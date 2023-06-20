@@ -2,88 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECC7F736C06
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jun 2023 14:36:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 830BF736C0D
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jun 2023 14:37:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231320AbjFTMgS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Jun 2023 08:36:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56492 "EHLO
+        id S231827AbjFTMhf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Jun 2023 08:37:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229932AbjFTMgR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jun 2023 08:36:17 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47E2310FA;
-        Tue, 20 Jun 2023 05:36:14 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4f769c37d26so6106694e87.1;
-        Tue, 20 Jun 2023 05:36:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687264570; x=1689856570;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VWBDXIcglRuVtZI8959sIG7iLkywrHbYxE58IPCNYGE=;
-        b=ZyvPlIfmAPvx8M/ioBZ/b3xHHUWs3y98uFv2tm4dADSaCphfSVL6fJxeMUOLf47eM7
-         2fr6nLaTLzurVx5YTUExA/f+SXhWgw1PM3oatOJ1+7HBGs8Q8nlfbLlG00kIb468zhpK
-         GnRF8cbecoOHHbciLZ00gFSvV8/AEUZ1+UwxkL3DYRNh8Yd/LQ9rmn1dpv65fGSbgthL
-         XNMzWHGd99NWosCThvGxebbpwvmHXOOjkG5viHhZGd+oKpOL6VPfWX2ZepAOf07N2ilw
-         VCqdcip6T4ZKzNTotgYShjKEonk78b1qUjUYHF8Nef3qUeauWYWfwZmDB8c5pSa4e8ll
-         dgkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687264570; x=1689856570;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VWBDXIcglRuVtZI8959sIG7iLkywrHbYxE58IPCNYGE=;
-        b=ldx5Sl9x3wmwZkP9AKzQLjUZVcB/770/4xDzm/IUPvXbXgZMFbs6EfHuefL/OjKeoK
-         07cLdXilaV0klSGmbguxMoy/p8W5k2BMi+DDo8hGtiwvNJ2RhJA6l8DdISLDaqaG8cCD
-         aswx2MQiRCj4S67qAc/xRBZ9hrHfJIr7sitHomtqGFuvgHBGeEKhJSusddySR/UC1Zt3
-         FnnNmkSsOfEsOaNulJPn4yuoxt45nPeG7Rh4EIm1IzkA8l6fLG8+PJOWdnpE+XfqHApb
-         7qvDtPbZLWNgAH7ZOWuF2PuAeE8f9nSPRjUp+Ut2E9wQSbECb0T+0UJFHazcpQFCJzSV
-         SyFA==
-X-Gm-Message-State: AC+VfDxqZQ3ISMd61ef5Xpa0TugOpo9z21ln8U2qCX51vlChnYtA/Yc/
-        1Lqli0DtO7M9ST91dvGv0/k=
-X-Google-Smtp-Source: ACHHUZ6EkPfBK22/FWvZGrk/sHCnUiSwEHMUioxVXNIy3vpveH/LF7mWH0ezEfhW232alFwcXB7l0g==
-X-Received: by 2002:ac2:5f8a:0:b0:4f8:a858:e616 with SMTP id r10-20020ac25f8a000000b004f8a858e616mr1669032lfe.5.1687264569611;
-        Tue, 20 Jun 2023 05:36:09 -0700 (PDT)
-Received: from mobilestation.baikal.int (srv1.baikalchip.ru. [87.245.175.227])
-        by smtp.gmail.com with ESMTPSA id x5-20020ac259c5000000b004f25df23cddsm348614lfn.170.2023.06.20.05.36.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jun 2023 05:36:09 -0700 (PDT)
-Date:   Tue, 20 Jun 2023 15:36:07 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "mani@kernel.org" <mani@kernel.org>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "kishon@kernel.org" <kishon@kernel.org>,
-        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v16 19/22] PCI: rcar-gen4: Add R-Car Gen4 PCIe Host
- support
-Message-ID: <eqngnojn7osrrpqetqxqomce3wij3icxemb3og55oiwg4toiwj@hi3bfboknx4v>
-References: <TYBPR01MB53417E55F5F9E667D679901CD850A@TYBPR01MB5341.jpnprd01.prod.outlook.com>
- <20230608121115.qnilmougdfd6fdyq@mobilestation>
- <TYBPR01MB5341AD39983D6B39034AF01BD851A@TYBPR01MB5341.jpnprd01.prod.outlook.com>
- <20230609105407.c4olqepv7vuoqktz@mobilestation>
- <TYBPR01MB53411835ACCD884FCA9ECBE2D854A@TYBPR01MB5341.jpnprd01.prod.outlook.com>
- <20230612195149.hdnttkcabynmf4kx@mobilestation>
- <TYBPR01MB534161A79DFF1830B65D303FD85AA@TYBPR01MB5341.jpnprd01.prod.outlook.com>
- <20230614113924.7ssdcl2njivdienp@mobilestation>
- <20230614193131.6nlqyzwmhpv23ksv@mobilestation>
- <TYBPR01MB53418EF6548818FCA2D1F45DD85CA@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+        with ESMTP id S232116AbjFTMhd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jun 2023 08:37:33 -0400
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F75010FF;
+        Tue, 20 Jun 2023 05:37:29 -0700 (PDT)
+Received: from localhost.localdomain (unknown [10.101.196.174])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 4CB9D3F295;
+        Tue, 20 Jun 2023 12:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1687264646;
+        bh=cMuha6GweaG+AAmv5ZFt5Jg08JwMgA7CO4IwqmsXL5g=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+        b=MVbfKx92+fDUG7KsEKcN5Sa8H9mIYx8KvGl4CNsfxwGhAWizldEdbjaSjbyxT4hGF
+         4jRWDYVwQLzgA6xy2soVWYICfVQ+SPLXllPk03rGrHdVRL7DnHhEoDX0e8l3FfBXYi
+         DCuTujYXhkPjRYqSgcSpEzaRZXv6pmFPzJ35vVHtmmOplWCv4NiTTye5PelYpnaNx6
+         0NJzpkZiPh/7yWaNJ1JQNff4rzhbRuB+Wm7qR3TOJ+iEg3LE312OXe2wUVlVP+32YA
+         cCvExDcklEmwtXx8ndytJ1pywXqOrmXXZappbmUTzf43rQBUjkbVyTfRd5WgT99IEf
+         DDoPkjW2DQHkw==
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com
+Cc:     linux-pci@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] igc: Ignore AER reset when device is suspended
+Date:   Tue, 20 Jun 2023 20:36:36 +0800
+Message-Id: <20230620123636.1854690-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TYBPR01MB53418EF6548818FCA2D1F45DD85CA@TYBPR01MB5341.jpnprd01.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -91,320 +59,211 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 12:02:08PM +0000, Yoshihiro Shimoda wrote:
-> Hello Serge,
-> 
-> > From: Serge Semin, Sent: Thursday, June 15, 2023 4:32 AM
-> > 
-> > On Wed, Jun 14, 2023 at 02:39:29PM +0300, Serge Semin wrote:
-> > > On Wed, Jun 14, 2023 at 02:30:13AM +0000, Yoshihiro Shimoda wrote:
-> > > > Hello Serge,
-> > > >
-> > > >  From: Serge Semin, Sent: Tuesday, June 13, 2023 4:52 AM
-> > > > >
-> > > > > On Mon, Jun 12, 2023 at 01:19:02PM +0000, Yoshihiro Shimoda wrote:
-> > > > > > Hello Serge,
-> > > > > >
-> > > > > > > From: Serge Semin, Sent: Friday, June 9, 2023 7:54 PM
-> > > > > > <snip>
-> > > > > > > > > > static int rcar_gen4_pcie_start_link(struct dw_pcie *dw)
-> > > > > > > > > > {
-> > > > > > > > > >         struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
-> > > > > > > > > >         int i;
-> > > > > > > > > >
-> > > > > > > > > >         rcar_gen4_pcie_ltssm_enable(rcar, true);
-> > > > > > > > > >
-> > > > > > > > > >         /*
-> > > > > > > > > >          * Require direct speed change here. Otherwise RDLH_LINK_UP of
-> > > > > > > > > >          * PCIEINTSTS0 which is this controller specific register may not
-> > > > > > > > > >          * be set.
-> > > > > > > > > >          */
-> > > > > > > > >
-> > > > > > > > > >         if (rcar->needs_speed_change) {
-> > > > > > > > >
-> > > > > > > > > Seeing this is specified for the root port only what about
-> > > > > > > > > replacing the statement with just test whether the rcar_gen4_pcie.mode ==
-> > > > > > > > > DW_PCIE_RC_TYPE? Thus you'll be ablt to drop the needs_speed_change field.
-> > > > > > > >
-> > > > > > > > Thank you for the comment. I'll fix it.
-> > > > > > > >
-> > > > > > > > > BTW Just curious. Why is the loop below enabled for the Root Port
-> > > > > > > > > only? What about the end-point controller? It's the same hardware
-> > > > > > > > > after all..
-> > > > > > > >
-> > > > > > > > This is reused from v16 and then it used "link retraining" which is only for
-> > > > > > > > the Root Port. As you mentioned, it seems endpoint controller is also needed
-> > > > > > > > if we use direct speed change.
-> > > > > > > >
-> > > > > > > > > >                 for (i = 0; i < SPEED_CHANGE_MAX_RETRIES; i++) {
-> > > > > > > > > >                         rcar_gen4_pcie_speed_change(dw);
-> > > > > > > > > >                         msleep(100);
-> > > > > > > > > >                         if (rcar_gen4_pcie_check_current_link(dw))
-> > > > > > > > > >                                 return 0;
-> > > > > > > > > >                 }
-> > > > > > > > >
-> > > > > > > > > Did you trace how many iterations this loop normally takes?
-> > > > > > > >
-> > > > > > > > i = 0 or 1 (if the max-link-speed is suitable for a connected device.)
-> > > > > > > >
-> > > > > > > > > Is it
-> > > > > > > > > constant or varies for the same platform setup and a connected link
-> > > > > > > > > partner? Does the number of iterations depend on the target link speed
-> > > > > > > > > specified via the "max-link-speed" property?
-> > > > > > > >
-> > > > > > >
-> > > > > > > > This is not related to the "max-link-speed". It seems to related to
-> > > > > > > > a link partner.
-> > > > > > > > 		LinkCap	max-link-speed	loop
-> > > > > > > > Device A		4	4		1
-> > > > > > > > Device A		4	3		1
-> > > > > > > > Device B		3	3		0
-> > > > > > >
-> > > > > > > Great! If so I would have just left a single unconditional
-> > > > > > > rcar_gen4_pcie_speed_change() call placed right after the
-> > > > > > > rcar_gen4_pcie_ltssm_enable() method with no delays afterwards. These
-> > > > > > > methods would have been invoked in the framework of
-> > > > > > > dw_pcie_start_link() after which the dw_pcie_wait_for_link() method is
-> > > > > > > called with several checks parted with the ~100ms delay. It will make
-> > > > > > > sure that at least some link is up with the link state printed to the
-> > > > > > > system log. If for some reason the performance degradation happens
-> > > > > > > then it will be up to the system administrator to investigate what was
-> > > > > > > wrong. Your driver did as much is it could to reach the best link gen.
-> > > > > >
-> > > > > > IIUC, is your suggestion like the following code?
-> > > > > > ---
-> > > > > > 	rcar_gen4_pcie_ltssm_enable(rcar, true);
-> > > > > > 	if (!dw_pcie_wait_for_link(dw)) {
-> > > > > > 		rcar_gen4_pcie_speed_change(dw);
-> > > > > > 		return 0;
-> > > > > > 	}
-> > > > > > ---
-> > > > > >
-> > > > > > Unfortunately, it doesn't work correctly...
-> > > > > > The following code can work correctly. The value of i is still 1 on the device A.
-> > > > > > What do you think that the following code is acceptable?
-> > > > > > ---
-> > > > > > 	rcar_gen4_pcie_ltssm_enable(rcar, true);
-> > > > > > 	for (i = 0; i < SPEED_CHANGE_MAX_RETRIES; i++) {
-> > > > > > 		msleep(100);
-> > > > > > 		rcar_gen4_pcie_speed_change(dw);
-> > > > > > 		if (dw_pcie_link_up(dw)) {
-> > > > > > 			printk("%s:%d\n", __func__, i);
-> > > > > > 			return 0;
-> > > > > > 		}
-> > > > > > 	}
-> > > > > > ---
-> > > > >
-> > > > > My idea was to implement something like this:
-> > > > >
-> > > > > +static int rcar_gen4_pcie_start_link(struct dw_pcie *dw)
-> > > > > +{
-> > > > > +	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
-> > > > > +
-> > > > > +	rcar_gen4_pcie_ltssm_enable(rcar, true);
-> > > > > +
-> > > > > +	rcar_gen4_pcie_speed_change(dw);
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
-> > > > >
-> > > > > and retain the rcar_gen4_pcie_link_up() method as is.
-> > > >
-> > > > Unfortunately, such a code doesn't work on my environment...
-> > > >
-> > > > > * Note: originally your loop used to have the msleep() call performed
-> > > > > after the first rcar_gen4_pcie_speed_change() invocation. Thus the
-> > > > > delay can be dropped if there is only one iteration implemented (see
-> > > > > further to understand why).
-> > > >
-> > > > Calling rcar_gen4_pcie_speed_change() multiple times is required on
-> > > > my environment. I thought msleep(100) was quite long so that I tried
-> > > > other wait interval like below:
-> > > >
-> > > >  msleep(1) : about 5 loops is needed for link. (about 5 msec.)
-> > > >  usleep_range(100, 110) : about 400 loops is needed for link. (about 40 msec.)
-> > > >  usleep_range(500, 600) : about 80 loops is needed for link. (about 40 msec.)
-> > > >
-> > > > The delay timing doesn't seems important. Both cases below can work correctly.
-> > > > --- case 1 ---
-> > > > 	for (i = 0; i < SPEED_CHANGE_MAX_RETRIES; i++) {
-> > > > 		rcar_gen4_pcie_speed_change(dw);
-> > > > 		if (dw_pcie_link_up(dw)) {
-> > > > 			printk("%s:%d\n", __func__, i); // will be removed
-> > > > 			return 0;
-> > > > 		}
-> > >
-> > > > 		msleep(1);
-> > >
-> > > Why? Just set it to 5 ms. In anyway please see the next message.
-> > >
-> > > > 	}
-> > > > ---
-> > > > --- case 2 ---
-> > > > 	for (i = 0; i < SPEED_CHANGE_MAX_RETRIES; i++) {
-> > > > 		rcar_gen4_pcie_speed_change(dw);
-> > > > 		msleep(1);
-> > > > 		if (dw_pcie_link_up(dw)) {
-> > > > 			printk("%s:%d\n", __func__, i); // will be removed
-> > > > 			return 0;
-> > > > 		}
-> > > > 	}
-> > > > ---
-> > > >
-> > > > So, I'll use case 1 for it.
-> > >
-> > > Ah. I think I get it now. Your spreadsheet:
-> > >
-> > >                 LinkCap max-link-speed  loop
-> > > Device A           4          4           1
-> > > Device A           4          3           1
-> > > Device B           3          3           0
-> > >
-> > > actually meant (loop+1) iterations. So in case of Gen4 you'll need
-> > > three speed changes (one already enabled in the dw_pcie_setup_rc()
-> > > method and another two ones are performed in your loop). Similarly in
-> > > case of Gen3 you'll need only one iteration. I bet you won't need to
-> > > call rcar_gen4_pcie_speed_change() at all if gen2 needs to be trained.
-> > > Could you try it out?
-> > >
-> > > Anyway based on what you discovered and on my experience working with
-> > > that controller, there should be as many
-> > > GEN2_CTRL_OFF.DIRECT_SPEED_CHANGE flag changes as the target speed
-> > > value, i.e. no flag switch if Gen1 is required, one flag switch if
-> > > Gen2 is required and so on. Although I failed to find any explicit
-> > > statement about that in the HW-manual.
-> > >
-> > > In addition to the above I've found out that
-> > > GEN2_CTRL_OFF.DIRECT_SPEED_CHANGE field is actually self cleared when
-> > > the speed change occurs (see the register description in the HW
-> > > reference manual). We can use it to implement the
-> > > dw_pcie_link_up()-independent link training algorithm like this:
-> > >
-> > > +#define RCAR_RETRAIN_MAX_CHECK		10
-> > > +#define RCAR_LINK_SPEED_MAX		4
-> > > +
-> > > +static bool rcar_gen4_pcie_speed_change(struct dw_pcie *dw)
-> > > +{
-> > > +	u32 val;
-> > > +	int i;
-> > > +
-> > > +	val = dw_pcie_readl_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL);
-> > > +	val &= ~PORT_LOGIC_SPEED_CHANGE;
-> > > +	dw_pcie_writel_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-> > > +
-> > > +	val |= PORT_LOGIC_SPEED_CHANGE;
-> > > +	dw_pcie_writel_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-> > > +
-> > > +	for (i = 0; i < RCAR_SPEED_CHANGE_WAIT_RETRIES; i++) {
-> > > +		val = dw_pcie_readl_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL);
-> > > +		if (!(val & PORT_LOGIC_SPEED_CHANGE))
-> > > +			return true;
-> > > +
-> > > +		msleep(1);
-> > > +	}
-> > > +
-> > > +	return false;
-> > > +}
-> > > +
-> > > +static int rcar_gen4_pcie_start_link(struct dw_pcie *dw)
-> > > +{
-> > > +	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
-> > > +	int i, changes;
-> > > +
-> > > +	rcar_gen4_pcie_ltssm_enable(rcar, true);
-> > > +
-> > 
-> > > +	changes = min_not_zero(dw->link_gen, RCAR_LINK_SPEED_MAX);
-> > 
-> > This should have been:
-> > +changes = min_not_zero(dw->link_gen, RCAR_LINK_SPEED_MAX) - 1;
-> > because Gen1 doesn't need any speed change action.
-> > 
-> > But this part can be further improved. Instead of the code above the
-> > next snipped can be implemented:
-> > 
-> > +changes = min_not_zero(dw->link_gen, RCAR_LINK_SPEED_MAX) - 1;
-> > +if (changes && rcar->mode == DW_PCIE_RC_TYPE)
-> > +		changes -= 1;
-> > 
-> > It takes into account that the GEN2_CTRL_OFF.DIRECT_SPEED_CHANGE
-> > flag is already set in the dw_pcie_setup_rc() method. So Gen2 will be
-> > trained with no need in addition actions. If it's supported of course.
-> 
+When a system that connects to a Thunderbolt dock equipped with I225,
+I225 stops working after S3 resume:
 
-> Thank you very much for your comments and suggestion! The suggestion code
-> works correctly on my environment.
+[  606.527643] pcieport 0000:00:1d.0: AER: Multiple Corrected error receive=
+d: 0000:00:1d.0
+[  606.527791] pcieport 0000:00:1d.0: PCIe Bus Error: severity=3DCorrected,=
+ type=3DTransaction Layer, (Receiver ID)
+[  606.527795] pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mas=
+k=3D00008000/00002000
+[  606.527800] pcieport 0000:00:1d.0:    [15] HeaderOF
+[  606.527806] pcieport 0000:00:1d.0: AER:   Error of this Agent is reporte=
+d first
+[  606.527853] pcieport 0000:07:04.0: PCIe Bus Error: severity=3DCorrected,=
+ type=3DData Link Layer, (Receiver ID)
+[  606.527856] pcieport 0000:07:04.0:   device [8086:0b26] error status/mas=
+k=3D00000080/00002000
+[  606.527861] pcieport 0000:07:04.0:    [ 7] BadDLLP
+[  606.527931] pcieport 0000:00:1d.0: AER: Multiple Uncorrected (Non-Fatal)=
+ error received: 0000:00:1d.0
+[  606.528064] pcieport 0000:00:1d.0: PCIe Bus Error: severity=3DUncorrecte=
+d (Non-Fatal), type=3DTransaction Layer, (Requester ID)
+[  606.528068] pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mas=
+k=3D00100000/00004000
+[  606.528072] pcieport 0000:00:1d.0:    [20] UnsupReq               (First)
+[  606.528075] pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 0a000052 =
+00000000 00000000
+[  606.528079] pcieport 0000:00:1d.0: AER:   Error of this Agent is reporte=
+d first
+[  606.528098] pcieport 0000:04:01.0: PCIe Bus Error: severity=3DUncorrecte=
+d (Non-Fatal), type=3DTransaction Layer, (Requester ID)
+[  606.528101] pcieport 0000:04:01.0:   device [8086:1136] error status/mas=
+k=3D00300000/00000000
+[  606.528105] pcieport 0000:04:01.0:    [20] UnsupReq               (First)
+[  606.528107] pcieport 0000:04:01.0:    [21] ACSViol
+[  606.528110] pcieport 0000:04:01.0: AER:   TLP Header: 34000000 04000052 =
+00000000 00000000
+[  606.528187] thunderbolt 0000:05:00.0: AER: can't recover (no error_detec=
+ted callback)
+[  606.558729] ------------[ cut here ]------------
+[  606.558729] igc 0000:38:00.0: disabling already-disabled device
+[  606.558738] WARNING: CPU: 0 PID: 209 at drivers/pci/pci.c:2248 pci_disab=
+le_device+0xf6/0x150
+[  606.558743] Modules linked in: rfcomm ccm cmac algif_hash algif_skcipher=
+ af_alg usbhid bnep snd_hda_codec_hdmi snd_ctl_led snd_hda_codec_realtek jo=
+ydev snd_hda_codec_generic ledtrig_audio binfmt_misc snd_sof_pci_intel_tgl =
+snd_sof_intel_hda_common snd_soc_acpi_intel_match snd_soc_acpi snd_soc_hdac=
+_hda snd_sof_pci snd_sof_xtensa_dsp x86_pkg_temp_thermal snd_sof_intel_hda_=
+mlink intel_powerclamp snd_sof_intel_hda snd_sof snd_sof_utils snd_hda_ext_=
+core snd_soc_core snd_compress snd_hda_intel coretemp snd_intel_dspcfg snd_=
+hda_codec snd_hwdep kvm_intel snd_hda_core iwlmvm nls_iso8859_1 i915 snd_pc=
+m kvm mac80211 crct10dif_pclmul crc32_pclmul i2c_algo_bit uvcvideo ghash_cl=
+mulni_intel snd_seq mei_pxp drm_buddy videobuf2_vmalloc sch_fq_codel sha512=
+_ssse3 libarc4 aesni_intel mei_hdcp videobuf2_memops btusb uvc crypto_simd =
+drm_display_helper snd_seq_device btrtl videobuf2_v4l2 cryptd snd_timer int=
+el_rapl_msr btbcm drm_kms_helper videodev iwlwifi snd btintel rapl input_le=
+ds wmi_bmof hid_sensor_rotation btmtk hid_sensor_accel_3d
+[  606.558778]  hid_sensor_gyro_3d hid_sensor_als syscopyarea videobuf2_com=
+mon intel_cstate serio_raw soundcore bluetooth hid_sensor_trigger thunderbo=
+lt sysfillrect cfg80211 mc mei_me industrialio_triggered_buffer sysimgblt p=
+rocessor_thermal_device_pci hid_sensor_iio_common hid_multitouch ecdh_gener=
+ic processor_thermal_device kfifo_buf cec 8250_dw mei ecc processor_thermal=
+_rfim industrialio rc_core processor_thermal_mbox ucsi_acpi processor_therm=
+al_rapl ttm typec_ucsi intel_rapl_common msr typec video int3403_thermal in=
+t340x_thermal_zone int3400_thermal intel_hid wmi acpi_pad acpi_thermal_rel =
+sparse_keymap acpi_tad mac_hid parport_pc ppdev lp parport drm ramoops reed=
+_solomon efi_pstore ip_tables x_tables autofs4 hid_sensor_custom hid_sensor=
+_hub intel_ishtp_hid spi_pxa2xx_platform hid_generic dw_dmac dw_dmac_core r=
+tsx_pci_sdmmc e1000e i2c_i801 igc nvme i2c_smbus intel_lpss_pci rtsx_pci in=
+tel_ish_ipc nvme_core intel_lpss xhci_pci i2c_hid_acpi intel_ishtp idma64 x=
+hci_pci_renesas i2c_hid hid pinctrl_alderlake
+[  606.558809] CPU: 0 PID: 209 Comm: irq/124-aerdrv Not tainted 6.4.0-rc7+ =
+#119
+[  606.558811] Hardware name: HP HP ZBook Fury 16 G9 Mobile Workstation PC/=
+89C6, BIOS U96 Ver. 01.07.01 04/06/2023
+[  606.558812] RIP: 0010:pci_disable_device+0xf6/0x150
+[  606.558814] Code: 4d 85 e4 75 07 4c 8b a3 d0 00 00 00 48 8d bb d0 00 00 =
+00 e8 5c f5 1f 00 4c 89 e2 48 c7 c7 f8 e6 37 ae 48 89 c6 e8 9a 3e 86 ff <0f=
+> 0b e9 3c ff ff ff 48 8d 55 e6 be 04 00 00 00 48 89 df e8 62 0b
+[  606.558815] RSP: 0018:ffffa70040a4fca0 EFLAGS: 00010246
+[  606.558816] RAX: 0000000000000000 RBX: ffff8ac8434b2000 RCX: 00000000000=
+00000
+[  606.558817] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000=
+00000
+[  606.558818] RBP: ffffa70040a4fcc0 R08: 0000000000000000 R09: 00000000000=
+00000
+[  606.558818] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8ac8434=
+35dd0
+[  606.558818] R13: ffff8ac84277c000 R14: 0000000000000001 R15: ffff8ac8434=
+b2150
+[  606.558819] FS:  0000000000000000(0000) GS:ffff8acbd6a00000(0000) knlGS:=
+0000000000000000
+[  606.558820] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  606.558821] CR2: 00007f9740ba28e8 CR3: 00000001eb43a000 CR4: 0000000000f=
+50ef0
+[  606.558822] PKRU: 55555554
+[  606.558822] Call Trace:
+[  606.558823]  <TASK>
+[  606.558825]  ? show_regs+0x76/0x90
+[  606.558828]  ? pci_disable_device+0xf6/0x150
+[  606.558830]  ? __warn+0x91/0x160
+[  606.558832]  ? pci_disable_device+0xf6/0x150
+[  606.558834]  ? report_bug+0x1bf/0x1d0
+[  606.558838] nvme nvme0: 24/0/0 default/read/poll queues
+[  606.558837]  ? handle_bug+0x46/0x90
+[  606.558841]  ? exc_invalid_op+0x1d/0x90
+[  606.558843]  ? asm_exc_invalid_op+0x1f/0x30
+[  606.558846]  ? pci_disable_device+0xf6/0x150
+[  606.558849]  igc_io_error_detected+0x40/0x70 [igc]
+[  606.558857]  report_error_detected+0xdb/0x1d0
+[  606.558860]  ? __pfx_report_normal_detected+0x10/0x10
+[  606.558862]  report_normal_detected+0x1a/0x30
+[  606.558864]  pci_walk_bus+0x78/0xb0
+[  606.558866]  pcie_do_recovery+0xba/0x340
+[  606.558868]  ? __pfx_aer_root_reset+0x10/0x10
+[  606.558870]  aer_process_err_devices+0x168/0x220
+[  606.558871]  aer_isr+0x1d3/0x1f0
+[  606.558874]  ? __pfx_irq_thread_fn+0x10/0x10
+[  606.558876]  irq_thread_fn+0x29/0x70
+[  606.558877]  irq_thread+0xee/0x1c0
+[  606.558878]  ? __pfx_irq_thread_dtor+0x10/0x10
+[  606.558879]  ? __pfx_irq_thread+0x10/0x10
+[  606.558880]  kthread+0xf8/0x130
+[  606.558882]  ? __pfx_kthread+0x10/0x10
+[  606.558884]  ret_from_fork+0x29/0x50
+[  606.558887]  </TASK>
+[  606.558887] ---[ end trace 0000000000000000 ]---
+[  606.570223] i915 0000:00:02.0: [drm] GT0: HuC: authenticated!
+[  606.570228] i915 0000:00:02.0: [drm] GT0: GUC: submission disabled
+[  606.570231] i915 0000:00:02.0: [drm] GT0: GUC: SLPC disabled
+[  606.663042] xhci_hcd 0000:39:00.0: AER: can't recover (no error_detected=
+ callback)
+[  606.663111] pcieport 0000:00:1d.0: AER: device recovery failed
+[  606.721642] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[  606.721677] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[  606.721687] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[  606.721698] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[  606.842877] usb 1-8: reset high-speed USB device number 3 using xhci_hcd
+[  607.048340] genirq: Flags mismatch irq 164. 00000000 (enp56s0) vs. 00000=
+000 (enp56s0)
+[  607.050313] ------------[ cut here ]------------
+...
+[  609.064160] igc 0000:38:00.0 enp56s0: Register Dump
+[  609.064167] igc 0000:38:00.0 enp56s0: Register Name   Value
+[  609.064181] igc 0000:38:00.0 enp56s0: CTRL            081c0641
+[  609.064188] igc 0000:38:00.0 enp56s0: STATUS          40280401
+[  609.064195] igc 0000:38:00.0 enp56s0: CTRL_EXT        100000c0
+[  609.064202] igc 0000:38:00.0 enp56s0: MDIC            18017949
+[  609.064208] igc 0000:38:00.0 enp56s0: ICR             80000010
+[  609.064214] igc 0000:38:00.0 enp56s0: RCTL            04408022
+[  609.064232] igc 0000:38:00.0 enp56s0: RDLEN[0-3]      00001000 00001000 =
+00001000 00001000
+[  609.064251] igc 0000:38:00.0 enp56s0: RDH[0-3]        00000000 00000000 =
+00000000 00000000
+[  609.064270] igc 0000:38:00.0 enp56s0: RDT[0-3]        000000ff 000000ff =
+000000ff 000000ff
+[  609.064289] igc 0000:38:00.0 enp56s0: RXDCTL[0-3]     00040808 00040808 =
+00040808 00040808
+[  609.064308] igc 0000:38:00.0 enp56s0: RDBAL[0-3]      ffc62000 fff6b000 =
+fff6c000 fff6d000
+[  609.064326] igc 0000:38:00.0 enp56s0: RDBAH[0-3]      00000000 00000000 =
+00000000 00000000
+[  609.064333] igc 0000:38:00.0 enp56s0: TCTL            a50400fa
+[  609.064351] igc 0000:38:00.0 enp56s0: TDBAL[0-3]      fff6d000 ffcdf000 =
+ffce0000 ffce1000
+[  609.064369] igc 0000:38:00.0 enp56s0: TDBAH[0-3]      00000000 00000000 =
+00000000 00000000
+[  609.064387] igc 0000:38:00.0 enp56s0: TDLEN[0-3]      00001000 00001000 =
+00001000 00001000
+[  609.064405] igc 0000:38:00.0 enp56s0: TDH[0-3]        00000000 00000000 =
+00000000 00000000
+[  609.064423] igc 0000:38:00.0 enp56s0: TDT[0-3]        00000004 00000000 =
+00000000 00000000
+[  609.064441] igc 0000:38:00.0 enp56s0: TXDCTL[0-3]     00100108 00100108 =
+00100108 00100108
+[  609.064445] igc 0000:38:00.0 enp56s0: Reset adapter
 
-Awesome! Glad we've finally settled this.
+The issue is that the PTM requests are sending before driver resumes the
+device. Since the issue can also be observed on Windows, it's quite
+likely a firmware/hardwar limitation.
 
--Serge(y)
+So avoid resetting the device if it's not resumed. Once the device is
+fully resumed, the device can work normally.
 
-> 
-> Best regards,
-> Yoshihiro Shimoda
-> 
-> P.S.
-> So, I'm investigating endpoint mode issues which you commented now.
-> 
-> > -Serge(y)
-> > 
-> > > +	for (i = 0; i < changes; ++i) {
-> > > +		if (!rcar_gen4_pcie_speed_change(dw))
-> > > +			break;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > >
-> > > Note 1. The actual link state will be checked in the framework of the
-> > > dw_pcie_wait_for_link() function, by means of dw_pcie_link_up().
-> > >
-> > > Note 2. RCAR_LINK_SPEED_MAX is deliberately set to 4 because DW PCIe
-> > > EP core driver doesn't set the PORT_LOGIC_SPEED_CHANGE flag. In case
-> > > of the DW PCIe Root Port at most 3 iterations should be enough.
-> > >
-> > > Note 3. Please use the RCAR_ prefix for the vendor-specific macros.
-> > > It concerns the entire series.
-> > >
-> > > Could you try out the code suggested above?
-> > >
-> > > -Serge(y)
-> > >
-> > > >
-> > > > > You don't need to wait for the link to actually get up in the
-> > > > > start_link() callback because there is the link_up() callback, which
-> > > > > is called from the dw_pcie_wait_for_link() method during the generic
-> > > > > DWC PCIe setup procedure. See:
-> > > >
-> > > > Since the procedure will call rcar_gen4_pcie_speed_change() from
-> > > > ->start_link() once, my environment cannot work correctly...
-> > > >
-> > > > Best regards,
-> > > > Yoshihiro Shimoda
-> > > >
-> > > > > dw_pcie_host_init():
-> > > > > +-> ops->host_init()
-> > > > > +-> ...
-> > > > > +-> dw_pcie_setup_rc()
-> > > > > |   +-> ...
-> > > > > |   +-> dw_pcie_setup()
-> > > > > |   +-> ...
-> > > > > +-> if !dw_pcie_link_up()
-> > > > > |   |   +-> ops->link_up()
-> > > > > |   +-> dw_pcie_start_link()
-> > > > > |       +-> ops->start_link()
-> > > > > +-> dw_pcie_wait_for_link();   // See, wait-procedure is already performed
-> > > > > |   +-> loop 10 times          // for you in the core driver together
-> > > > > |       +-> dw_pcie_link_up()  // with the delays between the checks
-> > > > > |           +-> ops->link_up()
-> > > > > |       +-> msleep(~100)
-> > > > > +-> ...
-> > > > >
-> > > > > -Serge(y)
-> > > > >
-> > > > > >
-> > > > > > Best regards,
-> > > > > > Yoshihiro Shimoda
-> > > > > >
-> > > > > > > -Serge(y)
-> > > > > >
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216850
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/net/ethernet/intel/igc/igc_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethern=
+et/intel/igc/igc_main.c
+index fa764190f270..6a46f886ff43 100644
+--- a/drivers/net/ethernet/intel/igc/igc_main.c
++++ b/drivers/net/ethernet/intel/igc/igc_main.c
+@@ -6962,6 +6962,9 @@ static pci_ers_result_t igc_io_error_detected(struct =
+pci_dev *pdev,
+ 	struct net_device *netdev =3D pci_get_drvdata(pdev);
+ 	struct igc_adapter *adapter =3D netdev_priv(netdev);
+=20
++	if (!pci_is_enabled(pdev))
++		return 0;
++
+ 	netif_device_detach(netdev);
+=20
+ 	if (state =3D=3D pci_channel_io_perm_failure)
+--=20
+2.34.1
+
