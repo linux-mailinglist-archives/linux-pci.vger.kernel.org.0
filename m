@@ -2,214 +2,177 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F41677360DD
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jun 2023 02:48:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84BE073618F
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jun 2023 04:35:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229492AbjFTAsD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Jun 2023 20:48:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42032 "EHLO
+        id S229562AbjFTCf4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Jun 2023 22:35:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229618AbjFTAsC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Jun 2023 20:48:02 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF1A8198C
-        for <linux-pci@vger.kernel.org>; Mon, 19 Jun 2023 17:47:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687222053; x=1718758053;
-  h=date:from:to:cc:subject:message-id;
-  bh=+ENGX3Bho4AK01sNi7pt81mcqbQ4fsQ7axPO6HNRi70=;
-  b=Vv18C3hErw4xzsjphyCngxiz/1b+cvlXZpQ0adC5nHoMs+HZE3r2Ewvl
-   hntYSNiHeGDl1jNzVSEVfIC6clQN4t94Wlgc+Jg61nc5x16lhweVjKRsC
-   IZ/lCo+hgYH8T4mpk6IJU/SM/GygmzRCQiGN7yv0rwbwJcN2RbatSo50C
-   OeY/TeqkLKP6QvK7HaNCoLWHjTIny3Go01MYmwVqgFpP7jP6r/Oh2d3H5
-   73jPo91N2Y15zaIBfcN9OUMdddzQNlaiJ0Q29+0CnmJIGNBYjBKCC51XU
-   7XtKYNjmUUovDjqPqEI+9vFGKTUKkX8t+p/ka1BuIP51kj14PrcBpdJDq
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10746"; a="357225695"
-X-IronPort-AV: E=Sophos;i="6.00,255,1681196400"; 
-   d="scan'208";a="357225695"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2023 17:44:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10746"; a="713857064"
-X-IronPort-AV: E=Sophos;i="6.00,255,1681196400"; 
-   d="scan'208";a="713857064"
-Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 19 Jun 2023 17:44:41 -0700
-Received: from kbuild by 783282924a45 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qBPU8-0005Iy-1c;
-        Tue, 20 Jun 2023 00:44:40 +0000
-Date:   Tue, 20 Jun 2023 08:43:59 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:controller/dwc] BUILD SUCCESS
- 3bbc3c72c4b8982ecb719df6685dc7067def0904
-Message-ID: <202306200857.YTWHSvw3-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229454AbjFTCfz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Jun 2023 22:35:55 -0400
+Received: from 189.cn (ptr.189.cn [183.61.185.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9586619A;
+        Mon, 19 Jun 2023 19:35:53 -0700 (PDT)
+HMM_SOURCE_IP: 10.64.8.31:39374.762909731
+HMM_ATTACHE_NUM: 0000
+HMM_SOURCE_TYPE: SMTP
+Received: from clientip-114.242.206.180 (unknown [10.64.8.31])
+        by 189.cn (HERMES) with SMTP id 890C0100300;
+        Tue, 20 Jun 2023 10:35:47 +0800 (CST)
+Received: from  ([114.242.206.180])
+        by gateway-151646-dep-75648544bd-xp9j7 with ESMTP id f42811347ea34ea683eed42a8113599e for mario.limonciello@amd.com;
+        Tue, 20 Jun 2023 10:35:51 CST
+X-Transaction-ID: f42811347ea34ea683eed42a8113599e
+X-Real-From: 15330273260@189.cn
+X-Receive-IP: 114.242.206.180
+X-MEDUSA-Status: 0
+Sender: 15330273260@189.cn
+Message-ID: <345c2bb9-71d8-27b9-0175-f1e55f096ed1@189.cn>
+Date:   Tue, 20 Jun 2023 10:35:46 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v6 2/8] PCI/VGA: Deal only with VGA class devices
+To:     "Limonciello, Mario" <mario.limonciello@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian Konig <christian.koenig@amd.com>,
+        Pan Xinhui <Xinhui.Pan@amd.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        Lijo Lazar <lijo.lazar@amd.com>,
+        YiPeng Chai <YiPeng.Chai@amd.com>,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>,
+        Bokun Zhang <Bokun.Zhang@amd.com>,
+        Ville Syrjala <ville.syrjala@linux.intel.com>,
+        Li Yi <liyi@loongson.cn>,
+        Sui Jingfeng <suijingfeng@loongson.cn>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Abhishek Sahu <abhsahu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+References: <20230612192550.197053-1-15330273260@189.cn>
+ <20230612192550.197053-3-15330273260@189.cn>
+ <5b6fdf65-b354-94a9-f883-be820157efad@amd.com>
+Content-Language: en-US
+From:   Sui Jingfeng <15330273260@189.cn>
+In-Reply-To: <5b6fdf65-b354-94a9-f883-be820157efad@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FROM_LOCAL_DIGITS,
+        FROM_LOCAL_HEX,NICE_REPLY_A,RCVD_IN_SBL_CSS,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dwc
-branch HEAD: 3bbc3c72c4b8982ecb719df6685dc7067def0904  PCI: imx6: Save and restore root port MSI control in suspend and resume
+Hi,
 
-elapsed time: 734m
+On 2023/6/20 02:12, Limonciello, Mario wrote:
+>
+> On 6/12/2023 2:25 PM, Sui Jingfeng wrote:
+>> From: Sui Jingfeng <suijingfeng@loongson.cn>
+>>
+>> Deal only with the VGA devcie(pdev->class == 0x0300), so replace the
+>> pci_get_subsys() function with pci_get_class(). Filter the non-PCI 
+>> display
+>> device(pdev->class != 0x0300) out. There no need to process the 
+>> non-display
+>> PCI device.
+>>
+>> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
+>> ---
+> This also means that deleting a PCI device no longer needs
+> to walk the list.
+>
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>
 
-configs tested: 138
-configs skipped: 12
+Thanks a lot.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r014-20230619   gcc  
-alpha                randconfig-r015-20230619   gcc  
-alpha                randconfig-r031-20230619   gcc  
-alpha                randconfig-r034-20230619   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r005-20230619   gcc  
-arc                  randconfig-r043-20230619   gcc  
-arc                  randconfig-r043-20230620   gcc  
-arc                    vdk_hs38_smp_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                          gemini_defconfig   gcc  
-arm                  randconfig-r003-20230619   clang
-arm                  randconfig-r036-20230619   clang
-arm                  randconfig-r046-20230619   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r031-20230619   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r002-20230619   gcc  
-csky                 randconfig-r004-20230619   gcc  
-csky                 randconfig-r021-20230619   gcc  
-hexagon              randconfig-r006-20230619   clang
-hexagon              randconfig-r025-20230619   clang
-hexagon              randconfig-r032-20230619   clang
-hexagon              randconfig-r041-20230619   clang
-hexagon              randconfig-r045-20230619   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230619   gcc  
-i386         buildonly-randconfig-r005-20230619   gcc  
-i386         buildonly-randconfig-r006-20230619   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230619   gcc  
-i386                 randconfig-i002-20230619   gcc  
-i386                 randconfig-i003-20230619   gcc  
-i386                 randconfig-i004-20230619   gcc  
-i386                 randconfig-i005-20230619   gcc  
-i386                 randconfig-i006-20230619   gcc  
-i386                 randconfig-i011-20230619   clang
-i386                 randconfig-i012-20230619   clang
-i386                 randconfig-i013-20230619   clang
-i386                 randconfig-i014-20230619   clang
-i386                 randconfig-i015-20230619   clang
-i386                 randconfig-i016-20230619   clang
-i386                 randconfig-r012-20230619   clang
-i386                 randconfig-r022-20230619   clang
-i386                 randconfig-r032-20230619   gcc  
-i386                 randconfig-r033-20230619   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r012-20230619   gcc  
-loongarch            randconfig-r026-20230619   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r001-20230619   gcc  
-m68k                 randconfig-r021-20230619   gcc  
-m68k                 randconfig-r034-20230619   gcc  
-m68k                 randconfig-r036-20230619   gcc  
-microblaze           randconfig-r011-20230619   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r013-20230619   gcc  
-mips                 randconfig-r015-20230619   gcc  
-mips                 randconfig-r016-20230619   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r002-20230619   gcc  
-nios2                randconfig-r032-20230619   gcc  
-nios2                randconfig-r033-20230619   gcc  
-openrisc             randconfig-r005-20230619   gcc  
-openrisc             randconfig-r013-20230619   gcc  
-openrisc             randconfig-r033-20230619   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r013-20230619   clang
-powerpc                     taishan_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r023-20230619   clang
-riscv                randconfig-r024-20230619   clang
-riscv                randconfig-r042-20230619   clang
-riscv                randconfig-r042-20230620   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r044-20230619   clang
-s390                 randconfig-r044-20230620   gcc  
-sh                               allmodconfig   gcc  
-sh                         microdev_defconfig   gcc  
-sh                   randconfig-r025-20230619   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r035-20230619   gcc  
-sparc64              randconfig-r006-20230619   gcc  
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r004-20230619   clang
-um                   randconfig-r005-20230619   clang
-um                   randconfig-r011-20230619   gcc  
-um                   randconfig-r016-20230619   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230619   gcc  
-x86_64       buildonly-randconfig-r002-20230619   gcc  
-x86_64       buildonly-randconfig-r003-20230619   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230619   gcc  
-x86_64               randconfig-a002-20230619   gcc  
-x86_64               randconfig-a003-20230619   gcc  
-x86_64               randconfig-a004-20230619   gcc  
-x86_64               randconfig-a005-20230619   gcc  
-x86_64               randconfig-a006-20230619   gcc  
-x86_64               randconfig-a011-20230619   clang
-x86_64               randconfig-a012-20230619   clang
-x86_64               randconfig-a013-20230619   clang
-x86_64               randconfig-a014-20230619   clang
-x86_64               randconfig-a015-20230619   clang
-x86_64               randconfig-a016-20230619   clang
-x86_64               randconfig-r003-20230619   gcc  
-x86_64               randconfig-r014-20230619   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r012-20230619   gcc  
-xtensa               randconfig-r024-20230619   gcc  
-xtensa               randconfig-r025-20230619   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>>   drivers/pci/vgaarb.c | 22 ++++++++++++----------
+>>   1 file changed, 12 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+>> index c1bc6c983932..22a505e877dc 100644
+>> --- a/drivers/pci/vgaarb.c
+>> +++ b/drivers/pci/vgaarb.c
+>> @@ -754,10 +754,6 @@ static bool vga_arbiter_add_pci_device(struct 
+>> pci_dev *pdev)
+>>       struct pci_dev *bridge;
+>>       u16 cmd;
+>>   -    /* Only deal with VGA class devices */
+>> -    if ((pdev->class >> 8) != PCI_CLASS_DISPLAY_VGA)
+>> -        return false;
+>> -
+>>       /* Allocate structure */
+>>       vgadev = kzalloc(sizeof(struct vga_device), GFP_KERNEL);
+>>       if (vgadev == NULL) {
+>> @@ -1500,7 +1496,9 @@ static int pci_notify(struct notifier_block 
+>> *nb, unsigned long action,
+>>       struct pci_dev *pdev = to_pci_dev(dev);
+>>       bool notify = false;
+>>   -    vgaarb_dbg(dev, "%s\n", __func__);
+>> +    /* Only deal with VGA class devices */
+>> +    if (pdev->class != PCI_CLASS_DISPLAY_VGA << 8)
+>> +        return 0;
+>>         /* For now we're only intereted in devices added and removed. 
+>> I didn't
+>>        * test this thing here, so someone needs to double check for the
+>> @@ -1510,6 +1508,8 @@ static int pci_notify(struct notifier_block 
+>> *nb, unsigned long action,
+>>       else if (action == BUS_NOTIFY_DEL_DEVICE)
+>>           notify = vga_arbiter_del_pci_device(pdev);
+>>   +    vgaarb_dbg(dev, "%s: action = %lu\n", __func__, action);
+>> +
+>>       if (notify)
+>>           vga_arbiter_notify_clients();
+>>       return 0;
+>> @@ -1534,8 +1534,8 @@ static struct miscdevice vga_arb_device = {
+>>     static int __init vga_arb_device_init(void)
+>>   {
+>> +    struct pci_dev *pdev = NULL;
+>>       int rc;
+>> -    struct pci_dev *pdev;
+>>         rc = misc_register(&vga_arb_device);
+>>       if (rc < 0)
+>> @@ -1545,11 +1545,13 @@ static int __init vga_arb_device_init(void)
+>>         /* We add all PCI devices satisfying VGA class in the arbiter by
+>>        * default */
+>> -    pdev = NULL;
+>> -    while ((pdev =
+>> -        pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
+>> -                   PCI_ANY_ID, pdev)) != NULL)
+>> +    while (1) {
+>> +        pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, pdev);
+>> +        if (!pdev)
+>> +            break;
+>> +
+>>           vga_arbiter_add_pci_device(pdev);
+>> +    }
+>>         pr_info("loaded\n");
+>>       return rc;
