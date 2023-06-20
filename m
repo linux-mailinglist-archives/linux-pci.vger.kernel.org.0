@@ -2,39 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84BE073618F
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jun 2023 04:35:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F8C5736210
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jun 2023 05:13:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229562AbjFTCf4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Jun 2023 22:35:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40940 "EHLO
+        id S229752AbjFTDNx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Jun 2023 23:13:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbjFTCfz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Jun 2023 22:35:55 -0400
-Received: from 189.cn (ptr.189.cn [183.61.185.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9586619A;
-        Mon, 19 Jun 2023 19:35:53 -0700 (PDT)
-HMM_SOURCE_IP: 10.64.8.31:39374.762909731
-HMM_ATTACHE_NUM: 0000
-HMM_SOURCE_TYPE: SMTP
-Received: from clientip-114.242.206.180 (unknown [10.64.8.31])
-        by 189.cn (HERMES) with SMTP id 890C0100300;
-        Tue, 20 Jun 2023 10:35:47 +0800 (CST)
-Received: from  ([114.242.206.180])
-        by gateway-151646-dep-75648544bd-xp9j7 with ESMTP id f42811347ea34ea683eed42a8113599e for mario.limonciello@amd.com;
-        Tue, 20 Jun 2023 10:35:51 CST
-X-Transaction-ID: f42811347ea34ea683eed42a8113599e
-X-Real-From: 15330273260@189.cn
-X-Receive-IP: 114.242.206.180
-X-MEDUSA-Status: 0
-Sender: 15330273260@189.cn
-Message-ID: <345c2bb9-71d8-27b9-0175-f1e55f096ed1@189.cn>
-Date:   Tue, 20 Jun 2023 10:35:46 +0800
+        with ESMTP id S229618AbjFTDNv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Jun 2023 23:13:51 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 92AFB1B0;
+        Mon, 19 Jun 2023 20:13:48 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8DxDetqGZFkrwcHAA--.14552S3;
+        Tue, 20 Jun 2023 11:13:46 +0800 (CST)
+Received: from [10.20.42.43] (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8DxbMpnGZFkax4hAA--.18888S3;
+        Tue, 20 Jun 2023 11:13:43 +0800 (CST)
+Message-ID: <5c3b5f2e-00c6-efba-1239-cdf96285d6a2@loongson.cn>
+Date:   Tue, 20 Jun 2023 11:13:43 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
 Subject: Re: [PATCH v6 2/8] PCI/VGA: Deal only with VGA class devices
+Content-Language: en-US
 To:     "Limonciello, Mario" <mario.limonciello@amd.com>,
+        Sui Jingfeng <15330273260@189.cn>,
         Alex Deucher <alexander.deucher@amd.com>,
         Christian Konig <christian.koenig@amd.com>,
         Pan Xinhui <Xinhui.Pan@amd.com>,
@@ -59,9 +53,7 @@ To:     "Limonciello, Mario" <mario.limonciello@amd.com>,
         Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>,
         Bokun Zhang <Bokun.Zhang@amd.com>,
         Ville Syrjala <ville.syrjala@linux.intel.com>,
-        Li Yi <liyi@loongson.cn>,
-        Sui Jingfeng <suijingfeng@loongson.cn>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
+        Li Yi <liyi@loongson.cn>, Jason Gunthorpe <jgg@ziepe.ca>,
         Kevin Tian <kevin.tian@intel.com>,
         Cornelia Huck <cohuck@redhat.com>,
         Yishai Hadas <yishaih@nvidia.com>,
@@ -73,16 +65,34 @@ Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
 References: <20230612192550.197053-1-15330273260@189.cn>
  <20230612192550.197053-3-15330273260@189.cn>
  <5b6fdf65-b354-94a9-f883-be820157efad@amd.com>
-Content-Language: en-US
-From:   Sui Jingfeng <15330273260@189.cn>
+From:   Sui Jingfeng <suijingfeng@loongson.cn>
+Organization: Loongson
 In-Reply-To: <5b6fdf65-b354-94a9-f883-be820157efad@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FROM_LOCAL_DIGITS,
-        FROM_LOCAL_HEX,NICE_REPLY_A,RCVD_IN_SBL_CSS,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+X-CM-TRANSID: AQAAf8DxbMpnGZFkax4hAA--.18888S3
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxGF4UCF4xWFy8AFW5CF1Dtwc_yoW5KrWDpF
+        ykJFW5GryUWwn7Gw12qr1UXFy5XrWUJa4DJr409a4jkr4UAryjqFy8XryYgr1UJrWkJF1U
+        Jr1Utr17Z3W7JabCm3ZEXasCq-sJn29KB7ZKAUJUUUUJ529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+        6r4UJVWxJr1ln4kS14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+        xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
+        6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+        1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWrXVW3AwCF04k20xvY0x0EwIxG
+        rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUtVW8ZwC20s026c02F40E14
+        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Wrv_Gr1UMIIY
+        rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+        v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
+        JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUD1EEUU
+        UUU
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -110,9 +120,13 @@ On 2023/6/20 02:12, Limonciello, Mario wrote:
 >
 > Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 >
+Thanks a lot,
 
-Thanks a lot.
+can you help to resend this precious R-B to the V7 of this series [1],
 
+This is V6.
+
+[1] https://patchwork.freedesktop.org/series/119250/
 
 >>   drivers/pci/vgaarb.c | 22 ++++++++++++----------
 >>   1 file changed, 12 insertions(+), 10 deletions(-)
@@ -176,3 +190,7 @@ Thanks a lot.
 >> +    }
 >>         pr_info("loaded\n");
 >>       return rc;
+
+-- 
+Jingfeng
+
