@@ -2,74 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 28A19737C34
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Jun 2023 09:36:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EE05737DA1
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Jun 2023 10:40:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231222AbjFUHdf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Jun 2023 03:33:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60610 "EHLO
+        id S231276AbjFUIRK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Jun 2023 04:17:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbjFUHde (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jun 2023 03:33:34 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BC0761B6;
-        Wed, 21 Jun 2023 00:33:31 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.43])
-        by gateway (Coremail) with SMTP id _____8Dxc8TKp5JkDgwAAA--.75S3;
-        Wed, 21 Jun 2023 15:33:30 +0800 (CST)
-Received: from [10.20.42.43] (unknown [10.20.42.43])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax8uTIp5JkoToAAA--.1446S3;
-        Wed, 21 Jun 2023 15:33:29 +0800 (CST)
-Message-ID: <4cdc3d68-8bd6-fbc4-b9c6-ca41e6d132ad@loongson.cn>
-Date:   Wed, 21 Jun 2023 15:33:28 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v7 2/8] PCI/VGA: Deal only with VGA class devices
+        with ESMTP id S230522AbjFUIRB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jun 2023 04:17:01 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97E961731;
+        Wed, 21 Jun 2023 01:16:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687335417; x=1718871417;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=sVKox1aOY6tNf5MDrhdLwD9ctQwEUahKH0icXmVJo7g=;
+  b=UIqJ40H+s8L2xOUxcyuIxyWhKhQoU2/03qvoUX0AVzjKmGPhIxT2qxqt
+   QPfL9FBZJd75phl5nimIynyBowlwkPS1BJfRiFfz0wRIo4UMTLTE3Zj3C
+   K/xdvDtVF65pY9hHXp7dYvH0SlGUN7M3az6Bdeg5kcRuu6Huz9GRKaEfv
+   +ATAczKFgNIKyB+zYbeSKwCn5snDezz5J89IrZsQjLp/wgUy6x/PT5TfT
+   8FkF39JvghC9zKkb9enx/VzCqh1I8VXNXRb1vlvFmXlquqKUurwVCOPz8
+   kHu00ASK2MmTlwm1ZZPSvQMARs99vdzdev/k2o0CDO0JIZV+HdyP8azJj
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="344843867"
+X-IronPort-AV: E=Sophos;i="6.00,259,1681196400"; 
+   d="scan'208";a="344843867"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2023 01:16:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="804282987"
+X-IronPort-AV: E=Sophos;i="6.00,259,1681196400"; 
+   d="scan'208";a="804282987"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by FMSMGA003.fm.intel.com with ESMTP; 21 Jun 2023 01:16:55 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Wed, 21 Jun 2023 01:16:55 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Wed, 21 Jun 2023 01:16:55 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.46) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Wed, 21 Jun 2023 01:16:54 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U0WG8xqGPZzmYQa0GrJbkp1XOlxqpNhkdSDmXllD4qq78vyziIhhwaVtNi9J9Tj76IAismyVEWW6gkHF0zWN5Sm+Sj7y8JwP+JLMdc7YiCZSc7XxPQcucRzBi4DJSctONrLY7cXW4cV6vb2r2dRiEk0DioPAngTva5B97Z1B9HBa3NYpZ/a01UyerhbOzIQId4i2UeGdx7K/DBw9M8C6/N3oN5afhKJjGyFx0V7QE6ArMouHO6hp1++Q4mVPd72WClIfAMfuRdUmK5mKdwzD6uKJnqzVQbUV9bB/u+mGcscxh/2yRz/eoVvFkpOxBEjt9rmc1HRATlwbvGlfMULAoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hHTnvGdH+KDbD8vuPqbJM0WCxhcx1Vh8ZAc/U+WqfRc=;
+ b=C3Et+w9N7ZIH8t7r/j6GX3KtBv/XMIsgTOI9boTycnTIyYr7VI0/Ds8DLYXsHagBQvTF5py6oaBagpGBrNIeK9XBkCwFu/2QAdZ6uVe8HfnKOa634dNXQSo8p3cDq/lKIX29qLE4QsCvTUOvirMkVHPdqNbtW7kly+iAA3p6oU0x2sggNEGGGhM7OG13DJVxul8iwRbM9nYEOnhPeChrQlvo1p2czw9mciTWCb5XUXUG+Y5fRGdqJ+IH9DtdvUGp7kG0JWtz5SpD04RQuZi1JS9ddVCDSFOpJ1NpzL67vZduBSfKIvTyPC3VKbg7jYIu6MjdAJ478D1ZIcNURIDz/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by SA1PR11MB6989.namprd11.prod.outlook.com (2603:10b6:806:2be::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.35; Wed, 21 Jun
+ 2023 08:16:52 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::4f05:6b0b:dbc8:abbb]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::4f05:6b0b:dbc8:abbb%7]) with mapi id 15.20.6521.023; Wed, 21 Jun 2023
+ 08:16:52 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+CC:     Robin Murphy <robin.murphy@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Baolu Lu <baolu.lu@linux.intel.com>,
+        "Alexander Duyck" <alexander.duyck@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Subject: RE: Question about reserved_regions w/ Intel IOMMU
+Thread-Topic: Question about reserved_regions w/ Intel IOMMU
+Thread-Index: AQHZmZR0JpzuQIuRD0G85gaP7++jm6+AOJSAgADP/QCAB+LmgIAEOrcwgABAlgCAB47s0A==
+Date:   Wed, 21 Jun 2023 08:16:52 +0000
+Message-ID: <BN9PR11MB5276B96470F3BF1E7077CC018C5DA@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <CAKgT0UezciLjHacOx372+v8MZkDf22D5Thn82n-07xxKy_0FTQ@mail.gmail.com>
+ <CAKgT0UfMeVOz6AOqSvVvzpsedGDiXCNQrjM+4KDv7qJJ1orpsw@mail.gmail.com>
+ <a1cff65b-b390-3872-25b5-dd6bbfb3524c@linux.intel.com>
+ <b24a6c7b-27fc-41c0-5c82-15696b4a7dc1@arm.com> <ZIiRK2Dzl2/9Jqle@ziepe.ca>
+ <BN9PR11MB52765C24405D2475CF3CBEBE8C58A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <ZIxTmGU4a5dniEY3@nvidia.com>
+In-Reply-To: <ZIxTmGU4a5dniEY3@nvidia.com>
+Accept-Language: en-US
 Content-Language: en-US
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Thomas Zimmermann <tzimmermann@suse.de>,
-        Sui Jingfeng <15330273260@189.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-fbdev@vger.kernel.org, kvm@vger.kernel.org,
-        nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org
-References: <20230613030151.216625-1-15330273260@189.cn>
- <20230613030151.216625-3-15330273260@189.cn>
- <dbf0d89f-717a-1f78-aef2-f30506751d4d@loongson.cn>
- <CADnq5_N6vVtzH6tzguZdHnP_TdRoG1G-Cr94O+X03jvtk=vhag@mail.gmail.com>
- <3c1c86ab-96ea-aa1c-c9c5-9a4012644fd6@loongson.cn>
- <CADnq5_Px-HWfwetv8LZsCnCeV7SMt_uqtLwMVK7648ZQiP2RCQ@mail.gmail.com>
- <f08b6a76-6c90-b59b-ff43-c779ef759d09@loongson.cn>
- <CADnq5_PFoM2O8mCd6+VFfu9Nc-Hg_HTnwEMxrq0FGRpva1kKiA@mail.gmail.com>
-From:   Sui Jingfeng <suijingfeng@loongson.cn>
-Organization: Loongson
-In-Reply-To: <CADnq5_PFoM2O8mCd6+VFfu9Nc-Hg_HTnwEMxrq0FGRpva1kKiA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8Ax8uTIp5JkoToAAA--.1446S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3JF4UJr45GrW3trWrJFyUtwc_yoWfCw1kpF
-        WrGFW5KF4DJr17Gr12qw1UXFyYvryrJF1rXr1rJw1Ykrn0yr1UGryrGr45C34xXrs5Gr12
-        vr4UJry7uF15XagCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-        xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-        AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-        XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-        8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67
-        AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-        rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-        v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-        JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOa93UUU
-        UU=
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|SA1PR11MB6989:EE_
+x-ms-office365-filtering-correlation-id: aa90ffe9-5472-4c74-d5ee-08db722fdea8
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 070bKmazggvGV/TlOqjkQbkkN7rFwP5qI6qMSJ9PDbVrM47PlLwVoNSHgaVhMgbJVFgphbICrq9eA4v/PGRNCt6ygojMMsSHKSEsECx99Q2R7+BasClWzmprDbUPpXrpbByW4PclmiTLDdfe/zY6OueZdkB/u3PrFYLxXO0T5DgimpTO6OYk3y0+quSL4ej76tZXspllhfRg0DD3lc+fQPi5nkX9hmEGfasqUmVbYNuMN1KH1fulcD8MpQFcYXmc/iGlnfcJ7Wi67Jh1ul+hiZ5YkVQ/I7Tor3m59MBZFx9UvfW2hmbA9zkSADdw+0l9KH+Dg4dOw/ZPkEE2kxbHfa8YRG1AFljjLASxfui0shPXo35YopojcRQTK8P+Vz+rWDIryuqGLBUWSPwrN+Ikfbee6cmB/5UwItiGWNSq2J3ungjDvr7snBC4UzS0Fl+AJnh+M6a+AYy64+wJNTgUFNzqpeBCBvNzsZ58l9behQRDVefIuMZwSxuCUDKB5WLmZmYiUvsLPBjXzniHEKTtaT2LiVC/Z4gT8IoeL+QLhcC8JD76rKsnbL3WIIdjNC86j2sZvpbP1B/Xn7e731pzqQWy5Ra5RiaLTRdfku6xnq9NgzM/OeDzE2RomDfcJEtmzEYXa3Q+VDxjdPj+7w9nRw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(346002)(396003)(136003)(376002)(39860400002)(451199021)(82960400001)(52536014)(2906002)(122000001)(83380400001)(38070700005)(86362001)(5660300002)(66899021)(4326008)(54906003)(186003)(66556008)(8936002)(8676002)(66476007)(66446008)(64756008)(66946007)(26005)(478600001)(41300700001)(6916009)(76116006)(55016003)(9686003)(38100700002)(6506007)(7696005)(316002)(33656002)(71200400001)(473944003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?hYGCP6zE19s/RQD8oT/gWJYkSES1hoJmAoOwaDlCBJ2+7sDCXOswILrZzzRW?=
+ =?us-ascii?Q?AFKBtlyr00LsnIUo7HemXyW1uRaGeGB9qqmolWrbXu8THRKrzABl+NLJXd8p?=
+ =?us-ascii?Q?acbrVvk4d+qoSrLm6LNt5x8sbUHQutqplbhUaWjWYfVYHyyHAJhnNo6CTeQ7?=
+ =?us-ascii?Q?tlkKsZXwYOIoD53vDPoQ/RP0nVTCPb6fEQkQJXpuLASchakNrc5qHzNZYOuJ?=
+ =?us-ascii?Q?mLtnxnXU6NIMwftKjM/0qmdO6vm3eTHBXjcMSsOrkdosbBf2kigyyKSm+N4I?=
+ =?us-ascii?Q?t6IQzTRs/oOy5yC8WYuZpJMsvPUypsZcxOzUS5qzMvyAlhs/4Ko/i5HvMJ0b?=
+ =?us-ascii?Q?CiZ0u52swTOPQShHLPcK0kdGDeBvnNlfiYNG9tiO2Nj7X7JPoUIjojOQwhZM?=
+ =?us-ascii?Q?MLaLfwcmWKonbOeFQv9t1/z4768psxOTQCFR5oirzss7QFyA0g+Z5k4n2TAh?=
+ =?us-ascii?Q?RvG3VXXBeJZTNY5pDtRmQ9HI8WBgFHZ4X31d6JJEJH2R4OEyOr1llOgPJaLU?=
+ =?us-ascii?Q?K6/G/J8zuwWs7zogPRtnfezwBBqfFjpcn09c4P1kUX4rfl+xhaXuYcxSasUU?=
+ =?us-ascii?Q?8032mDXJZc3aOe64eOU75SOOio88EsHiGXZNFVZAFqjX/94qHGIBy9OXLHto?=
+ =?us-ascii?Q?hBZTWMLy7B1s9SAh/aIDYYAnLXf2yof/9qa/xHMSFaTPdrDZCYRVp+3G4e4v?=
+ =?us-ascii?Q?BIaoy/Pu5Zg+oBzh/6W1/74GDQe49GeLRbRujKDJkL42RqJuikQf8MCTm3eX?=
+ =?us-ascii?Q?BJU5BjvilDNompDxnXNl6Bua/WRDnD8+XslLc1JYkEUrb0ghb9SD7nv20T7c?=
+ =?us-ascii?Q?yZuNEjF+jy1XmRbZsjomclXyOfus2TOD031BCweS4Ws1o7TRypsumjb93356?=
+ =?us-ascii?Q?sB9eMiqpJFpmkSpcxkjz3iUtQYtzlwi0D+EJ39gjjK3IbC2VYsMve3kWBI++?=
+ =?us-ascii?Q?Fnw9bbJRRfqcVmOxF9or3eduDzk4UuypX7BHvpkt5KUr+UOf3aA4z17/0gTd?=
+ =?us-ascii?Q?+aXFohX/fqLQe7Yo/KPM7YcteVcAbiGndXb+9QyoYKC1oJKmL27XX2WWMUCD?=
+ =?us-ascii?Q?ZNSDVrJFdWwpLsDrJW7JAjowYYD6AM6Hfy9cfzWbAQPXdNTc/88YlDzcMSKz?=
+ =?us-ascii?Q?SVW/ux7aQusqC7j4aWVSmxcue2PrVIVrw1APWQoKIH0PM7AtnglpWqpWTJsz?=
+ =?us-ascii?Q?F5O4YoiME9oG+beIBOLQ1FFDlCOJUBBd0eK8mdxec7GCMcwKaODUeTHaN3iS?=
+ =?us-ascii?Q?zTWgQg3CdzaigTKTUOkhGIC8m1yfUc6PesMjlKdNn2f2uhzRnyejBxKsPcpD?=
+ =?us-ascii?Q?XE+i+8nNTjWT3LlrGOjn9bOuUdVBvzOvu1rTVQS19x0wDcZzY1BFttluiNC0?=
+ =?us-ascii?Q?P5ApWUYxxZv4+HOJhEhTpYUz5U2pF8GaKJ7H+Nm6zdaDOiuIVw+zmpQSQ3Oh?=
+ =?us-ascii?Q?XHJQx0CbiiO5kdnHj2R0KN9fZ/haE+PYVlTAJp6IQbHmsY/4lUaQ+BMzO30M?=
+ =?us-ascii?Q?D9idvP+HVC2ql7GRID7TwmGvcJYfMJSWy9pKUCzwop33bEG0rRwDGLB+el5W?=
+ =?us-ascii?Q?hohroEbeHdg2E7Gw/YMOgxe5ISZeiTUAQnAVxb6E?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa90ffe9-5472-4c74-d5ee-08db722fdea8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2023 08:16:52.7533
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: A04PTd7hjzzHc4979Y9xZTb5XCq76nFFEYndB2/jJx4JqcWeiIz7X5sbdqgtDa02LtOkw7jABa0fsFZlT45NsQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6989
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,274 +156,91 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+> From: Jason Gunthorpe <jgg@nvidia.com>
+> Sent: Friday, June 16, 2023 8:21 PM
+>=20
+> On Fri, Jun 16, 2023 at 08:39:46AM +0000, Tian, Kevin wrote:
+> > +Alex
+> >
+> > > From: Jason Gunthorpe <jgg@nvidia.com>
+> > > Sent: Tuesday, June 13, 2023 11:54 PM
+> > >
+> > > On Thu, Jun 08, 2023 at 04:28:24PM +0100, Robin Murphy wrote:
+> > >
+> > > > > The iova_reserve_pci_windows() you've seen is for kernel DMA
+> interfaces
+> > > > > which is not related to peer-to-peer accesses.
+> > > >
+> > > > Right, in general the IOMMU driver cannot be held responsible for
+> > > whatever
+> > > > might happen upstream of the IOMMU input.
+> > >
+> > > The driver yes, but..
+> > >
+> > > > The DMA layer carves PCI windows out of its IOVA space
+> > > > unconditionally because we know that they *might* be problematic,
+> > > > and we don't have any specific constraints on our IOVA layout so
+> > > > it's no big deal to just sacrifice some space for simplicity.
+> > >
+> > > This is a problem for everything using UNMANAGED domains. If the
+> iommu
+> > > API user picks an IOVA it should be able to expect it to work. If the
+> > > intereconnect fails to allow it to work then this has to be discovere=
+d
+> > > otherwise UNAMANGED domains are not usable at all.
+> > >
+> > > Eg vfio and iommufd are also in trouble on these configurations.
+> > >
+> >
+> > If those PCI windows are problematic e.g. due to ACS they belong to
+> > a single iommu group. If a vfio user opens all the devices in that grou=
+p
+> > then it can discover and reserve those windows in its IOVA space.
+>=20
+> How? We don't even exclude the single device's BAR if there is no ACS?
 
-On 2023/6/16 22:34, Alex Deucher wrote:
-> On Fri, Jun 16, 2023 at 10:22 AM Sui Jingfeng <suijingfeng@loongson.cn> wrote:
->>
->> On 2023/6/16 21:41, Alex Deucher wrote:
->>> On Fri, Jun 16, 2023 at 3:11 AM Sui Jingfeng <suijingfeng@loongson.cn> wrote:
->>>> Hi,
->>>>
->>>> On 2023/6/16 05:11, Alex Deucher wrote:
->>>>> On Wed, Jun 14, 2023 at 6:50 AM Sui Jingfeng <suijingfeng@loongson.cn> wrote:
->>>>>> Hi,
->>>>>>
->>>>>> On 2023/6/13 11:01, Sui Jingfeng wrote:
->>>>>>> From: Sui Jingfeng <suijingfeng@loongson.cn>
->>>>>>>
->>>>>>> Deal only with the VGA devcie(pdev->class == 0x0300), so replace the
->>>>>>> pci_get_subsys() function with pci_get_class(). Filter the non-PCI display
->>>>>>> device(pdev->class != 0x0300) out. There no need to process the non-display
->>>>>>> PCI device.
->>>>>>>
->>>>>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
->>>>>>> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
->>>>>>> ---
->>>>>>>      drivers/pci/vgaarb.c | 22 ++++++++++++----------
->>>>>>>      1 file changed, 12 insertions(+), 10 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
->>>>>>> index c1bc6c983932..22a505e877dc 100644
->>>>>>> --- a/drivers/pci/vgaarb.c
->>>>>>> +++ b/drivers/pci/vgaarb.c
->>>>>>> @@ -754,10 +754,6 @@ static bool vga_arbiter_add_pci_device(struct pci_dev *pdev)
->>>>>>>          struct pci_dev *bridge;
->>>>>>>          u16 cmd;
->>>>>>>
->>>>>>> -     /* Only deal with VGA class devices */
->>>>>>> -     if ((pdev->class >> 8) != PCI_CLASS_DISPLAY_VGA)
->>>>>>> -             return false;
->>>>>>> -
->>>>>> Hi, here is probably a bug fixing.
->>>>>>
->>>>>> For an example, nvidia render only GPU typically has 0x0380.
->>>>>>
->>>>>> as its PCI class number, but render only GPU should not participate in
->>>>>> the arbitration.
->>>>>>
->>>>>> As it shouldn't snoop the legacy fixed VGA address.
->>>>>>
->>>>>> It(render only GPU) can not display anything.
->>>>>>
->>>>>>
->>>>>> But 0x0380 >> 8 = 0x03, the filter  failed.
->>>>>>
->>>>>>
->>>>>>>          /* Allocate structure */
->>>>>>>          vgadev = kzalloc(sizeof(struct vga_device), GFP_KERNEL);
->>>>>>>          if (vgadev == NULL) {
->>>>>>> @@ -1500,7 +1496,9 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
->>>>>>>          struct pci_dev *pdev = to_pci_dev(dev);
->>>>>>>          bool notify = false;
->>>>>>>
->>>>>>> -     vgaarb_dbg(dev, "%s\n", __func__);
->>>>>>> +     /* Only deal with VGA class devices */
->>>>>>> +     if (pdev->class != PCI_CLASS_DISPLAY_VGA << 8)
->>>>>>> +             return 0;
->>>>>> So here we only care 0x0300, my initial intent is to make an optimization,
->>>>>>
->>>>>> nowadays sane display graphic card should all has 0x0300 as its PCI
->>>>>> class number, is this complete right?
->>>>>>
->>>>>> ```
->>>>>>
->>>>>> #define PCI_BASE_CLASS_DISPLAY        0x03
->>>>>> #define PCI_CLASS_DISPLAY_VGA        0x0300
->>>>>> #define PCI_CLASS_DISPLAY_XGA        0x0301
->>>>>> #define PCI_CLASS_DISPLAY_3D        0x0302
->>>>>> #define PCI_CLASS_DISPLAY_OTHER        0x0380
->>>>>>
->>>>>> ```
->>>>>>
->>>>>> Any ideas ?
->>>>> I'm not quite sure what you are asking about here.
->>>> To be honest, I'm worried about the PCI devices which has a
->>>>
->>>> PCI_CLASS_DISPLAY_XGA as its PCI class number.
->>>>
->>>> As those devices are very uncommon in the real world.
->>>>
->>>>
->>>> $ find . -name "*.c" -type f | xargs grep "PCI_CLASS_DISPLAY_XGA"
->>>>
->>>>
->>>> Grep the "PCI_CLASS_DISPLAY_XGA" in the linux kernel tree got ZERO,
->>>>
->>>> there no code reference this macro. So I think it seems safe to ignore
->>>> the XGA ?
->>>>
->>>>
->>>> PCI_CLASS_DISPLAY_3D and PCI_CLASS_DISPLAY_OTHER are used to annotate
->>>> the render-only GPU.
->>>>
->>>> And render-only GPU can't decode the fixed VGA address space, it is safe
->>>> to ignore them.
->>>>
->>>>
->>>>>     For vga_arb, we
->>>>> only care about VGA class devices since those should be on the only
->>>>> ones that might have VGA routed to them.
->>>>>     However, as VGA gets deprecated,
->>>> We need the vgaarb for a system with multiple video card.
->>>>
->>>> Not only because some Legacy VGA devices implemented
->>>>
->>>> on PCI will typically have the same "hard-decoded" addresses;
->>>>
->>>> But also these video card need to participate in the arbitration,
->>>>
->>>> determine the default boot device.
->>> But couldn't the boot device be determined via what whatever resources
->>> were used by the pre-OS console?
->> I don't know what you are refer to by saying  pre-OS console, UEFI
->> SHELL,  UEFI GOP  or something like that.
->>
-> Right.  Before the OS loads the platform firmware generally sets up
-> something for display.  That could be GOP or vesa or some other
-> platform specific protocol.
->
->> If you are referring to the framebuffer driver which light up the screen
->> before the Linux kernel is loaded .
->>
->>
->> Then, what you have said is true,  the boot device is determined by the
->> pre-OS console.
->>
->> But the problem is how does the Linux kernel(vgaarb) could know which
->> one is the default boot device
->>
->> on a multiple GPU machine.  Relaying on the firmware fb's address and
->> size is what the mechanism
->>
->> we already in using.
-> Right.  It shouldn't need to depend on vgaarb.
->
->>
->>>    I feel like that should be separate from vgaarb.
->> Emm, this really deserved another patch, please ?
->>
->>>    vgaarb should handle PCI VGA routing and some other
->>> mechanism should be used to determine what device provided the pre-OS
->>> console.
->> If the new mechanism need the firmware changed, then this probably break
->> the old machine.
->>
->> Also, this probably will get all arch involved. to get the new mechanism
->> supported.
->>
->> The testing pressure and review power needed is quite large.
->>
->> drm/amdgpu and drm/radeon already being used on X86, ARM64,  Mips and
->> more arch...
->>
->> The reviewing process will became quite difficult then.
->>
->> vgaarb is really what we already in use, and being used more than ten
->> years ...
-> Yes, it works for x86 (and a few other platforms) today because of the
-> VGA legacy, so we can look at VGA routing to determine this.  But even
-> today, we don't need VGA routing to determine what was the primary
-> display before starting the OS.  We could probably have a platform
-> independent way to handle this by looking at the bread crumbs leftover
-> from the pre-OS environment.  E.g., for pre-UEFI platforms, we can
-> look at VGA routing.  For UEFI platforms we can look at what GOP left
-> us.  For various non-UEFI ARM/PPC/MIPS/etc. platforms we can look at
-> whatever breadcrumbs those pre-OS environments left.  That way when
-> VGA goes away, we can have a clean break and you won't need vgaarb if
-> the platform has no VGA devices.
+I thought the initial vbar value in vfio is copied from physical BAR so
+the user may check this value to skip. But it's informal and looks
+today Qemu doesn't compose the GPA layout with any information
+from there.
 
+>=20
+> > The problem is that the user may not open all the devices then
+> > currently there is no way for it to know the windows on those
+> > unopened devices.
+> >
+> > Curious why nobody complains about this gap before this thread...
+>=20
+> Probably because it only matters if you have a real PCIe switch in the
+> system, which is pretty rare.
+>=20
 
-Thanks for the dear developers from AMDGPU,
+multi-devices group might not be rare given vfio has spent so many
+effort to manage it.
 
+More likely the virtual bios may reserve a big enough hole between
+[3GB, 4GB] which happens to cover the physical BARs (if not 64bit)
+in the group to avoid conflict, e.g.:
 
-Mario already give me a R-B to V6 of this series[1],  I link it to 
-here,//for fear of lost it.
-
-He may be busy,  not seeing the latest.
-
-
-For this patch series, V6 is same with the V7.
-
-
-[1] 
-https://lore.kernel.org/all/5b6fdf65-b354-94a9-f883-be820157efad@amd.com/
-
-> Alex
->
->>
->>> Alex
->>>
->>>> Nowadays, the 'VGA devices' here is stand for the Graphics card
->>>>
->>>> which is capable of display something on the screen.
->>>>
->>>> We still need vgaarb to select the default boot device.
->>>>
->>>>
->>>>> you'll have more non VGA PCI classes for devices which
->>>>> could be the pre-OS console device.
->>>> Ah, we still want  do this(by applying this patch) first,
->>>>
->>>> and then we will have the opportunity to see who will crying if
->>>> something is broken. Will know more then.
->>>>
->>>> But drop this patch or revise it with more consideration is also
->>>> acceptable.
->>>>
->>>>
->>>> I asking about suggestion and/or review.
->>>>
->>>>> Alex
->>>>>
->>>>>>>          /* For now we're only intereted in devices added and removed. I didn't
->>>>>>>           * test this thing here, so someone needs to double check for the
->>>>>>> @@ -1510,6 +1508,8 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
->>>>>>>          else if (action == BUS_NOTIFY_DEL_DEVICE)
->>>>>>>                  notify = vga_arbiter_del_pci_device(pdev);
->>>>>>>
->>>>>>> +     vgaarb_dbg(dev, "%s: action = %lu\n", __func__, action);
->>>>>>> +
->>>>>>>          if (notify)
->>>>>>>                  vga_arbiter_notify_clients();
->>>>>>>          return 0;
->>>>>>> @@ -1534,8 +1534,8 @@ static struct miscdevice vga_arb_device = {
->>>>>>>
->>>>>>>      static int __init vga_arb_device_init(void)
->>>>>>>      {
->>>>>>> +     struct pci_dev *pdev = NULL;
->>>>>>>          int rc;
->>>>>>> -     struct pci_dev *pdev;
->>>>>>>
->>>>>>>          rc = misc_register(&vga_arb_device);
->>>>>>>          if (rc < 0)
->>>>>>> @@ -1545,11 +1545,13 @@ static int __init vga_arb_device_init(void)
->>>>>>>
->>>>>>>          /* We add all PCI devices satisfying VGA class in the arbiter by
->>>>>>>           * default */
->>>>>>> -     pdev = NULL;
->>>>>>> -     while ((pdev =
->>>>>>> -             pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
->>>>>>> -                            PCI_ANY_ID, pdev)) != NULL)
->>>>>>> +     while (1) {
->>>>>>> +             pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, pdev);
->>>>>>> +             if (!pdev)
->>>>>>> +                     break;
->>>>>>> +
->>>>>>>                  vga_arbiter_add_pci_device(pdev);
->>>>>>> +     }
->>>>>>>
->>>>>>>          pr_info("loaded\n");
->>>>>>>          return rc;
->>>>>> --
->>>>>> Jingfeng
->>>>>>
->>>> --
->>>> Jingfeng
->>>>
->> --
->> Jingfeng
->>
--- 
-Jingfeng
-
+c0000000-febfffff : PCI Bus 0000:00
+  fd000000-fdffffff : 0000:00:01.0
+    fd000000-fdffffff : bochs-drm
+  fe000000-fe01ffff : 0000:00:02.0
+  fe020000-fe02ffff : 0000:00:02.0
+  fe030000-fe033fff : 0000:00:03.0
+    fe030000-fe033fff : virtio-pci-modern
+  feb80000-febbffff : 0000:00:03.0
+  febd0000-febd0fff : 0000:00:01.0
+    febd0000-febd0fff : bochs-drm
+  febd1000-febd1fff : 0000:00:03.0
+  febd2000-febd2fff : 0000:00:1f.2
+    febd2000-febd2fff : ahci
+fec00000-fec003ff : IOAPIC 0
+fed00000-fed003ff : HPET 0
+  fed00000-fed003ff : PNP0103:00
+fed1c000-fed1ffff : Reserved
+  fed1f410-fed1f414 : iTCO_wdt.0.auto
+fed90000-fed90fff : dmar0
+fee00000-fee00fff : Local APIC
+feffc000-feffffff : Reserved
+fffc0000-ffffffff : Reserved
