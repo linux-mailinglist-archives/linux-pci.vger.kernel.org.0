@@ -2,273 +2,299 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A043F738CC2
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Jun 2023 19:11:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C5FF738D2C
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Jun 2023 19:34:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229872AbjFURLj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Jun 2023 13:11:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53264 "EHLO
+        id S231218AbjFURef (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Jun 2023 13:34:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbjFURLi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jun 2023 13:11:38 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D68AF129;
-        Wed, 21 Jun 2023 10:11:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687367497; x=1718903497;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=ouyyW1RWLlx0D/6B8cVMwnjeunonC+1tIEAPC3PI5cE=;
-  b=aXi4i72lUUQ6WFhq8rDVpPBNtfU1S0WclvUwRX6N2bfqhho0DXTJ/y+9
-   ehcWds4QuAMlOJuWiwfeuMCDeU4AVdtFnpcc5nZqMeX2OGc9xtMnVln9d
-   dUh2ngSAlk9xrnllBaVZo0xEZdsYEpF3hA+OQrLkNEOjnSsjVysKlDL9L
-   pM/z6OhpuQohbB2wWGPrsVefQr4KA/kXPKPaA/uHv6a8NgYZ9IkyQv2QA
-   7Wxn/h+NS6vaSO74qScEl6mNLKlmfePq6djwzUJA0fhdm3fwQY8LIQve6
-   AoVGrd+c5/JDbQBDCFK73xEgRM8Z9ukmc7IbSLU1ot8v8wPodk+LjtiSA
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10748"; a="344977732"
-X-IronPort-AV: E=Sophos;i="6.00,261,1681196400"; 
-   d="scan'208";a="344977732"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2023 10:10:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10748"; a="714580017"
-X-IronPort-AV: E=Sophos;i="6.00,261,1681196400"; 
-   d="scan'208";a="714580017"
-Received: from jarteaga-mobl1.amr.corp.intel.com (HELO vcostago-mobl3) ([10.212.165.203])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2023 10:10:28 -0700
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com
-Cc:     linux-pci@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] igc: Ignore AER reset when device is suspended
-In-Reply-To: <20230620123636.1854690-1-kai.heng.feng@canonical.com>
-References: <20230620123636.1854690-1-kai.heng.feng@canonical.com>
-Date:   Wed, 21 Jun 2023 10:10:27 -0700
-Message-ID: <87cz1ospvg.fsf@intel.com>
+        with ESMTP id S230339AbjFURee (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jun 2023 13:34:34 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2084.outbound.protection.outlook.com [40.107.237.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08934193;
+        Wed, 21 Jun 2023 10:34:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e11MOnV4mAFyyJaSnYuYBWaTymCWjydN62Z7XgfA56Rl5Juh74pP5Pk3Z3ov8s5LeIlfEkuMukNEyFfLghQ52+ImOk6iAgOEARRozlau65VOvD+HKacQPvGNOCm7TJe7IFXY840AxagPDXWg4MIMbMpT7FzTDr1AiJXx2l9MT/wI3VkH+gdXMH4n9BcKY0g2bZdd++R+JI9U/GWDZXLHAhyopVwq6fOe4+PIgceOJBips+fMTJDk6X8T7K02bcm+25PYSMnYZe9Bw5xkVrbYTiCgACgMYY88s62aLeIHJ3NMWsZypnFiBRpS37uOi67M0wUzQ7dpakjb7w7prCjYng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=63b3Wo/X0Yewu8Sjb3mXlYQC1Rs2IUsAD18qvko+EoE=;
+ b=E0XjMVYVBljkBn06U1zjYii5r6cXHglVmDOR4fyhahQSAkkSchQ10OXSa4eo4J3C+yrGSKkPJ0ESf9lQYbUTUPtD5zecNznmlzvoeRzXyLzte8DJv9aMSRLbj29SUvfjfWe6MjXVfieLugnI4YvyiDFu9LWkcR1+L4uBcwS4834mQ/ySFKld2XaliW5pUIWGCzkD/JAe3zb9TO752IHrwk/HO76QEg00gwJ5g+342f29fizcUzeTTTpqq/V4v6PrVIPw1/MrDOn8+unPs4qWPAwke/1vpJDcPJuo7NiaKa+DO0pCcAn64t38aKlJGYjKFddW8Ie3Y2F6UcIvnkITcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=63b3Wo/X0Yewu8Sjb3mXlYQC1Rs2IUsAD18qvko+EoE=;
+ b=FWHh7JscUhPwptEBzqvVh81KrYG0Ng8xjV9UlkIGb0DijpBCqu6I0g2vfc69xe376GKjrtNkUo0UwKiYhUuNhP45d9cXDgN4uGfk9JZ1O19tg7PvyqHEXjd3I1M9WJDzLI0D3u+Dklf35evPRJgPyb/PkkUu+5r3dNTPHBLpVo0=
+Received: from CY5PR15CA0141.namprd15.prod.outlook.com (2603:10b6:930:67::6)
+ by SJ2PR12MB8738.namprd12.prod.outlook.com (2603:10b6:a03:548::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.36; Wed, 21 Jun
+ 2023 17:34:27 +0000
+Received: from CY4PEPF0000E9D1.namprd03.prod.outlook.com
+ (2603:10b6:930:67:cafe::d2) by CY5PR15CA0141.outlook.office365.com
+ (2603:10b6:930:67::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.23 via Frontend
+ Transport; Wed, 21 Jun 2023 17:34:27 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000E9D1.mail.protection.outlook.com (10.167.241.144) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6521.23 via Frontend Transport; Wed, 21 Jun 2023 17:34:26 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 21 Jun
+ 2023 12:34:26 -0500
+Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.23 via Frontend
+ Transport; Wed, 21 Jun 2023 12:34:25 -0500
+From:   Lizhi Hou <lizhi.hou@amd.com>
+To:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <robh@kernel.org>
+CC:     Lizhi Hou <lizhi.hou@amd.com>, <max.zhen@amd.com>,
+        <sonal.santan@amd.com>, <stefano.stabellini@xilinx.com>
+Subject: [PATCH V9 0/5] Generate device tree node for pci devices
+Date:   Wed, 21 Jun 2023 10:34:04 -0700
+Message-ID: <1687368849-36722-1-git-send-email-lizhi.hou@amd.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D1:EE_|SJ2PR12MB8738:EE_
+X-MS-Office365-Filtering-Correlation-Id: 85a83d36-3e12-4e86-ed70-08db727dc2fe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: IiC9b/bizweCKYfxPRxW488WXqZ/A3Xsr3rlPZo9m/LiQ/9wcQOLcsm16RhPkfKMJiK3l+AksWsUMfIzLxuAU50xCqpwSB68lGD9wwB5IcxXhdfFiS4KhlH7YJ/udfHXbWVeqagNpF7Eai4Y1RFfBZ89fp4A9nP65sPMCKe0IjpVsO4TymXF3F++C/jrH3C1tfDiaWdRRfwNh3LlhNKu8GKkBIHK2ZtdV0WqaS5bSOSfMv4iknG1sUE9ATL3eMIkxnhFa05mXdYfnJNZaRWUmShvTt2ocGBbP0h8GrGsIPrRp6IHE7n1S2DrwM4iDtPfsJ3Ss5MP6+S0IBX7nw5B+LjNLofOBpwKhw5PnHQKdmfyVvdPag8l5ujEu5B6Gvr3/qDK9qJDYWsUMWQf3ubEGcA3Oc9Ftv1v9zekYNymI0ZrlXCK8B7TcoFxUKMYQNY3lolEqi7L27EVF7hHmqYjqz9FjeTNF7jR11d8fmGUwrq+UMxQGQmWhkKQTCPzhx+JjVMKfSyhJ4taIMrHY14CXcjcvWPA41eGKi/RHyFSjYK0TKljLNYoQH1Gew6NxTPhmp1jNUKEuydo0TfS5Gj7CGmW+9DdQyGfPWljRN2Mq97MxzLvVSdndsR6qhwHKftyRZ2lCENAzCXN3kLuSG4wBJMwXr0HeidoDlGXPwHfSQ1JiioNgDqUYXLfdu84mMsmVMrFQLwLWXeE3mD51bo7g13ORdm1kt6Ttx8lY9buQmdys1dEq36sIAFzItTjA4QEQy4xzQURr0XriToCPbidm2RlphDr+MX4esUMLkkVXxU=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(396003)(39860400002)(346002)(136003)(451199021)(46966006)(40470700004)(36840700001)(82310400005)(40480700001)(356005)(81166007)(82740400003)(40460700003)(36756003)(86362001)(966005)(6666004)(26005)(186003)(8936002)(8676002)(478600001)(44832011)(110136005)(41300700001)(54906003)(5660300002)(316002)(4326008)(70206006)(70586007)(2906002)(83380400001)(2616005)(36860700001)(336012)(426003)(47076005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2023 17:34:26.9928
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85a83d36-3e12-4e86-ed70-08db727dc2fe
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000E9D1.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8738
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
+This patch series introduces OF overlay support for PCI devices which
+primarily addresses two use cases. First, it provides a data driven method
+to describe hardware peripherals that are present in a PCI endpoint and
+hence can be accessed by the PCI host. Second, it allows reuse of a OF
+compatible driver -- often used in SoC platforms -- in a PCI host based
+system.
 
-> When a system that connects to a Thunderbolt dock equipped with I225,
-> I225 stops working after S3 resume:
->
-> [  606.527643] pcieport 0000:00:1d.0: AER: Multiple Corrected error recei=
-ved: 0000:00:1d.0
-> [  606.527791] pcieport 0000:00:1d.0: PCIe Bus Error: severity=3DCorrecte=
-d, type=3DTransaction Layer, (Receiver ID)
-> [  606.527795] pcieport 0000:00:1d.0:   device [8086:7ab0] error status/m=
-ask=3D00008000/00002000
-> [  606.527800] pcieport 0000:00:1d.0:    [15] HeaderOF
-> [  606.527806] pcieport 0000:00:1d.0: AER:   Error of this Agent is repor=
-ted first
-> [  606.527853] pcieport 0000:07:04.0: PCIe Bus Error: severity=3DCorrecte=
-d, type=3DData Link Layer, (Receiver ID)
-> [  606.527856] pcieport 0000:07:04.0:   device [8086:0b26] error status/m=
-ask=3D00000080/00002000
-> [  606.527861] pcieport 0000:07:04.0:    [ 7] BadDLLP
-> [  606.527931] pcieport 0000:00:1d.0: AER: Multiple Uncorrected (Non-Fata=
-l) error received: 0000:00:1d.0
-> [  606.528064] pcieport 0000:00:1d.0: PCIe Bus Error: severity=3DUncorrec=
-ted (Non-Fatal), type=3DTransaction Layer, (Requester ID)
-> [  606.528068] pcieport 0000:00:1d.0:   device [8086:7ab0] error status/m=
-ask=3D00100000/00004000
-> [  606.528072] pcieport 0000:00:1d.0:    [20] UnsupReq               (Fir=
-st)
-> [  606.528075] pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 0a00005=
-2 00000000 00000000
-> [  606.528079] pcieport 0000:00:1d.0: AER:   Error of this Agent is repor=
-ted first
-> [  606.528098] pcieport 0000:04:01.0: PCIe Bus Error: severity=3DUncorrec=
-ted (Non-Fatal), type=3DTransaction Layer, (Requester ID)
-> [  606.528101] pcieport 0000:04:01.0:   device [8086:1136] error status/m=
-ask=3D00300000/00000000
-> [  606.528105] pcieport 0000:04:01.0:    [20] UnsupReq               (Fir=
-st)
-> [  606.528107] pcieport 0000:04:01.0:    [21] ACSViol
-> [  606.528110] pcieport 0000:04:01.0: AER:   TLP Header: 34000000 0400005=
-2 00000000 00000000
-> [  606.528187] thunderbolt 0000:05:00.0: AER: can't recover (no error_det=
-ected callback)
-> [  606.558729] ------------[ cut here ]------------
-> [  606.558729] igc 0000:38:00.0: disabling already-disabled device
-> [  606.558738] WARNING: CPU: 0 PID: 209 at drivers/pci/pci.c:2248 pci_dis=
-able_device+0xf6/0x150
-> [  606.558743] Modules linked in: rfcomm ccm cmac algif_hash algif_skciph=
-er af_alg usbhid bnep snd_hda_codec_hdmi snd_ctl_led snd_hda_codec_realtek =
-joydev snd_hda_codec_generic ledtrig_audio binfmt_misc snd_sof_pci_intel_tg=
-l snd_sof_intel_hda_common snd_soc_acpi_intel_match snd_soc_acpi snd_soc_hd=
-ac_hda snd_sof_pci snd_sof_xtensa_dsp x86_pkg_temp_thermal snd_sof_intel_hd=
-a_mlink intel_powerclamp snd_sof_intel_hda snd_sof snd_sof_utils snd_hda_ex=
-t_core snd_soc_core snd_compress snd_hda_intel coretemp snd_intel_dspcfg sn=
-d_hda_codec snd_hwdep kvm_intel snd_hda_core iwlmvm nls_iso8859_1 i915 snd_=
-pcm kvm mac80211 crct10dif_pclmul crc32_pclmul i2c_algo_bit uvcvideo ghash_=
-clmulni_intel snd_seq mei_pxp drm_buddy videobuf2_vmalloc sch_fq_codel sha5=
-12_ssse3 libarc4 aesni_intel mei_hdcp videobuf2_memops btusb uvc crypto_sim=
-d drm_display_helper snd_seq_device btrtl videobuf2_v4l2 cryptd snd_timer i=
-ntel_rapl_msr btbcm drm_kms_helper videodev iwlwifi snd btintel rapl input_=
-leds wmi_bmof hid_sensor_rotation btmtk hid_sensor_accel_3d
-> [  606.558778]  hid_sensor_gyro_3d hid_sensor_als syscopyarea videobuf2_c=
-ommon intel_cstate serio_raw soundcore bluetooth hid_sensor_trigger thunder=
-bolt sysfillrect cfg80211 mc mei_me industrialio_triggered_buffer sysimgblt=
- processor_thermal_device_pci hid_sensor_iio_common hid_multitouch ecdh_gen=
-eric processor_thermal_device kfifo_buf cec 8250_dw mei ecc processor_therm=
-al_rfim industrialio rc_core processor_thermal_mbox ucsi_acpi processor_the=
-rmal_rapl ttm typec_ucsi intel_rapl_common msr typec video int3403_thermal =
-int340x_thermal_zone int3400_thermal intel_hid wmi acpi_pad acpi_thermal_re=
-l sparse_keymap acpi_tad mac_hid parport_pc ppdev lp parport drm ramoops re=
-ed_solomon efi_pstore ip_tables x_tables autofs4 hid_sensor_custom hid_sens=
-or_hub intel_ishtp_hid spi_pxa2xx_platform hid_generic dw_dmac dw_dmac_core=
- rtsx_pci_sdmmc e1000e i2c_i801 igc nvme i2c_smbus intel_lpss_pci rtsx_pci =
-intel_ish_ipc nvme_core intel_lpss xhci_pci i2c_hid_acpi intel_ishtp idma64=
- xhci_pci_renesas i2c_hid hid pinctrl_alderlake
-> [  606.558809] CPU: 0 PID: 209 Comm: irq/124-aerdrv Not tainted 6.4.0-rc7=
-+ #119
-> [  606.558811] Hardware name: HP HP ZBook Fury 16 G9 Mobile Workstation P=
-C/89C6, BIOS U96 Ver. 01.07.01 04/06/2023
-> [  606.558812] RIP: 0010:pci_disable_device+0xf6/0x150
-> [  606.558814] Code: 4d 85 e4 75 07 4c 8b a3 d0 00 00 00 48 8d bb d0 00 0=
-0 00 e8 5c f5 1f 00 4c 89 e2 48 c7 c7 f8 e6 37 ae 48 89 c6 e8 9a 3e 86 ff <=
-0f> 0b e9 3c ff ff ff 48 8d 55 e6 be 04 00 00 00 48 89 df e8 62 0b
-> [  606.558815] RSP: 0018:ffffa70040a4fca0 EFLAGS: 00010246
-> [  606.558816] RAX: 0000000000000000 RBX: ffff8ac8434b2000 RCX: 000000000=
-0000000
-> [  606.558817] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000=
-0000000
-> [  606.558818] RBP: ffffa70040a4fcc0 R08: 0000000000000000 R09: 000000000=
-0000000
-> [  606.558818] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8ac84=
-3435dd0
-> [  606.558818] R13: ffff8ac84277c000 R14: 0000000000000001 R15: ffff8ac84=
-34b2150
-> [  606.558819] FS:  0000000000000000(0000) GS:ffff8acbd6a00000(0000) knlG=
-S:0000000000000000
-> [  606.558820] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  606.558821] CR2: 00007f9740ba28e8 CR3: 00000001eb43a000 CR4: 000000000=
-0f50ef0
-> [  606.558822] PKRU: 55555554
-> [  606.558822] Call Trace:
-> [  606.558823]  <TASK>
-> [  606.558825]  ? show_regs+0x76/0x90
-> [  606.558828]  ? pci_disable_device+0xf6/0x150
-> [  606.558830]  ? __warn+0x91/0x160
-> [  606.558832]  ? pci_disable_device+0xf6/0x150
-> [  606.558834]  ? report_bug+0x1bf/0x1d0
-> [  606.558838] nvme nvme0: 24/0/0 default/read/poll queues
-> [  606.558837]  ? handle_bug+0x46/0x90
-> [  606.558841]  ? exc_invalid_op+0x1d/0x90
-> [  606.558843]  ? asm_exc_invalid_op+0x1f/0x30
-> [  606.558846]  ? pci_disable_device+0xf6/0x150
-> [  606.558849]  igc_io_error_detected+0x40/0x70 [igc]
-> [  606.558857]  report_error_detected+0xdb/0x1d0
-> [  606.558860]  ? __pfx_report_normal_detected+0x10/0x10
-> [  606.558862]  report_normal_detected+0x1a/0x30
-> [  606.558864]  pci_walk_bus+0x78/0xb0
-> [  606.558866]  pcie_do_recovery+0xba/0x340
-> [  606.558868]  ? __pfx_aer_root_reset+0x10/0x10
-> [  606.558870]  aer_process_err_devices+0x168/0x220
-> [  606.558871]  aer_isr+0x1d3/0x1f0
-> [  606.558874]  ? __pfx_irq_thread_fn+0x10/0x10
-> [  606.558876]  irq_thread_fn+0x29/0x70
-> [  606.558877]  irq_thread+0xee/0x1c0
-> [  606.558878]  ? __pfx_irq_thread_dtor+0x10/0x10
-> [  606.558879]  ? __pfx_irq_thread+0x10/0x10
-> [  606.558880]  kthread+0xf8/0x130
-> [  606.558882]  ? __pfx_kthread+0x10/0x10
-> [  606.558884]  ret_from_fork+0x29/0x50
-> [  606.558887]  </TASK>
-> [  606.558887] ---[ end trace 0000000000000000 ]---
-> [  606.570223] i915 0000:00:02.0: [drm] GT0: HuC: authenticated!
-> [  606.570228] i915 0000:00:02.0: [drm] GT0: GUC: submission disabled
-> [  606.570231] i915 0000:00:02.0: [drm] GT0: GUC: SLPC disabled
-> [  606.663042] xhci_hcd 0000:39:00.0: AER: can't recover (no error_detect=
-ed callback)
-> [  606.663111] pcieport 0000:00:1d.0: AER: device recovery failed
-> [  606.721642] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
-> [  606.721677] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
-> [  606.721687] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
-> [  606.721698] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
-> [  606.842877] usb 1-8: reset high-speed USB device number 3 using xhci_h=
-cd
-> [  607.048340] genirq: Flags mismatch irq 164. 00000000 (enp56s0) vs. 000=
-00000 (enp56s0)
-> [  607.050313] ------------[ cut here ]------------
-> ...
-> [  609.064160] igc 0000:38:00.0 enp56s0: Register Dump
-> [  609.064167] igc 0000:38:00.0 enp56s0: Register Name   Value
-> [  609.064181] igc 0000:38:00.0 enp56s0: CTRL            081c0641
-> [  609.064188] igc 0000:38:00.0 enp56s0: STATUS          40280401
-> [  609.064195] igc 0000:38:00.0 enp56s0: CTRL_EXT        100000c0
-> [  609.064202] igc 0000:38:00.0 enp56s0: MDIC            18017949
-> [  609.064208] igc 0000:38:00.0 enp56s0: ICR             80000010
-> [  609.064214] igc 0000:38:00.0 enp56s0: RCTL            04408022
-> [  609.064232] igc 0000:38:00.0 enp56s0: RDLEN[0-3]      00001000 0000100=
-0 00001000 00001000
-> [  609.064251] igc 0000:38:00.0 enp56s0: RDH[0-3]        00000000 0000000=
-0 00000000 00000000
-> [  609.064270] igc 0000:38:00.0 enp56s0: RDT[0-3]        000000ff 000000f=
-f 000000ff 000000ff
-> [  609.064289] igc 0000:38:00.0 enp56s0: RXDCTL[0-3]     00040808 0004080=
-8 00040808 00040808
-> [  609.064308] igc 0000:38:00.0 enp56s0: RDBAL[0-3]      ffc62000 fff6b00=
-0 fff6c000 fff6d000
-> [  609.064326] igc 0000:38:00.0 enp56s0: RDBAH[0-3]      00000000 0000000=
-0 00000000 00000000
-> [  609.064333] igc 0000:38:00.0 enp56s0: TCTL            a50400fa
-> [  609.064351] igc 0000:38:00.0 enp56s0: TDBAL[0-3]      fff6d000 ffcdf00=
-0 ffce0000 ffce1000
-> [  609.064369] igc 0000:38:00.0 enp56s0: TDBAH[0-3]      00000000 0000000=
-0 00000000 00000000
-> [  609.064387] igc 0000:38:00.0 enp56s0: TDLEN[0-3]      00001000 0000100=
-0 00001000 00001000
-> [  609.064405] igc 0000:38:00.0 enp56s0: TDH[0-3]        00000000 0000000=
-0 00000000 00000000
-> [  609.064423] igc 0000:38:00.0 enp56s0: TDT[0-3]        00000004 0000000=
-0 00000000 00000000
-> [  609.064441] igc 0000:38:00.0 enp56s0: TXDCTL[0-3]     00100108 0010010=
-8 00100108 00100108
-> [  609.064445] igc 0000:38:00.0 enp56s0: Reset adapter
->
-> The issue is that the PTM requests are sending before driver resumes the
-> device. Since the issue can also be observed on Windows, it's quite
-> likely a firmware/hardwar limitation.
->
-> So avoid resetting the device if it's not resumed. Once the device is
-> fully resumed, the device can work normally.
->
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216850
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
+There are 2 series devices rely on this patch:
 
-Feel free to add my:
+  1) Xilinx Alveo Accelerator cards (FPGA based device)
+  2) Microchip LAN9662 Ethernet Controller
 
-Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+     Please see: https://lore.kernel.org/lkml/20220427094502.456111-1-clement.leger@bootlin.com/
 
-After the comments are addressed.
+Normally, the PCI core discovers PCI devices and their BARs using the
+PCI enumeration process. However, the process does not provide a way to
+discover the hardware peripherals that are present in a PCI device, and
+which can be accessed through the PCI BARs. Also, the enumeration process
+does not provide a way to associate MSI-X vectors of a PCI device with the
+hardware peripherals that are present in the device. PCI device drivers
+often use header files to describe the hardware peripherals and their
+resources as there is no standard data driven way to do so. This patch
+series proposes to use flattened device tree blob to describe the
+peripherals in a data driven way. Based on previous discussion, using
+device tree overlay is the best way to unflatten the blob and populate
+platform devices. To use device tree overlay, there are three obvious
+problems that need to be resolved.
 
+First, we need to create a base tree for non-DT system such as x86_64. A
+patch series has been submitted for this:
+https://lore.kernel.org/lkml/20220624034327.2542112-1-frowand.list@gmail.com/
+https://lore.kernel.org/lkml/20220216050056.311496-1-lizhi.hou@xilinx.com/
 
-Cheers,
---=20
-Vinicius
+Second, a device tree node corresponding to the PCI endpoint is required
+for overlaying the flattened device tree blob for that PCI endpoint.
+Because PCI is a self-discoverable bus, a device tree node is usually not
+created for PCI devices. This series adds support to generate a device
+tree node for a PCI device which advertises itself using PCI quirks
+infrastructure.
+
+Third, we need to generate device tree nodes for PCI bridges since a child
+PCI endpoint may choose to have a device tree node created.
+
+This patch series is made up of three patches.
+
+The first patch is adding OF interface to create or destroy OF node
+dynamically.
+
+The second patch introduces a kernel option, CONFIG_DYNAMIC_PCI_OF_NODEX.
+When the option is turned on, the kernel will generate device tree nodes
+for all PCI bridges unconditionally. The patch also shows how to use the
+PCI quirks infrastructure, DECLARE_PCI_FIXUP_FINAL to generate a device
+tree node for a device. Specifically, the patch generates a device tree
+node for Xilinx Alveo U50 PCIe accelerator device. The generated device
+tree nodes do not have any property.
+
+The third patch adds basic properties ('reg', 'compatible' and
+'device_type') to the dynamically generated device tree nodes. More
+properties can be added in the future.
+
+Here is the example of device tree nodes generated within the ARM64 QEMU.
+# lspci -t
+-[0000:00]-+-00.0
+           +-01.0
+           +-03.0-[01-03]----00.0-[02-03]----00.0-[03]----00.0
+           +-03.1-[04]--
+           \-04.0-[05-06]----00.0-[06]--
+# tree /sys/firmware/devicetree/base/pcie\@10000000
+/sys/firmware/devicetree/base/pcie@10000000
+|-- #address-cells
+|-- #interrupt-cells
+|-- #size-cells
+|-- bus-range
+|-- compatible
+|-- device_type
+|-- dma-coherent
+|-- interrupt-map
+|-- interrupt-map-mask
+|-- linux,pci-domain
+|-- msi-map
+|-- name
+|-- pci@3,0
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- device_type
+|   |-- pci@0,0
+|   |   |-- #address-cells
+|   |   |-- #size-cells
+|   |   |-- compatible
+|   |   |-- device_type
+|   |   |-- pci@0,0
+|   |   |   |-- #address-cells
+|   |   |   |-- #size-cells
+|   |   |   |-- compatible
+|   |   |   |-- dev@0,0
+|   |   |   |   |-- #address-cells
+|   |   |   |   |-- #size-cells
+|   |   |   |   |-- compatible
+|   |   |   |   |-- ranges
+|   |   |   |   `-- reg
+|   |   |   |-- device_type
+|   |   |   |-- ranges
+|   |   |   `-- reg
+|   |   |-- ranges
+|   |   `-- reg
+|   |-- ranges
+|   `-- reg
+|-- pci@3,1
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- device_type
+|   |-- ranges
+|   `-- reg
+|-- pci@4,0
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- device_type
+|   |-- pci@0,0
+|   |   |-- #address-cells
+|   |   |-- #size-cells
+|   |   |-- compatible
+|   |   |-- device_type
+|   |   |-- ranges
+|   |   `-- reg
+|   |-- ranges
+|   `-- reg
+|-- ranges
+`-- reg
+
+Changes since v9:
+- Minor code review fixes
+
+Changes since v8:
+- Added patches to create unit test to verifying address translation
+    The test relies on QEMU PCI Test Device, please see
+        https://github.com/houlz0507/xoclv2/blob/pci-dt-0329/pci-dt-patch-0329/README
+    for test setup
+- Minor code review fixes
+
+Changes since v7:
+- Modified dynamic node creation interfaces
+- Added unittest for new added interfaces
+
+Changes since v6:
+- Removed single line wrapper functions
+- Added Signed-off-by Clément Léger <clement.leger@bootlin.com>
+
+Changes since v5:
+- Fixed code review comments
+- Fixed incorrect 'ranges' and 'reg' properties
+
+Changes since RFC v4:
+- Fixed code review comments
+
+Changes since RFC v3:
+- Split the Xilinx Alveo U50 PCI quirk to a separate patch
+- Minor changes in commit description and code comment
+
+Changes since RFC v2:
+- Merged patch 3 with patch 2
+- Added OF interfaces of_changeset_add_prop_* and use them to create
+  properties.
+- Added '#address-cells', '#size-cells' and 'ranges' properties.
+
+Changes since RFC v1:
+- Added one patch to create basic properties.
+- To move DT related code out of PCI subsystem, replaced of_node_alloc()
+  with of_create_node()/of_destroy_node()
+
+Lizhi Hou (5):
+  of: dynamic: Add interfaces for creating device node dynamically
+  PCI: Create device tree node for selected devices
+  PCI: Add PCI quirks to generate device tree node for Xilinx Alveo U50
+  of: overlay: Extend of_overlay_fdt_apply() to specify the target node
+  of: unittest: Add pci_dt_testdrv pci driver
+
+ drivers/of/dynamic.c                          | 164 ++++++++++++++
+ drivers/of/overlay.c                          |  42 +++-
+ drivers/of/unittest-data/Makefile             |   3 +-
+ .../of/unittest-data/overlay_pci_node.dtso    |  22 ++
+ drivers/of/unittest.c                         | 210 +++++++++++++++++-
+ drivers/pci/Kconfig                           |  12 +
+ drivers/pci/Makefile                          |   1 +
+ drivers/pci/bus.c                             |   2 +
+ drivers/pci/of.c                              |  81 ++++++-
+ drivers/pci/of_property.c                     | 194 ++++++++++++++++
+ drivers/pci/pci.h                             |  19 ++
+ drivers/pci/quirks.c                          |  12 +
+ drivers/pci/remove.c                          |   1 +
+ include/linux/of.h                            |  25 ++-
+ 14 files changed, 772 insertions(+), 16 deletions(-)
+ create mode 100644 drivers/of/unittest-data/overlay_pci_node.dtso
+ create mode 100644 drivers/pci/of_property.c
+
+-- 
+2.34.1
+
