@@ -2,99 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A53F8738F3A
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Jun 2023 20:53:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7856E738F47
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Jun 2023 20:55:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230518AbjFUSxI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Jun 2023 14:53:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38798 "EHLO
+        id S230382AbjFUSzj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Jun 2023 14:55:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231550AbjFUSxB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jun 2023 14:53:01 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2049.outbound.protection.outlook.com [40.107.93.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD83199B;
-        Wed, 21 Jun 2023 11:52:58 -0700 (PDT)
+        with ESMTP id S231388AbjFUSzU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jun 2023 14:55:20 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2086.outbound.protection.outlook.com [40.107.237.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F7F71FED;
+        Wed, 21 Jun 2023 11:55:14 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JmxatZT2OpWHzHDWZn3P6R7qOKg42y+imqJiJU7vDTZfZGjBRpXsYJHO61k0aIsZETZXE90Zn/NwBp6khHvPfm5WUvQABC6iRB9PCxMQukQVMyFywj1Sdf/sjC9MMH552jfDMFhf3P3wPe+hIC3v5x1KGG/P1IUBMTtlCp6SHQMT967FrRc/zU/6mlsvceKpQI7oxQmDT4Iy1J/KO8g7CxJZWpsIqPwARfDq+mAwuGs38DUGop5klSoLpo/mDo1woZZJIw1r+xYlyhqbmUi+vxZMBjmmmjOU7zyAkuXmX73XnMNknumcSZMlB7Zej1Uwz8fgqYCXSaYlsYajfwtaDw==
+ b=FsGVxJeBi7OC1lBn1mLTm3+dkj4dG7Eecw8QDWsVgeLug/dR7pHG0WX30x70vs6oM2ahdddd75ujxL6bM/aCaNGhhvTw2Yl8dxAcA0Mai/M2Aab2cEW2ds91YA86XlnM50YAXJeRlU3JfC/Yup+v1nTm6HAXJuq/0Ff1uRlU9roK+dM+4opDFBQmQhuwjtuYviYkk5fIP6VCNNbvTB1oUy/jw2Rexj3XwMkVDIWHfx5kXfDtJ2VePy7cTZ9cwRDNN+Dhn/J9sj9CMODojDZAQJS9fo7LgTxRjRz2u5pg/TKEzNDPQYUM9BXNTgB2NM1lsGNhnOkHMiKZEc2xfhKV0A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YhHmFwSHvWZXFAuUVeIaaDvrn7rpDuXcxvDDmpZMcq8=;
- b=SiUB9IabHRAvYKJ5VCZuy5nWZ3hBXU8qxSLvFtF+sDmSqFYFi6dT7sz2o4oj9y0WtiGuDGBr7RokqUsdSPTLHdKk5VFtSQ0/jbjazZE46MbCdreEIQIA2VXY6yRpQ7YJilfB2v/m61lmSNEwMlwG0Wp1S6zCo+NR3n2LYFTloykiV2yk6lsZQ7V6/FSixlqPnl5V2Z6JIN6LYD0Ca4qno5IicMKebCltW/O2MiyB19zFMv23CzcXTCUkaeLFSHDMeDvN82IkTPZF4j60mx4NtBFgIV9/kamxfECCHaGsD9QY0QhHSaWnH3xzmzvuajSHpF8F1T3/9TSQTvul6/R80A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
+ bh=QbsykAfJkgDLJx/l/oQbK+V4uvg6LPXSoJTQwZ1rDv4=;
+ b=jRCWH8u508ED4HlmJr4K6ITgyQI05aQQOk8sMU4DeNKhK/X3ioTSf7aVKibZzCki6QxheWZ2dUJMI15xf8Xo40BQslXJVgMPnrpSRxnEgjpBa5GNoS18RUSWYV6aZpHazYy01EOFghauTvSk+ZMluZOL/lFP3BhVGSWzqQpT4CYQRkZu9G1Uwa314SF5EtqEZZRf2JEbtOgRyPYan+DhfRm+EihzHjEnsxowBbOO4dzKmMemBW07cmUlwZ6H8TW/2GtHbjuN+hZfDu/O3wdEFtWUGyGAxyJpm/ZCQyHds6ulhCzBFHeENTWiRcs7ZdLxmcxLj8+YDEUriLlqDhpEAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YhHmFwSHvWZXFAuUVeIaaDvrn7rpDuXcxvDDmpZMcq8=;
- b=WcP6kKzcXdxcL1Vh/Xgbwx3CpXMR6BFdqI+oKtLFpTcxUnDHie7w0AdIrt5sC+dSCT5ET8fE0FHQ9BT4B6nNS40TAA3GHf/Zt2tjBb7g0JJ59kQwqdqa2aef/uOtdkBlm3AynMKZ97eL+3lKF8HUG3QQ/8iC/hcM1wbL8QTaFr8=
-Received: from BYAPR02CA0036.namprd02.prod.outlook.com (2603:10b6:a02:ee::49)
- by SN7PR12MB7203.namprd12.prod.outlook.com (2603:10b6:806:2aa::8) with
+ bh=QbsykAfJkgDLJx/l/oQbK+V4uvg6LPXSoJTQwZ1rDv4=;
+ b=sBeTVibzNQ+ADxQE/+wrHVKG/StI6LJkEhpgCBt+hLBca3TeXvPmA/AlWSu3jHPZYeCYDcZCYKcjC/nPsGc+HzZ6JWsiDqnbZTbxtVWmFY+r0Vn6DVXPV2BODKgYFqDrIKegaAO6xrdOvMF7noolN5VkPx61Rxv4CIJLB0x3tsI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
+ by PH7PR12MB5656.namprd12.prod.outlook.com (2603:10b6:510:13b::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.23; Wed, 21 Jun
- 2023 18:52:54 +0000
-Received: from MWH0EPF000971E8.namprd02.prod.outlook.com
- (2603:10b6:a02:ee:cafe::94) by BYAPR02CA0036.outlook.office365.com
- (2603:10b6:a02:ee::49) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.21 via Frontend
- Transport; Wed, 21 Jun 2023 18:52:54 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000971E8.mail.protection.outlook.com (10.167.243.68) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6521.17 via Frontend Transport; Wed, 21 Jun 2023 18:52:54 +0000
-Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 21 Jun
- 2023 13:52:52 -0500
-From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>, <oohall@gmail.com>,
-        "Mahesh J Salgaonkar" <mahesh@linux.ibm.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Kuppuswamy Sathyanarayanan" 
+ 2023 18:55:11 +0000
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::b616:6941:8855:93ad]) by BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::b616:6941:8855:93ad%5]) with mapi id 15.20.6500.036; Wed, 21 Jun 2023
+ 18:55:11 +0000
+Message-ID: <ee23accf-3e2e-773b-dc6c-81d9e18d0d0e@amd.com>
+Date:   Wed, 21 Jun 2023 11:55:08 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2 2/2] PCI: pciehp: Clear the optional capabilities in
+ DEVCTL2 on a hot-plug
+Content-Language: en-US
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Yazen Ghannam <yazen.ghannam@amd.com>,
-        Fontenot Nathan <Nathan.Fontenot@amd.com>,
-        "Smita Koralahalli" <Smita.KoralahalliChannabasappa@amd.com>
-Subject: [PATCH v3 2/2] PCI: pciehp: Clear the optional capabilities in DEVCTL2 on a hot-plug
-Date:   Wed, 21 Jun 2023 18:51:52 +0000
-Message-ID: <20230621185152.105320-3-Smita.KoralahalliChannabasappa@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230621185152.105320-1-Smita.KoralahalliChannabasappa@amd.com>
-References: <20230621185152.105320-1-Smita.KoralahalliChannabasappa@amd.com>
+        Fontenot Nathan <Nathan.Fontenot@amd.com>
+References: <20230418210526.36514-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20230418210526.36514-3-Smita.KoralahalliChannabasappa@amd.com>
+ <20230511111902.GA10720@wunner.de>
+ <cc36bb5b-6a4a-258b-6707-4d019154e019@amd.com>
+ <20230616182409.GA8894@wunner.de>
+ <d9cf3451-c0c1-ab86-0528-2c05982e7872@amd.com>
+ <20230621071259.GA2028@wunner.de>
+From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <20230621071259.GA2028@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY3PR10CA0002.namprd10.prod.outlook.com
+ (2603:10b6:a03:255::7) To BYAPR12MB2869.namprd12.prod.outlook.com
+ (2603:10b6:a03:132::30)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E8:EE_|SN7PR12MB7203:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19b5df84-a93c-40c7-fe98-08db7288b8b3
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|PH7PR12MB5656:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2fadefeb-1a94-4d43-1574-08db72890a15
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /0FuQScoi3BySsUb4TrRYwtD6F9BIsb5wr6PsMhfS+r35SxuslmxatTe0zC7snfA6DM6FfNsxj/AZnYyyoZ+QIHm1AY2QTCHA2pBpb844P4fFS9ZBUwLMQLnSs/YMcXXqz6YuEYep7b38uV2Nc5uOH9Kv4NwGvXWK1vk5dBr+j+gfebnogqcK37mYLM+OwBEiBnvmBKojIAsZC7ksCi2i3DXsO5IpybE2mi5hEtdPi1Z5mf6dfhZdw1yefqc+vCNOkDLOmRfhscOpDCQQDEQDygCd5YWAU5x4zO2/RdTfW6ZXX29A7FnH9eOMNnuBQxx/Of0qJbP89lmnZPOWv5vIe4mkV3I8x9IH/Rl624rBZ9OcR4DuBiEMYUl9r2I34EYgiTlP7mUtY43fif+Kg5CHnBWb3VQ7PU4KpCCmKU3ZOc54oS3WZ+k0/+77D2SdxbJkvSTHPFbw/6ybrO/5N2wE+7RCr+RbYjG5mMsZ8swwAFp+9NrARInZ35mA6VjiPtvNlYPoSt749D0xpsEP0LX+kUAxKbHiRDt2PuQObVJ0bZPKZlqUuzAGBXUx4BKRmUJetajbHHyMvCpqd7OFMhsr4PHKIt1D0MK7w8NxEbuk8gNl4tXyg7RShHveyxR1FFR+F2RytKJGkVUSVt3RI5508cOm75X+ybgrSu9GtMeUAPIR/NcBaptA+Fc1WCa3QXpVneh3gHFh+MXtvUvOES/6QsmCI/dWRbKsNO8KNv/iAHOgQx85mvxX7MObVWrPwr7c+2/+khVKsTFeAYEKN0E2w==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(136003)(346002)(376002)(451199021)(46966006)(40470700004)(36840700001)(82310400005)(81166007)(478600001)(70206006)(7696005)(36756003)(83380400001)(110136005)(54906003)(70586007)(40460700003)(4326008)(316002)(86362001)(26005)(36860700001)(16526019)(186003)(2616005)(966005)(1076003)(356005)(336012)(82740400003)(8936002)(8676002)(41300700001)(2906002)(5660300002)(426003)(47076005)(40480700001)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: q31OvzKw2aEMbcBpOdSLtSTQmsnv4Q3BMDWUcd+99otezRodkB4HI3P13N3HX5J8h9vBZwTqWsrCHwVh/ZZLI7MgxrVbmCqUv+IBwIYvXngTRN6b7RwNZNBi4R25J1ZHpLGcfMSTQwweqFBnBOXUwYRx4Z4B6V/Rtgrlg9/DsnccCCbWJCrzlIYhm3klQZ3Fj71HRW15VuGwo7wekttr9MSOVWBf1yo8NdKD+BwS+6mqEZ7MYJWda2/I4/v9jPQHhIkeTMbhRFvvwZPQKm1fbAk0tu7jN90P3V1MI8OZR0A1oHV//NXG+wUIyFZLk8ym+kWsBXuEA2FbHg1HAPxOvDNXyH4aBp8URXpN852Ts/KOPvASVI6YQbpy35O54vvX6Z8TX7/wyuM/GCGzNiBAcSNLXSdA7ojGoq9f4yyayjCxStp1YRfPvHTOgOlo6m5klrh2DfG7NReQLGDGRxvIyrevHpo/nAp7fVTV0Yw9o3vxYstC+OJIGDgW7GaOVltk3FsRrxZvCAUGXmq30D8T1tSx1ELRItW5ugHZJ+X2Qnb+FzRHmuenX6LxiKMF3WL0Omz4Q60UB6O9vykjYZu/D04YEgty/n9A651VZsVqu/JC5cil6UAkVqDo8gd7Xp0ts3t3IOcyxKlYnRTkptB19A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(346002)(136003)(39860400002)(376002)(396003)(451199021)(66946007)(66556008)(316002)(4326008)(66476007)(41300700001)(6512007)(8676002)(8936002)(6506007)(53546011)(6916009)(186003)(26005)(2616005)(54906003)(6666004)(6486002)(2906002)(5660300002)(478600001)(38100700002)(31696002)(31686004)(86362001)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?enNwc1F6UGZ0QjNOenZ1bHN3NGpNa3RuRDZTa3Q3YjVEVmVaMlpPTSs0anpo?=
+ =?utf-8?B?VElJS1kzVEpVTkdhL2c4Z3BoMTdXUXBVZ1lxZGZTRjZkMGtMcTBQL2tsQUdj?=
+ =?utf-8?B?YzM2Wk1PV0w2NkxMZmlOdlVvSmRtODdZaTJnZjZ6NjExMUhGejQ5bzVUUHVo?=
+ =?utf-8?B?aEpqdzI5L1UyTVBBczdNUENGWVhLaVV0Z3gxSGE0NllYMmxRWUNGa01EMFBD?=
+ =?utf-8?B?Ykh3N3BPOGpKNXdMZkpFMGk4M3k5UlYrOVJvaXJWWTZzSUNHTXBjYjVlT2h3?=
+ =?utf-8?B?Q1hQZW1BKzRCUmkyV08rbUpsaFV2TnpSK1RyaUh0aVk0NDlwTFRVaDBHOTNa?=
+ =?utf-8?B?dzFUa1dpenRlRTFORlpWZmpNQmU3K2xrVjhidzNDMWRFN0pyTUxKZnNkZWVE?=
+ =?utf-8?B?aWVEaTdhdHE0elNqN2RGaU41c0NWekNoOUxYOE9JVlBpSm9TNm1xbU9JdERi?=
+ =?utf-8?B?MXhRZmtYU2l0QjQ2aDZOeTFpbnlPTWxGeDlWVmhyR0FKNWhPYldwY0loTHFO?=
+ =?utf-8?B?bnNLcWxXZXVTZmk2NDVuMmJ3c3c1VjdzdkJkcjY4V25Ja0xQTWlhN0xNTm84?=
+ =?utf-8?B?U2dNVkU1ZkR0NzdLZWdLbHp6T2hEdi9aSVlNV05uUUFLNTYzckJsOUxhekJw?=
+ =?utf-8?B?RFN1dlpjejVGUXNJdnVFNlV2UVlaV3VySitaZ0w2c0NadW5kcnlwdmFwSEZj?=
+ =?utf-8?B?SHR2SDhnQ2Z0aEQ0M2FrREhkU2ZOTExoN2liVkJocnYwVFVUcjNDclF2Ny8w?=
+ =?utf-8?B?a3hBeWExcEJsYWN3VmdLOHB6bmVxS0g1LzJjZXlQNm9mdStHc3N1NHh3RFdN?=
+ =?utf-8?B?azJCQTc0RmVqL1J1bmFWL3FXZGVBbCtFYUdsYk5EV3phNTNIRXNueHd3eWJS?=
+ =?utf-8?B?NFIxN1VmSlJuTTZtUmFXSnduNUdoMWlWZTRWR0hpN1NGSWhiOWpiL3hVMFQw?=
+ =?utf-8?B?cThOZHZMV3JlQWl4Z0tmL245dkhMNjA3VXlSWHJWbmEyNWJiaGErZzB4VWtC?=
+ =?utf-8?B?QVpiWE5hRUtXSmVLRmt4ZFVDdDNSVTVLZGh1K1BvVkNzdC9kTEFqYzQ0QzJY?=
+ =?utf-8?B?d1VITW5yeDlodUlkaGpNSllZUGxYcnJpNVBzc1paYXdOWlV4c3FjTDRsdFkr?=
+ =?utf-8?B?TkIzb2t1VytvZmVGeHR0c1lSb2hmWlg5UG4ySUw0dGdPbWliQWxoUEhMSkQ2?=
+ =?utf-8?B?T1Z1bittN1V2L2RkdDJ0SDc4TW1aYURLUW5OVGlNcnd1eE0yRUF0REw2aWxX?=
+ =?utf-8?B?L1pBVXpWdzJvQWhoMmY0VXE3MlJUV0VOdGlGYjBHYS9MNWlvN3dHcmQybFI1?=
+ =?utf-8?B?bm1lWjYxWGExKzZlbFJFNCtFdVRlZythZHZnYWJsdFBSS05xQzgwZmZTWWtT?=
+ =?utf-8?B?VU9XQ2UzVTlNOGtuazYrYmc3L0hZQmZOUU9oZEw4NjNnV0pBRTJySzBIQnZm?=
+ =?utf-8?B?NS9UcmEvK1JiQS9GajN5RUpUVXBOQlJqbEdzSmp6RWFhMmpVeitLL2I4eTQ3?=
+ =?utf-8?B?WUpFTkk5NTFwTFZpekx3a2luRWZYbkZzL3VKRWd2SkZUdndpSXB1YjZ3UWtk?=
+ =?utf-8?B?eU5saU9DSFVRVTBKZktBYlFkcjVERFlBTjVUREZSbi9kUHFRbForRmF4cUxZ?=
+ =?utf-8?B?UmY0OXBLZ2hZK21iMTJSU3ovWkIyNmVHTlNJSnB4VmtENGQ1cy84d1A4U3hH?=
+ =?utf-8?B?c2grZ1k0MXJ6S1habzRaR2lhRENqV3FKeVhuT1RnZ21uWGhZNGhZL0ZOQUpz?=
+ =?utf-8?B?UlJvU3ZMaG1wc3A2V0FrN3pNRjlLWk1rMGZSeFN3TXZKWDl4bUt5TC9FQUdx?=
+ =?utf-8?B?RzM0SkN3b29hcy9RcUtzMnN1V0hUVDJFdkxjazc3c0FsVHFHSyt5dnpIZlZR?=
+ =?utf-8?B?dHUrUzdrbk5IekZTUDVycXpkOHMrNWg5dHlGYnJwZUF1UGVMNzRENTRMMXhs?=
+ =?utf-8?B?bHZIeUxxSHRCMm5NMVNaV0o1cG1hVGdvSzBwcExQTGNtUE51OGs2bXB6dW5B?=
+ =?utf-8?B?RHcycFlxZ1FnTUdJK29YeFZVZjg2ZDFWRmZzMjNzOU5vS3NVS1FTa3FBeHVC?=
+ =?utf-8?B?WGdaQWpuTU9hRUw5dkJDZEMzS1lVZmlvcDVkVk5xcUtRNTlYT1diOHJVMXZX?=
+ =?utf-8?Q?JuF652sauccKHH3ApeF6KYkpp?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2023 18:52:54.1417
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fadefeb-1a94-4d43-1574-08db72890a15
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2023 18:55:10.9789
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19b5df84-a93c-40c7-fe98-08db7288b8b3
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: MWH0EPF000971E8.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7203
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gBs3qchVH8RNUd7Su3UCuNFE/olt+Y18/O+yljig3ijckFl1IqIx0PK0M5kkXkc+hKrZuOzMG+W0WltKVifEFA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5656
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
         version=3.4.6
@@ -104,95 +136,40 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Clear the optional capabilities ARI Forwarding Enable, AtomicOp Requester
-Enable and 10-Bit Tag Requester Enable in DEVCTL2 unconditionally on a
-hot-plug event. These are the bits which are negotiated between endpoint
-and root port and should be re-negotiated and set up for optimal operation
-on a hot add.
+On 6/21/2023 12:12 AM, Lukas Wunner wrote:
+> On Fri, Jun 16, 2023 at 04:34:27PM -0700, Smita Koralahalli wrote:
+>> On 6/16/2023 11:24 AM, Lukas Wunner wrote:
+>>> On Mon, May 22, 2023 at 03:23:31PM -0700, Smita Koralahalli wrote:
+>>>> On 5/11/2023 4:19 AM, Lukas Wunner wrote:
+>>>>> On Tue, Apr 18, 2023 at 09:05:26PM +0000, Smita Koralahalli wrote:
+>>>> Some couple of ways we think could be:
+>>>> [1] Check if these bits are enabled by Platform at boot time, clear them
+>>>> only it is set during hotplug flow.
+>>>> [2] Clear them unconditionally as I did..
+>>>> [3] Enable 10-bits tags in Linux when a device is probed just like how
+>>>> we do for ARI..
+>>>>
+>>>> Similarly call pci_enable_atomic_ops_to_root() during a hot add..
+>>>
+>>> Personally I'm fine with option [2].  If you or Bjorn prefer option [3],
+>>> I'm fine with that as well.
+>>
+>> Looking forward for Bjorn comments!
+> 
+> You may want to consider first doing [2], i.e. clear the DevCtl2 bits
+> on hot removal, and then in a separate step do [3], i.e. add support
+> for enabling 10 bit tags and atomic ops in the kernel.  Having that
+> would certainly be useful, but it's more complex than just clearing
+> the DevCtl2 bits on unplug.  So you may want to do the latter as a
+> stop-gap.
 
-According to implementation notes in 2.2.6.2, of PCIe Base Specification
-[1], "For platforms where the RC supports 10-Bit Tag Completer capability,
-it is highly recommended for platform firmware or operating software that
-configures PCIe hierarchies to Set the 10-Bit Tag Requester Enable bit
-automatically in Endpoints with 10-Bit Tag Requester capability. This
-enables the important class of 10-Bit Tag capable adapters that send
-Memory Read Requests only to host memory". Hence, it must be noted that
-Platform FW may enable these bits if endpoint supports them at boot time
-for performance reasons even if Linux hasn't defined them.
+Okay I just sent v3 now. I will take care of this in v4 along with other
+comments in v3.
 
-Issues are being observed where a device became inaccessible and the port
-was not able to be recovered without a system reset when a device with
-10-bit tags was removed and replaced with a device that didn't support
-10-bit tags.
-
-Section 2.2.6.2, in PCIe Base Specification also implies that:
-
-* If a Requester sends a 10-Bit Tag Request to a Completer that lacks
-10-Bit Completer capability, the returned Completion(s) will have Tags
-with Tag[9:8] equal to 00b. Since the Requester is forbidden to generate
-these Tag values for 10-Bit Tags, such Completions will be handled as
-Unexpected Completions, which by default are Advisory Non-Fatal Errors.
-The Requester must follow standard PCI Express error handling
-requirements.
-
-* In configurations where a Requester with 10-Bit Tag Requester capability
-needs to target multiple Completers, one needs to ensure that the Requester
-sends 10-Bit Tag Requests only to Completers that have 10-Bit Tag Completer
-capability.
-
-Additionally, Section 6.13 and 6.15 of the PCIe Base Spec points out that
-following a hot-plug event, clear the ARI Forwarding Enable bit and
-AtomicOp Requester Enable as its not determined whether the next device
-inserted will support these capabilities. AtomicOp capabilities are not
-supported on PCI Express to PCI/PCI-X Bridges and any newly added
-component may not be an ARI device.
-
-[1] PCI Express Base Specification Revision 6.0, Dec 16 2021.
-    https://members.pcisig.com/wg/PCI-SIG/document/16609
-
-Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
----
-v2:
-	Clear all optional capabilities in Device Control 2 register
-	instead of individually clearing ARI Forwarding Enable,
-	AtomicOp Requestor Enable and 10-bit Tag Requestor Enable.
-v3:
-	Restore clearing only ARI, Atomic Op and 10 bit tags as these are
-	the optional capabilities.
-	Provide all necessary information in commit description.
-	Clear register bits of the hotplug port.
----
- drivers/pci/hotplug/pciehp_pci.c | 4 ++++
- include/uapi/linux/pci_regs.h    | 1 +
- 2 files changed, 5 insertions(+)
-
-diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
-index ad12515a4a12..e27fd2bc4ceb 100644
---- a/drivers/pci/hotplug/pciehp_pci.c
-+++ b/drivers/pci/hotplug/pciehp_pci.c
-@@ -102,6 +102,10 @@ void pciehp_unconfigure_device(struct controller *ctrl, bool presence)
- 
- 	pci_lock_rescan_remove();
- 
-+	pcie_capability_clear_word(ctrl->pcie->port, PCI_EXP_DEVCTL2,
-+				   (PCI_EXP_DEVCTL2_ARI | PCI_EXP_DEVCTL2_ATOMIC_REQ |
-+				    PCI_EXP_DEVCTL2_TAG_REQ_EN));
-+
- 	/*
- 	 * Stopping an SR-IOV PF device removes all the associated VFs,
- 	 * which will update the bus->devices list and confuse the
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index dc2000e0fe3a..6fbc47f23d52 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -668,6 +668,7 @@
- #define  PCI_EXP_DEVCTL2_IDO_REQ_EN	0x0100	/* Allow IDO for requests */
- #define  PCI_EXP_DEVCTL2_IDO_CMP_EN	0x0200	/* Allow IDO for completions */
- #define  PCI_EXP_DEVCTL2_LTR_EN		0x0400	/* Enable LTR mechanism */
-+#define  PCI_EXP_DEVCTL2_TAG_REQ_EN	0x1000  /* Allow 10 Tags for Requester */
- #define  PCI_EXP_DEVCTL2_OBFF_MSGA_EN	0x2000	/* Enable OBFF Message type A */
- #define  PCI_EXP_DEVCTL2_OBFF_MSGB_EN	0x4000	/* Enable OBFF Message type B */
- #define  PCI_EXP_DEVCTL2_OBFF_WAKE_EN	0x6000	/* OBFF using WAKE# signaling */
--- 
-2.17.1
+Thanks,
+Smita
+> 
+> Thanks,
+> 
+> Lukas
 
