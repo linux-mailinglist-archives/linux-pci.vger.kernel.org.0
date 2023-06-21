@@ -2,48 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E0EB7390C5
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Jun 2023 22:27:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26C557390CB
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Jun 2023 22:29:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229554AbjFUU12 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Jun 2023 16:27:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53516 "EHLO
+        id S229502AbjFUU3Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Jun 2023 16:29:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbjFUU11 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jun 2023 16:27:27 -0400
+        with ESMTP id S229463AbjFUU3P (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jun 2023 16:29:15 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1FE6A1;
-        Wed, 21 Jun 2023 13:27:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E35FA1;
+        Wed, 21 Jun 2023 13:29:14 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8AF786152C;
-        Wed, 21 Jun 2023 20:27:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD611C433C0;
-        Wed, 21 Jun 2023 20:27:24 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 07E1F616A1;
+        Wed, 21 Jun 2023 20:29:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2579EC433C8;
+        Wed, 21 Jun 2023 20:29:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687379245;
-        bh=RePG4+ZDMbB+q+Y8YEkbWu+XNvgjN9uHQwp2EEXlW78=;
+        s=k20201202; t=1687379353;
+        bh=L+rO1CMYqXKXf6AoAVFANg2xBTRriB5N07RJDG1s6Ko=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Yn0odbUugrCChM+6Jk+KwsL2gxVbBZYA0ZFJU3HZBWLrKhqKnDawuFwM5U7cfi32m
-         FwJZkAKS4o4Sgnha6u1IWIyMrGLxhpJTg7JjNaOmSRsYnaWMcIZrY90KEbAP0v0COJ
-         dwkrH68Vp6MCDxUH5oJ82JzdktANn284V+rNZ7NlHQVknIuygpxs77AMttDIunIiI0
-         SH+UdKW3/F8US6FQ2rbk7GXo4bqAqw7Dd32047LP6YaqsglWz9JE8IA5LClU4LIfPa
-         VrEo1NWMVf2hH1v+6YluI6uxbqFk48ousDsP2t1xcbEFxbcgLvULTWFiokfvA20kRu
-         BO3L7I91AowSg==
-Date:   Wed, 21 Jun 2023 15:27:22 -0500
+        b=PYdpokDmsLXR3gMVTD3O3cev7KqBdfi56w1P8y6fh83Yw57XZNnH50InYGQbfztrw
+         rgkm4PC0Pzi+XMMSyPsVKSb9CpOGfnCOIMrl+5Vra8EgCvi3IBE64t2GKS0ZFSWzBu
+         FUw2LgPaCO/epg1++kiwPvkfHN1toFUNkcPZ7b1gzmhcdz0uO18scCRfSSFdfIC3jJ
+         LjvV41xx5PoD2yz5TJSe3YBhAXKo0gwh+QYp1RCsZ24u8ibuh8h0KSJ0NAoeXm6D6i
+         JderUS+0Qrdyjjm9wAQQeXi6xfA5b4oOm3zIvoBocHMWgsGoUdRZRQLeU4rMEItH8M
+         NnG855wdACLTQ==
+Date:   Wed, 21 Jun 2023 15:29:11 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lizhi Hou <lizhi.hou@amd.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh@kernel.org, max.zhen@amd.com,
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lizhi Hou <lizhi.hou@amd.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, max.zhen@amd.com,
         sonal.santan@amd.com, stefano.stabellini@xilinx.com
-Subject: Re: [PATCH V9 2/5] PCI: Create device tree node for selected devices
-Message-ID: <20230621202722.GA116477@bhelgaas>
+Subject: Re: [PATCH V9 0/6] Generate device tree node for pci devices
+Message-ID: <20230621202911.GA116530@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230621202233.GA115496@bhelgaas>
+In-Reply-To: <20230620220818.GA418170-robh@kernel.org>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -54,228 +55,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 21, 2023 at 03:22:33PM -0500, Bjorn Helgaas wrote:
-> In subject, IIUC this patch does not actually create device tree nodes
-> for selected devices.  It looks like it:
-> 
->   - Adds an of_pci_make_dev_node() *interface* that can be used to
->     create this node
-> 
->   - Creates such a node for *every* bridge
-> 
->   - Does nothing at all for "selected devices" or the Xilinx Alveo
+On Tue, Jun 20, 2023 at 04:08:18PM -0600, Rob Herring wrote:
+> On Thu, Jun 15, 2023 at 09:50:36AM -0700, Lizhi Hou wrote:
+> > This patch series introduces OF overlay support for PCI devices which
+> > primarily addresses two use cases. First, it provides a data driven method
+> > to describe hardware peripherals that are present in a PCI endpoint and
+> > hence can be accessed by the PCI host. Second, it allows reuse of a OF
+> > compatible driver -- often used in SoC platforms -- in a PCI host based
+> > system.
 
-I forgot: with these comments addressed:
+> >  drivers/of/dynamic.c                          | 164 ++++++++++++++
+> >  drivers/of/overlay.c                          |  42 +++-
+> >  drivers/of/unittest-data/Makefile             |   3 +-
+> >  .../of/unittest-data/overlay_pci_node.dtso    |  22 ++
+> >  drivers/of/unittest.c                         | 210 +++++++++++++++++-
+> >  drivers/pci/Kconfig                           |  12 +
+> >  drivers/pci/Makefile                          |   1 +
+> >  drivers/pci/bus.c                             |   2 +
+> >  drivers/pci/of.c                              |  81 ++++++-
+> >  drivers/pci/of_property.c                     | 190 ++++++++++++++++
+> >  drivers/pci/pci.h                             |  19 ++
+> >  drivers/pci/quirks.c                          |  12 +
+> >  drivers/pci/remove.c                          |   1 +
+> >  include/linux/of.h                            |  25 ++-
+> >  14 files changed, 768 insertions(+), 16 deletions(-)
+> >  create mode 100644 drivers/of/unittest-data/overlay_pci_node.dtso
+> >  create mode 100644 drivers/pci/of_property.c
+> 
+> Bjorn, I think this is pretty close to being in shape for merging. Do 
+> you have any comments on the PCI bits? Would you prefer that I ack the 
+> DT bit and you take it or vice-versa?
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+I acked the PCI bits (modulo some trivial comments), and this seems
+more DTish than PCIish, so happy if you would take them.
 
-> On Wed, Jun 21, 2023 at 10:34:06AM -0700, Lizhi Hou wrote:
-> > The PCI endpoint device such as Xilinx Alveo PCI card maps the register
-> > spaces from multiple hardware peripherals to its PCI BAR. Normally,
-> > the PCI core discovers devices and BARs using the PCI enumeration process.
-> > There is no infrastructure to discover the hardware peripherals that are
-> > present in a PCI device, and which can be accessed through the PCI BARs.
-> > 
-> > For Alveo PCI card, the card firmware provides a flattened device tree to
-> > describe the hardware peripherals on its BARs. The Alveo card driver can
-> > load this flattened device tree and leverage device tree framework to
-> > generate platform devices for the hardware peripherals eventually.
-> 
-> The Alveo details are relevant to the quirk patch but not to *this*
-> patch.
-> 
-> But the reason for creating a node for every bridge device *is*
-> relevant and should be included here, since that change affects
-> everybody that uses OF.
-> 
-> > Apparently, the device tree framework requires a device tree node for the
-> > PCI device. Thus, it can generate the device tree nodes for hardware
-> > peripherals underneath. Because PCI is self discoverable bus, there might
-> > not be a device tree node created for PCI devices. This patch is to add
-> > support to generate device tree node for PCI devices.
-> 
-> s/This patch is to add/Add/
-> 
-> > Added a kernel option. When the option is turned on, the kernel will
-> > generate device tree nodes for PCI bridges unconditionally.
-> 
-> s/Added a kernel option/Add a PCI_DYNAMIC_OF_NODES config option/
-> (Be specific, and way what the patch does, not what you did.)
-> 
-> > Initially, the basic properties are added for the dynamically generated
-> > device tree nodes.
-> 
-> Make this specific, e.g., list the specific properties added.
-> 
-> > +config PCI_DYNAMIC_OF_NODES
-> > +	bool "Create Devicetree nodes for PCI devices"
-> > +	depends on OF
-> > +	select OF_DYNAMIC
-> > +	help
-> > +	  This option enables support for generating device tree nodes for some
-> > +	  PCI devices. Thus, the driver of this kind can load and overlay
-> > +	  flattened device tree for its downstream devices.
-> > +
-> > +	  Once this option is selected, the device tree nodes will be generated
-> > +	  for all PCI bridges.
-> 
-> Is there a convention for using "devicetree" vs "device tree"?  The
-> help message uses both and it would be nice to only use one or the
-> other.
-> 
-> > @@ -501,8 +501,10 @@ static int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *
-> >  		 * to rely on this function (you ship a firmware that doesn't
-> >  		 * create device nodes for all PCI devices).
-> >  		 */
-> > -		if (ppnode)
-> > +		if (ppnode && of_property_present(ppnode, "interrupt-map"))
-> 
-> Maybe this deserves a comment?  The connection between "interrupt-map"
-> and the rest of this patch isn't obvious to me.
-> 
-> Also, it looks like this happens for *everybody*, regardless of
-> PCI_DYNAMIC_OF_NODES, which seems a little suspect.  If it's an
-> unrelated bug fix it should be a different patch.
-> 
-> >  			break;
-> > +		else
-> > +			ppnode = NULL;
-> 
-> > +void of_pci_make_dev_node(struct pci_dev *pdev)
-> > +{
-> > +	struct device_node *ppnode, *np = NULL;
-> > +	const char *pci_type = "dev";
-> > +	struct of_changeset *cset;
-> > +	const char *name;
-> > +	int ret;
-> > +
-> > +	/*
-> > +	 * If there is already a device tree node linked to this device,
-> > +	 * return immediately.
-> > +	 */
-> > +	if (pci_device_to_OF_node(pdev))
-> > +		return;
-> > +
-> > +	/* Check if there is device tree node for parent device */
-> > +	if (!pdev->bus->self)
-> > +		ppnode = pdev->bus->dev.of_node;
-> > +	else
-> > +		ppnode = pdev->bus->self->dev.of_node;
-> > +	if (!ppnode)
-> > +		return;
-> > +
-> > +	if (pci_is_bridge(pdev))
-> > +		pci_type = "pci";
-> 
-> Initialize pci_type = "dev" here instead of way up top:
-> 
->   if (pci_is_bridge(pdev))
->     pci_type = "pci";
->   else
->     pci_type = "dev";
-> 
-> > +	name = kasprintf(GFP_KERNEL, "%s@%x,%x", pci_type,
-> > +			 PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn));
-> 
-> > +static int of_pci_prop_ranges(struct pci_dev *pdev, struct of_changeset *ocs,
-> > +			      struct device_node *np)
-> > +{
-> > +	struct of_pci_range *rp;
-> > +	struct resource *res;
-> > +	int i = 0, j, ret;
-> > +	u32 flags, num;
-> > +	u64 val64;
-> > +
-> > +	if (pci_is_bridge(pdev)) {
-> > +		num = PCI_BRIDGE_RESOURCE_NUM;
-> > +		res = &pdev->resource[PCI_BRIDGE_RESOURCES];
-> > +	} else {
-> > +		num = PCI_STD_NUM_BARS;
-> > +		res = &pdev->resource[PCI_STD_RESOURCES];
-> > +	}
-> > +
-> > +	rp = kcalloc(num, sizeof(*rp), GFP_KERNEL);
-> > +	if (!rp)
-> > +		return -ENOMEM;
-> > +
-> > +	for (j = 0; j < num; j++) {
-> 
-> Initialize i = 0 here so it's connected with the use:
-> 
->   for (i = 0, j = 0; j < num; ...)
-> 
-> > +		if (!resource_size(&res[j]))
-> > +			continue;
-> > +
-> > +		if (of_pci_get_addr_flags(&res[j], &flags))
-> > +			continue;
-> > +
-> > +		val64 = res[j].start;
-> > +		of_pci_set_address(pdev, rp[i].parent_addr, val64, 0, flags,
-> > +				   false);
-> > +		if (pci_is_bridge(pdev)) {
-> > +			memcpy(rp[i].child_addr, rp[i].parent_addr,
-> > +			       sizeof(rp[i].child_addr));
-> > +		} else {
-> > +			/*
-> > +			 * For endpoint device, the lower 64-bits of child
-> > +			 * address is always zero.
-> 
-> For the non-OF folks (like me), can you say what the semantics of
-> parent_addr vs child_addr are?  I suppose maybe parent_addr is an
-> address on the primary side of a bridge and child_addr is the
-> corresponding address on the secondary side?
-> 
-> And PCI bridges don't perform address translation, so they are
-> identical?
-> 
-> > +			 */
-> > +			rp[i].child_addr[0] = j;
-> > +		}
-> 
-> > +int of_pci_add_properties(struct pci_dev *pdev, struct of_changeset *ocs,
-> > +			  struct device_node *np)
-> > +{
-> > +	int ret = 0;
-> > +
-> > +	if (pci_is_bridge(pdev)) {
-> > +		ret |= of_changeset_add_prop_string(ocs, np, "device_type",
-> > +						    "pci");
-> > +	}
-> > +
-> > +	ret |= of_pci_prop_ranges(pdev, ocs, np);
-> > +	ret |= of_changeset_add_prop_u32(ocs, np, "#address-cells",
-> > +					 OF_PCI_ADDRESS_CELLS);
-> > +	ret |= of_changeset_add_prop_u32(ocs, np, "#size-cells",
-> > +					 OF_PCI_SIZE_CELLS);
-> > +	ret |= of_pci_prop_reg(pdev, ocs, np);
-> > +	ret |= of_pci_prop_compatible(pdev, ocs, np);
-> > +
-> > +	/*
-> > +	 * The added properties will be released when the
-> > +	 * changeset is destroyed.
-> > +	 */
-> 
-> I don't think it's meaningful to OR together the "negative error
-> values" returned by all these functions.  Presumably those are things
-> like -EINVAL, -ENOMEM, etc.  ORing them together is admittedly
-> non-zero, but yields nonsense.
-> 
-> > +	return ret;
-> 
-> > +static inline void
-> > +of_pci_make_dev_node(struct pci_dev *pdev)
-> > +{
-> > +}
-> > +
-> > +static inline void
-> > +of_pci_remove_node(struct pci_dev *pdev)
-> > +{
-> > +}
-> 
-> Pull these functions all onto one line, like other similar stubs in
-> this file.
-> 
-> > +#endif /* CONFIG_PCI_DYNAMIC_OF_NODES */
-> 
-> Unnecessary comment since this is all 10 lines.
+Bjorn
