@@ -2,165 +2,273 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05C107387A5
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Jun 2023 16:48:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A043F738CC2
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Jun 2023 19:11:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231536AbjFUOsM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Jun 2023 10:48:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56692 "EHLO
+        id S229872AbjFURLj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Jun 2023 13:11:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232054AbjFUOr6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jun 2023 10:47:58 -0400
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2115.outbound.protection.outlook.com [40.107.212.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1CFC19A9;
-        Wed, 21 Jun 2023 07:47:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZqMwgfVecBxa4iSz751oOEqyDE2ktDPaLb7JyReVYkZy2zR41wgpptc6Oq72nowObyhEG8iAEU29biYho2Ckpe8xY+BfsJbPNjdw5Hfmb7WgxldM1PzeqGQp4nuWIBqAVJmVt0oBzNoo1fYHVnCCMNC3XlFnZbE2hMJKMtzfLcPax+rQgZONE7riQZzl6f6flf2UKQyqZMqfwNViyPAWycIJMF9seWzv1tfw0VrlNIrMEw3vAIadOS3ApsnybeTcq4oI57I8z/PjEkJx/vVFFFdxn+fikWBNkgafpRyBlFQ8fI6IwY/gu7fRMui+RJh/L4jDXrSpKIoFUHPWlu1Byw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DYRsYvQQAcwl8l4e2oqtGhwwKM50VJTc4FdQiWhzSJM=;
- b=l1Q31W0p2QnyPoZjo9cB+KFGlGKXIF4OiDnJnnGyEIylcpDL2wYcrZZXCzJrnWMQoU5DSnMLPR8b4894sboTQHEfXgDAGjh8G2VEkYRjbKtmokIsfpaqCon6ay7U6fTr1jTsF/XDf+wXhwroRVlQYMIdWSFlBY12ho+x3Fcx2uYgZqracWB7wO+RpiAXMKBrQ827cavI03AsyDZdmESoOcFuJRifGxqCWNb9/rcTiLS6sOd+dGM2M7uDVhn8DEGNxxRqZqI7HBn7vB/xCWwe+0XpgNoZzcOWmmihamXRwCLKdMspYphZ6ziAsAxTNVZ1m3oHBXh9xp4Ov2NOxvY0Fw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
- dkim=pass header.d=corigine.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DYRsYvQQAcwl8l4e2oqtGhwwKM50VJTc4FdQiWhzSJM=;
- b=anhVUnG1Sew8WSkGDdNlLXrdTO/yX8mU3esTgi89htLdvWEesaW6n35fZ5YAeJCmL/B3zWkqsci8GIbWAxuogEEUIlJm/OrIYcIwlBJFDzAemUKo/piMtLLwwjPqi8JfyDgaNbWa67TBtRIv2AGUclkotzZVutHicr6Q+m9EPXw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=corigine.com;
-Received: from PH0PR13MB4842.namprd13.prod.outlook.com (2603:10b6:510:78::6)
- by CH2PR13MB4475.namprd13.prod.outlook.com (2603:10b6:610:62::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.23; Wed, 21 Jun
- 2023 14:47:45 +0000
-Received: from PH0PR13MB4842.namprd13.prod.outlook.com
- ([fe80::eb8f:e482:76e0:fe6e]) by PH0PR13MB4842.namprd13.prod.outlook.com
- ([fe80::eb8f:e482:76e0:fe6e%5]) with mapi id 15.20.6521.023; Wed, 21 Jun 2023
- 14:47:45 +0000
-Date:   Wed, 21 Jun 2023 16:47:36 +0200
-From:   Simon Horman <simon.horman@corigine.com>
-To:     Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>, Kalle Valo <kvalo@kernel.org>,
+        with ESMTP id S229514AbjFURLi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jun 2023 13:11:38 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D68AF129;
+        Wed, 21 Jun 2023 10:11:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687367497; x=1718903497;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=ouyyW1RWLlx0D/6B8cVMwnjeunonC+1tIEAPC3PI5cE=;
+  b=aXi4i72lUUQ6WFhq8rDVpPBNtfU1S0WclvUwRX6N2bfqhho0DXTJ/y+9
+   ehcWds4QuAMlOJuWiwfeuMCDeU4AVdtFnpcc5nZqMeX2OGc9xtMnVln9d
+   dUh2ngSAlk9xrnllBaVZo0xEZdsYEpF3hA+OQrLkNEOjnSsjVysKlDL9L
+   pM/z6OhpuQohbB2wWGPrsVefQr4KA/kXPKPaA/uHv6a8NgYZ9IkyQv2QA
+   7Wxn/h+NS6vaSO74qScEl6mNLKlmfePq6djwzUJA0fhdm3fwQY8LIQve6
+   AoVGrd+c5/JDbQBDCFK73xEgRM8Z9ukmc7IbSLU1ot8v8wPodk+LjtiSA
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10748"; a="344977732"
+X-IronPort-AV: E=Sophos;i="6.00,261,1681196400"; 
+   d="scan'208";a="344977732"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2023 10:10:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10748"; a="714580017"
+X-IronPort-AV: E=Sophos;i="6.00,261,1681196400"; 
+   d="scan'208";a="714580017"
+Received: from jarteaga-mobl1.amr.corp.intel.com (HELO vcostago-mobl3) ([10.212.165.203])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2023 10:10:28 -0700
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com
+Cc:     linux-pci@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
-        Pradeep Kumar Chitrapu <quic_pradeepc@quicinc.com>,
-        P Praneesh <quic_ppranees@quicinc.com>,
-        Bhagavathi Perumal S <quic_bperumal@quicinc.com>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>,
-        Karthikeyan Periyasamy <quic_periyasa@quicinc.com>,
-        ath12k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dean Luick <dean.luick@cornelisnetworks.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v3 09/10] wifi: ath12k: Use RMW accessors for changing
- LNKCTL
-Message-ID: <ZJMNiEw0IekR684V@corigine.com>
-References: <20230620134624.99688-1-ilpo.jarvinen@linux.intel.com>
- <20230620134624.99688-10-ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230620134624.99688-10-ilpo.jarvinen@linux.intel.com>
-X-ClientProxiedBy: AM0PR02CA0007.eurprd02.prod.outlook.com
- (2603:10a6:208:3e::20) To PH0PR13MB4842.namprd13.prod.outlook.com
- (2603:10b6:510:78::6)
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] igc: Ignore AER reset when device is suspended
+In-Reply-To: <20230620123636.1854690-1-kai.heng.feng@canonical.com>
+References: <20230620123636.1854690-1-kai.heng.feng@canonical.com>
+Date:   Wed, 21 Jun 2023 10:10:27 -0700
+Message-ID: <87cz1ospvg.fsf@intel.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR13MB4842:EE_|CH2PR13MB4475:EE_
-X-MS-Office365-Filtering-Correlation-Id: cc3833a3-cc70-45c9-bf1f-08db72667975
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Yi+yv7jcOl8V2Z5m4yhgZNNaj3gn2zJ72wLHXYUuZMvKvz+1gXMknJIjV7GapdFUBQWFhl3ckLHDi4uKMglEJvl33pxosGovhNjvoSo8D79wVLsl6CUtGdjY+w78vck0NuHlMzoJpyjhilDADJwY21zdWUh/B0dorgnt+XB8VWONkaK21YlgUjEualEmYxqyokYeN8od7F3OneDujZdr9DA3UAs32toN+B1u4fV5hn9QMiFW2+wtGzMg3V/1wu/ddpJaA193F3qltn4YZXE5J6mahKBlfEIyDrw77PFaJli5LeFKQ4X1uT1qZeX2JW8heWBeHn8z8ThyrKULRf/R4q56AwmdFn7UQe39s/gN/+ltoTO0clZlalvxY9vp+0PwMKLettTyaRKOAe6K2X7TL8+3rKseNI1yrwqjm83Cby1TbqDTGZW5VPKHlMRQXwrER28KvYLA4Nb0nS66Pa5nfWd2omO0is15qiHS2oyLnwbEvPviF+EVw2HHHhckgUXTkvtwy8Dpj9Gd9G9fHVsbRhgLj76A3FBELZlAmixe/B+M2VWNEWzzHNf69wg9eySjHXPJBtLxU/9FyhI9KlSwMDb+TMRTM8EhNzFJEkeBJeY=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR13MB4842.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(396003)(366004)(346002)(39830400003)(376002)(451199021)(478600001)(6666004)(4326008)(54906003)(6506007)(186003)(6486002)(6512007)(4744005)(2906002)(8676002)(8936002)(41300700001)(316002)(66946007)(6916009)(66556008)(66476007)(7416002)(5660300002)(44832011)(38100700002)(86362001)(36756003)(66574015)(83380400001)(2616005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RUE5cmZ1cHg0WDV3M2ZGWFl0M2pEdjZWZmhpTjVHT3hNV0hSMVl1ZFRLUlBr?=
- =?utf-8?B?bEZQeDJ3dml6YkRURy9HbFpKSGt4Z3NCdHRBWXFaeW5oQ042NzVjQmtkZWhY?=
- =?utf-8?B?bHlpd1VNU0NNTURHTXZLcnJYUElEaHpTdnp0T2dHWGRQa0YvayswVStGQjIx?=
- =?utf-8?B?RHRka0NFVmsxWnU0OWw2aXMrTlFLeFB5dUNlaG9xNVlZWnB4blR3Z2NWUTdP?=
- =?utf-8?B?ZnhKbzdSV3RCc21NdU9ORVp2aUpWblY0aFRybkR3b1VWZUxjSTJzcVVUVlkr?=
- =?utf-8?B?eTVxK2Y0K1V6OEhpUUFPblBVQ09NUzVyc0FtMlBCTEZ4TFVGSHVua240ZjFU?=
- =?utf-8?B?WnM2SWxhaWcwZXZST0poSjNYaloreEY3MVpXcHJRYlVHYnZVSDB0dms0d2VC?=
- =?utf-8?B?M0p6ZTBaUUJMeXc1SVBFSlc3SVYvUzMzM012MzUya1k3NDFTVktGR3ViMDhi?=
- =?utf-8?B?L21VZngzTDY2L3VlK29sZUU3dGh1eVlseEphNDhlK2RsY0FQVng3ZExVWlgz?=
- =?utf-8?B?TmhRZzE3ZTdyZFY5MHBRcmlVSm9jeUh0TU5xSTgyTFR6d3Fsa0tleFpERm9M?=
- =?utf-8?B?Z1BxV0pmWk1hWk1tRXBrcVo2cHN1d2MzT01CeTE4SEZFbDRPT0kvTkdhNUtX?=
- =?utf-8?B?dHJVQktyblJpRmYwL2RYbkN4VVorRy82cWlXVkNXOFJIbDNvbGZQcHpDTjZ3?=
- =?utf-8?B?Y09Lam5WL3RDR1JXRnd1blVzRzJYTFcxQnU5cWhqZzJZdVFCVmVtNHBkazBv?=
- =?utf-8?B?aXdrUVZIZ1N6UzZIRXRhUVNMY2J3MHdHVDFybHlyYmUxV09EalJ6S3hsWjRu?=
- =?utf-8?B?VGJZV1pFL2ZnZFlPMWVVY0x0MzRZT3p5M1M2aTlJa0x1bWM1RGdZYWFEUGhL?=
- =?utf-8?B?ZzVray8ycEcybitXajZCWVZCODBKT0doTUVWK2FUMXEzbzZYM3hlK1pxUGdJ?=
- =?utf-8?B?NHlXMGxqN3VLNXpVVCs3a0hxaFFXaVBuOS9pbXhLdnp3WmFETjRXVTU3eks5?=
- =?utf-8?B?eGRVbVVlVnRKL0dFb1NDTTJXd2tyb3Mrenptck4rWDMvanN2bjc4c1VxZkIz?=
- =?utf-8?B?azUzRlgrRFJvYThjazhHZGt4UHg2SzFnR2hVTytXZTBjVmFOQk9tS0x2QnBw?=
- =?utf-8?B?WUEySkt0bVNTa0xmRFcwaDc2d09xa0JwbDZ0d0c4Nk03Tkpuam4rKzdrTmVY?=
- =?utf-8?B?RFdWUXlPamgrME9LOU1iaUxYbEpLY052MUt6eFBtck9UYW82aktJQk1NL01P?=
- =?utf-8?B?UnhTUGdJQnpFTnZIUUZ5NnVpejZ3YTVDWG9GVkVscW96MDcwTmoyQnNad1RD?=
- =?utf-8?B?MW1HNUhZZlZZLzdUTkNlcDV3RFFtQ0ltaFBFWFFCQnE5SGtZa0hLS2xtS0V4?=
- =?utf-8?B?T0xCNHQ2N29zSS8xQzVFa3YzTVpCRUt4US9oblJvb1hValZLeWNZdHpwWGUy?=
- =?utf-8?B?NUlJM0hzNDRwUHdHa2lKYk1UMTQyNENPZFFabGcvQkhyb1JHOU1iVmVuZ2V1?=
- =?utf-8?B?NGJSVDcxQWEvbW93SE16WjZObkh4OE5qNGhySmxLS3hwbEJjMDd3YWYzT3FZ?=
- =?utf-8?B?OG5kTFNPL2greTlzSXB4T3VnM2tqZTV4TGZ4WlJRem9KQXBHblpvT0w2N0tL?=
- =?utf-8?B?cDYyb3M4MmRCWXU4bnJWKzEweXBKV3gxMjNvTUNDcFQweUNsTXNuUFVvS3M4?=
- =?utf-8?B?a3VlMC9IVVdIbkdGZW9HTlEvVWNuVlFIbzBnODc5L25FS3FsZ2lYSk14SFY3?=
- =?utf-8?B?V21ncmNJajM1V3REdmRZK2N2bTYySTRGWWpDMDVNVUxoMmVTdEVZclc5WmdO?=
- =?utf-8?B?NlRmbUdobW44QTZ3ZXZYM054Vjd6SXovUmszTmtna0VqVU02RW9jUGtvL2Jx?=
- =?utf-8?B?bTVCWWl2VTYrdFZWZWp6Nzlnb2dWbG41TmNuaEJ0eXZVOEN3eUxuZzJIUFZB?=
- =?utf-8?B?a2hzbFM2aUhKUHdlMk83aDdJeGRXWE1EMmNtUUVhckhEK1A5b0I5V3plL0FT?=
- =?utf-8?B?ajdlVVVtWk9sRXVpMjIrZlUyYW02Z1grbktnMlhoU2pXci9qT1BXSEI0R3hI?=
- =?utf-8?B?MVczc2NNdnBMcENjcUhMaDJlTXNVTER1RElwMjBwS3hsT3J4Y01VOVZaOE5u?=
- =?utf-8?B?SUhpeFBvM2VTUjlaRUYrTFpkZWtJdGFNRFlaNnlLTDY2dmdRdlVrcGY1a083?=
- =?utf-8?B?bUNJVXBEOEJ4QzNqc21LOHMzbE5CQVY3aEh6Z21vZEJzZWwweUFTKzdSOWlr?=
- =?utf-8?B?N2lQUk82TWZiUUZKT2pvbGRlemtRPT0=?=
-X-OriginatorOrg: corigine.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc3833a3-cc70-45c9-bf1f-08db72667975
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR13MB4842.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2023 14:47:45.4585
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ygmJJTUIp+0lfjP5wL0hi34n76LF3I5kpajTNWeddd4i6pvQKuzuJOCkkXOcn02IFdAqAJJcn9hsYB8Wh1m58Q2Dv6RvwwtD5K+HlQuGS+M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB4475
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 04:46:23PM +0300, Ilpo Järvinen wrote:
-> Don't assume that only the driver would be accessing LNKCTL. ASPM
-> policy changes can trigger write to LNKCTL outside of driver's control.
-> 
-> Use RMW capability accessors which do proper locking to avoid losing
-> concurrent updates to the register value. On restore, clear the ASPMC
-> field properly.
-> 
-> Fixes: d889913205cf ("wifi: ath12k: driver for Qualcomm Wi-Fi 7 devices")
-> Suggested-by: Lukas Wunner <lukas@wunner.de>
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Acked-by: Kalle Valo <kvalo@kernel.org>
-> Cc: stable@vger.kernel.org
+Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
+
+> When a system that connects to a Thunderbolt dock equipped with I225,
+> I225 stops working after S3 resume:
+>
+> [  606.527643] pcieport 0000:00:1d.0: AER: Multiple Corrected error recei=
+ved: 0000:00:1d.0
+> [  606.527791] pcieport 0000:00:1d.0: PCIe Bus Error: severity=3DCorrecte=
+d, type=3DTransaction Layer, (Receiver ID)
+> [  606.527795] pcieport 0000:00:1d.0:   device [8086:7ab0] error status/m=
+ask=3D00008000/00002000
+> [  606.527800] pcieport 0000:00:1d.0:    [15] HeaderOF
+> [  606.527806] pcieport 0000:00:1d.0: AER:   Error of this Agent is repor=
+ted first
+> [  606.527853] pcieport 0000:07:04.0: PCIe Bus Error: severity=3DCorrecte=
+d, type=3DData Link Layer, (Receiver ID)
+> [  606.527856] pcieport 0000:07:04.0:   device [8086:0b26] error status/m=
+ask=3D00000080/00002000
+> [  606.527861] pcieport 0000:07:04.0:    [ 7] BadDLLP
+> [  606.527931] pcieport 0000:00:1d.0: AER: Multiple Uncorrected (Non-Fata=
+l) error received: 0000:00:1d.0
+> [  606.528064] pcieport 0000:00:1d.0: PCIe Bus Error: severity=3DUncorrec=
+ted (Non-Fatal), type=3DTransaction Layer, (Requester ID)
+> [  606.528068] pcieport 0000:00:1d.0:   device [8086:7ab0] error status/m=
+ask=3D00100000/00004000
+> [  606.528072] pcieport 0000:00:1d.0:    [20] UnsupReq               (Fir=
+st)
+> [  606.528075] pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 0a00005=
+2 00000000 00000000
+> [  606.528079] pcieport 0000:00:1d.0: AER:   Error of this Agent is repor=
+ted first
+> [  606.528098] pcieport 0000:04:01.0: PCIe Bus Error: severity=3DUncorrec=
+ted (Non-Fatal), type=3DTransaction Layer, (Requester ID)
+> [  606.528101] pcieport 0000:04:01.0:   device [8086:1136] error status/m=
+ask=3D00300000/00000000
+> [  606.528105] pcieport 0000:04:01.0:    [20] UnsupReq               (Fir=
+st)
+> [  606.528107] pcieport 0000:04:01.0:    [21] ACSViol
+> [  606.528110] pcieport 0000:04:01.0: AER:   TLP Header: 34000000 0400005=
+2 00000000 00000000
+> [  606.528187] thunderbolt 0000:05:00.0: AER: can't recover (no error_det=
+ected callback)
+> [  606.558729] ------------[ cut here ]------------
+> [  606.558729] igc 0000:38:00.0: disabling already-disabled device
+> [  606.558738] WARNING: CPU: 0 PID: 209 at drivers/pci/pci.c:2248 pci_dis=
+able_device+0xf6/0x150
+> [  606.558743] Modules linked in: rfcomm ccm cmac algif_hash algif_skciph=
+er af_alg usbhid bnep snd_hda_codec_hdmi snd_ctl_led snd_hda_codec_realtek =
+joydev snd_hda_codec_generic ledtrig_audio binfmt_misc snd_sof_pci_intel_tg=
+l snd_sof_intel_hda_common snd_soc_acpi_intel_match snd_soc_acpi snd_soc_hd=
+ac_hda snd_sof_pci snd_sof_xtensa_dsp x86_pkg_temp_thermal snd_sof_intel_hd=
+a_mlink intel_powerclamp snd_sof_intel_hda snd_sof snd_sof_utils snd_hda_ex=
+t_core snd_soc_core snd_compress snd_hda_intel coretemp snd_intel_dspcfg sn=
+d_hda_codec snd_hwdep kvm_intel snd_hda_core iwlmvm nls_iso8859_1 i915 snd_=
+pcm kvm mac80211 crct10dif_pclmul crc32_pclmul i2c_algo_bit uvcvideo ghash_=
+clmulni_intel snd_seq mei_pxp drm_buddy videobuf2_vmalloc sch_fq_codel sha5=
+12_ssse3 libarc4 aesni_intel mei_hdcp videobuf2_memops btusb uvc crypto_sim=
+d drm_display_helper snd_seq_device btrtl videobuf2_v4l2 cryptd snd_timer i=
+ntel_rapl_msr btbcm drm_kms_helper videodev iwlwifi snd btintel rapl input_=
+leds wmi_bmof hid_sensor_rotation btmtk hid_sensor_accel_3d
+> [  606.558778]  hid_sensor_gyro_3d hid_sensor_als syscopyarea videobuf2_c=
+ommon intel_cstate serio_raw soundcore bluetooth hid_sensor_trigger thunder=
+bolt sysfillrect cfg80211 mc mei_me industrialio_triggered_buffer sysimgblt=
+ processor_thermal_device_pci hid_sensor_iio_common hid_multitouch ecdh_gen=
+eric processor_thermal_device kfifo_buf cec 8250_dw mei ecc processor_therm=
+al_rfim industrialio rc_core processor_thermal_mbox ucsi_acpi processor_the=
+rmal_rapl ttm typec_ucsi intel_rapl_common msr typec video int3403_thermal =
+int340x_thermal_zone int3400_thermal intel_hid wmi acpi_pad acpi_thermal_re=
+l sparse_keymap acpi_tad mac_hid parport_pc ppdev lp parport drm ramoops re=
+ed_solomon efi_pstore ip_tables x_tables autofs4 hid_sensor_custom hid_sens=
+or_hub intel_ishtp_hid spi_pxa2xx_platform hid_generic dw_dmac dw_dmac_core=
+ rtsx_pci_sdmmc e1000e i2c_i801 igc nvme i2c_smbus intel_lpss_pci rtsx_pci =
+intel_ish_ipc nvme_core intel_lpss xhci_pci i2c_hid_acpi intel_ishtp idma64=
+ xhci_pci_renesas i2c_hid hid pinctrl_alderlake
+> [  606.558809] CPU: 0 PID: 209 Comm: irq/124-aerdrv Not tainted 6.4.0-rc7=
++ #119
+> [  606.558811] Hardware name: HP HP ZBook Fury 16 G9 Mobile Workstation P=
+C/89C6, BIOS U96 Ver. 01.07.01 04/06/2023
+> [  606.558812] RIP: 0010:pci_disable_device+0xf6/0x150
+> [  606.558814] Code: 4d 85 e4 75 07 4c 8b a3 d0 00 00 00 48 8d bb d0 00 0=
+0 00 e8 5c f5 1f 00 4c 89 e2 48 c7 c7 f8 e6 37 ae 48 89 c6 e8 9a 3e 86 ff <=
+0f> 0b e9 3c ff ff ff 48 8d 55 e6 be 04 00 00 00 48 89 df e8 62 0b
+> [  606.558815] RSP: 0018:ffffa70040a4fca0 EFLAGS: 00010246
+> [  606.558816] RAX: 0000000000000000 RBX: ffff8ac8434b2000 RCX: 000000000=
+0000000
+> [  606.558817] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000=
+0000000
+> [  606.558818] RBP: ffffa70040a4fcc0 R08: 0000000000000000 R09: 000000000=
+0000000
+> [  606.558818] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8ac84=
+3435dd0
+> [  606.558818] R13: ffff8ac84277c000 R14: 0000000000000001 R15: ffff8ac84=
+34b2150
+> [  606.558819] FS:  0000000000000000(0000) GS:ffff8acbd6a00000(0000) knlG=
+S:0000000000000000
+> [  606.558820] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  606.558821] CR2: 00007f9740ba28e8 CR3: 00000001eb43a000 CR4: 000000000=
+0f50ef0
+> [  606.558822] PKRU: 55555554
+> [  606.558822] Call Trace:
+> [  606.558823]  <TASK>
+> [  606.558825]  ? show_regs+0x76/0x90
+> [  606.558828]  ? pci_disable_device+0xf6/0x150
+> [  606.558830]  ? __warn+0x91/0x160
+> [  606.558832]  ? pci_disable_device+0xf6/0x150
+> [  606.558834]  ? report_bug+0x1bf/0x1d0
+> [  606.558838] nvme nvme0: 24/0/0 default/read/poll queues
+> [  606.558837]  ? handle_bug+0x46/0x90
+> [  606.558841]  ? exc_invalid_op+0x1d/0x90
+> [  606.558843]  ? asm_exc_invalid_op+0x1f/0x30
+> [  606.558846]  ? pci_disable_device+0xf6/0x150
+> [  606.558849]  igc_io_error_detected+0x40/0x70 [igc]
+> [  606.558857]  report_error_detected+0xdb/0x1d0
+> [  606.558860]  ? __pfx_report_normal_detected+0x10/0x10
+> [  606.558862]  report_normal_detected+0x1a/0x30
+> [  606.558864]  pci_walk_bus+0x78/0xb0
+> [  606.558866]  pcie_do_recovery+0xba/0x340
+> [  606.558868]  ? __pfx_aer_root_reset+0x10/0x10
+> [  606.558870]  aer_process_err_devices+0x168/0x220
+> [  606.558871]  aer_isr+0x1d3/0x1f0
+> [  606.558874]  ? __pfx_irq_thread_fn+0x10/0x10
+> [  606.558876]  irq_thread_fn+0x29/0x70
+> [  606.558877]  irq_thread+0xee/0x1c0
+> [  606.558878]  ? __pfx_irq_thread_dtor+0x10/0x10
+> [  606.558879]  ? __pfx_irq_thread+0x10/0x10
+> [  606.558880]  kthread+0xf8/0x130
+> [  606.558882]  ? __pfx_kthread+0x10/0x10
+> [  606.558884]  ret_from_fork+0x29/0x50
+> [  606.558887]  </TASK>
+> [  606.558887] ---[ end trace 0000000000000000 ]---
+> [  606.570223] i915 0000:00:02.0: [drm] GT0: HuC: authenticated!
+> [  606.570228] i915 0000:00:02.0: [drm] GT0: GUC: submission disabled
+> [  606.570231] i915 0000:00:02.0: [drm] GT0: GUC: SLPC disabled
+> [  606.663042] xhci_hcd 0000:39:00.0: AER: can't recover (no error_detect=
+ed callback)
+> [  606.663111] pcieport 0000:00:1d.0: AER: device recovery failed
+> [  606.721642] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+> [  606.721677] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+> [  606.721687] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+> [  606.721698] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+> [  606.842877] usb 1-8: reset high-speed USB device number 3 using xhci_h=
+cd
+> [  607.048340] genirq: Flags mismatch irq 164. 00000000 (enp56s0) vs. 000=
+00000 (enp56s0)
+> [  607.050313] ------------[ cut here ]------------
+> ...
+> [  609.064160] igc 0000:38:00.0 enp56s0: Register Dump
+> [  609.064167] igc 0000:38:00.0 enp56s0: Register Name   Value
+> [  609.064181] igc 0000:38:00.0 enp56s0: CTRL            081c0641
+> [  609.064188] igc 0000:38:00.0 enp56s0: STATUS          40280401
+> [  609.064195] igc 0000:38:00.0 enp56s0: CTRL_EXT        100000c0
+> [  609.064202] igc 0000:38:00.0 enp56s0: MDIC            18017949
+> [  609.064208] igc 0000:38:00.0 enp56s0: ICR             80000010
+> [  609.064214] igc 0000:38:00.0 enp56s0: RCTL            04408022
+> [  609.064232] igc 0000:38:00.0 enp56s0: RDLEN[0-3]      00001000 0000100=
+0 00001000 00001000
+> [  609.064251] igc 0000:38:00.0 enp56s0: RDH[0-3]        00000000 0000000=
+0 00000000 00000000
+> [  609.064270] igc 0000:38:00.0 enp56s0: RDT[0-3]        000000ff 000000f=
+f 000000ff 000000ff
+> [  609.064289] igc 0000:38:00.0 enp56s0: RXDCTL[0-3]     00040808 0004080=
+8 00040808 00040808
+> [  609.064308] igc 0000:38:00.0 enp56s0: RDBAL[0-3]      ffc62000 fff6b00=
+0 fff6c000 fff6d000
+> [  609.064326] igc 0000:38:00.0 enp56s0: RDBAH[0-3]      00000000 0000000=
+0 00000000 00000000
+> [  609.064333] igc 0000:38:00.0 enp56s0: TCTL            a50400fa
+> [  609.064351] igc 0000:38:00.0 enp56s0: TDBAL[0-3]      fff6d000 ffcdf00=
+0 ffce0000 ffce1000
+> [  609.064369] igc 0000:38:00.0 enp56s0: TDBAH[0-3]      00000000 0000000=
+0 00000000 00000000
+> [  609.064387] igc 0000:38:00.0 enp56s0: TDLEN[0-3]      00001000 0000100=
+0 00001000 00001000
+> [  609.064405] igc 0000:38:00.0 enp56s0: TDH[0-3]        00000000 0000000=
+0 00000000 00000000
+> [  609.064423] igc 0000:38:00.0 enp56s0: TDT[0-3]        00000004 0000000=
+0 00000000 00000000
+> [  609.064441] igc 0000:38:00.0 enp56s0: TXDCTL[0-3]     00100108 0010010=
+8 00100108 00100108
+> [  609.064445] igc 0000:38:00.0 enp56s0: Reset adapter
+>
+> The issue is that the PTM requests are sending before driver resumes the
+> device. Since the issue can also be observed on Windows, it's quite
+> likely a firmware/hardwar limitation.
+>
+> So avoid resetting the device if it's not resumed. Once the device is
+> fully resumed, the device can work normally.
+>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216850
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > ---
->  drivers/net/wireless/ath/ath12k/pci.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
 
-Reviewed-by: Simon Horman <simon.horman@corigine.com>
+Feel free to add my:
 
+Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+
+After the comments are addressed.
+
+
+Cheers,
+--=20
+Vinicius
