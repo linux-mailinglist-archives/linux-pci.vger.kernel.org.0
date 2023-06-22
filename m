@@ -2,119 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F9C073A78C
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Jun 2023 19:44:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2138473AB2D
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Jun 2023 23:07:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229762AbjFVRoE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Jun 2023 13:44:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38362 "EHLO
+        id S231959AbjFVVG6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Jun 2023 17:06:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbjFVRoD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Jun 2023 13:44:03 -0400
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2060.outbound.protection.outlook.com [40.107.102.60])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74ED01BD6;
-        Thu, 22 Jun 2023 10:44:01 -0700 (PDT)
+        with ESMTP id S231962AbjFVVGk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Jun 2023 17:06:40 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2067.outbound.protection.outlook.com [40.107.92.67])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B5332688;
+        Thu, 22 Jun 2023 14:03:58 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K+4OhhbikFfFal0bWONIcll1eCcZA0Egs7HyYw67yu94X9+7rmHOVdv5DtCCmUcZ7w7r1EO5mewrXx1VRdIakNQFv9FKyrtvX2Fc8p+zG/tazd+0ubZdyKHxzjlcsT3pzjNgOMww7lXZurnqItL6VNM/T/1kyXMf9KJx+BfftgeD3d+kzBxTHvQ5DvMlYafANH+x4Wlf0+oWwNeixIHlHnsK/rMOnT9OHUW6BuUGTQaCM8y8Ga8jvTMIAksBJ8URzJWxIcCvbKjMcgJOYBmYZcY8hHZjXEaVgkEXnozMFQct2Yul8y7zqcwEViIMeR+GSIdAqmMOrl6DlRKM0HnvXA==
+ b=KDR1i5G7wY8u6wFbBH3gS8ksaECspFtZtwqW/ImNi/a18fohu6Fzn8kBj7EUpGjYcM2i4OVztZSBDepKkiFgZgTwOYWzh9ArzKwv5sRqDqQJDWSPWJDsVct8BmiJp1COJNebki1KilcL+sFfpSulHX1CR4OYLapMk+UPUGufEBT8JDuaAYWGJnTOep6JpgOP3gqqFBaqIc1gZCYIrwcQjl+XpfzAsahah8GXoUDyMk6yYOMwem82iX8gUnJ5ltys7CqngwPbhDvPdn7zPTtWE0g9ZzRzSER+4jmNxOZLIxnK4dQNazgZU1Mqx4F+I0UtJUdGf6gWehJquSWMil5I5w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r2F46NCMVyuOOf0Ijxktndjmzxkou34JWqbSi9rrUso=;
- b=gmBZqdLRo0CYnWYs9wIKSfcWzO9g+49i+cLbSCAYMT+J1I/aqMGtPx8WgxpEleaJGiB8xg0dfi/h55mVobOgdv/t5gO9gtboyOU9WVG4E/tHBt00UUmh6blJl8sPr9NuvHKJnghceB4NALw0Q3J27/nH9fQlnNgiKyEZ3pWeW5MNRrCJcCAKGMWI+++VYu7yipZ/O6lmmBP/agkTYlx6dNAGzGcxWO/v43CTK40QNwERBngm73fZeCu3u+oBxS6H0vOsRlggyHv+ZlnyHjEEYDZGbjWlW8UfOpm1VwACFXZtyiBAnZwxEqqvspvJme8C7ACxXhb4kBTW5ygwKtkufw==
+ bh=FS/1QYm5023d6Z2NpkBEnI9vvY8B/quHivVY3QC8RIE=;
+ b=ZYDHl8NEBI2Fjq1I38B4T87glFImp3q9TIQRkj17hJncggk3CbDIwF3pr9PzD3VbqsbLoHTpe/ajO5G0zP7FGxKZUsQyIVj2uWe3wZgFM7L9to8BpjoEK4r1aYcbXaJ2mxff8r3O799+/rL46UOWuiPIFkJMdOS07FXsA1tvgUq1oFmMlRy3C8i/Tet9aavj0BzZeG83h/me2kfMNiQQw+SE5V46DC2GFGokzxMr58dwapzij2orHtSiVgBr+e6bhHb5TnT+8jALA9QOTRFYsLegE/uq4buHbAksFDjH9ZPT5z+QYFCeIW2SNrfN33jV91p9xg3OHF/WaEqPUIfWaA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r2F46NCMVyuOOf0Ijxktndjmzxkou34JWqbSi9rrUso=;
- b=NQ5fs7tS9+aaA/nhOnRA6l0EmTrUp+3AqGFlWZ8Yk7BOto43ypXxsrOCS2zWRNhmkpdkbWbZ/pgRlHj3nEfDUvl5vtiE5qKsjYZTKF5VmvZzOBKjuMrAOspyhgOkcG7gLVRXuFexDDyuKDDPy3uqXUnJqNnL3PRsBtrzCjU1/s0=
+ bh=FS/1QYm5023d6Z2NpkBEnI9vvY8B/quHivVY3QC8RIE=;
+ b=QPSshECj8iXu/GwkQ+IkM91uoRxUppTZJZhK9BRJWQRvMu368qENXXl/cDU71Evo8CxXKUCD9Eu968tWyaHtrsmmqelb8EWUEGpQJ+0t00R3Whve1ZXhSNHyruJepJMRZv2j7/lt005UcSzQmlii2c5/mhx9tH5L/1U/MEqmMrY=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by BY1PR12MB8446.namprd12.prod.outlook.com (2603:10b6:a03:52d::16) with
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
+ by DS0PR12MB7727.namprd12.prod.outlook.com (2603:10b6:8:135::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.35; Thu, 22 Jun
- 2023 17:43:58 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::dfcf:f53c:c778:6f70]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::dfcf:f53c:c778:6f70%5]) with mapi id 15.20.6521.020; Thu, 22 Jun 2023
- 17:43:58 +0000
-Message-ID: <d361edd0-18b4-b14f-0777-81fa20bb334d@amd.com>
-Date:   Thu, 22 Jun 2023 12:43:56 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH v4] PCI: Call _REG when transitioning D-states
-From:   "Limonciello, Mario" <mario.limonciello@amd.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
-References: <20230621222857.GA122930@bhelgaas>
- <03e5d343-848c-02c7-2deb-917d1b93ce8c@amd.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.23; Thu, 22 Jun
+ 2023 21:02:05 +0000
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::b616:6941:8855:93ad]) by BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::b616:6941:8855:93ad%5]) with mapi id 15.20.6521.024; Thu, 22 Jun 2023
+ 21:02:05 +0000
+Message-ID: <15248fe6-9b82-7135-4bb7-73667aaec604@amd.com>
+Date:   Thu, 22 Jun 2023 14:02:03 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v3 1/2] PCI: pciehp: Add support for async hotplug with
+ native AER and DPC/EDR
 Content-Language: en-US
-In-Reply-To: <03e5d343-848c-02c7-2deb-917d1b93ce8c@amd.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Fontenot Nathan <Nathan.Fontenot@amd.com>
+References: <20230621185152.105320-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20230621185152.105320-2-Smita.KoralahalliChannabasappa@amd.com>
+ <20230622090403.GA21721@wunner.de>
+From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <20230622090403.GA21721@wunner.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DM6PR06CA0060.namprd06.prod.outlook.com
- (2603:10b6:5:54::37) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0166.namprd03.prod.outlook.com
+ (2603:10b6:a03:338::21) To BYAPR12MB2869.namprd12.prod.outlook.com
+ (2603:10b6:a03:132::30)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|BY1PR12MB8446:EE_
-X-MS-Office365-Filtering-Correlation-Id: bd96acac-f697-461c-875e-08db7348420c
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|DS0PR12MB7727:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0bf46e2d-33ce-4c12-5611-08db7363eefb
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4+8eJr35ZONh+y2DUnTAIWAJkn+khv7QBl9nXnwDS9WzqeV4iGanDG3kxRit4SXoq5AwvoPcW33mGf33bOeQ7Pu2IUHVhDPOnSYb6TlcUD31O44WqreyV66QsqnOIxl3XK/dazXLzlA0nAjepu6jcMvTrFJCfXqfl0FuDaOE7wML3MKzdUEsJhDSosE7KZtgRxP8RgdtWMkVcur4blPTAPuGJm+PzdbEnQA0AvhCqK9plFURS5BZadp1SVc70+5/Ook80qlJwXTUl6lGEIHKT2qKG+jYG3ffvuc3+y5fH3xNhPXOSh1AbZASOBtHXj8b0tS/HCQLvkY+4Q+ITe4u1rB5bibTADsPrxs5Sz5D5gnAUGTEFIyTm+dNaToEjNeV1Zz76/kT27UWICMe4RO+bReNqYmYiE6mVhwh507xRHlofZstmantYQ62OClOh0wYalIckJMNGNTxK/GLCmRDZ8C7JdiuY03xSZ7QFY3tcrqzDVxgRJdzuYMA3dVCEg/3JLTRG8AX+iMyC0oRN6RGyPdF4tyrm1LKeywgCS8ufWYIhMt2fePMMkeWQ1oCDAw5/N5K03sQrO3nfbwaEi66aPofEN7c8XcWn8ym/aZ58+5hGFiyjx2sU1J9mMflqeKtEQ7G1N7Kru1yj1xwIWudgNwf0cHSrfEBnVilXgJ+mMn6y3ACAZG0CGFRqWBSttNy
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(396003)(39860400002)(366004)(136003)(376002)(451199021)(966005)(8936002)(66556008)(8676002)(186003)(66946007)(66476007)(5660300002)(4326008)(54906003)(6486002)(316002)(478600001)(41300700001)(36756003)(26005)(38100700002)(6506007)(6916009)(53546011)(6512007)(86362001)(83380400001)(31696002)(31686004)(2906002)(2616005)(30864003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: cWypERmwodZPaVWtQC7Srqw/5Ahi2fCll6IVv8qYQ/fcitvnj9HcbIR2KiNhd6ZPBsKYh8TdvjzJKAC6oeYV4glAdm+InYtT3sB3Xj/VkSBI9skCu036YFmC7+3BfYrGhFiI25MuuO9I2fSqg5UxL+DF8IZbWxPJZywgMjEzx9GuOj3Bw/ht0cfC5eWgJIR4nZvsVgCe0Eh3Fz80IrDQX3lhiN17/fXXRuAKYB2lB045yxiDfkTz/kqWGmNL3T6rrJfnDbqG0nTVnM/gDkP2EGLcKB9DlwArHFIf1YI0/sXD3OojAukUczIkPnyIRgPlNo9sLrFOHOBTCto5k1wekzdwbR+w3VWwSq5cBsp5frJ63YabXVhU3roMr1tN9t2AYi7Ew8PFsRG5yZ/MAPAgC6Jygupwux6Zwj/J+9+byy0VQi6eSZV8tDj+HHCKW0/stCZVlpp/h3IRSMqR2Xx5qjJZ5ATC5uocL9oqhyVYo7AFzMWZN5W+9OcPxpFu8lkCvYNUH9W3+jlT2+P/VpbdAuY7/N0rw7lluHJtkUPE6xWAVA3eqL0U8KtThgbeoglf82J15HFO1A55WjmamdTDMm+Zo7ZgXVxRMYRppLBXtaJNNRt1goQJa6NwnKj80LBBMmvm7MpLpk4qGtzIxr3/8A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(376002)(396003)(136003)(366004)(346002)(451199021)(4326008)(2906002)(478600001)(54906003)(86362001)(31696002)(6486002)(316002)(41300700001)(38100700002)(66946007)(83380400001)(36756003)(6916009)(2616005)(66556008)(66476007)(6512007)(8676002)(8936002)(6506007)(26005)(186003)(5660300002)(31686004)(53546011)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ajZXV1R3d3hzQ0xWZUZLYW9LbisyVXdqcUNZUUEvb2VvMHAweGNscXR5TzI2?=
- =?utf-8?B?OFd2TDZGaldXa2RES0dvcGJLS3hrK2c0QjkrSTArTjhSbitLaXlJc1pvZHZq?=
- =?utf-8?B?VVR5OWpKOEF2Qi9XMjRhRS9CaUR0eUNBRHFHb3lwVjVHcFNBZ0h5cjEzZVRE?=
- =?utf-8?B?T1V3T2lsNDNKRGgvTzNYRUhJbk5mTEY0c3IrNFZ1M3dlT3ZteDczUnFVWld0?=
- =?utf-8?B?cmovaFF4dllCMDdtZ01FS0hsVGYzazlXbVV6ZW13L0hPeXl0R3E5d05wSS9Y?=
- =?utf-8?B?VHZMcmNSTFZwelBUaGNXSGlZY3VtWDg2QTRtSERjWjRiNEFZZmdxQnVKd09L?=
- =?utf-8?B?d2c3amJ0dnRFM25VUUdBaWtjazNtaytJclZXU3FiTE5ndUhWZ0YvY1lleEVM?=
- =?utf-8?B?MlRXL25FL3FIZDhBQmkvanlhR1p5ZHdyU250UVNzNnl2MkhUTk0vM1VnSm1M?=
- =?utf-8?B?dzJDRGF4elVoTXBwVzN6MjVTR0RsWnlFQlNTWDBOa21rZDRvekxXZXhTNlVQ?=
- =?utf-8?B?SmcrTjlVRjArVHUrbG43WHpFRVFmeDUvQVFtVHFrN0xVTzd4R2FSWGs4eVlj?=
- =?utf-8?B?RGdoTVdHV2kxU0dSVkN3MElIc1YrMnR4MWRwR1E2STZJWXhKeXVmTVZvbm94?=
- =?utf-8?B?aWdPa0lDd2Z1LytHK1RWclhyZHFMck4xUzVUNDdNTzhJU1NBUmFIUkl5aGRh?=
- =?utf-8?B?Y2RWN0FMM24xM0hWazFxSURpRkRHRWlGeHZySmJEc2ZjdXdlYnQxZXMvRGRu?=
- =?utf-8?B?dEdCNWl1NGVBbTR1QVArd1lMQ3JSelp3TXE3dWlGdzQ5bUFKRzZxeGxOVjVG?=
- =?utf-8?B?UitGanRIVFd6c1FtSE9Dd0ZtMVJSTVljRFliR05LWXBpMWhlK3hkU1diVGp1?=
- =?utf-8?B?MDViWVZRWkRiczZudUhYdHJVemhEL2dpb1RIM1prTzdEQkVxZXJPZVBzUS9U?=
- =?utf-8?B?cWNQM1o2MGs1NTdhTTNBb3ZqbDluTXNTeWEyMTMxQk52YWtzbVUwTVV1ZlNn?=
- =?utf-8?B?NXkxTmMvYkR3emJWY1VCTGUzek5JZW5hYVFBdnZ6SGRoYXR1TWRXUjBLZ0Er?=
- =?utf-8?B?YW9CMEY1dWQrMGZjRkVYOGE3UWpKWTdDVU04bHhIZTR0bXNJcUdTVTdJNHNq?=
- =?utf-8?B?SUxnUVB5ZzNRVnNBb2dZWXJNU2g5dmdXby9aTWlYc2FYb0VvK01yaTNVV0V5?=
- =?utf-8?B?alpGaHJSeVl3Q3NKdHlPU2g0a2F3SWhTNVRyem5PY0tHSDErQzFUUEFnMjho?=
- =?utf-8?B?eVZQQzRUV01MRGVrVDFjclNQdUl2YWo4WmRWdjZRTzIzNm04eFZQVTY1d21F?=
- =?utf-8?B?SFd2elcrWThBczN2OXVGRGw1QW1DZ0hiU20yc0VxaWFJc2FvRE93WlJJaXFW?=
- =?utf-8?B?bElsOE5EcnVVYXpKazlibzhldWlHUDlnUUxUR1RVYWNOQkhlbTVZQkl5b0xs?=
- =?utf-8?B?SVZ4QzVVWmZWZ3phY25KRDdmOEVReWZVS0JPSTJJOGJVMFgxZHlEdXpGWlBV?=
- =?utf-8?B?aGNwZGdMNjN5ejNzaHB2bmp0bzR1RmFhT05VMnJ6K0Q2T2U1a0lNWmc4bERo?=
- =?utf-8?B?QXBsa0h4SXZEWWZMb21JVjZ1aHdqekc2MGNKMCt3a0RPWEFtWVEvT1crTFJM?=
- =?utf-8?B?MWl2Y0MrMWhYT205RU16TnhCVmQ2WXNiemdyT1F4WHNyUERnS0RkQVAwWUFp?=
- =?utf-8?B?K0d6T29UcFBiMGxXWVNIUjFTSWJ6dVNJNG1ISENrU2V5RDREQkEzS3Q3a0RS?=
- =?utf-8?B?QklTMkgza3hNZzZxWDJzc1RQV09TekptUFFWRm0xUTlhWnNVTGVqU3dMclBG?=
- =?utf-8?B?ekRvajBkWGYzbzQ5ajQrZGR0TFA0WWJwNTBFNDQvempvd3pQMzRxWWs4Q2sw?=
- =?utf-8?B?Y1ZyT0xVQ0ZBcGhHQlIzVWhhbm9qdCtRUWZ4dytIRURGKzB5dkZBNnhac0NE?=
- =?utf-8?B?ZXhFRkJyZWlxcGU5dHg4U0wzMHd5KzRBVzJKWGhFc2diZUwxWFR6MVhzSHV4?=
- =?utf-8?B?UXZnem1BM2tjSmV2N3drR1ZEbXl4ekR6ZHZMcmxaVVltWnVqMi9vQkxQTlZu?=
- =?utf-8?B?THp2a3JZYkJNbGRnaVVnWlU2bkhMSjFFUExVYjlZWm43NXQxakhhdDl6ZktY?=
- =?utf-8?Q?bJqbjKFtJ1qsVsuoIatQPazpr?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?c05PeC94T3laRFM2SmV2RUZRQmtoRnRYTVV3SlB3ZlRSOTE4eTl5Q2NoT0Z1?=
+ =?utf-8?B?eEtySWxUVkRIWFdReGN0SXl1R3haeFZOY2ZheHY2dTA2RmpscmlMczhSdjV5?=
+ =?utf-8?B?VWdEM0xHQWRDRHdVT01wS0xhT0NxbUZTN0cxdU0xT3pYcEpoWkg5eWJONmFp?=
+ =?utf-8?B?aTFyKytCMGRIUVFZcVhySFBPOXhLMm1wdUpyU2JoQ3NQOEVBYW0xWHZpNnF5?=
+ =?utf-8?B?UER3ZGVsZkR3aVBWU24vUW44cXdoUDRZOUtQeDlJcTN5cmYrdmFxRWJGNUpi?=
+ =?utf-8?B?UmxuaTh4QTA1cjZsUDN4NG5UYmhNaXpFdkhFSkw4ZU1KaHhhZUhrTnA4OFc1?=
+ =?utf-8?B?MWxLd2l6aHlOMUZnMlBJMUJoRnJIZGk4ODZkVUVBMGo3UFBPYkN3cER2cVJy?=
+ =?utf-8?B?d0hGWGFQSXI5Rkl6SWdxUkxkVDNPVzduM0tIRTRGN0krR2N1ZUxOT1dUY2o2?=
+ =?utf-8?B?aVlWSHg5WHgyWHdWWnd4cTZ0NDlUbGtSYlpIVkVEb29QUWJrTm5oRHoyYXdo?=
+ =?utf-8?B?ZWdSa1lFd1pqWmV0M3d0cklpL3lmUjVRbUpkM3FVREo1dVdtc2N2c2p2emdz?=
+ =?utf-8?B?UXNUNzdPTWVsYnpJTWI0a0JGWWhFenlmYU1sOVVSSjNQOWJheEJ6MGNYYXZK?=
+ =?utf-8?B?cHU0WWs1ZTlmV3lxRXRrRGVWK2VhN3hFRGJ6MGlOZFJTd1lVSW9weVJaZldm?=
+ =?utf-8?B?cEZqdFBpNHIvdFVISkl5ckN3UStZMjg2a0dIcnpPbWRQTkg0Y2xTZ0czQ0Zn?=
+ =?utf-8?B?bmkzdUNqZmNBNkVubGorRmQ0UnNydWdvWW1wL2h3WmxEaDFQUmxnelhVZ1pv?=
+ =?utf-8?B?ZGhuVGx3Z2lVRXBXaXU5akM3YktmR0JveFlpRFBncnNqWWlvZThyaVdGeDJU?=
+ =?utf-8?B?cGtQaFNFT01zeC80aGd3M2J4d3k4TWZNNWtDZkVrWE0wNTVObDNXYnNWeENy?=
+ =?utf-8?B?N0drcW1GVHhXbjlhYXBvc0ZHSHk4OVVSajVOVXBoTTZQeDJVZ00wQ09ySVN2?=
+ =?utf-8?B?enVFYTYzWUYzcXV2ODJZR1BHUzAwa2ZxcWRJWXlJRmtmcDhZUWt1MTJyNTNm?=
+ =?utf-8?B?MUNUYUdqUVk0YW1jd2UwcmovMC9OdmN5TzV6bld3UWIzL0Vhd2NtTHZwbmxP?=
+ =?utf-8?B?QWVlRnFxcm5KaXN1S2dBbzFhVDdPem8yMGtSbGlKcnkwd0JTM29QdTBQTDZL?=
+ =?utf-8?B?V0hNUmNhamVvKzJoUlhYNW5LV2JKRkpTRmJiSmJaV1dtT3pUc0EwVnRVVWJk?=
+ =?utf-8?B?QmVlRk1yc1Z4MDVObGZvdlhhNHBXT3RRNHVRc0RoWHg5Q2hjTExZTFFyeE03?=
+ =?utf-8?B?WkZ1cVFPRU4yWE0xSUovQ2pVQ3pBUnYrS1BUQW9lOWVaSy92Rmw4TjQ1a2ho?=
+ =?utf-8?B?YklLTzlrR2xEa3NrOGdwam5RRFhTeE1wdm5kQnRWc0MvWWt3Sk5GVFFzU3FV?=
+ =?utf-8?B?TmZ4b0pRUVgxZFVrTWpma1VhZmRoNjJtcGdad2RDVDdOczdFSlpod21BbjNH?=
+ =?utf-8?B?RSs0bDJLM1B4RzNieURpVWkwQ041UnB0UXN2TXgydTlvbUl2RFdUOS8vS3BR?=
+ =?utf-8?B?WERrU3Q3cGdUQmU1SytsVnoyL1B5NVRKa0YvUGUwY0lsV1A3NHhsSDRKc29S?=
+ =?utf-8?B?MDJUb282cG9DOVA1cno3dTFkVGdtWXI0WUtSdjBrakM5M0piUjRrN3k2YkNp?=
+ =?utf-8?B?QStXeGdQOXVlTVVFQzF2YVhaRGVRUVBaaVdaTWdOTCtqeXQwUmxpL1FESEM4?=
+ =?utf-8?B?MGRFek9qRnh4RkN5UEdrdmkzSEZ3TDBCQkhidWU1d29PMWdBL1NjU3l0U2My?=
+ =?utf-8?B?OHlIcHQwcGdwZWxibFJqS3I4ci81T1NMcm4yeTJFUEk0dXZXUVJLV3RuUTZL?=
+ =?utf-8?B?M3JMODZXUktrWjVkVmdtM2tTaUlVYUJ0VU5vL1BPaVFPZXBpNkNBaWZXNEZv?=
+ =?utf-8?B?cXpkODFMS0ZJRTgrWlNFeTBEQUhJNVlGL2xiT1dEb00yNVZjbGxyRmZWemZj?=
+ =?utf-8?B?V21vK3NwRThhNVlhNDdXaFJtQ1pMK1Exd2p0c3JSbFVqZXdMNFRQYWJjMWx0?=
+ =?utf-8?B?Rmh3a0dIWHhIRXoyd1VpeWczVUlVSVZNZWxFZ2lVK2xCVnA3YzRqSzI3bXhH?=
+ =?utf-8?Q?wY2kwd1eJUsMKUK0wh2l7onPx?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd96acac-f697-461c-875e-08db7348420c
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0bf46e2d-33ce-4c12-5611-08db7363eefb
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2023 17:43:58.7441
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2023 21:02:05.3545
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: N/FjtS62dIf/NEslcuRmTA4DfRsJi0XbOKrJ4gi4FD6QdCBcNbbn+kkCXkiI5KxY7RHZp3+OYyCYcOQTRgSC+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR12MB8446
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7CYmul3eyHya3QPPOuky5kV6Sn7FVJ9y6pxyBmg7l8V2KcVxC+S1XLUAFZZPjc0TFxu60l/4z1w8Fz1mdijyNQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7727
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
@@ -125,350 +131,93 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-On 6/21/2023 5:52 PM, Limonciello, Mario wrote:
->
-> On 6/21/2023 5:28 PM, Bjorn Helgaas wrote:
->> On Tue, Jun 20, 2023 at 09:04:51AM -0500, Mario Limonciello wrote:
->>> Section 6.5.4 of the ACPI 6.4 spec describes how AML is unable to 
->>> access
->>> an OperationRegion unless `_REG` has been called.
->>>
->>> "The OS runs _REG control methods to inform AML code of a change in the
->>> availability of an operation region. When an operation region handler
->>> is unavailable, AML cannot access data fields in that region.
->>> (Operation region writes will be ignored and reads will return
->>> indeterminate data.)"
->>>
->>> The PCI core does not call `_REG` at anytime, leading to the undefined
->>> behavior mentioned in the spec.
->> I got lost in the maze of users of ACPI_ADR_SPACE_PCI_CONFIG, but is
->> it really true that we never call _REG for PCI config space at all
->> today?
-> I double checked a BIOS debug log which shows ACPI calls
-> to confirm and didn't see a single _REG call for any device
-> before this patch across a boot/suspend/resume cycle.
->>
->> If so, I guess AML that uses ACPI_ADR_SPACE_PCI_CONFIG won't work
->> until after we set the relevant device to D0?
-> The particular problem that that exposed this issue doesn't
-> happen until suspend/resume time, but yes I think this should
-> be called when setting the device to D0.
->>
->> Do we explicitly set devices to D0 during enumeration, e.g., somewhere
->> in the pci_scan_device() path?  If not, should we?
-> AFAICT it's happening for PCIe ports as part of:
-> pcie_portdrv_probe
-> ->pcie_port_device_register
-> ->->pci_enable_device
-> ->->->pci_enable_device_flags
-> ->->->->do_pci_enable_device
-> ->->->->->pci_set_power_state(pci_dev, PCI_D0)
-
-
-Just to add to this; I double checked and one of the devices that doesn't
-have a driver on my system has the power_state set to "unknown". I don't
-think it would be appropriate to explicitly put "all devices without 
-drivers"
-into D0 as this could block low power states for the SOC.
-
-On the Intel side, there is some special stuff in intel-pmc-core for example
-that explicitly puts specific driverless devices into D3 to ensure low power
-states.  If we put everything without a driver into D0 we may break 
-stuff like
-that.
-
-
->>
->> If we don't set things to D0 during enumeration, it seems like this
->> AML won't work until we suspend and resume the device.
->>
->> Separately, I propose a minor restructuring to avoid the need for
->> mentioning PCI_POWER_ERROR and PCI_UNKNOWN.  Checking for those means
->> we need to look at the definitions to be sure we cover all cases, and
->> it also doesn't solve the problem that a caller can pass undefined
->> pci_power_t values that would index outside the state_conv[].
->>
->> Possible rework attached below.  I also like the fact that it makes
->> the _REG patch very simple and specific to _REG.
->
-> I like your rework as well.
->
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> For the new patch.
->
->>
->>> The spec explains that _REG should be executed to indicate whether a
->>> given region can be accessed.
->>>
->>> "Once _REG has been executed for a particular operation region, 
->>> indicating
->>> that the operation region handler is ready, a control method can
->>> access fields in the operation region. Conversely, control methods
->>> must not access fields in operation regions when _REG method execution
->>> has not indicated that the operation region handler is ready."
->>>
->>> An example included in the spec demonstrates calling _REG when 
->>> devices are
->>> turned off: "when the host controller or bridge controller is turned 
->>> off
->>> or disabled, PCI Config Space Operation Regions for child devices are
->>> no longer available. As such, ETH0’s _REG method will be run when it
->>> is turned off and will again be run when PCI1 is turned off.".
->>>
->>> It is reported that ASMedia PCIe GPIO controllers fail functional tests
->>> after the system has returning from suspend (S3 or s2idle). This is
->>> because the BIOS checks whether the OSPM has called the `_REG` method
->>> to determine whether it can interact with the OperationRegion assigned
->>> to the device as part of the other AML called for the device.
->>>
->>> To fix this issue, call acpi_evaluate_reg() when devices are
->>> transitioning to D3cold or D0.
->>>
->>> Link: 
->>> https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html#reg-region
->>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
->>> index 052a611081ec..182cac535250 100644
->>> --- a/drivers/pci/pci-acpi.c
->>> +++ b/drivers/pci/pci-acpi.c
->>> @@ -1043,6 +1043,16 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
->>>       return false;
->>>   }
->>>   +static void acpi_pci_config_space_access(struct pci_dev *dev, 
->>> bool enable)
->>> +{
->>> +    int val = enable ? ACPI_REG_CONNECT : ACPI_REG_DISCONNECT;
->>> +    int ret = acpi_evaluate_reg(ACPI_HANDLE(&dev->dev),
->>> +                    ACPI_ADR_SPACE_PCI_CONFIG, val);
->>> +    if (ret)
->>> +        pci_dbg(dev, "ACPI _REG %s evaluation failed (%d)\n",
->>> +            enable ? "connect" : "disconnect", ret);
->>> +}
->>> +
->>>   int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
->>>   {
->>>       struct acpi_device *adev = ACPI_COMPANION(&dev->dev);
->>> @@ -1053,32 +1063,36 @@ int acpi_pci_set_power_state(struct pci_dev 
->>> *dev, pci_power_t state)
->>>           [PCI_D3hot] = ACPI_STATE_D3_HOT,
->>>           [PCI_D3cold] = ACPI_STATE_D3_COLD,
->>>       };
->>> -    int error = -EINVAL;
->>> +    int ret;
->>>         /* If the ACPI device has _EJ0, ignore the device */
->>>       if (!adev || acpi_has_method(adev->handle, "_EJ0"))
->>>           return -ENODEV;
->>>         switch (state) {
->>> +    case PCI_POWER_ERROR:
->>> +    case PCI_UNKNOWN:
->>> +        return -EINVAL;
->>>       case PCI_D3cold:
->>>           if (dev_pm_qos_flags(&dev->dev, PM_QOS_FLAG_NO_POWER_OFF) ==
->>> -                PM_QOS_FLAGS_ALL) {
->>> -            error = -EBUSY;
->>> -            break;
->>> -        }
->>> -        fallthrough;
->>> -    case PCI_D0:
->>> -    case PCI_D1:
->>> -    case PCI_D2:
->>> -    case PCI_D3hot:
->>> -        error = acpi_device_set_power(adev, state_conv[state]);
->>> +                     PM_QOS_FLAGS_ALL)
->>> +            return -EBUSY;
->>> +        /* Notify AML lack of PCI config space availability */
->>> +        acpi_pci_config_space_access(dev, false);
->>> +        break;
->>>       }
->>>   -    if (!error)
->>> -        pci_dbg(dev, "power state changed by ACPI to %s\n",
->>> - acpi_power_state_string(adev->power.state));
->>> +    ret = acpi_device_set_power(adev, state_conv[state]);
->>> +    if (ret)
->>> +        return ret;
->>> +    pci_dbg(dev, "power state changed by ACPI to %s\n",
->>> +        acpi_power_state_string(adev->power.state));
->>>   -    return error;
->>> +    /* Notify AML of PCI config space availability */
->>> +    if (state == PCI_D0)
->>> +        acpi_pci_config_space_access(dev, true);
->>> +
->>> +    return 0;
->>>   }
->>>     pci_power_t acpi_pci_get_power_state(struct pci_dev *dev)
->>
->> commit 79d4fdf58711 ("PCI/PM: Validate acpi_pci_set_power_state() 
->> parameter")
->> Author: Bjorn Helgaas <bhelgaas@google.com>
->> Date:   Wed Jun 21 16:36:12 2023 -0500
->>
->>      PCI/PM: Validate acpi_pci_set_power_state() parameter
->>           Previously acpi_pci_set_power_state() assumed the requested 
->> power state was
->>      valid (PCI_D0 ... PCI_D3cold).  If a caller supplied something 
->> else, we
->>      could index outside the state_conv[] array and pass junk to
->>      acpi_device_set_power().
->>           Validate the pci_power_t parameter and return -EINVAL if 
->> it's invalid.
->>           Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->>
->>
->> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
->> index 052a611081ec..bf545f719182 100644
->> --- a/drivers/pci/pci-acpi.c
->> +++ b/drivers/pci/pci-acpi.c
->> @@ -1053,32 +1053,37 @@ int acpi_pci_set_power_state(struct pci_dev 
->> *dev, pci_power_t state)
->>           [PCI_D3hot] = ACPI_STATE_D3_HOT,
->>           [PCI_D3cold] = ACPI_STATE_D3_COLD,
->>       };
->> -    int error = -EINVAL;
->> +    int error;
->>         /* If the ACPI device has _EJ0, ignore the device */
->>       if (!adev || acpi_has_method(adev->handle, "_EJ0"))
->>           return -ENODEV;
->>         switch (state) {
->> -    case PCI_D3cold:
->> -        if (dev_pm_qos_flags(&dev->dev, PM_QOS_FLAG_NO_POWER_OFF) ==
->> -                PM_QOS_FLAGS_ALL) {
->> -            error = -EBUSY;
->> -            break;
->> -        }
->> -        fallthrough;
->>       case PCI_D0:
->>       case PCI_D1:
->>       case PCI_D2:
->>       case PCI_D3hot:
->> -        error = acpi_device_set_power(adev, state_conv[state]);
->> +    case PCI_D3cold:
->> +        break;
->> +    default:
->> +        return -EINVAL;
->>       }
->>   -    if (!error)
->> -        pci_dbg(dev, "power state changed by ACPI to %s\n",
->> -                acpi_power_state_string(adev->power.state));
->> +    if (state == PCI_D3cold) {
->> +        if (dev_pm_qos_flags(&dev->dev, PM_QOS_FLAG_NO_POWER_OFF) ==
->> +                PM_QOS_FLAGS_ALL)
->> +            return -EBUSY;
->> +    }
->>   -    return error;
->> +    error = acpi_device_set_power(adev, state_conv[state]);
->> +    if (error)
->> +        return error;
->> +
->> +    pci_dbg(dev, "power state changed by ACPI to %s\n",
->> +            acpi_power_state_string(adev->power.state));
->> +
->> +    return 0;
->>   }
->>     pci_power_t acpi_pci_get_power_state(struct pci_dev *dev)
->> commit 746652bd0376 ("PCI/PM: Call _REG when transitioning D-states")
->> Author: Mario Limonciello <mario.limonciello@amd.com>
->> Date:   Tue Jun 20 09:04:51 2023 -0500
->>
->>      PCI/PM: Call _REG when transitioning D-states
->>           ACPI r6.5, sec 6.5.4, describes how AML is unable to access an
->>      OperationRegion unless _REG has been called to connect a handler:
->>             The OS runs _REG control methods to inform AML code of a 
->> change in the
->>        availability of an operation region. When an operation region 
->> handler is
->>        unavailable, AML cannot access data fields in that region.  
->> (Operation
->>        region writes will be ignored and reads will return 
->> indeterminate data.)
->>           The PCI core does not call _REG at any time, leading to the 
->> undefined
->>      behavior mentioned in the spec.
->>           The spec explains that _REG should be executed to indicate 
->> whether a
->>      given region can be accessed:
->>             Once _REG has been executed for a particular operation 
->> region, indicating
->>        that the operation region handler is ready, a control method 
->> can access
->>        fields in the operation region. Conversely, control methods 
->> must not
->>        access fields in operation regions when _REG method execution 
->> has not
->>        indicated that the operation region handler is ready.
->>           An example included in the spec demonstrates calling _REG 
->> when devices are
->>      turned off: "when the host controller or bridge controller is 
->> turned off
->>      or disabled, PCI Config Space Operation Regions for child 
->> devices are
->>      no longer available. As such, ETH0’s _REG method will be run 
->> when it
->>      is turned off and will again be run when PCI1 is turned off."
->>           It is reported that ASMedia PCIe GPIO controllers fail 
->> functional tests
->>      after the system has returning from suspend (S3 or s2idle). This 
->> is because
->>      the BIOS checks whether the OSPM has called the _REG method to 
->> determine
->>      whether it can interact with the OperationRegion assigned to the 
->> device as
->>      part of the other AML called for the device.
->>           To fix this issue, call acpi_evaluate_reg() when devices 
->> are transitioning
->>      to D3cold or D0.
->>           Link: 
->> https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html#reg-region
->>      Link: 
->> https://lore.kernel.org/r/20230620140451.21007-1-mario.limonciello@amd.com
->>      Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->>      Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
->>
->>
->> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
->> index bf545f719182..a05350a4e49c 100644
->> --- a/drivers/pci/pci-acpi.c
->> +++ b/drivers/pci/pci-acpi.c
->> @@ -1043,6 +1043,16 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
->>       return false;
->>   }
->>   +static void acpi_pci_config_space_access(struct pci_dev *dev, bool 
->> enable)
+On 6/22/2023 2:04 AM, Lukas Wunner wrote:
+> On Wed, Jun 21, 2023 at 06:51:51PM +0000, Smita Koralahalli wrote:
+>> --- a/drivers/pci/pcie/dpc.c
+>> +++ b/drivers/pci/pcie/dpc.c
+>> @@ -292,10 +292,68 @@ void dpc_process_error(struct pci_dev *pdev)
+>>   	}
+>>   }
+>>   
+>> +static void pci_clear_surpdn_errors(struct pci_dev *pdev)
 >> +{
->> +    int val = enable ? ACPI_REG_CONNECT : ACPI_REG_DISCONNECT;
->> +    int ret = acpi_evaluate_reg(ACPI_HANDLE(&dev->dev),
->> +                    ACPI_ADR_SPACE_PCI_CONFIG, val);
->> +    if (ret)
->> +        pci_dbg(dev, "ACPI _REG %s evaluation failed (%d)\n",
->> +            enable ? "connect" : "disconnect", ret);
+>> +	u16 reg16;
+>> +	u32 reg32;
+>> +
+>> +	pci_read_config_dword(pdev, pdev->dpc_cap + PCI_EXP_DPC_RP_PIO_STATUS, &reg32);
+>> +	pci_write_config_dword(pdev, pdev->dpc_cap + PCI_EXP_DPC_RP_PIO_STATUS, reg32);
+> 
+> Make this read+write conditional on "if (pdev->dpc_rp_extensions)"
+> as the register otherwise doesn't exist.
+
+I'm checking for pdev->dpc_rpc_extensions inside 
+dpc_handle_surprise_removal() before calling pci_clear_surpdn_errors(). 
+Should I recheck it once again here?
+
+> 
+> Wrap to 80 chars per line.
+
+Okay.
+
+> 
+> 
+>> +	pci_read_config_word(pdev, PCI_STATUS, &reg16);
+>> +	pci_write_config_word(pdev, PCI_STATUS, reg16);
+>> +
+>> +	pcie_capability_write_word(pdev, PCI_EXP_DEVSTA, PCI_EXP_DEVSTA_FED);
 >> +}
->> +
->>   int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
->>   {
->>       struct acpi_device *adev = ACPI_COMPANION(&dev->dev);
->> @@ -1074,6 +1084,9 @@ int acpi_pci_set_power_state(struct pci_dev 
->> *dev, pci_power_t state)
->>           if (dev_pm_qos_flags(&dev->dev, PM_QOS_FLAG_NO_POWER_OFF) ==
->>                   PM_QOS_FLAGS_ALL)
->>               return -EBUSY;
->> +
->> +        /* Notify AML lack of PCI config space availability */
->> +        acpi_pci_config_space_access(dev, false);
->>       }
->>         error = acpi_device_set_power(adev, state_conv[state]);
->> @@ -1083,6 +1096,15 @@ int acpi_pci_set_power_state(struct pci_dev 
->> *dev, pci_power_t state)
->>       pci_dbg(dev, "power state changed by ACPI to %s\n",
->>               acpi_power_state_string(adev->power.state));
->>   +    /*
->> +     * Notify AML of PCI config space availability.  Config space is
->> +     * accessible in all states except D3cold; the only transitions
->> +     * that change availability are transitions to D3cold and from
->> +     * D3cold to D0.
->> +     */
->> +    if (state == PCI_D0)
->> +        acpi_pci_config_space_access(dev, true);
->> +
->>       return 0;
->>   }
+> 
+> A code comment might be useful here saying that in practice,
+> Surprise Down errors have been observed to also set error bits
+> in the Status Register as well as the Fatal Error Detected bit
+> in the Device Status Register.
+
+And probably move this code comment below to where this function is 
+called inside dpc_handle_surprise_removal()..?
+
+> 
+> 
+>> +static void dpc_handle_surprise_removal(struct pci_dev *pdev)
+>> +{
+> 
+> I'm wondering if we also need
+> 
+> 	if (!pcie_wait_for_link(pdev, false)) {
+> 		pci_info(pdev, "Data Link Layer Link Active not cleared in 1000 msec\n");
+> 		goto out;
+> 	}
+> 
+> here, similar to dpc_reset_link() and in accordance with PCIe r6.1
+> sec 6.2.11:
+> 
+> 	"To ensure that the LTSSM has time to reach the Disabled state
+> 	or at least to bring the Link down under a variety of error
+> 	conditions, software must leave the Downstream Port in DPC
+> 	until the Data Link Layer Link Active bit in the Link Status
+> 	Register reads 0b; otherwise, the result is undefined."
+
+And include the above comment in code..
+> 
+> 
+>> +	if (pdev->dpc_rp_extensions && dpc_wait_rp_inactive(pdev)) {
+>> +		pci_err(pdev, "failed to retrieve DPC root port on async remove\n");
+>> +		goto out;
+>> +	}
+> 
+> I don't think pci_err() is needed here as dpc_wait_rp_inactive()
+> already emits a message.  (I think I mistakenly gave the advice
+> to emit an error here in an earlier review comment -- sorry!)
+
+:)
+
+Will take care of other comments below as well.
+
+Thanks,
+Smita
+
+>>   
+>>   	/* We configure DPC so it only triggers on ERR_FATAL */
+>> -- 
+>> 2.17.1
+>>
+
