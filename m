@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21609739604
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Jun 2023 05:58:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B124739617
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Jun 2023 06:00:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230372AbjFVD62 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Jun 2023 23:58:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58346 "EHLO
+        id S229578AbjFVEAn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Jun 2023 00:00:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230199AbjFVD5o (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jun 2023 23:57:44 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2088.outbound.protection.outlook.com [40.107.92.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8811F2735;
-        Wed, 21 Jun 2023 20:56:45 -0700 (PDT)
+        with ESMTP id S229684AbjFVD7N (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Jun 2023 23:59:13 -0400
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on20622.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eb2::622])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 982FF296D;
+        Wed, 21 Jun 2023 20:58:03 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gv6TX9aydwPTZhgkuWUEeD0Pq4X99B4wECCCGqTzIiFj61alwxNBCgcU1shslmk3EH3lSkGnQV52z0mt3v5m9fxWfeUlB3rC8zKVgTnwVju0aFB1UDz0mfPz4lzqRTrkoV+Xw+fFxUUf08VMH62aqhO2pAAT9w2OJx+QdwC86o9wYSEKf6EABxpDGKoSaSARHVj/e4VWqHPX2pA7J9nagB9V16ReSiUw7XIfGWCjVteNZfN0quKYTDPfo7YPalgAQlfGhqLxalfxU8uJ/HA0byzjpnHEa8TD3X+og58IXRqtDefGYgN7moixAeVQnCCC3PFcBw1CMNwFlza9/mQ7Lg==
+ b=aukQy2+OJvygP8GhV3C72LgqrEorY18fgEo5g4jfL/dDyZnlXPvIyGM+KalU8EvDcaeBJyl9AF7nJMSykWCjld3KXzU3IdPB3BCdjZeBZll22RBD6bEBJknpxKyz3KfwXaWkJlcs2y5O9Xz58+u95UijULRNZ2ORodlKwn6C+rie8GoA5wQ95l+1CZrGPIt9Hc9OxedNsxk5qk6F3bcPl78lwoprRdiR7x9lofZOPGogadFQboI2xpMRq0RjHFI3abMS4vK54zhUbNW3XMNYTHR8RNxAOI9D4cGLQDOqCOk72VoBNpRCz6bcdX7CHnO2BHIm7YefyfDwS2e7ApSw6A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=smd23x7vtbGpItusRCOZJCxcGcy/8nAFZ2Kmy/SFPc0=;
- b=flTZ2BqGmnuUpoOA0ePcK2HAIX6UIzKjXBdeSdTR7ZaR092bDj16pL50VGuVNAmzpJyafC8HjOYFSMjgVosntXCBuHshKj7UIGmMPCrJZv7V270/0ugEAxVhwd/htJsChU+JmRxguB7EdIoFepklq0VySRBmxm1zaHfVtg36BY9NXMD4CmTFygJ5C9zW/DZq/TA1BYZCx20c0iKnKh3FiKCDFN07L9yQkEWD9F6jlg9khkOdPQN3yUbLoXaOWV3TGtkI/EmzWDFUpAZIlzwT1J1eY+PPiVFTLLPc/FkRiAwZSC6gIoIxCE9GRjTedRNSm6AtSc81oaDxDNxQHndzqw==
+ bh=YEWZoqGQjZGiHM078woqIXSPHIqp1sJsoUluk/TlTf0=;
+ b=mfViSur8fVrVwrarq9LJ3AXeifUqlkGnSGYZJ7SKiMfdi4cLEj4m34yZZAxL8vgfAPI8ZbmowKazGEs5Fp6MFtsKinm+8UlPBRKMk1CwLE9xaB4bPQg+kOKwwEufoCMW8EbrPOjMNyNQrFMB/zSaVBUR8WhutmbLEF+kY92TnulM3p9aTiuRk1CGV1cmsOAQAjTXHZ170esbZxUddD/QoVAeTnT7uvMniHUJ/aDruYKPqv5VdYm9hd7ujlQ5hsiRq6pOfEOl99sMyez5G7aMpQ8/VuGdnw4Ct8TEBUCpNW4p+Wz9XtPrsSY1k/ehYXJityUkIUokEPtir58ztPZRGQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=smd23x7vtbGpItusRCOZJCxcGcy/8nAFZ2Kmy/SFPc0=;
- b=euXQxCQ/M89h3mKoufBcRJdeQIhI9YTye4hMwK5fGDcSs+fTfFS+RZLGriK0g0uc8fo2Y6OJiCfcBInM36uELCwBQUmG/cWTLTH6bQaCnVTwg75sBwI5ocztGqkmgZpOF8eBSh4IGph4k31vGeJlvt6nMZsEP4eHFxt/RSNA4cY=
-Received: from BN9PR03CA0568.namprd03.prod.outlook.com (2603:10b6:408:138::33)
- by MN2PR12MB4207.namprd12.prod.outlook.com (2603:10b6:208:1d9::23) with
+ bh=YEWZoqGQjZGiHM078woqIXSPHIqp1sJsoUluk/TlTf0=;
+ b=vUs3RgfYDOxihf2J01jMuqp+SxmiLKoesipuBoRkjxFVaMfKEFRci8julB1MQ6i4Krk3Xtgj8UMlOhdngk1JNWJksJGyVmjhxLND5C9S1lN3fyh/NFpIBuPoG8ny1iDTU3Hub/wKHDev5fAkT8FbHmZWVOPhrB6pCT+H1XF+zTQ=
+Received: from BN1PR13CA0025.namprd13.prod.outlook.com (2603:10b6:408:e2::30)
+ by MN0PR12MB5810.namprd12.prod.outlook.com (2603:10b6:208:376::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.23; Thu, 22 Jun
- 2023 03:56:35 +0000
-Received: from BN8NAM11FT084.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:138:cafe::3b) by BN9PR03CA0568.outlook.office365.com
- (2603:10b6:408:138::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.24 via Frontend
- Transport; Thu, 22 Jun 2023 03:56:34 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.21; Thu, 22 Jun
+ 2023 03:57:46 +0000
+Received: from BN8NAM11FT101.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e2:cafe::11) by BN1PR13CA0025.outlook.office365.com
+ (2603:10b6:408:e2::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.9 via Frontend
+ Transport; Thu, 22 Jun 2023 03:57:46 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -46,13 +46,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT084.mail.protection.outlook.com (10.13.176.169) with Microsoft SMTP
+ BN8NAM11FT101.mail.protection.outlook.com (10.13.177.126) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6500.41 via Frontend Transport; Thu, 22 Jun 2023 03:56:34 +0000
+ 15.20.6500.41 via Frontend Transport; Thu, 22 Jun 2023 03:57:45 +0000
 Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 21 Jun
- 2023 22:56:32 -0500
+ 2023 22:57:44 -0500
 From:   Terry Bowman <terry.bowman@amd.com>
 To:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
         <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
@@ -60,12 +60,11 @@ To:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
         <Jonathan.Cameron@huawei.com>, <linux-cxl@vger.kernel.org>
 CC:     <terry.bowman@amd.com>, <rrichter@amd.com>,
         <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
         Oliver O'Halloran <oohall@gmail.com>,
-        <linux-pci@vger.kernel.org>
-Subject: [PATCH v6 21/27] PCI/AER: Refactor cper_print_aer() for use by CXL driver module
-Date:   Wed, 21 Jun 2023 22:51:20 -0500
-Message-ID: <20230622035126.4130151-22-terry.bowman@amd.com>
+        <linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>
+Subject: [PATCH v6 26/27] PCI/AER: Forward RCH downstream port-detected errors to the CXL.mem dev handler
+Date:   Wed, 21 Jun 2023 22:51:25 -0500
+Message-ID: <20230622035126.4130151-27-terry.bowman@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230622035126.4130151-1-terry.bowman@amd.com>
 References: <20230622035126.4130151-1-terry.bowman@amd.com>
@@ -77,121 +76,241 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT084:EE_|MN2PR12MB4207:EE_
-X-MS-Office365-Filtering-Correlation-Id: 948bbba9-d21e-4fcf-bbeb-08db72d4aba6
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT101:EE_|MN0PR12MB5810:EE_
+X-MS-Office365-Filtering-Correlation-Id: 89d2a05e-686a-47f4-5467-08db72d4d66d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qcvNPL13fPpAWGNBOYgGcTpmaQrDHUrojaa9K1J3sffJOQ2hb91fXeGeOZCOVohZAtL+fXnZHDsz0cCBCEE1oUhUYTmQcqjk8x7RhShVaSyzmD0KYCUgzNlluzueDDWG0x2hO59H/BYWPPmIMRcAzskennbtLcjSsUl9N/6p8K43Sg3GPRocYsUaPZEACiyorI4EfVJjE1KquQnoIyijLcCE3fheMCjYsOhmdl2clqVW4t6SVezlG/Mmvha8x057m+er2r0QnPMJca6/uuxtYZviWyAp3MBWvAUy5FUj/Ix56fKV2EaJiOIwaYow7tJ1xVcbZms6f/3v0yxXNDzcf21HfztBbuzrfGEGWQdN71MRuxIvDClvFOdBDAAk6zv4X8k0lXbjNs9+BX8cYF4M6PZ71uX03gIMlgDnfP30Rh11DRyCCq2G99XjdG7COgVirg/rubADbns3YgPdLXqEFaLHMIUUXPfu4ZtRXuJfofcJXMUKkO0JCrr1TE2d8l+qJzYgOvu+Y5Y8qNi4HyTYPGMtoQ09Fn+lYPXTdBVAWptaqu3pJHT/EwnipbGC9pmJHHjqgtfewab8JTS9TaECEveRZK9Jun+AjZTxiCiECGhP5MvN3Jp7xLohHrbUzvyq/z70pLzR2Ap0Jqk6NNFV0OGoRBckW8awXLpqthXoSeWXbFlBGWbdWnxhvp7NkhD4zWq5nZFEgMomC1BRiVE243MusG3xro/JH/Wg7AKg2MWbk8O9oTgKqJRHrpOtkgH+suWYJ9wbJlSuU9dJeZw9aQ==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(39860400002)(346002)(396003)(136003)(451199021)(46966006)(40470700004)(36840700001)(82310400005)(478600001)(70206006)(70586007)(7696005)(36756003)(6666004)(316002)(40460700003)(54906003)(110136005)(426003)(86362001)(83380400001)(186003)(26005)(16526019)(2616005)(81166007)(336012)(82740400003)(36860700001)(41300700001)(8936002)(5660300002)(1076003)(356005)(8676002)(2906002)(4326008)(44832011)(47076005)(40480700001)(7416002)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: pStLA9xEtLiDlfKYjcxkn8z8nyMgzRqSx/E+CMb/11mWTYUO7d/h4Z16WCSZnXYtu9qiaIm1z9b42EurFDrGHKYrw+be8ceBzbkwnKE0D2xoF4K9IFsDTn5WYwvx3Vhw+JpMV0NqLYXp1hjcy/DXoC/8EYOGKgw4ndbjTsa+wSrgWUJ/yFajEWPGLSm8JrxQbbRR61um1CVpeaw18gQzql0avCw6ITx/jKCPD49wTC94WvXnhPgEPDfDbAXeFuQlvt4WnAAyE1sAkYfVsLDv28wrZ4EatJjrpt1F1eBOgEn7tO5ia52nwy1dxKmoMh+FDhz0yGkAi7JHufu9Qp3ZX4D7OCfhCCnjAjzsot9ese8/NsdjAIOlQMBGJeKLcr6nmLQi5FwcPynK0tT1w/MiENX28IgA5katFsfkyK/vXYrJw3bEx/emUPlmFotJ1Y1RjT9KmfZ7ZMoa9/tc6MuUgAhwwjAi43uj4Z6W6KLDOzypzQkZxnEeaKH0uUzBOccz/9GHVw767i9510hsB9iHl2q0qFjErdyP5RS6wM6GDHPJONl1FA8HC1BbvoqWQgII3db+6n+p7qDIESlGAJlXHKmA5vzP8Gj0QBOsXOxUZHRZEkpz5liAIqKdExLW5FSAiZdVm9ZbdyRP7+M0qTEUAVoApHTidBbkS0oLKAlbFQTtfEqo3BfIm9uNTV0Mh6t4q1xZBpIJE9n6sQ94f1dOaU3U8TVj9Ed9SQ9jiy8m2edHFDfmW4xK8RqkCw6yF27fVNp1mRbIbLRScwuLYVfgpA==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(396003)(39860400002)(346002)(136003)(451199021)(36840700001)(46966006)(40470700004)(40460700003)(5660300002)(44832011)(7416002)(2906002)(40480700001)(82310400005)(8676002)(356005)(81166007)(47076005)(83380400001)(426003)(36860700001)(86362001)(36756003)(82740400003)(6666004)(4326008)(966005)(8936002)(478600001)(70206006)(70586007)(110136005)(7696005)(54906003)(41300700001)(186003)(16526019)(26005)(336012)(2616005)(316002)(1076003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2023 03:56:34.1052
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2023 03:57:45.8867
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 948bbba9-d21e-4fcf-bbeb-08db72d4aba6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89d2a05e-686a-47f4-5467-08db72d4d66d
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT084.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT101.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4207
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5810
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The CXL driver plans to use cper_print_aer() for logging restricted CXL
-host (RCH) AER errors. cper_print_aer() is not currently exported and
-therefore not usable by the CXL drivers built as loadable modules. Export
-the cper_print_aer() function. Use the EXPORT_SYMBOL_NS_GPL() variant
-to restrict the export to CXL drivers.
+From: Robert Richter <rrichter@amd.com>
 
-The CONFIG_ACPI_APEI_PCIEAER kernel config is currently used to enable
-cper_print_aer(). cper_print_aer() logs the AER registers and is
-useful in PCIE AER logging outside of APEI. Remove the
-CONFIG_ACPI_APEI_PCIEAER dependency to enable cper_print_aer().
+In Restricted CXL Device (RCD) mode a CXL device is exposed as an
+RCiEP, but CXL downstream and upstream ports are not enumerated and
+not visible in the PCIe hierarchy. [1] Protocol and link errors from
+these non-enumerated ports are signaled as internal AER errors, either
+Uncorrectable Internal Error (UIE) or Corrected Internal Errors (CIE)
+via an RCEC.
 
-The cper_print_aer() function name implies CPER specific use but is useful
-in non-CPER cases as well. Rename cper_print_aer() to pci_print_aer().
+Restricted CXL host (RCH) downstream port-detected errors have the
+Requster ID of the RCEC set in the RCEC's AER Error Source ID
+register. A CXL handler must then inspect the error status in various
+CXL registers residing in the dport's component register space (CXL
+RAS capability) or the dport's RCRB (PCIe AER extended
+capability). [2]
 
-Also, update cxl_core to import CXL namespace imports.
+Errors showing up in the RCEC's error handler must be handled and
+connected to the CXL subsystem. Implement this by forwarding the error
+to all CXL devices below the RCEC. Since the entire CXL device is
+controlled only using PCIe Configuration Space of device 0, function
+0, only pass it there [3]. The error handling is limited to currently
+supported devices with the Memory Device class code set (CXL Type 3
+Device, PCI_CLASS_MEMORY_CXL, 502h), handle downstream port errors in
+the device's cxl_pci driver. Support for other CXL Device Types
+(e.g. a CXL.cache Device) can be added later.
 
-Co-developed-by: Robert Richter <rrichter@amd.com>
-Signed-off-by: Robert Richter <rrichter@amd.com>
+To handle downstream port errors in addition to errors directed to the
+CXL endpoint device, a handler must also inspect the CXL RAS and PCIe
+AER capabilities of the CXL downstream port the device is connected
+to.
+
+Since CXL downstream port errors are signaled using internal errors,
+the handler requires those errors to be unmasked. This is subject of a
+follow-on patch.
+
+The reason for choosing this implementation is that the AER service
+driver claims the RCEC device, but does not allow it to register a
+custom specific handler to support CXL. Connecting the RCEC hard-wired
+with a CXL handler does not work, as the CXL subsystem might not be
+present all the time. The alternative to add an implementation to the
+portdrv to allow the registration of a custom RCEC error handler isn't
+worth doing it as CXL would be its only user. Instead, just check for
+an CXL RCEC and pass it down to the connected CXL device's error
+handler. With this approach the code can entirely be implemented in
+the PCIe AER driver and is independent of the CXL subsystem. The CXL
+driver only provides the handler.
+
+[1] CXL 3.0 spec: 9.11.8 CXL Devices Attached to an RCH
+[2] CXL 3.0 spec, 12.2.1.1 RCH Downstream Port-detected Errors
+[3] CXL 3.0 spec, 8.1.3 PCIe DVSEC for CXL Devices
+
+Co-developed-by: Terry Bowman <terry.bowman@amd.com>
 Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
+Signed-off-by: Robert Richter <rrichter@amd.com>
 Cc: "Oliver O'Halloran" <oohall@gmail.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/cxl/core/port.c | 1 +
- drivers/pci/pcie/aer.c  | 9 +++++----
- include/linux/aer.h     | 2 +-
- 3 files changed, 7 insertions(+), 5 deletions(-)
+ drivers/pci/pcie/Kconfig | 12 +++++
+ drivers/pci/pcie/aer.c   | 96 +++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 106 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 37ecd756b224..41e79a36c1ae 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -2056,3 +2056,4 @@ static void cxl_core_exit(void)
- subsys_initcall(cxl_core_init);
- module_exit(cxl_core_exit);
- MODULE_LICENSE("GPL v2");
-+MODULE_IMPORT_NS(CXL);
+diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+index 228652a59f27..4f0e70fafe2d 100644
+--- a/drivers/pci/pcie/Kconfig
++++ b/drivers/pci/pcie/Kconfig
+@@ -49,6 +49,18 @@ config PCIEAER_INJECT
+ 	  gotten from:
+ 	     https://git.kernel.org/cgit/linux/kernel/git/gong.chen/aer-inject.git/
+ 
++config PCIEAER_CXL
++	bool "PCI Express CXL RAS support for Restricted Hosts (RCH)"
++	default y
++	depends on PCIEAER && CXL_PCI
++	help
++	  Enables error handling of downstream ports of a CXL host
++	  that is operating in RCD mode (Restricted CXL Host, RCH).
++	  The downstream port reports AER errors to a given RCEC.
++	  Errors are handled by the CXL memory device driver.
++
++	  If unsure, say Y.
++
+ #
+ # PCI Express ECRC
+ #
 diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index f6c24ded134c..d3344fcf1f79 100644
+index d3344fcf1f79..c354ca5e8f2b 100644
 --- a/drivers/pci/pcie/aer.c
 +++ b/drivers/pci/pcie/aer.c
-@@ -771,9 +771,10 @@ int cper_severity_to_aer(int cper_severity)
- 	}
+@@ -946,14 +946,100 @@ static bool find_source_device(struct pci_dev *parent,
+ 	return true;
  }
- EXPORT_SYMBOL_GPL(cper_severity_to_aer);
+ 
++#ifdef CONFIG_PCIEAER_CXL
++
++static bool is_cxl_mem_dev(struct pci_dev *dev)
++{
++	/*
++	 * The capability, status, and control fields in Device 0,
++	 * Function 0 DVSEC control the CXL functionality of the
++	 * entire device (CXL 3.0, 8.1.3).
++	 */
++	if (dev->devfn != PCI_DEVFN(0, 0))
++		return false;
++
++	/*
++	 * CXL Memory Devices must have the 502h class code set (CXL
++	 * 3.0, 8.1.12.1).
++	 */
++	if ((dev->class >> 8) != PCI_CLASS_MEMORY_CXL)
++		return false;
++
++	return true;
++}
++
++static bool cxl_error_is_native(struct pci_dev *dev)
++{
++	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
++
++	if (pcie_ports_native)
++		return true;
++
++	return host->native_aer && host->native_cxl_error;
++}
++
++static bool is_internal_error(struct aer_err_info *info)
++{
++	if (info->severity == AER_CORRECTABLE)
++		return info->status & PCI_ERR_COR_INTERNAL;
++
++	return info->status & PCI_ERR_UNC_INTN;
++}
++
++static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
++{
++	struct aer_err_info *info = (struct aer_err_info *)data;
++	const struct pci_error_handlers *err_handler;
++
++	if (!is_cxl_mem_dev(dev) || !cxl_error_is_native(dev))
++		return 0;
++
++	/* protect dev->driver */
++	device_lock(&dev->dev);
++
++	err_handler = dev->driver ? dev->driver->err_handler : NULL;
++	if (!err_handler)
++		goto out;
++
++	if (info->severity == AER_CORRECTABLE) {
++		if (err_handler->cor_error_detected)
++			err_handler->cor_error_detected(dev);
++	} else if (err_handler->error_detected) {
++		if (info->severity == AER_NONFATAL)
++			err_handler->error_detected(dev, pci_channel_io_normal);
++		else if (info->severity == AER_FATAL)
++			err_handler->error_detected(dev, pci_channel_io_frozen);
++	}
++out:
++	device_unlock(&dev->dev);
++	return 0;
++}
++
++static void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
++{
++	/*
++	 * Internal errors of an RCEC indicate an AER error in an
++	 * RCH's downstream port. Check and handle them in the CXL.mem
++	 * device driver.
++	 */
++	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
++	    is_internal_error(info))
++		pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
++}
++
++#else
++static inline void cxl_rch_handle_error(struct pci_dev *dev,
++					struct aer_err_info *info) { }
 +#endif
- 
--void cper_print_aer(struct pci_dev *dev, int aer_severity,
--		    struct aer_capability_regs *aer)
-+void pci_print_aer(struct pci_dev *dev, int aer_severity,
-+		   struct aer_capability_regs *aer)
- {
- 	int layer, agent, tlp_header_valid = 0;
- 	u32 status, mask;
-@@ -812,7 +813,7 @@ void cper_print_aer(struct pci_dev *dev, int aer_severity,
- 	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
- 			aer_severity, tlp_header_valid, &aer->header_log);
- }
--#endif
-+EXPORT_SYMBOL_NS_GPL(pci_print_aer, CXL);
- 
++
  /**
-  * add_error_device - list device to be handled
-@@ -1009,7 +1010,7 @@ static void aer_recover_work_func(struct work_struct *work)
- 			       PCI_SLOT(entry.devfn), PCI_FUNC(entry.devfn));
- 			continue;
- 		}
--		cper_print_aer(pdev, entry.severity, entry.regs);
-+		pci_print_aer(pdev, entry.severity, entry.regs);
- 		if (entry.severity == AER_NONFATAL)
- 			pcie_do_recovery(pdev, pci_channel_io_normal,
- 					 aer_root_reset);
-diff --git a/include/linux/aer.h b/include/linux/aer.h
-index 97f64ba1b34a..8f124b904314 100644
---- a/include/linux/aer.h
-+++ b/include/linux/aer.h
-@@ -64,7 +64,7 @@ static inline void pci_save_aer_state(struct pci_dev *dev) {}
- static inline void pci_restore_aer_state(struct pci_dev *dev) {}
- #endif
+- * handle_error_source - handle logging error into an event log
++ * pci_aer_handle_error - handle logging error into an event log
+  * @dev: pointer to pci_dev data structure of error source device
+  * @info: comprehensive error information
+  *
+  * Invoked when an error being detected by Root Port.
+  */
+-static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
++static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+ {
+ 	int aer = dev->aer_cap;
  
--void cper_print_aer(struct pci_dev *dev, int aer_severity,
-+void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 		    struct aer_capability_regs *aer);
- int cper_severity_to_aer(int cper_severity);
- void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
+@@ -977,6 +1063,12 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+ 		pcie_do_recovery(dev, pci_channel_io_normal, aer_root_reset);
+ 	else if (info->severity == AER_FATAL)
+ 		pcie_do_recovery(dev, pci_channel_io_frozen, aer_root_reset);
++}
++
++static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
++{
++	cxl_rch_handle_error(dev, info);
++	pci_aer_handle_error(dev, info);
+ 	pci_dev_put(dev);
+ }
+ 
 -- 
 2.34.1
 
