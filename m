@@ -2,47 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D91EA73ACB8
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 00:52:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91D6673ACE2
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 01:06:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229721AbjFVWw1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Jun 2023 18:52:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60842 "EHLO
+        id S229974AbjFVXGV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Jun 2023 19:06:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbjFVWw0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Jun 2023 18:52:26 -0400
+        with ESMTP id S230151AbjFVXGT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Jun 2023 19:06:19 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C3EE10C
-        for <linux-pci@vger.kernel.org>; Thu, 22 Jun 2023 15:52:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA032121;
+        Thu, 22 Jun 2023 16:06:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 020E66192D
-        for <linux-pci@vger.kernel.org>; Thu, 22 Jun 2023 22:52:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B99EC433C8;
-        Thu, 22 Jun 2023 22:52:24 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2291461901;
+        Thu, 22 Jun 2023 23:06:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EC1FC433C0;
+        Thu, 22 Jun 2023 23:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687474344;
-        bh=xhjepokCxvyS6BuPk30WbTTOsaZ/amw6gdG5sknV3l0=;
+        s=k20201202; t=1687475169;
+        bh=pegMzDXZUMfrU4xRrjxoACjUG6/qK6YYOfic7NwK9pQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Uh3YsSJKY3joSdIJ5PBDmqWImz5eUD221XMKlBtCuB4j5Tw2/w2UQ7PTuJYGrBxbC
-         /gWlP40jGI7Pq+yUAthosjZy0jctBjG3GYqXpgwh1z842s40HrvZIE+bKbfIsFVTyy
-         TOMKfDzknIiqv13BczAitk02Uhx7Arh/IO90C8E6hf2boRLbjK+X23AddkA1YuKF0N
-         G3M5dxFRwb3r7nWYDgxLSTFpruogIQ2WdPE3h2kLoHxlLbuaDfdA3bBTONBAhki/mC
-         PmQiEDJqu/On4rR5B+UAZzYoQLm/w3xF9MAOcBr+vYEgk/EK93+xUDazRlgJWHxQIU
-         FJfWCCT+2bH5w==
-Date:   Thu, 22 Jun 2023 17:52:21 -0500
+        b=hCs5CNZZoiMELCn9nFEKCsyp66MGgCSd2Hzf8wePvkKGKs/N+DcO7GzoWqVgM/rZh
+         iW+LAI5zdWRxLtq3a0bEgxjjIdjiy+s3XAiwQgU6SoRhvDy7tpbopbMg3wvZw4i2Ij
+         3a8C11GppvO/fKDyUKbhbq2mndKZmjBz1K9wVlDoiASZBWjx51O+bYXKG176utoHSa
+         hoVCcwBOZ4nGfc8mGbBkrjICYP5YjfuZUUihqLLFQEfn0BSO/WchgD+ZnlxSlcMg3c
+         iMKpWlxW7wW7qQcn/92rhrrQg1ZpSJLOTkMoRLkKYLhG6I3gtvpTp4nKouZBXkEc9F
+         b4r1Dh5HAjaZQ==
+Date:   Thu, 22 Jun 2023 18:06:07 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org, vsethi@nvidia.com,
-        jbodner@nvidia.com, kthota@nvidia.com
-Subject: Re: Query about setting MaxPayloadSize for the best performance
-Message-ID: <20230622225221.GA154188@bhelgaas>
+To:     "Limonciello, Mario" <mario.limonciello@amd.com>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Michael Bottini <michael.a.bottini@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/ASPM: Enable ASPM on external PCIe devices
+Message-ID: <20230622230607.GA155247@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <8bde8aa8-d385-aadb-f60b-9a81e7bf165c@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1b4b2c6c-8119-95fd-8958-dbbecc66510c@amd.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -53,89 +60,63 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 22, 2023 at 11:04:03AM +0530, Vidya Sagar wrote:
+On Tue, Jun 20, 2023 at 01:36:59PM -0500, Limonciello, Mario wrote:
+> <snip>
+> > > A variety of Intel chipsets don't support lane width switching
+> > > or speed switching.  When ASPM has been enabled on a dGPU,
+> > > these features are utilized and breakage ensues.
+> > Maybe this helps explain all the completely unmaintainable ASPM
+> > garbage in amdgpu and radeon.
+> > 
+> > If these devices are broken, we need quirks for them.
 > 
-> Hi,
-> This is about configuring the MPS (MaxPayloadSize) in the PCIe hierarchy
-> during enumeration. I would like to highlight the dependency on how the MPS
-> gets configured in a hierarchy based on the MPS value already present in the
-> root port's DevCtl register.
+> The problem is which device do you consider "broken"?
+> The dGPU that uses these features when the platform advertises ASPM
+> or the chipset which doesn't support the features that the device
+> uses when ASPM is active?
 > 
-> Initial root port's configuration (CASE-A):
->     Root port is capable of 128 & 256 MPS, but its MPS is set to "128" in
-> its DevCtl register.
-> 
-> Observation:
->     CASE-A-1:
->         When a device with support for 256MPS is connected directly to this
-> root port, only 128MPS is set in its DevCtl register (though both root port
-> and endpoint support 256MPS). This results in sub-optimal performance.
+> With this problem I'm talking about the dGPU works fine on hosts
+> that support these features.
 
-Yes.  We could set both to 256.  But I think there's a potential issue
-for peer-to-peer transactions, isn't there?  E.g., 
+Without more details about what's broken and when, I can't say.  What
+I *think* is that a device that doesn't work per spec needs a quirk.
+Typically it's a device that advertises a capability that doesn't work
+correctly.
 
-  00:01.0 Root Port to [bus 01], MPSS=256 MPS=256
-  00:02.0 Root Port to [bus 02], MPSS=256 MPS=128
-  01:00.0 Endpoint, MPSS=256 MPS=256
-  02:00.0 Endpoint, MPSS=128 MPS=128
+> > > > > I think the pragmatic way to approach it is to (essentially)
+> > > > > apply the policy as BIOS defaults and allow overrides from
+> > > > > that.
+> > > >
+> > > > Do you mean that when enumerating a device (at boot-time or
+> > > > hot-add time), we would read the current ASPM config but not
+> > > > change it?  And users could use the sysfs knobs to
+> > > > enable/disable ASPM as desired?
+> > >
+> > > Yes.
+> > >
+> > Hot-added devices power up with ASPM disabled.  This policy would
+> > mean the user has to explicitly enable it, which doesn't seem
+> > practical to me.
+>
+> Could we maybe have the hot added devices follow the policy of
+> the bridge they're connected to by default?
+>
+> > > > That wouldn't solve the problem Kai-Heng is trying to solve.
+> > >
+> > > Alone it wouldn't; but if you treated the i225 PCIe device
+> > > connected to the system as a "quirk" to apply ASPM policy
+> > > from the parent device to this child device it could.
+> >
+> > I want quirks for BROKEN devices.  Quirks for working hardware is a
+> > maintenance nightmare.
+>
+> If you follow my idea of hot added devices the policy follows
+> the parent would it work for the i225 PCIe device case?
 
-02:00.0 is only capable of MPS=128, so it and 00:02.0 are set to that.
-Now 01:00.0 does a DMA write to  02.00.0 and sends a single 256-byte
-TLP.
-
->     CASE-A-2:
->         When a device with only support for 128MPS is connected to the root
-> port through a PCIe switch (that has support for up to 256MPS), entire
-> hierarchy is configured for 128MPS.
-> 
-> Initial root port's configuration (CASE-B):
->     Root port is capable of 128 & 256 MPS, but its MPS is set to "256" in
-> its DevCtl register.
-> 
-> Observation:
->     CASE-B-1:
->         When a device with support for 256MPS is connected directly to this
-> root port, 256MPS is set in its DevCtl register. This gives the expected
-> performance.
->     CASE-B-2:
->         When a device with only support for 128MPS is connected to the root
-> port through a PCIe switch (that has support for upto 256MPS), rest of the
-> hierarchy gets configured for 256MPS, but since the endpoint behind the
-> switch has support for only 128MPS, functionality of this endpoint gets
-> broken.
-> 
-> One solution to address this issue is to leave the DevCtl of RP at 128MPS
-> and append 'pci=pcie_bus_perf' to the kernel command line. This would change
-> both MPS and MRRS (Max Read Request Size) in the hierarchy in such a way
-> that the system offers the best performance.
-> 
-> I'm not fully aware of the history of various 'pcie_bus_xxxx' options, but,
-> since there is no downside to making 'pcie_bus_perf' as the default, I'm
-> wondering why can't we just use 'pcie_bus_perf' itself as the default
-> configuration instead of the existing default configuration which has the
-> issues mentioned in CASE-A-1 and CASE-B-2.
-
-I'm definitely not happy with our MPS configuration.  I guess I should
-be glad that at least we don't have build-time config options for it.
-
-Anyway, it would be great if somebody would clean it up and make it
-more sensible.
-
-The peer-to-peer thing is a big issue because I don't think the RC is
-required or maybe even allowed to split TLPs to accommodate devices
-with smaller MPS.
-
-I'm not even sure the RC is required to route TLPs between Root Ports
-(see pci_p2pdma_whitelist[]), and I don't think that functionality is
-discoverable either directly from PCIe or via a firmware interface.
-
-But there's some new stuff in PCIe r6.0 related to MPS; I haven't
-really dug into it, but maybe some of that can help?
-
-You've likely seen "Understanding Performance of PCI Express Systems"
-by Jason Lawley, from Oct 28, 2014 [1].  It's a good analysis of MPS,
-MRRS, RCB, etc.
+That doesn't *sound* really robust to me because even if the default
+config after hot-add works, the user can change things via sysfs, and
+any configuration we set it to should work as well.  If there are
+land-mines there, we need a quirk that prevents sysfs from running
+into it.
 
 Bjorn
-
-[1] https://docs.xilinx.com/v/u/en-US/wp350
