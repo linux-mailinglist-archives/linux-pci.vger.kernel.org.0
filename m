@@ -2,85 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D929739A92
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Jun 2023 10:50:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62667739C5D
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Jun 2023 11:13:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229717AbjFVIuR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Jun 2023 04:50:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35686 "EHLO
+        id S231624AbjFVJNd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Jun 2023 05:13:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231363AbjFVItx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Jun 2023 04:49:53 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22A9BFE
-        for <linux-pci@vger.kernel.org>; Thu, 22 Jun 2023 01:49:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S232171AbjFVJNW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Jun 2023 05:13:22 -0400
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02B3576A2;
+        Thu, 22 Jun 2023 02:04:04 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A65E161768
-        for <linux-pci@vger.kernel.org>; Thu, 22 Jun 2023 08:49:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C356C433C0;
-        Thu, 22 Jun 2023 08:49:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687423792;
-        bh=fd3ocUb1brB9aPpGQuEtpnBKK7pjWMF2CQeU7fP6FoE=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=PSGFA5jA0ahlNnMMZAKlmWfY94UJaSdAl2kRNzJi/w7N06KiRMRTMyEV0bKEKo+tF
-         r5kfYNKnSRxjB8+LH/sQaiSR2YSqDpFxkNIbLYl6YQ27ATy/zOfU27vlfDQDNLfteE
-         yelnuFE1hAO7jbOEqISlikymfYbC1HkiOEPSXBal0nO5HeZVhAb1OCVG8s+aN/nE5U
-         fwiKqmpLg4DggHpH751XBELES9Bd32Ts37/LZB3dT0zjLvesch9xkqeYNccM2KwVVY
-         ZtBCv60qC5qdnxzqETX1kDuwr8aa2B9OikH3ZvfhSRSb7n/i9jYW9CzBT5GhPNxRlt
-         0dGvhB2/LmC6g==
-Message-ID: <fafe4e52-731f-46b8-971f-afaa64f182d3@kernel.org>
-Date:   Thu, 22 Jun 2023 17:49:50 +0900
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 1D13B300097A8;
+        Thu, 22 Jun 2023 11:04:03 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 0FCF41EAE2C; Thu, 22 Jun 2023 11:04:03 +0200 (CEST)
+Date:   Thu, 22 Jun 2023 11:04:03 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Fontenot Nathan <Nathan.Fontenot@amd.com>
+Subject: Re: [PATCH v3 1/2] PCI: pciehp: Add support for async hotplug with
+ native AER and DPC/EDR
+Message-ID: <20230622090403.GA21721@wunner.de>
+References: <20230621185152.105320-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20230621185152.105320-2-Smita.KoralahalliChannabasappa@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: Rockchip fixes
-Content-Language: en-US
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rick Wertenbroek <rick.wertenbroek@gmail.com>
-References: <d023a76f-93af-4112-7020-d888bb8a0ee3@kernel.org>
- <ZJP7Udy5naEPinhq@lpieralisi>
-From:   Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <ZJP7Udy5naEPinhq@lpieralisi>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230621185152.105320-2-Smita.KoralahalliChannabasappa@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/22/23 16:42, Lorenzo Pieralisi wrote:
-> On Thu, Jun 22, 2023 at 01:58:35PM +0900, Damien Le Moal wrote:
->> Bjorn,
->>
->> I still do not see Rick's series queued in pci/next to fix the Rockchip endpoint
->> driver...
->>
->> https://lore.kernel.org/linux-pci/20230418074700.1083505-1-rick.wertenbroek@gmail.com/
->>
->> Did this one fall through the cracks ? It was posted and fully reviewed last
->> cycle. Really need that one upstream.
+On Wed, Jun 21, 2023 at 06:51:51PM +0000, Smita Koralahalli wrote:
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -292,10 +292,68 @@ void dpc_process_error(struct pci_dev *pdev)
+>  	}
+>  }
+>  
+> +static void pci_clear_surpdn_errors(struct pci_dev *pdev)
+> +{
+> +	u16 reg16;
+> +	u32 reg32;
+> +
+> +	pci_read_config_dword(pdev, pdev->dpc_cap + PCI_EXP_DPC_RP_PIO_STATUS, &reg32);
+> +	pci_write_config_dword(pdev, pdev->dpc_cap + PCI_EXP_DPC_RP_PIO_STATUS, reg32);
+
+Make this read+write conditional on "if (pdev->dpc_rp_extensions)"
+as the register otherwise doesn't exist.
+
+Wrap to 80 chars per line.
+
+
+> +	pci_read_config_word(pdev, PCI_STATUS, &reg16);
+> +	pci_write_config_word(pdev, PCI_STATUS, reg16);
+> +
+> +	pcie_capability_write_word(pdev, PCI_EXP_DEVSTA, PCI_EXP_DEVSTA_FED);
+> +}
+
+A code comment might be useful here saying that in practice,
+Surprise Down errors have been observed to also set error bits
+in the Status Register as well as the Fatal Error Detected bit
+in the Device Status Register.
+
+
+> +static void dpc_handle_surprise_removal(struct pci_dev *pdev)
+> +{
+
+I'm wondering if we also need
+
+	if (!pcie_wait_for_link(pdev, false)) {
+		pci_info(pdev, "Data Link Layer Link Active not cleared in 1000 msec\n");
+		goto out;
+	}
+
+here, similar to dpc_reset_link() and in accordance with PCIe r6.1
+sec 6.2.11:
+
+	"To ensure that the LTSSM has time to reach the Disabled state
+	or at least to bring the Link down under a variety of error
+	conditions, software must leave the Downstream Port in DPC
+	until the Data Link Layer Link Active bit in the Link Status
+	Register reads 0b; otherwise, the result is undefined."
+
+
+> +	if (pdev->dpc_rp_extensions && dpc_wait_rp_inactive(pdev)) {
+> +		pci_err(pdev, "failed to retrieve DPC root port on async remove\n");
+> +		goto out;
+> +	}
+
+I don't think pci_err() is needed here as dpc_wait_rp_inactive()
+already emits a message.  (I think I mistakenly gave the advice
+to emit an error here in an earlier review comment -- sorry!)
+
+
+> +
+> +	pci_aer_raw_clear_status(pdev);
+> +	pci_clear_surpdn_errors(pdev);
+> +
+> +	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_STATUS,
+> +			      PCI_EXP_DPC_STATUS_TRIGGER);
+> +
+> +out:
+> +	clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
+> +	wake_up_all(&dpc_completed_waitqueue);
+> +}
+> +
+> +static bool dpc_is_surprise_removal(struct pci_dev *pdev)
+> +{
+> +	u16 status;
+> +
+> +	pci_read_config_word(pdev, pdev->aer_cap + PCI_ERR_UNCOR_STATUS, &status);
+
+Wrap to 80 chars.
+
+
+> +
+> +	if (!pdev->is_hotplug_bridge)
+> +		return false;
+
+Move this if-clause to the beginning if the function so that
+you omit the unnecessary register read if it's not a hotplug
+bridge.
+
+
+> +
+> +	if (!(status & PCI_ERR_UNC_SURPDN))
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+>  static irqreturn_t dpc_handler(int irq, void *context)
+>  {
+>  	struct pci_dev *pdev = context;
+>  
+> +	/*
+> +	 * According to Section 6.7.6 of the PCIe Base Spec 6.0, since async
+> +	 * removal might be unexpected, errors might be reported as a side
+> +	 * effect of the event and software should handle them as an expected
+> +	 * part of this event.
+> +	 */
+
+I think the usual way to reference the spec is "PCIe r6.0 sec 6.7.6".
+
+Maybe that's just me but I find the code comment a little difficult
+to parse.  Maybe something like the following?
+
+	/*
+	 * According to PCIe r6.0 sec 6.7.6, errors are an expected side effect
+	 * of async removal and should be ignored by software.
+	 */
+
+Thanks,
+
+Lukas
+
+> +	if (dpc_is_surprise_removal(pdev)) {
+> +		dpc_handle_surprise_removal(pdev);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+>  	dpc_process_error(pdev);
+>  
+>  	/* We configure DPC so it only triggers on ERR_FATAL */
+> -- 
+> 2.17.1
 > 
-> I wrongly delegated it to Krzysztof in patchwork so it went back to his
-> patch queue, my bad.
-> 
-> Now pulled, thanks.
-
-Thanks !
-
-
--- 
-Damien Le Moal
-Western Digital Research
-
