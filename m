@@ -2,57 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 91D6673ACE2
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 01:06:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB99A73AD22
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 01:22:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229974AbjFVXGV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Jun 2023 19:06:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38426 "EHLO
+        id S229978AbjFVXWy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Jun 2023 19:22:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230151AbjFVXGT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Jun 2023 19:06:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA032121;
-        Thu, 22 Jun 2023 16:06:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2291461901;
-        Thu, 22 Jun 2023 23:06:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EC1FC433C0;
-        Thu, 22 Jun 2023 23:06:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687475169;
-        bh=pegMzDXZUMfrU4xRrjxoACjUG6/qK6YYOfic7NwK9pQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hCs5CNZZoiMELCn9nFEKCsyp66MGgCSd2Hzf8wePvkKGKs/N+DcO7GzoWqVgM/rZh
-         iW+LAI5zdWRxLtq3a0bEgxjjIdjiy+s3XAiwQgU6SoRhvDy7tpbopbMg3wvZw4i2Ij
-         3a8C11GppvO/fKDyUKbhbq2mndKZmjBz1K9wVlDoiASZBWjx51O+bYXKG176utoHSa
-         hoVCcwBOZ4nGfc8mGbBkrjICYP5YjfuZUUihqLLFQEfn0BSO/WchgD+ZnlxSlcMg3c
-         iMKpWlxW7wW7qQcn/92rhrrQg1ZpSJLOTkMoRLkKYLhG6I3gtvpTp4nKouZBXkEc9F
-         b4r1Dh5HAjaZQ==
-Date:   Thu, 22 Jun 2023 18:06:07 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Michael Bottini <michael.a.bottini@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM on external PCIe devices
-Message-ID: <20230622230607.GA155247@bhelgaas>
+        with ESMTP id S231135AbjFVXWy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Jun 2023 19:22:54 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D311739;
+        Thu, 22 Jun 2023 16:22:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687476169; x=1719012169;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=IojqZKic5r/WkJFOdy0/gAiJXa7L7cuDCuvjj0Wd/qg=;
+  b=LayX0PoGDt96JowdjGr1Dj2u6R1VqWaU3MAqNi0wxazFEQ9ztPQBE1iX
+   keuuKUqQudVT6AhFvnBNgunYDRpLxsECzFYUQwrkvf8Uh+3qaHMzwVQzt
+   HAtxwHmJsLN7a4caMXCHc/U67U8RE2TK6Slqxh7S2+yVO8jvypAgFMMbV
+   ULOKmE7xgfHdEcCbnfFm4GF2tijt5O1qtzM6/ZL1UFka5Po64R6/iXU1Q
+   Oou05L8f4nfj7cUJYguSaS4VIl0f6Gf5A//qmKZrdI0KRTS7Hfw9IoMCU
+   pNykYUIpB/+jRGrd+v003ADzN+m0ifH8gtadEsfGSu5XKpS0YfYeo6y0f
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10749"; a="447014215"
+X-IronPort-AV: E=Sophos;i="6.01,150,1684825200"; 
+   d="scan'208";a="447014215"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2023 16:22:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10749"; a="715118504"
+X-IronPort-AV: E=Sophos;i="6.01,150,1684825200"; 
+   d="scan'208";a="715118504"
+Received: from rwtamm-mobl2.amr.corp.intel.com (HELO [10.209.27.111]) ([10.209.27.111])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2023 16:22:48 -0700
+Message-ID: <e7aa803b-2b43-dc43-1d92-38bcca636e62@linux.intel.com>
+Date:   Thu, 22 Jun 2023 16:22:38 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1b4b2c6c-8119-95fd-8958-dbbecc66510c@amd.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.11.0
+Subject: Re: [PATCH v3 1/2] PCI: pciehp: Add support for async hotplug with
+ native AER and DPC/EDR
+Content-Language: en-US
+To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Fontenot Nathan <Nathan.Fontenot@amd.com>
+References: <20230621185152.105320-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20230621185152.105320-2-Smita.KoralahalliChannabasappa@amd.com>
+From:   Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20230621185152.105320-2-Smita.KoralahalliChannabasappa@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,63 +70,170 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 01:36:59PM -0500, Limonciello, Mario wrote:
-> <snip>
-> > > A variety of Intel chipsets don't support lane width switching
-> > > or speed switching.  When ASPM has been enabled on a dGPU,
-> > > these features are utilized and breakage ensues.
-> > Maybe this helps explain all the completely unmaintainable ASPM
-> > garbage in amdgpu and radeon.
-> > 
-> > If these devices are broken, we need quirks for them.
+
+
+On 6/21/23 11:51 AM, Smita Koralahalli wrote:
+> According to Section 6.7.6 of PCIe Base Specification [1], async removal
+> with DPC may result in surprise down error. This error is expected and
+> is just a side-effect of async remove.
 > 
-> The problem is which device do you consider "broken"?
-> The dGPU that uses these features when the platform advertises ASPM
-> or the chipset which doesn't support the features that the device
-> uses when ASPM is active?
+> Add support to handle the surprise down error generated as a side-effect
+> of async remove. Typically, this error is benign as the pciehp handler
+> invoked by PDC or/and DLLSC alongside DPC, de-enumerates and brings down
+> the device appropriately. But the error messages might confuse users. Get
+> rid of these irritating log messages with a 1s delay while pciehp waits
+> for dpc recovery.
 > 
-> With this problem I'm talking about the dGPU works fine on hosts
-> that support these features.
+> The implementation is as follows: On an async remove a DPC is triggered
+> along with a Presence Detect State change and/or DLL State Change.
+> Determine it's an async remove by checking for DPC Trigger Status in DPC
+> Status Register and Surprise Down Error Status in AER Uncorrected Error
+> Status to be non-zero. If true, treat the DPC event as a side-effect of
+> async remove, clear the error status registers and continue with hot-plug
+> tear down routines. If not, follow the existing routine to handle AER and
+> DPC errors.
+> 
+> Please note that, masking Surprise Down Errors was explored as an
+> alternative approach, but left due to the odd behavior that masking only
+> avoids the interrupt, but still records an error per PCIe r6.0.1 Section
+> 6.2.3.2.2. That stale error is going to be reported the next time some
+> error other than Surprise Down is handled.
 
-Without more details about what's broken and when, I can't say.  What
-I *think* is that a device that doesn't work per spec needs a quirk.
-Typically it's a device that advertises a capability that doesn't work
-correctly.
+I think this fix is applicable to the EDR code path as well.
 
-> > > > > I think the pragmatic way to approach it is to (essentially)
-> > > > > apply the policy as BIOS defaults and allow overrides from
-> > > > > that.
-> > > >
-> > > > Do you mean that when enumerating a device (at boot-time or
-> > > > hot-add time), we would read the current ASPM config but not
-> > > > change it?  And users could use the sysfs knobs to
-> > > > enable/disable ASPM as desired?
-> > >
-> > > Yes.
-> > >
-> > Hot-added devices power up with ASPM disabled.  This policy would
-> > mean the user has to explicitly enable it, which doesn't seem
-> > practical to me.
->
-> Could we maybe have the hot added devices follow the policy of
-> the bridge they're connected to by default?
->
-> > > > That wouldn't solve the problem Kai-Heng is trying to solve.
-> > >
-> > > Alone it wouldn't; but if you treated the i225 PCIe device
-> > > connected to the system as a "quirk" to apply ASPM policy
-> > > from the parent device to this child device it could.
-> >
-> > I want quirks for BROKEN devices.  Quirks for working hardware is a
-> > maintenance nightmare.
->
-> If you follow my idea of hot added devices the policy follows
-> the parent would it work for the i225 PCIe device case?
+> 
+> Dmesg before:
+> 
+>   pcieport 0000:00:01.4: DPC: containment event, status:0x1f01 source:0x0000
+>   pcieport 0000:00:01.4: DPC: unmasked uncorrectable error detected
+>   pcieport 0000:00:01.4: PCIe Bus Error: severity=Uncorrected (Fatal), type=Transaction Layer, (Receiver ID)
+>   pcieport 0000:00:01.4:   device [1022:14ab] error status/mask=00000020/04004000
+>   pcieport 0000:00:01.4:    [ 5] SDES (First)
+>   nvme nvme2: frozen state error detected, reset controller
+>   pcieport 0000:00:01.4: DPC: Data Link Layer Link Active not set in 1000 msec
+>   pcieport 0000:00:01.4: AER: subordinate device reset failed
+>   pcieport 0000:00:01.4: AER: device recovery failed
+>   pcieport 0000:00:01.4: pciehp: Slot(16): Link Down
+>   nvme2n1: detected capacity change from 1953525168 to 0
+>   pci 0000:04:00.0: Removing from iommu group 49
+> 
+> Dmesg after:
+> 
+>  pcieport 0000:00:01.4: pciehp: Slot(16): Link Down
+>  nvme1n1: detected capacity change from 1953525168 to 0
+>  pci 0000:04:00.0: Removing from iommu group 37
+> 
+> [1] PCI Express Base Specification Revision 6.0, Dec 16 2021.
+>     https://members.pcisig.com/wg/PCI-SIG/document/16609
+> 
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> ---
+> v2:
+> 	Indentation is taken care. (Bjorn)
+> 	Unrelevant dmesg logs are removed. (Bjorn)
+> 	Rephrased commit message, to be clear on native vs FW-First
+> 	handling. (Bjorn and Sathyanarayanan)
+> 	Prefix changed from pciehp_ to dpc_. (Lukas)
+> 	Clearing ARI and AtomicOp Requester are performed as a part of
+> 	(de-)enumeration in pciehp_unconfigure_device(). (Lukas)
+> 	Changed to clearing all optional capabilities in DEVCTL2.
+> 	OS-First -> native. (Sathyanarayanan)
+> 
+> v3:
+> 	Added error message when root port become inactive.
+> 	Modified commit description to add more details.
+> 	Rearranged code comments and function calls with no functional
+> 	change.
+> 	Additional check for is_hotplug_bridge.
+> 	dpc_completed_waitqueue to wakeup pciehp handler.
+> 	Cleared only Fatal error detected in DEVSTA.
+> ---
+>  drivers/pci/pcie/dpc.c | 58 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 3ceed8e3de41..5153ac8ea91c 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -292,10 +292,68 @@ void dpc_process_error(struct pci_dev *pdev)
+>  	}
+>  }
+>  
+> +static void pci_clear_surpdn_errors(struct pci_dev *pdev)
+> +{
+> +	u16 reg16;
+> +	u32 reg32;
+> +
+> +	pci_read_config_dword(pdev, pdev->dpc_cap + PCI_EXP_DPC_RP_PIO_STATUS, &reg32);
+> +	pci_write_config_dword(pdev, pdev->dpc_cap + PCI_EXP_DPC_RP_PIO_STATUS, reg32);
 
-That doesn't *sound* really robust to me because even if the default
-config after hot-add works, the user can change things via sysfs, and
-any configuration we set it to should work as well.  If there are
-land-mines there, we need a quirk that prevents sysfs from running
-into it.
+It is not clear why you want to clear it.
 
-Bjorn
+> +
+> +	pci_read_config_word(pdev, PCI_STATUS, &reg16);
+> +	pci_write_config_word(pdev, PCI_STATUS, reg16);
+
+Same as above. Can you add some comment about why you are clearing it?
+
+> +
+> +	pcie_capability_write_word(pdev, PCI_EXP_DEVSTA, PCI_EXP_DEVSTA_FED);
+> +}
+> +
+> +static void dpc_handle_surprise_removal(struct pci_dev *pdev)
+> +{
+> +	if (pdev->dpc_rp_extensions && dpc_wait_rp_inactive(pdev)) {
+> +		pci_err(pdev, "failed to retrieve DPC root port on async remove\n");
+> +		goto out;
+> +	}
+> +
+> +	pci_aer_raw_clear_status(pdev);
+> +	pci_clear_surpdn_errors(pdev);
+> +
+> +	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_STATUS,
+> +			      PCI_EXP_DPC_STATUS_TRIGGER);
+
+Don't you need to wait for the link to go down?
+
+> +
+> +out:
+> +	clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
+> +	wake_up_all(&dpc_completed_waitqueue);
+> +}
+> +
+> +static bool dpc_is_surprise_removal(struct pci_dev *pdev)
+> +{
+> +	u16 status;
+> +
+> +	pci_read_config_word(pdev, pdev->aer_cap + PCI_ERR_UNCOR_STATUS, &status);
+> +
+> +	if (!pdev->is_hotplug_bridge)
+> +		return false;
+> +
+> +	if (!(status & PCI_ERR_UNC_SURPDN))
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+>  static irqreturn_t dpc_handler(int irq, void *context)
+>  {
+>  	struct pci_dev *pdev = context;
+>  
+> +	/*
+> +	 * According to Section 6.7.6 of the PCIe Base Spec 6.0, since async
+> +	 * removal might be unexpected, errors might be reported as a side
+> +	 * effect of the event and software should handle them as an expected
+> +	 * part of this event.
+> +	 */
+> +	if (dpc_is_surprise_removal(pdev)) {
+> +		dpc_handle_surprise_removal(pdev);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+>  	dpc_process_error(pdev);
+>  
+>  	/* We configure DPC so it only triggers on ERR_FATAL */
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
