@@ -2,50 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 718D673BA60
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 16:41:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA50273BA64
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 16:41:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231864AbjFWOlX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S230350AbjFWOlX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Fri, 23 Jun 2023 10:41:23 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231880AbjFWOlU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jun 2023 10:41:20 -0400
-Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DB8B19BF
-        for <linux-pci@vger.kernel.org>; Fri, 23 Jun 2023 07:41:12 -0700 (PDT)
-Received: by mail-qk1-x733.google.com with SMTP id af79cd13be357-7624af57b21so59479185a.1
-        for <linux-pci@vger.kernel.org>; Fri, 23 Jun 2023 07:41:12 -0700 (PDT)
+        with ESMTP id S232017AbjFWOlW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jun 2023 10:41:22 -0400
+Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBA4526AE
+        for <linux-pci@vger.kernel.org>; Fri, 23 Jun 2023 07:41:13 -0700 (PDT)
+Received: by mail-qk1-x729.google.com with SMTP id af79cd13be357-7624012c0b4so60088185a.1
+        for <linux-pci@vger.kernel.org>; Fri, 23 Jun 2023 07:41:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1687531271; x=1690123271;
+        d=broadcom.com; s=google; t=1687531272; x=1690123272;
         h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=7JaTTX/u6r9WHG8CBb2nIc/77Q7Cm1gWqR+xNarEVL8=;
-        b=I+viCJg201Gtd7ZT+P2U7TbN5jygxO/f53vLkGn3QZ7W1uN/olak2ftuV3CJq/3eWS
-         byqH6UFKNIHvjQLhQRItIRIGC6mGaGvZaemuuCNW/Lyo3FEQR7soYjUyEQTMjObhaDnQ
-         Ug0vdxAX0lthxd4068ypa280pgcitnpN46qEk=
+        bh=NXsIMdLVeqRmJLvAoHxSsCTJKyoULvGWQBxYVILJlHw=;
+        b=KmXxf2GN07ol57yvkZVILQdt7IMRHcOHQ4wgmO+Dm9xQlGfuS4payO/AMWy0bdIQEW
+         f6YcNPzmMDoRfTT8cUY2WgJB2YxmWMDI41WN7mmMAwVYd6xTToF/VnYCiLgzheG+mpKt
+         AiAk3++rxE7MPUm6hJ7GEfrQJMiT19IrvVBDA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687531271; x=1690123271;
+        d=1e100.net; s=20221208; t=1687531272; x=1690123272;
         h=references:in-reply-to:message-id:date:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7JaTTX/u6r9WHG8CBb2nIc/77Q7Cm1gWqR+xNarEVL8=;
-        b=gEgPHGWV8x2NrVKUkpNZfOV3tosPVgCGw3XB6a0ZDRBMBC9yUoweSTfn0N85eZA8Ua
-         qIu+R8le9fthw4l8ut5/3+lFNruRwIdhQbOmpoBkTYE7H8Rlrwi3SaFl4PqwsLT5Dw1g
-         VetOAgmsbV8Q6XRJC0MrOoAhEatMxyIuo1GcoxX9S1ubCNfYS69aZrcVcERAMNMb06it
-         WV63mjxXnaXqW3cDr6rU4SI5hQ6MBX6D7DR3XiM2FuY0OjjSkqoJqPTRuI/gYU8DWoaa
-         6q4afTZC2dRQuKJEUz9NS9Rw+tZqLvvdPLfRPAXx/lhz1vbmAGTRz//UY5kYsACX9mbg
-         b8Jg==
-X-Gm-Message-State: AC+VfDyfxgVMGp15hI+J8+w4B/58yjUJLrQ/WKEQE/Dfv9F1ptJCjYll
-        SyDRlTVKjIhzt3gT5AiNMoB0f6sPUOIs3NLvJtZEOV0FpKOOLXxvjRXtRH+RwthfMdNenlEKDLJ
-        8QfrupLHsJ+GnFVfGd4UqEbZ2uzydz/OgP0tou1tTF8mwdp1/Wh4aWoY4UzI5rRXgdBGwFHGr1f
-        s4ZnSQYUr1ew==
-X-Google-Smtp-Source: ACHHUZ4VUTc2qoNcrsn8Qp7O9siw73GsqtGEpwTfEu0R/xUCLrc8O1bXbkl3FlCTdDU63D7TU7ARxg==
-X-Received: by 2002:a05:620a:8290:b0:763:98b4:e81f with SMTP id ox16-20020a05620a829000b0076398b4e81fmr14356285qkn.39.1687531270963;
-        Fri, 23 Jun 2023 07:41:10 -0700 (PDT)
+        bh=NXsIMdLVeqRmJLvAoHxSsCTJKyoULvGWQBxYVILJlHw=;
+        b=cSSkCSAGsmHw017yI//V0XI2Uk+lX2nUnyDExJHCWMt5+qQ3C0IbfIW6ZWC0EsWYpH
+         eS0NdtdGtUCEZsQm4GjPhG1GgFM2RDpe10ad6xo+DYwyUEDLG3ZBlM9KuLwjAOHH1ETO
+         noD1Y6FkMCviRQKCitNaVbUkhOVFihB2QCC4uOEg8eBKM7hZG1dxqeHfQEUxSIn5DGWY
+         wpOvr3QhzIQlrITm/W2SGJ5fdZO6o5r2PqZ1X9EgaTy8fsBFJOzJTv7KMUHPZeYbIaKV
+         tZlxG0RsUgYa1Yb7d4t+KWF8nYnkSFKx9DnExmUgLfL2jXbSJo7fDQwva4rlzGNL/d9M
+         f5hg==
+X-Gm-Message-State: AC+VfDw8OXo9/WGhESfB1T5NXEMm90rRoNoDKh8dxOQWV9jdYqI7QFJ2
+        b1MecXCYBZDFdSQWb4KM3NEpdUFQqoQf5ZFd7aavs9KTqZwFxLVxMx5bweM59zvbPqtWaCAGoLR
+        A67Qr1JvDcVEdslwrFN+H7VSsVf2/WER6hC1GsteJAauFlMEQ+14NuoS3nfq6cNOfyv71x79ulr
+        EUOwYPuFg/VQ==
+X-Google-Smtp-Source: ACHHUZ7YaKrVqQ8QnvGuhcY3JvOvengIIXyMeQqiinLnw5eZIkQ6quN3qI+0+AoueIHKsYdVThZWIw==
+X-Received: by 2002:a05:620a:2955:b0:763:a83c:a9e4 with SMTP id n21-20020a05620a295500b00763a83ca9e4mr18146840qkp.31.1687531272243;
+        Fri, 23 Jun 2023 07:41:12 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id i18-20020a05620a145200b007625382f4ccsm4564613qkl.69.2023.06.23.07.41.10
+        by smtp.gmail.com with ESMTPSA id i18-20020a05620a145200b007625382f4ccsm4564613qkl.69.2023.06.23.07.41.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jun 2023 07:41:10 -0700 (PDT)
+        Fri, 23 Jun 2023 07:41:11 -0700 (PDT)
 From:   Jim Quinlan <james.quinlan@broadcom.com>
 To:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -64,14 +64,14 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v6 3/5] PCI: brcmstb: Set higher value for internal bus timeout
-Date:   Fri, 23 Jun 2023 10:40:56 -0400
-Message-Id: <20230623144100.34196-4-james.quinlan@broadcom.com>
+Subject: [PATCH v6 4/5] PCI: brcmstb: Assert PERST# on BCM2711
+Date:   Fri, 23 Jun 2023 10:40:57 -0400
+Message-Id: <20230623144100.34196-5-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20230623144100.34196-1-james.quinlan@broadcom.com>
 References: <20230623144100.34196-1-james.quinlan@broadcom.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000fae2cb05feccfd1b"
+        boundary="0000000000000e700005feccfe8d"
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         MIME_HEADER_CTYPE_ONLY,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
@@ -83,61 +83,39 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---000000000000fae2cb05feccfd1b
+--0000000000000e700005feccfe8d
 
-During long periods of the PCIe RC HW being in an L1SS sleep state, there
-may be a timeout on an internal bus access, even though there may not be
-any PCIe access involved.  Such a timeout will cause a subsequent CPU
-abort.
-
-So, when "brcm,enable-l1ss" is observed, we increase the timeout value to
-four seconds instead of using its HW default.
+The current PCIe driver assumes PERST# is asserted when probe() is invoked.
+Some older versions of the 2711/RPi bootloader left PERST# unasserted, as
+the Raspian OS does assert PERST# on probe().  For this reason, we assert
+PERST# for BCM2711 SOCs (i.e. RPi).
 
 Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-Tested-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/pci/controller/pcie-brcmstb.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index d30636a725d7..fe0415a98c63 100644
+index fe0415a98c63..7b698a9a851e 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -1034,6 +1034,21 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	return 0;
- }
+@@ -884,6 +884,11 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
  
-+/*
-+ * This extends the timeout period for an access to an internal bus.  This
-+ * access timeout may occur during L1SS sleep periods even without the
-+ * presence of a PCIe access.
-+ */
-+static void brcm_extend_rbus_timeout(struct brcm_pcie *pcie)
-+{
-+	/* TIMEOUT register is two registers before RGR1_SW_INIT_1 */
-+	const unsigned int REG_OFFSET = PCIE_RGR1_SW_INIT_1(pcie) - 8;
-+	u32 timeout_us = 4000000; /* 4 seconds, our setting for L1SS */
+ 	/* Reset the bridge */
+ 	pcie->bridge_sw_init_set(pcie, 1);
 +
-+	/* Each unit in timeout register is 1/216,000,000 seconds */
-+	writel(216 * timeout_us, pcie->base + REG_OFFSET);
-+}
++	/* Ensure that PERST# is asserted; some bootloaders may deassert it. */
++	if (pcie->type == BCM2711)
++		pcie->perst_set(pcie, 1);
 +
- static void brcm_config_clkreq(struct brcm_pcie *pcie)
- {
- 	bool l1ss = of_property_read_bool(pcie->np, "brcm,enable-l1ss");
-@@ -1059,6 +1074,7 @@ static void brcm_config_clkreq(struct brcm_pcie *pcie)
- 		 * of 400ns, as specified in 3.2.5.2.2 of the PCI Express
- 		 * Mini CEM 2.0 specification.
- 		 */
-+		brcm_extend_rbus_timeout(pcie);
- 		clkreq_set |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK;
- 		dev_info(pcie->dev, "bi-dir CLKREQ# for L1SS power savings");
- 	} else {
+ 	usleep_range(100, 200);
+ 
+ 	/* Take the bridge out of reset */
 -- 
 2.17.1
 
 
---000000000000fae2cb05feccfd1b
+--0000000000000e700005feccfe8d
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -208,13 +186,13 @@ AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
 75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
 AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
 AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCASuVEls4GipYFRa35Wzf8YhTtWj8EE
-FHaPMPTMc3WgXDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzA2
-MjMxNDQxMTFaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCDK0zS7aa24GQComlrqJumq9fpFFye+
+EkdM/huoSOvhHjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzA2
+MjMxNDQxMTJaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
 hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAdJG+UbOZTOm9tGwEUoEFt6X/jqYDrg3i0EW05XiEvPp70vqC
-n7Tm9350Z7wjrK7H6SOmWfyK8ur0zWFU+saWPdABGe6qfJnCE5U0RxvtKXqUJqeFYTXXrtq3zWbo
-G4XLolS4rkcrCyTzgwJNcVcwaqupPXdpO+HpsQMq9p4OaK1PySUPG1btTDrjXMsZJgYK3S7Z4RRY
-Dyg2ZJAL0j6SezZCySfKhn1HyWIw9W5DuFehsNfbBsWr/+8NwuyrxkweEhl/Ieyuj5JzEXXaaDVy
-E0y6k/kqqd0XquV9k91XFcKa0KQpO4btVi9xn0xJDm02HFqBVOlXrHcsQnoj1a+zMQ==
---000000000000fae2cb05feccfd1b--
+AgEwDQYJKoZIhvcNAQEBBQAEggEAJiEiR/wYRL04MqgLDyspKThq7/vM2X8L5ksJ3mhmth7KhT1e
+f/+sPHV0L9s9BCCCXsEfNDwCBUV/DIE+Y8HbFCYLbwbrRmcGEtLiqVjnAfUA50mxK7zZfUzPHWwn
+Ukenjdpm/WtqMFqCpAZljhMLNaRtV6iVVobmKF1+y+FiWg0mG5CEPYUilkfE+7dSa23a8l5Xn6Ee
+y8g+WShdItJRteQ5CkSu/4YZ1CEhCBpUgIu+DeRgpEuu9jV7erEqz/rjWOEokuZAzGqH1sC5KPFm
+pHcqendeN0D+CPj/yWkDvBSOe7Roz3DZ7Gi132Esh/UihRWExGGl5CD+0rIWoImQFA==
+--0000000000000e700005feccfe8d--
