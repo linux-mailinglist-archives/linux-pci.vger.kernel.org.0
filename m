@@ -2,184 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86F6673AF3B
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 06:00:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5474173AFA2
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 06:58:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229625AbjFWEAZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Jun 2023 00:00:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38306 "EHLO
+        id S229757AbjFWE57 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Jun 2023 00:57:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229847AbjFWEAK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jun 2023 00:00:10 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2057.outbound.protection.outlook.com [40.107.92.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87E1C213A;
-        Thu, 22 Jun 2023 21:00:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ANAWKk2zrjYt56KzzEu8VFkJYdrcWqp34pzsYqwmSrIW3c22o7SSO+TZ7ZPkFoyPiqbnwqVk9qzNhGA70dX1Jc+jfyeQ5UeamdtVrCED+FHroEjn4lr78mva2f9Si8mhTiEiJ6RCSZjOkuiwEEPrPF3EqzzTj4K9OLfPCOEBVkaFwGUIJkdvd4b672dVBGP3AqOyyaxmEXm7BPdfxVFiRjpdlJB4yOcV86pIvSBV9CNXQngJiUwt2BqGW6UnffeLgLGSNYfYkPgwWUOs9BSdAMUZhzOYHbRVhLgnY1WAC2+5xArs1CC6iL1SWVgkDC8aOUYOuxR6Db9KO/cRIiohHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UKoF2A39RMcrERphANb0fJ0JqmvytB8i+IeCTU79KSk=;
- b=APta/FWEIvauPawc9uSPTFpkOXQh3YKP3dnnjuq5OwXfZmVOiIQi00ROtVLbk04JgfUJywc97/zDpsX2mBqBMHyQlaw4gMp2AYaDEmBC13h39pfYDJDcgBr0RPp/xJOoPjPqcfBXcgCfktFrHiJEWRE95lchG0TGdzloNj4gKi8t/YzmhrtG3BpO/sKkXS27cYA3Ir8hHVefZeDG4mlYTY0SwRSNBWeO5ONGK5pjNaFU9MgavO4YUWhZdKte45VuOCdS+LN56DmtX67jEngKVOVVbW2//jE7eytzAsrZBM+maa3yNSe4uZ2V6l5ubFqWmS1hmLSLj+I5YJ8PZEv4qA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UKoF2A39RMcrERphANb0fJ0JqmvytB8i+IeCTU79KSk=;
- b=hNtVV39ta7NvzpaXmUU/b1VtiIIvwS1qdpKLTMxJvDZFokRiZ+NnNFCJVfsOnIeb44HTem0PII7LVxgiKUWJ/my5/KwakwrO6iToH4h6vCeUlW2HIUDfNSpbdj21BArZQCSO/4svSE2quqjMuOCdOWVv2XCQWf5jAlrLZk92Ejw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5112.namprd12.prod.outlook.com (2603:10b6:208:316::16)
- by PH7PR12MB6787.namprd12.prod.outlook.com (2603:10b6:510:1ad::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.24; Fri, 23 Jun
- 2023 04:00:01 +0000
-Received: from BL1PR12MB5112.namprd12.prod.outlook.com
- ([fe80::5c06:6ce6:fe4f:41da]) by BL1PR12MB5112.namprd12.prod.outlook.com
- ([fe80::5c06:6ce6:fe4f:41da%5]) with mapi id 15.20.6521.026; Fri, 23 Jun 2023
- 04:00:01 +0000
-Message-ID: <8bb20976-97ec-0c5c-adc8-183896de6768@amd.com>
-Date:   Fri, 23 Jun 2023 05:59:55 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v3 2/2] PCI: pciehp: Clear the optional capabilities in
- DEVCTL2 on a hot-plug
-To:     Lukas Wunner <lukas@wunner.de>,
-        Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Fontenot Nathan <Nathan.Fontenot@amd.com>,
-        Jay Cornwall <Jay.Cornwall@amd.com>
-References: <20230621185152.105320-1-Smita.KoralahalliChannabasappa@amd.com>
- <20230621185152.105320-3-Smita.KoralahalliChannabasappa@amd.com>
- <20230622063105.GA624@wunner.de>
- <d64f8de4-cac1-ccca-33fe-1fda418837e2@amd.com>
- <20230622214247.GB11993@wunner.de>
-Content-Language: en-US
-From:   Felix Kuehling <felix.kuehling@amd.com>
-In-Reply-To: <20230622214247.GB11993@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR3P281CA0014.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:1d::7) To BL1PR12MB5112.namprd12.prod.outlook.com
- (2603:10b6:208:316::16)
+        with ESMTP id S229607AbjFWE56 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jun 2023 00:57:58 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65B1F189;
+        Thu, 22 Jun 2023 21:57:57 -0700 (PDT)
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35N4W9hj008366;
+        Fri, 23 Jun 2023 04:57:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=qcppdkim1;
+ bh=j7Bm8l5mYYRm61e7L8igeHe8pJPYWRzXqv07q/u7m/Q=;
+ b=a14tQ1YAoaZ4dgyzx+W+UgrNouAtGQjl+49SeJ3heUF2suaSa7XqcYNlU8fyOh2pkiLr
+ bZ8v0lnkQo6gAy2AgFDr2Wdp3r76l1Kji1Uc3X5C0mEXkqqKTq4b0QEwkaAlsF/5ZefP
+ PEf/5KnZv3OVgzoHNheBO922ACwP5C7Vm304TJsEQhmeaBXhKeJdXIo0XPB95OEooATR
+ 3CDA4IOWJTw6pFn6+Rcex1iEe6IQ3Hk0xnwPMZ48S6NOU2//7GABTVDgqPclYsRn9ckP
+ wD3VNxVQ4gT5sLWTQlTUnn3yVHWEb0bXT1U6AgueA/bJbVI3E8nly1X2bDALEhV6Mv+W CA== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rc359mcdt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 23 Jun 2023 04:57:50 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35N4vns4003782
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 23 Jun 2023 04:57:49 GMT
+Received: from devipriy-linux.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.42; Thu, 22 Jun 2023 21:57:44 -0700
+From:   Devi Priya <quic_devipriy@quicinc.com>
+To:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <mani@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <quic_srichara@quicinc.com>, <quic_sjaganat@quicinc.com>,
+        <quic_kathirav@quicinc.com>, <quic_anusha@quicinc.com>,
+        <quic_ipkumar@quicinc.com>
+Subject: [PATCH] PCI: qcom: configure the parf halt window size to 1GB
+Date:   Fri, 23 Jun 2023 10:27:31 +0530
+Message-ID: <20230623045731.29397-1-quic_devipriy@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5112:EE_|PH7PR12MB6787:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8c79b9d0-08f3-47dd-fff4-08db739e517b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MEdZ0yZjy46JNDpcoTJ7Hv5vsWO25+NjbEphAFY/AQbq862xGikKg7yBOXlVNljFp5YNEJ+VsAiOZ7gCYA5cg4A4ANrlEl/cgYeiiBUzJldGEMoo0IVc2M2bGda5wi2opGBxK1XwBfK1DH1dtiFblxqv8wXApqqNaDtA9GBbfB0iC1hexeZ1c70TUKCiZMxNEAWNXddanY2naHZY5VcLcRgoYtLh8/6uxwui9OrXHcNi2SF5YQvMDlcom5uOL8uhMStR+1ugy4gQqy1Rxw7MCCOQ4FwLBhn4OiQp0GMHwRrjy7abO9l3Nshf3Of4elHLwj2Q2q/BAldhOzK/iJG6PjPvPNqsSyW89or8EK8cVA1KgQ6BfwiYuBsiECrsMQJQbbXH4GsycHX8qR8xarT3j/O71SMflnfd6EIZtdHv+8ZrqL62NfXR9PeOlhiPjtFxYWMMb9uBAUm2OEhfg0DYnYEzCUhe7IWvVdDAzi1yJSTJI5UjlDvI5N19e9XarQhziYPKUDMUqBnina+WT0rRJONLdsUCD9z4y5WaQFv6x8A56GZXOsXoI7Ag2rNyTRmP0tX4KHhEhasRozz0V3wLdOAf6OEf+2MF6iKAzGOzmeWOkASHuqFaDJ65GiXyl6gtmgrOprcjW4BKAheBxOjJ9A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5112.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(376002)(136003)(39860400002)(366004)(346002)(451199021)(478600001)(31686004)(53546011)(26005)(6512007)(6506007)(41300700001)(38100700002)(2616005)(5660300002)(86362001)(66556008)(4326008)(6636002)(110136005)(44832011)(54906003)(66476007)(66946007)(31696002)(2906002)(6666004)(8676002)(8936002)(6486002)(316002)(186003)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Y1FlMTM4NGpBVGxEUHNwWm5TRytUaS9RYjRXTVJNMDNDOHdYOUFYVFZ0NlV1?=
- =?utf-8?B?cEgxY24yb201MEVWLzl5WEFVbUFmYnFlU3VkZjhJWUpCOXJuQndNYTBxdGow?=
- =?utf-8?B?Rjd0bEJ3OUVKK2RRQmEwTkxiTC92eHF1a29BRk9OMUhUWFNrd1kvQXIzZWUx?=
- =?utf-8?B?RjJkTzcyWkxtMlRJWnpwRGJDUkVTYUVJcVJmOWU3Qnd5V28waEh5dVpIMUQw?=
- =?utf-8?B?VXBlWCt3YW9mT1NlVjB6WVlqL2dtT09CczBWallvQWV5V0xyTGxxUGFnbmQ2?=
- =?utf-8?B?c2FDeFRsdldZVmQ2RVh6UFlxbmVWMVkrZjA5MExHMTA4K1RhZFhMQ0lpKzgx?=
- =?utf-8?B?NHU4dTVlNXA5T2dROU0ySDd0WW5OWmQ5dHhDbnJLeEtCNUNrQUpFekZrcXV3?=
- =?utf-8?B?SDFsUjZOdjdmS1J5VkJEQnJlcGRwSmtjWGZ3TUNRekx6VVI4UzQxQllCbFVx?=
- =?utf-8?B?L2U0L01Bck5FOThQL1h4eWdHY3Z4OVRPaVU5aklzcmJVczZTcGd1eVNkbUU5?=
- =?utf-8?B?dkJ0UERKWkgrL2tCSVYyZ0VIeG50UVc0bVNJU2liVERYSVB1U25LbWJXeThU?=
- =?utf-8?B?MzJiRFNZRllqN2EyS3Q4U3BpamtUMnAvdmxvSDdPVmlRWmU4WGRHZm9ZemFV?=
- =?utf-8?B?QVVSZHlkUFU2U0lVUzFpcWR5OEMwL29GempvSXQ0eUZEb1FHZko1OXI5Z1l2?=
- =?utf-8?B?L0tZZGMwU0pDdVpWL0xaTkwrSzNWcTFLSUNna0R2NGZSb3I1eE45QitneHpr?=
- =?utf-8?B?T0hDSFlzYWZOOUZUS002L255TVd2NU00czB2b1Y4cHY4MndHN1M1bGtGSWJH?=
- =?utf-8?B?bWNhcU01dUI0MS8xR3psUVduVHVYYi9WTzZQa3J4YXJXVHF4VkVpQTRFbEw0?=
- =?utf-8?B?N054U0dVT3hlRTB4bnhHUmVxSEU2NmZYTi9PRkR6SlRURTN3M2ZkS1BJdGwv?=
- =?utf-8?B?Q1NNVERMTGlUamgvU3dZazZuaWovamwvTjNRYkZjRXNZNFBNeUw4VGZPRnF4?=
- =?utf-8?B?MUJDK1dKT3dseFZKei83cTVrUHJEV3hYd2hNd3NaUGJyVXNZQkk3VklBM1Ra?=
- =?utf-8?B?UVRvSk9PRDZDSDlBbWhqMm5Vc0I1TFJoNGsySkVncGFIbEwrSW1lZkVpQUkz?=
- =?utf-8?B?a0hsb1hHVmNpbnVmOGxDSHg1LzNxYkJTTVlOQlpPdTNlRXZmTEZUV1hlclUx?=
- =?utf-8?B?aCtrZmdHdmI5WDZURFFOa1R0MTVleGNFQURBdVE1VkhZQXRVMGtwd3dUelYz?=
- =?utf-8?B?QktFZDdzWWhPQi9QdlBEWW5WaDh1Nm4rb2JucmZnbUVxdnp3c0h3QnRWQXNh?=
- =?utf-8?B?aGJQbDZOa3Qzcm5XbEFmVGZ6eU1EbnZZSC9md01GaHZTZXFuQ1F1UmxCcndp?=
- =?utf-8?B?UUhKWU9yQmcxV0RwdW1JQkJlaW9yYjhWbWl6dVVlU2Qxb1l2eFZmOTBhc3hj?=
- =?utf-8?B?WENYRHV0U3pYOVg5dGtKQ0FyUzdLRDdUMHRpZ0YyUWNqYjlkT1NYdzl5RWti?=
- =?utf-8?B?QWJoekVYZkN0eDVreGhRVDdud3ZqcE4xN3M2RkdjM3pmQlM4c3BpMHp0M2V1?=
- =?utf-8?B?RUMwajhYZ3Q5RktxY3NKOU53VkFHOUlLQ1hIVUpEdGc0N2hsMWxvbVplQnJw?=
- =?utf-8?B?ZXR6OHB6ZFJQeXIzZTJlT0djdnl2bmhzSDBxeHlqRjNjbUhYajlxY1hJSkly?=
- =?utf-8?B?aWwwV1haNHF6djRaWUlGL2hDR2FNbjdvQUhDMUJNcSt2MDZsVkhQWUtZR1R3?=
- =?utf-8?B?Q04vL3NWUlZ2VmxOckdQZ2JNK2t5bDNIR1Z6TWtqR3N4eU1VVk8wSEN1UmFw?=
- =?utf-8?B?TGZkVVNNSU5rblRkVlBTVGptOWw5REluZW5hcDZvUy9qYlhGMmNacVk2S2Vv?=
- =?utf-8?B?eXNFYVlGUFBxTXNqNEREZ2VNTlZrMzVoTnA3azRXMUdNTkIycHg4aXBkWkww?=
- =?utf-8?B?c25lQ0dNZ2R3N3J2MnEwYm5xWlBha2hDRmpzTXZkdnk1U2pEWXhZdEVQYm5T?=
- =?utf-8?B?TjRSeFV2c1FoOWx6SDNMaFFFVlhJa2xTcjNkQ3FCaGhGOVdaWTJyOTFpcUhZ?=
- =?utf-8?B?VmJGMGlDRlUzVGZ2K0dYNnZBZnlFZTlXS1JtNTBvQUZWOGpFY3hCNW5YR3Yr?=
- =?utf-8?Q?HLmKffoycIMgO0YUoCJ55XQA3?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c79b9d0-08f3-47dd-fff4-08db739e517b
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5112.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2023 04:00:01.4176
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nRQdKGwzHt66iDQ5apP4vsnvgp/W2Cr7naqEuQNw4Wt1zUqZFcbPfnalK0qeU5bWzmdb6O79gtwybon/ldxvxg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6787
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 6mu3sAqHVH8Ft5UzANOCDEBRyuLhbt20
+X-Proofpoint-ORIG-GUID: 6mu3sAqHVH8Ft5UzANOCDEBRyuLhbt20
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-23_02,2023-06-22_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 bulkscore=0 mlxscore=0 malwarescore=0 mlxlogscore=733
+ spamscore=0 impostorscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306230043
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2023-06-22 23:42, Lukas Wunner wrote:
-> [cc += Jay, Felix]
->
-> On Thu, Jun 22, 2023 at 02:02:12PM -0700, Smita Koralahalli wrote:
->> Would it be fair to just reuse pci_enable_atomic_ops_to_root() for
->> Atomic_Ops configuration?
-> Hm, that's a good question.  I'm not an expert on that corner of
-> the PCI core.
->
-> But indeed what you could try is amend that function to not only
-> *set* PCI_EXP_DEVCTL2_ATOMIC_REQ if it's supported, but to also
-> *clear* it if it's not supported.
->
-> And you'd have to call pci_enable_atomic_ops_to_root() on enumeration,
-> e.g. from pci_init_capabilities().
->
-> That should obviate the need to call pci_enable_atomic_ops_to_root()
-> from drivers, so you could probably remove the call from all the
-> drivers which currently call it (amdgpu, infiniband, mellanox),
-> in one separate patch per driver.
->
-> An then you could drop the EXPORT clause for pci_enable_atomic_ops_to_root()
-> and make it private to the PCI core.
-Then our driver would need an alternative way to determine whether 
-atomic capabilities are enabled for a device. We currently use the 
-return value from pci_enable_atomic_ops_to_root to determine this.
+Configure the ADDR_BIT_INDEX of PARF_AXI_MSTR_WR_ADDR_HALT_V2 register with
+0x1E to increase the halt window size to 1GB so that, when new inbound
+posted write transactions whose address crosses 1G address range, the
+controller would halt all the incoming writes until all the previous AXI
+responses are received.
 
-Regards,
-   Felix
+Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+---
+ This patch depends on the below series which adds support for PCIe 
+ controllers in IPQ9574
+ https://lore.kernel.org/linux-arm-msm/20230519090219.15925-1-quic_devipriy@quicinc.com/
 
+ drivers/pci/controller/dwc/pcie-qcom.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
->
-> So that would be 5 patches (enablement/disablement on enumeration,
-> amendmend of the 3 drivers, making the call private).
->
-> I'm not sure if anyone will cry foul if you do that but if you want
-> to give it a try, go for it. :)
->
-> I don't now why commit 430a23689dea, which introduced
-> pci_enable_atomic_ops_to_root(), chose to add it as a library function
-> which is only called from specific drivers, instead of universally
-> enabling the feature for all devices.  Adding the commit authors to cc
-> so they can chime in.
->
-> Thanks,
->
-> Lukas
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index c7579dfa5b1c..26c40e006120 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -116,6 +116,8 @@
+ 
+ /* PARF_AXI_MSTR_WR_ADDR_HALT register fields */
+ #define EN					BIT(31)
++#define ADDR_BIT_INDEX				(BIT(0) | BIT(1) | BIT(2) | \
++						BIT(3) | BIT(4) | BIT(5))
+ 
+ /* PARF_LTSSM register fields */
+ #define LTSSM_EN				BIT(8)
+@@ -154,6 +156,8 @@
+ 
+ #define QCOM_PCIE_CRC8_POLYNOMIAL		(BIT(2) | BIT(1) | BIT(0))
+ 
++#define PARF_AXI_MSTR_WR_ADDR_HALT_WINDOW_SIZE	0x1e
++
+ #define QCOM_PCIE_1_0_0_MAX_CLOCKS		4
+ struct qcom_pcie_resources_1_0_0 {
+ 	struct clk_bulk_data clks[QCOM_PCIE_1_0_0_MAX_CLOCKS];
+@@ -1126,6 +1130,11 @@ static int qcom_pcie_post_init(struct qcom_pcie *pcie)
+ 
+ 	writel(0, pcie->parf + PARF_Q2A_FLUSH);
+ 
++	val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
++	val &= ~ADDR_BIT_INDEX;
++	writel(val | PARF_AXI_MSTR_WR_ADDR_HALT_WINDOW_SIZE, pcie->parf +
++			PARF_AXI_MSTR_WR_ADDR_HALT_V2);
++
+ 	dw_pcie_dbi_ro_wr_en(pci);
+ 	writel(PCIE_CAP_SLOT_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
+ 
+-- 
+2.17.1
+
