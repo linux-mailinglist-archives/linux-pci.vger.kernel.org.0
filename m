@@ -2,172 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B622D73B032
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 07:43:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F8AC73B082
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 08:06:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230502AbjFWFna (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Jun 2023 01:43:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59332 "EHLO
+        id S231287AbjFWGGc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Jun 2023 02:06:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjFWFn3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jun 2023 01:43:29 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B054E46;
-        Thu, 22 Jun 2023 22:43:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S229921AbjFWGGb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jun 2023 02:06:31 -0400
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [IPv6:2a01:37:3000::53df:4ef0:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B282E48;
+        Thu, 22 Jun 2023 23:06:30 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1D8D061987;
-        Fri, 23 Jun 2023 05:43:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97FA4C433C0;
-        Fri, 23 Jun 2023 05:43:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687499007;
-        bh=MYGG5cGrVBYsNDfhjkbhLquFlj7sZGMulbxa+VzidYE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KSahqqew1oabjk0qHPGkyWZkQbRye24+ZmhkAmK31tjBf34wBGPvyfhujOmgUipPy
-         uv753O6l+9Ti3s6XqElDRbPB9oZHTUjYkRZAwH6kuYApgZm4kJDCe4zTBoruEvZMo5
-         julQg7+6lMEdNCwv02fD//PaNuW7pPkFewQlSimO4W9xFgV3Vt1egrd+uz+kiPNqhI
-         WUyrBzGvBHZU1hcLQBO1pV9+2fQJyseB1BFhttCO7JU2GJgiEWLZLdVaRGx9Us/jlL
-         KNSJrmqrM729cMtMHQ2eQKntRU06OOUNH2qewiBZWMox+qSXNfGOGm8bcOjFw5s93h
-         apbrPh/FfI9Yw==
-Date:   Fri, 23 Jun 2023 11:13:13 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc:     manivannan.sadhasivam@linaro.org, quic_vbadigan@quicinc.com,
-        quic_ramkri@quicinc.com, linux-arm-msm@vger.kernel.org,
-        konrad.dybcio@linaro.org,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI ENDPOINT SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v1 1/3] PCI: endpoint: Add wakeup host API to EPC core
-Message-ID: <20230623054313.GB5611@thinkpad>
-References: <1686754850-29817-1-git-send-email-quic_krichai@quicinc.com>
- <1686754850-29817-2-git-send-email-quic_krichai@quicinc.com>
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 412DE2800C986;
+        Fri, 23 Jun 2023 08:06:28 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 304D9155F74; Fri, 23 Jun 2023 08:06:28 +0200 (CEST)
+Date:   Fri, 23 Jun 2023 08:06:28 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Felix Kuehling <felix.kuehling@amd.com>
+Cc:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Fontenot Nathan <Nathan.Fontenot@amd.com>,
+        Jay Cornwall <Jay.Cornwall@amd.com>
+Subject: Re: [PATCH v3 2/2] PCI: pciehp: Clear the optional capabilities in
+ DEVCTL2 on a hot-plug
+Message-ID: <20230623060628.GA28334@wunner.de>
+References: <20230621185152.105320-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20230621185152.105320-3-Smita.KoralahalliChannabasappa@amd.com>
+ <20230622063105.GA624@wunner.de>
+ <d64f8de4-cac1-ccca-33fe-1fda418837e2@amd.com>
+ <20230622214247.GB11993@wunner.de>
+ <8bb20976-97ec-0c5c-adc8-183896de6768@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1686754850-29817-2-git-send-email-quic_krichai@quicinc.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <8bb20976-97ec-0c5c-adc8-183896de6768@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 08:30:47PM +0530, Krishna chaitanya chundru wrote:
-> Endpoint cannot send any data/MSI when the device state is in
-> D3cold or D3hot. Endpoint needs to bring the device back to D0
-> to send any kind of data.
+On Fri, Jun 23, 2023 at 05:59:55AM +0200, Felix Kuehling wrote:
+> On 2023-06-22 23:42, Lukas Wunner wrote:
+> > On Thu, Jun 22, 2023 at 02:02:12PM -0700, Smita Koralahalli wrote:
+> > > Would it be fair to just reuse pci_enable_atomic_ops_to_root() for
+> > > Atomic_Ops configuration?
+> > 
+> > Hm, that's a good question.  I'm not an expert on that corner of
+> > the PCI core.
+> > 
+> > But indeed what you could try is amend that function to not only
+> > *set* PCI_EXP_DEVCTL2_ATOMIC_REQ if it's supported, but to also
+> > *clear* it if it's not supported.
+> > 
+> > And you'd have to call pci_enable_atomic_ops_to_root() on enumeration,
+> > e.g. from pci_init_capabilities().
+> > 
+> > That should obviate the need to call pci_enable_atomic_ops_to_root()
+> > from drivers, so you could probably remove the call from all the
+> > drivers which currently call it (amdgpu, infiniband, mellanox),
+> > in one separate patch per driver.
+> > 
+> > An then you could drop the EXPORT clause for pci_enable_atomic_ops_to_root()
+> > and make it private to the PCI core.
 > 
-> For this endpoint can send inband PME the device is in D3hot or
-> toggle wake when the device is D3 cold.
-> 
+> Then our driver would need an alternative way to determine whether atomic
+> capabilities are enabled for a device. We currently use the return value
+> from pci_enable_atomic_ops_to_root to determine this.
 
-Are you referring to "host" as the "device"? If so, then it is a wrong
-terminology.
+Just read PCI_EXP_DEVCTL2 and check whether PCI_EXP_DEVCTL2_ATOMIC_REQ
+is set.  (I.e. has been set by the PCI core on device enumeration.)
 
-> To support this adding wake up host to epc core.
-> 
+Problem solved, I guess?
 
-Commit message should be imperative.
+Thanks,
 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  drivers/pci/endpoint/pci-epc-core.c | 29 +++++++++++++++++++++++++++++
->  include/linux/pci-epc.h             |  3 +++
->  2 files changed, 32 insertions(+)
-> 
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index 46c9a5c..d203947 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -167,6 +167,35 @@ const struct pci_epc_features *pci_epc_get_features(struct pci_epc *epc,
->  EXPORT_SYMBOL_GPL(pci_epc_get_features);
->  
->  /**
-> + * pci_epc_wakeup_host() - interrupt the host system
-
-s/interrupt the host system/Wakeup the host
-
-> + * @epc: the EPC device which has to interrupt the host
-
-s/interrupt/wake
-
-> + * @func_no: the physical endpoint function number in the EPC device
-> + * @vfunc_no: the virtual endpoint function number in the physical function
-> + *
-> + * Invoke to wakeup host
-> + */
-> +int pci_epc_wakeup_host(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
-> +{
-> +	int ret;
-> +
-> +	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
-> +		return -EINVAL;
-> +
-> +	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-> +		return -EINVAL;
-> +
-
-Use proper errno for both of the above.
-
-- Mani
-
-> +	if (!epc->ops->wakeup_host)
-> +		return 0;
-> +
-> +	mutex_lock(&epc->lock);
-> +	ret = epc->ops->wakeup_host(epc, func_no, vfunc_no);
-> +	mutex_unlock(&epc->lock);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_epc_wakeup_host);
-> +
-> +/**
->   * pci_epc_stop() - stop the PCI link
->   * @epc: the link of the EPC device that has to be stopped
->   *
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index 301bb0e..a8496be 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -59,6 +59,7 @@ pci_epc_interface_string(enum pci_epc_interface_type type)
->   * @start: ops to start the PCI link
->   * @stop: ops to stop the PCI link
->   * @get_features: ops to get the features supported by the EPC
-> + * @wakeup_host: ops to wakeup the host
->   * @owner: the module owner containing the ops
->   */
->  struct pci_epc_ops {
-> @@ -88,6 +89,7 @@ struct pci_epc_ops {
->  	void	(*stop)(struct pci_epc *epc);
->  	const struct pci_epc_features* (*get_features)(struct pci_epc *epc,
->  						       u8 func_no, u8 vfunc_no);
-> +	int	(*wakeup_host)(struct pci_epc *epc, u8 func_no, u8 vfunc_no);
->  	struct module *owner;
->  };
->  
-> @@ -232,6 +234,7 @@ int pci_epc_start(struct pci_epc *epc);
->  void pci_epc_stop(struct pci_epc *epc);
->  const struct pci_epc_features *pci_epc_get_features(struct pci_epc *epc,
->  						    u8 func_no, u8 vfunc_no);
-> +int pci_epc_wakeup_host(struct pci_epc *epc, u8 func_no, u8 vfunc_no);
->  enum pci_barno
->  pci_epc_get_first_free_bar(const struct pci_epc_features *epc_features);
->  enum pci_barno pci_epc_get_next_free_bar(const struct pci_epc_features
-> -- 
-> 2.7.4
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Lukas
