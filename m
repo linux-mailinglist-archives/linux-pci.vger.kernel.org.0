@@ -2,48 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AA7673BDDF
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 19:35:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01AB573BDFF
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 19:42:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232128AbjFWRfP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Jun 2023 13:35:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54028 "EHLO
+        id S232145AbjFWRma (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Jun 2023 13:42:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231675AbjFWRfL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jun 2023 13:35:11 -0400
+        with ESMTP id S232085AbjFWRm1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jun 2023 13:42:27 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01EA270A;
-        Fri, 23 Jun 2023 10:35:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 861451FDF;
+        Fri, 23 Jun 2023 10:42:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6E2B761ADB;
-        Fri, 23 Jun 2023 17:35:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B518C433C0;
-        Fri, 23 Jun 2023 17:35:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1A27A61AEF;
+        Fri, 23 Jun 2023 17:42:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06578C433CD;
+        Fri, 23 Jun 2023 17:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687541702;
-        bh=OSQAdJDD/PqkHqlskdQSJTtP3Muh5NfOtrK/Fza6rn4=;
+        s=k20201202; t=1687542145;
+        bh=B+ile9UQYyNQVSV2ovecEJKbv71x2PzA3Mu7PzfgpNM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=GP1+yny7uFargymk1h7IkSW5Tzxe3VeIax5woNbWq9RDSzRgdhTPYvC3n1PcljlQD
-         8LWiGFrWWFylyEeOsH6x70LWRCARh4Wfdj1vEKC1Nw7pnfq7as6atg0dEFztCumxRK
-         brmwZNLCfKkPvpvH9zeNtVZpMOtbaYXSTnL2NfJgHBsCHKBgDRrdiWn4mzK/50BELZ
-         cTAadG23aBys9txSdlBqq8ALfB6k+k8lXgCL+rnoWSiRqw0fRRPBlkSgwgPdfOE8FS
-         fJCpClz/ETV/jDEXN/vgeqtwtRI9Exqe4PSCl65hfkNtt5s/gaIF8qXfqUTSrku6QJ
-         4S+boHdwARjXA==
-Date:   Fri, 23 Jun 2023 12:35:00 -0500
+        b=V3n+dW/7W+8e4ky/y2CyPQlPjv86avWhWcfjxymBA4Y+zefycJKi8ZcW3Y4UdCeDd
+         ecCGXt5OXv7xbAB2gFl4x15UlnXyZc7d65neHutk/85HFFdSo+PS1Lo6PB53sRFxBP
+         xiWSzo6wQ58H3gdEAxcIRxnTAuKcwgJGSmNmWy85pdv+5qBxweplEJc3T0tw4UYfjC
+         474rwzv8sdgGpqCsDussCzD4t1h39VW749/8df2hG14suPM2epAAy+wlHB3/rbie1h
+         FzKyo28RbTcpg2kD+y7/dzqUOjxloaopxsE4ZVy5svZ8OCnX1vNyVT0C9KkR38tRSO
+         kS4iSHMz7h+dQ==
+Date:   Fri, 23 Jun 2023 12:42:21 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v4] PCI: Call _REG when transitioning D-states
-Message-ID: <20230623173500.GA180070@bhelgaas>
+To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>,
+        Manivannan Sadhasivam <mani@kernel.org>
+Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, sboyd@kernel.org, mturquette@baylibre.com,
+        mani@kernel.org, lpieralisi@kernel.org, bhelgaas@google.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/4] pcie: qcom: Fix the macro
+ PARF_SLV_ADDR_SPACE_SIZE_2_3_3
+Message-ID: <20230623174221.GA180338@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <03e5d343-848c-02c7-2deb-917d1b93ce8c@amd.com>
+In-Reply-To: <20230623093445.3977772-2-quic_srichara@quicinc.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -54,33 +60,39 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 21, 2023 at 05:52:52PM -0500, Limonciello, Mario wrote:
-> On 6/21/2023 5:28 PM, Bjorn Helgaas wrote:
-> > On Tue, Jun 20, 2023 at 09:04:51AM -0500, Mario Limonciello wrote:
-> > > Section 6.5.4 of the ACPI 6.4 spec describes how AML is unable to access
-> > > an OperationRegion unless `_REG` has been called.
-> > > ...
+On Fri, Jun 23, 2023 at 03:04:42PM +0530, Sricharan Ramabadhran wrote:
+> PARF_SLV_ADDR_SPACE_SIZE_2_3_3 macro used for IPQ8074
+> pcie slave addr size was initially set to 0x358, but
+> was wrongly changed to 0x168 as a part of
+> 'PCI: qcom: Sort and group registers and bitfield definitions'
+> Fixing it back to right value here.
+> 
+> Without this pcie bring up on IPQ8074 is broken now.
+> 
+> Fixes: 769e49d87b15 ("PCI: qcom: Sort and group registers and bitfield definitions")
 
-> > > It is reported that ASMedia PCIe GPIO controllers fail
-> > > functional tests after the system has returning from suspend (S3
-> > > or s2idle). This is because the BIOS checks whether the OSPM has
-> > > called the `_REG` method to determine whether it can interact
-> > > with the OperationRegion assigned to the device as part of the
-> > > other AML called for the device.
+769e49d87b15 appeared in v6.4-rc1, so ideally this would get merged
+before v6.4 releases on Monday.  I can try to do that, given an ack
+from Manivannan.
 
-> I double checked a BIOS debug log which shows ACPI calls
-> to confirm and didn't see a single _REG call for any device
-> before this patch across a boot/suspend/resume cycle.
-
-Sorry to follow up on this again.
-
-The commit log says these GPIO controllers fail functional tests after
-returning from suspend.  Do those functional tests pass *before*
-suspend?  If so, why?
-
-Without this patch, we *never* call _REG, so the fact that calling
-_REG when we return the device to D0 while resuming fixes something
-suggests that it might have been broken even before the suspend.
-
-Bjorn
-
+> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 4ab30892f6ef..59823beed13f 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -43,7 +43,7 @@
+>  #define PARF_PHY_REFCLK				0x4c
+>  #define PARF_CONFIG_BITS			0x50
+>  #define PARF_DBI_BASE_ADDR			0x168
+> -#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x16c /* Register offset specific to IP ver 2.3.3 */
+> +#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x358 /* Register offset specific to IP ver 2.3.3 */
+>  #define PARF_MHI_CLOCK_RESET_CTRL		0x174
+>  #define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
+>  #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
+> -- 
+> 2.34.1
+> 
