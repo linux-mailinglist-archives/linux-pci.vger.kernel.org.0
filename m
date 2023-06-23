@@ -2,50 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9058973BA63
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 16:41:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8445273BA66
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 16:41:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231938AbjFWOlU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Jun 2023 10:41:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37770 "EHLO
+        id S231952AbjFWOlV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Jun 2023 10:41:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231665AbjFWOlT (ORCPT
+        with ESMTP id S231864AbjFWOlT (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jun 2023 10:41:19 -0400
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFD982688
-        for <linux-pci@vger.kernel.org>; Fri, 23 Jun 2023 07:41:09 -0700 (PDT)
-Received: by mail-qk1-x730.google.com with SMTP id af79cd13be357-7624e8ceef7so60290285a.2
-        for <linux-pci@vger.kernel.org>; Fri, 23 Jun 2023 07:41:09 -0700 (PDT)
+Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F325D172A
+        for <linux-pci@vger.kernel.org>; Fri, 23 Jun 2023 07:41:10 -0700 (PDT)
+Received: by mail-qk1-x735.google.com with SMTP id af79cd13be357-763e1a22a68so61243185a.0
+        for <linux-pci@vger.kernel.org>; Fri, 23 Jun 2023 07:41:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1687531268; x=1690123268;
+        d=broadcom.com; s=google; t=1687531269; x=1690123269;
         h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=H/MnZlXk/4MfIX0Zs4hYPeMhGkoL8SprRM9WTvKMY24=;
-        b=BttqBtgeyKQYKgfwjS8Ne9zM/0TI10iQGX8kNemb/icXbKrzzWhR01zccE21L8dlOe
-         WFCVCCbByiInJQo9n0kcr59w89i5M9TTwMR6CIN9oCyHnTBVEsQeY+SSIH6OeAy9youA
-         4rdYL6XkNIghJTPMYIyWYZBIPUUn55a8SFKV8=
+        bh=vr+1q/18XS9nyNJOpnhWi3GT/7Sprc3WsdAtTI7csII=;
+        b=hdWv+ZTLkmwma9LxHwsrueDrlDnXUbZR+cgZTx6fXKWL/lSj6XdcFf3Jq8GujXk3Ol
+         evJCuhVJdH0TLtz2WqUogOOSaU2tHPGYKYqTAIOWa8+GCSX4ltBXbwg9YsHOBXFY01WX
+         e/eayNKkDHZR97eE+Fk5uPCRBonqxeeBPJyGo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687531268; x=1690123268;
+        d=1e100.net; s=20221208; t=1687531269; x=1690123269;
         h=references:in-reply-to:message-id:date:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H/MnZlXk/4MfIX0Zs4hYPeMhGkoL8SprRM9WTvKMY24=;
-        b=VI2yAIHadbC15O8bMfxwtbwhcuiKYEVuNJ2liD156PWTz/m6TPjKs0xzgGoVCDjAEe
-         ebMdu1RmrC3TpMa8pRtVGgL1Wys6sLvgbm/8HRFhv/YTR380nWhRzDf4UT4jrRaKwHjr
-         mWS5Uqtxpg2MO71lgsMVH79zQPj/qW/MnRafk1ewM+6fW6S3hYWh9l+69RkLCnhGC+AU
-         Ye77Vj6AkXKYE92p77c1dtTaw00Vjokmau+I/W3p1P1BA1ZVem1HGr2gBbhxeBFcGRIU
-         RH0a08/atzxOfvxrEoFtb3C//x8VYECOH3rT/q1EXxmuDxL8MjIdJ8zYL98WHgNGL9Xo
-         b8wQ==
-X-Gm-Message-State: AC+VfDyV0L88ZB9NlEMHMXldFcrZ1H1nCWJPxI/qxIClea3H6mZ0lCTE
-        86q+0HCNk5VnmqgrvT0ZO7GmXC0gxhln7RApSsuodocIfoFCOs6QQ3WZIXOwY2Uy0Jsr1t3c8Ty
-        GNdCDLu5+63NyWv9XOQTOlSaF5Lt7oW8x/FCFzjO1PQq7dIyqD60gZ81h0OWxFtYFEESBPjYPbn
-        op4v6cqZ/A4Q==
-X-Google-Smtp-Source: ACHHUZ6VEUGWHyC6gT/qBlxdtFs8HESOkMiVWwwv0lzZBtEqaLYNovEbLqSls92mOSWoka1L+bDJrg==
-X-Received: by 2002:a05:620a:424d:b0:75b:23a1:3606 with SMTP id w13-20020a05620a424d00b0075b23a13606mr15726420qko.23.1687531268377;
-        Fri, 23 Jun 2023 07:41:08 -0700 (PDT)
+        bh=vr+1q/18XS9nyNJOpnhWi3GT/7Sprc3WsdAtTI7csII=;
+        b=kodpozs6WwiN+2iDho4eirkX8F203jALFTzvRh34N7gSjW0K8hBGUj/2gjwP5U7sam
+         KOphM+G130imsi1A5xKjSO8rVQddgxFSBFU88YJs8VY67755Jed433ivvG2uL4aJ4z/y
+         04cA+H1U3DOZEbyC5dY6DJsBu0TGT0nwIFrtwJST5E6EskPh8DCqXSTtT4vJkWGg8Y+c
+         olvtlejAP7MRvl/cPcgHg8Wbm+aQ1d7eKzw2LhgJkKXVOLjurxoiiXFzd1Qn/fnoTthQ
+         nOd4rq+eolb2uHvcxNUlTCN9KKQ6+moSYYvkOFFiw6SrShO/QJ0c8Pe7+tnl0owi/7UI
+         1VhA==
+X-Gm-Message-State: AC+VfDzxglwWny6o2eX+UG4ZEKM+CwPUs1inPYgiE9m+cRrAdu9TSMHf
+        vnNVNgvJND5tCz73aNXtVwbY5cXG7rgwCPcT8UQUyi00/ILNjN0B6vdrFAl5upaN4g3pGaBoL01
+        AubbqCU73nO1Vq894y2VQjnhAbapN/DNIIVpNG3/zO3GJkl992BiBTuQi46h1mWwaYTSWMJTi5R
+        RQNCk4x1DyZg==
+X-Google-Smtp-Source: ACHHUZ6qMOU/Dr/xZWfyf58cntxdi4IvXYnS/1XLdfxFGeFg/hftxGR16LNk1v7hMsbUSZhL9cLbew==
+X-Received: by 2002:a37:ad06:0:b0:763:dc8c:e85 with SMTP id f6-20020a37ad06000000b00763dc8c0e85mr7507800qkm.67.1687531269684;
+        Fri, 23 Jun 2023 07:41:09 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id i18-20020a05620a145200b007625382f4ccsm4564613qkl.69.2023.06.23.07.41.07
+        by smtp.gmail.com with ESMTPSA id i18-20020a05620a145200b007625382f4ccsm4564613qkl.69.2023.06.23.07.41.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jun 2023 07:41:07 -0700 (PDT)
+        Fri, 23 Jun 2023 07:41:09 -0700 (PDT)
 From:   Jim Quinlan <james.quinlan@broadcom.com>
 To:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -54,27 +54,24 @@ To:     linux-pci@vger.kernel.org,
         Cyril Brulebois <kibi@debian.org>,
         Phil Elwell <phil@raspberrypi.com>,
         bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Jim Quinlan <jim2101024@gmail.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE),
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v6 1/5] dt-bindings: PCI: brcmstb: Add brcm,enable-l1ss property
-Date:   Fri, 23 Jun 2023 10:40:54 -0400
-Message-Id: <20230623144100.34196-2-james.quinlan@broadcom.com>
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v6 2/5] PCI: brcmstb: Configure HW CLKREQ# mode appropriate for downstream device
+Date:   Fri, 23 Jun 2023 10:40:55 -0400
+Message-Id: <20230623144100.34196-3-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20230623144100.34196-1-james.quinlan@broadcom.com>
 References: <20230623144100.34196-1-james.quinlan@broadcom.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000d27df205feccfdc8"
+        boundary="000000000000e523f305feccfdec"
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         MIME_HEADER_CTYPE_ONLY,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
@@ -86,62 +83,168 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---000000000000d27df205feccfdc8
+--000000000000e523f305feccfdec
 
-This commit adds the boolean "brcm,enable-l1ss" property:
+The Broadcom STB/CM PCIe HW core, which is also used in RPi SOCs, must be
+deliberately set by the RC probe() into one of three mutually exclusive
+modes:
 
-  The Broadcom STB/CM PCIe HW -- a core that is also used by RPi SOCs --
-  requires the driver probe() to deliberately place the HW one of three
-  CLKREQ# modes:
+  (a) No CLKREQ# expected or required, refclk is always available.
+  (b) CLKREQ# is expected to be driven by downstream device when needed.
+  (c) Bidirectional CLKREQ# for L1SS capable devices.
 
-  (a) CLKREQ# driven by the RC unconditionally
-  (b) CLKREQ# driven by the EP for ASPM L0s, L1
-  (c) Bidirectional CLKREQ#, as used for L1 Substates (L1SS).
+Previously, only (b) was supported by the driver, as almost all STB/CM
+boards operate in this mode.  But now there is interest in activating L1SS
+power savings from STB/CM customers, and also interest in accommodating
+mode (a) for designs such as the RPi CM4 with IO board.
 
-  The HW+driver can tell the difference between downstream devices that
-  need (a) and (b), but does not know when to configure (c).  All devices
-  should work fine when the driver chooses (a) or (b), but (c) may be
-  desired to realize the extra power savings that L1SS offers.  So we
-  introduce the boolean "brcm,enable-l1ss" property to inform the driver
-  that (c) is desired.  Setting this property only makes sense when the
-  downstream device is L1SS-capable and the OS is configured to activate
-  this mode (e.g. policy==powersupersave).
+The HW+driver is able to tell us when mode (a) or (b) is needed.  All
+devices should be functional using the RC-driver selected (a) or (b) mode.
+For those with L1SS-capable devices that desire the power savings that come
+with mode (c) we rely on the DT prop "brcm,enable-l1ss".  It would be nice
+to do this automatically but there is no easy way to determine this at the
+time the PCI RC driver executes its probe().  Using this mode only makes
+sense when the downstream device is L1SS-capable and the OS has been
+configured to activate L1SS (e.g. policy==powersupersave).
 
-  This property is already present in the Raspian version of Linux, but the
-  upstream driver implementation that follows adds more details and
-  discerns between (a) and (b).
+The "brcm,enable-l1ss" property has already been in use by Raspian Linux,
+but this implementation adds more details and discerns between (a) and (b)
+automatically.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217276
 
 Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Tested-by: Florian Fainelli <f.fainelli@gmail.com>
+Tested-by: Cyril Brulebois <cyril@debamax.com>
 ---
- Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/pci/controller/pcie-brcmstb.c | 69 +++++++++++++++++++++++----
+ 1 file changed, 59 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-index 7e15aae7d69e..8b61c2179608 100644
---- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-@@ -64,6 +64,15 @@ properties:
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index edf283e2b5dd..d30636a725d7 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -48,10 +48,17 @@
+ #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
+ #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
  
-   aspm-no-l0s: true
- 
-+  brcm,enable-l1ss:
-+    description: Indicates that PCIe L1SS power savings
-+      are desired, the downstream device is L1SS-capable, and the
-+      OS has been configured to enable this mode.  For boards
-+      using a mini-card connector, this mode may not meet the
-+      TCRLon maximum time of 400ns, as specified in 3.2.5.2.2
-+      of the PCI Express Mini CEM 2.0 specification.
-+    type: boolean
++#define PCIE_RC_CFG_PRIV1_ROOT_CAP			0x4f8
++#define  PCIE_RC_CFG_PRIV1_ROOT_CAP_L1SS_MODE_MASK	0xf8
 +
-   brcm,scb-sizes:
-     description: u64 giving the 64bit PCIe memory
-       viewport size of a memory controller.  There may be up to
+ #define PCIE_RC_DL_MDIO_ADDR				0x1100
+ #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
+ #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
+ 
++#define PCIE_0_RC_PL_PHY_DBG_CLKREQ2_0			0x1e30
++#define  CLKREQ2_0_CLKREQ_IN_CNT_MASK			0x3f000000
++#define  CLKREQ2_0_CLKREQ_IN_MASK			0x40000000
++
+ #define PCIE_MISC_MISC_CTRL				0x4008
+ #define  PCIE_MISC_MISC_CTRL_PCIE_RCB_64B_MODE_MASK	0x80
+ #define  PCIE_MISC_MISC_CTRL_PCIE_RCB_MPS_MODE_MASK	0x400
+@@ -121,9 +128,12 @@
+ 
+ #define PCIE_MISC_HARD_PCIE_HARD_DEBUG					0x4204
+ #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK	0x2
++#define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK		0x200000
+ #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK		0x08000000
+ #define  PCIE_BMIPS_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK		0x00800000
+-
++#define  PCIE_CLKREQ_MASK \
++	  (PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK | \
++	   PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK)
+ 
+ #define PCIE_INTR2_CPU_BASE		0x4300
+ #define PCIE_MSI_INTR2_BASE		0x4500
+@@ -1024,13 +1034,58 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 	return 0;
+ }
+ 
++static void brcm_config_clkreq(struct brcm_pcie *pcie)
++{
++	bool l1ss = of_property_read_bool(pcie->np, "brcm,enable-l1ss");
++	void __iomem *base = pcie->base;
++	u32 clkreq_set, tmp = readl(base + PCIE_0_RC_PL_PHY_DBG_CLKREQ2_0);
++	bool clkreq_in_seen;
++
++	/*
++	 * We have "seen" CLKREQ# if it is asserted or has been in the past.
++	 * Note that the CLKREQ_IN_MASK is 1 if CLKREQ# is asserted.
++	 */
++	clkreq_in_seen = !!(tmp & CLKREQ2_0_CLKREQ_IN_MASK) ||
++		!!FIELD_GET(CLKREQ2_0_CLKREQ_IN_CNT_MASK, tmp);
++
++	/* Start with safest setting where we provide refclk regardless */
++	clkreq_set = readl(pcie->base + PCIE_MISC_HARD_PCIE_HARD_DEBUG) &
++		~PCIE_CLKREQ_MASK;
++
++	if (l1ss && IS_ENABLED(CONFIG_PCIEASPM)) {
++		/*
++		 * Note: For boards using a mini-card connector, this mode
++		 * (L1SS CLKREQ# mode) may not meet the TCRLon maximum time
++		 * of 400ns, as specified in 3.2.5.2.2 of the PCI Express
++		 * Mini CEM 2.0 specification.
++		 */
++		clkreq_set |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK;
++		dev_info(pcie->dev, "bi-dir CLKREQ# for L1SS power savings");
++	} else {
++		if (clkreq_in_seen && IS_ENABLED(CONFIG_PCIEASPM)) {
++			clkreq_set |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK;
++			dev_info(pcie->dev, "uni-dir CLKREQ# for L0s, L1 ASPM\n");
++		} else {
++			dev_info(pcie->dev, "CLKREQ# ignored; no ASPM\n");
++			/* Might as well unadvertise ASPM */
++			tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY) &
++				~PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK;
++			writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
++		}
++		/* Setting the field to 2 unadvertises L1SS support */
++		tmp = readl(base + PCIE_RC_CFG_PRIV1_ROOT_CAP);
++		u32p_replace_bits(&tmp, 2, PCIE_RC_CFG_PRIV1_ROOT_CAP_L1SS_MODE_MASK);
++		writel(tmp, base + PCIE_RC_CFG_PRIV1_ROOT_CAP);
++	}
++	writel(clkreq_set, pcie->base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
++}
++
+ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+ {
+ 	struct device *dev = pcie->dev;
+ 	void __iomem *base = pcie->base;
+ 	u16 nlw, cls, lnksta;
+ 	bool ssc_good = false;
+-	u32 tmp;
+ 	int ret, i;
+ 
+ 	/* Unassert the fundamental reset */
+@@ -1055,6 +1110,8 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+ 		return -ENODEV;
+ 	}
+ 
++	brcm_config_clkreq(pcie);
++
+ 	if (pcie->gen)
+ 		brcm_pcie_set_gen(pcie, pcie->gen);
+ 
+@@ -1073,14 +1130,6 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+ 		 pci_speed_string(pcie_link_speed[cls]), nlw,
+ 		 ssc_good ? "(SSC)" : "(!SSC)");
+ 
+-	/*
+-	 * Refclk from RC should be gated with CLKREQ# input when ASPM L0s,L1
+-	 * is enabled => setting the CLKREQ_DEBUG_ENABLE field to 1.
+-	 */
+-	tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+-	tmp |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK;
+-	writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.17.1
 
 
---000000000000d27df205feccfdc8
+--000000000000e523f305feccfdec
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -212,13 +315,13 @@ AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
 75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
 AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
 AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCA+R79zwEo1TTjgEuK7Tu6CpT5LY9mu
-tXGLDLZq53bPfjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzA2
-MjMxNDQxMDhaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCAj6J/OAtnbJKjoNviBqtOx8chQt76l
+bhZ5c5JYQc99rTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzA2
+MjMxNDQxMDlaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
 hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAMwyLN4aXqwczYWj6+riLfRMGj0zyPGcy83G7nz6TApFHk4cF
-+Uh0xw08Idqh5Rg2RafQY44jPqT2CEPkchTPBrfxfXUEznAYqJafZo38sHoPI8CTUsdyjp1AVFBo
-2K9X1SnOgVZ/XSnFZKGhTXESMJuNaHtr/RX1yWFZEY6vdzz+b7Ym7ESQZATG5rLN46RQtuN7Nlyf
-r4njpEIzozeBUUxVsdVDubZb8U+g3PAPm6kaXq5dyVKjIdy0WnkxinLsje0itJtzxK/M9MEcUDkU
-BsREzmRD5IFkiL7s0c7Q5eZFJvpGvH3n7hnQlDGpRzjfgiBfhE73sl9vTW5k4482Gw==
---000000000000d27df205feccfdc8--
+AgEwDQYJKoZIhvcNAQEBBQAEggEAJm56KUwAh7jcKRNH6qTTGFtFFlsZCgEEPcTzQyE4Z47zYlXG
+wM8eAN1gwpKEOQd3nG03Q0DMrxTKTX4/GcNqoexZedaWgcaaka5AYxQRLAqY1Uqp+AYYZWm0hStd
+/yMCzHAq1Bsc2NOeT5q4t80Rnu83pCB5EQ7K7o8v9y/irCW8rzj3ML0KnfiUcrO1Ms+0D43a9tAY
+fVjJ7r12MvPg9pR4KIwphvLIzvcxJR8uLKrm8cWAXCeBpLyXJF/yLXYk0ZKVM9IRRuNzAtofVRC2
+POQpURDOdWJEsFBvDguZqfR9zapVevIo8TtlNBeLKHyNYv+bFd42RehqKPo4zBmiqA==
+--000000000000e523f305feccfdec--
