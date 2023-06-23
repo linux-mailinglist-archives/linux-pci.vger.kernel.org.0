@@ -2,121 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE04373B534
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 12:23:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20AF373B59E
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 12:42:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232053AbjFWKX4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Jun 2023 06:23:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33874 "EHLO
+        id S230423AbjFWKmU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Jun 2023 06:42:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231991AbjFWKXx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jun 2023 06:23:53 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFF0910F8
-        for <linux-pci@vger.kernel.org>; Fri, 23 Jun 2023 03:23:51 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2b45b6adffbso7834191fa.3
-        for <linux-pci@vger.kernel.org>; Fri, 23 Jun 2023 03:23:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687515830; x=1690107830;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KWkn1j4YDLKl0IK4GIRfG+rZU5Zz9V3+MlpELBvyLnE=;
-        b=Lv5v6/WUOMe9EPELgwEGPtHCSnuEurKHRbsTC7Da2DPiVlnI09lyQs9/Ee2Uop4B3Z
-         jJL65HJQNb2jK4sKg3XVosgAq1emxCS5SrCcK7SEt7x5jYfYxBlwzT0ZXhpgNtme5xFy
-         oDI1HUald1kB6/GE5Z4VC0lEi7pOvE41wGDw5/IoKd8Gtlhr/+ygyXzZhxHhqwSY1dgT
-         QyxZfHGW4pAx1WS+Jpmi3uCntDaqCscHRow4SdskaGF+za0nS5bY3DWJPkm3s4RSpW4b
-         r5iD95vUN5xC7z+H6NIN69evurdfGM6VK8yatgH2a1YFop0LiFizrkFC99TqNi7Y5/A1
-         8kfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687515830; x=1690107830;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KWkn1j4YDLKl0IK4GIRfG+rZU5Zz9V3+MlpELBvyLnE=;
-        b=EdFWhiVikh80+ZCfGJ+0PEMvHZVZJVyn176UnJ8Ol6TvaGLl1w5KBjVaqJ/xWQ9g33
-         k/7IlkouO6Q0Xist3EgyPf1gmVcBU2H3xtDTDeFSPfEhamOXbdm40x1HuypoXYtZaa8T
-         kfe5P0ifgO/S8/6tAGAOP780qLcBRSy6UMv95/05alYDTnBFrdLOkkzZMV+9cydBhjem
-         h2Zla+x5Ff0wEI20aRjzHzSIRKWJ+5tpbgxmqvswozuXgbk41LpzmWeRYmyu1fTIq0yd
-         DQ5Ril4aLfBuL5GHPml5k67gwFqKsF1YrEQ8CoE5AQIjlgot+u2N8S6gIfuHiJwV5FyA
-         CxRw==
-X-Gm-Message-State: AC+VfDw7b524FTDwZZxc0/zfh4LRo5KLStR27JjEj8vYVazt2750XgLk
-        de+YgCnPu/CWuAEfZsyjCuUFwQ==
-X-Google-Smtp-Source: ACHHUZ7WiiXjygu0C97ZUwok3q3Sy/rHAJt5AmZivWrId/kBRMGzvsAMvd/W1h55AkUURdJrpuBWrg==
-X-Received: by 2002:a05:6512:252b:b0:4f9:644c:1edb with SMTP id be43-20020a056512252b00b004f9644c1edbmr3443015lfb.62.1687515830060;
-        Fri, 23 Jun 2023 03:23:50 -0700 (PDT)
-Received: from [192.168.1.101] (abxh63.neoplus.adsl.tpnet.pl. [83.9.1.63])
-        by smtp.gmail.com with ESMTPSA id b4-20020ac247e4000000b004f86db4ce65sm1408380lfp.55.2023.06.23.03.23.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Jun 2023 03:23:49 -0700 (PDT)
-Message-ID: <e85ca82f-1c7f-76dd-3599-793883dd0700@linaro.org>
-Date:   Fri, 23 Jun 2023 12:23:48 +0200
+        with ESMTP id S229448AbjFWKmT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jun 2023 06:42:19 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DC36E6D;
+        Fri, 23 Jun 2023 03:42:16 -0700 (PDT)
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35NAAaLq004834;
+        Fri, 23 Jun 2023 10:42:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=d1LF1mJaWIXY2wqgqwNTTbh1aJxpIYjRmC7iKI93Vck=;
+ b=R9MYf7rT70TVlvHWvooT4Q7wR6meXXx880hRn+PxOaZQQ0NTgKUEFmMLNDWJ4HJ9cNJr
+ nF+9/H5/qPB3wc1WJGvSqFG7gF8nsz0lVUrvgS6kAe7jJQRIuloRbu0jRzObsLp/86WR
+ hLQUmTYPSjsOK66b0zAwN9c5TQd5tGCNrwxcgWzBeHgxlUkinBfoNMMGacqrWR1GmhFk
+ 7GNDSvWPjE2oYm62KIHxggViKw9frCYlaWMGwaC6DuGEh9+zC4ITsjwWkObpsht8YTis
+ znbqj4Ukv/9+NeGKR9hF7THx1mJYS19ZvuMIZPbnQ3iC+dzzAiJJCw/GuwOJsgh95mEy Rg== 
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rckn2u3xd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 23 Jun 2023 10:42:08 +0000
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35NAg772023100
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 23 Jun 2023 10:42:07 GMT
+Received: from [10.216.15.42] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Fri, 23 Jun
+ 2023 03:42:02 -0700
+Message-ID: <1d814c12-6749-b670-42a5-326757f77ca8@quicinc.com>
+Date:   Fri, 23 Jun 2023 16:11:59 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 4/4] dts: Reserve memory region for NSS and TZ
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH 1/4] pcie: qcom: Fix the macro
+ PARF_SLV_ADDR_SPACE_SIZE_2_3_3
 Content-Language: en-US
-To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>,
-        agross@kernel.org, andersson@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        sboyd@kernel.org, mturquette@baylibre.com, mani@kernel.org,
-        lpieralisi@kernel.org, bhelgaas@google.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pci@vger.kernel.org
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>, <agross@kernel.org>,
+        <andersson@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <sboyd@kernel.org>, <mturquette@baylibre.com>, <mani@kernel.org>,
+        <lpieralisi@kernel.org>, <bhelgaas@google.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
 References: <20230623094403.3978838-1-quic_srichara@quicinc.com>
- <20230623094403.3978838-5-quic_srichara@quicinc.com>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20230623094403.3978838-5-quic_srichara@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+ <20230623094403.3978838-2-quic_srichara@quicinc.com>
+ <b3a1bca2-1867-aa4d-47c7-63c5f9df868f@linaro.org>
+From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
+In-Reply-To: <b3a1bca2-1867-aa4d-47c7-63c5f9df868f@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: dOf4SboSho_n8HLzfczfvRItm1-Zp-qv
+X-Proofpoint-ORIG-GUID: dOf4SboSho_n8HLzfczfvRItm1-Zp-qv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-23_04,2023-06-22_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
+ lowpriorityscore=0 malwarescore=0 phishscore=0 impostorscore=0 mlxscore=0
+ spamscore=0 bulkscore=0 adultscore=0 suspectscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
+ definitions=main-2306230096
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 23.06.2023 11:44, Sricharan Ramabadhran wrote:
-> Add reserved memory region for NSS and fix the name
-> for tz region explicitly.
-> 
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> ---
-The commit title is divergent from what's in the commit message and
-the patch body. Please separate these two changes.
 
->  arch/arm64/boot/dts/qcom/ipq8074.dtsi | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-> index 791af73334cb..d51ff9b4f5c1 100644
-> --- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-> @@ -86,6 +86,11 @@ reserved-memory {
->  		#size-cells = <2>;
->  		ranges;
->  
-> +		nss@40000000 {
-> +			reg = <0x0 0x40000000 0x0 0x01000000>;
-Drop the leading zeroes from the size part.
 
-Konrad
-> +			no-map;
-> +		};
-> +
->  		bootloader@4a600000 {
->  			reg = <0x0 0x4a600000 0x0 0x400000>;
->  			no-map;
-> @@ -104,7 +109,7 @@ smem@4ab00000 {
->  			hwlocks = <&tcsr_mutex 0>;
->  		};
->  
-> -		memory@4ac00000 {
-> +		tz@4ac00000 {
->  			reg = <0x0 0x4ac00000 0x0 0x400000>;
->  			no-map;
->  		};
+On 6/23/2023 3:52 PM, Konrad Dybcio wrote:
+> On 23.06.2023 11:44, Sricharan Ramabadhran wrote:
+>> PARF_SLV_ADDR_SPACE_SIZE_2_3_3 macro used for IPQ8074
+>> pcie slave addr size was initially set to 0x358, but
+>> was wrongly changed to 0x168 as a part of
+>> 'PCI: qcom: Sort and group registers and bitfield definitions'
+> Surely not, this commit only moved the definition containing 0x358 up.
+> 
+
+   Oops, infact it was the one just below, this one which changed it.
+
+    "PCI: qcom: Remove PCIE20_ prefix from register definitions"
+
+  Will fix this in V2.
+
+Regards,
+  Sricharan
+
+> Konrad
+>> Fixing it back to right value here.
+>>
+>> Without this pcie bring up on IPQ8074 is broken now.
+>>
+>> Fixes: 769e49d87b15 ("PCI: qcom: Sort and group registers and bitfield definitions")
+>> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>> index 4ab30892f6ef..59823beed13f 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>> @@ -43,7 +43,7 @@
+>>   #define PARF_PHY_REFCLK				0x4c
+>>   #define PARF_CONFIG_BITS			0x50
+>>   #define PARF_DBI_BASE_ADDR			0x168
+>> -#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x16c /* Register offset specific to IP ver 2.3.3 */
+>> +#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x358 /* Register offset specific to IP ver 2.3.3 */
+>>   #define PARF_MHI_CLOCK_RESET_CTRL		0x174
+>>   #define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
+>>   #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
