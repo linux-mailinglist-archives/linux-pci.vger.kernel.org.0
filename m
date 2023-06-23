@@ -2,40 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 01AB573BDFF
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 19:42:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9996373BE36
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 20:00:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232145AbjFWRma (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Jun 2023 13:42:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56522 "EHLO
+        id S232300AbjFWSAr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Jun 2023 14:00:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232085AbjFWRm1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jun 2023 13:42:27 -0400
+        with ESMTP id S232394AbjFWSAm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jun 2023 14:00:42 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 861451FDF;
-        Fri, 23 Jun 2023 10:42:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F42012972;
+        Fri, 23 Jun 2023 11:00:29 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1A27A61AEF;
-        Fri, 23 Jun 2023 17:42:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06578C433CD;
-        Fri, 23 Jun 2023 17:42:24 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 235CF61AD2;
+        Fri, 23 Jun 2023 18:00:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4349BC433C8;
+        Fri, 23 Jun 2023 18:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687542145;
-        bh=B+ile9UQYyNQVSV2ovecEJKbv71x2PzA3Mu7PzfgpNM=;
+        s=k20201202; t=1687543228;
+        bh=Cn2sUYiOjjyWWuJD4BwJSjEx2Ctq4fd78+3P6xW8XM8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=V3n+dW/7W+8e4ky/y2CyPQlPjv86avWhWcfjxymBA4Y+zefycJKi8ZcW3Y4UdCeDd
-         ecCGXt5OXv7xbAB2gFl4x15UlnXyZc7d65neHutk/85HFFdSo+PS1Lo6PB53sRFxBP
-         xiWSzo6wQ58H3gdEAxcIRxnTAuKcwgJGSmNmWy85pdv+5qBxweplEJc3T0tw4UYfjC
-         474rwzv8sdgGpqCsDussCzD4t1h39VW749/8df2hG14suPM2epAAy+wlHB3/rbie1h
-         FzKyo28RbTcpg2kD+y7/dzqUOjxloaopxsE4ZVy5svZ8OCnX1vNyVT0C9KkR38tRSO
-         kS4iSHMz7h+dQ==
-Date:   Fri, 23 Jun 2023 12:42:21 -0500
+        b=nHYn/PC9TtZ9C7lSJhUamJOXWttB3RwSqhh8z4Mh+sgFx+UXTjhPidBPtn0MVtvXQ
+         UNpn0e1DQdPQFdWJv49LMmSE11QE9qpxzdvNIu+/GNIVoHe/H/dB8utvL37cBKqrqI
+         ctB4drTLKFnbDckzayC6rtSBGQVtmWhYp2NthkC4Ig7Nx1UjNbjXEDtogHRHw+YWXq
+         YseIfF7WFYQn1obODSl0BWVqvjBOAB0xGrj4BnBan/jdhdErW4zDM93J9/uXD9WGwn
+         4eSNZy9nbpnHe8IZECHNz//2Udhw9231AJDd/zVavEpOK+D3SuB2hIOvEzJUKk/1fA
+         7lPK8pvyYVCSA==
+Date:   Fri, 23 Jun 2023 13:00:26 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>,
-        Manivannan Sadhasivam <mani@kernel.org>
+To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>
 Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
         robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         conor+dt@kernel.org, sboyd@kernel.org, mturquette@baylibre.com,
@@ -45,7 +44,7 @@ Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
         linux-pci@vger.kernel.org
 Subject: Re: [PATCH 1/4] pcie: qcom: Fix the macro
  PARF_SLV_ADDR_SPACE_SIZE_2_3_3
-Message-ID: <20230623174221.GA180338@bhelgaas>
+Message-ID: <20230623180026.GA181743@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -66,15 +65,26 @@ On Fri, Jun 23, 2023 at 03:04:42PM +0530, Sricharan Ramabadhran wrote:
 > was wrongly changed to 0x168 as a part of
 > 'PCI: qcom: Sort and group registers and bitfield definitions'
 > Fixing it back to right value here.
-> 
+
+1) Make your subject line match the history.  For example, you're
+fixing 769e49d87b15 ("PCI: qcom: Sort and group registers ..."), so
+your subject line should start with "PCI: qcom: ...".
+
+2) It doesn't look like 769e49d87b15 changed
+PARF_SLV_ADDR_SPACE_SIZE_2_3_3:
+
+  $ git show 769e49d87b15 | grep PARF_SLV_ADDR_SPACE_SIZE_2_3_3
+  +#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x16C /* Register offset specific to IP ver 2.3.3 */
+  -#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x16C /* Register offset specific to IP rev 2.3.3 */
+
+What am I missing here?  Do you have another out-of-tree patch that
+broke this?
+
+Bjorn
+
 > Without this pcie bring up on IPQ8074 is broken now.
 > 
 > Fixes: 769e49d87b15 ("PCI: qcom: Sort and group registers and bitfield definitions")
-
-769e49d87b15 appeared in v6.4-rc1, so ideally this would get merged
-before v6.4 releases on Monday.  I can try to do that, given an ack
-from Manivannan.
-
 > Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 > ---
 >  drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
