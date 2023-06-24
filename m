@@ -2,93 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CFC5A73BF48
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Jun 2023 22:15:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C696F73C5C1
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Jun 2023 03:14:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231835AbjFWUPE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Jun 2023 16:15:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42988 "EHLO
+        id S230244AbjFXBOo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Jun 2023 21:14:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231464AbjFWUPC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jun 2023 16:15:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 960C82721;
-        Fri, 23 Jun 2023 13:15:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2B50A619EF;
-        Fri, 23 Jun 2023 20:15:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16C10C433C0;
-        Fri, 23 Jun 2023 20:14:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687551300;
-        bh=cBdOmzREH23gQr5BLoIgKLXYX1NGEsq6gM/x9nbKeJA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NSmPbphvqssng0ETNLPI8H7XtPiIAsT3lZTFpnU8blIbBjO+d1xLZgXWqS8jf6mqo
-         ZnZkoGIgh49/FAbKjkQg7T1BokS06BCe+EavA4tMKOVSUI2Lub4tVyJR8khoDNdRwD
-         d8aly1z5KAqgB/9hMH7Uy1sYXWa3UorUNGuwig2yqUEB6aNihq0A7RNFDWtUZXRoCD
-         79m3T1O8pe3TU48eh1KUxPBSvsjmAlvuPaWx+/J6724D9NW5/juV2i7U0E1Z+hVdul
-         GCad2nA1sT4b/vdch39iHd+FePWdd/ZhPJV43HcLvkJDSCzMIbx1K7SDwfLC0tES0V
-         dPxv6Hsp+hsWw==
-Date:   Fri, 23 Jun 2023 15:14:58 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     lpieralisi@kernel.org, kw@linux.com, kishon@kernel.org,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dlemoal@kernel.org
-Subject: Re: [PATCH v6 2/9] PCI: endpoint: Pass EPF device ID to the probe
- function
-Message-ID: <20230623201458.GA201342@bhelgaas>
+        with ESMTP id S229487AbjFXBOm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Jun 2023 21:14:42 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3DBA26BD;
+        Fri, 23 Jun 2023 18:14:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1687569281; x=1719105281;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gVBYtovFlShT8nOaYyDi+3MWCsKpoIGfmBUN8cnVydg=;
+  b=HlwvHZOqsBs3iyDeb7LDQoYUmii5B7m/krGfIN6qhC/MjqCAnKYxYpVg
+   TOvm9uE5sh1sQaBrvqO9O92qxSweEcda42z8IVLiFoeD3V8gxgY75U1IK
+   UPjIra7s8Mutg1I7PT398nm6yZzL1N/rMErZuhVdBmo1WCfigTWPoZT5j
+   xfrt51vweqVpj/ugBFk1a/PBGqSP4pC6cMUz0SP1K33/19cL4/PT5XawP
+   EAikdCVJSCm4ixs37cicN4EiapulEkJwg890lQtlyxp0nZ9MRYH1nlCpE
+   YWiJ6eVS2oRXIsGOq5XuOknB9COW2LHPlxWnq7Wj3Asisba6x/vcZXFcl
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.01,153,1684825200"; 
+   d="scan'208";a="158380481"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Jun 2023 18:14:41 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Fri, 23 Jun 2023 18:14:40 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.21 via Frontend
+ Transport; Fri, 23 Jun 2023 18:14:40 -0700
+From:   <kelvin.cao@microchip.com>
+To:     <kurt.schwemmer@microsemi.com>, <logang@deltatee.com>,
+        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/2] PCI: switchtec: Add support for PCIe Gen5 devices
+Date:   Fri, 23 Jun 2023 17:00:01 -0700
+Message-ID: <20230624000003.2315364-1-kelvin.cao@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230602114756.36586-3-manivannan.sadhasivam@linaro.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 02, 2023 at 05:17:49PM +0530, Manivannan Sadhasivam wrote:
-> Currently, the EPF probe function doesn't get the device ID argument needed
-> to correctly identify the device table ID of the EPF device.
-> ...
+From: Kelvin Cao <kelvin.cao@microchip.com>
 
-> +++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-> @@ -2075,11 +2075,12 @@ static struct config_group *epf_ntb_add_cfs(struct pci_epf *epf,
->  /**
->   * epf_ntb_probe() - Probe NTB function driver
->   * @epf: NTB endpoint function device
-> + * @id: NTB endpoint function device ID
->   *
->   * Probe NTB function driver when endpoint function bus detects a NTB
->   * endpoint function.
->   */
-> -static int epf_ntb_probe(struct pci_epf *epf)
-> +static int epf_ntb_probe(struct pci_epf *epf, const struct pci_epf_device_id *id)
-> ...
+Hi,
 
-> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> @@ -1401,7 +1401,7 @@ static struct pci_epf_ops epf_ntb_ops = {
+This patchset adds support for Switchtec PCIe Gen5 devices by adding
+device IDs to the driver and PCI quirks. There's also minor code change
+to accommodate those devices.
 
->   *
->   * Returns: Zero for success, or an error code in case of failure
->   */
-> -static int epf_ntb_probe(struct pci_epf *epf)
-> +static int epf_ntb_probe(struct pci_epf *epf, const struct pci_epf_device_id *id)
+The patchset is based off of v6.4-rc7.
 
-I updated the pci/endpoint branch to add kernel-doc for the new "id",
-same as you did in pci-epf-ntb.c.
+Thanks,
+Kelvin
 
-Just FYI, Lorenzo & Krzysztof -- hopefully there are no more updates
-before the merge window, but if you do add anything to this branch,
-update it first.
+Kelvin Cao (2):
+  PCI: switchtec: Use normal comment style
+  PCI: switchtec: Add support for PCIe Gen5 devices
 
-Bjorn
+ drivers/pci/quirks.c           |  36 ++++++++
+ drivers/pci/switch/switchtec.c | 158 ++++++++++++++++++++-------------
+ include/linux/switchtec.h      |   1 +
+ 3 files changed, 134 insertions(+), 61 deletions(-)
+
+-- 
+2.25.1
+
