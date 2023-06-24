@@ -2,128 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84E5A73CB5F
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Jun 2023 16:23:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E894F73CBDF
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Jun 2023 18:33:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229790AbjFXOXf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 24 Jun 2023 10:23:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38882 "EHLO
+        id S229816AbjFXQdT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 24 Jun 2023 12:33:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229552AbjFXOXe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Jun 2023 10:23:34 -0400
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB5EC1BD6;
-        Sat, 24 Jun 2023 07:23:33 -0700 (PDT)
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-666ecb21f86so1516276b3a.3;
-        Sat, 24 Jun 2023 07:23:33 -0700 (PDT)
+        with ESMTP id S229565AbjFXQdS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Jun 2023 12:33:18 -0400
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A7111BC1;
+        Sat, 24 Jun 2023 09:33:17 -0700 (PDT)
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-262d505f336so98555a91.2;
+        Sat, 24 Jun 2023 09:33:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687616613; x=1690208613;
+        d=1e100.net; s=20221208; t=1687624397; x=1690216397;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l61WbsGIflGvlUxdvoJkBkB8edAun9mmIBPamQIpoWM=;
-        b=WlhZh2un2W+mSqxtEXiZl+aosNZr2GYzB6kzB7tAOnkWQ/Qs4zBKuDh2AJl+12AUSX
-         Q5UMywz4ZgGR5h2XJn4mfWukV+sS4MMLKuoYFyrGUkLI8yE+3qFXuEVc6l/MpL+8wEDk
-         GH9FEnwSq3liU5dRgBVreGcBUBNDwwN6nhkxdr7NxT9gjw7TaW+VAyJ0Y/e2t70lsT2p
-         oiNbAd10Zgujbyt6HPZT8l4KoQu+twbANJ/STAgH7z2e4AonJb6JkI+DEUASSozV+KHN
-         QJTyAYiTJIzsAIi7wg5bTIxj8GwaB7oMl3SBa4IaUD8S7jygc7BdZUbFL1VrZKiJA33M
-         ToZw==
-X-Gm-Message-State: AC+VfDz1UHbypIPUbQZbIlLAHv4xIBV/CkvulPH3/ABGpNwU0rmH5GHw
-        I/64kAJnAO/9yOKZAT08yqI=
-X-Google-Smtp-Source: ACHHUZ4/e98bK2UmPfEy4r3yCMJ6M+KXaviUSrYfc5Ra0ti+kRhvfGmLjPU3w2ysu/LA7SWvpPix5Q==
-X-Received: by 2002:a05:6a00:22d2:b0:668:7143:50b0 with SMTP id f18-20020a056a0022d200b00668714350b0mr26865595pfj.31.1687616613173;
-        Sat, 24 Jun 2023 07:23:33 -0700 (PDT)
+        bh=PYOlqLww+yl7DKURHVLVUqrkFu6eHQZNsApfZOW1vno=;
+        b=HU4FEm5aq8dZLfq+m+rU+bjH4aq5A9opL58/ASrj0bphv+6DHMmqKAlfItg9kG5+3n
+         HKyrJJlv3GsxhC2Y7Kg1OlrA2PSeg3TxgxTpaCSf/8ILFIWnChStRzlGJO0r+YfJoJtl
+         9r84wrVZybngkccIoonxz6HZ17aEoemdKFYmQhdz4uUhOgVpd08gvFeEaY11+IeCwbtO
+         RwaamLWr47ufrcE7xQ4bD4iInqrf4UPBmBF1qnksxakC13ajkcNiDxOE5FmTJylWp1ld
+         SEh0eSWQwhAd0cgk3rYu7n48HipsZ+K4WSr7SmBljvElkGgURRFlWl0o8efDMe+Zt54Z
+         cGIQ==
+X-Gm-Message-State: AC+VfDydCkqeulH4iPmVq/hOwEvnx1I55oJLXBJ4ydvUZ8rdFlkcFrzn
+        Yw/Y8qGik3iemwrMt4a0vzKfLuecCpEfgaba
+X-Google-Smtp-Source: ACHHUZ6PLKmUaWBfgPdN9TIwnb5e5SFTOW/J6dmpHur1MtP72GXKEEjcSkryeY2CMEuqYytIwI6oqg==
+X-Received: by 2002:a17:90a:1f82:b0:250:6c76:fd9b with SMTP id x2-20020a17090a1f8200b002506c76fd9bmr16084274pja.38.1687624396685;
+        Sat, 24 Jun 2023 09:33:16 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id j21-20020aa783d5000000b006580e98326esm1155839pfn.42.2023.06.24.07.23.32
+        by smtp.gmail.com with ESMTPSA id w2-20020a17090a380200b00256353eb8f2sm3628811pjb.5.2023.06.24.09.33.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Jun 2023 07:23:32 -0700 (PDT)
-Date:   Sat, 24 Jun 2023 23:23:30 +0900
+        Sat, 24 Jun 2023 09:33:15 -0700 (PDT)
+Date:   Sun, 25 Jun 2023 01:33:14 +0900
 From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jisheng Zhang <jszhang@kernel.org>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-rockchip@lists.infradead.org,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Rahul Tanwar <rtanwar@maxlinear.com>,
-        Jim Quinlan <jim2101024@gmail.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-arm-msm@vger.kernel.org,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        linux-tegra@vger.kernel.org, kernel@pengutronix.de,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Subject: Re: [PATCH 00/15] PCI: Convert to platform remove callback returning
- void
-Message-ID: <20230624142330.GC2636347@rocinante>
-References: <20230530140742.ebbrxmpieuphbmz3@pengutronix.de>
- <ZHphHkNLO4tEJIm/@bhelgaas>
- <20230606160234.elcvyqlz2j3mggih@pengutronix.de>
+To:     korantwork@gmail.com
+Cc:     dlemoal@kernel.org, helgaas@kernel.org,
+        nirmal.patel@linux.intel.com, kbusch@kernel.org,
+        jonathan.derrick@linux.dev, lpieralisi@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xinghui Li <korantli@tencent.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v2 0/2] PCI: vmd: Fix two issues in VMD reported by Smatch
+Message-ID: <20230624163314.GD2636347@rocinante>
+References: <20230420094332.1507900-1-korantwork@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230606160234.elcvyqlz2j3mggih@pengutronix.de>
+In-Reply-To: <20230420094332.1507900-1-korantwork@gmail.com>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+[+CC Christoph]
+
 Hello,
 
-[...]
-> > > These patches wait for application for quite some time now. They apply
-> > > just fine to v6.4-rc1 and next/master. Would be great to get them in
-> > > during the next merge window and ideally give them some time in next
-> > > before.
-> > 
-> > Thanks, these seem fine to me, and Lorenzo normally takes care of
-> > drivers/pci/controller/.  Lorenzo, if it's easier to have me apply
-> > them, that's fine, too, just let me know.
-> > 
-> > The only tweaks I would make would be:
-> > 
-> >   PCI: j721e: Convert to platform remove callback returning void
-> >   PCI: dwc: Convert to platform remove callback returning void
+> Fix two issues when building kernel with Smatch check.
 > 
-> If it's easier for you (or Lorenzo) I can resend with these tweaks.
-> Otherwise if these are adapted when applying them, that's fine for me,
-> too. Just tell me if I should do anything here.
+> v1->v2:
+> According to Damien's suggestion, I split it from 1 patch to 2 different
+> patches. Change 'inconsistent indenting' patch's title from 'fix' to
+> 'clean up'.
+> 
+> Xinghui Li (2):
+>   PCI: vmd: Fix one uninitialized symbol error reported by Smatch
 
-I took the entire series and tweaked the subject lines as Bjorn requested.
+Applied to controller/vmd, thank you!
 
-Thank you!
+[1/1] PCI: vmd: Fix uninitialized variable usage in vmd_enable_domain()
+      https://git.kernel.org/pci/pci/c/0c0206dc4f5b
+
+>   PCI: vmd: Clean up one inconsistent indenting warn reported by Smatch
+
+Even though this is a very nice clean-up, I did not take this patch at this
+time, as there has been a similar patch posted in the past, and Christoph
+Hellwig suggested, as part of his review, an alternative approach worth
+considering.
+
+Have a look at the following and let me know what you think:
+
+  https://patchwork.kernel.org/project/linux-pci/patch/20221115054847.77829-1-jiapeng.chong@linux.alibaba.com/
 
 	Krzysztof
