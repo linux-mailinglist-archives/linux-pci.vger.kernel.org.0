@@ -2,59 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B65673C9CC
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Jun 2023 11:02:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C3C373CB05
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Jun 2023 15:22:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232880AbjFXJC3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 24 Jun 2023 05:02:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46828 "EHLO
+        id S229604AbjFXNWc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 24 Jun 2023 09:22:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232865AbjFXJC2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Jun 2023 05:02:28 -0400
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 488F018B;
-        Sat, 24 Jun 2023 02:02:24 -0700 (PDT)
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-666edfc50deso1042270b3a.0;
-        Sat, 24 Jun 2023 02:02:24 -0700 (PDT)
+        with ESMTP id S229452AbjFXNWc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Jun 2023 09:22:32 -0400
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 210A4EA;
+        Sat, 24 Jun 2023 06:22:31 -0700 (PDT)
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1b539d2f969so11306365ad.0;
+        Sat, 24 Jun 2023 06:22:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687597344; x=1690189344;
+        d=1e100.net; s=20221208; t=1687612950; x=1690204950;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lbHvTw8FqvH8IrxxMQFB99GCBqS/a2L3RpRPq7Xisns=;
-        b=dEmllRxhbCGdKC0NfT+XjHdYVGT4cTUIj3JnAsbT4XiL9o2nsZLknch5rrvR3kMPA6
-         Hs2r4uO1mpL0diqD+c4JncRVjqpIzDUyhI6WfGZPEXi05BKLd4AE6M1PyVODwtuekeNJ
-         AgDDylBr2dNZ7HMQUAN6Owznsm/jJaQTSSdKw4QbfEVuNresLCy/1JPPWb0+h0HAB28e
-         7Y9xwUp+l/YsD7X1sRh6zflt8OPv4Bttg39aTuOnIAHbmPs4yFb0myu/V4MXseWZ+FJY
-         2Hal8e4ovulrFmG7oGsEtZCw3eW1NSPVpxXyvsO7JIr96306cehEhftMFSzuxf0i+vug
-         aB/w==
-X-Gm-Message-State: AC+VfDy/vKe3JfXr3ElhEQaRt0CXSYVdmbtJ5g1F03q/kIRO3yiw0OvU
-        T+JfOQ0YFdLKzkvzsIdGnME=
-X-Google-Smtp-Source: ACHHUZ5U7rc246WI6tuWXsBN1jnnDcmH29ARJsncYDN16vK87sDQg0Z+Zzo4lpB4Eg6BiWZUg1OxEA==
-X-Received: by 2002:a05:6a00:1f11:b0:668:6ea8:7bac with SMTP id be17-20020a056a001f1100b006686ea87bacmr26020820pfb.13.1687597344313;
-        Sat, 24 Jun 2023 02:02:24 -0700 (PDT)
+        bh=s3yKv66Eno2nz4InrGcSa4oQjUBLxGwqmhNnMLsiD3A=;
+        b=jYkxTsvCXvdaeKdXqVQ9AzAfALEpPRpkTVmi4SGzXAuk0EV2TOShEGeIcuGkPaKrlC
+         L5lqfZySmeJlvGicdFswu2/ieYKwG9GtEozD6Hq8VeNlvHnn1oHlrkLRoBoKd4b9xfBH
+         JGM+vGegkqn8mNTyFKZQObvtAgOruUaKjszeLL4WnVvUXmmftyLu+HSD6eTJhTKH41qa
+         y4kQ7LnM6HGMF2hTL2mDKaiTq2YC3dA61uXUJHk2ClcUUTJTJVtFl6RllTOjmVJNv+q4
+         oNzxUg1zY9fZ6pdjnTc0NKMFqTMOBr/tuRvSqvm3Hvc18IGx83CzbFd9jDc63vSRIbYx
+         HeUA==
+X-Gm-Message-State: AC+VfDxO15jhHPACi1q5aMTOnSZQnLTrE8YQH0hPbHecCIGywa9Srol+
+        8r6KUnyn6CQ4U4nNi/005aI=
+X-Google-Smtp-Source: ACHHUZ5ihw8DUSSxLYVpUUoG3e9mMdriSZs/bJQPkKREjBXX8vfKlG+laQQpE03dAvymfD7s6z0WyQ==
+X-Received: by 2002:a17:902:c202:b0:1b5:2ca9:f71b with SMTP id 2-20020a170902c20200b001b52ca9f71bmr2234015pll.11.1687612950498;
+        Sat, 24 Jun 2023 06:22:30 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id q25-20020a62ae19000000b0064d4d11b8bfsm710335pff.59.2023.06.24.02.02.23
+        by smtp.gmail.com with ESMTPSA id y8-20020a1709029b8800b001b23eb0b4bbsm1224596plp.147.2023.06.24.06.22.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Jun 2023 02:02:23 -0700 (PDT)
-Date:   Sat, 24 Jun 2023 18:02:22 +0900
+        Sat, 24 Jun 2023 06:22:29 -0700 (PDT)
+Date:   Sat, 24 Jun 2023 22:22:28 +0900
 From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: iproc: Use of_property_read_bool() for boolean
- properties
-Message-ID: <20230624090222.GA1309310@rocinante>
-References: <20230609193326.1963542-1-robh@kernel.org>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: rcar: use proper naming for R-Car
+Message-ID: <20230624132228.GA2636347@rocinante>
+References: <20230607204750.27837-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230609193326.1963542-1-robh@kernel.org>
+In-Reply-To: <20230607204750.27837-1-wsa+renesas@sang-engineering.com>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
@@ -68,14 +67,11 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hello,
 
-> It is preferred to use typed property access functions (i.e.
-> of_property_read_<type> functions) rather than low-level
-> of_get_property/of_find_property functions for reading properties.
-> Convert reading boolean properties to of_property_read_bool().
+> Neither RCar, nor Rcar, but R-Car.
 
-Applied to controller/iproc, thank you!
+Applied to controller/rcar, thank you!
 
-[1/1] PCI: iproc: Use of_property_read_bool() for boolean properties
-      https://git.kernel.org/pci/pci/c/4ce7d88e7ad9
+[1/1] PCI: rcar: Use correct product family name for Renesas R-Car
+      https://git.kernel.org/pci/pci/c/e28e75e9f589
 
 	Krzysztof
