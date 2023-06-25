@@ -2,110 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87BAB73CC7F
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Jun 2023 21:03:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1295A73CE2B
+	for <lists+linux-pci@lfdr.de>; Sun, 25 Jun 2023 05:15:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230402AbjFXTDP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 24 Jun 2023 15:03:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52764 "EHLO
+        id S229703AbjFYDPK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 24 Jun 2023 23:15:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229700AbjFXTDO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Jun 2023 15:03:14 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6461010A
-        for <linux-pci@vger.kernel.org>; Sat, 24 Jun 2023 12:03:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EED2D600E1
-        for <linux-pci@vger.kernel.org>; Sat, 24 Jun 2023 19:03:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3E4DC433C9;
-        Sat, 24 Jun 2023 19:03:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687633392;
-        bh=3yLec4OQwczkQ/kmMrEsOXE+LLwxkwLipHrOBu3vMcs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h1VwXEPMtzIaKC1DBEtpFHOmVTY3XKNb7US8u/G0+zLGjiSNjtX511ofFvhnIodi1
-         8bAGG8hqKh4NrHmvmmHhO8uUdcisafeUnEQdBwxv3d/jk/x/sGk3UQ975TBGyre3n6
-         ch0VFTumScrumDlLc0X+o/Vr8tzYfGkjqh/unyG4MWAkxQ2TXj/TzGt/mVIdDEo6/k
-         OWfkmUIstx+cO7cFKg3AQc14CU8+MuW9oz90+STD8bEIckW/ROi33uAe/WR+rOyB8y
-         loTwl+zbOYoqghwNw0pDJIDAYZDqwS23dh0XbbIX3YW178eXwEOJKVifpmPfeV41X8
-         0blEmwhiuA5tw==
-Date:   Sat, 24 Jun 2023 21:03:08 +0200
-From:   Simon Horman <horms@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     daire.mcnamara@microchip.com, conor.dooley@microchip.com,
-        lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v1 2/8] PCI: microchip: Remove cast warning for
- devm_add_action_or_reset() arg
-Message-ID: <ZJc97GdtuFSAx1nf@kernel.org>
-References: <20230614155556.4095526-1-daire.mcnamara@microchip.com>
- <20230614155556.4095526-3-daire.mcnamara@microchip.com>
- <20230624183428.GF2636347@rocinante>
+        with ESMTP id S229674AbjFYDPJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Jun 2023 23:15:09 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 882CFE70;
+        Sat, 24 Jun 2023 20:15:08 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id 5614622812f47-39ecf336d85so1906308b6e.2;
+        Sat, 24 Jun 2023 20:15:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687662908; x=1690254908;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+oAhMdsrYTutnkriGc4ra1y92niQ2/QlklHYuzcoSdY=;
+        b=O1QRclqLPvSt+lhIiKYcARiYee8xBqXg5Qu++fqQlUXpVtCIjM/958twYkBZVtZx/V
+         5ekT8+TBOPxhPP0fvy/iQ2Y3kGtGl5T0ASwyT+IOxhfBSS6W3htMvFpLDZ3LuvajhUwV
+         wzA1dtAOQcuL45qTPDoBG8q6FIyJbhvJf7dZD9RMrj21EnFQ45lrm8b5NDPuuQs5u7cS
+         IHEHJVMR1IDTh1N6NoBXvZKbRiI52o1U1xZKe3i/nNqf2Gm715WLhN4D0LAuv+TWkP5v
+         x7znJNK2U1w14UYmEKXwOugthA3TaIsNNY8urXmHLBCAJ/2oPYI9enlLtzeyqVZejI2x
+         EdZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687662908; x=1690254908;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+oAhMdsrYTutnkriGc4ra1y92niQ2/QlklHYuzcoSdY=;
+        b=AvAfMLdANO+HGkT1VjT00py7ano/vLYtYtqVcxzp4NYo8Nsi32Guo2bqMi421zSCgq
+         DIb4o9Pgpr47ABqtnBeg11FffnNarcUbsNTESLUOlwVJZyTdiXJAblVeAIDnDz3/jxBs
+         uvBq/kKYx4z9tPpE2+JzpzOXGH9SgP7WiixrUcg27Uy+a2Ies5O1JwtUXbjqKFnr1Nwf
+         6bzdblNaLy2aSwie1M3+2GeoP9FdtNyI1Tc0vV6QBE+lajoFSdTx1L8T/dW2WZU7M7uO
+         EeidAMj4zms9zBWIHQpUuFUY8NUEJC2Mr4DA291+lT4rVMeTy/+httN8ylYM2pBikMV+
+         qk6Q==
+X-Gm-Message-State: AC+VfDyaskkIt/GstMZukAlryqQJDNxidILFuohPHI6xY02lU9CRPosa
+        saaJtdj8ddk8hGrkkQXZcNxP/htrMha1o0KBpso=
+X-Google-Smtp-Source: ACHHUZ6+PufHgUFy4AlpIldcbp8YfX4+2xhdOsvB3UduEQOL5HqVNoY1ije5yGhwvSnkj2i0xB6uTxQiLhhdAdG+SCE=
+X-Received: by 2002:a05:6808:1441:b0:398:3152:fc35 with SMTP id
+ x1-20020a056808144100b003983152fc35mr35413813oiv.38.1687662907716; Sat, 24
+ Jun 2023 20:15:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230624183428.GF2636347@rocinante>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230420094332.1507900-1-korantwork@gmail.com> <20230624163314.GD2636347@rocinante>
+In-Reply-To: <20230624163314.GD2636347@rocinante>
+From:   Xinghui Li <korantwork@gmail.com>
+Date:   Sun, 25 Jun 2023 11:14:59 +0800
+Message-ID: <CAEm4hYUhRCBo=N9EKUaSbBWZafKk0WzzwDWYmJ4FykpQoeZe1w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] PCI: vmd: Fix two issues in VMD reported by Smatch
+To:     =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     dlemoal@kernel.org, helgaas@kernel.org,
+        nirmal.patel@linux.intel.com, kbusch@kernel.org,
+        jonathan.derrick@linux.dev, lpieralisi@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xinghui Li <korantli@tencent.com>,
+        Christoph Hellwig <hch@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jun 25, 2023 at 03:34:28AM +0900, Krzysztof Wilczyński wrote:
-> [+CC Simon]
-> 
-> Hello,
-> 
-> > The kernel test robot reported that the ugly cast from
-> > void(*)(struct clk *) to void (*)(void *) converts to incompatible
-> > function type.  This commit adopts the common convention of creating a
-> > trivial stub function that takes a void * and passes it to the
-> > underlying function that expects the more specific type.
-> 
-> This is a nice change, but it seems it has been carried along a few other
-> series and through their different revisions.  Simon also found the problem
-> and addressed it independently per:
-> 
->   https://lore.kernel.org/linux-pci/20230511-pci-microchip-clk-cast-v1-1-7674f4d4e218@kernel.org
-> 
-> However, we have a few other drivers where we could take care of this, per:
-> 
-> drivers/pci/controller/pcie-microchip-host.c
-> 864-		return ERR_PTR(ret);
-> 865-
-> 866:	devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare,
-> 867-				 clk);
-> 868-
-> 
-> drivers/pci/controller/dwc/pcie-keembay.c
-> 170-
-> 171-	ret = devm_add_action_or_reset(dev,
-> 172:				       (void(*)(void *))clk_disable_unprepare,
-> 173-				       clk);
-> 174-	if (ret)
-> 
-> drivers/pci/controller/dwc/pci-meson.c
-> 189-
-> 190-	devm_add_action_or_reset(dev,
-> 191:				 (void (*) (void *))clk_disable_unprepare,
-> 192-				 clk);
-> 193-
-> 
-> If neither you nor Simon has objections, I can send a small series to
-> address these in a single take.  You could then drop this particular patch
-> from v2 of this series, should you send a second revision at some point.
+On Sun, Jun 25, 2023 at 12:33=E2=80=AFAM Krzysztof Wilczy=C5=84ski <kw@linu=
+x.com> wrote:
+>
+> [1/1] PCI: vmd: Fix uninitialized variable usage in vmd_enable_domain()
+>       https://git.kernel.org/pci/pci/c/0c0206dc4f5b
+>
+> >   PCI: vmd: Clean up one inconsistent indenting warn reported by Smatch
+>
+> Even though this is a very nice clean-up, I did not take this patch at th=
+is
+> time, as there has been a similar patch posted in the past, and Christoph
+> Hellwig suggested, as part of his review, an alternative approach worth
+> considering.
+>
+> Have a look at the following and let me know what you think:
+>
+>   https://patchwork.kernel.org/project/linux-pci/patch/20221115054847.778=
+29-1-jiapeng.chong@linux.alibaba.com/
 
-Hi Krzysztof,
+I think Christoph Hellwig's suggestion is indeed better.
+So, should I submit a new patch to address this issue?
 
-Sure, that is fine my me.
-
-My 2c worth, is that it would be nice to have a common
-helper for these cases. But I don't feel strongly about it.
+Thanks=EF=BD=9E
