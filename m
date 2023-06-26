@@ -2,85 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 682F873E3CF
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Jun 2023 17:46:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1D4273E45B
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Jun 2023 18:13:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229533AbjFZPqA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Jun 2023 11:46:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60296 "EHLO
+        id S229796AbjFZQNx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Jun 2023 12:13:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230504AbjFZPp6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Jun 2023 11:45:58 -0400
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9917B10E9;
-        Mon, 26 Jun 2023 08:45:40 -0700 (PDT)
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-66869feb7d1so1727968b3a.3;
-        Mon, 26 Jun 2023 08:45:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687794340; x=1690386340;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JqM0x+lEbNwzWnLB8cFDRDG++2DUMupMoDamNLkl5AM=;
-        b=J8xx+x98B9piap0gCct2XX4YUS+Rt3oACbQXCr4zuf1K82JyOC7E89lB9Z27Yekn6+
-         bRzGUbWJYLp/fuTEino5hePjTRc62K8+K2QqXpCAxJvsxsRonhqYyqrOyqYQVgfm3k29
-         kSxHp27Q6G24T6yBXVFjfvbtMUSlt0YNvzvkQqygXA2IxKNqy/gSBNafBgTNu6NHzn25
-         Sni9O/zS39eXvOD2fU0mu9z4ubv02jO6atas8o8DFuro/+Wg7XcoL3NpcyZfd5Q5dE5N
-         /Okt0t85AtOESiIjPom7/UcPBPF6lvCVCo8KZIOSzazlI6YPAELNryDhVfgKrneTz/te
-         MAaQ==
-X-Gm-Message-State: AC+VfDwfmY5yEeBr+FFuwMIBXzhQ07/QZR7saybtILm05DEHbdrgtulx
-        StdJ3CQRrPCYHU+LFqCJ3LY=
-X-Google-Smtp-Source: ACHHUZ7WET+WmkMpPUoY8hHr3ctbsB7VZR4XgRJSxSI7MVpCjUrl1MDNzUDd4rg5gDqwxFhEO4epkA==
-X-Received: by 2002:a05:6a00:2405:b0:641:d9b:a444 with SMTP id z5-20020a056a00240500b006410d9ba444mr28862471pfh.31.1687794339974;
-        Mon, 26 Jun 2023 08:45:39 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id i9-20020aa78b49000000b00666e883757fsm3984833pfd.123.2023.06.26.08.45.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jun 2023 08:45:39 -0700 (PDT)
-Date:   Tue, 27 Jun 2023 00:45:37 +0900
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-renesas-soc@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: rcar: use proper naming for R-Car
-Message-ID: <20230626154537.GA2019715@rocinante>
-References: <20230607204750.27837-1-wsa+renesas@sang-engineering.com>
- <20230624132228.GA2636347@rocinante>
+        with ESMTP id S229579AbjFZQNq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Jun 2023 12:13:46 -0400
+X-Greylist: delayed 2147 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 26 Jun 2023 09:13:44 PDT
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6103F12A
+        for <linux-pci@vger.kernel.org>; Mon, 26 Jun 2023 09:13:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:To:
+        MIME-Version:Date:Message-ID:cc:content-disposition;
+        bh=rs1VdpLvoww5s8ZfEwPD+th0v+6ysNz41twwOh5VYog=; b=ix3DoD+BAF36mSF1bbWTcUTb6/
+        dWrzM9dovHRuE2ru86vti7cx0IqWGLef0rBB5LnHZvwpVqw92+23ErEjAAHHJOQUBw+xSzQWO82S8
+        5sDmToR6zSxltwBhHsJN47u7snlxdSx0Vci5cL6taJXnL7dP4nPvEfv5qgkPT6Qhe8WYxlZgpUQbK
+        i3eovpRKjatD1z4wRfx9SBvhWzKJ3tTa17DSxiZYcYPYIxaItZfVSlduYM2lefIVMaqSDR0+tbYjS
+        k/EYmZbEJjmDZeLtw8SPm1nv1f07bWWUTEo8d6Nr7N0bjJnKj009yFoHsNo+Abby71sjmwWXFNJgD
+        y3n9FX3Q==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1qDoHk-002qwq-Po; Mon, 26 Jun 2023 09:37:49 -0600
+Message-ID: <cd5ed21c-04f3-2c9c-4b56-225d3f20e016@deltatee.com>
+Date:   Mon, 26 Jun 2023 09:37:46 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230624132228.GA2636347@rocinante>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Content-Language: en-CA
+To:     kelvin.cao@microchip.com, kurt.schwemmer@microsemi.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230624000003.2315364-1-kelvin.cao@microchip.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20230624000003.2315364-1-kelvin.cao@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: kelvin.cao@microchip.com, kurt.schwemmer@microsemi.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
+Subject: Re: [PATCH 0/2] PCI: switchtec: Add support for PCIe Gen5 devices
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
 
-> > Neither RCar, nor Rcar, but R-Car.
 
-There might be one more variance left to correct:
+On 2023-06-23 18:00, kelvin.cao@microchip.com wrote:
+> From: Kelvin Cao <kelvin.cao@microchip.com>
+> 
+> Hi,
+> 
+> This patchset adds support for Switchtec PCIe Gen5 devices by adding
+> device IDs to the driver and PCI quirks. There's also minor code change
+> to accommodate those devices.
+> 
+> The patchset is based off of v6.4-rc7.
+> 
+> Thanks,
+> Kelvin
+> 
+> Kelvin Cao (2):
+>   PCI: switchtec: Use normal comment style
+>   PCI: switchtec: Add support for PCIe Gen5 devices
 
-  drivers/gpu/drm/rcar-du/rcar_du_plane.h:
+Both patches look good to me, thanks.
 
-  18-/*
-  19: * The RCAR DU has 8 hardware planes, shared between primary and overlay planes.
-  20- * As using overlay planes requires at least one of the CRTCs being enabled, no
-  21- * more than 7 overlay planes can be available. We thus create 1 primary plane
-  22- * per CRTC and 7 overlay planes, for a total of up to 9 KMS planes.
-  23- */
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
-For the sake of completeness.
-
-	Krzysztof
+Logan
