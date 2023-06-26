@@ -2,162 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF66473D58E
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Jun 2023 03:30:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9C4273D81B
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Jun 2023 08:56:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229550AbjFZBac (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 25 Jun 2023 21:30:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54984 "EHLO
+        id S229717AbjFZG4o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Jun 2023 02:56:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbjFZBab (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 25 Jun 2023 21:30:31 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B50B1194;
-        Sun, 25 Jun 2023 18:30:23 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.170])
-        by gateway (Coremail) with SMTP id _____8Dx+cUu6phk6woCAA--.3208S3;
-        Mon, 26 Jun 2023 09:30:22 +0800 (CST)
-Received: from [10.20.42.170] (unknown [10.20.42.170])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx5sws6phkgX0IAA--.18114S3;
-        Mon, 26 Jun 2023 09:30:20 +0800 (CST)
-Message-ID: <f676d9e0-bb88-283a-5189-f1ae945ee4dd@loongson.cn>
-Date:   Mon, 26 Jun 2023 09:30:20 +0800
+        with ESMTP id S229647AbjFZG4m (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Jun 2023 02:56:42 -0400
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 173B9AC;
+        Sun, 25 Jun 2023 23:56:42 -0700 (PDT)
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1b7fb1a82c4so3799195ad.1;
+        Sun, 25 Jun 2023 23:56:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687762601; x=1690354601;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u58j1CoFhNAAP0kPknc/GhPhE9N5OmJCD1ZWCCtRRgc=;
+        b=WDPKuhXalnGPckp2TpIKynsO8ZnokkfdhiarQXI1U9VrqORX/RqI+YQ6iOzudxuYfh
+         4q6XXJOoyqqR6QwbktPcLn3j/Hia6cNtm2Nrhm3yJiWc7JcKmjD3tVjEuADNSmK2GgDV
+         xk8ovnwV1ONicO1yc5JYu90NJCKD2g0I+aPJlJcB+YR5HHSFgftpBca8XhiVusEZTmu+
+         +qlUGGQiGJiMT1OVUk9z8yv0fpOv85eDrKiCyXaOhKgjcvScYC6P8FrVEMhdjE7n32Sn
+         iHlKwHWwvll89VW7GKPNxJvK15XueSQ8E1WR4TpisHG4FV0/OHjFbqUI8/raDxp23ahg
+         j18A==
+X-Gm-Message-State: AC+VfDzH7/LQdst87G9Hu9Qbm2z58jPxCzQv6It28ppNG805JMr6LwXE
+        0lNQtVHRiUvsINC/V/q86Hk=
+X-Google-Smtp-Source: ACHHUZ6OtbsuuY2aXoeHYGi4XSA3mdaoGOU6p/4pXML9TF8F1ADk58bPj18ptJOfaGu5YjoBFEMRig==
+X-Received: by 2002:a17:903:1250:b0:1b5:3c7f:1b3b with SMTP id u16-20020a170903125000b001b53c7f1b3bmr5150508plh.35.1687762601317;
+        Sun, 25 Jun 2023 23:56:41 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id jg3-20020a17090326c300b001a2104d706fsm2559571plb.225.2023.06.25.23.56.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Jun 2023 23:56:40 -0700 (PDT)
+Date:   Mon, 26 Jun 2023 15:56:39 +0900
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Helge Deller <deller@gmx.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Daniel Bristot de Oliveira <bristot@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>, coresight@lists.linaro.org,
+        dri-devel@lists.freedesktop.org, keyrings@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-sgx@vger.kernel.org, linux-trace-devel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        openrisc@lists.librecores.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org
+Subject: Re: [PATCH 00/24 v2] Documentation: correct lots of spelling errors
+ (series 1)
+Message-ID: <20230626065639.GA3403711@rocinante>
+References: <20230209071400.31476-1-rdunlap@infradead.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v5] PCI: Align pci memory space base address with page
- size
-From:   bibo mao <maobibo@loongson.cn>
-To:     Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <will@kernel.org>,
-        Huacai Chen <chenhuacai@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn,
-        Huacai Chen <chenhuacai@loongson.cn>
-References: <20230619014715.3792883-1-maobibo@loongson.cn>
-Content-Language: en-US
-In-Reply-To: <20230619014715.3792883-1-maobibo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8Dx5sws6phkgX0IAA--.18114S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCF48Xw4UJry3AFy5tF4kXwc_yoW5uw13pF
-        yxA3ZrCrW8Gr13G398t3s7uF4fXa97KFWY9ryrCa4rGF9rCryUC3s8XryagayDAr4DWrW0
-        qFnYkF1Yqa1Yq3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-        Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-        8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-        xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-        AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-        14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-        kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-        wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-        4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8r9N3UU
-        UUU==
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230209071400.31476-1-rdunlap@infradead.org>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-gentle ping.
+Hello,
 
-在 2023/6/19 09:47, Bibo Mao 写道:
-> Some PCI devices have only 4K memory space size, it is normal in general
-> machines and aligned with page size. However some architectures which
-> support different page size, default page size on LoongArch is 16K, and
-> ARM64 supports page size varying from 4K to 64K. On machines where larger
-> page size is use, memory space region of two different pci devices may be
-> in one page. It is not safe with mmu protection, also VFIO pci device
-> driver requires base address of pci memory space page aligned, so that it
-> can be memory mapped to qemu user space when it is passed-through to vm.
+> Correct many spelling errors in Documentation/ as reported by codespell.
 > 
-> It consumes more pci memory resource with page size alignment requirement,
-> here extra option PCI_MEMRES_PAGE_ALIGN is added, it can be enabled by
-> different architectures, currently arm64/loongarch enable this option.
+> Maintainers of specific kernel subsystems are only Cc-ed on their
+> respective patches, not the entire series.
 > 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
-> Change history
-> v5: enable option PCI_MEMRES_PAGE_ALIGN on arm64. Verified on LoongArch
-> and pass to compile on arm64 with defconfig
+> These patches are based on linux-next-20230209.
 > 
-> v4: add extra kernel option PCI_MEMRES_PAGE_ALIGN to set memory resource
->     page aligned
-> 
-> v3: move alignment requirement to generic pci code
-> 
-> v2: add pci resource alignment requirement in arch specified function
->     pcibios_align_resource on arm64/LoongArch platforms
-> 
-> ---
->  arch/arm64/Kconfig      | 1 +
->  arch/loongarch/Kconfig  | 1 +
->  drivers/pci/Kconfig     | 3 +++
->  drivers/pci/setup-res.c | 7 +++++++
->  4 files changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 343e1e1cae10..24858bbf2b72 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -232,6 +232,7 @@ config ARM64
->  	select OF_EARLY_FLATTREE
->  	select PCI_DOMAINS_GENERIC if PCI
->  	select PCI_ECAM if (ACPI && PCI)
-> +	select PCI_MEMRES_PAGE_ALIGN if PCI
->  	select PCI_SYSCALL if PCI
->  	select POWER_RESET
->  	select POWER_SUPPLY
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index d38b066fc931..7dbde5e5b351 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -140,6 +140,7 @@ config LOONGARCH
->  	select PCI_DOMAINS_GENERIC
->  	select PCI_ECAM if ACPI
->  	select PCI_LOONGSON
-> +	select PCI_MEMRES_PAGE_ALIGN
->  	select PCI_MSI_ARCH_FALLBACKS
->  	select PCI_QUIRKS
->  	select PERF_USE_VMALLOC
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 9309f2469b41..9be5f85ff9dc 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -128,6 +128,9 @@ config PCI_LOCKLESS_CONFIG
->  config PCI_BRIDGE_EMUL
->  	bool
->  
-> +config PCI_MEMRES_PAGE_ALIGN
-> +	bool
-> +
->  config PCI_IOV
->  	bool "PCI IOV support"
->  	select PCI_ATS
-> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> index 967f9a758923..6ad76734a670 100644
-> --- a/drivers/pci/setup-res.c
-> +++ b/drivers/pci/setup-res.c
-> @@ -339,6 +339,13 @@ int pci_assign_resource(struct pci_dev *dev, int resno)
->  		return -EINVAL;
->  	}
->  
-> +#ifdef CONFIG_PCI_MEMRES_PAGE_ALIGN
-> +	/*
-> +	 * force minimum page alignment for vfio pci usage
-> +	 */
-> +	if (res->flags & IORESOURCE_MEM)
-> +		align = max_t(resource_size_t, PAGE_SIZE, align);
-> +#endif
->  	size = resource_size(res);
->  	ret = _pci_assign_resource(dev, resno, size, align);
->  
+[...]
+>  [PATCH 13/24] Documentation: PCI: correct spelling
+[...]
 
+Applied to misc, thank you!
+
+[1/1] Documentation: PCI: correct spelling
+      https://git.kernel.org/pci/pci/c/b58d6d89ae02
+
+	Krzysztof
