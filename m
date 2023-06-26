@@ -2,114 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9C4273D81B
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Jun 2023 08:56:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4371673DCBC
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Jun 2023 13:02:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229717AbjFZG4o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Jun 2023 02:56:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51754 "EHLO
+        id S230272AbjFZLCw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Jun 2023 07:02:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229647AbjFZG4m (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Jun 2023 02:56:42 -0400
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 173B9AC;
-        Sun, 25 Jun 2023 23:56:42 -0700 (PDT)
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1b7fb1a82c4so3799195ad.1;
-        Sun, 25 Jun 2023 23:56:42 -0700 (PDT)
+        with ESMTP id S230115AbjFZLCi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Jun 2023 07:02:38 -0400
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2822B1;
+        Mon, 26 Jun 2023 04:02:28 -0700 (PDT)
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-1acf5ccf3baso3269494fac.3;
+        Mon, 26 Jun 2023 04:02:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687762601; x=1690354601;
+        d=1e100.net; s=20221208; t=1687777348; x=1690369348;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=u58j1CoFhNAAP0kPknc/GhPhE9N5OmJCD1ZWCCtRRgc=;
-        b=WDPKuhXalnGPckp2TpIKynsO8ZnokkfdhiarQXI1U9VrqORX/RqI+YQ6iOzudxuYfh
-         4q6XXJOoyqqR6QwbktPcLn3j/Hia6cNtm2Nrhm3yJiWc7JcKmjD3tVjEuADNSmK2GgDV
-         xk8ovnwV1ONicO1yc5JYu90NJCKD2g0I+aPJlJcB+YR5HHSFgftpBca8XhiVusEZTmu+
-         +qlUGGQiGJiMT1OVUk9z8yv0fpOv85eDrKiCyXaOhKgjcvScYC6P8FrVEMhdjE7n32Sn
-         iHlKwHWwvll89VW7GKPNxJvK15XueSQ8E1WR4TpisHG4FV0/OHjFbqUI8/raDxp23ahg
-         j18A==
-X-Gm-Message-State: AC+VfDzH7/LQdst87G9Hu9Qbm2z58jPxCzQv6It28ppNG805JMr6LwXE
-        0lNQtVHRiUvsINC/V/q86Hk=
-X-Google-Smtp-Source: ACHHUZ6OtbsuuY2aXoeHYGi4XSA3mdaoGOU6p/4pXML9TF8F1ADk58bPj18ptJOfaGu5YjoBFEMRig==
-X-Received: by 2002:a17:903:1250:b0:1b5:3c7f:1b3b with SMTP id u16-20020a170903125000b001b53c7f1b3bmr5150508plh.35.1687762601317;
-        Sun, 25 Jun 2023 23:56:41 -0700 (PDT)
+        bh=Yo55k0SMHkpFGe7XNrjZEsrn1U/Ef0qRgQ9OTkkGS3Q=;
+        b=MpoNU5TMyTPvcTPfYIwrfXlL1NfcNjWLHfx5BJMmA7euUrMudOJke0jxirOunIpcQJ
+         RmFDK9vgmZhIBEwFX2ma4d0msgdERWIpahlYL+Co9gPpEJCMNOxqdqtA/RqzYsH62/r2
+         0qH14jW/rVaeAhgyU3fRPFEzsOASCTu/GZYpsy8XN0fLaY114OrALAmcBPwMYwJeAnbf
+         7Q4Km+NakUlgbmPBMLI9vG+wylZaop0WpVXd+f4JEvRsJV6P4CKmnrTzi2wMQs8vTkxk
+         TUNWk9BrG+PMd02euOPl45GLQFxE1xL5axuKKO6rSSQq6xeRk7tNKVvebkNH6HqO4azn
+         DkvQ==
+X-Gm-Message-State: AC+VfDyyNUS30I0XglKyPevIp2e3MGOPbSJCjCFZpQjutBt6JZxTk/Ep
+        Ho8TDDYvzkD51YPzmj5V/ek=
+X-Google-Smtp-Source: ACHHUZ4NUr+76C+eqcdtic/nym3avSqY0y7Xr34NaRoffLKuFivw7WauvQ3veQuDbigKmchNrPNYAQ==
+X-Received: by 2002:a05:6870:4312:b0:19e:fd18:a6e7 with SMTP id w18-20020a056870431200b0019efd18a6e7mr20751109oah.17.1687777347953;
+        Mon, 26 Jun 2023 04:02:27 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id jg3-20020a17090326c300b001a2104d706fsm2559571plb.225.2023.06.25.23.56.40
+        by smtp.gmail.com with ESMTPSA id y73-20020a638a4c000000b0053491d92b65sm3945024pgd.84.2023.06.26.04.02.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Jun 2023 23:56:40 -0700 (PDT)
-Date:   Mon, 26 Jun 2023 15:56:39 +0900
+        Mon, 26 Jun 2023 04:02:27 -0700 (PDT)
+Date:   Mon, 26 Jun 2023 20:02:26 +0900
 From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Helge Deller <deller@gmx.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Naoya Horiguchi <naoya.horiguchi@nec.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Stafford Horne <shorne@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Daniel Bristot de Oliveira <bristot@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>, coresight@lists.linaro.org,
-        dri-devel@lists.freedesktop.org, keyrings@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-sgx@vger.kernel.org, linux-trace-devel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, linux-mm@kvack.org,
-        openrisc@lists.librecores.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        x86@kernel.org
-Subject: Re: [PATCH 00/24 v2] Documentation: correct lots of spelling errors
- (series 1)
-Message-ID: <20230626065639.GA3403711@rocinante>
-References: <20230209071400.31476-1-rdunlap@infradead.org>
+To:     Yang Li <yang.lee@linux.alibaba.com>
+Cc:     marek.vasut+renesas@gmail.com, yoshihiro.shimoda.uh@renesas.com,
+        lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] PCI: rcar-gen2: Use
+ devm_platform_get_and_ioremap_resource()
+Message-ID: <20230626110226.GA569947@rocinante>
+References: <20230323091644.91981-1-yang.lee@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230209071400.31476-1-rdunlap@infradead.org>
+In-Reply-To: <20230323091644.91981-1-yang.lee@linux.alibaba.com>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
@@ -123,20 +65,30 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hello,
 
-> Correct many spelling errors in Documentation/ as reported by codespell.
-> 
-> Maintainers of specific kernel subsystems are only Cc-ed on their
-> respective patches, not the entire series.
-> 
-> These patches are based on linux-next-20230209.
-> 
-[...]
->  [PATCH 13/24] Documentation: PCI: correct spelling
-[...]
+> According to commit 890cc39a8799 ("drivers: provide
+> devm_platform_get_and_ioremap_resource()"), convert
+> platform_get_resource(), devm_ioremap_resource() to a single
+> call to devm_platform_get_and_ioremap_resource(), as this is exactly
+> what this function does.
 
-Applied to misc, thank you!
+I took each separate patch:
 
-[1/1] Documentation: PCI: correct spelling
-      https://git.kernel.org/pci/pci/c/b58d6d89ae02
+  https://lore.kernel.org/linux-pci/20230323091644.91981-1-yang.lee@linux.alibaba.com
+  https://lore.kernel.org/linux-pci/20230323090431.73526-1-yang.lee@linux.alibaba.com
+  https://lore.kernel.org/linux-pci/20230323090011.66754-1-yang.lee@linux.alibaba.com
+  https://lore.kernel.org/linux-pci/20230323074553.90372-1-yang.lee@linux.alibaba.com
+
+Turned into a series and applied against a single branch.
+
+Applied to controller/resources, thank you!
+
+[01/04] PCI: rcar-gen2: Use devm_platform_get_and_ioremap_resource()
+        https://git.kernel.org/pci/pci/c/8b88299ef429
+[02/04] PCI: v3: Use devm_platform_get_and_ioremap_resource()
+        https://git.kernel.org/pci/pci/c/cc456373aa57
+[03/04] PCI: xgene-msi: Use devm_platform_get_and_ioremap_resource()
+        https://git.kernel.org/pci/pci/c/7a081062046f
+[04/04] PCI: imx6: Use devm_platform_get_and_ioremap_resource()
+	https://git.kernel.org/pci/pci/c/860955d0db7d
 
 	Krzysztof
