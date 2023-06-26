@@ -2,52 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 681B373E73F
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Jun 2023 20:12:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C034773EB37
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Jun 2023 21:35:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231660AbjFZSMn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Jun 2023 14:12:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57190 "EHLO
+        id S229482AbjFZTfn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Jun 2023 15:35:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231487AbjFZSMf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Jun 2023 14:12:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22669198C;
-        Mon, 26 Jun 2023 11:11:58 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9142D60F45;
-        Mon, 26 Jun 2023 18:11:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1084C433C0;
-        Mon, 26 Jun 2023 18:11:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687803117;
-        bh=JPG51f1XhFtULkQDerp9DiZGlQrVYSlsBSy1mxXedhk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=TAa2ZQ44xVZDJRseHq5MiELnPsQmGcB90Yc0SE/38Ad7TsU4cGXMoq4oGNwa739bI
-         6AGlr2U7O1A/RU30Wbt0TZngj1QBShlQTKHChgCBu2dRhx170CQi6ijDhxBGN88hSR
-         uYUlr2CHQ5/dcMwRParzc5CORFzn/RQPQGLw5V09HZJVlTvOwWrLkdiiCm+Y9INMzj
-         hnhjxauWWYmdr5VsCJEHWvGfd60z5ft4MMfTylFCXGC54JbDnSmViPjwy6Gc0m9Bpb
-         Jvkv2tSQbHWh7VoCZCsdXPrqMbU5nHv649GivNBvvBxflLE/DLarxBeVP9kXwZj6q5
-         YstjsLwePj7OQ==
-Date:   Mon, 26 Jun 2023 13:11:55 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lizhi Hou <lizhi.hou@amd.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh@kernel.org, max.zhen@amd.com,
-        sonal.santan@amd.com, stefano.stabellini@xilinx.com
-Subject: Re: [PATCH V9 2/5] PCI: Create device tree node for selected devices
-Message-ID: <20230626181155.GA250405@bhelgaas>
+        with ESMTP id S229456AbjFZTfn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Jun 2023 15:35:43 -0400
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB9210DA;
+        Mon, 26 Jun 2023 12:35:40 -0700 (PDT)
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7836164a08aso45903339f.1;
+        Mon, 26 Jun 2023 12:35:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687808140; x=1690400140;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BGfCwcbVLNoCSLzgxFgaQHuuup0hQXpRqIa+hpJXPdc=;
+        b=dXZBj1J5m8Y5Q3lPq4/jUo8q8lCgLGD7Is/63mplyAzlwMH8L8Fw646D1t9kKaeYW/
+         91DxcIrQMMrktDGPOse4fcgHXEHLwmxW3VEd5ZpuGS27L0a3cUlqtlFw7Ya97hrUdnlV
+         X0HyxO2rCh6LV/gvsWhy8p2sL+ZULFCOS17M4iEouwMD8U55Wx7VbgbSXY2GjAWMKCwr
+         mkrQZX9tfb4c2kVhx+1uDL9bpElYp1G2ChX5aCXEnLexBkEwLe+hEJM011cMu7kOJL43
+         /JLSeCu7DUnZco+RY12x5QXEyoYJo6UbHSO1KOWSFH3vZh4IIn1p8CLdw0VXhOJp+y8p
+         N+FA==
+X-Gm-Message-State: AC+VfDzlpmuOqsiLeOViVbEosLCnAVCo18/uGaXn26b/AZh1AhqHkz0+
+        f5RJJIDKnsapfY8crm+4ug==
+X-Google-Smtp-Source: ACHHUZ5n+5iHOWhRthQiOeSfPq/OI+/OPCixQPcsYGvRwG60osxotB0cF5A7pDV6dz3Nptrxo1Q4lQ==
+X-Received: by 2002:a5d:96c1:0:b0:76f:1664:672 with SMTP id r1-20020a5d96c1000000b0076f16640672mr28860112iol.13.1687808140076;
+        Mon, 26 Jun 2023 12:35:40 -0700 (PDT)
+Received: from robh_at_kernel.org ([199.114.228.113])
+        by smtp.gmail.com with ESMTPSA id l14-20020a02a88e000000b00423076f5442sm409363jam.2.2023.06.26.12.35.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jun 2023 12:35:39 -0700 (PDT)
+Received: (nullmailer pid 3613294 invoked by uid 1000);
+        Mon, 26 Jun 2023 19:32:38 -0000
+Date:   Mon, 26 Jun 2023 13:32:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Simon Xue <xxm@rock-chips.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@collabora.com
+Subject: Re: [PATCH v1 0/4] RK3588 PCIe2 support
+Message-ID: <20230626193238.GA3553158-robh@kernel.org>
+References: <20230616170022.76107-1-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <af9b6bb3-a98d-4fb6-b51e-b48bca61dada@amd.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <20230616170022.76107-1-sebastian.reichel@collabora.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,59 +73,27 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jun 26, 2023 at 10:34:05AM -0700, Lizhi Hou wrote:
-> On 6/21/23 13:22, Bjorn Helgaas wrote:
-
->     Added an of_pci_make_dev_node() interface that can be used to create
->     device tree node for PCI devices.
+On Fri, Jun 16, 2023 at 07:00:18PM +0200, Sebastian Reichel wrote:
+> Hi,
 > 
->     Added a PCI_DYNAMIC_OF_NODES config option. When the option is turned
-> on,
->     the kernel will generate device tree nodes for PCI bridges
-> unconditionally.
+> This adds PCIe2 support for RK3588. The series has been tested with the
+> onboard RTL8125 network card on Rockchip RK3588 EVB1 (&pcie2x1l1) and
+> Radxa Rock 5B (&pcie2x1l2). The final patch in this series depends on
+> the combo PHY support added by the SATA series [0].
 > 
->     Initially, the basic properties are added for the dynamically generated
->     device tree nodes which include #address-cells, #size-cells,
-> device_type,
->     compatible, ranges, reg.
-
-s/Added/Add/ (twice, mentioned before).
-
-The commit log should say what the *patch* does, not what *you* did.
-
-> > > @@ -501,8 +501,10 @@ static int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *
-> > >   		 * to rely on this function (you ship a firmware that doesn't
-> > >   		 * create device nodes for all PCI devices).
-> > >   		 */
-> > > -		if (ppnode)
-> > > +		if (ppnode && of_property_present(ppnode, "interrupt-map"))
-> >
-> > Maybe this deserves a comment?  The connection between "interrupt-map"
-> > and the rest of this patch isn't obvious to me.
-> > 
-> > Also, it looks like this happens for *everybody*, regardless of
-> > PCI_DYNAMIC_OF_NODES, which seems a little suspect.  If it's an
-> > unrelated bug fix it should be a different patch.
+> [0] https://lore.kernel.org/all/20230612171337.74576-1-sebastian.reichel@collabora.com/
 > 
-> This is not a bug fix. The check will distinguish between device tree nodes
-> automatically created for pci bridges by this patch with those created by a
-> DT based system. With this patch, device tree nodes are created for pci
-> bridges, thus ppnode here will be non-zero and we will break out of the
-> loop. In order to still use pci_swizzle_interrupt_pin(), checking
-> “interrupt-map” for ppnode is added here.
+> Thanks,
 > 
-> After thinking about this more, using “interrupt-map” property may not be
-> correct for the cases where ppnode is not dynamically generated and it does
-> not have “interrupt-map”. So, I would introduce a new property “dynamic” for
-> pci bridge nodes generated dynamically. And change the code to: if (ppnode
-> && of_property_present(ppnode, "dynamic")).
+> -- Sebastian
 > 
-> Does this make sense?
+> Sebastian Reichel (4):
+>   dt-bindings: PCI: dwc: rockchip: Fix interrupt-names issue
+>   dt-bindings: PCI: dwc: rockchip: Add missing
+>     legacy-interrupt-controller
+>   dt-bindings: PCI: dwc: rockchip: Update for RK3588
+>   arm64: dts: rockchip: rk3588: add PCIe2 support
 
-Makes a lot more sense to me than relying on some unrelated and
-undocumented property.  Probably still would benefit from an #ifdef.
+I applied patches 1-3.
 
-Rob might have an opinion on whether "dynamic" makes sense from a
-DT perspective.
-
-Bjorn
+Rob
