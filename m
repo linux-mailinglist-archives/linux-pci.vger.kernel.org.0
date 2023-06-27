@@ -2,70 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C034773EB37
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Jun 2023 21:35:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AFE573F00C
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 03:01:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229482AbjFZTfn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Jun 2023 15:35:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44852 "EHLO
+        id S229638AbjF0BBw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Jun 2023 21:01:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjFZTfn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Jun 2023 15:35:43 -0400
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB9210DA;
-        Mon, 26 Jun 2023 12:35:40 -0700 (PDT)
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7836164a08aso45903339f.1;
-        Mon, 26 Jun 2023 12:35:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687808140; x=1690400140;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BGfCwcbVLNoCSLzgxFgaQHuuup0hQXpRqIa+hpJXPdc=;
-        b=dXZBj1J5m8Y5Q3lPq4/jUo8q8lCgLGD7Is/63mplyAzlwMH8L8Fw646D1t9kKaeYW/
-         91DxcIrQMMrktDGPOse4fcgHXEHLwmxW3VEd5ZpuGS27L0a3cUlqtlFw7Ya97hrUdnlV
-         X0HyxO2rCh6LV/gvsWhy8p2sL+ZULFCOS17M4iEouwMD8U55Wx7VbgbSXY2GjAWMKCwr
-         mkrQZX9tfb4c2kVhx+1uDL9bpElYp1G2ChX5aCXEnLexBkEwLe+hEJM011cMu7kOJL43
-         /JLSeCu7DUnZco+RY12x5QXEyoYJo6UbHSO1KOWSFH3vZh4IIn1p8CLdw0VXhOJp+y8p
-         N+FA==
-X-Gm-Message-State: AC+VfDzlpmuOqsiLeOViVbEosLCnAVCo18/uGaXn26b/AZh1AhqHkz0+
-        f5RJJIDKnsapfY8crm+4ug==
-X-Google-Smtp-Source: ACHHUZ5n+5iHOWhRthQiOeSfPq/OI+/OPCixQPcsYGvRwG60osxotB0cF5A7pDV6dz3Nptrxo1Q4lQ==
-X-Received: by 2002:a5d:96c1:0:b0:76f:1664:672 with SMTP id r1-20020a5d96c1000000b0076f16640672mr28860112iol.13.1687808140076;
-        Mon, 26 Jun 2023 12:35:40 -0700 (PDT)
-Received: from robh_at_kernel.org ([199.114.228.113])
-        by smtp.gmail.com with ESMTPSA id l14-20020a02a88e000000b00423076f5442sm409363jam.2.2023.06.26.12.35.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jun 2023 12:35:39 -0700 (PDT)
-Received: (nullmailer pid 3613294 invoked by uid 1000);
-        Mon, 26 Jun 2023 19:32:38 -0000
-Date:   Mon, 26 Jun 2023 13:32:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@collabora.com
-Subject: Re: [PATCH v1 0/4] RK3588 PCIe2 support
-Message-ID: <20230626193238.GA3553158-robh@kernel.org>
-References: <20230616170022.76107-1-sebastian.reichel@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230616170022.76107-1-sebastian.reichel@collabora.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        with ESMTP id S229623AbjF0BBv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Jun 2023 21:01:51 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A21BC12E;
+        Mon, 26 Jun 2023 18:01:50 -0700 (PDT)
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35R0olZk026161;
+        Tue, 27 Jun 2023 01:01:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=qhnhRqi0nFLzXr+49PYiC7nGp/gXo7EQd1cvpHDh3/w=;
+ b=fMFW5jZGJav7Bfh1p7iEAyPjf9Zy36dp9fOdSgItQAtBURU2rrkMFOUpN89vuokzZtHS
+ QWg1zftKD1lU6OTlykhwmOfnTb/9mX98clufaERCEj51FdygYb4dJwnvSZeYL1QmDjMj
+ 4GcTtloONitP6Yy18iz0A64PAuDSa5li5Ogd6zjg9QmoXUO7j9RpVt3XdY/GzJXXw+HE
+ SgMyFcE0SuxNKPhSMGEOZU2vs+AwZ3xtiRbrCPpwciW3xaJYbzlkh26Qx4QCwjmrC+W6
+ BM1QALSJ5aOiYA/33ymrv4NwUQpTNusA2VpkBAsloQnZAA6N85WnY+O+uYwJyJM+I9n/ hg== 
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rfgmp0f6k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Jun 2023 01:01:46 +0000
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 35R11hOf006793;
+        Tue, 27 Jun 2023 01:01:43 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3rdsjkh3c1-1;
+        Tue, 27 Jun 2023 01:01:43 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35R11hjh006712;
+        Tue, 27 Jun 2023 01:01:43 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-krichai-hyd.qualcomm.com [10.213.110.112])
+        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 35R11hNQ006663;
+        Tue, 27 Jun 2023 01:01:43 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
+        id 865594AA5; Tue, 27 Jun 2023 06:31:42 +0530 (+0530)
+From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
+        krzysztof.kozlowski@linaro.org,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: [PATCH v5 0/3] PCI: qcom: ep: Add basic interconnect support
+Date:   Tue, 27 Jun 2023 06:31:28 +0530
+Message-Id: <1687827692-6181-1-git-send-email-quic_krichai@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: mo9TVmwqt8Dhcet6mh4jdMkpnyAT_A1c
+X-Proofpoint-ORIG-GUID: mo9TVmwqt8Dhcet6mh4jdMkpnyAT_A1c
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-26_20,2023-06-26_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 malwarescore=0 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=552 phishscore=0 suspectscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306270007
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,27 +79,35 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 16, 2023 at 07:00:18PM +0200, Sebastian Reichel wrote:
-> Hi,
-> 
-> This adds PCIe2 support for RK3588. The series has been tested with the
-> onboard RTL8125 network card on Rockchip RK3588 EVB1 (&pcie2x1l1) and
-> Radxa Rock 5B (&pcie2x1l2). The final patch in this series depends on
-> the combo PHY support added by the SATA series [0].
-> 
-> [0] https://lore.kernel.org/all/20230612171337.74576-1-sebastian.reichel@collabora.com/
-> 
-> Thanks,
-> 
-> -- Sebastian
-> 
-> Sebastian Reichel (4):
->   dt-bindings: PCI: dwc: rockchip: Fix interrupt-names issue
->   dt-bindings: PCI: dwc: rockchip: Add missing
->     legacy-interrupt-controller
->   dt-bindings: PCI: dwc: rockchip: Update for RK3588
->   arm64: dts: rockchip: rk3588: add PCIe2 support
+Add basic support for managing "pcie-mem" interconnect path by setting
+a low constraint before enabling clocks and updating it after the link
+is up based on link speed and width the device got enumerated.
 
-I applied patches 1-3.
+changes from v4:
+	- rebased with linux-next.
+	- Added comments as suggested by mani.
+	- removed the arm: dts: qcom: sdx55: Add interconnect path
+	  as that patch is already applied.
+changes from v3:
+        - ran make DT_CHECKER_FLAGS=-m dt_binding_check and fixed
+         errors.
+        - Added macros in the qcom ep driver patch as suggested by Dmitry
+changes from v2:
+        - changed the logic for getting speed and width as suggested
+         by bjorn.
+        - fixed compilation errors.
 
-Rob
+
+Krishna chaitanya chundru (3):
+  dt-bindings: PCI: qcom: ep: Add interconnects path
+  arm: dts: qcom: sdx65: Add interconnect path
+  PCI: qcom-ep: Add ICC bandwidth voting support
+
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 13 ++++
+ arch/arm/boot/dts/qcom/qcom-sdx65.dtsi             |  3 +
+ drivers/pci/controller/dwc/pcie-qcom-ep.c          | 73 ++++++++++++++++++++++
+ 3 files changed, 89 insertions(+)
+
+-- 
+2.7.4
+
