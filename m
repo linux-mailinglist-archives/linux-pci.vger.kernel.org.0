@@ -2,190 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5AF073FD9E
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 16:19:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42FC573FDA3
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 16:20:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230489AbjF0OTk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jun 2023 10:19:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58744 "EHLO
+        id S231172AbjF0OU0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jun 2023 10:20:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229664AbjF0OTj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 10:19:39 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3780E74;
-        Tue, 27 Jun 2023 07:19:37 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id 38308e7fff4ca-2b699a2fe86so45879171fa.3;
-        Tue, 27 Jun 2023 07:19:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687875576; x=1690467576;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DfLJWM1h+r2fz/FrGrblPiH2XYx5v1TUXif5QJyXgRE=;
-        b=nm+7mQKMEyoqcrirXa1lpri9J+NQjK7axqmZJUQdhWW5HbKcQWj7tKf+VdWSVe6FYE
-         ZE7zXSDa+7Euw9TK706CY6nxn+reMksrcECRmkJ8TgOc1TwR8QsrJ2cLBP379XZAgtCa
-         ZirljovqBqu5jfUZeKvbc2L/dd/Za1IAKgk049pvR6Qmcyfex3Jo2dFk5Hop8X6dYeph
-         OSRUegDjqLcapwRG7rbHpqtxkaGZF9mt4UPy/bH+ORbECJo9YxUtCiN7mpZZF0+BSxQS
-         KsQ8O3cWI4sLc484B/7ag5jpMXTJ17Lrbhg3RbQQKUknP9+Nlh1jjnUKxhkO2kAw70gz
-         RJuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687875576; x=1690467576;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DfLJWM1h+r2fz/FrGrblPiH2XYx5v1TUXif5QJyXgRE=;
-        b=MfnxF0UXOVqBgKb3ZmfD1jjdjq/jxIdC+1ZciBjJ4Vsk4Dn8i7b5nOkrdQv4v3p0VF
-         bVh2SCQYc1ZzR13vKzuOuHc5k1MkFAa07D0ubThEkkMmnrVJtz5Fwupkuo1LqhRu5RDx
-         2QY7/1y1QTpSOBqY8+4WB662/NNZdjklgBolkQXwkee9auuC3MDevSqvCy8ivDgNEBzv
-         4bJFPiBdMGtA7qOgXktwbli1c0saM0Z/PKOZNqg/e0WXhgKkYPsWCzsdacnTruCDO5va
-         64SUervT6ZOIfqcqoz7S57QzqMMTWKOcu0KP3D5Zbdhk30zDkssHUVDEX7geAeRipgdR
-         mgtw==
-X-Gm-Message-State: AC+VfDwtlwiYjiSzkvYDgimrus51dnasIJGLirp2ySnzmEQWFPPr4OM9
-        RBzp/4xVnMILVeq/qMknsR8=
-X-Google-Smtp-Source: ACHHUZ4unxU9mVyPjX85SmR3z4DLEpFOkvFzVKGizGK/iTAuIUTx25vGzfPrnowDBLMBpJVRCtPpMw==
-X-Received: by 2002:a05:6512:39d3:b0:4fb:5dd5:715c with SMTP id k19-20020a05651239d300b004fb5dd5715cmr5486832lfu.4.1687875575662;
-        Tue, 27 Jun 2023 07:19:35 -0700 (PDT)
-Received: from mobilestation ([109.194.233.142])
-        by smtp.gmail.com with ESMTPSA id f24-20020a19ae18000000b004f76388c0a6sm1520816lfc.236.2023.06.27.07.19.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jun 2023 07:19:34 -0700 (PDT)
-Date:   Tue, 27 Jun 2023 17:19:32 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@collabora.com
-Subject: Re: [PATCH v1 1/4] dt-bindings: PCI: dwc: rockchip: Fix
- interrupt-names issue
-Message-ID: <xfvpi67vvobt4hjnzlcghtshdfs7xakptsdj5tu4badmfbxddq@mgajg77uymeh>
-References: <20230616170022.76107-1-sebastian.reichel@collabora.com>
- <20230616170022.76107-2-sebastian.reichel@collabora.com>
- <n5vgfnqicq3ndgqtcp3yjurbdn76vucj6zyjhlpjbdwoquv2la@5g5kv5gceyd7>
- <CAL_Jsq+=kBrujhLW_KNRWpj+DQJbnXrA=RS3La5ekbJtji+xiQ@mail.gmail.com>
+        with ESMTP id S229664AbjF0OUZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 10:20:25 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6731F1BE2;
+        Tue, 27 Jun 2023 07:20:20 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8BxFsUh8JpkmiYDAA--.5125S3;
+        Tue, 27 Jun 2023 22:20:17 +0800 (CST)
+Received: from [10.20.42.43] (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx7yMh8Jpk41gMAA--.9031S3;
+        Tue, 27 Jun 2023 22:20:17 +0800 (CST)
+Message-ID: <628f718b-bcbc-6a3b-6e7f-40148160b5b7@loongson.cn>
+Date:   Tue, 27 Jun 2023 22:20:17 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_Jsq+=kBrujhLW_KNRWpj+DQJbnXrA=RS3La5ekbJtji+xiQ@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v7 8/8] drm/radeon: Implement the is_boot_device callback
+ function
+Content-Language: en-US
+To:     Sui Jingfeng <15330273260@189.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian Konig <christian.koenig@amd.com>,
+        Pan Xinhui <Xinhui.Pan@amd.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+References: <20230613030151.216625-1-15330273260@189.cn>
+ <20230613030151.216625-9-15330273260@189.cn>
+From:   Sui Jingfeng <suijingfeng@loongson.cn>
+Organization: Loongson
+In-Reply-To: <20230613030151.216625-9-15330273260@189.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf8Cx7yMh8Jpk41gMAA--.9031S3
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrXrykAr1fCw4kWr1xAw43Jwc_yoWxXFc_Wr
+        Z2k3ykC3W8XFZ7XFW2q398CrySyayrAryUJwnrtFn7W342kr4qvF1Du3sYqFy3A3W7Cr13
+        Wrn8tw4jya45ZosvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+        s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+        cSsGvfJTRUUUbgxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+        vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+        w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+        W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+        6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+        xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
+        6rW5McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+        8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
+        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
+        AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
+        rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+        v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8
+        Jr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07jjLv
+        tUUUUU=
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 27, 2023 at 07:48:29AM -0600, Rob Herring wrote:
-> On Tue, Jun 27, 2023 at 6:27 AM Serge Semin <fancer.lancer@gmail.com> wrote:
-> >
-> > On Fri, Jun 16, 2023 at 07:00:19PM +0200, Sebastian Reichel wrote:
-> > > The RK356x (and RK3588) have 5 ganged interrupts. For example the
-> > > "legacy" interrupt combines "inta/intb/intc/intd" with a register
-> > > providing the details.
-> > >
-> > > Currently the binding is not specifying these interrupts resulting
-> > > in a bunch of errors for all rk356x boards using PCIe.
-> > >
-> > > Fix this by specifying the interrupts and add them to the example
-> > > to prevent regressions.
-> > >
-> > > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > > ---
-> > >  .../bindings/pci/rockchip-dw-pcie.yaml         | 18 ++++++++++++++++++
-> > >  .../devicetree/bindings/pci/snps,dw-pcie.yaml  | 15 ++++++++++++++-
-> > >  2 files changed, 32 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> > > index 24c88942e59e..98e45d2d8dfe 100644
-> > > --- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> > > +++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> > > @@ -56,6 +56,17 @@ properties:
-> > >        - const: pclk
-> > >        - const: aux
-> > >
-> > > +  interrupts:
-> > > +    maxItems: 5
-> > > +
-> > > +  interrupt-names:
-> > > +    items:
-> > > +      - const: sys
-> > > +      - const: pmc
-> > > +      - const: msg
-> > > +      - const: legacy
-> > > +      - const: err
-> > > +
-> > >    msi-map: true
-> > >
-> > >    num-lanes: true
-> > > @@ -98,6 +109,7 @@ unevaluatedProperties: false
-> > >
-> > >  examples:
-> > >    - |
-> > > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > >
-> > >      bus {
-> > >          #address-cells = <2>;
-> > > @@ -117,6 +129,12 @@ examples:
-> > >                            "aclk_dbi", "pclk",
-> > >                            "aux";
-> > >              device_type = "pci";
-> > > +            interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-> > > +                         <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>,
-> > > +                         <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>,
-> > > +                         <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
-> > > +                         <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
-> > > +            interrupt-names = "sys", "pmc", "msg", "legacy", "err";
-> > >              linux,pci-domain = <2>;
-> > >              max-link-speed = <2>;
-> > >              msi-map = <0x2000 &its 0x2000 0x1000>;
-> > > diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> > > index 1a83f0f65f19..9f605eb297f5 100644
-> > > --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> > > +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> > > @@ -193,9 +193,22 @@ properties:
-> > >            oneOf:
-> > >              - description: See native "app" IRQ for details
-> > >                enum: [ intr ]
-> >
-> > The IRQs below are either combined version of the already defined IRQs
-> > or just the generic DW PCIe IRQs but named differently. Moreover I
-> > don't see kernel using any of them except the "legacy" interrupt. What
-> > about converting the dts files to using the already defined names instead
-> > of extending the already over-diverged DT-bindings?
-> > Rob, Krzysztof?
-> 
 
-> If there's not a dependency on the names, then we can get away with
-> changing them. Otherwise, it's an ABI issue to change them. Supporting
-> both names in the driver partially mitigates that, but isn't worth
-> carrying that IMO.
+PING ?
 
-DW Rockchip LLDD only looks for the "legacy" IRQ name. The rest of
-them are left unused by both LLDD and the DW PCIe core driver. So from
-the kernel point of view ABI is defined for "legacy" name only.
 
-Even "msi"/"msg" IRQ name left unused which is normally responsible
-for signaling MSI TLPs caught by the iMSI-RX engine. (Most likely
-MSI packets passes through the PCI<->System bus bridge and gets
-detected by the system GIC.)
+On 2023/6/13 11:01, Sui Jingfeng wrote:
+> From: Sui Jingfeng <suijingfeng@loongson.cn>
+>
+> [why]
+>
+> The vga_is_firmware_default() defined in drivers/pci/vgaarb.c is
+> arch-dependent, it's a dummy on non-x86 architectures currently.
+> This made VGAARB lost an important condition for the arbitration.
+> It could still be wrong even if we remove the #ifdef and #endif guards.
+> because the PCI bar will move (resource re-allocation).
+>
+> [how]
+>
+> The device that owns the firmware framebuffer should be the default boot
+> device. This patch adds an arch-independent function to enforce this rule
 
--Serge(y)
+-- 
+Jingfeng
 
-> 
-> Will drop this one from my tree. Seems patches 2 and 3 aren't
-> dependent on this one.
-> 
-> Rob
