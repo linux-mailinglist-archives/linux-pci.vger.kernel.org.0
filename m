@@ -2,78 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5474673FC3F
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 14:55:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E99D673FC46
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 14:56:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230424AbjF0MzH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jun 2023 08:55:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50230 "EHLO
+        id S229501AbjF0M4R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jun 2023 08:56:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230326AbjF0My4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 08:54:56 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7936F2715;
-        Tue, 27 Jun 2023 05:54:54 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id 38308e7fff4ca-2b5c231f842so42985711fa.2;
-        Tue, 27 Jun 2023 05:54:54 -0700 (PDT)
+        with ESMTP id S229740AbjF0M4Q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 08:56:16 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBBED26BA;
+        Tue, 27 Jun 2023 05:56:15 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-3fa7512e599so55157345e9.2;
+        Tue, 27 Jun 2023 05:56:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687870493; x=1690462493;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8YE7wSDf9+kixNjK3SC5HyvOe27Psh650QQ7iYwckpg=;
-        b=cjChsABwaIiGiXFxDFxskK6sd1HRgZdRbC2eVH6wCVvr1AQrgInU+xKmVehbzpUzCc
-         Ikpsh4LS5zq2zS3tYFKlFcY2TqDY0RTPND2efixaWg5ilaALZ06VJeA9KR9EvBgIs/EH
-         k+4y3YgEIdJ7wMCGOmrLLOLXprttiBkx4N7vby4VzOg9mg1wvN9j+tCPuXxAggVk2f8I
-         vtSeSDVDPP9GWwRwBA06A6OR+T2BEoRiiLnUiVSfUKh1+tgeWdpuFxnsYC5jFKx9kEec
-         U+mvIorg2MMU2p14fPMWPuI1d8qRtYzdaOB5lT9aVav8LRJyKFbcbc/8mBYtYiZJoclX
-         KGCA==
+        d=gmail.com; s=20221208; t=1687870574; x=1690462574;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0CmpeFe/W7bct0on6Cvz9lgbR3MqPfbzft85pRxf6ro=;
+        b=g4OCr0xCnqtOLwIff9cOjbimo678mSohP7uVU+SD3EwzZ17aTKL42gv2ikphvZsson
+         5g6ylW6ZyahqPBuFpa+opBxL8HbO9AgV52ftmztGHHX4jfHHjuxpiwu6zmnQ7IEZ9DwF
+         4ZF+Yx+ozMUfGWsl57m0KyXjmbFERhb4/PW8Xktz3dQMg4/hnxcY/iUi7bpMxRJPa4Yu
+         XkIpxBjyIygPv/ik0WZhzZTW24DFy14gP9TkOXvLR1eu5aArTsAy0SeD5Po0PtPKpFuc
+         wJ//VE+td7ipEXQyL67jvpywdnqquB7g/8lDcFxWhrU/wnxZHyAKkHnAkYyNyQ74Z/cY
+         K4XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687870493; x=1690462493;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8YE7wSDf9+kixNjK3SC5HyvOe27Psh650QQ7iYwckpg=;
-        b=HpZiIdB0OoPTtFfpXqsu6Yv+bCA803HOR5N3wVqTfMwCJ5USHG8U/od4Wby6LVuE8Y
-         P37zo2W8cwjHC+liWwnAGzhrh25kecJracXTgZqTSOJzZEDB8thS7CDl4icJBvQznzKN
-         vIoG/l1jgQKGI2Qt6XVqlgwT/2b41Y3V6veCTt+UFAv1EN5TnK9QwpwQ5nkCw8KdLT9E
-         4qYrSPtMO5VjmKK1mQWOYXOAlCBgmunV5qJrorCAdagIMvepyhcTtguTQaaTLWIfA3LN
-         YDY8du9PRGyZmz+1506oyZQDgNtuzLi/Tm04uMNn65LKGlhOZO/8CW727LXQudVWmgiq
-         GUew==
-X-Gm-Message-State: AC+VfDyHh1083B8gQgAvtIxWaTYJvW4SeulsrSMyYOyKLEuon/dxWSNn
-        NolqUMIvLWZUoeS/O6rUtDb3m0Ro4R8=
-X-Google-Smtp-Source: ACHHUZ5gkQTil60/IJCpxMy96qfRyWmGyiGxmtKV0FFui1C5evBEIgoYE3C3DgSY38t9mhHAHX1Ipg==
-X-Received: by 2002:a2e:9e4f:0:b0:2b1:b4e9:4c3 with SMTP id g15-20020a2e9e4f000000b002b1b4e904c3mr21755792ljk.2.1687870492431;
-        Tue, 27 Jun 2023 05:54:52 -0700 (PDT)
-Received: from mobilestation ([109.194.233.142])
-        by smtp.gmail.com with ESMTPSA id o10-20020a2e730a000000b002b217532064sm1737956ljc.33.2023.06.27.05.54.50
+        d=1e100.net; s=20221208; t=1687870574; x=1690462574;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0CmpeFe/W7bct0on6Cvz9lgbR3MqPfbzft85pRxf6ro=;
+        b=RREWShUzvQh8876NqqIzDdmQeHA9dfxUAwcRC65DAfbD/qUJC4PiopD1FTsh2Otlrp
+         P666M4PhwpEgdDb9XH2wEiPMJy4FSBHizagB4aHLW4Kt4ibojM4QkjpkcM2i0L2Naw8q
+         CVlY6PZXF15vjUvdkVPeHJwOLYtxQS6EPfd/awU8kdynQ35KkW8MtxbAhmaOvoD7IPH3
+         xglb/Z3JbQE0qICmFPtj0CKGD+LvmBkgyrr1CyjOU8g6JAVCu+D529qMjMt1sy9HYA9S
+         WT5uvatrvCQFkvfdE1nFQlRJYnf5H64Znzf6xbL6dz2HCSy/NHResbE42yOOU84bFLc/
+         yLPA==
+X-Gm-Message-State: AC+VfDwUfOv07y0hpoxcHMos47297h/9DlKGRbIRmz4loJLjxwvKZD3s
+        ql6UAPHRBe5h1LSBbGZsxyoYubN0uyC8sg==
+X-Google-Smtp-Source: ACHHUZ7zKsWmfe9syFfOnBXnGTnLWMSLV/h5hNjDh/rD9v8tbqRWdWWlu+EGK0726d1L4A3TSdoh6A==
+X-Received: by 2002:a1c:7705:0:b0:3fa:c3e8:901a with SMTP id t5-20020a1c7705000000b003fac3e8901amr3249818wmi.25.1687870574209;
+        Tue, 27 Jun 2023 05:56:14 -0700 (PDT)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id x9-20020a05600c21c900b003fb41491670sm3321616wmj.24.2023.06.27.05.56.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jun 2023 05:54:51 -0700 (PDT)
-Date:   Tue, 27 Jun 2023 15:54:49 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@collabora.com
-Subject: Re: [PATCH v1 2/4] dt-bindings: PCI: dwc: rockchip: Add missing
- legacy-interrupt-controller
-Message-ID: <6ewtsaw72474pwvdohpapwnmbevivlkmagwnv7r7ggixhhmo6e@fcl74rn2rlqz>
-References: <20230616170022.76107-1-sebastian.reichel@collabora.com>
- <20230616170022.76107-3-sebastian.reichel@collabora.com>
+        Tue, 27 Jun 2023 05:56:13 -0700 (PDT)
+From:   Colin Ian King <colin.i.king@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] PCI: ibmphp: make read-only arrays static
+Date:   Tue, 27 Jun 2023 13:56:12 +0100
+Message-Id: <20230627125612.724764-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230616170022.76107-3-sebastian.reichel@collabora.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -84,70 +68,62 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 16, 2023 at 07:00:20PM +0200, Sebastian Reichel wrote:
-> Rockchip RK356x and RK3588 handle legacy interrupts via a ganged
-> interrupts. The RK356x DT implements this via a sub-node named
-> "legacy-interrupt-controller", just like a couple of other PCIe
-> implementations. This adds proper documentation for this and updates
-> the example to avoid regressions.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  .../bindings/pci/rockchip-dw-pcie.yaml        | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> index 98e45d2d8dfe..bf81d306cc80 100644
-> --- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> @@ -67,6 +67,22 @@ properties:
->        - const: legacy
->        - const: err
->  
-> +  legacy-interrupt-controller:
-> +    description: Interrupt controller node for handling legacy PCI interrupts.
-> +    type: object
-> +    properties:
-> +      "#address-cells":
-> +        const: 0
-> +
-> +      "#interrupt-cells":
-> +        const: 1
-> +
+Don't populate the arrays on the stack, instead make them static const.
 
-> +      "interrupt-controller": true
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/pci/hotplug/ibmphp_pci.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-redundant quotes.
+diff --git a/drivers/pci/hotplug/ibmphp_pci.c b/drivers/pci/hotplug/ibmphp_pci.c
+index 754c3f23282e..50038e5f9ca4 100644
+--- a/drivers/pci/hotplug/ibmphp_pci.c
++++ b/drivers/pci/hotplug/ibmphp_pci.c
+@@ -329,7 +329,7 @@ int ibmphp_configure_card(struct pci_func *func, u8 slotno)
+ static int configure_device(struct pci_func *func)
+ {
+ 	u32 bar[6];
+-	u32 address[] = {
++	static const u32 address[] = {
+ 		PCI_BASE_ADDRESS_0,
+ 		PCI_BASE_ADDRESS_1,
+ 		PCI_BASE_ADDRESS_2,
+@@ -564,7 +564,7 @@ static int configure_bridge(struct pci_func **func_passed, u8 slotno)
+ 	struct resource_node *pfmem = NULL;
+ 	struct resource_node *bus_pfmem[2] = {NULL, NULL};
+ 	struct bus_node *bus;
+-	u32 address[] = {
++	static const u32 address[] = {
+ 		PCI_BASE_ADDRESS_0,
+ 		PCI_BASE_ADDRESS_1,
+ 		0
+@@ -1053,7 +1053,7 @@ static struct res_needed *scan_behind_bridge(struct pci_func *func, u8 busno)
+ 	int howmany = 0;	/*this is to see if there are any devices behind the bridge */
+ 
+ 	u32 bar[6], class;
+-	u32 address[] = {
++	static const u32 address[] = {
+ 		PCI_BASE_ADDRESS_0,
+ 		PCI_BASE_ADDRESS_1,
+ 		PCI_BASE_ADDRESS_2,
+@@ -1182,7 +1182,7 @@ static struct res_needed *scan_behind_bridge(struct pci_func *func, u8 busno)
+ static int unconfigure_boot_device(u8 busno, u8 device, u8 function)
+ {
+ 	u32 start_address;
+-	u32 address[] = {
++	static const u32 address[] = {
+ 		PCI_BASE_ADDRESS_0,
+ 		PCI_BASE_ADDRESS_1,
+ 		PCI_BASE_ADDRESS_2,
+@@ -1310,7 +1310,7 @@ static int unconfigure_boot_bridge(u8 busno, u8 device, u8 function)
+ 	struct resource_node *mem = NULL;
+ 	struct resource_node *pfmem = NULL;
+ 	struct bus_node *bus;
+-	u32 address[] = {
++	static const u32 address[] = {
+ 		PCI_BASE_ADDRESS_0,
+ 		PCI_BASE_ADDRESS_1,
+ 		0
+-- 
+2.39.2
 
-> +
-> +      interrupts:
-> +        items:
-> +          - description: combined legacy interrupt
-
-Missing the "additionalProperties" qualifier and the "required"
-property.
-
--Serge(y)
-
-> +
->    msi-map: true
->  
->    num-lanes: true
-> @@ -148,6 +164,14 @@ examples:
->              reset-names = "pipe";
->              #address-cells = <3>;
->              #size-cells = <2>;
-> +
-> +            legacy-interrupt-controller {
-> +                interrupt-controller;
-> +                #address-cells = <0>;
-> +                #interrupt-cells = <1>;
-> +                interrupt-parent = <&gic>;
-> +                interrupts = <GIC_SPI 72 IRQ_TYPE_EDGE_RISING>;
-> +            };
->          };
->      };
->  ...
-> -- 
-> 2.39.2
-> 
