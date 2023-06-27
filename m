@@ -2,219 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73E5673FBF2
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 14:27:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8172B73FC3C
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 14:54:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230280AbjF0M1m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jun 2023 08:27:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41670 "EHLO
+        id S230328AbjF0Myy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jun 2023 08:54:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230138AbjF0M1k (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 08:27:40 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2FF81999;
-        Tue, 27 Jun 2023 05:27:38 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-4f86fbe5e4fso5913875e87.2;
-        Tue, 27 Jun 2023 05:27:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687868857; x=1690460857;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/mJ6hmMqZhxuz4ikK9p02Uw9j7Tjh09y+Fhxu+CmDd0=;
-        b=g7/qXappm38Acrg/PZ0xRgRoQ3mCx1qsch84FzZiz0+ESXVwyVvu0z2Enl0IUKaV7q
-         htbU0CT+SB72XpCXIx9lbP4XQQLlU17TNyj2kntCazzzgyq9M848oSBjxMchkT4pu7D6
-         jX16cc3QTMWWngPQZNfjmA6Ov0RcvBC4lTH/+eNY8EtGfO3vm7P8Ewj30/vqZT1jSbqe
-         SghKEgS4XuQ8s9D7h2UWGFi90tL/tO9lGbJkQA9/v/ASX7R0kQA2ESQLQwKsg9XiZqZZ
-         D9+heArI2amw08vNLl5A4iZvijcabNbhSpv5EluoNAZf+7hyXoJR7H0PYqj4ryjGNeS0
-         o9Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687868857; x=1690460857;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/mJ6hmMqZhxuz4ikK9p02Uw9j7Tjh09y+Fhxu+CmDd0=;
-        b=NFVI+/dAgQF4KfXkissMnm/EW8S7K0IeM7Eq26kBazKeuMnSyFSGqdgOR+6LBhWcAR
-         RF50pFQPuZioyAuFtW9I2RJWL+n8AyN2sy+Qo9AQZ7b/M/WOvSR/PSGnHpYQyJgnYu50
-         ulvceLbt9VBV2J2y0e5ERK+jH9MbUxyad3aYANL9lEILwrhhm3DjSBuiZ8ds1z2JmknO
-         wtLftNRHyAYdod+TEbjH3pS1HrznIzmcywUJdoav8PWGT4RrgVpN+6BxEvOA7pSkIYWY
-         Rk3VdQ3QJNaU6/vZLxOv2R+JKfWkgCWNY5C0YeMrmD9dBukDd7JAjSmoBCSgIOeyD98+
-         d8BQ==
-X-Gm-Message-State: AC+VfDzXiO2HEe2PeURwPjbTI+3P0KztemwHISqRg9lvvN8KaJA7NKme
-        s5xI2238Tj2JcIRKOOjUNzU=
-X-Google-Smtp-Source: ACHHUZ7uudNcbmp+pqAQlJxTbbL5JTe7kns0LAL50bO2FeUNhAtc/IXEvtiJbz5XUijjmrozJAEi1w==
-X-Received: by 2002:a19:4355:0:b0:4f8:5635:2cd8 with SMTP id m21-20020a194355000000b004f856352cd8mr16940533lfj.32.1687868856658;
-        Tue, 27 Jun 2023 05:27:36 -0700 (PDT)
-Received: from mobilestation ([109.194.233.142])
-        by smtp.gmail.com with ESMTPSA id y10-20020ac255aa000000b004f842478f9asm1492318lfg.88.2023.06.27.05.27.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jun 2023 05:27:35 -0700 (PDT)
-Date:   Tue, 27 Jun 2023 15:27:33 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@collabora.com
-Subject: Re: [PATCH v1 1/4] dt-bindings: PCI: dwc: rockchip: Fix
- interrupt-names issue
-Message-ID: <n5vgfnqicq3ndgqtcp3yjurbdn76vucj6zyjhlpjbdwoquv2la@5g5kv5gceyd7>
-References: <20230616170022.76107-1-sebastian.reichel@collabora.com>
- <20230616170022.76107-2-sebastian.reichel@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230616170022.76107-2-sebastian.reichel@collabora.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229841AbjF0Mys (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 08:54:48 -0400
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E5A92944;
+        Tue, 27 Jun 2023 05:54:44 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 431B65C01D0;
+        Tue, 27 Jun 2023 08:54:41 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Tue, 27 Jun 2023 08:54:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1687870481; x=1687956881; bh=Il
+        Bb3apajPhN/l8gLah0GaLHQYTfmUxtdLJ9RjV0BfI=; b=WkeCwVfZDHVMO+MpRb
+        KzlnGYLTGdhc1hJmjiKDRwOnBqY2z57Fr1SxMUgz4dZHSy1xQpRRl6qC2xd/7wFH
+        8tAqeoMAxB4pLt4DXMtRlHf4mhSBuvFc1IMYjq2qxlugPMOcAfrLM/Kfo77GF06n
+        DAfYNxEHCyvF4d6MEyBBzeyTWxr4Koc5ThhTwfuUR+lFPBC8AfIIHqh2XMlk6uid
+        5CgOD2s7t1mrb0n1+GpBKyBSRiTX2TXVTmFSbYbaXPbFmJVEwmrsxsKL+OSW62rj
+        kZ7/e/XUkQ8H76giweWQ5DoaVBoyanNntQj/mTH5WIjFnrKqyZjvHeeARDjeQm5e
+        lsGg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1687870481; x=1687956881; bh=IlBb3apajPhN/
+        l8gLah0GaLHQYTfmUxtdLJ9RjV0BfI=; b=f7sKexIVSPqInL2fcESgFKBXUNLbZ
+        fbD34+KA5c4+wcPw8jTCxQhd3oOgXYGQM9NbadInyZl4pOYmoIzMDPjbBeszcQPu
+        SxZeU3FhAEzQ/5rrt8YXLxgqFf2ftb6DdXqpNqrQpBUT/+a+s8eJ2gykl+fp2tM/
+        WMIdDriRJHdUe/jw0NqutnuGELpUs86lWRarkWgZQ/FFV2d+X8HOfj0fhSe+Vomr
+        hWsXsrkRF2tGouQpiOG691IgreX8jr6PUjwdd1TNeqO3lO/DwyLrHN5SXxujXJPN
+        2YhcEV0QSzN09zkyvcCC0pvnYxJkRenFSkU1ZtPK01QRJlJBEmmyT7qjA==
+X-ME-Sender: <xms:ENyaZKlStiUDI71v2z9eXPoBbJj_fXA2caEiaeEy4HkhkgGl9ZSLjQ>
+    <xme:ENyaZB0kp-ZdUWg9T17Ui9KVmvNL7hWsmyw-NMJRlePGPvq6Jq3aIVTOBlTolSeGr
+    xF2cBHVNQxkxlfWuS8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrtddtgdduhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:ENyaZIrGuMf4xHJ5grbl2j-xIZbft02DGFwUPv2zKTFPG7PZBEGAVQ>
+    <xmx:ENyaZOnwJwSma7IIF8Tht0fh9-D_9xWKeu3re7VUnCPgi41mKRFyKA>
+    <xmx:ENyaZI2tgggHmEUBUc0-IMGjg9S2uDm79jIRukj0auBxhRjii2n1VQ>
+    <xmx:EdyaZCM3E-tfO0_X23ZOyyNU-xH-9ocLC9K38h6hwDCGHss4_cYZMw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 7B94FB60086; Tue, 27 Jun 2023 08:54:40 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-499-gf27bbf33e2-fm-20230619.001-gf27bbf33
+Mime-Version: 1.0
+Message-Id: <de4fe7d1-a0ae-40eb-a9d4-434802083e70@app.fastmail.com>
+In-Reply-To: <43a1f34a6b1c5a14519f3967dff5eb42e82ee88d.camel@linux.ibm.com>
+References: <20230522105049.1467313-1-schnelle@linux.ibm.com>
+ <7b5c40f3-d25b-4082-807d-4d75dc38886d@app.fastmail.com>
+ <43a1f34a6b1c5a14519f3967dff5eb42e82ee88d.camel@linux.ibm.com>
+Date:   Tue, 27 Jun 2023 14:53:59 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Niklas Schnelle" <schnelle@linux.ibm.com>,
+        "Richard Cochran" <richardcochran@gmail.com>,
+        "Heiko Carstens" <hca@linux.ibm.com>
+Cc:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        "Alan Stern" <stern@rowland.harvard.edu>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "Geert Uytterhoeven" <geert@linux-m68k.org>,
+        "Paul Walmsley" <paul.walmsley@sifive.com>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        "Albert Ou" <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-pci@vger.kernel.org, Netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH v5 00/44] treewide: Remove I/O port accessors for HAS_IOPORT=n
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 16, 2023 at 07:00:19PM +0200, Sebastian Reichel wrote:
-> The RK356x (and RK3588) have 5 ganged interrupts. For example the
-> "legacy" interrupt combines "inta/intb/intc/intd" with a register
-> providing the details.
-> 
-> Currently the binding is not specifying these interrupts resulting
-> in a bunch of errors for all rk356x boards using PCIe.
-> 
-> Fix this by specifying the interrupts and add them to the example
-> to prevent regressions.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  .../bindings/pci/rockchip-dw-pcie.yaml         | 18 ++++++++++++++++++
->  .../devicetree/bindings/pci/snps,dw-pcie.yaml  | 15 ++++++++++++++-
->  2 files changed, 32 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> index 24c88942e59e..98e45d2d8dfe 100644
-> --- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> @@ -56,6 +56,17 @@ properties:
->        - const: pclk
->        - const: aux
->  
-> +  interrupts:
-> +    maxItems: 5
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: sys
-> +      - const: pmc
-> +      - const: msg
-> +      - const: legacy
-> +      - const: err
-> +
->    msi-map: true
->  
->    num-lanes: true
-> @@ -98,6 +109,7 @@ unevaluatedProperties: false
->  
->  examples:
->    - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->  
->      bus {
->          #address-cells = <2>;
-> @@ -117,6 +129,12 @@ examples:
->                            "aclk_dbi", "pclk",
->                            "aux";
->              device_type = "pci";
-> +            interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
-> +            interrupt-names = "sys", "pmc", "msg", "legacy", "err";
->              linux,pci-domain = <2>;
->              max-link-speed = <2>;
->              msi-map = <0x2000 &its 0x2000 0x1000>;
-> diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> index 1a83f0f65f19..9f605eb297f5 100644
-> --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> @@ -193,9 +193,22 @@ properties:
->            oneOf:
->              - description: See native "app" IRQ for details
->                enum: [ intr ]
+On Tue, Jun 27, 2023, at 11:12, Niklas Schnelle wrote:
+> On Mon, 2023-05-22 at 13:29 +0200, Arnd Bergmann wrote:
+>> 
+>> Maybe let's give it another week to have more maintainers pick
+>> up stuff from v5, and then send out a v6 as separate submissions.
+>> 
+>>     Arnd
+>
+> Hi Arnd and All,
+>
+> I'm sorry there hasn't been an updated in a long time and we're missing
+> v6.5. I've been quite busy with other work and life. Speaking of, I
+> will be mostly out for around a month starting some time mid to end
+> July as, if all goes well, I'm expecting to become a dad. That said, I
+> haven't forgotten about this and your overall plan of sending per-
+> subsystem patches sounds good, just haven't had the time to also
+> incorporate the feedback.
 
-The IRQs below are either combined version of the already defined IRQs
-or just the generic DW PCIe IRQs but named differently. Moreover I
-don't see kernel using any of them except the "legacy" interrupt. What
-about converting the dts files to using the already defined names instead
-of extending the already over-diverged DT-bindings?
-Rob, Krzysztof?
+Ok, thanks for letting us know. I just checked to see that about half
+of your series has already made it into linux-next and is likely to
+be part of v6.5 or already in v6.4.
 
-In anyway in order to prevent from defining the new DW PCIe bindings
-compatible with your vendor-specific names please move the aliases to
-being under the last entry of the "interrupt-names" items property.
-(See the "intr" IRQ name for example or the way the vendor-specific
-names are defined in the reg-names property.)
+Maybe you can start out by taking a pass at just resending the ones
+that don't need any changes and can just get picked up after -rc1,
+and then I'll try to have a look at whatever remains after that.
 
-> +        - description: Combined Legacy A/B/C/D interrupt signal.
-> +          const: legacy
-
-This is a combined signal of "^int(a|b|c|d)$". So the entry
-is supposed to look:
-+              - description: See native "int*" IRQ for details
-+                const: legacy
-
-> +        - description: Combined System interrupt signal.
-> +          const: sys
-
-This seems like the "app" interrupt. So please either convert the dts
-file to using the "app" name or move this to being defined in the same
-entry as the "intr" name.
-
-> +        - description: Combined Power Management interrupt signal.
-> +          const: pmc
-
-This is an alias to the already defined "pme" name. So either convert
-the dts file to using "pme" or move this to being in the
-vendor-specific list of the "interrupt-names" property:
-+              - description: See native "pme" IRQ for details
-+                const: pmc
-
-> +        - description: Combined Message Received interrupt signal.
-> +          const: msg
-
-ditto but with respect to the "msi" name.
-
-> +        - description: Combined Error interrupt signal.
-> +          const: err
-
-ditto but with respect to the "sft_*" name.
-
-> +
->      allOf:
->        - contains:
-> -          const: msi
-> +          enum:
-> +            - msi
-> +            - msg
-
-* Please see my suggestion about converting the DTS file instead.
-
--Serge(y)
-
->  
->  additionalProperties: true
->  
-> -- 
-> 2.39.2
-> 
+    Arnd
