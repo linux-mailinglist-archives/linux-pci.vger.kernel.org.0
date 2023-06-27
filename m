@@ -2,71 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 62AA973FD2A
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 15:48:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3707F73FD41
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 15:54:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231133AbjF0Nsx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jun 2023 09:48:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44962 "EHLO
+        id S230002AbjF0NyI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jun 2023 09:54:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231183AbjF0Nsv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 09:48:51 -0400
+        with ESMTP id S229670AbjF0NyI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 09:54:08 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9477A296B;
-        Tue, 27 Jun 2023 06:48:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A29E1FCD;
+        Tue, 27 Jun 2023 06:54:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 230DA611AB;
-        Tue, 27 Jun 2023 13:48:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BE2AC433CA;
-        Tue, 27 Jun 2023 13:48:46 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9A54C611A6;
+        Tue, 27 Jun 2023 13:54:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1A24C433C8;
+        Tue, 27 Jun 2023 13:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687873726;
-        bh=mObELhIa7cwUVV/oIDNa5An5fXRPEinl+dDJGvds3Nc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=L51bvRo3oGBkGU3bYcUoxBi7qn+NBS181faXZyiA+mjcHOLWAVCr3vgHqTrqbzGBQ
-         30OTwDS0JSOAiLcEqhE4pFGIsNHahwmRQmJPtUewXfu/gR9wKpeIfXiyPraZG7Z60J
-         zgf00meR3swepOPrA3FOV8I0GsUgmhpFuxJZBv2+BoNuiH4I61qnrDjmjrcKIA/JZB
-         ow66V3Jogu1L9blAYv3JNW41bMhfWTVYCVmk1s2hlP8DYAH6YPqsZVIb3yHd5RIvkv
-         WAvGB74OXpKMUifH2ZLpFkzPcrMrYLVBSK/iRwFRPkARZsPzEg1SpyjRevjogb2YKB
-         IiiYpcBwJkMag==
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2b698371937so46831491fa.3;
-        Tue, 27 Jun 2023 06:48:46 -0700 (PDT)
-X-Gm-Message-State: AC+VfDwgYLbMSOsduqnnP6w+mzQwyG08fmo7GhROgTZIqHk9VDUW14rO
-        T4JYQwHNRGRPZBvtSxLm2hdDsTH8O/pDWrtJ/Q==
-X-Google-Smtp-Source: ACHHUZ5mxTMdxMXPa9Ql9RKi9asFXmBgUnXk5or90ARb0BmcJyRwHgk8XT0HrKpFAmR/DxyxLhEgELhil1yyDDw4tUE=
-X-Received: by 2002:a2e:7a06:0:b0:2b6:97e6:93f5 with SMTP id
- v6-20020a2e7a06000000b002b697e693f5mr4452783ljc.11.1687873724458; Tue, 27 Jun
- 2023 06:48:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230616170022.76107-1-sebastian.reichel@collabora.com>
- <20230616170022.76107-2-sebastian.reichel@collabora.com> <n5vgfnqicq3ndgqtcp3yjurbdn76vucj6zyjhlpjbdwoquv2la@5g5kv5gceyd7>
-In-Reply-To: <n5vgfnqicq3ndgqtcp3yjurbdn76vucj6zyjhlpjbdwoquv2la@5g5kv5gceyd7>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 27 Jun 2023 07:48:29 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+=kBrujhLW_KNRWpj+DQJbnXrA=RS3La5ekbJtji+xiQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+=kBrujhLW_KNRWpj+DQJbnXrA=RS3La5ekbJtji+xiQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/4] dt-bindings: PCI: dwc: rockchip: Fix
- interrupt-names issue
-To:     Serge Semin <fancer.lancer@gmail.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        s=k20201202; t=1687874046;
+        bh=/HQnZQKURnGKmqEgu7P1WBowtPThMVBdYKbYAVomb5I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s2my69PqoyneG/zr+hhc4NIu7Kb/nEfBFq4QqrmGu56nU93cDaaMCa0XoTGi17mcb
+         zVGDlYHtEIurnvmIMZRulTSHeGFqH2JtZvTPqDTJKAYFubWJvy3eWjB37UW1pr49Bp
+         LnDGe6dEGOUUSCY+DdJozEmdGE2Yz0orTGsLaaZAOxJvBUBnRrjFDMT4jPsUea+Dpi
+         2Fe48prUuamswwqs+irJKXlfuYSyjdLj+dnxzI15sSWlcpVwFgQH3fuDiOzdR3y/RG
+         zNvbKosqhPAZIpGZxyFQPHITSp9a4Tu8L5qrVpir87BXlf81vQrp9T+N5DQ1ou11Lb
+         ZUM+YtmOnRgIA==
+Date:   Tue, 27 Jun 2023 19:23:51 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+Cc:     manivannan.sadhasivam@linaro.org, quic_vbadigan@quicinc.com,
+        quic_ramkri@quicinc.com, linux-arm-msm@vger.kernel.org,
+        konrad.dybcio@linaro.org,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCIE ENDPOINT DRIVER FOR QUALCOMM" 
+        <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC v1 3/3] PCI: qcom: ep: Add wake up host op to
+ dw_pcie_ep_ops
+Message-ID: <20230627135351.GE5490@thinkpad>
+References: <1686754850-29817-1-git-send-email-quic_krichai@quicinc.com>
+ <1686754850-29817-4-git-send-email-quic_krichai@quicinc.com>
+ <20230623061839.GC5611@thinkpad>
+ <1b41ba64-51e2-7c66-104d-bc60ac131a0f@quicinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1b41ba64-51e2-7c66-104d-bc60ac131a0f@quicinc.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -77,93 +67,115 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 27, 2023 at 6:27=E2=80=AFAM Serge Semin <fancer.lancer@gmail.co=
-m> wrote:
->
-> On Fri, Jun 16, 2023 at 07:00:19PM +0200, Sebastian Reichel wrote:
-> > The RK356x (and RK3588) have 5 ganged interrupts. For example the
-> > "legacy" interrupt combines "inta/intb/intc/intd" with a register
-> > providing the details.
-> >
-> > Currently the binding is not specifying these interrupts resulting
-> > in a bunch of errors for all rk356x boards using PCIe.
-> >
-> > Fix this by specifying the interrupts and add them to the example
-> > to prevent regressions.
-> >
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > ---
-> >  .../bindings/pci/rockchip-dw-pcie.yaml         | 18 ++++++++++++++++++
-> >  .../devicetree/bindings/pci/snps,dw-pcie.yaml  | 15 ++++++++++++++-
-> >  2 files changed, 32 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yam=
-l b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> > index 24c88942e59e..98e45d2d8dfe 100644
-> > --- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> > @@ -56,6 +56,17 @@ properties:
-> >        - const: pclk
-> >        - const: aux
-> >
-> > +  interrupts:
-> > +    maxItems: 5
-> > +
-> > +  interrupt-names:
-> > +    items:
-> > +      - const: sys
-> > +      - const: pmc
-> > +      - const: msg
-> > +      - const: legacy
-> > +      - const: err
-> > +
-> >    msi-map: true
-> >
-> >    num-lanes: true
-> > @@ -98,6 +109,7 @@ unevaluatedProperties: false
-> >
-> >  examples:
-> >    - |
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >
-> >      bus {
-> >          #address-cells =3D <2>;
-> > @@ -117,6 +129,12 @@ examples:
-> >                            "aclk_dbi", "pclk",
-> >                            "aux";
-> >              device_type =3D "pci";
-> > +            interrupts =3D <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-> > +                         <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>,
-> > +                         <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>,
-> > +                         <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
-> > +                         <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
-> > +            interrupt-names =3D "sys", "pmc", "msg", "legacy", "err";
-> >              linux,pci-domain =3D <2>;
-> >              max-link-speed =3D <2>;
-> >              msi-map =3D <0x2000 &its 0x2000 0x1000>;
-> > diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/=
-Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> > index 1a83f0f65f19..9f605eb297f5 100644
-> > --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-> > @@ -193,9 +193,22 @@ properties:
-> >            oneOf:
-> >              - description: See native "app" IRQ for details
-> >                enum: [ intr ]
->
-> The IRQs below are either combined version of the already defined IRQs
-> or just the generic DW PCIe IRQs but named differently. Moreover I
-> don't see kernel using any of them except the "legacy" interrupt. What
-> about converting the dts files to using the already defined names instead
-> of extending the already over-diverged DT-bindings?
-> Rob, Krzysztof?
+On Mon, Jun 26, 2023 at 07:18:49PM +0530, Krishna Chaitanya Chundru wrote:
+> 
+> On 6/23/2023 11:48 AM, Manivannan Sadhasivam wrote:
+> > On Wed, Jun 14, 2023 at 08:30:49PM +0530, Krishna chaitanya chundru wrote:
+> > > Add wakeup host op to dw_pcie_ep_ops to wake up host from D3cold
+> > > or D3hot.
+> > > 
+> > Commit message should describe how the wakeup is implemented in the driver.
+> I will correct this in next series.
+> > 
+> > > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> > > ---
+> > >   drivers/pci/controller/dwc/pcie-qcom-ep.c | 34 +++++++++++++++++++++++++++++++
+> > >   1 file changed, 34 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> > > index 5d146ec..916a138 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> > > @@ -91,6 +91,7 @@
+> > >   /* PARF_PM_CTRL register fields */
+> > >   #define PARF_PM_CTRL_REQ_EXIT_L1		BIT(1)
+> > >   #define PARF_PM_CTRL_READY_ENTR_L23		BIT(2)
+> > > +#define PARF_PM_CTRL_XMT_PME			BIT(4)
+> > >   #define PARF_PM_CTRL_REQ_NOT_ENTR_L1		BIT(5)
+> > >   /* PARF_MHI_CLOCK_RESET_CTRL fields */
+> > > @@ -794,10 +795,43 @@ static void qcom_pcie_ep_init(struct dw_pcie_ep *ep)
+> > >   		dw_pcie_ep_reset_bar(pci, bar);
+> > >   }
+> > > +static int qcom_pcie_ep_wakeup_host(struct dw_pcie_ep *ep, u8 func_no)
+> > > +{
+> > > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > > +	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
+> > > +	struct device *dev = pci->dev;
+> > > +	u32 perst, dstate, val;
+> > > +
+> > > +	perst = gpiod_get_value(pcie_ep->reset);
+> > > +	/* Toggle wake GPIO when device is in D3 cold */
+> > > +	if (perst) {
+> > > +		dev_info(dev, "Device is in D3 cold toggling wake\n");
+> > dev_dbg(). "Waking up the host by toggling WAKE#"
+> > 
+> > > +		gpiod_set_value_cansleep(pcie_ep->wake, 1);
+> > Waking a device from D3cold requires power-on sequence by the host and in the
+> > presence of Vaux, the EPF should be prepared for that. In that case, the mode of
+> > wakeup should be decided by the EPF driver. So the wakeup API should have an
+> > argument to decide whether the wakeup is through PME or sideband WAKE#.
+> > 
+> > Also note that as per PCIe Spec 3.0, the devices can support PME generation from
+> > D3cold provided that the Vaux is supplied to the device. I do not know if that
+> > is supported by Qcom devices but API should honor the spec. So the wakeup
+> > control should come from EPF driver as I suggested above.
+> 
+> I aggre with you, but how will EPF know the PCI device state is in D3cold or
+> D3hot.
+> 
 
-If there's not a dependency on the names, then we can get away with
-changing them. Otherwise, it's an ABI issue to change them. Supporting
-both names in the driver partially mitigates that, but isn't worth
-carrying that IMO.
+We should add a notifier in the controller driver which signals EPF when it
+receives the DState events.. Take a look at pci_epc_linkdown().
 
-Will drop this one from my tree. Seems patches 2 and 3 aren't
-dependent on this one.
+> And how the EPF knows whether Vaux is supported or not in D3cold?
+> 
+> If there is any existing mechanism can you please point me that.
+> 
+> FYI Qcom does not support vaux power in D3 cold.
+> 
 
-Rob
+If the EPF can trigger wakeup event during D3Cold then it means it is powered
+by Vaux, isn't it?
+
+- Mani
+
+> > > +		usleep_range(WAKE_DELAY_US, WAKE_DELAY_US + 500);
+> > > +		gpiod_set_value_cansleep(pcie_ep->wake, 0);
+> > > +		return 0;
+> > > +	}
+> > > +
+> > > +	dstate = dw_pcie_readl_dbi(pci, DBI_CON_STATUS) &
+> > > +				   DBI_CON_STATUS_POWER_STATE_MASK;
+> > > +	if (dstate == 3) {
+> > > +		dev_info(dev, "Device is in D3 hot sending inband PME\n");
+> > dev_dbg(). As I said, the device can sent PME from D3cold also. So the log could
+> > be "Waking up the host using PME".
+> > 
+> > > +		val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
+> > > +		val |= PARF_PM_CTRL_XMT_PME;
+> > > +		writel_relaxed(val, pcie_ep->parf + PARF_PM_CTRL);
+> > > +	} else {
+> > > +		dev_err(dev, "Device is not in D3 state wakeup is not supported\n");
+> > > +		return -EPERM;
+> > -ENOTSUPP
+> > 
+> > - Mani
+> > 
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > >   static const struct dw_pcie_ep_ops pci_ep_ops = {
+> > >   	.ep_init = qcom_pcie_ep_init,
+> > >   	.raise_irq = qcom_pcie_ep_raise_irq,
+> > >   	.get_features = qcom_pcie_epc_get_features,
+> > > +	.wakeup_host = qcom_pcie_ep_wakeup_host,
+> > >   };
+> > >   static int qcom_pcie_ep_probe(struct platform_device *pdev)
+> > > -- 
+> > > 2.7.4
+> > > 
+
+-- 
+மணிவண்ணன் சதாசிவம்
