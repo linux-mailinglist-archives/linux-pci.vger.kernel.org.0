@@ -2,82 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5542C73F68E
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 10:13:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A90873F77D
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 10:36:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231180AbjF0INM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jun 2023 04:13:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53820 "EHLO
+        id S231316AbjF0IgW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jun 2023 04:36:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230353AbjF0INL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 04:13:11 -0400
+        with ESMTP id S230473AbjF0IgH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 04:36:07 -0400
 Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F50510FD
-        for <linux-pci@vger.kernel.org>; Tue, 27 Jun 2023 01:13:10 -0700 (PDT)
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91874B8
+        for <linux-pci@vger.kernel.org>; Tue, 27 Jun 2023 01:35:41 -0700 (PDT)
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 6A26F3F13F
-        for <linux-pci@vger.kernel.org>; Tue, 27 Jun 2023 08:13:07 +0000 (UTC)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 14EF4423E6
+        for <linux-pci@vger.kernel.org>; Tue, 27 Jun 2023 08:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1687853587;
-        bh=gg3OEKCdXYQ44h8MuGgBj8DaSBevkCPyPNd3zprHKaY=;
+        s=20210705; t=1687854939;
+        bh=cRPd42UjLsQHHlZk9zoi1NoFgO3UAhUdUSvEc9A0iZk=;
         h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
          To:Cc:Content-Type;
-        b=l9VaXRFlSrjjfvIddCX0D+ROs32wEd2nMlQOpqXXFhArBSn8aIQgInZl2tJIQbx+g
-         c/VYK+CqPkiQm5bm/KuiVs2hKc+C2TjepLnAJiegKcDa5jBEmrFXj3g4HUCd6EstsO
-         lp361EIJgx57lWIu/mSPRzVljwSAHqgufkqsPNoY8YxQtfk7imkbsuPULwdQr1cv0K
-         MrnEE1vQv6arI6vBsGs4VMFH4iRNGjm294EEwZnITKbsaKIR/tvMOQg+y1khaq+Od2
-         +2x03hd1ZSE2aurJONpHYGevlgjF5tFV2CM7Q1wVoaLoZdpyqRyh27CnvJgeWLhSMW
-         1XGNAfvU0Sn2Q==
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-765986c0521so198261685a.3
-        for <linux-pci@vger.kernel.org>; Tue, 27 Jun 2023 01:13:07 -0700 (PDT)
+        b=dmJu8jPzzyyvTdUNWV9vjdq1TsWOcIVodf5VrX41eGFs04e7s1zMx7m3uUw6e4Kkd
+         9LYhzbVzCZdsMTvbAjAafOn1f4T9S/Ujj5R2XaPrhnc0eoNS2C3nPO6xGUyQ8/EJcq
+         JzcAffZALUEAmp1Zi/1StX5LMsrrmNDq1jGrap196+3YG0CfwRfkUh+JRqjvx3KeDq
+         dlXNEDwYOvuLdM1c3uO6aLEq+3nNu8DDX2zH5tftHNQRoA6mJHIGIf2lhpzlpC1mla
+         bP3+00z6D7+OCT0M1D0gWYTzc/pgDsFGOcCmzUyRwOXnQHG4Jlt2/iHbC9jWH9j/VY
+         zlCYW1RUyUjzw==
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-262e04a6fd1so1270577a91.3
+        for <linux-pci@vger.kernel.org>; Tue, 27 Jun 2023 01:35:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687853585; x=1690445585;
+        d=1e100.net; s=20221208; t=1687854937; x=1690446937;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gg3OEKCdXYQ44h8MuGgBj8DaSBevkCPyPNd3zprHKaY=;
-        b=FR0kNZ2P8EttzSzujUIzdruhYsLVySl8XgYDrJ/LU8TzzN1LlEFMFyvCLvNobRpm8B
-         8EbIuwogZJKcwb/AI30ewTcT+R17yR2I1aAnbtl9bSOOHSbQ0bs0D3lXafJkp9avWtHI
-         s4W7VnUnUAx++XV7lxBKmhjJJFqb+BjnXhdCTXPHgwLDK12q/qDm6Ngt2QNGEAeL/3qQ
-         I23r1xKKyhmYTnKKjY4xKYS3PyNzlolopVmdURorOjnXSF5A2qFmvrZtLZ6Oy8C8CUzL
-         NrQ84LFRZOFZm1XguQpG2X6jiw1NAxIP6Q5x+Du6atnD+ms5JH9tgTYfnrk6B+xxiZ9c
-         yp9g==
-X-Gm-Message-State: AC+VfDwj85Uir4iG1M4XKsnalKKQ8CQPDMZxRlYx5DL3n+7S+di3fI50
-        mC5N0dGo07gVURyshaLXpmEO0bKBtlws2skw8wfruRAtRuq5GSj2L748oj/uWOPceDzyuyWNt3s
-        ANh9VuBtjON2W5p+0BRnisTlV+1+7kmyj/ckjSTr+69qY41PCM+ieFw==
-X-Received: by 2002:a05:620a:b5d:b0:765:a99c:96f3 with SMTP id x29-20020a05620a0b5d00b00765a99c96f3mr3991327qkg.28.1687853585408;
-        Tue, 27 Jun 2023 01:13:05 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5fgqyY3eOukJw2FU7SKafinmfoAL+d8SvblNvlFQgx5Qor6fZJCGh2ay3cp5ysEdiBq4nqsWO1NHqtqMWrOIU=
-X-Received: by 2002:a05:620a:b5d:b0:765:a99c:96f3 with SMTP id
- x29-20020a05620a0b5d00b00765a99c96f3mr3991319qkg.28.1687853585132; Tue, 27
- Jun 2023 01:13:05 -0700 (PDT)
+        bh=cRPd42UjLsQHHlZk9zoi1NoFgO3UAhUdUSvEc9A0iZk=;
+        b=Wfj6UJ/H4n7TJ/z2fEHjQhPYy6C/KZjbRjjDOxn/xJKsl+TDz2WXTbti/4jgBvI4OU
+         1bOlP/K+KeGlEqOQCcJ86Sn0srJN9+Aj5VivYlC+6w1E4VI8r8doZZuZGjIzEUj/BJRZ
+         rE4fLFLSuJvCG+lUuzcy8HcGy9QEl6K0aVy1VoaRsRt1BKXMKtWH3V3delrk4Kw5suxf
+         EbZ1NseBuWnlsGrgKsWuZMdfw/SVwkRMAQcQjnEkqEkwXTKf0gDBOaB9rq3p1VxmeQho
+         ZZl9rcd1nEfDyLDNblph3xdbFh+WkIAdCTT0L0QHpR1pa5YmjfN4PmbkRQx69XE/wy/U
+         LCqw==
+X-Gm-Message-State: AC+VfDx+ybySSlWQxRQlmJRbibkypxLd5c/Kahpc6DUwiT1ZCF0JtJJK
+        Zq4ENK4NOBd1K2CT85ef3GMKTpypCzlMYpLb81dX8XwaH2cJlgo6g0ONQr0Yvb2v4DIGrG3dCY8
+        TH43u2Q2Xw3XwsEI4eruD6UdXQJquFvyU8y2s678SQnf/TPcIjrOWHA==
+X-Received: by 2002:a17:90b:38cf:b0:262:d4c8:cb3c with SMTP id nn15-20020a17090b38cf00b00262d4c8cb3cmr4511924pjb.49.1687854937513;
+        Tue, 27 Jun 2023 01:35:37 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7MioXDYJkmV3SVO/wCnwnRIelqTF7AbSlaDlO1rO00diyGula96bz59WjKHfHlP5jECR7f1hwhWVHtmzuxmwQ=
+X-Received: by 2002:a17:90b:38cf:b0:262:d4c8:cb3c with SMTP id
+ nn15-20020a17090b38cf00b00262d4c8cb3cmr4511912pjb.49.1687854937083; Tue, 27
+ Jun 2023 01:35:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <16bcc313-a4e1-ab50-4487-c99ccf5ecdf9@intel.com> <20230622131123.GA137990@bhelgaas>
-In-Reply-To: <20230622131123.GA137990@bhelgaas>
+References: <1b4b2c6c-8119-95fd-8958-dbbecc66510c@amd.com> <20230622230607.GA155247@bhelgaas>
+In-Reply-To: <20230622230607.GA155247@bhelgaas>
 From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Tue, 27 Jun 2023 16:12:53 +0800
-Message-ID: <CAAd53p7EXmqe2CMnrVGK_DUcQZVxCPwcFdVFkPPSUZaPDjwz0g@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] [PATCH] igc: Ignore AER reset when device is suspended
+Date:   Tue, 27 Jun 2023 16:35:25 +0800
+Message-ID: <CAAd53p4kH7E92++jabBhvsM_+M7Dpyk2JP+aoVdb_sxZn47eyQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI/ASPM: Enable ASPM on external PCIe devices
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Neftin, Sasha" <sasha.neftin@intel.com>,
-        "Ruinskiy, Dima" <dima.ruinskiy@intel.com>,
-        "Gomes, Vinicius" <vinicius.gomes@intel.com>,
-        "Zulkifli, Muhammad Husaini" <muhammad.husaini.zulkifli@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Kees Cook <keescook@chromium.org>, linux-pci@vger.kernel.org,
-        "Mushayev, Nikolay" <nikolay.mushayev@intel.com>,
-        linux-kernel@vger.kernel.org, jesse.brandeburg@intel.com,
-        "Edri, Michael" <michael.edri@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Eric Dumazet <edumazet@google.com>, anthony.l.nguyen@intel.com,
-        linux-hardening@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        Paolo Abeni <pabeni@redhat.com>,
-        "Avivi, Amir" <amir.avivi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
+Cc:     "Limonciello, Mario" <mario.limonciello@amd.com>,
+        bhelgaas@google.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Michael Bottini <michael.a.bottini@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -90,117 +83,80 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 22, 2023 at 9:11=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
+On Fri, Jun 23, 2023 at 7:06=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
 wrote:
 >
-> On Thu, Jun 22, 2023 at 08:09:34AM +0300, Neftin, Sasha wrote:
-> > On 6/21/2023 23:43, Bjorn Helgaas wrote:
-> > > On Tue, Jun 20, 2023 at 08:36:36PM +0800, Kai-Heng Feng wrote:
-> > > > When a system that connects to a Thunderbolt dock equipped with I22=
-5,
-> > > > I225 stops working after S3 resume:
->
-> > > > The issue is that the PTM requests are sending before driver resume=
-s the
-> > > > device. Since the issue can also be observed on Windows, it's quite
-> > > > likely a firmware/hardwar limitation.
+> On Tue, Jun 20, 2023 at 01:36:59PM -0500, Limonciello, Mario wrote:
+> > <snip>
+> > > > A variety of Intel chipsets don't support lane width switching
+> > > > or speed switching.  When ASPM has been enabled on a dGPU,
+> > > > these features are utilized and breakage ensues.
+> > > Maybe this helps explain all the completely unmaintainable ASPM
+> > > garbage in amdgpu and radeon.
 > > >
-> > > I thought c01163dbd1b8 ("PCI/PM: Always disable PTM for all devices
-> > > during suspend") would turn off PTM.  Is that not working for this
-> > > path, or are we re-enabling PTM incorrectly, or something else?
+> > > If these devices are broken, we need quirks for them.
 > >
-> > I think we hit on the HW bug here. On some i225/6 parts, PTM requests a=
-re
-> > sent before SW takes ownership of the device. This patch could help.
+> > The problem is which device do you consider "broken"?
+> > The dGPU that uses these features when the platform advertises ASPM
+> > or the chipset which doesn't support the features that the device
+> > uses when ASPM is active?
+> >
+> > With this problem I'm talking about the dGPU works fine on hosts
+> > that support these features.
 >
-> Is there an erratum we can read?  If this is needed to work around a
-> hardware defect, there should be a comment in the code to that effect,
-> and we should have a better understanding because there may be other
-> scenarios (suspend/resume, hotplug, etc) that need similar changes.
+> Without more details about what's broken and when, I can't say.  What
+> I *think* is that a device that doesn't work per spec needs a quirk.
+> Typically it's a device that advertises a capability that doesn't work
+> correctly.
 
-Actually, similar message can be seen on hotplugging the device. The
-AER message will be gone shortly after the driver done it's probing.
+Many silicon vendors use the same "PCI IP" and integrate it into their
+own chip. That's one of the reason why the capability doesn't really
+reflect what actually being support.
+The vendors then send their private datasheet to system integrator so
+BIOS can enable what's really supported.
 
->
-> (I know this patch is to work around a suspend/resume issue, but the
-> change is in the AER error recovery path, so it doesn't quite fit
-> together for me yet.)
-
-This is something I really want to discuss.
-This is not the first time that AER handling doesn't play well with
-system resume because the error handling and resume routine can happen
-at the same time. Some possible way going forward:
-1) Serialize error recovery and resume routine.
-  - If error recovery happens first and it's a successful recovery,
-does the resume callback still need to be called?
-  - If the device successfully resume, is the error recovery routine
-still needed?
- So I think the most plausible way is to call error recovery only if
-the resume fails. Ignore the AER if resume success.
-
-2) Disable the AER interrupt during suspend
- - Since the AER is still recorded and AER interrupt gets enabled by
-port driver before child device resuming, the error recovery/resume
-race can still happen.
- - So the port services resume routines can only be called after the
-entire PCIe hierarchy is resumed.
-
-3) Disable the AER service completely during suspend
- - This is what's in my mind. If the AER is caused by firmware and
-hardware (like most cases), the most feasible way is to workaround the
-issue in the driver.
-
-IMO ether 1) or 2) requires involvements that add little benefit. So
-hopefully we can opt to 3).
+So the logic is to ignore the capability and trust the default set by BIOS.
 
 >
-> Are you saying the NIC sends PTM requests when it doesn't have PTM
-> Enable set?
-
-I think I mentioned during previous discussion. The PTM gets enabled
-by the firmware/hardware on the TBT dock right on S3 resume.
-The issue is also logged on Windows' Event Viewer, but hardware vendor
-doesn't care at all since the device is still functional :)
-
+> > > > > > I think the pragmatic way to approach it is to (essentially)
+> > > > > > apply the policy as BIOS defaults and allow overrides from
+> > > > > > that.
+> > > > >
+> > > > > Do you mean that when enumerating a device (at boot-time or
+> > > > > hot-add time), we would read the current ASPM config but not
+> > > > > change it?  And users could use the sysfs knobs to
+> > > > > enable/disable ASPM as desired?
+> > > >
+> > > > Yes.
+> > > >
+> > > Hot-added devices power up with ASPM disabled.  This policy would
+> > > mean the user has to explicitly enable it, which doesn't seem
+> > > practical to me.
+> >
+> > Could we maybe have the hot added devices follow the policy of
+> > the bridge they're connected to by default?
+> >
+> > > > > That wouldn't solve the problem Kai-Heng is trying to solve.
+> > > >
+> > > > Alone it wouldn't; but if you treated the i225 PCIe device
+> > > > connected to the system as a "quirk" to apply ASPM policy
+> > > > from the parent device to this child device it could.
+> > >
+> > > I want quirks for BROKEN devices.  Quirks for working hardware is a
+> > > maintenance nightmare.
+> >
+> > If you follow my idea of hot added devices the policy follows
+> > the parent would it work for the i225 PCIe device case?
 >
-> What exactly does it mean for "SW to take ownership of the device"?
-> What PCIe transaction would tell the device the SW has taken
-> ownership?
+> That doesn't *sound* really robust to me because even if the default
+> config after hot-add works, the user can change things via sysfs, and
+> any configuration we set it to should work as well.  If there are
+> land-mines there, we need a quirk that prevents sysfs from running
+> into it.
 
-Please correct me if I am wrong, but Intel ethernet devices may need
-the driver to perform some actions so the ownership can be switched
-between software and firmware.
+For this case it means driver needs to provide a ASPM callback to flip
+PTM based on ASPM sysfs.
 
 Kai-Heng
 
->
-> So far this feels kind of hand-wavey.
->
-> > > Checking pci_is_enable() in the .error_detected() callback looks like
-> > > a pattern that may need to be replicated in many other drivers, which
-> > > makes me think it may not be the best approach.
-> > >
-> > > > So avoid resetting the device if it's not resumed. Once the device =
-is
-> > > > fully resumed, the device can work normally.
-> > > >
-> > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216850
-> > > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > > ---
-> > > >   drivers/net/ethernet/intel/igc/igc_main.c | 3 +++
-> > > >   1 file changed, 3 insertions(+)
-> > > >
-> > > > diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/ne=
-t/ethernet/intel/igc/igc_main.c
-> > > > index fa764190f270..6a46f886ff43 100644
-> > > > --- a/drivers/net/ethernet/intel/igc/igc_main.c
-> > > > +++ b/drivers/net/ethernet/intel/igc/igc_main.c
-> > > > @@ -6962,6 +6962,9 @@ static pci_ers_result_t igc_io_error_detected=
-(struct pci_dev *pdev,
-> > > >           struct net_device *netdev =3D pci_get_drvdata(pdev);
-> > > >           struct igc_adapter *adapter =3D netdev_priv(netdev);
-> > > > + if (!pci_is_enabled(pdev))
-> > > > +         return 0;
-> > > > +
-> > > >           netif_device_detach(netdev);
-> > > >           if (state =3D=3D pci_channel_io_perm_failure)
+> Bjorn
