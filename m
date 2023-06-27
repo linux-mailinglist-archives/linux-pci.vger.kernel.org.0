@@ -2,85 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BBAB73F01B
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 03:03:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FC1B73F031
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 03:13:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229780AbjF0BDg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Jun 2023 21:03:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59432 "EHLO
+        id S229861AbjF0BNo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Jun 2023 21:13:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229986AbjF0BDe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Jun 2023 21:03:34 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 036DC1737;
-        Mon, 26 Jun 2023 18:03:17 -0700 (PDT)
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35R0gCJM027773;
-        Tue, 27 Jun 2023 01:03:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=vgLXF3puKzupPauOeKZ/hVo1WXrx7ULPGmpt8KheOeo=;
- b=Hq0bVOpqCVV1Hzhjf8uOFS6rLqC6kVsPhGnsPrKBut4wFeZRRR6tyqBYs+mN6Yrtl3s1
- rkyDjSoQE3MAMlias/pbzZdK95C0Zh049LCN9PhxcqLEYatb7pje6/Nxc1PJwAOcdK84
- RFiiwgZSYsWphlzy4H+MPTiFhBl/uSKoxpi3Et5QTPm6MVHy7kkx3Y1Kco8qL50QNR2+
- 0dkt1k16tbh/mrM5INuO/6knRBYJvkGR2j3TcXc4H28jLhBWuPN8sO4Vwe06Jc2MYZWO
- lnkRHmqQ4fyKPSBMnA13Y8ZiwWAkpRt2lvr+tX84ZNJL5oJ4RC79YbvulOyNko3QaFaa tg== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rdssdnc2p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Jun 2023 01:03:11 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35R13Ael008146
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Jun 2023 01:03:10 GMT
-Received: from [10.216.43.155] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Mon, 26 Jun
- 2023 18:03:05 -0700
-Message-ID: <9495a254-a219-fdd8-2c6e-ac147075813e@quicinc.com>
-Date:   Tue, 27 Jun 2023 06:33:01 +0530
+        with ESMTP id S229888AbjF0BNn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Jun 2023 21:13:43 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FBB6173E
+        for <linux-pci@vger.kernel.org>; Mon, 26 Jun 2023 18:13:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687828422; x=1719364422;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=r7zS1ZVFx66AceR/I1jHbO7hkt59wEfsJRdFUsvglAE=;
+  b=kvJ3H5YMiULWEnXx0Pd6Pg25OTXgYkPfwfRFWQtELUOsAaL5Aq2Wi0Ip
+   D6/Sb808pn48UiT7rQBdwMTt+BFjrP2/Us0mQ0EBQTetlEs14W4PPmwnp
+   t9VCnhr3zSNVzeaH8L6Y2o9lR8G9YrMieUchPWvBI+ysKPqZcP9zRtYvo
+   oDlb0RaYOLkS6OeQ+X+ePsI7LmvPfxhoxFNNQ0gtZ8K7aFe/E8U0YpeMr
+   HFVBLaj/n93Eco/w5/qMbF3ZZNJNGT9YxjKGA9h2Sp2gohyFC5IXZGsxB
+   n+3RTCPLy2T0I3ft1PiCG+wP16CURG9dc04WqAV82TazwEuNND2ULLSQ4
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10753"; a="360301220"
+X-IronPort-AV: E=Sophos;i="6.01,161,1684825200"; 
+   d="scan'208";a="360301220"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2023 18:13:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10753"; a="890481467"
+X-IronPort-AV: E=Sophos;i="6.01,161,1684825200"; 
+   d="scan'208";a="890481467"
+Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 26 Jun 2023 18:13:36 -0700
+Received: from kbuild by 783282924a45 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qDxGx-000BEE-2j;
+        Tue, 27 Jun 2023 01:13:35 +0000
+Date:   Tue, 27 Jun 2023 09:13:00 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Krzysztof =?utf-8?Q?Wilczy=C5=84ski" ?= <kwilczynski@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:controller/vmd] BUILD SUCCESS
+ 0c0206dc4f5ba2d18b15e24d2047487d6f73916b
+Message-ID: <202306270959.X3dUAr3M-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v4 3/3] PCI: qcom-ep: Add ICC bandwidth voting support
-Content-Language: en-US
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC:     <quic_vbadigan@quicinc.com>, <quic_ramkri@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <konrad.dybcio@linaro.org>,
-        "Manivannan Sadhasivam" <mani@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCIE ENDPOINT DRIVER FOR QUALCOMM" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1686752666-13426-1-git-send-email-quic_krichai@quicinc.com>
- <1686752666-13426-4-git-send-email-quic_krichai@quicinc.com>
- <20230623053448.GA5611@thinkpad>
-From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20230623053448.GA5611@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 8QeUwreOdqK2CDEUgGaUqEvd4HdPQ2JX
-X-Proofpoint-ORIG-GUID: 8QeUwreOdqK2CDEUgGaUqEvd4HdPQ2JX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-26_20,2023-06-26_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- phishscore=0 suspectscore=0 clxscore=1015 malwarescore=0 bulkscore=0
- priorityscore=1501 lowpriorityscore=0 impostorscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306270007
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+Content-Type: text/plain; charset=us-ascii
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -88,180 +61,164 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/vmd
+branch HEAD: 0c0206dc4f5ba2d18b15e24d2047487d6f73916b  PCI: vmd: Fix uninitialized variable usage in vmd_enable_domain()
 
-On 6/23/2023 11:04 AM, Manivannan Sadhasivam wrote:
-> On Wed, Jun 14, 2023 at 07:54:26PM +0530, Krishna chaitanya chundru wrote:
->> Add support to vote for ICC bandwidth based on the link
->> speed and width.
->>
->> This patch is inspired from pcie-qcom driver to add basic
->> interconnect support.
->>
->> Reference: commit c4860af88d0c ("PCI: qcom: Add basic interconnect
->> support").
->> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-qcom-ep.c | 73 +++++++++++++++++++++++++++++++
->>   1 file changed, 73 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> index 19b3283..5d146ec 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> @@ -13,6 +13,7 @@
->>   #include <linux/debugfs.h>
->>   #include <linux/delay.h>
->>   #include <linux/gpio/consumer.h>
->> +#include <linux/interconnect.h>
->>   #include <linux/mfd/syscon.h>
->>   #include <linux/phy/pcie.h>
->>   #include <linux/phy/phy.h>
->> @@ -28,6 +29,7 @@
->>   #define PARF_SYS_CTRL				0x00
->>   #define PARF_DB_CTRL				0x10
->>   #define PARF_PM_CTRL				0x20
->> +#define PARF_PM_STTS				0x24
->>   #define PARF_MHI_CLOCK_RESET_CTRL		0x174
->>   #define PARF_MHI_BASE_ADDR_LOWER		0x178
->>   #define PARF_MHI_BASE_ADDR_UPPER		0x17c
->> @@ -128,11 +130,19 @@
->>   /* DBI register fields */
->>   #define DBI_CON_STATUS_POWER_STATE_MASK		GENMASK(1, 0)
->>   
->> +#define DBI_LINKCTRLSTATUS			0x80
->> +#define DBI_LINKCTRLSTATUS_SHIFT		16
->> +
->>   #define XMLH_LINK_UP				0x400
->>   #define CORE_RESET_TIME_US_MIN			1000
->>   #define CORE_RESET_TIME_US_MAX			1005
->>   #define WAKE_DELAY_US				2000 /* 2 ms */
->>   
->> +#define PCIE_GEN1_BW_MBPS			250
->> +#define PCIE_GEN2_BW_MBPS			500
->> +#define PCIE_GEN3_BW_MBPS			985
->> +#define PCIE_GEN4_BW_MBPS			1969
->> +
->>   #define to_pcie_ep(x)				dev_get_drvdata((x)->dev)
->>   
->>   enum qcom_pcie_ep_link_status {
->> @@ -178,6 +188,8 @@ struct qcom_pcie_ep {
->>   	struct phy *phy;
->>   	struct dentry *debugfs;
->>   
->> +	struct icc_path *icc_mem;
->> +
->>   	struct clk_bulk_data *clks;
->>   	int num_clks;
->>   
->> @@ -253,9 +265,51 @@ static void qcom_pcie_dw_stop_link(struct dw_pcie *pci)
->>   	disable_irq(pcie_ep->perst_irq);
->>   }
->>   
->> +static void qcom_pcie_ep_icc_update(struct qcom_pcie_ep *pcie_ep)
->> +{
->> +	struct dw_pcie *pci = &pcie_ep->pci;
->> +	u32 offset, status, bw;
->> +	int speed, width;
->> +	int ret;
->> +
->> +	if (!pcie_ep->icc_mem)
->> +		return;
->> +
->> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->> +	status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
->> +
->> +	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
->> +	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, status);
->> +
->> +	switch (speed) {
->> +	case 1:
->> +		bw = MBps_to_icc(PCIE_GEN1_BW_MBPS);
->> +		break;
->> +	case 2:
->> +		bw = MBps_to_icc(PCIE_GEN2_BW_MBPS);
->> +		break;
->> +	case 3:
->> +		bw = MBps_to_icc(PCIE_GEN3_BW_MBPS);
->> +		break;
->> +	default:
->> +		WARN_ON_ONCE(1);
-> We can drop WARN_ON_ONCE and print a warning saying that default GEN4 bandwidth
-> is being used.
-done
->
->> +		fallthrough;
->> +	case 4:
->> +		bw = MBps_to_icc(PCIE_GEN4_BW_MBPS);
->> +		break;
->> +	}
->> +
->> +	ret = icc_set_bw(pcie_ep->icc_mem, 0, width * bw);
->> +	if (ret) {
->> +		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
->> +			ret);
->> +	}
->> +}
->> +
->>   static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
->>   {
->>   	int ret;
->> +	struct dw_pcie *pci = &pcie_ep->pci;
->>   
->>   	ret = clk_bulk_prepare_enable(pcie_ep->num_clks, pcie_ep->clks);
->>   	if (ret)
->> @@ -277,6 +331,20 @@ static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
->>   	if (ret)
->>   		goto err_phy_exit;
->>   
->> +	/*
->> +	 * Some Qualcomm platforms require interconnect bandwidth constraints
->> +	 * to be set before enabling interconnect clocks.
->> +	 *
->> +	 * Set an initial average bandwidth corresponding to GEN1x1
-> Keep the comment same as the other driver.
-done
->> +	 * for the pcie to mem path.
->> +	 */
->> +	ret = icc_set_bw(pcie_ep->icc_mem, 0, MBps_to_icc(PCIE_GEN1_BW_MBPS));
->> +	if (ret) {
->> +		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
->> +			ret);
->> +		goto err_phy_exit;
-> PHY should be powered off in the case of error.
->
-> Rest looks good.
->
-> - Mani
+elapsed time: 3377m
 
-For platforms which need ICC it is must to vote for interconnect so 
-better to power off in case of error.
+configs tested: 144
+configs skipped: 8
 
--KC
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->> +	}
->> +
->>   	return 0;
->>   
->>   err_phy_exit:
->> @@ -550,6 +618,10 @@ static int qcom_pcie_ep_get_resources(struct platform_device *pdev,
->>   	if (IS_ERR(pcie_ep->phy))
->>   		ret = PTR_ERR(pcie_ep->phy);
->>   
->> +	pcie_ep->icc_mem = devm_of_icc_get(dev, "pcie-mem");
->> +	if (IS_ERR(pcie_ep->icc_mem))
->> +		ret = PTR_ERR(pcie_ep->icc_mem);
->> +
->>   	return ret;
->>   }
->>   
->> @@ -572,6 +644,7 @@ static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
->>   	} else if (FIELD_GET(PARF_INT_ALL_BME, status)) {
->>   		dev_dbg(dev, "Received BME event. Link is enabled!\n");
->>   		pcie_ep->link_status = QCOM_PCIE_EP_LINK_ENABLED;
->> +		qcom_pcie_ep_icc_update(pcie_ep);
->>   	} else if (FIELD_GET(PARF_INT_ALL_PM_TURNOFF, status)) {
->>   		dev_dbg(dev, "Received PM Turn-off event! Entering L23\n");
->>   		val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
->> -- 
->> 2.7.4
->>
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                     haps_hs_smp_defconfig   gcc  
+arc                        nsimosci_defconfig   gcc  
+arc                  randconfig-r004-20230625   gcc  
+arc                  randconfig-r016-20230625   gcc  
+arc                  randconfig-r043-20230625   gcc  
+arc                           tb10x_defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                          gemini_defconfig   gcc  
+arm                       imx_v4_v5_defconfig   clang
+arm                        keystone_defconfig   gcc  
+arm                       netwinder_defconfig   clang
+arm                          pxa910_defconfig   gcc  
+arm                  randconfig-r024-20230625   gcc  
+arm                  randconfig-r046-20230625   gcc  
+arm                         s5pv210_defconfig   clang
+arm                        shmobile_defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             alldefconfig   gcc  
+csky                                defconfig   gcc  
+hexagon              randconfig-r041-20230625   clang
+hexagon              randconfig-r045-20230625   clang
+i386                             alldefconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230625   gcc  
+i386         buildonly-randconfig-r005-20230625   gcc  
+i386         buildonly-randconfig-r006-20230625   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230625   gcc  
+i386                 randconfig-i002-20230625   gcc  
+i386                 randconfig-i003-20230625   gcc  
+i386                 randconfig-i004-20230625   gcc  
+i386                 randconfig-i005-20230625   gcc  
+i386                 randconfig-i006-20230625   gcc  
+i386                 randconfig-i011-20230625   clang
+i386                 randconfig-i012-20230625   clang
+i386                 randconfig-i013-20230625   clang
+i386                 randconfig-i014-20230625   clang
+i386                 randconfig-i015-20230625   clang
+i386                 randconfig-i016-20230625   clang
+i386                 randconfig-r003-20230625   gcc  
+i386                 randconfig-r011-20230625   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r014-20230625   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                          hp300_defconfig   gcc  
+m68k                       m5249evb_defconfig   gcc  
+m68k                        m5272c3_defconfig   gcc  
+m68k                        mvme147_defconfig   gcc  
+m68k                 randconfig-r013-20230625   gcc  
+microblaze           randconfig-r015-20230625   gcc  
+microblaze           randconfig-r033-20230625   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                        bcm47xx_defconfig   gcc  
+mips                           gcw0_defconfig   gcc  
+mips                     loongson1b_defconfig   gcc  
+mips                     loongson2k_defconfig   clang
+mips                          malta_defconfig   clang
+mips                      maltaaprp_defconfig   clang
+mips                 randconfig-r025-20230625   gcc  
+nios2                         10m50_defconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc             randconfig-r023-20230625   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                generic-64bit_defconfig   gcc  
+parisc64                         alldefconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                    adder875_defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                 canyonlands_defconfig   gcc  
+powerpc                       eiger_defconfig   gcc  
+powerpc                     mpc83xx_defconfig   gcc  
+powerpc                      pcm030_defconfig   gcc  
+powerpc                     ppa8548_defconfig   clang
+powerpc              randconfig-r005-20230625   gcc  
+powerpc                    sam440ep_defconfig   gcc  
+powerpc                     tqm5200_defconfig   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r006-20230625   gcc  
+riscv                randconfig-r021-20230625   clang
+riscv                randconfig-r042-20230625   clang
+riscv                          rv32_defconfig   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r001-20230625   gcc  
+s390                 randconfig-r026-20230625   clang
+s390                 randconfig-r036-20230625   gcc  
+s390                 randconfig-r044-20230625   clang
+s390                       zfcpdump_defconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                        dreamcast_defconfig   gcc  
+sh                         ecovec24_defconfig   gcc  
+sh                 kfr2r09-romimage_defconfig   gcc  
+sh                          kfr2r09_defconfig   gcc  
+sh                            migor_defconfig   gcc  
+sh                          polaris_defconfig   gcc  
+sh                          r7780mp_defconfig   gcc  
+sh                          r7785rp_defconfig   gcc  
+sh                   randconfig-r034-20230625   gcc  
+sh                          rsk7201_defconfig   gcc  
+sh                          rsk7264_defconfig   gcc  
+sh                           se7206_defconfig   gcc  
+sh                           se7619_defconfig   gcc  
+sh                             sh03_defconfig   gcc  
+sh                   sh7770_generic_defconfig   gcc  
+sh                            titan_defconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r002-20230625   gcc  
+sparc64              randconfig-r031-20230625   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230625   gcc  
+x86_64       buildonly-randconfig-r002-20230625   gcc  
+x86_64       buildonly-randconfig-r003-20230625   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                generic_kc705_defconfig   gcc  
+xtensa               randconfig-r035-20230625   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
