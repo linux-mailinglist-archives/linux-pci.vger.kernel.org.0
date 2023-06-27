@@ -2,121 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA27A73FE73
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 16:40:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5BF973FE84
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 16:41:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231807AbjF0OkP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jun 2023 10:40:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40802 "EHLO
+        id S231271AbjF0Olv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jun 2023 10:41:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231933AbjF0Oj7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 10:39:59 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA1443AAB
-        for <linux-pci@vger.kernel.org>; Tue, 27 Jun 2023 07:39:23 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6687446eaccso4206663b3a.3
-        for <linux-pci@vger.kernel.org>; Tue, 27 Jun 2023 07:39:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687876760; x=1690468760;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4nJWDV0jywhxf0OMEHmO3nQx+Dc6iDsFe4yCSR+nmZo=;
-        b=kdgHbqxy6l7gE3SPWR0nWqtUAV597wHSuY6o8Fl9p27nal0aM6gMTEz7xLENW+Jws1
-         hlOTruXn7Hs+MgPpcR/2juT+bELpD8YS1/5TYD/dLrGMaxIXqiAVmRvDrhs1xlHx2gCZ
-         3trw24snpKKKFkqDv3nqUZvIlDAwhJKH7s5PaNzGxfmYwx/YvwjUHMearGW6Al66I0Fs
-         DHUyBty4p/VQVOaVpsMCyxEQvcaYpZk8ySM3DKXyDfV2UKjXmUesPxAY9/anaWKYu264
-         VqJWhFlMhXMdu9SaoisStiOEt0WEI+99CfhgAKs+fl16xhhX3bbp+O8UPpT9B6jN0NC0
-         kd6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687876760; x=1690468760;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4nJWDV0jywhxf0OMEHmO3nQx+Dc6iDsFe4yCSR+nmZo=;
-        b=GeCxjyIWpHVnusSJW9/rQ0t96HoIanSjrGH6HUP/Uhc4q0EvKTpAmmFLRkj/E2rYBL
-         t9IxfPhPYEvqUlki81PUXI25YHueo42Q7XGqjU+MRwGxpFNr4Jy6DghYErEQJ8AJZ3vz
-         S7E62AWc2d1Eh0e9h0WiLAPL6bGXcscJH5bwje62Bi8UyCU1SntEwy/couOPIfm2QxEZ
-         NnmzZd4Y7fMibAHhxYmdZghCf5PgIAuiIaqG28NI5wSzj5l3vU0ag3/vstJQVPUBJLRA
-         N9B/Adr0x14c+bpnjzOwLBxr+dU/vtoX9WbiSpmD5awoxwixlpfDTzEM59sIkZs11ihA
-         GX6A==
-X-Gm-Message-State: AC+VfDy6qB3QLovpAFwEfYRaEGMzTDGna6m8BngqGpSGNorfxYNMTa7i
-        LLOwBQRAL/N5y6rFpoBuRIdX
-X-Google-Smtp-Source: ACHHUZ5q4MSqBMad/7CU3n0bTQr5IyeSnkozHYAD/trBnbhPd2KNQd92dY2h/ORvdIT1OeC1SxnDzw==
-X-Received: by 2002:a05:6a20:549a:b0:123:2c2a:ee62 with SMTP id i26-20020a056a20549a00b001232c2aee62mr22355330pzk.14.1687876760443;
-        Tue, 27 Jun 2023 07:39:20 -0700 (PDT)
-Received: from thinkpad ([117.217.176.90])
-        by smtp.gmail.com with ESMTPSA id o6-20020a63e346000000b00553b9e0510esm5820482pgj.60.2023.06.27.07.39.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jun 2023 07:39:20 -0700 (PDT)
-Date:   Tue, 27 Jun 2023 20:09:12 +0530
+        with ESMTP id S229488AbjF0Olu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 10:41:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F94D3583;
+        Tue, 27 Jun 2023 07:41:23 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8FF37611C5;
+        Tue, 27 Jun 2023 14:41:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A701C433C0;
+        Tue, 27 Jun 2023 14:41:15 +0000 (UTC)
+Date:   Tue, 27 Jun 2023 20:11:05 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
 Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
         quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
-        krzysztof.kozlowski@linaro.org, Andy Gross <agross@kernel.org>,
+        krzysztof.kozlowski@linaro.org,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v5 2/3] arm: dts: qcom: sdx65: Add interconnect path
-Message-ID: <20230627143912.GG5490@thinkpad>
+Subject: Re: [PATCH v5 1/3] dt-bindings: PCI: qcom: ep: Add interconnects path
+Message-ID: <20230627144105.GH5490@thinkpad>
 References: <1687827692-6181-1-git-send-email-quic_krichai@quicinc.com>
- <1687827692-6181-3-git-send-email-quic_krichai@quicinc.com>
+ <1687827692-6181-2-git-send-email-quic_krichai@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1687827692-6181-3-git-send-email-quic_krichai@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+In-Reply-To: <1687827692-6181-2-git-send-email-quic_krichai@quicinc.com>
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jun 27, 2023 at 06:31:30AM +0530, Krishna chaitanya chundru wrote:
-> Add pcie-mem interconnect path to sdx65 target.
+On Tue, Jun 27, 2023 at 06:31:29AM +0530, Krishna chaitanya chundru wrote:
+> Some platforms may not boot if a device driver doesn't
+> initialize the interconnect path. Mostly it is handled
+> by the bootloader but we have starting to see cases
+> where bootloader simply ignores them.
 > 
-
-"target" is meaningless in upstream. Call it "SoC or platform".
-
-Also the subject should mention PCIe interconnect.
-
+> Add the "pcie-mem" interconnect path as a required property
+> to the bindings.
+> 
 > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 
-With both changes above,
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
->  arch/arm/boot/dts/qcom/qcom-sdx65.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
+>  Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi b/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
-> index 1a35830..77fa97c 100644
-> --- a/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
-> +++ b/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
-> @@ -332,6 +332,9 @@
->  				     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
->  			interrupt-names = "global", "doorbell";
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> index 8111122..bc32e13 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> @@ -71,6 +71,13 @@ properties:
+>      description: GPIO used as WAKE# output signal
+>      maxItems: 1
 >  
-> +			interconnects = <&system_noc MASTER_PCIE_0 &mc_virt SLAVE_EBI1>;
-> +			interconnect-names = "pcie-mem";
+> +  interconnects:
+> +    maxItems: 1
 > +
->  			resets = <&gcc GCC_PCIE_BCR>;
->  			reset-names = "core";
+> +  interconnect-names:
+> +    items:
+> +      - const: pcie-mem
+> +
+>    resets:
+>      maxItems: 1
 >  
+> @@ -98,6 +105,8 @@ required:
+>    - interrupts
+>    - interrupt-names
+>    - reset-gpios
+> +  - interconnects
+> +  - interconnect-names
+>    - resets
+>    - reset-names
+>    - power-domains
+> @@ -167,7 +176,9 @@ examples:
+>    - |
+>      #include <dt-bindings/clock/qcom,gcc-sdx55.h>
+>      #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interconnect/qcom,sdx55.h>
+>      #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+>      pcie_ep: pcie-ep@1c00000 {
+>          compatible = "qcom,sdx55-pcie-ep";
+>          reg = <0x01c00000 0x3000>,
+> @@ -194,6 +205,8 @@ examples:
+>          interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>,
+>                       <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
+>          interrupt-names = "global", "doorbell";
+> +        interconnects = <&system_noc MASTER_PCIE &mc_virt SLAVE_EBI_CH0>;
+> +        interconnect-names = "pcie-mem";
+>          reset-gpios = <&tlmm 57 GPIO_ACTIVE_LOW>;
+>          wake-gpios = <&tlmm 53 GPIO_ACTIVE_LOW>;
+>          resets = <&gcc GCC_PCIE_BCR>;
 > -- 
 > 2.7.4
 > 
