@@ -2,149 +2,205 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 218C673F54F
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 09:19:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5542C73F68E
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 10:13:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230076AbjF0HTd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jun 2023 03:19:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54456 "EHLO
+        id S231180AbjF0INM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jun 2023 04:13:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230247AbjF0HTT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 03:19:19 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F761211E
-        for <linux-pci@vger.kernel.org>; Tue, 27 Jun 2023 00:19:14 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-313e1c27476so2439513f8f.1
-        for <linux-pci@vger.kernel.org>; Tue, 27 Jun 2023 00:19:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687850352; x=1690442352;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dE2WHxlRabkmNFV6UQgAAK/SiSiy26ezXn6XoDTEYXk=;
-        b=deALLBrN428hJg1qqaUWNAHRcQ17iND40MTSLcNgUi3Js3F4vL2Ug1Qurimx1w4oKG
-         MWTUtPhR+HpvvRD6M0GwPgEAWmjCFIzezNqD1m4m2Hai0+b5OzivKSMNugustXd4Sh0v
-         IWGbPyG+IcphHzZSXHcuGPgYEO/7zUBrhLRMLSDGYIGLtmTCyz4Tt8ExCKuIl4P31RC+
-         3FWlorPcSR+ZPWtThsjudA6h1kjmcM7z2Klc7cKaymiTz175NNJ8tGfHxA+utOlt+6gg
-         toGzD4l7095jdVUzttaTuCqj1dwhMcn116TKMCTRCHtQ/m/kFn+pEDQ05R1RZPTOIxKc
-         +wtw==
+        with ESMTP id S230353AbjF0INL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 04:13:11 -0400
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F50510FD
+        for <linux-pci@vger.kernel.org>; Tue, 27 Jun 2023 01:13:10 -0700 (PDT)
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 6A26F3F13F
+        for <linux-pci@vger.kernel.org>; Tue, 27 Jun 2023 08:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1687853587;
+        bh=gg3OEKCdXYQ44h8MuGgBj8DaSBevkCPyPNd3zprHKaY=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=l9VaXRFlSrjjfvIddCX0D+ROs32wEd2nMlQOpqXXFhArBSn8aIQgInZl2tJIQbx+g
+         c/VYK+CqPkiQm5bm/KuiVs2hKc+C2TjepLnAJiegKcDa5jBEmrFXj3g4HUCd6EstsO
+         lp361EIJgx57lWIu/mSPRzVljwSAHqgufkqsPNoY8YxQtfk7imkbsuPULwdQr1cv0K
+         MrnEE1vQv6arI6vBsGs4VMFH4iRNGjm294EEwZnITKbsaKIR/tvMOQg+y1khaq+Od2
+         +2x03hd1ZSE2aurJONpHYGevlgjF5tFV2CM7Q1wVoaLoZdpyqRyh27CnvJgeWLhSMW
+         1XGNAfvU0Sn2Q==
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-765986c0521so198261685a.3
+        for <linux-pci@vger.kernel.org>; Tue, 27 Jun 2023 01:13:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687850352; x=1690442352;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dE2WHxlRabkmNFV6UQgAAK/SiSiy26ezXn6XoDTEYXk=;
-        b=PvKIcze2APOC8PLLrrGOjAUm0UahrrI7yU8M3lCq6cHjv4jwfI2usFViC8Rdg1EHes
-         kAhA1acNCG4ddNzmgH29dquRhfGlw21C0i0SM7wmvUnvtFlp1Xzl9RWpKVWlxKNk8Jpc
-         QotcCui3TvuHN8hcT6HnlH1abyBTKEjucRwTmbCXPIyzG7CaefyLfXwFPG+i9z08xpdO
-         YhazV8mr5hDgAF6iHmPKXi2S3kYOkR+uBr/deVT5qnHbRMYY6c/7YNTjhxoB9bZgetC2
-         WN5FcISouTT++PpxT8aCD+AY/a+0V3dzMvQ8IxO33QnR4Uh1xGAcDODcruOBo9ns9lwT
-         9M1g==
-X-Gm-Message-State: AC+VfDxrYD4bL+99EtUAcucfHgmZj7Poq20/883rU4+SqE7/YXdS80CJ
-        bVgQ1gmxUmafWoo6E3Td2VmHTg==
-X-Google-Smtp-Source: ACHHUZ5Z8MEBV48V+8AfeXL908qVRSw1/sNUR/Q7UQ+UcVVQEwKyGP5n8V1/y1oSMwcEIFzjc/ku3g==
-X-Received: by 2002:a5d:6644:0:b0:313:eeb0:224c with SMTP id f4-20020a5d6644000000b00313eeb0224cmr6072227wrw.28.1687850352570;
-        Tue, 27 Jun 2023 00:19:12 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id q5-20020a05600000c500b0031401bd6387sm478954wrx.102.2023.06.27.00.19.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jun 2023 00:19:11 -0700 (PDT)
-Date:   Tue, 27 Jun 2023 10:19:07 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     rick.wertenbroek@gmail.com
-Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: [bug report] PCI: rockchip: Fix window mapping and address
- translation for endpoint
-Message-ID: <8d19e5b7-8fa0-44a4-90e2-9bb06f5eb694@moroto.mountain>
+        d=1e100.net; s=20221208; t=1687853585; x=1690445585;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gg3OEKCdXYQ44h8MuGgBj8DaSBevkCPyPNd3zprHKaY=;
+        b=FR0kNZ2P8EttzSzujUIzdruhYsLVySl8XgYDrJ/LU8TzzN1LlEFMFyvCLvNobRpm8B
+         8EbIuwogZJKcwb/AI30ewTcT+R17yR2I1aAnbtl9bSOOHSbQ0bs0D3lXafJkp9avWtHI
+         s4W7VnUnUAx++XV7lxBKmhjJJFqb+BjnXhdCTXPHgwLDK12q/qDm6Ngt2QNGEAeL/3qQ
+         I23r1xKKyhmYTnKKjY4xKYS3PyNzlolopVmdURorOjnXSF5A2qFmvrZtLZ6Oy8C8CUzL
+         NrQ84LFRZOFZm1XguQpG2X6jiw1NAxIP6Q5x+Du6atnD+ms5JH9tgTYfnrk6B+xxiZ9c
+         yp9g==
+X-Gm-Message-State: AC+VfDwj85Uir4iG1M4XKsnalKKQ8CQPDMZxRlYx5DL3n+7S+di3fI50
+        mC5N0dGo07gVURyshaLXpmEO0bKBtlws2skw8wfruRAtRuq5GSj2L748oj/uWOPceDzyuyWNt3s
+        ANh9VuBtjON2W5p+0BRnisTlV+1+7kmyj/ckjSTr+69qY41PCM+ieFw==
+X-Received: by 2002:a05:620a:b5d:b0:765:a99c:96f3 with SMTP id x29-20020a05620a0b5d00b00765a99c96f3mr3991327qkg.28.1687853585408;
+        Tue, 27 Jun 2023 01:13:05 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5fgqyY3eOukJw2FU7SKafinmfoAL+d8SvblNvlFQgx5Qor6fZJCGh2ay3cp5ysEdiBq4nqsWO1NHqtqMWrOIU=
+X-Received: by 2002:a05:620a:b5d:b0:765:a99c:96f3 with SMTP id
+ x29-20020a05620a0b5d00b00765a99c96f3mr3991319qkg.28.1687853585132; Tue, 27
+ Jun 2023 01:13:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+References: <16bcc313-a4e1-ab50-4487-c99ccf5ecdf9@intel.com> <20230622131123.GA137990@bhelgaas>
+In-Reply-To: <20230622131123.GA137990@bhelgaas>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Tue, 27 Jun 2023 16:12:53 +0800
+Message-ID: <CAAd53p7EXmqe2CMnrVGK_DUcQZVxCPwcFdVFkPPSUZaPDjwz0g@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] [PATCH] igc: Ignore AER reset when device is suspended
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Neftin, Sasha" <sasha.neftin@intel.com>,
+        "Ruinskiy, Dima" <dima.ruinskiy@intel.com>,
+        "Gomes, Vinicius" <vinicius.gomes@intel.com>,
+        "Zulkifli, Muhammad Husaini" <muhammad.husaini.zulkifli@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Kees Cook <keescook@chromium.org>, linux-pci@vger.kernel.org,
+        "Mushayev, Nikolay" <nikolay.mushayev@intel.com>,
+        linux-kernel@vger.kernel.org, jesse.brandeburg@intel.com,
+        "Edri, Michael" <michael.edri@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Eric Dumazet <edumazet@google.com>, anthony.l.nguyen@intel.com,
+        linux-hardening@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        Paolo Abeni <pabeni@redhat.com>,
+        "Avivi, Amir" <amir.avivi@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Rick Wertenbroek,
+On Thu, Jun 22, 2023 at 9:11=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>
+> On Thu, Jun 22, 2023 at 08:09:34AM +0300, Neftin, Sasha wrote:
+> > On 6/21/2023 23:43, Bjorn Helgaas wrote:
+> > > On Tue, Jun 20, 2023 at 08:36:36PM +0800, Kai-Heng Feng wrote:
+> > > > When a system that connects to a Thunderbolt dock equipped with I22=
+5,
+> > > > I225 stops working after S3 resume:
+>
+> > > > The issue is that the PTM requests are sending before driver resume=
+s the
+> > > > device. Since the issue can also be observed on Windows, it's quite
+> > > > likely a firmware/hardwar limitation.
+> > >
+> > > I thought c01163dbd1b8 ("PCI/PM: Always disable PTM for all devices
+> > > during suspend") would turn off PTM.  Is that not working for this
+> > > path, or are we re-enabling PTM incorrectly, or something else?
+> >
+> > I think we hit on the HW bug here. On some i225/6 parts, PTM requests a=
+re
+> > sent before SW takes ownership of the device. This patch could help.
+>
+> Is there an erratum we can read?  If this is needed to work around a
+> hardware defect, there should be a comment in the code to that effect,
+> and we should have a better understanding because there may be other
+> scenarios (suspend/resume, hotplug, etc) that need similar changes.
 
-The patch dc73ed0f1b8b: "PCI: rockchip: Fix window mapping and
-address translation for endpoint" from Apr 18, 2023, leads to the
-following Smatch static checker warning:
+Actually, similar message can be seen on hotplugging the device. The
+AER message will be gone shortly after the driver done it's probing.
 
-	drivers/pci/controller/pcie-rockchip-ep.c:405 rockchip_pcie_ep_send_msi_irq()
-	warn: was expecting a 64 bit value instead of '~4294967040'
+>
+> (I know this patch is to work around a suspend/resume issue, but the
+> change is in the AER error recovery path, so it doesn't quite fit
+> together for me yet.)
 
-drivers/pci/controller/pcie-rockchip-ep.c
-    351 static int rockchip_pcie_ep_send_msi_irq(struct rockchip_pcie_ep *ep, u8 fn,
-    352                                          u8 interrupt_num)
-    353 {
-    354         struct rockchip_pcie *rockchip = &ep->rockchip;
-    355         u32 flags, mme, data, data_mask;
-    356         u8 msi_count;
-    357         u64 pci_addr;
-                ^^^^^^^^^^^^^
+This is something I really want to discuss.
+This is not the first time that AER handling doesn't play well with
+system resume because the error handling and resume routine can happen
+at the same time. Some possible way going forward:
+1) Serialize error recovery and resume routine.
+  - If error recovery happens first and it's a successful recovery,
+does the resume callback still need to be called?
+  - If the device successfully resume, is the error recovery routine
+still needed?
+ So I think the most plausible way is to call error recovery only if
+the resume fails. Ignore the AER if resume success.
 
-    358         u32 r;
-    359 
-    360         /* Check MSI enable bit */
-    361         flags = rockchip_pcie_read(&ep->rockchip,
-    362                                    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-    363                                    ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
-    364         if (!(flags & ROCKCHIP_PCIE_EP_MSI_CTRL_ME))
-    365                 return -EINVAL;
-    366 
-    367         /* Get MSI numbers from MME */
-    368         mme = ((flags & ROCKCHIP_PCIE_EP_MSI_CTRL_MME_MASK) >>
-    369                         ROCKCHIP_PCIE_EP_MSI_CTRL_MME_OFFSET);
-    370         msi_count = 1 << mme;
-    371         if (!interrupt_num || interrupt_num > msi_count)
-    372                 return -EINVAL;
-    373 
-    374         /* Set MSI private data */
-    375         data_mask = msi_count - 1;
-    376         data = rockchip_pcie_read(rockchip,
-    377                                   ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-    378                                   ROCKCHIP_PCIE_EP_MSI_CTRL_REG +
-    379                                   PCI_MSI_DATA_64);
-    380         data = (data & ~data_mask) | ((interrupt_num - 1) & data_mask);
-    381 
-    382         /* Get MSI PCI address */
-    383         pci_addr = rockchip_pcie_read(rockchip,
-    384                                       ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-    385                                       ROCKCHIP_PCIE_EP_MSI_CTRL_REG +
-    386                                       PCI_MSI_ADDRESS_HI);
-    387         pci_addr <<= 32;
+2) Disable the AER interrupt during suspend
+ - Since the AER is still recorded and AER interrupt gets enabled by
+port driver before child device resuming, the error recovery/resume
+race can still happen.
+ - So the port services resume routines can only be called after the
+entire PCIe hierarchy is resumed.
 
-The high 32 bits are definitely set.
+3) Disable the AER service completely during suspend
+ - This is what's in my mind. If the AER is caused by firmware and
+hardware (like most cases), the most feasible way is to workaround the
+issue in the driver.
 
-    388         pci_addr |= rockchip_pcie_read(rockchip,
-    389                                        ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-    390                                        ROCKCHIP_PCIE_EP_MSI_CTRL_REG +
-    391                                        PCI_MSI_ADDRESS_LO);
-    392 
-    393         /* Set the outbound region if needed. */
-    394         if (unlikely(ep->irq_pci_addr != (pci_addr & PCIE_ADDR_MASK) ||
-    395                      ep->irq_pci_fn != fn)) {
-    396                 r = rockchip_ob_region(ep->irq_phys_addr);
-    397                 rockchip_pcie_prog_ep_ob_atu(rockchip, fn, r,
-    398                                              ep->irq_phys_addr,
-    399                                              pci_addr & PCIE_ADDR_MASK,
-    400                                              ~PCIE_ADDR_MASK + 1);
-    401                 ep->irq_pci_addr = (pci_addr & PCIE_ADDR_MASK);
-    402                 ep->irq_pci_fn = fn;
-    403         }
-    404 
---> 405         writew(data, ep->irq_cpu_addr + (pci_addr & ~PCIE_ADDR_MASK));
+IMO ether 1) or 2) requires involvements that add little benefit. So
+hopefully we can opt to 3).
 
-PCIE_ADDR_MASK is 0xffffff00 (which is unsigned int).  What Smatch is
-saying here is that pci_addr is a u64 it looks like the intention was to
-zero out the last byte, but instead we are zeroing the high 32 bits as
-well as the last 8 bits.
+>
+> Are you saying the NIC sends PTM requests when it doesn't have PTM
+> Enable set?
 
-    406         return 0;
-    407 }
+I think I mentioned during previous discussion. The PTM gets enabled
+by the firmware/hardware on the TBT dock right on S3 resume.
+The issue is also logged on Windows' Event Viewer, but hardware vendor
+doesn't care at all since the device is still functional :)
 
-regards,
-dan carpenter
+>
+> What exactly does it mean for "SW to take ownership of the device"?
+> What PCIe transaction would tell the device the SW has taken
+> ownership?
+
+Please correct me if I am wrong, but Intel ethernet devices may need
+the driver to perform some actions so the ownership can be switched
+between software and firmware.
+
+Kai-Heng
+
+>
+> So far this feels kind of hand-wavey.
+>
+> > > Checking pci_is_enable() in the .error_detected() callback looks like
+> > > a pattern that may need to be replicated in many other drivers, which
+> > > makes me think it may not be the best approach.
+> > >
+> > > > So avoid resetting the device if it's not resumed. Once the device =
+is
+> > > > fully resumed, the device can work normally.
+> > > >
+> > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216850
+> > > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > > > ---
+> > > >   drivers/net/ethernet/intel/igc/igc_main.c | 3 +++
+> > > >   1 file changed, 3 insertions(+)
+> > > >
+> > > > diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/ne=
+t/ethernet/intel/igc/igc_main.c
+> > > > index fa764190f270..6a46f886ff43 100644
+> > > > --- a/drivers/net/ethernet/intel/igc/igc_main.c
+> > > > +++ b/drivers/net/ethernet/intel/igc/igc_main.c
+> > > > @@ -6962,6 +6962,9 @@ static pci_ers_result_t igc_io_error_detected=
+(struct pci_dev *pdev,
+> > > >           struct net_device *netdev =3D pci_get_drvdata(pdev);
+> > > >           struct igc_adapter *adapter =3D netdev_priv(netdev);
+> > > > + if (!pci_is_enabled(pdev))
+> > > > +         return 0;
+> > > > +
+> > > >           netif_device_detach(netdev);
+> > > >           if (state =3D=3D pci_channel_io_perm_failure)
