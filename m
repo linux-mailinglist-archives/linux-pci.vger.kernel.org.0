@@ -2,244 +2,265 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FB6873F08A
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 03:30:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37F5373F476
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 08:25:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229939AbjF0B35 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Jun 2023 21:29:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40460 "EHLO
+        id S230161AbjF0GZT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jun 2023 02:25:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230245AbjF0B3u (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Jun 2023 21:29:50 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E4971993
-        for <linux-pci@vger.kernel.org>; Mon, 26 Jun 2023 18:29:49 -0700 (PDT)
+        with ESMTP id S230179AbjF0GYn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 02:24:43 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D22FE5A
+        for <linux-pci@vger.kernel.org>; Mon, 26 Jun 2023 23:24:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687829389; x=1719365389;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=iKdHolvnvEgxR9Bt29aiJMwyghD5MBN2NAg0+gzcXIc=;
-  b=Ouy93hD0C/tlIGKqXfyGCSz+2teLWv2fpTsRRYfWgQQlVwBv3d4Pvaqr
-   jzQf7K5jMZm1D8TSvIWdisygMxB45lGYijyx1GSLhrNQELT/CQIspwarM
-   w+50EJwJTj7g+yNyQ6dAFRuLM5Qxcxs5oXyR7N4/M3Rrr/T46R6BRtgMs
-   vzT1axAKD6PtG7o//IPGezlBNfihmFgXM4cPt/NHcuGQB4m24/9WvFbqI
-   0FeglZrsB41kGfH6G5mYIzXnGtmdmAFgiQ7Q9/Y5dqdzxy3P3GraewBhz
-   isG15rHdBjrxb1KtoujsYJD8I3mKjtVB07A0QNG9D922JGAKOTpHjTZ6W
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10753"; a="391881526"
+  t=1687847082; x=1719383082;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mtTfCR1/kEQGOMkkD9qlOmvJBnauLV2J56E4Cbj9v14=;
+  b=NDxMMq+LAIW5RWZEGH6wfme6U/44V1rqPSpptCpiMGWjRZyiOduu8HFR
+   +PmiadDGK8DNCfTBTd7O/BY2Nwb1SeJ+AsMG8eKUlweaSw+BPRDSCv2Vs
+   7Zbh83fwR6J0nsOuIGPoTKHXRCMQB3ZsPAv1Gx3McT4l2UZvbdMvEgFto
+   dbW4StYab0zkgjlNiVO+PZja+eIAlt/6sBLjrCVz+LSCOGJzswSZ/28NI
+   o9vC05KqFI7zy/XlEBa4wijsesv9XBiKjc14FaGwj00quCo3dBWemUx9l
+   0dG8pclxkqVFqKqvPCuEZzYbad5EfGf5qhWdDQD6OGKQrRYKKqvfLDhZb
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10753"; a="361530290"
 X-IronPort-AV: E=Sophos;i="6.01,161,1684825200"; 
-   d="scan'208";a="391881526"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2023 18:29:47 -0700
+   d="scan'208";a="361530290"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2023 23:24:41 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10753"; a="719594062"
+X-IronPort-AV: E=McAfee;i="6600,9927,10753"; a="829532973"
 X-IronPort-AV: E=Sophos;i="6.01,161,1684825200"; 
-   d="scan'208";a="719594062"
-Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 26 Jun 2023 18:29:46 -0700
-Received: from kbuild by 783282924a45 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qDxWc-000BY3-0U;
-        Tue, 27 Jun 2023 01:29:46 +0000
-Date:   Tue, 27 Jun 2023 09:28:48 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Krzysztof =?utf-8?Q?Wilczy=C5=84ski" ?= <kwilczynski@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:controller/apple] BUILD SUCCESS
- 328a16477027b48bffa3bbee895328c4db798eb9
-Message-ID: <202306270946.IcWwODJq-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="scan'208";a="829532973"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 26 Jun 2023 23:24:31 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id B7916370; Tue, 27 Jun 2023 09:24:42 +0300 (EEST)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Michael Bottini <michael.a.bottini@linux.intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Tasev Nikola <tasev.stefanoska@skynet.be>,
+        Mark Enriquez <enriquezmark36@gmail.com>,
+        Thomas Witt <kernel@witt.link>,
+        Koba Ko <koba.ko@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH] PCI/ASPM: Add back L1 PM Substate save and restore
+Date:   Tue, 27 Jun 2023 09:24:42 +0300
+Message-Id: <20230627062442.54008-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/apple
-branch HEAD: 328a16477027b48bffa3bbee895328c4db798eb9  PCI: apple: Initialize pcie->nvecs before use
+Commit a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability
+for suspend/resume"") reverted saving and restoring of ASPM L1 Substates
+due to a regression that caused resume from suspend to fail on certain
+systems. However, we never added this capability back and this is now
+causing systems fail to enter low power CPU states, drawing more power
+from the battery.
 
-elapsed time: 3317m
+The original revert mentioned that we restore L1 PM substate configuration
+even though ASPM L1 may already be enabled. This is due the fact that
+the pci_restore_aspm_l1ss_state() was called before
+pci_restore_pcie_state().
 
-configs tested: 165
-configs skipped: 6
+Try to enable this functionality again by:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+ 1) Moving the restore happen after PCIe capability is restored
+    following PCIe r6.0, sec 5.5.4.
+ 2) Following the PCIe spec more closely to restore L1 PM substate
+    configuration (program enable bits last).
+ 3) Adding denylist that skips the restoring on the ASUS system where
+    the original regression happened, just in case.
 
-tested configs:
-alpha                            alldefconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r013-20230625   gcc  
-alpha                randconfig-r016-20230625   gcc  
-arc                              allyesconfig   gcc  
-arc                          axs103_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                     haps_hs_smp_defconfig   gcc  
-arc                        nsimosci_defconfig   gcc  
-arc                  randconfig-r015-20230625   gcc  
-arc                  randconfig-r021-20230625   gcc  
-arc                  randconfig-r026-20230625   gcc  
-arc                  randconfig-r043-20230625   gcc  
-arc                           tb10x_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                       aspeed_g5_defconfig   gcc  
-arm                        clps711x_defconfig   gcc  
-arm                                 defconfig   gcc  
-arm                          gemini_defconfig   gcc  
-arm                       imx_v4_v5_defconfig   clang
-arm                        keystone_defconfig   gcc  
-arm                       netwinder_defconfig   clang
-arm                          pxa910_defconfig   gcc  
-arm                  randconfig-r031-20230625   clang
-arm                  randconfig-r046-20230625   gcc  
-arm                         s5pv210_defconfig   clang
-arm                        shmobile_defconfig   gcc  
-arm                        spear6xx_defconfig   gcc  
-arm                           spitz_defconfig   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r024-20230625   clang
-csky                             alldefconfig   gcc  
-csky                                defconfig   gcc  
-hexagon              randconfig-r041-20230625   clang
-hexagon              randconfig-r045-20230625   clang
-i386                             alldefconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230625   gcc  
-i386         buildonly-randconfig-r005-20230625   gcc  
-i386         buildonly-randconfig-r006-20230625   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230625   gcc  
-i386                 randconfig-i002-20230625   gcc  
-i386                 randconfig-i003-20230625   gcc  
-i386                 randconfig-i004-20230625   gcc  
-i386                 randconfig-i005-20230625   gcc  
-i386                 randconfig-i006-20230625   gcc  
-i386                 randconfig-i011-20230625   clang
-i386                 randconfig-i012-20230625   clang
-i386                 randconfig-i013-20230625   clang
-i386                 randconfig-i014-20230625   clang
-i386                 randconfig-i015-20230625   clang
-i386                 randconfig-i016-20230625   clang
-i386                 randconfig-r002-20230625   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r004-20230625   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                          hp300_defconfig   gcc  
-m68k                       m5249evb_defconfig   gcc  
-m68k                        m5272c3_defconfig   gcc  
-m68k                          multi_defconfig   gcc  
-m68k                        mvme147_defconfig   gcc  
-m68k                        stmark2_defconfig   gcc  
-m68k                           sun3_defconfig   gcc  
-microblaze                          defconfig   gcc  
-microblaze           randconfig-r001-20230625   gcc  
-microblaze           randconfig-r036-20230625   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                        bcm47xx_defconfig   gcc  
-mips                           gcw0_defconfig   gcc  
-mips                     loongson1b_defconfig   gcc  
-mips                     loongson2k_defconfig   clang
-mips                      maltaaprp_defconfig   clang
-nios2                         10m50_defconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r006-20230625   gcc  
-openrisc             randconfig-r025-20230625   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                generic-64bit_defconfig   gcc  
-parisc               randconfig-r003-20230625   gcc  
-parisc64                         alldefconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                    adder875_defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                 canyonlands_defconfig   gcc  
-powerpc                       eiger_defconfig   gcc  
-powerpc                      ep88xc_defconfig   gcc  
-powerpc                     mpc83xx_defconfig   gcc  
-powerpc                 mpc85xx_cds_defconfig   gcc  
-powerpc                      pcm030_defconfig   gcc  
-powerpc                       ppc64_defconfig   gcc  
-powerpc              randconfig-r005-20230625   gcc  
-powerpc              randconfig-r034-20230625   gcc  
-powerpc              randconfig-r035-20230625   gcc  
-powerpc                    sam440ep_defconfig   gcc  
-powerpc                         wii_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r033-20230625   gcc  
-riscv                randconfig-r042-20230625   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r044-20230625   clang
-sh                               allmodconfig   gcc  
-sh                                  defconfig   gcc  
-sh                        dreamcast_defconfig   gcc  
-sh                         ecovec24_defconfig   gcc  
-sh                 kfr2r09-romimage_defconfig   gcc  
-sh                          kfr2r09_defconfig   gcc  
-sh                            migor_defconfig   gcc  
-sh                          polaris_defconfig   gcc  
-sh                          r7780mp_defconfig   gcc  
-sh                          r7785rp_defconfig   gcc  
-sh                   randconfig-r011-20230625   gcc  
-sh                   randconfig-r014-20230625   gcc  
-sh                          rsk7201_defconfig   gcc  
-sh                          rsk7264_defconfig   gcc  
-sh                           se7206_defconfig   gcc  
-sh                           se7619_defconfig   gcc  
-sh                             sh03_defconfig   gcc  
-sh                   sh7770_generic_defconfig   gcc  
-sh                            titan_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r023-20230625   gcc  
-sparc                       sparc64_defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r032-20230625   clang
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230625   gcc  
-x86_64       buildonly-randconfig-r002-20230625   gcc  
-x86_64       buildonly-randconfig-r003-20230625   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                           rhel-8.3-bpf   gcc  
-x86_64                          rhel-8.3-func   gcc  
-x86_64                    rhel-8.3-kselftests   gcc  
-x86_64                         rhel-8.3-kunit   gcc  
-x86_64                           rhel-8.3-kvm   gcc  
-x86_64                           rhel-8.3-ltp   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                generic_kc705_defconfig   gcc  
-xtensa               randconfig-r022-20230625   gcc  
-xtensa                         virt_defconfig   gcc  
+Reported-by: Koba Ko <koba.ko@canonical.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217321
+Cc: Tasev Nikola <tasev.stefanoska@skynet.be>
+Cc: Mark Enriquez <enriquezmark36@gmail.com>
+Cc: Thomas Witt <kernel@witt.link>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+Hi,
 
+There are several systems out there that are not entering lower package
+C-states after the first suspend/resume cycle because we do not restore
+L1SS configuration as can be seen in the linked bugzilla entry. Although
+they are functioning fine they still empty the battery faster than the
+user may expect.
+
+Apologies sending this out during merge window but I will be starting my
+vacation next week so wanted to get this out before, and possibly
+incorporate any changes during the week still.
+
+ drivers/pci/pci.c       |  7 ++++
+ drivers/pci/pci.h       |  4 +++
+ drivers/pci/pcie/aspm.c | 76 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 87 insertions(+)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 578bf0d3ec3c..bf30561aa32c 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1679,6 +1679,7 @@ int pci_save_state(struct pci_dev *dev)
+ 	pci_save_dpc_state(dev);
+ 	pci_save_aer_state(dev);
+ 	pci_save_ptm_state(dev);
++	pci_save_aspm_l1ss_state(dev);
+ 	return pci_save_vc_state(dev);
+ }
+ EXPORT_SYMBOL(pci_save_state);
+@@ -1790,6 +1791,7 @@ void pci_restore_state(struct pci_dev *dev)
+ 	pci_restore_vc_state(dev);
+ 	pci_restore_rebar_state(dev);
+ 	pci_restore_dpc_state(dev);
++	pci_restore_aspm_l1ss_state(dev);
+ 	pci_restore_ptm_state(dev);
+ 
+ 	pci_aer_clear_status(dev);
+@@ -3474,6 +3476,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
+ 	if (error)
+ 		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
+ 
++	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_L1SS,
++					    2 * sizeof(u32));
++	if (error)
++		pci_err(dev, "unable to allocate suspend buffer for ASPM-L1SS\n");
++
+ 	pci_allocate_vc_save_buffers(dev);
+ }
+ 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index d09e8f39e429..f34b55701d63 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -560,10 +560,14 @@ bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
+ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+ void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+ void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
++void pci_save_aspm_l1ss_state(struct pci_dev *pdev);
++void pci_restore_aspm_l1ss_state(struct pci_dev *pdev);
+ #else
+ static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
++static inline void pci_save_aspm_l1ss_state(struct pci_dev *pdev) { }
++static inline void pci_restore_aspm_l1ss_state(struct pci_dev *pdev) { }
+ #endif
+ 
+ #ifdef CONFIG_PCIE_ECRC
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 66d7514ca111..52e1a69f818a 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -7,6 +7,7 @@
+  * Copyright (C) Shaohua Li (shaohua.li@intel.com)
+  */
+ 
++#include <linux/dmi.h>
+ #include <linux/kernel.h>
+ #include <linux/math.h>
+ #include <linux/module.h>
+@@ -751,6 +752,81 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ 				PCI_L1SS_CTL1_L1SS_MASK, val);
+ }
+ 
++void pci_save_aspm_l1ss_state(struct pci_dev *pdev)
++{
++	struct pci_cap_saved_state *save_state;
++	u16 l1ss = pdev->l1ss;
++	u32 *cap;
++
++	if (!l1ss)
++		return;
++
++	save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_L1SS);
++	if (!save_state)
++		return;
++
++	cap = (u32 *)&save_state->cap.data[0];
++	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL2, cap++);
++	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, cap++);
++}
++
++/*
++ * Do not restore L1 substates for the below systems even if BIOS has
++ * enabled it initially. This breaks resume from suspend otherwise on
++ * these.
++ */
++static const struct dmi_system_id aspm_l1ss_denylist[] = {
++	{
++		/* https://bugzilla.kernel.org/show_bug.cgi?id=216782 */
++		.ident = "ASUS UX305FA",
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_BOARD_NAME, "UX305FA"),
++		},
++	},
++	{ }
++};
++
++void pci_restore_aspm_l1ss_state(struct pci_dev *pdev)
++{
++	struct pci_cap_saved_state *save_state;
++	u32 *cap, ctl1, ctl2, l1_2_enable;
++	u16 l1ss = pdev->l1ss;
++
++	if (!l1ss)
++		return;
++
++	if (dmi_check_system(aspm_l1ss_denylist)) {
++		pci_dbg(pdev, "skipping restoring L1 substates on this system\n");
++		return;
++	}
++
++	save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_L1SS);
++	if (!save_state)
++		return;
++
++	cap = (u32 *)&save_state->cap.data[0];
++	ctl2 = *cap++;
++	ctl1 = *cap;
++
++	/*
++	 * In addition, Common_Mode_Restore_Time and LTR_L1.2_THRESHOLD
++	 * in PCI_L1SS_CTL1 must be programmed *before* setting the L1.2
++	 * enable bits, even though they're all in PCI_L1SS_CTL1.
++	 */
++	l1_2_enable = ctl1 & PCI_L1SS_CTL1_L1_2_MASK;
++	ctl1 &= ~PCI_L1SS_CTL1_L1_2_MASK;
++
++	/* Write back without enables first (above we cleared them in ctl1) */
++	pci_write_config_dword(pdev, l1ss + PCI_L1SS_CTL1, ctl1);
++	pci_write_config_dword(pdev, l1ss + PCI_L1SS_CTL2, ctl2);
++
++	/* Then write back the enables */
++	if (l1_2_enable)
++		pci_write_config_dword(pdev, l1ss + PCI_L1SS_CTL1,
++				       ctl1 | l1_2_enable);
++}
++
+ static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+ {
+ 	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.40.1
+
