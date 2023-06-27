@@ -2,46 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 94BED73F9A7
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 12:07:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C12EF73F9AB
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Jun 2023 12:08:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232049AbjF0KHN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Jun 2023 06:07:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34928 "EHLO
+        id S232072AbjF0KID (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Jun 2023 06:08:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231511AbjF0KGn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 06:06:43 -0400
-X-Greylist: delayed 589 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 27 Jun 2023 03:03:25 PDT
-Received: from witt.link (witt.link [185.233.105.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F2182944
-        for <linux-pci@vger.kernel.org>; Tue, 27 Jun 2023 03:03:25 -0700 (PDT)
-Received: from [10.0.0.117] (p5489d081.dip0.t-ipconnect.de [84.137.208.129])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
-        (No client certificate requested)
-        by witt.link (Postfix) with ESMTPSA id E52962A0BB4;
-        Tue, 27 Jun 2023 11:53:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=witt.link; s=dkim;
-        t=1687859614;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=E1pZpKLKrbliglo0GMHWH4qRGTgEHDvPNl44p/Bwgn4=;
-        b=hWA4jjx6+ECPbHvAc371c5r4o9Q9znO0DbO30uGqyFL4L0kxs26syW+HN4M3YrhhlMq3Il
-        ioURBSZnt/kPeIZaZ0Xzw1ulBtv6QINKiKEveMNtEaauJHkrjXwn1gUof+BUJrcn48s+gF
-        DHQEaLvPFYU+tUpUVQzm+E1eXM2r6h0MHrwCanRCLqcOCA6ZEhFLf3UrYcG1D0jKoNfkB2
-        E1W8+igD4HwbApK3Y+Izmx8+oXmQcWRNwRN3fTJKRs4sRi+uO8CwjFzCT4ytlnuiOIACFI
-        qup9fRgocEFkCsEmnHpuYbdZk0Cq++lpltRBGuJXK71qV34MHz0YX4aWXdOj1g==
-Message-ID: <61224a0b-ddf7-8348-332c-ec20e7d970e4@witt.link>
-Date:   Tue, 27 Jun 2023 11:53:33 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] PCI/ASPM: Add back L1 PM Substate save and restore
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Kuppuswamy Sathyanarayanan 
+        with ESMTP id S232083AbjF0KH1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Jun 2023 06:07:27 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64B5D35B0
+        for <linux-pci@vger.kernel.org>; Tue, 27 Jun 2023 03:04:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687860282; x=1719396282;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1olh7lStFKPiQDbWhFJk3UpB7iLAY244Y77qEyrD9KU=;
+  b=BRfDTDjavwixJc/Vqf1mCdy/SAkyCwGg9eQGueBgrk1EhxGR+27AjHu5
+   ufrEoBqLN8JNav37PAx6AXFIEhH0K3Jzxl0o1PHCdFfbipbAz/B9gtTj0
+   LrhJHVAqFIOQ8sBZYJthQW1wSqkxKZrP1edn83JhS6jlSKl6bbeBv6FUp
+   KQ7vfDyYOLzDuh3AopiVqjfWxUslCI9C86mAg91Y4By+khDFcTFAcZDY7
+   PO5CEAX3X3D/n1EV8/m+woV6g/jIU4h+bRaPuVBmPy3Cwb2gQAkUk0Lww
+   0ownyjucxuEs3pTlrQNSgPsY11zgZmtLprGlywufjDQr0qCcNTqEKd3Bq
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10753"; a="425200254"
+X-IronPort-AV: E=Sophos;i="6.01,162,1684825200"; 
+   d="scan'208";a="425200254"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2023 03:04:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10753"; a="840638810"
+X-IronPort-AV: E=Sophos;i="6.01,162,1684825200"; 
+   d="scan'208";a="840638810"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 27 Jun 2023 03:04:36 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 17EA3370; Tue, 27 Jun 2023 13:04:47 +0300 (EEST)
+Date:   Tue, 27 Jun 2023 13:04:47 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Thomas Witt <thomas@witt.link>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Vidya Sagar <vidyas@nvidia.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
@@ -52,15 +55,17 @@ Cc:     Kuppuswamy Sathyanarayanan
         Mark Enriquez <enriquezmark36@gmail.com>,
         Thomas Witt <kernel@witt.link>,
         Koba Ko <koba.ko@canonical.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/ASPM: Add back L1 PM Substate save and restore
+Message-ID: <20230627100447.GC14638@black.fi.intel.com>
 References: <20230627062442.54008-1-mika.westerberg@linux.intel.com>
-Content-Language: en-US
-From:   Thomas Witt <thomas@witt.link>
-In-Reply-To: <20230627062442.54008-1-mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+ <61224a0b-ddf7-8348-332c-ec20e7d970e4@witt.link>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <61224a0b-ddf7-8348-332c-ec20e7d970e4@witt.link>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,20 +73,24 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 27/06/2023 08:24, Mika Westerberg wrote:
-> Commit a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability
-> for suspend/resume"") reverted saving and restoring of ASPM L1 Substates
-> due to a regression that caused resume from suspend to fail on certain
-> systems. However, we never added this capability back and this is now
-> causing systems fail to enter low power CPU states, drawing more power
-> from the battery.
+Hi Thomas,
 
-Hello Mika,
+On Tue, Jun 27, 2023 at 11:53:33AM +0200, Thomas Witt wrote:
+> On 27/06/2023 08:24, Mika Westerberg wrote:
+> > Commit a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability
+> > for suspend/resume"") reverted saving and restoring of ASPM L1 Substates
+> > due to a regression that caused resume from suspend to fail on certain
+> > systems. However, we never added this capability back and this is now
+> > causing systems fail to enter low power CPU states, drawing more power
+> > from the battery.
+> 
+> Hello Mika,
+> 
+> I am sorry, but your patch (applied on top of master) triggers the exact
+> same behaviour I described in
+> <https://bugzilla.kernel.org/show_bug.cgi?id=216877> (nvme and wifi become
+> unavailable during suspend/resume)
 
-I am sorry, but your patch (applied on top of master) triggers the exact 
-same behaviour I described in 
-<https://bugzilla.kernel.org/show_bug.cgi?id=216877> (nvme and wifi 
-become unavailable during suspend/resume)
-
-Best Regards,
-Thomas
+Thanks for testing! Can you provide the output of dmidecode from that
+system? We can add it to the denylist as well to avoid the issue on your
+system.
