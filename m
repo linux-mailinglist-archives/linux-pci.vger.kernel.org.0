@@ -2,41 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3396B740D78
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Jun 2023 11:48:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6822740D80
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Jun 2023 11:48:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231794AbjF1JsD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Jun 2023 05:48:03 -0400
-Received: from mail-bn8nam11on2040.outbound.protection.outlook.com ([40.107.236.40]:46700
+        id S231807AbjF1JsH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Jun 2023 05:48:07 -0400
+Received: from mail-bn8nam11on2041.outbound.protection.outlook.com ([40.107.236.41]:7425
         "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233114AbjF1J2V (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Jun 2023 05:28:21 -0400
+        id S233268AbjF1J2g (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Jun 2023 05:28:36 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XHseua+lBvjQRXxKVqUkAZa7LyAZp+dpEvT3KbfpQSC+4X5RZZoowEZSwcCT91+cgwx/SKr8NQabmxZBj0+upDYDy7shghrBZuNwkKPRLpuxLFg0hIP0VqTdoEBI4ie+BrDyr8T27H/6zuUHLIcsKNpdOBwaR3LV/bGaeXboP7L+EuUI+me1ktURJkxQvCCVQWQE68Xz3hu2Ej54fTlmGyMpjdS94EVDsrXMoGWrxHmWpoSRqXQU9eH+XNHVtS4Fu36ZxfI0k8IMyyNhkqHAB1WkPpCVT+Wvu5Q24ggxfhb5taR+0xDmKkVT+cW0CeN/d0o4G35UGNH8+NUFaVBLpw==
+ b=QuPpd+lxfuq3/DtF28ZMNkuZvpFqhokBnzouoXknwwD/5/MSne6JyaK/tKrkzXR1CVuHYjY50Cwn5eBLTqNTjClk0JoEde8wVOMpIu7JGXTpQyTfLqPsYGRQCF604X3ojNKi3nSMqU4ODbK822VeZnT20KGvwGVLyeesWRmGqkobLZC4OWNik9KJ9m2rvedxx4WQU9f/b94awxQRiQXh0nTbk0u/gtBL8naPQQQvsveou1ozi4WKOddZtCmswVKf2pHzDMyTcuTMLJvmq/M1LRKRzdih2sS6VEHo10WPk8HdfqtMmDcbZzp/sO4MDZWONH9E+I3LhQaV0Y9OGnWaXA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ABrX4W0T5lOUiTOLtx/NG+biEB7Cm4XoJEv6sC+EcE8=;
- b=DHPPGWt3gYqElyUUvMKK59ZFsIcDcuoBEpiXC+b+Vh8UrO1dVPQ7QuAB+FEHCfcd/fE6sKNvOKYShSbUl7tgaOtP4nc+lMPRn1PeezuYoDCUafIcjyxzlt1GJbnodfe5p6XHwZSSgqhBYtQGnXSdhnFxd6Feo7ZkcHun4l4NGBnoX4Df6V8WKOUyZ4wyJEKwxylWpPujGHJY3RprvNIt1MS32kq23PJKKmV2cRFtCWDsJOK/yVUcC8B5KrJUGdNzGV7twDIcxkAhwXhxOaEHPuSfd0XV0NR4Y4x928EQBuR+hEl8w13q3EuW+8IslYdE8bbwqg4RwjON4movkEwZqA==
+ bh=W9rn73qYoRd32aZLwT0iLEIgwcpi91DBbZDuPq8fDOc=;
+ b=EizNy0j+WOq0+FDixo8dpySRMs6pSGkFM6hLzPniZXBbJcAWCc3P/hefU0nlqa4H1LK5LTpdIaPyZYndsJdhYPQA6+FaVH7fnJPtFbyx0cC1AI90ersruUt8d23xzT4lUwe0kn+mp3NcYjg8vs5EFNipTo2AxJHkJlclcW/12khLqfG7HJTZ4jmD2fzcHf2Muvu1ZieAvIp3niMPJc8KuhVoSvvXMssiFPaUjzlrKo4fJIq2TBIDWpDEc5k97v9jMrRGWX0x+FlLtsvyDuRK7O41SksgPnqsx8fuHDW8GJSkWQBVouKh1fhPMRSG5y8TolmgwkOybbhInfWFo2FDsw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ABrX4W0T5lOUiTOLtx/NG+biEB7Cm4XoJEv6sC+EcE8=;
- b=rz5lIq8WX8KKiaqQUNVZiyag2+Ms1lOAbmaOwKV7jm3l5TAKKrYnPCglHMjtgaUeCksNQn5PWsyakzpHzSZj1Ads2t2A4EzL6K2ivuK0haZ9dvtvOdQcT4sYiIVtvoQjKcieWYZaHA53NIQhoZlwAhpBaKrFEm3ckAVnmCVuiFI=
-Received: from MW4PR04CA0234.namprd04.prod.outlook.com (2603:10b6:303:87::29)
- by MW4PR12MB5627.namprd12.prod.outlook.com (2603:10b6:303:16a::8) with
+ bh=W9rn73qYoRd32aZLwT0iLEIgwcpi91DBbZDuPq8fDOc=;
+ b=ZWMfKX3zyJ75MUJpGPaZU4vsY+l0AXw+ZjPC3US7UqpYfx8RMdQwK5DuhaYjgnm6bXF/UMBZo/YdnHQhSSdu67MR1QUjs/QGkMMqBQrLXGrniXKj/PHLRXCO2bcZGSF7RL21RXfmpRitpKT5d+YlH1EXSRJL7fUNO25Ex4LmzJM=
+Received: from MW4P223CA0027.NAMP223.PROD.OUTLOOK.COM (2603:10b6:303:80::32)
+ by CH2PR12MB4906.namprd12.prod.outlook.com (2603:10b6:610:6a::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.23; Wed, 28 Jun
- 2023 09:28:18 +0000
-Received: from CO1NAM11FT055.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:87:cafe::78) by MW4PR04CA0234.outlook.office365.com
- (2603:10b6:303:87::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.34 via Frontend
- Transport; Wed, 28 Jun 2023 09:28:18 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.15; Wed, 28 Jun
+ 2023 09:28:34 +0000
+Received: from CO1NAM11FT037.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:80:cafe::60) by MW4P223CA0027.outlook.office365.com
+ (2603:10b6:303:80::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.20 via Frontend
+ Transport; Wed, 28 Jun 2023 09:28:33 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -44,20 +44,20 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT055.mail.protection.outlook.com (10.13.175.129) with Microsoft SMTP
+ CO1NAM11FT037.mail.protection.outlook.com (10.13.174.91) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6500.48 via Frontend Transport; Wed, 28 Jun 2023 09:28:18 +0000
+ 15.20.6500.48 via Frontend Transport; Wed, 28 Jun 2023 09:28:33 +0000
 Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 28 Jun
- 2023 04:28:18 -0500
+ 2023 04:28:27 -0500
 Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB08.amd.com
  (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 28 Jun
- 2023 02:28:17 -0700
+ 2023 02:28:20 -0700
 Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.23 via Frontend
- Transport; Wed, 28 Jun 2023 04:28:14 -0500
+ Transport; Wed, 28 Jun 2023 04:28:18 -0500
 From:   Thippeswamy Havalige <thippeswamy.havalige@amd.com>
 To:     <krzysztof.kozlowski@linaro.org>, <devicetree@vger.kernel.org>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -66,64 +66,172 @@ CC:     <lorenzo.pieralisi@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <bharat.kumar.gogada@amd.com>, <michals@amd.com>,
         Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Subject: [PATCH V5 0/3] Add support for Xilinx XDMA Soft IP as Root Port.
-Date:   Wed, 28 Jun 2023 14:58:09 +0530
-Message-ID: <20230628092812.1592644-1-thippeswamy.havalige@amd.com>
+Subject: [PATCH V5 1/3] Move and rename error interrupt bits to a common header.
+Date:   Wed, 28 Jun 2023 14:58:10 +0530
+Message-ID: <20230628092812.1592644-2-thippeswamy.havalige@amd.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230628092812.1592644-1-thippeswamy.havalige@amd.com>
+References: <20230628092812.1592644-1-thippeswamy.havalige@amd.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT055:EE_|MW4PR12MB5627:EE_
-X-MS-Office365-Filtering-Correlation-Id: 679e586e-8346-4b26-c2d6-08db77ba0202
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT037:EE_|CH2PR12MB4906:EE_
+X-MS-Office365-Filtering-Correlation-Id: ac37ccb8-e389-493e-7e93-08db77ba0b1d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 57PDKv2gEH1G04LCYua/dmKDkArHMzIwya+sAbMsMX0WLyfbwaMpH09PM4BvNDKaproygHY3zxjQVeOIlHPNVH9TEJ89dm4xXAUHhK9Y/sLgv35S9aMqLB6c/NLeLul18Yl2BXoW0blY/pxqJaFTkgHZhASaVO9pT/dYCoreENIZK75992JyilCzPrIfCSZEU51NAtQNEAsa3SrsqQ7gL2dkLROWZK3tu46+fiYhTVDLf3zz7vgDUy75Y9e7CwGigE023UgGZOIIrLIAFe1ln9YQgbmvRQFt1rdEiT3Pf78ocbVWf9wEIeUQNqhSTkDqTqvjoohmE7oMJP7Cl7VtHzo0qr25avTnJ3POSzFUKdR9C5BU3kQBzhfNNXOhvJn0PJZRgpYXaNUlGYhnpsYywtURJ3g+e2heZDNacGUWH6iB5dgkuxGJ3ME/beLxOyvHx1WhttauyWT25RXX3ttn/DL7174ymMBWzsids49GGFezDkXLk10OZD80gNj5GKGcSse4M8NyYQvooPCwVfu8+O7oC3q+jFhO/+WUiFztPrBX0XBxXsDWPfoQL7VGRuuTBlib4oBvW2aLuVDc7GrrjMoWq8WIquTL0U45FJN9KcQc7E6CkEB8CtJfku7mF/J0lkZAQu4TXlGQyvGF+McCeELi+gbf5TWDPhErUEQJXd4iJNP/ji5i1JhGCxAsiNapYnxe47eUnlqlwgyXhLMCrnvfp5NSEIMP25EnnaaSKG5rBBGQpxeSE6e7Oo5IwflR/tMavhlAk0/GkiryTi1lnA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(136003)(346002)(376002)(396003)(39860400002)(451199021)(40470700004)(46966006)(36840700001)(1076003)(44832011)(4326008)(316002)(70586007)(478600001)(8936002)(70206006)(36756003)(8676002)(5660300002)(2906002)(40460700003)(110136005)(54906003)(86362001)(36860700001)(40480700001)(41300700001)(6666004)(82310400005)(186003)(426003)(26005)(47076005)(336012)(81166007)(356005)(82740400003)(83380400001)(2616005)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: yyK3hEJ48rYIrZlVVYbnZwMmN5P9uUlM8cGYDDrJ+lb+yI+gmrO6iGk063gTcbQvG5FCovDhYIxMP1Dcz4HLguyVTZlIQPK+3AP+kAFppheFGy2MNlc0sHELGUAoYkQUOHY9LZkc62D1VwIDuNgNqiEzccZZ+3IgdJgkyZRoR6zQAXvg5dS4T90cOdJUB1nHZmk4b4yQNvik3tldFCYHOutdoWXrpwxXOm6U8XPSOxERNKenk9SlCzF6PcYaIUAEwCZnZbN0lLg2h7UmndRYjrykke7xTz63Xtil/ImIStobyOKhbUcWHpcyN1uX9Sd+qVUdTU9mPUyvAo60S2zEL8LptWywLuBAn6hUWdcRWN2mhDGczAIgHsNx2TN7vsYuwDFFwwbojACWlN2DyIKO8KYCJPCOBP34G6sdFBMLDmWaWvQG0aYXo/AjXE+scJ6z2HgCRPf210GU62iPPKiMhzC+GG03hwNaNL8HeqV/EdWJD/W3QNgwqXaptu/H1bxuEgOYxsUea+usiuznzaGbjPASAP5qjeJBCdV3zTsWEMqJGGQyg9KUBfq5nfSLFFB8rpiGQ2ik/QoftIRuCnK5ezfCmsAACqB2MJ15D7tIW/7xqDo89FhUWJkCmRQBWz08yunTkFwf7LyYpRqlPNccMDu1a3lgqhsb0PI9uDSs23yi4fpehEOO/Z/YWPcvUq2bT07S3wCgsQDluIAZZ7pMjjKfVeSfBtDIPAy4NOf4Mw/omvo4Mmh/i+qbQPQO1SQfEGIAq9hvSJ09g62zrXB7vQ==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(346002)(39860400002)(136003)(396003)(376002)(451199021)(40470700004)(36840700001)(46966006)(44832011)(5660300002)(4326008)(70586007)(70206006)(316002)(478600001)(2906002)(36756003)(8936002)(8676002)(40460700003)(36860700001)(41300700001)(86362001)(54906003)(110136005)(82310400005)(40480700001)(186003)(336012)(426003)(1076003)(26005)(47076005)(82740400003)(356005)(6666004)(81166007)(83380400001)(2616005)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2023 09:28:18.2696
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2023 09:28:33.5443
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 679e586e-8346-4b26-c2d6-08db77ba0202
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac37ccb8-e389-493e-7e93-08db77ba0b1d
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT055.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT037.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB5627
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4906
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This series of patch add support for Xilinx XDMA Soft IP as Root Port.
+Move and rename error interrupt bit macros to a common header file for
+code reusability.
 
-The Xilinx XDMA Soft IP support's 32 bit and 64bit BAR's.
-As Root Port it supports MSI and legacy interrupts.
-
-For code reusability existing CPM4 error interrupt bits are moved to
-common header.
+Move common linux header files for reusability.
 
 Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
 Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>
 ---
-Thippeswamy Havalige (3):
-  Move and rename error interrupt bits to a common header.
-  dt-bindings: PCI: xilinx-xdma: Add YAML schemas for Xilinx XDMA PCIe
-    Root Port Bridge
-  PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver
-
- .../devicetree/bindings/pci/xlnx,xdma-host.yaml    | 114 +++
- drivers/pci/controller/Kconfig                     |  11 +
- drivers/pci/controller/Makefile                    |   1 +
- drivers/pci/controller/pcie-xilinx-common.h        |  31 +
- drivers/pci/controller/pcie-xilinx-cpm.c           |  38 +-
- drivers/pci/controller/pcie-xilinx-dma-pl.c        | 803 +++++++++++++++++++++
- 6 files changed, 967 insertions(+), 31 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
+changes in v5:
+None
+changes in v4:
+None
+changes in v3:
+- changed licensing year to 2023
+ drivers/pci/controller/pcie-xilinx-common.h | 30 ++++++++++++++++
+ drivers/pci/controller/pcie-xilinx-cpm.c    | 38 ++++-----------------
+ 2 files changed, 37 insertions(+), 31 deletions(-)
  create mode 100644 drivers/pci/controller/pcie-xilinx-common.h
- create mode 100644 drivers/pci/controller/pcie-xilinx-dma-pl.c
 
+diff --git a/drivers/pci/controller/pcie-xilinx-common.h b/drivers/pci/controller/pcie-xilinx-common.h
+new file mode 100644
+index 0000000..e97d272
+--- /dev/null
++++ b/drivers/pci/controller/pcie-xilinx-common.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * (C) Copyright 2023, Xilinx, Inc.
++ */
++
++#include <linux/pci.h>
++#include <linux/pci-ecam.h>
++#include <linux/platform_device.h>
++
++/* Interrupt registers definitions */
++#define XILINX_PCIE_INTR_LINK_DOWN		0
++#define XILINX_PCIE_INTR_HOT_RESET		3
++#define XILINX_PCIE_INTR_CFG_PCIE_TIMEOUT	4
++#define XILINX_PCIE_INTR_CFG_TIMEOUT		8
++#define XILINX_PCIE_INTR_CORRECTABLE		9
++#define XILINX_PCIE_INTR_NONFATAL		10
++#define XILINX_PCIE_INTR_FATAL			11
++#define XILINX_PCIE_INTR_CFG_ERR_POISON		12
++#define XILINX_PCIE_INTR_PME_TO_ACK_RCVD	15
++#define XILINX_PCIE_INTR_INTX			16
++#define XILINX_PCIE_INTR_PM_PME_RCVD		17
++#define XILINX_PCIE_INTR_SLV_UNSUPP		20
++#define XILINX_PCIE_INTR_SLV_UNEXP		21
++#define XILINX_PCIE_INTR_SLV_COMPL		22
++#define XILINX_PCIE_INTR_SLV_ERRP		23
++#define XILINX_PCIE_INTR_SLV_CMPABT		24
++#define XILINX_PCIE_INTR_SLV_ILLBUR		25
++#define XILINX_PCIE_INTR_MST_DECERR		26
++#define XILINX_PCIE_INTR_MST_SLVERR		27
++#define XILINX_PCIE_INTR_SLV_PCIE_TIMEOUT	28
+diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
+index 4a787a9..a0f5e1d 100644
+--- a/drivers/pci/controller/pcie-xilinx-cpm.c
++++ b/drivers/pci/controller/pcie-xilinx-cpm.c
+@@ -16,11 +16,9 @@
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+ #include <linux/of_platform.h>
+-#include <linux/pci.h>
+-#include <linux/platform_device.h>
+-#include <linux/pci-ecam.h>
+ 
+ #include "../pci.h"
++#include "pcie-xilinx-common.h"
+ 
+ /* Register definitions */
+ #define XILINX_CPM_PCIE_REG_IDR		0x00000E10
+@@ -38,29 +36,7 @@
+ #define XILINX_CPM_PCIE_IR_ENABLE       0x000002A8
+ #define XILINX_CPM_PCIE_IR_LOCAL        BIT(0)
+ 
+-/* Interrupt registers definitions */
+-#define XILINX_CPM_PCIE_INTR_LINK_DOWN		0
+-#define XILINX_CPM_PCIE_INTR_HOT_RESET		3
+-#define XILINX_CPM_PCIE_INTR_CFG_PCIE_TIMEOUT	4
+-#define XILINX_CPM_PCIE_INTR_CFG_TIMEOUT	8
+-#define XILINX_CPM_PCIE_INTR_CORRECTABLE	9
+-#define XILINX_CPM_PCIE_INTR_NONFATAL		10
+-#define XILINX_CPM_PCIE_INTR_FATAL		11
+-#define XILINX_CPM_PCIE_INTR_CFG_ERR_POISON	12
+-#define XILINX_CPM_PCIE_INTR_PME_TO_ACK_RCVD	15
+-#define XILINX_CPM_PCIE_INTR_INTX		16
+-#define XILINX_CPM_PCIE_INTR_PM_PME_RCVD	17
+-#define XILINX_CPM_PCIE_INTR_SLV_UNSUPP		20
+-#define XILINX_CPM_PCIE_INTR_SLV_UNEXP		21
+-#define XILINX_CPM_PCIE_INTR_SLV_COMPL		22
+-#define XILINX_CPM_PCIE_INTR_SLV_ERRP		23
+-#define XILINX_CPM_PCIE_INTR_SLV_CMPABT		24
+-#define XILINX_CPM_PCIE_INTR_SLV_ILLBUR		25
+-#define XILINX_CPM_PCIE_INTR_MST_DECERR		26
+-#define XILINX_CPM_PCIE_INTR_MST_SLVERR		27
+-#define XILINX_CPM_PCIE_INTR_SLV_PCIE_TIMEOUT	28
+-
+-#define IMR(x) BIT(XILINX_CPM_PCIE_INTR_ ##x)
++#define IMR(x) BIT(XILINX_PCIE_INTR_ ##x)
+ 
+ #define XILINX_CPM_PCIE_IMR_ALL_MASK			\
+ 	(						\
+@@ -323,7 +299,7 @@ static void xilinx_cpm_pcie_event_flow(struct irq_desc *desc)
+ }
+ 
+ #define _IC(x, s)                              \
+-	[XILINX_CPM_PCIE_INTR_ ## x] = { __stringify(x), s }
++	[XILINX_PCIE_INTR_ ## x] = { __stringify(x), s }
+ 
+ static const struct {
+ 	const char      *sym;
+@@ -359,9 +335,9 @@ static irqreturn_t xilinx_cpm_pcie_intr_handler(int irq, void *dev_id)
+ 	d = irq_domain_get_irq_data(port->cpm_domain, irq);
+ 
+ 	switch (d->hwirq) {
+-	case XILINX_CPM_PCIE_INTR_CORRECTABLE:
+-	case XILINX_CPM_PCIE_INTR_NONFATAL:
+-	case XILINX_CPM_PCIE_INTR_FATAL:
++	case XILINX_PCIE_INTR_CORRECTABLE:
++	case XILINX_PCIE_INTR_NONFATAL:
++	case XILINX_PCIE_INTR_FATAL:
+ 		cpm_pcie_clear_err_interrupts(port);
+ 		fallthrough;
+ 
+@@ -466,7 +442,7 @@ static int xilinx_cpm_setup_irq(struct xilinx_cpm_pcie *port)
+ 	}
+ 
+ 	port->intx_irq = irq_create_mapping(port->cpm_domain,
+-					    XILINX_CPM_PCIE_INTR_INTX);
++					    XILINX_PCIE_INTR_INTX);
+ 	if (!port->intx_irq) {
+ 		dev_err(dev, "Failed to map INTx interrupt\n");
+ 		return -ENXIO;
 -- 
 1.8.3.1
 
