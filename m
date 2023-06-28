@@ -2,104 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B946A7410E7
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Jun 2023 14:31:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44BF874117F
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Jun 2023 14:44:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230315AbjF1MbG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Jun 2023 08:31:06 -0400
-Received: from mga06b.intel.com ([134.134.136.31]:28840 "EHLO mga06.intel.com"
+        id S231831AbjF1MmV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Jun 2023 08:42:21 -0400
+Received: from mga17.intel.com ([192.55.52.151]:19059 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230449AbjF1MbG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Jun 2023 08:31:06 -0400
+        id S232512AbjF1Mi6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Jun 2023 08:38:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687955465; x=1719491465;
+  t=1687955938; x=1719491938;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=squAxCqo4O6bze9c8h2Fwv2QcDXRfEjzIKrKVxRZvKg=;
-  b=De3yf5AzL/1w968RkcTuAC91e+az3Ps8i2KLwtlGZzkyzq8hk8vmMt9n
-   YO+Oqd3cd+6QYDOfhOkxUb0SIM4T6NNAXmy19FtsRpt8dNJuG0pj6Ph75
-   vgcxz17uArucWp83xUuBp+PeJf7+WKyzmTX/Q2/y4hoq2QqsclTtfmmSs
-   577+Tm0BPTQ6KGY4hrOrxhu1gljMNIL0XgFzW98IU1a57jg0wrGiJ6J5c
-   OhNS5iHdfqu27PQ+lyu1SjoUCR7kq8SlEFg6n0Qen25s8qAz8n7sgZ/oP
-   LLAGr3RT1q8iNfeOTmySd4N2bwYnIM4rygr6FP7+iZ5wo+FeNF1P2L5zE
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10754"; a="425502427"
+   mime-version:in-reply-to;
+  bh=SiUPLFX8yooaTBprOCUevkhBwdpxnbwZbDK6fkmxZHs=;
+  b=hWwqhdtTZhEUw1ZLKR8KXTn27gIDpUd/4j+dWFwkuy5/G7ZkPAmW7txY
+   15aJrJNkjDXTPL6rMxccn4oCxXfbq0CqVhOmfwdOdwmze8DSAY1EDj4+o
+   /IzZTwWDYEyMWXuYx0gbVAe3Od4yk3XTHuutVtooOAchbnrsNaDIS9zGW
+   ct4LbJNSeKOuJqAEpiVUa4Lbn8fFt2VtY2nhRlg3MNzJ7VMX3RXwfw7c4
+   FcrkE97AAo5qZSdU+hCec2+E7tHYDgYH9hwXLQoIO3Swva7KZz4IiAmMW
+   TKJgh9OJHJ9izovTFxW/dBocE9wzAaSKu4wDMPShyY7+E43tOiMNVUPrt
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10754"; a="342168627"
 X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="425502427"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2023 05:30:49 -0700
+   d="scan'208";a="342168627"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2023 05:38:57 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10754"; a="806874446"
+X-IronPort-AV: E=McAfee;i="6600,9927,10754"; a="787031335"
 X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="806874446"
+   d="scan'208";a="787031335"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 Jun 2023 05:30:45 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 28 Jun 2023 05:38:53 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 9E276E1; Wed, 28 Jun 2023 15:30:46 +0300 (EEST)
-Date:   Wed, 28 Jun 2023 15:30:46 +0300
+        id CF8B5E1; Wed, 28 Jun 2023 15:38:54 +0300 (EEST)
+Date:   Wed, 28 Jun 2023 15:38:54 +0300
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Thomas Witt <kernel@witt.link>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Thomas Witt <thomas@witt.link>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Vidya Sagar <vidyas@nvidia.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Michael Bottini <michael.a.bottini@linux.intel.com>,
         "David E . Box" <david.e.box@linux.intel.com>,
         Tasev Nikola <tasev.stefanoska@skynet.be>,
         Mark Enriquez <enriquezmark36@gmail.com>,
+        Thomas Witt <kernel@witt.link>,
         Koba Ko <koba.ko@canonical.com>, linux-pci@vger.kernel.org
 Subject: Re: [PATCH] PCI/ASPM: Add back L1 PM Substate save and restore
-Message-ID: <20230628123046.GL14638@black.fi.intel.com>
+Message-ID: <20230628123854.GM14638@black.fi.intel.com>
 References: <20230627100447.GC14638@black.fi.intel.com>
  <20230627204124.GA366188@bhelgaas>
  <20230628064637.GF14638@black.fi.intel.com>
- <650f68a1-8d54-a5ad-079b-e8aea64c5130@witt.link>
- <20230628105940.GK14638@black.fi.intel.com>
+ <5a5f7511-74e0-39a2-3b3f-864e3f2e957d@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230628105940.GK14638@black.fi.intel.com>
+In-Reply-To: <5a5f7511-74e0-39a2-3b3f-864e3f2e957d@amd.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 01:59:40PM +0300, Mika Westerberg wrote:
-> Hi Thomas,
-> 
-> On Wed, Jun 28, 2023 at 12:24:06PM +0200, Thomas Witt wrote:
-> > On 28/06/2023 08:46, Mika Westerberg wrote:
-> > > @Thomas, is there any particular reason you have this option in the
-> > > command line? There is possibility that S3 is not even fully validated
-> > > if the system advertises S0 low power sleep instead.
+On Wed, Jun 28, 2023 at 07:16:49AM -0500, Mario Limonciello wrote:
+> On 6/28/23 01:46, Mika Westerberg wrote:
+> > Hi Bjorn,
 > > 
-> > In fact, there is: Entering suspend-to-ram without setting
-> > /sys/power/mem_sleep to "deep", my laptop consumes about the same power as
-> > it would idling online. The manufacturer suggests setting that commandline
-> > parameter:
+> > On Tue, Jun 27, 2023 at 03:41:24PM -0500, Bjorn Helgaas wrote:
+> > > On Tue, Jun 27, 2023 at 01:04:47PM +0300, Mika Westerberg wrote:
+> > > > On Tue, Jun 27, 2023 at 11:53:33AM +0200, Thomas Witt wrote:
+> > > > > On 27/06/2023 08:24, Mika Westerberg wrote:
+> > > > > > Commit a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability
+> > > > > > for suspend/resume"") reverted saving and restoring of ASPM L1 Substates
+> > > > > > due to a regression that caused resume from suspend to fail on certain
+> > > > > > systems. However, we never added this capability back and this is now
+> > > > > > causing systems fail to enter low power CPU states, drawing more power
+> > > > > > from the battery.
+> > > > > 
+> > > > > Hello Mika,
+> > > > > 
+> > > > > I am sorry, but your patch (applied on top of master) triggers the exact
+> > > > > same behaviour I described in
+> > > > > <https://bugzilla.kernel.org/show_bug.cgi?id=216877> (nvme and wifi become
+> > > > > unavailable during suspend/resume)
+> > > > 
+> > > > Thanks for testing! Can you provide the output of dmidecode from that
+> > > > system? We can add it to the denylist as well to avoid the issue on your
+> > > > system.
+> > > 
+> > > To me this says we don't completely understand the mechanism of the
+> > > failure.  If BIOS made L1SS work initially, Linux should be able to
+> > > make it work again after suspend/resume.
+> > > 
+> > > If we can identify an actual hardware or firmware defect, it makes
+> > > good sense to add a quirk or denylist.  But I'll push back a little if
+> > > it's just "there's some problem we don't understand on this system, so
+> > > avoid it."
 > > 
-> > <https://www.tuxedocomputers.com/en/Infos/Help-Support/Instructions/Fine-tuning-of-power-management-with-suspend-standby.tuxedo#>
+> > Fair enough.
+> > 
+> > I've looked at the Thomas' system dmesg that he attached to the bugzilla
+> > and he has mem_sleep_default=deep in the kernel command line. There is
+> > no such option in the mainline kernel but I suppose this makes systemd
+> > (or some initscript) to write "deep" to /sys/power/mem_sleep, thus
+> > forcing S3 instead of the default the ACPI tables suggest, which
+> > probably is S0ix (Intel low power state which does not involve BIOS).
 > 
-> Thanks for the clarification.
+> JFYI actually it is a mainline kernel parameter.
 > 
-> > I just retested your patch with setting mem_sleep to "s2idle", and it no
-> > longer triggers the loss of PCI devices. I guess that could be the indicator
-> > that Björn asked for.
-> 
-> I wonder if the patch actually helps here now because the reason we want
-> to add it back is that it allows the CPU to enter lower power states and
-> thus reducing the power consumption in S2idle too. Do you observe that
-> when you have the patch applied?
+> Reference the documentation here:
+> https://www.kernel.org/doc/html/v6.4/admin-guide/kernel-parameters.html?highlight=mem_sleep_default
 
-One possibility is to check the package C-state residency like:
-
-  # cat /sys/kernel/debug/pmc_core/package_cstate_show
-
-after system sleep and see if there is a change with the patch applied,
-as done here:
-
-  https://bugzilla.kernel.org/show_bug.cgi?id=217321
+Indeed it is. Thanks for correcting me. I grepped this from my source
+tree but somehow screwed it up and it did not show up anything. Now that
+I checked again it is there.
