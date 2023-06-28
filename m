@@ -2,42 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECEF2740E9E
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Jun 2023 12:26:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D15AD740F81
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Jun 2023 13:00:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231186AbjF1K0K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Jun 2023 06:26:10 -0400
-Received: from witt.link ([185.233.105.83]:48814 "EHLO witt.link"
+        id S230298AbjF1LAM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Jun 2023 07:00:12 -0400
+Received: from mga14.intel.com ([192.55.52.115]:51431 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229865AbjF1KYJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Jun 2023 06:24:09 -0400
-Received: from [10.0.0.117] (p5489d081.dip0.t-ipconnect.de [84.137.208.129])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
-        (No client certificate requested)
-        by witt.link (Postfix) with ESMTPSA id 5108B2A0676;
-        Wed, 28 Jun 2023 12:24:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=witt.link; s=dkim;
-        t=1687947847;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sDzETMTPDxtbzCyjvuGnG2CcfkJe9VJZUZDxUtsAD6Q=;
-        b=Sv9Ouv9wyf1J698pmsRT6q2VJhWc3GUYigqYr6+quE3oZD+FYLk91kX5J9riZM5aURdEE0
-        nXDgqPp61nZhdcGXS/9iuqLGmtaLl1PMBDq7XwqWvNR94XKuntDBzSzMZOHnMQt4oQP0C2
-        ZkoC9qiSgAit5Bz1IdUYipQNkGhjdSJN5XXLf+VcJFGpwygbByETV8nhDWg9GO4nC3gObz
-        55a2bH+PD8X6PyqPYIiz1NetHsxUGL7bITGBjwI+u6+n93kzEqXL5MVNxbd18eMwTFE8Hp
-        u3p1cGmBwMEJdwwiaOq65VnHgo/IKDol0ft7aAGls6xAYIMyluwsupZkXoM+/A==
-Message-ID: <650f68a1-8d54-a5ad-079b-e8aea64c5130@witt.link>
-Date:   Wed, 28 Jun 2023 12:24:06 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] PCI/ASPM: Add back L1 PM Substate save and restore
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        id S229522AbjF1K7p (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Jun 2023 06:59:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687949985; x=1719485985;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=tba71738f/bOKcS0qbSUDtyWQOesP6UBOIdYFDph4Vs=;
+  b=eLFtn7EubIiA/omf976Ky98T2WDAw1xLKNpSWN2PTraq2tWwsasI5JpD
+   8cg9mRm3p01xDw1tVQtETer/SfSnqmj/2Mc6EOoLKL09sTKhdrkrG9iDo
+   GS2ixy5XAJTW7ks2HvVUlokG86wqJiW/SU2TiaMo+6pkyR478wWMdszDt
+   0lBnMC48Y5Z26AtQ2my4AuaRzRXYQBIRE3VkkI/jxhAbfFeOVcEoEFBb8
+   GSI1K7ctYZ+JBP0G6Z/U6//jkDzghxD1sm9j3tXi8GkytIoc/Qtc/Ybsn
+   m8FD1fsrrkWRg/9iy1NvX+E/OlUrW7RBt8xr4SRwJvr+sTznKUSjMxIMZ
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10754"; a="361855131"
+X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
+   d="scan'208";a="361855131"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2023 03:59:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10754"; a="694221240"
+X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
+   d="scan'208";a="694221240"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga006.jf.intel.com with ESMTP; 28 Jun 2023 03:59:40 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 9BDCBE1; Wed, 28 Jun 2023 13:59:40 +0300 (EEST)
+Date:   Wed, 28 Jun 2023 13:59:40 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Thomas Witt <kernel@witt.link>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Vidya Sagar <vidyas@nvidia.com>,
@@ -47,38 +51,49 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         "David E . Box" <david.e.box@linux.intel.com>,
         Tasev Nikola <tasev.stefanoska@skynet.be>,
         Mark Enriquez <enriquezmark36@gmail.com>,
-        Thomas Witt <kernel@witt.link>,
         Koba Ko <koba.ko@canonical.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/ASPM: Add back L1 PM Substate save and restore
+Message-ID: <20230628105940.GK14638@black.fi.intel.com>
 References: <20230627100447.GC14638@black.fi.intel.com>
  <20230627204124.GA366188@bhelgaas>
  <20230628064637.GF14638@black.fi.intel.com>
-Content-Language: en-US
-From:   Thomas Witt <kernel@witt.link>
-In-Reply-To: <20230628064637.GF14638@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <650f68a1-8d54-a5ad-079b-e8aea64c5130@witt.link>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <650f68a1-8d54-a5ad-079b-e8aea64c5130@witt.link>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 28/06/2023 08:46, Mika Westerberg wrote:
-> @Thomas, is there any particular reason you have this option in the
-> command line? There is possibility that S3 is not even fully validated
-> if the system advertises S0 low power sleep instead.
+Hi Thomas,
 
-In fact, there is: Entering suspend-to-ram without setting 
-/sys/power/mem_sleep to "deep", my laptop consumes about the same power 
-as it would idling online. The manufacturer suggests setting that 
-commandline parameter:
+On Wed, Jun 28, 2023 at 12:24:06PM +0200, Thomas Witt wrote:
+> On 28/06/2023 08:46, Mika Westerberg wrote:
+> > @Thomas, is there any particular reason you have this option in the
+> > command line? There is possibility that S3 is not even fully validated
+> > if the system advertises S0 low power sleep instead.
+> 
+> In fact, there is: Entering suspend-to-ram without setting
+> /sys/power/mem_sleep to "deep", my laptop consumes about the same power as
+> it would idling online. The manufacturer suggests setting that commandline
+> parameter:
+> 
+> <https://www.tuxedocomputers.com/en/Infos/Help-Support/Instructions/Fine-tuning-of-power-management-with-suspend-standby.tuxedo#>
 
-<https://www.tuxedocomputers.com/en/Infos/Help-Support/Instructions/Fine-tuning-of-power-management-with-suspend-standby.tuxedo#>
+Thanks for the clarification.
 
-I just retested your patch with setting mem_sleep to "s2idle", and it no 
-longer triggers the loss of PCI devices. I guess that could be the 
-indicator that Björn asked for.
+> I just retested your patch with setting mem_sleep to "s2idle", and it no
+> longer triggers the loss of PCI devices. I guess that could be the indicator
+> that Björn asked for.
 
-I attached the output of dmidecode to the bugzilla entry mentioned 
-above: <https://bugzilla.kernel.org/attachment.cgi?id=304494>
+I wonder if the patch actually helps here now because the reason we want
+to add it back is that it allows the CPU to enter lower power states and
+thus reducing the power consumption in S2idle too. Do you observe that
+when you have the patch applied?
 
-Best regards,
-Thomas
+> I attached the output of dmidecode to the bugzilla entry mentioned above:
+> <https://bugzilla.kernel.org/attachment.cgi?id=304494>
+
+Thanks!
