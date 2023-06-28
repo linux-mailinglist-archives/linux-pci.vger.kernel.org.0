@@ -2,44 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A114B741404
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Jun 2023 16:45:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3095B741409
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Jun 2023 16:47:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231787AbjF1OpL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Jun 2023 10:45:11 -0400
-Received: from mga02.intel.com ([134.134.136.20]:48671 "EHLO mga02.intel.com"
+        id S229964AbjF1OrR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Jun 2023 10:47:17 -0400
+Received: from mga14.intel.com ([192.55.52.115]:5218 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231833AbjF1OpG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Jun 2023 10:45:06 -0400
+        id S230436AbjF1OrP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Jun 2023 10:47:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687963506; x=1719499506;
+  t=1687963635; x=1719499635;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:content-transfer-encoding:in-reply-to;
-  bh=5vCRBYpY7jo1Ni88rEwRhjkpOvVkhHCe9+LLsHYVXK4=;
-  b=jr48XKIGlUN88VQqm+1L0HwleBepg3HBpU/+RiclWD58VgyyPi1CFprB
-   uPC6B6TFBW2h13i+Bdz0muJ79rkhd4vY3+H1GSBKI77tlmQvPMl3VfYKn
-   5Kmw5OQ/T1hOVftyCR7QglG8PE2vuoDc9HvhedQI1TvXRBv10/byIqgJy
-   9mJr0HfdJh7TTAB/noxq6ZT4fOCkXAmFADvLNOFqbo4UPvqRyL1KlPd7t
-   OSZzgdwMzbEB5vOoINBNPOrIr+2ZGQyeoW2CkP4HMsmtE/GuEpTk8iYsg
-   tTFtly0faebqBYLDLGn87Gz+ep711BrlUQfci9R5frDFTCcxFvuKlNfx1
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10754"; a="351651669"
+  bh=rtGlV6TiHru15yGIIxQm3Jfi0dIBkNUCTwGVyxrpVgY=;
+  b=eSsqxDALVTdoCaO7cUw5dwZidHDKiyV6zTkHAoJ4QZjqnHUgeYPzaTGM
+   DpfWB4Z9q3ZJ7ekYXBr1K6pYrOqdJBJbD70OHGULCBLoBSCDz2CCnJa5y
+   PCknjpGARwhnGP4Qca7p8F+cJdSyOLOWdcpylrdc8WiU4uJ3eOpVYaDkc
+   T0rpI+nGiLnFRvd1IFtkT6NmFgUd6rwZ7Q2YzGYy6lnGTfs6yJfbAsThL
+   T8HoSqCvaCdwgpbxsHFPSfYTDvOq+/DGgo38FF+l2/B1cGyysbwqCqgTK
+   saRUNv4WU+2tPVM0B+iTCcJHa62vRVZzgdEn2dwsSXSJkhq2t7FUK08rC
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10755"; a="361906362"
 X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="351651669"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2023 07:45:04 -0700
+   d="scan'208";a="361906362"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2023 07:47:14 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10754"; a="752276046"
+X-IronPort-AV: E=McAfee;i="6600,9927,10755"; a="830148071"
 X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="752276046"
+   d="scan'208";a="830148071"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP; 28 Jun 2023 07:45:01 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 28 Jun 2023 07:47:12 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@intel.com>)
-        id 1qEWPj-000cqM-2r;
-        Wed, 28 Jun 2023 17:44:59 +0300
-Date:   Wed, 28 Jun 2023 17:44:59 +0300
+        id 1qEWRq-000cs2-1A;
+        Wed, 28 Jun 2023 17:47:10 +0300
+Date:   Wed, 28 Jun 2023 17:47:10 +0300
 From:   Andy Shevchenko <andriy.shevchenko@intel.com>
 To:     Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= 
         <amadeuszx.slawinski@linux.intel.com>
@@ -50,40 +50,44 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Cezary Rojewski <cezary.rojewski@intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Subject: Re: [RFC PATCH 4/8] ALSA: hda/i915: Update PCI IDs
-Message-ID: <ZJxHa36/xN3kClw0@smile.fi.intel.com>
+Subject: Re: [RFC PATCH 3/8] ALSA: hda: Update PCI ID list
+Message-ID: <ZJxH7lcU4tSzCjb1@smile.fi.intel.com>
 References: <20230628205135.517241-1-amadeuszx.slawinski@linux.intel.com>
- <20230628205135.517241-5-amadeuszx.slawinski@linux.intel.com>
- <ZJxG7YRroqi6kiyz@smile.fi.intel.com>
+ <20230628205135.517241-4-amadeuszx.slawinski@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZJxG7YRroqi6kiyz@smile.fi.intel.com>
+In-Reply-To: <20230628205135.517241-4-amadeuszx.slawinski@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 05:42:54PM +0300, Andy Shevchenko wrote:
-> On Wed, Jun 28, 2023 at 10:51:31PM +0200, Amadeusz Sławiński wrote:
+On Wed, Jun 28, 2023 at 10:51:30PM +0200, Amadeusz Sławiński wrote:
+> Use PCI device IDs from pci_ids.h header and while at it change to using
+> PCI_VDEVICE macro, to simplify declarations. This allows to change magic
+> number PCI vendor IDs to macro ones for all vendors. For Intel devices
+> use device IDs macros where defined.
 
 ...
 
-> > -#define IS_HSW_CONTROLLER(pci) (((pci)->device == 0x0a0c) || \
-> > -				((pci)->device == 0x0c0c) || \
-> > -				((pci)->device == 0x0d0c) || \
-> > -				((pci)->device == 0x160c))
-> > +#define IS_HSW_CONTROLLER(pci) (((pci)->device == PCI_DEVICE_ID_INTEL_HDA_HSW_0) || \
-> > +				((pci)->device == PCI_DEVICE_ID_INTEL_HDA_HSW_2) || \
-> > +				((pci)->device == PCI_DEVICE_ID_INTEL_HDA_HSW_3) || \
-> > +				((pci)->device == PCI_DEVICE_ID_INTEL_HDA_BDW))
-> 
-> The very same macro under different name appeared in the previous patch.
-> Am I correct? Perhaps go further and first move it somewhere to be available
-> for both?
+>  					((pci)->device == 0x490d) || \
+>  					((pci)->device == 0x4f90) || \
+>  					((pci)->device == 0x4f91) || \
+>  					((pci)->device == 0x4f92)))
 
-Ah, this one is a subset of that one, nevertheless the proposal stays.
+Why are not these be added in the header as well for the sake of consistency?
+
+...
+
+>  	/* CPT */
+> -	{ PCI_DEVICE(0x8086, 0x1c20),
+> +	{ PCI_VDEVICE(INTEL, 0x1c20),
+>  	  .driver_data = AZX_DRIVER_PCH | AZX_DCAPS_INTEL_PCH_NOPM },
+
+With the first patch seems all of these (x86) can be converted
+to use PCI_DEVICE_DATA().
 
 -- 
 With Best Regards,
