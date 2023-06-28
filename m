@@ -2,119 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44BF874117F
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Jun 2023 14:44:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9882A7411DE
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Jun 2023 15:01:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231831AbjF1MmV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Jun 2023 08:42:21 -0400
-Received: from mga17.intel.com ([192.55.52.151]:19059 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232512AbjF1Mi6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Jun 2023 08:38:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687955938; x=1719491938;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SiUPLFX8yooaTBprOCUevkhBwdpxnbwZbDK6fkmxZHs=;
-  b=hWwqhdtTZhEUw1ZLKR8KXTn27gIDpUd/4j+dWFwkuy5/G7ZkPAmW7txY
-   15aJrJNkjDXTPL6rMxccn4oCxXfbq0CqVhOmfwdOdwmze8DSAY1EDj4+o
-   /IzZTwWDYEyMWXuYx0gbVAe3Od4yk3XTHuutVtooOAchbnrsNaDIS9zGW
-   ct4LbJNSeKOuJqAEpiVUa4Lbn8fFt2VtY2nhRlg3MNzJ7VMX3RXwfw7c4
-   FcrkE97AAo5qZSdU+hCec2+E7tHYDgYH9hwXLQoIO3Swva7KZz4IiAmMW
-   TKJgh9OJHJ9izovTFxW/dBocE9wzAaSKu4wDMPShyY7+E43tOiMNVUPrt
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10754"; a="342168627"
-X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="342168627"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2023 05:38:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10754"; a="787031335"
-X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="787031335"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 28 Jun 2023 05:38:53 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id CF8B5E1; Wed, 28 Jun 2023 15:38:54 +0300 (EEST)
-Date:   Wed, 28 Jun 2023 15:38:54 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Thomas Witt <thomas@witt.link>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Tasev Nikola <tasev.stefanoska@skynet.be>,
-        Mark Enriquez <enriquezmark36@gmail.com>,
-        Thomas Witt <kernel@witt.link>,
-        Koba Ko <koba.ko@canonical.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/ASPM: Add back L1 PM Substate save and restore
-Message-ID: <20230628123854.GM14638@black.fi.intel.com>
-References: <20230627100447.GC14638@black.fi.intel.com>
- <20230627204124.GA366188@bhelgaas>
- <20230628064637.GF14638@black.fi.intel.com>
- <5a5f7511-74e0-39a2-3b3f-864e3f2e957d@amd.com>
+        id S229622AbjF1NBH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Jun 2023 09:01:07 -0400
+Received: from dfw.source.kernel.org ([139.178.84.217]:50392 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229747AbjF1NBF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Jun 2023 09:01:05 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6AC9361328;
+        Wed, 28 Jun 2023 13:01:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78AE7C433C8;
+        Wed, 28 Jun 2023 13:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687957264;
+        bh=2Y00wv8k2zeA83pKwDQ0+f0MQm1Vo3HU23NOR7nc/K4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EZpxB2upZeStM/+zsI4GTnz6y7pPZiv3bTGZVGP1AYAEmWtE42tKhS6Rv8k2+I13f
+         hhpQyoUb/MhYmnfA8zzwdKTX23t5SBXPaIYRMMgUagzwYTWwlGfUm8pIyk0jWTQezB
+         2pEC/BGq8sV/DRQ7RkRqHkkJrjbIWrXPIqUTNHeyLZYYbKq10dVObhXR2nomA/8Boy
+         w68yKaXAO9VxzlrymNs37HVgCnNVjSVGB8+yhXJGkolukx0DQSRyjlO/tJ1JoYtARS
+         B2PCckymx1q/0MeyaI2aAbDB57tkJETjgL/UYY/a9tVtHqE7nkkW2B/8HQJDN8afUE
+         TOjpM5+3oqArA==
+Date:   Wed, 28 Jun 2023 14:00:58 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= 
+        <amadeuszx.slawinski@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: Re: [RFC PATCH 0/8] PCI: Define Intel PCI IDs and use them in drivers
+Message-ID: <f4baf2d6-5fb8-4a28-acdb-ec838b0e2568@sirena.org.uk>
+References: <20230628205135.517241-1-amadeuszx.slawinski@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2ivVRextVhQTuygq"
 Content-Disposition: inline
-In-Reply-To: <5a5f7511-74e0-39a2-3b3f-864e3f2e957d@amd.com>
+In-Reply-To: <20230628205135.517241-1-amadeuszx.slawinski@linux.intel.com>
+X-Cookie: HELLO, everybody, I'm a HUMAN!!
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 07:16:49AM -0500, Mario Limonciello wrote:
-> On 6/28/23 01:46, Mika Westerberg wrote:
-> > Hi Bjorn,
-> > 
-> > On Tue, Jun 27, 2023 at 03:41:24PM -0500, Bjorn Helgaas wrote:
-> > > On Tue, Jun 27, 2023 at 01:04:47PM +0300, Mika Westerberg wrote:
-> > > > On Tue, Jun 27, 2023 at 11:53:33AM +0200, Thomas Witt wrote:
-> > > > > On 27/06/2023 08:24, Mika Westerberg wrote:
-> > > > > > Commit a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability
-> > > > > > for suspend/resume"") reverted saving and restoring of ASPM L1 Substates
-> > > > > > due to a regression that caused resume from suspend to fail on certain
-> > > > > > systems. However, we never added this capability back and this is now
-> > > > > > causing systems fail to enter low power CPU states, drawing more power
-> > > > > > from the battery.
-> > > > > 
-> > > > > Hello Mika,
-> > > > > 
-> > > > > I am sorry, but your patch (applied on top of master) triggers the exact
-> > > > > same behaviour I described in
-> > > > > <https://bugzilla.kernel.org/show_bug.cgi?id=216877> (nvme and wifi become
-> > > > > unavailable during suspend/resume)
-> > > > 
-> > > > Thanks for testing! Can you provide the output of dmidecode from that
-> > > > system? We can add it to the denylist as well to avoid the issue on your
-> > > > system.
-> > > 
-> > > To me this says we don't completely understand the mechanism of the
-> > > failure.  If BIOS made L1SS work initially, Linux should be able to
-> > > make it work again after suspend/resume.
-> > > 
-> > > If we can identify an actual hardware or firmware defect, it makes
-> > > good sense to add a quirk or denylist.  But I'll push back a little if
-> > > it's just "there's some problem we don't understand on this system, so
-> > > avoid it."
-> > 
-> > Fair enough.
-> > 
-> > I've looked at the Thomas' system dmesg that he attached to the bugzilla
-> > and he has mem_sleep_default=deep in the kernel command line. There is
-> > no such option in the mainline kernel but I suppose this makes systemd
-> > (or some initscript) to write "deep" to /sys/power/mem_sleep, thus
-> > forcing S3 instead of the default the ACPI tables suggest, which
-> > probably is S0ix (Intel low power state which does not involve BIOS).
-> 
-> JFYI actually it is a mainline kernel parameter.
-> 
-> Reference the documentation here:
-> https://www.kernel.org/doc/html/v6.4/admin-guide/kernel-parameters.html?highlight=mem_sleep_default
 
-Indeed it is. Thanks for correcting me. I grepped this from my source
-tree but somehow screwed it up and it did not show up anything. Now that
-I checked again it is there.
+--2ivVRextVhQTuygq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jun 28, 2023 at 10:51:27PM +0200, Amadeusz S=C5=82awi=C5=84ski wrot=
+e:
+> PCI IDs for Intel HDA are duplicated across quite a few drivers, due to
+> various configurations and historical reasons. Currently almost all uses
+> of HDA PCI IDs have corresponding comment telling which platform it is.
+> Additionally there are some inconsistencies between drivers about which
+> ID corresponds to which device.
+
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--2ivVRextVhQTuygq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmScLwoACgkQJNaLcl1U
+h9C14Qf/enTslOfeuoQE3sEiC7/D5fPrkfXHo5SpklR5QWR22KGn23Mr0UqCdSUa
+PJaY1aUhKtpPW/x1rP8LK0b7Hsb6zI+MW8FT+oNXIHveJRBgevnDB3MbHkv9betY
+FnBfa3gRALg0kPKxrpSYSGef1Tbg/F1m3YgtpTwBbTf5UBoRQVBhFOPw/ghLVmqt
+GRlu5kU6zBIEbEg9jTJ5eP6qFpmkYIWYMXJnuc6kA2IbDRXhtECItlWjSAs82bMY
+w9XyPZMPCY4KYbMeGAB/L1KlZvmLCsLQEDRUIva/0Ml6ty97cX67+9e+bgsqRtEC
+XtmEQX5+/sSnbrCZzUgJ1K6cMEYgXQ==
+=loPF
+-----END PGP SIGNATURE-----
+
+--2ivVRextVhQTuygq--
