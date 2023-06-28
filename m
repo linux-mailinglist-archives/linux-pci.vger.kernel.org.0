@@ -2,183 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 465EF740BD2
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Jun 2023 10:47:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDBA2740C3A
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Jun 2023 11:02:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234916AbjF1Irm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Jun 2023 04:47:42 -0400
-Received: from dfw.source.kernel.org ([139.178.84.217]:43230 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235410AbjF1Igw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Jun 2023 04:36:52 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        id S236786AbjF1JC0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Jun 2023 05:02:26 -0400
+Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:38122
+        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230403AbjF1ItW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Jun 2023 04:49:22 -0400
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com [209.85.167.200])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EB2D06119F;
-        Wed, 28 Jun 2023 04:57:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 918B8C433C8;
-        Wed, 28 Jun 2023 04:57:53 +0000 (UTC)
-Date:   Wed, 28 Jun 2023 10:27:43 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-Cc:     Manivannan Sadhasivam <mani@kernel.org>, quic_vbadigan@quicinc.com,
-        quic_ramkri@quicinc.com, linux-arm-msm@vger.kernel.org,
-        konrad.dybcio@linaro.org,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCIE ENDPOINT DRIVER FOR QUALCOMM" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v1 3/3] PCI: qcom: ep: Add wake up host op to
- dw_pcie_ep_ops
-Message-ID: <20230628045743.GA20477@thinkpad>
-References: <1686754850-29817-1-git-send-email-quic_krichai@quicinc.com>
- <1686754850-29817-4-git-send-email-quic_krichai@quicinc.com>
- <20230623061839.GC5611@thinkpad>
- <1b41ba64-51e2-7c66-104d-bc60ac131a0f@quicinc.com>
- <20230627135351.GE5490@thinkpad>
- <cd34d241-98e4-d3fa-3ae2-89182e9cd190@quicinc.com>
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id EE50A3F732
+        for <linux-pci@vger.kernel.org>; Wed, 28 Jun 2023 05:10:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1687929002;
+        bh=3bdC+uUyIZz0PgxeLe6K/fSeIXVXdbQUHA0MK3WxvKU=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=pPiHqZEyXktMSy2OoI57sTRe/hyUS9cEaElGEVt4J9JCmAKSJW62l//HnldyRrB2Z
+         YMUq6KVGdWsjnyzmgwEKWwC4ua5odQ4Iw3NVR5F56MDV3BM8Bj7tD9q2lGh19tXt6j
+         ZSrgVe5Iov+4ZSSiLzIXEAa8kObaZe7TYUVRj2pC/ZuQrNhEn2Xrlo9jZtCx69i6Gk
+         Jras8+ux+HS1jOSJa328v5YZOouXOvOkbLQAFRXqF8CZkJK7E9Uy7hioVKlgenCa8o
+         V6F4uYvUqUweEg/+KfffBtZxFMCGnFzhc4iiCKtUH/ijr2oWFiHGmyFFoKW9uSPeTJ
+         vMGFUn7sxS9jA==
+Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-3a1bcdd0966so4643960b6e.2
+        for <linux-pci@vger.kernel.org>; Tue, 27 Jun 2023 22:10:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687929001; x=1690521001;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3bdC+uUyIZz0PgxeLe6K/fSeIXVXdbQUHA0MK3WxvKU=;
+        b=dWESd7sJsAhZkptQj9Xu6lXQscrTXxNZsEUYREFFkInbe3lDinuslpzZ7deyFOCdzz
+         YNK2yJ9wwZkPTjRxP6yO/gNHJPgm7CixEzRVcCpbIAht9FieIXglVR+YR20jcwmEacax
+         4axkbjBAq0TN/4HfTEP4i00ZuIGFPwhTZyyryvWCm9oyCmD71h2fT3x/LIv+1AWNCFE0
+         jnBYqfYKH8Js8ezY0wL4B7+sPw3qt3O0RQiCT0ljnrwRwk6Tvn5BcaImD6EOwKir3JwT
+         bGgbsu8v+UnzzXiUxjstVjQykuWRb5b7uuJBgc8KejS4A+QEYqh09Gf7ggONBlyixUWg
+         8oeQ==
+X-Gm-Message-State: AC+VfDzRgg3dpaA9ExVeTCNLsgJpp/uTfEYm5EVAZAa1JTwjgXo88RXO
+        3SGHRhUe5tiA7l7FuGG7O59okCnw29+akoFQ6sOg0z6kcerjqRDZEWEYzlrkxIR15kCY/SFnCoV
+        o0rd6eGdV3Knl5kUz1aihchuNmMtGBzdSvQoeDj40AHMP5Z2/TU4HyA==
+X-Received: by 2002:a05:6808:f11:b0:3a0:663d:fd18 with SMTP id m17-20020a0568080f1100b003a0663dfd18mr20647408oiw.57.1687929001322;
+        Tue, 27 Jun 2023 22:10:01 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ42ji0zs3PoUsCX1nWOxZzCYOQcakZVi3alWc7EDIew9NqDWXdRzRhCW/XfEnOwyZd2T3eG1ytrMp03ePtGO48=
+X-Received: by 2002:a05:6808:f11:b0:3a0:663d:fd18 with SMTP id
+ m17-20020a0568080f1100b003a0663dfd18mr20647388oiw.57.1687929001077; Tue, 27
+ Jun 2023 22:10:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cd34d241-98e4-d3fa-3ae2-89182e9cd190@quicinc.com>
+References: <CAAd53p4kH7E92++jabBhvsM_+M7Dpyk2JP+aoVdb_sxZn47eyQ@mail.gmail.com>
+ <20230627205417.GA366405@bhelgaas>
+In-Reply-To: <20230627205417.GA366405@bhelgaas>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Wed, 28 Jun 2023 13:09:49 +0800
+Message-ID: <CAAd53p5YjKbOkzBUmhu=EctusO7d38tHhg_b+zzvfVt97hLuOA@mail.gmail.com>
+Subject: Re: [PATCH] PCI/ASPM: Enable ASPM on external PCIe devices
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Limonciello, Mario" <mario.limonciello@amd.com>,
+        bhelgaas@google.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Michael Bottini <michael.a.bottini@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        intel-wired-lan@osuosl.org,
+        "Neftin, Sasha" <sasha.neftin@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 08:01:45AM +0530, Krishna Chaitanya Chundru wrote:
-> 
-> On 6/27/2023 7:23 PM, Manivannan Sadhasivam wrote:
-> > On Mon, Jun 26, 2023 at 07:18:49PM +0530, Krishna Chaitanya Chundru wrote:
-> > > On 6/23/2023 11:48 AM, Manivannan Sadhasivam wrote:
-> > > > On Wed, Jun 14, 2023 at 08:30:49PM +0530, Krishna chaitanya chundru wrote:
-> > > > > Add wakeup host op to dw_pcie_ep_ops to wake up host from D3cold
-> > > > > or D3hot.
-> > > > > 
-> > > > Commit message should describe how the wakeup is implemented in the driver.
-> > > I will correct this in next series.
-> > > > > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> > > > > ---
-> > > > >    drivers/pci/controller/dwc/pcie-qcom-ep.c | 34 +++++++++++++++++++++++++++++++
-> > > > >    1 file changed, 34 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> > > > > index 5d146ec..916a138 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> > > > > @@ -91,6 +91,7 @@
-> > > > >    /* PARF_PM_CTRL register fields */
-> > > > >    #define PARF_PM_CTRL_REQ_EXIT_L1		BIT(1)
-> > > > >    #define PARF_PM_CTRL_READY_ENTR_L23		BIT(2)
-> > > > > +#define PARF_PM_CTRL_XMT_PME			BIT(4)
-> > > > >    #define PARF_PM_CTRL_REQ_NOT_ENTR_L1		BIT(5)
-> > > > >    /* PARF_MHI_CLOCK_RESET_CTRL fields */
-> > > > > @@ -794,10 +795,43 @@ static void qcom_pcie_ep_init(struct dw_pcie_ep *ep)
-> > > > >    		dw_pcie_ep_reset_bar(pci, bar);
-> > > > >    }
-> > > > > +static int qcom_pcie_ep_wakeup_host(struct dw_pcie_ep *ep, u8 func_no)
-> > > > > +{
-> > > > > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > > > +	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
-> > > > > +	struct device *dev = pci->dev;
-> > > > > +	u32 perst, dstate, val;
-> > > > > +
-> > > > > +	perst = gpiod_get_value(pcie_ep->reset);
-> > > > > +	/* Toggle wake GPIO when device is in D3 cold */
-> > > > > +	if (perst) {
-> > > > > +		dev_info(dev, "Device is in D3 cold toggling wake\n");
-> > > > dev_dbg(). "Waking up the host by toggling WAKE#"
-> > > > 
-> > > > > +		gpiod_set_value_cansleep(pcie_ep->wake, 1);
-> > > > Waking a device from D3cold requires power-on sequence by the host and in the
-> > > > presence of Vaux, the EPF should be prepared for that. In that case, the mode of
-> > > > wakeup should be decided by the EPF driver. So the wakeup API should have an
-> > > > argument to decide whether the wakeup is through PME or sideband WAKE#.
-> > > > 
-> > > > Also note that as per PCIe Spec 3.0, the devices can support PME generation from
-> > > > D3cold provided that the Vaux is supplied to the device. I do not know if that
-> > > > is supported by Qcom devices but API should honor the spec. So the wakeup
-> > > > control should come from EPF driver as I suggested above.
-> > > I aggre with you, but how will EPF know the PCI device state is in D3cold or
-> > > D3hot.
-> > > 
-> > We should add a notifier in the controller driver which signals EPF when it
-> > receives the DState events.. Take a look at pci_epc_linkdown().
-> Ok I will add this kind of Dstate change event
-> > 
-> > > And how the EPF knows whether Vaux is supported or not in D3cold?
-> > > 
-> > > If there is any existing mechanism can you please point me that.
-> > > 
-> > > FYI Qcom does not support vaux power in D3 cold.
-> > > 
-> > If the EPF can trigger wakeup event during D3Cold then it means it is powered
-> > by Vaux, isn't it?
-> > 
-> > - Mani
-> 
-> EPF needs to know that if the endpoint is getting vaux in D3cold or not
-> without this info
-> 
-> EPF doesn't know wheather to send toggle wake or send Inband PME right.
-> 
-> I mean EPF should have some  prior information wheather vaux is supplied or
-> not to decide
-> 
-> wheather to toggle wake or send in band PME.
-> 
+[+Cc Sasha and Intel Wired Lan]
 
-Controller driver can use the #PERST level to detect D3Cold. Then it can pass
-that info to EPF over notifiers. EPF may decide whether to toggle #WAKE or
-send PME based on its configuration. For MHI EPF, it can toggle #WAKE as PME
-during D3Cold is not supported.
+On Wed, Jun 28, 2023 at 4:54=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>
+> On Tue, Jun 27, 2023 at 04:35:25PM +0800, Kai-Heng Feng wrote:
+> > On Fri, Jun 23, 2023 at 7:06=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.o=
+rg> wrote:
+> > > On Tue, Jun 20, 2023 at 01:36:59PM -0500, Limonciello, Mario wrote:
+> > > > <snip>
+> > > > > > A variety of Intel chipsets don't support lane width switching
+> > > > > > or speed switching.  When ASPM has been enabled on a dGPU,
+> > > > > > these features are utilized and breakage ensues.
+> > > > >
+> > > > > Maybe this helps explain all the completely unmaintainable ASPM
+> > > > > garbage in amdgpu and radeon.
+> > > > >
+> > > > > If these devices are broken, we need quirks for them.
+> > > >
+> > > > The problem is which device do you consider "broken"?
+> > > > The dGPU that uses these features when the platform advertises ASPM
+> > > > or the chipset which doesn't support the features that the device
+> > > > uses when ASPM is active?
+> > > >
+> > > > With this problem I'm talking about the dGPU works fine on hosts
+> > > > that support these features.
+> > >
+> > > Without more details about what's broken and when, I can't say.  What
+> > > I *think* is that a device that doesn't work per spec needs a quirk.
+> > > Typically it's a device that advertises a capability that doesn't wor=
+k
+> > > correctly.
+> >
+> > Many silicon vendors use the same "PCI IP" and integrate it into their
+> > own chip. That's one of the reason why the capability doesn't really
+> > reflect what actually being support.
+> > The vendors then send their private datasheet to system integrator so
+> > BIOS can enable what's really supported.
+>
+> It's perfectly fine for the IP to support PCI features that are not
+> and can not be enabled in a system design.  But I expect that
+> strapping or firmware would disable those features so they are not
+> advertised in config space.
+>
+> If BIOS leaves features disabled because they cannot work, but at the
+> same time leaves them advertised in config space, I'd say that's a
+> BIOS defect.  In that case, we should have a DMI quirk or something to
+> work around the defect.
 
-- Mani
+That means most if not all BIOS are defected.
+BIOS vendors and ODM never bothered (and probably will not) to change
+the capabilities advertised by config space because "it already works
+under Windows".
 
-> -KC
-> 
-> > 
-> > > > > +		usleep_range(WAKE_DELAY_US, WAKE_DELAY_US + 500);
-> > > > > +		gpiod_set_value_cansleep(pcie_ep->wake, 0);
-> > > > > +		return 0;
-> > > > > +	}
-> > > > > +
-> > > > > +	dstate = dw_pcie_readl_dbi(pci, DBI_CON_STATUS) &
-> > > > > +				   DBI_CON_STATUS_POWER_STATE_MASK;
-> > > > > +	if (dstate == 3) {
-> > > > > +		dev_info(dev, "Device is in D3 hot sending inband PME\n");
-> > > > dev_dbg(). As I said, the device can sent PME from D3cold also. So the log could
-> > > > be "Waking up the host using PME".
-> > > > 
-> > > > > +		val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
-> > > > > +		val |= PARF_PM_CTRL_XMT_PME;
-> > > > > +		writel_relaxed(val, pcie_ep->parf + PARF_PM_CTRL);
-> > > > > +	} else {
-> > > > > +		dev_err(dev, "Device is not in D3 state wakeup is not supported\n");
-> > > > > +		return -EPERM;
-> > > > -ENOTSUPP
-> > > > 
-> > > > - Mani
-> > > > 
-> > > > > +	}
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
-> > > > > +
-> > > > >    static const struct dw_pcie_ep_ops pci_ep_ops = {
-> > > > >    	.ep_init = qcom_pcie_ep_init,
-> > > > >    	.raise_irq = qcom_pcie_ep_raise_irq,
-> > > > >    	.get_features = qcom_pcie_epc_get_features,
-> > > > > +	.wakeup_host = qcom_pcie_ep_wakeup_host,
-> > > > >    };
-> > > > >    static int qcom_pcie_ep_probe(struct platform_device *pdev)
-> > > > > -- 
-> > > > > 2.7.4
-> > > > > 
+>
+> > So the logic is to ignore the capability and trust the default set
+> > by BIOS.
+>
+> I think limiting ASPM support to whatever BIOS configured at boot-time
+> is problematic.  I don't think we can assume that all platforms have
+> firmware that configures ASPM as aggressively as possible, and
+> obviously firmware won't configure hot-added devices at all (in
+> general; I know ACPI _HPX can do some of that).
 
--- 
-மணிவண்ணன் சதாசிவம்
+Totally agree. I was not suggesting to limiting the setting at all.
+A boot-time parameter to flip ASPM setting is very useful. If none has
+been set, default to BIOS setting.
+
+>
+> It's possible we need some kind of policy that limits ASPM to the BIOS
+> config until date X, but I don't want to limit that forever.
+
+Desktop can have very different PCIe cards in the slots so BIOS date
+isn't a good indicator for ASPM support.
+Let alone BIOS date changes on each BIOS upgrade, this means potential
+regression risk.
+
+>
+> > > > If you follow my idea of hot added devices the policy follows
+> > > > the parent would it work for the i225 PCIe device case?
+> > >
+> > > That doesn't *sound* really robust to me because even if the default
+> > > config after hot-add works, the user can change things via sysfs, and
+> > > any configuration we set it to should work as well.  If there are
+> > > land-mines there, we need a quirk that prevents sysfs from running
+> > > into it.
+> >
+> > For this case it means driver needs to provide a ASPM callback to flip
+> > PTM based on ASPM sysfs.
+>
+> I'm not sure I follow this, but it sounds like you're saying PTM
+> doesn't work correctly with some ASPM configurations.  Is this allowed
+> by the PCIe spec or is it a hardware defect?  If the latter, maybe we
+> just need a quirk to disable PTM on the device.
+
+I'll leave this one to Intel folks.
+
+>
+> I'm not sure PTM is valuable enough to add a generic callback
+> mechanism to work around a defect in an individual device.
+
+Agree. Right now the issue is only observed when I225 is in a TBT dock.
+
+Kai-Heng
+
+>
+> Bjorn
