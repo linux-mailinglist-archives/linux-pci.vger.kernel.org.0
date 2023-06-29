@@ -2,121 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36127742AEC
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Jun 2023 19:00:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07757742AED
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Jun 2023 19:00:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232095AbjF2RAJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Jun 2023 13:00:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50300 "EHLO
+        id S231823AbjF2RAX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Jun 2023 13:00:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231823AbjF2RAI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jun 2023 13:00:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CEDC2D4C
-        for <linux-pci@vger.kernel.org>; Thu, 29 Jun 2023 10:00:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E086F615A8
-        for <linux-pci@vger.kernel.org>; Thu, 29 Jun 2023 17:00:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 094FAC433C0;
-        Thu, 29 Jun 2023 17:00:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688058006;
-        bh=ekZJhfEVqtyX3t+uLKmzRW38MPCUXcmlO89VvVdAQak=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X5AbPL2HVz3TeQmXq1zjjfnu71OYU8djIbs5/c9qxDEwhZz5jhwcajuZCLWcAf1YG
-         6UjtkyusIMkEn35B9ID+o4wyUfD8Syj+nTCcdyoT9PQH/x1xQozB7BY/9ggREkIa5m
-         +vNMH+Blw10Ll3L+bBoLHUYfDeYOU98PCKzQpa6bfVEzt/EjOBjHHgC8AhqBbezmw2
-         vAywnOuyOp1lKkttmawODM3OHQ5RDeMx89L7jc2xW12syxhI21c7HiqbxdSsS5t0nc
-         cFRf2sMLMCraOSx/SFj5Kv2mSMq66XzgB4jZUanmp4mfQ2KMcF9CpX4PvfGzmz9voT
-         Vgm+m5Gfg9BLg==
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-To:     "Bjorn Helgaas" <bhelgaas@google.com>
-Cc:     "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
-        "Rob Herring" <robh@kernel.org>, "Yue Wang" <yue.wang@Amlogic.com>,
-        "Neil Armstrong" <neil.armstrong@linaro.org>,
-        "Kevin Hilman" <khilman@baylibre.com>,
-        "Jerome Brunet" <jbrunet@baylibre.com>,
-        "Martin Blumenstingl" <martin.blumenstingl@googlemail.com>,
-        "Srikanth Thokala" <srikanth.thokala@intel.com>,
-        "Daire McNamara" <daire.mcnamara@microchip.com>,
-        "Conor Dooley" <conor.dooley@microchip.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org
-Subject: [PATCH 3/3] PCI: microchip: Remove cast between incompatible function type
-Date:   Thu, 29 Jun 2023 16:59:56 +0000
-Message-ID: <20230629165956.237832-3-kwilczynski@kernel.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230629165956.237832-1-kwilczynski@kernel.org>
-References: <20230629165956.237832-1-kwilczynski@kernel.org>
+        with ESMTP id S229522AbjF2RAW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jun 2023 13:00:22 -0400
+Received: from 189.cn (ptr.189.cn [183.61.185.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0E3242D4C;
+        Thu, 29 Jun 2023 10:00:18 -0700 (PDT)
+HMM_SOURCE_IP: 10.64.8.31:48394.1297546617
+HMM_ATTACHE_NUM: 0000
+HMM_SOURCE_TYPE: SMTP
+Received: from clientip-114.242.206.180 (unknown [10.64.8.31])
+        by 189.cn (HERMES) with SMTP id 05A4C10020D;
+        Fri, 30 Jun 2023 01:00:13 +0800 (CST)
+Received: from  ([114.242.206.180])
+        by gateway-151646-dep-75648544bd-xp9j7 with ESMTP id 2713aa1564624f348fd6c097b85f39d9 for helgaas@kernel.org;
+        Fri, 30 Jun 2023 01:00:17 CST
+X-Transaction-ID: 2713aa1564624f348fd6c097b85f39d9
+X-Real-From: 15330273260@189.cn
+X-Receive-IP: 114.242.206.180
+X-MEDUSA-Status: 0
+Sender: 15330273260@189.cn
+Message-ID: <bcfdc77d-a94d-bca1-56e3-5e14e91f6fd9@189.cn>
+Date:   Fri, 30 Jun 2023 01:00:10 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v7 6/8] PCI/VGA: Introduce is_boot_device function
+ callback to vga_client_register
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Sui Jingfeng <suijingfeng@loongson.cn>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-fbdev@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        nouveau@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, YiPeng Chai <YiPeng.Chai@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        Likun Gao <Likun.Gao@amd.com>,
+        David Airlie <airlied@gmail.com>,
+        Ville Syrjala <ville.syrjala@linux.intel.com>,
+        Yi Liu <yi.l.liu@intel.com>, kvm@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        Ben Skeggs <bskeggs@redhat.com>, linux-pci@vger.kernel.org,
+        Kevin Tian <kevin.tian@intel.com>,
+        Lijo Lazar <lijo.lazar@amd.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Bokun Zhang <Bokun.Zhang@amd.com>,
+        intel-gfx@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Abhishek Sahu <abhsahu@nvidia.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Pan Xinhui <Xinhui.Pan@amd.com>, linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian Konig <christian.koenig@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>
+References: <20230629155436.GA397963@bhelgaas>
+Content-Language: en-US
+From:   Sui Jingfeng <15330273260@189.cn>
+In-Reply-To: <20230629155436.GA397963@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FROM_LOCAL_DIGITS,
+        FROM_LOCAL_HEX,NICE_REPLY_A,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Rather than casting void(*)(struct clk *) to void (*)(void *), that
-forces conversion to an incompatible function type, replace the cast
-with a small local stub function with a signature that matches what
-the devm_add_action_or_reset() function expects.
+Hi,
 
-The sub function takes a void *, then passes it directly to
-clk_disable_unprepare(), which handles the more specific type.
+On 2023/6/29 23:54, Bjorn Helgaas wrote:
+> On Thu, Jun 22, 2023 at 01:08:15PM +0800, Sui Jingfeng wrote:
+>> Hi,
+>>
+>>
+>> A nouveau developer(Lyude) from redhat send me a R-B,
+>>
+>> Thanks for the developers of nouveau project.
+>>
+>>
+>> Please allow me add a link[1] here.
+>>
+>>
+>> [1] https://lore.kernel.org/all/0afadc69f99a36bc9d03ecf54ff25859dbc10e28.camel@redhat.com/
+> 1) Thanks for this.  If you post another version of this series,
+>     please pick up Lyude's Reviewed-by and include it in the relevant
+>     patches (as long as you haven't made significant changes to the
+>     code Lyude reviewed).
 
-Reported by clang when building with warnings enabled:
+Yes, no significant changes. Just fix typo.
 
-  drivers/pci/controller/pcie-microchip-host.c:866:32: warning: cast from 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible function type [-Wcast-function-type-strict]
-          devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare,
-                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-No functional changes are intended.
+I also would like to add support for other DRM drivers.
 
-Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip PolarFire PCIe controller driver")
-Co-developed-by: Daire McNamara <daire.mcnamara@microchip.com>
-Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
-Co-developed-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
----
- drivers/pci/controller/pcie-microchip-host.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+But I think this deserve another patch.
 
-diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-index 5e710e485464..d30286f815e7 100644
---- a/drivers/pci/controller/pcie-microchip-host.c
-+++ b/drivers/pci/controller/pcie-microchip-host.c
-@@ -848,6 +848,13 @@ static const struct irq_domain_ops event_domain_ops = {
- 	.map = mc_pcie_event_map,
- };
- 
-+static inline void mc_pcie_deinit_clk(void *data)
-+{
-+	struct clk *clk = data;
-+
-+	clk_disable_unprepare(clk);
-+}
-+
- static inline struct clk *mc_pcie_init_clk(struct device *dev, const char *id)
- {
- 	struct clk *clk;
-@@ -863,8 +870,7 @@ static inline struct clk *mc_pcie_init_clk(struct device *dev, const char *id)
- 	if (ret)
- 		return ERR_PTR(ret);
- 
--	devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare,
--				 clk);
-+	devm_add_action_or_reset(dev, mc_pcie_deinit_clk, clk);
- 
- 	return clk;
- }
--- 
-2.41.0
+>   Whoever applies this should automatically
+>     pick up Reviewed-by/Ack/etc that are replies to the version being
+>     applied, but they won't go through previous revisions to find them.
+>
+> 2) Please mention the commit to which the series applies.  I tried to
+>     apply this on v6.4-rc1, but it doesn't apply cleanly.
 
+Since I'm a graphic driver developer, I'm using drm-tip.
+
+I just have already pulled, it still apply cleanly on drm-tip.
+
+> 3) Thanks for including cover letters in your postings.  Please
+>     include a little changelog in the cover letter so we know what
+>     changed between v6 and v7, etc.
+
+No change between v6 and v7,
+
+it seems that it is because the mailbox don't allow me to sending too 
+many mails a day.
+
+so some of the patch is failed to delivery because out of quota.
+
+
+> 4) Right now we're in the middle of the v6.5 merge window, so new
+>     content, e.g., this series, is too late for v6.5.  Most
+>     maintainers, including me, wait to merge new content until the
+>     merge window closes and a new -rc1 is tagged.  This merge window
+>     should close on July 9, and people will start merging content for
+>     v6.6, typically based on v6.5-rc1.
+
+I'm wondering
+
+Would you will merge all of the patches in this series (e.g. including 
+the patch for drm/amdgpu(7/8) and drm/radeon(8/8)) ?
+
+Or just part of them?
+
+Emm, I don't know because my patch seems across different subsystem of 
+Linux kernel.
+
+There is also a developer for AMDGPU (Mario) give me a R-B for the 
+patch-0002 of this series.
+
+So, at least, PATCH-0001, PATCH-0002, PATCH-0003, PATCH-0004, PATCH-0006 
+are already OK(got reviewed by).
+
+Those 5 patch are already qualified to be merged, I think.
+
+I means that if you could merge those 5 patch first, then there no need 
+to send another version again.
+
+I will refine the rest patch with more details and description.
+
+I'm fear of making too much noise.
+
+> Bjorn
