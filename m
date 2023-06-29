@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C2DD742AEA
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Jun 2023 19:00:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E6A0742AEB
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Jun 2023 19:00:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231974AbjF2RAD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Jun 2023 13:00:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50272 "EHLO
+        id S229794AbjF2RAH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Jun 2023 13:00:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231823AbjF2RAC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jun 2023 13:00:02 -0400
+        with ESMTP id S232095AbjF2RAF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jun 2023 13:00:05 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 135263588
-        for <linux-pci@vger.kernel.org>; Thu, 29 Jun 2023 10:00:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ECEE2D4C
+        for <linux-pci@vger.kernel.org>; Thu, 29 Jun 2023 10:00:04 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 89EC6615A0
-        for <linux-pci@vger.kernel.org>; Thu, 29 Jun 2023 17:00:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BF10C433C0;
-        Thu, 29 Jun 2023 16:59:58 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3CD4E615A8
+        for <linux-pci@vger.kernel.org>; Thu, 29 Jun 2023 17:00:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56124C433CB;
+        Thu, 29 Jun 2023 17:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688058001;
-        bh=+L4Ij4wrOLbQ96O/FTu1MsLp0W4gkxcKZWK0acwmpS0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=MoXbH0bE6di+C5UwzqeyctmCs7co1wTv2/KtomUNC/fC9yUdGAPwseRlgW5d23hWE
-         plF0wyxsCMm+621H7Q4FLFBJLVTuDGEexWwSPPLLAGzqYCBnM4cM2eq8r9iBUclwJH
-         o0HkzQ6jEn8kfICJXfqaXfcnWWFlFuBJiCH/cxOsiCHaVpLooPfGLnERka3fbki7JK
-         IQsY4jD4TIlWo97Cu1MVuX4wZnT49xoOHFddGroHI6vuihy3y5IGqYnrgZZLYZ6buN
-         PyjzETzJxip3GlZmarkpZZR+zLSu9uRz9TQdQ6C33nzlnSHf68zJyASxgS52ZD0uCy
-         fvRvmYU5sLo1w==
+        s=k20201202; t=1688058003;
+        bh=HEnFcC/moYFnoPxBY2BVOmQpDQ1kN+hXUcu13kg/9xk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hMiUThPtt9QAVsqDXwBF4//tBZBsxF9cv8K24qAnQBF1YPPr2BkybozUVl+avaJRN
+         udUNE/uWoNH0W9u0vh6Pe1s6DRUYBaZofTLVKRbwBm4aGhAuszASWydvu4jqs5TrX5
+         Rg2/xKVIGWlyUJ+Pm9OWZ7vsWian4pSnl2/NdwzLcvDkUjr9MlSFv2e+O5pc9k1eqS
+         BM4I7iEjRdL3AlpYI3d8zXaM3thEfoLDsELu6TNj1+wsae1ytO/H+FaWbqcr1+tegT
+         6xOperToL6lTnjq2HCdi5ek/XcR6N93xhMn/IeTCw7/TpU7FMaf0C4uNlWacQBLFQ5
+         nONfrPP1e+0Tw==
 From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
 To:     "Bjorn Helgaas" <bhelgaas@google.com>
 Cc:     "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
@@ -45,10 +45,12 @@ Cc:     "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
         "Conor Dooley" <conor.dooley@microchip.com>,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org
-Subject: [PATCH 1/3] PCI: meson: Remove cast between incompatible function type
-Date:   Thu, 29 Jun 2023 16:59:54 +0000
-Message-ID: <20230629165956.237832-1-kwilczynski@kernel.org>
+Subject: [PATCH 2/3] PCI: keembay: Remove cast between incompatible function type
+Date:   Thu, 29 Jun 2023 16:59:55 +0000
+Message-ID: <20230629165956.237832-2-kwilczynski@kernel.org>
 X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230629165956.237832-1-kwilczynski@kernel.org>
+References: <20230629165956.237832-1-kwilczynski@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -72,46 +74,46 @@ clk_disable_unprepare(), which handles the more specific type.
 
 Reported by clang when building with warnings enabled:
 
-  drivers/pci/controller/dwc/pci-meson.c:191:6: warning: cast from 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible function type [-Wcast-function-type-strict]
-                                   (void (*) (void *))clk_disable_unprepare,
-                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  drivers/pci/controller/dwc/pcie-keembay.c:172:12: warning: cast from 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible function type [-Wcast-function-type-strict]
+                                         (void(*)(void *))clk_disable_unprepare,
+                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 No functional changes are intended.
 
-Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
+Fixes: 0c87f90b4c13 ("PCI: keembay: Add support for Intel Keem Bay")
 Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-meson.c | 11 ++++++++---
+ drivers/pci/controller/dwc/pcie-keembay.c | 11 ++++++++---
  1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-index c1527693bed9..34990a6363d0 100644
---- a/drivers/pci/controller/dwc/pci-meson.c
-+++ b/drivers/pci/controller/dwc/pci-meson.c
-@@ -163,6 +163,13 @@ static int meson_pcie_reset(struct meson_pcie *mp)
- 	return 0;
- }
+diff --git a/drivers/pci/controller/dwc/pcie-keembay.c b/drivers/pci/controller/dwc/pcie-keembay.c
+index f90f36bac018..289bff99d762 100644
+--- a/drivers/pci/controller/dwc/pcie-keembay.c
++++ b/drivers/pci/controller/dwc/pcie-keembay.c
+@@ -148,6 +148,13 @@ static const struct dw_pcie_ops keembay_pcie_ops = {
+ 	.stop_link	= keembay_pcie_stop_link,
+ };
  
-+static inline void meson_pcie_disable_clock(void *data)
++static inline void keembay_pcie_disable_clock(void *data)
 +{
 +	struct clk *clk = data;
 +
 +	clk_disable_unprepare(clk);
 +}
 +
- static inline struct clk *meson_pcie_probe_clock(struct device *dev,
- 						 const char *id, u64 rate)
+ static inline struct clk *keembay_pcie_probe_clock(struct device *dev,
+ 						   const char *id, u64 rate)
  {
-@@ -187,9 +194,7 @@ static inline struct clk *meson_pcie_probe_clock(struct device *dev,
+@@ -168,9 +175,7 @@ static inline struct clk *keembay_pcie_probe_clock(struct device *dev,
+ 	if (ret)
  		return ERR_PTR(ret);
- 	}
  
--	devm_add_action_or_reset(dev,
--				 (void (*) (void *))clk_disable_unprepare,
--				 clk);
-+	devm_add_action_or_reset(dev, meson_pcie_disable_clock, clk);
+-	ret = devm_add_action_or_reset(dev,
+-				       (void(*)(void *))clk_disable_unprepare,
+-				       clk);
++	ret = devm_add_action_or_reset(dev, keembay_pcie_disable_clock, clk);
+ 	if (ret)
+ 		return ERR_PTR(ret);
  
- 	return clk;
- }
 -- 
 2.41.0
 
