@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E6A0742AEB
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Jun 2023 19:00:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36127742AEC
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Jun 2023 19:00:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229794AbjF2RAH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Jun 2023 13:00:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50294 "EHLO
+        id S232095AbjF2RAJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Jun 2023 13:00:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232095AbjF2RAF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jun 2023 13:00:05 -0400
+        with ESMTP id S231823AbjF2RAI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jun 2023 13:00:08 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ECEE2D4C
-        for <linux-pci@vger.kernel.org>; Thu, 29 Jun 2023 10:00:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CEDC2D4C
+        for <linux-pci@vger.kernel.org>; Thu, 29 Jun 2023 10:00:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3CD4E615A8
-        for <linux-pci@vger.kernel.org>; Thu, 29 Jun 2023 17:00:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56124C433CB;
-        Thu, 29 Jun 2023 17:00:01 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E086F615A8
+        for <linux-pci@vger.kernel.org>; Thu, 29 Jun 2023 17:00:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 094FAC433C0;
+        Thu, 29 Jun 2023 17:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688058003;
-        bh=HEnFcC/moYFnoPxBY2BVOmQpDQ1kN+hXUcu13kg/9xk=;
+        s=k20201202; t=1688058006;
+        bh=ekZJhfEVqtyX3t+uLKmzRW38MPCUXcmlO89VvVdAQak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hMiUThPtt9QAVsqDXwBF4//tBZBsxF9cv8K24qAnQBF1YPPr2BkybozUVl+avaJRN
-         udUNE/uWoNH0W9u0vh6Pe1s6DRUYBaZofTLVKRbwBm4aGhAuszASWydvu4jqs5TrX5
-         Rg2/xKVIGWlyUJ+Pm9OWZ7vsWian4pSnl2/NdwzLcvDkUjr9MlSFv2e+O5pc9k1eqS
-         BM4I7iEjRdL3AlpYI3d8zXaM3thEfoLDsELu6TNj1+wsae1ytO/H+FaWbqcr1+tegT
-         6xOperToL6lTnjq2HCdi5ek/XcR6N93xhMn/IeTCw7/TpU7FMaf0C4uNlWacQBLFQ5
-         nONfrPP1e+0Tw==
+        b=X5AbPL2HVz3TeQmXq1zjjfnu71OYU8djIbs5/c9qxDEwhZz5jhwcajuZCLWcAf1YG
+         6UjtkyusIMkEn35B9ID+o4wyUfD8Syj+nTCcdyoT9PQH/x1xQozB7BY/9ggREkIa5m
+         +vNMH+Blw10Ll3L+bBoLHUYfDeYOU98PCKzQpa6bfVEzt/EjOBjHHgC8AhqBbezmw2
+         vAywnOuyOp1lKkttmawODM3OHQ5RDeMx89L7jc2xW12syxhI21c7HiqbxdSsS5t0nc
+         cFRf2sMLMCraOSx/SFj5Kv2mSMq66XzgB4jZUanmp4mfQ2KMcF9CpX4PvfGzmz9voT
+         Vgm+m5Gfg9BLg==
 From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
 To:     "Bjorn Helgaas" <bhelgaas@google.com>
 Cc:     "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
@@ -45,9 +45,9 @@ Cc:     "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
         "Conor Dooley" <conor.dooley@microchip.com>,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org
-Subject: [PATCH 2/3] PCI: keembay: Remove cast between incompatible function type
-Date:   Thu, 29 Jun 2023 16:59:55 +0000
-Message-ID: <20230629165956.237832-2-kwilczynski@kernel.org>
+Subject: [PATCH 3/3] PCI: microchip: Remove cast between incompatible function type
+Date:   Thu, 29 Jun 2023 16:59:56 +0000
+Message-ID: <20230629165956.237832-3-kwilczynski@kernel.org>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20230629165956.237832-1-kwilczynski@kernel.org>
 References: <20230629165956.237832-1-kwilczynski@kernel.org>
@@ -74,46 +74,49 @@ clk_disable_unprepare(), which handles the more specific type.
 
 Reported by clang when building with warnings enabled:
 
-  drivers/pci/controller/dwc/pcie-keembay.c:172:12: warning: cast from 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible function type [-Wcast-function-type-strict]
-                                         (void(*)(void *))clk_disable_unprepare,
-                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  drivers/pci/controller/pcie-microchip-host.c:866:32: warning: cast from 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible function type [-Wcast-function-type-strict]
+          devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare,
+                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 No functional changes are intended.
 
-Fixes: 0c87f90b4c13 ("PCI: keembay: Add support for Intel Keem Bay")
+Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip PolarFire PCIe controller driver")
+Co-developed-by: Daire McNamara <daire.mcnamara@microchip.com>
+Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+Co-developed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Simon Horman <horms@kernel.org>
 Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-keembay.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-microchip-host.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-keembay.c b/drivers/pci/controller/dwc/pcie-keembay.c
-index f90f36bac018..289bff99d762 100644
---- a/drivers/pci/controller/dwc/pcie-keembay.c
-+++ b/drivers/pci/controller/dwc/pcie-keembay.c
-@@ -148,6 +148,13 @@ static const struct dw_pcie_ops keembay_pcie_ops = {
- 	.stop_link	= keembay_pcie_stop_link,
+diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
+index 5e710e485464..d30286f815e7 100644
+--- a/drivers/pci/controller/pcie-microchip-host.c
++++ b/drivers/pci/controller/pcie-microchip-host.c
+@@ -848,6 +848,13 @@ static const struct irq_domain_ops event_domain_ops = {
+ 	.map = mc_pcie_event_map,
  };
  
-+static inline void keembay_pcie_disable_clock(void *data)
++static inline void mc_pcie_deinit_clk(void *data)
 +{
 +	struct clk *clk = data;
 +
 +	clk_disable_unprepare(clk);
 +}
 +
- static inline struct clk *keembay_pcie_probe_clock(struct device *dev,
- 						   const char *id, u64 rate)
+ static inline struct clk *mc_pcie_init_clk(struct device *dev, const char *id)
  {
-@@ -168,9 +175,7 @@ static inline struct clk *keembay_pcie_probe_clock(struct device *dev,
+ 	struct clk *clk;
+@@ -863,8 +870,7 @@ static inline struct clk *mc_pcie_init_clk(struct device *dev, const char *id)
  	if (ret)
  		return ERR_PTR(ret);
  
--	ret = devm_add_action_or_reset(dev,
--				       (void(*)(void *))clk_disable_unprepare,
--				       clk);
-+	ret = devm_add_action_or_reset(dev, keembay_pcie_disable_clock, clk);
- 	if (ret)
- 		return ERR_PTR(ret);
+-	devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare,
+-				 clk);
++	devm_add_action_or_reset(dev, mc_pcie_deinit_clk, clk);
  
+ 	return clk;
+ }
 -- 
 2.41.0
 
