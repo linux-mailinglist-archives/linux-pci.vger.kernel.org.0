@@ -2,61 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FCE2742E5B
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Jun 2023 22:31:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 456E5742E92
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Jun 2023 22:37:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230462AbjF2UbI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Jun 2023 16:31:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40592 "EHLO
+        id S229742AbjF2UhJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Jun 2023 16:37:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230256AbjF2UbH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jun 2023 16:31:07 -0400
+        with ESMTP id S229710AbjF2UhI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jun 2023 16:37:08 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3694530F0
-        for <linux-pci@vger.kernel.org>; Thu, 29 Jun 2023 13:31:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA612E4B;
+        Thu, 29 Jun 2023 13:37:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9BD6F61632
-        for <linux-pci@vger.kernel.org>; Thu, 29 Jun 2023 20:31:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF2F6C433C0;
-        Thu, 29 Jun 2023 20:30:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5BE326162A;
+        Thu, 29 Jun 2023 20:37:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 787B8C433C0;
+        Thu, 29 Jun 2023 20:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688070661;
-        bh=FCckL39hhcHT57R5uYeNPhUQQwIFbfubCkljbMtdAYM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pMFxkZiZLQWOpfqIBlL5paN6vadf1xSqWH3B6cDg6kABJyAg2i8HrcsxL+IhRhc0c
-         IOsoaOZu0zbuIODy6l6FoTHHpq97rmxDSXrvRNyxm/OHUCmVsrMR653cFN6ahVNpTM
-         qUd669BbNdNkLyY3fRbgT5zD0BnZr4hNzl0RoX3x1P6/2OqZpbkQ1d63XJZ/ejlh6p
-         boHl0SpSzSuZt0ysN/UtfNgjKS7v8M5iSNITjGA6KX694kD0PBJgItkHBPOFCxpKfi
-         afmfzOc80had61Fthbtb8M8adSHUjeyO/MtIhmUUkCmPeeKLBVaXgvn6KgA/8ENsPt
-         bHcWmAI5xLtKg==
-Date:   Thu, 29 Jun 2023 21:30:55 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>, Yue Wang <yue.wang@amlogic.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Srikanth Thokala <srikanth.thokala@intel.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 3/3] PCI: microchip: Remove cast between incompatible
- function type
-Message-ID: <20230629-smirk-resample-6741dcf9eac5@spud>
-References: <20230629165956.237832-1-kwilczynski@kernel.org>
- <20230629165956.237832-3-kwilczynski@kernel.org>
+        s=k20201202; t=1688071026;
+        bh=F4iR1kf4VjUJOXwXJoDpEKi6qL+AsCelLmSSb+C9vzg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=iq8zmXdv4336YTUGZ5+0I7NVnRp8iuqMub1tJEsNbDsYkpcu/gU0ve2qDl9VgL5Ab
+         VkK7XPMKF1fD5upJfy6tbKgHcEM7u/5dNq6DvuB8j/PaI69VWA5+PHRGkgiljd0KK/
+         JwCG/WEY2dncXdIeufVUe08xXxoiYrA8viTm3ODt2c9f/wdVX3MxNsFkuuP4sTBySe
+         RAT6L4zn7bhkpk8+Eu4igd4jCLy5Nv5K6rXwDPCa4/SNW1IJD55zw7ZP3VqZCw/ExV
+         XQCXbIRuiRw7ndDNT5qjZcs7XWyhsKNGyAgrgQrwwkslVwtuyZWgsD0VVkSQI9s5me
+         w5tWvNkuxH72A==
+Date:   Thu, 29 Jun 2023 15:37:04 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lizhi Hou <lizhi.hou@amd.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh@kernel.org, max.zhen@amd.com,
+        sonal.santan@amd.com, stefano.stabellini@xilinx.com
+Subject: Re: [PATCH V10 3/5] PCI: Add quirks to generate device tree node for
+ Xilinx Alveo U50
+Message-ID: <20230629203704.GA446887@bhelgaas>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="1tORRD56oX7m24Ur"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230629165956.237832-3-kwilczynski@kernel.org>
+In-Reply-To: <1688059190-4225-4-git-send-email-lizhi.hou@amd.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -67,58 +55,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Jun 29, 2023 at 10:19:48AM -0700, Lizhi Hou wrote:
+> The Xilinx Alveo U50 PCI card exposes multiple hardware peripherals on
+> its PCI BAR. The card firmware provides a flattened device tree to
+> describe the hardware peripherals on its BARs. This allows U50 driver to
+> load the flattened device tree and generate the device tree node for
+> hardware peripherals underneath.
+> 
+> To generate device tree node for U50 card, add PCI quirks to call
+> of_pci_make_dev_node() for U50.
+> 
+> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
 
---1tORRD56oX7m24Ur
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-On Thu, Jun 29, 2023 at 04:59:56PM +0000, Krzysztof Wilczy=C5=84ski wrote:
-> Rather than casting void(*)(struct clk *) to void (*)(void *), that
-> forces conversion to an incompatible function type, replace the cast
-> with a small local stub function with a signature that matches what
-> the devm_add_action_or_reset() function expects.
->=20
-> The sub function takes a void *, then passes it directly to
-> clk_disable_unprepare(), which handles the more specific type.
->=20
-> Reported by clang when building with warnings enabled:
->=20
->   drivers/pci/controller/pcie-microchip-host.c:866:32: warning: cast from=
- 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible fu=
-nction type [-Wcast-function-type-strict]
->           devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_un=
-prepare,
->                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~~~
-> No functional changes are intended.
->=20
-> Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip PolarFire PCIe contro=
-ller driver")
-> Co-developed-by: Daire McNamara <daire.mcnamara@microchip.com>
-> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
-> Co-developed-by: Simon Horman <horms@kernel.org>
-> Signed-off-by: Simon Horman <horms@kernel.org>
-> Signed-off-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
+I already gave my ack for v9, so ideally you would add that before
+posting the v10.  But here it is again :)
 
-This looks to be the same content wise as the patch I previously acked &
-effectively the same as the one I previously reviewed - you could have
-picked up either of those tags from the other submissions tbh.
-
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-Cheers,
-Conor.
-
---1tORRD56oX7m24Ur
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZJ3p/wAKCRB4tDGHoIJi
-0nbtAP4sy4P0Oru7YzNbLHMrWLhkwYJyOVKPMFqjwd0yIUAjLAD+M46rYMGjK+Se
-VSqbMkFjW4dHvnCRoYjmNpzWoWvKUAc=
-=eJrt
------END PGP SIGNATURE-----
-
---1tORRD56oX7m24Ur--
+> ---
+>  drivers/pci/quirks.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index c525867760bf..7776012eb03f 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -6041,3 +6041,15 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2d, dpc_log_size);
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2f, dpc_log_size);
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
+>  #endif
+> +
+> +/*
+> + * For a PCI device with multiple downstream devices, its driver may use
+> + * a flattened device tree to describe the downstream devices.
+> + *
+> + * To overlay the flattened device tree, the PCI device and all its ancestor
+> + * devices need to have device tree nodes on system base device tree. Thus,
+> + * before driver probing, it might need to add a device tree node as the final
+> + * fixup.
+> + */
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
+> -- 
+> 2.34.1
+> 
