@@ -2,214 +2,500 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A982F742A4F
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Jun 2023 18:10:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F099742AE4
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Jun 2023 18:58:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229910AbjF2QJ7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Jun 2023 12:09:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36970 "EHLO
+        id S231843AbjF2Q6o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Jun 2023 12:58:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232212AbjF2QJx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jun 2023 12:09:53 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AE651FD2;
-        Thu, 29 Jun 2023 09:09:52 -0700 (PDT)
+        with ESMTP id S230455AbjF2Q6n (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jun 2023 12:58:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D29B32D4C;
+        Thu, 29 Jun 2023 09:58:41 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CD1B16156D;
-        Thu, 29 Jun 2023 16:09:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F6EDC433C0;
-        Thu, 29 Jun 2023 16:09:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2007B615AF;
+        Thu, 29 Jun 2023 16:58:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CE46C433C8;
+        Thu, 29 Jun 2023 16:58:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688054991;
-        bh=vhzCcDGrCZn7v/AnfX+ZlH4QkMwDK30If/JXCB4OF1I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=VkVAWEkBpAUYJ1VHDghx8U2eug8D2go4ktax+QI74KbTtX9ZuyMle1c//inrZ5+W1
-         z2uuCOeOy3afDTZqlHJK7kzn2XOobOrrNW+8kROq49Bb5XT8zYvhV55kkcE4QpWiGG
-         5ORA/tY+0NmiYqL69wtae/pnhVu6YsmSK6UzOYKWVtOipscoWzhw7VIi66D8kwXfoR
-         OXLBlndW03mlgWAalhulj/OnkwZgx78DQgD1/GWtZeIdTw4s5KaTj4rVoaVF1CwsRO
-         X7ae9IR2Y5fvY4yqlqky7hTWfPjYTnW+gkw8dz4ggA39RsX7rk4vYaVWgYRmY4YCUg
-         pwOsMozFGEBWg==
-Date:   Thu, 29 Jun 2023 11:09:49 -0500
+        s=k20201202; t=1688057920;
+        bh=FQntZ6/LqIfW8Aeoys0cCNfrFRK7KsODpzAfiQHGArw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KYMGAygL8Pgw8FEm1HNU2K1M980PCp/iQxpFr8rL63KnuhfuMCinIowq2os1CVdp1
+         GdYL1wjbiZ/DskRVksAVnVFBXA74xbyOHx53RSAgPQTTg2afYihXTZmJikDL3EDfoj
+         DD7i0SDByIe0HYSP4eQeDONSGApRcu/U7DkCvvQfHGUHRYuBOjfwIHtaz/0Pqq757o
+         OrMCqtFwlsrnRJAd1PYAJyjNgo3Hg6A3TOOxbqUD1CgPUrSMnIAkN7U0BK1Fe42kHw
+         9p13j+XYZ6AStLDytCWT+8knPQFywnWU+HuhaUMfRcOdgGULPiJ+f//+ykCGmZ19n5
+         GnUnF+jKiL3cw==
+Date:   Thu, 29 Jun 2023 11:58:38 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= 
-        <amadeuszx.slawinski@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: Re: [RFC PATCH 1/8] PCI: Add Intel Audio DSP devices to pci_ids.h
-Message-ID: <20230629160949.GA399417@bhelgaas>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: [GIT PULL] PCI changes for v6.5
+Message-ID: <20230629165838.GA438762@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230628205135.517241-2-amadeuszx.slawinski@linux.intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UPPERCASE_50_75
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 10:51:28PM +0200, Amadeusz Sławiński wrote:
-> Those IDs are mostly sprinkled between HDA, Skylake, SOF and avs drivers.
-> Almost every use contains additional comments to identify to which
-> platform those IDs refer to. Add those IDs to pci_ids.h header, so that
-> there is one place which defines those names.
-> 
-> Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+The following changes since commit ac9a78681b921877518763ba0e89202254349d1b:
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+  Linux 6.4-rc1 (2023-05-07 13:34:35 -0700)
 
-Thanks for keeping these all sorted!  Feel free to merge this via the
-ALSA tree or whereever the rest of the series goes.
+are available in the Git repository at:
 
-> ---
->  include/linux/pci_ids.h | 44 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
-> 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index a99b1fcfc617..de675c6cfb63 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2636,6 +2636,7 @@
->  
->  #define PCI_VENDOR_ID_INTEL		0x8086
->  #define PCI_DEVICE_ID_INTEL_EESSC	0x0008
-> +#define PCI_DEVICE_ID_INTEL_HDA_CML_LP	0x02c8
->  #define PCI_DEVICE_ID_INTEL_PXHD_0	0x0320
->  #define PCI_DEVICE_ID_INTEL_PXHD_1	0x0321
->  #define PCI_DEVICE_ID_INTEL_PXH_0	0x0329
-> @@ -2651,6 +2652,7 @@
->  #define PCI_DEVICE_ID_INTEL_82424	0x0483
->  #define PCI_DEVICE_ID_INTEL_82378	0x0484
->  #define PCI_DEVICE_ID_INTEL_82425	0x0486
-> +#define PCI_DEVICE_ID_INTEL_HDA_CML_H	0x06c8
->  #define PCI_DEVICE_ID_INTEL_MRST_SD0	0x0807
->  #define PCI_DEVICE_ID_INTEL_MRST_SD1	0x0808
->  #define PCI_DEVICE_ID_INTEL_MFD_SD	0x0820
-> @@ -2662,12 +2664,19 @@
->  #define PCI_DEVICE_ID_INTEL_QUARK_X1000_ILB	0x095e
->  #define PCI_DEVICE_ID_INTEL_I960	0x0960
->  #define PCI_DEVICE_ID_INTEL_I960RM	0x0962
-> +#define PCI_DEVICE_ID_INTEL_HDA_HSW_0	0x0a0c
-> +#define PCI_DEVICE_ID_INTEL_HDA_HSW_2	0x0c0c
->  #define PCI_DEVICE_ID_INTEL_CENTERTON_ILB	0x0c60
-> +#define PCI_DEVICE_ID_INTEL_HDA_HSW_3	0x0d0c
-> +#define PCI_DEVICE_ID_INTEL_HDA_BYT	0x0f04
->  #define PCI_DEVICE_ID_INTEL_8257X_SOL	0x1062
->  #define PCI_DEVICE_ID_INTEL_82573E_SOL	0x1085
->  #define PCI_DEVICE_ID_INTEL_82573L_SOL	0x108f
->  #define PCI_DEVICE_ID_INTEL_82815_MC	0x1130
->  #define PCI_DEVICE_ID_INTEL_82815_CGC	0x1132
-> +#define PCI_DEVICE_ID_INTEL_HDA_MRFLD	0x119a
-> +#define PCI_DEVICE_ID_INTEL_HDA_BDW	0x160c
-> +#define PCI_DEVICE_ID_INTEL_HDA_APL_T	0x1a98
->  #define PCI_DEVICE_ID_INTEL_82092AA_0	0x1221
->  #define PCI_DEVICE_ID_INTEL_7505_0	0x2550
->  #define PCI_DEVICE_ID_INTEL_7205_0	0x255d
-> @@ -2710,6 +2719,7 @@
->  #define PCI_DEVICE_ID_INTEL_PANTHERPOINT_LPC_MIN	0x1e40
->  #define PCI_DEVICE_ID_INTEL_PANTHERPOINT_LPC_MAX	0x1e5f
->  #define PCI_DEVICE_ID_INTEL_VMD_201D	0x201d
-> +#define PCI_DEVICE_ID_INTEL_HDA_BSW	0x2284
->  #define PCI_DEVICE_ID_INTEL_DH89XXCC_LPC_MIN	0x2310
->  #define PCI_DEVICE_ID_INTEL_DH89XXCC_LPC_MAX	0x231f
->  #define PCI_DEVICE_ID_INTEL_82801AA_0	0x2410
-> @@ -2875,6 +2885,7 @@
->  #define PCI_DEVICE_ID_INTEL_LYNNFIELD_MC_CH2_ADDR_REV2  0x2db1
->  #define PCI_DEVICE_ID_INTEL_LYNNFIELD_MC_CH2_RANK_REV2  0x2db2
->  #define PCI_DEVICE_ID_INTEL_LYNNFIELD_MC_CH2_TC_REV2    0x2db3
-> +#define PCI_DEVICE_ID_INTEL_HDA_GML	0x3198
->  #define PCI_DEVICE_ID_INTEL_82855PM_HB	0x3340
->  #define PCI_DEVICE_ID_INTEL_IOAT_TBG4	0x3429
->  #define PCI_DEVICE_ID_INTEL_IOAT_TBG5	0x342a
-> @@ -2885,6 +2896,7 @@
->  #define PCI_DEVICE_ID_INTEL_IOAT_TBG1	0x3431
->  #define PCI_DEVICE_ID_INTEL_IOAT_TBG2	0x3432
->  #define PCI_DEVICE_ID_INTEL_IOAT_TBG3	0x3433
-> +#define PCI_DEVICE_ID_INTEL_HDA_ICL_LP	0x34c8
->  #define PCI_DEVICE_ID_INTEL_82830_HB	0x3575
->  #define PCI_DEVICE_ID_INTEL_82830_CGC	0x3577
->  #define PCI_DEVICE_ID_INTEL_82854_HB	0x358c
-> @@ -2917,6 +2929,7 @@
->  #define PCI_DEVICE_ID_INTEL_IOAT_JSF9	0x3719
->  #define PCI_DEVICE_ID_INTEL_QAT_C62X	0x37c8
->  #define PCI_DEVICE_ID_INTEL_QAT_C62X_VF	0x37c9
-> +#define PCI_DEVICE_ID_INTEL_HDA_ICL_N	0x38c8
->  #define PCI_DEVICE_ID_INTEL_ICH10_0	0x3a14
->  #define PCI_DEVICE_ID_INTEL_ICH10_1	0x3a16
->  #define PCI_DEVICE_ID_INTEL_ICH10_2	0x3a18
-> @@ -2961,12 +2974,27 @@
->  #define PCI_DEVICE_ID_INTEL_SBRIDGE_SAD0	0x3cf4	/* 12.6 */
->  #define PCI_DEVICE_ID_INTEL_SBRIDGE_BR		0x3cf5	/* 13.6 */
->  #define PCI_DEVICE_ID_INTEL_SBRIDGE_SAD1	0x3cf6	/* 12.7 */
-> +#define PCI_DEVICE_ID_INTEL_HDA_ICL_H	0x3dc8
->  #define PCI_DEVICE_ID_INTEL_IOAT_SNB	0x402f
->  #define PCI_DEVICE_ID_INTEL_5400_ERR	0x4030
->  #define PCI_DEVICE_ID_INTEL_5400_FBD0	0x4035
->  #define PCI_DEVICE_ID_INTEL_5400_FBD1	0x4036
-> +#define PCI_DEVICE_ID_INTEL_HDA_JSL_N	0x4dc8
-> +#define PCI_DEVICE_ID_INTEL_HDA_TGL_H	0x43c8
-> +#define PCI_DEVICE_ID_INTEL_HDA_EHL_0	0x4b55
-> +#define PCI_DEVICE_ID_INTEL_HDA_EHL_3	0x4b58
->  #define PCI_DEVICE_ID_INTEL_EP80579_0	0x5031
->  #define PCI_DEVICE_ID_INTEL_EP80579_1	0x5032
-> +#define PCI_DEVICE_ID_INTEL_HDA_ADL_P	0x51c8
-> +#define PCI_DEVICE_ID_INTEL_HDA_ADL_PS	0x51c9
-> +#define PCI_DEVICE_ID_INTEL_HDA_RPL_P_0	0x51ca
-> +#define PCI_DEVICE_ID_INTEL_HDA_RPL_P_1	0x51cb
-> +#define PCI_DEVICE_ID_INTEL_HDA_ADL_M	0x51cc
-> +#define PCI_DEVICE_ID_INTEL_HDA_ADL_PX	0x51cd
-> +#define PCI_DEVICE_ID_INTEL_HDA_RPL_M	0x51ce
-> +#define PCI_DEVICE_ID_INTEL_HDA_RPL_PX	0x51cf
-> +#define PCI_DEVICE_ID_INTEL_HDA_ADL_N	0x54c8
-> +#define PCI_DEVICE_ID_INTEL_HDA_APL	0x5a98
->  #define PCI_DEVICE_ID_INTEL_5100_16	0x65f0
->  #define PCI_DEVICE_ID_INTEL_5100_19	0x65f3
->  #define PCI_DEVICE_ID_INTEL_5100_21	0x65f5
-> @@ -3000,6 +3028,9 @@
->  #define PCI_DEVICE_ID_INTEL_82443GX_0	0x71a0
->  #define PCI_DEVICE_ID_INTEL_82443GX_2	0x71a2
->  #define PCI_DEVICE_ID_INTEL_82372FB_1	0x7601
-> +#define PCI_DEVICE_ID_INTEL_HDA_RPL_S	0x7a50
-> +#define PCI_DEVICE_ID_INTEL_HDA_ADL_S	0x7ad0
-> +#define PCI_DEVICE_ID_INTEL_HDA_MTL	0x7e28
->  #define PCI_DEVICE_ID_INTEL_SCH_LPC	0x8119
->  #define PCI_DEVICE_ID_INTEL_SCH_IDE	0x811a
->  #define PCI_DEVICE_ID_INTEL_E6XX_CU	0x8183
-> @@ -3011,8 +3042,21 @@
->  #define PCI_DEVICE_ID_INTEL_84460GX	0x84ea
->  #define PCI_DEVICE_ID_INTEL_IXP4XX	0x8500
->  #define PCI_DEVICE_ID_INTEL_IXP2800	0x9004
-> +#define PCI_DEVICE_ID_INTEL_HDA_LKF	0x98c8
->  #define PCI_DEVICE_ID_INTEL_VMD_9A0B	0x9a0b
-> +#define PCI_DEVICE_ID_INTEL_HDA_SKL_LP	0x9d70
-> +#define PCI_DEVICE_ID_INTEL_HDA_KBL_LP	0x9d71
-> +#define PCI_DEVICE_ID_INTEL_HDA_CNL_LP	0x9dc8
-> +#define PCI_DEVICE_ID_INTEL_HDA_TGL_LP	0xa0c8
-> +#define PCI_DEVICE_ID_INTEL_HDA_SKL	0xa170
-> +#define PCI_DEVICE_ID_INTEL_HDA_KBL	0xa171
-> +#define PCI_DEVICE_ID_INTEL_HDA_KBL_H	0xa2f0
-> +#define PCI_DEVICE_ID_INTEL_HDA_CNL_H	0xa348
-> +#define PCI_DEVICE_ID_INTEL_HDA_CML_S	0xa3f0
-> +#define PCI_DEVICE_ID_INTEL_HDA_LNL_P	0xa828
->  #define PCI_DEVICE_ID_INTEL_S21152BB	0xb152
-> +#define PCI_DEVICE_ID_INTEL_HDA_CML_R	0xf0c8
-> +#define PCI_DEVICE_ID_INTEL_HDA_RKL_S	0xf1c8
->  
->  #define PCI_VENDOR_ID_WANGXUN		0x8088
->  
-> -- 
-> 2.34.1
-> 
+  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.5-changes
+
+for you to fetch changes up to 6ecac465eee887de7ceda7ffe3bccf538eb786bc:
+
+  Merge branch 'pci/controller/remove-void-callbacks' (2023-06-26 13:00:00 -0500)
+
+----------------------------------------------------------------
+
+Enumeration:
+
+  - Export pcie_retrain_link() for use outside ASPM
+
+  - Add Data Link Layer Link Active Reporting as another way for
+    pcie_retrain_link() to determine the link is up
+
+  - Work around link training failures (especially on the ASMedia ASM2824
+    switch) by training first at 2.5GT/s and then attempting higher rates
+
+Resource management:
+
+  - When we coalesce host bridge windows, remove invalidated resources from
+    the resource tree so future allocations work correctly
+
+Hotplug:
+
+  - Cancel bringup sequence if card is not present, to keep from blinking
+    Power Indicator indefinitely
+
+  - Reassign bridge resources if necessary for ACPI hotplug
+
+Driver binding:
+
+  - Convert platform_device .remove() callbacks to return void instead of a
+    mostly useless int
+
+Power management:
+
+  - Reduce wait time for secondary bus to be ready to speed up resume
+
+  - Avoid putting EloPOS E2/S2/H2 (as well as Elo i2) PCIe Ports in D3cold
+
+  - Call _REG when transitioning D-states so AML that uses the PCI config
+    space OpRegion works, which fixes some ASMedia GPIO controllers after
+    resume
+
+Virtualization:
+
+  - Delay extra 250ms after FLR of Solidigm P44 Pro NVMe to avoid KVM hang
+    when guest is rebooted
+
+  - Add function 1 DMA alias quirk for Marvell 88SE9235
+
+Error handling:
+
+  - Unexport pci_save_aer_state() since it's only used in drivers/pci/
+
+  - Drop recommendation for drivers to configure AER Capability, since the
+    PCI core does this for all devices
+
+ASPM:
+
+  - Disable ASPM on MFD function removal to avoid use-after-free
+
+  - Tighten up pci_enable_link_state() and pci_disable_link_state()
+    interfaces so they don't enable/disable states the driver didn't
+    specify
+
+  - Avoid link retraining race that can happen if ASPM sets link control
+    parameters while the link is in the midst of training for some other
+    reason
+
+Endpoint framework:
+
+  - Change "PCI Endpoint Virtual NTB driver" Kconfig prompt to be different
+    from "PCI Endpoint NTB driver"
+
+  - Automatically create a function specific attributes group for endpoint
+    drivers to avoid reference counting issues
+
+  - Fix many EPC test issues
+
+  - Return pci_epf_type_add_cfs() error if EPF has no driver
+
+  - Add kernel-doc for pci_epc_raise_irq() and pci_epc_map_msi_irq() MSI
+    vector parameters
+
+  - Pass EPF device ID to driver probe functions
+
+  - Return -EALREADY if EPC has already been started/stopped
+
+  - Add linkdown notifier support and use it in qcom-ep
+
+  - Add Bus Master Enable event support and use it in qcom-ep
+
+  - Add Qualcomm Modem Host Interface (MHI) endpoint driver
+
+  - Add Layerscape PME interrupt handling to manage link-up notification
+
+Cadence PCIe controller driver:
+
+  - Wait for link retrain to complete when working around the J721E i2085
+    erratum with Gen2 mode
+
+Faraday FTPC100 PCI controller driver:
+
+  - Release clock resources on error paths
+
+Freescale i.MX6 PCIe controller driver:
+
+  - Save and restore Root Port MSI control to work around hardware defect
+
+Intel VMD host bridge driver:
+
+  - Reset VMD config register between soft reboots
+
+  - Capture pci_reset_bus() return value instead of printing junk when it
+    fails
+
+Qualcomm PCIe controller driver:
+
+  - Add SDX65 endpoint compatible string to DT binding
+
+  - Disable register write access after init for IP v2.3.3, v2.9.0
+
+  - Use DWC helpers for enabling/disabling writes to DBI registers
+
+  - Hide slot hotplug capability for IP v1.0.0, v1.9.0, v2.1.0, v2.3.2,
+    v2.3.3, v2.7.0, v2.9.0
+
+  - Reuse v2.3.2 post-init sequence for v2.4.0
+
+Renesas R-Car PCIe controller driver:
+
+  - Remove unused static pcie_base and pcie_dev
+
+Rockchip PCIe controller driver:
+
+  - Remove writes to unused registers
+
+  - Write endpoint Device ID using correct register
+
+  - Assert PCI Configuration Enable bit after probe so endpoint responds
+    instead of generating Request Retry Status messages
+
+  - Poll waiting for PHY PLLs to lock
+
+  - Update RK3399 example DT binding to be valid
+
+  - Use RK3399 PCIE_CLIENT_LEGACY_INT_CTRL to generate INTx instead of
+    manually generating PCIe message
+
+  - Use multiple windows to avoid address translation conflicts
+
+  - Use u32 (not u16) when accessing 32-bit registers
+
+  - Hide MSI-X Capability, since RK3399 can't generate MSI-X
+
+  - Set endpoint controller required alignment to 256
+
+Synopsys DesignWare PCIe controller driver:
+
+  - Wait for link to come up only if we've initiated link training
+
+Miscellaneous:
+
+  - Add pci_clear_master() stub for non-CONFIG_PCI
+
+----------------------------------------------------------------
+Ajay Agarwal (6):
+      PCI/ASPM: Disable only ASPM_STATE_L1 when driver disables L1
+      PCI/ASPM: Set only ASPM_STATE_L1 when driver enables L1
+      PCI/ASPM: Set ASPM_STATE_L1 when driver enables L1.1 or L1.2
+      PCI/ASPM: Rename L1.2-specific functions from 'l1ss' to 'l12'
+      PCI/ASPM: Remove unnecessary ASPM_STATE_L1SS check
+      PCI: dwc: Wait for link up only if link is started
+
+Andy Shevchenko (1):
+      PCI: of: Propagate firmware node by calling device_set_node()
+
+Ben Dooks (1):
+      PCI: Add PCI_EXT_CAP_ID_PL_32GT define
+
+Bjorn Helgaas (26):
+      PCI: pciehp: Simplify Attention Button logging
+      PCI: Expand comment about sorting pci_ids.h entries
+      PCI: Unexport pci_save_aer_state()
+      Documentation: PCI: Drop recommendation to configure AER Capability
+      Documentation: PCI: Update cross references to .rst files
+      Documentation: PCI: Tidy AER documentation
+      PCI/ASPM: Return 0 or -ETIMEDOUT from  pcie_retrain_link()
+      PCI/ACPI: Validate acpi_pci_set_power_state() parameter
+      Merge branch 'pci/aer'
+      Merge branch 'pci/aspm'
+      Merge branch 'pci/enumeration'
+      Merge branch 'pci/hotplug'
+      Merge branch 'pci/pm'
+      Merge branch 'pci/resource'
+      Merge branch 'pci/virtualization'
+      Merge branch 'pci/misc'
+      Merge branch 'pci/controller/dt'
+      Merge branch 'pci/controller/cadence'
+      Merge branch 'pci/controller/dwc'
+      Merge branch 'pci/pci/ftpci100'
+      Merge branch 'pci/controller/qcom'
+      Merge branch 'pci/controller/rcar'
+      Merge branch 'pci/controller/rockchip'
+      Merge branch 'pci/controller/vmd'
+      Merge branch 'pci/controller/endpoint'
+      Merge branch 'pci/controller/remove-void-callbacks'
+
+Damien Le Moal (19):
+      PCI: rockchip: Set address alignment for endpoint mode
+      PCI: endpoint: Automatically create a function specific attributes group
+      PCI: endpoint: Move pci_epf_type_add_cfs() code
+      PCI: epf-test: Fix DMA transfer completion initialization
+      PCI: epf-test: Fix DMA transfer completion detection
+      PCI: epf-test: Use dmaengine_submit() to initiate DMA transfer
+      PCI: epf-test: Simplify read/write/copy test functions
+      PCI: epf-test: Simplify pci_epf_test_raise_irq()
+      PCI: epf-test: Simplify IRQ test commands execution
+      PCI: epf-test: Improve handling of command and status registers
+      PCI: epf-test: Cleanup pci_epf_test_cmd_handler()
+      PCI: epf-test: Cleanup request result handling
+      PCI: epf-test: Simplify DMA support checks
+      PCI: epf-test: Simplify transfers result print
+      misc: pci_endpoint_test: Free IRQs before removing the device
+      misc: pci_endpoint_test: Re-init completion for every test
+      misc: pci_endpoint_test: Do not write status in IRQ handler
+      misc: pci_endpoint_test: Simplify pci_endpoint_test_msi_irq()
+      PCI: endpoint: Improve pci_epf_type_add_cfs()
+
+Ding Hui (1):
+      PCI/ASPM: Disable ASPM on MFD function removal to avoid use-after-free
+
+Frank Li (2):
+      PCI: endpoint: pci-epf-vntb: Fix typo in comments
+      PCI: layerscape: Add the endpoint linkup notifier support
+
+Geert Uytterhoeven (1):
+      PCI: rcar-host: Remove unused static pcie_base and pcie_dev
+
+Igor Mammedov (1):
+      PCI: acpiphp: Reassign resources on bridge if necessary
+
+Ilpo J�rvinen (2):
+      PCI/ASPM: Factor out pcie_wait_for_retrain()
+      PCI/ASPM: Avoid link retraining race
+
+Junyan Ye (1):
+      PCI: ftpci100: Release the clock resources
+
+Maciej W. Rozycki (14):
+      PCI: Initialize dev->link_active_reporting earlier
+      PCI: pciehp: Rely on dev->link_active_reporting
+      powerpc/eeh: Rely on dev->link_active_reporting
+      net/mlx5: Rely on dev->link_active_reporting
+      PCI/ASPM: Use distinct local vars in pcie_retrain_link()
+      PCI/ASPM: Avoid unnecessary pcie_link_state use
+      PCI/ASPM: Factor out waiting for link training to complete
+      PCI: Execute quirk_enable_clear_retrain_link() earlier
+      PCI: Export PCIe link retrain timeout
+      PCI: Export pcie_retrain_link() for use outside ASPM
+      PCI: Add support for polling DLLLA to pcie_retrain_link()
+      PCI: Use pcie_wait_for_link_status() in pcie_wait_for_link_delay()
+      PCI: Work around PCIe link training failures
+      PCI: Add failed link recovery for device reset events
+
+Manivannan Sadhasivam (18):
+      PCI: qcom: Disable write access to read only registers for IP v2.3.3
+      PCI: qcom: Use DWC helpers for modifying the read-only DBI registers
+      PCI: qcom: Disable write access to read only registers for IP v2.9.0
+      PCI: qcom: Do not advertise hotplug capability for IPs v2.7.0 and v1.9.0
+      PCI: qcom: Do not advertise hotplug capability for IPs v2.3.3 and v2.9.0
+      PCI: qcom: Do not advertise hotplug capability for IP v2.3.2
+      PCI: qcom: Use post init sequence of IP v2.3.2 for v2.4.0
+      PCI: qcom: Do not advertise hotplug capability for IP v1.0.0
+      PCI: qcom: Do not advertise hotplug capability for IP v2.1.0
+      PCI: endpoint: Add missing documentation about the MSI/MSI-X range
+      PCI: endpoint: Pass EPF device ID to the probe function
+      PCI: endpoint: Return error if EPC is started/stopped multiple times
+      PCI: endpoint: Add linkdown notifier support
+      PCI: endpoint: Add BME notifier support
+      PCI: qcom-ep: Add support for Link down notification
+      PCI: qcom-ep: Add support for BME notification
+      PCI: endpoint: Add PCI Endpoint function driver for MHI bus
+      MAINTAINERS: Add PCI MHI endpoint function driver under MHI bus
+
+Mario Limonciello (1):
+      PCI/ACPI: Call _REG when transitioning D-states
+
+Mika Westerberg (1):
+      PCI/PM: Shorten pci_bridge_wait_for_secondary_bus() wait time for slow links
+
+Mike Pastore (1):
+      PCI: Delay after FLR of Solidigm P44 Pro NVMe
+
+Nirmal Patel (1):
+      PCI: vmd: Reset VMD config register between soft reboots
+
+Ondrej Zary (1):
+      PCI/PM: Avoid putting EloPOS E2/S2/H2 PCIe Ports in D3cold
+
+Randy Dunlap (1):
+      Documentation: PCI: correct spelling
+
+Richard Zhu (1):
+      PCI: imx6: Save and restore root port MSI control in suspend and resume
+
+Rick Wertenbroek (9):
+      PCI: rockchip: Remove writes to unused registers
+      PCI: rockchip: Write PCI Device ID to correct register
+      PCI: rockchip: Assert PCI Configuration Enable bit after probe
+      PCI: rockchip: Add poll and timeout to wait for PHY PLLs to be locked
+      dt-bindings: PCI: Update the RK3399 example to a valid one
+      PCI: rockchip: Fix legacy IRQ generation for RK3399 PCIe endpoint core
+      PCI: rockchip: Fix window mapping and address translation for endpoint
+      PCI: rockchip: Use u32 variable to access 32-bit registers
+      PCI: rockchip: Don't advertise MSI-X in PCIe capabilities
+
+Robin Murphy (1):
+      PCI: Add function 1 DMA alias quirk for Marvell 88SE9235
+
+Rohit Agarwal (1):
+      dt-bindings: PCI: qcom: Add SDX65 SoC
+
+Rongguang Wei (1):
+      PCI: pciehp: Cancel bringup sequence if card is not present
+
+Ross Lagerwall (1):
+      PCI: Release resource invalidated by coalescing
+
+Shunsuke Mie (1):
+      PCI: endpoint: Fix a Kconfig prompt of vNTB driver
+
+Siddharth Vadapalli (1):
+      PCI: cadence: Fix Gen2 Link Retraining process
+
+Sui Jingfeng (1):
+      PCI: Add pci_clear_master() stub for non-CONFIG_PCI
+
+Uwe Kleine-K�nig (15):
+      PCI: aardvark: Convert to platform remove callback returning void
+      PCI: altera: Convert to platform remove callback returning void
+      PCI: altera-msi: Convert to platform remove callback returning void
+      PCI: brcmstb: Convert to platform remove callback returning void
+      PCI: j721e: Convert to platform remove callback returning void
+      PCI: dwc: Convert to platform remove callback returning void
+      PCI: hisi-error: Convert to platform remove callback returning void
+      PCI: iproc: Convert to platform remove callback returning void
+      PCI: mediatek: Convert to platform remove callback returning void
+      PCI: mediatek-gen3: Convert to platform remove callback returning void
+      PCI: mt7621: Convert to platform remove callback returning void
+      PCI: mvebu: Convert to platform remove callback returning void
+      PCI: rockchip-host: Convert to platform remove callback returning void
+      PCI: tegra: Convert to platform remove callback returning void
+      PCI: xgene-msi: Convert to platform remove callback returning void
+
+Wolfram Sang (1):
+      PCI: rcar: Use correct product family name for Renesas R-Car
+
+Xinghui Li (1):
+      PCI: vmd: Fix uninitialized variable usage in vmd_enable_domain()
+
+Yoshihiro Shimoda (1):
+      PCI: endpoint: functions/pci-epf-test: Fix dma_chan direction
+
+ Documentation/PCI/endpoint/pci-ntb-howto.rst       |  11 +-
+ Documentation/PCI/endpoint/pci-vntb-howto.rst      |  13 +-
+ Documentation/PCI/msi-howto.rst                    |   2 +-
+ Documentation/PCI/pci-error-recovery.rst           |   2 +-
+ Documentation/PCI/pcieaer-howto.rst                | 183 +++-----
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml      |   2 +
+ .../bindings/pci/rockchip,rk3399-pcie-ep.yaml      |   4 +-
+ MAINTAINERS                                        |   1 +
+ arch/powerpc/kernel/eeh_pe.c                       |   5 +-
+ drivers/misc/pci_endpoint_test.c                   |  25 +-
+ drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c |   8 +-
+ drivers/pci/controller/cadence/pci-j721e.c         |   6 +-
+ drivers/pci/controller/cadence/pcie-cadence-host.c |  27 ++
+ drivers/pci/controller/dwc/pci-imx6.c              |  23 ++
+ drivers/pci/controller/dwc/pci-layerscape-ep.c     | 100 ++++-
+ drivers/pci/controller/dwc/pcie-bt1.c              |   6 +-
+ drivers/pci/controller/dwc/pcie-designware-host.c  |  13 +-
+ drivers/pci/controller/dwc/pcie-designware.c       |  20 +-
+ drivers/pci/controller/dwc/pcie-designware.h       |   1 +
+ drivers/pci/controller/dwc/pcie-histb.c            |   6 +-
+ drivers/pci/controller/dwc/pcie-intel-gw.c         |   6 +-
+ drivers/pci/controller/dwc/pcie-qcom-ep.c          |  10 +-
+ drivers/pci/controller/dwc/pcie-qcom.c             |  73 ++--
+ drivers/pci/controller/dwc/pcie-tegra194.c         |   8 +-
+ drivers/pci/controller/pci-aardvark.c              |   6 +-
+ drivers/pci/controller/pci-ftpci100.c              |  14 +-
+ drivers/pci/controller/pci-mvebu.c                 |   6 +-
+ drivers/pci/controller/pci-tegra.c                 |   6 +-
+ drivers/pci/controller/pci-xgene-msi.c             |   6 +-
+ drivers/pci/controller/pcie-altera-msi.c           |   5 +-
+ drivers/pci/controller/pcie-altera.c               |   6 +-
+ drivers/pci/controller/pcie-brcmstb.c              |   6 +-
+ drivers/pci/controller/pcie-hisi-error.c           |   6 +-
+ drivers/pci/controller/pcie-iproc-platform.c       |   6 +-
+ drivers/pci/controller/pcie-iproc.c                |   4 +-
+ drivers/pci/controller/pcie-iproc.h                |   2 +-
+ drivers/pci/controller/pcie-mediatek-gen3.c        |   6 +-
+ drivers/pci/controller/pcie-mediatek.c             |   6 +-
+ drivers/pci/controller/pcie-mt7621.c               |   6 +-
+ drivers/pci/controller/pcie-rcar-host.c            |  25 +-
+ drivers/pci/controller/pcie-rockchip-ep.c          | 221 +++++-----
+ drivers/pci/controller/pcie-rockchip-host.c        |   6 +-
+ drivers/pci/controller/pcie-rockchip.c             |  17 +
+ drivers/pci/controller/pcie-rockchip.h             |  49 ++-
+ drivers/pci/controller/vmd.c                       |  11 +-
+ drivers/pci/endpoint/functions/Kconfig             |  12 +-
+ drivers/pci/endpoint/functions/Makefile            |   1 +
+ drivers/pci/endpoint/functions/pci-epf-mhi.c       | 458 +++++++++++++++++++++
+ drivers/pci/endpoint/functions/pci-epf-ntb.c       |   4 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c      | 271 ++++++------
+ drivers/pci/endpoint/functions/pci-epf-vntb.c      |  14 +-
+ drivers/pci/endpoint/pci-ep-cfs.c                  |  81 +++-
+ drivers/pci/endpoint/pci-epc-core.c                |  56 ++-
+ drivers/pci/endpoint/pci-epf-core.c                |  42 +-
+ drivers/pci/hotplug/acpiphp_glue.c                 |   5 +-
+ drivers/pci/hotplug/pciehp_ctrl.c                  |  21 +-
+ drivers/pci/hotplug/pciehp_hpc.c                   |  12 +-
+ drivers/pci/of.c                                   |  14 +-
+ drivers/pci/pci-acpi.c                             |  53 ++-
+ drivers/pci/pci.c                                  | 194 +++++++--
+ drivers/pci/pci.h                                  |  19 +-
+ drivers/pci/pcie/aspm.c                            | 101 ++---
+ drivers/pci/probe.c                                |  12 +-
+ drivers/pci/quirks.c                               | 111 ++++-
+ include/linux/aer.h                                |   4 -
+ include/linux/pci-epc.h                            |   2 +
+ include/linux/pci-epf.h                            |  11 +-
+ include/linux/pci.h                                |   1 +
+ include/linux/pci_ids.h                            |   4 +-
+ include/uapi/linux/pci_regs.h                      |   1 +
+ 70 files changed, 1631 insertions(+), 848 deletions(-)
+ create mode 100644 drivers/pci/endpoint/functions/pci-epf-mhi.c
