@@ -2,168 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CEDC741DDB
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Jun 2023 03:59:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 276F57421FB
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Jun 2023 10:21:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230519AbjF2B7u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Jun 2023 21:59:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46520 "EHLO
+        id S232424AbjF2IVc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Jun 2023 04:21:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230463AbjF2B7j (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Jun 2023 21:59:39 -0400
-Received: from stravinsky.debian.org (unknown [IPv6:2001:41b8:202:deb::311:108])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C59270A;
-        Wed, 28 Jun 2023 18:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-        s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YChyS4nbtccbfNNu4X1A8v3ecoV4guD+QWtTyEZmb9U=; b=Zqqr+smxp55qdZwF34DftF8llx
-        j1un6BP2dCog0gdIk8uXiquY+6GJso4mPHx0RLbYxJRgDO3JAnuk0MauwEct7RQHVLzcPWOYrZU3S
-        hluJWKTArm8fnHQcrB9YM3iQXWKQbebPARM/yemRImQL4kLZR9fOTMhsWgz7ezB181DBDRtRMuD8l
-        IAGGRuDalj8Zotrhd9zKPxpp1hpr9YZM6Ux5Re5Hr8GKR2j19hK7f3FB0yepPKnq2gfL37jACo1g9
-        xlKP6wld0uGYSKUvu9kyxBqAyOh+sq4HwydUdWS0HRC5v9/92DLXTObmNGWDNr2a7tjp4+QqlTGfL
-        9hL+OOOQ==;
-Received: from authenticated user
-        by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.94.2)
-        (envelope-from <kibi@debian.org>)
-        id 1qEgwL-005i06-9G; Thu, 29 Jun 2023 01:59:22 +0000
-Date:   Thu, 29 Jun 2023 03:59:18 +0200
-From:   Cyril Brulebois <kibi@debian.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Conor Dooley <conor+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jim Quinlan <jim2101024@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 0/5] PCI: brcmstb: Configure appropriate HW CLKREQ#
- mode
-Message-ID: <20230629015918.v4u7atl3ep3aetgj@mraw.org>
-Organization: Debian
-References: <20230623144100.34196-1-james.quinlan@broadcom.com>
+        with ESMTP id S232287AbjF2IUI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jun 2023 04:20:08 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41F5A1FFA;
+        Thu, 29 Jun 2023 01:18:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1688026736; x=1719562736;
+  h=message-id:date:mime-version:from:subject:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=nZeawW1oMN2HuGCf+TgAnAiNf1H7F95ZCg0NNjoviRI=;
+  b=AcInyjof8vSX9VG0LJ0MS50C95n4MLOGfaJ1kDwB/ZvcJwsGmtiValQu
+   khiQUoY+gZ6WGHhlhy+L+ZYnn81z236js3/fvJ/PM3+GawTVq8/D+m5HZ
+   2xOU+fOCT2k1IEJG3bMyOZZi4vSBdVDQAFmY+qLIW109N/KP9x6jwwUcT
+   mnHHInzsY1SFnhRziOtf/rnkDn5yFeV+LiVYKApFQXXQgSKCuBedo/CW5
+   8rSUI/4lxPbc8j7rbMLWtb8cQKWXnqw3EyZfZGrYUEu5CTz8MawbU75tz
+   3lu1FKYL9lcmvFuQ/1YxlXo8SU8HuO2R19Oa5m8gH2gEdDoJQTGJie4WP
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10755"; a="351854300"
+X-IronPort-AV: E=Sophos;i="6.01,168,1684825200"; 
+   d="scan'208";a="351854300"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2023 01:18:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10755"; a="891331178"
+X-IronPort-AV: E=Sophos;i="6.01,168,1684825200"; 
+   d="scan'208";a="891331178"
+Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.99.16.144]) ([10.99.16.144])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2023 01:18:53 -0700
+Message-ID: <a7bf3aaa-581d-0625-5f18-6b9b062ea48d@linux.intel.com>
+Date:   Thu, 29 Jun 2023 10:18:50 +0200
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7befo4br4255cxtj"
-Content-Disposition: inline
-In-Reply-To: <20230623144100.34196-1-james.quinlan@broadcom.com>
-X-Debian-User: kibi
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RDNS_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+From:   =?UTF-8?Q?Amadeusz_S=c5=82awi=c5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+Subject: Re: [RFC PATCH 1/8] PCI: Add Intel Audio DSP devices to pci_ids.h
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>
+References: <20230628205135.517241-1-amadeuszx.slawinski@linux.intel.com>
+ <20230628205135.517241-2-amadeuszx.slawinski@linux.intel.com>
+ <ZJxHTHCq0T/y+dG0@smile.fi.intel.com>
+Content-Language: en-US
+In-Reply-To: <ZJxHTHCq0T/y+dG0@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 6/28/2023 4:44 PM, Andy Shevchenko wrote:
+> On Wed, Jun 28, 2023 at 10:51:28PM +0200, Amadeusz Sławiński wrote:
+>> Those IDs are mostly sprinkled between HDA, Skylake, SOF and avs drivers.
+>> Almost every use contains additional comments to identify to which
+>> platform those IDs refer to. Add those IDs to pci_ids.h header, so that
+>> there is one place which defines those names.
+> 
+> ...
+> 
+>>   #define PCI_DEVICE_ID_INTEL_5400_FBD0	0x4035
+>>   #define PCI_DEVICE_ID_INTEL_5400_FBD1	0x4036
+>> +#define PCI_DEVICE_ID_INTEL_HDA_JSL_N	0x4dc8
+>> +#define PCI_DEVICE_ID_INTEL_HDA_TGL_H	0x43c8
+>> +#define PCI_DEVICE_ID_INTEL_HDA_EHL_0	0x4b55
+>> +#define PCI_DEVICE_ID_INTEL_HDA_EHL_3	0x4b58
+> 
+> Can it be kept sorted by a value?
+> 
+> Didn't check the full list, though.
+> 
 
---7befo4br4255cxtj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Jim,
-
-Jim Quinlan <james.quinlan@broadcom.com> (2023-06-23):
-> v6 -- No code has been changed.
->    -- Changed commit subject and comment in "#PERST" commit (Bjorn, Cyril)
->    -- Changed sign-off and author email address for all commits.
->       This was due to a change in Broadcom's upstreaming policy.
-
-I've just run some more tests to be on the safe side, and I can confirm
-everything is still looking good with the updated series and the updated
-base commit.
-
-Test setup:
------------
-
- - using a $CM with the 20230111 EEPROM
- - on the same CM4 IO Board
- - with a $PCIE board (PCIe to multiple USB ports)
- - and the same Samsung USB flash drive.
-
-where $CM is one of:
-
- - CM4 Lite Rev 1.0
- - CM4 8/32 Rev 1.0
- - CM4 4/32 Rev 1.1
-
-and $PCIE is one of:
-
- - SupaHub PCE6U1C-R02, VER 006
- - SupaHub PCE6U1C-R02, VER 006S
-
-
-Results:
---------
-
- 1. With an unpatched kernel, I'm getting the dreaded Serror for all
-    $CM/$PCIE combinations. That's reproducible with:
-     - the 6.1.y kernel shipped in Debian 12;
-     - a locally-built v6.4-rc7-194-g8a28a0b6f1a1d kernel.
-
- 2. With a patched kernel (v6.4-rc7-194-g8a28a0b6f1a1d + this series),
-    for all $CM/$PCIE combinations, I'm getting a system that boots,
-    sees the flash drive, and gives decent read performance on the USB
-    flash drive (200+ MB/s on the CM4 Lite, 220+ MB/s on the non-Lite
-    versions).
-
-
-In passing, since that looks like it could be merged finally: I suppose
-it's fair to say this series adds support for hardware that wasn't
-working before, which means it's not a candidate for inclusion via
-stable@ (even if it gets rid of a nasty failure to boot depending on
-what hardware is plugged in at that time)?
-
-In other words, downstream distributions should be expected to either
-adjust their build systems to pick some future Linux release or consider
-backporting this series on their own, to each base Linux version they
-support?
-
-
-Thanks again for all the help figuring this out.
-
-
-Cheers,
---=20
-Cyril Brulebois (kibi@debian.org)            <https://debamax.com/>
-D-I release manager -- Release team member -- Freelance Consultant
-
---7befo4br4255cxtj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEtg6/KYRFPHDXTPR4/5FK8MKzVSAFAmSc5XMACgkQ/5FK8MKz
-VSA3Sg//fgoP825n1pCIyd3e2L9YZB3DWHb6OWdjrkcyyLL4YEn6BapxdPkjwMpk
-JAK7iCo1grklQEvdqMrkoc4mRHsjN/3Hkx9GzRguiU28AqaMkazc3s+GnRJtoUnO
-zWNPnwnwsaeIGmB0uIXWLxtp1A9naSO/zOPwD/INCWYbC2EAT4sEPb+A4qqtMrz/
-CGXalNZb58prYVJrlZ2fcQL3SGrgf4lcob7JqtZcL9pHE5uaS7sOhSQdxQI1JgTC
-/6bjJGvBAyLLlOA8rTR8vYgmXbaFX12aVJ9OOn0tByScMc7VNikVPSTo7/Oc630t
-ElCEnxxIc/cslSXhM1xlhUMgGY8WIrr1G0qNM7LPVoC4FPWsOjdFXj0ooChEKaHW
-ZqKrJ7UDlq7rTIwyzJTVCbZJw+QVt8Qz6ffaQgbJ5jGkVIxrjFgfMvfNeRIhEF8a
-c6PJiLNm8QRh2h497F+J2PopC/i9kEL/k5ySoa1rOzqUPReXhN57Q5xQRivOZDdw
-nMa7m5eX0gbtvjX3qaCwVIIcwpVaWAeiOEm2/B3aAKiPVPmibw0sdCRtoSflh2NZ
-dq2ReO2rJZhNHgeOD3oY6L0vU7w2dN8k56eh+JVcWzksjqPgbndq0U54oFnuBnfL
-I7qN6WjGtPPQeYf/j9ngJkuKTPY/BUxUTP0cBkFrgQMHqnTJOyA=
-=yUbx
------END PGP SIGNATURE-----
-
---7befo4br4255cxtj--
+My mistake, I've tried to add them in order, but must have missed this 
+one, will review whole list again.
