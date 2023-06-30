@@ -2,248 +2,205 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 836FF743295
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Jun 2023 04:14:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DC467432EC
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Jun 2023 05:05:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232079AbjF3COV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Jun 2023 22:14:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54096 "EHLO
+        id S230426AbjF3DFx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Jun 2023 23:05:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230013AbjF3COU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jun 2023 22:14:20 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C104730EF;
-        Thu, 29 Jun 2023 19:14:17 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.43])
-        by gateway (Coremail) with SMTP id _____8BxlfB4Op5kzh0EAA--.6712S3;
-        Fri, 30 Jun 2023 10:14:16 +0800 (CST)
-Received: from [10.20.42.43] (unknown [10.20.42.43])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxxsxzOp5kA3oSAA--.41851S3;
-        Fri, 30 Jun 2023 10:14:11 +0800 (CST)
-Message-ID: <2c81fbe3-308a-4c5e-0150-32006253b3ea@loongson.cn>
-Date:   Fri, 30 Jun 2023 10:14:11 +0800
+        with ESMTP id S229945AbjF3DFx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jun 2023 23:05:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com (unknown [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F355030F7
+        for <linux-pci@vger.kernel.org>; Thu, 29 Jun 2023 20:05:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1688094295;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ar/iWdDUvg1A4Jd6Ig7scV83xsEguMT36A9gLYAvj1k=;
+        b=KVPgAsTnR8opvy6oAZU8FiIU3Ij4GZ3FIVZf+Fn45eceUVd8GF+eQj9Vz1SO0LsF3bF3w0
+        TTdFjOYeU69NIOa7CodoMir9pmEKh70PxwMDEOy83QmYTF+8wsolHWnuU/ViYTwuz6Goq+
+        xDCvgSPHpUkPpbSf4d4QfxAroelQHB8=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-345-_rGNXjgAOguFeS5c7GS1Qg-1; Thu, 29 Jun 2023 23:04:53 -0400
+X-MC-Unique: _rGNXjgAOguFeS5c7GS1Qg-1
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-635a3b9d24eso12145736d6.0
+        for <linux-pci@vger.kernel.org>; Thu, 29 Jun 2023 20:04:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688094293; x=1690686293;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ar/iWdDUvg1A4Jd6Ig7scV83xsEguMT36A9gLYAvj1k=;
+        b=WrUNLIzz4ZkNkDOEqFmSG53XJ5tJR2vLkFOJ3WVZUsOkp9RlVrr4/8qpyydHxIFrK6
+         O8WKrp7PH14D6Jq5DbSFrazRmfjAl8v2EDJIZEDH9njDbj+b8Aic0bcU62C62aLwUH7H
+         NFFIyOyMl9n9idWkP2lhWBU8heuIlykzRPg2OPnnOzx0AyR4irOuR3XBb+nRG1eZpBQS
+         MlE9JqY510GtsxZbF0F2wsfpIrxoaZpx6zn25x/5L6zD7YCUIsYidh45nEqi7bTGu9uo
+         tkUT6VGmIKq7SoyK/1DAir8OWvRlEqFt0g5UxRcOfYBkN60+xsGOJBrz+ih1I8C+DRd4
+         7Chg==
+X-Gm-Message-State: ABy/qLYwVHyfGo2aE7gFp44X/iT70soFcRAqi0XWtVj/X3seqMPGnFs9
+        EvmGAPkbLIwnLZyONhofDwQ+nZGuALmG82IuKLtLG1M2hbOsqqV3XliwKGqSpV1lyN4wA4NC3qE
+        VZE7vZD2ETnBZR5MMu7AY
+X-Received: by 2002:a05:6214:e4a:b0:635:df71:1fd9 with SMTP id o10-20020a0562140e4a00b00635df711fd9mr1912707qvc.7.1688094292805;
+        Thu, 29 Jun 2023 20:04:52 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlGk+/owvuY0I2STh/0UPHm5mr7KE38cNIaeZmPpj7RMi72ZCoQY20PUyzTwKTvg/k2zGt/LYA==
+X-Received: by 2002:a05:6214:e4a:b0:635:df71:1fd9 with SMTP id o10-20020a0562140e4a00b00635df711fd9mr1912691qvc.7.1688094292552;
+        Thu, 29 Jun 2023 20:04:52 -0700 (PDT)
+Received: from thinkpad-p1.localdomain (cpe00fc8d79db03-cm00fc8d79db00.cpe.net.fido.ca. [72.137.118.218])
+        by smtp.gmail.com with ESMTPSA id u18-20020a0cf892000000b0063660329d57sm65130qvn.67.2023.06.29.20.04.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Jun 2023 20:04:52 -0700 (PDT)
+Message-ID: <8715f2b298c04422db311666eb2409464c29458b.camel@redhat.com>
+Subject: Re: [PATCH 1/1] PCI: dwc: Use regular interrupt instead of chained
+From:   Radu Rendec <rrendec@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pali =?ISO-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Date:   Thu, 29 Jun 2023 23:04:50 -0400
+In-Reply-To: <20230629221103.GA449329@bhelgaas>
+References: <20230629221103.GA449329@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v7 6/8] PCI/VGA: Introduce is_boot_device function
- callback to vga_client_register
-To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
-        "15330273260@189.cn" <15330273260@189.cn>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Chai, Thomas" <YiPeng.Chai@amd.com>,
-        "Gao, Likun" <Likun.Gao@amd.com>, David Airlie <airlied@gmail.com>,
-        Ville Syrjala <ville.syrjala@linux.intel.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Lazar, Lijo" <Lijo.Lazar@amd.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        "Zhang, Bokun" <Bokun.Zhang@amd.com>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Abhishek Sahu <abhsahu@nvidia.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhang, Hawking" <Hawking.Zhang@amd.com>
-References: <20230629155436.GA397963@bhelgaas>
- <bcfdc77d-a94d-bca1-56e3-5e14e91f6fd9@189.cn>
- <MN0PR12MB6101CDB6FF9DC8F8EDEF5F45E225A@MN0PR12MB6101.namprd12.prod.outlook.com>
-Content-Language: en-US
-From:   suijingfeng <suijingfeng@loongson.cn>
-In-Reply-To: <MN0PR12MB6101CDB6FF9DC8F8EDEF5F45E225A@MN0PR12MB6101.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf8BxxsxzOp5kA3oSAA--.41851S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3JryDGFWfuryxZw1xGryrZrc_yoW7ZF4xpr
-        WY9FsIkrs7Xr1rAF1kKa4UAF1jq3y8J343Wrn8t3W8ur909F1SqrZaqr4a9Fy5Ar1akF4Y
-        vw4agrn2k395Z3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUd529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUUPqb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-        wI0_Gr1j6F4UJwAaw2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-        xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-        Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
-        xGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26rWY6Fy7MxAIw28IcxkI7VAK
-        I48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrV
-        AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8Jr1l
-        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxV
-        AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j
-        6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07bUzu
-        AUUUUU=
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Thu, 2023-06-29 at 17:11 -0500, Bjorn Helgaas wrote:
+> [+cc Pali]
+>=20
+> On Thu, Jun 29, 2023 at 05:27:54PM -0400, Radu Rendec wrote:
+> > On Thu, 2023-06-29 at 15:58 -0500, Bjorn Helgaas wrote:
+> > > On Thu, Jun 29, 2023 at 04:42:07PM -0400, Radu Rendec wrote:
+> > > > On Thu, 2023-06-29 at 14:57 -0500, Bjorn Helgaas wrote:
+> > > > > On Thu, Jun 29, 2023 at 02:30:19PM -0400, Radu Rendec wrote:
+> > > > > > The DesignWare PCIe host driver uses a chained interrupt to dem=
+ultiplex
+> > > > > > the downstream MSI interrupts. On Qualcomm SA8540P Ride, enabli=
+ng both
+> > > > > > pcie2a and pcie3a at the same time can create an interrupt stor=
+m where
+> > > > > > the parent interrupt fires continuously, even though reading th=
+e PCIe
+> > > > > > host registers doesn't identify any child MSI interrupt source.=
+ This
+> > > > > > effectively locks up CPU0, which spends all the time servicing =
+these
+> > > > > > interrupts.
+> > > > > >=20
+> > > > > > This is a clear example of how bypassing the interrupt core by =
+using
+> > > > > > chained interrupts can be very dangerous if the hardware misbeh=
+aves.
+> > > > > >=20
+> > > > > > Convert the driver to use a regular interrupt for the demultipl=
+ex
+> > > > > > handler. This allows the interrupt storm detector to detect the=
+ faulty
+> > > > > > interrupt and disable it, allowing the system to run normally.
+>=20
+> > ...
+> > > But you do imply that there's some DesignWare hardware issue involved=
+,
+> > > too, so I guess it's possible the other drivers don't have an issue
+> > > and/or actually require the chained IRQs.=C2=A0 That's why I asked ho=
+w we
+> > > should decide.
+> >=20
+> > That makes sense. I don't know if it's a DesignWare hardware issue or
+> > something else down the PCIe bus. Other folks in my team are
+> > investigating the root cause. This thread has the details:
+> > https://lore.kernel.org/all/pmodcoakbs25z2a7mlo5gpuz63zluh35vbgb5itn6k5=
+aqhjnny@jvphbpvahtse/
+> >=20
+> > I want to point out that this patch doesn't *fix* the root problem (the
+> > interrupt storm). It just makes the kernel handle it (much) better if
+> > it occurs.
+> >=20
+> > I can't see why any driver would _require_ chained IRQs. As I see it,
+> > chained interrupts are just a "shortcut" that circumvents the IRQ core
+> > for (debatable) performance reasons. Other than that, they should work
+> > the same as regular interrupts.
+> >=20
+> > There are other benefits associated with using regular interrupts. One
+> > of them is the ability to control the SMP affinity of the parent
+> > interrupt. But that's a different topic.
+>=20
+> Thanks for mentioning IRQ affinity because that reminds me of a
+> long-standing related issue.=C2=A0 Pali posted a similar patch for mvebu
+> [1], but it's been stalled for a long time because apparently there's
+> some potential breakage of the userspace ABI [2].
 
-On 2023/6/30 01:44, Limonciello, Mario wrote:
-> [Public]
->
->> -----Original Message-----
->> From: 15330273260@189.cn <15330273260@189.cn>
->> Sent: Thursday, June 29, 2023 12:00 PM
->> To: Bjorn Helgaas <helgaas@kernel.org>; Sui Jingfeng
->> <suijingfeng@loongson.cn>
->> Cc: Bjorn Helgaas <bhelgaas@google.com>; linux-fbdev@vger.kernel.org;
->> Cornelia Huck <cohuck@redhat.com>; Karol Herbst <kherbst@redhat.com>;
->> nouveau@lists.freedesktop.org; Joonas Lahtinen
->> <joonas.lahtinen@linux.intel.com>; dri-devel@lists.freedesktop.org; Chai,
->> Thomas <YiPeng.Chai@amd.com>; Limonciello, Mario
->> <Mario.Limonciello@amd.com>; Gao, Likun <Likun.Gao@amd.com>; David
->> Airlie <airlied@gmail.com>; Ville Syrjala <ville.syrjala@linux.intel.com>; Yi Liu
->> <yi.l.liu@intel.com>; kvm@vger.kernel.org; amd-gfx@lists.freedesktop.org;
->> Jason Gunthorpe <jgg@ziepe.ca>; Ben Skeggs <bskeggs@redhat.com>; linux-
->> pci@vger.kernel.org; Kevin Tian <kevin.tian@intel.com>; Lazar, Lijo
->> <Lijo.Lazar@amd.com>; Thomas Zimmermann <tzimmermann@suse.de>;
->> Zhang, Bokun <Bokun.Zhang@amd.com>; intel-gfx@lists.freedesktop.org;
->> Maarten Lankhorst <maarten.lankhorst@linux.intel.com>; Jani Nikula
->> <jani.nikula@linux.intel.com>; Alex Williamson
->> <alex.williamson@redhat.com>; Abhishek Sahu <abhsahu@nvidia.com>;
->> Maxime Ripard <mripard@kernel.org>; Rodrigo Vivi <rodrigo.vivi@intel.com>;
->> Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>; Yishai Hadas
->> <yishaih@nvidia.com>; Pan, Xinhui <Xinhui.Pan@amd.com>; linux-
->> kernel@vger.kernel.org; Daniel Vetter <daniel@ffwll.ch>; Deucher, Alexander
->> <Alexander.Deucher@amd.com>; Koenig, Christian
->> <Christian.Koenig@amd.com>; Zhang, Hawking <Hawking.Zhang@amd.com>
->> Subject: Re: [PATCH v7 6/8] PCI/VGA: Introduce is_boot_device function
->> callback to vga_client_register
->>
->> Hi,
->>
->> On 2023/6/29 23:54, Bjorn Helgaas wrote:
->>> On Thu, Jun 22, 2023 at 01:08:15PM +0800, Sui Jingfeng wrote:
->>>> Hi,
->>>>
->>>>
->>>> A nouveau developer(Lyude) from redhat send me a R-B,
->>>>
->>>> Thanks for the developers of nouveau project.
->>>>
->>>>
->>>> Please allow me add a link[1] here.
->>>>
->>>>
->>>> [1]
->> https://lore.kernel.org/all/0afadc69f99a36bc9d03ecf54ff25859dbc10e28.ca
->> mel@redhat.com/
->>> 1) Thanks for this.  If you post another version of this series,
->>>      please pick up Lyude's Reviewed-by and include it in the relevant
->>>      patches (as long as you haven't made significant changes to the
->>>      code Lyude reviewed).
->> Yes, no significant changes. Just fix typo.
->>
->> I also would like to add support for other DRM drivers.
->>
->> But I think this deserve another patch.
->>
->>>    Whoever applies this should automatically
->>>      pick up Reviewed-by/Ack/etc that are replies to the version being
->>>      applied, but they won't go through previous revisions to find them.
->>>
->>> 2) Please mention the commit to which the series applies.  I tried to
->>>      apply this on v6.4-rc1, but it doesn't apply cleanly.
->> Since I'm a graphic driver developer, I'm using drm-tip.
->>
->> I just have already pulled, it still apply cleanly on drm-tip.
->>
->>> 3) Thanks for including cover letters in your postings.  Please
->>>      include a little changelog in the cover letter so we know what
->>>      changed between v6 and v7, etc.
->> No change between v6 and v7,
->>
->> it seems that it is because the mailbox don't allow me to sending too
->> many mails a day.
->>
->> so some of the patch is failed to delivery because out of quota.
->>
->>
->>> 4) Right now we're in the middle of the v6.5 merge window, so new
->>>      content, e.g., this series, is too late for v6.5.  Most
->>>      maintainers, including me, wait to merge new content until the
->>>      merge window closes and a new -rc1 is tagged.  This merge window
->>>      should close on July 9, and people will start merging content for
->>>      v6.6, typically based on v6.5-rc1.
->> I'm wondering
->>
->> Would you will merge all of the patches in this series (e.g. including
->> the patch for drm/amdgpu(7/8) and drm/radeon(8/8)) ?
->>
->> Or just part of them?
->>
->> Emm, I don't know because my patch seems across different subsystem of
->> Linux kernel.
->>
->> There is also a developer for AMDGPU (Mario) give me a R-B for the
->> patch-0002 of this series.
->>
->> So, at least, PATCH-0001, PATCH-0002, PATCH-0003, PATCH-0004, PATCH-
->> 0006
->> are already OK(got reviewed by).
->>
->> Those 5 patch are already qualified to be merged, I think.
-> I think what you can do is pick up all the tags in your next version.  Once the
-> whole series has tags we can discuss how it merges.
+I'm really glad you brought this up. Ironically, that's exactly where I
+started.
 
-Thanks a lot, Mario.
+> Unfortunately I'm not an IRQ expert and haven't followed all the
+> arguments there.=C2=A0 BUT it does seem like Marc's objection to Pali's
+> patch would also apply to your patch, so maybe this is an opportune
+> time to re-evaluate the situation.
 
+I'm no IRQ expert either, but I've been looking into it quite a lot
+lately. For the record, there's an even older thread [3] where Marc
+explains the userspace ABI breakage you mentioned and he proposes a new
+sysfs based interface to address that problem.
 
-Is it possible to merge the PCI/VGA part as fast as possible, especially the
+I tried to follow Marc's suggestions and sent an RFC patch series [4]
+that attempts to implement the new interface and also some form of
+parent-child interrupt tracking. That would be a way of addressing the
+affinity issue without having to convert all the drivers. But on the
+other hand, it doesn't solve the IRQ storm detection problem.
 
-PATCH-0006 PCI/VGA: Introduce is_boot_device function callback to vga_client_register
+Anyway, Thomas replied [5] and explained why chained interrupts are a
+bad idea altogether. When we (my team and I ) came across the IRQ storm
+issue, we experienced first hand the scenario that Thomas describes.
 
-As this patch is fundamental, it introduce no functional change, as long as the drm
+> If converting from chained to normal handlers can be done safely, I
+> would definitely be in favor if doing it across all of drivers/pci/ at
+> once so they're all consistent.=C2=A0 Otherwise that code just gets copie=
+d
+> to new drivers, so the issue persists and spreads.
 
-driver side don't introduce a callback.
+I think the conversion can be done safely, meaning that it won't break
+the drivers. And by the way, there are other IRQ drivers (outside the
+PCI space) that use chained interrupts.
 
-I'm not hurry, but drm driver-side's patch have a dependency on this patch,
+Unfortunately, it seems we are going in circles. Chained interrupts are
+bad because they let IRQ storms go unnoticed and lock up the system,
+but converting them to regular interrupts is also bad because it breaks
+the userspace ABI.
 
-I think it is better the PCI/VGA-side's patch got merge first.
+I am willing to help clean up this mess, but I think first we need to
+come up with a solution that's acceptable for everybody. I was hoping
+Marc and Thomas would chime in, but unfortunately that hasn't happened
+yet - other than each of them pointing out (separately) what is wrong
+with each approach.
 
-At least for get the first four cleanup(0001 ~ 0004) patch merged first,
+Radu
 
-so that I don't have to send so much on the next version on one series.
-
-Being exposed so far, there no obvious objection.
-
-It saying that other people also want it got merged.
-
-Bjorn, is this OK ?
-
->
->> I means that if you could merge those 5 patch first, then there no need
->> to send another version again.
->>
->> I will refine the rest patch with more details and description.
->>
->> I'm fear of making too much noise.
->>
->>> Bjorn
+> [1] https://lore.kernel.org/r/20220524122817.7199-1-pali@kernel.org
+> [2] https://lore.kernel.org/r/874k0bf7f7.wl-maz@kernel.org
+[3] https://lore.kernel.org/all/87fslr7ygl.wl-maz@kernel.org/
+[4] https://lore.kernel.org/all/20230530214550.864894-1-rrendec@redhat.com/
+[5] https://lore.kernel.org/all/877csohcll.ffs@tglx/
 
