@@ -2,62 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9279C743145
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Jun 2023 01:58:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 836FF743295
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Jun 2023 04:14:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229522AbjF2Xz5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Jun 2023 19:55:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43182 "EHLO
+        id S232079AbjF3COV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Jun 2023 22:14:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230054AbjF2Xz4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jun 2023 19:55:56 -0400
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED5AA102;
-        Thu, 29 Jun 2023 16:55:54 -0700 (PDT)
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7836272f36eso56590639f.1;
-        Thu, 29 Jun 2023 16:55:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688082954; x=1690674954;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hco3GBCplDhEUQuXcF7xwdzFx9N07cdj82HcheoHCAE=;
-        b=IBa9YENb5lyzjRdlcZLp5msKzZZMk/gJWCMQgql0joU8W3POtly9zo3IMqujNGfgRE
-         MKwkWVeJnPgHKPWnY+pEiaDTi73TfohYVqqR6aFmvHBjyiNfSYHZS7rGc2dwk7nJHvir
-         UKXSP58RBYmYQm78j3MVTMel4KL0hJEd5vNyaoeSRDggn7SCVmR+ei1gtmqNA8YSgJn/
-         LQUtM3CLr+JTrLKYGlwwBiTrSLwBugpsrAJ9DaC1/7Hvx2EDKfcbKSJ4W/U7gnkl/opN
-         5QakKgwyBSyQ/1cdD3BB1nBVJlm1R+g11Pal9ZwwbQloGDBs4d4xMLr02O+nIeKDBmFw
-         Ictg==
-X-Gm-Message-State: AC+VfDyMSHCzcdS2xYR+1h1ZZQYVbskw7JKVq5zYgSsGCyOGt/nh84Mi
-        ZG8ZEPaTE20D1r7TpP07fcesiGzG3w==
-X-Google-Smtp-Source: ACHHUZ4DsazPqj4iSeZUXwyxuCP6ikhXMNrQEqvy30Y8vGWwIpMvZz0QiWovPTiMUI66eF6/bqN/Cg==
-X-Received: by 2002:a05:6602:2575:b0:77e:2883:13f3 with SMTP id dj21-20020a056602257500b0077e288313f3mr1049025iob.14.1688082954185;
-        Thu, 29 Jun 2023 16:55:54 -0700 (PDT)
-Received: from robh_at_kernel.org ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id dq34-20020a0566384d2200b0042566919376sm4015422jab.30.2023.06.29.16.55.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jun 2023 16:55:53 -0700 (PDT)
-Received: (nullmailer pid 129695 invoked by uid 1000);
-        Thu, 29 Jun 2023 23:55:51 -0000
-Date:   Thu, 29 Jun 2023 17:55:51 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lizhi Hou <lizhi.hou@amd.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        max.zhen@amd.com, sonal.santan@amd.com,
-        stefano.stabellini@xilinx.com
-Subject: Re: [PATCH V10 2/5] PCI: Create device tree node for bridge
-Message-ID: <20230629235551.GB92592-robh@kernel.org>
-References: <1688059190-4225-3-git-send-email-lizhi.hou@amd.com>
- <20230629225631.GA446944@bhelgaas>
+        with ESMTP id S230013AbjF3COU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Jun 2023 22:14:20 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C104730EF;
+        Thu, 29 Jun 2023 19:14:17 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8BxlfB4Op5kzh0EAA--.6712S3;
+        Fri, 30 Jun 2023 10:14:16 +0800 (CST)
+Received: from [10.20.42.43] (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxxsxzOp5kA3oSAA--.41851S3;
+        Fri, 30 Jun 2023 10:14:11 +0800 (CST)
+Message-ID: <2c81fbe3-308a-4c5e-0150-32006253b3ea@loongson.cn>
+Date:   Fri, 30 Jun 2023 10:14:11 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230629225631.GA446944@bhelgaas>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v7 6/8] PCI/VGA: Introduce is_boot_device function
+ callback to vga_client_register
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        "15330273260@189.cn" <15330273260@189.cn>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Chai, Thomas" <YiPeng.Chai@amd.com>,
+        "Gao, Likun" <Likun.Gao@amd.com>, David Airlie <airlied@gmail.com>,
+        Ville Syrjala <ville.syrjala@linux.intel.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        "Lazar, Lijo" <Lijo.Lazar@amd.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        "Zhang, Bokun" <Bokun.Zhang@amd.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Abhishek Sahu <abhsahu@nvidia.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhang, Hawking" <Hawking.Zhang@amd.com>
+References: <20230629155436.GA397963@bhelgaas>
+ <bcfdc77d-a94d-bca1-56e3-5e14e91f6fd9@189.cn>
+ <MN0PR12MB6101CDB6FF9DC8F8EDEF5F45E225A@MN0PR12MB6101.namprd12.prod.outlook.com>
+Content-Language: en-US
+From:   suijingfeng <suijingfeng@loongson.cn>
+In-Reply-To: <MN0PR12MB6101CDB6FF9DC8F8EDEF5F45E225A@MN0PR12MB6101.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf8BxxsxzOp5kA3oSAA--.41851S3
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3JryDGFWfuryxZw1xGryrZrc_yoW7ZF4xpr
+        WY9FsIkrs7Xr1rAF1kKa4UAF1jq3y8J343Wrn8t3W8ur909F1SqrZaqr4a9Fy5Ar1akF4Y
+        vw4agrn2k395Z3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUd529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUPqb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
+        wI0_Gr1j6F4UJwAaw2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
+        xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+        Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
+        xGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26rWY6Fy7MxAIw28IcxkI7VAK
+        I48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrV
+        AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8Jr1l
+        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxV
+        AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j
+        6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07bUzu
+        AUUUUU=
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,84 +102,148 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 29, 2023 at 05:56:31PM -0500, Bjorn Helgaas wrote:
-> On Thu, Jun 29, 2023 at 10:19:47AM -0700, Lizhi Hou wrote:
-> > The PCI endpoint device such as Xilinx Alveo PCI card maps the register
-> > spaces from multiple hardware peripherals to its PCI BAR. Normally,
-> > the PCI core discovers devices and BARs using the PCI enumeration process.
-> > There is no infrastructure to discover the hardware peripherals that are
-> > present in a PCI device, and which can be accessed through the PCI BARs.
-> 
-> IIUC this is basically a multi-function device except that instead of
-> each device being a separate PCI Function, they all appear in a single
-> Function.  That would mean all the devices share the same config space
-> so a single PCI Command register controls all of them, they all share
-> the same IRQs (either INTx or MSI/MSI-X), any MMIO registers are likely
-> in a shared BAR, etc., right?
-> 
-> Obviously PCI enumeration only sees the single Function and binds a
-> single driver to it.  But IIUC, you want to use existing drivers for
-> each of these sub-devices, so this series adds a DT node for the
-> single Function (using the quirks that call of_pci_make_dev_node()).
-> And I assume that when the PCI driver claims the single Function, it
-> will use that DT node to add platform devices, and those existing
-> drivers can claim those?
-> 
-> I don't see the PCI driver for the single Function in this series.  Is
-> that coming?  Is this series useful without it?
-> 
-> > Apparently, the device tree framework requires a device tree node for the
-> > PCI device. Thus, it can generate the device tree nodes for hardware
-> > peripherals underneath. Because PCI is self discoverable bus, there might
-> > not be a device tree node created for PCI devices. Furthermore, if the PCI
-> > device is hot pluggable, when it is plugged in, the device tree nodes for
-> > its parent bridges are required. Add support to generate device tree node
-> > for PCI bridges.
-> 
-> Can you remind me why hot-adding a PCI device requires DT nodes for
-> parent bridges?  I don't think we have those today, so maybe the DT
-> node for the PCI device requires a DT parent?  How far up does that
-> go?  From this patch, I guess a Root Port would be the top DT node on
-> a PCIe system, since that's the top PCI-to-PCI bridge?
-> 
-> This patch adds a DT node for *every* PCI bridge in the system.  We
-> only actually need that node for these unusual devices.  Is there some
-> way the driver for the single PCI Function could add that node when it
-> is needed?  Sorry if you've answered this in the past; maybe the
-> answer could be in the commit log or a code comment in case somebody
-> else wonders.
-> 
-> > @@ -340,6 +340,8 @@ void pci_bus_add_device(struct pci_dev *dev)
-> >  	 */
-> >  	pcibios_bus_add_device(dev);
-> >  	pci_fixup_device(pci_fixup_final, dev);
-> > +	if (pci_is_bridge(dev))
-> > +		of_pci_make_dev_node(dev);
-> 
-> It'd be nice to have a clue here about why we need this, since this is
-> executed for *every* system, even ACPI platforms that typically don't
-> use OF things.
-> 
-> >  	pci_create_sysfs_dev_files(dev);
-> >  	pci_proc_attach_device(dev);
-> >  	pci_bridge_d3_update(dev);
-> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> > index 2c25f4fa0225..9786ae407948 100644
-> > --- a/drivers/pci/of.c
-> > +++ b/drivers/pci/of.c
-> > @@ -487,6 +487,15 @@ static int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *
-> >  		} else {
-> >  			/* We found a P2P bridge, check if it has a node */
-> >  			ppnode = pci_device_to_OF_node(ppdev);
-> > +#if IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_NODES)
-> 
-> I would use plain #ifdef here instead of IS_ENABLED(), as you did in
-> pci.h below.  IS_ENABLED() is true if the Kconfig symbol is set to
-> either "y" or "m".
+Hi,
 
-Actually, IS_ENABLED() with a C 'if' rather than a preprocessor #if 
-would work here and is preferred.
+On 2023/6/30 01:44, Limonciello, Mario wrote:
+> [Public]
+>
+>> -----Original Message-----
+>> From: 15330273260@189.cn <15330273260@189.cn>
+>> Sent: Thursday, June 29, 2023 12:00 PM
+>> To: Bjorn Helgaas <helgaas@kernel.org>; Sui Jingfeng
+>> <suijingfeng@loongson.cn>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>; linux-fbdev@vger.kernel.org;
+>> Cornelia Huck <cohuck@redhat.com>; Karol Herbst <kherbst@redhat.com>;
+>> nouveau@lists.freedesktop.org; Joonas Lahtinen
+>> <joonas.lahtinen@linux.intel.com>; dri-devel@lists.freedesktop.org; Chai,
+>> Thomas <YiPeng.Chai@amd.com>; Limonciello, Mario
+>> <Mario.Limonciello@amd.com>; Gao, Likun <Likun.Gao@amd.com>; David
+>> Airlie <airlied@gmail.com>; Ville Syrjala <ville.syrjala@linux.intel.com>; Yi Liu
+>> <yi.l.liu@intel.com>; kvm@vger.kernel.org; amd-gfx@lists.freedesktop.org;
+>> Jason Gunthorpe <jgg@ziepe.ca>; Ben Skeggs <bskeggs@redhat.com>; linux-
+>> pci@vger.kernel.org; Kevin Tian <kevin.tian@intel.com>; Lazar, Lijo
+>> <Lijo.Lazar@amd.com>; Thomas Zimmermann <tzimmermann@suse.de>;
+>> Zhang, Bokun <Bokun.Zhang@amd.com>; intel-gfx@lists.freedesktop.org;
+>> Maarten Lankhorst <maarten.lankhorst@linux.intel.com>; Jani Nikula
+>> <jani.nikula@linux.intel.com>; Alex Williamson
+>> <alex.williamson@redhat.com>; Abhishek Sahu <abhsahu@nvidia.com>;
+>> Maxime Ripard <mripard@kernel.org>; Rodrigo Vivi <rodrigo.vivi@intel.com>;
+>> Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>; Yishai Hadas
+>> <yishaih@nvidia.com>; Pan, Xinhui <Xinhui.Pan@amd.com>; linux-
+>> kernel@vger.kernel.org; Daniel Vetter <daniel@ffwll.ch>; Deucher, Alexander
+>> <Alexander.Deucher@amd.com>; Koenig, Christian
+>> <Christian.Koenig@amd.com>; Zhang, Hawking <Hawking.Zhang@amd.com>
+>> Subject: Re: [PATCH v7 6/8] PCI/VGA: Introduce is_boot_device function
+>> callback to vga_client_register
+>>
+>> Hi,
+>>
+>> On 2023/6/29 23:54, Bjorn Helgaas wrote:
+>>> On Thu, Jun 22, 2023 at 01:08:15PM +0800, Sui Jingfeng wrote:
+>>>> Hi,
+>>>>
+>>>>
+>>>> A nouveau developer(Lyude) from redhat send me a R-B,
+>>>>
+>>>> Thanks for the developers of nouveau project.
+>>>>
+>>>>
+>>>> Please allow me add a link[1] here.
+>>>>
+>>>>
+>>>> [1]
+>> https://lore.kernel.org/all/0afadc69f99a36bc9d03ecf54ff25859dbc10e28.ca
+>> mel@redhat.com/
+>>> 1) Thanks for this.  If you post another version of this series,
+>>>      please pick up Lyude's Reviewed-by and include it in the relevant
+>>>      patches (as long as you haven't made significant changes to the
+>>>      code Lyude reviewed).
+>> Yes, no significant changes. Just fix typo.
+>>
+>> I also would like to add support for other DRM drivers.
+>>
+>> But I think this deserve another patch.
+>>
+>>>    Whoever applies this should automatically
+>>>      pick up Reviewed-by/Ack/etc that are replies to the version being
+>>>      applied, but they won't go through previous revisions to find them.
+>>>
+>>> 2) Please mention the commit to which the series applies.  I tried to
+>>>      apply this on v6.4-rc1, but it doesn't apply cleanly.
+>> Since I'm a graphic driver developer, I'm using drm-tip.
+>>
+>> I just have already pulled, it still apply cleanly on drm-tip.
+>>
+>>> 3) Thanks for including cover letters in your postings.  Please
+>>>      include a little changelog in the cover letter so we know what
+>>>      changed between v6 and v7, etc.
+>> No change between v6 and v7,
+>>
+>> it seems that it is because the mailbox don't allow me to sending too
+>> many mails a day.
+>>
+>> so some of the patch is failed to delivery because out of quota.
+>>
+>>
+>>> 4) Right now we're in the middle of the v6.5 merge window, so new
+>>>      content, e.g., this series, is too late for v6.5.  Most
+>>>      maintainers, including me, wait to merge new content until the
+>>>      merge window closes and a new -rc1 is tagged.  This merge window
+>>>      should close on July 9, and people will start merging content for
+>>>      v6.6, typically based on v6.5-rc1.
+>> I'm wondering
+>>
+>> Would you will merge all of the patches in this series (e.g. including
+>> the patch for drm/amdgpu(7/8) and drm/radeon(8/8)) ?
+>>
+>> Or just part of them?
+>>
+>> Emm, I don't know because my patch seems across different subsystem of
+>> Linux kernel.
+>>
+>> There is also a developer for AMDGPU (Mario) give me a R-B for the
+>> patch-0002 of this series.
+>>
+>> So, at least, PATCH-0001, PATCH-0002, PATCH-0003, PATCH-0004, PATCH-
+>> 0006
+>> are already OK(got reviewed by).
+>>
+>> Those 5 patch are already qualified to be merged, I think.
+> I think what you can do is pick up all the tags in your next version.  Once the
+> whole series has tags we can discuss how it merges.
 
-But this code and the "dynamic" property needs more discussion.
+Thanks a lot, Mario.
 
-Rob
+
+Is it possible to merge the PCI/VGA part as fast as possible, especially the
+
+PATCH-0006 PCI/VGA: Introduce is_boot_device function callback to vga_client_register
+
+As this patch is fundamental, it introduce no functional change, as long as the drm
+
+driver side don't introduce a callback.
+
+I'm not hurry, but drm driver-side's patch have a dependency on this patch,
+
+I think it is better the PCI/VGA-side's patch got merge first.
+
+At least for get the first four cleanup(0001 ~ 0004) patch merged first,
+
+so that I don't have to send so much on the next version on one series.
+
+Being exposed so far, there no obvious objection.
+
+It saying that other people also want it got merged.
+
+Bjorn, is this OK ?
+
+>
+>> I means that if you could merge those 5 patch first, then there no need
+>> to send another version again.
+>>
+>> I will refine the rest patch with more details and description.
+>>
+>> I'm fear of making too much noise.
+>>
+>>> Bjorn
+
