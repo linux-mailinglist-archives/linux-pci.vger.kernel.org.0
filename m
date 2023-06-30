@@ -2,321 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 81AAB7439C8
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Jun 2023 12:43:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D16F7439E1
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Jun 2023 12:52:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232760AbjF3KnG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Jun 2023 06:43:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39834 "EHLO
+        id S232097AbjF3KwZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Jun 2023 06:52:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232739AbjF3Kmq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Jun 2023 06:42:46 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 700FF3AB4
-        for <linux-pci@vger.kernel.org>; Fri, 30 Jun 2023 03:42:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1688121722; x=1719657722;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/wC3Yr5iTXHPR643WxwyRyrYaQ5orPoTl4rcSv5wmpU=;
-  b=NEbOI4pTlH13lzUnnpvfOJsj1NZa8/8ibvNP26J/Ye15PWOz4t0TI3VE
-   nYY7ooCw6LeZY/iCB//j1D9/dLYvxtTYu0/uBrMNbfJJsAfqjXEwFaupC
-   LFfThi3P1RVhsQZzIPxc55/9l2MiyhIvb1TjNs/UW2aBq9Hb18cMTdqUR
-   iInu/EPJVodU2zEK/B8TbavFdiiMuQzRcrccvR3iVjUZt7l4jtnGCWdE/
-   q9tparkYWrzoQ0u4NHmYwxi7u0rG2acB0Q/Wj9yBXtVBdfZLZAg+uG8ZK
-   iOlOjeY9hBV1MeZkIlqGlBNQZhlnqW1R3uXj8mVcR61qO9jqOsVJ2yWwp
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10756"; a="341948043"
-X-IronPort-AV: E=Sophos;i="6.01,170,1684825200"; 
-   d="scan'208";a="341948043"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2023 03:42:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10756"; a="830884874"
-X-IronPort-AV: E=Sophos;i="6.01,170,1684825200"; 
-   d="scan'208";a="830884874"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 30 Jun 2023 03:41:52 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 1F472358; Fri, 30 Jun 2023 13:41:54 +0300 (EEST)
-Date:   Fri, 30 Jun 2023 13:41:54 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     Thomas Witt <thomas@witt.link>, Thomas Witt <kernel@witt.link>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Tasev Nikola <tasev.stefanoska@skynet.be>,
-        Mark Enriquez <enriquezmark36@gmail.com>,
-        Koba Ko <koba.ko@canonical.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/ASPM: Add back L1 PM Substate save and restore
-Message-ID: <20230630104154.GS14638@black.fi.intel.com>
-References: <20230627100447.GC14638@black.fi.intel.com>
- <20230627204124.GA366188@bhelgaas>
- <20230628064637.GF14638@black.fi.intel.com>
- <650f68a1-8d54-a5ad-079b-e8aea64c5130@witt.link>
- <20230628105940.GK14638@black.fi.intel.com>
- <4b47ec58-dc34-1129-4a50-baf2b84b0f53@witt.link>
- <8af8d82dd0dc69851d0cfc41eba6e2acb22d2666.camel@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <8af8d82dd0dc69851d0cfc41eba6e2acb22d2666.camel@linux.intel.com>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S231455AbjF3KwX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Jun 2023 06:52:23 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A1A635AF;
+        Fri, 30 Jun 2023 03:52:22 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35U9IqOe011436;
+        Fri, 30 Jun 2023 10:52:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=lDAMfguN/Oi65s75t9Fww/pWagtN3YyKDqCIn+q6vwM=;
+ b=d4Z9vANmdQXbzJii6b6A3+24cMa0OhWTIJHqVD8I3WLiL5pFzl1nyEUasXrGvWBZe/2z
+ /aGJq6Xgn+yDxHjt/5NSDazKpkqGyiZQmmRRwVXcWMsHLyG/ZCemZKpfAbyYqziqCFxj
+ aQ0lV+LI4Lsr/p67ZkKyXla+hqoNKreK0waLbu28zj1gx9wz+6fwqa5qiPKYh4dFDsXR
+ ZHpr2932XFOjw+4twe2lbY179+s7SfCLRECRp8afKji+4jC/Wlo0XlJMAgirrkCMnTXb
+ +Ie1wPBZnPuF4Lly13fvDQx0cxc9ZscwPgc/cBapA67/+Z6GHzmEDHV2Qyz33xLcxPIY Gw== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rhfew9nvw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Jun 2023 10:52:17 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 35UAqDJx004625;
+        Fri, 30 Jun 2023 10:52:13 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3rdsjkpf1t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 30 Jun 2023 10:52:13 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35UAqCcJ004610;
+        Fri, 30 Jun 2023 10:52:13 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-krichai-hyd.qualcomm.com [10.213.110.112])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 35UAqC8o004605;
+        Fri, 30 Jun 2023 10:52:12 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
+        id 082174ABD; Fri, 30 Jun 2023 16:22:12 +0530 (+0530)
+From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
+        krzysztof.kozlowski@linaro.org,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: [PATCH v2 0/8] PCCI: EPC: Add support to wake up host from D3 states
+Date:   Fri, 30 Jun 2023 16:22:03 +0530
+Message-Id: <1688122331-25478-1-git-send-email-quic_krichai@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: VDcv7iTz9CrIxszYA5AUHww6jagh1-wg
+X-Proofpoint-GUID: VDcv7iTz9CrIxszYA5AUHww6jagh1-wg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-30_05,2023-06-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 malwarescore=0 priorityscore=1501
+ clxscore=1015 spamscore=0 mlxlogscore=352 adultscore=0 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306300092
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 29, 2023 at 07:24:55AM -0700, David E. Box wrote:
-> On Thu, 2023-06-29 at 11:47 +0200, Thomas Witt wrote:
-> > On 28/06/2023 12:59, Mika Westerberg wrote:
-> > > I wonder if the patch actually helps here now because the reason we want
-> > > to add it back is that it allows the CPU to enter lower power states and
-> > > thus reducing the power consumption in S2idle too. Do you observe that
-> > > when you have the patch applied?
-> > 
-> > No joy. I did not check what its actually doing, but the computer takes 
-> > about 150mA over the charger at idle with screen off and 140mA in 
-> > suspend. With mem_sleep set to "deep", it takes about 20mA in suspend. 
-> > All with the battery at 100%, at 19.7V.
-> > 
-> > So I guess I want to keep the "deep" setting in my cmdline.
-> 
-> It's likely something is not entering the right state. You can try the following
-> script to check what the cause may be.
-> 
-> https://github.com/intel/S0ixSelftestTool
+Here we propose this patch series to add support in PCI endpoint
+driver to wake up host from D3 states.
 
-That would be useful insights, indeed.
+As endpoint cannot send any data/MSI when the D-state is in
+D3cold or D3hot. Endpoint needs to bring the device back to D0
+to send any kind of data.
 
-@Thomas, below is an updated patch. I wonder if you could try it out?
-This one restores L1 substates first and then L0s/L1 as the spec
-suggests. If this does not work, them I'm not sure what to do because
-now we should be doing exactly what the spec is saying (unless I
-misinterpret something):
+For this endpoint needs to send inband PME the device is in D3 state or
+toggle wake when the device is D3 cold and vaux is not supplied.
 
-  - Write L1 enables on the upstream component first then downstream
-    (this is taken care by the parent child order of the Linux PM).
-  - Program L1 SS before L1 enables
-  - Program L1 SS enables after rest of the fields in the capability
+As EPF doestn't know the D-state of the PCI, added a notify op whenever
+device state changes.
 
-Applies on top of v6.4.
+Based on the D-state the EPF driver decides to wake host either by
+toggling wake or by sending PME.
 
-------8<-----8<-----8<-----8<-----
+When the MHI state is in M3 MHI driver will wakeup the host using the
+wakeup op.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 5ede93222bc1..2e947fea5afc 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1545,7 +1545,7 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
- {
- 	int i = 0;
- 	struct pci_cap_saved_state *save_state;
--	u16 *cap;
-+	u16 *cap, val;
- 
- 	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_EXP);
- 	if (!save_state)
-@@ -1560,7 +1560,14 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
- 
- 	cap = (u16 *)&save_state->cap.data[0];
- 	pcie_capability_write_word(dev, PCI_EXP_DEVCTL, cap[i++]);
--	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, cap[i++]);
-+	/*
-+	 * Restoring ASPM L1 substates has special requirements
-+	 * according to the PCIe spec 6.0. So we restore here only the
-+	 * LNKCTL register with the ASPM control field clear. ASPM will
-+	 * be restored in pci_restore_aspm_state().
-+	 */
-+	val = cap[i++] & ~PCI_EXP_LNKCTL_ASPMC;
-+	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, val);
- 	pcie_capability_write_word(dev, PCI_EXP_SLTCTL, cap[i++]);
- 	pcie_capability_write_word(dev, PCI_EXP_RTCTL, cap[i++]);
- 	pcie_capability_write_word(dev, PCI_EXP_DEVCTL2, cap[i++]);
-@@ -1671,6 +1678,7 @@ int pci_save_state(struct pci_dev *dev)
- 	pci_save_ltr_state(dev);
- 	pci_save_dpc_state(dev);
- 	pci_save_aer_state(dev);
-+	pci_save_aspm_state(dev);
- 	pci_save_ptm_state(dev);
- 	return pci_save_vc_state(dev);
- }
-@@ -1784,6 +1792,7 @@ void pci_restore_state(struct pci_dev *dev)
- 	pci_restore_rebar_state(dev);
- 	pci_restore_dpc_state(dev);
- 	pci_restore_ptm_state(dev);
-+	pci_restore_aspm_state(dev);
- 
- 	pci_aer_clear_status(dev);
- 	pci_restore_aer_state(dev);
-@@ -3467,6 +3476,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
- 	if (error)
- 		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
- 
-+	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_L1SS,
-+					    2 * sizeof(u32));
-+	if (error)
-+		pci_err(dev, "unable to allocate suspend buffer for ASPM-L1SS\n");
-+
- 	pci_allocate_vc_save_buffers(dev);
- }
- 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 2475098f6518..47dbbc006884 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -567,10 +567,14 @@ bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
- void pcie_aspm_init_link_state(struct pci_dev *pdev);
- void pcie_aspm_exit_link_state(struct pci_dev *pdev);
- void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
-+void pci_save_aspm_state(struct pci_dev *pdev);
-+void pci_restore_aspm_state(struct pci_dev *pdev);
- #else
- static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
- static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
- static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
-+static inline void pci_save_aspm_state(struct pci_dev *pdev) { }
-+static inline void pci_restore_aspm_state(struct pci_dev *pdev) { }
- #endif
- 
- #ifdef CONFIG_PCIE_ECRC
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 66d7514ca111..879896fffb1e 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -7,6 +7,7 @@
-  * Copyright (C) Shaohua Li (shaohua.li@intel.com)
-  */
- 
-+#include <linux/dmi.h>
- #include <linux/kernel.h>
- #include <linux/math.h>
- #include <linux/module.h>
-@@ -751,6 +752,114 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
- 				PCI_L1SS_CTL1_L1SS_MASK, val);
- }
- 
-+void pci_save_aspm_state(struct pci_dev *pdev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+	u16 l1ss = pdev->l1ss;
-+	u32 *cap;
-+
-+	/*
-+	 * Save L1 substate configuration. The ASPM L0s/L1 configuration
-+	 * is already saved in pci_save_pcie_state().
-+	 */
-+	if (!l1ss)
-+		return;
-+
-+	save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_L1SS);
-+	if (!save_state)
-+		return;
-+
-+	cap = (u32 *)&save_state->cap.data[0];
-+	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL2, cap++);
-+	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, cap++);
-+}
-+
-+/*
-+ * Do not restore L1 substates for the below systems even if BIOS has
-+ * enabled it initially. This breaks resume from suspend otherwise on
-+ * these.
-+ */
-+static const struct dmi_system_id aspm_l1ss_denylist[] = {
-+	{
-+		/* https://bugzilla.kernel.org/show_bug.cgi?id=216782 */
-+		.ident = "ASUS UX305FA",
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_BOARD_NAME, "UX305FA"),
-+		},
-+	},
-+	{ }
-+};
-+
-+static void pcie_restore_aspm_l1ss(struct pci_dev *pdev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+	u32 *cap, ctl1, ctl2, l1_2_enable;
-+	u16 l1ss = pdev->l1ss;
-+
-+	if (!l1ss)
-+		return;
-+
-+	if (dmi_check_system(aspm_l1ss_denylist)) {
-+		pci_dbg(pdev, "skipping restoring L1 substates on this system\n");
-+		return;
-+	}
-+
-+	save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_L1SS);
-+	if (!save_state)
-+		return;
-+
-+	cap = (u32 *)&save_state->cap.data[0];
-+	ctl2 = *cap++;
-+	ctl1 = *cap;
-+
-+	/*
-+	 * In addition, Common_Mode_Restore_Time and LTR_L1.2_THRESHOLD
-+	 * in PCI_L1SS_CTL1 must be programmed *before* setting the L1.2
-+	 * enable bits, even though they're all in PCI_L1SS_CTL1.
-+	 */
-+	l1_2_enable = ctl1 & PCI_L1SS_CTL1_L1_2_MASK;
-+	ctl1 &= ~PCI_L1SS_CTL1_L1_2_MASK;
-+
-+	/* Write back without enables first (above we cleared them in ctl1) */
-+	pci_write_config_dword(pdev, l1ss + PCI_L1SS_CTL1, ctl1);
-+	pci_write_config_dword(pdev, l1ss + PCI_L1SS_CTL2, ctl2);
-+
-+	/* Then write back the enables */
-+	if (l1_2_enable)
-+		pci_write_config_dword(pdev, l1ss + PCI_L1SS_CTL1,
-+				       ctl1 | l1_2_enable);
-+}
-+
-+void pci_restore_aspm_state(struct pci_dev *pdev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+	u16 *cap, val, tmp;
-+
-+	save_state = pci_find_saved_cap(pdev, PCI_CAP_ID_EXP);
-+	if (!save_state)
-+		return;
-+
-+	cap = (u16 *)&save_state->cap.data[0];
-+	/*
-+	 * Must match the ordering in pci_save/restore_pcie_state().
-+	 * This is PCI_EXP_LNKCTL.
-+	 */
-+	val = cap[1] & PCI_EXP_LNKCTL_ASPMC;
-+	if (!val)
-+		return;
-+
-+	/*
-+	 * We restore L1 substate configuration first before enabling L1
-+	 * as the PCIe spec 6.0 sec 5.5.4 suggests.
-+	 * */
-+	pcie_restore_aspm_l1ss(pdev);
-+
-+	pcie_capability_read_word(pdev, PCI_EXP_LNKCTL, &tmp);
-+	/* Re-enable L0s/L1 */
-+	pcie_capability_write_word(pdev, PCI_EXP_LNKCTL, tmp | val);
-+}
-+
- static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
- {
- 	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
+Changes from v1:
+	- Moved from RFC patch to regular patch
+	- Inclueded EPF patch and added a new op patch to notify dstate change
+Krishna chaitanya chundru (8):
+  PCI: endpoint: Add dstate change notifier support
+  PCI: qcom-ep: Add support for D-state change notification
+  PCI: epf-mhi: Add dtate change op
+  PCI: endpoint: Add wakeup host API to EPC core
+  pci: dwc: Add wakeup host op to pci_epc_ops
+  PCI: qcom: ep: Add wake up host op to dw_pcie_ep_ops
+  PCI: epf-mhi: Add wakeup host op
+  bus: mhi: ep: wake up host is the MHI state is in M3
+
+ Documentation/PCI/endpoint/pci-endpoint.rst     | 11 +++++
+ drivers/bus/mhi/ep/main.c                       | 16 ++++++-
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 12 +++++
+ drivers/pci/controller/dwc/pcie-designware.h    |  3 ++
+ drivers/pci/controller/dwc/pcie-qcom-ep.c       | 37 ++++++++++++++++
+ drivers/pci/endpoint/functions/pci-epf-mhi.c    | 32 ++++++++++++++
+ drivers/pci/endpoint/pci-epc-core.c             | 58 +++++++++++++++++++++++++
+ include/linux/mhi_ep.h                          |  4 ++
+ include/linux/pci-epc.h                         | 12 +++++
+ include/linux/pci-epf.h                         |  1 +
+ 10 files changed, 185 insertions(+), 1 deletion(-)
+
 -- 
-2.39.2
+2.7.4
 
