@@ -2,325 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F66F744572
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Jul 2023 02:09:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BB697446EC
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Jul 2023 08:30:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229672AbjGAAH2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Jun 2023 20:07:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50180 "EHLO
+        id S229534AbjGAGaI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 1 Jul 2023 02:30:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbjGAAH0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Jun 2023 20:07:26 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 609361BC6;
-        Fri, 30 Jun 2023 17:07:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1688170045; x=1719706045;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=mGBVmFPB3lUEzwDzAvQ0nEDvVlgmPf57YZH/VgcndDc=;
-  b=PZ/NzeAHbR5W4dh9Q/kAu2Kvzoqu7gRyXL2rdtdobAZepPvrv47ekL4T
-   LKQ7BOJLhOjjyETrhlhxT8qBoxZSBms7LaJ9PTHQ3v3EnFaPPA55Q3Rwb
-   27kbuTIoWG8GxAmaNG3b2jkuALBbrxHwIvtIYmkDG48OlAacZzCEFOJNo
-   Wf2mTr8VO3vlNGWYodTvzE2RQcXYkhpft+s7AlF9579Yu3OeqTzXamvOQ
-   9cBFFiZwZuZbH5zRLOYmDsNhtemWUoLhRYgI3H0vfO/sIu8PyuwDn0QRU
-   gPSpjG3x1/O4gV7/1iaM76rhDZjEELXb7jGWXRpDjcJiUrM7sbQ2/1uG5
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10757"; a="362564223"
-X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
-   d="scan'208";a="362564223"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2023 17:07:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10757"; a="964568675"
-X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
-   d="scan'208";a="964568675"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga006.fm.intel.com with ESMTP; 30 Jun 2023 17:07:24 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Fri, 30 Jun 2023 17:07:24 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Fri, 30 Jun 2023 17:07:24 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.175)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Fri, 30 Jun 2023 17:07:23 -0700
+        with ESMTP id S229452AbjGAGaG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 Jul 2023 02:30:06 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2063.outbound.protection.outlook.com [40.107.220.63])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E27E42118;
+        Fri, 30 Jun 2023 23:30:04 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Tc8xexAdYcCrST87BhOU8JqJv0MZvq+n7+DsSFBtGzShSNmtBWyvpqs470uF/6DHdDXUMmhcf5vFkSNOco4JW0gxV5n/UB/0ZNQL8bvfqEIMGbBMw7iN4sZJFfxd+JJQ+ElJsS6wip9cScs5ux05yk3ln2IMKN/hiIukmbwdECLtcKF/Zf6chTacEQMPi+osrfmctLLwg0Hh1bhp7PQUVKmz699/l3GcGqOYXSiukD7YWpR55Vof4T3KdIIRBOZrApVixw6MeROZnednzRmssauXuF8foKDdPBonzteKbZ8JnvRM6IO98Yqh0zOGe/fCKVLtQUCs96LVSAALycHrWQ==
+ b=Y7mebXRLVE9v9ij47EfBinc4jmOwkXLAWe9/9hgXbqBGBrXCYelrLMJPDComknT2AwQyzUv5J9BQZHf8ISZgKemrwWs1H+CPlMCCM7BHPR83pc8KG2u9WbVvDECOtNiVHq1Bjpu2qEp2KHN7ERDD2XFVeDXU3Hm0AbtYWzSADHvzDor+V4dX8Esig4FQf+ybftldf99A556sEuFs9Gs9h8qmMqDv+Pwmk9oSMF+AryKFnbUYdeKs/kjd71PJ6giDrLWZon30vJdZSv0YnApELV1Uq5b2zWz1bmZOwJIrZASimEuJXhuLa3NOcySdwHNAfQwr/MXsgasyY19779IVJQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/0OM5o/WwASXs6KwT24YsfgDWMPKuNzxvNOL7d3s198=;
- b=XDLiFPmKFe1garAFaK2m7fXLE09ecg9E/dN2F7WgGaXPthHkw2dOSUySZdgHY7Uy+D5NTbW3xKnEfcOMZoGcYe5GGXPv7IWe+QTbuXH3CCwIjI7eDr8a4M85/BGEP5aqIZ0fnNHdFFAKqkj9IbrBco++B2MzLtl/xdH6FppQHMTqvME2u5+Sy4+svWMP1u7p0gClNW8z8w9yhxWpjCN4lRYmVkOk1Gl2BCC5xZ0kUsRTBNYqBKL2JuMhEFQMPf1F80Gx5YNusUj+Q/NhDxVJvr/LvXMrde73+cFJXjB22I3bBxCkbCeWB9d4TrM1scuPBd2RCI0isPNYs7lOhwjjsw==
+ bh=0BnRCyBLuP+DIc/f/qXgOnYnptJ2oh7yrEa19JrJWnA=;
+ b=FHWdVWIR4wIls9aD6ZmMypSIwiBHySx7RI/vNk5sa6gHHD2foFd9iRQvMZ54hMSInx/tkpwe6U5jAxCloBVN+otqCS6NkFHCvbb0gI//Xm2qaTPNUP4xupYy4/xfCbl0HJKPl5omaBs+bmcvParZCuS3iuuP/G1KH1xJSVzL8MQNnyLIclKzEueNC2cJ4qSWZ8Wi0RQbnkBL8Uc1Gnb4fKjRz7m4ufvlLlEomJNCTkyYu1/i+lfaL4le9wIMhheCY1a5iQa0f+SKmTP88qdmmNPVCZZtEFr1Uj5LqJxF5PC6Bpw0JtEuFA7qQ6dTQ4R8yNtK6QzXvZxpt76zt5/Qiw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0BnRCyBLuP+DIc/f/qXgOnYnptJ2oh7yrEa19JrJWnA=;
+ b=ICoO9vYTs9qWQ0Er2BlmO6GE3iPmJ/yKDV3XodkN6aCwgfQA0RxRX/d0jFpLhtp7RDvPKaKnxnXuMtUOoNqEjoXszy4SyctSBEWC92Mhah6LyjjaHy6Y2zFXJeS4EHf4gY4FRbctSYnQu3DgN8d0f0XkS3q7pBgLZSZX2sohE2Y=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH0PR11MB5578.namprd11.prod.outlook.com (2603:10b6:510:e7::8) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
+ by PH7PR12MB8425.namprd12.prod.outlook.com (2603:10b6:510:240::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.24; Sat, 1 Jul
- 2023 00:07:21 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::aeb:12b5:6ac9:fab0]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::aeb:12b5:6ac9:fab0%7]) with mapi id 15.20.6500.029; Sat, 1 Jul 2023
- 00:07:20 +0000
-Date:   Fri, 30 Jun 2023 17:07:16 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     <torvalds@linux-foundation.org>
-CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Compute Express Link (CXL) for 6.5
-Message-ID: <649f6e34d4386_14494294e2@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-ClientProxiedBy: MW4PR03CA0092.namprd03.prod.outlook.com
- (2603:10b6:303:b7::7) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.26; Sat, 1 Jul
+ 2023 06:30:00 +0000
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::b616:6941:8855:93ad]) by BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::b616:6941:8855:93ad%5]) with mapi id 15.20.6544.019; Sat, 1 Jul 2023
+ 06:29:59 +0000
+Message-ID: <ba93f227-e46d-dbd0-1082-9396853e2fc4@amd.com>
+Date:   Fri, 30 Jun 2023 23:29:52 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v3 2/2] PCI: pciehp: Clear the optional capabilities in
+ DEVCTL2 on a hot-plug
+Content-Language: en-US
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Fontenot Nathan <Nathan.Fontenot@amd.com>,
+        Jay Cornwall <Jay.Cornwall@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>
+References: <20230621185152.105320-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20230621185152.105320-3-Smita.KoralahalliChannabasappa@amd.com>
+ <20230622063105.GA624@wunner.de>
+ <d64f8de4-cac1-ccca-33fe-1fda418837e2@amd.com>
+ <20230622214247.GB11993@wunner.de>
+ <4599d885-219f-3ee0-f425-62746f31cc67@amd.com>
+ <20230628132526.GA14276@wunner.de>
+From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <20230628132526.GA14276@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR13CA0227.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c1::22) To BYAPR12MB2869.namprd12.prod.outlook.com
+ (2603:10b6:a03:132::30)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH0PR11MB5578:EE_
-X-MS-Office365-Filtering-Correlation-Id: 06ff03ff-aa3b-4354-e421-08db79c72343
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|PH7PR12MB8425:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1f4c8ded-fe9c-4997-4a37-08db79fc97e6
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PAJZyvkHc6aLIAvRYOz18F3GJ8Vm+E1V3OVLIN7ztTpgL+lbH7tmwP+xOF/1h1i3BPjlINYalT/dQb5/75b+gO1RHmfQQ7VRESeHQxCieA3TmV7DiaPE0VJQCsxp7KtgcFB0dGNJ4ApBdd8S2EdfIWKe9DwDpQktVFm8mJm44uJQiTJua3cV42KwjMOCwDRY3Wgc9AxX3/oILQT3L7oK0ul7fL6K0ul413iMXegnhl2QnFoZbJcqxNm/f7+PfudhCbvCzOWwKMjtMmpHwiDcy6/Ktb+u5jLgYfpmNgrjOZ2CZqpJTkkw6aUE2PUI9Dtbqlhs3b1e2JR3gFb8JXuUuXz2hXeNDKvB6ORaJxn5aCRD2wAMpooYiMjK7udQoQCkceHOm4RQEpfvd0R76szMtbNLA1qfcRL17G7/BEei8ycNi9fWoeiP+qyLcqfw9/NU2h30L7Q1rGHZ8fWMQ/2IMNcdCv0VIl0wmBoim5pNpduwSIZsvV+b2ipxspMOx5tDPu5j/EbfnvhynoiGhgxf4ChYy9oBC+mpvJvt3zm27PUabNHEjIvdwvP6BBvDMSC/
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(346002)(136003)(376002)(396003)(39860400002)(451199021)(6916009)(66556008)(66476007)(8676002)(41300700001)(82960400001)(4326008)(8936002)(66946007)(316002)(38100700002)(6506007)(478600001)(5660300002)(9686003)(26005)(6512007)(186003)(6486002)(6666004)(86362001)(83380400001)(2906002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: NuDgu+rmfC2e006xxVHLFxa1KLMyj593WAO0EfmRtRliFIpqErcJTmXAr/QOnP7PdrmId2TT+nC9jYgceZ28FnRED98P4LPqYZ/HEch8nLLcmVAOl/Z2QdW4S3UWTxCxjzKOI2RSbXuQpBensh80t/zEW7fozjwgkdFiuxVS4b/iB1OwpegsZC+QhfDUEoERrPaoRg+YHM/w5ezRZsaP7l6/gb3jX9L+LC7XHWTZ12ngBoLGIMPHpDXvAQ8ucjhmgfXzjkxBB3OUfbnvbZvBT6qGbhXRMUi54MYLOh8tKYp3dC1+Wc5SsHMHpgct9T+bFo0guYOloqNUjqKpJBK0NmnORIvUsAdYVSIlucrY/0FWyYIsMPDhXNjEvkDQnJHrV/s6e84tTZHSvqD0oqvxd8l9RK5TjruZLh78F5yqaBd6vqa5B/uVx0n/uOj5pRd+P02RkmGtV/BfBHVOwWrqsj6ys0hY2897qwhSNG6Eff9t9K44sy9j+HPBhE0PkT3J75b4wP0E3l2kkvC6LIsT8LST/dBvdYDCKFfcRwkTmJO0vYwNQP8QUqKEQRMR2sTGGsuyzv6pVj0gLL25S6o+gC5YghY3QcHevNn3FzVPiZwOVxVz1D0PuiWt7e50I+XOzAqD71HeVv2YknY475ufew==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(366004)(376002)(39860400002)(396003)(136003)(451199021)(2906002)(6486002)(2616005)(83380400001)(86362001)(53546011)(38100700002)(6666004)(6512007)(186003)(26005)(6506007)(31696002)(54906003)(41300700001)(478600001)(316002)(36756003)(66556008)(6916009)(66476007)(66946007)(5660300002)(4326008)(31686004)(8676002)(8936002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kA2lKhI0v3zFh66JNZ0+izvb/E/E5ena1hUrJfz1ro9is3gzpVVSNMsEhJ2h?=
- =?us-ascii?Q?urvgjlStY5A7XiDA60TbzC+DVl87ykxjWkNS5+2CWggQOHQavmJJdiuRF1rC?=
- =?us-ascii?Q?eQLbuXafyJ36WT/MnH+c7Ld5EqvPvTtDKb1+JwCe11bDDa/sntWHCljbNTkF?=
- =?us-ascii?Q?q6LM91KQRCgXhEKQtysGnz80bcoMsndWET4ZMPR38ZqP24u2nMzJnF08LsYj?=
- =?us-ascii?Q?O6F+2aDxG1xBnjn8E1cqudSAV053sb0KLwTc+yagQg3bxQ+LZ2/Z/EGuuQxG?=
- =?us-ascii?Q?a9VaIEfQG8VFbtUrvwk6J/5OqzapbFz1ofrd24t4dTv4WVpqMX+gAg+vRdGE?=
- =?us-ascii?Q?rXK0R4m7KnmpPHXO0D1doyOjgy+AtixpeQpam+hl55MU2s+inKUX9BCE81GS?=
- =?us-ascii?Q?L/di0SVb95CsFx8qy5Npj3WzBtjp0bPXyOFQRkWjr0hXdpW61KSKIQ1iRNjO?=
- =?us-ascii?Q?q9snOuaMjlcBJPIKYsuH/8GdeE/g1qJMLm6wuuWRFs5TF5Bb0US4I+mSFs/M?=
- =?us-ascii?Q?Ny6GXtFLBLg4+IlUQYEfhhrTm/X105n3GJm9L12FvIr4+05BAH4Q1MnLDCEC?=
- =?us-ascii?Q?pUBRFxeTn0/tBfYJFXiNXpBf1TnPZdG7l2sGlmZ2vv1/OukajlepUm2qAhSe?=
- =?us-ascii?Q?eiXxcLkOJxgzUjr8fbEE1PMTVV/i0biMRFxwAtZjQIVP82e6qyUlayHTO97Q?=
- =?us-ascii?Q?Zq23eGFUT5ZxPG853sgFvuLmdFSbApy+mzsDI+aDvXJK6GFBc+epxGXyVHbu?=
- =?us-ascii?Q?cVL44vmFmHJBYAN9RXS0e9UC34OTBkMTsNh7u7689W2Aw+6e+cVVUc1Kzk5v?=
- =?us-ascii?Q?6xfZWjktYsBay6jgjGt2aaz8vpMOgpko+CbjgEwHVobxXv9alIVvGkPZxUJw?=
- =?us-ascii?Q?50Ofnu7m9rVgsPb7cPK8s2EHi7mModkG9fbeMD2D2kG9TqRfFlniBX/BXV6Z?=
- =?us-ascii?Q?10iwt0QyFy26syplGinxoRLNw22fE+KwuXsHLu/p/KMKs435P1FOJMWQj5I8?=
- =?us-ascii?Q?4vVnKFKASjb3/M5sGG7E56a/PGVI+2CwTA4k/rj1iCVNMPVDCMfZ9tXHVNQr?=
- =?us-ascii?Q?10Ut4BFIN7tDd6iSVywp9Ezt0PEl2Tdh1M3BzjOVK6Q5UiqHnH6qr5OIn7ik?=
- =?us-ascii?Q?yKO5iGXmr0nxAVE5ZlXzln68Jl5Z4396KErYey3sfScCcWao/LxAEaENVnuu?=
- =?us-ascii?Q?ut03VF5ntVpRcj3vbEgKQsCNDCKE8u7AfxLBnsviJ0KAfYNFs7bvsDFhNM7R?=
- =?us-ascii?Q?VhcTtHWp0dDx5hKznfRqebK+C2AEOOqpBVfInoDLvYa9BmeXd1pu/FeUNypq?=
- =?us-ascii?Q?GABv2R0b+IaA7/8kXfLLpiguekRjt5LxKEoV2FeGAyTLMGJSWE8C4MYRdf43?=
- =?us-ascii?Q?ga44AweBEXTtmyn80k1y2RKYNovFo2UPlEctdO4bBDf3z8APhVJPMY+i4IAf?=
- =?us-ascii?Q?u/A/d3NcotL8xrm3SL9d5AD7Dzl03fDq8OSPADobznNYxPgwQK7oNix4tOjC?=
- =?us-ascii?Q?rPeLm4/nIMXsfjnc7VdBnG/c6tWa6VHqFhXBiEO5TMCJloxi4v/c3aNEudL5?=
- =?us-ascii?Q?0+Nf26jKRD4KUdN/chftrVy+Aws78eH7CfFHsL5us8QE+jiLwS90/+3HjL92?=
- =?us-ascii?Q?5g=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 06ff03ff-aa3b-4354-e421-08db79c72343
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZEFVallNbERaOTA3R1B5S3ZhZTUvLzhBV0lWcDVoRlZXa1c3L1lTQyt6OE8x?=
+ =?utf-8?B?emU4UTVRYmFqTVV6U29oS1VnaStSd2lOZ0VTejRuR043UnBDbkJHZFdOTlBT?=
+ =?utf-8?B?U0RZaFFGWi96cHRXYUU2U295alFrcGdnWnJjRmMzVW42WllyY0RONmtJb0Vt?=
+ =?utf-8?B?OXN1aWRMY1RSd1Z1NmF5Z3NOYXpYZUFrSW4zTmVOTXM4bEJrR1liclpyTVhs?=
+ =?utf-8?B?eWwzQ3hMOUhXTWlpZHNCWHM0bXJlOFZFSjlYODlWeHA5dkRIMitDRUVPZ3M0?=
+ =?utf-8?B?Mmd5Y0hIUmpjRnRiTjdudUZaaDU5Q1VQZWhGUVdRc2E2bFFNcThXRVlDSGsz?=
+ =?utf-8?B?QnZDRVF4Y2dINjZkTm93T1h6aDMyRTAzY2hzSGR1VDlxdi9jeS9WQUVoZE1j?=
+ =?utf-8?B?UjZ5TEk3Ym5NM1RhOVg4MXRqKzI0dDI1NVliL3ZBUXRsNFpmejEzbktDbW5N?=
+ =?utf-8?B?alhKK3lrK2hCaVA2OE9SZW84RkVVT096UnBRMXhDUlB2VmluLytZbFB0ckw2?=
+ =?utf-8?B?UVRQVFQwWmd2dFAzZ2hmekFBbzJscDRZcnNrZlUvdURuUDZmNHYzNHF3Q29y?=
+ =?utf-8?B?UC8wQThGbW1oTVJHVXVsNjlvOHpDcm9Ib1l5Sms2VEhGT0JkU0FibGVidXlL?=
+ =?utf-8?B?dDBuTUc3MlZJYnlxekFGUjVYVFl4NjhyUFRZTlBRSEU0T29KN296ckxpaWc5?=
+ =?utf-8?B?di9wSW5PVnRVSjM4Q1lEQ2V1dDk4dXEzZmltVUdESENvS2tYWFlLL2VGSWht?=
+ =?utf-8?B?VUp6dlZNV0xZeGtmS3lER2FUZmkwRmNNbmtUUHJiNXBuWDlLN2hPZWdXSEZq?=
+ =?utf-8?B?NWZlWDJWM3VTOXRjb0V5SC9RREY4dDd0QzhaSWRSS2RKcHZ2U1RDTERjc25a?=
+ =?utf-8?B?WlQxMzVBRURKNVUydXpKZWN1VTQvUTdSS2FId1h1blpLaWp2VUZHK1I0Z1I5?=
+ =?utf-8?B?dGZsblUrUjgwTWpQSyswNHRNSGxCZ0dYS25aTkk2VklWZVdDeWxwUmQrQXVi?=
+ =?utf-8?B?MzNZNmY4VndMV0RjeWlQMEw5TTFtbnYvcTIxbGU2YXZIak4xNXNKbTBJd0hP?=
+ =?utf-8?B?aTZ0WUkvTVRzWXplREZZd3NoT0RJeDdVR3RHQS9WWGx5S3F4SWlBeWxsaGlz?=
+ =?utf-8?B?and1bEkxbnNYb1pxQjNSdXhjVUpwUXlQTGF5V2RxbjU0ejNwc20zU0lSQm80?=
+ =?utf-8?B?RmFaY3g3Z0phWGJWT2tubW5ad1EzZ2IwWjZ6VEE3d2dTelNSZkRncDI5a0l2?=
+ =?utf-8?B?VWxMSjM4MEFBMnhBNVkvM2h1UFN6SnRyUUQyOXVnNVBtTzg3dGFYYXFJZHl4?=
+ =?utf-8?B?UDlvUHkyNU12R1NacjFmV1VhRzErVS81QW1SWHQxVmFiditIaU9qQjdpd2tC?=
+ =?utf-8?B?dWNadHR6VHJnWXZFT1dLUlhOR1ZkazE3eVEvdXd5c3BVS2pLZm5pZ2UvL0FT?=
+ =?utf-8?B?MFVGNXRoNXVHd3RIV3hEajR3UXhCMnhZN3VlMGw2Y24zbk1aM1I0b1N2VWp3?=
+ =?utf-8?B?SU41MFNyRE1UNEx1b3pxVGlrdDN5Q0xkOXR6THJnaGtTUjUrOG1SMmxJUFNB?=
+ =?utf-8?B?cGRxR3lMeGxHTjB2ZTY5eXFrLytlZE5xdmxJMzduL3Z0bmx4Y3g0aG5DZjBl?=
+ =?utf-8?B?TTd5ZnhnbXExSzFEazh3K25OSnVmVGl5UmFFZk5tV2lGNFhVVmRSWW9FQ2hU?=
+ =?utf-8?B?SXJGMUx1Uy9yVXRYeGNJQjdoVnlNZ25WR1ZhQXBhcjNUQ1ptR1ovN2hGRlM1?=
+ =?utf-8?B?eEpqNm95d0lIL0lpMEQ1U1EvV1kxaTRYV2pGSlpFY0s2eEptcVhDdFVhbEVo?=
+ =?utf-8?B?U0dPT3hubHR5NzdlVUN4WFlONGx4Z0tnYmVIbkhuWkZmaGhNbFg4T1RxU1pT?=
+ =?utf-8?B?bmJGUlBTblFsZDdJS0VzMjQ4U3JweUV1R2RESkJPSHllMnhFVTU0NXFEQ29L?=
+ =?utf-8?B?a3dqNWZYQUxneHQ5NFd6UmMvaDAwZmlYZkowZUcwUm5LUElSckRzS3JjT2Qv?=
+ =?utf-8?B?VFlRSHNpN0xUMnRlQ3NVMjlMdEVqQjBFMzFJamkxd2tyM1A3dTlRZEhNRlk3?=
+ =?utf-8?B?R3MxRW5peENpNGNQN2NvdFpNYlVUWllNcGlxUDEvellSQUJwN1ZGcm05aGJs?=
+ =?utf-8?Q?3CDLOFZx2HRoIq0jvvVHh0Bwa?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1f4c8ded-fe9c-4997-4a37-08db79fc97e6
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2023 00:07:20.2860
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2023 06:29:59.4853
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VVcCyWofl65p5SaljOOAPBlnZcEOCZxdL26wlVqlkcN4TyujhqTcGwGFpoWZ6ZUj94pQ+gZn4qhTxZSaxsUF/hjPYWTcJTEhpYLhXxH6cvE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5578
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-UserPrincipalName: ItJWqVxv1wklwIXNIDGFqFQ7yV6rCIijace+t78ZfA/nqZuX21FHqvSSnlIYO0PA1/mSFfl2EIsy4PVLiv3wsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8425
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Linus, please pull from:
+On 6/28/2023 6:25 AM, Lukas Wunner wrote:
+> On Tue, Jun 27, 2023 at 10:38:54AM -0700, Smita Koralahalli wrote:
+>> Okay, I see there are no objections except for Bjorn/Jay's comments on
+>>
+>> "But there could be devices where AtomicOps are nominally supported but
+>> untested or broken.."
+>>
+>> Would this be an issue?
+> 
+> I think you said that BIOS enables AtomicOps on certain AMD machines?
+> Or did that observation only apply to 10 Bit tags?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-6.5
+Yes, that observation right now applies only to 10 bit tags.
 
-...to receive the CXL update for this cycle. The highlights in terms of
-new functionality are support for the standard CXL Performance Monitor
-definition that appeared in CXL 3.0, support for device sanitization
-(wiping all data from a device), secure-erase (re-keying encryption of
-user data), and support for firmware update. The firmware update support
-is notable as it reuses the simple sysfs_upload interface to just cat(1)
-a blob to a sysfs file and pipe that to the device.
+> 
+> If BIOS does enable AtomicOps, it would be interesting to know which
+> logic BIOS follows, i.e. how does it determine whether to set
+> AtomicOp Requester Enable on Endpoints?
 
-Additionally there are a substantial number of cleanups and
-reorganizations to get ready for RCH error handling (RCH == Restricted
-CXL Host == current shipping hardware generation / pre CXL-2.0
-topologies) and type-2 (accelerator / vendor specific) devices.
+I agree this is a very good thing to know. I have followed up with the 
+BIOS team to get some pointers on this. I will get back to you soon.
 
-For vendor specific devices they implement a subset of what the generic
-type-3 (generic memory expander) driver expects. As a result the rework
-decouples optional infrastructure from the core driver context.
+> 
+> It would also be interesting to know how far that BIOS has proliferated,
+> i.e. how much experience with various Endpoint devices exists in the
+> real world.  If it turns out that BIOS has enabled the feature for
+> years on a wide range of Endpoints without any issues, I think
+> that would render concerns mute that enabling it in the kernel
+> might cause regressions.
+> 
+> I don't know why the spec says that "discovery of AtomicOp Requester
+> capabilities is outside the scope of this specification".  I imagine
+> it would be possible to set AtomicOp Requester Enable, then read it
+> to determine whether the bit is now indeed 1 or hard-wired to 0.
+> In the latter case, AtomicOp Requester capabilities can be assumed
+> to be absent.  So that would be a way to make do without any other
+> specific discovery of AtomicOp Requester capabilities.
+> 
+> Thanks,
+> 
+> Lukas
 
-For RCH topologies, where the specification working group did not want
-to confuse pre-CXL-aware operating systems, many of the standard
-registers are hidden which makes support standard bus features like AER
-(PCIe Advanced Error Reporting) difficult. The rework arranges for the
-driver to help the PCI-AER core. Bjorn is on board with this direction
-but a late regression disocvery means the completion of this
-functionality needs to cook a bit longer, so it is code reorganizations
-only for now.
-
-It has all appeared in linux-next. Stephen did report that one of the
-Fixes: tags has an 11-character rather than 12-character abbreviated
-commit id. That submitter has updated their gitconfig going forward.
-There is also one late kernel-doc fixup that I missed when merging the
-driver-context decoupling with the new background command facilities.
-
----
-
-The following changes since commit 858fd168a95c5b9669aac8db6c14a9aeab446375:
-
-  Linux 6.4-rc6 (2023-06-11 14:35:30 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-6.5
-
-for you to fetch changes up to fe77cc2e5a6a7c85f5c6ef8a39d7694ffc7f41c9:
-
-  cxl: Fix one kernel-doc comment (2023-06-29 16:03:58 -0700)
-
-----------------------------------------------------------------
-cxl for v6.5
-
-- Add infrastructure for supporting background commands along with
-  support for device sanitization and firmware update
-
-- Introduce a CXL performance monitoring unit driver based on the common
-  definition in the specification.
-
-- Land some preparatory cleanup and refactoring for the anticipated
-  arrival of CXL type-2 (accelerator devices) and CXL RCH (CXL-v1.1
-  topology) error handling.
-
-- Rework CPU cache management with respect to region configuration
-  (device hotplug or other dynamic changes to memory interleaving)
-
-- Fix region reconfiguration vs CXL decoder ordering rules.
-
-----------------------------------------------------------------
-Dan Williams (23):
-      cxl/rch: Prepare for caching the MMIO mapped PCIe AER capability
-      cxl: Rename 'uport' to 'uport_dev'
-      cxl/region: Move cache invalidation before region teardown, and before setup
-      cxl/region: Flag partially torn down regions as unusable
-      cxl/region: Fix state transitions after reset failure
-      cxl/regs: Clarify when a 'struct cxl_register_map' is input vs output
-      tools/testing/cxl: Remove unused @cxlds argument
-      cxl: Fix kernel-doc warnings
-      cxl: Remove leftover attribute documentation in 'struct cxl_dev_state'
-      cxl/mbox: Move mailbox related driver state to its own data structure
-      cxl/memdev: Make mailbox functionality optional
-      cxl/port: Rename CXL_DECODER_{EXPANDER, ACCELERATOR} => {HOSTONLYMEM, DEVMEM}
-      cxl/hdm: Default CXL_DEVTYPE_DEVMEM decoders to CXL_DECODER_DEVMEM
-      cxl/region: Manage decoder target_type at decoder-attach time
-      cxl/pci: Unconditionally unmask 256B Flit errors
-      cxl/memdev: Formalize endpoint port linkage
-      Revert "cxl/port: Enable the HDM decoder capability for switch ports"
-      Merge branch 'for-6.5/cxl-background' into for-6.5/cxl
-      Merge branch 'for-6.5/cxl-fwupd' into for-6.5/cxl
-      Merge branch 'for-6.5/cxl-type-2' into for-6.5/cxl
-      Merge branch 'for-6.5/cxl-region-fixes' into for-6.5/cxl
-      Merge branch 'for-6.5/cxl-perf' into for-6.5/cxl
-      Merge branch 'for-6.5/cxl-rch-eh' into for-6.5/cxl
-
-Davidlohr Bueso (12):
-      rcuwait: Support timeouts
-      cxl/pci: Allocate irq vectors earlier during probe
-      cxl/pci: Introduce cxl_request_irq()
-      cxl/mbox: Add background cmd handling machinery
-      cxl/mbox: Allow for IRQ_NONE case in the isr
-      cxl/mem: Introduce security state sysfs file
-      cxl/mbox: Add sanitization handling machinery
-      cxl/mem: Wire up Sanitization support
-      cxl/test: Add Sanitize opcode support
-      cxl/mem: Support Secure Erase
-      cxl/test: Add Secure Erase opcode support
-      cxl/pci: Use correct flag for sanitize polling
-
-Jonathan Cameron (5):
-      perf: Allow a PMU to have a parent
-      cxl: Add functions to get an instance of / count regblocks of a given type
-      cxl/pci: Find and register CXL PMU devices
-      perf: CXL Performance Monitoring Unit driver
-      docs: perf: Minimal introduction the the CXL PMU device and driver
-
-Robert Richter (11):
-      cxl/acpi: Probe RCRB later during RCH downstream port creation
-      cxl: Rename member @dport of struct cxl_dport to @dport_dev
-      cxl/core/regs: Add @dev to cxl_register_map
-      cxl/acpi: Move add_host_bridge_uport() after cxl_get_chbs()
-      cxl/acpi: Directly bind the CEDT detected CHBCR to the Host Bridge's port
-      cxl/port: Remove Component Register base address from struct cxl_dport
-      cxl/regs: Remove early capability checks in Component Register setup
-      cxl/mem: Prepare for early RCH dport component register setup
-      cxl/pci: Early setup RCH dport component registers from RCRB
-      cxl/port: Store the port's Component Register mappings in struct cxl_port
-      cxl/port: Store the downstream port's Component Register mappings in struct cxl_dport
-
-Terry Bowman (1):
-      cxl/pci: Refactor component register discovery for reuse
-
-Vishal Verma (4):
-      cxl: add a firmware update mechanism using the sysfs firmware loader
-      tools/testing/cxl: Fix command effects for inject/clear poison
-      tools/testing/cxl: Use named effects for the Command Effect Log
-      tools/testing/cxl: add firmware update emulation to CXL memdevs
-
-Yang Li (1):
-      cxl: Fix one kernel-doc comment
-
- Documentation/ABI/testing/sysfs-bus-cxl  |  48 ++
- Documentation/admin-guide/perf/cxl.rst   |  68 +++
- Documentation/admin-guide/perf/index.rst |   1 +
- MAINTAINERS                              |   7 +
- drivers/cxl/Kconfig                      |  14 +
- drivers/cxl/acpi.c                       | 208 ++++---
- drivers/cxl/core/Makefile                |   1 +
- drivers/cxl/core/core.h                  |  11 +
- drivers/cxl/core/hdm.c                   |  48 +-
- drivers/cxl/core/mbox.c                  | 339 ++++++-----
- drivers/cxl/core/memdev.c                | 503 +++++++++++++++-
- drivers/cxl/core/pci.c                   |  31 +-
- drivers/cxl/core/pmem.c                  |   2 +-
- drivers/cxl/core/pmu.c                   |  68 +++
- drivers/cxl/core/port.c                  | 163 +++--
- drivers/cxl/core/region.c                | 168 ++++--
- drivers/cxl/core/regs.c                  | 182 +++++-
- drivers/cxl/cxl.h                        | 104 ++--
- drivers/cxl/cxlmem.h                     | 229 +++++--
- drivers/cxl/cxlpci.h                     |   1 +
- drivers/cxl/mem.c                        |  26 +-
- drivers/cxl/pci.c                        | 486 ++++++++++-----
- drivers/cxl/pmem.c                       |  35 +-
- drivers/cxl/pmu.h                        |  28 +
- drivers/cxl/port.c                       |  21 +-
- drivers/cxl/security.c                   |  27 +-
- drivers/perf/Kconfig                     |  13 +
- drivers/perf/Makefile                    |   1 +
- drivers/perf/cxl_pmu.c                   | 990 +++++++++++++++++++++++++++++++
- include/linux/perf_event.h               |   1 +
- include/linux/rcuwait.h                  |  23 +-
- kernel/events/core.c                     |   1 +
- tools/testing/cxl/Kbuild                 |   5 +-
- tools/testing/cxl/test/cxl.c             |  36 +-
- tools/testing/cxl/test/mem.c             | 367 +++++++++---
- tools/testing/cxl/test/mock.c            |  59 +-
- tools/testing/cxl/test/mock.h            |   3 -
- 37 files changed, 3475 insertions(+), 843 deletions(-)
- create mode 100644 Documentation/admin-guide/perf/cxl.rst
- create mode 100644 drivers/cxl/core/pmu.c
- create mode 100644 drivers/cxl/pmu.h
- create mode 100644 drivers/perf/cxl_pmu.c
