@@ -2,98 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 79F84744BBA
-	for <lists+linux-pci@lfdr.de>; Sun,  2 Jul 2023 01:13:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04072744FAF
+	for <lists+linux-pci@lfdr.de>; Sun,  2 Jul 2023 20:28:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229572AbjGAXNY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 1 Jul 2023 19:13:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33558 "EHLO
+        id S229791AbjGBS2J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 2 Jul 2023 14:28:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbjGAXNX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 Jul 2023 19:13:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB9B110DC
-        for <linux-pci@vger.kernel.org>; Sat,  1 Jul 2023 16:13:22 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6A40F60A29
-        for <linux-pci@vger.kernel.org>; Sat,  1 Jul 2023 23:13:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19154C433C7;
-        Sat,  1 Jul 2023 23:13:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688253201;
-        bh=yKgMddQapKf3JCyJBuC01M7yETVYS19zD9KU+DqtD4Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LvdPoGGWJ6pcmV0sx7sh71ClnpIipklO1ZZBtDaBCMXjdIpcSjBhxDVMguluosZxQ
-         8QH5Kt5DxMf+y+1cqOLjJdAIYVXIQB+p4quUUdfmpnwLWNuZ3K5gWzkLVtns8UDr9D
-         ORp+hl7Rjcd+Ijh3Zupax24T5tPh4uDwsp4KUQOPMz96HDiZUNlOHVxhT4nmFnM1+V
-         o2a9lBKzqqlTvjFC+bCO6IT8COWwGceL9UEbKGqOZk3Ly/wXqi3jjGG3262f6LRoC2
-         Yq6AZlapivbt/UnuBwbim2Yoklp/d43qzMGHUVDroayPo4lV+jt1/Lokioi7xjxgPz
-         OE27EhBkyUISg==
-Date:   Sun, 2 Jul 2023 00:13:17 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     daire.mcnamara@microchip.com
-Cc:     Conor Dooley <conor.dooley@microchip.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
+        with ESMTP id S229608AbjGBS2J (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Jul 2023 14:28:09 -0400
+Received: from out-38.mta0.migadu.com (out-38.mta0.migadu.com [91.218.175.38])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1787AC;
+        Sun,  2 Jul 2023 11:28:07 -0700 (PDT)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1688322485;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=c8oIOXLUyu6Hy3euIb+35kAKURoMMfCL4+zt+LpgQrI=;
+        b=cj5i7X8NIGfrWOZux8pWRT6wSPgfMb6og8nVfn9C+hC3/QDZo2zIbH5h7ncrhXIklQCVrX
+        6sITBq6QW4gJjbqqGZFN3lcWgbJ1Qxrx8UY03BDxOWGGVbOpuqz6kYpL8d6nWQmT14fnfl
+        1JU2TEA88cvmiWUcyHCZqsveRzQOEyg=
+From:   Sui Jingfeng <sui.jingfeng@linux.dev>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Lyude Paul <lyude@redhat.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 7/8] PCI: microchip: Rename and refactor
- mc_pcie_enable_msi()
-Message-ID: <20230702-audacity-gradient-a7871e31a97a@spud>
-References: <20230630154859.2049521-1-daire.mcnamara@microchip.com>
- <20230630154859.2049521-8-daire.mcnamara@microchip.com>
+        Mario Limonciello <mario.limonciello@amd.com>
+Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        Sui Jingfeng <suijingfeng@loongson.cn>
+Subject: [PATCH v2 0/6] PCI/VGA: Improve the default VGA device selection
+Date:   Mon,  3 Jul 2023 02:27:38 +0800
+Message-Id: <20230702182744.755467-1-sui.jingfeng@linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Kd4aL8O75rLHZ9c+"
-Content-Disposition: inline
-In-Reply-To: <20230630154859.2049521-8-daire.mcnamara@microchip.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: Sui Jingfeng <suijingfeng@loongson.cn>
 
---Kd4aL8O75rLHZ9c+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Currently, the default VGA device selection is not perfect. Potential
+problems are:
 
-On Fri, Jun 30, 2023 at 04:48:58PM +0100, daire.mcnamara@microchip.com wrot=
-e:
-> From: Daire McNamara <daire.mcnamara@microchip.com>
->=20
-> After improving driver to get MSI-related information from
-> configuration registers (set at power on from the Libero FPGA
-> design), its now clear that mc_pcie_enable_msi() is not a good
-> name for this function.  The function is better named as
-> mc_pcie_fixup_ecam() as its purpose is to correct the queue
-> size of the MSI CAP CTRL.
->=20
-> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+1) This function is a no-op on non-x86 architectures.
+2) It does not take the PCI Bar may get relocated into consideration.
+3) It is not effective for the PCI device without a dedicated VRAM Bar.
+4) It is device-agnostic, thus it has to waste the effort to iterate all
+   of the PCI Bar to find the VRAM aperture.
+5) It has invented lots of methods to determine which one is the default
+   boot device on a multiple video card coexistence system. But this is
+   still a policy because it doesn't give the user a choice to override.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+With the observation that device drivers or video aperture helpers may
+have better knowledge about which PCI bar contains the firmware FB,
 
-Cheers,
-Conor.
+This patch tries to solve the above problems by introducing a function
+callback to the vga_client_register() function interface. DRM device
+drivers for the PCI device need to register the is_boot_device() function
+callback during the driver loading time. Once the driver binds the device
+successfully, VRAARB will call back to the driver. This gives the device
+drivers a chance to provide accurate boot device identification. Which in
+turn unlock the abitration service to non-x86 architectures. A device
+driver can also pass a NULL pointer to keep the original behavior.
 
---Kd4aL8O75rLHZ9c+
-Content-Type: application/pgp-signature; name="signature.asc"
+This series is applied on the drm-tip branch (with a cleanup patch set[1]
+applied beforehand)
 
------BEGIN PGP SIGNATURE-----
+[1] https://patchwork.freedesktop.org/series/120053/
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZKCzDQAKCRB4tDGHoIJi
-0j67AQDk5OEcJCa5lf1hVQ/cU8VwhepULzIUArDgqfqy3RVOSAD/WCrLcO+TP3g5
-WIKDODvJxGPI0CPXgT8CWAA04v/+zQc=
-=BAuH
------END PGP SIGNATURE-----
+v2:
+	* Add a simple implemment for drm/i915 and drm/ast
+	* Pick up all tags (Mario)
 
---Kd4aL8O75rLHZ9c+--
+Sui Jingfeng (6):
+  video/aperture: Add a helper to detect if an aperture contains
+    firmware FB
+  PCI/VGA: Improve the default VGA device selection
+  drm/amdgpu: Implement the is_boot_device callback function
+  drm/radeon: Implement the is_boot_device callback function
+  drm/i915: Implement the is_boot_device callback function
+  drm/ast: Register as a vga client to vgaarb by calling
+    vga_client_register()
+
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 12 +++++++-
+ drivers/gpu/drm/ast/ast_drv.c              | 29 ++++++++++++++++++++
+ drivers/gpu/drm/drm_aperture.c             | 16 +++++++++++
+ drivers/gpu/drm/i915/display/intel_vga.c   | 32 ++++++++++++++++++++--
+ drivers/gpu/drm/nouveau/nouveau_vga.c      |  2 +-
+ drivers/gpu/drm/radeon/radeon_device.c     | 12 +++++++-
+ drivers/pci/vgaarb.c                       | 21 +++++++++++++-
+ drivers/vfio/pci/vfio_pci_core.c           |  2 +-
+ drivers/video/aperture.c                   | 29 ++++++++++++++++++++
+ include/drm/drm_aperture.h                 |  2 ++
+ include/linux/aperture.h                   |  7 +++++
+ include/linux/vgaarb.h                     |  8 ++++--
+ 12 files changed, 162 insertions(+), 10 deletions(-)
+
+-- 
+2.25.1
+
