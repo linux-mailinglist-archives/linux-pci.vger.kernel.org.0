@@ -2,111 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C4DE6745B0D
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jul 2023 13:29:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E296F745BDB
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jul 2023 14:08:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230172AbjGCL3i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Jul 2023 07:29:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46284 "EHLO
+        id S229915AbjGCMIa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Jul 2023 08:08:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229917AbjGCL3i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jul 2023 07:29:38 -0400
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2421EC;
-        Mon,  3 Jul 2023 04:29:36 -0700 (PDT)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 363BTG9b095606;
-        Mon, 3 Jul 2023 06:29:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1688383756;
-        bh=xDtP2HJQgfk6AN7TtOP/ryebO14+ERJGMm36HhtgU2Q=;
-        h=From:To:CC:Subject:Date;
-        b=klnc0xG8vrmpvDuVqdSlRNoClaR9Dz3fUQpMr+kcL1fTWNRJ0RBeESehAs6qKwC1h
-         hau/3fOOAe/kAeT51HIRpJylQFRzIE1HfevMGUlqDZ3lVOUv5tU1pPesFuDJMKPlcW
-         e8QnIkiz2UIkGMLep8PiaMEXigBmr1mweeQIuv90=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 363BTFx7048757
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 3 Jul 2023 06:29:15 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
- Jul 2023 06:29:15 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 3 Jul 2023 06:29:15 -0500
-Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 363BTERL001690;
-        Mon, 3 Jul 2023 06:29:15 -0500
-From:   Achal Verma <a-verma1@ti.com>
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Tom Joseph <tjoseph@cadence.com>,
+        with ESMTP id S229585AbjGCMI3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jul 2023 08:08:29 -0400
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E302115;
+        Mon,  3 Jul 2023 05:08:28 -0700 (PDT)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1b88e84bfb8so11663635ad.2;
+        Mon, 03 Jul 2023 05:08:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688386108; x=1690978108;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J1RQZiBYkGXoDrkdvY5PoVYRfWP/etmDOBicF5bYDcc=;
+        b=MhIYQc5gOS6fVi8ic32NhUXVhX8rsDFE0L5lk5r8pkkbDLSxSNbFY7NzeMR14Hypkl
+         UpibvqmeL5D2OrVd6IZsNvGhW7IBJTk6vthtq2MBlUuMBL0E9niUpyyG1IGHyO78ntL/
+         LOatxoqUCpL1j/e0dFAC96vVo1VzfJvhLhGVVBmUjN3wklk3YYELmVdS+ofni14Kyt+C
+         qMoyt/1ZpjMoy93twAWGC2p6/eeJ35/5fpl0qCRzHAzhjHyculVOZ27f72RMfA0Lzyzx
+         MLfKmOCWu6Rb7VqAHVnNEMKRL7KSPB4nXDuH1uhapYx18eUSV5/I87bI5PsLGZXajw/8
+         JH7Q==
+X-Gm-Message-State: ABy/qLZ4fxcl3MatMSIHJq8frUmDVaWG/aWL2vhdFffrRavGNs8Iix0z
+        CrJj0ypM+Uf1ZoWUE+pESuI=
+X-Google-Smtp-Source: APBJJlGOY8iLOJXpaCDww1+jpxC7Nbzk13GTYXUcfYjg94j+viCwrcy8jmCZaDeEU/OOaYir/vO6/g==
+X-Received: by 2002:a17:902:d486:b0:1b2:fa8:d9c9 with SMTP id c6-20020a170902d48600b001b20fa8d9c9mr12966827plg.49.1688386107834;
+        Mon, 03 Jul 2023 05:08:27 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id s12-20020a170902988c00b00198d7b52eefsm15161441plp.257.2023.07.03.05.08.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jul 2023 05:08:27 -0700 (PDT)
+Date:   Mon, 3 Jul 2023 21:08:25 +0900
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+        alberto.dassatti@heig-vd.ch, dlemoal@kernel.org,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        stable@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof Wilczy_ski <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Achal Verma <a-verma1@ti.com>
-Subject: [PATCH] PCI: j721e: Fix delay before PERST# deassert
-Date:   Mon, 3 Jul 2023 16:59:14 +0530
-Message-ID: <20230703112914.68806-1-a-verma1@ti.com>
-X-Mailer: git-send-email 2.25.1
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: rockchip: Use 64-bit mask on MSI 64-bit PCI
+ address
+Message-ID: <20230703120825.GA2375438@rocinante>
+References: <20230703085845.2052008-1-rick.wertenbroek@gmail.com>
+ <997819c6-0798-e2f9-b94b-fedfbab7fdd8@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <997819c6-0798-e2f9-b94b-fedfbab7fdd8@arm.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As per the PCIe Card Electromechanical specification REV. 3.0, PERST#
-signal should be de-asserted after minimum 100ms from the time power-rails
-become stable. Current delay of 100us is observed to be not enough on some
-custom platform implemented using TI's K3 SOCs.
+Hello,
 
-So, to ensure 100ms delay to give sufficient time for power-rails and
-refclk to become stable, change delay from 100us to 100ms.
+> > A 32-bit mask was used on the 64-bit PCI address used for mapping MSIs.
+> > This would result in the upper 32 bits being unintentionally zeroed and
+> > MSIs getting mapped to incorrect PCI addresses if the address had any
+> > of the upper bits set.
+> > 
+> > Replace 32-bit mask by appropriate 64-bit mask.
 
-From PCIe Card Electromechanical specification REV. 3.0 section 2.6.2:
-TPVPERL: Power stable to PERST# inactive - 100ms
-T-PERST-CLK: REFCLK stable before PERST# inactive - 100 usec.
+[...]
+> > +#define PCIE_ADDR_MASK			GENMASK(63, MIN_AXI_ADDR_BITS_PASSED)
+> 
+> Nit: this probably wants to be GENMASK_ULL(), otherwise it might throw a
+> warning if compile-tested for 32-bit.
 
-Fixes: f3e25911a430 ("PCI: j721e: Add TI J721E PCIe driver")
-Signed-off-by: Achal Verma <a-verma1@ti.com>
----
- drivers/pci/controller/cadence/pci-j721e.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+I can change this to GENMASK_ULL() when I apply the patch.  Unless Rick
+wants to send v3 - either way would be fine. :)
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index e70213c9060a..fa2b4c11d2c4 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -499,13 +499,12 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 		/*
- 		 * "Power Sequencing and Reset Signal Timings" table in
- 		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
--		 * indicates PERST# should be deasserted after minimum of 100us
--		 * once REFCLK is stable. The REFCLK to the connector in RC
--		 * mode is selected while enabling the PHY. So deassert PERST#
--		 * after 100 us.
-+		 * indicates PERST# should be deasserted after minimum of 100ms
-+		 * after power rails achieve specified operating limits and
-+		 * within this period reference clock should also become stable.
- 		 */
- 		if (gpiod) {
--			usleep_range(100, 200);
-+			msleep(100);
- 			gpiod_set_value_cansleep(gpiod, 1);
- 		}
- 
--- 
-2.25.1
-
+	Krzysztof
