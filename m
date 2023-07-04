@@ -2,132 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 842C7747165
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jul 2023 14:31:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC38C74716F
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jul 2023 14:33:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231328AbjGDMb4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jul 2023 08:31:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45742 "EHLO
+        id S231509AbjGDMdU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jul 2023 08:33:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230334AbjGDMbz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jul 2023 08:31:55 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D98EE72;
-        Tue,  4 Jul 2023 05:31:54 -0700 (PDT)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1qGfC7-00030A-Kc; Tue, 04 Jul 2023 14:31:47 +0200
-Message-ID: <9727f43c-609f-fa6d-476b-282205a87bb2@leemhuis.info>
-Date:   Tue, 4 Jul 2023 14:31:47 +0200
+        with ESMTP id S231929AbjGDMdL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jul 2023 08:33:11 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B852EE7E
+        for <linux-pci@vger.kernel.org>; Tue,  4 Jul 2023 05:33:08 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4fb7769f15aso8803328e87.0
+        for <linux-pci@vger.kernel.org>; Tue, 04 Jul 2023 05:33:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1688473987; x=1691065987;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JzgQQIKNDoBtiJAoujjApNzPmxlwUw+BR/55LC+iVio=;
+        b=CfEh/KBX/LDElugpqwu2sDiT5kzXeo1eUeTMkkVqIJI2SqJcdnjVe2vPA2dqVHS1To
+         /DvB2YRM9V3P7Wch1cEt6adXxVs7BbjGuxZ/Vhq0SLNNWwyq4OPGy+biCdIp3o2brOyo
+         +875WKhU9m/NCiMugZ8F4R84ttG3MSGh4kOeMs+jZRbLoGVYQUh10a/jZqZ4jvHnT92f
+         XaKepWIKwo/gHccmOsMfF2VjUwXlbOtmaelEDM7XXjHvrcvLki6YRaV4K1EGdAg69d9V
+         PdlIrairKLZ2UQLKC1Ir5xWwHix969JD4ISXs3esm7Co8feRDKjFLuBsq1cPMfpDdeQ5
+         G0Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688473987; x=1691065987;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JzgQQIKNDoBtiJAoujjApNzPmxlwUw+BR/55LC+iVio=;
+        b=Kddn949Ge5WXaKrk6wqo3U75SeZ+cKEVVR3bPynhyVDBSC8s2qBRs/A7PX7lDtp7xh
+         feP5Zqj0INWNVGsAIHutPI/zL6jnGqrtDB70JYw6B4/sMn6sNlmB2dS8tKABadSvJaAD
+         sIcSreMkjanQcDZ2Zd8cE/4WTl+jxCN31QlEudbMfd5BBZ0uad7yQvsAfSqX+FHR+VuW
+         IcKShxDnSOdHNJe19RvcvxLi9PDmIC89qLUKeQS4618ecnH5d2Cn93gRbmJuqyaiAhgN
+         ynPlK126QZ4Iyl49Lxnl7RyKODoQXHpgXDbizGz471Td1MyJDITru82vW9yxd/BxudB4
+         Mo+w==
+X-Gm-Message-State: ABy/qLbu/I+jEkeObDu/Ij8RQKXY19mxQFIdGV6abmhLRaFAUqXFZzSe
+        Rh8pDEtbAAT/IynkZBj4NwjsGQ==
+X-Google-Smtp-Source: APBJJlES1dFuMDEMs90e8mGzZJHQmmY+3FjM1O68m2ZDGiywI0ysXyovZjddRxhtodG9hlyCBhFx7Q==
+X-Received: by 2002:ac2:4ec5:0:b0:4fb:7de4:c837 with SMTP id p5-20020ac24ec5000000b004fb7de4c837mr8424423lfr.68.1688473987006;
+        Tue, 04 Jul 2023 05:33:07 -0700 (PDT)
+Received: from [192.168.1.101] (abyj26.neoplus.adsl.tpnet.pl. [83.9.29.26])
+        by smtp.gmail.com with ESMTPSA id r4-20020a19ac44000000b004fba5c20ab1sm2527946lfc.167.2023.07.04.05.33.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jul 2023 05:33:06 -0700 (PDT)
+Message-ID: <05666bf0-07f8-1e3a-22bf-fc779e2b7367@linaro.org>
+Date:   Tue, 4 Jul 2023 14:33:04 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: Ask for a regression issue of vfio-pci driver with Intel DG2
- (A770) discrete graphics card from Linux 6.1
-Content-Language: en-US, de-DE
-To:     Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        mika.westerberg@linux.intel.com, helgaas@kernel.org,
-        bhelgaas@google.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+Subject: Re: [PATCH V2] PCI: qcom: Use PARF_SLV_ADDR_SPACE_SIZE for ops_2_3_3
+Content-Language: en-US
+To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>,
+        agross@kernel.org, andersson@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        sboyd@kernel.org, mturquette@baylibre.com, mani@kernel.org,
+        lpieralisi@kernel.org, bhelgaas@google.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-pci@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Linux kernel regressions list <regressions@lists.linux.dev>
-References: <c836bf88-d961-040d-b15e-52feb8e11f8d@intel.com>
-From:   "Linux regression tracking #adding (Thorsten Leemhuis)" 
-        <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <c836bf88-d961-040d-b15e-52feb8e11f8d@intel.com>
+Cc:     stable@vger.kernel.org
+References: <20230703175757.2425540-1-quic_srichara@quicinc.com>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20230703175757.2425540-1-quic_srichara@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1688473914;6a786fd2;
-X-HE-SMSGID: 1qGfC7-00030A-Kc
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+On 3.07.2023 19:57, Sricharan Ramabadhran wrote:
+> PARF_SLV_ADDR_SPACE_SIZE_2_3_3 macro is used for IPQ8074
+> 2_3_3 post_init ops. pcie slave addr size was initially set
+> to 0x358, but was wrongly changed to 0x168 as a part of
+> "PCI: qcom: Remove PCIE20_ prefix from register definitions"
+> Fixing it, by using the right macro PARF_SLV_ADDR_SPACE_SIZE
+> and removing the unused PARF_SLV_ADDR_SPACE_SIZE_2_3_3.
+> 
+> Without this pcie bring up on IPQ8074 is broken now.
+> 
+> Fixes: 39171b33f652 ("PCI: qcom: Remove PCIE20_ prefix from register definitions")
+> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> ---
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 03.07.23 12:37, Gwan-gyeong Mun wrote:
+Konrad
+>  [V2] Fixed the 'fixes tag' correctly, subject, right macro usage
 > 
-> Since Linux 6.2 kernel (same happens in Linux 6.4.1), loading vfio-pci
-> driver to a specific HW (Intel DG2 A770) target does not work properly.
-> (It works fine on Linux 6.1 kernel with the same HW).
+>  drivers/pci/controller/dwc/pcie-qcom.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> The configuration and hardware information used is described in [1].
-> 
-> Starting with the Linux 6.2 kernel, the following log is output to dmesg
-> when a problem occurs.
-> ...
-> [ 15.049948] pcieport 0000:00:01.0: Data Link Layer Link Active not set
-> in 1000 msec
-> [ 15.050024] pcieport 0000:01:00.0: Unable to change power state from
-> D3cold to D0, device inaccessible
-> [ 15.051067] pcieport 0000:02:01.0: Unable to change power state from
-> D3cold to D0, device inaccessible
-> [ 15.052141] pcieport 0000:02:04.0: Unable to change power state from
-> D3cold to D0, device inaccessible
-> [ 17.286554] vfio-pci 0000:03:00.0: not ready 1023ms after resume;
-> giving up
-> [ 17.286553] vfio-pci 0000:04:00.0: not ready 1023ms after resume;
-> giving up
-> [ 17.286576] vfio-pci 0000:03:00.0: Unable to change power state from
-> D3cold to D0, device inaccessible
-> [ 17.286578] vfio-pci 0000:04:00.0: Unable to change power state from
-> D3cold to D0, device inaccessible
-> ...
-> 
-> And if you check the DG2 hardware using the "lspci -nnv" command, you
-> will see that "Flags:" is displayed as "!!! Unknown header type 7f" as
-> shown below. [2]
-> The normal output log looks like [3].
-> 
-> This issue has been occurring since the patch below was applied. [4]
-> 
-> d8d2b65a940bb497749d66bdab59b530901d3854 is the first bad commit
-> commit d8d2b65a940bb497749d66bdab59b530901d3854
-> Author: Bjorn Helgaas <bhelgaas@google.com>
-> Date:   Fri Dec 9 11:01:00 2022 -0600
-> 
->     PCI/portdrv: Allow AER service only for Root Ports & RCECs
-> 
-> 
-> Rolling back the [4] patch makes it work on boot with the latest version
-> of the kernel, but the same problem still occurs after "suspend to s2idle".
-> This problem existed even before applying [4].
-> [...]
-
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced d8d2b65a940bb4
-#regzbot title PCI/portdrv: vfio-pci driver fails to work with Intel DG2
-(A770) discrete graphics
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 4ab30892f6ef..1689d072fe86 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -43,7 +43,6 @@
+>  #define PARF_PHY_REFCLK				0x4c
+>  #define PARF_CONFIG_BITS			0x50
+>  #define PARF_DBI_BASE_ADDR			0x168
+> -#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x16c /* Register offset specific to IP ver 2.3.3 */
+>  #define PARF_MHI_CLOCK_RESET_CTRL		0x174
+>  #define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
+>  #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
+> @@ -811,7 +810,7 @@ static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
+>  	u32 val;
+>  
+>  	writel(SLV_ADDR_SPACE_SZ,
+> -		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_2_3_3);
+> +		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+>  
+>  	val = readl(pcie->parf + PARF_PHY_CTRL);
+>  	val &= ~PHY_TEST_PWR_DOWN;
