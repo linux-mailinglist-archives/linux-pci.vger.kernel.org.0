@@ -2,144 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FB8F7471A5
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jul 2023 14:46:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BD8D747617
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jul 2023 18:07:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230145AbjGDMqk convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 4 Jul 2023 08:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51408 "EHLO
+        id S231189AbjGDQHO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jul 2023 12:07:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230099AbjGDMqj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jul 2023 08:46:39 -0400
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B2A5FC;
-        Tue,  4 Jul 2023 05:46:38 -0700 (PDT)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-5701eaf0d04so63442037b3.2;
-        Tue, 04 Jul 2023 05:46:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688474797; x=1691066797;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WsNvAMnSUofmRnmSjEUJ3mWWbVeL8c/aa7qR+cnWQFc=;
-        b=bpKdjo0PJRGD2hslPW3U84g02EoL7z+pWsCPBA/wA12i/bUeGyvtK5WEfhykj/Uive
-         PhJ/B/5K6XYew87tIKJ3BD6DTv6Deq29L9m0p0gxwEFiXO+Plby3qVI6PBzE2wJ44tB8
-         2fOPuuq0Jf61KLpXUY5gNTimBYVvRSEjHYc0SFDqxHD9QMGqRhj8FpT1b+C+OcUwFIeZ
-         th6GJrYWsoAC11fzDXQ2U/lix6+QTWo1KvCdHw1S4MOuCbSZ8lPbCPsW8k8s/6K3reSK
-         1mkd18WdOisYhkL+RAdY63biIPGAAJCLr2ocpHJ5YcZMXafijsxkA/GkGeWgWha4QN8r
-         cVJA==
-X-Gm-Message-State: ABy/qLaKwFcD/ouzeyyFTDel4+Qj1r+jSDM+S+XeeM9WRmq739QKKVoP
-        32yTkjNEnlwPR8GJIt/iKOFqWhTP0idt1w==
-X-Google-Smtp-Source: APBJJlEprUem1w4DutjWd/uw6IbAAIX0kkVfJEgSSavd8k2WOgnGt02uBNTvdhN7a1/CrM3xu0Of9g==
-X-Received: by 2002:a25:ce8c:0:b0:c18:bbaa:754 with SMTP id x134-20020a25ce8c000000b00c18bbaa0754mr10944507ybe.51.1688474797062;
-        Tue, 04 Jul 2023 05:46:37 -0700 (PDT)
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
-        by smtp.gmail.com with ESMTPSA id g64-20020a25a4c6000000b00ba73c26f0d6sm4895523ybi.15.2023.07.04.05.46.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Jul 2023 05:46:35 -0700 (PDT)
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-c581c758ad8so1754570276.1;
-        Tue, 04 Jul 2023 05:46:35 -0700 (PDT)
-X-Received: by 2002:a25:6d02:0:b0:c5c:35d0:1c0f with SMTP id
- i2-20020a256d02000000b00c5c35d01c0fmr1671423ybc.20.1688474795342; Tue, 04 Jul
- 2023 05:46:35 -0700 (PDT)
+        with ESMTP id S230232AbjGDQHM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jul 2023 12:07:12 -0400
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A22EE7A;
+        Tue,  4 Jul 2023 09:07:10 -0700 (PDT)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 364G6meo127101;
+        Tue, 4 Jul 2023 11:06:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1688486808;
+        bh=Qp+vFMfuEysL6yAnzeCFNQYqDH0eM850rxMMqfKTg38=;
+        h=Date:Subject:To:CC:References:From:In-Reply-To;
+        b=UKFGGx+PbiFt+ARgk3EOsuA9BRRj1du8WmWnWArkd8O9+K5neJ0kNKB4uXZLRMFQm
+         AwU2C7ZRaVav3mZ4N02Zcj8BXJ2A5dhXuKksb1wdoFSwKojxj/g2o+tGHeuVzDamZ+
+         He9crasw8UCgpyk+mynEM65fuXTPbPjkcbW5PPqk=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 364G6mLT020501
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 4 Jul 2023 11:06:48 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
+ Jul 2023 11:06:48 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 4 Jul 2023 11:06:48 -0500
+Received: from [10.249.128.37] (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 364G6h1s061523;
+        Tue, 4 Jul 2023 11:06:44 -0500
+Message-ID: <a245938e-2140-5f77-ab91-6cfbd3ddf66c@ti.com>
+Date:   Tue, 4 Jul 2023 21:36:43 +0530
 MIME-Version: 1.0
-References: <20230522105049.1467313-1-schnelle@linux.ibm.com>
- <20230522105049.1467313-31-schnelle@linux.ibm.com> <CAMuHMdUAkRB9z2cqq6XBDKi-8zLyKxdw_PaT_TwLj78S5B6J8g@mail.gmail.com>
- <28a513fd-1e7c-4772-a3c1-f312938459ed@app.fastmail.com>
-In-Reply-To: <28a513fd-1e7c-4772-a3c1-f312938459ed@app.fastmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 4 Jul 2023 14:46:23 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWEx0F=fNei4Bz_JPkuvoaN-+zk08h0i8KnSi_VjO615g@mail.gmail.com>
-Message-ID: <CAMuHMdWEx0F=fNei4Bz_JPkuvoaN-+zk08h0i8KnSi_VjO615g@mail.gmail.com>
-Subject: Re: [PATCH v5 30/44] rtc: add HAS_IOPORT dependencies
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [EXTERNAL] Re: [PATCH] PCI: j721e: Fix delay before PERST#
+ deassert
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof Wilczy_ski <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        linux-rtc@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+        <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Achal Verma <a-verma1@ti.com>
+References: <20230703162156.GA525196@bhelgaas>
+From:   "Verma, Achal" <a-verma1@ti.com>
+In-Reply-To: <20230703162156.GA525196@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Arnd,
 
-On Tue, Jul 4, 2023 at 1:25 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tue, Jul 4, 2023, at 10:06, Geert Uytterhoeven wrote:
-> > On Mon, May 22, 2023 at 12:51 PM Niklas Schnelle <schnelle@linux.ibm.com> wrote:
-> >> In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
-> >> not being declared. We thus need to add HAS_IOPORT as dependency for
-> >> those drivers using them.
-> >>
-> >> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> >> Signed-off-by: Arnd Bergmann <arnd@kernel.org>
-> >> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> >
-> > Thanks for your patch, which is now commit 8bb12adb214b2d7c ("rtc:
-> > add HAS_IOPORT dependencies") upstream.
-> >
-> >> --- a/drivers/rtc/Kconfig
-> >> +++ b/drivers/rtc/Kconfig
-> >> @@ -1193,7 +1195,7 @@ config RTC_DRV_MSM6242
-> >>
-> >>  config RTC_DRV_BQ4802
-> >>         tristate "TI BQ4802"
-> >> -       depends on HAS_IOMEM
-> >> +       depends on HAS_IOMEM && HAS_IOPORT
-> >>         help
-> >>           If you say Y here you will get support for the TI
-> >>           BQ4802 RTC chip.
-> >
-> > This driver can use either iomem or ioport.
-> > By adding a dependency on HAS_IOPORT, it can no longer be used
-> > on platforms that provide HAS_IOMEM only.
->
-> You are correct, we could allow building this driver even
-> without IOPORT and make it use ioport_map() or an #ifdef.
->
-> > Probably the driver should be refactored to make it use only
-> > the accessors that are available.
->
-> Since the driver itself has no DT support, it looks like the
-> only way it can be used is from the sparc64/ultra45 wrapper,
-> but that architecture always provides CONFIG_IOPORT, so I
-> don't think it makes any difference in the end. We can change
-> this again if another user comes up.
 
-Correct, I made the same reasoning after sending my previous email...
+On 7/3/2023 9:51 PM, Bjorn Helgaas wrote:
+> In subject, "Fix" doesn't convey much information.  Does it increase?
+> Decrease?  How much time are we talking about?  PERST# deassert is at
+> one end of the delay; what event is at the other end?
+Hi Bjorn,
 
-> It might be good to know whether the machine uses a memory or
-> I/O resource in its device tree.
-
-Indeed.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+How about "Increase delay to 100ms for PERST# deassert from moment 
+power-rails achieve operating limits"
+> 
+> Some of these useful bits of information could appear in the subject
+> line.
+> 
+> On Mon, Jul 03, 2023 at 04:59:14PM +0530, Achal Verma wrote:
+>> As per the PCIe Card Electromechanical specification REV. 3.0, PERST#
+> 
+> I think the current rev of this spec is r5.0.  Can you cite that
+> instead?  I think the relevant section is r5.0, sec 2.9.2.
+REV 5.0 also quote same TPVPERL=100ms delay.
+I refer REV. 3.0 as pci-j721e controller follows REV. 3.0
+> 
+>> signal should be de-asserted after minimum 100ms from the time power-rails
+>> become stable. Current delay of 100us is observed to be not enough on some
+>> custom platform implemented using TI's K3 SOCs.
+> 
+> Is this delay for the benefit of the Root Port or for the attached
+> Endpoint?  If the latter, my guess is that some Endpoints might
+> tolerate the current shorter delay, while others might require more,
+> and it doesn't sound like "TI's K3 SoC" would be relevant here.
+Its for the endpoints, TI's EVB doesn't exhibit any issues with 100us 
+delay but some customer reported the issue with shorter delay.
+I have been working to refactor this driver to build as a module, I too
+observed the issue on re-probe after remove when delay is lesser.
+> 
+>> So, to ensure 100ms delay to give sufficient time for power-rails and
+>> refclk to become stable, change delay from 100us to 100ms.
+>>
+>>  From PCIe Card Electromechanical specification REV. 3.0 section 2.6.2:
+>> TPVPERL: Power stable to PERST# inactive - 100ms
+>> T-PERST-CLK: REFCLK stable before PERST# inactive - 100 usec.
+> 
+> Numbers like 100ms that come from the PCIe specs should have #defines
+> for them.  If we don't have one already, can you add one, please?
+Sure, will do it in next revision but should this go in some generic PCI 
+header file or just pci-j721e.c
+> 
+>> Fixes: f3e25911a430 ("PCI: j721e: Add TI J721E PCIe driver")
+>> Signed-off-by: Achal Verma <a-verma1@ti.com>
+>> ---
+>>   drivers/pci/controller/cadence/pci-j721e.c | 9 ++++-----
+>>   1 file changed, 4 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+>> index e70213c9060a..fa2b4c11d2c4 100644
+>> --- a/drivers/pci/controller/cadence/pci-j721e.c
+>> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+>> @@ -499,13 +499,12 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+>>   		/*
+>>   		 * "Power Sequencing and Reset Signal Timings" table in
+>>   		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
+>> -		 * indicates PERST# should be deasserted after minimum of 100us
+>> -		 * once REFCLK is stable. The REFCLK to the connector in RC
+>> -		 * mode is selected while enabling the PHY. So deassert PERST#
+>> -		 * after 100 us.
+>> +		 * indicates PERST# should be deasserted after minimum of 100ms
+>> +		 * after power rails achieve specified operating limits and
+>> +		 * within this period reference clock should also become stable.
+>>   		 */
+>>   		if (gpiod) {
+>> -			usleep_range(100, 200);
+>> +			msleep(100);
+>>   			gpiod_set_value_cansleep(gpiod, 1);
+>>   		}
+>>   
+>> -- 
+>> 2.25.1
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
