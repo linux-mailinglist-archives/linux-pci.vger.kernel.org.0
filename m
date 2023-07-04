@@ -2,123 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC38C74716F
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jul 2023 14:33:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FB8F7471A5
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jul 2023 14:46:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231509AbjGDMdU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jul 2023 08:33:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46468 "EHLO
+        id S230145AbjGDMqk convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 4 Jul 2023 08:46:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231929AbjGDMdL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jul 2023 08:33:11 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B852EE7E
-        for <linux-pci@vger.kernel.org>; Tue,  4 Jul 2023 05:33:08 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4fb7769f15aso8803328e87.0
-        for <linux-pci@vger.kernel.org>; Tue, 04 Jul 2023 05:33:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688473987; x=1691065987;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JzgQQIKNDoBtiJAoujjApNzPmxlwUw+BR/55LC+iVio=;
-        b=CfEh/KBX/LDElugpqwu2sDiT5kzXeo1eUeTMkkVqIJI2SqJcdnjVe2vPA2dqVHS1To
-         /DvB2YRM9V3P7Wch1cEt6adXxVs7BbjGuxZ/Vhq0SLNNWwyq4OPGy+biCdIp3o2brOyo
-         +875WKhU9m/NCiMugZ8F4R84ttG3MSGh4kOeMs+jZRbLoGVYQUh10a/jZqZ4jvHnT92f
-         XaKepWIKwo/gHccmOsMfF2VjUwXlbOtmaelEDM7XXjHvrcvLki6YRaV4K1EGdAg69d9V
-         PdlIrairKLZ2UQLKC1Ir5xWwHix969JD4ISXs3esm7Co8feRDKjFLuBsq1cPMfpDdeQ5
-         G0Mw==
+        with ESMTP id S230099AbjGDMqj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jul 2023 08:46:39 -0400
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B2A5FC;
+        Tue,  4 Jul 2023 05:46:38 -0700 (PDT)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-5701eaf0d04so63442037b3.2;
+        Tue, 04 Jul 2023 05:46:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688473987; x=1691065987;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JzgQQIKNDoBtiJAoujjApNzPmxlwUw+BR/55LC+iVio=;
-        b=Kddn949Ge5WXaKrk6wqo3U75SeZ+cKEVVR3bPynhyVDBSC8s2qBRs/A7PX7lDtp7xh
-         feP5Zqj0INWNVGsAIHutPI/zL6jnGqrtDB70JYw6B4/sMn6sNlmB2dS8tKABadSvJaAD
-         sIcSreMkjanQcDZ2Zd8cE/4WTl+jxCN31QlEudbMfd5BBZ0uad7yQvsAfSqX+FHR+VuW
-         IcKShxDnSOdHNJe19RvcvxLi9PDmIC89qLUKeQS4618ecnH5d2Cn93gRbmJuqyaiAhgN
-         ynPlK126QZ4Iyl49Lxnl7RyKODoQXHpgXDbizGz471Td1MyJDITru82vW9yxd/BxudB4
-         Mo+w==
-X-Gm-Message-State: ABy/qLbu/I+jEkeObDu/Ij8RQKXY19mxQFIdGV6abmhLRaFAUqXFZzSe
-        Rh8pDEtbAAT/IynkZBj4NwjsGQ==
-X-Google-Smtp-Source: APBJJlES1dFuMDEMs90e8mGzZJHQmmY+3FjM1O68m2ZDGiywI0ysXyovZjddRxhtodG9hlyCBhFx7Q==
-X-Received: by 2002:ac2:4ec5:0:b0:4fb:7de4:c837 with SMTP id p5-20020ac24ec5000000b004fb7de4c837mr8424423lfr.68.1688473987006;
-        Tue, 04 Jul 2023 05:33:07 -0700 (PDT)
-Received: from [192.168.1.101] (abyj26.neoplus.adsl.tpnet.pl. [83.9.29.26])
-        by smtp.gmail.com with ESMTPSA id r4-20020a19ac44000000b004fba5c20ab1sm2527946lfc.167.2023.07.04.05.33.05
+        d=1e100.net; s=20221208; t=1688474797; x=1691066797;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WsNvAMnSUofmRnmSjEUJ3mWWbVeL8c/aa7qR+cnWQFc=;
+        b=bpKdjo0PJRGD2hslPW3U84g02EoL7z+pWsCPBA/wA12i/bUeGyvtK5WEfhykj/Uive
+         PhJ/B/5K6XYew87tIKJ3BD6DTv6Deq29L9m0p0gxwEFiXO+Plby3qVI6PBzE2wJ44tB8
+         2fOPuuq0Jf61KLpXUY5gNTimBYVvRSEjHYc0SFDqxHD9QMGqRhj8FpT1b+C+OcUwFIeZ
+         th6GJrYWsoAC11fzDXQ2U/lix6+QTWo1KvCdHw1S4MOuCbSZ8lPbCPsW8k8s/6K3reSK
+         1mkd18WdOisYhkL+RAdY63biIPGAAJCLr2ocpHJ5YcZMXafijsxkA/GkGeWgWha4QN8r
+         cVJA==
+X-Gm-Message-State: ABy/qLaKwFcD/ouzeyyFTDel4+Qj1r+jSDM+S+XeeM9WRmq739QKKVoP
+        32yTkjNEnlwPR8GJIt/iKOFqWhTP0idt1w==
+X-Google-Smtp-Source: APBJJlEprUem1w4DutjWd/uw6IbAAIX0kkVfJEgSSavd8k2WOgnGt02uBNTvdhN7a1/CrM3xu0Of9g==
+X-Received: by 2002:a25:ce8c:0:b0:c18:bbaa:754 with SMTP id x134-20020a25ce8c000000b00c18bbaa0754mr10944507ybe.51.1688474797062;
+        Tue, 04 Jul 2023 05:46:37 -0700 (PDT)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id g64-20020a25a4c6000000b00ba73c26f0d6sm4895523ybi.15.2023.07.04.05.46.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Jul 2023 05:33:06 -0700 (PDT)
-Message-ID: <05666bf0-07f8-1e3a-22bf-fc779e2b7367@linaro.org>
-Date:   Tue, 4 Jul 2023 14:33:04 +0200
+        Tue, 04 Jul 2023 05:46:35 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-c581c758ad8so1754570276.1;
+        Tue, 04 Jul 2023 05:46:35 -0700 (PDT)
+X-Received: by 2002:a25:6d02:0:b0:c5c:35d0:1c0f with SMTP id
+ i2-20020a256d02000000b00c5c35d01c0fmr1671423ybc.20.1688474795342; Tue, 04 Jul
+ 2023 05:46:35 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH V2] PCI: qcom: Use PARF_SLV_ADDR_SPACE_SIZE for ops_2_3_3
-Content-Language: en-US
-To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>,
-        agross@kernel.org, andersson@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        sboyd@kernel.org, mturquette@baylibre.com, mani@kernel.org,
-        lpieralisi@kernel.org, bhelgaas@google.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Cc:     stable@vger.kernel.org
-References: <20230703175757.2425540-1-quic_srichara@quicinc.com>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20230703175757.2425540-1-quic_srichara@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230522105049.1467313-1-schnelle@linux.ibm.com>
+ <20230522105049.1467313-31-schnelle@linux.ibm.com> <CAMuHMdUAkRB9z2cqq6XBDKi-8zLyKxdw_PaT_TwLj78S5B6J8g@mail.gmail.com>
+ <28a513fd-1e7c-4772-a3c1-f312938459ed@app.fastmail.com>
+In-Reply-To: <28a513fd-1e7c-4772-a3c1-f312938459ed@app.fastmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 4 Jul 2023 14:46:23 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWEx0F=fNei4Bz_JPkuvoaN-+zk08h0i8KnSi_VjO615g@mail.gmail.com>
+Message-ID: <CAMuHMdWEx0F=fNei4Bz_JPkuvoaN-+zk08h0i8KnSi_VjO615g@mail.gmail.com>
+Subject: Re: [PATCH v5 30/44] rtc: add HAS_IOPORT dependencies
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        linux-rtc@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3.07.2023 19:57, Sricharan Ramabadhran wrote:
-> PARF_SLV_ADDR_SPACE_SIZE_2_3_3 macro is used for IPQ8074
-> 2_3_3 post_init ops. pcie slave addr size was initially set
-> to 0x358, but was wrongly changed to 0x168 as a part of
-> "PCI: qcom: Remove PCIE20_ prefix from register definitions"
-> Fixing it, by using the right macro PARF_SLV_ADDR_SPACE_SIZE
-> and removing the unused PARF_SLV_ADDR_SPACE_SIZE_2_3_3.
-> 
-> Without this pcie bring up on IPQ8074 is broken now.
-> 
-> Fixes: 39171b33f652 ("PCI: qcom: Remove PCIE20_ prefix from register definitions")
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> ---
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Hi Arnd,
 
-Konrad
->  [V2] Fixed the 'fixes tag' correctly, subject, right macro usage
-> 
->  drivers/pci/controller/dwc/pcie-qcom.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 4ab30892f6ef..1689d072fe86 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -43,7 +43,6 @@
->  #define PARF_PHY_REFCLK				0x4c
->  #define PARF_CONFIG_BITS			0x50
->  #define PARF_DBI_BASE_ADDR			0x168
-> -#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x16c /* Register offset specific to IP ver 2.3.3 */
->  #define PARF_MHI_CLOCK_RESET_CTRL		0x174
->  #define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
->  #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
-> @@ -811,7 +810,7 @@ static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
->  	u32 val;
->  
->  	writel(SLV_ADDR_SPACE_SZ,
-> -		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_2_3_3);
-> +		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
->  
->  	val = readl(pcie->parf + PARF_PHY_CTRL);
->  	val &= ~PHY_TEST_PWR_DOWN;
+On Tue, Jul 4, 2023 at 1:25 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tue, Jul 4, 2023, at 10:06, Geert Uytterhoeven wrote:
+> > On Mon, May 22, 2023 at 12:51 PM Niklas Schnelle <schnelle@linux.ibm.com> wrote:
+> >> In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
+> >> not being declared. We thus need to add HAS_IOPORT as dependency for
+> >> those drivers using them.
+> >>
+> >> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> >> Signed-off-by: Arnd Bergmann <arnd@kernel.org>
+> >> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> >
+> > Thanks for your patch, which is now commit 8bb12adb214b2d7c ("rtc:
+> > add HAS_IOPORT dependencies") upstream.
+> >
+> >> --- a/drivers/rtc/Kconfig
+> >> +++ b/drivers/rtc/Kconfig
+> >> @@ -1193,7 +1195,7 @@ config RTC_DRV_MSM6242
+> >>
+> >>  config RTC_DRV_BQ4802
+> >>         tristate "TI BQ4802"
+> >> -       depends on HAS_IOMEM
+> >> +       depends on HAS_IOMEM && HAS_IOPORT
+> >>         help
+> >>           If you say Y here you will get support for the TI
+> >>           BQ4802 RTC chip.
+> >
+> > This driver can use either iomem or ioport.
+> > By adding a dependency on HAS_IOPORT, it can no longer be used
+> > on platforms that provide HAS_IOMEM only.
+>
+> You are correct, we could allow building this driver even
+> without IOPORT and make it use ioport_map() or an #ifdef.
+>
+> > Probably the driver should be refactored to make it use only
+> > the accessors that are available.
+>
+> Since the driver itself has no DT support, it looks like the
+> only way it can be used is from the sparc64/ultra45 wrapper,
+> but that architecture always provides CONFIG_IOPORT, so I
+> don't think it makes any difference in the end. We can change
+> this again if another user comes up.
+
+Correct, I made the same reasoning after sending my previous email...
+
+> It might be good to know whether the machine uses a memory or
+> I/O resource in its device tree.
+
+Indeed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
