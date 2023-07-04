@@ -2,115 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1654747031
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jul 2023 13:55:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A8C074705F
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jul 2023 14:05:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230129AbjGDLzE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jul 2023 07:55:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51140 "EHLO
+        id S230477AbjGDMFK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jul 2023 08:05:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjGDLzE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jul 2023 07:55:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE66DAF;
-        Tue,  4 Jul 2023 04:55:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5DBEB6121F;
-        Tue,  4 Jul 2023 11:55:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3574C433C8;
-        Tue,  4 Jul 2023 11:54:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688471701;
-        bh=PTDbCPaR6uX8PvQlhuK8A36BSPCbCEz7P9ZKnKcicq0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YHWfpZY60LtXCfmshUNa2DsEmFUfLYIEqJONCmA/2aXt5vwiefGzwy/uDOB4IVeRa
-         jY+5xwJQ2f3jHU2RaXAs3l8eKCsGSrGnCUqojJs9vUkv93ZeXkgsyYvqCVR1x2MU+c
-         OjiH2leYI8e//6TvM0RVK4CZf5gI40D3PrzFDh1vkJhlBZ/8uR9r2OZ/oINnN/Bpte
-         1xKlY9Wn+QhKblV6vm8F3HVpnPS8x8RfoU2kzS5inkmFy6YY2CfE8U8NUSVjfkMuJQ
-         xqS8QSM1hHRza8ZZn9hxvAJ7JLTzn4RjQPL7JxhHFzdmAFLOSO1ySDSuVpLz8VVSYh
-         TU/FBXwN14IgQ==
-Date:   Tue, 4 Jul 2023 12:54:55 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: dwc: Provide deinit callback for i.MX
-Message-ID: <9e7d3961-4189-4141-a342-d15a34fefc9d@sirena.org.uk>
-References: <20230703-pci-imx-regulator-cleanup-v1-1-b6c050ae2bad@kernel.org>
- <CAOMZO5AghPUsVqMRdByR9hOatwHmgx90mq1HyZYFGkw1WaAY_Q@mail.gmail.com>
+        with ESMTP id S231131AbjGDMFI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jul 2023 08:05:08 -0400
+Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77A9D10F2
+        for <linux-pci@vger.kernel.org>; Tue,  4 Jul 2023 05:05:05 -0700 (PDT)
+X-ASG-Debug-ID: 1688472295-086e23149814910001-0c9NHn
+Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx1.zhaoxin.com with ESMTP id Qixcqczxx7gpNvsY (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Tue, 04 Jul 2023 20:04:55 +0800 (CST)
+X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
+Received: from ZXBJMBX03.zhaoxin.com (10.29.252.7) by ZXSHMBX3.zhaoxin.com
+ (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Tue, 4 Jul
+ 2023 20:04:55 +0800
+Received: from xin.lan (10.32.64.1) by ZXBJMBX03.zhaoxin.com (10.29.252.7)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Tue, 4 Jul
+ 2023 20:04:53 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
+From:   LeoLiu-oc <LeoLiu-oc@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.29.252.7
+To:     <lenb@kernel.org>, <james.morse@arm.com>, <tony.luck@intel.com>,
+        <bp@alien8.de>, <bhelgaas@google.com>, <robert.moore@intel.com>,
+        <leoliu-oc@zhaoxin.com>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <acpica-devel@lists.linuxfoundation.org>
+Subject: [PATCH v3 0/5] Parse the PCIe AER and set to relevant registers
+Date:   Tue, 4 Jul 2023 20:04:53 +0800
+X-ASG-Orig-Subj: [PATCH v3 0/5] Parse the PCIe AER and set to relevant registers
+Message-ID: <20230704120453.1322069-1-LeoLiu-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="RJaCUe86uaOocYwV"
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5AghPUsVqMRdByR9hOatwHmgx90mq1HyZYFGkw1WaAY_Q@mail.gmail.com>
-X-Cookie: Memory fault - where am I?
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.32.64.1]
+X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
+ ZXBJMBX03.zhaoxin.com (10.29.252.7)
+X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
+X-Barracuda-Start-Time: 1688472295
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 3854
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.110906
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: leoliu-oc <leoliu-oc@zhaoxin.com>
 
---RJaCUe86uaOocYwV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+According to the sec 18.3.2.4, 18.3.2.5 and 18.3.2.6 in ACPI r6.5, the
+register values form HEST PCI Express AER Structure should be written to
+relevant PCIe Device's AER Capabilities. So the purpose of the patch set
+is to extract register values from HEST PCI Express AER structures and
+program them into AER Capabilities.
+Refer to the ACPI Spec r6.5 for a more detailed description.
+Considering that HEST AER patch is an effective supplement to _HPP/_HPX
+method when the Firmware does not support the _HPP/_HPX method and can be
+specially configured for the AER register of a specific device.
+The question about whether OS has control of AER to write the information
+in the HEST AER structure to the AER register of the corresponding device
+is similar to the question about _HPX/_HPP method to write the AER
+information to the AER register of the corresponding device.I looked in
+ACPI Spec for a description of the relationship between writing to the AER
+register through the _HPP/_HPX method and whether the OS requires AER
+control:
+1.OSPM uses the information returned by _HPX to determine how to
+configure PCI Functions that are hot- plugged into the system, to
+configure Functions not configured by the platform firmware during initial
+system boot, and to configure Functions any time they lose configuration
+space settings (e.g. OSPM issues a Secondary Bus Reset/Function Level
+Reset or Downstream Port Containment is triggered).
 
-On Tue, Jul 04, 2023 at 08:50:15AM -0300, Fabio Estevam wrote:
+2._HPX may return multiple types or Record Settings (each setting in a
+single sub-package.) OSPM is responsible for detecting the type of
+Function and for applying the appropriate settings. OSPM is also
+responsible for detecting the device / port type of the PCI Express
+Function and applying the appropriate settings provided.
+For example, the Secondary Uncorrectable Error Severity and Secondary
+Uncorrectable Error Mask settings of Type 2 record are only applicable to
+PCI Express to PCI-X/PCI Bridge whose device / port type is 1000b.
+Similarly, AER settings are only applicable to hot plug PCI Express
+devices that support the optional AER capability.
 
-> I recall seeing this regulator warning before:
-> f81f095e8771 ("PCI: imx6: Allow to probe when dw_pcie_wait_for_link() fai=
-ls")
+3.Note: OSPM may override the settings provided by the _HPX object's Type2
+record (PCI Express Settings) or Type3 record (PCI Express Descriptor
+Settings) when OSPM has assumed native control of the corresponding
+feature. For example, if OSPM has assumed ownership of AER (via _OSC),
+OSPM may override AER related settings returned by _HPX. This means that
+writing the AER register value by _HPX does not require the OS to gain
+control of the AER. Also from the usage description of _HPX, I think
+ownership of AER means who decides the configuration value of the AER
+register rather than who can write the configuration value. Even though
+the OS does not have control or ownership of the AER, it should still
+write the configuration values determined by the firmware to the AER
+register at the request of the firmware. 
+Therefore, the ownership of AER is not considered in this patch.
 
-> I think the real issue is why does the probe fail when the link is not up?
+v1->v2:
+Correct some terminology.
 
-Well, they're both issues - if someone unloads or unbinds the driver we
-can still trigger this, even if the probe succeeded.
+v2->v3:
+Refined code comments, add commit information.
 
-> It should not fail to probe. At least, this was the original intention
-> with Rob's commit:
+leoliu-oc (5):
+  ACPI/APEI: Add apei_hest_parse_aer()
+  ACPI/APEI: Remove static from apei_hest_parse()
+  PCI: Add PCIe to PCI/PCI-X Bridge AER fields
+  ACPI/PCI: Add pci_acpi_program_hest_aer_params()
+  PCI: Config PCIe devices's AER register
 
-> 886a9c134755 ("PCI: dwc: Move link handling into common code")
+ drivers/acpi/apei/hest.c      | 116 +++++++++++++++++++++++++++++++++-
+ drivers/pci/pci-acpi.c        |  92 +++++++++++++++++++++++++++
+ drivers/pci/pci.h             |   5 ++
+ drivers/pci/probe.c           |   1 +
+ include/acpi/actbl1.h         |  69 ++++++++++++++++++++
+ include/acpi/apei.h           |  12 ++++
+ include/uapi/linux/pci_regs.h |   3 +
+ 7 files changed, 296 insertions(+), 2 deletions(-)
 
-> +       return 0;
->=20
->  err_remove_edma:
->         dw_pcie_edma_remove(pci);
+-- 
+2.34.1
 
-I have no idea about doing this, all the PCI on the board that I care
-about seems to work fine (and worked fine even with the failure, I'm not
-sure this is being generated by a link that's in use).
-
---RJaCUe86uaOocYwV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmSkCI8ACgkQJNaLcl1U
-h9AdOAf+JjQDVzex+YNa8DZECCgYOVwY1gJ6m+ExNYxZ53AmiNfvp4VmQrp1Qtx4
-0swTzBob6WbTd2merzyOSLqa/AEe2vUAnsfFtVdQZybd2MSXiSQMXuZTgFXgUQ5q
-xIJqnUlQUMtXphxgMyPNZsF+qCXJHDWCc7ibgKBeYie186LlDrO39rTsnwz5M8P4
-GKH3hH3AU3CtmFI+H72C/TnAeCz8gbxwIxLrCneVT258OcyrnIXVg9u4K+x/1kMD
-kfoVXzoeFrGWYZLWH7+BbDqjmbct0xuhPed1QUfOiEnflgk6yOv6KFQ9wqAP1a9E
-8X5XelpIwi4BQdfBTaQqqQvYVJ88yw==
-=bPQV
------END PGP SIGNATURE-----
-
---RJaCUe86uaOocYwV--
