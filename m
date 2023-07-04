@@ -2,62 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07B9F747643
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jul 2023 18:16:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7A537476D7
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jul 2023 18:37:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231250AbjGDQQG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jul 2023 12:16:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60912 "EHLO
+        id S231292AbjGDQhT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jul 2023 12:37:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231148AbjGDQQF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jul 2023 12:16:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4240610D9
-        for <linux-pci@vger.kernel.org>; Tue,  4 Jul 2023 09:16:03 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D57086129E
-        for <linux-pci@vger.kernel.org>; Tue,  4 Jul 2023 16:16:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE2E7C433C8;
-        Tue,  4 Jul 2023 16:16:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688487362;
-        bh=k1DBTIVmtQdmuvViEJWZzhb8aPKMCScd3plhjiJsXXY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h9y86wx8Eua2Jt/lLwTgu+U1on/jF1Uy7fj3N2Ym2lH7sfkjztuhXmh3PIY/R2gPq
-         qp5nvU02K0PY66Q2MOzor5X5XN3+g8/hYhLnvT5dFGKOzvNac8gR+fnwaDKGBlmUXq
-         zBS7vmWOfFyNT6AyjxDO2g9KqVqJgVE8dfvT5pAHEK3KOQ9AqEcB46t2B3/p8kUDf+
-         LzSPyABYm8FEwdPksgy2lAxBhZatBSvvLZj23H9cJDUBAdaEp6GaFYgUR3Nmwan+mn
-         LbwsG0z0TfnN+1vSpBVlrzZSmleMX2SbQRxlMoS53v/JBZdfG7TbQ0ffLmkcK90+X9
-         fpSWMdiBeP+hA==
-Date:   Wed, 5 Jul 2023 01:16:00 +0900
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>, Yue Wang <yue.wang@amlogic.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Srikanth Thokala <srikanth.thokala@intel.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 1/3] PCI: meson: Remove cast between incompatible
- function type
-Message-ID: <20230704161600.GA435329@rocinante>
-References: <20230629165956.237832-1-kwilczynski@kernel.org>
+        with ESMTP id S229615AbjGDQhS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jul 2023 12:37:18 -0400
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283A6CF;
+        Tue,  4 Jul 2023 09:37:18 -0700 (PDT)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1b7ef3e74edso29177865ad.0;
+        Tue, 04 Jul 2023 09:37:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688488637; x=1691080637;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qq9caxBhUaIDTOUts0hMPoGeTAHn1nr/fwkbfDRFOV4=;
+        b=DRODGkvGkssu8sbpH5JfFdL0Dwx1OfH+U7SSFY6gIJ0v6LTLqeNqjhBf8nmyPy4gG2
+         oiNgpFAtVRu9NdjJ8AXflAkzXUDRBtm1DwKH6+dv1MqxwskzxumNO5juQO8oDWlkMBY8
+         oMbR6wrLHLaBYM3LSFbtupluYCA8UKra9TkS14fNUvBVnA50/sSvLxoG+0JRkMGxohtC
+         4XFthla/1NcoJIUkd+Nh6VfWNefjn3uzOfEVCLURL1eFBJPdi9+Ej0TIRoo94qo1q9N5
+         YY+bjRQ9RjJcevtmfry7JvF1lFpLiu1nEkmZpTbFpZgJt7x1T83M/CiMTZTyCmMzQs3j
+         A+Ww==
+X-Gm-Message-State: ABy/qLZkIhcqZa19ZXVgKzV3v167qMEV//dp+1Hr1qss+3U2TLyIUTvb
+        irGKM6CN31PVMcqsDLArFdE=
+X-Google-Smtp-Source: APBJJlFLrXdz6T8wRfchr9R6PTEOz95tWasBcijz9afT2zIq9026AzCHmKf2iLbvuD5b+Zi1eMkf+g==
+X-Received: by 2002:a17:902:8682:b0:1b8:95fc:d12 with SMTP id g2-20020a170902868200b001b895fc0d12mr4921692plo.54.1688488637557;
+        Tue, 04 Jul 2023 09:37:17 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id j6-20020a170902c3c600b001b8918da8d1sm4605652plj.80.2023.07.04.09.37.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jul 2023 09:37:15 -0700 (PDT)
+Date:   Wed, 5 Jul 2023 01:37:13 +0900
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Cc:     alberto.dassatti@heig-vd.ch, dlemoal@kernel.org,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        stable@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: rockchip: Use 64-bit mask on MSI 64-bit PCI
+ address
+Message-ID: <20230704163713.GB435329@rocinante>
+References: <20230703085845.2052008-1-rick.wertenbroek@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230629165956.237832-1-kwilczynski@kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230703085845.2052008-1-rick.wertenbroek@gmail.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -66,28 +70,16 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hello,
 
-> Rather than casting void(*)(struct clk *) to void (*)(void *), that
-> forces conversion to an incompatible function type, replace the cast
-> with a small local stub function with a signature that matches what
-> the devm_add_action_or_reset() function expects.
+> A 32-bit mask was used on the 64-bit PCI address used for mapping MSIs.
+> This would result in the upper 32 bits being unintentionally zeroed and
+> MSIs getting mapped to incorrect PCI addresses if the address had any
+> of the upper bits set.
 > 
-> The sub function takes a void *, then passes it directly to
-> clk_disable_unprepare(), which handles the more specific type.
-> 
-> Reported by clang when building with warnings enabled:
-> 
->   drivers/pci/controller/dwc/pci-meson.c:191:6: warning: cast from 'void (*)(struct clk *)' to 'void (*)(void *)' converts to incompatible function type [-Wcast-function-type-strict]
->                                    (void (*) (void *))clk_disable_unprepare,
->                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> No functional changes are intended.
+> Replace 32-bit mask by appropriate 64-bit mask.
 
-Applied to controller/remove-void-cast, thank you everyone!
+Applied to controller/rockchip, thank you!
 
-[01/03] PCI: meson: Remove cast between incompatible function type
-	https://git.kernel.org/pci/pci/c/60fce60ab7b6
-[02/03] PCI: keembay: Remove cast between incompatible function type
-	https://git.kernel.org/pci/pci/c/43a2eef7cbba
-[03/03] PCI: microchip: Remove cast between incompatible function type
-	https://git.kernel.org/pci/pci/c/9e4811ce626f
+[1/1] PCI: rockchip: Use 64-bit mask on MSI 64-bit PCI address
+      https://git.kernel.org/pci/pci/c/251c859f4b6f
 
 	Krzysztof
