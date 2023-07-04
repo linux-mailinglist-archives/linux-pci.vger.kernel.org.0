@@ -2,84 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7A537476D7
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jul 2023 18:37:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D93EF7477AC
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jul 2023 19:21:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231292AbjGDQhT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jul 2023 12:37:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42806 "EHLO
+        id S230521AbjGDRVG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jul 2023 13:21:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229615AbjGDQhS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jul 2023 12:37:18 -0400
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283A6CF;
-        Tue,  4 Jul 2023 09:37:18 -0700 (PDT)
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1b7ef3e74edso29177865ad.0;
-        Tue, 04 Jul 2023 09:37:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688488637; x=1691080637;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qq9caxBhUaIDTOUts0hMPoGeTAHn1nr/fwkbfDRFOV4=;
-        b=DRODGkvGkssu8sbpH5JfFdL0Dwx1OfH+U7SSFY6gIJ0v6LTLqeNqjhBf8nmyPy4gG2
-         oiNgpFAtVRu9NdjJ8AXflAkzXUDRBtm1DwKH6+dv1MqxwskzxumNO5juQO8oDWlkMBY8
-         oMbR6wrLHLaBYM3LSFbtupluYCA8UKra9TkS14fNUvBVnA50/sSvLxoG+0JRkMGxohtC
-         4XFthla/1NcoJIUkd+Nh6VfWNefjn3uzOfEVCLURL1eFBJPdi9+Ej0TIRoo94qo1q9N5
-         YY+bjRQ9RjJcevtmfry7JvF1lFpLiu1nEkmZpTbFpZgJt7x1T83M/CiMTZTyCmMzQs3j
-         A+Ww==
-X-Gm-Message-State: ABy/qLZkIhcqZa19ZXVgKzV3v167qMEV//dp+1Hr1qss+3U2TLyIUTvb
-        irGKM6CN31PVMcqsDLArFdE=
-X-Google-Smtp-Source: APBJJlFLrXdz6T8wRfchr9R6PTEOz95tWasBcijz9afT2zIq9026AzCHmKf2iLbvuD5b+Zi1eMkf+g==
-X-Received: by 2002:a17:902:8682:b0:1b8:95fc:d12 with SMTP id g2-20020a170902868200b001b895fc0d12mr4921692plo.54.1688488637557;
-        Tue, 04 Jul 2023 09:37:17 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id j6-20020a170902c3c600b001b8918da8d1sm4605652plj.80.2023.07.04.09.37.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jul 2023 09:37:15 -0700 (PDT)
-Date:   Wed, 5 Jul 2023 01:37:13 +0900
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Cc:     alberto.dassatti@heig-vd.ch, dlemoal@kernel.org,
-        Dan Carpenter <dan.carpenter@linaro.org>,
-        stable@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
+        with ESMTP id S231213AbjGDRVF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jul 2023 13:21:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93DFCE76;
+        Tue,  4 Jul 2023 10:21:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 26E0261331;
+        Tue,  4 Jul 2023 17:21:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A2ABC433C8;
+        Tue,  4 Jul 2023 17:21:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1688491263;
+        bh=lM8Xkdn8aaUooQ9U6M0gWeIPLb7vnmUFpGt8CELVBQc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K3GOFDoKgYu6dtWssVqa+u4kdTAP7Ow5co/aRZdvR4k3UB6p6kTBA4rb5/do2tvSd
+         OrqF5KORgd0vKmInI2SPQ8ByexL1KW5akOaUqsbPoJm8H2NAqn69CcVbFoieCIeeyq
+         W+0QNhhY07HCVbt4+/i746IetbaMSJPe5/DSaJiLZmA/2RYUoukoOCq/aCZ1AwF3Kq
+         x5EjqMNWNZ7EJ53rcR1c2KH2QgW0+vFsWsy3zT53CdBqBtrfLGPe3KktRH6Ti8uMPN
+         pKNOctta8aVuy5jzI/v/ITSmyOAYfXkVzniQdfTkhaFM6TfDNbsh5hXfmBvSMopQDi
+         WryjS0EqrQLIQ==
+Date:   Tue, 4 Jul 2023 18:20:57 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: rockchip: Use 64-bit mask on MSI 64-bit PCI
- address
-Message-ID: <20230704163713.GB435329@rocinante>
-References: <20230703085845.2052008-1-rick.wertenbroek@gmail.com>
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, ajayagarwal@google.com
+Subject: Re: [PATCH] PCI: dwc: Provide deinit callback for i.MX
+Message-ID: <9327c1b0-514a-4985-a04e-2e8535f92578@sirena.org.uk>
+References: <20230703-pci-imx-regulator-cleanup-v1-1-b6c050ae2bad@kernel.org>
+ <CAOMZO5AghPUsVqMRdByR9hOatwHmgx90mq1HyZYFGkw1WaAY_Q@mail.gmail.com>
+ <9e7d3961-4189-4141-a342-d15a34fefc9d@sirena.org.uk>
+ <CAOMZO5AKYo+9FwNMc+s35ockjK2HET4NDAAMYdnZkBs6A1-Wnw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cn2GBMFTSW3ai4wG"
 Content-Disposition: inline
-In-Reply-To: <20230703085845.2052008-1-rick.wertenbroek@gmail.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+In-Reply-To: <CAOMZO5AKYo+9FwNMc+s35ockjK2HET4NDAAMYdnZkBs6A1-Wnw@mail.gmail.com>
+X-Cookie: Memory fault - where am I?
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
 
-> A 32-bit mask was used on the 64-bit PCI address used for mapping MSIs.
-> This would result in the upper 32 bits being unintentionally zeroed and
-> MSIs getting mapped to incorrect PCI addresses if the address had any
-> of the upper bits set.
-> 
-> Replace 32-bit mask by appropriate 64-bit mask.
+--cn2GBMFTSW3ai4wG
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Applied to controller/rockchip, thank you!
+On Tue, Jul 04, 2023 at 09:13:09AM -0300, Fabio Estevam wrote:
+> On Tue, Jul 4, 2023 at 8:55=E2=80=AFAM Mark Brown <broonie@kernel.org> wr=
+ote:
 
-[1/1] PCI: rockchip: Use 64-bit mask on MSI 64-bit PCI address
-      https://git.kernel.org/pci/pci/c/251c859f4b6f
+> > I have no idea about doing this, all the PCI on the board that I care
+> > about seems to work fine (and worked fine even with the failure, I'm not
+> > sure this is being generated by a link that's in use).
 
-	Krzysztof
+> The probe failure when link is not up happens in linux-next due to commit:
+
+> da56a1bfbab5 ("PCI: dwc: Wait for link up only if link is started")
+
+> Prior this commit the PCI driver probed successfully even when the
+> link was down.
+
+Ah, I see.  I don't know what's going on here enough to say if that's
+good or bad but it does at least seem plausible.
+
+--cn2GBMFTSW3ai4wG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmSkVPgACgkQJNaLcl1U
+h9BPzwgAhAN3PmhN1H3Cy7dnGdGWxMG/UB54huwKLQcuXkuHjPGjWinCEw9Lj5/2
+d36GnaoRVfT6s/mvY8Y2anenPiL7PDuYkTqxzY4u0dH+UvuwlZroOyNHtQ6nPBjR
+7YwDDW1sSpy4mmXakjaiO5vY2vjI4HAdoPRmCyz4fwCVwFkQ3SCI/LqXT02llMAG
+P2DJO9Jza44XB2mJMkanxOamgwSRNq4hxXK68PfC+0yc3dLh7kI/9uIKnS+rtdsF
+iWUAm+ekcBPxbT/rzxyVKSSD5Av2BTQSZe8oZhjYWsQXGx15izCNT6PS65Lhy8oI
+HM1WYviR3NtgHC+gAZ6cYn+gKcVA5A==
+=y7lY
+-----END PGP SIGNATURE-----
+
+--cn2GBMFTSW3ai4wG--
