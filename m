@@ -2,54 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6989E748001
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jul 2023 10:45:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B09F74800D
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jul 2023 10:46:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231877AbjGEIpK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Jul 2023 04:45:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
+        id S232085AbjGEIqZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Jul 2023 04:46:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231754AbjGEIpJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jul 2023 04:45:09 -0400
+        with ESMTP id S231549AbjGEIqY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jul 2023 04:46:24 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EE9D19B;
-        Wed,  5 Jul 2023 01:45:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11049133;
+        Wed,  5 Jul 2023 01:46:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9DBEE61493;
-        Wed,  5 Jul 2023 08:45:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC539C433C8;
-        Wed,  5 Jul 2023 08:45:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A32AA6149D;
+        Wed,  5 Jul 2023 08:46:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 426B2C433C7;
+        Wed,  5 Jul 2023 08:46:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688546708;
-        bh=3I2hTeaGJBO9WRbnJZs9CjQRSwxF5Et8HWH3vhQF2R4=;
+        s=k20201202; t=1688546783;
+        bh=TrDgTUVhADoSsAO2/sNZ+F/3nrvrfuljDS6R5BUFlqw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IyyzxTzpjRQ99S07jHM4YvYSM5O+NPQ8VPIwVeygMXzycK5oiHL7YKk34upTe6Qp3
-         w7O1x2tV6MWOkBUPupVX3UnZE2RtQXJzOn0KIOHay8chlXi/CGNP6p9DDj/9bftVUi
-         Bvm1dyMGpYbuR8K+eG9AM4XIeyKvmrEIn75F7GbtBrjwMr7zhdZo3w7ZpZT8m7S+4b
-         V2MALGMozJ/oxnScVZ1+9xn+rJ7La5PHV2KvilxBMw7MpB8QPBUT54/P0DamN15RSr
-         ptstEREff74SXUzlPlEM0Gp8AFrn82riVzUenSCEODNStMv9PWzwrj60I6fvlyoQ/J
-         ttoJ0PewpXP/g==
-Date:   Wed, 5 Jul 2023 14:14:54 +0530
+        b=j0+vVsH3AhB/AXyyE2VaWHL77fjGb9huGVzPLh4BVkJWt2lr2ii/t8H+KuQf0s6CS
+         Zw1KPnwuYyrhImeN1ZhndHzTVMH0KPrJsFYeyYRueACZ5pT1HxChw6uE31eC0DWz+w
+         KmrujmRpC7AEtoFiRnr/xJW3Jr9yVhuJoyPo+dK1bLPJKyysyp6XwGyAeMO8aGWfMy
+         iOJA2JBskgNU9gopvIRbAnp1VeSEpMt174zXetABgZyd1SGFpqw5iiVboRScCdx7cL
+         FbfcnVQrOI464HqZplDCV4Je7snRf5FCOc2hKj+CVucweQHllQypi44FecnC01DU7H
+         O72RoaRKM+oJQ==
+Date:   Wed, 5 Jul 2023 14:16:06 +0530
 From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, sboyd@kernel.org, mturquette@baylibre.com,
-        lpieralisi@kernel.org, bhelgaas@google.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pci@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH V2] PCI: qcom: Use PARF_SLV_ADDR_SPACE_SIZE for ops_2_3_3
-Message-ID: <20230705084454.GE11854@thinkpad>
-References: <20230703175757.2425540-1-quic_srichara@quicinc.com>
+To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        konrad.dybcio@linaro.org, quic_shazhuss@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
+        quic_nayiluri@quicinc.com,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-phy@lists.infradead.org
+Subject: Re: [PATCH v1 0/6] arm64: qcom: sa8775p: add support for PCIe
+Message-ID: <20230705084606.GF11854@thinkpad>
+References: <1688545032-17748-1-git-send-email-quic_msarkar@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230703175757.2425540-1-quic_srichara@quicinc.com>
+In-Reply-To: <1688545032-17748-1-git-send-email-quic_msarkar@quicinc.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -60,61 +67,36 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 03, 2023 at 11:27:57PM +0530, Sricharan Ramabadhran wrote:
-> PARF_SLV_ADDR_SPACE_SIZE_2_3_3 macro is used for IPQ8074
-> 2_3_3 post_init ops. pcie slave addr size was initially set
-
-PCIe
-
-> to 0x358, but was wrongly changed to 0x168 as a part of
-
-commit 39171b33f652 ("PCI: qcom: Remove PCIE20_ prefix from register definitions")
-
-> "PCI: qcom: Remove PCIE20_ prefix from register definitions"
-> Fixing it, by using the right macro PARF_SLV_ADDR_SPACE_SIZE
-> and removing the unused PARF_SLV_ADDR_SPACE_SIZE_2_3_3.
+On Wed, Jul 05, 2023 at 01:47:05PM +0530, Mrinmay Sarkar wrote:
+> Update the relavent DT bindings for PCIe, add new config to the phy
+> driver add pcie and phy nodes to the .dtsi file and enable then in 
+> board .dts file for the sa8775p-ride platform.
 > 
+> Mrinmay Sarkar (6):
+>   dt-bindings: PCI: qcom: Add sa8775p compatible
+>   dt-bindings: phy: qcom,qmp: Add sa8775p QMP PCIe PHY
+>   PCI: qcom: Add support for sa8775p SoC
+>   phy: qcom-qmp-pcie: add support for sa8775p
+>   arm64: dts: qcom: sa8775p: Add pcie0 and pcie1 nodes
+>   arm64: dts: qcom: sa8775p-ride: enable pcie nodes
 
-Commit message should be imperative.
-
-> Without this pcie bring up on IPQ8074 is broken now.
-> 
-> Fixes: 39171b33f652 ("PCI: qcom: Remove PCIE20_ prefix from register definitions")
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> ---
->  [V2] Fixed the 'fixes tag' correctly, subject, right macro usage
-> 
->  drivers/pci/controller/dwc/pcie-qcom.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 4ab30892f6ef..1689d072fe86 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -43,7 +43,6 @@
->  #define PARF_PHY_REFCLK				0x4c
->  #define PARF_CONFIG_BITS			0x50
->  #define PARF_DBI_BASE_ADDR			0x168
-> -#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x16c /* Register offset specific to IP ver 2.3.3 */
->  #define PARF_MHI_CLOCK_RESET_CTRL		0x174
->  #define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
->  #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
-> @@ -811,7 +810,7 @@ static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
->  	u32 val;
->  
->  	writel(SLV_ADDR_SPACE_SZ,
-> -		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_2_3_3);
-> +		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-
-This could be wrapped in the above line itself.
+Please note that the dts patches should come before driver patches.
 
 - Mani
 
->  
->  	val = readl(pcie->parf + PARF_PHY_CTRL);
->  	val &= ~PHY_TEST_PWR_DOWN;
+> 
+>  .../devicetree/bindings/pci/qcom,pcie.yaml    |  28 ++
+>  .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |  19 +-
+>  arch/arm64/boot/dts/qcom/sa8775p-ride.dts     |  68 ++++
+>  arch/arm64/boot/dts/qcom/sa8775p.dtsi         | 201 ++++++++++-
+>  drivers/pci/controller/dwc/pcie-qcom.c        |   1 +
+>  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 328 ++++++++++++++++++
+>  .../qualcomm/phy-qcom-qmp-pcs-pcie-v5_20.h    |   1 +
+>  .../phy-qcom-qmp-qserdes-txrx-v5_20.h         |   2 +
+>  8 files changed, 645 insertions(+), 3 deletions(-)
+> 
 > -- 
-> 2.34.1
+> 2.39.2
 > 
 
 -- 
