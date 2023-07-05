@@ -2,57 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CF52748855
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jul 2023 17:49:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39E1A748ABE
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jul 2023 19:38:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232705AbjGEPtr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Jul 2023 11:49:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58860 "EHLO
+        id S231315AbjGERii (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Jul 2023 13:38:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233041AbjGEPte (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jul 2023 11:49:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A570B19BA;
-        Wed,  5 Jul 2023 08:49:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3A61161607;
-        Wed,  5 Jul 2023 15:49:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A42CC433CA;
-        Wed,  5 Jul 2023 15:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688572169;
-        bh=Wk/EDtW10p6pp6WTwmzgYg6QrckaCsMdnVGkAU0iNaM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=E84fDqN41ael8RB8O2f19tkcvhuFrd6zuDsO1tXY+Z69XQqtcA8ljbDN3XG9xIvif
-         b7leT2sE2Va1DD2f17avNwUaKmLa34lG+4mlM4x85RPbEOknw69N/pYzYezhSFqqup
-         0KKeAOQsCvZy5uN4LSh+o5Cuu/ii46NBVP7cgrdoJfcSF79vYVfpa9zPF4oSC8QeIC
-         XEIYuhbcxhv3IHSSnzV4/Pyj4lk+mtohnz6+vdgt9RJYCgiy69Qbpig58lUkHLagBQ
-         3mTvoW1lDdZm3CXh2XjueeU6y+5BW3v9XYvGubIqP3WSEdI1gyDCiM2XQ4xtlhDH0t
-         XX/gNQXDhk1xQ==
-Date:   Wed, 5 Jul 2023 10:49:27 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Verma, Achal" <a-verma1@ti.com>
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof Wilczy_ski <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [EXTERNAL] Re: [PATCH] PCI: j721e: Fix delay before PERST#
- deassert
-Message-ID: <20230705154927.GA62511@bhelgaas>
+        with ESMTP id S231269AbjGERih (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jul 2023 13:38:37 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7A47DD
+        for <linux-pci@vger.kernel.org>; Wed,  5 Jul 2023 10:38:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1688578716; x=1720114716;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5IjUGhvr9ZJk5iumgjRYkMSu1W/jRZ3epXA/HKMpizU=;
+  b=AxOVO5nGJu1kUpq6GMVg8lcrkPVL/austbk4JRaxyk7GpmIO2/GEoL0y
+   Ja15VtzMt5H4+7hI/5JT41lLxk19GAceQS+LmRB4XJ3rincsYi0YcFRYc
+   b2JiZSoLHvOROrw0n7mCfTO3WSuvB0b19DsRVw6u7HWSvxKISWlgNXdcQ
+   aGVYADIaUNJguLEieJYhCRATnWVmSg8bSvVh9XR3MHWDD/nmkW6/VWZvB
+   3cOZOmW88UJJ6VY4RjTHbg1ILVvnJ5ubsgDlB8D+UssvUhWtsSAfkBi8G
+   A3/qFnLvRwzj/9RRJZVj4cbDf7+SRc3shXQMamdC4TNAdqs67XpcXGL54
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10762"; a="449768156"
+X-IronPort-AV: E=Sophos;i="6.01,183,1684825200"; 
+   d="scan'208";a="449768156"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2023 10:38:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10762"; a="1049794542"
+X-IronPort-AV: E=Sophos;i="6.01,183,1684825200"; 
+   d="scan'208";a="1049794542"
+Received: from unknown (HELO localhost.ch.intel.com) ([10.2.230.30])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2023 10:38:36 -0700
+From:   Nirmal Patel <nirmal.patel@linux.intel.com>
+To:     nirmal.patel@linux.intel.com, <linux-pci@vger.kernel.org>
+Subject: [PATCH] PCI: vmd: VMD to control Hotplug on its rootports
+Date:   Wed,  5 Jul 2023 13:20:38 -0400
+Message-Id: <20230705172038.844706-1-nirmal.patel@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a245938e-2140-5f77-ab91-6cfbd3ddf66c@ti.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,41 +57,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 04, 2023 at 09:36:43PM +0530, Verma, Achal wrote:
-> On 7/3/2023 9:51 PM, Bjorn Helgaas wrote:
-> > In subject, "Fix" doesn't convey much information.  Does it increase?
-> > Decrease?  How much time are we talking about?  PERST# deassert is at
-> > one end of the delay; what event is at the other end?
-> 
-> How about "Increase delay to 100ms for PERST# deassert from moment
-> power-rails achieve operating limits"
+The hotplug functionality is broken in various combinations of guest
+OSes i.e. RHEL, SlES and hypervisors i.e. KVM and ESXI.
 
-Maybe something like "Delay 100ms T_PVPERL from power stable to PERST#
-inactive" to match the language in the spec?
+VMD enabled on Intel ADL cpus caused interrupt storm for smasung
+drives due to AER being enabled on VMD controlled root ports.
+The patch 04b12ef163d10e348db664900ae7f611b83c7a0e
+("PCI: vmd: Honor APCI _OSC on PCIe features.") was added to the VMD
+driver to correct the issue based on the following assumption:
+	“Since VMD is an aperture to regular PCIe root ports, honor ACPI
+	_OSC to disable PCIe features accordingly to resolve the issue.”
+	Link: https://lore.kernel.org/r/20211203031541.1428904-1-kai.heng.feng@canonical.com
 
-> > Is this delay for the benefit of the Root Port or for the attached
-> > Endpoint?  If the latter, my guess is that some Endpoints might
-> > tolerate the current shorter delay, while others might require
-> > more, and it doesn't sound like "TI's K3 SoC" would be relevant
-> > here.
->
-> Its for the endpoints, TI's EVB doesn't exhibit any issues with
-> 100us delay but some customer reported the issue with shorter delay.
+VMD as a PCIe device is an end point(type 0), not a PCIe aperture
+(pcie bridge). In fact VMD is a type 0 raid controller(class code).
+When BIOS boots, all root ports under VMD is inaccessible by BIOS, and
+as such, they maintain their power on default states. The VMD UEFI DXE
+driver loads and configure all devices under VMD. This is how AER,
+power management and hotplug gets enabled in UEFI, since the BIOS pci
+driver cannot access the root ports.
 
-I wouldn't bother mentioning "some custom platform implemented using
-TI's K3 SOCs" then, because the problem is that the driver didn't
-observe T_PVPERL, so the problem will happen with some endpoints but
-not others.
+The patch worked around the interrupt storm by assigning the native
+ACPI states to the  root ports under VMD. It assigns AER, hotplug,
+PME, etc. These have been restored back to the power on default state
+in guest OS, which says the root port hot plug enable is default OFF.
+At most, the work around should have only assigned AER state.
+An additional patch should be added to exclude hot plug from the
+original patch.
+This will cause hot plug to start working again in the guest, as the
+settings implemented by the UEFI VMD DXE driver will remain in effect
+in Linux.
 
-> > Numbers like 100ms that come from the PCIe specs should have #defines
-> > for them.  If we don't have one already, can you add one, please?
->
-> Sure, will do it in next revision but should this go in some generic PCI
-> header file or just pci-j721e.c
+Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+---
+ drivers/pci/controller/vmd.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-I think it should be in drivers/pci/pci.h so all the controller
-drivers can use the same thing.  Obviously none of them *currently*
-use it, although there are a bunch of "msleep(100)" and a few comments
-that mention T_PVPERL.
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 769eedeb8802..52c2461b4761 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -701,8 +701,6 @@ static int vmd_alloc_irqs(struct vmd_dev *vmd)
+ static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
+ 				       struct pci_host_bridge *vmd_bridge)
+ {
+-	vmd_bridge->native_pcie_hotplug = root_bridge->native_pcie_hotplug;
+-	vmd_bridge->native_shpc_hotplug = root_bridge->native_shpc_hotplug;
+ 	vmd_bridge->native_aer = root_bridge->native_aer;
+ 	vmd_bridge->native_pme = root_bridge->native_pme;
+ 	vmd_bridge->native_ltr = root_bridge->native_ltr;
+-- 
+2.31.1
 
-Bjorn
