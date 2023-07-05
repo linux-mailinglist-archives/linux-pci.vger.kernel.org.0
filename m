@@ -2,108 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E45A774809C
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jul 2023 11:16:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F4B17481CF
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jul 2023 12:16:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232413AbjGEJQo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Jul 2023 05:16:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44106 "EHLO
+        id S230094AbjGEKQH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Jul 2023 06:16:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232328AbjGEJQb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jul 2023 05:16:31 -0400
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE8BDD;
-        Wed,  5 Jul 2023 02:16:30 -0700 (PDT)
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-78666f06691so138839739f.0;
-        Wed, 05 Jul 2023 02:16:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688548590; x=1691140590;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zrxkvponYz4V5NTYWmXXqT0XM8M8zhkcRZKfUVdIvfo=;
-        b=IClVVPsIgs/ysIKiBXnn4zwciWKPCAUaWpJeofySICfheeSgtZ2bqcdH9v3cPn+kDN
-         Pkoxp3TIgk7Ad/HQNHgEue6zvIAvaJ0DLOcd2CzY/fas7Zwzhl1aPE7SUqYHbFkiUXhe
-         jY7s9tsQEfywYhh2hT5z134Ws1VR5u9rFdSTzvfol1YeVXqfVhEDB91caBHN0KbT1I+l
-         PkjJvErlzyi4LdhfjmOQQc4CzbvK/95GA3vERHl7sVCccl9lRvay0C+WJK0uFcCCMx9r
-         7gyOBv7idhBnwSVeYeEYGCiDdEOQc+lJolALBIz6bOJPaFp7NbWandFDjtXFeO2bwB5t
-         wfvQ==
-X-Gm-Message-State: AC+VfDzsU48vNnjb4dz/wMAgqPzM3Wv4kzU+NR2uhNjYkDMDDe88ERpQ
-        8ECarSSjkfodwY6seKKPGg==
-X-Google-Smtp-Source: ACHHUZ7uV5drZripZphbrl8LDJeBSaflagI8Iu3OZ5ufCPyk2D1KK9nohHZs6UkU+btahidNzSfF3g==
-X-Received: by 2002:a5e:a911:0:b0:77e:3d2f:d1f4 with SMTP id c17-20020a5ea911000000b0077e3d2fd1f4mr15269163iod.15.1688548589990;
-        Wed, 05 Jul 2023 02:16:29 -0700 (PDT)
-Received: from robh_at_kernel.org ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id e20-20020a02a514000000b0042b48e5da4bsm1717283jam.134.2023.07.05.02.16.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jul 2023 02:16:29 -0700 (PDT)
-Received: (nullmailer pid 4038325 invoked by uid 1000);
-        Wed, 05 Jul 2023 09:16:27 -0000
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+        with ESMTP id S229772AbjGEKQG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jul 2023 06:16:06 -0400
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47DD0180;
+        Wed,  5 Jul 2023 03:16:05 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1688552153; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=TO6CBiZM6rIvspbbCHpYwuYx131U55KHTzl6zYjuIem9eFoOzWBUVmKAPJH4O/iqJNGJl53ZeNoC5N5WT5O8Fy8rrJy5lNMbKn91eNarLyPqunG+9amng/ZoRRNkvPDAoo9c7gNiRU6ZTBI3W1neYjr8uV1QDZ4QEiRzz07iMjQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1688552153; h=Content-Type:Content-Transfer-Encoding:Date:From:MIME-Version:Message-ID:Subject:To; 
+        bh=ORF7Ovs8ZIRMgtit0KQW/qwrGTpNeUvZ6qy0scFOmfo=; 
+        b=mjNfPRgzKZmDKXtyngbIboAw1fS0KTcsbNUirmwgDH4cp36IRJDZWyumEHLuoXOvSuK/qOCOEI+n8mmUdHUlp7hE1vJ4j1lQ33sf2RhYUcKOjjrk3jJaH+rhg8IDk3N4xn207h04gpAroFSo7zCAAnVDHrRBHYCKozeBokm6HSI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=linux.beauty;
+        spf=pass  smtp.mailfrom=me@linux.beauty;
+        dmarc=pass header.from=<me@linux.beauty>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1688552153;
+        s=zmail; d=linux.beauty; i=me@linux.beauty;
+        h=Date:Date:From:From:To:To:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+        bh=ORF7Ovs8ZIRMgtit0KQW/qwrGTpNeUvZ6qy0scFOmfo=;
+        b=J43UCRVChYV0ylWPgjjT5A8Q5uURtmGig7XxWGNT+lFnNerL80vbJdn+VFCJzoJO
+        x4ZK2a79saV7P/Uu8+19I1RoAShwMkq1zGUKXTAfPZqb5w8Og9ytwxA7KpxrIr2t+Fj
+        yVABDip1QuKTqvQk3hMXi/wKoUxbo/vT07S8XD1c=
+Received: from mail.zoho.com by mx.zohomail.com
+        with SMTP id 16885521516611005.9087764533741; Wed, 5 Jul 2023 03:15:51 -0700 (PDT)
+Date:   Wed, 05 Jul 2023 18:15:51 +0800
+From:   Li Chen <me@linux.beauty>
+To:     "Tom Joseph" <tjoseph@cadence.com>,
+        "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+        =?UTF-8?Q?=22Krzysztof_Wilczy=C5=84ski=22?= <kw@linux.com>,
+        "Rob Herring" <robh@kernel.org>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "linux-pci" <linux-pci@vger.kernel.org>
+Message-ID: <189258d19e1.1132188131010980.7371471641115980549@linux.beauty>
+In-Reply-To: 
+Subject: [PATCH] PCI: cadence: remove unused cdns_plat_pcie->is_rc
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc:     =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        agross@kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        konrad.dybcio@linaro.org, linux-pci@vger.kernel.org,
-        quic_nayiluri@quicinc.com, quic_shazhuss@quicinc.com,
-        linux-phy@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>,
-        quic_ramkri@quicinc.com, linux-arm-msm@vger.kernel.org,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        quic_nitegupt@quicinc.com, conor+dt@kernel.org, mani@kernel.org
-In-Reply-To: <1688545032-17748-2-git-send-email-quic_msarkar@quicinc.com>
-References: <1688545032-17748-1-git-send-email-quic_msarkar@quicinc.com>
- <1688545032-17748-2-git-send-email-quic_msarkar@quicinc.com>
-Message-Id: <168854858595.4038242.5895489616920935149.robh@kernel.org>
-Subject: Re: [PATCH v1 1/6] dt-bindings: PCI: qcom: Add sa8775p compatible
-Date:   Wed, 05 Jul 2023 03:16:27 -0600
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+We already have cdns_plat_pcie_of_data->is_rc.
 
-On Wed, 05 Jul 2023 13:47:06 +0530, Mrinmay Sarkar wrote:
-> Add sa8775p platform to the binding.
-> 
-> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie.yaml    | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
+Signed-off-by: Li Chen <lchen@ambarella.com>
+---
+ drivers/pci/controller/cadence/pcie-cadence-plat.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-plat.c b/drivers/pci/controller/cadence/pcie-cadence-plat.c
+index bac0541317c1..e091fef9c919 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-plat.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-plat.c
+@@ -18,12 +18,9 @@
+ /**
+  * struct cdns_plat_pcie - private data for this PCIe platform driver
+  * @pcie: Cadence PCIe controller
+- * @is_rc: Set to 1 indicates the PCIe controller mode is Root Complex,
+- *         if 0 it is in Endpoint mode.
+  */
+ struct cdns_plat_pcie {
+ 	struct cdns_pcie        *pcie;
+-	bool is_rc;
+ };
+ 
+ struct cdns_plat_pcie_of_data {
+@@ -77,7 +74,6 @@ static int cdns_plat_pcie_probe(struct platform_device *pdev)
+ 		rc->pcie.dev = dev;
+ 		rc->pcie.ops = &cdns_plat_ops;
+ 		cdns_plat_pcie->pcie = &rc->pcie;
+-		cdns_plat_pcie->is_rc = is_rc;
+ 
+ 		ret = cdns_pcie_init_phy(dev, cdns_plat_pcie->pcie);
+ 		if (ret) {
+@@ -105,7 +101,6 @@ static int cdns_plat_pcie_probe(struct platform_device *pdev)
+ 		ep->pcie.dev = dev;
+ 		ep->pcie.ops = &cdns_plat_ops;
+ 		cdns_plat_pcie->pcie = &ep->pcie;
+-		cdns_plat_pcie->is_rc = is_rc;
+ 
+ 		ret = cdns_pcie_init_phy(dev, cdns_plat_pcie->pcie);
+ 		if (ret) {
+-- 
+2.25.1
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/pci/qcom,pcie.yaml:753:17: [warning] wrong indentation: expected 14 but found 16 (indentation)
-
-dtschema/dtc warnings/errors:
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1688545032-17748-2-git-send-email-quic_msarkar@quicinc.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
 
