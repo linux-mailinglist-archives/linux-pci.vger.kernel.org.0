@@ -2,65 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DD767484B9
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jul 2023 15:15:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CF52748855
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jul 2023 17:49:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232164AbjGENPv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Jul 2023 09:15:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34024 "EHLO
+        id S232705AbjGEPtr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Jul 2023 11:49:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229576AbjGENPu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jul 2023 09:15:50 -0400
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7524D1700;
-        Wed,  5 Jul 2023 06:15:49 -0700 (PDT)
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-1b078b34df5so6630092fac.2;
-        Wed, 05 Jul 2023 06:15:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688562948; x=1691154948;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LFwQ+UpqPFkF/GIrr+0M5oyzafXA3IP7DayYsL51ako=;
-        b=Ts0Zuo2uT8DPjeTLFWKzjgwcz+Bjn5MAvX7HgVi+/nKxrzkamd+bl/m7MfM5Q5/5xc
-         LFs8H5ykB0G+mnw5Vky5ejlIZEnvsX0iqmxY6l4iscqy3IYIt0gjP0BBPkofullBmA8l
-         JafFPATMIPu1jmFhAGFrTV7J8za/luhuJ9/wCvv0bhM5+sh9bS5IkcONGlpDL88ggD+G
-         hGPBphC+OjzCqMviKi4Hr7bmGRvr+2PG2Tdc4FBHpqJCC6kqT5fvbv/nAX0BZQoyCixI
-         NC3eABMm3b+qZlFqUpQcBwV+bhjRYM5VDQJYrMKen0EkMAAUUPohOzs2KVOpXD0jsF7x
-         YprA==
-X-Gm-Message-State: ABy/qLZoEG3fH1Wu4CEmJLVEtHsYcxfI4lkAk3MgnELpQKUCkYCQuAwC
-        u7RQSq44I2DI+rOx6xhvjt7+EyIWkONmmgsl
-X-Google-Smtp-Source: ACHHUZ4YenNu0+NiMF+QiLQn4e/V6fpX7oEi0iJIGqvgB4oGGR5KrDoPmVYFC8SX+8XMuvirKS5svw==
-X-Received: by 2002:a05:6871:8784:b0:1b0:2d25:f5a8 with SMTP id td4-20020a056871878400b001b02d25f5a8mr19046588oab.1.1688562948390;
-        Wed, 05 Jul 2023 06:15:48 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id m12-20020a17090aab0c00b0025edb720cc1sm1434923pjq.22.2023.07.05.06.15.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jul 2023 06:15:47 -0700 (PDT)
-Date:   Wed, 5 Jul 2023 22:15:46 +0900
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Alistair Francis <alistair23@gmail.com>
-Cc:     Damien Le Moal <dlemoal@kernel.org>,
-        Alistair Francis <alistair@alistair23.me>,
-        marek.vasut+renesas@gmail.com, yoshihiro.shimoda.uh@renesas.com,
-        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lpieralisi@kernel.org,
-        robh@kernel.org, bhelgaas@google.com
-Subject: Re: [PATCH] PCI: rcar-ep: Include linux/pci-epf.h instead of
- linux/pci-epc.h
-Message-ID: <20230705131546.GA333066@rocinante>
-References: <20230705104824.174396-1-alistair@alistair23.me>
- <7536d9a3-4738-2bc2-e33e-d93347893865@kernel.org>
- <20230705114443.GA3555378@rocinante>
- <CAKmqyKMD99cDwfyY8BJ0_ExB+VXytT3VdeENwuw5ZyqAKq3X0w@mail.gmail.com>
+        with ESMTP id S233041AbjGEPte (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jul 2023 11:49:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A570B19BA;
+        Wed,  5 Jul 2023 08:49:30 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3A61161607;
+        Wed,  5 Jul 2023 15:49:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A42CC433CA;
+        Wed,  5 Jul 2023 15:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1688572169;
+        bh=Wk/EDtW10p6pp6WTwmzgYg6QrckaCsMdnVGkAU0iNaM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=E84fDqN41ael8RB8O2f19tkcvhuFrd6zuDsO1tXY+Z69XQqtcA8ljbDN3XG9xIvif
+         b7leT2sE2Va1DD2f17avNwUaKmLa34lG+4mlM4x85RPbEOknw69N/pYzYezhSFqqup
+         0KKeAOQsCvZy5uN4LSh+o5Cuu/ii46NBVP7cgrdoJfcSF79vYVfpa9zPF4oSC8QeIC
+         XEIYuhbcxhv3IHSSnzV4/Pyj4lk+mtohnz6+vdgt9RJYCgiy69Qbpig58lUkHLagBQ
+         3mTvoW1lDdZm3CXh2XjueeU6y+5BW3v9XYvGubIqP3WSEdI1gyDCiM2XQ4xtlhDH0t
+         XX/gNQXDhk1xQ==
+Date:   Wed, 5 Jul 2023 10:49:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Verma, Achal" <a-verma1@ti.com>
+Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof Wilczy_ski <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [EXTERNAL] Re: [PATCH] PCI: j721e: Fix delay before PERST#
+ deassert
+Message-ID: <20230705154927.GA62511@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKmqyKMD99cDwfyY8BJ0_ExB+VXytT3VdeENwuw5ZyqAKq3X0w@mail.gmail.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+In-Reply-To: <a245938e-2140-5f77-ab91-6cfbd3ddf66c@ti.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,47 +60,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
-
-> > > > pci-epc.h doesn't define the members of the pci_epf_header struct, so
-> > > > trying to access them results in errors like this:
-> > > >
-> > > >     error: invalid use of undefined type 'struct pci_epf_header'
-> > > >       167 |                 val = hdr->vendorid;
-> > > >
-> > > > Instead let's include pci-epf.h which not only defines the
-> > > > pci_epf_header but also includes pci-epc.h.
-> >
-> > [...]
-> > > It is odd that the the build bot did not detect this...
-> >
-> > This is a bit of a surprise to me too, especially since none of the usual
-> > bots pick this up, and I can't seem to find such a failure in the nightly
-> > CI logs either.
-> >
-> > Alistair, how did you stumble into this issue?  Also, which version or
-> > a tree would that be?
+On Tue, Jul 04, 2023 at 09:36:43PM +0530, Verma, Achal wrote:
+> On 7/3/2023 9:51 PM, Bjorn Helgaas wrote:
+> > In subject, "Fix" doesn't convey much information.  Does it increase?
+> > Decrease?  How much time are we talking about?  PERST# deassert is at
+> > one end of the delay; what event is at the other end?
 > 
-> I was building the kernel with this defconfig [1] inside OpenEmbedded.
-> It was the 6.4-rc7 kernel, specifically this one [2].
-> 
-> 1: https://github.com/damien-lemoal/buildroot/blob/rockpro64_ep_v23/board/pine64/rockpro64_ep/linux.config
-> 2: https://github.com/damien-lemoal/linux/tree/rockpro64_ep_v23
+> How about "Increase delay to 100ms for PERST# deassert from moment
+> power-rails achieve operating limits"
 
-Thank you!  Much appreciated.
+Maybe something like "Delay 100ms T_PVPERL from power stable to PERST#
+inactive" to match the language in the spec?
 
-So, the vanilla kernel does not have headers arranged like this custom tree
-that Damien maintains for his own needs, per:
+> > Is this delay for the benefit of the Root Port or for the attached
+> > Endpoint?  If the latter, my guess is that some Endpoints might
+> > tolerate the current shorter delay, while others might require
+> > more, and it doesn't sound like "TI's K3 SoC" would be relevant
+> > here.
+>
+> Its for the endpoints, TI's EVB doesn't exhibit any issues with
+> 100us delay but some customer reported the issue with shorter delay.
 
-  - https://elixir.bootlin.com/linux/v6.4-rc7/source/include/linux/pci-epc.h
-  - https://elixir.bootlin.com/linux/v6.4-rc7/source/include/linux/pci-epf.h
+I wouldn't bother mentioning "some custom platform implemented using
+TI's K3 SOCs" then, because the problem is that the driver didn't
+observe T_PVPERL, so the problem will happen with some endpoints but
+not others.
 
-I suppose, there are some changes that break it for you, for example:
+> > Numbers like 100ms that come from the PCIe specs should have #defines
+> > for them.  If we don't have one already, can you add one, please?
+>
+> Sure, will do it in next revision but should this go in some generic PCI
+> header file or just pci-j721e.c
 
-  https://github.com/damien-lemoal/linux/commit/c7aa8ddd76a141b975a097532050a76c6a58c436
+I think it should be in drivers/pci/pci.h so all the controller
+drivers can use the same thing.  Obviously none of them *currently*
+use it, although there are a bunch of "msleep(100)" and a few comments
+that mention T_PVPERL.
 
-So, I cannot take this patch as it would break vanilla kernel for us. :)
-
-Try building using vanilla kernel, and see if that helps.
-
-	Krzysztof
+Bjorn
