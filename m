@@ -2,66 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D57A274809F
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jul 2023 11:16:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E45A774809C
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jul 2023 11:16:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232437AbjGEJQp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Jul 2023 05:16:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44136 "EHLO
+        id S232413AbjGEJQo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Jul 2023 05:16:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232334AbjGEJQe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jul 2023 05:16:34 -0400
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90995171D;
-        Wed,  5 Jul 2023 02:16:33 -0700 (PDT)
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-785d738d3feso10487639f.0;
-        Wed, 05 Jul 2023 02:16:33 -0700 (PDT)
+        with ESMTP id S232328AbjGEJQb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jul 2023 05:16:31 -0400
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE8BDD;
+        Wed,  5 Jul 2023 02:16:30 -0700 (PDT)
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-78666f06691so138839739f.0;
+        Wed, 05 Jul 2023 02:16:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688548593; x=1691140593;
+        d=1e100.net; s=20221208; t=1688548590; x=1691140590;
         h=date:subject:message-id:references:in-reply-to:cc:to:from
          :mime-version:content-transfer-encoding:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=lq04kjYiYY2D3X+Ef3fDnIElUg0AyuRuSsj7VlSyuoQ=;
-        b=CfrZnxanMyi4FhJAHWksnO2sTz0pwiVA10UDlk8h19omW0NQXQzDeentcWgNJYZc0w
-         S9X6s1cT0m9mUwxnDY+GcU4tOq6i6HeTYGIH8nODj6W/IlzyicBH118g8gm1ssk4HsLT
-         06NDFeSUurndOgXik83WwuRxRbtOqqW0a/q201FY4jrhhJgpDgrwnb2qgrc1586c/Zj3
-         9myqB1uLje7pF/QesfXQDRFIgdq6C65pqYeyIRdw4cSfQ6fgMj8HYRX9vIZQPyKsbikl
-         IMZdPB5RBMiojrSbQy7J2Xw6cB9CMXtuqRqQ0dvKljRxXl4osPrSVJUAR4VE1O+Gg6YL
-         kGOQ==
-X-Gm-Message-State: ABy/qLadAYkjMa+30GqzD83ASDPKo3IZl8s6huKNigia6qLa0B6ZTYcc
-        aWINBHCq4WxrEKya8FDl4A==
-X-Google-Smtp-Source: APBJJlGE/605ujaMNU/z7n4PfFpdNXqgpH5xUQ/WO6pZbEYqJ7Qqw5V8pnQPxHsByRVJ6CADRgbktA==
-X-Received: by 2002:a6b:f314:0:b0:783:727a:8e15 with SMTP id m20-20020a6bf314000000b00783727a8e15mr1322122ioh.6.1688548592781;
-        Wed, 05 Jul 2023 02:16:32 -0700 (PDT)
+        bh=zrxkvponYz4V5NTYWmXXqT0XM8M8zhkcRZKfUVdIvfo=;
+        b=IClVVPsIgs/ysIKiBXnn4zwciWKPCAUaWpJeofySICfheeSgtZ2bqcdH9v3cPn+kDN
+         Pkoxp3TIgk7Ad/HQNHgEue6zvIAvaJ0DLOcd2CzY/fas7Zwzhl1aPE7SUqYHbFkiUXhe
+         jY7s9tsQEfywYhh2hT5z134Ws1VR5u9rFdSTzvfol1YeVXqfVhEDB91caBHN0KbT1I+l
+         PkjJvErlzyi4LdhfjmOQQc4CzbvK/95GA3vERHl7sVCccl9lRvay0C+WJK0uFcCCMx9r
+         7gyOBv7idhBnwSVeYeEYGCiDdEOQc+lJolALBIz6bOJPaFp7NbWandFDjtXFeO2bwB5t
+         wfvQ==
+X-Gm-Message-State: AC+VfDzsU48vNnjb4dz/wMAgqPzM3Wv4kzU+NR2uhNjYkDMDDe88ERpQ
+        8ECarSSjkfodwY6seKKPGg==
+X-Google-Smtp-Source: ACHHUZ7uV5drZripZphbrl8LDJeBSaflagI8Iu3OZ5ufCPyk2D1KK9nohHZs6UkU+btahidNzSfF3g==
+X-Received: by 2002:a5e:a911:0:b0:77e:3d2f:d1f4 with SMTP id c17-20020a5ea911000000b0077e3d2fd1f4mr15269163iod.15.1688548589990;
+        Wed, 05 Jul 2023 02:16:29 -0700 (PDT)
 Received: from robh_at_kernel.org ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id b20-20020a056602001400b007791e286fdbsm3863821ioa.21.2023.07.05.02.16.30
+        by smtp.gmail.com with ESMTPSA id e20-20020a02a514000000b0042b48e5da4bsm1717283jam.134.2023.07.05.02.16.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jul 2023 02:16:32 -0700 (PDT)
-Received: (nullmailer pid 4038328 invoked by uid 1000);
+        Wed, 05 Jul 2023 02:16:29 -0700 (PDT)
+Received: (nullmailer pid 4038325 invoked by uid 1000);
         Wed, 05 Jul 2023 09:16:27 -0000
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
 From:   Rob Herring <robh@kernel.org>
 To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc:     conor+dt@kernel.org, Vinod Koul <vkoul@kernel.org>,
-        linux-kernel@vger.kernel.org, quic_ramkri@quicinc.com,
-        quic_nayiluri@quicinc.com,
+Cc:     =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        agross@kernel.org, Vinod Koul <vkoul@kernel.org>,
         Kishon Vijay Abraham I <kishon@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        konrad.dybcio@linaro.org, linux-pci@vger.kernel.org,
+        quic_nayiluri@quicinc.com, quic_shazhuss@quicinc.com,
+        linux-phy@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>,
+        quic_ramkri@quicinc.com, linux-arm-msm@vger.kernel.org,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        linux-pci@vger.kernel.org, andersson@kernel.org,
-        quic_shazhuss@quicinc.com, linux-arm-msm@vger.kernel.org,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        agross@kernel.org, linux-phy@lists.infradead.org, mani@kernel.org,
-        konrad.dybcio@linaro.org, Bjorn Helgaas <bhelgaas@google.com>,
-        krzysztof.kozlowski+dt@linaro.org, quic_nitegupt@quicinc.com,
-        devicetree@vger.kernel.org
-In-Reply-To: <1688545032-17748-3-git-send-email-quic_msarkar@quicinc.com>
+        andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        quic_nitegupt@quicinc.com, conor+dt@kernel.org, mani@kernel.org
+In-Reply-To: <1688545032-17748-2-git-send-email-quic_msarkar@quicinc.com>
 References: <1688545032-17748-1-git-send-email-quic_msarkar@quicinc.com>
- <1688545032-17748-3-git-send-email-quic_msarkar@quicinc.com>
-Message-Id: <168854858712.4038293.10826309392324391984.robh@kernel.org>
-Subject: Re: [PATCH v1 2/6] dt-bindings: phy: qcom,qmp: Add sa8775p QMP
- PCIe PHY
+ <1688545032-17748-2-git-send-email-quic_msarkar@quicinc.com>
+Message-Id: <168854858595.4038242.5895489616920935149.robh@kernel.org>
+Subject: Re: [PATCH v1 1/6] dt-bindings: PCI: qcom: Add sa8775p compatible
 Date:   Wed, 05 Jul 2023 03:16:27 -0600
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
@@ -75,34 +73,26 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-On Wed, 05 Jul 2023 13:47:07 +0530, Mrinmay Sarkar wrote:
-> Add devicetree YAML binding for Qualcomm QMP PCIe PHY
-> for SA8775p platform.
+On Wed, 05 Jul 2023 13:47:06 +0530, Mrinmay Sarkar wrote:
+> Add sa8775p platform to the binding.
 > 
 > Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
 > ---
->  .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/pci/qcom,pcie.yaml    | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 > 
 
 My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
 on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
 yamllint warnings/errors:
+./Documentation/devicetree/bindings/pci/qcom,pcie.yaml:753:17: [warning] wrong indentation: expected 14 but found 16 (indentation)
 
 dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.example.dtb: phy@1c18000: clock-names:4: 'phy_aux' was expected
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.example.dtb: phy@1c18000: clock-names:5: 'pipe' was expected
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.example.dtb: phy@1c24000: clock-names:4: 'phy_aux' was expected
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.example.dtb: phy@1c24000: clock-names:5: 'pipe' was expected
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
 
 doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1688545032-17748-3-git-send-email-quic_msarkar@quicinc.com
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1688545032-17748-2-git-send-email-quic_msarkar@quicinc.com
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.
