@@ -2,90 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 64DF5749878
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jul 2023 11:30:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B559F7498DE
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jul 2023 12:01:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232151AbjGFJa1 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 6 Jul 2023 05:30:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41812 "EHLO
+        id S231802AbjGFKBq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jul 2023 06:01:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232097AbjGFJa0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jul 2023 05:30:26 -0400
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9691F171D;
-        Thu,  6 Jul 2023 02:30:24 -0700 (PDT)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-570114e1feaso5890067b3.3;
-        Thu, 06 Jul 2023 02:30:24 -0700 (PDT)
+        with ESMTP id S229775AbjGFKBo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jul 2023 06:01:44 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FEC0199F
+        for <linux-pci@vger.kernel.org>; Thu,  6 Jul 2023 03:01:43 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-4f9fdb0ef35so653004e87.0
+        for <linux-pci@vger.kernel.org>; Thu, 06 Jul 2023 03:01:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1688637702; x=1691229702;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XT60ydGbek1AFjPkAEjevV8MYxSepx4EylzL/gQ0j8Q=;
+        b=teFm+rkwOF4Fscx6FU5McwhsHg+3oRElnEWE9vJpbTvsJ92FFxKspLKWyi3SnfdOyn
+         Q77e4UPLlwWG95SIw0plNmt/BGzuYK5MKz3mLAGUnODGEvu7xhULrbzoeA9eF/5cLAqs
+         LWvIGAVwI+C0wG5w0SruZQ7MavLr6QszRrzLlgAnKfnAzO1GP718EIK602Rjhm9D+tgC
+         I2pinO5tdVG7BX0tBYR+q/7Dbd9oEYQJ3QrAL6urFjqP+S05NzKckDgD9a0h1F8nSp7V
+         1vYaHT6kkSEFWuvPHAAkC/gGZLot4KOpth2/XZRS0YjWgGcWvOLXdX4c08n3eAEdFWVv
+         HNAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688635823; x=1691227823;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YPVWS/AnexGn8mR391EaLezyPMA3jIWG3qZQy7VQ+CY=;
-        b=a1JdLvnO5vJdsdlg4zW+9GIgVEtdNZ70aav/hQO9OSEyR/TS0nGYq/T3lEu/XNndXx
-         v42eYo6f+YVhZqFZXrFVZVZBIcM8rRoZrkWYC1PNloV3VHe0CZikIHcaBRZLtrs8lnJ+
-         7pOzJAKZmp9WZ56XQ2D/ebmtlJedmpSP7MWnnijAvr05TaPI5TZDh3nbsJtmPdPQpCHD
-         skD4LnKit1stOagTgfoEBGdoplWs9RMldS7n3ONzDRot7Rofw18eMsyH1LTm+7cTAR/5
-         dK9pyZ+Le4ygHtDG53+MSOKH7yu5FFG0+0cwu5ddLT2XC5a7trAqQj7jnwNNwjqViXTk
-         WcXQ==
-X-Gm-Message-State: ABy/qLZkqI5YrI0eQEXIP9P8kjevX+H508cHw33XkKeKqMx71hutbbaJ
-        zAPmD2JXbf0bl6OXRBs7wOi3r0hDNr9UKw==
-X-Google-Smtp-Source: APBJJlE35a1BSrIN+i4KHeScgJNAd8RRPAdXqrvA0YrRU2lfPe4jpP9ou1L7YG9yS2aPKbaG4teb9Q==
-X-Received: by 2002:a0d:ca0e:0:b0:56d:28b:8042 with SMTP id m14-20020a0dca0e000000b0056d028b8042mr1335847ywd.40.1688635823550;
-        Thu, 06 Jul 2023 02:30:23 -0700 (PDT)
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
-        by smtp.gmail.com with ESMTPSA id n6-20020a0dcb06000000b0055a931afe48sm236990ywd.8.2023.07.06.02.30.22
+        d=1e100.net; s=20221208; t=1688637702; x=1691229702;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XT60ydGbek1AFjPkAEjevV8MYxSepx4EylzL/gQ0j8Q=;
+        b=K4qgkHumaI3MYjq94GRhE0sVad4Pj1xTmswZk8srfaLFSFPO0vj49FC/NWAmXP2wa8
+         bA/9y2qznJizOnFu6CyN4zTzAC9vX8Y1koIyTC4y2pCOzjGULQB3wWn6MoDbORYbz8Mm
+         A4hpamiuA4keV04biqBn7VhHcJfEa8wlE1kjHAPXEMDmq6NK4cwNN5laSJObaMim2fOB
+         naTXijjX5iB1N4E7DqJzj28hYgN3y1htUCpdWhjapoBN5tuntYolpVxQY5uZeDWP5o1W
+         GtgGxuQavgnji4rFkakU1tRTrpK/zJRt4EpCCtHYsaCNlqJ8yDVvXuZwhBpLDBPtKlvK
+         9Bxw==
+X-Gm-Message-State: ABy/qLYSJulCZ1dch+2QavP6IGclmuDxt6x6xdBQ11IMJDRtNKdDgXiw
+        ivmxyT6tlPcPJxMs0eCKCOjUew==
+X-Google-Smtp-Source: APBJJlHtbIbK40+kpbF5561nZK98zdUI+BAnFKMpIjZfYgqBtLSrABL4QxB7dMwedNHt3vfsOGhFsA==
+X-Received: by 2002:a19:2d4e:0:b0:4f8:7734:8dd0 with SMTP id t14-20020a192d4e000000b004f877348dd0mr1058895lft.2.1688637701624;
+        Thu, 06 Jul 2023 03:01:41 -0700 (PDT)
+Received: from [192.168.1.101] (abyj26.neoplus.adsl.tpnet.pl. [83.9.29.26])
+        by smtp.gmail.com with ESMTPSA id y2-20020ac255a2000000b004fb88fffd19sm188136lfg.146.2023.07.06.03.01.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jul 2023 02:30:22 -0700 (PDT)
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-bacf685150cso460690276.3;
-        Thu, 06 Jul 2023 02:30:22 -0700 (PDT)
-X-Received: by 2002:a25:1688:0:b0:c41:6451:b820 with SMTP id
- 130-20020a251688000000b00c416451b820mr1163431ybw.61.1688635822384; Thu, 06
- Jul 2023 02:30:22 -0700 (PDT)
+        Thu, 06 Jul 2023 03:01:41 -0700 (PDT)
+Message-ID: <e31564e1-31cf-2cda-df6f-6210e6a1c1fc@linaro.org>
+Date:   Thu, 6 Jul 2023 12:01:37 +0200
 MIME-Version: 1.0
-References: <20230706092047.18599-1-frank.li@vivo.com> <20230706092047.18599-2-frank.li@vivo.com>
-In-Reply-To: <20230706092047.18599-2-frank.li@vivo.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 6 Jul 2023 11:30:10 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUG9jgQdLhwB-6LaRPY-Mg1NawQAZGtOQWC=k47Fe044Q@mail.gmail.com>
-Message-ID: <CAMuHMdUG9jgQdLhwB-6LaRPY-Mg1NawQAZGtOQWC=k47Fe044Q@mail.gmail.com>
-Subject: Re: [PATCH 2/4] PCI: rcar-gen2: Use devm_platform_get_and_ioremap_resource()
-To:     Yangtao Li <frank.li@vivo.com>
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v1 5/6] arm64: dts: qcom: sa8775p: Add pcie0 and pcie1
+ nodes
+Content-Language: en-US
+To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, mani@kernel.org
+Cc:     quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-phy@lists.infradead.org
+References: <1688545032-17748-1-git-send-email-quic_msarkar@quicinc.com>
+ <1688545032-17748-6-git-send-email-quic_msarkar@quicinc.com>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <1688545032-17748-6-git-send-email-quic_msarkar@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 6, 2023 at 11:27 AM Yangtao Li <frank.li@vivo.com> wrote:
-> Convert platform_get_resource(), devm_ioremap_resource() to a single
-> call to devm_platform_get_and_ioremap_resource(), as this is exactly
-> what this function does.
->
-> Signed-off-by: Yangtao Li <frank.li@vivo.com>
+On 5.07.2023 10:17, Mrinmay Sarkar wrote:
+> Add pcie dtsi nodes for two controllers found on sa8775p platform.
+> 
+> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+> ---[...]
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> +	pcie1_phy: phy@1c14000 {
+> +		compatible = "qcom,sa8775p-qmp-gen4x4-pcie-phy";
+> +		reg = <0x0 0x1c14000 0x0 0x4000>;
+> +
+> +		clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
+> +			 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
+> +			 <&gcc GCC_PCIE_CLKREF_EN>,
+> +			 <&gcc GCC_PCIE_1_PHY_RCHNG_CLK>,
+> +			 <&gcc GCC_PCIE_1_PHY_AUX_CLK>,
+> +			 <&gcc GCC_PCIE_1_PIPE_CLK>,
+> +			 <&gcc GCC_PCIE_1_PIPEDIV2_CLK>;
+> +
+> +		clock-names = "aux", "cfg_ahb", "ref", "rchng", "phy_aux",
+> +						"pipe", "pipediv2";
+> +
+> +		assigned-clocks = <&gcc GCC_PCIE_1_PHY_RCHNG_CLK>;
+> +		assigned-clock-rates = <100000000>;
+> +
+> +		power-domains = <&gcc PCIE_1_GDSC>;
+Please check if it's the correct power domain. I've heard that the PCIe PHY
+may be hooked up to something else but have no way of confirming myself.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Konrad
+> +
+> +		resets = <&gcc GCC_PCIE_1_PHY_BCR>;
+> +		reset-names = "phy";
+> +
+> +		#clock-cells = <0>;
+> +		clock-output-names = "pcie_1_pipe_clk";
+> +
+> +		#phy-cells = <0>;
+> +
+> +		status = "disabled";
+> +
+> +	};
+>  };
