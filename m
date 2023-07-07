@@ -2,133 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E4E4D74B3E2
+	by mail.lfdr.de (Postfix) with ESMTP id 92DEB74B3E1
 	for <lists+linux-pci@lfdr.de>; Fri,  7 Jul 2023 17:12:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233351AbjGGPMV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jul 2023 11:12:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51084 "EHLO
+        id S232617AbjGGPMU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jul 2023 11:12:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230429AbjGGPMU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jul 2023 11:12:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36EB22121
-        for <linux-pci@vger.kernel.org>; Fri,  7 Jul 2023 08:11:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1688742690;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=/vpgghRxsUnXsE3t1IVpXcHF3Kir76KUPEpQodsytdc=;
-        b=d0iyv5jPnpJtODScQPik/87cvsBJteCer4VzqXvU1RTFYPDABfm3BlQa5fWFRFnRM+szmq
-        3zcGilYPtOSQrUu/2SPaV9JyMJsk/f8HFDmVog/ZkwLJNcx80BJh+d/NjPRB6pJERDOaSX
-        GKHkgL05vVxNRvxuPjE2oJbm2hy1FhI=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-425-huiRPxb7MyqWJbXufgI7Jw-1; Fri, 07 Jul 2023 11:11:27 -0400
-X-MC-Unique: huiRPxb7MyqWJbXufgI7Jw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S233352AbjGGPMR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jul 2023 11:12:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E268213C;
+        Fri,  7 Jul 2023 08:12:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D28691C060C9;
-        Fri,  7 Jul 2023 15:11:26 +0000 (UTC)
-Received: from omen.home.shazbot.org (unknown [10.22.17.80])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 70FCAC09A09;
-        Fri,  7 Jul 2023 15:11:26 +0000 (UTC)
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     bhelgaas@google.com
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        eric.auger@redhat.com
-Subject: [PATCH] PCI/VPD: Add runtime power management to sysfs interface
-Date:   Fri,  7 Jul 2023 09:10:44 -0600
-Message-Id: <20230707151044.1311544-1-alex.williamson@redhat.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BE619619D3;
+        Fri,  7 Jul 2023 15:12:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7BDAC433C8;
+        Fri,  7 Jul 2023 15:12:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1688742731;
+        bh=Ya0LfXrJm2rcUDVejC5YdLCrCcxE/mUzk/Zqpcvn0TI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=FitX0YVhEKf14hYzYIjYke+cBCO98TDEt32PMkOsaT/udyzSouFno+mb6mSFyXXcM
+         27Qe6wy4y3zrlvCH2j+hQMCykLwg8DS0zy0wW968EMHOvNtH6AXv3Ib+4htPbKsMJJ
+         tsFuvtoxiFfobvUdw4JVQG1syV8Rgx0vgPxmWuEcejrtUGRHs3d66znDOBPhhovb8x
+         +e4505LaicY8G9K8WZqJ+3FrrsE5c3LRfeem9XC4CHQh8fN+shOLFflhcJe+eJoB2s
+         IyfUPrPyrwmVWpVYleW48JQqDNFdZmvrWKJGaAN0xdFBXY/WBGi393Ne6KmSzNxmEz
+         4g6EBVLyh6Iiw==
+Date:   Fri, 7 Jul 2023 10:12:09 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        manivannan.sadhasivam@linaro.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
+        krzysztof.kozlowski@linaro.org,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Jeffrey Hugo <quic_jhugo@quicinc.com>,
+        Bo Liu <liubo03@inspur.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Carpenter <error27@gmail.com>,
+        "open list:MHI BUS" <mhi@lists.linux.dev>
+Subject: Re: [PATCH v3 9/9] bus: mhi: ep: wake up host is the MHI state is in
+ M3
+Message-ID: <20230707151209.GA139708@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <05b4d009-b50b-4971-9220-615f73db4acd@kadam.mountain>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Unlike default access to config space through sysfs, the vpd read and
-write function don't actively manage the runtime power management state
-of the device during access.  Since commit 7ab5e10eda02 ("vfio/pci: Move
-the unused device into low power state with runtime PM"), the vfio-pci
-driver will use runtime power management and release unused devices to
-make use of low power states.  Attempting to access VPD information in
-this low power state can result in incorrect information or kernel
-crashes depending on the system behavior.
+On Fri, Jul 07, 2023 at 02:41:57PM +0300, Dan Carpenter wrote:
+> On Fri, Jul 07, 2023 at 04:33:56PM +0530, Krishna chaitanya chundru wrote:
+> > If the MHI state is in M3 then the most probably the host kept the
+> > device in D3 hot or D3 cold, due to that endpoint transctions will not
+> > be read by the host, so endpoint wakes up host to bring the host to D0
+> > which eventually bring back the MHI state to M0.
+> > 
+> > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> > ---
+> >  drivers/bus/mhi/ep/main.c | 28 ++++++++++++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
+> > 
+> > diff --git a/drivers/bus/mhi/ep/main.c b/drivers/bus/mhi/ep/main.c
+> > index 6008818..46a8a3c 100644
+> > --- a/drivers/bus/mhi/ep/main.c
+> > +++ b/drivers/bus/mhi/ep/main.c
+> > @@ -25,6 +25,27 @@ static DEFINE_IDA(mhi_ep_cntrl_ida);
+> >  static int mhi_ep_create_device(struct mhi_ep_cntrl *mhi_cntrl, u32 ch_id);
+> >  static int mhi_ep_destroy_device(struct device *dev, void *data);
+> >  
+> > +static bool mhi_ep_wake_host(struct mhi_ep_cntrl *mhi_cntrl)
+> > +{
+> > +	enum mhi_state state;
+> > +	bool mhi_reset;
+> > +	u32 count = 0;
+> > +
+> > +	mhi_cntrl->wakeup_host(mhi_cntrl);
+> > +
+> > +	/* Wait for Host to set the M0 state */
+> > +	do {
+> > +		msleep(M0_WAIT_DELAY_MS);
+> > +		mhi_ep_mmio_get_mhi_state(mhi_cntrl, &state, &mhi_reset);
+> > +		count++;
+> > +	} while (state != MHI_STATE_M0 && count < M0_WAIT_COUNT);
+> > +
+> >+	if (state != MHI_STATE_M0)
+> >+		return false;
+> 
+> Functions which return false on success are an abomination.  Also
+> boolean functions should be named for the question they answer such
+> as access_ok() or has_feature() etc.
 
-Wrap the vpd read/write bin attribute handlers in runtime PM and take
-into account the potential quirk to select the correct device to wake.
++1.  Also nice if boolean functions do not have side effects, so in
+this case, where mhi_ep_wake_host() *does* something that might fail,
+I think "return 0 for success or negative error value" is easier to
+read.
 
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
----
- drivers/pci/vpd.c | 34 ++++++++++++++++++++++++++++++++--
- 1 file changed, 32 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-index a4fc4d0690fe..81217dd4789f 100644
---- a/drivers/pci/vpd.c
-+++ b/drivers/pci/vpd.c
-@@ -275,8 +275,23 @@ static ssize_t vpd_read(struct file *filp, struct kobject *kobj,
- 			size_t count)
- {
- 	struct pci_dev *dev = to_pci_dev(kobj_to_dev(kobj));
-+	struct pci_dev *vpd_dev = dev;
-+	ssize_t ret;
-+
-+	if (dev->dev_flags & PCI_DEV_FLAGS_VPD_REF_F0) {
-+		vpd_dev = pci_get_func0_dev(dev);
-+		if (!vpd_dev)
-+			return -ENODEV;
-+	}
-+
-+	pci_config_pm_runtime_get(vpd_dev);
-+	ret = pci_read_vpd(vpd_dev, off, count, buf);
-+	pci_config_pm_runtime_put(vpd_dev);
-+
-+	if (dev != vpd_dev)
-+		pci_dev_put(vpd_dev);
- 
--	return pci_read_vpd(dev, off, count, buf);
-+	return ret;
- }
- 
- static ssize_t vpd_write(struct file *filp, struct kobject *kobj,
-@@ -284,8 +299,23 @@ static ssize_t vpd_write(struct file *filp, struct kobject *kobj,
- 			 size_t count)
- {
- 	struct pci_dev *dev = to_pci_dev(kobj_to_dev(kobj));
-+	struct pci_dev *vpd_dev = dev;
-+	ssize_t ret;
-+
-+	if (dev->dev_flags & PCI_DEV_FLAGS_VPD_REF_F0) {
-+		vpd_dev = pci_get_func0_dev(dev);
-+		if (!vpd_dev)
-+			return -ENODEV;
-+	}
-+
-+	pci_config_pm_runtime_get(vpd_dev);
-+	ret = pci_write_vpd(vpd_dev, off, count, buf);
-+	pci_config_pm_runtime_put(vpd_dev);
-+
-+	if (dev != vpd_dev)
-+		pci_dev_put(vpd_dev);
- 
--	return pci_write_vpd(dev, off, count, buf);
-+	return ret;
- }
- static BIN_ATTR(vpd, 0600, vpd_read, vpd_write, 0);
- 
--- 
-2.40.1
-
+> Write it like this:
+> 
+> static int mhi_ep_wake_host(struct mhi_ep_cntrl *mhi_cntrl)
+> {
+> 	enum mhi_state state;
+> 	bool mhi_reset;
+> 	int count = 0;
+> 
+> 	mhi_cntrl->wakeup_host(mhi_cntrl);
+> 
+> 	while (count++ < M0_WAIT_COUNT) {
+> 		msleep(M0_WAIT_DELAY_MS);
+> 
+> 		mhi_ep_mmio_get_mhi_state(mhi_cntrl, &state, &mhi_reset);
+> 		if (state == MHI_STATE_M0)
+> 			return 0;
+> 	}
+> 	return -ENODEV;
+> }
