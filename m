@@ -2,96 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CCFE74A8F5
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jul 2023 04:25:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E86C74A91C
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jul 2023 04:47:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231786AbjGGCZV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jul 2023 22:25:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56472 "EHLO
+        id S229506AbjGGCrx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jul 2023 22:47:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230521AbjGGCZU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jul 2023 22:25:20 -0400
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8858B6;
-        Thu,  6 Jul 2023 19:25:19 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1688696711; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=hfya/VD4HCGSX9BIWKXyqEpBVt029ogQGcFDDA7NLfz3K/PMe8U7D6qTqIvUjF862OHu2jXUbuZyItXNiW1S8Vz+Cp7+Ww2r0w/y4XBB1gN6wZZh5SCdCulcjSyahSU+faTiRC0jCismLLI832TDe7Dff0lsMD7r/BzL9L8Q1Lk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1688696711; h=Content-Type:Content-Transfer-Encoding:Date:From:MIME-Version:Message-ID:Subject:To; 
-        bh=ik2eT2U2tcZUtukNJ6ARDpEzq7gr9zv2EARephZUF7A=; 
-        b=WcVRMSUVebWK3HY5pO24PDR8WJ/zT6Mnw2nOkPnZlxeB80inJYDdHVdg/atLMtj353j1hs3rvGjdZ5tYwpK0yg4dlU44U9QBzfd/YFZlaeCCDYZpvSEhDKP4e08KQ2mrfyHg08XOdgVlLO5H4+nVT2KZYIxsFPEtzbCv3Nq9d+c=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=linux.beauty;
-        spf=pass  smtp.mailfrom=me@linux.beauty;
-        dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1688696711;
-        s=zmail; d=linux.beauty; i=me@linux.beauty;
-        h=Date:Date:From:From:To:To:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-        bh=ik2eT2U2tcZUtukNJ6ARDpEzq7gr9zv2EARephZUF7A=;
-        b=VPcqvnAogxc1aNwjI32fgfI12Umh4Cui7+azKIRc3GZJX9kInDbptI9lZ5xY0TfD
-        um/x2CV2zg8apK+QYZ7i/Ttk9guKKOoyZiMjOKbexg+H9tpeNefZjBUXTGmZ0AIVObI
-        eQ+NhcjyGmprHYWBtdjwwOX+76KwuBF1UhkMWjaQ=
-Received: from mail.zoho.com by mx.zohomail.com
-        with SMTP id 1688696709492195.79904115078568; Thu, 6 Jul 2023 19:25:09 -0700 (PDT)
-Date:   Fri, 07 Jul 2023 10:25:09 +0800
-From:   Li Chen <me@linux.beauty>
-To:     "Tom Joseph" <tjoseph@cadence.com>,
-        "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
-        =?UTF-8?Q?=22Krzysztof_Wilczy=C5=84ski=22?= <kw@linux.com>,
-        "Rob Herring" <robh@kernel.org>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "linux-pci" <linux-pci@vger.kernel.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>
-Message-ID: <1892e2ae15f.f7e5dc061620757.4339091752690983066@linux.beauty>
-In-Reply-To: 
-Subject: PCI: cadence: Allow async probe
+        with ESMTP id S231769AbjGGCrv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jul 2023 22:47:51 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 13AC91BE9;
+        Thu,  6 Jul 2023 19:47:48 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.170])
+        by gateway (Coremail) with SMTP id _____8AxlPDSfKdkH08BAA--.4928S3;
+        Fri, 07 Jul 2023 10:47:46 +0800 (CST)
+Received: from [10.20.42.170] (unknown [10.20.42.170])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxF8zRfKdk_2EgAA--.55042S3;
+        Fri, 07 Jul 2023 10:47:45 +0800 (CST)
+Message-ID: <bdc6eb71-482d-5dd6-d527-c2f2f68dfb38@loongson.cn>
+Date:   Fri, 7 Jul 2023 10:47:45 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v5] PCI: Align pci memory space base address with page
+ size
+Content-Language: en-US
+From:   bibo mao <maobibo@loongson.cn>
+To:     Will Deacon <will@kernel.org>, loongson-kernel@lists.loongnix.cn
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn,
+        Huacai Chen <chenhuacai@loongson.cn>
+Reply-To: Bjorn Helgaas <bhelgaas@google.com>,
+          Huacai Chen <chenhuacai@kernel.org>
+References: <20230619014715.3792883-1-maobibo@loongson.cn>
+ <f676d9e0-bb88-283a-5189-f1ae945ee4dd@loongson.cn>
+In-Reply-To: <f676d9e0-bb88-283a-5189-f1ae945ee4dd@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8CxF8zRfKdk_2EgAA--.55042S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWF4fJFyxZFWDWF4xtr4xAFc_yoWrWw48pF
+        yfA3ZrCrW8Jr13Gwsaq34kuFsxZ397KrW5Kry5Ca4rGF9ruryUCry5WryagayDArs8WrW0
+        qFn5KF1Yva15XacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+        6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+        02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
+        wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+        CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+        67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
+        IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+        14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+        W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07URa0PU
+        UUUU=
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Li Chen <lchen@ambarella.com>
+Bjourn, Hucai,
 
-I observed that on Ambarella SoC, which also utilizes
-the Cadence controller, the boot time increases by 1
-second when no endpoints (including switch) are connected
-to PCIe. This increase is caused by cdns_pcie_host_wait_for_link.
+ping again.
 
-Enabling async probe can eliminate this boot time increase.
+The is such issue on only LoongArch system since 16K page size is used.
 
-I guess other platforms also has this issue.
+Should we add code in general framework  or in LoongArch specified code
+in v1?  
 
-Signed-off-by: Li Chen <lchen@ambarella.com>
----
- drivers/pci/controller/cadence/pcie-cadence-plat.c | 1 +
- 1 file changed, 1 insertion(+)
+If you do not think that it is problem, I can give up. LoongArch system
+is not only for myself own, I do not care about it also since LoongArch
+Maintainer think it is not a issue.
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-plat.c b/drivers/pci/controller/cadence/pcie-cadence-plat.c
-index e091fef9c919..5177f18e1dfc 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-plat.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-plat.c
-@@ -174,6 +174,7 @@ static struct platform_driver cdns_plat_pcie_driver = {
- 		.name = "cdns-pcie",
- 		.of_match_table = cdns_plat_pcie_of_match,
- 		.pm	= &cdns_pcie_pm_ops,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 	},
- 	.probe = cdns_plat_pcie_probe,
- 	.shutdown = cdns_plat_pcie_shutdown,
--- 
-2.34.1
+Regards
+Bibo Mao
 
+在 2023/6/26 09:30, bibo mao 写道:
+> gentle ping.
+> 
+> 在 2023/6/19 09:47, Bibo Mao 写道:
+>> Some PCI devices have only 4K memory space size, it is normal in general
+>> machines and aligned with page size. However some architectures which
+>> support different page size, default page size on LoongArch is 16K, and
+>> ARM64 supports page size varying from 4K to 64K. On machines where larger
+>> page size is use, memory space region of two different pci devices may be
+>> in one page. It is not safe with mmu protection, also VFIO pci device
+>> driver requires base address of pci memory space page aligned, so that it
+>> can be memory mapped to qemu user space when it is passed-through to vm.
+>>
+>> It consumes more pci memory resource with page size alignment requirement,
+>> here extra option PCI_MEMRES_PAGE_ALIGN is added, it can be enabled by
+>> different architectures, currently arm64/loongarch enable this option.
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+>> ---
+>> Change history
+>> v5: enable option PCI_MEMRES_PAGE_ALIGN on arm64. Verified on LoongArch
+>> and pass to compile on arm64 with defconfig
+>>
+>> v4: add extra kernel option PCI_MEMRES_PAGE_ALIGN to set memory resource
+>>     page aligned
+>>
+>> v3: move alignment requirement to generic pci code
+>>
+>> v2: add pci resource alignment requirement in arch specified function
+>>     pcibios_align_resource on arm64/LoongArch platforms
+>>
+>> ---
+>>  arch/arm64/Kconfig      | 1 +
+>>  arch/loongarch/Kconfig  | 1 +
+>>  drivers/pci/Kconfig     | 3 +++
+>>  drivers/pci/setup-res.c | 7 +++++++
+>>  4 files changed, 12 insertions(+)
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index 343e1e1cae10..24858bbf2b72 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -232,6 +232,7 @@ config ARM64
+>>  	select OF_EARLY_FLATTREE
+>>  	select PCI_DOMAINS_GENERIC if PCI
+>>  	select PCI_ECAM if (ACPI && PCI)
+>> +	select PCI_MEMRES_PAGE_ALIGN if PCI
+>>  	select PCI_SYSCALL if PCI
+>>  	select POWER_RESET
+>>  	select POWER_SUPPLY
+>> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+>> index d38b066fc931..7dbde5e5b351 100644
+>> --- a/arch/loongarch/Kconfig
+>> +++ b/arch/loongarch/Kconfig
+>> @@ -140,6 +140,7 @@ config LOONGARCH
+>>  	select PCI_DOMAINS_GENERIC
+>>  	select PCI_ECAM if ACPI
+>>  	select PCI_LOONGSON
+>> +	select PCI_MEMRES_PAGE_ALIGN
+>>  	select PCI_MSI_ARCH_FALLBACKS
+>>  	select PCI_QUIRKS
+>>  	select PERF_USE_VMALLOC
+>> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+>> index 9309f2469b41..9be5f85ff9dc 100644
+>> --- a/drivers/pci/Kconfig
+>> +++ b/drivers/pci/Kconfig
+>> @@ -128,6 +128,9 @@ config PCI_LOCKLESS_CONFIG
+>>  config PCI_BRIDGE_EMUL
+>>  	bool
+>>  
+>> +config PCI_MEMRES_PAGE_ALIGN
+>> +	bool
+>> +
+>>  config PCI_IOV
+>>  	bool "PCI IOV support"
+>>  	select PCI_ATS
+>> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+>> index 967f9a758923..6ad76734a670 100644
+>> --- a/drivers/pci/setup-res.c
+>> +++ b/drivers/pci/setup-res.c
+>> @@ -339,6 +339,13 @@ int pci_assign_resource(struct pci_dev *dev, int resno)
+>>  		return -EINVAL;
+>>  	}
+>>  
+>> +#ifdef CONFIG_PCI_MEMRES_PAGE_ALIGN
+>> +	/*
+>> +	 * force minimum page alignment for vfio pci usage
+>> +	 */
+>> +	if (res->flags & IORESOURCE_MEM)
+>> +		align = max_t(resource_size_t, PAGE_SIZE, align);
+>> +#endif
+>>  	size = resource_size(res);
+>>  	ret = _pci_assign_resource(dev, resno, size, align);
+>>  
+> 
+> _______________________________________________
+> Loongson-kernel mailing list -- loongson-kernel@lists.loongnix.cn
+> To unsubscribe send an email to loongson-kernel-leave@lists.loongnix.cn
 
