@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1484474AF58
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jul 2023 13:04:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9230074AF6E
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jul 2023 13:05:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229822AbjGGLEU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jul 2023 07:04:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59420 "EHLO
+        id S232506AbjGGLFN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jul 2023 07:05:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbjGGLEQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jul 2023 07:04:16 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B9EAFF;
-        Fri,  7 Jul 2023 04:04:15 -0700 (PDT)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3679Km2i006277;
-        Fri, 7 Jul 2023 11:04:06 GMT
+        with ESMTP id S232377AbjGGLFJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jul 2023 07:05:09 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD3081BD2;
+        Fri,  7 Jul 2023 04:04:41 -0700 (PDT)
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3676dDgF013979;
+        Fri, 7 Jul 2023 11:04:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=qcppdkim1;
- bh=ek5WLwSvjXSVCr9SmWwANF2/cFWSzE8fMO2GvxyqURo=;
- b=NGxxKT9OD8DhF7AoY5U+L4Kx4jbTB87mD7kCugiOCpr+BGdi7qN/GabPc79HVadM2Clh
- NcDQ1JmxL1url08mlHhRJnJDAreAN+8jzUcnRNLQSEA31iJ0Af8Qjf7CcD9IKTdqgYtX
- BmcvdZLyfUWqLqdUnsGMG18le0neRDuu7WEUmuxNXP3ycY/jYohwpEQ1BN7+ENajy5G4
- j5nDkJXUZjBnmTWM+8uS4nAMvdp2QGei71+KI67PQLNwLMMd8dxIKTlzE96b4sr6IcGm
- M8CAw8D5n6E4VBTjhjs7kC7vs/itQvRIw9Jm94vp/FpK7gA32u412VcNkJ3+sW/RoHwG KQ== 
+ bh=QXmy030ikNWnWChHa47/KnRaCnnbff7PjI6Sc/FI0cI=;
+ b=hq/6HBnWMvmC6vcC+VFXCmYJyRAbxWtOz+3+mBXseUJZHzpwFN/I09kKm6xq5O1WIjjK
+ KxqkupNYHPhaZ5iu17naJ5YqmzGdinsqdoriiLUwYDRswk4OSjFHXgi1VGJ5Zs8LX74U
+ Yl74t7wFbq4KzcjJYl+IBLAUaz7gNxRpaOBkxCQ7P3tAyDRxEYP+5QqPD/i+cy4pxXrJ
+ 6Aqui0WJBIhTUVijjEnJc3YNd4sUhkHDtYlLWaCFI2WPYXfTWNJaRQUubyqeCCfKdnAy
+ Gn/Y+6moaUbjJCiV3Q4YJV8WaSEfSkotmacMpw7HwzT1Ngne1gilSM/LUfEPy/qcw6nN cQ== 
 Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rpfyw8cm0-1
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rnx4x2m9u-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Jul 2023 11:04:06 +0000
+        Fri, 07 Jul 2023 11:04:33 +0000
 Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 367B40bk022751;
-        Fri, 7 Jul 2023 11:04:03 GMT
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 367B41WZ022752;
+        Fri, 7 Jul 2023 11:04:05 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3rjd7kq59b-1
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3rjd7kq59m-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 07 Jul 2023 11:04:03 +0000
+        Fri, 07 Jul 2023 11:04:05 +0000
 Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 367B4203022792;
-        Fri, 7 Jul 2023 11:04:02 GMT
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 367B45jI022834;
+        Fri, 7 Jul 2023 11:04:05 GMT
 Received: from hu-sgudaval-hyd.qualcomm.com (hu-krichai-hyd.qualcomm.com [10.213.110.112])
-        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 367B42HV022786;
-        Fri, 07 Jul 2023 11:04:02 +0000
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 367B45q4022832;
+        Fri, 07 Jul 2023 11:04:05 +0000
 Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
-        id 39FCE473F; Fri,  7 Jul 2023 16:34:02 +0530 (+0530)
+        id 6001A46E0; Fri,  7 Jul 2023 16:34:04 +0530 (+0530)
 From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
 To:     manivannan.sadhasivam@linaro.org
 Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
@@ -55,11 +55,13 @@ Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
         Manivannan Sadhasivam <mani@kernel.org>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v3 7/9] PCI: qcom-ep: Add wake up host op to dw_pcie_ep_ops
-Date:   Fri,  7 Jul 2023 16:33:54 +0530
-Message-Id: <1688727836-11141-8-git-send-email-quic_krichai@quicinc.com>
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jeffrey Hugo <quic_jhugo@quicinc.com>,
+        mhi@lists.linux.dev (open list:MHI BUS)
+Subject: [PATCH v3 8/9] PCI: epf-mhi: Add wakeup host op
+Date:   Fri,  7 Jul 2023 16:33:55 +0530
+Message-Id: <1688727836-11141-9-git-send-email-quic_krichai@quicinc.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1688727836-11141-1-git-send-email-quic_krichai@quicinc.com>
 References: <1688727836-11141-1-git-send-email-quic_krichai@quicinc.com>
@@ -67,85 +69,82 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: xnFJSSuiJjVawiArsz3v82GIRTFT8plF
-X-Proofpoint-ORIG-GUID: xnFJSSuiJjVawiArsz3v82GIRTFT8plF
+X-Proofpoint-ORIG-GUID: cSFr7GHHAv6HzdR4JorKRNG0X0IYJ1OQ
+X-Proofpoint-GUID: cSFr7GHHAv6HzdR4JorKRNG0X0IYJ1OQ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
  definitions=2023-07-07_07,2023-07-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 adultscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 clxscore=1015 mlxlogscore=999
- impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2305260000 definitions=main-2307070102
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 impostorscore=0 bulkscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 clxscore=1015 spamscore=0 mlxlogscore=793 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2307070103
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add wakeup host op to dw_pcie_ep_ops to wake up host.
-If the wakeup type is PME, then trigger inband PME by writing to the PARF
-PARF_PM_CTRL register, otherwise toggle #WAKE.
+Add wakeup host op for MHI EPF.
+If the D-state is in D3cold toggle wake signal, otherwise send PME.
 
 Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 ---
- drivers/pci/controller/dwc/pcie-qcom-ep.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/pci/endpoint/functions/pci-epf-mhi.c | 17 +++++++++++++++++
+ include/linux/mhi_ep.h                       |  1 +
+ 2 files changed, 18 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 75ab6d6..6472554 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -89,6 +89,7 @@
- /* PARF_PM_CTRL register fields */
- #define PARF_PM_CTRL_REQ_EXIT_L1		BIT(1)
- #define PARF_PM_CTRL_READY_ENTR_L23		BIT(2)
-+#define PARF_PM_CTRL_XMT_PME			BIT(4)
- #define PARF_PM_CTRL_REQ_NOT_ENTR_L1		BIT(5)
- 
- /* PARF_MHI_CLOCK_RESET_CTRL fields */
-@@ -729,10 +730,37 @@ static void qcom_pcie_ep_init(struct dw_pcie_ep *ep)
- 		dw_pcie_ep_reset_bar(pci, bar);
+diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+index 631eb2f7..d84f869 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
++++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+@@ -237,6 +237,22 @@ static int pci_epf_mhi_write_to_host(struct mhi_ep_cntrl *mhi_cntrl,
+ 	return 0;
  }
  
-+static bool qcom_pcie_ep_wakeup_host(struct dw_pcie_ep *ep, u8 func_no,
-+					enum pci_epc_wakeup_host_type type)
++static int pci_epf_mhi_wakeup_host(struct mhi_ep_cntrl *mhi_cntrl)
 +{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
-+	struct device *dev = pci->dev;
-+	u32 val;
++	struct pci_epf_mhi *epf_mhi = to_epf_mhi(mhi_cntrl);
++	struct pci_epf *epf = epf_mhi->epf;
++	enum pci_epc_wakeup_host_type type;
++	struct pci_epc *epc = epf->epc;
++	int ret;
 +
-+	if (type == PCI_WAKEUP_TOGGLE_WAKE) {
-+		dev_dbg(dev, "Waking up the host by toggling WAKE#\n");
-+		gpiod_set_value_cansleep(pcie_ep->wake, 1);
-+		usleep_range(WAKE_DELAY_US, WAKE_DELAY_US + 500);
-+		gpiod_set_value_cansleep(pcie_ep->wake, 0);
++	type = PCI_WAKEUP_SEND_PME;
++	if (mhi_cntrl->dstate == PCI_D3cold)
++		type = PCI_WAKEUP_TOGGLE_WAKE;
 +
-+	} else if (type == PCI_WAKEUP_SEND_PME) {
-+		dev_dbg(dev, "Waking up the host using PME\n");
-+		val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
-+		writel_relaxed(val | PARF_PM_CTRL_XMT_PME, pcie_ep->parf + PARF_PM_CTRL);
-+		writel_relaxed(val, pcie_ep->parf + PARF_PM_CTRL);
++	return pci_epc_wakeup_host(epc, epf->func_no, epf->vfunc_no, type);
 +
-+	} else
-+		return false;
-+
-+	return true;
 +}
 +
- static const struct dw_pcie_ep_ops pci_ep_ops = {
- 	.ep_init = qcom_pcie_ep_init,
- 	.raise_irq = qcom_pcie_ep_raise_irq,
- 	.get_features = qcom_pcie_epc_get_features,
-+	.wakeup_host = qcom_pcie_ep_wakeup_host,
- };
+ static int pci_epf_mhi_core_init(struct pci_epf *epf)
+ {
+ 	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
+@@ -293,6 +309,7 @@ static int pci_epf_mhi_link_up(struct pci_epf *epf)
+ 	mhi_cntrl->unmap_free = pci_epf_mhi_unmap_free;
+ 	mhi_cntrl->read_from_host = pci_epf_mhi_read_from_host;
+ 	mhi_cntrl->write_to_host = pci_epf_mhi_write_to_host;
++	mhi_cntrl->wakeup_host = pci_epf_mhi_wakeup_host;
  
- static int qcom_pcie_ep_probe(struct platform_device *pdev)
+ 	/* Register the MHI EP controller */
+ 	ret = mhi_ep_register_controller(mhi_cntrl, info->config);
+diff --git a/include/linux/mhi_ep.h b/include/linux/mhi_ep.h
+index c3a0685..e353c429 100644
+--- a/include/linux/mhi_ep.h
++++ b/include/linux/mhi_ep.h
+@@ -137,6 +137,7 @@ struct mhi_ep_cntrl {
+ 			   void __iomem *virt, size_t size);
+ 	int (*read_from_host)(struct mhi_ep_cntrl *mhi_cntrl, u64 from, void *to, size_t size);
+ 	int (*write_to_host)(struct mhi_ep_cntrl *mhi_cntrl, void *from, u64 to, size_t size);
++	int (*wakeup_host)(struct mhi_ep_cntrl *mhi_cntrl);
+ 
+ 	enum mhi_state mhi_state;
+ 
 -- 
 2.7.4
 
