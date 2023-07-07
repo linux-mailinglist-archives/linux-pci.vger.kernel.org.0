@@ -2,53 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C206474A8E8
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jul 2023 04:23:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CCFE74A8F5
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jul 2023 04:25:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229880AbjGGCXd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jul 2023 22:23:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55674 "EHLO
+        id S231786AbjGGCZV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jul 2023 22:25:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229775AbjGGCXc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jul 2023 22:23:32 -0400
+        with ESMTP id S230521AbjGGCZU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jul 2023 22:25:20 -0400
 Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EE82B6;
-        Thu,  6 Jul 2023 19:23:31 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1688696596; cv=none; 
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8858B6;
+        Thu,  6 Jul 2023 19:25:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1688696711; cv=none; 
         d=zohomail.com; s=zohoarc; 
-        b=IbokFj70kwmuMJoNgpTyJqzmlBhti36Iy5SeWnIY+Tjgf02NjLBA2gIdlkcDW1IN5xrhPEQprXTCA5jFMITXnTguH3I0N2elxp7NcUtaSxYl/mk4BOmZRYk83Rtr8pGOSrQmRFaTR4VSR4KqX8ejxUj5/swTtJlcMx4kU2oiwd4=
+        b=hfya/VD4HCGSX9BIWKXyqEpBVt029ogQGcFDDA7NLfz3K/PMe8U7D6qTqIvUjF862OHu2jXUbuZyItXNiW1S8Vz+Cp7+Ww2r0w/y4XBB1gN6wZZh5SCdCulcjSyahSU+faTiRC0jCismLLI832TDe7Dff0lsMD7r/BzL9L8Q1Lk=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1688696596; h=Content-Type:Content-Transfer-Encoding:Date:From:MIME-Version:Message-ID:Subject:To; 
-        bh=7pezz7Mu0y2xLl1qQuZUTIdWX+vqDQV14cg2rs2iL0I=; 
-        b=bbVIER+Fmsb/0Ml0UnnVTmdTnZklVQOUYI9PX/BNx4Xh/qqjYVydKalP5SFjpRyk1PxqiaKpssKYaN59LGF49JvCTzR82HzRqvnWxbr4UwaV+HZGcOyTRdNecBmNCRDlP7rQMTHonOlAtW/KIqIxWNcnJcBh/AUY3rCXP2wZ10w=
+        t=1688696711; h=Content-Type:Content-Transfer-Encoding:Date:From:MIME-Version:Message-ID:Subject:To; 
+        bh=ik2eT2U2tcZUtukNJ6ARDpEzq7gr9zv2EARephZUF7A=; 
+        b=WcVRMSUVebWK3HY5pO24PDR8WJ/zT6Mnw2nOkPnZlxeB80inJYDdHVdg/atLMtj353j1hs3rvGjdZ5tYwpK0yg4dlU44U9QBzfd/YFZlaeCCDYZpvSEhDKP4e08KQ2mrfyHg08XOdgVlLO5H4+nVT2KZYIxsFPEtzbCv3Nq9d+c=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
         dkim=pass  header.i=linux.beauty;
         spf=pass  smtp.mailfrom=me@linux.beauty;
         dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1688696596;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1688696711;
         s=zmail; d=linux.beauty; i=me@linux.beauty;
         h=Date:Date:From:From:To:To:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-        bh=7pezz7Mu0y2xLl1qQuZUTIdWX+vqDQV14cg2rs2iL0I=;
-        b=DI04ZPM28LJnBJ0JKurB2bCS7VrRIQbiDkPQO01jcfP/PcHTjMt0k2PEMY3QY5qZ
-        1xU2nMqnVnhUh1Z9stOGKQzAGxYPdco23ALvyYElujFALSEpS1M6HmsK3WhzWl29JOL
-        g7a9gPP/r6d7AbNaVtGwn69dMmQbOvsqe8GBwH78=
+        bh=ik2eT2U2tcZUtukNJ6ARDpEzq7gr9zv2EARephZUF7A=;
+        b=VPcqvnAogxc1aNwjI32fgfI12Umh4Cui7+azKIRc3GZJX9kInDbptI9lZ5xY0TfD
+        um/x2CV2zg8apK+QYZ7i/Ttk9guKKOoyZiMjOKbexg+H9tpeNefZjBUXTGmZ0AIVObI
+        eQ+NhcjyGmprHYWBtdjwwOX+76KwuBF1UhkMWjaQ=
 Received: from mail.zoho.com by mx.zohomail.com
-        with SMTP id 1688696594594371.96988380364905; Thu, 6 Jul 2023 19:23:14 -0700 (PDT)
-Date:   Fri, 07 Jul 2023 10:23:14 +0800
+        with SMTP id 1688696709492195.79904115078568; Thu, 6 Jul 2023 19:25:09 -0700 (PDT)
+Date:   Fri, 07 Jul 2023 10:25:09 +0800
 From:   Li Chen <me@linux.beauty>
-To:     "Vignesh Raghavendra" <vigneshr@ti.com>,
-        "Tom Joseph" <tjoseph@cadence.com>,
+To:     "Tom Joseph" <tjoseph@cadence.com>,
         "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
         =?UTF-8?Q?=22Krzysztof_Wilczy=C5=84ski=22?= <kw@linux.com>,
         "Rob Herring" <robh@kernel.org>,
         "Bjorn Helgaas" <bhelgaas@google.com>,
-        "linux-omap" <linux-omap@vger.kernel.org>,
         "linux-pci" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel" <linux-kernel@vger.kernel.org>
-Message-ID: <1892e291fa4.1219137911620526.2248312811348305435@linux.beauty>
+Message-ID: <1892e2ae15f.f7e5dc061620757.4339091752690983066@linux.beauty>
 In-Reply-To: 
-Subject: [PATCH 1/2] PCI: j721e: Allow async probe
+Subject: PCI: cadence: Allow async probe
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
@@ -75,25 +72,25 @@ to PCIe. This increase is caused by cdns_pcie_host_wait_for_link.
 
 Enabling async probe can eliminate this boot time increase.
 
-I guess j721e also has this issue.
+I guess other platforms also has this issue.
 
 Signed-off-by: Li Chen <lchen@ambarella.com>
 ---
- drivers/pci/controller/cadence/pci-j721e.c | 1 +
+ drivers/pci/controller/cadence/pcie-cadence-plat.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index e70213c9060a..660c13bdb606 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -561,6 +561,7 @@ static struct platform_driver j721e_pcie_driver = {
- 		.name	= "j721e-pcie",
- 		.of_match_table = of_j721e_pcie_match,
- 		.suppress_bind_attrs = true,
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-plat.c b/drivers/pci/controller/cadence/pcie-cadence-plat.c
+index e091fef9c919..5177f18e1dfc 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-plat.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-plat.c
+@@ -174,6 +174,7 @@ static struct platform_driver cdns_plat_pcie_driver = {
+ 		.name = "cdns-pcie",
+ 		.of_match_table = cdns_plat_pcie_of_match,
+ 		.pm	= &cdns_pcie_pm_ops,
 +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
  	},
- };
- builtin_platform_driver(j721e_pcie_driver);
+ 	.probe = cdns_plat_pcie_probe,
+ 	.shutdown = cdns_plat_pcie_shutdown,
 -- 
 2.34.1
 
