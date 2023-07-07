@@ -2,48 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E85974AF1B
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jul 2023 12:53:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70B5B74AF20
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jul 2023 12:54:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231334AbjGGKxO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jul 2023 06:53:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52502 "EHLO
+        id S232298AbjGGKya (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jul 2023 06:54:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232904AbjGGKxK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jul 2023 06:53:10 -0400
+        with ESMTP id S229775AbjGGKy3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jul 2023 06:54:29 -0400
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E0E919A5;
-        Fri,  7 Jul 2023 03:53:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB019172B;
+        Fri,  7 Jul 2023 03:54:28 -0700 (PDT)
 Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3675mDOi006007;
-        Fri, 7 Jul 2023 10:53:00 GMT
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3678AWXF026972;
+        Fri, 7 Jul 2023 10:54:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
  mime-version : subject : to : cc : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=qcppdkim1;
- bh=KtfkCOnIAXvYTY8NXlpZbf3tZAVETmZLz4XrH0WvJrk=;
- b=Q34raBANEaLo1s5FDGCQvV8PqYhh1JATCGBZGjCKJSJfVFb7LNztRW8iVVYJ9JZ8SqKR
- loFRt0EN2zy8ezC5NMp7NVHFM1IAzwpf0RYqUchiSga0U6IQ038rDyL+6iI8gBOrj33h
- LoKAJ7E/xDrYFkHMDvOxn+NQ69nUxa3FrqBY2RPN08V2IdLfgOGd+cY9ZxP5K0BND5SL
- UhSU0Q9+dHF0t61a/YDgQpUb5XTp7IF7JtjTOVFcRRj6pNcN4Ao8BJRgdAHv48OA7qLJ
- yijAGr2t2/gyS/bl6Pv7WgHAQjuTz/gA50rjql1qrifymCjoZrUI/RSNTQayTD5yJBBt Vg== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rp8a61a2d-1
+ bh=33xgh8fWOc2o6p45YDZ7DF1WRb8Q5GJzh8uGUWDJ72w=;
+ b=a5pXZbFZUtzwyWCnpKxa9qKSH5n5BCfI5L24tay1w/ppgyyNNetxTZ84CeMaKyt3weBg
+ 0To6ldvrrj2nwVV1VduWNSCyUnuEgIsLTRbBUUGAQHa/Tu4t2qQ0ATPvQ51k4iJkJbqZ
+ ksX0X+csWCY4yKt7XUZJujHr5h5A8kwxeEyOQyLrhV3qTveyQNXal3XiIEv61M4jTdjR
+ NpP9mWR44PwmEUiaOTiH5mKEOTdHhr2H/KzXQ7L9tOZXEMAAIM11nY3ik3xhHfx86XOZ
+ dor0+J9zNdCJsMjYj3Dwpa4tq/4wW2COqmME5mZ4/Kky9fW05YdJFFoev+8rtCH0AGZV Og== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rp8a61a99-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Jul 2023 10:53:00 +0000
+        Fri, 07 Jul 2023 10:54:19 +0000
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 367Aqw1O030665
+        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 367AsIfc012004
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 7 Jul 2023 10:52:58 GMT
+        Fri, 7 Jul 2023 10:54:18 GMT
 Received: from [10.216.29.164] (10.80.80.8) by nalasex01a.na.qualcomm.com
  (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Fri, 7 Jul
- 2023 03:52:52 -0700
-Message-ID: <a5360f12-1687-d03e-6ba4-0f6e487905d5@quicinc.com>
-Date:   Fri, 7 Jul 2023 16:22:49 +0530
+ 2023 03:54:12 -0700
+Message-ID: <afd48178-fa6d-a2ac-7a50-cf558be6aa01@quicinc.com>
+Date:   Fri, 7 Jul 2023 16:24:08 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.13.1
-Subject: Re: [PATCH v2 1/8] PCI: endpoint: Add dstate change notifier support
+Subject: Re: [PATCH v2 2/8] PCI: qcom-ep: Add support for D-state change
+ notification
 Content-Language: en-US
 To:     Manivannan Sadhasivam <mani@kernel.org>
 CC:     <manivannan.sadhasivam@linaro.org>, <helgaas@kernel.org>,
@@ -53,24 +54,22 @@ CC:     <manivannan.sadhasivam@linaro.org>, <helgaas@kernel.org>,
         <quic_ramkri@quicinc.com>, <krzysztof.kozlowski@linaro.org>,
         "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
         =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
 References: <1688122331-25478-1-git-send-email-quic_krichai@quicinc.com>
- <1688122331-25478-2-git-send-email-quic_krichai@quicinc.com>
- <20230707054454.GA6001@thinkpad>
+ <1688122331-25478-3-git-send-email-quic_krichai@quicinc.com>
+ <20230707055121.GB6001@thinkpad>
 From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20230707054454.GA6001@thinkpad>
+In-Reply-To: <20230707055121.GB6001@thinkpad>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: N47EQJ3tPGMFEGeA0bYaakmohATvqppz
-X-Proofpoint-GUID: N47EQJ3tPGMFEGeA0bYaakmohATvqppz
+X-Proofpoint-ORIG-GUID: kqf_3dYBNtcdpNEdMb-CvSvgkQ6KXKcl
+X-Proofpoint-GUID: kqf_3dYBNtcdpNEdMb-CvSvgkQ6KXKcl
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
  definitions=2023-07-07_06,2023-07-06_02,2023-05-22_02
@@ -90,106 +89,61 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-On 7/7/2023 11:14 AM, Manivannan Sadhasivam wrote:
-> On Fri, Jun 30, 2023 at 04:22:04PM +0530, Krishna chaitanya chundru wrote:
->> Add support to notify the EPF device about the D-state change event
->> from the EPC device.
+On 7/7/2023 11:21 AM, Manivannan Sadhasivam wrote:
+> On Fri, Jun 30, 2023 at 04:22:05PM +0530, Krishna chaitanya chundru wrote:
+>> Add support to pass D-state change notification to Endpoint
+>> function driver.
 >>
 >> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
->> ---
->>   Documentation/PCI/endpoint/pci-endpoint.rst |  5 +++++
->>   drivers/pci/endpoint/pci-epc-core.c         | 27 +++++++++++++++++++++++++++
->>   include/linux/pci-epc.h                     |  1 +
->>   include/linux/pci-epf.h                     |  1 +
->>   4 files changed, 34 insertions(+)
->>
->> diff --git a/Documentation/PCI/endpoint/pci-endpoint.rst b/Documentation/PCI/endpoint/pci-endpoint.rst
->> index 4f5622a..0538cdc 100644
->> --- a/Documentation/PCI/endpoint/pci-endpoint.rst
->> +++ b/Documentation/PCI/endpoint/pci-endpoint.rst
->> @@ -78,6 +78,11 @@ by the PCI controller driver.
->>      Cleanup the pci_epc_mem structure allocated during pci_epc_mem_init().
->>   
->>   
->> +* pci_epc_dstate_change()
->> +
->> +   In order to notify all the function devices that the EPC device has
->> +   changed its D-state.
->> +
->>   EPC APIs for the PCI Endpoint Function Driver
->>   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>   
->> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
->> index 6c54fa5..cad360f 100644
->> --- a/drivers/pci/endpoint/pci-epc-core.c
->> +++ b/drivers/pci/endpoint/pci-epc-core.c
->> @@ -785,6 +785,33 @@ void pci_epc_bme_notify(struct pci_epc *epc)
->>   EXPORT_SYMBOL_GPL(pci_epc_bme_notify);
->>   
->>   /**
->> + * pci_epc_dstate_change() - Notify the EPF device that EPC device D-state
->> + *			has changed
->> + * @epc: the EPC device which has change in D-state
->> + * @state: the changed D-state
->> + *
->> + * Invoke to Notify the EPF device that the EPC device has D-state has
->> + * changed.
->> + */
->> +void pci_epc_dstate_change(struct pci_epc *epc, pci_power_t state)
-> How about "pci_epc_dstate_notity()"?
+> Few comments below.
 >
-> Rest looks good.
+>> ---
+>>   drivers/pci/controller/dwc/pcie-qcom-ep.c | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+>> index 1435f51..e75aec4 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+>> @@ -561,6 +561,7 @@ static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
+>>   	struct device *dev = pci->dev;
+>>   	u32 status = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_STATUS);
+>>   	u32 mask = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_MASK);
+>> +	pci_power_t state;
+>>   	u32 dstate, val;
+>>   
+>>   	writel_relaxed(status, pcie_ep->parf + PARF_INT_ALL_CLEAR);
+>> @@ -583,11 +584,16 @@ static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
+>>   		dstate = dw_pcie_readl_dbi(pci, DBI_CON_STATUS) &
+>>   					   DBI_CON_STATUS_POWER_STATE_MASK;
+>>   		dev_dbg(dev, "Received D%d state event\n", dstate);
+> We should also change this debug output to make use of pci_power_name() based on
+> the "state" variable and move it just above pci_epc_dstate_change(). But this
+> should be a separate patch.
+I will add a seperate patch in the same series
+>
+>> +		state = dstate;
+>>   		if (dstate == 3) {
+>>   			val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
+>>   			val |= PARF_PM_CTRL_REQ_EXIT_L1;
+>>   			writel_relaxed(val, pcie_ep->parf + PARF_PM_CTRL);
+>> +			state = PCI_D3hot;
+>> +			if (gpiod_get_value(pcie_ep->reset))
+>> +				state = PCI_D3cold;
+>>   		}
+>> +		pci_epc_dstate_change(pci->ep.epc, state);
+> Need to change this API as per my comment on patch 1.
 >
 > - Mani
 
-sure I will change to pci_epc_dstate_notity
+sure will change it as you suggested.
 
--KC
+- KC
 
 >
->> +{
->> +	struct pci_epf *epf;
->> +
->> +	if (!epc || IS_ERR(epc))
->> +		return;
->> +
->> +	mutex_lock(&epc->list_lock);
->> +	list_for_each_entry(epf, &epc->pci_epf, list) {
->> +		mutex_lock(&epf->lock);
->> +		if (epf->event_ops && epf->event_ops->dstate_change)
->> +			epf->event_ops->dstate_change(epf, state);
->> +		mutex_unlock(&epf->lock);
->> +	}
->> +	mutex_unlock(&epc->list_lock);
->> +}
->> +EXPORT_SYMBOL_GPL(pci_epc_dstate_change);
->> +
->> +/**
->>    * pci_epc_destroy() - destroy the EPC device
->>    * @epc: the EPC device that has to be destroyed
->>    *
->> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
->> index 5cb6940..26a1108 100644
->> --- a/include/linux/pci-epc.h
->> +++ b/include/linux/pci-epc.h
->> @@ -251,4 +251,5 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
->>   				     phys_addr_t *phys_addr, size_t size);
->>   void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
->>   			   void __iomem *virt_addr, size_t size);
->> +void pci_epc_dstate_change(struct pci_epc *epc, pci_power_t state);
->>   #endif /* __LINUX_PCI_EPC_H */
->> diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
->> index 4b52807..1d3c2a2 100644
->> --- a/include/linux/pci-epf.h
->> +++ b/include/linux/pci-epf.h
->> @@ -79,6 +79,7 @@ struct pci_epc_event_ops {
->>   	int (*link_up)(struct pci_epf *epf);
->>   	int (*link_down)(struct pci_epf *epf);
->>   	int (*bme)(struct pci_epf *epf);
->> +	int (*dstate_change)(struct pci_epf *epf, pci_power_t state);
->>   };
->>   
->>   /**
+>>   	} else if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
+>>   		dev_dbg(dev, "Received Linkup event. Enumeration complete!\n");
+>>   		dw_pcie_ep_linkup(&pci->ep);
 >> -- 
 >> 2.7.4
 >>
