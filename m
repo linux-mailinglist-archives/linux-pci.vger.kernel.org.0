@@ -2,98 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29F9F74B141
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jul 2023 14:47:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCAAF74B1C5
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jul 2023 15:29:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231745AbjGGMre (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jul 2023 08:47:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37220 "EHLO
+        id S231799AbjGGN3i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jul 2023 09:29:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229753AbjGGMre (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jul 2023 08:47:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7344124;
-        Fri,  7 Jul 2023 05:47:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 548AE61997;
-        Fri,  7 Jul 2023 12:47:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A32AAC433C7;
-        Fri,  7 Jul 2023 12:47:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688734050;
-        bh=aIGBVnL4h550uklj+CUMoa+LNgGz6m/8MWw5loKY/Dk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U55sAdF24LuBpmMzrBY8PF4P+pcjfEHWJnDCWYRbE9X3jPFEbEmrw9/sTaHxQ4qnR
-         zTB8+hGehm2JZgcMQPW3zSkowkH5D6Ay1sslWMka9pHR03d6zYos/DzSv3uZOAQyx/
-         K8Bl9btbJeZWHrYpD8jWq1WMRMEXnZkIa6+P+SMvVLpn4u4x+VLYTfgoupbjOIR4E8
-         lvrFtJqLr4Ky/qCWFLxYUyJUw6FtFwoA+UnUqdGPGkY/lKl8VsKxTuXPy2rDfKJm9J
-         E+6wlHya/uA5YqLio50yZfe7vFB9hPCyQX691xl33ikT6AEbapNZzIM0zKGOxtT+5M
-         cH1eFd8j6Mbwg==
-Received: from johan by xi.lan with local (Exim 4.96)
-        (envelope-from <johan@kernel.org>)
-        id 1qHksO-0007lO-21;
-        Fri, 07 Jul 2023 14:47:56 +0200
-Date:   Fri, 7 Jul 2023 14:47:56 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Johan Hovold <johan+linaro@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        Sajid Dalvi <sdalvi@google.com>,
-        Ajay Agarwal <ajayagarwal@google.com>
-Subject: Re: [PATCH] Revert "PCI: dwc: Wait for link up only if link is
- started"
-Message-ID: <ZKgJfG5Mi-e77LQT@hovoldconsulting.com>
-References: <20230706082610.26584-1-johan+linaro@kernel.org>
- <20230706125811.GD4808@thinkpad>
+        with ESMTP id S232181AbjGGN3h (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jul 2023 09:29:37 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E424D2118
+        for <linux-pci@vger.kernel.org>; Fri,  7 Jul 2023 06:29:35 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-656bc570a05so359402b3a.0
+        for <linux-pci@vger.kernel.org>; Fri, 07 Jul 2023 06:29:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688736575; x=1691328575;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DupNh7fnA3eo1sAlqzoBLQHM+Z+4Cc4oLL6Nx5C1EmY=;
+        b=gZReAgklny50fFzmsC3EkeE+3qiZey+kcqm/533Y2CMWwVF5e0o55OhIxegfOLB76m
+         PUvAXjezHUYkah8JH7/mam9gDznrRu/JWm/b8oE4+A5qE3dprAMTbO4L9yv61KV6S68F
+         ZU3NyvnTcZyuj2WAoU8jiHeWhtIZ07U31zGLVeIt4lhfLfOBeNTHJpM5RZBxSOhF1a61
+         zAejfhBIDOpWUOIahDvwTEqV2lbOprSR9WpdvcjR+DOU7aiUnIpMHlBFwGbIdK3KQKfa
+         qIPXTZRuQKgX+Wr2VlvzBxqkN7oc3FG/+GGtYny8ssXuQnzfINx6BiMVgweO/ZMAnNwH
+         v/EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688736575; x=1691328575;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DupNh7fnA3eo1sAlqzoBLQHM+Z+4Cc4oLL6Nx5C1EmY=;
+        b=BLBa+JV/9vj47Ku7CN0HJsBWTVFA4KZrweJOz8EP7L/6P5NRjF6LDHVoDQn4XUcgHV
+         mWk0zEhhhbL31EbJETH/h6AyeM80yBkM9LmPup90mISGq1O9fr4W30S2VtVUCCzT8BiC
+         ws5DRat5K7ja7im2FjPSrSQD9pAJvRnJbC/zSlwZtiq7KdAWkUxfkuTSbBrPebU8FvjI
+         8ffvikV47Y0JDXmkDL2s05+YmiJmIQgd4ctrBJElGZwz+D8PEWetQ6iQQsH8YZfwpc4Z
+         orXTri9n0ImLbsu2rZ7ASPdroRxVRTYdpmWcw9yrNoF7iEsB8ARbofjL5l6b400rszaY
+         rJCg==
+X-Gm-Message-State: ABy/qLYkpI2afLtfg8+60nSLwhWGpQvmuUTuyrA1Ed4oQYj29H2lsI7h
+        FxHq0VOekwDcDjxUoBZaTuqAn8a0zM/mAnb8zb8=
+X-Google-Smtp-Source: APBJJlFIc35596BF7QhE/kwcjrni4Eb15XdhBhhdYN9aqYTU0XYHqqdYsbMUOPuuaKp7nD3rba1zgLFwlbQTK8DON00=
+X-Received: by 2002:a05:6a20:7495:b0:12d:2abe:549a with SMTP id
+ p21-20020a056a20749500b0012d2abe549amr5477507pzd.6.1688736575308; Fri, 07 Jul
+ 2023 06:29:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230706125811.GD4808@thinkpad>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230704122635.1362156-1-festevam@gmail.com>
+In-Reply-To: <20230704122635.1362156-1-festevam@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Fri, 7 Jul 2023 10:29:24 -0300
+Message-ID: <CAOMZO5DFBSde4ugR-H87t5igKrE6_MPMOa6kdGFppvo0Oab4mw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: dwc: Do not fail to probe when link is down
+To:     bhelgaas@google.com, johan+linaro@kernel.org
+Cc:     ajayagarwal@google.com, robh@kernel.org, lpieralisi@kernel.org,
+        hongxing.zhu@nxp.com, broonie@kernel.org,
+        linux-pci@vger.kernel.org, kw@linux.com,
+        gustavo.pimentel@synopsys.com, jingoohan1@gmail.com,
+        sdalvi@google.com, Fabio Estevam <festevam@denx.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 06, 2023 at 06:28:11PM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Jul 06, 2023 at 10:26:10AM +0200, Johan Hovold wrote:
+On Tue, Jul 4, 2023 at 9:26=E2=80=AFAM Fabio Estevam <festevam@gmail.com> w=
+rote:
+>
+> From: Fabio Estevam <festevam@denx.de>
+>
+> Since commit da56a1bfbab5 ("PCI: dwc: Wait for link up only if link is
+> started") the following probe error is observed when the PCI link is down=
+:
+>
+> imx6q-pcie 33800000.pcie: Phy link never came up
+> imx6q-pcie: probe of 33800000.pcie failed with error -110
+>
+> The intention of commit 886a9c134755 ("PCI: dwc: Move link handling into
+> common code") was to standardize the behavior of link down as explained
+> in its commit log:
+>
+> "The behavior for a link down was inconsistent as some drivers would fail
+> probe in that case while others succeed. Let's standardize this to
+> succeed as there are usecases where devices (and the link) appear later
+> even without hotplug. For example, a reconfigured FPGA device."
+>
+> Restore the original behavior by ignoring the error from
+> dw_pcie_wait_for_link().
+>
+> Fixes: da56a1bfbab5 ("PCI: dwc: Wait for link up only if link is started"=
+)
+> Signed-off-by: Fabio Estevam <festevam@denx.de>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/=
+pci/controller/dwc/pcie-designware-host.c
+> index cf61733bf78d..af6a7cd060b1 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -492,11 +492,8 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>                 if (ret)
+>                         goto err_remove_edma;
+>
+> -               if (pci->ops && pci->ops->start_link) {
+> -                       ret =3D dw_pcie_wait_for_link(pci);
+> -                       if (ret)
+> -                               goto err_stop_link;
+> -               }
+> +               if (pci->ops && pci->ops->start_link)
+> +                       dw_pcie_wait_for_link(PCI);
 
-> > Finally, note that the intel-gw driver is the only driver currently not
-> > providing a start_link callback and instead starts the link in its
-> > host_init callback, and which may avoid an additional one-second timeout
-> > during probe by making the link-up wait conditional. If anyone cares,
-> > that can be done in a follow-up patch with a proper motivation.
-
-> The offending commit is bogus since it makes the intel-gw _special_ w.r.t
-> waiting for the link up. Most of the drivers call dw_pcie_host_init() during the
-> probe time and they all have to wait for 1 sec if the slot is empty.
-
-Just to clarify, the intel-gw driver starts the link and waits for link
-up in its host_init() callback, which is called during probe. That wait
-could possibly just be dropped in favour of the one in
-dw_pcie_host_init() and/or the driver could be reworked to implement
-start_link().
-
-Either way, the call in dw_pcie_host_init() will only add an additional
-1 second delay in cases where the link did *not* come up.
-
-> As Johan noted, intel-gw should make use of the async probe to avoid the boot
-> delay instead of adding a special case.
-
-Indeed.
-
-Johan
+We can discard this one as Johan sent a patch doing the full revert:
+https://lkml.org/lkml/2023/7/6/204
