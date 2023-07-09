@@ -2,131 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92DEB74B3E1
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jul 2023 17:12:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2556B74C13F
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Jul 2023 08:17:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232617AbjGGPMU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jul 2023 11:12:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51758 "EHLO
+        id S233200AbjGIGQp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 9 Jul 2023 02:16:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233352AbjGGPMR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jul 2023 11:12:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E268213C;
-        Fri,  7 Jul 2023 08:12:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BE619619D3;
-        Fri,  7 Jul 2023 15:12:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7BDAC433C8;
-        Fri,  7 Jul 2023 15:12:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688742731;
-        bh=Ya0LfXrJm2rcUDVejC5YdLCrCcxE/mUzk/Zqpcvn0TI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FitX0YVhEKf14hYzYIjYke+cBCO98TDEt32PMkOsaT/udyzSouFno+mb6mSFyXXcM
-         27Qe6wy4y3zrlvCH2j+hQMCykLwg8DS0zy0wW968EMHOvNtH6AXv3Ib+4htPbKsMJJ
-         tsFuvtoxiFfobvUdw4JVQG1syV8Rgx0vgPxmWuEcejrtUGRHs3d66znDOBPhhovb8x
-         +e4505LaicY8G9K8WZqJ+3FrrsE5c3LRfeem9XC4CHQh8fN+shOLFflhcJe+eJoB2s
-         IyfUPrPyrwmVWpVYleW48JQqDNFdZmvrWKJGaAN0xdFBXY/WBGi393Ne6KmSzNxmEz
-         4g6EBVLyh6Iiw==
-Date:   Fri, 7 Jul 2023 10:12:09 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dan Carpenter <dan.carpenter@linaro.org>
-Cc:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        manivannan.sadhasivam@linaro.org, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
-        krzysztof.kozlowski@linaro.org,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Jeffrey Hugo <quic_jhugo@quicinc.com>,
-        Bo Liu <liubo03@inspur.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Carpenter <error27@gmail.com>,
-        "open list:MHI BUS" <mhi@lists.linux.dev>
-Subject: Re: [PATCH v3 9/9] bus: mhi: ep: wake up host is the MHI state is in
- M3
-Message-ID: <20230707151209.GA139708@bhelgaas>
+        with ESMTP id S233174AbjGIGQo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 Jul 2023 02:16:44 -0400
+Received: from mail-yw1-x1142.google.com (mail-yw1-x1142.google.com [IPv6:2607:f8b0:4864:20::1142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473BE1BB
+        for <linux-pci@vger.kernel.org>; Sat,  8 Jul 2023 23:16:43 -0700 (PDT)
+Received: by mail-yw1-x1142.google.com with SMTP id 00721157ae682-5701e8f2b79so42754197b3.0
+        for <linux-pci@vger.kernel.org>; Sat, 08 Jul 2023 23:16:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688883402; x=1691475402;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CmlwvXEoimVTfsyyyYai0GQlqo3zzXGhdH5Gfvmx5TY=;
+        b=Bp5MLvKPSk5zMbAC/lttAdgyhC6wqBrx20Zr6vebn+/0U+fjSDRgD/l9Z5tUmJ67TZ
+         vtzfcWzCq9eFkMP1wm+iNthhOOTdTMAUfemY994pc1Vcsk4/nHlq8vIM1LCGXMdPOrUB
+         U21MpugVWLPMpmOSYigcx5pHCVVItOA+ZqUaxPGgfysELso1+wGqj5Wnp62wcEm71XOm
+         jOBl38WhtzxvBwD6cak1rDdOdkhOBhT4JC7yK2jyZ/IDmbDwPOivr0BGiSqOgEtQettM
+         pmH+KLXC9g90nw9aDDvE8KlonfY/glvE4j5x+XvvndwhZJNCtombGtVRls7GTt5eWP3J
+         39bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688883402; x=1691475402;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CmlwvXEoimVTfsyyyYai0GQlqo3zzXGhdH5Gfvmx5TY=;
+        b=R8RyeyRdmUA4BzpambqPEGY/GBNZqNbcl7FieB5vyx8FtZHBLlEodzGMkPUe8RobHq
+         vXuwhFoW/45LJ9sx2dvTBSdHedIOe1fbexhtK2wlr1LQTWfIX+8QowrqC1fgtXJumbcT
+         e5HF835avNFllv9NWorPcMmlYhnILAeIRcajCv1tCqaJQvwEa/i5izHcYhqU3SjSk69h
+         hxFWVoZaORrnybU00o+iQ6LKbR0X/aalg5r0zH6LQ5a9zvCX9A/v34Sm7Mq7Kn2GrgHa
+         A3T8Sqz6SZC9CzLoKCApBV3U8Om1mDuclwVAj9qp/XWxa77lhWhNJlh5T0GCdcRcs/j9
+         O82Q==
+X-Gm-Message-State: ABy/qLY49XvGRL3V02+paloFaY3eOg2z1KRIdtYAnpXoG5fCJDX68L06
+        hdAW4XYWX5tkw2vOjiC7YQ+pVTRWlfpw1XHjLIk=
+X-Google-Smtp-Source: APBJJlHDyeGMLRJh1TqEFXuQL5gNHvL979NAqymoRu2852sJo5Wc5PVm71x+nJyUxH/c+0ShKcWO/9pWFC+1aec0z8Q=
+X-Received: by 2002:a81:5f83:0:b0:576:b52d:4946 with SMTP id
+ t125-20020a815f83000000b00576b52d4946mr9750194ywb.30.1688883402409; Sat, 08
+ Jul 2023 23:16:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <05b4d009-b50b-4971-9220-615f73db4acd@kadam.mountain>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:7010:6211:b0:35e:b32a:1b89 with HTTP; Sat, 8 Jul 2023
+ 23:16:40 -0700 (PDT)
+Reply-To: ninacoulibaly03@hotmail.com
+From:   nina coulibaly <coulibalynina15@gmail.com>
+Date:   Sun, 9 Jul 2023 06:16:40 +0000
+Message-ID: <CA+8Vp3Va6YuVNky0j3E1UYrYwr56aeg2aKtMxvgOUsLM-3zVTw@mail.gmail.com>
+Subject: from nina coulibaly
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 07, 2023 at 02:41:57PM +0300, Dan Carpenter wrote:
-> On Fri, Jul 07, 2023 at 04:33:56PM +0530, Krishna chaitanya chundru wrote:
-> > If the MHI state is in M3 then the most probably the host kept the
-> > device in D3 hot or D3 cold, due to that endpoint transctions will not
-> > be read by the host, so endpoint wakes up host to bring the host to D0
-> > which eventually bring back the MHI state to M0.
-> > 
-> > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> > ---
-> >  drivers/bus/mhi/ep/main.c | 28 ++++++++++++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
-> > 
-> > diff --git a/drivers/bus/mhi/ep/main.c b/drivers/bus/mhi/ep/main.c
-> > index 6008818..46a8a3c 100644
-> > --- a/drivers/bus/mhi/ep/main.c
-> > +++ b/drivers/bus/mhi/ep/main.c
-> > @@ -25,6 +25,27 @@ static DEFINE_IDA(mhi_ep_cntrl_ida);
-> >  static int mhi_ep_create_device(struct mhi_ep_cntrl *mhi_cntrl, u32 ch_id);
-> >  static int mhi_ep_destroy_device(struct device *dev, void *data);
-> >  
-> > +static bool mhi_ep_wake_host(struct mhi_ep_cntrl *mhi_cntrl)
-> > +{
-> > +	enum mhi_state state;
-> > +	bool mhi_reset;
-> > +	u32 count = 0;
-> > +
-> > +	mhi_cntrl->wakeup_host(mhi_cntrl);
-> > +
-> > +	/* Wait for Host to set the M0 state */
-> > +	do {
-> > +		msleep(M0_WAIT_DELAY_MS);
-> > +		mhi_ep_mmio_get_mhi_state(mhi_cntrl, &state, &mhi_reset);
-> > +		count++;
-> > +	} while (state != MHI_STATE_M0 && count < M0_WAIT_COUNT);
-> > +
-> >+	if (state != MHI_STATE_M0)
-> >+		return false;
-> 
-> Functions which return false on success are an abomination.  Also
-> boolean functions should be named for the question they answer such
-> as access_ok() or has_feature() etc.
+Dear,
 
-+1.  Also nice if boolean functions do not have side effects, so in
-this case, where mhi_ep_wake_host() *does* something that might fail,
-I think "return 0 for success or negative error value" is easier to
-read.
+Please grant me the permission to share important discussion with you.
+I am looking forward to hearing from you at your earliest convenience.
 
-> Write it like this:
-> 
-> static int mhi_ep_wake_host(struct mhi_ep_cntrl *mhi_cntrl)
-> {
-> 	enum mhi_state state;
-> 	bool mhi_reset;
-> 	int count = 0;
-> 
-> 	mhi_cntrl->wakeup_host(mhi_cntrl);
-> 
-> 	while (count++ < M0_WAIT_COUNT) {
-> 		msleep(M0_WAIT_DELAY_MS);
-> 
-> 		mhi_ep_mmio_get_mhi_state(mhi_cntrl, &state, &mhi_reset);
-> 		if (state == MHI_STATE_M0)
-> 			return 0;
-> 	}
-> 	return -ENODEV;
-> }
+Best Regards.
+
+Mrs. Nina Coulibaly
