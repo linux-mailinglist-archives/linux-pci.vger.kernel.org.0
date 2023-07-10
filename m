@@ -2,59 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD56374D1A9
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jul 2023 11:35:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 871AB74D4E4
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jul 2023 14:04:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232276AbjGJJfF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jul 2023 05:35:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54374 "EHLO
+        id S229786AbjGJMEk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jul 2023 08:04:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232060AbjGJJeV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jul 2023 05:34:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFE1319BD;
-        Mon, 10 Jul 2023 02:33:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 46E5D60F08;
-        Mon, 10 Jul 2023 09:33:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53CDDC433C9;
-        Mon, 10 Jul 2023 09:33:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688981608;
-        bh=FW512bUwkwbM2sy7ptkYcIAJbw1Ta8o+HZebnXCuO88=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=He4q2bK6D80vP+DQ/jaf1J+NOI/0R6OPlkwZ3y5E95rFHLYWZ9awDrai2qkjExRyd
-         gJfQGaMaju4ILkuRuF/q6RFu81lAy9sg6tqbvE9yZBdf6lAezqwscANAkLYKT5wAhL
-         Q0XjEBW70dHodiRkJCViA/Nfa64qOv3R/WopbvRh/85wr3Y4OP2wa+TKq/l6JlFAng
-         yhCReC2ixa98lw64Aph+DrCtVigLbNavv95aXKklejb6LJ1PsRrqiMcwCX/XFnV1LX
-         KXW6+OqOVpDcgqnR4ruXx3AfmoUvYw/2Gqrtx9oy9impncy7iK+AGFa0C4lfwpHtcO
-         Tv32nRhmEXfuw==
-Date:   Mon, 10 Jul 2023 10:33:23 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Huacai Chen <chenhuacai@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        loongson-kernel@lists.loongnix.cn, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v5] PCI: Align pci memory space base address with page
- size
-Message-ID: <20230710093323.GB32673@willie-the-truck>
-References: <20230619014715.3792883-1-maobibo@loongson.cn>
- <f676d9e0-bb88-283a-5189-f1ae945ee4dd@loongson.cn>
- <bdc6eb71-482d-5dd6-d527-c2f2f68dfb38@loongson.cn>
- <CAAhV-H7_Rjv-ySorjbw0f4OiV4J0-N75fmUNBCmeJbeeydJu4Q@mail.gmail.com>
+        with ESMTP id S229892AbjGJMEj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jul 2023 08:04:39 -0400
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A94D6F9;
+        Mon, 10 Jul 2023 05:04:36 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R611e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Vn3FTsx_1688990670;
+Received: from 30.240.113.134(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vn3FTsx_1688990670)
+          by smtp.aliyun-inc.com;
+          Mon, 10 Jul 2023 20:04:32 +0800
+Message-ID: <161dc5b6-7c20-ea8c-2efb-9594e94df2d3@linux.alibaba.com>
+Date:   Mon, 10 Jul 2023 20:04:29 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H7_Rjv-ySorjbw0f4OiV4J0-N75fmUNBCmeJbeeydJu4Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.12.0
+Subject: Re: [PATCH v6 0/4] drivers/perf: add Synopsys DesignWare PCIe PMU
+ driver support
+Content-Language: en-US
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+To:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
+        helgaas@kernel.org, yangyicong@huawei.com, will@kernel.org,
+        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
+        robin.murphy@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, rdunlap@infradead.org,
+        mark.rutland@arm.com, zhuo.song@linux.alibaba.com
+References: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
+ <204e3891-c041-53ae-a965-f3abec2cc091@linux.alibaba.com>
+In-Reply-To: <204e3891-c041-53ae-a965-f3abec2cc091@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-10.0 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,26 +49,144 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jul 09, 2023 at 05:19:57PM +0800, Huacai Chen wrote:
-> On Fri, Jul 7, 2023 at 10:47 AM bibo mao <maobibo@loongson.cn> wrote:
-> >
-> > Bjourn, Hucai,
-> >
-> > ping again.
-> >
-> > The is such issue on only LoongArch system since 16K page size is used.
-> >
-> > Should we add code in general framework  or in LoongArch specified code
-> > in v1?
-> Though I still don't know why others have no problems. But it is
-> surely a bug on LoongArch. So if Bjorn has no objections, please use
-> the old method (just like v1 but you can simply align to page size
-> unconditionally).
 
-The initial assertion is that this is a problem for any architecture with
-a page-size > 4K, so there's nothing LoongArch-specific about that on paper.
 
-More likely, we've only just come out of the merge window so I suggest a
-little patience is probably all that is needed.
+On 2023/6/16 16:39, Shuai Xue wrote:
+> 
+> 
+> On 2023/6/6 15:49, Shuai Xue wrote:
+>> changes since v5:
+>> - Rewrite the commit log to follow policy in pci_ids.h (Bjorn Helgaas)
+>> - return error code when __dwc_pcie_pmu_probe failed (Baolin Wang)
+>> - call 'cpuhp_remove_multi_state()' when exiting the driver. (Baolin Wang)
+>> - pick up Review-by tag from Baolin for Patch 1 and 3
+>>
+>> changes since v4:
+>>
+>> 1. addressing commens from Bjorn Helgaas:
+>> - reorder the includes by alpha
+>> - change all macros with upper-case hex
+>> - change ras_des type into u16
+>> - remove unnecessary outer "()"
+>> - minor format changes
+>>
+>> 2. Address commensts from Jonathan Cameron:
+>> - rewrite doc and add a example to show how to use lane event
+>>
+>> 3. fix compile error reported by: kernel test robot
+>> - remove COMPILE_TEST and add depend on PCI in kconfig
+>> - add Reported-by: kernel test robot <lkp@intel.com>
+>>
+>> Changes since v3:
+>>
+>> 1. addressing comments from Robin Murphy:
+>> - add a prepare patch to define pci id in linux/pci_ids.h
+>> - remove unnecessary 64BIT dependency
+>> - fix DWC_PCIE_PER_EVENT_OFF/ON macro
+>> - remove dwc_pcie_pmu struct and move all its fileds into dwc_pcie_rp_info
+>> - remove unnecessary format field show
+>> - use sysfs_emit() instead of all the assorted sprintf() and snprintf() calls.
+>> - remove unnecessary spaces and remove unnecessary cast to follow event show convention
+>> - remove pcie_pmu_event_attr_is_visible
+>> - fix a refcout leak on error branch when walk pci device in for_each_pci_dev
+>> - remove bdf field from dwc_pcie_rp_info and calculate it at runtime
+>> - finish all the checks before allocating rp_info to avoid hanging wasted memory
+>> - remove some unused fields
+>> - warp out control register configuration from sub function to .add()
+>> - make function return type with a proper signature
+>> - fix lane event count enable by clear DWC_PCIE_CNT_ENABLE field first
+>> - pass rp_info directly to the read_*_counter helpers and in start, stop and add callbacks
+>> - move event type validtion into .event_init()
+>> - use is_sampling_event() to be consistent with everything else of pmu drivers
+>> - remove unnecessary dev_err message in .event_init()
+>> - return EINVAL instead EOPNOTSUPP for not a valid event 
+>> - finish all the checks before start modifying the event
+>> - fix sibling event check by comparing event->pmu with sibling->pmu
+>> - probe PMU for each rootport independently
+>> - use .update() as .read() directly
+>> - remove dynamically generating symbolic name of lane event
+>> - redefine static symbolic name of lane event and leave lane filed to user
+>> - add CPU hotplug support
+>>
+>> 2. addressing comments from Baolin:
+>> - add a mask to avoid possible overflow
+>>
+>> Changes since v2 addressing comments from Baolin:
+>> - remove redundant macro definitions
+>> - use dev_err to print error message
+>> - change pmu_is_register to boolean
+>> - use PLATFORM_DEVID_NONE macro
+>> - fix module author format
+>>
+>> Changes since v1:
+>>
+>> 1. address comments from Jonathan:
+>> - drop marco for PMU name and VSEC version
+>> - simplify code with PCI standard marco
+>> - simplify code with FIELD_PREP()/FIELD_GET() to replace shift marco
+>> - name register filed with single _ instead double
+>> - wrap dwc_pcie_pmu_{write}_dword out and drop meaningless snaity check 
+>> - check vendor id while matching vesc with pci_find_vsec_capability()
+>> - remove RP_NUM_MAX and use a list to organize PMU devices for rootports
+>> - replace DWC_PCIE_CREATE_BDF with standard PCI_DEVID
+>> - comments on riping register together
+>>
+>> 2. address comments from Bjorn:
+>> - rename DWC_PCIE_VSEC_ID to DWC_PCIE_VSEC_RAS_DES_ID
+>> - rename cap_pos to ras_des
+>> - simplify declare of device_attribute with DEVICE_ATTR_RO
+>> - simplify code with PCI standard macro and API like pcie_get_width_cap()
+>> - fix some code style problem and typo
+>> - drop meaningless snaity check of container_of
+>>
+>> 3. address comments from Yicong:
+>> - use sysfs_emit() to replace sprintf()
+>> - simplify iteration of pci device with for_each_pci_dev
+>> - pick preferred CPUs on a near die and add comments
+>> - unregister PMU drivers only for failed ones
+>> - log on behalf PMU device and give more hint
+>> - fix some code style problem
+>>
+>> (Thanks for all comments and they are very valuable to me)
+>>
+>> This patchset adds the PCIe Performance Monitoring Unit (PMU) driver support
+>> for T-Head Yitian 710 SoC chip. Yitian 710 is based on the Synopsys PCI Express
+>> Core controller IP which provides statistics feature.
+>>
+>> Shuai Xue (4):
+>>   docs: perf: Add description for Synopsys DesignWare PCIe PMU driver
+>>   PCI: Add Alibaba Vendor ID to linux/pci_ids.h
+>>   drivers/perf: add DesignWare PCIe PMU driver
+>>   MAINTAINERS: add maintainers for DesignWare PCIe PMU driver
+>>
+>>  .../admin-guide/perf/dwc_pcie_pmu.rst         |  97 +++
+>>  Documentation/admin-guide/perf/index.rst      |   1 +
+>>  MAINTAINERS                                   |   6 +
+>>  drivers/infiniband/hw/erdma/erdma_hw.h        |   2 -
+>>  drivers/perf/Kconfig                          |   7 +
+>>  drivers/perf/Makefile                         |   1 +
+>>  drivers/perf/dwc_pcie_pmu.c                   | 706 ++++++++++++++++++
+>>  include/linux/pci_ids.h                       |   2 +
+>>  8 files changed, 820 insertions(+), 2 deletions(-)
+>>  create mode 100644 Documentation/admin-guide/perf/dwc_pcie_pmu.rst
+>>  create mode 100644 drivers/perf/dwc_pcie_pmu.c
+>>
+> 
+> Hi, all,
+> 
+> Gently ping. Any comments are welcomed.
 
-Will
+
+Hi, all,
+
+Gentle ping.
+
+
+> 
+> Thank you.
+>
+> 
+> Best Regards,
+> Shuai
+> 
+> 
