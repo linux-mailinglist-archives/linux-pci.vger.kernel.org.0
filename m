@@ -2,52 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3396774E21E
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 01:14:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D543374E229
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 01:22:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230413AbjGJXO3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jul 2023 19:14:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48130 "EHLO
+        id S229931AbjGJXVp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jul 2023 19:21:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231134AbjGJXO1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jul 2023 19:14:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 014E5137;
-        Mon, 10 Jul 2023 16:14:27 -0700 (PDT)
+        with ESMTP id S229658AbjGJXVo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jul 2023 19:21:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0C8D9E;
+        Mon, 10 Jul 2023 16:21:43 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 948FF6125F;
-        Mon, 10 Jul 2023 23:14:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9602C433C8;
-        Mon, 10 Jul 2023 23:14:25 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5456B61236;
+        Mon, 10 Jul 2023 23:21:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 897F3C433C7;
+        Mon, 10 Jul 2023 23:21:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689030866;
-        bh=3pacJFdrciplk9UTyYfKnVqmTOkTDznXreLebZgCpcc=;
+        s=k20201202; t=1689031302;
+        bh=0ZZzAlML7PigSYIRwkyWGmOeNW5UQGLxmRIiOlnen3o=;
         h=From:To:Cc:Subject:Date:From;
-        b=FFa1cwZMYTNEk2+uKOfl/u+Z354qKOEXsU7dCcJNHIgSwW3g81vYZuz+hbnKvFKHJ
-         TwCwS1KkJzzi2H6SiZnQY8tlT13Js5S3z4dxDXczn3VEVUGwV+MhTDwxWawomkIPZN
-         DuQzYbNxYHwFiTK8quELngQuJ+onwLUNBvK29jwcgyR3OHWncK9CsjzClfxOWXUiwl
-         OD+y4x3gRviZCmYPG+lPvvx0lGr/HREp/B4kNTUHUWrOhF8BM28cgTFH8hNFM0vL9o
-         gTBfHPFSgaVmbrP4qP9oML6CUJBSBLLz+HExEWfdcNBQ/4Mp6qJLRoUke6uiqVQ3Co
-         Keod6VwjvIbfA==
+        b=bIL6XKUt8RG31HcS15ahZRfdOQmvVbNkmtd2+Cx3ezDsVLDdgPBiJuF9+YEVlfea5
+         VzI4BSqQaVNU+uatKjMcOXzW/rCiNI87ipZJw6EyWooMDB/lRO5BxFjDQuMjyT+UDd
+         /KJM7qXX42KlIIUtjwU2w4bhaPtYL/gjsi4kFJII4jqalchP/2BA56dToHdqrY60Xx
+         14XdoZ0+6mO5P1H+xDjUcirb5LWlMTsq5O10a9XIXPGr8SFsj/BE5PMvu7SNWHTWmr
+         vs0igRzgiAjyG98DMzT7raGU+8qDsqcg+WuqDRDqYg5UX9j3mCJ0tyozp5xB4oz1Py
+         S8RpdFcFwOZGA==
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] cxl/pci: Remove unnecessary aer.h include
-Date:   Mon, 10 Jul 2023 18:14:16 -0500
-Message-Id: <20230710231416.232751-1-helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 0/2] PCI/AER: Remove/unexport error reporting enable/disable
+Date:   Mon, 10 Jul 2023 18:21:34 -0500
+Message-Id: <20230710232136.233034-1-helgaas@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -58,30 +56,18 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-<linux/aer.h> is unused, so remove it.
+pci_disable_pcie_error_reporting() is unused; remove it.
+pci_enable_pcie_error_reporting() is used only inside aer.c; make it
+static.
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Ben Widawsky <bwidawsk@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
----
- drivers/cxl/pci.c | 1 -
- 1 file changed, 1 deletion(-)
+Bjorn Helgaas (2):
+  PCI/AER: Drop unused pci_disable_pcie_error_reporting()
+  PCI/AER: Unexport pci_enable_pcie_error_reporting()
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 1cb1494c28fe..8314cf2ac16a 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -8,7 +8,6 @@
- #include <linux/mutex.h>
- #include <linux/list.h>
- #include <linux/pci.h>
--#include <linux/aer.h>
- #include <linux/io.h>
- #include "cxlmem.h"
- #include "cxlpci.h"
+ drivers/pci/pcie/aer.c | 15 +--------------
+ include/linux/aer.h    | 11 -----------
+ 2 files changed, 1 insertion(+), 25 deletions(-)
+
 -- 
 2.34.1
 
