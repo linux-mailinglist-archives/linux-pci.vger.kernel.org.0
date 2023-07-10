@@ -2,191 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 871AB74D4E4
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jul 2023 14:04:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50F8C74D71F
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jul 2023 15:12:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbjGJMEk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jul 2023 08:04:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51474 "EHLO
+        id S230492AbjGJNME (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jul 2023 09:12:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229892AbjGJMEj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jul 2023 08:04:39 -0400
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A94D6F9;
-        Mon, 10 Jul 2023 05:04:36 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R611e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Vn3FTsx_1688990670;
-Received: from 30.240.113.134(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vn3FTsx_1688990670)
-          by smtp.aliyun-inc.com;
-          Mon, 10 Jul 2023 20:04:32 +0800
-Message-ID: <161dc5b6-7c20-ea8c-2efb-9594e94df2d3@linux.alibaba.com>
-Date:   Mon, 10 Jul 2023 20:04:29 +0800
+        with ESMTP id S231176AbjGJNL5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jul 2023 09:11:57 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A28EB194;
+        Mon, 10 Jul 2023 06:11:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1688994704; x=1720530704;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=DJgY4ciUiCYZnuYn9MihHuASvS84fRZSA2ENwfBYIiU=;
+  b=LUorezlukmWp3Vh4ech/a7g+ulF1IxEc7VJO5c+BGVmDUff7pA9Ukgwn
+   uGkuz3F/rm22RAmzHM4vCHPV9dLIQ4meXDXdIaujYCcF5+tCUIgNa6dGV
+   D0htRAFM887s4Xpu6e6pDt+Ply7H+EAhVxR6jzxmY2icYrnBITrvNAJzW
+   SeUR43FgYoMxeqprniKUa+dV2dRp0Q5lFgO6xqRW7Ok13DC64PtjBDK4J
+   xMxQIL6gJsLp2fQjCd81XyQlUjyPfJM/3EtscKgpPh/qT36BFj+jiXE7v
+   xUW8m48FSiiaKlv5VwSgsCIcuAm7ioB8/5YzpVCAq/VM0MIfx61lf/w+i
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="344665577"
+X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
+   d="scan'208";a="344665577"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 06:11:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="697985342"
+X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
+   d="scan'208";a="697985342"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga006.jf.intel.com with ESMTP; 10 Jul 2023 06:11:40 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 1152F1FC; Mon, 10 Jul 2023 16:11:44 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH v1 1/1] range.h: Move resource API and constant to respective headers
+Date:   Mon, 10 Jul 2023 16:11:42 +0300
+Message-Id: <20230710131142.32284-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [PATCH v6 0/4] drivers/perf: add Synopsys DesignWare PCIe PMU
- driver support
-Content-Language: en-US
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-To:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
-        helgaas@kernel.org, yangyicong@huawei.com, will@kernel.org,
-        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
-        robin.murphy@arm.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, rdunlap@infradead.org,
-        mark.rutland@arm.com, zhuo.song@linux.alibaba.com
-References: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
- <204e3891-c041-53ae-a965-f3abec2cc091@linux.alibaba.com>
-In-Reply-To: <204e3891-c041-53ae-a965-f3abec2cc091@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-10.0 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+range.h works with struct range data type. The resource_size_t
+is an alien here. Move the related pieces to the respective
+headers and rename MAX_RESOURCE using pattern ${TYPE}_MAX.
 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ arch/mips/cavium-octeon/setup.c | 2 +-
+ arch/x86/pci/amd_bus.c          | 8 ++++++++
+ arch/x86/pci/bus_numa.c         | 2 +-
+ include/linux/limits.h          | 2 ++
+ include/linux/range.h           | 8 --------
+ 5 files changed, 12 insertions(+), 10 deletions(-)
 
-On 2023/6/16 16:39, Shuai Xue wrote:
-> 
-> 
-> On 2023/6/6 15:49, Shuai Xue wrote:
->> changes since v5:
->> - Rewrite the commit log to follow policy in pci_ids.h (Bjorn Helgaas)
->> - return error code when __dwc_pcie_pmu_probe failed (Baolin Wang)
->> - call 'cpuhp_remove_multi_state()' when exiting the driver. (Baolin Wang)
->> - pick up Review-by tag from Baolin for Patch 1 and 3
->>
->> changes since v4:
->>
->> 1. addressing commens from Bjorn Helgaas:
->> - reorder the includes by alpha
->> - change all macros with upper-case hex
->> - change ras_des type into u16
->> - remove unnecessary outer "()"
->> - minor format changes
->>
->> 2. Address commensts from Jonathan Cameron:
->> - rewrite doc and add a example to show how to use lane event
->>
->> 3. fix compile error reported by: kernel test robot
->> - remove COMPILE_TEST and add depend on PCI in kconfig
->> - add Reported-by: kernel test robot <lkp@intel.com>
->>
->> Changes since v3:
->>
->> 1. addressing comments from Robin Murphy:
->> - add a prepare patch to define pci id in linux/pci_ids.h
->> - remove unnecessary 64BIT dependency
->> - fix DWC_PCIE_PER_EVENT_OFF/ON macro
->> - remove dwc_pcie_pmu struct and move all its fileds into dwc_pcie_rp_info
->> - remove unnecessary format field show
->> - use sysfs_emit() instead of all the assorted sprintf() and snprintf() calls.
->> - remove unnecessary spaces and remove unnecessary cast to follow event show convention
->> - remove pcie_pmu_event_attr_is_visible
->> - fix a refcout leak on error branch when walk pci device in for_each_pci_dev
->> - remove bdf field from dwc_pcie_rp_info and calculate it at runtime
->> - finish all the checks before allocating rp_info to avoid hanging wasted memory
->> - remove some unused fields
->> - warp out control register configuration from sub function to .add()
->> - make function return type with a proper signature
->> - fix lane event count enable by clear DWC_PCIE_CNT_ENABLE field first
->> - pass rp_info directly to the read_*_counter helpers and in start, stop and add callbacks
->> - move event type validtion into .event_init()
->> - use is_sampling_event() to be consistent with everything else of pmu drivers
->> - remove unnecessary dev_err message in .event_init()
->> - return EINVAL instead EOPNOTSUPP for not a valid event 
->> - finish all the checks before start modifying the event
->> - fix sibling event check by comparing event->pmu with sibling->pmu
->> - probe PMU for each rootport independently
->> - use .update() as .read() directly
->> - remove dynamically generating symbolic name of lane event
->> - redefine static symbolic name of lane event and leave lane filed to user
->> - add CPU hotplug support
->>
->> 2. addressing comments from Baolin:
->> - add a mask to avoid possible overflow
->>
->> Changes since v2 addressing comments from Baolin:
->> - remove redundant macro definitions
->> - use dev_err to print error message
->> - change pmu_is_register to boolean
->> - use PLATFORM_DEVID_NONE macro
->> - fix module author format
->>
->> Changes since v1:
->>
->> 1. address comments from Jonathan:
->> - drop marco for PMU name and VSEC version
->> - simplify code with PCI standard marco
->> - simplify code with FIELD_PREP()/FIELD_GET() to replace shift marco
->> - name register filed with single _ instead double
->> - wrap dwc_pcie_pmu_{write}_dword out and drop meaningless snaity check 
->> - check vendor id while matching vesc with pci_find_vsec_capability()
->> - remove RP_NUM_MAX and use a list to organize PMU devices for rootports
->> - replace DWC_PCIE_CREATE_BDF with standard PCI_DEVID
->> - comments on riping register together
->>
->> 2. address comments from Bjorn:
->> - rename DWC_PCIE_VSEC_ID to DWC_PCIE_VSEC_RAS_DES_ID
->> - rename cap_pos to ras_des
->> - simplify declare of device_attribute with DEVICE_ATTR_RO
->> - simplify code with PCI standard macro and API like pcie_get_width_cap()
->> - fix some code style problem and typo
->> - drop meaningless snaity check of container_of
->>
->> 3. address comments from Yicong:
->> - use sysfs_emit() to replace sprintf()
->> - simplify iteration of pci device with for_each_pci_dev
->> - pick preferred CPUs on a near die and add comments
->> - unregister PMU drivers only for failed ones
->> - log on behalf PMU device and give more hint
->> - fix some code style problem
->>
->> (Thanks for all comments and they are very valuable to me)
->>
->> This patchset adds the PCIe Performance Monitoring Unit (PMU) driver support
->> for T-Head Yitian 710 SoC chip. Yitian 710 is based on the Synopsys PCI Express
->> Core controller IP which provides statistics feature.
->>
->> Shuai Xue (4):
->>   docs: perf: Add description for Synopsys DesignWare PCIe PMU driver
->>   PCI: Add Alibaba Vendor ID to linux/pci_ids.h
->>   drivers/perf: add DesignWare PCIe PMU driver
->>   MAINTAINERS: add maintainers for DesignWare PCIe PMU driver
->>
->>  .../admin-guide/perf/dwc_pcie_pmu.rst         |  97 +++
->>  Documentation/admin-guide/perf/index.rst      |   1 +
->>  MAINTAINERS                                   |   6 +
->>  drivers/infiniband/hw/erdma/erdma_hw.h        |   2 -
->>  drivers/perf/Kconfig                          |   7 +
->>  drivers/perf/Makefile                         |   1 +
->>  drivers/perf/dwc_pcie_pmu.c                   | 706 ++++++++++++++++++
->>  include/linux/pci_ids.h                       |   2 +
->>  8 files changed, 820 insertions(+), 2 deletions(-)
->>  create mode 100644 Documentation/admin-guide/perf/dwc_pcie_pmu.rst
->>  create mode 100644 drivers/perf/dwc_pcie_pmu.c
->>
-> 
-> Hi, all,
-> 
-> Gently ping. Any comments are welcomed.
+diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon/setup.c
+index c5561016f577..1ad2602a0383 100644
+--- a/arch/mips/cavium-octeon/setup.c
++++ b/arch/mips/cavium-octeon/setup.c
+@@ -1240,7 +1240,7 @@ static int __init octeon_no_pci_init(void)
+ 	 */
+ 	octeon_dummy_iospace = vzalloc(IO_SPACE_LIMIT);
+ 	set_io_port_base((unsigned long)octeon_dummy_iospace);
+-	ioport_resource.start = MAX_RESOURCE;
++	ioport_resource.start = RESOURCE_SIZE_MAX;
+ 	ioport_resource.end = 0;
+ 	return 0;
+ }
+diff --git a/arch/x86/pci/amd_bus.c b/arch/x86/pci/amd_bus.c
+index dd40d3fea74e..631512f7ec85 100644
+--- a/arch/x86/pci/amd_bus.c
++++ b/arch/x86/pci/amd_bus.c
+@@ -51,6 +51,14 @@ static struct pci_root_info __init *find_pci_root_info(int node, int link)
+ 	return NULL;
+ }
+ 
++static inline resource_size_t cap_resource(u64 val)
++{
++	if (val > RESOURCE_SIZE_MAX)
++		return RESOURCE_SIZE_MAX;
++
++	return val;
++}
++
+ /**
+  * early_root_info_init()
+  * called before pcibios_scan_root and pci_scan_bus
+diff --git a/arch/x86/pci/bus_numa.c b/arch/x86/pci/bus_numa.c
+index 2752c02e3f0e..e4a525e59eaf 100644
+--- a/arch/x86/pci/bus_numa.c
++++ b/arch/x86/pci/bus_numa.c
+@@ -101,7 +101,7 @@ void update_res(struct pci_root_info *info, resource_size_t start,
+ 	if (start > end)
+ 		return;
+ 
+-	if (start == MAX_RESOURCE)
++	if (start == RESOURCE_SIZE_MAX)
+ 		return;
+ 
+ 	if (!merge)
+diff --git a/include/linux/limits.h b/include/linux/limits.h
+index f6bcc9369010..38eb7f6f7e88 100644
+--- a/include/linux/limits.h
++++ b/include/linux/limits.h
+@@ -10,6 +10,8 @@
+ #define SSIZE_MAX	((ssize_t)(SIZE_MAX >> 1))
+ #define PHYS_ADDR_MAX	(~(phys_addr_t)0)
+ 
++#define RESOURCE_SIZE_MAX	((resource_size_t)~0)
++
+ #define U8_MAX		((u8)~0U)
+ #define S8_MAX		((s8)(U8_MAX >> 1))
+ #define S8_MIN		((s8)(-S8_MAX - 1))
+diff --git a/include/linux/range.h b/include/linux/range.h
+index 7efb6a9b069b..6ad0b73cb7ad 100644
+--- a/include/linux/range.h
++++ b/include/linux/range.h
+@@ -31,12 +31,4 @@ int clean_sort_range(struct range *range, int az);
+ 
+ void sort_range(struct range *range, int nr_range);
+ 
+-#define MAX_RESOURCE ((resource_size_t)~0)
+-static inline resource_size_t cap_resource(u64 val)
+-{
+-	if (val > MAX_RESOURCE)
+-		return MAX_RESOURCE;
+-
+-	return val;
+-}
+ #endif
+-- 
+2.40.0.1.gaa8946217a0b
 
-
-Hi, all,
-
-Gentle ping.
-
-
-> 
-> Thank you.
->
-> 
-> Best Regards,
-> Shuai
-> 
-> 
