@@ -2,231 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2F1E74F2E9
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 17:01:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C71174F340
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 17:24:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230507AbjGKPBc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jul 2023 11:01:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60158 "EHLO
+        id S229890AbjGKPYP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jul 2023 11:24:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229801AbjGKPBb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 11:01:31 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED7D010CF;
-        Tue, 11 Jul 2023 08:01:29 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4f954d7309fso7232529e87.1;
-        Tue, 11 Jul 2023 08:01:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689087688; x=1691679688;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AU4XR1QanIyk4Xzx6nQ+M2edqTQrT9XWFJQn7RHLzs4=;
-        b=gIKvGcWiiPfFeHCRGVXMbl80umHW43eLlrhIsWN9WUETqAJKb4dL4Hld0fYSRID48o
-         YDELsiG5iXc0NqDwdeWINSVdjMZU1I6h9lrvlhiYgZCi3XCbwvzoFb5Md6QmvdEPfem6
-         gza6y0LpnfoHZOh2S3EGmHmM9oAYYkWgbbfXV2pzX+y5L7gyjJO8shBpbZE69ygwwkXU
-         ZQSyvJ0FacnJsTyRVGdbbV9FOJIT87colaI8SAd1wfOX1RJSk5TqiM/DBYssoQm9dgCv
-         09TKiTl1rIhMwYKrI4MjVfvREtKFZPlp310+kAS3YU871et58ZTXoFSpVCxtyJztbebW
-         OtQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689087688; x=1691679688;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AU4XR1QanIyk4Xzx6nQ+M2edqTQrT9XWFJQn7RHLzs4=;
-        b=hS2EJLYvMTgGDSTF7Ej8hQrmFBJRdG+FjrIbMRgwt0bnSoIkJER6aecp5hnPmr2qP3
-         ZHkRKmjefNLXFp5mdsIqR/BOcO2ISO2mTBXnkcLtZRF/Is4vGntYpRRtwnk5X39gn1O4
-         4w//YNx9BcYPeMi4J8NRITw6tCW5KVQCObUowXTfOBzJnXEmMmKz+Jju9gGMJSyVhZ0B
-         pjWgBquMxaEbavEHY/a3qH3VkrsNCL83skId9wVG79ig5S1lK2HelHSeppad5plHBGlC
-         2TmlZwnSh/8yoZAC/qLwNK9egwdMcxD9MWSgJ7d0NOKxUUDAvH2P2nJEXSQyxRBtFYro
-         VbZw==
-X-Gm-Message-State: ABy/qLZlrqzpyap9ooKCWp6UzIIPIoZkRiWGc8pIVuyZjgPNdPUTOsu3
-        nImUAcW1hqIAQosyqW2AiYw=
-X-Google-Smtp-Source: APBJJlFIviX7ZB0xBPU8WRhrIbT4iqIJzglUbNZuRqvYBYOwaoZtyzVhGcSuX2qEcihti1RY8BxDbg==
-X-Received: by 2002:a19:910e:0:b0:4f8:1e2a:1de1 with SMTP id t14-20020a19910e000000b004f81e2a1de1mr5408361lfd.29.1689087687836;
-        Tue, 11 Jul 2023 08:01:27 -0700 (PDT)
-Received: from mobilestation ([85.249.18.12])
-        by smtp.gmail.com with ESMTPSA id f15-20020ac2532f000000b004fb745fd232sm353868lfh.30.2023.07.11.08.01.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jul 2023 08:01:27 -0700 (PDT)
-Date:   Tue, 11 Jul 2023 18:01:23 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
-        bhelgaas@google.com, kishon@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v17 06/20] PCI: designware-ep: Add INTx IRQs support
-Message-ID: <leliqp56nmecbzowzxyx7hurdat2styt4itl2yh63vgmc4rvf2@ro3o6w2ox47u>
-References: <20230705114206.3585188-1-yoshihiro.shimoda.uh@renesas.com>
- <20230705114206.3585188-7-yoshihiro.shimoda.uh@renesas.com>
+        with ESMTP id S231839AbjGKPYN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 11:24:13 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62407133;
+        Tue, 11 Jul 2023 08:24:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689089052; x=1720625052;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=la1QVq4HIgIr0eEz8hF9KkZUQTqFiyIfgzdHWOn/i40=;
+  b=oJKaddIgrAjmy0070MOPtU21aJqaP+jghjsDCjOqlSV4qH9ImYbIoP7+
+   xO/zf7U48GENOHTIjjCjfSIKqaq8ygw2SRoyfBo+ree2LQgmX8I9f/A0+
+   Ay4VyoeZ6f+rS9PacyIAEQyXufPPXS4nd4hnaN2dJQFg8fCGgjg0TMMMV
+   atgwbkwzpY/h2HytE3gap/nQNF13x3Z0JJcI2s9f0+GdXCWYkDDKT7ZTm
+   0MLeC2R4YXOoFQz/1X+dP/s/hHW400VDY2RTkXEe8m95hCfAPC1rNPqcV
+   rEY6gNuaBNWoeeu7cg8jdSAOts5magNR03++LAtgOIkeFM+VTKYiUqFKv
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="344246898"
+X-IronPort-AV: E=Sophos;i="6.01,196,1684825200"; 
+   d="scan'208";a="344246898"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 08:24:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="791241368"
+X-IronPort-AV: E=Sophos;i="6.01,196,1684825200"; 
+   d="scan'208";a="791241368"
+Received: from pratipro-mobl1.ger.corp.intel.com (HELO [10.252.44.140]) ([10.252.44.140])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 08:24:09 -0700
+Message-ID: <bc2484ba-3bb2-7d74-fcd1-55c9ec253b9c@linux.intel.com>
+Date:   Tue, 11 Jul 2023 17:24:07 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230705114206.3585188-7-yoshihiro.shimoda.uh@renesas.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.11.0
+Subject: Re: [PATCH 00/13] PCI: Define Intel PCI IDs and use them in drivers
+Content-Language: en-US
+To:     =?UTF-8?Q?Amadeusz_S=c5=82awi=c5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>
+References: <20230711125726.3509391-1-amadeuszx.slawinski@linux.intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <20230711125726.3509391-1-amadeuszx.slawinski@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 05, 2023 at 08:41:52PM +0900, Yoshihiro Shimoda wrote:
-> Add support for triggering INTx IRQs by using outbound iATU.
-> Outbound iATU is utilized to send assert and de-assert INTx TLPs.
-> The message is generated based on the payloadless Msg TLP with type
-> 0x14, where 0x4 is the routing code implying the Terminate at
-> Receiver message. The message code is specified as b1000xx for
-> the INTx assertion and b1001xx for the INTx de-assertion.
 
-Looking good. Feel free to add:
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 
--Serge(y)
-
+On 7/11/23 14:57, Amadeusz Sławiński wrote:
+> PCI IDs for Intel HDA are duplicated across quite a few drivers, due to
+> various configurations and historical reasons. Currently almost all uses
+> of HDA PCI IDs have corresponding comment telling which platform it is.
+> Additionally there are some inconsistencies between drivers about which
+> ID corresponds to which device.
 > 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  .../pci/controller/dwc/pcie-designware-ep.c   | 69 +++++++++++++++++--
->  drivers/pci/controller/dwc/pcie-designware.h  |  2 +
->  2 files changed, 67 insertions(+), 4 deletions(-)
+> Simplify things, by adding PCI IDs to global header and make use of them
+> in drivers. This allows for removal of comments by having IDs themselves
+> being self explanatory. Additionally it allows for removal of existing
+> inconsistencies by having one source of truth.
+
+I'd like to hear from Takashi and Mark on how this would work, we have
+to provide new PCI IDs for both trees using a common 'pci_ids.h' file.
+
+It's not science fiction, we have new PCI IDs for ArrowLake and LunarLake:
+
+https://github.com/thesofproject/linux/pull/4437
+https://github.com/thesofproject/linux/pull/4425
+
+> Changes from RFC:
+>  - Sort Intel PCI IDs before adding new ones
+>  - Fix ordering of new PCI IDs (Andy)
+>  - Define all used Intel IDs (Andy)
+>  - Add macros for controller type detection (Andy/Bjorn)
+>  - Add set of patches changing to use above macro (Andy/Bjorn)
+>  - Use PCI_DEVICE_DATA for Intel IDs in sound/pci/hda/hda_intel.c (Andy)
+>  - Commit message wording (Andy)
+>  - Remove unnecessary tabs (Andy)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index fe2e0d765be9..1d24ebf9686f 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -6,9 +6,11 @@
->   * Author: Kishon Vijay Abraham I <kishon@ti.com>
->   */
->  
-> +#include <linux/delay.h>
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
->  
-> +#include "../../pci.h"
->  #include "pcie-designware.h"
->  #include <linux/pci-epc.h>
->  #include <linux/pci-epf.h>
-> @@ -484,14 +486,60 @@ static const struct pci_epc_ops epc_ops = {
->  	.get_features		= dw_pcie_ep_get_features,
->  };
->  
-> +static int dw_pcie_ep_send_msg(struct dw_pcie_ep *ep, u8 func_no, u8 code,
-> +			       u8 routing)
-> +{
-> +	struct dw_pcie_ob_atu_cfg atu = { 0 };
-> +	struct pci_epc *epc = ep->epc;
-> +	int ret;
-> +
-> +	atu.func_no = func_no;
-> +	atu.code = code;
-> +	atu.routing = routing;
-> +	atu.type = PCIE_ATU_TYPE_MSG;
-> +	atu.cpu_addr = ep->intx_mem_phys;
-> +	atu.size = epc->mem->window.page_size;
-> +
-> +	ret = dw_pcie_ep_outbound_atu(ep, &atu);
-> +	if (ret)
-> +		return ret;
-> +
-> +	writel(0, ep->intx_mem);
-> +
-> +	dw_pcie_ep_unmap_addr(epc, func_no, 0, ep->intx_mem_phys);
-> +
-> +	return 0;
-> +}
-> +
->  int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  	struct device *dev = pci->dev;
-> +	int ret;
->  
-> -	dev_err(dev, "EP cannot trigger INTx IRQs\n");
-> +	if (!ep->intx_mem) {
-> +		dev_err(dev, "INTx not supported\n");
-> +		return -EOPNOTSUPP;
-> +	}
->  
-> -	return -EINVAL;
-> +	/*
-> +	 * Even though the PCI bus specification implies the level-triggered
-> +	 * INTx interrupts the kernel PCIe endpoint framework has a single
-> +	 * PCI_EPC_IRQ_INTx flag defined for the legacy IRQs simulation. Thus
-> +	 * this function sends the Deassert_INTx PCIe TLP after the Assert_INTx
-> +	 * message with the 50 usec duration basically implementing the
-> +	 * rising-edge triggering IRQ. Hopefully the interrupt controller will
-> +	 * still be able to register the incoming IRQ event...
-> +	 */
-> +	ret = dw_pcie_ep_send_msg(ep, func_no, PCI_MSG_CODE_ASSERT_INTA,
-> +				  PCI_MSG_TYPE_R_ROUTING_LOCAL);
-> +	if (ret)
-> +		return ret;
-> +
-> +	usleep_range(50, 100);
-> +
-> +	return dw_pcie_ep_send_msg(ep, func_no, PCI_MSG_CODE_DEASSERT_INTA,
-> +				   PCI_MSG_TYPE_R_ROUTING_LOCAL);
->  }
->  EXPORT_SYMBOL_GPL(dw_pcie_ep_raise_intx_irq);
->  
-> @@ -622,6 +670,10 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
->  
->  	dw_pcie_edma_remove(pci);
->  
-> +	if (ep->intx_mem)
-> +		pci_epc_mem_free_addr(epc, ep->intx_mem_phys, ep->intx_mem,
-> +				      epc->mem->window.page_size);
-> +
->  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
->  			      epc->mem->window.page_size);
->  
-> @@ -793,9 +845,14 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  		goto err_exit_epc_mem;
->  	}
->  
-> +	ep->intx_mem = pci_epc_mem_alloc_addr(epc, &ep->intx_mem_phys,
-> +					      epc->mem->window.page_size);
-> +	if (!ep->intx_mem)
-> +		dev_warn(dev, "Failed to reserve memory for INTx\n");
-> +
->  	ret = dw_pcie_edma_detect(pci);
->  	if (ret)
-> -		goto err_free_epc_mem;
-> +		goto err_free_epc_mem_intx;
->  
->  	if (ep->ops->get_features) {
->  		epc_features = ep->ops->get_features(ep);
-> @@ -812,7 +869,11 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  err_remove_edma:
->  	dw_pcie_edma_remove(pci);
->  
-> -err_free_epc_mem:
-> +err_free_epc_mem_intx:
-> +	if (ep->intx_mem)
-> +		pci_epc_mem_free_addr(epc, ep->intx_mem_phys, ep->intx_mem,
-> +				      epc->mem->window.page_size);
-> +
->  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
->  			      epc->mem->window.page_size);
->  
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index c626d21243b0..812c221b3f7c 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -365,6 +365,8 @@ struct dw_pcie_ep {
->  	unsigned long		*ob_window_map;
->  	void __iomem		*msi_mem;
->  	phys_addr_t		msi_mem_phys;
-> +	void __iomem		*intx_mem;
-> +	phys_addr_t		intx_mem_phys;
->  	struct pci_epf_bar	*epf_bar[PCI_STD_NUM_BARS];
->  };
->  
-> -- 
-> 2.25.1
+> Amadeusz Sławiński (13):
+>   PCI: Sort Intel PCI IDs by number
+>   PCI: Add Intel Audio DSP devices to pci_ids.h
+>   ALSA: hda: Add controller matching macros
+>   ALSA: hda: Use global PCI match macro
+>   ALSA: hda/i915:  Use global PCI match macro
+>   ASoC: Intel: Skylake: Use global PCI match macro
+>   ALSA: intel-dsp-config: Convert to PCI device IDs defines
+>   ALSA: hda: Convert to PCI device IDs defines
+>   ASoC: Intel: avs: Convert to PCI device IDs defines
+>   ASoC: Intel: avs: Convert to PCI device IDs defines
+>   ASoC: Intel: Skylake: Convert to PCI device IDs defines
+>   ASoC: SOF: Intel: Convert to PCI device IDs defines
+>   ASoC: Intel: sst: Convert to PCI device IDs defines
+> 
+>  include/linux/pci_ids.h                | 104 +++++--
+>  include/sound/hda_codec.h              |   3 -
+>  include/sound/hdaudio.h                |  27 ++
+>  sound/hda/hdac_i915.c                  |   7 +-
+>  sound/hda/intel-dsp-config.c           | 119 ++++----
+>  sound/pci/hda/hda_intel.c              | 373 ++++++++++---------------
+>  sound/soc/intel/atom/sst/sst.c         |   3 +-
+>  sound/soc/intel/atom/sst/sst.h         |   1 -
+>  sound/soc/intel/atom/sst/sst_pci.c     |   4 +-
+>  sound/soc/intel/avs/board_selection.c  |  10 +-
+>  sound/soc/intel/avs/core.c             |  16 +-
+>  sound/soc/intel/skylake/skl-messages.c |  16 +-
+>  sound/soc/intel/skylake/skl-pcm.c      |   3 +-
+>  sound/soc/intel/skylake/skl.c          |  36 +--
+>  sound/soc/sof/intel/pci-apl.c          |   9 +-
+>  sound/soc/sof/intel/pci-cnl.c          |  15 +-
+>  sound/soc/sof/intel/pci-icl.c          |  12 +-
+>  sound/soc/sof/intel/pci-mtl.c          |   3 +-
+>  sound/soc/sof/intel/pci-skl.c          |   6 +-
+>  sound/soc/sof/intel/pci-tgl.c          |  45 +--
+>  sound/soc/sof/intel/pci-tng.c          |   3 +-
+>  21 files changed, 384 insertions(+), 431 deletions(-)
 > 
