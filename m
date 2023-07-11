@@ -2,231 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A11AE74F98E
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 23:02:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B861E74FAC6
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jul 2023 00:14:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230213AbjGKVCi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jul 2023 17:02:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58858 "EHLO
+        id S231602AbjGKWOc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jul 2023 18:14:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229931AbjGKVCh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 17:02:37 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233B719B;
-        Tue, 11 Jul 2023 14:02:36 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-4fb7dc16ff0so9646467e87.2;
-        Tue, 11 Jul 2023 14:02:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689109354; x=1691701354;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WZilgtAPy8wWSgGLAsFq4XIBq5SXQUgWQos6V0+Rs1s=;
-        b=CgTC89cg05Te6fIySldVpTiCjdPZQUtOdrFyQg3HUggwj/h0Loi/OqxBSmsWi65Gbb
-         177t0ntTfKIHl4c46h24fCaCzE11mi2BlGBO3k2Sk7igXSmAozxQS0UsI6EdCwBXJIoF
-         p9i/tLUWMSbS2fA+IEzW/ebepz8u3OV2GGqstp33cdVAr63UWBmiokhmdB6pxv5IxRl/
-         umaBXafUUFxHRYsgce4PItlsB7SmczxCROB0VyINoOxeRF8/IC1l2MVoNuH3GeEwEZBE
-         nwslJWomOlIImRvm1E1mQ9ZDRAp/6tv6+LNpuqMwsau51YbnpoGz0H5JiUsQVLnacuWn
-         LUBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689109354; x=1691701354;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WZilgtAPy8wWSgGLAsFq4XIBq5SXQUgWQos6V0+Rs1s=;
-        b=Pz/X8eE0RC1cQ4z8pCavTrDJFDUcozS4xTWO7xuosRaDJiohdp2aWOm68bcjM6g16a
-         a16lgGS/cVHpobUdrNshD0wh5rzdec3GcRSw4gUkdvrLSe3smfrjF7PgXVqAjcKi8opE
-         9QCUKH3p4FxxtFahL+ufonFBt5f0qOotwLIAhxpMYOhyvEbB5UjKBBtFVN0tseduRa3j
-         uabday9HdGEAFNAXtZmIMlEjZsvovRT6bAJD58NTHkm/Yap2/mJ7gUId49B3qiAKEo+B
-         B16R01LR+dUnyBF66WvSVViMWvB4vceZmRfC57ozdMfAc1qV/tI+a7SnKWGEyuVnGVNV
-         IunA==
-X-Gm-Message-State: ABy/qLYXlYDKTuiQmaarNOKOOYvpqTyZANsqdJ4LVd4gTgKx3drCKgRs
-        2d68cTV/O98wljwAhNKqJBo=
-X-Google-Smtp-Source: APBJJlEr3S3PKMoToFuuwjZWxO20wadh3V8YGM0cTUWHbgfUZ+AyKEVU4GSIWwplfhceC9MsciR5Qg==
-X-Received: by 2002:a05:6512:692:b0:4f8:5e11:2cbc with SMTP id t18-20020a056512069200b004f85e112cbcmr15766413lfe.36.1689109354046;
-        Tue, 11 Jul 2023 14:02:34 -0700 (PDT)
-Received: from mobilestation ([95.79.172.181])
-        by smtp.gmail.com with ESMTPSA id w7-20020ac25987000000b004fbb3872190sm444906lfn.113.2023.07.11.14.02.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jul 2023 14:02:33 -0700 (PDT)
-Date:   Wed, 12 Jul 2023 00:02:31 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
-        bhelgaas@google.com, kishon@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>
-Subject: Re: [PATCH v17 16/20] dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe
- Endpoint
-Message-ID: <rk52tz3tmpzg6s7szkh3u44vnr3sncgtb7535fn5alf4fj4dlh@ljmhmtjee3rw>
-References: <20230705114206.3585188-1-yoshihiro.shimoda.uh@renesas.com>
- <20230705114206.3585188-17-yoshihiro.shimoda.uh@renesas.com>
+        with ESMTP id S230180AbjGKWOc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 18:14:32 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7AF510DD;
+        Tue, 11 Jul 2023 15:14:30 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7A6376162D;
+        Tue, 11 Jul 2023 22:14:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58897C433C8;
+        Tue, 11 Jul 2023 22:14:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689113669;
+        bh=mtQRBFqPZqhB1NU4Cy2LdD6e119wMclsqM9gkZvti8E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=rNl7CLezXw3/JUmOr0a8JbgidThlu5VFqtBzEhNr1EZ/0tbhajAIa4OouRYdQJirN
+         snngw49Dd0yCUkSfuUMqocfWFmcgY6xXRo63EgaJsAAROJtdL/WKnzvE5TWyb5GVHd
+         KHSdBXqMAuJb2CdbeRxn1BNIp9x4meDiQZ5YXi5qBeV3RjBcJ3b7RMIT7yBAcE9Ly2
+         9xtj3THhr/LxXjVSenXEP45l2u04t5J7MWgXp6UN1dqOLH5A3KJqcXi2lf4gq4kvUG
+         t4H5dhgFztruRBMbBT2mAaJ3AID060UbpyRclpMOxf7xhehyw6T4NPPMN4UcifyUwu
+         /Eg3dflxEupKQ==
+Date:   Tue, 11 Jul 2023 17:14:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        Iain Lane <iain@orangesquash.org.uk>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v7 2/2] PCI: Don't put non-power manageable PCIe root
+ ports into D3
+Message-ID: <20230711221427.GA250962@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230705114206.3585188-17-yoshihiro.shimoda.uh@renesas.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230711005325.1499-3-mario.limonciello@amd.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 05, 2023 at 08:42:02PM +0900, Yoshihiro Shimoda wrote:
-> Document bindings for Renesas R-Car Gen4 and R-Car S4-8 (R8A779F0)
-> PCIe endpoint module.
+[+cc Andy, Intel MID stuff]
+
+On Mon, Jul 10, 2023 at 07:53:25PM -0500, Mario Limonciello wrote:
+> Since commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
+> PCIe ports from modern machines (>2015) are allowed to be put into D3 by
+> storing a flag in the `struct pci_dev` structure.
+
+It looks like >= 2015 (not >2015).  I think "a flag" refers to
+"bridge_d3".
+
+> pci_power_manageable() uses this flag to indicate a PCIe port can enter D3.
+> pci_pm_suspend_noirq() uses the return from pci_power_manageable() to
+> decide whether to try to put a device into its target state for a sleep
+> cycle via pci_prepare_to_sleep().
 > 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-> Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+> For devices that support D3, the target state is selected by this policy:
+> 1. If platform_pci_power_manageable():
+>    Use platform_pci_choose_state()
+> 2. If the device is armed for wakeup:
+>    Select the deepest D-state that supports a PME.
+> 3. Else:
+>    Use D3hot.
+> 
+> Devices are considered power manageable by the platform when they have
+> one or more objects described in the table in section 7.3 of the ACPI 6.4
+> specification.
+
+No point in citing an old version, so please cite ACPI r6.5, sec 7.3.
+
+The spec claims we only need one object from the table for a device to
+be "power-managed", but in reality, it looks like the only things that
+actually *control* power are _PRx (the _ON/_OFF methods of Power
+Resources) and _PSx (ironically only mentioned parenthically).
+
+This matches up well with acpi_pci_power_manageable(), which returns
+true if a device has either _PR0 or _PS0.
+
+  Per ACPI r6.5, sec 7.3, ACPI control of device power states uses
+  Power Resources (i.e., the _ON/_OFF methods of _PRx) or _PSx
+  methods.  Hence acpi_pci_power_manageable() checks for the presence
+  of _PR0 or _PS0.
+
+Tangent unrelated to *this* patch: I don't know how to think about the
+pci_use_mid_pm() in platform_pci_power_manageable() because I haven't
+seen a MID spec.  pci_use_mid_pm() isn't dependent on "dev", so we
+claim *all* PCI devices, even external ones, are power manageable by
+the platform, which doesn't seem right.
+
+> At suspend Linux puts PCIe root ports that are not power manageable by
+> the platform into D3hot. Windows only puts PCIe root ports into D3 when
+> they are power manageable by the platform.
+> 
+> The policy selected for Linux to put non-power manageable PCIe root ports
+> into D3hot at system suspend doesn't match anything in the PCIe or ACPI
+> specs.
+> 
+> Linux shouldn't assume PCIe root ports support D3 just because
+> they're on a machine newer than 2015, the ports should also be considered
+> power manageable by the platform.
+> 
+> Add an extra check for PCIe root ports to ensure D3 isn't selected for
+> them if they are not power-manageable through platform firmware.
+> This will avoid pci_pm_suspend_noirq() changing the power state
+> via pci_prepare_to_sleep().
+> 
+> The check is focused on PCIe root ports because they are part of
+> the platform.  Other PCIe bridges may be connected externally and thus
+> cannot impose platform specific limitations.
+>
+> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/07_Power_and_Performance_Mgmt/device-power-management-objects.html [1]
+> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
+> Reported-by: Iain Lane <iain@orangesquash.org.uk>
+> Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
+> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 > ---
->  .../bindings/pci/rcar-gen4-pci-ep.yaml        | 106 ++++++++++++++++++
->  1 file changed, 106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+> v6->v7:
+> * revert back to v5 code, rewrite commit message to specific examples
+>   and be more generic
+> ---
+>  drivers/pci/pci.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
-> new file mode 100644
-> index 000000000000..4e6be856104c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
-> @@ -0,0 +1,106 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2022-2023 Renesas Electronics Corp.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/rcar-gen4-pci-ep.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas R-Car Gen4 PCIe Endpoint
-> +
-> +maintainers:
-> +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> +
-> +allOf:
-> +  - $ref: snps,dw-pcie-ep.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: renesas,r8a779f0-pcie-ep   # R-Car S4-8
-> +      - const: renesas,rcar-gen4-pcie-ep  # R-Car Gen4
-> +
-> +  reg:
-> +    maxItems: 6
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: dbi2
-> +      - const: atu
-> +      - const: dma
-> +      - const: app
-> +      - const: addr_space
-> +
-> +  interrupts:
-> +    maxItems: 3
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: dma
-> +      - const: sft_ce
-> +      - const: app
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    items:
-> +      - const: core
-> +      - const: ref
-> +
-> +  max-functions:
-> +    maximum: 2
-> +
-> +  max-link-speed:
-> +    maximum: 4
-> +
-> +  num-lanes:
-> +    maximum: 4
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - interrupts
-> +  - resets
-> +  - power-domains
-> +  - clocks
-> +  - clock-names
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/r8a779f0-cpg-mssr.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/power/r8a779f0-sysc.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        pcie0_ep: pcie-ep@e65d0000 {
-> +            compatible = "renesas,r8a779f0-pcie-ep", "renesas,rcar-gen4-pcie-ep";
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index f916fd76eba79..4be8c6f8f4ebe 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3041,6 +3041,14 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+>  	if (dmi_check_system(bridge_d3_blacklist))
+>  		return false;
+>  
+> +	/*
+> +	 * It's not safe to put root ports that aren't power manageable
+> +	 * by the platform into D3.
 
-> +            reg = <0 0xe65d0000 0 0x2000>, <0 0xe65d2800 0 0x0800>,
-> +                  <0 0xe65d3000 0 0x2000>, <0 0xe65d5000 0 0x1200>,
-> +                  <0 0xe65d6200 0 0x0e00>, <0 0xfe000000 0 0x400000>;
-> +            reg-names = "dbi", "dbi2", "atu", "dma", "app", "addr_space";
+Does this refer specifically to D3cold?
 
-I'll ask it once again since you didn't address my comment in v16 and
-haven't fixed the example node in the bindings:
+I assume that if we were talking about D3hot, we wouldn't need to
+check for ACPI support because D3hot behavior should be fully covered
+by the PCIe spec.
 
-I see you defining the dbi2 space as <0 _0xe65d2800_ 0 0x0800>. But
-sometime before you mentioned that your device has the next CSRs
-layout:
-! +0x0000 : Function 0 (common address in Root port and Endpoint mode)
-  +0x1000 : Function 1 (Endpoint mode only)
-  +0x2000 : Shadow register for Function 0
-! +0x2800 : Shadow register for Function 1
-it means the DT-bindings example node has the dbi space defined for
-both functions meanwhile the dbi2 space defined for _function #1_ only
-(it's 0xe65d0000 + 0x2800). So AFAICS either you have wrong space
-defined in the example node or the node is wrong in your platform DTS
-too and you have a malfunction end-point mode. Am I missing something?
-In any case based on your End-point driver implementation dbi2 is
-supposed to be defined at the 0xe65d2000 base address.
+Let's be specific about D3hot vs D3cold whenever possible.
 
-Am I wrong? Could you clarify this?
+> +	if (pci_pcie_type(bridge) == PCI_EXP_TYPE_ROOT_PORT &&
+> +	    !platform_pci_power_manageable(bridge))
+> +		return false;
 
--Serge(y)
+If ACPI says a device is not power-manageable, i.e., ACPI doesn't know
+how to put it in D0, it makes sense to return "false" here so we don't
+try to put it in D3cold.
 
-> +            interrupts = <GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>;
-> +            interrupt-names = "dma", "sft_ce", "app";
-> +            clocks = <&cpg CPG_MOD 624>, <&pcie0_clkref>;
-> +            clock-names = "core", "ref";
-> +            power-domains = <&sysc R8A779F0_PD_ALWAYS_ON>;
-> +            resets = <&cpg 624>;
-> +            num-lanes = <2>;
-> +            max-link-speed = <4>;
-> +            max-functions = /bits/ 8 <2>;
-> +        };
-> +    };
+But I don't understand the ROOT_PORT check.  We may have a Switch
+described via ACPI, and the ROOT_PORT check means we can return "true"
+(it's OK to use D3cold) even if the Switch Port is not power-manageable
+via ACPI.
+
+>  	/*
+>  	 * It should be safe to put PCIe ports from 2015 or newer
+>  	 * to D3.
 > -- 
-> 2.25.1
+> 2.34.1
 > 
