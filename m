@@ -2,71 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 936E974F944
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 22:45:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C51D574F952
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 22:48:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229641AbjGKUpn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jul 2023 16:45:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49752 "EHLO
+        id S229547AbjGKUsC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jul 2023 16:48:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230255AbjGKUpm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 16:45:42 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADEFD1BE8;
-        Tue, 11 Jul 2023 13:45:17 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4fba74870abso9383236e87.0;
-        Tue, 11 Jul 2023 13:45:17 -0700 (PDT)
+        with ESMTP id S231364AbjGKUrv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 16:47:51 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F3359B;
+        Tue, 11 Jul 2023 13:47:50 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id 38308e7fff4ca-2b69923a715so98567241fa.0;
+        Tue, 11 Jul 2023 13:47:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689108316; x=1691700316;
+        d=gmail.com; s=20221208; t=1689108468; x=1691700468;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y9xIQvqaahkiwEUqdRZhWypAqRkikDdgKU/ZrStMMeg=;
-        b=dsK0NXDIeVcBsiyPXT9V2671tLaT4oNp0Nx6MBOYfYAkPD9AtV4Gn6XvhA4gu32rDI
-         o8QHw1WcaXHOVveCQ9ZwwuyMqrH+0I5mDKORD/XYFGC6E/qG0tef1/TPlgL117hThXhu
-         +WhF3zd5W4PtVGvfBGXYGR0TcierT38BQSih00QGbOnpdcJNqffQG3WytnqZ7BGgGcjX
-         0AQ5bx4xsNpS+ElHZhUfb+vHd6SSUmXDIb7HTaSzouMXUYX8P+/KYxqSxrxJDApVqtB3
-         hKes2tIMxsv3b899AmyYgm+v1sNtJofdzVyUXvPLW5ga0vm7iGg7mpzTJQvA2FXia0GA
-         IysQ==
+        bh=UJHRQ34WYwoDGj03DDbaHxKoVvqJPbF8opF7Gn8ticg=;
+        b=ToUgugcPuBd55m8pWthqiCe1ojkZnICsw9WiQfoe8kp6WEVjn2mI3jkfrzV3tM7OlE
+         qPBU4CjwJVCsU4ll2AJSWTcxW48jkpRsVpN1OGmIyrtutKfJUPWs/iXlAXSqGXqH2JZ5
+         2pK7I7mOUhC22YbCW211nkRryHP9aGpFIxBGFnA85Ptx8cZLD9IX+pFi0fPFTUKl0zeV
+         L6NKn2g+7NGvKY42w0BvQqtzqGnGae+h61kKPjnvzGC0Vg985PtDUJJnkGO7Mjo6vJa9
+         kHF13Q2F8LL2+ldyI+ts3KIkstDG6l4kvgb4tGnA2Ib2W/evA2D+g8H+jwgM+/UA9C34
+         RxAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689108316; x=1691700316;
+        d=1e100.net; s=20221208; t=1689108468; x=1691700468;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y9xIQvqaahkiwEUqdRZhWypAqRkikDdgKU/ZrStMMeg=;
-        b=hNgQtnAdkLdDHzWvC0KC8cKOT5ZTJAmoH9QfTrYDk/ktC5Fq71JiV4ElanaSGz4rmY
-         CH7eJCTyV5OzK1t+99qe2fAHWWkv0yr1wCbPt0NYqpxs4We6WBGa1VR9UIQ1MRv64c4n
-         L6hJHf1k8kw2HMJwu4B5btIY/oBt5aa/iGeqMmiMdDtrXTeZcq+Ino0MZt5DMPd1GB4x
-         yxhFkCU00VOLsZMKwuwjA9Gy7bz/yAYa0oZWaxsm4m4/LPGAKmMxSMwm8ZfrAv9BPq1c
-         O6Oe1CuX+OlTM8pOu1Uhx4wrDC+4F2AYGRO09OiqdIwPSLVOVwYa679ApDpgY13Eeo9Q
-         Sjog==
-X-Gm-Message-State: ABy/qLYqQwBf+KnIpdSWpCm+3FGCEze66BlMYI1oRtMsit5Mo+PIuJBc
-        1pj9/KOrHzqzoIg1/jyvAL8=
-X-Google-Smtp-Source: APBJJlGcM8HVA3S7jGvt/A3pI5N5Rc581SeVvdlceIgVS7lJx/eDsAxaKx96Ea0clz/Xb98Cai9LQQ==
-X-Received: by 2002:a19:6504:0:b0:4fb:8b78:4a93 with SMTP id z4-20020a196504000000b004fb8b784a93mr9689819lfb.7.1689108315358;
-        Tue, 11 Jul 2023 13:45:15 -0700 (PDT)
+        bh=UJHRQ34WYwoDGj03DDbaHxKoVvqJPbF8opF7Gn8ticg=;
+        b=JlPNyKJSzF1fHJGK7IP0ZJXGlME8jSBGSclcu45pWf3k2/laqXt+6gfY96isAhcMMw
+         yapsNt0fOGGzQLaSVeWQJeJLsQVgoZkyPalO/tX6u0cITJxMhcDkSv6/y3jcB6N5LPxE
+         e5Y0dOklfW1C2FP0OGiHx9PNtsGOPF/41K78TMiHD/CZ0c8RgTvIltoUHsoQePQ4GxIE
+         Kj+WFJzzz0DktrAEvEv3L38aZixXqtArkHWMFv7t0+DkO+30S9x19mzL8PdBTFCsAZTQ
+         JASabhngIcS/VVchc5L/KJTtFVP21LGDE4h8H6FixyCjIt+LrkDrC40VPaAwiuPOt7/A
+         vALw==
+X-Gm-Message-State: ABy/qLYtA18tFYSTeAc9M/0fA5NSU6V0bNuJrzXWf/mc6PlrZ34U0P2+
+        kRBNG9fZqvSyhuHLyVeJuwI=
+X-Google-Smtp-Source: APBJJlEsnwN8An1uHj9yamSS8udYeK1O+8NhwN94DRWpiw4tBOjfddE6RCXZVSnEqpTLHhSk6ccunw==
+X-Received: by 2002:a2e:b045:0:b0:2b6:e618:b597 with SMTP id d5-20020a2eb045000000b002b6e618b597mr16008167ljl.28.1689108468011;
+        Tue, 11 Jul 2023 13:47:48 -0700 (PDT)
 Received: from mobilestation ([95.79.172.181])
-        by smtp.gmail.com with ESMTPSA id d28-20020ac2545c000000b004faeedbb2a0sm441163lfn.78.2023.07.11.13.45.13
+        by smtp.gmail.com with ESMTPSA id p19-20020a2e9ad3000000b002b6e9e4d5c7sm617752ljj.35.2023.07.11.13.47.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jul 2023 13:45:14 -0700 (PDT)
-Date:   Tue, 11 Jul 2023 23:45:10 +0300
+        Tue, 11 Jul 2023 13:47:47 -0700 (PDT)
+Date:   Tue, 11 Jul 2023 23:47:45 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh+dt@kernel.org, bhelgaas@google.com,
-        kishon@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, marek.vasut+renesas@gmail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Manivannan Sadhasivam <mani@kernel.org>
-Subject: Re: [PATCH v17 08/20] PCI: dwc: Add dw_pcie_link_set_max_link_width()
-Message-ID: <3nldn3s27gwdsfyybgg2ady4tkgpxcvsntbpxp4vdbr4myncnc@clivb7gcds3e>
+        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
+        bhelgaas@google.com, kishon@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v17 09/20] PCI: dwc: Add PCI_EXP_LNKCAP_MLW handling
+Message-ID: <4dik7u3sk42itkmp3o7e5r4fx5ziquo6j6f67dq4s3qtp6kzxq@ji2ss2c2n7zh>
 References: <20230705114206.3585188-1-yoshihiro.shimoda.uh@renesas.com>
- <20230705114206.3585188-9-yoshihiro.shimoda.uh@renesas.com>
+ <20230705114206.3585188-10-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230705114206.3585188-9-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20230705114206.3585188-10-yoshihiro.shimoda.uh@renesas.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -77,135 +75,71 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 05, 2023 at 08:41:54PM +0900, Yoshihiro Shimoda wrote:
-> To improve code readability, add dw_pcie_link_set_max_link_width().
-
-This is a preparation 
-
+On Wed, Jul 05, 2023 at 08:41:55PM +0900, Yoshihiro Shimoda wrote:
+> Update dw_pcie_link_set_max_link_width() to set PCI_EXP_LNKCAP_MLW.
+> In accordance with the DW PCIe RC/EP HW manuals [1,2,3,...] aside with
+> the PORT_LINK_CTRL_OFF.LINK_CAPABLE and GEN2_CTRL_OFF.NUM_OF_LANES[8:0]
+> field there is another one which needs to be updated. It's
+> LINK_CAPABILITIES_REG.PCIE_CAP_MAX_LINK_WIDTH. If it isn't done at
+> the very least the maximum link-width capability CSR won't expose
+> the actual maximum capability.
 > 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 86 ++++++++++----------
->  1 file changed, 41 insertions(+), 45 deletions(-)
+> [1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
+>     Version 4.60a, March 2015, p.1032
+> [2] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
+>     Version 4.70a, March 2016, p.1065
+> [3] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
+>     Version 4.90a, March 2016, p.1057
+> ...
+> [X] DesignWare Cores PCI Express Controller Databook - DWC PCIe Endpoint,
+>       Version 5.40a, March 2019, p.1396
+> [X+1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
+>       Version 5.40a, March 2019, p.1266
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index a531dc50abea..7b720bad7656 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -728,6 +728,46 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
->  
->  }
->  
-> +static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
-> +{
-> +	u32 lwsc, plc;
-> +
-> +	if (!num_lanes)
-> +		return;
-> +
-> +	/* Set the number of lanes */
-> +	plc = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
 
-> +	plc &= ~PORT_LINK_FAST_LINK_MODE;
+> The commit description is suggested by Serge Semin.
 
-This is redundant and unrelated to the link width setup. See my next
-comment for solution.
+This is implied by the Suggested-by tag. I'd drop it.
 
-> +	plc &= ~PORT_LINK_MODE_MASK;
-> +
-> +	/* Set link width speed control register */
-> +	lwsc = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
-> +	lwsc &= ~PORT_LOGIC_LINK_WIDTH_MASK;
-> +	switch (num_lanes) {
-> +	case 1:
-> +		plc |= PORT_LINK_MODE_1_LANES;
-> +		lwsc |= PORT_LOGIC_LINK_WIDTH_1_LANES;
-> +		break;
-> +	case 2:
-> +		plc |= PORT_LINK_MODE_2_LANES;
-> +		lwsc |= PORT_LOGIC_LINK_WIDTH_2_LANES;
-> +		break;
-> +	case 4:
-> +		plc |= PORT_LINK_MODE_4_LANES;
-> +		lwsc |= PORT_LOGIC_LINK_WIDTH_4_LANES;
-> +		break;
-> +	case 8:
-> +		plc |= PORT_LINK_MODE_8_LANES;
-> +		lwsc |= PORT_LOGIC_LINK_WIDTH_8_LANES;
-> +		break;
-> +	default:
-> +		dev_err(pci->dev, "num-lanes %u: invalid value\n", num_lanes);
-> +		return;
-> +	}
-> +	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, plc);
-> +	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, lwsc);
-> +}
-> +
->  void dw_pcie_iatu_detect(struct dw_pcie *pci)
->  {
->  	int max_region, ob, ib;
-> @@ -1009,49 +1049,5 @@ void dw_pcie_setup(struct dw_pcie *pci)
->  	val |= PORT_LINK_DLL_LINK_EN;
->  	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
->  
-> -	if (!pci->num_lanes) {
-> -		dev_dbg(pci->dev, "Using h/w default number of lanes\n");
-> -		return;
-> -	}
-> -
-> -	/* Set the number of lanes */
-
-> -	val &= ~PORT_LINK_FAST_LINK_MODE;
-
-Please pick up my patch dropping the line above
-https://patchwork.kernel.org/project/linux-pci/patch/20230611192005.25636-6-Sergey.Semin@baikalelectronics.ru/
-and add it to your series before this one.
-* unless Krzysztof decide to merge it and some another patches from my
-* series in...
+Anyway. The change looks good to me. Thanks!
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 
 -Serge(y)
 
-> -	val &= ~PORT_LINK_MODE_MASK;
-> -	switch (pci->num_lanes) {
-> -	case 1:
-> -		val |= PORT_LINK_MODE_1_LANES;
-> -		break;
-> -	case 2:
-> -		val |= PORT_LINK_MODE_2_LANES;
-> -		break;
-> -	case 4:
-> -		val |= PORT_LINK_MODE_4_LANES;
-> -		break;
-> -	case 8:
-> -		val |= PORT_LINK_MODE_8_LANES;
-> -		break;
-> -	default:
-> -		dev_err(pci->dev, "num-lanes %u: invalid value\n", pci->num_lanes);
-> -		return;
-> -	}
-> -	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
-> -
-> -	/* Set link width speed control register */
-> -	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
-> -	val &= ~PORT_LOGIC_LINK_WIDTH_MASK;
-> -	switch (pci->num_lanes) {
-> -	case 1:
-> -		val |= PORT_LOGIC_LINK_WIDTH_1_LANES;
-> -		break;
-> -	case 2:
-> -		val |= PORT_LOGIC_LINK_WIDTH_2_LANES;
-> -		break;
-> -	case 4:
-> -		val |= PORT_LOGIC_LINK_WIDTH_4_LANES;
-> -		break;
-> -	case 8:
-> -		val |= PORT_LOGIC_LINK_WIDTH_8_LANES;
-> -		break;
-> -	}
-> -	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-> +	dw_pcie_link_set_max_link_width(pci, pci->num_lanes);
+> 
+> Suggested-by: Serge Semin <fancer.lancer@gmail.com>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 7b720bad7656..44150d34720a 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -730,7 +730,8 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
+>  
+>  static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
+>  {
+> -	u32 lwsc, plc;
+> +	u32 lnkcap, lwsc, plc;
+> +	u8 cap;
+>  
+>  	if (!num_lanes)
+>  		return;
+> @@ -766,6 +767,12 @@ static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
+>  	}
+>  	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, plc);
+>  	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, lwsc);
+> +
+> +	cap = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> +	lnkcap = dw_pcie_readl_dbi(pci, cap + PCI_EXP_LNKCAP);
+> +	lnkcap &= ~PCI_EXP_LNKCAP_MLW;
+> +	lnkcap |= FIELD_PREP(PCI_EXP_LNKCAP_MLW, num_lanes);
+> +	dw_pcie_writel_dbi(pci, cap + PCI_EXP_LNKCAP, lnkcap);
 >  }
+>  
+>  void dw_pcie_iatu_detect(struct dw_pcie *pci)
 > -- 
 > 2.25.1
 > 
