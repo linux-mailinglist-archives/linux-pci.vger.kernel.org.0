@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2310374F2CE
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 16:54:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2F1E74F2E9
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 17:01:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230402AbjGKOy5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jul 2023 10:54:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58586 "EHLO
+        id S230507AbjGKPBc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jul 2023 11:01:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbjGKOy4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 10:54:56 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C331E5C;
-        Tue, 11 Jul 2023 07:54:55 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-4fb863edcb6so9229145e87.0;
-        Tue, 11 Jul 2023 07:54:55 -0700 (PDT)
+        with ESMTP id S229801AbjGKPBb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 11:01:31 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED7D010CF;
+        Tue, 11 Jul 2023 08:01:29 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4f954d7309fso7232529e87.1;
+        Tue, 11 Jul 2023 08:01:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689087293; x=1691679293;
+        d=gmail.com; s=20221208; t=1689087688; x=1691679688;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EGlOt2o4Q8FcB3M3yiW6rTLz1+uV1iY2yTAo8ZK7p7Q=;
-        b=q2y5LMjq7UPh5MomsYF+YZxA1DG9YdMGUbFV0hQSkL3R+VSwM98eZPUoy//uAw8H7J
-         WdO5bGCHtGAjIx1FEXdRmYyFVNnLGiLuGzRVVtcoSBzz5LMYnX/dY3vPAUSJ7aB7W+ur
-         MWmHEQleT0K8quajj21FqdpyzFxQuvbcLGXN0PdBT2KcPhrW4NpXURb1Mq1hbO6/lJqs
-         m8FTLc+Sd6fq7iPfbGjpqz4Q9bAHCNeRXe9+JevFWcdgdEBegymxqLDI/OzNVtRC1A7Q
-         0/3WSseqdUFkMep2nL8xwmBGf5R3HQd6cJO5f3B06iY5zUZSZ8ZbNUkPS4KP7N6SZrsw
-         4YSA==
+        bh=AU4XR1QanIyk4Xzx6nQ+M2edqTQrT9XWFJQn7RHLzs4=;
+        b=gIKvGcWiiPfFeHCRGVXMbl80umHW43eLlrhIsWN9WUETqAJKb4dL4Hld0fYSRID48o
+         YDELsiG5iXc0NqDwdeWINSVdjMZU1I6h9lrvlhiYgZCi3XCbwvzoFb5Md6QmvdEPfem6
+         gza6y0LpnfoHZOh2S3EGmHmM9oAYYkWgbbfXV2pzX+y5L7gyjJO8shBpbZE69ygwwkXU
+         ZQSyvJ0FacnJsTyRVGdbbV9FOJIT87colaI8SAd1wfOX1RJSk5TqiM/DBYssoQm9dgCv
+         09TKiTl1rIhMwYKrI4MjVfvREtKFZPlp310+kAS3YU871et58ZTXoFSpVCxtyJztbebW
+         OtQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689087293; x=1691679293;
+        d=1e100.net; s=20221208; t=1689087688; x=1691679688;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EGlOt2o4Q8FcB3M3yiW6rTLz1+uV1iY2yTAo8ZK7p7Q=;
-        b=JahW7U7J6U1MWn150Tnk0OAwdfNC1vKEB6a50xQJKJnwVVUZ+Dnfwhga5wsArPqpCj
-         4guCCTHkGgrI5p7agYTem6ZpPm7kNWWJLUFE29uBvmfhtf4SSobwqqrR5TdcuczNPf4M
-         TO9sIA/rzv+gOrJ0/PQpVe8AiwS9/eOwqRjuX4ebrTs/uFQDFEaafXg3VLhLqIkb8jGi
-         wRvyRXGl5NXER3aHwk4cddKwFdWmnbRYjZLjxw3pDU/pNZn3KbFtx216jIixLpAwhO3/
-         3RRhqOpttq9RJwBf5jksniO41O8pxRlsTTE8cS00y0U4Z5AD0YfqFfA+HVVvwbgTYL8U
-         G8Qg==
-X-Gm-Message-State: ABy/qLZtikugKySLK3hfWRFo3tVYy7CSO7PTe/os6HMmufOOepvoU+L4
-        kP3dSl2/SnOXBFP9Zk+l/Js=
-X-Google-Smtp-Source: APBJJlFTTvhc+SJ5FcDvEi9TJAR9GdLJr6xBTUK/PpCg9nPU3BIbOG6UzprSmHox6rnBDFLxE0389g==
-X-Received: by 2002:a19:e059:0:b0:4f8:6d54:72f9 with SMTP id g25-20020a19e059000000b004f86d5472f9mr12251450lfj.61.1689087293391;
-        Tue, 11 Jul 2023 07:54:53 -0700 (PDT)
+        bh=AU4XR1QanIyk4Xzx6nQ+M2edqTQrT9XWFJQn7RHLzs4=;
+        b=hS2EJLYvMTgGDSTF7Ej8hQrmFBJRdG+FjrIbMRgwt0bnSoIkJER6aecp5hnPmr2qP3
+         ZHkRKmjefNLXFp5mdsIqR/BOcO2ISO2mTBXnkcLtZRF/Is4vGntYpRRtwnk5X39gn1O4
+         4w//YNx9BcYPeMi4J8NRITw6tCW5KVQCObUowXTfOBzJnXEmMmKz+Jju9gGMJSyVhZ0B
+         pjWgBquMxaEbavEHY/a3qH3VkrsNCL83skId9wVG79ig5S1lK2HelHSeppad5plHBGlC
+         2TmlZwnSh/8yoZAC/qLwNK9egwdMcxD9MWSgJ7d0NOKxUUDAvH2P2nJEXSQyxRBtFYro
+         VbZw==
+X-Gm-Message-State: ABy/qLZlrqzpyap9ooKCWp6UzIIPIoZkRiWGc8pIVuyZjgPNdPUTOsu3
+        nImUAcW1hqIAQosyqW2AiYw=
+X-Google-Smtp-Source: APBJJlFIviX7ZB0xBPU8WRhrIbT4iqIJzglUbNZuRqvYBYOwaoZtyzVhGcSuX2qEcihti1RY8BxDbg==
+X-Received: by 2002:a19:910e:0:b0:4f8:1e2a:1de1 with SMTP id t14-20020a19910e000000b004f81e2a1de1mr5408361lfd.29.1689087687836;
+        Tue, 11 Jul 2023 08:01:27 -0700 (PDT)
 Received: from mobilestation ([85.249.18.12])
-        by smtp.gmail.com with ESMTPSA id w25-20020a19c519000000b004fa5f4fd094sm349186lfe.266.2023.07.11.07.54.51
+        by smtp.gmail.com with ESMTPSA id f15-20020ac2532f000000b004fb745fd232sm353868lfh.30.2023.07.11.08.01.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jul 2023 07:54:52 -0700 (PDT)
-Date:   Tue, 11 Jul 2023 17:54:49 +0300
+        Tue, 11 Jul 2023 08:01:27 -0700 (PDT)
+Date:   Tue, 11 Jul 2023 18:01:23 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
@@ -57,14 +57,14 @@ Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
         marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v17 05/20] PCI: dwc: Add outbound MSG TLPs support
-Message-ID: <p6nfh7pxmtxboc5zkbojp7xryx46aezdkugykim4cjn7wfcixh@rj3wyxswzcmp>
+Subject: Re: [PATCH v17 06/20] PCI: designware-ep: Add INTx IRQs support
+Message-ID: <leliqp56nmecbzowzxyx7hurdat2styt4itl2yh63vgmc4rvf2@ro3o6w2ox47u>
 References: <20230705114206.3585188-1-yoshihiro.shimoda.uh@renesas.com>
- <20230705114206.3585188-6-yoshihiro.shimoda.uh@renesas.com>
+ <20230705114206.3585188-7-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230705114206.3585188-6-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20230705114206.3585188-7-yoshihiro.shimoda.uh@renesas.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -75,14 +75,15 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 05, 2023 at 08:41:51PM +0900, Yoshihiro Shimoda wrote:
-> Add "code" and "routing" into struct dw_pcie_ob_atu_cfg for sending
-> MSG by iATU in the PCIe endpoint mode in near the future.
-> PCIE_ATU_INHIBIT_PAYLOAD is set to issue TLP type of Msg instead of
-> MsgD. So, this implementation supports the data-less messages only
-> for now.
+On Wed, Jul 05, 2023 at 08:41:52PM +0900, Yoshihiro Shimoda wrote:
+> Add support for triggering INTx IRQs by using outbound iATU.
+> Outbound iATU is utilized to send assert and de-assert INTx TLPs.
+> The message is generated based on the payloadless Msg TLP with type
+> 0x14, where 0x4 is the routing code implying the Terminate at
+> Receiver message. The message code is specified as b1000xx for
+> the INTx assertion and b1001xx for the INTx de-assertion.
 
-Looks good. Thanks!
+Looking good. Feel free to add:
 Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 
 -Serge(y)
@@ -90,64 +91,142 @@ Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 > 
 > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > ---
->  drivers/pci/controller/dwc/pcie-designware.c | 9 +++++++--
->  drivers/pci/controller/dwc/pcie-designware.h | 4 ++++
->  2 files changed, 11 insertions(+), 2 deletions(-)
+>  .../pci/controller/dwc/pcie-designware-ep.c   | 69 +++++++++++++++++--
+>  drivers/pci/controller/dwc/pcie-designware.h  |  2 +
+>  2 files changed, 67 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index e4ac1def7363..a531dc50abea 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -498,7 +498,7 @@ int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
->  	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_UPPER_TARGET,
->  			      upper_32_bits(atu->pci_addr));
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index fe2e0d765be9..1d24ebf9686f 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -6,9 +6,11 @@
+>   * Author: Kishon Vijay Abraham I <kishon@ti.com>
+>   */
 >  
-> -	val = atu->type | PCIE_ATU_FUNC_NUM(atu->func_no);
-> +	val = atu->type | atu->routing | PCIE_ATU_FUNC_NUM(atu->func_no);
->  	if (upper_32_bits(limit_addr) > upper_32_bits(cpu_addr) &&
->  	    dw_pcie_ver_is_ge(pci, 460A))
->  		val |= PCIE_ATU_INCREASE_REGION_SIZE;
-> @@ -506,7 +506,12 @@ int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
->  		val = dw_pcie_enable_ecrc(val);
->  	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_REGION_CTRL1, val);
+> +#include <linux/delay.h>
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
 >  
-> -	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_REGION_CTRL2, PCIE_ATU_ENABLE);
-> +	val = PCIE_ATU_ENABLE;
-> +	if (atu->type == PCIE_ATU_TYPE_MSG) {
-> +		/* The data-less messages only for now */
-> +		val |= PCIE_ATU_INHIBIT_PAYLOAD | atu->code;
+> +#include "../../pci.h"
+>  #include "pcie-designware.h"
+>  #include <linux/pci-epc.h>
+>  #include <linux/pci-epf.h>
+> @@ -484,14 +486,60 @@ static const struct pci_epc_ops epc_ops = {
+>  	.get_features		= dw_pcie_ep_get_features,
+>  };
+>  
+> +static int dw_pcie_ep_send_msg(struct dw_pcie_ep *ep, u8 func_no, u8 code,
+> +			       u8 routing)
+> +{
+> +	struct dw_pcie_ob_atu_cfg atu = { 0 };
+> +	struct pci_epc *epc = ep->epc;
+> +	int ret;
+> +
+> +	atu.func_no = func_no;
+> +	atu.code = code;
+> +	atu.routing = routing;
+> +	atu.type = PCIE_ATU_TYPE_MSG;
+> +	atu.cpu_addr = ep->intx_mem_phys;
+> +	atu.size = epc->mem->window.page_size;
+> +
+> +	ret = dw_pcie_ep_outbound_atu(ep, &atu);
+> +	if (ret)
+> +		return ret;
+> +
+> +	writel(0, ep->intx_mem);
+> +
+> +	dw_pcie_ep_unmap_addr(epc, func_no, 0, ep->intx_mem_phys);
+> +
+> +	return 0;
+> +}
+> +
+>  int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	struct device *dev = pci->dev;
+> +	int ret;
+>  
+> -	dev_err(dev, "EP cannot trigger INTx IRQs\n");
+> +	if (!ep->intx_mem) {
+> +		dev_err(dev, "INTx not supported\n");
+> +		return -EOPNOTSUPP;
 > +	}
-> +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_REGION_CTRL2, val);
 >  
->  	/*
->  	 * Make sure ATU enable takes effect before any subsequent config
+> -	return -EINVAL;
+> +	/*
+> +	 * Even though the PCI bus specification implies the level-triggered
+> +	 * INTx interrupts the kernel PCIe endpoint framework has a single
+> +	 * PCI_EPC_IRQ_INTx flag defined for the legacy IRQs simulation. Thus
+> +	 * this function sends the Deassert_INTx PCIe TLP after the Assert_INTx
+> +	 * message with the 50 usec duration basically implementing the
+> +	 * rising-edge triggering IRQ. Hopefully the interrupt controller will
+> +	 * still be able to register the incoming IRQ event...
+> +	 */
+> +	ret = dw_pcie_ep_send_msg(ep, func_no, PCI_MSG_CODE_ASSERT_INTA,
+> +				  PCI_MSG_TYPE_R_ROUTING_LOCAL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	usleep_range(50, 100);
+> +
+> +	return dw_pcie_ep_send_msg(ep, func_no, PCI_MSG_CODE_DEASSERT_INTA,
+> +				   PCI_MSG_TYPE_R_ROUTING_LOCAL);
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_ep_raise_intx_irq);
+>  
+> @@ -622,6 +670,10 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+>  
+>  	dw_pcie_edma_remove(pci);
+>  
+> +	if (ep->intx_mem)
+> +		pci_epc_mem_free_addr(epc, ep->intx_mem_phys, ep->intx_mem,
+> +				      epc->mem->window.page_size);
+> +
+>  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
+>  			      epc->mem->window.page_size);
+>  
+> @@ -793,9 +845,14 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  		goto err_exit_epc_mem;
+>  	}
+>  
+> +	ep->intx_mem = pci_epc_mem_alloc_addr(epc, &ep->intx_mem_phys,
+> +					      epc->mem->window.page_size);
+> +	if (!ep->intx_mem)
+> +		dev_warn(dev, "Failed to reserve memory for INTx\n");
+> +
+>  	ret = dw_pcie_edma_detect(pci);
+>  	if (ret)
+> -		goto err_free_epc_mem;
+> +		goto err_free_epc_mem_intx;
+>  
+>  	if (ep->ops->get_features) {
+>  		epc_features = ep->ops->get_features(ep);
+> @@ -812,7 +869,11 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  err_remove_edma:
+>  	dw_pcie_edma_remove(pci);
+>  
+> -err_free_epc_mem:
+> +err_free_epc_mem_intx:
+> +	if (ep->intx_mem)
+> +		pci_epc_mem_free_addr(epc, ep->intx_mem_phys, ep->intx_mem,
+> +				      epc->mem->window.page_size);
+> +
+>  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
+>  			      epc->mem->window.page_size);
+>  
 > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 85de0d8346fa..c626d21243b0 100644
+> index c626d21243b0..812c221b3f7c 100644
 > --- a/drivers/pci/controller/dwc/pcie-designware.h
 > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -147,11 +147,13 @@
->  #define PCIE_ATU_TYPE_IO		0x2
->  #define PCIE_ATU_TYPE_CFG0		0x4
->  #define PCIE_ATU_TYPE_CFG1		0x5
-> +#define PCIE_ATU_TYPE_MSG		0x10
->  #define PCIE_ATU_TD			BIT(8)
->  #define PCIE_ATU_FUNC_NUM(pf)           ((pf) << 20)
->  #define PCIE_ATU_REGION_CTRL2		0x004
->  #define PCIE_ATU_ENABLE			BIT(31)
->  #define PCIE_ATU_BAR_MODE_ENABLE	BIT(30)
-> +#define PCIE_ATU_INHIBIT_PAYLOAD	BIT(22)
->  #define PCIE_ATU_FUNC_NUM_MATCH_EN      BIT(19)
->  #define PCIE_ATU_LOWER_BASE		0x008
->  #define PCIE_ATU_UPPER_BASE		0x00C
-> @@ -292,6 +294,8 @@ struct dw_pcie_ob_atu_cfg {
->  	int index;
->  	int type;
->  	u8 func_no;
-> +	u8 code;
-> +	u8 routing;
->  	u64 cpu_addr;
->  	u64 pci_addr;
->  	u64 size;
+> @@ -365,6 +365,8 @@ struct dw_pcie_ep {
+>  	unsigned long		*ob_window_map;
+>  	void __iomem		*msi_mem;
+>  	phys_addr_t		msi_mem_phys;
+> +	void __iomem		*intx_mem;
+> +	phys_addr_t		intx_mem_phys;
+>  	struct pci_epf_bar	*epf_bar[PCI_STD_NUM_BARS];
+>  };
+>  
 > -- 
 > 2.25.1
 > 
