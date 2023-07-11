@@ -2,91 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68FDB74F4FA
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 18:20:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C31D74F53C
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 18:32:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231689AbjGKQU1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jul 2023 12:20:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53838 "EHLO
+        id S232210AbjGKQcU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jul 2023 12:32:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232170AbjGKQUJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 12:20:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 453EF10E3;
-        Tue, 11 Jul 2023 09:19:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C0BA161562;
-        Tue, 11 Jul 2023 16:19:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E95D6C433C9;
-        Tue, 11 Jul 2023 16:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689092372;
-        bh=93JhDreefZ2IaOeQ5o+vxmKR9FPwV2k7NiXOGpNuMCM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=GqeN214M5tCT1zk3DKwIwk9lUERRHUO5CzojBlqjfl864/8o/15oEIAtlfKGaU7SH
-         64mmYRlhtcOyIamQwm5tShwx4KAhmOpsOPW2aoPhviU9yVNuBt8emDlfucOwXtRjvS
-         U7AH4V3gC3Kf5dR6XpwgcdSYJcA1/G12ZbT7FZ3Ziz1RMlx39mZY+GBz82/YbkNV65
-         ZwebRQFY6e/Nxv5oFdJktBrFR3sdObl7CQkTglS7B0Bt971vxtxI6p7daFugYx3t6E
-         Yn10gmBjI+wjVnKMNbN4nIesLF/BGScBHm0fZZjH9ImEuTgpc3AvsUlb939VnXhCzT
-         MXaj/jXbYHmdg==
-Date:   Tue, 11 Jul 2023 11:19:30 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= 
-        <amadeuszx.slawinski@linux.intel.com>,
+        with ESMTP id S232165AbjGKQcS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 12:32:18 -0400
+Received: from out-23.mta0.migadu.com (out-23.mta0.migadu.com [IPv6:2001:41d0:1004:224b::17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48A0210C4
+        for <linux-pci@vger.kernel.org>; Tue, 11 Jul 2023 09:32:15 -0700 (PDT)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1689093133;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=AOe2sK5corMJVr8s18spKTEHFO7S6COQNSRgsjkc54A=;
+        b=ixKAhLu28/nq1vazDkLtGsR/XEiVHt1ra2tNTmdDLo9BPHekHQ7OViZ9PZCadSk3DSxHL1
+        6Md7s5pSxG/rbDPk5WiAXKGCJ9q1jxF9DVPaEOAcGbdFMUXTFAqhY+mtay7NocxBghXDdE
+        nl8Q8HRCQmWsB+O7po7KrEn9IlnkOKE=
+From:   Sui Jingfeng <sui.jingfeng@linux.dev>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Airlie <airlied@redhat.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jocelyn Falempe <jfalempe@redhat.com>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Lyude Paul <lyude@redhat.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 00/13] PCI: Define Intel PCI IDs and use them in drivers
-Message-ID: <20230711161930.GA250687@bhelgaas>
+        Helge Deller <deller@gmx.de>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        Sui Jingfeng <suijingfeng@loongson.cn>
+Subject: [PATCH v3 0/9] PCI/VGA: Improve the default VGA device selection
+Date:   Wed, 12 Jul 2023 00:31:46 +0800
+Message-Id: <20230711163155.791522-1-sui.jingfeng@linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87jzv6h2ui.wl-tiwai@suse.de>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 11, 2023 at 05:42:13PM +0200, Takashi Iwai wrote:
-> On Tue, 11 Jul 2023 17:36:20 +0200, Mark Brown wrote:
-> > On Tue, Jul 11, 2023 at 05:24:07PM +0200, Pierre-Louis Bossart wrote:
-> > > On 7/11/23 14:57, Amadeusz Sławiński wrote:
-> > 
-> > > > Simplify things, by adding PCI IDs to global header and make use of them
-> > > > in drivers. This allows for removal of comments by having IDs themselves
-> > > > being self explanatory. Additionally it allows for removal of existing
-> > > > inconsistencies by having one source of truth.
-> > 
-> > > I'd like to hear from Takashi and Mark on how this would work, we have
-> > > to provide new PCI IDs for both trees using a common 'pci_ids.h' file.
-> > 
-> > We can probably just agree on a tree to apply things and work from
-> > there.
-> 
-> Yes, simply apply on top of 6.5-rc1 or such a stable point and tag it.
-> Then other trees can merging it.
-> 
-> I can do it if both Bjorn and Mark agree (after all patches get
-> reviewed and no objection comes up).
+From: Sui Jingfeng <suijingfeng@loongson.cn>
 
-Sure.  I acked the PCI ones, so you can merge these via whatever tree
-makes the most sense.  We might have minor conflicts during the merge
-window, but they should be easy to fix.
+Currently, the default VGA device selection is not perfect. Potential
+problems are:
 
-Bjorn
+1) This function is a no-op on non-x86 architectures.
+2) It does not take the PCI Bar may get relocated into consideration.
+3) It is not effective for the PCI device without a dedicated VRAM Bar.
+4) It is device-agnostic, thus it has to waste the effort to iterate all
+   of the PCI Bar to find the VRAM aperture.
+5) It has invented lots of methods to determine which one is the default
+   boot device on a multiple video card coexistence system. But this is
+   still a policy because it doesn't give the user a choice to override.
+
+With the observation that device drivers or video aperture helpers may
+have better knowledge about which PCI bar contains the firmware FB,
+
+This patch tries to solve the above problems by introducing a function
+callback to the vga_client_register() function interface. DRM device
+drivers for the PCI device need to register the is_boot_device() function
+callback during the driver loading time. Once the driver binds the device
+successfully, VRAARB will call back to the driver. This gives the device
+drivers a chance to provide accurate boot device identification. Which in
+turn unlock the abitration service to non-x86 architectures. A device
+driver can also pass a NULL pointer to keep the original behavior.
+
+This series is applied on the drm-tip branch (with a cleanup patch set[1]
+applied beforehand)
+
+[1] https://patchwork.freedesktop.org/series/120548/
+
+v2:
+	* Add a simple implemment for drm/i915 and drm/ast
+	* Pick up all tags (Mario)
+v3:
+	* Fix a mistake for drm/i915 implement
+	* Fix patch can not be applied problem because of drm/amdgpu merged
+          other people's patch.
+
+Sui Jingfeng (9):
+  video/aperture: Add a helper to detect if an aperture contains
+    firmware FB
+  video/aperture: Add a helper for determining if an unmoved aperture
+    contain FB
+  PCI/VGA: Switch to aperture_contain_firmware_fb_nonreloc()
+  PCI/VGA: Improve the default VGA device selection
+  drm/amdgpu: Implement the is_primary_gpu callback of
+    vga_client_register()
+  drm/radeon: Add an implement for the is_primary_gpu function callback
+  drm/i915: Add an implement for the is_primary_gpu hook
+  drm/ast: Register as a vga client to vgaarb by calling
+    vga_client_register()
+  drm/loongson: Add an implement for the is_primary_gpu function
+    callback
+
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 12 +++-
+ drivers/gpu/drm/ast/ast_drv.c              | 29 +++++++++
+ drivers/gpu/drm/drm_aperture.c             | 16 +++++
+ drivers/gpu/drm/i915/display/intel_vga.c   | 31 ++++++++-
+ drivers/gpu/drm/loongson/lsdc_drv.c        | 10 ++-
+ drivers/gpu/drm/nouveau/nouveau_vga.c      |  2 +-
+ drivers/gpu/drm/radeon/radeon_device.c     | 12 +++-
+ drivers/pci/vgaarb.c                       | 74 ++++++++++++++++------
+ drivers/vfio/pci/vfio_pci_core.c           |  2 +-
+ drivers/video/aperture.c                   | 65 +++++++++++++++++++
+ include/drm/drm_aperture.h                 |  2 +
+ include/linux/aperture.h                   | 14 ++++
+ include/linux/vgaarb.h                     |  8 ++-
+ 13 files changed, 247 insertions(+), 30 deletions(-)
+
+-- 
+2.25.1
+
