@@ -2,137 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C5F974F574
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 18:33:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5151C74F8C5
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 22:09:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232583AbjGKQdJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jul 2023 12:33:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33908 "EHLO
+        id S231436AbjGKUJ3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jul 2023 16:09:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233242AbjGKQc7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 12:32:59 -0400
-Received: from out-62.mta0.migadu.com (out-62.mta0.migadu.com [IPv6:2001:41d0:1004:224b::3e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF3BD19BA
-        for <linux-pci@vger.kernel.org>; Tue, 11 Jul 2023 09:32:45 -0700 (PDT)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1689093163;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QoMhwjFigAbTHq+HcB9GYpyFfpHDzGgLNmwruJkUmC8=;
-        b=mjzopN32gkDIHH2DKeXPU4Uhh5gf5z6r2DVtvgerWF+e+HZlmhuYpklBE1idXQeZo+0qP6
-        kmmBiis6yM0xkO0eQgkG3GzLPBwQlnlpbqo8JYOMgGxYMoHSFvkTp+dFbaI/Dx0l2tA5er
-        DVLQ6sEcNFPLD8VVKk9IBe1o8Q3fX7c=
-From:   Sui Jingfeng <sui.jingfeng@linux.dev>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Airlie <airlied@redhat.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Jocelyn Falempe <jfalempe@redhat.com>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Lyude Paul <lyude@redhat.com>,
+        with ESMTP id S231334AbjGKUJ2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 16:09:28 -0400
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4ED51722
+        for <linux-pci@vger.kernel.org>; Tue, 11 Jul 2023 13:09:20 -0700 (PDT)
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-666ecf9a081so5408247b3a.2
+        for <linux-pci@vger.kernel.org>; Tue, 11 Jul 2023 13:09:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689106160; x=1691698160;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lMJwZ8kAMR/naZvtIfWHzEjIasoE6IRJi+ShdVOpKCk=;
+        b=B7F1zOor6/5pH9BTZSRyurnqZOhdK2hV5QYmlRvC9o3b1Z+K+O/MEkuDfHYOG9u3c7
+         1j7+nDfu0sWHO35gXmEUNYHs8ePzqNBtgXD15iQ9oIfjxixMILLKwwW/rtEbR1cMIMCw
+         cqPdT+EhJXces6IQ1lW+Z8m8s4Z5h890R4r4safGG6c8xnGkoCRkG8bAPZOeAx3LS4gj
+         PtfDoE8RSA6C2KiCljpl9+6rQLxDONcWBMDvzV0b3JJBbIwOd54wRYaLk7SCSKameAld
+         NWnZX/K5rt6XZ/7yiyNDyR7D66EkxlFzQq9FypXqKp5rlyhDq/4WsHXnFG2Sad5oGNeo
+         ffbQ==
+X-Gm-Message-State: ABy/qLY8lp6rdN54/K+Ocl157+3Tig1xFTuqy9qzEY3OFb4XJhBMPltv
+        WCUBLVpVGv+qcpq+CJsX5OHeGlTMz/YH2X2S
+X-Google-Smtp-Source: APBJJlEMkDJl43ARcG6lzf4hTkMzpWHfzTW2q9k9uIHW4MAlwmSP3PAeQN5hNVsYSmr1VltJAOV0Hg==
+X-Received: by 2002:a17:903:1107:b0:1b8:8af0:416f with SMTP id n7-20020a170903110700b001b88af0416fmr19728245plh.1.1689106159501;
+        Tue, 11 Jul 2023 13:09:19 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id f8-20020a170902684800b001b53953f314sm2389605pln.23.2023.07.11.13.09.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jul 2023 13:09:18 -0700 (PDT)
+Date:   Wed, 12 Jul 2023 05:09:16 +0900
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Linux PCI <linux-pci@vger.kernel.org>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Helge Deller <deller@gmx.de>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        Sui Jingfeng <suijingfeng@loongson.cn>,
-        Pan Xinhui <Xinhui.Pan@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Lijo Lazar <lijo.lazar@amd.com>,
-        YiPeng Chai <YiPeng.Chai@amd.com>,
-        Bokun Zhang <Bokun.Zhang@amd.com>,
-        Likun Gao <Likun.Gao@amd.com>
-Subject: [PATCH v3 5/9] drm/amdgpu: Implement the is_primary_gpu callback of vga_client_register()
-Date:   Wed, 12 Jul 2023 00:31:51 +0800
-Message-Id: <20230711163155.791522-6-sui.jingfeng@linux.dev>
-In-Reply-To: <20230711163155.791522-1-sui.jingfeng@linux.dev>
-References: <20230711163155.791522-1-sui.jingfeng@linux.dev>
+        =?utf-8?B?SsO2cmc=?= Roedel <jroedel@suse.de>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: The VFIO/IOMMU/PCI MC at LPC 2023 - Call for Papers
+Message-ID: <20230711200916.GA699236@rocinante>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Sui Jingfeng <suijingfeng@loongson.cn>
+Hello everyone!
 
-[why]
+Recently, we announced that the VFIO/IOMMU/PCI micro-conference is going to
+be part of this year's Linux Plumbers Conference, see:
 
-The vga_is_firmware_default() function defined in drivers/pci/vgaarb.c is
-arch-dependent, it's a dummy on non-x86 architectures. This made VGAARB
-lost an important condition for the arbitration on non-x86 platform. The
-rules about which GPU is (or should be) the primary display device get used
-by userspace are obscure on non-x86 platform, let's made the things clear.
+  https://lore.kernel.org/linux-pci/20230620114325.GA1387614@rocinante
 
-[how]
+That said, I am thrilled to announce that the Call for Papers (CfP) is open!
 
-The device that owns the firmware framebuffer should be the default boot
-device. This patch adds an arch-independent function to implement this
-rule. The vgaarb subsystem will call back to amdgpu_is_primary_gpu() when
-drm/amdgpu is bound to an AMDGPU device successfully.
+If you would like to submit a talk for the MC, please follow the process at
+https://lpc.events/event/17/abstracts, selecting "VFIO/IOMMU/PCI MC" from
+the available tracks.
 
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: Christian Konig <christian.koenig@amd.com>
-Cc: Pan Xinhui <Xinhui.Pan@amd.com>
-Cc: David Airlie <airlied@gmail.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Hawking Zhang <Hawking.Zhang@amd.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Lijo Lazar <lijo.lazar@amd.com>
-Cc: YiPeng Chai <YiPeng.Chai@amd.com>
-Cc: Bokun Zhang <Bokun.Zhang@amd.com>
-CC: Likun Gao <Likun.Gao@amd.com>
-Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+The deadline for talk proposal submission is early August, so only a few of
+weeks are left!  Remember: you can submit the proposal early and refine it
+later; there will be time.  So, don't hesitate!
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index d98f0801ac77..b638eff58636 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -3690,6 +3690,15 @@ static void amdgpu_device_set_mcbp(struct amdgpu_device *adev)
- 		DRM_INFO("MCBP is enabled\n");
- }
- 
-+static bool amdgpu_is_primary_gpu(struct pci_dev *pdev)
-+{
-+	struct drm_device *dev = pci_get_drvdata(pdev);
-+	struct amdgpu_device *adev = drm_to_adev(dev);
-+	struct amdgpu_gmc *gmc = &adev->gmc;
-+
-+	return drm_aperture_contain_firmware_fb(gmc->aper_base, gmc->aper_size);
-+}
-+
- /**
-  * amdgpu_device_init - initialize the driver
-  *
-@@ -4103,7 +4112,8 @@ int amdgpu_device_init(struct amdgpu_device *adev,
- 	/* this will fail for cards that aren't VGA class devices, just
- 	 * ignore it */
- 	if ((adev->pdev->class >> 8) == PCI_CLASS_DISPLAY_VGA)
--		vga_client_register(adev->pdev, amdgpu_device_vga_set_decode, NULL);
-+		vga_client_register(adev->pdev, amdgpu_device_vga_set_decode,
-+				    amdgpu_is_primary_gpu);
- 
- 	px = amdgpu_device_supports_px(ddev);
- 
--- 
-2.25.1
+Again, you can find the complete MC proposal at:
 
+  https://drive.google.com/file/d/1U3_WvPzVeP7DcTSs5FN7jZ2EtTTzUSor
+
+As a reminder: the conference registration is still open, so remember to
+reserve your attendance.
+
+Thank you for your help, and see you at the LPC 2023!
+
+	Alex, Bjorn, Jörg, Lorenzo and Krzysztof
