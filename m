@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C51D574F952
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 22:48:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A11AE74F98E
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 23:02:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229547AbjGKUsC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jul 2023 16:48:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51754 "EHLO
+        id S230213AbjGKVCi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jul 2023 17:02:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231364AbjGKUrv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 16:47:51 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F3359B;
-        Tue, 11 Jul 2023 13:47:50 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id 38308e7fff4ca-2b69923a715so98567241fa.0;
-        Tue, 11 Jul 2023 13:47:49 -0700 (PDT)
+        with ESMTP id S229931AbjGKVCh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 17:02:37 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233B719B;
+        Tue, 11 Jul 2023 14:02:36 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-4fb7dc16ff0so9646467e87.2;
+        Tue, 11 Jul 2023 14:02:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689108468; x=1691700468;
+        d=gmail.com; s=20221208; t=1689109354; x=1691701354;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UJHRQ34WYwoDGj03DDbaHxKoVvqJPbF8opF7Gn8ticg=;
-        b=ToUgugcPuBd55m8pWthqiCe1ojkZnICsw9WiQfoe8kp6WEVjn2mI3jkfrzV3tM7OlE
-         qPBU4CjwJVCsU4ll2AJSWTcxW48jkpRsVpN1OGmIyrtutKfJUPWs/iXlAXSqGXqH2JZ5
-         2pK7I7mOUhC22YbCW211nkRryHP9aGpFIxBGFnA85Ptx8cZLD9IX+pFi0fPFTUKl0zeV
-         L6NKn2g+7NGvKY42w0BvQqtzqGnGae+h61kKPjnvzGC0Vg985PtDUJJnkGO7Mjo6vJa9
-         kHF13Q2F8LL2+ldyI+ts3KIkstDG6l4kvgb4tGnA2Ib2W/evA2D+g8H+jwgM+/UA9C34
-         RxAA==
+        bh=WZilgtAPy8wWSgGLAsFq4XIBq5SXQUgWQos6V0+Rs1s=;
+        b=CgTC89cg05Te6fIySldVpTiCjdPZQUtOdrFyQg3HUggwj/h0Loi/OqxBSmsWi65Gbb
+         177t0ntTfKIHl4c46h24fCaCzE11mi2BlGBO3k2Sk7igXSmAozxQS0UsI6EdCwBXJIoF
+         p9i/tLUWMSbS2fA+IEzW/ebepz8u3OV2GGqstp33cdVAr63UWBmiokhmdB6pxv5IxRl/
+         umaBXafUUFxHRYsgce4PItlsB7SmczxCROB0VyINoOxeRF8/IC1l2MVoNuH3GeEwEZBE
+         nwslJWomOlIImRvm1E1mQ9ZDRAp/6tv6+LNpuqMwsau51YbnpoGz0H5JiUsQVLnacuWn
+         LUBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689108468; x=1691700468;
+        d=1e100.net; s=20221208; t=1689109354; x=1691701354;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UJHRQ34WYwoDGj03DDbaHxKoVvqJPbF8opF7Gn8ticg=;
-        b=JlPNyKJSzF1fHJGK7IP0ZJXGlME8jSBGSclcu45pWf3k2/laqXt+6gfY96isAhcMMw
-         yapsNt0fOGGzQLaSVeWQJeJLsQVgoZkyPalO/tX6u0cITJxMhcDkSv6/y3jcB6N5LPxE
-         e5Y0dOklfW1C2FP0OGiHx9PNtsGOPF/41K78TMiHD/CZ0c8RgTvIltoUHsoQePQ4GxIE
-         Kj+WFJzzz0DktrAEvEv3L38aZixXqtArkHWMFv7t0+DkO+30S9x19mzL8PdBTFCsAZTQ
-         JASabhngIcS/VVchc5L/KJTtFVP21LGDE4h8H6FixyCjIt+LrkDrC40VPaAwiuPOt7/A
-         vALw==
-X-Gm-Message-State: ABy/qLYtA18tFYSTeAc9M/0fA5NSU6V0bNuJrzXWf/mc6PlrZ34U0P2+
-        kRBNG9fZqvSyhuHLyVeJuwI=
-X-Google-Smtp-Source: APBJJlEsnwN8An1uHj9yamSS8udYeK1O+8NhwN94DRWpiw4tBOjfddE6RCXZVSnEqpTLHhSk6ccunw==
-X-Received: by 2002:a2e:b045:0:b0:2b6:e618:b597 with SMTP id d5-20020a2eb045000000b002b6e618b597mr16008167ljl.28.1689108468011;
-        Tue, 11 Jul 2023 13:47:48 -0700 (PDT)
+        bh=WZilgtAPy8wWSgGLAsFq4XIBq5SXQUgWQos6V0+Rs1s=;
+        b=Pz/X8eE0RC1cQ4z8pCavTrDJFDUcozS4xTWO7xuosRaDJiohdp2aWOm68bcjM6g16a
+         a16lgGS/cVHpobUdrNshD0wh5rzdec3GcRSw4gUkdvrLSe3smfrjF7PgXVqAjcKi8opE
+         9QCUKH3p4FxxtFahL+ufonFBt5f0qOotwLIAhxpMYOhyvEbB5UjKBBtFVN0tseduRa3j
+         uabday9HdGEAFNAXtZmIMlEjZsvovRT6bAJD58NTHkm/Yap2/mJ7gUId49B3qiAKEo+B
+         B16R01LR+dUnyBF66WvSVViMWvB4vceZmRfC57ozdMfAc1qV/tI+a7SnKWGEyuVnGVNV
+         IunA==
+X-Gm-Message-State: ABy/qLYXlYDKTuiQmaarNOKOOYvpqTyZANsqdJ4LVd4gTgKx3drCKgRs
+        2d68cTV/O98wljwAhNKqJBo=
+X-Google-Smtp-Source: APBJJlEr3S3PKMoToFuuwjZWxO20wadh3V8YGM0cTUWHbgfUZ+AyKEVU4GSIWwplfhceC9MsciR5Qg==
+X-Received: by 2002:a05:6512:692:b0:4f8:5e11:2cbc with SMTP id t18-20020a056512069200b004f85e112cbcmr15766413lfe.36.1689109354046;
+        Tue, 11 Jul 2023 14:02:34 -0700 (PDT)
 Received: from mobilestation ([95.79.172.181])
-        by smtp.gmail.com with ESMTPSA id p19-20020a2e9ad3000000b002b6e9e4d5c7sm617752ljj.35.2023.07.11.13.47.46
+        by smtp.gmail.com with ESMTPSA id w7-20020ac25987000000b004fbb3872190sm444906lfn.113.2023.07.11.14.02.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jul 2023 13:47:47 -0700 (PDT)
-Date:   Tue, 11 Jul 2023 23:47:45 +0300
+        Tue, 11 Jul 2023 14:02:33 -0700 (PDT)
+Date:   Wed, 12 Jul 2023 00:02:31 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
@@ -56,90 +56,177 @@ Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
         bhelgaas@google.com, kishon@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
         marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v17 09/20] PCI: dwc: Add PCI_EXP_LNKCAP_MLW handling
-Message-ID: <4dik7u3sk42itkmp3o7e5r4fx5ziquo6j6f67dq4s3qtp6kzxq@ji2ss2c2n7zh>
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>
+Subject: Re: [PATCH v17 16/20] dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe
+ Endpoint
+Message-ID: <rk52tz3tmpzg6s7szkh3u44vnr3sncgtb7535fn5alf4fj4dlh@ljmhmtjee3rw>
 References: <20230705114206.3585188-1-yoshihiro.shimoda.uh@renesas.com>
- <20230705114206.3585188-10-yoshihiro.shimoda.uh@renesas.com>
+ <20230705114206.3585188-17-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230705114206.3585188-10-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20230705114206.3585188-17-yoshihiro.shimoda.uh@renesas.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 05, 2023 at 08:41:55PM +0900, Yoshihiro Shimoda wrote:
-> Update dw_pcie_link_set_max_link_width() to set PCI_EXP_LNKCAP_MLW.
-> In accordance with the DW PCIe RC/EP HW manuals [1,2,3,...] aside with
-> the PORT_LINK_CTRL_OFF.LINK_CAPABLE and GEN2_CTRL_OFF.NUM_OF_LANES[8:0]
-> field there is another one which needs to be updated. It's
-> LINK_CAPABILITIES_REG.PCIE_CAP_MAX_LINK_WIDTH. If it isn't done at
-> the very least the maximum link-width capability CSR won't expose
-> the actual maximum capability.
+On Wed, Jul 05, 2023 at 08:42:02PM +0900, Yoshihiro Shimoda wrote:
+> Document bindings for Renesas R-Car Gen4 and R-Car S4-8 (R8A779F0)
+> PCIe endpoint module.
 > 
-> [1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
->     Version 4.60a, March 2015, p.1032
-> [2] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
->     Version 4.70a, March 2016, p.1065
-> [3] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
->     Version 4.90a, March 2016, p.1057
-> ...
-> [X] DesignWare Cores PCI Express Controller Databook - DWC PCIe Endpoint,
->       Version 5.40a, March 2019, p.1396
-> [X+1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
->       Version 5.40a, March 2019, p.1266
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+> Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+> ---
+>  .../bindings/pci/rcar-gen4-pci-ep.yaml        | 106 ++++++++++++++++++
+>  1 file changed, 106 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+> new file mode 100644
+> index 000000000000..4e6be856104c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+> @@ -0,0 +1,106 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) 2022-2023 Renesas Electronics Corp.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/rcar-gen4-pci-ep.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas R-Car Gen4 PCIe Endpoint
+> +
+> +maintainers:
+> +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> +
+> +allOf:
+> +  - $ref: snps,dw-pcie-ep.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: renesas,r8a779f0-pcie-ep   # R-Car S4-8
+> +      - const: renesas,rcar-gen4-pcie-ep  # R-Car Gen4
+> +
+> +  reg:
+> +    maxItems: 6
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: dbi2
+> +      - const: atu
+> +      - const: dma
+> +      - const: app
+> +      - const: addr_space
+> +
+> +  interrupts:
+> +    maxItems: 3
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: dma
+> +      - const: sft_ce
+> +      - const: app
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    items:
+> +      - const: core
+> +      - const: ref
+> +
+> +  max-functions:
+> +    maximum: 2
+> +
+> +  max-link-speed:
+> +    maximum: 4
+> +
+> +  num-lanes:
+> +    maximum: 4
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - interrupts
+> +  - resets
+> +  - power-domains
+> +  - clocks
+> +  - clock-names
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/r8a779f0-cpg-mssr.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/power/r8a779f0-sysc.h>
+> +
+> +    soc {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        pcie0_ep: pcie-ep@e65d0000 {
+> +            compatible = "renesas,r8a779f0-pcie-ep", "renesas,rcar-gen4-pcie-ep";
 
-> The commit description is suggested by Serge Semin.
+> +            reg = <0 0xe65d0000 0 0x2000>, <0 0xe65d2800 0 0x0800>,
+> +                  <0 0xe65d3000 0 0x2000>, <0 0xe65d5000 0 0x1200>,
+> +                  <0 0xe65d6200 0 0x0e00>, <0 0xfe000000 0 0x400000>;
+> +            reg-names = "dbi", "dbi2", "atu", "dma", "app", "addr_space";
 
-This is implied by the Suggested-by tag. I'd drop it.
+I'll ask it once again since you didn't address my comment in v16 and
+haven't fixed the example node in the bindings:
 
-Anyway. The change looks good to me. Thanks!
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+I see you defining the dbi2 space as <0 _0xe65d2800_ 0 0x0800>. But
+sometime before you mentioned that your device has the next CSRs
+layout:
+! +0x0000 : Function 0 (common address in Root port and Endpoint mode)
+  +0x1000 : Function 1 (Endpoint mode only)
+  +0x2000 : Shadow register for Function 0
+! +0x2800 : Shadow register for Function 1
+it means the DT-bindings example node has the dbi space defined for
+both functions meanwhile the dbi2 space defined for _function #1_ only
+(it's 0xe65d0000 + 0x2800). So AFAICS either you have wrong space
+defined in the example node or the node is wrong in your platform DTS
+too and you have a malfunction end-point mode. Am I missing something?
+In any case based on your End-point driver implementation dbi2 is
+supposed to be defined at the 0xe65d2000 base address.
+
+Am I wrong? Could you clarify this?
 
 -Serge(y)
 
-> 
-> Suggested-by: Serge Semin <fancer.lancer@gmail.com>
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 7b720bad7656..44150d34720a 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -730,7 +730,8 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
->  
->  static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
->  {
-> -	u32 lwsc, plc;
-> +	u32 lnkcap, lwsc, plc;
-> +	u8 cap;
->  
->  	if (!num_lanes)
->  		return;
-> @@ -766,6 +767,12 @@ static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
->  	}
->  	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, plc);
->  	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, lwsc);
-> +
-> +	cap = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	lnkcap = dw_pcie_readl_dbi(pci, cap + PCI_EXP_LNKCAP);
-> +	lnkcap &= ~PCI_EXP_LNKCAP_MLW;
-> +	lnkcap |= FIELD_PREP(PCI_EXP_LNKCAP_MLW, num_lanes);
-> +	dw_pcie_writel_dbi(pci, cap + PCI_EXP_LNKCAP, lnkcap);
->  }
->  
->  void dw_pcie_iatu_detect(struct dw_pcie *pci)
+> +            interrupts = <GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>;
+> +            interrupt-names = "dma", "sft_ce", "app";
+> +            clocks = <&cpg CPG_MOD 624>, <&pcie0_clkref>;
+> +            clock-names = "core", "ref";
+> +            power-domains = <&sysc R8A779F0_PD_ALWAYS_ON>;
+> +            resets = <&cpg 624>;
+> +            num-lanes = <2>;
+> +            max-link-speed = <4>;
+> +            max-functions = /bits/ 8 <2>;
+> +        };
+> +    };
 > -- 
 > 2.25.1
 > 
