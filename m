@@ -2,129 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53EC074EF41
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 14:48:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4086C74EF87
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jul 2023 14:57:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230072AbjGKMr5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jul 2023 08:47:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51462 "EHLO
+        id S229537AbjGKM5K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jul 2023 08:57:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229637AbjGKMr4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 08:47:56 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9FDF11B;
-        Tue, 11 Jul 2023 05:47:54 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id 38308e7fff4ca-2b6fbf0c0e2so87765811fa.2;
-        Tue, 11 Jul 2023 05:47:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689079673; x=1691671673;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kZwIWsyHBDhjLad84NzaNva3BNfXjZe5vkLfQsOCjCc=;
-        b=pSipQ/AW/mGoObrbdhJv/oCUAvq/UliTyS5/cglEVv63+SguNkGYr3f6H/Y/IG84AP
-         e7WD1fpm7cUeIwneC6KY8Vswr6oN7bJ/ihMg4j5F5IyYFNXfgXsYX47taxWsJuuTyF0y
-         uVjZNj4AmS8XannHsmJj1pbkUAEFOyVjqRMIlYEhf4fGff04iJAgUeeaFPbvLhE+MeNw
-         rNjd5kpsTGMkV/d5K7jtXfmfpR2Ff+JeUyou0zsYmaexL0myCvU7Z8CDndwxvscM4Up6
-         Kh4A5pFzQPyNNeSHbjGbmoEjSBYKkbx6PupXR0MFB43WLJ23W4N+1bp9EtpLACaZ54ND
-         k5Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689079673; x=1691671673;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kZwIWsyHBDhjLad84NzaNva3BNfXjZe5vkLfQsOCjCc=;
-        b=NJ6fWbtUY1cKB22A2cFPAiSpspR29JtF8NKrSExhkOviIv7LrsjrRTtlbtdwkZxFNv
-         AymAK2OdfILJ3h2M/QZWPRlMnSbhCiPez9uzom/MRvjMa0Lyh6ATG2rl6FxcqjEHEkyl
-         Up7imMJMC9mT70GJeg850ZL1rMYFSjLF+3dw7Qthre/1cc7uULxpqKw8bGI9VY+GEZCw
-         CgYK/Iqv+aqnltUgU3kzto9mUcP7dXHNb2U26oqk4tQZWLqI4OU17yxwjRdb4udr/3qz
-         jZ9xHqCiK7LqVquzjK2SlutVpWPCc7+OhVTmdMBYy/X+2aB9ScjHpkxFTyID3NlJdcH1
-         h3+A==
-X-Gm-Message-State: ABy/qLZrX/Ap9C2Jy0nmV3ZjVahAj0N5/qBwEcMj7LSBpREMPh0PUlep
-        zAkBjpv/PEVvYVCvzICeYUk=
-X-Google-Smtp-Source: APBJJlGTGVjSGfPVElIc+uEX2MYdYCtrEOxoN7Wt0fbZwaLSqMQOuoY9bsbAGNYMsMh3SViR3GwrCw==
-X-Received: by 2002:a19:4f42:0:b0:4fb:7de4:c837 with SMTP id a2-20020a194f42000000b004fb7de4c837mr12264673lfk.68.1689079672996;
-        Tue, 11 Jul 2023 05:47:52 -0700 (PDT)
-Received: from mobilestation ([85.249.18.12])
-        by smtp.gmail.com with ESMTPSA id er24-20020a05651248d800b004fb75943aa0sm305920lfb.196.2023.07.11.05.47.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jul 2023 05:47:52 -0700 (PDT)
-Date:   Tue, 11 Jul 2023 15:47:49 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
-        bhelgaas@google.com, kishon@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v17 01/20] PCI: Add INTx Mechanism Messages macros
-Message-ID: <7jry4cvtqw56xt5tbuorla5dq3ikrfboy5sltsnbe6ttdi5h7h@fqfal75irzwe>
-References: <20230705114206.3585188-1-yoshihiro.shimoda.uh@renesas.com>
- <20230705114206.3585188-2-yoshihiro.shimoda.uh@renesas.com>
+        with ESMTP id S229458AbjGKM5J (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 08:57:09 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12C2018D;
+        Tue, 11 Jul 2023 05:57:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689080229; x=1720616229;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Jid2RuYbICnO2j6tUDkfKrrrf977lWFjcHoNG9Lge9A=;
+  b=LQ5R8esKkntAkN2Y3MlQm0X86HPt3NmNGUsNBsFK142RZ/RgrwmGuMmq
+   qV6nX3UOcZ8K7cm/GNOIfFDc2binvcbKQsdkQJhQ2z4FMipjrerLGfhga
+   N8Lanu0QunDaZ22v5XegZbra2huOFDJVJg6XjLMXUCG00IDKpqJTRmHhj
+   mRK0+USgsQMyTksih70PNNVD8tVnMMcWmOK4d7Nc77aMkJjkN70nz31Mk
+   2HUlZkk0QX4qaNUt+81xVaP7gnMH61iwNbfZ9tAJQGnmmRshF5+0gzzkU
+   5vUNVpqPQWjsn+aTN5f/PX8eqQIcmTRF4ietH2yfCgQ45sp9F/JAHpNpd
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="367187322"
+X-IronPort-AV: E=Sophos;i="6.01,196,1684825200"; 
+   d="scan'208";a="367187322"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 05:57:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="834666447"
+X-IronPort-AV: E=Sophos;i="6.01,196,1684825200"; 
+   d="scan'208";a="834666447"
+Received: from dev2 (HELO DEV2.igk.intel.com) ([10.237.148.94])
+  by fmsmga002.fm.intel.com with ESMTP; 11 Jul 2023 05:57:05 -0700
+From:   =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+Subject: [PATCH 00/13] PCI: Define Intel PCI IDs and use them in drivers
+Date:   Tue, 11 Jul 2023 14:57:13 +0200
+Message-Id: <20230711125726.3509391-1-amadeuszx.slawinski@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230705114206.3585188-2-yoshihiro.shimoda.uh@renesas.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 05, 2023 at 08:41:47PM +0900, Yoshihiro Shimoda wrote:
-> Add "Implicit Message Routing" and "INTx Mechanism Messages" macros
-> to send a message by a PCIe driver.
+PCI IDs for Intel HDA are duplicated across quite a few drivers, due to
+various configurations and historical reasons. Currently almost all uses
+of HDA PCI IDs have corresponding comment telling which platform it is.
+Additionally there are some inconsistencies between drivers about which
+ID corresponds to which device.
 
-Adding to the patch log why they are needed would shed some light to
-the patch context for the reviewers unfamiliar with the series.
-Normally the submitters provide the context of the preparation patches
-to simplify the review. Adding a reference to the respective part of
-the PCIe specification would be also appropriate here.
+Simplify things, by adding PCI IDs to global header and make use of them
+in drivers. This allows for removal of comments by having IDs themselves
+being self explanatory. Additionally it allows for removal of existing
+inconsistencies by having one source of truth.
 
-Other than that no objection from my side:
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+Changes from RFC:
+ - Sort Intel PCI IDs before adding new ones
+ - Fix ordering of new PCI IDs (Andy)
+ - Define all used Intel IDs (Andy)
+ - Add macros for controller type detection (Andy/Bjorn)
+ - Add set of patches changing to use above macro (Andy/Bjorn)
+ - Use PCI_DEVICE_DATA for Intel IDs in sound/pci/hda/hda_intel.c (Andy)
+ - Commit message wording (Andy)
+ - Remove unnecessary tabs (Andy)
 
--Serge(y)
+Amadeusz Sławiński (13):
+  PCI: Sort Intel PCI IDs by number
+  PCI: Add Intel Audio DSP devices to pci_ids.h
+  ALSA: hda: Add controller matching macros
+  ALSA: hda: Use global PCI match macro
+  ALSA: hda/i915:  Use global PCI match macro
+  ASoC: Intel: Skylake: Use global PCI match macro
+  ALSA: intel-dsp-config: Convert to PCI device IDs defines
+  ALSA: hda: Convert to PCI device IDs defines
+  ASoC: Intel: avs: Convert to PCI device IDs defines
+  ASoC: Intel: avs: Convert to PCI device IDs defines
+  ASoC: Intel: Skylake: Convert to PCI device IDs defines
+  ASoC: SOF: Intel: Convert to PCI device IDs defines
+  ASoC: Intel: sst: Convert to PCI device IDs defines
 
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  drivers/pci/pci.h | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index a4c397434057..45673cc9c724 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -13,6 +13,24 @@
->  
->  #define PCIE_LINK_RETRAIN_TIMEOUT_MS	1000
->  
-> +/* Implicit Message Routing (r[2:0]) */
-> +#define PCI_MSG_TYPE_R_ROUTING_RC	0
-> +#define PCI_MSG_TYPE_R_ROUTING_ADDR	1
-> +#define PCI_MSG_TYPE_R_ROUTING_ID	2
-> +#define PCI_MSG_TYPE_R_ROUTING_BC	3
-> +#define PCI_MSG_TYPE_R_ROUTING_LOCAL	4
-> +#define PCI_MSG_TYPE_R_ROUTING_GATHER	5
-> +
-> +/* INTx Mechanism Messages */
-> +#define PCI_MSG_CODE_ASSERT_INTA	0x20
-> +#define PCI_MSG_CODE_ASSERT_INTB	0x21
-> +#define PCI_MSG_CODE_ASSERT_INTC	0x22
-> +#define PCI_MSG_CODE_ASSERT_INTD	0x23
-> +#define PCI_MSG_CODE_DEASSERT_INTA	0x24
-> +#define PCI_MSG_CODE_DEASSERT_INTB	0x25
-> +#define PCI_MSG_CODE_DEASSERT_INTC	0x26
-> +#define PCI_MSG_CODE_DEASSERT_INTD	0x27
-> +
->  extern const unsigned char pcie_link_speed[];
->  extern bool pci_early_dump;
->  
-> -- 
-> 2.25.1
-> 
+ include/linux/pci_ids.h                | 104 +++++--
+ include/sound/hda_codec.h              |   3 -
+ include/sound/hdaudio.h                |  27 ++
+ sound/hda/hdac_i915.c                  |   7 +-
+ sound/hda/intel-dsp-config.c           | 119 ++++----
+ sound/pci/hda/hda_intel.c              | 373 ++++++++++---------------
+ sound/soc/intel/atom/sst/sst.c         |   3 +-
+ sound/soc/intel/atom/sst/sst.h         |   1 -
+ sound/soc/intel/atom/sst/sst_pci.c     |   4 +-
+ sound/soc/intel/avs/board_selection.c  |  10 +-
+ sound/soc/intel/avs/core.c             |  16 +-
+ sound/soc/intel/skylake/skl-messages.c |  16 +-
+ sound/soc/intel/skylake/skl-pcm.c      |   3 +-
+ sound/soc/intel/skylake/skl.c          |  36 +--
+ sound/soc/sof/intel/pci-apl.c          |   9 +-
+ sound/soc/sof/intel/pci-cnl.c          |  15 +-
+ sound/soc/sof/intel/pci-icl.c          |  12 +-
+ sound/soc/sof/intel/pci-mtl.c          |   3 +-
+ sound/soc/sof/intel/pci-skl.c          |   6 +-
+ sound/soc/sof/intel/pci-tgl.c          |  45 +--
+ sound/soc/sof/intel/pci-tng.c          |   3 +-
+ 21 files changed, 384 insertions(+), 431 deletions(-)
+
+-- 
+2.34.1
+
