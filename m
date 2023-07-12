@@ -2,84 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF3DD74FCDF
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jul 2023 03:54:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B34074FE98
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jul 2023 07:08:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231359AbjGLBy0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jul 2023 21:54:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33032 "EHLO
+        id S229551AbjGLFII (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jul 2023 01:08:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231272AbjGLByZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 21:54:25 -0400
-Received: from mail.208.org (unknown [183.242.55.162])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13718171E
-        for <linux-pci@vger.kernel.org>; Tue, 11 Jul 2023 18:54:23 -0700 (PDT)
-Received: from mail.208.org (email.208.org [127.0.0.1])
-        by mail.208.org (Postfix) with ESMTP id 4R114k1DkYzBR5CM
-        for <linux-pci@vger.kernel.org>; Wed, 12 Jul 2023 09:54:14 +0800 (CST)
-Authentication-Results: mail.208.org (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)" header.d=208.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=208.org; h=
-        content-transfer-encoding:content-type:message-id:user-agent
-        :references:in-reply-to:subject:to:from:date:mime-version; s=
-        dkim; t=1689126853; x=1691718854; bh=QDt5V1qbtA8v+foDitLWQlDYCUM
-        5+ZnoES/3BD6Zv4M=; b=rGtdHWimvmzvqSZzjoBHOwAO71rX2dqnAALOTv8ZTH6
-        nrGAMp9pil1LMsf3yPCpWfjkBGBmEa4krl1Ney7PkPb30Fxktq++/ab6dHJn/vnP
-        nhlbk6V0LBb960wYyyC4zFkLszTO2FsL/xeCQsZqqGrXW3F0dbuLLIcCkxfkEWvb
-        fN0QhO1pyt1JI0NUZybCgbDz76kitLuQmrACGC2mJf+nyb1o4LA5xLm1Jf5WJ8Zh
-        AHEcxFAEvvypM5Wyu4IWROXdtV14OfOitLV7QHmTG45isEQ2NJyNu0afER0mCzZB
-        JwU4nx+CsHkNcJkCslRP6fqu7sX/+sZkrmrU31CuLTQ==
-X-Virus-Scanned: amavisd-new at mail.208.org
-Received: from mail.208.org ([127.0.0.1])
-        by mail.208.org (mail.208.org [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 0zeH_8OmV82I for <linux-pci@vger.kernel.org>;
-        Wed, 12 Jul 2023 09:54:13 +0800 (CST)
-Received: from localhost (email.208.org [127.0.0.1])
-        by mail.208.org (Postfix) with ESMTPSA id 4R114j3LdHzBHXhY;
-        Wed, 12 Jul 2023 09:54:13 +0800 (CST)
+        with ESMTP id S230327AbjGLFIH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jul 2023 01:08:07 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C53F0;
+        Tue, 11 Jul 2023 22:08:05 -0700 (PDT)
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36C3wseK027784;
+        Wed, 12 Jul 2023 05:08:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=dCnyi4x/006EB36CO8CTR21nQ9r+xvXsqaHQF3fs9kM=;
+ b=mU8E+95h3zz70v9T/NUyHIb0m+hRW/vZdwOBwdq0ZafkpJQHqxk8gZ/O0fvMqfS8ns4G
+ P+zeQqHYlZdyc/BnAoSU6/dR7OcWw9M1TetQyrNlQ1/1M2T0y1gCA9IARwInb8ZgII2m
+ YtvslJ3HY+IizCgJhNiijpWpSbAiTC+KXpLh+X47Jri6Xr0YVjSXLR3ApFuBqytXDkez
+ vB31d2DfzhKaD17gSD4KAva1yCJYHNipzRH7+smsOrsqIzpj69KY3bVqe3aPeLLlx68n
+ 06UirMhfrlBrZnZ4n527Et+vEKe3A8dkV+DiP6t1W09wPSdR1ewB5uWunUJSrduKadvJ gg== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rsf51gku0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 12 Jul 2023 05:08:02 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36C581Aa004676
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 12 Jul 2023 05:08:01 GMT
+Received: from [10.217.219.216] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Tue, 11 Jul
+ 2023 22:07:57 -0700
+Message-ID: <db0623b0-b6a3-cc09-f5ac-24e7499d4109@quicinc.com>
+Date:   Wed, 12 Jul 2023 10:37:55 +0530
 MIME-Version: 1.0
-Date:   Wed, 12 Jul 2023 09:54:13 +0800
-From:   shijie001@208suo.com
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hpa@zytor.com
-Subject: [PATCH] x86/pci:Fix errors in ce4100.c
-In-Reply-To: <tencent_9BFBD2DD48250CEC69579ED53FF756022B05@qq.com>
-References: <tencent_9BFBD2DD48250CEC69579ED53FF756022B05@qq.com>
-User-Agent: Roundcube Webmail
-Message-ID: <d96ed681c938934e87beb65a6108d2a9@208suo.com>
-X-Sender: shijie001@208suo.com
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v7 0/3] PCI: qcom: ep: Add basic interconnect support
+Content-Language: en-US
+To:     <manivannan.sadhasivam@linaro.org>
+CC:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_vbadigan@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_ramkri@quicinc.com>,
+        <krzysztof.kozlowski@linaro.org>
+References: <1688099123-28036-1-git-send-email-quic_krichai@quicinc.com>
+From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <1688099123-28036-1-git-send-email-quic_krichai@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,RDNS_NONE,SPF_HELO_FAIL,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: jqVPe2QRmsUoNyMVgPhCH5gOT206ICWF
+X-Proofpoint-GUID: jqVPe2QRmsUoNyMVgPhCH5gOT206ICWF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-12_02,2023-07-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ bulkscore=0 lowpriorityscore=0 clxscore=1015 phishscore=0 malwarescore=0
+ mlxlogscore=759 impostorscore=0 spamscore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
+ definitions=main-2307120044
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The following checkpatch errors are removed:
-ERROR: space prohibited before that ',' (ctx:WxW)
+Hi All,
 
-Signed-off-by: Jie Shi <shijie001@208suo.com>
----
-  arch/x86/pci/ce4100.c | 2 +-
-  1 file changed, 1 insertion(+), 1 deletion(-)
+A gentle ping.
 
-diff --git a/arch/x86/pci/ce4100.c b/arch/x86/pci/ce4100.c
-index 87313701f069..0ffb6563e429 100644
---- a/arch/x86/pci/ce4100.c
-+++ b/arch/x86/pci/ce4100.c
-@@ -113,7 +113,7 @@ static struct sim_dev_reg bus1_fixups[] = {
-      DEFINE_REG(8, 0, 0x10, (1*MB), reg_init, reg_read, reg_write)
-      DEFINE_REG(8, 1, 0x10, (64*KB), reg_init, reg_read, reg_write)
-      DEFINE_REG(8, 2, 0x10, (64*KB), reg_init, reg_read, reg_write)
--    DEFINE_REG(9, 0, 0x10 , (1*MB), reg_init, reg_read, reg_write)
-+    DEFINE_REG(9, 0, 0x10, (1*MB), reg_init, reg_read, reg_write)
-      DEFINE_REG(9, 0, 0x14, (64*KB), reg_init, reg_read, reg_write)
-      DEFINE_REG(10, 0, 0x10, (256), reg_init, reg_read, reg_write)
-      DEFINE_REG(10, 0, 0x14, (256*MB), reg_init, reg_read, reg_write)
+
+Thanks,
+
+KC
+
+On 6/30/2023 9:55 AM, Krishna chaitanya chundru wrote:
+> Add basic support for managing "pcie-mem" interconnect path by setting
+> a low constraint before enabling clocks and updating it after the link
+> is up based on link speed and width the device got enumerated.
+>
+> chnages from v6:
+> 	- addressed the comments as suggested by mani.
+> changes from v5:
+>          - addressed the comments by mani.
+> changes from v4:
+>          - rebased with linux-next.
+>          - Added comments as suggested by mani.
+>          - removed the arm: dts: qcom: sdx55: Add interconnect path
+>            as that patch is already applied.
+> changes from v3:
+>          - ran make DT_CHECKER_FLAGS=-m dt_binding_check and fixed
+>           errors.
+>          - Added macros in the qcom ep driver patch as suggested by Dmitry
+> changes from v2:
+>          - changed the logic for getting speed and width as suggested
+>           by bjorn.
+>          - fixed compilation errors.
+>
+>
+> Krishna chaitanya chundru (3):
+>    dt-bindings: PCI: qcom: ep: Add interconnects path
+>    arm: dts: qcom: sdx65: Add PCIe interconnect path
+>    PCI: qcom-ep: Add ICC bandwidth voting support
+>
+>   .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 13 ++++
+>   arch/arm/boot/dts/qcom/qcom-sdx65.dtsi             |  3 +
+>   drivers/pci/controller/dwc/pcie-qcom-ep.c          | 71 ++++++++++++++++++++++
+>   3 files changed, 87 insertions(+)
+>
