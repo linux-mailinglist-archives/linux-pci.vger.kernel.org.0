@@ -2,311 +2,323 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D09674FB62
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jul 2023 00:54:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FAA874FC0C
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jul 2023 02:17:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231267AbjGKWyw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jul 2023 18:54:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40404 "EHLO
+        id S230285AbjGLAR4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jul 2023 20:17:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230155AbjGKWyv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 18:54:51 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2051.outbound.protection.outlook.com [40.107.94.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 583A7E60;
-        Tue, 11 Jul 2023 15:54:49 -0700 (PDT)
+        with ESMTP id S229537AbjGLARz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jul 2023 20:17:55 -0400
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2115.outbound.protection.outlook.com [40.107.114.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFD2BFB;
+        Tue, 11 Jul 2023 17:17:51 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IKkISI8dcGPtnDqCY1jiQ8WLO5D8XhMmV8L33Gam9PmHK7uODnx8KVr+vvOmW5CBuN+Yj6ClXwWl/Ao68wpzHw8/QwqfdCzcAI6CkPTOr1hBIygO7ksdFdMMTwgBQsbSYAHwzzQ9VHicYKglAVXjzpqQ2kUUz0mMFRcDui+eayOWE/CimnrfcmkUTGtdDigIzuCoxZeOX9Wf9Dm6m26HVBD8RjBmEc4a20EmJwPfesDmyAE2NsP/EVl5vkpBdZE9dwoFWbA3Ef1863SUg0CcqOjKvJunI9GUpIlL7/nhXbYnGdA+By5sygwONUU8e7JdyAR9MbWzhk/JGjCyVUU/4w==
+ b=nG5VCUEPvWBcvBOYOmSqfN8HjwkzWFDnwkcZLbQ2gtCCc/T2XiSUYQmLM5s6uMgkWOdft7CyxeTmnQpIP3Z1qVwk8/VZZkH/e2q02es4aUqymouEEq2zuOq20ajuIQkcXfkI+k+K03Gj6/iyg1MDmm8nsjpNDI34NtFObPM9Yv7Rz4vqfQdHYk7Jpn66Ag3JZJ5OGMM3OSrpH3YMsgMaQ1SdsupXt/nphmxm9uP0Svhl9pCpIs5rdGCIXmFgvtikZ8dG35yoEPQaU3uMJwji/ZuXMDt21Ky9th7kK12tRmRwhk/XAXHVCvRE+Hc/rSGrV8jU97WsL3Yq8WxnBFg1mQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tZvXVML1c3wAmLONOyDyhelIASdL672e8owQH/lsOmc=;
- b=VzM2hPfMUqsA69Q+8VQ9F1YTodVm6s8GSjqdyAPXS6shvgZquH5gDsp8xvbPa0x/f/1kqd7ta3iAoWUJzd+Z0cQDPovupEc+PRRs2Sdru/xcd+R0Wtd/yqkvAhb9U6tqPkwuPt7O0Dr5wvmIJe0LStV6pqqMG/ysD1LJMrp74T+dtyPwxK+oqu0Kxtrm4zm7bEV5/LJtACoFSYQvf/eAvTVY3pGHCjY/aNLb2XwonvPPTvHjPUMEJpsD5Uj7UI4CCejytuCM6UJnXeLwzr3TyC+825tf9yFTYWC6T8+ZpuRj0Ekp5y/xAg0CmPduirGwciH3N2ENnrB5q/je2pqURQ==
+ bh=pNCXHi2ZsvRvOujY4dKmIpcH4NnJdN+XcFHC5pKsKHc=;
+ b=InO+aDLpQebTVkXdVvimG1rulCng6C5nmGzwmLXcaWsMpP3RGROK3MZWDVeFafvdSnOhGb62vY+WS/x7hDUL5EP4kNWqXClveR0wpfnSeCrUi6tWfAT4Oz/Gt/kcPbyIy2d+gi4x+PA6mn4ZXlt67O9iHIru41pM6sDkWgs60ddE+eEMhxB8Me0cOZmJK/6GckErP5tS051OujBA6AgBA4cM3bdH/FYuGTLNZ1K/6fV1dqziS8uZWjgKOisvpZFoQLa/cXRBxsR1b/9sSvAJD2AsjG2JoSMO9MWqoRtHATmky0Gdm17cJa6qiohx2UcJd8QVpWT7v1QN0GF/A3Cgvw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tZvXVML1c3wAmLONOyDyhelIASdL672e8owQH/lsOmc=;
- b=XcBGwUZXYOmpAFJYJmCzktUV6VBWnfaDw4ShtQ6CPhTwpW5u6cbrUaTX5bvct7yOccqtbKRSapOFJPFQyXjTvt2hbCDG8OY2SYj0kM6km7ZkdUu61I/9WfkAuuMPcQPvAx37bc215hLUquobFt819PMteXxdtbKHosACiH2RxkE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SN7PR12MB7346.namprd12.prod.outlook.com (2603:10b6:806:299::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.30; Tue, 11 Jul
- 2023 22:54:46 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::bce4:716a:8303:efcf]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::bce4:716a:8303:efcf%4]) with mapi id 15.20.6565.028; Tue, 11 Jul 2023
- 22:54:46 +0000
-Message-ID: <b82a50eb-8182-84ca-5b24-dbe8870fa871@amd.com>
-Date:   Tue, 11 Jul 2023 17:54:43 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v7 2/2] PCI: Don't put non-power manageable PCIe root
- ports into D3
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        Iain Lane <iain@orangesquash.org.uk>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20230711221427.GA250962@bhelgaas>
-Content-Language: en-US
-From:   Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20230711221427.GA250962@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN4PR0501CA0035.namprd05.prod.outlook.com
- (2603:10b6:803:40::48) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+ bh=pNCXHi2ZsvRvOujY4dKmIpcH4NnJdN+XcFHC5pKsKHc=;
+ b=lT4hwUkVcRwPd9caQGjRhq96O9Eja1po7TQguFCvRTYHQ6WA0o2AvZTSyA2SF/amyncfTYxpP6W79uAkG0d4wKZcAmf+bzqMgm47Kl8e/i8BoSp3IS5Hd+oGeRVPg7eVSym3qJooHv5es9BKv/Dc8AHPi+O1yEexwCJxf5RZMrg=
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ (2603:1096:404:8028::13) by OSZPR01MB9549.jpnprd01.prod.outlook.com
+ (2603:1096:604:1d2::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.30; Wed, 12 Jul
+ 2023 00:17:47 +0000
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::4aa4:531b:e63:3d61]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::4aa4:531b:e63:3d61%2]) with mapi id 15.20.6588.017; Wed, 12 Jul 2023
+ 00:17:47 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Serge Semin <fancer.lancer@gmail.com>
+CC:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "kishon@kernel.org" <kishon@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "conor+dt@kernel.org" <conor+dt@kernel.org>,
+        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>
+Subject: RE: [PATCH v17 16/20] dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe
+ Endpoint
+Thread-Topic: [PATCH v17 16/20] dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe
+ Endpoint
+Thread-Index: AQHZrzZOhmZZlqV+G0S5OoAbmbQvqa+1F5aAgAAzlOA=
+Date:   Wed, 12 Jul 2023 00:17:47 +0000
+Message-ID: <TYBPR01MB534172B437BA8146E05808C7D836A@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+References: <20230705114206.3585188-1-yoshihiro.shimoda.uh@renesas.com>
+ <20230705114206.3585188-17-yoshihiro.shimoda.uh@renesas.com>
+ <rk52tz3tmpzg6s7szkh3u44vnr3sncgtb7535fn5alf4fj4dlh@ljmhmtjee3rw>
+In-Reply-To: <rk52tz3tmpzg6s7szkh3u44vnr3sncgtb7535fn5alf4fj4dlh@ljmhmtjee3rw>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|OSZPR01MB9549:EE_
+x-ms-office365-filtering-correlation-id: e4e65d33-fb0b-4931-2206-08db826d6c11
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dVndDJ+InyJffD0us9pAReIIFOYAsPPYG+WQa3ePyUjR/Wni0CybmDpwBP9CQ0eQmGtW6cRW3jcTyxvPPRQDE0omS/frmvZFtcoOREf7oPJopRRWegzva4oAst4wakcMjX41XGk/kqv6Hr6Id04qmd1XrJlAvDQD/CW8H3dbXCwWxhvB3hHDl6bPyKJ8rlD+YtFXYzVAlFZwVn/NbR3yeQTj2yssswFEqnVI8sgTgTD482kAZqnpfWOGSjP349juueiiEjvU2450D6s+T1i+SlNad/3FbRLmzXwZunDQgOFwKmHQPL7xRPqHoZoy2iejJLjp6UKlrwnVYEk8AMsMRpSQSJXR1efs1Lmy0jTwwgc3dYL/Tq5KOm9do4G4aT/u2e59BNm9imt6RXNHoZ96en/tcv1aApq3Ak3U7HhvwRHaSED37JCP+cOZ9QRPBKgtUafi4w46UsLHSeC7ru+gouBNwFoUwngfcVMMgk7CH/Sj5mFUBx3vuE95pXbPzIBs0L3ymQtSvM0BRvmNUlF91I8HctMvSKuIsCfgj10bh4NL0tmrTjR2lrmn8MtVoRc/yv/KpMxEar2Hlvfi9vAeuigN+LKHL6e1byFXnw5z2TKoNtdYnU2lOHxa3fHGGKPS
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(39860400002)(346002)(396003)(366004)(376002)(451199021)(38100700002)(38070700005)(86362001)(52536014)(71200400001)(55016003)(7696005)(54906003)(76116006)(122000001)(9686003)(6506007)(33656002)(186003)(5660300002)(2906002)(316002)(66556008)(66946007)(7416002)(66476007)(8676002)(8936002)(83380400001)(4326008)(64756008)(66446008)(478600001)(6916009)(41300700001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?5+aIcXXTZVyRUT5i8isB3/ykU2w0Nie+gBDz3SS6tO9wgQuKemwUjqbX1OH5?=
+ =?us-ascii?Q?wyoI+fPKq2l0yYR2d1L4RZvT9lC/t0jSvisXZVFqyPJqRX6Hf4qm332S273B?=
+ =?us-ascii?Q?A3ecu/H/OPc9ixBw/NCyxoPHGPcGjlg2jGF+vXl6mMW6qYW7MSKS1iRcMlQb?=
+ =?us-ascii?Q?vwZi9ZpnGQNVhVqmyxIusIOosJN43HDAz948530bUwHunxAGc9SuWqIb3bXj?=
+ =?us-ascii?Q?fZRx4QPDLr+u6XiU8aem3envT+jGcz9x7yHeJ32PpNj4d2qcyB2wFrs1efkg?=
+ =?us-ascii?Q?w4sThIZTVIzG9HeFhvUey/j80OYrXf9R627qgm2G2QhWpYl18tFYzHY0f+fR?=
+ =?us-ascii?Q?hztuzAs4W+N9Wm5o5YtT7f+ydlYB78f2z/F29uZdJcA/2KFRy3Kb03341DIe?=
+ =?us-ascii?Q?nIG+6W3/TBUuHN5oTXSe9E2Xw77cWuDbvEL7BJ48OXBOGS072HyUgPHGkLqL?=
+ =?us-ascii?Q?cmw4fVKd6+PjwErlKlzbKsQYu7rZowUstCUKCoPY3CY6Kd2mxi5n2dTXKymm?=
+ =?us-ascii?Q?VQ4PgMH2IQ67/GM2LfTEJrWlmpCtsGaBII51BYt2h58Tf709yddb9dZ2AhAf?=
+ =?us-ascii?Q?JTsc4UnUl0vTM/hEXj78zF3iD7h0uzIi9MijUUsdkzIZO0YPIuDRWe0/XIXI?=
+ =?us-ascii?Q?3slhQ3hykN3y7NM0Ib5UE8q6XakHDhATnKdWlFRCSxwufMnuFORLCSswSR3f?=
+ =?us-ascii?Q?MMNK/cHKggR4LVuMXO9B9VK/gClNmPKQWjmTjhBUPWMs8GLMqxNIigeCa/jN?=
+ =?us-ascii?Q?UqDvufDh27XurpjAm9Eovc9xnftDlUG2H+ITAw9e3UrDzrvzxUUGjtI5bnkC?=
+ =?us-ascii?Q?c9Dht7sB4tvDkVFsW/BQptBPtLhM69gTvzyqU0GTXnEPCxKZmKuXU4qhjUmW?=
+ =?us-ascii?Q?iBrmGFR92+naFGhnyeLHigdhZkJ6pRO7MbpUXm+URC0oXOJecgb9XpZmz3ra?=
+ =?us-ascii?Q?up6Xt0P1SoGlQlFUDoFUqkfpBOrUE9CxHEhvrgZPgFnJJ6ICq3gEFbWpkW1V?=
+ =?us-ascii?Q?4pSQ10trowp+IEBhJIrBg0h2nu4OXa0tCmtd0kfGZLlQ2WqrWUY1QjzknUtZ?=
+ =?us-ascii?Q?km1ke9tXVxTrXjpJrFkoW+RUMvt12A6cD88ti0+3VlIUb19JHcsmQ/8ecQzS?=
+ =?us-ascii?Q?CKpRMPUr1q0ppljyKITzfsoDVpvR5Plv6agdyfzd3nSkoq2Zq6QPAUng1yQO?=
+ =?us-ascii?Q?qStwmlio6kb7gDAjDWI4xxpPJ7nFGpDPD3xxd3IrxnHERL5Y9UDuktjFsovQ?=
+ =?us-ascii?Q?R95bsj8MnHUlCPkjIs9+AQ/Ce+m8AIlMt83+TI9ySknGMZS4/5mFU+4OlEMS?=
+ =?us-ascii?Q?v61W6gQgIuhW10a38CEoXUqmAU/eIlEDcIrwM3oPm77wY6qVXdAQadVrGmKL?=
+ =?us-ascii?Q?Yprvpi02qBtF+E4ILcgB4crIL+DJbYPG2rANLhu5zcJdgjtfAi0TwdD+9TIg?=
+ =?us-ascii?Q?g28xLXwapCmKA9DLtfJRimoVHF+PPLzo1X1zkm/RwN/hjRlHLHPcmJYL+3bc?=
+ =?us-ascii?Q?4DGJ/HYL1dndJs1X8ytfTcUC746SAZ4iNAtfZq9udIH9aYzCYbEs3lvyj8UW?=
+ =?us-ascii?Q?sBs1jq8gE1V3F+sGRnIEA0vUr1fQnlyphe6iQPKCqgQec9q81XtW5czEhFcm?=
+ =?us-ascii?Q?VjINLTLuHe44i9CPPhXAhWN6uxx9yZ1KWKmOy48KldFI/CriUmfY32/Pdx93?=
+ =?us-ascii?Q?Ndutig=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SN7PR12MB7346:EE_
-X-MS-Office365-Filtering-Correlation-Id: b89b2a80-a7dc-42a8-4bc4-08db8261d2a5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1wMmGzdwbJxI6udxkx70jVoJY9iUDxURlaaAQPmZAbtJ5DcE1j+R3FyM3N9ySZ2pPEZIfVorGwBUJ4bbD0JrN6qy9MUwG3eoQVJKYOvcFX2WePLdg77zknpdBLCQShYWzGcRaZkFIXsESgtm36ChY8psCBmILYd9DBwtPNr8GaQRZ2Gn4vIgD6VkaFK+BiIG2CntiwfH7ldn9OpBEt10+Glf4yv1enkFyo2uu4njs5PKvMS/OKPeNqXdB84rOwHB96pLvHUGSgEo9KszvynYLPhNwIBCJRgPg4jg7OerpbUxDNxIHwvk/AKM9YDeINNuKrMi1xo+aRYuUelcpGlanI0aVbUoOlDRFnrnW2Vr4xS/lk9jsHlHO94EaLAEzbg7GF5+tkMTmAoA/yCUMxkb9VROiakJqM8AocRcJ5KWhmFoF2haciRD4XUUco+QhFjMTJgaJAn7SI7yAxRLqEiFCNGCwsKDupsKCFgTwZZTd+Y6cOIV36Cl4mgUib65gcHEkX+V/KSSERdwkim4r3IQV5xZwOWHALsP/BdMOUuBEQ+aFLGBV6LIRceJRTLgPLI9K0A9XVvbCVQXiF7RqIdL0e9hCgnqZactMQh06Q+F84lKUJkUkoZm/yl0feFmQ80YxcEB/bNGoXxloERLdG2bPRtRI2ojy96910Cq8xr25H0=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(396003)(376002)(136003)(346002)(39860400002)(451199021)(6506007)(186003)(2616005)(966005)(6512007)(53546011)(478600001)(83380400001)(66574015)(41300700001)(44832011)(4326008)(5660300002)(66556008)(2906002)(7416002)(316002)(8676002)(8936002)(66946007)(6916009)(66476007)(6486002)(6666004)(54906003)(36756003)(38100700002)(86362001)(31696002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?S1JQNTI3ZDBvRWg0eVBQNGF1UHc2TmVoNzhsRGJNNkRkbGlHc2RBSEJ0NGNt?=
- =?utf-8?B?TGZwSnRnVWgxMWZMbVg4OFl0VkFFQ0FiOE1sUHZYNS9ub3RnZ2E4TXUxTWFa?=
- =?utf-8?B?NktMaFcvUVdHRmhDeWFPZVFwcDBNRFZLeEFibDJUUE1HL0hKY1Z3ZnpIUTdH?=
- =?utf-8?B?REV2T0l6Qk9sWmdvakwzcG1JQkdKME03ekdINU5mSENVK3kzQk8vTnFjaU5v?=
- =?utf-8?B?bTJFWmJWeWFmUXFmejBLaU0wcjAzSFZDMlVjRGZCY2FHSlVNc3BCV3lBdjQ3?=
- =?utf-8?B?bWVlOGtZRU8vQ1hHUXJiOEhFUGVKVDlWR1ArM0JBMnRtZ0MyMEN5RlY1NVNC?=
- =?utf-8?B?VW1TSEJXdkpKczdIWk9RS1YwaDI1eDhZWThXV2VvcjFVcldHSW83Y1BLM0NF?=
- =?utf-8?B?UGR2U0xaRW1hMmFXbjBJd3Btd0hTSElZZXYzQW5VM3VaekU0aWg0L0dCQXpv?=
- =?utf-8?B?VUhYVk9KNEFxZGFYTjl3dXlaZWgxSVJMUlN6UTBtQ1dUVXlEVTh5WmtRamdN?=
- =?utf-8?B?Qnl0eko5d3NpQ3FYK3lMNWZsMnRKQWlnVWNxa2pvRkJ4TmZwSXdCdkNoWEI5?=
- =?utf-8?B?QUlsNHhoTEw4TlBiS3pCSnRzZFZ4b2hKK2YvZU1OMXk1Z3hRdEoyMHNHTEhx?=
- =?utf-8?B?NytRTlNkS1AwTWJ3VW1oMGxwdUlvUlpLWWVPREFvQmltSW1RTUlsMXNWTTl3?=
- =?utf-8?B?Um1WZnJjeTBLK3c0Y3lJMHBsTkFrV3QxeExEQkxvSGlubExQWDA5MkVsaC9X?=
- =?utf-8?B?WjNZVW5BUk1za1hCNWZFM0t0WGQ0dGNNbmIxMEpqVlZicmE2TVYxVjBJa0gz?=
- =?utf-8?B?YUx2RTVZYjJSNnRpZ2VyNkF1cGV2UGxyeDN3UmZjczNWVk9EdWtRZU82eldV?=
- =?utf-8?B?MzQ0NU55L20zd05xc0lVb1lOTkpVcGxpcVhJTkREN3N6cHlxcXVvYk13WnlQ?=
- =?utf-8?B?bFFpVkk2bGtaNGx2VlJiZDJSWDAwcHNFa3F6cWNyaDZWTUtwck5Hd2NSVERw?=
- =?utf-8?B?QmZHNVFCSUVpSnRzazdBUnJoU0FQd3REak1zOURIK1JmYlVFU3Z2a3ZGMUh1?=
- =?utf-8?B?VVpwTlFSd0g0dWhBczhMd3MrZDFpVXpaazBieWlCWXFHMHFFYWVGYk9sWnFk?=
- =?utf-8?B?bnJPMjAreHhKOXFwc3hpenBHcmp3UGRTVDR2a3UwTG9COURlUTdQMTJ6MTJ4?=
- =?utf-8?B?QlZSOHZoTzI5RUlKanpLUjlMdWg1NFlWRWhvb3NXcmF4WDNpSUlCQUZJZG83?=
- =?utf-8?B?TUFIeFBZR2xxc3RYSkErb0FoTlJUYzRTWmoySEVzTFBZeUhFZWxBdEVzcGVR?=
- =?utf-8?B?ZE9JSnRCeVEzRDhNWk8wTlRpQk5NL1dNVlNYZGpmQ2hrT0twaDNiZmhHZExO?=
- =?utf-8?B?N3o3TnBWbkh3Yk1KS3g2a2doelMvSUc3bHM5UTRsRVRoRkNYWUZRTzVidmx1?=
- =?utf-8?B?eSt5YUhEVEJkNDkyaWwveEhBYmhBVWNjY3JGR0FvK1grTjBsNy9SUE9JT1Ey?=
- =?utf-8?B?Z2lyQ01kMExtdWZORlpaNDZXUUM2aWZvNWtodWhaMDR1WkxPRnpKYzQzTGlz?=
- =?utf-8?B?amdNNnpVNWlQTi9mVysxNFhxb0VZaWJZK2h1T3BoQm5jVTQzR0l6bVlYbmlX?=
- =?utf-8?B?ZGljKzAxV1RSSG1rNGxIWGVqSFBnZWV0OXlEQzBhS0UxSVNaZ0JKdjNDK0RW?=
- =?utf-8?B?YWxPbUthRWhkZkdOY0pZSDJmdmpKU1BBcWplaVlPd2NMdWFQSmw5Q1dTa3d3?=
- =?utf-8?B?MGNMODRtRDMra2lDQUtRYmo5cldTd1p1Mmt0bnVuRzlRblJPNWFKaXYrRnE0?=
- =?utf-8?B?UmNrbkM0WWRsMFFhVDFPWlRHaEwrN29veHpubXR4azBCZWsyVUU2SjVCbTF6?=
- =?utf-8?B?NnNnYm45V2lhRldGVnkyQWNkMDQxM2NYSjRsc3B6RG1kcUlidFMwTWwyZjBT?=
- =?utf-8?B?ZkNIRUZFSVpWU3NRc2lNd3BKMTJkeVJ1UzNneTBYTW9YZXpZY3lWTW9PM0Na?=
- =?utf-8?B?bU5pZitkaWRCU3lEUk9kb3kzVGlXOW5SSnIraHNoZ0JuRDUvRkU5TndsU1Uy?=
- =?utf-8?B?eTJEenBUTGxiUXNxR0xCREpYdDV0VmIwVUkyckNHZFI4VU9PUllUY3Q0ZXhM?=
- =?utf-8?B?OWhhdlh2bWlaU0JEaG1Ed3hOVmVpWWFmK1piMENXeEw4Nnhrd0ZFU0d0YU56?=
- =?utf-8?B?QWc9PQ==?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b89b2a80-a7dc-42a8-4bc4-08db8261d2a5
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-OriginatorOrg: renesas.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2023 22:54:46.2203
+X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e4e65d33-fb0b-4931-2206-08db826d6c11
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jul 2023 00:17:47.8712
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EzYH7REIMbjrgVB5PBwxVbZHEMzVEvnH6uoC4BSGheYS7aX4TsZXClTjc/fltwZu3wf3Wy8+nlFgWlx3NL/I1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7346
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dezigD9VKZ63a8lYk3tjikJUdfrxtbfPT9U381E+7KGIZdlroxAsF6p0Rahr/3U6757Mfx3Piqfpa0TOHOwvsBsf0f4TqvBlWXzWi+G091v1CvwcP01ksDOIdZ9Tvd9x
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSZPR01MB9549
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 7/11/23 17:14, Bjorn Helgaas wrote:
-> [+cc Andy, Intel MID stuff]
-> 
-> On Mon, Jul 10, 2023 at 07:53:25PM -0500, Mario Limonciello wrote:
->> Since commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
->> PCIe ports from modern machines (>2015) are allowed to be put into D3 by
->> storing a flag in the `struct pci_dev` structure.
-> 
-> It looks like >= 2015 (not >2015).  I think "a flag" refers to
-> "bridge_d3".
+Hello Serge,
 
-Yeah.
+> From: Serge Semin, Sent: Wednesday, July 12, 2023 6:03 AM
+>=20
+> On Wed, Jul 05, 2023 at 08:42:02PM +0900, Yoshihiro Shimoda wrote:
+> > Document bindings for Renesas R-Car Gen4 and R-Car S4-8 (R8A779F0)
+> > PCIe endpoint module.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+> > Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+> > ---
+> >  .../bindings/pci/rcar-gen4-pci-ep.yaml        | 106 ++++++++++++++++++
+> >  1 file changed, 106 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci=
+-ep.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yam=
+l
+> b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+> > new file mode 100644
+> > index 000000000000..4e6be856104c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+> > @@ -0,0 +1,106 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +# Copyright (C) 2022-2023 Renesas Electronics Corp.
+> > +%YAML 1.2
+> > +---
+> > +$id:
+<snip URL>
+> > +$schema:
+<snip URL>
+> > +
+> > +title: Renesas R-Car Gen4 PCIe Endpoint
+> > +
+> > +maintainers:
+> > +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > +
+> > +allOf:
+> > +  - $ref: snps,dw-pcie-ep.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - const: renesas,r8a779f0-pcie-ep   # R-Car S4-8
+> > +      - const: renesas,rcar-gen4-pcie-ep  # R-Car Gen4
+> > +
+> > +  reg:
+> > +    maxItems: 6
+> > +
+> > +  reg-names:
+> > +    items:
+> > +      - const: dbi
+> > +      - const: dbi2
+> > +      - const: atu
+> > +      - const: dma
+> > +      - const: app
+> > +      - const: addr_space
+> > +
+> > +  interrupts:
+> > +    maxItems: 3
+> > +
+> > +  interrupt-names:
+> > +    items:
+> > +      - const: dma
+> > +      - const: sft_ce
+> > +      - const: app
+> > +
+> > +  power-domains:
+> > +    maxItems: 1
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 2
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: core
+> > +      - const: ref
+> > +
+> > +  max-functions:
+> > +    maximum: 2
+> > +
+> > +  max-link-speed:
+> > +    maximum: 4
+> > +
+> > +  num-lanes:
+> > +    maximum: 4
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - reg-names
+> > +  - interrupts
+> > +  - resets
+> > +  - power-domains
+> > +  - clocks
+> > +  - clock-names
+> > +
+> > +unevaluatedProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/r8a779f0-cpg-mssr.h>
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    #include <dt-bindings/power/r8a779f0-sysc.h>
+> > +
+> > +    soc {
+> > +        #address-cells =3D <2>;
+> > +        #size-cells =3D <2>;
+> > +
+> > +        pcie0_ep: pcie-ep@e65d0000 {
+> > +            compatible =3D "renesas,r8a779f0-pcie-ep", "renesas,rcar-g=
+en4-pcie-ep";
+>=20
+> > +            reg =3D <0 0xe65d0000 0 0x2000>, <0 0xe65d2800 0 0x0800>,
+> > +                  <0 0xe65d3000 0 0x2000>, <0 0xe65d5000 0 0x1200>,
+> > +                  <0 0xe65d6200 0 0x0e00>, <0 0xfe000000 0 0x400000>;
+> > +            reg-names =3D "dbi", "dbi2", "atu", "dma", "app", "addr_sp=
+ace";
+>=20
+> I'll ask it once again since you didn't address my comment in v16 and
+> haven't fixed the example node in the bindings:
 
-> 
->> pci_power_manageable() uses this flag to indicate a PCIe port can enter D3.
->> pci_pm_suspend_noirq() uses the return from pci_power_manageable() to
->> decide whether to try to put a device into its target state for a sleep
->> cycle via pci_prepare_to_sleep().
->>
->> For devices that support D3, the target state is selected by this policy:
->> 1. If platform_pci_power_manageable():
->>     Use platform_pci_choose_state()
->> 2. If the device is armed for wakeup:
->>     Select the deepest D-state that supports a PME.
->> 3. Else:
->>     Use D3hot.
->>
->> Devices are considered power manageable by the platform when they have
->> one or more objects described in the table in section 7.3 of the ACPI 6.4
->> specification.
-> 
-> No point in citing an old version, so please cite ACPI r6.5, sec 7.3.
-> 
-> The spec claims we only need one object from the table for a device to
-> be "power-managed", but in reality, it looks like the only things that
-> actually *control* power are _PRx (the _ON/_OFF methods of Power
-> Resources) and _PSx (ironically only mentioned parenthically).
-> 
+Thank you for your review! I'm sorry, I completely forgot about this...
 
-Your point has me actually wondering if I've got this entirely wrong.
+> I see you defining the dbi2 space as <0 _0xe65d2800_ 0 0x0800>. But
+> sometime before you mentioned that your device has the next CSRs
+> layout:
+> ! +0x0000 : Function 0 (common address in Root port and Endpoint mode)
+>   +0x1000 : Function 1 (Endpoint mode only)
+>   +0x2000 : Shadow register for Function 0
+> ! +0x2800 : Shadow register for Function 1
+> it means the DT-bindings example node has the dbi space defined for
+> both functions meanwhile the dbi2 space defined for _function #1_ only
+> (it's 0xe65d0000 + 0x2800). So AFAICS either you have wrong space
+> defined in the example node or the node is wrong in your platform DTS
+> too and you have a malfunction end-point mode. Am I missing something?
+> In any case based on your End-point driver implementation dbi2 is
+> supposed to be defined at the 0xe65d2000 base address.
+>=20
+> Am I wrong? Could you clarify this?
 
-Should we perhaps be looking specifically for the presence of _SxW to 
-decide if a given PCIe port can go below D0?
+You're correct. So, I had investigated this topic, and then the current
+actual dtsi file has the following about the reg property:
 
-IE very similar to what 8133844a8f24 did but for ports that are not 
-hotplug bridges.
++                       reg =3D <0 0xe65d0000 0 0x2000>, <0 0xe65d2000 0 0x=
+1000>,
++                             <0 0xe65d3000 0 0x2000>, <0 0xe65d5000 0 0x12=
+00>,
++                             <0 0xe65d6200 0 0x0e00>, <0 0xfe000000 0 0x40=
+0000>;
 
-> This matches up well with acpi_pci_power_manageable(), which returns
-> true if a device has either _PR0 or _PS0.
-> 
->    Per ACPI r6.5, sec 7.3, ACPI control of device power states uses
->    Power Resources (i.e., the _ON/_OFF methods of _PRx) or _PSx
->    methods.  Hence acpi_pci_power_manageable() checks for the presence
->    of _PR0 or _PS0.
-> 
-> Tangent unrelated to *this* patch: I don't know how to think about the
-> pci_use_mid_pm() in platform_pci_power_manageable() because I haven't
-> seen a MID spec.  pci_use_mid_pm() isn't dependent on "dev", so we
-> claim *all* PCI devices, even external ones, are power manageable by
-> the platform, which doesn't seem right.
-> 
->> At suspend Linux puts PCIe root ports that are not power manageable by
->> the platform into D3hot. Windows only puts PCIe root ports into D3 when
->> they are power manageable by the platform.
->>
->> The policy selected for Linux to put non-power manageable PCIe root ports
->> into D3hot at system suspend doesn't match anything in the PCIe or ACPI
->> specs.
->>
->> Linux shouldn't assume PCIe root ports support D3 just because
->> they're on a machine newer than 2015, the ports should also be considered
->> power manageable by the platform.
->>
->> Add an extra check for PCIe root ports to ensure D3 isn't selected for
->> them if they are not power-manageable through platform firmware.
->> This will avoid pci_pm_suspend_noirq() changing the power state
->> via pci_prepare_to_sleep().
->>
->> The check is focused on PCIe root ports because they are part of
->> the platform.  Other PCIe bridges may be connected externally and thus
->> cannot impose platform specific limitations.
->>
->> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/07_Power_and_Performance_Mgmt/device-power-management-objects.html [1]
+After that, the driver could not work correctly on v16 patch series.
+So, I had investigated why, and then I found this was related to
+the dbi2 offset. That's why I added a new patch [1] on v17 patch series.
 
-At least for myself when I respin this, here is the 6.5 link.
-https://uefi.org/specs/ACPI/6.5/07_Power_and_Performance_Mgmt.html#device-power-management-objects
+[1] "[PATCH v17 07/20] PCI: dwc: endpoint: Add multiple PFs support for dbi=
+2"
 
->> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
->> Reported-by: Iain Lane <iain@orangesquash.org.uk>
->> Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
->> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
->> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->> v6->v7:
->> * revert back to v5 code, rewrite commit message to specific examples
->>    and be more generic
->> ---
->>   drivers/pci/pci.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index f916fd76eba79..4be8c6f8f4ebe 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -3041,6 +3041,14 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
->>   	if (dmi_check_system(bridge_d3_blacklist))
->>   		return false;
->>   
->> +	/*
->> +	 * It's not safe to put root ports that aren't power manageable
->> +	 * by the platform into D3.
-> 
-> Does this refer specifically to D3cold?
-> 
+Anyway, I'll revise this dt-bindings doc too on v18 patch series.
 
-No, it's intentionally not saying D3hot or D3cold because it's stored to 
-"bridge_d3" which is used for both D3hot and D3cold.
+Best regards,
+Yoshihiro Shimoda
 
-> I assume that if we were talking about D3hot, we wouldn't need to
-> check for ACPI support because D3hot behavior should be fully covered
-> by the PCIe spec.
-
-Right; the PCIe spec indicates that D3hot should be supported by all 
-devices and has rules about when you can go into D3hot like not allowing 
-it unless child devices are already in D3.
-
-Naïvely you would think that means pci_bridge_d3_possible() shouldn't 
-have any of these checks, but they've all obviously all been grown for a 
-reason.
-
-The value from pci_bridge_d3_possible() is used both "at suspend" and 
-"runtime", but what we're really talking with this issue is is the 
-behavior "at suspend".
-
-> 
-> Let's be specific about D3hot vs D3cold whenever possible.
-> 
->> +	if (pci_pcie_type(bridge) == PCI_EXP_TYPE_ROOT_PORT &&
->> +	    !platform_pci_power_manageable(bridge))
->> +		return false;
-> 
-> If ACPI says a device is not power-manageable, i.e., ACPI doesn't know
-> how to put it in D0, it makes sense to return "false" here so we don't
-> try to put it in D3cold.
-> 
-> But I don't understand the ROOT_PORT check.  We may have a Switch
-> described via ACPI, and the ROOT_PORT check means we can return "true"
-> (it's OK to use D3cold) even if the Switch Port is not power-manageable
-> via ACPI.
-
-This feels a lot more of a potential to cause regressions.
-
-Something we could do is include the value for bridge->untrusted in the 
-decision, but I'm not convinced that's correct.
-
-Another option can be to merge a series of changes like this:
-
-1) My v5 patch that adds the quirks for the two known broken machines
-2) Patch 1/2 from v7
-3) Patch 2/2 from v7
-4) Another patch to drop the root port check here
-
-#1 could go to 6.5-rcX as it's riskless.  #2-4 could go to linux-next 
-and if they work out not to cause any problems we could revert #1.
-
-If they cause problems we come back to the drawing table to find the
-right balance.
-
-> 
->>   	/*
->>   	 * It should be safe to put PCIe ports from 2015 or newer
->>   	 * to D3.
->> -- 
->> 2.34.1
->>
-
+> -Serge(y)
+>=20
+> > +            interrupts =3D <GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH>,
+> > +                         <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
+> > +                         <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>;
+> > +            interrupt-names =3D "dma", "sft_ce", "app";
+> > +            clocks =3D <&cpg CPG_MOD 624>, <&pcie0_clkref>;
+> > +            clock-names =3D "core", "ref";
+> > +            power-domains =3D <&sysc R8A779F0_PD_ALWAYS_ON>;
+> > +            resets =3D <&cpg 624>;
+> > +            num-lanes =3D <2>;
+> > +            max-link-speed =3D <4>;
+> > +            max-functions =3D /bits/ 8 <2>;
+> > +        };
+> > +    };
+> > --
+> > 2.25.1
+> >
