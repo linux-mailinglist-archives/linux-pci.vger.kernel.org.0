@@ -2,82 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 868B3750CD6
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jul 2023 17:42:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31D5C750D23
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jul 2023 17:53:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233779AbjGLPmf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jul 2023 11:42:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56364 "EHLO
+        id S232814AbjGLPxn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jul 2023 11:53:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233269AbjGLPmf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jul 2023 11:42:35 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22A061BB;
-        Wed, 12 Jul 2023 08:42:34 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-4fb7589b187so11570613e87.1;
-        Wed, 12 Jul 2023 08:42:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689176552; x=1691768552;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rlyvltT+TDsU8aorJ6katMKTRoqeM7opfaR5ApThWtM=;
-        b=EFG/VXUjRh4UrfnXYu5nGLwTrAls9lAdWj9WRQqTaVgmLqFpPlijetLYty46AciUYk
-         +TYOOi+CjPTCHHO4ZwWVYXuV2yeO6VUh4rkdrQNvxtakVJe6EaLYYDYjHGePsmTfPOry
-         WZu+vKUi7ltZIXAld1oH5gheeh8b88JZTWoocV8gZmP7yZYuwj7lLOrwmBIphlN8MrVy
-         xlXbBizjbziObo7MLM/LIpXM3/4ynnHOXBnyFIx0SRUjjphP7OBUCdfiaeFvIixpvuLR
-         yWc84RGUWZkNqHbJ6p9Fh6S0+zHtmfecql8xJoJPhlA7PknbRXJ8etErJ6z54eeUEUZg
-         yTGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689176552; x=1691768552;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rlyvltT+TDsU8aorJ6katMKTRoqeM7opfaR5ApThWtM=;
-        b=dOhG92SnURDrxjS9KnPJ+ULvJ4KL+4V6ph9yMppqWpY7CqmJuXGb1F9LC4L7mC1zNK
-         O4z+uNaNFEO5yJjJ/iMbkJYWEywYOcSkG3JJy6599FUnTIdM2JahAKfXgMa8PvNcvI/2
-         c91vCQebLTG1DJJSiN2d5itE12Uk1TXkL5HAYbqUfeffy5VfaryjGbFHF6qRkWzBT8rP
-         1G79et7hQRwmh0Y+IYg93a8xocGg3uF+UWY/F3CRO4ktbTRrKktTwjueFUTrTT6U+CFo
-         l4tw9+VdcQGkHX5sYFaFF/kJFr94SS0/aBTfZ8FVQ1YOE1p4JSHPhkesGzkYo29kU/O1
-         O+9Q==
-X-Gm-Message-State: ABy/qLb3M6rv+fzqvp4dbR4fbrkvGvj0BP4lD9YmevwIt77ehdJiGozI
-        3kVRC9B/0HoUZuXJv5Eu9mY=
-X-Google-Smtp-Source: APBJJlFh1bdUChwGl7U4vHb1mdJrD+m6UPFPwDryvpr/QaFR5P9DcyKjGaB1u39/J2BwE2Bo+5XyMQ==
-X-Received: by 2002:ac2:4f0a:0:b0:4fb:7be5:7404 with SMTP id k10-20020ac24f0a000000b004fb7be57404mr18891991lfr.63.1689176552020;
-        Wed, 12 Jul 2023 08:42:32 -0700 (PDT)
-Received: from localhost ([165.231.178.23])
-        by smtp.gmail.com with ESMTPSA id d11-20020ac241cb000000b004fbc6a8ad08sm756979lfi.306.2023.07.12.08.42.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jul 2023 08:42:31 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 12 Jul 2023 17:42:27 +0200
-Message-Id: <CU0B41A94HS4.32OC49OW4W5SW@vincent-arch>
-Cc:     <kw@linux.com>, <heiko@sntech.de>, <robh@kernel.org>,
-        <linux-pci@vger.kernel.org>, <shawn.lin@rock-chips.com>,
-        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
-        <linux-rockchip@lists.infradead.org>, <broonie@kernel.org>,
-        <bhelgaas@google.com>,
-        <linux-kernel-mentees@lists.linuxfoundation.org>,
-        <lpieralisi@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        "Dan Johansen" <strit@manjaro.org>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        "Will Deacon" <will@kernel.org>,
-        "Robin Murphy" <robin.murphy@arm.com>, <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v1] drivers: pci: introduce configurable delay for
- Rockchip PCIe bus scan
-From:   "Vincenzo Palazzo" <vincenzopalazzodev@gmail.com>
-To:     "Peter Geis" <pgwipeout@gmail.com>,
-        "Bjorn Helgaas" <helgaas@kernel.org>
-X-Mailer: aerc 0.15.1
-References: <CSK8M39MQL2C.3S7JO031H0BA2@vincent-arch>
- <ZF7m1npzLZmawT8Y@bhelgaas>
- <CAMdYzYqV72=pQa-U3a2N7MZ2ChBNL74QrxHQLbMZJxiftTK9sA@mail.gmail.com>
-In-Reply-To: <CAMdYzYqV72=pQa-U3a2N7MZ2ChBNL74QrxHQLbMZJxiftTK9sA@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        with ESMTP id S231592AbjGLPxm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jul 2023 11:53:42 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA0A01BD4;
+        Wed, 12 Jul 2023 08:53:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689177221; x=1720713221;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=JyJLilC7lSpSEXwLkk2Nl0wlhmfEXlOLLuDZFu3Vyj4=;
+  b=LlGe8hT6Be3025Jy/puWuho4C2+WxnOpoyTsEXyUl1j1H6zjuTnEyrsB
+   vZXjGiRVbyLxM/Zt+ViRNWW7tKft/5kEBvBcmh+bpwCETgHf9Un4hE5Hq
+   xG1an83yxIjbsWknLK5+hSyklAmJizy1qUyEQUBCjbsxp7awp+uKjmHCm
+   wLjoeEoU055OrKSXfWxPkKGlsMvMjXl9yS+zeBE9Pm3qEgKtDwO56j462
+   U7GHHf+h0J9+PDlG+v7l7737wS8xT46+pdldzM4iv7mwHNRjJU3N3ZmML
+   VnyJGWHfk2hdhbeYrISoyArVnUGjvqHRkxBVlG348qab7aXZoUHr7+UY+
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10769"; a="362391803"
+X-IronPort-AV: E=Sophos;i="6.01,200,1684825200"; 
+   d="scan'208";a="362391803"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2023 08:53:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10769"; a="895674100"
+X-IronPort-AV: E=Sophos;i="6.01,200,1684825200"; 
+   d="scan'208";a="895674100"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP; 12 Jul 2023 08:53:38 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qJc9o-002AZF-0w;
+        Wed, 12 Jul 2023 18:53:36 +0300
+Date:   Wed, 12 Jul 2023 18:53:36 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= 
+        <amadeuszx.slawinski@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 12/13] ASoC: SOF: Intel: Convert to PCI device IDs defines
+Message-ID: <ZK7MgNH7KM7rHris@smile.fi.intel.com>
+References: <20230711125726.3509391-1-amadeuszx.slawinski@linux.intel.com>
+ <20230711125726.3509391-13-amadeuszx.slawinski@linux.intel.com>
+ <ZK1kPXm+FieJ+vya@smile.fi.intel.com>
+ <ec6a8f88-ae94-21a5-ec01-013c68fd8feb@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ec6a8f88-ae94-21a5-ec01-013c68fd8feb@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -85,16 +76,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi all,
+On Wed, Jul 12, 2023 at 02:16:17PM +0200, Amadeusz Sławiński wrote:
+> On 7/11/2023 4:16 PM, Andy Shevchenko wrote:
+> > On Tue, Jul 11, 2023 at 02:57:25PM +0200, Amadeusz Sławiński wrote:
 
-> Perhaps a hook mechanism that allows drivers to register with the
-> serror handler and offer to handle specific errors before the generic
-> code causes the system panic?
+...
 
-I have some time to work on it. I'm interested in exploring the=20
-solution proposed here. However, I would appreciate some guidance=20
-in understanding how to implement this type of hook to report the error.
+> > Oh, additional remark below.
 
-Cheers.
+> > > +	{ PCI_DEVICE_DATA(INTEL, HDA_APL, &bxt_desc) },
+> > > +	{ PCI_DEVICE_DATA(INTEL, HDA_APL_T, &bxt_desc) },
+> > 
+> > Have we ever had APL-T? What is that? I remember that we have had two or
+> > three BXTs inside, and then products become for Broxton and Apollo Lake
+> > SoC codenames. I never have heard about -T...
+> 
+> I've talked a bit with Cezary and it seems that 0x1a98 is BXT-M (not -T) and
+> it's an RVP, BXT-M B0 to be specific. From what we know no BXT is available
+> on market. Perhaps we can just remove it?
 
-Vincent.
+If you go this way, it should be in a separate patch and it seems it has
+already pre-cooked commit message (as per previous paragraph) :-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
