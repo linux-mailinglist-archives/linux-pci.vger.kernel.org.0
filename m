@@ -2,220 +2,345 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7DB07506F9
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jul 2023 13:49:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52C7B75072C
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jul 2023 13:53:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233476AbjGLLtp convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 12 Jul 2023 07:49:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38600 "EHLO
+        id S232527AbjGLLxF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jul 2023 07:53:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233289AbjGLLtP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jul 2023 07:49:15 -0400
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A3B02103;
-        Wed, 12 Jul 2023 04:48:31 -0700 (PDT)
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-94ea38c90ccso191471966b.1;
-        Wed, 12 Jul 2023 04:48:31 -0700 (PDT)
+        with ESMTP id S233659AbjGLLwz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jul 2023 07:52:55 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A7ED2109;
+        Wed, 12 Jul 2023 04:51:40 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-4fba74870abso10419251e87.0;
+        Wed, 12 Jul 2023 04:51:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689162607; x=1691754607;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SLApzjkIllbQ31GLl4rJiuymb9kgLKtq1XrXsg3KCr0=;
+        b=Yg7i61f+75xEkAs0ixkVDKZ+Tqop6czxchT6nhCZYd2Q1bl4lEBlDqQ0PwVe1l0wBQ
+         /plmtJjr6QZJuAYE4KQDYMbgdp7hCSVS6BRTQx+7MV6KNQCzmWmchVXunBkouEbD1wK6
+         53ywAlsLQbk26nLDxhkaRJcCW8A4JM+bvTLG0VTJ3LB37Ya+kQ61Tll4lvV+EcyeLhMb
+         FecYSgc/uGy6iDFrFR8G3hkRALU0XIxq9d3vcSG36TrcZseW4pPFxsyVuXEBkWpN9N9c
+         cqBidkC5KusXKYU8uCJgR4JJY3/sV7//aVUu3wo20iiUHGtAX90wri5YywAzrMhmgtcV
+         aaww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689162503; x=1691754503;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SoXCY3sAAcBrdVqEWi7uKArR+tI/RlCQx6kJCdISvsg=;
-        b=PdG/0T7XNFox0hRyfG/idCR3WMjuf/RNKSjS1AEKAfymWTYt4MDySd5m9M5TexqS4f
-         VI/HBBapuvG0R0eMt0+DB2oh2YjMHUtLCJPGPZErQbQ7C9wfLHR0ZxCayzbb6c0P84fn
-         066XcCnF3T0UQ0x2P56/KCqjBxEJy7FeBculJT6j3ePEYVrELE/zyFmAiuEDU7g/U1qF
-         NLr1/ghK9P3uFYvzowVNa8ARa8BEkfdrbNELX1ZsBbBleKIgTj91/SIhtI45QMmyobcS
-         fcF0YvbcK7xVnksuiJEyoKxQzmYzTALPG4Gy+02B3PgrD4IC6ZdV+T7R22Zuurn0T5xU
-         8r9w==
-X-Gm-Message-State: ABy/qLaAUCWIBR4VFqUPSpIe4GimtVKEK6unTqp1nHPAgdnuE3yxwp5/
-        dxn24CYczI8byU+ViaFz1JQLMbW4D9M37qptgEg=
-X-Google-Smtp-Source: APBJJlHOQkU1ZmDQsnarqITjpg/7awZ+GZY2vErAj+o094OvmfF5lgPs4W86rGgS1a4K2aEJN7z0eJCyTB9ZiA5CcN0=
-X-Received: by 2002:a17:906:7490:b0:993:d5e7:80f8 with SMTP id
- e16-20020a170906749000b00993d5e780f8mr14433741ejl.7.1689162502796; Wed, 12
- Jul 2023 04:48:22 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1689162607; x=1691754607;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SLApzjkIllbQ31GLl4rJiuymb9kgLKtq1XrXsg3KCr0=;
+        b=YfStHoEyXLFft/2Q8OAI7nE9oZ9LLczKWqqJDA2vEUhu4PiojAYAUg/vF5rkDC6j1K
+         RK8HLx8mVaNcyXrA1eAjBj0fdrhfQa30B6U3zmG2Opr6THEErrwvTXJ7wYm0UtO4x3Mf
+         NJ9cKoLig6cNWJlioyAVh/hmYNXMR61O4Gcqu2hN28GtuUrMk6GRDYkPtb4l2v/qOZ34
+         D7mzXkXmEUVyBYzElgL8i9cfoXP4JtIoI+5VWAIpXzh0MB4mZn6cGi0ss/7JtUS9+B60
+         is+ZwOzjE8YO1k8PSgNLIk/z0rGz3mooJe42nwDk78fmP410D+7rK7oHnQSFY68zrWX+
+         lNXA==
+X-Gm-Message-State: ABy/qLbOQ7SN96ikEFtRlORUV8VhWs2sn27PY3y/HjdhFIL8a0s1JWDX
+        Bll/2ZEiC9V6MgzBfbDSjBo=
+X-Google-Smtp-Source: APBJJlFyCMNFwlER1YtIh9E/JkHbJJUmwZ8sSxLnExSIOlob3bEzuEQ3oaM9frG5G+Z2st5MpEKk4A==
+X-Received: by 2002:a05:6512:4013:b0:4fb:9497:b2a5 with SMTP id br19-20020a056512401300b004fb9497b2a5mr19636727lfb.21.1689162606833;
+        Wed, 12 Jul 2023 04:50:06 -0700 (PDT)
+Received: from mobilestation ([85.249.22.88])
+        by smtp.gmail.com with ESMTPSA id h3-20020ac25d63000000b004fba4e27abesm674940lft.241.2023.07.12.04.50.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jul 2023 04:50:06 -0700 (PDT)
+Date:   Wed, 12 Jul 2023 14:50:02 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
+        bhelgaas@google.com, kishon@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v17 18/20] PCI: rcar-gen4-ep: Add R-Car Gen4 PCIe
+ Endpoint support
+Message-ID: <yzcrldzywq42am2f6wswgnospmp4bxe4uui7jsrr53ivtfj6ac@epajljzbduxl>
+References: <20230705114206.3585188-1-yoshihiro.shimoda.uh@renesas.com>
+ <20230705114206.3585188-19-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-References: <20230711005325.1499-3-mario.limonciello@amd.com> <20230711221427.GA250962@bhelgaas>
-In-Reply-To: <20230711221427.GA250962@bhelgaas>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 12 Jul 2023 13:48:11 +0200
-Message-ID: <CAJZ5v0hmDVkUz8QbE3Jx0kLqDfB6hEuQjhd_u8Kjj2hyZYpZGA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] PCI: Don't put non-power manageable PCIe root
- ports into D3
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Mario Limonciello <mario.limonciello@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        Iain Lane <iain@orangesquash.org.uk>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230705114206.3585188-19-yoshihiro.shimoda.uh@renesas.com>
+X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_SBL,RCVD_IN_SBL_CSS,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 12:14 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Andy, Intel MID stuff]
->
-> On Mon, Jul 10, 2023 at 07:53:25PM -0500, Mario Limonciello wrote:
-> > Since commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-> > PCIe ports from modern machines (>2015) are allowed to be put into D3 by
-> > storing a flag in the `struct pci_dev` structure.
->
-> It looks like >= 2015 (not >2015).  I think "a flag" refers to
-> "bridge_d3".
->
-> > pci_power_manageable() uses this flag to indicate a PCIe port can enter D3.
-> > pci_pm_suspend_noirq() uses the return from pci_power_manageable() to
-> > decide whether to try to put a device into its target state for a sleep
-> > cycle via pci_prepare_to_sleep().
-> >
-> > For devices that support D3, the target state is selected by this policy:
-> > 1. If platform_pci_power_manageable():
-> >    Use platform_pci_choose_state()
-> > 2. If the device is armed for wakeup:
-> >    Select the deepest D-state that supports a PME.
-> > 3. Else:
-> >    Use D3hot.
-> >
-> > Devices are considered power manageable by the platform when they have
-> > one or more objects described in the table in section 7.3 of the ACPI 6.4
-> > specification.
->
-> No point in citing an old version, so please cite ACPI r6.5, sec 7.3.
->
-> The spec claims we only need one object from the table for a device to
-> be "power-managed", but in reality, it looks like the only things that
-> actually *control* power are _PRx (the _ON/_OFF methods of Power
-> Resources) and _PSx (ironically only mentioned parenthically).
->
-> This matches up well with acpi_pci_power_manageable(), which returns
-> true if a device has either _PR0 or _PS0.
->
->   Per ACPI r6.5, sec 7.3, ACPI control of device power states uses
->   Power Resources (i.e., the _ON/_OFF methods of _PRx) or _PSx
->   methods.  Hence acpi_pci_power_manageable() checks for the presence
->   of _PR0 or _PS0.
->
-> Tangent unrelated to *this* patch: I don't know how to think about the
-> pci_use_mid_pm() in platform_pci_power_manageable() because I haven't
-> seen a MID spec.  pci_use_mid_pm() isn't dependent on "dev", so we
-> claim *all* PCI devices, even external ones, are power manageable by
-> the platform, which doesn't seem right.
+On Wed, Jul 05, 2023 at 08:42:04PM +0900, Yoshihiro Shimoda wrote:
+> Add R-Car Gen4 PCIe Endpoint support. This controller is based on
+> Synopsys DesignWare PCIe.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  drivers/pci/controller/dwc/Kconfig            |   9 +
+>  drivers/pci/controller/dwc/Makefile           |   2 +
+>  .../pci/controller/dwc/pcie-rcar-gen4-ep.c    | 191 ++++++++++++++++++
+>  3 files changed, 202 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-ep.c
+> 
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index 64d4d37bc891..4d877cd18374 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -424,4 +424,13 @@ config PCIE_RCAR_GEN4
+>  	  Say Y here if you want PCIe host controller support on R-Car Gen4 SoCs.
+>  	  This uses the DesignWare core.
+>  
+> +config PCIE_RCAR_GEN4_EP
+> +	tristate "Renesas R-Car Gen4 PCIe Endpoint controller"
+> +	depends on ARCH_RENESAS || COMPILE_TEST
+> +	depends on PCI_ENDPOINT
+> +	select PCIE_DW_EP
+> +	help
+> +	  Say Y here if you want PCIe endpoint controller support on R-Car Gen4
+> +	  SoCs. This uses the DesignWare core.
+> +
+>  endmenu
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> index 486cf706b53d..0fb0bde26ac4 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -28,6 +28,8 @@ obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
+>  obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
+>  pcie-rcar-gen4-host-drv-objs := pcie-rcar-gen4.o pcie-rcar-gen4-host.o
+>  obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4-host-drv.o
+> +pcie-rcar-gen4-ep-drv-objs := pcie-rcar-gen4.o pcie-rcar-gen4-ep.o
+> +obj-$(CONFIG_PCIE_RCAR_GEN4_EP) += pcie-rcar-gen4-ep-drv.o
+>  
+>  # The following drivers are for devices that use the generic ACPI
+>  # pci_root.c driver but don't support standard ECAM config access.
+> diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4-ep.c b/drivers/pci/controller/dwc/pcie-rcar-gen4-ep.c
+> new file mode 100644
+> index 000000000000..1de33a9529bd
+> --- /dev/null
+> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4-ep.c
+> @@ -0,0 +1,191 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * PCIe Endpoint driver for Renesas R-Car Gen4 Series SoCs
+> + * Copyright (C) 2022-2023 Renesas Electronics Corporation
+> + */
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "pcie-rcar-gen4.h"
+> +#include "pcie-designware.h"
+> +
+> +#define RCAR_GEN4_PCIE_EP_FUNC_DBI_OFFSET	0x1000
+> +#define RCAR_GEN4_PCIE_EP_FUNC_DBI2_OFFSET	0x800
+> +
+> +static void rcar_gen4_pcie_ep_pre_init(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *dw = to_dw_pcie_from_ep(ep);
+> +	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
+> +	int ret;
+> +
 
-No, we don't.
+> +	ret = clk_bulk_prepare_enable(DW_PCIE_NUM_CORE_CLKS, dw->core_clks);
 
-This only means that PCI devices may be power manageable by the
-platform and so the platform code should be invoked to check that.
-AFAICS, intel_mid_pwr_get_lss_id(() will return an error for a device
-without platform PM support.
+I don't see you disabling the clocks. It should be done in a
+respective antagonistic method (like ep_deinit()?).
+* The same concerns the Rcar Gen4 RP driver submitted in the previous
+* patch.
 
-> > At suspend Linux puts PCIe root ports that are not power manageable by
-> > the platform into D3hot. Windows only puts PCIe root ports into D3 when
-> > they are power manageable by the platform.
-> >
-> > The policy selected for Linux to put non-power manageable PCIe root ports
-> > into D3hot at system suspend doesn't match anything in the PCIe or ACPI
-> > specs.
-> >
-> > Linux shouldn't assume PCIe root ports support D3 just because
-> > they're on a machine newer than 2015, the ports should also be considered
-> > power manageable by the platform.
-> >
-> > Add an extra check for PCIe root ports to ensure D3 isn't selected for
-> > them if they are not power-manageable through platform firmware.
-> > This will avoid pci_pm_suspend_noirq() changing the power state
-> > via pci_prepare_to_sleep().
-> >
-> > The check is focused on PCIe root ports because they are part of
-> > the platform.  Other PCIe bridges may be connected externally and thus
-> > cannot impose platform specific limitations.
-> >
-> > Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/07_Power_and_Performance_Mgmt/device-power-management-objects.html [1]
-> > Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-> > Reported-by: Iain Lane <iain@orangesquash.org.uk>
-> > Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
-> > Acked-by: Rafael J. Wysocki <rafael@kernel.org>
-> > Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> > ---
-> > v6->v7:
-> > * revert back to v5 code, rewrite commit message to specific examples
-> >   and be more generic
-> > ---
-> >  drivers/pci/pci.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index f916fd76eba79..4be8c6f8f4ebe 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -3041,6 +3041,14 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
-> >       if (dmi_check_system(bridge_d3_blacklist))
-> >               return false;
-> >
-> > +     /*
-> > +      * It's not safe to put root ports that aren't power manageable
-> > +      * by the platform into D3.
->
-> Does this refer specifically to D3cold?
->
-> I assume that if we were talking about D3hot, we wouldn't need to
-> check for ACPI support because D3hot behavior should be fully covered
-> by the PCIe spec.
->
-> Let's be specific about D3hot vs D3cold whenever possible.
+> +	if (ret) {
+> +		dev_err(dw->dev, "Failed to enable ref clocks\n");
+> +		return;
+> +	}
+> +
 
-Amen.
+> +	rcar_gen4_pcie_basic_init(rcar);
 
-However, even though by the PCIe spec it should be possible to program
-PCIe ports without ACPI PM support into D3hot via PMCSR, I'm not
-actually sure how that works in practice, especially as far as PCIe
-Root Ports are concerned.
+Please, see my note sent to the previous patch regarding having
+rcar_gen4_pcie_basic_deinit().
 
-Hardware designs usually don't allow Root Ports to be power managed
-individually, so I suppose that programming them into D3hot (or D1 or
-D2 for that matter) could be treated by the Host Bridge as dropping
-references to them or something similar and I can imagine that this
-may not work on some platforms and so maybe it should be avoided in
-general.
+> +
+> +	writel(PCIEDMAINTSTSEN_INIT, rcar->base + PCIEDMAINTSTSEN);
+> +}
+> +
+> +static void rcar_gen4_pcie_ep_init(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	enum pci_barno bar;
+> +
+> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++)
+> +		dw_pcie_ep_reset_bar(pci, bar);
+> +}
+> +
+> +static void rcar_gen4_pcie_ep_deinit(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *dw = to_dw_pcie_from_ep(ep);
+> +	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
+> +
+> +	writel(0, rcar->base + PCIEDMAINTSTSEN);
+> +}
+> +
+> +static int rcar_gen4_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> +				       enum pci_epc_irq_type type,
+> +				       u16 interrupt_num)
+> +{
+> +	struct dw_pcie *dw = to_dw_pcie_from_ep(ep);
+> +
+> +	switch (type) {
+> +	case PCI_EPC_IRQ_INTX:
+> +		return dw_pcie_ep_raise_intx_irq(ep, func_no);
+> +	case PCI_EPC_IRQ_MSI:
+> +		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
+> +	default:
+> +		dev_err(dw->dev, "Unknown IRQ type\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pci_epc_features rcar_gen4_pcie_epc_features = {
+> +	.linkup_notifier = false,
+> +	.msi_capable = true,
+> +	.msix_capable = false,
+> +	.reserved_bar = 1 << BAR_1 | 1 << BAR_3 | 1 << BAR_5,
+> +	.align = SZ_1M,
+> +};
+> +
+> +static const struct pci_epc_features*
+> +rcar_gen4_pcie_ep_get_features(struct dw_pcie_ep *ep)
+> +{
+> +	return &rcar_gen4_pcie_epc_features;
+> +}
+> +
+> +static unsigned int rcar_gen4_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+> +						       u8 func_no)
+> +{
+> +	return func_no * RCAR_GEN4_PCIE_EP_FUNC_DBI_OFFSET;
+> +}
+> +
+> +static unsigned int rcar_gen4_pcie_ep_func_conf_select2(struct dw_pcie_ep *ep,
+> +							u8 func_no)
+> +{
+> +	return func_no * RCAR_GEN4_PCIE_EP_FUNC_DBI2_OFFSET;
+> +}
+> +
+> +static const struct dw_pcie_ep_ops pcie_ep_ops = {
+> +	.ep_pre_init = rcar_gen4_pcie_ep_pre_init,
+> +	.ep_init = rcar_gen4_pcie_ep_init,
+> +	.ep_deinit = rcar_gen4_pcie_ep_deinit,
+> +	.raise_irq = rcar_gen4_pcie_ep_raise_irq,
+> +	.get_features = rcar_gen4_pcie_ep_get_features,
+> +	.func_conf_select = rcar_gen4_pcie_ep_func_conf_select,
+> +	.func_conf_select2 = rcar_gen4_pcie_ep_func_conf_select2,
+> +};
+> +
+> +static int rcar_gen4_add_pcie_ep(struct rcar_gen4_pcie *rcar,
+> +				 struct platform_device *pdev)
+> +{
+> +	struct dw_pcie_ep *ep = &rcar->dw.ep;
+> +	int ret;
+> +
+> +	rcar->mode = DW_PCIE_EP_TYPE;
+> +	ep->ops = &pcie_ep_ops;
+> +
+> +	ret = dw_pcie_ep_init(ep);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to initialize endpoint\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void rcar_gen4_remove_pcie_ep(struct rcar_gen4_pcie *rcar)
+> +{
+> +	dw_pcie_ep_exit(&rcar->dw.ep);
+> +}
+> +
+> +static int rcar_gen4_pcie_ep_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct rcar_gen4_pcie *rcar;
+> +	int err;
+> +
+> +	rcar = rcar_gen4_pcie_devm_alloc(dev);
+> +	if (!rcar)
+> +		return -ENOMEM;
+> +
+> +	err = rcar_gen4_pcie_get_resources(rcar, pdev);
+> +	if (err < 0) {
+> +		dev_err(dev, "Failed to request resource: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, rcar);
+> +
+> +	err = rcar_gen4_pcie_prepare(rcar);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	err = rcar_gen4_add_pcie_ep(rcar, pdev);
+> +	if (err < 0)
+> +		goto err_add;
+> +
+> +	return 0;
+> +
+> +err_add:
+> +	rcar_gen4_pcie_unprepare(rcar);
+> +
+> +	return err;
+> +}
+> +
 
-When there is ACPI PM support, though, it can at least be assumed that
-the platform designer has taken Root Port D3hot into account.
+> +static int rcar_gen4_pcie_ep_remove(struct platform_device *pdev)
+> +{
+> +	struct rcar_gen4_pcie *rcar = platform_get_drvdata(pdev);
+> +
+> +	rcar_gen4_remove_pcie_ep(rcar);
+> +	rcar_gen4_pcie_unprepare(rcar);
+> +
+> +	return 0;
+> +}
 
-> > +     if (pci_pcie_type(bridge) == PCI_EXP_TYPE_ROOT_PORT &&
-> > +         !platform_pci_power_manageable(bridge))
-> > +             return false;
->
-> If ACPI says a device is not power-manageable, i.e., ACPI doesn't know
-> how to put it in D0, it makes sense to return "false" here so we don't
-> try to put it in D3cold.
->
-> But I don't understand the ROOT_PORT check.  We may have a Switch
-> described via ACPI, and the ROOT_PORT check means we can return "true"
-> (it's OK to use D3cold) even if the Switch Port is not power-manageable
-> via ACPI.
+Please convert this function to returning void and assign to the
+platform_driver.remove_new pointer instead.
 
-My understanding is that it is related to the remark above: It is
-generally unclear how Root Port power management without ACPI support
-is supposed to work, so they are kind of a special case.
+> +
+> +static const struct of_device_id rcar_gen4_pcie_of_match[] = {
+> +	{ .compatible = "renesas,rcar-gen4-pcie-ep", },
+> +	{},
+> +};
+> +
+> +static struct platform_driver rcar_gen4_pcie_ep_driver = {
+> +	.driver = {
+> +		.name = "pcie-rcar-gen4-ep",
+> +		.of_match_table = rcar_gen4_pcie_of_match,
+> +	},
+> +	.probe = rcar_gen4_pcie_ep_probe,
 
-> >       /*
-> >        * It should be safe to put PCIe ports from 2015 or newer
-> >        * to D3.
-> > --
-> > 2.34.1
-> >
+> +	.remove = rcar_gen4_pcie_ep_remove,
+
+ditto
+
+-Serge(y)
+
+> +};
+> +module_platform_driver(rcar_gen4_pcie_ep_driver);
+> +
+> +MODULE_DESCRIPTION("Renesas R-Car Gen4 PCIe endpoint controller driver");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.25.1
+> 
