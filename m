@@ -2,50 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FE91752B08
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jul 2023 21:33:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C97F1752B52
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jul 2023 22:05:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233426AbjGMTdU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jul 2023 15:33:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36046 "EHLO
+        id S232724AbjGMUFP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jul 2023 16:05:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233422AbjGMTdT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jul 2023 15:33:19 -0400
-X-Greylist: delayed 395 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 13 Jul 2023 12:33:17 PDT
-Received: from out-62.mta0.migadu.com (out-62.mta0.migadu.com [91.218.175.62])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D187B268B
-        for <linux-pci@vger.kernel.org>; Thu, 13 Jul 2023 12:33:17 -0700 (PDT)
-Message-ID: <8768a272-18f8-9569-86f6-25564f8f862b@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1689276400;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ffLJYRKjKrm5E1Vgws6bFQ2mY/UBcmjl4+Qujv3Hl9c=;
-        b=wRaF/M8lGyRMQ/O676nxqDjiXFpzR/HqgkRdHcGtwFLPEE1ZRcChtUCYrk53OzzjKIlEzu
-        BZwV2Fw7IwuIHOD1s3zKeruabWaLrW0ZY1g2FC1OwiBdyYO8j8E1CiP5NQNdZDwajM8coM
-        KECVfarVnAKMH3f8wa+rHoAbBzC6LDM=
-Date:   Thu, 13 Jul 2023 13:26:36 -0600
-MIME-Version: 1.0
-Subject: Re: [PATCH] PCI: vmd: VMD to control Hotplug on its rootports
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org,
+        with ESMTP id S231547AbjGMUFO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jul 2023 16:05:14 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 860AA2D4B;
+        Thu, 13 Jul 2023 13:05:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689278713; x=1720814713;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9JiUrZtZsTMA2CpeUkSmTHTXxe2GKMdio7QpaLZNZ3w=;
+  b=OZHrf/hSTRluFbQYiOPjIjDC3CHRU2TVjHaYYDG8PhkT3FNw8xYwxulh
+   gQmHpXDA5ZUFDVFcczusTvt/rfDgVtCRJOpSryhVLY3+2k0nusUfaWQlN
+   RwsUQIJgDtpDx0V4PvE8VAEGngtEN/5c6Pqr8PSSgnn/rCf9FDg9Lxt9b
+   /0zK3rlIKWEGPYjL8zBoH/Lm3GpEWzrxRgnK8HcuOjo6vFxOX0gYJDiiF
+   jVKabNNx5Hd7f4EaSLWeZ6gFNCSi81s4huAb5H1dbspPSn2mit4/EMHW8
+   yAuhHxz026hT3i8L8gc2UlmZrR++i0AKZaqIFv9IrtmRgcm5TCIqQU8oC
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="364177164"
+X-IronPort-AV: E=Sophos;i="6.01,203,1684825200"; 
+   d="scan'208";a="364177164"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 13:05:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="757307678"
+X-IronPort-AV: E=Sophos;i="6.01,203,1684825200"; 
+   d="scan'208";a="757307678"
+Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 13 Jul 2023 13:05:08 -0700
+Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qK2Yl-0006sX-2T;
+        Thu, 13 Jul 2023 20:05:07 +0000
+Date:   Fri, 14 Jul 2023 04:04:42 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        manivannan.sadhasivam@linaro.org
+Cc:     oe-kbuild-all@lists.linux.dev, helgaas@kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, krzysztof.kozlowski@linaro.org,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kwilczynski@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>
-References: <20230713165856.GA322319@bhelgaas>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Jonathan Derrick <jonathan.derrick@linux.dev>
-In-Reply-To: <20230713165856.GA322319@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Subject: Re: [PATCH v2 2/8] PCI: qcom-ep: Add support for D-state change
+ notification
+Message-ID: <202307140321.wjx00mop-lkp@intel.com>
+References: <1688122331-25478-3-git-send-email-quic_krichai@quicinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1688122331-25478-3-git-send-email-quic_krichai@quicinc.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,115 +74,90 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Krishna,
 
+kernel test robot noticed the following build warnings:
 
-On 7/13/2023 10:58 AM, Bjorn Helgaas wrote:
-> [+cc Jonathan, Lorenzo, Krzysztof, Rob (from MAINTAINERS)]
-> 
-> Can you make the subject line say what the patch does?  Repeating
-> "VMD" is probably unnecessary.
-> 
-> On Wed, Jul 05, 2023 at 01:20:38PM -0400, Nirmal Patel wrote:
->> The hotplug functionality is broken in various combinations of guest
->> OSes i.e. RHEL, SlES and hypervisors i.e. KVM and ESXI.
-> 
-> "SLES"
-> 
->> VMD enabled on Intel ADL cpus caused interrupt storm for smasung
->> drives due to AER being enabled on VMD controlled root ports.
-> 
-> "Samsung"
-> 
-> Enabling AER should not cause an interrupt storm.  There must be
-> something else going on in addition.  Are you saying the Samsung
-> drives have some AER-related defect, like generating Correctable
-> Errors when they shouldn't?  It doesn't sound like "Intel ADL" would
-> be relevant here.
-> 
-> It's not clear to me if this is directly related to *hotplug* or if
-> it's an AER issue that may happen because of hotplug and possible for
-> other reasons.
-> 
->> The patch 04b12ef163d10e348db664900ae7f611b83c7a0e
-> 
-> 12 char SHA1 is sufficient.
-> 
->> ("PCI: vmd: Honor APCI _OSC on PCIe features.") was added to the VMD
->> driver to correct the issue based on the following assumption:
->> 	“Since VMD is an aperture to regular PCIe root ports, honor ACPI
->> 	_OSC to disable PCIe features accordingly to resolve the issue.”
->> 	Link: https://lore.kernel.org/r/20211203031541.1428904-1-kai.heng.feng@canonical.com
->>
->> VMD as a PCIe device is an end point(type 0), not a PCIe aperture
->> (pcie bridge). In fact VMD is a type 0 raid controller(class code).
->> When BIOS boots, all root ports under VMD is inaccessible by BIOS, and
->> as such, they maintain their power on default states. The VMD UEFI DXE
->> driver loads and configure all devices under VMD. This is how AER,
->> power management and hotplug gets enabled in UEFI, since the BIOS pci
->> driver cannot access the root ports.
-> 
-> s/pcie/PCIe/
-> s/pci/PCI/
-> s/raid/RAID/
-> 
->> The patch worked around the interrupt storm by assigning the native
-> 
-> I assume "the patch" means 04b12ef163d1.  Sometimes people write "the
-> patch does X" in the commit log for the current patch, so it's nice to
-> be specific to avoid confusion.
-> 
->> ACPI states to the  root ports under VMD. It assigns AER, hotplug,
->> PME, etc. These have been restored back to the power on default state
->> in guest OS, which says the root port hot plug enable is default OFF.
->> At most, the work around should have only assigned AER state.
->> An additional patch should be added to exclude hot plug from the
->> original patch.
-> 
-> Add blank line between paragraphs.
-> 
->> This will cause hot plug to start working again in the guest, as the
->> settings implemented by the UEFI VMD DXE driver will remain in effect
->> in Linux.
-So hotplug will work in the guest per UEFI VMD DXE driver, but AER will 
-be determined by the host native_aer state?
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.5-rc1 next-20230713]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> 
-> This is a lot of description that doesn't seem to say what the actual
-> underlying issue is.  It's basically "if we treat hotplug differently
-> from other negotiated features, things work better."  And it seems
-> like it depends on what the UEFI driver did, and we should try to
-> avoid a dependency there.
-> 
-> If the issue is too many Correctable Errors being reported via AER, we
-> have that problem regardless of VMD, and we should handle it by
-> rate-limiting and/or suppressing them completely for particularly
-> offensive devices.  We have some issues like this that are still
-> outstanding:
-I'm curious if Non-VMD root ports on the system see the same CE storm.
-Either way, rate-limiting per device seems like a good idea.
+url:    https://github.com/intel-lab-lkp/linux/commits/Krishna-chaitanya-chundru/PCI-endpoint-Add-dstate-change-notifier-support/20230630-190228
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/1688122331-25478-3-git-send-email-quic_krichai%40quicinc.com
+patch subject: [PATCH v2 2/8] PCI: qcom-ep: Add support for D-state change notification
+config: arm-randconfig-r081-20230713 (https://download.01.org/0day-ci/archive/20230714/202307140321.wjx00mop-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 12.3.0
+reproduce: (https://download.01.org/0day-ci/archive/20230714/202307140321.wjx00mop-lkp@intel.com/reproduce)
 
-> 
-> [1] https://lore.kernel.org/linux-pci/DM6PR04MB6473197DBD89FF4643CC391F8BC19@DM6PR04MB6473.namprd04.prod.outlook.com/
-> [2] https://lore.kernel.org/linux-pci/20230606035256.2886098-2-grundler@chromium.org/
-> 
->> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
->> ---
->>   drivers/pci/controller/vmd.c | 2 --
->>   1 file changed, 2 deletions(-)
->>
->> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
->> index 769eedeb8802..52c2461b4761 100644
->> --- a/drivers/pci/controller/vmd.c
->> +++ b/drivers/pci/controller/vmd.c
->> @@ -701,8 +701,6 @@ static int vmd_alloc_irqs(struct vmd_dev *vmd)
->>   static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
->>   				       struct pci_host_bridge *vmd_bridge)
->>   {
->> -	vmd_bridge->native_pcie_hotplug = root_bridge->native_pcie_hotplug;
->> -	vmd_bridge->native_shpc_hotplug = root_bridge->native_shpc_hotplug;
->>   	vmd_bridge->native_aer = root_bridge->native_aer;
->>   	vmd_bridge->native_pme = root_bridge->native_pme;
->>   	vmd_bridge->native_ltr = root_bridge->native_ltr;
->> -- 
->> 2.31.1
->>
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202307140321.wjx00mop-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/pci/controller/dwc/pcie-qcom-ep.c:587:23: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted pci_power_t [usertype] state @@     got unsigned int [assigned] [usertype] dstate @@
+   drivers/pci/controller/dwc/pcie-qcom-ep.c:587:23: sparse:     expected restricted pci_power_t [usertype] state
+   drivers/pci/controller/dwc/pcie-qcom-ep.c:587:23: sparse:     got unsigned int [assigned] [usertype] dstate
+
+vim +587 drivers/pci/controller/dwc/pcie-qcom-ep.c
+
+   555	
+   556	/* TODO: Notify clients about PCIe state change */
+   557	static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
+   558	{
+   559		struct qcom_pcie_ep *pcie_ep = data;
+   560		struct dw_pcie *pci = &pcie_ep->pci;
+   561		struct device *dev = pci->dev;
+   562		u32 status = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_STATUS);
+   563		u32 mask = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_MASK);
+   564		pci_power_t state;
+   565		u32 dstate, val;
+   566	
+   567		writel_relaxed(status, pcie_ep->parf + PARF_INT_ALL_CLEAR);
+   568		status &= mask;
+   569	
+   570		if (FIELD_GET(PARF_INT_ALL_LINK_DOWN, status)) {
+   571			dev_dbg(dev, "Received Linkdown event\n");
+   572			pcie_ep->link_status = QCOM_PCIE_EP_LINK_DOWN;
+   573			pci_epc_linkdown(pci->ep.epc);
+   574		} else if (FIELD_GET(PARF_INT_ALL_BME, status)) {
+   575			dev_dbg(dev, "Received BME event. Link is enabled!\n");
+   576			pcie_ep->link_status = QCOM_PCIE_EP_LINK_ENABLED;
+   577			pci_epc_bme_notify(pci->ep.epc);
+   578		} else if (FIELD_GET(PARF_INT_ALL_PM_TURNOFF, status)) {
+   579			dev_dbg(dev, "Received PM Turn-off event! Entering L23\n");
+   580			val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
+   581			val |= PARF_PM_CTRL_READY_ENTR_L23;
+   582			writel_relaxed(val, pcie_ep->parf + PARF_PM_CTRL);
+   583		} else if (FIELD_GET(PARF_INT_ALL_DSTATE_CHANGE, status)) {
+   584			dstate = dw_pcie_readl_dbi(pci, DBI_CON_STATUS) &
+   585						   DBI_CON_STATUS_POWER_STATE_MASK;
+   586			dev_dbg(dev, "Received D%d state event\n", dstate);
+ > 587			state = dstate;
+   588			if (dstate == 3) {
+   589				val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
+   590				val |= PARF_PM_CTRL_REQ_EXIT_L1;
+   591				writel_relaxed(val, pcie_ep->parf + PARF_PM_CTRL);
+   592				state = PCI_D3hot;
+   593				if (gpiod_get_value(pcie_ep->reset))
+   594					state = PCI_D3cold;
+   595			}
+   596			pci_epc_dstate_change(pci->ep.epc, state);
+   597		} else if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
+   598			dev_dbg(dev, "Received Linkup event. Enumeration complete!\n");
+   599			dw_pcie_ep_linkup(&pci->ep);
+   600			pcie_ep->link_status = QCOM_PCIE_EP_LINK_UP;
+   601		} else {
+   602			dev_dbg(dev, "Received unknown event: %d\n", status);
+   603		}
+   604	
+   605		return IRQ_HANDLED;
+   606	}
+   607	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
