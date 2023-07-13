@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46889752178
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jul 2023 14:45:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5353D75217B
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jul 2023 14:45:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234333AbjGMMpq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jul 2023 08:45:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55644 "EHLO
+        id S234786AbjGMMpu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jul 2023 08:45:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234370AbjGMMpo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jul 2023 08:45:44 -0400
+        with ESMTP id S234506AbjGMMpr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jul 2023 08:45:47 -0400
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D6D826A0;
-        Thu, 13 Jul 2023 05:45:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8928213C;
+        Thu, 13 Jul 2023 05:45:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689252339; x=1720788339;
+  t=1689252346; x=1720788346;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=w9fmnbavpFPn2k6FB22LLTiMoKztUNTZBdmD34m58vg=;
-  b=WwG/V6emJCh39Z63eFxqFFMQ2GXsAMKJBOdLspWd0AOI34JzLOkWxs7N
-   /0QcCwp9Z5uQmlYIOqUyIT3ulLI/tRDBWr5sbbVTlTeuhZiM6dm1VyWFO
-   Ll0dY8tTrRVh8Zx5dsJkwv3ZQ5j/DIvnjf7Ogi7MoABzq6lCYlHIbuPSZ
-   TD0MmjOIs0r0gghfkcPzIDlieLSsT+pEDjcsNYaUCEMi3kusUdIAg337P
-   s+9crGe/Q6jvTeCPp58QBEbsCcFsk5CMCG4vI2i3jJ+g8s33hYjtERqyg
-   gTVnheD43xPjyhZBwkxD56cFskMbVfZkz9GJKiGDvnfVN51udSXrkIMYg
+  bh=6XrYSLnRiRdBPpgn0CFb5orJiB6ktHC50J1M1HARYbo=;
+  b=m+6h248cNwKj1OvN7NaU3rKCTyH896M5AAvpRqQzMZ56oSQxWaxDBGFM
+   yccl+13U8z0ZmRJf9G87GEH4eM9AcJUOqADR9su1G8waB9nbkIg/GpNwA
+   3xwbgOSX/DvBdD7mtrP833TMyxKzN/IAMiX8ZTZs/7jz42VFBl5ieMVVt
+   lvhyBQG+jyomTPIggGhJOpQfQ6lkm8ErmxIYogqXFLg36d3b8+xB9P0Zt
+   vRbdrYRZbL8swgZOyyTqcE5CHtj6HW4MaSCp06yyp35MTTQvrpi1+zIHk
+   6805kyBB32k1hdrhEoeK6gY7qLuldHtSbZEDTa1jTwQaLm0l1VdTLY3BS
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="367796797"
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="367796825"
 X-IronPort-AV: E=Sophos;i="6.01,202,1684825200"; 
-   d="scan'208";a="367796797"
+   d="scan'208";a="367796825"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 05:45:38 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 05:45:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="757144396"
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="757144406"
 X-IronPort-AV: E=Sophos;i="6.01,202,1684825200"; 
-   d="scan'208";a="757144396"
+   d="scan'208";a="757144406"
 Received: from ijarvine-mobl2.ger.corp.intel.com ([10.251.222.39])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 05:45:33 -0700
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 05:45:40 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -47,18 +47,16 @@ To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Lukas Wunner <lukas@wunner.de>,
-        =?UTF-8?q?Stefan=20M=C3=A4tje?= <stefan.maetje@esd.eu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Shaohua Li <shaohua.li@intel.com>,
-        Greg Kroah-Hartman <gregkh@suse.de>,
-        linux-kernel@vger.kernel.org
+        Jesse Barnes <jbarnes@virtuousgeek.org>,
+        Yinghai Lu <yinghai@kernel.org>, linux-kernel@vger.kernel.org
 Cc:     Dean Luick <dean.luick@cornelisnetworks.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
         =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         stable@vger.kernel.org
-Subject: [PATCH v4 02/11] PCI: Make link retraining use RMW accessors for changing LNKCTL
-Date:   Thu, 13 Jul 2023 15:44:56 +0300
-Message-Id: <20230713124505.94866-3-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v4 03/11] PCI: pciehp: Use RMW accessors for changing LNKCTL
+Date:   Thu, 13 Jul 2023 15:44:57 +0300
+Message-Id: <20230713124505.94866-4-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230713124505.94866-1-ilpo.jarvinen@linux.intel.com>
 References: <20230713124505.94866-1-ilpo.jarvinen@linux.intel.com>
@@ -75,59 +73,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Don't assume that the device is fully under the control of PCI core.
-Use RMW capability accessors in link retraining which do proper locking
-to avoid losing concurrent updates to the register values.
+As hotplug is not the only driver touching LNKCTL, use the RMW
+capability accessor which handles concurrent changes correctly.
 
-Fixes: 4ec73791a64b ("PCI: Work around Pericom PCIe-to-PCI bridge Retrain Link erratum")
-Fixes: 7d715a6c1ae5 ("PCI: add PCI Express ASPM support")
+Fixes: 7f822999e12a ("PCI: pciehp: Add Disable/enable link functions")
 Suggested-by: Lukas Wunner <lukas@wunner.de>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Acked-by: Rafael J. Wysocki <rafael@kernel.org>
 Cc: stable@vger.kernel.org
 ---
+ drivers/pci/hotplug/pciehp_hpc.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-pci/enumeration branch moves the link retraining code into PCI core and
-also conflicts with a link retraining fix in pci/aspm. The changelog
-(and patch splitting) takes the move into account by not referring to
-ASPM while the change itself is not based on pci/enumeration (as per
-Bjorn's preference).
----
- drivers/pci/pci.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 60230da957e0..f7315b13bb82 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4927,7 +4927,6 @@ static int pcie_wait_for_link_status(struct pci_dev *pdev,
- int pcie_retrain_link(struct pci_dev *pdev, bool use_lt)
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 8711325605f0..e9ec77d8d44a 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -332,17 +332,11 @@ int pciehp_check_link_status(struct controller *ctrl)
+ static int __pciehp_link_set(struct controller *ctrl, bool enable)
  {
- 	int rc;
--	u16 lnkctl;
+ 	struct pci_dev *pdev = ctrl_dev(ctrl);
+-	u16 lnk_ctrl;
  
- 	/*
- 	 * Ensure the updated LNKCTL parameters are used during link
-@@ -4939,17 +4938,14 @@ int pcie_retrain_link(struct pci_dev *pdev, bool use_lt)
- 	if (rc)
- 		return rc;
+-	pcie_capability_read_word(pdev, PCI_EXP_LNKCTL, &lnk_ctrl);
++	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
++					   PCI_EXP_LNKCTL_LD,
++					   !enable ? PCI_EXP_LNKCTL_LD : 0);
  
--	pcie_capability_read_word(pdev, PCI_EXP_LNKCTL, &lnkctl);
--	lnkctl |= PCI_EXP_LNKCTL_RL;
--	pcie_capability_write_word(pdev, PCI_EXP_LNKCTL, lnkctl);
-+	pcie_capability_set_word(pdev, PCI_EXP_LNKCTL, PCI_EXP_LNKCTL_RL);
- 	if (pdev->clear_retrain_link) {
- 		/*
- 		 * Due to an erratum in some devices the Retrain Link bit
- 		 * needs to be cleared again manually to allow the link
- 		 * training to succeed.
- 		 */
--		lnkctl &= ~PCI_EXP_LNKCTL_RL;
--		pcie_capability_write_word(pdev, PCI_EXP_LNKCTL, lnkctl);
-+		pcie_capability_clear_word(pdev, PCI_EXP_LNKCTL, PCI_EXP_LNKCTL_RL);
- 	}
+-	if (enable)
+-		lnk_ctrl &= ~PCI_EXP_LNKCTL_LD;
+-	else
+-		lnk_ctrl |= PCI_EXP_LNKCTL_LD;
+-
+-	pcie_capability_write_word(pdev, PCI_EXP_LNKCTL, lnk_ctrl);
+-	ctrl_dbg(ctrl, "%s: lnk_ctrl = %x\n", __func__, lnk_ctrl);
+ 	return 0;
+ }
  
- 	return pcie_wait_for_link_status(pdev, use_lt, !use_lt);
 -- 
 2.30.2
 
