@@ -2,225 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0C87751FE6
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jul 2023 13:30:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B816752172
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jul 2023 14:45:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233657AbjGMLaH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jul 2023 07:30:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36682 "EHLO
+        id S233868AbjGMMpW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jul 2023 08:45:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233086AbjGMLaG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jul 2023 07:30:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7132A18E;
-        Thu, 13 Jul 2023 04:30:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0F25261044;
-        Thu, 13 Jul 2023 11:30:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 918FEC433C8;
-        Thu, 13 Jul 2023 11:29:59 +0000 (UTC)
-Date:   Thu, 13 Jul 2023 16:59:48 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
-        krzysztof.kozlowski@linaro.org,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        with ESMTP id S229838AbjGMMpV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jul 2023 08:45:21 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E83212E;
+        Thu, 13 Jul 2023 05:45:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689252317; x=1720788317;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=AXOgPYaPuOxYmPDMtFL2ISnKlxaaq+TWYj4SLMdIzoo=;
+  b=NcujlginmKqUgpaEbKCBs/lyWxh2MX5fTf0X/dr8qmfYfzelj2cRSwQ3
+   ROrcNx50Od8AgmWxzmZ0pSl1fyeAjYr2++F0teu9LmkvQGB6F8HY8MDvQ
+   U3BTSL2qZoDiNGVeElxtFNvGZNS9iZVVjK/Kmdtcmy9iS7DMtnua9mxL2
+   tgeEZU/UaNUR4QAityE+aNRtPOp9mzMWzCjzgueyhlmBReU+VvtZalc1s
+   9arJKqQER7yTwnBn77JQLXQYeYGHTvs4UtJqKv4w8x7noMHAi4AWqlFC6
+   PN4nDsWnHcn3M0zbXtkn1josMWhk//oqj+RlPgFz+90OrtmpB3dtKqemo
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="367796715"
+X-IronPort-AV: E=Sophos;i="6.01,202,1684825200"; 
+   d="scan'208";a="367796715"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 05:45:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="757144353"
+X-IronPort-AV: E=Sophos;i="6.01,202,1684825200"; 
+   d="scan'208";a="757144353"
+Received: from ijarvine-mobl2.ger.corp.intel.com ([10.251.222.39])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 05:45:12 -0700
+From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v8 3/3] PCI: qcom-ep: Add ICC bandwidth voting support
-Message-ID: <20230713112948.GJ3047@thinkpad>
-References: <1689247213-13569-1-git-send-email-quic_krichai@quicinc.com>
- <1689247213-13569-4-git-send-email-quic_krichai@quicinc.com>
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Dean Luick <dean.luick@cornelisnetworks.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v4 00/11] PCI: Improve PCIe Capability RMW concurrency control
+Date:   Thu, 13 Jul 2023 15:44:54 +0300
+Message-Id: <20230713124505.94866-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1689247213-13569-4-git-send-email-quic_krichai@quicinc.com>
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 13, 2023 at 04:50:13PM +0530, Krishna chaitanya chundru wrote:
-> Add support for voting interconnect (ICC) bandwidth based
-> on the link speed and width.
-> 
-> This commit is inspired from the basic interconnect support added
-> to pcie-qcom driver in commit c4860af88d0c ("PCI: qcom: Add basic
-> interconnect support").
-> 
-> The interconnect support is kept optional to be backward compatible
-> with legacy devicetrees.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+PCI Express Capability RMW accessors don't properly protect against
+concurrent access. Link Control Register is written by a number of
+things in the kernel in a RMW fashion without any concurrency control.
+This could in the unlucky case lead to losing one of the updates. One
+of the most obvious path which can race with most of the other LNKCTL
+RMW operations seems to be ASPM policy sysfs write which triggers
+LNKCTL update. Similarly, Root Control Register can be concurrently
+accessed by AER and PME.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Make pcie_capability_clear_and_set_word() (and other RMW accessors that
+call it) to use a per device spinlock to protect the RMW operations to
+the Capability Registers that require locking. Convert open-coded
+LNKCTL RMW operations to use pcie_capability_clear_and_set_word() to
+benefit from the locking.
 
-- Mani
+There's also a related series which improves ASPM service driver and
+device driver coordination by removing out-of-band ASPM state
+management from device drivers (which will remove some of the code
+fragments changed by this series but it has higher regression
+potential which is why it seems prudent to do these changes in two
+steps):
+  https://lore.kernel.org/linux-pci/20230602114751.19671-1-ilpo.jarvinen@linux.intel.com/T/#t
 
-> ---
->  drivers/pci/controller/dwc/pcie-qcom-ep.c | 72 +++++++++++++++++++++++++++++++
->  1 file changed, 72 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> index 0fe7f06..cf9fc94 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> @@ -13,6 +13,7 @@
->  #include <linux/debugfs.h>
->  #include <linux/delay.h>
->  #include <linux/gpio/consumer.h>
-> +#include <linux/interconnect.h>
->  #include <linux/mfd/syscon.h>
->  #include <linux/phy/pcie.h>
->  #include <linux/phy/phy.h>
-> @@ -28,6 +29,7 @@
->  #define PARF_SYS_CTRL				0x00
->  #define PARF_DB_CTRL				0x10
->  #define PARF_PM_CTRL				0x20
-> +#define PARF_PM_STTS				0x24
->  #define PARF_MHI_CLOCK_RESET_CTRL		0x174
->  #define PARF_MHI_BASE_ADDR_LOWER		0x178
->  #define PARF_MHI_BASE_ADDR_UPPER		0x17c
-> @@ -133,6 +135,11 @@
->  #define CORE_RESET_TIME_US_MAX			1005
->  #define WAKE_DELAY_US				2000 /* 2 ms */
->  
-> +#define PCIE_GEN1_BW_MBPS			250
-> +#define PCIE_GEN2_BW_MBPS			500
-> +#define PCIE_GEN3_BW_MBPS			985
-> +#define PCIE_GEN4_BW_MBPS			1969
-> +
->  #define to_pcie_ep(x)				dev_get_drvdata((x)->dev)
->  
->  enum qcom_pcie_ep_link_status {
-> @@ -178,6 +185,8 @@ struct qcom_pcie_ep {
->  	struct phy *phy;
->  	struct dentry *debugfs;
->  
-> +	struct icc_path *icc_mem;
-> +
->  	struct clk_bulk_data *clks;
->  	int num_clks;
->  
-> @@ -253,8 +262,49 @@ static void qcom_pcie_dw_stop_link(struct dw_pcie *pci)
->  	disable_irq(pcie_ep->perst_irq);
->  }
->  
-> +static void qcom_pcie_ep_icc_update(struct qcom_pcie_ep *pcie_ep)
-> +{
-> +	struct dw_pcie *pci = &pcie_ep->pci;
-> +	u32 offset, status, bw;
-> +	int speed, width;
-> +	int ret;
-> +
-> +	if (!pcie_ep->icc_mem)
-> +		return;
-> +
-> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
-> +
-> +	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
-> +	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, status);
-> +
-> +	switch (speed) {
-> +	case 1:
-> +		bw = MBps_to_icc(PCIE_GEN1_BW_MBPS);
-> +		break;
-> +	case 2:
-> +		bw = MBps_to_icc(PCIE_GEN2_BW_MBPS);
-> +		break;
-> +	case 3:
-> +		bw = MBps_to_icc(PCIE_GEN3_BW_MBPS);
-> +		break;
-> +	default:
-> +		dev_warn(pci->dev, "using default GEN4 bandwidth\n");
-> +		fallthrough;
-> +	case 4:
-> +		bw = MBps_to_icc(PCIE_GEN4_BW_MBPS);
-> +		break;
-> +	}
-> +
-> +	ret = icc_set_bw(pcie_ep->icc_mem, 0, width * bw);
-> +	if (ret)
-> +		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
-> +			ret);
-> +}
-> +
->  static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
->  {
-> +	struct dw_pcie *pci = &pcie_ep->pci;
->  	int ret;
->  
->  	ret = clk_bulk_prepare_enable(pcie_ep->num_clks, pcie_ep->clks);
-> @@ -277,8 +327,24 @@ static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
->  	if (ret)
->  		goto err_phy_exit;
->  
-> +	/*
-> +	 * Some Qualcomm platforms require interconnect bandwidth constraints
-> +	 * to be set before enabling interconnect clocks.
-> +	 *
-> +	 * Set an initial peak bandwidth corresponding to single-lane Gen 1
-> +	 * for the pcie-mem path.
-> +	 */
-> +	ret = icc_set_bw(pcie_ep->icc_mem, 0, MBps_to_icc(PCIE_GEN1_BW_MBPS));
-> +	if (ret) {
-> +		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
-> +			ret);
-> +		goto err_phy_off;
-> +	}
-> +
->  	return 0;
->  
-> +err_phy_off:
-> +	phy_power_off(pcie_ep->phy);
->  err_phy_exit:
->  	phy_exit(pcie_ep->phy);
->  err_disable_clk:
-> @@ -289,6 +355,7 @@ static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
->  
->  static void qcom_pcie_disable_resources(struct qcom_pcie_ep *pcie_ep)
->  {
-> +	icc_set_bw(pcie_ep->icc_mem, 0, 0);
->  	phy_power_off(pcie_ep->phy);
->  	phy_exit(pcie_ep->phy);
->  	clk_bulk_disable_unprepare(pcie_ep->num_clks, pcie_ep->clks);
-> @@ -550,6 +617,10 @@ static int qcom_pcie_ep_get_resources(struct platform_device *pdev,
->  	if (IS_ERR(pcie_ep->phy))
->  		ret = PTR_ERR(pcie_ep->phy);
->  
-> +	pcie_ep->icc_mem = devm_of_icc_get(dev, "pcie-mem");
-> +	if (IS_ERR(pcie_ep->icc_mem))
-> +		ret = PTR_ERR(pcie_ep->icc_mem);
-> +
->  	return ret;
->  }
->  
-> @@ -573,6 +644,7 @@ static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
->  	} else if (FIELD_GET(PARF_INT_ALL_BME, status)) {
->  		dev_dbg(dev, "Received BME event. Link is enabled!\n");
->  		pcie_ep->link_status = QCOM_PCIE_EP_LINK_ENABLED;
-> +		qcom_pcie_ep_icc_update(pcie_ep);
->  		pci_epc_bme_notify(pci->ep.epc);
->  	} else if (FIELD_GET(PARF_INT_ALL_PM_TURNOFF, status)) {
->  		dev_dbg(dev, "Received PM Turn-off event! Entering L23\n");
-> -- 
-> 2.7.4
-> 
+v4:
+- Rebased on top of pci/main
+- Added patch to update documentation
+
+v3:
+- Split link retraining change off from ASPM patch & reorder it earlier
+- Adjust changelog to take into account the move of link retraining
+  code into PCI core and no longer refer to ASPM (currently in
+  pci/enumeration branch)
+- based on top of pci/main
+
+v2:
+- Keep the RMW ops caller API the same
+- Make pcie_capability_clear_and_set_word() a wrapper that uses
+  locked/unlocked variant based on the capability reg
+- Extracted LNKCTL2 changes out from this series to keep this purely
+  a series which fixes something (LNKCTL2 RMW lock is necessary only
+  when PCIe BW control is introduced).
+- Added Fixes tags (it's a bit rathole but yeah, they're there now).
+- Renamed cap_lock to pcie_cap_lock
+- Changed ath1* to clear the ASPMC field before setting it
+
+Ilpo Järvinen (11):
+  PCI: Add locking to RMW PCI Express Capability Register accessors
+  PCI: Make link retraining use RMW accessors for changing LNKCTL
+  PCI: pciehp: Use RMW accessors for changing LNKCTL
+  PCI/ASPM: Use RMW accessors for changing LNKCTL
+  drm/amdgpu: Use RMW accessors for changing LNKCTL
+  drm/radeon: Use RMW accessors for changing LNKCTL
+  net/mlx5: Use RMW accessors for changing LNKCTL
+  wifi: ath11k: Use RMW accessors for changing LNKCTL
+  wifi: ath12k: Use RMW accessors for changing LNKCTL
+  wifi: ath10k: Use RMW accessors for changing LNKCTL
+  PCI: Document the Capability accessor RMW improvements
+
+ Documentation/PCI/pciebus-howto.rst           | 14 ++++---
+ drivers/gpu/drm/amd/amdgpu/cik.c              | 36 +++++-------------
+ drivers/gpu/drm/amd/amdgpu/si.c               | 36 +++++-------------
+ drivers/gpu/drm/radeon/cik.c                  | 36 +++++-------------
+ drivers/gpu/drm/radeon/si.c                   | 37 +++++--------------
+ .../ethernet/mellanox/mlx5/core/fw_reset.c    |  9 +----
+ drivers/net/wireless/ath/ath10k/pci.c         |  9 +++--
+ drivers/net/wireless/ath/ath11k/pci.c         | 10 +++--
+ drivers/net/wireless/ath/ath12k/pci.c         | 10 +++--
+ drivers/pci/access.c                          | 20 ++++++++--
+ drivers/pci/hotplug/pciehp_hpc.c              | 12 ++----
+ drivers/pci/pci.c                             |  8 +---
+ drivers/pci/pcie/aspm.c                       | 31 +++++++---------
+ drivers/pci/probe.c                           |  1 +
+ include/linux/pci.h                           | 34 ++++++++++++++++-
+ 15 files changed, 137 insertions(+), 166 deletions(-)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.30.2
+
