@@ -2,140 +2,206 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07D8175323C
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jul 2023 08:47:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAB077532B5
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jul 2023 09:13:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234764AbjGNGrW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jul 2023 02:47:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36822 "EHLO
+        id S233722AbjGNHNT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jul 2023 03:13:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234986AbjGNGq6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jul 2023 02:46:58 -0400
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CED430E2;
-        Thu, 13 Jul 2023 23:46:34 -0700 (PDT)
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 36E6kBnn116158;
-        Fri, 14 Jul 2023 01:46:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1689317171;
-        bh=51ygtQqbjia4BNqCGeTzY/PWLEnrB51JEBAW1iWjYps=;
-        h=Date:Subject:To:CC:References:From:In-Reply-To;
-        b=fJ+J0NHdY++G9H2fThwS039bgwc1y5MWHuZByQxeVy3Sow7VUXgkHMEvZkmZ8A4Bg
-         M5qln6ojA518kKzyjtG0oaLuqQW9hc1mYIAXCQ8dNlmBx0O2T0jflGRrejO1P8HG1S
-         2Wt+ZmSw0O8x2RfviukuPK8JC3dWVXViWUkJHJfM=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 36E6kBwa051681
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 14 Jul 2023 01:46:11 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 14
- Jul 2023 01:46:11 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 14 Jul 2023 01:46:11 -0500
-Received: from [172.24.19.15] (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 36E6k7RU097881;
-        Fri, 14 Jul 2023 01:46:08 -0500
-Message-ID: <eb1dd448-8cec-13a0-c782-92950de52085@ti.com>
-Date:   Fri, 14 Jul 2023 12:16:07 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v3] PCI: j721e: Delay 100ms T_PVPERL from power stable to
- PERST# inactive
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof Wilczy_ski <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Achal Verma <a-verma1@ti.com>
-References: <20230707095119.447952-1-a-verma1@ti.com>
-Content-Language: en-US
-From:   "Verma, Achal" <a-verma1@ti.com>
-In-Reply-To: <20230707095119.447952-1-a-verma1@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S235255AbjGNHM5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jul 2023 03:12:57 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E2330DF
+        for <linux-pci@vger.kernel.org>; Fri, 14 Jul 2023 00:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689318749; x=1720854749;
+  h=date:from:to:cc:subject:message-id;
+  bh=5+wVY4w2XrgadXTYT0zcb0JsYpQwrZywTc2B8hSj0+I=;
+  b=K4bYRiRp9j5aPEQ6XKDCvYcQWD4vSUMpEFE6G0jalNLewdUM4+KMNlAO
+   +tUcnKBLsHA6YYGhBogBl8L8HItuab3BrlSU3dXDPT4NjErIjL3hCWYSI
+   otUMn2nv+6fNQoXEWBcoWbSIOtzhGtZiY0NJWzNjJNOhnODW6r26f3Fl7
+   6J+UicnoxNQS7H60yBUtRC5kMH9vIsxzbglvzB9S1U2Gvah3v/XG4CyoP
+   0LGdziF6dsnUcbsDWpegs1aTG1cRkO9NYvE99FqlT/3+0o5X4J+K8O0hP
+   ykfzY/227qoK3pwbGR1yTILAW9NKVV8j0OlzA3vxJMybDXqbthjFfuh4L
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="368049781"
+X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
+   d="scan'208";a="368049781"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 00:12:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="835933136"
+X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
+   d="scan'208";a="835933136"
+Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Jul 2023 00:12:26 -0700
+Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qKCyX-0007HF-1o;
+        Fri, 14 Jul 2023 07:12:25 +0000
+Date:   Fri, 14 Jul 2023 15:11:32 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:aer] BUILD SUCCESS
+ 7ec4b34be4234599cf1241ef807cdb7c3636f6fe
+Message-ID: <202307141530.LZgBFadi-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git aer
+branch HEAD: 7ec4b34be4234599cf1241ef807cdb7c3636f6fe  PCI/AER: Unexport pci_enable_pcie_error_reporting()
 
+elapsed time: 835m
 
-On 7/7/2023 3:21 PM, Achal Verma wrote:
-> As per the PCIe Card Electromechanical specification REV. 5.0, PERST#
-> signal should be de-asserted after minimum 100ms from the time power-rails
-> become stable. So, to ensure 100ms delay to give sufficient time for
-> power-rails and refclk to become stable, change delay from 100us to 100ms.
-> 
->  From PCIe Card Electromechanical specification REV. 5.0 section 2.9.2:
-> TPVPERL: Power stable to PERST# inactive - 100ms
-> 
-> Fixes: f3e25911a430 ("PCI: j721e: Add TI J721E PCIe driver")
-> Signed-off-by: Achal Verma <a-verma1@ti.com>
-Hello Bjorn,
+configs tested: 129
+configs skipped: 7
 
-Could you please bless this with "Reviewed-by" tag.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Thanks,
-Achal Verma
-> ---
-> 
-> Changes from v2:
-> * Fix commit message.
-> 
-> Change from v1:
-> * Add macro for delay value.
-> 
->   drivers/pci/controller/cadence/pci-j721e.c | 11 +++++------
->   drivers/pci/pci.h                          |  2 ++
->   2 files changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> index e70213c9060a..32b6a7dc3cff 100644
-> --- a/drivers/pci/controller/cadence/pci-j721e.c
-> +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> @@ -498,14 +498,13 @@ static int j721e_pcie_probe(struct platform_device *pdev)
->   
->   		/*
->   		 * "Power Sequencing and Reset Signal Timings" table in
-> -		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
-> -		 * indicates PERST# should be deasserted after minimum of 100us
-> -		 * once REFCLK is stable. The REFCLK to the connector in RC
-> -		 * mode is selected while enabling the PHY. So deassert PERST#
-> -		 * after 100 us.
-> +		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 5.0
-> +		 * indicates PERST# should be deasserted after minimum of 100ms
-> +		 * after power rails achieve specified operating limits and
-> +		 * within this period reference clock should also become stable.
->   		 */
->   		if (gpiod) {
-> -			usleep_range(100, 200);
-> +			msleep(PCIE_TPVPERL_DELAY_MS);
->   			gpiod_set_value_cansleep(gpiod, 1);
->   		}
->   
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index a4c397434057..6ab2367e5867 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -13,6 +13,8 @@
->   
->   #define PCIE_LINK_RETRAIN_TIMEOUT_MS	1000
->   
-> +#define PCIE_TPVPERL_DELAY_MS	100	/* see PCIe CEM r5.0, sec 2.9.2 */
-> +
->   extern const unsigned char pcie_link_speed[];
->   extern bool pci_early_dump;
->   
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                        nsimosci_defconfig   gcc  
+arc                  randconfig-r005-20230713   gcc  
+arc                  randconfig-r024-20230713   gcc  
+arc                  randconfig-r043-20230713   gcc  
+arc                        vdk_hs38_defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                       aspeed_g5_defconfig   gcc  
+arm                     davinci_all_defconfig   clang
+arm                                 defconfig   gcc  
+arm                            qcom_defconfig   gcc  
+arm                  randconfig-r011-20230713   clang
+arm                  randconfig-r046-20230713   clang
+arm                           sunxi_defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r001-20230713   clang
+csky                                defconfig   gcc  
+hexagon              randconfig-r004-20230713   clang
+hexagon              randconfig-r041-20230713   clang
+hexagon              randconfig-r045-20230713   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230713   clang
+i386         buildonly-randconfig-r005-20230713   clang
+i386         buildonly-randconfig-r006-20230713   clang
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230713   clang
+i386                 randconfig-i002-20230713   clang
+i386                 randconfig-i003-20230713   clang
+i386                 randconfig-i004-20230713   clang
+i386                 randconfig-i005-20230713   clang
+i386                 randconfig-i006-20230713   clang
+i386                 randconfig-i011-20230713   gcc  
+i386                 randconfig-i012-20230713   gcc  
+i386                 randconfig-i013-20230713   gcc  
+i386                 randconfig-i014-20230713   gcc  
+i386                 randconfig-i015-20230713   gcc  
+i386                 randconfig-i016-20230713   gcc  
+i386                 randconfig-r002-20230713   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r006-20230713   gcc  
+loongarch            randconfig-r031-20230713   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze           randconfig-r012-20230713   gcc  
+microblaze           randconfig-r033-20230713   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                      maltasmvp_defconfig   gcc  
+mips                           rs90_defconfig   clang
+nios2                               defconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          g5_defconfig   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv             nommu_k210_sdcard_defconfig   gcc  
+riscv                randconfig-r042-20230713   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r022-20230713   gcc  
+s390                 randconfig-r044-20230713   gcc  
+s390                       zfcpdump_defconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                                  defconfig   gcc  
+sh                 kfr2r09-romimage_defconfig   gcc  
+sh                          landisk_defconfig   gcc  
+sh                   randconfig-r036-20230713   gcc  
+sh                           se7705_defconfig   gcc  
+sh                           se7722_defconfig   gcc  
+sh                        sh7763rdp_defconfig   gcc  
+sh                        sh7785lcr_defconfig   gcc  
+sh                            shmin_defconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r003-20230713   gcc  
+sparc                randconfig-r026-20230713   gcc  
+sparc64              randconfig-r013-20230713   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r032-20230713   gcc  
+um                   randconfig-r034-20230713   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230713   clang
+x86_64       buildonly-randconfig-r002-20230713   clang
+x86_64       buildonly-randconfig-r003-20230713   clang
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-r015-20230713   gcc  
+x86_64               randconfig-r025-20230713   gcc  
+x86_64               randconfig-x001-20230713   gcc  
+x86_64               randconfig-x002-20230713   gcc  
+x86_64               randconfig-x003-20230713   gcc  
+x86_64               randconfig-x004-20230713   gcc  
+x86_64               randconfig-x005-20230713   gcc  
+x86_64               randconfig-x006-20230713   gcc  
+x86_64               randconfig-x011-20230713   clang
+x86_64               randconfig-x012-20230713   clang
+x86_64               randconfig-x013-20230713   clang
+x86_64               randconfig-x014-20230713   clang
+x86_64               randconfig-x015-20230713   clang
+x86_64               randconfig-x016-20230713   clang
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                          rhel-8.3-func   gcc  
+x86_64                    rhel-8.3-kselftests   gcc  
+x86_64                         rhel-8.3-kunit   gcc  
+x86_64                           rhel-8.3-ltp   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa               randconfig-r016-20230713   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
