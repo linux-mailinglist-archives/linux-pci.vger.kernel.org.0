@@ -2,76 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3D4C753613
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jul 2023 11:08:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85C1375364F
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jul 2023 11:22:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235335AbjGNJIL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jul 2023 05:08:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41880 "EHLO
+        id S234965AbjGNJWK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jul 2023 05:22:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235834AbjGNJIE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jul 2023 05:08:04 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D5DD2D66;
-        Fri, 14 Jul 2023 02:07:58 -0700 (PDT)
+        with ESMTP id S234966AbjGNJWK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jul 2023 05:22:10 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24E122D63;
+        Fri, 14 Jul 2023 02:22:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689325678; x=1720861678;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=EeCmo5QPrerXx59WQvD8Hi1p50w/XswlhljpvGAX/l0=;
-  b=Kzd8PExYdJI8uEMEX+QeCOaNmP7rF5BwCHzpkzNZMbwuRTnboV0sx7jp
-   u99IdVs01CqYfiLkKnCZ0G35mr/9fgi4TBBwX1NqH0YQV7srqv3NWG2TT
-   34VfCqKpdbZj1n1Xrhb5vNXYa639ntOQiTXVtOl+lOs9YBJAhKir95oRf
-   wIaGLECJfxyKKhux1k9FHrYmpM2vT5ayAj8SLs0LR+Yk8QCEA3HB0iaxA
-   7Ct1JeDxW6DXIuKRbYu+kpxIGpdd7xRDkgnJwG+oxcTimI8E4eGsFH+3p
-   QO/3VogGYU7K8GereWjL+YelZm2EXrMIUAIBOf1NtameI2FkMG3czplfL
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="364303219"
+  t=1689326529; x=1720862529;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=OMB/N6BPRDjZBe+8HIGutNalCNZjLvvhIVpbF29doEE=;
+  b=GbpGYqpXSfhYb494uaS3bSNDQEE38hRiHFEb27XJmkqdU7MY598sJYvw
+   H6BLmav5VsVyTXUnHnLBLLVWUd6uqjQZEw7b8QAEnJDnijP80oPIQ3NU8
+   QjsRgnEAp0kU88FGKslpKLm/TIyyB++Hb/egT6rXWE9dHUApVUUV60tTo
+   9CmGxGFdIw9LDdqy5c/ie3O3yL90ZvQ27KhQ1TZy8riyhvLvxNus9OakM
+   2zmQZLJGihzSLpkxiqpIxMX3y4XnsWchmabaO1bLMdsSVtzV1KvTWNo4H
+   fp3v/2ZMLPDGyk50k9nKMh3CyoFvtT5e8QqFLDuaj8pPuHUYGQLUs3EFT
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="362898759"
 X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
-   d="scan'208";a="364303219"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 02:06:07 -0700
+   d="scan'208";a="362898759"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 02:22:08 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="672626070"
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="812359420"
 X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
-   d="scan'208";a="672626070"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003.jf.intel.com with ESMTP; 14 Jul 2023 02:06:03 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qKEkS-002bvt-2C;
-        Fri, 14 Jul 2023 12:06:00 +0300
-Date:   Fri, 14 Jul 2023 12:06:00 +0300
+   d="scan'208";a="812359420"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 Jul 2023 02:21:55 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 77AC1379; Fri, 14 Jul 2023 12:22:01 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Jesse Barnes <jbarnes@virtuousgeek.org>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Shaohua Li <shaohua.li@intel.com>,
-        Thomas Renninger <trenn@suse.de>,
-        Greg Kroah-Hartman <gregkh@suse.de>,
-        linux-kernel@vger.kernel.org,
-        Dean Luick <dean.luick@cornelisnetworks.com>,
-        Jonas =?iso-8859-1?Q?Dre=DFler?= <verdre@v0yd.nl>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v4 04/11] PCI/ASPM: Use RMW accessors for changing LNKCTL
-Message-ID: <ZLEP+FPwsvk8jw5E@smile.fi.intel.com>
-References: <20230713124505.94866-1-ilpo.jarvinen@linux.intel.com>
- <20230713124505.94866-5-ilpo.jarvinen@linux.intel.com>
+To:     Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH v2 1/1] range.h: Move resource API and constant to respective files
+Date:   Fri, 14 Jul 2023 12:22:00 +0300
+Message-Id: <20230714092200.1834-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230713124505.94866-5-ilpo.jarvinen@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
@@ -82,65 +68,98 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 13, 2023 at 03:44:58PM +0300, Ilpo Järvinen wrote:
-> Don't assume that the device is fully under the control of ASPM and use
-> RMW capability accessors which do proper locking to avoid losing
-> concurrent updates to the register values.
-> 
-> If configuration fails in pcie_aspm_configure_common_clock(), the
-> function attempts to restore the old PCI_EXP_LNKCTL_CCC settings. Store
-> only the old PCI_EXP_LNKCTL_CCC bit for the relevant devices rather
-> than the content of the whole LNKCTL registers. It aligns better with
-> how pcie_lnkctl_clear_and_set() expects its parameter and makes the
-> code more obvious to understand.
+range.h works with struct range data type. The resource_size_t
+is an alien here.
 
-...
+(1) Move cap_resource() implementation into its only user, and
+(2) rename and move RESOURCE_SIZE_MAX to limits.h.
 
->  	int same_clock = 1;
-> -	u16 reg16, parent_reg, child_reg[8];
-> +	u16 reg16, parent_old_ccc, child_old_ccc[8];
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+v2: added tag (Bjorn), massaged commit message (Bjorn)
+ arch/mips/cavium-octeon/setup.c | 2 +-
+ arch/x86/pci/amd_bus.c          | 8 ++++++++
+ arch/x86/pci/bus_numa.c         | 2 +-
+ include/linux/limits.h          | 2 ++
+ include/linux/range.h           | 8 --------
+ 5 files changed, 12 insertions(+), 10 deletions(-)
 
-	u16 ccc;
-
->  	struct pci_dev *child, *parent = link->pdev;
->  	struct pci_bus *linkbus = parent->subordinate;
-
-...
-
-	ccc = same_clock ? PCI_EXP_LNKCTL_CCC : 0);
-
->  	/* Configure downstream component, all functions */
->  	list_for_each_entry(child, &linkbus->devices, bus_list) {
->  		pcie_capability_read_word(child, PCI_EXP_LNKCTL, &reg16);
-> -		child_reg[PCI_FUNC(child->devfn)] = reg16;
-> -		if (same_clock)
-> -			reg16 |= PCI_EXP_LNKCTL_CCC;
-> -		else
-> -			reg16 &= ~PCI_EXP_LNKCTL_CCC;
-> -		pcie_capability_write_word(child, PCI_EXP_LNKCTL, reg16);
-> +		child_old_ccc[PCI_FUNC(child->devfn)] = reg16 & PCI_EXP_LNKCTL_CCC;
-> +		pcie_capability_clear_and_set_word(child, PCI_EXP_LNKCTL,
-> +						   PCI_EXP_LNKCTL_CCC,
-> +						   same_clock ? PCI_EXP_LNKCTL_CCC : 0);
-
-		pcie_capability_clear_and_set_word(child, PCI_EXP_LNKCTL,
-						   PCI_EXP_LNKCTL_CCC, ccc);
-
->  	}
-
-...
-
-> +	pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL,
-> +					   PCI_EXP_LNKCTL_CCC,
-> +					   same_clock ? PCI_EXP_LNKCTL_CCC : 0);
-
-	pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL,
-					   PCI_EXP_LNKCTL_CCC, ccc);
-
-?
-
+diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon/setup.c
+index c5561016f577..1ad2602a0383 100644
+--- a/arch/mips/cavium-octeon/setup.c
++++ b/arch/mips/cavium-octeon/setup.c
+@@ -1240,7 +1240,7 @@ static int __init octeon_no_pci_init(void)
+ 	 */
+ 	octeon_dummy_iospace = vzalloc(IO_SPACE_LIMIT);
+ 	set_io_port_base((unsigned long)octeon_dummy_iospace);
+-	ioport_resource.start = MAX_RESOURCE;
++	ioport_resource.start = RESOURCE_SIZE_MAX;
+ 	ioport_resource.end = 0;
+ 	return 0;
+ }
+diff --git a/arch/x86/pci/amd_bus.c b/arch/x86/pci/amd_bus.c
+index dd40d3fea74e..631512f7ec85 100644
+--- a/arch/x86/pci/amd_bus.c
++++ b/arch/x86/pci/amd_bus.c
+@@ -51,6 +51,14 @@ static struct pci_root_info __init *find_pci_root_info(int node, int link)
+ 	return NULL;
+ }
+ 
++static inline resource_size_t cap_resource(u64 val)
++{
++	if (val > RESOURCE_SIZE_MAX)
++		return RESOURCE_SIZE_MAX;
++
++	return val;
++}
++
+ /**
+  * early_root_info_init()
+  * called before pcibios_scan_root and pci_scan_bus
+diff --git a/arch/x86/pci/bus_numa.c b/arch/x86/pci/bus_numa.c
+index 2752c02e3f0e..e4a525e59eaf 100644
+--- a/arch/x86/pci/bus_numa.c
++++ b/arch/x86/pci/bus_numa.c
+@@ -101,7 +101,7 @@ void update_res(struct pci_root_info *info, resource_size_t start,
+ 	if (start > end)
+ 		return;
+ 
+-	if (start == MAX_RESOURCE)
++	if (start == RESOURCE_SIZE_MAX)
+ 		return;
+ 
+ 	if (!merge)
+diff --git a/include/linux/limits.h b/include/linux/limits.h
+index f6bcc9369010..38eb7f6f7e88 100644
+--- a/include/linux/limits.h
++++ b/include/linux/limits.h
+@@ -10,6 +10,8 @@
+ #define SSIZE_MAX	((ssize_t)(SIZE_MAX >> 1))
+ #define PHYS_ADDR_MAX	(~(phys_addr_t)0)
+ 
++#define RESOURCE_SIZE_MAX	((resource_size_t)~0)
++
+ #define U8_MAX		((u8)~0U)
+ #define S8_MAX		((s8)(U8_MAX >> 1))
+ #define S8_MIN		((s8)(-S8_MAX - 1))
+diff --git a/include/linux/range.h b/include/linux/range.h
+index 7efb6a9b069b..6ad0b73cb7ad 100644
+--- a/include/linux/range.h
++++ b/include/linux/range.h
+@@ -31,12 +31,4 @@ int clean_sort_range(struct range *range, int az);
+ 
+ void sort_range(struct range *range, int nr_range);
+ 
+-#define MAX_RESOURCE ((resource_size_t)~0)
+-static inline resource_size_t cap_resource(u64 val)
+-{
+-	if (val > MAX_RESOURCE)
+-		return MAX_RESOURCE;
+-
+-	return val;
+-}
+ #endif
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.40.0.1.gaa8946217a0b
 
