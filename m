@@ -2,203 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D95D754303
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jul 2023 21:05:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB0E775432C
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jul 2023 21:18:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236435AbjGNTEy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jul 2023 15:04:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60698 "EHLO
+        id S235698AbjGNTSJ convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 14 Jul 2023 15:18:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235786AbjGNTEr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jul 2023 15:04:47 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CA035AC;
-        Fri, 14 Jul 2023 12:04:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689361482; x=1720897482;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=qacA9qwUpKvn7LZMtgwL6f2gOhniVmx24US3rVtu6+c=;
-  b=dW4WJ7j80y9fh0nt6bUdlQHBNuPFXhNHdhGfzAzQquPjDBi9nMBoyE6V
-   dE3AKw62v0nEJykCtMIZ1RUpHj2ZXFcxhLEW8EbkeuGNJmDW61OJgbS4Z
-   NCZbHeF8uqryziPubRgc1Zsh0cSlOv19q722IEHAziYRqukcAcMUZ9x/G
-   X/wfuBw2797c1DJCkrohUrdkV1zr+n+NDGTHrV3HM7qmLWeZHHkQh5LgC
-   objeBhCw42LJ0iZWnxYzasApNnfx02V2QCun1TcoiqGAH3hO0P9qq8tWp
-   pORoyid4N3F4HlfVZ91GfadKRfUxn/xVW7SUIiHTp//G8qDke0qbbyMN7
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10771"; a="396366510"
-X-IronPort-AV: E=Sophos;i="6.01,206,1684825200"; 
-   d="scan'208";a="396366510"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 12:04:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10771"; a="699791616"
-X-IronPort-AV: E=Sophos;i="6.01,206,1684825200"; 
-   d="scan'208";a="699791616"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orsmga006.jf.intel.com with ESMTP; 14 Jul 2023 12:04:07 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Fri, 14 Jul 2023 12:04:07 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Fri, 14 Jul 2023 12:04:07 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Fri, 14 Jul 2023 12:04:07 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DhZHiYK3Gfs/0p67J6wBqEbxk6zpvoc7/yK9bFvem27yftTouwws/aHU3TxtSqXTqWfXEa6LVZbBpQcengbubu2te474JkzI+j7MNuN9gjF1RCwyjJWCBMP4SqPF9NVHGpoBLHBDV/bAh2mkwJOukzUHFSS4g6x94wr0QkLU7Rf0WLgjJ/uZ4hnvQL8aYgVix51y3CZHtmDzGQ9si6sfWcAJ6sCVKTVrX2K4reKYfph4MuSoEJ2GXQAmFL6RoE/TJGnLJyZrgCLys1m+6AnQbogMDkP1o6f+fzntCtAvjdjCr81vXq9ttGYoD7dqisUACZKaZz1RXzkKgVTUafe9fg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FtWziak9pUYSbQL6uM6Pqu0YHSTK3m7EJe7Gyc9BQKk=;
- b=AQvccwKCB+02B75zxHMeGx4//gL8+8B/Dlc0dE06kux7G/3SYKr2Ad/irQI6UaOnceB0BkiHnmV+RX4ZNGSWpRyazSR50abUTaioNh5whnbc2lFue30YcVSBSV6MCR18l0n+MywAk4MmEEZcwL6Lwix2WX35HTXgsVP/DR/F0x1G/5Wd2X91yBl6dEJ63VVBgKliBs1jf2OdE2qz/X2NH5xpxE1bM99ts1wGm/ysFcyhSQPBGkAB9eccoWvrxz5OuyGfRFYw+JgmsmzGgk7QCCCZZdW4F65WJZ1WyYpagKh5NtIiYbncsdyQIkINwZWYOvEHS5WNs3rloVNGsYB0wQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB6375.namprd11.prod.outlook.com (2603:10b6:8:c9::21) by
- PH8PR11MB8038.namprd11.prod.outlook.com (2603:10b6:510:25e::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.26; Fri, 14 Jul
- 2023 19:04:02 +0000
-Received: from DS0PR11MB6375.namprd11.prod.outlook.com
- ([fe80::3a96:9177:fd4f:c649]) by DS0PR11MB6375.namprd11.prod.outlook.com
- ([fe80::3a96:9177:fd4f:c649%6]) with mapi id 15.20.6565.028; Fri, 14 Jul 2023
- 19:04:02 +0000
-Message-ID: <245f0248-b0ea-fae5-ce1b-6d4414277f36@intel.com>
-Date:   Fri, 14 Jul 2023 21:03:53 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v3 00/15] PCI: Define Intel PCI IDs and use them in
- drivers
-Content-Language: en-US
-To:     =?UTF-8?Q?Amadeusz_S=c5=82awi=c5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-References: <20230714202457.423866-1-amadeuszx.slawinski@linux.intel.com>
-From:   Cezary Rojewski <cezary.rojewski@intel.com>
-In-Reply-To: <20230714202457.423866-1-amadeuszx.slawinski@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BE1P281CA0420.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:b10:83::17) To DS0PR11MB6375.namprd11.prod.outlook.com
- (2603:10b6:8:c9::21)
+        with ESMTP id S235220AbjGNTSI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jul 2023 15:18:08 -0400
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8182735B1;
+        Fri, 14 Jul 2023 12:18:06 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-98273ae42d0so66948666b.0;
+        Fri, 14 Jul 2023 12:18:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689362285; x=1691954285;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RCXsMqYR9s3PYFNU6diJhKk3oI06Lndg+rpXvM6sCxU=;
+        b=LmDEH9I10xUggZklBU+MTSDXVnJBcQLU1/y67a2gk0J5wczF+Jn91CDemjACbe/piu
+         BWPe5ymT/RWdbLdaS+Duv/gIAWTQfx7ff23TC/fth2+nfPASHFR6kjhVbaJB0oViLsU/
+         /22Z87BRKK/NwbSCECSeOeWzBF4RlaLOmBzbSt/qPpUxpd/i9lYdx/Cb4XEtbQCiYadF
+         BQb14ldD/R6gUuqyV25pIZP/RI+gucSXGRrID5gc9/s7XxCi5YuDQN1Osv9toV4RDq/T
+         Gj9Imi16vBKEzwBx5VqUTcUhTOY1r3X/mF/X63w7b5Pbs4nYEkbzFf1LVY/YD7oa7Lxv
+         2dKg==
+X-Gm-Message-State: ABy/qLYNeGQfIJNzkgcvwilXMm70qu+e3Lx7pNbKWwJnY0ULJn8WSTNt
+        KKmSTpTObCTbZkmQB3L4bfqqGZ2P0wS/Zzt+w5g7dNa8
+X-Google-Smtp-Source: APBJJlFVCm/aKdLWObD0Z4IqX8VLM6YjQNvFOBuZmroCJeQzEghYt5BYZSc6eyZm+vtTvzIpO9EWFIySkBOxLmU37FA=
+X-Received: by 2002:a17:906:220b:b0:993:d54b:3e4b with SMTP id
+ s11-20020a170906220b00b00993d54b3e4bmr141681ejs.0.1689362284621; Fri, 14 Jul
+ 2023 12:18:04 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB6375:EE_|PH8PR11MB8038:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3bde0426-2eee-4e1f-0346-08db849d1628
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5Wgh7Tso4oc8kdBooBKw1JL4k79kT8zFBTvgpRCiNctqxVgOIepAvul5oA+fE2F8MmIejzurFPyAGxkO9kJfWyBjRz/9aeb7t/mj7lLdT7bGk+kFxHXxeLfoTjLZCV4276aw+W06k7oceF1SbyP2bZKNwQW5mZjkRIMOGCoOyq/eCAB99FOiaiWJ2UFSCR7wNIEgweZOa1doBC3hig3wguwnerdbw17ys6K+rmscWBtrdQ6YQzBnLlpV//eMs063iw9Gt4XLpaMef8ul4GV9sTPQ9uQ1u52QdJDeIVPQOz03moRTEO6+bNHKkSqfuBwfqN4xJ9VS4WpL5LPuhkiGAwxEEdYStzY4e0rIfnq9s1rHadUm0xLoev4kRExK7NGW9i8lb0inMlKRZzdc8Xpt5WE0Fz2PhqIjfBwLf+y5BiRZCKiv2eectuG+jFWLE+MFqROyDPz52MgaSxdHBb0NCFdUmPxtvC9T2A6zWAGguVUyqvIdJrZZEakmIRJug/ENcmyLoNwJEQnrGxb4xdSNuiRhXrQNSeYOTav81CjjPboMlNc8AK7szVGXQ0CQpY8ywBnKeXqnMmAwa08WBuRPUTRJDgjyFro3rDUel7Co31JcdWRN48L+ou6Gu0b3Qlcnb5G+cHPfX5Jc6meiNgVxHA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB6375.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(366004)(346002)(396003)(376002)(136003)(451199021)(31686004)(478600001)(6666004)(110136005)(6486002)(54906003)(36756003)(53546011)(86362001)(2906002)(31696002)(26005)(6506007)(6512007)(2616005)(41300700001)(186003)(38100700002)(44832011)(5660300002)(8676002)(82960400001)(316002)(66476007)(8936002)(4326008)(7416002)(66946007)(66556008)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SlVqd21mN3V0cnJHcThFZ1RWeVorQ2pUeGRqNHRQK3NrZ082WEM2cjJsSCtE?=
- =?utf-8?B?L3hGcjNiRy9LVVVjdU9OcGk1TFlTdWVEcVZMU0tXaTAvelpNYllJMmRYbW1z?=
- =?utf-8?B?aE1rV0lVcmNBNTNTZlZScWZJaDhJaUloYXA2N3hwUVhTbWowbHpQSy8wUUdx?=
- =?utf-8?B?aVFQN3VEWDU4dC9TTFVHOWRSb2F0cSttMTI5N3o2WWxMVkNpVzc3NE0zc1B0?=
- =?utf-8?B?TEMwbCtFUjhvYlZkOTFQMHV0a2tVRXJ3TTA4T3NGcXc5Q29JWVp1dThQZVJQ?=
- =?utf-8?B?M1VKVDc2NjlwV256UFI1RWhGWk5zWm5sT0F4NDc0WHNINDZXOFplY0NVaVVD?=
- =?utf-8?B?ZTdmK1VxUFZWcEt4aFl0TVRUZnh6WEw0cU5yMWswZHhrQSsxU1d6djcxU0xv?=
- =?utf-8?B?ZWFEazFSeFlKbFl4U0ZxMzlVbXpXNm5MY0hVblFSVXR6Tmd2OG1wMDBPcnZz?=
- =?utf-8?B?MGIrOWUzWlJ2aXl6bk84QjlGV1J6SWtmRW0vRWNTcmZkNkJsbnlITkFEZElE?=
- =?utf-8?B?N3IvZ3RDbW50UzI0bGZCZVFmb3FrSDlPWmtIVlUzWUZxRjhEZlNSN3ZaM1RS?=
- =?utf-8?B?MThKYjRyRXRSMlFLd0lJdXNFYktFZDFHZW5EVm9XbDl4c3E4ME41dVMrQWx0?=
- =?utf-8?B?ZFkxRmtvc2ZsK2xPdG94L0pIaktEZ1I1UUxUWlEwelp2U1NvMzIwMm94aWxU?=
- =?utf-8?B?T3I0OFFoUXNMcHhDdCtZQStUVFIrNitPYndKZFpvM3JzbXU5K04zYmhTWVJx?=
- =?utf-8?B?UjFYdytuUVUycFphR3JJU1piUllYa3gvSklxcUlnb2syN3FRUTRPV3ZLNFZC?=
- =?utf-8?B?clA5VUNFSGY0aTQ2TVlOTm1OYUUyL00zcjhEdGxnUVFXK2VZOUF4d2tzSFJP?=
- =?utf-8?B?QmhlL0pnZk1kbURNUGI2cHBFakZBY3VhZTk1VDFjemtuMUhIWklVc0thZ2t3?=
- =?utf-8?B?Y3hsNVp3VldESWZ1NEVJdDVJQ0pBWlNtOU1YSjFFUFVQZjZyU2xwMFhYV04v?=
- =?utf-8?B?MElpU1lITHhaYmJEMTNiVjZZWnhDN1NiMEpkLzhneTNUeVl1WHBRZ3cxM3Zn?=
- =?utf-8?B?NVdUd3BBdWxOUXhYUGRjeUVLeU1GL3lrU08xTUV1eHpsOHhpTnI4MEdsV0Vp?=
- =?utf-8?B?L1h0MTduUUJtVXdaa25heEh5ZGwvS2NDZVh3ekN2QWRyNW9xYlZTcGJtTmR2?=
- =?utf-8?B?WTA4andSa2cyWkFGUmZWeXduZ0FMajVoWWF5T3htYU9ERUxkVjUySWNrY0kw?=
- =?utf-8?B?SkljWlJ6Z3g0ZC9KY2wwbjVTY1NncUZLaG84ZzVINURsT0FPU0M1QVpPQzg0?=
- =?utf-8?B?NGJLTExBdkp6U2dYU283SzdpL00zcGp1LzZ1cWxnc3FxRFFobHoraHZ4Z25l?=
- =?utf-8?B?WW1vWWsvNUsxbU5ZdjRSYXQzQVI3Qnl1NUlkZDJhNTVvSzlzUUFQWjF6QUt3?=
- =?utf-8?B?TC9uV2ZCc0pySW5MTTVNWmgzMFQrOGNobC82U1lKZXRVeFZsaEJFVlNLaFAv?=
- =?utf-8?B?d29xaG1PNkdMSThJMzZXdEhReStJbWhONkc1UjdRc3dvNVlVR3dYdVE2bkNw?=
- =?utf-8?B?QWhaZGgyTlRSUmtOWUphTG5UdUExOHlIWFB2NUVpL2tYQlVsL1E5MnRFWUw3?=
- =?utf-8?B?QlNFQXJCcU51S1FqRC9iN2plN0gzUnJjVEtuZUVZYS9ZTDkxdjdYV1pScmVR?=
- =?utf-8?B?WW9uMExYNTlEZ2VCbFdvT2s0dTRWMWVXcFZwa1NURmtHZE14cHlWbjB0US9I?=
- =?utf-8?B?d0FTbjZsNkNFaGRscmYvVHkwU2pFV2RCZ2NvQnkxcDFxSzZYdGlNQWFMd09R?=
- =?utf-8?B?KzZnUTlsSDZUN0NuUmlXMlRNN3dxdFhQUDVKaE5hU1VBaExBcndSOVJkdmR1?=
- =?utf-8?B?STlkb2I0cjRROGRqNkl1MzRWcXdTNVN4L2NkNkZiUmtqeVZoYzAxTEVPVGht?=
- =?utf-8?B?R2Q4TFk0dml5R25kVEluTmVrNGxRWlB0c09ZNzNZSnJZOWw4WkdJOFU4Y0xp?=
- =?utf-8?B?d1V6V2E5RnRiNXd4U2c2Mm13WmJhV2RFdmJia2tRcExRYkVBOUZ6TjdSRXVS?=
- =?utf-8?B?MmNQVldXV2dweHdnMWY2anZxaFJBQkxEYWhjS2xaSmJvM2MzQkJ5eW1rMlJC?=
- =?utf-8?B?eWFQSFhYblpRc2VDTmdTcnlCM2ZqK2Y3cXZldHVKQVNNYk9UaFllUG5ZM3dw?=
- =?utf-8?B?ZWc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3bde0426-2eee-4e1f-0346-08db849d1628
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB6375.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2023 19:04:02.2410
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J4utCn5CxV80mZ427R2ZCpAzczwOqg1FP9up15cuDOAgpfGZcWFwl/XyJrhNMvrtLjwMqtxMbT94TC6l0qU3AOPL/3q34YIB0oUTpyb3B1M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB8038
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230711221427.GA250962@bhelgaas> <b82a50eb-8182-84ca-5b24-dbe8870fa871@amd.com>
+ <CAJZ5v0i6PviqW7u3i8hmvSCvR_VHqP-mWRy3Da8Ev_1vi9qBQA@mail.gmail.com> <a309e3fe-b1f9-e269-cb97-8af87c8d483b@amd.com>
+In-Reply-To: <a309e3fe-b1f9-e269-cb97-8af87c8d483b@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 14 Jul 2023 21:17:53 +0200
+Message-ID: <CAJZ5v0jvxrDMR6YHFpYZ4yYpp82-3TtrH==SMRFtUMJsv7=i=g@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] PCI: Don't put non-power manageable PCIe root
+ ports into D3
+To:     "Limonciello, Mario" <mario.limonciello@amd.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org, Iain Lane <iain@orangesquash.org.uk>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2023-07-14 10:24 PM, Amadeusz Sławiński wrote:
-> PCI IDs for Intel HDA are duplicated across quite a few drivers, due to
-> various configurations and historical reasons. Currently almost all uses
-> of HDA PCI IDs have corresponding comment telling which platform it is.
-> Additionally there are some inconsistencies between drivers about which
-> ID corresponds to which device.
-> 
-> Simplify things, by adding PCI IDs to global header and make use of them
-> in drivers. This allows for removal of comments by having IDs themselves
-> being self explanatory. Additionally it allows for removal of existing
-> inconsistencies by having one source of truth.
+On Wed, Jul 12, 2023 at 6:09 PM Limonciello, Mario
+<mario.limonciello@amd.com> wrote:
+>
+> On 7/12/2023 07:13, Rafael J. Wysocki wrote:
+> > On Wed, Jul 12, 2023 at 12:54 AM Mario Limonciello
+> > <mario.limonciello@amd.com> wrote:
+> >>
+> >> On 7/11/23 17:14, Bjorn Helgaas wrote:
+> >>> [+cc Andy, Intel MID stuff]
+> >>>
+> >>> On Mon, Jul 10, 2023 at 07:53:25PM -0500, Mario Limonciello wrote:
+> >>>> Since commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
+> >>>> PCIe ports from modern machines (>2015) are allowed to be put into D3 by
+> >>>> storing a flag in the `struct pci_dev` structure.
+> >>>
+> >>> It looks like >= 2015 (not >2015).  I think "a flag" refers to
+> >>> "bridge_d3".
+> >>
+> >> Yeah.
+> >>
+> >>>
+> >>>> pci_power_manageable() uses this flag to indicate a PCIe port can enter D3.
+> >>>> pci_pm_suspend_noirq() uses the return from pci_power_manageable() to
+> >>>> decide whether to try to put a device into its target state for a sleep
+> >>>> cycle via pci_prepare_to_sleep().
+> >>>>
+> >>>> For devices that support D3, the target state is selected by this policy:
+> >>>> 1. If platform_pci_power_manageable():
+> >>>>      Use platform_pci_choose_state()
+> >>>> 2. If the device is armed for wakeup:
+> >>>>      Select the deepest D-state that supports a PME.
+> >>>> 3. Else:
+> >>>>      Use D3hot.
+> >>>>
+> >>>> Devices are considered power manageable by the platform when they have
+> >>>> one or more objects described in the table in section 7.3 of the ACPI 6.4
+> >>>> specification.
+> >>>
+> >>> No point in citing an old version, so please cite ACPI r6.5, sec 7.3.
+> >>>
+> >>> The spec claims we only need one object from the table for a device to
+> >>> be "power-managed", but in reality, it looks like the only things that
+> >>> actually *control* power are _PRx (the _ON/_OFF methods of Power
+> >>> Resources) and _PSx (ironically only mentioned parenthically).
+> >>>
+> >>
+> >> Your point has me actually wondering if I've got this entirely wrong.
+> >>
+> >> Should we perhaps be looking specifically for the presence of _SxW to
+> >> decide if a given PCIe port can go below D0?
+> >
+> > There are two things, _SxW and _SxD, and they shouldn't be confused.
+> >
+> > _SxW tells you what the deepest power state from which wakeup can be
+> > signaled by the device (in the given Sx state of the system) is.
+> >
+> > _SxD tells you what the deepest power state supported by the device
+> > (in the given Sx state of the system) is.
+> >
+> > And note that _SxW is applicable to the device itself, not the
+> > subordinate devices, so I'm not sure how meaningful it is for ports.
+> >
+> > pci_target_state() uses both _SxW and _SxD to determine the deepest
+> > state the device can go into and so long as it is used properly, it
+> > shouldn't return a power state that is too deep, so I'm not really
+> > sure why you want this special "should the bridge be allowed to go
+> > into D3hot/cold" routine to double check this.
+>
+> Because pci_target_state only looks at _SxW and _SxD "if" the PCI device
+> is power manageable by ACPI.  That's why this change is injecting that
+> extra check in.
 
-...
+I see.  We seem to be getting to the bottom of the problem.
 
-> Amadeusz Sławiński (15):
->    PCI: Sort Intel PCI IDs by number
->    PCI: Add Intel Audio DSP devices to pci_ids.h
->    ASoC: SOF: Remove unused Broxton PCI ID
->    ALSA: Remove unused Broxton PCI ID
->    ALSA: hda: Add controller matching macros
->    ALSA: hda: Use global PCI match macro
->    ALSA: hda/i915:  Use global PCI match macro
->    ASoC: Intel: Skylake: Use global PCI match macro
->    ALSA: intel-dsp-config: Convert to PCI device IDs defines
->    ALSA: hda: Convert to PCI device IDs defines
->    ASoC: Intel: avs: Convert to PCI device IDs defines
->    ASoC: Intel: avs: Convert to PCI device IDs defines
->    ASoC: Intel: Skylake: Convert to PCI device IDs defines
->    ASoC: SOF: Intel: Convert to PCI device IDs defines
->    ASoC: Intel: sst: Convert to PCI device IDs defines
+[cut]
 
-Given the amount of talks we have had internally regarding this subject, 
-to my best knowledge series looks good:
+> >
+> > Generally speaking, pci_bridge_d3_possible() is there to prevent
+> > bridges (and PCIe ports in particular) from being put into D3hot/cold
+> > if there are reasons to believe that it may not work.
+> > acpi_pci_bridge_d3() is part of that.
+> >
+> > Even if it returns 'true', the _SxD/_SxW check should still be applied
+> > via pci_target_state() to determine whether or not the firmware allows
+> > this particular bridge to go into D3hot/cold.  So arguably, the _SxW
+> > check in acpi_pci_bridge_d3() should not be necessary and if it makes
+> > any functional difference, there is a bug somewhere else.
+>
+> But only if it was power manageable would the _SxD/_SxW check be
+> applied.  This issue is around the branch of pci_target_state() where
+> it's not power manageable and so it uses PME or it falls back to D3hot.
 
-Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Well, this looks like a spec interpretation difference.
 
-Great initiative Amadeo and, good job.
+We thought that _SxD/_SxW would only be relevant for devices with ACPI
+PM support, but the firmware people seem to think that those objects
+are also relevant for PCI devices that don't have ACPI PM support
+(because those devices are still power-manageable via PMCSR).  If
+Windows agrees with that viewpoint, we'll need to adjust, but not
+through adding _SxW checks in random places.
