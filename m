@@ -2,192 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 916B5753455
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jul 2023 09:54:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 382EC7534D7
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jul 2023 10:16:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235580AbjGNHyL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jul 2023 03:54:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45718 "EHLO
+        id S235187AbjGNIQE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jul 2023 04:16:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235151AbjGNHxo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jul 2023 03:53:44 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A72524201
-        for <linux-pci@vger.kernel.org>; Fri, 14 Jul 2023 00:52:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689321150; x=1720857150;
-  h=date:from:to:cc:subject:message-id;
-  bh=kXB2x9vbvgotfdwUI/v4cMFyhMtp8dFtCvFTPohNXZo=;
-  b=jUTeVWbjGVm5TfnMmdynP3wK/GM1/vha3fEybZL7RxzYtJM2bwng8+GE
-   QRhni26+tDOGHGK3Ym2ZYzMakG7ZshgY80iYxfMM+54xr951k7MPMqT4o
-   U+5fWbknPiWI9C92YJG/wBcJJs6EPG3ISfN6obElaiwJnzbcANCsNlMeO
-   lPODrTU0yzY4AJvOccd2Eba2YMnSjz6CAYiNDK4QGHBQKo6G5vT6/yIiS
-   KRvWJ+Zevf2rYDRMCSW5NI5U9iV2lcsHskJKbAwuwlsLfsPvOqX7ZILUa
-   0hkW6JIPgejwqd9m8lVuu4U6g6jQTTYFRf4xkf1e6LvbkPDyW06a/icDe
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="345012559"
-X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
-   d="scan'208";a="345012559"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 00:52:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="716249914"
-X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
-   d="scan'208";a="716249914"
-Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 14 Jul 2023 00:52:26 -0700
-Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qKDbG-0007Hx-0D;
-        Fri, 14 Jul 2023 07:52:26 +0000
-Date:   Fri, 14 Jul 2023 15:51:52 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- ffb9381f49dac1203a54823542d9dc6eb32d0393
-Message-ID: <202307141551.2s8HoLcW-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S235497AbjGNIPk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jul 2023 04:15:40 -0400
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C7C51FCD
+        for <linux-pci@vger.kernel.org>; Fri, 14 Jul 2023 01:14:47 -0700 (PDT)
+Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com [209.85.161.70])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 54F1B3F723
+        for <linux-pci@vger.kernel.org>; Fri, 14 Jul 2023 08:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1689322485;
+        bh=3orHT4JM0Iv/tV5GPFY3h6ErKAXsnmT8WOqTtcRm+2w=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=pPULnrhluQ6I1pvUTo9pzd9hVmFL2eYQnIHwU90v36zXdhlFhUu6PsvI0oJ56CZ+I
+         vJaZqT5fqvtz/RhK+ACDyAMRPbuUUbc2g3U1aa28KAopBKcIQHMsgeGLvC9vM2THZW
+         xRfsNxABIFc118BDwUVEomGVRi6KW1jAUSWUnTtbITHbB+yxmIGLESb4h+72aHIEH0
+         OJb2OWowLuA/KNSgOuXEAU4XmuHI828RbroQpIKYuxTfYism1LJSZ25iHmEwXfBMOD
+         NGXpoOOkUohZPpRjvWzr8dQOf1rIMNm17yzzLLZbuvns7NLkRam1totJDlJtlR7oo3
+         f1ok9PhDLMDdA==
+Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-565d30b4311so2378631eaf.1
+        for <linux-pci@vger.kernel.org>; Fri, 14 Jul 2023 01:14:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689322484; x=1691914484;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3orHT4JM0Iv/tV5GPFY3h6ErKAXsnmT8WOqTtcRm+2w=;
+        b=fuWzPjhEmOnWFM9NosTuBhWkwawlUBolPuTCmUqRJhQEdi7PLZ/aMOiQx+i+d2iI2T
+         EjLKpF+TSc7o8jjaH4X/bYTPuHHWlX2M8SmX8Za9GKM9EfWB6bS4AfpSBmat9aCDJ172
+         Axl21imB/u4jZX5yr+s2LlA+w1W/wkZy2mowX/qEv6BSLs6wDuzf1pUrYwzIAJL/ptmk
+         +++V9Ygq6TZyiGSdqtwAcqTKxxfTTPIEATrlUZcnX6AlGDO+B9EfprSIY3XTQvQRY7al
+         SR9JZPPNqISn/PMhVRTRQqbCJuoAvm/lVAtouU7MxVw/S5MzbYuHRpVc8yofe2m3XxiX
+         +lEA==
+X-Gm-Message-State: ABy/qLZdat5lUoTKHCe2+hpd0EpcYYZKGWmbAgCiqhFMBi+mNJCxB+ob
+        3lBfpBguYjcvkKDE4eDXzq/j8wfPynK502s+AqtQynCzlQvVOJafDXVWfJrgwOc8AG2yCYwM44v
+        GARWVCHZB1Rea5dlXfkH+8P/fYORfUEZb0/eYP9BqPaEJMz0xxjBXcQ==
+X-Received: by 2002:a05:6358:5e0c:b0:134:ddad:2b51 with SMTP id q12-20020a0563585e0c00b00134ddad2b51mr4160618rwn.14.1689322484234;
+        Fri, 14 Jul 2023 01:14:44 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlHUGLglEJ2G95ivnaP/bf04GjYDd7FiIIQuh2B1oRfEBSPuFJkdc0euxQBZvVLKwTeqwDaQ+Vo90vDAhQelD+8=
+X-Received: by 2002:a05:6358:5e0c:b0:134:ddad:2b51 with SMTP id
+ q12-20020a0563585e0c00b00134ddad2b51mr4160605rwn.14.1689322483950; Fri, 14
+ Jul 2023 01:14:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230512000014.118942-1-kai.heng.feng@canonical.com> <20230512000014.118942-2-kai.heng.feng@canonical.com>
+In-Reply-To: <20230512000014.118942-2-kai.heng.feng@canonical.com>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Fri, 14 Jul 2023 16:14:32 +0800
+Message-ID: <CAAd53p6KEMJzraFn5GWGfEWQQ6WJmKGxtuGRuP2esAib+6s+Lw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] PCI/AER: Disable AER interrupt on suspend
+To:     bhelgaas@google.com
+Cc:     mika.westerberg@linux.intel.com, koba.ko@canonical.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: ffb9381f49dac1203a54823542d9dc6eb32d0393  Merge branch 'pci/misc'
+On Fri, May 12, 2023 at 8:01=E2=80=AFAM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+>
+> PCIe services that share an IRQ with PME, such as AER or DPC, may cause a
+> spurious wakeup on system suspend. To prevent this, disable the AER inter=
+rupt
+> notification during the system suspend process.
+>
+> As Per PCIe Base Spec 5.0, section 5.2, titled "Link State Power Manageme=
+nt",
+> TLP and DLLP transmission are disabled for a Link in L2/L3 Ready (D3hot),=
+ L2
+> (D3cold with aux power) and L3 (D3cold) states. So disabling the AER
+> notification during suspend and re-enabling them during the resume proces=
+s
+> should not affect the basic functionality.
+>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216295
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-elapsed time: 725m
+A gentle ping...
 
-configs tested: 116
-configs skipped: 5
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r021-20230713   gcc  
-arc                              allyesconfig   gcc  
-arc                          axs101_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r043-20230713   gcc  
-arc                        vdk_hs38_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                       aspeed_g5_defconfig   gcc  
-arm                        clps711x_defconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r013-20230713   clang
-arm                  randconfig-r034-20230713   gcc  
-arm                  randconfig-r046-20230713   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r016-20230713   gcc  
-csky                 randconfig-r025-20230713   gcc  
-hexagon              randconfig-r041-20230713   clang
-hexagon              randconfig-r045-20230713   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230713   clang
-i386         buildonly-randconfig-r005-20230713   clang
-i386         buildonly-randconfig-r006-20230713   clang
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230713   clang
-i386                 randconfig-i002-20230713   clang
-i386                 randconfig-i003-20230713   clang
-i386                 randconfig-i004-20230713   clang
-i386                 randconfig-i005-20230713   clang
-i386                 randconfig-i006-20230713   clang
-i386                 randconfig-i011-20230714   clang
-i386                 randconfig-i012-20230714   clang
-i386                 randconfig-i013-20230714   clang
-i386                 randconfig-i014-20230714   clang
-i386                 randconfig-i015-20230714   clang
-i386                 randconfig-i016-20230714   clang
-i386                 randconfig-r023-20230713   gcc  
-i386                 randconfig-r035-20230713   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r015-20230713   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc             randconfig-r031-20230713   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r004-20230713   gcc  
-parisc               randconfig-r026-20230713   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r032-20230713   clang
-riscv                randconfig-r042-20230713   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r011-20230713   gcc  
-s390                 randconfig-r044-20230713   gcc  
-sh                               allmodconfig   gcc  
-sh                 kfr2r09-romimage_defconfig   gcc  
-sh                          landisk_defconfig   gcc  
-sh                           se7705_defconfig   gcc  
-sh                        sh7785lcr_defconfig   gcc  
-sh                            shmin_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r024-20230713   gcc  
-sparc                randconfig-r033-20230713   gcc  
-sparc64              randconfig-r036-20230713   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r003-20230713   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230713   clang
-x86_64       buildonly-randconfig-r002-20230713   clang
-x86_64       buildonly-randconfig-r003-20230713   clang
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r002-20230713   clang
-x86_64               randconfig-r012-20230713   gcc  
-x86_64               randconfig-x001-20230713   gcc  
-x86_64               randconfig-x002-20230713   gcc  
-x86_64               randconfig-x003-20230713   gcc  
-x86_64               randconfig-x004-20230713   gcc  
-x86_64               randconfig-x005-20230713   gcc  
-x86_64               randconfig-x006-20230713   gcc  
-x86_64               randconfig-x011-20230713   clang
-x86_64               randconfig-x012-20230713   clang
-x86_64               randconfig-x013-20230713   clang
-x86_64               randconfig-x014-20230713   clang
-x86_64               randconfig-x015-20230713   clang
-x86_64               randconfig-x016-20230713   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r001-20230713   gcc  
-xtensa               randconfig-r022-20230713   gcc  
-xtensa                         virt_defconfig   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+> v6:
+> v5:
+>  - Wording.
+>
+> v4:
+> v3:
+>  - No change.
+>
+> v2:
+>  - Only disable AER IRQ.
+>  - No more check on PME IRQ#.
+>  - Use helper.
+>
+>  drivers/pci/pcie/aer.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 1420e1f27105..9c07fdbeb52d 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1356,6 +1356,26 @@ static int aer_probe(struct pcie_device *dev)
+>         return 0;
+>  }
+>
+> +static int aer_suspend(struct pcie_device *dev)
+> +{
+> +       struct aer_rpc *rpc =3D get_service_data(dev);
+> +       struct pci_dev *pdev =3D rpc->rpd;
+> +
+> +       aer_disable_irq(pdev);
+> +
+> +       return 0;
+> +}
+> +
+> +static int aer_resume(struct pcie_device *dev)
+> +{
+> +       struct aer_rpc *rpc =3D get_service_data(dev);
+> +       struct pci_dev *pdev =3D rpc->rpd;
+> +
+> +       aer_enable_irq(pdev);
+> +
+> +       return 0;
+> +}
+> +
+>  /**
+>   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
+>   * @dev: pointer to Root Port, RCEC, or RCiEP
+> @@ -1420,6 +1440,8 @@ static struct pcie_port_service_driver aerdriver =
+=3D {
+>         .service        =3D PCIE_PORT_SERVICE_AER,
+>
+>         .probe          =3D aer_probe,
+> +       .suspend        =3D aer_suspend,
+> +       .resume         =3D aer_resume,
+>         .remove         =3D aer_remove,
+>  };
+>
+> --
+> 2.34.1
+>
