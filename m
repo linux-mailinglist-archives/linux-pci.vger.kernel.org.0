@@ -2,102 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCA99753988
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jul 2023 13:32:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D58A6753A3B
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jul 2023 13:54:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235489AbjGNLch (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jul 2023 07:32:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40252 "EHLO
+        id S235689AbjGNLy6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jul 2023 07:54:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235523AbjGNLce (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jul 2023 07:32:34 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 724853586;
-        Fri, 14 Jul 2023 04:32:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689334353; x=1720870353;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=vMiLtLLmLYbROtrWsVDVcXNKwbyBp9NtziuSigdu7S4=;
-  b=jDSD6Vgdor66fKSfUUqXewXMEQKB3vGvHbz09LVumUzFzd2BeIJmOjhZ
-   h3h0YYNNTOK+j8WsAl/YaNqRWthZg4av2Gi6+l9U2jFe9Vv+1vEO6kkZR
-   GJIPFBDw3xaTzP1vlKpF7fJjkRXd93GLzn5BPTQ85dRhO7WQoIqxlmcZc
-   7rL9lQ7nYqT7avrV2sVkKMEtm6PApfav2rUom3I5Lx2MrIsuSo2dy1HLw
-   wd01i3F2J9k76DnPd8AMvEkLSYg8lUfmPp5d0xGt1De2Q2Rd+ElLspTkX
-   2ayarqpYbQgQpthXa3N/uC1b4PD00ooUcjLzybawvseh6ena3noMKgfYU
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="362920112"
-X-IronPort-AV: E=Sophos;i="6.01,205,1684825200"; 
-   d="scan'208";a="362920112"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 04:32:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="722372918"
-X-IronPort-AV: E=Sophos;i="6.01,205,1684825200"; 
-   d="scan'208";a="722372918"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga002.jf.intel.com with ESMTP; 14 Jul 2023 04:32:29 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1qKH2B-002e87-1W;
-        Fri, 14 Jul 2023 14:32:27 +0300
-Date:   Fri, 14 Jul 2023 14:32:27 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= 
-        <amadeuszx.slawinski@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 15/15] ASoC: Intel: sst: Convert to PCI device IDs
- defines
-Message-ID: <ZLEyS7gZqbuXmkUL@smile.fi.intel.com>
-References: <20230714185615.370597-1-amadeuszx.slawinski@linux.intel.com>
- <20230714185615.370597-16-amadeuszx.slawinski@linux.intel.com>
- <ZLEw9S8hmkcdk7K2@smile.fi.intel.com>
+        with ESMTP id S235576AbjGNLyz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jul 2023 07:54:55 -0400
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCE521995;
+        Fri, 14 Jul 2023 04:54:51 -0700 (PDT)
+Received: from i53875a50.versanet.de ([83.135.90.80] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <heiko@sntech.de>)
+        id 1qKHNb-0003C7-KD; Fri, 14 Jul 2023 13:54:35 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Simon Xue <xxm@rock-chips.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@collabora.com
+Subject: Re: [PATCH v2 0/3] RK3588 PCIe2 support
+Date:   Fri, 14 Jul 2023 13:54:34 +0200
+Message-ID: <3628628.VLH7GnMWUR@phil>
+In-Reply-To: <20230713204844.c4j4lebzj54uj7no@mercury.elektranox.org>
+References: <20230713171851.73052-1-sebastian.reichel@collabora.com>
+ <9408492.EvYhyI6sBW@phil>
+ <20230713204844.c4j4lebzj54uj7no@mercury.elektranox.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZLEw9S8hmkcdk7K2@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        T_SPF_HELO_TEMPERROR autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 14, 2023 at 02:26:45PM +0300, Andy Shevchenko wrote:
-> On Fri, Jul 14, 2023 at 08:56:15PM +0200, Amadeusz Sławiński wrote:
-> > Use PCI device IDs from pci_ids.h header.
-> 
-> Perhaps one more sentence to explain why this is okay change, like:
-> "The ACPI IDs are used only internally and lower 16 bits uniquely define
->  the device as vendor ID for Intel is 8086 for all of them."
-> 
-> Suggested-by: ?
-> 
-> ...
-> 
-> > -	{ PCI_VDEVICE(INTEL, SST_MRFLD_PCI_ID), 0},
-> > +	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_SST_TNG), 0},
-> 
-> That 0 is not needed, OTOH you may use PCI_DEVICE_DATA(..., 0).
+Hi Sebastian,
 
-And you missed the patch I sent to you, i.e. replacing field and function
-parameter type to be insigned short. Otherwise it won't work with ACPI.
+Am Donnerstag, 13. Juli 2023, 22:48:44 CEST schrieb Sebastian Reichel:
+> On Thu, Jul 13, 2023 at 10:09:29PM +0200, Heiko Stuebner wrote:
+> > Am Donnerstag, 13. Juli 2023, 19:18:48 CEST schrieb Sebastian Reichel:
+> > > This adds PCIe v2 support for RK3588. The series has been tested with
+> > > the onboard RTL8125 network card on Rockchip RK3588 EVB1 (&pcie2x1l1)
+> > > and Radxa Rock 5B (&pcie2x1l2).
+> > 
+> > Didn't Rob write that he applied patches 1-3 of the v1 series? [0]
+> > or did I miss further communication somehow?
+> > [0] https://lore.kernel.org/r/20230626193238.GA3553158-robh@kernel.org
+> 
+> Rob wrote, that he de-applied the first patch:
+> 
+> https://lore.kernel.org/all/CAL_Jsq+=kBrujhLW_KNRWpj+DQJbnXrA=RS3La5ekbJtji+xiQ@mail.gmail.com/
+> 
+> It seems the second one was also dropped, since I rebased on top of
+> 6.5-rc1, which only had patch 3/4.
 
--- 
-With Best Regards,
-Andy Shevchenko
+thanks for the clarification :-) .
+
+> FWIW the remaining dt-bindings fix issues that also exist for
+> RK356x, so I guess there is no strict dependency. It might be
+> acceptable to merge the DTS patch already, so that we finally
+> get working network on Rock 5B. That would temporarily introduce
+> DT warnings though (RK3588 is currently warning-free).
+
+We're still early in the release cycle, so I guess we should
+just give Rob(?) time to pick up the binding patches if they
+look ok to him. And not introduce new warnings ;-)
+
+
+Heiko
 
 
