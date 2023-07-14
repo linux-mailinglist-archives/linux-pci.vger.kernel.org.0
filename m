@@ -2,193 +2,198 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8699B7530FB
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jul 2023 07:09:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 331FC753113
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jul 2023 07:20:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234896AbjGNFJY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jul 2023 01:09:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48434 "EHLO
+        id S234025AbjGNFUh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jul 2023 01:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234088AbjGNFJQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jul 2023 01:09:16 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A8830E2;
-        Thu, 13 Jul 2023 22:09:11 -0700 (PDT)
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36E3drsn005977;
-        Fri, 14 Jul 2023 05:09:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=qcppdkim1;
- bh=/Lx1ab3qRgx8WdYB3n1YuDrtzTcmtaaYbwnH1Hr7/XE=;
- b=gbdpvZeyZXHeFVl9nlQvQVFGqwj4da6o6vpjSbFJA9S/G1vv0QIBXx7FSrWsGWzqu8YN
- Sj5sM1OgQrS/GsbKM4vB70zhBJmB8HZCLDNuFlyJsXKkbl3Li1COvq/flq/P5SB/iZIh
- k3kbgl2EzNP7FWzmExQ27FYDE0pRxjMa/cDdZXZOxbOvgmZ/yrql8ohbcDvcJtaVhC+X
- /BTfzJR7ZLZp2xXorW3fpe4yFv/PfUHKQJ94fbPwnqwXGcg4chitUE6/7OfUhKD65YyH
- 0DfgAeLN1/xMp9h4lVv2twNr1pCjxmMUE3232m581ag1z9Kv2cjXY5H/JJYwipdvsD8j rw== 
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rtpu90vp9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Jul 2023 05:09:02 +0000
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-        by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 36E58xtW001423;
-        Fri, 14 Jul 2023 05:08:59 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 3rq0vm5789-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 14 Jul 2023 05:08:59 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36E58ucW001391;
-        Fri, 14 Jul 2023 05:08:59 GMT
-Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
-        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 36E58woB001416;
-        Fri, 14 Jul 2023 05:08:59 +0000
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
-        id 27058333B; Fri, 14 Jul 2023 10:38:58 +0530 (+0530)
-From:   Mrinmay Sarkar <quic_msarkar@quicinc.com>
-To:     agross@kernel.org, andersson@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        konrad.dybcio@linaro.org, mani@kernel.org
-Cc:     quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
-        dmitry.baryshkov@linaro.org,
-        Mrinmay Sarkar <quic_msarkar@quicinc.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-phy@lists.infradead.org
-Subject: [PATCH v2 6/6] arm64: dts: qcom: sa8775p-ride: enable pcie nodes
-Date:   Fri, 14 Jul 2023 10:38:38 +0530
-Message-Id: <1689311319-22054-7-git-send-email-quic_msarkar@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1689311319-22054-1-git-send-email-quic_msarkar@quicinc.com>
-References: <1689311319-22054-1-git-send-email-quic_msarkar@quicinc.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 6I2BhuN07qbPPVy0jpvmQ9GWN1xMLuQI
-X-Proofpoint-ORIG-GUID: 6I2BhuN07qbPPVy0jpvmQ9GWN1xMLuQI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-14_02,2023-07-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 mlxlogscore=795 clxscore=1015 adultscore=0 spamscore=0
- impostorscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2307140046
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+        with ESMTP id S234803AbjGNFUb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jul 2023 01:20:31 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6CC830DF
+        for <linux-pci@vger.kernel.org>; Thu, 13 Jul 2023 22:20:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689312024; x=1720848024;
+  h=date:from:to:cc:subject:message-id;
+  bh=4ZlszdINOTDn/8Ts0MJPmE5ES6ahNeXXd0nOMFMhwFs=;
+  b=KnmSxa5C5u8JMQ/ob+5HyGodM+QO4nBAiKnkeVe61dPBXLrCgMpAa6u8
+   ibguVyPJSiYQMRdosYnRCcK2J3cHGN5ETWE8v7xP1u5jyDOKLx/CBPmp/
+   jmdHtOy+TGrbswQow+VWgw34cAuN8wl9B7E8hn6E2pLJZCpCoRs8986Mf
+   /O8xsjxtkwQygfpwwjIaeySip0uDI/zfxlkKWzReR7nLBUiz3GUj3XRbS
+   6E8rc+/vl0OwZDVGFXEtGSUFUBZQJeEKNsopbMehlNzG2pqroCaq5xUN7
+   SFdvCOUT48rOp7886IWDC/AIfVJS/K72bmw5oSYFYcWaHOdG4oGiaceyc
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="362858641"
+X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
+   d="scan'208";a="362858641"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 22:20:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="757446382"
+X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
+   d="scan'208";a="757446382"
+Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 13 Jul 2023 22:20:23 -0700
+Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qKBE6-0007Ce-1K;
+        Fri, 14 Jul 2023 05:20:22 +0000
+Date:   Fri, 14 Jul 2023 13:19:52 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:misc] BUILD SUCCESS
+ 091f9f7f3b819434eed5c1c3acad6c7b32bf13f6
+Message-ID: <202307141350.tRzsVKvM-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Enable pcie0, pcie1 nodes and their respective phy's.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
+branch HEAD: 091f9f7f3b819434eed5c1c3acad6c7b32bf13f6  PCI: Change pdev->rom_attr_enabled to single bit
 
-Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sa8775p-ride.dts | 80 +++++++++++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
+elapsed time: 724m
 
-diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts b/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-index b2aa160..d3b2ab0 100644
---- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-+++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-@@ -552,6 +552,86 @@
- 			bias-pull-down;
- 		};
- 	};
-+
-+	pcie0_default_state: pcie0-default {
-+		perst {
-+			pins = "gpio2";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
-+
-+		clkreq {
-+			pins = "gpio1";
-+			function = "pcie0_clkreq";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+
-+		wake {
-+			pins = "gpio0";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	pcie1_default_state: pcie1-default {
-+		perst {
-+			pins = "gpio4";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
-+
-+		clkreq {
-+			pins = "gpio3";
-+			function = "pcie1_clkreq";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+
-+		wake {
-+			pins = "gpio5";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+	};
-+};
-+
-+&pcie0 {
-+	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
-+	wake-gpios = <&tlmm 0 GPIO_ACTIVE_HIGH>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie0_default_state>;
-+
-+	status = "okay";
-+};
-+
-+&pcie1 {
-+	perst-gpios = <&tlmm 4 GPIO_ACTIVE_LOW>;
-+	wake-gpios = <&tlmm 5 GPIO_ACTIVE_HIGH>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie1_default_state>;
-+
-+	status = "okay";
-+};
-+
-+&pcie0_phy {
-+	vdda-phy-supply = <&vreg_l5a>;
-+	vdda-pll-supply = <&vreg_l1c>;
-+
-+	status = "okay";
-+};
-+
-+&pcie1_phy {
-+	vdda-phy-supply = <&vreg_l5a>;
-+	vdda-pll-supply = <&vreg_l1c>;
-+
-+	status = "okay";
- };
- 
- &uart10 {
+configs tested: 122
+configs skipped: 8
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r002-20230713   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                        nsimosci_defconfig   gcc  
+arc                  randconfig-r043-20230713   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                       aspeed_g5_defconfig   gcc  
+arm                     davinci_all_defconfig   clang
+arm                                 defconfig   gcc  
+arm                            qcom_defconfig   gcc  
+arm                  randconfig-r046-20230713   clang
+arm                           sunxi_defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r011-20230713   gcc  
+arm64                randconfig-r013-20230713   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r001-20230713   gcc  
+hexagon              randconfig-r014-20230713   clang
+hexagon              randconfig-r026-20230713   clang
+hexagon              randconfig-r041-20230713   clang
+hexagon              randconfig-r045-20230713   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230713   clang
+i386         buildonly-randconfig-r005-20230713   clang
+i386         buildonly-randconfig-r006-20230713   clang
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230713   clang
+i386                 randconfig-i002-20230713   clang
+i386                 randconfig-i003-20230713   clang
+i386                 randconfig-i004-20230713   clang
+i386                 randconfig-i005-20230713   clang
+i386                 randconfig-i006-20230713   clang
+i386                 randconfig-i011-20230714   clang
+i386                 randconfig-i012-20230714   clang
+i386                 randconfig-i013-20230714   clang
+i386                 randconfig-i014-20230714   clang
+i386                 randconfig-i015-20230714   clang
+i386                 randconfig-i016-20230714   clang
+i386                 randconfig-r003-20230713   clang
+i386                 randconfig-r024-20230713   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r005-20230713   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                      maltasmvp_defconfig   gcc  
+mips                 randconfig-r022-20230713   clang
+mips                           rs90_defconfig   clang
+nios2                               defconfig   gcc  
+nios2                randconfig-r006-20230713   gcc  
+nios2                randconfig-r025-20230713   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r012-20230713   gcc  
+parisc               randconfig-r034-20230713   gcc  
+parisc               randconfig-r036-20230713   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          g5_defconfig   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv             nommu_k210_sdcard_defconfig   gcc  
+riscv                randconfig-r042-20230713   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r044-20230713   gcc  
+s390                       zfcpdump_defconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                                  defconfig   gcc  
+sh                           se7722_defconfig   gcc  
+sh                        sh7763rdp_defconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r016-20230713   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r023-20230713   clang
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230713   clang
+x86_64       buildonly-randconfig-r002-20230713   clang
+x86_64       buildonly-randconfig-r003-20230713   clang
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-r015-20230713   gcc  
+x86_64               randconfig-r031-20230713   clang
+x86_64               randconfig-x001-20230713   gcc  
+x86_64               randconfig-x002-20230713   gcc  
+x86_64               randconfig-x003-20230713   gcc  
+x86_64               randconfig-x004-20230713   gcc  
+x86_64               randconfig-x005-20230713   gcc  
+x86_64               randconfig-x006-20230713   gcc  
+x86_64               randconfig-x011-20230713   clang
+x86_64               randconfig-x012-20230713   clang
+x86_64               randconfig-x013-20230713   clang
+x86_64               randconfig-x014-20230713   clang
+x86_64               randconfig-x015-20230713   clang
+x86_64               randconfig-x016-20230713   clang
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                          rhel-8.3-func   gcc  
+x86_64                    rhel-8.3-kselftests   gcc  
+x86_64                         rhel-8.3-kunit   gcc  
+x86_64                           rhel-8.3-ltp   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+
 -- 
-2.7.4
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
