@@ -2,94 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97107753C6D
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jul 2023 16:02:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82DF6753AB1
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jul 2023 14:23:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235645AbjGNOCb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jul 2023 10:02:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55458 "EHLO
+        id S235338AbjGNMXp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jul 2023 08:23:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234638AbjGNOCb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jul 2023 10:02:31 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FA92269F
-        for <linux-pci@vger.kernel.org>; Fri, 14 Jul 2023 07:02:29 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id 3f1490d57ef6-bff89873d34so1732537276.2
-        for <linux-pci@vger.kernel.org>; Fri, 14 Jul 2023 07:02:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=edgeble-ai.20221208.gappssmtp.com; s=20221208; t=1689343348; x=1691935348;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=UE2pP3kr6N661bURVuxZqsXqodClTm8wp0msbgmiIH4=;
-        b=MXEeWfqY2mgAgr5E9wbHzY4ZYoUoDnUnhnH4sh3G0mbF5ftopFspvE0b0UDi/Ug00R
-         bdzDD0NyPXjiv2DGQDScCJQjNWryU+un5bh5PRJtmFqlaHXEW2gT7cLW8JMqe4lbWR/6
-         rvPCprvTemiHzugEoTDCEYpBx+neVJ2NGR7cwzULmmwuLKQEpMsuW3KwtoPxa8V6EEIJ
-         LV+3UTfp3xaO9qaX/7Oizkx27gThCe6Uv+EX/h1qsAAMkE6bPKQvnLScK2XPXqSKay91
-         jKdsQXWuPuP7NWN2cScAslRKio3KZP7YyR/II1Jl/SiIYnxXp6gT552refvlEYL9HgMI
-         L7LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689343348; x=1691935348;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UE2pP3kr6N661bURVuxZqsXqodClTm8wp0msbgmiIH4=;
-        b=MHmPVx5NmVg2XD3kyL7uCNTf7SA4nFh8l95h1PYToSfUwvYWuxX6Mw1SMbbjNlXSYW
-         CUxxBHUDeCHo7JVB/wLwQWQFxo+ecVnltvY4a3LZZJSlcqDR64QeGR/hie+4LQEUTzM3
-         6shyfuIJcC/W3QeKGS1NoFVdBWkvKGgSXt0MyZhIfOSeBuOKPDbfKZrg7TbEy7knou2i
-         efofLJUBPGTfQBpnesvLyOkjn+XMRyCP7SSMC20O+LdVxCwkRJQxPdgWdGjf8eiM33C4
-         v8SFFNd6Y1HF3oELcqHy+PKUcEvSe8XIUQSGGXDyJAwN2uCVPgTy6cz8dyqqp/wdUCYf
-         WtQA==
-X-Gm-Message-State: ABy/qLYy9maJVNQLJQfUVabo/5RqZs+slVGq2xS6yJp+azugoidcjPoZ
-        p6So5vIvvDxwXTdyRxBF9eLK5kzY9jXFdzi0nYUADw==
-X-Google-Smtp-Source: APBJJlHS/oqNNmU6mDCZBTm1FqpDFiEIjuyfTLPHbX8EIeNAEAfjvZr6HPwCNvC67uJvxzFt9wasxruRv+DK3J/Qu3c=
-X-Received: by 2002:a25:e7c3:0:b0:c12:fb0e:52a0 with SMTP id
- e186-20020a25e7c3000000b00c12fb0e52a0mr4112693ybh.19.1689343348754; Fri, 14
- Jul 2023 07:02:28 -0700 (PDT)
+        with ESMTP id S235220AbjGNMXo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jul 2023 08:23:44 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 133F4269D;
+        Fri, 14 Jul 2023 05:23:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689337423; x=1720873423;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ctKemUwsoQTlB8hR1k2AtPpg1aFoaPmj0pPJ2qO6D3g=;
+  b=bZMzCPonpy3h921NLjU0oKMhG+1Q6FxGx1ylLMNPJ2YCooH0QlevxA+b
+   Xbo7d8ZLtzK0D7a4OtuhbW+toNBvU7cZfrcZDYOhW4hpZVGNRgnqQj0ol
+   Ib7t2iHC50+kH8fR/KDgZTYDh/MOcmdIn++/qg1beHfEuqrLe9SoOOzTt
+   kjL3rZF9ssfhBTz2hJzgwyXsLUaulLFGzhB8gvrwGkYfhxo0tpUEn1Hfc
+   LjTCoyfbOjSYN8ZBHhPDUJ/q7nuL7R4W2RrcjjFFicCOn7NYFA/rLqOLd
+   niNnnIS+GsjMDcgBJhmdTcvI+xf/gZtPWCAex0w9k0NHmPVm/nnEEarH7
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="429225773"
+X-IronPort-AV: E=Sophos;i="6.01,205,1684825200"; 
+   d="scan'208";a="429225773"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 05:23:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="1053034846"
+X-IronPort-AV: E=Sophos;i="6.01,205,1684825200"; 
+   d="scan'208";a="1053034846"
+Received: from dev2 (HELO DEV2.igk.intel.com) ([10.237.148.94])
+  by fmsmga005.fm.intel.com with ESMTP; 14 Jul 2023 05:23:39 -0700
+From:   =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+Subject: [PATCH v3 00/15] PCI: Define Intel PCI IDs and use them in drivers
+Date:   Fri, 14 Jul 2023 22:24:42 +0200
+Message-Id: <20230714202457.423866-1-amadeuszx.slawinski@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20230713171851.73052-1-sebastian.reichel@collabora.com> <20230713171851.73052-4-sebastian.reichel@collabora.com>
-In-Reply-To: <20230713171851.73052-4-sebastian.reichel@collabora.com>
-From:   Jagan Teki <jagan@edgeble.ai>
-Date:   Fri, 14 Jul 2023 19:32:17 +0530
-Message-ID: <CA+VMnFzh1-rnDoY_hS-iqjDrOYwDAQXBBg9KUHAVBvaoUH=ZoQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] arm64: dts: rockchip: rk3588: add PCIe2 support
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@collabora.com, Kever Yang <kever.yang@rock-chips.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 13 Jul 2023 at 22:49, Sebastian Reichel
-<sebastian.reichel@collabora.com> wrote:
->
-> Add all three PCIe2 IP blocks to the RK3588 DT. Note, that RK3588
-> also has two PCIe3 IP blocks, that will be handled separately.
->
-> Co-developed-by: Kever Yang <kever.yang@rock-chips.com>
-> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
+PCI IDs for Intel HDA are duplicated across quite a few drivers, due to
+various configurations and historical reasons. Currently almost all uses
+of HDA PCI IDs have corresponding comment telling which platform it is.
+Additionally there are some inconsistencies between drivers about which
+ID corresponds to which device.
 
-Tested all pcie2x1l0 and pcie2x1l1 IP blocks in edgeble-neu6a, 6b.
+Simplify things, by adding PCI IDs to global header and make use of them
+in drivers. This allows for removal of comments by having IDs themselves
+being self explanatory. Additionally it allows for removal of existing
+inconsistencies by having one source of truth.
 
-Tested-by: Jagan Teki <jagan@edgeble.ai> # edgeble-neu6a, 6b
-Reviewed-by: Jagan Teki <jagan@edgeble.ai>
+Changes from v2:
+ - Change CHV to BSW (Andy)
+ - Fix incorrectly rebased patches (Andy)
+ - Fix commit message and add suggestions from Andy to SST patch (Andy)
+ - Rebased on top of Linus tree commit: 4b810bf037e5
+
+Changes from v1:
+ - Remove BXT-T PCI ID as it is not released (Andy)
+ - Reorder macros to start from pci_match_id() (Andy)
+ - Add comment about BXT->APL name change in commit messages (Andy)
+ - Use SST as part of macro name for DSP only devices (Andy)
+ - Add PCI IDs for all SST combinations (Andy)
+
+Changes from RFC:
+ - Sort Intel PCI IDs before adding new ones
+ - Fix ordering of new PCI IDs (Andy)
+ - Define all used Intel IDs (Andy)
+ - Add macros for controller type detection (Andy/Bjorn)
+ - Add set of patches changing to use above macro (Andy/Bjorn)
+ - Use PCI_DEVICE_DATA for Intel IDs in sound/pci/hda/hda_intel.c (Andy)
+ - Commit message wording (Andy)
+ - Remove unnecessary tabs (Andy)
+
+Amadeusz Sławiński (15):
+  PCI: Sort Intel PCI IDs by number
+  PCI: Add Intel Audio DSP devices to pci_ids.h
+  ASoC: SOF: Remove unused Broxton PCI ID
+  ALSA: Remove unused Broxton PCI ID
+  ALSA: hda: Add controller matching macros
+  ALSA: hda: Use global PCI match macro
+  ALSA: hda/i915:  Use global PCI match macro
+  ASoC: Intel: Skylake: Use global PCI match macro
+  ALSA: intel-dsp-config: Convert to PCI device IDs defines
+  ALSA: hda: Convert to PCI device IDs defines
+  ASoC: Intel: avs: Convert to PCI device IDs defines
+  ASoC: Intel: avs: Convert to PCI device IDs defines
+  ASoC: Intel: Skylake: Convert to PCI device IDs defines
+  ASoC: SOF: Intel: Convert to PCI device IDs defines
+  ASoC: Intel: sst: Convert to PCI device IDs defines
+
+ include/linux/pci_ids.h                | 105 +++++--
+ include/sound/hda_codec.h              |   3 -
+ include/sound/hdaudio.h                |  26 ++
+ sound/hda/hdac_i915.c                  |   7 +-
+ sound/hda/intel-dsp-config.c           | 124 ++++----
+ sound/pci/hda/hda_intel.c              | 373 ++++++++++---------------
+ sound/soc/intel/atom/sst/sst.c         |   9 +-
+ sound/soc/intel/atom/sst/sst.h         |   7 +-
+ sound/soc/intel/atom/sst/sst_pci.c     |   4 +-
+ sound/soc/intel/avs/board_selection.c  |  10 +-
+ sound/soc/intel/avs/core.c             |  16 +-
+ sound/soc/intel/skylake/skl-messages.c |  16 +-
+ sound/soc/intel/skylake/skl-pcm.c      |   3 +-
+ sound/soc/intel/skylake/skl.c          |  36 +--
+ sound/soc/sof/intel/pci-apl.c          |   8 +-
+ sound/soc/sof/intel/pci-cnl.c          |  15 +-
+ sound/soc/sof/intel/pci-icl.c          |  12 +-
+ sound/soc/sof/intel/pci-mtl.c          |   3 +-
+ sound/soc/sof/intel/pci-skl.c          |   6 +-
+ sound/soc/sof/intel/pci-tgl.c          |  45 +--
+ sound/soc/sof/intel/pci-tng.c          |   3 +-
+ 21 files changed, 386 insertions(+), 445 deletions(-)
+
+-- 
+2.34.1
+
