@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BA92753AC4
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jul 2023 14:24:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44853753AC7
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jul 2023 14:24:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235219AbjGNMYV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jul 2023 08:24:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36390 "EHLO
+        id S235842AbjGNMYe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jul 2023 08:24:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234925AbjGNMYP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jul 2023 08:24:15 -0400
+        with ESMTP id S235775AbjGNMYX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jul 2023 08:24:23 -0400
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B46CA3A8E;
-        Fri, 14 Jul 2023 05:24:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CBFD35A1;
+        Fri, 14 Jul 2023 05:24:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689337442; x=1720873442;
+  t=1689337445; x=1720873445;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=O2F310bFUrrtqJHibkMdzi90JDrvWOt0X9HXx8O2FCY=;
-  b=Kk6KomRZYKGX6B0Ud968jSeEaIF+xC6Lfzuw106K6Qk8XqhPrNkLWG6J
-   +AmOI+8QGeLNRdXsHD4wrpF88wxlB/+20e4deyTM3Qsvt+AlIkYZKEqZh
-   4ZtRbFtP4tSZjVY/TkQN2humuVeh6PwGl8EGaQHBgErUhfXn81ypoJ8hT
-   LUZWCNgZeDaKdPcQYugR2XC6YRpkowqok/TcPkDY6d9XyXkGdCz40CsJJ
-   VwfNXF0SFzle5QkIqSQMfTOGQEw0HPIi0HpwC/zuYSpvVKPXMKhFz4ZWD
-   cvvmpvJz3Ljd97NiE3543zanT38+tLBPfBxmKNvYDMcaHwxCjYbNqSwg+
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="429225842"
+  bh=PBebvDAwGl69rhzohAaS7jNgIdCEGCL7ad9NEzcoAGA=;
+  b=j8zYUjTgMjovl6YaX31IthybZHeqswBmtq2yuWNu7VxskONtD2upiJfM
+   mQerXzlL+mt/X1DSNCYrC7uzWv54Q2jndJNL8EhO4VDG98i4H1dTxLhv8
+   gZGI7hxN8jyrS0EMMrDN847Qh+eXP53AlFKQSHSNg68fsIdzwXNkt8+4M
+   uEANX0m4BT3NyjuAhRSBBiJX7BqCUobFIq3UlMN2EZqEiKMC4qKwNAJ8r
+   oDe7exrPvAXTETJs5FaFOpFKo24OHWLrqhLwCNNhwOEg1ZU/KoXB8txoD
+   pVYLl1ldgkRJ2MMXMnKBtaLBoz9+8rhgpCS1fXWju25Y2gkNG0sDM3Slh
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="429225856"
 X-IronPort-AV: E=Sophos;i="6.01,205,1684825200"; 
-   d="scan'208";a="429225842"
+   d="scan'208";a="429225856"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 05:24:02 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 05:24:05 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="1053034912"
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="1053034934"
 X-IronPort-AV: E=Sophos;i="6.01,205,1684825200"; 
-   d="scan'208";a="1053034912"
+   d="scan'208";a="1053034934"
 Received: from dev2 (HELO DEV2.igk.intel.com) ([10.237.148.94])
-  by fmsmga005.fm.intel.com with ESMTP; 14 Jul 2023 05:23:59 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 14 Jul 2023 05:24:02 -0700
 From:   =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
         <amadeuszx.slawinski@linux.intel.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -52,9 +52,9 @@ Cc:     alsa-devel@alsa-project.org, linux-pci@vger.kernel.org,
         =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
         <amadeuszx.slawinski@linux.intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v3 07/15] ALSA: hda/i915:  Use global PCI match macro
-Date:   Fri, 14 Jul 2023 22:24:49 +0200
-Message-Id: <20230714202457.423866-8-amadeuszx.slawinski@linux.intel.com>
+Subject: [PATCH v3 08/15] ASoC: Intel: Skylake: Use global PCI match macro
+Date:   Fri, 14 Jul 2023 22:24:50 +0200
+Message-Id: <20230714202457.423866-9-amadeuszx.slawinski@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230714202457.423866-1-amadeuszx.slawinski@linux.intel.com>
 References: <20230714202457.423866-1-amadeuszx.slawinski@linux.intel.com>
@@ -71,39 +71,53 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Instead of using local macro to match PCI device, use global one.
+Instead of using local macro to match PCI device, use global one. As
+Apollolake is Broxton-P successor that made it to the market, be precise
+and use APL shortcut. IS_CFL() macro is dropped as it is unused.
 
+Acked-by: Mark Brown <broonie@kernel.org>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 ---
- sound/hda/hdac_i915.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ include/sound/hda_codec.h         | 3 ---
+ sound/soc/intel/skylake/skl-pcm.c | 3 ++-
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/sound/hda/hdac_i915.c b/sound/hda/hdac_i915.c
-index 161a9711cd63..2a451ff4fe6a 100644
---- a/sound/hda/hdac_i915.c
-+++ b/sound/hda/hdac_i915.c
-@@ -11,11 +11,6 @@
- #include <sound/hda_i915.h>
- #include <sound/hda_register.h>
+diff --git a/include/sound/hda_codec.h b/include/sound/hda_codec.h
+index bbb7805e85d8..5497dc9c396a 100644
+--- a/include/sound/hda_codec.h
++++ b/include/sound/hda_codec.h
+@@ -18,9 +18,6 @@
+ #include <sound/hda_verbs.h>
+ #include <sound/hda_regmap.h>
  
--#define IS_HSW_CONTROLLER(pci) (((pci)->device == 0x0a0c) || \
--				((pci)->device == 0x0c0c) || \
--				((pci)->device == 0x0d0c) || \
--				((pci)->device == 0x160c))
+-#define IS_BXT(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0x5a98)
+-#define IS_CFL(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0xa348)
 -
- /**
-  * snd_hdac_i915_set_bclk - Reprogram BCLK for HSW/BDW
-  * @bus: HDA core bus
-@@ -39,7 +34,7 @@ void snd_hdac_i915_set_bclk(struct hdac_bus *bus)
- 
- 	if (!acomp || !acomp->ops || !acomp->ops->get_cdclk_freq)
- 		return; /* only for i915 binding */
--	if (!IS_HSW_CONTROLLER(pci))
-+	if (!HDA_CONTROLLER_IS_HSW(pci))
- 		return; /* only HSW/BDW */
- 
- 	cdclk_freq = acomp->ops->get_cdclk_freq(acomp->dev);
+ /*
+  * Structures
+  */
+diff --git a/sound/soc/intel/skylake/skl-pcm.c b/sound/soc/intel/skylake/skl-pcm.c
+index a4209d88b0c6..ac3dc8c63c26 100644
+--- a/sound/soc/intel/skylake/skl-pcm.c
++++ b/sound/soc/intel/skylake/skl-pcm.c
+@@ -13,6 +13,7 @@
+ #include <linux/pci.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/delay.h>
++#include <sound/hdaudio.h>
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
+ #include "skl.h"
+@@ -152,7 +153,7 @@ int skl_pcm_host_dma_prepare(struct device *dev, struct skl_pipe_params *params)
+ 	 * The recommended SDxFMT programming sequence for BXT
+ 	 * platforms is to couple the stream before writing the format
+ 	 */
+-	if (IS_BXT(skl->pci)) {
++	if (HDA_CONTROLLER_IS_APL(skl->pci)) {
+ 		snd_hdac_ext_stream_decouple(bus, stream, false);
+ 		err = snd_hdac_stream_setup(hdac_stream(stream));
+ 		snd_hdac_ext_stream_decouple(bus, stream, true);
 -- 
 2.34.1
 
