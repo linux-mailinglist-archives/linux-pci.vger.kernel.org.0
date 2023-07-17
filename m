@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E82E57561D8
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jul 2023 13:46:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90EB97561DA
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jul 2023 13:46:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230013AbjGQLp7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jul 2023 07:45:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52790 "EHLO
+        id S230243AbjGQLqG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jul 2023 07:46:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230243AbjGQLpw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jul 2023 07:45:52 -0400
+        with ESMTP id S229844AbjGQLqD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jul 2023 07:46:03 -0400
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837FF10FA;
-        Mon, 17 Jul 2023 04:45:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99388172E;
+        Mon, 17 Jul 2023 04:45:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689594342; x=1721130342;
+  t=1689594348; x=1721130348;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=DAr+POYVw8U019TczNsGgzolTNRRVedmJ61tFw/QC4Y=;
-  b=XdM8GCobY4liZMdY/Zb4+22CFmluRikXbiYyc0hj+jOtSsfk8A9XS8ML
-   r29/cM4OqKuqNtqWqVOVdAKDgrBM44f+7WFiPu90KfjjpLO7Q/973OGFd
-   OFME8Is84f+YFU4ZhiHPcdWHaYx91rjmyxJ6UMruStz9GzqOMb2fbKonP
-   NMUESgrUN62A741MCm9fgKpCG4AVzHYASxoN34re9zRzTk1jrnI+Dr3Bp
-   QIdM1xL8HQKxGRe32Ip9uo+FbHgd3yLD8Ob+Z5fZH6WhRAEkHNsAyoLwO
-   asFv7LSn7UMoamDu6sbNsKhYh6Z0w+mwqEJxk22HtKvVOvKQTonzPugXF
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10773"; a="363372799"
+  bh=bg/Oeye7JlKu5M4sZceMFdhSsrroMtW9Z2UVA8ue+co=;
+  b=W5QKcbjtaY9Wmb02YkRyIsEyf835GL3+X65vgndczO9AY1Xte0loc8oC
+   7ton3wAAdmRhOP9YSmrFF0cX6ASFlJCsAMkuOSW1zKtDwk9/9wsKrtrxe
+   ZU3peqEygsCslRwhiD1hAsuUFrNioO7U4wRsDoBdGh5wygXZHusCe00yo
+   ce3VBQIsWniOQ/kgE95nOtVy3H1TxL3BO/T5Io45HelhcNMTQei5pAVUl
+   rThTSZ47hXE/lxqd9yQbws+TfUN6jZaD/djdGmAbxrYFlFKCmdEYR2kvZ
+   aMSSe8IwKvXmmP9n1lYVz+QBHg0gE5f3tN78SQ0Rne+yoWsXAk3V/mFhN
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10773"; a="363372818"
 X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
-   d="scan'208";a="363372799"
+   d="scan'208";a="363372818"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2023 04:45:34 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2023 04:45:37 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10773"; a="969856495"
+X-IronPort-AV: E=McAfee;i="6600,9927,10773"; a="969856505"
 X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
-   d="scan'208";a="969856495"
+   d="scan'208";a="969856505"
 Received: from dev2 (HELO DEV2.igk.intel.com) ([10.237.148.94])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Jul 2023 04:45:30 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 17 Jul 2023 04:45:34 -0700
 From:   =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
         <amadeuszx.slawinski@linux.intel.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -53,9 +53,9 @@ Cc:     alsa-devel@alsa-project.org, linux-pci@vger.kernel.org,
         =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
         <amadeuszx.slawinski@linux.intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v4 04/15] ALSA: Remove unused Broxton PCI ID
-Date:   Mon, 17 Jul 2023 13:45:00 +0200
-Message-Id: <20230717114511.484999-5-amadeuszx.slawinski@linux.intel.com>
+Subject: [PATCH v4 05/15] ALSA: hda: Add controller matching macros
+Date:   Mon, 17 Jul 2023 13:45:01 +0200
+Message-Id: <20230717114511.484999-6-amadeuszx.slawinski@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230717114511.484999-1-amadeuszx.slawinski@linux.intel.com>
 References: <20230717114511.484999-1-amadeuszx.slawinski@linux.intel.com>
@@ -72,32 +72,60 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Current code references 0x1a98 which is BXT-M (not -T as it is
-commented) and it's an RVP, BXT-M B0 to be specific. From what we know
-no BXT is available on market.
+Some HDA controllers require additional handling, so there are macros to
+match them, however those are spread across multiple files. Add them all
+in one place, so they can be reused.
 
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Acked-by: Mark Brown <broonie@kernel.org>
 Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
 Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 ---
- sound/pci/hda/hda_intel.c | 3 ---
- 1 file changed, 3 deletions(-)
+ include/sound/hdaudio.h | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index ef831770ca7d..8f0cebb83302 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2564,9 +2564,6 @@ static const struct pci_device_id azx_ids[] = {
- 	/* Broxton-P(Apollolake) */
- 	{ PCI_DEVICE(0x8086, 0x5a98),
- 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_BROXTON },
--	/* Broxton-T */
--	{ PCI_DEVICE(0x8086, 0x1a98),
--	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_BROXTON },
- 	/* Gemini-Lake */
- 	{ PCI_DEVICE(0x8086, 0x3198),
- 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_BROXTON },
+diff --git a/include/sound/hdaudio.h b/include/sound/hdaudio.h
+index 2ffdf58bd6d4..32c59053b48e 100644
+--- a/include/sound/hdaudio.h
++++ b/include/sound/hdaudio.h
+@@ -11,6 +11,7 @@
+ #include <linux/io.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/iopoll.h>
++#include <linux/pci.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/timecounter.h>
+ #include <sound/core.h>
+@@ -704,4 +705,29 @@ static inline unsigned int snd_array_index(struct snd_array *array, void *ptr)
+ 	for ((idx) = 0, (ptr) = (array)->list; (idx) < (array)->used; \
+ 	     (ptr) = snd_array_elem(array, ++(idx)))
+ 
++/*
++ * Device matching
++ */
++
++#define HDA_CONTROLLER_IS_HSW(pci) (pci_match_id((struct pci_device_id []){ \
++			{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_HDA_HSW_0) }, \
++			{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_HDA_HSW_2) }, \
++			{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_HDA_HSW_3) }, \
++			{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_HDA_BDW) }, \
++			{ } \
++		}, pci))
++
++#define HDA_CONTROLLER_IS_APL(pci) (pci_match_id((struct pci_device_id []){ \
++			{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_HDA_APL) }, \
++			{ } \
++		}, pci))
++
++#define HDA_CONTROLLER_IN_GPU(pci) (pci_match_id((struct pci_device_id []){ \
++			{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_HDA_DG1) }, \
++			{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_HDA_DG2_0) }, \
++			{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_HDA_DG2_1) }, \
++			{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_HDA_DG2_2) }, \
++			{ } \
++		}, pci) || HDA_CONTROLLER_IS_HSW(pci))
++
+ #endif /* __SOUND_HDAUDIO_H */
 -- 
 2.34.1
 
