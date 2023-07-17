@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F15BA756251
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jul 2023 14:05:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B6EC756255
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jul 2023 14:05:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229779AbjGQMFT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jul 2023 08:05:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38206 "EHLO
+        id S230243AbjGQMFk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jul 2023 08:05:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbjGQMFS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jul 2023 08:05:18 -0400
+        with ESMTP id S230229AbjGQMFj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jul 2023 08:05:39 -0400
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C86EE8F;
-        Mon, 17 Jul 2023 05:05:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12B9C10CA;
+        Mon, 17 Jul 2023 05:05:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689595517; x=1721131517;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=MTAcx2EIK+KDUM9wm9QmcxJn6O3dI+zOMLpiJ0PiZII=;
-  b=JZv4AUY0NqUTnEKxU+wMNBHrMUiR3pqxcZRbnD6Rj6qS5VJhu/DWKzCI
-   8Wn5/AulYJ0exYZDjxxYmBDXT9DGU8f5EQFfU9Mniw6gf9p7ftBNbW24s
-   GJAGC/Cs6zOHf5ZuXpD4vsSpDfXz0MwMsM4Yh3GrBONBv0FM1j0eu1ljd
-   ljKWOZsYvZw0KMj+Z3TPns5A6SitlQKPUhWzcnD60sZrhLrWfl2FRtVA6
-   GPjFeoCjUHYRGUHEmMpXTSk7m1sWl8Z7Nqf2JxKq+kCv6G5qBVbjmEsIz
-   PDIUzK3dC+rcyQZ41OowuQBQTBljUqsyvOEccUOfWS4RrSequCLUCuP2+
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10773"; a="432081399"
+  t=1689595532; x=1721131532;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=jZAmi7i2DsRxp8XcsCtYleiHASBL2jOVHHwz4RQm2Wc=;
+  b=ETq18yfybherjseLZyU0Q+WoEVA0nniLnVdxmx8cv5IWFioLOEr6l8vY
+   abV2XeOBLKgdJEHEP+3U1fuDb3C3U6Uazz9eubM+7G3p6LnfHl/HbwywA
+   JLkef0WuMre8igDfsRi2gcHJenihMfVbkUbCMQ3fmmKMnsmnL0OJhIUI7
+   GkDT4NSDVM4hv9MlwD4DhIW9iZyTNkbbZRbfEE2/Et1uHI7nAZutZC/dT
+   cSqE7XaDZx+9SzzKIljbTXkXuA0pcoSknwCU5GIpBmIcQn2Fih1m9NIbk
+   63kqtrfeF0yKjKYnypqKIzbvyyd47/++549RCxA+YHstdXTpx258Zpsv+
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10773"; a="432081468"
 X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
-   d="scan'208";a="432081399"
+   d="scan'208";a="432081468"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2023 05:05:17 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2023 05:05:30 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10773"; a="752875752"
+X-IronPort-AV: E=McAfee;i="6600,9927,10773"; a="752875843"
 X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
-   d="scan'208";a="752875752"
+   d="scan'208";a="752875843"
 Received: from dkravtso-mobl1.ccr.corp.intel.com (HELO ijarvine-mobl2.ger.corp.intel.com) ([10.252.45.233])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2023 05:05:13 -0700
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2023 05:05:18 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -47,15 +47,50 @@ To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Dean Luick <dean.luick@cornelisnetworks.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Jesse Barnes <jbarnes@virtuousgeek.org>,
+        Yijing Wang <wangyijing@huawei.com>,
+        Jiang Liu <jiang.liu@huawei.com>,
+        Shaohua Li <shaohua.li@intel.com>,
+        Greg Kroah-Hartman <gregkh@suse.de>,
+        Doug Ledford <dledford@redhat.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dean Luick <dean.luick@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ricky Wu <ricky_wu@realtek.com>,
+        Rui Feng <rui_feng@realsil.com.cn>, Lee Jones <lee@kernel.org>,
+        Micky Ching <micky_ching@realsil.com.cn>,
+        Wei WANG <wei_wang@realsil.com.cn>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Michael Chan <mchan@broadcom.com>,
+        Matt Carlson <mcarlson@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Francois Romieu <romieu@fr.zoreil.com>,
+        Sven Peter <sven@svenpeter.dev>,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Bruce Allan <bruce.w.allan@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Auke Kok <auke-jan.h.kok@intel.com>,
+        Jeff Garzik <jeff@garzik.org>,
+        Vasanthakumar Thiagarajan <vasanth@atheros.com>,
+        "John W. Linville" <linville@tuxdriver.com>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Kalle Valo <kvalo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Dean Luick <dean.luick@cornelisnetworks.com>,
         =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v5 00/11] PCI: Improve PCIe Capability RMW concurrency control
-Date:   Mon, 17 Jul 2023 15:04:52 +0300
-Message-Id: <20230717120503.15276-1-ilpo.jarvinen@linux.intel.com>
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v5 01/11] PCI: Add locking to RMW PCI Express Capability Register accessors
+Date:   Mon, 17 Jul 2023 15:04:53 +0300
+Message-Id: <20230717120503.15276-2-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230717120503.15276-1-ilpo.jarvinen@linux.intel.com>
+References: <20230717120503.15276-1-ilpo.jarvinen@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -69,85 +104,161 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI Express Capability RMW accessors don't properly protect against
-concurrent access. Link Control Register is written by a number of
-things in the kernel in a RMW fashion without any concurrency control.
-This could in the unlucky case lead to losing one of the updates. One
-of the most obvious path which can race with most of the other LNKCTL
-RMW operations seems to be ASPM policy sysfs write which triggers
-LNKCTL update. Similarly, Root Control Register can be concurrently
-accessed by AER and PME.
+Many places in the kernel write the Link Control and Root Control PCI
+Express Capability Registers without proper concurrency control and
+this could result in losing the changes one of the writers intended to
+make.
 
-Make pcie_capability_clear_and_set_word() (and other RMW accessors that
-call it) to use a per device spinlock to protect the RMW operations to
-the Capability Registers that require locking. Convert open-coded
-LNKCTL RMW operations to use pcie_capability_clear_and_set_word() to
-benefit from the locking.
+Add pcie_cap_lock spinlock into the struct pci_dev and use it to
+protect bit changes made in the RMW capability accessors. Protect only
+a selected set of registers by differentiating the RMW accessor
+internally to locked/unlocked variants using a wrapper which has the
+same signature as pcie_capability_clear_and_set_word(). As the
+Capability Register (pos) given to the wrapper is always a constant,
+the compiler should be able to simplify all the dead-code away.
 
-There's also a related series which improves ASPM service driver and
-device driver coordination by removing out-of-band ASPM state
-management from device drivers (which will remove some of the code
-fragments changed by this series but it has higher regression
-potential which is why it seems prudent to do these changes in two
-steps):
-  https://lore.kernel.org/linux-pci/20230602114751.19671-1-ilpo.jarvinen@linux.intel.com/T/#t
+So far only the Link Control Register (ASPM, hotplug, link retraining,
+various drivers) and the Root Control Register (AER & PME) seem to
+require RMW locking.
 
-v5:
-- Remove reversed logic from a conditional
-- Use a variable for CCC setup
+Fixes: c7f486567c1d ("PCI PM: PCIe PME root port service driver")
+Fixes: f12eb72a268b ("PCI/ASPM: Use PCI Express Capability accessors")
+Fixes: 7d715a6c1ae5 ("PCI: add PCI Express ASPM support")
+Fixes: affa48de8417 ("staging/rdma/hfi1: Add support for enabling/disabling PCIe ASPM")
+Fixes: 849a9366cba9 ("misc: rtsx: Add support new chip rts5228 mmc: rtsx: Add support MMC_CAP2_NO_MMC")
+Fixes: 3d1e7aa80d1c ("misc: rtsx: Use pcie_capability_clear_and_set_word() for PCI_EXP_LNKCTL")
+Fixes: c0e5f4e73a71 ("misc: rtsx: Add support for RTS5261")
+Fixes: 3df4fce739e2 ("misc: rtsx: separate aspm mode into MODE_REG and MODE_CFG")
+Fixes: 121e9c6b5c4c ("misc: rtsx: modify and fix init_hw function")
+Fixes: 19f3bd548f27 ("mfd: rtsx: Remove LCTLR defination")
+Fixes: 773ccdfd9cc6 ("mfd: rtsx: Read vendor setting from config space")
+Fixes: 8275b77a1513 ("mfd: rts5249: Add support for RTS5250S power saving")
+Fixes: 5da4e04ae480 ("misc: rtsx: Add support for RTS5260")
+Fixes: 0f49bfbd0f2e ("tg3: Use PCI Express Capability accessors")
+Fixes: 5e7dfd0fb94a ("tg3: Prevent corruption at 10 / 100Mbps w CLKREQ")
+Fixes: b726e493e8dc ("r8169: sync existing 8168 device hardware start sequences with vendor driver")
+Fixes: e6de30d63eb1 ("r8169: more 8168dp support.")
+Fixes: 8a06127602de ("Bluetooth: hci_bcm4377: Add new driver for BCM4377 PCIe boards")
+Fixes: 6f461f6c7c96 ("e1000e: enable/disable ASPM L0s and L1 and ERT according to hardware errata")
+Fixes: 1eae4eb2a1c7 ("e1000e: Disable L1 ASPM power savings for 82573 mobile variants")
+Fixes: 8060e169e02f ("ath9k: Enable extended synch for AR9485 to fix L0s recovery issue")
+Fixes: 69ce674bfa69 ("ath9k: do btcoex ASPM disabling at initialization time")
+Fixes: f37f05503575 ("mt76: mt76x2e: disable pcie_aspm by default")
+Suggested-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
+Cc: stable@vger.kernel.org
+---
+ drivers/pci/access.c | 20 +++++++++++++++++---
+ drivers/pci/probe.c  |  1 +
+ include/linux/pci.h  | 34 ++++++++++++++++++++++++++++++++--
+ 3 files changed, 50 insertions(+), 5 deletions(-)
 
-v4:
-- Rebased on top of pci/main
-- Added patch to update documentation
-
-v3:
-- Split link retraining change off from ASPM patch & reorder it earlier
-- Adjust changelog to take into account the move of link retraining
-  code into PCI core and no longer refer to ASPM (currently in
-  pci/enumeration branch)
-- based on top of pci/main
-
-v2:
-- Keep the RMW ops caller API the same
-- Make pcie_capability_clear_and_set_word() a wrapper that uses
-  locked/unlocked variant based on the capability reg
-- Extracted LNKCTL2 changes out from this series to keep this purely
-  a series which fixes something (LNKCTL2 RMW lock is necessary only
-  when PCIe BW control is introduced).
-- Added Fixes tags (it's a bit rathole but yeah, they're there now).
-- Renamed cap_lock to pcie_cap_lock
-- Changed ath1* to clear the ASPMC field before setting it
-
-Ilpo Järvinen (11):
-  PCI: Add locking to RMW PCI Express Capability Register accessors
-  PCI: Make link retraining use RMW accessors for changing LNKCTL
-  PCI: pciehp: Use RMW accessors for changing LNKCTL
-  PCI/ASPM: Use RMW accessors for changing LNKCTL
-  drm/amdgpu: Use RMW accessors for changing LNKCTL
-  drm/radeon: Use RMW accessors for changing LNKCTL
-  net/mlx5: Use RMW accessors for changing LNKCTL
-  wifi: ath11k: Use RMW accessors for changing LNKCTL
-  wifi: ath12k: Use RMW accessors for changing LNKCTL
-  wifi: ath10k: Use RMW accessors for changing LNKCTL
-  PCI: Document the Capability accessor RMW improvements
-
- Documentation/PCI/pciebus-howto.rst           | 14 ++++---
- drivers/gpu/drm/amd/amdgpu/cik.c              | 36 +++++-------------
- drivers/gpu/drm/amd/amdgpu/si.c               | 36 +++++-------------
- drivers/gpu/drm/radeon/cik.c                  | 36 +++++-------------
- drivers/gpu/drm/radeon/si.c                   | 37 +++++--------------
- .../ethernet/mellanox/mlx5/core/fw_reset.c    |  9 +----
- drivers/net/wireless/ath/ath10k/pci.c         |  9 +++--
- drivers/net/wireless/ath/ath11k/pci.c         | 10 +++--
- drivers/net/wireless/ath/ath12k/pci.c         | 10 +++--
- drivers/pci/access.c                          | 20 ++++++++--
- drivers/pci/hotplug/pciehp_hpc.c              | 12 ++----
- drivers/pci/pci.c                             |  8 +---
- drivers/pci/pcie/aspm.c                       | 30 +++++++--------
- drivers/pci/probe.c                           |  1 +
- include/linux/pci.h                           | 34 ++++++++++++++++-
- 15 files changed, 136 insertions(+), 166 deletions(-)
-
+diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+index 3c230ca3de58..0b2e90d2f04f 100644
+--- a/drivers/pci/access.c
++++ b/drivers/pci/access.c
+@@ -497,8 +497,8 @@ int pcie_capability_write_dword(struct pci_dev *dev, int pos, u32 val)
+ }
+ EXPORT_SYMBOL(pcie_capability_write_dword);
+ 
+-int pcie_capability_clear_and_set_word(struct pci_dev *dev, int pos,
+-				       u16 clear, u16 set)
++int pcie_capability_clear_and_set_word_unlocked(struct pci_dev *dev, int pos,
++						u16 clear, u16 set)
+ {
+ 	int ret;
+ 	u16 val;
+@@ -512,7 +512,21 @@ int pcie_capability_clear_and_set_word(struct pci_dev *dev, int pos,
+ 
+ 	return ret;
+ }
+-EXPORT_SYMBOL(pcie_capability_clear_and_set_word);
++EXPORT_SYMBOL(pcie_capability_clear_and_set_word_unlocked);
++
++int pcie_capability_clear_and_set_word_locked(struct pci_dev *dev, int pos,
++					      u16 clear, u16 set)
++{
++	unsigned long flags;
++	int ret;
++
++	spin_lock_irqsave(&dev->pcie_cap_lock, flags);
++	ret = pcie_capability_clear_and_set_word_unlocked(dev, pos, clear, set);
++	spin_unlock_irqrestore(&dev->pcie_cap_lock, flags);
++
++	return ret;
++}
++EXPORT_SYMBOL(pcie_capability_clear_and_set_word_locked);
+ 
+ int pcie_capability_clear_and_set_dword(struct pci_dev *dev, int pos,
+ 					u32 clear, u32 set)
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 8bac3ce02609..f1587fb0ba71 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2324,6 +2324,7 @@ struct pci_dev *pci_alloc_dev(struct pci_bus *bus)
+ 		.end = -1,
+ 	};
+ 
++	spin_lock_init(&dev->pcie_cap_lock);
+ #ifdef CONFIG_PCI_MSI
+ 	raw_spin_lock_init(&dev->msi_lock);
+ #endif
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index c69a2cc1f412..7ee498cd1f37 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -467,6 +467,7 @@ struct pci_dev {
+ 	pci_dev_flags_t dev_flags;
+ 	atomic_t	enable_cnt;	/* pci_enable_device has been called */
+ 
++	spinlock_t	pcie_cap_lock;		/* Protects RMW ops in capability accessors */
+ 	u32		saved_config_space[16]; /* Config space saved at suspend time */
+ 	struct hlist_head saved_cap_space;
+ 	int		rom_attr_enabled;	/* Display of ROM attribute enabled? */
+@@ -1217,11 +1218,40 @@ int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val);
+ int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val);
+ int pcie_capability_write_word(struct pci_dev *dev, int pos, u16 val);
+ int pcie_capability_write_dword(struct pci_dev *dev, int pos, u32 val);
+-int pcie_capability_clear_and_set_word(struct pci_dev *dev, int pos,
+-				       u16 clear, u16 set);
++int pcie_capability_clear_and_set_word_unlocked(struct pci_dev *dev, int pos,
++						u16 clear, u16 set);
++int pcie_capability_clear_and_set_word_locked(struct pci_dev *dev, int pos,
++					      u16 clear, u16 set);
+ int pcie_capability_clear_and_set_dword(struct pci_dev *dev, int pos,
+ 					u32 clear, u32 set);
+ 
++/**
++ * pcie_capability_clear_and_set_word - RMW accessor for PCI Express Capability Registers
++ * @dev:	PCI device structure of the PCI Express device
++ * @pos:	PCI Express Capability Register
++ * @clear:	Clear bitmask
++ * @set:	Set bitmask
++ *
++ * Perform a Read-Modify-Write (RMW) operation using @clear and @set
++ * bitmasks on PCI Express Capability Register at @pos. Certain PCI Express
++ * Capability Registers are accessed concurrently in RMW fashion, hence
++ * require locking which is handled transparently to the caller.
++ */
++static inline int pcie_capability_clear_and_set_word(struct pci_dev *dev,
++						     int pos,
++						     u16 clear, u16 set)
++{
++	switch (pos) {
++	case PCI_EXP_LNKCTL:
++	case PCI_EXP_RTCTL:
++		return pcie_capability_clear_and_set_word_locked(dev, pos,
++								 clear, set);
++	default:
++		return pcie_capability_clear_and_set_word_unlocked(dev, pos,
++								   clear, set);
++	}
++}
++
+ static inline int pcie_capability_set_word(struct pci_dev *dev, int pos,
+ 					   u16 set)
+ {
 -- 
 2.30.2
 
