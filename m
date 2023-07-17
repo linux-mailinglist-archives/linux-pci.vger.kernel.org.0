@@ -2,113 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D449E7569F4
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jul 2023 19:16:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AC18756A4A
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jul 2023 19:27:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229925AbjGQRQC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jul 2023 13:16:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36718 "EHLO
+        id S231262AbjGQR1P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jul 2023 13:27:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229798AbjGQRQB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jul 2023 13:16:01 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6249819F;
-        Mon, 17 Jul 2023 10:16:00 -0700 (PDT)
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36HGvqJp030261;
-        Mon, 17 Jul 2023 17:15:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=3tPIZA9DnySEarrlQU8wHxA+hbKEZ2uIUFPiISS7alg=;
- b=RYfKAh0zxDHpCBiTu4PdPp4rlN9EVyUJWD7fdmk9wBUiqtft/nfvr9VHibbkeecE+y3C
- EIVWl0DC5huUe5C0mKjsRHZm7tKpPCZRjXboawfk9/Ti0cKbESKa7u020igZmL5qzK+J
- rN4XUEFtH8vFJwGwcx4jtLBC+ZziFJiZfG/wZfolzXZSBuaSFH8hsQ6zI4GaG8N8aJah
- e6etSzn0iIv1oUGu/OhOzViy00G3Vu1mxd/o7w0UeR8GVGuOQu05aLz3TGQPZpx8yxy5
- 0oSQrME4QBGpchiPWBtd716BemZfw1xQ9ceKSxyaZTDO/gS6U1Su4RK9zRNtj+5Wvqer OA== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rw289s82w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 17 Jul 2023 17:15:50 +0000
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36HHFoNK011739
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 17 Jul 2023 17:15:50 GMT
-Received: from [10.216.47.191] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Mon, 17 Jul
- 2023 10:15:46 -0700
-Message-ID: <2fc238aa-82c1-383a-9dca-72f979ee3c07@quicinc.com>
-Date:   Mon, 17 Jul 2023 22:45:42 +0530
+        with ESMTP id S230512AbjGQR1D (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jul 2023 13:27:03 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECBFADD;
+        Mon, 17 Jul 2023 10:26:57 -0700 (PDT)
+Received: from jupiter.universe (dyndsl-091-248-189-171.ewe-ip-backbone.de [91.248.189.171])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: sre)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id CDA85660297B;
+        Mon, 17 Jul 2023 18:26:55 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1689614816;
+        bh=br7WffVrrPWJblI6hMOtAA0jJageWK+7UkJ5nR07nqU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JVOOWYXgss8UA4sAVTgkYDtjcBT/b6kAw/X48OcmDdWKC7MgBaUKwgFoWBWaK9pWl
+         480byhNk9NwbJ1RIyLepO5zC2pVEdDGmt9F8RZp9r2yO3CzbcUA6cVCYRm4zCG7Xnh
+         Pc1xQMC8jP2n5p8NHF7pWOPdTXZzCF6nJ0g9b75+xNY1PGJscSHdTwA+tD3QcBlkAP
+         xbl3z2WMoFMJjokghr0P2YmcmE1hdxpDPy/lXC8fGMJRLjENSCkD3CDcj6ENQN+4y2
+         OixAH6wUx+BOUMrMRjjDhk8MsGUJNEhjcc3nKlkS6y8chaso5eG6zOXmtwR3nFVARg
+         RVJ8qqXAkSNgw==
+Received: by jupiter.universe (Postfix, from userid 1000)
+        id 17F5B480C72; Mon, 17 Jul 2023 19:26:53 +0200 (CEST)
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Serge Semin <fancer.lancer@gmail.com>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Simon Xue <xxm@rock-chips.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        kernel@collabora.com
+Subject: [PATCH v3 0/5] RK3588 PCIe2 support
+Date:   Mon, 17 Jul 2023 19:26:46 +0200
+Message-Id: <20230717172651.64324-1-sebastian.reichel@collabora.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH V4] PCI: qcom: Fixing broken pcie bring up for 2_3_3
- configs ops
-Content-Language: en-US
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh@kernel.org>, <mani@kernel.org>,
-        <lpieralisi@kernel.org>, <bhelgaas@google.com>, <kw@linux.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <stable@vger.kernel.org>
-References: <20230717065535.2065582-1-quic_srichara@quicinc.com>
- <2023071729-shamrock-evidence-b698@gregkh>
-From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
-In-Reply-To: <2023071729-shamrock-evidence-b698@gregkh>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: zh38zpLXZ1BNI7moZ8bAuc7kOwjinL_J
-X-Proofpoint-GUID: zh38zpLXZ1BNI7moZ8bAuc7kOwjinL_J
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-17_13,2023-07-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1011
- suspectscore=0 bulkscore=0 mlxscore=0 adultscore=0 spamscore=0
- impostorscore=0 phishscore=0 priorityscore=1501 mlxlogscore=677
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2307170159
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
 
+This adds PCIe v2 support for RK3588. The series has been tested with
+the onboard RTL8125 network card on Rockchip RK3588 EVB1 (&pcie2x1l1)
+and Radxa Rock 5B (&pcie2x1l2).
 
-On 7/17/2023 7:09 PM, Greg KH wrote:
-> On Mon, Jul 17, 2023 at 12:25:35PM +0530, Sricharan Ramabadhran wrote:
->> PARF_SLV_ADDR_SPACE_SIZE_2_3_3 macro is used for IPQ8074
->> 2_3_3 post_init ops. PCIe slave addr size was initially set
->> to 0x358, but was wrongly changed to 0x168 as a part of
->> commit 39171b33f652 ("PCI: qcom: Remove PCIE20_ prefix from
->> register definitions"). Fixing it, by using the right macro
->> PARF_SLV_ADDR_SPACE_SIZE and remove the unused
->> PARF_SLV_ADDR_SPACE_SIZE_2_3_3.
-> 
-> Note, you do have a full 72 columns to use, no need to make it smaller.
+Changes since v2:
+ * https://lore.kernel.org/all/20230713171851.73052-1-sebastian.reichel@collabora.com/
+ * Removed num-ib-windows/num-ob-windows/num-viewport from DT
+ * Added patch making 'msi' irq optional, if 'msi-map' property is available
+ * Updated binding according two discussion with Serge Semin, I provided two
+   options by adding one extra patch that should be squashed into the main
+   one or dropped depending on preferences from DT binding  maintainers.
+ * Collected Reviewed-by/Tested-by from Jagan Teki
 
-  ok sure
+Changes since v1:
+ * https://lore.kernel.org/all/20230616170022.76107-1-sebastian.reichel@collabora.com/
+ * Dropped patch adding 'RK3588' (queued by Rob)
+ * Updated patch adding legacy-interrupt-controller according to comments
+   from Rob and Serge
+    - added missing additionalProperties: false
+    - added all properties to new required property
+    - removed useless quotes around interrupt-controller
+    - added Rob's Reviewed-by
+ * Updated patch adding the missing RK356x/RK3588 interrupt names, so that it
+   provides more details about the interrupts
+ * Updated the DT patch according to the comment from Jonas Karlman, so that
+   the addresses are in 32 bit address space starting at 0x40000000
 
-> 
->> Without this pcie bring up on IPQ8074 is broken now.
-> 
-> I do not understand, something that used to work now breaks, or this is
-> preventing a new chip from being "brought up"?
-> 
+[0] https://lore.kernel.org/all/20230612171337.74576-1-sebastian.reichel@collabora.com/
 
-  yes, ipq8074 pcie which was previously working is broken now.
-  This patch fixes it.
+Thanks,
 
+-- Sebastian
 
-Regards,
-  Sricharan
+Sebastian Reichel (5):
+  dt-bindings: PCI: dwc: improve msi handling
+  dt-bindings: PCI: dwc: rockchip: Fix interrupt-names issue
+  dt-bindings: PCI: dwc: rockchip: Use generic binding
+  dt-bindings: PCI: dwc: rockchip: Add missing
+    legacy-interrupt-controller
+  arm64: dts: rockchip: rk3588: add PCIe2 support
+
+ .../bindings/pci/rockchip-dw-pcie.yaml        |  70 ++++++++++++
+ .../devicetree/bindings/pci/snps,dw-pcie.yaml |  18 +++-
+ arch/arm64/boot/dts/rockchip/rk3588.dtsi      |  51 +++++++++
+ arch/arm64/boot/dts/rockchip/rk3588s.dtsi     | 102 ++++++++++++++++++
+ 4 files changed, 237 insertions(+), 4 deletions(-)
+
+-- 
+2.40.1
+
