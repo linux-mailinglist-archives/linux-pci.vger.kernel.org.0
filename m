@@ -2,122 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1676755CD1
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jul 2023 09:26:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78F38755D16
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jul 2023 09:38:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229787AbjGQH0R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jul 2023 03:26:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36626 "EHLO
+        id S230394AbjGQHi3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jul 2023 03:38:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230323AbjGQH0P (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jul 2023 03:26:15 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A344810E9
-        for <linux-pci@vger.kernel.org>; Mon, 17 Jul 2023 00:26:10 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-51e6113437cso5512445a12.2
-        for <linux-pci@vger.kernel.org>; Mon, 17 Jul 2023 00:26:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689578769; x=1692170769;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8NyLL7xIHFr8TM9wgkdAiK0RyCfmwsOPlj/7DHoIVLg=;
-        b=JdfgC8rC468QIy07zzQ9PkbABPnq0krXDaXPZSbVqGDg6mLQ7/WyTwIDDRIPT8tk/K
-         6Mp0KNG+0cB2rRc46Jzog/xUf/VTInxyQOZeo4t5M6oOFKJO/zU+22rrFSXvaRCZe4gQ
-         Ul6em6JGJHgVtnzzYVxTSzdP6/cBl9n/KXk3uAWAbzi+wKiVH9jSS33sCzK4JhMhkN/t
-         xQM0iKojs2H//BgG5SNoonrZPm7KzVYJxgLiSUsI2gVo34rWjhjYD57mSLsLUDw3ravZ
-         A94PbnT9TdmKWZ6jTK4OnDxFxTwTz+ySHr9IBhaNZiIrxJt/dWAPrxvSjR7IXgYNojTr
-         VA7A==
+        with ESMTP id S229617AbjGQHi3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jul 2023 03:38:29 -0400
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 401B3FE
+        for <linux-pci@vger.kernel.org>; Mon, 17 Jul 2023 00:38:27 -0700 (PDT)
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id D7E7A3F71B
+        for <linux-pci@vger.kernel.org>; Mon, 17 Jul 2023 07:38:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1689579502;
+        bh=MAlGaXtehqgWPJcNsE/u7WTIL9sCas4Vh5dXm4S4XCE=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=howuZi/7PYcojVb3qGJ0EgzeoY1Xaf4Q8+ZXKqb0TAYf8RrO+/RhY9jkjqV8uAqoa
+         TW3de6o/RoacauZsHcXurIuGhYre24yYmYX/QWlFNTcCxumOEczTd5y0PknefWRrh4
+         XVktk3VjtCxRSGmTHZ8eUXKVwZ/sCZFUss22x+R59qkIDxcPVpQXwAENeF7NJDrjhN
+         EENAcsWuICdV1L6TW1o4KdPNl+3JeIuYODvYg0QjKqAOmvoSZG14SYAawCvGJ5E1Yo
+         K3t0SpY2xzRu6vGCVwQk4P0soYjZcKt+qBPV5OjzoTHJaCtxZxpL2uRttDitB9ThjD
+         6cK/V55DdYFhw==
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7675581a4afso563147685a.1
+        for <linux-pci@vger.kernel.org>; Mon, 17 Jul 2023 00:38:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689578769; x=1692170769;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8NyLL7xIHFr8TM9wgkdAiK0RyCfmwsOPlj/7DHoIVLg=;
-        b=IBmTtGO/cBsjR47LwF/6bEjAvMUytAsO8hoDhU/jz9fj8Eca2HDxjY/7IdrtctpjdH
-         gKA9XyftU8Fu66lpkOMhIaeLIJSq2MnUQsFqn1TU+BS8ob327FKbnZORkQzMSkD3+0vt
-         A4bMLd1L3CGVAyMTMq97ULFxDQcngw7/doq4EPAosm7YnWm69rTwWJascxuaTfUdzxEk
-         mszQYboUjsazBo659vs4K+VXy36x7c5JOleo8uRMo6kOEawHYqE1KDGlI3xVSm8UwCnA
-         LfWIsW+LLFVxLwmb326mqO59svJd2fs5UDonzgZz9nrSVYaXtS7yiMQ5N8ifc+Vd2XQp
-         xfAQ==
-X-Gm-Message-State: ABy/qLYyHlS2ImTxoZqZdXpA7C2QNbx27haXRxgPe/EWCGgw70PnUe/9
-        P7Y9cgP79Sm+s64jFOReQe/rLw==
-X-Google-Smtp-Source: APBJJlE22ZFdkIUR/k32sD9ntkgnOqDp+SIuqLRIXRHbsi5WrLBE9vSWsH4Qp/COnyAo7f04OEA9Rg==
-X-Received: by 2002:a17:906:7a59:b0:973:cc48:f19c with SMTP id i25-20020a1709067a5900b00973cc48f19cmr8750922ejo.56.1689578768619;
-        Mon, 17 Jul 2023 00:26:08 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.104])
-        by smtp.gmail.com with ESMTPSA id z15-20020a17090655cf00b00987e2f84768sm8808852ejp.0.2023.07.17.00.26.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jul 2023 00:26:08 -0700 (PDT)
-Message-ID: <5c6f7a88-2660-12b4-2c9b-f0eb4f108f5b@linaro.org>
-Date:   Mon, 17 Jul 2023 09:26:05 +0200
+        d=1e100.net; s=20221208; t=1689579502; x=1692171502;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MAlGaXtehqgWPJcNsE/u7WTIL9sCas4Vh5dXm4S4XCE=;
+        b=QWcbIkREumJW/5cJgfJpxtYgSi+o72Q65EYrvCXYKgdwC0qhrGFj3fc5A2WnB3M2xk
+         pdU0NAE/eOpWD9vxhODnQ8Fm0s4muSSOtZzg1DQWiUo20N1J9hHtYDrDYXf4WFP06gJV
+         qNSMROERo7wbMGLTFmt//lia0Nbuir4j0YFh4RMnNMJdJf43QPwWy5IZ/q6ELaXebJEk
+         hScFhAxMothOTktg7bOlG15oKH3oI7yLZHqxVpeOZTJQaUXulpZQJTyj8k67TcPCDosU
+         I4sgJp6zArr4XK+/9PUKolLS1Vr8dF8psiPSisEQe/0OYDiFfUuuTU4fAt8LUaz4U5qU
+         5Hsg==
+X-Gm-Message-State: ABy/qLZFs8ka6onZEqKC86TkZd9578elW1fjrEes+Wq2UimyhJSQ0fww
+        VJ0N9WEP/mbMIEaug4ZC6SKinwUxLU2Vq0MeXysiciMZ94PTtC19dFL3lCVZyX1IYLFbsQbEdHO
+        uIBIke7cjtJe/ESDroXZ2+DMF5Sr7NUZeE54EzADaeKUBv9EV8nPzfA==
+X-Received: by 2002:a05:620a:2403:b0:767:1938:93c7 with SMTP id d3-20020a05620a240300b00767193893c7mr15175711qkn.43.1689579501872;
+        Mon, 17 Jul 2023 00:38:21 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlEXndrCszhc01Ang+8MTUDFaoQ/GVyMz5a6ACO3CyrHv7+mb6yN+kdZAUzYEE85a5rEttlirRaBhZZJcInJGl0=
+X-Received: by 2002:a05:620a:2403:b0:767:1938:93c7 with SMTP id
+ d3-20020a05620a240300b00767193893c7mr15175696qkn.43.1689579501610; Mon, 17
+ Jul 2023 00:38:21 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 6/6] arm64: dts: qcom: sa8775p-ride: enable pcie nodes
-Content-Language: en-US
-To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, konrad.dybcio@linaro.org, mani@kernel.org
-Cc:     quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
-        dmitry.baryshkov@linaro.org,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-phy@lists.infradead.org
-References: <1689311319-22054-1-git-send-email-quic_msarkar@quicinc.com>
- <1689311319-22054-7-git-send-email-quic_msarkar@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <1689311319-22054-7-git-send-email-quic_msarkar@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+References: <20230714050541.2765246-1-kai.heng.feng@canonical.com> <20230714145445.GA354014@bhelgaas>
+In-Reply-To: <20230714145445.GA354014@bhelgaas>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Mon, 17 Jul 2023 15:38:09 +0800
+Message-ID: <CAAd53p4Owt_ygt2f=38M0X2MxnPsXv=BHzSLRbprwW208MUVdQ@mail.gmail.com>
+Subject: Re: [PATCH v2] igc: Ignore AER reset when device is suspended
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
+        linux-pci@vger.kernel.org,
+        "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Aaron Ma <aaron.ma@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 14/07/2023 07:08, Mrinmay Sarkar wrote:
-> Enable pcie0, pcie1 nodes and their respective phy's.
-> 
-> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/sa8775p-ride.dts | 80 +++++++++++++++++++++++++++++++
->  1 file changed, 80 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts b/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-> index b2aa160..d3b2ab0 100644
-> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-> @@ -552,6 +552,86 @@
->  			bias-pull-down;
->  		};
->  	};
-> +
-> +	pcie0_default_state: pcie0-default {
-> +		perst {
+[+Cc Aaron]
 
-Really?
+On Fri, Jul 14, 2023 at 10:54=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
+ wrote:
+>
+> On Fri, Jul 14, 2023 at 01:05:41PM +0800, Kai-Heng Feng wrote:
+> > When a system that connects to a Thunderbolt dock equipped with I225,
+> > like HP Thunderbolt Dock G4, I225 stops working after S3 resume:
+> > ...
+>
+> > The issue is that the PTM requests are sending before driver resumes th=
+e
+> > device. Since the issue can also be observed on Windows, it's quite
+> > likely a firmware/hardware limitation.
+>
+> Does this mean we didn't disable PTM correctly on suspend?  Or is the
 
-This is a friendly reminder during the review process.
+PTM gets disabled correctly during suspend, by commit c01163dbd1b8
+("PCI/PM: Always disable PTM for all devices during suspend").
+Before that commit the suspend will fail.
 
-It seems my previous comments were not fully addressed. Maybe my
-feedback got lost between the quotes, maybe you just forgot to apply it.
-Please go back to the previous discussion and either implement all
-requested changes or keep discussing them.
+> device defective and sending PTM requests even though PTM is disabled?
 
-Thank you.
+Yes. When S3 resume, I guess the firmware resets the dock and/or I225
+so PTM request starts even before the OS is resumed.
+AFAIK the issue doesn't happen when s2Idle is used.
 
-Best regards,
-Krzysztof
+>
+> If the latter, I vote for a quirk that just disables PTM completely
+> for this device.
 
+The S3 resume enables PTM regardless of OS involvement. So I don't
+think this will work.
+
+>
+> This check in .error_detected() looks out of place to me because
+> there's no connection between AER and PTM, there's no connection
+> between PTM and the device being enabled, and the connection between
+> the device being enabled and being fully resumed is a little tenuous.
+
+True. This patch is just a workaround.
+
+Have you considered my other proposed approach? Like disable AER
+completely during suspend, or even defer the resuming of PCIe services
+after the entire hierarchy is resumed?
+
+>
+> If we must do it this way, maybe add a comment about *why* we're
+> checking pci_is_enabled().  Otherwise this will be copied to other
+> drivers that don't need it.
+
+Sure.
+
+Kai-Heng
+
+>
+> > So avoid resetting the device if it's not resumed. Once the device is
+> > fully resumed, the device can work normally.
+> >
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216850
+> > Reviewed-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> > Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >
+> > ---
+> > v2:
+> >  - Fix typo.
+> >  - Mention the product name.
+> >
+> >  drivers/net/ethernet/intel/igc/igc_main.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/et=
+hernet/intel/igc/igc_main.c
+> > index 9f93f0f4f752..8c36bbe5e428 100644
+> > --- a/drivers/net/ethernet/intel/igc/igc_main.c
+> > +++ b/drivers/net/ethernet/intel/igc/igc_main.c
+> > @@ -7115,6 +7115,9 @@ static pci_ers_result_t igc_io_error_detected(str=
+uct pci_dev *pdev,
+> >       struct net_device *netdev =3D pci_get_drvdata(pdev);
+> >       struct igc_adapter *adapter =3D netdev_priv(netdev);
+> >
+> > +     if (!pci_is_enabled(pdev))
+> > +             return 0;
+> > +
+> >       netif_device_detach(netdev);
+> >
+> >       if (state =3D=3D pci_channel_io_perm_failure)
+> > --
+> > 2.34.1
+> >
