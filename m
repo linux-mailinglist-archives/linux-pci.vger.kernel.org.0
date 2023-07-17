@@ -2,58 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1A5F7566B6
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jul 2023 16:45:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E49267566EF
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jul 2023 16:58:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230027AbjGQOpe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jul 2023 10:45:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34756 "EHLO
+        id S229903AbjGQO6C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jul 2023 10:58:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229978AbjGQOpd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jul 2023 10:45:33 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA1CDB2;
-        Mon, 17 Jul 2023 07:45:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 789ED610D5;
-        Mon, 17 Jul 2023 14:45:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5985C433CA;
-        Mon, 17 Jul 2023 14:45:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689605129;
-        bh=6Lh/okJ/tlTuqTU1b/j/uErvTDrdoSJQUHuVEAFETts=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DXcRR896EnZnRLJNO/6oE3vS17JskNmeBySR1a8GBnSZMpK8R09u2GHreDf2c0Dzo
-         JLenvfB83kOgsDGMpX/l4sKSoMCJTkDOcZ1AMcrisUwBT45Hqkbl+XlzoIQD7J44xp
-         BYFUcjgFWWPES+2nt7thJ9TOtx9ok3veYqLmGXwpUvNrkKD9uUi4kuNmjRjO8kvSv/
-         Q22oXxhN3DW4SMHsd2yGH263wD6ee7T8xcq/guGZp7OF4Df7SJdXBFCdPf5RkCCV/3
-         AAiKiz+alTYz/OnLZ5fgffEXHxAlU+vg0JkRSCtx7kTfPpi4mi5LtNw9VoqrLwYgPv
-         lh5ICjbnogAkg==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2b70bfc8db5so68132651fa.2;
-        Mon, 17 Jul 2023 07:45:29 -0700 (PDT)
-X-Gm-Message-State: ABy/qLbQxh1H3IGPgKmzeioCvLaadaaCJVxLnXr8a0wh6eB6mMSIZdGn
-        pYVMLqKmP76XUPR9BfVt2AaGsNqQw4sflJEr+w==
-X-Google-Smtp-Source: APBJJlFFXYcLka0U2O/B1evPE/8dIeXS+VuPwNFdjWy1LSj2t3dI5YnbEtEP8rRsNBtPkvMxm/lDG3mrsq/u8ZWdw1Y=
-X-Received: by 2002:a2e:9d84:0:b0:2b6:e76b:1e50 with SMTP id
- c4-20020a2e9d84000000b002b6e76b1e50mr9074981ljj.41.1689605127886; Mon, 17 Jul
- 2023 07:45:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230615164113.2270698-1-Frank.Li@nxp.com> <20230615164113.2270698-2-Frank.Li@nxp.com>
-In-Reply-To: <20230615164113.2270698-2-Frank.Li@nxp.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 17 Jul 2023 08:45:14 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL7o5ipaBkNRECkWZPZDTB1kSFrUV3YjKL6xj02f0x2Sw@mail.gmail.com>
-Message-ID: <CAL_JsqL7o5ipaBkNRECkWZPZDTB1kSFrUV3YjKL6xj02f0x2Sw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI: layerscape: Add the workaround for lost link
- capablities during reset
-To:     Frank Li <Frank.Li@nxp.com>
+        with ESMTP id S229764AbjGQO6C (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jul 2023 10:58:02 -0400
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2070.outbound.protection.outlook.com [40.107.7.70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E7CBE5E;
+        Mon, 17 Jul 2023 07:58:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k1MicFwIW9zJA+bZHjiUXZ3ne09+M4N/XAfqKybttlgLYgNEYny0YNSDPieGTaHg6Za4UdLrykzTvX4ngPH0ZdnBRqIGD3tXK51L9ZAiNnwIMHReHYnzusNvIFNsG46gFQLoxJRHMPNJDhi4aZPjG9MzfSBsBwdpBVXzODDYynXUAFX3nErlGY7nL75fm17Jhac4drxSwFEqvh9ZbgiuRcAAvt4RM4npLgf8Jtlt9ebs5WOUC/UFQIZdPvKE2Sh9D0yKo5p7HogCMWa1LfxO2bVaEAKl074zzknGmEAbGSTNKK5RLZK7pyynwAOqx0p8BIDlRDXDQy1lmxRygI5G3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=n9LEHGFTwmRLbQqqsyHdq9bnzJ1Q3Hu4ZC5s9tBIlB4=;
+ b=IZfi95kTuQKf5dp5fqTy/Iej7kABHBwWFyCpNlmo2b/HNh3OPflYXwECe9w6P+DUXsNiuvMDcHJaBeqbMdLxFRghehObMzaMday6GpPeAHCDMFtY0XkvtRgDOY3HgHx+2hBYP77EKNvRO/sWlKvkUJKv6Vn8yh9jznIC8uKeXfXI8psd+LDume9+9Pi+5kJC+Y2RV0Q3wBhxTPv1w9zl66QJHjkElFwuRU9yaqTMxsurLwbSXalAjF6GDbNCFf9ZVsORpY9YuBBd+hoTs8uIIxLQuYKMo+fKoX4BgRXHVw+WV5jmX/Ps18aFEWK25SCd3CCJhi1oY/Ho4bQQ/IkIBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n9LEHGFTwmRLbQqqsyHdq9bnzJ1Q3Hu4ZC5s9tBIlB4=;
+ b=UMeMQkICxVVQ2/tJ+WLCFdmPhWiLr90tsBS5IIp4rKRCwcQ8pC9JPHVP1eSMSvGcITMVehtd+L5U3PLk0LZkNta0GQvdq+HSMNb+3Z3AxE1Aw0ZThHMyGjiSMPn0WX2WxDsnPa3QxVQuCQ/t2EKibVqXZQEevihOcDUJRwZPzz0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by PAXPR04MB9140.eurprd04.prod.outlook.com (2603:10a6:102:22f::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.31; Mon, 17 Jul
+ 2023 14:57:57 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::6cc2:14b2:ca51:6c0]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::6cc2:14b2:ca51:6c0%4]) with mapi id 15.20.6588.031; Mon, 17 Jul 2023
+ 14:57:57 +0000
+Date:   Mon, 17 Jul 2023 10:57:44 -0400
+From:   Frank Li <Frank.li@nxp.com>
+To:     Rob Herring <robh@kernel.org>
 Cc:     mani@kernel.org, Minghuan Lian <minghuan.Lian@nxp.com>,
         Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
         <linuxppc-dev@lists.ozlabs.org>,
@@ -62,11 +54,79 @@ Cc:     mani@kernel.org, Minghuan Lian <minghuan.Lian@nxp.com>,
         "moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
         <linux-arm-kernel@lists.infradead.org>,
         open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+Subject: Re: [PATCH 2/2] PCI: layerscape: Add the workaround for lost link
+ capablities during reset
+Message-ID: <ZLVW6OotFdesx+wG@lizhi-Precision-Tower-5810>
+References: <20230615164113.2270698-1-Frank.Li@nxp.com>
+ <20230615164113.2270698-2-Frank.Li@nxp.com>
+ <CAL_JsqL7o5ipaBkNRECkWZPZDTB1kSFrUV3YjKL6xj02f0x2Sw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqL7o5ipaBkNRECkWZPZDTB1kSFrUV3YjKL6xj02f0x2Sw@mail.gmail.com>
+X-ClientProxiedBy: SJ0PR03CA0332.namprd03.prod.outlook.com
+ (2603:10b6:a03:39c::7) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|PAXPR04MB9140:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7c7ac133-a5ef-496c-d9ab-08db86d634d7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0jW9lJRc6Kiga/xlXOy4qDSVQxuNwhdRGOdaavfvAdaDGaPEQ40vGK01XOvOiMLYYsIDCpgf/py9L6BO8+Ue3VhakChpMq8VQOFpvlvJ7zwQeku5j+4q2HhrVlBBYeibir8xqm1aSdLRQT+8NmrXivm3EK27gCtC9pdIfKiH6QXkZTudneQpFw4CDuxTAKYQ484hpQqM4BapdlnDLv1eIe6lVh4Lp29H59ou9+N4fb0L685bz0QPh+SQGu5rCGFR6CIQAwuQN2PjMaPlCDaZxSWMEQQcHA5hL1HDz+waZwbzbELe93SWBfvaJo0I08X4R/jzqyqPKyQZUCrmWJIRvNBJK/Gu1Clqip8p0aiYcM+zNCkaPrDBBPLhCxdGOZg0DGXS+bdrkEG0tideOXR68v3Nd44lTTLbjHVZ+PnA2NrnoZ7Vds7SvV9D6n1h+aPgkfT/Lsf4XXHJ/CAt1rTNaucB0OmCO2kL7yjb/S3e3kqX1yS6cjlSk8gM2STbxQA8r6fwcPbREx1h292fQaT2oHXzrw2pOm0eCdkhmKughirYCQxVoW/B2F4KzFJm8/GzCZgq3sJD9HiyyBKeAqrUrbif6CRVQd8vZ1TGOsMxP0zG9jxzrtxHcyJYzpfBk0Gb2aB6cgfmRyBmcWGw2oaW4A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(4636009)(39860400002)(396003)(366004)(136003)(346002)(376002)(451199021)(478600001)(6486002)(52116002)(6666004)(54906003)(6506007)(53546011)(186003)(2906002)(9686003)(6512007)(26005)(33716001)(316002)(41300700001)(4326008)(6916009)(66946007)(7416002)(8676002)(5660300002)(8936002)(66476007)(38350700002)(38100700002)(66556008)(86362001)(67856001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dEtmUWwwOGhNcmJXYUpneTFHRlowSmJlSEJoOHZ6alZld2JJM0xtRE5jT1pU?=
+ =?utf-8?B?RHBBaHAxQ2dYUU5QUThMc2lrUWZwbDlqWGFzZGxOR1k5K3lMcXVYNkp3bEdk?=
+ =?utf-8?B?VGNPQk5jdnRCQVluR0dHWTZhNzQ2dUlPUUpsVVpSK2tQNDFNaWp1eitZb3JR?=
+ =?utf-8?B?NEx6RndqY1o3TFlFSEJaTTlrSDl2N1o0dTBZaWpWK0tMclV4OHhQdkM5bXhn?=
+ =?utf-8?B?bW5nR1ZwaUFPY1N0TWNwQlJuZGhBc2tDcFNPck1nNEY4TEcyb1pYVmRzcTR3?=
+ =?utf-8?B?Nk1WWEZ4NEVkYjFDdDdDdUNtQ1FDRktFa1lVM2U1dFlUQUhMcTFXaVdnSWdJ?=
+ =?utf-8?B?dFFKVTR0ZTlDK05KbXE4U2NYZFlBUitXV0NvcEswOTIwZllncVYrMW1wTTlT?=
+ =?utf-8?B?czl1M2F5T014VDFVQzJxOWF4MVFVNlBoZmp5UlVDVVMrd1N0MWttbDBsb1JK?=
+ =?utf-8?B?SlhKT1ZNOWR1ZXFQM05EU01JcHduZ0ZlK0tuSnBaU241NUROWVhrRi9xRWlG?=
+ =?utf-8?B?SHZOYTRxcU5SY2NSVlR3eko5aGhOeTg3WExKRkw0cnhlY3FPSS9hVk4xak5v?=
+ =?utf-8?B?eTN6RFNSb3VtYXhPSitIdEU2Tm90WjJleFdGbUFmZVhMTGpDMGxwUEJWYlVx?=
+ =?utf-8?B?QmVPcHRIMHlJdWxySCtDT1RscVFzd2E1YVhRVUo1dE9kMVFrZUFNOFQ0TGxa?=
+ =?utf-8?B?dTlzT3BURGJ3WEQ3TmI2WUg2UklZVzRGZkE3SENoMGc5cWpVMUFHMGlQYmpF?=
+ =?utf-8?B?SzRYUmoyNkVCeEZmR0JXclc4bTE5R2Y2K09BS3k4Q3ZxR3BCWWNVNGdNMWx6?=
+ =?utf-8?B?ZTJYSjlPNnJrNkEvb2ozUFQ5RnE4dXU4MlY5b3NEVXFDbFpTbU1TRUFIek1K?=
+ =?utf-8?B?M1crOWFmQzEzMkhab0F1aURoTkdWcDNhek5KSVJEd0NJVHUxWmYxRy9CdDIr?=
+ =?utf-8?B?VitiTEQxQ0FCeHJRL1V1MVNZUlQzcWZGbWNnbWVuMEltQnhvRGRjWk1CcitF?=
+ =?utf-8?B?K1dXNGxhd2xNSnpjeXJTdWNJUnJqWFM4OWovZ21obXZxSy9FcVVsR3BWY3VC?=
+ =?utf-8?B?Z1NOOWVZR2FjbGRnVlAvbkR4dTlZQzdUN202WTBtWjkyai9kczljZTQwdHNV?=
+ =?utf-8?B?c2RNbGVXVmMzV1JicVBlUlZUN3R2OE1GU0RoKzNVTENzai9Mc2dLU3FIUkwx?=
+ =?utf-8?B?Vm43eS9YZUJXSjd1UVZCVUQvSVlZek9sTExweVJsMTRUVFVFNXpNZ2h1UGhj?=
+ =?utf-8?B?MXpRUVlDcDFLWEZ0SmlIdUZZR3NqZTl1ZVpQKzJyYWZoZTBSTGtTRDJBR3Qx?=
+ =?utf-8?B?SjZ6TWlrTThvc00rcEQzWjZCRFNvdGhhTzYwdlhTN0tZRnBUZThWM3duM2Rk?=
+ =?utf-8?B?WFNic1NjUTQ3bHBQdUVrQzRHR2FId1JlVjczd1Zvb1NFdkExMGd2QlhXdVNL?=
+ =?utf-8?B?bEhnSWlFQUpaOW1aSFIybXRpQXdacE1yOVk1anlybTBzTzF5TTZ6Y2RRb0Fw?=
+ =?utf-8?B?SEhwWlY1dUxmY1FyZENlVmgrcWZ3L2xHSG5QeFY0ZUxaMzlac3lqcjJISDFz?=
+ =?utf-8?B?OERnUitYaFZ3eHNqTkRYSFZYSit4Z3dLT2FzRUdUbWlrMWpzQjhnN2g1VzBG?=
+ =?utf-8?B?eHpvVHR6ZEtkSmN1ZFdEWElvVUJDMUZvYUxHMmZQaUFmdFZpS1ZpZWZ2blJm?=
+ =?utf-8?B?bTNHR3ZyNUtENE1obmtQMjE5SlZHSDlIeDJmeE5JaEhicWRrSmpHRytvMUND?=
+ =?utf-8?B?cEN6czg3a20vUXZ0Z1hvUVh0OSt3dXFsZERDNnhHOE5vZTluUHRmU3JvMExT?=
+ =?utf-8?B?MVplZmFoRVFTQ1hGK28vM3dKMHFxQnpHaDliTS9ic3NMYXBJNmtsc0JrQmRk?=
+ =?utf-8?B?VUdyRE9DSnFSWTBwUks5WXpqTUlOdFBtaHFYSFk2bmhuTzdRdXRZZVdKd1hM?=
+ =?utf-8?B?YnRwck5QWnROQVVDbXdUWU5jd3FDeVVMUWpqaTNpaTVlcENDeFhnZ0Y0c3RQ?=
+ =?utf-8?B?QVdWMGFzRHdaVThiYzU0aFgwcDhiMmFReUtMMWVGamxuZUhWK1JOcllMNlJR?=
+ =?utf-8?B?NkhRRStWQzJQQ0tDa2FNTkx2ZHY4NUVrVmdhU0htd1Awdm5Obk5ydVkzNFht?=
+ =?utf-8?Q?ZWbsY4KDMgjY05sWSKwzNoYc0?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c7ac133-a5ef-496c-d9ab-08db86d634d7
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2023 14:57:57.1965
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Dmh2nLw6VQerQnU/sVmx+jZA0kR/7ijRypNJrAty/JV7PqzOohMSlXciiFAaAxOjW6k29pz+RHdFhUiTN3zI2w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9140
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,83 +134,91 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jun 15, 2023 at 10:41=E2=80=AFAM Frank Li <Frank.Li@nxp.com> wrote:
->
-> From: Xiaowei Bao <xiaowei.bao@nxp.com>
->
-> A workaround for the issue where the PCI Express Endpoint (EP) controller
-> loses the values of the Maximum Link Width and Supported Link Speed from
-> the Link Capabilities Register, which initially configured by the Reset
-> Configuration Word (RCW) during a link-down or hot reset event.
+On Mon, Jul 17, 2023 at 08:45:14AM -0600, Rob Herring wrote:
+> On Thu, Jun 15, 2023 at 10:41 AM Frank Li <Frank.Li@nxp.com> wrote:
+> >
+> > From: Xiaowei Bao <xiaowei.bao@nxp.com>
+> >
+> > A workaround for the issue where the PCI Express Endpoint (EP) controller
+> > loses the values of the Maximum Link Width and Supported Link Speed from
+> > the Link Capabilities Register, which initially configured by the Reset
+> > Configuration Word (RCW) during a link-down or hot reset event.
+> 
+> What makes this Layerscape specific? Seems like something internal to DWC.
 
-What makes this Layerscape specific? Seems like something internal to DWC.
+layerscape designed behavor is that LINK speed and width controled by RCW.
+But design have been 'defect' when switch to dwc controller, may not
+correct connect some wire. So provide an errata, ask software recover such
+information when link up/down to align design spec.
 
->
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-layerscape-ep.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci=
-/controller/dwc/pci-layerscape-ep.c
-> index 4e4fdd1dfea7..2ef02d827eeb 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> @@ -45,6 +45,7 @@ struct ls_pcie_ep {
->         struct pci_epc_features         *ls_epc;
->         const struct ls_pcie_ep_drvdata *drvdata;
->         int                             irq;
-> +       u32                             lnkcap;
->         bool                            big_endian;
->  };
->
-> @@ -73,6 +74,7 @@ static irqreturn_t ls_pcie_ep_event_handler(int irq, vo=
-id *dev_id)
->         struct ls_pcie_ep *pcie =3D dev_id;
->         struct dw_pcie *pci =3D pcie->pci;
->         u32 val, cfg;
-> +       u8 offset;
->
->         val =3D ls_lut_readl(pcie, PEX_PF0_PME_MES_DR);
->         ls_lut_writel(pcie, PEX_PF0_PME_MES_DR, val);
-> @@ -81,6 +83,13 @@ static irqreturn_t ls_pcie_ep_event_handler(int irq, v=
-oid *dev_id)
->                 return IRQ_NONE;
->
->         if (val & PEX_PF0_PME_MES_DR_LUD) {
-> +
-> +               offset =3D dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +
-> +               dw_pcie_dbi_ro_wr_en(pci);
-> +               dw_pcie_writew_dbi(pci, offset + PCI_EXP_LNKCAP, pcie->ln=
-kcap);
-> +               dw_pcie_dbi_ro_wr_dis(pci);
-> +
->                 cfg =3D ls_lut_readl(pcie, PEX_PF0_CONFIG);
->                 cfg |=3D PEX_PF0_CFG_READY;
->                 ls_lut_writel(pcie, PEX_PF0_CONFIG, cfg);
-> @@ -216,6 +225,7 @@ static int __init ls_pcie_ep_probe(struct platform_de=
-vice *pdev)
->         struct ls_pcie_ep *pcie;
->         struct pci_epc_features *ls_epc;
->         struct resource *dbi_base;
-> +       u8 offset;
->         int ret;
->
->         pcie =3D devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> @@ -252,6 +262,9 @@ static int __init ls_pcie_ep_probe(struct platform_de=
-vice *pdev)
->
->         platform_set_drvdata(pdev, pcie);
->
-> +       offset =3D dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +       pcie->lnkcap =3D dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
-> +
->         ret =3D dw_pcie_ep_init(&pci->ep);
->         if (ret)
->                 return ret;
-> --
-> 2.34.1
->
+For example, RCW config max link is 2lan, after link down/up, DWC reset
+to max link to 4lan. So host side get a report, max link is 4 lan. 
+
+It will not impact function, just information miss matched.
+
+Frank
+
+> 
+> >
+> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> >  drivers/pci/controller/dwc/pci-layerscape-ep.c | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > index 4e4fdd1dfea7..2ef02d827eeb 100644
+> > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > @@ -45,6 +45,7 @@ struct ls_pcie_ep {
+> >         struct pci_epc_features         *ls_epc;
+> >         const struct ls_pcie_ep_drvdata *drvdata;
+> >         int                             irq;
+> > +       u32                             lnkcap;
+> >         bool                            big_endian;
+> >  };
+> >
+> > @@ -73,6 +74,7 @@ static irqreturn_t ls_pcie_ep_event_handler(int irq, void *dev_id)
+> >         struct ls_pcie_ep *pcie = dev_id;
+> >         struct dw_pcie *pci = pcie->pci;
+> >         u32 val, cfg;
+> > +       u8 offset;
+> >
+> >         val = ls_lut_readl(pcie, PEX_PF0_PME_MES_DR);
+> >         ls_lut_writel(pcie, PEX_PF0_PME_MES_DR, val);
+> > @@ -81,6 +83,13 @@ static irqreturn_t ls_pcie_ep_event_handler(int irq, void *dev_id)
+> >                 return IRQ_NONE;
+> >
+> >         if (val & PEX_PF0_PME_MES_DR_LUD) {
+> > +
+> > +               offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> > +
+> > +               dw_pcie_dbi_ro_wr_en(pci);
+> > +               dw_pcie_writew_dbi(pci, offset + PCI_EXP_LNKCAP, pcie->lnkcap);
+> > +               dw_pcie_dbi_ro_wr_dis(pci);
+> > +
+> >                 cfg = ls_lut_readl(pcie, PEX_PF0_CONFIG);
+> >                 cfg |= PEX_PF0_CFG_READY;
+> >                 ls_lut_writel(pcie, PEX_PF0_CONFIG, cfg);
+> > @@ -216,6 +225,7 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+> >         struct ls_pcie_ep *pcie;
+> >         struct pci_epc_features *ls_epc;
+> >         struct resource *dbi_base;
+> > +       u8 offset;
+> >         int ret;
+> >
+> >         pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> > @@ -252,6 +262,9 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+> >
+> >         platform_set_drvdata(pdev, pcie);
+> >
+> > +       offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> > +       pcie->lnkcap = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+> > +
+> >         ret = dw_pcie_ep_init(&pci->ep);
+> >         if (ret)
+> >                 return ret;
+> > --
+> > 2.34.1
+> >
