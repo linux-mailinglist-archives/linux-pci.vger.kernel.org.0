@@ -2,109 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B420675627B
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jul 2023 14:08:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BE6475635E
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jul 2023 14:55:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229759AbjGQMIJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jul 2023 08:08:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41374 "EHLO
+        id S230093AbjGQMz1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jul 2023 08:55:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231229AbjGQMH7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jul 2023 08:07:59 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF0C8E58;
-        Mon, 17 Jul 2023 05:07:34 -0700 (PDT)
+        with ESMTP id S229379AbjGQMz0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jul 2023 08:55:26 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0DC8E49;
+        Mon, 17 Jul 2023 05:55:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689595655; x=1721131655;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=WP9jbrwJlCzDhGsE/E1k9YoxHP6CB4ER/l8Uze8ZUhU=;
-  b=VUmHmtKw3+V42iWkXCTgXkiGTj4CJyxGrrr5Ms0I109kVZouKhHgUt5e
-   1r28kx5QtN1ijv0wbR7WNK/ak1FVKwbxQNCzkGKZsNSRwj9wIls8JdsZ0
-   3zqJHAxJ+0EE5R1WKNrU70uGoSZtXVDuOV4+k8xq7JNgwXGkqlLM/n2pW
-   DaBG7wWAZzdBCtoPPJQ5U7fd9pCusF0OjGpRoCKdCk2NL41Tk2CrAhT3m
-   BB7IHn1/tIvJjaOxUJZUBHQ8kJEYEmc3KcbwV/HKwzggWe3vHPPbt3/Pt
-   gokginQ5eqnFlz6raXWRz0XoaSMyHP89IZTg8CGAMMBj82HL81k3cG8fN
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10773"; a="432082001"
+  t=1689598525; x=1721134525;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=b2YtQTOB52EtISwGmNJvxnB+CChgEJ2fe0RvWIVjTAk=;
+  b=NN6T9T4YlDdLb5zvFn5B0l4umAz+elj/wXOvmmHxhBZkuHxWDhYAphIP
+   kJO/S4x5T7yZ/c+gGBzkzqP77gi7yrehM708stTbbmwQmTOBJn3vqK6aH
+   dpDOIbFltpCigFE6SugYuynTdvcGu5v9+rMlqlGKQg8bRhO5kmZCOhteb
+   8a3sCQOab8ZpzZfFI79vNXIy6trEsMjiJoqZ2/OSKvpsNkqpAHdTRwfmI
+   TfWvcMQLmygbmZD7MSVIddEnvK0Ra7IXemxW6xODqTO9WJ9ITwiEPnSWD
+   LcZg2a43AL+2hIZ1TgDloaAkYPWcYv9kRIU5YKA+70YIWfp9SHcNtWKdJ
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10774"; a="429680653"
 X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
-   d="scan'208";a="432082001"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2023 05:07:15 -0700
+   d="scan'208";a="429680653"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2023 05:55:24 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10773"; a="752876486"
+X-IronPort-AV: E=McAfee;i="6600,9927,10774"; a="793234536"
 X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
-   d="scan'208";a="752876486"
-Received: from dkravtso-mobl1.ccr.corp.intel.com (HELO ijarvine-mobl2.ger.corp.intel.com) ([10.252.45.233])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2023 05:07:10 -0700
-From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Dean Luick <dean.luick@cornelisnetworks.com>,
-        =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v5 11/11] PCI: Document the Capability accessor RMW improvements
-Date:   Mon, 17 Jul 2023 15:05:03 +0300
-Message-Id: <20230717120503.15276-12-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230717120503.15276-1-ilpo.jarvinen@linux.intel.com>
-References: <20230717120503.15276-1-ilpo.jarvinen@linux.intel.com>
+   d="scan'208";a="793234536"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Jul 2023 05:55:17 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id C6EB4256; Mon, 17 Jul 2023 15:55:23 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        David Gow <davidgow@google.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Brendan Higgins <brendan.higgins@linux.dev>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v3 0/4] kernel.h: Split out a couple of macros to args.h
+Date:   Mon, 17 Jul 2023 15:55:17 +0300
+Message-Id: <20230717125521.43176-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Documentation claims port service drivers should play nice wrt. PCIe
-Capability changes but the concurrency control is now provided in the
-Capability accessors as long as the correct ones are used.
+There are macros in kernel.h that can be used outside of that header.
+Split them to args.h and replace open coded variants.
 
-Update the documention to match the RMW accessor behavior.
+Test compiled with `make allmodconfig` for x86_64.
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- Documentation/PCI/pciebus-howto.rst | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+(Note that positive diff statistics is due to documentation being
+updated.)
 
-diff --git a/Documentation/PCI/pciebus-howto.rst b/Documentation/PCI/pciebus-howto.rst
-index f882ff62c51f..a0027e8fb0d0 100644
---- a/Documentation/PCI/pciebus-howto.rst
-+++ b/Documentation/PCI/pciebus-howto.rst
-@@ -213,8 +213,12 @@ PCI Config Registers
- --------------------
- 
- Each service driver runs its PCI config operations on its own
--capability structure except the PCI Express capability structure, in
--which Root Control register and Device Control register are shared
--between PME and AER. This patch assumes that all service drivers
--will be well behaved and not overwrite other service driver's
--configuration settings.
-+capability structure except the PCI Express capability structure,
-+that is shared between many drivers including the service drivers.
-+RMW Capability accessors (pcie_capability_clear_and_set_word(),
-+pcie_capability_set_word(), and pcie_capability_clear_word()) protect
-+a selected set of PCI Express Capability Registers (Link Control
-+Register and Root Control Register). Any change to those registers
-+should be performed using RMW accessors to avoid problems due to
-+concurrent updates. For the up-to-date list of protected registers,
-+see pcie_capability_clear_and_set_word().
+In v3:
+- split to a series of patches
+- fixed build issue on `make allmodconfig` for x86_64 (Andrew)
+
+In v2:
+- converted existing users at the same time (Andrew, Rasmus)
+- documented how it does work (Andrew, Rasmus)
+
+Andy Shevchenko (4):
+  kernel.h: Split out COUNT_ARGS() and CONCATENATE() to args.h
+  x86/asm: Replace custom COUNT_ARGS() & CONCATENATE() implementations
+  arm64: smccc: Replace custom COUNT_ARGS() & CONCATENATE()
+    implementations
+  genetlink: Replace custom CONCATENATE() implementation
+
+ arch/x86/include/asm/rmwcc.h      | 11 +++--------
+ include/kunit/test.h              |  1 +
+ include/linux/args.h              | 28 ++++++++++++++++++++++++++++
+ include/linux/arm-smccc.h         | 27 ++++++++++-----------------
+ include/linux/genl_magic_func.h   | 27 ++++++++++++++-------------
+ include/linux/genl_magic_struct.h |  8 +++-----
+ include/linux/kernel.h            |  7 -------
+ include/linux/pci.h               |  2 +-
+ include/trace/bpf_probe.h         |  2 ++
+ 9 files changed, 62 insertions(+), 51 deletions(-)
+ create mode 100644 include/linux/args.h
+
 -- 
-2.30.2
+2.40.0.1.gaa8946217a0b
 
