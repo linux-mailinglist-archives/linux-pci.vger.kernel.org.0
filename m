@@ -2,80 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 071DC7560E9
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jul 2023 12:51:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35BFA7561D0
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jul 2023 13:45:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230049AbjGQKu5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jul 2023 06:50:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54918 "EHLO
+        id S229798AbjGQLpY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jul 2023 07:45:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229978AbjGQKu4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jul 2023 06:50:56 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D88BA11F;
-        Mon, 17 Jul 2023 03:50:55 -0700 (PDT)
+        with ESMTP id S229621AbjGQLpX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jul 2023 07:45:23 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33A46BF;
+        Mon, 17 Jul 2023 04:45:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689591055; x=1721127055;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=F8akH87XGHxEQ+Klpl4CglFI+YpNF0AZeGW6h5QLXyM=;
-  b=UmVxvExJkcruVf4OVKaT0iWJNodZM0p5BsMZyA5v6aDMUnb23n5vd+vw
-   MvvNW2ijuQuOguVCVdT3qCvHipD8wdkQf0FAZu3wCBPmlwJeOBel8E1fn
-   6GMjZYoCTdtbfeQoEbO1p4VUqkxaW9R7CSzSPvx6XtVi1ONHw0LQzi2ad
-   ZfY29fydoXvBgDG6XZ0hFBUh/DdzTOSfacHETCtoDFVYhPx9EWRXXndR9
-   YNlprHnzkG1lNTE3V1Q+Iw+9bYKb7+SvB7q2w+sJ8PtqVRAIZQ+VMJqzp
-   JyghPjojbx0NtfbSHVOHQ8szpzGcSKF1gDAeiOXfqQAVDeKAeGeenNQl/
+  t=1689594322; x=1721130322;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2MHPO+iHuYgAyGNlqYAFRPStgolKWt3w3Dm0eTHpGD4=;
+  b=Jx30VsZLJMMaX2PWgrBAhH63xXVjMsRAnndeBerLxSswM+nNG+USAEMH
+   4Kd3ZPLWp2ZtU36nuOeQQzjA+pkTFehWnpQOBCbUdTGEteMvF1hJfppCK
+   HjJ+we3qp5eW9waH/TldRyj11Tqq6il4Z2QtGolS1gyyT+WxwUq7sc+C/
+   sWOjOV2K9inKQnGOboe5Q5tLHAHxPe7S5marGQVFI110tSRowD2nrrfDU
+   FTVOWwg6sWlo9eOD0jETw+z1k7KJiCJGSXcHllcSX5meJIgegZymgAhBp
+   Ld/hlk0wLk1x7dyGrzjtrmISiGCwE1aiHlXO3EkDPlX8OTOih7xAI6UtW
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10773"; a="345489480"
+X-IronPort-AV: E=McAfee;i="6600,9927,10773"; a="363372705"
 X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
-   d="scan'208";a="345489480"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2023 03:50:55 -0700
+   d="scan'208";a="363372705"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2023 04:45:21 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10773"; a="813274237"
+X-IronPort-AV: E=McAfee;i="6600,9927,10773"; a="969856460"
 X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
-   d="scan'208";a="813274237"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Jul 2023 03:50:49 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qLLoU-00ALzI-2u;
-        Mon, 17 Jul 2023 13:50:46 +0300
-Date:   Mon, 17 Jul 2023 13:50:46 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        David Gow <davidgow@google.com>,
-        Daniel Latypov <dlatypov@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Brendan Higgins <brendan.higgins@linux.dev>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v2 1/1] kernel.h: Split out COUNT_ARGS() and
- CONCATENATE() to args.h
-Message-ID: <ZLUdBka2tldmBqaL@smile.fi.intel.com>
-References: <20230714142237.21836-1-andriy.shevchenko@linux.intel.com>
- <20230714115542.b5373a8dc80ba996338ee753@linux-foundation.org>
+   d="scan'208";a="969856460"
+Received: from dev2 (HELO DEV2.igk.intel.com) ([10.237.148.94])
+  by fmsmga006.fm.intel.com with ESMTP; 17 Jul 2023 04:45:18 -0700
+From:   =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+Subject: [PATCH v4 00/15] PCI: Define Intel PCI IDs and use them in drivers
+Date:   Mon, 17 Jul 2023 13:44:56 +0200
+Message-Id: <20230717114511.484999-1-amadeuszx.slawinski@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230714115542.b5373a8dc80ba996338ee753@linux-foundation.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,27 +69,87 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 14, 2023 at 11:55:42AM -0700, Andrew Morton wrote:
-> On Fri, 14 Jul 2023 17:22:37 +0300 Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > kernel.h is being used as a dump for all kinds of stuff for a long time.
-> > The COUNT_ARGS() and CONCATENATE() macros may be used in some places
-> > without need of the full kernel.h dependency train with it.
-> > 
-> > Here is the attempt on cleaning it up by splitting out these macros().
-> > 
-> > While at it, include new header where it's being used and drop custom
-> > implementation of these macros and document how it works.
-> 
-> This blows up my x86_64 allmodconfig build, starting with
+PCI IDs for Intel HDA are duplicated across quite a few drivers, due to
+various configurations and historical reasons. Currently almost all uses
+of HDA PCI IDs have corresponding comment telling which platform it is.
+Additionally there are some inconsistencies between drivers about which
+ID corresponds to which device.
 
-Oh, don't know how I missed to grep for that.
-Thank you, now I'm reproducing this on my side.
-I think I will split this to a few patches in v3,
-so we can see better if anything happens.
+Simplify things, by adding PCI IDs to global header and make use of them
+in drivers. This allows for removal of comments by having IDs themselves
+being self explanatory. Additionally it allows for removal of existing
+inconsistencies by having one source of truth.
 
+Changes from v3:
+ - Fix double space in commit message title (Ilpo)
+ - Comment ACPI/PCI ID handling in Atom SST driver (Andy)
+ - Rebased once again and used --base this time (Andy)
+
+Changes from v2:
+ - Change CHV to BSW (Andy)
+ - Fix incorrectly rebased patches (Andy)
+ - Fix commit message and add suggestions from Andy to SST patch (Andy)
+ - Rebased on top of Linus tree commit: 4b810bf037e5
+
+Changes from v1:
+ - Remove BXT-T PCI ID as it is not released (Andy)
+ - Reorder macros to start from pci_match_id() (Andy)
+ - Add comment about BXT->APL name change in commit messages (Andy)
+ - Use SST as part of macro name for DSP only devices (Andy)
+ - Add PCI IDs for all SST combinations (Andy)
+
+Changes from RFC:
+ - Sort Intel PCI IDs before adding new ones
+ - Fix ordering of new PCI IDs (Andy)
+ - Define all used Intel IDs (Andy)
+ - Add macros for controller type detection (Andy/Bjorn)
+ - Add set of patches changing to use above macro (Andy/Bjorn)
+ - Use PCI_DEVICE_DATA for Intel IDs in sound/pci/hda/hda_intel.c (Andy)
+ - Commit message wording (Andy)
+ - Remove unnecessary tabs (Andy)
+
+Amadeusz Sławiński (15):
+  PCI: Sort Intel PCI IDs by number
+  PCI: Add Intel Audio DSP devices to pci_ids.h
+  ASoC: SOF: Remove unused Broxton PCI ID
+  ALSA: Remove unused Broxton PCI ID
+  ALSA: hda: Add controller matching macros
+  ALSA: hda: Use global PCI match macro
+  ALSA: hda/i915: Use global PCI match macro
+  ASoC: Intel: Skylake: Use global PCI match macro
+  ALSA: intel-dsp-config: Convert to PCI device IDs defines
+  ALSA: hda: Convert to PCI device IDs defines
+  ASoC: Intel: avs: Convert to PCI device IDs defines
+  ASoC: Intel: avs: Convert to PCI device IDs defines
+  ASoC: Intel: Skylake: Convert to PCI device IDs defines
+  ASoC: SOF: Intel: Convert to PCI device IDs defines
+  ASoC: Intel: sst: Convert to PCI device IDs defines
+
+ include/linux/pci_ids.h                | 105 +++++--
+ include/sound/hda_codec.h              |   3 -
+ include/sound/hdaudio.h                |  26 ++
+ sound/hda/hdac_i915.c                  |   7 +-
+ sound/hda/intel-dsp-config.c           | 124 ++++----
+ sound/pci/hda/hda_intel.c              | 373 ++++++++++---------------
+ sound/soc/intel/atom/sst/sst.c         |  14 +-
+ sound/soc/intel/atom/sst/sst.h         |   7 +-
+ sound/soc/intel/atom/sst/sst_pci.c     |   4 +-
+ sound/soc/intel/avs/board_selection.c  |  10 +-
+ sound/soc/intel/avs/core.c             |  16 +-
+ sound/soc/intel/skylake/skl-messages.c |  16 +-
+ sound/soc/intel/skylake/skl-pcm.c      |   3 +-
+ sound/soc/intel/skylake/skl.c          |  36 +--
+ sound/soc/sof/intel/pci-apl.c          |   8 +-
+ sound/soc/sof/intel/pci-cnl.c          |  15 +-
+ sound/soc/sof/intel/pci-icl.c          |  12 +-
+ sound/soc/sof/intel/pci-mtl.c          |   3 +-
+ sound/soc/sof/intel/pci-skl.c          |   6 +-
+ sound/soc/sof/intel/pci-tgl.c          |  45 +--
+ sound/soc/sof/intel/pci-tng.c          |   3 +-
+ 21 files changed, 391 insertions(+), 445 deletions(-)
+
+
+base-commit: fdf0eaf11452d72945af31804e2a1048ee1b574c
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
