@@ -2,70 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42B79757AF8
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jul 2023 13:54:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B831A757BD6
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jul 2023 14:31:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230482AbjGRLyi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jul 2023 07:54:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58304 "EHLO
+        id S231452AbjGRMbJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jul 2023 08:31:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230457AbjGRLyi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jul 2023 07:54:38 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D4CD18E
-        for <linux-pci@vger.kernel.org>; Tue, 18 Jul 2023 04:54:37 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1b9cdef8619so34644065ad.0
-        for <linux-pci@vger.kernel.org>; Tue, 18 Jul 2023 04:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689681276; x=1692273276;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qAbXWHOXyFDKHVxruYWm3jD0eZO0+0Z+8kud6jIU9tk=;
-        b=AFcXpzXFi26zgMPCAx6DdEqgI+b/QNahrDEJ8N1zyzF4Bv1kONYqLBMCN5F7o7UlwM
-         CKLm3LCVercKZITgQ9JCJUKwtchpt2hDl0Sy7MjTXqd2CelbngPXruyl2rusIYWqDNiY
-         llKXIHFYkjTbxU4jnS5YZXER6rwcHN3PxjU7eHN0kx8lnL5s0s4JiLvRRT2SL3moyAge
-         BIGADE7Xe/e3eFZQWEIb0zz486oCWUOLBQTW/TJ6TUdx7VT9JUcT34+Xz5yj1V+yjFzT
-         rfH/+Eb6sDpwk85JyVfu5uBHFbmreY/lR0WOkzXUjihjkSIIneqePGYWOBdGaGoDNy6x
-         zmnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689681276; x=1692273276;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qAbXWHOXyFDKHVxruYWm3jD0eZO0+0Z+8kud6jIU9tk=;
-        b=laVCjCduY7A3UQHgTc4zoeqF7Qnx2cxY64xQazC5K0WsvNnaOgYOwGEzycvmhxk5wp
-         sJYMsgPQVtI5u1XcqPlng+qEjRie+EoutYbDTM4nRSsgBSNDmGM5Zve9HW88wspeXBeJ
-         IOfhOTwvVaW1r2Gx9X2E8EYBcRvHdNUJYIasQX2VhJsMPM5OMd6pefox8IFksdE510ua
-         xad0ld2DA7tUbCGhpXEWxfh5vUnrCTwBALQTMRwnqWgTxGtuEmYJdQNyFtFPsDRcYsRa
-         HQG8cm1dGXmfd4rWcbXkr9c0/JRbJn8dm+DOS9AHY/5i3IakzK7ezJa9BzFkNKKnepE7
-         QTaQ==
-X-Gm-Message-State: ABy/qLbMr9GcIHRTyrb2j2CW2HLYj1965w92R7uVpfyfwABPyKSaTK7w
-        SH5Pj8J//NgzjPBc0nVsfMQ2
-X-Google-Smtp-Source: APBJJlEUcXTVWiyujmSqtqJfXDTAjfoEPqdfe9RmlKXcdfA+hAJ0riwkDqbYxbJ6t3mYiT9J2QowIw==
-X-Received: by 2002:a17:902:f693:b0:1ae:6cf0:94eb with SMTP id l19-20020a170902f69300b001ae6cf094ebmr2190077plg.5.1689681276519;
-        Tue, 18 Jul 2023 04:54:36 -0700 (PDT)
-Received: from thinkpad ([117.217.187.33])
-        by smtp.gmail.com with ESMTPSA id m15-20020a170902db0f00b001b02bd00c61sm1654451plx.237.2023.07.18.04.54.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jul 2023 04:54:36 -0700 (PDT)
-Date:   Tue, 18 Jul 2023 17:24:30 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        linux-pci@vger.kernel.org, Radu Rendec <rrendec@redhat.com>
-Subject: Re: Future of pci-mvebu
-Message-ID: <20230718115430.GE4771@thinkpad>
-References: <20230717220317.q7hgtpppvruxiapx@pali>
- <20230718111952.GA475778@bhelgaas>
- <20230718115052.GD4771@thinkpad>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        with ESMTP id S231420AbjGRMbH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jul 2023 08:31:07 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FACF10E6;
+        Tue, 18 Jul 2023 05:31:06 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id F40C22195A;
+        Tue, 18 Jul 2023 12:31:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1689683465; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KbjvdsHsS1PmNV4JGwm/IUUOXq5JvVmOTqBck+EzJEk=;
+        b=RymDNfSaGPwdSqtX2PwhA7GLLqrSo7DFLn8fHZrcCEzTV4W0ZDaLLD+PJ1FRHPXu5SMgGc
+        nCt9BxL8UUn0v7vXkgWrRRGXhKvEMpKGEpZhbTzb4J41+Iy1tapHlLc4WgIvZLfYjgCvd4
+        UxZ0GdERj5YY6gJk8lQL9178OX7pnZk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1689683465;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KbjvdsHsS1PmNV4JGwm/IUUOXq5JvVmOTqBck+EzJEk=;
+        b=uLYybcIKIBzGtKobmZyQ05Z9kjWOjiLzlEKIt6RmL5oXEsuCP67rph5FANpRa2tXuOmTyU
+        l4Wi0hxzHCF52gDw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AEE8F134B0;
+        Tue, 18 Jul 2023 12:31:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id sCHNKQiGtmQUSAAAMHmgww
+        (envelope-from <tiwai@suse.de>); Tue, 18 Jul 2023 12:31:04 +0000
+Date:   Tue, 18 Jul 2023 14:31:04 +0200
+Message-ID: <87351lo0zb.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Amadeusz =?ISO-8859-2?Q?S=B3awi=F1ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v4 00/15] PCI: Define Intel PCI IDs and use them in drivers
+In-Reply-To: <20230717114511.484999-1-amadeuszx.slawinski@linux.intel.com>
+References: <20230717114511.484999-1-amadeuszx.slawinski@linux.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-2
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230718115052.GD4771@thinkpad>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
@@ -76,43 +80,73 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 18, 2023 at 05:21:01PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Jul 18, 2023 at 06:19:52AM -0500, Bjorn Helgaas wrote:
-> > [+cc Radu]
-> > 
-> > On Tue, Jul 18, 2023 at 12:03:17AM +0200, Pali Rohár wrote:
-> > > Hello, I have just one question. What do you want to do with pci-mvebu
-> > > driver? It is already marked as broken for 3 kernel releases and I do
-> > > not see any progress from anybody (and you rejected my fixes). How long
-> > > do you want it to have marked as broken?
-> > 
-> > I don't think "depends on BROKEN" necessarily means that we plan to
-> > remove the driver.  I think it just means that it's currently broken,
-> > but we hope to fix it eventually.
-> > 
-> > I think the problem here is the regular vs chained interrupt handlers,
-> > right?  Radu has been looking at that recently, too, so maybe we can
-> > have another go at it.
-> > 
+On Mon, 17 Jul 2023 13:44:56 +0200,
+Amadeusz S�awi�ski wrote:
 > 
-> We (Linaro and Redhat) had a discussion a while ago on this topic and I just got
-> pointed to Radu's series. So yes, we should instead work on that direction
-> instead of driver hacks which brings maintainers disagreement.
+> PCI IDs for Intel HDA are duplicated across quite a few drivers, due to
+> various configurations and historical reasons. Currently almost all uses
+> of HDA PCI IDs have corresponding comment telling which platform it is.
+> Additionally there are some inconsistencies between drivers about which
+> ID corresponds to which device.
 > 
-
-FYI: These are the two series/patches that I got pointed to:
-
-https://lore.kernel.org/all/20230530214550.864894-1-rrendec@redhat.com/
-https://lore.kernel.org/lkml/20230629183019.1992819-1-rrendec@redhat.com/
-
-- Mani
-
-> - Mani
+> Simplify things, by adding PCI IDs to global header and make use of them
+> in drivers. This allows for removal of comments by having IDs themselves
+> being self explanatory. Additionally it allows for removal of existing
+> inconsistencies by having one source of truth.
 > 
-> > Bjorn
+> Changes from v3:
+>  - Fix double space in commit message title (Ilpo)
+>  - Comment ACPI/PCI ID handling in Atom SST driver (Andy)
+>  - Rebased once again and used --base this time (Andy)
 > 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+> Changes from v2:
+>  - Change CHV to BSW (Andy)
+>  - Fix incorrectly rebased patches (Andy)
+>  - Fix commit message and add suggestions from Andy to SST patch (Andy)
+>  - Rebased on top of Linus tree commit: 4b810bf037e5
+> 
+> Changes from v1:
+>  - Remove BXT-T PCI ID as it is not released (Andy)
+>  - Reorder macros to start from pci_match_id() (Andy)
+>  - Add comment about BXT->APL name change in commit messages (Andy)
+>  - Use SST as part of macro name for DSP only devices (Andy)
+>  - Add PCI IDs for all SST combinations (Andy)
+> 
+> Changes from RFC:
+>  - Sort Intel PCI IDs before adding new ones
+>  - Fix ordering of new PCI IDs (Andy)
+>  - Define all used Intel IDs (Andy)
+>  - Add macros for controller type detection (Andy/Bjorn)
+>  - Add set of patches changing to use above macro (Andy/Bjorn)
+>  - Use PCI_DEVICE_DATA for Intel IDs in sound/pci/hda/hda_intel.c (Andy)
+>  - Commit message wording (Andy)
+>  - Remove unnecessary tabs (Andy)
+> 
+> Amadeusz S�awi�ski (15):
+>   PCI: Sort Intel PCI IDs by number
+>   PCI: Add Intel Audio DSP devices to pci_ids.h
+>   ASoC: SOF: Remove unused Broxton PCI ID
+>   ALSA: Remove unused Broxton PCI ID
+>   ALSA: hda: Add controller matching macros
+>   ALSA: hda: Use global PCI match macro
+>   ALSA: hda/i915: Use global PCI match macro
+>   ASoC: Intel: Skylake: Use global PCI match macro
+>   ALSA: intel-dsp-config: Convert to PCI device IDs defines
+>   ALSA: hda: Convert to PCI device IDs defines
+>   ASoC: Intel: avs: Convert to PCI device IDs defines
+>   ASoC: Intel: avs: Convert to PCI device IDs defines
+>   ASoC: Intel: Skylake: Convert to PCI device IDs defines
+>   ASoC: SOF: Intel: Convert to PCI device IDs defines
+>   ASoC: Intel: sst: Convert to PCI device IDs defines
 
--- 
-மணிவண்ணன் சதாசிவம்
+Now applied all to sound.git tree, merged to for-next branch.
+
+I pushed a signed tag hda-pci-ids including those (based on 6.5-rc2).
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/hda-pci-ids
+
+Feel free to merge to other trees.
+
+
+thanks,
+
+Takashi
