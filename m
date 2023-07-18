@@ -2,119 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 252B7758455
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jul 2023 20:15:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E07997584AD
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jul 2023 20:23:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229531AbjGRSPi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jul 2023 14:15:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51342 "EHLO
+        id S229719AbjGRSXO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jul 2023 14:23:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbjGRSPg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jul 2023 14:15:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B8E10B;
-        Tue, 18 Jul 2023 11:15:34 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CA25F616A9;
-        Tue, 18 Jul 2023 18:15:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AC62C433C9;
-        Tue, 18 Jul 2023 18:15:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689704133;
-        bh=kHxVNW1fF7PzuKK1ys+0NZi4M8XowaLr/7P8gkpdlJI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ORusedm981Yj/+87SN8Dfy42m31DyCLpq9HqWv4ho+Z3KBXkCG5zYt1xECLY1h9UQ
-         FK8vM0+EOYl5JwIpVu6RsM/AW4ce1jHotCKLzfgoHQA5B0jwIuuLBO+20iCwv6yRBB
-         xEHN+GcJVpJsJ2xIOl9HVkaf5Q+lZWrS240/Pm8AYISW3D6gXZsNhNFT8y+hOOBBau
-         4ZFn3HOxn1BW0KJ+rk7XjsQ/UVxw10DAtsJyjQdzwivZXy2vkJZYZghTLZEONKu5yL
-         f6HbAnlhAW7VKw0PlwjWKZVskPOIKLloGmkTcS1tUVN7GMWjs+7h9Ca83jjkNCGDxT
-         TbK6CaPd77Ysg==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2b703d7ed3aso94633341fa.1;
-        Tue, 18 Jul 2023 11:15:33 -0700 (PDT)
-X-Gm-Message-State: ABy/qLZ1xDyG+BZSL9+Y0Zvg6B1XIfcRf2pai3q0M6ISSQ+MD2GS8+9K
-        yVCDPhMP7+40Pbv1owLz51/1Flr3TXZIAYuSGw==
-X-Google-Smtp-Source: APBJJlETguQ1GeiGzi5H2NtBXJoWqk6KyqjpW8Bc6IS6lJOA4xgoNinovssDBzEvIoFur6Atchxk6+cTA5VSi5CZrA8=
-X-Received: by 2002:a2e:9901:0:b0:2b8:6f78:ffa0 with SMTP id
- v1-20020a2e9901000000b002b86f78ffa0mr7549480lji.18.1689704131164; Tue, 18 Jul
- 2023 11:15:31 -0700 (PDT)
+        with ESMTP id S229853AbjGRSXA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jul 2023 14:23:00 -0400
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2057.outbound.protection.outlook.com [40.107.22.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DBDB1FF7;
+        Tue, 18 Jul 2023 11:22:36 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MJ28Q6mhZYpYjeN1TW+ufBHWRm8fAE0PCq72U3M20fDLJeo4VG4NQReYR8HO5l/f9A6ncCjniEBMgfuntf6dbgP+3JBFfb62f8Bwc/SZTvkVGItwexNoGCeakEbiDI/SrA/7bNmibhOOuqCidThNkrLchgHTgq919tcjJuygtWMGNdgh4wS4Ff9xjRwfYEM85Ds+klUn6+CdzlYXcicxk4mIpeBbaKG3kfOGxrdsCMXsNLnscWBpZZ6gQab1n287fHh/xei8bVLev4NQnNDWmyz8pBeb+FZsPNl2m+aHzKCGJuydC5YT0gGRMUtTx/Humk1kZrgPffKjqzHAMrUGBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pOxthBqQqVbNb8u4I3azKid/wHlYPOAu6jllJjdkvPk=;
+ b=Xp8L1XjIpMmasb1bLQ8DgDRq3uXjHa7hatRtVCfpJ+Gh3yZt373/qaKe390t0ezlhUJhJlADy//2WNESrVDNTmgQqj4vkH8OunGEuehWeV83w5tZUSBDPcokFdt47GA44fbcT/tbbgyzIm+p2Srhk2ljE6GBvpaBr+Fw643rUGkTNl+KMHMigc9+ENqIemHy4JSptX4XiOIoS60VYAjzsVn2ZMEuIwXDN6NWxGJWPogQ3+gpD0dWXNIrtz+jYyioDk1yo0JqperqqZezvTTIco6PhDjQSs9RLF2TOTsCyZskDNOK7kyE3TRhtWgGk6+Pwl0IFMiwN+AwdhSYQaWTtQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pOxthBqQqVbNb8u4I3azKid/wHlYPOAu6jllJjdkvPk=;
+ b=aQRcW/o9ZrRyO7gwSbFKUImF+t3xSmLIuuzkzKNrb+OIGVY93yCgwBiszuTd2/0EA7avB1HrbLdZKnzaie5qVD0FiNIoWgPWZdspMsJSM4rL+BDoA9pxgSEu/AmOZgbi1Ovk1rU1LsllLEvwI6tbb8/wIfvcgUgTk4ptkc2hG2g=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by PAXPR04MB9572.eurprd04.prod.outlook.com (2603:10a6:102:24f::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.32; Tue, 18 Jul
+ 2023 18:22:02 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::6cc2:14b2:ca51:6c0]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::6cc2:14b2:ca51:6c0%4]) with mapi id 15.20.6588.031; Tue, 18 Jul 2023
+ 18:22:02 +0000
+From:   Frank Li <Frank.Li@nxp.com>
+To:     mani@kernel.org
+Cc:     Frank.Li@nxp.com, bhelgaas@google.com, imx@lists.linux.dev,
+        kw@linux.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, lpieralisi@kernel.org,
+        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, robh@kernel.org,
+        roy.zang@nxp.com
+Subject: [PATCH v2 1/2] PCI: layerscape: Add support for Link down notification
+Date:   Tue, 18 Jul 2023 14:21:41 -0400
+Message-Id: <20230718182142.1864070-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR13CA0049.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c2::24) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 MIME-Version: 1.0
-References: <1688059190-4225-3-git-send-email-lizhi.hou@amd.com>
- <20230629225631.GA446944@bhelgaas> <20230629235226.GA92592-robh@kernel.org> <9f39fc3d-ae40-e5b1-8d40-8c27fc4e1022@amd.com>
-In-Reply-To: <9f39fc3d-ae40-e5b1-8d40-8c27fc4e1022@amd.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 18 Jul 2023 12:15:18 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLzGted2tYHM7uKZRYDHypz4P6KMXGDuYLgpYsJcUyU8Q@mail.gmail.com>
-Message-ID: <CAL_JsqLzGted2tYHM7uKZRYDHypz4P6KMXGDuYLgpYsJcUyU8Q@mail.gmail.com>
-Subject: Re: [PATCH V10 2/5] PCI: Create device tree node for bridge
-To:     Lizhi Hou <lizhi.hou@amd.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        max.zhen@amd.com, sonal.santan@amd.com,
-        stefano.stabellini@xilinx.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|PAXPR04MB9572:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8246d3d0-da16-42c4-b9eb-08db87bbe194
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0vKHZqIikRvIiD9iza32eD1me69brccCBUuGbvvYYm7XHkHN/CR0LJJg1AtHy56y5Bv7SBhUOrPT8LejfKlw/oEIK97p6yG4M1aermZXQjp8qorHfwezcxlb5/WCF2fJD9jQvYMEN8+WcTu02nGyw1Y/QsUt/3eOJ0U1xH2X8QCJYYQczWjhWW9kL0+uk7avp6hTSkjIdY/nr2QrDmtVIRUbdyf9PU20TVZb8izBTUswmBTLyxgsnXrd9z4f0l3Sn614+prGG6MtOS/vW1qeAhgxmKPhnzC/7oZR2a6uoxRYC9fKcPZ+wBbEy7Otri84b0gqA43FUX8hECKRb5hVQ5/tgZWwNmvtFCBK2AJo8YWA65wI654wzZ4ewhVVEWHRYyBs8HvHekTNFGdxT24SnOXcF3ZdOv1ljT1HUKkT0/AazEYpdmt/Y+1oG5teCUcDKX3RG89hLXQrYDdeM5B4b/eG6RfdrNwbT8KhkcAKAIF/IZL60UISwqHn0Lp0yj4E2M49U+Qloc+NQdunHBGHmm77PFixy8C4sbLkMNwDzkG5X2wkvESaMNSAAXkxg4RdxUH54lADEWwcAySEsC2RSS8mAi3YofLAzhGkmO9TieXlaydAj7vH5Owga74rxjEqk0IFucxEjdHtzADfYUQ9SZA7XUUzfLCqhH2I0KC/Ax4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(136003)(39860400002)(396003)(346002)(376002)(451199021)(1076003)(478600001)(52116002)(6486002)(6666004)(83380400001)(6506007)(186003)(26005)(6512007)(2906002)(15650500001)(4744005)(66556008)(6916009)(8936002)(7416002)(41300700001)(66946007)(4326008)(316002)(8676002)(5660300002)(38100700002)(38350700002)(66476007)(36756003)(86362001)(2616005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3ApmRD5HZphK/edl7x1Ct7SjVkX553i8kSHwim6m1RBOFq5n/ektB3C3AC9d?=
+ =?us-ascii?Q?bbda3iRV6qDgEON3Kru4wzpECmdDvcxduLS0ShfQAsxSHGFsIUUDP1uvADdz?=
+ =?us-ascii?Q?tRFXoiV/jFfKk3BD5c4jbOe82xbXBWB1FU69KY3XPQyzp8BLWlJ0Q0pHJcaD?=
+ =?us-ascii?Q?ALAeGnATMBgBpVessyWuXk1k2koiIHf62QtZiMRP44Kbc7KPsSWREaJ9Qsu9?=
+ =?us-ascii?Q?E1oflOdmIbHkoyonLl7zIIdOXhgM6qUx7SKOMk2tWxpTqxTSeUVA66CEwPEw?=
+ =?us-ascii?Q?MxiErgvEw3kYIja9DFMZhjwI5ROT76WYMzwb03hrfmEdD6IL5469FGTUOUdn?=
+ =?us-ascii?Q?W93UCjw0SYCLASUAQ3MC1FZ2zJbS00eCDg7+BRrbgnbNTIf6/8tRBzN4SQ7W?=
+ =?us-ascii?Q?SN8qKQDcBmq4HCNZ1xH83TWlDbMNOwkHB0KcUs3WC8zjhjQQopeAYRAH3/Po?=
+ =?us-ascii?Q?BwzmzHtEM9fxcOR4Elk3G/BBrbx3+NM+Sp2a2k0dy2e5ceUVHX3/H8BYD2fN?=
+ =?us-ascii?Q?L3MBzo3TXzr1usotJJUvI/Zt1qyX19SPe+BxvVq6XfLfwz6yJwRP3CKhMOiW?=
+ =?us-ascii?Q?elRLnshaCbx/v74iFcxPyhBEqQLTcSViMjJyTYVTFtcCoCh4UiYMg9AKzgVR?=
+ =?us-ascii?Q?9ROuhQgzb2aUrhrXvE86DNqB+mWbso+NO408muuv1y0gt4oje6Ntl6r69Joi?=
+ =?us-ascii?Q?c9h7NkIzoq+49tfQgFF8KuMYWmtZK2WANVYNCM/A31lrDHi0WbhukB4NPAvz?=
+ =?us-ascii?Q?v2b9m4yQO91g/EhrSZF9eEhtxd1SAEgUp5rK6wFRhDZ7fEPv3Ghw9n6k3mty?=
+ =?us-ascii?Q?yzNGpcl+oEFLMBven+X7+ly+xb/XlUGzyy1oDoDOQAYCASU+54B2fi8a3HmH?=
+ =?us-ascii?Q?sDx2gLHF8KGP2i3g86hHAR7ZzMhMAE8kWsD8sf99jQQqpt1XQzglG822Czx9?=
+ =?us-ascii?Q?zt7f0wiKRt+N3oxWw97GFuA9AjbnpK9yHgQVrqlDC4RN9em3ZHNzAfij5V1q?=
+ =?us-ascii?Q?1Omn6dkgtJblnZ3Up9d05iUNln5zO+muGiyqPzS6GZT8n/0KQh8GSq8F413C?=
+ =?us-ascii?Q?LTl+G3KjCqXN5thBx8dQQx5ri78zcfpKeZy/RMsJ4QoTbAcLUiYQukuafNYc?=
+ =?us-ascii?Q?+0+zEHDJS3gsS9sgWhbSRQ8R8yxdgXqUa3fUs6OS5R5PgXq++EKnxgS522Ie?=
+ =?us-ascii?Q?JCVAD1+ICxmPmFm1GHL+sa2LdPAbEZWyixUvPhsI3OfLkH1A3JECrmZD0yo6?=
+ =?us-ascii?Q?IyON5X06TdkMm+f9C1SOBxqsBQWxP58LJOzBIDVJCTgIVUe2la/7Enxb4GO5?=
+ =?us-ascii?Q?VJvzLLFVaROPEf4mEw9Of8AorGQFbHT8zMd1frum6dafr2jDkqOhjh5MiMI6?=
+ =?us-ascii?Q?zQTAi6vbRWOr6wKuz5FXYAB1xfUM0uthy6/grawT6jFwgyo7d1oEdH4/joV0?=
+ =?us-ascii?Q?A82axOWvc/4k4XKSMw3bw4hxWJoMcRe3qfxqH72qeerRqPTcyG4iISG1wJ2R?=
+ =?us-ascii?Q?RB6BFRLGSPo+xDnUApuz9ZPqGjgm3WYEimIfsLdSWeeg8zJJb9+BobW0S5It?=
+ =?us-ascii?Q?MquVfri4/mbgsgGNmVLZvWRy5lObzCmg6RcluLAR?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8246d3d0-da16-42c4-b9eb-08db87bbe194
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2023 18:22:01.9886
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: teRLqMPq3YbCQQniJw8BNoDd9dNPj1uXkflCOd7JW+3RBWULibPQdpfZdGNhoc6d0aAlQv9HOyfSDMqpkqZzZw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9572
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 30, 2023 at 12:25=E2=80=AFPM Lizhi Hou <lizhi.hou@amd.com> wrot=
-e:
->
->
-> On 6/29/23 16:52, Rob Herring wrote:
-> >>> +                   rp[i].child_addr[0] =3D j;
-> >>> +   ret =3D of_changeset_add_empty_prop(ocs, np, "dynamic");
-> >> It seems slightly confusing to use a "dynamic" property here when we
-> >> also have the OF_DYNAMIC dynamic flag above.  I think they have
-> >> different meanings, don't they?
-> > Hum, what's the property for? It's new in this version. Any DT property
-> > needs to be documented, but I don't see why we need it.
->
-> This is mentioned in my previous reply for V9
->
-> https://lore.kernel.org/lkml/af9b6bb3-a98d-4fb6-b51e-b48bca61dada@amd.com=
-/
->
-> As we discussed before, "interrupt-map" was intended to be used here.
->
-> And after thinking it more, it may not work for the cases where ppnode
->
-> is not dynamically generated and it does not have "interrupt-map".
->
-> For example the IBM ppc system, its device tree has nodes for pci bridge
->
-> and it does not have "interrupt-map".
+Add support to pass Link down notification to Endpoint function driver
+so that the LINK_DOWN event can be processed by the function.
 
-How do you know? I ask because usually the only way I have visibility
-there is when I break something. In traditional OpenFirmware, which
-IBM PPC is, all PCI devices have a DT node because it's the firmware
-telling the OS "these are the devices I discovered and this is how I
-configured them".
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Change from v1 to v2
+ - move pci_epc_linkdown() after dev_dbg()
 
-> Based on previous discussions, OF_DYNAMIC should not be used here.
+ drivers/pci/controller/dwc/pci-layerscape-ep.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-For the same reasons, I don't think the behavior should change based
-on being dynamic. Now maybe the behavior when it's an ACPI system with
-DT overlays has to change, but that's a problem for later. I don't yet
-know if we'd handle that here somehow or elsewhere so that this node
-looks like a normal DT system.
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index de4c1758a6c3..e0969ff2ddf7 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -89,6 +89,7 @@ static irqreturn_t ls_pcie_ep_event_handler(int irq, void *dev_id)
+ 		dev_dbg(pci->dev, "Link up\n");
+ 	} else if (val & PEX_PF0_PME_MES_DR_LDD) {
+ 		dev_dbg(pci->dev, "Link down\n");
++		pci_epc_linkdown(pci->ep.epc);
+ 	} else if (val & PEX_PF0_PME_MES_DR_HRD) {
+ 		dev_dbg(pci->dev, "Hot reset\n");
+ 	}
+-- 
+2.34.1
 
-This should all work the same whether we've generated the nodes or
-they were already present in the FDT when we booted.
-
-> So I think adding "dynamic" might be a way to identify the dynamically
->
-> added node. Or we can introduce a new flag e.g OF_IRQ_SWIZZLING.
-
-I hope not. The flags tend to be hacks.
-
-Rob
