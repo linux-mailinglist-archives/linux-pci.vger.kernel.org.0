@@ -2,97 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 326B67573E4
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jul 2023 08:16:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CD64757798
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jul 2023 11:16:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231463AbjGRGQu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jul 2023 02:16:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58266 "EHLO
+        id S231665AbjGRJQQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jul 2023 05:16:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231332AbjGRGQc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jul 2023 02:16:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB48F2103;
-        Mon, 17 Jul 2023 23:15:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 31BFE6146C;
-        Tue, 18 Jul 2023 06:15:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A470C433C8;
-        Tue, 18 Jul 2023 06:15:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689660944;
-        bh=cUbtQFwtfNqfULDCUbv0nOM8BYXs2LTWrJLdZvxDQA8=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=KJMbAtyc6I4UHt7JFBVCvT14hZFxEuSn4EUlSOeJYjfmbE5T15HppBRoUbJax/Vtm
-         869HTzQvKifHDgR2O6mXMZPwr9FNPI53GvIY3GS2y1ZXAk84W5q/JxvSiYhQPN6N/4
-         2pdCEkamrgQOIO6ksvmJ1MVA4wNMZ+QvYssZwsUmSTEZCR6yiSJq7yut8GDT5tNhUZ
-         hZsMUuT+RqvRZX4kJfQYgJn9iFHaasyZU3hPQPOsoVupT7pDyG2vOzZ7Vv9UMqPMBq
-         /POpr7jpl0bocB0WIjrTURwiWpsuZMWyF/GB8IzpM7p8HpMfIDZSJ6on4t0eynysl6
-         RRyyt8RJGyA1A==
-From:   Vinod Koul <vkoul@kernel.org>
-To:     linux-phy@lists.infradead.org, linux-rockchip@lists.infradead.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        with ESMTP id S231593AbjGRJQK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jul 2023 05:16:10 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 877DD171B
+        for <linux-pci@vger.kernel.org>; Tue, 18 Jul 2023 02:16:09 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-4f4b2bc1565so8937798e87.2
+        for <linux-pci@vger.kernel.org>; Tue, 18 Jul 2023 02:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689671768; x=1692263768;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1ArVM8hO5JmqawYj0bAdi35rTjPsLnVXsndSgTl9bpA=;
+        b=bDAOBbnEsu8XzXY6Qr9rFqFeguyvLdnAWlkhI+TFQkNYOP1B8tboggUAHVKCsgrd+F
+         ze+iedigN4Xr41ABn6jlbAmHMKX8Zv4IP5jMvYtEVWmN7Bd9e7FimswjLlSdv7eRpZvZ
+         bes7cZxSg7ZsSjXLHZ4A5ETGHk1pvus4yhJtq1c2mTVwGQ1uHt9XKFmQT9IPlQRFvr6x
+         9glNHyyB494PBA6b1VGcfU7qAZdV+2VF84TeVtaOjmQx6+ycDYdiBeleklFrdFZtu4WI
+         g+YRdES/EgAmJaLFH2W7X43k9VZEsnrnIJl3m2zEStsOHACWueEegpu0J2D3Ybgfcv25
+         /lWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689671768; x=1692263768;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1ArVM8hO5JmqawYj0bAdi35rTjPsLnVXsndSgTl9bpA=;
+        b=iY9B+uStYjFpEH321jJXF2tfGb84DFX9rVfQ9LWmCI/WNQ10RUUkCSx54bhT/HDGyP
+         sm4gKDRotbRU6nGhTNAKJa/alUltv0QjJ9nUV5Rgyks9HoFfOS7zLx+/4MnycijTqazZ
+         Q3a7+ZHS7eae7Sty9gqIWkFP3cBh1pe/lBeIWxLliZkHBrnz2ia3PLLA/3zt14vImxb+
+         zJr5phUK3BDfFznOu4NaibV1/57q7Y5RiEGufVrzGibViGBuvbd+oNyl/sg+FhpJEIiR
+         rKq+rbpZP5zCnS1hyIzmhIRtyS0I5jsUYsr+ozXuQx/zStWB1APFLNmudRfK47jsu0oB
+         RMJg==
+X-Gm-Message-State: ABy/qLZ4RteNplxhaP3vGMcg/kU0QTo6T5/X3X+QiFIAYc8JKfXrbmX1
+        v3kCJzz14TRzVIPyDtrDQLgt5QudbF4=
+X-Google-Smtp-Source: APBJJlFWdyunRCXhL+SaA4OC9Q8/h0ko7xnGI/QFkqoV3ssjSMQvQ+1kijJLAn03S0LYMrH9pOSDbw==
+X-Received: by 2002:ac2:4e0d:0:b0:4f8:58ae:8ea8 with SMTP id e13-20020ac24e0d000000b004f858ae8ea8mr1256472lfr.58.1689671767520;
+        Tue, 18 Jul 2023 02:16:07 -0700 (PDT)
+Received: from mobilestation ([85.249.21.35])
+        by smtp.gmail.com with ESMTPSA id g18-20020ac25392000000b004fa52552c7csm341980lfh.151.2023.07.18.02.16.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jul 2023 02:16:07 -0700 (PDT)
+Date:   Tue, 18 Jul 2023 12:16:04 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>, John Clark <inindev@gmail.com>,
-        Qu Wenruo <wqu@suse.com>, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kernel@collabora.com
-In-Reply-To: <20230717173512.65169-1-sebastian.reichel@collabora.com>
-References: <20230717173512.65169-1-sebastian.reichel@collabora.com>
-Subject: Re: (subset) [PATCH v2 0/2] RK3588 PCIe3 support
-Message-Id: <168966093703.340315.14184672794247667224.b4-ty@kernel.org>
-Date:   Tue, 18 Jul 2023 11:45:37 +0530
+        linux-pci@vger.kernel.org
+Subject: Re: Future of pci-mvebu
+Message-ID: <l3rqo422yn2mbf7qtkqk4ay2fz6jteygmahepvmleiyrxjoaw2@ptqtsl5s6mj6>
+References: <20230717220317.q7hgtpppvruxiapx@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.2
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230717220317.q7hgtpppvruxiapx@pali>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_SBL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+To += Mani
 
-On Mon, 17 Jul 2023 19:35:10 +0200, Sebastian Reichel wrote:
-> This adds PCIe v3 support for RK3588. The series depends on the PCIe
-> v2 series [0], since the the same binding is used. It has been tested
-> on Rockchip EVB1 and Radxa Rock 5B.
-> 
-> Note, that the PCIe3 PHY driver is currently missing bifurcation
-> support for RK3588. Thus after this series only PCIe3x4 is usable
-> (in aggregated x4 mode) without adding support for the PHY's
-> "rockchip,pcie30-phymode" DT property, which allows configuring
-> how the lanes are distributed. Aggregated 3x4 mode seems to be the
-> most common configuration. Both EVB1 and Rock 5B use it, so I
-> cannot test anything else anyways.
-> 
-> [...]
+* He is now supposed to watch for the DW PCIe drivers.
 
-Applied, thanks!
-
-[1/2] dt-bindings: phy: rockchip: add RK3588 PCIe v3 phy
-      commit: f66782cff479807ad7e98f0cf6a0c0babfe0159b
-
-Best regards,
--- 
-~Vinod
+On Tue, Jul 18, 2023 at 12:03:17AM +0200, Pali Rohár wrote:
+> Hello, I have just one question. What do you want to do with pci-mvebu
+> driver? It is already marked as broken for 3 kernel releases and I do
+> not see any progress from anybody (and you rejected my fixes). How long
+> do you want it to have marked as broken?
 
 
