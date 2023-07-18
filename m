@@ -2,232 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65A9F7580A4
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jul 2023 17:18:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 652397580B1
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jul 2023 17:21:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231959AbjGRPSf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jul 2023 11:18:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52212 "EHLO
+        id S233416AbjGRPVA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jul 2023 11:21:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231901AbjGRPSe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jul 2023 11:18:34 -0400
-X-Greylist: delayed 516 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 18 Jul 2023 08:18:31 PDT
-Received: from smtp.dudau.co.uk (dliviu.plus.com [80.229.23.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A3C68C0;
-        Tue, 18 Jul 2023 08:18:31 -0700 (PDT)
-Received: from mail.dudau.co.uk (bart.dudau.co.uk [192.168.14.2])
-        by smtp.dudau.co.uk (Postfix) with SMTP id 5774F41A7003;
-        Tue, 18 Jul 2023 16:09:53 +0100 (BST)
-Received: by mail.dudau.co.uk (sSMTP sendmail emulation); Tue, 18 Jul 2023 16:09:53 +0100
-Date:   Tue, 18 Jul 2023 16:09:53 +0100
-From:   Liviu Dudau <liviu@dudau.co.uk>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     linux-phy@lists.infradead.org, linux-rockchip@lists.infradead.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>, John Clark <inindev@gmail.com>,
-        Qu Wenruo <wqu@suse.com>, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v2 2/2] arm64: dts: rockchip: rk3588: add PCIe3 support
-Message-ID: <ZLarQUvUK3v3m6Cg@bart.dudau.co.uk>
-References: <20230717173512.65169-1-sebastian.reichel@collabora.com>
- <20230717173512.65169-3-sebastian.reichel@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230717173512.65169-3-sebastian.reichel@collabora.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S232955AbjGRPU7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jul 2023 11:20:59 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3865DC0;
+        Tue, 18 Jul 2023 08:20:58 -0700 (PDT)
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36IFI3JJ008296;
+        Tue, 18 Jul 2023 15:20:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=IscltNk2d68+/+s5NWyxpmimxpfYBboBnnaojrCojfo=;
+ b=LnyrTyVjvsBpNVOadzypkNfy3IGRRm/1oq9IB+eHn6c3ItwTA6tvFk54vuxVwSXuhmUt
+ YJOf5UO6GBwXzdOKzF1IuOsLswCzn0ziqtdpiaK08xTAY5uVtPZnIWBZS0nWk8UuJxKf
+ ysQSvAOuOz5FpbYzNohsMnZeOcceuA5MBB49u0DSyBJlQA5BF7TauxIE187c4iu1uYIs
+ lLRDYjn4UvRbWvjNBV//CIUS2tcF7aw9U2ZM8uFF8qf3qBcEYlq8Ki5moWaZB2W45LjR
+ RSiuTFG6bHaLgbZpo0kUvCEog2fdqlGF4gU22BDFcOOSibkjv5FlyK1b6Mhzzm0o12sh Zg== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rwnrrh7hg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Jul 2023 15:20:53 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 36IFKnLd026248;
+        Tue, 18 Jul 2023 15:20:49 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3rumhkb0g8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 18 Jul 2023 15:20:49 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36IFKnmr026055;
+        Tue, 18 Jul 2023 15:20:49 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-krichai-hyd.qualcomm.com [10.213.110.112])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 36IFKnjq025902;
+        Tue, 18 Jul 2023 15:20:49 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
+        id 59F6D4AF6; Tue, 18 Jul 2023 20:50:48 +0530 (+0530)
+From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
+        krzysztof.kozlowski@linaro.org,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: [PATCH v9 0/4] PCI: qcom: ep: Add basic interconnect support
+Date:   Tue, 18 Jul 2023 20:50:41 +0530
+Message-Id: <1689693645-28254-1-git-send-email-quic_krichai@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: aHL3nClpYAwCsjS0zwDqtNhZ6xv1hS1N
+X-Proofpoint-ORIG-GUID: aHL3nClpYAwCsjS0zwDqtNhZ6xv1hS1N
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-18_11,2023-07-18_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ malwarescore=0 suspectscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
+ mlxlogscore=517 priorityscore=1501 impostorscore=0 mlxscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
+ definitions=main-2307180141
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 17, 2023 at 07:35:12PM +0200, Sebastian Reichel wrote:
-> Add both PCIe3 controllers together with the shared PHY.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3588.dtsi | 120 +++++++++++++++++++++++
->  1 file changed, 120 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588.dtsi b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-> index 88d702575db2..8f210f002fac 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-> @@ -7,6 +7,11 @@
->  #include "rk3588-pinctrl.dtsi"
->  
->  / {
-> +	pcie30_phy_grf: syscon@fd5b8000 {
-> +		compatible = "rockchip,rk3588-pcie3-phy-grf", "syscon";
-> +		reg = <0x0 0xfd5b8000 0x0 0x10000>;
-> +	};
-> +
->  	pipe_phy1_grf: syscon@fd5c0000 {
->  		compatible = "rockchip,rk3588-pipe-phy-grf", "syscon";
->  		reg = <0x0 0xfd5c0000 0x0 0x100>;
+Add basic support for managing "pcie-mem" interconnect path by setting
+a low constraint before enabling clocks and updating it after the link
+is up based on link speed and width the device got enumerated.
 
-Hi Sebastian,
-
-What tree is based this on? Even after applying your PCIe2 series I don't have the above
-node so the patch doesn't apply to mainline.
-
-Best regards,
-Liviu
+changes from v8:
+	- Added cpu to pcie path in dtsi and in dtsi binding.
+changes from v7:
+        - setting icc bw to '0' in disable resources as suggested by mani.
+changes from v6:
+        - addressed the comments as suggested by mani.
+changes from v5:
+        - addressed the comments by mani.
+changes from v4:
+        - rebased with linux-next.
+        - Added comments as suggested by mani.
+        - removed the arm: dts: qcom: sdx55: Add interconnect path
+          as that patch is already applied.
+changes from v3:
+        - ran make DT_CHECKER_FLAGS=-m dt_binding_check and fixed
+         errors.
+        - Added macros in the qcom ep driver patch as suggested by Dmitry
+changes from v2:
+        - changed the logic for getting speed and width as suggested
+         by bjorn.
+        - fixed compilation errors.
 
 
-> @@ -80,6 +85,108 @@ i2s10_8ch: i2s@fde00000 {
->  		status = "disabled";
->  	};
->  
-> +	pcie3x4: pcie@fe150000 {
-> +		compatible = "rockchip,rk3588-pcie", "rockchip,rk3568-pcie";
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		bus-range = <0x00 0x0f>;
-> +		clocks = <&cru ACLK_PCIE_4L_MSTR>, <&cru ACLK_PCIE_4L_SLV>,
-> +			 <&cru ACLK_PCIE_4L_DBI>, <&cru PCLK_PCIE_4L>,
-> +			 <&cru CLK_PCIE_AUX0>, <&cru CLK_PCIE4L_PIPE>;
-> +		clock-names = "aclk_mst", "aclk_slv",
-> +			      "aclk_dbi", "pclk",
-> +			      "aux", "pipe";
-> +		device_type = "pci";
-> +		interrupts = <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH 0>,
-> +			     <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH 0>,
-> +			     <GIC_SPI 261 IRQ_TYPE_LEVEL_HIGH 0>,
-> +			     <GIC_SPI 260 IRQ_TYPE_LEVEL_HIGH 0>,
-> +			     <GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH 0>;
-> +		interrupt-names = "sys", "pmc", "msg", "legacy", "err";
-> +		#interrupt-cells = <1>;
-> +		interrupt-map-mask = <0 0 0 7>;
-> +		interrupt-map = <0 0 0 1 &pcie3x4_intc 0>,
-> +				<0 0 0 2 &pcie3x4_intc 1>,
-> +				<0 0 0 3 &pcie3x4_intc 2>,
-> +				<0 0 0 4 &pcie3x4_intc 3>;
-> +		linux,pci-domain = <0>;
-> +		max-link-speed = <3>;
-> +		msi-map = <0x0000 &its1 0x0000 0x1000>;
-> +		num-lanes = <4>;
-> +		phys = <&pcie30phy>;
-> +		phy-names = "pcie-phy";
-> +		power-domains = <&power RK3588_PD_PCIE>;
-> +		ranges = <0x01000000 0x0 0xf0100000 0x0 0xf0100000 0x0 0x00100000>,
-> +			 <0x02000000 0x0 0xf0200000 0x0 0xf0200000 0x0 0x00e00000>,
-> +			 <0x03000000 0x0 0x40000000 0x9 0x00000000 0x0 0x40000000>;
-> +		reg = <0xa 0x40000000 0x0 0x00400000>,
-> +		      <0x0 0xfe150000 0x0 0x00010000>,
-> +		      <0x0 0xf0000000 0x0 0x00100000>;
-> +		reg-names = "dbi", "apb", "config";
-> +		resets = <&cru SRST_PCIE0_POWER_UP>, <&cru SRST_P_PCIE0>;
-> +		reset-names = "pwr", "pipe";
-> +		status = "disabled";
-> +
-> +		pcie3x4_intc: legacy-interrupt-controller {
-> +			interrupt-controller;
-> +			#address-cells = <0>;
-> +			#interrupt-cells = <1>;
-> +			interrupt-parent = <&gic>;
-> +			interrupts = <GIC_SPI 260 IRQ_TYPE_EDGE_RISING 0>;
-> +		};
-> +	};
-> +
-> +	pcie3x2: pcie@fe160000 {
-> +		compatible = "rockchip,rk3588-pcie", "rockchip,rk3568-pcie";
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		bus-range = <0x10 0x1f>;
-> +		clocks = <&cru ACLK_PCIE_2L_MSTR>, <&cru ACLK_PCIE_2L_SLV>,
-> +			 <&cru ACLK_PCIE_2L_DBI>, <&cru PCLK_PCIE_2L>,
-> +			 <&cru CLK_PCIE_AUX1>, <&cru CLK_PCIE2L_PIPE>;
-> +		clock-names = "aclk_mst", "aclk_slv",
-> +			      "aclk_dbi", "pclk",
-> +			      "aux", "pipe";
-> +		device_type = "pci";
-> +		interrupts = <GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH 0>,
-> +			     <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH 0>,
-> +			     <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH 0>,
-> +			     <GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH 0>,
-> +			     <GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH 0>;
-> +		interrupt-names = "sys", "pmc", "msg", "legacy", "err";
-> +		#interrupt-cells = <1>;
-> +		interrupt-map-mask = <0 0 0 7>;
-> +		interrupt-map = <0 0 0 1 &pcie3x2_intc 0>,
-> +				<0 0 0 2 &pcie3x2_intc 1>,
-> +				<0 0 0 3 &pcie3x2_intc 2>,
-> +				<0 0 0 4 &pcie3x2_intc 3>;
-> +		linux,pci-domain = <1>;
-> +		max-link-speed = <3>;
-> +		msi-map = <0x1000 &its1 0x1000 0x1000>;
-> +		num-lanes = <2>;
-> +		phys = <&pcie30phy>;
-> +		phy-names = "pcie-phy";
-> +		power-domains = <&power RK3588_PD_PCIE>;
-> +		ranges = <0x01000000 0x0 0xf1100000 0x0 0xf1100000 0x0 0x00100000>,
-> +			 <0x02000000 0x0 0xf1200000 0x0 0xf1200000 0x0 0x00e00000>,
-> +			 <0x03000000 0x0 0x40000000 0x9 0x40000000 0x0 0x40000000>;
-> +		reg = <0xa 0x40400000 0x0 0x00400000>,
-> +		      <0x0 0xfe160000 0x0 0x00010000>,
-> +		      <0x0 0xf1000000 0x0 0x00100000>;
-> +		reg-names = "dbi", "apb", "config";
-> +		resets = <&cru SRST_PCIE1_POWER_UP>, <&cru SRST_P_PCIE1>;
-> +		reset-names = "pwr", "pipe";
-> +		status = "disabled";
-> +
-> +		pcie3x2_intc: legacy-interrupt-controller {
-> +			interrupt-controller;
-> +			#address-cells = <0>;
-> +			#interrupt-cells = <1>;
-> +			interrupt-parent = <&gic>;
-> +			interrupts = <GIC_SPI 255 IRQ_TYPE_EDGE_RISING 0>;
-> +		};
-> +	};
-> +
->  	pcie2x1l0: pcie@fe170000 {
->  		compatible = "rockchip,rk3588-pcie", "rockchip,rk3568-pcie";
->  		#address-cells = <3>;
-> @@ -218,4 +325,17 @@ combphy1_ps: phy@fee10000 {
->  		rockchip,pipe-phy-grf = <&pipe_phy1_grf>;
->  		status = "disabled";
->  	};
-> +
-> +	pcie30phy: phy@fee80000 {
-> +		compatible = "rockchip,rk3588-pcie3-phy";
-> +		reg = <0x0 0xfee80000 0x0 0x20000>;
-> +		#phy-cells = <0>;
-> +		clocks = <&cru PCLK_PCIE_COMBO_PIPE_PHY>;
-> +		clock-names = "pclk";
-> +		resets = <&cru SRST_PCIE30_PHY>;
-> +		reset-names = "phy";
-> +		rockchip,pipe-grf = <&php_grf>;
-> +		rockchip,phy-grf = <&pcie30_phy_grf>;
-> +		status = "disabled";
-> +	};
->  };
-> -- 
-> 2.40.1
-> 
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+Krishna chaitanya chundru (4):
+  dt-bindings: PCI: qcom: ep: Add interconnects path
+  arm: dts: qcom: sdx65: Add PCIe interconnect path
+  arm: dts: qcom: sdx55: Add CPU PCIe interconnect path
+  PCI: qcom-ep: Add ICC bandwidth voting support
+
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 15 +++++
+ arch/arm/boot/dts/qcom/qcom-sdx55.dtsi             |  5 +-
+ arch/arm/boot/dts/qcom/qcom-sdx65.dtsi             |  4 ++
+ drivers/pci/controller/dwc/pcie-qcom-ep.c          | 72 ++++++++++++++++++++++
+ 4 files changed, 94 insertions(+), 2 deletions(-)
 
 -- 
-Everyone who uses computers frequently has had, from time to time,
-a mad desire to attack the precocious abacus with an axe.
-       	   	      	     	  -- John D. Clark, Ignition!
+2.7.4
+
