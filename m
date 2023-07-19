@@ -2,35 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0D7A75A227
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jul 2023 00:44:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A55AE75A289
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jul 2023 00:54:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230269AbjGSWoz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jul 2023 18:44:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41266 "EHLO
+        id S231303AbjGSWyS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jul 2023 18:54:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230245AbjGSWox (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 18:44:53 -0400
-Received: from out-39.mta1.migadu.com (out-39.mta1.migadu.com [95.215.58.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2683F1FF9
-        for <linux-pci@vger.kernel.org>; Wed, 19 Jul 2023 15:44:52 -0700 (PDT)
-Message-ID: <74994ce2-c060-f662-9210-14d09a15162f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1689806688;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fjbO79xlLNloGHqzkmh/GrwE5dqq196RqzVZxz+HQuY=;
-        b=tyL+5EjVO88fUgTXUzZJvKY+JfMezNTNqLlky4Key7ELBF1/bJEXZwIzwfXEU5giFkbOHo
-        bs2sLXFvTbu5KRkClnah41uJLYUoPnho/GiocT6aPhwta72XhksZVZ/iUoXF/ZG9ZHo7Cc
-        K41KgUorxkZsDqez3UfEW48aM4qvmjI=
-Date:   Thu, 20 Jul 2023 06:44:29 +0800
+        with ESMTP id S231316AbjGSWyE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 18:54:04 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CC68326B3;
+        Wed, 19 Jul 2023 15:53:32 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8CxLOshabhkHHYHAA--.13769S3;
+        Thu, 20 Jul 2023 06:52:17 +0800 (CST)
+Received: from [10.20.42.43] (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxjiMJabhkXiA1AA--.40588S3;
+        Thu, 20 Jul 2023 06:52:17 +0800 (CST)
+Message-ID: <6f2faa2f-f91b-eaae-06bf-25367088645e@loongson.cn>
+Date:   Thu, 20 Jul 2023 06:51:53 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
 Subject: Re: [PATCH v3 4/9] PCI/VGA: Improve the default VGA device selection
-Content-Language: en-US
-To:     suijingfeng <suijingfeng@loongson.cn>,
-        Bjorn Helgaas <helgaas@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Sui Jingfeng <sui.jingfeng@linux.dev>
 Cc:     David Airlie <airlied@gmail.com>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         intel-gfx@lists.freedesktop.org, kvm@vger.kernel.org,
@@ -66,17 +63,32 @@ Cc:     David Airlie <airlied@gmail.com>, amd-gfx@lists.freedesktop.org,
         Yi Liu <yi.l.liu@intel.com>,
         Jani Nikula <jani.nikula@intel.com>
 References: <20230719193233.GA511659@bhelgaas>
- <f87a48c6-909e-39ba-62b0-289e78798540@loongson.cn>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Sui Jingfeng <sui.jingfeng@linux.dev>
-In-Reply-To: <f87a48c6-909e-39ba-62b0-289e78798540@loongson.cn>
+Content-Language: en-US
+From:   suijingfeng <suijingfeng@loongson.cn>
+In-Reply-To: <20230719193233.GA511659@bhelgaas>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-CM-TRANSID: AQAAf8AxjiMJabhkXiA1AA--.40588S3
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+        ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+        BjDU0xBIdaVrnRJUUUmqb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+        xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+        j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxV
+        AFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x02
+        67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
+        87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2
+        IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4c8EcI0En4kS14v26r4a6rW5MxAqzxv2
+        6xkF7I0En4kS14v26Fy26r43JwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxV
+        WrXVW3AwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+        67kF1VAFwI0_Wrv_Gr1UMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lIx
+        AIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
+        IxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCT
+        nIWIevJa73UjIFyTuYvjxU7eT5DUUUU
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -84,21 +96,10 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-On 2023/7/20 06:32, suijingfeng wrote:
-> it will be works no matter CONFIG_DRM_AST=m or CONFIG_DRM_AST=y
+On 2023/7/20 03:32, Bjorn Helgaas wrote:
+> but I think it's just confusing to
+> mention this in the commit log, so I would just remove it.
 
 
-It will be works regardless of CONFIG_DRM_AST=m or CONFIG_DRM_AST=y.
-
-When vgaarb call to the device driver, device driver already loaded 
-successfully.
-
-and the PCI(e) device emulation already finished.
-
-
-So the last change the vgaarb gave us to override is actually happen 
-very late.
-
-But it will be happen as long as the device driver get loaded successfully.
-
+Ok, will be done at the next version.
 
