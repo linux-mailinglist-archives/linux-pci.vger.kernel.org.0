@@ -2,207 +2,218 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DB0375A14A
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jul 2023 00:04:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FE9275A159
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jul 2023 00:06:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229574AbjGSWEc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jul 2023 18:04:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44210 "EHLO
+        id S230353AbjGSWGx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jul 2023 18:06:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230177AbjGSWEb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 18:04:31 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 804561FE8;
-        Wed, 19 Jul 2023 15:04:23 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.43])
-        by gateway (Coremail) with SMTP id _____8Cxc_DmXbhkBHMHAA--.18957S3;
-        Thu, 20 Jul 2023 06:04:22 +0800 (CST)
-Received: from [10.20.42.43] (unknown [10.20.42.43])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx7yPlXbhkPxo1AA--.40661S3;
-        Thu, 20 Jul 2023 06:04:22 +0800 (CST)
-Message-ID: <d490f455-5228-b85a-656a-dce11586dee5@loongson.cn>
-Date:   Thu, 20 Jul 2023 06:04:21 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [Intel-gfx] [PATCH v3 3/9] PCI/VGA: Switch to
- aperture_contain_firmware_fb_nonreloc()
+        with ESMTP id S230061AbjGSWGv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 18:06:51 -0400
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2078.outbound.protection.outlook.com [40.107.100.78])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 377752108;
+        Wed, 19 Jul 2023 15:06:41 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FR0IJQq7tblGWohrFjY14j6BEkhunbXZy2YixvNCZ4EwDydeb2JUWiCd9QnvxklGpR6UcOk6HdvG1C+pZuatQnJyVkkCGE0qE85LPkkWEnZuT9e+xvajOwoOb9K7+p8OwnYhUwzVgDX4zBgFvRpw1D+br92508XwCsE4P09qk9Uh/g7wHebO/+01mmMnBio5+Q53PDdOOYeRmFe369MWpMDSzvm0mPn+GgRQZ83vFG3r7IlXrINmNG+/RK7bgoBdE6wrah5q8gMwaB9rge3xXiJHQqH0B4lSDRc3BQadLoz3eZFJ/mraGKsgO926pKBZATlaKUoGJ5jCjjLKORv4Mg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Xd/0+D7UwBM59puAraPW4b/cbZC7n4MrFWC7DSVlqiU=;
+ b=d+Y8hjyuTfvfnrtZW6Pcr51F3ecMrcXGf5iimvBNxk5UnAB39KysIJWWD14wwIJEgW1dIsi+C+3RTKIJuqZdGRfZWpctsa9H/2sieMm7yhC5XMyHLq7YxKjs8OUNbqrzqv1TXLGGiuaDZfL28am6wfY0WRyDVE36tqTWTalCzyS33zVxX19hfwQA7Apln2hHWkMJm+9kuQ3AQ4CoMFLOUkBu+CoAzWm8aYBueIgI3gle/zDLw8qZrRljfrwyP5JXeUCD2a52mun/nGQJPl1KfOpfN4emKYtmeUN2wHaUXbJ7FeiHzq7Vv82LhCQqrkWBUVUHcLdEzic/11WA5GDmiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xd/0+D7UwBM59puAraPW4b/cbZC7n4MrFWC7DSVlqiU=;
+ b=F5yXaoPVTao4GOQArED6IRrKiu2oFmCoExEuioZdjmfo/ZiRYi82Do5jVzNaR0EH43TsBbn2EFORJmWrPeCeedJKoOqqiyVnf7oi0YMyr2u/xp7cgdfVocHSHn6+QhFdB7JpoR/ezZTUWzmEdOoYuv+X7uNTe/CtR2KVjT0V2fI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
+ by DM4PR12MB5165.namprd12.prod.outlook.com (2603:10b6:5:394::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.24; Wed, 19 Jul
+ 2023 22:06:37 +0000
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::642c:a4b0:ae3f:378b]) by BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::642c:a4b0:ae3f:378b%4]) with mapi id 15.20.6609.024; Wed, 19 Jul 2023
+ 22:06:37 +0000
+Message-ID: <82c139c6-ab4c-9810-bbc6-84e6d19984a6@amd.com>
+Date:   Wed, 19 Jul 2023 15:06:34 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 1/2] PCI, AER: Export and make pcie_aer_is_native() global
 Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Sui Jingfeng <sui.jingfeng@linux.dev>
-Cc:     David Airlie <airlied@gmail.com>, linux-fbdev@vger.kernel.org,
-        kvm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org
-References: <20230719204314.GA512532@bhelgaas>
-From:   suijingfeng <suijingfeng@loongson.cn>
-In-Reply-To: <20230719204314.GA512532@bhelgaas>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-cxl@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        oohall@gmail.com, Lukas Wunner <lukas@wunner.de>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Terry Bowman <terry.bowman@amd.com>,
+        Robert Richter <rrichter@amd.com>
+References: <20230719203600.GA514279@bhelgaas>
+From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <20230719203600.GA514279@bhelgaas>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf8Cx7yPlXbhkPxo1AA--.40661S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAr47uw17Jryxtw1rAr1xtFc_yoWrZw4xpa
-        n5AFZ3Aa1DGr4rG3W2v3W2vF1Fvws7GFyUKF98Zw1ru3sIkwn7Kr18ArZ0v3s7ArZ7Ja1S
-        vF43tw15uan8ZFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-        6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-        02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
-        wI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-        AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-        rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
-        CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-        67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr
-        0_Gr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UA
-        Ma8UUUUU=
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-ClientProxiedBy: PH8PR07CA0037.namprd07.prod.outlook.com
+ (2603:10b6:510:2cf::17) To BYAPR12MB2869.namprd12.prod.outlook.com
+ (2603:10b6:a03:132::30)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|DM4PR12MB5165:EE_
+X-MS-Office365-Filtering-Correlation-Id: 32c280af-d3d8-4610-9d07-08db88a46c43
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Qjr+yMap/MAJwOO93pD7nSRtDC7A2+B7f1ktD2S+iRorttHyEzVIJprq4b8IW4WJkhRK5FrlW4erX8HGqWEzIqS+0bZiX3lpWdyylKWuohgMSQ4ZZCdDJvfkyR7b1e0R8QhCiunbZrzJd/anmHvWr9MuoZNNtb086B6bfm9k3XUYE/mhwfXJDulfrRhsUtc4DznPfGMsp9DbELBpgd+eONXBcdq0RPrKkKvchMhmi7bQd/LIVwf3+eySYhV9NrMioLdoFyF6S0NfRfzPP3A8pgnhA3nVaPpF76b//KgWe4XTx5rgYE6qRoax9AdwKNIJk2eKWMfX1ySQ9BwOjkCRHizrcZ5N2HvCIP2kfGVSyiC3xM8jbw73LFB2QhVA3Xi6WDCqwUBhEq1FaZO+AeNOlNRp96sL6ZEdLS91BlfjNDkBQoffGbjCaCwSgLt1MCGGXt6V5o2JS54pj5lzFSMDbHxO5Aty59ccQlbZ68HdoPDPeANIV/wJERo+Rl/yX7OiCosZJctn30qFXc/PSmHb+fa/74uE/HInYnWMvS/Y3qbPuea81ML03n4fknNa+pPLj9y490Cky3CtNFiR7XUZJsWfh7vl7ygBG3fY/fRZ6euG/5if9Kg0weaOUHy4j+KapZeceVFUqWDYq+ghnKl0fg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(39860400002)(346002)(136003)(396003)(366004)(451199021)(83380400001)(2616005)(478600001)(6666004)(186003)(31686004)(26005)(53546011)(6506007)(6512007)(8936002)(66476007)(66556008)(8676002)(41300700001)(316002)(2906002)(6916009)(4326008)(6486002)(86362001)(38100700002)(36756003)(54906003)(7416002)(66946007)(31696002)(5660300002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YW1BZStGLzNxRUVZbzN2TkwyNnpnSnl2Y1dBbUdCaC9ZUWtXY2VNWlVUTGtq?=
+ =?utf-8?B?YzREajhjS2JqdDNVZmNJTVRUYmlYU25FblNHR0NObkQ4RzFNWjU2UTc3eDR5?=
+ =?utf-8?B?M1FTM09WSnVld09sTjlzWE5uK2JhTzcwR0NNVFdhTHFlUDdJY2QxejNBWHpE?=
+ =?utf-8?B?RDdqUG5lSjRGckJnSVhydFI3RExwcjY1YTFHamQ3ZDVWV1N2K1Y2T0RkMHRv?=
+ =?utf-8?B?MFRoQldYNEw1YzZkeDBwMmhJU1RRS1BjTXZHRDBKMXdqTXJYZFJDTC93RHkx?=
+ =?utf-8?B?L3ZUaXZyeDZFZmJwUW9hMzNnZG9tdWlRQm9hMHQ4bTRWNng1MlpMZ2R3Z1B2?=
+ =?utf-8?B?dUNXeTNKM3ZDTTNteXh0NXM0YjdRcU1KRmVpWWgvK2EzTmxCRm51dDhTbEdu?=
+ =?utf-8?B?amc3WFIvWmNlN2IyeVhBamVkME9tb1dFZUJEMkx0T2JTVWtrYjVlamx0M3hO?=
+ =?utf-8?B?dUZwQXFzTjI4K2drWW1zUjRpOUpQSDRHS25sQWsxZkh6MllLZTI5N1BubUZU?=
+ =?utf-8?B?UFRhcEZXRGNIQjQ3ODNobE1ac2pRdGhBNUJ0cGtEVEcyZ1ZxY2QzNkcxZTRK?=
+ =?utf-8?B?d05qN1NSNGVlWmNxV0dyaENPb1BmWkdOa1hHYlhQL0xFazlJbGw4TmF0V1kv?=
+ =?utf-8?B?dE9OTk5NNVVhWjY0bHQ0Ym9XWVZGQzBKVVVNNjJoWEgySThzQjY2Mm0zNVNh?=
+ =?utf-8?B?MmJFZXNCK1JaenFNUmRrQzJYM0ZBcWJBbVVQNW40Rm5CaUJ4QXdaR1NXc2hL?=
+ =?utf-8?B?M21qcUJEYndtOVFUT0hQQ29naU5wVVZjcUpZR3kxYXA0YWF5bTBuS290UTNC?=
+ =?utf-8?B?V2U0WXdJTmtrRU9ib1NtNVA0VFRaQjU1ODRTT3VSeDJEMWorck1LdFQ4QTlB?=
+ =?utf-8?B?d0g3NjhjTTRhb0JCTk5ndDRqMHVjY1dUSjVCWUZ3OUNNR0kyYjE4U2ZNd1lS?=
+ =?utf-8?B?eVVVR2F5dUUweTdncmdhbTkrMGIvZitzKyt3czJGOUJoMUowd3kvdmlyVnN0?=
+ =?utf-8?B?akxHVElkMng1YnlHTVhYNUdOYkVrUkd1VDBIVkJzUkw3em9hbVd4cFc3dENX?=
+ =?utf-8?B?dTk4dTFHZXFvaFRsUXQvNjlOa2lhYkRaUE9tVE8vcFdQTTdhVHNoWmZjZ0Qz?=
+ =?utf-8?B?bjZhZ1pQc25FRkhoNDhrMU42Yjl6ejhEUmt2bWJFTmNmMWlMejViZEdDV2Ew?=
+ =?utf-8?B?ZTJiYncvMDRLR0Z0VWkweHRscVNuY2xMazI5TVpYNnVieDl4MEFlWFdabmc4?=
+ =?utf-8?B?cGhoNW5WeklmYnArUmc0QkNhM2V2S1ZqdGN2NzhEMTcvVDNpQmtJMEN6ZkYw?=
+ =?utf-8?B?MElRWS84S2I0TmlJcVhRMWg1RDhjUjJQb08yejRxNFdyY1g0UG1ldzBIT3BN?=
+ =?utf-8?B?RDJ1MzFRd3l0TVNsSVJwVnFsQ0ZVZ1ZmK3VlS3lTNGIvbmNJRnFpUjE3Z3hJ?=
+ =?utf-8?B?MHE1YlBLbWRZWjJIWkVKL3F2aVZhNnpNdVVtWlVWZmp1ajZMUm41eDhmcm1k?=
+ =?utf-8?B?bjFlQ1pTMFVuaXliYkFPTFMvSy9LdDAwSDZieVZZYndFSjRjcUlmNUhCRzUx?=
+ =?utf-8?B?ZjZWS2IyViszeVludW0yTzJRY25uTzJyUURZSVBtN3RwNzV5blNJSEQ4TWtN?=
+ =?utf-8?B?SnpHWDdocml6SCtaU3VIRlpyVHR5cms5YUlMdDN1K0lmVEQwR2ZyVko3MmJC?=
+ =?utf-8?B?a3p0cnBudHFRMVdPNEtQd1dHSmVGRHZWUmpjcFE5d0RjWFZTRFVaNzhvUU9Y?=
+ =?utf-8?B?dVVhejdEODNtWURLSUdDWW9vbldPZ2JidFh4YjNLOWtaMFFzVU9UbFlYaXla?=
+ =?utf-8?B?cWlMVzFWWTI1ZGU1eG9GMTE4OTZ6Y09GNHB2ZnR3bFBwOFV0bm5mekpCcWZK?=
+ =?utf-8?B?Y0lEOUR0cE9kTXZ4d2hJVkp2QTF4cGpGcWQyS21ObmhEL3Q2WEtMbjZQNmRG?=
+ =?utf-8?B?Z0VMcDM5dC9tL2M2bjA2bHZjb0NmM09UMzk0MFRpNGZZWHVsM3RNYU5hZXRh?=
+ =?utf-8?B?Vk8rTmVhOVN6Z2xyT2hMM3pvM0ZVQUxndmpaZXl4cWpSNG15SWFqcHB3VnpS?=
+ =?utf-8?B?Skwxb2dlekp6b0lSdnl4V2pCQTFCSHI5b3FlNmh4cDVUaUlra016TGE0LzNS?=
+ =?utf-8?Q?c1NaF1rN4We3bIUJjFtrOs78t?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32c280af-d3d8-4610-9d07-08db88a46c43
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jul 2023 22:06:37.8217
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JdV8ikVjE9WHVLpKnxjs3iAf/UJ3O92cqruT2jsMNF1GxogDGsmpgaX16JgYlGrwcZBAKliiYu2CBe8O4YYOUg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5165
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On 7/19/2023 1:36 PM, Bjorn Helgaas wrote:
+> On Wed, Jul 19, 2023 at 07:23:12PM +0000, Smita Koralahalli wrote:
+>> Export and move the declaration of pcie_aer_is_native() to a common header
+>> file to be reused by cxl/pci module.
+> 
+> Run "git log --oneline drivers/pci/pcie/aer.c" and format your subject
+> line to match.
+> 
+> "Exporting" pretty much means making it global, so "Export
+> pcie_aer_is_native()" is probably enough.
+> 
+>> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> 
+> With the above,
 
-On 2023/7/20 04:43, Bjorn Helgaas wrote:
-> [+cc linux-pci; I don't apply or ack PCI patches unless they appear there]
->
-> On Wed, Jul 12, 2023 at 12:43:04AM +0800, Sui Jingfeng wrote:
->> From: Sui Jingfeng <suijingfeng@loongson.cn>
->>
->> The observation behind this is that we should avoid accessing the global
->> screen_info directly. Call the aperture_contain_firmware_fb_nonreloc()
->> function to implement the detection of whether an aperture contains the
->> firmware FB.
-> Because it's better to access the global screen_info from
-> aperture_contain_firmware_fb_nonreloc()?  The reasoning here is not
-> super clear to me.
+Will make the above two changes in v2. Thanks for the review!
 
-Yes, honestly the benefits of this patch is not obvious.
+Thanks,
+Smita
 
-But I do have some (may not practical) ideas in my mind when I create 
-this patch.
-
-See my explanation at the end.
-
-
->> This patch helps to decouple the determination from the implementation.
->> Or, in other words, we intend to make the determination opaque to the
->> caller. The determination may choose to be arch-dependent or
->> arch-independent. But vgaarb, as a consumer of the determination,
->> shouldn't care how the does determination is implemented.
-> "how the determination ..."  (drop the "does")
-Ok, will be fixed at the next version.
->
-> Are you saying that aperture_contain_firmware_fb_nonreloc() might be
-> arch-dependent?  Are there multiple callers?  Or does this just move
-> code from one place to a more appropriate place?
-
-1) To form a unify approach, and drop the screen_info.h header.
-
-There are similar cleanup patch at patchwork.
-
-
-screen_info.h is definitely arch-dependent, while vgaarb is just 
-device-dependent.
-
-I think, they do have subtle difference.
-
-
-2) Convert the *device driven* to the "driver driven".
-
-Move it from vgaarb.c to video/apperture allow code sharing.
-
-While this function are not going to be shared in vgaarb.
-
-Previous it is the device make the decision,
-
-after applied this patch it allow driver make the decision.
-
-They do have subtle difference.
-
-Emm, I will try to give some examples at the next version.
-
-
-3) I was imagine to drag platform display controllers in (get platform 
-devices involved in the arbitration).
-
-As Alex seem hint to implement something platform-independent.
-
-The aperture_contain_firmware_fb_nonreloc() actually is possible be shared.
-
-The aperture of platform device will be not moved.
-
-So it seems that platform device driver could call this function to do 
-something else.
-
-
->> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
 >> ---
->>   drivers/pci/vgaarb.c | 19 ++++---------------
->>   1 file changed, 4 insertions(+), 15 deletions(-)
+>>   drivers/pci/pcie/aer.c     | 1 +
+>>   drivers/pci/pcie/portdrv.h | 2 --
+>>   include/linux/aer.h        | 2 ++
+>>   3 files changed, 3 insertions(+), 2 deletions(-)
 >>
->> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
->> index bf96e085751d..953daf731b2c 100644
->> --- a/drivers/pci/vgaarb.c
->> +++ b/drivers/pci/vgaarb.c
->> @@ -14,6 +14,7 @@
->>   #define vgaarb_info(dev, fmt, arg...)	dev_info(dev, "vgaarb: " fmt, ##arg)
->>   #define vgaarb_err(dev, fmt, arg...)	dev_err(dev, "vgaarb: " fmt, ##arg)
+>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>> index f6c24ded134c..87d90dbda023 100644
+>> --- a/drivers/pci/pcie/aer.c
+>> +++ b/drivers/pci/pcie/aer.c
+>> @@ -229,6 +229,7 @@ int pcie_aer_is_native(struct pci_dev *dev)
 >>   
->> +#include <linux/aperture.h>
->>   #include <linux/module.h>
->>   #include <linux/kernel.h>
->>   #include <linux/pci.h>
->> @@ -26,7 +27,6 @@
->>   #include <linux/poll.h>
->>   #include <linux/miscdevice.h>
->>   #include <linux/slab.h>
->> -#include <linux/screen_info.h>
->>   #include <linux/vt.h>
->>   #include <linux/console.h>
->>   #include <linux/acpi.h>
->> @@ -558,20 +558,11 @@ void vga_put(struct pci_dev *pdev, unsigned int rsrc)
+>>   	return pcie_ports_native || host->native_aer;
 >>   }
->>   EXPORT_SYMBOL(vga_put);
+>> +EXPORT_SYMBOL_GPL(pcie_aer_is_native);
 >>   
->> +/* Select the device owning the boot framebuffer if there is one */
->>   static bool vga_is_firmware_default(struct pci_dev *pdev)
+>>   int pci_enable_pcie_error_reporting(struct pci_dev *dev)
 >>   {
->>   #if defined(CONFIG_X86) || defined(CONFIG_IA64)
->> -	u64 base = screen_info.lfb_base;
->> -	u64 size = screen_info.lfb_size;
->>   	struct resource *r;
->> -	u64 limit;
->> -
->> -	/* Select the device owning the boot framebuffer if there is one */
->> -
->> -	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
->> -		base |= (u64)screen_info.ext_lfb_base << 32;
->> -
->> -	limit = base + size;
+>> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+>> index 58a2b1a1cae4..1f3803bde7ee 100644
+>> --- a/drivers/pci/pcie/portdrv.h
+>> +++ b/drivers/pci/pcie/portdrv.h
+>> @@ -29,10 +29,8 @@ extern bool pcie_ports_dpc_native;
 >>   
->>   	/* Does firmware framebuffer belong to us? */
->>   	pci_dev_for_each_resource(pdev, r) {
->> @@ -581,10 +572,8 @@ static bool vga_is_firmware_default(struct pci_dev *pdev)
->>   		if (!r->start || !r->end)
->>   			continue;
->>   
->> -		if (base < r->start || limit >= r->end)
->> -			continue;
->> -
->> -		return true;
->> +		if (aperture_contain_firmware_fb_nonreloc(r->start, r->end))
->> +			return true;
->>   	}
+>>   #ifdef CONFIG_PCIEAER
+>>   int pcie_aer_init(void);
+>> -int pcie_aer_is_native(struct pci_dev *dev);
+>>   #else
+>>   static inline int pcie_aer_init(void) { return 0; }
+>> -static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
 >>   #endif
->>   	return false;
+>>   
+>>   #ifdef CONFIG_HOTPLUG_PCI_PCIE
+>> diff --git a/include/linux/aer.h b/include/linux/aer.h
+>> index 3a3ab05e13fd..94ce49a5f8d5 100644
+>> --- a/include/linux/aer.h
+>> +++ b/include/linux/aer.h
+>> @@ -45,6 +45,7 @@ struct aer_capability_regs {
+>>   int pci_enable_pcie_error_reporting(struct pci_dev *dev);
+>>   int pci_disable_pcie_error_reporting(struct pci_dev *dev);
+>>   int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+>> +int pcie_aer_is_native(struct pci_dev *dev);
+>>   #else
+>>   static inline int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+>>   {
+>> @@ -58,6 +59,7 @@ static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+>>   {
+>>   	return -EINVAL;
+>>   }
+>> +static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+>>   #endif
+>>   
+>>   void cper_print_aer(struct pci_dev *dev, int aer_severity,
 >> -- 
->> 2.25.1
+>> 2.17.1
 >>
 
