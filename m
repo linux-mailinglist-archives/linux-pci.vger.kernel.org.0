@@ -2,67 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AFEC759F6D
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 22:16:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF3FD759FE8
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 22:36:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231149AbjGSUQo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jul 2023 16:16:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52714 "EHLO
+        id S230357AbjGSUgm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jul 2023 16:36:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230429AbjGSUQl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 16:16:41 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1EF4D1FD3;
-        Wed, 19 Jul 2023 13:16:35 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.43])
-        by gateway (Coremail) with SMTP id _____8DxfeuiRLhk1GsHAA--.16406S3;
-        Thu, 20 Jul 2023 04:16:34 +0800 (CST)
-Received: from [10.20.42.43] (unknown [10.20.42.43])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_yOiRLhkcAs1AA--.39777S3;
-        Thu, 20 Jul 2023 04:16:34 +0800 (CST)
-Message-ID: <042abb3d-8963-9c90-ccc5-59c42332f22d@loongson.cn>
-Date:   Thu, 20 Jul 2023 04:16:34 +0800
+        with ESMTP id S229807AbjGSUgl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 16:36:41 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD2792112;
+        Wed, 19 Jul 2023 13:36:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 05FE061827;
+        Wed, 19 Jul 2023 20:36:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1345C433C7;
+        Wed, 19 Jul 2023 20:36:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689798963;
+        bh=XrQ/pPRSHvXh7lxVqpPGBAZ3IM9RShfrP9G5GJYGNpY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=DNI2J6H+YnMEsoWAuadSAWPeYD7tM3mWfNvpmrOqbG1twEQ6KZveIJI5Rz/s3zJKU
+         6XonmkQXwNQly5B4kySr9PK279KtmwSNiUufvrkBIjVw9HoQxtZlOuy/QoAIOUnmWN
+         lNvuHwtCTcL5705avEj+eL1IjBlhUCnMsc+RN8T7kh9ESH5xNQ1lAOw7a3KwkKugzt
+         uHZojok/KrXl6Q0Cp925GujyX3nbsf+BQWMvTT6bklPboEyCZbvrjwFkWR7oMyOpu9
+         Tfb1h4EbTIhIoUbp5tFYjnPZIoPwXL/4bf4oviI2vOna7wSUhi/p79rBkjx8WZ+xT+
+         i7SEgldqHzc4g==
+Date:   Wed, 19 Jul 2023 15:36:00 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-cxl@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        oohall@gmail.com, Lukas Wunner <lukas@wunner.de>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Terry Bowman <terry.bowman@amd.com>,
+        Robert Richter <rrichter@amd.com>
+Subject: Re: [PATCH 1/2] PCI, AER: Export and make pcie_aer_is_native() global
+Message-ID: <20230719203600.GA514279@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 2/6] PCI/VGA: Deal with PCI VGA compatible devices only
-Content-Language: en-US
-To:     Sui Jingfeng <sui.jingfeng@linux.dev>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        loongson-kernel@lists.loongnix.cn,
-        Mario Limonciello <mario.limonciello@amd.com>
-References: <20230719182617.GA509912@bhelgaas>
- <9a1590bd-5dfc-94ad-645e-a0a499ae5b23@linux.dev>
-From:   suijingfeng <suijingfeng@loongson.cn>
-In-Reply-To: <9a1590bd-5dfc-94ad-645e-a0a499ae5b23@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf8Dx_yOiRLhkcAs1AA--.39777S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-        ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-        BjDU0xBIdaVrnRJUUUPEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-        xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-        j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxV
-        AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-        wI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-        1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-        67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-        AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCF54CYxVAaw2AFwI0_Jw0_GFyl4c8EcI0Ec7Cj
-        xVAaw2AFwI0_Jw0_GFyl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_GFv_Wr
-        ylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-        14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7
-        IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-        87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
-        IFyTuYvjxUcCD7UUUUU
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230719192313.38591-2-Smita.KoralahalliChannabasappa@amd.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -71,15 +66,75 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Jul 19, 2023 at 07:23:12PM +0000, Smita Koralahalli wrote:
+> Export and move the declaration of pcie_aer_is_native() to a common header
+> file to be reused by cxl/pci module.
 
-On 2023/7/20 03:58, Sui Jingfeng wrote:
-> On the other hand, even though the lest significant 8 but if 
-> pdev->class is really matter.
+Run "git log --oneline drivers/pci/pcie/aer.c" and format your subject
+line to match.
 
+"Exporting" pretty much means making it global, so "Export
+pcie_aer_is_native()" is probably enough.
 
-If the low eight bits of pdev->class is really matters,
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
 
-maybe we should wait the potential problems became severe.
+With the above,
 
-Currently, it is not obvious.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
+> ---
+>  drivers/pci/pcie/aer.c     | 1 +
+>  drivers/pci/pcie/portdrv.h | 2 --
+>  include/linux/aer.h        | 2 ++
+>  3 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index f6c24ded134c..87d90dbda023 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -229,6 +229,7 @@ int pcie_aer_is_native(struct pci_dev *dev)
+>  
+>  	return pcie_ports_native || host->native_aer;
+>  }
+> +EXPORT_SYMBOL_GPL(pcie_aer_is_native);
+>  
+>  int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+>  {
+> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+> index 58a2b1a1cae4..1f3803bde7ee 100644
+> --- a/drivers/pci/pcie/portdrv.h
+> +++ b/drivers/pci/pcie/portdrv.h
+> @@ -29,10 +29,8 @@ extern bool pcie_ports_dpc_native;
+>  
+>  #ifdef CONFIG_PCIEAER
+>  int pcie_aer_init(void);
+> -int pcie_aer_is_native(struct pci_dev *dev);
+>  #else
+>  static inline int pcie_aer_init(void) { return 0; }
+> -static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+>  #endif
+>  
+>  #ifdef CONFIG_HOTPLUG_PCI_PCIE
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index 3a3ab05e13fd..94ce49a5f8d5 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -45,6 +45,7 @@ struct aer_capability_regs {
+>  int pci_enable_pcie_error_reporting(struct pci_dev *dev);
+>  int pci_disable_pcie_error_reporting(struct pci_dev *dev);
+>  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+> +int pcie_aer_is_native(struct pci_dev *dev);
+>  #else
+>  static inline int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+>  {
+> @@ -58,6 +59,7 @@ static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+>  {
+>  	return -EINVAL;
+>  }
+> +static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+>  #endif
+>  
+>  void cper_print_aer(struct pci_dev *dev, int aer_severity,
+> -- 
+> 2.17.1
+> 
