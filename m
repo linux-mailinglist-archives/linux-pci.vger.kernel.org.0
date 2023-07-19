@@ -2,147 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 451F975A00A
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 22:40:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40DA375A00F
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 22:43:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229530AbjGSUkN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jul 2023 16:40:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42576 "EHLO
+        id S229625AbjGSUnT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jul 2023 16:43:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230182AbjGSUkM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 16:40:12 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EFED1734;
-        Wed, 19 Jul 2023 13:40:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689799210; x=1721335210;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GWyUhw9RLRjcwXrBBTCj4jRGSRu1evn0GbeImxsRUZs=;
-  b=SJErFRw9sxPwro8VJDL7aar1zVz8t6jRMQuoUnWYjr9WX8BBU9iEMrzT
-   IPcQ0+dWUmmHL7ijWEtUxysoTGkvH9bBnqKp2rompIVaj2W4YjjzAd8LK
-   RGxnjFLlWq1ErhdR/Di/xY9B59bpxCbcA/z/2h2OifXqQnsdfIQrzxB3r
-   S6tS2szdqGETenzNOfH3RkhthPVLUCZ8wTl8EDmMt0SwFmQz1gWJraGaY
-   Z7VKtQqQNXCOxPneCzdD4mxJxcnLiTe5CvmZwnbItwdgZ4r2/8Y73BQYN
-   ZUMDP3Rh/bOwRAbJquOhCwPmxfNLc2CSHJORngnZzTshuWI7FLJtJJ3fu
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="346869416"
-X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
-   d="scan'208";a="346869416"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2023 13:40:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="848172367"
-X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
-   d="scan'208";a="848172367"
-Received: from vijayakr-mobl2.amr.corp.intel.com (HELO [10.212.182.233]) ([10.212.182.233])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2023 13:40:09 -0700
-Message-ID: <2ce67c27-ae0e-e40e-4f43-d8e5be13e993@linux.intel.com>
-Date:   Wed, 19 Jul 2023 13:40:09 -0700
+        with ESMTP id S229480AbjGSUnS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 16:43:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD1909E;
+        Wed, 19 Jul 2023 13:43:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 699A46182F;
+        Wed, 19 Jul 2023 20:43:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A388C433C8;
+        Wed, 19 Jul 2023 20:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689799396;
+        bh=Tyjuk2o5/6zWPoP1zMw3/ypWfYVhxYWg4rjX3S4aZtg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=FiAa9y/2tv71wEXdSyAGzNYhBUxM+hvhiaqxmMnzXpP8UcpFHg9j/QVPzqJ1auM37
+         lbHnkX0NYfz7AI9yHQjtRu9TYLXdBTGLfLBfe6m5AW1ZMZ1Db0D8YHv0o/kXURCPBg
+         6o2jg6IJRGYIgt179i38xPkXzaLIsMgsxFnK0fpi91ooT8kKWcS8B/1ovFntmhRFU0
+         Q8BPuImDwnSqp/UoGGhqBPPlkEWcYQ8KgeRMf3mdhJTJhj6Do9nbOMZCXofTjkWIFw
+         Snq6WsZ6LAoKSxoq4zjBx4b7UYqEw6ID5xRozHH9G3pl2v8PjgHJhBEsxoAdXceHil
+         xp9Aiqzk429pA==
+Date:   Wed, 19 Jul 2023 15:43:14 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sui Jingfeng <sui.jingfeng@linux.dev>
+Cc:     David Airlie <airlied@gmail.com>, linux-fbdev@vger.kernel.org,
+        Sui Jingfeng <suijingfeng@loongson.cn>, kvm@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [Intel-gfx] [PATCH v3 3/9] PCI/VGA: Switch to
+ aperture_contain_firmware_fb_nonreloc()
+Message-ID: <20230719204314.GA512532@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.13.0
-Subject: Re: [PATCH 1/2] PCI, AER: Export and make pcie_aer_is_native() global
-Content-Language: en-US
-To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-cxl@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
-        Lukas Wunner <lukas@wunner.de>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Robert Richter <rrichter@amd.com>
-References: <20230719192313.38591-1-Smita.KoralahalliChannabasappa@amd.com>
- <20230719192313.38591-2-Smita.KoralahalliChannabasappa@amd.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20230719192313.38591-2-Smita.KoralahalliChannabasappa@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230711164310.791756-4-sui.jingfeng@linux.dev>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+[+cc linux-pci; I don't apply or ack PCI patches unless they appear there]
 
-
-On 7/19/23 12:23 PM, Smita Koralahalli wrote:
-> Export and move the declaration of pcie_aer_is_native() to a common header
-> file to be reused by cxl/pci module.
+On Wed, Jul 12, 2023 at 12:43:04AM +0800, Sui Jingfeng wrote:
+> From: Sui Jingfeng <suijingfeng@loongson.cn>
 > 
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> The observation behind this is that we should avoid accessing the global
+> screen_info directly. Call the aperture_contain_firmware_fb_nonreloc()
+> function to implement the detection of whether an aperture contains the
+> firmware FB.
 
-Looks good to me.
+Because it's better to access the global screen_info from
+aperture_contain_firmware_fb_nonreloc()?  The reasoning here is not
+super clear to me.
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> This patch helps to decouple the determination from the implementation.
+> Or, in other words, we intend to make the determination opaque to the
+> caller. The determination may choose to be arch-dependent or
+> arch-independent. But vgaarb, as a consumer of the determination,
+> shouldn't care how the does determination is implemented.
 
+"how the determination ..."  (drop the "does")
+
+Are you saying that aperture_contain_firmware_fb_nonreloc() might be
+arch-dependent?  Are there multiple callers?  Or does this just move
+code from one place to a more appropriate place?
+
+> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
 > ---
->  drivers/pci/pcie/aer.c     | 1 +
->  drivers/pci/pcie/portdrv.h | 2 --
->  include/linux/aer.h        | 2 ++
->  3 files changed, 3 insertions(+), 2 deletions(-)
+>  drivers/pci/vgaarb.c | 19 ++++---------------
+>  1 file changed, 4 insertions(+), 15 deletions(-)
 > 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index f6c24ded134c..87d90dbda023 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -229,6 +229,7 @@ int pcie_aer_is_native(struct pci_dev *dev)
+> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+> index bf96e085751d..953daf731b2c 100644
+> --- a/drivers/pci/vgaarb.c
+> +++ b/drivers/pci/vgaarb.c
+> @@ -14,6 +14,7 @@
+>  #define vgaarb_info(dev, fmt, arg...)	dev_info(dev, "vgaarb: " fmt, ##arg)
+>  #define vgaarb_err(dev, fmt, arg...)	dev_err(dev, "vgaarb: " fmt, ##arg)
 >  
->  	return pcie_ports_native || host->native_aer;
+> +#include <linux/aperture.h>
+>  #include <linux/module.h>
+>  #include <linux/kernel.h>
+>  #include <linux/pci.h>
+> @@ -26,7 +27,6 @@
+>  #include <linux/poll.h>
+>  #include <linux/miscdevice.h>
+>  #include <linux/slab.h>
+> -#include <linux/screen_info.h>
+>  #include <linux/vt.h>
+>  #include <linux/console.h>
+>  #include <linux/acpi.h>
+> @@ -558,20 +558,11 @@ void vga_put(struct pci_dev *pdev, unsigned int rsrc)
 >  }
-> +EXPORT_SYMBOL_GPL(pcie_aer_is_native);
+>  EXPORT_SYMBOL(vga_put);
 >  
->  int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+> +/* Select the device owning the boot framebuffer if there is one */
+>  static bool vga_is_firmware_default(struct pci_dev *pdev)
 >  {
-> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-> index 58a2b1a1cae4..1f3803bde7ee 100644
-> --- a/drivers/pci/pcie/portdrv.h
-> +++ b/drivers/pci/pcie/portdrv.h
-> @@ -29,10 +29,8 @@ extern bool pcie_ports_dpc_native;
+>  #if defined(CONFIG_X86) || defined(CONFIG_IA64)
+> -	u64 base = screen_info.lfb_base;
+> -	u64 size = screen_info.lfb_size;
+>  	struct resource *r;
+> -	u64 limit;
+> -
+> -	/* Select the device owning the boot framebuffer if there is one */
+> -
+> -	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
+> -		base |= (u64)screen_info.ext_lfb_base << 32;
+> -
+> -	limit = base + size;
 >  
->  #ifdef CONFIG_PCIEAER
->  int pcie_aer_init(void);
-> -int pcie_aer_is_native(struct pci_dev *dev);
->  #else
->  static inline int pcie_aer_init(void) { return 0; }
-> -static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+>  	/* Does firmware framebuffer belong to us? */
+>  	pci_dev_for_each_resource(pdev, r) {
+> @@ -581,10 +572,8 @@ static bool vga_is_firmware_default(struct pci_dev *pdev)
+>  		if (!r->start || !r->end)
+>  			continue;
+>  
+> -		if (base < r->start || limit >= r->end)
+> -			continue;
+> -
+> -		return true;
+> +		if (aperture_contain_firmware_fb_nonreloc(r->start, r->end))
+> +			return true;
+>  	}
 >  #endif
->  
->  #ifdef CONFIG_HOTPLUG_PCI_PCIE
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index 3a3ab05e13fd..94ce49a5f8d5 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -45,6 +45,7 @@ struct aer_capability_regs {
->  int pci_enable_pcie_error_reporting(struct pci_dev *dev);
->  int pci_disable_pcie_error_reporting(struct pci_dev *dev);
->  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
-> +int pcie_aer_is_native(struct pci_dev *dev);
->  #else
->  static inline int pci_enable_pcie_error_reporting(struct pci_dev *dev)
->  {
-> @@ -58,6 +59,7 @@ static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->  {
->  	return -EINVAL;
->  }
-> +static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->  #endif
->  
->  void cper_print_aer(struct pci_dev *dev, int aer_severity,
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+>  	return false;
+> -- 
+> 2.25.1
+> 
