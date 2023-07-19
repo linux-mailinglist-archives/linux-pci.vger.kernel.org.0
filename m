@@ -2,65 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBED6758F55
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 09:42:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3FA575902D
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 10:24:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230310AbjGSHmj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jul 2023 03:42:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37042 "EHLO
+        id S229558AbjGSIYK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jul 2023 04:24:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230183AbjGSHmI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 03:42:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 573AB2685;
-        Wed, 19 Jul 2023 00:41:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D831D612FD;
-        Wed, 19 Jul 2023 07:41:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AD33C433C8;
-        Wed, 19 Jul 2023 07:41:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689752472;
-        bh=b8GEqB/2sTmMlL5y18FKSNhfxtcA7qKBejTmK0tI0EI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O+YN10JPskc9ztReEFlJnjB72I1SIq5vKeTpSeV2hXjlFdrIp1fDy/b/q6uNV/WWD
-         QV1ujwc4umRfGoa6ZtU0Vp0Fbg9J2WvAi+WmdBIjYNufejEqOb7rEbLNBvw555cSqu
-         y+xjx4VrK7j8AZSkyro8k7IHin5y6ZreGREDgqvE8kp9v2Y9/Pdf+P21R4Qqm8tNtt
-         JhF/1YksfB4xnxrlx3VHVCDfcF8xNYd7pwHkSzC+PJCIZpytBhS2gQzefvdmjhMSKs
-         VZwsGVFwYFbJMoYpNtLMf3hXoB6knBJgLTdu34QSeJWv2I+y1ThAuZBQFWBYK+nbWr
-         zBvNXXyteGLrg==
-Date:   Wed, 19 Jul 2023 13:10:55 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc:     manivannan.sadhasivam@linaro.org, helgaas@kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, krzysztof.kozlowski@linaro.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v10 3/4] arm: dts: qcom: sdx55: Add CPU PCIe EP
- interconnect path
-Message-ID: <20230719074055.GB9312@thinkpad>
-References: <1689751218-24492-1-git-send-email-quic_krichai@quicinc.com>
- <1689751218-24492-4-git-send-email-quic_krichai@quicinc.com>
+        with ESMTP id S229539AbjGSIYJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 04:24:09 -0400
+Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52691B6;
+        Wed, 19 Jul 2023 01:24:08 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id B3F163200946;
+        Wed, 19 Jul 2023 04:24:07 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Wed, 19 Jul 2023 04:24:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+        cc:cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm1; t=
+        1689755047; x=1689841447; bh=yj5ZNyx3bJGO8fextcCvMTuJb3vFCBIZNLI
+        tIYuSUIY=; b=n/uyu36t7GewOebMFc3M/kLb+5zUMoGZUF6TGjRXkMa+IwGp6V0
+        cDaX4s4cBFcGSsMatKHCx8/ESQpK/xl9EhBoG5jSWfOoI7P4uA5CrHyY71OY1H2x
+        uxydK9cffT+Qne5t4tN1tKhYPrQuLMQwrMHDykNruS9IUre4wbElq/7mdt5rW0zj
+        +YsnE8RZhai0DdcygqnXo+6L1hBsbWQvvRSqF2dw/MPe0LCIVuXdk2vgz0HyVkFZ
+        3cWlxSv67nzy4hjVNldnNlLbDYAN/W/JZ2iEs/GikxbhoQYfSdXZCMmqAIw9fBn/
+        vpFsCkAndHADBTL+mA4EXv1OmFA5ZhXtdpQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+        1689755047; x=1689841447; bh=yj5ZNyx3bJGO8fextcCvMTuJb3vFCBIZNLI
+        tIYuSUIY=; b=Syv7JxWMCh5h7FiUzDJqvXCKDZmV2xr+z82JFI6lWMk2/a0NZI2
+        60NLjKRDnFHtj/CQy2094/kpbXUD1t9VtL0GI9OHpwOmSJBdxwgCIwqDQt1Q/DCn
+        TA2IU4CDiifdTdGmjQOfT0hy7pCVpTKhJbzz2N7jWo47i4Xyv7TonN4dJfm+iBxq
+        ynG/4I2n1NQMezR5rlYtu15gZqGaQJuc9BXxhbMBkJ6efwEdXYNFMyQtZFvGvkVz
+        SDeFVU4jdNrQmET/ssSi05Y5Uq1i2XJrlQEMGlpieIJhV0Ahk/VngDXMEthu3+mh
+        DB4+K/haVxsZea00s6hKYQdPO8s+XpQp3sA==
+X-ME-Sender: <xms:p523ZKDxKad-GxOkS2KAk0ONJ-vzL5fIFBnzIQvgK5Y6S-BbPGB_Wg>
+    <xme:p523ZEi9Z6N5eZeZXHF_SSvkT6Q84zILtT7HS5lbgWTr486Efig_X6lS__1gZGFRL
+    AaJyIjyeobVUFOkKxw>
+X-ME-Received: <xmr:p523ZNmf-qyhnAX8FUqcYzFib4KlN0jRl7vbvqLQzszbTf6Ol41difYZZQ4Ssp1zC2A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrgeeigddtvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkffggfgfuvfevfhfhjggtgfesthekredttdefjeenucfhrhhomheplfhirgig
+    uhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
+    ggtffrrghtthgvrhhnpeffledtgefgudffhfefteelveeuudeugffhleevueekjeelueeh
+    vefgveeiieduhfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrh
+    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghes
+    fhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:p523ZIxxQqGpIuuCodUtdWecoQibXmfRII1iHmc50A5xMVq561hslw>
+    <xmx:p523ZPTkoazrWAzS_nLyAgE855L_oARIiwzdr_iIMTKFzqXneycecQ>
+    <xmx:p523ZDZQeB6SDdMp1SLv3h453--2iu_Bm20qjjzOa_YxxG4WqDYacg>
+    <xmx:p523ZNNXUwUOz1Hho9oeNY-bQ0MH8_lvxoQ7Ilfnv_I8dedFTaGvKQ>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 19 Jul 2023 04:24:04 -0400 (EDT)
+Message-ID: <c01c0138-70a5-f2ce-e99e-fa1a76e04cb2@flygoat.com>
+Date:   Wed, 19 Jul 2023 16:24:02 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] pci: loongson: Workaround MIPS firmware MRRS settings
+To:     Huacai Chen <chenhuacai@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, kw@linux.com, lpieralisi@kernel.org
+References: <20230718133259.2867432-1-jiaxun.yang@flygoat.com>
+ <CAAhV-H7bv1OmzT0E-SEF6w83gPYrTwnZfc0WpWMUmBB1T1MmqQ@mail.gmail.com>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+In-Reply-To: <CAAhV-H7bv1OmzT0E-SEF6w83gPYrTwnZfc0WpWMUmBB1T1MmqQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1689751218-24492-4-git-send-email-quic_krichai@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,38 +89,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 12:50:17PM +0530, Krishna chaitanya chundru wrote:
-> Add cpu-pcie interconnect path for PCIe EP to sdx55 platform.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-- Mani
+在 2023/7/18 22:46, Huacai Chen 写道:
+> Hi, Jiaxun,
+>
+> On Tue, Jul 18, 2023 at 9:33 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>> This is a partial revert of commit 8b3517f88ff2 ("PCI:
+>> loongson: Prevent LS7A MRRS increases") for MIPS based Loongson.
+>>
+>> There are many MIPS based Loongson systems in wild that
+>> shipped with firmware which does not set maximum MRRS properly.
+>>
+>> Limiting MRRS to 256 for all as MIPS Loongson comes with higher
+>> MRRS support is considered rare.
+>>
+>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217680
+>> Fixes: 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases")
+>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> ---
+>>   drivers/pci/controller/pci-loongson.c | 38 +++++++++++++++++++++++++++
+>>   1 file changed, 38 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+>> index fe0f732f6e43..1cc3a5535dac 100644
+>> --- a/drivers/pci/controller/pci-loongson.c
+>> +++ b/drivers/pci/controller/pci-loongson.c
+>> @@ -108,6 +108,44 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>   DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>                          DEV_LS7A_PCIE_PORT6, loongson_mrrs_quirk);
+>>
+>> +#ifdef CONFIG_MIPS
+>> +static void loongson_firmware_mrrs_quirk(struct pci_dev *pdev)
+>  From my point of view, loongson_old_mrrs_quirk() may be better.
 
-> ---
->  arch/arm/boot/dts/qcom/qcom-sdx55.dtsi | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi b/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
-> index df3cd9c..a7c0c26 100644
-> --- a/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
-> +++ b/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
-> @@ -422,8 +422,9 @@
->  			interrupt-names = "global",
->  					  "doorbell";
->  
-> -			interconnects = <&system_noc MASTER_PCIE &mc_virt SLAVE_EBI_CH0>;
-> -			interconnect-names = "pcie-mem";
-> +			interconnects = <&system_noc MASTER_PCIE &mc_virt SLAVE_EBI_CH0>,
-> +					<&mem_noc MASTER_AMPSS_M0 &system_noc SLAVE_PCIE_0>;
-> +			interconnect-names = "pcie-mem", "cpu-pcie";
->  
->  			resets = <&gcc GCC_PCIE_BCR>;
->  			reset-names = "core";
-> -- 
-> 2.7.4
-> 
+Make sense to me, will rename in v2.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Thanks
+- Jiaxun
