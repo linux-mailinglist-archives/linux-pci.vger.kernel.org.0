@@ -2,208 +2,198 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE194759AB9
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 18:26:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F15B759B5C
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 18:49:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229638AbjGSQ0i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jul 2023 12:26:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47734 "EHLO
+        id S230406AbjGSQtF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jul 2023 12:49:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbjGSQ0h (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 12:26:37 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E6031BB
-        for <linux-pci@vger.kernel.org>; Wed, 19 Jul 2023 09:26:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689783996; x=1721319996;
-  h=date:from:to:cc:subject:message-id;
-  bh=nyoyHkoP56prR3yTy7no5y9Lu+5ufs6hfbV3I2G7iq4=;
-  b=ZizIyunUA1uSEfmH6vRwSb8s3STSNXzccIRm72QG5eo/pXdyf785Nsv4
-   jjAATFuxGTInXGUXxHdHPbNAG5CoyotedfDVxGpSBmdSF1tSQv8n6X5sT
-   eSplbxgY8xQn6hAQTfjgAfmUCuoat43R/9Jjkyn1WPJ7aPznRjzxn3GCS
-   MRUvjeubmLHeOKfX40F57bBOX0Fr5O9XBcleRmB6f1OC1j2qeY5HL7Xlv
-   yN4i77DJrkKtDJEZzIEI6X8lRlP6Va5JfW92iI3nKYc6gmgyw0QhnAuNC
-   Dc9phNYU5XjNa5oRug12QIjsQuZMOWZPiHepaKjKMATGjq9TjUDetBEn7
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="365396131"
-X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
-   d="scan'208";a="365396131"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2023 09:26:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="837752775"
-X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
-   d="scan'208";a="837752775"
-Received: from lkp-server02.sh.intel.com (HELO 36946fcf73d7) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 19 Jul 2023 09:26:35 -0700
-Received: from kbuild by 36946fcf73d7 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qMA0O-0005BU-2R;
-        Wed, 19 Jul 2023 16:26:31 +0000
-Date:   Thu, 20 Jul 2023 00:22:56 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:hotplug] BUILD SUCCESS
- 5810ab21860538bce22acb6f9bb74086e493a7e2
-Message-ID: <202307200054.UxnwSMIL-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+        with ESMTP id S230426AbjGSQtB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 12:49:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9501110CB;
+        Wed, 19 Jul 2023 09:48:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 15A756178E;
+        Wed, 19 Jul 2023 16:48:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B94CAC433C7;
+        Wed, 19 Jul 2023 16:48:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689785334;
+        bh=1HBKVki0O0wNw4bhjdzJwsp6wEBaBoJaQE76IJ1szgA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=X7N2d/2yj1WdtbiS2soZExEPhMcqvLSQZB7JPhkGBwOS0KQAbfIVhRHHVOtWqE1W4
+         bqnZ5DmTLWWAcgya0/zqzoRPSuSBUYb1PPQF713srTHra/T2B0s4ao2xvIyXKYLbG8
+         1ogSJKWzjC0cPH91ZlqUuoTH7sifnzDyRqqY4lkbYtMnEDg/uRNZjra7JPNJa5xn5H
+         I/qkeXMNDlog4n3EmwXpZZ7/3WXAF4kjh/VD16ugzOUPOYSmBH0VjSyQAmJ/k+r6zX
+         kgeOcEHp7paSGLoPh9D7OmG1DZSiDwz9b2axobKpjT5hh+5px6AknnKCSIf5rQKixF
+         GEatizIpbiXeA==
+Date:   Wed, 19 Jul 2023 11:48:51 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Minda Chen <minda.chen@starfivetech.com>
+Cc:     Daire McNamara <daire.mcnamara@microchip.com>,
+        Conor Dooley <conor@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Kevin Xie <kevin.xie@starfivetech.com>
+Subject: Re: [PATCH v1 8/9] PCI: PLDA: starfive: Add JH7110 PCIe controller
+Message-ID: <20230719164851.GA505840@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230719102057.22329-9-minda.chen@starfivetech.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git hotplug
-branch HEAD: 5810ab21860538bce22acb6f9bb74086e493a7e2  PCI: ibmphp: Make read-only arrays static
+On Wed, Jul 19, 2023 at 06:20:56PM +0800, Minda Chen wrote:
+> Add StarFive JH7110 SoC PCIe controller platform
+> driver codes.
 
-elapsed time: 1038m
+Rewrap all the commit logs to fill 75 columns or so.
 
-configs tested: 131
-configs skipped: 9
+>  #define PCIE_PCI_IDS_DW1		0x9c
+> -
+> +#define  IDS_CLASS_CODE_SHIFT		16
+> +#define PCI_MISC			0xB4
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Surrounding code uses lower-case hex.  Make it all match.
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r004-20230718   gcc  
-arc                  randconfig-r031-20230718   gcc  
-arc                  randconfig-r043-20230718   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                     am200epdkit_defconfig   clang
-arm                                 defconfig   gcc  
-arm                            hisi_defconfig   gcc  
-arm                           omap1_defconfig   clang
-arm                          pxa3xx_defconfig   gcc  
-arm                  randconfig-r032-20230718   clang
-arm                  randconfig-r046-20230718   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r001-20230718   gcc  
-csky                 randconfig-r016-20230718   gcc  
-csky                 randconfig-r035-20230718   gcc  
-hexagon              randconfig-r041-20230718   clang
-hexagon              randconfig-r045-20230718   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230718   gcc  
-i386         buildonly-randconfig-r005-20230718   gcc  
-i386         buildonly-randconfig-r006-20230718   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230718   gcc  
-i386                 randconfig-i002-20230718   gcc  
-i386                 randconfig-i003-20230718   gcc  
-i386                 randconfig-i004-20230718   gcc  
-i386                 randconfig-i005-20230718   gcc  
-i386                 randconfig-i006-20230718   gcc  
-i386                 randconfig-i011-20230718   clang
-i386                 randconfig-i012-20230718   clang
-i386                 randconfig-i013-20230718   clang
-i386                 randconfig-i014-20230718   clang
-i386                 randconfig-i015-20230718   clang
-i386                 randconfig-i016-20230718   clang
-i386                 randconfig-r015-20230718   clang
-i386                 randconfig-r036-20230718   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze           randconfig-r033-20230718   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                  cavium_octeon_defconfig   clang
-mips                           ip22_defconfig   clang
-mips                 randconfig-r005-20230718   clang
-nios2                               defconfig   gcc  
-openrisc             randconfig-r031-20230718   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                    klondike_defconfig   gcc  
-powerpc                    mvme5100_defconfig   clang
-powerpc              randconfig-r005-20230718   gcc  
-powerpc              randconfig-r026-20230718   clang
-powerpc              randconfig-r036-20230718   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv             nommu_k210_sdcard_defconfig   gcc  
-riscv                randconfig-r025-20230718   clang
-riscv                randconfig-r042-20230718   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r006-20230718   gcc  
-s390                 randconfig-r044-20230718   clang
-sh                               allmodconfig   gcc  
-sh                        edosk7705_defconfig   gcc  
-sh                   randconfig-r001-20230718   gcc  
-sh                          rsk7201_defconfig   gcc  
-sh                          urquell_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r006-20230718   gcc  
-sparc                randconfig-r021-20230718   gcc  
-sparc                randconfig-r023-20230718   gcc  
-sparc                randconfig-r024-20230718   gcc  
-sparc64              randconfig-r011-20230718   gcc  
-sparc64              randconfig-r022-20230718   gcc  
-sparc64              randconfig-r034-20230718   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r002-20230718   clang
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230718   gcc  
-x86_64       buildonly-randconfig-r002-20230718   gcc  
-x86_64       buildonly-randconfig-r003-20230718   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r012-20230718   clang
-x86_64               randconfig-r014-20230718   clang
-x86_64               randconfig-r032-20230718   gcc  
-x86_64               randconfig-x001-20230718   clang
-x86_64               randconfig-x002-20230718   clang
-x86_64               randconfig-x003-20230718   clang
-x86_64               randconfig-x004-20230718   clang
-x86_64               randconfig-x005-20230718   clang
-x86_64               randconfig-x006-20230718   clang
-x86_64               randconfig-x011-20230718   gcc  
-x86_64               randconfig-x012-20230718   gcc  
-x86_64               randconfig-x013-20230718   gcc  
-x86_64               randconfig-x014-20230718   gcc  
-x86_64               randconfig-x015-20230718   gcc  
-x86_64               randconfig-x016-20230718   gcc  
-x86_64                           rhel-8.3-bpf   gcc  
-x86_64                          rhel-8.3-func   gcc  
-x86_64                    rhel-8.3-kselftests   gcc  
-x86_64                         rhel-8.3-kunit   gcc  
-x86_64                           rhel-8.3-ltp   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r034-20230718   gcc  
+> +#define STG_SYSCON_AXI4_SLVL_ARFUNC_MASK	GENMASK(22, 8)
+> +#define STG_SYSCON_AXI4_SLVL_ARFUNC_SHIFT	8
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+When practical, use FIELD_GET() and FIELD_PREP() to avoid the need for
+*_SHIFT macros.
+
+> +struct starfive_jh7110_pcie {
+> +	struct plda_pcie	plda;
+> +	struct reset_control *resets;
+> +	struct clk_bulk_data *clks;
+> +	struct regmap *reg_syscon;
+> +	struct gpio_desc *power_gpio;
+> +	struct gpio_desc *reset_gpio;
+> +
+> +	u32 stg_arfun;
+> +	u32 stg_awfun;
+> +	u32 stg_rp_nep;
+> +	u32 stg_lnksta;
+> +
+> +	int num_clks;
+
+If you indent one member with tabs, e.g., "struct plda_pcie        plda",
+they should all be indented to match.
+
+> + * The BAR0/1 of bridge should be hidden during enumeration to
+> + * avoid the sizing and resource allocation by PCIe core.
+> + */
+> +static bool starfive_pcie_hide_rc_bar(struct pci_bus *bus, unsigned int  devfn,
+> +				      int offset)
+> +{
+> +	if (pci_is_root_bus(bus) && !devfn &&
+> +	    (offset == PCI_BASE_ADDRESS_0 || offset == PCI_BASE_ADDRESS_1))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +int starfive_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
+> +			       int where, int size, u32 value)
+> +{
+> +	if (starfive_pcie_hide_rc_bar(bus, devfn, where))
+> +		return PCIBIOS_BAD_REGISTER_NUMBER;
+
+I think you are trying present BARs 0 & 1 as unimplemented.  Such BARs
+are hardwired to zero, so you should make them behave that way (both
+read and write).  Many callers of config accessors don't check the
+return value, so I don't think it's reliable to just return
+PCIBIOS_BAD_REGISTER_NUMBER.
+
+> +static int starfive_pcie_is_link_up(struct starfive_jh7110_pcie *pcie)
+> +{
+> +	struct device *dev = pcie->plda.dev;
+> +	int ret;
+> +	u32 stg_reg_val;
+> +
+> +	/* 100ms timeout value should be enough for Gen1/2 training */
+> +	ret = regmap_read_poll_timeout(pcie->reg_syscon,
+> +				       pcie->stg_lnksta,
+> +				       stg_reg_val,
+> +				       stg_reg_val & DATA_LINK_ACTIVE,
+> +				       10 * 1000, 100 * 1000);
+> +
+> +	/* If the link is down (no device in slot), then exit. */
+> +	if (ret == -ETIMEDOUT) {
+> +		dev_info(dev, "Port link down, exit.\n");
+> +		return 0;
+> +	} else if (ret == 0) {
+> +		dev_info(dev, "Port link up.\n");
+> +		return 1;
+> +	}
+
+Please copy the naming and style of the "*_pcie_link_up()" functions
+in other drivers.  These are boolean functions with no side effects,
+including no timeouts.
+
+Some drivers have "*wait_for_link()" functions if polling is needed.
+
+> +		return dev_err_probe(dev, ret,
+> +			"failed to initialize pcie phy\n");
+
+Driver messages should match (all capitalized or none capitalized).
+
+> +	/* Enable root port */
+
+Superfluous comment, since the function name says the same.
+
+> +	plda_pcie_enable_root_port(plda);
+
+> +	/* Ensure that PERST has been asserted for at least 100 ms */
+> +	msleep(300);
+> +	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
+
+At least 100 ms, but you sleep *300* ms?  This is probably related to
+https://lore.kernel.org/r/20230718155515.GA483233@bhelgaas
+
+Please include a comment with the source of the delay value.  I assume
+it's T_PVPERL and T_PERST-CLK from the PCIe CEM spec.  This way we can
+someday share those #defines across drivers.
+
+> +#ifdef CONFIG_PM_SLEEP
+> +static int __maybe_unused starfive_pcie_suspend_noirq(struct device *dev)
+
+I think you can dispense with some of these #ifdefs and the
+__maybe_unused as in
+https://lore.kernel.org/all/20220720224829.GA1667002@bhelgaas/
+
+> +{
+> +	struct starfive_jh7110_pcie *pcie = dev_get_drvdata(dev);
+> +
+> +	if (!pcie)
+> +		return 0;
+
+How can this happen?  If we're only detecting memory corruption, it's
+not worth it.
+
+Bjorn
