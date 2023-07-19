@@ -2,33 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9573975A1F7
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jul 2023 00:32:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0D7A75A227
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jul 2023 00:44:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230281AbjGSWcY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jul 2023 18:32:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34462 "EHLO
+        id S230269AbjGSWoz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jul 2023 18:44:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230187AbjGSWcX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 18:32:23 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2CB4C1FDC;
-        Wed, 19 Jul 2023 15:32:20 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.43])
-        by gateway (Coremail) with SMTP id _____8BxXetzZLhkQnUHAA--.13743S3;
-        Thu, 20 Jul 2023 06:32:19 +0800 (CST)
-Received: from [10.20.42.43] (unknown [10.20.42.43])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx_c5zZLhkDh41AA--.15520S3;
-        Thu, 20 Jul 2023 06:32:19 +0800 (CST)
-Message-ID: <f87a48c6-909e-39ba-62b0-289e78798540@loongson.cn>
-Date:   Thu, 20 Jul 2023 06:32:19 +0800
+        with ESMTP id S230245AbjGSWox (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 18:44:53 -0400
+Received: from out-39.mta1.migadu.com (out-39.mta1.migadu.com [95.215.58.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2683F1FF9
+        for <linux-pci@vger.kernel.org>; Wed, 19 Jul 2023 15:44:52 -0700 (PDT)
+Message-ID: <74994ce2-c060-f662-9210-14d09a15162f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1689806688;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fjbO79xlLNloGHqzkmh/GrwE5dqq196RqzVZxz+HQuY=;
+        b=tyL+5EjVO88fUgTXUzZJvKY+JfMezNTNqLlky4Key7ELBF1/bJEXZwIzwfXEU5giFkbOHo
+        bs2sLXFvTbu5KRkClnah41uJLYUoPnho/GiocT6aPhwta72XhksZVZ/iUoXF/ZG9ZHo7Cc
+        K41KgUorxkZsDqez3UfEW48aM4qvmjI=
+Date:   Thu, 20 Jul 2023 06:44:29 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
 Subject: Re: [PATCH v3 4/9] PCI/VGA: Improve the default VGA device selection
 Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Sui Jingfeng <sui.jingfeng@linux.dev>
+To:     suijingfeng <suijingfeng@loongson.cn>,
+        Bjorn Helgaas <helgaas@kernel.org>
 Cc:     David Airlie <airlied@gmail.com>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         intel-gfx@lists.freedesktop.org, kvm@vger.kernel.org,
@@ -64,106 +66,39 @@ Cc:     David Airlie <airlied@gmail.com>, amd-gfx@lists.freedesktop.org,
         Yi Liu <yi.l.liu@intel.com>,
         Jani Nikula <jani.nikula@intel.com>
 References: <20230719193233.GA511659@bhelgaas>
-From:   suijingfeng <suijingfeng@loongson.cn>
-In-Reply-To: <20230719193233.GA511659@bhelgaas>
+ <f87a48c6-909e-39ba-62b0-289e78798540@loongson.cn>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Sui Jingfeng <sui.jingfeng@linux.dev>
+In-Reply-To: <f87a48c6-909e-39ba-62b0-289e78798540@loongson.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf8Cx_c5zZLhkDh41AA--.15520S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WF18WFW7Cw1kAr15Zr15Jrc_yoW5Jr1rp3
-        yaga1akrs7XFWUtry7A34kXFyavw4fX3yrGr1rG34j9398G3s5JrW8Ka15Ka47Zw18WF42
-        vFy8tw12kay5Z3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUP529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUUPvb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-        6r4UJVWxJr1ln4kS14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-        xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
-        6rW5McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-        8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vI
-        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67
-        AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26rWY6r4UJwCI
-        c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267
-        AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_
-        Gr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjxU-J
-        KIDUUUU
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
 
-On 2023/7/20 03:32, Bjorn Helgaas wrote:
-> [+cc linux-pci (please cc in the future since the bulk of this patch
-> is in drivers/pci/)]
->
-> On Wed, Jul 12, 2023 at 12:43:05AM +0800, Sui Jingfeng wrote:
->> From: Sui Jingfeng <suijingfeng@loongson.cn>
->>
->> Currently, the strategy of selecting the default boot on a multiple video
->> card coexistence system is not perfect. Potential problems are:
->>
->> 1) This function is a no-op on non-x86 architectures.
-> Which function in particular is a no-op for non-x86?
+On 2023/7/20 06:32, suijingfeng wrote:
+> it will be works no matter CONFIG_DRM_AST=m or CONFIG_DRM_AST=y
 
 
-I refer to the vga_is_firmware_default() function,
+It will be works regardless of CONFIG_DRM_AST=m or CONFIG_DRM_AST=y.
 
-I will improve the commit message at the next version. (To make it more 
-human readable).
+When vgaarb call to the device driver, device driver already loaded 
+successfully.
 
-Thanks you point it out.
-
-
->> 2) It does not take the PCI Bar may get relocated into consideration.
->> 3) It is not effective for the PCI device without a dedicated VRAM Bar.
->> 4) It is device-agnostic, thus it has to waste the effort to iterate all
->>     of the PCI Bar to find the VRAM aperture.
->> 5) It has invented lots of methods to determine which one is the default
->>     boot device, but this is still a policy because it doesn't give the
->>     user a choice to override.
-> I don't think we need a list of *potential* problems.  We need an
-> example of the specific problem this will solve, i.e., what currently
-> does not work?
-
-1) The selection of primary GPU on Non-x86 platform. (Arm64, risc-v, 
-powerpc etc)
-
-Mostly server platforms have equipped with aspeed bmc, and such hardware 
-platforms have a lot PCIe slot.
-
-So I think, aspeed bmc V.S (P.K) radeon(or amdgpu) is very common.
+and the PCI(e) device emulation already finished.
 
 
-2) The ability to pass the control back to the end user.
+So the last change the vgaarb gave us to override is actually happen 
+very late.
 
-Convert the *device driven* to the "driver driven" or "human driven".
+But it will be happen as long as the device driver get loaded successfully.
 
-Currently, it is the machine making the decision.
-
-Emm, I probably will be able to give some examples at the next version.
-
-
-> The drm/ast and maybe drm/loongson patches are the only ones that use
-> the new callback, so I assume there are real problems with those
-> drivers.
->
-> CONFIG_DRM_AST is a tristate.  We're talking about identifying the
-> boot-time console device.  So if CONFIG_DRM_AST=m, I guess we don't
-> get the benefit of the new callback unless the module gets loaded?
->
-Since, this patch set is mostly for the user of X server.
-
-It is actually okey if CONFIG_DRM_AST=m. (it will be works no matter CONFIG_DRM_AST=m or CONFIG_DRM_AST=y)
-
-
-As the device and the driver bound at a latter time.
-
-So we are lucky, we need this behavior to implement the override.
 
