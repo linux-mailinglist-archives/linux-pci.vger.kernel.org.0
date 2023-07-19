@@ -2,41 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F15B759B5C
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 18:49:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECCAF759BA8
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 18:58:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230406AbjGSQtF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jul 2023 12:49:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36572 "EHLO
+        id S229542AbjGSQ6U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jul 2023 12:58:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230426AbjGSQtB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 12:49:01 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9501110CB;
-        Wed, 19 Jul 2023 09:48:55 -0700 (PDT)
+        with ESMTP id S229449AbjGSQ6T (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 12:58:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC054B6;
+        Wed, 19 Jul 2023 09:58:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 15A756178E;
-        Wed, 19 Jul 2023 16:48:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B94CAC433C7;
-        Wed, 19 Jul 2023 16:48:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0DFC3617A7;
+        Wed, 19 Jul 2023 16:58:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 905FDC433C7;
+        Wed, 19 Jul 2023 16:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689785334;
-        bh=1HBKVki0O0wNw4bhjdzJwsp6wEBaBoJaQE76IJ1szgA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=X7N2d/2yj1WdtbiS2soZExEPhMcqvLSQZB7JPhkGBwOS0KQAbfIVhRHHVOtWqE1W4
-         bqnZ5DmTLWWAcgya0/zqzoRPSuSBUYb1PPQF713srTHra/T2B0s4ao2xvIyXKYLbG8
-         1ogSJKWzjC0cPH91ZlqUuoTH7sifnzDyRqqY4lkbYtMnEDg/uRNZjra7JPNJa5xn5H
-         I/qkeXMNDlog4n3EmwXpZZ7/3WXAF4kjh/VD16ugzOUPOYSmBH0VjSyQAmJ/k+r6zX
-         kgeOcEHp7paSGLoPh9D7OmG1DZSiDwz9b2axobKpjT5hh+5px6AknnKCSIf5rQKixF
-         GEatizIpbiXeA==
-Date:   Wed, 19 Jul 2023 11:48:51 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
+        s=k20201202; t=1689785897;
+        bh=xayvFZEqNUxkMixHih/sryn5ylVD/sjcMsn7un1bPYw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=J3n9AoZ0SJlV8lgbjP2eg1EfnS7FHT1VfY3AEiWAgaDry/O2UXfoxJvKZ71IIO5QK
+         YfAe2oiJ4tLy+CjALsaOLZ49xbzWRDuvvOWIUWz9YDkb2wqqSuFcXzaiLkxssiAu2I
+         bFCv/eLHHk3j5eIkHt1rKTSamKndqwGiDZ2Ivgv6bZ1/Hu1VeStmSN56Gj2KDIglNS
+         lwt20OvsGEA8vjd7rpi5hSf+esT5XVBtIdLziDxDf0ZwZhLAkNWZ95/urD1Pmx9cM3
+         7ndjk4fnh/ZBpNO4o4+OajYlAexmPFOhKAWSR+yenbpGdv7tAF6aBgj/RUMeHe7eJc
+         6n1y7UBz5n3Eg==
+Date:   Wed, 19 Jul 2023 17:58:11 +0100
+From:   Conor Dooley <conor@kernel.org>
 To:     Minda Chen <minda.chen@starfivetech.com>
 Cc:     Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -52,148 +51,85 @@ Cc:     Daire McNamara <daire.mcnamara@microchip.com>,
         Mason Huo <mason.huo@starfivetech.com>,
         Leyfoon Tan <leyfoon.tan@starfivetech.com>,
         Kevin Xie <kevin.xie@starfivetech.com>
-Subject: Re: [PATCH v1 8/9] PCI: PLDA: starfive: Add JH7110 PCIe controller
-Message-ID: <20230719164851.GA505840@bhelgaas>
+Subject: Re: [PATCH v1 0/9] Refactoring Microchip PolarFire PCIe driver
+Message-ID: <20230719-rockstar-gangway-467e64ada609@spud>
+References: <20230719102057.22329-1-minda.chen@starfivetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ItaO0NWrNgH9c6FC"
 Content-Disposition: inline
-In-Reply-To: <20230719102057.22329-9-minda.chen@starfivetech.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230719102057.22329-1-minda.chen@starfivetech.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 06:20:56PM +0800, Minda Chen wrote:
-> Add StarFive JH7110 SoC PCIe controller platform
-> driver codes.
 
-Rewrap all the commit logs to fill 75 columns or so.
+--ItaO0NWrNgH9c6FC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->  #define PCIE_PCI_IDS_DW1		0x9c
-> -
-> +#define  IDS_CLASS_CODE_SHIFT		16
-> +#define PCI_MISC			0xB4
+Hey Minda,
 
-Surrounding code uses lower-case hex.  Make it all match.
+On Wed, Jul 19, 2023 at 06:20:48PM +0800, Minda Chen wrote:
+> This patchset final purpose is add PCIe driver for StarFive JH7110 SoC.
+> JH7110 using PLDA XpressRICH PCIe IP. Microchip PolarFire Using the
+> same IP and have commit their codes, which are mixed with PLDA
+> controller codes and Microchip platform codes.
+>=20
+> For re-use the PLDA controller codes, I request refactoring microchip
+> codes, move PLDA common codes to PLDA files.
+> Desigware and Cadence is good example for refactoring codes.
+>=20
+> So first step is extract the PLDA common codes from microchip, and
+> refactoring the microchip codes.(patch1 - 4)
+> Then add the PLDA platform codes. (patch5, 6)
+> At last, add Starfive codes. (patch7 - 9)
 
-> +#define STG_SYSCON_AXI4_SLVL_ARFUNC_MASK	GENMASK(22, 8)
-> +#define STG_SYSCON_AXI4_SLVL_ARFUNC_SHIFT	8
+Thanks for sending this, I'll try to have a look through it tomorrow, or
+if not, early next week. As pointed out off-list, the gist of what you
+have here looked good to myself and Daire.
 
-When practical, use FIELD_GET() and FIELD_PREP() to avoid the need for
-*_SHIFT macros.
+> This patchset is base on v6.5-rc1
+>=20
+> patch1 is add PLDA XpressRICH PCIe host common properties dt-binding
+>        docs, most are extracted from microchip,pcie-host.yaml
+> patch2 is add plda,xpressrich-pcie-common.yaml(patch1 file) reference
+>        and remove the PLDA common properties.
+> patch3 is extracting the PLDA common codes from microchip Polarfire PCIe
+>        codes. The change list in the commit message.
+> patch4 is move microchip driver to PLDA directory and remove the PLDA
+>        common codes.
+> patch5 is add PLDA Xpressrich platform driver dt-binding doc.
+> patch6 is PLDA Xpressrich platform driver.
+> patch7 is add StarFive JH7110 PCIe dt-binding doc.
+> patch8 is add StarFive JH7110 Soc PCIe platform codes.
+> patch9 is StarFive JH7110 device tree configuration.
+>=20
+> I have noticed that Daire have changed microchip's codes.
+> https://patchwork.kernel.org/project/linux-pci/cover/20230630154859.20495=
+21-1-daire.mcnamara@microchip.com/
 
-> +struct starfive_jh7110_pcie {
-> +	struct plda_pcie	plda;
-> +	struct reset_control *resets;
-> +	struct clk_bulk_data *clks;
-> +	struct regmap *reg_syscon;
-> +	struct gpio_desc *power_gpio;
-> +	struct gpio_desc *reset_gpio;
-> +
-> +	u32 stg_arfun;
-> +	u32 stg_awfun;
-> +	u32 stg_rp_nep;
-> +	u32 stg_lnksta;
-> +
-> +	int num_clks;
+I'll go and ping this, it's been a few weeks with no movement :)
 
-If you indent one member with tabs, e.g., "struct plda_pcie        plda",
-they should all be indented to match.
+Thanks,
+Conor.
 
-> + * The BAR0/1 of bridge should be hidden during enumeration to
-> + * avoid the sizing and resource allocation by PCIe core.
-> + */
-> +static bool starfive_pcie_hide_rc_bar(struct pci_bus *bus, unsigned int  devfn,
-> +				      int offset)
-> +{
-> +	if (pci_is_root_bus(bus) && !devfn &&
-> +	    (offset == PCI_BASE_ADDRESS_0 || offset == PCI_BASE_ADDRESS_1))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +int starfive_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
-> +			       int where, int size, u32 value)
-> +{
-> +	if (starfive_pcie_hide_rc_bar(bus, devfn, where))
-> +		return PCIBIOS_BAD_REGISTER_NUMBER;
+--ItaO0NWrNgH9c6FC
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I think you are trying present BARs 0 & 1 as unimplemented.  Such BARs
-are hardwired to zero, so you should make them behave that way (both
-read and write).  Many callers of config accessors don't check the
-return value, so I don't think it's reliable to just return
-PCIBIOS_BAD_REGISTER_NUMBER.
+-----BEGIN PGP SIGNATURE-----
 
-> +static int starfive_pcie_is_link_up(struct starfive_jh7110_pcie *pcie)
-> +{
-> +	struct device *dev = pcie->plda.dev;
-> +	int ret;
-> +	u32 stg_reg_val;
-> +
-> +	/* 100ms timeout value should be enough for Gen1/2 training */
-> +	ret = regmap_read_poll_timeout(pcie->reg_syscon,
-> +				       pcie->stg_lnksta,
-> +				       stg_reg_val,
-> +				       stg_reg_val & DATA_LINK_ACTIVE,
-> +				       10 * 1000, 100 * 1000);
-> +
-> +	/* If the link is down (no device in slot), then exit. */
-> +	if (ret == -ETIMEDOUT) {
-> +		dev_info(dev, "Port link down, exit.\n");
-> +		return 0;
-> +	} else if (ret == 0) {
-> +		dev_info(dev, "Port link up.\n");
-> +		return 1;
-> +	}
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZLgWIwAKCRB4tDGHoIJi
+0tRJAQCQfXnUkEmh0PtotZgcZuTK2jJ5Pb7zCTWIdxVjSTdhfQD+LoI9+2N9Qein
+q+pkZ3wrnXopGLOVdsu5a4hvcELWqQ8=
+=fTL5
+-----END PGP SIGNATURE-----
 
-Please copy the naming and style of the "*_pcie_link_up()" functions
-in other drivers.  These are boolean functions with no side effects,
-including no timeouts.
-
-Some drivers have "*wait_for_link()" functions if polling is needed.
-
-> +		return dev_err_probe(dev, ret,
-> +			"failed to initialize pcie phy\n");
-
-Driver messages should match (all capitalized or none capitalized).
-
-> +	/* Enable root port */
-
-Superfluous comment, since the function name says the same.
-
-> +	plda_pcie_enable_root_port(plda);
-
-> +	/* Ensure that PERST has been asserted for at least 100 ms */
-> +	msleep(300);
-> +	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-
-At least 100 ms, but you sleep *300* ms?  This is probably related to
-https://lore.kernel.org/r/20230718155515.GA483233@bhelgaas
-
-Please include a comment with the source of the delay value.  I assume
-it's T_PVPERL and T_PERST-CLK from the PCIe CEM spec.  This way we can
-someday share those #defines across drivers.
-
-> +#ifdef CONFIG_PM_SLEEP
-> +static int __maybe_unused starfive_pcie_suspend_noirq(struct device *dev)
-
-I think you can dispense with some of these #ifdefs and the
-__maybe_unused as in
-https://lore.kernel.org/all/20220720224829.GA1667002@bhelgaas/
-
-> +{
-> +	struct starfive_jh7110_pcie *pcie = dev_get_drvdata(dev);
-> +
-> +	if (!pcie)
-> +		return 0;
-
-How can this happen?  If we're only detecting memory corruption, it's
-not worth it.
-
-Bjorn
+--ItaO0NWrNgH9c6FC--
