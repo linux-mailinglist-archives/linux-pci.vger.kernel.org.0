@@ -2,185 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C774758B19
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 04:00:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46A10758C9D
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 06:29:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229478AbjGSCAh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jul 2023 22:00:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44114 "EHLO
+        id S229688AbjGSE3w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jul 2023 00:29:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbjGSCAg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jul 2023 22:00:36 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 417D7FC
-        for <linux-pci@vger.kernel.org>; Tue, 18 Jul 2023 19:00:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689732035; x=1721268035;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=21dMuWZEaJm9X2MR2awcVrLUIxn03ljtjEkqnTYRbWI=;
-  b=fcfo6H1uxPhMc9b9E8Op2Ecs3gKE4mz+/1yEoHjYHhwuS/gfJcoZRZ9i
-   xc43wc14LZ6gaW2Xv482E5incVyZdQTSk0s7Ja7dXq1yDgt6hxTTAVppy
-   ibMYsKAwKCag0xJGmTcgQXYtCDd1qXr6tOosK8UjI4ElCtxkirfTzNM0f
-   cd9yM8k5YHK8UeQod6h6+VMGwnVNrTIePCWktBD7cnAV70ilk5lodQSiu
-   JHgKpJVOx3W3KjaT8sR1pzxmrnYQ5mMT7Q6v406vx0f48/98WGMCA6zSr
-   gkAju+EslFNtZ0TXVpkJ/vc4x4s/FVjSwF47K3RGFCvcbPxiwb7oAG6oz
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10775"; a="345943212"
-X-IronPort-AV: E=Sophos;i="6.01,215,1684825200"; 
-   d="scan'208";a="345943212"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2023 19:00:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10775"; a="723832781"
-X-IronPort-AV: E=Sophos;i="6.01,215,1684825200"; 
-   d="scan'208";a="723832781"
-Received: from patelni-mobl1.amr.corp.intel.com (HELO [10.209.159.171]) ([10.209.159.171])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2023 19:00:30 -0700
-Message-ID: <0e7cc1d0-a4c6-33d4-1f0f-e0b662a73850@linux.intel.com>
-Date:   Tue, 18 Jul 2023 19:00:26 -0700
+        with ESMTP id S229502AbjGSE3v (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 00:29:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB58D1B5;
+        Tue, 18 Jul 2023 21:29:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4AED3611A6;
+        Wed, 19 Jul 2023 04:29:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD7F7C433C7;
+        Wed, 19 Jul 2023 04:29:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689740989;
+        bh=VsupOhAw0dkjCQ85UwV+mlGN3pD2O9GWV2eVO3RP9o8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QQ8I5AIdXpyK55Mzzf/2HAnG3XS0KMKKjNJTQcWMnBJ7ngAsNyVlFqPF+Qdu4ovOW
+         yWeGURj5MhyTQdhYUK9c9em02iktKVNnkBVveVRdxBOtShcUKm3zZGXXPsfWr6OyVl
+         ZCO2dfRKMue8ng7w0dzyqvggMqnG2ouswxCj2tZorTSY35P7ktcFvI+eyQcse9MXO3
+         rkXQcLsuzz+5onPv93gJ+GZKPwvhhwGOLvy/UwcnEqWyNLnKjMoF8HXoJpYVbq45dp
+         tmtGidHlV+E8zudwWQE3mIcYTSvmcc+tGu1BKgF0JmZjCKamGe8yphhYRHJRj/Dg1t
+         Yr+VgiB8Ci7hQ==
+Date:   Wed, 19 Jul 2023 09:59:13 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     bhelgaas@google.com, imx@lists.linux.dev, kw@linux.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        lpieralisi@kernel.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
+        robh@kernel.org, roy.zang@nxp.com
+Subject: Re: [PATCH v2 2/2] PCI: layerscape: Add the workaround for lost link
+ capablities during reset
+Message-ID: <20230719042913.GA5990@thinkpad>
+References: <20230718182142.1864070-1-Frank.Li@nxp.com>
+ <20230718182142.1864070-2-Frank.Li@nxp.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] PCI: vmd: VMD to control Hotplug on its rootports
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kwilczynski@kernel.org>,
-        Rob Herring <robh@kernel.org>
-References: <20230713165856.GA322319@bhelgaas>
-Content-Language: en-US
-From:   "Patel, Nirmal" <nirmal.patel@linux.intel.com>
-In-Reply-To: <20230713165856.GA322319@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230718182142.1864070-2-Frank.Li@nxp.com>
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 7/13/2023 9:58 AM, Bjorn Helgaas wrote:
-> [+cc Jonathan, Lorenzo, Krzysztof, Rob (from MAINTAINERS)]
->
-> Can you make the subject line say what the patch does?  Repeating
-> "VMD" is probably unnecessary.
->
-> On Wed, Jul 05, 2023 at 01:20:38PM -0400, Nirmal Patel wrote:
->> The hotplug functionality is broken in various combinations of guest
->> OSes i.e. RHEL, SlES and hypervisors i.e. KVM and ESXI.
-> "SLES"
+On Tue, Jul 18, 2023 at 02:21:42PM -0400, Frank Li wrote:
+> From: Xiaowei Bao <xiaowei.bao@nxp.com>
+> 
+> A workaround for the issue where the PCI Express Endpoint (EP) controller
+> loses the values of the Maximum Link Width and Supported Link Speed from
+> the Link Capabilities Register, which initially configured by the Reset
+> Configuration Word (RCW) during a link-down or hot reset event.
+> 
+> Fixes: a805770d8a22 ("PCI: layerscape: Add EP mode support")
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Will fix it.
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
 
->
->> VMD enabled on Intel ADL cpus caused interrupt storm for smasung
->> drives due to AER being enabled on VMD controlled root ports.
-> "Samsung"
-Will fix it.
->
-> Enabling AER should not cause an interrupt storm.  There must be
-> something else going on in addition.  Are you saying the Samsung
-> drives have some AER-related defect, like generating Correctable
-> Errors when they shouldn't?  It doesn't sound like "Intel ADL" would
-> be relevant here.
->
-> It's not clear to me if this is directly related to *hotplug* or if
-> it's an AER issue that may happen because of hotplug and possible for
-> other reasons.
->
->> The patch 04b12ef163d10e348db664900ae7f611b83c7a0e
-> 12 char SHA1 is sufficient.
-Will fix it.
->
->> ("PCI: vmd: Honor APCI _OSC on PCIe features.") was added to the VMD
->> driver to correct the issue based on the following assumption:
->> 	“Since VMD is an aperture to regular PCIe root ports, honor ACPI
->> 	_OSC to disable PCIe features accordingly to resolve the issue.”
->> 	Link: https://lore.kernel.org/r/20211203031541.1428904-1-kai.heng.feng@canonical.com
->>
->> VMD as a PCIe device is an end point(type 0), not a PCIe aperture
->> (pcie bridge). In fact VMD is a type 0 raid controller(class code).
->> When BIOS boots, all root ports under VMD is inaccessible by BIOS, and
->> as such, they maintain their power on default states. The VMD UEFI DXE
->> driver loads and configure all devices under VMD. This is how AER,
->> power management and hotplug gets enabled in UEFI, since the BIOS pci
->> driver cannot access the root ports.
-> s/pcie/PCIe/
-> s/pci/PCI/
-> s/raid/RAID/
-Will fix it.
->
->> The patch worked around the interrupt storm by assigning the native
-> I assume "the patch" means 04b12ef163d1.  Sometimes people write "the
-> patch does X" in the commit log for the current patch, so it's nice to
-> be specific to avoid confusion.
->
->> ACPI states to the  root ports under VMD. It assigns AER, hotplug,
->> PME, etc. These have been restored back to the power on default state
->> in guest OS, which says the root port hot plug enable is default OFF.
->> At most, the work around should have only assigned AER state.
->> An additional patch should be added to exclude hot plug from the
->> original patch.
-> Add blank line between paragraphs.
-Will fix it.
->
->> This will cause hot plug to start working again in the guest, as the
->> settings implemented by the UEFI VMD DXE driver will remain in effect
->> in Linux.
-> This is a lot of description that doesn't seem to say what the actual
-> underlying issue is.  It's basically "if we treat hotplug differently
-> from other negotiated features, things work better."  And it seems
-> like it depends on what the UEFI driver did, and we should try to
-> avoid a dependency there.
->
-> If the issue is too many Correctable Errors being reported via AER, we
-> have that problem regardless of VMD, and we should handle it by
-> rate-limiting and/or suppressing them completely for particularly
-> offensive devices.  We have some issues like this that are still
-> outstanding:
->
-> [1] https://lore.kernel.org/linux-pci/DM6PR04MB6473197DBD89FF4643CC391F8BC19@DM6PR04MB6473.namprd04.prod.outlook.com/
-> [2] https://lore.kernel.org/linux-pci/20230606035256.2886098-2-grundler@chromium.org/
-Sorry for the long description. I think your understanding of treating
-hotplug differently from other features is correct. The hotplug issue
-is seen only in guest because guest BIOS doesn't know about such
-settings nor have an implementation. Ideally, when hotplug is enabled
-in Host BIOS, VMD root ports in guest should obtain same values with
-the help of direct assign feature. The patch (04b12ef163d1) overwrites
-these values and assigns default values(i.e 0h for hotplug) resulting
-in hotplug disabled.
+- Mani
 
-Regarding AER, I think we should leave other settings as it is. During
-the initialization, AER is enabled on VMD root-port without knowing if
-the platform firmware has a handler. Thanks to the patch(04b12ef163d1),
-this mistake was corrected.
+> ---
+> change from v1 to v2:
+>  - add comments at restore register
+>  - add fixes tag
+> 
+>  .../pci/controller/dwc/pci-layerscape-ep.c    | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> index e0969ff2ddf7..b1faf41a2fae 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -45,6 +45,7 @@ struct ls_pcie_ep {
+>  	struct pci_epc_features		*ls_epc;
+>  	const struct ls_pcie_ep_drvdata *drvdata;
+>  	int				irq;
+> +	u32				lnkcap;
+>  	bool				big_endian;
+>  };
+>  
+> @@ -73,6 +74,7 @@ static irqreturn_t ls_pcie_ep_event_handler(int irq, void *dev_id)
+>  	struct ls_pcie_ep *pcie = dev_id;
+>  	struct dw_pcie *pci = pcie->pci;
+>  	u32 val, cfg;
+> +	u8 offset;
+>  
+>  	val = ls_lut_readl(pcie, PEX_PF0_PME_MES_DR);
+>  	ls_lut_writel(pcie, PEX_PF0_PME_MES_DR, val);
+> @@ -81,6 +83,19 @@ static irqreturn_t ls_pcie_ep_event_handler(int irq, void *dev_id)
+>  		return IRQ_NONE;
+>  
+>  	if (val & PEX_PF0_PME_MES_DR_LUD) {
+> +
+> +		offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> +
+> +		/*
+> +		 * The values of the Maximum Link Width and Supported Link
+> +		 * Speed from the Link Capabilities Register will be lost
+> +		 * during link down or hot reset. Restore initial value
+> +		 * that configured by the Reset Configuration Word (RCW).
+> +		 */
+> +		dw_pcie_dbi_ro_wr_en(pci);
+> +		dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, pcie->lnkcap);
+> +		dw_pcie_dbi_ro_wr_dis(pci);
+> +
+>  		cfg = ls_lut_readl(pcie, PEX_PF0_CONFIG);
+>  		cfg |= PEX_PF0_CFG_READY;
+>  		ls_lut_writel(pcie, PEX_PF0_CONFIG, cfg);
+> @@ -216,6 +231,7 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+>  	struct ls_pcie_ep *pcie;
+>  	struct pci_epc_features *ls_epc;
+>  	struct resource *dbi_base;
+> +	u8 offset;
+>  	int ret;
+>  
+>  	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> @@ -252,6 +268,9 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, pcie);
+>  
+> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> +	pcie->lnkcap = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+> +
+>  	ret = dw_pcie_ep_init(&pci->ep);
+>  	if (ret)
+>  		return ret;
+> -- 
+> 2.34.1
+> 
 
->> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
->> ---
->>  drivers/pci/controller/vmd.c | 2 --
->>  1 file changed, 2 deletions(-)
->>
->> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
->> index 769eedeb8802..52c2461b4761 100644
->> --- a/drivers/pci/controller/vmd.c
->> +++ b/drivers/pci/controller/vmd.c
->> @@ -701,8 +701,6 @@ static int vmd_alloc_irqs(struct vmd_dev *vmd)
->>  static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
->>  				       struct pci_host_bridge *vmd_bridge)
->>  {
->> -	vmd_bridge->native_pcie_hotplug = root_bridge->native_pcie_hotplug;
->> -	vmd_bridge->native_shpc_hotplug = root_bridge->native_shpc_hotplug;
->>  	vmd_bridge->native_aer = root_bridge->native_aer;
->>  	vmd_bridge->native_pme = root_bridge->native_pme;
->>  	vmd_bridge->native_ltr = root_bridge->native_ltr;
->> -- 
->> 2.31.1
->>
-
+-- 
+மணிவண்ணன் சதாசிவம்
