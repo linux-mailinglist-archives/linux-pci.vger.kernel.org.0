@@ -2,86 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3FA575902D
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 10:24:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D41C67591CA
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 11:41:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229558AbjGSIYK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jul 2023 04:24:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60814 "EHLO
+        id S229485AbjGSJlW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jul 2023 05:41:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229539AbjGSIYJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 04:24:09 -0400
-Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52691B6;
-        Wed, 19 Jul 2023 01:24:08 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id B3F163200946;
-        Wed, 19 Jul 2023 04:24:07 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Wed, 19 Jul 2023 04:24:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-        cc:cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm1; t=
-        1689755047; x=1689841447; bh=yj5ZNyx3bJGO8fextcCvMTuJb3vFCBIZNLI
-        tIYuSUIY=; b=n/uyu36t7GewOebMFc3M/kLb+5zUMoGZUF6TGjRXkMa+IwGp6V0
-        cDaX4s4cBFcGSsMatKHCx8/ESQpK/xl9EhBoG5jSWfOoI7P4uA5CrHyY71OY1H2x
-        uxydK9cffT+Qne5t4tN1tKhYPrQuLMQwrMHDykNruS9IUre4wbElq/7mdt5rW0zj
-        +YsnE8RZhai0DdcygqnXo+6L1hBsbWQvvRSqF2dw/MPe0LCIVuXdk2vgz0HyVkFZ
-        3cWlxSv67nzy4hjVNldnNlLbDYAN/W/JZ2iEs/GikxbhoQYfSdXZCMmqAIw9fBn/
-        vpFsCkAndHADBTL+mA4EXv1OmFA5ZhXtdpQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-        1689755047; x=1689841447; bh=yj5ZNyx3bJGO8fextcCvMTuJb3vFCBIZNLI
-        tIYuSUIY=; b=Syv7JxWMCh5h7FiUzDJqvXCKDZmV2xr+z82JFI6lWMk2/a0NZI2
-        60NLjKRDnFHtj/CQy2094/kpbXUD1t9VtL0GI9OHpwOmSJBdxwgCIwqDQt1Q/DCn
-        TA2IU4CDiifdTdGmjQOfT0hy7pCVpTKhJbzz2N7jWo47i4Xyv7TonN4dJfm+iBxq
-        ynG/4I2n1NQMezR5rlYtu15gZqGaQJuc9BXxhbMBkJ6efwEdXYNFMyQtZFvGvkVz
-        SDeFVU4jdNrQmET/ssSi05Y5Uq1i2XJrlQEMGlpieIJhV0Ahk/VngDXMEthu3+mh
-        DB4+K/haVxsZea00s6hKYQdPO8s+XpQp3sA==
-X-ME-Sender: <xms:p523ZKDxKad-GxOkS2KAk0ONJ-vzL5fIFBnzIQvgK5Y6S-BbPGB_Wg>
-    <xme:p523ZEi9Z6N5eZeZXHF_SSvkT6Q84zILtT7HS5lbgWTr486Efig_X6lS__1gZGFRL
-    AaJyIjyeobVUFOkKxw>
-X-ME-Received: <xmr:p523ZNmf-qyhnAX8FUqcYzFib4KlN0jRl7vbvqLQzszbTf6Ol41difYZZQ4Ssp1zC2A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrgeeigddtvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkffggfgfuvfevfhfhjggtgfesthekredttdefjeenucfhrhhomheplfhirgig
-    uhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
-    ggtffrrghtthgvrhhnpeffledtgefgudffhfefteelveeuudeugffhleevueekjeelueeh
-    vefgveeiieduhfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrh
-    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghes
-    fhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:p523ZIxxQqGpIuuCodUtdWecoQibXmfRII1iHmc50A5xMVq561hslw>
-    <xmx:p523ZPTkoazrWAzS_nLyAgE855L_oARIiwzdr_iIMTKFzqXneycecQ>
-    <xmx:p523ZDZQeB6SDdMp1SLv3h453--2iu_Bm20qjjzOa_YxxG4WqDYacg>
-    <xmx:p523ZNNXUwUOz1Hho9oeNY-bQ0MH8_lvxoQ7Ilfnv_I8dedFTaGvKQ>
-Feedback-ID: ifd894703:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 19 Jul 2023 04:24:04 -0400 (EDT)
-Message-ID: <c01c0138-70a5-f2ce-e99e-fa1a76e04cb2@flygoat.com>
-Date:   Wed, 19 Jul 2023 16:24:02 +0800
+        with ESMTP id S229639AbjGSJlW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 05:41:22 -0400
+Received: from smtp.dudau.co.uk (dliviu.plus.com [80.229.23.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B1814EC;
+        Wed, 19 Jul 2023 02:41:20 -0700 (PDT)
+Received: from mail.dudau.co.uk (bart.dudau.co.uk [192.168.14.2])
+        by smtp.dudau.co.uk (Postfix) with SMTP id A2F6E41A7003;
+        Wed, 19 Jul 2023 10:41:18 +0100 (BST)
+Received: by mail.dudau.co.uk (sSMTP sendmail emulation); Wed, 19 Jul 2023 10:41:18 +0100
+Date:   Wed, 19 Jul 2023 10:41:18 +0100
+From:   Liviu Dudau <liviu@dudau.co.uk>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     linux-phy@lists.infradead.org, linux-rockchip@lists.infradead.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Simon Xue <xxm@rock-chips.com>, John Clark <inindev@gmail.com>,
+        Qu Wenruo <wqu@suse.com>, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kernel@collabora.com
+Subject: Re: [PATCH v2 2/2] arm64: dts: rockchip: rk3588: add PCIe3 support
+Message-ID: <ZLevvl+VKBxe1kQu@bart.dudau.co.uk>
+References: <20230717173512.65169-1-sebastian.reichel@collabora.com>
+ <20230717173512.65169-3-sebastian.reichel@collabora.com>
+ <ZLarQUvUK3v3m6Cg@bart.dudau.co.uk>
+ <20230718160137.sfitnkl6gmyi75jx@mercury.elektranox.org>
+ <ZLbqPB5yP7Kn6FT6@bart.dudau.co.uk>
+ <20230718210601.6hrmnl5lbtl6vinp@mercury.elektranox.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] pci: loongson: Workaround MIPS firmware MRRS settings
-To:     Huacai Chen <chenhuacai@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, kw@linux.com, lpieralisi@kernel.org
-References: <20230718133259.2867432-1-jiaxun.yang@flygoat.com>
- <CAAhV-H7bv1OmzT0E-SEF6w83gPYrTwnZfc0WpWMUmBB1T1MmqQ@mail.gmail.com>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-In-Reply-To: <CAAhV-H7bv1OmzT0E-SEF6w83gPYrTwnZfc0WpWMUmBB1T1MmqQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230718210601.6hrmnl5lbtl6vinp@mercury.elektranox.org>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -89,41 +60,53 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Sebastian,
+
+On Tue, Jul 18, 2023 at 11:06:01PM +0200, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Tue, Jul 18, 2023 at 08:38:36PM +0100, Liviu Dudau wrote:
+> > On Tue, Jul 18, 2023 at 06:01:37PM +0200, Sebastian Reichel wrote:
+> > > On Tue, Jul 18, 2023 at 04:09:53PM +0100, Liviu Dudau wrote:
+> > > > On Mon, Jul 17, 2023 at 07:35:12PM +0200, Sebastian Reichel wrote:
+> > > > >  	pipe_phy1_grf: syscon@fd5c0000 {
+> > > > >  		compatible = "rockchip,rk3588-pipe-phy-grf", "syscon";
+> > > > >  		reg = <0x0 0xfd5c0000 0x0 0x100>;
+> > > > 
+> > > > What tree is based this on? Even after applying your PCIe2 series I don't have the above
+> > > > node so the patch doesn't apply to mainline.
+> > > 
+> > > You are missing naneng-combphy support:
+> > > 
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/commit/?h=v6.6-armsoc/dts64&id=6ebd55b3bba383e0523b0c014f17c97f3ce80708
+> > 
+> > Thanks! It looks like the PCIe2 commit that adds support to rk3588(s).dtsi
+> > files is also missing an #include <dt-bindings/phy/phy.h> for the PHY_TYPE_PCIE
+> > use, otherwise the DTS fail to compile.
+> 
+> Yes, that's also already in linux-next:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/commit/?h=v6.6-armsoc/dts64&id=34d6c15d8e86256ef2456c604b1c8d8242720871
+
+I'm reading that as: "relevant patch that this series depends on has already
+been added to the tree that's going to pull this PCIe2 series so all will be
+good". Otherwise I think there should be some mention in the cover letter
+about dependencies, so that people like me don't report issues just because
+they are not using the linux-rockchip tree by default.
+
+Many thanks for the quick answers and the links to fix my tree.
+
+Best regards,
+Liviu
+
+> 
+> Greetings,
+> 
+> -- Sebastian
 
 
-在 2023/7/18 22:46, Huacai Chen 写道:
-> Hi, Jiaxun,
->
-> On Tue, Jul 18, 2023 at 9:33 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->> This is a partial revert of commit 8b3517f88ff2 ("PCI:
->> loongson: Prevent LS7A MRRS increases") for MIPS based Loongson.
->>
->> There are many MIPS based Loongson systems in wild that
->> shipped with firmware which does not set maximum MRRS properly.
->>
->> Limiting MRRS to 256 for all as MIPS Loongson comes with higher
->> MRRS support is considered rare.
->>
->> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217680
->> Fixes: 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases")
->> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->> ---
->>   drivers/pci/controller/pci-loongson.c | 38 +++++++++++++++++++++++++++
->>   1 file changed, 38 insertions(+)
->>
->> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
->> index fe0f732f6e43..1cc3a5535dac 100644
->> --- a/drivers/pci/controller/pci-loongson.c
->> +++ b/drivers/pci/controller/pci-loongson.c
->> @@ -108,6 +108,44 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->>   DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->>                          DEV_LS7A_PCIE_PORT6, loongson_mrrs_quirk);
->>
->> +#ifdef CONFIG_MIPS
->> +static void loongson_firmware_mrrs_quirk(struct pci_dev *pdev)
->  From my point of view, loongson_old_mrrs_quirk() may be better.
 
-Make sense to me, will rename in v2.
-
-Thanks
-- Jiaxun
+-- 
+Everyone who uses computers frequently has had, from time to time,
+a mad desire to attack the precocious abacus with an axe.
+       	   	      	     	  -- John D. Clark, Ignition!
