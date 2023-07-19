@@ -2,147 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40DA375A00F
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 22:43:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6D6E75A06A
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 23:16:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229625AbjGSUnT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jul 2023 16:43:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43910 "EHLO
+        id S229477AbjGSVQG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jul 2023 17:16:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229480AbjGSUnS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 16:43:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD1909E;
-        Wed, 19 Jul 2023 13:43:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 699A46182F;
-        Wed, 19 Jul 2023 20:43:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A388C433C8;
-        Wed, 19 Jul 2023 20:43:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689799396;
-        bh=Tyjuk2o5/6zWPoP1zMw3/ypWfYVhxYWg4rjX3S4aZtg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FiAa9y/2tv71wEXdSyAGzNYhBUxM+hvhiaqxmMnzXpP8UcpFHg9j/QVPzqJ1auM37
-         lbHnkX0NYfz7AI9yHQjtRu9TYLXdBTGLfLBfe6m5AW1ZMZ1Db0D8YHv0o/kXURCPBg
-         6o2jg6IJRGYIgt179i38xPkXzaLIsMgsxFnK0fpi91ooT8kKWcS8B/1ovFntmhRFU0
-         Q8BPuImDwnSqp/UoGGhqBPPlkEWcYQ8KgeRMf3mdhJTJhj6Do9nbOMZCXofTjkWIFw
-         Snq6WsZ6LAoKSxoq4zjBx4b7UYqEw6ID5xRozHH9G3pl2v8PjgHJhBEsxoAdXceHil
-         xp9Aiqzk429pA==
-Date:   Wed, 19 Jul 2023 15:43:14 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sui Jingfeng <sui.jingfeng@linux.dev>
-Cc:     David Airlie <airlied@gmail.com>, linux-fbdev@vger.kernel.org,
-        Sui Jingfeng <suijingfeng@loongson.cn>, kvm@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [Intel-gfx] [PATCH v3 3/9] PCI/VGA: Switch to
- aperture_contain_firmware_fb_nonreloc()
-Message-ID: <20230719204314.GA512532@bhelgaas>
+        with ESMTP id S229471AbjGSVQG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 17:16:06 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EBE91FC0
+        for <linux-pci@vger.kernel.org>; Wed, 19 Jul 2023 14:16:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689801365; x=1721337365;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YjYJXFZNKRa829Ef6CvuA69cIbjy+2D6KMvVRB+QSjQ=;
+  b=JiCxmPDuNxw4vBG0VXkEsx05MVnvoOzA37jHJudZ4+1jiZwgcYuMVG45
+   u/dCRg9J5cE7ITM3YoNvH8fVPXR34+KjM6xPgNx4VRSMesf6LBVQMISSp
+   0yEPLUPIqmaOuY/MHIxp6iK7z/Z1EXNneEq1R+OevIZuuhOfYsbBz3Y1A
+   EyCSN5vUSjMtmA2IylfeYYzx7WL4C0BzFibzPD2H31KMYhIOAApGVS7k5
+   QjHnNI/Mn0EEaIUShuSDVqCBsAyz8McR6VlwiGpM5cGa3uZ2PkRtvrlyh
+   CP+88dOjD7lcndBqGnmRqGxA0E8nDdrsR553M4C9yhYzR/S79ClmkGAdU
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="370139076"
+X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
+   d="scan'208";a="370139076"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2023 14:16:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="701395418"
+X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
+   d="scan'208";a="701395418"
+Received: from unknown (HELO localhost.ch.intel.com) ([10.2.230.30])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2023 14:16:04 -0700
+From:   Nirmal Patel <nirmal.patel@linux.intel.com>
+To:     nirmal.patel@linux.intel.com, <linux-pci@vger.kernel.org>
+Subject: [PATCH v2] PCI: vmd: Disable bridge window for domain reset
+Date:   Wed, 19 Jul 2023 16:56:10 -0400
+Message-Id: <20230719205610.922324-1-nirmal.patel@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230711164310.791756-4-sui.jingfeng@linux.dev>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc linux-pci; I don't apply or ack PCI patches unless they appear there]
+During domain reset process we are accidentally enabling
+the prefetchable memory by writing 0x0 to Prefetchable Memory
+Base and Prefetchable Memory Limit registers. As a result certain
+platforms failed to boot up.
 
-On Wed, Jul 12, 2023 at 12:43:04AM +0800, Sui Jingfeng wrote:
-> From: Sui Jingfeng <suijingfeng@loongson.cn>
-> 
-> The observation behind this is that we should avoid accessing the global
-> screen_info directly. Call the aperture_contain_firmware_fb_nonreloc()
-> function to implement the detection of whether an aperture contains the
-> firmware FB.
+When clearing Prefetchable Memory Base, Prefetchable Memory
+Limit and Prefetchable Base Upper 32 bits, the prefetchable
+memory range becomes 0x0-0x575000fffff. As a result the
+prefetchable memory is enabled accidentally. There is a gap
+between implementation and the PCI Express spec.
 
-Because it's better to access the global screen_info from
-aperture_contain_firmware_fb_nonreloc()?  The reasoning here is not
-super clear to me.
+Here is the quote from section 7.5.1.3.9 of PCI Express Base 6.0 spec:
 
-> This patch helps to decouple the determination from the implementation.
-> Or, in other words, we intend to make the determination opaque to the
-> caller. The determination may choose to be arch-dependent or
-> arch-independent. But vgaarb, as a consumer of the determination,
-> shouldn't care how the does determination is implemented.
+  The Prefetchable Memory Limit register must be programmed to a smaller
+  value than the Prefetchable Memory Base register if there is no
+  prefetchable memory on the secondary side of the bridge.
 
-"how the determination ..."  (drop the "does")
+Write proper values to required Memory Base registers and follow
+same the style as  pci_disable_bridge_window.
 
-Are you saying that aperture_contain_firmware_fb_nonreloc() might be
-arch-dependent?  Are there multiple callers?  Or does this just move
-code from one place to a more appropriate place?
+Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+---
+v1->v2: Follow same chain of operation as pci_disable_bridge_window
+        and update commit log.
+---
+ drivers/pci/controller/vmd.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
-> ---
->  drivers/pci/vgaarb.c | 19 ++++---------------
->  1 file changed, 4 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-> index bf96e085751d..953daf731b2c 100644
-> --- a/drivers/pci/vgaarb.c
-> +++ b/drivers/pci/vgaarb.c
-> @@ -14,6 +14,7 @@
->  #define vgaarb_info(dev, fmt, arg...)	dev_info(dev, "vgaarb: " fmt, ##arg)
->  #define vgaarb_err(dev, fmt, arg...)	dev_err(dev, "vgaarb: " fmt, ##arg)
->  
-> +#include <linux/aperture.h>
->  #include <linux/module.h>
->  #include <linux/kernel.h>
->  #include <linux/pci.h>
-> @@ -26,7 +27,6 @@
->  #include <linux/poll.h>
->  #include <linux/miscdevice.h>
->  #include <linux/slab.h>
-> -#include <linux/screen_info.h>
->  #include <linux/vt.h>
->  #include <linux/console.h>
->  #include <linux/acpi.h>
-> @@ -558,20 +558,11 @@ void vga_put(struct pci_dev *pdev, unsigned int rsrc)
->  }
->  EXPORT_SYMBOL(vga_put);
->  
-> +/* Select the device owning the boot framebuffer if there is one */
->  static bool vga_is_firmware_default(struct pci_dev *pdev)
->  {
->  #if defined(CONFIG_X86) || defined(CONFIG_IA64)
-> -	u64 base = screen_info.lfb_base;
-> -	u64 size = screen_info.lfb_size;
->  	struct resource *r;
-> -	u64 limit;
-> -
-> -	/* Select the device owning the boot framebuffer if there is one */
-> -
-> -	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
-> -		base |= (u64)screen_info.ext_lfb_base << 32;
-> -
-> -	limit = base + size;
->  
->  	/* Does firmware framebuffer belong to us? */
->  	pci_dev_for_each_resource(pdev, r) {
-> @@ -581,10 +572,8 @@ static bool vga_is_firmware_default(struct pci_dev *pdev)
->  		if (!r->start || !r->end)
->  			continue;
->  
-> -		if (base < r->start || limit >= r->end)
-> -			continue;
-> -
-> -		return true;
-> +		if (aperture_contain_firmware_fb_nonreloc(r->start, r->end))
-> +			return true;
->  	}
->  #endif
->  	return false;
-> -- 
-> 2.25.1
-> 
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 769eedeb8802..ca9081be917d 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -526,8 +526,16 @@ static void vmd_domain_reset(struct vmd_dev *vmd)
+ 				     PCI_CLASS_BRIDGE_PCI))
+ 					continue;
+ 
+-				memset_io(base + PCI_IO_BASE, 0,
+-					  PCI_ROM_ADDRESS1 - PCI_IO_BASE);
++				writel(0, base + PCI_IO_BASE);
++				/* MMIO Base/Limit */
++				writel(0x0000fff0, base + PCI_MEMORY_BASE);
++
++				/* Prefetchable MMIO Base/Limit */
++				writel(0, base + PCI_PREF_LIMIT_UPPER32);
++				writel(0x0000fff0, base + PCI_PREF_MEMORY_BASE);
++				writel(0xffffffff, base + PCI_PREF_BASE_UPPER32);
++				writel(0, base + PCI_IO_BASE_UPPER16);
++				writeb(0, base + PCI_CAPABILITY_LIST);
+ 			}
+ 		}
+ 	}
+-- 
+2.31.1
+
