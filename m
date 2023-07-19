@@ -2,180 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92D2F759F1E
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 21:58:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AB7A759F49
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jul 2023 22:06:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229637AbjGST6w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jul 2023 15:58:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42880 "EHLO
+        id S230074AbjGSUGj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jul 2023 16:06:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229681AbjGST6v (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 15:58:51 -0400
-Received: from out-21.mta0.migadu.com (out-21.mta0.migadu.com [91.218.175.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA217B3
-        for <linux-pci@vger.kernel.org>; Wed, 19 Jul 2023 12:58:49 -0700 (PDT)
-Message-ID: <9a1590bd-5dfc-94ad-645e-a0a499ae5b23@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1689796727;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0X9JpDivKaFvl29MFTdl1MmoW2D7jWyZmoPkL8jU/wY=;
-        b=g/U7HnDoDiCqmNZx9nygGmoTHsh/oR4gOBAp/GI+d29O4ufvQt6OR0CHo4r0LBcxZz9GnM
-        /4jyWgrcpveBCEPEy5FQ5TPkk0pyFbmPiyrGZL1dAKoa+GM+RF9uf/7G/a5Eq/OqVKVBIQ
-        0hhXwg4DTFrgz5FZ2cobs56lIWG+5N8=
-Date:   Thu, 20 Jul 2023 03:58:36 +0800
+        with ESMTP id S229525AbjGSUGj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jul 2023 16:06:39 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7C24492;
+        Wed, 19 Jul 2023 13:06:36 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8AxEvBKQrhksmoHAA--.17921S3;
+        Thu, 20 Jul 2023 04:06:34 +0800 (CST)
+Received: from [10.20.42.43] (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax8uQ6QrhkbAo1AA--.15314S3;
+        Thu, 20 Jul 2023 04:06:34 +0800 (CST)
+Message-ID: <4c6248d8-1145-6153-7031-fdbc635a4dff@loongson.cn>
+Date:   Thu, 20 Jul 2023 04:06:18 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
 Subject: Re: [PATCH 2/6] PCI/VGA: Deal with PCI VGA compatible devices only
-To:     Bjorn Helgaas <helgaas@kernel.org>
+Content-Language: en-US
+To:     Sui Jingfeng <sui.jingfeng@linux.dev>,
+        Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sui Jingfeng <suijingfeng@loongson.cn>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, loongson-kernel@lists.loongnix.cn,
+        Daniel Vetter <daniel@ffwll.ch>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        loongson-kernel@lists.loongnix.cn,
         Mario Limonciello <mario.limonciello@amd.com>
 References: <20230719182617.GA509912@bhelgaas>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Sui Jingfeng <sui.jingfeng@linux.dev>
-In-Reply-To: <20230719182617.GA509912@bhelgaas>
+ <9a1590bd-5dfc-94ad-645e-a0a499ae5b23@linux.dev>
+From:   suijingfeng <suijingfeng@loongson.cn>
+In-Reply-To: <9a1590bd-5dfc-94ad-645e-a0a499ae5b23@linux.dev>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf8Ax8uQ6QrhkbAo1AA--.15314S3
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+        ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+        BjDU0xBIdaVrnRJUUUPEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+        xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+        j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
+        AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAF
+        wI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+        1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
+        67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+        AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCF54CYxVAaw2AFwI0_JF0_Jw1l4c8EcI0Ec7Cj
+        xVAaw2AFwI0_Jw0_GFyl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GF
+        ylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+        14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7
+        IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
+        87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+        IFyTuYvjxU2T5lUUUUU
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+
+On 2023/7/20 03:58, Sui Jingfeng wrote:
+> What this version adds here is *same* before this patch set is applied.
 
 
-On 2023/7/20 02:26, Bjorn Helgaas wrote:
-> On Tue, Jul 11, 2023 at 09:43:50PM +0800, Sui Jingfeng wrote:
-[...]
->> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
->> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
-> I do not see Mario's Reviewed-by on the list.  I do see Mario's
-> Reviewed-by [2] for a previous version, but that version added this in
-> pci_notify():
->
->    + if (pdev->class != PCI_CLASS_DISPLAY_VGA << 8)
->    +   return 0;
->
-> while this version adds:
->
->    + if ((pdev->class >> 8) != PCI_CLASS_DISPLAY_VGA)
->    +   return 0;
->
-> It's OK to carry a review to future versions if there are
-> insignificant changes, but this is a functional change that seems
-> significant to me.  The first matches only 0x030000, while the second
-> discards the low eight bits so it matches 0x0300XX.
+The filter method is *same* , in the cases of before this patch is 
+applied and after this patch is applied.
 
-Yes, you are right.
-
-But I suddenly realized that this may deserve another patch, desperate 
-trivial.
-
-What this version adds here is *same* before this patch set is applied.
-
-My explanation about the minor tweak being made before this version and 
-previous version
-
-is that  I want to keep my patch *less distraction*.
-
-The major functional gains(benefit) is that we filter non VGA compatible 
-devices out.
-
-As a start point, I should keep one patch do one thing (do one thing and 
-do it well).
-
-
-On the other hand, even though the lest significant 8 but if pdev->class 
-is really matter.
-
-I think I still need to wait the things(a bug emerged, for example) 
-became clear.
-
-Instead of cleanup all potential problems with obvious motivation.
-
-I think Mario will accept my explanation.
-
-> [1] https://lore.kernel.org/r/20230718231400.GA496927@bhelgaas
-> [2] https://lore.kernel.org/all/5b6fdf65-b354-94a9-f883-be820157efad@amd.com/
->
->> ---
->>   drivers/pci/vgaarb.c | 25 +++++++++++++------------
->>   1 file changed, 13 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
->> index c1bc6c983932..021116ed61cb 100644
->> --- a/drivers/pci/vgaarb.c
->> +++ b/drivers/pci/vgaarb.c
->> @@ -754,10 +754,6 @@ static bool vga_arbiter_add_pci_device(struct pci_dev *pdev)
->>   	struct pci_dev *bridge;
->>   	u16 cmd;
->>   
->> -	/* Only deal with VGA class devices */
->> -	if ((pdev->class >> 8) != PCI_CLASS_DISPLAY_VGA)
->> -		return false;
->> -
->>   	/* Allocate structure */
->>   	vgadev = kzalloc(sizeof(struct vga_device), GFP_KERNEL);
->>   	if (vgadev == NULL) {
->> @@ -1502,6 +1498,10 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
->>   
->>   	vgaarb_dbg(dev, "%s\n", __func__);
->>   
->> +	/* Deal with VGA compatible devices only */
->> +	if ((pdev->class >> 8) != PCI_CLASS_DISPLAY_VGA)
->> +		return 0;
->> +
->>   	/* For now we're only intereted in devices added and removed. I didn't
->>   	 * test this thing here, so someone needs to double check for the
->>   	 * cases of hotplugable vga cards. */
->> @@ -1534,8 +1534,8 @@ static struct miscdevice vga_arb_device = {
->>   
->>   static int __init vga_arb_device_init(void)
->>   {
->> +	struct pci_dev *pdev = NULL;
->>   	int rc;
->> -	struct pci_dev *pdev;
->>   
->>   	rc = misc_register(&vga_arb_device);
->>   	if (rc < 0)
->> @@ -1543,13 +1543,14 @@ static int __init vga_arb_device_init(void)
->>   
->>   	bus_register_notifier(&pci_bus_type, &pci_notifier);
->>   
->> -	/* We add all PCI devices satisfying VGA class in the arbiter by
->> -	 * default */
->> -	pdev = NULL;
->> -	while ((pdev =
->> -		pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
->> -			       PCI_ANY_ID, pdev)) != NULL)
->> -		vga_arbiter_add_pci_device(pdev);
->> +	/*
->> +	 * We add all PCI VGA compatible devices in the arbiter by default
->> +	 */
->> +	do {
->> +		pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, pdev);
->> +		if (pdev)
->> +			vga_arbiter_add_pci_device(pdev);
->> +	} while (pdev);
->>   
->>   	pr_info("loaded\n");
->>   	return rc;
->> -- 
->> 2.25.1
->>
