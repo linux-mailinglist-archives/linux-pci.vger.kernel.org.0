@@ -2,136 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D329875B26F
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jul 2023 17:24:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF4C975B3D2
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jul 2023 18:08:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232071AbjGTPYG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jul 2023 11:24:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58944 "EHLO
+        id S230475AbjGTQIE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jul 2023 12:08:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232515AbjGTPYF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jul 2023 11:24:05 -0400
+        with ESMTP id S233069AbjGTQID (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jul 2023 12:08:03 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D1F813E;
-        Thu, 20 Jul 2023 08:24:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAA3ECE;
+        Thu, 20 Jul 2023 09:07:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 99EEF61B4C;
-        Thu, 20 Jul 2023 15:24:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D009DC433C8;
-        Thu, 20 Jul 2023 15:24:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 60EFB612CA;
+        Thu, 20 Jul 2023 16:07:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07552C433C8;
+        Thu, 20 Jul 2023 16:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689866643;
-        bh=A9ffLkHP3EeJtWxJ/R0wqfZkmpfeCi3q5f4HAbNpLUs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=E5ix1vEBK3ECDKaX/NVb7PYydIW8QhdbkjT2ocNoka284gQjrgp9wFUORUSOpkpio
-         +O6I2kp27YgvAXhnFY/8V9WroAuxs7K6DkFG3ysWeYrypld4juqa2nzOnOd2KTCMWo
-         1c78ge0WkNgCXuXO/jUXrqs+54T0AgB80q9FfxObW7Uj8MwG/KTXCQ/xyggnxTpJ2y
-         NYZ2RuwecYUMz3uRBY1S4c36lj9/Gt+EdGnVfsQvJPJ50PyReqbxqyxBuChtbqHwUP
-         5hIlVX1ctzu0yC5YvE1yOvMd3LHoZ2XrWWlV9jxc1jsbfEvUGHQ5vlNw/n2MVepr68
-         57COOMXu1/tfQ==
-Date:   Thu, 20 Jul 2023 10:24:01 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
-Cc:     "krzysztof.kozlowski@linaro.org" <krzysztof.kozlowski@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>,
-        "Simek, Michal" <michal.simek@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH V5 3/3] PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver
-Message-ID: <20230720152401.GA523764@bhelgaas>
+        s=k20201202; t=1689869275;
+        bh=Ou2Mh5nraWXlzNwKruRqfrLeoeDKp8beV04BRuHhYwo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QDPRzplSB7rDPnYbyMPv7JcU43dmdgPKHwR+inxmoJlN/LC+4kmsPvpf8Knct6shU
+         sCOH6u11Hx9i/jQ2yC4biJjDAzRXm5N8sqvIwdD4VEWrj/C4+YWp7EsyQpdfxpT6ET
+         tzeaLBWvvINiKVnxRMtgpdevhG222aUIR+jswm5aaKFNKFPVn0GiCjEoHjmol1oReF
+         I+gfEBo9fvPHIYRqyQdoo26D7Hm05LZYqdQctEY8AmxDINlc1Ndus9EtZSsuf2xrcd
+         zWHtOCKOf76wMwe+Fm2eio8zTnhLH4lMCKp6zTr3VlFwhJ88+I6HjXJjBmaL7m6z5x
+         ddQTciqQJmiKg==
+Date:   Thu, 20 Jul 2023 21:37:38 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Frank Li <Frank.li@nxp.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        helgaas@kernel.org, imx@lists.linux.dev, bhelgaas@google.com,
+        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
+        kw@linux.com, leoyang.li@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, minghuan.lian@nxp.com,
+        mingkai.hu@nxp.com, robh+dt@kernel.org, roy.zang@nxp.com,
+        shawnguo@kernel.org, zhiqiang.hou@nxp.com
+Subject: Re: [PATCH v3 1/2] PCI: dwc: Implement general suspend/resume
+ functionality for L2/L3 transitions
+Message-ID: <20230720160738.GC48270@thinkpad>
+References: <20230419164118.596300-1-Frank.Li@nxp.com>
+ <20230717164526.GC35455@thinkpad>
+ <ZLWKI1lRqxejfUgK@lizhi-Precision-Tower-5810>
+ <20230718100400.GB4771@thinkpad>
+ <20230720142509.GB48270@thinkpad>
+ <ZLlGsM/D/b+udmAD@lizhi-Precision-Tower-5810>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <SN7PR12MB7201A03526C04788709167A48B3EA@SN7PR12MB7201.namprd12.prod.outlook.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZLlGsM/D/b+udmAD@lizhi-Precision-Tower-5810>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Thomas in case he wants to comment on chained interrupts]
-
-On Thu, Jul 20, 2023 at 06:37:03AM +0000, Havalige, Thippeswamy wrote:
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > ...
-> > On Wed, Jun 28, 2023 at 02:58:12PM +0530, Thippeswamy Havalige wrote:
-> > > Add support for Xilinx XDMA Soft IP core as Root Port.
-> > > ...
-
-> > > + * struct pl_dma_pcie - PCIe port information
-> > > + * @intx_domain: Legacy IRQ domain pointer
-> > > + * @pldma_domain: PL DMA IRQ domain pointer
-> > > + * @irq_misc: Legacy and error interrupt number
-> > > + * @intx_irq: legacy interrupt number
-
-> > "Legacy and error interrupt number" and "legacy interrupt number"
-> > sound like they overlap -- "legacy interrupt number" is part of both.
-> > Is that an error?
->
-> - Agreed, I'll modify this comment to legacy interrupt number. (This
-> irq line is for both legacy interrupts and error interrupt bits)
-
-Does "legacy" mean "INTx" in this context?  If so, I'd use "INTx"
-because it's much more specific.  "Legacy" really doesn't contain any
-information other than "this is something retained for some kind of
-backward compatibility."
-
-If you have more detail about the "error interrupt," that would be
-useful as well.  Does this refer to an AER interrupt, a "System
-Error", something else?  I'm looking at the diagram in PCIe r6.0,
-Figure 6-3, wondering if this is related to anything there.  I suppose
-likely it's some Xilinx-specific thing?
-
-> > > +	/* Plug the INTx chained handler */
-> > > +	irq_set_chained_handler_and_data(port->intx_irq,
-> > > +					 xilinx_pl_dma_pcie_intx_flow, port);
-> > > +
-> > > +	/* Plug the main event chained handler */
-> > > +	irq_set_chained_handler_and_data(port->irq,
-> > > +					 xilinx_pl_dma_pcie_event_flow,
-> > port);
+On Thu, Jul 20, 2023 at 10:37:36AM -0400, Frank Li wrote:
+> On Thu, Jul 20, 2023 at 07:55:09PM +0530, Manivannan Sadhasivam wrote:
+> > On Tue, Jul 18, 2023 at 03:34:26PM +0530, Manivannan Sadhasivam wrote:
+> > > On Mon, Jul 17, 2023 at 02:36:19PM -0400, Frank Li wrote:
+> > > > On Mon, Jul 17, 2023 at 10:15:26PM +0530, Manivannan Sadhasivam wrote:
+> > > > > On Wed, Apr 19, 2023 at 12:41:17PM -0400, Frank Li wrote:
+> > > > > > Introduced helper function dw_pcie_get_ltssm to retrieve SMLH_LTSS_STATE.
+> > > > > > Added API pme_turn_off and exit_from_l2 for managing L2/L3 state transitions.
+> > > > > > 
+> > > > > > Typical L2 entry workflow:
+> > > > > > 
+> > > > > > 1. Transmit PME turn off signal to PCI devices.
+> > > > > > 2. Await link entering L2_IDLE state.
+> > > > > 
+> > > > > AFAIK, typical workflow is to wait for PME_To_Ack.
+> > > > 
+> > > > 1 Already wait for PME_to_ACK,  2, just wait for link actual enter L2.
+> > > > I think PCI RC needs some time to set link enter L2 after get ACK from
+> > > > PME.
+> > > > 
 > > 
-> > What's the reason for using chained IRQs?  Can this be done
-> > without them?  I don't claim to understand all the issues here,
-> > but it seems better to avoid chained IRQ handlers when possible:
-> > https://lore.kernel.org/all/877csohcll.ffs@tglx/
-
-> - As per the comments in this
-> https://lkml.kernel.org/lkml/alpine.DEB.2.20.1705232307330.2409@nanos/T/
-> "It is fine to have chained interrupts when bootloader, device tree
-> and kernel under control. Only if BIOS/UEFI comes into play the user
-> is helpless against interrupt storm which will cause system to
-> hangs."
+> > One more comment. If you transition the device to L2/L3, then it can loose power
+> > if Vaux was not provided. In that case, can all the devices work after resume?
+> > Most notably NVMe?
 > 
-> We are using ARM embedded platform with Bootloader, Devicetree flow.
+> I have not hardware to do such test, NVMe driver will reinit everything after
+> resume if no L1.1\L1.2 support. If there are L1.1\L1.2, NVME expect it leave
+> at L1.2 at suspend to get better resume latency.
+> 
 
-I read Thomas' comments as "in general it's better to use regular
-interrupts, but we can live with chained interrupts if we have control
-of bootloader, device tree, and kernel."
+To be precise, NVMe driver will shutdown the device if there is no ASPM support
+and keep it in low power mode otherwise (there are other cases as well but we do
+not need to worry).
 
-I guess my questions are more like:
+But here you are not checking for ASPM state in the suspend path, and just
+forcing the link to be in L2/L3 (thereby D3Cold) even though NVMe driver may
+expect it to be in low power state like ASPM/APST.
 
-  - Could this be done with either chained interrupts or regular
-    interrupts?
+So you should only put the link to L2/L3 if there is no ASPM support. Otherwise,
+you'll ending up with bug reports when users connect NVMe to it.
 
-  - If so, what is the advantage to using chained interrupts?
+- Mani
 
-Across the entire kernel, irq_set_chained_handler_and_data() is
-relatively unusual, which makes me think it may be better to use the
-more common path if it's possible.
+> This API help remove duplicate codes and it can be improved gradually.
+> 
+> 
+> > 
+> > - Mani
+> > 
+> > 
+> > -- 
+> > மணிவண்ணன் சதாசிவம்
 
-Bjorn
+-- 
+மணிவண்ணன் சதாசிவம்
