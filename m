@@ -2,119 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E40775A71D
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jul 2023 09:03:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18C8875A8A9
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jul 2023 10:07:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229651AbjGTHDF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jul 2023 03:03:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38622 "EHLO
+        id S231623AbjGTIHR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jul 2023 04:07:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229644AbjGTHDE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jul 2023 03:03:04 -0400
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C400FCC;
-        Thu, 20 Jul 2023 00:03:02 -0700 (PDT)
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-        by ex01.ufhost.com (Postfix) with ESMTP id D10C724E3C2;
-        Thu, 20 Jul 2023 15:03:00 +0800 (CST)
-Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 20 Jul
- 2023 15:03:00 +0800
-Received: from [192.168.125.127] (113.72.147.86) by EXMBX171.cuchost.com
- (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 20 Jul
- 2023 15:02:59 +0800
-Message-ID: <8e78ffd6-1cec-ad3b-7809-1b0350bef935@starfivetech.com>
-Date:   Thu, 20 Jul 2023 15:02:58 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v1 5/9] dt-bindings: PLDA: Add PLDA XpressRICH PCIe host
- controller
-Content-Language: en-US
-To:     Rob Herring <robh@kernel.org>
-CC:     Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        with ESMTP id S230499AbjGTIHN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jul 2023 04:07:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84CF52684
+        for <linux-pci@vger.kernel.org>; Thu, 20 Jul 2023 01:07:11 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 062D96191C
+        for <linux-pci@vger.kernel.org>; Thu, 20 Jul 2023 08:07:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BEDCC433C8;
+        Thu, 20 Jul 2023 08:07:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689840430;
+        bh=vi5MjxIZvlklMNcaihqDgE+Ey3S6LNVaabLJhEHYLuE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cPC6z0kskbvUNcv4M115MOTVLtsbglt8rK0i2KRR6rqcbgdsjw72deZsM6++xwAVZ
+         nVG1uYY0fGPiSkZiWHkeOi2s8SU6PO1IB5U2L7QD8umvNiGttBCAC2A1UHOYmBhe8d
+         WZqLWXfXCfmD8A7uLXQ0yFn+AmIK90Duq8fOkVWFMUnpxKfNWmYatXDzPpuJhyrIld
+         +SwKbKFQdZqsrlnoqWHc8z2rcJEPqGuQpW9Y+Bf9+H1vT3xoPPsXJb7eDYPRx+BVjH
+         M9g1ctOVesaK8lVtNqBlQxEWzrWv761zKFUM/IqfBAtKESy3l/zjgUiqco53fbF+xJ
+         a45N+IOMY/nOg==
+Date:   Thu, 20 Jul 2023 10:07:05 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Conor Dooley <conor@kernel.org>
+Cc:     daire.mcnamara@microchip.com,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        Kevin Xie <kevin.xie@starfivetech.com>
-References: <20230719102057.22329-1-minda.chen@starfivetech.com>
- <20230719102057.22329-6-minda.chen@starfivetech.com>
- <20230719222900.GA882340-robh@kernel.org>
-From:   Minda Chen <minda.chen@starfivetech.com>
-In-Reply-To: <20230719222900.GA882340-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [113.72.147.86]
-X-ClientProxiedBy: EXCAS063.cuchost.com (172.16.6.23) To EXMBX171.cuchost.com
- (172.16.6.91)
-X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 0/8] PCI: microchip: Fixes and clean-ups
+Message-ID: <ZLjrKTLhNhPhlEbg@lpieralisi>
+References: <20230630154859.2049521-1-daire.mcnamara@microchip.com>
+ <20230719-roster-preheated-799d7e103ddb@spud>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230719-roster-preheated-799d7e103ddb@spud>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Jul 19, 2023 at 06:00:37PM +0100, Conor Dooley wrote:
+> Hey folks,
+> 
+> On Fri, Jun 30, 2023 at 04:48:51PM +0100, daire.mcnamara@microchip.com wrote:
+> > From: Daire McNamara <daire.mcnamara@microchip.com>
+> > 
+> > This patch series contains fixes and clean-ups for the Microchip PolarFire SoC PCIe driver
+> > 
+> > These patches are extracted from the link below to separate them from the outbound and inbound
+> > range handling which is taking considerable time.
+> > Link: https://lore.kernel.org/linux-riscv/20230111125323.1911373-1-daire.mcnamara@microchip.com/
+> > 
+> > These patches are regenerated on v6.4-rc6.
+> > 
+> > Main Changes from v1:
+> > - Dropped "Remove cast warning for devm_add_action_or_reset()". This
+> >   has been overtaken by a patch series from Krzysztof Wilczynski.
+> > - Improved the comment for "Enable building driver as a module" to
+> >   clarify what enables building the driver as a module.
+> > - Split "Gather MSI information from hardware config registers",
+> >   for clarity, into:
+> >    - "Gather MSI information from hardware config registers" purely
+> >       changing the of source of MSI-related information (Num MSIs and
+> >       MSI address) from #defines (which can be incorrect) to FPGA
+> >       configuration registers (which is the ultimate source of truth),
+> >       and a
+> >    - "Rename and refactor ..." patch as a function's code is now clearly
+> >       unrelated to its current name.
+> 
+> This series has been sitting with reviews (albeit from myself) for a
+> couple of weeks. What's missing to get this series picked up?
+
+We are at v6.5-rc2 - fixes are not urgent, there is nothing missing
+other than us going through the patch queue and review it/pick it up.
+
+Thanks,
+Lorenzo
+
+> Thanks,
+> Conor.
+> 
+> > cc: Conor Dooley <conor.dooley@microchip.com>
+> > cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > cc: "Krzysztof Wilczyński" <kw@linux.com>
+> > cc: Rob Herring <robh@kernel.org>
+> > cc: Bjorn Helgaas <bhelgaas@google.com>
+> > cc: linux-riscv@lists.infradead.org
+> > cc: linux-pci@vger.kernel.org
+> > 
+> > Daire McNamara (8):
+> >   PCI: microchip: Correct the DED and SEC interrupt bit offsets
+> >   PCI: microchip: Enable building driver as a module
+> >   PCI: microchip: Align register, offset, and mask names with hw docs
+> >   PCI: microchip: Enable event handlers to access bridge and ctrl ptrs
+> >   PCI: microchip: Clean up initialisation of interrupts
+> >   PCI: microchip: Gather MSI information from hardware config registers
+> >   PCI: microchip: Rename and refactor mc_pcie_enable_msi()
+> >   PCI: microchip: Re-partition code between probe() and init()
+> > 
+> >  drivers/pci/controller/Kconfig               |   2 +-
+> >  drivers/pci/controller/pcie-microchip-host.c | 402 +++++++++++--------
+> >  2 files changed, 238 insertions(+), 166 deletions(-)
+> > 
+> > 
+> > base-commit: 858fd168a95c5b9669aac8db6c14a9aeab446375
+> > -- 
+> > 2.25.1
+> > 
 
 
-On 2023/7/20 6:29, Rob Herring wrote:
-> On Wed, Jul 19, 2023 at 06:20:53PM +0800, Minda Chen wrote:
->> Add PLDA XpressRICH host controller dt-bindings. Both Microchip
->> PolarFire SoC and StarFive JH7110 SoC are using PLDA XpressRICH
->> PCIe host controller IP.
->> 
->> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
->> Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
->> ---
->>  .../pci/plda,xpressrich-pcie-host.yaml        | 66 +++++++++++++++++++
->>  1 file changed, 66 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/plda,xpressrich-pcie-host.yaml
->> 
->> diff --git a/Documentation/devicetree/bindings/pci/plda,xpressrich-pcie-host.yaml b/Documentation/devicetree/bindings/pci/plda,xpressrich-pcie-host.yaml
->> new file mode 100644
->> index 000000000000..10a10862a078
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/plda,xpressrich-pcie-host.yaml
->> @@ -0,0 +1,66 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pci/plda,xpressrich-pcie-host.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: PLDA XpressRICH PCIe host controller
->> +
->> +maintainers:
->> +  - Daire McNamara <daire.mcnamara@microchip.com>
->> +  - Minda Chen <minda.chen@starfivetech.com>
->> +
->> +allOf:
->> +  - $ref: /schemas/pci/pci-bus.yaml#
->> +  - $ref: plda,xpressrich-pcie-common.yaml#
->> +  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    const: plda,xpressrich-pcie-host
-> 
-> What h/w is this in? I don't see why this is needed. You have the common 
-> schema for the IP block and then the Microchip and Starfive schemas for 
-> the 2 implementations.
-> 
-> Rob
-OK. I will delete this patch and pcie-plda-plat.c
