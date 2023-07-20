@@ -2,246 +2,249 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10FA275B51C
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jul 2023 18:59:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61D9A75B6CF
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jul 2023 20:31:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229644AbjGTQ7r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jul 2023 12:59:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46780 "EHLO
+        id S232072AbjGTSbZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jul 2023 14:31:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229907AbjGTQ7p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jul 2023 12:59:45 -0400
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on20618.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe16::618])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBB3492;
-        Thu, 20 Jul 2023 09:59:39 -0700 (PDT)
+        with ESMTP id S230018AbjGTSbW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jul 2023 14:31:22 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2041.outbound.protection.outlook.com [40.107.237.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19C9F196;
+        Thu, 20 Jul 2023 11:31:21 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Rdqfof7+MmlVdQfzIQg5Mpmp7nGMSPsgWG4vAPMnmM4j/AOTh+5l57bkepo4NEoBu6jRRGw5gkTHko1dSxPcfKQbE3DIbtIVWIS11BoxmLsxnDua3VhBV5X6vCEr99d76bu/L6wloEi+vUArEr0O88GFtuJcGcxmwO3qYBBJDOoVlW4gBAJtT+lEQzVBfayyU6cuNs6zn2UIGtbOBxEAf9z7QG5A/SiS+0wuYgARJNINU3XUrQDnOngfRmG/Gs8JV/yssO6MhMKqfKeqOjcUnhenYjDdgSGFiFFW+xvqKYgiqMykAj4oF2yK/6B2T5GVeGNNJKA1W+FjitY8bdOgAw==
+ b=RhwFTgRmJv7eoI7VRTbLo/6S5c1/QAyG3XRi7jFFQoA5t6bii3tu4i9SlZCMoHBTRANw7JnJhelXa3V9dX078ol3lpGTJUa92N9BT5/sNufe73rpOqWYN0BNYMRaLBHZsO72ttPyKowr4qx/mwhqWtHPjX0uabwS0ypLxyGRcT1XBLuM3Bo2iWOLN8uKiZigrt4dpYeBqmt/XDnC+t7xc4hKicrr3rVqxTd0A10+tZo8zKVgT52rIE8k6EAXN/hVocpZfx2bcXpUJCeuibPZxEvOMTafkBaHFnQga174RI63yRdmmXyPMVCbbVR+zvySasvnOxcrMLly/w/fPRFK8g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=66jfCo6JZvpcBWfCbEaUA7qh5Q37lSrzg38E9qv4RzI=;
- b=Q5GpXWJ5iK2Wb3mR5UyDK33BqDwG1U6T9BoMxsTITlu8iGIChnl+D8PPJCncQFq1Rl2bMVeGOJon75EePVoDZZQrTXcoEPlIMYzrWTBAPWvo7DNdF5x0bCC1MIFIwnz/o8rMVD/uFjw82UbcNz/xjF/f7KGZD5wbDBuH4b+FZHiZ3aKGjUqkRqQIfVLRpnSoKDRFqy6YZspxY2gcOltFwHsqQH3NmIlPuUpOSFbN/AzOt+Ydy0QttmcD9a9OYZurGcXd355DxPyAFNm5+TjWMqbDNPuP/hCL2e0qkTa4N5tYe0pmz8KYg4ZcjomohiJyf3HJiartWG8SbNLVArzEDg==
+ bh=uu5I9vdWUnpr2tsaUClKmxxD4hTXuGrHBkx2uMKcL60=;
+ b=N38ivpBoUypWLAfaBUkzi4s0+adOYj25ifgjspUp6Ek1oFThP7QN1Bt1IfenJ+k7z5czdCg3GSy1mQHA04VMjUn7jiRuxx1YOt1Y0nDqEnTMWzDOlO2GnBOEEIy9+yVBlGiTkC7Bh6+wkSL2UMVLm7oxg07K7RpPGGOds0N8b9t4Eja0ZnZlPo120MHNYAWkzsCl5Frsl84W/2gnpoo4TYM2czVfqAIE+WHncuPdERH6EyAEOqQw3tRuIcSm5onvAz2GpaAlZVJXI8b3D1I1jvMpF5m7/jI7Y+0Ym9YLAFOyMNZvfIbBI1Za7Bx72WytuWiYVex5HhRI68T4RdZdwg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=66jfCo6JZvpcBWfCbEaUA7qh5Q37lSrzg38E9qv4RzI=;
- b=Js3jXEBg1TWb+wNQoMYfsNfNK2WApukLE5I5I3/qexR0+CVp2l4rHMLn8v0B55BvWPpBLoeXkewwOk7EUTri0nk+s0DdQEbXf42+rd3jCQ0lhsxlHlVDv6VcqMr8AjhiptKmnG3twjqprf2uSNE4YJ3HhXHyOoHamxD+zXAj1Ug=
+ bh=uu5I9vdWUnpr2tsaUClKmxxD4hTXuGrHBkx2uMKcL60=;
+ b=rRwL8zVMwGsp4EStEhRZY/h3zSyjTh85gaxttzVBiLUAVoLZ/OwDf8Ore6/4vrNBQ0Yp1l/d2Qwzj+jG5bBoV5DwglttkQjjj/mst0A6CTIV/+veDuLTZ6xFiaih2ReuGb/+0DrzfPlegCFWeLB0upM5EcQdJ/X5s/V+A2p63Q0=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
- by DU0PR04MB9468.eurprd04.prod.outlook.com (2603:10a6:10:35c::12) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
+ by DM4PR12MB6231.namprd12.prod.outlook.com (2603:10b6:8:a6::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.24; Thu, 20 Jul
- 2023 16:59:35 +0000
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::d0d5:3604:98da:20b1]) by AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::d0d5:3604:98da:20b1%7]) with mapi id 15.20.6609.024; Thu, 20 Jul 2023
- 16:59:35 +0000
-Date:   Thu, 20 Jul 2023 12:59:20 -0400
-From:   Frank Li <Frank.li@nxp.com>
-To:     Manivannan Sadhasivam <mani@kernel.org>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        helgaas@kernel.org, imx@lists.linux.dev, bhelgaas@google.com,
-        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
-        kw@linux.com, leoyang.li@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, minghuan.lian@nxp.com,
-        mingkai.hu@nxp.com, robh+dt@kernel.org, roy.zang@nxp.com,
-        shawnguo@kernel.org, zhiqiang.hou@nxp.com
-Subject: Re: [PATCH v3 1/2] PCI: dwc: Implement general suspend/resume
- functionality for L2/L3 transitions
-Message-ID: <ZLln6GDX/u3pdEQ6@lizhi-Precision-Tower-5810>
-References: <20230419164118.596300-1-Frank.Li@nxp.com>
- <20230717164526.GC35455@thinkpad>
- <ZLWKI1lRqxejfUgK@lizhi-Precision-Tower-5810>
- <20230718100400.GB4771@thinkpad>
- <20230720142509.GB48270@thinkpad>
- <ZLlGsM/D/b+udmAD@lizhi-Precision-Tower-5810>
- <20230720160738.GC48270@thinkpad>
- <ZLlgPprvtuDbGFVu@lizhi-Precision-Tower-5810>
- <20230720164318.GE48270@thinkpad>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230720164318.GE48270@thinkpad>
-X-ClientProxiedBy: BY5PR17CA0050.namprd17.prod.outlook.com
- (2603:10b6:a03:167::27) To AM6PR04MB4838.eurprd04.prod.outlook.com
- (2603:10a6:20b:4::16)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.33; Thu, 20 Jul
+ 2023 18:31:18 +0000
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::642c:a4b0:ae3f:378b]) by BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::642c:a4b0:ae3f:378b%4]) with mapi id 15.20.6609.024; Thu, 20 Jul 2023
+ 18:31:18 +0000
+Message-ID: <fdadfe06-5d1e-978b-82bf-637a9ad9754a@amd.com>
+Date:   Thu, 20 Jul 2023 11:31:15 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 2/2] cxl/pci: Fix appropriate checking for _OSC while
+ handling CXL RAS registers
+Content-Language: en-US
+To:     Robert Richter <rrichter@amd.com>
+Cc:     Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-cxl@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        oohall@gmail.com, Lukas Wunner <lukas@wunner.de>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Terry Bowman <terry.bowman@amd.com>
+References: <20230719192313.38591-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20230719192313.38591-3-Smita.KoralahalliChannabasappa@amd.com>
+ <53d5eeb3-5a13-3663-57a1-e927c4c369b8@linux.intel.com>
+ <937d872d-cbc1-3671-9c3d-ddceb9cb270b@amd.com>
+ <ZLkxiZv3lWfazwVH@rric.localdomain>
+From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <ZLkxiZv3lWfazwVH@rric.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR05CA0092.namprd05.prod.outlook.com
+ (2603:10b6:a03:e0::33) To BYAPR12MB2869.namprd12.prod.outlook.com
+ (2603:10b6:a03:132::30)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|DU0PR04MB9468:EE_
-X-MS-Office365-Filtering-Correlation-Id: b86727a9-582d-404a-2102-08db8942b203
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|DM4PR12MB6231:EE_
+X-MS-Office365-Filtering-Correlation-Id: ed685d09-16e6-4353-33e5-08db894f81f2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0m/lGQSYU07jVbx1IQmUerjRX4SSKxPZA3BQbzN+X8fikxELk7oId79Ti2Wy6fxXfdt+MNLoPOC+FPdJpFul5WnskkaOMeq/Yopo9trTzHxOx9IzRXHRgtNUiscn5FCl7lM3WP8Ymj85KcDt2kWRXwOCZM/KmaBng7fJpsNQzFYa909LLwFr670CM9goHdsOfwsY2oucUOyz43Uw8Nki3uAoH/c9y3MjkbaFGouqAA6XnlK7blXR3XwxJVeQDqkvjAAR/KMABXElWVsQj0ydDOk3e6e29vCT8BoADxuxDAGDPxFzq5aE0N/r/RYci9OZZqgS0jjXdkq4gslwHv1ibdfnnNGAPfbAspyAvyRQxXggLuxSUJmqzbkzKmly86uIsrKkTiteUEf5zjx8pqnq1k6Ml31EeZQEpFW1uNBSVa8Upvp3UPeuyjW4oVvH3lIQJvFtxEmbtOP59mDDhvVzDu5M9sQhr3vFtKEJXLKla5W9wc63Nv0VUC0/Ofg4yfAp7PlXrkmzD0NSsprnPeDSJPnkRJQScQmxBQkC6vcteIQL8Jq4sFg2PZYt8OgOvTzVrHeouhc58rLNDpufq+55f93uMe8sbvogcLPkaHcvEa1207Vv2++wy6EEoJx6cP4h
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(7916004)(366004)(136003)(396003)(376002)(346002)(39860400002)(451199021)(38350700002)(86362001)(316002)(4326008)(6916009)(6486002)(83380400001)(6512007)(9686003)(6666004)(38100700002)(52116002)(6506007)(33716001)(26005)(186003)(15650500001)(478600001)(2906002)(66476007)(5660300002)(66556008)(66946007)(8936002)(8676002)(7416002)(41300700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: XQTBYLNZ3j2cMoTCwTyOyxG3sBQ0hum0zqvSzHfd1nAcQvfJLVAFdR8Hb2Xq3Ezxu8Um1lSdUDPWIVGDYwulnfz2yIJglJOM1xQL2gJb2Mg3sRolYZI66ijL/PjxV/vhiMj0mCPgPh2BEb0oM93LvjA/YPMLUVE1ICvzSvabL6VgWgHldiHrz7GrxhpckOdoTv9UxpNCXCCFH7xHdQx37Q+DIB+NFIFqlwhkgJ9RNFyHOVSHLzqIZ/Rd+SUxGrzFMNGQCQKKL+2x/wGj1Ky+MIAs2/WxDbK1hNLfX+3wLVq2zj8CDhyUZBv4nxCPv4Ie2m0IxpnJJwNYZst4OaO1nTZdty1iigDifbgY4czwDdl4eFR9o/41L8oNGix3jkNOHQeBuWMH15LdLU2YCQd4GJfw6KfhbpoGP8AftoUTIZ9yoHjbnVzqDdyPFIMJ5WtiViXvfuA/OKo1aQgaoQUbC21RvNV8k0ERFfn3XQv8qQ5PIOyeH4RZ7PzIb3rgYz/OqoBD9KuIxBXDT6qAU/uLytgC/Rk46KqQgF+l/YkkNcL9hSxn5JiX+8nC4CSrVZT3nIpIg09oX8DRlhwbE6Pyryfi4lpFZCxnfEbH/jgNIc44EEA1fWXMtwAftzz6F1lMe1rJTGVnuwzMEvN9AIcK2w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(346002)(39860400002)(396003)(366004)(136003)(451199021)(316002)(36756003)(2616005)(53546011)(6506007)(6486002)(26005)(6666004)(31696002)(86362001)(54906003)(37006003)(6512007)(478600001)(6636002)(4326008)(66476007)(66946007)(2906002)(38100700002)(186003)(7416002)(31686004)(8936002)(6862004)(8676002)(83380400001)(66556008)(41300700001)(5660300002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RXQ2UytkWjR4azhneGNzZnBWSGtlMngrUDF6M01scDc5OUxnSVNYSFZwdzFT?=
- =?utf-8?B?UXRTbVVtcWZ4V05mdVNNWUJzWlQzd2VDR2VsNHlzczJ0Y3ZTcWwrUnVaUVd2?=
- =?utf-8?B?dkFuYWdOVGJQRU1YSnFXaVJCaTgzYWttbmZiT3hZRUtpVC9UNWlwb0pnVUpZ?=
- =?utf-8?B?TEFGVGE5SWhkYWZxVHFsajliTngwQ3libXQ3TVdwWjFqV3hNMUhyRFpZWmwy?=
- =?utf-8?B?RFZkYTVSZ1JXaFE0ZWxCK08xRXVUVFdtNUw1clUySElGZXd4OGM4UEpQK0Ja?=
- =?utf-8?B?M3NOYzBGZnZKcHFEVjNRam5oV24yK3dVQ1lpL0xUanNabEkvRGtJc254Qklz?=
- =?utf-8?B?cEdDNDd6TnlrcW5aZVJ3TWM1a1MyaEVIRHFHdnM0Tld2OEJXeXM2d2YvV0h2?=
- =?utf-8?B?YUlDeUN6ck9zU0ovYnB2aE1WVlNUR0IwMEtKYkxVdmNaT3lMcGU0aUhWc1R1?=
- =?utf-8?B?Nm1DTUZxbkFqUVR6bHZRZi8vZkY5aS9nMWw4VzZjN0pBa0hnbzh0ZnJqWThJ?=
- =?utf-8?B?T2pIU21LK21mNWNhV3o4OVZOeVNFemRzWnBpT2ovbUh2NTZrc285dDZHZFd1?=
- =?utf-8?B?enFWOXloc0FBMTJLTmwyTXdncWZSMklhNVl2aG9jcFk3cmZ5c1BzK2lCdGVD?=
- =?utf-8?B?c0VwZ05XcHg5cXJlMFVleVovNnd5VXJCL2FEL2hwbEdLdTYvbkxKRUZSRnZ4?=
- =?utf-8?B?MjV3SEkzaFowbk9VbFU1cms3S2c0VFh4dnJCbVVCNnloMmJnSEg0NDRmQmcy?=
- =?utf-8?B?QmpWZ2R2TXU5Y3g2WU1FS2REclFFK254Smo2Vlo4b1ZvS2R4Ylk0MDZ3M0dS?=
- =?utf-8?B?NmdmZWJqbCt5Rnl5UW1aWlpkempXTVJGZVdOVmEvUUMrckRvRHB4NHpWVFNj?=
- =?utf-8?B?SEpCYnlRV3hzUnJzdXAxdzZjZWVEODVkUlF5NnVmS2Qwd0JiWjRsOFJMK1pq?=
- =?utf-8?B?UXdVTEVuUHVPZk5GczBnL1ZpODNLUGRFWkpQTmMzdnRmbC82eDkzdFF1TWRQ?=
- =?utf-8?B?VlYrdkhFSVlKUE1ZZGYxa0ExdTlSbWJRUDdha2pNVVNXbk5OUHJieE43dmUw?=
- =?utf-8?B?NEI0dFlwcGU0cURRd3l0a05wQXYwQmQwd0p0Y09YSmFLaXNOWnhtK2g1Wmoy?=
- =?utf-8?B?YkJaN09hem8wMHFqRW94VmllV0xQa1MxWktYS0lFNXBUaGE4WXg2TUdOUmhz?=
- =?utf-8?B?QnA0ekJYK3Nyd05xWEtaNXZSRXkvNS8yelFDd0p0all1ZkJjdTl3ZzgxdkRz?=
- =?utf-8?B?RVRJeGNSVXpqTkZaMCsvYkNlV2dhd2lmSjlOU0k4Q0hybDFHYjFSTWZ6SXFk?=
- =?utf-8?B?S3BnMlpHalRnektSck1FTFdGV09PTUY0b2Z4V2I0TWxoSHYxaDJQSFdBcDlG?=
- =?utf-8?B?Ync0c0h0M1FKbmdYamNOaHhiVnJuenl1eFZnZnZVallVRG1OYUpiRzB3MXU4?=
- =?utf-8?B?aVRGNkQ0SEhFdTZrSFF3NlRXendodnhSajQyNVdJVDFWTUFtdDQ3MWxNeGVl?=
- =?utf-8?B?OUZLZ04wNDN0dGJBV2F2dkt4Z0UvN0M5Q3NjUW9OYmlxZGdQZnkxRnN4dFJ3?=
- =?utf-8?B?dVorSkdmeFVpUnBINHFBZ2pkQ1doZFBtS3pTQXYxenVMM0NRZVZxQktxV3dH?=
- =?utf-8?B?RlNxNHBTcGIvSFQyemdkRXM2NnJLVjV4NnJxYnJaMXQ1NkcxWjZLK3prYlN2?=
- =?utf-8?B?Wm1TeTI0bm83b3dmaUZWY2FSaXRvR1h4NG9iM0pENUhhVlBHQkNraU56ZDdZ?=
- =?utf-8?B?N3VjVnZhVWc2Tit3Tm1odHRTNHcydCtUdUpJM3lNN2x3T1pCSDl5QmxwNWh4?=
- =?utf-8?B?L2ZNSXBYYjNsUlRGdkhVNFBrVXpzTnNhL2NMYk1mRXBmemgxZG9sMGxQRUtE?=
- =?utf-8?B?b2FBbkx0b1JMa0xhMTE3T1o0Y3ZmamVyQjBaS0dUd1hQckMzblZ1Zk1pb2l2?=
- =?utf-8?B?L3hHUDg1T00zT3kxYzNDTnlpZ05kR2M0Rks0eUZrL0pNbDBTdWhuMVNUYlZx?=
- =?utf-8?B?RXk5K1VvejNLTlBRWlAxT1NFdEM2SzRKd1UzTG5qd2xmR1VRSkxPNmI4T3d5?=
- =?utf-8?B?dEt3SFh6VTZCbmhSMlZyck54L0dLeERZM2hPMmVHVmsxUlkvc0F6YVpFRFBo?=
- =?utf-8?Q?wkxHk7qLrnuHKxbu39MapWorQ?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b86727a9-582d-404a-2102-08db8942b203
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?R1ZiUWNyRytGNjVXcnVHK2NSSkoxQkJVYjdWazZpalRFeStiQVFQUEQ1ZWRw?=
+ =?utf-8?B?K0tBS3JiNHRXSytnZWQySEEzN1VpTGFNa0tFdFFXTnhWR0o5WXNjWmRnUHdK?=
+ =?utf-8?B?MzRha2VlakFsazFadWVSTGVUOHEvbmp2SjhUZnJpZFhMd2N4SUhGZi96ZDMy?=
+ =?utf-8?B?U1J6ODZ5emFBQUF0TzN0L2Z5dUxsUTZ5WmF4TEw1eGYrdmZ5YVY3aUlOQmRk?=
+ =?utf-8?B?c01LaXRQdWpvNkR2aDhKNTlnbHJQYWpGdEFHNW95cHA5VlpsT2JJV2JzNkY0?=
+ =?utf-8?B?THRlNmtJejJIYmtCR28vV1p4a2Z3Y0VMeW80RlRBam5EdlBSTlY2eFhlQUNZ?=
+ =?utf-8?B?K2laVDJqUFhLT1dmUWNpTi9QWWNlMmtOZG9ScGd5ckVxcldLODIrS3NaNVR0?=
+ =?utf-8?B?NVc3WHFLSnFyK1NMdk9hQmZtKzcwUDl4VXhGNXlnbE54TS8rUWdkbUo2U3g5?=
+ =?utf-8?B?dzVRRnBXRitmcStiUzhXOC9Wd0Q0MFh0cmFRTStONkVqN1hwc053RnV1cE11?=
+ =?utf-8?B?WHZhYzJhMTBuTFVWazNobXI1Q2drYno2VlNIa05LS0duVEVINUUwQUVsN2RR?=
+ =?utf-8?B?SGgxOEdyV1VjMW9nSVVYM3AzQnhMd0RJalRhVThlNUszSDlaSGM0TkFnWjU2?=
+ =?utf-8?B?WUYrUlVCMXJCcWhXQ051c2tYcHV1Wmd6c3BBYUtYNG1mSGpOd2lpa3EySmtv?=
+ =?utf-8?B?M0hoSWI2SkloZWRvdDBjYzljamRneDJBNVNsem1iOGpOSkVRK3lVYU82SElk?=
+ =?utf-8?B?UVRKdkFuaFFwYlFDSnBXd3dycHNtTXVTYnRIQ29iVjMzOXM3NGFTdENqazRF?=
+ =?utf-8?B?UnlKK2VMQjVWdmN2U2RZWDA1TVJYWDJTaFV1c0xwdmI1NklNTlBDVWRiUWtP?=
+ =?utf-8?B?OEZPN0duWDFZQTNCalNGMEZtKzdkTHJpMVNPbVAreUtySXR5c1VYSEhLMklZ?=
+ =?utf-8?B?RzZpNEM3ejA3WmsxeXBtb284Z015NTJJQ1NKeGNRK1VSTktZMkxabFZLVFZY?=
+ =?utf-8?B?VXlWN0dyeGM5RTB2YTNscXRnNm5rTWJpTThxWW5oWmRLYWFGZkV6dGROYWhI?=
+ =?utf-8?B?TTNhYWVCZHZDNGQ1WjJFeVNPcXB0OTV1VG5jaW5NKzFLYjdCeWVSWkV4T0ZN?=
+ =?utf-8?B?VitWejVzNHJndk5uSXQ2ak8wMk1GS1pRVHMzamJtQmFFRlBadHRMMy85Znpv?=
+ =?utf-8?B?a3JoNWR0dUd4TnpJNEJIT2Jkdy9hMUgyTjF4aEdCRUxTZ1BPS3pMTFhvamxs?=
+ =?utf-8?B?WFd2WUZhL3lOU0tOTmtFSHV0TnpkSWpheit6b2RtS1BTT2I5MWpjaDYxT1Nr?=
+ =?utf-8?B?bVNCeW1Yc3o0TVV2dWkrVS9kUHJuT1picml1ZnczS1hIdlR5cTZINUN4M1dE?=
+ =?utf-8?B?RDlBN21yOWwvVFhtZFdxYkg3WFpLRE9ZcG16WlU1RGk2dCtkeEFqMHFweE5N?=
+ =?utf-8?B?d2oyVXI3VEp3L2sweU9FWitDM0wzQUJNRHNDQmVmaUpZYURqT01kdFFaKzZk?=
+ =?utf-8?B?K1FheHloeEVNVi9IL3BhdEVHVFRrR3NURVYzOVR2RXFHNUhsclk1Q3YycCtM?=
+ =?utf-8?B?emNSMEJhY2d1YnZuNGgzSlpJbm13TThRaTgwM1VqSUJqUmFXYlBnRDkxdldv?=
+ =?utf-8?B?WDhBdVJBZTdxV0dJdUdZNUFDdTVyOHF4T3dqN0ZHenhyMXlVdVlFbkVxcXdn?=
+ =?utf-8?B?dFI5dEp0cS9ibncrdmxNV1pCNXFrVkd3T0ZnaGc4dGJaZ0EzZVhRWXRpVDVV?=
+ =?utf-8?B?RHh2d293N0kyQjRSSU5iOFJSOGs2djZheW4reE9nVW85WVRMcUlMK3cwL2x1?=
+ =?utf-8?B?Y3BVOHBDQWNOK0NHNEl3ZWVESVNjNDBLOVFoL0JmKzVndjRYZVZDUDVaeEh3?=
+ =?utf-8?B?Uy9OMkpYTkxET21OR0x2cTI0ZjRvUE5FU0NnZTV3ZlQwcnpEZ1NyN2RnRlNV?=
+ =?utf-8?B?eXNKSlBhRCttamRkUGs2d2hoTDg2Tmd6MkZuM1h6dERwUmdXZkczWUVLNDQ2?=
+ =?utf-8?B?ellkMWlRV2FQM25NVjFGRHdNR2JJNmxRdDRMYmJSVGpDWWQ5b0dXalFjeHI3?=
+ =?utf-8?B?YUZDQ2Z4MlBUNmhQM2ZIR0dxalhDZVc2bENqWlphTmZFU0U2WGsrdnRoY2p0?=
+ =?utf-8?Q?15hH3tFgnLgTcvlwxb5KMlu8c?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed685d09-16e6-4353-33e5-08db894f81f2
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2023 16:59:35.1766
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2023 18:31:18.0436
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0gzkS/LJWCje91H+hA0iL8t0ThTTLygdRDsCyQbD+nwY+t52DLNtHM6ea129XX4giaevKi0MNlYuZbbs24fISg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR04MB9468
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,T_SCC_BODY_TEXT_LINE,
-        T_SPF_PERMERROR autolearn=no autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-UserPrincipalName: eWTArcW/MhOgdBbHk3WFtCt715DguCA0QUejzZJe8z48uURFvuUjhK6o5L1IpSYb0q4pSpcP9frLECdqhPh7Ew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6231
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 10:13:18PM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Jul 20, 2023 at 12:26:38PM -0400, Frank Li wrote:
-> > On Thu, Jul 20, 2023 at 09:37:38PM +0530, Manivannan Sadhasivam wrote:
-> > > On Thu, Jul 20, 2023 at 10:37:36AM -0400, Frank Li wrote:
-> > > > On Thu, Jul 20, 2023 at 07:55:09PM +0530, Manivannan Sadhasivam wrote:
-> > > > > On Tue, Jul 18, 2023 at 03:34:26PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > On Mon, Jul 17, 2023 at 02:36:19PM -0400, Frank Li wrote:
-> > > > > > > On Mon, Jul 17, 2023 at 10:15:26PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > > > On Wed, Apr 19, 2023 at 12:41:17PM -0400, Frank Li wrote:
-> > > > > > > > > Introduced helper function dw_pcie_get_ltssm to retrieve SMLH_LTSS_STATE.
-> > > > > > > > > Added API pme_turn_off and exit_from_l2 for managing L2/L3 state transitions.
-> > > > > > > > > 
-> > > > > > > > > Typical L2 entry workflow:
-> > > > > > > > > 
-> > > > > > > > > 1. Transmit PME turn off signal to PCI devices.
-> > > > > > > > > 2. Await link entering L2_IDLE state.
-> > > > > > > > 
-> > > > > > > > AFAIK, typical workflow is to wait for PME_To_Ack.
-> > > > > > > 
-> > > > > > > 1 Already wait for PME_to_ACK,  2, just wait for link actual enter L2.
-> > > > > > > I think PCI RC needs some time to set link enter L2 after get ACK from
-> > > > > > > PME.
-> > > > > > > 
-> > > > > 
-> > > > > One more comment. If you transition the device to L2/L3, then it can loose power
-> > > > > if Vaux was not provided. In that case, can all the devices work after resume?
-> > > > > Most notably NVMe?
-> > > > 
-> > > > I have not hardware to do such test, NVMe driver will reinit everything after
-> > > > resume if no L1.1\L1.2 support. If there are L1.1\L1.2, NVME expect it leave
-> > > > at L1.2 at suspend to get better resume latency.
-> > > > 
-> > > 
-> > > To be precise, NVMe driver will shutdown the device if there is no ASPM support
-> > > and keep it in low power mode otherwise (there are other cases as well but we do
-> > > not need to worry).
-> > 
-> > I supposed this should work. but I have not hardware to test it now. NMVE already
-> > sent shut down command to SSD, which can safely turn off. after resume, that most
-> > likely a cold reset.
-> > 
+On 7/20/2023 6:07 AM, Robert Richter wrote:
+> Smita,
 > 
-> NO, it won't work and that's the reason the Qcom platforms are not transitioning
-> the link to L2/L3 state during suspend. This applies to other platforms
-> including layerscape as well.
+> On 19.07.23 15:30:25, Smita Koralahalli wrote:
+>> On 7/19/2023 1:39 PM, Sathyanarayanan Kuppuswamy wrote:
+>>>
+>>>
+>>> On 7/19/23 12:23 PM, Smita Koralahalli wrote:
+>>>> According to Section 9.17.2, Table 9-26 of CXL Specification [1], owner
+>>>> of AER should also own CXL Protocol Error Management as there is no
+>>>> explicit control of CXL Protocol error. And the CXL RAS Cap registers
+>>>> reported on Protocol errors should check for AER _OSC rather than CXL
+>>>> Memory Error Reporting Control _OSC.
+>>>>
+>>>> The CXL Memory Error Reporting Control _OSC specifically highlights
+>>>> handling Memory Error Logging and Signaling Enhancements. These kinds of
+>>>> errors are reported through a device's mailbox and can be managed
+>>>> independently from CXL Protocol Errors.
+>>>
+>>> Does it fix any issue? If yes, please include that in the commit log.
+>>
+>> Yes, this fix actually makes Protocol Error handling independent of
+>> Component/Memory Error handling.
+>>
+>> We observed that OS was not able to handle the protocol errors ("i.e unable
+>> to reference to the cxl device node") with native AER support. The reason
+>> being Memory/Component Error handling was under FW control.
+>>
+>> Since the RAS registers are tied to protocol errors, I think there is no
+>> reason that memory error reporting being in fw control or os control should
+>> be a roadblock in handling RAS registers or accessing the cxl device node by
+>> OS.
+>>
+>>>
+>>> Since you are removing some change, maybe it needs Fixes: tag?
+>>
+>> Missed this. Thanks!
+>>
+>> Fixes: 248529edc86f ("cxl: add RAS status unmasking for CXL")
 > 
-> > > 
-> > > But here you are not checking for ASPM state in the suspend path, and just
-> > > forcing the link to be in L2/L3 (thereby D3Cold) even though NVMe driver may
-> > > expect it to be in low power state like ASPM/APST.
-> > 
-> > This function is not called defaultly and need platform driver to call it as need.
-> > Actually, I think PCI framework should handle L1.2 and L2 case, some devices
-> > or user case want to L1.2 to get better resume latency, some devices want to
-> > L2 to get better power saving, which out of scope of this patches.
-> > 
+> the fix must be isolated to this patch (for automated backports) and
+> you need to remove the dependency to the first patch then. So swap
+> them and ... see below.
 > 
-> I'm referring to the platform where these helper functions are being used which
-> is layerscape. It doesn't matter whether you test this series with NVMe or not,
-> it will not work unless you disable ASPM.
+>>
+>> Will include in v2.
+>>
+>> Thanks,
+>> Smita
+>>
+>>>>
+>>>> [1] Compute Express Link (CXL) Specification, Revision 3.1, Aug 1 2022.
+>>>>
+>>>> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+>>>> ---
+>>>>    drivers/cxl/pci.c | 7 +++----
+>>>>    1 file changed, 3 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+>>>> index 1cb1494c28fe..44a21ab7add5 100644
+>>>> --- a/drivers/cxl/pci.c
+>>>> +++ b/drivers/cxl/pci.c
+>>>> @@ -529,7 +529,6 @@ static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+>>>>    static int cxl_pci_ras_unmask(struct pci_dev *pdev)
+>>>>    {
+>>>> -	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
+>>>>    	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+>>>>    	void __iomem *addr;
+>>>>    	u32 orig_val, val, mask;
+>>>> @@ -541,9 +540,9 @@ static int cxl_pci_ras_unmask(struct pci_dev *pdev)
+>>>>    		return 0;
+>>>>    	}
+>>>> -	/* BIOS has CXL error control */
+>>>> -	if (!host_bridge->native_cxl_error)
+> 
+> For the fix, you could replace that with:
+> 
+> 	if (!host_bridge->native_aer) ...
 
-I tested with NVNE. You are right, ASPM is disabled at layerscape platform.
+Yeah I tried something like:
++	if (!pdev->aer_cap &&
++	    !(pcie_ports_native || host_bridge->native_aer))
++		return 0;
+
+But then pcie_ports_native needed to be exported as well. So better just 
+keep the check to !host_bridge->native_aer and return zero in first 
+patch, EXPORT to second and replacing host_bridge->native_aer with 
+pcie_aer_is_native() in third?
+
+Thanks,
+Smita
 
 > 
-> > This patch just handle L2 case, I remember L1.2 don't expect send PME at all.
-> > 
-> > > 
-> > > So you should only put the link to L2/L3 if there is no ASPM support. Otherwise,
-> > > you'll ending up with bug reports when users connect NVMe to it.
-> > 
-> > Platform should choose call or no call this function according to their
-> > user case. So far, I have not found a good mathod to let ASPM to affect
-> > suspend/resume. 
-> > 
+>>>> -		return -ENXIO;
+>>>> +	/* BIOS has PCIe AER error control */
+>>>> +	if (!pcie_aer_is_native(pdev))
+>>>> +		return 0;
 > 
-> You are missing my point here. If any platform decides to use these helper
-> functions, they will face problems with NVMe. So please add a check for ASPM
-> state before doing any L2/L3 handling.
+> ... and replace it with this function here in the patch where
+> pcie_aer_is_native() is exported (or in a 3rd patch).
 > 
-> I agree that it may not be optimal w.r.t power savings, but the PCIe controller
-> driver should work for all devices.
+> -Robert
+> 
+>>>>    	rc = pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &cap);
+>>>>    	if (rc)
+>>>
+>>
 
-I can add aspm check here. but I hope there are a flags in future, which can
-show if expect pci controller enter L2.
-
-Frank
-
-> 
-> - Mani
-> 
-> > > 
-> > > - Mani
-> > > 
-> > > > This API help remove duplicate codes and it can be improved gradually.
-> > > > 
-> > > > 
-> > > > > 
-> > > > > - Mani
-> > > > > 
-> > > > > 
-> > > > > -- 
-> > > > > மணிவண்ணன் சதாசிவம்
-> > > 
-> > > -- 
-> > > மணிவண்ணன் சதாசிவம்
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
