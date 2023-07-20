@@ -2,108 +2,214 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E1B275AC31
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jul 2023 12:40:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1315E75AC93
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jul 2023 13:08:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230367AbjGTKke (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jul 2023 06:40:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44098 "EHLO
+        id S230177AbjGTLH6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jul 2023 07:07:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230321AbjGTKkd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jul 2023 06:40:33 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0723E171D
-        for <linux-pci@vger.kernel.org>; Thu, 20 Jul 2023 03:40:33 -0700 (PDT)
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1qMR53-0003bG-FA; Thu, 20 Jul 2023 12:40:21 +0200
-Received: from pengutronix.de (unknown [172.20.34.65])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        (Authenticated sender: mkl-all@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id F200D1F6205;
-        Thu, 20 Jul 2023 10:40:19 +0000 (UTC)
-Date:   Thu, 20 Jul 2023 12:40:19 +0200
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-To:     Jiaqing Zhao <jiaqing.zhao@linux.intel.com>
-Cc:     Wolfgang Grandegger <wg@grandegger.com>,
-        Gerhard Uttenthaler <uttenthaler@ems-wuensche.com>,
-        support@ems-wuensche.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-can@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 2/2] can: ems_pci: move ASIX AX99100 ids to pci_ids.h
-Message-ID: <20230720-document-tingle-e5d555714021-mkl@pengutronix.de>
-References: <20230720102859.2985655-1-jiaqing.zhao@linux.intel.com>
- <20230720102859.2985655-3-jiaqing.zhao@linux.intel.com>
+        with ESMTP id S229614AbjGTLH4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jul 2023 07:07:56 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E1B326A3;
+        Thu, 20 Jul 2023 04:07:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1689851271; x=1721387271;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kRnPBYIg/Txid4eQMW5mWguX6Sa02z6B8L96xUlIcwA=;
+  b=je8sQ/nRC2fmRGykXXGVeywNz+Xgzn6uXmTZoqZqiySRX+rn4mEO4W/3
+   Za7TjnrLqdICm5g2w2NpkPhLNMpL2h/yLSfuu7XBOgdJN/PFIHWs1V2Dz
+   r9W+bWthtt0M3xgJ94vdUf3LSRihy8REWjBkcemN+8MK/i3TJbcQ1YDSV
+   pBdOJfAYX9zJe6wzTKAf3TfxAaP5MOP2iadnuHpjrlpN3ID5z0cOnXJ7L
+   EECDflkZWtqbvC7PppAQdkgxN4ItooFDFniOwNlo4mDTLo4MXFdWC/ur/
+   movByS4Kq/BCyOjDVlMgG+3x5YraqBMaacEUhm0R3WrRuinl4qvU8xhc8
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.01,218,1684825200"; 
+   d="asc'?scan'208";a="236690299"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Jul 2023 04:07:51 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Thu, 20 Jul 2023 04:07:50 -0700
+Received: from wendy (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
+ Transport; Thu, 20 Jul 2023 04:07:47 -0700
+Date:   Thu, 20 Jul 2023 12:07:14 +0100
+From:   Conor Dooley <conor.dooley@microchip.com>
+To:     Minda Chen <minda.chen@starfivetech.com>
+CC:     Daire McNamara <daire.mcnamara@microchip.com>,
+        Conor Dooley <conor@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Kevin Xie <kevin.xie@starfivetech.com>
+Subject: Re: [PATCH v1 4/9] PCI: microchip: Move PCIe driver to PLDA directory
+Message-ID: <20230720-parched-laborer-a8416d86a85e@wendy>
+References: <20230719102057.22329-1-minda.chen@starfivetech.com>
+ <20230719102057.22329-5-minda.chen@starfivetech.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ywabkzbnj5v34fnc"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="R981OROlZpffAhaD"
 Content-Disposition: inline
-In-Reply-To: <20230720102859.2985655-3-jiaqing.zhao@linux.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:b01:1d::7b
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+In-Reply-To: <20230719102057.22329-5-minda.chen@starfivetech.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
---ywabkzbnj5v34fnc
-Content-Type: text/plain; charset=utf-8
+--R981OROlZpffAhaD
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On 20.07.2023 10:28:59, Jiaqing Zhao wrote:
-> Move PCI Vendor and Device ID of ASIX AX99100 PCIe to Multi I/O
-> Controller to pci_ids.h for its serial and parallel port driver
-> support in subsequent patches.
+Hey Minda,
 
-Sorry, I haven't noticed the change in "include/linux/pci_ids.h", that
-the other patches depend on. How to coordinate among the subsystems?
-
-I don't mind taking the entire (v1) series with the Acks from the
-tty/serial and parport maintainers, or give my Acked-by to upstream
-via their trees.
-
-> Signed-off-by: Jiaqing Zhao <jiaqing.zhao@linux.intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+On Wed, Jul 19, 2023 at 06:20:52PM +0800, Minda Chen wrote:
+> Move Microchip specific platform codes to PLDA directory.
+> Including clock init, interrupt event handle and platform
+> init codes.
+>=20
+> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
 > ---
->  drivers/net/can/sja1000/ems_pci.c | 6 +-----
->  include/linux/pci_ids.h           | 4 ++++
->  2 files changed, 5 insertions(+), 5 deletions(-)
+>  MAINTAINERS                                   |   4 +-
+>  drivers/pci/controller/Kconfig                |   8 -
+>  drivers/pci/controller/Makefile               |   1 -
+>  drivers/pci/controller/plda/Kconfig           |  10 +-
+>  drivers/pci/controller/plda/Makefile          |   1 +
+>  .../{ =3D> plda}/pcie-microchip-host.c          | 594 ++----------------
 
-Marc
+I think that you should squash this with the previous patch, rather than
+duplicate the code and then de-duplicate it, so that it is more obvious
+what is being extracted.
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+>  6 files changed, 55 insertions(+), 563 deletions(-)
+>  rename drivers/pci/controller/{ =3D> plda}/pcie-microchip-host.c (50%)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3b3c4d8808ae..f02618c2bdf5 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16503,7 +16503,7 @@ M:	Daire McNamara <daire.mcnamara@microchip.com>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Supported
+>  F:	Documentation/devicetree/bindings/pci/microchip*
+> -F:	drivers/pci/controller/*microchip*
+> +F:	drivers/pci/controller/plda/*microchip*
+> =20
+>  PCIE DRIVER FOR QUALCOMM MSM
+>  M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> @@ -18287,7 +18287,7 @@ F:	drivers/char/hw_random/mpfs-rng.c
+>  F:	drivers/clk/microchip/clk-mpfs*.c
+>  F:	drivers/i2c/busses/i2c-microchip-corei2c.c
+>  F:	drivers/mailbox/mailbox-mpfs.c
+> -F:	drivers/pci/controller/pcie-microchip-host.c
+> +F:	drivers/pci/controller/plda/pcie-microchip-host.c
+>  F:	drivers/pwm/pwm-microchip-core.c
+>  F:	drivers/reset/reset-mpfs.c
+>  F:	drivers/rtc/rtc-mpfs.c
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kcon=
+fig
+> index a106dabcb8dc..107cdb69e15c 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -216,14 +216,6 @@ config PCIE_MT7621
+>  	help
+>  	  This selects a driver for the MediaTek MT7621 PCIe Controller.
+> =20
+> -config PCIE_MICROCHIP_HOST
+> -	bool "Microchip AXI PCIe controller"
+> -	depends on PCI_MSI && OF
+> -	select PCI_HOST_COMMON
+> -	help
+> -	  Say Y here if you want kernel to support the Microchip AXI PCIe
+> -	  Host Bridge driver.
+> -
+>  config PCI_HYPERV_INTERFACE
+>  	tristate "Microsoft Hyper-V PCI Interface"
+>  	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI
+> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Mak=
+efile
+> index aa0a691ebcbc..93236dc97b21 100644
+> --- a/drivers/pci/controller/Makefile
+> +++ b/drivers/pci/controller/Makefile
+> @@ -32,7 +32,6 @@ obj-$(CONFIG_PCIE_ROCKCHIP_EP) +=3D pcie-rockchip-ep.o
+>  obj-$(CONFIG_PCIE_ROCKCHIP_HOST) +=3D pcie-rockchip-host.o
+>  obj-$(CONFIG_PCIE_MEDIATEK) +=3D pcie-mediatek.o
+>  obj-$(CONFIG_PCIE_MEDIATEK_GEN3) +=3D pcie-mediatek-gen3.o
+> -obj-$(CONFIG_PCIE_MICROCHIP_HOST) +=3D pcie-microchip-host.o
+>  obj-$(CONFIG_VMD) +=3D vmd.o
+>  obj-$(CONFIG_PCIE_BRCMSTB) +=3D pcie-brcmstb.o
+>  obj-$(CONFIG_PCI_LOONGSON) +=3D pci-loongson.o
+> diff --git a/drivers/pci/controller/plda/Kconfig b/drivers/pci/controller=
+/plda/Kconfig
+> index 37e17326671b..fb274976b84b 100644
+> --- a/drivers/pci/controller/plda/Kconfig
+> +++ b/drivers/pci/controller/plda/Kconfig
+> @@ -4,8 +4,16 @@ menu "PLDA PCIe controllers support"
+>  	depends on PCI
+> =20
+>  config PCIE_PLDA_HOST
+> -	bool "PLDA PCIe host controller"
+> +	bool
+>  	depends on OF && PCI_MSI
 
---ywabkzbnj5v34fnc
+Is this okay w.r.t. unmet dependencies? IOW, if PCI_MSI is disabled,
+PCIE_MICROCHIP_HOST can still select PCIE_PLDA_HOST, no?
+
+>  	select IRQ_DOMAIN
+> =20
+> +config PCIE_MICROCHIP_HOST
+> +	bool "Microchip AXI PCIe controller"
+> +	select PCI_HOST_COMMON
+> +	select PCIE_PLDA_HOST
+> +	help
+> +	  Say Y here if you want kernel to support the Microchip AXI PCIe
+> +	  Host Bridge driver.
+> +
+>  endmenu
+> diff --git a/drivers/pci/controller/plda/Makefile b/drivers/pci/controlle=
+r/plda/Makefile
+> index 79dbae655c2b..4340ab007f44 100644
+> --- a/drivers/pci/controller/plda/Makefile
+> +++ b/drivers/pci/controller/plda/Makefile
+> @@ -1,2 +1,3 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-$(CONFIG_PCIE_PLDA_HOST) +=3D pcie-plda-host.o
+> +obj-$(CONFIG_PCIE_MICROCHIP_HOST) +=3D pcie-microchip-host.o
+
+--R981OROlZpffAhaD
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEDs2BvajyNKlf9TJQvlAcSiqKBOgFAmS5DxAACgkQvlAcSiqK
-BOg1UAf/ZpmSvdfWjnvUZk3Qv6CwO0u6+aHK85LaqW2FCBv8xe0Ci75aMDbTPUn/
-RPkl6x1csKOKwJP8AwktGovSKKMSeBDyROTbsYBbbt31pjimsw+8Iys8/fl+evQK
-wZj6Smf98VWGg8FxCAOPBmdJNA6R/6nR1Wdv9Ernqemv/WmJGvEYpvbVGg6++gZj
-1/vGdFAw5G6k84HAktpsynVBlTZ5lRQaJHTTavXlo+sL143PePp5aSewYBqd0e26
-bAwZU/HNTcmcAhyzaczd/Hi49A6ZFZLM4RuY2pzpWFYhgYM+sel34Q95d63aA+hx
-VpTBRe3wOLTGC6KkKsuoN395qO3UlA==
-=6EYy
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZLkVYgAKCRB4tDGHoIJi
+0k0bAQCls5FIJwFB57TYTloKZdZpGhbCdYfiHdflmFpajndJsQD6ApkFiSrTI7Lc
+iflf2JhxaeFtKVbea64gWAB2NFZTTQ8=
+=QWY5
 -----END PGP SIGNATURE-----
 
---ywabkzbnj5v34fnc--
+--R981OROlZpffAhaD--
