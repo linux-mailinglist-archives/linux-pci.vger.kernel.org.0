@@ -2,169 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8817075C570
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jul 2023 13:08:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD14575C627
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jul 2023 13:55:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230242AbjGULIr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jul 2023 07:08:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53738 "EHLO
+        id S230051AbjGULzo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jul 2023 07:55:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231187AbjGULHp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jul 2023 07:07:45 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB7E46AD;
-        Fri, 21 Jul 2023 04:04:10 -0700 (PDT)
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36LB19tq012404;
-        Fri, 21 Jul 2023 11:03:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=uDtElLv/5bFBcI1FU53B4erF6OinAr+ovFJRi+ia4Ws=;
- b=JSs52lgf4+vF0pK4o/TmVEIbM3x53mg86feQ7Zf/NHb020QEfUyWjlAlu3/q8hX6PLvX
- vMZxWL9EQgHWgCewub5Mm51/uCeI9fVsde+qZqOCthvrZYKZZORnIPDklhwmbcMH/JX6
- 8dPgmsdu6Fmadd+OwUKtqwcIP5q6me00Zc1eLMARbciYW77jIijr8jX9NZC0kxDLFcE1
- cUtqAzaMK2sNzh3dib5nPjD0Z4bYn9wmIuLZyxaU23Rh7GLEc0qYwfIzC5YMxRQvu6AU
- qEFusH8/m0bFgcezqLtCLiYdwWZEVkrMRl7EChMhKttAIoTn7VtomjlVUcjob/styD/M 1w== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ryrsb0057-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Jul 2023 11:03:32 +0000
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36LB3UHU005977
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Jul 2023 11:03:30 GMT
-Received: from [10.217.219.237] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Fri, 21 Jul
- 2023 04:03:23 -0700
-Message-ID: <ca51b1dc-5805-5b01-01e0-a7dff535cb6c@quicinc.com>
-Date:   Fri, 21 Jul 2023 16:33:20 +0530
+        with ESMTP id S229703AbjGULzn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jul 2023 07:55:43 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF10D2130;
+        Fri, 21 Jul 2023 04:55:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689940541; x=1721476541;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=K41ZT6FFbqsFq/4uR+fCJXln/yKHh9TKSrU4l6M1czk=;
+  b=kLAcDJCX3fdaoF6usRt/4NDQfpoGz5oy85vwpM8+5pkOboXcJO+lU6rq
+   AQwY71NibJKJYbFKNIDzQTKYswz1pQ8HxbasXJOFWtLqDxFewDrpoYUYO
+   93AlVAEinVfaOt5M803/j8W9q46Ti/xsgWpYIv4uW4qjunIZFGYj3t8MO
+   xRpqHrE2kvyVg14YFkHT3T6XYZUY7A2ltKkTMIex1a/633AOuAmA57sHA
+   yOP+e4WN0LVr+SlhL46ayg6Z8waOy/EzG2il+f6zgvdGncjcoAgmoBDkR
+   ufEwTXMdXDv3BwmLurub1LXCt9PEQzjQWkGxYxcNudh0V2+DFPxQn5xTL
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10777"; a="453382117"
+X-IronPort-AV: E=Sophos;i="6.01,220,1684825200"; 
+   d="scan'208";a="453382117"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 04:55:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10777"; a="898692805"
+X-IronPort-AV: E=Sophos;i="6.01,220,1684825200"; 
+   d="scan'208";a="898692805"
+Received: from lkp-server02.sh.intel.com (HELO 36946fcf73d7) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 21 Jul 2023 04:55:35 -0700
+Received: from kbuild by 36946fcf73d7 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qMojO-0007Fx-2b;
+        Fri, 21 Jul 2023 11:55:34 +0000
+Date:   Fri, 21 Jul 2023 19:54:57 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Frank Li <Frank.Li@nxp.com>, mani@kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, Frank.li@nxp.com,
+        bhelgaas@google.com, devicetree@vger.kernel.org,
+        gustavo.pimentel@synopsys.com, helgaas@kernel.org,
+        imx@lists.linux.dev, kw@linux.com, leoyang.li@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, manivannan.sadhasivam@linaro.org,
+        minghuan.lian@nxp.com, mingkai.hu@nxp.com, robh+dt@kernel.org,
+        roy.zang@nxp.com, shawnguo@kernel.org, zhiqiang.hou@nxp.com
+Subject: Re: [PATCH v4 1/2] PCI: dwc: Implement general suspend/resume
+ functionality for L2/L3 transitions
+Message-ID: <202307211904.zExw4Q8H-lkp@intel.com>
+References: <20230720210914.2030897-1-Frank.Li@nxp.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v2 2/6] dt-bindings: phy: qcom,qmp: Add sa8775p QMP PCIe
- PHY
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <konrad.dybcio@linaro.org>, <mani@kernel.org>
-CC:     <quic_shazhuss@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <quic_nayiluri@quicinc.com>,
-        <dmitry.baryshkov@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>
-References: <1689311319-22054-1-git-send-email-quic_msarkar@quicinc.com>
- <1689311319-22054-3-git-send-email-quic_msarkar@quicinc.com>
- <132e9514-7eb9-8915-6130-5bf656c1aaac@linaro.org>
-Content-Language: en-US
-From:   Mrinmay Sarkar <quic_msarkar@quicinc.com>
-In-Reply-To: <132e9514-7eb9-8915-6130-5bf656c1aaac@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: KHLXyv7UinIewFxIhznIV_eqegdw9kAX
-X-Proofpoint-ORIG-GUID: KHLXyv7UinIewFxIhznIV_eqegdw9kAX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-21_06,2023-07-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 impostorscore=0 mlxlogscore=999 suspectscore=0
- spamscore=0 adultscore=0 mlxscore=0 bulkscore=0 clxscore=1011
- malwarescore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2306200000 definitions=main-2307210099
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230720210914.2030897-1-Frank.Li@nxp.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Frank,
 
-On 7/17/2023 12:55 PM, Krzysztof Kozlowski wrote:
-> On 14/07/2023 07:08, Mrinmay Sarkar wrote:
->> Add devicetree YAML binding for Qualcomm QMP PCIe PHY
->> for SA8775p platform.
->>
->> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
->> ---
->>   .../bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml      | 19 ++++++++++++++++++-
->>   1 file changed, 18 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
->> index a0407fc..ca55ed9 100644
->> --- a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
->> +++ b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
->> @@ -16,6 +16,8 @@ description:
->>   properties:
->>     compatible:
->>       enum:
->> +      - qcom,sa8775p-qmp-gen4x2-pcie-phy
->> +      - qcom,sa8775p-qmp-gen4x4-pcie-phy
->>         - qcom,sc8280xp-qmp-gen3x1-pcie-phy
->>         - qcom,sc8280xp-qmp-gen3x2-pcie-phy
->>         - qcom,sc8280xp-qmp-gen3x4-pcie-phy
->> @@ -30,7 +32,7 @@ properties:
->>   
->>     clocks:
->>       minItems: 5
->> -    maxItems: 6
->> +    maxItems: 7
->>   
->>     clock-names:
->>       minItems: 5
->> @@ -41,6 +43,7 @@ properties:
->>         - const: rchng
->>         - const: pipe
->>         - const: pipediv2
->> +      - const: phy_aux
->>   
->>     power-domains:
->>       maxItems: 1
->> @@ -141,6 +144,20 @@ allOf:
->>           compatible:
->>             contains:
->>               enum:
->> +              - qcom,sa8775p-qmp-gen4x2-pcie-phy
->> +              - qcom,sa8775p-qmp-gen4x4-pcie-phy
->> +    then:
->> +      properties:
->> +        clocks:
->> +          minItems: 7
->> +        clock-names:
->> +          minItems: 7
->> +
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
-> This probably works but is not obvious and easy to read. You have here
-> if:then:else: block, so else applies to your variant. Change all these
-> if clauses for clocks into separate clauses per matching variant
-> (if:then: ... if:then:... if:then:...)
->
-> Best regards,
-> Krzysztof
+kernel test robot noticed the following build warnings:
 
-My Bad here, This patch already applied we will take care this in next 
-patch set.
+[auto build test WARNING on v6.4]
+[also build test WARNING on linus/master next-20230721]
+[cannot apply to pci/next pci/for-linus v6.5-rc2 v6.5-rc1]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Thanks,
-Mrinmay
+url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/PCI-layerscape-Add-power-management-support-for-ls1028a/20230721-051152
+base:   v6.4
+patch link:    https://lore.kernel.org/r/20230720210914.2030897-1-Frank.Li%40nxp.com
+patch subject: [PATCH v4 1/2] PCI: dwc: Implement general suspend/resume functionality for L2/L3 transitions
+config: mips-randconfig-r093-20230720 (https://download.01.org/0day-ci/archive/20230721/202307211904.zExw4Q8H-lkp@intel.com/config)
+compiler: mips64-linux-gcc (GCC) 12.3.0
+reproduce: (https://download.01.org/0day-ci/archive/20230721/202307211904.zExw4Q8H-lkp@intel.com/reproduce)
 
->
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202307211904.zExw4Q8H-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/pci/controller/dwc/pcie-designware-host.c:824:13: sparse: sparse: invalid assignment: |=
+>> drivers/pci/controller/dwc/pcie-designware-host.c:824:13: sparse:    left side has type unsigned int
+>> drivers/pci/controller/dwc/pcie-designware-host.c:824:13: sparse:    right side has type restricted pci_power_t
+
+vim +824 drivers/pci/controller/dwc/pcie-designware-host.c
+
+   811	
+   812	/*
+   813	 * This resemble the pci_set_power_state() interfaces, but these are for
+   814	 * configuring host controllers, which are bridges *to* PCI devices but
+   815	 * are not PCI devices themselves.
+   816	 */
+   817	static void dw_pcie_set_dstate(struct dw_pcie *pci, pci_power_t dstate)
+   818	{
+   819		u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_PM);
+   820		u32 val;
+   821	
+   822		val = dw_pcie_readw_dbi(pci, offset + PCI_PM_CTRL);
+   823		val &= ~PCI_PM_CTRL_STATE_MASK;
+ > 824		val |= dstate;
+   825		dw_pcie_writew_dbi(pci, offset + PCI_PM_CTRL, val);
+   826	}
+   827	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
