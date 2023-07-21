@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A92575BBAF
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jul 2023 03:03:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19DA775BBBB
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jul 2023 03:12:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbjGUBDu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jul 2023 21:03:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42490 "EHLO
+        id S229879AbjGUBMj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jul 2023 21:12:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbjGUBDt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jul 2023 21:03:49 -0400
+        with ESMTP id S229457AbjGUBMi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jul 2023 21:12:38 -0400
 Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 893FA2718;
-        Thu, 20 Jul 2023 18:03:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21B03271C;
+        Thu, 20 Jul 2023 18:12:37 -0700 (PDT)
 Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
         (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
         (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-        by fd01.gateway.ufhost.com (Postfix) with ESMTP id A166281B1;
-        Fri, 21 Jul 2023 09:03:36 +0800 (CST)
+        by fd01.gateway.ufhost.com (Postfix) with ESMTP id BD5868178;
+        Fri, 21 Jul 2023 09:12:35 +0800 (CST)
 Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX166.cuchost.com
  (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 21 Jul
- 2023 09:03:36 +0800
+ 2023 09:12:35 +0800
 Received: from [192.168.125.127] (113.72.147.86) by EXMBX171.cuchost.com
  (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 21 Jul
- 2023 09:03:35 +0800
-Message-ID: <2ace898a-c919-1388-28cd-0c39ac88dc62@starfivetech.com>
-Date:   Fri, 21 Jul 2023 09:03:34 +0800
+ 2023 09:12:34 +0800
+Message-ID: <e4668a72-b180-0b54-bf58-69b43ae0b529@starfivetech.com>
+Date:   Fri, 21 Jul 2023 09:12:33 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH v1 8/9] PCI: PLDA: starfive: Add JH7110 PCIe controller
+Subject: Re: [PATCH v1 4/9] PCI: microchip: Move PCIe driver to PLDA directory
 Content-Language: en-US
 To:     Conor Dooley <conor.dooley@microchip.com>
 CC:     Daire McNamara <daire.mcnamara@microchip.com>,
@@ -51,10 +51,10 @@ CC:     Daire McNamara <daire.mcnamara@microchip.com>,
         Leyfoon Tan <leyfoon.tan@starfivetech.com>,
         Kevin Xie <kevin.xie@starfivetech.com>
 References: <20230719102057.22329-1-minda.chen@starfivetech.com>
- <20230719102057.22329-9-minda.chen@starfivetech.com>
- <20230720-vanquish-upcoming-1145e052c849@wendy>
+ <20230719102057.22329-5-minda.chen@starfivetech.com>
+ <20230720-exception-spectator-b48ecb9d4c39@wendy>
 From:   Minda Chen <minda.chen@starfivetech.com>
-In-Reply-To: <20230720-vanquish-upcoming-1145e052c849@wendy>
+In-Reply-To: <20230720-exception-spectator-b48ecb9d4c39@wendy>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [113.72.147.86]
@@ -72,59 +72,21 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 2023/7/20 19:14, Conor Dooley wrote:
-> On Wed, Jul 19, 2023 at 06:20:56PM +0800, Minda Chen wrote:
->> Add StarFive JH7110 SoC PCIe controller platform
->> driver codes.
+On 2023/7/20 20:26, Conor Dooley wrote:
+> Hey Minda,
+> 
+> On Wed, Jul 19, 2023 at 06:20:52PM +0800, Minda Chen wrote:
+>> Move Microchip specific platform codes to PLDA directory.
+>> Including clock init, interrupt event handle and platform
+>> init codes.
 >> 
 >> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
->> Reviewed-by: Mason Huo <mason.huo@starfivetech.com>
->> ---
->>  MAINTAINERS                                 |   7 +
->>  drivers/pci/controller/plda/Kconfig         |   8 +
->>  drivers/pci/controller/plda/Makefile        |   1 +
->>  drivers/pci/controller/plda/pcie-plda.h     |  58 ++-
->>  drivers/pci/controller/plda/pcie-starfive.c | 415 ++++++++++++++++++++
->>  5 files changed, 487 insertions(+), 2 deletions(-)
->>  create mode 100644 drivers/pci/controller/plda/pcie-starfive.c
->> 
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index f02618c2bdf5..b88a54a24ae5 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -20356,6 +20356,13 @@ S:	Supported
->>  F:	Documentation/devicetree/bindings/watchdog/starfive*
->>  F:	drivers/watchdog/starfive-wdt.c
->>  
->> +STARFIVE JH71x0 PCIE DRIVER
->> +M:	Minda Chen <minda.chen@starfivetech.com>
->> +L:	linux-pci@vger.kernel.org
->> +S:	Supported
->> +F:	Documentation/devicetree/bindings/pci/starfive*
->> +F:	drivers/pci/controller/plda/pcie-starfive.c
->> +
->>  STATIC BRANCH/CALL
->>  M:	Peter Zijlstra <peterz@infradead.org>
->>  M:	Josh Poimboeuf <jpoimboe@kernel.org>
->> diff --git a/drivers/pci/controller/plda/Kconfig b/drivers/pci/controller/plda/Kconfig
->> index a3c790545843..eaf72954da9f 100644
->> --- a/drivers/pci/controller/plda/Kconfig
->> +++ b/drivers/pci/controller/plda/Kconfig
->> @@ -24,4 +24,12 @@ config PCIE_MICROCHIP_HOST
->>  	  Say Y here if you want kernel to support the Microchip AXI PCIe
->>  	  Host Bridge driver.
->>  
->> +config PCIE_STARFIVE_HOST
->> +	tristate "StarFive PCIe host controller"
->> +	select PCIE_PLDA_HOST
 > 
-> Ditto here, I think this suffers from the same issue, although its
-> probably only really randconfigs that'll trigger it.
+> Something else that I noticed, looking at what is not in the diff here,
+> but is everything under the "/* PCIe Controller Phy Regs */" comment
+> that remains in the microchip driver not also common to the plda IP?
 > 
-ok, thanks, I will change it with microchip.
->> +	help
->> +	  Say Y here if you want to support the StarFive PCIe controller
->> +	  in host mode. StarFive PCIe controller uses PLDA PCIe
->> +	  core.
->> +
->>  endmenu
+> Thanks,
+> Conor.
+I changed it to "PCIe Controller Reg" in patch8 ... It looks not the Phy register..
+Maybe I don't change it. And I will squash this patch with patch3.
