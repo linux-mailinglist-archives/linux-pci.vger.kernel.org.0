@@ -2,98 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4759175C2FB
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jul 2023 11:23:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 879A475C31E
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jul 2023 11:35:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231591AbjGUJXq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jul 2023 05:23:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45652 "EHLO
+        id S230444AbjGUJfk convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 21 Jul 2023 05:35:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231811AbjGUJXe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jul 2023 05:23:34 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E87143A87;
-        Fri, 21 Jul 2023 02:23:15 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-4fb863edcb6so2742714e87.0;
-        Fri, 21 Jul 2023 02:23:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689931393; x=1690536193;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M0C4zDryat48OeUNijAsubnvNOIhi4gDTfxngqXQKzY=;
-        b=no3r2jgsdvpIbDr/9DhIblU96Yteh/5I+AQyymUhUwu4LoQUKx9J7v2Ol1O8pvcp0w
-         TS+sK4E+T7pZ8w8OxeNOo3ic6kbrWRMs6kPBx3Axozl1y61vOLm/nS+kheYhFJJYoSOA
-         Jq2/KSw0HhG/DHZdZcqMOKQFAy0kW6n7q6iJpLtVlEGnsM7gSr6aPNG1cj9MNTZamabB
-         FCK2/zWC0MyjKR9M45mmzWJO5/uoAJrToXFvEZcAlLXDDTmdJ5KZjravFNSBgxlzpWzB
-         V3amk6+lVsN0FNKp3ra7QWyslQNTIoC9nsRU9cQJGfGX0opfoESKKr4UaAYpwWS+ASl0
-         4TyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689931393; x=1690536193;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M0C4zDryat48OeUNijAsubnvNOIhi4gDTfxngqXQKzY=;
-        b=gKaJ2SeigBLzW6Qwbl2NVsut2QylE7b2uZ1rRsCb0Y8KOWg9h9aPbcf8OlgC2gDVWR
-         mfrJqgtUBNQ6AiWwWEtjuTBFwfuOcwPHluHjNhzPc1UL8sxgfga02kX6dSxwxaR+JJF/
-         dLSHxmUqC2FmqYY9CFUhauO3aDtTOUepB4AoiTE2INX3ORMvRs5HVRsPLRDsxmOJilJn
-         MltSxVTw59bsXzmCPq0oPPD1mq+smDBadGwWhZ/eWEMojef80j+8BsFpvpKmbA/+OYTJ
-         3FsUa6BAI04kBmX+84gl2UHtPqjsplM5mPv/JcX1fnHKayagIwoUsBN8WrqYG/x9JtH+
-         INwA==
-X-Gm-Message-State: ABy/qLb8V4BTOGMoHRadhsNIxZMeqNySPIswR4A9ebMCjID6X0mBCBeI
-        Nkyq6mmt4ygzj/QDS8vtSW7WR/q1LDugVA==
-X-Google-Smtp-Source: APBJJlGlPTLa2gquXOOWAKAZZ3vkxcBhOsdvlyEajvy4zxY9iZQkDUUaGESJm1qebBWtVsnzrKrWtA==
-X-Received: by 2002:a05:6512:3297:b0:4f8:5d2f:902a with SMTP id p23-20020a056512329700b004f85d2f902amr885121lfe.60.1689931393364;
-        Fri, 21 Jul 2023 02:23:13 -0700 (PDT)
-Received: from [192.168.1.103] ([31.173.87.226])
-        by smtp.gmail.com with ESMTPSA id eo14-20020a056512480e00b004fbdeca7b79sm636328lfb.247.2023.07.21.02.23.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Jul 2023 02:23:12 -0700 (PDT)
-Subject: Re: [PATCH v18 13/20] PCI: dwc: Introduce .ep_pre_init() and
- .ep_deinit()
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
-        manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
-        kishon@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org
-Cc:     marek.vasut+renesas@gmail.com, fancer.lancer@gmail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <20230721074452.65545-1-yoshihiro.shimoda.uh@renesas.com>
- <20230721074452.65545-14-yoshihiro.shimoda.uh@renesas.com>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Message-ID: <103865a6-1b8a-e165-dc83-4723b2b0089e@gmail.com>
-Date:   Fri, 21 Jul 2023 12:23:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        with ESMTP id S230117AbjGUJfj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jul 2023 05:35:39 -0400
+Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8792726;
+        Fri, 21 Jul 2023 02:35:37 -0700 (PDT)
+Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
+        by fd01.gateway.ufhost.com (Postfix) with ESMTP id 43D8024DE03;
+        Fri, 21 Jul 2023 17:35:36 +0800 (CST)
+Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX165.cuchost.com
+ (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 21 Jul
+ 2023 17:35:36 +0800
+Received: from [192.168.50.8] (172.16.6.8) by EXMBX171.cuchost.com
+ (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 21 Jul
+ 2023 17:35:09 +0800
+Message-ID: <12dd5333-7b08-a458-2be6-59e62843a1b5@starfivetech.com>
+Date:   Fri, 21 Jul 2023 17:34:48 +0800
 MIME-Version: 1.0
-In-Reply-To: <20230721074452.65545-14-yoshihiro.shimoda.uh@renesas.com>
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v1 0/9] Refactoring Microchip PolarFire PCIe driver
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+To:     Conor Dooley <conor.dooley@microchip.com>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Conor Dooley <conor@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Kevin Xie <kevin.xie@starfivetech.com>
+References: <20230719152626.GA502469@bhelgaas>
+ <52ebc991-0e73-8df4-61b2-32989ab4e62c@starfivetech.com>
+ <20230720-unkempt-bath-9d320d55577c@wendy>
+From:   Minda Chen <minda.chen@starfivetech.com>
+In-Reply-To: <20230720-unkempt-bath-9d320d55577c@wendy>
+Content-Type: text/plain; charset="UTF-8"
+X-Originating-IP: [172.16.6.8]
+X-ClientProxiedBy: EXCAS081.cuchost.com (172.16.6.41) To EXMBX171.cuchost.com
+ (172.16.6.91)
+X-YovoleRuleAgent: yovoleflag
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 7/21/23 10:44 AM, Yoshihiro Shimoda wrote:
 
-> Renesas R-Car Gen4 PCIe controllers require vender-specific
 
-   It's "vendor". :-)
-
-> initialization before .ep_init(). To use dw->dbi and dw->num-lanes
-> in the initialization code, introduce .ep_pre_init() into struct
-> dw_pcie_ep_ops. Also introduce .ep_deinit() to disable the controller
-> by using vender-specific de-initialization.
+On 2023/7/20 20:12, Conor Dooley wrote:
+> On Thu, Jul 20, 2023 at 10:15:51AM +0800, Minda Chen wrote:
+>> On 2023/7/19 23:26, Bjorn Helgaas wrote:
+>> > On Wed, Jul 19, 2023 at 06:20:48PM +0800, Minda Chen wrote:
 > 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-[...]
-
-MBR, Sergey
+>> >> This patchset is base on v6.5-rc1
+>> > 
+>> > Doesn't quite apply cleanly for me:
+>> > 
+>> I am sorry, The driver need stg clk and syscon driver, which are have't be merge to main line.
+>> mainly dts is(patch9) rejected, Must apply this series patch first. (I forget add this link in cover letter)
+>> https://patchwork.kernel.org/project/linux-riscv/cover/20230712092007.31013-1-xingyu.wu@starfivetech.com/
+>> and this syscon patch 
+>> https://patchwork.kernel.org/project/linux-riscv/patch/20230717023040.78860-7-xingyu.wu@starfivetech.com/
+> 
+> You could detach the dts patch from the series & send it independently once
+> everything it depends on is in place. I'm going to pick up both of the
+> patches you've linked for v6.6 in the next day or two.
+Thanks very much. Yes， I have considered remove the dts patch. But I think the maintainers also
+will review the dts file. So I add this....
