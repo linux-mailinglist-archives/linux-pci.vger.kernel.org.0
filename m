@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C625E75C040
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jul 2023 09:45:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDB4B75C043
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jul 2023 09:45:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231313AbjGUHpO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jul 2023 03:45:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37466 "EHLO
+        id S231247AbjGUHpP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jul 2023 03:45:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231270AbjGUHpK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jul 2023 03:45:10 -0400
+        with ESMTP id S231224AbjGUHpM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jul 2023 03:45:12 -0400
 Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0D90B19A1;
-        Fri, 21 Jul 2023 00:45:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9B4352D4B;
+        Fri, 21 Jul 2023 00:45:10 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="6.01,220,1684767600"; 
-   d="scan'208";a="170346726"
+   d="scan'208";a="170346730"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 21 Jul 2023 16:45:03 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 21 Jul 2023 16:45:04 +0900
 Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id C9479418F610;
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id EED73418F604;
         Fri, 21 Jul 2023 16:45:03 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
@@ -30,10 +30,12 @@ To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
 Cc:     marek.vasut+renesas@gmail.com, fancer.lancer@gmail.com,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v18 13/20] PCI: dwc: Introduce .ep_pre_init() and .ep_deinit()
-Date:   Fri, 21 Jul 2023 16:44:45 +0900
-Message-Id: <20230721074452.65545-14-yoshihiro.shimoda.uh@renesas.com>
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>
+Subject: [PATCH v18 14/20] dt-bindings: PCI: dwc: Update maxItems of reg and reg-names
+Date:   Fri, 21 Jul 2023 16:44:46 +0900
+Message-Id: <20230721074452.65545-15-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230721074452.65545-1-yoshihiro.shimoda.uh@renesas.com>
 References: <20230721074452.65545-1-yoshihiro.shimoda.uh@renesas.com>
@@ -48,56 +50,54 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Renesas R-Car Gen4 PCIe controllers require vender-specific
-initialization before .ep_init(). To use dw->dbi and dw->num-lanes
-in the initialization code, introduce .ep_pre_init() into struct
-dw_pcie_ep_ops. Also introduce .ep_deinit() to disable the controller
-by using vender-specific de-initialization.
+Update maxItems of reg and reg-names on both host and endpoint
+for supporting Renesas R-Car Gen4 PCIe controllers later.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- drivers/pci/controller/dwc/pcie-designware-ep.c | 6 ++++++
- drivers/pci/controller/dwc/pcie-designware.h    | 2 ++
- 2 files changed, 8 insertions(+)
+ Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml | 4 ++--
+ Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml    | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 14c641395c3b..52b3e7f67513 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -684,6 +684,9 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 	struct pci_epc *epc = ep->epc;
+diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+index 8fc2151691a4..cb727f60be0b 100644
+--- a/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
++++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+@@ -33,11 +33,11 @@ properties:
+       normal controller functioning. iATU memory IO region is also required
+       if the space is unrolled (IP-core version >= 4.80a).
+     minItems: 2
+-    maxItems: 5
++    maxItems: 6
  
-+	if (ep->ops->ep_deinit)
-+		ep->ops->ep_deinit(ep);
-+
- 	dw_pcie_edma_remove(pci);
+   reg-names:
+     minItems: 2
+-    maxItems: 5
++    maxItems: 6
+     items:
+       oneOf:
+         - description:
+diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+index 1a83f0f65f19..0bfcfd6ccb5f 100644
+--- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+@@ -33,11 +33,11 @@ properties:
+       are required for the normal controller work. iATU memory IO region is
+       also required if the space is unrolled (IP-core version >= 4.80a).
+     minItems: 2
+-    maxItems: 5
++    maxItems: 6
  
- 	if (ep->intx_mem)
-@@ -797,6 +800,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	ep->phys_base = res->start;
- 	ep->addr_size = resource_size(res);
- 
-+	if (ep->ops->ep_pre_init)
-+		ep->ops->ep_pre_init(ep);
-+
- 	dw_pcie_version_detect(pci);
- 
- 	dw_pcie_iatu_detect(pci);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 6821446d7c66..c3aeafd0f4c9 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -332,7 +332,9 @@ struct dw_pcie_rp {
- };
- 
- struct dw_pcie_ep_ops {
-+	void	(*ep_pre_init)(struct dw_pcie_ep *ep);
- 	void	(*ep_init)(struct dw_pcie_ep *ep);
-+	void	(*ep_deinit)(struct dw_pcie_ep *ep);
- 	int	(*raise_irq)(struct dw_pcie_ep *ep, u8 func_no,
- 			     enum pci_epc_irq_type type, u16 interrupt_num);
- 	const struct pci_epc_features* (*get_features)(struct dw_pcie_ep *ep);
+   reg-names:
+     minItems: 2
+-    maxItems: 5
++    maxItems: 6
+     items:
+       oneOf:
+         - description:
 -- 
 2.25.1
 
