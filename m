@@ -2,236 +2,281 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB30C75C940
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jul 2023 16:10:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9130D75CAAC
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jul 2023 16:53:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230347AbjGUOKr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jul 2023 10:10:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36130 "EHLO
+        id S230344AbjGUOxG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jul 2023 10:53:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229826AbjGUOKq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jul 2023 10:10:46 -0400
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2081.outbound.protection.outlook.com [40.107.8.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63FDB2D4C;
-        Fri, 21 Jul 2023 07:10:39 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fG4zC/uAdTFt5tzQuOdh0e387mYrxS8nUud/XkUJYAJ8EKnBeiEuTuSB06pP6NICXR1tFpiVpXaz8Ezk01J64SuLfhE2TSB5ZElvT+5Vv/hnfoK2HXo8W8H/4U3fwfidTUSe5VW0ntfm+QgpHwwUANGFmFwgPhJdBgZSKOMxFWcpLlJn7Xz/HnbjLeLrBb0BL0u59kO3s+2z0eOOJ8BLbtRhVVdA1ooXR0qJ6vD4rc8UzcMnhviyz/7fYU6lxoHza20vH0/EpnqgAbcEcqZXX8LNkmV7wLLIpEQtoeM23UXUUlxWBOyhAl2GwVvcnXSz3nGiV12ISEzgEIuEd78cTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vweO65zncnXGcKsw8XnRSycf13bKgrFa+UEk3Tzvfv0=;
- b=SQz9JefIi5urcDOuUrihHk3AZLtvi0LXcz5mRgZMp3NmeWPtztdkfe5YToWtVO43Vnx2ZsC3e84CoBNKgpcF20D+7Z+5B8Umf2sMAUjDHlKBL7QiXzgejE95zBiVa2FHQb8oJpPYPxUBFm4pYXsOgEMeFETaKCkUB2itgvn+ASrjnhf/U9Z58NsWlNQqc0ssh/ElzlfQV1EqvgXHTuc8MwGRg+pmCr97lYqaEwPjmozcuIxeOjCHyt6IesZfdaEAOqkhsDDr5xol7yw+9astN3URICEZzXUMuWW+D2kA2F88Qsnaenh6L/a4xcpcg9xDNARrCbTZayQsXAY+OmoXYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vweO65zncnXGcKsw8XnRSycf13bKgrFa+UEk3Tzvfv0=;
- b=D6Pdr1Stf3DOO9hQFt6FXn2lT0rh+OuEVpuppKIXfyekEpewc9phekmM28x/vTIjLaM+SJi8mfvvA1DmlE4qRqJv3542a6vGEzsFzOytolfGWwO25LlALo1BctJgHto/0tCuEak5CqHipf0TAI+gHQH1atWNvcJN6mP7IlQIsAY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
- by AS4PR04MB9315.eurprd04.prod.outlook.com (2603:10a6:20b:4e6::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.24; Fri, 21 Jul
- 2023 14:10:36 +0000
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::d0d5:3604:98da:20b1]) by AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::d0d5:3604:98da:20b1%7]) with mapi id 15.20.6609.026; Fri, 21 Jul 2023
- 14:10:36 +0000
-Date:   Fri, 21 Jul 2023 10:10:11 -0400
-From:   Frank Li <Frank.li@nxp.com>
-To:     Shawn Lin <shawn.lin@rock-chips.com>
-Cc:     Manivannan Sadhasivam <mani@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        helgaas@kernel.org, imx@lists.linux.dev, bhelgaas@google.com,
-        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
-        kw@linux.com, leoyang.li@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, minghuan.lian@nxp.com,
-        mingkai.hu@nxp.com, robh+dt@kernel.org, roy.zang@nxp.com,
-        shawnguo@kernel.org, zhiqiang.hou@nxp.com
-Subject: Re: [PATCH v3 1/2] PCI: dwc: Implement general suspend/resume
- functionality for L2/L3 transitions
-Message-ID: <ZLqRwxmQr0jrhS3M@lizhi-Precision-Tower-5810>
-References: <20230419164118.596300-1-Frank.Li@nxp.com>
- <20230717164526.GC35455@thinkpad>
- <ZLWKI1lRqxejfUgK@lizhi-Precision-Tower-5810>
- <20230718100400.GB4771@thinkpad>
- <20230720142509.GB48270@thinkpad>
- <ZLlGsM/D/b+udmAD@lizhi-Precision-Tower-5810>
- <20230720160738.GC48270@thinkpad>
- <6f1eb449-5609-0b17-1323-0d114c38d969@rock-chips.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6f1eb449-5609-0b17-1323-0d114c38d969@rock-chips.com>
-X-ClientProxiedBy: BY3PR05CA0014.namprd05.prod.outlook.com
- (2603:10b6:a03:254::19) To AM6PR04MB4838.eurprd04.prod.outlook.com
- (2603:10a6:20b:4::16)
+        with ESMTP id S231633AbjGUOxF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jul 2023 10:53:05 -0400
+Received: from mail-oo1-xc2d.google.com (mail-oo1-xc2d.google.com [IPv6:2607:f8b0:4864:20::c2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD29A121;
+        Fri, 21 Jul 2023 07:53:03 -0700 (PDT)
+Received: by mail-oo1-xc2d.google.com with SMTP id 006d021491bc7-5634db21a58so1352675eaf.0;
+        Fri, 21 Jul 2023 07:53:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689951183; x=1690555983;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JxlgaC60bco0Cm1BalXqc8WdAEfbZykARIUfMKPLvhI=;
+        b=fbrUOeUpu4cBkbiAZ8xkJRDFN1rcYnsMEErgzZd4XvEaBZaOATyGRd9L8p9FgGsbK8
+         U+Zn+fktiRE3+uRA4yMihQ80YP4CxgZmjQta6n9UbHs0hNxDWLcNahKHgan1YZ3vaypO
+         rjkhifUHytGH989tDbfhfJZAOjXBwXXf2xR1Ghwg/MH+kmbMiVQ2B7DK7XIjLCJBAUTJ
+         I3huXU6GXAWeGmzh2OSV892nyKHbIl7WefxoXpNrhSVfQBS8FZZdapZDV93EyGhLxTw1
+         05Clo3CyvPwJfKexVC7zk8Q+FkqVayvXRWiF18rdPm1I5eomz+HwkGYHFx47MX+E8rDh
+         nwrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689951183; x=1690555983;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JxlgaC60bco0Cm1BalXqc8WdAEfbZykARIUfMKPLvhI=;
+        b=DwR5JSK9rttUbl/9qYRWbd2TyytdJmrbnbx4Z1IQPM9EnT8Vy32/y/P4YrF4Gx3O/F
+         J/Z/MxAlTIbypBm69Mb6qNuS5X3rQdSrXuQ3wIH22YOOyEuWlfCWFKD2PwvdwbL3mYiW
+         5vaLhg+aXqmzIBsDXlKBBAkNGtvAPKGHPPu9NdZSrZ23LSBY+w9VYWNya4QnmnsGDjpB
+         +QniXcEHMaOznvXrG+bLrH5YB54COdvVPVKeVcb6i/iMPEAs5fWP6v+TW1+tS33iwnna
+         ztpSPKOSNC/IzQgUC8aiM1/p2UzI9BSBtvvOimeWIeMYDFfepU7b6ngJ98+qpLQ4yk/a
+         o+Vg==
+X-Gm-Message-State: ABy/qLYBDkQf0sLEd/4nT7EQQ+hT5CL4NKbRMYEhnELmzq1536sfzCdE
+        DUoj2+jjrYPu27pokqyXuI6+OkrjJAtolqcqobc=
+X-Google-Smtp-Source: APBJJlESC7Ai9Ycl0FQ+vntlvM+i6R3W0MWc3MK5MIQ1NKkGjXHAfFkEx56UUC7A/g25qJDMU+4MZ/Gil3pRk7P3MHM=
+X-Received: by 2002:a4a:d1c3:0:b0:563:53fa:324f with SMTP id
+ a3-20020a4ad1c3000000b0056353fa324fmr1890890oos.6.1689951182938; Fri, 21 Jul
+ 2023 07:53:02 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|AS4PR04MB9315:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8f59edaa-665c-4b49-bce1-08db89f4414f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1rekWOZgvoIHXcIpDqmudvv3fiDfChKa+xDGJmxkRH89ONJtn/npUNSMi/CxxZTacy7z4QkfHfMFAPE1IIA4LdF2pF3Cvm+sSWegPkE+BuR4vMjyzQQen6yyV0huFIbpK+B3RhW5fshAcV55HbU1NOVK2zQd7gvh0H6h+YXtdVHDexATOy++4GH2BeDTMLxn8Be/HCf0h+Wg4sMrNJBzFDTQzPqRPmZV5oIruMuOllgAKVgxBM/+71tj1+VgyGkaLntVSlbCRBLjvZBAUclHORXt1kz8cK6YdySzpt/f3rYujmIR3FggHB6aa8ts03pYAcMDnA0j/dHmuaNrnEspjU34SQnDNYBQfvnfgYWHYwB1RdLJKdBgVLnymAPmOAJxgyNNXeUEL20neBgzuIelbUjKSocaSqBN2VThgHeojgQbpuyI0po/+eeCdho8YwDiQUQLBBCbHqNgzIUelFpzVkAZYRrmJ0ilZWsGEnjsyWmkV5FK7BlT9qTg2rBZZl0Uw8+JlNVsB/g1acgy7QULLOF1nkD5bLR1FyUZamqGC3AFD198E8gYP+xa1/1bEqtMxSnmOm5d9qNai6o7hqknhZ7a/PWQ2YnfVWxX6inct1djbHplHqbEtoGxKQUMyG4m
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(7916004)(376002)(39860400002)(346002)(366004)(396003)(136003)(451199021)(478600001)(83380400001)(26005)(53546011)(186003)(6506007)(6486002)(6666004)(52116002)(66476007)(66946007)(66556008)(54906003)(38100700002)(38350700002)(9686003)(6512007)(4326008)(6916009)(15650500001)(7416002)(5660300002)(41300700001)(33716001)(8676002)(316002)(8936002)(2906002)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?M01YeXNSTTUrRzkxSDVHRHhobjNzT1ptUEk0UkgvSGJJMXJlYjY2UVUxeUdB?=
- =?utf-8?B?blZCZGJtaUNwQk5Uek9GSXdrV0dJYXFFM29SWkJDc0V0S2w2bXBhRm9DL2tG?=
- =?utf-8?B?OTZ4dDZMNWhVclQwSHRBN0drOU0vazhTVTRBQ0RCZytnUnZxQ2lyOWI4WXBJ?=
- =?utf-8?B?QTk0Y0xET3lIVWttUHVhK1lsZm5waGJsL0YzeVZxZE1NWkxFV2NCdnJZbFEz?=
- =?utf-8?B?MUhVMUlMUldmc1VHYWExdldwUmd0SDFVbVVYUXp1aGJ4aEZPTHNwWXVGNzA5?=
- =?utf-8?B?VTZwZ05DbnZmc2lyQW5wT0RlREdBeTdmUVRkaTJKMW5QYTRvVHJ6dnFvNTgx?=
- =?utf-8?B?TUoyMW9NaWJTNGNlL0RkRFF3eG1IMkFWdHE2ZUVMUEhXTTIrUkhXcFpCeTd1?=
- =?utf-8?B?UmMvV29wcVl6OVhmYWlROWJ3eFdpVzRaM2RZMVhtMmw2VzBoNGdqTVZjTndy?=
- =?utf-8?B?STBReHozWU9KdXk1ZTA5MHowQ1JOZlVocnQxQ1hXSXBrRlNwTjROOXo5OEk2?=
- =?utf-8?B?cElYeGtaR2FTNWRyQ2gxR0RCK0YxU2tjMDhGLzVoS2NHQ0RGYkRyaEVqUFJJ?=
- =?utf-8?B?bG9OTlBqNkZTL1pOZ2JYcXNRNkdZQTEwVlJTZkRrVG1EODAzb29EMUJJUGZ2?=
- =?utf-8?B?TjlJUEZzQVdxc3IyNEpxMUFGNDRzTExOeXdmclB2M012M3o0UFRER2JtMkdi?=
- =?utf-8?B?Z0FnUEU4TnZSd1E3SlBjRXVCMUwzQlZSOEVRVG80b0x4cTNXYjQ3YWsxZjRK?=
- =?utf-8?B?YmFTTFZ1WVV1aEJobzFPQ01BdzhxTHFFUlU4b3B2cXlCRXZiRlE3T2hoZlFE?=
- =?utf-8?B?V2FzcllSczBNeG14cUFxaGNHOGZ6eStiLzByQ1F1NmQzQjI2UzNCSEhOZ2Fk?=
- =?utf-8?B?WHpiUlRrOVlVbmdoaXB3K2hXaG9OQzZhU0JuTUJvdUhIQ09PYW0rTThuaHBH?=
- =?utf-8?B?WkRqNHBQbXVvMGdNeGlaRHBHZW9lcmJodGd2WmIxZWVYN0VmUy9tMUk4b0Ux?=
- =?utf-8?B?SnNGQlQzSk9taHBPQk9MMFVReVBIdE40RTkwRkd0bTlMTVltRklDMWFCS1dj?=
- =?utf-8?B?M0tIcDUzODR0Tmxid0N4aXNBcVZ5Z0QrWGxaL3dqUFQ0VGpndjZXSmJiMnJr?=
- =?utf-8?B?SC84SDl5eGdUNmxYa0szOEJWajBwOHo0SGtpSHV2dUdTS3FjdmRENGNTK3RP?=
- =?utf-8?B?K0xoQ3pLRmJxWVNyZi9NcFNEa0wxNyswK0FTSEFMQ1A3aTJJdXBLdXBZSHVY?=
- =?utf-8?B?TzF2aHEyTmdmWndPWm5rWFZNaHlkKy9QREpablJEMnVpYWNRcFJNeENXNkZw?=
- =?utf-8?B?dDU3K0duRURtbld5cG1FRVhWSXNQNk5hRU13WmN5emEydlNycnhrSHpBSzhh?=
- =?utf-8?B?em9GcU8vMWtuMXlwU0M5RFN4ZjV6Ymw0c2RicHlPTkRHSWRncEp1cUR0WDIr?=
- =?utf-8?B?M05rVlNZWXJ3ZWZya2g0RnVia1gyQTg4dXhjZk5wZ0NPKzRiRitOazVjTXFB?=
- =?utf-8?B?T0xlOEs2bGpqb2w3QkU0bW1HWFBpUWFnV2J5QnlzN1Vxek54WmYyckQ2QWxJ?=
- =?utf-8?B?ZWxQSXdkZHppSDZqeXJTMTNvbERCVnBUUFZpemhHb0I4clNEeVNuUTFMUWRR?=
- =?utf-8?B?RHM0QzVBRHpjMEtmVXpKTFZBMnpKSTF0VUpHZ2hrNG5vTWp0ZWF4VHFVYm5Y?=
- =?utf-8?B?Q2pHUm5kei9qNHNVRFRxZnpyN1Y1WWo4Ylc3Z1hoV1l2ZmpOYVFOaWVmbUw4?=
- =?utf-8?B?ZG85TUMvNWp2WTIvbjd6cHNNWW5lODBpV1Q5K3pINlZUcTBSL1JhdVRWQlgx?=
- =?utf-8?B?ODNtN1M5eXR4dkxxNUVpZTNjYWFYdGZrcjFMaTlDdi9xNzQvNFpIYmRwYlpy?=
- =?utf-8?B?WmZHMzFlQmZXd1JFSWtDdEZTSU1JYWxrTHhabGtGZVhmdUpWaExUb2s3ZjNu?=
- =?utf-8?B?cGRZODJha2lkZ2FEN0VGQWUwTFo0cjlHa1FPa05FcU9ueHVlR001aWVhZExr?=
- =?utf-8?B?clNWSm4vU3gvUW5VNkVJbE9nQ1hVeCtxMDYrYUhodFc3UytJU1RBU0ZMR3lS?=
- =?utf-8?B?UHhvb2hlUEZ5NFJrc0Zrb0hwN3k0Z291Mm4yR2VFaHRPeUJEZ2ZBSGpIZjg5?=
- =?utf-8?Q?sJtj3D7JlsGn9M7ooUKWytiEx?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f59edaa-665c-4b49-bce1-08db89f4414f
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2023 14:10:36.5143
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: h67eAdJAd9jw2QB0XaFfUvVAb3WvPexgVNMTYfv6sB/NUJ/7fj1wMa3hmGYHUo1m4gh2UnI4vJA8nSbsrUJ+2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9315
+References: <20230720215550.GA554900@bhelgaas> <eff193b-31ea-5c36-cbc-6b15a477f3b1@linux.intel.com>
+In-Reply-To: <eff193b-31ea-5c36-cbc-6b15a477f3b1@linux.intel.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 21 Jul 2023 10:52:51 -0400
+Message-ID: <CADnq5_MUyjAZoRBDvdBFDYdiA6nwsaup+MKM+ajo7HKTtez9DQ@mail.gmail.com>
+Subject: Re: [PATCH v5 05/11] drm/amdgpu: Use RMW accessors for changing LNKCTL
+To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Jammy Zhou <Jammy.Zhou@amd.com>, linux-pci@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        amd-gfx@lists.freedesktop.org,
+        Dean Luick <dean.luick@cornelisnetworks.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Ken Wang <Qingqing.Wang@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 21, 2023 at 10:09:18AM +0800, Shawn Lin wrote:
-> 
-> On 2023/7/21 0:07, Manivannan Sadhasivam wrote:
-> > On Thu, Jul 20, 2023 at 10:37:36AM -0400, Frank Li wrote:
-> > > On Thu, Jul 20, 2023 at 07:55:09PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Tue, Jul 18, 2023 at 03:34:26PM +0530, Manivannan Sadhasivam wrote:
-> > > > > On Mon, Jul 17, 2023 at 02:36:19PM -0400, Frank Li wrote:
-> > > > > > On Mon, Jul 17, 2023 at 10:15:26PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > > On Wed, Apr 19, 2023 at 12:41:17PM -0400, Frank Li wrote:
-> > > > > > > > Introduced helper function dw_pcie_get_ltssm to retrieve SMLH_LTSS_STATE.
-> > > > > > > > Added API pme_turn_off and exit_from_l2 for managing L2/L3 state transitions.
-> > > > > > > > 
-> > > > > > > > Typical L2 entry workflow:
-> > > > > > > > 
-> > > > > > > > 1. Transmit PME turn off signal to PCI devices.
-> > > > > > > > 2. Await link entering L2_IDLE state.
-> > > > > > > 
-> > > > > > > AFAIK, typical workflow is to wait for PME_To_Ack.
-> > > > > > 
-> > > > > > 1 Already wait for PME_to_ACK,  2, just wait for link actual enter L2.
-> > > > > > I think PCI RC needs some time to set link enter L2 after get ACK from
-> > > > > > PME.
-> > > > > > 
-> > > > 
-> > > > One more comment. If you transition the device to L2/L3, then it can loose power
-> > > > if Vaux was not provided. In that case, can all the devices work after resume?
-> > > > Most notably NVMe?
-> > > 
-> > > I have not hardware to do such test, NVMe driver will reinit everything after
-> > > resume if no L1.1\L1.2 support. If there are L1.1\L1.2, NVME expect it leave
-> > > at L1.2 at suspend to get better resume latency.
-> > > 
-> > 
-> > To be precise, NVMe driver will shutdown the device if there is no ASPM support
-> > and keep it in low power mode otherwise (there are other cases as well but we do
-> > not need to worry).
-> > 
-> > But here you are not checking for ASPM state in the suspend path, and just
-> > forcing the link to be in L2/L3 (thereby D3Cold) even though NVMe driver may
-> > expect it to be in low power state like ASPM/APST.
-> > 
-> > So you should only put the link to L2/L3 if there is no ASPM support. Otherwise,
-> > you'll ending up with bug reports when users connect NVMe to it.
-> > 
-> 
-> 
-> At this topic, it's very interesting to look at
-> 
-> drivers/pci/controller/dwc/pcie-tegra194.c
-> 
-> 
-> static int tegra_pcie_dw_suspend_noirq(struct device *dev)
-> {
->         struct tegra_pcie_dw *pcie = dev_get_drvdata(dev);
-> 
->         if (!pcie->link_state)
->                 return 0;
-> 
->         tegra_pcie_downstream_dev_to_D0(pcie);
->         tegra_pcie_dw_pme_turnoff(pcie);
->         tegra_pcie_unconfig_controller(pcie);
-> 
->         return 0;
-> }
-> 
-> It brings back all the downstream components to D0, as I assumed it was L0
-> indeed, before sending PME aiming to enter L2.
+On Fri, Jul 21, 2023 at 4:18=E2=80=AFAM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Thu, 20 Jul 2023, Bjorn Helgaas wrote:
+>
+> > On Mon, Jul 17, 2023 at 03:04:57PM +0300, Ilpo J=C3=A4rvinen wrote:
+> > > Don't assume that only the driver would be accessing LNKCTL. ASPM
+> > > policy changes can trigger write to LNKCTL outside of driver's contro=
+l.
+> > > And in the case of upstream bridge, the driver does not even own the
+> > > device it's changing the registers for.
+> > >
+> > > Use RMW capability accessors which do proper locking to avoid losing
+> > > concurrent updates to the register value.
+> > >
+> > > Fixes: a2e73f56fa62 ("drm/amdgpu: Add support for CIK parts")
+> > > Fixes: 62a37553414a ("drm/amdgpu: add si implementation v10")
+> > > Suggested-by: Lukas Wunner <lukas@wunner.de>
+> > > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> > > Cc: stable@vger.kernel.org
+> >
+> > Do we have any reports of problems that are fixed by this patch (or by
+> > others in the series)?  If not, I'm not sure it really fits the usual
+> > stable kernel criteria:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/Documentation/process/stable-kernel-rules.rst?id=3Dv6.4
+>
+> I was on the edge with this. The answer to your direct question is no,
+> there are no such reports so it would be okay to leave stable out I think=
+.
+> This applies to all patches in this series.
+>
+> Basically, this series came to be after Lukas noted the potential
+> concurrency issues with how LNKCTL is unprotected when reviewing
+> (internally) my bandwidth controller series. Then I went to look around
+> all LNKCTL usage and realized existing things might alreary have similar
+> issues.
+>
+> Do you want me to send another version w/o cc stable or you'll take care
+> of that?
+>
+> > > ---
+> > >  drivers/gpu/drm/amd/amdgpu/cik.c | 36 +++++++++---------------------=
+--
+> > >  drivers/gpu/drm/amd/amdgpu/si.c  | 36 +++++++++---------------------=
+--
+> > >  2 files changed, 20 insertions(+), 52 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/amd/amdgpu/cik.c b/drivers/gpu/drm/amd/a=
+mdgpu/cik.c
+> > > index 5641cf05d856..e63abdf52b6c 100644
+> > > --- a/drivers/gpu/drm/amd/amdgpu/cik.c
+> > > +++ b/drivers/gpu/drm/amd/amdgpu/cik.c
+> > > @@ -1574,17 +1574,8 @@ static void cik_pcie_gen3_enable(struct amdgpu=
+_device *adev)
+> > >                     u16 bridge_cfg2, gpu_cfg2;
+> > >                     u32 max_lw, current_lw, tmp;
+> > >
+> > > -                   pcie_capability_read_word(root, PCI_EXP_LNKCTL,
+> > > -                                             &bridge_cfg);
+> > > -                   pcie_capability_read_word(adev->pdev, PCI_EXP_LNK=
+CTL,
+> > > -                                             &gpu_cfg);
+> > > -
+> > > -                   tmp16 =3D bridge_cfg | PCI_EXP_LNKCTL_HAWD;
+> > > -                   pcie_capability_write_word(root, PCI_EXP_LNKCTL, =
+tmp16);
+> > > -
+> > > -                   tmp16 =3D gpu_cfg | PCI_EXP_LNKCTL_HAWD;
+> > > -                   pcie_capability_write_word(adev->pdev, PCI_EXP_LN=
+KCTL,
+> > > -                                              tmp16);
+> > > +                   pcie_capability_set_word(root, PCI_EXP_LNKCTL, PC=
+I_EXP_LNKCTL_HAWD);
+> > > +                   pcie_capability_set_word(adev->pdev, PCI_EXP_LNKC=
+TL, PCI_EXP_LNKCTL_HAWD);
+> > >
+> > >                     tmp =3D RREG32_PCIE(ixPCIE_LC_STATUS1);
+> > >                     max_lw =3D (tmp & PCIE_LC_STATUS1__LC_DETECTED_LI=
+NK_WIDTH_MASK) >>
+> > > @@ -1637,21 +1628,14 @@ static void cik_pcie_gen3_enable(struct amdgp=
+u_device *adev)
+> > >                             msleep(100);
+> > >
+> > >                             /* linkctl */
+> > > -                           pcie_capability_read_word(root, PCI_EXP_L=
+NKCTL,
+> > > -                                                     &tmp16);
+> > > -                           tmp16 &=3D ~PCI_EXP_LNKCTL_HAWD;
+> > > -                           tmp16 |=3D (bridge_cfg & PCI_EXP_LNKCTL_H=
+AWD);
+> > > -                           pcie_capability_write_word(root, PCI_EXP_=
+LNKCTL,
+> > > -                                                      tmp16);
+> > > -
+> > > -                           pcie_capability_read_word(adev->pdev,
+> > > -                                                     PCI_EXP_LNKCTL,
+> > > -                                                     &tmp16);
+> > > -                           tmp16 &=3D ~PCI_EXP_LNKCTL_HAWD;
+> > > -                           tmp16 |=3D (gpu_cfg & PCI_EXP_LNKCTL_HAWD=
+);
+> > > -                           pcie_capability_write_word(adev->pdev,
+> > > -                                                      PCI_EXP_LNKCTL=
+,
+> > > -                                                      tmp16);
+> > > +                           pcie_capability_clear_and_set_word(root, =
+PCI_EXP_LNKCTL,
+> > > +                                                              PCI_EX=
+P_LNKCTL_HAWD,
+> > > +                                                              bridge=
+_cfg &
+> > > +                                                              PCI_EX=
+P_LNKCTL_HAWD);
+> > > +                           pcie_capability_clear_and_set_word(adev->=
+pdev, PCI_EXP_LNKCTL,
+> > > +                                                              PCI_EX=
+P_LNKCTL_HAWD,
+> > > +                                                              gpu_cf=
+g &
+> > > +                                                              PCI_EX=
+P_LNKCTL_HAWD);
+> >
+> > Wow, there's a lot of pointless-looking work going on here:
+> >
+> >   set root PCI_EXP_LNKCTL_HAWD
+> >   set GPU  PCI_EXP_LNKCTL_HAWD
+> >
+> >   for (i =3D 0; i < 10; i++) {
+> >     read root PCI_EXP_LNKCTL
+> >     read GPU  PCI_EXP_LNKCTL
+> >
+> >     clear root PCI_EXP_LNKCTL_HAWD
+> >     if (root PCI_EXP_LNKCTL_HAWD was set)
+> >       set root PCI_EXP_LNKCTL_HAWD
+> >
+> >     clear GPU  PCI_EXP_LNKCTL_HAWD
+> >     if (GPU  PCI_EXP_LNKCTL_HAWD was set)
+> >       set GPU  PCI_EXP_LNKCTL_HAWD
+> >   }
+> >
+> > If it really *is* pointless, it would be nice to clean it up, but that
+> > wouldn't be material for this patch, so what you have looks good.
+>
+> I really don't know if it's needed or not. There's stuff which looks hw
+> specific going on besides those things you point out and I've not really
+> understood what all that does.
+>
+> One annoying thing is that this code has been copy-pasted to appear in
+> almost identical form in 4 files.
+>
+> I agree it certainly looks there might be room for cleaning things up her=
+e
+> but such cleanups look a bit too scary to me w/o hw to test them.
+>
+> > >                             /* linkctl2 */
+> > >                             pcie_capability_read_word(root, PCI_EXP_L=
+NKCTL2,
+> >
+> > The PCI_EXP_LNKCTL2 stuff also includes RMW updates.  I don't see any
+> > uses of PCI_EXP_LNKCTL2 outside this driver that look relevant, so I
+> > guess we don't care about making the PCI_EXP_LNKCTL2 updates atomic?
+>
+> Currently no, which is why I left it out from this patchset.
+>
+> It is going to change soon though as I intend to submit bandwidth
+> controller series after this series which will add RMW ops for LNKCTL2.
+> The LNKCTL2 RMW parts are now in that series rather than in this one.
+>
+> After adding the bandwidth controller, this driver might be able to use
+> it instead of tweaking LNKCTL2 directly to alter PCIe link speed (but I
+> don't expect myself to be able to test these drivers and it feels too
+> risky to make such a change without testing it, unfortunately).
 
-If current state is L1.1 or L1.2, hardware can auto enter to D0\L0 when
-there are any PCI bus activity, include PME. I supposed
-tegra_pcie_downstream_dev_to_D0() just make sure come back from L2/L3,
-which may enter by runtime PM previously, or other reason.
+Thanks for the background.  It was not clear what the point of this
+patch set was.  This code and the similar code in radeon is just to
+change the link speed of the GPU.  Some older platforms used default
+to slower link on boot so we added this code to renegotiate the link
+to a faster speed when the driver loaded.  If you are adding core
+infrastructure to do that, we can switch to that.  This was just the
+programming sequence I got from the hardware team back when this code
+was written.  Most platforms I've seen these days come up at the max
+supported speed of the platform and endpoint so I don't think the code
+actually gets used much anymore.
 
-NVME ASPM problem is (at least when I debug at other platform about 1 year
-ago): 
+Taking a step back, what is the end goal of the bandwidth controller
+changes?  The reason I ask is that today, we look at the currently
+negotiated speed of the link and use that for the baseline in the
+driver.  The driver then enables PCIe dynamic power management where
+the system management unit on the GPU dynamically adjusts the link
+speed, width, and clock on demand based on the PCIe bandwidth
+requirements of the currently executing GPU jobs to save power.  This
+might conflict with software if the goal is for some software
+component to do something similar.
 
-    1. NVME will not release MSI interrupt during suspsend.
-    2. PCI controler enter L2 at suspned_noirq();
-    3. CPU hot plug try to down second core (CORE1, CORE2, ...)
-    4. GIC try to disable MSI irq by write config space.
-    5. panic here because config space can't be access at L2.
-
-I suposed tegra should have problem when ASPM enable with NVME devices.
-
-Frank
-> 
-> > - Mani
-> > 
-> > > This API help remove duplicate codes and it can be improved gradually.
-> > > 
-> > > 
-> > > > 
-> > > > - Mani
-> > > > 
-> > > > 
-> > > > -- 
-> > > > மணிவண்ணன் சதாசிவம்
-> > 
+Alex
