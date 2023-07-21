@@ -2,182 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53AEC75B9E3
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jul 2023 23:55:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A92575BBAF
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jul 2023 03:03:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229622AbjGTVz4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jul 2023 17:55:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39156 "EHLO
+        id S229786AbjGUBDu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jul 2023 21:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229610AbjGTVzz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jul 2023 17:55:55 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5186D1719;
-        Thu, 20 Jul 2023 14:55:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DA93361C37;
-        Thu, 20 Jul 2023 21:55:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB259C433C8;
-        Thu, 20 Jul 2023 21:55:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689890153;
-        bh=/bXS787t6CrBfx1QzszVq51xokDzGgEBIJZxAQSEBpc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=PckrirTH+R/atkbCgfex4heLW9KXK7s+ISrPtn4IqPCDQOKZUWg1Hku404dLZZsBi
-         NuuAgsruXLXuYa229tXINUGekioW5P7Daw5vmq90cy11jXiwkYB9r4Q+5N+La7zPDk
-         5WqD3lk4QWHGuFSFJug0czFpUN8scQsR9tJ+IWE8KHhCRC0TUgdK5LmS3cYU52B7qH
-         9e5rmBwkikmKUYtCWFxPRDrRYB+UqPcIPK0NqFdydH+LDgmkJl14xxSE3FtpsbiCvI
-         9KcFD7+bTSrCTKeTdQWB2g7KwQ6lw6itidOZ0E6XQVL48L8lzxOjEWHZyfxe0A+k0L
-         Xv+29EkPDh4uA==
-Date:   Thu, 20 Jul 2023 16:55:50 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jammy Zhou <Jammy.Zhou@amd.com>,
-        Ken Wang <Qingqing.Wang@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Dean Luick <dean.luick@cornelisnetworks.com>,
-        Jonas =?iso-8859-1?Q?Dre=DFler?= <verdre@v0yd.nl>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v5 05/11] drm/amdgpu: Use RMW accessors for changing
- LNKCTL
-Message-ID: <20230720215550.GA554900@bhelgaas>
+        with ESMTP id S229744AbjGUBDt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jul 2023 21:03:49 -0400
+Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 893FA2718;
+        Thu, 20 Jul 2023 18:03:44 -0700 (PDT)
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+        by fd01.gateway.ufhost.com (Postfix) with ESMTP id A166281B1;
+        Fri, 21 Jul 2023 09:03:36 +0800 (CST)
+Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 21 Jul
+ 2023 09:03:36 +0800
+Received: from [192.168.125.127] (113.72.147.86) by EXMBX171.cuchost.com
+ (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 21 Jul
+ 2023 09:03:35 +0800
+Message-ID: <2ace898a-c919-1388-28cd-0c39ac88dc62@starfivetech.com>
+Date:   Fri, 21 Jul 2023 09:03:34 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230717120503.15276-6-ilpo.jarvinen@linux.intel.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v1 8/9] PCI: PLDA: starfive: Add JH7110 PCIe controller
+Content-Language: en-US
+To:     Conor Dooley <conor.dooley@microchip.com>
+CC:     Daire McNamara <daire.mcnamara@microchip.com>,
+        Conor Dooley <conor@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Kevin Xie <kevin.xie@starfivetech.com>
+References: <20230719102057.22329-1-minda.chen@starfivetech.com>
+ <20230719102057.22329-9-minda.chen@starfivetech.com>
+ <20230720-vanquish-upcoming-1145e052c849@wendy>
+From:   Minda Chen <minda.chen@starfivetech.com>
+In-Reply-To: <20230720-vanquish-upcoming-1145e052c849@wendy>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [113.72.147.86]
+X-ClientProxiedBy: EXCAS065.cuchost.com (172.16.6.25) To EXMBX171.cuchost.com
+ (172.16.6.91)
+X-YovoleRuleAgent: yovoleflag
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 17, 2023 at 03:04:57PM +0300, Ilpo Järvinen wrote:
-> Don't assume that only the driver would be accessing LNKCTL. ASPM
-> policy changes can trigger write to LNKCTL outside of driver's control.
-> And in the case of upstream bridge, the driver does not even own the
-> device it's changing the registers for.
+
+
+On 2023/7/20 19:14, Conor Dooley wrote:
+> On Wed, Jul 19, 2023 at 06:20:56PM +0800, Minda Chen wrote:
+>> Add StarFive JH7110 SoC PCIe controller platform
+>> driver codes.
+>> 
+>> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+>> Reviewed-by: Mason Huo <mason.huo@starfivetech.com>
+>> ---
+>>  MAINTAINERS                                 |   7 +
+>>  drivers/pci/controller/plda/Kconfig         |   8 +
+>>  drivers/pci/controller/plda/Makefile        |   1 +
+>>  drivers/pci/controller/plda/pcie-plda.h     |  58 ++-
+>>  drivers/pci/controller/plda/pcie-starfive.c | 415 ++++++++++++++++++++
+>>  5 files changed, 487 insertions(+), 2 deletions(-)
+>>  create mode 100644 drivers/pci/controller/plda/pcie-starfive.c
+>> 
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index f02618c2bdf5..b88a54a24ae5 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -20356,6 +20356,13 @@ S:	Supported
+>>  F:	Documentation/devicetree/bindings/watchdog/starfive*
+>>  F:	drivers/watchdog/starfive-wdt.c
+>>  
+>> +STARFIVE JH71x0 PCIE DRIVER
+>> +M:	Minda Chen <minda.chen@starfivetech.com>
+>> +L:	linux-pci@vger.kernel.org
+>> +S:	Supported
+>> +F:	Documentation/devicetree/bindings/pci/starfive*
+>> +F:	drivers/pci/controller/plda/pcie-starfive.c
+>> +
+>>  STATIC BRANCH/CALL
+>>  M:	Peter Zijlstra <peterz@infradead.org>
+>>  M:	Josh Poimboeuf <jpoimboe@kernel.org>
+>> diff --git a/drivers/pci/controller/plda/Kconfig b/drivers/pci/controller/plda/Kconfig
+>> index a3c790545843..eaf72954da9f 100644
+>> --- a/drivers/pci/controller/plda/Kconfig
+>> +++ b/drivers/pci/controller/plda/Kconfig
+>> @@ -24,4 +24,12 @@ config PCIE_MICROCHIP_HOST
+>>  	  Say Y here if you want kernel to support the Microchip AXI PCIe
+>>  	  Host Bridge driver.
+>>  
+>> +config PCIE_STARFIVE_HOST
+>> +	tristate "StarFive PCIe host controller"
+>> +	select PCIE_PLDA_HOST
 > 
-> Use RMW capability accessors which do proper locking to avoid losing
-> concurrent updates to the register value.
+> Ditto here, I think this suffers from the same issue, although its
+> probably only really randconfigs that'll trigger it.
 > 
-> Fixes: a2e73f56fa62 ("drm/amdgpu: Add support for CIK parts")
-> Fixes: 62a37553414a ("drm/amdgpu: add si implementation v10")
-> Suggested-by: Lukas Wunner <lukas@wunner.de>
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Cc: stable@vger.kernel.org
-
-Do we have any reports of problems that are fixed by this patch (or by
-others in the series)?  If not, I'm not sure it really fits the usual
-stable kernel criteria:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/stable-kernel-rules.rst?id=v6.4
-
-> ---
->  drivers/gpu/drm/amd/amdgpu/cik.c | 36 +++++++++-----------------------
->  drivers/gpu/drm/amd/amdgpu/si.c  | 36 +++++++++-----------------------
->  2 files changed, 20 insertions(+), 52 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/cik.c b/drivers/gpu/drm/amd/amdgpu/cik.c
-> index 5641cf05d856..e63abdf52b6c 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/cik.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/cik.c
-> @@ -1574,17 +1574,8 @@ static void cik_pcie_gen3_enable(struct amdgpu_device *adev)
->  			u16 bridge_cfg2, gpu_cfg2;
->  			u32 max_lw, current_lw, tmp;
->  
-> -			pcie_capability_read_word(root, PCI_EXP_LNKCTL,
-> -						  &bridge_cfg);
-> -			pcie_capability_read_word(adev->pdev, PCI_EXP_LNKCTL,
-> -						  &gpu_cfg);
-> -
-> -			tmp16 = bridge_cfg | PCI_EXP_LNKCTL_HAWD;
-> -			pcie_capability_write_word(root, PCI_EXP_LNKCTL, tmp16);
-> -
-> -			tmp16 = gpu_cfg | PCI_EXP_LNKCTL_HAWD;
-> -			pcie_capability_write_word(adev->pdev, PCI_EXP_LNKCTL,
-> -						   tmp16);
-> +			pcie_capability_set_word(root, PCI_EXP_LNKCTL, PCI_EXP_LNKCTL_HAWD);
-> +			pcie_capability_set_word(adev->pdev, PCI_EXP_LNKCTL, PCI_EXP_LNKCTL_HAWD);
->  
->  			tmp = RREG32_PCIE(ixPCIE_LC_STATUS1);
->  			max_lw = (tmp & PCIE_LC_STATUS1__LC_DETECTED_LINK_WIDTH_MASK) >>
-> @@ -1637,21 +1628,14 @@ static void cik_pcie_gen3_enable(struct amdgpu_device *adev)
->  				msleep(100);
->  
->  				/* linkctl */
-> -				pcie_capability_read_word(root, PCI_EXP_LNKCTL,
-> -							  &tmp16);
-> -				tmp16 &= ~PCI_EXP_LNKCTL_HAWD;
-> -				tmp16 |= (bridge_cfg & PCI_EXP_LNKCTL_HAWD);
-> -				pcie_capability_write_word(root, PCI_EXP_LNKCTL,
-> -							   tmp16);
-> -
-> -				pcie_capability_read_word(adev->pdev,
-> -							  PCI_EXP_LNKCTL,
-> -							  &tmp16);
-> -				tmp16 &= ~PCI_EXP_LNKCTL_HAWD;
-> -				tmp16 |= (gpu_cfg & PCI_EXP_LNKCTL_HAWD);
-> -				pcie_capability_write_word(adev->pdev,
-> -							   PCI_EXP_LNKCTL,
-> -							   tmp16);
-> +				pcie_capability_clear_and_set_word(root, PCI_EXP_LNKCTL,
-> +								   PCI_EXP_LNKCTL_HAWD,
-> +								   bridge_cfg &
-> +								   PCI_EXP_LNKCTL_HAWD);
-> +				pcie_capability_clear_and_set_word(adev->pdev, PCI_EXP_LNKCTL,
-> +								   PCI_EXP_LNKCTL_HAWD,
-> +								   gpu_cfg &
-> +								   PCI_EXP_LNKCTL_HAWD);
-
-Wow, there's a lot of pointless-looking work going on here:
-
-  set root PCI_EXP_LNKCTL_HAWD
-  set GPU  PCI_EXP_LNKCTL_HAWD
-
-  for (i = 0; i < 10; i++) {
-    read root PCI_EXP_LNKCTL
-    read GPU  PCI_EXP_LNKCTL
-
-    clear root PCI_EXP_LNKCTL_HAWD
-    if (root PCI_EXP_LNKCTL_HAWD was set)
-      set root PCI_EXP_LNKCTL_HAWD
-
-    clear GPU  PCI_EXP_LNKCTL_HAWD
-    if (GPU  PCI_EXP_LNKCTL_HAWD was set)
-      set GPU  PCI_EXP_LNKCTL_HAWD
-  }
-
-If it really *is* pointless, it would be nice to clean it up, but that
-wouldn't be material for this patch, so what you have looks good.
-
->  				/* linkctl2 */
->  				pcie_capability_read_word(root, PCI_EXP_LNKCTL2,
-
-The PCI_EXP_LNKCTL2 stuff also includes RMW updates.  I don't see any
-uses of PCI_EXP_LNKCTL2 outside this driver that look relevant, so I
-guess we don't care about making the PCI_EXP_LNKCTL2 updates atomic?
-
-Bjorn
+ok, thanks, I will change it with microchip.
+>> +	help
+>> +	  Say Y here if you want to support the StarFive PCIe controller
+>> +	  in host mode. StarFive PCIe controller uses PLDA PCIe
+>> +	  core.
+>> +
+>>  endmenu
