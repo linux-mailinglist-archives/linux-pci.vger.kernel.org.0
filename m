@@ -2,71 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BE6375C4C3
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jul 2023 12:35:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8817075C570
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jul 2023 13:08:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229571AbjGUKfx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jul 2023 06:35:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38356 "EHLO
+        id S230242AbjGULIr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jul 2023 07:08:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230151AbjGUKft (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jul 2023 06:35:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EF341722;
-        Fri, 21 Jul 2023 03:35:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2077560C7B;
-        Fri, 21 Jul 2023 10:35:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AC3BC433C8;
-        Fri, 21 Jul 2023 10:35:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689935747;
-        bh=Je4jmw2YnxTcTqTMRin9ETDHc7Fr+mZCpqJaYHv8iP4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gyMuAeO0YQpXeU6s8MvqxN/S4e//q0/WuTsV6KPiOB6q3EaZb1YO89ex/9EZUDHXv
-         Vdnl7F5aan7jtnSZZDJNdWnKNaN70ScAFIc6evn7vnE4MkPYQy1GgxAUo5+RuZ1lNM
-         bKgboN/zhpwU/oOvuoG/Y8GMV0wAVN6hawUXYSRxKTLwEkvNoLaetDgEuKj/A5NntF
-         vrSwrubhoac6yD47ZsN51FOiZQPrgUMdnuOoLB7N+LzzS5W3JJb5CESRP+AYLOTa24
-         fv9s/Pcyg4QVZ2PmBijcYnFi+xCtreVFtqhBKlpzqrtzYeor3KafUwdmxGo4s2tDss
-         f+PUJjoE6wZuQ==
-Date:   Fri, 21 Jul 2023 05:35:44 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, lpieralisi@kernel.org,
-        kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-        thierry.reding@gmail.com, Sergey.Semin@baikalelectronics.ru,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V4] Revert "PCI: tegra194: Enable support for 256 Byte
- payload"
-Message-ID: <20230721103544.GA569300@bhelgaas>
+        with ESMTP id S231187AbjGULHp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jul 2023 07:07:45 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB7E46AD;
+        Fri, 21 Jul 2023 04:04:10 -0700 (PDT)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36LB19tq012404;
+        Fri, 21 Jul 2023 11:03:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=uDtElLv/5bFBcI1FU53B4erF6OinAr+ovFJRi+ia4Ws=;
+ b=JSs52lgf4+vF0pK4o/TmVEIbM3x53mg86feQ7Zf/NHb020QEfUyWjlAlu3/q8hX6PLvX
+ vMZxWL9EQgHWgCewub5Mm51/uCeI9fVsde+qZqOCthvrZYKZZORnIPDklhwmbcMH/JX6
+ 8dPgmsdu6Fmadd+OwUKtqwcIP5q6me00Zc1eLMARbciYW77jIijr8jX9NZC0kxDLFcE1
+ cUtqAzaMK2sNzh3dib5nPjD0Z4bYn9wmIuLZyxaU23Rh7GLEc0qYwfIzC5YMxRQvu6AU
+ qEFusH8/m0bFgcezqLtCLiYdwWZEVkrMRl7EChMhKttAIoTn7VtomjlVUcjob/styD/M 1w== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ryrsb0057-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Jul 2023 11:03:32 +0000
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36LB3UHU005977
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Jul 2023 11:03:30 GMT
+Received: from [10.217.219.237] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Fri, 21 Jul
+ 2023 04:03:23 -0700
+Message-ID: <ca51b1dc-5805-5b01-01e0-a7dff535cb6c@quicinc.com>
+Date:   Fri, 21 Jul 2023 16:33:20 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <53d1bf79-4353-49b5-76b6-c2266535c778@nvidia.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v2 2/6] dt-bindings: phy: qcom,qmp: Add sa8775p QMP PCIe
+ PHY
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <konrad.dybcio@linaro.org>, <mani@kernel.org>
+CC:     <quic_shazhuss@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_ramkri@quicinc.com>, <quic_nayiluri@quicinc.com>,
+        <dmitry.baryshkov@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>
+References: <1689311319-22054-1-git-send-email-quic_msarkar@quicinc.com>
+ <1689311319-22054-3-git-send-email-quic_msarkar@quicinc.com>
+ <132e9514-7eb9-8915-6130-5bf656c1aaac@linaro.org>
+Content-Language: en-US
+From:   Mrinmay Sarkar <quic_msarkar@quicinc.com>
+In-Reply-To: <132e9514-7eb9-8915-6130-5bf656c1aaac@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: KHLXyv7UinIewFxIhznIV_eqegdw9kAX
+X-Proofpoint-ORIG-GUID: KHLXyv7UinIewFxIhznIV_eqegdw9kAX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-21_06,2023-07-20_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 mlxlogscore=999 suspectscore=0
+ spamscore=0 adultscore=0 mlxscore=0 bulkscore=0 clxscore=1011
+ malwarescore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2306200000 definitions=main-2307210099
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 21, 2023 at 09:23:01AM +0100, Jon Hunter wrote:
-> ...
 
-> I see a version of this patch here ...
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=controller/tegra194
-> 
-> However, I don't see this in -next yet. If you are happy with this latest
-> version, could we get this into -next?
+On 7/17/2023 12:55 PM, Krzysztof Kozlowski wrote:
+> On 14/07/2023 07:08, Mrinmay Sarkar wrote:
+>> Add devicetree YAML binding for Qualcomm QMP PCIe PHY
+>> for SA8775p platform.
+>>
+>> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+>> ---
+>>   .../bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml      | 19 ++++++++++++++++++-
+>>   1 file changed, 18 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
+>> index a0407fc..ca55ed9 100644
+>> --- a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
+>> +++ b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
+>> @@ -16,6 +16,8 @@ description:
+>>   properties:
+>>     compatible:
+>>       enum:
+>> +      - qcom,sa8775p-qmp-gen4x2-pcie-phy
+>> +      - qcom,sa8775p-qmp-gen4x4-pcie-phy
+>>         - qcom,sc8280xp-qmp-gen3x1-pcie-phy
+>>         - qcom,sc8280xp-qmp-gen3x2-pcie-phy
+>>         - qcom,sc8280xp-qmp-gen3x4-pcie-phy
+>> @@ -30,7 +32,7 @@ properties:
+>>   
+>>     clocks:
+>>       minItems: 5
+>> -    maxItems: 6
+>> +    maxItems: 7
+>>   
+>>     clock-names:
+>>       minItems: 5
+>> @@ -41,6 +43,7 @@ properties:
+>>         - const: rchng
+>>         - const: pipe
+>>         - const: pipediv2
+>> +      - const: phy_aux
+>>   
+>>     power-domains:
+>>       maxItems: 1
+>> @@ -141,6 +144,20 @@ allOf:
+>>           compatible:
+>>             contains:
+>>               enum:
+>> +              - qcom,sa8775p-qmp-gen4x2-pcie-phy
+>> +              - qcom,sa8775p-qmp-gen4x4-pcie-phy
+>> +    then:
+>> +      properties:
+>> +        clocks:
+>> +          minItems: 7
+>> +        clock-names:
+>> +          minItems: 7
+>> +
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+> This probably works but is not obvious and easy to read. You have here
+> if:then:else: block, so else applies to your variant. Change all these
+> if clauses for clocks into separate clauses per matching variant
+> (if:then: ... if:then:... if:then:...)
+>
+> Best regards,
+> Krzysztof
 
-I'm on vacation until Tuesday; will build a new -next branch Tuesday
-or Wednesday.
+My Bad here, This patch already applied we will take care this in next 
+patch set.
+
+Thanks,
+Mrinmay
+
+>
