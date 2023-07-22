@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88E1575D81A
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jul 2023 02:17:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8172D75D81C
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jul 2023 02:18:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230430AbjGVARI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jul 2023 20:17:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40310 "EHLO
+        id S229597AbjGVASX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jul 2023 20:18:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbjGVARH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jul 2023 20:17:07 -0400
+        with ESMTP id S229766AbjGVASW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jul 2023 20:18:22 -0400
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4FDB1705;
-        Fri, 21 Jul 2023 17:17:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76A772106;
+        Fri, 21 Jul 2023 17:18:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689985027; x=1721521027;
+  t=1689985101; x=1721521101;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=sVDYsKmJrI+FgtLdiHgy/Ei0RS4XwTYvF/jSUYneT+A=;
-  b=B00VZbgLEZ8ng38GYURQGDno/fWt7Q/rikXkw0u8nDY+N9rMhBvP3FUk
-   WSNzXi+CshSrnaeO6urfPeO1k3hVBnh1ZaBMGUlG50sEo/Xk4p/366E8Q
-   28UQYVWFjcdltXcxQVFd5Hz4GaGXJT7r7B+sCaRF3giwHD+KhXAI5aMhV
-   k0PJqW/PB0INcZmJRYi7i5Ri+cCh7wLmnvfAVGtwOitq6Ldj2Zo8EyAyx
-   taP/8rNkqC7/RYVeykdftRcCXR9Dx2V2NMuSBsd1+RVDkO4WL90fU3Ckj
-   JzpBQS0objUvlSpXtXmcwXmsYgIrMDSSPkG9bwlyQQHO0+2XiKNfY9g7r
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10778"; a="369808751"
+  bh=W2Ht8Q5lag/UKO8J7Y6PdiC/ZRU+wcdJRyA2rSC1AlE=;
+  b=aouOYLBBRhhgiKRtPp6xhMn9zgUzss695Z+lV4QqEeO3aEBlM5FyJp1A
+   8Lp7w3jvD/0V1EOk8Yo4tLG7Uq6XUXStECmdYb9GE+biUIzGDus0qPLPP
+   Ol90xw7UBZDPUskMquCGwvZPgoyVsayIr4smU+hg0GH3BxiLXMHTLBAC9
+   mOvw1Oe+nTXerGmEU7hsMmvNBDwdduHAtBnpN9PQVLw1zUnrkumfrsrwh
+   kwDJpGEYkyUb/ym3uLkBXA0+CaD3nsOn3TgdpawzE17PM1PwofWmY0lGq
+   AGVFYPKIc/tWSx2QZqa1XYaldtDBF9cgg4q8gHsfyo8uNSJc7s8KWPYe0
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10778"; a="369808862"
 X-IronPort-AV: E=Sophos;i="6.01,223,1684825200"; 
-   d="scan'208";a="369808751"
+   d="scan'208";a="369808862"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 17:17:06 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 17:18:21 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10778"; a="719025040"
+X-IronPort-AV: E=McAfee;i="6600,9927,10778"; a="719025138"
 X-IronPort-AV: E=Sophos;i="6.01,223,1684825200"; 
-   d="scan'208";a="719025040"
+   d="scan'208";a="719025138"
 Received: from cthomas-mobl1.amr.corp.intel.com (HELO [10.209.99.41]) ([10.209.99.41])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 17:17:06 -0700
-Message-ID: <d94a39e3-1822-1f3f-1118-6b2346f5e738@linux.intel.com>
-Date:   Fri, 21 Jul 2023 17:17:05 -0700
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 17:18:20 -0700
+Message-ID: <0e4dc46f-a086-8b85-f94f-b3530d958209@linux.intel.com>
+Date:   Fri, 21 Jul 2023 17:18:20 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.13.0
-Subject: Re: [PATCH v2 3/3] cxl/pci: Replace host_bridge->native_aer with
- pcie_aer_is_native()
+Subject: Re: [PATCH v2 1/3] cxl/pci: Fix appropriate checking for _OSC while
+ handling CXL RAS registers
 Content-Language: en-US
 To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -62,10 +62,10 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
         Terry Bowman <terry.bowman@amd.com>,
         Robert Richter <rrichter@amd.com>
 References: <20230721214740.256602-1-Smita.KoralahalliChannabasappa@amd.com>
- <20230721214740.256602-4-Smita.KoralahalliChannabasappa@amd.com>
+ <20230721214740.256602-2-Smita.KoralahalliChannabasappa@amd.com>
 From:   Sathyanarayanan Kuppuswamy 
         <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20230721214740.256602-4-Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <20230721214740.256602-2-Smita.KoralahalliChannabasappa@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -82,50 +82,53 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 On 7/21/23 2:47 PM, Smita Koralahalli wrote:
-> Reuse pcie_aer_is_native() to determine the native AER ownership.
-
-Although it is straightforward, IMO, the commit log should include
-few words about *why* you are making this change.
-
-For example, usage of host_bride->native_aer does not cover command
-line override of AER ownership. So use pcie_aer_is_native() to
-determine the ownership.
-
-With that fixed,
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
+> According to Section 9.17.2, Table 9-26 of CXL Specification [1], owner
+> of AER should also own CXL Protocol Error Management as there is no
+> explicit control of CXL Protocol error. And the CXL RAS Cap registers
+> reported on Protocol errors should check for AER _OSC rather than CXL
+> Memory Error Reporting Control _OSC.
 > 
+> The CXL Memory Error Reporting Control _OSC specifically highlights
+> handling Memory Error Logging and Signaling Enhancements. These kinds of
+> errors are reported through a device's mailbox and can be managed
+> independently from CXL Protocol Errors.
+> 
+> This change fixes handling and reporting CXL Protocol Errors and RAS
+> registers natively with native AER and FW-First CXL Memory Error Reporting
+> Control.
+> 
+> [1] Compute Express Link (CXL) Specification, Revision 3.1, Aug 1 2022.
+> 
+> Fixes: 248529edc86f ("cxl: add RAS status unmasking for CXL")
 > Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
 > ---
 > v2:
-> 	Replaced pcie_aer_is_native() at a later stage for automated
-> 	backports.
+> 	Added fixes tag.
+> 	Included what the patch fixes in commit message.
 > ---
->  drivers/cxl/pci.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/cxl/pci.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
 > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 2323169b6e5f..44a21ab7add5 100644
+> index 1cb1494c28fe..2323169b6e5f 100644
 > --- a/drivers/cxl/pci.c
 > +++ b/drivers/cxl/pci.c
-> @@ -529,7 +529,6 @@ static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
->  
->  static int cxl_pci_ras_unmask(struct pci_dev *pdev)
->  {
-> -	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
->  	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
->  	void __iomem *addr;
->  	u32 orig_val, val, mask;
-> @@ -542,7 +541,7 @@ static int cxl_pci_ras_unmask(struct pci_dev *pdev)
+> @@ -541,9 +541,9 @@ static int cxl_pci_ras_unmask(struct pci_dev *pdev)
+>  		return 0;
 >  	}
 >  
->  	/* BIOS has PCIe AER error control */
-> -	if (!host_bridge->native_aer)
-> +	if (!pcie_aer_is_native(pdev))
->  		return 0;
+> -	/* BIOS has CXL error control */
+> -	if (!host_bridge->native_cxl_error)
+> -		return -ENXIO;
+> +	/* BIOS has PCIe AER error control */
+> +	if (!host_bridge->native_aer)
+> +		return 0;
+
+Why not directly use pcie_aer_is_native() here?
+
 >  
 >  	rc = pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &cap);
+>  	if (rc)
 
 -- 
 Sathyanarayanan Kuppuswamy
