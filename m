@@ -2,89 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1C7175DA25
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jul 2023 07:15:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FB5575DAF8
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jul 2023 10:11:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231534AbjGVFPG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 22 Jul 2023 01:15:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58266 "EHLO
+        id S229554AbjGVILP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 22 Jul 2023 04:11:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231465AbjGVFOb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Jul 2023 01:14:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF6A53C24;
-        Fri, 21 Jul 2023 22:14:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EB9C760AFB;
-        Sat, 22 Jul 2023 05:14:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BF92C433C8;
-        Sat, 22 Jul 2023 05:14:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690002865;
-        bh=4ofCngG6gP1um5SzZmIDgDMUwhzcsEFwqF+1KFyEiYg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oSn847ano+FpQBXb1xEELtte5HDJkZfpa1Yx0RaLjITk+GvwBwRvGHRUsVxK6lF5S
-         6z3SFXkjPR5veOyMNa9wzTz3/I5yKBIXoOBFPujgsVQXh5TnfDgQFfI8ESagpywFvZ
-         /ZEkErLWqIfkQLhKD4CsjGRmHURNznmlu8WAroQvp4Be4ZonQPRDHplniMqNDubBGK
-         d68RgyFpIFvWxc1+mBKQ8P7W5xtCCIR6KB8buBWLAZi6nUNC81ZeSYlWUnpUa9vuTT
-         NF/nWGlsRyedJrjW6F2Ok9iV/WRqMqCraakwzR/n62LUzfoZZj2vxIClBgTvOhqLcb
-         DWsbrb95F3pSw==
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     agross@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, konrad.dybcio@linaro.org, mani@kernel.org,
-        Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc:     quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
-        dmitry.baryshkov@linaro.org,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH v3 0/4] arm64: qcom: sa8775p: add support for PCIe
-Date:   Fri, 21 Jul 2023 22:17:22 -0700
-Message-ID: <169000304222.3611206.893707906283849131.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <1689960276-29266-1-git-send-email-quic_msarkar@quicinc.com>
-References: <1689960276-29266-1-git-send-email-quic_msarkar@quicinc.com>
+        with ESMTP id S229456AbjGVILP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Jul 2023 04:11:15 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4A6492D58;
+        Sat, 22 Jul 2023 01:11:11 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8AxCPIej7tk+i4IAA--.20839S3;
+        Sat, 22 Jul 2023 16:11:10 +0800 (CST)
+Received: from [10.20.42.43] (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxX88bj7tkOYg2AA--.18356S3;
+        Sat, 22 Jul 2023 16:11:08 +0800 (CST)
+Message-ID: <ee44ec4e-df97-c327-b83b-fe56eb2c120b@loongson.cn>
+Date:   Sat, 22 Jul 2023 16:11:07 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 2/6] PCI/VGA: Deal with PCI VGA compatible devices only
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Sui Jingfeng <sui.jingfeng@linux.dev>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        loongson-kernel@lists.loongnix.cn,
+        Mario Limonciello <mario.limonciello@amd.com>
+References: <20230719182617.GA509912@bhelgaas>
+From:   suijingfeng <suijingfeng@loongson.cn>
+In-Reply-To: <20230719182617.GA509912@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-CM-TRANSID: AQAAf8AxX88bj7tkOYg2AA--.18356S3
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCr4xCry3try8ZF4kKry5KFX_yoW5Xr1rpa
+        y0kFW5KFyvgFy0kw1xuFW8WFyrKr47JFy3AFyYg34Uu3yDXasI9rZYgrWqga4kCrs7Jr4I
+        qFsFqr18uFyDArXCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+        Gr0_Gr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+        kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
+        XwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+        k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l
+        4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxV
+        WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
+        7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+        4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+        42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2pVbDUUUU
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
 
-On Fri, 21 Jul 2023 22:54:31 +0530, Mrinmay Sarkar wrote:
-> Update the relavent DT bindings for PCIe, add new config to the phy
-> driver add pcie and phy nodes to the .dtsi file and enable then in
-> board .dts file for the sa8775p-ride platform.
-> 
-> v2 -> v3:
-> - to align with dt-bindings rectified pcie default state
-> - dropped PCIe PHY dt-bindings and PHY driver in this series as its
->   already applied [1]
-> - To verify DTS against bindings for this series we required [2]
-> 
-> [...]
+On 2023/7/20 02:26, Bjorn Helgaas wrote:
+> Optimization is fine, but the most important thing here is to be clear
+> about what functional change this patch makes.  As I mentioned at [1],
+> if this patch affects the class codes accepted, please make that clear
+> here.
+>
+>> Reviewed-by: Mario Limonciello<mario.limonciello@amd.com>
+>> Signed-off-by: Sui Jingfeng<suijingfeng@loongson.cn>
+> I do not see Mario's Reviewed-by on the list.  I do see Mario's
+> Reviewed-by [2] for a previous version, but that version added this in
+> pci_notify():
+>
+>    + if (pdev->class != PCI_CLASS_DISPLAY_VGA << 8)
+>    +   return 0;
+>
+> while this version adds:
+>
+>    + if ((pdev->class >> 8) != PCI_CLASS_DISPLAY_VGA)
+>    +   return 0;
+>
+> It's OK to carry a review to future versions if there are
+> insignificant changes, but this is a functional change that seems
+> significant to me.  The first matches only 0x030000, while the second
+> discards the low eight bits so it matches 0x0300XX.
+>
+> [1]https://lore.kernel.org/r/20230718231400.GA496927@bhelgaas
+> [2]https://lore.kernel.org/all/5b6fdf65-b354-94a9-f883-be820157efad@amd.com/
+>
+Yes,  you are right. As you already told me at [1]:
 
-Applied, thanks!
 
-[3/4] arm64: dts: qcom: sa8775p: Add pcie0 and pcie1 nodes
-      commit: 489f14be0e0a19225ef8575e4a04b0f9ee77ab3e
-[4/4] arm64: dts: qcom: sa8775p-ride: enable pcie nodes
-      commit: bf3ee3db23ed2e72ee61141ade9a3964b509a8d4
+According to the "PCI Code and ID Assignment" spec, r1.15, sec 1.4,
 
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+only mentions 0x0300 programming interface 0x00 as decoding
+
+the legacy VGA addresses.
+
+
+If the programming interface is 0x01, then it is a 8514-compatible 
+controller.
+
+It is petty old card,  about 30 years old(I think, it is nearly obsolete 
+for now).
+
+I never have a chance to see such a card in real life.
+
+
+Yes, we should adopt first matches method here. That is:
+
+   + if (pdev->class != PCI_CLASS_DISPLAY_VGA << 8)
+   +   return 0;
+
+It seems that we are more rigorous to deal the VGA-compatible devices as 
+illustrated by above code here.
+
+But who the still have that card (8514-compatible) and the hardware to 
+using such a card today ?
+
+
+Please consider that the pci_dev_attrs_are_visible() function[3] also 
+ignore the
+
+programming interface (the least significant 8 bits).
+
+Therefore, at this version of my vgaarb cleanup patch set.
+
+I choose to keep the original filtering rule,
+
+but do the necessary optimization only which I think is meaningful.
+
+
+In the future, we may want to expand VGAARB to deal all PCI display 
+class devices, with another patch.
+
+  
+if (pdev->class >> 16 == PCI_BASE_CLASS_DISPLAY)
+
+          // accept
+
+else
+
+       // return immediately.
+
+
+Then, we will have a more good chance to clarify the programmer interface.
+
+Is this explanation feasible and reasonable, Bjorn and Mario ?
+
+
+[3] 
+https://elixir.bootlin.com/linux/latest/source/drivers/pci/pci-sysfs.c#L1551
+
+
