@@ -2,58 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 52FE075D89C
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jul 2023 03:22:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F33F475D9A6
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jul 2023 06:24:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230031AbjGVBWo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jul 2023 21:22:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36350 "EHLO
+        id S229736AbjGVEYI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 22 Jul 2023 00:24:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbjGVBWn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jul 2023 21:22:43 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F389E12F
-        for <linux-pci@vger.kernel.org>; Fri, 21 Jul 2023 18:22:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689988962; x=1721524962;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=vd6HcOr36ekkE7sTMUr7scTjUoWIg2aeAkbkYMsR8OI=;
-  b=Ts2AmIKvOc2q38U/9QRW8YAA3Q8oyIhSX1osVReZHZFJ62SzMFhx7ss2
-   xb89zIOW4qrPDQtItJfQuwZAcnKHw5bCJiPZ27i5XkphLJ+TD4Xp2cQRj
-   uYsfUpExqcGCe9oYZQOHHS0WCfQ04Ew6LBBwdRz9ZMC7TC/xXQa1ivfdb
-   cWs2JqIzRIAo1b+41MI/GnTjGzDRoCqytLUQnzq2PNNfn+a/eRy0q+p2c
-   RPkCUCcS7U4ChTJ4n7CDESsv4CuhtZQ35dChYoUD8ooSYmR2sKt024wJa
-   Rq0AXytcizqg+BLytk+2FeEn0xGAEU4lF1MmrZvxwV0jxdQcAH+xsbOsz
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10778"; a="346750324"
-X-IronPort-AV: E=Sophos;i="6.01,223,1684825200"; 
-   d="scan'208";a="346750324"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 18:22:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10778"; a="790366758"
-X-IronPort-AV: E=Sophos;i="6.01,223,1684825200"; 
-   d="scan'208";a="790366758"
-Received: from lkp-server02.sh.intel.com (HELO 36946fcf73d7) ([10.239.97.151])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Jul 2023 18:22:40 -0700
-Received: from kbuild by 36946fcf73d7 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qN1KR-0007om-1v;
-        Sat, 22 Jul 2023 01:22:39 +0000
-Date:   Sat, 22 Jul 2023 09:20:28 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Krzysztof =?utf-8?Q?Wilczy=C5=84ski" ?= <kwilczynski@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:controller/tegra194] BUILD SUCCESS
- 9357e7a50bebca43bc837c7f059bac600a12736a
-Message-ID: <202307220926.K6dmWn5S-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+        with ESMTP id S229529AbjGVEYH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Jul 2023 00:24:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2704210C3;
+        Fri, 21 Jul 2023 21:24:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ADF7C60918;
+        Sat, 22 Jul 2023 04:24:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA85DC433C8;
+        Sat, 22 Jul 2023 04:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689999846;
+        bh=h5XuZr98sjwlO7gDdMo7HLiufEe+Jm9DBn3LdnntEBI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=J6qxb05TIsnO+2TbAww91awPBspLbIwAWkD+O1nOnxYvfrCo37N4Dfh8ft/f7DDqk
+         C+O+SmgR7aV2Rekws17TW+tA2jeZoKxUZx743tnJgBJmYTsjhYzHGpNYMkV3LOoX2N
+         JlMqqXFnOExkxh8S+bTc99Gig9jxMG/EDqGwZuTHVjlYbM+aUNuR2/CJipXTKIwBfr
+         N49wMSapRU55Wr3aM4NAZgKc+FPuWIhcABwfTZEHj3P1MeYWz7YXciZY0W6e6fhp8u
+         DHKodfn1HSBBMcHlxNG5hI2fVdptgTwwa82Z/gvQdD/Fi+PFhA+SrkZVG8zYsanJpI
+         i+v5m5XsKIP5g==
+Date:   Fri, 21 Jul 2023 21:27:24 -0700
+From:   Bjorn Andersson <andersson@kernel.org>
+To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc:     agross@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, konrad.dybcio@linaro.org, mani@kernel.org,
+        quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+        dmitry.baryshkov@linaro.org,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] PCI: qcom: Add support for sa8775p SoC
+Message-ID: <4stjo474xkq4d7wwsonpvvj37txsq5mqok3uqi2dj5e3xmgkv2@rl22supr2jin>
+References: <1689960276-29266-1-git-send-email-quic_msarkar@quicinc.com>
+ <1689960276-29266-3-git-send-email-quic_msarkar@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+Content-Disposition: inline
+In-Reply-To: <1689960276-29266-3-git-send-email-quic_msarkar@quicinc.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,142 +64,13 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/tegra194
-branch HEAD: 9357e7a50bebca43bc837c7f059bac600a12736a  Revert "PCI: tegra194: Enable support for 256 Byte payload"
+On Fri, Jul 21, 2023 at 10:54:33PM +0530, Mrinmay Sarkar wrote:
+> Add support for sa8775p SoC that uses controller version 5.90
+> reusing the 1.9.0 config.
+> 
+> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
 
-elapsed time: 727m
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 
-configs tested: 123
-configs skipped: 4
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r035-20230720   gcc  
-arc                  randconfig-r036-20230720   gcc  
-arc                  randconfig-r043-20230720   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r002-20230720   clang
-arm                  randconfig-r004-20230720   clang
-arm                  randconfig-r005-20230720   clang
-arm                  randconfig-r011-20230721   clang
-arm                  randconfig-r046-20230720   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r021-20230720   clang
-arm64                randconfig-r022-20230720   clang
-csky                                defconfig   gcc  
-csky                 randconfig-r023-20230720   gcc  
-csky                 randconfig-r034-20230720   gcc  
-hexagon              randconfig-r036-20230720   clang
-hexagon              randconfig-r041-20230720   clang
-hexagon              randconfig-r045-20230720   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230720   gcc  
-i386         buildonly-randconfig-r005-20230720   gcc  
-i386         buildonly-randconfig-r006-20230720   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230720   gcc  
-i386                 randconfig-i002-20230720   gcc  
-i386                 randconfig-i003-20230720   gcc  
-i386                 randconfig-i004-20230720   gcc  
-i386                 randconfig-i005-20230720   gcc  
-i386                 randconfig-i006-20230720   gcc  
-i386                 randconfig-i011-20230720   clang
-i386                 randconfig-i011-20230721   gcc  
-i386                 randconfig-i012-20230720   clang
-i386                 randconfig-i012-20230721   gcc  
-i386                 randconfig-i013-20230720   clang
-i386                 randconfig-i013-20230721   gcc  
-i386                 randconfig-i014-20230720   clang
-i386                 randconfig-i014-20230721   gcc  
-i386                 randconfig-i015-20230720   clang
-i386                 randconfig-i015-20230721   gcc  
-i386                 randconfig-i016-20230720   clang
-i386                 randconfig-i016-20230721   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r032-20230720   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r016-20230720   gcc  
-microblaze           randconfig-r003-20230720   gcc  
-microblaze           randconfig-r006-20230720   gcc  
-microblaze           randconfig-r023-20230720   gcc  
-microblaze           randconfig-r033-20230720   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r004-20230720   clang
-mips                 randconfig-r005-20230720   clang
-mips                 randconfig-r014-20230720   gcc  
-mips                 randconfig-r026-20230720   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r026-20230720   gcc  
-openrisc             randconfig-r001-20230720   gcc  
-openrisc             randconfig-r025-20230720   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r031-20230720   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r011-20230720   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r015-20230720   clang
-riscv                randconfig-r032-20230720   gcc  
-riscv                randconfig-r042-20230720   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r031-20230720   gcc  
-s390                 randconfig-r044-20230720   clang
-sh                               allmodconfig   gcc  
-sh                   randconfig-r025-20230720   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r034-20230720   gcc  
-sparc64              randconfig-r024-20230720   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230720   gcc  
-x86_64       buildonly-randconfig-r002-20230720   gcc  
-x86_64       buildonly-randconfig-r003-20230720   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-x001-20230720   clang
-x86_64               randconfig-x002-20230720   clang
-x86_64               randconfig-x003-20230720   clang
-x86_64               randconfig-x004-20230720   clang
-x86_64               randconfig-x005-20230720   clang
-x86_64               randconfig-x006-20230720   clang
-x86_64               randconfig-x011-20230720   gcc  
-x86_64               randconfig-x012-20230720   gcc  
-x86_64               randconfig-x013-20230720   gcc  
-x86_64               randconfig-x014-20230720   gcc  
-x86_64               randconfig-x015-20230720   gcc  
-x86_64               randconfig-x016-20230720   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards,
+Bjorn
