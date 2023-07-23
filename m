@@ -2,43 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C97575E0CC
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Jul 2023 11:24:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2ECF75E194
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Jul 2023 13:13:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbjGWJYM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 23 Jul 2023 05:24:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36954 "EHLO
+        id S229626AbjGWLNL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 23 Jul 2023 07:13:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229705AbjGWJYI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Jul 2023 05:24:08 -0400
+        with ESMTP id S229491AbjGWLNK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Jul 2023 07:13:10 -0400
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69E611A4;
-        Sun, 23 Jul 2023 02:24:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2D2810C3;
+        Sun, 23 Jul 2023 04:13:08 -0700 (PDT)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
         by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1qNVJt-0000EZ-PK; Sun, 23 Jul 2023 11:24:05 +0200
-Message-ID: <01e617d6-c7e0-8f46-6f04-94961251f2a0@leemhuis.info>
-Date:   Sun, 23 Jul 2023 11:24:05 +0200
+        id 1qNX1N-0006H6-2e; Sun, 23 Jul 2023 13:13:05 +0200
+Message-ID: <d8471890-feb8-8953-a97d-5fc6b1f22d65@leemhuis.info>
+Date:   Sun, 23 Jul 2023 13:13:04 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: Kernel 6.5-rc2: system crash on suspend bisected
+Subject: Re: Fwd: PCI: Loongson: 8b3517f88ff2 breaks PCIe on some system
 Content-Language: en-US, de-DE
-To:     Woody Suwalski <terraluna977@gmail.com>, imammedo@redhat.com,
-        bhelgaas@google.com, LKML <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-References: <11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com>
-From:   "Linux regression tracking #adding (Thorsten Leemhuis)" 
-        <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc:     Linux kernel regressions list <regressions@lists.linux.dev>
-In-Reply-To: <11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com>
+To:     Bagas Sanjaya <bagasdotme@gmail.com>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>, jiaxun.yang@flygoat.com,
+        Aurelien Jarno <aurel32@debian.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Loongarch <loongarch@lists.linux.dev>
+References: <871f22f4-c456-db15-3466-085971bd1221@gmail.com>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <871f22f4-c456-db15-3466-085971bd1221@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690104247;995ef5b1;
-X-HE-SMSGID: 1qNVJt-0000EZ-PK
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690110788;91fa5781;
+X-HE-SMSGID: 1qNX1N-0006H6-2e
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -46,52 +48,35 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
-
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 20.07.23 05:36, Woody Suwalski wrote:
+On 23.07.23 04:03, Bagas Sanjaya wrote:
 > 
-> Laptop shows a kernel crash trace after a first suspend to ram, on a
-> second attempt to suspend it becomes frozen solid. This is 100%
-> repeatable with a 6.5-rc2 kernel, not happening with a 6.4 kernel - see
-> the attached dmesg output.
+> I notice a regression report on Bugzilla [1]. Quoting from it:
 > 
-> I have bisected the kernel uilds and it points to :
-> [40613da52b13fb21c5566f10b287e0ca8c12c4e9] PCI: acpiphp: Reassign
-> resources on bridge if necessary
+>> After 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases") backported to stable, we have received multiple regression reports including one from Debian build farm[1] that some systems failed to initialize some PCIe devices.
+>>
+>> I was able to reproduce on one of my Loongson-3A4000+7A system. It seems like the root cause is firmware on those systems didn't set MRRS properly but 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases") assumed firmware's maximum MRRS is always valid.
+>>
+>> [1]: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1035587
 > 
-> Reversing this patch seems to fix the kernel crash problem on my laptop.
+> See Bugzilla for the full thread.
 > 
-> Happy to test some proper fix patches...
+> The linked Debian BTS entry have debugging details on this regression
+> (boot log, cpuinfo, and lspci).
 > 
+> Anyway, I'm adding this regression to regzbot:
+> 
+> #regzbot introduced: 8b3517f88ff298 https://bugzilla.kernel.org/show_bug.cgi?id=217680
+> #regzbot title: LS7A MRRS quirk fails to initialize PCIe devices
+> #regzbot link: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1035587
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+FWIW & TWIMC, a fix for this is in the works already afaics:
 
-#regzbot ^introduced 40613da52b13fb21c5566f10b287e0ca8c12c
-#regzbot title PCI: acpiphp: Oops on first attempt to suspend, freeze on
-second
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+#regzbot monitor:
+https://lore.kernel.org/all/20230718133259.2867432-1-jiaxun.yang@flygoat.com/
+#regzbot fix: pci: loongson: Workaround MIPS firmware MRRS settings
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
