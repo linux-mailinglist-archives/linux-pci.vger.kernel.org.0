@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21C5075E777
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 03:28:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B314275E78F
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 03:28:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231386AbjGXB22 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 23 Jul 2023 21:28:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59336 "EHLO
+        id S231607AbjGXB2w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 23 Jul 2023 21:28:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231684AbjGXB2F (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Jul 2023 21:28:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C7249C7;
-        Sun, 23 Jul 2023 18:25:18 -0700 (PDT)
+        with ESMTP id S231788AbjGXB2S (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Jul 2023 21:28:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95181171E;
+        Sun, 23 Jul 2023 18:25:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C2D8F60EF9;
-        Mon, 24 Jul 2023 01:24:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1015AC433C8;
-        Mon, 24 Jul 2023 01:24:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E26B60F1B;
+        Mon, 24 Jul 2023 01:24:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17788C433C8;
+        Mon, 24 Jul 2023 01:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690161868;
-        bh=nB9sY8X/582vVWL2LbmgPFirUzquFq34/rstMIeanBI=;
+        s=k20201202; t=1690161877;
+        bh=sBhbt8uzCKA9A2iTjhFHhhqHH3IHMBsBCpiHJkgpwXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QWZ6Sa56GIM6ggUgzJNm2e1v9LynMpjOCG3uIxU33Pirf5wDWkVPpXKq4OME7XKts
-         JbqXnU1Q3sq8dmbQFx8REbMY9/RzZOY9pA1YuDSyItDQrjb7M1I7MpfLuNu0V+W8nR
-         ZnUlIPi+KXFPmO5pPrYLYvfnqh3GAVVRsFQi4TNvx0P95e9nRlIPoY1hnQD89yan2x
-         M2W4GFrwVJzASz70NOYf6i8OTjgCz7YbVTclYSjYJXMFan3+QJxwMKMCBw/f+9ORVe
-         85tngEgdm3CFGlwOd3QHNv8bI/WHXNFFxCGpo/B95nqNe9pvEPU1EfRflFd9/GKjqf
-         a1a06JMkYxkMA==
+        b=QVVWoUt5TlchygaX136TCg1lOcFet/ZuFPyqTdx/tRCBNiSlbcvpQNsz1DR45lvvr
+         X+tGS/YrKLmSuxzqIh8rO+rFMw/vhLS7GMjsuXs02u4X85mbx5F4OMRLIOZXcZ4GQD
+         FZ02DoxwJozFUwSQnHrnqEOGXBYoWMuxmVMxaIXQ8FM576R9VvDsgLoBzeePPYS5go
+         nwcVfBMJ17zYKg4CE/nS3FgMJtz3KVVPIPFQ+H7eCYuhuwN0eXWmAVEubCKa7T7XpS
+         XLhLheK8twDhw1udSBJzZVtkkERpojCoqm6WQW7ICncNxLPSjJufZYhxpBrLYzKt6I
+         J4ApAsH7Myo/Q==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sumit Gupta <sumitg@nvidia.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, bhelgaas@google.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 05/22] PCI: tegra194: Fix possible array out of bounds access
-Date:   Sun, 23 Jul 2023 21:24:02 -0400
-Message-Id: <20230724012419.2317649-5-sashal@kernel.org>
+Cc:     Yanteng Si <siyanteng@loongson.cn>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        bhelgaas@google.com, perex@perex.cz, tiwai@suse.com,
+        gregkh@linuxfoundation.org, kai.vehmanen@linux.intel.com,
+        mkumard@nvidia.com, nmahale@nvidia.com, linux-pci@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.10 11/22] ALSA: hda: Add Loongson LS7A HD-Audio support
+Date:   Sun, 23 Jul 2023 21:24:08 -0400
+Message-Id: <20230724012419.2317649-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230724012419.2317649-1-sashal@kernel.org>
 References: <20230724012419.2317649-1-sashal@kernel.org>
@@ -52,74 +52,105 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.186
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Sumit Gupta <sumitg@nvidia.com>
+From: Yanteng Si <siyanteng@loongson.cn>
 
-[ Upstream commit 205b3d02d57ce6dce96f6d2b9c230f56a9bf9817 ]
+[ Upstream commit 28bd137a3c8e105587ba8c55b68ef43b519b270f ]
 
-Add check to fix the possible array out of bounds violation by
-making speed equal to GEN1_CORE_CLK_FREQ when its value is more
-than the size of "pcie_gen_freq" array. This array has size of
-four but possible speed (CLS) values are from "0 to 0xF". So,
-"speed - 1" values are "-1 to 0xE".
+Add the new PCI ID 0x0014 0x7a07 and the new PCI ID 0x0014 0x7a37
+Loongson HDA controller.
 
-Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
-Link: https://lore.kernel.org/lkml/72b9168b-d4d6-4312-32ea-69358df2f2d0@nvidia.com/
-Acked-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+Link: https://lore.kernel.org/r/993587483b9509796b29a416f257fcfb4b15c6ea.1686128807.git.siyanteng@loongson.cn
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-tegra194.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ include/linux/pci_ids.h    | 3 +++
+ sound/hda/hdac_device.c    | 1 +
+ sound/pci/hda/hda_intel.c  | 7 +++++++
+ sound/pci/hda/patch_hdmi.c | 1 +
+ 4 files changed, 12 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 1222f5749bc67..a215777df96c7 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -239,6 +239,7 @@
- #define EP_STATE_ENABLED	1
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 4b34a5c125999..84cb7b32aa26f 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -153,6 +153,9 @@
  
- static const unsigned int pcie_gen_freq[] = {
-+	GEN1_CORE_CLK_FREQ,	/* PCI_EXP_LNKSTA_CLS == 0; undefined */
- 	GEN1_CORE_CLK_FREQ,
- 	GEN2_CORE_CLK_FREQ,
- 	GEN3_CORE_CLK_FREQ,
-@@ -470,7 +471,11 @@ static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
+ #define PCI_VENDOR_ID_LOONGSON		0x0014
  
- 	speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
- 		PCI_EXP_LNKSTA_CLS;
--	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
++#define PCI_DEVICE_ID_LOONGSON_HDA      0x7a07
++#define PCI_DEVICE_ID_LOONGSON_HDMI     0x7a37
 +
-+	if (speed >= ARRAY_SIZE(pcie_gen_freq))
-+		speed = 0;
-+
-+	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
+ #define PCI_VENDOR_ID_TTTECH		0x0357
+ #define PCI_DEVICE_ID_TTTECH_MC322	0x000a
  
- 	/* If EP doesn't advertise L1SS, just return */
- 	val = dw_pcie_readl_dbi(pci, pcie->cfg_link_cap_l1sub);
-@@ -973,7 +978,11 @@ static int tegra_pcie_dw_host_init(struct pcie_port *pp)
+diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
+index bfd8585776767..5315a3eb114ee 100644
+--- a/sound/hda/hdac_device.c
++++ b/sound/hda/hdac_device.c
+@@ -645,6 +645,7 @@ struct hda_vendor_id {
+ };
  
- 	speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
- 		PCI_EXP_LNKSTA_CLS;
--	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
-+
-+	if (speed >= ARRAY_SIZE(pcie_gen_freq))
-+		speed = 0;
-+
-+	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
+ static const struct hda_vendor_id hda_vendor_ids[] = {
++	{ 0x0014, "Loongson" },
+ 	{ 0x1002, "ATI" },
+ 	{ 0x1013, "Cirrus Logic" },
+ 	{ 0x1057, "Motorola" },
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 1f641712233ef..13226f4f2d119 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -274,6 +274,7 @@ enum {
+ 	AZX_DRIVER_CTHDA,
+ 	AZX_DRIVER_CMEDIA,
+ 	AZX_DRIVER_ZHAOXIN,
++	AZX_DRIVER_LOONGSON,
+ 	AZX_DRIVER_GENERIC,
+ 	AZX_NUM_DRIVERS, /* keep this as last entry */
+ };
+@@ -397,6 +398,7 @@ static const char * const driver_short_names[] = {
+ 	[AZX_DRIVER_CTHDA] = "HDA Creative",
+ 	[AZX_DRIVER_CMEDIA] = "HDA C-Media",
+ 	[AZX_DRIVER_ZHAOXIN] = "HDA Zhaoxin",
++	[AZX_DRIVER_LOONGSON] = "HDA Loongson",
+ 	[AZX_DRIVER_GENERIC] = "HD-Audio Generic",
+ };
  
- 	tegra_pcie_enable_interrupts(pp);
- 
+@@ -2838,6 +2840,11 @@ static const struct pci_device_id azx_ids[] = {
+ 	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_ATI_HDMI },
+ 	/* Zhaoxin */
+ 	{ PCI_DEVICE(0x1d17, 0x3288), .driver_data = AZX_DRIVER_ZHAOXIN },
++	/* Loongson HDAudio*/
++	{PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_HDA),
++	  .driver_data = AZX_DRIVER_LOONGSON },
++	{PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_HDMI),
++	  .driver_data = AZX_DRIVER_LOONGSON },
+ 	{ 0, }
+ };
+ MODULE_DEVICE_TABLE(pci, azx_ids);
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index c19afe4861949..5ff7e93024154 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -4307,6 +4307,7 @@ static int patch_gf_hdmi(struct hda_codec *codec)
+  * patch entries
+  */
+ static const struct hda_device_id snd_hda_id_hdmi[] = {
++HDA_CODEC_ENTRY(0x00147a47, "Loongson HDMI",	patch_generic_hdmi),
+ HDA_CODEC_ENTRY(0x1002793c, "RS600 HDMI",	patch_atihdmi),
+ HDA_CODEC_ENTRY(0x10027919, "RS600 HDMI",	patch_atihdmi),
+ HDA_CODEC_ENTRY(0x1002791a, "RS690/780 HDMI",	patch_atihdmi),
 -- 
 2.39.2
 
