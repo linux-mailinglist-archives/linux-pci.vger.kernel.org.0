@@ -2,120 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 607EC75F6C4
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 14:48:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17F6275F6DA
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 14:49:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230190AbjGXMsJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jul 2023 08:48:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38734 "EHLO
+        id S231214AbjGXMtQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jul 2023 08:49:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231186AbjGXMsB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 08:48:01 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09AB1E63;
-        Mon, 24 Jul 2023 05:47:38 -0700 (PDT)
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36OCdNMx015189;
-        Mon, 24 Jul 2023 12:47:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=qcppdkim1;
- bh=ydsySNg3Q4jb9ZF8E2mxqDsppYBtg+mgK0htP0/P++8=;
- b=GeJ0m14BtIZMHrXqvwbe0Z/p+6eYj+E6y0Fx2XQshZ5+iMpYhPBoyv4TbjxVFeIaQNhI
- i8C0cmE8h6S7gzhJrreKDcpKVpQDPAhIDf5RIRutWSqjGSeJZmS3YQCO9E85gOX98T9A
- o/ra386jGX6Or5fx668kgQdvRdZBVX1DxQUMTn7Rfd+1L3HRz67ft13zrGAX3qDtMCcc
- BSPgEXBB6QiIMuWGNEzjPw7Y4Hwb/GGgPOXWgIID8K5N8PWMEyHBqjio4Oz0GtpXoooK
- kOtG0mA8EspRuIgG5KEIj6gjOrpTbm8zDVRU3TiAtkjIWKHIutSA5dNb33+MgAkiCUy3 bg== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3s08deu6j8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Jul 2023 12:47:31 +0000
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36OClUmN000608
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Jul 2023 12:47:30 GMT
-Received: from hu-ipkumar-blr.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.30; Mon, 24 Jul 2023 05:47:26 -0700
-From:   Praveenkumar I <quic_ipkumar@quicinc.com>
-To:     <mani@kernel.org>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <lpieralisi@kernel.org>,
-        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <quic_varada@quicinc.com>, <quic_devipriy@quicinc.com>
-Subject: [PATCH 1/1] PCI: qcom: Add early fixup to set the max payload size for IPQ9574
-Date:   Mon, 24 Jul 2023 18:17:11 +0530
-Message-ID: <20230724124711.2346886-2-quic_ipkumar@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230724124711.2346886-1-quic_ipkumar@quicinc.com>
-References: <20230724124711.2346886-1-quic_ipkumar@quicinc.com>
+        with ESMTP id S231207AbjGXMsU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 08:48:20 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EE2531FF2;
+        Mon, 24 Jul 2023 05:47:50 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8AxDOv1cr5k_zUJAA--.17747S3;
+        Mon, 24 Jul 2023 20:47:49 +0800 (CST)
+Received: from [10.20.42.43] (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLCP0cr5kczY5AA--.5514S3;
+        Mon, 24 Jul 2023 20:47:48 +0800 (CST)
+Message-ID: <4cb6fd14-4661-4285-ac5f-c8f6ea1f4208@loongson.cn>
+Date:   Mon, 24 Jul 2023 20:47:48 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v3 0/9] PCI/VGA: Improve the default VGA device selection
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Sui Jingfeng <sui.jingfeng@linux.dev>
+Cc:     David Airlie <airlied@gmail.com>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20230719193241.GA510805@bhelgaas>
+From:   suijingfeng <suijingfeng@loongson.cn>
+In-Reply-To: <20230719193241.GA510805@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: qrwMwwu4YmBCpcOPEpZY0lXkGqd2xOFP
-X-Proofpoint-ORIG-GUID: qrwMwwu4YmBCpcOPEpZY0lXkGqd2xOFP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-24_09,2023-07-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 lowpriorityscore=0 mlxlogscore=771 spamscore=0
- mlxscore=0 malwarescore=0 impostorscore=0 suspectscore=0 clxscore=1015
- adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2307240113
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-CM-TRANSID: AQAAf8CxLCP0cr5kczY5AA--.5514S3
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cw4UGrWxCFWrXF1ftFyUXFc_yoW8Xr4Upr
+        1rXF4UKry8Jr18Jr1DJr1UJryDJF47J34UJr1UGF1UJr1UJryjq348Xr1jgr47Jr4kXr4U
+        Xr4UJF1UZF1jywbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+        xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+        1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+        67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+        AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+        F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
+        ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+        xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+        4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjxU
+        2ID7UUUUU
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Set 256 bytes as payload size for IPQ9574 via early fixup. This allows
-PCIe RC to use the max payload size when a capable link partner is
-connected.
+Hi,
 
-Signed-off-by: Praveenkumar I <quic_ipkumar@quicinc.com>
----
-This patch depends on the below series which adds support for PCIe
-controllers in IPQ9574
-https://lore.kernel.org/linux-arm-msm/20230519090219.15925-1-quic_devipriy@quicinc.com/
 
- drivers/pci/controller/dwc/pcie-qcom.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+On 2023/7/20 03:32, Bjorn Helgaas wrote:
+> "drm/loongson: Add an implement for ..." also solves a problem, but it
+> lacks a commit log, so I don't know what the problem is.
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index cee4e400a695..6695bc3b122f 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1631,6 +1631,11 @@ static void qcom_fixup_class(struct pci_dev *dev)
- {
- 	dev->class = PCI_CLASS_BRIDGE_PCI_NORMAL;
- }
-+
-+static void qcom_fixup_mps_256(struct pci_dev *dev)
-+{
-+	pcie_set_mps(dev, 256);
-+}
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
-@@ -1638,6 +1643,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1108, qcom_fixup_mps_256);
- 
- static const struct dev_pm_ops qcom_pcie_pm_ops = {
- 	NOIRQ_SYSTEM_SLEEP_PM_OPS(qcom_pcie_suspend_noirq, qcom_pcie_resume_noirq)
--- 
-2.34.1
+
+I have already telling you one yeas ago.
+
+I want remove the pci_fixup_vgadev() function in arch/loongarch/pci/pci.c
+
+I was the original author of this workaround at our downstream kernel.
+
+While the time is not mature until this patch set be merged.
+
+I don't want mention this, as you asked this question.
+
+So, I think I have to explain.
+
+
+-static void pci_fixup_vgadev(struct pci_dev *pdev)
+-{
+-       struct pci_dev *devp = NULL;
+-
+-       while ((devp = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, devp))) {
+-               if (devp->vendor != PCI_VENDOR_ID_LOONGSON) {
+-                       vga_set_default_device(devp);
+-                       dev_info(&pdev->dev,
+-                               "Overriding boot device as %X:%X\n",
+-                               devp->vendor, devp->device);
+-               }
+-       }
+-}
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, 
+PCI_DEVICE_ID_LOONGSON_DC1, pci_fixup_vgadev);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, 
+PCI_DEVICE_ID_LOONGSON_DC2, pci_fixup_vgadev);
 
