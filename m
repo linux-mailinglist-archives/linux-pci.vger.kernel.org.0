@@ -2,109 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A27C75F785
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 14:59:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 336BD75F7BA
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 15:03:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229862AbjGXM7A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jul 2023 08:59:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48604 "EHLO
+        id S231532AbjGXNDd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jul 2023 09:03:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231691AbjGXM6B (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 08:58:01 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E1D5BBA
-        for <linux-pci@vger.kernel.org>; Mon, 24 Jul 2023 05:54:41 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4fb7373dd35so6743770e87.1
-        for <linux-pci@vger.kernel.org>; Mon, 24 Jul 2023 05:54:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690203219; x=1690808019;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=a2Ax+g4Vq22atUQfE+CrYPUiHKIfw129Y1mAPVdfhrk=;
-        b=yIjEagSPzyrV4pnOzGUMMfEoceZFbE4b2sE2bDD34FCS9owCq5V48XdsU3g05ebZAd
-         1rdKzRxjTXXlk8BAaIU/FYi6gf4ly6wUBZ87I+2zs1toMcGk3mcfmltS90FnjYZf2PM+
-         zWmYpWGqIXMDcxhu/KHB8jUHxNXfeXimh1aWxjChWy6OfZezytgZrvzZTXQa2E29l1iQ
-         EkOUKoO4jKZPPBwyxpFh+othkKSu/BkQ63tb3Nuyp01uLqNcpCxJTI2A2QJnSmAECKP+
-         LBwKMkqIkylWf74OoEOrFYOo1Ax74/TUnpbJKFcMgqLHpk73Aps09ydWTHMEYv5zwJhw
-         PQ7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690203219; x=1690808019;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a2Ax+g4Vq22atUQfE+CrYPUiHKIfw129Y1mAPVdfhrk=;
-        b=VyBf42y9vocN4Nrqe50FEWXwD/6NFSUIgU+nBQkzlLuLVHO94bRv75H3GHiER+uPUc
-         otTV4F2EPw2WRAWmJVtbky5oSusw1SYjND9LVUtI/dDdJwWClsffXnGUANGdTjUVtVqy
-         fFLO2RhMpkPfkqHK/3+m9EZcH93sycLTydAts0ddB4JMVZi3a0UD2Ffqdg+1y0SblMBc
-         VHZ3GK518Ll6ZBmDSI+po/8RPQA9Q0J96+a9B1VRn1cxThSd9IDa3JJBW2VPdR3A+jWl
-         RN8EufX39LcqP13k36mcFdAq9/I8M2+kCbv0RxWiyU2xTSiLvb91nup6p7j21RsptoNo
-         P50A==
-X-Gm-Message-State: ABy/qLazYPyiXPyABBSEyd4FYlwqakyRXaruLOsAvmPw5Jfu+k7Bw0L+
-        PnnNCPJsnxwrYPmPFJMEoSlO6A==
-X-Google-Smtp-Source: APBJJlF3M0XAIIrNjCgd3lRmor0h1II8rIjFWnG7yMxjXazt29zxHtYqTKVQn1cYI8S8IR2Mgzm7Nw==
-X-Received: by 2002:a05:6512:e8c:b0:4fb:8ff3:1f74 with SMTP id bi12-20020a0565120e8c00b004fb8ff31f74mr3971328lfb.20.1690203219568;
-        Mon, 24 Jul 2023 05:53:39 -0700 (PDT)
-Received: from [192.168.1.101] (abxj221.neoplus.adsl.tpnet.pl. [83.9.3.221])
-        by smtp.gmail.com with ESMTPSA id m8-20020a195208000000b004fb86662871sm2166604lfb.233.2023.07.24.05.53.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jul 2023 05:53:39 -0700 (PDT)
-Message-ID: <af7d1db2-8bbe-e078-6b17-7f841fb7f475@linaro.org>
-Date:   Mon, 24 Jul 2023 14:53:37 +0200
+        with ESMTP id S231906AbjGXNDM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 09:03:12 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3CD7F19A5;
+        Mon, 24 Jul 2023 06:02:16 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8Cxc_BWdr5kKTcJAA--.23093S3;
+        Mon, 24 Jul 2023 21:02:14 +0800 (CST)
+Received: from [10.20.42.43] (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxniNWdr5kYjs5AA--.49082S3;
+        Mon, 24 Jul 2023 21:02:14 +0800 (CST)
+Message-ID: <6c8ca3a6-5898-ccba-cd01-9622215ddd10@loongson.cn>
+Date:   Mon, 24 Jul 2023 21:02:14 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] PCI: qcom: Add early fixup to set the max payload
- size for IPQ9574
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 4/6] PCI/VGA: Move the new_state assignment out the loop
 Content-Language: en-US
-To:     Praveenkumar I <quic_ipkumar@quicinc.com>, mani@kernel.org,
-        agross@kernel.org, andersson@kernel.org, lpieralisi@kernel.org,
-        kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     quic_varada@quicinc.com, quic_devipriy@quicinc.com
-References: <20230724124711.2346886-1-quic_ipkumar@quicinc.com>
- <20230724124711.2346886-2-quic_ipkumar@quicinc.com>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20230724124711.2346886-2-quic_ipkumar@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+To:     Sui Jingfeng <sui.jingfeng@linux.dev>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, loongson-kernel@lists.loongnix.cn
+References: <20230711134354.755966-1-sui.jingfeng@linux.dev>
+ <20230711134354.755966-5-sui.jingfeng@linux.dev>
+From:   suijingfeng <suijingfeng@loongson.cn>
+In-Reply-To: <20230711134354.755966-5-sui.jingfeng@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+X-CM-TRANSID: AQAAf8BxniNWdr5kYjs5AA--.49082S3
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJr43tw13Gw13Zw4xAF1xCrX_yoW8Ww1kpr
+        ZYvFyfCFZ7XF1IkrWaqr1UXrZ5W3s5t3yxAFWj934DWFWDJa4rtryfJrW5KrnrCrZ3uayj
+        yr15GFy7ZayUXFgCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUPqb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+        xVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+        xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+        6r1DMcIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+        8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
+        AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+        rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+        v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8
+        Jr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07jb_-
+        PUUUUU=
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -113,20 +71,58 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 24.07.2023 14:47, Praveenkumar I wrote:
-> Set 256 bytes as payload size for IPQ9574 via early fixup. This allows
-> PCIe RC to use the max payload size when a capable link partner is
-> connected.
-> 
-> Signed-off-by: Praveenkumar I <quic_ipkumar@quicinc.com>
+PING, please !
+
+
+On 2023/7/11 21:43, Sui Jingfeng wrote:
+> From: Sui Jingfeng <suijingfeng@loongson.cn>
+>
+> In the vga_arbiter_notify_clients() function, the value of the 'new_state'
+> variable will be 'false' on systems that have more than one PCI VGA card.
+> Its value will be 'true' on systems that have one or no PCI VGA compatible
+> card. In other words, its value is not relevant to the iteration, so move
+> the assignment () out of the loop.
+>
+> For a system with multiple video cards, this patch saves the redundant
+> assignment.
+>
+> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
 > ---
-[...]
+>   drivers/pci/vgaarb.c | 16 +++++++---------
+>   1 file changed, 7 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+> index 668139f7c247..4c448c758bab 100644
+> --- a/drivers/pci/vgaarb.c
+> +++ b/drivers/pci/vgaarb.c
+> @@ -1468,22 +1468,20 @@ static void vga_arbiter_notify_clients(void)
+>   {
+>   	struct vga_device *vgadev;
+>   	unsigned long flags;
+> -	uint32_t new_decodes;
+> -	bool new_state;
+> +	bool state;
+>   
+>   	if (!vga_arbiter_used)
+>   		return;
+>   
+> +	state = (vga_count > 1) ? false : true;
+> +
+>   	spin_lock_irqsave(&vga_lock, flags);
+>   	list_for_each_entry(vgadev, &vga_list, list) {
+> -		if (vga_count > 1)
+> -			new_state = false;
+> -		else
+> -			new_state = true;
+>   		if (vgadev->set_decode) {
+> -			new_decodes = vgadev->set_decode(vgadev->pdev,
+> -							 new_state);
+> -			vga_update_device_decodes(vgadev, new_decodes);
+> +			unsigned int decodes;
+> +
+> +			decodes = vgadev->set_decode(vgadev->pdev, state);
+> +			vga_update_device_decodes(vgadev, decodes);
+>   		}
+>   	}
+>   	spin_unlock_irqrestore(&vga_lock, flags);
 
-> 
-> +static void qcom_fixup_mps_256(struct pci_dev *dev)
-> +{
-> +	pcie_set_mps(dev, 256);
-Looks like setting "dev->pcie_mpss = 1" here would make the PCIe generic
-code take care of this.
-
-Konrad
