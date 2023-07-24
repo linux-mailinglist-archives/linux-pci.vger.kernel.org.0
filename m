@@ -2,58 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55BF275F74D
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 14:54:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A27C75F785
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 14:59:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231468AbjGXMyh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jul 2023 08:54:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43936 "EHLO
+        id S229862AbjGXM7A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jul 2023 08:59:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231467AbjGXMx4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 08:53:56 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6E883A87
-        for <linux-pci@vger.kernel.org>; Mon, 24 Jul 2023 05:50:44 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-4faaaa476a9so6508978e87.2
-        for <linux-pci@vger.kernel.org>; Mon, 24 Jul 2023 05:50:44 -0700 (PDT)
+        with ESMTP id S231691AbjGXM6B (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 08:58:01 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E1D5BBA
+        for <linux-pci@vger.kernel.org>; Mon, 24 Jul 2023 05:54:41 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4fb7373dd35so6743770e87.1
+        for <linux-pci@vger.kernel.org>; Mon, 24 Jul 2023 05:54:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690203019; x=1690807819;
+        d=linaro.org; s=google; t=1690203219; x=1690808019;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6nQOx8QpxMl4xmqW1W/cGtwpWNmlYQb9ZRl8qG0IXSc=;
-        b=H42F9CvMDBCmp/gcoj+qvE3TzKL0C0wnAK6FhL/5CkghE/BdP6230yQCDn8Uo3KsKE
-         Z/AWBpf4KY6/Jg2e3r/EcR1hBVil+EeKBjKKgu7U+t5lpDaVaqFLP8bHw48Ij4dSO1Vh
-         om1aBhL5sbB/rXTBhV649ENYl4muzyHAxyRo8jj5d0jx0rCc8+DM1W3krz6GjXpQxdbe
-         ylS38WrFQ2U5k7qUTTE4rtiuABlJopLu5qJTl6+tcwmkCiBEQW7QDQwWAwVJg3LUC2nJ
-         aOZrVfT/PRSnoJ3wv6ke7JCZIvUOr31RcXNAtiFsVsrQ4xZhxuF6sL3bv07i+lOBMMym
-         gTXA==
+        bh=a2Ax+g4Vq22atUQfE+CrYPUiHKIfw129Y1mAPVdfhrk=;
+        b=yIjEagSPzyrV4pnOzGUMMfEoceZFbE4b2sE2bDD34FCS9owCq5V48XdsU3g05ebZAd
+         1rdKzRxjTXXlk8BAaIU/FYi6gf4ly6wUBZ87I+2zs1toMcGk3mcfmltS90FnjYZf2PM+
+         zWmYpWGqIXMDcxhu/KHB8jUHxNXfeXimh1aWxjChWy6OfZezytgZrvzZTXQa2E29l1iQ
+         EkOUKoO4jKZPPBwyxpFh+othkKSu/BkQ63tb3Nuyp01uLqNcpCxJTI2A2QJnSmAECKP+
+         LBwKMkqIkylWf74OoEOrFYOo1Ax74/TUnpbJKFcMgqLHpk73Aps09ydWTHMEYv5zwJhw
+         PQ7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690203019; x=1690807819;
+        d=1e100.net; s=20221208; t=1690203219; x=1690808019;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6nQOx8QpxMl4xmqW1W/cGtwpWNmlYQb9ZRl8qG0IXSc=;
-        b=aRwrUJNpBCuuy/Z54JyBU5td6WOFP4S1bXfDttXwGD6BQ57C0eSxOZbsU0/9sD75iJ
-         zWsryP80fraslt7y2mAM6/wn1lFhZwebMAgkk44EMNcQu9hKEtf608K8KiE/faYrLOm5
-         mSBixpmZopXcyvFGEAf7TnQR6QTdgvhNFcBHwPsGIwMCYvWIFYYcQwW6ocoXPFKc9Su1
-         d0JIC6pTq3fn54sneX5gA48r3b6ZLPvAvVbp8+cuzl53jAl59YbnaKQInqJ8IKcGC2dO
-         FTBxwUJwayLt5tNdUIpk4lB7moOn5NRZ+bLzgeNvvulWaMqpXq+mgCYdqtXiJ/WqCILO
-         OE2A==
-X-Gm-Message-State: ABy/qLZGVyR2A1kdjEIoL7Wd+70/I2toDqG9BjT/Y/23v7p0jNIFjbo+
-        k/19QZrwrpP1clV588xULntjew==
-X-Google-Smtp-Source: APBJJlE51EVSVuXAKr+xHydyC8+tcdP1mFIRU18KrDnY3qMmkv5DqpaiYwmGatjBS2+9NkHgR11Wtw==
-X-Received: by 2002:a05:6512:20ce:b0:4fd:d213:dfd0 with SMTP id u14-20020a05651220ce00b004fdd213dfd0mr4827935lfr.11.1690203019023;
-        Mon, 24 Jul 2023 05:50:19 -0700 (PDT)
+        bh=a2Ax+g4Vq22atUQfE+CrYPUiHKIfw129Y1mAPVdfhrk=;
+        b=VyBf42y9vocN4Nrqe50FEWXwD/6NFSUIgU+nBQkzlLuLVHO94bRv75H3GHiER+uPUc
+         otTV4F2EPw2WRAWmJVtbky5oSusw1SYjND9LVUtI/dDdJwWClsffXnGUANGdTjUVtVqy
+         fFLO2RhMpkPfkqHK/3+m9EZcH93sycLTydAts0ddB4JMVZi3a0UD2Ffqdg+1y0SblMBc
+         VHZ3GK518Ll6ZBmDSI+po/8RPQA9Q0J96+a9B1VRn1cxThSd9IDa3JJBW2VPdR3A+jWl
+         RN8EufX39LcqP13k36mcFdAq9/I8M2+kCbv0RxWiyU2xTSiLvb91nup6p7j21RsptoNo
+         P50A==
+X-Gm-Message-State: ABy/qLazYPyiXPyABBSEyd4FYlwqakyRXaruLOsAvmPw5Jfu+k7Bw0L+
+        PnnNCPJsnxwrYPmPFJMEoSlO6A==
+X-Google-Smtp-Source: APBJJlF3M0XAIIrNjCgd3lRmor0h1II8rIjFWnG7yMxjXazt29zxHtYqTKVQn1cYI8S8IR2Mgzm7Nw==
+X-Received: by 2002:a05:6512:e8c:b0:4fb:8ff3:1f74 with SMTP id bi12-20020a0565120e8c00b004fb8ff31f74mr3971328lfb.20.1690203219568;
+        Mon, 24 Jul 2023 05:53:39 -0700 (PDT)
 Received: from [192.168.1.101] (abxj221.neoplus.adsl.tpnet.pl. [83.9.3.221])
-        by smtp.gmail.com with ESMTPSA id q19-20020ac246f3000000b004fb7cd9651bsm2192458lfo.98.2023.07.24.05.50.17
+        by smtp.gmail.com with ESMTPSA id m8-20020a195208000000b004fb86662871sm2166604lfb.233.2023.07.24.05.53.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jul 2023 05:50:18 -0700 (PDT)
-Message-ID: <5f707d2e-f944-d991-2c0d-5ea9d02f7572@linaro.org>
-Date:   Mon, 24 Jul 2023 14:50:17 +0200
+        Mon, 24 Jul 2023 05:53:39 -0700 (PDT)
+Message-ID: <af7d1db2-8bbe-e078-6b17-7f841fb7f475@linaro.org>
+Date:   Mon, 24 Jul 2023 14:53:37 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/1] Set may payload size for IPQ9574
+Subject: Re: [PATCH 1/1] PCI: qcom: Add early fixup to set the max payload
+ size for IPQ9574
 Content-Language: en-US
 To:     Praveenkumar I <quic_ipkumar@quicinc.com>, mani@kernel.org,
         agross@kernel.org, andersson@kernel.org, lpieralisi@kernel.org,
@@ -62,6 +63,7 @@ To:     Praveenkumar I <quic_ipkumar@quicinc.com>, mani@kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     quic_varada@quicinc.com, quic_devipriy@quicinc.com
 References: <20230724124711.2346886-1-quic_ipkumar@quicinc.com>
+ <20230724124711.2346886-2-quic_ipkumar@quicinc.com>
 From:   Konrad Dybcio <konrad.dybcio@linaro.org>
 Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
@@ -98,12 +100,12 @@ Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
  nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
  izWDgYvmBE8=
-In-Reply-To: <20230724124711.2346886-1-quic_ipkumar@quicinc.com>
+In-Reply-To: <20230724124711.2346886-2-quic_ipkumar@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -112,14 +114,19 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 On 24.07.2023 14:47, Praveenkumar I wrote:
-> IPQ9574 supports 256 bytes of payload size and setting the max will allow
-> to use it when capable partner is connected.
+> Set 256 bytes as payload size for IPQ9574 via early fixup. This allows
+> PCIe RC to use the max payload size when a capable link partner is
+> connected.
 > 
-It's not necessary to send a (bogus) cover letter with a single patch.
+> Signed-off-by: Praveenkumar I <quic_ipkumar@quicinc.com>
+> ---
+[...]
 
-Please consider using the b4 tool, which takes care of almost all sending-
-related complaints:
-
-https://b4.docs.kernel.org/en/latest/index.html
+> 
+> +static void qcom_fixup_mps_256(struct pci_dev *dev)
+> +{
+> +	pcie_set_mps(dev, 256);
+Looks like setting "dev->pcie_mpss = 1" here would make the PCIe generic
+code take care of this.
 
 Konrad
