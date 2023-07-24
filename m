@@ -2,82 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7854875F8FA
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 15:55:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20B6575F91A
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 16:00:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229700AbjGXNzI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jul 2023 09:55:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55580 "EHLO
+        id S230090AbjGXN76 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jul 2023 09:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229748AbjGXNy5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 09:54:57 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22322526D;
-        Mon, 24 Jul 2023 06:52:28 -0700 (PDT)
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36ODYnus027616;
-        Mon, 24 Jul 2023 13:52:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=TooVBwAIA3xzgpS1Zg854+i1r43v/oLL+XANBssgrKw=;
- b=oDqTCFcKv2GI8EhWtbpHEZbOqoXDShNi+eDFnx5/2FSCCvrwaC7SZl6fMjw74XjGZ67T
- eeKA9ApvAc/reS1RLXTO0NNA2T58rr36HMAZxz4inHwa7iUY77dCR2WhtfEwezO1gcdN
- bH9X34dB3q8AmHMt8MOQM8MoCU7uIRrl6Kx6eOiXrPCrXEun0jKXtts3xe1DVWAgyKOI
- UOUj8MJynLqrv1MV4GFX39uEwyTZxEAtTufF6eDO0XoDWqeCHU+ZnxTBEh6aCjOGOp+n
- 9Dra1sJdQT3+/cPjpXB44FY8mSBw3jf+RB8dx3DgjxTcD2R9iUeq7Sjvr8H3wzxRbXlo aQ== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3s1qasrd5a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Jul 2023 13:52:20 +0000
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36ODpwQE016069
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Jul 2023 13:51:58 GMT
-Received: from [10.216.38.70] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Mon, 24 Jul
- 2023 06:51:53 -0700
-Message-ID: <b9424d44-82bf-8863-a269-ab68fde232e7@quicinc.com>
-Date:   Mon, 24 Jul 2023 19:21:49 +0530
+        with ESMTP id S229798AbjGXN75 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 09:59:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F233F125
+        for <linux-pci@vger.kernel.org>; Mon, 24 Jul 2023 06:59:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1690207149;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=P2aZVU7pPnDc/RmZQW4iakWRtXamS7FJFx+fSy45nyM=;
+        b=QymtMmsTSY3Ev2cIqp6Ix7MseEEcWqIwRWNx3PhIqH2fSbt3fa+2F/JBee0l6rYM1grPHV
+        3EWyDEDk0QvVdHs/p01w/F0Xg5T67hU5WBkgPKmU5DM38YssvZLUS2tnoNGEjsnyKUjQW/
+        DcGQRxYVNKyb88niZ/CjiXBEupfsMgM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-122-NK6o2GkLNmuwifLXGGNa6Q-1; Mon, 24 Jul 2023 09:59:05 -0400
+X-MC-Unique: NK6o2GkLNmuwifLXGGNa6Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 51785800159;
+        Mon, 24 Jul 2023 13:59:05 +0000 (UTC)
+Received: from dell-r430-03.lab.eng.brq2.redhat.com (dell-r430-03.lab.eng.brq2.redhat.com [10.37.153.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 67ED040C2063;
+        Mon, 24 Jul 2023 13:59:04 +0000 (UTC)
+From:   Igor Mammedov <imammedo@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     terraluna977@gmail.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, imammedo@redhat.com, mst@redhat.com
+Subject: [PATCH] hack to debug acpiphp crash
+Date:   Mon, 24 Jul 2023 15:59:02 +0200
+Message-Id: <20230724135902.2217991-1-imammedo@redhat.com>
+In-Reply-To: <11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com>
+References: <11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 1/1] PCI: qcom: Add early fixup to set the max payload
- size for IPQ9574
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>, <mani@kernel.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <quic_varada@quicinc.com>, <quic_devipriy@quicinc.com>
-References: <20230724124711.2346886-1-quic_ipkumar@quicinc.com>
- <20230724124711.2346886-2-quic_ipkumar@quicinc.com>
- <af7d1db2-8bbe-e078-6b17-7f841fb7f475@linaro.org>
-Content-Language: en-US
-From:   Praveenkumar I <quic_ipkumar@quicinc.com>
-In-Reply-To: <af7d1db2-8bbe-e078-6b17-7f841fb7f475@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: AFDz2SOrtO_jqUcW5vn75PxOWGcadxZf
-X-Proofpoint-GUID: AFDz2SOrtO_jqUcW5vn75PxOWGcadxZf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-24_10,2023-07-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- impostorscore=0 mlxscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501
- clxscore=1015 spamscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2307240123
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -85,28 +61,83 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-On 7/24/2023 6:23 PM, Konrad Dybcio wrote:
-> On 24.07.2023 14:47, Praveenkumar I wrote:
->> Set 256 bytes as payload size for IPQ9574 via early fixup. This allows
->> PCIe RC to use the max payload size when a capable link partner is
->> connected.
->>
->> Signed-off-by: Praveenkumar I <quic_ipkumar@quicinc.com>
->> ---
-> [...]
->
->> +static void qcom_fixup_mps_256(struct pci_dev *dev)
->> +{
->> +	pcie_set_mps(dev, 256);
-> Looks like setting "dev->pcie_mpss = 1" here would make the PCIe generic
-> code take care of this.
-Yes, but that is not helping as the generic code pci_configure_mps() has 
-a check for,
-/         if (!bridge || !pci_is_pcie(bridge))/
-/            return;/
-/Here it is returning and mps is not set to new 256 bytes./
->
-> Konrad
---
-Thanks,
-Praveenkumar
+Woody thanks for testing,
+
+can you try following patch which will try to workaround NULL bus->self if it's
+a really cuplrit and print an extra debug information.
+Add following to kernel command line(make sure that CONFIG_DYNAMIC_DEBUG is enabled):
+
+dyndbg="file drivers/pci/access.c +p; file drivers/pci/hotplug/acpiphp_glue.c +p; file drivers/pci/bus.c +p; file drivers/pci/pci.c +p; file drivers/pci/setup-bus.c +p" ignore_loglevel
+
+What I find odd in you logs is that enable_slot() is called while native PCIe
+should be used. Additional info might help to understand what's going on:
+  1: 'lspci' output
+  2:  DSDT and all SSDT ACPI tables (you can use 'acpidump -b' to get them).
+
+Signed-off-by: Igor Mammedov <imammedo@redhat.com>
+---
+ drivers/pci/hotplug/acpiphp_glue.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
+index 328d1e416014..9ce3fd9d72a9 100644
+--- a/drivers/pci/hotplug/acpiphp_glue.c
++++ b/drivers/pci/hotplug/acpiphp_glue.c
+@@ -485,7 +485,10 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
+ 	struct pci_bus *bus = slot->bus;
+ 	struct acpiphp_func *func;
+ 
++WARN(1, "enable_slot");
++pci_info(bus, "enable_slot bus\n");
+ 	if (bridge && bus->self && hotplug_is_native(bus->self)) {
++pr_err("enable_slot: bridge branch\n");
+ 		/*
+ 		 * If native hotplug is used, it will take care of hotplug
+ 		 * slot management and resource allocation for hotplug
+@@ -498,8 +501,10 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
+ 				acpiphp_native_scan_bridge(dev);
+ 		}
+ 	} else {
++		LIST_HEAD(add_list);
+ 		int max, pass;
+ 
++pr_err("enable_slot: acpiphp_rescan_slot branch\n");
+ 		acpiphp_rescan_slot(slot);
+ 		max = acpiphp_max_busnr(bus);
+ 		for (pass = 0; pass < 2; pass++) {
+@@ -508,13 +513,23 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
+ 					continue;
+ 
+ 				max = pci_scan_bridge(bus, dev, max, pass);
++pci_info(dev, "enable_slot: pci_scan_bridge: max: %d\n", max);
+ 				if (pass && dev->subordinate) {
+ 					check_hotplug_bridge(slot, dev);
+ 					pcibios_resource_survey_bus(dev->subordinate);
++                                        if (bus->self)
++						__pci_bus_size_bridges(dev->subordinate,
++								       &add_list);
+ 				}
+ 			}
+ 		}
+-		pci_assign_unassigned_bridge_resources(bus->self);
++                if (bus->self) {
++pci_info(bus->self, "enable_slot: pci_assign_unassigned_bridge_resources:\n");
++			pci_assign_unassigned_bridge_resources(bus->self);
++                } else {
++pci_info(bus, "enable_slot: __pci_bus_assign_resources:\n");
++			__pci_bus_assign_resources(bus, &add_list, NULL);
++		}
+ 	}
+ 
+ 	acpiphp_sanitize_bus(bus);
+@@ -541,6 +556,7 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
+ 		}
+ 		pci_dev_put(dev);
+ 	}
++pr_err("enable_slot: end\n");
+ }
+ 
+ /**
+-- 
+2.39.3
+
