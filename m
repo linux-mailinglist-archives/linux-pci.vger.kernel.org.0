@@ -2,330 +2,228 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E3DD75EE78
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 10:55:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79C8D75EEE9
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 11:18:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231996AbjGXIzr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jul 2023 04:55:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51828 "EHLO
+        id S232201AbjGXJSR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jul 2023 05:18:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231975AbjGXIze (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 04:55:34 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E78137;
-        Mon, 24 Jul 2023 01:55:29 -0700 (PDT)
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36O7dRQV030277;
-        Mon, 24 Jul 2023 08:55:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : from : to : cc
- : date : message-id : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=8bcDdBxvihBC30mVrX2Bu0i4dSrj1lJsbZou3q1wlh4=;
- b=WYlUXSjsg/gyAqOJLNJxezfn4R+/yNkpTIxEwyVhOIIb95dW+hjHbff+NE/n2oNXd9+U
- dRlHqK1liJ5U6ir5SacdCvqT97nq/H4aZ6eCr1WN6XF85HaK0/I3wsjYLtbk6FQ20331
- wkXlw3lckhq6V16PRpyvu2RrdTheUxt2q18417vrmW1EQsn9lBT12i0U3t2OAOnGaaOb
- JXmKTE7Dn9a64rSD8rD08FlD5d9Q/gac2WPy1n5GFCbfWzhVF9koAtP48wtAG/uCTKW1
- JzIDG4nQNWPYz6MEq0TpzCTVgr8702t1Cyb+qTRe9X9gCJhDQbgfPGpvZhZXd4/WG92d DQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s1hscey7t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Jul 2023 08:55:26 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36O8l7PG010408;
-        Mon, 24 Jul 2023 08:55:26 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s1hscey6s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Jul 2023 08:55:26 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36O86F3X014406;
-        Mon, 24 Jul 2023 08:55:24 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3s0stxhyn8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Jul 2023 08:55:24 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36O8tLIH18678454
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jul 2023 08:55:21 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7BB8B2004E;
-        Mon, 24 Jul 2023 08:55:21 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E5C0820043;
-        Mon, 24 Jul 2023 08:55:19 +0000 (GMT)
-Received: from [9.109.248.226] (unknown [9.109.248.226])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Jul 2023 08:55:19 +0000 (GMT)
-Subject: [PATCH v7 2/2] PCI: rpaphp: Error out on busy status from
- get-sensor-state
-From:   Mahesh Salgaonkar <mahesh@linux.ibm.com>
-To:     linuxppc-dev <linuxppc-dev@ozlabs.org>
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Date:   Mon, 24 Jul 2023 14:25:19 +0530
-Message-ID: <169018891453.2762525.13358294392014600391.stgit@jupiter>
-In-Reply-To: <169018889869.2762525.12537634512378621566.stgit@jupiter>
-References: <169018889869.2762525.12537634512378621566.stgit@jupiter>
-User-Agent: StGit/1.5
-Content-Type: text/plain; charset="utf-8"
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: mrDr-HzPZoK1dLBzl_ohvhjSS_PtDfHz
-X-Proofpoint-ORIG-GUID: akO5p3yXIyTGRVUaWFdKkawWrrDg27CD
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        with ESMTP id S232258AbjGXJSO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 05:18:14 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2DD612A;
+        Mon, 24 Jul 2023 02:18:12 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4R8ZHS23yKz67Gj3;
+        Mon, 24 Jul 2023 17:14:44 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 24 Jul
+ 2023 10:18:08 +0100
+Date:   Mon, 24 Jul 2023 10:18:07 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Shuai Xue <xueshuai@linux.alibaba.com>
+CC:     <chengyou@linux.alibaba.com>, <kaishen@linux.alibaba.com>,
+        <helgaas@kernel.org>, <yangyicong@huawei.com>, <will@kernel.org>,
+        <baolin.wang@linux.alibaba.com>, <robin.murphy@arm.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <rdunlap@infradead.org>,
+        <mark.rutland@arm.com>, <zhuo.song@linux.alibaba.com>
+Subject: Re: [PATCH v6 0/4] drivers/perf: add Synopsys DesignWare PCIe PMU
+ driver support
+Message-ID: <20230724101807.000012bf@Huawei.com>
+In-Reply-To: <5db5aaf0-4fb7-a017-3b6f-017d04a93d33@linux.alibaba.com>
+References: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
+        <204e3891-c041-53ae-a965-f3abec2cc091@linux.alibaba.com>
+        <161dc5b6-7c20-ea8c-2efb-9594e94df2d3@linux.alibaba.com>
+        <5db5aaf0-4fb7-a017-3b6f-017d04a93d33@linux.alibaba.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-24_06,2023-07-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 spamscore=0 clxscore=1015
- impostorscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2307240075
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When certain PHB HW failure causes pHyp to recover PHB, it marks the PE
-state as temporarily unavailable until recovery is complete. This also
-triggers an EEH handler in Linux which needs to notify drivers, and perform
-recovery. But before notifying the driver about the PCI error it uses
-get_adapter_state()->get-sensor-state() operation of the hotplug_slot to
-determine if the slot contains a device or not. if the slot is empty, the
-recovery is skipped entirely.
+On Mon, 24 Jul 2023 10:34:08 +0800
+Shuai Xue <xueshuai@linux.alibaba.com> wrote:
 
-However on certain PHB failures, the RTAS call get-sensor-state() returns
-extended busy error (9902) until PHB is recovered by pHyp. Once PHB is
-recovered, the get-sensor-state() returns success with correct presence
-status. The RTAS call interface rtas_get_sensor() loops over the RTAS call
-on extended delay return code (9902) until the return value is either
-success (0) or error (-1). This causes the EEH handler to get stuck for ~6
-seconds before it could notify that the PCI error has been detected and
-stop any active operations. Hence with running I/O traffic, during this 6
-seconds, the network driver continues its operation and hits a timeout
-(netdev watchdog).
+> On 2023/7/10 20:04, Shuai Xue wrote:
+> > 
+> > 
+> > On 2023/6/16 16:39, Shuai Xue wrote:  
+> >>
+> >>
+> >> On 2023/6/6 15:49, Shuai Xue wrote:  
+> >>> changes since v5:
+> >>> - Rewrite the commit log to follow policy in pci_ids.h (Bjorn Helgaas)
+> >>> - return error code when __dwc_pcie_pmu_probe failed (Baolin Wang)
+> >>> - call 'cpuhp_remove_multi_state()' when exiting the driver. (Baolin Wang)
+> >>> - pick up Review-by tag from Baolin for Patch 1 and 3
+> >>>
+> >>> changes since v4:
+> >>>
+> >>> 1. addressing commens from Bjorn Helgaas:
+> >>> - reorder the includes by alpha
+> >>> - change all macros with upper-case hex
+> >>> - change ras_des type into u16
+> >>> - remove unnecessary outer "()"
+> >>> - minor format changes
+> >>>
+> >>> 2. Address commensts from Jonathan Cameron:
+> >>> - rewrite doc and add a example to show how to use lane event
+> >>>
+> >>> 3. fix compile error reported by: kernel test robot
+> >>> - remove COMPILE_TEST and add depend on PCI in kconfig
+> >>> - add Reported-by: kernel test robot <lkp@intel.com>
+> >>>
+> >>> Changes since v3:
+> >>>
+> >>> 1. addressing comments from Robin Murphy:
+> >>> - add a prepare patch to define pci id in linux/pci_ids.h
+> >>> - remove unnecessary 64BIT dependency
+> >>> - fix DWC_PCIE_PER_EVENT_OFF/ON macro
+> >>> - remove dwc_pcie_pmu struct and move all its fileds into dwc_pcie_rp_info
+> >>> - remove unnecessary format field show
+> >>> - use sysfs_emit() instead of all the assorted sprintf() and snprintf() calls.
+> >>> - remove unnecessary spaces and remove unnecessary cast to follow event show convention
+> >>> - remove pcie_pmu_event_attr_is_visible
+> >>> - fix a refcout leak on error branch when walk pci device in for_each_pci_dev
+> >>> - remove bdf field from dwc_pcie_rp_info and calculate it at runtime
+> >>> - finish all the checks before allocating rp_info to avoid hanging wasted memory
+> >>> - remove some unused fields
+> >>> - warp out control register configuration from sub function to .add()
+> >>> - make function return type with a proper signature
+> >>> - fix lane event count enable by clear DWC_PCIE_CNT_ENABLE field first
+> >>> - pass rp_info directly to the read_*_counter helpers and in start, stop and add callbacks
+> >>> - move event type validtion into .event_init()
+> >>> - use is_sampling_event() to be consistent with everything else of pmu drivers
+> >>> - remove unnecessary dev_err message in .event_init()
+> >>> - return EINVAL instead EOPNOTSUPP for not a valid event 
+> >>> - finish all the checks before start modifying the event
+> >>> - fix sibling event check by comparing event->pmu with sibling->pmu
+> >>> - probe PMU for each rootport independently
+> >>> - use .update() as .read() directly
+> >>> - remove dynamically generating symbolic name of lane event
+> >>> - redefine static symbolic name of lane event and leave lane filed to user
+> >>> - add CPU hotplug support
+> >>>
+> >>> 2. addressing comments from Baolin:
+> >>> - add a mask to avoid possible overflow
+> >>>
+> >>> Changes since v2 addressing comments from Baolin:
+> >>> - remove redundant macro definitions
+> >>> - use dev_err to print error message
+> >>> - change pmu_is_register to boolean
+> >>> - use PLATFORM_DEVID_NONE macro
+> >>> - fix module author format
+> >>>
+> >>> Changes since v1:
+> >>>
+> >>> 1. address comments from Jonathan:
+> >>> - drop marco for PMU name and VSEC version
+> >>> - simplify code with PCI standard marco
+> >>> - simplify code with FIELD_PREP()/FIELD_GET() to replace shift marco
+> >>> - name register filed with single _ instead double
+> >>> - wrap dwc_pcie_pmu_{write}_dword out and drop meaningless snaity check 
+> >>> - check vendor id while matching vesc with pci_find_vsec_capability()
+> >>> - remove RP_NUM_MAX and use a list to organize PMU devices for rootports
+> >>> - replace DWC_PCIE_CREATE_BDF with standard PCI_DEVID
+> >>> - comments on riping register together
+> >>>
+> >>> 2. address comments from Bjorn:
+> >>> - rename DWC_PCIE_VSEC_ID to DWC_PCIE_VSEC_RAS_DES_ID
+> >>> - rename cap_pos to ras_des
+> >>> - simplify declare of device_attribute with DEVICE_ATTR_RO
+> >>> - simplify code with PCI standard macro and API like pcie_get_width_cap()
+> >>> - fix some code style problem and typo
+> >>> - drop meaningless snaity check of container_of
+> >>>
+> >>> 3. address comments from Yicong:
+> >>> - use sysfs_emit() to replace sprintf()
+> >>> - simplify iteration of pci device with for_each_pci_dev
+> >>> - pick preferred CPUs on a near die and add comments
+> >>> - unregister PMU drivers only for failed ones
+> >>> - log on behalf PMU device and give more hint
+> >>> - fix some code style problem
+> >>>
+> >>> (Thanks for all comments and they are very valuable to me)
+> >>>
+> >>> This patchset adds the PCIe Performance Monitoring Unit (PMU) driver support
+> >>> for T-Head Yitian 710 SoC chip. Yitian 710 is based on the Synopsys PCI Express
+> >>> Core controller IP which provides statistics feature.
+> >>>
+> >>> Shuai Xue (4):
+> >>>   docs: perf: Add description for Synopsys DesignWare PCIe PMU driver
+> >>>   PCI: Add Alibaba Vendor ID to linux/pci_ids.h
+> >>>   drivers/perf: add DesignWare PCIe PMU driver
+> >>>   MAINTAINERS: add maintainers for DesignWare PCIe PMU driver
+> >>>
+> >>>  .../admin-guide/perf/dwc_pcie_pmu.rst         |  97 +++
+> >>>  Documentation/admin-guide/perf/index.rst      |   1 +
+> >>>  MAINTAINERS                                   |   6 +
+> >>>  drivers/infiniband/hw/erdma/erdma_hw.h        |   2 -
+> >>>  drivers/perf/Kconfig                          |   7 +
+> >>>  drivers/perf/Makefile                         |   1 +
+> >>>  drivers/perf/dwc_pcie_pmu.c                   | 706 ++++++++++++++++++
+> >>>  include/linux/pci_ids.h                       |   2 +
+> >>>  8 files changed, 820 insertions(+), 2 deletions(-)
+> >>>  create mode 100644 Documentation/admin-guide/perf/dwc_pcie_pmu.rst
+> >>>  create mode 100644 drivers/perf/dwc_pcie_pmu.c
+> >>>  
+> >>
+> >> Hi, all,
+> >>
+> >> Gently ping. Any comments are welcomed.  
+> > 
+> > 
+> > Hi, all,
+> > 
+> > Gentle ping.
+> >   
+> 
+> Hi, all
+> 
+> Gentle reminder, thank you.
 
-------------
-[52732.244731] DEBUG: ibm_read_slot_reset_state2()
-[52732.244762] DEBUG: ret = 0, rets[0]=5, rets[1]=1, rets[2]=4000, rets[3]=>
-[52732.244798] DEBUG: in eeh_slot_presence_check
-[52732.244804] DEBUG: error state check
-[52732.244807] DEBUG: Is slot hotpluggable
-[52732.244810] DEBUG: hotpluggable ops ?
-[52732.244953] DEBUG: Calling ops->get_adapter_status
-[52732.244958] DEBUG: calling rpaphp_get_sensor_state
-[52736.564262] ------------[ cut here ]------------
-[52736.564299] NETDEV WATCHDOG: enP64p1s0f3 (tg3): transmit queue 0 timed o>
-[52736.564324] WARNING: CPU: 1442 PID: 0 at net/sched/sch_generic.c:478 dev>
-[...]
-[52736.564505] NIP [c000000000c32368] dev_watchdog+0x438/0x440
-[52736.564513] LR [c000000000c32364] dev_watchdog+0x434/0x440
-------------
+Hi Shuai,
 
-On timeouts, network driver starts dumping debug information to console
-(e.g bnx2 driver calls bnx2x_panic_dump()), and go into recovery path while
-pHyp is still recovering the PHB. As part of recovery, the driver tries to
-reset the device and it keeps failing since every PCI read/write returns
-ff's. And when EEH recovery kicks-in, the driver is unable to recover the
-device. This impacts the ssh connection and leads to the system being
-inaccessible. To get the NIC working again it needs a reboot or re-assign
-the I/O adapter from HMC.
+Really a question for Bjorn I think, but here is my 2 cents...
 
-[ 9531.168587] EEH: Beginning: 'slot_reset'
-[ 9531.168601] PCI 0013:01:00.0#10000: EEH: Invoking bnx2x->slot_reset()
-[...]
-[ 9614.110094] bnx2x: [bnx2x_func_stop:9129(enP19p1s0f0)]FUNC_STOP ramrod failed. Running a dry transaction
-[ 9614.110300] bnx2x: [bnx2x_igu_int_disable:902(enP19p1s0f0)]BUG! Proper val not read from IGU!
-[ 9629.178067] bnx2x: [bnx2x_fw_command:3055(enP19p1s0f0)]FW failed to respond!
-[ 9629.178085] bnx2x 0013:01:00.0 enP19p1s0f0: bc 7.10.4
-[ 9629.178091] bnx2x: [bnx2x_fw_dump_lvl:789(enP19p1s0f0)]Cannot dump MCP info while in PCI error
-[ 9644.241813] bnx2x: [bnx2x_io_slot_reset:14245(enP19p1s0f0)]IO slot reset --> driver unload
-[...]
-[ 9644.241819] PCI 0013:01:00.0#10000: EEH: bnx2x driver reports: 'disconnect'
-[ 9644.241823] PCI 0013:01:00.1#10000: EEH: Invoking bnx2x->slot_reset()
-[ 9644.241827] bnx2x: [bnx2x_io_slot_reset:14229(enP19p1s0f1)]IO slot reset initializing...
-[ 9644.241916] bnx2x 0013:01:00.1: enabling device (0140 -> 0142)
-[ 9644.258604] bnx2x: [bnx2x_io_slot_reset:14245(enP19p1s0f1)]IO slot reset --> driver unload
-[ 9644.258612] PCI 0013:01:00.1#10000: EEH: bnx2x driver reports: 'disconnect'
-[ 9644.258615] EEH: Finished:'slot_reset' with aggregate recovery state:'disconnect'
-[ 9644.258620] EEH: Unable to recover from failure from PHB#13-PE#10000.
-[ 9644.261811] EEH: Beginning: 'error_detected(permanent failure)'
-[...]
-[ 9644.261823] EEH: Finished:'error_detected(permanent failure)'
+The problem here is that we need to do that fundamental redesign of the
+way the PCI ports drivers work.  I'm not sure there is a path to merging
+this until that is done.  The bigger problem is that I'm not sure anyone
+is actively looking at that yet.  I'd like to look at this (as I have
+the same problem for some other drivers), but it is behind various
+other things on my todo list.
 
-Hence, it becomes important to inform driver about the PCI error detection
-as early as possible, so that driver is aware of PCI error and waits for
-EEH handler's next action for successful recovery.
+Bjorn might be persuaded on a temporary solution, but that would come
+with some maintenance problems, particularly when we try to do it
+'right' in the future.  Maybe adding another service driver would be
+a stop gap as long as we know we won't keep doing so for ever. Not sure.
 
-Current implementation uses rtas_get_sensor() API which blocks the slot
-check state until RTAS call returns success. To avoid this, fix the PCI
-hotplug driver (rpaphp) to return an error (-EBUSY) if the slot presence
-state can not be detected immediately while PE is in EEH recovery state.
-Change rpaphp_get_sensor_state() to invoke rtas_call(get-sensor-state)
-directly only if the respective PE is in EEH recovery state, and take
-actions based on RTAS return status. This way EEH handler will not be
-blocked on rpaphp_get_sensor_state() and can immediately notify driver
-about the PCI error and stop any active operations.
+Jonathan
 
-In normal cases (non-EEH case) rpaphp_get_sensor_state() will continue to
-invoke rtas_get_sensor() as it was earlier with no change in existing
-behavior.
-
-Signed-off-by: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-Reviewed-by: Nathan Lynch <nathanl@linux.ibm.com>
----
-Change in v7:
-- Modified patch description to explain affect of timeout on NIC
-  functioning.
-- Fix few nits requested in previous review at
-  https://lore.kernel.org/all/20220612170248.l6ftaneqjfof2jrc@in.ibm.com/
-- Add additional patch before this to introduce rtas_generic_errno() to
-  handle generic rtas error codes.
-  https://lore.kernel.org/all/20220429162545.GA79541@bhelgaas/
-
-Change in v6:
-- Fixed typo's in the patch description as per review comments.
-
-Change in v5:
-- Fixup #define macros with parentheses around the values.
-
-Change in V4:
-- Error out on sensor busy only if PE is going through EEH recovery instead
-  of always error out.
-
-Change in V3:
-- Invoke rtas_call(get-sensor-state) directly from
-  rpaphp_get_sensor_state() directly and do special handling.
-- See v2 at
-  https://lore.kernel.org/all/163817631601.2016996.16085383012429651821.stgit@jupiter/
-
-Change in V2:
-- Alternate approach to fix the EEH issue instead of delaying slot presence
-  check proposed at
-  https://lore.kernel.org/all/163767273634.1368569.7327743414665595326.stgit@jupiter/
-
-Also refer:
-https://lore.kernel.org/all/20211125053402.zyzpl3te5x3ryypx@in.ibm.com/
----
- drivers/pci/hotplug/rpaphp_pci.c |   82 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 79 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/hotplug/rpaphp_pci.c b/drivers/pci/hotplug/rpaphp_pci.c
-index 630f77057c23d..c8a4699d1f029 100644
---- a/drivers/pci/hotplug/rpaphp_pci.c
-+++ b/drivers/pci/hotplug/rpaphp_pci.c
-@@ -19,12 +19,89 @@
- #include "../pci.h"		/* for pci_add_new_bus */
- #include "rpaphp.h"
- 
-+/*
-+ * RTAS call get-sensor-state(DR_ENTITY_SENSE) return values as per PAPR:
-+ * -- generic return codes ---
-+ *    -1: Hardware Error
-+ *    -2: RTAS_BUSY
-+ *    -3: Invalid sensor. RTAS Parameter Error.
-+ * -- rtas_get_sensor function specific return codes ---
-+ * -9000: Need DR entity to be powered up and unisolated before RTAS call
-+ * -9001: Need DR entity to be powered up, but not unisolated, before RTAS call
-+ * -9002: DR entity unusable
-+ *  990x: Extended delay - where x is a number in the range of 0-5
-+ */
-+static int rtas_get_sensor_errno(int rtas_rc)
-+{
-+	switch (rtas_rc) {
-+	case 0:
-+		/* Success case */
-+		return 0;
-+	case RTAS_SLOT_UNISOLATED:
-+	case RTAS_SLOT_NOT_UNISOLATED:
-+		return -EFAULT;
-+	case RTAS_SLOT_NOT_USABLE:
-+		return -ENODEV;
-+	case RTAS_BUSY:
-+	case RTAS_EXTENDED_DELAY_MIN...RTAS_EXTENDED_DELAY_MAX:
-+		return -EBUSY;
-+	default:
-+		return rtas_generic_errno(rtas_rc);
-+	}
-+}
-+
-+/*
-+ * get_adapter_status() can be called by the EEH handler during EEH recovery.
-+ * On certain PHB failures, the RTAS call get-seHsor-state() returns extended
-+ * busy error (9902) until PHB is recovered by pHyp. The RTAS call interface
-+ * rtas_get_sensor() loops over the RTAS call on extended delay return code
-+ * (9902) until the return value is either success (0) or error (-1). This
-+ * causes the EEH handler to get stuck for ~6 seconds before it could notify
-+ * that the PCI error has been detected and stop any active operations. This
-+ * sometimes causes EEH recovery to fail. To avoid this issue, invoke
-+ * rtas_call(get-sensor-state) directly if the respective PE is in EEH recovery
-+ * state and return -EBUSY error based on RTAS return status. This will help
-+ * the EEH handler to notify the driver about the PCI error immediately and
-+ * successfully proceed with EEH recovery steps.
-+ */
-+static int __rpaphp_get_sensor_state(struct slot *slot, int *state)
-+{
-+#ifdef CONFIG_EEH
-+	int rc;
-+	int token = rtas_token("get-sensor-state");
-+	struct pci_dn *pdn;
-+	struct eeh_pe *pe;
-+	struct pci_controller *phb = PCI_DN(slot->dn)->phb;
-+
-+	if (token == RTAS_UNKNOWN_SERVICE)
-+		return -ENOENT;
-+
-+	/*
-+	 * Fallback to existing method for empty slot or PE isn't in EEH
-+	 * recovery.
-+	 */
-+	pdn = list_first_entry_or_null(&PCI_DN(phb->dn)->child_list,
-+					struct pci_dn, list);
-+	if (!pdn)
-+		goto fallback;
-+
-+	pe = eeh_dev_to_pe(pdn->edev);
-+	if (pe && (pe->state & EEH_PE_RECOVERING)) {
-+		rc = rtas_call(token, 2, 2, state, DR_ENTITY_SENSE,
-+			       slot->index);
-+		return rtas_get_sensor_errno(rc);
-+	}
-+fallback:
-+#endif
-+	return rtas_get_sensor(DR_ENTITY_SENSE, slot->index, state);
-+}
-+
- int rpaphp_get_sensor_state(struct slot *slot, int *state)
- {
- 	int rc;
- 	int setlevel;
- 
--	rc = rtas_get_sensor(DR_ENTITY_SENSE, slot->index, state);
-+	rc = __rpaphp_get_sensor_state(slot, state);
- 
- 	if (rc < 0) {
- 		if (rc == -EFAULT || rc == -EEXIST) {
-@@ -40,8 +117,7 @@ int rpaphp_get_sensor_state(struct slot *slot, int *state)
- 				dbg("%s: power on slot[%s] failed rc=%d.\n",
- 				    __func__, slot->name, rc);
- 			} else {
--				rc = rtas_get_sensor(DR_ENTITY_SENSE,
--						     slot->index, state);
-+				rc = __rpaphp_get_sensor_state(slot, state);
- 			}
- 		} else if (rc == -ENODEV)
- 			info("%s: slot is unusable\n", __func__);
-
+> 
+> >>
+> >> Thank you.
+> >>
+> >>
+> >> Best Regards,
+> >> Shuai
+> >>
+> >>  
+> 
 
