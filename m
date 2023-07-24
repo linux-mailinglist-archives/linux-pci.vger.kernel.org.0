@@ -2,164 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3EDA7601AC
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 23:59:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03FF07601AE
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 23:59:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231391AbjGXV70 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jul 2023 17:59:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43416 "EHLO
+        id S231404AbjGXV7w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jul 2023 17:59:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230315AbjGXV7Z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 17:59:25 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2075.outbound.protection.outlook.com [40.107.92.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D1E81BCD;
-        Mon, 24 Jul 2023 14:59:14 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RaCFcG5BDRhnf6OpaBAFjMLvH1Jppfih20HAUDpWAgXtFbYIQIlEa2ua/5riArGfO94mfwV72QyO5AtxwD5ZYK/c2IZFsMjZMltNByz4PK8dvJGYefWvvaSl++2L3w3BxiU3Wptyzh+QpYGN9lKQmLnOuRjKLNnKx4qkEr1uF7NRV0VbhauLAW0QyX7AUyAp6vUaWhlxZkBMBUAOPhz6PdIxx5FgdBhGVc3xXYUUDslan0ES9/vaYxLI2+OZ98sF0SLZ8xOXdasT8UWWUqRTcCPyShFrClxp8ipjSZfOOMbEyHablu1qrLqlQQ7sPi7nCsvEPKMEa5CrBzEbM1m83w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Z62m8T3vSNWoeygPMl+imHEsFvbDlfxtIVatJ5YmhXU=;
- b=cjDcUo0HBvbOMvdbjDXsBK+99pobd1EeScRPsTIMchlZNKzqL4/y26X7/luMLrizeyTXp5j2Hl8c17UPxCcKEBccqiN5cEAf6sGMznwHY+u8vwSeP630xNDUhWg7u/rJzoPClbeNoI2k9t9kESnVxvNgoIA3rj/zW363lDdVfyfcJuIcGbmLkhfnFPB/KXUTMwg9r/+QPZlo1C/FSfGdHU1yjnrRi/VLM+I4L42tgvtYl443dy/ZVWZZL/L0LLjo3rkda4+ez7UHa2rZpkd/N+K9f5KK9qB5helmajC+1Vvyki9lASEZSs66WwXHHVl8yBLypE5lORpDA2UHfxWuLw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Z62m8T3vSNWoeygPMl+imHEsFvbDlfxtIVatJ5YmhXU=;
- b=4AY+tCU35YzSJd20Y3f6s+DFutSrY0PW/sbXvatOJ3H6+FrvMQhD/GBCoZM6ZAS2ImiYV+5a0EigoiOwCvQdm1wjArD9FSnZapRe/vXAz1AHsOJWTGwUm4a+NndiTFKAKBhIBh1cv7ll2l/yEKQR/Ov00oHunGMhWAzTsi3huz4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
- by SN7PR12MB7912.namprd12.prod.outlook.com (2603:10b6:806:341::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.31; Mon, 24 Jul
- 2023 21:59:12 +0000
-Received: from BYAPR12MB2869.namprd12.prod.outlook.com
- ([fe80::642c:a4b0:ae3f:378b]) by BYAPR12MB2869.namprd12.prod.outlook.com
- ([fe80::642c:a4b0:ae3f:378b%4]) with mapi id 15.20.6609.031; Mon, 24 Jul 2023
- 21:59:11 +0000
-Message-ID: <64da6d98-953f-f813-7184-e69b1c8bb28e@amd.com>
-Date:   Mon, 24 Jul 2023 14:59:08 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 1/3] cxl/pci: Fix appropriate checking for _OSC while
- handling CXL RAS registers
-Content-Language: en-US
-To:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-cxl@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
-        Lukas Wunner <lukas@wunner.de>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Robert Richter <rrichter@amd.com>
-References: <20230721214740.256602-1-Smita.KoralahalliChannabasappa@amd.com>
- <20230721214740.256602-2-Smita.KoralahalliChannabasappa@amd.com>
- <0e4dc46f-a086-8b85-f94f-b3530d958209@linux.intel.com>
-From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-In-Reply-To: <0e4dc46f-a086-8b85-f94f-b3530d958209@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PH8PR21CA0010.namprd21.prod.outlook.com
- (2603:10b6:510:2ce::10) To BYAPR12MB2869.namprd12.prod.outlook.com
- (2603:10b6:a03:132::30)
+        with ESMTP id S230315AbjGXV7u (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 17:59:50 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 700481B3
+        for <linux-pci@vger.kernel.org>; Mon, 24 Jul 2023 14:59:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690235968; x=1721771968;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Flh42j3WcoMCSYpxBWnfFWe3nkViGkzwoww0QZRJ3rw=;
+  b=kr7/KMef5qFxKIJr2s+SxdHszh7SmPHBq9fOzYv51ecKNeHxifNVSit/
+   3Kjk2BTZkF+2KQGw7fWucZ+TecSpH1HH/crbJdbVJ7qFKgEwcwwr5cwaP
+   5Cl/h+vMzjbx9HrkPGiz8N8m5CMhGo9WSbbVOLTLb0jhwd5L2tjU0SqaU
+   ZqwO/ZuyNuTOT6oTY20ToJNXQqmw7v7RNd8WNhzUHAXFWeqm23s9iyFBd
+   PXRoKC5NkbYZOG0Juto1OGqRE7ZeTKUPlw63hIWbkKNYcY5Riim9c5sz4
+   wW8TftcvDprJzttijTKPhcjbSRop9XhpUnrFP62wtiBRV/wzfXQE2t5zv
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10781"; a="431357757"
+X-IronPort-AV: E=Sophos;i="6.01,229,1684825200"; 
+   d="scan'208";a="431357757"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2023 14:59:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10781"; a="839614820"
+X-IronPort-AV: E=Sophos;i="6.01,229,1684825200"; 
+   d="scan'208";a="839614820"
+Received: from patelni-mobl1.amr.corp.intel.com (HELO [10.209.173.4]) ([10.209.173.4])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2023 14:59:27 -0700
+Message-ID: <426be79d-03a4-722d-bb36-855656b3af61@linux.intel.com>
+Date:   Mon, 24 Jul 2023 14:59:22 -0700
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|SN7PR12MB7912:EE_
-X-MS-Office365-Filtering-Correlation-Id: cb39021c-b961-4a6d-6730-08db8c913649
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nDPNGCPhjOl/omvRjk3Y4gcebX/EXXyPXRWqm3rIpUUCfMI+GdKDCgaxM/rox9o+uroBUKqeLQcn4GgrXXtrMabFAbv9TERHshZjBzY7bxvYjRyDYJ2OMiYRnKt0hexTwFUh7dqFl+bHXV5hlbIp4hfkZuvORVpCwSxYorZ1WYdSoOndYTrn7uhK84gg5X3BYNqZNjExC8LOBNKsUFXDotgE5ORlyYlgeKZkahCl8fPc1ai1x/BP9IrS/WCZ+O6h6xa9CJkpzM18wphk+sjECzXFYPl8TaiMd6Trt2xmi0xBmSC//tgiWZA3uc5J9sFywsr7SHGnPlWyXpzlefuGqO3Are9pGoeaN7n8xbgvLLt+afxyHqVHNvgBJ70RJBoa+nmeCkS1nNw5zx1sAly+DKwYvKWBCML+jlXTPuEUCX6+9jAqCwOmE6phNbvfVLDIwaVTHQ94nt1lD33lVnxOCIa1mox+2uHx55WrQM03A9zDH62MTvilff0es6Z2IkBBUzUGg/Wj/Qk8Vce446I+ogJAVzaoah5+5PYsAnR0LhcOevKEFuplMdXShJMY28E5VnZg6SAt4+Q7GTbUfsUwJHExhDSKjiA+jRa4wkpRNmAdt7DC9xyuQiawf1nmPDlRBmj9esVE04MWsEukXq9o9Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(376002)(346002)(396003)(39860400002)(136003)(451199021)(38100700002)(36756003)(2616005)(66556008)(6506007)(7416002)(8676002)(6486002)(8936002)(5660300002)(478600001)(54906003)(316002)(66476007)(4326008)(66946007)(41300700001)(186003)(26005)(6512007)(966005)(6666004)(4744005)(2906002)(31686004)(31696002)(86362001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N1NBQ3NUWGNTdkNZbFY4YVRlZDRUendYWkNGaVl5b1M4VjROVXR0UkVBUjlF?=
- =?utf-8?B?KzRWV001cm9IRnhjMjFkSVRhNk13TjAyZVpMeHpweUNueXRCeEhqV2VXdzhC?=
- =?utf-8?B?KzNWNXprYU5WMGl2cFlRRjNNSlZDT051L2VMcWdpaHpaVVo5Y2VUSGV1UVFn?=
- =?utf-8?B?T3VrWHlHMDh4WjFSZ0JNUkw5bWRyMGR2SlRjZ2R3ZUpURjBrbVhOeXNXUmJJ?=
- =?utf-8?B?alZUWENibDZMUVVOUktpSndIQm5HM2R1Y2JhRjI2dGJFMEgzY0hucERUQU9x?=
- =?utf-8?B?a0RqQ1NJejlqc1gzU0tmVzZuSzZMYWU3S3pZbmlUNlFPSWpFclI2Mmk0M2kw?=
- =?utf-8?B?aDA2OE1TcTBJZVV5RHFsN1VQT2laMGJRbmE1ZDAreFZKTzJwQzdhUmNYTGdi?=
- =?utf-8?B?ZVRkZDd3Ym1BOWhFUDB5YllqSnZ0cG44SkcxRE0wUVcwWmExSW1JNE9Id2p1?=
- =?utf-8?B?OS9YS3dHZEhXdWFIZ2x6emIxT1ZraTREV3NMQjBnMTBTd3NrQTVrc2ozZnVC?=
- =?utf-8?B?am5DQVRhS0RaTVEvUTJ3TWtOUHY2VllnU3ljMUJoU0xZazBFQXM3d0RDbjJN?=
- =?utf-8?B?OGxHazk5VFdaUWY5bzhhekZGbVZYSUg4UkhrUzcrSnZmUm5jYlhNVmxYRkhw?=
- =?utf-8?B?QVA5MkhuTVZ4aFdMdXpoMHVDVlAxVXJvSkNPRGdHdHhianFiZTdQZTU1QXVo?=
- =?utf-8?B?d0cwYkR5VFR3ZHRxVkthNTRBQmRHQitEcHo3d3pGSHdXdjhHanRsZitBalpk?=
- =?utf-8?B?dytXMC85VWJnMnk4V2V5RU1qYXl0TEVxSDllZEZDbWVWMHFxNlpZS2xydHNm?=
- =?utf-8?B?Zk95T3JmWVpaZ2p4c24xbW42VEd4MDFrT3ZkK1FyRG1iaVRVenlSMnlxemJi?=
- =?utf-8?B?NEpUdDcrejNHaThyN0hvcG5HcUpkZitpazU0dm9MOW5jTUJJRkVRYVZoQU1t?=
- =?utf-8?B?VzJ3bFplZkJ5ZnJKQ05Wc0lxUitpQUtJdUJ5NVFRZTdod1RWc08zNXBkcnA5?=
- =?utf-8?B?QUV3RTBaa1A4QVlxc3JnVCt0bDlxYmhRUzh0ekQ4aHFkemFYdTVkQWxlSlF6?=
- =?utf-8?B?UzNmQUxpb1MxU0pzNTVDN2JEcEJvZ2RRdDViL2JjVWIyRVVSSHJxNTZtaWdm?=
- =?utf-8?B?RzF0dzk4cm93RE1LdU12akhMSlVMY3FaS1Jtamd1TW43Q295UHBFQWQweDln?=
- =?utf-8?B?R1FzKzd5cWpXN1RjaWhpRS9uZUljM2o0dDZQS3FLaEhmZHZvbWExOFhzZ3Bt?=
- =?utf-8?B?ek1DK2wxY08zbUs5WEVDOTlpV0laNWNVVWhRRGN6Yy8weGFJSXFRMnJ6Qnlk?=
- =?utf-8?B?dW4vVldQZS8vNDlCTDRqTFk5K0xWSEFiZUZSakVrcHA0TmpBclVSM2twMk5s?=
- =?utf-8?B?NXc4c2IvVHc0RkJhak1tK2dSaTl3UlRQZk56SGJQLzRSYnZWRjlzQ3orT2hM?=
- =?utf-8?B?WmI4a2QrbHJQODhoai9zNkdFTWZibjJibjd1Ym13RkNlTllUdWIzRHk5ektx?=
- =?utf-8?B?MWk3Y3B0aUhkb05VV0lRM1I0TDJiS0g0ZG9BZHJzMWdOOVVKcW50Ty9pamRm?=
- =?utf-8?B?WXBPUFlUckRYTTZ2WGZMczB1QWVWOExRcnNpa2lNWGQ0Q0JzQkhlUWYxZlov?=
- =?utf-8?B?N0dueWwyL0JjQXB2aVdLOGNCdk9YL2QzcVREOXpsYzJKLzFoMUpwMTZsWXBU?=
- =?utf-8?B?M0lCdWJ0cFVDZCs4TENwblkzT0VqM1V0dit4LzVFUVN0LzRSU1ZINWcvYTJl?=
- =?utf-8?B?RWorcVZqWUdTeThkR0FEMGcrWExEc3dWcUNONStodGZ3ODZlS1pOb2hOWG04?=
- =?utf-8?B?emFZdDVCc0pZUWtlTXNUUS9WWjR4WXFPckRoMUxLUllMbys5YXBIS3ZuZVBU?=
- =?utf-8?B?SXg3T014eFBaUldWeDRXRDErYWo0ZDAwL203cHVqWjNuYVIzS0g2ZmxzM2sr?=
- =?utf-8?B?d2pXSFFBL1htVEtlQUkvaXRPangyTnBYWkhNS1JLbmttRXV2WGM2dklBZStD?=
- =?utf-8?B?VUx1Ykt3Y0d2b1pBRGpMS2tRWGFTSW1pbW40SmY2S0MrRWwwZnJDc21vNDdl?=
- =?utf-8?B?NzJwTERnd0VWQVVPaU9KTC8wcFFoMEVSclVHazhvL2FzeTVVZnNteVpwdEJk?=
- =?utf-8?Q?6FBazjqU1IR0dt+SRolhopyOG?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb39021c-b961-4a6d-6730-08db8c913649
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2023 21:59:11.6392
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OYBCnyMsXhrcKKmQ4J/FvvFSfn8s7FyFfDfvSWs+Y8QKQdipHsFQCg3Nm9mBn7gKCC5ptEsT0CTxCXkVHo82+w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7912
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] PCI: vmd: VMD to control Hotplug on its rootports
+To:     Jonathan Derrick <jonathan.derrick@linux.dev>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kwilczynski@kernel.org>,
+        Rob Herring <robh@kernel.org>
+References: <20230713165856.GA322319@bhelgaas>
+ <8768a272-18f8-9569-86f6-25564f8f862b@linux.dev>
+Content-Language: en-US
+From:   "Patel, Nirmal" <nirmal.patel@linux.intel.com>
+In-Reply-To: <8768a272-18f8-9569-86f6-25564f8f862b@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 7/13/2023 12:26 PM, Jonathan Derrick wrote:
+>
+>
+> On 7/13/2023 10:58 AM, Bjorn Helgaas wrote:
+>> [+cc Jonathan, Lorenzo, Krzysztof, Rob (from MAINTAINERS)]
+>>
+>> Can you make the subject line say what the patch does?  Repeating
+>> "VMD" is probably unnecessary.
+>>
+>> On Wed, Jul 05, 2023 at 01:20:38PM -0400, Nirmal Patel wrote:
+>>> The hotplug functionality is broken in various combinations of guest
+>>> OSes i.e. RHEL, SlES and hypervisors i.e. KVM and ESXI.
+>>
+>> "SLES"
+>>
+>>> VMD enabled on Intel ADL cpus caused interrupt storm for smasung
+>>> drives due to AER being enabled on VMD controlled root ports.
+>>
+>> "Samsung"
+>>
+>> Enabling AER should not cause an interrupt storm.  There must be
+>> something else going on in addition.  Are you saying the Samsung
+>> drives have some AER-related defect, like generating Correctable
+>> Errors when they shouldn't?  It doesn't sound like "Intel ADL" would
+>> be relevant here.
+>>
+>> It's not clear to me if this is directly related to *hotplug* or if
+>> it's an AER issue that may happen because of hotplug and possible for
+>> other reasons.
+>>
+>>> The patch 04b12ef163d10e348db664900ae7f611b83c7a0e
+>>
+>> 12 char SHA1 is sufficient.
+>>
+>>> ("PCI: vmd: Honor APCI _OSC on PCIe features.") was added to the VMD
+>>> driver to correct the issue based on the following assumption:
+>>>     “Since VMD is an aperture to regular PCIe root ports, honor ACPI
+>>>     _OSC to disable PCIe features accordingly to resolve the issue.”
+>>>     Link: https://lore.kernel.org/r/20211203031541.1428904-1-kai.heng.feng@canonical.com
+>>>
+>>> VMD as a PCIe device is an end point(type 0), not a PCIe aperture
+>>> (pcie bridge). In fact VMD is a type 0 raid controller(class code).
+>>> When BIOS boots, all root ports under VMD is inaccessible by BIOS, and
+>>> as such, they maintain their power on default states. The VMD UEFI DXE
+>>> driver loads and configure all devices under VMD. This is how AER,
+>>> power management and hotplug gets enabled in UEFI, since the BIOS pci
+>>> driver cannot access the root ports.
+>>
+>> s/pcie/PCIe/
+>> s/pci/PCI/
+>> s/raid/RAID/
+>>
+>>> The patch worked around the interrupt storm by assigning the native
+>>
+>> I assume "the patch" means 04b12ef163d1.  Sometimes people write "the
+>> patch does X" in the commit log for the current patch, so it's nice to
+>> be specific to avoid confusion.
+>>
+>>> ACPI states to the  root ports under VMD. It assigns AER, hotplug,
+>>> PME, etc. These have been restored back to the power on default state
+>>> in guest OS, which says the root port hot plug enable is default OFF.
+>>> At most, the work around should have only assigned AER state.
+>>> An additional patch should be added to exclude hot plug from the
+>>> original patch.
+>>
+>> Add blank line between paragraphs.
+>>
+>>> This will cause hot plug to start working again in the guest, as the
+>>> settings implemented by the UEFI VMD DXE driver will remain in effect
+>>> in Linux.
+> So hotplug will work in the guest per UEFI VMD DXE driver, but AER will be determined by the host native_aer state?
 
->> -	/* BIOS has CXL error control */
->> -	if (!host_bridge->native_cxl_error)
->> -		return -ENXIO;
->> +	/* BIOS has PCIe AER error control */
->> +	if (!host_bridge->native_aer)
->> +		return 0;
-> 
-> Why not directly use pcie_aer_is_native() here?
-Yeah, this was in my v1. But changed as per Robert's comments, to be 
-applicable for automated backports..
+Yes. Guest doesn't have UEFI driver to configure rootports as in case of Host.
 
-https://lore.kernel.org/all/ZLkxiZv3lWfazwVH@rric.localdomain/
+>
+>>
+>> This is a lot of description that doesn't seem to say what the actual
+>> underlying issue is.  It's basically "if we treat hotplug differently
+>> from other negotiated features, things work better."  And it seems
+>> like it depends on what the UEFI driver did, and we should try to
+>> avoid a dependency there.
+>>
+>> If the issue is too many Correctable Errors being reported via AER, we
+>> have that problem regardless of VMD, and we should handle it by
+>> rate-limiting and/or suppressing them completely for particularly
+>> offensive devices.  We have some issues like this that are still
+>> outstanding:
+> I'm curious if Non-VMD root ports on the system see the same CE storm.
+> Either way, rate-limiting per device seems like a good idea.
 
-Please advice.
+AER is not the issue here and we can leave them as it is.
+I added unnecessary description which caused more confusion.
+My apologies.
 
-Thanks,
-Smita
-> 
->>   
->>   	rc = pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &cap);
->>   	if (rc)
-> 
+>
+>>
+>> [1] https://lore.kernel.org/linux-pci/DM6PR04MB6473197DBD89FF4643CC391F8BC19@DM6PR04MB6473.namprd04.prod.outlook.com/
+>> [2] https://lore.kernel.org/linux-pci/20230606035256.2886098-2-grundler@chromium.org/
+>>
+>>> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+>>> ---
+>>>   drivers/pci/controller/vmd.c | 2 --
+>>>   1 file changed, 2 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+>>> index 769eedeb8802..52c2461b4761 100644
+>>> --- a/drivers/pci/controller/vmd.c
+>>> +++ b/drivers/pci/controller/vmd.c
+>>> @@ -701,8 +701,6 @@ static int vmd_alloc_irqs(struct vmd_dev *vmd)
+>>>   static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
+>>>                          struct pci_host_bridge *vmd_bridge)
+>>>   {
+>>> -    vmd_bridge->native_pcie_hotplug = root_bridge->native_pcie_hotplug;
+>>> -    vmd_bridge->native_shpc_hotplug = root_bridge->native_shpc_hotplug;
+>>>       vmd_bridge->native_aer = root_bridge->native_aer;
+>>>       vmd_bridge->native_pme = root_bridge->native_pme;
+>>>       vmd_bridge->native_ltr = root_bridge->native_ltr;
+>>> -- 
+>>> 2.31.1
+>>>
 
