@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29D7475EB4C
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 08:17:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4457A75EB53
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 08:17:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230225AbjGXGRF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jul 2023 02:17:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51716 "EHLO
+        id S229926AbjGXGRp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jul 2023 02:17:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229703AbjGXGRE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 02:17:04 -0400
+        with ESMTP id S229862AbjGXGRo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 02:17:44 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6016B1B4;
-        Sun, 23 Jul 2023 23:17:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D15791BE;
+        Sun, 23 Jul 2023 23:17:43 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DABD160F25;
-        Mon, 24 Jul 2023 06:17:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ADC9C433C8;
-        Mon, 24 Jul 2023 06:16:54 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 646C760E8E;
+        Mon, 24 Jul 2023 06:17:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0E06C433C8;
+        Mon, 24 Jul 2023 06:17:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690179421;
-        bh=54FIbV0uolapPF1pZMiAwThu+twaSkdErRK7mohWjA8=;
+        s=k20201202; t=1690179462;
+        bh=oEu91Uj13ngC2hlPGZmp9Z9g/jlfBj9S4viyw/aj5FM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sM7W7N1b2+KvnVHTFOET9VVBhel/MNGje/6cOWCs6qqPKeHKSnocQf70zXLlKPe0z
-         GPZefphWHMn3m6vYb3isKY3R+Saofi9kGLFdbMy2JwRrrIdGpsUDjNt+JhY1QKOMfi
-         gKRUZYrxMYqVwK5bclhM/cM3zZtujM25JqreySMvGENlCxSPBlMO8ikWl9t5AIr87v
-         fjkglzyT0wxVMD8Vv6PCL4np5h6KLdM0fpHBycXRzbTO581f8xHX3YcBkoUlU94QAS
-         +diR8bkTW72Hl1DyJREYk0GyBDBiJJh8gKhJZilEwUYFHp4oZve5HH4LfW5lVJhvuP
-         04RxXkoXw5+dw==
-Date:   Mon, 24 Jul 2023 11:46:45 +0530
+        b=jTG1WsUHTQVKBBCakpRfQYnPU2eZBlglYfj3mDjn6gxed2Hx+FJDRe+NMMW0G3wZE
+         P1Z22+nMf1VJwZo4uycZVDG4MPzZv+HHSxkLVN6sVJr+eEo1JPO0OPKrYOlLf3M9hi
+         Arnqf3noN41CqgBGmAc6sRMwphZXmHKKP2GAtDocktYPQSTp+2se8e3fzGjYhJIcHM
+         cqFhwWbYK+Gn7ykxbEGd+9GUw2FWN6/XejAjFyNvx/xYQTQ9Lb2Vg40LtLwMDmd05h
+         aZwqrw1Mqa1KG/kY4jnrNz50k2eZKvBCJphE8DXpfm9a5Orf54w0bMRrrwhIWxUzIe
+         0JkEdX78LH90g==
+Date:   Mon, 24 Jul 2023 11:47:24 +0530
 From:   Manivannan Sadhasivam <mani@kernel.org>
 To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
 Cc:     agross@kernel.org, andersson@kernel.org,
@@ -46,15 +46,15 @@ Cc:     agross@kernel.org, andersson@kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] dt-bindings: PCI: qcom: Add sa8775p compatible
-Message-ID: <20230724061645.GH2370@thinkpad>
+Subject: Re: [PATCH v3 2/4] PCI: qcom: Add support for sa8775p SoC
+Message-ID: <20230724061724.GI2370@thinkpad>
 References: <1689960276-29266-1-git-send-email-quic_msarkar@quicinc.com>
- <1689960276-29266-2-git-send-email-quic_msarkar@quicinc.com>
+ <1689960276-29266-3-git-send-email-quic_msarkar@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1689960276-29266-2-git-send-email-quic_msarkar@quicinc.com>
+In-Reply-To: <1689960276-29266-3-git-send-email-quic_msarkar@quicinc.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -65,81 +65,32 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 21, 2023 at 10:54:32PM +0530, Mrinmay Sarkar wrote:
-> Add sa8775p platform to the binding.
+On Fri, Jul 21, 2023 at 10:54:33PM +0530, Mrinmay Sarkar wrote:
+> Add support for sa8775p SoC that uses controller version 5.90
+> reusing the 1.9.0 config.
 > 
 > Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
 
-Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
 
 - Mani
 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
->  .../devicetree/bindings/pci/qcom,pcie.yaml         | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
+>  drivers/pci/controller/dwc/pcie-qcom.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> index 81971be4..eadba38 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> @@ -29,6 +29,7 @@ properties:
->            - qcom,pcie-msm8996
->            - qcom,pcie-qcs404
->            - qcom,pcie-sa8540p
-> +          - qcom,pcie-sa8775p
->            - qcom,pcie-sc7280
->            - qcom,pcie-sc8180x
->            - qcom,pcie-sc8280xp
-> @@ -211,6 +212,7 @@ allOf:
->          compatible:
->            contains:
->              enum:
-> +              - qcom,pcie-sa8775p
->                - qcom,pcie-sc7280
->                - qcom,pcie-sc8180x
->                - qcom,pcie-sc8280xp
-> @@ -748,7 +750,32 @@ allOf:
->          compatible:
->            contains:
->              enum:
-> +              - qcom,pcie-sa8775p
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 5
-> +          maxItems: 5
-> +        clock-names:
-> +          items:
-> +            - const: aux # Auxiliary clock
-> +            - const: cfg # Configuration clock
-> +            - const: bus_master # Master AXI clock
-> +            - const: bus_slave # Slave AXI clock
-> +            - const: slave_q2a # Slave Q2A clock
-> +        resets:
-> +          maxItems: 1
-> +        reset-names:
-> +          items:
-> +            - const: pci # PCIe core reset
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
->                - qcom,pcie-sa8540p
-> +              - qcom,pcie-sa8775p
->                - qcom,pcie-sc8280xp
->      then:
->        required:
-> @@ -790,6 +817,7 @@ allOf:
->            contains:
->              enum:
->                - qcom,pcie-msm8996
-> +              - qcom,pcie-sa8775p
->                - qcom,pcie-sc7280
->                - qcom,pcie-sc8180x
->                - qcom,pcie-sdm845
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index cee4e40..e2f2940 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1613,6 +1613,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
+>  	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
+>  	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_1_9_0 },
+> +	{ .compatible = "qcom,pcie-sa8775p", .data = &cfg_1_9_0},
+>  	{ .compatible = "qcom,pcie-sc7280", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sc8180x", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sc8280xp", .data = &cfg_1_9_0 },
 > -- 
 > 2.7.4
 > 
