@@ -2,48 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A25C75E9CB
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 04:34:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8613C75E9F2
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 05:00:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229853AbjGXCeX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 23 Jul 2023 22:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46230 "EHLO
+        id S229548AbjGXDAY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 23 Jul 2023 23:00:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230147AbjGXCeT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Jul 2023 22:34:19 -0400
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 533D9183;
-        Sun, 23 Jul 2023 19:34:15 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Vo.u9II_1690166049;
-Received: from 30.240.115.26(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vo.u9II_1690166049)
-          by smtp.aliyun-inc.com;
-          Mon, 24 Jul 2023 10:34:10 +0800
-Message-ID: <5db5aaf0-4fb7-a017-3b6f-017d04a93d33@linux.alibaba.com>
-Date:   Mon, 24 Jul 2023 10:34:08 +0800
+        with ESMTP id S229713AbjGXDAX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Jul 2023 23:00:23 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 21654185;
+        Sun, 23 Jul 2023 20:00:18 -0700 (PDT)
+Received: from loongson.cn (unknown [112.20.109.108])
+        by gateway (Coremail) with SMTP id _____8AxV_FA6b1kXvwIAA--.22978S3;
+        Mon, 24 Jul 2023 11:00:16 +0800 (CST)
+Received: from [192.168.100.8] (unknown [112.20.109.108])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxF8w56b1ki2U4AA--.48015S3;
+        Mon, 24 Jul 2023 11:00:12 +0800 (CST)
+Message-ID: <d7b825d7-0430-50b0-514a-8685362b640c@loongson.cn>
+Date:   Mon, 24 Jul 2023 11:00:09 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [PATCH v6 0/4] drivers/perf: add Synopsys DesignWare PCIe PMU
- driver support
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH AUTOSEL 6.4 28/58] ALSA: hda: Add Loongson LS7A HD-Audio
+ support
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Huacai Chen <chenhuacai@loongson.cn>, Takashi Iwai <tiwai@suse.de>,
+        bhelgaas@google.com, perex@perex.cz, tiwai@suse.com,
+        rafael@kernel.org, chenhuacai@kernel.org,
+        gregkh@linuxfoundation.org, pierre-louis.bossart@linux.intel.com,
+        mengyingkun@loongson.cn, fred.oh@linux.intel.com,
+        kai.vehmanen@linux.intel.com, jasontao@glenfly.com,
+        amadeuszx.slawinski@linux.intel.com, mkumard@nvidia.com,
+        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org
+References: <20230724011338.2298062-1-sashal@kernel.org>
+ <20230724011338.2298062-28-sashal@kernel.org>
 Content-Language: en-US
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-To:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
-        helgaas@kernel.org, yangyicong@huawei.com, will@kernel.org,
-        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
-        robin.murphy@arm.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, rdunlap@infradead.org,
-        mark.rutland@arm.com, zhuo.song@linux.alibaba.com
-References: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
- <204e3891-c041-53ae-a965-f3abec2cc091@linux.alibaba.com>
- <161dc5b6-7c20-ea8c-2efb-9594e94df2d3@linux.alibaba.com>
-In-Reply-To: <161dc5b6-7c20-ea8c-2efb-9594e94df2d3@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-10.0 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+From:   Yanteng Si <siyanteng@loongson.cn>
+In-Reply-To: <20230724011338.2298062-28-sashal@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8CxF8w56b1ki2U4AA--.48015S3
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWF1DAr43Jr1UZr47KryUurX_yoWrGrW8pr
+        s5ZryjkFZ7tryYvFsrG3W7Kr97u3WDA3ZF9rW29w1xZFnavw1Sgas8ur4YvFWavry5WrW3
+        WFWqk34xAayUtwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUP529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUU9Eb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+        Gr0_Gr1UM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+        kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
+        XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+        kF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
+        MxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
+        0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+        14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20x
+        vaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8
+        JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0L0ePUUUUU==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -51,150 +72,104 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
+Hi Sasha,
 
-On 2023/7/10 20:04, Shuai Xue wrote:
-> 
-> 
-> On 2023/6/16 16:39, Shuai Xue wrote:
->>
->>
->> On 2023/6/6 15:49, Shuai Xue wrote:
->>> changes since v5:
->>> - Rewrite the commit log to follow policy in pci_ids.h (Bjorn Helgaas)
->>> - return error code when __dwc_pcie_pmu_probe failed (Baolin Wang)
->>> - call 'cpuhp_remove_multi_state()' when exiting the driver. (Baolin Wang)
->>> - pick up Review-by tag from Baolin for Patch 1 and 3
->>>
->>> changes since v4:
->>>
->>> 1. addressing commens from Bjorn Helgaas:
->>> - reorder the includes by alpha
->>> - change all macros with upper-case hex
->>> - change ras_des type into u16
->>> - remove unnecessary outer "()"
->>> - minor format changes
->>>
->>> 2. Address commensts from Jonathan Cameron:
->>> - rewrite doc and add a example to show how to use lane event
->>>
->>> 3. fix compile error reported by: kernel test robot
->>> - remove COMPILE_TEST and add depend on PCI in kconfig
->>> - add Reported-by: kernel test robot <lkp@intel.com>
->>>
->>> Changes since v3:
->>>
->>> 1. addressing comments from Robin Murphy:
->>> - add a prepare patch to define pci id in linux/pci_ids.h
->>> - remove unnecessary 64BIT dependency
->>> - fix DWC_PCIE_PER_EVENT_OFF/ON macro
->>> - remove dwc_pcie_pmu struct and move all its fileds into dwc_pcie_rp_info
->>> - remove unnecessary format field show
->>> - use sysfs_emit() instead of all the assorted sprintf() and snprintf() calls.
->>> - remove unnecessary spaces and remove unnecessary cast to follow event show convention
->>> - remove pcie_pmu_event_attr_is_visible
->>> - fix a refcout leak on error branch when walk pci device in for_each_pci_dev
->>> - remove bdf field from dwc_pcie_rp_info and calculate it at runtime
->>> - finish all the checks before allocating rp_info to avoid hanging wasted memory
->>> - remove some unused fields
->>> - warp out control register configuration from sub function to .add()
->>> - make function return type with a proper signature
->>> - fix lane event count enable by clear DWC_PCIE_CNT_ENABLE field first
->>> - pass rp_info directly to the read_*_counter helpers and in start, stop and add callbacks
->>> - move event type validtion into .event_init()
->>> - use is_sampling_event() to be consistent with everything else of pmu drivers
->>> - remove unnecessary dev_err message in .event_init()
->>> - return EINVAL instead EOPNOTSUPP for not a valid event 
->>> - finish all the checks before start modifying the event
->>> - fix sibling event check by comparing event->pmu with sibling->pmu
->>> - probe PMU for each rootport independently
->>> - use .update() as .read() directly
->>> - remove dynamically generating symbolic name of lane event
->>> - redefine static symbolic name of lane event and leave lane filed to user
->>> - add CPU hotplug support
->>>
->>> 2. addressing comments from Baolin:
->>> - add a mask to avoid possible overflow
->>>
->>> Changes since v2 addressing comments from Baolin:
->>> - remove redundant macro definitions
->>> - use dev_err to print error message
->>> - change pmu_is_register to boolean
->>> - use PLATFORM_DEVID_NONE macro
->>> - fix module author format
->>>
->>> Changes since v1:
->>>
->>> 1. address comments from Jonathan:
->>> - drop marco for PMU name and VSEC version
->>> - simplify code with PCI standard marco
->>> - simplify code with FIELD_PREP()/FIELD_GET() to replace shift marco
->>> - name register filed with single _ instead double
->>> - wrap dwc_pcie_pmu_{write}_dword out and drop meaningless snaity check 
->>> - check vendor id while matching vesc with pci_find_vsec_capability()
->>> - remove RP_NUM_MAX and use a list to organize PMU devices for rootports
->>> - replace DWC_PCIE_CREATE_BDF with standard PCI_DEVID
->>> - comments on riping register together
->>>
->>> 2. address comments from Bjorn:
->>> - rename DWC_PCIE_VSEC_ID to DWC_PCIE_VSEC_RAS_DES_ID
->>> - rename cap_pos to ras_des
->>> - simplify declare of device_attribute with DEVICE_ATTR_RO
->>> - simplify code with PCI standard macro and API like pcie_get_width_cap()
->>> - fix some code style problem and typo
->>> - drop meaningless snaity check of container_of
->>>
->>> 3. address comments from Yicong:
->>> - use sysfs_emit() to replace sprintf()
->>> - simplify iteration of pci device with for_each_pci_dev
->>> - pick preferred CPUs on a near die and add comments
->>> - unregister PMU drivers only for failed ones
->>> - log on behalf PMU device and give more hint
->>> - fix some code style problem
->>>
->>> (Thanks for all comments and they are very valuable to me)
->>>
->>> This patchset adds the PCIe Performance Monitoring Unit (PMU) driver support
->>> for T-Head Yitian 710 SoC chip. Yitian 710 is based on the Synopsys PCI Express
->>> Core controller IP which provides statistics feature.
->>>
->>> Shuai Xue (4):
->>>   docs: perf: Add description for Synopsys DesignWare PCIe PMU driver
->>>   PCI: Add Alibaba Vendor ID to linux/pci_ids.h
->>>   drivers/perf: add DesignWare PCIe PMU driver
->>>   MAINTAINERS: add maintainers for DesignWare PCIe PMU driver
->>>
->>>  .../admin-guide/perf/dwc_pcie_pmu.rst         |  97 +++
->>>  Documentation/admin-guide/perf/index.rst      |   1 +
->>>  MAINTAINERS                                   |   6 +
->>>  drivers/infiniband/hw/erdma/erdma_hw.h        |   2 -
->>>  drivers/perf/Kconfig                          |   7 +
->>>  drivers/perf/Makefile                         |   1 +
->>>  drivers/perf/dwc_pcie_pmu.c                   | 706 ++++++++++++++++++
->>>  include/linux/pci_ids.h                       |   2 +
->>>  8 files changed, 820 insertions(+), 2 deletions(-)
->>>  create mode 100644 Documentation/admin-guide/perf/dwc_pcie_pmu.rst
->>>  create mode 100644 drivers/perf/dwc_pcie_pmu.c
->>>
->>
->> Hi, all,
->>
->> Gently ping. Any comments are welcomed.
-> 
-> 
-> Hi, all,
-> 
-> Gentle ping.
-> 
+在 2023/7/24 09:12, Sasha Levin 写道:
+> From: Yanteng Si <siyanteng@loongson.cn>
+>
+> [ Upstream commit 28bd137a3c8e105587ba8c55b68ef43b519b270f ]
+>
+> Add the new PCI ID 0x0014 0x7a07 and the new PCI ID 0x0014 0x7a37
+> Loongson HDA controller.
+>
+> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+> Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+> Link: https://lore.kernel.org/r/993587483b9509796b29a416f257fcfb4b15c6ea.1686128807.git.siyanteng@loongson.cn
+Loongson HDA can't work if AUTOSEL only ports this one patch, because 
+6.4 also needs the other three patches inside this thread. Also, 6.1, 
+5.15, and 5.10 have the same problem.
 
-Hi, all
+Give me a shout if you need anything.
 
-Gentle reminder, thank you.
+Thanks,
+Yanteng
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>   include/linux/pci_ids.h    | 3 +++
+>   sound/hda/hdac_device.c    | 1 +
+>   sound/pci/hda/hda_intel.c  | 7 +++++++
+>   sound/pci/hda/patch_hdmi.c | 1 +
+>   4 files changed, 12 insertions(+)
+>
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 95f33dadb2be2..c0c4ca8e28510 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -158,6 +158,9 @@
+>   
+>   #define PCI_VENDOR_ID_LOONGSON		0x0014
+>   
+> +#define PCI_DEVICE_ID_LOONGSON_HDA      0x7a07
+> +#define PCI_DEVICE_ID_LOONGSON_HDMI     0x7a37
+> +
+>   #define PCI_VENDOR_ID_TTTECH		0x0357
+>   #define PCI_DEVICE_ID_TTTECH_MC322	0x000a
+>   
+> diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
+> index 6c043fbd606f1..bbf7bcdb449a8 100644
+> --- a/sound/hda/hdac_device.c
+> +++ b/sound/hda/hdac_device.c
+> @@ -645,6 +645,7 @@ struct hda_vendor_id {
+>   };
+>   
+>   static const struct hda_vendor_id hda_vendor_ids[] = {
+> +	{ 0x0014, "Loongson" },
+>   	{ 0x1002, "ATI" },
+>   	{ 0x1013, "Cirrus Logic" },
+>   	{ 0x1057, "Motorola" },
+> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+> index 3226691ac923c..9c353dc7740c4 100644
+> --- a/sound/pci/hda/hda_intel.c
+> +++ b/sound/pci/hda/hda_intel.c
+> @@ -237,6 +237,7 @@ enum {
+>   	AZX_DRIVER_CTHDA,
+>   	AZX_DRIVER_CMEDIA,
+>   	AZX_DRIVER_ZHAOXIN,
+> +	AZX_DRIVER_LOONGSON,
+>   	AZX_DRIVER_GENERIC,
+>   	AZX_NUM_DRIVERS, /* keep this as last entry */
+>   };
+> @@ -360,6 +361,7 @@ static const char * const driver_short_names[] = {
+>   	[AZX_DRIVER_CTHDA] = "HDA Creative",
+>   	[AZX_DRIVER_CMEDIA] = "HDA C-Media",
+>   	[AZX_DRIVER_ZHAOXIN] = "HDA Zhaoxin",
+> +	[AZX_DRIVER_LOONGSON] = "HDA Loongson",
+>   	[AZX_DRIVER_GENERIC] = "HD-Audio Generic",
+>   };
+>   
+> @@ -2809,6 +2811,11 @@ static const struct pci_device_id azx_ids[] = {
+>   	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_ATI_HDMI },
+>   	/* Zhaoxin */
+>   	{ PCI_DEVICE(0x1d17, 0x3288), .driver_data = AZX_DRIVER_ZHAOXIN },
+> +	/* Loongson HDAudio*/
+> +	{PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_HDA),
+> +	  .driver_data = AZX_DRIVER_LOONGSON },
+> +	{PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_HDMI),
+> +	  .driver_data = AZX_DRIVER_LOONGSON },
+>   	{ 0, }
+>   };
+>   MODULE_DEVICE_TABLE(pci, azx_ids);
+> diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+> index 5c0b1a09fd57c..260d3e64f6589 100644
+> --- a/sound/pci/hda/patch_hdmi.c
+> +++ b/sound/pci/hda/patch_hdmi.c
+> @@ -4505,6 +4505,7 @@ static int patch_gf_hdmi(struct hda_codec *codec)
+>    * patch entries
+>    */
+>   static const struct hda_device_id snd_hda_id_hdmi[] = {
+> +HDA_CODEC_ENTRY(0x00147a47, "Loongson HDMI",	patch_generic_hdmi),
+>   HDA_CODEC_ENTRY(0x1002793c, "RS600 HDMI",	patch_atihdmi),
+>   HDA_CODEC_ENTRY(0x10027919, "RS600 HDMI",	patch_atihdmi),
+>   HDA_CODEC_ENTRY(0x1002791a, "RS690/780 HDMI",	patch_atihdmi),
 
->>
->> Thank you.
->>
->>
->> Best Regards,
->> Shuai
->>
->>
