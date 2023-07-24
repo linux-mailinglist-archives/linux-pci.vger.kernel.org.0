@@ -2,228 +2,200 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 79C8D75EEE9
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 11:18:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D577175EF11
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 11:25:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232201AbjGXJSR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jul 2023 05:18:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37038 "EHLO
+        id S232253AbjGXJZN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jul 2023 05:25:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232258AbjGXJSO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 05:18:14 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2DD612A;
-        Mon, 24 Jul 2023 02:18:12 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4R8ZHS23yKz67Gj3;
-        Mon, 24 Jul 2023 17:14:44 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 24 Jul
- 2023 10:18:08 +0100
-Date:   Mon, 24 Jul 2023 10:18:07 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-CC:     <chengyou@linux.alibaba.com>, <kaishen@linux.alibaba.com>,
-        <helgaas@kernel.org>, <yangyicong@huawei.com>, <will@kernel.org>,
-        <baolin.wang@linux.alibaba.com>, <robin.murphy@arm.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <rdunlap@infradead.org>,
-        <mark.rutland@arm.com>, <zhuo.song@linux.alibaba.com>
-Subject: Re: [PATCH v6 0/4] drivers/perf: add Synopsys DesignWare PCIe PMU
- driver support
-Message-ID: <20230724101807.000012bf@Huawei.com>
-In-Reply-To: <5db5aaf0-4fb7-a017-3b6f-017d04a93d33@linux.alibaba.com>
-References: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
-        <204e3891-c041-53ae-a965-f3abec2cc091@linux.alibaba.com>
-        <161dc5b6-7c20-ea8c-2efb-9594e94df2d3@linux.alibaba.com>
-        <5db5aaf0-4fb7-a017-3b6f-017d04a93d33@linux.alibaba.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S230263AbjGXJZN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 05:25:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8945FD;
+        Mon, 24 Jul 2023 02:25:11 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5D8F261007;
+        Mon, 24 Jul 2023 09:25:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47250C433C8;
+        Mon, 24 Jul 2023 09:25:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690190710;
+        bh=8O9VQSiFMULv8D+ewifq1TPDI8/RywKN013pnVPM0bc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rACGdXL5/fIIkJu+2P6LO6W6Ue+206wtwMVG3ajyFORIRxLDdKxGWSwhsSSA4V07v
+         oR5H2qFkdnbCH443/eKEpO6QZZALhrOxGPGbtrNSp+xVr2ZP84ftlb3gYeiaU2Xx0q
+         2mN5Oe/F7Abx06zxnBR1v3ahtxy1+pUAeKibUVWygnTQyLLQ7ptN/N0yT2GtEzNTNO
+         76/1WAynuwkvjRGmiFArMAFLD9ZMPrMh8zs+s2y1YmS9PMdP92B8VyMfDkRrQZnlzv
+         cPyjVSqy8t4mevwz67jdphAJeZW0DTvqYb4tyV8HABpcotkLN4DeyR/+uYxhyZHPb/
+         GLAdSzB/R9KqQ==
+Date:   Mon, 24 Jul 2023 14:54:54 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
+        manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
+        kishon@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, marek.vasut+renesas@gmail.com,
+        fancer.lancer@gmail.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v18 07/20] PCI: dwc: endpoint: Add multiple PFs support
+ for dbi2
+Message-ID: <20230724092454.GF6291@thinkpad>
+References: <20230721074452.65545-1-yoshihiro.shimoda.uh@renesas.com>
+ <20230721074452.65545-8-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230721074452.65545-8-yoshihiro.shimoda.uh@renesas.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 24 Jul 2023 10:34:08 +0800
-Shuai Xue <xueshuai@linux.alibaba.com> wrote:
-
-> On 2023/7/10 20:04, Shuai Xue wrote:
-> > 
-> > 
-> > On 2023/6/16 16:39, Shuai Xue wrote:  
-> >>
-> >>
-> >> On 2023/6/6 15:49, Shuai Xue wrote:  
-> >>> changes since v5:
-> >>> - Rewrite the commit log to follow policy in pci_ids.h (Bjorn Helgaas)
-> >>> - return error code when __dwc_pcie_pmu_probe failed (Baolin Wang)
-> >>> - call 'cpuhp_remove_multi_state()' when exiting the driver. (Baolin Wang)
-> >>> - pick up Review-by tag from Baolin for Patch 1 and 3
-> >>>
-> >>> changes since v4:
-> >>>
-> >>> 1. addressing commens from Bjorn Helgaas:
-> >>> - reorder the includes by alpha
-> >>> - change all macros with upper-case hex
-> >>> - change ras_des type into u16
-> >>> - remove unnecessary outer "()"
-> >>> - minor format changes
-> >>>
-> >>> 2. Address commensts from Jonathan Cameron:
-> >>> - rewrite doc and add a example to show how to use lane event
-> >>>
-> >>> 3. fix compile error reported by: kernel test robot
-> >>> - remove COMPILE_TEST and add depend on PCI in kconfig
-> >>> - add Reported-by: kernel test robot <lkp@intel.com>
-> >>>
-> >>> Changes since v3:
-> >>>
-> >>> 1. addressing comments from Robin Murphy:
-> >>> - add a prepare patch to define pci id in linux/pci_ids.h
-> >>> - remove unnecessary 64BIT dependency
-> >>> - fix DWC_PCIE_PER_EVENT_OFF/ON macro
-> >>> - remove dwc_pcie_pmu struct and move all its fileds into dwc_pcie_rp_info
-> >>> - remove unnecessary format field show
-> >>> - use sysfs_emit() instead of all the assorted sprintf() and snprintf() calls.
-> >>> - remove unnecessary spaces and remove unnecessary cast to follow event show convention
-> >>> - remove pcie_pmu_event_attr_is_visible
-> >>> - fix a refcout leak on error branch when walk pci device in for_each_pci_dev
-> >>> - remove bdf field from dwc_pcie_rp_info and calculate it at runtime
-> >>> - finish all the checks before allocating rp_info to avoid hanging wasted memory
-> >>> - remove some unused fields
-> >>> - warp out control register configuration from sub function to .add()
-> >>> - make function return type with a proper signature
-> >>> - fix lane event count enable by clear DWC_PCIE_CNT_ENABLE field first
-> >>> - pass rp_info directly to the read_*_counter helpers and in start, stop and add callbacks
-> >>> - move event type validtion into .event_init()
-> >>> - use is_sampling_event() to be consistent with everything else of pmu drivers
-> >>> - remove unnecessary dev_err message in .event_init()
-> >>> - return EINVAL instead EOPNOTSUPP for not a valid event 
-> >>> - finish all the checks before start modifying the event
-> >>> - fix sibling event check by comparing event->pmu with sibling->pmu
-> >>> - probe PMU for each rootport independently
-> >>> - use .update() as .read() directly
-> >>> - remove dynamically generating symbolic name of lane event
-> >>> - redefine static symbolic name of lane event and leave lane filed to user
-> >>> - add CPU hotplug support
-> >>>
-> >>> 2. addressing comments from Baolin:
-> >>> - add a mask to avoid possible overflow
-> >>>
-> >>> Changes since v2 addressing comments from Baolin:
-> >>> - remove redundant macro definitions
-> >>> - use dev_err to print error message
-> >>> - change pmu_is_register to boolean
-> >>> - use PLATFORM_DEVID_NONE macro
-> >>> - fix module author format
-> >>>
-> >>> Changes since v1:
-> >>>
-> >>> 1. address comments from Jonathan:
-> >>> - drop marco for PMU name and VSEC version
-> >>> - simplify code with PCI standard marco
-> >>> - simplify code with FIELD_PREP()/FIELD_GET() to replace shift marco
-> >>> - name register filed with single _ instead double
-> >>> - wrap dwc_pcie_pmu_{write}_dword out and drop meaningless snaity check 
-> >>> - check vendor id while matching vesc with pci_find_vsec_capability()
-> >>> - remove RP_NUM_MAX and use a list to organize PMU devices for rootports
-> >>> - replace DWC_PCIE_CREATE_BDF with standard PCI_DEVID
-> >>> - comments on riping register together
-> >>>
-> >>> 2. address comments from Bjorn:
-> >>> - rename DWC_PCIE_VSEC_ID to DWC_PCIE_VSEC_RAS_DES_ID
-> >>> - rename cap_pos to ras_des
-> >>> - simplify declare of device_attribute with DEVICE_ATTR_RO
-> >>> - simplify code with PCI standard macro and API like pcie_get_width_cap()
-> >>> - fix some code style problem and typo
-> >>> - drop meaningless snaity check of container_of
-> >>>
-> >>> 3. address comments from Yicong:
-> >>> - use sysfs_emit() to replace sprintf()
-> >>> - simplify iteration of pci device with for_each_pci_dev
-> >>> - pick preferred CPUs on a near die and add comments
-> >>> - unregister PMU drivers only for failed ones
-> >>> - log on behalf PMU device and give more hint
-> >>> - fix some code style problem
-> >>>
-> >>> (Thanks for all comments and they are very valuable to me)
-> >>>
-> >>> This patchset adds the PCIe Performance Monitoring Unit (PMU) driver support
-> >>> for T-Head Yitian 710 SoC chip. Yitian 710 is based on the Synopsys PCI Express
-> >>> Core controller IP which provides statistics feature.
-> >>>
-> >>> Shuai Xue (4):
-> >>>   docs: perf: Add description for Synopsys DesignWare PCIe PMU driver
-> >>>   PCI: Add Alibaba Vendor ID to linux/pci_ids.h
-> >>>   drivers/perf: add DesignWare PCIe PMU driver
-> >>>   MAINTAINERS: add maintainers for DesignWare PCIe PMU driver
-> >>>
-> >>>  .../admin-guide/perf/dwc_pcie_pmu.rst         |  97 +++
-> >>>  Documentation/admin-guide/perf/index.rst      |   1 +
-> >>>  MAINTAINERS                                   |   6 +
-> >>>  drivers/infiniband/hw/erdma/erdma_hw.h        |   2 -
-> >>>  drivers/perf/Kconfig                          |   7 +
-> >>>  drivers/perf/Makefile                         |   1 +
-> >>>  drivers/perf/dwc_pcie_pmu.c                   | 706 ++++++++++++++++++
-> >>>  include/linux/pci_ids.h                       |   2 +
-> >>>  8 files changed, 820 insertions(+), 2 deletions(-)
-> >>>  create mode 100644 Documentation/admin-guide/perf/dwc_pcie_pmu.rst
-> >>>  create mode 100644 drivers/perf/dwc_pcie_pmu.c
-> >>>  
-> >>
-> >> Hi, all,
-> >>
-> >> Gently ping. Any comments are welcomed.  
-> > 
-> > 
-> > Hi, all,
-> > 
-> > Gentle ping.
-> >   
-> 
-> Hi, all
-> 
-> Gentle reminder, thank you.
-
-Hi Shuai,
-
-Really a question for Bjorn I think, but here is my 2 cents...
-
-The problem here is that we need to do that fundamental redesign of the
-way the PCI ports drivers work.  I'm not sure there is a path to merging
-this until that is done.  The bigger problem is that I'm not sure anyone
-is actively looking at that yet.  I'd like to look at this (as I have
-the same problem for some other drivers), but it is behind various
-other things on my todo list.
-
-Bjorn might be persuaded on a temporary solution, but that would come
-with some maintenance problems, particularly when we try to do it
-'right' in the future.  Maybe adding another service driver would be
-a stop gap as long as we know we won't keep doing so for ever. Not sure.
-
-Jonathan
-
-> 
-> >>
-> >> Thank you.
-> >>
-> >>
-> >> Best Regards,
-> >> Shuai
-> >>
-> >>  
+On Fri, Jul 21, 2023 at 04:44:39PM +0900, Yoshihiro Shimoda wrote:
+> The commit 24ede430fa49 ("PCI: designware-ep: Add multiple PFs support
+> for DWC") added .func_conf_select() to get the configuration space of
+> different PFs and assumed that the offsets between dbi and dbi2 would
+> be the same. However, Renesas R-Car Gen4 PCIe controllers have different
+> offsets of function 1: dbi (+0x1000) and dbi2 (+0x800). To get
+> the offset for dbi2, add .func_conf_select2() and
+> dw_pcie_ep_func_select2().
 > 
 
+How about,
+
+.get_dbi2_offset() and dw_pcie_ep_get_dbi2_offset()?
+
+This would've been much simpler if dw_pcie_writeX_{dbi/dbi2} APIs accepted the
+func_no argument, so that these offset calculations are contained in the API
+definitions itself as it should. Then the APIs could just do "func_offset *
+func_no" to get DBI base and "(func_offset * func_no) + dbi2_offset" to get DBI2
+base, provided these offsets are passed by the vendor drivers.
+
+It can be done in a separate cleanup series later.
+
+> Notes that dw_pcie_ep_func_select2() will call .func_conf_select()
+
+s/Notes/Note
+
+> if .func_conf_select2() doesn't exist for backward compatibility.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  .../pci/controller/dwc/pcie-designware-ep.c   | 32 ++++++++++++++-----
+>  drivers/pci/controller/dwc/pcie-designware.h  |  3 +-
+>  2 files changed, 26 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 1d24ebf9686f..bd57516d5313 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -54,21 +54,35 @@ static unsigned int dw_pcie_ep_func_select(struct dw_pcie_ep *ep, u8 func_no)
+>  	return func_offset;
+>  }
+>  
+> +static unsigned int dw_pcie_ep_func_select2(struct dw_pcie_ep *ep, u8 func_no)
+> +{
+> +	unsigned int func_offset = 0;
+> +
+> +	if (ep->ops->func_conf_select2)
+> +		func_offset = ep->ops->func_conf_select2(ep, func_no);
+> +	else if (ep->ops->func_conf_select)	/* for backward compatibility */
+> +		func_offset = ep->ops->func_conf_select(ep, func_no);
+> +
+> +	return func_offset;
+> +}
+> +
+>  static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, u8 func_no,
+>  				   enum pci_barno bar, int flags)
+>  {
+> -	u32 reg;
+> -	unsigned int func_offset = 0;
+> +	u32 reg, reg_dbi2;
+> +	unsigned int func_offset, func_offset_dbi2;
+
+Please maitain reverse Xmas tree order.
+
+- Mani
+
+>  	struct dw_pcie_ep *ep = &pci->ep;
+>  
+>  	func_offset = dw_pcie_ep_func_select(ep, func_no);
+> +	func_offset_dbi2 = dw_pcie_ep_func_select2(ep, func_no);
+>  
+>  	reg = func_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
+> +	reg_dbi2 = func_offset_dbi2 + PCI_BASE_ADDRESS_0 + (4 * bar);
+>  	dw_pcie_dbi_ro_wr_en(pci);
+> -	dw_pcie_writel_dbi2(pci, reg, 0x0);
+> +	dw_pcie_writel_dbi2(pci, reg_dbi2, 0x0);
+>  	dw_pcie_writel_dbi(pci, reg, 0x0);
+>  	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
+> -		dw_pcie_writel_dbi2(pci, reg + 4, 0x0);
+> +		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, 0x0);
+>  		dw_pcie_writel_dbi(pci, reg + 4, 0x0);
+>  	}
+>  	dw_pcie_dbi_ro_wr_dis(pci);
+> @@ -232,13 +246,15 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  	enum pci_barno bar = epf_bar->barno;
+>  	size_t size = epf_bar->size;
+>  	int flags = epf_bar->flags;
+> -	unsigned int func_offset = 0;
+> +	unsigned int func_offset, func_offset_dbi2;
+>  	int ret, type;
+> -	u32 reg;
+> +	u32 reg, reg_dbi2;
+>  
+>  	func_offset = dw_pcie_ep_func_select(ep, func_no);
+> +	func_offset_dbi2 = dw_pcie_ep_func_select2(ep, func_no);
+>  
+>  	reg = PCI_BASE_ADDRESS_0 + (4 * bar) + func_offset;
+> +	reg_dbi2 = PCI_BASE_ADDRESS_0 + (4 * bar) + func_offset_dbi2;
+>  
+>  	if (!(flags & PCI_BASE_ADDRESS_SPACE))
+>  		type = PCIE_ATU_TYPE_MEM;
+> @@ -254,11 +270,11 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  
+>  	dw_pcie_dbi_ro_wr_en(pci);
+>  
+> -	dw_pcie_writel_dbi2(pci, reg, lower_32_bits(size - 1));
+> +	dw_pcie_writel_dbi2(pci, reg_dbi2, lower_32_bits(size - 1));
+>  	dw_pcie_writel_dbi(pci, reg, flags);
+>  
+>  	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
+> -		dw_pcie_writel_dbi2(pci, reg + 4, upper_32_bits(size - 1));
+> +		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, upper_32_bits(size - 1));
+>  		dw_pcie_writel_dbi(pci, reg + 4, 0);
+>  	}
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 812c221b3f7c..94bc20f5f600 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -340,9 +340,10 @@ struct dw_pcie_ep_ops {
+>  	 * access for different platform, if different func have different
+>  	 * offset, return the offset of func. if use write a register way
+>  	 * return a 0, and implement code in callback function of platform
+> -	 * driver.
+> +	 * driver. The func_conf_select2 is for dbi2.
+>  	 */
+>  	unsigned int (*func_conf_select)(struct dw_pcie_ep *ep, u8 func_no);
+> +	unsigned int (*func_conf_select2)(struct dw_pcie_ep *ep, u8 func_no);
+>  };
+>  
+>  struct dw_pcie_ep_func {
+> -- 
+> 2.25.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
