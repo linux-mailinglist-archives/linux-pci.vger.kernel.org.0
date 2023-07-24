@@ -2,177 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9B9D75F596
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 14:02:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E9A775F5B6
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jul 2023 14:13:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229923AbjGXMCo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jul 2023 08:02:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38172 "EHLO
+        id S229821AbjGXMNj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jul 2023 08:13:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbjGXMCn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 08:02:43 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2084.outbound.protection.outlook.com [40.107.237.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A31BCFA;
-        Mon, 24 Jul 2023 05:02:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QGxZkbVwv6HTd0SO6XWR2fbycUnRLwN0pM/FMJLLRKXD7qpEXSwiWGdW1ZaqlzVlHyJkpnID7G7wNFX+Gphmj+baQQ9kak1FYhsJppGS4zmUMO91H8glIFrpBjG8aYF5suw7lIDl+DxwAnUHuydapN+Fo0ISRaLstdI1aP8HeVcxsZ/ih6iRbCYW80o6NxM2vDnnfaGTZzPZ+HWt2GaaAR2fEE0tSiSyIxSzhejvI9OB8ver9NBdOWSR1+JeQeYhx1w1VIOMprWwtxt4zINMVoP3iFhnm9+wO/ihYx5cRdFSb9Sat8OK7WWnJzgHDr+5gizlcJztqZM3JJ1pqqlK8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BIh1d4wad69LSWZ4+Gua4DyaFeemOBtb5Hsp+bBVBmc=;
- b=dRU+TyhAZXU+9KbcBgXuk/0i05JCkA37x/qF7W9LstiFqDumT6j8eh5ZQ7cXTk+TPSorByGjDVQNAKiA/e/UVopYEWJxacD2LreWJsigZgg8D20s9nw1+lrZnPlvvXWqX1wei1hoHzPmriChfP0Ip6BPJN5c1d1Zje10ElrtAcJdAM5hxWUXahyjB6pMMX33qN6MZGTw4pG9+f7XcB52vEyQuhiR1dzzY9uUoqVAhzruB9nK74xkmzHqfzM72nEcYRGDZ+PG/+zzNYA7H9zHQupUAbYiJhVgvTHnDc3elJ5jwd141B67+/wWt4rmkf9u6mWq1XkNCDfcdZSIqkOEvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BIh1d4wad69LSWZ4+Gua4DyaFeemOBtb5Hsp+bBVBmc=;
- b=BYnP07GWvH50egU93QyFhTtERw/X7S7Aq4Ns5mnL886CLtEYUjnweeNpRoJad9MNNeoIK9YgFYvFZGnRtnIL5oocZEaPpwummhww0ebHjNCKtb0gu5/5MHkGAvmB4BdiwtnTUoqqXfmzmNXlED4UZRNgJVgwOC9h9khK78roBC0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB3657.namprd12.prod.outlook.com (2603:10b6:5:149::18)
- by PH7PR12MB8778.namprd12.prod.outlook.com (2603:10b6:510:26b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.32; Mon, 24 Jul
- 2023 12:02:40 +0000
-Received: from DM6PR12MB3657.namprd12.prod.outlook.com
- ([fe80::6cf0:e179:9f0b:edd9]) by DM6PR12MB3657.namprd12.prod.outlook.com
- ([fe80::6cf0:e179:9f0b:edd9%5]) with mapi id 15.20.6609.032; Mon, 24 Jul 2023
- 12:02:39 +0000
-Date:   Mon, 24 Jul 2023 14:02:33 +0200
-From:   Robert Richter <rrichter@amd.com>
-To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-cxl@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        oohall@gmail.com, Lukas Wunner <lukas@wunner.de>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 1/3] cxl/pci: Fix appropriate checking for _OSC while
- handling CXL RAS registers
-Message-ID: <ZL5oWTxp9fv/DBHL@rric.localdomain>
-References: <20230721214740.256602-1-Smita.KoralahalliChannabasappa@amd.com>
- <20230721214740.256602-2-Smita.KoralahalliChannabasappa@amd.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230721214740.256602-2-Smita.KoralahalliChannabasappa@amd.com>
-X-ClientProxiedBy: FR2P281CA0035.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:14::22) To DM6PR12MB3657.namprd12.prod.outlook.com
- (2603:10b6:5:149::18)
+        with ESMTP id S230230AbjGXMNi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jul 2023 08:13:38 -0400
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D68B7E61;
+        Mon, 24 Jul 2023 05:13:33 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Vo91cmw_1690200808;
+Received: from 30.240.115.26(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vo91cmw_1690200808)
+          by smtp.aliyun-inc.com;
+          Mon, 24 Jul 2023 20:13:30 +0800
+Message-ID: <3dba0c90-9673-eadd-4f82-353ae48567a7@linux.alibaba.com>
+Date:   Mon, 24 Jul 2023 20:13:26 +0800
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3657:EE_|PH7PR12MB8778:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0439441f-6726-4856-70b2-08db8c3de092
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3r3lmLS0RMIgJxO/WW7E/WUbf8AaTf6lj//P7+BGB4zyF3H54zRmADkSwcDy1rwBrFS1pxHlf/KyaisEWyKmV7OyofAoV1auNKtyZpI7UidmvYua/xiJ+tgEMDNVu+/VVZUHq0FItfrXLvXtP9pFsTg0uUmT0rDKmozX4qzADJvSG0WIMFNrQsMq1vL1AMWNk6jj7SHQmYE9dUC9P8KycnJuz4v5WwptrWSbiF8VqXsZc+inNMIwVjXed0UQqBmZrOTFM6maDZi1ni709lJYW5YevT2TJrj+RCsfJRJkacW5lyoez63jiHe1Or/VgPo0PMi1u0iiBMyRE4iwnVujYCk3eBMkhJzmWch9ptaBqUDY3PCVMzWKq3re8qNAodewFU7ac+CWwE+6Lc0o0mlSgW+/kvBVS9DKsUEa5czm+d6/sXC8dYizHTLKgPpU1GhD2CAlSgovptODqHkJmDg4snlnqWdJw7zYbaoB/TKcEmQlC5V0tn0SNB3++9jirAv1oK2xz7H/Nw0G3cp1lXvgURl1mk896SmuIiWWgQ3I+7myn8xJcWMCmpmJ15N/+e+m
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3657.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(366004)(396003)(39860400002)(136003)(346002)(451199021)(53546011)(41300700001)(6506007)(186003)(83380400001)(478600001)(26005)(6666004)(9686003)(6512007)(2906002)(6486002)(7416002)(5660300002)(66476007)(66556008)(66946007)(4326008)(6636002)(6862004)(8676002)(8936002)(316002)(38100700002)(54906003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?bSxJ94gpwHx5uUJA/juLZ0vmSh4vfRMSWnYTR13OFpW1c+9d6pEQLS1AMNBF?=
- =?us-ascii?Q?CWovfamA3RndmgzXScPLzcPzfiZcS3exQhg9ENqsNVnCy3H2TtyYZnXRIkA+?=
- =?us-ascii?Q?Ei+AZ/EMxdk6v7mBgWVvu2aGb9DYWeLoHTcK18qwLEkuQLKmw/ekC/vtft13?=
- =?us-ascii?Q?xI1HOupe89YTVU0H2OQ79kZvudayD2Kp4d318uulnBWog1bxnmS1N1AsfrYY?=
- =?us-ascii?Q?Y8eEXVwhF1NS9aXeVQIp4Pp2zIuKpV5b0aMvO8UpG4ipUmiFlVr8O2zs9VSm?=
- =?us-ascii?Q?r/yj0uMNyvRReVhSuKtVakByVj9kzyeMsN2o7FCMo7GAPW6X4lmBwbrAtPDM?=
- =?us-ascii?Q?Mls404l39WvtGhRWVZWEtUPv1QplCtYRo8BFIyo6p6T+e42B1iX1ofPPb0Qg?=
- =?us-ascii?Q?Np0NNpqqB4/tdBzk4XLaYUikyGDehr1euMupeaW+MDAue0Gmy6FtciAAYYVv?=
- =?us-ascii?Q?MEU8UDK9cxdfF9Aih+2WSPBTxQnLEMdH4+7aAUVodruRU5vPbD3O50vcE0AE?=
- =?us-ascii?Q?n6WKTfWL7uHaXpXDi+B1hxeN6FRZrqUeqj9V50mQxLAjOYBmzUe4svGhASgS?=
- =?us-ascii?Q?HbcW1PzvkrI/CBRiTK6DlQfZoKw5CiU3BZnNiOvyKE8+9T5ti0uaMifUALUm?=
- =?us-ascii?Q?h/2o0edHSWVG9Mk1rBpYE5PEuEvitKuOOgIBvLpD9tqYcIakmbrvWJgoxsJl?=
- =?us-ascii?Q?/efTKeLKacGNrh9we9J/7+F4yZ8o1ZJaxbt7C1prb9uMPetIkGW/2zgQzlkb?=
- =?us-ascii?Q?dWSLgeemx/3ua8Y9WxO2yugdbdFODp7toOc4xzOYThEuLPNQ75yntmjypdqw?=
- =?us-ascii?Q?71lleu46nlqq4Jwc7M9sE7iSPLR2v3okAt5Sa85KOtWrKblvhY5Grepk8qlh?=
- =?us-ascii?Q?7gIBwYejAuqm4lNo67Zd9gtPnLkOvV0d158az4vXXjOI1FyfQ4M9jQ10xB7B?=
- =?us-ascii?Q?rxOy6UrN6YgFPy/HF0t01sy4jDjTAlskWI17snLtwrdJKsDsuoW7yFijJmEF?=
- =?us-ascii?Q?gmq7+Yna0FaoICwd8mOdHDiVvXjbO83gydy5g6oPlbHyZfWJMeKHL9h9j+iz?=
- =?us-ascii?Q?lNV5yY2/hOGKOKvJan4NQisZqep2IlKI36vL9bG0BF69+6J/87M7lDnJGGfx?=
- =?us-ascii?Q?OGukw6gKsFQ6XLHkqoAmNfzf4ZvMP19U3M9tgud23L5kXf8SqNgzIqwUSrly?=
- =?us-ascii?Q?L0N3sG79igZMGERuCF9QzztSxJoUnLsAfEOGi9ADDklp5qo91bKlG/bwBm9C?=
- =?us-ascii?Q?KdAXiTJjPq0S1gZ6KwahVOKvtWYp/lT2xI1MrBhvi8QW6MbQwnY7MMau0s0t?=
- =?us-ascii?Q?QTFsB+9MabneouzFkl+3JISCvGNa6PU1RXmGUpnl09xtAp5k2mpaQFb57O8i?=
- =?us-ascii?Q?I1qigmQHEv/eFQyDhfvh2uxq+A1qldOcDQ2TFTRr7z/OFC5vFl+22CwkdN90?=
- =?us-ascii?Q?yWvyEdJHmx4pdLsCfcbJaRaH6E6BYI48q7C+xDUtpOGzRtflBlbofM8fHt2w?=
- =?us-ascii?Q?4tKUpwpbPhKhizWLx89h40J/i8PAeyz+2aJQ9rr8lVInLkJFOsfhC2Y4UiU3?=
- =?us-ascii?Q?aaqfhvv4BfGQc+/9Lsb5l+t64rkOmUfbDsJsCWKN?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0439441f-6726-4856-70b2-08db8c3de092
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3657.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2023 12:02:39.6179
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O63x8b36lYhOew3MOwYeCV5Bm6dexEk/O2XyamJWV4QhMegJDVr3/qCDSyqgQsAzwkdEuHDNEePppSbbxXPAzA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8778
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.12.0
+Subject: Re: [PATCH v6 0/4] drivers/perf: add Synopsys DesignWare PCIe PMU
+ driver support
+Content-Language: en-US
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
+        helgaas@kernel.org, yangyicong@huawei.com, will@kernel.org,
+        baolin.wang@linux.alibaba.com, robin.murphy@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, rdunlap@infradead.org,
+        mark.rutland@arm.com, zhuo.song@linux.alibaba.com
+References: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
+ <204e3891-c041-53ae-a965-f3abec2cc091@linux.alibaba.com>
+ <161dc5b6-7c20-ea8c-2efb-9594e94df2d3@linux.alibaba.com>
+ <5db5aaf0-4fb7-a017-3b6f-017d04a93d33@linux.alibaba.com>
+ <20230724101807.000012bf@Huawei.com>
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20230724101807.000012bf@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-10.0 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21.07.23 21:47:38, Smita Koralahalli wrote:
-> According to Section 9.17.2, Table 9-26 of CXL Specification [1], owner
-> of AER should also own CXL Protocol Error Management as there is no
-> explicit control of CXL Protocol error. And the CXL RAS Cap registers
-> reported on Protocol errors should check for AER _OSC rather than CXL
-> Memory Error Reporting Control _OSC.
-> 
-> The CXL Memory Error Reporting Control _OSC specifically highlights
-> handling Memory Error Logging and Signaling Enhancements. These kinds of
-> errors are reported through a device's mailbox and can be managed
-> independently from CXL Protocol Errors.
-> 
-> This change fixes handling and reporting CXL Protocol Errors and RAS
-> registers natively with native AER and FW-First CXL Memory Error Reporting
-> Control.
-> 
-> [1] Compute Express Link (CXL) Specification, Revision 3.1, Aug 1 2022.
-> 
-> Fixes: 248529edc86f ("cxl: add RAS status unmasking for CXL")
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
 
-Reviewed-by: Robert Richter <rrichter@amd.com>
 
-> ---
-> v2:
-> 	Added fixes tag.
-> 	Included what the patch fixes in commit message.
-> ---
->  drivers/cxl/pci.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+On 2023/7/24 17:18, Jonathan Cameron wrote:
+> Really a question for Bjorn I think, but here is my 2 cents...
 > 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 1cb1494c28fe..2323169b6e5f 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -541,9 +541,9 @@ static int cxl_pci_ras_unmask(struct pci_dev *pdev)
->  		return 0;
->  	}
->  
-> -	/* BIOS has CXL error control */
-> -	if (!host_bridge->native_cxl_error)
-> -		return -ENXIO;
-> +	/* BIOS has PCIe AER error control */
-> +	if (!host_bridge->native_aer)
-> +		return 0;
->  
->  	rc = pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &cap);
->  	if (rc)
-> -- 
-> 2.17.1
+> The problem here is that we need to do that fundamental redesign of the
+> way the PCI ports drivers work.  I'm not sure there is a path to merging
+> this until that is done.  The bigger problem is that I'm not sure anyone
+> is actively looking at that yet.  I'd like to look at this (as I have
+> the same problem for some other drivers), but it is behind various
+> other things on my todo list.
 > 
+> Bjorn might be persuaded on a temporary solution, but that would come
+> with some maintenance problems, particularly when we try to do it
+> 'right' in the future.  Maybe adding another service driver would be
+> a stop gap as long as we know we won't keep doing so for ever. Not sure.
+
+Thank you for your reply, and got your point, :)
+
++ Bjorn
+
+
+>>>> The approach used here is to separately walk the PCI topology and
+>>>> register the devices.  It can 'maybe' get away with that because no
+>>>> interrupts and I assume resets have no nasty impacts on it because
+>>>> the device is fairly simple.  In general that's not going to work.
+>>>> CXL does a similar trick (which I don't much like, but too late
+>>>> now), but we've also run into the problem of how to get interrupts
+>>>> if not the main driver.
+>>>
+>>> Yes, this is a real problem.  I think the "walk all PCI devices
+>>> looking for one we like" approach is terrible because it breaks a lot
+>>> of driver model assumptions (no device ID to autoload module via udev,
+>>> hotplug doesn't work, etc), but we don't have a good alternative right
+>>> now.
+>>>
+>>> I think portdrv is slightly better because at least it claims the
+>>> device in the usual way and gives a way for service drivers to
+>>> register with it.  But I don't really like that either because it
+>>> created a new weird /sys/bus/pci_express hierarchy full of these
+>>> sub-devices that aren't really devices, and it doesn't solve the
+>>> module load and hotplug issues.
+>>>
+>>> I would like to have portdrv be completely built into the PCI core and
+>>> not claim Root Ports or Switch Ports.  Then those devices would be
+>>> available via the usual driver model for driver loading and binding
+>>> and for hotplug.
+>>
+>> Let me see if I understand this correctly as I can think of a few options
+>> that perhaps are inline with what you are thinking.
+>>
+>> 1) All the portdrv stuff converted to normal PCI core helper functions
+>>    that a driver bound to the struct pci_dev can use.
+>> 2) Driver core itself provides a bunch of extra devices alongside the
+>>    struct pci_dev one to which additional drivers can bind? - so kind
+>>    of portdrv handling, but squashed into the PCI device topology?
+>> 3) Have portdrv operated under the hood, so all the services etc that
+>>    it provides don't require a driver to be bound at all.  Then
+>>    allow usual VID/DID based driver binding.
+>>
+>> If 1 - we are going to run into class device restrictions and that will
+>> just move where we have to handle the potential vendor specific parts.
+>> We probably don't want that to be a hydra with all the functionality
+>> and lookups etc driven from there, so do we end up with sub devices
+>> of that new PCI port driver with a discover method based on either
+>> vsec + VID or DVSEC with devices created under the main pci_dev.
+>> That would have to include nastiness around interrupt discovery for
+>> those sub devices. So ends up roughly like port_drv.
+>>
+>> I don't think 2 solves anything.
+>>
+>> For 3 - interrupts and ownership of facilities is going to be tricky
+>> as initially those need to be owned by the PCI core (no device driver bound)
+>> and then I guess handed off to the driver once it shows up?  Maybe that
+>> driver should call a pci_claim_port() that gives it control of everything
+>> and pci_release_port() that hands it all back to the core.  That seems
+>> racey.
+>
+> Yes, 3 is the option I want to explore.  That's what we already do for
+> things like ASPM.  Agreed, interrupts is a potential issue.  I think
+> the architected parts of config space should be implicitly owned by
+> the PCI core, with interfaces à la pci_disable_link_state() if drivers
+> need them.
+>
+> Bjorn
+> https://lore.kernel.org/lkml/ZGUAWxoEngmqFcLJ@bhelgaas/
+
+@Bjorn Is there a path to merging this patch set until your explore is done?
+And are you still actively looking at that yet?
+
+I am not quite familiar with PCI core, but I would like to help work on that.
+
+Thank you.
+
+Best Regards,
+Shuai
