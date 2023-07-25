@@ -2,126 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA92A7623DA
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jul 2023 22:46:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AD4576240C
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jul 2023 23:00:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229502AbjGYUql (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jul 2023 16:46:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43686 "EHLO
+        id S231387AbjGYVAB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jul 2023 17:00:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229914AbjGYUqi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jul 2023 16:46:38 -0400
+        with ESMTP id S229657AbjGYVAA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jul 2023 17:00:00 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3ACE1733;
-        Tue, 25 Jul 2023 13:46:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C84F1BC3;
+        Tue, 25 Jul 2023 13:59:58 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 374D4618EA;
-        Tue, 25 Jul 2023 20:46:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52251C433C7;
-        Tue, 25 Jul 2023 20:46:35 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3BEA2618E8;
+        Tue, 25 Jul 2023 20:59:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37684C433C8;
+        Tue, 25 Jul 2023 20:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690317995;
-        bh=DLA6OAhIubZj4rPsH89WQo5bkfHHHDQZqjjyCtICNoo=;
+        s=k20201202; t=1690318797;
+        bh=YU0pkJ3KyW8TbBxYB6lwKUSa3sLNGB7MlyMIuPOKFlM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=P15Cwmwe3zkRSOi5sZtydKCn1t9svJ7FkJvS2yQHsKRGfMJkIIclKL2pya708tdZX
-         GQHGK+uoG4Azgywc3NbM0ZpCVsvXzPzSxjCHGNcx+ul6KwyfoOVqRh2d14cZEAIu0B
-         hOmkVXnZIvjLrAfjx3Gpx14hBhXdGaHHmEXZXbbrLlJDUBfpVVi9C3xPD6LSHIsGFS
-         uVmLUS6rhZehpMLjrHlzigGCOLy/lfmCZ5SAJ/IzehRg3Rga74lZuUgW/MCNzt/wrI
-         XfLXr3vTl6GHefhiXXY17tG/8QAyR7G4zNFRLPXyB5pKCqfZno8JBKVncxYxE/qGss
-         8j67/qhKSCN4A==
-Date:   Tue, 25 Jul 2023 15:46:33 -0500
+        b=Ka/nj/+taMK5OcYk3J849CMQvxscIG9oBJz93rvlhlGJL9fTiWLvodAT4S5vZ0Gq8
+         fNlntMfIJg6j6epRcJP6uSbc1psVZnI+4iW25l0NK257wDyNwAOGVaSyCY/YE5O3+C
+         O7Zcx+vuy9LVfotYLeeg/Gb6gZIOrVqGBbwKlQZtFggqnJQC2W8Lo3msrV3nvUSn9H
+         iX7VszdshA+Qs5rHJRxnhQ/EbPo/Q9g7Xe5w9BXFyvkCdPDq/VfmS+npVxZ8uX+9rB
+         sTbPulJdkDcrM3tUEFnMSHal1d+8q/iHH5VUgD9/UjTt998orvbmtpZrdIxkg6uA8Q
+         oo+Vt9OLXoQNA==
+Date:   Tue, 25 Jul 2023 15:59:55 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kevin Xie <kevin.xie@starfivetech.com>
-Cc:     Minda Chen <minda.chen@starfivetech.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>
-Subject: Re: [PATCH v1 8/9] PCI: PLDA: starfive: Add JH7110 PCIe controller
-Message-ID: <20230725204633.GA664368@bhelgaas>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Shuai Xue <xueshuai@linux.alibaba.com>, chengyou@linux.alibaba.com,
+        kaishen@linux.alibaba.com, yangyicong@huawei.com, will@kernel.org,
+        baolin.wang@linux.alibaba.com, robin.murphy@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, rdunlap@infradead.org,
+        mark.rutland@arm.com, zhuo.song@linux.alibaba.com
+Subject: Re: [PATCH v6 0/4] drivers/perf: add Synopsys DesignWare PCIe PMU
+ driver support
+Message-ID: <20230725205955.GA665326@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a687c273-48b1-651e-313f-d8140732c5d8@starfivetech.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230724101807.000012bf@Huawei.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 24, 2023 at 06:48:47PM +0800, Kevin Xie wrote:
-> On 2023/7/21 0:15, Bjorn Helgaas wrote:
-> > On Thu, Jul 20, 2023 at 06:11:59PM +0800, Kevin Xie wrote:
-> >> On 2023/7/20 0:48, Bjorn Helgaas wrote:
-> >> > On Wed, Jul 19, 2023 at 06:20:56PM +0800, Minda Chen wrote:
-> >> >> Add StarFive JH7110 SoC PCIe controller platform
-> >> >> driver codes.
+On Mon, Jul 24, 2023 at 10:18:07AM +0100, Jonathan Cameron wrote:
+> On Mon, 24 Jul 2023 10:34:08 +0800
+> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+> > On 2023/7/10 20:04, Shuai Xue wrote:
+> > > On 2023/6/16 16:39, Shuai Xue wrote:  
+> > >> On 2023/6/6 15:49, Shuai Xue wrote:  
 
-> >> However, in the compatibility testing with several NVMe SSD, we
-> >> found that Lenovo Thinklife ST8000 NVMe can not get ready in 100ms,
-> >> and it actually needs almost 200ms.  Thus, we increased the T_PVPERL
-> >> value to 300ms for the better device compatibility.
-> > ...
-> > 
-> > Thanks for this valuable information!  This NVMe issue potentially
-> > affects many similar drivers, and we may need a more generic fix so
-> > this device works well with all of them.
-> > 
-> > T_PVPERL is defined to start when power is stable.  Do you have a way
-> > to accurately determine that point?  I'm guessing this:
-> > 
-> >   gpiod_set_value_cansleep(pcie->power_gpio, 1)
-> > 
-> > turns the power on?  But of course that doesn't mean it is instantly
-> > stable.  Maybe your testing is telling you that your driver should
-> > have a hardware-specific 200ms delay to wait for power to become
-> > stable, followed by the standard 100ms for T_PVPERL?
+> > >>> This patchset adds the PCIe Performance Monitoring Unit (PMU) driver support
+> > >>> for T-Head Yitian 710 SoC chip. Yitian 710 is based on the Synopsys PCI Express
+> > >>> Core controller IP which provides statistics feature.
+
+> ...
+> Really a question for Bjorn I think, but here is my 2 cents...
 > 
-> You are right, we did not take the power stable cost into account.
-> T_PVPERL is enough for Lenovo Thinklife ST8000 NVMe SSD to get ready,
-> and the extra cost is from the power circuit of a PCIe to M.2 connector,
-> which is used to verify M.2 SSD with our EVB at early stage.
+> The problem here is that we need to do that fundamental redesign of the
+> way the PCI ports drivers work.  I'm not sure there is a path to merging
+> this until that is done.  The bigger problem is that I'm not sure anyone
+> is actively looking at that yet.  I'd like to look at this (as I have
+> the same problem for some other drivers), but it is behind various
+> other things on my todo list.
+> 
+> Bjorn might be persuaded on a temporary solution, but that would come
+> with some maintenance problems, particularly when we try to do it
+> 'right' in the future.  Maybe adding another service driver would be
+> a stop gap as long as we know we won't keep doing so for ever. Not sure.
 
-Hmm.  That sounds potentially interesting.  I assume you're talking
-about something like this: https://www.amazon.com/dp/B07JKH5VTL
+I think the question here is around the for_each_pci_dev() in
+__dwc_pcie_pmu_probe()?  I don't *like* that because of the
+assumptions it breaks (autoload doesn't work, hotplug doesn't work),
+but:
 
-I'm not familiar with the timing requirements for something like this.
-There is a PCIe M.2 spec with some timing requirements, but I don't
-know whether or how software is supposed to manage this.  There is a
-T_PVPGL (power valid to PERST# inactive) parameter, but it's
-implementation specific, so I don't know what the point of that is.
-And I don't see a way for software to even detect the presence of such
-an adapter.
+  - There are several other drivers that also do this,
+  - I don't have a better suggest for any of them,
+  - It's not a drivers/pci thing, so not really up to me anyway,
 
-But I assume some end users will use adapters like this and expect it
-to "just work," so it would be nice if it did.
+so I don't have any problem with this being merged as-is, as long as
+you can live with the limitations.
 
-> As the Thinklife NVMe SSD may be a halted product, and the onboard
-> power circuit of VisionFive V2 is no problem, we decided revert the
-> sleep time to be 100ms.
-
-Even though the product may be end-of-life, people will probably still
-try to use it, and I would like it to work.  Otherwise we end up with
-frustrated users and problem reports that are hard to resolve.  But I
-don't know where to go here.
+I don't think this series does anything to work around those
+limitations, i.e., it doesn't make up fake device IDs for module
+loading or fake events for hotplug, so it seems like we could improve
+the implementation later if we ever have a way to do it.
 
 Bjorn
