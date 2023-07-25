@@ -2,270 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3F6D761D65
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jul 2023 17:30:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5058761D85
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jul 2023 17:41:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232140AbjGYPaR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jul 2023 11:30:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52990 "EHLO
+        id S230337AbjGYPlQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jul 2023 11:41:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231539AbjGYPaQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jul 2023 11:30:16 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2077.outbound.protection.outlook.com [40.107.237.77])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4896E19AF;
-        Tue, 25 Jul 2023 08:30:14 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m0wBXVQisJ2IEXods80/5XdnK9TSg0e3zQ2DOQkyTJWOBk7CE/MmK6XMGkf0AwAeBckzBMMHBzaDzmkoX0sa/1t0ocU5JKhp6UEwkawiJOGOks6SLKSJy6/Q8HqIcceQ36W1ba4Wc00losWLKzhHpYbbZxZITHzwiN+D9CP//U1jskat7Do6AxR2dSpkGCyQzKsDiUbSVzdY9ftAkIQ5tXZnhW+Mo5xAHdnmIaLHcNm1rnkoDZPS49UzDhWwyZnbeNNE4XU5zq+DxM6ByvqgOZDVnphBPU6gYnjM7eaDYki1nKSesC9WzFQxbP2KOkaPiaUS6TX9uq86peE2L9fgwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8IyKCKJRugZUdfKnW1+o/urkQToa3Luyqy9+OeZWGIU=;
- b=GRHoDreR110Fs4iZcXp5L89rrFavzE4HpLT41Y1JyUUbSZRJiDKjVruwp2fhNFKNWBHamQPuGDxVasyJjwwZgn4KSKLniUbaWOVP89jF2k9a9FNPFsDi5oAFBczvBT5IR/mDgyfaEYN+VYwQcuGWczgqraqd/fX4Div+vN4sQIXif8b2/GGDPJUDg9xNMdJq/fv5poNiBAPBZfxzHks9G9Jo3h/lUavYdzTTtm5IbrZY3ajwRKwATEfKvieA2B1BlM6IolQsCyL69r7lG3JlS8CCBgALHwq4ZsuFbEeQrW+CM8V9pZO32i2B/yFGi4rSnYZON0bRujEXV0mKzLMwFg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8IyKCKJRugZUdfKnW1+o/urkQToa3Luyqy9+OeZWGIU=;
- b=RSqpIu/BFXGLTJfHdWMJSCUCjZoYiqRoJwluA8hzae5yne91n9XnihY0W0sTNF5QZQXTMVfz/MwRmQfBUuPRtOCX6FJA+7g4ahjwqShfNsMCituCheIZQ/AnjU8G5hhdY2SOgepmGFCltShVwZu2jtVkpi7/kx++FornLAJfUDc83PY2HTaT59BRfHYz0IncnHwK+JyZ+qdpqxB3CStOddt5jt2R4FP2nuwfpZomy+oTsBv95b6aLOsb5AyOtboViywdT2ePqLtgXw2/bHW7GazWfUvU9+mQrl8DC/HzrDrTX0oB9h8n8aomIRdp1ppLt7c0HDxLfu/JEKvoPYYHOA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CO6PR12MB5444.namprd12.prod.outlook.com (2603:10b6:5:35e::8) by
- CO6PR12MB5393.namprd12.prod.outlook.com (2603:10b6:5:356::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6609.33; Tue, 25 Jul 2023 15:30:11 +0000
-Received: from CO6PR12MB5444.namprd12.prod.outlook.com
- ([fe80::8833:f1bb:7d8b:dce7]) by CO6PR12MB5444.namprd12.prod.outlook.com
- ([fe80::8833:f1bb:7d8b:dce7%4]) with mapi id 15.20.6609.032; Tue, 25 Jul 2023
- 15:30:10 +0000
-Message-ID: <6ca287a1-6c7c-7b90-9022-9e73fb82b564@nvidia.com>
-Date:   Tue, 25 Jul 2023 16:30:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v4] PCI: dwc: Wait for link up only if link is started
-Content-Language: en-US
-To:     Ajay Agarwal <ajayagarwal@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Nikhil Devshatwar <nikhilnd@google.com>,
-        Manu Gautam <manugautam@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sajid Dalvi <sdalvi@google.com>,
-        William McVicker <willmcvicker@google.com>
-Cc:     linux-pci@vger.kernel.org,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <20230412093425.3659088-1-ajayagarwal@google.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-In-Reply-To: <20230412093425.3659088-1-ajayagarwal@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0183.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:311::6) To CO6PR12MB5444.namprd12.prod.outlook.com
- (2603:10b6:5:35e::8)
+        with ESMTP id S233290AbjGYPlO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jul 2023 11:41:14 -0400
+Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEED61FCF;
+        Tue, 25 Jul 2023 08:41:13 -0700 (PDT)
+Received: by mail-vs1-xe34.google.com with SMTP id ada2fe7eead31-444f9c0b2a4so1969247137.1;
+        Tue, 25 Jul 2023 08:41:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690299673; x=1690904473;
+        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:references:cc:to:from:subject:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dmkK+30yGQXibPyT5/Ct9RQIv6+C83i5MSHGoAU54A8=;
+        b=j/kPUbLAHKIy7l16YnLesrhJaJv0YE2O3MSVif2RI60DqAU8n/K3bbBju+XoKI+7hW
+         4GcYp3IOdWjh8Yvc9nf4OgHNxl3Yc+AonsWnyDCtOKoWbnT4/SQqoYdiy+z1Aupiu0ir
+         R3p/05sRxdBuj21BVljNBg/qnn2Aum5N9da+/aTn151hRTGS/jIT+j1MEBCi9yvsUbVz
+         26zj+gTsfUCQTucTujw0ILwroRb6P1tOfk/oNPFpv4gPF7z4U8qUvRMU0DBffGdAEjhO
+         dt31nJYn+FMcKsBFa3Z8Xs2YKlkWmeK30JaTycuTY7/SFQYR7hacWjl2QtAnLEIQd5wN
+         ZAjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690299673; x=1690904473;
+        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:references:cc:to:from:subject:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=dmkK+30yGQXibPyT5/Ct9RQIv6+C83i5MSHGoAU54A8=;
+        b=L0HU2ZHu4ZRO7p5w0ghWt4s6CA66kwOsgxjjUnM1qC1PFcLqq5l6WN/txmNWbDO/Vx
+         wKhFpGX8aIyx9mwm4YjUt11oWeu4LDvVvr9rACHbwqwtYfxtarHy8RCxT1QJXyaou/gl
+         EcNfX3cYKwAArP6IMiFgrZhDtMvavHUGxF96Rv4DpCpKXaqB68lyipCCgoN6bSbUbOYo
+         nd5UyRuN+46q9Et+fNPkxMPP7BN5mx7x+4EkqmOpuXGSm3T4X25GmlUc3sjlX/9m6x6b
+         lNB57N5XAe7FatAc3P/+nYgcboqPfKJDHfNJpK/6tpdG4IhVd8uj/F86BqCOimJhCPVG
+         qm7g==
+X-Gm-Message-State: ABy/qLbWXE9wNDRPgmnosfB1n6okzjUb89UEamYZaAqjEQKCCIzcRrB0
+        G5Q/S6edkvbAUQSRIxpvSYmTuT2akUAmYjg=
+X-Google-Smtp-Source: APBJJlFiKd26kkurVXyDJLvJhwiAGgciTXIG20Ilv9aMQptI69PlmjaXbIgSZ6Cm2hi30KjOeI6Fdg==
+X-Received: by 2002:a67:fa46:0:b0:443:7a85:8fbd with SMTP id j6-20020a67fa46000000b004437a858fbdmr4680934vsq.32.1690299672839;
+        Tue, 25 Jul 2023 08:41:12 -0700 (PDT)
+Received: from [120.7.1.38] (198-84-239-141.cpe.teksavvy.com. [198.84.239.141])
+        by smtp.gmail.com with ESMTPSA id x10-20020a0c8e8a000000b0063762ab2f90sm4431033qvb.83.2023.07.25.08.41.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Jul 2023 08:41:12 -0700 (PDT)
+Subject: Re: [RFC 0/3] acpipcihp: fix kernel crash on 2nd resume
+From:   Woody Suwalski <terraluna977@gmail.com>
+To:     Igor Mammedov <imammedo@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org, mst@redhat.com,
+        Woody Suwalski <terraluna977@gmail.com>
+References: <20230725113938.2277420-1-imammedo@redhat.com>
+ <88a06e12-600a-a4bd-f216-44753965ce48@gmail.com>
+Message-ID: <7bbe2e5f-411c-6936-5d4b-c128795fb5d4@gmail.com>
+Date:   Tue, 25 Jul 2023 11:41:11 -0400
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:91.0) Gecko/20100101 Firefox/91.0
+ SeaMonkey/2.53.16
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR12MB5444:EE_|CO6PR12MB5393:EE_
-X-MS-Office365-Filtering-Correlation-Id: df5b1a4c-360d-4a24-2089-08db8d240894
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wxxhcUnsCrrbugvRrnSHsuqMJBVF9tlC27xKoQguwmFXqsEqMCBDW7j6XnGs2IpbDTSBfusIZFnBeyab9D32zksQLV8t0YkP6WH9O8WqgDb9v8YOQom5WvMpQP02oLOjeN1nBx48WqV6/4wawpdtPz6rBdnmGUnKqT+j+JwCUyqkdcosnBaADOgO0LhZZIEO/MNAgvtrf08mizowK170Wj7Pz+LjO9ZIjyz//ROwvH0l85dY1QEgesknFc6T9lnbqRWLp4/nxxXMt0n3wJcwigpynqV1LPRHUFkNdhdK/82mdh4AxPZShpCx8l+spdzwFSn4NM4v5dzVpUFlUgn1Al/2e1KV34GL1JLhEqo2MsxeCtNaRjNkG8quwJMLYOryu1Q90wU6zulgP3l9mPYBAT51Vg5njpG4Cf+It+pFUz8YhqxmOt4wLi37H152VllDPtHmaVE4G81K+cZyaOWXBfFLbHXxx/Lm8W638Vk3V5ltA8tn2adTB5peXh1XNqnFyM/G+VUt4C/h9xzRAIUygWfdmAv3q5VwtT/RvC2C0JZ9SEPJk2sJzJnFAOIHJs+eUpSdxF+D0BWF2LAKUe62RReXUikuPu7XTOQMXcxYm6EPux0CawitUSvNcr3+yyX56yP3xVrGWFuLogP+hPSSDD8nU1SeJEyiQ7pKGvazsxA=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5444.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(366004)(39860400002)(376002)(396003)(346002)(451199021)(2906002)(186003)(26005)(6506007)(4326008)(921005)(38100700002)(2616005)(55236004)(53546011)(83380400001)(41300700001)(5660300002)(66946007)(316002)(66556008)(66476007)(36756003)(8676002)(8936002)(7416002)(86362001)(31696002)(110136005)(6512007)(6486002)(6666004)(478600001)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dlNKcGsreTA3ZWc5U3lvb2tJMFEwS2x4WUliRGE0Y2pGQ0ZPRlJQUWZBdmlh?=
- =?utf-8?B?RWZhL2x6dFgwQVYxa2FoWU9aeWZVTzFrR0tiRjNsOS85YUpTNGxWa1NybStZ?=
- =?utf-8?B?My9BR3U0QnFmUS9DTkp2eXVFMGRHaitpcWlZeUl0M3hIRFM5QWQwTXFWWXJu?=
- =?utf-8?B?WkFmcmlvcXFIVFVCbXpVVUk0R1ZhMGNjUFZScVNydnhGZkJhZTUxWFgwMjZQ?=
- =?utf-8?B?Vk1Td0dFbU5ZVGV3MEpIcDVyazFjZU43R292TEFsRUdCQ000MW1YaEExYUZp?=
- =?utf-8?B?aUxEMitNMklZVUJjeS94S2hQU2g0VCtZODJlZlMreEN6K0w5MHBtSE5jTlpr?=
- =?utf-8?B?NjBPcS9Md0FzR2Vrb3g3UDlibFcvWGVXWWk4cExhanlkUGlEZU56YnFoNEZH?=
- =?utf-8?B?SXZydENRYzJ3K1BLektDd0lnVXpvZ01Sb1dUZ1VkSWVpUERzMU1nOEsvTTBj?=
- =?utf-8?B?em1uRzNGNCtXYWtISER6bHo0VEprNHN4ek5NRGJwWWxhd2NPb1VsZ3RFZFpV?=
- =?utf-8?B?bkVuazlJbjMwM1AxSjk0eVkrdWJUdGFKRDlaS2hyd0VYQ3BET3hycEFYTFZB?=
- =?utf-8?B?RXpzWG9DS0ZlOVUrMVlJQlVodnByTUVLR3ZHRzlNVTUzdXE0dFNnbHBTbmt5?=
- =?utf-8?B?RlNaWWxOT1ZiSi9lejVhdk8xa3JrK2drWU0yb3JWS0c5Uk1QZ3RucCtTTkpT?=
- =?utf-8?B?ekJYd25sc0FwV2lDMFFhZXFpNERaTGJGMUJwUitTMGdtOVRuRmd4dTl1ZzVJ?=
- =?utf-8?B?eGgzbW8xTlMweHFTZjJlYThPNHJCL3k4WnJOWEs1dHJ3NHRVdFhMS0ViVHps?=
- =?utf-8?B?RXowdzNobDJxNnhqaHFHNGRySkdwbmd0WXRXemNEd1N4ZHp5WnJnWW43b1lH?=
- =?utf-8?B?akhlRnpSLzcyM2JHcG0zeGhqVHEveE45MmJGaDNxcGNGRmdiS0g0QkdablNz?=
- =?utf-8?B?MDMyb0lvS1ZXaTkzNUFtdS9UazVKOFI0R0ozMXdpaXh4OWNVYUY5Sk5OdEtR?=
- =?utf-8?B?Y2sxQllyWlBObFN5MVZsN3I3UHUyRmV1OEw1dytXZ01qdG5hNjR1ekxnY2s4?=
- =?utf-8?B?aWhSeFhUYldRUG5TUmU2dXNmZ0dWMVBNT3FBNkZGRWpjaGR3UUhhTTRoSU5v?=
- =?utf-8?B?eWp5SmkyNjdqMG9XZkQ1S0dXa0FVV3Fza29WYXBRelpqei9uYlZhWHNjSEd6?=
- =?utf-8?B?QWJUUS8vZkpYdEdUZDZSbFhsOTdwME5Id25UUVB6T3E1MjJJampBQlYzbk1Y?=
- =?utf-8?B?V2RXb0hhdzRocWhGUnVqZ29wZEg0N0x1THZlU1BXSmJkL2tUakN4dnM5cFVr?=
- =?utf-8?B?M3Zjemp5WlVYYTZ3TFU4cEJ2T1hzczBRSitKK3FVUzczNnY5dTNKTXVhN2JK?=
- =?utf-8?B?b25DV1RmZEFwVlpId1BrTklSV2ZrZThjTXRKUWU5cmVvTWFyM1pzQjFUdk9D?=
- =?utf-8?B?VVg0OFZISFovWnFMWUhJZ3MwbmtrL2Z3RVAzbzJIeXNLUm9Fc2t6QjZQYTFi?=
- =?utf-8?B?WWtoNXNYSnUvelVKUkpyd2F1YzM0MTFKQXh5Ym02Y3VnQUtIekhoU0FTOEdY?=
- =?utf-8?B?TE5yaU5iR2s1WnBhcG1USXBJRytjQ3lXeW0ydmZTSTF6QklkdGovb3c2SHUy?=
- =?utf-8?B?UVZNZzgxQnJIYUt5cWxzdEo4d2plYjRTYU9iV29hb0pUa1YyeTg1UUk5SVAr?=
- =?utf-8?B?RWZjSG9rWkRjUWlsNHljVDVlWUcvL2ZhcUt5anhpVVFYcWw3NWo0SHZ0REVw?=
- =?utf-8?B?alA4cGtMdmw1SThkL2F3Rnp1b0dMT3R4THhRNGhqY3ZpSGNoS1pielZUVkJP?=
- =?utf-8?B?MU9UU3psOGZkd2RyUUZmSzRYejk2VDJwbnRTUUZ5YkhJRVRGZURsdUVqU2Vr?=
- =?utf-8?B?RUQvSEpZUzltRjRUd3BJcytlR0dUZk9hUjZ5MTdpcG5qNTEwY2FkMlg2NTRN?=
- =?utf-8?B?bVpJelROQjJHNnJ0ZFBGT3NJMnNJNkpxSGYzb2xLS1hOZGlJamwrL2xaSGNa?=
- =?utf-8?B?OVpjeUQwa3UzdjBwUW5RVHJKczJEVmpqamRmTUl3d3AzaEtrZ1kyWWJzVnNW?=
- =?utf-8?B?Z3BDRFROSlFjWU90MXVVT09qUU5XTmxzNDhIQ3NiTTJpbWlDVFlvdTBIQnBt?=
- =?utf-8?Q?+QRDNtbppOIvf9PLAJ3P9MCYf?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df5b1a4c-360d-4a24-2089-08db8d240894
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5444.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jul 2023 15:30:10.8383
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: exkRTRZCdhgEusnneUc2328YhKnWl6acpOu8S/ezZP53aF8ExGIDtpLLIG6HxokkJN1gsImuWTyMy+w6oDqtvw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR12MB5393
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+In-Reply-To: <88a06e12-600a-a4bd-f216-44753965ce48@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Ajay,
+Woody Suwalski wrote:
+> Igor Mammedov wrote:
+>> Changelog:
+>>    * split out debug patch into a separate one with extra printk added
+>>    * fixed inverte bus->self check (probably a reason why it didn't 
+>> work before)
+>>
+>>
+>> 1/3 debug patch
+>> 2/3 offending patch
+>> 3/3 potential fix
+>>    I added more files to trace, add following to kernel CLI
+>>     dyndbg="file drivers/pci/access.c +p; file 
+>> drivers/pci/hotplug/acpiphp_glue.c +p; file drivers/pci/bus.c +p; 
+>> file drivers/pci/pci.c +p; file drivers/pci/setup-bus.c +p; file 
+>> drivers/acpi/bus.c +p" ignore_loglevel
+>>
+>> should be applied on top of
+>>     e8afd0d9fccc PCI: pciehp: Cancel bringup sequence if card is not 
+>> present
+>>
+>> apply a patch one by one and run testcase + capture dmesg after each 
+>> patch
+>> one shpould endup with 3 dmesg to ananlyse
+>>   1st - old behaviour - no crash
+>>   2nd - crash
+>>   3rd - no crash hopefully
+>>
+>> Igor Mammedov (3):
+>>    acpiphp: extra debug hack
+>>    PCI: acpiphp: Reassign resources on bridge if necessary
+>>    acpipcihp: use __pci_bus_assign_resources() if bus doesn't have 
+>> bridge
+>>
+>>   drivers/pci/hotplug/acpiphp_glue.c | 23 ++++++++++++++++++-----
+>>   1 file changed, 18 insertions(+), 5 deletions(-)
+>>
+> Actually applying patch1 is already creating the crash (why???), hence 
+> I have added also dmesg-6.5-0.txt which shows a working condition 
+> based on git e8afd0d9fccc level (acpiphp_glue in kernel 6.4)
+>
+> Patch3 did not fix the issue, it seems that the culprit is somewhere 
+> else triggered by  "benign" patch1 :-(
+>
+> Also note about the trigger description in patch3: the dmesg trace on 
+> Inspiron laptop is collected after the first wake from suspend to ram. 
+> The consecutive  attempt to sleep results in a frozen system.
+>
+> Thanks, Woody
+>
+I think that in patch1 there is a problem in your debug statement 
+acpi_handle_debug(...slot_name...) - it is masking the "old" issue.
+when I commented out that line in hotplug_event(), it has worked ok (as 
+was expected). I will redo the testing in ~2 hours...
 
-On 12/04/2023 10:34, Ajay Agarwal wrote:
-> In dw_pcie_host_init() regardless of whether the link has been
-> started or not, the code waits for the link to come up. Even in
-> cases where start_link() is not defined the code ends up spinning
-> in a loop for 1 second. Since in some systems dw_pcie_host_init()
-> gets called during probe, this one second loop for each pcie
-> interface instance ends up extending the boot time.
-> 
-> Wait for the link up in only if the start_link() is defined.
-> 
-> Signed-off-by: Sajid Dalvi <sdalvi@google.com>
-> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
-> ---
-> Changelog since v3:
-> - Run dw_pcie_start_link() only if link is not already up
-> 
-> Changelog since v2:
-> - Wait for the link up if start_link() is really defined.
-> - Print the link status if the link is up on init.
-> 
->   .../pci/controller/dwc/pcie-designware-host.c | 13 ++++++++----
->   drivers/pci/controller/dwc/pcie-designware.c  | 20 ++++++++++++-------
->   drivers/pci/controller/dwc/pcie-designware.h  |  1 +
->   3 files changed, 23 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 9952057c8819..cf61733bf78d 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -485,14 +485,19 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->   	if (ret)
->   		goto err_remove_edma;
->   
-> -	if (!dw_pcie_link_up(pci)) {
-> +	if (dw_pcie_link_up(pci)) {
-> +		dw_pcie_print_link_status(pci);
-> +	} else {
->   		ret = dw_pcie_start_link(pci);
->   		if (ret)
->   			goto err_remove_edma;
-> -	}
->   
-> -	/* Ignore errors, the link may come up later */
-> -	dw_pcie_wait_for_link(pci);
-> +		if (pci->ops && pci->ops->start_link) {
-> +			ret = dw_pcie_wait_for_link(pci);
-> +			if (ret)
-> +				goto err_stop_link;
-> +		}
-> +	}
->   
->   	bridge->sysdata = pp;
->   
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 53a16b8b6ac2..03748a8dffd3 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -644,9 +644,20 @@ void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index)
->   	dw_pcie_writel_atu(pci, dir, index, PCIE_ATU_REGION_CTRL2, 0);
->   }
->   
-> -int dw_pcie_wait_for_link(struct dw_pcie *pci)
-> +void dw_pcie_print_link_status(struct dw_pcie *pci)
->   {
->   	u32 offset, val;
-> +
-> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
-> +
-> +	dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
-> +		 FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
-> +		 FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
-> +}
-> +
-> +int dw_pcie_wait_for_link(struct dw_pcie *pci)
-> +{
->   	int retries;
->   
->   	/* Check if the link is up or not */
-> @@ -662,12 +673,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
->   		return -ETIMEDOUT;
->   	}
->   
-> -	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> -	val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
-> -
-> -	dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
-> -		 FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
-> -		 FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
-> +	dw_pcie_print_link_status(pci);
->   
->   	return 0;
->   }
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 79713ce075cc..615660640801 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -429,6 +429,7 @@ void dw_pcie_setup(struct dw_pcie *pci);
->   void dw_pcie_iatu_detect(struct dw_pcie *pci);
->   int dw_pcie_edma_detect(struct dw_pcie *pci);
->   void dw_pcie_edma_remove(struct dw_pcie *pci);
-> +void dw_pcie_print_link_status(struct dw_pcie *pci);
->   
->   static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
->   {
+Woody
 
-
-After this change was merged we are seeing the following errors on some 
-of our Tegra platforms ...
-
-  tegra194-pcie 141a0000.pcie: Failed to add PCIe port: -110
-  tegra194-pcie 141a0000.pcie: Failed to initialize controller: -110
-
-This is causing the probe of some of the PCIe controllers to fail. On 
-some of our Tegra boards we do have some open PCIe slots and so the PCIe 
-controllers are enabled, but there might not be a device connected. I am 
-wondering if your change always assumes that there is a device 
-connected? If that is the case, then this will not work for these boards.
-
-Note that previously we had changed a dev_err message to dev_info, 
-because the link failing to come up was not actually an error for these 
-boards. See ...
-
-commit 8405d8f0956d227c3355d9bdbabc23f79f721ce4
-Author: Vidya Sagar <vidyas@nvidia.com>
-Date:   Tue Sep 13 15:42:37 2022 +0530
-
-     PCI: dwc: Use dev_info for PCIe link down event logging
-
-Jon
-
--- 
-nvpublic
