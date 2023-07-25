@@ -2,216 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 669EB761CD1
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jul 2023 17:02:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E3BA761D0E
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jul 2023 17:13:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232010AbjGYPCK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jul 2023 11:02:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60712 "EHLO
+        id S232582AbjGYPNm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jul 2023 11:13:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233398AbjGYPBm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jul 2023 11:01:42 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A17AF3C14;
-        Tue, 25 Jul 2023 08:00:38 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4R9Kr53m31z67fjR;
-        Tue, 25 Jul 2023 22:57:09 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 25 Jul
- 2023 16:00:35 +0100
-Date:   Tue, 25 Jul 2023 16:00:34 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Alistair Francis <alistair23@gmail.com>
-CC:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [PATCH] PCI/DOE: Expose the DOE protocols via sysfs
-Message-ID: <20230725160034.00005774@Huawei.com>
-In-Reply-To: <20230725035755.2621507-1-alistair.francis@wdc.com>
-References: <20230725035755.2621507-1-alistair.francis@wdc.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S232640AbjGYPNm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jul 2023 11:13:42 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E14B19A0
+        for <linux-pci@vger.kernel.org>; Tue, 25 Jul 2023 08:12:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1690297977;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yOQIR2zaeadSLX9E8o3+NewD2VrhC+k+gYgvHB3PhWc=;
+        b=L892fNHooxcTgg+GI0mXFehPUjg//jG8M8KJKY7eWnZUAfjjg+g7X9c9icyy/cW0NxJduR
+        117TqqNq0grj0uSyjbwC/Rxh7egi/uOF0K8oFSvslop91GLk5jQWgT8HNOQiBl9Og8KREv
+        E0uOl/Owrqo0Crxla8H8cj/6D+VUbvA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-88-o9K8OLO8NnSGOesA7YpMdQ-1; Tue, 25 Jul 2023 11:12:54 -0400
+X-MC-Unique: o9K8OLO8NnSGOesA7YpMdQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 761FB857FF8;
+        Tue, 25 Jul 2023 15:12:53 +0000 (UTC)
+Received: from dell-r430-03.lab.eng.brq2.redhat.com (dell-r430-03.lab.eng.brq2.redhat.com [10.37.153.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8958C4094DC0;
+        Tue, 25 Jul 2023 15:12:52 +0000 (UTC)
+From:   Igor Mammedov <imammedo@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     terraluna977@gmail.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, imammedo@redhat.com, mst@redhat.com
+Subject: [RFC v2 1/3] acpiphp: extra debug hack
+Date:   Tue, 25 Jul 2023 17:12:50 +0200
+Message-Id: <20230725151250.2287988-1-imammedo@redhat.com>
+In-Reply-To: <20230725113938.2277420-2-imammedo@redhat.com>
+References: <20230725113938.2277420-2-imammedo@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 25 Jul 2023 13:57:55 +1000
-Alistair Francis <alistair23@gmail.com> wrote:
+v3:
+drop recent debug line that probably causing crash
 
-> The PCIe 6 specification added support for the Data Object Exchange (DOE).
-> When DOE is supported the Discovery Data Object Protocol must be
-> implemented. The protocol allows a requester to obtain information about
-> the other DOE protocols supported by the device.
-> 
-> The kernel is already querying the DOE protocols supported and cacheing
-> the values. This patch exposes the values via sysfs. This will allow
-> userspace to determine which DOE protocols are supported by the PCIe
-> device.
-> 
-> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+Signed-off-by: Igor Mammedov <imammedo@redhat.com>
+---
+ drivers/pci/hotplug/acpiphp_glue.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Hi Alistair,
-
-Needs documentation. 
-Documentation/ABI/testing/sys-bus-pci probably the right place.
-
-Also, I wonder if we want to associate each DOE with the protocols
-it supports rather than clumping them together in one file...
-Otherwise we'll loose information on sharing + we may well see
-repeated entries as it's fine to have more than one instance of
-given protocol.
-
-A few more comments inline about what happens when we do run out
-of space in the buffer.
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/pci/doe.c       | 28 ++++++++++++++++++++++++++++
->  drivers/pci/pci-sysfs.c | 27 +++++++++++++++++++++++++++
->  include/linux/pci-doe.h |  2 ++
->  3 files changed, 57 insertions(+)
-> 
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index 1b97a5ab71a9..cc1c23c78ac1 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-> @@ -563,6 +563,34 @@ static bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
->  	return false;
->  }
->  
-> +/**
-> + * pci_doe_sysfs_proto_supports() - Write the supported DOE protocols
-> + *			     to a sysfs buffer
-> + * @doe_mb: DOE mailbox capability to query
-> + * @buf: buffer to store the sysfs strings
-> + * @offset: offset in buffer to store the sysfs strings
-> + *
-> + * RETURNS: The number of bytes written, 0 means an error occured
-> + */
-> +unsigned long pci_doe_sysfs_proto_supports(struct pci_doe_mb *doe_mb,
-> +					   char *buf, ssize_t offset)
-> +{
-> +	unsigned long index;
-> +	ssize_t ret = offset, r;
-
-I find that hard to parse.  Maybe
-
-	ssize_t ret = offset;
-	ssize_t r;
-
-
-
-> +	void *entry;
-> +
-> +	xa_for_each(&doe_mb->prots, index, entry) {
-> +		r = sysfs_emit_at(buf, ret, "0x%08lX\n", xa_to_value(entry));
-> +
-> +		if (r == 0)
-> +			return 0;
-
-return ret here? Otherwise we aren't outputting everything that we have
-managed to print before the buffer fills up.
-It's also inconsistent because if the last entry happens to partly print
-we'll let it through whereas, if it doesn't fit at all we will drop
-all the info about this DOE instance.
-
-
-> +
-> +		ret += r;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  /**
->   * pci_doe_submit_task() - Submit a task to be processed by the state machine
->   *
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index ab32a91f287b..df93051e65bf 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -16,6 +16,7 @@
->  #include <linux/kernel.h>
->  #include <linux/sched.h>
->  #include <linux/pci.h>
-> +#include <linux/pci-doe.h>
->  #include <linux/stat.h>
->  #include <linux/export.h>
->  #include <linux/topology.h>
-> @@ -290,6 +291,29 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
->  }
->  static DEVICE_ATTR_RO(modalias);
->  
-> +#ifdef CONFIG_PCI_DOE
-> +static ssize_t doe_proto_show(struct device *dev, struct device_attribute *attr,
-> +			     char *buf)
-> +{
-> +	struct pci_dev *pci_dev = to_pci_dev(dev);
-> +	unsigned long index;
-> +	ssize_t ret = 0, r;
-
-As above.
-
-> +	struct pci_doe_mb *doe_mb;
-> +
-> +	xa_for_each(&pci_dev->doe_mbs, index, doe_mb) {
-> +		r = pci_doe_sysfs_proto_supports(doe_mb, buf, ret);
-> +
-> +		if (r == 0)
-> +			return 0;
-
-As above, return ret here I think makes more sense than 0.
-
-
-> +
-> +		ret += r;
-> +	}
-> +
-> +	return ret;
-> +}
-> +static DEVICE_ATTR_RO(doe_proto);
-> +#endif
-> +
->  static ssize_t enable_store(struct device *dev, struct device_attribute *attr,
->  			     const char *buf, size_t count)
->  {
-> @@ -603,6 +627,9 @@ static struct attribute *pci_dev_attrs[] = {
->  	&dev_attr_local_cpus.attr,
->  	&dev_attr_local_cpulist.attr,
->  	&dev_attr_modalias.attr,
-> +#ifdef CONFIG_PCI_DOE
-> +	&dev_attr_doe_proto.attr,
-> +#endif
->  #ifdef CONFIG_NUMA
->  	&dev_attr_numa_node.attr,
->  #endif
-> diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
-> index 1f14aed4354b..066494a4dba3 100644
-> --- a/include/linux/pci-doe.h
-> +++ b/include/linux/pci-doe.h
-> @@ -21,5 +21,7 @@ struct pci_doe_mb *pci_find_doe_mailbox(struct pci_dev *pdev, u16 vendor,
->  int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
->  	    const void *request, size_t request_sz,
->  	    void *response, size_t response_sz);
-> +unsigned long pci_doe_sysfs_proto_supports(struct pci_doe_mb *doe_mb,
-> +					   char *buf, ssize_t offset);
->  
->  #endif
+diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
+index 5b1f271c6034..ea8ed608f2a7 100644
+--- a/drivers/pci/hotplug/acpiphp_glue.c
++++ b/drivers/pci/hotplug/acpiphp_glue.c
+@@ -485,6 +485,7 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
+ 	struct pci_bus *bus = slot->bus;
+ 	struct acpiphp_func *func;
+ 
++pci_info(bus, "enable_slot bus: bridge: %d, bus->self: %p\n", bridge, bus->self);
+ 	if (bridge && bus->self && hotplug_is_native(bus->self)) {
+ 		/*
+ 		 * If native hotplug is used, it will take care of hotplug
+@@ -544,6 +545,7 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
+ 		}
+ 		pci_dev_put(dev);
+ 	}
++pr_err("enable_slot: end\n");
+ }
+ 
+ /**
+@@ -702,16 +704,20 @@ static void acpiphp_check_bridge(struct acpiphp_bridge *bridge)
+ 	if (bridge->is_going_away)
+ 		return;
+ 
+-	if (bridge->pci_dev)
++	if (bridge->pci_dev) {
+ 		pm_runtime_get_sync(&bridge->pci_dev->dev);
++pci_info(bridge->pci_dev, "acpiphp_check_bridge\n");
++        }
+ 
+ 	list_for_each_entry(slot, &bridge->slots, node) {
+ 		struct pci_bus *bus = slot->bus;
+ 		struct pci_dev *dev, *tmp;
+ 
+ 		if (slot_no_hotplug(slot)) {
++pr_err("acpiphp_check_bridge: slot_no_hotplug\n");
+ 			; /* do nothing */
+ 		} else if (device_status_valid(get_slot_status(slot))) {
++pr_err("acpiphp_check_bridge: device_status_valid\n");
+ 			/* remove stale devices if any */
+ 			list_for_each_entry_safe_reverse(dev, tmp,
+ 							 &bus->devices, bus_list)
+@@ -799,7 +805,7 @@ static void hotplug_event(u32 type, struct acpiphp_context *context)
+ 	switch (type) {
+ 	case ACPI_NOTIFY_BUS_CHECK:
+ 		/* bus re-enumerate */
+-		acpi_handle_debug(handle, "Bus check in %s()\n", __func__);
++		acpi_handle_debug(handle, "Bus check in %s(): bridge: %p\n", __func__, bridge);
+ 		if (bridge)
+ 			acpiphp_check_bridge(bridge);
+ 		else if (!(slot->flags & SLOT_IS_GOING_AWAY))
+-- 
+2.39.3
 
