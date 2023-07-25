@@ -2,401 +2,199 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 242787625DE
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jul 2023 00:16:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87741762729
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jul 2023 01:05:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232251AbjGYWQQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jul 2023 18:16:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32926 "EHLO
+        id S230094AbjGYXFO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jul 2023 19:05:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231330AbjGYWPm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jul 2023 18:15:42 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2078.outbound.protection.outlook.com [40.107.243.78])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B1EBE78;
-        Tue, 25 Jul 2023 15:15:40 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ltCIc3LdQqXQRJSXgJQBKxjSUl7moL7nIfoiLo9o8+HpHaU5CfdE7G5e394Uz8TDSoZ6f0KeeuEF2vWY7TaHX0jTJW3Lejy3/Tp4xL3B9ftg3/DnXo8YF55UXIHWjRUF2eYkVY7s7goJZdaa6u5f6SGLbOxuHO+s9ECFqECdYx5SPNXaUS0gqpYaQ4+L84orLnAo3hMHazpBxKu5H3h/Zarf86RVgSM+bwqHtpM9WCQATLmkrJaTv+J61TSh0Jfo7g4U89jH6jeaFDb7t1pZOOBUVKOkDQmTwGgB8RUcDX90Rvte9V3bjBICAGUlj+wmr3mP4WXHUUHsEHXoC6M85w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OjXllyAyHppdTnvS6sbsaIuNb2aA8ZEh9Ydwdm5jURs=;
- b=I1ajfILUMW0txgM7mQbWQ7SZN6qHYYz/hoNMe6+qxB6ATxZVWocqg62L5rKnp8aYbURA+iCPg6UFPAjaEHQAEbv9s/Vaal3ZZZLaeSF7D4heYzdwgZZbFv/IYB9MidBdd+B3smLJSwMHrxguG3Q6Alal2ZFPGWkGaJWTKvFcS55HxEdGH4C08bqicEuRuZmhe0jprQdh265U/JImRYGN0spG8ZOY1M7fBXAsQyKmHkA3kAV/k85/S8omIgJkNEm/vA0GzNWrb8kt9uYoBkKeyj1KaqSEeA4qSyb9YMckjmHa8sp1FhdHPzfrNXUQsFFgJI69cOk5jfhfo0dfc4XzfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OjXllyAyHppdTnvS6sbsaIuNb2aA8ZEh9Ydwdm5jURs=;
- b=ZrpcOXJV59Dg2igCs/8yq+jFveHbejHkQrl3wa1GAo8QKS7CETk0sjS2YY34HntlX2CmveJzKaP27bX+l/OqWe7AriCEmNmEoVs5+HCVsDzo6pFj9r+utG9/H+MfPshwvb6LjIUoF5MKyn0d9PKzpsmwCvVoiYO60jY7WUPuOaM=
-Received: from MW4PR03CA0060.namprd03.prod.outlook.com (2603:10b6:303:8e::35)
- by DS0PR12MB7632.namprd12.prod.outlook.com (2603:10b6:8:11f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.32; Tue, 25 Jul
- 2023 22:15:38 +0000
-Received: from CO1NAM11FT053.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:8e:cafe::ff) by MW4PR03CA0060.outlook.office365.com
- (2603:10b6:303:8e::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.33 via Frontend
- Transport; Tue, 25 Jul 2023 22:15:35 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT053.mail.protection.outlook.com (10.13.175.63) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6631.29 via Frontend Transport; Tue, 25 Jul 2023 22:15:35 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 25 Jul
- 2023 17:15:34 -0500
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 25 Jul
- 2023 17:15:34 -0500
-Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.27 via Frontend
- Transport; Tue, 25 Jul 2023 17:15:33 -0500
-From:   Lizhi Hou <lizhi.hou@amd.com>
-To:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <robh@kernel.org>
-CC:     Lizhi Hou <lizhi.hou@amd.com>, <max.zhen@amd.com>,
-        <sonal.santan@amd.com>, <stefano.stabellini@xilinx.com>
-Subject: [PATCH V11 5/5] of: unittest: Add pci_dt_testdrv pci driver
-Date:   Tue, 25 Jul 2023 15:15:18 -0700
-Message-ID: <1690323318-6103-6-git-send-email-lizhi.hou@amd.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1690323318-6103-1-git-send-email-lizhi.hou@amd.com>
-References: <1690323318-6103-1-git-send-email-lizhi.hou@amd.com>
+        with ESMTP id S229827AbjGYXFN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jul 2023 19:05:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 770B5E7;
+        Tue, 25 Jul 2023 16:05:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 132DB61926;
+        Tue, 25 Jul 2023 23:05:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 790C3C433C7;
+        Tue, 25 Jul 2023 23:05:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690326311;
+        bh=8u87rzOYUB7/c0OvMvcaBKrY8ZfQ238ZrdAu8eLiTwg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hsDb2Qjx8BUPWaF60ohr/F1CAxiNAoYO7jMn5YnLaysGynJ+IZm/QXijsZDnt1HPA
+         08j6hV8YMhhfQjtB3GaOiC6C1YyBtgcy5XG65sPdmuDKHCFmSNKgReuEgpcXocFQ1T
+         7j0TrtViuUMXIISXWkBd/7eh47cxhlcm9JEHq3jVd8hvvjF1lmEpWyyWWMHFVzoAMO
+         Wcq+/YOGCwbym2N/CK/9NJB1LyYRLs5f0IH0ykG5WOGnUr+Rz5A/cL/ZZszkedH3uI
+         20IaHZDrDMZAxmfg1NRj1Mr5fDkABbYj/MPkbSJ06vKVr/wiQEx1bz1M0w2mTehfL1
+         k1v9V9DuZp6wg==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2b933bbd3eeso90630761fa.1;
+        Tue, 25 Jul 2023 16:05:11 -0700 (PDT)
+X-Gm-Message-State: ABy/qLaaG97ixLESOiv+kDbzXjxD6RgeeccdQe3Q5+4WpWAiXbQQf9L+
+        nN4suHDRtjnLbk2W/BS6h8MfSkY1J3cX2GhVuA==
+X-Google-Smtp-Source: APBJJlGiuk90Ip8gZC0eU2XxptJIjyvn4OaCBsXt9I6gU9jTBi07iiZP0B89Sux6tgm+ZK1Mh1tlaz8wsswH5R/ur4Y=
+X-Received: by 2002:a2e:9556:0:b0:2b6:c2e4:a57a with SMTP id
+ t22-20020a2e9556000000b002b6c2e4a57amr110000ljh.38.1690326309410; Tue, 25 Jul
+ 2023 16:05:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT053:EE_|DS0PR12MB7632:EE_
-X-MS-Office365-Filtering-Correlation-Id: e31bab93-db96-45d5-59a2-08db8d5cab66
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EYL7UYznrONYIdiexdlcEOe9zrWwM7BIBX1DWRIfqdZxbBdLFLldxukeBNLpPjOX3Dhg/MY0zAkKUEMPepPD3JloIeapWvfPtFy2DfGcu6aTyb6zMPzQXvCS2qKGhFGPALiGXRwhM6objdAYqYrHq73fOVIQACUZQpR6hdDFjrFY0VWmMPC8WkecnH5zEfKwuAYCnY2v7JN2MXEZzf/u7JAXf1bbcVAbU4WpESE4UgIDBgoGfW4NrByeAKjsEcgduV1jQTaMA9/RzqpXD4d5ekg6l6W2q/UQjAuH0vVQ5CsFfGgZry5C0PE3X4kVhKZl4FNKEWd//WOn9gapetPzrCwaQoxQbrKNICv4gDQG5fUNZGgwu9jVsGugHgR3f0YrmbCEzHK86vpcx790dGDtaXg69MeZX6rIjoIbJECcHFGQ0wZTSYARsPazJYm54vrqrMhEnoPhlvAatY4Y2r4fXmaeX+jjjj6WwfakdctWgVTbP2pgiwfGQ2Bx3ZbebiY5MGfoQKccVoBSKBHzsUKFKkL0tXTO5NP4vDzso02QhaYIZZOqJyGgFhgYksFtLf0QJXCkuavcdhVzux0gL6eKdRkPVZEMTHsaWzNHTlFrnvnEesIOwFGrZv7+yuuviSLihLypNV+l0tb6j/t/ums31nzgZ6gW+XxM3bqPQ78Vk1jiafqZ6AnA/0Q2VK62zxu7Q/Er67DjIvQg4wqQBhcNjlD3zutjqrAoWxTaAJ+OstCBn7qkoA4csbUzuwNqwekmYbt/cxl8X0c1y0AZ5Qt0Ow==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(346002)(376002)(396003)(136003)(82310400008)(451199021)(36840700001)(46966006)(40470700004)(70206006)(70586007)(83380400001)(54906003)(6666004)(86362001)(4326008)(47076005)(316002)(2616005)(426003)(41300700001)(478600001)(110136005)(5660300002)(356005)(8936002)(8676002)(44832011)(336012)(186003)(40460700003)(26005)(36756003)(36860700001)(40480700001)(82740400003)(81166007)(2906002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jul 2023 22:15:35.3457
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e31bab93-db96-45d5-59a2-08db8d5cab66
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT053.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7632
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+References: <1690323318-6103-1-git-send-email-lizhi.hou@amd.com> <1690323318-6103-3-git-send-email-lizhi.hou@amd.com>
+In-Reply-To: <1690323318-6103-3-git-send-email-lizhi.hou@amd.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 25 Jul 2023 17:04:57 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLoJzqnXtJ4BZZo6Y5fVz7PW701968K1VkZX93oKzxf5w@mail.gmail.com>
+Message-ID: <CAL_JsqLoJzqnXtJ4BZZo6Y5fVz7PW701968K1VkZX93oKzxf5w@mail.gmail.com>
+Subject: Re: [PATCH V11 2/5] PCI: Create device tree node for bridge
+To:     Lizhi Hou <lizhi.hou@amd.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, max.zhen@amd.com,
+        sonal.santan@amd.com, stefano.stabellini@xilinx.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pci_dt_testdrv is bound to QEMU PCI Test Device. It reads
-overlay_pci_node fdt fragment and apply it to Test Device. Then it
-calls of_platform_default_populate() to populate the platform
-devices.
+On Tue, Jul 25, 2023 at 4:15=E2=80=AFPM Lizhi Hou <lizhi.hou@amd.com> wrote=
+:
+>
+> The PCI endpoint device such as Xilinx Alveo PCI card maps the register
+> spaces from multiple hardware peripherals to its PCI BAR. Normally,
+> the PCI core discovers devices and BARs using the PCI enumeration process=
+.
+> There is no infrastructure to discover the hardware peripherals that are
+> present in a PCI device, and which can be accessed through the PCI BARs.
+>
+> Apparently, the device tree framework requires a device tree node for the
+> PCI device. Thus, it can generate the device tree nodes for hardware
+> peripherals underneath. Because PCI is self discoverable bus, there might
+> not be a device tree node created for PCI devices. Furthermore, if the PC=
+I
+> device is hot pluggable, when it is plugged in, the device tree nodes for
+> its parent bridges are required. Add support to generate device tree node
+> for PCI bridges.
+>
+> Add an of_pci_make_dev_node() interface that can be used to create device
+> tree node for PCI devices.
+>
+> Add a PCI_DYNAMIC_OF_NODES config option. When the option is turned on,
+> the kernel will generate device tree nodes for PCI bridges unconditionall=
+y.
+>
+> Initially, add the basic properties for the dynamically generated device
+> tree nodes which include #address-cells, #size-cells, device_type,
+> compatible, ranges, reg.
+>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+> ---
+>  drivers/pci/Kconfig       |  12 ++
+>  drivers/pci/Makefile      |   1 +
+>  drivers/pci/bus.c         |   2 +
+>  drivers/pci/of.c          |  96 +++++++++++++++-
+>  drivers/pci/of_property.c | 232 ++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pci.h         |  12 ++
+>  drivers/pci/remove.c      |   1 +
+>  7 files changed, 354 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/pci/of_property.c
+>
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 3c07d8d214b3..49bd09c7dd0a 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -194,6 +194,18 @@ config PCI_HYPERV
+>           The PCI device frontend driver allows the kernel to import arbi=
+trary
+>           PCI devices from a PCI backend to support PCI driver domains.
+>
+> +config PCI_DYNAMIC_OF_NODES
+> +       bool "Create device tree nodes for PCI devices"
+> +       depends on OF
+> +       select OF_DYNAMIC
+> +       help
+> +         This option enables support for generating device tree nodes fo=
+r some
+> +         PCI devices. Thus, the driver of this kind can load and overlay
+> +         flattened device tree for its downstream devices.
+> +
+> +         Once this option is selected, the device tree nodes will be gen=
+erated
+> +         for all PCI bridges.
+> +
+>  choice
+>         prompt "PCI Express hierarchy optimization setting"
+>         default PCIE_BUS_DEFAULT
+> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> index 2680e4c92f0a..cc8b4e01e29d 100644
+> --- a/drivers/pci/Makefile
+> +++ b/drivers/pci/Makefile
+> @@ -32,6 +32,7 @@ obj-$(CONFIG_PCI_P2PDMA)      +=3D p2pdma.o
+>  obj-$(CONFIG_XEN_PCIDEV_FRONTEND) +=3D xen-pcifront.o
+>  obj-$(CONFIG_VGA_ARB)          +=3D vgaarb.o
+>  obj-$(CONFIG_PCI_DOE)          +=3D doe.o
+> +obj-$(CONFIG_PCI_DYNAMIC_OF_NODES) +=3D of_property.o
+>
+>  # Endpoint library must be initialized before its users
+>  obj-$(CONFIG_PCI_ENDPOINT)     +=3D endpoint/
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index 5bc81cc0a2de..ab7d06cd0099 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -340,6 +340,8 @@ void pci_bus_add_device(struct pci_dev *dev)
+>          */
+>         pcibios_bus_add_device(dev);
+>         pci_fixup_device(pci_fixup_final, dev);
+> +       if (pci_is_bridge(dev))
+> +               of_pci_make_dev_node(dev);
+>         pci_create_sysfs_dev_files(dev);
+>         pci_proc_attach_device(dev);
+>         pci_bridge_d3_update(dev);
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index e51219f9f523..11d3be165e32 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -495,8 +495,21 @@ static int of_irq_parse_pci(const struct pci_dev *pd=
+ev, struct of_phandle_args *
+>                  * to rely on this function (you ship a firmware that doe=
+sn't
+>                  * create device nodes for all PCI devices).
+>                  */
+> -               if (ppnode)
+> -                       break;
+> +               if (ppnode) {
+> +                       /*
+> +                        * When PCI_DYNAMIC_OF_NODES is on, a device tree
+> +                        * node will be generated for PCI bridge. For the
+> +                        * dynamically generated node, interrupt mapping =
+is
+> +                        * not supported. Thus, it needs to check interru=
+pt-map
+> +                        * property and set ppnode to NULL to do standard
+> +                        * swizzling if interrupt-map does not present.
+> +                        */
+> +                       if (IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_NODES) &&
+> +                           !of_property_present(ppnode, "interrupt-map")=
+)
+> +                               ppnode =3D NULL;
 
-Tested-by: Herve Codina <herve.codina@bootlin.com>
-Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
----
- drivers/of/unittest-data/Makefile             |   3 +-
- .../of/unittest-data/overlay_pci_node.dtso    |  22 ++
- drivers/of/unittest.c                         | 189 ++++++++++++++++++
- drivers/pci/quirks.c                          |   1 +
- 4 files changed, 214 insertions(+), 1 deletion(-)
- create mode 100644 drivers/of/unittest-data/overlay_pci_node.dtso
+We cannot use a kconfig option to determine behavior. You don't get to
+decide the value of the kconfig option. The OS distro does. As I've
+said in the past, the kconfig option is not a long term solution. You
+need things to work the same way whether PCI nodes were populated
+before the kernel runs or dynamically.
 
-diff --git a/drivers/of/unittest-data/Makefile b/drivers/of/unittest-data/Makefile
-index ea5f4da68e23..1aa875088159 100644
---- a/drivers/of/unittest-data/Makefile
-+++ b/drivers/of/unittest-data/Makefile
-@@ -32,7 +32,8 @@ obj-$(CONFIG_OF_OVERLAY) += overlay.dtbo.o \
- 			    overlay_gpio_02b.dtbo.o \
- 			    overlay_gpio_03.dtbo.o \
- 			    overlay_gpio_04a.dtbo.o \
--			    overlay_gpio_04b.dtbo.o
-+			    overlay_gpio_04b.dtbo.o \
-+			    overlay_pci_node.dtbo.o
- 
- # enable creation of __symbols__ node
- DTC_FLAGS_overlay += -@
-diff --git a/drivers/of/unittest-data/overlay_pci_node.dtso b/drivers/of/unittest-data/overlay_pci_node.dtso
-new file mode 100644
-index 000000000000..c05e52e9e44a
---- /dev/null
-+++ b/drivers/of/unittest-data/overlay_pci_node.dtso
-@@ -0,0 +1,22 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
-+/ {
-+	fragment@0 {
-+		target-path="";
-+		__overlay__ {
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			pci-ep-bus@0 {
-+				compatible = "simple-bus";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x0 0x0 0x0 0x1000>;
-+				reg = <0 0 0 0 0>;
-+				unittest-pci@100 {
-+					compatible = "unittest-pci";
-+					reg = <0x100 0x200>;
-+				};
-+			};
-+		};
-+	};
-+};
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 7bff6c4cb653..f9895ea832f3 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -22,6 +22,7 @@
- #include <linux/slab.h>
- #include <linux/device.h>
- #include <linux/platform_device.h>
-+#include <linux/pci.h>
- #include <linux/kernel.h>
- 
- #include <linux/i2c.h>
-@@ -3324,6 +3325,7 @@ OVERLAY_INFO_EXTERN(overlay_gpio_02b);
- OVERLAY_INFO_EXTERN(overlay_gpio_03);
- OVERLAY_INFO_EXTERN(overlay_gpio_04a);
- OVERLAY_INFO_EXTERN(overlay_gpio_04b);
-+OVERLAY_INFO_EXTERN(overlay_pci_node);
- OVERLAY_INFO_EXTERN(overlay_bad_add_dup_node);
- OVERLAY_INFO_EXTERN(overlay_bad_add_dup_prop);
- OVERLAY_INFO_EXTERN(overlay_bad_phandle);
-@@ -3359,6 +3361,7 @@ static struct overlay_info overlays[] = {
- 	OVERLAY_INFO(overlay_gpio_03, 0),
- 	OVERLAY_INFO(overlay_gpio_04a, 0),
- 	OVERLAY_INFO(overlay_gpio_04b, 0),
-+	OVERLAY_INFO(overlay_pci_node, 0),
- 	OVERLAY_INFO(overlay_bad_add_dup_node, -EINVAL),
- 	OVERLAY_INFO(overlay_bad_add_dup_prop, -EINVAL),
- 	OVERLAY_INFO(overlay_bad_phandle, -EINVAL),
-@@ -3729,6 +3732,191 @@ static inline __init void of_unittest_overlay_high_level(void) {}
- 
- #endif
- 
-+#ifdef CONFIG_PCI_DYNAMIC_OF_NODES
-+
-+int of_unittest_pci_dev_num;
-+int of_unittest_pci_child_num;
-+
-+/*
-+ * PCI device tree node test driver
-+ */
-+static const struct pci_device_id testdrv_pci_ids[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_REDHAT, 0x5), }, /* PCI_VENDOR_ID_REDHAT */
-+	{ 0, }
-+};
-+
-+static int testdrv_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-+{
-+	struct overlay_info *info;
-+	struct device_node *dn;
-+	int ret, ovcs_id;
-+	u32 size;
-+
-+	dn = pdev->dev.of_node;
-+	if (!dn) {
-+		dev_err(&pdev->dev, "does not find bus endpoint");
-+		return -EINVAL;
-+	}
-+
-+	for (info = overlays; info && info->name; info++) {
-+		if (!strcmp(info->name, "overlay_pci_node"))
-+			break;
-+	}
-+	if (!info || !info->name) {
-+		dev_err(&pdev->dev, "no overlay data for overlay_pci_node");
-+		return -ENODEV;
-+	}
-+
-+	size = info->dtbo_end - info->dtbo_begin;
-+	ret = of_overlay_fdt_apply(info->dtbo_begin, size, &ovcs_id, dn);
-+	of_node_put(dn);
-+	if (ret)
-+		return ret;
-+
-+	of_platform_default_populate(dn, NULL, &pdev->dev);
-+	pci_set_drvdata(pdev, (void *)(uintptr_t)ovcs_id);
-+
-+	return 0;
-+}
-+
-+static void testdrv_remove(struct pci_dev *pdev)
-+{
-+	int ovcs_id = (int)(uintptr_t)pci_get_drvdata(pdev);
-+
-+	of_platform_depopulate(&pdev->dev);
-+	of_overlay_remove(&ovcs_id);
-+}
-+
-+static struct pci_driver testdrv_driver = {
-+	.name = "pci_dt_testdrv",
-+	.id_table = testdrv_pci_ids,
-+	.probe = testdrv_probe,
-+	.remove = testdrv_remove,
-+};
-+
-+static int unittest_pci_probe(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	struct device *dev;
-+	u64 exp_addr;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -ENODEV;
-+
-+	dev = &pdev->dev;
-+	while (dev && !dev_is_pci(dev))
-+		dev = dev->parent;
-+	if (!dev) {
-+		pr_err("unable to find parent device\n");
-+		return -ENODEV;
-+	}
-+
-+	exp_addr = pci_resource_start(to_pci_dev(dev), 0) + 0x100;
-+	unittest(res->start == exp_addr, "Incorrect translated address %llx, expected %llx\n",
-+		 (u64)res->start, exp_addr);
-+
-+	of_unittest_pci_child_num++;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id unittest_pci_of_match[] = {
-+	{ .compatible = "unittest-pci" },
-+	{ }
-+};
-+
-+static struct platform_driver unittest_pci_driver = {
-+	.probe = unittest_pci_probe,
-+	.driver = {
-+		.name = "unittest-pci",
-+		.of_match_table = unittest_pci_of_match,
-+	},
-+};
-+
-+static int of_unittest_pci_node_verify(struct pci_dev *pdev, bool add)
-+{
-+	struct device_node *pnp, *np = NULL;
-+	struct device *child_dev;
-+	char *path = NULL;
-+	const __be32 *reg;
-+	int rc = 0;
-+
-+	pnp = pdev->dev.of_node;
-+	unittest(pnp, "Failed creating PCI dt node\n");
-+	if (!pnp)
-+		return -ENODEV;
-+
-+	if (add) {
-+		path = kasprintf(GFP_KERNEL, "%pOF/pci-ep-bus@0/unittest-pci@100", pnp);
-+		np = of_find_node_by_path(path);
-+		unittest(np, "Failed to get unittest-pci node under PCI node\n");
-+		if (!np) {
-+			rc = -ENODEV;
-+			goto failed;
-+		}
-+
-+		reg = of_get_property(np, "reg", NULL);
-+		unittest(reg, "Failed to get reg property\n");
-+		if (!reg)
-+			rc = -ENODEV;
-+	} else {
-+		path = kasprintf(GFP_KERNEL, "%pOF/pci-ep-bus@0", pnp);
-+		np = of_find_node_by_path(path);
-+		unittest(!np, "Child device tree node is not removed\n");
-+		child_dev = device_find_any_child(&pdev->dev);
-+		unittest(!child_dev, "Child device is not removed\n");
-+	}
-+
-+failed:
-+	kfree(path);
-+	if (np)
-+		of_node_put(np);
-+
-+	return rc;
-+}
-+
-+static void __init of_unittest_pci_node(void)
-+{
-+	struct pci_dev *pdev = NULL;
-+	int rc;
-+
-+	rc = pci_register_driver(&testdrv_driver);
-+	unittest(!rc, "Failed to register pci test driver; rc = %d\n", rc);
-+	if (rc)
-+		return;
-+
-+	rc = platform_driver_register(&unittest_pci_driver);
-+	if (unittest(!rc, "Failed to register unittest pci driver\n")) {
-+		pci_unregister_driver(&testdrv_driver);
-+		return;
-+	}
-+
-+	while ((pdev = pci_get_device(PCI_VENDOR_ID_REDHAT, 0x5, pdev)) != NULL) {
-+		of_unittest_pci_node_verify(pdev, true);
-+		of_unittest_pci_dev_num++;
-+	}
-+	if (pdev)
-+		pci_dev_put(pdev);
-+
-+	unittest(of_unittest_pci_dev_num,
-+		 "No test PCI device been found. Please run QEMU with '-device pci-testdev'\n");
-+	unittest(of_unittest_pci_dev_num == of_unittest_pci_child_num,
-+		 "Child device number %d is not expected %d", of_unittest_pci_child_num,
-+		 of_unittest_pci_dev_num);
-+
-+	platform_driver_unregister(&unittest_pci_driver);
-+	pci_unregister_driver(&testdrv_driver);
-+
-+	while ((pdev = pci_get_device(PCI_VENDOR_ID_REDHAT, 0x5, pdev)) != NULL)
-+		of_unittest_pci_node_verify(pdev, false);
-+	if (pdev)
-+		pci_dev_put(pdev);
-+}
-+#else
-+static void __init of_unittest_pci_node(void) { }
-+#endif
-+
- static int __init of_unittest(void)
- {
- 	struct device_node *np;
-@@ -3779,6 +3967,7 @@ static int __init of_unittest(void)
- 	of_unittest_platform_populate();
- 	of_unittest_overlay();
- 	of_unittest_lifecycle();
-+	of_unittest_pci_node();
- 
- 	/* Double check linkage after removing testcase data */
- 	of_unittest_check_tree_linkage();
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 6c0e7b6bbdd1..a8223ff52939 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -6149,3 +6149,4 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
-  */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
--- 
-2.34.1
+Perhaps what you need to do is read PCI_INTERRUPT_PIN and if it's
+non-zero for a device, populate 'interrupts' property using the value.
+Then the standard DT interrupt parsing code should work. That code
+will walk up nodes until it finds the host bridge interrupt-map.
 
+Rob
