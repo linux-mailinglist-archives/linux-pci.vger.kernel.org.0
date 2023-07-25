@@ -2,110 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B796760A2A
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jul 2023 08:17:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9FE7760C6D
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jul 2023 09:52:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232081AbjGYGRZ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 25 Jul 2023 02:17:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41572 "EHLO
+        id S231622AbjGYHwJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jul 2023 03:52:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231640AbjGYGRT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jul 2023 02:17:19 -0400
-Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EBC7A1BE6;
-        Mon, 24 Jul 2023 23:17:07 -0700 (PDT)
-Received: from [IPv6:::1] (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 36P6Fdmn023967;
-        Tue, 25 Jul 2023 01:15:40 -0500
-Message-ID: <bc6c3a08e3d0a343fe8317218106609ba159dfe2.camel@kernel.crashing.org>
-Subject: Re: VFIO (PCI) and write combine mapping of BARs
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Jason Gunthorpe <jgg@nvidia.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alex.williamson@redhat.com, osamaabb@amazon.com,
-        linux-pci@vger.kernel.org, Clint Sbisa <csbisa@amazon.com>,
-        catalin.marinas@arm.com, maz@kernel.org
-Date:   Tue, 25 Jul 2023 16:15:39 +1000
-In-Reply-To: <ZLFBnACjoTbDmKuU@nvidia.com>
-References: <2838d716b08c78ed24fdd3fe392e21222ee70067.camel@kernel.crashing.org>
-         <ZLD1l1274hQQ54RT@lpieralisi> <ZLFBnACjoTbDmKuU@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.44.4-0ubuntu1 
+        with ESMTP id S230386AbjGYHwI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jul 2023 03:52:08 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46F0BF
+        for <linux-pci@vger.kernel.org>; Tue, 25 Jul 2023 00:52:07 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-6687096c6ddso2935536b3a.0
+        for <linux-pci@vger.kernel.org>; Tue, 25 Jul 2023 00:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1690271527; x=1690876327;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=OmasqMUtJENc1u5aTvRQMoAivuz8HYaIGy1Y1ma70D8=;
+        b=UmB4B6smVGikTJLcujt/b4P3lhWQmrB9TXbcM8coHikIALIEXs1/pL5rpjkQ6mkOBg
+         9jdW6ZLlvh3LBvJBTKtiSpHy6kFaoD/dlfYjrIPOlVPUog3SqjHQLIRj8oTdSXg78fvn
+         m61/3xqmr/R17ONxQGI9CeXnaU3Vb4KdloupShqgK4bKG8vA00liUGyZbtyMvSDMdlpJ
+         JJwGvfNbxfNt5f90YM7FGx1FzeDO2f85WF3Q1SjrVqcPI6qrI5bk0oycevJ4rcbVOkyQ
+         YVl7pwZ8wacbaGW8mhlw2Jsuwoho2+2ApJFwmznFj1N0jVAMyUhiADVYIsGyl8YLipYG
+         NGGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690271527; x=1690876327;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OmasqMUtJENc1u5aTvRQMoAivuz8HYaIGy1Y1ma70D8=;
+        b=B7NOSgOjAhbiWUzo3lTIxlA6m/hFl2B/7Q6c2d8ZjwmvpbaXEnomrlsKnMhbjL4IOC
+         yeTpxERC3QiS8BohAfsdOTSZbVnMrCNMjZ7F4AagIu6ckfSIAKffEfNsYuXTg9kMvz4O
+         eMmBmnDeUb1Od/ViFbcYEp0H1Q55szyHUzuikMI+GqdeJxCX5SQ/XdkMaugW8DNIBbVe
+         WkUvs7hytXK1pFSsJVKTLiUmmBoI59ts46gQm9jlcsjfjzHpF3P2wB8kVXwtoG5qE0fQ
+         bgIJTAYqfWuFfma918iex8A+E7rMDBw04NlTmOBUWNAOF8ByDrjDCWuTIv7VP+mS85HF
+         MF0g==
+X-Gm-Message-State: ABy/qLayrDwhD1gMspM5ELbZymFXUw+PLicyifZKIHAuuhjoCBrQ64NV
+        9ge6AMPLSSvRrl8Qkwas741zZ4i4XDMzx9T3LQ==
+X-Google-Smtp-Source: APBJJlEFsFBmcbu+kGDXRDjdPf4YlThrOLcJmvZxtOGuaDCNZbKmlWT96t6835OyA8ouWWRJyxLeJw==
+X-Received: by 2002:a05:6a20:3b30:b0:137:26b9:f403 with SMTP id c48-20020a056a203b3000b0013726b9f403mr9308853pzh.49.1690271527205;
+        Tue, 25 Jul 2023 00:52:07 -0700 (PDT)
+Received: from thinkpad ([117.206.117.206])
+        by smtp.gmail.com with ESMTPSA id a13-20020aa780cd000000b006863240ef3bsm9267172pfn.171.2023.07.25.00.52.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jul 2023 00:52:06 -0700 (PDT)
+Date:   Tue, 25 Jul 2023 13:21:59 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, Sergey.Semin@baikalelectronics.ru,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V1] Revert "PCI: tegra194: Enable support for 256 Byte
+ payload"
+Message-ID: <20230725075159.GB22139@thinkpad>
+References: <20230608093652.1409485-1-vidyas@nvidia.com>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230608093652.1409485-1-vidyas@nvidia.com>
+X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 2023-07-14 at 09:37 -0300, Jason Gunthorpe wrote:
+On Thu, Jun 08, 2023 at 03:06:52PM +0530, Vidya Sagar wrote:
+> This reverts commit 4fb8e46c1bc4 ("PCI: tegra194: Enable
+> support for 256 Byte payload")
 > 
-> There are two topics here
+> Consider a PCIe hierarchy with a PCIe switch and a device connected
+> downstream of the switch that has support for MPS which is the minimum
+> in the hierarchy, and root port programmed with an MPS in its DevCtl
+> register that is greater than the minimum. In this scenario, the default
+> bus configuration of the kernel i.e. "PCIE_BUS_DEFAULT" doesn't
+> configure the MPS settings in the hierarchy correctly resulting in the
+> device with support for minimum MPS in the hierarchy receiving the TLPs
+> of size more than that. Although this can be addresed by appending
+> "pci=pcie_bus_safe" to the kernel command line, it doesn't seem to be a
+> good idea to always have this commandline argument even for the basic
+> functionality to work.
+> Reverting commit 4fb8e46c1bc4 ("PCI: tegra194: Enable support for 256
+> Byte payload") avoids this requirement and ensures that the basic
+> functionality of the devices irrespective of the hierarchy and the MPS of
+> the devices in the hierarchy.
+> To reap the benefits of having support for higher MPS, optionally, one can
+> always append the kernel command line with "pci=pcie_bus_perf".
 > 
-> 1) Make ARM KVM allow the VM to select WC for its MMIO. This has
->    evolved in a way that is not related to VFIO
-> 
-> 2) Allow VFIO to create mmaps with WC for non-VM use cases like DPDK.
-> 
-> We have a draft patch for #1, and I think a general understanding with
-> ARM folks that this is the right direction.
-> 
-> 2 is more like what this email talks about - providing mmaps with
-> specific flags.
-> 
-> Benjamin, which are you interested in?
+> Fixes: 4fb8e46c1bc4 ("PCI: tegra194: Enable support for 256 Byte payload")
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 
-Sorry for the delay, got caught up.... The customer request we have
-(and what I was indeed talking about) is 2. That said, when running in
-a VM, 2 won't do much without 1.
+I know that this patch is merged. But I happen to test a similar change on Qcom
+platform during a patch review and found that the PCI core changes MPS to 128
+when a 128byte supported device is found:
 
-> > > The problem isn't so much the low level implementation, we just have to
-> > > play with the pgprot, the question is more around what API to present
-> > > to control this.
-> 
-> Assuming this is for #2, I think VFIO has fallen into a bit of a trap
-> by allowing userspace to form the mmap offset. I've seen this happen
-> in other subsystems too. It seems like a good idea then you realize
-> you need more stuff in the mmap space and become sad.
-> 
-> Typically the way out is to covert the mmap offset into a cookie where
-> userspace issues some ioctl and then the ioctl returns an opaque mmap
-> offset to use.
-> 
-> eg in the vfio context you'd do some 'prepare region for mmap' ioctl
-> where you could specify flags. The kernel would encode the flags in
-> the cookie and then mmap would do the right thing. Adding more stuff
-> is done by enhancing the prepare ioctl.
-> 
-> Legacy mmap offsets are kept working.
+[    3.174290] pci 0000:01:00.0: Upstream bridge's Max Payload Size set to 128 (was 256, max 128)
+[    3.186538] pci 0000:01:00.0: Max Payload Size set to 128 (was 128, max 128)
 
-This indeed what I have in mind. IE. VFIO has legacy regions and add-on
-regions though the latter is currently only exploited by some drivers
-that create their own add-on regions. My proposal is to add an ioctl to
-create them from userspace as "children" of an existing driver-provided
-region, allowing to set different attributes for mmap.
+This was just randomly tested on a platform whose Root port DEVCAP was 128, but
+it shouldn't matter. And I didn't change the default bus configuration.
 
-> > > This is still quite specific to PCI, but so is the entire regions
-> > > mechanism, so I don't see an easy path to something more generic at
-> > > this stage.
+Wondering how you ended up facing issues with it.
+
+- Mani
+
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 13 -------------
+>  1 file changed, 13 deletions(-)
 > 
-> Regions are general, but the encoding of the mmap cookie has various
-> PCI semantics when used with the PCI interface..
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 4fdadc7b045f..877d81b13334 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -892,7 +892,6 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>  	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
+>  	u32 val;
+> -	u16 val_16;
+>  
+>  	pp->bridge->ops = &tegra_pci_ops;
+>  
+> @@ -900,11 +899,6 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
+>  		pcie->pcie_cap_base = dw_pcie_find_capability(&pcie->pci,
+>  							      PCI_CAP_ID_EXP);
+>  
+> -	val_16 = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_DEVCTL);
+> -	val_16 &= ~PCI_EXP_DEVCTL_PAYLOAD;
+> -	val_16 |= PCI_EXP_DEVCTL_PAYLOAD_256B;
+> -	dw_pcie_writew_dbi(pci, pcie->pcie_cap_base + PCI_EXP_DEVCTL, val_16);
+> -
+>  	val = dw_pcie_readl_dbi(pci, PCI_IO_BASE);
+>  	val &= ~(IO_BASE_IO_DECODE | IO_BASE_IO_DECODE_BIT8);
+>  	dw_pcie_writel_dbi(pci, PCI_IO_BASE, val);
+> @@ -1756,7 +1750,6 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
+>  	struct device *dev = pcie->dev;
+>  	u32 val;
+>  	int ret;
+> -	u16 val_16;
+>  
+>  	if (pcie->ep_state == EP_STATE_ENABLED)
+>  		return;
+> @@ -1887,11 +1880,6 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
+>  	pcie->pcie_cap_base = dw_pcie_find_capability(&pcie->pci,
+>  						      PCI_CAP_ID_EXP);
+>  
+> -	val_16 = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_DEVCTL);
+> -	val_16 &= ~PCI_EXP_DEVCTL_PAYLOAD;
+> -	val_16 |= PCI_EXP_DEVCTL_PAYLOAD_256B;
+> -	dw_pcie_writew_dbi(pci, pcie->pcie_cap_base + PCI_EXP_DEVCTL, val_16);
+> -
+>  	/* Clear Slot Clock Configuration bit if SRNS configuration */
+>  	if (pcie->enable_srns) {
+>  		val_16 = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base +
+> @@ -1900,7 +1888,6 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
+>  		dw_pcie_writew_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA,
+>  				   val_16);
+>  	}
+> -
+>  	clk_set_rate(pcie->core_clk, GEN4_CORE_CLK_FREQ);
+>  
+>  	val = (ep->msi_mem_phys & MSIX_ADDR_MATCH_LOW_OFF_MASK);
+> -- 
+> 2.25.1
 > 
-> We'd want the same ability with platform devices too, for instance.
 
-In the current VFIO the implementation is *entirely* in vfio_pci_core
-for PCI and entirely in vfio_platform_common.c for platform, so while
-the same ioctls could be imagined to create sub-regions, it would have
-to be completely implemented twice unless we do a lot of heavy lifting
-to move some of that region stuff into common code.
-
-But yes, appart from that, no objection :-)
-
-Cheers,
-Ben.
+-- 
+மணிவண்ணன் சதாசிவம்
