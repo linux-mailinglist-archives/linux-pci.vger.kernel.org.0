@@ -2,209 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C67D1760D05
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jul 2023 10:30:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C91B760D76
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jul 2023 10:45:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232509AbjGYIap (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jul 2023 04:30:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52712 "EHLO
+        id S232103AbjGYIp3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jul 2023 04:45:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232651AbjGYIal (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jul 2023 04:30:41 -0400
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82D9F10F6
-        for <linux-pci@vger.kernel.org>; Tue, 25 Jul 2023 01:30:39 -0700 (PDT)
-Received: by mail-ot1-x32e.google.com with SMTP id 46e09a7af769-6bb14015560so3054344a34.2
-        for <linux-pci@vger.kernel.org>; Tue, 25 Jul 2023 01:30:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690273838; x=1690878638;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2Hj2YLFYM/S07VoSoGgF04djEYIMz11EHw/3X1OVZ1Q=;
-        b=qhj20O2SmADCSOlJf4DHy+EzkLiJQAjJvMsB7yotZRelouCgLm46+gdXcdSNm3JeVa
-         JhvJfa+WMnuURpFiyDJBhkBbDXiJnZQ26AuR9xLqx+zhnsGw4lSeVTkV1VbBYbpz6bmV
-         oUD44OA9+CigPm9Ro3DAcZFJWDCHqrcr+jQwSf1Y/8jTXefUc6TCcJz8bIK7agbsg75f
-         LF0b+lNuaEGYHo+b/AsfTAIAl+MuX7SOo3Imteka1BP65Np0ifzXQ39/LoDltPOR12l9
-         bhxY20FK7J9AdUxXhzTRqncfEbe8KKpqzIp3JI5xiniNupFRpWf1W3uKnxtbGQO3h6ZU
-         /A7A==
+        with ESMTP id S231614AbjGYIob (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jul 2023 04:44:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C5191FDD
+        for <linux-pci@vger.kernel.org>; Tue, 25 Jul 2023 01:42:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1690274561;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=E/lGM3AFGn4fMjg440JiVDWQxDq2/CsLGdFzbi2mu8k=;
+        b=YpI3X72Sl3i1NWccAcqvD0pWrROqMrVRzTwuh1b+o8utGwJeiGFM6Ohiu8E2bjbj0Z6yPR
+        dS14l/uBRYueUqygaWbGAsgJPQAK011p6+3KWwbRs+xuk42P+ldJ8mimBBkrsHJPSz2kJa
+        Y5Ehhq1jSXXoW8Krxk9aiaNtnbniMsM=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-321-yg04SL3IMGG4G2r8PxQGFw-1; Tue, 25 Jul 2023 04:42:40 -0400
+X-MC-Unique: yg04SL3IMGG4G2r8PxQGFw-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-97542592eb9so341341666b.2
+        for <linux-pci@vger.kernel.org>; Tue, 25 Jul 2023 01:42:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690273838; x=1690878638;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Hj2YLFYM/S07VoSoGgF04djEYIMz11EHw/3X1OVZ1Q=;
-        b=l4ObewVw1PMfy5vsevLBKoNiYYwbKVd7vWuDJ2qQFVNU3iaTMn746M/5oxaR195f7f
-         wt0ITgoNWlrJp9rRWwy1POyh6delBcaj8gjvnO8fufdZQvI8kIuilayYwFgV7i3kON5R
-         SzMFbA6l3oMq8lDBPAwmhXejKbNpj0I91dS0u6D9Zz5Ewv7cuJyJYvNnsWFR1waTk3dI
-         RHHeck9KpB/cmS/x4QnsNs/hzrloLcUY9+glzZbPMwpRr1SftDoAu63XOiGP4ayQv810
-         LEEq4HsItLIo3PocP6AB0yX2QrvY8JDqUml40Z73HGmAQwnf8iwoNF64jX545cizUu8A
-         cG2w==
-X-Gm-Message-State: ABy/qLZ4iY7FtBdIa984pN9R65twBfillHpYAQf5NXM2N88byeUx9E9M
-        /QztUvOMxm0xNcfgiCeQonJP
-X-Google-Smtp-Source: APBJJlHgHt4Mr03Ju5QwMxd+Xmd/+ZsTxES9nD1+vmr+Omyd0hHVHVoNXc9cgNaAhnak+vVD+sSfbg==
-X-Received: by 2002:a9d:5c17:0:b0:6b7:493d:69ae with SMTP id o23-20020a9d5c17000000b006b7493d69aemr7462297otk.31.1690273838654;
-        Tue, 25 Jul 2023 01:30:38 -0700 (PDT)
-Received: from thinkpad ([117.206.117.206])
-        by smtp.gmail.com with ESMTPSA id p9-20020a639509000000b005633941a547sm9895186pgd.27.2023.07.25.01.30.34
+        d=1e100.net; s=20221208; t=1690274559; x=1690879359;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E/lGM3AFGn4fMjg440JiVDWQxDq2/CsLGdFzbi2mu8k=;
+        b=DB1XTxLXKpyMxG4rWtVSJ3TNp9MYaw3/FgwaoHeVFLfeiOZPMjJMN+SLUEGCvxQAdV
+         KocVzy+FQAy2QwG4p62oeKvUxvoLwGIT3hEfB7HBZZwuNKTKZg1rRUQ1cLU5VrplhUXG
+         KPGi3ARh8UMeYNpsd3DFIlni6/ImCAsOa8vQ8Z+dG5rVZs8B7AgqeWrqDjATjHPGjZgW
+         Ujyn8m3uOvG/JWm8/leeZFFpy2Kduor/K+Xj/LbE9CKrhrc8ThauCVmzZyf7tVTB9wAe
+         o0yGIY7mWIjcmmUYVUVrrSxCGDLeWG6P8+0AaZ5r0Y6znee+B59CrZaBX5Df5qYoBJjp
+         5lhg==
+X-Gm-Message-State: ABy/qLYKCv+rCF6NiNiFnzy9/Eax5NdBwWg2VgbmsXtu1HMhRuPTeY+f
+        0g1Kt+7oNFIa7Tp+BGd/0InNjKsm4h0ql2XgaL8/rUzx4IMLiZd2NaZPbqzdEQA7de8CZneWy6M
+        KUjNgyL6bKXUR1gabikpA
+X-Received: by 2002:a17:906:cc49:b0:98f:5640:16a with SMTP id mm9-20020a170906cc4900b0098f5640016amr12404165ejb.53.1690274559333;
+        Tue, 25 Jul 2023 01:42:39 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlFT8gkR9kPbQttomndHJiJR3D8A95upZF6W+dEQNzOD6/93XYMy+W6KX9P6z63JwSAMCrdeZA==
+X-Received: by 2002:a17:906:cc49:b0:98f:5640:16a with SMTP id mm9-20020a170906cc4900b0098f5640016amr12404149ejb.53.1690274559025;
+        Tue, 25 Jul 2023 01:42:39 -0700 (PDT)
+Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id jp7-20020a170906f74700b009937dbabbd5sm7840352ejb.220.2023.07.25.01.42.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jul 2023 01:30:38 -0700 (PDT)
-Date:   Tue, 25 Jul 2023 14:00:30 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, Sergey.Semin@baikalelectronics.ru,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V1] Revert "PCI: tegra194: Enable support for 256 Byte
- payload"
-Message-ID: <20230725083030.GC22139@thinkpad>
-References: <20230608093652.1409485-1-vidyas@nvidia.com>
- <20230725075159.GB22139@thinkpad>
- <815d102d-be0c-8e5d-ac12-1500d90628da@nvidia.com>
+        Tue, 25 Jul 2023 01:42:38 -0700 (PDT)
+Date:   Tue, 25 Jul 2023 10:42:37 +0200
+From:   Igor Mammedov <imammedo@redhat.com>
+To:     Woody Suwalski <terraluna977@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, mst@redhat.com
+Subject: Re: [PATCH] hack to debug acpiphp crash
+Message-ID: <20230725104237.0c8d0dc1@imammedo.users.ipa.redhat.com>
+In-Reply-To: <20230725100644.6138efb6@imammedo.users.ipa.redhat.com>
+References: <11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com>
+        <20230724135902.2217991-1-imammedo@redhat.com>
+        <92150d8d-8a3a-d600-a996-f60a8e4c876c@gmail.com>
+        <20230725100644.6138efb6@imammedo.users.ipa.redhat.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <815d102d-be0c-8e5d-ac12-1500d90628da@nvidia.com>
-X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 25, 2023 at 01:49:35PM +0530, Vidya Sagar wrote:
-> 
-> 
-> On 7/25/2023 1:21 PM, Manivannan Sadhasivam wrote:
-> > External email: Use caution opening links or attachments
-> > 
-> > 
-> > On Thu, Jun 08, 2023 at 03:06:52PM +0530, Vidya Sagar wrote:
-> > > This reverts commit 4fb8e46c1bc4 ("PCI: tegra194: Enable
-> > > support for 256 Byte payload")
-> > > 
-> > > Consider a PCIe hierarchy with a PCIe switch and a device connected
-> > > downstream of the switch that has support for MPS which is the minimum
-> > > in the hierarchy, and root port programmed with an MPS in its DevCtl
-> > > register that is greater than the minimum. In this scenario, the default
-> > > bus configuration of the kernel i.e. "PCIE_BUS_DEFAULT" doesn't
-> > > configure the MPS settings in the hierarchy correctly resulting in the
-> > > device with support for minimum MPS in the hierarchy receiving the TLPs
-> > > of size more than that. Although this can be addresed by appending
-> > > "pci=pcie_bus_safe" to the kernel command line, it doesn't seem to be a
-> > > good idea to always have this commandline argument even for the basic
-> > > functionality to work.
-> > > Reverting commit 4fb8e46c1bc4 ("PCI: tegra194: Enable support for 256
-> > > Byte payload") avoids this requirement and ensures that the basic
-> > > functionality of the devices irrespective of the hierarchy and the MPS of
-> > > the devices in the hierarchy.
-> > > To reap the benefits of having support for higher MPS, optionally, one can
-> > > always append the kernel command line with "pci=pcie_bus_perf".
-> > > 
-> > > Fixes: 4fb8e46c1bc4 ("PCI: tegra194: Enable support for 256 Byte payload")
-> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > 
-> > I know that this patch is merged. But I happen to test a similar change on Qcom
-> > platform during a patch review and found that the PCI core changes MPS to 128
-> > when a 128byte supported device is found:
-> > 
-> > [    3.174290] pci 0000:01:00.0: Upstream bridge's Max Payload Size set to 128 (was 256, max 128)
-> > [    3.186538] pci 0000:01:00.0: Max Payload Size set to 128 (was 128, max 128)
-> > 
-> > This was just randomly tested on a platform whose Root port DEVCAP was 128, but
-> > it shouldn't matter. And I didn't change the default bus configuration.
-> > 
-> > Wondering how you ended up facing issues with it.
-> 
-> If the endpiont device that has support only for 128byte MPS is connected
-> directly to the root port, then, I agree that the PCIe sub-system takes care
-> of changing the MPS to the common lowest MPS, but if the endpoint device is
-> connected behind a PCIe switch, then the PCIe subsystem doesn't configure
-> the MPS properly.
-> 
+On Tue, 25 Jul 2023 10:06:44 +0200
+Igor Mammedov <imammedo@redhat.com> wrote:
 
-Ah, I missed the fact that your issue only happens with a PCIe switch. But
-shouldn't this be fixed in the PCI core instead?
-
-I mean, PCI core should use 128byte in your case for Root port unless it is not
-allowed in the spec (which I doubt).
-
-- Mani
-
-> -Vidya Sagar
+> PS:
+> What happens is that on resume firmware (likely EC),
+> issues ACPI bus check on root ports which (bus check) is
+> wired to acpiphp module (though pciehp module was initialized
+> at boot to manage root ports), it's likely firmware bug.
 > 
-> > 
-> > - Mani
-> > 
-> > > ---
-> > >   drivers/pci/controller/dwc/pcie-tegra194.c | 13 -------------
-> > >   1 file changed, 13 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > index 4fdadc7b045f..877d81b13334 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > @@ -892,7 +892,6 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
-> > >        struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > >        struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
-> > >        u32 val;
-> > > -     u16 val_16;
-> > > 
-> > >        pp->bridge->ops = &tegra_pci_ops;
-> > > 
-> > > @@ -900,11 +899,6 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
-> > >                pcie->pcie_cap_base = dw_pcie_find_capability(&pcie->pci,
-> > >                                                              PCI_CAP_ID_EXP);
-> > > 
-> > > -     val_16 = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_DEVCTL);
-> > > -     val_16 &= ~PCI_EXP_DEVCTL_PAYLOAD;
-> > > -     val_16 |= PCI_EXP_DEVCTL_PAYLOAD_256B;
-> > > -     dw_pcie_writew_dbi(pci, pcie->pcie_cap_base + PCI_EXP_DEVCTL, val_16);
-> > > -
-> > >        val = dw_pcie_readl_dbi(pci, PCI_IO_BASE);
-> > >        val &= ~(IO_BASE_IO_DECODE | IO_BASE_IO_DECODE_BIT8);
-> > >        dw_pcie_writel_dbi(pci, PCI_IO_BASE, val);
-> > > @@ -1756,7 +1750,6 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
-> > >        struct device *dev = pcie->dev;
-> > >        u32 val;
-> > >        int ret;
-> > > -     u16 val_16;
-> > > 
-> > >        if (pcie->ep_state == EP_STATE_ENABLED)
-> > >                return;
-> > > @@ -1887,11 +1880,6 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
-> > >        pcie->pcie_cap_base = dw_pcie_find_capability(&pcie->pci,
-> > >                                                      PCI_CAP_ID_EXP);
-> > > 
-> > > -     val_16 = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_DEVCTL);
-> > > -     val_16 &= ~PCI_EXP_DEVCTL_PAYLOAD;
-> > > -     val_16 |= PCI_EXP_DEVCTL_PAYLOAD_256B;
-> > > -     dw_pcie_writew_dbi(pci, pcie->pcie_cap_base + PCI_EXP_DEVCTL, val_16);
-> > > -
-> > >        /* Clear Slot Clock Configuration bit if SRNS configuration */
-> > >        if (pcie->enable_srns) {
-> > >                val_16 = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base +
-> > > @@ -1900,7 +1888,6 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
-> > >                dw_pcie_writew_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA,
-> > >                                   val_16);
-> > >        }
-> > > -
-> > >        clk_set_rate(pcie->core_clk, GEN4_CORE_CLK_FREQ);
-> > > 
-> > >        val = (ep->msi_mem_phys & MSIX_ADDR_MATCH_LOW_OFF_MASK);
-> > > --
-> > > 2.25.1
-> > > 
-> > 
-> > --
-> > மணிவண்ணன் சதாசிவம்
+> I'd guess the intent behind this was to check if PCIe devices
+> were hotplugged while laptop has been asleep, and for
+> some reason they didn't use native PCIe hotplug to handle that. 
+> However looking at laptop specs you can't hotplug PCIe
+> devices via external ports. Given how old laptop is
+> it isn't going to be fixed, so we would need a workaround
+> or fixup DSDT to skip buscheck.
+> 
+> The options I see is to keep old kernel as for such case,
+> or bail out early from bus check/enable_slot since root port
+> is managed by pciehp module (and let it handle hotplug).
 
--- 
-மணிவண்ணன் சதாசிவம்
+scratch all of above out (it's wrong). Looking at DSDT
+firmware sends Notify(rpxx, 2 /* Wake */) event. Which
+according to spec needs to be handed down to the native
+device driver.
+
+
