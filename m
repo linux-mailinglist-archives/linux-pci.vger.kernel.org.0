@@ -2,53 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5EDF76071A
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jul 2023 06:15:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F2BB76088C
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jul 2023 06:30:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229553AbjGYEO7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jul 2023 00:14:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50660 "EHLO
+        id S231837AbjGYEaD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jul 2023 00:30:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbjGYEO5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jul 2023 00:14:57 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1E4EE59
-        for <linux-pci@vger.kernel.org>; Mon, 24 Jul 2023 21:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690258496; x=1721794496;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=3txiD4SisULDKa8kvXRe0BWXq9sNCNQLjulxe+4hOQs=;
-  b=cZklJlRkRhJWo1IpfIYtfwWyFvb2OBjdJKpmuHS1wWbjpQQNuaJxzLn/
-   cdQxaxO7pzI9hRH549S3fAQO7rhyBtoPAw3PmueoynrN7Dj/LkN1e4x5b
-   abpmaZC1z2XgEPv4zUQhdkOYvOB9EaWNmrIA1LaJvBDX2wHqxV/xCB+jp
-   MFFG2n2Yo3ne2gQ+8AANS+jCdgjhinHheU2NZ9ERrj2qozawt77Z8Ikbp
-   1E2P8GrqoIlFkmUpMhhAMHPv1OHJFR/0714r/eH/pIyLuG/3iuVPdAWmw
-   cdvURkExqVzUHmyMkuW5GUwxTb3gwqrqg+EPXq7LzbKFttwqi/4sz+Hmd
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10781"; a="366499016"
-X-IronPort-AV: E=Sophos;i="6.01,229,1684825200"; 
-   d="scan'208";a="366499016"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2023 21:14:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10781"; a="849860596"
-X-IronPort-AV: E=Sophos;i="6.01,229,1684825200"; 
-   d="scan'208";a="849860596"
-Received: from unknown (HELO localhost.ch.intel.com) ([10.2.230.30])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2023 21:14:55 -0700
-From:   Nirmal Patel <nirmal.patel@linux.intel.com>
-To:     nirmal.patel@linux.intel.com, <linux-pci@vger.kernel.org>
-Subject: [PATCH v2] PCI: vmd: Do not change the Hotplug setting on VMD rootports
-Date:   Mon, 24 Jul 2023 23:54:05 -0400
-Message-Id: <20230725035405.932765-1-nirmal.patel@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
+        with ESMTP id S232065AbjGYE3q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jul 2023 00:29:46 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B4DA270F;
+        Mon, 24 Jul 2023 21:24:58 -0700 (PDT)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36P4HtR2000477;
+        Tue, 25 Jul 2023 04:24:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=UPh8BX8GNtNMoS2mWq7N34bq+EwRiLK3K8GGBoaD1fc=;
+ b=mXEd2HyKmpjbFUdQKiOU9Y7J4bdhugvIafUhHboX3w9fyxAE3T2XBXExKk280Wg3XcuN
+ JTR06npba7I2HCv7pMMG335t4C6NkR0tnBnJAqpgPRXI+T9iguhyG1kaFQ+diunL3Y5t
+ ZDMoRzrFuQc1CJPAycD/5Yr7oAUEQ9xMyXEFLOFfbrSoZEdf/wuZc2SNKUXnsHhWfsGr
+ ofmizxdamYsChdORSpSYOHvLRp0RckHGA+LLPRfJO3seTKEDJppn22Ws1AHZbzqAZEC2
+ /b23hBH5hHKsGOAwreS3hM+zv6z08X1KonQITJqXQ3IuDTos9JC/GO/Bbb6iVEg2Vren UQ== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3s1qast1re-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Jul 2023 04:24:51 +0000
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36P4OoG4008415
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Jul 2023 04:24:50 GMT
+Received: from [10.216.17.203] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Mon, 24 Jul
+ 2023 21:24:45 -0700
+Message-ID: <3f715e25-2b7c-3af4-028e-941393e5a927@quicinc.com>
+Date:   Tue, 25 Jul 2023 09:54:42 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 0/1] Set may payload size for IPQ9574
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>, <mani@kernel.org>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <quic_varada@quicinc.com>, <quic_devipriy@quicinc.com>
+References: <20230724124711.2346886-1-quic_ipkumar@quicinc.com>
+ <5f707d2e-f944-d991-2c0d-5ea9d02f7572@linaro.org>
+Content-Language: en-US
+From:   Praveenkumar I <quic_ipkumar@quicinc.com>
+In-Reply-To: <5f707d2e-f944-d991-2c0d-5ea9d02f7572@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: GRRdqw7a83RSA0YXkZUo29b1Kgvhr6FG
+X-Proofpoint-GUID: GRRdqw7a83RSA0YXkZUo29b1Kgvhr6FG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-25_01,2023-07-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ impostorscore=0 mlxscore=0 mlxlogscore=474 adultscore=0 priorityscore=1501
+ clxscore=1015 spamscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
+ definitions=main-2307250038
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,44 +82,19 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The hotplug functionality is broken in various combinations of guest
-OSes i.e. RHEL, SLES and hypervisors i.e. KVM and ESXI.
 
-During the VMD rootport creation, VMD honors ACPI settings and assigns
-respective values to Hotplug, AER, DPC, PM etc which works in case of
-Host OS. But these have been restored back to the power on default
-state in Guest OSes, which puts the root port hot plug enable to
-default OFF.
+On 7/24/2023 6:20 PM, Konrad Dybcio wrote:
+> On 24.07.2023 14:47, Praveenkumar I wrote:
+>> IPQ9574 supports 256 bytes of payload size and setting the max will allow
+>> to use it when capable partner is connected.
+>>
+> It's not necessary to send a (bogus) cover letter with a single patch.
+>
+> Please consider using the b4 tool, which takes care of almost all sending-
+> related complaints:
+>
+> https://b4.docs.kernel.org/en/latest/index.html
+Sure, will take care hence forth.
 
-When BIOS boots, all root ports under VMD is inaccessible by BIOS and
-they maintain their power on default states. The VMD UEFI driver loads
-and configure all devices under VMD. This is how AER, power management,
-DPC and hotplug gets enabled in UEFI, since the BIOS pci driver cannot
-access the root ports. With the absence of VMD UEFI driver in Guest,
-Hotplug stays Disabled.
-
-This change will  cause the hot plug to start working again in guest,
-as the settings implemented by the UEFI VMD DXE driver will remain in
-effect in the Guest OS.
-
-Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
----
- drivers/pci/controller/vmd.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 769eedeb8802..52c2461b4761 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -701,8 +701,6 @@ static int vmd_alloc_irqs(struct vmd_dev *vmd)
- static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
- 				       struct pci_host_bridge *vmd_bridge)
- {
--	vmd_bridge->native_pcie_hotplug = root_bridge->native_pcie_hotplug;
--	vmd_bridge->native_shpc_hotplug = root_bridge->native_shpc_hotplug;
- 	vmd_bridge->native_aer = root_bridge->native_aer;
- 	vmd_bridge->native_pme = root_bridge->native_pme;
- 	vmd_bridge->native_ltr = root_bridge->native_ltr;
--- 
-2.31.1
-
+- Praveenkumar
+> Konrad
