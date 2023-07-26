@@ -2,142 +2,232 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D819763E79
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jul 2023 20:29:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF4FB7642A6
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jul 2023 01:38:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229630AbjGZS3p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jul 2023 14:29:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33114 "EHLO
+        id S230345AbjGZXiv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jul 2023 19:38:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229562AbjGZS3p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jul 2023 14:29:45 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20817213A;
-        Wed, 26 Jul 2023 11:29:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690396184; x=1721932184;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:to:cc;
-  bh=2UugmXYB/i6kxbLyCIwBGxYk5WEtjViQvhva6LrKcZ8=;
-  b=e6Hf/Ru1nrHvMkJdHviHRLU5D7Mx9xBWAPz+h9EGjCTF+SWu+hy96QZQ
-   +ay7rvQU24+k8mrcli6C5C1pAf6Qk7oPtFW8IHbyDgxSnjXDZEjFZ0+xQ
-   Hz72gvsE3LZzgnm4cQ/WpqA0dM1Jqj7Fn0Ird3yakkH1VIo6ZcQSU0TL9
-   g7qn715nmFGlkcjAdF8txWF5r/EzQO7/nCA8lD6ahpH2asd/6DKOzcYDs
-   U7CoU2fadAJK5Cy9HVb69mVQKgKAsmzo7/mKHlvRQtrWxxDSPYZI00dF8
-   7jL/0DspqG/WcEtZGSFDpAyFGMOOUxpmdHlunB0W+HQ61QK74Ly7J7OlS
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10783"; a="358097126"
-X-IronPort-AV: E=Sophos;i="6.01,232,1684825200"; 
-   d="scan'208";a="358097126"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2023 11:29:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10783"; a="796685529"
-X-IronPort-AV: E=Sophos;i="6.01,232,1684825200"; 
-   d="scan'208";a="796685529"
-Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.97.167])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2023 11:29:43 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-Date:   Wed, 26 Jul 2023 11:29:42 -0700
-Subject: [PATCH] PCI/DOE: Fix destroy_work_on_stack() race
+        with ESMTP id S229587AbjGZXiu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jul 2023 19:38:50 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AC20E4C;
+        Wed, 26 Jul 2023 16:38:49 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-4fe0eb0ca75so591258e87.2;
+        Wed, 26 Jul 2023 16:38:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690414727; x=1691019527;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=gsbI3SH+Kq96dup/SZd+lNDDg+o58o0YW0EFAmDfboc=;
+        b=HxC/f1alkcNBemeDK4zIFM+fmaMJyGkgDiWXVJW4C6gtyY/yr2kHxlgnLD8GA17jMT
+         8v7x2u6AhaZvGAZ2/KZ0JoVtnMrb0TIKRoeK8Iuyh4A1zVEfT82FRaxwjH9UkMGwNkGC
+         xQGzn+tGXfskRav8+TXNsYPa/IRoFa4WvLU4NNs0ptKUOzRwcvbmbc315BIfOnMAZWfn
+         EiBMPECN6HiQaHbKnWz+05uEU5F/Tb5GcWAYM2jXfiUiYqkcC4QXuIM44XEy4ezsWbu3
+         8L+QWs1PdjqqqN8lPQvDLZ46AQQDAG02NM9geWNJRLKrWriT0vPGcDHBQnA5L92LRI64
+         p5lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690414727; x=1691019527;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gsbI3SH+Kq96dup/SZd+lNDDg+o58o0YW0EFAmDfboc=;
+        b=jkmwaYDBWiwsxnTZK+BM49eiN6RZ0uI0KR6DrKH2mf4SZ1zJtJorNnUraHRmoQWu7X
+         bGxgsQk8W9JUaXR+pqVH0xVVdK8XbNxgFsd/+mNJfyZKNaLPyN96q+mJPIacK5hMuyN/
+         ypzYp1yz/nhgk4l4jdNnix6K5PS6aPGfJBeoHrNE1Oh5LuIMI3EKf4s8Buq/OLTiz/K+
+         d58G3bqLiQQpGxb1lg6HmfvQuaKwuFKDMRPbd7g6mfr6e9oTAl5KS0Gwjd2PJLfsHCG+
+         ToR6YRpXUbeSB6Ct2BAvBtvPYOqjmdXdA2sT49pznU2Hm452cJi1/im8PNai+X0DwQqR
+         ftMw==
+X-Gm-Message-State: ABy/qLbWrqNUleVGaxngpYUBYuIUklPVd1X+R33qi3SRN8Wf/LkWHKC/
+        38/qf9UqXsVtSqJjPV+s/+w=
+X-Google-Smtp-Source: APBJJlGZbZTlWXcPVMKxCYwZi4R7qxv4IuHAPSuZ69a6v0RZFzwCtO63kcvVdKcYkyj4Bg6tsyqfSg==
+X-Received: by 2002:a05:6512:3e29:b0:4fb:896d:bd70 with SMTP id i41-20020a0565123e2900b004fb896dbd70mr469539lfv.46.1690414727032;
+        Wed, 26 Jul 2023 16:38:47 -0700 (PDT)
+Received: from mobilestation ([95.79.172.181])
+        by smtp.gmail.com with ESMTPSA id b11-20020ac25e8b000000b004fba1170087sm38489lfq.224.2023.07.26.16.38.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jul 2023 16:38:46 -0700 (PDT)
+Date:   Thu, 27 Jul 2023 02:38:44 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Manivannan Sadhasivam <mani@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
+        bhelgaas@google.com, kishon@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v18 04/20] PCI: dwc: Change arguments of
+ dw_pcie_prog_outbound_atu()
+Message-ID: <aldqqozyrjdd74jdm2xmgp53rpke4otm6iy4tjfemdwxd4ir5y@p3dlr3p5c7t4>
+References: <20230721074452.65545-1-yoshihiro.shimoda.uh@renesas.com>
+ <20230721074452.65545-5-yoshihiro.shimoda.uh@renesas.com>
+ <20230724074556.GC6291@thinkpad>
+ <ezuyypjmhkb4nsruy5kdoopg537yqg2paf4acgfyib6p7kj7g5@kumpnp2cr4zh>
+ <20230726130015.GA5633@thinkpad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230726-doe-fix-v1-1-af07e614d4dd@intel.com>
-X-B4-Tracking: v=1; b=H4sIABVmwWQC/x3NwQqDQAyE4VeRnBuwa6u1ryI9RJ3VHLqWRKQgv
- nvXHn/mg9nJYQqnZ7GTYVPXJeW4XgoaZkkTWMfcFMpQlU2oeVzAUb8c7017q2ILeQTKuhcH9yZ
- pmE//Fl9h5/AxZP+/6F7H8QMFUKircgAAAA==
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ira Weiny <ira.weiny@intel.com>
-X-Mailer: b4 0.13-dev-c6835
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1690396182; l=2634;
- i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=2UugmXYB/i6kxbLyCIwBGxYk5WEtjViQvhva6LrKcZ8=;
- b=GGm4zVVuZ0rQJCHxxpdw9IG6KWDuY6e3e3wvOSZ6PSc5nfExk5Q7aWs3zLf4MGtYts7Xbv17H
- MYyeMY9tSM0Cs1iGhibASlW/kJcu+sXF2+7Acokaoa16UwBkgpwIsI7
-X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
- pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230726130015.GA5633@thinkpad>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The following debug object splat was observed in testing.
+On Wed, Jul 26, 2023 at 06:30:15PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Jul 26, 2023 at 08:02:24AM +0300, Serge Semin wrote:
+> > On Mon, Jul 24, 2023 at 01:15:56PM +0530, Manivannan Sadhasivam wrote:
+> > > On Fri, Jul 21, 2023 at 04:44:36PM +0900, Yoshihiro Shimoda wrote:
+> > > > The __dw_pcie_prog_outbound_atu() currently has 6 arguments.
+> > > > To support INTx IRQs in the future, it requires an additional 2
+> > > > arguments. For improved code readability, introduce the struct
+> > > > dw_pcie_ob_atu_cfg and update the arguments of
+> > > > dw_pcie_prog_outbound_atu().
+> > > > 
+> > > > Consequently, remove __dw_pcie_prog_outbound_atu() and
+> > > > dw_pcie_prog_ep_outbound_atu() because there is no longer
+> > > > a need.
+> > > > 
+> > > > No behavior changes.
+> > > > 
+> > > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > 
+> > > One nit below. With that,
+> > > 
+> > > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > 
+> > > > Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+> > > > ---
+> > > >  .../pci/controller/dwc/pcie-designware-ep.c   | 21 +++++---
+> > > >  .../pci/controller/dwc/pcie-designware-host.c | 52 +++++++++++++------
+> > > >  drivers/pci/controller/dwc/pcie-designware.c  | 49 ++++++-----------
+> > > >  drivers/pci/controller/dwc/pcie-designware.h  | 15 ++++--
+> > > >  4 files changed, 77 insertions(+), 60 deletions(-)
+> > > > 
+> > > 
+> > > [...]
+> > > 
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > index 3c06e025c905..85de0d8346fa 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > @@ -288,6 +288,15 @@ enum dw_pcie_core_rst {
+> > > >  	DW_PCIE_NUM_CORE_RSTS
+> > > >  };
+> > > >  
+> > > > +struct dw_pcie_ob_atu_cfg {
+> > > > +	int index;
+> > > > +	int type;
+> > > > +	u8 func_no;
+> > > > +	u64 cpu_addr;
+> > > > +	u64 pci_addr;
+> > > > +	u64 size;
+> > > 
+> > 
+> > > Reorder the members in below order to avoid holes:
+> > > 
+> > > u64
+> > > int
+> > > u8
+> > 
+> > One more time. Your suggestion won't prevent the compiler from adding
+> > the pads. (If by "holes" you meant the padding. Otherwise please
+> > elaborate what you meant?).
+> 
+> Struct padding is often referred as struct holes. So yes, I'm referring the
+> same.
+> 
+> > The structure will have the same size of
+> > 40 bytes in both cases. So your suggestion will just worsen the
+> > structure readability from having a more natural parameters order (MW
+> > index, type, function, and then the mapping parameters) to a redundant
+> > type-based order.
+> > 
+> 
 
-  [   14.061937] ------------[ cut here ]------------
-  [   14.063899] ODEBUG: free active (active state 0) object: 0000000097d23782 object type: work_struct hint: doe_statemachine_work+0x0/0x510
-  [   14.067480] WARNING: CPU: 1 PID: 71 at lib/debugobjects.c:514 debug_print_object+0x7d/0xb0
-  ...
-  [   14.080951] Workqueue: pci 0000:36:00.0 DOE [1 doe_statemachine_work
-  [   14.083485] RIP: 0010:debug_print_object+0x7d/0xb0
-  ...
-  [   14.116231] Call Trace:
-  [   14.117652]  <TASK>
-  [   14.118958]  ? debug_print_object+0x7d/0xb0
-  [   14.120782]  ? __warn+0x7d/0x130
-  [   14.122399]  ? debug_print_object+0x7d/0xb0
-  [   14.123746]  ? report_bug+0x18d/0x1c0
-  [   14.125025]  ? handle_bug+0x3c/0x80
-  [   14.126506]  ? exc_invalid_op+0x13/0x60
-  [   14.127796]  ? asm_exc_invalid_op+0x16/0x20
-  [   14.129380]  ? debug_print_object+0x7d/0xb0
-  [   14.130688]  ? debug_print_object+0x7d/0xb0
-  [   14.131997]  ? __pfx_doe_statemachine_work+0x10/0x10
-  [   14.133597]  debug_object_free.part.0+0x11b/0x150
-  [   14.134940]  doe_statemachine_work+0x45e/0x510
-  [   14.136348]  process_one_work+0x1d4/0x3c0
-  ...
-  [   14.161484]  </TASK>
-  [   14.162434] ---[ end trace 0000000000000000 ]---
+> This is a common comment I provide for all structures. Even though the current
+> result (reordering) doesn't save any space, when the structure grows big (who
+> knows), we often see more holes/padding being inserted by the compiler if the
+> members are not ordered in the descending order w.r.t their size.
+> 
+> I agree that it makes more clear if the members are grouped based on their
+> function etc... but for large structures this would often add more padding/hole.
 
-This occurs because destroy_work_on_stack() was called after signaling
-the completion in the calling thread.  This creates a race between
-destroy_work_on_stack() and the task->work struct going of scope in the
-pci_doe().
+This structure will never be big enough to be considered for such
+strange optimization. Moreover practicality almost always beats some
+theoretical considerations. In this case there is no any reason to
+reorder the fields as you say.
 
-Signal the work complete after destroying the work struct.  This is safe
-because signal_task_complete() is the final thing the work item does and
-the workqueue code is careful not to access the work struct after.
+Speaking in general I very much doubt that saving a few bytes of
+memory can be considered as a better option than having a more
+readable structure especially these days. Moreover for all these years
+I never met anybody asking to set the descending order of
+the members or maintaining such limitation in the commonly used kernel
+structures. What is normally done:
+1. Move an embedded object to the head of the structure for the
+container_of-macro optimization.
+2. Group up the commonly used fields to optimize the system cache
+utilization.
+3. Logical grouping the members, which naturally may lead to the more
+optimal cache utilization.
+4. Move a field to a certain place of the structure to fill in the
+pads.
 
-Fixes: abf04be0e707 ("PCI/DOE: Fix memory leak with CONFIG_DEBUG_OBJECTS=y")
-Cc: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- drivers/pci/doe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Even if the "descending alignment" requirement minimizes the number of
+the pads it isn't the only possible way to do so in the particular
+cases and it looks too harsh to be blindly applied all the time. If a
+few bytes is so important why not do the same for instance for the
+local variables too? They are also normally size-aligned in the stack
+memory, which is much more precious in kernel.
 
-diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-index 1b97a5ab71a9..e3aab5edaf70 100644
---- a/drivers/pci/doe.c
-+++ b/drivers/pci/doe.c
-@@ -293,8 +293,8 @@ static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *tas
- static void signal_task_complete(struct pci_doe_task *task, int rv)
- {
- 	task->rv = rv;
--	task->complete(task);
- 	destroy_work_on_stack(&task->work);
-+	task->complete(task);
- }
- 
- static void signal_task_abort(struct pci_doe_task *task, int rv)
+Anyway in this case changing the fields order is absolutely redundant.
+Even a provided afterwards update doesn't cause the structure size
+change. So for the sake of readability it's better to leave its fields
+ordered as is.
 
----
-base-commit: 20ea1e7d13c1b544fe67c4a8dc3943bb1ab33e6f
-change-id: 20230726-doe-fix-f57943f9ea82
+-Serge(y)
 
-Best regards,
--- 
-Ira Weiny <ira.weiny@intel.com>
-
+> 
+> - Mani
+> 
+> > -Serge(y)
+> > 
+> > > 
+> > > - Mani
+> > > 
+> > > > +};
+> > > > +
+> > > >  struct dw_pcie_host_ops {
+> > > >  	int (*host_init)(struct dw_pcie_rp *pp);
+> > > >  	void (*host_deinit)(struct dw_pcie_rp *pp);
+> > > > @@ -416,10 +425,8 @@ void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
+> > > >  int dw_pcie_link_up(struct dw_pcie *pci);
+> > > >  void dw_pcie_upconfig_setup(struct dw_pcie *pci);
+> > > >  int dw_pcie_wait_for_link(struct dw_pcie *pci);
+> > > > -int dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+> > > > -			      u64 cpu_addr, u64 pci_addr, u64 size);
+> > > > -int dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> > > > -				 int type, u64 cpu_addr, u64 pci_addr, u64 size);
+> > > > +int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
+> > > > +			      const struct dw_pcie_ob_atu_cfg *atu);
+> > > >  int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
+> > > >  			     u64 cpu_addr, u64 pci_addr, u64 size);
+> > > >  int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> > > > -- 
+> > > > 2.25.1
+> > > > 
+> > > 
+> > > -- 
+> > > மணிவண்ணன் சதாசிவம்
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
