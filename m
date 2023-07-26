@@ -2,93 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CF5D7633E0
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jul 2023 12:34:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5309876341A
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jul 2023 12:43:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233337AbjGZKet (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jul 2023 06:34:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58774 "EHLO
+        id S233890AbjGZKnP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jul 2023 06:43:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232167AbjGZKes (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jul 2023 06:34:48 -0400
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44C9B2127;
-        Wed, 26 Jul 2023 03:34:43 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id E20615C00E1;
-        Wed, 26 Jul 2023 06:34:39 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Wed, 26 Jul 2023 06:34:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1690367679; x=1690454079; bh=5V
-        vawHwISs141Hz7Wc6ZcS682GbwIMf1XURxVyfXwaA=; b=SwyIbga4W4OElXCLwW
-        dQ8fySDusevZSkiFzdbTHnRRXEsqFLdVfkq4HqcvUjfiem0Pzvt8iMdjLgKfa7TT
-        XL3lsRlfQF5yRy3VrWMjveYSAmpO19uN8J3MXkH5s26E9hX5Q0mLORsdpd3FKBsm
-        uBzXdWlxeGxeGAPxezL1BQgDfxX0mdKLJKViGDXd62hR/i0Y2M4el4k6dZDD/njm
-        LxBMkFH+HILy0pNIoYNcDW8Z6Vt1t/F26xHwR4ea7lI6ZbUtd40o54IS0to0q9z7
-        LkTH7LZPEl+1qVc7H0pudQEmMNwJuwv5Pke13FLgHBtYF4/WbLdQrG4Bdbh6tzCM
-        bsbQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1690367679; x=1690454079; bh=5VvawHwISs141
-        Hz7Wc6ZcS682GbwIMf1XURxVyfXwaA=; b=Ke3gMf9u2YUFAs/ORmM+G9RoTjQts
-        5uc0NZutEvEbvam/V3O8u7i/y20hX9xGj+t+9LQNsX7C/OZ/1wGhsatkTzq9WnaU
-        QZr8J5xY68H5zGJDVNgvgURvnJGQeye3K5in4oD31xQ0SP+dYS1k3OOTSEswzZJa
-        a3iL5giWfh5lZ3XMDhC57xQ+lK2wf7Pg/Q8Xe60rjFtWMCtXWyeBYyIMn5khafQl
-        x2vc/cC06cBPjEjIrqDSUFKqG3xITOZTMPXBpcDQ0decV0A8KQlW8UnpacoicGsp
-        HDkumj/mPQ9y4yP7Ggx4B9tqNxw8ievRLZg6ouLy2N8QU1KZMdxk/TSRw==
-X-ME-Sender: <xms:v_bAZD0s3xUiYytEtjvHrnkTiv6e7ZuhRiK-pX9e-IM6NPvqcCdj_A>
-    <xme:v_bAZCHA9sdY_Du2hx93Cj7v-v0aYUxm22H086LjqiFOCmMdk79Dw3oOwVZD4Wfom
-    IBKXjdIMB0YXSLrd2Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedriedvgddvkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:v_bAZD7MeYjzDGb598tkBDT20yiZox3kdiHYKxam3sRA5TWdofBNaw>
-    <xmx:v_bAZI0WZ9thZP5sHt1KABNbiglcxTEkoyvsj9NHI28DkrgTCiVjtQ>
-    <xmx:v_bAZGEMZ1V-GJEMmiiBdqATuqz92TxYWDKoI26fy9sNsgpBhswMgA>
-    <xmx:v_bAZJD0UriU7nIVeI2tcJeSFTA94hvagmTH-iVaQN1GxlycHxxaLQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 32B8DB60089; Wed, 26 Jul 2023 06:34:39 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-592-ga9d4a09b4b-fm-defalarms-20230725.001-ga9d4a09b
-Mime-Version: 1.0
-Message-Id: <40807832-9e26-403a-b7b7-3979d4984b23@app.fastmail.com>
-In-Reply-To: <CA+G9fYuEVLeJX485ZbPNnvbViYUecNsewGiMi+54mNVnL-XBGA@mail.gmail.com>
-References: <CA+G9fYtAi8NQ_5LNku3oik6b0243xhGFt2WyxERNE+eNqLbNOw@mail.gmail.com>
- <76665dd9-1cbc-4b3a-b466-18a54cd74c1c@app.fastmail.com>
- <CA+G9fYuEVLeJX485ZbPNnvbViYUecNsewGiMi+54mNVnL-XBGA@mail.gmail.com>
-Date:   Wed, 26 Jul 2023 12:34:17 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Naresh Kamboju" <naresh.kamboju@linaro.org>,
-        linux-pci@vger.kernel.org
-Cc:     "Dan Carpenter" <dan.carpenter@linaro.org>,
-        =?UTF-8?Q?Daniel_D=C3=ADaz?= <daniel.diaz@linaro.org>,
-        "Anders Roxell" <anders.roxell@linaro.org>,
-        "Kishon Vijay Abraham I" <kishon@kernel.org>,
-        "Vignesh Raghavendra" <vigneshr@ti.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
-        "Jingoo Han" <jingoohan1@gmail.com>,
-        "Gustavo Pimentel" <gustavo.pimentel@synopsys.com>,
-        "Benjamin Copeland" <ben.copeland@linaro.org>
-Subject: Re: x15: Unable to handle kernel NULL pointer dereference at virtual address
- 00000004 when read : pci_generic_config_read
+        with ESMTP id S233113AbjGZKnO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jul 2023 06:43:14 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 421CA212B;
+        Wed, 26 Jul 2023 03:43:13 -0700 (PDT)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36Q7R7mY007763;
+        Wed, 26 Jul 2023 10:43:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=qcppdkim1;
+ bh=Hlj89nR2ktz7oEB/4DNcUsbBiauYQu5YgEhQRa/Z55c=;
+ b=hZJu26xMO93gWMXYCXiH55vxHgPBRPbXmWH2z81XKc6rodkoQTQ3mdsRfWpBhtL1cxai
+ tmSenbFbdZJ5BhA4QytnUDdT0yy/dvv2YsG/4Y+3+5n697ytk7nDTD6sgMn1sk4Ti/PL
+ WUyaS+NUIQA40pQcmAIrzXEvFph2KK0nS+7gMYN5OCj8P+oqLdnN3FdVSbcBqk4WeHzo
+ nXd6rbJ9or9laKQ75bKGiNr991Zcx2Goxp65UHCWxN6amHhiS+tfO0AWN5DU2QBzhDJF
+ cTsj7vtyRJF2JER7s82fp29rjcq0cVHtX/IQyet7NKmc8jpJN/KNS2F9Vl1wnZIBNZH8 2Q== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3s2vq9gmsn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Jul 2023 10:43:06 +0000
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36QAh55s016532
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Jul 2023 10:43:05 GMT
+Received: from hu-ipkumar-blr.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.30; Wed, 26 Jul 2023 03:43:01 -0700
+From:   Praveenkumar I <quic_ipkumar@quicinc.com>
+To:     <mani@kernel.org>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <quic_varada@quicinc.com>, <quic_devipriy@quicinc.com>
+Subject: [PATCH v2] PCI: qcom: Set max payload size 256 bytes for IPQ9574
+Date:   Wed, 26 Jul 2023 16:12:49 +0530
+Message-ID: <20230726104249.534210-1-quic_ipkumar@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,T_SCC_BODY_TEXT_LINE,
-        T_SPF_TEMPERROR,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: HXwrTeDwQ53XZ5y_WOPeY3ih8y_taJ3Z
+X-Proofpoint-GUID: HXwrTeDwQ53XZ5y_WOPeY3ih8y_taJ3Z
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-26_04,2023-07-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 impostorscore=0 malwarescore=0 adultscore=0
+ phishscore=0 suspectscore=0 clxscore=1015 mlxlogscore=824 spamscore=0
+ mlxscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2306200000 definitions=main-2307260094
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -96,57 +77,39 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 26, 2023, at 11:59, Naresh Kamboju wrote:
-> On Tue, 20 Jun 2023 at 14:10, Arnd Bergmann <arnd@arndb.de> wrote:
->>
->> On Tue, Jun 20, 2023, at 10:00, Naresh Kamboju wrote:
->> > We have been noticing the following kernel crash on x15 device while running
->> > LTP fs proc01 testing with Linux stable rc 6.x kernels.
->>
->> Do you know if this is a regression with this kernel version compared
->> to older kernels running the same tests, or an added testcase in LTP
->> that exercises a code path that may have been broken for longer?
-...
->>
->> I have not disassembled the vmlinux file, but I can see that the
->> offset into the NULL pointer is '4', which does not match the
->> structur offsets for bus->ops or ops->map_bus.
->>
->> I also see that if map_bus returns NULL, we treat that as
->> an error, but if it returns '4', that is taken as a pointer,
->> which is my best guess at what is happening here.
->>
->> map_bus() seems to be either dw_pcie_other_conf_map_bus() or
->> dw_pcie_own_conf_map_bus(), since the dra7 does not have its
->> own variant but inherits these from the dwc pci driver.
->>
->> I think this is caused by the combination of two bugs:
->>
->> - something prevents the dra7-pcie driver from probing the
->>   device correctly, ultimately failing with the "failed to
->>   request irq" message.
->>
->> - The error handling in dra7xx_pcie_probe() fails to clean
->>   up after the first problem, leaving the PCIe host
->>   in a broken state instead of removing it entirely.
->
-> The reported kernel crash is continuously happening on the
-> BeagleBoard x15 device while running LTP fs tests on stable rc 6.4.7-rc1.
+This patch sets 256 bytes as payload size for IPQ9574. This allows
+PCIe RC to use the max payload size when a capable link partner is
+connected.
 
-Ok, so you think there is an additional regression between
-6.4.6 and 6.4.7-rc1? on top of the two that you have not bisected?
+Signed-off-by: Praveenkumar I <quic_ipkumar@quicinc.com>
+---
+[v2]:
+	Dropped cover letter for this patch. Configured the max payload
+	in the post_init of IPQ9574 instead for early fixup.
 
-I don't see any changes in drivers/pci/ after 6.4.5, so I'm
-even more confused now.
+ drivers/pci/controller/dwc/pcie-qcom.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> soundcore display_connector
-> [ 1195.601104] CPU: 0 PID: 4876 Comm: proc01 Not tainted 6.4.7-rc1 #1
-> [ 1195.607330] Hardware name: Generic DRA74X (Flattened Device Tree)
-> [ 1195.613464] PC is at pci_generic_config_read+0x34/0x8c
-> [ 1195.618621] LR is at pci_generic_config_read+0x1c/0x8c
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 8ee7c2b5de27..739c0d514a96 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1145,6 +1145,15 @@ static int qcom_pcie_post_init(struct qcom_pcie *pcie)
+ 
+ static int qcom_pcie_post_init_1_27_0(struct qcom_pcie *pcie)
+ {
++	struct dw_pcie *pci = pcie->pci;
++	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
++	u32 val;
++
++	val = readl(pci->dbi_base + offset + PCI_EXP_DEVCTL);
++	val &= ~PCI_EXP_DEVCTL_PAYLOAD;
++	val |= PCI_EXP_DEVCTL_PAYLOAD_256B;
++	writel(val, pci->dbi_base + offset + PCI_EXP_DEVCTL);
++
+ 	writel(SLV_ADDR_SPACE_SZ_1_27_0,
+ 	       pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+ 
+-- 
+2.34.1
 
-This looks identical to the first bugs that you reported, so I'd
-suggest you keep trying to narrow down when that one started rather
-than looking at the latest stable-rc.
-
-     Arnd
