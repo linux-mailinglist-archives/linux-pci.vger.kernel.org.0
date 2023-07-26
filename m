@@ -2,56 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FD6D763AD4
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jul 2023 17:21:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65145763B0A
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jul 2023 17:29:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231370AbjGZPVm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jul 2023 11:21:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35552 "EHLO
+        id S232343AbjGZP3r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jul 2023 11:29:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229984AbjGZPVl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jul 2023 11:21:41 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3D6794
-        for <linux-pci@vger.kernel.org>; Wed, 26 Jul 2023 08:21:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690384900; x=1721920900;
-  h=date:from:to:cc:subject:message-id;
-  bh=g6d+/8E0GJFrFxyDaGzdUCFhQ2YheAVoa1tcLVtIbWU=;
-  b=HcXmtBfO5wb1ddHaKSxKYUt/hon0kqdCoRShCABPICre2GK6TPPAZoC+
-   ceQSt5yJ1xQearLX2aEMjc5EHvx/PYB1VCi2ETAf9qbZfIQwkwFthihJC
-   ESRCt4m9Xdq5ywCAUu33LoUgGCE4Dam67tFvKwN8Em7Pf02WcjsLVtLPG
-   1hcGDvq9ZyvtWo7KFp/k+IjbRJip7x79XYwSe3/0Op3iZOUFQ5VJSPywF
-   zlX61CzU/r+qBf7lfzEU1QyPSuOJl0Rpyh7ac8oRZNQq5M58u6oPD/j2+
-   0lmKPzxTe8op3o3q7RvEhP4Rh9+OZTolmj2rEnc2Fz+a1ancdRtbERCxt
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10783"; a="347657602"
-X-IronPort-AV: E=Sophos;i="6.01,232,1684825200"; 
-   d="scan'208";a="347657602"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2023 08:21:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10783"; a="726589065"
-X-IronPort-AV: E=Sophos;i="6.01,232,1684825200"; 
-   d="scan'208";a="726589065"
-Received: from lkp-server02.sh.intel.com (HELO 953e8cd98f7d) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 26 Jul 2023 08:21:36 -0700
-Received: from kbuild by 953e8cd98f7d with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qOgKW-000149-0F;
-        Wed, 26 Jul 2023 15:21:36 +0000
-Date:   Wed, 26 Jul 2023 23:20:47 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- f3b827a92f7d54b9cafe55a7a831ca706d3292b5
-Message-ID: <202307262345.692AfPsE-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        with ESMTP id S231176AbjGZP3p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jul 2023 11:29:45 -0400
+Received: from mail-oo1-xc35.google.com (mail-oo1-xc35.google.com [IPv6:2607:f8b0:4864:20::c35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 055561FFC
+        for <linux-pci@vger.kernel.org>; Wed, 26 Jul 2023 08:29:44 -0700 (PDT)
+Received: by mail-oo1-xc35.google.com with SMTP id 006d021491bc7-5661e8f4c45so4676213eaf.1
+        for <linux-pci@vger.kernel.org>; Wed, 26 Jul 2023 08:29:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1690385383; x=1690990183;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=U6AGl6EJ9ojfwoIPkx72Nb+mtQBvhnepwNiGsBvw4D0=;
+        b=o2lRCoF8UiW4g2FvhAfGcHRAWarVH1BVZr1TRiXK/HguesFgB+xKw7VvS1aovlHwYp
+         btM0bh5TIHLSfJTKNMemFYfpvPepO4KeteDn3QXnHvXtkx2AVd8F842l8VTteoD6aNa3
+         W2No7UR1sANH9yQS2q9/XldQaX3WZKEtPsdTHNOmYcAUeLjYJ988VKB6lnlKHk1/OtwF
+         24g0TgUN1/wMfPYWD0VIqbFQiYahiGwlWwrh9KB3vccu6rAqpn184sEjlu3dJKnXN2gf
+         w0qWpk6HWDTfSSTofgWsKEU6gsaNr5kquhTnOnvYxYi/6ITjfNo9Sk23AKIVpcmDvbzF
+         EqJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690385383; x=1690990183;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U6AGl6EJ9ojfwoIPkx72Nb+mtQBvhnepwNiGsBvw4D0=;
+        b=fRUwiQ8Y+wfz3MNlb5oil44eIWGyN/SnalaVdPsKZ2dp/tKZhSmG4Lyt1uH2kKYZkN
+         DCXaxDlOZNOu53nSL26t2yWOYVXFo9IOMSc3Wg8AIcmEx7qSV0+yGbmXLCx3x34tWmeS
+         b4Cz1bxhBEw5ql2mPm5N/KdfW9uHzSesj+2LDjWTKwLEmjicQUqEFdJOU7F2Cfz7A8Da
+         u3FhNiqXpVcpY8AsxwJ0vJ+z9aHMOVIH30wkCPiTJIoFLstHqiiFLnyOya0hAk+eZAIw
+         gTlmb6aN5gkH8rumjLkzsDJULmkMeitYnHh1C+Wn/OurDJcFDbiACsi7Xv63GoxOoxUE
+         NK/g==
+X-Gm-Message-State: ABy/qLYGvuvCAiOExNDyGe4ejSzXas73nZnJ0onubm6ebXnvY1ZL1kMP
+        fbOiprw9I7ZtOOWtnR7mHQ52
+X-Google-Smtp-Source: APBJJlGTcKYWeISBmDCN0aDKSXjg/bNNvDOKZoF6gCXICknVsGl/EaEkWIvL8cSGJJy86LKI8Jxf9Q==
+X-Received: by 2002:a05:6358:2607:b0:134:c279:c825 with SMTP id l7-20020a056358260700b00134c279c825mr2799666rwc.12.1690385383248;
+        Wed, 26 Jul 2023 08:29:43 -0700 (PDT)
+Received: from localhost.localdomain ([120.138.12.53])
+        by smtp.gmail.com with ESMTPSA id k186-20020a636fc3000000b00553dcfc2179sm12886092pgc.52.2023.07.26.08.29.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jul 2023 08:29:42 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     lpieralisi@kernel.org, kw@linux.com
+Cc:     robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH] PCI: qcom-ep: Treat unknown irq events as an error
+Date:   Wed, 26 Jul 2023 20:59:31 +0530
+Message-Id: <20230726152931.18134-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,125 +69,33 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-branch HEAD: f3b827a92f7d54b9cafe55a7a831ca706d3292b5  Revert "PCI: acpiphp: Reassign resources on bridge if necessary"
+Sometimes, the Qcom PCIe EP controller can receive some interrupts that are
+not known to the driver like safety interrupts in newer SoCs. In those
+cases, if the driver doesn't clear the interrupts, then it will end up in
+interrupt storm. But the users won't have any idea about it due to the log
+being treated as a debug message.
 
-elapsed time: 1114m
+So let's treat the unknown event log as an error, so that it at least makes
+the user aware, thereby getting fixed eventually.
 
-configs tested: 106
-configs skipped: 5
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r012-20230725   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r013-20230725   gcc  
-arc                  randconfig-r033-20230725   gcc  
-arc                  randconfig-r035-20230725   gcc  
-arc                  randconfig-r043-20230725   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r003-20230725   gcc  
-arm                  randconfig-r046-20230725   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r032-20230725   clang
-csky                                defconfig   gcc  
-csky                 randconfig-r016-20230725   gcc  
-hexagon              randconfig-r011-20230725   clang
-hexagon              randconfig-r041-20230725   clang
-hexagon              randconfig-r045-20230725   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230725   clang
-i386         buildonly-randconfig-r005-20230725   clang
-i386         buildonly-randconfig-r006-20230725   clang
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230725   clang
-i386                 randconfig-i002-20230725   clang
-i386                 randconfig-i003-20230725   clang
-i386                 randconfig-i004-20230725   clang
-i386                 randconfig-i005-20230725   clang
-i386                 randconfig-i006-20230725   clang
-i386                 randconfig-i011-20230725   gcc  
-i386                 randconfig-i012-20230725   gcc  
-i386                 randconfig-i013-20230725   gcc  
-i386                 randconfig-i014-20230725   gcc  
-i386                 randconfig-i015-20230725   gcc  
-i386                 randconfig-i016-20230725   gcc  
-i386                 randconfig-r022-20230725   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r004-20230725   gcc  
-loongarch            randconfig-r015-20230725   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze           randconfig-r025-20230725   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc             randconfig-r001-20230725   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r024-20230725   gcc  
-riscv                randconfig-r042-20230725   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r005-20230725   clang
-s390                 randconfig-r034-20230725   clang
-s390                 randconfig-r044-20230725   gcc  
-sh                               allmodconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r031-20230725   gcc  
-sparc64              randconfig-r006-20230725   gcc  
-sparc64              randconfig-r014-20230725   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r023-20230725   clang
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230725   clang
-x86_64       buildonly-randconfig-r002-20230725   clang
-x86_64       buildonly-randconfig-r003-20230725   clang
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-x001-20230725   gcc  
-x86_64               randconfig-x002-20230725   gcc  
-x86_64               randconfig-x003-20230725   gcc  
-x86_64               randconfig-x004-20230725   gcc  
-x86_64               randconfig-x005-20230725   gcc  
-x86_64               randconfig-x006-20230725   gcc  
-x86_64               randconfig-x011-20230725   clang
-x86_64               randconfig-x012-20230725   clang
-x86_64               randconfig-x013-20230725   clang
-x86_64               randconfig-x014-20230725   clang
-x86_64               randconfig-x015-20230725   clang
-x86_64               randconfig-x016-20230725   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r002-20230725   gcc  
-
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index 267e1247d548..802dedcc929c 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -593,7 +593,7 @@ static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
+ 		dw_pcie_ep_linkup(&pci->ep);
+ 		pcie_ep->link_status = QCOM_PCIE_EP_LINK_UP;
+ 	} else {
+-		dev_dbg(dev, "Received unknown event: %d\n", status);
++		dev_err(dev, "Received unknown event: %d\n", status);
+ 	}
+ 
+ 	return IRQ_HANDLED;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
