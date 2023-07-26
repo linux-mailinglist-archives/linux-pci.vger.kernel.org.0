@@ -2,199 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87741762729
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jul 2023 01:05:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAF5B762814
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jul 2023 03:20:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230094AbjGYXFO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jul 2023 19:05:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56750 "EHLO
+        id S229478AbjGZBUj convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 25 Jul 2023 21:20:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229827AbjGYXFN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jul 2023 19:05:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 770B5E7;
-        Tue, 25 Jul 2023 16:05:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 132DB61926;
-        Tue, 25 Jul 2023 23:05:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 790C3C433C7;
-        Tue, 25 Jul 2023 23:05:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690326311;
-        bh=8u87rzOYUB7/c0OvMvcaBKrY8ZfQ238ZrdAu8eLiTwg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hsDb2Qjx8BUPWaF60ohr/F1CAxiNAoYO7jMn5YnLaysGynJ+IZm/QXijsZDnt1HPA
-         08j6hV8YMhhfQjtB3GaOiC6C1YyBtgcy5XG65sPdmuDKHCFmSNKgReuEgpcXocFQ1T
-         7j0TrtViuUMXIISXWkBd/7eh47cxhlcm9JEHq3jVd8hvvjF1lmEpWyyWWMHFVzoAMO
-         Wcq+/YOGCwbym2N/CK/9NJB1LyYRLs5f0IH0ykG5WOGnUr+Rz5A/cL/ZZszkedH3uI
-         20IaHZDrDMZAxmfg1NRj1Mr5fDkABbYj/MPkbSJ06vKVr/wiQEx1bz1M0w2mTehfL1
-         k1v9V9DuZp6wg==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2b933bbd3eeso90630761fa.1;
-        Tue, 25 Jul 2023 16:05:11 -0700 (PDT)
-X-Gm-Message-State: ABy/qLaaG97ixLESOiv+kDbzXjxD6RgeeccdQe3Q5+4WpWAiXbQQf9L+
-        nN4suHDRtjnLbk2W/BS6h8MfSkY1J3cX2GhVuA==
-X-Google-Smtp-Source: APBJJlGiuk90Ip8gZC0eU2XxptJIjyvn4OaCBsXt9I6gU9jTBi07iiZP0B89Sux6tgm+ZK1Mh1tlaz8wsswH5R/ur4Y=
-X-Received: by 2002:a2e:9556:0:b0:2b6:c2e4:a57a with SMTP id
- t22-20020a2e9556000000b002b6c2e4a57amr110000ljh.38.1690326309410; Tue, 25 Jul
- 2023 16:05:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <1690323318-6103-1-git-send-email-lizhi.hou@amd.com> <1690323318-6103-3-git-send-email-lizhi.hou@amd.com>
-In-Reply-To: <1690323318-6103-3-git-send-email-lizhi.hou@amd.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 25 Jul 2023 17:04:57 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLoJzqnXtJ4BZZo6Y5fVz7PW701968K1VkZX93oKzxf5w@mail.gmail.com>
-Message-ID: <CAL_JsqLoJzqnXtJ4BZZo6Y5fVz7PW701968K1VkZX93oKzxf5w@mail.gmail.com>
-Subject: Re: [PATCH V11 2/5] PCI: Create device tree node for bridge
-To:     Lizhi Hou <lizhi.hou@amd.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, max.zhen@amd.com,
-        sonal.santan@amd.com, stefano.stabellini@xilinx.com
+        with ESMTP id S229483AbjGZBUi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jul 2023 21:20:38 -0400
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DF84AB0;
+        Tue, 25 Jul 2023 18:20:36 -0700 (PDT)
+Received: from [IPv6:::1] (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 36Q1JIxL008573;
+        Tue, 25 Jul 2023 20:19:19 -0500
+Message-ID: <012cb915ae0ce3a32f1608400cf6389a03f2aa7d.camel@kernel.crashing.org>
+Subject: Re: VFIO (PCI) and write combine mapping of BARs
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alex.williamson@redhat.com,
+        osamaabb@amazon.com, linux-pci@vger.kernel.org,
+        Clint Sbisa <csbisa@amazon.com>, catalin.marinas@arm.com,
+        maz@kernel.org
+Date:   Wed, 26 Jul 2023 11:19:18 +1000
+In-Reply-To: <ZL+0h9gvJGTyWKZX@nvidia.com>
+References: <2838d716b08c78ed24fdd3fe392e21222ee70067.camel@kernel.crashing.org>
+         <ZLD1l1274hQQ54RT@lpieralisi> <ZLFBnACjoTbDmKuU@nvidia.com>
+         <bc6c3a08e3d0a343fe8317218106609ba159dfe2.camel@kernel.crashing.org>
+         <ZL+0h9gvJGTyWKZX@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.44.4-0ubuntu1 
+MIME-Version: 1.0
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jul 25, 2023 at 4:15=E2=80=AFPM Lizhi Hou <lizhi.hou@amd.com> wrote=
-:
->
-> The PCI endpoint device such as Xilinx Alveo PCI card maps the register
-> spaces from multiple hardware peripherals to its PCI BAR. Normally,
-> the PCI core discovers devices and BARs using the PCI enumeration process=
-.
-> There is no infrastructure to discover the hardware peripherals that are
-> present in a PCI device, and which can be accessed through the PCI BARs.
->
-> Apparently, the device tree framework requires a device tree node for the
-> PCI device. Thus, it can generate the device tree nodes for hardware
-> peripherals underneath. Because PCI is self discoverable bus, there might
-> not be a device tree node created for PCI devices. Furthermore, if the PC=
-I
-> device is hot pluggable, when it is plugged in, the device tree nodes for
-> its parent bridges are required. Add support to generate device tree node
-> for PCI bridges.
->
-> Add an of_pci_make_dev_node() interface that can be used to create device
-> tree node for PCI devices.
->
-> Add a PCI_DYNAMIC_OF_NODES config option. When the option is turned on,
-> the kernel will generate device tree nodes for PCI bridges unconditionall=
-y.
->
-> Initially, add the basic properties for the dynamically generated device
-> tree nodes which include #address-cells, #size-cells, device_type,
-> compatible, ranges, reg.
->
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
-> ---
->  drivers/pci/Kconfig       |  12 ++
->  drivers/pci/Makefile      |   1 +
->  drivers/pci/bus.c         |   2 +
->  drivers/pci/of.c          |  96 +++++++++++++++-
->  drivers/pci/of_property.c | 232 ++++++++++++++++++++++++++++++++++++++
->  drivers/pci/pci.h         |  12 ++
->  drivers/pci/remove.c      |   1 +
->  7 files changed, 354 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/pci/of_property.c
->
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 3c07d8d214b3..49bd09c7dd0a 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -194,6 +194,18 @@ config PCI_HYPERV
->           The PCI device frontend driver allows the kernel to import arbi=
-trary
->           PCI devices from a PCI backend to support PCI driver domains.
->
-> +config PCI_DYNAMIC_OF_NODES
-> +       bool "Create device tree nodes for PCI devices"
-> +       depends on OF
-> +       select OF_DYNAMIC
-> +       help
-> +         This option enables support for generating device tree nodes fo=
-r some
-> +         PCI devices. Thus, the driver of this kind can load and overlay
-> +         flattened device tree for its downstream devices.
-> +
-> +         Once this option is selected, the device tree nodes will be gen=
-erated
-> +         for all PCI bridges.
-> +
->  choice
->         prompt "PCI Express hierarchy optimization setting"
->         default PCIE_BUS_DEFAULT
-> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-> index 2680e4c92f0a..cc8b4e01e29d 100644
-> --- a/drivers/pci/Makefile
-> +++ b/drivers/pci/Makefile
-> @@ -32,6 +32,7 @@ obj-$(CONFIG_PCI_P2PDMA)      +=3D p2pdma.o
->  obj-$(CONFIG_XEN_PCIDEV_FRONTEND) +=3D xen-pcifront.o
->  obj-$(CONFIG_VGA_ARB)          +=3D vgaarb.o
->  obj-$(CONFIG_PCI_DOE)          +=3D doe.o
-> +obj-$(CONFIG_PCI_DYNAMIC_OF_NODES) +=3D of_property.o
->
->  # Endpoint library must be initialized before its users
->  obj-$(CONFIG_PCI_ENDPOINT)     +=3D endpoint/
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index 5bc81cc0a2de..ab7d06cd0099 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -340,6 +340,8 @@ void pci_bus_add_device(struct pci_dev *dev)
->          */
->         pcibios_bus_add_device(dev);
->         pci_fixup_device(pci_fixup_final, dev);
-> +       if (pci_is_bridge(dev))
-> +               of_pci_make_dev_node(dev);
->         pci_create_sysfs_dev_files(dev);
->         pci_proc_attach_device(dev);
->         pci_bridge_d3_update(dev);
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index e51219f9f523..11d3be165e32 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -495,8 +495,21 @@ static int of_irq_parse_pci(const struct pci_dev *pd=
-ev, struct of_phandle_args *
->                  * to rely on this function (you ship a firmware that doe=
-sn't
->                  * create device nodes for all PCI devices).
->                  */
-> -               if (ppnode)
-> -                       break;
-> +               if (ppnode) {
-> +                       /*
-> +                        * When PCI_DYNAMIC_OF_NODES is on, a device tree
-> +                        * node will be generated for PCI bridge. For the
-> +                        * dynamically generated node, interrupt mapping =
-is
-> +                        * not supported. Thus, it needs to check interru=
-pt-map
-> +                        * property and set ppnode to NULL to do standard
-> +                        * swizzling if interrupt-map does not present.
-> +                        */
-> +                       if (IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_NODES) &&
-> +                           !of_property_present(ppnode, "interrupt-map")=
-)
-> +                               ppnode =3D NULL;
+On Tue, 2023-07-25 at 08:39 -0300, Jason Gunthorpe wrote:
+> On Tue, Jul 25, 2023 at 04:15:39PM +1000, Benjamin Herrenschmidt wrote:
+> > > Assuming this is for #2, I think VFIO has fallen into a bit of a trap
+> > > by allowing userspace to form the mmap offset. I've seen this happen
+> > > in other subsystems too. It seems like a good idea then you realize
+> > > you need more stuff in the mmap space and become sad.
+> > > 
+> > > Typically the way out is to covert the mmap offset into a cookie where
+> > > userspace issues some ioctl and then the ioctl returns an opaque mmap
+> > > offset to use.
+> > > 
+> > > eg in the vfio context you'd do some 'prepare region for mmap' ioctl
+> > > where you could specify flags. The kernel would encode the flags in
+> > > the cookie and then mmap would do the right thing. Adding more stuff
+> > > is done by enhancing the prepare ioctl.
+> > > 
+> > > Legacy mmap offsets are kept working.
+> > 
+> > This indeed what I have in mind. IE. VFIO has legacy regions and add-on
+> > regions though the latter is currently only exploited by some drivers
+> > that create their own add-on regions. My proposal is to add an ioctl to
+> > create them from userspace as "children" of an existing driver-provided
+> > region, allowing to set different attributes for mmap.
+> 
+> I wouldn't call it children, you are just getting a different mmap
+> cookie for the same region object.
 
-We cannot use a kconfig option to determine behavior. You don't get to
-decide the value of the kconfig option. The OS distro does. As I've
-said in the past, the kconfig option is not a long term solution. You
-need things to work the same way whether PCI nodes were populated
-before the kernel runs or dynamically.
+I though they could be subsets but that might be overkill.
 
-Perhaps what you need to do is read PCI_INTERRUPT_PIN and if it's
-non-zero for a device, populate 'interrupts' property using the value.
-Then the standard DT interrupt parsing code should work. That code
-will walk up nodes until it finds the host bridge interrupt-map.
+> > In the current VFIO the implementation is *entirely* in vfio_pci_core
+> > for PCI and entirely in vfio_platform_common.c for platform, so while
+> > the same ioctls could be imagined to create sub-regions, it would have
+> > to be completely implemented twice unless we do a lot of heavy lifting
+> > to move some of that region stuff into common code.
+> 
+> The machinery for managing the mmap cookies should be in common code
 
-Rob
+Ok. I'll whip up a POC within vfio_pci only intially to test the
+concept and to agree on the API, then look at how we can clean all that
+up.
+
+Cheers,
+Ben.
+
