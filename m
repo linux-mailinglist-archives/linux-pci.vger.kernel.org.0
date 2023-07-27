@@ -2,63 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E32F0765754
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jul 2023 17:21:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59734765799
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jul 2023 17:28:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234040AbjG0PVd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jul 2023 11:21:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35246 "EHLO
+        id S231221AbjG0P2W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jul 2023 11:28:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231387AbjG0PVc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jul 2023 11:21:32 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5A791BC1;
-        Thu, 27 Jul 2023 08:21:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=HbvXpPPcY/mtss3n7QDDW7e1ZzXg2VcdFJci2fYdwG0=; b=itsRPG4Zd+Hxc1LA8yWHqGSMMU
-        r3CcuytBqmQwN3uD1pcwqmAI4b+DcyhJLuQn3q/UC9+BVmO8XZk41yfWB13Tk0L5SvlSZBqotnbyc
-        yDJ1id6FPpHzJSr9OlTqxN36CsVNHh6qoieC8HWG242oz4sk8SBABIrAUv8cIyhMWXhmMqMfhXg1V
-        Kao51wMBx63OTvJO7Mr3vI2cZEtOssByqK8EhA9JR/vO0SqlJScLoF++8dFgQw6Oe/WBb3lQ1ytCY
-        u6fRmFlaArJKqbKPCBo83HGC56wWBFf8+t/Bp2vI7oO5bLrQXMM38ZjXPUIG0UifzQ92g4/8TYMLp
-        N5vztD6Q==;
-Received: from [2601:1c2:980:9ec0::2764]
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qP2ni-00FoB8-1s;
-        Thu, 27 Jul 2023 15:21:14 +0000
-Message-ID: <6e85db42-b946-14a5-fe2b-d90f01cb24d2@infradead.org>
-Date:   Thu, 27 Jul 2023 08:21:13 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 2/4] PCI: plda: Get common codes from Microchip
- PolarFire host
-Content-Language: en-US
-To:     Minda Chen <minda.chen@starfivetech.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        with ESMTP id S234756AbjG0P2O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jul 2023 11:28:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B021B30DC
+        for <linux-pci@vger.kernel.org>; Thu, 27 Jul 2023 08:28:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 108AD61EBD
+        for <linux-pci@vger.kernel.org>; Thu, 27 Jul 2023 15:28:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C962C433C7;
+        Thu, 27 Jul 2023 15:28:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690471682;
+        bh=izxQ/NRJBO6j/aIHrUmKUiuLXeceL8X6rh8Ywm6hmA0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kajoPCjYdOfvWbO4QlS1jjP1vh8MWPPIbAb8s6W4Sofyw9Vijl/6q4Bkr4Up981RV
+         aCAcjDmrQelGAi+N/z0/ius6UAOKHOrz0joQ3OAKQwMlUxaQCT4qsxj8f88QUCXnlY
+         9DYAqfT/xMMbHkv3Q94PoacrpAav4MGF1TMw+EFmsgIpSt1EmRlxtLnCsHGKEHYCSi
+         UCjDPjQUgsvjhKP0JGMp3BdR+ATfRrfOfB17H8vbNSu14dgfr9mGrHWfC+R1Wf0i1r
+         uhMZh6ci5uTGbP9OcxzAQblMoPzvbea9h405UbzLNN/y6nTf+QE9GUjv/LkvUkIJkN
+         W+Tvztl2QsSKQ==
+Date:   Thu, 27 Jul 2023 17:27:57 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     daire.mcnamara@microchip.com, conor@kernel.org,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        Kevin Xie <kevin.xie@starfivetech.com>
-References: <20230727103949.26149-1-minda.chen@starfivetech.com>
- <20230727103949.26149-3-minda.chen@starfivetech.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20230727103949.26149-3-minda.chen@starfivetech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 7/8] PCI: microchip: Rename and refactor
+ mc_pcie_enable_msi()
+Message-ID: <ZMKM/f3q1o7N/bBv@lpieralisi>
+References: <20230630154859.2049521-8-daire.mcnamara@microchip.com>
+ <20230719174135.GA507746@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230719174135.GA507746@bhelgaas>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,38 +60,42 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi--
+On Wed, Jul 19, 2023 at 12:41:35PM -0500, Bjorn Helgaas wrote:
+> On Fri, Jun 30, 2023 at 04:48:58PM +0100, daire.mcnamara@microchip.com wrote:
+> > From: Daire McNamara <daire.mcnamara@microchip.com>
+> > 
+> > After improving driver to get MSI-related information from
+> > configuration registers (set at power on from the Libero FPGA
+> > design), its now clear that mc_pcie_enable_msi() is not a good
+> 
+> it's (contraction of "it is")
+> 
+> > name for this function.  The function is better named as
+> > mc_pcie_fixup_ecam() as its purpose is to correct the queue
+> > size of the MSI CAP CTRL.
+> 
+> > -static void mc_pcie_enable_msi(struct mc_pcie *port, void __iomem *base)
+> > +static void mc_pcie_fixup_ecam(struct mc_pcie *port, void __iomem *ecam)
+> 
+> Since the purpose of this seems to be to fix stuff in the MSI cap,
+> removing "msi" from the name seems weird.  The fact that it uses ECAM
+> to access the registers is incidental.
+> 
+> > -	msg_ctrl &= ~PCI_MSI_FLAGS_QSIZE;
+> > -	msg_ctrl |= queue_size << 4;
+> > -	writew_relaxed(msg_ctrl, base + cap_offset + PCI_MSI_FLAGS);
+> > +	reg &= ~PCI_MSI_FLAGS_QSIZE;
+> > +	reg |= queue_size << 4;
+> 
+> Could maybe use FIELD_PREP() instead of the shift?  I guess this would
+> go in the "Gather MSI information" patch.
 
-On 7/27/23 03:39, Minda Chen wrote:
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8e4f9d5dca55..ec59c6d00bf9 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -16170,6 +16170,14 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/pci/cdns,*
->  F:	drivers/pci/controller/cadence/
->  
+Daire,
 
-This new entry is not in the correct location.
-It should be in alphabetical order, so it goes between
+can you follow up on these review comments please ?
 
-PCI DRIVER FOR NXP LAYERSCAPE GEN4 CONTROLLER
-and
-PCI DRIVER FOR RENESAS R-CAR
+Thanks,
+Lorenzo
 
-Thanks.
-
-> +PCI DRIVER FOR PLDA PCIE IP
-> +M:	Daire McNamara <daire.mcnamara@microchip.com>
-> +M:	Kevin Xie <kevin.xie@starfivetech.com>
-> +L:	linux-pci@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/pci/plda,*
-> +F:	drivers/pci/controller/plda/*plda*
-> +
->  PCI DRIVER FOR FREESCALE LAYERSCAPE
->  M:	Minghuan Lian <minghuan.Lian@nxp.com>
->  M:	Mingkai Hu <mingkai.hu@nxp.com>
-
--- 
-~Randy
+> 
+> Bjorn
