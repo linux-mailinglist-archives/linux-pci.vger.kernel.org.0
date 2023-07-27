@@ -2,66 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B195B765E55
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jul 2023 23:40:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E4D576603E
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 01:27:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232249AbjG0VkN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jul 2023 17:40:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57426 "EHLO
+        id S231378AbjG0X1o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jul 2023 19:27:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229819AbjG0VkM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jul 2023 17:40:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 354B0211C;
-        Thu, 27 Jul 2023 14:40:11 -0700 (PDT)
+        with ESMTP id S231875AbjG0X1n (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jul 2023 19:27:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D2331737;
+        Thu, 27 Jul 2023 16:27:41 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AD58F61F58;
-        Thu, 27 Jul 2023 21:40:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9558C433C7;
-        Thu, 27 Jul 2023 21:40:09 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0B97661F3E;
+        Thu, 27 Jul 2023 23:27:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D778C433C8;
+        Thu, 27 Jul 2023 23:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690494010;
-        bh=mjTnkk3b0rI1iOPv/Erll2f7p8nHIqeLrpilD6C+YDQ=;
+        s=k20201202; t=1690500460;
+        bh=goKHBWa/vS/pA7DJKDLo60FUtbLnq7dNm7Fkf6aAGcw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=os6lgqeRlhps0lkDpycX0VCi+KYZNetLU7PqLKFkIOaKx75In/LdmyInZ+Cik2SRz
-         s4BVM2SjHyK7IUERS4hwnVBBFsmu7iN7w95b3n4hVqqls79hSbB/BCyShUhRiCqVBN
-         Rx96krUKwgicAcTwrbGQJZMgbt54TSSIDRudtnoghTiZksUJljgQjFvT1BOQUgp6OX
-         SAiSBelfmexQEfqYN//OtdJ6nyYU0vc0J+qGFgkbKn5vgJcEVaO2a+OfcEjx651AdA
-         1a7OKyB3BtkfaUSeEHcv+RouKXEWVwyuta8AAa2nEaFmjvGVk0blN+GDAR1UZVef42
-         acC1VYKjsqxYg==
-Date:   Thu, 27 Jul 2023 16:40:08 -0500
+        b=WoROMJHlKcwYp9PX/dIOqyE2pPKmgq4MboO5cUDWkA0ekr2d8SuAWdV8wNyBD/ZWr
+         7unfgNXm/z9u2DVlEyJ+pAzBxI8S14s0hgmFST1f1x5LLb36Hp6jTAJvzwKr20Yc86
+         kT0ql+EifMTdDPZquB2MHa2ldCs+qkklJRx0wlSCQXdA7QgJ/DEt4+lS0jl/rIhhGc
+         xkj6RnvR/nSnZYoV8vcWWjkQsEPb94LJ76L/l0gmIRxKPrrJ5oBPMFjbJZbD0dSrJU
+         JAJmYDCsIe6riScLmKHtBIl4j3WG5zwSzrsjElylLgtksijhlfztig1mITrign5ame
+         S9Ft7IVlXPJOQ==
+Date:   Thu, 27 Jul 2023 18:27:38 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kevin Xie <kevin.xie@starfivetech.com>
-Cc:     Minda Chen <minda.chen@starfivetech.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>
-Subject: Re: [PATCH v1 8/9] PCI: PLDA: starfive: Add JH7110 PCIe controller
-Message-ID: <20230727214008.GA797783@bhelgaas>
+To:     "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
+Cc:     "krzysztof.kozlowski@linaro.org" <krzysztof.kozlowski@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>,
+        "Simek, Michal" <michal.simek@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH V5 3/3] PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver
+Message-ID: <20230727232738.GA786642@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230725204633.GA664368@bhelgaas>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+In-Reply-To: <SN7PR12MB72010CF07797580B0B8732EC8B02A@SN7PR12MB7201.namprd12.prod.outlook.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -70,120 +63,96 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Mika, Maciej since they've worked on similar delays recently]
+On Mon, Jul 24, 2023 at 06:40:58AM +0000, Havalige, Thippeswamy wrote:
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > On Thu, Jul 20, 2023 at 06:37:03AM +0000, Havalige, Thippeswamy wrote:
+> > > > From: Bjorn Helgaas <helgaas@kernel.org> ...
+> > > > On Wed, Jun 28, 2023 at 02:58:12PM +0530, Thippeswamy Havalige wrote:
+> > > > > Add support for Xilinx XDMA Soft IP core as Root Port.
+> > > > > ...
 
-On Tue, Jul 25, 2023 at 03:46:35PM -0500, Bjorn Helgaas wrote:
-> On Mon, Jul 24, 2023 at 06:48:47PM +0800, Kevin Xie wrote:
-> > On 2023/7/21 0:15, Bjorn Helgaas wrote:
-> > > On Thu, Jul 20, 2023 at 06:11:59PM +0800, Kevin Xie wrote:
-> > >> On 2023/7/20 0:48, Bjorn Helgaas wrote:
-> > >> > On Wed, Jul 19, 2023 at 06:20:56PM +0800, Minda Chen wrote:
-> > >> >> Add StarFive JH7110 SoC PCIe controller platform
-> > >> >> driver codes.
+> > If you have more detail about the "error interrupt," that would be
+> > useful as well.  Does this refer to an AER interrupt, a "System
+> > Error", something else?  I'm looking at the diagram in PCIe r6.0,
+> > Figure 6-3, wondering if this is related to anything there.  I
+> > suppose likely it's some Xilinx-specific thing?
 > 
-> > >> However, in the compatibility testing with several NVMe SSD, we
-> > >> found that Lenovo Thinklife ST8000 NVMe can not get ready in 100ms,
-> > >> and it actually needs almost 200ms.  Thus, we increased the T_PVPERL
-> > >> value to 300ms for the better device compatibility.
-> > > ...
-> > > 
-> > > Thanks for this valuable information!  This NVMe issue potentially
-> > > affects many similar drivers, and we may need a more generic fix so
-> > > this device works well with all of them.
-> > > 
-> > > T_PVPERL is defined to start when power is stable.  Do you have a way
-> > > to accurately determine that point?  I'm guessing this:
-> > > 
-> > >   gpiod_set_value_cansleep(pcie->power_gpio, 1)
-> > > 
-> > > turns the power on?  But of course that doesn't mean it is instantly
-> > > stable.  Maybe your testing is telling you that your driver should
-> > > have a hardware-specific 200ms delay to wait for power to become
-> > > stable, followed by the standard 100ms for T_PVPERL?
+> - Agreed, ll modify Legacy to INTx, and regarding error interrupts
+> these are Xilinx controller specific interrupts which are used to
+> notify the user about errors such as cfg timeout, slave unsupported
+> requests,Fatal and non fatal error.
+
+This would be great material for comments and/or a revised commit log.
+
+> > > > > +	/* Plug the INTx chained handler */
+> > > > > +	irq_set_chained_handler_and_data(port->intx_irq,
+> > > > > +					 xilinx_pl_dma_pcie_intx_flow, port);
+> > > > > +
+> > > > > +	/* Plug the main event chained handler */
+> > > > > +	irq_set_chained_handler_and_data(port->irq,
+> > > > > +					 xilinx_pl_dma_pcie_event_flow,
+> > > > port);
+> > > >
+> > > > What's the reason for using chained IRQs?  Can this be done without
+> > > > them?  I don't claim to understand all the issues here, but it seems
+> > > > better to avoid chained IRQ handlers when possible:
+> > > > https://lore.kernel.org/all/877csohcll.ffs@tglx/
 > > 
-> > You are right, we did not take the power stable cost into account.
-> > T_PVPERL is enough for Lenovo Thinklife ST8000 NVMe SSD to get ready,
-> > and the extra cost is from the power circuit of a PCIe to M.2 connector,
-> > which is used to verify M.2 SSD with our EVB at early stage.
+> > > - As per the comments in this
+> > > https://lkml.kernel.org/lkml/alpine.DEB.2.20.1705232307330.2409@nanos/
+> > > T/ "It is fine to have chained interrupts when bootloader, device tree
+> > > and kernel under control. Only if BIOS/UEFI comes into play the user
+> > > is helpless against interrupt storm which will cause system to hangs."
+> > >
+> > > We are using ARM embedded platform with Bootloader, Devicetree flow.
+> > 
+> > I read Thomas' comments as "in general it's better to use regular
+> > interrupts, but we can live with chained interrupts if we have
+> > control of bootloader, device tree, and kernel."
+> > 
+> > I guess my questions are more like:
+> > 
+> >   - Could this be done with either chained interrupts or regular
+> >     interrupts?
+> >  - If so, what is the advantage to using chained interrupts?
+
+> With regular interrupts, these interrupts are self-consumed
+> interrupts (interrupt is handled within driver) but where as chained
+> interrupts are not self consumed (interrupts are not handled within
+> the driver, but forwarded to different driver for which the actual
+> interrupt is raised) but these interrupts are demultiplexed and
+> forwards interrupt to another subsystem by calling
+> generic_handle_irq(). 
 > 
-> Hmm.  That sounds potentially interesting.  I assume you're talking
-> about something like this: https://www.amazon.com/dp/B07JKH5VTL
-> 
-> I'm not familiar with the timing requirements for something like this.
-> There is a PCIe M.2 spec with some timing requirements, but I don't
-> know whether or how software is supposed to manage this.  There is a
-> T_PVPGL (power valid to PERST# inactive) parameter, but it's
-> implementation specific, so I don't know what the point of that is.
-> And I don't see a way for software to even detect the presence of such
-> an adapter.
+> As, MSI generic handlers are consumed by Endpoints and end point
+> drivers, chained handlers forward the interrupt to the specific EP
+> driver (For example NVME subsystem or any other subsystem).
 
-I intended to ask about this on the PCI-SIG forum, but after reading
-this thread [1], I don't think we would learn anything.  The question
-was:
+This doesn't really explain it for me, probably because of my IRQ
+ignorance.
 
-  The M.2 device has 5 voltage rails generated from the 3.3V input
-  supply voltage
-  -------------------------------------------
-  This is re. Table 17 in PCI Express M.2 Specification Revision 1.1
-  Power Valid* to PERST# input inactive : Implementation specific;
-  recommended 50 ms
+I compared xilinx_pl_dma (which uses chained interrupts) with
+pci-aardvark.c (which does not).
 
-  What exactly does this mean ?
+  - xilinx_pl_dma_pcie_setup_irq() calls platform_get_irq(0) once and
+    sets up xilinx_pl_dma_pcie_event_flow() as the handler.
 
-  The Note says
+  - advk_pcie_probe() calls platform_get_irq(0) once and sets up
+    advk_pcie_irq_handler() as the handler.
 
-    *Power Valid when all the voltage supply rails have reached their
-    respective Vmin.
+  - xilinx_pl_dma_pcie_event_flow() reads XILINX_PCIE_DMA_REG_IDR to
+    learn which interrupts are pending and calls
+    generic_handle_domain_irq() for each.
 
-  Does this mean that the 50ms to PERSTn is counted from the instant
-  when all *5 voltage rails* on the M.2 device have become "good" ?
+  - advk_pcie_irq_handler() calls advk_pcie_handle_int(), which reads
+    PCIE_ISR0_REG and PCIE_ISR1_REG to learn which interrupts are
+    pending and calls generic_handle_domain_irq() for each.
 
-and the answer was:
+It seems like both drivers do essentially the same thing, but
+xilinx_pl_dma_pcie_event_flow() is a chained handler and
+advk_pcie_irq_handler() is not.
 
-  You wrote;
-  Does this mean that the 50ms to PERSTn is counted from the instant
-  when all 5 voltage rails on the M.2 device have become "good" ?
-
-  Reply:
-  This means that counting the recommended 50 ms begins from the time
-  when the power rails coming to the device/module, from the host, are
-  stable *at the device connector*.
-
-  As for the time it takes voltages derived inside the device from any
-  of the host power rails (e.g., 3.3V rail) to become stable, that is
-  part of the 50ms the host should wait before de-asserting PERST#, in
-  order ensure that most devices will be ready by then.
-
-  Strictly speaking, nothing disastrous happens if a host violates the
-  50ms. If it de-asserts too soon, the device may not be ready, but
-  most hosts will try again. If the host de-asserts too late, the
-  device has even more time to stabilize. This is why the WG felt that
-  an exact minimum number for >>Tpvpgl, was not valid in practice, and
-  we made it a recommendation.
-
-Since T_PVPGL is implementation-specific, we can't really base
-anything in software on the 50ms recommendation.  It sounds to me like
-they are counting on software to retry config reads when enumerating.
-
-I guess the delays we *can* observe are:
-
-  100ms T_PVPERL "Power stable to PERST# inactive" (CEM 2.9.2)
-  100ms software delay between reset and config request (Base 6.6.1)
-
-The PCI core doesn't know how to assert PERST#, so the T_PVPERL delay
-definitely has to be in the host controller driver.
-
-The PCI core observes the second 100ms delay after a reset in
-pci_bridge_wait_for_secondary_bus().  But this 100ms delay does not
-happen during initial enumeration.  I think the assumption of the PCI
-core is that when the host controller driver calls pci_host_probe(),
-we can issue config requests immediately.
-
-So I think that to be safe, we probably need to do both of those 100ms
-delays in the host controller driver.  Maybe there's some hope of
-supporting the latter one in the PCI core someday, but that's not
-today.
+Is there some underlying difference in the way the hardware works that
+means xilinx_pl_dma needs a chained handler while aardvark does not?
 
 Bjorn
-
-[1] https://forum.pcisig.com/viewtopic.php?f=74&t=1037
