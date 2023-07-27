@@ -2,82 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F48E76538E
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jul 2023 14:22:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 617CE765460
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jul 2023 14:52:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232856AbjG0MW3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jul 2023 08:22:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58762 "EHLO
+        id S231908AbjG0Mw6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jul 2023 08:52:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233913AbjG0MW2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jul 2023 08:22:28 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50DEC30C0;
-        Thu, 27 Jul 2023 05:21:58 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-4fdd14c1fbfso1580053e87.1;
-        Thu, 27 Jul 2023 05:21:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690460498; x=1691065298;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3lv8NLN1fG/Lk2oimzBPYTF7qXzdm4FqQVkw6hJCTj0=;
-        b=CPepNmNZ6Jty33pDVwH9xvXmD+1cPXg/Vmwt7+FqF8RfxBa0ulxIh/DPy1OZJhc1Om
-         QnP/1XlTi30iKhTvDoe0/XoUYySZ9IlSxGvjiZ+WWog/Xt/T8fswOqE8avOtrFb8OGIY
-         aKJpFdPDl1Jqlf4OlJxoeMo5JyLV84ay8W7LDRfQj5VDEqkxd9b6UYlZHkuJt+dO8fXn
-         8qsGaaLhtUKcd9U2WJsU+gmWpLzB39HzmfqOdqXrV619nEdJdVcHvfHfwh8/u2OnnWHR
-         JNrX4cc78eAzNzwrKGSiImEOS3taoFnp+G2Ut2/ps7BXGrkouf+FrlHMNoZ/2PJcxsKG
-         2Pqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690460498; x=1691065298;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3lv8NLN1fG/Lk2oimzBPYTF7qXzdm4FqQVkw6hJCTj0=;
-        b=TcdTP3DiYAlhyBEs06nyaYaUIT2YwIbQ4vjj6/4LvGoseaLxGIo/TLwbsVWLJBeNyz
-         pRplUYv8OTBZaCnlPXeTF0Cgp5nXItPwAmYgJyZ30/FMJ+U1I34rnDixIVMhr34a9ZQh
-         YEh+xG4qQwK3It4Xw+wEsI2hPe9zhXItQlgWnEUMjg7w+D1LXGtRleU1Dawy6UbVs8Uf
-         ad3VTd0a0JNWg+enRqSg+uXTmj50T6n3tTIM1Q+m4Zul9bP2VIfeNFtLRkO/uEiJKLRP
-         KBR5pitzRcc0e8rD306y6yhHbdXfywG9tWd2SdkbB4MAKnPUUjkpczr5d0OHASrq7pwo
-         2V5g==
-X-Gm-Message-State: ABy/qLYbWs0qM0w6IeAilO5B/dYgJCQho83X4YyAh2ymqaSZaFV7kTkp
-        ZkS0i0XPqG2lLabZVBd8qxM=
-X-Google-Smtp-Source: APBJJlFw+VPnN4KLx7SkniKX8XuJHD/frq+qjPTTxFkmXHGb/TARyZOOpm1buWxCLY/+xqQYPEvYMw==
-X-Received: by 2002:a19:a40d:0:b0:4f8:6d99:f4f3 with SMTP id q13-20020a19a40d000000b004f86d99f4f3mr1524855lfc.52.1690460497859;
-        Thu, 27 Jul 2023 05:21:37 -0700 (PDT)
-Received: from mobilestation ([93.157.254.210])
-        by smtp.gmail.com with ESMTPSA id eq17-20020a056512489100b004fe1268bf7asm288662lfb.126.2023.07.27.05.21.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 05:21:37 -0700 (PDT)
-Date:   Thu, 27 Jul 2023 15:21:33 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Manivannan Sadhasivam <mani@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
-        bhelgaas@google.com, kishon@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v18 04/20] PCI: dwc: Change arguments of
- dw_pcie_prog_outbound_atu()
-Message-ID: <qcqki7cxr75vjov67kkxsox4buokfgu64s5irisu6hz2yvmt26@o6dyibtpz5vc>
-References: <20230721074452.65545-1-yoshihiro.shimoda.uh@renesas.com>
- <20230721074452.65545-5-yoshihiro.shimoda.uh@renesas.com>
- <20230724074556.GC6291@thinkpad>
- <ezuyypjmhkb4nsruy5kdoopg537yqg2paf4acgfyib6p7kj7g5@kumpnp2cr4zh>
- <20230726130015.GA5633@thinkpad>
- <aldqqozyrjdd74jdm2xmgp53rpke4otm6iy4tjfemdwxd4ir5y@p3dlr3p5c7t4>
- <20230727110343.GA4702@thinkpad>
+        with ESMTP id S234310AbjG0Mww (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jul 2023 08:52:52 -0400
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29CDA1BFA;
+        Thu, 27 Jul 2023 05:52:49 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R671e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0VoM90Yd_1690462362;
+Received: from 30.240.115.26(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VoM90Yd_1690462362)
+          by smtp.aliyun-inc.com;
+          Thu, 27 Jul 2023 20:52:45 +0800
+Message-ID: <e5f05c67-1b4a-af9a-3e14-8ee4234e36c8@linux.alibaba.com>
+Date:   Thu, 27 Jul 2023 20:52:40 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.12.0
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+Subject: Re: [PATCH v6 1/4] docs: perf: Add description for Synopsys
+ DesignWare PCIe PMU driver
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
+        helgaas@kernel.org, yangyicong@huawei.com, will@kernel.org,
+        baolin.wang@linux.alibaba.com, robin.murphy@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, rdunlap@infradead.org,
+        mark.rutland@arm.com, zhuo.song@linux.alibaba.com
+References: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
+ <20230606074938.97724-2-xueshuai@linux.alibaba.com>
+ <20230727095727.0000190b@Huawei.com>
+Content-Language: en-US
+In-Reply-To: <20230727095727.0000190b@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230727110343.GA4702@thinkpad>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+X-Spam-Status: No, score=-10.0 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -85,192 +50,225 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 27, 2023 at 04:33:43PM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Jul 27, 2023 at 02:38:44AM +0300, Serge Semin wrote:
-> > On Wed, Jul 26, 2023 at 06:30:15PM +0530, Manivannan Sadhasivam wrote:
-> > > On Wed, Jul 26, 2023 at 08:02:24AM +0300, Serge Semin wrote:
-> > > > On Mon, Jul 24, 2023 at 01:15:56PM +0530, Manivannan Sadhasivam wrote:
-> > > > > On Fri, Jul 21, 2023 at 04:44:36PM +0900, Yoshihiro Shimoda wrote:
-> > > > > > The __dw_pcie_prog_outbound_atu() currently has 6 arguments.
-> > > > > > To support INTx IRQs in the future, it requires an additional 2
-> > > > > > arguments. For improved code readability, introduce the struct
-> > > > > > dw_pcie_ob_atu_cfg and update the arguments of
-> > > > > > dw_pcie_prog_outbound_atu().
-> > > > > > 
-> > > > > > Consequently, remove __dw_pcie_prog_outbound_atu() and
-> > > > > > dw_pcie_prog_ep_outbound_atu() because there is no longer
-> > > > > > a need.
-> > > > > > 
-> > > > > > No behavior changes.
-> > > > > > 
-> > > > > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > > > 
-> > > > > One nit below. With that,
-> > > > > 
-> > > > > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > 
-> > > > > > Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-> > > > > > ---
-> > > > > >  .../pci/controller/dwc/pcie-designware-ep.c   | 21 +++++---
-> > > > > >  .../pci/controller/dwc/pcie-designware-host.c | 52 +++++++++++++------
-> > > > > >  drivers/pci/controller/dwc/pcie-designware.c  | 49 ++++++-----------
-> > > > > >  drivers/pci/controller/dwc/pcie-designware.h  | 15 ++++--
-> > > > > >  4 files changed, 77 insertions(+), 60 deletions(-)
-> > > > > > 
-> > > > > 
-> > > > > [...]
-> > > > > 
-> > > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > > > > > index 3c06e025c905..85de0d8346fa 100644
-> > > > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > > > > @@ -288,6 +288,15 @@ enum dw_pcie_core_rst {
-> > > > > >  	DW_PCIE_NUM_CORE_RSTS
-> > > > > >  };
-> > > > > >  
-> > > > > > +struct dw_pcie_ob_atu_cfg {
-> > > > > > +	int index;
-> > > > > > +	int type;
-> > > > > > +	u8 func_no;
-> > > > > > +	u64 cpu_addr;
-> > > > > > +	u64 pci_addr;
-> > > > > > +	u64 size;
-> > > > > 
-> > > > 
-> > > > > Reorder the members in below order to avoid holes:
-> > > > > 
-> > > > > u64
-> > > > > int
-> > > > > u8
-> > > > 
-> > > > One more time. Your suggestion won't prevent the compiler from adding
-> > > > the pads. (If by "holes" you meant the padding. Otherwise please
-> > > > elaborate what you meant?).
-> > > 
-> > > Struct padding is often referred as struct holes. So yes, I'm referring the
-> > > same.
-> > > 
-> > > > The structure will have the same size of
-> > > > 40 bytes in both cases. So your suggestion will just worsen the
-> > > > structure readability from having a more natural parameters order (MW
-> > > > index, type, function, and then the mapping parameters) to a redundant
-> > > > type-based order.
-> > > > 
-> > > 
-> > 
-> > > This is a common comment I provide for all structures. Even though the current
-> > > result (reordering) doesn't save any space, when the structure grows big (who
-> > > knows), we often see more holes/padding being inserted by the compiler if the
-> > > members are not ordered in the descending order w.r.t their size.
-> > > 
-> > > I agree that it makes more clear if the members are grouped based on their
-> > > function etc... but for large structures this would often add more padding/hole.
-> > 
-> > This structure will never be big enough to be considered for such
-> > strange optimization. Moreover practicality almost always beats some
-> > theoretical considerations. In this case there is no any reason to
-> > reorder the fields as you say.
-> > 
-> > Speaking in general I very much doubt that saving a few bytes of
-> > memory can be considered as a better option than having a more
-> > readable structure especially these days. Moreover for all these years
-> > I never met anybody asking to set the descending order of
-> > the members or maintaining such limitation in the commonly used kernel
-> > structures. What is normally done:
-> > 1. Move an embedded object to the head of the structure for the
-> > container_of-macro optimization.
-> > 2. Group up the commonly used fields to optimize the system cache
-> > utilization.
-> > 3. Logical grouping the members, which naturally may lead to the more
-> > optimal cache utilization.
-> 
-> Indeed.
-> 
-> > 4. Move a field to a certain place of the structure to fill in the
-> > pads.
-> > 
-> 
-> This is what I try to avoid by grouping the members. If you move a field to
-> a certain place, wouldn't it affect readability?
-> 
-> But I do not want to argue more on this. Please see below.
-> 
-> > Even if the "descending alignment" requirement minimizes the number of
-> > the pads it isn't the only possible way to do so in the particular
-> > cases and it looks too harsh to be blindly applied all the time. If a
-> > few bytes is so important why not do the same for instance for the
-> > local variables too? They are also normally size-aligned in the stack
-> > memory, which is much more precious in kernel.
-> > 
-> 
-> Well, for local variables I prefer reverse Xmas tree order which is what widely
-> used throughout the kernel. But we do not care about their ordering because, it
-> won't grow too much like a structure (not talking about recursive case).
-> 
-> > Anyway in this case changing the fields order is absolutely redundant.
-> > Even a provided afterwards update doesn't cause the structure size
-> > change. So for the sake of readability it's better to leave its fields
-> > ordered as is.
-> > 
-> 
-> I certainly agree that reordering wouldn't save any space for this structure.
-> As a maintainer, I prefer to keep this pattern so that I don't have to worry
-> about the padding issues in the future and hence the suggestion.
-> 
-> But feel free to drop it as I don't have a strong objection to this specific
-> case.
 
-Agreed then.
 
-Yoshihiro, could you please ignore the Mani' comment regarding the
-"descending alignment" order and retain the fields order is in your
-current patch?
+On 2023/7/27 16:57, Jonathan Cameron wrote:
+> On Tue, 6 Jun 2023 15:49:35 +0800
+> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+> 
+>> Alibaba's T-Head Yitan 710 SoC includes Synopsys' DesignWare Core PCIe
+>> controller which implements which implements PMU for performance and
+>> functional debugging to facilitate system maintenance.
+>>
+>> Document it to provide guidance on how to use it.
+>>
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> 
+> Given this looks like it might move forwards (after Bjorn's reply)
+> I'll give it a closer review :)
 
-I'll get back to the series review tomorrow. Please no rush with
-resubmitting.
-
--Serge(y)
+That's great to hear! I appreciate the effort that has been put into resuming the
+review process. Thank you for your dedication and hard work in making this happen。
 
 > 
-> - Mani
+> Some editorial things in here only. What you have is easy
+> to understand but nice to tidy up the odd corner or two.
+> We can bikeshed this for ever so I've skipped really minor things
+> where phrasing is debatable (particularly British vs US English :)
+
+Thank you for patiently pointing out the writing issues. I appreciate your feedback
+and it will make the necessary improvements.
+
+(Comments replied inline)
+
+Best Regards,
+Shuai
+
 > 
-> > -Serge(y)
-> > 
-> > > 
-> > > - Mani
-> > > 
-> > > > -Serge(y)
-> > > > 
-> > > > > 
-> > > > > - Mani
-> > > > > 
-> > > > > > +};
-> > > > > > +
-> > > > > >  struct dw_pcie_host_ops {
-> > > > > >  	int (*host_init)(struct dw_pcie_rp *pp);
-> > > > > >  	void (*host_deinit)(struct dw_pcie_rp *pp);
-> > > > > > @@ -416,10 +425,8 @@ void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
-> > > > > >  int dw_pcie_link_up(struct dw_pcie *pci);
-> > > > > >  void dw_pcie_upconfig_setup(struct dw_pcie *pci);
-> > > > > >  int dw_pcie_wait_for_link(struct dw_pcie *pci);
-> > > > > > -int dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
-> > > > > > -			      u64 cpu_addr, u64 pci_addr, u64 size);
-> > > > > > -int dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
-> > > > > > -				 int type, u64 cpu_addr, u64 pci_addr, u64 size);
-> > > > > > +int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
-> > > > > > +			      const struct dw_pcie_ob_atu_cfg *atu);
-> > > > > >  int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
-> > > > > >  			     u64 cpu_addr, u64 pci_addr, u64 size);
-> > > > > >  int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
-> > > > > > -- 
-> > > > > > 2.25.1
-> > > > > > 
-> > > > > 
-> > > > > -- 
-> > > > > மணிவண்ணன் சதாசிவம்
-> > > 
-> > > -- 
-> > > மணிவண்ணன் சதாசிவம்
+> Jonathan
 > 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+> 
+>> ---
+>>  .../admin-guide/perf/dwc_pcie_pmu.rst         | 97 +++++++++++++++++++
+>>  Documentation/admin-guide/perf/index.rst      |  1 +
+>>  2 files changed, 98 insertions(+)
+>>  create mode 100644 Documentation/admin-guide/perf/dwc_pcie_pmu.rst
+>>
+>> diff --git a/Documentation/admin-guide/perf/dwc_pcie_pmu.rst b/Documentation/admin-guide/perf/dwc_pcie_pmu.rst
+>> new file mode 100644
+>> index 000000000000..c1f671cb64ec
+>> --- /dev/null
+>> +++ b/Documentation/admin-guide/perf/dwc_pcie_pmu.rst
+>> @@ -0,0 +1,97 @@
+>> +======================================================================
+>> +Synopsys DesignWare Cores (DWC) PCIe Performance Monitoring Unit (PMU)
+>> +======================================================================
+>> +
+>> +DesignWare Cores (DWC) PCIe PMU
+>> +===============================
+>> +
+>> +The PMU is not a PCIe Root Complex integrated End Point (RCiEP) device but
+>> +only PCIe configuration space register block provided by each PCIe Root
+> 
+> I don't think you need the negative bit of description - it's not a lot of
+> different things and this statement only really makes sense when compared to
+> some other PCIe PMUs which the reader may never have come across.
+> 
+> "The PMU is a PCIe configuration space register block provided by each PCIE Root
+> Port in a Vendor-Specific Extended Capability ..."
+
+Aha, you are right, I should not have made such assumptions, will adopt your
+rewriting.
+
+> 
+>> +Port in a Vendor-Specific Extended Capability named RAS DES (Debug, Error
+>> +injection, and Statistics).
+>> +
+>> +As the name indicated, the RAS DES capability supports system level
+> 
+> "As the name indicates," (present tense more appropriate here)
+
+Will fix it.
+
+> 
+>> +debugging, AER error injection, and collection of statistics. To facilitate
+>> +collection of statistics, Synopsys DesignWare Cores PCIe controller
+> 
+> "Core's"
+> 
+> (as it belongs to the core rather than intent being that it applies to plural
+> cores?)
+
+"Synopsys DesignWare Cores PCIe controller" is from the title from Synopsys
+databook, so I prefer to keep as it is here.
+
+
+> 
+>> +provides the following two features:
+>> +
+>> +- Time Based Analysis (RX/TX data throughput and time spent in each
+>> +  low-power LTSSM state)
+>> +- Lane Event counters (Error and Non-Error for lanes)
+>> +
+>> +Time Based Analysis
+>> +-------------------
+>> +
+>> +Using this feature you can obtain information regarding RX/TX data
+>> +throughput and time spent in each low-power LTSSM state by the controller.
+>> +
+>> +The counters are 64-bit width and measure data in two categories,
+>> +
+>> +- percentage of time does the controller stay in LTSSM state in a
+> 
+> "percentage of time the controller stays in LTSSM " 
+
+Will fix it.
+
+> 
+>> +  configurable duration. The measurement range of each Event in Group#0.
+> 
+> I'm not sure of meaning of the last sentence.  Is it simply that this bullet
+> refers to group#0?  Perhaps make that the lead off. e.g.
+> 
+> - Group#0: Percentage of time the controller stays in LTSSM states.
+> - Group#1: Amount of data processed (Units of 16 bytes).
+
+You are right. Will fix it.
+
+> 
+>> +- amount of data processed (Units of 16 bytes). The measurement range of
+>> +  each Event in Group#1.
+>> +
+>> +Lane Event counters
+>> +-------------------
+>> +
+>> +Using this feature you can obtain Error and Non-Error information in
+>> +specific lane by the controller.
+>> +
+>> +The counters are 32-bit width and the measured event is select by:
+>> +
+>> +- Group i
+>> +- Event j within the Group i
+>> +- and Lane k
+>> +
+>> +Some of the event counters only exist for specific configurations.
+>> +
+>> +DesignWare Cores (DWC) PCIe PMU Driver
+>> +=======================================
+>> +
+>> +This driver add PMU devices for each PCIe Root Port. And the PMU device is
+> 
+> "This driver adds PMU devices for each PCIe Root Port.  The PMU device is named"
+> 
+> (Not good to start a sentence with And - an alternative form would be)
+> 
+> "This driver adds PMU devices for each PCIe Root Port named based on the BDF of
+> the Root Port." 
+
+Ok, will fix it.
+
+> 
+>> +named based the BDF of Root Port. For example,
+>> +
+>> +    30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
+>> +
+>> +the PMU device name for this Root Port is dwc_rootport_3018.
+>> +
+>> +The DWC PCIe PMU driver registers a perf PMU driver, which provides
+>> +description of available events and configuration options in sysfs, see
+>> +/sys/bus/event_source/devices/dwc_rootport_{bdf}.
+>> +
+>> +The "format" directory describes format of the config, fields of the
+> 
+> "config fields" (stray comma makes this confusing to read)
+
+Will fix it.
+
+
+
+>> +perf_event_attr structure. The "events" directory provides configuration
+>> +templates for all documented events.  For example,
+>> +"Rx_PCIe_TLP_Data_Payload" is an equivalent of "eventid=0x22,type=0x1".
+>> +
+>> +The "perf list" command shall list the available events from sysfs, e.g.::
+>> +
+>> +    $# perf list | grep dwc_rootport
+>> +    <...>
+>> +    dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/        [Kernel PMU event]
+>> +    <...>
+>> +    dwc_rootport_3018/rx_memory_read,lane=?/               [Kernel PMU event]
+>> +
+>> +Time Based Analysis Event Usage
+>> +-------------------------------
+>> +
+>> +Example usage of counting PCIe RX TLP data payload (Units of 16 bytes)::
+>> +
+>> +    $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
+>> +
+>> +The average RX/TX bandwidth can be calculated using the following formula:
+>> +
+>> +    PCIe RX Bandwidth = PCIE_RX_DATA * 16B / Measure_Time_Window
+>> +    PCIe TX Bandwidth = PCIE_TX_DATA * 16B / Measure_Time_Window
+>> +
+>> +Lane Event Usage
+>> +-------------------------------
+>> +
+>> +Each lane has the same event set and to avoid generating a list of hundreds
+>> +of events, the user need to specify the lane ID explicitly, e.g.::
+>> +
+>> +    $# perf stat -a -e dwc_rootport_3018/rx_memory_read,lane=4/
+>> +
+>> +The driver does not support sampling, therefore "perf record" will not
+>> +work. Per-task (without "-a") perf sessions are not supported.
+>> diff --git a/Documentation/admin-guide/perf/index.rst b/Documentation/admin-guide/perf/index.rst
+>> index 9de64a40adab..11a80cd28a2e 100644
+>> --- a/Documentation/admin-guide/perf/index.rst
+>> +++ b/Documentation/admin-guide/perf/index.rst
+>> @@ -19,5 +19,6 @@ Performance monitor support
+>>     arm_dsu_pmu
+>>     thunderx2-pmu
+>>     alibaba_pmu
+>> +   dwc_pcie_pmu
+>>     nvidia-pmu
+>>     meson-ddr-pmu
