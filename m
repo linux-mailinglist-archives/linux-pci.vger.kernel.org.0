@@ -2,131 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AACB76595C
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jul 2023 18:59:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A00EF765A9C
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jul 2023 19:41:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231817AbjG0Q7P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jul 2023 12:59:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35078 "EHLO
+        id S229662AbjG0RlH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jul 2023 13:41:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230409AbjG0Q7O (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jul 2023 12:59:14 -0400
+        with ESMTP id S229450AbjG0RlG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jul 2023 13:41:06 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05090273C;
-        Thu, 27 Jul 2023 09:59:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD5E819A1;
+        Thu, 27 Jul 2023 10:41:05 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8CBA961EE2;
-        Thu, 27 Jul 2023 16:59:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DE3EC433C7;
-        Thu, 27 Jul 2023 16:59:12 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 550E361F05;
+        Thu, 27 Jul 2023 17:41:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E66CC433C8;
+        Thu, 27 Jul 2023 17:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690477152;
-        bh=2LPH2ZikNZEeoMkYepl8BArTbqY3yYkLkdvhWJxt1Hg=;
+        s=k20201202; t=1690479664;
+        bh=sV0KNtt9fE1XUeUe/XyptVCWCQE2T1DYtSUkvu0/uQU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=YzhDZb+NGDJm5xPzn0sIMO8wCVhqoVdj2GdlFyhUKRxR9HhhmPBH98/cqNhoo2zvK
-         XZ+PlHLK4W/94iByiSzGFJ6I9Dm27wqS25H/cuQhXTOCaNy5bhXEoGRb18YTGiL1hd
-         yqz/b/7ySrJjy16y0pdRqrIFqOcj6E0/Tl1mxxoZsNx+a+0Hb1siuFnV+fqs0wlCmA
-         5xUnoX5VAnvJY4iW9rGATE6pQvziPg90LnqBddtue+824SqLz163MW7QFvLi/8ccb/
-         CYrRASOo15AL4anOEZu8BA9GTfcxm9RCQeyuYX25n9gEgVG7AwJrVn91BLRjZCOK3m
-         XekbpyzGybBow==
-Date:   Thu, 27 Jul 2023 11:59:10 -0500
+        b=ondc/h+uRtAb3vSjtI9OfaFusUo1AEMl/lad0+0r0QabAkdTx82Su7M/1SqBtnUd9
+         s9YDdOZRZfwkmnI+1KtH22smACKUWz89aWVk5vlsD7jVO43mIeMnz4eHowqeKWFqdk
+         GNW9C3P/fAf1zTbFW323WYurlTP0AEQa5h37iqsszvBXKN4DHJ9ax/vZ7WjDAH5U7i
+         MwoUjgFtWIOARzvvCYm6rg0vxCD7zXixWk/4i9oiyUW1GZf+AzSsehHJIizwHApcmb
+         s347weqxZxhTMjndpp/Ntwbu+KjjVl2uAGp71y89KtWJNzUPbv98MaTRpg9ffX8Qz8
+         LwL+SAWCqJnMQ==
+Date:   Thu, 27 Jul 2023 12:41:02 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Davidlohr Bueso <dave@stgolabs.net>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/DOE: Fix destroy_work_on_stack() race
-Message-ID: <20230727165910.GA786573@bhelgaas>
+To:     Igor Mammedov <imammedo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, terraluna977@gmail.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org, mst@redhat.com,
+        rafael@kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI: acpiphp:: use
+ pci_assign_unassigned_bridge_resources() only if bus->self not NULL
+Message-ID: <20230727174102.GA689794@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230726-doe-fix-v1-1-af07e614d4dd@intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230726123518.2361181-2-imammedo@redhat.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 26, 2023 at 11:29:42AM -0700, Ira Weiny wrote:
-> The following debug object splat was observed in testing.
-> 
->   [   14.061937] ------------[ cut here ]------------
->   [   14.063899] ODEBUG: free active (active state 0) object: 0000000097d23782 object type: work_struct hint: doe_statemachine_work+0x0/0x510
->   [   14.067480] WARNING: CPU: 1 PID: 71 at lib/debugobjects.c:514 debug_print_object+0x7d/0xb0
->   ...
->   [   14.080951] Workqueue: pci 0000:36:00.0 DOE [1 doe_statemachine_work
->   [   14.083485] RIP: 0010:debug_print_object+0x7d/0xb0
->   ...
->   [   14.116231] Call Trace:
->   [   14.117652]  <TASK>
->   [   14.118958]  ? debug_print_object+0x7d/0xb0
->   [   14.120782]  ? __warn+0x7d/0x130
->   [   14.122399]  ? debug_print_object+0x7d/0xb0
->   [   14.123746]  ? report_bug+0x18d/0x1c0
->   [   14.125025]  ? handle_bug+0x3c/0x80
->   [   14.126506]  ? exc_invalid_op+0x13/0x60
->   [   14.127796]  ? asm_exc_invalid_op+0x16/0x20
->   [   14.129380]  ? debug_print_object+0x7d/0xb0
->   [   14.130688]  ? debug_print_object+0x7d/0xb0
->   [   14.131997]  ? __pfx_doe_statemachine_work+0x10/0x10
->   [   14.133597]  debug_object_free.part.0+0x11b/0x150
->   [   14.134940]  doe_statemachine_work+0x45e/0x510
->   [   14.136348]  process_one_work+0x1d4/0x3c0
->   ...
->   [   14.161484]  </TASK>
->   [   14.162434] ---[ end trace 0000000000000000 ]---
-> 
-> This occurs because destroy_work_on_stack() was called after signaling
-> the completion in the calling thread.  This creates a race between
-> destroy_work_on_stack() and the task->work struct going of scope in the
-> pci_doe().
-> 
-> Signal the work complete after destroying the work struct.  This is safe
-> because signal_task_complete() is the final thing the work item does and
-> the workqueue code is careful not to access the work struct after.
-> 
-> Fixes: abf04be0e707 ("PCI/DOE: Fix memory leak with CONFIG_DEBUG_OBJECTS=y")
-> Cc: Lukas Wunner <lukas@wunner.de>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Thank you to both you and Woody for chasing this down!
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+On Wed, Jul 26, 2023 at 02:35:18PM +0200, Igor Mammedov wrote:
+> Commit [1] switched acpiphp hotplug to use
+>    pci_assign_unassigned_bridge_resources()
+> which depends on bridge being available, however in some cases
+> when acpiphp is in use, enable_slot() can get a slot without
+> bridge associated.
+>   1. legitimate case of hotplug on root bus
+>       (likely not exiting on real hw, but widely used in virt world)
+>   2. broken firmware, that sends 'Bus check' events to non
+>      existing root ports (Dell Inspiron 7352/0W6WV0), which somehow
+>      endup at acpiphp:enable_slot(..., bridge = 0) and with bus
+>      without bridge assigned to it.
 
-Dan, let me know if you'd rather have me take this.
+Do we have evidence about the details of this non-existent root port?
+If we do, I think it would be interesting to include a URL to them in
+case there's some hole in the way we handle Bus Check events.
 
+> Issue is easy to reproduce with QEMU's 'pc' machine provides
+> PCI hotplug on hostbridge slots. to reproduce boot kernel at
+> commit [1] in VM started with followin CLI and hotplug a device:
+
+You mention CLI; did you mean to include a qemu command line here?
+Maybe it's the same thing mentioned in the 40613da52b13 commit log?
+I tried briefly to reproduce this using the 40613da52b13 command line
+but haven't quite got it going yet.  I think it would be very useful
+to either include it here again or point to the 40613da52b13 commit
+log.
+
+> once guest OS is fully booted at qemu prompt:
+> 
+> (qemu) device_add e1000
+> 
+> it will cause NULL pointer dereference at
+> 
+>     void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
+>     {
+>         struct pci_bus *parent = bridge->subordinate;
+> 
+> [  612.277651] BUG: kernel NULL pointer dereference, address: 0000000000000018
+> [...]
+> [  612.277798]  ? pci_assign_unassigned_bridge_resources+0x1f/0x260
+> [  612.277804]  ? pcibios_allocate_dev_resources+0x3c/0x2a0
+> [  612.277809]  enable_slot+0x21f/0x3e0
+> [  612.277816]  acpiphp_hotplug_notify+0x13d/0x260
+> [  612.277822]  ? __pfx_acpiphp_hotplug_notify+0x10/0x10
+> [  612.277827]  acpi_device_hotplug+0xbc/0x540
+> [  612.277834]  acpi_hotplug_work_fn+0x15/0x20
+> [  612.277839]  process_one_work+0x1f7/0x370
+> [  612.277845]  worker_thread+0x45/0x3b0
+> [  612.277850]  ? __pfx_worker_thread+0x10/0x10
+> [  612.277854]  kthread+0xdc/0x110
+> [  612.277860]  ? __pfx_kthread+0x10/0x10
+> [  612.277866]  ret_from_fork+0x28/0x40
+> [  612.277871]  ? __pfx_kthread+0x10/0x10
+> [  612.277876]  ret_from_fork_asm+0x1b/0x30
+> 
+> The issue was discovered on Dell Inspiron 7352/0W6WV0 laptop with
+> following sequence:
+>    1. suspend to RAM
+>    2. wake up with the same backtrace being observed:
+>    3. 2nd suspend to RAM attempt makes laptop freeze
+> 
+> Fix it by using __pci_bus_assign_resources() instead of
+> pci_assign_unassigned_bridge_resources()as we used to do
+> but only in case when bus doesn't have a bridge associated
+> with it.
+> 
+> That let us keep hotplug on root bus working like it used to be
+> but at the same time keeps resource reassignment usable on
+> root ports (and other 1st level bridges) that was fixed by [1].
+> 
+> 1)
+> Fixes: 40613da52b13 ("PCI: acpiphp: Reassign resources on bridge if necessary")
+> Link: https://lore.kernel.org/r/11fc981c-af49-ce64-6b43-3e282728bd1a@gmail.com
+> Reported-by: Woody Suwalski <terraluna977@gmail.com>
+> Signed-off-by: Igor Mammedov <imammedo@redhat.com>
 > ---
->  drivers/pci/doe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/pci/hotplug/acpiphp_glue.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index 1b97a5ab71a9..e3aab5edaf70 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-> @@ -293,8 +293,8 @@ static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *tas
->  static void signal_task_complete(struct pci_doe_task *task, int rv)
->  {
->  	task->rv = rv;
-> -	task->complete(task);
->  	destroy_work_on_stack(&task->work);
-> +	task->complete(task);
->  }
+> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
+> index 328d1e416014..3bc4e1f3efee 100644
+> --- a/drivers/pci/hotplug/acpiphp_glue.c
+> +++ b/drivers/pci/hotplug/acpiphp_glue.c
+> @@ -498,6 +498,7 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
+>  				acpiphp_native_scan_bridge(dev);
+>  		}
+>  	} else {
+> +		LIST_HEAD(add_list);
+>  		int max, pass;
 >  
->  static void signal_task_abort(struct pci_doe_task *task, int rv)
-> 
-> ---
-> base-commit: 20ea1e7d13c1b544fe67c4a8dc3943bb1ab33e6f
-> change-id: 20230726-doe-fix-f57943f9ea82
-> 
-> Best regards,
+>  		acpiphp_rescan_slot(slot);
+> @@ -511,10 +512,15 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
+>  				if (pass && dev->subordinate) {
+>  					check_hotplug_bridge(slot, dev);
+>  					pcibios_resource_survey_bus(dev->subordinate);
+> +					if (!bus->self)
+> +						__pci_bus_size_bridges(dev->subordinate, &add_list);
+>  				}
+>  			}
+>  		}
+> -		pci_assign_unassigned_bridge_resources(bus->self);
+> +		if (bus->self)
+> +			pci_assign_unassigned_bridge_resources(bus->self);
+> +		else
+> +			__pci_bus_assign_resources(bus, &add_list, NULL);
+>  	}
+>  
+>  	acpiphp_sanitize_bus(bus);
 > -- 
-> Ira Weiny <ira.weiny@intel.com>
+> 2.39.3
 > 
