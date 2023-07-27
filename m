@@ -2,145 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F1D8765E3E
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jul 2023 23:31:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B195B765E55
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jul 2023 23:40:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232185AbjG0VbP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jul 2023 17:31:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54264 "EHLO
+        id S232249AbjG0VkN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jul 2023 17:40:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232166AbjG0VbM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jul 2023 17:31:12 -0400
-Received: from mgamail.intel.com (unknown [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E709A3A80;
-        Thu, 27 Jul 2023 14:31:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690493460; x=1722029460;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=CkhZtIXxv1Ech716DTrSGMW7GwhKbo3o5WNC/qwv8fw=;
-  b=ZULZCbnSzBWtywjqLBZBHiLgXy18sxHcspAQ84yRMM6kwmbq3p0WisK/
-   Q503vJrIyaDxdneArlcsqz+iyF6yF9QZ7KGRNMGKUbmAju8zMkwC26BFZ
-   uwXzJ35KWM3mhNhaoGEX9f3+ZHJH81Kx6XcgyBg34jVcLQrexeDsIbuzC
-   AMD+W44y+vp7U+DL1sc0hiOTIV4IeoEUJFfH1K3vBOM8oPKxdwtn43jBH
-   8CBPgALTjK9j1MnnqT1PpUmlsFpghst9SKoTG2ubqFAG++UHzOiw2tgw6
-   5h0Cbevf0j+wdfRdsQK/r7PG+RVRBqAYHBvnuu9uopzCa/95+tSd4BvEo
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="348047769"
-X-IronPort-AV: E=Sophos;i="6.01,236,1684825200"; 
-   d="scan'208";a="348047769"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2023 14:31:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="704299547"
-X-IronPort-AV: E=Sophos;i="6.01,236,1684825200"; 
-   d="scan'208";a="704299547"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orsmga006.jf.intel.com with ESMTP; 27 Jul 2023 14:30:59 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Thu, 27 Jul 2023 14:30:59 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Thu, 27 Jul 2023 14:30:59 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Thu, 27 Jul 2023 14:30:59 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PZ7yaXl6UX/atzzbjKRagSWdu6xo92kwb4PJZLCsd9RVdvEzZcY4o+wwcoON/qPTKZtpqkj73tMStSKC3LkgKIRJDJ8vc1ErZj/LA3MGg9W1cNjSNMP84fi5/ApICW1totYU5FZxYz21Amk24D6mxvppvpmtUjpTvAU1Gp8+eaRe61c8qs43tYe7rgPmBqI3Qcb/+ZppyfBsWBLDlbY+3MkOK59k2WLymT0D8t9nLXo8lAEGGamH2fMeAC8GxvNccXP5nsMXKua6fu1cWp8eyxzlz63klcdOdzpi3PxEO0U4HCqblMeCzb5oIe+Q+Wm3tA2K61dwDmLOC+9P5cDtxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pUsI1eJx4UiRs/CLbV8GQxoyyMMDpPAkh121bCSsqIo=;
- b=ZaYkMpU2hVmEEk51uMkkVa1VfNTYdrrdFmfcZ4k4bK34y9rZvbMFxX+Kve/5lWMDk1na2D5VELEdO0RZHVSELT/9VL8YK3j7wV+DFnaBiCfg81xmfVxcY8n8y1bOSZoRCZF2XbSSW5lMtTHICwQOqePSbAD1fdtS29TYg1h6ZnwTxDXzr43wh9xj+rJtSorshMZEzKEUdc5ATgxH7kSx0t5/YyBtZa7Jo6t14u2jVkFb+YnrTHW8vdADgAGn1p8RNMJVA/5Yaovk2G6RBjwmnlae3t3yMyWBzw2c51dVFvm0yOjIfoFR7vHz7OfZbvyXDet5NC6qql1ARjyg9ncnyQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by CH3PR11MB7371.namprd11.prod.outlook.com (2603:10b6:610:151::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.32; Thu, 27 Jul
- 2023 21:30:57 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::6da5:f747:ba54:6938]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::6da5:f747:ba54:6938%6]) with mapi id 15.20.6631.026; Thu, 27 Jul 2023
- 21:30:57 +0000
-Date:   Thu, 27 Jul 2023 14:30:54 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>, Ira Weiny <ira.weiny@intel.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI/DOE: Fix destroy_work_on_stack() race
-Message-ID: <64c2e20e58ad8_34b9a029479@iweiny-mobl.notmuch>
-References: <20230726-doe-fix-v1-1-af07e614d4dd@intel.com>
- <20230727202149.GA793572@bhelgaas>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230727202149.GA793572@bhelgaas>
-X-ClientProxiedBy: BY5PR16CA0028.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::41) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+        with ESMTP id S229819AbjG0VkM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jul 2023 17:40:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 354B0211C;
+        Thu, 27 Jul 2023 14:40:11 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AD58F61F58;
+        Thu, 27 Jul 2023 21:40:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9558C433C7;
+        Thu, 27 Jul 2023 21:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690494010;
+        bh=mjTnkk3b0rI1iOPv/Erll2f7p8nHIqeLrpilD6C+YDQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=os6lgqeRlhps0lkDpycX0VCi+KYZNetLU7PqLKFkIOaKx75In/LdmyInZ+Cik2SRz
+         s4BVM2SjHyK7IUERS4hwnVBBFsmu7iN7w95b3n4hVqqls79hSbB/BCyShUhRiCqVBN
+         Rx96krUKwgicAcTwrbGQJZMgbt54TSSIDRudtnoghTiZksUJljgQjFvT1BOQUgp6OX
+         SAiSBelfmexQEfqYN//OtdJ6nyYU0vc0J+qGFgkbKn5vgJcEVaO2a+OfcEjx651AdA
+         1a7OKyB3BtkfaUSeEHcv+RouKXEWVwyuta8AAa2nEaFmjvGVk0blN+GDAR1UZVef42
+         acC1VYKjsqxYg==
+Date:   Thu, 27 Jul 2023 16:40:08 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kevin Xie <kevin.xie@starfivetech.com>
+Cc:     Minda Chen <minda.chen@starfivetech.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Conor Dooley <conor@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>
+Subject: Re: [PATCH v1 8/9] PCI: PLDA: starfive: Add JH7110 PCIe controller
+Message-ID: <20230727214008.GA797783@bhelgaas>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|CH3PR11MB7371:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4f94cbb4-1f6f-4181-1f42-08db8ee8c3e2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MQChVJ4Z7Q8AwuuKnDm0KytSo1EBQampT2SPZeusKg5SuwJH8oyUAk91G+BPKWrUw1UNIK6OKcJrvT0WjOAmai96wh70nbBY4NMWuimPA4iQDQdFXTTg5miOpGyY9QbgZJww7oOZQUma4N5e49Fw4JOOrY+rW5B2CJvqpbP7mw3ex1oqDGyJ8IPXeKle/dITzMbQaLgJV/e8d0rVel10bboXYo/ZsbwbzM7Zq/N/PQu855ZuyshKxB0qoI/2khQU4yli0lUF45+BTVUpOeYBoDKbh2pkHhDvDDC4tKQATi7c0tHX1fvEkK4QdOKiNpC2hTaV1NXhPpSf1gTYV1MfonXNeDysUvRAdRFXYV/K2jAvQbdIs0ZxZ4Gp1y1TA70Yu7ajIDOqN8jGTXrLVjaM3xENEgEQAflJBCf9ukOS8tIrWZ4s2PvVs7cnTTEv7WYevdcZA18Zt7oUxyQ6d8EdDoA7kAn9rkBKdvcs6ESsaJrS+lqp4JFXb5ubZukcCGT7dGKc4itWt0j+PoTHk4oj7Q/yCFRjbZCipemPhAYQGD6NmpyN4mMW1Qm9ViNwDBli
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(396003)(366004)(39860400002)(346002)(376002)(451199021)(8676002)(478600001)(86362001)(6666004)(66476007)(66556008)(66946007)(54906003)(6512007)(4326008)(9686003)(6486002)(41300700001)(110136005)(82960400001)(8936002)(6506007)(5660300002)(26005)(38100700002)(186003)(44832011)(316002)(2906002)(83380400001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?tjKC2vJG2t93NRux63g1XwPP/gZpzqK6nvdFvnQWuYkJLVS1is9NOLrWL+WA?=
- =?us-ascii?Q?5VbRW1SJPn87V7VNpo2T+qIpVV+yNxYgN6FBEPCDtZyye8pTlxyvESfOBPe9?=
- =?us-ascii?Q?RCXA6hRaPczYD6FVNwtMuXElzLDrwMhDIGkQIr9ycoN7YYj4NrU6zWHCJNWs?=
- =?us-ascii?Q?6bVv5EO/EHLnqzLodKVlpbDHvmoX0VFG0XehbPJG6/mY64lHuWUw6HkNRVi6?=
- =?us-ascii?Q?HfUiDCKsErHWq9Br9Rd07iNj7cao2irPu4XS0Boa+Q5S0IakXwIBI+KW9HjP?=
- =?us-ascii?Q?v22tVaMOIUSXX+dWISONneySVkqvEh6JFHMFJhpGMjUAhvAAeRmjkIlrQXn/?=
- =?us-ascii?Q?GjWE0TggKm5+axISY0OqF7ZT5RQ+l7wEMAel9cXpAj2GQzn0/1ugPXQn+zkM?=
- =?us-ascii?Q?G/62/QcGuYAxHhmA0d9pqFW1SUpm0MTZ6HDrEau+rsWrgkYW3hBG7YLzSvx/?=
- =?us-ascii?Q?7L8StneZ/c1pPNo9AFq7LHa0tlCPjEsvl1WavT3NTxeEGV7gbZ+JHLumrToN?=
- =?us-ascii?Q?WX7cBhPX/X1CgmCreFJ9e2egvp+kDmUVm0fxm8609vX4nXW8Ey4Lne0LicMd?=
- =?us-ascii?Q?wdC4Z8rGVSHTBd27FU6KC84Ek4RY4hplvChIOq60pyX1/cm7rNrAEOCcY/Ts?=
- =?us-ascii?Q?6cIkx7+//LTPCXTn1G3L8Ki5JbydBVoNykP6aISsYO2Azn4PF6KQB05M07z/?=
- =?us-ascii?Q?Pm0qTzWeJ8wB7KZ+yqirmMDO+UKY+KyyxpiSmnSq1KlFCbForj+UL3xVzZGO?=
- =?us-ascii?Q?jxzS2ic5WLjHZR86CLY4qgP801W87Kal9BM6L/nKSRuQFxoiCHP7QT8/4Dcx?=
- =?us-ascii?Q?gp8OrJ51AD4g2lto0hQefM0RZi1TM78zd7i+ztjoS8RInqdt6m0Edz3kpjMV?=
- =?us-ascii?Q?DoUEwmKf5p0qqXgAsC/Jq++ZAnyv2nlmsPuycxAzkgNuniay3gAhQKXOwUbi?=
- =?us-ascii?Q?ReYWffSPlqsGXVFB+REpWyX27QdIz8jL/VbYSJK+sKN5KLl9cJvuSXUZvXrL?=
- =?us-ascii?Q?YMluKLhQZNS0r1QJa8qxPyuDv+AtyU/XheSHP3NE3hjjE84bBuQtFJgnOHZl?=
- =?us-ascii?Q?BXUbXHJ6Z5JzmWlmjHW1vYAbRp/hTZhutgl+NiSZPa4GsIwtlrYVyPJn5DRH?=
- =?us-ascii?Q?DbtytDoLIgeiJqHMchwx1aH6e9ZW85oHk9Nnc+B6EZkSYZhOx5/+w43gNeqB?=
- =?us-ascii?Q?0eL8+1M1o6EXfOAYmkwhxByMrBj3DTkRfcGhI2ImVqpZg2W4pBmrx0wr2IJB?=
- =?us-ascii?Q?bS6Qj9rDtVriZ56KMAWe36YpNbMhGoimEEo8wgWTP2OVvtDKdwvnSzggH4dZ?=
- =?us-ascii?Q?KmkvPk/qcfjGnKTf8HG3rFc5KNzfzkSh43ak+6T9gjKo+Vbl4reyJt012mJ/?=
- =?us-ascii?Q?KuWA8Ei6AXrtSX4/v3UQa1PR5Z0R/eyIVx+2X8GQvjeZYs7NZ3dRhE3gKZlc?=
- =?us-ascii?Q?IxlmMaQE69gvLixrokwQhMVRdN8K0vmTlRoereNvwverR+z00JJRM5LU3lCV?=
- =?us-ascii?Q?SNU7KQb3qH3Ul7h6LXBbMJL5y8cg0Gukxah48on6yg1SSqewr1B14vhU02wa?=
- =?us-ascii?Q?Dg1CAIrpRwRYRAv5NdKTuLgsE6FWpHkoy98FrqoO?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f94cbb4-1f6f-4181-1f42-08db8ee8c3e2
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2023 21:30:57.4573
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LRAecyycpV8UN6Z8vG4hsMPSbvTjcEQu8whSaOiFRPt2L/QvaNX9Ozo+Pnod0o/DXJTi6TmLgDAFdPZNdkXO2Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7371
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230725204633.GA664368@bhelgaas>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -148,53 +70,120 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn Helgaas wrote:
-> On Wed, Jul 26, 2023 at 11:29:42AM -0700, Ira Weiny wrote:
-> > The following debug object splat was observed in testing.
-> > 
-> >   [   14.061937] ------------[ cut here ]------------
-> >   [   14.063899] ODEBUG: free active (active state 0) object: 0000000097d23782 object type: work_struct hint: doe_statemachine_work+0x0/0x510
-> >   [   14.067480] WARNING: CPU: 1 PID: 71 at lib/debugobjects.c:514 debug_print_object+0x7d/0xb0
-> >   ...
-> >   [   14.080951] Workqueue: pci 0000:36:00.0 DOE [1 doe_statemachine_work
-> >   [   14.083485] RIP: 0010:debug_print_object+0x7d/0xb0
-> >   ...
-> >   [   14.116231] Call Trace:
-> >   [   14.117652]  <TASK>
-> >   [   14.118958]  ? debug_print_object+0x7d/0xb0
-> >   [   14.120782]  ? __warn+0x7d/0x130
-> >   [   14.122399]  ? debug_print_object+0x7d/0xb0
-> >   [   14.123746]  ? report_bug+0x18d/0x1c0
-> >   [   14.125025]  ? handle_bug+0x3c/0x80
-> >   [   14.126506]  ? exc_invalid_op+0x13/0x60
-> >   [   14.127796]  ? asm_exc_invalid_op+0x16/0x20
-> >   [   14.129380]  ? debug_print_object+0x7d/0xb0
-> >   [   14.130688]  ? debug_print_object+0x7d/0xb0
-> >   [   14.131997]  ? __pfx_doe_statemachine_work+0x10/0x10
-> >   [   14.133597]  debug_object_free.part.0+0x11b/0x150
-> >   [   14.134940]  doe_statemachine_work+0x45e/0x510
-> >   [   14.136348]  process_one_work+0x1d4/0x3c0
-> >   ...
-> >   [   14.161484]  </TASK>
-> >   [   14.162434] ---[ end trace 0000000000000000 ]---
-> > 
-> > This occurs because destroy_work_on_stack() was called after signaling
-> > the completion in the calling thread.  This creates a race between
-> > destroy_work_on_stack() and the task->work struct going of scope in the
-> > pci_doe().
-> > 
-> > Signal the work complete after destroying the work struct.  This is safe
-> > because signal_task_complete() is the final thing the work item does and
-> > the workqueue code is careful not to access the work struct after.
-> > 
-> > Fixes: abf04be0e707 ("PCI/DOE: Fix memory leak with CONFIG_DEBUG_OBJECTS=y")
-> > Cc: Lukas Wunner <lukas@wunner.de>
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> Thanks, applied to pci/misc with Lukas' reviewed-by and Dan's ack for
-> v6.6.  I edited out the timestamps and some of the call trace from the
-> splat because they didn't seem relevant.
-> 
+[+cc Mika, Maciej since they've worked on similar delays recently]
 
-Thanks.  I'll make sure to remove the timestamps in future.
-Ira
+On Tue, Jul 25, 2023 at 03:46:35PM -0500, Bjorn Helgaas wrote:
+> On Mon, Jul 24, 2023 at 06:48:47PM +0800, Kevin Xie wrote:
+> > On 2023/7/21 0:15, Bjorn Helgaas wrote:
+> > > On Thu, Jul 20, 2023 at 06:11:59PM +0800, Kevin Xie wrote:
+> > >> On 2023/7/20 0:48, Bjorn Helgaas wrote:
+> > >> > On Wed, Jul 19, 2023 at 06:20:56PM +0800, Minda Chen wrote:
+> > >> >> Add StarFive JH7110 SoC PCIe controller platform
+> > >> >> driver codes.
+> 
+> > >> However, in the compatibility testing with several NVMe SSD, we
+> > >> found that Lenovo Thinklife ST8000 NVMe can not get ready in 100ms,
+> > >> and it actually needs almost 200ms.  Thus, we increased the T_PVPERL
+> > >> value to 300ms for the better device compatibility.
+> > > ...
+> > > 
+> > > Thanks for this valuable information!  This NVMe issue potentially
+> > > affects many similar drivers, and we may need a more generic fix so
+> > > this device works well with all of them.
+> > > 
+> > > T_PVPERL is defined to start when power is stable.  Do you have a way
+> > > to accurately determine that point?  I'm guessing this:
+> > > 
+> > >   gpiod_set_value_cansleep(pcie->power_gpio, 1)
+> > > 
+> > > turns the power on?  But of course that doesn't mean it is instantly
+> > > stable.  Maybe your testing is telling you that your driver should
+> > > have a hardware-specific 200ms delay to wait for power to become
+> > > stable, followed by the standard 100ms for T_PVPERL?
+> > 
+> > You are right, we did not take the power stable cost into account.
+> > T_PVPERL is enough for Lenovo Thinklife ST8000 NVMe SSD to get ready,
+> > and the extra cost is from the power circuit of a PCIe to M.2 connector,
+> > which is used to verify M.2 SSD with our EVB at early stage.
+> 
+> Hmm.  That sounds potentially interesting.  I assume you're talking
+> about something like this: https://www.amazon.com/dp/B07JKH5VTL
+> 
+> I'm not familiar with the timing requirements for something like this.
+> There is a PCIe M.2 spec with some timing requirements, but I don't
+> know whether or how software is supposed to manage this.  There is a
+> T_PVPGL (power valid to PERST# inactive) parameter, but it's
+> implementation specific, so I don't know what the point of that is.
+> And I don't see a way for software to even detect the presence of such
+> an adapter.
+
+I intended to ask about this on the PCI-SIG forum, but after reading
+this thread [1], I don't think we would learn anything.  The question
+was:
+
+  The M.2 device has 5 voltage rails generated from the 3.3V input
+  supply voltage
+  -------------------------------------------
+  This is re. Table 17 in PCI Express M.2 Specification Revision 1.1
+  Power Valid* to PERST# input inactive : Implementation specific;
+  recommended 50 ms
+
+  What exactly does this mean ?
+
+  The Note says
+
+    *Power Valid when all the voltage supply rails have reached their
+    respective Vmin.
+
+  Does this mean that the 50ms to PERSTn is counted from the instant
+  when all *5 voltage rails* on the M.2 device have become "good" ?
+
+and the answer was:
+
+  You wrote;
+  Does this mean that the 50ms to PERSTn is counted from the instant
+  when all 5 voltage rails on the M.2 device have become "good" ?
+
+  Reply:
+  This means that counting the recommended 50 ms begins from the time
+  when the power rails coming to the device/module, from the host, are
+  stable *at the device connector*.
+
+  As for the time it takes voltages derived inside the device from any
+  of the host power rails (e.g., 3.3V rail) to become stable, that is
+  part of the 50ms the host should wait before de-asserting PERST#, in
+  order ensure that most devices will be ready by then.
+
+  Strictly speaking, nothing disastrous happens if a host violates the
+  50ms. If it de-asserts too soon, the device may not be ready, but
+  most hosts will try again. If the host de-asserts too late, the
+  device has even more time to stabilize. This is why the WG felt that
+  an exact minimum number for >>Tpvpgl, was not valid in practice, and
+  we made it a recommendation.
+
+Since T_PVPGL is implementation-specific, we can't really base
+anything in software on the 50ms recommendation.  It sounds to me like
+they are counting on software to retry config reads when enumerating.
+
+I guess the delays we *can* observe are:
+
+  100ms T_PVPERL "Power stable to PERST# inactive" (CEM 2.9.2)
+  100ms software delay between reset and config request (Base 6.6.1)
+
+The PCI core doesn't know how to assert PERST#, so the T_PVPERL delay
+definitely has to be in the host controller driver.
+
+The PCI core observes the second 100ms delay after a reset in
+pci_bridge_wait_for_secondary_bus().  But this 100ms delay does not
+happen during initial enumeration.  I think the assumption of the PCI
+core is that when the host controller driver calls pci_host_probe(),
+we can issue config requests immediately.
+
+So I think that to be safe, we probably need to do both of those 100ms
+delays in the host controller driver.  Maybe there's some hope of
+supporting the latter one in the PCI core someday, but that's not
+today.
+
+Bjorn
+
+[1] https://forum.pcisig.com/viewtopic.php?f=74&t=1037
