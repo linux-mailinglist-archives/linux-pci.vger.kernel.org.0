@@ -2,55 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13C7A76705F
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 17:20:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 707E9767099
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 17:33:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236029AbjG1PUh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jul 2023 11:20:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49034 "EHLO
+        id S236678AbjG1Pcw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jul 2023 11:32:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233675AbjG1PUg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jul 2023 11:20:36 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6338130FC;
-        Fri, 28 Jul 2023 08:20:34 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RCB7c40Wcz6839B;
-        Fri, 28 Jul 2023 23:17:00 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 28 Jul
- 2023 16:20:31 +0100
-Date:   Fri, 28 Jul 2023 16:20:30 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-CC:     Yicong Yang <yangyicong@huawei.com>, <chengyou@linux.alibaba.com>,
-        <kaishen@linux.alibaba.com>, <helgaas@kernel.org>,
-        <will@kernel.org>, <baolin.wang@linux.alibaba.com>,
-        <robin.murphy@arm.com>, <yangyicong@hisilicon.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <rdunlap@infradead.org>,
-        <mark.rutland@arm.com>, <zhuo.song@linux.alibaba.com>
-Subject: Re: [PATCH v6 3/4] drivers/perf: add DesignWare PCIe PMU driver
-Message-ID: <20230728162030.00005e60@Huawei.com>
-In-Reply-To: <12958abe-4bdb-8532-bf67-8e772ed2a9dd@linux.alibaba.com>
-References: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
-        <20230606074938.97724-4-xueshuai@linux.alibaba.com>
-        <31e2b012-3a29-d063-842d-e3f7736816e7@huawei.com>
-        <20230727103929.00000544@Huawei.com>
-        <12958abe-4bdb-8532-bf67-8e772ed2a9dd@linux.alibaba.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S235004AbjG1Pcv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jul 2023 11:32:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE997B5;
+        Fri, 28 Jul 2023 08:32:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B45562185;
+        Fri, 28 Jul 2023 15:32:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 533CAC433C8;
+        Fri, 28 Jul 2023 15:32:43 +0000 (UTC)
+Date:   Fri, 28 Jul 2023 21:02:38 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
+        helgaas@kernel.org, imx@lists.linux.dev, kw@linux.com,
+        leoyang.li@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, mani@kernel.org, minghuan.lian@nxp.com,
+        mingkai.hu@nxp.com, robh+dt@kernel.org, roy.zang@nxp.com,
+        shawnguo@kernel.org, zhiqiang.hou@nxp.com
+Subject: Re: [PATCH v5 1/2] PCI: dwc: Implement general suspend/resume
+ functionality for L2/L3 transitions
+Message-ID: <20230728153238.GA4719@thinkpad>
+References: <20230724215830.2253112-1-Frank.Li@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230724215830.2253112-1-Frank.Li@nxp.com>
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,116 +51,267 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-...
+On Mon, Jul 24, 2023 at 05:58:29PM -0400, Frank Li wrote:
+> Introduced helper function dw_pcie_get_ltssm to retrieve SMLH_LTSS_STATE.
+> Added API pme_turn_off and exit_from_l2 for managing L2/L3 state transitions.
+> 
+> Typical L2 entry workflow:
+> 
+> 1. Transmit PME turn off signal to PCI devices and wait for PME_To_Ack.
+> 2. Await link entering L2_IDLE state.
+> 3. Transition Root complex to D3 state.
+> 
+> Typical L2 exit workflow:
+> 
+> 1. Transition Root complex to D0 state.
+> 2. Issue exit from L2 command.
+> 3. Reinitialize PCI host.
+> 4. Wait for link to become active.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> Change from v4 to v5:
+> - Closes: https://lore.kernel.org/oe-kbuild-all/202307211904.zExw4Q8H-lkp@intel.com/
+> Change from v3 to v4:
+> - change according to Manivannan's comments.
+>   I hope I have not missed anything. quite long discuss thread
+> Change from v2 to v3:
+> - Basic rewrite whole patch according rob herry suggestion.
+>   put common function into dwc, so more soc can share the same logic.
+> 
+>  .../pci/controller/dwc/pcie-designware-host.c | 95 +++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h  | 28 ++++++
+>  2 files changed, 123 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 9952057c8819..031e1f9c0d0c 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -8,6 +8,7 @@
+>   * Author: Jingoo Han <jg1.han@samsung.com>
+>   */
+>  
+> +#include <linux/iopoll.h>
+>  #include <linux/irqchip/chained_irq.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/msi.h>
+> @@ -807,3 +808,97 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
+> +
+> +/*
+> + * This resemble the pci_set_power_state() interfaces, but these are for
 
+s/interfaces/API
+s/these are/this is
 
-> >>> +
-> >>> +static int dwc_pcie_pmu_online_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
-> >>> +{
-> >>> +	struct dwc_pcie_pmu *pcie_pmu;
-> >>> +	struct pci_dev *pdev;
-> >>> +	int node;
-> >>> +
-> >>> +	pcie_pmu = hlist_entry_safe(cpuhp_node, struct dwc_pcie_pmu, cpuhp_node);
-> >>> +	pdev = pcie_pmu->pdev;
-> >>> +	node = dev_to_node(&pdev->dev);
-> >>> +
-> >>> +	if (node != NUMA_NO_NODE && cpu_to_node(pcie_pmu->oncpu) != node &&  
-> > 
-> > Perhaps worth a comment on when you might see node == NUMA_NO_NODE?
-> > Beyond NUMA being entirely disabled, I'd hope that never happens and for that you
-> > might be able to use a compile time check.
-> > 
-> > I wonder if this can be simplified by a flag that says if we are already in the
-> > right node? Might be easier to follow than having similar dance in online and offline
-> > to figure that out.  
-> 
-> Ok, I will add a comment for NUMA_NO_NODE. If no numa support, I think
-> any CPU is fine to bind.
+> + * configuring host controllers, which are bridges *to* PCI devices but
+> + * are not PCI devices themselves.
+> + */
+> +static void dw_pcie_set_dstate(struct dw_pcie *pci, pci_power_t dstate)
+> +{
+> +	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_PM);
+> +	u16 val;
+> +
+> +	val = dw_pcie_readw_dbi(pci, offset + PCI_PM_CTRL);
+> +	val &= ~PCI_PM_CTRL_STATE_MASK;
+> +	val |= ((u16 __force)dstate) & PCI_PM_CTRL_STATE_MASK;
 
-Agreed. I would add a comment on that being the intent.
+Why can't just,
 
-> 
-> pcie_pmu->on_cpu may be a good choise to be used as a flag, right? pcie_pmu->on_cpu
-> will be set as -1 when pcie_pmu is allocated and then check in
-> dwc_pcie_pmu_online_cpu() first.
+val |= dstate;
 
-I think you still want to know whether it's in the right node - as maybe
-there are no local CPUs available at startup.
+> +	dw_pcie_writew_dbi(pci, offset + PCI_PM_CTRL, val);
+> +}
+> +
+> +int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+> +{
+> +	u8 offset;
+> +	u32 val;
+> +	int ret;
+> +
+> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
 
-> 
-> Then, the code will be:
-> 
-> static int dwc_pcie_pmu_online_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
-> {
-> 	struct dwc_pcie_pmu *pcie_pmu;
-> 	struct pci_dev *pdev;
-> 	int node;
-> 
-> 	pcie_pmu = hlist_entry_safe(cpuhp_node, struct dwc_pcie_pmu, cpuhp_node);
-> 	/* If another CPU is already managing this PMU, simply return. */
-> 	if (pcie_pmu->on_cpu != -1)
-> 		return 0;
-> 
-> 	pdev = pcie_pmu->pdev;
-> 	node = dev_to_node(&pdev->dev);
-> 
-> 	/* Select the first CPU if no numa support. */
-> 	if (node == NUMA_NO_NODE)
-> 		pcie_pmu->on_cpu = cpu;
-> 	else if (cpu_to_node(pcie_pmu->on_cpu) != node &&
-> 		 cpu_to_node(cpu) == node)
-> 		dwc_pcie_pmu_migrate(pcie_pmu, cpu);
-> 
-> 	return 0;
-> }
-> > 
-> >>> +static int __init dwc_pcie_pmu_init(void)
-> >>> +{
-> >>> +	int ret;
-> >>> +
-> >>> +	ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
-> >>> +				      "perf/dwc_pcie_pmu:online",
-> >>> +				      dwc_pcie_pmu_online_cpu,
-> >>> +				      dwc_pcie_pmu_offline_cpu);
-> >>> +	if (ret < 0)
-> >>> +		return ret;
-> >>> +
-> >>> +	dwc_pcie_pmu_hp_state = ret;
-> >>> +
-> >>> +	ret = platform_driver_register(&dwc_pcie_pmu_driver);
-> >>> +	if (ret) {
-> >>> +		cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
-> >>> +		return ret;
-> >>> +	}
-> >>> +
-> >>> +	dwc_pcie_pmu_dev = platform_device_register_simple(
-> >>> +				"dwc_pcie_pmu", PLATFORM_DEVID_NONE, NULL, 0);
-> >>> +	if (IS_ERR(dwc_pcie_pmu_dev)) {
-> >>> +		platform_driver_unregister(&dwc_pcie_pmu_driver);    
-> >>
-> >> On failure we also need to remove cpuhp state as well.  
-> > 
-> > I'd suggest using gotos and a single error handling block. That
-> > makes it both harder to forget things like this and easier to
-> > compare that block with what happens in exit() - so slightly 
-> > easier to review!  
-> 
-> Given that we have a appropriate way to tear down the PMUs via devm_add_action_or_reset(),
-> I am going to remove the redundant probe/remove framework via platform_driver_{un}register().
-> for_each probe process in __dwc_pcie_pmu_probe() will be move into dwc_pcie_pmu_init().
-> Is it a better way?
+Just assign this during variable definition itself..
 
-I think I'd prefer to see a standard driver creation / probe flow even if you could in theory
-avoid it.
+> +	/*
+> +	 * If L1.1\L1.2 enable, devices (such as NVME) want short
+> +	 * resume latency, controller will not enter L2
 
-Jonathan
+"If L1SS is supported, then do not put the link into L2 as some devices such as
+NVMe expect low resume latency."
 
-> 
-> Thank you very much for your valuable comments.
-> 
-> Best Regards,
-> Shuai
-> 
+> +	 */
+> +	if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
+> +		return 0;
+> +
+> +	if (dw_pcie_get_ltssm(pci) <= DW_PCIE_LTSSM_DETECT_ACT)
+> +		return 0;
+> +
+> +	if (!pci->pp.ops->pme_turn_off)
+> +		return -EINVAL;
+
+Can you just return 0 instead of failing? As per my comment below, if you move
+the D-state change before this callback, then this won't be a hard requirement.
+
+> +
+> +	pci->pp.ops->pme_turn_off(&pci->pp);
+> +
+> +	/*
+> +	 * PCI Express Base Specification Rev 4.0
+> +	 * 5.3.3.2.1 PME Synchronization
+> +	 * Recommand 1ms to 10ms timeout to check L2 ready
+
+"Recommends"
+
+Please use full 80 columns for comments.
+
+> +	 */
+> +	ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
+> +				100, 10000, false, pci);
+> +	if (ret) {
+> +		dev_err(pci->dev, "PCIe link enter L2 timeout! ltssm = 0x%x\n", val);
+
+"Timeout waiting for L2 entry! LTSSM: 0x%x\n"
+
+> +		return ret;
+> +	}
+> +
+> +	dw_pcie_set_dstate(pci, PCI_D3hot);
+
+This should be done before initiating L2 entry as per
+PCI_Express_Base_Specification 3.0, section 5.2.
+
+> +
+> +	pci->suspended = true;
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(dw_pcie_suspend_noirq);
+> +
+> +int dw_pcie_resume_noirq(struct dw_pcie *pci)
+> +{
+> +	int ret;
+> +
+> +	if (!pci->suspended)
+> +		return 0;
+> +
+> +	pci->suspended = false;
+> +
+> +	dw_pcie_set_dstate(pci, PCI_D0);
+> +
+> +	if (!pci->pp.ops->exit_from_l2)
+> +		return -EINVAL;
+
+Same comment as above.
+
+> +
+> +	pci->pp.ops->exit_from_l2(&pci->pp);
+> +
+> +	ret = pci->pp.ops->host_init(&pci->pp);
+
+I don't see matching host_deinit() in suspend.
+
+- Mani
+
+> +	if (ret) {
+> +		dev_err(pci->dev, "Host init failed! ret = 0x%x\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	dw_pcie_setup_rc(&pci->pp);
+> +
+> +	ret = dw_pcie_start_link(pci);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = dw_pcie_wait_for_link(pci);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(dw_pcie_resume_noirq);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 79713ce075cc..effb07a506e4 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -288,10 +288,21 @@ enum dw_pcie_core_rst {
+>  	DW_PCIE_NUM_CORE_RSTS
+>  };
+>  
+> +enum dw_pcie_ltssm {
+> +	DW_PCIE_LTSSM_UNKNOWN = 0xFFFFFFFF,
+> +	/* Need align PCIE_PORT_DEBUG0 bit0:5 */
+
+"Need to align with PCIE_PORT_DEBUG0 bits 0:5".
+
+- Mani
+
+> +	DW_PCIE_LTSSM_DETECT_QUIET = 0x0,
+> +	DW_PCIE_LTSSM_DETECT_ACT = 0x1,
+> +	DW_PCIE_LTSSM_L0 = 0x11,
+> +	DW_PCIE_LTSSM_L2_IDLE = 0x15,
+> +};
+> +
+>  struct dw_pcie_host_ops {
+>  	int (*host_init)(struct dw_pcie_rp *pp);
+>  	void (*host_deinit)(struct dw_pcie_rp *pp);
+>  	int (*msi_host_init)(struct dw_pcie_rp *pp);
+> +	void (*pme_turn_off)(struct dw_pcie_rp *pp);
+> +	void (*exit_from_l2)(struct dw_pcie_rp *pp);
+>  };
+>  
+>  struct dw_pcie_rp {
+> @@ -364,6 +375,7 @@ struct dw_pcie_ops {
+>  	void    (*write_dbi2)(struct dw_pcie *pcie, void __iomem *base, u32 reg,
+>  			      size_t size, u32 val);
+>  	int	(*link_up)(struct dw_pcie *pcie);
+> +	enum dw_pcie_ltssm (*get_ltssm)(struct dw_pcie *pcie);
+>  	int	(*start_link)(struct dw_pcie *pcie);
+>  	void	(*stop_link)(struct dw_pcie *pcie);
+>  };
+> @@ -393,6 +405,7 @@ struct dw_pcie {
+>  	struct reset_control_bulk_data	app_rsts[DW_PCIE_NUM_APP_RSTS];
+>  	struct reset_control_bulk_data	core_rsts[DW_PCIE_NUM_CORE_RSTS];
+>  	struct gpio_desc		*pe_rst;
+> +	bool			suspended;
+>  };
+>  
+>  #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
+> @@ -430,6 +443,9 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci);
+>  int dw_pcie_edma_detect(struct dw_pcie *pci);
+>  void dw_pcie_edma_remove(struct dw_pcie *pci);
+>  
+> +int dw_pcie_suspend_noirq(struct dw_pcie *pci);
+> +int dw_pcie_resume_noirq(struct dw_pcie *pci);
+> +
+>  static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
+>  {
+>  	dw_pcie_write_dbi(pci, reg, 0x4, val);
+> @@ -501,6 +517,18 @@ static inline void dw_pcie_stop_link(struct dw_pcie *pci)
+>  		pci->ops->stop_link(pci);
+>  }
+>  
+> +static inline enum dw_pcie_ltssm dw_pcie_get_ltssm(struct dw_pcie *pci)
+> +{
+> +	u32 val;
+> +
+> +	if (pci->ops && pci->ops->get_ltssm)
+> +		return pci->ops->get_ltssm(pci);
+> +
+> +	val = dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG0);
+> +
+> +	return (enum dw_pcie_ltssm)FIELD_GET(PORT_LOGIC_LTSSM_STATE_MASK, val);
+> +}
+> +
+>  #ifdef CONFIG_PCIE_DW_HOST
+>  irqreturn_t dw_handle_msi_irq(struct dw_pcie_rp *pp);
+>  int dw_pcie_setup_rc(struct dw_pcie_rp *pp);
+> -- 
+> 2.34.1
 > 
 
+-- 
+மணிவண்ணன் சதாசிவம்
