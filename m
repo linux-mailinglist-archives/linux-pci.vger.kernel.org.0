@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DE83766310
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 06:21:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 867BD766330
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 06:35:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231741AbjG1EVn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jul 2023 00:21:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41000 "EHLO
+        id S230395AbjG1EfE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jul 2023 00:35:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230057AbjG1EVm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jul 2023 00:21:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030E635A3;
-        Thu, 27 Jul 2023 21:21:41 -0700 (PDT)
+        with ESMTP id S229933AbjG1EfE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jul 2023 00:35:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFC072127;
+        Thu, 27 Jul 2023 21:35:02 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 88FB261FCD;
-        Fri, 28 Jul 2023 04:21:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56257C433C7;
-        Fri, 28 Jul 2023 04:21:34 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 79AD961FC4;
+        Fri, 28 Jul 2023 04:35:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F1C4C433C8;
+        Fri, 28 Jul 2023 04:34:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690518099;
-        bh=npFFPyaQEwifiFYx76sBK90ncmNWu0Npk+xLXEgPOFM=;
+        s=k20201202; t=1690518901;
+        bh=DZrogaGXBUp1d/Lh7/05sza1+746GkxyRTdGmrOOfWI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=poONmNBGtWzL4WLzQeFUMI1MU/sWcd2mhhLf6n/Sdh9yEHZnQo8VQ7N34a9MgLGAd
-         Prdg7+WXlUvgsfF8D74J9LCEB4q7rz1OOid38+jNBPrBZXIxZ3qt8/9Q5VxrnIrRa9
-         WsJILO8++a1g3goYgbxnkECSrxTXsOb62Rp5bekx30JzhVNGsb+1GK7jyAEd0ewmB4
-         JtsJiT56WhQPYQbA9jEGZdOAG+ARDPssjk3IcDM6NtA60VD/0D076KS4ktIPpnlrf0
-         2i5A5T0q1JG3LEunOY6RU3AdT9uq5uNx4r5mBBh7wvURZH9F2YcfFFkA+z+q2swW7s
-         oKyTpHmlIIhRQ==
-Date:   Fri, 28 Jul 2023 09:51:29 +0530
+        b=o8RHc8JQK5Dv4Nx6+SqJ8bXBeTFWRRUnws6PyrkpKmPGyvY9LsNKbzbEOVrOuTOTS
+         Nm1meMwb9PD3qDZgZY9mPh3otw9PFaDkgUGe5p4WMePlRahoLwRHRjIsy8pRcXDLZc
+         cXGXzA7rVxHIixeNsulKSXA6evXs8JHT8yOQ5fmmVM9ppr3lCD0SID1UnNJYZWDw1U
+         /lhg8RBMsXqyhIqc8o8QxcaRA0zczIMumUxQgxohQshAvBrtuJYEwnwdwSPRKtyMFA
+         gj3UxjO4pSQob45L5NQ13Cuy5rET5mxYUt4PKzl6gM811VTnwzuXzOag21y2/mCbs4
+         YGmsk1xaX2AvA==
+Date:   Fri, 28 Jul 2023 10:04:52 +0530
 From:   Manivannan Sadhasivam <mani@kernel.org>
 To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
 Cc:     manivannan.sadhasivam@linaro.org, helgaas@kernel.org,
@@ -40,23 +40,23 @@ Cc:     manivannan.sadhasivam@linaro.org, helgaas@kernel.org,
         linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
         quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
         quic_ramkri@quicinc.com, krzysztof.kozlowski@linaro.org,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v4 5/9] PCI: endpoint: Add wakeup host API to EPC core
-Message-ID: <20230728042129.GH4433@thinkpad>
+        Jeffrey Hugo <quic_jhugo@quicinc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Carpenter <error27@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "open list:MHI BUS" <mhi@lists.linux.dev>
+Subject: Re: [PATCH v4 9/9] bus: mhi: ep: wake up host if the MHI state is in
+ M3
+Message-ID: <20230728043452.GI4433@thinkpad>
 References: <1689232218-28265-1-git-send-email-quic_krichai@quicinc.com>
- <1689232218-28265-6-git-send-email-quic_krichai@quicinc.com>
+ <1689232218-28265-10-git-send-email-quic_krichai@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1689232218-28265-6-git-send-email-quic_krichai@quicinc.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+In-Reply-To: <1689232218-28265-10-git-send-email-quic_krichai@quicinc.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -65,141 +65,79 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 13, 2023 at 12:40:14PM +0530, Krishna chaitanya chundru wrote:
-> Endpoint cannot send any data/MSI when the D-state is in
-> D3cold or D3hot. Endpoint needs to wake up the host to
-> bring the D-state to D0.
-> 
-> Endpoint can toggle wake signal when the D-state is in D3cold and vaux is
-> not supplied or can send inband PME.
-> 
-> To support this add wakeup_host() callback to the EPC core.
+On Thu, Jul 13, 2023 at 12:40:18PM +0530, Krishna chaitanya chundru wrote:
+> If the MHI state is in M3 then the most probably the host kept the
+
+s/then the/then
+
+> device in D3 hot or D3 cold, due to that endpoint transctions will not
+
+s/transctions/transactions
+
+> be read by the host, so endpoint wakes up host to bring the host to D0
+
+endpoint needs to wake up the host to bring the device to D0 state...
+
+> which eventually bring back the MHI state to M0.
 > 
 > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 > ---
->  Documentation/PCI/endpoint/pci-endpoint.rst |  6 ++++++
->  drivers/pci/endpoint/pci-epc-core.c         | 31 +++++++++++++++++++++++++++++
->  include/linux/pci-epc.h                     | 11 ++++++++++
->  3 files changed, 48 insertions(+)
+>  drivers/bus/mhi/ep/main.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
-> diff --git a/Documentation/PCI/endpoint/pci-endpoint.rst b/Documentation/PCI/endpoint/pci-endpoint.rst
-> index 3a54713..eb79b77 100644
-> --- a/Documentation/PCI/endpoint/pci-endpoint.rst
-> +++ b/Documentation/PCI/endpoint/pci-endpoint.rst
-> @@ -53,6 +53,7 @@ by the PCI controller driver.
->  	 * raise_irq: ops to raise a legacy, MSI or MSI-X interrupt
->  	 * start: ops to start the PCI link
->  	 * stop: ops to stop the PCI link
-> +	 * wakeup_host: ops to wakeup host
+> diff --git a/drivers/bus/mhi/ep/main.c b/drivers/bus/mhi/ep/main.c
+> index 6008818..46a888e 100644
+> --- a/drivers/bus/mhi/ep/main.c
+> +++ b/drivers/bus/mhi/ep/main.c
+> @@ -25,6 +25,26 @@ static DEFINE_IDA(mhi_ep_cntrl_ida);
+>  static int mhi_ep_create_device(struct mhi_ep_cntrl *mhi_cntrl, u32 ch_id);
+>  static int mhi_ep_destroy_device(struct device *dev, void *data);
 >  
->     The PCI controller driver can then create a new EPC device by invoking
->     devm_pci_epc_create()/pci_epc_create().
-> @@ -122,6 +123,11 @@ by the PCI endpoint function driver.
->     The PCI endpoint function driver should use pci_epc_mem_free_addr() to
->     free the memory space allocated using pci_epc_mem_alloc_addr().
->  
-> +* pci_epc_wakeup_host()
-> +
-> +   The PCI endpoint function driver should use pci_epc_wakeup_host() to wakeup
-> +   host.
-> +
->  Other EPC APIs
->  ~~~~~~~~~~~~~~
->  
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index ea76baf..b419eff 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -167,6 +167,37 @@ const struct pci_epc_features *pci_epc_get_features(struct pci_epc *epc,
->  EXPORT_SYMBOL_GPL(pci_epc_get_features);
->  
->  /**
-> + * pci_epc_wakeup_host() - Wakeup the host
-> + * @epc: the EPC device which has to wakeup the host
-> + * @func_no: the physical endpoint function number in the EPC device
-> + * @vfunc_no: the virtual endpoint function number in the physical function
-> + * @type: specify the type of wakeup: WAKEUP_FROM_D3COLD, WAKEUP_FROM_D3HOT
-> + *
-> + * Invoke to wakeup host
-> + */
-> +bool pci_epc_wakeup_host(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> +			enum pci_epc_wakeup_host_type type)
+> +static int mhi_ep_wake_host(struct mhi_ep_cntrl *mhi_cntrl)
 > +{
-> +	int ret;
+> +	enum mhi_state state;
+> +	bool mhi_reset;
+> +	u32 count = 0;
 > +
-> +	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
-> +		return false;
+> +	mhi_cntrl->wakeup_host(mhi_cntrl);
 > +
-> +	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-> +		return false;
+> +	/* Wait for Host to set the M0 state */
+> +	while (count++ < M0_WAIT_COUNT) {
+> +		msleep(M0_WAIT_DELAY_MS);
 > +
-> +	if (!epc->ops->wakeup_host)
-> +		return true;
+> +		mhi_ep_mmio_get_mhi_state(mhi_cntrl, &state, &mhi_reset);
+> +		if (state == MHI_STATE_M0)
+> +			return 0;
+> +	}
 > +
-> +	mutex_lock(&epc->lock);
-> +	ret = epc->ops->wakeup_host(epc, func_no, vfunc_no, type);
-> +	mutex_unlock(&epc->lock);
-> +
-> +	return ret;
+> +	return -ENODEV;
+
+ENODEV or ETIMEDOUT?
+
 > +}
-> +EXPORT_SYMBOL_GPL(pci_epc_wakeup_host);
 > +
-> +/**
->   * pci_epc_stop() - stop the PCI link
->   * @epc: the link of the EPC device that has to be stopped
->   *
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index 26a1108..d262179 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -26,6 +26,12 @@ enum pci_epc_irq_type {
->  	PCI_EPC_IRQ_MSIX,
->  };
+>  static int mhi_ep_send_event(struct mhi_ep_cntrl *mhi_cntrl, u32 ring_idx,
+>  			     struct mhi_ring_element *el, bool bei)
+>  {
+> @@ -464,6 +484,13 @@ int mhi_ep_queue_skb(struct mhi_ep_device *mhi_dev, struct sk_buff *skb)
+>  	buf_left = skb->len;
+>  	ring = &mhi_cntrl->mhi_chan[mhi_chan->chan].ring;
 >  
-> +enum pci_epc_wakeup_host_type {
-> +	PCI_WAKEUP_UNKNOWN,
-> +	PCI_WAKEUP_SEND_PME,
-> +	PCI_WAKEUP_TOGGLE_WAKE,
+> +	if (mhi_cntrl->mhi_state == MHI_STATE_M3) {
+> +		if (mhi_ep_wake_host(mhi_cntrl)) {
 
-I think I asked you to get rid of these enums and use a bool. I don't see any
-new wakeup mechanism going to be added to the spec. So using enums for just 2
-options looks overkill to me.
-
-If you defer, please discuss it here.
+Don't you need lock here in the case of multiple queue requests?
 
 - Mani
 
-> +};
+> +			dev_err(dev, "Failed to wakeup host\n");
+> +			return -ENODEV;
+> +		}
+> +	}
 > +
->  static inline const char *
->  pci_epc_interface_string(enum pci_epc_interface_type type)
->  {
-> @@ -59,6 +65,7 @@ pci_epc_interface_string(enum pci_epc_interface_type type)
->   * @start: ops to start the PCI link
->   * @stop: ops to stop the PCI link
->   * @get_features: ops to get the features supported by the EPC
-> + * @wakeup_host: ops to wakeup the host
->   * @owner: the module owner containing the ops
->   */
->  struct pci_epc_ops {
-> @@ -88,6 +95,8 @@ struct pci_epc_ops {
->  	void	(*stop)(struct pci_epc *epc);
->  	const struct pci_epc_features* (*get_features)(struct pci_epc *epc,
->  						       u8 func_no, u8 vfunc_no);
-> +	bool	(*wakeup_host)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> +				enum pci_epc_wakeup_host_type type);
->  	struct module *owner;
->  };
+>  	mutex_lock(&mhi_chan->lock);
 >  
-> @@ -234,6 +243,8 @@ int pci_epc_start(struct pci_epc *epc);
->  void pci_epc_stop(struct pci_epc *epc);
->  const struct pci_epc_features *pci_epc_get_features(struct pci_epc *epc,
->  						    u8 func_no, u8 vfunc_no);
-> +bool pci_epc_wakeup_host(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> +					enum pci_epc_wakeup_host_type type);
->  enum pci_barno
->  pci_epc_get_first_free_bar(const struct pci_epc_features *epc_features);
->  enum pci_barno pci_epc_get_next_free_bar(const struct pci_epc_features
+>  	do {
 > -- 
 > 2.7.4
 > 
