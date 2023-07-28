@@ -2,253 +2,362 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83C3476717F
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 18:07:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 859B17672D9
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 19:07:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234775AbjG1QHK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jul 2023 12:07:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51592 "EHLO
+        id S233393AbjG1RHH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jul 2023 13:07:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234254AbjG1QHJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jul 2023 12:07:09 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5999C30D4;
-        Fri, 28 Jul 2023 09:07:08 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id 38308e7fff4ca-2b962c226ceso34809411fa.3;
-        Fri, 28 Jul 2023 09:07:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690560426; x=1691165226;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=N16GEP2/m3aZjHw0K8KYPGsCcy8BI//VCr6xCVcthrc=;
-        b=HLex0g8P13+bvEwTBuGSp1Obd4O0IaGoeW/uFyTRb4tIHtmem9LxelkIHETBCG2c2v
-         y1zQEA6aMEKig54053DTtuttHr+IYIrdjgpN6oneo8OdfV12kObe6/72lUGukSb4RybX
-         MoLnk5ixmwvE2aSBB+HCZdsRufNLie3OdxDiqSeDyn3uyquBEf0gH4AMD2yZ2EBQzKNH
-         5tVHeD1beij2SisqKrlVfPvvDP0mN4itte9hWsN8//ReOC07SRegAMvJNVLi7bi94VWe
-         GwALN6HXvl/zV9pjxqvjfQarS0WYBn/RIdBN0O+ZNtM8Az9iuMaQV/Emc/xgQEv6awVO
-         O+Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690560426; x=1691165226;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N16GEP2/m3aZjHw0K8KYPGsCcy8BI//VCr6xCVcthrc=;
-        b=aSdUyR8uYTkRaIVdTT+kX8HPIftwnjarHKgcTv1KDuW9fFLJyzJyVToak4l3/73HAK
-         XPBbJy9yu+oZ0cL5SMq7IMkQrfUxORLsbPqOh0e2R2+QocB1eCcqrBc+lXz++cbUMFhV
-         KuuVurhTlWEYKEm5wV87rYcP8kTho/CFOZJ8f7nL1DEJGQ9Kbkrmg8sc5Va9NXL+f79W
-         s50JlRmhdkz+bVgscDXi7lfXm7B8tSiwU4kEA8ing+lQSQl4fHaJOJ1HqdjcXrNvL1Qg
-         SJPYNDrkT9jwV68YnP9QYKemUCR45XDDVF0Hug2lAAzqgs4TjVM6qocJEnGRcTRNeo6D
-         oDIA==
-X-Gm-Message-State: ABy/qLY/y0ho1qQhmSSIN+LfsWweN0GhTnw4g6h4Hj1F6BFX/j8Uubrr
-        eUJ6FrdRrkpITDu9Lue9+9jViSq7Kg4=
-X-Google-Smtp-Source: APBJJlHB1HqHToxS6Ete/aD4vnQV5+/I1La2Pph1hLvIhC6vInjYqQDffSIoCvB3yCKJtVs2FHscow==
-X-Received: by 2002:a2e:3012:0:b0:2b9:bc5c:1b28 with SMTP id w18-20020a2e3012000000b002b9bc5c1b28mr2199769ljw.49.1690560426277;
-        Fri, 28 Jul 2023 09:07:06 -0700 (PDT)
-Received: from mobilestation ([93.157.254.210])
-        by smtp.gmail.com with ESMTPSA id u7-20020a2ea167000000b002b93cb80acbsm1014887ljl.91.2023.07.28.09.07.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jul 2023 09:07:05 -0700 (PDT)
-Date:   Fri, 28 Jul 2023 19:07:03 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "kishon@kernel.org" <kishon@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "conor+dt@kernel.org" <conor+dt@kernel.org>,
-        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v18 09/20] PCI: dwc: Add PCI_EXP_LNKCAP_MLW handling
-Message-ID: <2zv7mcxa7skywhxe2ene3c5ycine6tsmsfwmpf4nknhoeye7rx@m525r5ph3xow>
-References: <20230721074452.65545-1-yoshihiro.shimoda.uh@renesas.com>
- <20230721074452.65545-10-yoshihiro.shimoda.uh@renesas.com>
- <20230724110344.GH6291@thinkpad>
- <TYBPR01MB534165847452C8A2398B03D9D800A@TYBPR01MB5341.jpnprd01.prod.outlook.com>
- <20230728025119.GB4433@thinkpad>
- <TYBPR01MB534130DF2431F0A49E0C5C3BD806A@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+        with ESMTP id S230344AbjG1RHG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jul 2023 13:07:06 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2076.outbound.protection.outlook.com [40.107.244.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13553B5;
+        Fri, 28 Jul 2023 10:07:05 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KQSyqJ/gnS1BZ0140KmsCaAj66/DdYKIJgyNoTz39sPbvNGmepZU87qkMc1nxX3x9uirL1bmz51HIACx1v5NYCMHchCXNc6bQSDNYzj6as4J0fcsaM5x28yVNrV9z6M9kxr007YqEj6eX5BI2HvIA+tw6OgM2u/gpw8r6vTomX0G9I3GoVBjPJZNQVOBmyI5YIbQQD9uSt2sHKGfotkFw0IFfVEAeeZT7QrLP5P0X0Eur6kVEPjTiiW9JXAAXy4As13B2whJu7XyGJyVGOHKYYVBzZA/5jkk8etkus3v3lunXwjT8lYP/08EFhnm0BeeVc8zPOycm1l2iEkWl0Fo1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BzDFPt/aHfMAsfidd/1AosN6zA6sV1BIECAFCEv3pnY=;
+ b=VDAdMa2CtfM1PbCadH+YQg/3A7f8CUf5owdzwwrKv/+cFhtmTNED1MCX1rM/GwLJXzxSgTjX7xxOPXjBNBYEgn0hw9oLRoBBLOlGJWQtmD/w3MrJJOSljqTdmOIbDakUXuQEm6uW1SaOlqP7bhrpiakTMlhOnbafySTotMY734EusHx9y+raVLqmd7QB66rvBEpsVbX1DMi4Vk+PgPMj8gAQ3bdwSqiauqM0m5PcL+dqJbruch7/tjVjn8dgxCfOiz0GpZVJcm9Q1ibGLXlC2xvPCmBXy8BJ2wJ07zpwX25dJI3/yxMlf+IIer6c346VFBKNEqSwyqhrapRdnf4/KQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BzDFPt/aHfMAsfidd/1AosN6zA6sV1BIECAFCEv3pnY=;
+ b=2Eqsrf95++HsfOrrCTlQHHnlWZdBTvz5T1T7AfRbI0L76Q2tPsVCaHQNUlaz9BRDDzHobZYH8Xn7TEFKhg+hbOCjyJqvKILck1Jwp4//lDlYqz3RmwrFcZvjwlsuqVoc79ueiRM4C4SrUFmHv6mxMeorO/ypa8Xxspn2UXe34k0=
+Received: from CY5PR15CA0258.namprd15.prod.outlook.com (2603:10b6:930:66::29)
+ by SA1PR12MB7150.namprd12.prod.outlook.com (2603:10b6:806:2b4::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.29; Fri, 28 Jul
+ 2023 17:07:02 +0000
+Received: from CY4PEPF0000EE30.namprd05.prod.outlook.com
+ (2603:10b6:930:66:cafe::41) by CY5PR15CA0258.outlook.office365.com
+ (2603:10b6:930:66::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.34 via Frontend
+ Transport; Fri, 28 Jul 2023 17:07:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ CY4PEPF0000EE30.mail.protection.outlook.com (10.167.242.36) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6631.29 via Frontend Transport; Fri, 28 Jul 2023 17:07:01 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 28 Jul
+ 2023 12:07:01 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 28 Jul
+ 2023 12:07:00 -0500
+Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.27 via Frontend
+ Transport; Fri, 28 Jul 2023 12:07:00 -0500
+From:   Lizhi Hou <lizhi.hou@amd.com>
+To:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <robh@kernel.org>
+CC:     Lizhi Hou <lizhi.hou@amd.com>, <max.zhen@amd.com>,
+        <sonal.santan@amd.com>, <stefano.stabellini@xilinx.com>
+Subject: [PATCH V12 0/5] Generate device tree node for pci devices
+Date:   Fri, 28 Jul 2023 10:06:53 -0700
+Message-ID: <1690564018-11142-1-git-send-email-lizhi.hou@amd.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <TYBPR01MB534130DF2431F0A49E0C5C3BD806A@TYBPR01MB5341.jpnprd01.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE30:EE_|SA1PR12MB7150:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9d091456-0d0e-4bb3-7aba-08db8f8d0fa3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Bk5wqqVDg76sIypTes51w5if7y9OarsdD6EJBZ6CBINM6R3jnmWyyc3VvVknPomSOvvtcMyU/Ta3K2T3UCM6Qx3nly29qonH/iHterybhnb1wQ7g/iwNZlhwKzYxre6Kl+qkwLaLthznMADg1tmuRw2KvYGbK+RPOyvLK5Wsd+alelMgGyaYsxokC7XB8fi7a8F+Tkjm4CQoheV91fa0IzXIspauZCj+0roIWzVoq3Zvy5Jox2jA5l4m9N2bAo5BoYSCdVENkJuTVcK1W83pC5XCqeb9jC+XQipKdpsY0a+zxssNiH5OnWPwfUC15oklQ1F+pT8a2tmHuUDeha9xtqvJf1WZqCIhPBR/gHoNu/e17NrSYubrXqJfX85/XFVqgc8xUlLQOSCYMaQ5RyD7UnhbSKFdDEgdbaw7f+uTW6IEkjQmEMdWLTzewRzTBFtLPFiPD+zu8KG+9vvp/XDYwBS8ZQ6qVLyTdyTZqEFdPtFBJZgOewUXvPhF7cICuASQuf6tPV8YL6H9MID8OoAfNHJ4M67NkI42dUxdN+G9CVyq8gRsWcoLkrtgXbt156G/OeLHZRPSiY4eZrf4I7jmKOppzBG0y2Ee5a4qX7TV6N1B8WH00k96vzJwf+XVaugfhIsgbXaYhoQw/YpyeqRTzcWgAoAtRI866Z1Y2+1jUZHiuhwOVyOHG9WZ+6rnQeQiBZkJc9JPmheD7EL+2UO1wSP6G8kZuKWiLoFgmonIWkzRPPu5bWKuvIBHuRASIgsMm+CMcWsFKOtQKkWZQox2OsXdL+RlFrG/zg2V+HdcE1Q=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(136003)(39860400002)(396003)(346002)(82310400008)(451199021)(46966006)(36840700001)(40470700004)(6666004)(82740400003)(478600001)(356005)(83380400001)(47076005)(36860700001)(966005)(26005)(70586007)(70206006)(54906003)(110136005)(81166007)(186003)(426003)(336012)(2616005)(4326008)(5660300002)(40460700003)(44832011)(41300700001)(316002)(2906002)(8936002)(8676002)(86362001)(40480700001)(36756003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2023 17:07:01.7652
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d091456-0d0e-4bb3-7aba-08db8f8d0fa3
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000EE30.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7150
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jul 28, 2023 at 04:19:38AM +0000, Yoshihiro Shimoda wrote:
-> Hi Manivannan,
-> 
-> > From: Manivannan Sadhasivam, Sent: Friday, July 28, 2023 11:51 AM
-> > 
-> > On Wed, Jul 26, 2023 at 02:12:15AM +0000, Yoshihiro Shimoda wrote:
-> > > Hi Manivannan,
-> > >
-> > > > From: Manivannan Sadhasivam, Sent: Monday, July 24, 2023 8:04 PM
-> > > >
-> > > > Subject should contain the word "missing". Like, "Add missing PCI_EXP_LNKCAP_MLW
-> > > > handling".
-> > >
-> > > I got it.
-> > >
-> > > > On Fri, Jul 21, 2023 at 04:44:41PM +0900, Yoshihiro Shimoda wrote:
-> > > > > Update dw_pcie_link_set_max_link_width() to set PCI_EXP_LNKCAP_MLW.
-> > > > > In accordance with the DW PCIe RC/EP HW manuals [1,2,3,...] aside with
-> > > > > the PORT_LINK_CTRL_OFF.LINK_CAPABLE and GEN2_CTRL_OFF.NUM_OF_LANES[8:0]
-> > > > > field there is another one which needs to be updated. It's
-> > > > > LINK_CAPABILITIES_REG.PCIE_CAP_MAX_LINK_WIDTH. If it isn't done at
-> > > > > the very least the maximum link-width capability CSR won't expose
-> > > > > the actual maximum capability.
-> > > > >
-> > > > > [1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-> > > > >     Version 4.60a, March 2015, p.1032
-> > > > > [2] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-> > > > >     Version 4.70a, March 2016, p.1065
-> > > > > [3] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-> > > > >     Version 4.90a, March 2016, p.1057
-> > > > > ...
-> > > > > [X] DesignWare Cores PCI Express Controller Databook - DWC PCIe Endpoint,
-> > > > >       Version 5.40a, March 2019, p.1396
-> > > > > [X+1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-> > > > >       Version 5.40a, March 2019, p.1266
-> > > > >
-> > > > > Suggested-by: Serge Semin <fancer.lancer@gmail.com>
-> > > >
-> > > > Add Reported-by also?
-> > >
-> > > I don't think so because Serge suggested the commit description from my submitted patch [1].
-> > >
-> > > [1]
-> > >
-> <snip URL>
-> > >
-> > 
-> > Fine then.
-> > 
-> > > > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > >
-> > > > This looks like a potential bug fix to me. So please move this change before the
-> > > > previous patch that introduces dw_pcie_link_set_max_link_width(), tag fixes and
-> > > > CC stable list for backporting.
-> > >
-> > > I think that this patch should be a next branch because this is possible to
-> > > cause side effective. Almost all drivers/pcie/controller/dwc/ host drivers except
-> > > pcie-tegra194.c doesn't have this setting, but I assume that the drivers work correctly
-> > > without this setting.
-> > >
-> > > Also, to be honest, I could not find a suitable commit ID for this patch's "Fixes" tag.
-> > > Additionally, I could not determine which old kernel versions should have this patch
-> > > applied as backporting.
-> > >
-> > 
+This patch series introduces OF overlay support for PCI devices which
+primarily addresses two use cases. First, it provides a data driven method
+to describe hardware peripherals that are present in a PCI endpoint and
+hence can be accessed by the PCI host. Second, it allows reuse of a OF
+compatible driver -- often used in SoC platforms -- in a PCI host based
+system.
 
-> > Ok. But you can still move this patch as I suggested. If we happen to hit any
-> > issue with this setting, then we can easily revert it.
-> 
-> I got it. I'll move this patch as you suggested.
+There are 2 series devices rely on this patch:
 
-No. By moving this patch to be implemented before the patch:
-[PATCH v18 08/20] PCI: dwc: Add dw_pcie_link_set_max_link_width()
-you won't be able to easily revert it afterwards because the patch #8
-will move the code added by the patch #9 to the
-dw_pcie_link_set_max_link_width() function. Basically you suggest to
-switch the preparation and functional patches order which doesn't look
-right.
+  1) Xilinx Alveo Accelerator cards (FPGA based device)
+  2) Microchip LAN9662 Ethernet Controller
 
-Basically the Link-width-related part of this series currently implies
-the next logic:
+     Please see: https://lore.kernel.org/lkml/20220427094502.456111-1-clement.leger@bootlin.com/
 
-1. Prepare the DW PCIe core driver to implementing a comprehensive
-Max-link-width setup methods (aka as it's done in
-dw_pcie_link_set_max_speed()) by moving the Link-width related code to
-a dedicated method:
-[PATCH v18 08/20] PCI: dwc: Add dw_pcie_link_set_max_link_width()
+Normally, the PCI core discovers PCI devices and their BARs using the
+PCI enumeration process. However, the process does not provide a way to
+discover the hardware peripherals that are present in a PCI device, and
+which can be accessed through the PCI BARs. Also, the enumeration process
+does not provide a way to associate MSI-X vectors of a PCI device with the
+hardware peripherals that are present in the device. PCI device drivers
+often use header files to describe the hardware peripherals and their
+resources as there is no standard data driven way to do so. This patch
+series proposes to use flattened device tree blob to describe the
+peripherals in a data driven way. Based on previous discussion, using
+device tree overlay is the best way to unflatten the blob and populate
+platform devices. To use device tree overlay, there are three obvious
+problems that need to be resolved.
 
-2. Add the PCI_EXP_LNKCAP_MLW field update, which
-dw_pcie_link_set_max_link_width() lacks to be comprehensive:
-[PATCH v18 09/20] PCI: dwc: Add PCI_EXP_LNKCAP_MLW handling
+First, we need to create a base tree for non-DT system such as x86_64. A
+patch series has been submitted for this:
+https://lore.kernel.org/lkml/20220624034327.2542112-1-frowand.list@gmail.com/
+https://lore.kernel.org/lkml/20220216050056.311496-1-lizhi.hou@xilinx.com/
 
-3. Drop the duplicating code from the Tegra194 PCIe driver:
-[PATCH v18 10/20] PCI: tegra194: Drop PCI_EXP_LNKSTA_NLW setting
+Second, a device tree node corresponding to the PCI endpoint is required
+for overlaying the flattened device tree blob for that PCI endpoint.
+Because PCI is a self-discoverable bus, a device tree node is usually not
+created for PCI devices. This series adds support to generate a device
+tree node for a PCI device which advertises itself using PCI quirks
+infrastructure.
 
-In case if the patch #9 appears to be a bug fix, then it will need to
-be backported together with patch #8 which isn't a problem at all
-(though it's doubtfully to happen since nobody reported any problem
-with that so far). But if patch #9 turns out to break something in
-current circumstances we'll be able to either easily revert it (since
-it's applied after the preparation patch) or fix somehow. If you
-switch patch #8 and #9 order, the reversion will require to be
-performed for both these patches to avoid the conflicts. Thus I'd
-suggest to leave the patches order as is which looks more natural and
-won't cause any problems to revert the functional change or to
-backport it.
+Third, we need to generate device tree nodes for PCI bridges since a child
+PCI endpoint may choose to have a device tree node created.
 
--Serge(y)
+This patch series is made up of three patches.
 
-> 
-> Best regards,
-> Yoshihiro Shimoda
-> 
-> > - Mani
-> > 
-> > > Best regards,
-> > > Yoshihiro Shimoda
-> > >
-> > > > - Mani
-> > > >
-> > > > > Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-> > > > > ---
-> > > > >  drivers/pci/controller/dwc/pcie-designware.c | 9 ++++++++-
-> > > > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > > > > index 5cca34140d2a..c4998194fe74 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > > > @@ -730,7 +730,8 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
-> > > > >
-> > > > >  static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
-> > > > >  {
-> > > > > -	u32 lwsc, plc;
-> > > > > +	u32 lnkcap, lwsc, plc;
-> > > > > +	u8 cap;
-> > > > >
-> > > > >  	if (!num_lanes)
-> > > > >  		return;
-> > > > > @@ -766,6 +767,12 @@ static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
-> > > > >  	}
-> > > > >  	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, plc);
-> > > > >  	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, lwsc);
-> > > > > +
-> > > > > +	cap = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> > > > > +	lnkcap = dw_pcie_readl_dbi(pci, cap + PCI_EXP_LNKCAP);
-> > > > > +	lnkcap &= ~PCI_EXP_LNKCAP_MLW;
-> > > > > +	lnkcap |= FIELD_PREP(PCI_EXP_LNKCAP_MLW, num_lanes);
-> > > > > +	dw_pcie_writel_dbi(pci, cap + PCI_EXP_LNKCAP, lnkcap);
-> > > > >  }
-> > > > >
-> > > > >  void dw_pcie_iatu_detect(struct dw_pcie *pci)
-> > > > > --
-> > > > > 2.25.1
-> > > > >
-> > > >
-> > > > --
-> > > > மணிவண்ணன் சதாசிவம்
-> > 
-> > --
-> > மணிவண்ணன் சதாசிவம்
+The first patch is adding OF interface to create or destroy OF node
+dynamically.
+
+The second patch introduces a kernel option, CONFIG_PCI_DYNAMIC_OF_NODES.
+When the option is turned on, the kernel will generate device tree nodes
+for all PCI bridges unconditionally. The patch also shows how to use the
+PCI quirks infrastructure, DECLARE_PCI_FIXUP_FINAL to generate a device
+tree node for a device. Specifically, the patch generates a device tree
+node for Xilinx Alveo U50 PCIe accelerator device. The generated device
+tree nodes do not have any property.
+
+The third patch adds basic properties ('reg', 'compatible' and
+'device_type') to the dynamically generated device tree nodes. More
+properties can be added in the future.
+
+Here is the example of device tree nodes generated within the ARM64 QEMU.
+
+# lspci -t
+-[0000:00]-+-00.0
+           +-01.0
+           +-03.0-[01-03]----00.0-[02-03]----00.0-[03]----00.0
+           +-03.1-[04]--
+           \-04.0-[05-06]----00.0-[06]--
+
+Without CONFIG_PCI_DYNAMIC_OF_NODES
+
+# tree /sys/firmware/devicetree/base/pcie@10000000/
+/sys/firmware/devicetree/base/pcie@10000000/
+|-- #address-cells
+|-- #interrupt-cells
+|-- #size-cells
+|-- bus-range
+|-- compatible
+|-- device_type
+|-- dma-coherent
+|-- interrupt-map
+|-- interrupt-map-mask
+|-- linux,pci-domain
+|-- msi-map
+|-- name
+|-- ranges
+`-- reg
+
+With CONFIG_PCI_DYNAMIC_OF_NODES
+
+# tree /sys/firmware/devicetree/base/pcie@10000000/
+/sys/firmware/devicetree/base/pcie@10000000/
+|-- #address-cells
+|-- #interrupt-cells
+|-- #size-cells
+|-- bus-range
+|-- compatible
+|-- device_type
+|-- dma-coherent
+|-- interrupt-map
+|-- interrupt-map-mask
+|-- linux,pci-domain
+|-- msi-map
+|-- name
+|-- pci@3,0
+|   |-- #address-cells
+|   |-- #interrupt-cells
+|   |-- #size-cells
+|   |-- bus-range
+|   |-- compatible
+|   |-- device_type
+|   |-- interrupt-map
+|   |-- interrupt-map-mask
+|   |-- interrupts
+|   |-- pci@0,0
+|   |   |-- #address-cells
+|   |   |-- #interrupt-cells
+|   |   |-- #size-cells
+|   |   |-- bus-range
+|   |   |-- compatible
+|   |   |-- device_type
+|   |   |-- interrupt-map
+|   |   |-- interrupt-map-mask
+|   |   |-- pci@0,0
+|   |   |   |-- #address-cells
+|   |   |   |-- #interrupt-cells
+|   |   |   |-- #size-cells
+|   |   |   |-- bus-range
+|   |   |   |-- compatible
+|   |   |   |-- dev@0,0
+|   |   |   |   |-- #address-cells
+|   |   |   |   |-- #size-cells
+|   |   |   |   |-- compatible
+|   |   |   |   |-- ranges
+|   |   |   |   `-- reg
+|   |   |   |-- device_type
+|   |   |   |-- interrupt-map
+|   |   |   |-- interrupt-map-mask
+|   |   |   |-- ranges
+|   |   |   `-- reg
+|   |   |-- ranges
+|   |   `-- reg
+|   |-- ranges
+|   `-- reg
+|-- pci@3,1
+|   |-- #address-cells
+|   |-- #interrupt-cells
+|   |-- #size-cells
+|   |-- bus-range
+|   |-- compatible
+|   |-- device_type
+|   |-- interrupt-map
+|   |-- interrupt-map-mask
+|   |-- interrupts
+|   |-- ranges
+|   `-- reg
+|-- pci@4,0
+|   |-- #address-cells
+|   |-- #interrupt-cells
+|   |-- #size-cells
+|   |-- bus-range
+|   |-- compatible
+|   |-- device_type
+|   |-- interrupt-map
+|   |-- interrupt-map-mask
+|   |-- pci@0,0
+|   |   |-- #address-cells
+|   |   |-- #interrupt-cells
+|   |   |-- #size-cells
+|   |   |-- bus-range
+|   |   |-- compatible
+|   |   |-- device_type
+|   |   |-- interrupt-map
+|   |   |-- interrupt-map-mask
+|   |   |-- interrupts
+|   |   |-- ranges
+|   |   `-- reg
+|   |-- ranges
+|   `-- reg
+|-- ranges
+`-- reg
+
+Changes since v11:
+- Create interrupt related properties
+
+Changes since v10:
+- Remove 'dynamic' property
+
+Changes since v9:
+- Introduce 'dynamic' property to identify dynamically generated device tree
+  node for PCI device
+- Added 'bus-range' property to remove dtc warnings
+- Minor code review fixes
+
+Changes since v8:
+- Added patches to create unit test to verifying address translation
+    The test relies on QEMU PCI Test Device, please see
+        https://github.com/houlz0507/xoclv2/blob/pci-dt-0329/pci-dt-patch-0329/README
+    for test setup
+- Minor code review fixes
+
+Changes since v7:
+- Modified dynamic node creation interfaces
+- Added unittest for new added interfaces
+
+Changes since v6:
+- Removed single line wrapper functions
+- Added Signed-off-by Clément Léger <clement.leger@bootlin.com>
+
+Changes since v5:
+- Fixed code review comments
+- Fixed incorrect 'ranges' and 'reg' properties
+
+Changes since RFC v4:
+- Fixed code review comments
+
+Changes since RFC v3:
+- Split the Xilinx Alveo U50 PCI quirk to a separate patch
+- Minor changes in commit description and code comment
+
+Changes since RFC v2:
+- Merged patch 3 with patch 2
+- Added OF interfaces of_changeset_add_prop_* and use them to create
+  properties.
+- Added '#address-cells', '#size-cells' and 'ranges' properties.
+
+Changes since RFC v1:
+- Added one patch to create basic properties.
+- To move DT related code out of PCI subsystem, replaced of_node_alloc()
+  with of_create_node()/of_destroy_node()
+
+Lizhi Hou (5):
+  of: dynamic: Add interfaces for creating device node dynamically
+  PCI: Create device tree node for bridge
+  PCI: Add quirks to generate device tree node for Xilinx Alveo U50
+  of: overlay: Extend of_overlay_fdt_apply() to specify the target node
+  of: unittest: Add pci_dt_testdrv pci driver
+
+ drivers/of/dynamic.c                          | 164 ++++++++
+ drivers/of/overlay.c                          |  42 ++-
+ drivers/of/unittest-data/Makefile             |   3 +-
+ .../of/unittest-data/overlay_pci_node.dtso    |  22 ++
+ drivers/of/unittest.c                         | 211 ++++++++++-
+ drivers/pci/Kconfig                           |  12 +
+ drivers/pci/Makefile                          |   1 +
+ drivers/pci/bus.c                             |   2 +
+ drivers/pci/of.c                              |  79 ++++
+ drivers/pci/of_property.c                     | 355 ++++++++++++++++++
+ drivers/pci/pci.h                             |  12 +
+ drivers/pci/quirks.c                          |  12 +
+ drivers/pci/remove.c                          |   1 +
+ include/linux/of.h                            |  25 +-
+ 14 files changed, 926 insertions(+), 15 deletions(-)
+ create mode 100644 drivers/of/unittest-data/overlay_pci_node.dtso
+ create mode 100644 drivers/pci/of_property.c
+
+-- 
+2.34.1
+
