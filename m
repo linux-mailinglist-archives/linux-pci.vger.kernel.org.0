@@ -2,143 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF340766C78
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 14:04:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FF5D766C8D
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 14:12:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235686AbjG1MEO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jul 2023 08:04:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52968 "EHLO
+        id S233609AbjG1ML6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jul 2023 08:11:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235651AbjG1MD5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jul 2023 08:03:57 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA3A4211
-        for <linux-pci@vger.kernel.org>; Fri, 28 Jul 2023 05:03:25 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-3fbc12181b6so22542045e9.2
-        for <linux-pci@vger.kernel.org>; Fri, 28 Jul 2023 05:03:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690545801; x=1691150601;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=A/vKoaITIyW9xcwG8PtxXcCtwnXHm7Y94zVK2jGbtSY=;
-        b=F8c164DEg1U2zHFVL6A881PvtLW8arBQxTSuYi6BsazIikM8FKwJt8677VhL/YR5mf
-         Yrfv6VsM7uTf7JAiIr8/yfKWx3erIUq+snXxdTpCLqgqBoA623kze3xRWtyjyn1P+hcr
-         4pcxiMf53FRCFPdyflSJvROwRCNscn92er3ClH8x/+exjTFmrAu8zKcaTUeSo+H6PlSd
-         G8/bUjD6pgiejWLBS1iZDqZxLhkEjcf22QXMUkEvIFjQSIVXOyWMjULvU3Q+xoyBVOWf
-         dm8ji7904cyWSd5XGhEjkClg5KYREauq7FmA9Xq5NhMUIOFPygk/wrb867ojZ08nS06C
-         ZP+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690545801; x=1691150601;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A/vKoaITIyW9xcwG8PtxXcCtwnXHm7Y94zVK2jGbtSY=;
-        b=UrUaJhJj01khRvzVbKyiHVFT1fO/p2DOPlCsuynYkGYjU0ls0MMoG7aezzWExtMvs1
-         aqxGunlNXRWYrOvIdOU2MwqDLGq5QmD3Ru2t478t0gos+yzRsCT1sJmoatavO0cvM6qi
-         XVpIX8vmZEnY8kIAa18Utx3mbBoe3htuDWcfMqGKXmGu1hcSmfsm2/f2y63Tp5QNIg+D
-         HezCbWo3MWEAhwJDs9YNoX2RhzFbD5jJZVcKrrFL8cEGbxIXOhGWO6BoeXmB5cHmdqTS
-         w9yluk2OU0XZFfCEKdH2ES4pZ0VNdatTi35AxgbG6yj8jiRIsyo1QhC7lxPwRx04JOhA
-         iMKA==
-X-Gm-Message-State: ABy/qLbQUPVomPcCnzTEB/RLgLrtpEu90D9P/3+V2V6pwrmcC54bD7Q7
-        ZdrLQ/iNvJbRa76anzAbCJqoJA==
-X-Google-Smtp-Source: APBJJlEkuI6UTwqW0VTko2uWsPFht7OoyEgxGr2mGh5SPlgfnShLErAkXAEfZK43dAqhK7yX5s44Rw==
-X-Received: by 2002:a05:600c:d5:b0:3fb:e206:ca5f with SMTP id u21-20020a05600c00d500b003fbe206ca5fmr1392256wmm.31.1690545801567;
-        Fri, 28 Jul 2023 05:03:21 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.104])
-        by smtp.gmail.com with ESMTPSA id w17-20020a05600c015100b003fbfef555d2sm6778983wmm.23.2023.07.28.05.03.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Jul 2023 05:03:21 -0700 (PDT)
-Message-ID: <17c2ba50-3b72-523c-d92b-1ecbf9be7450@linaro.org>
-Date:   Fri, 28 Jul 2023 14:03:17 +0200
+        with ESMTP id S233512AbjG1ML5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jul 2023 08:11:57 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65C510EC
+        for <linux-pci@vger.kernel.org>; Fri, 28 Jul 2023 05:11:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1690546315; x=1722082315;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JGssJGLQ0T3qf9XcXhh5d5FevqWgguMUf0rr1cM7iFs=;
+  b=AYtH0rUIEAM4h4RdtBwLn3OJKw8QmOHy+PG428EP7lLs5KGf1pOSWEJm
+   sM62GYGu9y7Vmw3gNlAp7oTtZ1tJH4igi6WLYFT+xULuCo23oZOElycd6
+   aZMWd9i+Op4Z6cWzKB+e6iwx/byoOCYse+wo289ZBJxCwTHgtItUYjwxq
+   v+4T/Yz7MobF1gEioSInDQbpNGynwPpRw+leHGIqThx1oBo4M2/iiUqAN
+   S8edvVCyqh7r2WdZ34IXc+hoBv3rpdUouIxjPvXuX5qJoEMoh3xvW5RWs
+   qcO4YT61gCsOqwErkul/FqPv5cSQUi+ezbIMMXAxzhFoAy3U8JYpfcSY3
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.01,237,1684825200"; 
+   d="scan'208";a="163721077"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Jul 2023 05:11:55 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Fri, 28 Jul 2023 05:11:54 -0700
+Received: from daire-X570.amer.actel.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.21 via Frontend Transport; Fri, 28 Jul 2023 05:11:52 -0700
+From:   <daire.mcnamara@microchip.com>
+To:     <conor.dooley@microchip.com>
+CC:     Daire McNamara <daire.mcnamara@microchip.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>
+Subject: [PATCH v3 0/7] PCI: microchip: Fixes and clean-ups
+Date:   Fri, 28 Jul 2023 13:11:42 +0100
+Message-ID: <20230728121149.1606382-1-daire.mcnamara@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v1] arm64: dts: qcom: sc7280: Add PCIe0 node
-Content-Language: en-US
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        manivannan.sadhasivam@linaro.org
-Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
-        quic_parass@quicinc.com,
-        "reviewer:ARM/QUALCOMM CHROMEBOOK SUPPORT" 
-        <cros-qcom-dts-watchers@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <1690540760-20191-1-git-send-email-quic_krichai@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <1690540760-20191-1-git-send-email-quic_krichai@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 28/07/2023 12:39, Krishna chaitanya chundru wrote:
-> Add PCIe dtsi node for PCIe0 controller on sc7280 platform.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+From: Daire McNamara <daire.mcnamara@microchip.com>
 
-Thank you for your patch. There is something to discuss/improve.
+This patch series contains fixes and clean-ups for the Microchip PolarFire SoC PCIe driver
+
+These patches are extracted from the link below to separate them from the outbound and inbound
+range handling which is taking considerable time.
+Link: https://lore.kernel.org/linux-riscv/20230111125323.1911373-1-daire.mcnamara@microchip.com/
+
+These patches are regenerated on v6.5-rc4.
+
+Main changes from v2:
+- Reworked "Gather MSI information..." as suggested by Bjorn
+- merged 'Gather MSI Information..." and "Rename and refactor" as suggested by Bjorn
+- Re-generated on v6.5-rc4
+
+Main Changes from v1:
+- Dropped "Remove cast warning for devm_add_action_or_reset()". This
+  has been overtaken by a patch series from Krzysztof Wilczynski.
+- Improved the comment for "Enable building driver as a module" to
+  clarify what enables building the driver as a module.
+- Split "Gather MSI information from hardware config registers",
+  for clarity, into:
+   - "Gather MSI information from hardware config registers" purely
+      changing the of source of MSI-related information (Num MSIs and
+      MSI address) from #defines (which can be incorrect) to FPGA
+      configuration registers (which is the ultimate source of truth),
+      and a
+   - "Rename and refactor ..." patch as a function's code is now clearly
+      unrelated to its current name.
+
+cc: Conor Dooley <conor.dooley@microchip.com>
+cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+cc: "Krzysztof Wilczyński" <kw@linux.com>
+cc: Rob Herring <robh@kernel.org>
+cc: Bjorn Helgaas <bhelgaas@google.com>
+cc: linux-riscv@lists.infradead.org
+cc: linux-pci@vger.kernel.org
+
+Daire McNamara (8):
+  PCI: microchip: Correct the DED and SEC interrupt bit offsets
+  PCI: microchip: Enable building driver as a module
+  PCI: microchip: Align register, offset, and mask names with hw docs
+  PCI: microchip: Enable event handlers to access bridge and ctrl ptrs
+  PCI: microchip: Clean up initialisation of interrupts
+  PCI: microchip: Gather MSI information from hardware config registers
+  PCI: microchip: Re-partition code between probe() and init()
+
+ drivers/pci/controller/Kconfig               |   2 +-
+ drivers/pci/controller/pcie-microchip-host.c | 393 +++++++++++--------
+ 2 files changed, 233 insertions(+), 162 deletions(-)
 
 
-> +		pcie0_phy: phy@1c06000 {
-> +			compatible = "qcom,sm8250-qmp-gen3x1-pcie-phy";
-> +			reg = <0 0x01c06000 0 0x1c0>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges;
-> +			clocks = <&gcc GCC_PCIE_0_AUX_CLK>,
-> +				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-> +				 <&gcc GCC_PCIE_CLKREF_EN>,
-> +				 <&gcc GCC_PCIE0_PHY_RCHNG_CLK>;
-> +			clock-names = "aux", "cfg_ahb", "ref", "refgen";
-> +
-> +			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
-> +			reset-names = "phy";
-> +
-> +			assigned-clocks = <&gcc GCC_PCIE0_PHY_RCHNG_CLK>;
-> +			assigned-clock-rates = <100000000>;
-> +
-> +			status = "disabled";
-> +
-> +			pcie0_lane: phy@1c0e6200 {
-
-Isn't this old-style of bindings? Wasn't there a change? On what tree
-did you base it?
-
-> +
-> +			pcie0_wake_n: pcie0-wake-n {
-
-It does not look like you tested the DTS against bindings. Please run
-`make dtbs_check` (see
-Documentation/devicetree/bindings/writing-schema.rst or
-https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
-for instructions).
-
-Nodes end with 'state'.
-
-
-> +				pins = "gpio89";
-> +				function = "gpio";
-> +
-> +				drive-strength = <2>;
-> +				bias-pull-up;
-> +			};
-Best regards,
-Krzysztof
+base-commit: 6eaae198076080886b9e7d57f4ae06fa782f90ef
+-- 
+2.25.1
 
