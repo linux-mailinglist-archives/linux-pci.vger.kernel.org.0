@@ -2,189 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E730B766DEB
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 15:14:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60DC8766E91
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 15:39:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235789AbjG1NOb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jul 2023 09:14:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38200 "EHLO
+        id S236841AbjG1Njh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jul 2023 09:39:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235692AbjG1NOa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jul 2023 09:14:30 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A943C12
-        for <linux-pci@vger.kernel.org>; Fri, 28 Jul 2023 06:14:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1690550063; x=1722086063;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=VSlMewaRlgUqGdK9WsctRfPfy3ZTf2dkgCOC86e2ZwU=;
-  b=Xyk9VQdBg4TsnMEz+YRJiZpjtCEYq9utGzTYH6Hto5jy7Qn4r628wdMs
-   MTaeB4VKPH2iYqXUJ0IMOa3WhHFRStYnXCrSZ00Z2JmlDCNegxwALx9Wm
-   bJp2r9hl0/GYIdfDKzLB1mDQGKR6qI3GRsNzAHfAsEw2/Yr+HyCpQG/1s
-   fq0F3O5i3qidOWiWEjPPJ3gYLJ64MGyQXBj92r1Koc9SFKUTqyEyx8JEV
-   nmi3l7Lra7RsCkykJw1aVFBp4TUB8GCRnChVcYIVLacUV2feEYJWMqly1
-   wbvItQCca2H1sgKorZvhKW0dqhV65JV+0AbSWFhl6QD2vwhuanmLafNTv
-   w==;
-X-IronPort-AV: E=Sophos;i="6.01,237,1684825200"; 
-   d="scan'208";a="238431694"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Jul 2023 06:14:23 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Fri, 28 Jul 2023 06:14:20 -0700
-Received: from daire-X570.amer.actel.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.21 via Frontend Transport; Fri, 28 Jul 2023 06:14:18 -0700
-From:   <daire.mcnamara@microchip.com>
-To:     <conor.dooley@microchip.com>, <lpieralisi@kernel.org>,
-        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
-        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>
-CC:     Daire McNamara <daire.mcnamara@microchip.com>
-Subject: [PATCH v3 7/7] PCI: microchip: Re-partition code between probe() and init()
-Date:   Fri, 28 Jul 2023 14:14:01 +0100
-Message-ID: <20230728131401.1615724-8-daire.mcnamara@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230728131401.1615724-1-daire.mcnamara@microchip.com>
-References: <20230728131401.1615724-1-daire.mcnamara@microchip.com>
+        with ESMTP id S236095AbjG1Njf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jul 2023 09:39:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58E1E3C04;
+        Fri, 28 Jul 2023 06:39:34 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C71E562130;
+        Fri, 28 Jul 2023 13:39:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4594C433C8;
+        Fri, 28 Jul 2023 13:39:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690551573;
+        bh=rrMGRA9QOCHjw1OjWOTAoukKaG1CWaZCt3LhiwC5Xp4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OjskhXK/XxIHWmQ9Eh3vvEj0LiRtA3ng9FnPdhSzB65+LA4adEbSDS0tKNBed2fGY
+         RN2kz3EgmIG3ZzLtKuDVgvjTzFQ9KAcuhqp2/qNdtUKmQlJphX2ZK6JDx2dVnFT0BK
+         BNsrSPixeMUqEo27ztvE2KEfA3/9l463614d2vX8+GqL9U6wz/c+TNqldrzC97YCXS
+         /EIr5sT9HKw/Rqk1pLHw2T+jZ/9Us+SP2r8q8HCKFsnN/GHTXTelAXTQPVFcu1K94k
+         hBqHbmjZ8e2nOs0M6lumvF6JWfqaTIc5w8vNmKpWys2iC/5eT8F2PFnN/mMCVutNKd
+         7Zw6uRHBGOaQg==
+Date:   Fri, 28 Jul 2023 14:39:27 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Shuai Xue <xueshuai@linux.alibaba.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
+        yangyicong@huawei.com, baolin.wang@linux.alibaba.com,
+        robin.murphy@arm.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        rdunlap@infradead.org, mark.rutland@arm.com,
+        zhuo.song@linux.alibaba.com
+Subject: Re: [PATCH v6 0/4] drivers/perf: add Synopsys DesignWare PCIe PMU
+ driver support
+Message-ID: <20230728133926.GC21394@willie-the-truck>
+References: <20230725205955.GA665326@bhelgaas>
+ <634f4762-cf2e-4535-f369-4032d65093f0@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <634f4762-cf2e-4535-f369-4032d65093f0@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Daire McNamara <daire.mcnamara@microchip.com>
+On Thu, Jul 27, 2023 at 11:45:22AM +0800, Shuai Xue wrote:
+> 
+> 
+> On 2023/7/26 04:59, Bjorn Helgaas wrote:
+> > On Mon, Jul 24, 2023 at 10:18:07AM +0100, Jonathan Cameron wrote:
+> >> On Mon, 24 Jul 2023 10:34:08 +0800
+> >> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+> >>> On 2023/7/10 20:04, Shuai Xue wrote:
+> >>>> On 2023/6/16 16:39, Shuai Xue wrote:  
+> >>>>> On 2023/6/6 15:49, Shuai Xue wrote:  
+> > 
+> >>>>>> This patchset adds the PCIe Performance Monitoring Unit (PMU) driver support
+> >>>>>> for T-Head Yitian 710 SoC chip. Yitian 710 is based on the Synopsys PCI Express
+> >>>>>> Core controller IP which provides statistics feature.
+> > 
+> >> ...
+> >> Really a question for Bjorn I think, but here is my 2 cents...
+> >>
+> >> The problem here is that we need to do that fundamental redesign of the
+> >> way the PCI ports drivers work.  I'm not sure there is a path to merging
+> >> this until that is done.  The bigger problem is that I'm not sure anyone
+> >> is actively looking at that yet.  I'd like to look at this (as I have
+> >> the same problem for some other drivers), but it is behind various
+> >> other things on my todo list.
+> >>
+> >> Bjorn might be persuaded on a temporary solution, but that would come
+> >> with some maintenance problems, particularly when we try to do it
+> >> 'right' in the future.  Maybe adding another service driver would be
+> >> a stop gap as long as we know we won't keep doing so for ever. Not sure.
+> > 
+> > I think the question here is around the for_each_pci_dev() in
+> > __dwc_pcie_pmu_probe()?  I don't *like* that because of the
+> > assumptions it breaks (autoload doesn't work, hotplug doesn't work),
+> > but:
+> > 
+> >   - There are several other drivers that also do this,
+> >   - I don't have a better suggest for any of them,
+> >   - It's not a drivers/pci thing, so not really up to me anyway,
+> > 
+> > so I don't have any problem with this being merged as-is, as long as
+> > you can live with the limitations.
+> > 
+> > I don't think this series does anything to work around those
+> > limitations, i.e., it doesn't make up fake device IDs for module
+> > loading or fake events for hotplug, so it seems like we could improve
+> > the implementation later if we ever have a way to do it.
+> > 
+> > Bjorn
+> 
+> + Will
+> 
+> Ok, thank you for confirmation, Bjorn. Then it comes to perf driver parts and
+> it is really a question for @Will I think.
+> 
+> What's your opinion about merging this patch set, @Will?
 
-Continuing to use pci_host_common_probe() for the PCIe Root Complex on
-PolarFire SoC was leading to an extremely large _init() function and
-some unnatural code flow. Re-partition so some tasks are done in
-a _probe() routine, which calls pci_host_common_probe() and then use a
-much smaller _init() function, mainly to enable interrupts after address
-translation tables are set up.
+No fundamental objection from me, but I'll have a closer look when you
+post a version addressing the feedback from Jonathan and Yicong.
 
-Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
----
- drivers/pci/controller/pcie-microchip-host.c | 58 +++++++++++++-------
- 1 file changed, 38 insertions(+), 20 deletions(-)
+Cheers,
 
-diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-index ca13fd56a0d9..252aff180ca2 100644
---- a/drivers/pci/controller/pcie-microchip-host.c
-+++ b/drivers/pci/controller/pcie-microchip-host.c
-@@ -384,6 +384,8 @@ static struct {
- 
- static char poss_clks[][5] = { "fic0", "fic1", "fic2", "fic3" };
- 
-+static struct mc_pcie *port;
-+
- static void mc_pcie_enable_msi(struct mc_pcie *port, void __iomem *ecam)
- {
- 	struct mc_msi *msi = &port->msi;
-@@ -1104,7 +1106,34 @@ static int mc_platform_init(struct pci_config_window *cfg)
- {
- 	struct device *dev = cfg->parent;
- 	struct platform_device *pdev = to_platform_device(dev);
--	struct mc_pcie *port;
-+	void __iomem *bridge_base_addr =
-+		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-+	int ret;
-+
-+	/* Configure address translation table 0 for PCIe config space */
-+	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start,
-+			     cfg->res.start,
-+			     resource_size(&cfg->res));
-+
-+	/* Need some fixups in config space */
-+	mc_pcie_enable_msi(port, cfg->win);
-+
-+	/* Configure non-config space outbound ranges */
-+	ret = mc_pcie_setup_windows(pdev, port);
-+	if (ret)
-+		return ret;
-+
-+	/* Address translation is up; safe to enable interrupts */
-+	ret = mc_init_interrupts(pdev, port);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int mc_host_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
- 	void __iomem *bridge_base_addr;
- 	int ret;
- 	u32 val;
-@@ -1112,13 +1141,8 @@ static int mc_platform_init(struct pci_config_window *cfg)
- 	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
- 	if (!port)
- 		return -ENOMEM;
--	port->dev = dev;
- 
--	ret = mc_pcie_init_clks(dev);
--	if (ret) {
--		dev_err(dev, "failed to get clock resources, error %d\n", ret);
--		return -ENODEV;
--	}
-+	port->dev = dev;
- 
- 	port->axi_base_addr = devm_platform_ioremap_resource(pdev, 1);
- 	if (IS_ERR(port->axi_base_addr))
-@@ -1133,9 +1157,6 @@ static int mc_platform_init(struct pci_config_window *cfg)
- 	val &= ~MSIX_CAP_MASK;
- 	writel(val, bridge_base_addr + PCIE_PCI_IRQ_DW0);
- 
--	/* Hardware doesn't setup MSI by default */
--	mc_pcie_enable_msi(port, cfg->win);
--
- 	/* Pick num vectors from bitfile programmed onto FPGA fabric */
- 	val = readl(bridge_base_addr + PCIE_PCI_IRQ_DW0);
- 	val &= NUM_MSI_MSGS_MASK;
-@@ -1146,16 +1167,13 @@ static int mc_platform_init(struct pci_config_window *cfg)
- 	/* Pick vector address from design */
- 	port->msi.vector_phy = readl_relaxed(bridge_base_addr + IMSI_ADDR);
- 
--	/* Configure Address Translation Table 0 for PCIe config space */
--	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start & 0xffffffff,
--			     cfg->res.start, resource_size(&cfg->res));
--
--	ret = mc_pcie_setup_windows(pdev, port);
--	if (ret)
--		return ret;
-+	ret = mc_pcie_init_clks(dev);
-+	if (ret) {
-+		dev_err(dev, "failed to get clock resources, error %d\n", ret);
-+		return -ENODEV;
-+	}
- 
--	/* Address translation is up; safe to enable interrupts */
--	return mc_init_interrupts(pdev, port);
-+	return pci_host_common_probe(pdev);
- }
- 
- static const struct pci_ecam_ops mc_ecam_ops = {
-@@ -1178,7 +1196,7 @@ static const struct of_device_id mc_pcie_of_match[] = {
- MODULE_DEVICE_TABLE(of, mc_pcie_of_match);
- 
- static struct platform_driver mc_pcie_driver = {
--	.probe = pci_host_common_probe,
-+	.probe = mc_host_probe,
- 	.driver = {
- 		.name = "microchip-pcie",
- 		.of_match_table = mc_pcie_of_match,
--- 
-2.25.1
-
+Will
