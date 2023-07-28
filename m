@@ -2,153 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 542D376703E
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 17:11:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13C7A76705F
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 17:20:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235370AbjG1PLa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jul 2023 11:11:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46004 "EHLO
+        id S236029AbjG1PUh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jul 2023 11:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233488AbjG1PL3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jul 2023 11:11:29 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 740DE10CB;
-        Fri, 28 Jul 2023 08:11:28 -0700 (PDT)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36SCxYmu021467;
-        Fri, 28 Jul 2023 15:11:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=+M1QcnslsutWlO5X/4Ecy8tXoGFGslAYbFb1EjhoPe8=;
- b=fD2x+4iEWo2Y5j6649zpeBgY5WzVO1ojQBHFIwRUiKHm56AxvceZfr8faNNeYQa4ND0Y
- 8lPjSndLvM0HytKxLIvZAVD1xBolDnYbR5zM+57pV5axGDp/ZAMs8eXchKw2zjf7g0Mi
- 5uu3ujBjMePVuyLStoo8/sNfG0W49ICP/n3TUZhxZAcFcArqwCcedImeoze1/IU2gK+G
- 0IydaomdgAOkiNsZYuLJ3jL/nI/Jgsyh1nvrPGcl6/QoSfhiUxhs2WlSl/N/2J8mkwbK
- BSrkXVEOofw73EZWDtlPpUPOu8m3Pd/KFsDNFa0WmiTKw0GWGOSBMBiH7tuS1ayOvGkE +g== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3s469hha2a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Jul 2023 15:11:21 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36SFBKJM008061
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Jul 2023 15:11:20 GMT
-Received: from [10.216.26.20] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Fri, 28 Jul
- 2023 08:10:58 -0700
-Message-ID: <f3d5c72d-90d3-b091-f995-5ad0bf93ae1d@quicinc.com>
-Date:   Fri, 28 Jul 2023 20:40:54 +0530
+        with ESMTP id S233675AbjG1PUg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jul 2023 11:20:36 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6338130FC;
+        Fri, 28 Jul 2023 08:20:34 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RCB7c40Wcz6839B;
+        Fri, 28 Jul 2023 23:17:00 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 28 Jul
+ 2023 16:20:31 +0100
+Date:   Fri, 28 Jul 2023 16:20:30 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Shuai Xue <xueshuai@linux.alibaba.com>
+CC:     Yicong Yang <yangyicong@huawei.com>, <chengyou@linux.alibaba.com>,
+        <kaishen@linux.alibaba.com>, <helgaas@kernel.org>,
+        <will@kernel.org>, <baolin.wang@linux.alibaba.com>,
+        <robin.murphy@arm.com>, <yangyicong@hisilicon.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <rdunlap@infradead.org>,
+        <mark.rutland@arm.com>, <zhuo.song@linux.alibaba.com>
+Subject: Re: [PATCH v6 3/4] drivers/perf: add DesignWare PCIe PMU driver
+Message-ID: <20230728162030.00005e60@Huawei.com>
+In-Reply-To: <12958abe-4bdb-8532-bf67-8e772ed2a9dd@linux.alibaba.com>
+References: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
+        <20230606074938.97724-4-xueshuai@linux.alibaba.com>
+        <31e2b012-3a29-d063-842d-e3f7736816e7@huawei.com>
+        <20230727103929.00000544@Huawei.com>
+        <12958abe-4bdb-8532-bf67-8e772ed2a9dd@linux.alibaba.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v1] arm64: dts: qcom: sc7280: Add PCIe0 node
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <manivannan.sadhasivam@linaro.org>
-CC:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_vbadigan@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_ramkri@quicinc.com>,
-        <quic_parass@quicinc.com>,
-        "reviewer:ARM/QUALCOMM CHROMEBOOK SUPPORT" 
-        <cros-qcom-dts-watchers@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        "Bjorn Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <1690540760-20191-1-git-send-email-quic_krichai@quicinc.com>
- <17c2ba50-3b72-523c-d92b-1ecbf9be7450@linaro.org>
-From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <17c2ba50-3b72-523c-d92b-1ecbf9be7450@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: hOlM99BQYESLq8VgbD3ILXuwJl74JUvh
-X-Proofpoint-GUID: hOlM99BQYESLq8VgbD3ILXuwJl74JUvh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-27_10,2023-07-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 impostorscore=0 malwarescore=0 phishscore=0
- adultscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 spamscore=0
- lowpriorityscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2306200000 definitions=main-2307280140
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+...
 
-On 7/28/2023 5:33 PM, Krzysztof Kozlowski wrote:
-> On 28/07/2023 12:39, Krishna chaitanya chundru wrote:
->> Add PCIe dtsi node for PCIe0 controller on sc7280 platform.
->>
->> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> Thank you for your patch. There is something to discuss/improve.
->
->
->> +		pcie0_phy: phy@1c06000 {
->> +			compatible = "qcom,sm8250-qmp-gen3x1-pcie-phy";
->> +			reg = <0 0x01c06000 0 0x1c0>;
->> +			#address-cells = <2>;
->> +			#size-cells = <2>;
->> +			ranges;
->> +			clocks = <&gcc GCC_PCIE_0_AUX_CLK>,
->> +				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
->> +				 <&gcc GCC_PCIE_CLKREF_EN>,
->> +				 <&gcc GCC_PCIE0_PHY_RCHNG_CLK>;
->> +			clock-names = "aux", "cfg_ahb", "ref", "refgen";
->> +
->> +			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
->> +			reset-names = "phy";
->> +
->> +			assigned-clocks = <&gcc GCC_PCIE0_PHY_RCHNG_CLK>;
->> +			assigned-clock-rates = <100000000>;
->> +
->> +			status = "disabled";
->> +
->> +			pcie0_lane: phy@1c0e6200 {
-> Isn't this old-style of bindings? Wasn't there a change? On what tree
-> did you base it?
-Let me rebase and send it again.
->> +
->> +			pcie0_wake_n: pcie0-wake-n {
-> It does not look like you tested the DTS against bindings. Please run
-> `make dtbs_check` (see
-> Documentation/devicetree/bindings/writing-schema.rst or
-> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
-> for instructions).
->
-> Nodes end with 'state'.
 
-I will run it send it again.
+> >>> +
+> >>> +static int dwc_pcie_pmu_online_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
+> >>> +{
+> >>> +	struct dwc_pcie_pmu *pcie_pmu;
+> >>> +	struct pci_dev *pdev;
+> >>> +	int node;
+> >>> +
+> >>> +	pcie_pmu = hlist_entry_safe(cpuhp_node, struct dwc_pcie_pmu, cpuhp_node);
+> >>> +	pdev = pcie_pmu->pdev;
+> >>> +	node = dev_to_node(&pdev->dev);
+> >>> +
+> >>> +	if (node != NUMA_NO_NODE && cpu_to_node(pcie_pmu->oncpu) != node &&  
+> > 
+> > Perhaps worth a comment on when you might see node == NUMA_NO_NODE?
+> > Beyond NUMA being entirely disabled, I'd hope that never happens and for that you
+> > might be able to use a compile time check.
+> > 
+> > I wonder if this can be simplified by a flag that says if we are already in the
+> > right node? Might be easier to follow than having similar dance in online and offline
+> > to figure that out.  
+> 
+> Ok, I will add a comment for NUMA_NO_NODE. If no numa support, I think
+> any CPU is fine to bind.
 
-Thanks,
+Agreed. I would add a comment on that being the intent.
 
-KC
+> 
+> pcie_pmu->on_cpu may be a good choise to be used as a flag, right? pcie_pmu->on_cpu
+> will be set as -1 when pcie_pmu is allocated and then check in
+> dwc_pcie_pmu_online_cpu() first.
 
->
->> +				pins = "gpio89";
->> +				function = "gpio";
->> +
->> +				drive-strength = <2>;
->> +				bias-pull-up;
->> +			};
-> Best regards,
-> Krzysztof
->
+I think you still want to know whether it's in the right node - as maybe
+there are no local CPUs available at startup.
+
+> 
+> Then, the code will be:
+> 
+> static int dwc_pcie_pmu_online_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
+> {
+> 	struct dwc_pcie_pmu *pcie_pmu;
+> 	struct pci_dev *pdev;
+> 	int node;
+> 
+> 	pcie_pmu = hlist_entry_safe(cpuhp_node, struct dwc_pcie_pmu, cpuhp_node);
+> 	/* If another CPU is already managing this PMU, simply return. */
+> 	if (pcie_pmu->on_cpu != -1)
+> 		return 0;
+> 
+> 	pdev = pcie_pmu->pdev;
+> 	node = dev_to_node(&pdev->dev);
+> 
+> 	/* Select the first CPU if no numa support. */
+> 	if (node == NUMA_NO_NODE)
+> 		pcie_pmu->on_cpu = cpu;
+> 	else if (cpu_to_node(pcie_pmu->on_cpu) != node &&
+> 		 cpu_to_node(cpu) == node)
+> 		dwc_pcie_pmu_migrate(pcie_pmu, cpu);
+> 
+> 	return 0;
+> }
+> > 
+> >>> +static int __init dwc_pcie_pmu_init(void)
+> >>> +{
+> >>> +	int ret;
+> >>> +
+> >>> +	ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
+> >>> +				      "perf/dwc_pcie_pmu:online",
+> >>> +				      dwc_pcie_pmu_online_cpu,
+> >>> +				      dwc_pcie_pmu_offline_cpu);
+> >>> +	if (ret < 0)
+> >>> +		return ret;
+> >>> +
+> >>> +	dwc_pcie_pmu_hp_state = ret;
+> >>> +
+> >>> +	ret = platform_driver_register(&dwc_pcie_pmu_driver);
+> >>> +	if (ret) {
+> >>> +		cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
+> >>> +		return ret;
+> >>> +	}
+> >>> +
+> >>> +	dwc_pcie_pmu_dev = platform_device_register_simple(
+> >>> +				"dwc_pcie_pmu", PLATFORM_DEVID_NONE, NULL, 0);
+> >>> +	if (IS_ERR(dwc_pcie_pmu_dev)) {
+> >>> +		platform_driver_unregister(&dwc_pcie_pmu_driver);    
+> >>
+> >> On failure we also need to remove cpuhp state as well.  
+> > 
+> > I'd suggest using gotos and a single error handling block. That
+> > makes it both harder to forget things like this and easier to
+> > compare that block with what happens in exit() - so slightly 
+> > easier to review!  
+> 
+> Given that we have a appropriate way to tear down the PMUs via devm_add_action_or_reset(),
+> I am going to remove the redundant probe/remove framework via platform_driver_{un}register().
+> for_each probe process in __dwc_pcie_pmu_probe() will be move into dwc_pcie_pmu_init().
+> Is it a better way?
+
+I think I'd prefer to see a standard driver creation / probe flow even if you could in theory
+avoid it.
+
+Jonathan
+
+> 
+> Thank you very much for your valuable comments.
+> 
+> Best Regards,
+> Shuai
+> 
+> 
+
