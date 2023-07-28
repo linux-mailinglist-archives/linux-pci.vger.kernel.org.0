@@ -2,883 +2,269 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0233976613B
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 03:31:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8995D7661D3
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 04:35:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230079AbjG1BbQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jul 2023 21:31:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45404 "EHLO
+        id S232659AbjG1Ce7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jul 2023 22:34:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229719AbjG1BbP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jul 2023 21:31:15 -0400
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 275E72D5D;
-        Thu, 27 Jul 2023 18:31:11 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0VoOAd.U_1690507867;
-Received: from 30.240.115.26(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VoOAd.U_1690507867)
-          by smtp.aliyun-inc.com;
-          Fri, 28 Jul 2023 09:31:09 +0800
-Message-ID: <2a75e4c0-230b-7dbe-8b06-8d672eeb4486@linux.alibaba.com>
-Date:   Fri, 28 Jul 2023 09:31:06 +0800
+        with ESMTP id S232682AbjG1Ce5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jul 2023 22:34:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBD9E30FA;
+        Thu, 27 Jul 2023 19:34:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 50BC861FA0;
+        Fri, 28 Jul 2023 02:34:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4018C433CA;
+        Fri, 28 Jul 2023 02:34:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690511694;
+        bh=VKwfnqtxpdQg1s0HfEXDoPQ6/LKADwOgnygbsE5ll7g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pGsVzYGNUIqNMH/7+adYOGzvdDxkHSp6KqKQ10m14lyRl+bqv7SfroNUWSK10aJDK
+         sLAWnmasDzmWh6F81Y8A7MsypZz2FQDPasIyb5Lkt5islxUJ0a1RvOl/BG2a8SlJMO
+         WAh1EGkA1D4XeJFHj8AXUiYP8WroDnbMQRoI/VDoakMbqjgBNZkwZNpaQAvILDR7ne
+         rDlH5UJkCZfBSwuep+y+BIickzM7KqSPWzNynQH/6YcI1X2LK6nr2Em8TbPqhGyZ+x
+         FJ16fhKkRsQsCdtdiO2LFP749C+moIghLQ1SycRNhVMJuGQe9E6TybEGG6zmfh0oky
+         g6J8nSg5pGU+A==
+Date:   Fri, 28 Jul 2023 08:04:44 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "kw@linux.com" <kw@linux.com>,
+        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "kishon@kernel.org" <kishon@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "conor+dt@kernel.org" <conor+dt@kernel.org>,
+        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
+        "fancer.lancer@gmail.com" <fancer.lancer@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v18 07/20] PCI: dwc: endpoint: Add multiple PFs support
+ for dbi2
+Message-ID: <20230728023444.GA4433@thinkpad>
+References: <20230721074452.65545-1-yoshihiro.shimoda.uh@renesas.com>
+ <20230721074452.65545-8-yoshihiro.shimoda.uh@renesas.com>
+ <20230724092454.GF6291@thinkpad>
+ <TYBPR01MB53412DCDBC766DB3322F7517D803A@TYBPR01MB5341.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [PATCH v6 3/4] drivers/perf: add DesignWare PCIe PMU driver
-Content-Language: en-US
-To:     Yicong Yang <yangyicong@huawei.com>, chengyou@linux.alibaba.com,
-        kaishen@linux.alibaba.com, helgaas@kernel.org, will@kernel.org,
-        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
-        robin.murphy@arm.com
-Cc:     yangyicong@hisilicon.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        rdunlap@infradead.org, mark.rutland@arm.com,
-        zhuo.song@linux.alibaba.com
-References: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
- <20230606074938.97724-4-xueshuai@linux.alibaba.com>
- <31e2b012-3a29-d063-842d-e3f7736816e7@huawei.com>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <31e2b012-3a29-d063-842d-e3f7736816e7@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-10.0 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <TYBPR01MB53412DCDBC766DB3322F7517D803A@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Jul 25, 2023 at 11:57:34AM +0000, Yoshihiro Shimoda wrote:
+> Hi Manivannan,
+> 
+> > From: Manivannan Sadhasivam, Sent: Monday, July 24, 2023 6:25 PM
+> > 
+> > On Fri, Jul 21, 2023 at 04:44:39PM +0900, Yoshihiro Shimoda wrote:
+> > > The commit 24ede430fa49 ("PCI: designware-ep: Add multiple PFs support
+> > > for DWC") added .func_conf_select() to get the configuration space of
+> > > different PFs and assumed that the offsets between dbi and dbi2 would
+> > > be the same. However, Renesas R-Car Gen4 PCIe controllers have different
+> > > offsets of function 1: dbi (+0x1000) and dbi2 (+0x800). To get
+> > > the offset for dbi2, add .func_conf_select2() and
+> > > dw_pcie_ep_func_select2().
+> > >
+> > 
+> > How about,
+> > 
+> > .get_dbi2_offset() and dw_pcie_ep_get_dbi2_offset()?
+> 
+> Thank you for your suggestion. I should have shared the following information
+> in the commit log, but dbi2_offset is not depended on the DBI on my environment:
+> 
+>  +0x0000 : dbi Function 0
+>  +0x1000 : dbi Function 1
+>  +0x2000 : dbi2 Function 0
+>  +0x2800 : dbi2 Function 1
+> 
+> So, on my environment:
+>  - the dbi_base is set to +0x0000..
+>  -- And func_offset of func_no = 1 was 0x1000.
+>  - the dbi_base2 is set to +0x2000.
+>  -- And func_offset2 of function = 1 was 0x0800, not 0x1800.
+> 
+> Perhaps, the name of new API should be .func_conf_select_dbi2 instead?
+>                                                         ~~~~~
 
+"func_conf_select" doesn't look intuitive to me atleast. The idea behind this
+callback is to get the funcion offset based on the supplied function no. So this
+should've been something like, "get_func_offset" and the API should've been
+dw_pcie_ep_get_func_offset().
 
-On 2023/6/6 23:14, Yicong Yang wrote:
+Since I do not want you to change the existing naming in this series, I
+suggested to get the next API naming right.
 
-Hi, Yicong,
+> 
+> > This would've been much simpler if dw_pcie_writeX_{dbi/dbi2} APIs accepted the
+> > func_no argument, so that these offset calculations are contained in the API
+> > definitions itself as it should. Then the APIs could just do "func_offset *
+> > func_no" to get DBI base and "(func_offset * func_no) + dbi2_offset" to get DBI2
+> > base, provided these offsets are passed by the vendor drivers.
+> 
+> Serge suggested such implementation before [1]
+> 
+> [1]
+> https://lore.kernel.org/linux-pci/j4g4ijnxd7qyacszlwyi3tdztkw2nmnjwyhdqf2l2yj3h2mvje@iqsrqiodqbhq/
+> 
 
-Thank you for your valuable comments, and I apologize for missing your previous
-message. It appears that Thunderbird had mistakenly placed your email in the
-junk folder, causing me to overlook it.
+Thanks for the link. I missed Serge's suggestion before. But I completely agree
+with him as you can see from my above suggestion. In addition, I also want to
+fix the "func_conf_select" naming as well.
 
-Jonathan's reply served as a reminder, prompting me to realize that I had missed
-some emails. Since Jonathan's reply is on top of yours, I will give my feedback
-on both of your messages in his thread.
+However, I do not want you to implement the suggestion in this series itself.
+It should be done as a separate cleanup series later. (I think you both agree to
+that as well).
 
-Thank you.
+- Mani
 
-Best Regards,
-Shuai
+> > It can be done in a separate cleanup series later.
+> > 
+> > > Notes that dw_pcie_ep_func_select2() will call .func_conf_select()
+> > 
+> > s/Notes/Note
+> 
+> I'll fix it.
+> 
+> > > if .func_conf_select2() doesn't exist for backward compatibility.
+> > >
+> > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > ---
+> > >  .../pci/controller/dwc/pcie-designware-ep.c   | 32 ++++++++++++++-----
+> > >  drivers/pci/controller/dwc/pcie-designware.h  |  3 +-
+> > >  2 files changed, 26 insertions(+), 9 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > index 1d24ebf9686f..bd57516d5313 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > @@ -54,21 +54,35 @@ static unsigned int dw_pcie_ep_func_select(struct dw_pcie_ep *ep, u8 func_no)
+> > >  	return func_offset;
+> > >  }
+> > >
+> > > +static unsigned int dw_pcie_ep_func_select2(struct dw_pcie_ep *ep, u8 func_no)
+> > > +{
+> > > +	unsigned int func_offset = 0;
+> > > +
+> > > +	if (ep->ops->func_conf_select2)
+> > > +		func_offset = ep->ops->func_conf_select2(ep, func_no);
+> > > +	else if (ep->ops->func_conf_select)	/* for backward compatibility */
+> > > +		func_offset = ep->ops->func_conf_select(ep, func_no);
+> > > +
+> > > +	return func_offset;
+> > > +}
+> > > +
+> > >  static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, u8 func_no,
+> > >  				   enum pci_barno bar, int flags)
+> > >  {
+> > > -	u32 reg;
+> > > -	unsigned int func_offset = 0;
+> > > +	u32 reg, reg_dbi2;
+> > > +	unsigned int func_offset, func_offset_dbi2;
+> > 
+> > Please maitain reverse Xmas tree order.
+> 
+> I got it.
+> 
+> Best regards,
+> Yoshihiro Shimoda
+> 
+> > - Mani
+> > 
+> > >  	struct dw_pcie_ep *ep = &pci->ep;
+> > >
+> > >  	func_offset = dw_pcie_ep_func_select(ep, func_no);
+> > > +	func_offset_dbi2 = dw_pcie_ep_func_select2(ep, func_no);
+> > >
+> > >  	reg = func_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
+> > > +	reg_dbi2 = func_offset_dbi2 + PCI_BASE_ADDRESS_0 + (4 * bar);
+> > >  	dw_pcie_dbi_ro_wr_en(pci);
+> > > -	dw_pcie_writel_dbi2(pci, reg, 0x0);
+> > > +	dw_pcie_writel_dbi2(pci, reg_dbi2, 0x0);
+> > >  	dw_pcie_writel_dbi(pci, reg, 0x0);
+> > >  	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
+> > > -		dw_pcie_writel_dbi2(pci, reg + 4, 0x0);
+> > > +		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, 0x0);
+> > >  		dw_pcie_writel_dbi(pci, reg + 4, 0x0);
+> > >  	}
+> > >  	dw_pcie_dbi_ro_wr_dis(pci);
+> > > @@ -232,13 +246,15 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> > >  	enum pci_barno bar = epf_bar->barno;
+> > >  	size_t size = epf_bar->size;
+> > >  	int flags = epf_bar->flags;
+> > > -	unsigned int func_offset = 0;
+> > > +	unsigned int func_offset, func_offset_dbi2;
+> > >  	int ret, type;
+> > > -	u32 reg;
+> > > +	u32 reg, reg_dbi2;
+> > >
+> > >  	func_offset = dw_pcie_ep_func_select(ep, func_no);
+> > > +	func_offset_dbi2 = dw_pcie_ep_func_select2(ep, func_no);
+> > >
+> > >  	reg = PCI_BASE_ADDRESS_0 + (4 * bar) + func_offset;
+> > > +	reg_dbi2 = PCI_BASE_ADDRESS_0 + (4 * bar) + func_offset_dbi2;
+> > >
+> > >  	if (!(flags & PCI_BASE_ADDRESS_SPACE))
+> > >  		type = PCIE_ATU_TYPE_MEM;
+> > > @@ -254,11 +270,11 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> > >
+> > >  	dw_pcie_dbi_ro_wr_en(pci);
+> > >
+> > > -	dw_pcie_writel_dbi2(pci, reg, lower_32_bits(size - 1));
+> > > +	dw_pcie_writel_dbi2(pci, reg_dbi2, lower_32_bits(size - 1));
+> > >  	dw_pcie_writel_dbi(pci, reg, flags);
+> > >
+> > >  	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
+> > > -		dw_pcie_writel_dbi2(pci, reg + 4, upper_32_bits(size - 1));
+> > > +		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, upper_32_bits(size - 1));
+> > >  		dw_pcie_writel_dbi(pci, reg + 4, 0);
+> > >  	}
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > > index 812c221b3f7c..94bc20f5f600 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > @@ -340,9 +340,10 @@ struct dw_pcie_ep_ops {
+> > >  	 * access for different platform, if different func have different
+> > >  	 * offset, return the offset of func. if use write a register way
+> > >  	 * return a 0, and implement code in callback function of platform
+> > > -	 * driver.
+> > > +	 * driver. The func_conf_select2 is for dbi2.
+> > >  	 */
+> > >  	unsigned int (*func_conf_select)(struct dw_pcie_ep *ep, u8 func_no);
+> > > +	unsigned int (*func_conf_select2)(struct dw_pcie_ep *ep, u8 func_no);
+> > >  };
+> > >
+> > >  struct dw_pcie_ep_func {
+> > > --
+> > > 2.25.1
+> > >
+> > 
+> > --
+> > மணிவண்ணன் சதாசிவம்
 
-
-> On 2023/6/6 15:49, Shuai Xue wrote:
->> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
->> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
->> Core controller IP which provides statistics feature. The PMU is not a PCIe
->> Root Complex integrated End Point(RCiEP) device but only register counters
->> provided by each PCIe Root Port.
->>
->> To facilitate collection of statistics the controller provides the
->> following two features for each Root Port:
->>
->> - Time Based Analysis (RX/TX data throughput and time spent in each
->>   low-power LTSSM state)
->> - Event counters (Error and Non-Error for lanes)
->>
->> Note, only one counter for each type and does not overflow interrupt.
->>
->> This driver adds PMU devices for each PCIe Root Port. And the PMU device is
->> named based the BDF of Root Port. For example,
->>
->>     30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
->>
->> the PMU device name for this Root Port is dwc_rootport_3018.
->>
->> Example usage of counting PCIe RX TLP data payload (Units of 16 bytes)::
->>
->>     $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
->>
->> average RX bandwidth can be calculated like this:
->>
->>     PCIe TX Bandwidth = PCIE_TX_DATA * 16B / Measure_Time_Window
->>
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->> Reported-by: kernel test robot <lkp@intel.com>
->> Link: https://lore.kernel.org/oe-kbuild-all/202305170639.XU3djFZX-lkp@intel.com/
->> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->> ---
->>  drivers/perf/Kconfig        |   7 +
->>  drivers/perf/Makefile       |   1 +
->>  drivers/perf/dwc_pcie_pmu.c | 706 ++++++++++++++++++++++++++++++++++++
->>  3 files changed, 714 insertions(+)
->>  create mode 100644 drivers/perf/dwc_pcie_pmu.c
->>
->> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
->> index 711f82400086..6ff3921d7a62 100644
->> --- a/drivers/perf/Kconfig
->> +++ b/drivers/perf/Kconfig
->> @@ -209,6 +209,13 @@ config MARVELL_CN10K_DDR_PMU
->>  	  Enable perf support for Marvell DDR Performance monitoring
->>  	  event on CN10K platform.
->>  
->> +config DWC_PCIE_PMU
->> +	tristate "Enable Synopsys DesignWare PCIe PMU Support"
->> +	depends on (ARM64 && PCI)
->> +	help
->> +	  Enable perf support for Synopsys DesignWare PCIe PMU Performance
->> +	  monitoring event on Yitian 710 platform.
->> +
->>  source "drivers/perf/arm_cspmu/Kconfig"
->>  
->>  source "drivers/perf/amlogic/Kconfig"
->> diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
->> index dabc859540ce..13a6d1b286da 100644
->> --- a/drivers/perf/Makefile
->> +++ b/drivers/perf/Makefile
->> @@ -22,5 +22,6 @@ obj-$(CONFIG_MARVELL_CN10K_TAD_PMU) += marvell_cn10k_tad_pmu.o
->>  obj-$(CONFIG_MARVELL_CN10K_DDR_PMU) += marvell_cn10k_ddr_pmu.o
->>  obj-$(CONFIG_APPLE_M1_CPU_PMU) += apple_m1_cpu_pmu.o
->>  obj-$(CONFIG_ALIBABA_UNCORE_DRW_PMU) += alibaba_uncore_drw_pmu.o
->> +obj-$(CONFIG_DWC_PCIE_PMU) += dwc_pcie_pmu.o
->>  obj-$(CONFIG_ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU) += arm_cspmu/
->>  obj-$(CONFIG_MESON_DDR_PMU) += amlogic/
->> diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
->> new file mode 100644
->> index 000000000000..8bfcf6e0662d
->> --- /dev/null
->> +++ b/drivers/perf/dwc_pcie_pmu.c
->> @@ -0,0 +1,706 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Synopsys DesignWare PCIe PMU driver
->> + *
->> + * Copyright (C) 2021-2023 Alibaba Inc.
->> + */
->> +
->> +#include <linux/bitfield.h>
->> +#include <linux/bitops.h>
->> +#include <linux/cpuhotplug.h>
->> +#include <linux/cpumask.h>
->> +#include <linux/device.h>
->> +#include <linux/errno.h>
->> +#include <linux/kernel.h>
->> +#include <linux/list.h>
->> +#include <linux/perf_event.h>
->> +#include <linux/pci.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/smp.h>
->> +#include <linux/sysfs.h>
->> +#include <linux/types.h>
->> +
->> +#define DWC_PCIE_VSEC_RAS_DES_ID		0x02
->> +
->> +#define DWC_PCIE_EVENT_CNT_CTL			0x8
->> +
->> +/*
->> + * Event Counter Data Select includes two parts:
->> + * - 27-24: Group number(4-bit: 0..0x7)
->> + * - 23-16: Event number(8-bit: 0..0x13) within the Group
->> + *
->> + * Put them togother as TRM used.
->> + */
->> +#define DWC_PCIE_CNT_EVENT_SEL			GENMASK(27, 16)
->> +#define DWC_PCIE_CNT_LANE_SEL			GENMASK(11, 8)
->> +#define DWC_PCIE_CNT_STATUS			BIT(7)
->> +#define DWC_PCIE_CNT_ENABLE			GENMASK(4, 2)
->> +#define DWC_PCIE_PER_EVENT_OFF			0x1
->> +#define DWC_PCIE_PER_EVENT_ON			0x3
->> +#define DWC_PCIE_EVENT_CLEAR			GENMASK(1, 0)
->> +#define DWC_PCIE_EVENT_PER_CLEAR		0x1
->> +
->> +#define DWC_PCIE_EVENT_CNT_DATA			0xC
->> +
->> +#define DWC_PCIE_TIME_BASED_ANAL_CTL		0x10
->> +#define DWC_PCIE_TIME_BASED_REPORT_SEL		GENMASK(31, 24)
->> +#define DWC_PCIE_TIME_BASED_DURATION_SEL	GENMASK(15, 8)
->> +#define DWC_PCIE_DURATION_MANUAL_CTL		0x0
->> +#define DWC_PCIE_DURATION_1MS			0x1
->> +#define DWC_PCIE_DURATION_10MS			0x2
->> +#define DWC_PCIE_DURATION_100MS			0x3
->> +#define DWC_PCIE_DURATION_1S			0x4
->> +#define DWC_PCIE_DURATION_2S			0x5
->> +#define DWC_PCIE_DURATION_4S			0x6
->> +#define DWC_PCIE_DURATION_4US			0xFF
->> +#define DWC_PCIE_TIME_BASED_TIMER_START		BIT(0)
->> +#define DWC_PCIE_TIME_BASED_CNT_ENABLE		0x1
->> +
->> +#define DWC_PCIE_TIME_BASED_ANAL_DATA_REG_LOW	0x14
->> +#define DWC_PCIE_TIME_BASED_ANAL_DATA_REG_HIGH	0x18
->> +
->> +/* Event attributes */
->> +#define DWC_PCIE_CONFIG_EVENTID			GENMASK(15, 0)
->> +#define DWC_PCIE_CONFIG_TYPE			GENMASK(19, 16)
->> +#define DWC_PCIE_CONFIG_LANE			GENMASK(27, 20)
->> +
->> +#define DWC_PCIE_EVENT_ID(event)	FIELD_GET(DWC_PCIE_CONFIG_EVENTID, (event)->attr.config)
->> +#define DWC_PCIE_EVENT_TYPE(event)	FIELD_GET(DWC_PCIE_CONFIG_TYPE, (event)->attr.config)
->> +#define DWC_PCIE_EVENT_LANE(event)	FIELD_GET(DWC_PCIE_CONFIG_LANE, (event)->attr.config)
->> +
->> +enum dwc_pcie_event_type {
->> +	DWC_PCIE_TYPE_INVALID,
->> +	DWC_PCIE_TIME_BASE_EVENT,
->> +	DWC_PCIE_LANE_EVENT,
->> +};
->> +
->> +#define DWC_PCIE_LANE_EVENT_MAX_PERIOD		GENMASK_ULL(31, 0)
->> +#define DWC_PCIE_TIME_BASED_EVENT_MAX_PERIOD	GENMASK_ULL(63, 0)
->> +
->> +
->> +struct dwc_pcie_pmu {
->> +	struct pci_dev		*pdev;		/* Root Port device */
-> 
-> If the root port removed after the probe of this PCIe PMU driver, we'll access the NULL
-> pointer. I didn't see you hold the root port to avoid the removal.
-> 
->> +	u16			ras_des;	/* RAS DES capability offset */
->> +	u32			nr_lanes;
->> +
->> +	struct list_head	pmu_node;
->> +	struct hlist_node	cpuhp_node;
->> +	struct pmu		pmu;
->> +	struct perf_event	*event;
->> +	int			oncpu;
->> +};
->> +
->> +struct dwc_pcie_pmu_priv {
->> +	struct device *dev;
->> +	struct list_head pmu_nodes;
->> +};
->> +
->> +#define to_dwc_pcie_pmu(p) (container_of(p, struct dwc_pcie_pmu, pmu))
->> +
-> 
-> somebody told me to put @pmu as the first member then this macro will have no calculation. :)
-> 
->> +static struct platform_device *dwc_pcie_pmu_dev;
->> +static int dwc_pcie_pmu_hp_state;
->> +
->> +static ssize_t cpumask_show(struct device *dev,
->> +					 struct device_attribute *attr,
->> +					 char *buf)
->> +{
->> +	struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(dev_get_drvdata(dev));
->> +
->> +	return cpumap_print_to_pagebuf(true, buf, cpumask_of(pcie_pmu->oncpu));
->> +}
->> +static DEVICE_ATTR_RO(cpumask);
->> +
->> +static struct attribute *dwc_pcie_pmu_cpumask_attrs[] = {
->> +	&dev_attr_cpumask.attr,
->> +	NULL
->> +};
->> +
->> +static struct attribute_group dwc_pcie_cpumask_attr_group = {
->> +	.attrs = dwc_pcie_pmu_cpumask_attrs,
->> +};
->> +
->> +struct dwc_pcie_format_attr {
->> +	struct device_attribute attr;
->> +	u64 field;
->> +	int config;
->> +};
->> +
->> +static ssize_t dwc_pcie_pmu_format_show(struct device *dev,
->> +					struct device_attribute *attr,
->> +					char *buf)
->> +{
->> +	struct dwc_pcie_format_attr *fmt = container_of(attr, typeof(*fmt), attr);
->> +	int lo = __ffs(fmt->field), hi = __fls(fmt->field);
->> +
->> +	return sysfs_emit(buf, "config:%d-%d\n", lo, hi);
->> +}
->> +
->> +#define _dwc_pcie_format_attr(_name, _cfg, _fld)				\
->> +	(&((struct dwc_pcie_format_attr[]) {{					\
->> +		.attr = __ATTR(_name, 0444, dwc_pcie_pmu_format_show, NULL),	\
->> +		.config = _cfg,							\
->> +		.field = _fld,							\
->> +	}})[0].attr.attr)
->> +
->> +#define dwc_pcie_format_attr(_name, _fld)	_dwc_pcie_format_attr(_name, 0, _fld)
->> +
->> +static struct attribute *dwc_pcie_format_attrs[] = {
->> +	dwc_pcie_format_attr(type, DWC_PCIE_CONFIG_TYPE),
->> +	dwc_pcie_format_attr(eventid, DWC_PCIE_CONFIG_EVENTID),
->> +	dwc_pcie_format_attr(lane, DWC_PCIE_CONFIG_LANE),
->> +	NULL,
->> +};
->> +
->> +static struct attribute_group dwc_pcie_format_attrs_group = {
->> +	.name = "format",
->> +	.attrs = dwc_pcie_format_attrs,
->> +};
->> +
->> +struct dwc_pcie_event_attr {
->> +	struct device_attribute attr;
->> +	enum dwc_pcie_event_type type;
->> +	u16 eventid;
->> +	u8 lane;
->> +};
->> +
->> +static ssize_t dwc_pcie_event_show(struct device *dev,
->> +				struct device_attribute *attr, char *buf)
->> +{
->> +	struct dwc_pcie_event_attr *eattr;
->> +
->> +	eattr = container_of(attr, typeof(*eattr), attr);
->> +
->> +	if (eattr->type == DWC_PCIE_LANE_EVENT)
->> +		return sysfs_emit(buf, "eventid=0x%x,type=0x%x,lane=?\n",
->> +				  eattr->eventid, eattr->type);
->> +
->> +	return sysfs_emit(buf, "eventid=0x%x,type=0x%x\n", eattr->eventid,
->> +		       eattr->type);
->> +}
->> +
->> +#define DWC_PCIE_EVENT_ATTR(_name, _type, _eventid, _lane)		\
->> +	(&((struct dwc_pcie_event_attr[]) {{				\
->> +		.attr = __ATTR(_name, 0444, dwc_pcie_event_show, NULL),	\
->> +		.type = _type,						\
->> +		.eventid = _eventid,					\
->> +		.lane = _lane,						\
->> +	}})[0].attr.attr)
->> +
->> +#define DWC_PCIE_PMU_TIME_BASE_EVENT_ATTR(_name, _eventid)		\
->> +	DWC_PCIE_EVENT_ATTR(_name, DWC_PCIE_TIME_BASE_EVENT, _eventid, 0)
->> +#define DWC_PCIE_PMU_LANE_EVENT_ATTR(_name, _eventid)			\
->> +	DWC_PCIE_EVENT_ATTR(_name, DWC_PCIE_LANE_EVENT, _eventid, 0)
->> +
->> +static struct attribute *dwc_pcie_pmu_time_event_attrs[] = {
->> +	/* Group #0 */
->> +	DWC_PCIE_PMU_TIME_BASE_EVENT_ATTR(one_cycle, 0x00),
->> +	DWC_PCIE_PMU_TIME_BASE_EVENT_ATTR(TX_L0S, 0x01),
->> +	DWC_PCIE_PMU_TIME_BASE_EVENT_ATTR(RX_L0S, 0x02),
->> +	DWC_PCIE_PMU_TIME_BASE_EVENT_ATTR(L0, 0x03),
->> +	DWC_PCIE_PMU_TIME_BASE_EVENT_ATTR(L1, 0x04),
->> +	DWC_PCIE_PMU_TIME_BASE_EVENT_ATTR(L1_1, 0x05),
->> +	DWC_PCIE_PMU_TIME_BASE_EVENT_ATTR(L1_2, 0x06),
->> +	DWC_PCIE_PMU_TIME_BASE_EVENT_ATTR(CFG_RCVRY, 0x07),
->> +	DWC_PCIE_PMU_TIME_BASE_EVENT_ATTR(TX_RX_L0S, 0x08),
->> +	DWC_PCIE_PMU_TIME_BASE_EVENT_ATTR(L1_AUX, 0x09),
->> +
->> +	/* Group #1 */
->> +	DWC_PCIE_PMU_TIME_BASE_EVENT_ATTR(Tx_PCIe_TLP_Data_Payload, 0x20),
->> +	DWC_PCIE_PMU_TIME_BASE_EVENT_ATTR(Rx_PCIe_TLP_Data_Payload, 0x21),
->> +	DWC_PCIE_PMU_TIME_BASE_EVENT_ATTR(Tx_CCIX_TLP_Data_Payload, 0x22),
->> +	DWC_PCIE_PMU_TIME_BASE_EVENT_ATTR(Rx_CCIX_TLP_Data_Payload, 0x23),
->> +
->> +	/*
->> +	 * Leave it to the user to specify the lane ID to avoid generating
->> +	 * a list of hundreds of events.
->> +	 */
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(tx_ack_dllp, 0x600),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(tx_update_fc_dllp, 0x601),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(rx_ack_dllp, 0x602),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(rx_update_fc_dllp, 0x603),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(rx_nulified_tlp, 0x604),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(tx_nulified_tlp, 0x605),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(rx_duplicate_tl, 0x606),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(tx_memory_write, 0x700),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(tx_memory_read, 0x701),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(tx_configuration_write, 0x702),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(tx_configuration_read, 0x703),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(tx_io_write, 0x704),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(tx_io_read, 0x705),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(tx_completion_without_data, 0x706),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(tx_completion_with_data, 0x707),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(tx_message_tlp, 0x708),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(tx_atomic, 0x709),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(tx_tlp_with_prefix, 0x70A),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(rx_memory_write, 0x70B),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(rx_memory_read, 0x70C),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(rx_io_write, 0x70F),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(rx_io_read, 0x710),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(rx_completion_without_data, 0x711),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(rx_completion_with_data, 0x712),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(rx_message_tlp, 0x713),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(rx_atomic, 0x714),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(rx_tlp_with_prefix, 0x715),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(tx_ccix_tlp, 0x716),
->> +	DWC_PCIE_PMU_LANE_EVENT_ATTR(rx_ccix_tlp, 0x717),
->> +
-> 
-> Intended blank line?
-> 
->> +	NULL
->> +};
->> +
->> +static const struct attribute_group dwc_pcie_event_attrs_group = {
->> +	.name = "events",
->> +	.attrs = dwc_pcie_pmu_time_event_attrs,
->> +};
->> +
->> +static const struct attribute_group *dwc_pcie_attr_groups[] = {
->> +	&dwc_pcie_event_attrs_group,
->> +	&dwc_pcie_format_attrs_group,
->> +	&dwc_pcie_cpumask_attr_group,
->> +	NULL
->> +};
->> +
->> +static void dwc_pcie_pmu_lane_event_enable(struct dwc_pcie_pmu *pcie_pmu,
->> +					   bool enable)
->> +{
->> +	struct pci_dev *pdev = pcie_pmu->pdev;
->> +	u16 ras_des = pcie_pmu->ras_des;
->> +	u32 val;
->> +
->> +	pci_read_config_dword(pdev, ras_des + DWC_PCIE_EVENT_CNT_CTL, &val);
->> +
->> +	/* Clear DWC_PCIE_CNT_ENABLE field first */
->> +	val &= ~DWC_PCIE_CNT_ENABLE;
->> +	if (enable)
->> +		val |= FIELD_PREP(DWC_PCIE_CNT_ENABLE, DWC_PCIE_PER_EVENT_ON);
->> +	else
->> +		val |= FIELD_PREP(DWC_PCIE_CNT_ENABLE, DWC_PCIE_PER_EVENT_OFF);
->> +
->> +	pci_write_config_dword(pdev, ras_des + DWC_PCIE_EVENT_CNT_CTL, val);
->> +}
->> +
->> +static void dwc_pcie_pmu_time_based_event_enable(struct dwc_pcie_pmu *pcie_pmu,
->> +					  bool enable)
->> +{
->> +	struct pci_dev *pdev = pcie_pmu->pdev;
->> +	u16 ras_des = pcie_pmu->ras_des;
->> +	u32 val;
->> +
->> +	pci_read_config_dword(pdev, ras_des + DWC_PCIE_TIME_BASED_ANAL_CTL,
->> +			      &val);
->> +
->> +	if (enable)
->> +		val |= DWC_PCIE_TIME_BASED_CNT_ENABLE;
->> +	else
->> +		val &= ~DWC_PCIE_TIME_BASED_CNT_ENABLE;
->> +
->> +	pci_write_config_dword(pdev, ras_des + DWC_PCIE_TIME_BASED_ANAL_CTL,
->> +			       val);
->> +}
->> +
->> +static u64 dwc_pcie_pmu_read_lane_event_counter(struct dwc_pcie_pmu *pcie_pmu)
->> +{
->> +	struct pci_dev *pdev = pcie_pmu->pdev;
->> +	u16 ras_des = pcie_pmu->ras_des;
->> +	u32 val;
->> +
->> +	pci_read_config_dword(pdev, ras_des + DWC_PCIE_EVENT_CNT_DATA, &val);
->> +
->> +	return val;
->> +}
->> +
->> +static u64 dwc_pcie_pmu_read_time_based_counter(struct dwc_pcie_pmu *pcie_pmu)
->> +{
->> +	struct pci_dev *pdev = pcie_pmu->pdev;
->> +	u16 ras_des = pcie_pmu->ras_des;
->> +	u64 count;
->> +	u32 val;
->> +
->> +	pci_read_config_dword(
->> +		pdev, ras_des + DWC_PCIE_TIME_BASED_ANAL_DATA_REG_HIGH, &val);
->> +	count = val;
->> +	count <<= 32;
->> +
->> +	pci_read_config_dword(
->> +		pdev, ras_des + DWC_PCIE_TIME_BASED_ANAL_DATA_REG_LOW, &val);
->> +
->> +	count += val;
->> +
->> +	return count;
->> +}
->> +
->> +static void dwc_pcie_pmu_event_update(struct perf_event *event)
->> +{
->> +	struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
->> +	struct hw_perf_event *hwc = &event->hw;
->> +	enum dwc_pcie_event_type type = DWC_PCIE_EVENT_TYPE(event);
->> +	u64 delta, prev, now;
->> +
->> +	do {
->> +		prev = local64_read(&hwc->prev_count);
->> +
->> +		if (type == DWC_PCIE_LANE_EVENT)
->> +			now = dwc_pcie_pmu_read_lane_event_counter(pcie_pmu);
->> +		else if (type == DWC_PCIE_TIME_BASE_EVENT)
->> +			now = dwc_pcie_pmu_read_time_based_counter(pcie_pmu);
->> +
->> +	} while (local64_cmpxchg(&hwc->prev_count, prev, now) != prev);
->> +
->> +	if (type == DWC_PCIE_LANE_EVENT)
->> +		delta = (now - prev) & DWC_PCIE_LANE_EVENT_MAX_PERIOD;
->> +	else if (type == DWC_PCIE_TIME_BASE_EVENT)
->> +		delta = (now - prev) & DWC_PCIE_TIME_BASED_EVENT_MAX_PERIOD;
->> +
->> +	local64_add(delta, &event->count);
->> +}
->> +
->> +static int dwc_pcie_pmu_event_init(struct perf_event *event)
->> +{
->> +	struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
->> +	enum dwc_pcie_event_type type = DWC_PCIE_EVENT_TYPE(event);
->> +	struct perf_event *sibling;
->> +	u32 lane;
->> +
->> +	if (event->attr.type != event->pmu->type)
->> +		return -ENOENT;
->> +
->> +	/* We don't support sampling */
->> +	if (is_sampling_event(event))
->> +		return -EINVAL;
->> +
->> +	/* We cannot support task bound events */
->> +	if (event->cpu < 0 || event->attach_state & PERF_ATTACH_TASK)
->> +		return -EINVAL;
->> +
->> +	if (event->group_leader != event &&
->> +	    !is_software_event(event->group_leader))
->> +		return -EINVAL;
->> +
->> +	for_each_sibling_event(sibling, event->group_leader) {
->> +		if (sibling->pmu != event->pmu && !is_software_event(sibling))
->> +			return -EINVAL;
->> +	}
->> +
->> +	if (type == DWC_PCIE_LANE_EVENT) {
->> +		lane = DWC_PCIE_EVENT_LANE(event);
->> +		if (lane < 0 || lane >= pcie_pmu->nr_lanes)
->> +			return -EINVAL;
->> +	}
->> +
->> +	event->cpu = pcie_pmu->oncpu;
->> +
->> +	return 0;
->> +}
->> +
->> +static void dwc_pcie_pmu_set_period(struct hw_perf_event *hwc)
->> +{
->> +	local64_set(&hwc->prev_count, 0);
->> +}
->> +
->> +static void dwc_pcie_pmu_event_start(struct perf_event *event, int flags)
->> +{
->> +	struct hw_perf_event *hwc = &event->hw;
->> +	struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
->> +	enum dwc_pcie_event_type type = DWC_PCIE_EVENT_TYPE(event);
->> +
->> +	hwc->state = 0;
->> +	dwc_pcie_pmu_set_period(hwc);
->> +
->> +	if (type == DWC_PCIE_LANE_EVENT)
->> +		dwc_pcie_pmu_lane_event_enable(pcie_pmu, true);
->> +	else if (type == DWC_PCIE_TIME_BASE_EVENT)
->> +		dwc_pcie_pmu_time_based_event_enable(pcie_pmu, true);
->> +}
->> +
->> +static void dwc_pcie_pmu_event_stop(struct perf_event *event, int flags)
->> +{
->> +	struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
->> +	enum dwc_pcie_event_type type = DWC_PCIE_EVENT_TYPE(event);
->> +	struct hw_perf_event *hwc = &event->hw;
->> +
->> +	if (event->hw.state & PERF_HES_STOPPED)
->> +		return;
->> +
->> +	if (type == DWC_PCIE_LANE_EVENT)
->> +		dwc_pcie_pmu_lane_event_enable(pcie_pmu, false);
->> +	else if (type == DWC_PCIE_TIME_BASE_EVENT)
->> +		dwc_pcie_pmu_time_based_event_enable(pcie_pmu, false);
->> +
->> +	dwc_pcie_pmu_event_update(event);
->> +	hwc->state |= PERF_HES_STOPPED | PERF_HES_UPTODATE;
->> +}
->> +
->> +static int dwc_pcie_pmu_event_add(struct perf_event *event, int flags)
->> +{
->> +	struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
->> +	struct pci_dev *pdev = pcie_pmu->pdev;
->> +	struct hw_perf_event *hwc = &event->hw;
->> +	enum dwc_pcie_event_type type = DWC_PCIE_EVENT_TYPE(event);
->> +	int event_id = DWC_PCIE_EVENT_ID(event);
->> +	int lane = DWC_PCIE_EVENT_LANE(event);
->> +	u16 ras_des = pcie_pmu->ras_des;
->> +	u32 ctrl;
->> +
->> +	/* Only one counter and it is in use */
->> +	if (pcie_pmu->event)
->> +		return -ENOSPC;
->> +
->> +	pcie_pmu->event = event;
->> +	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
->> +
->> +	if (type == DWC_PCIE_LANE_EVENT) {
->> +		/* EVENT_COUNTER_DATA_REG needs clear manually */
->> +		ctrl = FIELD_PREP(DWC_PCIE_CNT_EVENT_SEL, event_id) |
->> +			FIELD_PREP(DWC_PCIE_CNT_LANE_SEL, lane) |
->> +			FIELD_PREP(DWC_PCIE_CNT_ENABLE, DWC_PCIE_PER_EVENT_OFF) |
->> +			FIELD_PREP(DWC_PCIE_EVENT_CLEAR, DWC_PCIE_EVENT_PER_CLEAR);
->> +		pci_write_config_dword(pdev, ras_des + DWC_PCIE_EVENT_CNT_CTL,
->> +				       ctrl);
->> +	} else if (type == DWC_PCIE_TIME_BASE_EVENT) {
->> +		/*
->> +		 * TIME_BASED_ANAL_DATA_REG is a 64 bit register, we can safely
->> +		 * use it with any manually controlled duration. And it is
->> +		 * cleared when next measurement starts.
->> +		 */
->> +		ctrl = FIELD_PREP(DWC_PCIE_TIME_BASED_REPORT_SEL, event_id) |
->> +			FIELD_PREP(DWC_PCIE_TIME_BASED_DURATION_SEL,
->> +				   DWC_PCIE_DURATION_MANUAL_CTL) |
->> +			DWC_PCIE_TIME_BASED_CNT_ENABLE;
->> +		pci_write_config_dword(
->> +			pdev, ras_des + DWC_PCIE_TIME_BASED_ANAL_CTL, ctrl);
->> +	}
->> +
->> +	if (flags & PERF_EF_START)
->> +		dwc_pcie_pmu_event_start(event, PERF_EF_RELOAD);
->> +
->> +	perf_event_update_userpage(event);
->> +
->> +	return 0;
->> +}
->> +
->> +static void dwc_pcie_pmu_event_del(struct perf_event *event, int flags)
->> +{
->> +	struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
->> +
->> +	dwc_pcie_pmu_event_stop(event, flags | PERF_EF_UPDATE);
->> +	perf_event_update_userpage(event);
->> +	pcie_pmu->event = NULL;
->> +}
->> +
->> +static int __dwc_pcie_pmu_probe(struct dwc_pcie_pmu_priv *priv)
->> +{
->> +	struct pci_dev *pdev = NULL;
->> +	struct dwc_pcie_pmu *pcie_pmu;
->> +	char *name;
->> +	u32 bdf;
->> +	int ret;
->> +
->> +	INIT_LIST_HEAD(&priv->pmu_nodes);
->> +
->> +	/* Match the rootport with VSEC_RAS_DES_ID, and register a PMU for it */
->> +	for_each_pci_dev(pdev) {
->> +		u16 vsec;
->> +		u32 val;
->> +
->> +		if (!(pci_is_pcie(pdev) &&
->> +		      pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT))
->> +			continue;
->> +
->> +		vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_ALIBABA,
->> +						DWC_PCIE_VSEC_RAS_DES_ID);
->> +		if (!vsec)
->> +			continue;
->> +
->> +		pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
->> +		if (PCI_VNDR_HEADER_REV(val) != 0x04 ||
->> +		    PCI_VNDR_HEADER_LEN(val) != 0x100)
->> +			continue;
->> +		pci_dbg(pdev,
->> +			"Detected PCIe Vendor-Specific Extended Capability RAS DES\n");
->> +
->> +		bdf = PCI_DEVID(pdev->bus->number, pdev->devfn);
->> +		name = devm_kasprintf(priv->dev, GFP_KERNEL, "dwc_rootport_%x",
->> +				      bdf);
->> +		if (!name)
->> +			return -ENOMEM;
->> +
->> +		/* All checks passed, go go go */
->> +		pcie_pmu = devm_kzalloc(&pdev->dev, sizeof(*pcie_pmu), GFP_KERNEL);
->> +		if (!pcie_pmu) {
->> +			pci_dev_put(pdev);
-> 
-> we need to call pci_dev_put on all the return branch below and above and after the for_each_pci_dev()
-> loop to keep the refcnt balance.
-> 
->> +			return -ENOMEM;
->> +		}
->> +
->> +		pcie_pmu->pdev = pdev;
->> +		pcie_pmu->ras_des = vsec;
->> +		pcie_pmu->nr_lanes = pcie_get_width_cap(pdev);
->> +		pcie_pmu->pmu = (struct pmu){
->> +			.module		= THIS_MODULE,
->> +			.attr_groups	= dwc_pcie_attr_groups,
->> +			.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
->> +			.task_ctx_nr	= perf_invalid_context,
->> +			.event_init	= dwc_pcie_pmu_event_init,
->> +			.add		= dwc_pcie_pmu_event_add,
->> +			.del		= dwc_pcie_pmu_event_del,
->> +			.start		= dwc_pcie_pmu_event_start,
->> +			.stop		= dwc_pcie_pmu_event_stop,
->> +			.read		= dwc_pcie_pmu_event_update,
->> +		};
->> +
->> +		/* Add this instance to the list used by the offline callback */
->> +		ret = cpuhp_state_add_instance(dwc_pcie_pmu_hp_state,
->> +					       &pcie_pmu->cpuhp_node);
->> +		if (ret) {
->> +			pci_err(pcie_pmu->pdev,
->> +				"Error %d registering hotplug @%x\n", ret, bdf);
->> +			return ret;
->> +		}
->> +		ret = perf_pmu_register(&pcie_pmu->pmu, name, -1);
->> +		if (ret) {
->> +			pci_err(pcie_pmu->pdev,
->> +				"Error %d registering PMU @%x\n", ret, bdf);
->> +			cpuhp_state_remove_instance_nocalls(
->> +				dwc_pcie_pmu_hp_state, &pcie_pmu->cpuhp_node);
->> +			return ret;
->> +		}
->> +
->> +		/* Add registered PMUs and unregister them when this driver remove */
->> +		list_add(&pcie_pmu->pmu_node, &priv->pmu_nodes);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int dwc_pcie_pmu_remove(struct platform_device *pdev)
->> +{
->> +	struct dwc_pcie_pmu_priv *priv = platform_get_drvdata(pdev);
->> +	struct dwc_pcie_pmu *pcie_pmu;
->> +
->> +	list_for_each_entry(pcie_pmu, &priv->pmu_nodes, pmu_node) {
->> +		cpuhp_state_remove_instance(dwc_pcie_pmu_hp_state,
->> +					    &pcie_pmu->cpuhp_node);
->> +		perf_pmu_unregister(&pcie_pmu->pmu);
-> 
-> should unregister the PMU first, keep the order reverse to __dwc_pcie_pmu_probe().
-> 
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int dwc_pcie_pmu_probe(struct platform_device *pdev)
->> +{
->> +	struct dwc_pcie_pmu_priv *priv;
->> +	int ret;
->> +
->> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->> +	if (!priv)
->> +		return -ENOMEM;
->> +
->> +	priv->dev = &pdev->dev;
->> +	platform_set_drvdata(pdev, priv);
->> +
->> +	/* If one PMU registration fails, remove all. */
->> +	ret = __dwc_pcie_pmu_probe(priv);
->> +	if (ret) {
->> +		dwc_pcie_pmu_remove(pdev);
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static void dwc_pcie_pmu_migrate(struct dwc_pcie_pmu *pcie_pmu, unsigned int cpu)
->> +{
->> +	/* This PMU does NOT support interrupt, just migrate context. */
->> +	perf_pmu_migrate_context(&pcie_pmu->pmu, pcie_pmu->oncpu, cpu);
->> +	pcie_pmu->oncpu = cpu;
->> +}
->> +
->> +static int dwc_pcie_pmu_online_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
->> +{
->> +	struct dwc_pcie_pmu *pcie_pmu;
->> +	struct pci_dev *pdev;
->> +	int node;
->> +
->> +	pcie_pmu = hlist_entry_safe(cpuhp_node, struct dwc_pcie_pmu, cpuhp_node);
->> +	pdev = pcie_pmu->pdev;
->> +	node = dev_to_node(&pdev->dev);
->> +
->> +	if (node != NUMA_NO_NODE && cpu_to_node(pcie_pmu->oncpu) != node &&
->> +	    cpu_to_node(cpu) == node)
->> +		dwc_pcie_pmu_migrate(pcie_pmu, cpu);
->> +
->> +	return 0;
->> +}
->> +
->> +static int dwc_pcie_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
->> +{
->> +	struct dwc_pcie_pmu *pcie_pmu;
->> +	struct pci_dev *pdev;
->> +	int node;
->> +	cpumask_t mask;
->> +	unsigned int target;
->> +
->> +	pcie_pmu = hlist_entry_safe(cpuhp_node, struct dwc_pcie_pmu, cpuhp_node);
->> +	if (cpu != pcie_pmu->oncpu)
->> +		return 0;
->> +
->> +	pdev = pcie_pmu->pdev;
->> +	node = dev_to_node(&pdev->dev);
->> +	if (cpumask_and(&mask, cpumask_of_node(node), cpu_online_mask) &&
->> +	    cpumask_andnot(&mask, &mask, cpumask_of(cpu)))
->> +		target = cpumask_any(&mask);
-> 
-> The cpumask_of_node() only contains the online CPUs so this branch is redundant. For arm64
-> using arch_numa.c the node cpumask is updated in numa_{add, remove}_cpu() and for other
-> arthitecture the behaviour should keep consistenct. Please correct my if I'm wrong.
-> 
->> +	else
->> +		target = cpumask_any_but(cpu_online_mask, cpu);
->> +	if (target < nr_cpu_ids)
->> +		dwc_pcie_pmu_migrate(pcie_pmu, target);
->> +
->> +	return 0;
->> +}
->> +
->> +static struct platform_driver dwc_pcie_pmu_driver = {
->> +	.probe = dwc_pcie_pmu_probe,
->> +	.remove = dwc_pcie_pmu_remove,
->> +	.driver = {.name = "dwc_pcie_pmu",},
->> +};
->> +
->> +static int __init dwc_pcie_pmu_init(void)
->> +{
->> +	int ret;
->> +
->> +	ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
->> +				      "perf/dwc_pcie_pmu:online",
->> +				      dwc_pcie_pmu_online_cpu,
->> +				      dwc_pcie_pmu_offline_cpu);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	dwc_pcie_pmu_hp_state = ret;
->> +
->> +	ret = platform_driver_register(&dwc_pcie_pmu_driver);
->> +	if (ret) {
->> +		cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
->> +		return ret;
->> +	}
->> +
->> +	dwc_pcie_pmu_dev = platform_device_register_simple(
->> +				"dwc_pcie_pmu", PLATFORM_DEVID_NONE, NULL, 0);
->> +	if (IS_ERR(dwc_pcie_pmu_dev)) {
->> +		platform_driver_unregister(&dwc_pcie_pmu_driver);
-> 
-> On failure we also need to remove cpuhp state as well.
-> 
-> Thanks,
-> Yicong
-> 
->> +		return PTR_ERR(dwc_pcie_pmu_dev);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static void __exit dwc_pcie_pmu_exit(void)
->> +{
->> +	platform_device_unregister(dwc_pcie_pmu_dev);
->> +	platform_driver_unregister(&dwc_pcie_pmu_driver);
->> +	cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
->> +}
->> +
->> +module_init(dwc_pcie_pmu_init);
->> +module_exit(dwc_pcie_pmu_exit);
->> +
->> +MODULE_DESCRIPTION("PMU driver for DesignWare Cores PCI Express Controller");
->> +MODULE_AUTHOR("Shuai xue <xueshuai@linux.alibaba.com>");
->> +MODULE_AUTHOR("Wen Cheng <yinxuan_cw@linux.alibaba.com>");
->> +MODULE_LICENSE("GPL v2");
->>
+-- 
+மணிவண்ணன் சதாசிவம்
