@@ -2,215 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EDBFF766B05
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 12:50:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF340766C78
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 14:04:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235991AbjG1KuR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jul 2023 06:50:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45364 "EHLO
+        id S235686AbjG1MEO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jul 2023 08:04:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235962AbjG1KuN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jul 2023 06:50:13 -0400
-Received: from mgamail.intel.com (unknown [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06B5835A5
-        for <linux-pci@vger.kernel.org>; Fri, 28 Jul 2023 03:50:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690541412; x=1722077412;
-  h=date:from:to:cc:subject:message-id;
-  bh=tQsuaQDv783BjzchAnq7a8aOj5h01t+3M0O9oeJ/9F0=;
-  b=mulgWJnGpk/hhy2QIi0tCVrnJh6IxaEY7gm8nq1dOYGMiB1Qg/B6vsWa
-   CjfDfcKXz+CDif3i0tOJY/9+ZzzwKjTWWop4I6TLiwpDTxoHoH/B6NaOX
-   FA5OdJGdiF3OAAFzAtHSGuDVp+whDUL6RguyoKXKBNKjAsfXEtZDmxRT+
-   A2lpvpWO3MA3iGJTXh22ymweAIJ/tbdcQhA9mMxfr7r1WMImG7BiBgAHb
-   Vjx0enbWXr2sLluXUPb/ad7CYWsFgmRzjeDQArf/MezAQJdGEurEV7u5P
-   Q323+a+ndzLc6B5Gt74OHKNm/OoePTZMefGy+pfZDKmCcLI3eU7hg86ri
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="371265013"
-X-IronPort-AV: E=Sophos;i="6.01,237,1684825200"; 
-   d="scan'208";a="371265013"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2023 03:50:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="841266782"
-X-IronPort-AV: E=Sophos;i="6.01,237,1684825200"; 
-   d="scan'208";a="841266782"
-Received: from lkp-server02.sh.intel.com (HELO 953e8cd98f7d) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 28 Jul 2023 03:50:10 -0700
-Received: from kbuild by 953e8cd98f7d with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qPL2v-00036X-18;
-        Fri, 28 Jul 2023 10:50:09 +0000
-Date:   Fri, 28 Jul 2023 18:49:14 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:misc] BUILD SUCCESS
- e3a3a097eaebaf234a482b4d2f9f18fe989208c1
-Message-ID: <202307281812.D3OZrfZS-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S235651AbjG1MD5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jul 2023 08:03:57 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA3A4211
+        for <linux-pci@vger.kernel.org>; Fri, 28 Jul 2023 05:03:25 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-3fbc12181b6so22542045e9.2
+        for <linux-pci@vger.kernel.org>; Fri, 28 Jul 2023 05:03:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1690545801; x=1691150601;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A/vKoaITIyW9xcwG8PtxXcCtwnXHm7Y94zVK2jGbtSY=;
+        b=F8c164DEg1U2zHFVL6A881PvtLW8arBQxTSuYi6BsazIikM8FKwJt8677VhL/YR5mf
+         Yrfv6VsM7uTf7JAiIr8/yfKWx3erIUq+snXxdTpCLqgqBoA623kze3xRWtyjyn1P+hcr
+         4pcxiMf53FRCFPdyflSJvROwRCNscn92er3ClH8x/+exjTFmrAu8zKcaTUeSo+H6PlSd
+         G8/bUjD6pgiejWLBS1iZDqZxLhkEjcf22QXMUkEvIFjQSIVXOyWMjULvU3Q+xoyBVOWf
+         dm8ji7904cyWSd5XGhEjkClg5KYREauq7FmA9Xq5NhMUIOFPygk/wrb867ojZ08nS06C
+         ZP+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690545801; x=1691150601;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A/vKoaITIyW9xcwG8PtxXcCtwnXHm7Y94zVK2jGbtSY=;
+        b=UrUaJhJj01khRvzVbKyiHVFT1fO/p2DOPlCsuynYkGYjU0ls0MMoG7aezzWExtMvs1
+         aqxGunlNXRWYrOvIdOU2MwqDLGq5QmD3Ru2t478t0gos+yzRsCT1sJmoatavO0cvM6qi
+         XVpIX8vmZEnY8kIAa18Utx3mbBoe3htuDWcfMqGKXmGu1hcSmfsm2/f2y63Tp5QNIg+D
+         HezCbWo3MWEAhwJDs9YNoX2RhzFbD5jJZVcKrrFL8cEGbxIXOhGWO6BoeXmB5cHmdqTS
+         w9yluk2OU0XZFfCEKdH2ES4pZ0VNdatTi35AxgbG6yj8jiRIsyo1QhC7lxPwRx04JOhA
+         iMKA==
+X-Gm-Message-State: ABy/qLbQUPVomPcCnzTEB/RLgLrtpEu90D9P/3+V2V6pwrmcC54bD7Q7
+        ZdrLQ/iNvJbRa76anzAbCJqoJA==
+X-Google-Smtp-Source: APBJJlEkuI6UTwqW0VTko2uWsPFht7OoyEgxGr2mGh5SPlgfnShLErAkXAEfZK43dAqhK7yX5s44Rw==
+X-Received: by 2002:a05:600c:d5:b0:3fb:e206:ca5f with SMTP id u21-20020a05600c00d500b003fbe206ca5fmr1392256wmm.31.1690545801567;
+        Fri, 28 Jul 2023 05:03:21 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.104])
+        by smtp.gmail.com with ESMTPSA id w17-20020a05600c015100b003fbfef555d2sm6778983wmm.23.2023.07.28.05.03.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Jul 2023 05:03:21 -0700 (PDT)
+Message-ID: <17c2ba50-3b72-523c-d92b-1ecbf9be7450@linaro.org>
+Date:   Fri, 28 Jul 2023 14:03:17 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v1] arm64: dts: qcom: sc7280: Add PCIe0 node
+Content-Language: en-US
+To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        manivannan.sadhasivam@linaro.org
+Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
+        quic_parass@quicinc.com,
+        "reviewer:ARM/QUALCOMM CHROMEBOOK SUPPORT" 
+        <cros-qcom-dts-watchers@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <1690540760-20191-1-git-send-email-quic_krichai@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <1690540760-20191-1-git-send-email-quic_krichai@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
-branch HEAD: e3a3a097eaebaf234a482b4d2f9f18fe989208c1  PCI/DOE: Fix destroy_work_on_stack() race
+On 28/07/2023 12:39, Krishna chaitanya chundru wrote:
+> Add PCIe dtsi node for PCIe0 controller on sc7280 platform.
+> 
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 
-elapsed time: 832m
+Thank you for your patch. There is something to discuss/improve.
 
-configs tested: 138
-configs skipped: 6
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> +		pcie0_phy: phy@1c06000 {
+> +			compatible = "qcom,sm8250-qmp-gen3x1-pcie-phy";
+> +			reg = <0 0x01c06000 0 0x1c0>;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges;
+> +			clocks = <&gcc GCC_PCIE_0_AUX_CLK>,
+> +				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
+> +				 <&gcc GCC_PCIE_CLKREF_EN>,
+> +				 <&gcc GCC_PCIE0_PHY_RCHNG_CLK>;
+> +			clock-names = "aux", "cfg_ahb", "ref", "refgen";
+> +
+> +			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
+> +			reset-names = "phy";
+> +
+> +			assigned-clocks = <&gcc GCC_PCIE0_PHY_RCHNG_CLK>;
+> +			assigned-clock-rates = <100000000>;
+> +
+> +			status = "disabled";
+> +
+> +			pcie0_lane: phy@1c0e6200 {
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r012-20230727   gcc  
-alpha                randconfig-r021-20230727   gcc  
-alpha                randconfig-r022-20230727   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r025-20230727   gcc  
-arc                  randconfig-r031-20230727   gcc  
-arc                  randconfig-r043-20230727   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                     am200epdkit_defconfig   clang
-arm                                 defconfig   gcc  
-arm                           imxrt_defconfig   gcc  
-arm                  randconfig-r032-20230727   gcc  
-arm                  randconfig-r034-20230727   gcc  
-arm                  randconfig-r046-20230727   clang
-arm                       versatile_defconfig   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r016-20230727   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r021-20230727   gcc  
-csky                 randconfig-r035-20230727   gcc  
-hexagon              randconfig-r041-20230727   clang
-hexagon              randconfig-r045-20230727   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230727   clang
-i386         buildonly-randconfig-r005-20230727   clang
-i386         buildonly-randconfig-r006-20230727   clang
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230727   clang
-i386                 randconfig-i002-20230727   clang
-i386                 randconfig-i003-20230727   clang
-i386                 randconfig-i004-20230727   clang
-i386                 randconfig-i005-20230727   clang
-i386                 randconfig-i006-20230727   clang
-i386                 randconfig-i011-20230727   gcc  
-i386                 randconfig-i012-20230727   gcc  
-i386                 randconfig-i013-20230727   gcc  
-i386                 randconfig-i014-20230727   gcc  
-i386                 randconfig-i015-20230727   gcc  
-i386                 randconfig-i016-20230727   gcc  
-i386                 randconfig-r022-20230727   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r013-20230727   gcc  
-loongarch            randconfig-r014-20230727   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r035-20230727   gcc  
-microblaze           randconfig-r011-20230727   gcc  
-microblaze           randconfig-r013-20230727   gcc  
-microblaze           randconfig-r025-20230727   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                           gcw0_defconfig   gcc  
-mips                           ip27_defconfig   clang
-mips                 randconfig-r034-20230727   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r005-20230727   gcc  
-nios2                randconfig-r024-20230727   gcc  
-nios2                randconfig-r036-20230727   gcc  
-openrisc             randconfig-r001-20230727   gcc  
-openrisc             randconfig-r014-20230727   gcc  
-openrisc             randconfig-r026-20230727   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r002-20230727   gcc  
-parisc               randconfig-r036-20230727   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                     kilauea_defconfig   clang
-powerpc                     rainier_defconfig   gcc  
-powerpc                    socrates_defconfig   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r012-20230727   gcc  
-riscv                randconfig-r016-20230727   gcc  
-riscv                randconfig-r042-20230727   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r006-20230727   clang
-s390                 randconfig-r044-20230727   gcc  
-sh                               allmodconfig   gcc  
-sh                   randconfig-r005-20230727   gcc  
-sh                   randconfig-r024-20230727   gcc  
-sh                   randconfig-r032-20230727   gcc  
-sh                          rsk7201_defconfig   gcc  
-sh                          rsk7203_defconfig   gcc  
-sh                      rts7751r2d1_defconfig   gcc  
-sh                   sh7770_generic_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r003-20230727   gcc  
-sparc                randconfig-r015-20230727   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r003-20230727   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230727   clang
-x86_64       buildonly-randconfig-r002-20230727   clang
-x86_64       buildonly-randconfig-r003-20230727   clang
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-x001-20230727   gcc  
-x86_64               randconfig-x002-20230727   gcc  
-x86_64               randconfig-x003-20230727   gcc  
-x86_64               randconfig-x004-20230727   gcc  
-x86_64               randconfig-x005-20230727   gcc  
-x86_64               randconfig-x006-20230727   gcc  
-x86_64               randconfig-x011-20230727   clang
-x86_64               randconfig-x012-20230727   clang
-x86_64               randconfig-x013-20230727   clang
-x86_64               randconfig-x014-20230727   clang
-x86_64               randconfig-x015-20230727   clang
-x86_64               randconfig-x016-20230727   clang
-x86_64                           rhel-8.3-bpf   gcc  
-x86_64                         rhel-8.3-kunit   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r004-20230727   gcc  
-xtensa               randconfig-r011-20230727   gcc  
-xtensa               randconfig-r026-20230727   gcc  
-xtensa               randconfig-r033-20230727   gcc  
+Isn't this old-style of bindings? Wasn't there a change? On what tree
+did you base it?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +
+> +			pcie0_wake_n: pcie0-wake-n {
+
+It does not look like you tested the DTS against bindings. Please run
+`make dtbs_check` (see
+Documentation/devicetree/bindings/writing-schema.rst or
+https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+for instructions).
+
+Nodes end with 'state'.
+
+
+> +				pins = "gpio89";
+> +				function = "gpio";
+> +
+> +				drive-strength = <2>;
+> +				bias-pull-up;
+> +			};
+Best regards,
+Krzysztof
+
