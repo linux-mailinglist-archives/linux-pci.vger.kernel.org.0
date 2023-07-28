@@ -2,106 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 686C27663CB
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 07:51:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A11176667E
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jul 2023 10:11:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229601AbjG1Fvm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jul 2023 01:51:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38190 "EHLO
+        id S234690AbjG1ILK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jul 2023 04:11:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230478AbjG1Fvl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jul 2023 01:51:41 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F10A82682
-        for <linux-pci@vger.kernel.org>; Thu, 27 Jul 2023 22:51:39 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4fdfefdf5abso2933513e87.1
-        for <linux-pci@vger.kernel.org>; Thu, 27 Jul 2023 22:51:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690523498; x=1691128298;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QbJoy+y2Yudh1CYrBwAxIycjhiEMLkeAf2hLUb9dK34=;
-        b=LH6YTDFSPga/O+VAxidGwEtHUFiI3euAsZYJ51ccNSFe5Qgtgeg9kwxBqunN05CDlm
-         kGNggeVbJqUWLEqxdzRBLOUO4KA24vRH2TWLcqYZFoXj4kApGdquNlNU4oFte+F6WFIS
-         6GfIpews7zvObUBnY1Mw94OfijKGIIIOYc+v2SFkeyRifN/mkWxK588/D7xru6SLq3iZ
-         YCGk1V3fqh4Hk/f6tzMe3sJfUJB4z+9Xjt9WAF50WSbNiudloZSmfk0OHe/YmrjUbIXS
-         D7DnFpN8sgy9CikjAz6AkK222KA1IDRS9zcCdz5QGmQXtObIX3fwlOu3rIJv6IGo2ABB
-         O9LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690523498; x=1691128298;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QbJoy+y2Yudh1CYrBwAxIycjhiEMLkeAf2hLUb9dK34=;
-        b=Qtp32W9b7XJBM/VAQrg1nqd0jhw+RuuJ3MRKmsEx8fPzNuNdxJHmV3D6j0DGWsug8C
-         54ZS4eDvff7RRFuoxWw0lugtRm/aZjS2Eka2A6mxuFjr9C6UGoW5ex0X6Sf6Y/On9w2s
-         P7ZpcCBPeYw6dM9EXknDAdSbs52sXdDi9KujJ3xU0tBMyR9UUQB2imP9IXqSRz0/9oCH
-         cmlDMsXyDXpFP2tKNUPUvdk64N/nrVAEtVMg7WeWddVCcmmBNrnOdiEHAXbii2ebPVnH
-         PJFF+PUld9v93PSehldGiddyqdue5hI498YBjQM9cB1NH/3xXk6Vz/o5vHAyb57ACBAJ
-         mbog==
-X-Gm-Message-State: ABy/qLbS5uInejmqFnPbJ+ElMzRucRboASTx7wL21Zt+D+NPrIHO5Pm6
-        XdNTo0HboGv3CcnxCnrF+rq8Og==
-X-Google-Smtp-Source: APBJJlGAM9s+ylKBZ7ENa9yuO0NicGa5hvMyehHWMw1AMAyqXxPn/1i1xulnaAcUNfJR3YVDzOPtCw==
-X-Received: by 2002:a2e:b6c2:0:b0:2b6:df25:1ab0 with SMTP id m2-20020a2eb6c2000000b002b6df251ab0mr924764ljo.34.1690523498209;
-        Thu, 27 Jul 2023 22:51:38 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id w4-20020adfec44000000b00317614b6a5dsm3857666wrn.50.2023.07.27.22.51.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 22:51:37 -0700 (PDT)
-Date:   Fri, 28 Jul 2023 08:51:35 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc:     manivannan.sadhasivam@linaro.org, helgaas@kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, krzysztof.kozlowski@linaro.org,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Jeffrey Hugo <quic_jhugo@quicinc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Carpenter <error27@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "open list:MHI BUS" <mhi@lists.linux.dev>
-Subject: Re: [PATCH v4 9/9] bus: mhi: ep: wake up host if the MHI state is in
- M3
-Message-ID: <1399c766-791b-486d-90d5-a00999eb15fb@kadam.mountain>
-References: <1689232218-28265-1-git-send-email-quic_krichai@quicinc.com>
- <1689232218-28265-10-git-send-email-quic_krichai@quicinc.com>
+        with ESMTP id S234745AbjG1IKs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jul 2023 04:10:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB0B3A94
+        for <linux-pci@vger.kernel.org>; Fri, 28 Jul 2023 01:10:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 685EF62038
+        for <linux-pci@vger.kernel.org>; Fri, 28 Jul 2023 08:10:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07B80C433C7;
+        Fri, 28 Jul 2023 08:10:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690531845;
+        bh=bTWBozpUeMN0xK9mfMqRhIFLjxi5qzgqcDypMZO9+zQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BIEg8EnFrcVOr0XXiraDUA7xn5PF42pldmoWB4V0stQ/2nY4QQ78raNL27SDGPqv0
+         5bUh1DTL4XZm+tJ9yUZ2ftdZnoYKpGELrEwkKF4Ijsf/1P+UpBTSUP2gSXiCB9YWWN
+         RvOtiqrUB/40PR7SpVj9kb8jmZYjouhK6bwYQYOVdXLUbcAt7Zl0w7mM8CnINKjAE2
+         0g/o9L+b9XCIent7VOK0sho8fVHvV8GyA4IzfWYUNId8VQF2pLtPl8az7z0czUhsqM
+         uFXsQzb39cVdyhUfL5XKkYq+r/vsKNjLZK0Aqj8JCHA8N0oKklBwFWRJv88mJBns9L
+         7tFWZKZrXqDOg==
+Date:   Fri, 28 Jul 2023 10:10:42 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Nirmal Patel <nirmal.patel@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: vmd: Disable bridge window for domain reset
+Message-ID: <ZMN4AnYddVjO/JG1@lpieralisi>
+References: <20230719205610.922324-1-nirmal.patel@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1689232218-28265-10-git-send-email-quic_krichai@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+In-Reply-To: <20230719205610.922324-1-nirmal.patel@linux.intel.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jul 13, 2023 at 12:40:18PM +0530, Krishna chaitanya chundru wrote:
-> @@ -464,6 +484,13 @@ int mhi_ep_queue_skb(struct mhi_ep_device *mhi_dev, struct sk_buff *skb)
->  	buf_left = skb->len;
->  	ring = &mhi_cntrl->mhi_chan[mhi_chan->chan].ring;
+On Wed, Jul 19, 2023 at 04:56:10PM -0400, Nirmal Patel wrote:
+> During domain reset process we are accidentally enabling
+> the prefetchable memory by writing 0x0 to Prefetchable Memory
+> Base and Prefetchable Memory Limit registers. As a result certain
+> platforms failed to boot up.
+> 
+> When clearing Prefetchable Memory Base, Prefetchable Memory
+> Limit and Prefetchable Base Upper 32 bits, the prefetchable
+> memory range becomes 0x0-0x575000fffff.
+
+I asked before, I am asking again. I assume you are describing
+what happens while the code is executing memset_io() and the
+Prefetchable Base Upper 32 bits have not been written yet.
+
+That's a problem but most likely the issue is the end result,
+with the prefetchable window set to 0x0-0x000fffff.
+
+Please explain and reword the commit log accordingly.
+
+> As a result the
+> prefetchable memory is enabled accidentally. There is a gap
+> between implementation and the PCI Express spec.
+
+Define the gap and how it affects this commit or remove this sentence.
+
+[...]
+
+> Write proper values to required Memory Base registers and follow
+> same the style as  pci_disable_bridge_window.
+
+Replace this sentence with:
+
+"Disable the bridge window by executing a sequence of operations
+borrowed from pci_disable_bridge_window(), that comply with the
+PCI specifications".
+
+Thanks,
+Lorenzo
+
+> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> ---
+> v1->v2: Follow same chain of operation as pci_disable_bridge_window
+>         and update commit log.
+> ---
+>  drivers/pci/controller/vmd.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 769eedeb8802..ca9081be917d 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -526,8 +526,16 @@ static void vmd_domain_reset(struct vmd_dev *vmd)
+>  				     PCI_CLASS_BRIDGE_PCI))
+>  					continue;
 >  
-> +	if (mhi_cntrl->mhi_state == MHI_STATE_M3) {
-> +		if (mhi_ep_wake_host(mhi_cntrl)) {
-> +			dev_err(dev, "Failed to wakeup host\n");
-> +			return -ENODEV;
-> +		}
-
-Since you're going to be redoing this patch anyway could you please
-propage the error code:
-
-		ret = mhi_ep_wake_host(mhi_cntrl);
-		if (ret) {
-			dev_err(dev, "Failed to wakeup host\n");
-			return ret;
-		}
-
-regards,
-dan carpenter
-
-
+> -				memset_io(base + PCI_IO_BASE, 0,
+> -					  PCI_ROM_ADDRESS1 - PCI_IO_BASE);
+> +				writel(0, base + PCI_IO_BASE);
+> +				/* MMIO Base/Limit */
+> +				writel(0x0000fff0, base + PCI_MEMORY_BASE);
+> +
+> +				/* Prefetchable MMIO Base/Limit */
+> +				writel(0, base + PCI_PREF_LIMIT_UPPER32);
+> +				writel(0x0000fff0, base + PCI_PREF_MEMORY_BASE);
+> +				writel(0xffffffff, base + PCI_PREF_BASE_UPPER32);
+> +				writel(0, base + PCI_IO_BASE_UPPER16);
+> +				writeb(0, base + PCI_CAPABILITY_LIST);
+>  			}
+>  		}
+>  	}
+> -- 
+> 2.31.1
+> 
