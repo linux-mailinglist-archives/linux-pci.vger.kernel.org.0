@@ -2,591 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C873768996
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Jul 2023 03:26:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DE987689B0
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Jul 2023 03:56:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229551AbjGaB0A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 30 Jul 2023 21:26:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48396 "EHLO
+        id S229665AbjGaB4v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 30 Jul 2023 21:56:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229726AbjGaBZ6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 30 Jul 2023 21:25:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC59E7F
-        for <linux-pci@vger.kernel.org>; Sun, 30 Jul 2023 18:25:55 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BE0F560E0A
-        for <linux-pci@vger.kernel.org>; Mon, 31 Jul 2023 01:25:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FA06C433C8;
-        Mon, 31 Jul 2023 01:25:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690766754;
-        bh=I417M30EmGXxGbE6lo8N1qsRIJWl+q1STssEIC1JZ5Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=or9GNlSgaI2SVTLu+VKsgcfvBYHy3eRiSJFq+VaEo2N1SQazi7x3zugg5LISEWIeM
-         JFEZT9ZeJzdiMUj7nJ3E37UA/qmIjQVk0X3WEgAl5ABjJFIuEWxeDQyJbeql39/uAd
-         BJfnmTufMHZ8S/xU3OIlMSF3j4aW8GlVgm3udwSBMyR/xI6zmcrT6E6ZEQIPVQegLW
-         yuPOYPe7Bi1bHpxATAtcOOUT5qleODdRjjOUbie0kt5MH9gQ4+RqccTifsoVvX7g9c
-         jHXwt10E/mbYSEkADR359SSHDvzKbxRbF2DKhGW7WSDW8Oo/fXhbIw5stMZk6l0eMi
-         Osh3JL8GK6V+A==
-From:   Damien Le Moal <dlemoal@kernel.org>
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        with ESMTP id S229478AbjGaB4u (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 30 Jul 2023 21:56:50 -0400
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2090.outbound.protection.outlook.com [40.107.113.90])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8D8AE71
+        for <linux-pci@vger.kernel.org>; Sun, 30 Jul 2023 18:56:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YGAiGJ5VerYwb/tUtBkdZI6XJyy7Uo638gnYC1kFm0yysL+A8mZSCR2LUI/d4vgPh6VnK0lEIwedlePDto3Z7btDtDRviEt/xUgj+RyMY5x75W4BO9xzhYg7l2M0B7bIfRu53ayEcJ4aWP0KfK9uGhKegnjgq1SRku+KLNVHWBVtWkkjf42nNS95LBGW7cQIsSAiyWxs2ihf4VzLUsNY7YlY4ZnqZCXgxxU6oIn2DC1+Zo37Xcnfx+AkbXCyRK8iVYlz1AvjUU4BZyzvYADh7GqwEwO4fqip8w4UApWaXiIkDhGgP3NlD2wWk4YTaefkPmCL/KSvFMiOnr20sLoq6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uiXVqUqga0xWgzFCpTtm3JR1rwn2ClxSqF+d/famJgk=;
+ b=nffMF2R7rwkyyUn2tZuAEh56LiDbyie9LOELJ7PSxqGuixfnM8ZuIHV5SbN7aF5YS6yudBwh7Gr9h5TV1JuAIJaiNpaqc7UDag3fbCmTKWh55wNw3Kp/GO2+X6VofEbTtBLQZ6Mq+5exK/kAUIM7ll4/e2pO3Hk2hughPabjhoTZEFdGWo0qcDr9ljuXWyON9EQGkUjz6YVLZLHw1+6i+AVdLuNWZr4wpVq26hbSjQVlXRNUGYhGmyNoCryjUvuihYY3J5CTyrm523KBCY8ErgradS8QYyjFVV37E/YdFSjs5rgl2f3a9Q/GvnW1zUtIjqZ/fuvlIG9+jaEm2bhtSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uiXVqUqga0xWgzFCpTtm3JR1rwn2ClxSqF+d/famJgk=;
+ b=HR/nXvm+ewQyI56tcy2rmSgXa0PfaBnWHlvamWllxiqnVnakprxxVHWAOTr2j0Ff5U806GND2uWr/fzLJEfNk8W+wG14eSlqhpeYRsfYGTlHiZCoaYhwUmG3WxpBiUn3SvACK0EYInx3pKCcfLtVyXFJ1ZXmdC2zmJDW7iN/oiM=
+Received: from OSYPR01MB5334.jpnprd01.prod.outlook.com (2603:1096:604:8a::15)
+ by OS3PR01MB6119.jpnprd01.prod.outlook.com (2603:1096:604:d0::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.43; Mon, 31 Jul
+ 2023 01:56:43 +0000
+Received: from OSYPR01MB5334.jpnprd01.prod.outlook.com
+ ([fe80::fe8:f613:9823:4075]) by OSYPR01MB5334.jpnprd01.prod.outlook.com
+ ([fe80::fe8:f613:9823:4075%6]) with mapi id 15.20.6631.043; Mon, 31 Jul 2023
+ 01:56:43 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Damien Le Moal <dlemoal@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Kishon Vijay Abraham I <kishon@kernel.org>,
         Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 2/2] PCI: endpoint: Drop PCI_EPC_IRQ_XXX definitions
-Date:   Mon, 31 Jul 2023 10:25:50 +0900
-Message-ID: <20230731012550.728070-3-dlemoal@kernel.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230731012550.728070-1-dlemoal@kernel.org>
+        Serge Semin <fancer.lancer@gmail.com>
+Subject: RE: [PATCH 0/2] Cleanup IRQ type definitions
+Thread-Topic: [PATCH 0/2] Cleanup IRQ type definitions
+Thread-Index: AQHZw030cgrknKCySkKp3T9rvY8lAq/THZfQ
+Date:   Mon, 31 Jul 2023 01:56:43 +0000
+Message-ID: <OSYPR01MB5334E01589952B7E03D87C9AD805A@OSYPR01MB5334.jpnprd01.prod.outlook.com>
 References: <20230731012550.728070-1-dlemoal@kernel.org>
+In-Reply-To: <20230731012550.728070-1-dlemoal@kernel.org>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OSYPR01MB5334:EE_|OS3PR01MB6119:EE_
+x-ms-office365-filtering-correlation-id: 9ce5ab68-b433-4f78-1ce1-08db916963e4
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: oB+QSVWXmWw0oPonecbBgaW1CC9CxSPtzYcCY75KiUnXJuXchEyBw5Bk0q81jeQpDjVpp4q/RPmDQsa9QZhfyQNsUfd+nnVsa2R4SMKCw7HYi3oiRAIck8poxC95QLVDSFhefYdJVa0oa3pMgGkKaYhYYrLM4QGBrhwwP9dRI6+F09LiQ3YWOLjjW1kZ5OrWaRWZkjm78IhdQgU2W2sxduAgK3KHzHUOb4u08hNvhf15OT5uveNr3mn4SE+hczuC3NW6r72cdeNobveNMLbALx2OXeKoKoHLihvPqtiVLyOnLV1lOMW6eCgHlYKFfqkrD0amnAXagAOz9/VQqKnksflvgqiblih38ctX8IyjG7WrimKXjwiKFH60P/TZf3hx2RUncMScXF8WGXQaqxCxgX1Ex7HGRn3G1/BMO8rpJw6FtTDInpmQR04UBrQwF/t+FONsZbobVawUnpUXKQVp+FIpq0K8DrwKqRoezR7W6PkbZ99k963lVWQ1AkIvlcgi9JbZqcAW+ZaltWDIyeSC8acRGDMKYPBtt0LxMLXocU8oybNC7Eox25RWdwyoWhycD0ghiXJeWD6URac58Ru2pitJhzQRRJEXbRfybG2RqWFHxWVkCzYdhLKddgOirFWmFY+TmtFDLwSvW4WekU4wzQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSYPR01MB5334.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(366004)(346002)(376002)(396003)(136003)(451199021)(9686003)(7696005)(55016003)(6506007)(83380400001)(186003)(33656002)(76116006)(66946007)(66556008)(52536014)(38070700005)(122000001)(54906003)(110136005)(41300700001)(86362001)(66476007)(316002)(64756008)(66446008)(4326008)(5660300002)(8936002)(8676002)(38100700002)(2906002)(71200400001)(478600001)(21314003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?aoAGbaVIZNOJcoVH6mN1aiPKiThSv7K6XuRbeT6H+5OidhuMp9X4noGpERWQ?=
+ =?us-ascii?Q?tOfdi31rF6Sm2TOi4wHx1NesV1WVKtqx7MXbl5VsNrKxBNRpWFAUhK5+7h1k?=
+ =?us-ascii?Q?kCw+OomrGvrG/XIfKst7ALqRnWvvK6hY9vt2paiJWn+JFfzSpG0Fub2GujKh?=
+ =?us-ascii?Q?1KvDhNReovBtEZVo6tUFJFb8HZqzbsnMc7VbPA/EpNb9rSqAdl1e1ZQ1LbyI?=
+ =?us-ascii?Q?XBEpD/oKLAkJJPa7FsjrOA4zT8i/lJ3KHmb2eRoRFVfLC9Pj/Sp8tgPilVPq?=
+ =?us-ascii?Q?E8EXfGY+RXPhGg6Gq4ovMXaVtBSTuuhZS7jyGFOqUpYO2mi+eaPPSnvBeyB2?=
+ =?us-ascii?Q?4lL7hK/JbHn46v9oiSjeGZdTVyasJcyyaVctI8lINbNknrVLQYsI6iTNeQYo?=
+ =?us-ascii?Q?CbAcQQAGYC2bmdLOiMn2sI26mEytIPBwVDbv9bQrtw126mf4M2nqeigBh0DG?=
+ =?us-ascii?Q?8r3x0wkv/C8/1HZZhkOTqVNuJjlDtNsktVR/Vo/Kq+7LXCYWjyaArY+ot8wg?=
+ =?us-ascii?Q?gaxOHIfFWt4lYvA55Q7tpgxmmg4OmLHMb9Rp4hEJT2FbbdPUF8b7ESVNYTPa?=
+ =?us-ascii?Q?EGRj4K19crIDn2qH+Zp9t/JhZGQ69e3eNsIMKpu78buoDImAO7HCYvTeYuMA?=
+ =?us-ascii?Q?v3XhOTGL3t2mIvZl8VkyUPUjkeFvRnA7JLBL20xks4lo1yLYR+/pY/rKBuFL?=
+ =?us-ascii?Q?w+19XXJo6rtsWkZQXKPuoVmb2mEygfRcZcQrt7e7TVnoRz6d1yGNUOPCvNRa?=
+ =?us-ascii?Q?+A6ZeZwZE38u64H11kc0UGgrE4Fc1p88n+ILAoiZw2cBN6Lu4HZpNeaok0rT?=
+ =?us-ascii?Q?YDnRSAJbc7NSA/6F8YmAPaQVlg17IS4NgnDFjQFeS/3JvcL51cpeQ4HWYZ/N?=
+ =?us-ascii?Q?t73Jm3odiyBHUtNZLqDrYv6CA9fTNv1oTlUqXZ16bknpvhDk91jS8IJ7teXi?=
+ =?us-ascii?Q?b+Dq9jRiAEVyKsvkmbuV2Om6yEqFq4u21AenV0kurFY4m5zHqBQ/e5SpRYop?=
+ =?us-ascii?Q?KcPbDOVPY88qk4ibm3QSBBJTJTVbt7KsfJ1b6HOOCgedY+VDZZ2htcoeHu21?=
+ =?us-ascii?Q?OtrT6uO8Gjh36ivxxR1K5mGGrVBgAgkg7EkErv6ADLJhYlH0RS4ow+MvDR8y?=
+ =?us-ascii?Q?wM/wYDner0R5bwBd8btdGMB14azYKV5SYl2c7Z8d4LwkmQQiNlc64DaCyFSk?=
+ =?us-ascii?Q?i60rZQFm4UX5KjKI2x3gVXXPi9ndCBmzbA5SKy0JUJIpjl2Vt5Y5N9SBXZ8c?=
+ =?us-ascii?Q?TWn+pk0IQ/9UX1q4ATSr/a3nzxfIrlXWqr+KrsL3HW7aPCcteVpzBhKp506H?=
+ =?us-ascii?Q?QOqEhX6vP+1kGLqeNhoMlYrzFnN0k0VlacKTjo1KdmZSJ11N1Q7XryPXk2jP?=
+ =?us-ascii?Q?SsQZ9uJa90AbU0ibgWVCC658jjOcUVQCTcYqP/9KtVpTj1Yt+8viSlqBkwiF?=
+ =?us-ascii?Q?4yZPA1+zXIl5on+RRwifyjogh0wZODBkYdBjrPYY30DvLFHd7DNrcJJ7vm4l?=
+ =?us-ascii?Q?hcFM0C4ppx/OTvpR8iViOYDiTWFtQh5U/3Bf+sFKJsmbElr1Up2Z3+RIEG21?=
+ =?us-ascii?Q?Ejoh82q4QGkmiwiALWCfGu+xsMioxG/JXqr1AlCKNrGtQ34LCM+NGBCZU8Ua?=
+ =?us-ascii?Q?PlqhIxIE9APx4jkA+foCp521SEANO8Kj34wJYrG3u2grzHXT14/FABCsUPv2?=
+ =?us-ascii?Q?EtYaVg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSYPR01MB5334.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ce5ab68-b433-4f78-1ce1-08db916963e4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2023 01:56:43.6236
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: E1vjdnNmlvunLpxCALP79Ri4euxdqgJ1spnYRKKdtNdl45woD66qCem+PafqkzZ0WCkS6WZKxb4wnKPaZ5C3ZLHcQhtmf14x4Za4ynI8eKLyfmCckvSOEH9x6ikJcCxo
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB6119
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-linux/pci.h defines the IRQ flags PCI_IRQ_INTX, PCI_IRQ_MSI and
-PCI_IRQ_MSIX. Let's use these flags directly instead of the endpoint
-definitions provided by enum pci_epc_irq_type. This removes the need
-for defining this enum type completely.
+Hello Damien,
 
-Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
----
- drivers/pci/controller/cadence/pcie-cadence-ep.c  |  9 ++++-----
- drivers/pci/controller/dwc/pci-dra7xx.c           |  6 +++---
- drivers/pci/controller/dwc/pci-imx6.c             |  9 ++++-----
- drivers/pci/controller/dwc/pci-keystone.c         |  9 ++++-----
- drivers/pci/controller/dwc/pci-layerscape-ep.c    |  8 ++++----
- drivers/pci/controller/dwc/pcie-artpec6.c         |  8 ++++----
- drivers/pci/controller/dwc/pcie-designware-ep.c   |  2 +-
- drivers/pci/controller/dwc/pcie-designware-plat.c |  9 ++++-----
- drivers/pci/controller/dwc/pcie-designware.h      |  2 +-
- drivers/pci/controller/dwc/pcie-keembay.c         | 13 ++++++-------
- drivers/pci/controller/dwc/pcie-qcom-ep.c         |  6 +++---
- drivers/pci/controller/dwc/pcie-tegra194.c        |  9 ++++-----
- drivers/pci/controller/dwc/pcie-uniphier-ep.c     |  7 +++----
- drivers/pci/controller/pcie-rcar-ep.c             |  7 +++----
- drivers/pci/controller/pcie-rockchip-ep.c         |  7 +++----
- drivers/pci/endpoint/functions/pci-epf-mhi.c      |  2 +-
- drivers/pci/endpoint/functions/pci-epf-ntb.c      |  4 ++--
- drivers/pci/endpoint/functions/pci-epf-test.c     |  6 +++---
- drivers/pci/endpoint/functions/pci-epf-vntb.c     |  7 ++-----
- drivers/pci/endpoint/pci-epc-core.c               |  2 +-
- include/linux/pci-epc.h                           | 11 ++---------
- 21 files changed, 62 insertions(+), 81 deletions(-)
+> From: Damien Le Moal, Sent: Monday, July 31, 2023 10:26 AM
+>=20
+> The first patch renames PCI_IRQ_LEGACY to PCI_IRQ_INTX as suggested by
+> Bjorn (hence the patch authorship is given to him).
+>=20
+> The second patch removes the redundant IRQ type definitions
+> PCI_EPC_IRQ_XXX and replace these with a direct use of the PCI_IRQ_XXX
+> definitions. Going forward, more cleanups renaming "legacy" to "intx"
+> in various drivers can be added on top of this series.
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-index b8b655d4047e..885291bb1e28 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-@@ -531,25 +531,24 @@ static int cdns_pcie_ep_send_msix_irq(struct cdns_pcie_ep *ep, u8 fn, u8 vfn,
- }
- 
- static int cdns_pcie_ep_raise_irq(struct pci_epc *epc, u8 fn, u8 vfn,
--				  enum pci_epc_irq_type type,
--				  u16 interrupt_num)
-+				  unsigned int type, u16 interrupt_num)
- {
- 	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct cdns_pcie *pcie = &ep->pcie;
- 	struct device *dev = pcie->dev;
- 
- 	switch (type) {
--	case PCI_EPC_IRQ_LEGACY:
-+	case PCI_IRQ_INTX:
- 		if (vfn > 0) {
- 			dev_err(dev, "Cannot raise legacy interrupts for VF\n");
- 			return -EINVAL;
- 		}
- 		return cdns_pcie_ep_send_legacy_irq(ep, fn, vfn, 0);
- 
--	case PCI_EPC_IRQ_MSI:
-+	case PCI_IRQ_MSI:
- 		return cdns_pcie_ep_send_msi_irq(ep, fn, vfn, interrupt_num);
- 
--	case PCI_EPC_IRQ_MSIX:
-+	case PCI_IRQ_MSIX:
- 		return cdns_pcie_ep_send_msix_irq(ep, fn, vfn, interrupt_num);
- 
- 	default:
-diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-index b445ffe95e3f..f257a42f3314 100644
---- a/drivers/pci/controller/dwc/pci-dra7xx.c
-+++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-@@ -404,16 +404,16 @@ static void dra7xx_pcie_raise_msi_irq(struct dra7xx_pcie *dra7xx,
- }
- 
- static int dra7xx_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
--				 enum pci_epc_irq_type type, u16 interrupt_num)
-+				 unsigned int type, u16 interrupt_num)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pci);
- 
- 	switch (type) {
--	case PCI_EPC_IRQ_LEGACY:
-+	case PCI_IRQ_INTX:
- 		dra7xx_pcie_raise_legacy_irq(dra7xx);
- 		break;
--	case PCI_EPC_IRQ_MSI:
-+	case PCI_IRQ_MSI:
- 		dra7xx_pcie_raise_msi_irq(dra7xx, interrupt_num);
- 		break;
- 	default:
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 235ead4c807f..adda8a43d058 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1057,17 +1057,16 @@ static void imx6_pcie_ep_init(struct dw_pcie_ep *ep)
- }
- 
- static int imx6_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
--				  enum pci_epc_irq_type type,
--				  u16 interrupt_num)
-+				  unsigned int type, u16 interrupt_num)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 
- 	switch (type) {
--	case PCI_EPC_IRQ_LEGACY:
-+	case PCI_IRQ_INTX:
- 		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
--	case PCI_EPC_IRQ_MSI:
-+	case PCI_IRQ_MSI:
- 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
--	case PCI_EPC_IRQ_MSIX:
-+	case PCI_IRQ_MSIX:
- 		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
- 	default:
- 		dev_err(pci->dev, "UNKNOWN IRQ type\n");
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 49aea6ce3e87..58170a4fc574 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -900,20 +900,19 @@ static void ks_pcie_am654_raise_legacy_irq(struct keystone_pcie *ks_pcie)
- }
- 
- static int ks_pcie_am654_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
--				   enum pci_epc_irq_type type,
--				   u16 interrupt_num)
-+				   unsigned int type, u16 interrupt_num)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
- 
- 	switch (type) {
--	case PCI_EPC_IRQ_LEGACY:
-+	case PCI_IRQ_INTX:
- 		ks_pcie_am654_raise_legacy_irq(ks_pcie);
- 		break;
--	case PCI_EPC_IRQ_MSI:
-+	case PCI_IRQ_MSI:
- 		dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
- 		break;
--	case PCI_EPC_IRQ_MSIX:
-+	case PCI_IRQ_MSIX:
- 		dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
- 		break;
- 	default:
-diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-index de4c1758a6c3..6b65f1bcc550 100644
---- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-@@ -150,16 +150,16 @@ static void ls_pcie_ep_init(struct dw_pcie_ep *ep)
- }
- 
- static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
--				enum pci_epc_irq_type type, u16 interrupt_num)
-+				unsigned int type, u16 interrupt_num)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 
- 	switch (type) {
--	case PCI_EPC_IRQ_LEGACY:
-+	case PCI_IRQ_INTX:
- 		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
--	case PCI_EPC_IRQ_MSI:
-+	case PCI_IRQ_MSI:
- 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
--	case PCI_EPC_IRQ_MSIX:
-+	case PCI_IRQ_MSIX:
- 		return dw_pcie_ep_raise_msix_irq_doorbell(ep, func_no,
- 							  interrupt_num);
- 	default:
-diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-index 9b572a2b2c9a..fc426182443a 100644
---- a/drivers/pci/controller/dwc/pcie-artpec6.c
-+++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-@@ -352,15 +352,15 @@ static void artpec6_pcie_ep_init(struct dw_pcie_ep *ep)
- }
- 
- static int artpec6_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
--				  enum pci_epc_irq_type type, u16 interrupt_num)
-+				  unsigned int type, u16 interrupt_num)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 
- 	switch (type) {
--	case PCI_EPC_IRQ_LEGACY:
--		dev_err(pci->dev, "EP cannot trigger legacy IRQs\n");
-+	case PCI_IRQ_INTX:
-+		dev_err(pci->dev, "EP cannot trigger INTx IRQs\n");
- 		return -EINVAL;
--	case PCI_EPC_IRQ_MSI:
-+	case PCI_IRQ_MSI:
- 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
- 	default:
- 		dev_err(pci->dev, "UNKNOWN IRQ type\n");
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index f9182f8d552f..ab87ea3b0986 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -426,7 +426,7 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- }
- 
- static int dw_pcie_ep_raise_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
--				enum pci_epc_irq_type type, u16 interrupt_num)
-+				unsigned int type, u16 interrupt_num)
- {
- 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
- 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-plat.c b/drivers/pci/controller/dwc/pcie-designware-plat.c
-index b625841e98aa..c83968aa0149 100644
---- a/drivers/pci/controller/dwc/pcie-designware-plat.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-plat.c
-@@ -42,17 +42,16 @@ static void dw_plat_pcie_ep_init(struct dw_pcie_ep *ep)
- }
- 
- static int dw_plat_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
--				     enum pci_epc_irq_type type,
--				     u16 interrupt_num)
-+				     unsigned int type, u16 interrupt_num)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 
- 	switch (type) {
--	case PCI_EPC_IRQ_LEGACY:
-+	case PCI_IRQ_INTX:
- 		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
--	case PCI_EPC_IRQ_MSI:
-+	case PCI_IRQ_MSI:
- 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
--	case PCI_EPC_IRQ_MSIX:
-+	case PCI_IRQ_MSIX:
- 		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
- 	default:
- 		dev_err(pci->dev, "UNKNOWN IRQ type\n");
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 615660640801..e039081eb947 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -320,7 +320,7 @@ struct dw_pcie_rp {
- struct dw_pcie_ep_ops {
- 	void	(*ep_init)(struct dw_pcie_ep *ep);
- 	int	(*raise_irq)(struct dw_pcie_ep *ep, u8 func_no,
--			     enum pci_epc_irq_type type, u16 interrupt_num);
-+			     unsigned int type, u16 interrupt_num);
- 	const struct pci_epc_features* (*get_features)(struct dw_pcie_ep *ep);
- 	/*
- 	 * Provide a method to implement the different func config space
-diff --git a/drivers/pci/controller/dwc/pcie-keembay.c b/drivers/pci/controller/dwc/pcie-keembay.c
-index 289bff99d762..8e0e2e28ef67 100644
---- a/drivers/pci/controller/dwc/pcie-keembay.c
-+++ b/drivers/pci/controller/dwc/pcie-keembay.c
-@@ -289,19 +289,18 @@ static void keembay_pcie_ep_init(struct dw_pcie_ep *ep)
- }
- 
- static int keembay_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
--				     enum pci_epc_irq_type type,
--				     u16 interrupt_num)
-+				     unsigned int type, u16 interrupt_num)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 
- 	switch (type) {
--	case PCI_EPC_IRQ_LEGACY:
--		/* Legacy interrupts are not supported in Keem Bay */
--		dev_err(pci->dev, "Legacy IRQ is not supported\n");
-+	case PCI_IRQ_INTX:
-+		/* INTx interrupts are not supported in Keem Bay */
-+		dev_err(pci->dev, "INTx IRQ is not supported\n");
- 		return -EINVAL;
--	case PCI_EPC_IRQ_MSI:
-+	case PCI_IRQ_MSI:
- 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
--	case PCI_EPC_IRQ_MSIX:
-+	case PCI_IRQ_MSIX:
- 		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
- 	default:
- 		dev_err(pci->dev, "Unknown IRQ type %d\n", type);
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 267e1247d548..5f95c33ae293 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -655,14 +655,14 @@ static int qcom_pcie_ep_enable_irq_resources(struct platform_device *pdev,
- }
- 
- static int qcom_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
--				  enum pci_epc_irq_type type, u16 interrupt_num)
-+				  unsigned int type, u16 interrupt_num)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 
- 	switch (type) {
--	case PCI_EPC_IRQ_LEGACY:
-+	case PCI_IRQ_INTX:
- 		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
--	case PCI_EPC_IRQ_MSI:
-+	case PCI_IRQ_MSI:
- 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
- 	default:
- 		dev_err(pci->dev, "Unknown IRQ type\n");
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 383ba71d1e8f..42205f0675d0 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -1992,20 +1992,19 @@ static int tegra_pcie_ep_raise_msix_irq(struct tegra_pcie_dw *pcie, u16 irq)
- }
- 
- static int tegra_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
--				   enum pci_epc_irq_type type,
--				   u16 interrupt_num)
-+				   unsigned int type, u16 interrupt_num)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
- 
- 	switch (type) {
--	case PCI_EPC_IRQ_LEGACY:
-+	case PCI_IRQ_INTX:
- 		return tegra_pcie_ep_raise_legacy_irq(pcie, interrupt_num);
- 
--	case PCI_EPC_IRQ_MSI:
-+	case PCI_IRQ_MSI:
- 		return tegra_pcie_ep_raise_msi_irq(pcie, interrupt_num);
- 
--	case PCI_EPC_IRQ_MSIX:
-+	case PCI_IRQ_MSIX:
- 		return tegra_pcie_ep_raise_msix_irq(pcie, interrupt_num);
- 
- 	default:
-diff --git a/drivers/pci/controller/dwc/pcie-uniphier-ep.c b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-index cba3c88fcf39..d47236d5678d 100644
---- a/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-@@ -256,15 +256,14 @@ static int uniphier_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep,
- }
- 
- static int uniphier_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
--				      enum pci_epc_irq_type type,
--				      u16 interrupt_num)
-+				      unsigned int type, u16 interrupt_num)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 
- 	switch (type) {
--	case PCI_EPC_IRQ_LEGACY:
-+	case PCI_IRQ_INTX:
- 		return uniphier_pcie_ep_raise_legacy_irq(ep);
--	case PCI_EPC_IRQ_MSI:
-+	case PCI_IRQ_MSI:
- 		return uniphier_pcie_ep_raise_msi_irq(ep, func_no,
- 						      interrupt_num);
- 	default:
-diff --git a/drivers/pci/controller/pcie-rcar-ep.c b/drivers/pci/controller/pcie-rcar-ep.c
-index f9682df1da61..c21294bc430d 100644
---- a/drivers/pci/controller/pcie-rcar-ep.c
-+++ b/drivers/pci/controller/pcie-rcar-ep.c
-@@ -402,16 +402,15 @@ static int rcar_pcie_ep_assert_msi(struct rcar_pcie *pcie,
- }
- 
- static int rcar_pcie_ep_raise_irq(struct pci_epc *epc, u8 fn, u8 vfn,
--				  enum pci_epc_irq_type type,
--				  u16 interrupt_num)
-+				  unsigned int type, u16 interrupt_num)
- {
- 	struct rcar_pcie_endpoint *ep = epc_get_drvdata(epc);
- 
- 	switch (type) {
--	case PCI_EPC_IRQ_LEGACY:
-+	case PCI_IRQ_INTX:
- 		return rcar_pcie_ep_assert_intx(ep, fn, 0);
- 
--	case PCI_EPC_IRQ_MSI:
-+	case PCI_IRQ_MSI:
- 		return rcar_pcie_ep_assert_msi(&ep->pcie, fn, interrupt_num);
- 
- 	default:
-diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-index 0af0e965fb57..397ad551c912 100644
---- a/drivers/pci/controller/pcie-rockchip-ep.c
-+++ b/drivers/pci/controller/pcie-rockchip-ep.c
-@@ -407,15 +407,14 @@ static int rockchip_pcie_ep_send_msi_irq(struct rockchip_pcie_ep *ep, u8 fn,
- }
- 
- static int rockchip_pcie_ep_raise_irq(struct pci_epc *epc, u8 fn, u8 vfn,
--				      enum pci_epc_irq_type type,
--				      u16 interrupt_num)
-+				      unsigned int type, u16 interrupt_num)
- {
- 	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
- 
- 	switch (type) {
--	case PCI_EPC_IRQ_LEGACY:
-+	case PCI_IRQ_LEGACY:
- 		return rockchip_pcie_ep_send_legacy_irq(ep, fn, 0);
--	case PCI_EPC_IRQ_MSI:
-+	case PCI_IRQ_MSI:
- 		return rockchip_pcie_ep_send_msi_irq(ep, fn, interrupt_num);
- 	default:
- 		return -EINVAL;
-diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-index 9c1f5a154fbd..90b49e707392 100644
---- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-@@ -177,7 +177,7 @@ static void pci_epf_mhi_raise_irq(struct mhi_ep_cntrl *mhi_cntrl, u32 vector)
- 	 * MHI supplies 0 based MSI vectors but the API expects the vector
- 	 * number to start from 1, so we need to increment the vector by 1.
- 	 */
--	pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no, PCI_EPC_IRQ_MSI,
-+	pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no, PCI_IRQ_MSI,
- 			  vector + 1);
- }
- 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-ntb.c b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-index 9aac2c6f3bb9..fad00b1a8335 100644
---- a/drivers/pci/endpoint/functions/pci-epf-ntb.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-@@ -140,9 +140,9 @@ static struct pci_epf_header epf_ntb_header = {
- static int epf_ntb_link_up(struct epf_ntb *ntb, bool link_up)
- {
- 	enum pci_epc_interface_type type;
--	enum pci_epc_irq_type irq_type;
- 	struct epf_ntb_epc *ntb_epc;
- 	struct epf_ntb_ctrl *ctrl;
-+	unsigned int irq_type;
- 	struct pci_epc *epc;
- 	u8 func_no, vfunc_no;
- 	bool is_msix;
-@@ -159,7 +159,7 @@ static int epf_ntb_link_up(struct epf_ntb *ntb, bool link_up)
- 			ctrl->link_status |= LINK_STATUS_UP;
- 		else
- 			ctrl->link_status &= ~LINK_STATUS_UP;
--		irq_type = is_msix ? PCI_EPC_IRQ_MSIX : PCI_EPC_IRQ_MSI;
-+		irq_type = is_msix ? PCI_IRQ_MSIX : PCI_IRQ_MSI;
- 		ret = pci_epc_raise_irq(epc, func_no, vfunc_no, irq_type, 1);
- 		if (ret) {
- 			dev_err(&epc->dev,
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 1f0d2b84296a..9d39fda5c348 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -602,7 +602,7 @@ static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test,
- 	switch (reg->irq_type) {
- 	case IRQ_TYPE_LEGACY:
- 		pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no,
--				  PCI_EPC_IRQ_LEGACY, 0);
-+				  PCI_IRQ_INTX, 0);
- 		break;
- 	case IRQ_TYPE_MSI:
- 		count = pci_epc_get_msi(epc, epf->func_no, epf->vfunc_no);
-@@ -612,7 +612,7 @@ static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test,
- 			return;
- 		}
- 		pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no,
--				  PCI_EPC_IRQ_MSI, reg->irq_number);
-+				  PCI_IRQ_MSI, reg->irq_number);
- 		break;
- 	case IRQ_TYPE_MSIX:
- 		count = pci_epc_get_msix(epc, epf->func_no, epf->vfunc_no);
-@@ -622,7 +622,7 @@ static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test,
- 			return;
- 		}
- 		pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no,
--				  PCI_EPC_IRQ_MSIX, reg->irq_number);
-+				  PCI_IRQ_MSIX, reg->irq_number);
- 		break;
- 	default:
- 		dev_err(dev, "Failed to raise IRQ, unknown type\n");
-diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-index c8b423c3c26e..ba2fe0bb400a 100644
---- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-@@ -1172,11 +1172,8 @@ static int vntb_epf_peer_db_set(struct ntb_dev *ndev, u64 db_bits)
- 	func_no = ntb->epf->func_no;
- 	vfunc_no = ntb->epf->vfunc_no;
- 
--	ret = pci_epc_raise_irq(ntb->epf->epc,
--				func_no,
--				vfunc_no,
--				PCI_EPC_IRQ_MSI,
--				interrupt_num + 1);
-+	ret = pci_epc_raise_irq(ntb->epf->epc, func_no, vfunc_no,
-+				PCI_IRQ_MSI, interrupt_num + 1);
- 	if (ret)
- 		dev_err(&ntb->ntb.dev, "Failed to raise IRQ\n");
- 
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index 5a4a8b0be626..c80d06db4249 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -217,7 +217,7 @@ EXPORT_SYMBOL_GPL(pci_epc_start);
-  * Invoke to raise an legacy, MSI or MSI-X interrupt
-  */
- int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
--		      enum pci_epc_irq_type type, u16 interrupt_num)
-+		      unsigned int type, u16 interrupt_num)
- {
- 	int ret;
- 
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index 5cb694031072..f498f9aa2ab0 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -19,13 +19,6 @@ enum pci_epc_interface_type {
- 	SECONDARY_INTERFACE,
- };
- 
--enum pci_epc_irq_type {
--	PCI_EPC_IRQ_UNKNOWN,
--	PCI_EPC_IRQ_LEGACY,
--	PCI_EPC_IRQ_MSI,
--	PCI_EPC_IRQ_MSIX,
--};
--
- static inline const char *
- pci_epc_interface_string(enum pci_epc_interface_type type)
- {
-@@ -79,7 +72,7 @@ struct pci_epc_ops {
- 			    u16 interrupts, enum pci_barno, u32 offset);
- 	int	(*get_msix)(struct pci_epc *epc, u8 func_no, u8 vfunc_no);
- 	int	(*raise_irq)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
--			     enum pci_epc_irq_type type, u16 interrupt_num);
-+			     unsigned int type, u16 interrupt_num);
- 	int	(*map_msi_irq)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 			       phys_addr_t phys_addr, u8 interrupt_num,
- 			       u32 entry_size, u32 *msi_data,
-@@ -229,7 +222,7 @@ int pci_epc_map_msi_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 			phys_addr_t phys_addr, u8 interrupt_num,
- 			u32 entry_size, u32 *msi_data, u32 *msi_addr_offset);
- int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
--		      enum pci_epc_irq_type type, u16 interrupt_num);
-+		      unsigned int type, u16 interrupt_num);
- int pci_epc_start(struct pci_epc *epc);
- void pci_epc_stop(struct pci_epc *epc);
- const struct pci_epc_features *pci_epc_get_features(struct pci_epc *epc,
--- 
-2.41.0
+Thank you for the patches! For the patches:
+
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Best regards,
+Yoshihiro Shimoda
+
+> Bjorn Helgaas (1):
+>   PCI: Rename PCI_IRQ_LEGACY to PCI_IRQ_INTX
+>=20
+> Damien Le Moal (1):
+>   PCI: endpoint: Drop PCI_EPC_IRQ_XXX definitions
+>=20
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c  |  9 ++++-----
+>  drivers/pci/controller/dwc/pci-dra7xx.c           |  6 +++---
+>  drivers/pci/controller/dwc/pci-imx6.c             |  9 ++++-----
+>  drivers/pci/controller/dwc/pci-keystone.c         |  9 ++++-----
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c    |  8 ++++----
+>  drivers/pci/controller/dwc/pcie-artpec6.c         |  8 ++++----
+>  drivers/pci/controller/dwc/pcie-designware-ep.c   |  2 +-
+>  drivers/pci/controller/dwc/pcie-designware-plat.c |  9 ++++-----
+>  drivers/pci/controller/dwc/pcie-designware.h      |  2 +-
+>  drivers/pci/controller/dwc/pcie-keembay.c         | 13 ++++++-------
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c         |  6 +++---
+>  drivers/pci/controller/dwc/pcie-tegra194.c        |  9 ++++-----
+>  drivers/pci/controller/dwc/pcie-uniphier-ep.c     |  7 +++----
+>  drivers/pci/controller/pcie-rcar-ep.c             |  7 +++----
+>  drivers/pci/controller/pcie-rockchip-ep.c         |  7 +++----
+>  drivers/pci/endpoint/functions/pci-epf-mhi.c      |  2 +-
+>  drivers/pci/endpoint/functions/pci-epf-ntb.c      |  4 ++--
+>  drivers/pci/endpoint/functions/pci-epf-test.c     |  6 +++---
+>  drivers/pci/endpoint/functions/pci-epf-vntb.c     |  7 ++-----
+>  drivers/pci/endpoint/pci-epc-core.c               |  2 +-
+>  include/linux/pci-epc.h                           | 11 ++---------
+>  include/linux/pci.h                               |  4 +++-
+>  22 files changed, 65 insertions(+), 82 deletions(-)
+>=20
+> --
+> 2.41.0
 
