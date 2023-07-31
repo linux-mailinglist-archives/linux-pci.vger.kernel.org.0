@@ -2,87 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECAFB76A3F9
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Aug 2023 00:12:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AACB876A499
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Aug 2023 01:12:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231259AbjGaWML (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jul 2023 18:12:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41792 "EHLO
+        id S231848AbjGaXMl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jul 2023 19:12:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231836AbjGaWMG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jul 2023 18:12:06 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F105A1FCD;
-        Mon, 31 Jul 2023 15:11:50 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-4fe0e23a4b1so7918886e87.3;
-        Mon, 31 Jul 2023 15:11:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690841509; x=1691446309;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DUlc8Zih7AFjdjr0cHfklZW7ElrNX3VLil/OBBbUrMY=;
-        b=exRzhGKri0JNGp+JykLJz2qmEmiGw4jK2+r2VUkX5t9F2HieXXrZ474OQynpNlhywM
-         5gcvQ9ka0fmzC0czTXYV3jyDHfkOCExHd9IGE0KJNviGJzTMl7QsEtiI0yaVS8iuEJMr
-         Fbvk1wn0vgNeIE5FGqbQD198wk5ycV0izhA2NUE153zIeCKEII0IHFKAN8JASO9e/pus
-         QTzzB/6rJb/h+btn8ybv1yjlIh81DvAKHJLPY6/IXDECHDnpwPWsHNuu9exnX9o0OzCh
-         Wka+lFLVqq60v426LDq4Er/l46ZOxOHL7ZzRNfplKauVmRypmUjH032kIhUHL9lGwuif
-         RgBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690841509; x=1691446309;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DUlc8Zih7AFjdjr0cHfklZW7ElrNX3VLil/OBBbUrMY=;
-        b=fRqiLBXPJkV4bFU/1hdC+GcXr4Vv53XW5WNUHAEbhJnBoy4FS0CyCJeH4SMvbdxuMF
-         Bo1fTIGrx/IBuNBig6dX2hJx20LEeu0docBcU9ElUW9qQpfMPVttPww8dQCZLxbglOPB
-         8QaH+m5jD+dqkwZ1CABFLu0tUvPTrcc9pqQSlT9DARkwzCrnUkv7ujdVzKa3GMHYsrYg
-         Fumv0+dz5LGWqmVIfSkp1wjksdC+cGQVsvD7cat0Ue8k/qLc946ENdHUYAN3Cqlz87k4
-         DDrpH+XLdzLwu0eSSUlBdzp6A+kzjT9R8nkG58XSC1ZX/CNklnHqduJ86Vi1jrOLEs6s
-         1HuQ==
-X-Gm-Message-State: ABy/qLZID+H1Wn+UuIP18VyYF6q13uSIANvqydU4PaJZCRvcsMkV6x32
-        iCSu7C+46XOOz7/GSYw4iYk=
-X-Google-Smtp-Source: APBJJlFLRHbIxgDyV7QZdXM2yQnSJkIWhHakZtTZVVHLNId66kyMOxl/QR/vysO8GP/dRDWeCsRtWg==
-X-Received: by 2002:a19:ab09:0:b0:4fe:1ecf:8ab4 with SMTP id u9-20020a19ab09000000b004fe1ecf8ab4mr695584lfe.18.1690841508500;
-        Mon, 31 Jul 2023 15:11:48 -0700 (PDT)
-Received: from mobilestation ([95.79.172.181])
-        by smtp.gmail.com with ESMTPSA id j15-20020ac2550f000000b004fe432108aesm99177lfk.261.2023.07.31.15.11.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jul 2023 15:11:48 -0700 (PDT)
-Date:   Tue, 1 Aug 2023 01:11:46 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Manivannan Sadhasivam <mani@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "kw@linux.com" <kw@linux.com>,
-        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "kishon@kernel.org" <kishon@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "conor+dt@kernel.org" <conor+dt@kernel.org>,
-        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v18 05/20] PCI: dwc: Add outbound MSG TLPs support
-Message-ID: <b6jzau7mwbnomy2whhwfbtww6p5hiikiay5jvcz5em422q2ycb@pe3au6vvcygc>
-References: <20230721074452.65545-1-yoshihiro.shimoda.uh@renesas.com>
- <20230721074452.65545-6-yoshihiro.shimoda.uh@renesas.com>
- <20230724081250.GD6291@thinkpad>
- <qckzwhgcx7eux7qi6a27hww7wbva6r4nylxo437gnohpsxuja3@6dj2ld7qlvix>
- <OSYPR01MB5334600364096E6FDE573394D805A@OSYPR01MB5334.jpnprd01.prod.outlook.com>
+        with ESMTP id S231855AbjGaXMj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jul 2023 19:12:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C2FE1FC8;
+        Mon, 31 Jul 2023 16:12:26 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0B8B761220;
+        Mon, 31 Jul 2023 23:12:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F0DAC433C8;
+        Mon, 31 Jul 2023 23:12:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690845145;
+        bh=Nu9Zxt9VTHuAwj+frT44+k98BkcHvxSV6qXTkuyVlDs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=hjt9RVuZswOhkpkeENCGIM/9sWjcNIp545q3Q5LE4tsA3jJPt2T+kwakTCE/UtAIm
+         WjLD6C5y1Yw7kintnZA3HPs+3q3qXCTsmZ5k/2lV08hnPCOUIlinu8ng7WqhiRK6tl
+         xiUpV8/Egf7duc+WL+7x4/qEob30Vqqb2jiZJ6fTiOgZDfqVj4f1FlbqEUxZRMH138
+         +9lVwODWiKZCA1ApR6was22LDYsNxF/44VsX5qlEfH7uVzr7Lh/1eI57vKYBXm1hCo
+         jSTysIQEeVbJ1SVv30ZB0WpVJjbp1UkBGTmF7OuvbL0kd1+LGBqngBnAdHRjz+G1r9
+         P5Bq39udxyDxg==
+Date:   Mon, 31 Jul 2023 18:12:23 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kevin Xie <kevin.xie@starfivetech.com>
+Cc:     Minda Chen <minda.chen@starfivetech.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Conor Dooley <conor@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Subject: Re: [PATCH v1 8/9] PCI: PLDA: starfive: Add JH7110 PCIe controller
+Message-ID: <20230731231223.GA14721@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <OSYPR01MB5334600364096E6FDE573394D805A@OSYPR01MB5334.jpnprd01.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+In-Reply-To: <66d794c5-3837-483e-87d1-4b745d7cb9c4@starfivetech.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -91,147 +72,158 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 31, 2023 at 01:18:30AM +0000, Yoshihiro Shimoda wrote:
-> Hi Serge,
-> 
-> > From: Serge Semin, Sent: Saturday, July 29, 2023 10:41 AM
+[+cc Pali, Marek because I used f76b36d40bee ("PCI: aardvark: Fix link
+training") as an example]
+
+On Mon, Jul 31, 2023 at 01:52:35PM +0800, Kevin Xie wrote:
+> On 2023/7/28 5:40, Bjorn Helgaas wrote:
+> > On Tue, Jul 25, 2023 at 03:46:35PM -0500, Bjorn Helgaas wrote:
+> >> On Mon, Jul 24, 2023 at 06:48:47PM +0800, Kevin Xie wrote:
+> >> > On 2023/7/21 0:15, Bjorn Helgaas wrote:
+> >> > > On Thu, Jul 20, 2023 at 06:11:59PM +0800, Kevin Xie wrote:
+> >> > >> On 2023/7/20 0:48, Bjorn Helgaas wrote:
+> >> > >> > On Wed, Jul 19, 2023 at 06:20:56PM +0800, Minda Chen wrote:
+> >> > >> >> Add StarFive JH7110 SoC PCIe controller platform
+> >> > >> >> driver codes.
+> >> 
+> >> > >> However, in the compatibility testing with several NVMe SSD, we
+> >> > >> found that Lenovo Thinklife ST8000 NVMe can not get ready in 100ms,
+> >> > >> and it actually needs almost 200ms.  Thus, we increased the T_PVPERL
+> >> > >> value to 300ms for the better device compatibility.
+> >> > > ...
+> >> > > 
+> >> > > Thanks for this valuable information!  This NVMe issue potentially
+> >> > > affects many similar drivers, and we may need a more generic fix so
+> >> > > this device works well with all of them.
+> >> > > 
+> >> > > T_PVPERL is defined to start when power is stable.  Do you have a way
+> >> > > to accurately determine that point?  I'm guessing this:
+> >> > > 
+> >> > >   gpiod_set_value_cansleep(pcie->power_gpio, 1)
+> >> > > 
+> >> > > turns the power on?  But of course that doesn't mean it is instantly
+> >> > > stable.  Maybe your testing is telling you that your driver should
+> >> > > have a hardware-specific 200ms delay to wait for power to become
+> >> > > stable, followed by the standard 100ms for T_PVPERL?
+> >> > 
+> >> > You are right, we did not take the power stable cost into account.
+> >> > T_PVPERL is enough for Lenovo Thinklife ST8000 NVMe SSD to get ready,
+> >> > and the extra cost is from the power circuit of a PCIe to M.2 connector,
+> >> > which is used to verify M.2 SSD with our EVB at early stage.
+> >> 
+> >> Hmm.  That sounds potentially interesting.  I assume you're talking
+> >> about something like this: https://www.amazon.com/dp/B07JKH5VTL
+> >> 
+> >> I'm not familiar with the timing requirements for something like this.
+> >> There is a PCIe M.2 spec with some timing requirements, but I don't
+> >> know whether or how software is supposed to manage this.  There is a
+> >> T_PVPGL (power valid to PERST# inactive) parameter, but it's
+> >> implementation specific, so I don't know what the point of that is.
+> >> And I don't see a way for software to even detect the presence of such
+> >> an adapter.
 > > 
-> > On Mon, Jul 24, 2023 at 01:42:50PM +0530, Manivannan Sadhasivam wrote:
-> > > On Fri, Jul 21, 2023 at 04:44:37PM +0900, Yoshihiro Shimoda wrote:
-> > > > Add "code" and "routing" into struct dw_pcie_ob_atu_cfg for sending
-> > > > MSG by iATU in the PCIe endpoint mode in near the future.
-> > >
-> > > It's better to specify the exact requirement here "triggering INTx IRQs"
-> > > instead of implying.
-> > >
-> > > > PCIE_ATU_INHIBIT_PAYLOAD is set to issue TLP type of Msg instead of
-> > > > MsgD. So, this implementation supports the data-less messages only
-> > > > for now.
-> > > >
-> > > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > >
+> > I intended to ask about this on the PCI-SIG forum, but after reading
+> > this thread [1], I don't think we would learn anything.  The question
+> > was:
 > > 
-> > > Same comment for patch 4/20 applies here also. With that fixed,
+> >   The M.2 device has 5 voltage rails generated from the 3.3V input
+> >   supply voltage
+> >   -------------------------------------------
+> >   This is re. Table 17 in PCI Express M.2 Specification Revision 1.1
+> >   Power Valid* to PERST# input inactive : Implementation specific;
+> >   recommended 50 ms
 > > 
-> > Yoshihiro, as we greed with Mani in the PATCH 4/20 discussion please
-> > ignore this request.
-> 
-
-> By the way, do you have any comment about my suggestion? [1]
-> 
-> [1]
-> https://lore.kernel.org/linux-pci/TYBPR01MB5341407DC508F0B390B84090D801A@TYBPR01MB5341.jpnprd01.prod.outlook.com/
-> 
-> If you don't agree my suggestion, I'll ignore this request.
-
-Your suggested is not good for several reasons:
-
-1. You suggest to add the function caller context-wise comments to the
-structure. It will cause the maintainers to keep the comments and the
-callers semantics in sync which is almost always gets to be diverged
-at some point.
-
-2. dw_pcie_prog_outbound_atu() doesn't know whether it is called for
-an End-point or a Root Port controller. It just maps the CPU->PCIe
-spaces by means of the outbound iATU engine with the specified mapping
-parameters. This makes the comments you suggest misleading. Moreover
-depending on the application the low-level drivers or even the DW PCIe
-core driver may decided to map them in any way. In that case the
-respective change will need to update the comments too, otherwise
-they'll get to be wrong which gets us to the reason 1.
-
-3. The current arguments/fields order more-or-less preserves the
-natural settings setup: first you specifies the entity index, then you
-specify the mapping settings, then you specified the mapping itself
-(addresses and size). Ideally the "func_no" field should be moved to
-the head of the structure since it also represents the mapping entity
-index but it will cause having the pads (so called "holes") if we
-didn't change it type. Anyway inverting the order so the mapping
-itself goes first will break that, the structure will look as if, for
-instance, the device-managed function taking the device pointer
-somewhere in the middle or at the tail of the arguments lists. The
-most important settings which are normally initialized first will be
-defined at some random place in the structure.
-
-So to speak, it's better to keep the structure fields as is for
-now.
-
--Serge(y)
-
-> 
-> Best regards,
-> Yoshihiro Shimoda
-> 
-> > -Serge(y)
+> >   What exactly does this mean ?
 > > 
-> > >
-> > > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > >
-> > > - Mani
-> > >
-> > > > Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-> > > > ---
-> > > >  drivers/pci/controller/dwc/pcie-designware.c | 9 +++++++--
-> > > >  drivers/pci/controller/dwc/pcie-designware.h | 4 ++++
-> > > >  2 files changed, 11 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > > > index 49b785509576..2d0f816fa0ab 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > > @@ -498,7 +498,7 @@ int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
-> > > >  	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_UPPER_TARGET,
-> > > >  			      upper_32_bits(atu->pci_addr));
-> > > >
-> > > > -	val = atu->type | PCIE_ATU_FUNC_NUM(atu->func_no);
-> > > > +	val = atu->type | atu->routing | PCIE_ATU_FUNC_NUM(atu->func_no);
-> > > >  	if (upper_32_bits(limit_addr) > upper_32_bits(cpu_addr) &&
-> > > >  	    dw_pcie_ver_is_ge(pci, 460A))
-> > > >  		val |= PCIE_ATU_INCREASE_REGION_SIZE;
-> > > > @@ -506,7 +506,12 @@ int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
-> > > >  		val = dw_pcie_enable_ecrc(val);
-> > > >  	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_REGION_CTRL1, val);
-> > > >
-> > > > -	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_REGION_CTRL2, PCIE_ATU_ENABLE);
-> > > > +	val = PCIE_ATU_ENABLE;
-> > > > +	if (atu->type == PCIE_ATU_TYPE_MSG) {
-> > > > +		/* The data-less messages only for now */
-> > > > +		val |= PCIE_ATU_INHIBIT_PAYLOAD | atu->code;
-> > > > +	}
-> > > > +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_REGION_CTRL2, val);
-> > > >
-> > > >  	/*
-> > > >  	 * Make sure ATU enable takes effect before any subsequent config
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > > > index 85de0d8346fa..c626d21243b0 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > > @@ -147,11 +147,13 @@
-> > > >  #define PCIE_ATU_TYPE_IO		0x2
-> > > >  #define PCIE_ATU_TYPE_CFG0		0x4
-> > > >  #define PCIE_ATU_TYPE_CFG1		0x5
-> > > > +#define PCIE_ATU_TYPE_MSG		0x10
-> > > >  #define PCIE_ATU_TD			BIT(8)
-> > > >  #define PCIE_ATU_FUNC_NUM(pf)           ((pf) << 20)
-> > > >  #define PCIE_ATU_REGION_CTRL2		0x004
-> > > >  #define PCIE_ATU_ENABLE			BIT(31)
-> > > >  #define PCIE_ATU_BAR_MODE_ENABLE	BIT(30)
-> > > > +#define PCIE_ATU_INHIBIT_PAYLOAD	BIT(22)
-> > > >  #define PCIE_ATU_FUNC_NUM_MATCH_EN      BIT(19)
-> > > >  #define PCIE_ATU_LOWER_BASE		0x008
-> > > >  #define PCIE_ATU_UPPER_BASE		0x00C
-> > > > @@ -292,6 +294,8 @@ struct dw_pcie_ob_atu_cfg {
-> > > >  	int index;
-> > > >  	int type;
-> > > >  	u8 func_no;
-> > > > +	u8 code;
-> > > > +	u8 routing;
-> > > >  	u64 cpu_addr;
-> > > >  	u64 pci_addr;
-> > > >  	u64 size;
-> > > > --
-> > > > 2.25.1
-> > > >
-> > >
-> > > --
-> > > மணிவண்ணன் சதாசிவம்
+> >   The Note says
+> > 
+> >     *Power Valid when all the voltage supply rails have reached their
+> >     respective Vmin.
+> > 
+> >   Does this mean that the 50ms to PERSTn is counted from the instant
+> >   when all *5 voltage rails* on the M.2 device have become "good" ?
+> > 
+> > and the answer was:
+> > 
+> >   You wrote;
+> >   Does this mean that the 50ms to PERSTn is counted from the instant
+> >   when all 5 voltage rails on the M.2 device have become "good" ?
+> > 
+> >   Reply:
+> >   This means that counting the recommended 50 ms begins from the time
+> >   when the power rails coming to the device/module, from the host, are
+> >   stable *at the device connector*.
+> > 
+> >   As for the time it takes voltages derived inside the device from any
+> >   of the host power rails (e.g., 3.3V rail) to become stable, that is
+> >   part of the 50ms the host should wait before de-asserting PERST#, in
+> >   order ensure that most devices will be ready by then.
+> > 
+> >   Strictly speaking, nothing disastrous happens if a host violates the
+> >   50ms. If it de-asserts too soon, the device may not be ready, but
+> >   most hosts will try again. If the host de-asserts too late, the
+> >   device has even more time to stabilize. This is why the WG felt that
+> >   an exact minimum number for >>Tpvpgl, was not valid in practice, and
+> >   we made it a recommendation.
+> > 
+> > Since T_PVPGL is implementation-specific, we can't really base
+> > anything in software on the 50ms recommendation.  It sounds to me like
+> > they are counting on software to retry config reads when enumerating.
+> > 
+> > I guess the delays we *can* observe are:
+> > 
+> >   100ms T_PVPERL "Power stable to PERST# inactive" (CEM 2.9.2)
+> >   100ms software delay between reset and config request (Base 6.6.1)
+> 
+> Refer to Figure2-10 in CEM Spec V2.0, I guess this two delays are T2 & T4?
+> In the PATCH v2[4/4], T2 is the msleep(100) for T_PVPERL,
+> and T4 is done by starfive_pcie_host_wait_for_link().
+
+Yes, I think "T2" is T_PVPERL.  The CEM r2.0 Figure 2-10 note is
+"2. Minimum time from power rails within specified tolerance to
+PERST# inactive (T_PVPERL)."
+
+As far as T4 ("Minimum PERST# inactive to PCI Express link out of
+electrical idle"), I don't see a name or a value for that parameter,
+and I don't think it is the delay required by PCIe r6.0, sec 6.6.1.
+
+The delay required by sec 6.6.1 is a minimum of 100ms following exit
+from reset or, for fast links, 100ms after link training completes.
+
+The comment at the call of advk_pcie_wait_for_link() [2] says it is
+the delay required by sec 6.6.1, but that doesn't seem right to me.
+
+For one thing, I don't think 6.6.1 says anything about "link up" being
+the end of a delay.  So if we want to do the delay required by 6.6.1,
+"wait_for_link()" doesn't seem like quite the right name.
+
+For another, all the *_wait_for_link() functions can return success
+after 0ms, 90ms, 180ms, etc.  They're unlikely to return after 0ms,
+but 90ms is quite possible.  If we avoided the 0ms return and
+LINK_WAIT_USLEEP_MIN were 100ms instead of 90ms, that should be enough
+for slow links, where we need 100ms following "exit from reset."
+
+But it's still not enough for fast links where we need 100ms "after
+link training completes" because we don't know when training
+completed.  If training completed 89ms into *_wait_for_link(), we only
+delay 1ms after that.
+
+> > The PCI core doesn't know how to assert PERST#, so the T_PVPERL delay
+> > definitely has to be in the host controller driver.
+> > 
+> > The PCI core observes the second 100ms delay after a reset in
+> > pci_bridge_wait_for_secondary_bus().  But this 100ms delay does not
+> > happen during initial enumeration.  I think the assumption of the PCI
+> > core is that when the host controller driver calls pci_host_probe(),
+> > we can issue config requests immediately.
+> > 
+> > So I think that to be safe, we probably need to do both of those 100ms
+> > delays in the host controller driver.  Maybe there's some hope of
+> > supporting the latter one in the PCI core someday, but that's not
+> > today.
+> > 
+> > Bjorn
+> > 
+> > [1] https://forum.pcisig.com/viewtopic.php?f=74&t=1037
+
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pci-aardvark.c?id=v6.4#n433
