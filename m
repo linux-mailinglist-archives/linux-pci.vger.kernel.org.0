@@ -2,64 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 780B376B0A3
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Aug 2023 12:15:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEE9176B3B1
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Aug 2023 13:46:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232561AbjHAKPm convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 1 Aug 2023 06:15:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35606 "EHLO
+        id S234357AbjHALqk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Aug 2023 07:46:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230102AbjHAKPf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Aug 2023 06:15:35 -0400
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33F71116;
-        Tue,  1 Aug 2023 03:15:34 -0700 (PDT)
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-56c9f7830c2so253339eaf.0;
-        Tue, 01 Aug 2023 03:15:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690884933; x=1691489733;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FzHqdne2BG4kkp0BowEqbgS/OCqX4nVAVPjcUk7pJCQ=;
-        b=JngEa0dYtiQ3aTir9VTHkpqjydq7rG0xu31Sx1psjZwkCRCGaBOG8NmWiMlQ5D4+Yc
-         HH/fO/wNbqg1Z3tNxZ1D1lxvS7bX4RoPRq+LDcYuHx8v718LNdKmOasTe1kTY9ZGp7UZ
-         fzeBVrgWKaUFgvnznxzHZFTraR9sD+YGVRbszLActOHxm0qnumkY+nuRCuGlMbMmgIS7
-         u8ng3fNaYTre0tJZ7IHbDI1fyXT9TFNIi/A6tZizVqstFFL0T+UcnnTZKpgXmUcQq8fL
-         7sw/u68rDix3dOzex0FxkGWXjxmoh4t4zwJlf2/m4QMRAVqX6ZtAG/SJsMdTmeU+9op6
-         NPDw==
-X-Gm-Message-State: ABy/qLauZv9repnJDDVEHRneXnBNjR8MJtmHioIWTbpThCnZZgY7uh8x
-        ZzoImiThTtEpn2SSFbszW+F33BEM+oXKZAVd6do=
-X-Google-Smtp-Source: APBJJlGjwZAJQKYHp20dvvuuPFokbdWXCEPK+M3phnsNgqTP5NAAlRdRJ+viLK+HU5lNlTQhqIU8h0svb2P1aPtiM60=
-X-Received: by 2002:a05:6820:1686:b0:56c:5e21:c730 with SMTP id
- bc6-20020a056820168600b0056c5e21c730mr8254193oob.1.1690884933362; Tue, 01 Aug
- 2023 03:15:33 -0700 (PDT)
+        with ESMTP id S234464AbjHALqi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Aug 2023 07:46:38 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEA921BE7;
+        Tue,  1 Aug 2023 04:46:28 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RFYBx13PTztRkB;
+        Tue,  1 Aug 2023 19:43:05 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Tue, 1 Aug 2023 19:46:25 +0800
+CC:     <yangyicong@hisilicon.com>, <chengyou@linux.alibaba.com>,
+        <kaishen@linux.alibaba.com>, <helgaas@kernel.org>,
+        <will@kernel.org>, <baolin.wang@linux.alibaba.com>,
+        <robin.murphy@arm.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <rdunlap@infradead.org>,
+        <mark.rutland@arm.com>, <zhuo.song@linux.alibaba.com>
+Subject: Re: [PATCH v6 3/4] drivers/perf: add DesignWare PCIe PMU driver
+To:     Shuai Xue <xueshuai@linux.alibaba.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+References: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
+ <20230606074938.97724-4-xueshuai@linux.alibaba.com>
+ <31e2b012-3a29-d063-842d-e3f7736816e7@huawei.com>
+ <20230727103929.00000544@Huawei.com>
+ <12958abe-4bdb-8532-bf67-8e772ed2a9dd@linux.alibaba.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <edc056aa-1c53-a31e-087f-6076b795d5cc@huawei.com>
+Date:   Tue, 1 Aug 2023 19:46:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-References: <20230711221427.GA250962@bhelgaas> <b82a50eb-8182-84ca-5b24-dbe8870fa871@amd.com>
- <CAJZ5v0i6PviqW7u3i8hmvSCvR_VHqP-mWRy3Da8Ev_1vi9qBQA@mail.gmail.com>
- <a309e3fe-b1f9-e269-cb97-8af87c8d483b@amd.com> <CAJZ5v0jvxrDMR6YHFpYZ4yYpp82-3TtrH==SMRFtUMJsv7=i=g@mail.gmail.com>
- <37b005d5-68fb-f8dd-67e2-c953d677fca2@amd.com> <8298c01c-abec-914b-0542-459f38c635fe@amd.com>
-In-Reply-To: <8298c01c-abec-914b-0542-459f38c635fe@amd.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 1 Aug 2023 12:15:20 +0200
-Message-ID: <CAJZ5v0i3g0JujMwikB8niRZ93hXJZqWtjrCjbaDmkMLUbMmwMA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] PCI: Don't put non-power manageable PCIe root
- ports into D3
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, Iain Lane <iain@orangesquash.org.uk>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+In-Reply-To: <12958abe-4bdb-8532-bf67-8e772ed2a9dd@linux.alibaba.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,81 +59,120 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 1, 2023 at 5:25 AM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> On 7/14/23 19:46, Limonciello, Mario wrote:
-> >
-> > On 7/14/2023 2:17 PM, Rafael J. Wysocki wrote:
-> >>>> Generally speaking, pci_bridge_d3_possible() is there to prevent
-> >>>> bridges (and PCIe ports in particular) from being put into D3hot/cold
-> >>>> if there are reasons to believe that it may not work.
-> >>>> acpi_pci_bridge_d3() is part of that.
-> >>>>
-> >>>> Even if it returns 'true', the _SxD/_SxW check should still be applied
-> >>>> via pci_target_state() to determine whether or not the firmware allows
-> >>>> this particular bridge to go into D3hot/cold.  So arguably, the _SxW
-> >>>> check in acpi_pci_bridge_d3() should not be necessary and if it makes
-> >>>> any functional difference, there is a bug somewhere else.
-> >>> But only if it was power manageable would the _SxD/_SxW check be
-> >>> applied.  This issue is around the branch of pci_target_state() where
-> >>> it's not power manageable and so it uses PME or it falls back to D3hot.
-> >> Well, this looks like a spec interpretation difference.
-> >>
-> >> We thought that _SxD/_SxW would only be relevant for devices with ACPI
-> >> PM support, but the firmware people seem to think that those objects
-> >> are also relevant for PCI devices that don't have ACPI PM support
-> >> (because those devices are still power-manageable via PMCSR).  If
-> >> Windows agrees with that viewpoint, we'll need to adjust, but not
-> >> through adding _SxW checks in random places.
-> > I think that depends upon how you want to handle the lack of _S0W.
-> >
-> > On these problematic devices there is no _S0W under the PCIe
-> > root port.  As I said; Windows puts them into D0 in this case though.
-> >
-> > So acpi_dev_power_state_for_wake should return ACPI_STATE_UNKNOWN.
-> >
-> > Can you suggest where you think adding a acpi_dev_power_state_for_wake()
-> > does make sense?
-> >
-> > Two areas that I think would work would be in: pci_pm_suspend_noirq()
-> > (to avoid calling pci_prepare_to_sleep)
-> >
-> > or
-> >
-> > directly in pci_prepare_to_sleep() to check that value in lieu of
-> > pci_target_state().
-> >
->
-> Rafael,
->
-> Did you have any more thoughts on this?
+On 2023/7/28 20:41, Shuai Xue wrote:
+> 
+> 
+> On 2023/7/27 17:39, Jonathan Cameron wrote:
+>> On Tue, 6 Jun 2023 23:14:07 +0800
+>> Yicong Yang <yangyicong@huawei.com> wrote:
+>>
+>>> On 2023/6/6 15:49, Shuai Xue wrote:
+>>>> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
+>>>> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
+>>>> Core controller IP which provides statistics feature. The PMU is not a PCIe
+>>>> Root Complex integrated End Point(RCiEP) device but only register counters
+>>>> provided by each PCIe Root Port.
+>>>>
+>>>> To facilitate collection of statistics the controller provides the
+>>>> following two features for each Root Port:
+>>>>
+>>>> - Time Based Analysis (RX/TX data throughput and time spent in each
+>>>>   low-power LTSSM state)
+>>>> - Event counters (Error and Non-Error for lanes)
+>>>>
+>>>> Note, only one counter for each type and does not overflow interrupt.
+>>>>
+>>>> This driver adds PMU devices for each PCIe Root Port. And the PMU device is
+>>>> named based the BDF of Root Port. For example,
+>>>>
+>>>>     30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
+>>>>
+>>>> the PMU device name for this Root Port is dwc_rootport_3018.
+>>>>
+>>>> Example usage of counting PCIe RX TLP data payload (Units of 16 bytes)::
+>>>>
+>>>>     $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
+>>>>
+>>>> average RX bandwidth can be calculated like this:
+>>>>
+>>>>     PCIe TX Bandwidth = PCIE_TX_DATA * 16B / Measure_Time_Window
+>>>>
+>>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>>>> Reported-by: kernel test robot <lkp@intel.com>
+>>>> Link: https://lore.kernel.org/oe-kbuild-all/202305170639.XU3djFZX-lkp@intel.com/
+>>>> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>
+>> I'll review on top to avoid any duplication with Yicong.
+> 
+> Thank you! It also served as a reminder that I missed Yicong's email. It appears
+> that Thunderbird mistakenly moved his email to the junk folder, resulting in me
+> overlooking it.
+> 
+>>
+>> Note I've cropped the stuff neither of us commented on so it's
+>> easier to spot the feedback.
+> 
+> Thank you for noting that. My feedback is replied inline.
+> 
+>>
+>> Jonathan
+>>
+>>>> ---
+>>>>  drivers/perf/Kconfig        |   7 +
+>>>>  drivers/perf/Makefile       |   1 +
+>>>>  drivers/perf/dwc_pcie_pmu.c | 706 ++++++++++++++++++++++++++++++++++++
+>>>>  3 files changed, 714 insertions(+)
+>>>>  create mode 100644 drivers/perf/dwc_pcie_pmu.c
+>>>>
+>>>> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+>>>> index 711f82400086..6ff3921d7a62 100644
+>>>> --- a/drivers/perf/Kconfig
+>>>> +++ b/drivers/perf/Kconfig
+>>>> @@ -209,6 +209,13 @@ config MARVELL_CN10K_DDR_PMU
+>>>>  	  Enable perf support for Marvell DDR Performance monitoring
+>>>>  	  event on CN10K platform.
+>>>>  
+>>>> +config DWC_PCIE_PMU
+>>>> +	tristate "Enable Synopsys DesignWare PCIe PMU Support"
+>>>> +	depends on (ARM64 && PCI)
+>>>> +	help
+>>>> +	  Enable perf support for Synopsys DesignWare PCIe PMU Performance
+>>>> +	  monitoring event on Yitian 710 platform.
+>>
+>> The documentation kind of implies this isn't platform specific.
+>> If some parts are (such as which events exist) then you may want to push
+>> that to userspace / perftool with appropriate matching against specific SoC.
+>>
+>> If it is generic, then change this text to "event on platform including the Yitian 710."
+> 
+> It is generic without any platform specific, so I will change it as you expected.
+> 
+>>
+>>>> +
+>>>>  source "drivers/perf/arm_cspmu/Kconfig"
+>>>>  
+>>>>  source "drivers/perf/amlogic/Kconfig"
+>>
+>>>> new file mode 100644
+>>>> index 000000000000..8bfcf6e0662d
+>>>> --- /dev/null
+>>>> +++ b/drivers/perf/dwc_pcie_pmu.c
+>>>> @@ -0,0 +1,706 @@
+>>
+>> ...
+>>
+>>>> +
+>>>> +struct dwc_pcie_pmu {
+>>>> +	struct pci_dev		*pdev;		/* Root Port device */  
+>>>
+>>> If the root port removed after the probe of this PCIe PMU driver, we'll access the NULL
+>>> pointer. I didn't see you hold the root port to avoid the removal.
+> 
+> Do you mean that I should have a reference count of rootport by pci_dev_get() when allocating
+> pcie_pmu?
+> 
+>      pcie_pmu->pdev = pci_dev_get();
 
-Reportedly, if there are no ACPI power management objects associated
-with a Root Port, Windows will always leave it in D0.
-
-In that case, acpi_pci_bridge_d3() will return false unless the
-HotPlugSupportInD3 property is present AFAICS, so the ACPI code will
-not allow the port to be put into D3hot.
-
-Consequently, platform_pci_bridge_d3() will return false and the only
-thing that may allow the port to go into D0 is the dmi_get_bios_year()
-check at the end of pci_bridge_d3_possible().
-
-However, that was added, because there are Intel platforms on which
-Root Ports need to be programmed into D3hot on suspend (which allows
-the whole platform to reduce power significantly) and there are no
-ACPI device power management objects associated with them (Mika should
-know the gory details related to this).  It looks like under Windows
-the additional power reduction would not be possible on those systems,
-but that would be a problem, wouldn't it?
-
-So it looks like there are some systems on which programming Root
-Ports into D3hot is needed to achieve additional power reduction of
-the platform and there are systems on which programming Root Ports
-into D3hot breaks things and there are no ACPI power management
-objects associated with these Root Ports in both cases.
-
-The only way to make progress that I can think about right now is to
-limit the dmi_get_bios_year() check at the end of
-pci_bridge_d3_possible() to Intel platforms.
+It could be one option, but will block the removal of device from userspace. Another option
+is to register a PCI bus notifier then on removal/added the driver can get notified and handle
+it, for example, remove the related PMU on the removal of the root ports.
