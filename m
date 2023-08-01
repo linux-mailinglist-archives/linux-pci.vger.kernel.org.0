@@ -2,177 +2,225 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CEE9176B3B1
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Aug 2023 13:46:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A33876B498
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Aug 2023 14:18:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234357AbjHALqk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Aug 2023 07:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42104 "EHLO
+        id S229823AbjHAMSl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Aug 2023 08:18:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234464AbjHALqi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Aug 2023 07:46:38 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEA921BE7;
-        Tue,  1 Aug 2023 04:46:28 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RFYBx13PTztRkB;
-        Tue,  1 Aug 2023 19:43:05 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 1 Aug 2023 19:46:25 +0800
-CC:     <yangyicong@hisilicon.com>, <chengyou@linux.alibaba.com>,
-        <kaishen@linux.alibaba.com>, <helgaas@kernel.org>,
-        <will@kernel.org>, <baolin.wang@linux.alibaba.com>,
-        <robin.murphy@arm.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <rdunlap@infradead.org>,
-        <mark.rutland@arm.com>, <zhuo.song@linux.alibaba.com>
-Subject: Re: [PATCH v6 3/4] drivers/perf: add DesignWare PCIe PMU driver
-To:     Shuai Xue <xueshuai@linux.alibaba.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-References: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
- <20230606074938.97724-4-xueshuai@linux.alibaba.com>
- <31e2b012-3a29-d063-842d-e3f7736816e7@huawei.com>
- <20230727103929.00000544@Huawei.com>
- <12958abe-4bdb-8532-bf67-8e772ed2a9dd@linux.alibaba.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <edc056aa-1c53-a31e-087f-6076b795d5cc@huawei.com>
-Date:   Tue, 1 Aug 2023 19:46:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        with ESMTP id S229541AbjHAMSj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Aug 2023 08:18:39 -0400
+Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE22410C7;
+        Tue,  1 Aug 2023 05:18:38 -0700 (PDT)
+Received: by mail-vs1-xe32.google.com with SMTP id ada2fe7eead31-444f9c0b2a4so1865303137.1;
+        Tue, 01 Aug 2023 05:18:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690892318; x=1691497118;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pP1LQZ3EZd9ln0nwPnrXxZLJWSXcccxJAHuawahyw9Y=;
+        b=IMeI38bIaEv93vufwerodgHrAB0qmaVcT/q4ti7xad1dAy7azu+8zkAH+VnbaWrj0W
+         ZFr96Fupiqa/pxtfn9Gt4MyeZiIY8NCZ6GWMEIS71bU7dS0OAm202uac2MdKbJnlIbU0
+         bP+58HRHpww4fG6dD2lFX3q5HN2cuybgWCjFBt1/4+7rAn2nZONAnNwJUHL/ubRkmQdd
+         8awrDyEI6T9iCg3S9u3U0nZUB3DOsEE+6m1b1KozyFDhhrgbNuquItnnKlDmuD2ImQeo
+         RalDOEScKVQBUPIZwrZI+ZKmsnSrhQPhr2PorHkc0/bLGPqCu2GitqTCBV2GpbSiN+QX
+         gvlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690892318; x=1691497118;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pP1LQZ3EZd9ln0nwPnrXxZLJWSXcccxJAHuawahyw9Y=;
+        b=ZL22dhP/t6a60xNcLbJEWAn1DPj1YIWHGc4tLk0UO2fm7WmEQEtOYlHx0YmBdY6DQ7
+         DwdW1IpOQLmI1N6eeBJ8Uo5OCf44WIeC0StlAiuSFtmjCZGtCBRrYD054Cf9qcDhExzX
+         fVADjqMABit7+cCwqqN1S6af6Lk9+VYnBCnwdHzUMn+F4cbAjMY+HgZfpCfzAPuKpAWk
+         PpAY0F8teVT0lOTW9yIklzf0YQdCKXvIjL/HsBfNfJo27UNePEWz8NdbfUb1999uoZRU
+         qVFxww/GWPtK3l6JPJ48TRDUa5fYNjsfB+7RJO6ckZIovEMlljC4j72jmwQNyEtXgOsA
+         NZZQ==
+X-Gm-Message-State: ABy/qLbjccWTWK76f+epR3/+agl4r0cTcSaLVCZzDq0bVuD5cKhmrFZH
+        ZZ9hIcaCiMbDAFSKargRRys=
+X-Google-Smtp-Source: APBJJlEg8ehQI+BYse/H+1HW88RyPtyfO3dPeVJBwqPl6e/ceY+G+PazXKlb7zAfG2shTTZJs8fmMA==
+X-Received: by 2002:a67:fc47:0:b0:446:a2f8:9fe4 with SMTP id p7-20020a67fc47000000b00446a2f89fe4mr1991178vsq.16.1690892317714;
+        Tue, 01 Aug 2023 05:18:37 -0700 (PDT)
+Received: from localhost.localdomain ([146.70.187.10])
+        by smtp.gmail.com with ESMTPSA id u20-20020a67d994000000b004476404490csm1755445vsj.16.2023.08.01.05.18.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Aug 2023 05:18:37 -0700 (PDT)
+From:   Alistair Francis <alistair23@gmail.com>
+X-Google-Original-From: Alistair Francis <alistair.francis@wdc.com>
+To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        Jonathan.Cameron@huawei.com, lukas@wunner.de
+Cc:     alex.williamson@redhat.com, christian.koenig@amd.com,
+        kch@nvidia.com, gregkh@linuxfoundation.org, logang@deltatee.com,
+        linux-kernel@vger.kernel.org, alistair23@gmail.com,
+        Alistair Francis <alistair.francis@wdc.com>
+Subject: [PATCH v2] PCI/DOE: Expose the DOE protocols via sysfs
+Date:   Tue,  1 Aug 2023 08:18:24 -0400
+Message-ID: <20230801121824.174556-1-alistair.francis@wdc.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-In-Reply-To: <12958abe-4bdb-8532-bf67-8e772ed2a9dd@linux.alibaba.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2023/7/28 20:41, Shuai Xue wrote:
-> 
-> 
-> On 2023/7/27 17:39, Jonathan Cameron wrote:
->> On Tue, 6 Jun 2023 23:14:07 +0800
->> Yicong Yang <yangyicong@huawei.com> wrote:
->>
->>> On 2023/6/6 15:49, Shuai Xue wrote:
->>>> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
->>>> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
->>>> Core controller IP which provides statistics feature. The PMU is not a PCIe
->>>> Root Complex integrated End Point(RCiEP) device but only register counters
->>>> provided by each PCIe Root Port.
->>>>
->>>> To facilitate collection of statistics the controller provides the
->>>> following two features for each Root Port:
->>>>
->>>> - Time Based Analysis (RX/TX data throughput and time spent in each
->>>>   low-power LTSSM state)
->>>> - Event counters (Error and Non-Error for lanes)
->>>>
->>>> Note, only one counter for each type and does not overflow interrupt.
->>>>
->>>> This driver adds PMU devices for each PCIe Root Port. And the PMU device is
->>>> named based the BDF of Root Port. For example,
->>>>
->>>>     30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
->>>>
->>>> the PMU device name for this Root Port is dwc_rootport_3018.
->>>>
->>>> Example usage of counting PCIe RX TLP data payload (Units of 16 bytes)::
->>>>
->>>>     $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
->>>>
->>>> average RX bandwidth can be calculated like this:
->>>>
->>>>     PCIe TX Bandwidth = PCIE_TX_DATA * 16B / Measure_Time_Window
->>>>
->>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->>>> Reported-by: kernel test robot <lkp@intel.com>
->>>> Link: https://lore.kernel.org/oe-kbuild-all/202305170639.XU3djFZX-lkp@intel.com/
->>>> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->>
->> I'll review on top to avoid any duplication with Yicong.
-> 
-> Thank you! It also served as a reminder that I missed Yicong's email. It appears
-> that Thunderbird mistakenly moved his email to the junk folder, resulting in me
-> overlooking it.
-> 
->>
->> Note I've cropped the stuff neither of us commented on so it's
->> easier to spot the feedback.
-> 
-> Thank you for noting that. My feedback is replied inline.
-> 
->>
->> Jonathan
->>
->>>> ---
->>>>  drivers/perf/Kconfig        |   7 +
->>>>  drivers/perf/Makefile       |   1 +
->>>>  drivers/perf/dwc_pcie_pmu.c | 706 ++++++++++++++++++++++++++++++++++++
->>>>  3 files changed, 714 insertions(+)
->>>>  create mode 100644 drivers/perf/dwc_pcie_pmu.c
->>>>
->>>> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
->>>> index 711f82400086..6ff3921d7a62 100644
->>>> --- a/drivers/perf/Kconfig
->>>> +++ b/drivers/perf/Kconfig
->>>> @@ -209,6 +209,13 @@ config MARVELL_CN10K_DDR_PMU
->>>>  	  Enable perf support for Marvell DDR Performance monitoring
->>>>  	  event on CN10K platform.
->>>>  
->>>> +config DWC_PCIE_PMU
->>>> +	tristate "Enable Synopsys DesignWare PCIe PMU Support"
->>>> +	depends on (ARM64 && PCI)
->>>> +	help
->>>> +	  Enable perf support for Synopsys DesignWare PCIe PMU Performance
->>>> +	  monitoring event on Yitian 710 platform.
->>
->> The documentation kind of implies this isn't platform specific.
->> If some parts are (such as which events exist) then you may want to push
->> that to userspace / perftool with appropriate matching against specific SoC.
->>
->> If it is generic, then change this text to "event on platform including the Yitian 710."
-> 
-> It is generic without any platform specific, so I will change it as you expected.
-> 
->>
->>>> +
->>>>  source "drivers/perf/arm_cspmu/Kconfig"
->>>>  
->>>>  source "drivers/perf/amlogic/Kconfig"
->>
->>>> new file mode 100644
->>>> index 000000000000..8bfcf6e0662d
->>>> --- /dev/null
->>>> +++ b/drivers/perf/dwc_pcie_pmu.c
->>>> @@ -0,0 +1,706 @@
->>
->> ...
->>
->>>> +
->>>> +struct dwc_pcie_pmu {
->>>> +	struct pci_dev		*pdev;		/* Root Port device */  
->>>
->>> If the root port removed after the probe of this PCIe PMU driver, we'll access the NULL
->>> pointer. I didn't see you hold the root port to avoid the removal.
-> 
-> Do you mean that I should have a reference count of rootport by pci_dev_get() when allocating
-> pcie_pmu?
-> 
->      pcie_pmu->pdev = pci_dev_get();
+The PCIe 6 specification added support for the Data Object Exchange (DOE).
+When DOE is supported the Discovery Data Object Protocol must be
+implemented. The protocol allows a requester to obtain information about
+the other DOE protocols supported by the device.
 
-It could be one option, but will block the removal of device from userspace. Another option
-is to register a PCI bus notifier then on removal/added the driver can get notified and handle
-it, for example, remove the related PMU on the removal of the root ports.
+The kernel is already querying the DOE protocols supported and cacheing
+the values. This patch exposes the values via sysfs. This will allow
+userspace to determine which DOE protocols are supported by the PCIe
+device.
+
+By exposing the information to userspace tools like lspci can relay the
+information to users. By listing all of the supported protocols we can
+allow userspace to parse and support the list, which might include
+vendor specific protocols as well as yet to be supported protocols.
+
+Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+---
+ Documentation/ABI/testing/sysfs-bus-pci | 11 ++++++
+ drivers/pci/doe.c                       | 52 +++++++++++++++++++++++++
+ drivers/pci/pci-sysfs.c                 |  8 ++++
+ include/linux/pci-doe.h                 |  2 +
+ 4 files changed, 73 insertions(+)
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+index ecf47559f495..ae969bbfa631 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci
++++ b/Documentation/ABI/testing/sysfs-bus-pci
+@@ -500,3 +500,14 @@ Description:
+ 		console drivers from the device.  Raw users of pci-sysfs
+ 		resourceN attributes must be terminated prior to resizing.
+ 		Success of the resizing operation is not guaranteed.
++
++What:		/sys/bus/pci/devices/.../doe_proto
++Date:		July 2023
++Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
++Description:
++		This file contains a list of the supported Data Object Exchange (DOE)
++		protocols. The protocols are seperated by newlines.
++		The value comes from the device and specifies the vendor and
++		protocol supported. The lower byte is the protocol and the next
++		two bytes are the vendor ID.
++		The file is read only.
+diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+index 1b97a5ab71a9..70900b79b239 100644
+--- a/drivers/pci/doe.c
++++ b/drivers/pci/doe.c
+@@ -563,6 +563,58 @@ static bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
+ 	return false;
+ }
+ 
++#ifdef CONFIG_SYSFS
++/**
++ * pci_doe_sysfs_proto_supports() - Write the supported DOE protocols
++ *			     to a sysfs buffer
++ * @doe_mb: DOE mailbox capability to query
++ * @buf: buffer to store the sysfs strings
++ * @offset: offset in buffer to store the sysfs strings
++ *
++ * RETURNS: The number of bytes written, 0 means an error occured
++ */
++static unsigned long pci_doe_sysfs_proto_supports(struct pci_doe_mb *doe_mb,
++						  char *buf, ssize_t offset)
++{
++	unsigned long index;
++	ssize_t ret = offset;
++	ssize_t r;
++	void *entry;
++
++	xa_for_each(&doe_mb->prots, index, entry) {
++		r = sysfs_emit_at(buf, ret, "0x%08lX\n", xa_to_value(entry));
++
++		if (r == 0)
++			return ret;
++
++		ret += r;
++	}
++
++	return ret;
++}
++
++ssize_t doe_proto_show(struct device *dev, struct device_attribute *attr,
++		       char *buf)
++{
++	struct pci_dev *pci_dev = to_pci_dev(dev);
++	unsigned long index;
++	ssize_t ret = 0;
++	ssize_t r;
++	struct pci_doe_mb *doe_mb;
++
++	xa_for_each(&pci_dev->doe_mbs, index, doe_mb) {
++		r = pci_doe_sysfs_proto_supports(doe_mb, buf, ret);
++
++		if (r == 0)
++			return ret;
++
++		ret += r;
++	}
++
++	return ret;
++}
++#endif
++
+ /**
+  * pci_doe_submit_task() - Submit a task to be processed by the state machine
+  *
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index ab32a91f287b..cdb6aea2d263 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -16,6 +16,7 @@
+ #include <linux/kernel.h>
+ #include <linux/sched.h>
+ #include <linux/pci.h>
++#include <linux/pci-doe.h>
+ #include <linux/stat.h>
+ #include <linux/export.h>
+ #include <linux/topology.h>
+@@ -290,6 +291,10 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+ }
+ static DEVICE_ATTR_RO(modalias);
+ 
++#ifdef CONFIG_PCI_DOE
++static DEVICE_ATTR_RO(doe_proto);
++#endif
++
+ static ssize_t enable_store(struct device *dev, struct device_attribute *attr,
+ 			     const char *buf, size_t count)
+ {
+@@ -603,6 +608,9 @@ static struct attribute *pci_dev_attrs[] = {
+ 	&dev_attr_local_cpus.attr,
+ 	&dev_attr_local_cpulist.attr,
+ 	&dev_attr_modalias.attr,
++#ifdef CONFIG_PCI_DOE
++	&dev_attr_doe_proto.attr,
++#endif
+ #ifdef CONFIG_NUMA
+ 	&dev_attr_numa_node.attr,
+ #endif
+diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
+index 1f14aed4354b..3033eb4bd17d 100644
+--- a/include/linux/pci-doe.h
++++ b/include/linux/pci-doe.h
+@@ -22,4 +22,6 @@ int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
+ 	    const void *request, size_t request_sz,
+ 	    void *response, size_t response_sz);
+ 
++ssize_t doe_proto_show(struct device *dev, struct device_attribute *attr,
++		       char *buf);
+ #endif
+-- 
+2.41.0
+
