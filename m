@@ -2,52 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D90A776BEF3
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Aug 2023 23:06:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A12376BF04
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Aug 2023 23:11:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230095AbjHAVGh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Aug 2023 17:06:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37092 "EHLO
+        id S231703AbjHAVLz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Aug 2023 17:11:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230122AbjHAVGW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Aug 2023 17:06:22 -0400
+        with ESMTP id S232055AbjHAVLw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Aug 2023 17:11:52 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9926129
-        for <linux-pci@vger.kernel.org>; Tue,  1 Aug 2023 14:06:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89087E67;
+        Tue,  1 Aug 2023 14:11:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5D4F661712
-        for <linux-pci@vger.kernel.org>; Tue,  1 Aug 2023 21:06:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85FE0C433C7;
-        Tue,  1 Aug 2023 21:06:20 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 076EC61719;
+        Tue,  1 Aug 2023 21:11:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08120C433C7;
+        Tue,  1 Aug 2023 21:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690923980;
-        bh=ArT61hXgPy4KiHQ7AdKz/XNWfP/u42PomPG4+jN8BCA=;
+        s=k20201202; t=1690924301;
+        bh=zx03PjfgY07UCKTT9D+a57aqd3/g+SVsstHgr2BvJBk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=S9JwinoSfZH8A3BJLosg9sIPdpfJO3t4sR+34zawnXaM0BHXwYENbUuKzc9H0hTcy
-         uXvZWoR/CP4xjvORITBU76aOHlgQC26p/dGPF85aCjjVCHSLaQer/mFcNOHgl/BRl/
-         vwJjugdwBYu8SpozeG549W9WmL9ZGQTEr4bJYYLKvgzKv3ZunPhJOBAVaDW8TpbTui
-         hr1EUpVR4XI4Z/8PduELt2gE+CwLqjyZXXqNwdhCEoIPetf2R5QVzAG6u0D2S+Oyc5
-         j84jyV7FZV1hgI42eaEWV122I8sPOt2PCCAgmtBFCuEUCyedgtak1Xv/I/ctQFhf/x
-         IlsuV6ieSKdSg==
-Date:   Tue, 1 Aug 2023 16:06:18 -0500
+        b=sblLoR3kQGCtNkxVEW+NLWBgyfNJOVLJD1dqEJzGWiDAlpPajGeOX+9YR66py8GlS
+         h3+TDJG7WbJ9qG/Vw3xavRlmqLqqhDxttl+YTfpqpGBQPE5Uk8MWl1s9nQVlmX/ecK
+         snTPWPFHsvdLkqenjmJ/F5htbfdTu42CyWxG5Ls3RNfeXWnndeA36mJZ1DE81y9b11
+         ts1SLqVvDfbVQjjJ5ZWAoYjhJ/y4RcD+MavMdz7psXxnvkAfpfH5DIdcLqD37FmAfh
+         mH31ki9VoGdMte6bBBOingw7G3PxdVuSlVSc7g0D+rwjb/AjP5mcPDVl4xRSK9WvwH
+         x35MKBUb9+5Nw==
+Date:   Tue, 1 Aug 2023 16:11:39 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Damien Le Moal <dlemoal@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        David Gow <davidgow@google.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Brendan Higgins <brendan.higgins@linux.dev>,
+        Mark Rutland <mark.rutland@arm.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH 1/2] PCI: Rename PCI_IRQ_LEGACY to PCI_IRQ_INTX
-Message-ID: <20230801210618.GA50659@bhelgaas>
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v4 1/4] kernel.h: Split out COUNT_ARGS() and
+ CONCATENATE() to args.h
+Message-ID: <20230801211139.GA51676@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230731012550.728070-2-dlemoal@kernel.org>
+In-Reply-To: <20230718211147.18647-2-andriy.shevchenko@linux.intel.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -58,55 +70,33 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Krzysztof]
-
-On Mon, Jul 31, 2023 at 10:25:49AM +0900, Damien Le Moal wrote:
-> From: Bjorn Helgaas <helgaas@kernel.org>
+On Wed, Jul 19, 2023 at 12:11:44AM +0300, Andy Shevchenko wrote:
+> kernel.h is being used as a dump for all kinds of stuff for a long time.
+> The COUNT_ARGS() and CONCATENATE() macros may be used in some places
+> without need of the full kernel.h dependency train with it.
 > 
-> Rename PCI_IRQ_LEGACY to PCI_IRQ_INTX to be more explicit about the type
-> of IRQ being referenced as well as to match the PCI specifications
-> terms. The macro PCI_IRQ_LEGACY is redefined as an alias to PCI_IRQ_INTX
-> to avoid the need for doing the renaming tree-wide. New drivers and new
-> code should now prefer using PCI_IRQ_INTX instead of PCI_IRQ_LEGACY.
+> Here is the attempt on cleaning it up by splitting out these macros().
 > 
-> Signed-off-by: Bjorn Helgaas <helgaas@kernel.org>
-
-Looks good to me, but instead of the kernel.org address, please use:
-
-  Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Also:
-
-  Redefine PCI_IRQ_LEGACY as an alias to PCI_IRQ_INTX to avoid the
-  need for doing the renaming tree-wide.
-
-ISTR other pci/controller/ patches that may come on top of these?  If
-so, probably makes sense for Krzysztof to apply these?
-
-> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-> ---
->  include/linux/pci.h | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> While at it, include new header where it's being used.
 > 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# PCI
+
 > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 0ff7500772e6..7692d73719e0 100644
+> index 0ff7500772e6..eeb2e6f6130f 100644
 > --- a/include/linux/pci.h
 > +++ b/include/linux/pci.h
-> @@ -1048,11 +1048,13 @@ enum {
->  	PCI_SCAN_ALL_PCIE_DEVS	= 0x00000040,	/* Scan all, not just dev 0 */
->  };
+> @@ -23,7 +23,7 @@
+>  #ifndef LINUX_PCI_H
+>  #define LINUX_PCI_H
 >  
-> -#define PCI_IRQ_LEGACY		(1 << 0) /* Allow legacy interrupts */
-> +#define PCI_IRQ_INTX		(1 << 0) /* Allow INTx interrupts */
->  #define PCI_IRQ_MSI		(1 << 1) /* Allow MSI interrupts */
->  #define PCI_IRQ_MSIX		(1 << 2) /* Allow MSI-X interrupts */
->  #define PCI_IRQ_AFFINITY	(1 << 3) /* Auto-assign affinity */
+> -
+> +#include <linux/args.h>
+>  #include <linux/mod_devicetable.h>
 >  
-> +#define PCI_IRQ_LEGACY		PCI_IRQ_INTX	/* prefer PCI_IRQ_INTX */
-> +
->  /* These external functions are only available when PCI support is enabled */
->  #ifdef CONFIG_PCI
->  
-> -- 
-> 2.41.0
-> 
+>  #include <linux/types.h>
+
+If there's not a reason otherwise, I'd put this in the main list
+instead of the weirdly separated mod_devicetable.h.
