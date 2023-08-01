@@ -2,78 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E76876A607
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Aug 2023 03:07:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 123D476A653
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Aug 2023 03:29:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231376AbjHABHF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jul 2023 21:07:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56156 "EHLO
+        id S231129AbjHAB3S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jul 2023 21:29:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231725AbjHABHB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jul 2023 21:07:01 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC1DA1FDC;
-        Mon, 31 Jul 2023 18:06:36 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2b95d5ee18dso76899461fa.1;
-        Mon, 31 Jul 2023 18:06:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690851995; x=1691456795;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4vnEUx2wQQkbTUVtaPc4VBq7hwOiZgTJIqMbYiK8fag=;
-        b=SwEjPvqpWiA4I326Jtgi5ZaBOU6LDNQtLjw9PV/nPHAaEmA8VfS0YtfiTBfruTxTo/
-         VAyYCxSgTlN5/Tcj4k+pf6zlmIr/Tkt6rBmYcgsp48DNwv6+UxCmHTBptfm4Iato1sFB
-         RHQcNShceORK3zPc2MojqeBECBRXRtAf9lYm7bN5y7TGmXptoq7C1UiDlodyeeRYnD2Z
-         eB+ryb54Z/cn2xG0SzLU2JwGW5OkKqZuKZbrgw7eZJusRBferD9oqAxJCQgzahWsYyKW
-         O+AZbEDXm7dP63vvY9jl9MYdJb7k6+gjp6YkUbelHIIYiP3p9O/Ui62t2dhC+qzYl697
-         QPSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690851995; x=1691456795;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4vnEUx2wQQkbTUVtaPc4VBq7hwOiZgTJIqMbYiK8fag=;
-        b=b4l44IqeMWRAFkn0wXYV148lGVS+mZX2bZtLCoqq3/61IHIa/tFzVgbKIpqNMWeln/
-         QuCIGJtMq0A/KMr9RYDfwp/sFJOPDQhmhanbQHV/X5ZmUTEuII3zCtKY4o1yvdN6lHp3
-         pMK909s1lOuXK03xS7G3qJCOsUEutMwPl86iwUd11wN/0gfR1tl1Xbz72Rn9eTiAsiTN
-         U3uuEgt+WuJJATl0UIWFbcqe+URr1nUC+hmyoGzU+EZt0UrOCUGbn6vv1CNnnTXuB4e5
-         3LmD5q9RQlFfu49M2XLzX/Meje9IJqjlED4Q20E7mcgTXte+vdMySdevUC+Nl3UfjDq3
-         W02g==
-X-Gm-Message-State: ABy/qLYYhNvFCaUj0vBZ69LPXK71TxzqDqGJa60CVfrXqPOQwV7zR50b
-        e5V6JLDzpLPdylJz1rYontM=
-X-Google-Smtp-Source: APBJJlEYZa3DA7yh0SDKkN+75sN42c1lT6BmtUFW4oL/77QlO2ZjISUfghy/Fptw7qHU9+mDsLSBig==
-X-Received: by 2002:a05:651c:d6:b0:2b9:581d:73bb with SMTP id 22-20020a05651c00d600b002b9581d73bbmr1117245ljr.26.1690851994774;
-        Mon, 31 Jul 2023 18:06:34 -0700 (PDT)
-Received: from mobilestation ([95.79.172.181])
-        by smtp.gmail.com with ESMTPSA id x11-20020a2e9dcb000000b002b6c8cf48bfsm2743083ljj.104.2023.07.31.18.06.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jul 2023 18:06:34 -0700 (PDT)
-Date:   Tue, 1 Aug 2023 04:06:32 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
-        bhelgaas@google.com, kishon@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v18 17/20] PCI: rcar-gen4: Add R-Car Gen4 PCIe Host
- support
-Message-ID: <gmy7uzvuy2fkmc7hsanslkv2f4mxzydxvewrv5i5w3b3voqzfv@nmkpewdj726m>
+        with ESMTP id S229612AbjHAB3R (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jul 2023 21:29:17 -0400
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2091.outbound.protection.outlook.com [40.107.113.91])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77B97114;
+        Mon, 31 Jul 2023 18:29:14 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PxMX/T1iOmhikyUNIKU0+7B3jUBEVrb6PLTzm2WR22qx0wv20y2czCz0g1Js1c7pTUt6dMP38fD6lBYLGctMCQxG2WvulwqDjvXScbW7gyiNulMGm7ouq9fAiiWqwk+/uRpqJPvvy/SLw+hGYRWMDeuuMdEfJGsjml0r2IQM/FClxXU8veInIS0hswh4B7fa0tjSwoOh1QAuVtYNdAte/Y73Y4K66XCycN/d251NCj+NX9KQ+k7SSTht5+Sbc88wQkNefXWGmlRmFd8epK4+vkCyOEk7K3Hzbcx7DzzVVoyIKqAP0o29NkQTvmOyqArpwl8IcLU11HtAPqSzVwcM8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Z3RLxI4KvDm2vtFmxLs2XjELCg1ZfjySqt14jB40S7g=;
+ b=SHVkxAnQHpqMb3PVcscaEkEvy6jfJF8ckidOy+Mwl1668pRnCstTY0MP3IOIB/hY/utiFbKoWz8Kk5qdu04kIjV3eksb8C3LwLPeymgxd7x/ZkhUvE/FM6OO+qBoVsENfDTWDidkE8QFpOJTp4/0NQEWo1JdmMfdDSbViJEl80Txn1+WdzSaTQ5kDVchfvEbrmSmgtXyK6gDWjl1z1jER8q7hXRyPp6GYrJK94HC54f1pFBV6S5J8lExg1BWUk9Br+1p9edwUGH2i++KelRvDN9j75ljaWwdEQN4d0hJNYnFw07KtdMJyTVKGb+AjwOmDTwGDza8+B6871vOp9KqJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z3RLxI4KvDm2vtFmxLs2XjELCg1ZfjySqt14jB40S7g=;
+ b=ZF67PMNMGeC5M6UAJjmlbi+jM+lW3ecO4vWwf9v7HNwtsabz7gVjT0rKGZ0i3ACQx/FXMTYI6p6q1gx0w44yPW5esYgslORLYyps3U9WoIVcOm9cxTyeZ/ahcWiZk20Hk2kUuJFFCVUJ62SKyw+4ug82GJw5JnEooRaiMOitPG8=
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ (2603:1096:404:8028::13) by TYAPR01MB5756.jpnprd01.prod.outlook.com
+ (2603:1096:404:8055::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.44; Tue, 1 Aug
+ 2023 01:29:10 +0000
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::e5cd:66a0:248f:1d30]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::e5cd:66a0:248f:1d30%4]) with mapi id 15.20.6631.043; Tue, 1 Aug 2023
+ 01:29:10 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Serge Semin <fancer.lancer@gmail.com>
+CC:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "kw@linux.com" <kw@linux.com>,
+        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "kishon@kernel.org" <kishon@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "conor+dt@kernel.org" <conor+dt@kernel.org>,
+        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v18 04/20] PCI: dwc: Change arguments of
+ dw_pcie_prog_outbound_atu()
+Thread-Topic: [PATCH v18 04/20] PCI: dwc: Change arguments of
+ dw_pcie_prog_outbound_atu()
+Thread-Index: AQHZu6dDb7hFhSogz0udklVWjO2cJ6/QC08AgAMXU6CAAVM9gIAAQCcQ
+Date:   Tue, 1 Aug 2023 01:29:10 +0000
+Message-ID: <TYBPR01MB5341F15483816E81A073B12DD80AA@TYBPR01MB5341.jpnprd01.prod.outlook.com>
 References: <20230721074452.65545-1-yoshihiro.shimoda.uh@renesas.com>
- <20230721074452.65545-18-yoshihiro.shimoda.uh@renesas.com>
- <20230724122820.GM6291@thinkpad>
+ <20230721074452.65545-5-yoshihiro.shimoda.uh@renesas.com>
+ <u2lzrypnaevcp5r5xueeceoq6b5v6ngzdmwyadel2liloxb3rz@6ribp2lqv2db>
+ <OSYPR01MB5334EBCD11ED8D3104A0BEFBD805A@OSYPR01MB5334.jpnprd01.prod.outlook.com>
+ <4idgmodxlnzv2kkscniuw3336ynmukh3duu4rt2db354ln5sbg@e4jnmhfugmj4>
+In-Reply-To: <4idgmodxlnzv2kkscniuw3336ynmukh3duu4rt2db354ln5sbg@e4jnmhfugmj4>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|TYAPR01MB5756:EE_
+x-ms-office365-filtering-correlation-id: 8bd1d5d6-7f85-446b-47b8-08db922eb4bd
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tmPrf80y2RyABKGVgPmWIhoH2gONsBfppydy2X5z8iuIz67EZyk3wwtIbOPq+KXPdwQ5z8lpDUDP15e6OwGURrDEcTfW5YZH7wwfzpbd3m2SGPqeQSRjl44MiL0i7FXO0+2N5l2z501bkxGT5JTvlZLRpzLjgJS+WqIXdc00KgTbNzOLAGRHvEBEAj7djz7U+cQIdhOi7qWJvWpburbNyhDKt3WRNLRmuJtwj87bo/VIMzhyuMaiwbADSMml1+/TcWDyxclNUpCeU1wNF8sSGTU0Yo09oIFu8kE9RxNK+vKZlp5XaEy9OZK/lkbhf7oahN8+xEAr4DkHQfjXMsEN077hhbM8W9Kp+Sq/fpRqiJNE+AHLn0dpJLL7sJkRiIOGsVqgK+1nhzGhHLlvUxGnjPucPaH4SV2sSN2gOZS07HCxcNXAfx8L99lYAmZdkKLNjnmkus+qU9IFxImdDJhfSQOM3s3n736q9n4Kz7/LBYNqvGxdV4CQT4S49k4SmtZqiF4mA/saoebkY8iUv3rOxIoheiDdGwEVgnjciVp9dLeImpOYiYfIQTc89Dpy0CoxrdbOHn7SBjdqhmaqxWUb91mPYmuHv92qfiNGOceayYt4OskADd5XlmvmbKF9zez2
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(396003)(39860400002)(366004)(136003)(376002)(451199021)(38100700002)(122000001)(55016003)(86362001)(38070700005)(33656002)(9686003)(478600001)(71200400001)(7696005)(6506007)(186003)(8676002)(8936002)(7416002)(5660300002)(52536014)(76116006)(66556008)(66946007)(66476007)(64756008)(41300700001)(54906003)(2906002)(66446008)(6916009)(4326008)(30864003)(316002)(83380400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?EW/lsz/TihNQQszTq1bTMvBohLeggtWEWWU+NHnkQYywlbiWfgFPa3LiqNZL?=
+ =?us-ascii?Q?GLm6bZb1Ssd3+ONWpVtAq/IC32OdPl0RHYA8t868ZmEWMcvFIq4KLdy6oWhC?=
+ =?us-ascii?Q?k0Ga30QFlZcWvaxz/PMOVjgVUP2IyDM8CVy+q/ITe4GHImOwNA1UxZ1qbQFL?=
+ =?us-ascii?Q?fD1AtzIsfTT4R8FXLyDGRF/duv7USPCvvjFwTtN0/LiP0v2Fhtd8k1uxk1qb?=
+ =?us-ascii?Q?AY6gzVdy4ehsNgbETg86uiLNJ/UowrNQu9orY6MvVprDbWrbCszhNdHURTf7?=
+ =?us-ascii?Q?RuQ9uM6f1dm2tDp7/+lNr/jbZihsEviwbT4nXxcSafIPK0ZVggQbBdC+yII+?=
+ =?us-ascii?Q?zWyRWVpGHVXHHWqhE72nrpuZFI5Q//Dj8GU9KLdyRyDAfSf1435k76XmZZ7c?=
+ =?us-ascii?Q?QObTOFl2QmzUKY8nYD1yS6m9TnzT3l6ZKo7Svynfylj6TN63aGWz40bie5Fv?=
+ =?us-ascii?Q?CufZDA9sdJyo+xjrhfiCTvtXQzVOMNBLdidHQVP9/cmE093A55EwTT/cp2+Z?=
+ =?us-ascii?Q?blhC0zLrQo8xSB186HR5Fmng7CU7+ckWyh057GgKV+WFGZCr6BZkLPcJ2d3j?=
+ =?us-ascii?Q?vQZmmm5fkCNOJ0Bu+xvfIqNDE2Tt+P1X+bBCbqsSZIdyadijv9eoTRifkLxP?=
+ =?us-ascii?Q?ff+bMpP0ERYT4/jvKdxQv/xwWh89NTiZWIVlEXs1MfLGxABPHsSSsMb/X4GQ?=
+ =?us-ascii?Q?h5kTspfALDNLfpcXEMUGbjbAZh+lrCqLj2jNcHBDUSkz9JACw4sbjuhYuXFp?=
+ =?us-ascii?Q?nANYgf/LRVcipwTPjUVFiYt/9yTcjbeor4N4ZJUFXvrMN15XTQQIbSZPr2wv?=
+ =?us-ascii?Q?L1c+Zkd2Cjlxzn10djOC/82WB0TAbj7jG6bV7hV5StehGi4nwzDVODyS9xtC?=
+ =?us-ascii?Q?5KMa5n5uNV0oNtA0mCXId134eM7fntCthzxvD4ykL8gnBeyDx3Ptsa/So8o/?=
+ =?us-ascii?Q?qstN5PKpAyckcNl8gIxmP2iCkEB9TGcq0vDesDzey66IrWdL8fJKbw9qzRDc?=
+ =?us-ascii?Q?3a39FfxWhJyy/+W+qT3nbxrUak9bKINEeA4luCtVZRtcXGRAF9cWPjyJXKCr?=
+ =?us-ascii?Q?IT+VlicmybLMV3+svP2oArP4T5NSZpyXo93/33nSs/Ap145SduGHV+Ht+P/C?=
+ =?us-ascii?Q?sJuThwsYdN2NxhbSX16NYXthKSUoD6t6xVjfUud138aOP/HZAlvw7T6dDWhB?=
+ =?us-ascii?Q?7uhrEYTxyUmGzQ2QDtNIJJO3QSdajpPUPCZ1yWMLl/iVikz8EED4MluDntBt?=
+ =?us-ascii?Q?v9luexy23GZOUbTttssNsNUEJ3ivudQkKV9ujI9kI2jxFkw9Io+WffmjS2cy?=
+ =?us-ascii?Q?w6mmP57nSKoZ/HiMj9ZNryLMy7afDiA4pbfiyCU0fHPvs2Y3AlB3l0V6edRY?=
+ =?us-ascii?Q?fS4BfjGs5TjbEPWaCiSZu3SwaD5TUEhWTObNIZckHnPqV6/kO09+k1vdOVGd?=
+ =?us-ascii?Q?nYmcLRYBmBfbFOCPNYZsuLNVF5AtNISBgsdDTNEpePYBCeWieJg1s6YGSV8p?=
+ =?us-ascii?Q?Ib+leeaUxPNoaFIO1R0eqW+f3KNEuJxB5bZKw6T3UuzEd5oM8qhddjUjJC1I?=
+ =?us-ascii?Q?RlTUOv2N4OeL272PiSj4iq1GnywGiRiWsBJp6WUu0kXqiiq/CELuNsyvx8QX?=
+ =?us-ascii?Q?IRxJ3bldfWubmG1Io/gL8cc615M7mW2sBIC8rsM39Hcbmk7laPJgnsn/mHpy?=
+ =?us-ascii?Q?Ao42wA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230724122820.GM6291@thinkpad>
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8bd1d5d6-7f85-446b-47b8-08db922eb4bd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Aug 2023 01:29:10.1231
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ySjIjd8hnneHnvjdx1zyLqvDLphXfr/kzWerlMFlHppjnIcwVP2oQL1XPS2xl8Q1rdq457vNLdgaTDVSnO52HjhQgFHa0fukDeKwiicitZfW+vJRuG+o1qP2Eb6LCl8U
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5756
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
         URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,546 +137,427 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 24, 2023 at 05:58:20PM +0530, Manivannan Sadhasivam wrote:
-> On Fri, Jul 21, 2023 at 04:44:49PM +0900, Yoshihiro Shimoda wrote:
-> > Add R-Car Gen4 PCIe Host support. This controller is based on
-> > Synopsys DesignWare PCIe, but this controller has vendor-specific
-> > registers so that requires initialization code like mode setting
-> > and retraining and so on.
-> > 
-> > To reduce code delta, adds some helper functions which are used by
-> > both the host driver and the endpoint driver (which is added
-> > immediately afterwards) into a separate file.
-> > 
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > ---
-> >  drivers/pci/controller/dwc/Kconfig            |   9 +
-> >  drivers/pci/controller/dwc/Makefile           |   2 +
-> >  .../pci/controller/dwc/pcie-rcar-gen4-host.c  | 149 +++++++++++++
-> >  drivers/pci/controller/dwc/pcie-rcar-gen4.c   | 200 ++++++++++++++++++
-> >  drivers/pci/controller/dwc/pcie-rcar-gen4.h   |  44 ++++
-> >  5 files changed, 404 insertions(+)
-> >  create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-host.c
-> >  create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.c
-> >  create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.h
-> > 
-> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > index ab96da43e0c2..64d4d37bc891 100644
-> > --- a/drivers/pci/controller/dwc/Kconfig
-> > +++ b/drivers/pci/controller/dwc/Kconfig
-> > @@ -415,4 +415,13 @@ config PCIE_VISCONTI_HOST
-> >  	  Say Y here if you want PCIe controller support on Toshiba Visconti SoC.
-> >  	  This driver supports TMPV7708 SoC.
-> >  
-> > +config PCIE_RCAR_GEN4
-> > +	tristate "Renesas R-Car Gen4 PCIe Host controller"
-> > +	depends on ARCH_RENESAS || COMPILE_TEST
-> > +	depends on PCI_MSI
-> > +	select PCIE_DW_HOST
-> > +	help
-> > +	  Say Y here if you want PCIe host controller support on R-Car Gen4 SoCs.
-> 
-> Add a line about module option and specify the module name. Like,
-> 
-> To compile this driver as a module, choose M here: the module will be called
-> pcie-rcar-gen4-host-drv.ko.
-> 
-> I have a suggestion for module name change below...
-> 
-> > +	  This uses the DesignWare core.
-> > +
-> >  endmenu
-> > diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> > index bf5c311875a1..486cf706b53d 100644
-> > --- a/drivers/pci/controller/dwc/Makefile
-> > +++ b/drivers/pci/controller/dwc/Makefile
-> > @@ -26,6 +26,8 @@ obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
-> >  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
-> >  obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
-> >  obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
-> > +pcie-rcar-gen4-host-drv-objs := pcie-rcar-gen4.o pcie-rcar-gen4-host.o
-> > +obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4-host-drv.o
-> 
-> It'd be better to call the module as pcie-rcar-gen4-host and the file as
-> pcie-rcar-gen4-host-drv.c
-> 
-> Also, move the goal definition first.
-> 
-> >  
-> >  # The following drivers are for devices that use the generic ACPI
-> >  # pci_root.c driver but don't support standard ECAM config access.
-> > diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4-host.c b/drivers/pci/controller/dwc/pcie-rcar-gen4-host.c
-> > new file mode 100644
-> > index 000000000000..3168f5d98a79
-> > --- /dev/null
-> > +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4-host.c
-> > @@ -0,0 +1,149 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * PCIe host controller driver for Renesas R-Car Gen4 Series SoCs
-> > + * Copyright (C) 2022-2023 Renesas Electronics Corporation
-> > + */
-> > +
-> > +#include <linux/delay.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/pci.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#include "pcie-rcar-gen4.h"
-> > +#include "pcie-designware.h"
-> > +
-> > +static int rcar_gen4_pcie_host_init(struct dw_pcie_rp *pp)
-> > +{
-> > +	struct dw_pcie *dw = to_dw_pcie_from_pp(pp);
-> > +	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
-> > +	int ret;
-> > +	u32 val;
-> > +
-> > +	gpiod_set_value_cansleep(dw->pe_rst, 1);
-> > +
-> > +	ret = clk_bulk_prepare_enable(DW_PCIE_NUM_CORE_CLKS, dw->core_clks);
-> > +	if (ret) {
-> > +		dev_err(dw->dev, "Failed to enable ref clocks\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = rcar_gen4_pcie_basic_init(rcar);
-> > +	if (ret < 0) {
-> 
-> Use "if (ret)" for consistency.
-> 
-> > +		clk_bulk_disable_unprepare(DW_PCIE_NUM_CORE_CLKS, dw->core_clks);
-> > +		return ret;
-> > +	}
-> > +
-> > +	/*
-> > +	 * According to the section 3.5.7.2 "RC Mode" in DWC PCIe Dual Mode
-> > +	 * Rev.5.20a, we should disable two BARs to avoid unnecessary memory
-> > +	 * assignment during device enumeration.
-> > +	 */
-> > +	dw_pcie_writel_dbi2(dw, PCI_BASE_ADDRESS_0, 0x0);
-> > +	dw_pcie_writel_dbi2(dw, PCI_BASE_ADDRESS_1, 0x0);
-> > +
-> > +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> 
-> Driver depends on PCI_MSI, so there is no need of this check.
-> 
-> > +		/* Enable MSI interrupt signal */
-> > +		val = readl(rcar->base + PCIEINTSTS0EN);
-> > +		val |= MSI_CTRL_INT;
-> > +		writel(val, rcar->base + PCIEINTSTS0EN);
-> > +	}
-> > +
-> > +	msleep(100);	/* pe_rst requires 100msec delay */
-> > +
-> > +	gpiod_set_value_cansleep(dw->pe_rst, 0);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void rcar_gen4_pcie_host_deinit(struct dw_pcie_rp *pp)
-> > +{
-> > +	struct dw_pcie *dw = to_dw_pcie_from_pp(pp);
-> > +	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
-> > +
-> > +	gpiod_set_value_cansleep(dw->pe_rst, 1);
-> > +	rcar_gen4_pcie_basic_deinit(rcar);
-> > +	clk_bulk_disable_unprepare(DW_PCIE_NUM_CORE_CLKS, dw->core_clks);
-> > +}
-> > +
-> > +static const struct dw_pcie_host_ops rcar_gen4_pcie_host_ops = {
-> > +	.host_init = rcar_gen4_pcie_host_init,
-> > +	.host_deinit = rcar_gen4_pcie_host_deinit,
-> > +};
-> > +
-> > +static int rcar_gen4_add_dw_pcie_rp(struct rcar_gen4_pcie *rcar)
-> > +{
-> > +	struct dw_pcie_rp *pp = &rcar->dw.pp;
-> > +
-> > +	pp->num_vectors = MAX_MSI_IRQS;
-> > +	pp->ops = &rcar_gen4_pcie_host_ops;
-> > +	rcar->mode = DW_PCIE_RC_TYPE;
-> > +
-> > +	return dw_pcie_host_init(pp);
-> > +}
-> > +
-> > +static void rcar_gen4_remove_dw_pcie_rp(struct rcar_gen4_pcie *rcar)
-> > +{
-> > +	dw_pcie_host_deinit(&rcar->dw.pp);
-> > +	gpiod_set_value_cansleep(rcar->dw.pe_rst, 1);
-> > +}
-> > +
-> > +static int rcar_gen4_pcie_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct rcar_gen4_pcie *rcar;
-> > +	int err;
-> > +
-> > +	rcar = rcar_gen4_pcie_devm_alloc(pdev);
-> > +	if (!rcar)
-> > +		return -ENOMEM;
-> > +
-> > +	err = rcar_gen4_pcie_get_resources(rcar);
+Hi Serge,
 
-> > +	if (err < 0) {
-> > +		dev_err(dev, "Failed to request resource: %d\n", err);
-> 
-> Use dev_err_probe().
+> From: Serge Semin, Sent: Tuesday, August 1, 2023 6:33 AM
+>=20
+> On Mon, Jul 31, 2023 at 01:24:27AM +0000, Yoshihiro Shimoda wrote:
+> > Hi Serge,
+> >
+> > > From: Serge Semin, Sent: Saturday, July 29, 2023 11:07 AM
+> > >
+> > > On Fri, Jul 21, 2023 at 04:44:36PM +0900, Yoshihiro Shimoda wrote:
+> > > > The __dw_pcie_prog_outbound_atu() currently has 6 arguments.
+> > > > To support INTx IRQs in the future, it requires an additional 2
+> > > > arguments. For improved code readability, introduce the struct
+> > > > dw_pcie_ob_atu_cfg and update the arguments of
+> > > > dw_pcie_prog_outbound_atu().
+> > > >
+> > > > Consequently, remove __dw_pcie_prog_outbound_atu() and
+> > > > dw_pcie_prog_ep_outbound_atu() because there is no longer
+> > > > a need.
+> > > >
+> > > > No behavior changes.
+> > >
+> > > So you decided not to use a suggested by me in v17 more detailed patc=
+h
+> > > log?
+> >
+> > You're correct. I thought your suggested comments was too detailed.
+>=20
+> I strongly recommend for you to use mine instead. It gives more
+> details about the change and the patch context. Moreover it much more
+> clearer justifies the change implemented in the patch.
 
-Right. Can't believe I missed that and the error checks.
+I didn't realize that you have a strong recommendation about the comments
+you suggested. I'll replace the commit description and add your Suggested-b=
+y
+tag on v19.
 
-> 
-> > +		return err;
-> > +	}
-> > +
-> > +	err = rcar_gen4_pcie_prepare(rcar);
-> > +	if (err < 0)
-> > +		return err;
-> > +
+Best regards,
+Yoshihiro Shimoda
 
-> > +	err = rcar_gen4_add_dw_pcie_rp(rcar);
-> > +	if (err < 0)
-> > +		goto err_add;
-> > +
-> > +	return 0;
-> > +
-> > +err_add:
-> 
-> err_prepare
-
-IMO either "err_unprepare" or "err_add_rp". First option seems better
-since unlike the second version it would look correct in case of
-having multiple gotos to the same label.
-
-"err_prepare" doesn't indicate neither the target code nor the source
-of the jump. So the name doesn't sound descriptive if not to say
-misleading.
-
-> 
-> > +	rcar_gen4_pcie_unprepare(rcar);
-> > +
-> > +	return err;
-> > +}
-> > +
-> > +static void rcar_gen4_pcie_remove(struct platform_device *pdev)
-> > +{
-> > +	struct rcar_gen4_pcie *rcar = platform_get_drvdata(pdev);
-> > +
-> > +	rcar_gen4_remove_dw_pcie_rp(rcar);
-> > +	rcar_gen4_pcie_unprepare(rcar);
-> > +}
-> > +
-> > +static const struct of_device_id rcar_gen4_pcie_of_match[] = {
-> > +	{ .compatible = "renesas,rcar-gen4-pcie", },
-> > +	{},
-> > +};
-> 
-> Missing MODULE_DEVICE_TABLE since this driver can be built as a module.
-> 
-> > +
-> > +static struct platform_driver rcar_gen4_pcie_driver = {
-> > +	.driver = {
-> > +		.name = "pcie-rcar-gen4",
-> > +		.of_match_table = rcar_gen4_pcie_of_match,
-> > +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> > +	},
-> > +	.probe = rcar_gen4_pcie_probe,
-> > +	.remove_new = rcar_gen4_pcie_remove,
-> > +};
-> > +module_platform_driver(rcar_gen4_pcie_driver);
-> > +
-> > +MODULE_DESCRIPTION("Renesas R-Car Gen4 PCIe host controller driver");
-> > +MODULE_LICENSE("GPL");
-> > diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-> > new file mode 100644
-> > index 000000000000..a5fb9aae0a6f
-> > --- /dev/null
-> > +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-> > @@ -0,0 +1,200 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * PCIe host/endpoint controller driver for Renesas R-Car Gen4 Series SoCs
-> > + * Copyright (C) 2022-2023 Renesas Electronics Corporation
-> > + */
-> > +
-> > +#include <linux/delay.h>
-> > +#include <linux/io.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/pci.h>
-> > +#include <linux/pm_runtime.h>
-> > +#include <linux/reset.h>
-> > +
-> > +#include "pcie-rcar-gen4.h"
-> > +#include "pcie-designware.h"
-> > +
-> > +/* Renesas-specific */
-> > +#define PCIERSTCTRL1		0x0014
-> > +#define  APP_HOLD_PHY_RST	BIT(16)
-> 
-> Spacing is not consistent.
-> 
-> > +#define  APP_LTSSM_ENABLE	BIT(0)
-> > +
-> > +#define RCAR_NUM_SPEED_CHANGE_RETRIES	10
-> > +#define RCAR_MAX_LINK_SPEED		4
-> > +
-> > +static void rcar_gen4_pcie_ltssm_enable(struct rcar_gen4_pcie *rcar,
-> > +					bool enable)
-> > +{
-> > +	u32 val;
-> > +
-> > +	val = readl(rcar->base + PCIERSTCTRL1);
-> > +	if (enable) {
-> > +		val |= APP_LTSSM_ENABLE;
-> > +		val &= ~APP_HOLD_PHY_RST;
-> > +	} else {
-> > +		/*
-> > +		 * Since the datasheet of R-Car doesn't mention how to assert
-> > +		 * the APP_HOLD_PHY_RST, don't assert it again. Otherwise,
-> > +		 * hang-up issue happened in the dw_edma_core_off() when
-> > +		 * the controller didn't detect a PCI device.
-> > +		 */
-> > +		val &= ~APP_LTSSM_ENABLE;
-> > +	}
-> > +	writel(val, rcar->base + PCIERSTCTRL1);
-> > +}
-> > +
-> > +static int rcar_gen4_pcie_link_up(struct dw_pcie *dw)
-> > +{
-> > +	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
-> > +	u32 val, mask;
-> > +
-> > +	val = readl(rcar->base + PCIEINTSTS0);
-> > +	mask = RDLH_LINK_UP | SMLH_LINK_UP;
-> > +
-> > +	return (val & mask) == mask;
-> > +}
-> > +
-> > +static bool rcar_gen4_pcie_speed_change(struct dw_pcie *dw)
-> 
-> It'd be good to add a comment for this function.
-> 
-> > +{
-> > +	u32 val;
-> > +	int i;
-> > +
-> > +	val = dw_pcie_readl_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL);
-> > +	val &= ~PORT_LOGIC_SPEED_CHANGE;
-> > +	dw_pcie_writel_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-> > +
-> > +	val = dw_pcie_readl_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL);
-> > +	val |= PORT_LOGIC_SPEED_CHANGE;
-> > +	dw_pcie_writel_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-> > +
-> > +	for (i = 0; i < RCAR_NUM_SPEED_CHANGE_RETRIES; i++) {
-> > +		val = dw_pcie_readl_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL);
-> > +		if (!(val & PORT_LOGIC_SPEED_CHANGE))
-> > +			return true;
-> > +		usleep_range(10000, 11000);
-> > +	}
-> > +
-> > +	return false;
-> > +}
-> > +
-> > +static int rcar_gen4_pcie_start_link(struct dw_pcie *dw)
-> 
-> For this one too.
-> 
-> > +{
-> > +	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
-> > +	int i, changes;
-> > +
-> > +	rcar_gen4_pcie_ltssm_enable(rcar, true);
-> > +
-> > +	/*
-> > +	 * Require direct speed change with retrying here if the link_gen is
-> > +	 * PCIe Gen2 or higher.
-> > +	 */
-> > +	changes = min_not_zero(dw->link_gen, RCAR_MAX_LINK_SPEED) - 1;
-> > +
-> > +	/*
-> > +	 * Since dw_pcie_setup_rc() sets it once, PCIe Gen2 will be trained.
-> > +	 * So, this needs remaining times for up to PCIe Gen4 if RC mode.
-> > +	 */
-> > +	if (changes && rcar->mode == DW_PCIE_RC_TYPE)
-> > +		changes--;
-> > +
-> > +	for (i = 0; i < changes; i++) {
-> > +		if (!rcar_gen4_pcie_speed_change(dw))
-> > +			break;	/* No error because possible disconnected here if EP mode */
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void rcar_gen4_pcie_stop_link(struct dw_pcie *dw)
-> > +{
-> > +	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
-> > +
-> > +	rcar_gen4_pcie_ltssm_enable(rcar, false);
-> > +}
-> > +
-> > +int rcar_gen4_pcie_basic_init(struct rcar_gen4_pcie *rcar)
-> 
-> s/basic/common
-> 
-> - Mani
-> 
-> > +{
-> > +	struct dw_pcie *dw = &rcar->dw;
-> > +	u32 val;
-> > +
-> > +	if (!reset_control_status(dw->core_rsts[DW_PCIE_PWR_RST].rstc))
-> > +		reset_control_assert(dw->core_rsts[DW_PCIE_PWR_RST].rstc);
-> > +
-> > +	val = readl(rcar->base + PCIEMSR0);
-> > +	if (rcar->mode == DW_PCIE_RC_TYPE)
-> > +		val |= DEVICE_TYPE_RC;
-> > +	else if (rcar->mode == DW_PCIE_EP_TYPE)
-> > +		val |= DEVICE_TYPE_EP;
-> > +	else
-> > +		return -EINVAL;
-> > +
-> > +	if (dw->num_lanes < 4)
-> > +		val |= BIFUR_MOD_SET_ON;
-> > +
-> > +	writel(val, rcar->base + PCIEMSR0);
-> > +
-> > +	return reset_control_deassert(dw->core_rsts[DW_PCIE_PWR_RST].rstc);
-> > +}
-> > +
-> > +void rcar_gen4_pcie_basic_deinit(struct rcar_gen4_pcie *rcar)
-> > +{
-> > +	struct dw_pcie *dw = &rcar->dw;
-> > +
-> > +	reset_control_assert(dw->core_rsts[DW_PCIE_PWR_RST].rstc);
-> > +}
-> > +
-> > +int rcar_gen4_pcie_prepare(struct rcar_gen4_pcie *rcar)
-> > +{
-> > +	struct device *dev = rcar->dw.dev;
-> > +	int err;
-> > +
-> > +	pm_runtime_enable(dev);
-> > +	err = pm_runtime_resume_and_get(dev);
-> > +	if (err < 0) {
-> > +		dev_err(dev, "Failed to resume/get Runtime PM\n");
-> > +		pm_runtime_disable(dev);
-> > +	}
-> > +
-> > +	return err;
-> > +}
-> > +
-> > +void rcar_gen4_pcie_unprepare(struct rcar_gen4_pcie *rcar)
-> > +{
-> > +	struct device *dev = rcar->dw.dev;
-> > +
-> > +	pm_runtime_put(dev);
-> > +	pm_runtime_disable(dev);
-> > +}
-> > +
-> > +int rcar_gen4_pcie_get_resources(struct rcar_gen4_pcie *rcar)
-> > +{
-> > +	/* Renesas-specific registers */
-> > +	rcar->base = devm_platform_ioremap_resource_byname(rcar->pdev, "app");
-> > +
-
-> > +	return IS_ERR(rcar->base) ? PTR_ERR(rcar->base) : 0;
-
-This can be replaced with PTR_ERR_OR_ZERO().
-
-> > +}
-> > +
-> > +static const struct dw_pcie_ops dw_pcie_ops = {
-> > +	.start_link = rcar_gen4_pcie_start_link,
-> > +	.stop_link = rcar_gen4_pcie_stop_link,
-> > +	.link_up = rcar_gen4_pcie_link_up,
-> > +};
-> > +
-> > +struct rcar_gen4_pcie *rcar_gen4_pcie_devm_alloc(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct rcar_gen4_pcie *rcar;
-> > +
-
-> > +	rcar = devm_kzalloc(dev, sizeof(*rcar), GFP_KERNEL);
-> > +	if (!rcar)
-> > +		return NULL;
-
-A better approach would be to return ERR_PTR(-ENOMEM) here and convert
-the method caller to performing "if (IS_ERR(rcar)) return
-PTR_ERR(rcar)". Thus in case if you decide to extend this method
-semantics with additional checks you won't need to update the caller
-and all the errors returned will be propagated up to the kernel
-device-driver subsystem.
-
--Serge(y)
-
-> > +
-> > +	rcar->dw.dev = dev;
-> > +	rcar->dw.ops = &dw_pcie_ops;
-> > +	dw_pcie_cap_set(&rcar->dw, EDMA_UNROLL);
-> > +	dw_pcie_cap_set(&rcar->dw, REQ_RES);
-> > +	rcar->pdev = pdev;
-> > +	platform_set_drvdata(pdev, rcar);
-> > +
-> > +	return rcar;
-> > +}
-> > diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.h b/drivers/pci/controller/dwc/pcie-rcar-gen4.h
-> > new file mode 100644
-> > index 000000000000..781165422739
-> > --- /dev/null
-> > +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.h
-> > @@ -0,0 +1,44 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * PCIe host/endpoint controller driver for Renesas R-Car Gen4 Series SoCs
-> > + * Copyright (C) 2022-2023 Renesas Electronics Corporation
-> > + */
-> > +
-> > +#ifndef _PCIE_RCAR_GEN4_H_
-> > +#define _PCIE_RCAR_GEN4_H_
-> > +
-> > +#include <linux/io.h>
-> > +#include <linux/pci.h>
-> > +
-> > +#include "pcie-designware.h"
-> > +
-> > +/* Renesas-specific */
-> > +#define PCIEMSR0		0x0000
-> > +#define  BIFUR_MOD_SET_ON	BIT(0)
-> > +#define  DEVICE_TYPE_EP		0
-> > +#define  DEVICE_TYPE_RC		BIT(4)
-> > +
-> > +#define PCIEINTSTS0		0x0084
-> > +#define PCIEINTSTS0EN		0x0310
-> > +#define  MSI_CTRL_INT		BIT(26)
-> > +#define  SMLH_LINK_UP		BIT(7)
-> > +#define  RDLH_LINK_UP		BIT(6)
-> > +#define PCIEDMAINTSTSEN		0x0314
-> > +#define  PCIEDMAINTSTSEN_INIT	GENMASK(15, 0)
-> > +
-> > +struct rcar_gen4_pcie {
-> > +	struct dw_pcie dw;
-> > +	void __iomem *base;
-> > +	struct platform_device *pdev;
-> > +	enum dw_pcie_device_mode mode;
-> > +};
-> > +#define to_rcar_gen4_pcie(_dw)	container_of(_dw, struct rcar_gen4_pcie, dw)
-> > +
-> > +int rcar_gen4_pcie_basic_init(struct rcar_gen4_pcie *rcar);
-> > +void rcar_gen4_pcie_basic_deinit(struct rcar_gen4_pcie *rcar);
-> > +int rcar_gen4_pcie_prepare(struct rcar_gen4_pcie *rcar);
-> > +void rcar_gen4_pcie_unprepare(struct rcar_gen4_pcie *rcar);
-> > +int rcar_gen4_pcie_get_resources(struct rcar_gen4_pcie *rcar);
-> > +struct rcar_gen4_pcie *rcar_gen4_pcie_devm_alloc(struct platform_device *pdev);
-> > +
-> > +#endif /* _PCIE_RCAR_GEN4_H_ */
-> > -- 
-> > 2.25.1
-> > 
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+> -Serge(y)
+>=20
+> >
+> > Best regards,
+> > Yoshihiro Shimoda
+> >
+> > > C&P it here just in case if you change your mind:
+> > >
+> > > This is a preparation before adding the Msg-type outbound iATU
+> > > mapping. The respective update will require two more arguments added
+> > > to __dw_pcie_prog_outbound_atu(). That will make the already
+> > > complicated function prototype even more hard to comprehend accepting
+> > > _eight_ arguments. In order to prevent that and keep the code
+> > > more-or-less readable all the outbound iATU-related arguments are
+> > > moved to the new config-structure: struct dw_pcie_ob_atu_cfg pointer
+> > > to which shall be passed to dw_pcie_prog_outbound_atu(). The structur=
+e
+> > > is supposed to be locally defined and populated with the outbound iAT=
+U
+> > > settings implied by the caller context.
+> > >
+> > > As a result of the denoted change there is no longer need in having
+> > > the two distinctive methods for the Host and End-point outbound iATU
+> > > setups since the corresponding code can directly call the
+> > > dw_pcie_prog_outbound_atu() method with the config-structure
+> > > populated. Thus dw_pcie_prog_ep_outbound_atu() is dropped.
+> > >
+> > > -Serge(y)
+> > >
+> > > >
+> > > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > > Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+> > > > ---
+> > > >  .../pci/controller/dwc/pcie-designware-ep.c   | 21 +++++---
+> > > >  .../pci/controller/dwc/pcie-designware-host.c | 52 +++++++++++++--=
+----
+> > > >  drivers/pci/controller/dwc/pcie-designware.c  | 49 ++++++---------=
+--
+> > > >  drivers/pci/controller/dwc/pcie-designware.h  | 15 ++++--
+> > > >  4 files changed, 77 insertions(+), 60 deletions(-)
+> > > >
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/driv=
+ers/pci/controller/dwc/pcie-designware-ep.c
+> > > > index 27278010ecec..fe2e0d765be9 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > > > @@ -182,9 +182,8 @@ static int dw_pcie_ep_inbound_atu(struct dw_pci=
+e_ep *ep, u8 func_no, int type,
+> > > >  	return 0;
+> > > >  }
+> > > >
+> > > > -static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, u8 func_=
+no,
+> > > > -				   phys_addr_t phys_addr,
+> > > > -				   u64 pci_addr, size_t size)
+> > > > +static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep,
+> > > > +				   struct dw_pcie_ob_atu_cfg *atu)
+> > > >  {
+> > > >  	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > > >  	u32 free_win;
+> > > > @@ -196,13 +195,13 @@ static int dw_pcie_ep_outbound_atu(struct dw_=
+pcie_ep *ep, u8 func_no,
+> > > >  		return -EINVAL;
+> > > >  	}
+> > > >
+> > > > -	ret =3D dw_pcie_prog_ep_outbound_atu(pci, func_no, free_win, PCIE=
+_ATU_TYPE_MEM,
+> > > > -					   phys_addr, pci_addr, size);
+> > > > +	atu->index =3D free_win;
+> > > > +	ret =3D dw_pcie_prog_outbound_atu(pci, atu);
+> > > >  	if (ret)
+> > > >  		return ret;
+> > > >
+> > > >  	set_bit(free_win, ep->ob_window_map);
+> > > > -	ep->outbound_addr[free_win] =3D phys_addr;
+> > > > +	ep->outbound_addr[free_win] =3D atu->cpu_addr;
+> > > >
+> > > >  	return 0;
+> > > >  }
+> > > > @@ -305,8 +304,14 @@ static int dw_pcie_ep_map_addr(struct pci_epc =
+*epc, u8 func_no, u8 vfunc_no,
+> > > >  	int ret;
+> > > >  	struct dw_pcie_ep *ep =3D epc_get_drvdata(epc);
+> > > >  	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > > > -
+> > > > -	ret =3D dw_pcie_ep_outbound_atu(ep, func_no, addr, pci_addr, size=
+);
+> > > > +	struct dw_pcie_ob_atu_cfg atu =3D { 0 };
+> > > > +
+> > > > +	atu.func_no =3D func_no;
+> > > > +	atu.type =3D PCIE_ATU_TYPE_MEM;
+> > > > +	atu.cpu_addr =3D addr;
+> > > > +	atu.pci_addr =3D pci_addr;
+> > > > +	atu.size =3D size;
+> > > > +	ret =3D dw_pcie_ep_outbound_atu(ep, &atu);
+> > > >  	if (ret) {
+> > > >  		dev_err(pci->dev, "Failed to enable address\n");
+> > > >  		return ret;
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/dr=
+ivers/pci/controller/dwc/pcie-designware-host.c
+> > > > index cf61733bf78d..7419185721f2 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > @@ -549,6 +549,7 @@ static void __iomem *dw_pcie_other_conf_map_bus=
+(struct pci_bus *bus,
+> > > >  {
+> > > >  	struct dw_pcie_rp *pp =3D bus->sysdata;
+> > > >  	struct dw_pcie *pci =3D to_dw_pcie_from_pp(pp);
+> > > > +	struct dw_pcie_ob_atu_cfg atu =3D { 0 };
+> > > >  	int type, ret;
+> > > >  	u32 busdev;
+> > > >
+> > > > @@ -571,8 +572,12 @@ static void __iomem *dw_pcie_other_conf_map_bu=
+s(struct pci_bus *bus,
+> > > >  	else
+> > > >  		type =3D PCIE_ATU_TYPE_CFG1;
+> > > >
+> > > > -	ret =3D dw_pcie_prog_outbound_atu(pci, 0, type, pp->cfg0_base, bu=
+sdev,
+> > > > -					pp->cfg0_size);
+> > > > +	atu.type =3D type;
+> > > > +	atu.cpu_addr =3D pp->cfg0_base;
+> > > > +	atu.pci_addr =3D busdev;
+> > > > +	atu.size =3D pp->cfg0_size;
+> > > > +
+> > > > +	ret =3D dw_pcie_prog_outbound_atu(pci, &atu);
+> > > >  	if (ret)
+> > > >  		return NULL;
+> > > >
+> > > > @@ -584,6 +589,7 @@ static int dw_pcie_rd_other_conf(struct pci_bus=
+ *bus, unsigned int devfn,
+> > > >  {
+> > > >  	struct dw_pcie_rp *pp =3D bus->sysdata;
+> > > >  	struct dw_pcie *pci =3D to_dw_pcie_from_pp(pp);
+> > > > +	struct dw_pcie_ob_atu_cfg atu =3D { 0 };
+> > > >  	int ret;
+> > > >
+> > > >  	ret =3D pci_generic_config_read(bus, devfn, where, size, val);
+> > > > @@ -591,9 +597,12 @@ static int dw_pcie_rd_other_conf(struct pci_bu=
+s *bus, unsigned int devfn,
+> > > >  		return ret;
+> > > >
+> > > >  	if (pp->cfg0_io_shared) {
+> > > > -		ret =3D dw_pcie_prog_outbound_atu(pci, 0, PCIE_ATU_TYPE_IO,
+> > > > -						pp->io_base, pp->io_bus_addr,
+> > > > -						pp->io_size);
+> > > > +		atu.type =3D PCIE_ATU_TYPE_IO;
+> > > > +		atu.cpu_addr =3D pp->io_base;
+> > > > +		atu.pci_addr =3D pp->io_bus_addr;
+> > > > +		atu.size =3D pp->io_size;
+> > > > +
+> > > > +		ret =3D dw_pcie_prog_outbound_atu(pci, &atu);
+> > > >  		if (ret)
+> > > >  			return PCIBIOS_SET_FAILED;
+> > > >  	}
+> > > > @@ -606,6 +615,7 @@ static int dw_pcie_wr_other_conf(struct pci_bus=
+ *bus, unsigned int devfn,
+> > > >  {
+> > > >  	struct dw_pcie_rp *pp =3D bus->sysdata;
+> > > >  	struct dw_pcie *pci =3D to_dw_pcie_from_pp(pp);
+> > > > +	struct dw_pcie_ob_atu_cfg atu =3D { 0 };
+> > > >  	int ret;
+> > > >
+> > > >  	ret =3D pci_generic_config_write(bus, devfn, where, size, val);
+> > > > @@ -613,9 +623,12 @@ static int dw_pcie_wr_other_conf(struct pci_bu=
+s *bus, unsigned int devfn,
+> > > >  		return ret;
+> > > >
+> > > >  	if (pp->cfg0_io_shared) {
+> > > > -		ret =3D dw_pcie_prog_outbound_atu(pci, 0, PCIE_ATU_TYPE_IO,
+> > > > -						pp->io_base, pp->io_bus_addr,
+> > > > -						pp->io_size);
+> > > > +		atu.type =3D PCIE_ATU_TYPE_IO;
+> > > > +		atu.cpu_addr =3D pp->io_base;
+> > > > +		atu.pci_addr =3D pp->io_bus_addr;
+> > > > +		atu.size =3D pp->io_size;
+> > > > +
+> > > > +		ret =3D dw_pcie_prog_outbound_atu(pci, &atu);
+> > > >  		if (ret)
+> > > >  			return PCIBIOS_SET_FAILED;
+> > > >  	}
+> > > > @@ -650,6 +663,7 @@ static struct pci_ops dw_pcie_ops =3D {
+> > > >  static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+> > > >  {
+> > > >  	struct dw_pcie *pci =3D to_dw_pcie_from_pp(pp);
+> > > > +	struct dw_pcie_ob_atu_cfg atu =3D { 0 };
+> > > >  	struct resource_entry *entry;
+> > > >  	int i, ret;
+> > > >
+> > > > @@ -677,10 +691,13 @@ static int dw_pcie_iatu_setup(struct dw_pcie_=
+rp *pp)
+> > > >  		if (pci->num_ob_windows <=3D ++i)
+> > > >  			break;
+> > > >
+> > > > -		ret =3D dw_pcie_prog_outbound_atu(pci, i, PCIE_ATU_TYPE_MEM,
+> > > > -						entry->res->start,
+> > > > -						entry->res->start - entry->offset,
+> > > > -						resource_size(entry->res));
+> > > > +		atu.index =3D i;
+> > > > +		atu.type =3D PCIE_ATU_TYPE_MEM;
+> > > > +		atu.cpu_addr =3D entry->res->start;
+> > > > +		atu.pci_addr =3D entry->res->start - entry->offset;
+> > > > +		atu.size =3D resource_size(entry->res);
+> > > > +
+> > > > +		ret =3D dw_pcie_prog_outbound_atu(pci, &atu);
+> > > >  		if (ret) {
+> > > >  			dev_err(pci->dev, "Failed to set MEM range %pr\n",
+> > > >  				entry->res);
+> > > > @@ -690,10 +707,13 @@ static int dw_pcie_iatu_setup(struct dw_pcie_=
+rp *pp)
+> > > >
+> > > >  	if (pp->io_size) {
+> > > >  		if (pci->num_ob_windows > ++i) {
+> > > > -			ret =3D dw_pcie_prog_outbound_atu(pci, i, PCIE_ATU_TYPE_IO,
+> > > > -							pp->io_base,
+> > > > -							pp->io_bus_addr,
+> > > > -							pp->io_size);
+> > > > +			atu.index =3D i;
+> > > > +			atu.type =3D PCIE_ATU_TYPE_IO;
+> > > > +			atu.cpu_addr =3D pp->io_base;
+> > > > +			atu.pci_addr =3D pp->io_bus_addr;
+> > > > +			atu.size =3D pp->io_size;
+> > > > +
+> > > > +			ret =3D dw_pcie_prog_outbound_atu(pci, &atu);
+> > > >  			if (ret) {
+> > > >  				dev_err(pci->dev, "Failed to set IO range %pr\n",
+> > > >  					entry->res);
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers=
+/pci/controller/dwc/pcie-designware.c
+> > > > index 2459f2a61b9b..49b785509576 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > @@ -464,56 +464,56 @@ static inline u32 dw_pcie_enable_ecrc(u32 val=
+)
+> > > >  	return val | PCIE_ATU_TD;
+> > > >  }
+> > > >
+> > > > -static int __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 fun=
+c_no,
+> > > > -				       int index, int type, u64 cpu_addr,
+> > > > -				       u64 pci_addr, u64 size)
+> > > > +int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
+> > > > +			      const struct dw_pcie_ob_atu_cfg *atu)
+> > > >  {
+> > > > +	u64 cpu_addr =3D atu->cpu_addr;
+> > > >  	u32 retries, val;
+> > > >  	u64 limit_addr;
+> > > >
+> > > >  	if (pci->ops && pci->ops->cpu_addr_fixup)
+> > > >  		cpu_addr =3D pci->ops->cpu_addr_fixup(pci, cpu_addr);
+> > > >
+> > > > -	limit_addr =3D cpu_addr + size - 1;
+> > > > +	limit_addr =3D cpu_addr + atu->size - 1;
+> > > >
+> > > >  	if ((limit_addr & ~pci->region_limit) !=3D (cpu_addr & ~pci->regi=
+on_limit) ||
+> > > >  	    !IS_ALIGNED(cpu_addr, pci->region_align) ||
+> > > > -	    !IS_ALIGNED(pci_addr, pci->region_align) || !size) {
+> > > > +	    !IS_ALIGNED(atu->pci_addr, pci->region_align) || !atu->size) =
+{
+> > > >  		return -EINVAL;
+> > > >  	}
+> > > >
+> > > > -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_LOWER_BASE,
+> > > > +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_LOWER_BASE,
+> > > >  			      lower_32_bits(cpu_addr));
+> > > > -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_UPPER_BASE,
+> > > > +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_UPPER_BASE,
+> > > >  			      upper_32_bits(cpu_addr));
+> > > >
+> > > > -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_LIMIT,
+> > > > +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_LIMIT,
+> > > >  			      lower_32_bits(limit_addr));
+> > > >  	if (dw_pcie_ver_is_ge(pci, 460A))
+> > > > -		dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_UPPER_LIMIT,
+> > > > +		dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_UPPER_LIMIT,
+> > > >  				      upper_32_bits(limit_addr));
+> > > >
+> > > > -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_LOWER_TARGET,
+> > > > -			      lower_32_bits(pci_addr));
+> > > > -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_UPPER_TARGET,
+> > > > -			      upper_32_bits(pci_addr));
+> > > > +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_LOWER_TARGET,
+> > > > +			      lower_32_bits(atu->pci_addr));
+> > > > +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_UPPER_TARGET,
+> > > > +			      upper_32_bits(atu->pci_addr));
+> > > >
+> > > > -	val =3D type | PCIE_ATU_FUNC_NUM(func_no);
+> > > > +	val =3D atu->type | PCIE_ATU_FUNC_NUM(atu->func_no);
+> > > >  	if (upper_32_bits(limit_addr) > upper_32_bits(cpu_addr) &&
+> > > >  	    dw_pcie_ver_is_ge(pci, 460A))
+> > > >  		val |=3D PCIE_ATU_INCREASE_REGION_SIZE;
+> > > >  	if (dw_pcie_ver_is(pci, 490A))
+> > > >  		val =3D dw_pcie_enable_ecrc(val);
+> > > > -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_REGION_CTRL1, val);
+> > > > +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_REGION_CTRL1, val=
+);
+> > > >
+> > > > -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_REGION_CTRL2, PCIE_ATU=
+_ENABLE);
+> > > > +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_REGION_CTRL2, PCI=
+E_ATU_ENABLE);
+> > > >
+> > > >  	/*
+> > > >  	 * Make sure ATU enable takes effect before any subsequent config
+> > > >  	 * and I/O accesses.
+> > > >  	 */
+> > > >  	for (retries =3D 0; retries < LINK_WAIT_MAX_IATU_RETRIES; retries=
+++) {
+> > > > -		val =3D dw_pcie_readl_atu_ob(pci, index, PCIE_ATU_REGION_CTRL2);
+> > > > +		val =3D dw_pcie_readl_atu_ob(pci, atu->index, PCIE_ATU_REGION_CT=
+RL2);
+> > > >  		if (val & PCIE_ATU_ENABLE)
+> > > >  			return 0;
+> > > >
+> > > > @@ -525,21 +525,6 @@ static int __dw_pcie_prog_outbound_atu(struct =
+dw_pcie *pci, u8 func_no,
+> > > >  	return -ETIMEDOUT;
+> > > >  }
+> > > >
+> > > > -int dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int =
+type,
+> > > > -			      u64 cpu_addr, u64 pci_addr, u64 size)
+> > > > -{
+> > > > -	return __dw_pcie_prog_outbound_atu(pci, 0, index, type,
+> > > > -					   cpu_addr, pci_addr, size);
+> > > > -}
+> > > > -
+> > > > -int dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, =
+int index,
+> > > > -				 int type, u64 cpu_addr, u64 pci_addr,
+> > > > -				 u64 size)
+> > > > -{
+> > > > -	return __dw_pcie_prog_outbound_atu(pci, func_no, index, type,
+> > > > -					   cpu_addr, pci_addr, size);
+> > > > -}
+> > > > -
+> > > >  static inline u32 dw_pcie_readl_atu_ib(struct dw_pcie *pci, u32 in=
+dex, u32 reg)
+> > > >  {
+> > > >  	return dw_pcie_readl_atu(pci, PCIE_ATU_REGION_DIR_IB, index, reg)=
+;
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers=
+/pci/controller/dwc/pcie-designware.h
+> > > > index 3c06e025c905..85de0d8346fa 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > @@ -288,6 +288,15 @@ enum dw_pcie_core_rst {
+> > > >  	DW_PCIE_NUM_CORE_RSTS
+> > > >  };
+> > > >
+> > > > +struct dw_pcie_ob_atu_cfg {
+> > > > +	int index;
+> > > > +	int type;
+> > > > +	u8 func_no;
+> > > > +	u64 cpu_addr;
+> > > > +	u64 pci_addr;
+> > > > +	u64 size;
+> > > > +};
+> > > > +
+> > > >  struct dw_pcie_host_ops {
+> > > >  	int (*host_init)(struct dw_pcie_rp *pp);
+> > > >  	void (*host_deinit)(struct dw_pcie_rp *pp);
+> > > > @@ -416,10 +425,8 @@ void dw_pcie_write_dbi2(struct dw_pcie *pci, u=
+32 reg, size_t size, u32 val);
+> > > >  int dw_pcie_link_up(struct dw_pcie *pci);
+> > > >  void dw_pcie_upconfig_setup(struct dw_pcie *pci);
+> > > >  int dw_pcie_wait_for_link(struct dw_pcie *pci);
+> > > > -int dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int =
+type,
+> > > > -			      u64 cpu_addr, u64 pci_addr, u64 size);
+> > > > -int dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, =
+int index,
+> > > > -				 int type, u64 cpu_addr, u64 pci_addr, u64 size);
+> > > > +int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
+> > > > +			      const struct dw_pcie_ob_atu_cfg *atu);
+> > > >  int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int t=
+ype,
+> > > >  			     u64 cpu_addr, u64 pci_addr, u64 size);
+> > > >  int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, i=
+nt index,
+> > > > --
+> > > > 2.25.1
+> > > >
