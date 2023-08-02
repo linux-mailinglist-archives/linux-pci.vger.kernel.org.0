@@ -2,65 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CC6476D69C
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Aug 2023 20:14:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1780B76D70A
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Aug 2023 20:45:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230461AbjHBSOY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Aug 2023 14:14:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60020 "EHLO
+        id S229638AbjHBSpQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Aug 2023 14:45:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230223AbjHBSOY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Aug 2023 14:14:24 -0400
-Received: from mgamail.intel.com (unknown [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70B13171B
-        for <linux-pci@vger.kernel.org>; Wed,  2 Aug 2023 11:14:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691000063; x=1722536063;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=UgdXSsyvw65ySj43we4vjITUumnhHwnMR2GnhOr4S6A=;
-  b=lEeJSHYVtz8TsbIRTWhor/aMhcbgFNuWYdjwS9y8kzfNgmGInbPDrNVt
-   wlva2SkD82cqYv4zWxVymNP1WfLMnabZKAh7HS4gjsdgSq7MIEar5vfJy
-   Alde15/7ReJF8ZhVA5Bj3myvcX988AsIqQqnAGxWZjQieXjMdrjIqSeqz
-   nBNsrPtB1NnpSrqj/LjbG6+eRH5KHoC2FBX7c4Xhg4t6QZBJfmc3JUGcO
-   Qpx0x5WKClUiqz1cIZF9+FC1yoA6Xk2aJXlSiepgOPwr9c6/HnvVbScLR
-   kOT1anE6EwAd7issXW2ICUA8vvjk7KU0fvn/NxJaongwmzQ27ZhghsITo
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10790"; a="373302199"
-X-IronPort-AV: E=Sophos;i="6.01,249,1684825200"; 
-   d="scan'208";a="373302199"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2023 11:14:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10790"; a="764311955"
-X-IronPort-AV: E=Sophos;i="6.01,249,1684825200"; 
-   d="scan'208";a="764311955"
-Received: from rickylop-mobl1.amr.corp.intel.com (HELO [10.212.125.114]) ([10.212.125.114])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2023 11:14:22 -0700
-Message-ID: <74ea038e-5ec3-c24b-4e05-7b8116f13297@linux.intel.com>
-Date:   Wed, 2 Aug 2023 13:14:21 -0500
+        with ESMTP id S229628AbjHBSpO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Aug 2023 14:45:14 -0400
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2082.outbound.protection.outlook.com [40.107.21.82])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86DBF19A4;
+        Wed,  2 Aug 2023 11:45:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FgAwUe3xLOnKjonL5MsQhRKnsNnCkLy/VdzwA8+X9bXc2G/qfkvZe1DkWDK+uwzlIzQGFMeYKEvHco6TI2D+8xsktGYxto3RZTUpSpWBFtL0wWby6lAlneE0rBP/rps1y2T5mHNS4uPLvmQqtiZsNNtFiWep39WzFhbqH+Mf76jna8gx/M3USx37IteDdJ1oYp1HN1va9WLwydZakThqQUHOQI36mxFGUEntAeViFQVLN/npRTU44/oPxdsuqGoMjHk8gpm8gis+ZdfV7NhL0FCLPgYsWuib2HbL1OkwGe2xH18Qk+G9EWMdwnOpzqT8+ycw9yzTKn5Qb11h7faOiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lmjjptg0w82ECi3B/KUJx6w2QCVP5Le0/SQbfQK49n8=;
+ b=dDZj3tNWmdaLzYN82c2bt+8s6A0BcDY79Kif0oJg0hYooBrWMURs1k81FqtHcrKBGASFQx8/jyBcABS3TPv2yB/QRcMnnY7aRKVmKlG2xE2HQQYA0b77gFCR0d8qWAughh3kVowRrljgyd2Y6GTz12kW89Z/S3VyfoxApcRH7nJdiDhmCOeC+4GksjuFi+S0ahwSFa8hGVHv3Dy8mUI/7pijyqsSTR5wcR8z4l6YG3hkH3bfNbWI5sdJsc3CfqOY8DB4sSgcWmgpzI1ny8e2LCVoeg4o0zLx1N4Lyrdx3xkFrjnCaSWtMy6LoH79OTGQuoq1q6uX3EXHmaY6TmULKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lmjjptg0w82ECi3B/KUJx6w2QCVP5Le0/SQbfQK49n8=;
+ b=Xm6rxcJbyh7Crdj64ckiw7Po0OCeE42PbsmgQcsE0CnZKs59RTKv0x+KFAIRCluHSK7spAzXO2Qg8DKP+uCIjMCdffSTkhmvR10L/GLTv5z8OFhRZ5HPHrTfOuHRZVg0Mn/U8W3yisjq5D7cuRlR5VBlHtkT9YlW+uDg3hT16sI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR04MB4845.eurprd04.prod.outlook.com (2603:10a6:803:51::30)
+ by AM0PR04MB6977.eurprd04.prod.outlook.com (2603:10a6:208:189::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.45; Wed, 2 Aug
+ 2023 18:45:09 +0000
+Received: from VI1PR04MB4845.eurprd04.prod.outlook.com
+ ([fe80::f70b:a2f2:d9ae:ce58]) by VI1PR04MB4845.eurprd04.prod.outlook.com
+ ([fe80::f70b:a2f2:d9ae:ce58%4]) with mapi id 15.20.6631.045; Wed, 2 Aug 2023
+ 18:45:08 +0000
+Date:   Wed, 2 Aug 2023 14:44:52 -0400
+From:   Frank Li <Frank.li@nxp.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     mani@kernel.org, bhelgaas@google.com, devicetree@vger.kernel.org,
+        gustavo.pimentel@synopsys.com, imx@lists.linux.dev, kw@linux.com,
+        leoyang.li@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
+        minghuan.lian@nxp.com, mingkai.hu@nxp.com, robh+dt@kernel.org,
+        roy.zang@nxp.com, shawnguo@kernel.org, zhiqiang.hou@nxp.com
+Subject: Re: [PATCH v7 1/2] PCI: dwc: Implement general suspend/resume
+ functionality for L2/L3 transitions
+Message-ID: <ZMqj/4Yc6U5YqmHJ@lizhi-Precision-Tower-5810>
+References: <20230802155748.212377-1-Frank.Li@nxp.com>
+ <20230802163138.GA61043@bhelgaas>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230802163138.GA61043@bhelgaas>
+X-ClientProxiedBy: SJ0PR05CA0180.namprd05.prod.outlook.com
+ (2603:10b6:a03:339::35) To VI1PR04MB4845.eurprd04.prod.outlook.com
+ (2603:10a6:803:51::30)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.13.0
-Subject: Re: [PATCH 1/5] PCI: add ArrowLake-S PCI ID for Intel HDAudio
- subsystem.
-To:     Mark Brown <broonie@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Takashi Iwai <tiwai@suse.de>, alsa-devel@alsa-project.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>
-References: <206f5a15-29f0-ec7c-1b85-50ace8ae7c2f@linux.intel.com>
- <20230802162541.GA60855@bhelgaas>
- <b1c21bfb-2d47-4c42-87b7-2846de02e017@sirena.org.uk>
-Content-Language: en-US
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <b1c21bfb-2d47-4c42-87b7-2846de02e017@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VI1PR04MB4845:EE_|AM0PR04MB6977:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9da1307a-4c22-40d6-93c9-08db9388985f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DkVHNv/qFR+kuZNo2jNn7DkgBpj9/Weqw0g+ZvlxiCW9ALpKdS41hyaIdp3IOLf79CSC+m0SW2hE2gvq0sml2w6S/8oPVDgwiXMK8YX+fM5dFefwuLQf/OHPbfBbO2K/XJhWu4i6JBv2ZJshl1CSNxvkPkn4GwcYt8mgiWTKLHwA1co2efVkTcV7DwFdj4r6rSYlCY9tjCNLs2NPTwchEPvX4SfZXDcFND52/2l5aQr5BrGfpMdjrUO3b6IhD83qZT399JH2yO1Y9YvcRvArhkViVo516XqtcOnjph7ukpS9YzSMxIBzxVdY/uyXW5Bnh34EVJOSkVIW329K6d6v6+X0S3Y6wtoQ2Fltx2X6EIMKnF06czsoEci7L+/v5lqIzl1EksxW3Gle+ztEpIVx3Dz2aBhzWw43lPEVVfRAyKKUFXQc/BktxuSFgPGhUHYGvGBQyEJOTunxkH5H5vtounJyQNxwGrXe51wF6dggPfXvPVZaSZpr341uj8YzRTud1Sv93NHC0EVhbn0T/IJcUKv4vUmAoMhl6L9tIgI2sq8wmzHUT2VjUEo1QUTxtYTsbLXT6p4el2qtY1PvVJVN9Vi/JsyM0pV12Xw1BGTQbZYSllPWG/gqNZ09P2M5aavI
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4845.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(7916004)(39860400002)(346002)(396003)(366004)(136003)(376002)(451199021)(9686003)(6512007)(316002)(38100700002)(478600001)(86362001)(38350700002)(66476007)(6666004)(66556008)(66946007)(6486002)(52116002)(33716001)(4326008)(6916009)(6506007)(41300700001)(26005)(186003)(83380400001)(8676002)(8936002)(5660300002)(7416002)(2906002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?HJof27ue01EzyfRNr6IHFjEpYkKs+UJouri+9AQfs+u5jJvnhp17aUaMj1xe?=
+ =?us-ascii?Q?7KkFuu4mczyj0fH/IL/GvJdmufxkvzL1SIWF3aLfV/JNlMEAD7bvLn4x+xZ7?=
+ =?us-ascii?Q?kt8pK7wsXqgnDPn9pJZitRenr2mOs6KNE5U4CGruahISEjUsVlLjRzuWcyo6?=
+ =?us-ascii?Q?hE7apSTlkoYr3OT6X616S+h0QTdRRnDqJH0bBXd5y8e5ucF7fv12GouzkNi8?=
+ =?us-ascii?Q?yfwbANx8FY1lz3mkWkS2B2uEiBmbBnu8ZKpavYA6LIk3vyPOs4bPoRjfgo7i?=
+ =?us-ascii?Q?rVhnglxpzhKVjHor76P4u2qJjNEiEj172AqJ0ELjca0RQgkb1BOQt5wELOq3?=
+ =?us-ascii?Q?2D9N6EUbNqkfbDpjruvFOwv//wgw4Zjf6Kt53BCkZ5IksROP4odGvFI5LWkv?=
+ =?us-ascii?Q?BSNDbPUQ05gsnJTR86Uu3kyxNabXMe59kPGu8G2BNgcxAFmvphIRiIqAzPQ/?=
+ =?us-ascii?Q?kuiTS3KkwbbUSBI/1Fur5DndnweW6FBgmiOf0gLWhv7AWl/g0x6icK+TawqE?=
+ =?us-ascii?Q?owj8iFheA9zoXeRhboHY/HQVSruMCNYDzeneo3T7Ciiyl47rWzqkwWtOI3q9?=
+ =?us-ascii?Q?h2997oRa1R8JxQGM3QYu+wCWtQx/F7VKRqtDzjEAirJjm8q92mZdifigghxH?=
+ =?us-ascii?Q?V9AmhoPdo6nQNxp0P2ivnKmNaVGUHs2vuCP6YgezZeTYRhKkYdgAGETCyCNR?=
+ =?us-ascii?Q?z9fU3SoVlldXmwfJBva4n4Zrvv/GYf4qnhpz5LGTTZdI7LOXgYJ+5/8JIUqL?=
+ =?us-ascii?Q?cf4L5PLBF4cpFhCz4jC7H7XreR9XfXIVdb96+qTKt9QGAmszREftoLztK/KH?=
+ =?us-ascii?Q?4YMq7/0KVekxNMMA5sJMaAY/s2y1/kt/3Kjwg9onTj6XvBpKZ2U/4p7OL9fb?=
+ =?us-ascii?Q?dm/r9/xABMvRKwYfKcHuyjWsU8n9eUw9qb/JhsGzh1sXdNOkAIobaQNxRsK2?=
+ =?us-ascii?Q?Nhvsl6rn01es2ZfAJnrr6oT7bigB3XSGO7iM86du/Bj+jUo+xBq41cJGJgmP?=
+ =?us-ascii?Q?v685ZkhdIbN/vWl2XEpAhLOmdhSEyHbExN1sDZZxapAdLM84WaAOoZdPrS6K?=
+ =?us-ascii?Q?9TTZElpFkmXe30uHuKv4rUGVJFeaLrMhhpUWEpo7YLo8J+xV31yl7ndUjQIQ?=
+ =?us-ascii?Q?VEzkqtqEI4NsMgnZekHLq2XgUqk+qQVtgwpQrHSl+BICErIUxwcecyOMiO/K?=
+ =?us-ascii?Q?+TmQVceYsg8yzwAIZemYxnbYF3OpWAC2cilYUXlYXSjrkthBkvY/d+t4Hjfb?=
+ =?us-ascii?Q?qYIhPWGLJbX8cxkKpmT9+4lreUaEm5RICBT8RER9bEGdekCeQzuuX/gxo70X?=
+ =?us-ascii?Q?xVYMvctSb3u/lal5UOKuFiJUkxWlu62yGehYt6J5pR9IzGKHIGU0q7mMkdQD?=
+ =?us-ascii?Q?ULNlDhvVQ7M4yB0/oORpLHpXq4y632Jxf9uQ3a4Ron1+sH6dmdvx9Z/ToKiu?=
+ =?us-ascii?Q?tHqgE4pNL2D9QHGe4oSlZEyo7/i/oOcMV789NH5fFoe/Mm1jaPpQimeMub3e?=
+ =?us-ascii?Q?jHHVf6i37hE+CeqOz9YvLCz0GD69BxlkjGcZXMdbBn8gJdV94pnHQh0BTKkg?=
+ =?us-ascii?Q?3EXlXWkz2kDcEfqLYmgVY+JJPTOZTBkuLcxy1Bbd?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9da1307a-4c22-40d6-93c9-08db9388985f
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB4845.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2023 18:45:08.5737
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fbVfBlLz4sLl5n7yvJqYbsV6kXZ9BcgBmL7bcCOg0yX8S2BOJTJ53hD0QcepturPHFRdnW3Gu4c2Ovawv7rg7A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6977
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
         URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,45 +119,62 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 8/2/23 11:34, Mark Brown wrote:
-> On Wed, Aug 02, 2023 at 11:25:41AM -0500, Bjorn Helgaas wrote:
->> On Wed, Aug 02, 2023 at 11:07:36AM -0500, Pierre-Louis Bossart wrote:
+On Wed, Aug 02, 2023 at 11:31:38AM -0500, Bjorn Helgaas wrote:
+> On Wed, Aug 02, 2023 at 11:57:47AM -0400, Frank Li wrote:
+> > Introduce helper function dw_pcie_get_ltssm to retrieve SMLH_LTSS_STATE.
 > 
->>> I am not following. we just agreed a couple of weeks ago to record ALL
->>> Intel/HDaudio PCI IDs in the same pci_ids.h include file.
+> s/dw_pcie_get_ltssm/dw_pcie_get_ltssm()/
 > 
->> I'm not sure who "we" is here.  If it included me and I signed up to
->> it, I apologize for forgetting, and go ahead and add my:
+> > Add callback .pme_turn_off and .exit_from_l2 for platform specific PME
+> > handling.
+> > 
+> > Add common dw_pcie_suspend(resume)_noirq() API to avoid duplicated code
+> > in dwc pci host controller platform driver.
+> > 
+> > Typical L2 entry workflow/dw_pcie_suspend_noirq()
+> > 
+> > 1. Transmit PME turn off signal to PCI devices and wait for PME_To_Ack.
+> > 2. Await link entering L2_IDLE state.
+> > 
+> > Typical L2 exit workflow/dw_pcie_resume_noirq()
+> > 
+> > 1. Issue exit from L2 command.
+> > 2. Reinitialize PCI host.
+> > 3. Wait for link to become active.
+> > 
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> >  Change from v6 to v7
+> >  - change according to Manivannan's comments.
+> >    fix sleep value 100 (should be 1000 for 1ms).
 > 
->>   Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > +	 * PCI Express Base Specification Rev 4.0 Section 5.3.3.2.1 PME
+> > +	 * Synchronization Recommends 1ms to 10ms timeout to check L2 ready.
+> > +	 */
+> > +	ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
+> > +				1000, 10000, false, pci);
+> 
+> Thanks for the spec citation.  Can you please reference the current
+> spec, i.e., "PCIe r6.0, sec 5.3.3.2.1".
+> 
+> s/Recommends/recommends/
+> 
+> It would really be great to have a #define for this since the bare
+> numbers are not very meaningful and they're not specific to DWC so a
+> #define would let us find similar situations in other drivers.
 
-This was the original thread for the record
+how about define as
 
-https://lore.kernel.org/alsa-devel/20230717114511.484999-3-amadeuszx.slawinski@linux.intel.com/
+#define PCI_PME_TO_L2_TIMEOUT 10000
 
->> I'm just pointing out the usual practice for pci_ids.h, as mentioned
->> in the file itself.
+ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
+                           PCI_PME_TO_L2_TIMEOUT/10, PCI_PME_TO_L2_TIMEOUT, false, pci);
 
-You're actually right that we didn't talk about the minimum criterion to
-add a PCI ID to this file. To me it was a central place similar to the
-cpu ids, etc., if it wasn't clear to everyone than it's good to agree on
-this second point.
+where is good place PCI_PME_TO_L2_TIMEOUT in?
 
-> I think the thing with these drivers is that we know they will become
-> shared in fairly short order so it just becomes overhead to add then
-> move the identifier and update.
+pcie-designware.h or pci.h?
 
-Indeed, the sharing part is not always predictable and is subject to
-roadmap changes made above my pay grade.
+Frank
 
-The intended use of the devices can vary as well, some PCI IDs for
-desktops are intended to be used only by snd-hda-intel, but if one OEM
-starts adding digital microphones then the SOF driver becomes required.
-
-So rather than force everyone to follow changes at Intel or Intel
-customers it's simpler to just add PCI IDs in pci_ids.h. We typically
-deal with 3-4 PCI IDS per year
-
-
+> 
+> Bjorn
