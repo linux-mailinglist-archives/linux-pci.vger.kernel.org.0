@@ -2,353 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C9E976C451
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Aug 2023 06:56:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8AA076C464
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Aug 2023 06:59:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231821AbjHBE4a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Aug 2023 00:56:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57328 "EHLO
+        id S231309AbjHBE7j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Aug 2023 00:59:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230365AbjHBE43 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Aug 2023 00:56:29 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE0BD19B0;
-        Tue,  1 Aug 2023 21:56:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 52D67617CA;
-        Wed,  2 Aug 2023 04:56:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42BBDC433C8;
-        Wed,  2 Aug 2023 04:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690952186;
-        bh=jkqNebjbGSnF+JKGgJsSItHww469pXN74F0m7mNutlM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WIyEnXcHkhv1jvgI3nCnc6/9PJqXc9fTIm3eiqeI1DuD1AoXQVEOow+6u6MNiW5rq
-         03CLmHo3PLrZAqBT9yu8cN2nVN46FpTyDhxucWQ+84KDNLSoBU7gMBBPYPly/FGNiN
-         831dyR8JJfxxif73t+y1EIr0novEH/FyXEgd2iC9k0JXWwVs/sfepV/7Iq1dPCBCjf
-         8U+41Tq1GY6RPznJk7iuHRrNbJ0AoJohx6XGDohou7ALTh00dnlWNYIjk23nVhWdFy
-         ftf6N0MFSetfy1iKT6t2chVyOIrrBzpJOnNyiWEopjSmObJ8hnzgiapQqukZLa1+vm
-         4BiBxufmURavw==
-Date:   Wed, 2 Aug 2023 10:26:10 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     lpieralisi@kernel.org, bhelgaas@google.com,
-        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
-        helgaas@kernel.org, imx@lists.linux.dev, kw@linux.com,
-        leoyang.li@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        manivannan.sadhasivam@linaro.org, minghuan.lian@nxp.com,
-        mingkai.hu@nxp.com, robh+dt@kernel.org, roy.zang@nxp.com,
-        shawnguo@kernel.org, zhiqiang.hou@nxp.com
-Subject: Re: [PATCH v6 2/2] PCI: layerscape: Add power management support for
- ls1028a
-Message-ID: <20230802045610.GE2370@thinkpad>
-References: <20230731194010.73016-1-Frank.Li@nxp.com>
- <20230731194010.73016-2-Frank.Li@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230731194010.73016-2-Frank.Li@nxp.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S230138AbjHBE7i (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Aug 2023 00:59:38 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEBF31BFA;
+        Tue,  1 Aug 2023 21:59:37 -0700 (PDT)
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3723OI3F020182;
+        Wed, 2 Aug 2023 04:59:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=kMErFIqWFbN25KqkFKK6YzYOatQw6VWpghdd42BrtU0=;
+ b=NXz2w4ld+JJtaEJApD+HC/9MdctewbyB1Pq7q6aleIeWJMJRqNG6BVI4qHnevMhih0CK
+ wvYSavsYKSFGoWb4NPCuo/jYPR6r4TdHq11x6P7BAb4dOx6q+am+DGb+gvfoRARDrWhy
+ lABjlDxuFRqzWTnc6j2waJFy8vagg3htakG46VGUhh3lNUNIt4ndsoHBzGgWblAqgoq9
+ s9Z4s2Jv3ag/77b3uj3UWuv0UVRJQA1k1DC+xylmhm2emw1qwu+ltQCpdiRD9pVVcqJM
+ aiCHmMazBwPhsVCw8M93t4Bzh6vyH+IIGrprvwOTg6mSMxhkemRCm7GuiJyfApL5JTA+ uQ== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3s7adk8jfd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Aug 2023 04:59:31 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 3724xR1H022302;
+        Wed, 2 Aug 2023 04:59:27 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3s4uukd91t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 02 Aug 2023 04:59:27 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3724xQFJ022282;
+        Wed, 2 Aug 2023 04:59:26 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-krichai-hyd.qualcomm.com [10.213.110.112])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3724xQ3r022279;
+        Wed, 02 Aug 2023 04:59:26 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
+        id 4890D4B59; Wed,  2 Aug 2023 10:29:25 +0530 (+0530)
+From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
+        quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: [PATCH v5 0/5]  PCI: EPC: Add support to wake up host from D3 states
+Date:   Wed,  2 Aug 2023 10:29:14 +0530
+Message-Id: <1690952359-8625-1-git-send-email-quic_krichai@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: vr2OErjd5gURnCDKGDRMbywFvrypQxSK
+X-Proofpoint-GUID: vr2OErjd5gURnCDKGDRMbywFvrypQxSK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-02_03,2023-08-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ priorityscore=1501 phishscore=0 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 clxscore=1015 mlxlogscore=622 adultscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308020044
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 31, 2023 at 03:40:10PM -0400, Frank Li wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> Add PME_Turn_Off/PME_TO_Ack handshake sequence, and finally
-> put the PCIe controller into D3 state after the L2/L3 ready
-> state transition process completion.
-> 
+Here we propose this patch series to add support in PCI endpoint
+driver to wake up host from D3 states.
 
-This commit message is wrong/outdated. Please describe what _this_ patch does.
+As endpoint cannot send any data/MSI when the D-state is in
+D3cold or D3hot. Endpoint needs to bring the device back to D0
+to send any kind of data.
 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> - Change from v5 to v6
->   change to NOIRQ_SYSTEM_SLEEP_PM_OPS to remove #ifdef PM_CONFIG
->   
-> - Change from v3 to v5
->   none
-> 
-> -  change at v3
->   Basic rewrite whole patch according rob herry suggestion.
->   put common function into dwc, so more soc can share the same logic.
-> 
->  drivers/pci/controller/dwc/pci-layerscape.c | 146 ++++++++++++++++++--
->  1 file changed, 137 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-> index ed5fb492fe084..f235c79600277 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
-> @@ -8,9 +8,11 @@
->   * Author: Minghuan Lian <Minghuan.Lian@freescale.com>
->   */
->  
-> +#include <linux/delay.h>
->  #include <linux/kernel.h>
->  #include <linux/interrupt.h>
->  #include <linux/init.h>
-> +#include <linux/iopoll.h>
->  #include <linux/of_pci.h>
->  #include <linux/of_platform.h>
->  #include <linux/of_address.h>
-> @@ -27,12 +29,33 @@
->  #define PCIE_ABSERR		0x8d0 /* Bridge Slave Error Response Register */
->  #define PCIE_ABSERR_SETTING	0x9401 /* Forward error of non-posted request */
->  
-> +/* PF Message Command Register */
-> +#define LS_PCIE_PF_MCR		0x2c
-> +#define PF_MCR_PTOMR		BIT(0)
-> +#define PF_MCR_EXL2S		BIT(1)
-> +
->  #define PCIE_IATU_NUM		6
->  
-> +struct ls_pcie;
-> +
+For this endpoint needs to send inband PME the device is in D3 state or
+toggle wake when the device is D3 cold and vaux is not supplied.
 
-Why do you need foward declaration?
+Based on the D-state the EPF driver decides to wake host either by
+toggling wake or by sending PME.
 
-> +struct ls_pcie_drvdata {
-> +	const u32 pf_off;
-> +	const u32 lut_off;
-> +	bool pm_support;
-> +};
-> +
->  struct ls_pcie {
->  	struct dw_pcie *pci;
-> +	const struct ls_pcie_drvdata *drvdata;
-> +	void __iomem *pf_base;
-> +	void __iomem *lut_base;
-> +	bool big_endian;
-> +	bool ep_presence;
+When the MHI state is in M3 MHI driver will wakeup the host using the
+wakeup op.
 
-Where is this variable used?
+This change is dependent on this series PCI: endpoint: add D-state change notifier
+support
 
-> +	struct regmap *scfg;
-> +	int index;
->  };
->  
-> +#define ls_pcie_pf_readl_addr(addr)	ls_pcie_pf_readl(pcie, addr)
->  #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
->  
->  static bool ls_pcie_is_bridge(struct ls_pcie *pcie)
-> @@ -73,6 +96,57 @@ static void ls_pcie_fix_error_response(struct ls_pcie *pcie)
->  	iowrite32(PCIE_ABSERR_SETTING, pci->dbi_base + PCIE_ABSERR);
->  }
->  
-> +static u32 ls_pcie_pf_readl(struct ls_pcie *pcie, u32 off)
-> +{
-> +	if (pcie->big_endian)
-> +		return ioread32be(pcie->pf_base + off);
-> +
-> +	return ioread32(pcie->pf_base + off);
-> +}
-> +
-> +static void ls_pcie_pf_writel(struct ls_pcie *pcie, u32 off, u32 val)
-> +{
-> +	if (pcie->big_endian)
-> +		return iowrite32be(val, pcie->pf_base + off);
+https://lore.kernel.org/linux-pci/1690948281-2143-1-git-send-email-quic_krichai@quicinc.com/
 
-Return value of this function is marked as void. So you should not return
-anything.
+---
+Changes from v4:
+	- removed the enum to select to send PME or toggle wake and use bool variable in 
+	  the api itself as suggested by mani.
+Changes from v3:
+	- changed the bool return type to int for waking the host in mhi ep driver
+	 as suggested by dan and bjorn.
+	- Changed commit logs as suggested by bjorn.
+Changes from v2:
+        - Addressed review comments made by mani.
+Changes from v1:
+        - Moved from RFC patch to regular patch
+        - Inclueded EPF patch and added a new op patch to notify D-state change.
+---
 
-> +
-> +	return iowrite32(val, pcie->pf_base + off);
-> +
-> +}
-> +
-> +static void ls_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct ls_pcie *pcie = to_ls_pcie(pci);
-> +	u32 val;
-> +	int ret;
-> +
-> +	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
-> +	val |= PF_MCR_PTOMR;
-> +	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
-> +
-> +	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
-> +				 val, !(val & PF_MCR_PTOMR), 100, 10000);
+Krishna chaitanya chundru (5):
+  PCI: endpoint: Add wakeup host API to EPC core
+  PCI: dwc: Add wakeup host op to pci_epc_ops
+  PCI: qcom-ep: Add wake up host op to dw_pcie_ep_ops
+  PCI: epf-mhi: Add wakeup host op
+  bus: mhi: ep: wake up host if the MHI state is in M3
 
-As I mentioned in previous patch, if you intend to use 1ms, please change the
-value to 1000.
-
-> +	if (ret)
-> +		dev_info(pcie->pci->dev, "poll turn off message timeout\n");
-
-dev_err? Same below.
-
-> +}
-> +
-> +static void ls_pcie_exit_from_l2(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct ls_pcie *pcie = to_ls_pcie(pci);
-> +	u32 val;
-> +	int ret;
-> +
-> +	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
-> +	val |= PF_MCR_EXL2S;
-> +	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
-> +
-> +	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
-> +				 val, !(val & PF_MCR_EXL2S), 100, 10000);
-> +	if (ret)
-> +		dev_info(pcie->pci->dev, "poll exit L2 state timeout\n");
-
-Same as above.
-
-> +}
-> +
->  static int ls_pcie_host_init(struct dw_pcie_rp *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> @@ -91,18 +165,33 @@ static int ls_pcie_host_init(struct dw_pcie_rp *pp)
->  
->  static const struct dw_pcie_host_ops ls_pcie_host_ops = {
->  	.host_init = ls_pcie_host_init,
-> +	.pme_turn_off = ls_pcie_send_turnoff_msg,
-> +	.exit_from_l2 = ls_pcie_exit_from_l2,
-> +};
-> +
-> +static const struct ls_pcie_drvdata ls1021a_drvdata = {
-> +};
-> +
-> +static const struct ls_pcie_drvdata ls1043a_drvdata = {
-> +	.lut_off = 0x10000,
-> +};
-> +
-> +static const struct ls_pcie_drvdata layerscape_drvdata = {
-> +	.lut_off = 0x80000,
-> +	.pf_off = 0xc0000,
-> +	.pm_support = true,
->  };
->  
->  static const struct of_device_id ls_pcie_of_match[] = {
-> -	{ .compatible = "fsl,ls1012a-pcie", },
-> -	{ .compatible = "fsl,ls1021a-pcie", },
-> -	{ .compatible = "fsl,ls1028a-pcie", },
-> -	{ .compatible = "fsl,ls1043a-pcie", },
-> -	{ .compatible = "fsl,ls1046a-pcie", },
-> -	{ .compatible = "fsl,ls2080a-pcie", },
-> -	{ .compatible = "fsl,ls2085a-pcie", },
-> -	{ .compatible = "fsl,ls2088a-pcie", },
-> -	{ .compatible = "fsl,ls1088a-pcie", },
-> +	{ .compatible = "fsl,ls1012a-pcie", .data = &layerscape_drvdata },
-> +	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021a_drvdata },
-> +	{ .compatible = "fsl,ls1028a-pcie", .data = &layerscape_drvdata },
-> +	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043a_drvdata },
-> +	{ .compatible = "fsl,ls1046a-pcie", .data = &layerscape_drvdata },
-> +	{ .compatible = "fsl,ls2080a-pcie", .data = &layerscape_drvdata },
-> +	{ .compatible = "fsl,ls2085a-pcie", .data = &layerscape_drvdata },
-> +	{ .compatible = "fsl,ls2088a-pcie", .data = &layerscape_drvdata },
-> +	{ .compatible = "fsl,ls1088a-pcie", .data = &layerscape_drvdata },
->  	{ },
->  };
->  
-> @@ -121,6 +210,8 @@ static int ls_pcie_probe(struct platform_device *pdev)
->  	if (!pci)
->  		return -ENOMEM;
->  
-> +	pcie->drvdata = of_device_get_match_data(dev);
-> +
->  	pci->dev = dev;
->  	pci->pp.ops = &ls_pcie_host_ops;
->  
-> @@ -131,6 +222,14 @@ static int ls_pcie_probe(struct platform_device *pdev)
->  	if (IS_ERR(pci->dbi_base))
->  		return PTR_ERR(pci->dbi_base);
->  
-> +	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
-> +
-> +	if (pcie->drvdata->lut_off)
-> +		pcie->lut_base = pci->dbi_base + pcie->drvdata->lut_off;
-
-Where is lut_base being used?
-
-> +
-> +	if (pcie->drvdata->pf_off)
-
-No need of this check. In the absence of "pf_off", pf_base is going to be 0
-which is anyway wrong if used. So just use "pf_off" directly.
-
-If you really need the check, then you should use "pm_support" as below:
-
-	if (pcie->drvdata->pm_support)
-		pcie->pf_base = pci->dbi_base + pcie->drvdata->pf_off;
-
-This makes it clear that "pf_base" is only used if pm_support is enabled.
-
-> +		pcie->pf_base = pci->dbi_base + pcie->drvdata->pf_off;
-> +
->  	if (!ls_pcie_is_bridge(pcie))
->  		return -ENODEV;
->  
-> @@ -139,12 +238,41 @@ static int ls_pcie_probe(struct platform_device *pdev)
->  	return dw_pcie_host_init(&pci->pp);
->  }
->  
-> +static int ls_pcie_suspend_noirq(struct device *dev)
-> +{
-> +	struct ls_pcie *pcie = dev_get_drvdata(dev);
-> +	struct dw_pcie *pci = pcie->pci;
-> +
-> +	if (!pcie->drvdata->pm_support)
-> +		return 0;
-> +
-> +	return dw_pcie_suspend_noirq(pci);
-> +}
-> +
-> +static int ls_pcie_resume_noirq(struct device *dev)
-> +{
-> +
-
-Remove newline.
-
-- Mani
-
-> +	struct ls_pcie *pcie = dev_get_drvdata(dev);
-> +	struct dw_pcie *pci = pcie->pci;
-> +
-> +	if (!pcie->drvdata->pm_support)
-> +		return 0;
-> +
-> +	return dw_pcie_resume_noirq(pci);
-> +}
-> +
-> +static const struct dev_pm_ops ls_pcie_pm_ops = {
-> +	NOIRQ_SYSTEM_SLEEP_PM_OPS(ls_pcie_suspend_noirq,
-> +				      ls_pcie_resume_noirq)
-> +};
-> +
->  static struct platform_driver ls_pcie_driver = {
->  	.probe = ls_pcie_probe,
->  	.driver = {
->  		.name = "layerscape-pcie",
->  		.of_match_table = ls_pcie_of_match,
->  		.suppress_bind_attrs = true,
-> +		.pm = &ls_pcie_pm_ops,
->  	},
->  };
->  builtin_platform_driver(ls_pcie_driver);
-> -- 
-> 2.34.1
-> 
+ Documentation/PCI/endpoint/pci-endpoint.rst     |  6 +++++
+ drivers/bus/mhi/ep/main.c                       | 28 +++++++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 12 ++++++++++
+ drivers/pci/controller/dwc/pcie-designware.h    |  2 ++
+ drivers/pci/controller/dwc/pcie-qcom-ep.c       | 26 +++++++++++++++++++++
+ drivers/pci/endpoint/functions/pci-epf-mhi.c    | 12 ++++++++++
+ drivers/pci/endpoint/pci-epc-core.c             | 30 +++++++++++++++++++++++++
+ include/linux/mhi_ep.h                          |  1 +
+ include/linux/pci-epc.h                         |  5 +++++
+ 9 files changed, 122 insertions(+)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.7.4
+
