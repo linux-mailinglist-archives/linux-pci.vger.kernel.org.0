@@ -2,100 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54EC076C3A0
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Aug 2023 05:41:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B026976C3B7
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Aug 2023 05:51:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230245AbjHBDlR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Aug 2023 23:41:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34406 "EHLO
+        id S230216AbjHBDvc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Aug 2023 23:51:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229606AbjHBDlQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Aug 2023 23:41:16 -0400
-Received: from mgamail.intel.com (unknown [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 688D81712;
-        Tue,  1 Aug 2023 20:41:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690947675; x=1722483675;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Alv4LIt+me26FKI8aUKd7sa+qxe9P74mpHMU0PpwyFA=;
-  b=DbkUC1PyNyFzuJTPvy48D7D2BPZxjBCS+zqx7Zc0Go03Zx6Of8N2P3Ir
-   Xo1rBx5X39IQhNshXdM5qsSqXzNAz3XJmrx8SE3+3T7oKWMYRojK8HL/P
-   efIasv6z/K/zV7KLRHiGatZAaRXyKUQ4Or7jVCFQbFsa96uMeFcjf6zQ0
-   KqTsqX4PCGM1fSvn1P7GeCf1cXmR6tvrLaJpbvWg/AyrT1XcaCVcJETc3
-   UYdlpy6qeP0N3pviPn9+CdchhmYOx/dKFJQrl7p/JN43U3HKOO43y3a0w
-   Ykj0+9pYl/JZvucMgBA4dwkRi0ksYNABcQ808cZ/9ovv52pfCJ7Jq+X3o
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="400418305"
-X-IronPort-AV: E=Sophos;i="6.01,248,1684825200"; 
-   d="scan'208";a="400418305"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2023 20:41:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="1059661650"
-X-IronPort-AV: E=Sophos;i="6.01,248,1684825200"; 
-   d="scan'208";a="1059661650"
-Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 01 Aug 2023 20:41:05 -0700
-Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qR2jQ-0000og-2d;
-        Wed, 02 Aug 2023 03:41:04 +0000
-Date:   Wed, 2 Aug 2023 11:40:17 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Sui Jingfeng <suijingfeng@loongson.cn>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH] PCI/VGA: Fixup the firmware fb address om demanding time
-Message-ID: <202308021153.w0leLadx-lkp@intel.com>
-References: <20230801183706.702567-1-suijingfeng@loongson.cn>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230801183706.702567-1-suijingfeng@loongson.cn>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S230308AbjHBDvb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Aug 2023 23:51:31 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DADD1BC7;
+        Tue,  1 Aug 2023 20:51:30 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3723mvn7005089;
+        Wed, 2 Aug 2023 03:51:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=z5WVRoUiQGe7xbMn4R8L3vQYDcJNjQ+FIqx35pYCUMg=;
+ b=DuFZIrDK5OZQAHoI2Et8Z8SKYlj/Ij0aUrgYnJ1LlF8eR0bpFmpEaDFfiZ/C5jeywucs
+ 2KpxWH/YdaBabKwZ420+jlY3OkNLpHTNU+TyyQbAwMGEks8WcJR4rJYbYfce/hzpxKek
+ NH7uI8AICLpNhBlxe2KwzhQN0PtSHj6tkO4hntvpS690fWVFffFxx87txgupFK94Ni+Q
+ 3n2QaNrDA9U0QX/ss3gulIBh6rIL1lVJ+rxcBpd3YS56YUBAppV/wKt26zqE0BYPaz6U
+ CHjlMMvkRb/0Ldv8eG4MkSmrOXHvYc33TOHJ98dBGZfJgleySLDF29LlwxRYaqBX5PUH sw== 
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3s6j4euj4r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Aug 2023 03:51:27 +0000
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 3723pORS022458;
+        Wed, 2 Aug 2023 03:51:24 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 3s4uukryx7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 02 Aug 2023 03:51:24 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3723pNse022449;
+        Wed, 2 Aug 2023 03:51:23 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-krichai-hyd.qualcomm.com [10.213.110.112])
+        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3723pNqh022445;
+        Wed, 02 Aug 2023 03:51:23 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
+        id AA6CF4B59; Wed,  2 Aug 2023 09:21:22 +0530 (+0530)
+From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
+        quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: [PATCH v5 0/4] PCI: endpoint: add D-state change notifier support
+Date:   Wed,  2 Aug 2023 09:21:17 +0530
+Message-Id: <1690948281-2143-1-git-send-email-quic_krichai@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: KlmJVvzf5xpDX3ORmaXINlRIrHDMYY-j
+X-Proofpoint-ORIG-GUID: KlmJVvzf5xpDX3ORmaXINlRIrHDMYY-j
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-01_22,2023-08-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ adultscore=0 malwarescore=0 mlxscore=0 mlxlogscore=353 lowpriorityscore=0
+ impostorscore=0 priorityscore=1501 bulkscore=0 phishscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
+ definitions=main-2308020033
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Sui,
+In this series we added support to nofity the EPF driver whenever there
+is change in the D-state if the EPF driver registered for it.
 
-kernel test robot noticed the following build errors:
+Krishna chaitanya chundru (4):
+  PCI: endpoint: Add D-state change notifier support
+  PCI: qcom-ep: Add support for D-state change notification
+  PCI: qcom-ep: Update the D-state log
+  PCI: epf-mhi: Add support for handling D-state notify from EPC
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus linus/master v6.5-rc4 next-20230801]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Sui-Jingfeng/PCI-VGA-Fixup-the-firmware-fb-address-om-demanding-time/20230802-023743
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20230801183706.702567-1-suijingfeng%40loongson.cn
-patch subject: [PATCH] PCI/VGA: Fixup the firmware fb address om demanding time
-config: parisc64-defconfig (https://download.01.org/0day-ci/archive/20230802/202308021153.w0leLadx-lkp@intel.com/config)
-compiler: hppa64-linux-gcc (GCC) 12.3.0
-reproduce: (https://download.01.org/0day-ci/archive/20230802/202308021153.w0leLadx-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308021153.w0leLadx-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   hppa64-linux-ld: drivers/pci/vgaarb.o: in function `vga_arb_firmware_fb_addr_tracker':
->> (.text+0x1d0): undefined reference to `screen_info'
->> hppa64-linux-ld: (.text+0x1d4): undefined reference to `screen_info'
+ Documentation/PCI/endpoint/pci-endpoint.rst  |  4 ++++
+ drivers/pci/controller/dwc/pcie-qcom-ep.c    |  9 ++++++++-
+ drivers/pci/endpoint/functions/pci-epf-mhi.c | 11 +++++++++++
+ drivers/pci/endpoint/pci-epc-core.c          | 27 +++++++++++++++++++++++++++
+ include/linux/mhi_ep.h                       |  3 +++
+ include/linux/pci-epc.h                      |  1 +
+ include/linux/pci-epf.h                      |  1 +
+ 7 files changed, 55 insertions(+), 1 deletion(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.7.4
+
