@@ -2,53 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0712676D300
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Aug 2023 17:54:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5744B76D320
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Aug 2023 17:58:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234467AbjHBPyN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Aug 2023 11:54:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39266 "EHLO
+        id S232654AbjHBP63 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Aug 2023 11:58:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234581AbjHBPxw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Aug 2023 11:53:52 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63A89272A
-        for <linux-pci@vger.kernel.org>; Wed,  2 Aug 2023 08:52:52 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S235349AbjHBP5x (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Aug 2023 11:57:53 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03DBE2685
+        for <linux-pci@vger.kernel.org>; Wed,  2 Aug 2023 08:57:47 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E3EDB619D7
-        for <linux-pci@vger.kernel.org>; Wed,  2 Aug 2023 15:52:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2221EC433C7;
-        Wed,  2 Aug 2023 15:52:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690991548;
-        bh=Lh3fXJXqzrKLmGTtOEbU1xywH6lZiOQQJpCFx/d1gvk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=uAOBGOUvwnounY7GbixgmnvoYyynqBjkp+oXEtxp4bzZFd+gOIgR5UgFqbfYcxNum
-         byfVG5Vgavg15TBoyccVQ+054Tdbg4PgAcFdvGwKQcvZAKPQzrL9XTvGP5BlZf+M/u
-         VyIMMzhY52i8NSyj6mWlsBfxLQEfgpvY+yLIpO1R9yQzWjgR+DQNBGEavethomzsya
-         DDd3gHI0rdmOtjVxaJrd3lLBTmC0gOKDBnZS0lWYUXMyjbD41Zcb33ZKT/LHW7lJrN
-         4cUmJD7mPuaZRsonc5tVjm/LnoALbHc+8w9xa3hR+BPBHwOrfz+IN7bkNV5hLzTLPY
-         ZVhJvrvSwF8bQ==
-Date:   Wed, 2 Aug 2023 10:52:26 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de, broonie@kernel.org,
+        by smtp-out2.suse.de (Postfix) with ESMTPS id B86F71F381;
+        Wed,  2 Aug 2023 15:57:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1690991865; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y4cKrxXTYWisN5RcuPHnoaVpyBNRXGNZ0s9ctVTI9Yw=;
+        b=WMRCBDYFb53QGu4H4gc4yHEbyMMtEPD1aNbvV0uJaKo5/eVUq6afxARy/cqgEpoa4e7DuG
+        ngNtErUvq0Ju2cqecycIZg3e/gkMfMxLaV61JybE5SzQTzjkyYOHmn/ai4xHFf4DH2U5Qi
+        szybTY+V7hHWfem18pzgvmeXkwUiMIo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1690991865;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y4cKrxXTYWisN5RcuPHnoaVpyBNRXGNZ0s9ctVTI9Yw=;
+        b=AoPfyvsw1n456CD3En7CnsBBxSriFplxFtgVgcILM+h7LdDTTo+1q0JbJwhuDgqjbJqlAi
+        IXbvqhRTpeAcL5Aw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 830E013909;
+        Wed,  2 Aug 2023 15:57:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id INQVH/l8ymTHPAAAMHmgww
+        (envelope-from <tiwai@suse.de>); Wed, 02 Aug 2023 15:57:45 +0000
+Date:   Wed, 02 Aug 2023 17:57:45 +0200
+Message-ID: <87fs51cu86.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org, broonie@kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Bard Liao <yung-chuan.liao@linux.intel.com>
-Subject: Re: [PATCH 1/5] PCI: add ArrowLake-S PCI ID for Intel HDAudio
- subsystem.
-Message-ID: <20230802155226.GA59821@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230802150105.24604-2-pierre-louis.bossart@linux.intel.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+Subject: Re: [PATCH 1/5] PCI: add ArrowLake-S PCI ID for Intel HDAudio subsystem.
+In-Reply-To: <20230802155226.GA59821@bhelgaas>
+References: <20230802150105.24604-2-pierre-louis.bossart@linux.intel.com>
+        <20230802155226.GA59821@bhelgaas>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,39 +72,29 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 02, 2023 at 10:01:01AM -0500, Pierre-Louis Bossart wrote:
-> Add part ID to common include file
-
-Please drop period at end of subject and add one at the end of the
-commit log.
-
-Also mention the drivers that will use this new #define; looks like
-hda_intel.c and ...
-
-Well, actually, I only see that one use, which means we probably
-shouldn't add this #define to pci_ids.h, per the comment at the top of
-the file.  If there's only one use, use the hex ID in the driver (or
-add a #define in the driver itself).
-
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-> Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-> ---
->  include/linux/pci_ids.h | 1 +
->  1 file changed, 1 insertion(+)
+On Wed, 02 Aug 2023 17:52:26 +0200,
+Bjorn Helgaas wrote:
 > 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 3066660cd39b..a6411aa4c331 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -3058,6 +3058,7 @@
->  #define PCI_DEVICE_ID_INTEL_HDA_RPL_S	0x7a50
->  #define PCI_DEVICE_ID_INTEL_HDA_ADL_S	0x7ad0
->  #define PCI_DEVICE_ID_INTEL_HDA_MTL	0x7e28
-> +#define PCI_DEVICE_ID_INTEL_HDA_ARL_S	0x7f50
->  #define PCI_DEVICE_ID_INTEL_SCH_LPC	0x8119
->  #define PCI_DEVICE_ID_INTEL_SCH_IDE	0x811a
->  #define PCI_DEVICE_ID_INTEL_HDA_POULSBO	0x811b
-> -- 
-> 2.39.2
+> On Wed, Aug 02, 2023 at 10:01:01AM -0500, Pierre-Louis Bossart wrote:
+> > Add part ID to common include file
 > 
+> Please drop period at end of subject and add one at the end of the
+> commit log.
+> 
+> Also mention the drivers that will use this new #define; looks like
+> hda_intel.c and ...
+> 
+> Well, actually, I only see that one use, which means we probably
+> shouldn't add this #define to pci_ids.h, per the comment at the top of
+> the file.  If there's only one use, use the hex ID in the driver (or
+> add a #define in the driver itself).
+
+Judging from the previous patterns, the same ID could be required for
+ASoC SOF driver, too, which isn't included in this patch set.  In
+that case, it's worth to put to pci_ids.h.
+(OTOH, it can be done at a later stage, too.)
+
+
+thanks,
+
+Takashi
