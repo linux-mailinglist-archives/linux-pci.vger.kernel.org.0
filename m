@@ -2,324 +2,323 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E81A76D869
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Aug 2023 22:10:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6E7B76DA01
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Aug 2023 23:54:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232167AbjHBUKy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Aug 2023 16:10:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55564 "EHLO
+        id S231382AbjHBVy0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Aug 2023 17:54:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232113AbjHBUKs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Aug 2023 16:10:48 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2052.outbound.protection.outlook.com [40.107.220.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F2071734;
-        Wed,  2 Aug 2023 13:10:46 -0700 (PDT)
+        with ESMTP id S229624AbjHBVyZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Aug 2023 17:54:25 -0400
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on0615.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe0e::615])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09EE0119;
+        Wed,  2 Aug 2023 14:54:24 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hz2St7KdlFn0PmDQvdMqdmyAFs1wLrNbg1iae8hfH7/+xGacn3qcbRc42r/1qokHlVMHGr2M6MFWKBI5kjGZ5hz7m8Gqp9nsSnvx5MpwQycaavGCcF4kOvopR2KaP9Cxiu4Oo5YnPTevtDx+DlH75/KVx5JYk5yn+m9v8bV1zVmmU+Ol1XBfLzZTEL4vOnOD6H3nOZAZUl6gRufBNT4OV/dCLxV4lRRAyA6qIzK7zrRrjmfsM+Be1e/TTfYPdnC37/mjamqE7BRvwfjCc/N0q4MjKRxc5mrpnXuZzHSIicsO/fHAERd12jRjyEVZgC/Dok6Xwc6Z6tRdwSueFHHHMA==
+ b=J9vxsabwO3uQe5r/pMYnl6090kVeR+BLr2jro1ZKyPvLaZQhqkUDobHTV+pB3xedxAmoSYjlJWZ7m79znw5mm8/P3Y3WgsctSMrxglBYINdVWeyUsMeDd7awsP/Z3WTNriAcBqm2UF9cGD+DxKvU/y7k3iF0s+Xbq6V8VCsfmaSBWVRSzUZfcG+haWjS41dHBTui59mQLic87gmc/TolnUFDPtD12toNombIWtkYhyIUqQAgVd9EJ+URJUBjsxN6YujSYcM2NtXY2JZTRFOT9A9Mq8e23ESGp30qetiL0t4ph7ZWllzX+QTukru+QOCPh6jLdi7nod8dv+eBxVpeCg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GPMfbYgRS7/o9DUVQZ2uly5uA9Rb4iMXgTZF2x17Yc8=;
- b=igU1YXCHNPMPxmurtBLnunoGEVweJVqK3Qpr+tL7CNssTaLInOyIiFl2EVK/RI+dnUZ25C/Z3PFQU5tuj3HwjYxVY/0FkIqS2AE1erXXqx7NU+3lk3NvFZWJLpvjyqLz8JsruuR2NuO7kBsIF/PPeW75JaWkJdXayA3M1vBgKEZw4lmtURyHmEALswGeAR2OVs8DOKa3snfjRVc/S+xDWHAbisZJP3Jvyb86jWMrny/DXSf4SQDoCgSh3GL06mqYrEyf2Yii0jnrtDR51347tY90Nm3nmRuv5P1bdPp9aHj2H6HfdWDhfMsXgK75nRdkBBi3/5COCT9hjT4fhnqaqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=9H+xIo7uHG0QGOSSorbERKfl7aa0DIrX9agUu6djsL8=;
+ b=DnyekvXjczciWzvV6M0WjrixQFmIINzcVaglXoJkeqCwrh5iQPmD0/csFM56s1+FJhmiQ1mI0XIRT9jFuoDE2pw55GA3RB/4QkebZuf7qZaJxtt0g6Yz2UfDXsr70mdFXHrV2E8Fsp7eJTw7QBkhwSa6rbcGJy+BMra9qy9gW17i5iMSTBA8afk8Sf7/hrhHKrVrMUcUK0foDy49cxXuA/zH4Cl26V6QhKKivactbLcmuRX4pvYH4VWUGSCZMJjio9vpAgz2kCfDZyvJe5yizMzN5l4keYwr8voe4z883iLJ/uweDh64Q9lmxKLpvmQMtM/ueWItNItlC1G7XVdWsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GPMfbYgRS7/o9DUVQZ2uly5uA9Rb4iMXgTZF2x17Yc8=;
- b=HHwaBLZiJs2/+yCrdwcja+bzevc38711FuyYb64CKJGwKPSKPaI0lOVKOIYRDMkfELv8sWJmLE+WKt4Bi8FrQTTQibFgUKTTbuYwJdkZ2TCy7HSKJXYqIyBvT2+Jf8+r5vKeByVa5n+w9lISFVgeINhJNKm68z2JPPVdNPnnhS0=
-Received: from DS7PR03CA0185.namprd03.prod.outlook.com (2603:10b6:5:3b6::10)
- by BN9PR12MB5148.namprd12.prod.outlook.com (2603:10b6:408:119::21) with
+ bh=9H+xIo7uHG0QGOSSorbERKfl7aa0DIrX9agUu6djsL8=;
+ b=AefCSvIf39d31FTA7xVxkrD7bkgtYI2hkf3s8cRKJjw0CTYiaiYEQzet7/8vX/mYAMWCGn2nUBfkCQXWeF2bRLeJv4rPH+ZTB2p4lywIv+3OZI3oyTVsiNWAzJAT4bIZJaokruBD8+vRqfHnxqVHOx/iI3IjzSy98Os4x3fTtqA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by AS8PR04MB8006.eurprd04.prod.outlook.com (2603:10a6:20b:288::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.19; Wed, 2 Aug
- 2023 20:10:42 +0000
-Received: from CO1PEPF000044FB.namprd21.prod.outlook.com
- (2603:10b6:5:3b6:cafe::e9) by DS7PR03CA0185.outlook.office365.com
- (2603:10b6:5:3b6::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.19 via Frontend
- Transport; Wed, 2 Aug 2023 20:10:41 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000044FB.mail.protection.outlook.com (10.167.241.201) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6652.19 via Frontend Transport; Wed, 2 Aug 2023 20:10:40 +0000
-Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 2 Aug
- 2023 15:10:36 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, Iain Lane <iain@orangesquash.org.uk>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v8 2/2] PCI/ACPI: Use device constraints instead of dates to opt devices into D3
-Date:   Wed, 2 Aug 2023 15:10:13 -0500
-Message-ID: <20230802201013.910-3-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230802201013.910-1-mario.limonciello@amd.com>
-References: <20230802201013.910-1-mario.limonciello@amd.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.47; Wed, 2 Aug
+ 2023 21:54:19 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::d0d5:3604:98da:20b1]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::d0d5:3604:98da:20b1%7]) with mapi id 15.20.6631.046; Wed, 2 Aug 2023
+ 21:54:17 +0000
+Date:   Wed, 2 Aug 2023 17:54:01 -0400
+From:   Frank Li <Frank.li@nxp.com>
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     l.stach@pengutronix.de, shawnguo@kernel.org, lpieralisi@kernel.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, linux-imx@nxp.com
+Subject: Re: [PATCH 7/9] PCI: imx6: Add i.MX6Q and i.MX6QP PCIe EP supports
+Message-ID: <ZMrQedvqMHzx32Vx@lizhi-Precision-Tower-5810>
+References: <1690956412-2439-1-git-send-email-hongxing.zhu@nxp.com>
+ <1690956412-2439-8-git-send-email-hongxing.zhu@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1690956412-2439-8-git-send-email-hongxing.zhu@nxp.com>
+X-ClientProxiedBy: SJ0PR13CA0186.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c3::11) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044FB:EE_|BN9PR12MB5148:EE_
-X-MS-Office365-Filtering-Correlation-Id: 91afcb88-e95b-4096-4e9c-08db93948ba6
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|AS8PR04MB8006:EE_
+X-MS-Office365-Filtering-Correlation-Id: f451b698-75c7-4536-3ad1-08db93a304ef
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tUZxPDpB61v/OEShB5JEkjFN8AamgBLRdN7PFiD20eHoUQd01OKfWNFY/ouYCjnHP6Ej18Ql2drJxC7fqVfr8S8fOR9L1QzPAeDtFvL5+XnsySrprNM4qBllxq7qcvZqP4H3c0E0p0MXBmF1bj1T8ZqIxMZKB30SQp4z/CF+TJUpELehrMuTMyXhCC698vfkjmihwFmNRxD++fS6a01j/yzxJTr1uc8NabJeJlCwEimaPG9FM0bwS8oseCreQ3qsQrquWPoaQmRiNPWH6StXayl6MYcVT8KBzHhvGU3R3bnfqStTFbCQYw3L5HalBlSDVWZmb9PA0bLoWidIt8wJw6M0WakaNllZdyODc2ta4zfdpeD72ciYGKW70ndp7KwhcS9+4wiZyJZyAYFLMfR7MIa+BhXYxHZ9iGGoql7vV5+LLlBCiV3y/blR6y4BgfD7QvMZEnUCC0RQDhXGBUGqd5L8hXNpjNnZo6OjA3lnylgTakXKjIvCTKQCrUCtiWw9uUGBET/lusbSbP3wuN5weZiW9ZOF0P/chwPPfW0mkDCJ9LV0YTE1SzS0AyI3HtMOm0tTik8Um5Ruxl+hozMSge4c/yhjhOWp1km+GG9yaY/M0wua1FnE0sAkGAismH6Lrg37IWkh2vH3iRu70igKTsd3OhAgM7G/1VNmGJgVUgZqcQM+7nMq8gX8bLwh1SZlfYdlC4xzkjYS7UCgJlTgc8XU09Lhg3wac6JHN68DMYleGZqaQBf7Bp4QERPzMafcr7fHBRl++TfMsSH7DGAGxHTjmaUDke1LFIdsUgFo+NE=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(346002)(396003)(39860400002)(136003)(451199021)(82310400008)(40470700004)(36840700001)(46966006)(36756003)(86362001)(40480700001)(478600001)(966005)(6666004)(7696005)(8936002)(8676002)(41300700001)(316002)(5660300002)(44832011)(4326008)(40460700003)(36860700001)(83380400001)(110136005)(54906003)(47076005)(2906002)(70586007)(70206006)(426003)(1076003)(26005)(81166007)(82740400003)(2616005)(336012)(356005)(186003)(16526019)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2023 20:10:40.8713
+X-Microsoft-Antispam-Message-Info: FMeyhTmxFiLhpXx1IOwS3cGxDJ2ET1DUO0m7HMs1kgWC3kNSP7a8YrBR3QKTp3sGTbNW5zEyHVynBraXeNHWv1K63urzNDT6G8OsZk+rhwI3Dt/64KU4t1uG3VTdlfBXLD3USkOsvgrjYGrHH4gVmEITrMw7C9We9jZz1WAQH3u5AHQ3y/wqxVniRTkLlGf3t56AjYQU9IVfY00lFwyUqj8xh03xYQHPOz6EZGWUV8Smv96usI+A10py/cWp07BoQSBTeaQbgKgZUfm0H5nmxp0DwK9F6u/5uj+65vlj4mmLiSEsnYUQ+Ia8Ze1geqFzKlams6+j6hOXnn5VmMzY2VE2fwOSCIia75YAuXuUlOt6bk+dz29FEUzSMGg0hQ0xCQxqAeSAciRlKpvbMtDFm7QZz3wkbIqH9Ksb4BAul7uw4HmUAkgIloj5C8lLEglzE7smhTr0juAMd78G90OGAKzqfKDgkxJ6QsbiiBGH3Qr8m9iA7HFkPH8xi/TMMYOAjC5s84ErfODzPXWRlpqJEgAzTldhV+adGkIKS56RbafYFWj4XTQoOeB/SEEXMSDa3NGb82lCeRWuJaxFRMeqeg2r3toFKIbi/qlBRjzDs+B5VGO8PYyzOOiQRyqsDdXC
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(7916004)(136003)(396003)(346002)(39860400002)(366004)(376002)(451199021)(6506007)(83380400001)(26005)(186003)(316002)(2906002)(66946007)(4326008)(66476007)(66556008)(6636002)(5660300002)(7416002)(6862004)(41300700001)(8676002)(8936002)(6666004)(6486002)(6512007)(9686003)(52116002)(478600001)(38100700002)(38350700002)(33716001)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Wo7gO7ZmRjntFHkAOoOiIqabt2IyB/uNih6If/eorXl2xN7rg0m6pEH6gxDa?=
+ =?us-ascii?Q?lqaUazazyPfXs/K6bStCHut9x34v3wcTgWjOrZYkuHauWQsk6TYIWUrV0hNc?=
+ =?us-ascii?Q?8wOCaoOyEOw+MaxqO3xYIn5SzuG3gViu7BDWERbOdlKC1GfKJYFaqp9MLZwh?=
+ =?us-ascii?Q?s+1hPR0v7lU/IGDOmux+ncpfMJLxTy+AMlZvecKPFLZzNB05chd2d2TBHavg?=
+ =?us-ascii?Q?zCZvYASazCvu/pbAmxw76eFjT5GjgK4eoHraA+Aq8AaVLcSP1onhjVi+JfzC?=
+ =?us-ascii?Q?BgpGJMFtAoNtT+dLHFl+AnlG2U9Uvm3Ey+R4fQ7xSdtG9ng/wQf1+Bz70yhw?=
+ =?us-ascii?Q?nh1e3fAYVXXNJ7oIdlj6uaQgumMAGFCClFhOu8F4NTBsHRf5cvw76wGxlI47?=
+ =?us-ascii?Q?U2Z0XQWVLqMrMBK7x/WHF4Bf8g6sAp7p8aOAXZ2NYhAv6sLzPVZWF1onnIl5?=
+ =?us-ascii?Q?fjVfRE1vRyaegmCWdOCC8T2HZN5LhaRe6TYMzorjE0NNzExO9JDTJMXg7HNa?=
+ =?us-ascii?Q?CO5sMPmv9T0H83VsPnMOXMVFFZEymjBGuIlTr3TaU7k6xhlTN6m6dQC7I/Mb?=
+ =?us-ascii?Q?zsMzM2o+1u5ENmz0r2IDh1zNNj2U1/Ne+mrFc2kr7G0taHcuRdXiRxbkUKnA?=
+ =?us-ascii?Q?OeuHTU7fVqfyd7hjKRDWdetSrFnMy9OXnkU6EASd3tXy8VW2MhGtPeTkLhTO?=
+ =?us-ascii?Q?vAHYh0ZscN5imFFJeWXEeI9OPhSZ0uUfWDrhuwQdNYTPhmZ3NcYYO7OBewBJ?=
+ =?us-ascii?Q?CRQIR8NhfrtRxmPcNBbRCSF+qO1FPUkI2NsZTszVT19pAE4xsk7zhXIH767B?=
+ =?us-ascii?Q?pVlkC1/MrQFLcHwJQM4SmvkwAZRLNbh8vfEZdiRGPSE2NNauccruY41pSHAv?=
+ =?us-ascii?Q?h6ufJKwtQY3823nd5pZXslAmxzlCqqZvXTRJXomZQcimHk4dXiI872cLI8yl?=
+ =?us-ascii?Q?m6ZG2vNUmwDzw+LxkOvuSZYji+9Z08kpYsdu2ZXRba7uPu24Euk0a2OPVmO9?=
+ =?us-ascii?Q?9ydDb+8EziiY+Xx+3nHEDei7MmVcArpKAo6kYoTjEGFqnDd2uPg5CzPz84Ms?=
+ =?us-ascii?Q?eQk8W1nvlLImG9m2FD2G4N0E5cEENVkPDMsYvN2phx1IURt7lMKexriUXPUk?=
+ =?us-ascii?Q?PmIcZywgbl3TPZ0ur7wywfATHfQujqiPiKJllapBp9GuoIqA5sJeitHKktVa?=
+ =?us-ascii?Q?QR/SIrSu3twTPTFfaQgqK+l9SlLdWqM5TKxBDmnC/F4deMMTnWdSG7pVE869?=
+ =?us-ascii?Q?eqJINJWWsiTIJMj6M5/gJKrlslTrlOa7J2qmYCUET9Ewu7t++ozbM7D4HXuC?=
+ =?us-ascii?Q?UnES+5L7NmhHQwmRqXX3xA/346W2T+baGaVcQwWJtP6tG/Ke1PybxGCqx13z?=
+ =?us-ascii?Q?uc1QNOTUXd/UcUJy8EmoQe/VCbVN82DZUWqnCHakZfdkmcxcbptysuUK//Kr?=
+ =?us-ascii?Q?Zc+ioms0xlO2XcWtN+01bFxBex2IX/R6vwnJhXBMejyC9H5wFVnVdakkzEJV?=
+ =?us-ascii?Q?fBYDNwsz6zsj+pxrIPzqTeRwYZzQbRgLuXoWXoNiDSmglvFc1ToRacf7iM9z?=
+ =?us-ascii?Q?KKjjSo39dcTf63E9Hw4uN4P/54qr6T1lnOnIFARc?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f451b698-75c7-4536-3ad1-08db93a304ef
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2023 21:54:17.8026
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91afcb88-e95b-4096-4e9c-08db93948ba6
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000044FB.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5148
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MnHK0wLLo8vIs6mOpmTReswS6T1jfynGnld1hdrV3OfcU93KwQN07j2LKTqq3/4HMMnUS1L4kdA7OIg1BBvbXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8006
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,SPF_HELO_PASS,
+        T_SCC_BODY_TEXT_LINE,T_SPF_PERMERROR,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Since commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-PCIe ports from modern machines (>=2015) are allowed to be put into D3 by
-storing a value to the `bridge_d3` variable in the `struct pci_dev`
-structure.
+On Wed, Aug 02, 2023 at 02:06:49PM +0800, Richard Zhu wrote:
+> Add i.MX6Q and i.MX6QP PCIe EP supports.
+> 
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 61 ++++++++++++++++++++++++++-
+>  1 file changed, 60 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 27aaa2a6bf39..4da9553b49b4 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -46,8 +46,10 @@
+>  
+>  enum imx6_pcie_variants {
+>  	IMX6Q,
+> +	IMX6Q_EP,
+>  	IMX6SX,
+>  	IMX6QP,
+> +	IMX6QP_EP,
+>  	IMX7D,
+>  	IMX8MQ,
+>  	IMX8MM,
+> @@ -567,7 +569,9 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+>  				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN, 0);
+>  		break;
+>  	case IMX6QP:
+> +	case IMX6QP_EP:
+>  	case IMX6Q:
+> +	case IMX6Q_EP:
+>  		/* power up core phy and enable ref clock */
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+>  				   IMX6Q_GPR1_PCIE_TEST_PD, 0 << 18);
+> @@ -619,7 +623,9 @@ static void imx6_pcie_disable_ref_clk(struct imx6_pcie *imx6_pcie)
+>  		clk_disable_unprepare(imx6_pcie->pcie_inbound_axi);
+>  		break;
+>  	case IMX6QP:
+> +	case IMX6QP_EP:
+>  	case IMX6Q:
+> +	case IMX6Q_EP:
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+>  				IMX6Q_GPR1_PCIE_REF_CLK_EN, 0);
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+> @@ -720,11 +726,13 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+>  				   IMX6SX_GPR5_PCIE_BTNRST_RESET);
+>  		break;
+>  	case IMX6QP:
+> +	case IMX6QP_EP:
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+>  				   IMX6Q_GPR1_PCIE_SW_RST,
+>  				   IMX6Q_GPR1_PCIE_SW_RST);
+>  		break;
+>  	case IMX6Q:
+> +	case IMX6Q_EP:
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+>  				   IMX6Q_GPR1_PCIE_TEST_PD, 1 << 18);
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+> @@ -777,12 +785,14 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  				   IMX6SX_GPR5_PCIE_BTNRST_RESET, 0);
+>  		break;
+>  	case IMX6QP:
+> +	case IMX6QP_EP:
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+>  				   IMX6Q_GPR1_PCIE_SW_RST, 0);
+>  
+>  		usleep_range(200, 500);
+>  		break;
+>  	case IMX6Q:		/* Nothing to do */
+> +	case IMX6Q_EP:
+>  	case IMX8MM:
+>  	case IMX8MM_EP:
+>  	case IMX8MP:
+> @@ -827,8 +837,10 @@ static void imx6_pcie_ltssm_enable(struct device *dev)
+>  
+>  	switch (imx6_pcie->drvdata->variant) {
+>  	case IMX6Q:
+> +	case IMX6Q_EP:
+>  	case IMX6SX:
+>  	case IMX6QP:
+> +	case IMX6QP_EP:
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+>  				   IMX6Q_GPR12_PCIE_CTL_2,
+>  				   IMX6Q_GPR12_PCIE_CTL_2);
+> @@ -851,8 +863,10 @@ static void imx6_pcie_ltssm_disable(struct device *dev)
+>  
+>  	switch (imx6_pcie->drvdata->variant) {
+>  	case IMX6Q:
+> +	case IMX6Q_EP:
+>  	case IMX6SX:
+>  	case IMX6QP:
+> +	case IMX6QP_EP:
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+>  				   IMX6Q_GPR12_PCIE_CTL_2, 0);
+>  		break;
+> @@ -1077,6 +1091,27 @@ static int imx6_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	return 0;
+>  }
+>  
+> +/*
+> + * i.MX6Q and i.MX6QP PCIe EP BAR definitions.
+> + * +-----------------------------------------------------------------+
+> + * | BAR0     | BAR1     | BAR2     | BAR3     | BAR4     | BAR5     |
+> + * +----------|----------|----------|----------|----------|----------+
+> + * | 64-bit   | Disabled | 32-bit   | 32-bit   | Disabled | Disabled |
+> + * |          |          |          | Fixed    |          |          |
+> + * |          |          |          | 256Bytes |          |          |
+> + * | Prefetch |          | Prefetch | None-    |          |          |
+> + * | Memory   |          | Memory   | Prefetch |          |          |
+> + * |          |          |          | IO       |          |          |
+> + * +-----------------------------------------------------------------+
+> + */
+> +static const struct pci_epc_features imx6q_pcie_epc_features = {
+> +	.linkup_notifier = false,
+> +	.msi_capable = true,
+> +	.msix_capable = false,
+> +	.reserved_bar = 1 << BAR_4 | 1 << BAR_5,
+> +	.align = SZ_64K,
+> +};
+> +
+>  static const struct pci_epc_features imx8m_pcie_epc_features = {
+>  	.linkup_notifier = false,
+>  	.msi_capable = true,
+> @@ -1088,7 +1123,16 @@ static const struct pci_epc_features imx8m_pcie_epc_features = {
+>  static const struct pci_epc_features*
+>  imx6_pcie_ep_get_features(struct dw_pcie_ep *ep)
+>  {
+> -	return &imx8m_pcie_epc_features;
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct imx6_pcie *imx6_pcie = to_imx6_pcie(pci);
+> +
+> +	switch (imx6_pcie->drvdata->variant) {
+> +	case IMX6Q_EP:
+> +	case IMX6QP_EP:
+> +		return &imx6q_pcie_epc_features;
+> +	default:
+> +		return &imx8m_pcie_epc_features;
 
-pci_power_manageable() uses this variable to indicate a PCIe port can
-enter D3.
-pci_pm_suspend_noirq() uses the return from pci_power_manageable() to
-decide whether to try to put a device into its target state for a sleep
-cycle via pci_prepare_to_sleep().
+Could you add "const struct pci_epc_features" *epc_features in drvdata?
 
-For devices that support D3, the target state is selected by this policy:
-1. If platform_pci_power_manageable():
-   Use platform_pci_choose_state()
-2. If the device is armed for wakeup:
-   Select the deepest D-state that supports a PME.
-3. Else:
-   Use D3hot.
+	if (imx6_pcie->drvdata->epc_features)
+		return imx6_pcie->drvdata->epc_features;
 
-Devices are considered power manageable by the platform when they have
-one or more objects described in the table in section 7.3 of the ACPI 6.5
-specification.
+	return &imx8m_pcie_epc_features;
 
-When devices are not considered power manageable; specs are ambiguous as
-to what should happen.  In this situation Windows 11 seems to leave PCIe
-root ports in D0 while Linux puts them into D3 due to the above mentioned
-commit.
 
-In Windows systems that support Modern Standby specify hardware
-pre-conditions for the SoC to achieve the lowest power state by device
-constraints in a SOC specific "Power Engine Plugin" (PEP) [2] [3].
-They can be marked as disabled or enabled and when enabled can specify
-the minimum power state required for an ACPI device.
+Needn't change this code if new chip added in future.
 
-Instead of using a time based heuristic to decide if a port should go
-into D3 use device constraints to decide.
-* If the constraint is not present or disabled then choose D0.
-* If the constraint is enabled, then enable D3 if the constraint is set
-  to 3 or greater.
+Frank
 
-Link: https://uefi.org/specs/ACPI/6.5/07_Power_and_Performance_Mgmt.html#device-power-management-objects [1]
-Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/platform-design-for-modern-standby#low-power-core-silicon-cpu-soc-dram [2]
-Link: https://uefi.org/sites/default/files/resources/Intel_ACPI_Low_Power_S0_Idle.pdf [3]
-Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-Reported-by: Iain Lane <iain@orangesquash.org.uk>
-Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v7->v8:
- * Use device constraints instead
- * Update commit message and links
----
- drivers/acpi/x86/s2idle.c | 28 ++++++++++++++++++++++++++--
- drivers/pci/pci-acpi.c    | 19 +++++++++++++++++++
- drivers/pci/pci.c         | 15 ++++++++++-----
- drivers/pci/pci.h         |  5 +++++
- include/linux/acpi.h      |  6 ++++++
- 5 files changed, 66 insertions(+), 7 deletions(-)
+> +	}
+>  }
+>  
+>  static const struct dw_pcie_ep_ops pcie_ep_ops = {
+> @@ -1157,6 +1201,7 @@ static void imx6_pcie_pm_turnoff(struct imx6_pcie *imx6_pcie)
+>  	switch (imx6_pcie->drvdata->variant) {
+>  	case IMX6SX:
+>  	case IMX6QP:
+> +	case IMX6QP_EP:
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+>  				IMX6SX_GPR12_PCIE_PM_TURN_OFF,
+>  				IMX6SX_GPR12_PCIE_PM_TURN_OFF);
+> @@ -1478,6 +1523,12 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  		.dbi_length = 0x200,
+>  		.gpr = "fsl,imx6q-iomuxc-gpr",
+>  	},
+> +	[IMX6Q_EP] = {
+> +		.variant = IMX6Q_EP,
+> +		.mode = DW_PCIE_EP_TYPE,
+> +		.flags = IMX6_PCIE_FLAG_IMX6_PHY,
+> +		.gpr = "fsl,imx6q-iomuxc-gpr",
 
-diff --git a/drivers/acpi/x86/s2idle.c b/drivers/acpi/x86/s2idle.c
-index ce62e61a9605e..60f681fa05ed3 100644
---- a/drivers/acpi/x86/s2idle.c
-+++ b/drivers/acpi/x86/s2idle.c
-@@ -133,7 +133,7 @@ static void lpi_device_get_constraints_amd(void)
- 					union acpi_object *obj = &info_obj->package.elements[k];
- 
- 					list = &lpi_constraints_table[lpi_constraints_table_size];
--					list->min_dstate = -1;
-+					list->min_dstate = -EINVAL;
- 
- 					switch (k) {
- 					case 0:
-@@ -244,7 +244,7 @@ static void lpi_device_get_constraints(void)
- 		acpi_handle_debug(lps0_device_handle,
- 				  "index:%d Name:%s\n", i, info.name);
- 
--		constraint->min_dstate = -1;
-+		constraint->min_dstate = -EINVAL;
- 
- 		for (j = 0; j < package_count; ++j) {
- 			union acpi_object *info_obj = &info.package[j];
-@@ -291,6 +291,30 @@ static void lpi_device_get_constraints(void)
- 	ACPI_FREE(out_obj);
- }
- 
-+/*
-+ * acpi_get_lps0_constraint - get any LPS0 constraint for an acpi device
-+ * @handle: ACPI handle of the device
-+ *
-+ * If a constraint has been specified in the _DSM method for the device,
-+ * return it.  Otherwise, return -ENODEV.
-+ */
-+int acpi_get_lps0_constraint(struct device *dev)
-+{
-+	acpi_handle handle = ACPI_HANDLE(dev);
-+	int i;
-+
-+	if (!handle)
-+		return -ENODEV;
-+
-+	for (i = 0; i < lpi_constraints_table_size; ++i) {
-+		if (lpi_constraints_table[i].handle != handle)
-+			continue;
-+		return lpi_constraints_table[i].min_dstate;
-+	}
-+
-+	return -ENODEV;
-+}
-+
- static void lpi_check_constraints(void)
- {
- 	int i;
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index a05350a4e49cb..40900754404ff 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -1043,6 +1043,25 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
- 	return false;
- }
- 
-+/*
-+ * acpi_pci_device_constraint_d3 - determine if device constraints require D3
-+ * @dev: PCI device to check
-+ *
-+ * Returns true if the PEP constraints for the device is enabled and
-+ * requires D3.
-+ */
-+bool acpi_pci_device_constraint_d3(struct pci_dev *dev)
-+{
-+	int constraint = acpi_get_lps0_constraint(&dev->dev);
-+
-+	if (constraint < 0) {
-+		pci_dbg(dev, "ACPI device constraint not present\n");
-+		return false;
-+	}
-+
-+	return constraint >= 3;
-+}
-+
- static void acpi_pci_config_space_access(struct pci_dev *dev, bool enable)
- {
- 	int val = enable ? ACPI_REG_CONNECT : ACPI_REG_DISCONNECT;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 60230da957e0c..dce313cd3b8f0 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1082,6 +1082,14 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
- 	return acpi_pci_bridge_d3(dev);
- }
- 
-+static inline bool platform_constraint_d3(struct pci_dev *dev)
-+{
-+	if (pci_use_mid_pm())
-+		return false;
-+
-+	return acpi_pci_device_constraint_d3(dev);
-+}
-+
- /**
-  * pci_update_current_state - Read power state of given device and cache it
-  * @dev: PCI device to handle.
-@@ -3036,11 +3044,8 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
- 		if (dmi_check_system(bridge_d3_blacklist))
- 			return false;
- 
--		/*
--		 * It should be safe to put PCIe ports from 2015 or newer
--		 * to D3.
--		 */
--		if (dmi_get_bios_year() >= 2015)
-+		/* the platform indicates in a device constraint that D3 is needed */
-+		if (platform_constraint_d3(bridge))
- 			return true;
- 		break;
- 	}
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index a4c3974340576..2162f243bcc25 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -707,6 +707,7 @@ void pci_set_acpi_fwnode(struct pci_dev *dev);
- int pci_dev_acpi_reset(struct pci_dev *dev, bool probe);
- bool acpi_pci_power_manageable(struct pci_dev *dev);
- bool acpi_pci_bridge_d3(struct pci_dev *dev);
-+bool acpi_pci_device_constraint_d3(struct pci_dev *dev);
- int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state);
- pci_power_t acpi_pci_get_power_state(struct pci_dev *dev);
- void acpi_pci_refresh_power_state(struct pci_dev *dev);
-@@ -731,6 +732,10 @@ static inline bool acpi_pci_bridge_d3(struct pci_dev *dev)
- {
- 	return false;
- }
-+static inline bool acpi_pci_device_constraint_d3(struct pci_dev *dev)
-+{
-+	return false;
-+}
- static inline int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
- {
- 	return -ENODEV;
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 0d5277b7c6323..353c0b910c2cd 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1109,6 +1109,12 @@ struct acpi_s2idle_dev_ops {
- };
- int acpi_register_lps0_dev(struct acpi_s2idle_dev_ops *arg);
- void acpi_unregister_lps0_dev(struct acpi_s2idle_dev_ops *arg);
-+int acpi_get_lps0_constraint(struct device *dev);
-+#else
-+static inline int acpi_get_lps0_constraint(struct device *dev)
-+{
-+	return false;
-+}
- #endif /* CONFIG_X86 */
- #ifndef CONFIG_IA64
- void arch_reserve_mem_area(acpi_physical_address addr, size_t size);
--- 
-2.34.1
+See above comments
+		.epc_feature = &imx6q_pcie_epc_features;
 
+Frank
+
+> +	},
+>  	[IMX6SX] = {
+>  		.variant = IMX6SX,
+>  		.flags = IMX6_PCIE_FLAG_IMX6_PHY |
+> @@ -1493,6 +1544,12 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  		.dbi_length = 0x200,
+>  		.gpr = "fsl,imx6q-iomuxc-gpr",
+>  	},
+> +	[IMX6QP_EP] = {
+> +		.variant = IMX6QP_EP,
+> +		.mode = DW_PCIE_EP_TYPE,
+> +		.flags = IMX6_PCIE_FLAG_IMX6_PHY,
+> +		.gpr = "fsl,imx6q-iomuxc-gpr",
+> +	},
+>  	[IMX7D] = {
+>  		.variant = IMX7D,
+>  		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
+> @@ -1531,8 +1588,10 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  
+>  static const struct of_device_id imx6_pcie_of_match[] = {
+>  	{ .compatible = "fsl,imx6q-pcie",  .data = &drvdata[IMX6Q],  },
+> +	{ .compatible = "fsl,imx6q-pcie-ep", .data = &drvdata[IMX6Q_EP], },
+>  	{ .compatible = "fsl,imx6sx-pcie", .data = &drvdata[IMX6SX], },
+>  	{ .compatible = "fsl,imx6qp-pcie", .data = &drvdata[IMX6QP], },
+> +	{ .compatible = "fsl,imx6qp-pcie-ep", .data = &drvdata[IMX6QP_EP], },
+>  	{ .compatible = "fsl,imx7d-pcie",  .data = &drvdata[IMX7D],  },
+>  	{ .compatible = "fsl,imx8mq-pcie", .data = &drvdata[IMX8MQ], },
+>  	{ .compatible = "fsl,imx8mm-pcie", .data = &drvdata[IMX8MM], },
+> -- 
+> 2.34.1
+> 
