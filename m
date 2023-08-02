@@ -2,616 +2,213 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 299A076C9CF
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Aug 2023 11:48:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C4A376CAF0
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Aug 2023 12:35:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231358AbjHBJss (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Aug 2023 05:48:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52936 "EHLO
+        id S231378AbjHBKf4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Aug 2023 06:35:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231559AbjHBJsp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Aug 2023 05:48:45 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FFAFE57
-        for <linux-pci@vger.kernel.org>; Wed,  2 Aug 2023 02:48:42 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-4fe3678010eso5170876e87.3
-        for <linux-pci@vger.kernel.org>; Wed, 02 Aug 2023 02:48:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690969721; x=1691574521;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qB9Sy9N0hdZFHdWplg8q7doc7IU6K8XjKXDvs5ZDSqw=;
-        b=XztU9DPTqY3MF6bw2yQXMPtvdc2umo0e1bN7kDeZvKhElaM088vmq4PeJ3sGiztbO4
-         tJ9+Z4TRA0nvBqS23Wqt2luHuJILS2X+wxmmKNLUjeMLJtERHiB/1IWQyI0rmhJOlL1q
-         DK3RgjU4HS2Z/UwLjBBVRRHaSxn1nt7rDgnf38DXBteweUbB9autm6lX9Z25TAVN6gnJ
-         3Aq+oSluR3IEp3KyknIgDX3izXNsME7qaONtFcwMce2rqKP7nyRiHMAdCanstRP4utWL
-         k2IOhmn069LPb8TTEjMcVr/0uV6rx2B+ghTyzhriXwi7clmeNAgklWZwqQUoi64t/arM
-         F6+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690969721; x=1691574521;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qB9Sy9N0hdZFHdWplg8q7doc7IU6K8XjKXDvs5ZDSqw=;
-        b=TEKB+eyFLyozXTRSm3tH3wqf6Q3XBpmpiLQIKAXxmxw3lxecI97plu3TpmDTjLG0GP
-         4KY9B5yeWwJEhYG89D/VIfKtMaNZhYb6NMUTMiBFtgGwec3EYWcnrXYxaYtTEK3kkS0h
-         tnm7KjhXR1N/QYshDGe9SbQ6xql7N1oJodwowT2n9WQs9UeVYsnO5emgzfTYoiaPUiw1
-         PsXZp2jk2ZGVuzcJAgGqTMnKDLhLlyA+ZfSCUIyC7AgOxfFdToFTcUFxcHLiqY875w/O
-         Nnac4iADAeTUcl0eueUaSerL3rbt/whmQC3VgqiAZkes8TiyG87PIlbnY3IOowRDkSk3
-         fshA==
-X-Gm-Message-State: ABy/qLakKJ1M5zLXiMBu8ZvQDCLwmZ0GfgS9k6qOT+l9bzZaLGlMv7Nu
-        4CDehtbH/6coQBxBJkqy/hE=
-X-Google-Smtp-Source: APBJJlGzgUpWYxg6HqjKOPVUJLOmB9AtJRyrxcL3G0o0lOJN2P6w1L88WBUq+u94o63878ka1QZJ+w==
-X-Received: by 2002:ac2:5e2e:0:b0:4fd:d3aa:e425 with SMTP id o14-20020ac25e2e000000b004fdd3aae425mr3584969lfg.27.1690969720534;
-        Wed, 02 Aug 2023 02:48:40 -0700 (PDT)
-Received: from mobilestation ([93.157.254.210])
-        by smtp.gmail.com with ESMTPSA id q18-20020ac25fd2000000b004fdc0023a47sm2868043lfg.238.2023.08.02.02.48.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Aug 2023 02:48:39 -0700 (PDT)
-Date:   Wed, 2 Aug 2023 12:48:37 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Damien Le Moal <dlemoal@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        with ESMTP id S231436AbjHBKfb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Aug 2023 06:35:31 -0400
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4837E3C26;
+        Wed,  2 Aug 2023 03:31:16 -0700 (PDT)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 372AV03e087357;
+        Wed, 2 Aug 2023 05:31:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1690972260;
+        bh=/MHuGroEMLFbmSZMPPGGvJ55f3Ob1498wHHAUU9f2Jk=;
+        h=From:To:CC:Subject:Date;
+        b=EcNEJOivYiUABdA25H4TtqL3cZOZ4J/WMpw8Wg0tsQhcEK/5r/BApZ7kgpUyf77Gu
+         QwcBxAdLnbIXLUguDK26R0Y6tNQViA+Gbffu0RInV+Zq9yHJZAtOgtbkVsrisDBCEp
+         zRLrstDlQQPq1B8f873xysNnNUKFL8yQREyJqiPo=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 372AV0BV013219
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 2 Aug 2023 05:31:00 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 2
+ Aug 2023 05:31:00 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 2 Aug 2023 05:31:00 -0500
+Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 372AUx60016890;
+        Wed, 2 Aug 2023 05:31:00 -0500
+From:   Achal Verma <a-verma1@ti.com>
+To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH v3 2/2] PCI: endpoint: Drop PCI_EPC_IRQ_XXX definitions
-Message-ID: <xjg5gztbre56dd7xxcrrr2e26dzibt5e25gwklg4mtjspvvoq7@phyyitzpa4oj>
-References: <20230802094036.1052472-1-dlemoal@kernel.org>
- <20230802094036.1052472-3-dlemoal@kernel.org>
+        Krzysztof Wilczy_ski <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Achal Verma <a-verma1@ti.com>
+Subject: [PATCH] PCI: cadence: Set the AFS bit in Device Capabilities 2 Register
+Date:   Wed, 2 Aug 2023 16:00:59 +0530
+Message-ID: <20230802103059.3492181-1-a-verma1@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230802094036.1052472-3-dlemoal@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 02, 2023 at 06:40:36PM +0900, Damien Le Moal wrote:
-> linux/pci.h defines the IRQ flags PCI_IRQ_INTX, PCI_IRQ_MSI and
-> PCI_IRQ_MSIX. Let's use these flags directly instead of the endpoint
-> definitions provided by enum pci_epc_irq_type. This removes the need
-> for defining this enum type completely.
-> 
-> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+J7 PCIe Root Complex has ARI Forwarding Support, means supporting
+forwarding of TLPs addressed to functions with function number greater than
+7 but some PCIe instances on J7 have this bit cleared which results in
+failure of forwarding of TLPs destined for function number > 7.
+Setting the AFS bit in Device Capabilities 2 Register explicitly, resolves
+the issue and leads to successful access to function number > 7.
 
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+Some observations:
+1. J7200-EVB has single PCIe instance(PCIe1) for which ARIFwd bit is not
+   set. Enumeration gracefully fails for funciton number greater than 7 but
+   later read/write access to these funcitons results in a crash.
 
--Serge(y)
+2. On J721E-EVB, PCIe1 instance has ARIFwd bit set while it is cleared for
+   PCIe0 instance. This issue combined with errata i2086
+   (Unsupported Request (UR) Response Results in External Abort) results in
+   SERROR while scanning multi-function endpoint device.
 
+Kernel panic - not syncing: Asynchronous SError Interrupt
+Hardware name: Texas Instruments K3 J721E SoC (DT)
+Workqueue: events deferred_probe_work_func
+Call trace:
+ dump_backtrace+0x0/0x1a0
+ show_stack+0x18/0x68
+ dump_stack+0xd0/0x12c
+ panic+0x16c/0x334
+ nmi_panic+0x8c/0x90
+ arm64_serror_panic+0x78/0x84
+ do_serror+0x38/0x98
+ el1_error+0x90/0x110
+ pci_generic_config_read+0x3c/0xe0
+ cdns_ti_pcie_config_read+0x18/0x38
+ pci_bus_read_config_dword+0x80/0xd8
+ pci_bus_generic_read_dev_vendor_id+0x34/0x1b0
+ pci_bus_read_dev_vendor_id+0x4c/0x70
+ pci_scan_single_device+0x7c/0xf8
+ pci_scan_slot+0x74/0x120
+ pci_scan_child_bus_extend+0x54/0x298
+ pci_scan_bridge_extend+0x29c/0x580
+ pci_scan_child_bus_extend+0x1e4/0x298
+ pci_scan_root_bus_bridge+0x64/0xd8
+ pci_host_probe+0x18/0xc8
+ cdns_pcie_host_setup+0x534/0x8f0
+ j721e_pcie_probe+0x494/0x820
 
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-ep.c  |  9 ++++-----
->  drivers/pci/controller/dwc/pci-dra7xx.c           |  6 +++---
->  drivers/pci/controller/dwc/pci-imx6.c             |  9 ++++-----
->  drivers/pci/controller/dwc/pci-keystone.c         |  9 ++++-----
->  drivers/pci/controller/dwc/pci-layerscape-ep.c    |  8 ++++----
->  drivers/pci/controller/dwc/pcie-artpec6.c         |  8 ++++----
->  drivers/pci/controller/dwc/pcie-designware-ep.c   |  2 +-
->  drivers/pci/controller/dwc/pcie-designware-plat.c |  9 ++++-----
->  drivers/pci/controller/dwc/pcie-designware.h      |  2 +-
->  drivers/pci/controller/dwc/pcie-keembay.c         | 13 ++++++-------
->  drivers/pci/controller/dwc/pcie-qcom-ep.c         |  6 +++---
->  drivers/pci/controller/dwc/pcie-tegra194.c        |  9 ++++-----
->  drivers/pci/controller/dwc/pcie-uniphier-ep.c     |  7 +++----
->  drivers/pci/controller/pcie-rcar-ep.c             |  7 +++----
->  drivers/pci/controller/pcie-rockchip-ep.c         |  7 +++----
->  drivers/pci/endpoint/functions/pci-epf-mhi.c      |  2 +-
->  drivers/pci/endpoint/functions/pci-epf-ntb.c      |  4 ++--
->  drivers/pci/endpoint/functions/pci-epf-test.c     |  6 +++---
->  drivers/pci/endpoint/functions/pci-epf-vntb.c     |  7 ++-----
->  drivers/pci/endpoint/pci-epc-core.c               |  2 +-
->  include/linux/pci-epc.h                           | 11 ++---------
->  21 files changed, 62 insertions(+), 81 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> index b8b655d4047e..885291bb1e28 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> @@ -531,25 +531,24 @@ static int cdns_pcie_ep_send_msix_irq(struct cdns_pcie_ep *ep, u8 fn, u8 vfn,
->  }
->  
->  static int cdns_pcie_ep_raise_irq(struct pci_epc *epc, u8 fn, u8 vfn,
-> -				  enum pci_epc_irq_type type,
-> -				  u16 interrupt_num)
-> +				  unsigned int type, u16 interrupt_num)
->  {
->  	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
->  	struct cdns_pcie *pcie = &ep->pcie;
->  	struct device *dev = pcie->dev;
->  
->  	switch (type) {
-> -	case PCI_EPC_IRQ_LEGACY:
-> +	case PCI_IRQ_INTX:
->  		if (vfn > 0) {
->  			dev_err(dev, "Cannot raise legacy interrupts for VF\n");
->  			return -EINVAL;
->  		}
->  		return cdns_pcie_ep_send_legacy_irq(ep, fn, vfn, 0);
->  
-> -	case PCI_EPC_IRQ_MSI:
-> +	case PCI_IRQ_MSI:
->  		return cdns_pcie_ep_send_msi_irq(ep, fn, vfn, interrupt_num);
->  
-> -	case PCI_EPC_IRQ_MSIX:
-> +	case PCI_IRQ_MSIX:
->  		return cdns_pcie_ep_send_msix_irq(ep, fn, vfn, interrupt_num);
->  
->  	default:
-> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-> index b445ffe95e3f..f257a42f3314 100644
-> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
-> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-> @@ -404,16 +404,16 @@ static void dra7xx_pcie_raise_msi_irq(struct dra7xx_pcie *dra7xx,
->  }
->  
->  static int dra7xx_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> -				 enum pci_epc_irq_type type, u16 interrupt_num)
-> +				 unsigned int type, u16 interrupt_num)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pci);
->  
->  	switch (type) {
-> -	case PCI_EPC_IRQ_LEGACY:
-> +	case PCI_IRQ_INTX:
->  		dra7xx_pcie_raise_legacy_irq(dra7xx);
->  		break;
-> -	case PCI_EPC_IRQ_MSI:
-> +	case PCI_IRQ_MSI:
->  		dra7xx_pcie_raise_msi_irq(dra7xx, interrupt_num);
->  		break;
->  	default:
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 235ead4c807f..adda8a43d058 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -1057,17 +1057,16 @@ static void imx6_pcie_ep_init(struct dw_pcie_ep *ep)
->  }
->  
->  static int imx6_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> -				  enum pci_epc_irq_type type,
-> -				  u16 interrupt_num)
-> +				  unsigned int type, u16 interrupt_num)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  
->  	switch (type) {
-> -	case PCI_EPC_IRQ_LEGACY:
-> +	case PCI_IRQ_INTX:
->  		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
-> -	case PCI_EPC_IRQ_MSI:
-> +	case PCI_IRQ_MSI:
->  		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-> -	case PCI_EPC_IRQ_MSIX:
-> +	case PCI_IRQ_MSIX:
->  		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
->  	default:
->  		dev_err(pci->dev, "UNKNOWN IRQ type\n");
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index 49aea6ce3e87..58170a4fc574 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -900,20 +900,19 @@ static void ks_pcie_am654_raise_legacy_irq(struct keystone_pcie *ks_pcie)
->  }
->  
->  static int ks_pcie_am654_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> -				   enum pci_epc_irq_type type,
-> -				   u16 interrupt_num)
-> +				   unsigned int type, u16 interrupt_num)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
->  
->  	switch (type) {
-> -	case PCI_EPC_IRQ_LEGACY:
-> +	case PCI_IRQ_INTX:
->  		ks_pcie_am654_raise_legacy_irq(ks_pcie);
->  		break;
-> -	case PCI_EPC_IRQ_MSI:
-> +	case PCI_IRQ_MSI:
->  		dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
->  		break;
-> -	case PCI_EPC_IRQ_MSIX:
-> +	case PCI_IRQ_MSIX:
->  		dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
->  		break;
->  	default:
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> index de4c1758a6c3..6b65f1bcc550 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> @@ -150,16 +150,16 @@ static void ls_pcie_ep_init(struct dw_pcie_ep *ep)
->  }
->  
->  static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> -				enum pci_epc_irq_type type, u16 interrupt_num)
-> +				unsigned int type, u16 interrupt_num)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  
->  	switch (type) {
-> -	case PCI_EPC_IRQ_LEGACY:
-> +	case PCI_IRQ_INTX:
->  		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
-> -	case PCI_EPC_IRQ_MSI:
-> +	case PCI_IRQ_MSI:
->  		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-> -	case PCI_EPC_IRQ_MSIX:
-> +	case PCI_IRQ_MSIX:
->  		return dw_pcie_ep_raise_msix_irq_doorbell(ep, func_no,
->  							  interrupt_num);
->  	default:
-> diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-> index 9b572a2b2c9a..fc426182443a 100644
-> --- a/drivers/pci/controller/dwc/pcie-artpec6.c
-> +++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-> @@ -352,15 +352,15 @@ static void artpec6_pcie_ep_init(struct dw_pcie_ep *ep)
->  }
->  
->  static int artpec6_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> -				  enum pci_epc_irq_type type, u16 interrupt_num)
-> +				  unsigned int type, u16 interrupt_num)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  
->  	switch (type) {
-> -	case PCI_EPC_IRQ_LEGACY:
-> -		dev_err(pci->dev, "EP cannot trigger legacy IRQs\n");
-> +	case PCI_IRQ_INTX:
-> +		dev_err(pci->dev, "EP cannot trigger INTx IRQs\n");
->  		return -EINVAL;
-> -	case PCI_EPC_IRQ_MSI:
-> +	case PCI_IRQ_MSI:
->  		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
->  	default:
->  		dev_err(pci->dev, "UNKNOWN IRQ type\n");
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index f9182f8d552f..ab87ea3b0986 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -426,7 +426,7 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  }
->  
->  static int dw_pcie_ep_raise_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> -				enum pci_epc_irq_type type, u16 interrupt_num)
-> +				unsigned int type, u16 interrupt_num)
->  {
->  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
->  
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-plat.c b/drivers/pci/controller/dwc/pcie-designware-plat.c
-> index b625841e98aa..c83968aa0149 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-plat.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-plat.c
-> @@ -42,17 +42,16 @@ static void dw_plat_pcie_ep_init(struct dw_pcie_ep *ep)
->  }
->  
->  static int dw_plat_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> -				     enum pci_epc_irq_type type,
-> -				     u16 interrupt_num)
-> +				     unsigned int type, u16 interrupt_num)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  
->  	switch (type) {
-> -	case PCI_EPC_IRQ_LEGACY:
-> +	case PCI_IRQ_INTX:
->  		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
-> -	case PCI_EPC_IRQ_MSI:
-> +	case PCI_IRQ_MSI:
->  		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-> -	case PCI_EPC_IRQ_MSIX:
-> +	case PCI_IRQ_MSIX:
->  		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
->  	default:
->  		dev_err(pci->dev, "UNKNOWN IRQ type\n");
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 615660640801..e039081eb947 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -320,7 +320,7 @@ struct dw_pcie_rp {
->  struct dw_pcie_ep_ops {
->  	void	(*ep_init)(struct dw_pcie_ep *ep);
->  	int	(*raise_irq)(struct dw_pcie_ep *ep, u8 func_no,
-> -			     enum pci_epc_irq_type type, u16 interrupt_num);
-> +			     unsigned int type, u16 interrupt_num);
->  	const struct pci_epc_features* (*get_features)(struct dw_pcie_ep *ep);
->  	/*
->  	 * Provide a method to implement the different func config space
-> diff --git a/drivers/pci/controller/dwc/pcie-keembay.c b/drivers/pci/controller/dwc/pcie-keembay.c
-> index 289bff99d762..8e0e2e28ef67 100644
-> --- a/drivers/pci/controller/dwc/pcie-keembay.c
-> +++ b/drivers/pci/controller/dwc/pcie-keembay.c
-> @@ -289,19 +289,18 @@ static void keembay_pcie_ep_init(struct dw_pcie_ep *ep)
->  }
->  
->  static int keembay_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> -				     enum pci_epc_irq_type type,
-> -				     u16 interrupt_num)
-> +				     unsigned int type, u16 interrupt_num)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  
->  	switch (type) {
-> -	case PCI_EPC_IRQ_LEGACY:
-> -		/* Legacy interrupts are not supported in Keem Bay */
-> -		dev_err(pci->dev, "Legacy IRQ is not supported\n");
-> +	case PCI_IRQ_INTX:
-> +		/* INTx interrupts are not supported in Keem Bay */
-> +		dev_err(pci->dev, "INTx IRQ is not supported\n");
->  		return -EINVAL;
-> -	case PCI_EPC_IRQ_MSI:
-> +	case PCI_IRQ_MSI:
->  		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-> -	case PCI_EPC_IRQ_MSIX:
-> +	case PCI_IRQ_MSIX:
->  		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
->  	default:
->  		dev_err(pci->dev, "Unknown IRQ type %d\n", type);
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> index 267e1247d548..5f95c33ae293 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> @@ -655,14 +655,14 @@ static int qcom_pcie_ep_enable_irq_resources(struct platform_device *pdev,
->  }
->  
->  static int qcom_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> -				  enum pci_epc_irq_type type, u16 interrupt_num)
-> +				  unsigned int type, u16 interrupt_num)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  
->  	switch (type) {
-> -	case PCI_EPC_IRQ_LEGACY:
-> +	case PCI_IRQ_INTX:
->  		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
-> -	case PCI_EPC_IRQ_MSI:
-> +	case PCI_IRQ_MSI:
->  		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
->  	default:
->  		dev_err(pci->dev, "Unknown IRQ type\n");
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 383ba71d1e8f..42205f0675d0 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -1992,20 +1992,19 @@ static int tegra_pcie_ep_raise_msix_irq(struct tegra_pcie_dw *pcie, u16 irq)
->  }
->  
->  static int tegra_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> -				   enum pci_epc_irq_type type,
-> -				   u16 interrupt_num)
-> +				   unsigned int type, u16 interrupt_num)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
->  
->  	switch (type) {
-> -	case PCI_EPC_IRQ_LEGACY:
-> +	case PCI_IRQ_INTX:
->  		return tegra_pcie_ep_raise_legacy_irq(pcie, interrupt_num);
->  
-> -	case PCI_EPC_IRQ_MSI:
-> +	case PCI_IRQ_MSI:
->  		return tegra_pcie_ep_raise_msi_irq(pcie, interrupt_num);
->  
-> -	case PCI_EPC_IRQ_MSIX:
-> +	case PCI_IRQ_MSIX:
->  		return tegra_pcie_ep_raise_msix_irq(pcie, interrupt_num);
->  
->  	default:
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier-ep.c b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-> index cba3c88fcf39..d47236d5678d 100644
-> --- a/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-> @@ -256,15 +256,14 @@ static int uniphier_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep,
->  }
->  
->  static int uniphier_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> -				      enum pci_epc_irq_type type,
-> -				      u16 interrupt_num)
-> +				      unsigned int type, u16 interrupt_num)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  
->  	switch (type) {
-> -	case PCI_EPC_IRQ_LEGACY:
-> +	case PCI_IRQ_INTX:
->  		return uniphier_pcie_ep_raise_legacy_irq(ep);
-> -	case PCI_EPC_IRQ_MSI:
-> +	case PCI_IRQ_MSI:
->  		return uniphier_pcie_ep_raise_msi_irq(ep, func_no,
->  						      interrupt_num);
->  	default:
-> diff --git a/drivers/pci/controller/pcie-rcar-ep.c b/drivers/pci/controller/pcie-rcar-ep.c
-> index f9682df1da61..c21294bc430d 100644
-> --- a/drivers/pci/controller/pcie-rcar-ep.c
-> +++ b/drivers/pci/controller/pcie-rcar-ep.c
-> @@ -402,16 +402,15 @@ static int rcar_pcie_ep_assert_msi(struct rcar_pcie *pcie,
->  }
->  
->  static int rcar_pcie_ep_raise_irq(struct pci_epc *epc, u8 fn, u8 vfn,
-> -				  enum pci_epc_irq_type type,
-> -				  u16 interrupt_num)
-> +				  unsigned int type, u16 interrupt_num)
->  {
->  	struct rcar_pcie_endpoint *ep = epc_get_drvdata(epc);
->  
->  	switch (type) {
-> -	case PCI_EPC_IRQ_LEGACY:
-> +	case PCI_IRQ_INTX:
->  		return rcar_pcie_ep_assert_intx(ep, fn, 0);
->  
-> -	case PCI_EPC_IRQ_MSI:
-> +	case PCI_IRQ_MSI:
->  		return rcar_pcie_ep_assert_msi(&ep->pcie, fn, interrupt_num);
->  
->  	default:
-> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-> index 0af0e965fb57..95b1c8ef59c3 100644
-> --- a/drivers/pci/controller/pcie-rockchip-ep.c
-> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-> @@ -407,15 +407,14 @@ static int rockchip_pcie_ep_send_msi_irq(struct rockchip_pcie_ep *ep, u8 fn,
->  }
->  
->  static int rockchip_pcie_ep_raise_irq(struct pci_epc *epc, u8 fn, u8 vfn,
-> -				      enum pci_epc_irq_type type,
-> -				      u16 interrupt_num)
-> +				      unsigned int type, u16 interrupt_num)
->  {
->  	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
->  
->  	switch (type) {
-> -	case PCI_EPC_IRQ_LEGACY:
-> +	case PCI_IRQ_INTX:
->  		return rockchip_pcie_ep_send_legacy_irq(ep, fn, 0);
-> -	case PCI_EPC_IRQ_MSI:
-> +	case PCI_IRQ_MSI:
->  		return rockchip_pcie_ep_send_msi_irq(ep, fn, interrupt_num);
->  	default:
->  		return -EINVAL;
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> index 9c1f5a154fbd..90b49e707392 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> @@ -177,7 +177,7 @@ static void pci_epf_mhi_raise_irq(struct mhi_ep_cntrl *mhi_cntrl, u32 vector)
->  	 * MHI supplies 0 based MSI vectors but the API expects the vector
->  	 * number to start from 1, so we need to increment the vector by 1.
->  	 */
-> -	pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no, PCI_EPC_IRQ_MSI,
-> +	pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no, PCI_IRQ_MSI,
->  			  vector + 1);
->  }
->  
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-ntb.c b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-> index 9aac2c6f3bb9..fad00b1a8335 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-ntb.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-> @@ -140,9 +140,9 @@ static struct pci_epf_header epf_ntb_header = {
->  static int epf_ntb_link_up(struct epf_ntb *ntb, bool link_up)
->  {
->  	enum pci_epc_interface_type type;
-> -	enum pci_epc_irq_type irq_type;
->  	struct epf_ntb_epc *ntb_epc;
->  	struct epf_ntb_ctrl *ctrl;
-> +	unsigned int irq_type;
->  	struct pci_epc *epc;
->  	u8 func_no, vfunc_no;
->  	bool is_msix;
-> @@ -159,7 +159,7 @@ static int epf_ntb_link_up(struct epf_ntb *ntb, bool link_up)
->  			ctrl->link_status |= LINK_STATUS_UP;
->  		else
->  			ctrl->link_status &= ~LINK_STATUS_UP;
-> -		irq_type = is_msix ? PCI_EPC_IRQ_MSIX : PCI_EPC_IRQ_MSI;
-> +		irq_type = is_msix ? PCI_IRQ_MSIX : PCI_IRQ_MSI;
->  		ret = pci_epc_raise_irq(epc, func_no, vfunc_no, irq_type, 1);
->  		if (ret) {
->  			dev_err(&epc->dev,
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 1f0d2b84296a..9d39fda5c348 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -602,7 +602,7 @@ static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test,
->  	switch (reg->irq_type) {
->  	case IRQ_TYPE_LEGACY:
->  		pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no,
-> -				  PCI_EPC_IRQ_LEGACY, 0);
-> +				  PCI_IRQ_INTX, 0);
->  		break;
->  	case IRQ_TYPE_MSI:
->  		count = pci_epc_get_msi(epc, epf->func_no, epf->vfunc_no);
-> @@ -612,7 +612,7 @@ static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test,
->  			return;
->  		}
->  		pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no,
-> -				  PCI_EPC_IRQ_MSI, reg->irq_number);
-> +				  PCI_IRQ_MSI, reg->irq_number);
->  		break;
->  	case IRQ_TYPE_MSIX:
->  		count = pci_epc_get_msix(epc, epf->func_no, epf->vfunc_no);
-> @@ -622,7 +622,7 @@ static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test,
->  			return;
->  		}
->  		pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no,
-> -				  PCI_EPC_IRQ_MSIX, reg->irq_number);
-> +				  PCI_IRQ_MSIX, reg->irq_number);
->  		break;
->  	default:
->  		dev_err(dev, "Failed to raise IRQ, unknown type\n");
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> index c8b423c3c26e..ba2fe0bb400a 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> @@ -1172,11 +1172,8 @@ static int vntb_epf_peer_db_set(struct ntb_dev *ndev, u64 db_bits)
->  	func_no = ntb->epf->func_no;
->  	vfunc_no = ntb->epf->vfunc_no;
->  
-> -	ret = pci_epc_raise_irq(ntb->epf->epc,
-> -				func_no,
-> -				vfunc_no,
-> -				PCI_EPC_IRQ_MSI,
-> -				interrupt_num + 1);
-> +	ret = pci_epc_raise_irq(ntb->epf->epc, func_no, vfunc_no,
-> +				PCI_IRQ_MSI, interrupt_num + 1);
->  	if (ret)
->  		dev_err(&ntb->ntb.dev, "Failed to raise IRQ\n");
->  
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index 5a4a8b0be626..c80d06db4249 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -217,7 +217,7 @@ EXPORT_SYMBOL_GPL(pci_epc_start);
->   * Invoke to raise an legacy, MSI or MSI-X interrupt
->   */
->  int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> -		      enum pci_epc_irq_type type, u16 interrupt_num)
-> +		      unsigned int type, u16 interrupt_num)
->  {
->  	int ret;
->  
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index 5cb694031072..f498f9aa2ab0 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -19,13 +19,6 @@ enum pci_epc_interface_type {
->  	SECONDARY_INTERFACE,
->  };
->  
-> -enum pci_epc_irq_type {
-> -	PCI_EPC_IRQ_UNKNOWN,
-> -	PCI_EPC_IRQ_LEGACY,
-> -	PCI_EPC_IRQ_MSI,
-> -	PCI_EPC_IRQ_MSIX,
-> -};
-> -
->  static inline const char *
->  pci_epc_interface_string(enum pci_epc_interface_type type)
->  {
-> @@ -79,7 +72,7 @@ struct pci_epc_ops {
->  			    u16 interrupts, enum pci_barno, u32 offset);
->  	int	(*get_msix)(struct pci_epc *epc, u8 func_no, u8 vfunc_no);
->  	int	(*raise_irq)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> -			     enum pci_epc_irq_type type, u16 interrupt_num);
-> +			     unsigned int type, u16 interrupt_num);
->  	int	(*map_msi_irq)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  			       phys_addr_t phys_addr, u8 interrupt_num,
->  			       u32 entry_size, u32 *msi_data,
-> @@ -229,7 +222,7 @@ int pci_epc_map_msi_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  			phys_addr_t phys_addr, u8 interrupt_num,
->  			u32 entry_size, u32 *msi_data, u32 *msi_addr_offset);
->  int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> -		      enum pci_epc_irq_type type, u16 interrupt_num);
-> +		      unsigned int type, u16 interrupt_num);
->  int pci_epc_start(struct pci_epc *epc);
->  void pci_epc_stop(struct pci_epc *epc);
->  const struct pci_epc_features *pci_epc_get_features(struct pci_epc *epc,
-> -- 
-> 2.41.0
-> 
+Signed-off-by: Achal Verma <a-verma1@ti.com>
+---
+ drivers/pci/controller/cadence/pci-j721e.c         |  4 ++++
+ drivers/pci/controller/cadence/pcie-cadence-host.c |  7 +++++++
+ drivers/pci/controller/cadence/pcie-cadence.h      | 12 ++++++++++++
+ 3 files changed, 23 insertions(+)
+
+diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+index 32b6a7dc3cff..e890fe9ca89d 100644
+--- a/drivers/pci/controller/cadence/pci-j721e.c
++++ b/drivers/pci/controller/cadence/pci-j721e.c
+@@ -71,6 +71,7 @@ struct j721e_pcie_data {
+ 	unsigned int		quirk_disable_flr:1;
+ 	u32			linkdown_irq_regfield;
+ 	unsigned int		byte_access_allowed:1;
++	unsigned int		set_afs_bit:1;
+ };
+ 
+ static inline u32 j721e_pcie_user_readl(struct j721e_pcie *pcie, u32 offset)
+@@ -290,6 +291,7 @@ static const struct j721e_pcie_data j721e_pcie_rc_data = {
+ 	.quirk_retrain_flag = true,
+ 	.byte_access_allowed = false,
+ 	.linkdown_irq_regfield = LINK_DOWN,
++	.set_afs_bit = true,
+ };
+ 
+ static const struct j721e_pcie_data j721e_pcie_ep_data = {
+@@ -302,6 +304,7 @@ static const struct j721e_pcie_data j7200_pcie_rc_data = {
+ 	.quirk_detect_quiet_flag = true,
+ 	.linkdown_irq_regfield = J7200_LINK_DOWN,
+ 	.byte_access_allowed = true,
++	.set_afs_bit = true,
+ };
+ 
+ static const struct j721e_pcie_data j7200_pcie_ep_data = {
+@@ -391,6 +394,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 		rc = pci_host_bridge_priv(bridge);
+ 		rc->quirk_retrain_flag = data->quirk_retrain_flag;
+ 		rc->quirk_detect_quiet_flag = data->quirk_detect_quiet_flag;
++		rc->set_afs_bit = data->set_afs_bit;
+ 
+ 		cdns_pcie = &rc->pcie;
+ 		cdns_pcie->dev = dev;
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 5b14f7ee3c79..fc696d94f7a2 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -507,6 +507,7 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 	struct cdns_pcie *pcie;
+ 	struct resource *res;
+ 	int ret;
++	u32 pcie_cap2;
+ 
+ 	bridge = pci_host_bridge_from_priv(rc);
+ 	if (!bridge)
+@@ -536,6 +537,12 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 	if (rc->quirk_detect_quiet_flag)
+ 		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
+ 
++	if (rc->set_afs_bit) {
++		pcie_cap2 = cdns_pcie_rp_readl(pcie, CDNS_PCIE_RP_CAP_OFFSET + PCI_EXP_DEVCAP2);
++		pcie_cap2 |= PCI_EXP_DEVCAP2_ARI;
++		cdns_pcie_rp_writel(pcie, CDNS_PCIE_RP_CAP_OFFSET + PCI_EXP_DEVCAP2, pcie_cap2);
++	}
++
+ 	cdns_pcie_host_enable_ptm_response(pcie);
+ 
+ 	ret = cdns_pcie_start_link(pcie);
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index 190786e47df9..7a5d05f3febc 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -329,6 +329,7 @@ struct cdns_pcie_rc {
+ 	bool			avail_ib_bar[CDNS_PCIE_RP_MAX_IB];
+ 	unsigned int		quirk_retrain_flag:1;
+ 	unsigned int		quirk_detect_quiet_flag:1;
++	unsigned int		set_afs_bit:1;
+ };
+ 
+ /**
+@@ -457,6 +458,17 @@ static inline u16 cdns_pcie_rp_readw(struct cdns_pcie *pcie, u32 reg)
+ 	return cdns_pcie_read_sz(addr, 0x2);
+ }
+ 
++static inline void cdns_pcie_rp_writel(struct cdns_pcie *pcie,
++				       u32 reg, u32 value)
++{
++	writel(value, pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
++}
++
++static inline u32 cdns_pcie_rp_readl(struct cdns_pcie *pcie, u32 reg)
++{
++	return readl(pcie->reg_base + CDNS_PCIE_RP_BASE + reg);
++}
++
+ /* Endpoint Function register access */
+ static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
+ 					  u32 reg, u8 value)
+-- 
+2.25.1
+
