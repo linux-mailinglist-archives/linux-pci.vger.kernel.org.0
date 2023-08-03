@@ -2,70 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC18976E235
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Aug 2023 09:57:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03C9B76E2E0
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Aug 2023 10:24:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234016AbjHCH5I convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 3 Aug 2023 03:57:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32970 "EHLO
+        id S233847AbjHCIYX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Aug 2023 04:24:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233418AbjHCH4U (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 03:56:20 -0400
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C18193C2;
-        Thu,  3 Aug 2023 00:44:32 -0700 (PDT)
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-        by ex01.ufhost.com (Postfix) with ESMTP id 45F6E24E267;
-        Thu,  3 Aug 2023 15:43:49 +0800 (CST)
-Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 3 Aug
- 2023 15:43:49 +0800
-Received: from [192.168.125.136] (183.27.98.54) by EXMBX172.cuchost.com
- (172.16.6.92) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 3 Aug
- 2023 15:43:48 +0800
-Message-ID: <dae4bd27-4ea6-43b1-d65c-225be7b5640b@starfivetech.com>
-Date:   Thu, 3 Aug 2023 15:43:47 +0800
+        with ESMTP id S233714AbjHCIX7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 04:23:59 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6F218468C;
+        Thu,  3 Aug 2023 01:18:00 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8Cxc_C2Ystk35EPAA--.36216S3;
+        Thu, 03 Aug 2023 16:17:58 +0800 (CST)
+Received: from openarena.loongson.cn (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxrM62YstkmOdGAA--.51590S2;
+        Thu, 03 Aug 2023 16:17:58 +0800 (CST)
+From:   Sui Jingfeng <suijingfeng@loongson.cn>
+To:     suijingfeng@loongson.cn
+Cc:     bhelgaas@google.com, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        loongson-kernel@lists.loongnix.cn
+Subject: [PATCH] PCI/VGA: Make the vga_is_firmware_default() arch-independent
+Date:   Thu,  3 Aug 2023 16:17:58 +0800
+Message-Id: <20230803081758.968742-1-suijingfeng@loongson.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230801183706.702567-1-suijingfeng@loongson.cn>
+References: <20230801183706.702567-1-suijingfeng@loongson.cn>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v1 8/9] PCI: PLDA: starfive: Add JH7110 PCIe controller
-Content-Language: en-US
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        Minda Chen <minda.chen@starfivetech.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Palmer Dabbelt" <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>,
-        =?UTF-8?Q?Marek_Beh=c3=ban?= <kabel@kernel.org>
-References: <20230802171805.GA62238@bhelgaas>
- <1c546489-40dd-25c5-3ac2-9e3b3fd5a670@starfivetech.com>
- <20230803065835.twdicvx62mgzzzqi@pali>
-From:   Kevin Xie <kevin.xie@starfivetech.com>
-In-Reply-To: <20230803065835.twdicvx62mgzzzqi@pali>
-Content-Type: text/plain; charset="UTF-8"
-X-Originating-IP: [183.27.98.54]
-X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX172.cuchost.com
- (172.16.6.92)
-X-YovoleRuleAgent: yovoleflag
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8BxrM62YstkmOdGAA--.51590S2
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Ww1fGrW7ZF15CrWkCFyfGrX_yoWxAF1kpF
+        Z3AFWrtrs8Gw4fJrsxGF48Xw1rursYvFW7KFW7Z3Z3Ja43urykKr4FyFWDtryfJ39rJw4a
+        gF12yr1rGFsrXFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+        xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+        1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+        67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+        Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+        6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
+        vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+        42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+        kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -74,91 +60,216 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Currently, the vga_is_firmware_default() function works on x86 and IA64
+architectures, but it is a no-op on ARM64, PPC, RISC-V, etc. This patch
+completes the implementation by tracking the firmware framebuffer's address
+range. The added code is trying to identify the VRAM aperture that contains
+the firmware framebuffer. Once found, related information about the VRAM
+aperture will be tracked.
 
+Note that the initial VRAM aperture (the one that contains firmware fb)
+identification should be done before the PCI resource relocation. This is
+because we need to lock the VRAM aperture before it is moved. We achieve
+this by using DECLARE_PCI_FIXUP_CLASS_HEADER(), which ensures that
+vga_arb_firmware_fb_addr_tracker() gets called before PCI resource
+allocation.
 
-On 2023/8/3 14:58, Pali Rohár wrote:
-> On Thursday 03 August 2023 10:23:47 Kevin Xie wrote:
->> On 2023/8/3 1:18, Bjorn Helgaas wrote:
->> > On Tue, Aug 01, 2023 at 03:05:46PM +0800, Kevin Xie wrote:
->> >> On 2023/8/1 7:12, Bjorn Helgaas wrote:
->> >> ...
->> > 
->> >> > The delay required by sec 6.6.1 is a minimum of 100ms following exit
->> >> > from reset or, for fast links, 100ms after link training completes.
->> >> > 
->> >> > The comment at the call of advk_pcie_wait_for_link() [2] says it is
->> >> > the delay required by sec 6.6.1, but that doesn't seem right to me.
->> >> > 
->> >> > For one thing, I don't think 6.6.1 says anything about "link up" being
->> >> > the end of a delay.  So if we want to do the delay required by 6.6.1,
->> >> > "wait_for_link()" doesn't seem like quite the right name.
->> >> > 
->> >> > For another, all the *_wait_for_link() functions can return success
->> >> > after 0ms, 90ms, 180ms, etc.  They're unlikely to return after 0ms,
->> >> > but 90ms is quite possible.  If we avoided the 0ms return and
->> >> > LINK_WAIT_USLEEP_MIN were 100ms instead of 90ms, that should be enough
->> >> > for slow links, where we need 100ms following "exit from reset."
->> >> > 
->> >> > But it's still not enough for fast links where we need 100ms "after
->> >> > link training completes" because we don't know when training
->> >> > completed.  If training completed 89ms into *_wait_for_link(), we only
->> >> > delay 1ms after that.
->> >> 
->> >> That's the point, we will add a extra 100ms after PERST# de-assert
->> >> in the patch-v3 according to Base Spec r6.0 - 6.6.1:
->> >>         msleep(100);
->> >>         gpiod_set_value_cansleep(pcie->reset_gpio, 0);
->> >> 
->> >> +       /* As the requirement in PCIe base spec r6.0, system must wait a
->> >> +        * minimum of 100 ms following exit from a Conventional Reset
->> >> +        * before sending a Configuration Request to the device.*/
->> >> +       msleep(100);
->> >> +
->> >>         if (starfive_pcie_host_wait_for_link(pcie))
->> >>                 return -EIO;
->> > 
->> > For fast links (links that support > 5.0 GT/s), the 100ms starts
->> > *after* link training completes.  The above looks OK if starfive only
->> > supports slow links, but then I'm not sure why we would need
->> > starfive_pcie_host_wait_for_link().
->> > 
->> Yes, the maximum speed of JH7110 PCIe is 5.0 GT/s (Gen2x1).
->> 
->> About starfive_pcie_host_wait_for_link():
->> JH7110 SoC only has one root port in each PCIe controller (2 in total)
->> and they do not support hot-plug yet.
-> 
-> Beware that even if HW does not support hotplug, endpoint PCIe card
-> still may drop the link down and later put it up (for example if FW in
-> the card crashes or when card want to do internal reset, etc...; this is
-> very common for wifi cards). So drivers for non-hotplug controllers
-> still have to handle hotplug events generated by link up/down state.
-> 
-> So it means that, if endpoint PCIe card is not detected during probe
-> time, it may be detected later. So this check to completely stop
-> registering controller is not a good idea. Note that userspace can
-> tell kernel (via sysfs) to rescan all PCIe buses and try to discover new
-> PCIea devices.
-> 
+This patch overcame the VRAM bar relocation issue by updating the cached
+firmware framebuffer's address range accordingly if the VRAM bar of the
+primary GPU do moved. We achieve that by monitoring the address changes of
+the VRAM aperture.
 
-Yes, we should not ignored this situation.
+This patch make the vga_is_firmware_default() function works on whatever
+arch that has UEFI GOP support, including x86 and IA64. But at the first
+step, we make it available only on platforms which PCI resource relocation
+do happens. Once provided to be effective and reliable, it can be expanded
+to other arch easily.
 
->> Thus, We add starfive_pcie_host_wait_for_link() to poll if it is a empty slot.
->> If nothing here, we will exit the probe() of this controller, and it will not
->> go into pci_host_probe() too.
->> This may not be a very standard logic, should we remove it or rewrite in a better way?
->> 
->> > Bjorn
-> 
-> Rather to remove this starfive_pcie_host_wait_for_link logic.
-> 
-> Better option would be to teach PCI core code to wait for the link
-> before trying to read vendor/device ids, like I described in my old
-> proposal.
+This patch is tested on LS3A5000+LS7A2000 platform and LS3A5000+LS7A1000
+platform. This patch can be applied on pci-next (6.5.0-rc1+) branch cleanly
 
-Yes, the proposal can prevent us from writing the wrong timing.
-However, as things stand, we have to do the waiting in host controller driver now.
-We will keep the wait for the link, but don't return error when the link is down,
-such as:
-    if (starfive_pcie_host_wait_for_link(pcie))
-	dev_info(dev, "port link down\n");
+v2:
+	* Fix test robot warnnings and fix typos
+
+Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
+---
+ drivers/pci/vgaarb.c | 140 ++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 125 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+index 5a696078b382..1f2d464e5812 100644
+--- a/drivers/pci/vgaarb.c
++++ b/drivers/pci/vgaarb.c
+@@ -61,6 +61,82 @@ static bool vga_arbiter_used;
+ static DEFINE_SPINLOCK(vga_lock);
+ static DECLARE_WAIT_QUEUE_HEAD(vga_wait_queue);
+ 
++static struct firmware_fb_tracker {
++	/* The PCI(e) device who owns the firmware framebuffer */
++	struct pci_dev *pdev;
++	/* The index of the VRAM Bar */
++	unsigned int bar;
++	/* Firmware fb's offset from the VRAM aperture start */
++	resource_size_t offset;
++	/* The firmware fb's size, in bytes */
++	resource_size_t size;
++
++	/* Firmware fb's address range, suffer from change */
++	resource_size_t start;
++	resource_size_t end;
++} firmware_fb;
++
++static bool vga_arb_get_fb_range_from_screen_info(resource_size_t *start,
++						  resource_size_t *end)
++{
++	resource_size_t fb_start;
++	resource_size_t fb_end;
++	resource_size_t fb_size;
++
++	fb_start = screen_info.lfb_base;
++	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
++		fb_start |= (u64)screen_info.ext_lfb_base << 32;
++
++	fb_size = screen_info.lfb_size;
++
++	/* No firmware framebuffer support */
++	if (!fb_start || !fb_size)
++		return false;
++
++	fb_end = fb_start + fb_size - 1;
++
++	*start = fb_start;
++	*end = fb_end;
++
++	return true;
++}
++
++static bool vga_arb_get_fb_range_from_tracker(resource_size_t *start,
++					      resource_size_t *end)
++{
++	struct pci_dev *pdev = firmware_fb.pdev;
++	resource_size_t new_vram_base;
++	resource_size_t new_fb_start;
++	resource_size_t old_fb_start;
++	resource_size_t old_fb_end;
++
++	/*
++	 * No firmware framebuffer support or no aperture that contains the
++	 * firmware FB is found. In this case, the firmware_fb.pdev will be
++	 * NULL. We will return immediately.
++	 */
++	if (!pdev)
++		return false;
++
++	new_vram_base = pdev->resource[firmware_fb.bar].start;
++	new_fb_start = new_vram_base + firmware_fb.offset;
++	old_fb_start = firmware_fb.start;
++	old_fb_end = firmware_fb.end;
++
++	if (new_fb_start != old_fb_start) {
++		firmware_fb.start = new_fb_start;
++		firmware_fb.end = new_fb_start + firmware_fb.size - 1;
++		vgaarb_dbg(&pdev->dev,
++			   "[0x%llx, 0x%llx] -> [0x%llx, 0x%llx]\n",
++			   (u64)old_fb_start, (u64)old_fb_end,
++			   (u64)firmware_fb.start, (u64)firmware_fb.end);
++	}
++
++	*start = firmware_fb.start;
++	*end = firmware_fb.end;
++
++	return true;
++}
+ 
+ static const char *vga_iostate_to_str(unsigned int iostate)
+ {
+@@ -543,20 +619,21 @@ void vga_put(struct pci_dev *pdev, unsigned int rsrc)
+ }
+ EXPORT_SYMBOL(vga_put);
+ 
++/* Select the device owning the boot framebuffer if there is one */
+ static bool vga_is_firmware_default(struct pci_dev *pdev)
+ {
+-#if defined(CONFIG_X86) || defined(CONFIG_IA64)
+-	u64 base = screen_info.lfb_base;
+-	u64 size = screen_info.lfb_size;
+ 	struct resource *r;
+-	u64 limit;
+-
+-	/* Select the device owning the boot framebuffer if there is one */
++	resource_size_t fb_start;
++	resource_size_t fb_end;
++	bool ret;
+ 
+-	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
+-		base |= (u64)screen_info.ext_lfb_base << 32;
+-
+-	limit = base + size;
++#if defined(CONFIG_X86) || defined(CONFIG_IA64)
++	ret = vga_arb_get_fb_range_from_screen_info(&fb_start, &fb_end);
++#else
++	ret = vga_arb_get_fb_range_from_tracker(&fb_start, &fb_end);
++#endif
++	if (!ret)
++		return false;
+ 
+ 	/* Does firmware framebuffer belong to us? */
+ 	pci_dev_for_each_resource(pdev, r) {
+@@ -566,12 +643,10 @@ static bool vga_is_firmware_default(struct pci_dev *pdev)
+ 		if (!r->start || !r->end)
+ 			continue;
+ 
+-		if (base < r->start || limit >= r->end)
+-			continue;
+-
+-		return true;
++		if (fb_start >= r->start && fb_end <= r->end)
++			return true;
+ 	}
+-#endif
++
+ 	return false;
+ }
+ 
+@@ -1555,3 +1630,38 @@ static int __init vga_arb_device_init(void)
+ 	return rc;
+ }
+ subsys_initcall_sync(vga_arb_device_init);
++
++static void vga_arb_firmware_fb_addr_tracker(struct pci_dev *pdev)
++{
++	resource_size_t fb_start;
++	resource_size_t fb_end;
++	unsigned int i;
++
++	if (!vga_arb_get_fb_range_from_screen_info(&fb_start, &fb_end))
++		return;
++
++	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
++		struct resource *ap = &pdev->resource[i];
++
++		if (resource_type(ap) != IORESOURCE_MEM)
++			continue;
++
++		if (!ap->start || !ap->end)
++			continue;
++
++		if (ap->start <= fb_start && fb_end <= ap->end) {
++			firmware_fb.pdev = pdev;
++			firmware_fb.bar = i;
++			firmware_fb.size = fb_end - fb_start + 1;
++			firmware_fb.offset = fb_start - ap->start;
++			firmware_fb.start = fb_start;
++			firmware_fb.end = fb_end;
++
++			vgaarb_dbg(&pdev->dev,
++				   "BAR %u contains firmware FB\n", i);
++			break;
++		}
++	}
++}
++DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID, PCI_CLASS_DISPLAY_VGA,
++			       8, vga_arb_firmware_fb_addr_tracker);
+-- 
+2.34.1
+
