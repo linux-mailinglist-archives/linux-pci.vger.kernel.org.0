@@ -2,163 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B221276DAFE
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Aug 2023 00:53:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7E4576DE5B
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Aug 2023 04:39:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229898AbjHBWxG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Aug 2023 18:53:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46974 "EHLO
+        id S231490AbjHCCjX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Aug 2023 22:39:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229883AbjHBWw5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Aug 2023 18:52:57 -0400
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA329127;
-        Wed,  2 Aug 2023 15:52:50 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 438CA30010DFE;
-        Thu,  3 Aug 2023 00:52:48 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 357C2D6B89; Thu,  3 Aug 2023 00:52:48 +0200 (CEST)
-Date:   Thu, 3 Aug 2023 00:52:48 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Alistair Francis <alistair23@gmail.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Greg KH <gregkh@linuxfoundation.org>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, alex.williamson@redhat.com,
-        christian.koenig@amd.com, kch@nvidia.com, logang@deltatee.com,
-        linux-kernel@vger.kernel.org,
-        Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [PATCH v2] PCI/DOE: Expose the DOE protocols via sysfs
-Message-ID: <20230802225248.GA19409@wunner.de>
-References: <20230801121824.174556-1-alistair.francis@wdc.com>
- <2023080152-disobey-widen-65a4@gregkh>
- <CAKmqyKMEqrfP8BrXd9pVd4a5Aodipty-8bAkxK5xcGSewsC9JA@mail.gmail.com>
- <20230801170739.000048cb@Huawei.com>
- <CAKmqyKND01=xaiB-VFVsi3+KRbxu4dBKfh_RhCN-jric5VzNpA@mail.gmail.com>
+        with ESMTP id S232506AbjHCCjL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Aug 2023 22:39:11 -0400
+Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E67019A0;
+        Wed,  2 Aug 2023 19:39:09 -0700 (PDT)
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+        by fd01.gateway.ufhost.com (Postfix) with ESMTP id 4E8277FF9;
+        Thu,  3 Aug 2023 10:23:49 +0800 (CST)
+Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 3 Aug
+ 2023 10:23:49 +0800
+Received: from [192.168.125.136] (183.27.98.54) by EXMBX172.cuchost.com
+ (172.16.6.92) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 3 Aug
+ 2023 10:23:47 +0800
+Message-ID: <1c546489-40dd-25c5-3ac2-9e3b3fd5a670@starfivetech.com>
+Date:   Thu, 3 Aug 2023 10:23:47 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKmqyKND01=xaiB-VFVsi3+KRbxu4dBKfh_RhCN-jric5VzNpA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v1 8/9] PCI: PLDA: starfive: Add JH7110 PCIe controller
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Minda Chen <minda.chen@starfivetech.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Conor Dooley <conor@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        =?UTF-8?Q?Marek_Beh=c3=ban?= <kabel@kernel.org>
+References: <20230802171805.GA62238@bhelgaas>
+From:   Kevin Xie <kevin.xie@starfivetech.com>
+In-Reply-To: <20230802171805.GA62238@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [183.27.98.54]
+X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX172.cuchost.com
+ (172.16.6.92)
+X-YovoleRuleAgent: yovoleflag
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 01, 2023 at 02:24:24PM -0400, Alistair Francis wrote:
-> On Tue, Aug 1, 2023 at 12:07???PM Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> > On Tue, 1 Aug 2023 09:48:13 -0400 Alistair Francis <alistair23@gmail.com> wrote:
-> > > On Tue, Aug 1, 2023 at 9:28???AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > > On Tue, Aug 01, 2023 at 08:18:24AM -0400, Alistair Francis wrote:
-> > > > > +What:                /sys/bus/pci/devices/.../doe_proto
-
-The PCISIG published the DOE r1.1 ECN in September 2022.
-
-It replaced all occurrences of the term "protocol" with either "feature"
-or "data object type".  Please adhere to the terms used by the spec so
-that it is easy for an uninitiated reader to make the connection between
-the spec and the implementation.
-
-DOE r1.1 was merged into the PCIe Base Spec r6.1.  It wasn't merged into
-r6.0.1 yet.
 
 
-> > > > > +             This file contains a list of the supported Data Object Exchange (DOE)
-> > > > > +             protocols. The protocols are seperated by newlines.
-                                                     ^^^^^^^^^
-s/seperated/separated/
+On 2023/8/3 1:18, Bjorn Helgaas wrote:
+> On Tue, Aug 01, 2023 at 03:05:46PM +0800, Kevin Xie wrote:
+>> On 2023/8/1 7:12, Bjorn Helgaas wrote:
+>> ...
+> 
+>> > The delay required by sec 6.6.1 is a minimum of 100ms following exit
+>> > from reset or, for fast links, 100ms after link training completes.
+>> > 
+>> > The comment at the call of advk_pcie_wait_for_link() [2] says it is
+>> > the delay required by sec 6.6.1, but that doesn't seem right to me.
+>> > 
+>> > For one thing, I don't think 6.6.1 says anything about "link up" being
+>> > the end of a delay.  So if we want to do the delay required by 6.6.1,
+>> > "wait_for_link()" doesn't seem like quite the right name.
+>> > 
+>> > For another, all the *_wait_for_link() functions can return success
+>> > after 0ms, 90ms, 180ms, etc.  They're unlikely to return after 0ms,
+>> > but 90ms is quite possible.  If we avoided the 0ms return and
+>> > LINK_WAIT_USLEEP_MIN were 100ms instead of 90ms, that should be enough
+>> > for slow links, where we need 100ms following "exit from reset."
+>> > 
+>> > But it's still not enough for fast links where we need 100ms "after
+>> > link training completes" because we don't know when training
+>> > completed.  If training completed 89ms into *_wait_for_link(), we only
+>> > delay 1ms after that.
+>> 
+>> That's the point, we will add a extra 100ms after PERST# de-assert
+>> in the patch-v3 according to Base Spec r6.0 - 6.6.1:
+>>         msleep(100);
+>>         gpiod_set_value_cansleep(pcie->reset_gpio, 0);
+>> 
+>> +       /* As the requirement in PCIe base spec r6.0, system must wait a
+>> +        * minimum of 100 ms following exit from a Conventional Reset
+>> +        * before sending a Configuration Request to the device.*/
+>> +       msleep(100);
+>> +
+>>         if (starfive_pcie_host_wait_for_link(pcie))
+>>                 return -EIO;
+> 
+> For fast links (links that support > 5.0 GT/s), the 100ms starts
+> *after* link training completes.  The above looks OK if starfive only
+> supports slow links, but then I'm not sure why we would need
+> starfive_pcie_host_wait_for_link().
+> 
+Yes, the maximum speed of JH7110 PCIe is 5.0 GT/s (Gen2x1).
 
+About starfive_pcie_host_wait_for_link():
+JH7110 SoC only has one root port in each PCIe controller (2 in total)
+and they do not support hot-plug yet.
+Thus, We add starfive_pcie_host_wait_for_link() to poll if it is a empty slot.
+If nothing here, we will exit the probe() of this controller, and it will not
+go into pci_host_probe() too.
+This may not be a very standard logic, should we remove it or rewrite in a better way?
 
-> > > > > +             The value comes from the device and specifies the vendor and
-> > > > > +             protocol supported. The lower byte is the protocol and the next
-> > > > > +             two bytes are the vendor ID.
-> > > > > +             The file is read only.
-
-I kind of like the approach of exposing a list which can be grep'ed,
-even though it may go against the rule of having just one datum per
-attribute.  I'd prefer a representation that's human-readable though,
-e.g. "0001:01" for CMA-SPDM.
-
-
-> > > > So this is going to be a lot of data, what is ensuring that you didn't
-> > > > truncate it?  Which again, is the reason why this is not a good idea for
-> > > > sysfs, sorry.
-
-For all practical purposes, the maximum size which can be returned
-by a sysfs attribute (PAGE_SIZE, i.e. 4 kByte on x86) ought to be
-sufficient.  I'd say a mailbox typically doesn't support more than,
-say, 10 protocols.
-
-
-> > > I was hoping to avoid the kernel needing to know the protocols. This
-> > > list can include vendor specific protocols, as well as future
-> > > protocols that the running kernel doesn't yet support, so I wanted to
-> > > directly pass it to userspace without having to parse it in the
-> > > kernel.
-
-Right, just expose raw numbers and let lspci print them in beautified
-(parsed) form.
-
-
-> A directory per vid and files for each protocol sounds good to me.
-> I'll update the patch to do that. If anyone doesn't like that idea let
-> me know
-
-Since you intend to expose an interface for interacting with mailboxes,
-on top of just exposing a list of supported data types (protocols),
-I think you should first come up with a plan how to do that instead
-of kicking the can down the road.  The sysfs ABI is sort of set in
-stone, you can't easily change it if you realize after the fact
-that it has deficiencies for your use case.
-
-sysfs is not suitable for interaction with DOE mailboxes because the
-filesystem imposes a size restriction of PAGE_SIZE per read.  DOE
-allows up to 1 MByte per request or response, so way bigger than the
-puny 4 kByte PAGE_SIZE on x86.  Splitting response reception into
-multiple reads of the same attribute would be an awful kludge.
-So I think you need to resort to devfs or procfs for mailbox interaction,
-instead of sysfs.
-
-Question is, if you use devfs/procfs for mailbox interaction, maybe it
-makes sense to expose the list of supported data types there as well,
-instead of in sysfs?
-
-If you do expose a list of supported protocols, you should definitely
-have one sysfs attribute per mailbox, e.g. "doe_123" or "doe@123" if
-the mailbox is located at offset 123 in config space.
-
-
-> I think we will need to at least expose a few parts of SPDM to
-> userspace. It could either be the kernel passing data back (like the
-> measurements for example) or userspace orchestrating the
-> communication. That's a future problem at the moment though
-
-I envision that we'll provide a higher-level ABI for things like
-measurement retrieval, either through IMA or maybe sysfs, but not
-low-level access to the SPDM session.
-
-In fact, I think if you do implement mailbox interaction, you may
-want to blacklist certain data types that are handled in-kernel,
-such as CMA-SPDM.
-
-And you should constrain the whole thing to
-!security_locked_down(LOCKDOWN_PCI_ACCESS).
-
-FWIW, an experimental in-kernel implementation of SPDM measurement
-retrieval already exists (it goes on top of my doe branch that I
-linked to previously):
-
-https://github.com/debox1/spdm/commits/measurement
-
-Thanks,
-
-Lukas
+> Bjorn
