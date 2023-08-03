@@ -2,52 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8DA576F103
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Aug 2023 19:59:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF18176F109
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Aug 2023 19:59:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235218AbjHCR7h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Aug 2023 13:59:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59768 "EHLO
+        id S235287AbjHCR7w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Aug 2023 13:59:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235202AbjHCR7g (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 13:59:36 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A7FC30CF
-        for <linux-pci@vger.kernel.org>; Thu,  3 Aug 2023 10:59:35 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-686f38692b3so1119142b3a.2
-        for <linux-pci@vger.kernel.org>; Thu, 03 Aug 2023 10:59:35 -0700 (PDT)
+        with ESMTP id S235256AbjHCR7p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 13:59:45 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ACF83A85
+        for <linux-pci@vger.kernel.org>; Thu,  3 Aug 2023 10:59:42 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-686efb9ee0cso1089784b3a.3
+        for <linux-pci@vger.kernel.org>; Thu, 03 Aug 2023 10:59:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1691085574; x=1691690374;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Wq1z7BeI+UFrw1hZHq1hsdT3ctozS/71fNVXggUyOc=;
-        b=TKbVzXiidYr6S5VYtdtf1RzdOXZlF7YlZGAMz5JBa3hQCChWKfcMl06Tm33RUMM2AT
-         HJc+DhFBmwL3k/o/kj3hAK2jwOBpEOGlbr63abNLrTyaHg/Tx613qEQ2sIGIokBFEKy7
-         Q7pSXU90KcKI0UZou6S7o898dbu4yYtAjvjesZlKV+tw21+58qB8DHwqlFlZZwF3J4tW
-         +fhM21Zek4vYUxDqvDmwUsMhSfI0z5X0OZZSxk6N6kacC+/t6jBe0dUAiJ0ITdhIawrA
-         IYvPPOVt5EitUe3UmJGfXaVeDMYYV9aeRa3RBCj3uM8jO94WL6Z9GAZ/GkCsvh5d1yrf
-         xZWw==
+        d=ventanamicro.com; s=google; t=1691085582; x=1691690382;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UFiDx4yUD9M5LLDSVyQwmi0hMurmb+i35a+0GaoSwmM=;
+        b=gzSCFSr/G3waueuE9A6zvWLt6I+my76zCgzC+Cixi6x1rcZmEeUXOSYMURhNyw6A6r
+         J49EhGgoE3rXRkx6/8YpidVkV0MDlLQRzHN5khGbW0Z6Le7dX36yRwInwPOpY3NUol9K
+         VFZda8kXmQd0g/+Bcy87pAQkGHttASe2PqLvfoe/rAFLFu56gnJi/ypQPQH0DfBUZLvh
+         rumXtVJlEMOPyX69tNEq170gumWAvTBB487kSAKUPQbVWxjTEwxI1l6eSwdWgp1IXmU2
+         EXNHu9wR+N4ak1DbuoMVvmyGwft7HubO+CSmircw3jRVDj5DBYF+Ylw9aBGU2GW71/6K
+         aTug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691085574; x=1691690374;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2Wq1z7BeI+UFrw1hZHq1hsdT3ctozS/71fNVXggUyOc=;
-        b=YAss8wLPDxLYIbQ/o8OKpmKP8F2eM0E77FykmIKIbaUCbd8rkg7PIVO7sMAQDvV2AD
-         gc3W83AokvIxQAA7PqVXIbJiO0BRRLGOccJaYu8LcJRq0IbiJaZfjRmlTxnef+4xCfOn
-         kcBzWXlmLJPNvpoVfG3MI9wNfhhl71ViIHf3k43eFZZkmuROMwdqO0KbA2+EkQScys5Y
-         VfyVvR/sZaq38qsoU+ITXAOFAq5xaYCXwJkkhQW536xjX2msUOKFCEAICYsCPt4vf8H7
-         T+yZXV5amW3XbI2SX1TgTlkL15iCy0OKRfa16ELeYJeuJLw9QGVwEjdNG/tjp1SzvuvA
-         D5bg==
-X-Gm-Message-State: ABy/qLb4ilo2oqIvKoZCwRMTz+NinFtrQsxDWKeVRJSiXhSB9dgmuBRY
-        MVKNFXeef4s1nsvgG6X0etIbVQ==
-X-Google-Smtp-Source: APBJJlEa2k0rKCkuiAJ14ufMYRdoRsdE+VQDeZqRmHp7niCeuF87Hv6jsPcdECJx49MZ98jIdtCMHA==
-X-Received: by 2002:a05:6a20:3953:b0:134:1ef9:8c17 with SMTP id r19-20020a056a20395300b001341ef98c17mr24642870pzg.20.1691085574172;
-        Thu, 03 Aug 2023 10:59:34 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691085582; x=1691690382;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UFiDx4yUD9M5LLDSVyQwmi0hMurmb+i35a+0GaoSwmM=;
+        b=gCx3Tzj4EqUZvo5DkNUd5NHE85SWaDOnJYprtNE8z56LF3EVg4pWNd92DgeoxRqruI
+         yPdWTBNJPzoWIJ41u/mwbnTU3EaNQRkdCKK6focMrLZxewf1IAU+t3EzBFvIiAn7vDng
+         sxCtwOHKSP3H6sQxH8bAo8ZnmpfI4yCb/SuLrTTrgBVXss9T9nvSpbRAQ+nydov9rOK0
+         2YLqLEpDIV/Ye6ZotglcrtMXHqYz5B0Rk5KeHNYVtWD60bmPw2yxHm0y+6kf5KJOZb3a
+         DrdJJ40kbhfFKQDxi0U0XK0SRi8ujJcBDgrYfVxC5+t7Nq26GQMk4uCmcSKA1OuHmABv
+         PZPA==
+X-Gm-Message-State: ABy/qLaSwsAUgKVrZmgb9OYOEuL0MCdDkiS5t3VqC6+d4OsKPauLjRks
+        MY2TJDCgyQkcLH3cS2N6qYwhaw==
+X-Google-Smtp-Source: APBJJlEYFTsZLTq9I40pUpD7LIXiH3Cg29Qi6vfE5k5jpjtfQAYsVuB8uUL66kNJTqe85l1gopgFEA==
+X-Received: by 2002:a05:6a20:7d9c:b0:13e:82ae:483 with SMTP id v28-20020a056a207d9c00b0013e82ae0483mr11419977pzj.31.1691085581732;
+        Thu, 03 Aug 2023 10:59:41 -0700 (PDT)
 Received: from sunil-pc.Dlink ([106.51.190.143])
-        by smtp.gmail.com with ESMTPSA id s8-20020aa78d48000000b0065a1b05193asm134952pfe.185.2023.08.03.10.59.27
+        by smtp.gmail.com with ESMTPSA id s8-20020aa78d48000000b0065a1b05193asm134952pfe.185.2023.08.03.10.59.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Aug 2023 10:59:33 -0700 (PDT)
+        Thu, 03 Aug 2023 10:59:41 -0700 (PDT)
 From:   Sunil V L <sunilvl@ventanamicro.com>
 To:     linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -75,11 +76,14 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         Andrew Jones <ajones@ventanamicro.com>,
         Conor Dooley <conor.dooley@microchip.com>,
         Atish Kumar Patra <atishp@rivosinc.com>,
-        Sunil V L <sunilvl@ventanamicro.com>
-Subject: [RFC PATCH v1 00/21] RISC-V: ACPI: Add external interrupt controller support 
-Date:   Thu,  3 Aug 2023 23:28:55 +0530
-Message-Id: <20230803175916.3174453-1-sunilvl@ventanamicro.com>
+        Sunil V L <sunilvl@ventanamicro.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [RFC PATCH v1 01/21] ACPICA: MADT: Add RISC-V external interrupt controllers
+Date:   Thu,  3 Aug 2023 23:28:56 +0530
+Message-Id: <20230803175916.3174453-2-sunilvl@ventanamicro.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230803175916.3174453-1-sunilvl@ventanamicro.com>
+References: <20230803175916.3174453-1-sunilvl@ventanamicro.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -92,115 +96,114 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This series adds support for the below ECRs approved by ASWG recently.
-1) MADT - https://drive.google.com/file/d/1oMGPyOD58JaPgMl1pKasT-VKsIKia7zR/view?usp=sharing
-2) RHCT - https://drive.google.com/file/d/1sKbOa8m1UZw1JkquZYe3F1zQBN1xXsaf/view?usp=sharing
+ACPICA commit 8c048cee4ea7b9ded8db3e1b3b9c14e21e084a2c
 
-The series primarily adds below features.
+This adds 3 different external interrupt controller
+definitions in MADT for RISC-V.
 
-1) ACPI support for external interrupt controller drivers (IMSIC, APLIC and PLIC).
-2) Get CBO block sizes from RHCT.
-3) Set timer_can_not_wakeup in timer driver based on the flag in RHCT.
+ 1) RISC-V PLIC is a platform interrupt controller for
+    handling wired interrupt in a RISC-V systems.
 
-PCI ACPI related functions are migrated from arm64 to common file
-so that we don't need to duplicate them for RISC-V.
+ 2) RISC-V IMSIC is MSI interrupt controller to
+    support MSI interrupts.
 
-It uses software node framework to create the fwnode for the interrupt
-controllers. This helps in keeping the actual drivers code mostly common
-for DT and ACPI.
+ 3) RISC-V APLIC has dual functionality. First it can
+    act like PLIC and direct all wired interrupts to
+    the CPU which doesn't have MSI controller. Second,
+    when the CPU has MSI controller (IMSIC), it will
+    act as a converter from wired interrupts to MSI.
 
-This series is based on Anup's AIA v7 series. The first 2 ACPICA
-patches in this series will be merged via ACPICA release process. PATCH3 is a
-fix patch. These patches are included in this series only to enable build.
+Update the existing RINTC structure also to support
+these external interrupt controllers.
 
-To test the series,
+This codefirst ECR is approved by UEFI forum and will
+be part of next ACPI spec version.
 
-1) Qemu should be built using the riscv_acpi_b2_v1_plic branch at
-https://github.com/vlsunil/qemu.git
+Link: https://github.com/acpica/acpica/commit/8c048cee
+Co-developed-by: Haibo Xu <haibo1.xu@intel.com>
+Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
+Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ include/acpi/actbl2.h | 50 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 49 insertions(+), 1 deletion(-)
 
-2) EDK2 should be built using the instructions at:
-https://github.com/tianocore/edk2/blob/master/OvmfPkg/RiscVVirt/README.md
-
-3) Build Linux using this series on top of Anup's AIA v7 series.
-
-Run Qemu:
-qemu-system-riscv64 \
- -M virt,pflash0=pflash0,pflash1=pflash1,aia=aplic-imsic \
- -m 2G -smp 8 \
- -serial mon:stdio \
- -device virtio-gpu-pci -full-screen \
- -device qemu-xhci \
- -device usb-kbd \
- -blockdev node-name=pflash0,driver=file,read-only=on,filename=RISCV_VIRT_CODE.fd \
- -blockdev node-name=pflash1,driver=file,filename=RISCV_VIRT_VARS.fd \
- -netdev user,id=net0 -device virtio-net-pci,netdev=net0 \
- -kernel arch/riscv/boot/Image \
- -initrd rootfs.cpio \
- -append "root=/dev/ram ro console=ttyS0 rootwait earlycon=uart8250,mmio,0x10000000"
-
-To boot with APLIC only, use aia=aplic.
-To boot with PLIC, remove aia= option.
-
-This series is also available in riscv_acpi_b2_v1 brach at
-https://github.com/vlsunil/linux.git
-
-Based-on: 20230802150018.327079-1-apatel@ventanamicro.com
-(https://lore.kernel.org/lkml/20230802150018.327079-1-apatel@ventanamicro.com/)
-
-
-Anup Patel (1):
-  swnode: Add support to create early during boot
-
-Sunil V L (20):
-  ACPICA: MADT: Add RISC-V external interrupt controllers
-  ACPICA: RHCT: Add flags, CMO and MMU nodes
-  RISC-V: ACPI: Fix acpi_os_ioremap to return iomem address
-  RISC-V: ACPI: Enhance acpi_os_ioremap with MMIO remapping
-  arm64: PCI: Migrate ACPI related functions to pci-acpi.c
-  RISC-V: ACPI: Implement PCI related functionality
-  RISC-V: Kconfig: Select ECAM and MCFG
-  RISC-V: ACPI: RHCT: Add function to get CBO block sizes
-  RISC-V: cacheflush: Initialize CBO variables on ACPI systems
-  clocksource/timer-riscv: ACPI: Add timer_cannot_wakeup_cpu
-  irqchip/riscv-intc: Use swnode framework to create fwnode
-  irqchip/riscv-imsic-early: Add ACPI support
-  ACPI: bus: Add acpi_riscv_init function
-  ACPI: RISC-V: Create IMSIC platform device
-  ACPI: Add APLIC IRQ model for RISC-V
-  ACPI: RISC-V: Create APLIC platform device
-  irqchip/irq-riscv-aplic-msi: Add ACPI support
-  ACPI: bus: Add PLIC IRQ model
-  RISC-V: ACPI: Create PLIC platform device
-  irqchip/sifive-plic: Add GSI conversion support
-
- Documentation/riscv/acpi.rst            |  33 ++
- arch/arm64/kernel/pci.c                 | 193 ---------
- arch/riscv/Kconfig                      |   3 +
- arch/riscv/include/asm/acpi.h           |  21 +-
- arch/riscv/kernel/acpi.c                | 120 +++++-
- arch/riscv/mm/cacheflush.c              |  37 +-
- drivers/acpi/bus.c                      |   7 +
- drivers/acpi/riscv/Makefile             |   2 +-
- drivers/acpi/riscv/init.c               |  16 +
- drivers/acpi/riscv/init.h               |   6 +
- drivers/acpi/riscv/irqchip.c            | 507 ++++++++++++++++++++++++
- drivers/acpi/riscv/rhct.c               |  61 +++
- drivers/base/swnode.c                   | 117 +++++-
- drivers/clocksource/timer-riscv.c       |   4 +
- drivers/irqchip/irq-riscv-aplic-msi.c   |  14 +-
- drivers/irqchip/irq-riscv-imsic-early.c |  28 ++
- drivers/irqchip/irq-riscv-imsic-state.c |  33 +-
- drivers/irqchip/irq-riscv-intc.c        |  12 +-
- drivers/irqchip/irq-sifive-plic.c       |  16 +
- drivers/pci/pci-acpi.c                  | 182 +++++++++
- include/acpi/actbl2.h                   |  76 +++-
- include/linux/acpi.h                    |   8 +
- include/linux/property.h                |   3 +
- 23 files changed, 1248 insertions(+), 251 deletions(-)
- create mode 100644 drivers/acpi/riscv/init.c
- create mode 100644 drivers/acpi/riscv/init.h
- create mode 100644 drivers/acpi/riscv/irqchip.c
-
+diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+index 0029336775a9..280ab4c7f77a 100644
+--- a/include/acpi/actbl2.h
++++ b/include/acpi/actbl2.h
+@@ -893,7 +893,10 @@ enum acpi_madt_type {
+ 	ACPI_MADT_TYPE_BIO_PIC = 22,
+ 	ACPI_MADT_TYPE_LPC_PIC = 23,
+ 	ACPI_MADT_TYPE_RINTC = 24,
+-	ACPI_MADT_TYPE_RESERVED = 25,	/* 25 to 0x7F are reserved */
++	ACPI_MADT_TYPE_IMSIC = 25,
++	ACPI_MADT_TYPE_APLIC = 26,
++	ACPI_MADT_TYPE_PLIC = 27,
++	ACPI_MADT_TYPE_RESERVED = 28,	/* 28 to 0x7F are reserved */
+ 	ACPI_MADT_TYPE_OEM_RESERVED = 0x80	/* 0x80 to 0xFF are reserved for OEM use */
+ };
+ 
+@@ -1261,6 +1264,9 @@ struct acpi_madt_rintc {
+ 	u32 flags;
+ 	u64 hart_id;
+ 	u32 uid;		/* ACPI processor UID */
++	u32 ext_intc_id;	/* External INTC Id */
++	u64 imsic_addr;		/* IMSIC base address */
++	u32 imsic_size;		/* IMSIC size */
+ };
+ 
+ /* Values for RISC-V INTC Version field above */
+@@ -1271,6 +1277,48 @@ enum acpi_madt_rintc_version {
+ 	ACPI_MADT_RINTC_VERSION_RESERVED = 2	/* 2 and greater are reserved */
+ };
+ 
++/* 25: RISC-V IMSIC */
++struct acpi_madt_imsic {
++	struct acpi_subtable_header header;
++	u8 version;
++	u8 reserved;
++	u32 flags;
++	u16 num_ids;
++	u16 num_guest_ids;
++	u8 guest_index_bits;
++	u8 hart_index_bits;
++	u8 group_index_bits;
++	u8 group_index_shift;
++};
++
++/* 26: RISC-V APLIC */
++struct acpi_madt_aplic {
++	struct acpi_subtable_header header;
++	u8 version;
++	u8 id;
++	u32 flags;
++	u8 hw_id[8];
++	u16 num_idcs;
++	u16 num_sources;
++	u32 gsi_base;
++	u64 base_addr;
++	u32 size;
++};
++
++/* 27: RISC-V PLIC */
++struct acpi_madt_plic {
++	struct acpi_subtable_header header;
++	u8 version;
++	u8 id;
++	u8 hw_id[8];
++	u16 num_irqs;
++	u16 max_prio;
++	u32 flags;
++	u32 size;
++	u64 base_addr;
++	u32 gsi_base;
++};
++
+ /* 80: OEM data */
+ 
+ struct acpi_madt_oem_data {
 -- 
 2.39.2
 
