@@ -2,169 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8E7D76E5E7
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Aug 2023 12:54:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2162076E5F1
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Aug 2023 12:58:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229634AbjHCKyb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Aug 2023 06:54:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38812 "EHLO
+        id S233167AbjHCK56 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Aug 2023 06:57:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229710AbjHCKya (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 06:54:30 -0400
-Received: from mgamail.intel.com (unknown [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6502230DB;
-        Thu,  3 Aug 2023 03:54:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691060068; x=1722596068;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rHqfW8v9zgYkB3pcJ59lEKKAgJ+bnwqxiHp7+qUhM7U=;
-  b=FK/0E+VsQuNcD+4PNSX9Ix2TpoJ6SP8/B335AQb8ozGSmrFPPyiaZiro
-   0OEUGavfNonQ+TI2rdbNNLrTm2ySZvs8v6YtaPFtNN0C0zCkTT06vt2QP
-   nm6j3T+FOO+CDTYWvEJz2kOBHodZw7lbeGIKoIscMBWtpzCA2wdxd3tPZ
-   wYFOlRSYyzIymqlzwLIgFbW9HxRsDniX8Y+vUwu3nGmiP9XBFvU/uMVWi
-   hXiq7LMrwMmn20oq8k4S5eFp86vQwfy94ZAJGg0stC/DmUKamN07eITtK
-   nZExrzcNMZ/UJf3oeKJnweqxD6Ienxyke0KxzHWr1FsAdaM1lv1Fkcnjq
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10790"; a="359880535"
-X-IronPort-AV: E=Sophos;i="6.01,252,1684825200"; 
-   d="scan'208";a="359880535"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2023 03:54:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10790"; a="732718341"
-X-IronPort-AV: E=Sophos;i="6.01,252,1684825200"; 
-   d="scan'208";a="732718341"
-Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Aug 2023 03:54:23 -0700
-Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qRVyI-00023f-2F;
-        Thu, 03 Aug 2023 10:54:22 +0000
-Date:   Thu, 3 Aug 2023 18:53:35 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        manivannan.sadhasivam@linaro.org
-Cc:     oe-kbuild-all@lists.linux.dev, helgaas@kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, quic_parass@quicinc.com,
-        krzysztof.kozlowski@linaro.org,
-        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        with ESMTP id S235408AbjHCK5s (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 06:57:48 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 071E230F3
+        for <linux-pci@vger.kernel.org>; Thu,  3 Aug 2023 03:57:42 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-68706b39c4cso525523b3a.2
+        for <linux-pci@vger.kernel.org>; Thu, 03 Aug 2023 03:57:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1691060261; x=1691665061;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Yxi8OSUOsgSNqW0DID4+WdGXqClGX+/fDODchGAnwd4=;
+        b=zTSrDZPhXxN+lm/Sh1hUVCzIbg1hHVcd+I/F39LmuyOqDplPv5dVkfMl7MeZxgwAt7
+         gffDm582xHBD4JwPusXS2/VlI1Al7OM0rwm6U12KOY7rRUeNEZbnJ8yNSmIvCRcdW16N
+         Kp8QY6aVqZvd5PK+MFCUcaFNvcgPkdtbwSyHFE6GuO2YbWTzDQCjhOORiP2njwBxLA7q
+         mS1QaazQp2fZN3052w+Q1Wy/YVzqRBS2deh2XrxECloAR4UIZZLgL2xoU29wj/eE0opL
+         sr3L9Cfb3ux9bITVnV2NZZ2NcHsd0ZrkkqmGVYl3o2NvmCuTsN0rF91NPqiNeTQi7A43
+         n1eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691060261; x=1691665061;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yxi8OSUOsgSNqW0DID4+WdGXqClGX+/fDODchGAnwd4=;
+        b=YYgdh1edMU56NKTIE8Z1h+N2HXMsULAqB5XjLF5sI9RM7hea+JNNeI3NyQryvkEyA7
+         wm0cqrQLB7idsSf+mCLthyodBL6iN6ixleI1d9Zbv8+68lcx22rGpTS2ImoximqryC09
+         CfNiId/zEUvzrlGKADd8GpuPGxVLGBwVMML08JXlSyNIicgYs0a1/0kL4r57fVdn0EYL
+         vr856t8UM59w2qbMwnMz5mdgW3D03TcnAz/8pSUTLy7FCDpJQ7p2N2oQDyW8zxzeSgzN
+         XTamo7W0aPP/jsp1uV7pz+qVboPGx9sTJnmtWri37p/WYPALNne90pchRLJQ8tm4bxHU
+         wzdw==
+X-Gm-Message-State: ABy/qLaDNlX81/TOZ3G56WjAb4QTB3pFfHQQPWGYV27mXaXX0tIi60Sn
+        2lxKEO+2w3Hl8kbije1XrFyR
+X-Google-Smtp-Source: APBJJlGFYkAo1Xry9RNVbNHHTT0h0nSDmp1PI757Nj6byqcE6gAvoFhRTSycJUMKZDvW1JXPdzz4Ig==
+X-Received: by 2002:a05:6a20:8f0b:b0:12e:cbce:444a with SMTP id b11-20020a056a208f0b00b0012ecbce444amr21705887pzk.37.1691060261273;
+        Thu, 03 Aug 2023 03:57:41 -0700 (PDT)
+Received: from thinkpad ([103.28.246.45])
+        by smtp.gmail.com with ESMTPSA id e18-20020a62aa12000000b006875493da1fsm4524019pff.10.2023.08.03.03.57.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Aug 2023 03:57:40 -0700 (PDT)
+Date:   Thu, 3 Aug 2023 16:27:36 +0530
+From:   Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>
+To:     Damien Le Moal <dlemoal@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/4] PCI: qcom-ep: Add support for D-state change
- notification
-Message-ID: <202308031857.u3v2s0bm-lkp@intel.com>
-References: <1690948281-2143-3-git-send-email-quic_krichai@quicinc.com>
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH v3 1/2] PCI: Rename PCI_IRQ_LEGACY to PCI_IRQ_INTX
+Message-ID: <20230803105736.GA7313@thinkpad>
+References: <20230802094036.1052472-1-dlemoal@kernel.org>
+ <20230802094036.1052472-2-dlemoal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1690948281-2143-3-git-send-email-quic_krichai@quicinc.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230802094036.1052472-2-dlemoal@kernel.org>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_SBL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Krishna,
+On Wed, Aug 02, 2023 at 06:40:35PM +0900, Damien Le Moal wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Rename PCI_IRQ_LEGACY to PCI_IRQ_INTX to be more explicit about the type
+> of IRQ being referenced as well as to match the PCI specifications
+> terms. Redefine PCI_IRQ_LEGACY as an alias to PCI_IRQ_INTX to avoid the
+> need for doing the renaming tree-wide. New drivers and new code should
+> now prefer using PCI_IRQ_INTX instead of PCI_IRQ_LEGACY.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 
-kernel test robot noticed the following build errors:
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus linus/master v6.5-rc4 next-20230803]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+- Mani
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Krishna-chaitanya-chundru/PCI-endpoint-Add-D-state-change-notifier-support/20230802-115309
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/1690948281-2143-3-git-send-email-quic_krichai%40quicinc.com
-patch subject: [PATCH v5 2/4] PCI: qcom-ep: Add support for D-state change notification
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20230803/202308031857.u3v2s0bm-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20230803/202308031857.u3v2s0bm-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308031857.u3v2s0bm-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/pci/controller/dwc/pcie-qcom-ep.c: In function 'qcom_pcie_ep_global_irq_thread':
->> drivers/pci/controller/dwc/pcie-qcom-ep.c:597:17: error: implicit declaration of function 'pci_epc_dstate_notify'; did you mean 'pci_epc_bme_notify'? [-Werror=implicit-function-declaration]
-     597 |                 pci_epc_dstate_notify(pci->ep.epc, state);
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-         |                 pci_epc_bme_notify
-   cc1: some warnings being treated as errors
-
-
-vim +597 drivers/pci/controller/dwc/pcie-qcom-ep.c
-
-   555	
-   556	/* TODO: Notify clients about PCIe state change */
-   557	static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
-   558	{
-   559		struct qcom_pcie_ep *pcie_ep = data;
-   560		struct dw_pcie *pci = &pcie_ep->pci;
-   561		struct device *dev = pci->dev;
-   562		u32 status = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_STATUS);
-   563		u32 mask = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_MASK);
-   564		pci_power_t state;
-   565		u32 dstate, val;
-   566	
-   567		writel_relaxed(status, pcie_ep->parf + PARF_INT_ALL_CLEAR);
-   568		status &= mask;
-   569	
-   570		if (FIELD_GET(PARF_INT_ALL_LINK_DOWN, status)) {
-   571			dev_dbg(dev, "Received Linkdown event\n");
-   572			pcie_ep->link_status = QCOM_PCIE_EP_LINK_DOWN;
-   573			pci_epc_linkdown(pci->ep.epc);
-   574		} else if (FIELD_GET(PARF_INT_ALL_BME, status)) {
-   575			dev_dbg(dev, "Received BME event. Link is enabled!\n");
-   576			pcie_ep->link_status = QCOM_PCIE_EP_LINK_ENABLED;
-   577			pci_epc_bme_notify(pci->ep.epc);
-   578		} else if (FIELD_GET(PARF_INT_ALL_PM_TURNOFF, status)) {
-   579			dev_dbg(dev, "Received PM Turn-off event! Entering L23\n");
-   580			val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
-   581			val |= PARF_PM_CTRL_READY_ENTR_L23;
-   582			writel_relaxed(val, pcie_ep->parf + PARF_PM_CTRL);
-   583		} else if (FIELD_GET(PARF_INT_ALL_DSTATE_CHANGE, status)) {
-   584			dstate = dw_pcie_readl_dbi(pci, DBI_CON_STATUS) &
-   585						   DBI_CON_STATUS_POWER_STATE_MASK;
-   586			dev_dbg(dev, "Received D%d state event\n", dstate);
-   587			state = dstate;
-   588			if (dstate == 3) {
-   589				val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
-   590				val |= PARF_PM_CTRL_REQ_EXIT_L1;
-   591				writel_relaxed(val, pcie_ep->parf + PARF_PM_CTRL);
-   592	
-   593				state = PCI_D3hot;
-   594				if (gpiod_get_value(pcie_ep->reset))
-   595					state = PCI_D3cold;
-   596			}
- > 597			pci_epc_dstate_notify(pci->ep.epc, state);
-   598		} else if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
-   599			dev_dbg(dev, "Received Linkup event. Enumeration complete!\n");
-   600			dw_pcie_ep_linkup(&pci->ep);
-   601			pcie_ep->link_status = QCOM_PCIE_EP_LINK_UP;
-   602		} else {
-   603			dev_dbg(dev, "Received unknown event: %d\n", status);
-   604		}
-   605	
-   606		return IRQ_HANDLED;
-   607	}
-   608	
+> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+> ---
+>  include/linux/pci.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 0ff7500772e6..9e97f0027227 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1048,11 +1048,13 @@ enum {
+>  	PCI_SCAN_ALL_PCIE_DEVS	= 0x00000040,	/* Scan all, not just dev 0 */
+>  };
+>  
+> -#define PCI_IRQ_LEGACY		(1 << 0) /* Allow legacy interrupts */
+> +#define PCI_IRQ_INTX		(1 << 0) /* Allow INTx interrupts */
+>  #define PCI_IRQ_MSI		(1 << 1) /* Allow MSI interrupts */
+>  #define PCI_IRQ_MSIX		(1 << 2) /* Allow MSI-X interrupts */
+>  #define PCI_IRQ_AFFINITY	(1 << 3) /* Auto-assign affinity */
+>  
+> +#define PCI_IRQ_LEGACY		PCI_IRQ_INTX /* Deprecated! Use PCI_IRQ_INTX */
+> +
+>  /* These external functions are only available when PCI support is enabled */
+>  #ifdef CONFIG_PCI
+>  
+> -- 
+> 2.41.0
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+மணிவண்ணன் சதாசிவம்
