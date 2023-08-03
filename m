@@ -2,379 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E46F076E6FC
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Aug 2023 13:34:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D02E76E712
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Aug 2023 13:38:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234740AbjHCLee (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Aug 2023 07:34:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35552 "EHLO
+        id S234201AbjHCLix (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Aug 2023 07:38:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234572AbjHCLec (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 07:34:32 -0400
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2070.outbound.protection.outlook.com [40.107.21.70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CD6D1FC2;
-        Thu,  3 Aug 2023 04:34:27 -0700 (PDT)
+        with ESMTP id S235076AbjHCLiw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 07:38:52 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2056.outbound.protection.outlook.com [40.107.243.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A2EA1BF0;
+        Thu,  3 Aug 2023 04:38:51 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mzjHAPJjN8rXYGZfgnPxau1ZnAFyKsK40hs+lvBXDRRSHN2Js5YchdBnwBmLYPAKS6s2mAY0bv0q9bikJRu3pp1TQvqkwg8vy/oiiyx/wnR+wOlPcyajg3/TA8O6Ps2X5DyAJIvpWz70mCY0GRAsEThgc/aoI9Vpx5hbZ7FMMLLC7rKxOnXTKRhUKg/REver3Zs4AXzS3Z9OxzXM6wQQKnzaC3B2ihq3osrsiVCMELSJ547rSWvhsimI+K7aNzmySlAjZIlFo7zOHKRZmxHmnydP3zSB7BKYYzOHYxkA02CMMxVzhrucinbu3t8ALMZjyO2f91xt76Oby4LJcJugkA==
+ b=CuQB0G1iWjGj8aO8OQYKbqbs0lfiMp0RT3q2rQr1shENW7V1Z/OWjmMdSY09LsHgqfawgjrDCA8sDcQSLcOpZplZL8g2ssaVHz7lKy9M9hQ8oQNxf1HHd4Jtw61GZvMOLLfqwmwrA+uGZsjYn0gyguUJ3D2nxcktk0mXZYNsdEcdYFz306DruMqFtWtEOYKwtyXxr4uXn8kDKAC4Auc0D28K+WaOablPgyyHh4wwYzaZzVIcb9Z9oSCw6BIUEHqPY4LvkkfAKT7d/aoierQWABroJcAf3Tu/MulG5K3WZ408466SvyIWQuSL4b2QeJ9APn8HWPsdKANKVDshRermiA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1RI9N8euLt+6eGH6wlmIBlRmp6QT/6tv5yn2El66aLE=;
- b=fk8BItYTWUUaUaXQiy7uW9F9ohJRLEcLD0L10BnJuBQJ5hFqiojXSG7sgaNqk4g1VjV+VjqWENjM+MIBcCUtR0SricB+KMRqbk67Em6+FU5PUuO2xgMKWcPmBeICnkKolkoCGS/nnnwj5nZ8W3h7S2S6suEtDMHGbndx/fKXM5peat76cfync7Bgo5HvN183JSs39gHBkfSRQAVhyKavjViiobKINGOwoPH2nGm1wGNl3vBNnaA6+FehMVV/NTdvXIFXge4Yj3+/SYimhefhRsIL9ytW8XmIZO1JknfMZn4dEUj0DGO1mLaZ/GI7ZOmOnWGvxf1lPgG5FM3C1ErP9g==
+ bh=21evKWySk+uoxZbFopg6reFc29iIZUrbM0vzvFefjGA=;
+ b=FW63qK0Y8jhQ399wR6cmmwWQ76nhVCmT6yxsRTkPNNF9GbYQH2y+Rs9nmNA2uEQ/K5nwq+nS0W+d4t9m7j2BtYeqcHN0Glck4joSDMp/g7AQDhhzRLwnSnEWAO7EKQIL0wIQtQZvAyQp1dWsaxVqGl5WWje1hFVFkRz8GrDAFUCe11lTu2jHvJdtZsQnycPmxVhkOtHCNm0iv4En9cPytLK5KXCTasnwxypCIGMf/JrLOI9bc/WsoKdEB7W0reikzCXorQrh1fx4NiVpLneO6E7saLpOo5eJZOKsy1vBuOhjaOQwqoU4LOZjgmtAhhlRN91uIJoMlJIa6MXKcQBPVQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1RI9N8euLt+6eGH6wlmIBlRmp6QT/6tv5yn2El66aLE=;
- b=CFDwaUN8psm0t+jz3SwE2het3BShvMFkxyuOTg5zfv2QNES0xdJBHZ9g8yvwDFZHjG/ur/EnTugo97xE8mZWw8cbhtloHFkAb/YnhS0yr5Fyxy4nnM8eWLvjKk55M3XzvSE34XkirfqGuGDpAePrnn/j3B3Ln+AYTbXijk3/z6Q=
+ bh=21evKWySk+uoxZbFopg6reFc29iIZUrbM0vzvFefjGA=;
+ b=OechxOzLC/IysltJ2Q/DrNF1C+he+eJyTx1v+JbFlJXdIwEF2gQFtSYNao1eTmlz6D/3P2DEr+1n8kJGVSIzGWX4xWBfwuTs+gnLmEQnrZysO2bJRJ0ibYalKeaSjbkE5dBd6eiBMNJQv0dfwiYck4NntzYYq8AlUcn3JVd1BbI=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM0PR04MB6452.eurprd04.prod.outlook.com (2603:10a6:208:16d::21)
- by DBBPR04MB7499.eurprd04.prod.outlook.com (2603:10a6:10:203::15) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by BN9PR12MB5193.namprd12.prod.outlook.com (2603:10b6:408:11a::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.47; Thu, 3 Aug
- 2023 11:34:24 +0000
-Received: from AM0PR04MB6452.eurprd04.prod.outlook.com
- ([fe80::6074:afac:3fae:6194]) by AM0PR04MB6452.eurprd04.prod.outlook.com
- ([fe80::6074:afac:3fae:6194%4]) with mapi id 15.20.6631.046; Thu, 3 Aug 2023
- 11:34:23 +0000
-Date:   Thu, 3 Aug 2023 14:34:19 +0300
-From:   Vladimir Oltean <vladimir.oltean@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jianmin Lv <lvjianmin@loongson.cn>,
-        Liu Peibao <liupeibao@loongson.cn>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.20; Thu, 3 Aug
+ 2023 11:38:48 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146%7]) with mapi id 15.20.6631.046; Thu, 3 Aug 2023
+ 11:38:48 +0000
+Message-ID: <06cf76ba-de5f-caaa-d1c4-9d34adf15a52@amd.com>
+Date:   Thu, 3 Aug 2023 06:38:45 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v8 2/2] PCI/ACPI: Use device constraints instead of dates
+ to opt devices into D3
+Content-Language: en-US
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        netdev@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
-        Binbin Zhou <zhoubinbin@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH pci] PCI: don't skip probing entire device if first fn OF
- node has status = "disabled"
-Message-ID: <20230803113419.7tj4v527pvvqsvxo@skbuf>
-References: <20230601163335.6zw4ojbqxz2ws6vx@skbuf>
- <ZHjaq+TDW/RFcoxW@bhelgaas>
- <20230601221532.2rfcda4sg5nl7pzp@skbuf>
- <dc430271-8511-e6e4-041b-ede197e7665d@loongson.cn>
- <7a7f78ae-7fd8-b68d-691c-609a38ab3161@loongson.cn>
- <20230602101628.jkgq3cmwccgsfb4c@skbuf>
- <87f2b231-2e16-e7b8-963b-fc86c407bc96@loongson.cn>
- <20230604085500.ioaos3ydehvqq24i@skbuf>
- <CAL_JsqLsVYiPLx2kcHkDQ4t=hQVCR7NHziDwi9cCFUFhx48Qow@mail.gmail.com>
- <20230803103955.qsp2k7i46cytn53e@skbuf>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230803103955.qsp2k7i46cytn53e@skbuf>
-X-ClientProxiedBy: AS4P195CA0029.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:20b:5d6::19) To AM0PR04MB6452.eurprd04.prod.outlook.com
- (2603:10a6:208:16d::21)
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Iain Lane <iain@orangesquash.org.uk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <20230802201013.910-1-mario.limonciello@amd.com>
+ <20230802201013.910-3-mario.limonciello@amd.com>
+ <20230803050118.GV14638@black.fi.intel.com>
+From:   Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20230803050118.GV14638@black.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR01CA0023.prod.exchangelabs.com (2603:10b6:805:b6::36)
+ To MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM0PR04MB6452:EE_|DBBPR04MB7499:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8750e73f-2dc4-4bb3-a257-08db941595ec
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|BN9PR12MB5193:EE_
+X-MS-Office365-Filtering-Correlation-Id: db2b2d33-2241-4375-32ed-08db9416339c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KZPhw/cqjMuwuMcAIC8igVm0bXbNflEj1pSeLpyr8GP1UUtdfWpXMSRIXL8Aiat3vBCbQ55j65bKWhwYGEgcmWyT9GAEKgm6aCrQZsA7VpUAC0Y4Fx3n1gAWi56I1+HN5kJPRsTrpbNRz0KuHTaF1WXvM8QQzE7QWkqepCBlzxp6oP5MCqQvBa5nWKJddtHwwoBk/4FIm6tImRrqKJAxXSB8RvkKTNfLcLjU6fAnx/yyPAvuNEjUatx34EO6sek/XSw2WIpgJZS4NmL8piYuCqTfoYygFOZh9e4UO4aecFzHsqk1aWaZphiy4mlhxWjrjGr3BfKgBuLun+Vcs5C7bwFfKVTYEMA9IDmBg1ciPAzIXZz2DeM3pD0E5ld3UGvj+AXlQHWd9zs8GF/LLopXUMesI/C5zMYv3ygvTd89qLmf2cLXULZPYMkPtWfu3uBIbOy0fq13Tk4UtfssPMcxN2Go85B9X9da22Kt/9k27VKXqKIbAiEnDtya7r1KjVOdDmtc6LouSX/DkVOjUoa/HYUHhZp3sEIqtA4iC9RowmoPrK0CYIqiGmtbKd+1PArA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6452.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(4636009)(396003)(376002)(346002)(136003)(366004)(39860400002)(451199021)(41300700001)(66556008)(316002)(2906002)(4326008)(6916009)(66946007)(66476007)(44832011)(8936002)(8676002)(5660300002)(38100700002)(26005)(1076003)(53546011)(186003)(6506007)(86362001)(83380400001)(33716001)(9686003)(6512007)(478600001)(54906003)(6486002)(6666004)(7416002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: SryOXunReapkjoecQ+dfm8X2OHHrzIauBze02u/5di6nOhbnVNNdPoeMqtXsoH+zb1tOAlS29Fh8PjuKyE71r7uGm6rcgiAKLmXLuGLYUHT5P64nKxL6cmS2yaS8/dGDdAjkeKIURjBnRYwGj/jaZ1R6dNkkig4UTLIJL16yNCZ8LiYg7CqNJQHU0ZRRz41Ry/f2stfzQByFLpxs3kwQ6RUyAS4tQUzDBFJOvA8GmV/BCGA7HqCuAjtGObE6iEwgac9R17znhM/L0LCidGqL1HekVwiugNqPH2g52RkTYXTaMpalM1tZ3KjFNXVWlK9yf4g2GVIFCWsb/vADShLLO9VGXQQxmJD1VIG0mzBh4J9N7ADFNVS3mpdRz0BIUmKONQJHeH+Jh5mVhfbFSGvHYibTZSirJ5l9ptXoabsP1l3JML+QTfWJpCO83hyjkht/XUoTih/MaUuqPoxNp9LUXobgFuiyXfgc3qww9iGK4+p/p+/tMIRNSJdvZeYzWGgleBFqz7h0lH5y9/ncM1B5AKWzNmDHHHuGtrtNuXHOUqlcp8mfXYdbe8eYd15+JEQlXZwIwazcKoXDouoXLqEm7R+QP22B7bJ7VW+TK5bHEgU3TKtGAIVgJW3z49p0na0rRQeiMA114BqhKsY6ZPfkUQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(376002)(346002)(136003)(366004)(39860400002)(451199021)(41300700001)(66556008)(316002)(2906002)(4326008)(6916009)(66946007)(66476007)(44832011)(8936002)(8676002)(5660300002)(38100700002)(36756003)(53546011)(186003)(6506007)(86362001)(83380400001)(2616005)(31696002)(6512007)(478600001)(54906003)(6486002)(6666004)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NVpuYXNZS2hjdTc2cTM4bXc0bnprdTlDMUYyd0l4TmZraGMyMkN0bEZMTEVn?=
- =?utf-8?B?RUxydVhQVHc0dEFscXhLM0NmTi9ScVRkeTh5c2l1dm8xNHg3QVBoVXRsMHhX?=
- =?utf-8?B?ZnFoaHB6SzhRVWFmOVZiZ3ZtT0ZSRm40SVB5eTZXTWxVUUJPYWNwU0hzTDY1?=
- =?utf-8?B?K2tSRVZ1S0FhTlZYQ0ZGZjJWTzlFcWhLL2NzYXBQWXhDbzlNSzh4ZUErYnJU?=
- =?utf-8?B?TXZpVythand4Yk14eVNLUjU1bG1DaXlXYUV0L1JvYXQ5UnRYR1hjMFM4TlRn?=
- =?utf-8?B?WUZOUEhjTEhwemk0NTlIaXpFa1VUWDgrMFNpSGJQRnpDMUxSTDhQVHpKUi9P?=
- =?utf-8?B?L25FNk9mK3hPb25mQi9qeEV2aVJJWHFlbkVRSW5TSUs4VUI2a1VSYU5ZRkpL?=
- =?utf-8?B?R1V3cnJHeWdzVUVmUjI5LzlReHJXK3R5YWhKV2tRS3p2am50ZUNYRXlHUE9K?=
- =?utf-8?B?eUl5OTRIV2NlZ09EZjVLMGRCQ1dRT2J6UzZUYmt5YStGZ1lBM25GclR6UFJp?=
- =?utf-8?B?d2xZTXJJNis5N0k1bWI3OHdEZmNqdDJkc3JXSkoyNVEyM1FDMGlwNlZ4bUZo?=
- =?utf-8?B?ME43cmYyZDU3Rm5aaGRsRG9Bb0pieXNxdDdxNlZqb0piOVJpT05qbHRab2du?=
- =?utf-8?B?UStMRms5aXBDNi84OUw4bFFMRWFrRit5bGw2R2ZrK0VOY3BadmNaa2taWFdQ?=
- =?utf-8?B?NE9TUG05RWtFdWVqa21aMWRKMDJGMHlKWk9Fa0R1QUFRU1BnSW5lTHYzT0dp?=
- =?utf-8?B?Skg5U2cxaFVVRkFtUTc1OXRRYk1EYXUyQU9xdGNPMUFlT0U2VEdzU2lSWVcx?=
- =?utf-8?B?WCtMaTRZTWdLd3J6dW5XdWlmeW1QSXJlMUthUVJvZnlNR2ZGS0xPcWVHdjRl?=
- =?utf-8?B?TGU3b083Zi8vUy9vQW1LUnRJYVlhUTBOM3UrNWNJZ0ZyR3lMcHErc3Q4L3hD?=
- =?utf-8?B?STFweUVpd3FSSzh1SVhvYzBkQjExc21yM1grbE5Hc0dOQmV3OEJ3QUFQS3VR?=
- =?utf-8?B?NmJpTU0vRjF0WWcvdUlXM2FpNDBsaHBpUTRLbkR3ZVRTVHRWYXMvcXVOdzBK?=
- =?utf-8?B?U0JlcEdWOHRJSm96UEpZUG1zMHZhbkhhaVhxTWJINlNobEFTWFpZbjV3d2Vl?=
- =?utf-8?B?c0p1b3VHTng5aFBLMk9HTm5RUjdIOFEvY2R6SHZCWlJURUUrQ3R5aGZWeUU5?=
- =?utf-8?B?blVSYzFGNHpwbUV4U216TVpUR1RSU3pSVnZUMTZHTklNTlpkTEdqQk8wbmVu?=
- =?utf-8?B?cGRFdGkvMTNQc2V6bUxtcXI2VHA2UzNZMjQzdjJzbDdGTkdabm9FYWVONmF6?=
- =?utf-8?B?YTMxakkyZ0Niays1MHlGQVp5UUlENDF5R1dLaVIwQ09xUUVhRlQyWDQ4NUJj?=
- =?utf-8?B?MXhzZStPT1pSNm9aVUp4UE9YSHB6SVluT25NT3pPOFJpVmxnbnVaUWJOT2F6?=
- =?utf-8?B?TTN3b2FKcWlFL2srcEdYWnYvTThXS25OVG43RHNBV25zeFcxbXVlUTRWWGtC?=
- =?utf-8?B?RGVDZ0pjVFoxTEliK3FlYUlwQklLWHpsaG1yOG8yTjJlZjd1ZDdDNHVPVnJx?=
- =?utf-8?B?NjFnajMzRVRTbzVjcHFhcmNQTk1mOG5HajNPRHJiMG1uL1RyVG83azdOeDdJ?=
- =?utf-8?B?aFBxM3NvQ2k0dHJLV1duaTZ0S0EyTHh5Q2lQbTd3cUFqeTVtR2t4Y1JyRjlo?=
- =?utf-8?B?dS9sZWNWeGpnNjBpbzN3MnJYV1VwUTZZWW45WVkyaHMzb2hXSldUdGRObTBW?=
- =?utf-8?B?bjgwdEh3aVdCOEJGeU94c2NaWmdobnpuRVhWUjQxT3d2cFZOZkdFaC9JTE02?=
- =?utf-8?B?Ty9relFpUEFqdkNUMEs2R0c1WFB5aEMxR1hXSC9CZmtKbjV4QlRlN2VMZEpN?=
- =?utf-8?B?TGYxQ3dlRzkrVW5SaVM0Z1BNMk5RRmFvazdWWWdUci95WHNFR1RNMWFlQnlS?=
- =?utf-8?B?S1hQajdrR3pjNWE0THdSS1dRSTlMT2I0aXBaNEFCa2NhcDIxTTEvbGlzRlNV?=
- =?utf-8?B?RWxHcnJEa3Rvb2Zsd3QrblFjaUR3d21EOVlVcDcxUzFtVWdiUVhtQVJEbmpE?=
- =?utf-8?B?S29hTGh5a1hmeFNibkdNMk1HMUQrVDVpM3pXNExsZk5JbFhtSDYxekduWElY?=
- =?utf-8?B?UGN6OE5uT210WlRKdmpNUXpVNTk5YUVDWHZuTm5SblZJRWx3SllGMXNkYnhM?=
- =?utf-8?B?S0E9PQ==?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8750e73f-2dc4-4bb3-a257-08db941595ec
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6452.eurprd04.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YUduVEhYZ0FRWUhaZUxKeThlNjFyQ2M2MEVHVUQ1cmo0WU5EQ01YejZ3K205?=
+ =?utf-8?B?MnhpYXFrVWZmZGZ5U3A0Y1ExUGgvdGd1U09XZE1JRTNiQ0s5Tm5oRzFMUHpk?=
+ =?utf-8?B?WmR6aldCSVhpaXdJLy9xNjExOHpXMzRIenBCakVNdjNKcTZ2eVZLMDB5K1FZ?=
+ =?utf-8?B?OENrT1pVOUxSaVRmMW1SNjNTTzArRCs5MFlmZzVzUTNiS1Q2dUx2dWU2Zjc2?=
+ =?utf-8?B?UUhJWUJMRVhEcVF5ek1EaDhOTUlIbFFMdFRVVlhBdFJJeUxPMlo3aXkzN1Vh?=
+ =?utf-8?B?ak9xV1hUdzltRyt6elNDUGZQUCt2dS8xT1VsejZKb3ZuS1JhQW9WNHBLaGhN?=
+ =?utf-8?B?RkgwUVJ2VklNRis0K1p3ZG9UYmNMR3BWcWlIT1A5ZjJtK1VBMWJvUUppeEMy?=
+ =?utf-8?B?SDlDWmtSL3BKMCt0aWxiT0tKdFVRd2lMQjBmWldwQlNLRUtCRHhzZFBtQUFz?=
+ =?utf-8?B?SmgwT01SUUVQRmdmTG55MGlMT0J1cXEvV2RETXJ1SHJLQzJwcG92cWw0NG11?=
+ =?utf-8?B?dE5qV1BWRGRKR0oyUFE5dTcxYXRtUnlNN05kY0YyZmhTVTlTOWE1ZTVqbE1Q?=
+ =?utf-8?B?WHNGMGNGdVlUU3ZLcXFBWklvbDNBTks0TTE5QndlQWRMZm8yN1N2MGlSdDBJ?=
+ =?utf-8?B?VDRPNzRSQ21yMVlzZEhEKzYxd1k5bGNEYlRnYXJBZm1kZGJDblBjdmpZV2xv?=
+ =?utf-8?B?b282UVNsaXpwUnc0OVhNRmQweUlxdDgyMzBNd3dZY3FLanZmdXdlcDkxY05B?=
+ =?utf-8?B?N0FWUzRFYVJZNktlaVIvdm1maXpDSjk5V1I0b1FCY1F3anJ6TnVHcnhtRzBR?=
+ =?utf-8?B?Z01qaVF4YzJmOUczTVNLRjM0czV2YThJS096bG5JanVwbGlmNGJtUmpYK0ZJ?=
+ =?utf-8?B?ZnJVODJ2YWQ1ek9jbmVGMUhTS1IxTGVrZzUvU05pOW1MT2pHdkFDREkzTFhu?=
+ =?utf-8?B?Rll2VU55cDUwNlVEdlhXck40bGJneVVuM0IrZlVmZGF4ZE1vK283ODBBWjhJ?=
+ =?utf-8?B?VG5Jeks3T3BEUmZYb3JraEJ5cmNXNkhaRW1xd3B1TmpUU1dOWnRta0lrVkhr?=
+ =?utf-8?B?L1ZQMXRUWGg2OXlwWXlRUU1YRnhPZUlGbXY1bjE0eVJDMUxDMUI4eXYzU3dG?=
+ =?utf-8?B?bUhrZjFlMDB5QlIzaW9MaVdBbTRwdmd0T0hEYXlyWUsxYUJFbGhmZTljZHlh?=
+ =?utf-8?B?ZlZwSlFqeXNVdFkrcUh1OVpDWEFZYzVkSjhET0c0QjdtL1NUbmE2dVU2Z3pF?=
+ =?utf-8?B?VlA5cUlaYlJzYUhZK1lHck9iOEI1azJDcVZBNWh1L0dHcjVydDhiWXM3cHkv?=
+ =?utf-8?B?L0piT3VZYnVDU1ZZdFNVNlNDWGJnakt1T085WXFQVmY5VkNGUHV3cEl1YUw1?=
+ =?utf-8?B?NWQ2R3F1ZklRZ2JKckkrbmUxQVZraHQ3dDZ6SldtN2dQV3MxdG9xbEFvQXJX?=
+ =?utf-8?B?eFk3Nys2QTBONlBSSGlyaDRtS2hMRlZUYXpPVXJFUWxSL2JQT3lLdWNuM2V3?=
+ =?utf-8?B?ZjQ4WFVzUnVPSzg3MnNQcWd5REZidWwzUloyRjFrZFRTSEVQbElrd3B3bEdl?=
+ =?utf-8?B?NEk3cjY1QVIrYy9jYll6b2dDeU0zcXJad2VRWlhTVXBPZFRURGVNc1VydHlI?=
+ =?utf-8?B?ZStTUHhhdllRall5OW9mWkU4Y0l2aEd3RkZzdzI4TkNCbnpraDRvQlVYYm5J?=
+ =?utf-8?B?bWNuM0QrcXV6QTZpZ3pobEdYSHl0Rkl1LzFadVhGck1uVHdtbUtOWWczNS84?=
+ =?utf-8?B?ZTl3a1QyeW10OFlTWFJESnJvOWQ1MEdYeTNsNmlPdE5PaUpRK0UwcUdrZTVG?=
+ =?utf-8?B?N3BHNjZnR1FTd0JQdzZFM0FtWng4VVFUaGNOclMwaFFUZkp5UXozeVI3ejV6?=
+ =?utf-8?B?cVRvTzU2elNzcW16MllQQzd4MERYZ3NiaTUrR3JDTDMzRHRDaGpTMzltL2pJ?=
+ =?utf-8?B?cVpWa1pjRTFtcy9HdTNyK3dHUUg0Ym1TWE1EV2EyaFpuVFZmb0t4KzFydU1l?=
+ =?utf-8?B?Y0ZIRVBHb3EzQVlibUVoVkE5UEliSFlDQkR4bzhnVG5aVlRLdis4SjNCY1JC?=
+ =?utf-8?B?c2xMZ3hKUkowUlhJVlAyVkJmN2lWRWdnblFBSU1tTWlNUWJlNDFGaXY3aVlh?=
+ =?utf-8?B?NTMwcWZZY0dqZFJyR2ZScW4vdW1oYnNjNURnenRiQTZ0cThLN2ptN0pyOGM5?=
+ =?utf-8?B?VkE9PQ==?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db2b2d33-2241-4375-32ed-08db9416339c
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2023 11:34:23.4981
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2023 11:38:48.2071
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8AlOBH46J69iJB3vPlXVIt8JunfHeiEDVI8/ErZc2wz5ehsYNFlgCQiAHOH6UWaeUip7/6+sKmJv7mLRPi6Lyw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7499
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-UserPrincipalName: lagae9J9dqMXsSMQ6ASCIl1DrncgRf3DgCL31DQUa+ySXbeSORQU6NplD4MfKUXxvjUthvFkntsaepdk8QUK3Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5193
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 03, 2023 at 01:39:55PM +0300, Vladimir Oltean wrote:
-> Hi Rob,
+On 8/3/23 00:01, Mika Westerberg wrote:
+> Hi,
 > 
-> On Fri, Jun 16, 2023 at 11:57:43AM -0600, Rob Herring wrote:
-> > On Sun, Jun 4, 2023 at 2:55 AM Vladimir Oltean <vladimir.oltean@nxp.com> wrote:
-> > >
-> > 
-> > Sorry, just now seeing this as I've been out the last month.
-> > 
-> > > On Sat, Jun 03, 2023 at 10:35:50AM +0800, Jianmin Lv wrote:
-> > > > > How about 3. handle of_device_is_available() in the probe function of
-> > > > > the "loongson, pci-gmac" driver? Would that not work?
-> > > > >
-> > > > This way does work only for the specified device. There are other devices,
-> > > > such as HDA, I2S, etc, which have shared pins. Then we have to add
-> > > > of_device_is_available() checking to those drivers one by one. And we are
-> > > > not sure if there are other devices in new generation chips in future. So
-> > > > I'm afraid that the way you mentioned is not suitable for us.
-> > 
-> > If we decided that disabled devices should probe, then that is exactly
-> > what will have to be done. The restriction (of shared pins) is in the
-> > devices and is potentially per device, so it makes more sense for the
-> > device's drivers to handle than the host bridge IMO. (Assuming the
-> > core doesn't handle a per device property.)
-> > 
-> > 
-> > > Got it, so you have more on-chip PCIe devices than the ones listed in
-> > > loongson64-2k1000.dtsi, and you don't want to describe them in the
-> > > device tree just to put status = "disabled" for those devices/functions
-> > > that you don't want Linux to use - although you could, and it wouldn't
-> > > be that hard or have unintended side effects.
-> > >
-> > > Though you need to admit, in case you had an on-chip multi-function PCIe
-> > > device like the NXP ENETC, and you wanted Linux to not use function 0,
-> > > the strategy you're suggesting here that is acceptable for Loongson
-> > > would not have worked.
-> > >
-> > > I believe we need a bit of coordination from PCIe and device tree
-> > > maintainers, to suggest what would be the encouraged best practices and
-> > > ways to solve this regression for the ENETC.
-> > 
-> > I think we need to define what behavior is correct for 'status =
-> > "disabled"'. For almost everywhere in DT, it is equivalent to the
-> > device is not present. A not present device doesn't probe. There are
-> > unfortunately cases where status got ignored/forgotten and PCI was one
-> > of those. PCI is a bit different since there are 2 sources of
-> > information about a device being present. The intent with PCI is DT
-> > overrides what's discovered. For example, 'vendor-id' overrides what's
-> > read from the h/w.
-> > 
-> > I think we can fix making the status per function simply by making
-> > 'match_driver' be set based on the status. This would move the check
-> > later to just before probing. That would not work for a case where
-> > accessing the config registers is a problem. It doesn't sound like
-> > that's a problem for Loongson based on the above response, but their
-> > original solution did prevent that. This change would also mean the
-> > PCI quirks would run. Perhaps the func0 memory clearing you need could
-> > be run as a quirk instead?
-> > 
-> > Rob
+> On Wed, Aug 02, 2023 at 03:10:13PM -0500, Mario Limonciello wrote:
+>> @@ -3036,11 +3044,8 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+>>   		if (dmi_check_system(bridge_d3_blacklist))
+>>   			return false;
+>>   
+>> -		/*
+>> -		 * It should be safe to put PCIe ports from 2015 or newer
+>> -		 * to D3.
+>> -		 */
+>> -		if (dmi_get_bios_year() >= 2015)
+>> +		/* the platform indicates in a device constraint that D3 is needed */
+>> +		if (platform_constraint_d3(bridge))
 > 
-> Sorry to return to this thread very late. I had lots of other stuff to
-> take care of, and somehow *this* breakage had less priority :)
+> This for sure causes some sort of power regression on the Intel
+> platforms made after 2015. Why not check for the constraint and:
 > 
-> So, first off, there's a confusion regarding the "func0 memory clearing"
-> that could be run as a quirk instead. It's not memory clearing for fn 0,
-> but memory clearing for all ENETC functions, regardless or not whether
-> they have status = "disabled" or not in the device tree.
-> 
-> That being said, I've implemented the workaround below in a quirk as
-> you've said, and the quirks only get applied for those PCI functions
-> which don't have status = "disabled" in the device tree. So, as things
-> stand, it won't work.
-> 
-> Also, the original patch on which we're commenting ("PCI: don't skip
-> probing entire device if first fn OF node has status = "disabled"") is
-> needed in any case, because of the other issue: the PCI core thinks that
-> when fn 0 has status = "disabled", fn 1 .. 6 are also unavailable. False.
-> 
-> From 9c3b88196a7c7e2b010d051c6d48faf36791e220 Mon Sep 17 00:00:00 2001
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> Date: Tue, 20 Jun 2023 16:31:07 +0300
-> Subject: [PATCH] net: enetc: reimplement RFS/RSS memory clearing as PCI quirk
-> 
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
->  .../net/ethernet/freescale/enetc/enetc_pf.c   | 57 ++++++++++++++-----
->  1 file changed, 43 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.c b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-> index 1416262d4296..b8f6f0799170 100644
-> --- a/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-> +++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-> @@ -1242,18 +1242,6 @@ static int enetc_pf_probe(struct pci_dev *pdev,
->  	if (err)
->  		goto err_setup_cbdr;
-> 
-> -	err = enetc_init_port_rfs_memory(si);
-> -	if (err) {
-> -		dev_err(&pdev->dev, "Failed to initialize RFS memory\n");
-> -		goto err_init_port_rfs;
-> -	}
-> -
-> -	err = enetc_init_port_rss_memory(si);
-> -	if (err) {
-> -		dev_err(&pdev->dev, "Failed to initialize RSS memory\n");
-> -		goto err_init_port_rss;
-> -	}
-> -
->  	if (node && !of_device_is_available(node)) {
->  		dev_info(&pdev->dev, "device is disabled, skipping\n");
->  		err = -ENODEV;
-> @@ -1339,8 +1327,6 @@ static int enetc_pf_probe(struct pci_dev *pdev,
->  	si->ndev = NULL;
->  	free_netdev(ndev);
->  err_alloc_netdev:
-> -err_init_port_rss:
-> -err_init_port_rfs:
->  err_device_disabled:
->  err_setup_mac_addresses:
->  	enetc_teardown_cbdr(&si->cbd_ring);
-> @@ -1377,6 +1363,49 @@ static void enetc_pf_remove(struct pci_dev *pdev)
->  	enetc_pci_remove(pdev);
->  }
-> 
-> +static void enetc_fixup_clear_rss_rfs(struct pci_dev *pdev)
-> +{
-> +	struct enetc_si *si;
-> +	struct enetc_pf *pf;
-> +	int err;
-> +
-> +	err = enetc_pci_probe(pdev, KBUILD_MODNAME, sizeof(*pf));
-> +	if (err)
-> +		goto out;
-> +
-> +	si = pci_get_drvdata(pdev);
-> +	if (!si->hw.port || !si->hw.global) {
-> +		err = -ENODEV;
-> +		goto out_pci_remove;
-> +	}
-> +
-> +	err = enetc_setup_cbdr(&pdev->dev, &si->hw, ENETC_CBDR_DEFAULT_SIZE,
-> +			       &si->cbd_ring);
-> +	if (err)
-> +		goto out_pci_remove;
-> +
-> +	err = enetc_init_port_rfs_memory(si);
-> +	if (err)
-> +		goto out_teardown_cbdr;
-> +
-> +	err = enetc_init_port_rss_memory(si);
-> +	if (err)
-> +		goto out_teardown_cbdr;
-> +
-> +out_teardown_cbdr:
-> +	enetc_teardown_cbdr(&si->cbd_ring);
-> +out_pci_remove:
-> +	enetc_pci_remove(pdev);
-> +out:
-> +	if (err) {
-> +		dev_err(&pdev->dev,
-> +			"Failed to apply PCI fixup for clearing RFS/RSS memories: %pe\n",
-> +			ERR_PTR(err));
-> +	}
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, ENETC_DEV_ID_PF,
-> +			enetc_fixup_clear_rss_rfs);
-> +
->  static const struct pci_device_id enetc_pf_id_table[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, ENETC_DEV_ID_PF) },
->  	{ 0, } /* End of table. */
-> --
-> 2.34.1
->
+Are you sure?  I saw it as an explanation of how Windows could put the 
+systems into D3 when there is no other PM related ACPI objects.
 
-Ah, sorry, I completely missed your comment about match_driver.
-So I've added this extra patch and both issues are solved. The fixup
-runs for all functions (thus I see no AER errors), and functions 1 .. 6
-continue to probe even when function 0 has status = "disabled".
+> - If present and enabled, use the desired D-state
+> - If present and disabled, leave the device in D0
+> - If not present use the existing cutoff date
+> 
+> ?
 
-From 3528d4a48cb37dce8d1d83d2fbb465f21a32adcd Mon Sep 17 00:00:00 2001
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
-Date: Thu, 3 Aug 2023 14:31:27 +0300
-Subject: [PATCH] PCI: move OF status = "disabled" detection to
- dev->match_driver
-
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
----
- drivers/pci/bus.c | 4 +++-
- drivers/pci/of.c  | 5 -----
- 2 files changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index 5bc81cc0a2de..46b252bbe500 100644
---- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -11,6 +11,7 @@
- #include <linux/pci.h>
- #include <linux/errno.h>
- #include <linux/ioport.h>
-+#include <linux/of.h>
- #include <linux/proc_fs.h>
- #include <linux/slab.h>
-
-@@ -332,6 +333,7 @@ void __weak pcibios_bus_add_device(struct pci_dev *pdev) { }
-  */
- void pci_bus_add_device(struct pci_dev *dev)
- {
-+	struct device_node *dn = dev->dev.of_node;
- 	int retval;
-
- 	/*
-@@ -344,7 +346,7 @@ void pci_bus_add_device(struct pci_dev *dev)
- 	pci_proc_attach_device(dev);
- 	pci_bridge_d3_update(dev);
-
--	dev->match_driver = true;
-+	dev->match_driver = !dn || of_device_is_available(dn);
- 	retval = device_attach(&dev->dev);
- 	if (retval < 0 && retval != -EPROBE_DEFER)
- 		pci_warn(dev, "device attach failed (%d)\n", retval);
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index e51219f9f523..3c158b17dcb5 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -34,11 +34,6 @@ int pci_set_of_node(struct pci_dev *dev)
- 	if (!node)
- 		return 0;
-
--	if (!of_device_is_available(node)) {
--		of_node_put(node);
--		return -ENODEV;
--	}
--
- 	device_set_node(&dev->dev, of_fwnode_handle(node));
- 	return 0;
- }
---
-2.34.1
-
+Thanks! That sounds very reasonable to me.  I'll double check it in my case.
