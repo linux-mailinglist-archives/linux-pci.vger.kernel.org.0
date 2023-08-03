@@ -2,105 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0023E76E820
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Aug 2023 14:26:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2E6A76E924
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Aug 2023 15:04:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234364AbjHCM0e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Aug 2023 08:26:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37130 "EHLO
+        id S233620AbjHCND6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Aug 2023 09:03:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229548AbjHCM0d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 08:26:33 -0400
-Received: from mgamail.intel.com (unknown [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D66393588;
-        Thu,  3 Aug 2023 05:26:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691065586; x=1722601586;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2F5IYI+st9aRDs3eL22xgwh/NWyfWxHGIKX3hSkU1es=;
-  b=SmCRG88uMeD7OY/JymmzY+kLc35jNU5UsYIjd8lupMzVE8/BMDQkJB7z
-   +oJGXKfYufYplTWesPOMIsN7e2HxzwzIZJCwUCpAw+h6fhFOlkFW1OwbO
-   LqQpBAlt3Zb6e/VM78Bqg2/5ABM5mx2TmyRJmqbH9bHWV//Cu42UVEdaN
-   za//qYkON4G/hEWfJ5Q1QxceStCiEl9IZ1fKjEZuCd9ms6DUjHAvYXjzO
-   GxoUkG9Cyp1eTTagvf8DEbEmgP/QRbLW7OzmHebiWImX6M+tvf94g6ggt
-   OBafLrluIgkEBQvQNjbrQy+nq0zhQaLYfsIr5Ycs8uooa/my2dPEPpxKf
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="436165444"
-X-IronPort-AV: E=Sophos;i="6.01,252,1684825200"; 
-   d="scan'208";a="436165444"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2023 05:26:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="706515734"
-X-IronPort-AV: E=Sophos;i="6.01,252,1684825200"; 
-   d="scan'208";a="706515734"
-Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 03 Aug 2023 05:26:25 -0700
-Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qRXPM-00026d-1d;
-        Thu, 03 Aug 2023 12:26:24 +0000
-Date:   Thu, 3 Aug 2023 20:25:45 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Sui Jingfeng <suijingfeng@loongson.cn>
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        loongson-kernel@lists.loongnix.cn, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] PCI/VGA: Make the vga_is_firmware_default()
- arch-independent
-Message-ID: <202308032022.yiZngbbk-lkp@intel.com>
-References: <20230803081758.968742-1-suijingfeng@loongson.cn>
+        with ESMTP id S235867AbjHCNDv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 09:03:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3FE61702;
+        Thu,  3 Aug 2023 06:03:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 356FB61D9D;
+        Thu,  3 Aug 2023 13:03:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A121C433C9;
+        Thu,  3 Aug 2023 13:03:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691067810;
+        bh=EPikV/PRmu4Q4MQ/8jF1ykyFZwdSFeXvbtsbFXlTz4I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ev0hFd6+hVftG4l0sb7Rmq5mU+by/GzZA9JwgXYabccV977W7iIosgLrttBfMHZTe
+         iExkyAfso1ioOe7CpWYG1TRlWgPczVw+OAQnoFPwqoqfzG68e91XcFYZO/GfiG9+hj
+         xJoE6BySP+7xlD0zRYN8UyKtCn3MFkUHrVUiiRAJtkMHzEMK9KuF6+3/ObD05Ptz80
+         3/HYximGjGPNcJVnWr2Ujz40CLihWjUp4O4tmOgAVbLTBgmeCoy6vgKDA6QV9At6R9
+         BQPWsn2Z1LnJKSn0mPhu6gXTCvhq7t5pAnNC89GbLGrjpUXggsADsWbywdTtj5UMcM
+         s5y9nd1rphSZw==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     ruanjinjie <ruanjinjie@huawei.com>, Jon Mason <jdmason@kudzu.us>,
+        Sasha Levin <sashal@kernel.org>, dave.jiang@intel.com,
+        allenbh@gmail.com, lpieralisi@kernel.org, kw@linux.com,
+        bhelgaas@google.com, ntb@lists.linux.dev, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.4 5/7] NTB: EPF: fix possible memory leak in pci_vntb_probe()
+Date:   Thu,  3 Aug 2023 09:03:18 -0400
+Message-Id: <20230803130321.641516-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230803130321.641516-1-sashal@kernel.org>
+References: <20230803130321.641516-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230803081758.968742-1-suijingfeng@loongson.cn>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.4.7
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Sui,
+From: ruanjinjie <ruanjinjie@huawei.com>
 
-kernel test robot noticed the following build errors:
+[ Upstream commit 956578e3d397e00d6254dc7b5194d28587f98518 ]
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus linus/master v6.5-rc4 next-20230803]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+As ntb_register_device() don't handle error of device_register(),
+if ntb_register_device() returns error in pci_vntb_probe(), name of kobject
+which is allocated in dev_set_name() called in device_add() is leaked.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sui-Jingfeng/PCI-VGA-Make-the-vga_is_firmware_default-arch-independent/20230803-161838
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20230803081758.968742-1-suijingfeng%40loongson.cn
-patch subject: [PATCH] PCI/VGA: Make the vga_is_firmware_default() arch-independent
-config: arm64-randconfig-r026-20230731 (https://download.01.org/0day-ci/archive/20230803/202308032022.yiZngbbk-lkp@intel.com/config)
-compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
-reproduce: (https://download.01.org/0day-ci/archive/20230803/202308032022.yiZngbbk-lkp@intel.com/reproduce)
+As comment of device_add() says, it should call put_device() to drop the
+reference count that was set in device_initialize()
+when it fails, so the name can be freed in kobject_cleanup().
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308032022.yiZngbbk-lkp@intel.com/
+Signed-off-by: ruanjinjie <ruanjinjie@huawei.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/endpoint/functions/pci-epf-vntb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-All errors (new ones prefixed by >>):
-
->> ld.lld: error: undefined symbol: screen_info
-   >>> referenced by vgaarb.c:86 (drivers/pci/vgaarb.c:86)
-   >>>               drivers/pci/vgaarb.o:(vga_arb_firmware_fb_addr_tracker) in archive vmlinux.a
-   >>> referenced by vgaarb.c:86 (drivers/pci/vgaarb.c:86)
-   >>>               drivers/pci/vgaarb.o:(vga_arb_firmware_fb_addr_tracker) in archive vmlinux.a
-   >>> referenced by vgaarb.c:88 (drivers/pci/vgaarb.c:88)
-   >>>               drivers/pci/vgaarb.o:(vga_arb_firmware_fb_addr_tracker) in archive vmlinux.a
-   >>> referenced 3 more times
-
+diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+index b7c7a8af99f4f..77306983ac456 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+@@ -1285,6 +1285,7 @@ static int pci_vntb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	return 0;
+ 
+ err_register_dev:
++	put_device(&ndev->ntb.dev);
+ 	return -EINVAL;
+ }
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.40.1
+
