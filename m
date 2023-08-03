@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF8D176F133
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Aug 2023 20:02:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 028C776F137
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Aug 2023 20:02:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230423AbjHCSCa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Aug 2023 14:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33028 "EHLO
+        id S235492AbjHCSCj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Aug 2023 14:02:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231235AbjHCSCA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 14:02:00 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CAEE4498
-        for <linux-pci@vger.kernel.org>; Thu,  3 Aug 2023 11:01:12 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-686c06b806cso866686b3a.2
-        for <linux-pci@vger.kernel.org>; Thu, 03 Aug 2023 11:01:12 -0700 (PDT)
+        with ESMTP id S231905AbjHCSCC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 14:02:02 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4068F44BA
+        for <linux-pci@vger.kernel.org>; Thu,  3 Aug 2023 11:01:15 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-686f38692b3so1120594b3a.2
+        for <linux-pci@vger.kernel.org>; Thu, 03 Aug 2023 11:01:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1691085656; x=1691690456;
+        d=ventanamicro.com; s=google; t=1691085663; x=1691690463;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DyY105ZWYDcmAte3LXmkGWmEUp/pfY0rBCzPBKLc5no=;
-        b=F2No1P8dCodOCJka5dx2xLrl5WcKTOqh0CqE9s2TUtqnLixlF6cr/AUvszgzy2TZTu
-         IpgJ+dCrZugmZepjC/tpy4R5LQ7Pz00gUcQA/TtEMUWoSfT5/uFb1jKxDzT1ZQsqsZTd
-         n/YxBVubsZMRX+XTZS1a6+twWBxpWIcvQgGZi10KPo9NwU+hLzYpn1k3UmbuJPr0c0iN
-         /xxd/mndMDktQMKzqNFO4efMHpBh/HZI7YvgUVyIjmX6wmoATvY7iqn4QFz7f0d+cSG4
-         WzANehXdmfb0puBdKFejEfzCVDWLv6Eq7vxbamEiMtycsiO96UVNPeRmqmAhUEv2O88s
-         z+Bg==
+        bh=Vqi3iZnSO0pCz4r86HvzjXAIoq/LUkNm+cOCoheLdcU=;
+        b=RGBk6rx5Hg20bOXt+KLaRA26VcrOyNOoG/eZ7AxmlMnjFLn1DtSewmy8B6izdUW0E9
+         GsvBNf8e3jLCLs9h3DTaOaEA4Km0R9H4SNrQ9+L743IjhhgsHfGIylndzoIQZ265aQGL
+         n3u5HhJfofcxpdy320nz2rQ2QoD01GiNeIZKOW51Fa3p9Z3xFqseEFfup54Xbr4HF94E
+         1EWqxSsfqSg9VtpcDRRRk5I1Neux3XeF5LvtGw6Xi2P1PAQzmkcPwAZHb9qGJ5o3kBoC
+         gZ6YooLlmoRGD/mmS9270tnx8asDRFY2Qh6PHJuGg7a6wwcl70gJWrfxbZ1zW3Bv9Blq
+         Sc+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691085656; x=1691690456;
+        d=1e100.net; s=20221208; t=1691085663; x=1691690463;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DyY105ZWYDcmAte3LXmkGWmEUp/pfY0rBCzPBKLc5no=;
-        b=GayzxUfeezC7EOftXzwIFpwrxPuJ13fTxUZmmchdUISTMOf/KuZuUlyPgwv1FuMSE0
-         pMWzZQUsqfoz52Pr4ZeK18gGEx+emh1yrLndXI4xZq8xhslWfZjGNp+Qv2VLdSDc1BbK
-         srgFRpMHiNU1m79BcU8nNgo30hH6FA9Rr5TIBxgJKM93vqFaP6jqjGojBRXE3PnEZs7t
-         O1aTJT9rrUvYhpgve4AWTlKEdbQd9r6vqakO9VC0YMjX9CthB3ynu5TAZJqcw7+3MFf/
-         nMhStyzKupLSUpj+LBPSN183qtSPpa1YpvcsBCUI5bx39/5FDgfXIrCHKZFAHx5JCdjq
-         rkJQ==
-X-Gm-Message-State: ABy/qLYFKFXdJU2ht2950OFTpV2eV9cHwsAPLNSrjngDwj5G7MyHRc/R
-        xz7MAbKqzIZPQEFswi8cvhyJZQ==
-X-Google-Smtp-Source: APBJJlF1KqR7PBmpd+0ur15adwkWpnUfiC6IMRYgAhf76Ujfi0pbNhhy0c6BhAYpNTIPaEB13Qkk0A==
-X-Received: by 2002:a05:6a00:1883:b0:666:b254:1c9c with SMTP id x3-20020a056a00188300b00666b2541c9cmr22057156pfh.27.1691085656078;
-        Thu, 03 Aug 2023 11:00:56 -0700 (PDT)
+        bh=Vqi3iZnSO0pCz4r86HvzjXAIoq/LUkNm+cOCoheLdcU=;
+        b=PF7uKoNwCPR6zjIMA13DVfXB944WyzfaHC1tFZ96lEz6sE4vFnkOUu/vfHjF7MPwbP
+         HXAUwL9N24LleaIZh/HN/p7MMdAsztvj2MwrfRxH8zfBhgazOsQWKOfARh2k2zFEwZLh
+         PkCmWAtrIOBvmyBTt3iqFF9FN183uEHTX0GNKyEU5Dq33rfYiNaFF54uCM5aXMH+QsVI
+         J0YSo5o94cTAF3mxXbg1jiH/GTYKgKiKZuoYP9/zGUEiZmRLhhihgJfTmCwldfbZkiXf
+         c0FS091pl8h7r+0aYmmhWHgyvClsbQTuw3LShdcsM5TdqFrk3/PFoH6aOsyu4ots/JQb
+         Qk+A==
+X-Gm-Message-State: ABy/qLbbqpSKfZOYeEnrnPWMFtpky/Brs4S0SeP1CEMHYOT1+Qt3BYC/
+        64/+VMIm2oD8nQ9q7/RpOX0LUg==
+X-Google-Smtp-Source: APBJJlFqOcYVb1YmYRN4MTpyz32muTvUlVIwXMvqlj269qOtTWbHmeKplda1rvUua7TwvFx4MZypxQ==
+X-Received: by 2002:a05:6a00:2351:b0:687:5c3f:d834 with SMTP id j17-20020a056a00235100b006875c3fd834mr8861510pfj.11.1691085663545;
+        Thu, 03 Aug 2023 11:01:03 -0700 (PDT)
 Received: from sunil-pc.Dlink ([106.51.190.143])
-        by smtp.gmail.com with ESMTPSA id s8-20020aa78d48000000b0065a1b05193asm134952pfe.185.2023.08.03.11.00.48
+        by smtp.gmail.com with ESMTPSA id s8-20020aa78d48000000b0065a1b05193asm134952pfe.185.2023.08.03.11.00.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Aug 2023 11:00:55 -0700 (PDT)
+        Thu, 03 Aug 2023 11:01:03 -0700 (PDT)
 From:   Sunil V L <sunilvl@ventanamicro.com>
 To:     linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -76,11 +76,10 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         Andrew Jones <ajones@ventanamicro.com>,
         Conor Dooley <conor.dooley@microchip.com>,
         Atish Kumar Patra <atishp@rivosinc.com>,
-        Anup Patel <apatel@ventanamicro.com>,
         Sunil V L <sunilvl@ventanamicro.com>
-Subject: [RFC PATCH v1 11/21] swnode: Add support to create early during boot
-Date:   Thu,  3 Aug 2023 23:29:06 +0530
-Message-Id: <20230803175916.3174453-12-sunilvl@ventanamicro.com>
+Subject: [RFC PATCH v1 12/21] irqchip/riscv-intc: Use swnode framework to create fwnode
+Date:   Thu,  3 Aug 2023 23:29:07 +0530
+Message-Id: <20230803175916.3174453-13-sunilvl@ventanamicro.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230803175916.3174453-1-sunilvl@ventanamicro.com>
 References: <20230803175916.3174453-1-sunilvl@ventanamicro.com>
@@ -96,262 +95,152 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Anup Patel <apatel@ventanamicro.com>
+By using swnode framework, all data from ACPI tables can
+be populated as properties of the swnode. This simplifies
+the driver code and removes the need for ACPI vs DT checks.
+Use this framework for RISC-V INTC driver.
 
-swnode framework can be used to create fwnode for interrupt
-controllers. This helps in keeping the drivers same for both
-DT and ACPI. To enable this, enhance the swnode framework so
-that it can be created early during boot without dependency
-on sysfs.
-
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-Co-developed-by: Sunil V L <sunilvl@ventanamicro.com>
 Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 ---
- drivers/base/swnode.c    | 117 +++++++++++++++++++++++++++++++++------
- include/linux/property.h |   3 +
- 2 files changed, 103 insertions(+), 17 deletions(-)
+ Documentation/riscv/acpi.rst     | 21 +++++++++++++++
+ arch/riscv/include/asm/acpi.h    |  1 +
+ drivers/acpi/riscv/Makefile      |  2 +-
+ drivers/acpi/riscv/irqchip.c     | 46 ++++++++++++++++++++++++++++++++
+ drivers/irqchip/irq-riscv-intc.c | 12 ++++-----
+ 5 files changed, 75 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/acpi/riscv/irqchip.c
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 1886995a0b3a..43f191a38980 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -10,6 +10,7 @@
- #include <linux/kernel.h>
- #include <linux/property.h>
- #include <linux/slab.h>
-+#include <linux/spinlock.h>
- 
- #include "base.h"
- 
-@@ -21,6 +22,7 @@ struct swnode {
- 
- 	/* hierarchy */
- 	struct ida child_ids;
-+	struct list_head early;
- 	struct list_head entry;
- 	struct list_head children;
- 	struct swnode *parent;
-@@ -32,6 +34,9 @@ struct swnode {
- static DEFINE_IDA(swnode_root_ids);
- static struct kset *swnode_kset;
- 
-+static DEFINE_SPINLOCK(swnode_early_lock);
-+static LIST_HEAD(swnode_early_list);
+diff --git a/Documentation/riscv/acpi.rst b/Documentation/riscv/acpi.rst
+index 9870a282815b..e2406546bc16 100644
+--- a/Documentation/riscv/acpi.rst
++++ b/Documentation/riscv/acpi.rst
+@@ -8,3 +8,24 @@ The ISA string parsing rules for ACPI are defined by `Version ASCIIDOC
+ Conversion, 12/2022 of the RISC-V specifications, as defined by tag
+ "riscv-isa-release-1239329-2023-05-23" (commit 1239329
+ ) <https://github.com/riscv/riscv-isa-manual/releases/tag/riscv-isa-release-1239329-2023-05-23>`_
 +
- #define kobj_to_swnode(_kobj_) container_of(_kobj_, struct swnode, kobj)
- 
- static const struct fwnode_operations software_node_ops;
-@@ -73,6 +78,17 @@ software_node_to_swnode(const struct software_node *node)
- 	if (!node)
- 		return NULL;
- 
-+	spin_lock(&swnode_early_lock);
++Interrupt Controller Drivers
++=======
 +
-+	list_for_each_entry(swnode, &swnode_early_list, early) {
-+		if (swnode->node == node) {
-+			spin_unlock(&swnode_early_lock);
-+			return swnode;
-+		}
-+	}
++ACPI drivers for RISC-V interrupt controllers use software node framework to
++create the fwnode for the interrupt controllers. Below properties are
++additionally required for some firmware nodes apart from the properties
++defined by the device tree bindings for these interrupt controllers. The
++properties are created using the data in MADT table.
 +
-+	spin_unlock(&swnode_early_lock);
++1) RISC-V Interrupt Controller (INTC)
++-----------
++``hartid`` - Hart ID of the hart this interrupt controller belongs to.
 +
- 	spin_lock(&swnode_kset->list_lock);
- 
- 	list_for_each_entry(k, &swnode_kset->list, entry) {
-@@ -698,6 +714,19 @@ software_node_find_by_name(const struct software_node *parent, const char *name)
- 	if (!name)
- 		return NULL;
- 
-+	spin_lock(&swnode_early_lock);
++``riscv,imsic-addr`` - Physical base address of the Incoming MSI Controller
++(IMSIC) MMIO region of this hart.
 +
-+	list_for_each_entry(swnode, &swnode_early_list, early) {
-+		if (parent == swnode->node->parent && swnode->node->name &&
-+		    !strcmp(name, swnode->node->name)) {
-+			kobject_get(&swnode->kobj);
-+			spin_unlock(&swnode_early_lock);
-+			return swnode->node;
-+		}
-+	}
++``riscv,imsic-size`` - Size in bytes of the IMSIC MMIO region of this hart.
 +
-+	spin_unlock(&swnode_early_lock);
++``riscv,ext-intc-id`` - The unique ID of the external interrupts connected
++to this hart.
+diff --git a/arch/riscv/include/asm/acpi.h b/arch/riscv/include/asm/acpi.h
+index 0c4e8b35103e..0ac2df2dd194 100644
+--- a/arch/riscv/include/asm/acpi.h
++++ b/arch/riscv/include/asm/acpi.h
+@@ -68,6 +68,7 @@ int acpi_get_riscv_isa(struct acpi_table_header *table,
+ static inline int acpi_numa_get_nid(unsigned int cpu) { return NUMA_NO_NODE; }
+ int acpi_get_cbo_block_size(struct acpi_table_header *table, unsigned int cpu, u32 *cbom_size,
+ 			    u32 *cboz_size, u32 *cbop_size);
++struct fwnode_handle *acpi_rintc_create_irqchip_fwnode(struct acpi_madt_rintc *rintc);
+ #else
+ static inline void acpi_init_rintc_map(void) { }
+ static inline struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu)
+diff --git a/drivers/acpi/riscv/Makefile b/drivers/acpi/riscv/Makefile
+index 8b3b126e0b94..8b664190d172 100644
+--- a/drivers/acpi/riscv/Makefile
++++ b/drivers/acpi/riscv/Makefile
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-obj-y 	+= rhct.o
++obj-y 	+= rhct.o irqchip.o
+diff --git a/drivers/acpi/riscv/irqchip.c b/drivers/acpi/riscv/irqchip.c
+new file mode 100644
+index 000000000000..36f066a2cad5
+--- /dev/null
++++ b/drivers/acpi/riscv/irqchip.c
+@@ -0,0 +1,46 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2023, Ventana Micro Systems Inc
++ *	Author: Sunil V L <sunilvl@ventanamicro.com>
++ *
++ */
 +
- 	spin_lock(&swnode_kset->list_lock);
- 
- 	list_for_each_entry(k, &swnode_kset->list, entry) {
-@@ -742,10 +771,16 @@ static void software_node_free(const struct software_node *node)
- 	kfree(node);
- }
- 
--static void software_node_release(struct kobject *kobj)
-+static void software_node_release_common(struct kobject *kobj, bool early)
- {
- 	struct swnode *swnode = kobj_to_swnode(kobj);
- 
-+	if (early) {
-+		spin_lock(&swnode_early_lock);
-+		list_del(&swnode->early);
-+		spin_unlock(&swnode_early_lock);
-+	}
++#include <linux/acpi.h>
++#include <linux/fwnode.h>
++#include <linux/irqdomain.h>
++#include <linux/list.h>
++#include <linux/property.h>
 +
- 	if (swnode->parent) {
- 		ida_simple_remove(&swnode->parent->child_ids, swnode->id);
- 		list_del(&swnode->entry);
-@@ -760,6 +795,20 @@ static void software_node_release(struct kobject *kobj)
- 	kfree(swnode);
- }
- 
-+static void software_node_release(struct kobject *kobj)
-+{
-+	software_node_release_common(kobj, false);
-+}
-+
-+static void software_node_release_early(struct kobject *kobj)
-+{
-+	software_node_release_common(kobj, true);
-+}
-+
-+static const struct kobj_type software_node_type_early = {
-+	.release = software_node_release_early
++struct riscv_irqchip_list {
++	struct fwnode_handle *fwnode;
++	struct list_head list;
 +};
 +
- static const struct kobj_type software_node_type = {
- 	.release = software_node_release,
- 	.sysfs_ops = &kobj_sysfs_ops,
-@@ -767,7 +816,7 @@ static const struct kobj_type software_node_type = {
- 
- static struct fwnode_handle *
- swnode_register(const struct software_node *node, struct swnode *parent,
--		unsigned int allocated)
-+		unsigned int allocated, unsigned int early)
- {
- 	struct swnode *swnode;
- 	int ret;
-@@ -786,21 +835,39 @@ swnode_register(const struct software_node *node, struct swnode *parent,
- 	swnode->id = ret;
- 	swnode->node = node;
- 	swnode->parent = parent;
--	swnode->kobj.kset = swnode_kset;
-+	swnode->kobj.kset = (!early) ? swnode_kset : NULL;
- 	fwnode_init(&swnode->fwnode, &software_node_ops);
- 
- 	ida_init(&swnode->child_ids);
-+	INIT_LIST_HEAD(&swnode->early);
- 	INIT_LIST_HEAD(&swnode->entry);
- 	INIT_LIST_HEAD(&swnode->children);
- 
--	if (node->name)
--		ret = kobject_init_and_add(&swnode->kobj, &software_node_type,
--					   parent ? &parent->kobj : NULL,
--					   "%s", node->name);
--	else
--		ret = kobject_init_and_add(&swnode->kobj, &software_node_type,
--					   parent ? &parent->kobj : NULL,
--					   "node%d", swnode->id);
-+	if (early) {
-+		ret = 0;
-+		kobject_init(&swnode->kobj, &software_node_type_early);
-+		swnode->kobj.parent = parent ? &parent->kobj : NULL;
-+		if (node->name)
-+			ret = kobject_set_name(&swnode->kobj,
-+					       "%s", node->name);
-+		else
-+			ret = kobject_set_name(&swnode->kobj,
-+					       "node%d", swnode->id);
-+		if (!ret) {
-+			spin_lock(&swnode_early_lock);
-+			list_add_tail(&swnode->early, &swnode_early_list);
-+			spin_unlock(&swnode_early_lock);
++LIST_HEAD(rintc_list);
++
++struct fwnode_handle *acpi_rintc_create_irqchip_fwnode(struct acpi_madt_rintc *rintc)
++{
++	struct property_entry props[6] = {};
++	struct fwnode_handle *fwnode;
++	struct riscv_irqchip_list *rintc_element;
++
++	props[0] = PROPERTY_ENTRY_U64("hartid", rintc->hart_id);
++	props[1] = PROPERTY_ENTRY_U32("riscv,ext-intc-id", rintc->ext_intc_id);
++	props[2] = PROPERTY_ENTRY_U64("riscv,imsic-addr", rintc->imsic_addr);
++	props[3] = PROPERTY_ENTRY_U32("riscv,imsic-size", rintc->imsic_size);
++	props[4] = PROPERTY_ENTRY_U32("#interrupt-cells", 1);
++
++	fwnode = fwnode_create_software_node_early(props, NULL);
++	if (fwnode) {
++		rintc_element = kzalloc(sizeof(*rintc_element), GFP_KERNEL);
++		if (!rintc_element) {
++			fwnode_remove_software_node(fwnode);
++			return NULL;
 +		}
-+	} else {
-+		if (node->name)
-+			ret = kobject_init_and_add(&swnode->kobj, &software_node_type,
-+						   parent ? &parent->kobj : NULL,
-+						   "%s", node->name);
-+		else
-+			ret = kobject_init_and_add(&swnode->kobj, &software_node_type,
-+						   parent ? &parent->kobj : NULL,
-+						   "node%d", swnode->id);
++
++		rintc_element->fwnode = fwnode;
++		list_add_tail(&rintc_element->list, &rintc_list);
 +	}
- 	if (ret) {
- 		kobject_put(&swnode->kobj);
- 		return ERR_PTR(ret);
-@@ -815,7 +882,8 @@ swnode_register(const struct software_node *node, struct swnode *parent,
- 	if (parent)
- 		list_add_tail(&swnode->entry, &parent->children);
- 
--	kobject_uevent(&swnode->kobj, KOBJ_ADD);
-+	if (!early)
-+		kobject_uevent(&swnode->kobj, KOBJ_ADD);
- 	return &swnode->fwnode;
- }
- 
-@@ -892,7 +960,7 @@ int software_node_register(const struct software_node *node)
- 	if (node->parent && !parent)
- 		return -EINVAL;
- 
--	return PTR_ERR_OR_ZERO(swnode_register(node, parent, 0));
-+	return PTR_ERR_OR_ZERO(swnode_register(node, parent, 0, 0));
- }
- EXPORT_SYMBOL_GPL(software_node_register);
- 
-@@ -910,9 +978,10 @@ void software_node_unregister(const struct software_node *node)
- }
- EXPORT_SYMBOL_GPL(software_node_unregister);
- 
--struct fwnode_handle *
--fwnode_create_software_node(const struct property_entry *properties,
--			    const struct fwnode_handle *parent)
-+static struct fwnode_handle *
-+fwnode_create_software_node_common(const struct property_entry *properties,
-+				   const struct fwnode_handle *parent,
-+				   bool early)
- {
- 	struct fwnode_handle *fwnode;
- 	struct software_node *node;
-@@ -931,12 +1000,26 @@ fwnode_create_software_node(const struct property_entry *properties,
- 
- 	node->parent = p ? p->node : NULL;
- 
--	fwnode = swnode_register(node, p, 1);
-+	fwnode = swnode_register(node, p, 1, early);
- 	if (IS_ERR(fwnode))
- 		software_node_free(node);
- 
- 	return fwnode;
- }
 +
-+struct fwnode_handle *
-+fwnode_create_software_node_early(const struct property_entry *properties,
-+				  const struct fwnode_handle *parent)
-+{
-+	return fwnode_create_software_node_common(properties, parent, true);
++	return fwnode;
 +}
+diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
+index 1a0fc87152c5..1ef9cada1ed3 100644
+--- a/drivers/irqchip/irq-riscv-intc.c
++++ b/drivers/irqchip/irq-riscv-intc.c
+@@ -203,6 +203,12 @@ static int __init riscv_intc_acpi_init(union acpi_subtable_headers *header,
+ 
+ 	rintc = (struct acpi_madt_rintc *)header;
+ 
++	fn = acpi_rintc_create_irqchip_fwnode(rintc);
++	if (!fn) {
++		pr_err("unable to create INTC FW node\n");
++		return -ENOMEM;
++	}
 +
-+struct fwnode_handle *
-+fwnode_create_software_node(const struct property_entry *properties,
-+			    const struct fwnode_handle *parent)
-+{
-+	return fwnode_create_software_node_common(properties, parent, false);
-+}
- EXPORT_SYMBOL_GPL(fwnode_create_software_node);
+ 	/*
+ 	 * The ACPI MADT will have one INTC for each CPU (or HART)
+ 	 * so riscv_intc_acpi_init() function will be called once
+@@ -212,12 +218,6 @@ static int __init riscv_intc_acpi_init(union acpi_subtable_headers *header,
+ 	if (riscv_hartid_to_cpuid(rintc->hart_id) != smp_processor_id())
+ 		return 0;
  
- void fwnode_remove_software_node(struct fwnode_handle *fwnode)
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 8c3c6685a2ae..7137338bfabb 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -503,6 +503,9 @@ void software_node_unregister_node_group(const struct software_node **node_group
- int software_node_register(const struct software_node *node);
- void software_node_unregister(const struct software_node *node);
+-	fn = irq_domain_alloc_named_fwnode("RISCV-INTC");
+-	if (!fn) {
+-		pr_err("unable to allocate INTC FW node\n");
+-		return -ENOMEM;
+-	}
+-
+ 	return riscv_intc_init_common(fn);
+ }
  
-+struct fwnode_handle *
-+fwnode_create_software_node_early(const struct property_entry *properties,
-+				  const struct fwnode_handle *parent);
- struct fwnode_handle *
- fwnode_create_software_node(const struct property_entry *properties,
- 			    const struct fwnode_handle *parent);
 -- 
 2.39.2
 
