@@ -2,113 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CD4B76F9CB
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 08:07:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76DC176F9DE
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 08:11:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232222AbjHDGHi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Aug 2023 02:07:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55598 "EHLO
+        id S232523AbjHDGK7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Aug 2023 02:10:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229634AbjHDGHg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Aug 2023 02:07:36 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E97F53C16;
-        Thu,  3 Aug 2023 23:07:35 -0700 (PDT)
+        with ESMTP id S232486AbjHDGK6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Aug 2023 02:10:58 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06CFB2708;
+        Thu,  3 Aug 2023 23:10:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691129256; x=1722665256;
+  t=1691129457; x=1722665457;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=npPKe6GlwGsYMSaSyoznMCFJXnIfabPEXvr8yANVB4Y=;
-  b=lqUC3Eb690BjEZ2lWBRGkE/3PGmhpcUdsu2i+OuoVjAxqfvkEmZgsQ2y
-   v1hYLOsKR0PRni7Ov+t+N2IPesu5kqWBY+w3qxg7Sz25MtlDQ0+2lrG25
-   QVYRlTpYYB//IdvhpIwHr8oOaONkhxevkpuivwtJb1GLAkmLNoDU9MNHl
-   eJNOrR6j0ObuEx7y7DoE5e5Nn3KmQ0WGQRYkfYqV3Ohz7s9EHdvggJKaS
-   Fj+uhxH0CXy+6oJlgr8UWuYXcG4Ca74FmaO0v45XcHKY4kL5vfZyDTbVq
-   fSMWER6vst5S3SXXvp5zw1YSNOKS4WNfqJR3gi0Oce3R6+Z8A7eoEL8nO
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="360129154"
+  bh=+G9GSNfDAvX+Kh/QKq5xmMGn8Ir1PIpjRkZ3yB2HDaQ=;
+  b=DDTsdovFGfE13fCAxXybncmShsYRZerR0OhkDOCDFdN9L7EY1pEQpp7F
+   KEoPyQSjJY7D+bljCOBQmOo/93TzTdQC1qU0vDvGvriefssRDwv5Haw7g
+   GeqDI/M0NTRiUxVh8qu8EDlT6eqi5dtGvJhwKs8mnCBGaySsDc9KHmVv0
+   cR+VRj4sCKoxQEgp7qWPM3ES9SKgXvJh1e+xIFEdLkjA9GIAY3IKDFPg1
+   puwi2lNOEAQLnOOp2wSv4F/GMzrH9fWlfnlIMXF5zc4IkhrTaTzbDPahf
+   h8vEI0noMdnCtPOsGKHh88+yACwj0Y6vG+HX9yKLx3nqFAmPoMQ8576A4
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="433927389"
 X-IronPort-AV: E=Sophos;i="6.01,254,1684825200"; 
-   d="scan'208";a="360129154"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2023 23:07:35 -0700
+   d="scan'208";a="433927389"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2023 23:09:26 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="976413473"
-X-IronPort-AV: E=Sophos;i="6.01,254,1684825200"; 
-   d="scan'208";a="976413473"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 03 Aug 2023 23:07:33 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id C69BF170; Fri,  4 Aug 2023 09:07:43 +0300 (EEST)
-Date:   Fri, 4 Aug 2023 09:07:43 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Iain Lane <iain@orangesquash.org.uk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v8 2/2] PCI/ACPI: Use device constraints instead of dates
- to opt devices into D3
-Message-ID: <20230804060743.GA14638@black.fi.intel.com>
-References: <20230802201013.910-1-mario.limonciello@amd.com>
- <20230802201013.910-3-mario.limonciello@amd.com>
- <20230803050118.GV14638@black.fi.intel.com>
- <06cf76ba-de5f-caaa-d1c4-9d34adf15a52@amd.com>
- <20230803151454.GZ14638@black.fi.intel.com>
- <208afe43-2539-156b-971f-89233598b687@amd.com>
+X-IronPort-AV: E=Sophos;i="6.01,202,1684825200"; 
+   d="scan'208";a="873237868"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP; 03 Aug 2023 23:09:22 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qRnzw-00Cx13-2f;
+        Fri, 04 Aug 2023 09:09:16 +0300
+Date:   Fri, 4 Aug 2023 09:09:16 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sunil V L <sunilvl@ventanamicro.com>
+Cc:     linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anup Patel <anup@brainfault.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Haibo Xu <haibo1.xu@intel.com>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Atish Kumar Patra <atishp@rivosinc.com>,
+        Anup Patel <apatel@ventanamicro.com>
+Subject: Re: [RFC PATCH v1 11/21] swnode: Add support to create early during
+ boot
+Message-ID: <ZMyWDDD6Lw8REd1r@smile.fi.intel.com>
+References: <20230803175916.3174453-1-sunilvl@ventanamicro.com>
+ <20230803175916.3174453-12-sunilvl@ventanamicro.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <208afe43-2539-156b-971f-89233598b687@amd.com>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20230803175916.3174453-12-sunilvl@ventanamicro.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 03, 2023 at 10:18:07AM -0500, Mario Limonciello wrote:
-> On 8/3/2023 10:14, Mika Westerberg wrote:
-> > On Thu, Aug 03, 2023 at 06:38:45AM -0500, Mario Limonciello wrote:
-> > > On 8/3/23 00:01, Mika Westerberg wrote:
-> > > > Hi,
-> > > > 
-> > > > On Wed, Aug 02, 2023 at 03:10:13PM -0500, Mario Limonciello wrote:
-> > > > > @@ -3036,11 +3044,8 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
-> > > > >    		if (dmi_check_system(bridge_d3_blacklist))
-> > > > >    			return false;
-> > > > > -		/*
-> > > > > -		 * It should be safe to put PCIe ports from 2015 or newer
-> > > > > -		 * to D3.
-> > > > > -		 */
-> > > > > -		if (dmi_get_bios_year() >= 2015)
-> > > > > +		/* the platform indicates in a device constraint that D3 is needed */
-> > > > > +		if (platform_constraint_d3(bridge))
-> > > > 
-> > > > This for sure causes some sort of power regression on the Intel
-> > > > platforms made after 2015. Why not check for the constraint and:
-> > > > 
-> > > Are you sure?  I saw it as an explanation of how Windows could put the
-> > > systems into D3 when there is no other PM related ACPI objects.
-> > 
-> > I'm concerned if there are no PEP constraints on some of the affected
-> > systems this now leaves root ports into D0 then, no?
+On Thu, Aug 03, 2023 at 11:29:06PM +0530, Sunil V L wrote:
+> From: Anup Patel <apatel@ventanamicro.com>
 > 
-> Do you have any idea if any of the affected systems were something that
-> didn't ship with Windows?  Like an Apple system or a Chromebook?
+> swnode framework can be used to create fwnode for interrupt
+> controllers.
 
-Some of them, at least the Apollo Lake ones were used in IVI systems
-that did not run Windows IIRC.
+Why? What is this for?
+Can you elaborate? This commit message is poorly written...
 
-> If so; I'd think it's better to treat those as "quirks" rather than make a
-> blanket policy from the timing.
+And why firmware node is not enough for ACPI case?
+I assume the fwnode in DT case is already provided by OF.
 
-It is possible that the quirk list ends up being rather big (or not) so
-it may be considered something that is painful to maintain.
+> This helps in keeping the drivers same for both
+> DT and ACPI. To enable this, enhance the swnode framework so
+> that it can be created early during boot without dependency
+> on sysfs.
+
+...
+
+> -	swnode->kobj.kset = swnode_kset;
+> +	swnode->kobj.kset = (!early) ? swnode_kset : NULL;
+
+Too many unneeded characters. Why parentheses? Why negative check?
+
+...
+
+> +	if (early) {
+> +		ret = 0;
+> +		kobject_init(&swnode->kobj, &software_node_type_early);
+> +		swnode->kobj.parent = parent ? &parent->kobj : NULL;
+> +		if (node->name)
+> +			ret = kobject_set_name(&swnode->kobj,
+> +					       "%s", node->name);
+> +		else
+> +			ret = kobject_set_name(&swnode->kobj,
+> +					       "node%d", swnode->id);
+> +		if (!ret) {
+> +			spin_lock(&swnode_early_lock);
+> +			list_add_tail(&swnode->early, &swnode_early_list);
+> +			spin_unlock(&swnode_early_lock);
+> +		}
+> +	} else {
+> +		if (node->name)
+> +			ret = kobject_init_and_add(&swnode->kobj, &software_node_type,
+> +						   parent ? &parent->kobj : NULL,
+
+This looks like have a duplication.
+
+> +						   "%s", node->name);
+> +		else
+> +			ret = kobject_init_and_add(&swnode->kobj, &software_node_type,
+> +						   parent ? &parent->kobj : NULL,
+> +						   "node%d", swnode->id);
+> +	}
+
+Maybe it's possible to refactor this piece to be more compact?
+
+...
+
+> -	return PTR_ERR_OR_ZERO(swnode_register(node, parent, 0));
+> +	return PTR_ERR_OR_ZERO(swnode_register(node, parent, 0, 0));
+
+In one case you use boolean, here is unsigned int for early flag, why is the
+inconsistency added?
+
+...
+
+> -struct fwnode_handle *
+> -fwnode_create_software_node(const struct property_entry *properties,
+> -			    const struct fwnode_handle *parent)
+> +static struct fwnode_handle *
+> +fwnode_create_software_node_common(const struct property_entry *properties,
+> +				   const struct fwnode_handle *parent,
+> +				   bool early)
+
+Why would you need this API in early stages?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
