@@ -2,193 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 271A076F7DB
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 04:28:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F17B76F7E2
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 04:32:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbjHDC2S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Aug 2023 22:28:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50558 "EHLO
+        id S231357AbjHDCcp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Aug 2023 22:32:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233949AbjHDC2J (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 22:28:09 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7290ABA;
-        Thu,  3 Aug 2023 19:28:08 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RH8jx2h2ZzrRft;
-        Fri,  4 Aug 2023 10:27:01 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Fri, 4 Aug 2023 10:28:05 +0800
-CC:     <yangyicong@hisilicon.com>, <chengyou@linux.alibaba.com>,
-        <kaishen@linux.alibaba.com>, <helgaas@kernel.org>,
-        <will@kernel.org>, <baolin.wang@linux.alibaba.com>,
-        <robin.murphy@arm.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <rdunlap@infradead.org>,
-        <mark.rutland@arm.com>, <zhuo.song@linux.alibaba.com>
-Subject: Re: [PATCH v6 3/4] drivers/perf: add DesignWare PCIe PMU driver
-To:     Shuai Xue <xueshuai@linux.alibaba.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-References: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
- <20230606074938.97724-4-xueshuai@linux.alibaba.com>
- <31e2b012-3a29-d063-842d-e3f7736816e7@huawei.com>
- <20230727103929.00000544@Huawei.com>
- <12958abe-4bdb-8532-bf67-8e772ed2a9dd@linux.alibaba.com>
- <edc056aa-1c53-a31e-087f-6076b795d5cc@huawei.com>
- <10176239-78c1-e276-e74f-a6e79b9c0751@linux.alibaba.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <f14c9acd-1549-1a65-4e57-a5e434cbe18d@huawei.com>
-Date:   Fri, 4 Aug 2023 10:28:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        with ESMTP id S230035AbjHDCco (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 22:32:44 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2042.outbound.protection.outlook.com [40.107.93.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4F64119;
+        Thu,  3 Aug 2023 19:32:42 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l6/uRuL099iUc50GlTbxq1hHjZtWo51vabVoAnkdeYRkSGUGI4lFk+CJH/ouz8IFU69zQcjOXo3KoAKj0o4WeeZwgMvwwLfoHctx/UhoTdnVDe+JsKtC4J5la31l3OMgWs/013sjVOQVE30HoFRoa/MYYDcpaUyPXLLYSGnb+3b6zOk6iLQ0w4C0Z8fMRtym2YFlM8jkP+agJTwFLoP5A7Rjr1K8uZ086GKkUGFW0JewvNQjyao3T0z/j8SNFL8eeiwmvkXkGM4BlJY8JXj8dxfdjzzMfr84BWNlSo+mVKHMgDUQuoI6LRpR6rCS019X8LgRnh5i8Xc7+QsDunYW9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fAIawoKWeYc5Bs9Moet/aYsbA3W41wYv8mJ7OxxKScs=;
+ b=kA3kfV7pfSYpUNo5wWSWQyYZyJFm7lBLSQPvayu8FUcdTnErXm+MOlDhzROh8H8A8TNHbveYKavvRuuNbGoVKDb66REfc9GZEZ/Q6Nod1yXu6ACJZlqoJWfLPjvfDbv1OC7lCNrMd3X+SyS51lhIKeZ/RH1iZ5I4/7a1xAbf4KwdLZf47QdMEQWD1XZi7lo6WYbQTBdyf79zHijEBTtH+0lw9o0z7sjvm7Ki9GoOjNJS8xsAJgv+/OIfUhsKi/2H/12XPxEouGqjmi5WWMHnupUZCXFOVjh8EyDFVKRNve+J9AXKPMqSD0I05H68YaLvjeRUkUSCOQ8/dOHV7R4k9Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fAIawoKWeYc5Bs9Moet/aYsbA3W41wYv8mJ7OxxKScs=;
+ b=Da08GBwcfhFRvWfQO0aBzS1WZWVloG3dDzlbb5lah3/A+EogsfzCZGrwOXHpRvg76Jql/2ZHf7hHGEwOlzSCRbUBaVMDfqPKlqHy6VbhNImdgeawnrKDx4pi7a30flTjjV8NP88E8sksdjZyqEI+hwov85Yj3I3d6oQ/ldSWD2A=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by MW3PR12MB4458.namprd12.prod.outlook.com (2603:10b6:303:5d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.20; Fri, 4 Aug
+ 2023 02:32:38 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146%7]) with mapi id 15.20.6631.046; Fri, 4 Aug 2023
+ 02:32:38 +0000
+Message-ID: <846c0e8f-d7b4-bfe5-8b2b-cf72fe7afeb9@amd.com>
+Date:   Thu, 3 Aug 2023 21:32:35 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v8 2/2] PCI/ACPI: Use device constraints instead of dates
+ to opt devices into D3
+Content-Language: en-US
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Iain Lane <iain@orangesquash.org.uk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <20230802201013.910-1-mario.limonciello@amd.com>
+ <20230802201013.910-3-mario.limonciello@amd.com>
+ <20230803050118.GV14638@black.fi.intel.com>
+ <06cf76ba-de5f-caaa-d1c4-9d34adf15a52@amd.com>
+In-Reply-To: <06cf76ba-de5f-caaa-d1c4-9d34adf15a52@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA9PR10CA0029.namprd10.prod.outlook.com
+ (2603:10b6:806:a7::34) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 MIME-Version: 1.0
-In-Reply-To: <10176239-78c1-e276-e74f-a6e79b9c0751@linux.alibaba.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MW3PR12MB4458:EE_
+X-MS-Office365-Filtering-Correlation-Id: a5304d46-c5fe-4d6a-14b3-08db949311e7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GiNi7T4g30b/fjFDl5IhmecL3T0zk65cUC2tPdIvmggxBimXIg4yq2r1IadoPngTACcL4CkRrkr39rTwYRi2ROPHQXjNI7ZqlyJjA7uDMseLG2jVI3KfsdpwFp7NNjQ8FZ2A+1aRpAvAU9tBVptsrhXJ7a0joOOfta0r89a71INW2BllVzbZBHUR3QqFLoOM1O10ZyNHui1b/CivO4b6riXEYY8FWRM5DwWM8irQrpZbk0hBwx/EqrpqSMcLzeW4lQJnm6KVV31rFZ3s2pp7UKiGroaCxIA3ma+QhucjQb8qsS6EOHDeCPNAlQAceMOurgP21ZSrC7g2JP4ld7XgiR3YaWQgzYVtPQDyOFh4jx/UPRKjCqQP2FoGg4rj4IYl8vilVwlRWoBVkH15JRje45pS2snuGfw5jQ4/KID+jpLa1AXRYecY0bwdqpZIWxh+8sLsKGV7Cbf97M+snVRlgvTd08M4+LSlX8Haoy7vo5WSw040QLnvyDkyUgQQNI9slsyHTiOEFgn92zR9udebQ7dhfGlT7zmi21zX7d5UbMhbzEGiH3B/co5YwmoKACSwnt4NrVq6rEOGxGLYRjc6YHl2cz7QxWkBviPHhPR0Se+Y4tWcXWzlIbrp3wIUutaafmoeFRK2fD7Ce6NF9Og/sw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(376002)(396003)(39860400002)(366004)(136003)(1800799003)(186006)(451199021)(36756003)(6506007)(53546011)(478600001)(6512007)(6486002)(6666004)(54906003)(2906002)(66556008)(4326008)(41300700001)(316002)(6916009)(5660300002)(66476007)(66946007)(44832011)(8676002)(8936002)(38100700002)(86362001)(31696002)(2616005)(83380400001)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aytsRnU0MlhGWE0vMHJ5RFRKaEM4aEtnOWUxREoxQ05lU0psZnExQTNwNTNa?=
+ =?utf-8?B?SlpBbk90MHd1NW9QZkFDdUV3M2FSK1cxWlNWd3lHNmVPTDJlakliZEh1OFIr?=
+ =?utf-8?B?TU9yU1RiZGIyT0c1QkwxYTByc2xYWUVjN3dlbDY4QkUyNmJPb25BS29XMDRu?=
+ =?utf-8?B?MThRWkE5WERlMlF3MUQxdTRwdjZ2RFluOHFuRERNZXhnMTlRR3U3cmVqNmMx?=
+ =?utf-8?B?azRLZmRjN0JPRE1tb09PWEJUc1BNTkl2Ui9sWXQvU25OTDhxS241cWQxaUxq?=
+ =?utf-8?B?U0NoWitoMHVNQmZ0a1YxSWx4bUpXRGFZc05nU0wwZGljbzkzdEhZWmRnUlFE?=
+ =?utf-8?B?VmJzYVZSM09JdU1ValZjcXduYkduRlI1ZVBEcEw1cWJndFhJWmpUeHcwait2?=
+ =?utf-8?B?V2tDYjZwTDhmRzkxREV1bG1nVVdoRU96eHd1aFZqVm9qamlCUlVyMUtTNnpV?=
+ =?utf-8?B?Q29kNEw0ZCtMUEppQkZiU0NJTnBaQlR2RHV6bG5WV2p1UkxOSzZrV3NwRGU2?=
+ =?utf-8?B?MXZHSGt5bWViVEtnTS9mQkVLWVpSYkl6bTZ3K1RjcGxITlcxQ0dIS0xtM3E5?=
+ =?utf-8?B?U2VzQlZrcnJOekpQU2NGaVdYQmVIbDdLSTVjcGJyT2dHU1R2b3MrQkg1NUcw?=
+ =?utf-8?B?L3hBcTBqaEQxWEt6ckxjTWd5QVBOQzJXbmpNbjNwQVQzK0JGRnFzaXlCOWNE?=
+ =?utf-8?B?MUJ4S2NZTVg2MkVnRlBka09TTStiSU9DaG16WHNzSEtYdGdIamEzZDNJb2Ro?=
+ =?utf-8?B?bEVvZUM5anUzNGtjZVVXQ0xCMDFzN2tmVG9XaVNmTTNXcDh2b2N2RnFRNU9R?=
+ =?utf-8?B?amdFcTQ3TWkxTzluR3YzZ0FwUjFDcnptOTZJVkQzdWJ0ZXhmT2x1Q0pNci9S?=
+ =?utf-8?B?L0hSWGRibnlnL1h2TWM0dDZKMEpzUW1sSFBVbzcrSFhKWVpiMWZBTUpBeTJG?=
+ =?utf-8?B?Nkd3c1ZYVmFaNGp4blJvWUJWRFBwSmlDOHBDRjdyRlJLL09qSFdrNXQxLzJC?=
+ =?utf-8?B?cE1KRVRERVhmT3B0YkhRRU56VGRqNkw2alFYTzZyeFF6cGR3ejZabW0yeks5?=
+ =?utf-8?B?cjQrMW54cysxeEVKbXIvRTVZZjhqZ0ZNRis0ZFQ4SG9EZjZhUkZqUUlBb0lq?=
+ =?utf-8?B?a3ZxUGxDWC90NjBBMXhMY1Z6ZmNVUlVnMU1KMGh5ZzhvUzhWSDkvbitsNk1Q?=
+ =?utf-8?B?TGVIM2NaWDZUc1F0OHlIWDBaUkUzMFhOb1R0cHVOWG8xTVNiekFNZkVEZXZZ?=
+ =?utf-8?B?V3JhUG5CRW5HZ29yNGlTN2JwbTBnQk1seEUvbDlSdnZqczJsRlJRMURIQ1dy?=
+ =?utf-8?B?S3lBb3E0bE1tZjJnSkEzRHlQQnhnN2dGQ3pyUXA2T2llS092OWNXU1I1Y2RW?=
+ =?utf-8?B?bUdLMVd5Zkg2eFNwY2ZqYWlnMTgxZ0FlYlpOOG9oeWc1VXg2b3FXaGFqejZ2?=
+ =?utf-8?B?d0NhSXV6UmhNTll1UU04eHNWY0RrVVRxTzRmdGdLRmh5NFMxbUtBM0tROGRI?=
+ =?utf-8?B?eHNEdVRJQ0h1NXNPNHdJZ2ZUOXBaLzFaK1F0WkhHRllmbUVORnRUeDVKaWhh?=
+ =?utf-8?B?Y2tPZ080aHc2QWN3YzRuRlJ3d2RZRTNsNTVNM1hCR3dCSTVFUE5pWWlyaHQ1?=
+ =?utf-8?B?cjBwS3JDaXF1TXVhMXA3K1BPWDRkbjFjdDBmTmNsWmg5K2pxd1ozVC9HdXlJ?=
+ =?utf-8?B?NUhMYlM2R3hyelByQ2Q2QWx5dk84Y2NuMG9FN1ZDUmRKYTVVQTI2U04ydUxJ?=
+ =?utf-8?B?SUVaRmpHSWVmbm1DVjZueHFIaElocDlZaUVqQ2FQSFlxUnhqYkJnMURDWFpp?=
+ =?utf-8?B?L1lUOWEwaktBSGl0UkFDam0yT2x4WTQyVjNYa1RDM3pMRUNLdWpkQTVBS2RG?=
+ =?utf-8?B?TUx0ZnI0VDErOGJ4UTRZajZObUNtclFFMFk2VGRUY2UyMXM2ZnFmTisyNmdV?=
+ =?utf-8?B?WVFUQjgwV3IwNGVqZDl2OHVUa3kySVVlTHV5b2pYZ0swbWdwRzYwdk5VN0JC?=
+ =?utf-8?B?YkdhVGRrRW51Uzk3WHptZXN2THVNb21VVzNsakNsTWJoakVlamd6UVBKR1JR?=
+ =?utf-8?B?TW5UV0l4bjdWSUxjcWR1aXM5aU5pdXVsQnFnOEhqeXdVZWhZb0Qzc0Zzc0Zw?=
+ =?utf-8?B?M3o3NDR5Tkhtc3BYTkZSWWszZkFlaXFGcnFvSmxRZ3JzUS9pOWlialNDZHNX?=
+ =?utf-8?B?T0E9PQ==?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5304d46-c5fe-4d6a-14b3-08db949311e7
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2023 02:32:38.6680
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pjLeMRxhAzJ7xlJ0I/WhfPB6pv6qvXoqLCPaxWMtbhNK2KxEaMG7RFbThqrv4c0hgt4ZNXr3oZaGiwudlBinMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4458
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2023/8/4 9:39, Shuai Xue wrote:
-> 
-> 
-> On 2023/8/1 19:46, Yicong Yang wrote:
->> On 2023/7/28 20:41, Shuai Xue wrote:
->>>
->>>
->>> On 2023/7/27 17:39, Jonathan Cameron wrote:
->>>> On Tue, 6 Jun 2023 23:14:07 +0800
->>>> Yicong Yang <yangyicong@huawei.com> wrote:
->>>>
->>>>> On 2023/6/6 15:49, Shuai Xue wrote:
->>>>>> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
->>>>>> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
->>>>>> Core controller IP which provides statistics feature. The PMU is not a PCIe
->>>>>> Root Complex integrated End Point(RCiEP) device but only register counters
->>>>>> provided by each PCIe Root Port.
->>>>>>
->>>>>> To facilitate collection of statistics the controller provides the
->>>>>> following two features for each Root Port:
->>>>>>
->>>>>> - Time Based Analysis (RX/TX data throughput and time spent in each
->>>>>>   low-power LTSSM state)
->>>>>> - Event counters (Error and Non-Error for lanes)
->>>>>>
->>>>>> Note, only one counter for each type and does not overflow interrupt.
->>>>>>
->>>>>> This driver adds PMU devices for each PCIe Root Port. And the PMU device is
->>>>>> named based the BDF of Root Port. For example,
->>>>>>
->>>>>>     30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
->>>>>>
->>>>>> the PMU device name for this Root Port is dwc_rootport_3018.
->>>>>>
->>>>>> Example usage of counting PCIe RX TLP data payload (Units of 16 bytes)::
->>>>>>
->>>>>>     $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
->>>>>>
->>>>>> average RX bandwidth can be calculated like this:
->>>>>>
->>>>>>     PCIe TX Bandwidth = PCIE_TX_DATA * 16B / Measure_Time_Window
->>>>>>
->>>>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->>>>>> Reported-by: kernel test robot <lkp@intel.com>
->>>>>> Link: https://lore.kernel.org/oe-kbuild-all/202305170639.XU3djFZX-lkp@intel.com/
->>>>>> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->>>>
->>>> I'll review on top to avoid any duplication with Yicong.
->>>
->>> Thank you! It also served as a reminder that I missed Yicong's email. It appears
->>> that Thunderbird mistakenly moved his email to the junk folder, resulting in me
->>> overlooking it.
->>>
->>>>
->>>> Note I've cropped the stuff neither of us commented on so it's
->>>> easier to spot the feedback.
->>>
->>> Thank you for noting that. My feedback is replied inline.
->>>
->>>>
->>>> Jonathan
->>>>
->>>>>> ---
->>>>>>  drivers/perf/Kconfig        |   7 +
->>>>>>  drivers/perf/Makefile       |   1 +
->>>>>>  drivers/perf/dwc_pcie_pmu.c | 706 ++++++++++++++++++++++++++++++++++++
->>>>>>  3 files changed, 714 insertions(+)
->>>>>>  create mode 100644 drivers/perf/dwc_pcie_pmu.c
->>>>>>
->>>>>> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
->>>>>> index 711f82400086..6ff3921d7a62 100644
->>>>>> --- a/drivers/perf/Kconfig
->>>>>> +++ b/drivers/perf/Kconfig
->>>>>> @@ -209,6 +209,13 @@ config MARVELL_CN10K_DDR_PMU
->>>>>>  	  Enable perf support for Marvell DDR Performance monitoring
->>>>>>  	  event on CN10K platform.
->>>>>>  
->>>>>> +config DWC_PCIE_PMU
->>>>>> +	tristate "Enable Synopsys DesignWare PCIe PMU Support"
->>>>>> +	depends on (ARM64 && PCI)
->>>>>> +	help
->>>>>> +	  Enable perf support for Synopsys DesignWare PCIe PMU Performance
->>>>>> +	  monitoring event on Yitian 710 platform.
->>>>
->>>> The documentation kind of implies this isn't platform specific.
->>>> If some parts are (such as which events exist) then you may want to push
->>>> that to userspace / perftool with appropriate matching against specific SoC.
->>>>
->>>> If it is generic, then change this text to "event on platform including the Yitian 710."
->>>
->>> It is generic without any platform specific, so I will change it as you expected.
->>>
->>>>
->>>>>> +
->>>>>>  source "drivers/perf/arm_cspmu/Kconfig"
->>>>>>  
->>>>>>  source "drivers/perf/amlogic/Kconfig"
->>>>
->>>>>> new file mode 100644
->>>>>> index 000000000000..8bfcf6e0662d
->>>>>> --- /dev/null
->>>>>> +++ b/drivers/perf/dwc_pcie_pmu.c
->>>>>> @@ -0,0 +1,706 @@
->>>>
->>>> ...
->>>>
->>>>>> +
->>>>>> +struct dwc_pcie_pmu {
->>>>>> +	struct pci_dev		*pdev;		/* Root Port device */  
->>>>>
->>>>> If the root port removed after the probe of this PCIe PMU driver, we'll access the NULL
->>>>> pointer. I didn't see you hold the root port to avoid the removal.
->>>
->>> Do you mean that I should have a reference count of rootport by pci_dev_get() when allocating
->>> pcie_pmu?
->>>
->>>      pcie_pmu->pdev = pci_dev_get();
+On 8/3/23 06:38, Mario Limonciello wrote:
+> On 8/3/23 00:01, Mika Westerberg wrote:
+>> Hi,
 >>
->> It could be one option, but will block the removal of device from userspace. Another option
->> is to register a PCI bus notifier then on removal/added the driver can get notified and handle
->> it, for example, remove the related PMU on the removal of the root ports.
+>> On Wed, Aug 02, 2023 at 03:10:13PM -0500, Mario Limonciello wrote:
+>>> @@ -3036,11 +3044,8 @@ bool pci_bridge_d3_possible(struct pci_dev 
+>>> *bridge)
+>>>           if (dmi_check_system(bridge_d3_blacklist))
+>>>               return false;
+>>> -        /*
+>>> -         * It should be safe to put PCIe ports from 2015 or newer
+>>> -         * to D3.
+>>> -         */
+>>> -        if (dmi_get_bios_year() >= 2015)
+>>> +        /* the platform indicates in a device constraint that D3 is 
+>>> needed */
+>>> +        if (platform_constraint_d3(bridge))
+>>
+>> This for sure causes some sort of power regression on the Intel
+>> platforms made after 2015. Why not check for the constraint and:
+>>
+> Are you sure?  I saw it as an explanation of how Windows could put the 
+> systems into D3 when there is no other PM related ACPI objects.
 > 
-> I see, but can root port be removed from userspace? I check the hotplug slot interface, no root
-> port is available to power off.
+>> - If present and enabled, use the desired D-state
+>> - If present and disabled, leave the device in D0
+>> - If not present use the existing cutoff date
+>>
+>> ?
 > 
+> Thanks! That sounds very reasonable to me.  I'll double check it in my 
+> case.
 
-For hotplug maybe not, but user can remove certian device through sysfs:
+I've played with this a bit, and I found that I can make it work by 
+moving the constraints check into pci_target_state() in the non-ACPI 
+power manageable case.
 
-echo 1 > /sys/bus/pci/devices/<root port>/remove
-
-Thanks.
+To me this works pretty well to reflect spec policy ambiguity but should 
+avoid regressions dropping the 2015 check.  I'll send out a v9 with this 
+approach.
