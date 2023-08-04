@@ -2,109 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3534D7703A0
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 16:54:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C56967703BB
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 16:58:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229938AbjHDOyj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Aug 2023 10:54:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38806 "EHLO
+        id S230266AbjHDO6p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Aug 2023 10:58:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229714AbjHDOyi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Aug 2023 10:54:38 -0400
-Received: from pandora.armlinux.org.uk (unknown [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B38CAC
-        for <linux-pci@vger.kernel.org>; Fri,  4 Aug 2023 07:54:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=dF1m+xi9hK5dAK5/Njs60e2rNOE7VFj7wfZlwI2Oe2o=; b=vxQQNBEwn9UUKvBd6Mgb35Mo7a
-        7wZv5OziPh+A8OeUl85Pc++8G4e2E8EN9qCZDo7+8oo2yjjoaxxC4ZGO9xY8hcyS/u4HpNifCzASK
-        H91WcQAonCwXNeGtkiLiZH41DbvxmnJpE5mQcsF3bGiojx+IxVji7z6EwZLx9goklYsu2u1iK8IqV
-        nVbi2yDYLuxmlgirlt6DyEM/uPMekVZy3iXyezxUv24nRadtvYpEFrupp9jst+kGepsCUKTCOUfW4
-        s64729ISzG7HHx6Zuif/EFpsaE4qtxKoS/6fubsN1goGIlK+vjI23E/flDn/H7YybqVex3J3XPfuI
-        QX3vAbdQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40900)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.96)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1qRwCA-0000LG-0d;
-        Fri, 04 Aug 2023 15:54:26 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1qRwCA-00044Q-7e; Fri, 04 Aug 2023 15:54:26 +0100
-Date:   Fri, 4 Aug 2023 15:54:26 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: mvebu: Mark driver as BROKEN
-Message-ID: <ZM0RIheSZKiImCsz@shell.armlinux.org.uk>
-References: <20230114164125.1298-1-pali@kernel.org>
- <ZMzicVQEyHyZzBOc@shell.armlinux.org.uk>
+        with ESMTP id S229714AbjHDO6p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Aug 2023 10:58:45 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CAFDAC;
+        Fri,  4 Aug 2023 07:58:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691161124; x=1722697124;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=k4cqc2uFUvykatWv/bI5oB09e9fHPN3dIPVE6GY6Krc=;
+  b=htGAfylN1JsCVBMkgoNjJTl8uu/iaqnewVsc+ZL9kVhc6HE41uydUsSr
+   ygrG0DXti9SoUPLwRq9yZF/wUggfmJB0k3FSAvg0iA0tv6ObQqiJryq3/
+   c0+mC4yXSTuKxi/qGD2XuYpxuflloBO08i+EvNNjkRfbppZ3jky0aSm9D
+   6zlA1ncipY+XWdkZQq9mVdmZZjS5r35BWxRtlgSN+S1kEcSM2Yyd4qXLA
+   1r5M2ptgOQkXbXycG5iyzRjuezjCqBJ84BOTS0/B8SSVi+FPRumTOpe2d
+   o45RROSYjeu1RENaHGV+mvsRK5mE2rTaVnfRD9zQMAJevRLZcLdjtU+Mp
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="369069845"
+X-IronPort-AV: E=Sophos;i="6.01,255,1684825200"; 
+   d="scan'208";a="369069845"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 07:58:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="765144192"
+X-IronPort-AV: E=Sophos;i="6.01,255,1684825200"; 
+   d="scan'208";a="765144192"
+Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 04 Aug 2023 07:58:37 -0700
+Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qRwGC-0002uX-2f;
+        Fri, 04 Aug 2023 14:58:36 +0000
+Date:   Fri, 4 Aug 2023 22:57:45 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Frank Li <Frank.Li@nxp.com>, helgaas@kernel.org
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        Frank.li@nxp.com, bhelgaas@google.com, devicetree@vger.kernel.org,
+        gustavo.pimentel@synopsys.com, imx@lists.linux.dev, kw@linux.com,
+        leoyang.li@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        lpieralisi@kernel.org, mani@kernel.org,
+        manivannan.sadhasivam@linaro.org, minghuan.lian@nxp.com,
+        mingkai.hu@nxp.com, robh+dt@kernel.org, roy.zang@nxp.com,
+        shawnguo@kernel.org, zhiqiang.hou@nxp.com
+Subject: Re: [PATCH v8 2/3] PCI: dwc: Implement general suspend/resume
+ functionality for L2/L3 transitions
+Message-ID: <202308042251.yGAFqeDw-lkp@intel.com>
+References: <20230803150409.271155-3-Frank.Li@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZMzicVQEyHyZzBOc@shell.armlinux.org.uk>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RDNS_NONE,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20230803150409.271155-3-Frank.Li@nxp.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 04, 2023 at 12:35:13PM +0100, Russell King (Oracle) wrote:
-> Hi,
-> 
-> So it seems this patch got applied, but it wasn't Cc'd to
-> linux-arm-kernel or anyone else, so those of us with platforms never
-> had a chance to comment on it.
-> 
-> *** This change causes a regression to working setups. ***
-> 
-> It appears that the *only* reason this patch was proposed is to stop a
-> kernel developer receiving problem reports from a set of users, but
-> completely ignores that there is another group of users where this works
-> fine - and thus the addition of this patch causes working setups to
-> regress.
-> 
-> Because one is being bothered with problem reports is not a reason to
-> mark a driver broken - and especially not doing so in a way that those
-> who may be affected don't get an opportunity to comment on the patch!
-> Also, there is _zero_ information provided on what the reported problems
-> actually are, so no one else can guess what these issues are.
-> 
-> However, given that there are working setups and this change causes
-> those to regress, it needs to be reverted.
-> 
-> For example, I have an Atheros PCIe WiFi card in an Armada 388 Clearfog
-> platform, and this works fine.
+Hi Frank,
 
-Further testing - same platform with a mini-PCIe SATA card:
+kernel test robot noticed the following build errors:
 
-01:00.0 SATA controller: ASMedia Technology Inc. ASM1062 Serial ATA Controller (rev 01)
+[auto build test ERROR on pci/for-linus]
+[also build test ERROR on linus/master v6.5-rc4 next-20230804]
+[cannot apply to pci/next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-with a WD10JPVX-60JC3T0 2.5" drive with hdparm -t:
+url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/PCI-Add-macro-PCIE_PME_TO_L2_TIMEOUT_US/20230803-230808
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+patch link:    https://lore.kernel.org/r/20230803150409.271155-3-Frank.Li%40nxp.com
+patch subject: [PATCH v8 2/3] PCI: dwc: Implement general suspend/resume functionality for L2/L3 transitions
+config: x86_64-randconfig-x005-20230731 (https://download.01.org/0day-ci/archive/20230804/202308042251.yGAFqeDw-lkp@intel.com/config)
+compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+reproduce: (https://download.01.org/0day-ci/archive/20230804/202308042251.yGAFqeDw-lkp@intel.com/reproduce)
 
- Timing buffered disk reads: 344 MB in  3.01 seconds = 114.16 MB/sec
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308042251.yGAFqeDw-lkp@intel.com/
 
-which is about what is expected for spinny-rust 2.5" drives.
+All errors (new ones prefixed by >>):
 
-This was tested with ASPM and AER disabled. AER isn't supported anyway
-as pcie_init_service_irqs() fails with -ENODEV.
+>> drivers/pci/controller/dwc/pcie-designware-host.c:835:5: error: use of undeclared identifier 'PCIE_PME_TO_L2_TIMEOUT_US'
+                                   PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+                                   ^
+   drivers/pci/controller/dwc/pcie-designware-host.c:834:5: error: use of undeclared identifier 'PCIE_PME_TO_L2_TIMEOUT_US'
+                                   PCIE_PME_TO_L2_TIMEOUT_US/10,
+                                   ^
+   2 errors generated.
 
-For further info, the Atheros WiFi card was:
 
-02:00.0 Network controller: Qualcomm Atheros QCA986x/988x 802.11ac Wireless Network Adapter
+vim +/PCIE_PME_TO_L2_TIMEOUT_US +835 drivers/pci/controller/dwc/pcie-designware-host.c
+
+   811	
+   812	int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+   813	{
+   814		u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+   815		u32 val;
+   816		int ret;
+   817	
+   818		/*
+   819		 * If L1SS is supported, then do not put the link into L2 as some
+   820		 * devices such as NVMe expect low resume latency.
+   821		 */
+   822		if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
+   823			return 0;
+   824	
+   825		if (dw_pcie_get_ltssm(pci) <= DW_PCIE_LTSSM_DETECT_ACT)
+   826			return 0;
+   827	
+   828		if (!pci->pp.ops->pme_turn_off)
+   829			return 0;
+   830	
+   831		pci->pp.ops->pme_turn_off(&pci->pp);
+   832	
+   833		ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
+   834					PCIE_PME_TO_L2_TIMEOUT_US/10,
+ > 835					PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+   836		if (ret) {
+   837			dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
+   838			return ret;
+   839		}
+   840	
+   841		if (pci->pp.ops->host_deinit)
+   842			pci->pp.ops->host_deinit(&pci->pp);
+   843	
+   844		pci->suspended = true;
+   845	
+   846		return ret;
+   847	}
+   848	EXPORT_SYMBOL_GPL(dw_pcie_suspend_noirq);
+   849	
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
