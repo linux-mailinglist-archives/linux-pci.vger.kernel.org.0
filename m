@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 215AA76FBD2
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 10:19:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A64A76FBE1
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 10:23:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233127AbjHDITk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Aug 2023 04:19:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55920 "EHLO
+        id S233746AbjHDIXq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Aug 2023 04:23:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232559AbjHDITj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Aug 2023 04:19:39 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61716E6F
-        for <linux-pci@vger.kernel.org>; Fri,  4 Aug 2023 01:19:38 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-686b879f605so1298866b3a.1
-        for <linux-pci@vger.kernel.org>; Fri, 04 Aug 2023 01:19:38 -0700 (PDT)
+        with ESMTP id S234506AbjHDIXm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Aug 2023 04:23:42 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97D5A30D7
+        for <linux-pci@vger.kernel.org>; Fri,  4 Aug 2023 01:23:40 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1bbc7b2133fso12776685ad.1
+        for <linux-pci@vger.kernel.org>; Fri, 04 Aug 2023 01:23:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1691137178; x=1691741978;
+        d=ventanamicro.com; s=google; t=1691137419; x=1691742219;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+6p8ZmyjWt9EkIhx2x7mQdHkPI32JR/rPIgt/KaUyrM=;
-        b=Xy7UXj5rKhL+uu8tkHk9ALkF9uUbocA2LUGuUDTCT+UGGvvTrismPG1zBkJkoUphar
-         GFIBh9B6MWwxSsxdU7gxlE57mN66vXeN52obzKwYx5CxoHQybxqezGy7NIg+855c764S
-         XNF/oYMsJJ5Rt/2MYOeT2lTd6jXCIw8p1xhmuAbrL+ZL+sCs0RmmNBE1mk+AOBq6Eq9W
-         F4pwgeCm+zv78ejFX6n1IKU186BdKmiIkBCc3ojk6wDZAKKAN2w8IQf6CZtDJd5Pa6Dq
-         /f/CXnPRCEHLAkvvcZXchDfjlnHhtZnzkRvEjbeedsy/ciaI5ykfwG3vd5RKwNUEGKzl
-         UCZg==
+        bh=U1iCEOYYU/TuYkpsVb8VVtB172iQ0uWVvB+JeREIxpo=;
+        b=mNBCtcy+pGxfsWGwe4DsVuDy0NZiV99ZQ4y9rP1aAfOeel/kt5pokMEdhS81rp7emX
+         4q6NJxqkNJzQZR5RnuPibbIx0v6AbybMa3VEwgggL6fAkUhefeZhI2/Gz4Q4xac1Hu6h
+         8MjfYa3JyEeMVEGBK5ZP+wO1LM8UPpCmHNXVAQxffB8VxXFoW2uSKKYQk2m9NR7CScok
+         jix7R8iUOQ9P18rXExjcm9a74uPR2ME3+6gSWvBwejujKQMYqjSyJTaUsKXd3tTT7Ktp
+         Ua49YNuBvi/++1M98fkf1zd8ApIbK50kwdYoWSkV7oJpm/agaVJjM+EgS7/TxqGrsKvq
+         deDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691137178; x=1691741978;
+        d=1e100.net; s=20221208; t=1691137419; x=1691742219;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+6p8ZmyjWt9EkIhx2x7mQdHkPI32JR/rPIgt/KaUyrM=;
-        b=fG7NEGG+8aI7S2DGsu+Z6Egx/y1bkNt3r4G8nsFhScGMDHdg+8Gz60lrBxNfg8EBPb
-         MfoAGKhPyesu3gzBcgxlACeAOiwo1/Uz6IG+ONDCCaT17Z8JDn+ZQ+1LE3N2muJyh4/9
-         54POQcoAQj/ee1iTIZ0BNktP8mQ08HE7JtTTU2aCssFD0YVhRLayY1n5jrjc8HXWYVZ4
-         ta2B7/ikUoSp9kfX4QmY2cQ9Vf02keCpKUR0Fv62mSPSfJHDPGAhyxLmL12pLyJCzW2M
-         mP9QT9tiv4ZtdPqGULSLjn5rRDEtYLjX1ZzuDi22yqoFhvKtHbpgQ3Vepa6HSEE20rYH
-         By2A==
-X-Gm-Message-State: AOJu0YyDiMHgz+387/MVpS4g+NyHp5it4KOyFcsugVxtqaGUDH01A1aG
-        bIknLs3clqDRf3ksDdIA+JHlmA==
-X-Google-Smtp-Source: AGHT+IFmU2okWiufqxbBgTJlqhXztctK8e0s9XMhsjLRvyxOqapi7NDJcuaofoqHVSzZkHv7M/zO9Q==
-X-Received: by 2002:a05:6a20:938a:b0:13e:8ce5:cacd with SMTP id x10-20020a056a20938a00b0013e8ce5cacdmr944703pzh.26.1691137177799;
-        Fri, 04 Aug 2023 01:19:37 -0700 (PDT)
+        bh=U1iCEOYYU/TuYkpsVb8VVtB172iQ0uWVvB+JeREIxpo=;
+        b=TZMTFg1wG/U0BaHKlYkMBWdW1+zRA0EBFK2bHF7OHjSfL+wiLPTsk6fOWPeYSx7Hv3
+         w/qfG7Ey8ERhEJNYOc6jQgQYzQmKlPAkiP6QfXln8Al6objNWGpEm7e5Ey0xIpQG4EUn
+         y8zps29vH27VtBneBzl2VzlwStNVZxKU3WMk27jvUIXtdP6zLLNGsbncqQWi7IQAkU4r
+         RBHAh9mabV6BBeIRkzxiF9vhCW2GSd1JycUdyH4iCMbVOjtOAepfmX+0bZY9Ipv2xGCW
+         5mfbbsNBF/MH9nPtTg2pftWqdqrpgZAPMizOxU6U7LhZOGRWiw+qk/F5lvdbFkkQhmaN
+         xrKw==
+X-Gm-Message-State: AOJu0YwV6D0e0mI9jN/L8pafET741858g7s7LxIpdcAQC3RP9xgr9Bsd
+        9qVnzIZylH2j2j0D+X+iRsXmTQ==
+X-Google-Smtp-Source: AGHT+IErTrIrbgFzVl3JfKafZGO1uGvh7W7gOxEf+8QZhTVoODvh18JAAUR9r8v3VTYouOFQkb7gqw==
+X-Received: by 2002:a17:902:e5cb:b0:1bb:5b88:73da with SMTP id u11-20020a170902e5cb00b001bb5b8873damr906032plf.61.1691137419493;
+        Fri, 04 Aug 2023 01:23:39 -0700 (PDT)
 Received: from sunil-laptop ([106.51.190.143])
-        by smtp.gmail.com with ESMTPSA id e18-20020aa78c52000000b0068620bee456sm1046915pfd.209.2023.08.04.01.19.28
+        by smtp.gmail.com with ESMTPSA id s13-20020a170902b18d00b001ac6b926621sm1138810plr.292.2023.08.04.01.23.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Aug 2023 01:19:37 -0700 (PDT)
-Date:   Fri, 4 Aug 2023 13:49:24 +0530
+        Fri, 04 Aug 2023 01:23:39 -0700 (PDT)
+Date:   Fri, 4 Aug 2023 13:53:26 +0530
 From:   Sunil V L <sunilvl@ventanamicro.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
@@ -75,19 +75,17 @@ Cc:     linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
         Haibo Xu <haibo1.xu@intel.com>,
         Andrew Jones <ajones@ventanamicro.com>,
         Conor Dooley <conor.dooley@microchip.com>,
-        Atish Kumar Patra <atishp@rivosinc.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: Re: [RFC PATCH v1 04/21] RISC-V: ACPI: Enhance acpi_os_ioremap with
- MMIO remapping
-Message-ID: <ZMy0jC55N0+nKEye@sunil-laptop>
+        Atish Kumar Patra <atishp@rivosinc.com>
+Subject: Re: [RFC PATCH v1 05/21] arm64: PCI: Migrate ACPI related functions
+ to pci-acpi.c
+Message-ID: <ZMy1fgzCSICftyWz@sunil-laptop>
 References: <20230803175916.3174453-1-sunilvl@ventanamicro.com>
- <20230803175916.3174453-5-sunilvl@ventanamicro.com>
- <ZMyRCRRkTnR/sK0u@smile.fi.intel.com>
+ <20230803175916.3174453-6-sunilvl@ventanamicro.com>
+ <ZMySSmy0sNl7Q+rh@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZMyRCRRkTnR/sK0u@smile.fi.intel.com>
+In-Reply-To: <ZMySSmy0sNl7Q+rh@smile.fi.intel.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
@@ -98,54 +96,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 04, 2023 at 08:47:53AM +0300, Andy Shevchenko wrote:
-> On Thu, Aug 03, 2023 at 11:28:59PM +0530, Sunil V L wrote:
-> > Enhance the acpi_os_ioremap() to support opregions in MMIO
-> > space. Also, have strict checks using EFI memory map
-> > to allow remapping the RAM similar to arm64.
-> > 
-> > Cc: Ard Biesheuvel <ardb@kernel.org>
-> > Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-> 
-> You may use --cc to the command line when forming patches.
-> 
-> Also we usually consider Cc: as a part of the tag block, meaning no blank line
-> should be here.
-> 
-Thanks!, Andy. I specifically wanted Ard and Alex to look at this patch
-and hence added Cc. I was not aware that no blank line should be there.
-Thanks for letting me know.
-
-> > Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+On Fri, Aug 04, 2023 at 08:53:14AM +0300, Andy Shevchenko wrote:
+> On Thu, Aug 03, 2023 at 11:29:00PM +0530, Sunil V L wrote:
+> > The functions defined in arm64 for ACPI support are required
+> > for RISC-V also. To avoid duplication, copy these functions
+> > to common location.
 > 
 > ...
 > 
-> >  #include <linux/io.h>
-> >  #include <linux/pci.h>
-> >  #include <linux/efi.h>
-> > +#include <linux/memblock.h>
+> >  }
+> > +
 > 
-> Can you squeeze it to have some order, like to be after io.h (taking into
-> account given context)?
+> Stray change.
 > 
-Yeah, sure. Let me update in next version.
+Let me remove this in next version.
 
+> >  arch_initcall(acpi_pci_init);
+> > +
+> > +#if defined(CONFIG_ARM64)
+> 
 > ...
 > 
-> > +			if (memblock_is_map_memory(phys) ||
-> > +			    !memblock_is_region_memory(phys, size)) {
-> > +				pr_warn(FW_BUG "requested region covers kernel memory @ %p\n",
-> > +					&phys);
+> > +	cfg = pci_ecam_create(dev, &cfgres, bus_res, ecam_ops);
+> > +	if (IS_ERR(cfg)) {
+> > +		dev_err(dev, "%04x:%pR error %ld mapping ECAM\n", seg, bus_res,
+> > +			PTR_ERR(cfg));
+> > +		return NULL;
+> > +	}
+> > +
+> > +	return cfg;
 > 
-> How %p can be useful here (it's mangled), but also wouldn't this give a hint to
-> an attacker about the kernel memory location and diminish the KASLR protection?
-> (IIRC after boot we always have the same salt for the mangling the pointers when
->  printing, so at least theoretically it might be possible to bruteforce the
->  printing algo to give a clue about the kernel address.)
+> Can be
 > 
-Okay. This is copied from arm64 version. But I think this is a good
-point. Let me just print the warning message without address in the next
-version.
+> 	cfg = pci_ecam_create(dev, &cfgres, bus_res, ecam_ops);
+> 	ret = PTR_ERR_OR_ZERO(cfg);
+> 	if (ret) {
+> 		dev_err(dev, "%04x:%pR error %d mapping ECAM\n", seg, bus_res, ret);
+> 
+> but as far as I understand this is in the original code like this, so consider
+> as a suggestion for further cleanups.
+>
 
-Thanks!
-Sunil
+Good suggestion!. Sure, we can cleanup as a follow on patch.
+
+Thanks,
+Sunil 
