@@ -2,141 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82086770672
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 18:56:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF47277068D
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 19:01:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230000AbjHDQ4j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Aug 2023 12:56:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33504 "EHLO
+        id S231477AbjHDRBB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Aug 2023 13:01:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229675AbjHDQ4i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Aug 2023 12:56:38 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C4A31994;
-        Fri,  4 Aug 2023 09:56:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691168197; x=1722704197;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gpDidnsvALbETLwYUDIaqkBOrRmLDkWhHtFiUIEPsrc=;
-  b=nVAj6Ki+r/HOcAoZl0tVkX9yVOmFL5BwoY+SdflYbP2ebK9ZRyGrXPZh
-   RfbKMEZq/ugTq+c0ZNTRmaUxXtqX1UKQEUdcV32RgNgC8Yf83AaP1GL8j
-   AysF0YJXaxTD5IL+bLG+cv8YSXOXz5z9QDKTJgCUV6zae6V3fbDEeD8n3
-   AUsrfCG9K5ziIqYePqtB8fiCLqul/dBUPxiEWasTqcdDcoGayXVm4T/Zn
-   rJtUHHEfX+ZlWR783UV+MoDwcAnWo+7yXzJfxjQCe9wgL1rQRNQy7h37P
-   zZBDRqk+nspXIDyCzN7ndZh+OlYrRaqRasaUysLRwsyzVPHG5IUnkbjCD
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="401156666"
-X-IronPort-AV: E=Sophos;i="6.01,255,1684825200"; 
-   d="scan'208";a="401156666"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 09:56:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="723705867"
-X-IronPort-AV: E=Sophos;i="6.01,255,1684825200"; 
-   d="scan'208";a="723705867"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP; 04 Aug 2023 09:56:29 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qRy6E-00HEmR-1a;
-        Fri, 04 Aug 2023 19:56:26 +0300
-Date:   Fri, 4 Aug 2023 19:56:26 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Conor Dooley <conor@kernel.org>
-Cc:     Sunil V L <sunilvl@ventanamicro.com>, linux-doc@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Anup Patel <anup@brainfault.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Haibo Xu <haibo1.xu@intel.com>,
-        Andrew Jones <ajones@ventanamicro.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Atish Kumar Patra <atishp@rivosinc.com>
-Subject: Re: [RFC PATCH v1 09/21] RISC-V: cacheflush: Initialize CBO
- variables on ACPI systems
-Message-ID: <ZM0tuv5mdgHLdrsr@smile.fi.intel.com>
-References: <20230803175916.3174453-1-sunilvl@ventanamicro.com>
- <20230803175916.3174453-10-sunilvl@ventanamicro.com>
- <ZMyTDcffqXYT29JX@smile.fi.intel.com>
- <ZMzC4nHOJOfp0vaa@sunil-laptop>
- <ZM0SZwL9SXrEuFMT@smile.fi.intel.com>
- <20230804-dreamy-unharmed-a502d02af35a@spud>
- <ZM0s6GrfXqx4fu+l@smile.fi.intel.com>
+        with ESMTP id S231598AbjHDRAv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Aug 2023 13:00:51 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 788B849D8
+        for <linux-pci@vger.kernel.org>; Fri,  4 Aug 2023 10:00:45 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qRyAH-00078o-PJ; Fri, 04 Aug 2023 19:00:37 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qRyAH-00173P-2f; Fri, 04 Aug 2023 19:00:37 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qRyAG-00ARCi-DV; Fri, 04 Aug 2023 19:00:36 +0200
+Date:   Fri, 4 Aug 2023 19:00:10 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] PCI: mvebu: Mark driver as BROKEN
+Message-ID: <20230804170010.2i2cq6xobsm4v4jt@pengutronix.de>
+References: <20230114164125.1298-1-pali@kernel.org>
+ <ZMzicVQEyHyZzBOc@shell.armlinux.org.uk>
+ <20230804134622.pmbymxtzxj2yfhri@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="b4vhtzr2bw75qlff"
 Content-Disposition: inline
-In-Reply-To: <ZM0s6GrfXqx4fu+l@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230804134622.pmbymxtzxj2yfhri@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 04, 2023 at 07:52:56PM +0300, Andy Shevchenko wrote:
-> On Fri, Aug 04, 2023 at 04:19:27PM +0100, Conor Dooley wrote:
-> > On Fri, Aug 04, 2023 at 05:59:51PM +0300, Andy Shevchenko wrote:
-> > > On Fri, Aug 04, 2023 at 02:50:34PM +0530, Sunil V L wrote:
-> > > > On Fri, Aug 04, 2023 at 08:56:29AM +0300, Andy Shevchenko wrote:
-> > > > > On Thu, Aug 03, 2023 at 11:29:04PM +0530, Sunil V L wrote:
 
-...
+--b4vhtzr2bw75qlff
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > > > > > +#include <asm/acpi.h>
-> > > > > 
-> > > > > What do you need this for?
-> > > > > 
-> > > > > >  #include <asm/cacheflush.h>
-> > > > > 
-> > > > When CONFIG_ACPI is disabled, this include is required to get
-> > > > acpi_get_cbo_block_size().
-> > > 
-> > > How is it useful without ACPI being enabled?
-> > 
-> > It is not, as evidenced by the `return -EINVAL;`.
-> > 
-> > > If it's indeed
-> > > (in which I do not believe), better to make sure you have it
-> > > avaiable independently on CONFIG_ACPI. Otherwise, just put
-> > > #ifdef CONFIG_ACPI around the call.
-> > 
-> > Let's not litter the code with ifdeffery please where it can be easily
-> > avoided.
-> 
-> Including asm/acpi.h looks to me as a "let's avoid it with a hack that it
-> is uglier than ifdeffery". Sorry, but ifdeffery for ACPI, with all my full
-> agreement with the statement that it's not good, is the correct way to fix
-> this.
+Hello,
 
-On the other hand this is an arch code and I see precedents of using the
-headers together, alas, it seems not better to me that ugly ifdeffery.
+On Fri, Aug 04, 2023 at 03:46:22PM +0200, Uwe Kleine-K=F6nig wrote:
+> On Fri, Aug 04, 2023 at 12:35:13PM +0100, Russell King (Oracle) wrote:
+> > So it seems this patch got applied, but it wasn't Cc'd to
+> > linux-arm-kernel or anyone else, so those of us with platforms never
+> > had a chance to comment on it.
+> >=20
+> > *** This change causes a regression to working setups. ***
+> >=20
+> > It appears that the *only* reason this patch was proposed is to stop a
+> > kernel developer receiving problem reports from a set of users, but
+> > completely ignores that there is another group of users where this works
+> > fine - and thus the addition of this patch causes working setups to
+> > regress.
+> >=20
+> > Because one is being bothered with problem reports is not a reason to
+> > mark a driver broken - and especially not doing so in a way that those
+> > who may be affected don't get an opportunity to comment on the patch!
+> > Also, there is _zero_ information provided on what the reported problems
+> > actually are, so no one else can guess what these issues are.
+> >=20
+> > However, given that there are working setups and this change causes
+> > those to regress, it needs to be reverted.
+> >=20
+> > For example, I have an Atheros PCIe WiFi card in an Armada 388 Clearfog
+> > platform, and this works fine.
+> >=20
+> > Uwe has a SATA controller for a bunch of disks in an Armada 370 based
+> > NAS platform that is connected to PCIe, and removing PCIe support
+> > effectively makes his platform utterly useless.
+>=20
+> While this is true there is really a problem on my platform with
+> accessing the hard disks via that pci controller and a 88SE9215 SATA
+> controller. While it seems to work in principle, it's incredible slow.
+>=20
+> I intend to bisect that, 6.1.x is still fine. Don't know when I find the
+> time though, as there are a few things that are more important
+> currently.
 
-So, I leave it to the respective maintainers to decide.
+I did that and found next-20230803 to be bad but next-20230804 is good.
+I didn't debug that further and didn't spot anything obvious in
 
--- 
-With Best Regards,
-Andy Shevchenko
+	git log --oneline --no-merges --left-right next-20230803...next-20230804
 
+=2E I will just assume the problem is gone for good.
 
+So now I'm in the position to say: For me PCI_MVEBU works fine and so I
+support Russell's request to revert
+b3574f579ece24439c90e9a179742c61205fbcfa.
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--b4vhtzr2bw75qlff
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmTNLpYACgkQj4D7WH0S
+/k47HAgApIpya8HcrHL+AOy4FTK9Q0j45I4V/WcPab0kXN2zeFfSGm2IPx5VahZA
+V8oqwnqSpCNitrA60k5nK8IhmOJdmIhQfH4LSac/E6kzcoSPKFpqnLdKtmaAxYwp
+B9Vk3mPhD+zQ8F3IQfK0QMs6FAJ5mnM9gewzbubv9cpBeUQDAUm4kfnDhlzBcARl
+oQ3CC/EL8gKCzHQbB1uCnMte2sP/40mfvZ4cqD+IYzCbU/tcYXWqJsrroBF9jiLW
+41xItFkPJaJuqDT5NLx8CgHfPzTcJJqym2cDlgGeTFAnr1GqHsHjjxfv0EzqhDO2
+BdGb83WUfqzI2AK0EsvnJUN0WAsowA==
+=GoYW
+-----END PGP SIGNATURE-----
+
+--b4vhtzr2bw75qlff--
