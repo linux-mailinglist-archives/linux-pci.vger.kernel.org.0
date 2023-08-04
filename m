@@ -2,154 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C56967703BB
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 16:58:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25FA67703C0
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 17:00:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230266AbjHDO6p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Aug 2023 10:58:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41318 "EHLO
+        id S230483AbjHDPAT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Aug 2023 11:00:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229714AbjHDO6p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Aug 2023 10:58:45 -0400
+        with ESMTP id S229714AbjHDPAS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Aug 2023 11:00:18 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CAFDAC;
-        Fri,  4 Aug 2023 07:58:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57548AC;
+        Fri,  4 Aug 2023 08:00:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691161124; x=1722697124;
+  t=1691161217; x=1722697217;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=k4cqc2uFUvykatWv/bI5oB09e9fHPN3dIPVE6GY6Krc=;
-  b=htGAfylN1JsCVBMkgoNjJTl8uu/iaqnewVsc+ZL9kVhc6HE41uydUsSr
-   ygrG0DXti9SoUPLwRq9yZF/wUggfmJB0k3FSAvg0iA0tv6ObQqiJryq3/
-   c0+mC4yXSTuKxi/qGD2XuYpxuflloBO08i+EvNNjkRfbppZ3jky0aSm9D
-   6zlA1ncipY+XWdkZQq9mVdmZZjS5r35BWxRtlgSN+S1kEcSM2Yyd4qXLA
-   1r5M2ptgOQkXbXycG5iyzRjuezjCqBJ84BOTS0/B8SSVi+FPRumTOpe2d
-   o45RROSYjeu1RENaHGV+mvsRK5mE2rTaVnfRD9zQMAJevRLZcLdjtU+Mp
+  bh=MpvATlDjjJZIna8broQzbePYRa5IYY2XnpYjRR2L2Mg=;
+  b=P4DNPlDpOjaHrVRWn3Wy7sS/FpauNxNnHt/rvW/GEJOenPHBgPTkd+33
+   q1oyJmJWz7jrfrU2JtmT7j4t4C971MxanetmfKXcZHTLlKenjXKL6B46N
+   HwV8FpHQREKqOGYM+6LSCpFaWbge2BW4vu1IIIq2QXCBJu/TBSg4ldB6O
+   /W5FSyogjIehq9Q9/6NnF0TvqlB8cpVEp+B6qsuRFHREVGi1eHDRX2zDy
+   jqgO6Qg2+2fkK2+wLqQff9SbZEO9GfuNRrsKsv+geX3mvHEtVwmwDpRxJ
+   NT79MCO7GxGVZAArn1uQ8KZC6HEo2CRS4Uk6AP2EjZnufAViAEUvGicXI
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="369069845"
+X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="369070010"
 X-IronPort-AV: E=Sophos;i="6.01,255,1684825200"; 
-   d="scan'208";a="369069845"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 07:58:43 -0700
+   d="scan'208";a="369070010"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 08:00:02 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="765144192"
+X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="730091090"
 X-IronPort-AV: E=Sophos;i="6.01,255,1684825200"; 
-   d="scan'208";a="765144192"
-Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 04 Aug 2023 07:58:37 -0700
-Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qRwGC-0002uX-2f;
-        Fri, 04 Aug 2023 14:58:36 +0000
-Date:   Fri, 4 Aug 2023 22:57:45 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Frank Li <Frank.Li@nxp.com>, helgaas@kernel.org
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        Frank.li@nxp.com, bhelgaas@google.com, devicetree@vger.kernel.org,
-        gustavo.pimentel@synopsys.com, imx@lists.linux.dev, kw@linux.com,
-        leoyang.li@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        lpieralisi@kernel.org, mani@kernel.org,
-        manivannan.sadhasivam@linaro.org, minghuan.lian@nxp.com,
-        mingkai.hu@nxp.com, robh+dt@kernel.org, roy.zang@nxp.com,
-        shawnguo@kernel.org, zhiqiang.hou@nxp.com
-Subject: Re: [PATCH v8 2/3] PCI: dwc: Implement general suspend/resume
- functionality for L2/L3 transitions
-Message-ID: <202308042251.yGAFqeDw-lkp@intel.com>
-References: <20230803150409.271155-3-Frank.Li@nxp.com>
+   d="scan'208";a="730091090"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga002.jf.intel.com with ESMTP; 04 Aug 2023 07:59:55 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qRwHP-00DIKr-1l;
+        Fri, 04 Aug 2023 17:59:51 +0300
+Date:   Fri, 4 Aug 2023 17:59:51 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sunil V L <sunilvl@ventanamicro.com>
+Cc:     linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anup Patel <anup@brainfault.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Haibo Xu <haibo1.xu@intel.com>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Atish Kumar Patra <atishp@rivosinc.com>
+Subject: Re: [RFC PATCH v1 09/21] RISC-V: cacheflush: Initialize CBO
+ variables on ACPI systems
+Message-ID: <ZM0SZwL9SXrEuFMT@smile.fi.intel.com>
+References: <20230803175916.3174453-1-sunilvl@ventanamicro.com>
+ <20230803175916.3174453-10-sunilvl@ventanamicro.com>
+ <ZMyTDcffqXYT29JX@smile.fi.intel.com>
+ <ZMzC4nHOJOfp0vaa@sunil-laptop>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230803150409.271155-3-Frank.Li@nxp.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <ZMzC4nHOJOfp0vaa@sunil-laptop>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Frank,
+On Fri, Aug 04, 2023 at 02:50:34PM +0530, Sunil V L wrote:
+> On Fri, Aug 04, 2023 at 08:56:29AM +0300, Andy Shevchenko wrote:
+> > On Thu, Aug 03, 2023 at 11:29:04PM +0530, Sunil V L wrote:
+> > > Using new interface to get the CBO block size information in
+> > > RHCT, initialize the variables on ACPI platforms.
 
-kernel test robot noticed the following build errors:
+...
 
-[auto build test ERROR on pci/for-linus]
-[also build test ERROR on linus/master v6.5-rc4 next-20230804]
-[cannot apply to pci/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > > +#include <asm/acpi.h>
+> > 
+> > What do you need this for?
+> > 
+> > >  #include <asm/cacheflush.h>
+> > 
+> When CONFIG_ACPI is disabled, this include is required to get
+> acpi_get_cbo_block_size().
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/PCI-Add-macro-PCIE_PME_TO_L2_TIMEOUT_US/20230803-230808
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-patch link:    https://lore.kernel.org/r/20230803150409.271155-3-Frank.Li%40nxp.com
-patch subject: [PATCH v8 2/3] PCI: dwc: Implement general suspend/resume functionality for L2/L3 transitions
-config: x86_64-randconfig-x005-20230731 (https://download.01.org/0day-ci/archive/20230804/202308042251.yGAFqeDw-lkp@intel.com/config)
-compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
-reproduce: (https://download.01.org/0day-ci/archive/20230804/202308042251.yGAFqeDw-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308042251.yGAFqeDw-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/pci/controller/dwc/pcie-designware-host.c:835:5: error: use of undeclared identifier 'PCIE_PME_TO_L2_TIMEOUT_US'
-                                   PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
-                                   ^
-   drivers/pci/controller/dwc/pcie-designware-host.c:834:5: error: use of undeclared identifier 'PCIE_PME_TO_L2_TIMEOUT_US'
-                                   PCIE_PME_TO_L2_TIMEOUT_US/10,
-                                   ^
-   2 errors generated.
-
-
-vim +/PCIE_PME_TO_L2_TIMEOUT_US +835 drivers/pci/controller/dwc/pcie-designware-host.c
-
-   811	
-   812	int dw_pcie_suspend_noirq(struct dw_pcie *pci)
-   813	{
-   814		u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-   815		u32 val;
-   816		int ret;
-   817	
-   818		/*
-   819		 * If L1SS is supported, then do not put the link into L2 as some
-   820		 * devices such as NVMe expect low resume latency.
-   821		 */
-   822		if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
-   823			return 0;
-   824	
-   825		if (dw_pcie_get_ltssm(pci) <= DW_PCIE_LTSSM_DETECT_ACT)
-   826			return 0;
-   827	
-   828		if (!pci->pp.ops->pme_turn_off)
-   829			return 0;
-   830	
-   831		pci->pp.ops->pme_turn_off(&pci->pp);
-   832	
-   833		ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
-   834					PCIE_PME_TO_L2_TIMEOUT_US/10,
- > 835					PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
-   836		if (ret) {
-   837			dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
-   838			return ret;
-   839		}
-   840	
-   841		if (pci->pp.ops->host_deinit)
-   842			pci->pp.ops->host_deinit(&pci->pp);
-   843	
-   844		pci->suspended = true;
-   845	
-   846		return ret;
-   847	}
-   848	EXPORT_SYMBOL_GPL(dw_pcie_suspend_noirq);
-   849	
+How is it useful without ACPI being enabled?  If it's indeed
+(in which I do not believe), better to make sure you have it
+avaiable independently on CONFIG_ACPI. Otherwise, just put
+#ifdef CONFIG_ACPI around the call.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+With Best Regards,
+Andy Shevchenko
+
+
