@@ -2,167 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BC6876FA61
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 08:47:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A1A676FA9A
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 09:02:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233769AbjHDGrV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Aug 2023 02:47:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44166 "EHLO
+        id S233952AbjHDHCM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Aug 2023 03:02:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233839AbjHDGrI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Aug 2023 02:47:08 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08E4A5244;
-        Thu,  3 Aug 2023 23:46:49 -0700 (PDT)
+        with ESMTP id S233944AbjHDHCL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Aug 2023 03:02:11 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 000421734
+        for <linux-pci@vger.kernel.org>; Fri,  4 Aug 2023 00:02:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691131610; x=1722667610;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=p9K9edwregzUhDUBhwKOkviRf4+2FT7ek/znin6wgKw=;
-  b=kkOHTtfFTBd6rIJDnGil+tQhcNN3HYMTGCDXDnsxVX7zb8hWRW6s589G
-   p25M1upJPnPSiTxZTx0QbrCsaRWeE+qxr0/CR1FcmddMlDVN37Z5roXEy
-   okh8QaLaWJCwUL29QjBMoLb/9jC/VuxF/P+kLnNYC2gYwuqqYsnuxDwEX
-   sxsbz+WMo6guA4boiI3ko5c+lIPCNmAZy7bS8mZPKYyYxL9zYhCy3z79I
-   YbzRbEjVeKOe13EFac0y/Qlo7rdFDeReueyrjFIGUBk1D5h6VguEhr1nd
-   Hi7Z7/JuZw2YVNeRylkpp2drpq7R4Up6m5gen1zqOwHReUVP3sceJyxkE
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="349677291"
+  t=1691132530; x=1722668530;
+  h=date:from:to:cc:subject:message-id;
+  bh=46Q/oFtCDUs0ykBN3l4IyfmIow/ketl6vnlzRfoeCt0=;
+  b=V7iOWNP4BzZfOflVnnxJfpVEGFmDD6ZNaBF3EXmWF4WYlr5ZY2FBGLZ0
+   EFA9CLO/UsS1WhrXE0/9+i4w5BsR8PnymEJrk/IZh+Z/KbcS8aF9zLP+O
+   RGczRYF40QV4J38DhMIrBwQbKCeALuPUp9In8kuxPyqd8Igt3UpNh9ngd
+   PTWLqdeLDgLwRGv41139ojJ+u8mcpzoPgJlFe+tiPN2mUksZ7dYxjxx/0
+   YXMla4NrZ39wCF/+so6YyzMWGK/26qSctcfMoiMT94hyjkcCfgchkJYfK
+   61QzzRSS8Oc+RUkzNIpAgKPk0T3FQfNczCHrleEiSgf+ekgpPgfPjcrPj
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="360136906"
 X-IronPort-AV: E=Sophos;i="6.01,254,1684825200"; 
-   d="scan'208";a="349677291"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2023 23:46:31 -0700
+   d="scan'208";a="360136906"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 00:02:09 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="733091085"
+X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="819987895"
 X-IronPort-AV: E=Sophos;i="6.01,254,1684825200"; 
-   d="scan'208";a="733091085"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Aug 2023 23:46:27 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id D858214F; Fri,  4 Aug 2023 09:46:38 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v3 1/1] range.h: Move resource API and constant to respective files
-Date:   Fri,  4 Aug 2023 09:46:36 +0300
-Message-Id: <20230804064636.15368-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+   d="scan'208";a="819987895"
+Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Aug 2023 00:02:08 -0700
+Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qRop5-0002hu-1h;
+        Fri, 04 Aug 2023 07:02:07 +0000
+Date:   Fri, 04 Aug 2023 15:01:44 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS
+ 417acbdb96e248b4a6edefc7b6a5d130e3f6b824
+Message-ID: <202308041541.p6vbHlsn-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-range.h works with struct range data type. The resource_size_t
-is an alien here.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: 417acbdb96e248b4a6edefc7b6a5d130e3f6b824  Merge branch 'pci/misc'
 
-(1) Move cap_resource() implementation into its only user, and
-(2) rename and move RESOURCE_SIZE_MAX to limits.h.
+elapsed time: 724m
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
----
-v3: Cc'ed to Andrew to pick up
-(I believe with Bjorn Ack we are fine to route it via your tree as it
-doesn't change any code behaviour)
- arch/mips/cavium-octeon/setup.c | 2 +-
- arch/x86/pci/amd_bus.c          | 8 ++++++++
- arch/x86/pci/bus_numa.c         | 2 +-
- include/linux/limits.h          | 2 ++
- include/linux/range.h           | 8 --------
- 5 files changed, 12 insertions(+), 10 deletions(-)
+configs tested: 105
+configs skipped: 6
 
-diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon/setup.c
-index c5561016f577..1ad2602a0383 100644
---- a/arch/mips/cavium-octeon/setup.c
-+++ b/arch/mips/cavium-octeon/setup.c
-@@ -1240,7 +1240,7 @@ static int __init octeon_no_pci_init(void)
- 	 */
- 	octeon_dummy_iospace = vzalloc(IO_SPACE_LIMIT);
- 	set_io_port_base((unsigned long)octeon_dummy_iospace);
--	ioport_resource.start = MAX_RESOURCE;
-+	ioport_resource.start = RESOURCE_SIZE_MAX;
- 	ioport_resource.end = 0;
- 	return 0;
- }
-diff --git a/arch/x86/pci/amd_bus.c b/arch/x86/pci/amd_bus.c
-index dd40d3fea74e..631512f7ec85 100644
---- a/arch/x86/pci/amd_bus.c
-+++ b/arch/x86/pci/amd_bus.c
-@@ -51,6 +51,14 @@ static struct pci_root_info __init *find_pci_root_info(int node, int link)
- 	return NULL;
- }
- 
-+static inline resource_size_t cap_resource(u64 val)
-+{
-+	if (val > RESOURCE_SIZE_MAX)
-+		return RESOURCE_SIZE_MAX;
-+
-+	return val;
-+}
-+
- /**
-  * early_root_info_init()
-  * called before pcibios_scan_root and pci_scan_bus
-diff --git a/arch/x86/pci/bus_numa.c b/arch/x86/pci/bus_numa.c
-index 2752c02e3f0e..e4a525e59eaf 100644
---- a/arch/x86/pci/bus_numa.c
-+++ b/arch/x86/pci/bus_numa.c
-@@ -101,7 +101,7 @@ void update_res(struct pci_root_info *info, resource_size_t start,
- 	if (start > end)
- 		return;
- 
--	if (start == MAX_RESOURCE)
-+	if (start == RESOURCE_SIZE_MAX)
- 		return;
- 
- 	if (!merge)
-diff --git a/include/linux/limits.h b/include/linux/limits.h
-index f6bcc9369010..38eb7f6f7e88 100644
---- a/include/linux/limits.h
-+++ b/include/linux/limits.h
-@@ -10,6 +10,8 @@
- #define SSIZE_MAX	((ssize_t)(SIZE_MAX >> 1))
- #define PHYS_ADDR_MAX	(~(phys_addr_t)0)
- 
-+#define RESOURCE_SIZE_MAX	((resource_size_t)~0)
-+
- #define U8_MAX		((u8)~0U)
- #define S8_MAX		((s8)(U8_MAX >> 1))
- #define S8_MIN		((s8)(-S8_MAX - 1))
-diff --git a/include/linux/range.h b/include/linux/range.h
-index 7efb6a9b069b..6ad0b73cb7ad 100644
---- a/include/linux/range.h
-+++ b/include/linux/range.h
-@@ -31,12 +31,4 @@ int clean_sort_range(struct range *range, int az);
- 
- void sort_range(struct range *range, int nr_range);
- 
--#define MAX_RESOURCE ((resource_size_t)~0)
--static inline resource_size_t cap_resource(u64 val)
--{
--	if (val > MAX_RESOURCE)
--		return MAX_RESOURCE;
--
--	return val;
--}
- #endif
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r011-20230731   gcc  
+alpha                randconfig-r036-20230801   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r043-20230731   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r046-20230731   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r013-20230731   clang
+csky                                defconfig   gcc  
+hexagon              randconfig-r003-20230731   clang
+hexagon              randconfig-r041-20230731   clang
+hexagon              randconfig-r045-20230731   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230731   gcc  
+i386         buildonly-randconfig-r005-20230731   gcc  
+i386         buildonly-randconfig-r006-20230731   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230731   gcc  
+i386                 randconfig-i002-20230731   gcc  
+i386                 randconfig-i003-20230731   gcc  
+i386                 randconfig-i004-20230731   gcc  
+i386                 randconfig-i005-20230731   gcc  
+i386                 randconfig-i006-20230731   gcc  
+i386                 randconfig-i011-20230731   clang
+i386                 randconfig-i012-20230731   clang
+i386                 randconfig-i013-20230731   clang
+i386                 randconfig-i014-20230731   clang
+i386                 randconfig-i015-20230731   clang
+i386                 randconfig-i016-20230731   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r016-20230731   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                 randconfig-r026-20230801   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r022-20230801   gcc  
+openrisc             randconfig-r014-20230731   gcc  
+openrisc             randconfig-r034-20230801   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r021-20230801   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc              randconfig-r004-20230731   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r006-20230731   gcc  
+riscv                randconfig-r042-20230731   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r044-20230731   clang
+sh                               allmodconfig   gcc  
+sh                   randconfig-r005-20230731   gcc  
+sh                   randconfig-r023-20230801   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r002-20230731   gcc  
+sparc                randconfig-r033-20230801   gcc  
+sparc64              randconfig-r001-20230731   gcc  
+sparc64              randconfig-r015-20230731   gcc  
+sparc64              randconfig-r025-20230801   gcc  
+sparc64              randconfig-r031-20230801   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230731   gcc  
+x86_64       buildonly-randconfig-r002-20230731   gcc  
+x86_64       buildonly-randconfig-r003-20230731   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-x001-20230731   clang
+x86_64               randconfig-x002-20230731   clang
+x86_64               randconfig-x003-20230731   clang
+x86_64               randconfig-x004-20230731   clang
+x86_64               randconfig-x005-20230731   clang
+x86_64               randconfig-x006-20230731   clang
+x86_64               randconfig-x011-20230731   gcc  
+x86_64               randconfig-x012-20230731   gcc  
+x86_64               randconfig-x013-20230731   gcc  
+x86_64               randconfig-x014-20230731   gcc  
+x86_64               randconfig-x015-20230731   gcc  
+x86_64               randconfig-x016-20230731   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+
 -- 
-2.40.0.1.gaa8946217a0b
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
