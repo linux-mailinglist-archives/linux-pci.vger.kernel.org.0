@@ -2,127 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F44676F845
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 05:13:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72DE876F8F4
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 06:30:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231843AbjHDDNw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Aug 2023 23:13:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40238 "EHLO
+        id S232103AbjHDEab (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Aug 2023 00:30:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234048AbjHDDNK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 23:13:10 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F12C049E9;
-        Thu,  3 Aug 2023 20:11:42 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.43])
-        by gateway (Coremail) with SMTP id _____8Cxc_BtbMxkowEQAA--.37082S3;
-        Fri, 04 Aug 2023 11:11:41 +0800 (CST)
-Received: from [10.20.42.43] (unknown [10.20.42.43])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8DxJ81QbMxkdMpHAA--.52126S3;
-        Fri, 04 Aug 2023 11:11:34 +0800 (CST)
-Message-ID: <8e51eb50-aa7b-f771-e53b-499bf899e22e@loongson.cn>
-Date:   Fri, 4 Aug 2023 11:11:12 +0800
+        with ESMTP id S229498AbjHDEaa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Aug 2023 00:30:30 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6C6335BE;
+        Thu,  3 Aug 2023 21:30:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691123429; x=1722659429;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7SU+OnhENlKD0/sf+9S44cv0vNFtLHvqcGpWrAJLLlM=;
+  b=YX52LJlEcEFVvEMKj51u64xFMxabYMABhzQ20OsMTRx42XdIqbPOs9EU
+   iddJN2FoUElT+ntd30nRAODs0zIZVLFiaA571rEidsaAsCOJo2TZ1thzl
+   cx+OpxbobD/mRr0LM3EwznzkYjYy+IYo0z8o8qSYI3OGApBAMcZT6z89q
+   ApdthwVnKLSAbtoGtFYkfpq3q9aM3uX0bU0kYec621SwRAXWJKguf/fp7
+   9sBf9kH52KIAQjM/KkSaQBlTe4CX8fPHeP3Yvy1/N2yW2wU/mDNMaMi9t
+   eHJ1STCry+LvlbKo19J7b/dGs6v+tbZAMUb4mznmanq9Ib2CAgOEAhsIs
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="401017267"
+X-IronPort-AV: E=Sophos;i="6.01,254,1684825200"; 
+   d="scan'208";a="401017267"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2023 21:30:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="853565264"
+X-IronPort-AV: E=Sophos;i="6.01,254,1684825200"; 
+   d="scan'208";a="853565264"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga004.jf.intel.com with ESMTP; 03 Aug 2023 21:30:26 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qRmSH-009c7u-0F;
+        Fri, 04 Aug 2023 07:30:25 +0300
+Date:   Fri, 4 Aug 2023 07:30:24 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Iain Lane <iain@orangesquash.org.uk>,
+        Shyam-sundar S-k <Shyam-sundar.S-k@amd.com>
+Subject: Re: [PATCH v9 3/3] PCI/ACPI: Use device constraints to decide PCI
+ target state fallback policy
+Message-ID: <ZMx+4CxT/b8ShiWR@smile.fi.intel.com>
+References: <20230804010229.3664-1-mario.limonciello@amd.com>
+ <20230804010229.3664-4-mario.limonciello@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] PCI/VGA: Make the vga_is_firmware_default()
- arch-independent
-To:     kernel test robot <lkp@intel.com>
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        loongson-kernel@lists.loongnix.cn, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-References: <20230803081758.968742-1-suijingfeng@loongson.cn>
- <202308032022.yiZngbbk-lkp@intel.com>
-Content-Language: en-US
-From:   suijingfeng <suijingfeng@loongson.cn>
-In-Reply-To: <202308032022.yiZngbbk-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf8DxJ81QbMxkdMpHAA--.52126S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGFWDCryktr47tw15AFW3CFX_yoW5tFWkpF
-        W8JF1ayF4kGr4fK392gryUur1Yvws8XFy3WrsxC3sruFyDZry0qr4SkrZ0gr9Ikr4xCF1j
-        yrnxtry0ka4kAagCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-        6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-        xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
-        6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-        1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxG
-        rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14
-        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-        0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-        MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUU
-        U==
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230804010229.3664-4-mario.limonciello@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Thu, Aug 03, 2023 at 08:02:29PM -0500, Mario Limonciello wrote:
+> Since commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
+> PCIe ports from modern machines (>=2015) are allowed to be put into D3 by
+> storing a value to the `bridge_d3` variable in the `struct pci_dev`
+> structure.
+> 
+> pci_power_manageable() uses this variable to indicate a PCIe port can
+> enter D3.
+> pci_pm_suspend_noirq() uses the return from pci_power_manageable() to
+> decide whether to try to put a device into its target state for a sleep
+> cycle via pci_prepare_to_sleep().
+> 
+> For devices that support D3, the target state is selected by this policy:
+> 1. If platform_pci_power_manageable():
+>    Use platform_pci_choose_state()
+> 2. If the device is armed for wakeup:
+>    Select the deepest D-state that supports a PME.
+> 3. Else:
+>    Use D3hot.
+> 
+> Devices are considered power manageable by the platform when they have
+> one or more objects described in the table in section 7.3 of the ACPI 6.5
+> specification.
+> 
+> When devices are not considered power manageable; specs are ambiguous as
+> to what should happen.  In this situation Windows 11 leaves PCIe
+> ports in D0 while Linux puts them into D3 due to the above mentioned
+> commit.
+> 
+> In Windows systems that support Modern Standby specify hardware
+> pre-conditions for the SoC to achieve the lowest power state by device
+> constraints in a SOC specific "Power Engine Plugin" (PEP) [2] [3].
+> They can be marked as disabled or enabled and when enabled can specify
+> the minimum power state required for an ACPI device.
+> 
+> When it is ambiguous what should happen, adjust the logic for
+> pci_target_state() to check whether a device constraint is present
+> and enabled.
+> * If power manageable by ACPI use this to get to select target state
+> * If a device constraint is present but disabled then choose D0
+> * If a device constraint is present and enabled then use it
+> * If a device constraint is not present, then continue to existing
+>   logic (if marked for wakeup use deepest state that PME works)
+> * If not marked for wakeup choose D3hot
 
-On 2023/8/3 20:25, kernel test robot wrote:
-> Hi Sui,
->
-> kernel test robot noticed the following build errors:
->
-> [auto build test ERROR on pci/next]
-> [also build test ERROR on pci/for-linus linus/master v6.5-rc4 next-20230803]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/Sui-Jingfeng/PCI-VGA-Make-the-vga_is_firmware_default-arch-independent/20230803-161838
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-> patch link:    https://lore.kernel.org/r/20230803081758.968742-1-suijingfeng%40loongson.cn
-> patch subject: [PATCH] PCI/VGA: Make the vga_is_firmware_default() arch-independent
-> config: arm64-randconfig-r026-20230731 (https://download.01.org/0day-ci/archive/20230803/202308032022.yiZngbbk-lkp@intel.com/config)
-> compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
-> reproduce: (https://download.01.org/0day-ci/archive/20230803/202308032022.yiZngbbk-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202308032022.yiZngbbk-lkp@intel.com/
->
-> All errors (new ones prefixed by >>):
->
->>> ld.lld: error: undefined symbol: screen_info
->     >>> referenced by vgaarb.c:86 (drivers/pci/vgaarb.c:86)
->     >>>               drivers/pci/vgaarb.o:(vga_arb_firmware_fb_addr_tracker) in archive vmlinux.a
->     >>> referenced by vgaarb.c:86 (drivers/pci/vgaarb.c:86)
->     >>>               drivers/pci/vgaarb.o:(vga_arb_firmware_fb_addr_tracker) in archive vmlinux.a
->     >>> referenced by vgaarb.c:88 (drivers/pci/vgaarb.c:88)
->     >>>               drivers/pci/vgaarb.o:(vga_arb_firmware_fb_addr_tracker) in archive vmlinux.a
->     >>> referenced 3 more times
->
-This is a more like arch-specific problem, It will be pain at many places on platforms
-that do not export the screen_info symbol. Not only here.
+...
 
-I have already explained that screen_info is arch-dependent many times, but no one cares about me.
-By using (looking at) screen_info, vgaarb gets infected, and becomes arch-dependent as well.
-vgaarb deals with VGA class (pdev->class == 0x0300XX) devices only, This makes it device-dependent.
-Hence, It only works correctly for a small set of PCIe devices on x86.
+> +/**
+> + * acpi_get_lps0_constraint - get any LPS0 constraint for a device
+> + * @dev: device to get constraint for
+> + *
+> + * If a constraint has been specified in the _DSM method for the device,
+> + * and the constraint is enabled return it.  If the constraint is disabled,
+> + * return 0. Otherwise, return -ENODEV.
+> + */
 
-arch-dependent, device-dependent, subsystem-dependent (part of it rely on ACPI) and
-loading order dependent, those dependent itself are the problems.
-It results in various undefined (uncertain) behaviors on non-x86 architectures.
+I believe you get a kernel-doc warning. Always test kernel doc with
 
-Even on x86, some platform choose to relay on the firmware to solve the multiple GPU coexist problem.
-so it is also firmware-dependent.
+	scripts/kernel-doc -v -none -Wall ...your file...
 
-This patch solves part of the above problems listed, target at the *device level*, as early as possible.
-while they still a few problems could be only solved at the *driver level*.
-For an example, The display controller in Intel N2000 and d2000 series don't has a dedicated VRAM bar.
-they use the "stolen memory", which is carve out by somebody (either bios or kernel?).
+...
+
+> +/**
+> + * acpi_pci_device_constraint - determine if the platform has a contraint for the device
+> + * @dev: PCI device to check
+> + * @result (out): the constraint specified by the platform
+> + *
+> + * If the platform has specified a constraint for a device, this function will
+> + * return 0 and set @result to the constraint.
+> + * Otherwise, it will return an error code.
+> + */
+
+Ditto.
+
+...
+
+> +int acpi_pci_device_constraint(struct pci_dev *dev, int *result)
+> +{
+> +	int constraint;
+> +
+> +	constraint = acpi_get_lps0_constraint(&dev->dev);
+
+> +	pci_dbg(dev, "ACPI device constraint: %d\n", constraint);
+
+Does it make sense before the below check? Why can we be interested in the
+_exact_ negative values? (Note that non-printing is already a sign that either
+we don't call this or have negative constraint.)
+
+> +	if (constraint < 0)
+> +		return constraint;
+> +	*result = constraint;
+> +
+> +	return 0;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
