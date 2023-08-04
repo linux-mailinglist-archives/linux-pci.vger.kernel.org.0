@@ -2,124 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13BDC770621
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 18:38:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D57B77065D
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 18:53:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230280AbjHDQiR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Aug 2023 12:38:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49558 "EHLO
+        id S229700AbjHDQxY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Aug 2023 12:53:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229770AbjHDQiQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Aug 2023 12:38:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFAF3B2;
-        Fri,  4 Aug 2023 09:38:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6BF2B62097;
-        Fri,  4 Aug 2023 16:38:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E2A0C433C7;
-        Fri,  4 Aug 2023 16:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691167093;
-        bh=Eby5n4ZE0AMvm51ITihJARaywMHTaI7+TdCZEB4JlBI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EkYEymErHlsBYfc6voP/I5ipDUFZRX2PW1a0Dzn5Z52S+nlaFxKTFbCDZ4nzjTEAs
-         G9AGKljmTcXzTTcO3fyjbOdtCB5aa31CKRvKZxZjx4q2zX1d55WJeuC8A1uhEBJ7Cr
-         DfZ2z5kevHi7QuwwYHc+1qFUSoqRf1nlpS4mLi9gSStEHd/XFFbYG8X6qvz4Nbq8RF
-         PVwLGTO47E8PcYGKpQeGGRIFrUMqbgKmkMd0zrW+NSUMKhsq+CEPqdOKkV7PX91S8n
-         Ebw6qL0cZ/EEMaC9X3sqcZ/Y/stiL8kaZFgl1leJs3ZA7jVac9poDnPJJkwaxxKWMs
-         7lMKwPPtVLU0A==
-Date:   Fri, 4 Aug 2023 11:38:11 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     suijingfeng <suijingfeng@loongson.cn>
-Cc:     kernel test robot <lkp@intel.com>, linux-pci@vger.kernel.org,
-        llvm@lists.linux.dev, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, loongson-kernel@lists.loongnix.cn,
-        oe-kbuild-all@lists.linux.dev, bhelgaas@google.com
-Subject: Re: [PATCH] PCI/VGA: Make the vga_is_firmware_default()
- arch-independent
-Message-ID: <20230804163811.GA144900@bhelgaas>
+        with ESMTP id S231128AbjHDQxX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Aug 2023 12:53:23 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4F3A198B;
+        Fri,  4 Aug 2023 09:53:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691168002; x=1722704002;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vCjr5AC8CWlmvMGX3Rq5ZB+kAEuf7h0FzPi+ZFzcRHo=;
+  b=TDRSRa0A6n2S5dn3rS74qtQawVOpFq6xberQqqTEFy7vUCzJe2hf6s3y
+   mqrF/u8PAogAiGe37Ki2JrMGGO7sOYI063Q2Adiq+TFy1yrb6BQOu8nJJ
+   rlwdVEZIMDIj0gs3bnH/E9uO2TTmJ3NLsJ/9HdKIfz1dutm8/4kIURj0B
+   EQqmNhQEAXdwqfULgJqb6OTAC2CZ/pf1zs5tjE8G1cgDvkaWWsnuyrEW8
+   Yzz2ipdJl/t7UGS67n+MGtipNMjXfNco/aPx8ncsdIkPb9A+JuNUVjyc+
+   FTzMb0OCbYFYDBBE1Ae5RpeyqhGJKH5v0GRkdmlJ8qkE9Fw5MdzMPdPkX
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="350506967"
+X-IronPort-AV: E=Sophos;i="6.01,255,1684825200"; 
+   d="scan'208";a="350506967"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 09:53:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="903945496"
+X-IronPort-AV: E=Sophos;i="6.01,255,1684825200"; 
+   d="scan'208";a="903945496"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP; 04 Aug 2023 09:52:59 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qRy2q-00H7d3-0x;
+        Fri, 04 Aug 2023 19:52:56 +0300
+Date:   Fri, 4 Aug 2023 19:52:56 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Conor Dooley <conor@kernel.org>
+Cc:     Sunil V L <sunilvl@ventanamicro.com>, linux-doc@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anup Patel <anup@brainfault.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Haibo Xu <haibo1.xu@intel.com>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Atish Kumar Patra <atishp@rivosinc.com>
+Subject: Re: [RFC PATCH v1 09/21] RISC-V: cacheflush: Initialize CBO
+ variables on ACPI systems
+Message-ID: <ZM0s6GrfXqx4fu+l@smile.fi.intel.com>
+References: <20230803175916.3174453-1-sunilvl@ventanamicro.com>
+ <20230803175916.3174453-10-sunilvl@ventanamicro.com>
+ <ZMyTDcffqXYT29JX@smile.fi.intel.com>
+ <ZMzC4nHOJOfp0vaa@sunil-laptop>
+ <ZM0SZwL9SXrEuFMT@smile.fi.intel.com>
+ <20230804-dreamy-unharmed-a502d02af35a@spud>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8e51eb50-aa7b-f771-e53b-499bf899e22e@loongson.cn>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230804-dreamy-unharmed-a502d02af35a@spud>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 04, 2023 at 11:11:12AM +0800, suijingfeng wrote:
-> On 2023/8/3 20:25, kernel test robot wrote:
-> > Hi Sui,
-> > 
-> > kernel test robot noticed the following build errors:
-> > 
-> > [auto build test ERROR on pci/next]
-> > [also build test ERROR on pci/for-linus linus/master v6.5-rc4 next-20230803]
-> > [If your patch is applied to the wrong git tree, kindly drop us a note.
-> > And when submitting patch, we suggest to use '--base' as documented in
-> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> > 
-> > url:    https://github.com/intel-lab-lkp/linux/commits/Sui-Jingfeng/PCI-VGA-Make-the-vga_is_firmware_default-arch-independent/20230803-161838
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-> > patch link:    https://lore.kernel.org/r/20230803081758.968742-1-suijingfeng%40loongson.cn
-> > patch subject: [PATCH] PCI/VGA: Make the vga_is_firmware_default() arch-independent
-> > config: arm64-randconfig-r026-20230731 (https://download.01.org/0day-ci/archive/20230803/202308032022.yiZngbbk-lkp@intel.com/config)
-> > compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
-> > reproduce: (https://download.01.org/0day-ci/archive/20230803/202308032022.yiZngbbk-lkp@intel.com/reproduce)
-> > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202308032022.yiZngbbk-lkp@intel.com/
-> > 
-> > All errors (new ones prefixed by >>):
-> > 
-> > > > ld.lld: error: undefined symbol: screen_info
-> >     >>> referenced by vgaarb.c:86 (drivers/pci/vgaarb.c:86)
-> >     >>>               drivers/pci/vgaarb.o:(vga_arb_firmware_fb_addr_tracker) in archive vmlinux.a
-> >     >>> referenced by vgaarb.c:86 (drivers/pci/vgaarb.c:86)
-> >     >>>               drivers/pci/vgaarb.o:(vga_arb_firmware_fb_addr_tracker) in archive vmlinux.a
-> >     >>> referenced by vgaarb.c:88 (drivers/pci/vgaarb.c:88)
-> >     >>>               drivers/pci/vgaarb.o:(vga_arb_firmware_fb_addr_tracker) in archive vmlinux.a
-> >     >>> referenced 3 more times
-> > 
-> This is a more like arch-specific problem, It will be pain at many places on platforms
-> that do not export the screen_info symbol. Not only here.
-> 
-> I have already explained that screen_info is arch-dependent many times, but no one cares about me.
-> By using (looking at) screen_info, vgaarb gets infected, and becomes arch-dependent as well.
-> vgaarb deals with VGA class (pdev->class == 0x0300XX) devices only, This makes it device-dependent.
-> Hence, It only works correctly for a small set of PCIe devices on x86.
+On Fri, Aug 04, 2023 at 04:19:27PM +0100, Conor Dooley wrote:
+> On Fri, Aug 04, 2023 at 05:59:51PM +0300, Andy Shevchenko wrote:
+> > On Fri, Aug 04, 2023 at 02:50:34PM +0530, Sunil V L wrote:
+> > > On Fri, Aug 04, 2023 at 08:56:29AM +0300, Andy Shevchenko wrote:
+> > > > On Thu, Aug 03, 2023 at 11:29:04PM +0530, Sunil V L wrote:
 
-This build error report is from an automated service; there's nothing
-personal about it and the automated service isn't going to respond to
-you.
+...
 
-The build issue is just something that will have to be resolved before
-we can consider merging the patch.
+> > > > > +#include <asm/acpi.h>
+> > > > 
+> > > > What do you need this for?
+> > > > 
+> > > > >  #include <asm/cacheflush.h>
+> > > > 
+> > > When CONFIG_ACPI is disabled, this include is required to get
+> > > acpi_get_cbo_block_size().
+> > 
+> > How is it useful without ACPI being enabled?
+> 
+> It is not, as evidenced by the `return -EINVAL;`.
+> 
+> > If it's indeed
+> > (in which I do not believe), better to make sure you have it
+> > avaiable independently on CONFIG_ACPI. Otherwise, just put
+> > #ifdef CONFIG_ACPI around the call.
+> 
+> Let's not litter the code with ifdeffery please where it can be easily
+> avoided.
 
-Any explanation needs to go in the commit logs for the relevant
-patches.
+Including asm/acpi.h looks to me as a "let's avoid it with a hack that it
+is uglier than ifdeffery". Sorry, but ifdeffery for ACPI, with all my full
+agreement with the statement that it's not good, is the correct way to fix
+this.
 
-> arch-dependent, device-dependent, subsystem-dependent (part of it rely on ACPI) and
-> loading order dependent, those dependent itself are the problems.
-> It results in various undefined (uncertain) behaviors on non-x86 architectures.
-> 
-> Even on x86, some platform choose to relay on the firmware to solve the multiple GPU coexist problem.
-> so it is also firmware-dependent.
-> 
-> This patch solves part of the above problems listed, target at the *device level*, as early as possible.
-> while they still a few problems could be only solved at the *driver level*.
-> For an example, The display controller in Intel N2000 and d2000 series don't has a dedicated VRAM bar.
-> they use the "stolen memory", which is carve out by somebody (either bios or kernel?).
-> 
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
