@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F421176F7FE
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 04:44:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70ED276F800
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Aug 2023 04:44:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232204AbjHDCoI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Aug 2023 22:44:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56758 "EHLO
+        id S233806AbjHDCoK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Aug 2023 22:44:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231953AbjHDCoH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 22:44:07 -0400
+        with ESMTP id S233795AbjHDCoI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Aug 2023 22:44:08 -0400
 Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80E4C115;
-        Thu,  3 Aug 2023 19:44:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 304A4173C;
+        Thu,  3 Aug 2023 19:44:07 -0700 (PDT)
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 108D41A13D2;
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C9D761A1E55;
         Fri,  4 Aug 2023 04:44:05 +0200 (CEST)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CA4CC1A13C5;
-        Fri,  4 Aug 2023 04:44:04 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8FDCC1A13C5;
+        Fri,  4 Aug 2023 04:44:05 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 26DEE1802200;
-        Fri,  4 Aug 2023 10:44:03 +0800 (+08)
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 4EDA21820F59;
+        Fri,  4 Aug 2023 10:44:04 +0800 (+08)
 From:   Richard Zhu <hongxing.zhu@nxp.com>
 To:     frank.li@nxp.com, l.stach@pengutronix.de, shawnguo@kernel.org,
         lpieralisi@kernel.org, robh+dt@kernel.org,
@@ -31,9 +31,9 @@ Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, kernel@pengutronix.de,
         linux-imx@nxp.com
-Subject: [PATCH v2 5/9] arm: dts: nxp: Add i.MX6SX PCIe EP support
-Date:   Fri,  4 Aug 2023 10:09:31 +0800
-Message-Id: <1691114975-4750-6-git-send-email-hongxing.zhu@nxp.com>
+Subject: [PATCH v2 6/9] arm: dts: nxp: Add i.MX7D PCIe EP support
+Date:   Fri,  4 Aug 2023 10:09:32 +0800
+Message-Id: <1691114975-4750-7-git-send-email-hongxing.zhu@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1691114975-4750-1-git-send-email-hongxing.zhu@nxp.com>
 References: <1691114975-4750-1-git-send-email-hongxing.zhu@nxp.com>
@@ -47,40 +47,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add i.MX6SX PCIe EP support.
+Add i.MX7D PCIe EP support.
 
 Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 ---
- arch/arm/boot/dts/nxp/imx/imx6sx.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm/boot/dts/nxp/imx/imx7d.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6sx.dtsi b/arch/arm/boot/dts/nxp/imx/imx6sx.dtsi
-index f6b35923ad83..13411a843e07 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6sx.dtsi
-@@ -1471,5 +1471,22 @@ pcie: pcie@8ffc000 {
- 			power-domain-names = "pcie", "pcie_phy";
+diff --git a/arch/arm/boot/dts/nxp/imx/imx7d.dtsi b/arch/arm/boot/dts/nxp/imx/imx7d.dtsi
+index 4b94b8afb55d..135684f17a20 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx7d.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx7d.dtsi
+@@ -156,6 +156,33 @@ pcie: pcie@33800000 {
+ 			fsl,imx7d-pcie-phy = <&pcie_phy>;
  			status = "disabled";
  		};
 +
-+		pcie_ep: pcie-ep@8ffc000 {
-+			compatible = "fsl,imx6sx-pcie-ep";
-+			reg = <0x08ffc000 0x04000>, <0x08000000 0xf00000>;
++		pcie_ep: pcie-ep@33800000 {
++			compatible = "fsl,imx7d-pcie-ep";
++			reg = <0x33800000 0x4000>,
++			      <0x40000000 0x10000000>;
 +			reg-names = "dbi", "addr_space";
 +			num-lanes = <1>;
-+			clocks = <&clks IMX6SX_CLK_PCIE_AXI>,
-+				 <&clks IMX6SX_CLK_LVDS1_OUT>,
-+				 <&clks IMX6SX_CLK_PCIE_REF_125M>,
-+				 <&clks IMX6SX_CLK_DISPLAY_AXI>;
-+			clock-names = "pcie", "pcie_bus", "pcie_phy", "pcie_inbound_axi";
-+			power-domains = <&pd_disp>, <&pd_pci>;
-+			power-domain-names = "pcie", "pcie_phy";
++			clocks = <&clks IMX7D_PCIE_CTRL_ROOT_CLK>,
++				 <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>,
++				 <&clks IMX7D_PCIE_PHY_ROOT_CLK>;
++			clock-names = "pcie", "pcie_bus", "pcie_phy";
++			assigned-clocks = <&clks IMX7D_PCIE_CTRL_ROOT_SRC>,
++					  <&clks IMX7D_PCIE_PHY_ROOT_SRC>;
++			assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_250M_CLK>,
++						 <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
++
++			fsl,max-link-speed = <2>;
++			power-domains = <&pgc_pcie_phy>;
++			resets = <&src IMX7_RESET_PCIEPHY>,
++				 <&src IMX7_RESET_PCIE_CTRL_APPS_EN>,
++				 <&src IMX7_RESET_PCIE_CTRL_APPS_TURNOFF>;
++			reset-names = "pciephy", "apps", "turnoff";
++			fsl,imx7d-pcie-phy = <&pcie_phy>;
 +			num-ib-windows = <4>;
 +			num-ob-windows = <4>;
 +			status = "disabled";
 +		};
  	};
  };
+ 
 -- 
 2.34.1
 
