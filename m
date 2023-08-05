@@ -2,191 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45F1E770FCD
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Aug 2023 15:05:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1E06771081
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Aug 2023 18:21:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229887AbjHENFk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 5 Aug 2023 09:05:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38980 "EHLO
+        id S229475AbjHEQVo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 5 Aug 2023 12:21:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229609AbjHENFj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 5 Aug 2023 09:05:39 -0400
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A39D10DC
-        for <linux-pci@vger.kernel.org>; Sat,  5 Aug 2023 06:05:38 -0700 (PDT)
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 271484248E
-        for <linux-pci@vger.kernel.org>; Sat,  5 Aug 2023 13:05:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1691240736;
-        bh=2/ad3+MbDoymfxhJoThbWbwX8DQQuk7471vPuRmufOw=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=FfI/m3PxaPcc4Y1DQm4uFUEziGueoSkq+KHk4P4axBR0Ez2B/xdIMZfP6VqODqCjp
-         cBj6ggL6iGEomLxXntzPpScpadyR5wzZ5hijGJpWfQ6a3r/hGXXl85BqocNABg0IkY
-         W0Cs17mOLH1se/XZwg2H7+8+ZP1DTknCAdNXzBudLnX12ngtejb2PUGzznM+dt9C3T
-         0rND3a9hbNO6f2WP+Mp7mf0VuXabeuIsX/f4Zddiz1kWiQ6tZ22FgU9LPe2lG8lMXx
-         eqD2pMewDTWpLy+HoJdcZPPAojVJYQFW08jetX04ROjQYDCxfAusvxOXr/TwhZ+ZgP
-         i3VPHuxSiFwXQ==
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-40fedf8472bso32114471cf.1
-        for <linux-pci@vger.kernel.org>; Sat, 05 Aug 2023 06:05:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691240733; x=1691845533;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2/ad3+MbDoymfxhJoThbWbwX8DQQuk7471vPuRmufOw=;
-        b=g1HHBbFhfNsDWQ89gWA3tKIW92ltG7BZPrthxTjvUdi52Xy6NJEOaNrhsjX4EgqJF1
-         Xp9YoFipIFNfWuHm8XTaAz2XSDtbD746SH3O6AT24mnK0i96AaiVL2I8rdaIq2EwYCMV
-         8Ix+DS0K4HuWd/s2pkpbqYwJ+MwyacPFNuBbFDwb1txi5mh+7HaSDzQbnEqqN5KfpGHi
-         sn3MUcz7161NzdDlmNIlEkGf7QEs98XRJPs/SsQsLDZNbnB/aOpGQzUHE7+M0A74tbgg
-         Dty9U28o6/jX3F80HBIf3chToyS5/VbKLvmCc8ef6jnifYsLu7mLwsuoEfKTpxRG7CVz
-         yiFw==
-X-Gm-Message-State: AOJu0Yy/1atW0Rl7O0viMAbJtYO7cdMXt1Rhmdwlrkw5VbFl8ZmOgsCp
-        9j2aHnRmVnikM3JM4aTNYDkiLkSYeDkFsyZYfg91tUDPcGUGHTPFyTPHyfcrMjSTXEOo/dytrMX
-        XoXX1UgDYgb9pGiApMFa4QfK1AC4OLYtaFDQNnbtvy960dVxilXAfvA==
-X-Received: by 2002:ac8:5987:0:b0:3f6:ad2f:3922 with SMTP id e7-20020ac85987000000b003f6ad2f3922mr5896423qte.8.1691240733081;
-        Sat, 05 Aug 2023 06:05:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF+mlQ3pAVkW53oPIRoUJzWUIe+gkRndl3F7nGAF9DwIPOwIfHOlcz0DlbEcgNSrTWEbUadbmKjxGxbbRv9oTA=
-X-Received: by 2002:ac8:5987:0:b0:3f6:ad2f:3922 with SMTP id
- e7-20020ac85987000000b003f6ad2f3922mr5896406qte.8.1691240732830; Sat, 05 Aug
- 2023 06:05:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230727103949.26149-1-minda.chen@starfivetech.com>
-In-Reply-To: <20230727103949.26149-1-minda.chen@starfivetech.com>
-From:   Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Date:   Sat, 5 Aug 2023 15:05:16 +0200
-Message-ID: <CAJM55Z-r3EtMGui=g8PhwbkYbuPFJgk8OcAF6S_1LcTRAqbOdw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] Refactoring Microchip PCIe driver and add StarFive PCIe
-To:     Minda Chen <minda.chen@starfivetech.com>
-Cc:     =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        Kevin Xie <kevin.xie@starfivetech.com>
-Content-Type: text/plain; charset="UTF-8"
+        with ESMTP id S229456AbjHEQVo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 5 Aug 2023 12:21:44 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 542D93C3D
+        for <linux-pci@vger.kernel.org>; Sat,  5 Aug 2023 09:21:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691252503; x=1722788503;
+  h=date:from:to:cc:subject:message-id;
+  bh=EbNX00ty23GQ6OoG7EnK6xcR2yJtwQXlXxhcyR62YYk=;
+  b=czymham5cKD1nV50B6xdgYul6T8CqVYXKhluFR2fDCW7ZRLb19wdHd78
+   baHd/lHtIGgv6AcXNvU358uT+2bPzRxSZN1lBiZK4eQbJJZe7OJTMc4NF
+   x8Wco2o/BBp06ojomvKTKjFWMu4a6NpSMj7PnMfNlddtAtXGcrTcNkP4l
+   qxT10ePCBl8YJjRrB7J4+krjZ2k2uJsRNQcOEbO1kAIGUngLovoLP1gNZ
+   y/r+0HQAe9yGcDXs9xwHDNenNfV+WZZ+TstfYqibbHf3EbLpjczahH6Yc
+   j3XtC56zoMn1QUpAYSZWD+3XeTPHpyrci+x1hoCEYUdsyGN72i8poy6JX
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10793"; a="350635301"
+X-IronPort-AV: E=Sophos;i="6.01,257,1684825200"; 
+   d="scan'208";a="350635301"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2023 09:21:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10793"; a="680308845"
+X-IronPort-AV: E=Sophos;i="6.01,257,1684825200"; 
+   d="scan'208";a="680308845"
+Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 05 Aug 2023 09:21:40 -0700
+Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qSK27-0003kH-1w;
+        Sat, 05 Aug 2023 16:21:39 +0000
+Date:   Sun, 06 Aug 2023 00:21:10 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:for-linus] BUILD SUCCESS
+ 3bfc37d92687b4b19056998cebc02f94fbc81427
+Message-ID: <202308060008.CgClDMOQ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 27 Jul 2023 at 12:40, Minda Chen <minda.chen@starfivetech.com> wrote:
->
-> This patchset final purpose is add PCIe driver for StarFive JH7110 SoC.
-> JH7110 using PLDA XpressRICH PCIe IP. Microchip PolarFire Using the
-> same IP and have commit their codes, which are mixed with PLDA
-> controller codes and Microchip platform codes.
->
-> For re-use the PLDA controller codes, I request refactoring microchip
-> codes, move PLDA common codes to PLDA files.
-> Desigware and Cadence is good example for refactoring codes.
->
-> So first step is extract the PLDA common codes from microchip, and
-> refactoring the microchip codes.(patch1 - 2)
-> Then, add Starfive codes. (patch3 - 4)
->
-> This patchset is base on v6.5-rc1
->
-> patch1 is move PLDA XpressRICH PCIe host common properties dt-binding
->        docs from microchip,pcie-host.yaml
-> patch2 is extracting the PLDA common codes from microchip Polarfire PCIe
->        codes. The change list in the commit message.
-> patch3 is add StarFive JH7110 PCIe dt-binding doc.
-> patch4 is add StarFive JH7110 Soc PCIe codes.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+branch HEAD: 3bfc37d92687b4b19056998cebc02f94fbc81427  Revert "PCI: mvebu: Mark driver as BROKEN"
 
-Hi Minda,
+elapsed time: 1076m
 
-To test this series properly it needs matching nodes in the VisionFive
-2 device trees, but it seems to be missing from this version of the
-patch series. If I apply the device tree patch from v1 I get errors
-like this:
+configs tested: 108
+configs skipped: 3
 
-  pcie-starfive 2b000000.pcie: invalid resource (null)
-  pcie-starfive 2b000000.pcie: error -EINVAL: failed to map reg memory
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-It would be great if you included the device tree patch in the next
-series so this can actually be tested.
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r023-20230731   gcc  
+alpha                randconfig-r034-20230803   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r004-20230731   gcc  
+arc                  randconfig-r026-20230731   gcc  
+arc                  randconfig-r043-20230731   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r024-20230731   gcc  
+arm                  randconfig-r046-20230731   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r003-20230731   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r012-20230801   gcc  
+csky                 randconfig-r036-20230803   gcc  
+hexagon              randconfig-r001-20230731   clang
+hexagon              randconfig-r016-20230801   clang
+hexagon              randconfig-r041-20230731   clang
+hexagon              randconfig-r045-20230731   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230731   gcc  
+i386         buildonly-randconfig-r005-20230731   gcc  
+i386         buildonly-randconfig-r006-20230731   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230731   gcc  
+i386                 randconfig-i002-20230731   gcc  
+i386                 randconfig-i003-20230731   gcc  
+i386                 randconfig-i004-20230731   gcc  
+i386                 randconfig-i005-20230731   gcc  
+i386                 randconfig-i006-20230731   gcc  
+i386                 randconfig-i011-20230731   clang
+i386                 randconfig-i012-20230731   clang
+i386                 randconfig-i013-20230731   clang
+i386                 randconfig-i014-20230731   clang
+i386                 randconfig-i015-20230731   clang
+i386                 randconfig-i016-20230731   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze           randconfig-r002-20230731   gcc  
+microblaze           randconfig-r013-20230801   gcc  
+microblaze           randconfig-r025-20230731   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                 randconfig-r011-20230801   gcc  
+mips                 randconfig-r022-20230731   gcc  
+mips                 randconfig-r033-20230803   clang
+nios2                               defconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r006-20230731   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc              randconfig-r014-20230801   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r021-20230731   clang
+riscv                randconfig-r042-20230731   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r015-20230801   clang
+s390                 randconfig-r032-20230803   gcc  
+s390                 randconfig-r044-20230731   clang
+sh                               allmodconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r031-20230803   gcc  
+sparc64              randconfig-r035-20230803   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230731   gcc  
+x86_64       buildonly-randconfig-r002-20230731   gcc  
+x86_64       buildonly-randconfig-r003-20230731   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-x001-20230731   clang
+x86_64               randconfig-x002-20230731   clang
+x86_64               randconfig-x003-20230731   clang
+x86_64               randconfig-x004-20230731   clang
+x86_64               randconfig-x005-20230731   clang
+x86_64               randconfig-x006-20230731   clang
+x86_64               randconfig-x011-20230805   gcc  
+x86_64               randconfig-x012-20230805   gcc  
+x86_64               randconfig-x013-20230805   gcc  
+x86_64               randconfig-x014-20230805   gcc  
+x86_64               randconfig-x015-20230805   gcc  
+x86_64               randconfig-x016-20230805   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
 
-/Emil
-
-> I have noticed that Daire have changed microchip's codes.
-> https://patchwork.kernel.org/project/linux-pci/cover/20230630154859.2049521-1-daire.mcnamara@microchip.com/
-> I have changed patch2 base on their commits. StarFive
-> PCIe driver still can work. But their codes is under reviewed and
-> maybe changing. Do not base on their changes first.
-> I will base on their commit to change patch2 as soon as
-> their commits are accepted.
->
-> previous version:
-> v1:https://patchwork.kernel.org/project/linux-pci/cover/20230719102057.22329-1-minda.chen@starfivetech.com/
->
-> change:
->   v2:
->     patch1:
->       - squash dt-bindings patches to patch1
->       - add 'required' list.
->       - plda doc rename to plda,xpressrich-axi-common.yaml
->     patch2:
->       - squash the microchip modification patch to patch 2.
->     patch3:
->       - remove the plda common required property.
->     patch4:
->       - Sync the hide rc bar ops with config read function.
->       - Revert the T_PVPERL to 100ms and add comments for the source.
->       - Replace the link check function by the standard link ops.
->       - Convert to new pm ops marcos.
->       - Some formats modification.
->       - pcie-plda-host modification merge to patch4.
->     other:
->       - remove the pcie-plda-plat.c
->       - remove the starfive dts patch first. for it depends on
->         stg clock and syscon setting.
->
-> Minda Chen (4):
->   dt-bindings: PCI: Add PLDA XpressRICH PCIe host common properties
->   PCI: plda: Get common codes from Microchip PolarFire host
->   dt-bindings: PCI: Add StarFive JH7110 PCIe controller
->   PCI: starfive: Add JH7110 PCIe controller
->
->  .../bindings/pci/microchip,pcie-host.yaml     |  49 +-
->  .../pci/plda,xpressrich3-axi-common.yaml      |  69 ++
->  .../bindings/pci/starfive,jh7110-pcie.yaml    | 133 ++++
->  MAINTAINERS                                   |  19 +-
->  drivers/pci/controller/Kconfig                |   9 +-
->  drivers/pci/controller/Makefile               |   2 +-
->  drivers/pci/controller/plda/Kconfig           |  31 +
->  drivers/pci/controller/plda/Makefile          |   4 +
->  .../{ => plda}/pcie-microchip-host.c          | 594 ++--------------
->  drivers/pci/controller/plda/pcie-plda-host.c  | 665 ++++++++++++++++++
->  drivers/pci/controller/plda/pcie-plda.h       | 242 +++++++
->  drivers/pci/controller/plda/pcie-starfive.c   | 438 ++++++++++++
->  12 files changed, 1645 insertions(+), 610 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/plda,xpressrich3-axi-common.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/starfive,jh7110-pcie.yaml
->  create mode 100644 drivers/pci/controller/plda/Kconfig
->  create mode 100644 drivers/pci/controller/plda/Makefile
->  rename drivers/pci/controller/{ => plda}/pcie-microchip-host.c (50%)
->  create mode 100644 drivers/pci/controller/plda/pcie-plda-host.c
->  create mode 100644 drivers/pci/controller/plda/pcie-plda.h
->  create mode 100644 drivers/pci/controller/plda/pcie-starfive.c
->
->
-> base-commit: 06c2afb862f9da8dc5efa4b6076a0e48c3fbaaa5
-> --
-> 2.17.1
->
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
