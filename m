@@ -2,73 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8314770E8A
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Aug 2023 09:43:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8140B770E9A
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Aug 2023 09:58:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229515AbjHEHnZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 5 Aug 2023 03:43:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50618 "EHLO
+        id S229573AbjHEH6D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 5 Aug 2023 03:58:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjHEHnY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 5 Aug 2023 03:43:24 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 685B04ED0
-        for <linux-pci@vger.kernel.org>; Sat,  5 Aug 2023 00:43:22 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-3fe12baec61so25518465e9.2
-        for <linux-pci@vger.kernel.org>; Sat, 05 Aug 2023 00:43:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691221401; x=1691826201;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fyaf0OHfvWgaqfRiwRufcy49gz6rXRNyNLf1qH0Ffk0=;
-        b=H6MquAaP6/HmkEokFI9YGQzP/w2mxoVQVHOlwZZiq4P2moVqB0l542greR0hKk1x2L
-         CN4gDDhaPLuFGYAUV/fGZPWI5n+2njUxJLEADeTgmTZNC2MvfbzNcFQ6Lc7PAb0Q+ata
-         dc87Y3MdQi9fqnvV5ZMgfsfHP45COU5ta8paBekrt8xcZEqfX16cGKP5+qF2qRYCDcN3
-         b0Uofobes4PxSKOhrILB6qWsOnk5baNMdbW9j39OFUrGGHcH96x7niST1BL8avUJ1CRG
-         Ol5kSm7BPk2eiFY1OetXYoLKMm5k67kHGhCVsawcbVvLz+Y8VLrOuXBOcesK9UML+0ar
-         ecug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691221401; x=1691826201;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fyaf0OHfvWgaqfRiwRufcy49gz6rXRNyNLf1qH0Ffk0=;
-        b=dztDlINnKYnA2f59/H173eYvSn1vTb03JDZd+hHxdksFwlahnvj67QNPqmuWOOYHbz
-         jhcuZ7unAn9TagPxLYYt85yuCss9b0RutpKK4y+tSs6kp6s8b5EtmUbILLz9rgtGV5bV
-         wUkAXa9p3O4C90uXG8vGaUFgPYteO0C5ee1lGWMYkz2Y7r0BZ39KYFqb+RQi4Ghld+y/
-         NI7Vi2XmdccRrUxXMkoQZPhk3JlmTshRuAbvJ/uIRanoFR38BpEPp9MxKUxYfDjEwYUV
-         PnH1JvsCmXbeMEs4WkuyYJAMuKrt6pToxerlu/JJlCYjo0hpefK5ONfTsuVQESzsRT8Z
-         UqhQ==
-X-Gm-Message-State: AOJu0YySXhj6/utfQCRv6FxDzEUSI7g8VljxlHRuxEV8+bC8OljETofF
-        xGlFmh0An1oDrWcV1H8+BDeDtrB014RniMjpj5o=
-X-Google-Smtp-Source: AGHT+IH/VlnyPMsWJwsj/SdjFUaBPgKWlvvrmxm2mX1JQ9jJHFM4HrzV5fWlfvkX8mxOZPAPXC//FiS+Fm7a7sUGFTw=
-X-Received: by 2002:a7b:c4c8:0:b0:3fc:4:a5b5 with SMTP id g8-20020a7bc4c8000000b003fc0004a5b5mr2862333wmk.29.1691221400743;
- Sat, 05 Aug 2023 00:43:20 -0700 (PDT)
+        with ESMTP id S229460AbjHEH6C (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 5 Aug 2023 03:58:02 -0400
+Received: from witt.link (witt.link [185.233.105.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B057101
+        for <linux-pci@vger.kernel.org>; Sat,  5 Aug 2023 00:58:00 -0700 (PDT)
+Received: from [10.0.0.117] (p5082aeb4.dip0.t-ipconnect.de [80.130.174.180])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
+        (No client certificate requested)
+        by witt.link (Postfix) with ESMTPSA id B03842BEC34;
+        Sat,  5 Aug 2023 09:57:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=witt.link; s=dkim;
+        t=1691222268;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=l10MIReqKRYQ6OVgbsKPzfLHQNgDz0DXcxYdN2CYvnw=;
+        b=NmfshdRDR9vuBuQiRzH57PQiQLbrDwdBcoJjRFQxUh2na9YoRGNCM8t91f2Nq3P6wYOV/4
+        GyAyNC1ScPNkzDtF7fdshfrJ9gyZMSmn5l5hpVEdv9remfmKv8R5GeVqoHJcPKbpTYUNwN
+        1oaP+aGzvrAG0y+o9AMGGzV4MELm1i/aNXdY9nwjOvrXhoDi6I/0foWjae7Q6UjIjGQmOZ
+        dQFc4X83+6+lX6KSik46gQoyEo3PCPxkiOaFy/JYkv+FwAJL5ffFqA+TTaj6VjsYgsRVPc
+        u1lu7Jla9DfM98lj/1TG70QrRcLeNHYV4vRIQiPMoewhrpjkC8x1ocV+Azb+RA==
+Message-ID: <5d5dc59d-0ce0-c98c-c6c8-f1d748a8d968@witt.link>
+Date:   Sat, 5 Aug 2023 09:57:47 +0200
 MIME-Version: 1.0
-Received: by 2002:adf:ed43:0:b0:314:eb3:bbfe with HTTP; Sat, 5 Aug 2023
- 00:43:20 -0700 (PDT)
-Reply-To: bintu37999@gmail.com
-From:   BINTU FELICIA <felicia974@gmail.com>
-Date:   Sat, 5 Aug 2023 08:43:20 +0100
-Message-ID: <CAOKX9wO1QZYF_keq_AUa+5KoWbaVT+i_iZfa=CLMttSoLxPG-A@mail.gmail.com>
-Subject: HELLO...,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH] PCI/ASPM: Add back L1 PM Substate save and restore
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     david.e.box@linux.intel.com, Thomas Witt <kernel@witt.link>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Tasev Nikola <tasev.stefanoska@skynet.be>,
+        Mark Enriquez <enriquezmark36@gmail.com>,
+        Koba Ko <koba.ko@canonical.com>, linux-pci@vger.kernel.org
+References: <20230627204124.GA366188@bhelgaas>
+ <20230628064637.GF14638@black.fi.intel.com>
+ <650f68a1-8d54-a5ad-079b-e8aea64c5130@witt.link>
+ <20230628105940.GK14638@black.fi.intel.com>
+ <4b47ec58-dc34-1129-4a50-baf2b84b0f53@witt.link>
+ <8af8d82dd0dc69851d0cfc41eba6e2acb22d2666.camel@linux.intel.com>
+ <20230630104154.GS14638@black.fi.intel.com>
+ <7efaf5d9-9469-9710-8a04-1483bc45c8b6@witt.link>
+ <098da63daae434f6ac0d34ea5303ccd8fb0435c1.camel@linux.intel.com>
+ <6673c6a1-16ba-aaa4-707a-70d92d9751f6@witt.link>
+ <20230731150128.GK14638@black.fi.intel.com>
+Content-Language: en-US
+From:   Thomas Witt <thomas@witt.link>
+In-Reply-To: <20230731150128.GK14638@black.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,NICE_REPLY_A,NO_DNS_FOR_FROM,T_SPF_HELO_TEMPERROR,
+        T_SPF_TEMPERROR,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-How are you today? I hope you are fine. My name is Miss
-Bintu Felicia . l am single looking for honest and nice
-person whom i can partner with . I don't care about
-your color, ethnicity, Status or Sex. Upon your reply to
-this mail I will tell you more about myself and send you
-more of my picture .I am sending you this beautiful mail
-with a wish for much happiness
+On 31/07/2023 17:01, Mika Westerberg wrote:
+> Hi Thomas,
+> 
+> Thanks for trying that. Did you manage to try out the S0ix script David
+> suggested? That should show us hopefully what is draining the battery in
+> s2idle.
+
+Hi Mika,
+
+I did, with -s it gives
+
+Your system does not support low power S0 idle capability.
+Isolation suggestion:
+Please check BIOS low power S0 idle capability setting.
+
+with -r on
+
+Your system did not achieve the runtime PC10 state during screen ON
+
+additionally, it encounters a syntax error:
+./s0ix-selftest-tool.sh: line 1182: wc:: syntax error in expression 
+(error token is ":")
+
+with -r off, it tries xset which fails due to a lack of xserver.
+
+Thomas
