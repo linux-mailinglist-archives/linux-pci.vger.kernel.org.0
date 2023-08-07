@@ -2,119 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A578A771BE5
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Aug 2023 09:57:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69426771C2B
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Aug 2023 10:20:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229738AbjHGH5E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Aug 2023 03:57:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49142 "EHLO
+        id S230454AbjHGIU3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Aug 2023 04:20:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229928AbjHGH4i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Aug 2023 03:56:38 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9189ADD
-        for <linux-pci@vger.kernel.org>; Mon,  7 Aug 2023 00:56:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691394997; x=1722930997;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=a231DJijz7Gk3REhQOgWmFJGCEfRYxlfDoeglnJPJbk=;
-  b=FrjuhAheQR+gZSY5+IdnanqTfJQ8SFNBeXvEEsbLpAnvQIRVc+PnYGxP
-   qv6UBpBGz6urRqE3AMDMVH3JTZTWsGJvx3jsnh0v7DSzOA+3++V6WKaNl
-   S2LQV7Winh/1JqJzwanooGUTSQDeW0y+m7e+LbKqcb0pqFE3hYSc22SQb
-   giZ7O7ZvBeZ1DwPlTC/oyDuhx736PAXROi30PHCp2CRDa0887GkXK48I9
-   ZVzo5XgbDtcsC4BO8/hQ6FZ9nJUZ/N/YvHcaIQCqAHnmZeXxfrk87VHgu
-   J8RQ3VLFY39RDG8Zbii/me47/YIO7QRY8WYiike4P1W71ab+dNmHevUTW
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10794"; a="360559763"
-X-IronPort-AV: E=Sophos;i="6.01,261,1684825200"; 
-   d="scan'208";a="360559763"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2023 00:56:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10794"; a="724414441"
-X-IronPort-AV: E=Sophos;i="6.01,261,1684825200"; 
-   d="scan'208";a="724414441"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 07 Aug 2023 00:56:22 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 630AE17C; Mon,  7 Aug 2023 10:58:32 +0300 (EEST)
-Date:   Mon, 7 Aug 2023 10:58:32 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Thomas Witt <thomas@witt.link>
-Cc:     david.e.box@linux.intel.com, Thomas Witt <kernel@witt.link>,
-        Bjorn Helgaas <helgaas@kernel.org>,
+        with ESMTP id S229925AbjHGIU3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Aug 2023 04:20:29 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C00B170B
+        for <linux-pci@vger.kernel.org>; Mon,  7 Aug 2023 01:20:26 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-99cbfee358eso232399766b.3
+        for <linux-pci@vger.kernel.org>; Mon, 07 Aug 2023 01:20:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1691396425; x=1692001225;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=X/3aPcv01OzN39IUD/aX9hP4XVkcpINkY5fZPomzhTU=;
+        b=PVv4YJO4RBn7OA3++k0468r7BbExuUQyBP+0fuCyf8NiGwU9ulLb0NuvXxuUQDex5u
+         0Ko3JrFQFM2kHrnHIjA1iCVnbvwOdAdiJaMQ5GT2SoZpqReMRSTlQWML9Pv1V3QdFt7x
+         Go93snSTsJEnD3CEU5BvZ69yag3oJPHpoEc0BmgXh2pzeQNKdJEVmuhwBFyUxGi0rv87
+         vi+XnRTq3DmeNAe4YeJkvuJvhQ8hFYlvhRxF/0KVQDYOTES/x9jbBnSSJWv3My5YhGew
+         kKYg9qqVAo3QlGLYApMbN6PaJyWWeZJO5wxoACI+N+x/Ucem551AzjiZT6HP+Awc4yzH
+         eMXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691396425; x=1692001225;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X/3aPcv01OzN39IUD/aX9hP4XVkcpINkY5fZPomzhTU=;
+        b=VqfsT29bXvplu0HtcqplTyaVv3EXi0PvyhS8P8c0yqOHEDUDmWZMp1+lFDbLfPRDYI
+         UswgCY8s1FJXSFqfpJ5IpZXVnMGV1bCjIb/MyuH0Df9aLj4PKYLHLTfqiZHX0h62JRwG
+         5SQLQwk3ScKJhWlKJsIctVLqbCBXFVOORSepKrNw0jLu6B526s683sUEJgobIU2rYLvF
+         Y2V5LWnIx/Jnu0Yz2TdvHCSPWSqNjp4ZsKzDsWV/+uP+3RaeiCzWRV7E32V/yMfD10DZ
+         BDMdMdrOyGBhgTyzD+Ve1DyvtODpPR534Khyp65D7DiwRUGIuPvsr1mzz7Hr7Nr5VcLY
+         aLwg==
+X-Gm-Message-State: AOJu0YyQEJ2a1XlsdGKqnNI69jRS49Iurh3+8jAB7nwcWJ5hv5b/8n6e
+        29vGVrwDbL7TaB6D9s0aARN8Mw==
+X-Google-Smtp-Source: AGHT+IG6bTLsou3LPOGQGdFM9cCRg9PxjTO2zzfPl5N+ZCSlyhpUhGftqSn9l1/Ee8JS/rtN2WArPg==
+X-Received: by 2002:a17:907:1dc3:b0:99b:f44e:6daa with SMTP id og3-20020a1709071dc300b0099bf44e6daamr6734142ejc.62.1691396424949;
+        Mon, 07 Aug 2023 01:20:24 -0700 (PDT)
+Received: from localhost (212-5-140-29.ip.btc-net.bg. [212.5.140.29])
+        by smtp.gmail.com with ESMTPSA id k19-20020a17090666d300b00991dfb5dfbbsm4837363ejp.67.2023.08.07.01.20.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Aug 2023 01:20:24 -0700 (PDT)
+Date:   Mon, 7 Aug 2023 11:20:20 +0300
+From:   Andrew Jones <ajones@ventanamicro.com>
+To:     Sunil V L <sunilvl@ventanamicro.com>
+Cc:     linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anup Patel <anup@brainfault.org>,
+        Marc Zyngier <maz@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Tasev Nikola <tasev.stefanoska@skynet.be>,
-        Mark Enriquez <enriquezmark36@gmail.com>,
-        Koba Ko <koba.ko@canonical.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/ASPM: Add back L1 PM Substate save and restore
-Message-ID: <20230807075832.GD14638@black.fi.intel.com>
-References: <650f68a1-8d54-a5ad-079b-e8aea64c5130@witt.link>
- <20230628105940.GK14638@black.fi.intel.com>
- <4b47ec58-dc34-1129-4a50-baf2b84b0f53@witt.link>
- <8af8d82dd0dc69851d0cfc41eba6e2acb22d2666.camel@linux.intel.com>
- <20230630104154.GS14638@black.fi.intel.com>
- <7efaf5d9-9469-9710-8a04-1483bc45c8b6@witt.link>
- <098da63daae434f6ac0d34ea5303ccd8fb0435c1.camel@linux.intel.com>
- <6673c6a1-16ba-aaa4-707a-70d92d9751f6@witt.link>
- <20230731150128.GK14638@black.fi.intel.com>
- <5d5dc59d-0ce0-c98c-c6c8-f1d748a8d968@witt.link>
+        Robert Moore <robert.moore@intel.com>,
+        Haibo Xu <haibo1.xu@intel.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Atish Kumar Patra <atishp@rivosinc.com>,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [RFC PATCH v1 03/21] RISC-V: ACPI: Fix acpi_os_ioremap to return
+ iomem address
+Message-ID: <20230807-4fa96c8f505a601dd758ec2e@orel>
+References: <20230803175916.3174453-1-sunilvl@ventanamicro.com>
+ <20230803175916.3174453-4-sunilvl@ventanamicro.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5d5dc59d-0ce0-c98c-c6c8-f1d748a8d968@witt.link>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230803175916.3174453-4-sunilvl@ventanamicro.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas,
-
-On Sat, Aug 05, 2023 at 09:57:47AM +0200, Thomas Witt wrote:
-> On 31/07/2023 17:01, Mika Westerberg wrote:
-> > Hi Thomas,
-> > 
-> > Thanks for trying that. Did you manage to try out the S0ix script David
-> > suggested? That should show us hopefully what is draining the battery in
-> > s2idle.
+On Thu, Aug 03, 2023 at 11:28:58PM +0530, Sunil V L wrote:
+> acpi_os_ioremap() currently is a wrapper to memremap() on
+> RISC-V. But the callers of acpi_os_ioremap() expect it to
+> return __iomem address and hence sparse tool reports a new
+> warning. Fix this issue by type casting to  __iomem type.
 > 
-> Hi Mika,
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202307230357.egcTAefj-lkp@intel.com/
+> Fixes: a91a9ffbd3a5 ("RISC-V: Add support to build the ACPI core")
+> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+> ---
+>  arch/riscv/include/asm/acpi.h | 2 +-
+>  arch/riscv/kernel/acpi.c      | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> I did, with -s it gives
-> 
-> Your system does not support low power S0 idle capability.
-> Isolation suggestion:
-> Please check BIOS low power S0 idle capability setting.
-> 
-> with -r on
-> 
-> Your system did not achieve the runtime PC10 state during screen ON
+> diff --git a/arch/riscv/include/asm/acpi.h b/arch/riscv/include/asm/acpi.h
+> index f71ce21ff684..d5604d2073bc 100644
+> --- a/arch/riscv/include/asm/acpi.h
+> +++ b/arch/riscv/include/asm/acpi.h
+> @@ -19,7 +19,7 @@ typedef u64 phys_cpuid_t;
+>  #define PHYS_CPUID_INVALID INVALID_HARTID
+>  
+>  /* ACPI table mapping after acpi_permanent_mmap is set */
+> -void *acpi_os_ioremap(acpi_physical_address phys, acpi_size size);
+> +void __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size);
+>  #define acpi_os_ioremap acpi_os_ioremap
+>  
+>  #define acpi_strict 1	/* No out-of-spec workarounds on RISC-V */
+> diff --git a/arch/riscv/kernel/acpi.c b/arch/riscv/kernel/acpi.c
+> index 5ee03ebab80e..56cb2c986c48 100644
+> --- a/arch/riscv/kernel/acpi.c
+> +++ b/arch/riscv/kernel/acpi.c
+> @@ -215,9 +215,9 @@ void __init __acpi_unmap_table(void __iomem *map, unsigned long size)
+>  	early_iounmap(map, size);
+>  }
+>  
+> -void *acpi_os_ioremap(acpi_physical_address phys, acpi_size size)
+> +void __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size)
+>  {
+> -	return memremap(phys, size, MEMREMAP_WB);
+> +	return (void __iomem *)memremap(phys, size, MEMREMAP_WB);
+>  }
+>  
+>  #ifdef CONFIG_PCI
+> -- 
+> 2.39.2
+>
 
-Thanks for trying. Did you change the "mem_sleep" back to "s2idle"
-before you run the script?
-
-> additionally, it encounters a syntax error:
-> ./s0ix-selftest-tool.sh: line 1182: wc:: syntax error in expression (error
-> token is ":")
-
-@David, do you know what might be the issue?
-
-> with -r off, it tries xset which fails due to a lack of xserver.
-
-You do have graphics running right? I mean i915 driver is enabled and
-all the firmwares are in place (should come with the distro). I'm asking
-because s2idle typically requires that graphics and pretty much all the
-devices on the SoC have a driver and the accompanying firmwares, and
-that they enter D3 properly.
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
