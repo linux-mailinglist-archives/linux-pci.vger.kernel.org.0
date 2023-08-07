@@ -2,97 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC43E77192C
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Aug 2023 06:54:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 720687719CD
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Aug 2023 07:57:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229928AbjHGEyu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Aug 2023 00:54:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40712 "EHLO
+        id S229947AbjHGF5J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Aug 2023 01:57:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbjHGEyt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Aug 2023 00:54:49 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C87E8
-        for <linux-pci@vger.kernel.org>; Sun,  6 Aug 2023 21:54:48 -0700 (PDT)
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3774eI6j002666;
-        Mon, 7 Aug 2023 04:54:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=+zs5svu4nZLl3lS1JtxPWKu//slmeo0oxKb/abzUZe4=;
- b=GX2aW48W6r4bTnLyzkm67J//uvx6tmWzFUTwx2Odqr0jAVZ5amQRzgoo83ODiJ5k05qt
- ax6JgTox9xSp4abMKCdp4XorNIFI0u2wtf4q9UU6AFltvopABsQEmSyXHcnoV4Y71w21
- AufBl+MhiW/OOxYbsxJop6SZFCodnkZbqAUszleCVEZEZSx6dw7VGO8KHK/itCzMOwlZ
- zYQ/Gm29IWE2tIYJvH2I4y5CBECBiZedN3uqeV/Kxlv5QvqJDl6FHHdhwTW+Zb1tjrJj
- CCFOMGd914llIJ/vEPjEM52ICh1X1ecLQAKpcXGlm3gPuHz6yJF9IUSzdGEa4U5tHrLR Zw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sasjh8cre-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Aug 2023 04:54:24 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3774nUYM031993;
-        Mon, 7 Aug 2023 04:54:23 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sasjh8cqy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Aug 2023 04:54:23 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37748Y66000402;
-        Mon, 7 Aug 2023 04:54:22 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sa28k1y29-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Aug 2023 04:54:21 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3774sJN527198000
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Aug 2023 04:54:19 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A2C5520043;
-        Mon,  7 Aug 2023 04:54:19 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 22AEB20040;
-        Mon,  7 Aug 2023 04:54:19 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon,  7 Aug 2023 04:54:19 +0000 (GMT)
-Received: from jarvis.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 2A7FB600E5;
-        Mon,  7 Aug 2023 14:54:16 +1000 (AEST)
-Message-ID: <b521f1165104d67e08d016f96a9e3579489ee9f4.camel@linux.ibm.com>
-Subject: Re: [PATCH 2/2] ocxl: use pci_find_next_dvsec_capability() to
- simplify the code
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>, bhelgaas@google.com,
-        fbarrat@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, arnd@arndb.de,
-        gregkh@linuxfoundation.org, ben.widawsky@intel.com
-Cc:     jonathan.cameron@huawei.com, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, yangyingliang@huawei.com
-Date:   Mon, 07 Aug 2023 14:54:15 +1000
-In-Reply-To: <20230807031846.77348-3-wangxiongfeng2@huawei.com>
-References: <20230807031846.77348-1-wangxiongfeng2@huawei.com>
-         <20230807031846.77348-3-wangxiongfeng2@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
-MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Zl2I8h13MNT0KFsOGL2X415LDyWSfIT8
-X-Proofpoint-ORIG-GUID: mRqkIifrXOH76M1qs7LZL7JNP9vHDSUE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-08-07_02,2023-08-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 phishscore=0 bulkscore=0 impostorscore=0 suspectscore=0
- mlxlogscore=615 clxscore=1015 adultscore=0 lowpriorityscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2308070041
-X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        with ESMTP id S229613AbjHGF5I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Aug 2023 01:57:08 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F1D172E
+        for <linux-pci@vger.kernel.org>; Sun,  6 Aug 2023 22:56:26 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-686c06b806cso2580364b3a.2
+        for <linux-pci@vger.kernel.org>; Sun, 06 Aug 2023 22:56:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1691387786; x=1691992586;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0hK3UyFydAHSGIJkcyMvn8TqqL0Fsk9vt5oznPUXGDM=;
+        b=HNH+rI7Q9X1+btJCgt35E/IR4R3RMA0m9iOt1s1OrrFC0BHFjM+EKstFAD33HZ7Dq2
+         VsG8OOPd9bG2Omy1JGzCkbmipSDyCROM+iNa0toAAYJS4JULR2RCVc++dkrQ7PKEwPr7
+         LrcL1Lihc7Y7BWe/QaPoBiBmcHAqijda1SQeDrcIFT+jFVwlnqhSsPp3998a4P/2Y4+Y
+         DGftWwZhw48B1xazIjTIDb4a3SEYJPrReJqnJx5NbFgrQHKUBs3tqOSsxXFdJdeIwy/5
+         OOE32QMosDCWb1vN2w3Va6Jb7DsbegkXJvDOCDRk8hqy7zmrbDrNaqXiE/lkYYRU0dRL
+         KBVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691387786; x=1691992586;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0hK3UyFydAHSGIJkcyMvn8TqqL0Fsk9vt5oznPUXGDM=;
+        b=k6kLF20kTkyPQPRjfx+6vKQThVCGnTVOxACl5og0s+z64crYggV9ppXSCcEBOExFHf
+         JxxsX5og+KtEuE7R9VyN1fvHSnWKS/SFAQ2iof/smCKcW+IDeHQHrKergNQPdIJ6N3VI
+         VWovLldNjaijSHXrF4RdZXQjCzvsBOfmisGxjXMertNsP3fn0JrwCc68+wXwcaW2hxIP
+         +A5K+f2NQk+v053w0LEGwCJPyAjY17RDM8GTQ5uSdqEJu1Ttj0WmRmjgzTh0ReOl50zM
+         cckBaKFPFMkadD2FVZTkKFEA1kdRe+wbm79PIlqzfhWcXt++GN6NcFP1p5sb0l0taOSp
+         mwbg==
+X-Gm-Message-State: AOJu0Yz50+0SeiUvr0PbcSdIlMT1RTLnxcBfNRJWgBdG5r8aacwRE3Rr
+        rz8dfvSm1XtKXL0NWg2KoPAqRYCCDCUPq3DmYrPvvsjme7ZuRU8rszY6/HmNJUxpJF/yNObyxlx
+        P5XU9TYYWCkumwmppLOmxlLAGRXMNeUA9tJ2pjPsPOfXjQf36M3Q9yOhqPQKP/umsodJTzm1912
+        BMTo+Wq04ekQ==
+X-Google-Smtp-Source: AGHT+IH7lsAXC6CAHf+Lo13cxjPnkTABszlkF43xj33/yxMjt8XFiQRUd7L/wq0dfMx7VFI68zjyeg==
+X-Received: by 2002:a05:6a20:918e:b0:140:f855:5cde with SMTP id v14-20020a056a20918e00b00140f8555cdemr1916106pzd.33.1691387786015;
+        Sun, 06 Aug 2023 22:56:26 -0700 (PDT)
+Received: from hsinchu26.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
+        by smtp.gmail.com with ESMTPSA id c9-20020aa78c09000000b006874c47e918sm5264320pfd.124.2023.08.06.22.56.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Aug 2023 22:56:25 -0700 (PDT)
+From:   Yong-Xuan Wang <yongxuan.wang@sifive.com>
+To:     linux-pci@vger.kernel.org
+Cc:     paul.walmsley@sifive.com, greentime.hu@sifive.com,
+        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, p.zabel@pengutronix.de, palmer@dabbelt.com,
+        fancer.lancer@gmail.com, zong.li@sifive.com,
+        Yong-Xuan Wang <yongxuan.wang@sifive.com>
+Subject: [PATCH v3] PCI: fu740: Set the number of MSI vectors
+Date:   Mon,  7 Aug 2023 05:56:21 +0000
+Message-Id: <20230807055621.2431-1-yongxuan.wang@sifive.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -100,17 +69,40 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 2023-08-07 at 11:18 +0800, Xiongfeng Wang wrote:
-> PCI core add pci_find_next_dvsec_capability() to query the next
-> DVSEC.
-> We can use that core API to simplify the code. Also remove the unused
-> macros.
->=20
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+The iMSI-RX module of the DW PCIe controller provides multiple sets of
+MSI_CTRL_INT_i_* registers, and each set is capable of handling 32 MSI
+interrupts. However, the fu740 PCIe controller driver only enabled one set
+of MSI_CTRL_INT_i_* registers, as the total number of supported interrupts
+was not specified.
 
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Set the supported number of MSI vectors to enable all the MSI_CTRL_INT_i_*
+registers on the fu740 PCIe core, allowing the system to fully utilize the
+available MSI interrupts.
 
+Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+---
+Changelog
+v3:
+- refined the commit message
+v2:
+- recast the subject and the commit message
+---
+ drivers/pci/controller/dwc/pcie-fu740.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---=20
-Andrew Donnellan    OzLabs, ADL Canberra
-ajd@linux.ibm.com   IBM Australia Limited
+diff --git a/drivers/pci/controller/dwc/pcie-fu740.c b/drivers/pci/controller/dwc/pcie-fu740.c
+index 0c90583c078b..1e9b44b8bba4 100644
+--- a/drivers/pci/controller/dwc/pcie-fu740.c
++++ b/drivers/pci/controller/dwc/pcie-fu740.c
+@@ -299,6 +299,7 @@ static int fu740_pcie_probe(struct platform_device *pdev)
+ 	pci->dev = dev;
+ 	pci->ops = &dw_pcie_ops;
+ 	pci->pp.ops = &fu740_pcie_host_ops;
++	pci->pp.num_vectors = MAX_MSI_IRQS;
+ 
+ 	/* SiFive specific region: mgmt */
+ 	afp->mgmt_base = devm_platform_ioremap_resource_byname(pdev, "mgmt");
+-- 
+2.17.1
+
