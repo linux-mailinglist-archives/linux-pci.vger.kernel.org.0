@@ -2,116 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA9AE772B90
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Aug 2023 18:53:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00EB6772CED
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Aug 2023 19:29:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231294AbjHGQxl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Aug 2023 12:53:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56330 "EHLO
+        id S232302AbjHGR27 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Aug 2023 13:28:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230142AbjHGQxk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Aug 2023 12:53:40 -0400
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2053.outbound.protection.outlook.com [40.107.7.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B30710DC;
-        Mon,  7 Aug 2023 09:53:31 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KF/mu/qe8zrO8dYJab6q6yLaqeM/8JdD5LYoB4pPEqPvFRK0p1PPpPD0Ai8U9GZceKf2lugURobD4qwVT+ix2mdZ3BbRpMLSsMvdLGK9rwbJS9eXNAWUqPgtASxv2YaED9lBVH0JLl6YgRTxVGNB7VpsQnzb7ZGA1Kw2tq0qNR+nfTfHKU1zQPjgJ/vBuP6pgXhqxtxPrTFodrBTnfgw9e3AwGEhT6wdqY7MoPZ1mXsfOSzcNAO8iS2MhyS9Rl/58AkoX89k/q9y42m8Uz5LJDOwjJ0Djodc2TvtRyQQ4DJ5fpTdcww/q3Y9KQtLtEa1PDc8ncYXJoTK93/TuAemww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cemv0o+A4B4UVs6IecKdz+P02Zgm4E8Y/XAvJfrdSkY=;
- b=BXOzEDC/X08AtGjjGZFDFisD63PanY6o30BlzitttXGt16L2KfbLRO//iCBbxzeHXqLT87wzHj+N0+8CMlU2uM7UDohROUB/09dZMpE21PfmTpilecvqlX6nx2i4jZ2suWd0xSPWhsacktm/TPP+XZ6nk+CeNDXLvyLULe7Hc3Jf8kGHaZk33KZv2kXt2bcjL6xGX4Gv3qn/TttZUwUCQ4AvBk8FIUtX4iq+YAbA+TKDOEi3EX/3Flt1nP8QzcxVQHP/HEONGRMwJxKkjbrXAHkAgpCQCUPIciVoKodfHm5BY+kbTva8dXfu0/cQPnqcYwrKNtbldr43UXbx+NfN+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cemv0o+A4B4UVs6IecKdz+P02Zgm4E8Y/XAvJfrdSkY=;
- b=Hffa5q+iHh2OWWWflBehs03zPcgBO+Iwd0etP8/6QaIGdh2ULLDS5L2USWOW9KjIZklVJrjvhOySv2eljvtCzWeR0btT6oiKtSyMBn6xWma2ZCpS3ZOediarm2Sc7j/sFotL6Z7Y2uOWvmMgQNatUwA9FNb8U8IbbDQCE5UYmcY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
- by DBAPR04MB7318.eurprd04.prod.outlook.com (2603:10a6:10:1ab::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.26; Mon, 7 Aug
- 2023 16:53:20 +0000
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::d0d5:3604:98da:20b1]) by AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::d0d5:3604:98da:20b1%7]) with mapi id 15.20.6652.026; Mon, 7 Aug 2023
- 16:53:20 +0000
-From:   Frank Li <Frank.Li@nxp.com>
-To:     helgaas@kernel.org
-Cc:     Frank.li@nxp.com, bhelgaas@google.com, devicetree@vger.kernel.org,
-        gustavo.pimentel@synopsys.com, imx@lists.linux.dev, kw@linux.com,
-        leoyang.li@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        lpieralisi@kernel.org, mani@kernel.org,
-        manivannan.sadhasivam@linaro.org, minghuan.lian@nxp.com,
-        mingkai.hu@nxp.com, robh+dt@kernel.org, roy.zang@nxp.com,
-        shawnguo@kernel.org, zhiqiang.hou@nxp.com
-Subject: [PATCH v10 resent 3/3] PCI: layerscape: Add power management support for ls1028a
-Date:   Mon,  7 Aug 2023 12:52:38 -0400
-Message-Id: <20230807165238.569297-4-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230807165238.569297-1-Frank.Li@nxp.com>
-References: <20230807165238.569297-1-Frank.Li@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR05CA0093.namprd05.prod.outlook.com
- (2603:10b6:a03:334::8) To AM6PR04MB4838.eurprd04.prod.outlook.com
- (2603:10a6:20b:4::16)
+        with ESMTP id S231397AbjHGR25 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Aug 2023 13:28:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48B32F9;
+        Mon,  7 Aug 2023 10:28:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B956C62043;
+        Mon,  7 Aug 2023 17:28:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE929C433C7;
+        Mon,  7 Aug 2023 17:28:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691429334;
+        bh=umiws+qo/l7mS3mGD2LhwtlaVOENQ2ScuETufuHC9Bs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=D7QbSnaszSbUCdS0UR5Ol4ZssNxf74XnRYwrjiTy1JqoeBOHB1cOodqw61kT7YsHO
+         R76Da1TZh/qA7XCWvxc+cYc3RKfZKhsKNInyrspjZ5hUNMiQmAMzjnvxwNnQORXYLG
+         Lju0vWYKgLer9tq1FzeibolBZnoIunQZLKBdXWSRL5SAQ7c4sf+OGX0FD1hIVo8X0v
+         GyJduxac3udnMALH6lmpwtyyYIYy/iHKkXBfuqDhlPi0cpmvEs2EOtiBhv+joqtMOw
+         1l9aLQ5rh4jbclVBdUEkc2EhEa6IRCuaGPyMCqGI6ipWW/U88bjmHnE8HhuL+9bPYn
+         r0Q1akV/Va7kA==
+Date:   Mon, 7 Aug 2023 12:28:52 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Igor Mammedov <imammedo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, terraluna977@gmail.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org, mst@redhat.com,
+        rafael@kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI: acpiphp:: use
+ pci_assign_unassigned_bridge_resources() only if bus->self not NULL
+Message-ID: <20230807172852.GA250768@bhelgaas>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|DBAPR04MB7318:EE_
-X-MS-Office365-Filtering-Correlation-Id: 04b26cf6-2fb2-42bf-406b-08db9766cb89
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Mt32X455/BmZ20SL5kXiUrgvVLt4uL77e1CpCgvQ9ibkcbGEDx+GRCguMmQBFqsN8SwBVeTaUPaAY7NTeIJ+6qTi45lc+UwdM3286dXX2W+x1T1Pp5/mjTsU0hd0i8M4eVj6cCeCrW6XkFg12dKnMVPCRsJrgzOpFFA8GU9sJ5g+vWZEJEJPjpEpuvI/vh39lVETtXdwUCVpM6I7z9mPSMYHe2fRPLkNbGfqAliio8gUXlPK7j3UAkVRXxBgeOEEBkfWI5hRfNanTdCCOz57dv570p584TVkU27jDlEwKjq2mhnpQEVDln0IRoMlNEne8psbinV1YCXKv6erHWaSfRiP1BOmb8kYl2J2suIl4KE5cnA6gP0dB28iBk5M255Z/BPF3WR+VDuCzHOoCg3ev1QMMT6Z+MRzcPdCz+PSy51xYxd7WGTVxuiLJXZFZLrvBHA3kXSGk8AhZVv45BoFjhbnyX1n0zeKiNRPL0mfwSgYTV7Ixudg3bfXqSuSiXjjlXp4hnO09CgM7llrZtyU0hs5zqhazugajDnYdf98jumSo6YXd2SmoLTO4aYfMguHFcMR6H4sN0U/IROK2lnau9cOcOoJbG+UrGxKTU5Twn914C4qptvmC65vxKpv+jUC
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(366004)(376002)(136003)(346002)(39860400002)(451199021)(186006)(1800799003)(2616005)(36756003)(6512007)(4326008)(316002)(6916009)(86362001)(478600001)(38350700002)(38100700002)(52116002)(6666004)(66946007)(6486002)(66556008)(66476007)(6506007)(41300700001)(1076003)(26005)(8676002)(8936002)(2906002)(83380400001)(7416002)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1xb4FY5j72g4E1UMCfJhzo9mi65o4RFzZoHyhfE7xa/toNLVfb4f+7zJdQo6?=
- =?us-ascii?Q?S/WonHOOb38J1wq8Vctyw8lNn5pSN/FCY/FWMlvlYx77bY1pjeLs1nclW66f?=
- =?us-ascii?Q?3aBS/QgqhPgyAJHTe1nIC2bSTXbXmCGYFwgGXW/GT6TD0Im1YkgRvVwf0+d2?=
- =?us-ascii?Q?oO0Fqjwx0OrS3QG9sVaXKHKTRUes1EyHiDtkcSJ+tQiFT2z7k8cK80oNr5BQ?=
- =?us-ascii?Q?0/ltlvazgFflvGOPeQ92RWVQYHjQuh+En6wxEAz3ky9s9g+0XCzryWiqyYjk?=
- =?us-ascii?Q?xr1QkoFSsov5t+Q0kH5WjWWYAYEZzOHl8XjU05Sxg+ELEWx7lRCpTAKJ/efu?=
- =?us-ascii?Q?MF3JS2spKc25hi2HthwVjLYuytBAeWA3dTlfqxzLWyCsnOGU+aKzebjwG6yJ?=
- =?us-ascii?Q?XdM+/vrAmuTwBY6IADrFETQ49hb/cuuewhsfmo8FVbQfWaSO1YIlG6cxIWe7?=
- =?us-ascii?Q?eyz4HITHtHEGmHu66n3lDV+A0aLIz254NxK4YuuEsMQK+fLDnw1AJR9X3U+K?=
- =?us-ascii?Q?rhRP41Jd0mJTB32JoZdr8+VeFQ1eFMDk672EdrjMQxRXgm4Uke3wgEVd8WSu?=
- =?us-ascii?Q?4xFIZtIz5pUMvSlIDPUUS3hzUW4zw5/j0rpk7ysFSvCfmP0/Ve/RhqGs6M4B?=
- =?us-ascii?Q?4C6bKGJyQeZ5e69zmqncNQ4R3SCTONS+DoGvQ2JJ5o4qqsnK+dr63NNSuLmP?=
- =?us-ascii?Q?+rGdjw0C9+vhfDAIsvHnJhrd1D7E7us/0e9zrSXvrGtxMJUc4J1IOQpl79pI?=
- =?us-ascii?Q?BZA2mW/56lcJphabdMuecjFP+hWApB6ikPKoym9DJCVhIvw5q2vY6CXrvUZy?=
- =?us-ascii?Q?v/OGptNYGgBeUZHEECbroVPBxO4gqZhn1j3ADeTkfYsXuapiQuveURFNutup?=
- =?us-ascii?Q?357LIUJgnoq0txNVF0QpHX04sB4OPXusRt6XAqd+fe2eXBBmmqok+0tcx0ZX?=
- =?us-ascii?Q?el9RlRv+EclEB+6b7SzWLPYKn9wtSJ1s9YegbeRKcWGRMFL1OgN3NXQ2S7jd?=
- =?us-ascii?Q?WSrIFzYoaEbFg7sQAHH6hGPKCCh5u9J35oDEqRoOvqKxaY9ypFFxs6mG/doO?=
- =?us-ascii?Q?hcQImRIqbhVe0E/TMDQlv092P8SUgp5mIjpJPv9+B+JSjO08PlU0tAaSBG5L?=
- =?us-ascii?Q?Hb9pnvNBE/YKMTcL532OjdzQq4esLb75lHODkdW26ULif5HfaQ/SU4PjF3kw?=
- =?us-ascii?Q?mMJGzlesU5ak7wb92U8vqvsV3Xk1N0vhlLZvaDzRmLzY9mF5UKiRvfZF1c00?=
- =?us-ascii?Q?qUd3OkeWwNIdrf46Vn0YChD944Icc+sssmSeMgX/rVC7vF4Eg9Cl+M8NPjpp?=
- =?us-ascii?Q?kPEElu3jJrezADKSlO3sQGDeQ7SAZI3249BHCCYodQzHdN6qtDNmkmX4krkR?=
- =?us-ascii?Q?fh1qbJ7OVGWokkWWCaRCpYZzcFdwBEYn+TAS9kx6P6PZApG6FO0pOHAqdeg8?=
- =?us-ascii?Q?hljM10SSSpLdIxVH774nQ35ZdOhPC14OHpD0GQYPm84ceeG2d2wRBGd7FW9Y?=
- =?us-ascii?Q?QyegtFlVvsks1fTqvCPPhuIIdv3Gyh5/Y8/QwUoUSZPdutqKBIUh0amdqYqV?=
- =?us-ascii?Q?+vplvDHWbk9e6nCJlykatGhm/tQ4bCxz/PAaEwFT?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04b26cf6-2fb2-42bf-406b-08db9766cb89
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2023 16:53:16.2129
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +nB5tuuYPGj40ADKuOYngV2xeRLskmvVDXWsmvPRL9kqFduJK5mOeg8fJnoLGVRupyRj5vzL6FbF/L8zPUsTxw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7318
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230807150746.71ca1df3@imammedo.users.ipa.redhat.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -119,227 +55,165 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On Mon, Aug 07, 2023 at 03:07:46PM +0200, Igor Mammedov wrote:
+> On Fri, 4 Aug 2023 18:27:09 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> 
+> > On Wed, Jul 26, 2023 at 02:35:18PM +0200, Igor Mammedov wrote:
+> > > Commit [1] switched acpiphp hotplug to use
+> > >    pci_assign_unassigned_bridge_resources()
+> > > which depends on bridge being available, however in some cases
+> > > when acpiphp is in use, enable_slot() can get a slot without
+> > > bridge associated.  
+> > 
+> > acpiphp is *always* in use if we get to enable_slot(), so that doesn't
+> > really add information here.
+> > 
+> > >   1. legitimate case of hotplug on root bus
+> > >       (likely not exiting on real hw, but widely used in virt world)
+> > >   2. broken firmware, that sends 'Bus check' events to non
+> > >      existing root ports (Dell Inspiron 7352/0W6WV0), which somehow
+> > >      endup at acpiphp:enable_slot(..., bridge = 0) and with bus
+> > >      without bridge assigned to it.  
+> 
+> how about following commit message (incorporating all feed back in this thread):
 
-Add PME_Turn_off/PME_TO_Ack handshake sequence for ls1028a platform. Call
-common dwc dw_pcie_suspend(resume)_noirq() function when system enter/exit
-suspend state.
+I incorporated this commit log and put the patch on for-linus for
+v6.5.  I think the patch is fine, and we can amend the commit log
+again if necessary.
 
-Acked-by: Manivannan Sadhasivam <mani@kernel.org>
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- drivers/pci/controller/dwc/pci-layerscape.c | 130 ++++++++++++++++++--
- 1 file changed, 121 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-index ed5fb492fe084..7586aece769b2 100644
---- a/drivers/pci/controller/dwc/pci-layerscape.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape.c
-@@ -8,9 +8,11 @@
-  * Author: Minghuan Lian <Minghuan.Lian@freescale.com>
-  */
- 
-+#include <linux/delay.h>
- #include <linux/kernel.h>
- #include <linux/interrupt.h>
- #include <linux/init.h>
-+#include <linux/iopoll.h>
- #include <linux/of_pci.h>
- #include <linux/of_platform.h>
- #include <linux/of_address.h>
-@@ -20,6 +22,7 @@
- #include <linux/mfd/syscon.h>
- #include <linux/regmap.h>
- 
-+#include "../../pci.h"
- #include "pcie-designware.h"
- 
- /* PEX Internal Configuration Registers */
-@@ -27,12 +30,26 @@
- #define PCIE_ABSERR		0x8d0 /* Bridge Slave Error Response Register */
- #define PCIE_ABSERR_SETTING	0x9401 /* Forward error of non-posted request */
- 
-+/* PF Message Command Register */
-+#define LS_PCIE_PF_MCR		0x2c
-+#define PF_MCR_PTOMR		BIT(0)
-+#define PF_MCR_EXL2S		BIT(1)
-+
- #define PCIE_IATU_NUM		6
- 
-+struct ls_pcie_drvdata {
-+	const u32 pf_off;
-+	bool pm_support;
-+};
-+
- struct ls_pcie {
- 	struct dw_pcie *pci;
-+	const struct ls_pcie_drvdata *drvdata;
-+	void __iomem *pf_base;
-+	bool big_endian;
- };
- 
-+#define ls_pcie_pf_readl_addr(addr)	ls_pcie_pf_readl(pcie, addr)
- #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
- 
- static bool ls_pcie_is_bridge(struct ls_pcie *pcie)
-@@ -73,6 +90,60 @@ static void ls_pcie_fix_error_response(struct ls_pcie *pcie)
- 	iowrite32(PCIE_ABSERR_SETTING, pci->dbi_base + PCIE_ABSERR);
- }
- 
-+static u32 ls_pcie_pf_readl(struct ls_pcie *pcie, u32 off)
-+{
-+	if (pcie->big_endian)
-+		return ioread32be(pcie->pf_base + off);
-+
-+	return ioread32(pcie->pf_base + off);
-+}
-+
-+static void ls_pcie_pf_writel(struct ls_pcie *pcie, u32 off, u32 val)
-+{
-+	if (pcie->big_endian)
-+		iowrite32be(val, pcie->pf_base + off);
-+	else
-+		iowrite32(val, pcie->pf_base + off);
-+}
-+
-+static void ls_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct ls_pcie *pcie = to_ls_pcie(pci);
-+	u32 val;
-+	int ret;
-+
-+	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
-+	val |= PF_MCR_PTOMR;
-+	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
-+
-+	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
-+				 val, !(val & PF_MCR_PTOMR),
-+				 PCIE_PME_TO_L2_TIMEOUT_US/10,
-+				 PCIE_PME_TO_L2_TIMEOUT_US);
-+	if (ret)
-+		dev_err(pcie->pci->dev, "poll turn off message timeout\n");
-+}
-+
-+static void ls_pcie_exit_from_l2(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct ls_pcie *pcie = to_ls_pcie(pci);
-+	u32 val;
-+	int ret;
-+
-+	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
-+	val |= PF_MCR_EXL2S;
-+	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
-+
-+	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
-+				 val, !(val & PF_MCR_EXL2S),
-+				 PCIE_PME_TO_L2_TIMEOUT_US/10,
-+				 PCIE_PME_TO_L2_TIMEOUT_US);
-+	if (ret)
-+		dev_err(pcie->pci->dev, "poll exit L2 state timeout\n");
-+}
-+
- static int ls_pcie_host_init(struct dw_pcie_rp *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-@@ -91,18 +162,28 @@ static int ls_pcie_host_init(struct dw_pcie_rp *pp)
- 
- static const struct dw_pcie_host_ops ls_pcie_host_ops = {
- 	.host_init = ls_pcie_host_init,
-+	.pme_turn_off = ls_pcie_send_turnoff_msg,
-+	.exit_from_l2 = ls_pcie_exit_from_l2,
-+};
-+
-+static const struct ls_pcie_drvdata ls1021a_drvdata = {
-+};
-+
-+static const struct ls_pcie_drvdata layerscape_drvdata = {
-+	.pf_off = 0xc0000,
-+	.pm_support = true,
- };
- 
- static const struct of_device_id ls_pcie_of_match[] = {
--	{ .compatible = "fsl,ls1012a-pcie", },
--	{ .compatible = "fsl,ls1021a-pcie", },
--	{ .compatible = "fsl,ls1028a-pcie", },
--	{ .compatible = "fsl,ls1043a-pcie", },
--	{ .compatible = "fsl,ls1046a-pcie", },
--	{ .compatible = "fsl,ls2080a-pcie", },
--	{ .compatible = "fsl,ls2085a-pcie", },
--	{ .compatible = "fsl,ls2088a-pcie", },
--	{ .compatible = "fsl,ls1088a-pcie", },
-+	{ .compatible = "fsl,ls1012a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021a_drvdata },
-+	{ .compatible = "fsl,ls1028a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1021a_drvdata },
-+	{ .compatible = "fsl,ls1046a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls2080a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls2085a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls2088a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls1088a-pcie", .data = &layerscape_drvdata },
- 	{ },
- };
- 
-@@ -121,6 +202,8 @@ static int ls_pcie_probe(struct platform_device *pdev)
- 	if (!pci)
- 		return -ENOMEM;
- 
-+	pcie->drvdata = of_device_get_match_data(dev);
-+
- 	pci->dev = dev;
- 	pci->pp.ops = &ls_pcie_host_ops;
- 
-@@ -131,6 +214,10 @@ static int ls_pcie_probe(struct platform_device *pdev)
- 	if (IS_ERR(pci->dbi_base))
- 		return PTR_ERR(pci->dbi_base);
- 
-+	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
-+
-+	pcie->pf_base = pci->dbi_base + pcie->drvdata->pf_off;
-+
- 	if (!ls_pcie_is_bridge(pcie))
- 		return -ENODEV;
- 
-@@ -139,12 +226,37 @@ static int ls_pcie_probe(struct platform_device *pdev)
- 	return dw_pcie_host_init(&pci->pp);
- }
- 
-+static int ls_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct ls_pcie *pcie = dev_get_drvdata(dev);
-+
-+	if (!pcie->drvdata->pm_support)
-+		return 0;
-+
-+	return dw_pcie_suspend_noirq(pcie->pci);
-+}
-+
-+static int ls_pcie_resume_noirq(struct device *dev)
-+{
-+	struct ls_pcie *pcie = dev_get_drvdata(dev);
-+
-+	if (!pcie->drvdata->pm_support)
-+		return 0;
-+
-+	return dw_pcie_resume_noirq(pcie->pci);
-+}
-+
-+static const struct dev_pm_ops ls_pcie_pm_ops = {
-+	NOIRQ_SYSTEM_SLEEP_PM_OPS(ls_pcie_suspend_noirq, ls_pcie_resume_noirq)
-+};
-+
- static struct platform_driver ls_pcie_driver = {
- 	.probe = ls_pcie_probe,
- 	.driver = {
- 		.name = "layerscape-pcie",
- 		.of_match_table = ls_pcie_of_match,
- 		.suppress_bind_attrs = true,
-+		.pm = &ls_pcie_pm_ops,
- 	},
- };
- builtin_platform_driver(ls_pcie_driver);
--- 
-2.34.1
-
+> -- cut --
+> Commit [1] switched acpiphp hotplug to use
+>    pci_assign_unassigned_bridge_resources()
+> which depends on bridge being available, however in case
+> when acpiphp is enabled [2], enable_slot() can be called without
+> bridge associated.
+>   1. legitimate case of hotplug on root bus
+>       (widely used in virt world)
+>   2. a (misbehaving) firmware, that sends 'Bus check' events
+>      to non existing root ports (Dell Inspiron 7352/0W6WV0),
+>      which endup at acpiphp:enable_slot(..., bridge = 0)
+>      where bus has not bridge assigned to it.
+>      acpihp doesn't know that it's a bridge, and bus specific
+>      'PCI subsystem' can't argument ACPI context with bridge
+>      information since the PCI device to get this data from
+>      is/was not available.
+> 
+> Issue is easy to reproduce with QEMU's 'pc' machine, which supports
+> PCI hotplug on hostbridge slots. To reproduce boot kernel at
+> commit [1] in VM started with following CLI (assuming guest root fs
+> is installed on sda1 partition):
+> 
+>    # qemu-system-x86_64 -M pc -m 1G -enable-kvm -cpu host \
+>          -monitor stdio -serial file:serial.log           \
+>          -kernel arch/x86/boot/bzImage                    \
+>          -append "root=/dev/sda1 console=ttyS0"           \
+>          guest_disk.img
+> 
+> once guest OS is fully booted at qemu prompt:
+> 
+> (qemu) device_add e1000
+> 
+> (check serial.log) it will cause NULL pointer dereference at:
+> 
+>     void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
+>     {
+>         struct pci_bus *parent = bridge->subordinate;
+> 
+> [  612.277651] BUG: kernel NULL pointer dereference, address: 0000000000000018
+> [...]
+> [  612.277798]  ? pci_assign_unassigned_bridge_resources+0x1f/0x260
+> [  612.277804]  ? pcibios_allocate_dev_resources+0x3c/0x2a0
+> [  612.277809]  enable_slot+0x21f/0x3e0
+> [  612.277816]  acpiphp_hotplug_notify+0x13d/0x260
+> [  612.277822]  ? __pfx_acpiphp_hotplug_notify+0x10/0x10
+> [  612.277827]  acpi_device_hotplug+0xbc/0x540
+> [  612.277834]  acpi_hotplug_work_fn+0x15/0x20
+> [  612.277839]  process_one_work+0x1f7/0x370
+> [  612.277845]  worker_thread+0x45/0x3b0
+> [  612.277850]  ? __pfx_worker_thread+0x10/0x10
+> [  612.277854]  kthread+0xdc/0x110
+> [  612.277860]  ? __pfx_kthread+0x10/0x10
+> [  612.277866]  ret_from_fork+0x28/0x40
+> [  612.277871]  ? __pfx_kthread+0x10/0x10
+> [  612.277876]  ret_from_fork_asm+0x1b/0x30
+> 
+> The issue was discovered on Dell Inspiron 7352/0W6WV0 laptop with
+> following sequence:
+>    1. suspend to RAM
+>    2. wake up with the same backtrace being observed:
+>    3. 2nd suspend to RAM attempt makes laptop freeze
+> 
+> Fix it by using __pci_bus_assign_resources() instead of
+> pci_assign_unassigned_bridge_resources() as we used to do
+> but only in case when bus doesn't have a bridge associated
+> (to cover for the case of ACPI event on hostbridge or
+> non existing root port).
+> 
+> That let us keep hotplug on root bus working like it used to be
+> and at the same time keeps resource reassignment usable on
+> root ports (and other 1st level bridges) that was fixed by [1].
+> 
+> 1)
+> Fixes: 40613da52b13 ("PCI: acpiphp: Reassign resources on bridge if necessary")
+> 2) CONFIG_HOTPLUG_PCI_ACPI=y
+> 
+> -- cut --
+> 
+> if commit message is looking acceptable to you, I can respin
+> amended patch with your suggestions taken in account.
+> 
+> > IIUC, the Inspiron problem happens when:
+> > 
+> >   - acpiphp_context->bridge is NULL, so hotplug_event() calls
+> >     enable_slot() instead of acpiphp_check_bridge(), AND
+> > 
+> >   - acpiphp_slot->bus->self is also NULL, because enable_slot() calls
+> >     pci_assign_unassigned_bridge_resources() with that NULL pointer,
+> >     which dereferences "bridge->subordinate"
+> > 
+> > But I can't figure out why acpiphp_context->bridge is NULL for RP07
+> > and RP08 (which don't exist), but not for RP03 (which does).
+> > 
+> > I guess all the acpiphp_contexts (RP03, RP07, RP08) must be allocated in
+> > acpiphp_add_context() by acpiphp_init_context().
+> > 
+> > Woody's lspci from [1] shows only one Root Port:
+> > 
+> >   00:1c.0 Wildcat Point-LP PCI Express Root Port #3
+> > 
+> > The DSDT.DSL includes:
+> > 
+> >   Device (RP01) _ADR 0x001C0000		# 1c.0
+> >   Device (RP02) _ADR 0x001C0001		# 1c.1
+> >   Device (RP03) _ADR 0x001C0002		# 1c.2
+> >   Device (RP04) _ADR 0x001C0003		# 1c.3
+> >   Device (RP05) _ADR 0x001C0004		# 1c.4
+> >   Device (RP06) _ADR 0x001C0005		# 1c.5
+> >   Device (RP07) _ADR 0x001C0006		# 1c.6
+> >   Device (RP08) _ADR 0x001C0007		# 1c.7
+> > 
+> > I can see why we might need a Bus Check after resume to see if
+> > something got added while we were suspended.  But I don't see why we
+> > handle RP03 differently from RP07 and RP08.
+> > 
+> > Can you help me out?  I'm lost in a maze of twisty passages, all
+> > alike.
+> 
+> I'll try to trace call path and see where it leads
+> (based on a guess in updated commit message: OS/nor ACPI
+> has info if it's bridge when the device didn't exists
+> during boot).
+> 
+> (though, I don't think it should hold this patch.
+> while it would be good to understand where bridge
+> gets added in acpi context, it's not directly relevant
+> to the fixing hotplug on hostbridge and buscheck events 
+> on non-existing root-ports)
+> 
+> > Bjorn
+> > 
+> > [1] https://lore.kernel.org/r/92150d8d-8a3a-d600-a996-f60a8e4c876c@gmail.com
+> > 
+> 
+> 
