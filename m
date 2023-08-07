@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DE57772B87
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Aug 2023 18:53:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA9AE772B90
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Aug 2023 18:53:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230170AbjHGQxc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Aug 2023 12:53:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56200 "EHLO
+        id S231294AbjHGQxl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Aug 2023 12:53:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230142AbjHGQxb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Aug 2023 12:53:31 -0400
+        with ESMTP id S230142AbjHGQxk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Aug 2023 12:53:40 -0400
 Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2053.outbound.protection.outlook.com [40.107.7.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B9D6199B;
-        Mon,  7 Aug 2023 09:53:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B30710DC;
+        Mon,  7 Aug 2023 09:53:31 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nbypGh2ifn42PATn/cTQsOjk56kcTY+yatxoUOvGyocjWeoJg8ae4/GGRhw96AuwBeKeCR19oV3E8r/xW1XXUIntYP5WexRywjNL0ksjaYSCHaiQqbpWDzLjQpfhSWvnsZmLPlPq8/h1fH76aihH3v2w0MVptMUZAtsZBu71USHy6jS7wuJ9PrK3z4zgYNzd8ijxXieyHWc1Azuh21d+MhF/VN9wWfxOshxIZBjc7Q/BzjrZAAOQzcxpqS7gdWG5otHtA5HbmxWWECwHUeYnNEVGlD2RvZctXAgN3cBBh2+jC5KvWhEWfdcXWfp6QBPlm5i0jAczyOGAW3o54TDiqA==
+ b=KF/mu/qe8zrO8dYJab6q6yLaqeM/8JdD5LYoB4pPEqPvFRK0p1PPpPD0Ai8U9GZceKf2lugURobD4qwVT+ix2mdZ3BbRpMLSsMvdLGK9rwbJS9eXNAWUqPgtASxv2YaED9lBVH0JLl6YgRTxVGNB7VpsQnzb7ZGA1Kw2tq0qNR+nfTfHKU1zQPjgJ/vBuP6pgXhqxtxPrTFodrBTnfgw9e3AwGEhT6wdqY7MoPZ1mXsfOSzcNAO8iS2MhyS9Rl/58AkoX89k/q9y42m8Uz5LJDOwjJ0Djodc2TvtRyQQ4DJ5fpTdcww/q3Y9KQtLtEa1PDc8ncYXJoTK93/TuAemww==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RuZYozsszV04m9+f6PLw4EoD1EIVUX6sjonI35T2M80=;
- b=UjMzYmLkaXd9rp05de9D8B1GPCuUFeJi+kQPkV5H5ximlDSwdF31iMvlIOBLC2Z0O8FTAH0SCDnoRmsJ+pdtZprVVeIKVAlCrCFQBD6j40GSxRkzMPr96BUnEN7c9U+11n1souXsERM/x72eoidQgg03BIJBj4SeCNEILlVIKcr+jqs5v/r2oefQ6SeLHgLzlaAQ1m96X5HMdSMXA+AlCWzDdFsT4ctF3Fqzh+ay6gY4gnGDOplHcpbsGuiVIgurtTd8MIQyak0AtR1pVKw+hoIYhRuQ27zufoGsK30sfub4asMbkhFjkWyfU5UdNkDSeYYqUqKGF/y/kbNchvGQFg==
+ bh=cemv0o+A4B4UVs6IecKdz+P02Zgm4E8Y/XAvJfrdSkY=;
+ b=BXOzEDC/X08AtGjjGZFDFisD63PanY6o30BlzitttXGt16L2KfbLRO//iCBbxzeHXqLT87wzHj+N0+8CMlU2uM7UDohROUB/09dZMpE21PfmTpilecvqlX6nx2i4jZ2suWd0xSPWhsacktm/TPP+XZ6nk+CeNDXLvyLULe7Hc3Jf8kGHaZk33KZv2kXt2bcjL6xGX4Gv3qn/TttZUwUCQ4AvBk8FIUtX4iq+YAbA+TKDOEi3EX/3Flt1nP8QzcxVQHP/HEONGRMwJxKkjbrXAHkAgpCQCUPIciVoKodfHm5BY+kbTva8dXfu0/cQPnqcYwrKNtbldr43UXbx+NfN+w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RuZYozsszV04m9+f6PLw4EoD1EIVUX6sjonI35T2M80=;
- b=J2BS3BK0PJAdK64OO/WJIVZGJ6ByKnpELstcH0cC1J0Q2VQSLKOZpqHDLqvBWxQ8mHMgGJSP6lv7CcXMUY2BoS3Kv3FgcBJiW1Xmo6PPRVwHN6mTfRReozg70EpqOb2Yp5TYMiZs0jhFGVspMH+wocWbpwSR7MEvF+Bm7MLI+JU=
+ bh=cemv0o+A4B4UVs6IecKdz+P02Zgm4E8Y/XAvJfrdSkY=;
+ b=Hffa5q+iHh2OWWWflBehs03zPcgBO+Iwd0etP8/6QaIGdh2ULLDS5L2USWOW9KjIZklVJrjvhOySv2eljvtCzWeR0btT6oiKtSyMBn6xWma2ZCpS3ZOediarm2Sc7j/sFotL6Z7Y2uOWvmMgQNatUwA9FNb8U8IbbDQCE5UYmcY=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
  by DBAPR04MB7318.eurprd04.prod.outlook.com (2603:10a6:10:1ab::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.26; Mon, 7 Aug
- 2023 16:53:11 +0000
+ 2023 16:53:20 +0000
 Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
  ([fe80::d0d5:3604:98da:20b1]) by AM6PR04MB4838.eurprd04.prod.outlook.com
  ([fe80::d0d5:3604:98da:20b1%7]) with mapi id 15.20.6652.026; Mon, 7 Aug 2023
- 16:53:10 +0000
+ 16:53:20 +0000
 From:   Frank Li <Frank.Li@nxp.com>
 To:     helgaas@kernel.org
 Cc:     Frank.li@nxp.com, bhelgaas@google.com, devicetree@vger.kernel.org,
@@ -50,9 +50,9 @@ Cc:     Frank.li@nxp.com, bhelgaas@google.com, devicetree@vger.kernel.org,
         manivannan.sadhasivam@linaro.org, minghuan.lian@nxp.com,
         mingkai.hu@nxp.com, robh+dt@kernel.org, roy.zang@nxp.com,
         shawnguo@kernel.org, zhiqiang.hou@nxp.com
-Subject: [PATCH v10 resent 2/3] PCI: dwc: Implement general suspend/resume functionality for L2/L3 transitions
-Date:   Mon,  7 Aug 2023 12:52:37 -0400
-Message-Id: <20230807165238.569297-3-Frank.Li@nxp.com>
+Subject: [PATCH v10 resent 3/3] PCI: layerscape: Add power management support for ls1028a
+Date:   Mon,  7 Aug 2023 12:52:38 -0400
+Message-Id: <20230807165238.569297-4-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230807165238.569297-1-Frank.Li@nxp.com>
 References: <20230807165238.569297-1-Frank.Li@nxp.com>
@@ -64,50 +64,50 @@ X-ClientProxiedBy: SJ0PR05CA0093.namprd05.prod.outlook.com
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|DBAPR04MB7318:EE_
-X-MS-Office365-Filtering-Correlation-Id: f8d9c33d-8e95-452a-4da3-08db9766c85c
+X-MS-Office365-Filtering-Correlation-Id: 04b26cf6-2fb2-42bf-406b-08db9766cb89
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: H23mEj2AqHxZfXvxN+PXsaMR6s89DekiariWrqQQFkIobgOaCsZ4IoQi10HmSgRhdZJO10lRApoClv2OdAv8TOEuP1UE2gpKi7xG9X1FXuHR8IOaahn9HZxFe1jiFl2EnSufapqZDoqVkeuh2eWx/DwxDIiGuQNqzgFO3MwO/kJ3CUrUlDtuClubBJA1EJV2MMDazw0Vq/QB4oqWx5IUw1066UkkSENlx8nsAG6Yam5FsBMb4uimcCY2YSs1A1f9iX/PEVOE5lMcKnJAsPepJWGIAhUa5z/KnK3lESXLH+TmZQRGeXKhoGB0JIVzYixuHc3m9UCC1d6vQ4GFHakcM7fEDLyz18gKbaDmKj5Z9HDxM+AOa7o6G3gTTaxw0Yt45tu9Xz06yJfMeZlwlatqu5wCEtXNcRGr0DuUCN0zNnVGPvnfoh8AByRJa5so5bKCuZyuEtLI076SOctmnlEli//4IzadnQXQ7esU9MADjHrs6pE1c2V1bs0WhDa2YrBEsIkNl5CYscXnEnz4/+qD/MjaeK9rmZEq3BEzeY64g5J15J5DiMWiDyLPqQCfh6eTeda4QwOfo7Lh9Utg+B0V+/kRoMrn159xAtQpdlFAwnTH7g//RMtw3kR/dEwrPMad
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(366004)(376002)(136003)(346002)(39860400002)(451199021)(186006)(1800799003)(2616005)(36756003)(6512007)(4326008)(316002)(6916009)(86362001)(478600001)(38350700002)(38100700002)(52116002)(6666004)(66946007)(6486002)(66556008)(66476007)(6506007)(41300700001)(1076003)(26005)(15650500001)(8676002)(8936002)(2906002)(83380400001)(7416002)(5660300002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: Mt32X455/BmZ20SL5kXiUrgvVLt4uL77e1CpCgvQ9ibkcbGEDx+GRCguMmQBFqsN8SwBVeTaUPaAY7NTeIJ+6qTi45lc+UwdM3286dXX2W+x1T1Pp5/mjTsU0hd0i8M4eVj6cCeCrW6XkFg12dKnMVPCRsJrgzOpFFA8GU9sJ5g+vWZEJEJPjpEpuvI/vh39lVETtXdwUCVpM6I7z9mPSMYHe2fRPLkNbGfqAliio8gUXlPK7j3UAkVRXxBgeOEEBkfWI5hRfNanTdCCOz57dv570p584TVkU27jDlEwKjq2mhnpQEVDln0IRoMlNEne8psbinV1YCXKv6erHWaSfRiP1BOmb8kYl2J2suIl4KE5cnA6gP0dB28iBk5M255Z/BPF3WR+VDuCzHOoCg3ev1QMMT6Z+MRzcPdCz+PSy51xYxd7WGTVxuiLJXZFZLrvBHA3kXSGk8AhZVv45BoFjhbnyX1n0zeKiNRPL0mfwSgYTV7Ixudg3bfXqSuSiXjjlXp4hnO09CgM7llrZtyU0hs5zqhazugajDnYdf98jumSo6YXd2SmoLTO4aYfMguHFcMR6H4sN0U/IROK2lnau9cOcOoJbG+UrGxKTU5Twn914C4qptvmC65vxKpv+jUC
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(366004)(376002)(136003)(346002)(39860400002)(451199021)(186006)(1800799003)(2616005)(36756003)(6512007)(4326008)(316002)(6916009)(86362001)(478600001)(38350700002)(38100700002)(52116002)(6666004)(66946007)(6486002)(66556008)(66476007)(6506007)(41300700001)(1076003)(26005)(8676002)(8936002)(2906002)(83380400001)(7416002)(5660300002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?uWRGKrNdA5nFq+yG7cWX4RTbzyJLx9i5F//VkNFpT8pmntaZHn4ImsvXxRE8?=
- =?us-ascii?Q?SDUX7C0CyjS0MrDocovKDC43lEX1cOZyoCDGePYHLy9Yl6N5QWSgQ8uhCQTQ?=
- =?us-ascii?Q?YtxfouEBc9nsvJaOB7Fpy2UwXuI9yp7I1HAOHHrn4hamtGvK/EMVKxDom+DL?=
- =?us-ascii?Q?0jtr4dJRK9UfrQSVaTBgF+B1y2qTDmbnidZKdrv9kbySipne2ItThVo4uh8/?=
- =?us-ascii?Q?xPBrJNb29KPCXYQroqYduULutKn8sTlxbSRZ/LN80KLmf42QS4ZXprZxKcko?=
- =?us-ascii?Q?34cLgwtSh/yu54VYJFDnUhLgQs9XfX+T8kwNxAXvI6qyv+kJ5phZT/MYdb0r?=
- =?us-ascii?Q?Am6/41cDOH/fa25EOAW/yPuCf2QLjDWZgQXDwVYtRVtKyPSGHAgCKNYOx2rW?=
- =?us-ascii?Q?VA0gVwIIR4QLCchkWQI1bpNXQE523e2tY5i5Nez6KTll8PpsegBw1yeI4I9o?=
- =?us-ascii?Q?xizMTbgRKTs5LP6+UhCKu4Cq4v8MEUxmzXvOXfJ6GkvdKkIx/cXpInlZZW65?=
- =?us-ascii?Q?44H39cU4rbHGlw+3fuC3UwFXypSCfZE3s9LSsmYgXoaLZTIyzLGX6vIURUqh?=
- =?us-ascii?Q?ioqNSM9VDUu9p5TwfWXV2TGByS7sT41yaa3MOvOeFwdS4HDDIKFN0p/kNtHp?=
- =?us-ascii?Q?iz0/18fRJBsi08KPKkPBYdXYx7bS43pc5HK/3JSBC5Xnx583Qm064AqxIik4?=
- =?us-ascii?Q?HEXgztYCV6ZJ4VPqZH6GHWezyOpimkD7c/lUohdhkNV4dUChWK5WRIXrjKeo?=
- =?us-ascii?Q?DPJwyLGc9QvynrL6sGV4bNOXxRpWLgz0Cq+YoD40/uJUoIE5BfNtthFPZku8?=
- =?us-ascii?Q?U51/obIIoEw6ulxG9Zum8N8n5OfFagfVhBlxzz+7FsgUQGnIeM3KxJXkdGw0?=
- =?us-ascii?Q?DWTBEPIAvsE+2lzJKxe4A5jAHYSqBWSx75B/kbcLfeBApsAm4ePw2nToHQhg?=
- =?us-ascii?Q?q6blnBokccz6kziTadNoABFJL+V/GkeSKlx0Ermv8jvAl6vQMIYLKe0fvqH1?=
- =?us-ascii?Q?whXc9G9yHDAr2LdRM8k1UuSpuNd/g1ekb0CZC3Nt/Ms0eRfGd1vI2iGDIsne?=
- =?us-ascii?Q?Mu0BKgEU3Une/ltIVPHdruFUxWf2ZNnHZx53sc6Gr710TITIk1pOexvkahsG?=
- =?us-ascii?Q?VVLith9m10PcwdYJlIpJhchRlflx0mKMDCaRnIJWn5ajUhNzvPGclPpuFjz3?=
- =?us-ascii?Q?k2pS8gc8uq3hGO23w3NtizqlKZ+HLWqxStYlqoaTKSAkoDyqnu0eeP25vrmP?=
- =?us-ascii?Q?ttpWrzdRUmOeKAQKrvJ/97v+OKmEoJwxpswQVuArDdY55nxdr7uilLWa2vCL?=
- =?us-ascii?Q?uo8pkFRCvJKFFhaiXo65e662x0oYWPVw/p4aKhn88KsQAs/74FIRv1n8xaaf?=
- =?us-ascii?Q?ICRyHvqZVY+cGOUYRg08pSaJS5zyCqHVijnDT+iBgte16B6kOajNCragm73H?=
- =?us-ascii?Q?yFIpfpK/4ms8NR+ZlbMmVEDR+fgykQzpa/EW/XkOLr2V3WXJIP72QANtLnx4?=
- =?us-ascii?Q?wYfV3Z14kakiJMw1KsrdDCim+6YDPcTZdj8tBbjubfHfOf3iGCUaZT7wbXwX?=
- =?us-ascii?Q?HmxIH+Lq4ViCxOzRFzP+0jnuED9Br9vDBg0st+HA?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1xb4FY5j72g4E1UMCfJhzo9mi65o4RFzZoHyhfE7xa/toNLVfb4f+7zJdQo6?=
+ =?us-ascii?Q?S/WonHOOb38J1wq8Vctyw8lNn5pSN/FCY/FWMlvlYx77bY1pjeLs1nclW66f?=
+ =?us-ascii?Q?3aBS/QgqhPgyAJHTe1nIC2bSTXbXmCGYFwgGXW/GT6TD0Im1YkgRvVwf0+d2?=
+ =?us-ascii?Q?oO0Fqjwx0OrS3QG9sVaXKHKTRUes1EyHiDtkcSJ+tQiFT2z7k8cK80oNr5BQ?=
+ =?us-ascii?Q?0/ltlvazgFflvGOPeQ92RWVQYHjQuh+En6wxEAz3ky9s9g+0XCzryWiqyYjk?=
+ =?us-ascii?Q?xr1QkoFSsov5t+Q0kH5WjWWYAYEZzOHl8XjU05Sxg+ELEWx7lRCpTAKJ/efu?=
+ =?us-ascii?Q?MF3JS2spKc25hi2HthwVjLYuytBAeWA3dTlfqxzLWyCsnOGU+aKzebjwG6yJ?=
+ =?us-ascii?Q?XdM+/vrAmuTwBY6IADrFETQ49hb/cuuewhsfmo8FVbQfWaSO1YIlG6cxIWe7?=
+ =?us-ascii?Q?eyz4HITHtHEGmHu66n3lDV+A0aLIz254NxK4YuuEsMQK+fLDnw1AJR9X3U+K?=
+ =?us-ascii?Q?rhRP41Jd0mJTB32JoZdr8+VeFQ1eFMDk672EdrjMQxRXgm4Uke3wgEVd8WSu?=
+ =?us-ascii?Q?4xFIZtIz5pUMvSlIDPUUS3hzUW4zw5/j0rpk7ysFSvCfmP0/Ve/RhqGs6M4B?=
+ =?us-ascii?Q?4C6bKGJyQeZ5e69zmqncNQ4R3SCTONS+DoGvQ2JJ5o4qqsnK+dr63NNSuLmP?=
+ =?us-ascii?Q?+rGdjw0C9+vhfDAIsvHnJhrd1D7E7us/0e9zrSXvrGtxMJUc4J1IOQpl79pI?=
+ =?us-ascii?Q?BZA2mW/56lcJphabdMuecjFP+hWApB6ikPKoym9DJCVhIvw5q2vY6CXrvUZy?=
+ =?us-ascii?Q?v/OGptNYGgBeUZHEECbroVPBxO4gqZhn1j3ADeTkfYsXuapiQuveURFNutup?=
+ =?us-ascii?Q?357LIUJgnoq0txNVF0QpHX04sB4OPXusRt6XAqd+fe2eXBBmmqok+0tcx0ZX?=
+ =?us-ascii?Q?el9RlRv+EclEB+6b7SzWLPYKn9wtSJ1s9YegbeRKcWGRMFL1OgN3NXQ2S7jd?=
+ =?us-ascii?Q?WSrIFzYoaEbFg7sQAHH6hGPKCCh5u9J35oDEqRoOvqKxaY9ypFFxs6mG/doO?=
+ =?us-ascii?Q?hcQImRIqbhVe0E/TMDQlv092P8SUgp5mIjpJPv9+B+JSjO08PlU0tAaSBG5L?=
+ =?us-ascii?Q?Hb9pnvNBE/YKMTcL532OjdzQq4esLb75lHODkdW26ULif5HfaQ/SU4PjF3kw?=
+ =?us-ascii?Q?mMJGzlesU5ak7wb92U8vqvsV3Xk1N0vhlLZvaDzRmLzY9mF5UKiRvfZF1c00?=
+ =?us-ascii?Q?qUd3OkeWwNIdrf46Vn0YChD944Icc+sssmSeMgX/rVC7vF4Eg9Cl+M8NPjpp?=
+ =?us-ascii?Q?kPEElu3jJrezADKSlO3sQGDeQ7SAZI3249BHCCYodQzHdN6qtDNmkmX4krkR?=
+ =?us-ascii?Q?fh1qbJ7OVGWokkWWCaRCpYZzcFdwBEYn+TAS9kx6P6PZApG6FO0pOHAqdeg8?=
+ =?us-ascii?Q?hljM10SSSpLdIxVH774nQ35ZdOhPC14OHpD0GQYPm84ceeG2d2wRBGd7FW9Y?=
+ =?us-ascii?Q?QyegtFlVvsks1fTqvCPPhuIIdv3Gyh5/Y8/QwUoUSZPdutqKBIUh0amdqYqV?=
+ =?us-ascii?Q?+vplvDHWbk9e6nCJlykatGhm/tQ4bCxz/PAaEwFT?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8d9c33d-8e95-452a-4da3-08db9766c85c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04b26cf6-2fb2-42bf-406b-08db9766cb89
 X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2023 16:53:10.9174
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2023 16:53:16.2129
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UZth4JX3e6mbGoA65CjkAodlKni2Rv+KVHm2EFcmsxRZsEpzJWFNR7RKqjIWK3fbSpr4OGaf0qnIYjeVvbIcOg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: +nB5tuuYPGj40ADKuOYngV2xeRLskmvVDXWsmvPRL9kqFduJK5mOeg8fJnoLGVRupyRj5vzL6FbF/L8zPUsTxw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7318
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
@@ -119,202 +119,227 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Introduce helper function dw_pcie_get_ltssm() to retrieve SMLH_LTSS_STATE.
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Add callback .pme_turn_off and .exit_from_l2 for platform specific PME
-handling.
-
-Add common dw_pcie_suspend(resume)_noirq() API to avoid duplicated code
-in dwc pci host controller platform driver.
-
-Typical L2 entry workflow/dw_pcie_suspend_noirq()
-
-1. Transmit PME turn off signal to PCI devices and wait for PME_To_Ack.
-2. Await link entering L2_IDLE state.
-
-Typical L2 exit workflow/dw_pcie_resume_noirq()
-
-1. Issue exit from L2 command.
-2. Reinitialize PCI host.
-3. Wait for link to become active.
+Add PME_Turn_off/PME_TO_Ack handshake sequence for ls1028a platform. Call
+common dwc dw_pcie_suspend(resume)_noirq() function when system enter/exit
+suspend state.
 
 Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- .../pci/controller/dwc/pcie-designware-host.c | 76 +++++++++++++++++++
- drivers/pci/controller/dwc/pcie-designware.h  | 29 +++++++
- 2 files changed, 105 insertions(+)
+ drivers/pci/controller/dwc/pci-layerscape.c | 130 ++++++++++++++++++--
+ 1 file changed, 121 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 9952057c8819c..cdbff11a7d00e 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -8,6 +8,7 @@
-  * Author: Jingoo Han <jg1.han@samsung.com>
+diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+index ed5fb492fe084..7586aece769b2 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape.c
++++ b/drivers/pci/controller/dwc/pci-layerscape.c
+@@ -8,9 +8,11 @@
+  * Author: Minghuan Lian <Minghuan.Lian@freescale.com>
   */
  
++#include <linux/delay.h>
+ #include <linux/kernel.h>
+ #include <linux/interrupt.h>
+ #include <linux/init.h>
 +#include <linux/iopoll.h>
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
- #include <linux/msi.h>
-@@ -16,6 +17,7 @@
- #include <linux/pci_regs.h>
- #include <linux/platform_device.h>
+ #include <linux/of_pci.h>
+ #include <linux/of_platform.h>
+ #include <linux/of_address.h>
+@@ -20,6 +22,7 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/regmap.h>
  
 +#include "../../pci.h"
  #include "pcie-designware.h"
  
- static struct pci_ops dw_pcie_ops;
-@@ -807,3 +809,77 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
-+
-+int dw_pcie_suspend_noirq(struct dw_pcie *pci)
-+{
-+	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-+	u32 val;
-+	int ret;
-+
-+	/*
-+	 * If L1SS is supported, then do not put the link into L2 as some
-+	 * devices such as NVMe expect low resume latency.
-+	 */
-+	if (dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKCTL) & PCI_EXP_LNKCTL_ASPM_L1)
-+		return 0;
-+
-+	if (dw_pcie_get_ltssm(pci) <= DW_PCIE_LTSSM_DETECT_ACT)
-+		return 0;
-+
-+	if (!pci->pp.ops->pme_turn_off)
-+		return 0;
-+
-+	pci->pp.ops->pme_turn_off(&pci->pp);
-+
-+	ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
-+				PCIE_PME_TO_L2_TIMEOUT_US/10,
-+				PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
-+	if (ret) {
-+		dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
-+		return ret;
-+	}
-+
-+	if (pci->pp.ops->host_deinit)
-+		pci->pp.ops->host_deinit(&pci->pp);
-+
-+	pci->suspended = true;
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(dw_pcie_suspend_noirq);
-+
-+int dw_pcie_resume_noirq(struct dw_pcie *pci)
-+{
-+	int ret;
-+
-+	if (!pci->suspended)
-+		return 0;
-+
-+	pci->suspended = false;
-+
-+	if (!pci->pp.ops->exit_from_l2)
-+		return 0;
-+
-+	pci->pp.ops->exit_from_l2(&pci->pp);
-+
-+	if (pci->pp.ops->host_init) {
-+		ret = pci->pp.ops->host_init(&pci->pp);
-+		if (ret) {
-+			dev_err(pci->dev, "Host init failed: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	dw_pcie_setup_rc(&pci->pp);
-+
-+	ret = dw_pcie_start_link(pci);
-+	if (ret)
-+		return ret;
-+
-+	ret = dw_pcie_wait_for_link(pci);
-+	if (ret)
-+		return ret;
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(dw_pcie_resume_noirq);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 79713ce075cc1..629bccfa92ddd 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -288,10 +288,22 @@ enum dw_pcie_core_rst {
- 	DW_PCIE_NUM_CORE_RSTS
- };
+ /* PEX Internal Configuration Registers */
+@@ -27,12 +30,26 @@
+ #define PCIE_ABSERR		0x8d0 /* Bridge Slave Error Response Register */
+ #define PCIE_ABSERR_SETTING	0x9401 /* Forward error of non-posted request */
  
-+enum dw_pcie_ltssm {
-+	/* Need to align with PCIE_PORT_DEBUG0 bits 0:5 */
-+	DW_PCIE_LTSSM_DETECT_QUIET = 0x0,
-+	DW_PCIE_LTSSM_DETECT_ACT = 0x1,
-+	DW_PCIE_LTSSM_L0 = 0x11,
-+	DW_PCIE_LTSSM_L2_IDLE = 0x15,
++/* PF Message Command Register */
++#define LS_PCIE_PF_MCR		0x2c
++#define PF_MCR_PTOMR		BIT(0)
++#define PF_MCR_EXL2S		BIT(1)
 +
-+	DW_PCIE_LTSSM_UNKNOWN = 0xFFFFFFFF,
+ #define PCIE_IATU_NUM		6
+ 
++struct ls_pcie_drvdata {
++	const u32 pf_off;
++	bool pm_support;
 +};
 +
- struct dw_pcie_host_ops {
- 	int (*host_init)(struct dw_pcie_rp *pp);
- 	void (*host_deinit)(struct dw_pcie_rp *pp);
- 	int (*msi_host_init)(struct dw_pcie_rp *pp);
-+	void (*pme_turn_off)(struct dw_pcie_rp *pp);
-+	void (*exit_from_l2)(struct dw_pcie_rp *pp);
+ struct ls_pcie {
+ 	struct dw_pcie *pci;
++	const struct ls_pcie_drvdata *drvdata;
++	void __iomem *pf_base;
++	bool big_endian;
  };
  
- struct dw_pcie_rp {
-@@ -364,6 +376,7 @@ struct dw_pcie_ops {
- 	void    (*write_dbi2)(struct dw_pcie *pcie, void __iomem *base, u32 reg,
- 			      size_t size, u32 val);
- 	int	(*link_up)(struct dw_pcie *pcie);
-+	enum dw_pcie_ltssm (*get_ltssm)(struct dw_pcie *pcie);
- 	int	(*start_link)(struct dw_pcie *pcie);
- 	void	(*stop_link)(struct dw_pcie *pcie);
- };
-@@ -393,6 +406,7 @@ struct dw_pcie {
- 	struct reset_control_bulk_data	app_rsts[DW_PCIE_NUM_APP_RSTS];
- 	struct reset_control_bulk_data	core_rsts[DW_PCIE_NUM_CORE_RSTS];
- 	struct gpio_desc		*pe_rst;
-+	bool			suspended;
- };
++#define ls_pcie_pf_readl_addr(addr)	ls_pcie_pf_readl(pcie, addr)
+ #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
  
- #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
-@@ -430,6 +444,9 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci);
- int dw_pcie_edma_detect(struct dw_pcie *pci);
- void dw_pcie_edma_remove(struct dw_pcie *pci);
- 
-+int dw_pcie_suspend_noirq(struct dw_pcie *pci);
-+int dw_pcie_resume_noirq(struct dw_pcie *pci);
-+
- static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
- {
- 	dw_pcie_write_dbi(pci, reg, 0x4, val);
-@@ -501,6 +518,18 @@ static inline void dw_pcie_stop_link(struct dw_pcie *pci)
- 		pci->ops->stop_link(pci);
+ static bool ls_pcie_is_bridge(struct ls_pcie *pcie)
+@@ -73,6 +90,60 @@ static void ls_pcie_fix_error_response(struct ls_pcie *pcie)
+ 	iowrite32(PCIE_ABSERR_SETTING, pci->dbi_base + PCIE_ABSERR);
  }
  
-+static inline enum dw_pcie_ltssm dw_pcie_get_ltssm(struct dw_pcie *pci)
++static u32 ls_pcie_pf_readl(struct ls_pcie *pcie, u32 off)
 +{
-+	u32 val;
++	if (pcie->big_endian)
++		return ioread32be(pcie->pf_base + off);
 +
-+	if (pci->ops && pci->ops->get_ltssm)
-+		return pci->ops->get_ltssm(pci);
-+
-+	val = dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG0);
-+
-+	return (enum dw_pcie_ltssm)FIELD_GET(PORT_LOGIC_LTSSM_STATE_MASK, val);
++	return ioread32(pcie->pf_base + off);
 +}
 +
- #ifdef CONFIG_PCIE_DW_HOST
- irqreturn_t dw_handle_msi_irq(struct dw_pcie_rp *pp);
- int dw_pcie_setup_rc(struct dw_pcie_rp *pp);
++static void ls_pcie_pf_writel(struct ls_pcie *pcie, u32 off, u32 val)
++{
++	if (pcie->big_endian)
++		iowrite32be(val, pcie->pf_base + off);
++	else
++		iowrite32(val, pcie->pf_base + off);
++}
++
++static void ls_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
++{
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++	struct ls_pcie *pcie = to_ls_pcie(pci);
++	u32 val;
++	int ret;
++
++	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
++	val |= PF_MCR_PTOMR;
++	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
++
++	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
++				 val, !(val & PF_MCR_PTOMR),
++				 PCIE_PME_TO_L2_TIMEOUT_US/10,
++				 PCIE_PME_TO_L2_TIMEOUT_US);
++	if (ret)
++		dev_err(pcie->pci->dev, "poll turn off message timeout\n");
++}
++
++static void ls_pcie_exit_from_l2(struct dw_pcie_rp *pp)
++{
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++	struct ls_pcie *pcie = to_ls_pcie(pci);
++	u32 val;
++	int ret;
++
++	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
++	val |= PF_MCR_EXL2S;
++	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
++
++	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
++				 val, !(val & PF_MCR_EXL2S),
++				 PCIE_PME_TO_L2_TIMEOUT_US/10,
++				 PCIE_PME_TO_L2_TIMEOUT_US);
++	if (ret)
++		dev_err(pcie->pci->dev, "poll exit L2 state timeout\n");
++}
++
+ static int ls_pcie_host_init(struct dw_pcie_rp *pp)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+@@ -91,18 +162,28 @@ static int ls_pcie_host_init(struct dw_pcie_rp *pp)
+ 
+ static const struct dw_pcie_host_ops ls_pcie_host_ops = {
+ 	.host_init = ls_pcie_host_init,
++	.pme_turn_off = ls_pcie_send_turnoff_msg,
++	.exit_from_l2 = ls_pcie_exit_from_l2,
++};
++
++static const struct ls_pcie_drvdata ls1021a_drvdata = {
++};
++
++static const struct ls_pcie_drvdata layerscape_drvdata = {
++	.pf_off = 0xc0000,
++	.pm_support = true,
+ };
+ 
+ static const struct of_device_id ls_pcie_of_match[] = {
+-	{ .compatible = "fsl,ls1012a-pcie", },
+-	{ .compatible = "fsl,ls1021a-pcie", },
+-	{ .compatible = "fsl,ls1028a-pcie", },
+-	{ .compatible = "fsl,ls1043a-pcie", },
+-	{ .compatible = "fsl,ls1046a-pcie", },
+-	{ .compatible = "fsl,ls2080a-pcie", },
+-	{ .compatible = "fsl,ls2085a-pcie", },
+-	{ .compatible = "fsl,ls2088a-pcie", },
+-	{ .compatible = "fsl,ls1088a-pcie", },
++	{ .compatible = "fsl,ls1012a-pcie", .data = &layerscape_drvdata },
++	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021a_drvdata },
++	{ .compatible = "fsl,ls1028a-pcie", .data = &layerscape_drvdata },
++	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1021a_drvdata },
++	{ .compatible = "fsl,ls1046a-pcie", .data = &layerscape_drvdata },
++	{ .compatible = "fsl,ls2080a-pcie", .data = &layerscape_drvdata },
++	{ .compatible = "fsl,ls2085a-pcie", .data = &layerscape_drvdata },
++	{ .compatible = "fsl,ls2088a-pcie", .data = &layerscape_drvdata },
++	{ .compatible = "fsl,ls1088a-pcie", .data = &layerscape_drvdata },
+ 	{ },
+ };
+ 
+@@ -121,6 +202,8 @@ static int ls_pcie_probe(struct platform_device *pdev)
+ 	if (!pci)
+ 		return -ENOMEM;
+ 
++	pcie->drvdata = of_device_get_match_data(dev);
++
+ 	pci->dev = dev;
+ 	pci->pp.ops = &ls_pcie_host_ops;
+ 
+@@ -131,6 +214,10 @@ static int ls_pcie_probe(struct platform_device *pdev)
+ 	if (IS_ERR(pci->dbi_base))
+ 		return PTR_ERR(pci->dbi_base);
+ 
++	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
++
++	pcie->pf_base = pci->dbi_base + pcie->drvdata->pf_off;
++
+ 	if (!ls_pcie_is_bridge(pcie))
+ 		return -ENODEV;
+ 
+@@ -139,12 +226,37 @@ static int ls_pcie_probe(struct platform_device *pdev)
+ 	return dw_pcie_host_init(&pci->pp);
+ }
+ 
++static int ls_pcie_suspend_noirq(struct device *dev)
++{
++	struct ls_pcie *pcie = dev_get_drvdata(dev);
++
++	if (!pcie->drvdata->pm_support)
++		return 0;
++
++	return dw_pcie_suspend_noirq(pcie->pci);
++}
++
++static int ls_pcie_resume_noirq(struct device *dev)
++{
++	struct ls_pcie *pcie = dev_get_drvdata(dev);
++
++	if (!pcie->drvdata->pm_support)
++		return 0;
++
++	return dw_pcie_resume_noirq(pcie->pci);
++}
++
++static const struct dev_pm_ops ls_pcie_pm_ops = {
++	NOIRQ_SYSTEM_SLEEP_PM_OPS(ls_pcie_suspend_noirq, ls_pcie_resume_noirq)
++};
++
+ static struct platform_driver ls_pcie_driver = {
+ 	.probe = ls_pcie_probe,
+ 	.driver = {
+ 		.name = "layerscape-pcie",
+ 		.of_match_table = ls_pcie_of_match,
+ 		.suppress_bind_attrs = true,
++		.pm = &ls_pcie_pm_ops,
+ 	},
+ };
+ builtin_platform_driver(ls_pcie_driver);
 -- 
 2.34.1
 
