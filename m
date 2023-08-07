@@ -2,173 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 08F10773057
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Aug 2023 22:33:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BAB47730E7
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Aug 2023 23:08:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229952AbjHGUd4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Aug 2023 16:33:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33230 "EHLO
+        id S229514AbjHGVII (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Aug 2023 17:08:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbjHGUdz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Aug 2023 16:33:55 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8316210F6
-        for <linux-pci@vger.kernel.org>; Mon,  7 Aug 2023 13:33:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 06E3462208
-        for <linux-pci@vger.kernel.org>; Mon,  7 Aug 2023 20:33:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EE89C433C7;
-        Mon,  7 Aug 2023 20:33:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691440433;
-        bh=y38hN5EEclw0PUar5Ep4X7eyWkPruUr/IdGCGlqUoIk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Y9C8mW+xhR59eCV+WBOs36X6h43LmCogopSONWvzb60lW0qtKfmiLifxzhAREeOJh
-         7GLlI4qkn8kXlOWcxrs1IjZM/VtuKoaU2QK0n9hoDdasL4OxVKu9PRwMo4ZkJDn2sU
-         iXSsr3VJ5GgVBPYdyfLxGmTYI2YZ57jC5euTqXW0nVsF5o6JhuerJwOYzqxQHO2HLU
-         DLX+xtLrDcJEVrB/Q96oZQ32sHqKffPPCwJh1wxdV4QVSMoLCLIJXRxWaFu+BcfbTd
-         OzVAhN8DN1Naj2n5peAKL9Vp2TYTQ9/uTS8bY4avnQ4V/tsB3ZNXW39iNd0PMjc+RH
-         iZxsD7it+czqQ==
-Date:   Mon, 7 Aug 2023 15:33:51 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     bhelgaas@google.com, fbarrat@linux.ibm.com, ajd@linux.ibm.com,
-        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        arnd@arndb.de, gregkh@linuxfoundation.org, ben.widawsky@intel.com,
-        linux-pci@vger.kernel.org, yangyingliang@huawei.com,
-        linuxppc-dev@lists.ozlabs.org, jonathan.cameron@huawei.com,
-        "David E. Box" <david.e.box@linux.intel.com>
-Subject: Re: [PATCH 1/2] PCI: Add pci_find_next_dvsec_capability to find next
- designated VSEC
-Message-ID: <20230807203351.GA269717@bhelgaas>
+        with ESMTP id S229498AbjHGVII (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Aug 2023 17:08:08 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F705B6
+        for <linux-pci@vger.kernel.org>; Mon,  7 Aug 2023 14:08:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691442487; x=1722978487;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2nTdv/xqxHRd+c6pWCgvHUz9diY2VEs0/f4FN8mJBvg=;
+  b=UG9d1CwxeLdswOBCBQ7FPaz726OF8MYgdKszbwnkF0RNsXVdmJdvJ2ky
+   3M8BQJZFbKj6Zd84v06TrH7qob9LP/RL+4BgA1vOu13wkGSza+PaR2GqN
+   1ZxRN60SNZZjHGvGTWQHTbDdGNC8g0var4X16kyMM17ffLvEIaFc9LbbR
+   m5EeIQJlLbUvCJqqIvrXAetr8sgUYWRZdtuYhFziAwfHrK0UfLPzce1KY
+   +jti31kFWS/cztFKRAj16CJQgWcdE/9uRqUTrYoR0FlJqDSXZ1Eqe0G7G
+   ec1ZjSBdOFtazaFWIWsEaauCmpkQKErOAOJxfdMlPkk8JaRhaqVb5PnMd
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="373405178"
+X-IronPort-AV: E=Sophos;i="6.01,263,1684825200"; 
+   d="scan'208";a="373405178"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2023 14:08:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="801091509"
+X-IronPort-AV: E=Sophos;i="6.01,263,1684825200"; 
+   d="scan'208";a="801091509"
+Received: from unknown (HELO localhost.ch.intel.com) ([10.2.230.30])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2023 14:07:57 -0700
+From:   Nirmal Patel <nirmal.patel@linux.intel.com>
+To:     nirmal.patel@linux.intel.com, <linux-pci@vger.kernel.org>
+Subject: [PATCH v3] PCI: vmd: Disable bridge window for domain reset
+Date:   Mon,  7 Aug 2023 16:45:20 -0400
+Message-Id: <20230807204520.1088801-1-nirmal.patel@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230807031846.77348-2-wangxiongfeng2@huawei.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc David since drivers/platform/x86/intel/vsec.c does some similar
-things, although it seems to iterate over all Intel DVSEC IDs at once]
+During domain reset process vmd_domain_reset() clears PCI
+configuration space of VMD root ports. But certain platform
+has observed following errors and failed to boot.
+  ...
+  DMAR: VT-d detected Invalidation Queue Error: Reason f
+  DMAR: VT-d detected Invalidation Time-out Error: SID ffff
+  DMAR: VT-d detected Invalidation Completion Error: SID ffff
+  DMAR: QI HEAD: UNKNOWN qw0 = 0x0, qw1 = 0x0
+  DMAR: QI PRIOR: UNKNOWN qw0 = 0x0, qw1 = 0x0
+  DMAR: Invalidation Time-out Error (ITE) cleared
 
-In subject:
+The root cause is that memset_io() clears prefetchable memory base/limit
+registers and prefetchable base/limit 32 bits registers sequentially.
+This seems to be enabling prefetchable memory if the device disabled
+prefetchable memory originally.
+Here is an example (before memset_io()):
 
-  PCI: Add pci_find_next_dvsec_capability() to find next Designated VSEC
+  PCI configuration space for 10000:00:00.0:
+  86 80 30 20 06 00 10 00 04 00 04 06 00 00 01 00
+  00 00 00 00 00 00 00 00 00 01 01 00 00 00 00 20
+  00 00 00 00 01 00 01 00 ff ff ff ff 75 05 00 00
+  ...
 
-On Mon, Aug 07, 2023 at 11:18:45AM +0800, Xiongfeng Wang wrote:
-> Some devices may have several DVSEC(Designated Vendor-Specific Extended
-> Capability) entries with the same DVSEC ID. Add
-> pci_find_next_dvsec_capability() to find them all.
+So, prefetchable memory is ffffffff00000000-575000fffff, which is
+disabled. When memset_io() clears prefetchable base 32 bits register,
+the prefetchable memory becomes 0000000000000000-575000fffff, which is
+enabled.
 
-Add space between "DVSEC" and "(Designated ...)".
+This is believed to be the reason for the failure and in addition the
+sequence of operation in vmd_domain_reset() is not following the PCIe
+specs.
 
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Here is the quote from section 7.5.1.3.9 of PCI Express Base 6.0 spec:
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+  The Prefetchable Memory Limit register must be programmed to a smaller
+  value than the Prefetchable Memory Base register if there is no
+  prefetchable memory on the secondary side of the bridg
 
-so you can merge this along with the ocxl patch that uses it.
+Disable the bridge window by executing a sequence of operations
+borrowed from pci_disable_bridge_window(), that comply with the
+PCI specifications.
 
-> ---
->  drivers/pci/pci.c   | 37 +++++++++++++++++++++++++------------
->  include/linux/pci.h |  2 ++
->  2 files changed, 27 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 60230da957e0..3455ca7306ae 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -749,35 +749,48 @@ u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap)
->  EXPORT_SYMBOL_GPL(pci_find_vsec_capability);
->  
->  /**
-> - * pci_find_dvsec_capability - Find DVSEC for vendor
-> + * pci_find_next_dvsec_capability - Find next DVSEC for vendor
->   * @dev: PCI device to query
-> + * @start: address at which to start looking (0 to start at beginning of list)
+Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+---
+v3->v3: Add more information to commit description.
+v1->v2: Follow same chain of operation as pci_disable_bridge_window
+        and update commit log.
+---
+ drivers/pci/controller/vmd.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-s/address/Address/ to match other parameters
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 769eedeb8802..ca9081be917d 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -526,8 +526,16 @@ static void vmd_domain_reset(struct vmd_dev *vmd)
+ 				     PCI_CLASS_BRIDGE_PCI))
+ 					continue;
+ 
+-				memset_io(base + PCI_IO_BASE, 0,
+-					  PCI_ROM_ADDRESS1 - PCI_IO_BASE);
++				writel(0, base + PCI_IO_BASE);
++				/* MMIO Base/Limit */
++				writel(0x0000fff0, base + PCI_MEMORY_BASE);
++
++				/* Prefetchable MMIO Base/Limit */
++				writel(0, base + PCI_PREF_LIMIT_UPPER32);
++				writel(0x0000fff0, base + PCI_PREF_MEMORY_BASE);
++				writel(0xffffffff, base + PCI_PREF_BASE_UPPER32);
++				writel(0, base + PCI_IO_BASE_UPPER16);
++				writeb(0, base + PCI_CAPABILITY_LIST);
+ 			}
+ 		}
+ 	}
+-- 
+2.31.1
 
->   * @vendor: Vendor ID to match for the DVSEC
->   * @dvsec: Designated Vendor-specific capability ID
-
-There are a lot of IDs floating around here, so to better match the
-spec language:
-
-  @dvsec: Vendor-defined DVSEC ID
-
-> - * If DVSEC has Vendor ID @vendor and DVSEC ID @dvsec return the capability
-> - * offset in config space; otherwise return 0.
-> + * Returns the address of the next DVSEC if the DVSEC has Vendor ID @vendor and
-> + * DVSEC ID @dvsec; otherwise return 0. DVSEC can occur several times with the
-> + * same DVSEC ID for some devices, and this provides a way to find them all.
->   */
-> -u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec)
-> +u16 pci_find_next_dvsec_capability(struct pci_dev *dev, u16 start, u16 vendor,
-> +				   u16 dvsec)
->  {
-> -	int pos;
-> +	u16 pos = start;
->  
-> -	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DVSEC);
-> -	if (!pos)
-> -		return 0;
-> -
-> -	while (pos) {
-> +	while ((pos = pci_find_next_ext_capability(dev, pos,
-> +						  PCI_EXT_CAP_ID_DVSEC))) {
->  		u16 v, id;
->  
->  		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER1, &v);
->  		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER2, &id);
->  		if (vendor == v && dvsec == id)
->  			return pos;
-> -
-> -		pos = pci_find_next_ext_capability(dev, pos, PCI_EXT_CAP_ID_DVSEC);
->  	}
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(pci_find_next_dvsec_capability);
-> +
-> +/**
-> + * pci_find_dvsec_capability - Find DVSEC for vendor
-> + * @dev: PCI device to query
-> + * @vendor: Vendor ID to match for the DVSEC
-> + * @dvsec: Designated Vendor-specific capability ID
-> + *
-> + * If DVSEC has Vendor ID @vendor and DVSEC ID @dvsec return the capability
-> + * offset in config space; otherwise return 0.
-> + */
-> +u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec)
-> +{
-> +	return pci_find_next_dvsec_capability(dev, 0, vendor, dvsec);
-> +}
->  EXPORT_SYMBOL_GPL(pci_find_dvsec_capability);
->  
->  /**
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index c69a2cc1f412..82bb905daf72 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1168,6 +1168,8 @@ u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 pos, int cap);
->  struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
->  u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap);
->  u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec);
-> +u16 pci_find_next_dvsec_capability(struct pci_dev *dev, u16 start, u16 vendor,
-> +				   u16 dvsec);
->  
->  u64 pci_get_dsn(struct pci_dev *dev);
->  
-> -- 
-> 2.20.1
-> 
