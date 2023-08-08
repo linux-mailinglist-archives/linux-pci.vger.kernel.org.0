@@ -2,163 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 234A0774EA4
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Aug 2023 00:49:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA646774EFD
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Aug 2023 01:10:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231566AbjHHWty (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Aug 2023 18:49:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51332 "EHLO
+        id S229881AbjHHXKT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Aug 2023 19:10:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229884AbjHHWty (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 18:49:54 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 163341FD8;
-        Tue,  8 Aug 2023 15:49:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D8AD662E00;
-        Tue,  8 Aug 2023 22:49:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12891C433C7;
-        Tue,  8 Aug 2023 22:49:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691534952;
-        bh=vazB5ubdA1Xae9qWpSwshgsUyH+SQh5z62VSNnbq7aA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=oaoP151C3Thr8C+TVhNJJF3Uh7I/I/tkRw6LH57T6uC4CJ45XHol+7CqPzxhm41CM
-         h5Xb2UYDOJWFnQiSYOOkEa78Y7NXBjVXizlET2owFcyktNZluqVlGgXH7dL1F0QFv3
-         7eY4AXTwgWjB2yzyjqQVJ2izoI7f/p3hVDiH+91W6kMI7DL2lTzp8vJDbWECaSUr+k
-         3QO/856nhXkzPj8XLzpqIJdk3w4EPwhL8Nfp69hN2JfGKs4S4g+JRl0onx/XNNWkm7
-         rgZ9C3vwbB1JBhwRwteiZXb5je6FJ3PEwWmRbMRAazUgz3kshmF5NI90KLYDhllBqP
-         ZEufbfeSWwzyQ==
-Date:   Tue, 8 Aug 2023 17:49:10 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Verma, Achal" <a-verma1@ti.com>
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof Wilczy_ski <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [EXTERNAL] Re: [PATCH] PCI: cadence: Set the AFS bit in Device
- Capabilities 2 Register
-Message-ID: <20230808224910.GA334895@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c95cd3e2-8cc0-cc65-9d62-2edb23adc292@ti.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229487AbjHHXKS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 19:10:18 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FFB2101
+        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 16:10:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691536218; x=1723072218;
+  h=date:from:to:cc:subject:message-id;
+  bh=uSUz4qIK2oi2KMUbRTfGMkKosNjJ5m4Tj/4OcFeWTPk=;
+  b=SgevbuPrHCTdSp3FKSDN6ufpWnX36dfKLM6Fc7GFyIeVuLU97Hn+5nKW
+   jQWkCd05gi/upkDIMuHyP4HYcG33mxcYeVXxh2BRie6S7uyCpAYPOudjP
+   2xl/y/W5RmtZhU2qj7e6hsofzwz1HOQPvfWYprN50W37b2Qn2uaCqG5K6
+   3q0j7n5NBLbHr+t7woua67Gljl0fAyRei8Xv8LjBJ3QXrPYhYtdpq9lUy
+   DO9qkJq1Jbf8HlsbSA0BKodeDYvbRMa0fxPx3cnyuMjMStbljer25i8Rz
+   sf4sTjSi7SZw4GnGDcgo+HAzsK7gvECPinu1/wnxCbuBYt7AldA2ZstJT
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="437339832"
+X-IronPort-AV: E=Sophos;i="6.01,157,1684825200"; 
+   d="scan'208";a="437339832"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2023 16:10:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="905409527"
+X-IronPort-AV: E=Sophos;i="6.01,157,1684825200"; 
+   d="scan'208";a="905409527"
+Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 08 Aug 2023 16:10:16 -0700
+Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qTVqC-0005fN-01;
+        Tue, 08 Aug 2023 23:10:16 +0000
+Date:   Wed, 09 Aug 2023 07:09:32 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:controller/microchip] BUILD SUCCESS
+ bac406c34fbc906f09479af72cb6a908a5d1db1d
+Message-ID: <202308090731.Rni4zmh4-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 04, 2023 at 01:22:56PM +0530, Verma, Achal wrote:
-> On 8/2/2023 9:49 PM, Bjorn Helgaas wrote:
-> > In subject, "Advertise ARI Forwarding Supported".
-> Ok
-> > 
-> > It's not obvious that "AFS" refers to ARI Forwarding Supported, and
-> > the bit name is enough; we don't need to know that it's in Dev Cap 2.
-> > "Advertise" shows that we're just *advertising* the functionality, not
-> > *enabling* it.
-> > 
-> > On Wed, Aug 02, 2023 at 04:00:59PM +0530, Achal Verma wrote:
-> > > J7 PCIe Root Complex has ARI Forwarding Support, means supporting
-> > > forwarding of TLPs addressed to functions with function number greater than
-> > > 7 but some PCIe instances on J7 have this bit cleared which results in
-> > > failure of forwarding of TLPs destined for function number > 7.
-> > > Setting the AFS bit in Device Capabilities 2 Register explicitly, resolves
-> > > the issue and leads to successful access to function number > 7.
-> > 
-> > s/AFS/ARI Forwarding Supported/
-> > 
-> > > Some observations:
-> > > 1. J7200-EVB has single PCIe instance(PCIe1) for which ARIFwd bit is not
-> > >     set. Enumeration gracefully fails for funciton number greater than 7 but
-> > >     later read/write access to these funcitons results in a crash.
-> > 
-> > By "ARIFwd bit" here, I assume you mean PCI_EXP_DEVCAP2_ARI in the Root
-> > Port?  Maybe you can use the #define to make this more greppable.
-> > 
-> will replace with PCI_EXP_DEVCAP2_ARI
-> > s/funciton/function/ (twice)
-> > 
-> > If we don't enumerate function numbers greater than 7, we shouldn't
-> > have pci_dev structs for them, so why are there later read/write
-> > config accesses to them?
-> > 
-> > If the Root Port doesn't advertise ARI Forwarding Supported,
-> > bridge->ari_enabled will not be set, and we shouldn't even try to
-> > enumerate functions greater than 7.  So it's not that enumeration
-> > *fails*; it just doesn't happen at all.
-> > 
-> > > 2. On J721E-EVB, PCIe1 instance has ARIFwd bit set while it is cleared for
-> > >     PCIe0 instance. This issue combined with errata i2086
-> > >     (Unsupported Request (UR) Response Results in External Abort) results in
-> > >     SERROR while scanning multi-function endpoint device.
-> > 
-> > Is the SERROR when scanning under PCIe0 or under PCIe1?
-> > 
-> > I'm not clear on what's happening here:
-> > 
-> >    1) Root Port advertises PCI_EXP_DEVCAP2_ARI, we set
-> >       bridge->ari_enabled and scan functions > 7, we do a config read
-> >       to function 8, get a UR response (as expected during enumeration)
-> >       and that results in SERROR?
-> > 
-> >    2) Root Port *doesn't* advertise PCI_EXP_DEVCAP2_ARI, we don't set
-> >       bridge->ari_enabled, so we don't try config read to function 8,
-> >       and something blows up later?
-> > 
-> >    3) Something else?
-> > 
-> Hello Bjorn,
-> 
-> There are multiple issues which are leading to different behavior on
-> different platforms.
-> 
-> 1. PCI_EXP_DEVCAP2_ARI is not set.
-> 
-> Consider scenario:
-> J7200 (RC) --- J721E (EP with 1 PF and 4 VFs)
-> 
-> PF enumerates successfully on J7200 but bringing up 4 associated VFs (echo 4
-> > /sys/bus/pci/devices/<device>/sriov_numvfs) doesn't workout. First VF gets
-> devfn = 6 and then +1 for next one on wards. 6 and 7 are setup fine but 8
-> and 9 fails and UR is received while accessing them. Accessing VFs > 7
-> doesn't go through the ARI support check and directly calls
-> pci_setup_device(). So, since PCI_EXP_DEVCAP2_ARI is not set, unable to
-> access VFs > 7.
-> 
-> do_serror+0x34/0x88
-> el1_error+0x8c/0x10c
-> pci_generic_config_read+0x90/0xd0
-> cdns_ti_pcie_config_read+0x14/0x28
-> pci_bus_read_config_word+0x78/0xd0
-> __pci_bus_find_cap_start+0x2c/0x78
-> pci_find_capability+0x38/0x90
-> set_pcie_port_type+0x2c/0x150
-> pci_setup_device+0x90/0x728
-> pci_iov_add_virtfn+0xe4/0x2e0
-> sriov_enable+0x1f0/0x440
-> pci_sriov_configure_simple+0x34/0x80
-> sriov_numvfs_store+0xa4/0x190
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/microchip
+branch HEAD: bac406c34fbc906f09479af72cb6a908a5d1db1d  PCI: microchip: Re-partition code between probe() and init()
 
-Thanks!  Obviously you should make the Root Port advertise
-PCI_EXP_DEVCAP2_ARI if you want to use that functionality.
+elapsed time: 721m
 
-But I think the fact that we add a device with fn > 7 when ARI is not
-enabled is also an underlying defect in iov.c.  
+configs tested: 105
+configs skipped: 6
 
-sriov_init() already checks whether ARI is enabled, and I think we
-should probably remember that somewhere and use it in
-pci_iov_add_virtfn() to avoid adding VFs with fn > 7.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Bjorn
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r031-20230808   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r043-20230808   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r003-20230808   gcc  
+arm                  randconfig-r011-20230808   clang
+arm                  randconfig-r046-20230808   clang
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r016-20230808   gcc  
+csky                 randconfig-r022-20230808   gcc  
+hexagon              randconfig-r041-20230808   clang
+hexagon              randconfig-r045-20230808   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230808   clang
+i386         buildonly-randconfig-r005-20230808   clang
+i386         buildonly-randconfig-r006-20230808   clang
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230808   clang
+i386                 randconfig-i002-20230808   clang
+i386                 randconfig-i003-20230808   clang
+i386                 randconfig-i004-20230808   clang
+i386                 randconfig-i005-20230808   clang
+i386                 randconfig-i006-20230808   clang
+i386                 randconfig-i011-20230808   gcc  
+i386                 randconfig-i012-20230808   gcc  
+i386                 randconfig-i013-20230808   gcc  
+i386                 randconfig-i014-20230808   gcc  
+i386                 randconfig-i015-20230808   gcc  
+i386                 randconfig-i016-20230808   gcc  
+i386                 randconfig-r012-20230808   gcc  
+i386                 randconfig-r032-20230808   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze           randconfig-r006-20230808   gcc  
+microblaze           randconfig-r023-20230808   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r034-20230808   gcc  
+openrisc             randconfig-r024-20230808   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r005-20230808   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc              randconfig-r004-20230808   clang
+powerpc              randconfig-r013-20230808   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r014-20230808   gcc  
+riscv                randconfig-r042-20230808   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r044-20230808   gcc  
+sh                               allmodconfig   gcc  
+sh                   randconfig-r002-20230808   gcc  
+sh                   randconfig-r035-20230808   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64              randconfig-r021-20230808   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r015-20230808   clang
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230808   clang
+x86_64       buildonly-randconfig-r002-20230808   clang
+x86_64       buildonly-randconfig-r003-20230808   clang
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-r025-20230808   gcc  
+x86_64               randconfig-x001-20230808   gcc  
+x86_64               randconfig-x002-20230808   gcc  
+x86_64               randconfig-x003-20230808   gcc  
+x86_64               randconfig-x004-20230808   gcc  
+x86_64               randconfig-x005-20230808   gcc  
+x86_64               randconfig-x006-20230808   gcc  
+x86_64               randconfig-x011-20230808   clang
+x86_64               randconfig-x012-20230808   clang
+x86_64               randconfig-x013-20230808   clang
+x86_64               randconfig-x014-20230808   clang
+x86_64               randconfig-x015-20230808   clang
+x86_64               randconfig-x016-20230808   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
