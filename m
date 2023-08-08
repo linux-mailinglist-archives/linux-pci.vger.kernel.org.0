@@ -2,54 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 991E477434A
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 20:00:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF340774940
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 21:50:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235217AbjHHSAO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Aug 2023 14:00:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56334 "EHLO
+        id S229840AbjHHTun (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Aug 2023 15:50:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229920AbjHHR7n (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 13:59:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C55D72CEE2
-        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 09:27:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 531B062531
-        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 16:26:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71430C433B7;
-        Tue,  8 Aug 2023 16:26:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691511989;
-        bh=zE/uSYeRloetY2ZRpWdkDWpaPNmX2Vprz3+Hc9pFNr8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Sjdz06csNVGed3j66FD4E/PDkuW6p4aJDFTASGiBQPnqYPMIcBAKLqdysbMQqSGSj
-         Vr60OZ3318kwP8ODF2E8XcwylDOyDCIuuhhha7vfn24K0HNilLiRd0p0TJvmmCDf4q
-         PzutiWTgmR9s2XhbbObOl+ZnWfKF21ZcB4nOC1LkkOdXYuzjK6McaPjFAwvimVJ7qc
-         4sbBlNPB6fy3zfBF+yxgbTOtoRHWlaAzr7V6ZkLGLQsoAeTb0Dc81xM0/putFxpyCC
-         eGLnfxkHj0+g+njPF9/QrW+TT66W4OV1B3dqcx58PwF4rvi83hx3sT63JZgC2AUHyu
-         aV2sreGd2MOKg==
-Date:   Tue, 8 Aug 2023 11:26:27 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] PCI: mvebu: Mark driver as BROKEN
-Message-ID: <20230808162627.GA314706@bhelgaas>
+        with ESMTP id S231781AbjHHTuW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 15:50:22 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02AE64FB00
+        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 09:56:00 -0700 (PDT)
+Received: from dggpemm500002.china.huawei.com (unknown [172.30.72.56])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4RKfSR5cbkz1hwCb;
+        Tue,  8 Aug 2023 11:53:59 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ dggpemm500002.china.huawei.com (7.185.36.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Tue, 8 Aug 2023 11:56:47 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <bhelgaas@google.com>, <fbarrat@linux.ibm.com>,
+        <ajd@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+        <christophe.leroy@csgroup.eu>, <arnd@arndb.de>,
+        <gregkh@linuxfoundation.org>, <ben.widawsky@intel.com>
+CC:     <linux-pci@vger.kernel.org>, <yangyingliang@huawei.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <jonathan.cameron@huawei.com>,
+        <david.e.box@linux.intel.com>, <helgaas@kernel.org>,
+        <wangxiongfeng2@huawei.com>
+Subject: [PATCH v2 0/2] Introduce pci_find_next_dvsec_capability() to simplify the code
+Date:   Tue, 8 Aug 2023 12:08:56 +0800
+Message-ID: <20230808040858.183568-1-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230808072605.n3rjfsxuogza7qth@pali>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm500002.china.huawei.com (7.185.36.229)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -58,31 +50,25 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc linux-arm-kernel, beginning of thread:
-https://lore.kernel.org/r/20230114164125.1298-1-pali@kernel.org]
+Some devices may have several DVSEC (Designated Vendor-Specific Extended
+Capability) entries with the same DVSEC ID. Introduce
+pci_find_next_dvsec_capability() to simplify the code.
 
-On Tue, Aug 08, 2023 at 09:26:05AM +0200, Pali Rohár wrote:
-> On Friday 04 August 2023 12:35:13 Russell King (Oracle) wrote:
-> ...
+ChangeLog:
+v1->v2:  Add Reviewed-by and Acked-by tags
+	 Modify commit message and document a little for the first patch
 
-> > For example, I have an Atheros PCIe WiFi card in an Armada 388 Clearfog
-> > platform, and this works fine.
-> > 
-> > Uwe has a SATA controller for a bunch of disks in an Armada 370 based
-> > NAS platform that is connected to PCIe, and removing PCIe support
-> > effectively makes his platform utterly useless.
-> > 
-> > Please revert this patch.
-> 
-> Please do not revert it, instead start fixing problems.
+Xiongfeng Wang (2):
+  PCI: Add pci_find_next_dvsec_capability to find next Designated VSEC
+  ocxl: use pci_find_next_dvsec_capability() to simplify the code
 
-We know that like all the other drivers, the mvebu driver isn't
-perfect.  But I don't think effectively removing the driver completely
-helps anybody.  If people try to use it and notice problems, we have a
-chance to try to fix them.
+ arch/powerpc/platforms/powernv/ocxl.c | 20 ++------------
+ drivers/misc/ocxl/config.c            | 21 +++++----------
+ drivers/pci/pci.c                     | 39 ++++++++++++++++++---------
+ include/linux/pci.h                   |  2 ++
+ include/misc/ocxl-config.h            |  4 ---
+ 5 files changed, 36 insertions(+), 50 deletions(-)
 
-Or maybe I'm missing your point.  I think you're suggesting that we
-keep pci-mvebu in the tree but unselectable because it depends on
-CONFIG_BROKEN.  What would be the advantage of doing that?
+-- 
+2.20.1
 
-Bjorn
