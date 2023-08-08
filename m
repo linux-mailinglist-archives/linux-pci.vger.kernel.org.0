@@ -2,172 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 91CFA774CD6
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 23:18:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCB1C774D17
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 23:31:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236576AbjHHVSw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Aug 2023 17:18:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34130 "EHLO
+        id S229494AbjHHVbx convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 8 Aug 2023 17:31:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236587AbjHHVSn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 17:18:43 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B09E7;
-        Tue,  8 Aug 2023 14:16:13 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4fe7e67cc77so947183e87.2;
-        Tue, 08 Aug 2023 14:16:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691529372; x=1692134172;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7BNjTP5A6iaNI8I0ONshSv2dOVlvAeNExB7nL8frDXM=;
-        b=kPJk8NVCa0OhcQbj4ylogCMt7dAfsI9yvrORqoGfysNysjEzWc2ZB+7zHoJsOgAVqe
-         oYMcEbr3U93UgOGF/33F1pYatSv/ft5i5CuTJkke34BHbam6cPRIpOkj1C2yeIae0DAq
-         y34jpG95/wTF194ZFgzZxzBl82OqkTWP0BmMjoOvGwM9eRqh8WWv8rQpo1udGGHushcP
-         1/J30RQD0BO400ObLlpNa+rfGLAUfRP+aQSEWfaP+Ic0CijMa8Y9Z9etx4EM+sdcki9V
-         s2/fsAJ1PWpB53TpjptaY41j3f/JUe72riJkmSCyKtR9ivhNQts1wQ6ujmj2T7lIaNZJ
-         frgA==
+        with ESMTP id S229437AbjHHVbw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 17:31:52 -0400
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2562A91;
+        Tue,  8 Aug 2023 14:31:52 -0700 (PDT)
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6bb1133b063so980114a34.1;
+        Tue, 08 Aug 2023 14:31:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691529372; x=1692134172;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7BNjTP5A6iaNI8I0ONshSv2dOVlvAeNExB7nL8frDXM=;
-        b=EnhES3LjR/1gxAgrTdU2+LD7qgd9CS8u65WJy76Vk+5ORtOVWR5am5UyD+WiLt0m4Y
-         k4wmO6qbF6OEFbO9FU0PMcm//xm6NLZ9kTe7+HdGBR/j6ycMS3wSpSIme/2kc5CAvnn3
-         yeMp5BdjYclxiiDm9VIzRNvuLamosrBAgPVtig3TVupyFwPTJY4GrVwOdWEyRhjbRWU2
-         v+G97SwagNAREUAOfBZwwK+MHX9oXaAXKEY2PRcvMupmpplvlOUcaGwZLIMEob0iulyS
-         /aFz59nC0Na4yEn6Zztb0wTes8/F8uCE582EmzFfYnPBoxuAgoBodl+mywWPNnpKpBZ5
-         se3A==
-X-Gm-Message-State: AOJu0Yxuoc3xrT9GSVOmGm7ljfc+86zW6HBvw61m67gT7Au3Wg8mipKy
-        Y4zF3a9vtqFyW4UqT/09BnNnv6jbeHk=
-X-Google-Smtp-Source: AGHT+IFrbk/VfHFBjLAmGI1jyvpDVk0+ej8DQKimek6J+8iYsTeNTqGCNG+LkpMVasMLcc+YElYUSg==
-X-Received: by 2002:a05:6512:3f7:b0:4fb:7b4c:d38c with SMTP id n23-20020a05651203f700b004fb7b4cd38cmr360748lfq.60.1691529371918;
-        Tue, 08 Aug 2023 14:16:11 -0700 (PDT)
-Received: from mobilestation (89-109-45-41.dynamic.mts-nn.ru. [89.109.45.41])
-        by smtp.gmail.com with ESMTPSA id t9-20020a19ad09000000b004fe47879d93sm2016304lfc.106.2023.08.08.14.16.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Aug 2023 14:16:11 -0700 (PDT)
-Date:   Wed, 9 Aug 2023 00:16:09 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "kw@linux.com" <kw@linux.com>,
-        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-        "kishon@kernel.org" <kishon@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "conor+dt@kernel.org" <conor+dt@kernel.org>,
-        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>
-Subject: Re: [PATCH v18 08/20] PCI: dwc: Add dw_pcie_link_set_max_link_width()
-Message-ID: <rolemxcg3ezjdjkx2y2zbnoxq3zbpvo6cuukhr4lzevwim7pca@xagj3xq54dgg>
-References: <rt2vwgmdsxvkb2jh4v6mpnjpfvql44o72nxf663wbnkcvkmift@o2dl5oa435k3>
- <20230808150854.GA304435@bhelgaas>
+        d=1e100.net; s=20221208; t=1691530311; x=1692135111;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dar5Gf1UmWSsQg1cGFlHubc+7wJ03BPupNvzSWN3N8E=;
+        b=AEUTKNCJEJgm5HPDFVmLUeJeK4kWnCDKMU/kmaOU8XNcahqUJePV6RjlAUymQ3NLwC
+         oUSQ7jV+AWr5p4WQNxXjgiROHKINIevaKNe8L2/qPvP/x8yWcMUf2YI/e0Xz6fbwvjE+
+         gODCl8PPfVJnON4YocuKo2zlhuM5odZqD5XOaqc63wFT8ltkNqAbnNUqbcKZo0pdAxCV
+         kWuXZE5/UXs/taMpelYAoJVWemnPSoObklV7NYGFpYmTcHjQjMJh6OeA71entQEkjGos
+         nudaYP+ctNGzAgthPjTuN+QHiOlihBIBMy6fTPgpj8FgdvRl0k0YIVmIUZq6J24Zl4CU
+         ZjnQ==
+X-Gm-Message-State: AOJu0Yxn6HSLtvHHBuRg+CqjymWCg7Gm9jUUDPPc+W86WmtbpF08M+rB
+        QL/CC1aX49CvaZqORytH/CQu6Y4M3mIgkhtZifA=
+X-Google-Smtp-Source: AGHT+IEkRkhKAJcwy7Kiik7KrKGEdSp2I18CQ+jsoYeeevPtkp6gtO3VhqUn+lyy0exbEBZwmVe+tJVq1hpGx0aCR7o=
+X-Received: by 2002:a4a:2c42:0:b0:560:b01a:653d with SMTP id
+ o63-20020a4a2c42000000b00560b01a653dmr1006343ooo.0.1691530311356; Tue, 08 Aug
+ 2023 14:31:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230808150854.GA304435@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <CAJZ5v0jc5dn+6WtH6O30EeJfGDLewiLaAY9YJEAO6d_n+Uv7ig@mail.gmail.com>
+ <20230808205800.GA332785@bhelgaas>
+In-Reply-To: <20230808205800.GA332785@bhelgaas>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 8 Aug 2023 23:31:40 +0200
+Message-ID: <CAJZ5v0gFQsidEJyfN8oj+=gXjw7kwJwewmAAAEQkeO0vDnTusg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: acpiphp: Log more slot and notification details
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org,
+        Len Brown <lenb@kernel.org>,
+        Igor Mammedov <imammedo@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Woody Suwalski <terraluna977@gmail.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 08, 2023 at 10:08:54AM -0500, Bjorn Helgaas wrote:
-> On Tue, Aug 08, 2023 at 03:15:33AM +0300, Serge Semin wrote:
-> > On Mon, Aug 07, 2023 at 06:40:34PM -0500, Bjorn Helgaas wrote:
-> > > On Tue, Aug 08, 2023 at 01:53:11AM +0300, Serge Semin wrote:
-> > > > On Tue, Aug 01, 2023 at 01:50:59AM +0000, Yoshihiro Shimoda wrote:
-> > > > > > From: Serge Semin, Sent: Tuesday, August 1, 2023 8:54 AM
-> > > > > > On Fri, Jul 21, 2023 at 04:44:40PM +0900, Yoshihiro Shimoda wrote:
-> > > > > > > To improve code readability, add dw_pcie_link_set_max_link_width().
-> > > > > > > ...
-> > > 
-> > > > > > > @@ -1009,49 +1049,5 @@ void dw_pcie_setup(struct dw_pcie *pci)
-> > > > > > >  	val |= PORT_LINK_DLL_LINK_EN;
-> > > > > > >  	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
-> > > > > > >
-> > > > > > > -	if (!pci->num_lanes) {
-> > > > > > > -		dev_dbg(pci->dev, "Using h/w default number of lanes\n");
-> > > > > > > -		return;
-> > > > > > > -	}
-> > > > > > > -
-> > > > > > > -	/* Set the number of lanes */
-> > > > > > 
-> > > > > > > -	val &= ~PORT_LINK_FAST_LINK_MODE;
-> > > > > > 
-> > > > > > My series contains the patch which drops this line:
-> > > > > <snip URL>
-> > > > > > So either pick my patch up and add it to your series or still pick it up
-> > > > > > but with changing the authorship and adding me under the Suggested-by
-> > > > > > tag with the email-address I am using to review your series. Bjorn,
-> > > > > > what approach would you prefer? Perhaps alternative?
-> > 
-> > > I don't really see the argument here.  AFAICT, Yoshihiro's patch
-> > > (https://lore.kernel.org/r/20230721074452.65545-9-yoshihiro.shimoda.uh@renesas.com)
-> > > is a trivial refactoring to make dw_pcie_link_set_max_link_width(),
-> > > which might be reused elsewhere later, which seems perfectly fine.
-> > > 
-> > > It'd be fine with me to add a little detail in the commit log to
-> > > reference the Synopsys manual, which I don't have.  But doesn't seem
-> > > like a big deal to me.
-> > 
-> > More details are in one of my earlier comments to this patch which
-> > Yoshihiro promised to add to the patch log on the next patchset
-> > revision. You can read it here:
-> > https://lore.kernel.org/linux-pci/20230721074452.65545-1-yoshihiro.shimoda.uh@renesas.com/T/#m8ac364249f40c726da88316b67f11a6d55068ef0
-> > 
-> > > Dropping the PORT_LINK_FAST_LINK_MODE mask seems like a separate
-> > > question that should be in a separate patch.
-> > > https://lore.kernel.org/linux-pci/20230611192005.25636-6-Sergey.Semin@baikalelectronics.ru/
-> > > says it's redundant, so it sounds more like a cleanup than a fix.
-> > 
-> > That's the point of my comment. There is no need in copying that mask
-> > to the dw_pcie_link_set_max_link_width() method because first it's
-> > unrelated to the link-width setting, second it's redundant. There is
-> > my patch dropping the mask with the proper justification:
-> > https://lore.kernel.org/linux-pci/20230611192005.25636-6-Sergey.Semin@baikalelectronics.ru/
-> > It would be good to either merge it in before the Yoshihiro' series or
-> > add my patch to the Yoshihiro' patchset. But it's in the patchwork
-> > limbo now, neither you nor Lorenzo or Krzysztof were willing to merge
-> > it in. That's why I suggested to move the patch here with the denoted
-> > alterations. Could you give your resolution whether the suggested
-> > movement is ok or perhaps you or Lorenzo or Krzysztof consider merge
-> > it in as is?
-> 
-> If I understand Yoshihiro's patch, it pulls code out into
-> dw_pcie_link_set_max_link_width() without changing that code.  That
-> seems like the best approach to me because it's very easy to review.
-> 
+On Tue, Aug 8, 2023 at 10:58 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Tue, Aug 08, 2023 at 09:39:22PM +0200, Rafael J. Wysocki wrote:
+> > On Tue, Aug 8, 2023 at 9:27 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > From: Bjorn Helgaas <bhelgaas@google.com>
+> > >
+> > > When registering an acpiphp slot, log the slot name in the same style as
+> > > pciehp and include the PCI bus/device and whether a device is present or
+> > > the slot is empty.
+> > >
+> > > When handling an ACPI notification, log the PCI bus/device and notification
+> > > type.
+> > >
+> > > Sample dmesg log diff:
+> > >
+> > >     ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+> > >   - acpiphp: Slot [3] registered
+> > >   - acpiphp: Slot [4] registered
+> > >     PCI host bridge to bus 0000:00
+> > >     pci 0000:00:03.0: [8086:100e] type 00 class 0x020000
+> > >     <ACPI Device Check notification>
+> > >     pci 0000:00:04.0: [8086:100e] type 00 class 0x020000
+> > >
+> > >     ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+> > >   + acpiphp: pci 0000:00:03 Slot(3) registered (enabled)
+> > >   + acpiphp: pci 0000:00:04 Slot(4) registered (empty)
+> > >     PCI host bridge to bus 0000:00
+> > >     pci 0000:00:03.0: [8086:100e] type 00 class 0x020000
+> > >     <ACPI Device Check notification>
+> > >   + acpiphp: pci 0000:00:04 Slot(4) Device Check
+> > >     pci 0000:00:04.0: [8086:100e] type 00 class 0x020000
+> > > ...
+>
+> > > @@ -793,6 +804,14 @@ static void hotplug_event(u32 type, struct acpiphp_context *context)
+> > >
+> > >         pci_lock_rescan_remove();
+> > >
+> > > +       pr_info("pci %04x:%02x:%02x Slot(%s) %s\n",
+> > > +               pci_domain_nr(slot->bus), slot->bus->number,
+> > > +               slot->device, slot_name(slot->slot),
+> > > +               type == ACPI_NOTIFY_BUS_CHECK ? "Bus Check" :
+> > > +               type == ACPI_NOTIFY_DEVICE_CHECK ? "Device Check" :
+> > > +               type == ACPI_NOTIFY_EJECT_REQUEST ? "Eject Request" :
+> > > +               "Notification");
+> >
+> > pr_debug() perhaps?
+> >
+> > On systems that don't have any hotplug problems these messages will
+> > just be filling the kernel log unnecessarily.
+>
+> If these notifications are really common, pr_debug() sounds like the
+> right thing.  I assumed that they would not be common, e.g., they
+> would happen for user-time things like dock/undock, plug/unplug,
+> suspend/resume, etc.
+>
+> In pciehp, we use _info for attention button presses, presence detect
+> changes, link up/down, and I assumed the ACPI notify events would
+> roughly correspond to those.  No?
 
-> If we want to remove a little redundant code later in a separate
-> patch, that's fine too but doesn't seem urgent.  I don't think they
-> need to be tied together.
+Depending on how often the system gets suspended and resumed, they may
+end up in the log quite often and if there are no problems related to
+them, they are just noise.
 
-Well, my point was the opposite: why would we need to maintain a dead,
-redundant code which also unrelated to the function it's being copied
-to, meanwhile there is already available patch which drops that code
-and Yoshihiro needs to resubmit a new revision of his series anyway?
-It would have been much better to just merge in my patch/change
-somehow (with another authorship if that's the problem) and forget
-about that from now on. If you get to merge in the Yoshohiro patchset
-first, my patch won't be cleanly applicable after that.
-
--Serge(y)
-
-> 
-> Bjorn
+IMHO in that case the users are taught to ignore stuff that lands in
+the log which is not fantastic.
