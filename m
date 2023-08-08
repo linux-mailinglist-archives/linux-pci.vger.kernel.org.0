@@ -2,118 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AEB617741A0
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 19:25:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F4E9774287
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 19:46:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234565AbjHHRZp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Aug 2023 13:25:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40112 "EHLO
+        id S234939AbjHHRq1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Aug 2023 13:46:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234374AbjHHRZY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 13:25:24 -0400
+        with ESMTP id S231605AbjHHRpi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 13:45:38 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAEF020268;
-        Tue,  8 Aug 2023 09:10:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FFC325EEB;
+        Tue,  8 Aug 2023 09:20:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B1594624CB;
-        Tue,  8 Aug 2023 11:23:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B46A2C433C7;
-        Tue,  8 Aug 2023 11:23:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F3A61624D6;
+        Tue,  8 Aug 2023 11:30:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B01BDC433C7;
+        Tue,  8 Aug 2023 11:30:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691493786;
-        bh=uf47QcqVVednoTyXP/D1xitpSzvvxXjJ0RJvfi2KsoE=;
+        s=k20201202; t=1691494211;
+        bh=vBWSlCDrZROxYuy5ae4tTgkUDzDtAMFgQOHc2MqMN00=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qUUbmI60+gD371c+d5N6y7GEIlxhTL0jSQyQgcYZy3sb7K6SacbY+7NvuHjoVNSG1
-         WH9DqltMiROF3+twdf6p73ddnb2Hw1KfAOzYZq7P/mUBKFcJRIHAxz5oDTRh6uRDG1
-         TPuI/NpY6bBziU+F/N9X+5SEFAHG9X7/3exDlA9fquqR8UEUHsaDjTl5Fd9wohD2fm
-         VvyD37kojpCZemPC8cz1YSFCefwhsCxqSgTemzzGGFp8fFIvl22H3vYxRz5t9boOgf
-         cMoT5j2g8ZycnSQVVbwH+GIFmJpU8n8pV+3y/uNyXtdfoy9cRqxaxjkaZBDXs2VFs2
-         qDtayNRcM9nIg==
-Date:   Tue, 8 Aug 2023 13:22:59 +0200
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
+        b=MxQAHNSR+7FUjdWOuwilrrz5CHO2ObEjZl4fLBcr+LuMNcCNKtQAKcmtgTOIFV+Yh
+         7cu/EogbhTMQiiZ3g+syK5H83K28a+yereJhUBKnA4a/yOMRSjt3nLsKAHhlUvXYXr
+         htGC6od3JcJbQFmH5LiGxzAIRcVqG+ss/EdoPCxLbX1KOl4Sqdx8QNGbbZeNCDXOMi
+         IDR3emYO4U9d0hpj/LVopgLJRCXwtM1TvG6zIv47LavRbQnw6i8QGtabKCjXXlhWqN
+         1FbmPRagUR0jvtHILpvHSXizSC7kIt/kwtCj1gMpev209vnY2NFhuJbNneA3n1sJyO
+         ZFi+GGQOWIk9g==
+Date:   Tue, 8 Aug 2023 12:30:03 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Anup Patel <apatel@ventanamicro.com>
+Cc:     Sunil V L <sunilvl@ventanamicro.com>, linux-doc@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Atish Kumar Patra <atishp@rivosinc.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Will Deacon <will@kernel.org>, Haibo Xu <haibo1.xu@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: dwc: Provide deinit callback for i.MX
-Message-ID: <ZNIlk8YgUevE7kTH@lpieralisi>
-References: <20230712-pci-imx-regulator-cleanup-v2-1-3b1f6e9d26bc@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Anup Patel <anup@brainfault.org>, Len Brown <lenb@kernel.org>
+Subject: Re: [RFC PATCH v1 20/21] RISC-V: ACPI: Create PLIC platform device
+Message-ID: <20230808-ferry-swarm-e2a0abb17165@spud>
+References: <20230803175916.3174453-1-sunilvl@ventanamicro.com>
+ <20230803175916.3174453-21-sunilvl@ventanamicro.com>
+ <20230808-chalice-easing-1369c7386082@spud>
+ <CAK9=C2XZ7_tfSK6HNN1Em5fAHrknWBqGaD9gPL8yGs8AzE3vQg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="B+bG6e2jHgiFE7ir"
 Content-Disposition: inline
-In-Reply-To: <20230712-pci-imx-regulator-cleanup-v2-1-3b1f6e9d26bc@kernel.org>
+In-Reply-To: <CAK9=C2XZ7_tfSK6HNN1Em5fAHrknWBqGaD9gPL8yGs8AzE3vQg@mail.gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 12:02:57PM +0100, Mark Brown wrote:
-> The i.MX integration for the DesignWare PCI controller has a _host_exit()
-> operation which undoes everything that the _host_init() operation does but
-> does not wire this up as the host_deinit callback for the core, or call it
-> in any path other than suspend. This means that if we ever unwind the
-> initial probe of the device, for example because it fails, the regulator
-> core complains that the regulators for the device were left enabled:
-> 
-> imx6q-pcie 33800000.pcie: iATU: unroll T, 4 ob, 4 ib, align 64K, limit 16G
-> imx6q-pcie 33800000.pcie: Phy link never came up
-> imx6q-pcie 33800000.pcie: Phy link never came up
-> imx6q-pcie: probe of 33800000.pcie failed with error -110
-> ------------[ cut here ]------------
-> WARNING: CPU: 2 PID: 46 at drivers/regulator/core.c:2396 _regulator_put+0x110/0x128
-> 
-> Wire up the callback so that the core can clean up after itself.
-> 
-> Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Tested-by: Fabio Estevam <festevam@gmail.com>
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
-> Changes in v2:
-> - Rebase onto v6.5-rc1.
-> - Link to v1: https://lore.kernel.org/r/20230703-pci-imx-regulator-cleanup-v1-1-b6c050ae2bad@kernel.org
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 1 +
->  1 file changed, 1 insertion(+)
 
-Applied to controller/dwc, thanks.
+--B+bG6e2jHgiFE7ir
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Lorenzo
+On Tue, Aug 08, 2023 at 04:27:16PM +0530, Anup Patel wrote:
+> On Tue, Aug 8, 2023 at 2:12=E2=80=AFPM Conor Dooley <conor@kernel.org> wr=
+ote:
+> >
+> > On Thu, Aug 03, 2023 at 11:29:15PM +0530, Sunil V L wrote:
+> > > Since PLIC needs to be a platform device
+> >
+> > For the unwashed, why does the PLCI need to be a platform device?
+> > (And while you're at that, please try to make use of the extra ~20
+> > characters per line that you can use here.)
+>=20
+> As suggested by Marc Z, only timers and IPIs need to be probed early.
+> Everything else needs to be a platform device. The devlink feature of
+> Linux DD framework ensures that platform devices are probed in the
+> right order based on the interdependency.
+>=20
+> The PATCH5 of the v7 AIA series converts the PLIC driver into a
+> platform driver. This works perfectly fine.
 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 27aaa2a6bf39..a18c20085e94 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -1040,6 +1040,7 @@ static void imx6_pcie_host_exit(struct dw_pcie_rp *pp)
->  
->  static const struct dw_pcie_host_ops imx6_pcie_host_ops = {
->  	.host_init = imx6_pcie_host_init,
-> +	.host_deinit = imx6_pcie_host_exit,
->  };
->  
->  static const struct dw_pcie_ops dw_pcie_ops = {
-> 
-> ---
-> base-commit: 06c2afb862f9da8dc5efa4b6076a0e48c3fbaaa5
-> change-id: 20230703-pci-imx-regulator-cleanup-a17c8fd15ec5
-> 
-> Best regards,
-> -- 
-> Mark Brown <broonie@kernel.org>
-> 
+To be clear, I want the explanation of why the "PLIC needs to be a
+platform device" to be in the commit message.
+
+Thanks,
+Conor.
+
+>=20
+> >
+> > > probe the
+> > > MADT and create platform devices for each PLIC in the
+> > > system. Use software node framework for the fwnode
+> > > which allows to create properties and hence the
+> > > actual irqchip driver doesn't need to do anything
+> > > different for ACPI vs DT.
+> > >
+> > > Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+> > > Co-developed-by: Haibo Xu <haibo1.xu@intel.com>
+> > > Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
+> >
+> > > +static struct fwnode_handle *acpi_plic_create_fwnode(struct acpi_mad=
+t_plic *plic)
+> > > +{
+> > > +     struct fwnode_handle *fwnode, *parent_fwnode;
+> > > +     struct riscv_irqchip_list *plic_element;
+> > > +     struct software_node_ref_args *refs;
+> > > +     struct property_entry props[8] =3D {};
+> > > +     int nr_contexts;
+> > > +
+> > > +     props[0] =3D PROPERTY_ENTRY_U32("riscv,gsi-base", plic->gsi_bas=
+e);
+> > > +     props[1] =3D PROPERTY_ENTRY_U32("riscv,ndev", plic->num_irqs);
+> > > +     props[2] =3D PROPERTY_ENTRY_U32("riscv,max_prio", plic->max_pri=
+o);
+> >
+> > My OCD wants to know why this gets an _ but the others have a -.
+> >
+> > > +     props[3] =3D PROPERTY_ENTRY_U8("riscv,plic-id", plic->id);
+> > > +     props[4] =3D PROPERTY_ENTRY_U64("riscv,plic-base", plic->base_a=
+ddr);
+> > > +     props[5] =3D PROPERTY_ENTRY_U32("riscv,plic-size", plic->size);
+
+--B+bG6e2jHgiFE7ir
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZNInOwAKCRB4tDGHoIJi
+0sLcAQCDXLAw71GxaGzz6Qp83L1Tb3sQIefjSzU544KRvPaIZwEA0NG4WpAU7bh9
+dP9hFr5cEYLKlf5xgRt76/vz3TmyhAM=
+=TeDA
+-----END PGP SIGNATURE-----
+
+--B+bG6e2jHgiFE7ir--
