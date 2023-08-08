@@ -2,128 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCB1C774D17
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 23:31:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47A5F774DF7
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Aug 2023 00:08:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229494AbjHHVbx convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 8 Aug 2023 17:31:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33468 "EHLO
+        id S231712AbjHHWIG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Aug 2023 18:08:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjHHVbw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 17:31:52 -0400
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2562A91;
-        Tue,  8 Aug 2023 14:31:52 -0700 (PDT)
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6bb1133b063so980114a34.1;
-        Tue, 08 Aug 2023 14:31:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691530311; x=1692135111;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dar5Gf1UmWSsQg1cGFlHubc+7wJ03BPupNvzSWN3N8E=;
-        b=AEUTKNCJEJgm5HPDFVmLUeJeK4kWnCDKMU/kmaOU8XNcahqUJePV6RjlAUymQ3NLwC
-         oUSQ7jV+AWr5p4WQNxXjgiROHKINIevaKNe8L2/qPvP/x8yWcMUf2YI/e0Xz6fbwvjE+
-         gODCl8PPfVJnON4YocuKo2zlhuM5odZqD5XOaqc63wFT8ltkNqAbnNUqbcKZo0pdAxCV
-         kWuXZE5/UXs/taMpelYAoJVWemnPSoObklV7NYGFpYmTcHjQjMJh6OeA71entQEkjGos
-         nudaYP+ctNGzAgthPjTuN+QHiOlihBIBMy6fTPgpj8FgdvRl0k0YIVmIUZq6J24Zl4CU
-         ZjnQ==
-X-Gm-Message-State: AOJu0Yxn6HSLtvHHBuRg+CqjymWCg7Gm9jUUDPPc+W86WmtbpF08M+rB
-        QL/CC1aX49CvaZqORytH/CQu6Y4M3mIgkhtZifA=
-X-Google-Smtp-Source: AGHT+IEkRkhKAJcwy7Kiik7KrKGEdSp2I18CQ+jsoYeeevPtkp6gtO3VhqUn+lyy0exbEBZwmVe+tJVq1hpGx0aCR7o=
-X-Received: by 2002:a4a:2c42:0:b0:560:b01a:653d with SMTP id
- o63-20020a4a2c42000000b00560b01a653dmr1006343ooo.0.1691530311356; Tue, 08 Aug
- 2023 14:31:51 -0700 (PDT)
+        with ESMTP id S231933AbjHHWID (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 18:08:03 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5924512D97D
+        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 09:54:31 -0700 (PDT)
+Received: from dggpemm500002.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RKfRk0NhDztRwp;
+        Tue,  8 Aug 2023 11:53:22 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ dggpemm500002.china.huawei.com (7.185.36.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Tue, 8 Aug 2023 11:56:49 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <bhelgaas@google.com>, <fbarrat@linux.ibm.com>,
+        <ajd@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+        <christophe.leroy@csgroup.eu>, <arnd@arndb.de>,
+        <gregkh@linuxfoundation.org>, <ben.widawsky@intel.com>
+CC:     <linux-pci@vger.kernel.org>, <yangyingliang@huawei.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <jonathan.cameron@huawei.com>,
+        <david.e.box@linux.intel.com>, <helgaas@kernel.org>,
+        <wangxiongfeng2@huawei.com>
+Subject: [PATCH v2 2/2] ocxl: use pci_find_next_dvsec_capability() to simplify the code
+Date:   Tue, 8 Aug 2023 12:08:58 +0800
+Message-ID: <20230808040858.183568-3-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20230808040858.183568-1-wangxiongfeng2@huawei.com>
+References: <20230808040858.183568-1-wangxiongfeng2@huawei.com>
 MIME-Version: 1.0
-References: <CAJZ5v0jc5dn+6WtH6O30EeJfGDLewiLaAY9YJEAO6d_n+Uv7ig@mail.gmail.com>
- <20230808205800.GA332785@bhelgaas>
-In-Reply-To: <20230808205800.GA332785@bhelgaas>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 8 Aug 2023 23:31:40 +0200
-Message-ID: <CAJZ5v0gFQsidEJyfN8oj+=gXjw7kwJwewmAAAEQkeO0vDnTusg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: acpiphp: Log more slot and notification details
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org,
-        Len Brown <lenb@kernel.org>,
-        Igor Mammedov <imammedo@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Woody Suwalski <terraluna977@gmail.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm500002.china.huawei.com (7.185.36.229)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 8, 2023 at 10:58 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Aug 08, 2023 at 09:39:22PM +0200, Rafael J. Wysocki wrote:
-> > On Tue, Aug 8, 2023 at 9:27 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > From: Bjorn Helgaas <bhelgaas@google.com>
-> > >
-> > > When registering an acpiphp slot, log the slot name in the same style as
-> > > pciehp and include the PCI bus/device and whether a device is present or
-> > > the slot is empty.
-> > >
-> > > When handling an ACPI notification, log the PCI bus/device and notification
-> > > type.
-> > >
-> > > Sample dmesg log diff:
-> > >
-> > >     ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
-> > >   - acpiphp: Slot [3] registered
-> > >   - acpiphp: Slot [4] registered
-> > >     PCI host bridge to bus 0000:00
-> > >     pci 0000:00:03.0: [8086:100e] type 00 class 0x020000
-> > >     <ACPI Device Check notification>
-> > >     pci 0000:00:04.0: [8086:100e] type 00 class 0x020000
-> > >
-> > >     ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
-> > >   + acpiphp: pci 0000:00:03 Slot(3) registered (enabled)
-> > >   + acpiphp: pci 0000:00:04 Slot(4) registered (empty)
-> > >     PCI host bridge to bus 0000:00
-> > >     pci 0000:00:03.0: [8086:100e] type 00 class 0x020000
-> > >     <ACPI Device Check notification>
-> > >   + acpiphp: pci 0000:00:04 Slot(4) Device Check
-> > >     pci 0000:00:04.0: [8086:100e] type 00 class 0x020000
-> > > ...
->
-> > > @@ -793,6 +804,14 @@ static void hotplug_event(u32 type, struct acpiphp_context *context)
-> > >
-> > >         pci_lock_rescan_remove();
-> > >
-> > > +       pr_info("pci %04x:%02x:%02x Slot(%s) %s\n",
-> > > +               pci_domain_nr(slot->bus), slot->bus->number,
-> > > +               slot->device, slot_name(slot->slot),
-> > > +               type == ACPI_NOTIFY_BUS_CHECK ? "Bus Check" :
-> > > +               type == ACPI_NOTIFY_DEVICE_CHECK ? "Device Check" :
-> > > +               type == ACPI_NOTIFY_EJECT_REQUEST ? "Eject Request" :
-> > > +               "Notification");
-> >
-> > pr_debug() perhaps?
-> >
-> > On systems that don't have any hotplug problems these messages will
-> > just be filling the kernel log unnecessarily.
->
-> If these notifications are really common, pr_debug() sounds like the
-> right thing.  I assumed that they would not be common, e.g., they
-> would happen for user-time things like dock/undock, plug/unplug,
-> suspend/resume, etc.
->
-> In pciehp, we use _info for attention button presses, presence detect
-> changes, link up/down, and I assumed the ACPI notify events would
-> roughly correspond to those.  No?
+PCI core add pci_find_next_dvsec_capability() to query the next DVSEC.
+We can use that core API to simplify the code. Also remove the unused
+macros.
 
-Depending on how often the system gets suspended and resumed, they may
-end up in the log quite often and if there are no problems related to
-them, they are just noise.
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+---
+ arch/powerpc/platforms/powernv/ocxl.c | 20 ++------------------
+ drivers/misc/ocxl/config.c            | 21 ++++++---------------
+ include/misc/ocxl-config.h            |  4 ----
+ 3 files changed, 8 insertions(+), 37 deletions(-)
 
-IMHO in that case the users are taught to ignore stuff that lands in
-the log which is not fantastic.
+diff --git a/arch/powerpc/platforms/powernv/ocxl.c b/arch/powerpc/platforms/powernv/ocxl.c
+index 629067781cec..8dbc1a9535fc 100644
+--- a/arch/powerpc/platforms/powernv/ocxl.c
++++ b/arch/powerpc/platforms/powernv/ocxl.c
+@@ -71,29 +71,13 @@ static DEFINE_MUTEX(links_list_lock);
+  * the AFUs, by pro-rating if needed.
+  */
+ 
+-static int find_dvsec_from_pos(struct pci_dev *dev, int dvsec_id, int pos)
+-{
+-	int vsec = pos;
+-	u16 vendor, id;
+-
+-	while ((vsec = pci_find_next_ext_capability(dev, vsec,
+-						    OCXL_EXT_CAP_ID_DVSEC))) {
+-		pci_read_config_word(dev, vsec + OCXL_DVSEC_VENDOR_OFFSET,
+-				&vendor);
+-		pci_read_config_word(dev, vsec + OCXL_DVSEC_ID_OFFSET, &id);
+-		if (vendor == PCI_VENDOR_ID_IBM && id == dvsec_id)
+-			return vsec;
+-	}
+-	return 0;
+-}
+-
+ static int find_dvsec_afu_ctrl(struct pci_dev *dev, u8 afu_idx)
+ {
+ 	int vsec = 0;
+ 	u8 idx;
+ 
+-	while ((vsec = find_dvsec_from_pos(dev, OCXL_DVSEC_AFU_CTRL_ID,
+-					   vsec))) {
++	while ((vsec = pci_find_next_dvsec_capability(dev, vsec,
++				PCI_VENDOR_ID_IBM, OCXL_DVSEC_AFU_CTRL_ID))) {
+ 		pci_read_config_byte(dev, vsec + OCXL_DVSEC_AFU_CTRL_AFU_IDX,
+ 				&idx);
+ 		if (idx == afu_idx)
+diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
+index 92ab49705f64..6c0fca32e6db 100644
+--- a/drivers/misc/ocxl/config.c
++++ b/drivers/misc/ocxl/config.c
+@@ -39,23 +39,14 @@ static int find_dvsec(struct pci_dev *dev, int dvsec_id)
+ static int find_dvsec_afu_ctrl(struct pci_dev *dev, u8 afu_idx)
+ {
+ 	int vsec = 0;
+-	u16 vendor, id;
+ 	u8 idx;
+ 
+-	while ((vsec = pci_find_next_ext_capability(dev, vsec,
+-						    OCXL_EXT_CAP_ID_DVSEC))) {
+-		pci_read_config_word(dev, vsec + OCXL_DVSEC_VENDOR_OFFSET,
+-				&vendor);
+-		pci_read_config_word(dev, vsec + OCXL_DVSEC_ID_OFFSET, &id);
+-
+-		if (vendor == PCI_VENDOR_ID_IBM &&
+-			id == OCXL_DVSEC_AFU_CTRL_ID) {
+-			pci_read_config_byte(dev,
+-					vsec + OCXL_DVSEC_AFU_CTRL_AFU_IDX,
+-					&idx);
+-			if (idx == afu_idx)
+-				return vsec;
+-		}
++	while ((vsec = pci_find_next_dvsec_capability(dev, vsec,
++				PCI_VENDOR_ID_IBM, OCXL_DVSEC_AFU_CTRL_ID))) {
++		pci_read_config_byte(dev, vsec + OCXL_DVSEC_AFU_CTRL_AFU_IDX,
++				     &idx);
++		if (idx == afu_idx)
++			return vsec;
+ 	}
+ 	return 0;
+ }
+diff --git a/include/misc/ocxl-config.h b/include/misc/ocxl-config.h
+index ccfd3b463517..40cf1b143170 100644
+--- a/include/misc/ocxl-config.h
++++ b/include/misc/ocxl-config.h
+@@ -10,10 +10,6 @@
+  * It follows the specification for opencapi 3.0
+  */
+ 
+-#define OCXL_EXT_CAP_ID_DVSEC                 0x23
+-
+-#define OCXL_DVSEC_VENDOR_OFFSET              0x4
+-#define OCXL_DVSEC_ID_OFFSET                  0x8
+ #define OCXL_DVSEC_TL_ID                      0xF000
+ #define   OCXL_DVSEC_TL_BACKOFF_TIMERS          0x10
+ #define   OCXL_DVSEC_TL_RECV_CAP                0x18
+-- 
+2.20.1
+
