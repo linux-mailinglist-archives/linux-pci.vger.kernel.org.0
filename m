@@ -2,162 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8837F773E40
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 18:27:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25676774224
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 19:35:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232705AbjHHQ1i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Aug 2023 12:27:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34346 "EHLO
+        id S230226AbjHHRf4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Aug 2023 13:35:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230100AbjHHQ0R (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 12:26:17 -0400
+        with ESMTP id S233708AbjHHRfd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 13:35:33 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F2D136
-        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 08:50:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDAE797D5D
+        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 09:15:29 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7CCAB60202
-        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 07:31:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AA52C433C7;
-        Tue,  8 Aug 2023 07:31:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 973FA62166
+        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 07:56:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC7B1C433C8;
+        Tue,  8 Aug 2023 07:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691479917;
-        bh=ATs2f06VXRPuOGQ04L+DaPWovVdeFCFuKK9xzmYIC14=;
+        s=k20201202; t=1691481387;
+        bh=neADDd1vZwFjQNQRa9xqHewGQOvBGcnQpVQrUa/in54=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N0ruxBMeU2doqFZn7yfljKGPTEdRD1aFxvsrZirlwWztN0RumGl1w8cunoA5kHL/y
-         lmCGn/IJSjONQMUWptmZXnE9TCxpfjLRGYwaMn7hg77wr/Dbbj/HNUALFAWGn6KUR3
-         GgVb5hKH7B9mhY0SrfjKXSgmivKBTaJvVDsA4bVV4cdQ+jcTAWH/SXJmOkpVUB/njD
-         1YQvm3COA9B6dguuHgl2Xc54fjYoGoBEthEnBUH5v+HZ1vEzZF5BnKHmv8KRc6cIbm
-         Ls4kLkW5qHgUTENS9hKRnqS3DPcSynSXaRr2yeZ2GPhH7ZRicquvlqaTOFtrNp0JXd
-         nkOZ33jUFdjQw==
+        b=ndC3njM5PJwnLTcX9+AmJb3M8Hgb7ighXwFLymLrLJdYqH4cJJ+/0AthUWUBY4x0v
+         jUf20uQoGpJkxRcaoc1zGRtcFyK5PZnVlLgz817hUjRswA3MZsxaiJqVSBfhGYIXui
+         yr5h4uPJEuE7SnnDNQ40ppkWexA3ozkhzweUn6nAeUgXhioTFDavvb99IACszysG8K
+         XdX4NueJUepSKi+sYkhK4GAnJghLsb8BoJeRnmjkPOU7Akt2STd2wqV+paBOgzmlBC
+         w7HW8pbD/UVCYN58/EOue1PsWih4JSSZaI7LpQYJAuNgfWZ6NXuOWH4IUOLCu42TTB
+         L3AyF1uQPDlHw==
 Received: by pali.im (Postfix)
-        id 8F91F687; Tue,  8 Aug 2023 09:31:54 +0200 (CEST)
-Date:   Tue, 8 Aug 2023 09:31:54 +0200
+        id 15CB9687; Tue,  8 Aug 2023 09:56:24 +0200 (CEST)
+Date:   Tue, 8 Aug 2023 09:56:23 +0200
 From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 Cc:     "Russell King (Oracle)" <linux@armlinux.org.uk>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        linux-pci@vger.kernel.org
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH] PCI: mvebu: Mark driver as BROKEN
-Message-ID: <20230808073154.bstm3xwtjalyq3qb@pali>
-References: <ZMzicVQEyHyZzBOc@shell.armlinux.org.uk>
- <20230804170655.GA147757@bhelgaas>
+Message-ID: <20230808075623.lmhvotnzzjsz5r2o@pali>
+References: <20230114164125.1298-1-pali@kernel.org>
+ <ZMzicVQEyHyZzBOc@shell.armlinux.org.uk>
+ <20230804134622.pmbymxtzxj2yfhri@pengutronix.de>
+ <20230808072701.gx6apjnnrppv7sit@pali>
+ <20230808073822.35vlao5bs6bo2b2n@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230804170655.GA147757@bhelgaas>
+In-Reply-To: <20230808073822.35vlao5bs6bo2b2n@pengutronix.de>
 User-Agent: NeoMutt/20180716
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 04 August 2023 12:06:55 Bjorn Helgaas wrote:
-> [+cc Krzysztof]
+On Tuesday 08 August 2023 09:38:22 Uwe Kleine-König wrote:
+> Hello Pali,
 > 
-> On Fri, Aug 04, 2023 at 12:35:13PM +0100, Russell King (Oracle) wrote:
-> > So it seems this patch got applied, but it wasn't Cc'd to
-> > linux-arm-kernel or anyone else, so those of us with platforms never
-> > had a chance to comment on it.
+> On Tue, Aug 08, 2023 at 09:27:01AM +0200, Pali Rohár wrote:
+> > On Friday 04 August 2023 15:46:22 Uwe Kleine-König wrote:
+> > > On Fri, Aug 04, 2023 at 12:35:13PM +0100, Russell King (Oracle) wrote:
+> > > > Uwe has a SATA controller for a bunch of disks in an Armada 370 based
+> > > > NAS platform that is connected to PCIe, and removing PCIe support
+> > > > effectively makes his platform utterly useless.
+> > > 
+> > > While this is true there is really a problem on my platform with
+> > > accessing the hard disks via that pci controller and a 88SE9215 SATA
+> > > controller. While it seems to work in principle, it's incredible slow.
 > > 
-> > *** This change causes a regression to working setups. ***
-> > 
-> > It appears that the *only* reason this patch was proposed is to stop a
-> > kernel developer receiving problem reports from a set of users, but
-> > completely ignores that there is another group of users where this works
-> > fine - and thus the addition of this patch causes working setups to
-> > regress.
-> > 
-> > Because one is being bothered with problem reports is not a reason to
-> > mark a driver broken - and especially not doing so in a way that those
-> > who may be affected don't get an opportunity to comment on the patch!
-> > Also, there is _zero_ information provided on what the reported problems
-> > actually are, so no one else can guess what these issues are.
-> > 
-> > However, given that there are working setups and this change causes
-> > those to regress, it needs to be reverted.
-> > 
-> > For example, I have an Atheros PCIe WiFi card in an Armada 388 Clearfog
-> > platform, and this works fine.
-> > 
-> > Uwe has a SATA controller for a bunch of disks in an Armada 370 based
-> > NAS platform that is connected to PCIe, and removing PCIe support
-> > effectively makes his platform utterly useless.
-> > 
-> > Please revert this patch.
+> > Exactly those are things which randomly does not work.
 > 
-> Sorry for the inconvenience.
-> 
-> I was under the mistaken impression that making the driver depend on
-> CONFIG_BROKEN would keep the driver available but only if the user
-> explicitly requested it, similar to how 
-> CONFIG_COMPILE_TEST works.  But obviously that's not the case, so
-> we'll revert the change.
-> 
-> I queued up the revert below, including a note in the Kconfig help
-> text about the known issues.
-> 
-> commit 814b6bb15367 ("Revert "PCI: mvebu: Mark driver as BROKEN"")
-> Author: Bjorn Helgaas <bhelgaas@google.com>
-> Date:   Fri Aug 4 11:54:43 2023 -0500
-> 
->     Revert "PCI: mvebu: Mark driver as BROKEN"
->     
->     b3574f579ece ("PCI: mvebu: Mark driver as BROKEN") made it impossible to
->     enable the pci-mvebu driver.  The driver does have known problems, but as
->     Russell and Uwe reported, it does work in some configurations, so removing
->     it broke some working setups.
->     
->     Revert b3574f579ece so pci-mvebu is available.  Mention the known problems
->     in the Kconfig help text.
->     
->     Reported-by: Russell King (Oracle) <linux@armlinux.org.uk>
->     Link: https://lore.kernel.org/r/ZMzicVQEyHyZzBOc@shell.armlinux.org.uk
->     Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
->     Link: https://lore.kernel.org/r/20230804134622.pmbymxtzxj2yfhri@pengutronix.de
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
+> I had this slow behaviour consistently on next-20230803 and
+> next-20230804 was fine. I thought that meant that there was something
+> fixed between these two trees. Do you suggest this is worth to
+> investigate as it might just be some butterfly effect that made the
+> problem go away?
 
-What you are trying to achieve with this patch now? Do you think that it
-is really correct to show that everything is working for everybody
-correctly? Use a common sense here.
+These issues are there for a longer time, it started appearing after
+5.15 lts version. And by your description it means that they were not
+fixed yet.
 
-Or this is a way how kernel people are fixing bugs?
+> Best regards
+> Uwe
+> 
+> -- 
+> Pengutronix e.K.                           | Uwe Kleine-König            |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-Now I'm starting understand why majority of HW industry say to not use
-"unsupported mainline kernel" and instead use our prepared patched
-kernels...
 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 8d49bad7f847..478f158b2dfb 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -179,13 +179,15 @@ config PCI_MVEBU
->  	depends on MVEBU_MBUS
->  	depends on ARM
->  	depends on OF
-> -	depends on BROKEN
->  	select PCI_BRIDGE_EMUL
->  	help
->  	 Add support for Marvell EBU PCIe controller. This PCIe controller
->  	 is used on 32-bit Marvell ARM SoCs: Dove, Kirkwood, Armada 370,
->  	 Armada XP, Armada 375, Armada 38x and Armada 39x.
->  
-> +	 This driver has known problems that may cause crashes during boot
-> +	 and failure to detect PCIe devices in some cases.
-> +
->  config PCIE_MEDIATEK
->  	tristate "MediaTek PCIe controller"
->  	depends on ARCH_AIROHA || ARCH_MEDIATEK || COMPILE_TEST
