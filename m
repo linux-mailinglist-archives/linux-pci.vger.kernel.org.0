@@ -2,85 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 28F4A77471C
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 21:09:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC8A977493F
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 21:50:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234577AbjHHTJp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Aug 2023 15:09:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52510 "EHLO
+        id S230397AbjHHTuh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Aug 2023 15:50:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231631AbjHHTJQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 15:09:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 641C92FA2B
-        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 09:31:03 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9CEE9623E4
-        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 07:04:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE8C8C433C7;
-        Tue,  8 Aug 2023 07:04:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691478250;
-        bh=0kLVYnJCAHrNEd6IC9dxsFc15LPqkFS44LyZ4cxCS0Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fSB88tEpNsZbn8gqOxe9W3CgFZtxdkO2enG9vqfG8/RIDgsnU89A4kvtQcacVfVc0
-         tOGu8C+c4LLIPhl102KCUrO8ZPPMHu0LVsSlnnQL1k77WEtgHs/+KaS2pxnIPUA5Kh
-         VT0Q+ExeMeFPCQkqyXo1eY1SXLaiGzjizUOTAvqDUq9aiHKWrfTIpe1UNWl+Y+nuTf
-         aeUzieb0/N8tQnxm+bf75KnkwJFzubDXCEIauOwxpLYuWyxGKuZjSQJsJcbUKpEUYi
-         Xc8QqEXVoNnLc72odVBQPq9T/l4Gx+OPc/2nNKIATSql2dih6AtHdUkms8jUGJUUy3
-         1I0VuKNoWdZUg==
-Date:   Tue, 8 Aug 2023 12:33:57 +0530
-From:   mani <mani@kernel.org>
-To:     Li Chen <me@linux.beauty>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        with ESMTP id S229553AbjHHTuW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 15:50:22 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D971EA2B9
+        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 09:56:47 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qTHIO-0006g7-0w; Tue, 08 Aug 2023 09:38:24 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qTHIM-001vlU-W3; Tue, 08 Aug 2023 09:38:23 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qTHIM-00BLuB-9u; Tue, 08 Aug 2023 09:38:22 +0200
+Date:   Tue, 8 Aug 2023 09:38:22 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     "Russell King (Oracle)" <linux@armlinux.org.uk>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC] add __iomem cookie for EPF BAR
-Message-ID: <20230808070357.GC4990@thinkpad>
-References: <189cff865f3.fc7e71c96186.1411633612292556520@linux.beauty>
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] PCI: mvebu: Mark driver as BROKEN
+Message-ID: <20230808073822.35vlao5bs6bo2b2n@pengutronix.de>
+References: <20230114164125.1298-1-pali@kernel.org>
+ <ZMzicVQEyHyZzBOc@shell.armlinux.org.uk>
+ <20230804134622.pmbymxtzxj2yfhri@pengutronix.de>
+ <20230808072701.gx6apjnnrppv7sit@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mfde7qneidzydtp6"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <189cff865f3.fc7e71c96186.1411633612292556520@linux.beauty>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230808072701.gx6apjnnrppv7sit@pali>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 07, 2023 at 08:28:30PM +0800, Li Chen wrote:
-> Hi All
-> 
-> Currently, the EPF's bar is allocated by pci_epf_alloc_space, which internally uses dma_alloc_coherent and the caching behavior of dma_alloc_coherent may vary depending on platforms.
-> 
-> The bar space is exported to RC, which means that RC may modify it without EP being aware of it, so EP still read from the cache and get stalled data. To address this issue, the bar space should be treated as iomem instead and forced to use io read/write APIs, which enforces volatile. 
-> 
 
-We already had a similar discussion on using volatile for BAR space and settled
-with {WRITE/READ}_ONCE macros in EPF Test driver [1].
+--mfde7qneidzydtp6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Since the BAR space allocated in endpoint is not a MMIO, I don't think it should
-be forced as iomem. Rather EPF drivers should use _ONCE macros to access the
-fields to avoid coherency issues as suggested by Arnd earlier.
+Hello Pali,
 
-- Mani
+On Tue, Aug 08, 2023 at 09:27:01AM +0200, Pali Roh=E1r wrote:
+> On Friday 04 August 2023 15:46:22 Uwe Kleine-K=F6nig wrote:
+> > On Fri, Aug 04, 2023 at 12:35:13PM +0100, Russell King (Oracle) wrote:
+> > > Uwe has a SATA controller for a bunch of disks in an Armada 370 based
+> > > NAS platform that is connected to PCIe, and removing PCIe support
+> > > effectively makes his platform utterly useless.
+> >=20
+> > While this is true there is really a problem on my platform with
+> > accessing the hard disks via that pci controller and a 88SE9215 SATA
+> > controller. While it seems to work in principle, it's incredible slow.
+>=20
+> Exactly those are things which randomly does not work.
 
-[1] https://lore.kernel.org/linux-pci/c49df2f9-9848-45aa-9d64-9e4e9841440f@app.fastmail.com/
+I had this slow behaviour consistently on next-20230803 and
+next-20230804 was fine. I thought that meant that there was something
+fixed between these two trees. Do you suggest this is worth to
+investigate as it might just be some butterfly effect that made the
+problem go away?
 
-> If you agree, I would create patches for existing EPF and EPF/EPC core and submit them for review.
-> 
-> Regards,
-> Li
+Best regards
+Uwe
 
--- 
-மணிவண்ணன் சதாசிவம்
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--mfde7qneidzydtp6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmTR8O0ACgkQj4D7WH0S
+/k6I7ggAkvBg/yZHZHb90BJ38qJPf5cSgepg4MYV9kJ6MpxCNencGfuxH7UEFM7t
+IWKYzkNKBdz1eKskT5A4CHUoTJuiyNeZWNtarbL+DN8i4T2M7boyF5DjXlkYQvP9
+aFxs85BvugFvSaU1GqvxR1y5SgZZg7oJyGh+h6jFL4nS1NRokAwjAYh42zDROVfF
+EtxhrulOZjHx+qJDMb6Xow4BCyidTl7JJqW76jSvhu4lT5yn0HkOFWLr9VhF/bcY
+t0H/tnjggfbMqIOaOTAseZ4BN3Tsify5M4Jfjkql/1r0B+xC13pxF7Z1IfbNOoVa
+e2x5Pnr7y3dnC4VYsBBD9LjPbp4plw==
+=xwD8
+-----END PGP SIGNATURE-----
+
+--mfde7qneidzydtp6--
