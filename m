@@ -2,200 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD080773B50
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 17:48:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64D0D773B89
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 17:52:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229980AbjHHPss (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Aug 2023 11:48:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37900 "EHLO
+        id S230320AbjHHPwM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Aug 2023 11:52:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229493AbjHHPrZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 11:47:25 -0400
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58326422A;
-        Tue,  8 Aug 2023 08:41:33 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id D169132009E6;
-        Tue,  8 Aug 2023 03:38:27 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Tue, 08 Aug 2023 03:38:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-        cc:cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm1; t=
-        1691480307; x=1691566707; bh=Knybq0RB1LVNGAjxl9LcbJ93Kivqg2gX18/
-        gaDHnUT4=; b=wKwgJyj+XdyQxhTGqdq1f6STJef87fhs6sTGy1m4KcjrYCeQr2i
-        tKfaZbnPrlTlT7m3pLz9z0kgMfN7x1NPSMFK7nrltjAuGCNKZYjCmN7NJoNS6Tnl
-        22PRM/jyOjkhXJs4qdHz9GHOMzGmSoBMzqvbX0X1mt/mgeEMD+7Ue96YDAkqox0e
-        xYtpPvrEZXLeVkUoNOVe+RcNZBJOrnUVeYDlzJ7HLuu0im3l2T637ddBW/Pw8EBV
-        j7pKv56W86TaZg/K6nVzytDomVNjlvBptY+zMttM2Rw2k0PNehDxHJMFsvYZ79PL
-        aUfZcG1FcH0g73iuI96Qltq+hC6NzIGRSZQ==
+        with ESMTP id S229459AbjHHPut (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 11:50:49 -0400
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FC8E1FFA
+        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 08:42:32 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id CC6725C00BD;
+        Tue,  8 Aug 2023 03:45:06 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Tue, 08 Aug 2023 03:45:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm3; t=1691480706; x=1691567106; bh=gj
+        z6OiMLrclZFMOUDCUupdUehHVLB5u//qoVBb28758=; b=Zs1XR4Mpb4b6OHtphg
+        7fhSC6urXg/c1oB2RqwiSpHOSqGeYr8got8RKvBlXlsqV0yh27q8outTFwUBtIvo
+        2Q9JG3yKc3VrpmSpzgjC8lYENkZWHGniBqRglvSU7FR55Y12jFzveDa1VJsXPUPK
+        qKGhm/XEOLr+doQLI8J5EnCPLSHkLZ1FAkyoZU0HyxbELopFidStirDzHhZKgSqF
+        lO/kiZMwxDnIzw5ZocKKw9QkpwFLwzKnvmAb5mfa+vM8GUmW0UrNuDqDpsePyjC2
+        gzW9RzI9X8g3wROVk8yy0GiIIWTb5zvsgWuiUFPzPxL/WZsTk1Lz477x3sV5y0Sb
+        OhgA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-        1691480307; x=1691566707; bh=Knybq0RB1LVNGAjxl9LcbJ93Kivqg2gX18/
-        gaDHnUT4=; b=q4NoRkO8hJPfXI9TmnCEcSVHA9e7/4PRO2jsKwuSQSSW+tnUA13
-        2lZ92ehFtjH+BI7bZfMk8RMT++2RRks2PRD1489w1DYLUTc2lr0QC3ivj1jFLrM8
-        8+lA/oNmaqtk6Q+Dpb8x0LmD2vojMOuUN6YhCTZdcPmmt5UsYi0o1vlihesykGML
-        XP48J5s9iZfAkQoWBYNvShHDtUgLJ4I0TlpAgGMak6S5ncv3wDQSym4/LQXZt5J1
-        vdkq0lvvkVJXEsl3S3SRo95DG4et760hvE+0Ktw7AMuVgP0epOkDzXVOGP+6bYxP
-        N6IQkay+7poe4Cp5BYDE/+DzvskoOvlGvnA==
-X-ME-Sender: <xms:8vDRZAMzVpimbWrVMf8_G8Pm73wSK-w5Ass3aqlnTHFwHlPIJiLmcg>
-    <xme:8vDRZG-GQjd7Sr5XWXzutuW_63DBEI0yjtm0CHq0RtLpHPngkqLKOmfY-y6UhdVnG
-    1K0VcM04S5pI1wegTk>
-X-ME-Received: <xmr:8vDRZHRPz3OuYhiAoHJ_oPMmg5r5889qtqN1LEz-_qHW8-4qQxyK2gzXaO--g_JaBn_b>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrledugdduudelucetufdoteggodetrfdotf
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1691480706; x=1691567106; bh=gjz6OiMLrclZF
+        MOUDCUupdUehHVLB5u//qoVBb28758=; b=i4fi9+pb0Go1yVsuU9zo7pqGl7iru
+        JSbYFrI0aBEJ0q3Uxu6d3GZPHdRNREVBDrzcNfqETD6SrbYBf2E/LOm0eYeAQv9t
+        YICd+WAInSszDs2GOQhG2EQQQIuR6fCKVdhCN1/myT4WUWjDOas55zoL2gM5OHOV
+        kBrCPwpQAy3Jj490SIxRlBQ7mWU1SdYjR9UZ6Lgp7mrehSErDihR2IbQIl4jmzrS
+        PwadcC/wgcGM01lXPTpirkOmd1xrtq2kTOcbZ1V2fKM94m+xX4wX2tZw4wgRKqY+
+        0nUUyzm8IDqZKiPWbX7DM5yzqCZG1t2H9q8hSbTVavSvXT3NjuEoC+02g==
+X-ME-Sender: <xms:gvLRZLUow1VgUUEqFGi7yRLafPkT5Hr10QU10M8VuwkF8FAVqZvLFA>
+    <xme:gvLRZDkPfZ-jCjtiUoxXdfB0CK9U1kMyscXaLGFd7r0cPvlVuASyhc99UyPSWK5r3
+    uHKTetrtJ4gClmGEWg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrledugdduvddtucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtfeejnecuhfhrohhmpeflihgr
-    gihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqne
-    cuggftrfgrthhtvghrnhepffeltdeggfdufffhfeetleevueduuefghfelveeukeejleeu
-    heevgfevieeiudfhnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvg
-    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhg
-    sehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:8vDRZIt4eqxTNDVzypSHF0-y0myy1VcNCc-3jvDPnutLcGheea2S1g>
-    <xmx:8vDRZIf52V521I36ksXU975qyQnMtEck1NDU7odZdcASaUwrH9J85w>
-    <xmx:8vDRZM0kWdTEl_dLE-eFa7yqRoWXhVGh4eGjRUz0Y8SOfWR1sruhWQ>
-    <xmx:8_DRZNFzYUUSYy_2OOmbAg9rIz5fARB6gI5GWr9PhNR2mxZyQe7j8Q>
-Feedback-ID: ifd894703:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 8 Aug 2023 03:38:22 -0400 (EDT)
-Message-ID: <861a809d-3df1-327e-e033-87506f6d89e5@flygoat.com>
-Date:   Tue, 8 Aug 2023 15:38:19 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2] pci: loongson: Workaround MIPS firmware MRRS settings
-To:     Huacai Chen <chenhuacai@kernel.org>
-Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, kw@linux.com, lpieralisi@kernel.org,
-        stable@vger.kernel.org
-References: <20230725061008.1504292-1-jiaxun.yang@flygoat.com>
- <e9c103dc-98ac-9a51-7291-f5da1467b2ff@flygoat.com>
- <CAAhV-H7_OjTaU_wn6mUW0-JSrXS+=A2rXCiBc8cyce5ob49BLg@mail.gmail.com>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-In-Reply-To: <CAAhV-H7_OjTaU_wn6mUW0-JSrXS+=A2rXCiBc8cyce5ob49BLg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:gvLRZHYJ2bGlUtNvvIwMfyeG1KpP76Fsh1sAtB_VBDQPsZD3KLEBdw>
+    <xmx:gvLRZGV3lAlemTTVW-ONrcOwKj7RqV-sSEeZ8OmzLTZeKX3-767gwQ>
+    <xmx:gvLRZFlY21pxcWJqKfQEWhEzJat1pjmNKRGxoG4EHHxFCqwgcVTugA>
+    <xmx:gvLRZLjFKuYtLsmQSPhsmybpqtzZt7FWEPiyBexxedgvaKFaKvjngg>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 6458BB60089; Tue,  8 Aug 2023 03:45:06 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
+Mime-Version: 1.0
+Message-Id: <344b8ccd-23c9-4476-9493-1d2b9c23590d@app.fastmail.com>
+In-Reply-To: <20230808070357.GC4990@thinkpad>
+References: <189cff865f3.fc7e71c96186.1411633612292556520@linux.beauty>
+ <20230808070357.GC4990@thinkpad>
+Date:   Tue, 08 Aug 2023 09:44:44 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Manivannan Sadhasivam" <mani@kernel.org>,
+        "Li Chen" <me@linux.beauty>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+        "Kishon Vijay Abraham I" <kishon@ti.com>,
+        "Bjorn Helgaas" <helgaas@kernel.org>
+Subject: Re: [RFC] add __iomem cookie for EPF BAR
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-在 2023/8/6 22:30, Huacai Chen 写道:
-> Hi, Jiaxun,
+On Tue, Aug 8, 2023, at 09:03, mani wrote:
+> On Mon, Aug 07, 2023 at 08:28:30PM +0800, Li Chen wrote:
+>> 
+>> Currently, the EPF's bar is allocated by pci_epf_alloc_space, which internally uses dma_alloc_coherent and the caching behavior of dma_alloc_coherent may vary depending on platforms.
+>> 
+>> The bar space is exported to RC, which means that RC may modify it without EP being aware of it, so EP still read from the cache and get stalled data. To address this issue, the bar space should be treated as iomem instead and forced to use io read/write APIs, which enforces volatile. 
+>> 
 >
-> On Sun, Aug 6, 2023 at 10:20 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->>
->>
->> 在 2023/7/25 14:10, Jiaxun Yang 写道:
->>> This is a partial revert of commit 8b3517f88ff2 ("PCI:
->>> loongson: Prevent LS7A MRRS increases") for MIPS based Loongson.
->>>
->>> There are many MIPS based Loongson systems in wild that
->>> shipped with firmware which does not set maximum MRRS properly.
->>>
->>> Limiting MRRS to 256 for all as MIPS Loongson comes with higher
->>> MRRS support is considered rare.
->>>
->>> Cc: stable@vger.kernel.org
->>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217680
->>> Fixes: 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases")
->>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->> Ping?
->> I expect this patch to go through PCI fixes tree.
-> Can we do it like this by modifying the existing loongson_mrrs_quirk()?
-
-Hmm, I'm not sure this will work, since loongson_mrrs_quirk only run on 
-bridges
-but the old quirk should run on every single device.
-
-Thanks
-Jiaxun
-
+> We already had a similar discussion on using volatile for BAR space and settled
+> with {WRITE/READ}_ONCE macros in EPF Test driver [1].
 >
-> static void loongson_mrrs_quirk(struct pci_dev *pdev)
-> {
->          /*
->           * Some Loongson PCIe ports have h/w limitations of maximum read
->           * request size. They can't handle anything larger than this. So
->           * force this limit on any devices attached under these ports.
->           */
->          struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
->
-> #ifdef CONFIG_MIPS
->          set_pcie_ports_to_mrrs_256_to_emulate_the_firmware_behavior();
-> #endif
->
->          bridge->no_inc_mrrs = 1;
-> }
->
->> Thanks
->> - Jiaxun
->>
->>> ---
->>> v2: Rename quirk name to: loongson_old_mrrs_quirk
->>> ---
->>>    drivers/pci/controller/pci-loongson.c | 38 +++++++++++++++++++++++++++
->>>    1 file changed, 38 insertions(+)
->>>
->>> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
->>> index fe0f732f6e43..d0f68b102d10 100644
->>> --- a/drivers/pci/controller/pci-loongson.c
->>> +++ b/drivers/pci/controller/pci-loongson.c
->>> @@ -108,6 +108,44 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->>>    DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->>>                        DEV_LS7A_PCIE_PORT6, loongson_mrrs_quirk);
->>>
->>> +#ifdef CONFIG_MIPS
->>> +static void loongson_old_mrrs_quirk(struct pci_dev *pdev)
->>> +{
->>> +     struct pci_bus *bus = pdev->bus;
->>> +     struct pci_dev *bridge;
->>> +     static const struct pci_device_id bridge_devids[] = {
->>> +             { PCI_VDEVICE(LOONGSON, DEV_LS2K_PCIE_PORT0) },
->>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT0) },
->>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT1) },
->>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT2) },
->>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT3) },
->>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT4) },
->>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT5) },
->>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT6) },
->>> +             { 0, },
->>> +     };
->>> +
->>> +     /* look for the matching bridge */
->>> +     while (!pci_is_root_bus(bus)) {
->>> +             bridge = bus->self;
->>> +             bus = bus->parent;
->>> +             /*
->>> +              * There are still some wild MIPS Loongson firmware won't
->>> +              * set MRRS properly. Limiting MRRS to 256 as MIPS Loongson
->>> +              * comes with higher MRRS support is considered rare.
->>> +              */
->>> +             if (pci_match_id(bridge_devids, bridge)) {
->>> +                     if (pcie_get_readrq(pdev) > 256) {
->>> +                             pci_info(pdev, "limiting MRRS to 256\n");
->>> +                             pcie_set_readrq(pdev, 256);
->>> +                     }
->>> +                     break;
->>> +             }
->>> +     }
->>> +}
->>> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_old_mrrs_quirk);
->>> +#endif
->>> +
->>>    static void loongson_pci_pin_quirk(struct pci_dev *pdev)
->>>    {
->>>        pdev->pin = 1 + (PCI_FUNC(pdev->devfn) & 3);
+> Since the BAR space allocated in endpoint is not a MMIO, I don't think it should
+> be forced as iomem. Rather EPF drivers should use _ONCE macros to access the
+> fields to avoid coherency issues as suggested by Arnd earlier.
 
+Using readl/writel is clearly the wrong solution here as I explained
+before, but I assume that Li Chen is dealing with a real problem.
+
+If the cache is coherent with the device, then reading from the cache
+is clearly the right thing to do, but the mentioned "stall" problem may
+be related to the store buffers, where an dma_wmb() after the
+WRITE_ONCE() is missing. Similarly, a dma_rmb() might be missing before
+a READ_ONCE() to prevent prefetching during out-of-order execution.
+
+With readl()/writel(), you already get very heavy barriers, so it may
+end up working by accident, but these barriers are at the other side
+of the access (before writel and after readl) and may be the wrong
+type of barrier depending on the CPU.
+
+       Arnd
