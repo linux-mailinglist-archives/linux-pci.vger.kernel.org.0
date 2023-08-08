@@ -2,155 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C6C1774947
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 21:51:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA8F777481F
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 21:26:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232230AbjHHTu7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Aug 2023 15:50:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36442 "EHLO
+        id S233087AbjHHT0e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Aug 2023 15:26:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231904AbjHHTun (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 15:50:43 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 385C853F12
-        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 09:56:38 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qTHfF-00010w-4J; Tue, 08 Aug 2023 10:02:01 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qTHfE-001vnq-B5; Tue, 08 Aug 2023 10:02:00 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qTHfD-00BM3x-KD; Tue, 08 Aug 2023 10:01:59 +0200
-Date:   Tue, 8 Aug 2023 10:01:59 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        with ESMTP id S233460AbjHHT0F (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 15:26:05 -0400
+Received: from pandora.armlinux.org.uk (unknown [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB6380AE
+        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 11:51:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=S+XXnKtj7sFpmYD9cihTD7FnEzWIRdk2onC3cV6aol0=; b=od07sGnmhi3ThCrW+qINhg/ZuA
+        6MHnB/WLD+iZr2aUEEklMbjIVkiQIyhtWSzbWosw4J1b0DxaKj4dS3H7+9a6Sg0eD+ProgTYDGJgB
+        PogLlfeQAg4Xtk0NP3npFFqX5v3kHIwyCRREeqTRG7aOXEGcBkXkgAvp06izd8vL4suCWQMA2gV+g
+        Ca6EXfNSHLbYz05ATDhi1SAehakvH2Fg9i9iju+BRy7t6NN+IjbV8uofu1B5ekE+gHbTrjmFz06b+
+        Cwb883NOlFLtjShnVu813EJ/nIG4MzqxwtfNlkJuWiSJxu8/KyQQxdHTWGweva59F2QdAKqmoNDrj
+        XrONmvtA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44518)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.96)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1qTI4q-0006lE-0Y;
+        Tue, 08 Aug 2023 09:28:28 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1qTI4q-0007uy-6j; Tue, 08 Aug 2023 09:28:28 +0100
+Date:   Tue, 8 Aug 2023 09:28:28 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        linux-pci@vger.kernel.org
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pci@vger.kernel.org
 Subject: Re: [PATCH] PCI: mvebu: Mark driver as BROKEN
-Message-ID: <20230808080159.cjffiewenmazhrgx@pengutronix.de>
-References: <ZMzicVQEyHyZzBOc@shell.armlinux.org.uk>
- <20230804170655.GA147757@bhelgaas>
- <20230808073154.bstm3xwtjalyq3qb@pali>
+Message-ID: <ZNH8rM/EJQrEKsgo@shell.armlinux.org.uk>
+References: <20230114164125.1298-1-pali@kernel.org>
+ <ZMzicVQEyHyZzBOc@shell.armlinux.org.uk>
+ <20230808072605.n3rjfsxuogza7qth@pali>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mgpjqowvhmrri6dx"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20230808073154.bstm3xwtjalyq3qb@pali>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230808072605.n3rjfsxuogza7qth@pali>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RDNS_NONE,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Aug 08, 2023 at 09:26:05AM +0200, Pali Rohár wrote:
+> On Friday 04 August 2023 12:35:13 Russell King (Oracle) wrote:
+> > Hi,
+> > 
+> > So it seems this patch got applied, but it wasn't Cc'd to
+> > linux-arm-kernel or anyone else, so those of us with platforms never
+> > had a chance to comment on it.
+> 
+> You have received more changes and fixes for last 2 years for these
+> issues and you have done **nothing**. You even not said anything.
+> So you are the last one who can complain here.
 
---mgpjqowvhmrri6dx
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That's because I can't help - what I have *works*. I have *zero*
+issues with the PCI interfaces on Armada 388.
 
-Hello Pali,
+> You should have come up and start solving issues. And not complaining
+> now.
 
-On Tue, Aug 08, 2023 at 09:31:54AM +0200, Pali Roh=E1r wrote:
-> On Friday 04 August 2023 12:06:55 Bjorn Helgaas wrote:
-> > I queued up the revert below, including a note in the Kconfig help
-> > text about the known issues.
-> >=20
-> > commit 814b6bb15367 ("Revert "PCI: mvebu: Mark driver as BROKEN"")
-> > Author: Bjorn Helgaas <bhelgaas@google.com>
-> > Date:   Fri Aug 4 11:54:43 2023 -0500
-> >=20
-> >     Revert "PCI: mvebu: Mark driver as BROKEN"
-> >    =20
-> >     b3574f579ece ("PCI: mvebu: Mark driver as BROKEN") made it impossib=
-le to
-> >     enable the pci-mvebu driver.  The driver does have known problems, =
-but as
-> >     Russell and Uwe reported, it does work in some configurations, so r=
-emoving
-> >     it broke some working setups.
-> >    =20
-> >     Revert b3574f579ece so pci-mvebu is available.  Mention the known p=
-roblems
-> >     in the Kconfig help text.
-> >    =20
-> >     Reported-by: Russell King (Oracle) <linux@armlinux.org.uk>
-> >     Link: https://lore.kernel.org/r/ZMzicVQEyHyZzBOc@shell.armlinux.org=
-=2Euk
-> >     Reported-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> >     Link: https://lore.kernel.org/r/20230804134622.pmbymxtzxj2yfhri@pen=
-gutronix.de
-> >     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> >=20
->=20
-> What you are trying to achieve with this patch now?
+How can one solve issues when they're probably hardware related and
+one doesn't experience them?
 
-We all agree that there are problems with the pci-mvebu driver. But to
-my knowledge it works in some configurations. So I guess the thing to
-achieve here is to go from "broken for everyone" (with the driver
-depending on BROKEN) to "broken for only some people". So in my view
-it's an improvement.
+Sorry, but no. If you feel as strongly as you do, walk away.
 
-> Do you think that it is really correct to show that everything is
-> working for everybody correctly?
-
-What makes you think Bjorn considers everything to work fine? Both the
-commit log and the added help text suggest he's aware of problems.
-
-> Now I'm starting understand why majority of HW industry say to not use
-> "unsupported mainline kernel" and instead use our prepared patched
-> kernels...
-
-Yes, for a given company it's the easiest and cheapest option to just
-support a single kernel version. In this regard the patch adding the
-dependency on BROKEN is even worse than the commit that removes it
-again. In an ideal world Marvell would care to work on the issues of
-their hardware's drivers or at least provide enough documentation to the
-folks who care about these drivers. I guess we both know we're not in
-that ideal world.
-
-I wonder what's your objective problem with this revert. You can just
-keep PCI_MVEBU disabled, so it doesn't affect the machines you care
-about.  You might get some mail with complaints that the driver is
-broken in some configuration. But without this revert you might get
-(more?) complaints that the driver cannot be enabled. Is that any
-better?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---mgpjqowvhmrri6dx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmTR9nYACgkQj4D7WH0S
-/k6EsAgArknZlgr8MKKkmRRAH71tzcFrezhy1S30kumlnvqLMqcPOLTHe/HOjY1s
-G9xI3WpFJ5O9Omec7KtyJ3gJdqFspwfyIHJs7s2KCBRuukrC4yyvZuND+83WbFBj
-O4R6lnVrLgLSauNFhSb7hlsk4ODNiI8m8ukmc3FJvLA9+rWFZ0Df6RZmkMvVZX2u
-NKTdSP6J8iUm7YMqfM5/nFCAzmBs32ABqNYFtZ9l/cYlF4cCTVpe2UuyFnojn50Z
-S5ePMnmMuNx8SNfYuUWMWVuTfOFZxZ8lMVERs07ufPLnRiOaLv9KJAMTy8I/e+KN
-bYXA4uSagQ+UoarA3OK1AVwvr0Ej2w==
-=s6il
------END PGP SIGNATURE-----
-
---mgpjqowvhmrri6dx--
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
