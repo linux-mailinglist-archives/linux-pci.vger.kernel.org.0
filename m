@@ -2,50 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D6F07747ED
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 21:22:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DD77774483
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 20:21:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235456AbjHHTWf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Aug 2023 15:22:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53334 "EHLO
+        id S229990AbjHHSVq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Aug 2023 14:21:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236181AbjHHTWA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 15:22:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A3FC10E9C7;
-        Tue,  8 Aug 2023 09:45:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 526CE6254B;
-        Tue,  8 Aug 2023 13:06:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E2DFC433C7;
-        Tue,  8 Aug 2023 13:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691499979;
-        bh=cRvpYcI51ENCIOzxv8f5XlXNoDaFznNKaW3wW2zr0ow=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=A6E7wuFXbhqek+azVh3Uj/E3WW6xluz7q3sP84yJsB2qv+iGQaPjVs4wBy+e+S/To
-         XkSdlquUSfO1uKp9oWK2o7UV6fJWQONPEnU1kHpDusthZ0jZdV+YrHV5nYBRJTi/F/
-         lmuRk1voPrSp7JLOh6a8/T2ZJYRo7Ib5bHjpBLjj1aCytZFqHGX4gSO3HR/eDY5uCe
-         30LLEt8CJPSLp/IiPCwKGk3dShL+BqfxQ7d0r3qRhpchAU+sRSViMoHOfC4fN6Knee
-         G0zi+oEi8htuuM5y1qG9meKOZEYv8UboJYiBSNyrFxiWSMXW+mb9BnfTCIPOpCBxxZ
-         Ap7e0/uyynO3w==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1qTMPh-0038M0-9S;
-        Tue, 08 Aug 2023 14:06:17 +0100
-Date:   Tue, 08 Aug 2023 14:06:08 +0100
-Message-ID: <867cq5hef3.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Sunil V L <sunilvl@ventanamicro.com>
-Cc:     linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
+        with ESMTP id S235038AbjHHSVT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 14:21:19 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A86048DCE2;
+        Tue,  8 Aug 2023 10:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691515904; x=1723051904;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bekUQmkLqiuuNXeg0IhE6M5EXx5phX87uLqdbgvDBug=;
+  b=LzIZY7LXvL95dYeOdFA9WJLOWFIa62K76K1AKJGDb5ldaLmSElhdGc+B
+   41et612Dqr4L+/93K9nWiTNe+WyoJ4FJe69CmW58MtQTr2mjmlN61fgmB
+   3ZlIIO55bMNHinEtLeUWmwY4cyOa034tW8BYJK+iV4+PNqCV9qpHGZu00
+   tNDX2vxjSIdpyrPK+qbxnlOnTyQkqJjbRJqf3HyQxXOuJjE3D/3tPsuuO
+   kiNTlCtbq+DwHBRyxZgQxVyWF3o2w4XbaS26wdqYsJBb90/Hn9VnSi4zq
+   pxPv6RLXWLti3zonNxVlRKXWpznHSIJ7iYcM+8fyRL4KZ+K4bnyzIEH1q
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="434668092"
+X-IronPort-AV: E=Sophos;i="6.01,156,1684825200"; 
+   d="scan'208";a="434668092"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2023 06:11:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="731407306"
+X-IronPort-AV: E=Sophos;i="6.01,156,1684825200"; 
+   d="scan'208";a="731407306"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga002.jf.intel.com with ESMTP; 08 Aug 2023 06:11:16 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qTMUS-009BJF-2O;
+        Tue, 08 Aug 2023 16:11:12 +0300
+Date:   Tue, 8 Aug 2023 16:11:12 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Sunil V L <sunilvl@ventanamicro.com>, linux-doc@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
@@ -53,7 +56,6 @@ Cc:     linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
         Will Deacon <will@kernel.org>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
         Len Brown <lenb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Daniel Scally <djrscally@gmail.com>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
@@ -61,54 +63,47 @@ Cc:     linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Anup Patel <anup@brainfault.org>,
+        Marc Zyngier <maz@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Robert Moore <robert.moore@intel.com>,
         Haibo Xu <haibo1.xu@intel.com>,
         Andrew Jones <ajones@ventanamicro.com>,
         Conor Dooley <conor.dooley@microchip.com>,
-        Atish Kumar Patra <atishp@rivosinc.com>,
-        Anup Patel <apatel@ventanamicro.com>
-Subject: Re: [RFC PATCH v1 11/21] swnode: Add support to create early during boot
-In-Reply-To: <20230803175916.3174453-12-sunilvl@ventanamicro.com>
-References: <20230803175916.3174453-1-sunilvl@ventanamicro.com> <20230803175916.3174453-12-sunilvl@ventanamicro.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: sunilvl@ventanamicro.com, linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org, corbet@lwn.net, paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, catalin.marinas@arm.com, will@kernel.org, rafael@kernel.org, lenb@kernel.org, andriy.shevchenko@linux.intel.com, djrscally@gmail.com, heikki.krogerus@linux.intel.com, sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, tglx@linutronix.de, anup@brainfault.org, bhelgaas@google.com, robert.moore@intel.com, haibo1.xu@intel.com, ajones@ventanamicro.com, conor.dooley@microchip.com, atishp@rivosinc.com, apatel@ventanamicro.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Atish Kumar Patra <atishp@rivosinc.com>
+Subject: Re: [RFC PATCH v1 05/21] arm64: PCI: Migrate ACPI related functions
+ to pci-acpi.c
+Message-ID: <ZNI+8CHSLT4g1UM6@smile.fi.intel.com>
+References: <20230803175916.3174453-6-sunilvl@ventanamicro.com>
+ <20230807224152.GA274647@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230807224152.GA274647@bhelgaas>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 03 Aug 2023 18:59:06 +0100,
-Sunil V L <sunilvl@ventanamicro.com> wrote:
+On Mon, Aug 07, 2023 at 05:41:52PM -0500, Bjorn Helgaas wrote:
+> On Thu, Aug 03, 2023 at 11:29:00PM +0530, Sunil V L wrote:
+> > The functions defined in arm64 for ACPI support are required
+> > for RISC-V also. To avoid duplication, copy these functions
+> > to common location.
 > 
-> From: Anup Patel <apatel@ventanamicro.com>
-> 
-> swnode framework can be used to create fwnode for interrupt
-> controllers. This helps in keeping the drivers same for both
-> DT and ACPI. To enable this, enhance the swnode framework so
-> that it can be created early during boot without dependency
-> on sysfs.
+> I assume this is a "move" (not a copy) and the code being moved isn't
+> being changed.
 
-Where is this coming from? We have had common abstractions for
-irqchips for a very long time. We can create fwnodes any odd way we
-want, but why oh why should we invent another method for that?
-
-We already have multiple architectures such as arm64 and loongarch
-already having both DT and ACPI. Do they need another level of
-"abstraction"? No. Why is risc-v so special?
-
-	M.
+Not sure is proper -M -C will help to recognize that on the patch generation.
+Maybe -M 50 (or another carefully chosen percentage) can help.
 
 -- 
-Without deviation from the norm, progress is not possible.
+With Best Regards,
+Andy Shevchenko
+
+
