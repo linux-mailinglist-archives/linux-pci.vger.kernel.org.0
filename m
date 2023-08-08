@@ -2,60 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFBB97748C4
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 21:39:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8464F774806
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 21:24:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235252AbjHHTi7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Aug 2023 15:38:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35380 "EHLO
+        id S234360AbjHHTY0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Aug 2023 15:24:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230527AbjHHTil (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 15:38:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 436F111F4F
-        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 12:07:47 -0700 (PDT)
+        with ESMTP id S236241AbjHHTYK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 15:24:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A46AD92C1
+        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 12:20:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C915662AB6
-        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 19:07:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09D17C433CD;
-        Tue,  8 Aug 2023 19:07:46 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 689BE62B1C
+        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 19:20:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1392C433C7;
+        Tue,  8 Aug 2023 19:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691521666;
-        bh=WfySy0HZnd3rEMYjuu89Dt4Hk6YRJtlornvYhcdqAxs=;
+        s=k20201202; t=1691522429;
+        bh=6e39yrlLiKSrgUoZ2M444RyiaqrYu/3GKu7yzntRXUI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u7FhtvUlajzN9jY95yriwj1zuk79R4U6GpululA8yvt21mXspXCtnZ7HSNkFiDXSx
-         gzEmryBDVK134I5rSy1zNp+OKyPzG2YJPR1IYRlPbSiIjfhuVqZam/BcoYeaSBnqOf
-         014CSza73j0X+reAgtQIxPLLBukHRauauxnKiw/OYYUBbxMY701yk+Y9WoQ3k10/tW
-         c2Xr72jEvnujGMMC45dKgvufvlqbRiARXRApJj53kFjtFjZnyOj477NHFhA6B7RXLj
-         KAEwOY+KHTyRqBSgivGA5CwAZkkqdB0ojL3tY1niT5j8ViBuP62LLB4EWhH/M+7+57
-         mjAz1Gphh/yPw==
+        b=knblRZFv4xYk3/h5YWLYc8x4JJSh6TrKafTMWGlNegq8YrscP7JgxPAYaCweHUb9c
+         up+IHej4UtJ0ugwfumzqV117J24Uv/9gCDAPUCDrpd6oBmAsnUZD4Mdj5OWrO31trC
+         WlGHJzzMgIex59by5WFzDreSe5PNILNBk5Bgl3D4H3nqTAeqRc2Pddcoewn2NRlx8G
+         OJLhVrLU3pr/3MsTR05y0I6ou0LnaizgEFDgsNKbeT2FwMiac4YPOuuNi8qP4OrIHo
+         uLBn6p2MJ3KDdeSV6NOb4YsWsqiiVyw6nBN7EDT+wQcZrTMnBKcLU2jozjd5vLL1uO
+         SVNH6il+YDgXw==
 Received: by pali.im (Postfix)
-        id 9A182687; Tue,  8 Aug 2023 21:07:43 +0200 (CEST)
-Date:   Tue, 8 Aug 2023 21:07:43 +0200
+        id DC11A687; Tue,  8 Aug 2023 21:20:26 +0200 (CEST)
+Date:   Tue, 8 Aug 2023 21:20:26 +0200
 From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pci@vger.kernel.org
+        <u.kleine-koenig@pengutronix.de>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kwilczynski@kernel.org
 Subject: Re: [PATCH] PCI: mvebu: Mark driver as BROKEN
-Message-ID: <20230808190743.6fbn3rz5xdcuocvg@pali>
-References: <20230114164125.1298-1-pali@kernel.org>
- <ZMzicVQEyHyZzBOc@shell.armlinux.org.uk>
- <20230808072605.n3rjfsxuogza7qth@pali>
- <ZNH8rM/EJQrEKsgo@shell.armlinux.org.uk>
- <ZNH/6zlAxeXqTcAs@shell.armlinux.org.uk>
+Message-ID: <20230808192026.t65ebdii5bv2xx5b@pali>
+References: <20230808072605.n3rjfsxuogza7qth@pali>
+ <20230808162627.GA314706@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZNH/6zlAxeXqTcAs@shell.armlinux.org.uk>
+In-Reply-To: <20230808162627.GA314706@bhelgaas>
 User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,33 +62,69 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday 08 August 2023 09:42:19 Russell King (Oracle) wrote:
-> On Tue, Aug 08, 2023 at 09:28:28AM +0100, Russell King (Oracle) wrote:
-> > On Tue, Aug 08, 2023 at 09:26:05AM +0200, Pali Rohár wrote:
-> > > On Friday 04 August 2023 12:35:13 Russell King (Oracle) wrote:
-> > > > Hi,
-> > > > 
-> > > > So it seems this patch got applied, but it wasn't Cc'd to
-> > > > linux-arm-kernel or anyone else, so those of us with platforms never
-> > > > had a chance to comment on it.
-> > > 
-> > > You have received more changes and fixes for last 2 years for these
-> > > issues and you have done **nothing**. You even not said anything.
-> > > So you are the last one who can complain here.
-> > 
-> > That's because I can't help - what I have *works*. I have *zero*
-> > issues with the PCI interfaces on Armada 388.
-> > 
-> > > You should have come up and start solving issues. And not complaining
-> > > now.
-> > 
-> > How can one solve issues when they're probably hardware related and
-> > one doesn't experience them?
-> > 
-> > Sorry, but no. If you feel as strongly as you do, walk away.
+On Tuesday 08 August 2023 11:26:27 Bjorn Helgaas wrote:
+> [+cc linux-arm-kernel, beginning of thread:
+> https://lore.kernel.org/r/20230114164125.1298-1-pali@kernel.org]
 > 
-> ... and how dare you tell me what I should work on - you are *not* my
-> boss.
+> On Tue, Aug 08, 2023 at 09:26:05AM +0200, Pali Rohár wrote:
+> > On Friday 04 August 2023 12:35:13 Russell King (Oracle) wrote:
+> > ...
+> 
+> > > For example, I have an Atheros PCIe WiFi card in an Armada 388 Clearfog
+> > > platform, and this works fine.
+> > > 
+> > > Uwe has a SATA controller for a bunch of disks in an Armada 370 based
+> > > NAS platform that is connected to PCIe, and removing PCIe support
+> > > effectively makes his platform utterly useless.
+> > > 
+> > > Please revert this patch.
+> > 
+> > Please do not revert it, instead start fixing problems.
+> 
+> We know that like all the other drivers, the mvebu driver isn't
+> perfect.  But I don't think effectively removing the driver completely
+> helps anybody.  If people try to use it and notice problems, we have a
+> chance to try to fix them.
 
-I'm not your boss, but I'm still marked as maintainer of this code and
-you should get my review for any changes here. Or was there some change?
+I do not want to remove it. I was trying to find somebody who can start
+caring about issues. In last year I was resending patches, some smaller
+which could improve situation, but most of them were ignored or rejected.
+
+So I'm here and waiting for alternatives, and I'm prepared to review
+changes and patches for mvebu, which can improve driver support.
+
+But I do not see anything. The only one who wrote something useful was
+Uwe as he wanted to do some git bisect (which normally indicates issues
+or also fixup/patch).
+
+Also some times ago Greg wrote something like that (mainline) kernel is
+place for unsupported and broken drivers. But mvebu is going in this
+direction.
+
+How can I otherwise point out to start doing something in this area?
+
+Or are you unhappy with the fact that there is at least somebody (me)
+who is willing to do patch review for this marvell stuff? You should
+have said it to me earlier.
+
+But as I'm reading now, that I should go away, maybe you should have to
+find also new reviewer for driver. Good luck here as there was nobody
+who even wanted to do anything in this area.
+
+> Or maybe I'm missing your point.  I think you're suggesting that we
+> keep pci-mvebu in the tree but unselectable because it depends on
+> CONFIG_BROKEN.  What would be the advantage of doing that?
+> 
+> Bjorn
+
+Well, all knows here that driver is in bad state. In past there were
+regressions and no accepted fixes for it. (At that time I prepared fix,
+but you did not like it and nobody else comes with other alternative
+patch).
+
+There area other options which can be done now, if there are only people
+like Russel who are complaining but refusing to do absolutely nothing.
+For example mark driver as experimental (there is some Kconfig symbol
+for it). Or add a new menuconfig selectable symbol which appropriately
+warn all distributions about problems and would be dependency for mvebu.
+(if you do not like broken symbol).
