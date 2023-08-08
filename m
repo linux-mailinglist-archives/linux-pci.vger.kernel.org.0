@@ -2,180 +2,284 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA71A774B29
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 22:42:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13EED774AF7
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 22:39:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232084AbjHHUmr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Aug 2023 16:42:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43070 "EHLO
+        id S230327AbjHHUi4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Aug 2023 16:38:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232449AbjHHUlx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 16:41:53 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CA7E7DBD
-        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 10:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691515896; x=1723051896;
-  h=date:from:to:cc:subject:message-id;
-  bh=jcC96D9p2vpKmui8l6+bfGLYjXwlOYucJ6MZl81Ixxg=;
-  b=WrINLz866xuHpxx30wer+m+YArjphLaAjaOyfqZ8kaDOgb/gfl9JMZN0
-   E/NhMJAXPtJZi1zR/f8Ckiwh0RD6mrGGC5BFRCFt5f6nRZ/A6188/bc3B
-   QDm7oTDWZ2pbhRANsrHao49HCLEQSQyUy2uOgUlA+EgWy276GKans1q1b
-   oJghPWNr6CHN+/Mytrk2pQsebNlpELmcgUlXipCRMWyrTVj8r6AsTKo6Y
-   bj95gMgpwUOzmNnlP6GSofLZa2nrL2/5JTROrixhlF1pQPXRH14r1Baj9
-   j1D87HN2yk7KavOumljju27osHNHPbO1ItL6Ub7v02SEbdZ5XEZj5QmCe
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="434575261"
-X-IronPort-AV: E=Sophos;i="6.01,263,1684825200"; 
-   d="scan'208";a="434575261"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2023 22:42:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="731245009"
-X-IronPort-AV: E=Sophos;i="6.01,263,1684825200"; 
-   d="scan'208";a="731245009"
-Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 07 Aug 2023 22:42:48 -0700
-Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qTFUV-00058D-1d;
-        Tue, 08 Aug 2023 05:42:47 +0000
-Date:   Tue, 08 Aug 2023 13:42:21 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- 508e82f65945ad40e5d70f627cc8fe604173a360
-Message-ID: <202308081319.WGWJ369t-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S232698AbjHHUbv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 16:31:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 376034AA90;
+        Tue,  8 Aug 2023 09:50:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 60970623F2;
+        Tue,  8 Aug 2023 08:31:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A31BC433C8;
+        Tue,  8 Aug 2023 08:31:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691483517;
+        bh=MpyvTQzwBjHbZI8sMSOd7J9/piSikcHHm+TWFR/stac=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pka7NzrVjEQNbyWGI/WnWkrr+a5FjLtxCmsQcCOXphsY9L5W46RUvd6aapwlo9jCS
+         NolUJckCfoY7fX/X9OHUnpMLYiuwRY70OYahppcxYoMgc9SHLse5Xn7id/DhVU/r/7
+         nnGGJeO6e3yUm2+hcyf2EF+9bqOSVK4poXjiqNSyxgEPFVLlt4kExzhNuWuz9Xm7fH
+         b1yO+pqKpbEjzdwsS/cserCryKALKg+zlphWhxpBehWtx4z+lnaAb+TJGL2UPyW0E/
+         ETh8bu5SwkRbm9SP9U2vRi75kNMH8ZwGOZ53Zv9IaZc7clxnmeiTFjwGGpWVI3Plsk
+         /lL4HFoVfbKgQ==
+Date:   Tue, 8 Aug 2023 09:31:49 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Sunil V L <sunilvl@ventanamicro.com>
+Cc:     linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Atish Kumar Patra <atishp@rivosinc.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Will Deacon <will@kernel.org>, Haibo Xu <haibo1.xu@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Anup Patel <anup@brainfault.org>, Len Brown <lenb@kernel.org>
+Subject: Re: [RFC PATCH v1 12/21] irqchip/riscv-intc: Use swnode framework to
+ create fwnode
+Message-ID: <20230808-chuck-jailhouse-0cb08b55d1bd@spud>
+References: <20230803175916.3174453-1-sunilvl@ventanamicro.com>
+ <20230803175916.3174453-13-sunilvl@ventanamicro.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="KGbrO9FdUrNn/kR9"
+Content-Disposition: inline
+In-Reply-To: <20230803175916.3174453-13-sunilvl@ventanamicro.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-branch HEAD: 508e82f65945ad40e5d70f627cc8fe604173a360  PCI: acpiphp: Use pci_assign_unassigned_bridge_resources() only for non-root bus
 
-elapsed time: 720m
+--KGbrO9FdUrNn/kR9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-configs tested: 104
-configs skipped: 7
+Hey Sunil,
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+On Thu, Aug 03, 2023 at 11:29:07PM +0530, Sunil V L wrote:
+> By using swnode framework, all data from ACPI tables can
+> be populated as properties of the swnode. This simplifies
+> the driver code and removes the need for ACPI vs DT checks.
+> Use this framework for RISC-V INTC driver.
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r001-20230807   gcc  
-alpha                randconfig-r016-20230807   gcc  
-alpha                randconfig-r031-20230807   gcc  
-alpha                randconfig-r035-20230807   gcc  
-alpha                randconfig-r036-20230807   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r043-20230807   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r046-20230807   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r012-20230807   gcc  
-csky                 randconfig-r023-20230807   gcc  
-hexagon              randconfig-r041-20230807   clang
-hexagon              randconfig-r045-20230807   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230807   gcc  
-i386         buildonly-randconfig-r005-20230807   gcc  
-i386         buildonly-randconfig-r006-20230807   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230807   gcc  
-i386                 randconfig-i002-20230807   gcc  
-i386                 randconfig-i003-20230807   gcc  
-i386                 randconfig-i004-20230807   gcc  
-i386                 randconfig-i005-20230807   gcc  
-i386                 randconfig-i006-20230807   gcc  
-i386                 randconfig-i011-20230807   clang
-i386                 randconfig-i012-20230807   clang
-i386                 randconfig-i013-20230807   clang
-i386                 randconfig-i014-20230807   clang
-i386                 randconfig-i015-20230807   clang
-i386                 randconfig-i016-20230807   clang
-i386                 randconfig-r002-20230807   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r015-20230807   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r003-20230807   gcc  
-nios2                randconfig-r026-20230807   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r011-20230807   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r014-20230807   clang
-riscv                randconfig-r034-20230807   gcc  
-riscv                randconfig-r042-20230807   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r032-20230807   gcc  
-s390                 randconfig-r044-20230807   clang
-sh                               allmodconfig   gcc  
-sh                   randconfig-r013-20230807   gcc  
-sh                   randconfig-r022-20230807   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r006-20230807   clang
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230807   gcc  
-x86_64       buildonly-randconfig-r002-20230807   gcc  
-x86_64       buildonly-randconfig-r003-20230807   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r004-20230807   gcc  
-x86_64               randconfig-x001-20230807   clang
-x86_64               randconfig-x002-20230807   clang
-x86_64               randconfig-x003-20230807   clang
-x86_64               randconfig-x004-20230807   clang
-x86_64               randconfig-x005-20230807   clang
-x86_64               randconfig-x006-20230807   clang
-x86_64               randconfig-x011-20230807   gcc  
-x86_64               randconfig-x012-20230807   gcc  
-x86_64               randconfig-x013-20230807   gcc  
-x86_64               randconfig-x014-20230807   gcc  
-x86_64               randconfig-x015-20230807   gcc  
-x86_64               randconfig-x016-20230807   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
+btw, you are permitted to use more than 60 characters in a commit
+message...
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>=20
+> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+> ---
+>  Documentation/riscv/acpi.rst     | 21 +++++++++++++++
+>  arch/riscv/include/asm/acpi.h    |  1 +
+>  drivers/acpi/riscv/Makefile      |  2 +-
+>  drivers/acpi/riscv/irqchip.c     | 46 ++++++++++++++++++++++++++++++++
+>  drivers/irqchip/irq-riscv-intc.c | 12 ++++-----
+>  5 files changed, 75 insertions(+), 7 deletions(-)
+>  create mode 100644 drivers/acpi/riscv/irqchip.c
+>=20
+> diff --git a/Documentation/riscv/acpi.rst b/Documentation/riscv/acpi.rst
+> index 9870a282815b..e2406546bc16 100644
+> --- a/Documentation/riscv/acpi.rst
+> +++ b/Documentation/riscv/acpi.rst
+> @@ -8,3 +8,24 @@ The ISA string parsing rules for ACPI are defined by `Ve=
+rsion ASCIIDOC
+>  Conversion, 12/2022 of the RISC-V specifications, as defined by tag
+>  "riscv-isa-release-1239329-2023-05-23" (commit 1239329
+>  ) <https://github.com/riscv/riscv-isa-manual/releases/tag/riscv-isa-rele=
+ase-1239329-2023-05-23>`_
+> +
+> +Interrupt Controller Drivers
+> +=3D=3D=3D=3D=3D=3D=3D
+> +
+> +ACPI drivers for RISC-V interrupt controllers use software node framewor=
+k to
+> +create the fwnode for the interrupt controllers. Below properties are
+> +additionally required for some firmware nodes apart from the properties
+> +defined by the device tree bindings for these interrupt controllers. The
+> +properties are created using the data in MADT table.
+
+I don't really understand this text, specifically what you are getting
+at w/ the dependency on devicetree properties. What exactly does "apart
+=66rom the properties defined by the devicetree bindings" mean?
+
+Is there prior art for this kind of "ACPI needs swnodes that look
+vaguely similar to devicetree" for other interrupt controllers?
+
+Thanks,
+Conor.
+
+> +1) RISC-V Interrupt Controller (INTC)
+> +-----------
+> +``hartid`` - Hart ID of the hart this interrupt controller belongs to.
+> +
+> +``riscv,imsic-addr`` - Physical base address of the Incoming MSI Control=
+ler
+> +(IMSIC) MMIO region of this hart.
+> +
+> +``riscv,imsic-size`` - Size in bytes of the IMSIC MMIO region of this ha=
+rt.
+> +
+> +``riscv,ext-intc-id`` - The unique ID of the external interrupts connect=
+ed
+> +to this hart.
+> diff --git a/arch/riscv/include/asm/acpi.h b/arch/riscv/include/asm/acpi.h
+> index 0c4e8b35103e..0ac2df2dd194 100644
+> --- a/arch/riscv/include/asm/acpi.h
+> +++ b/arch/riscv/include/asm/acpi.h
+> @@ -68,6 +68,7 @@ int acpi_get_riscv_isa(struct acpi_table_header *table,
+>  static inline int acpi_numa_get_nid(unsigned int cpu) { return NUMA_NO_N=
+ODE; }
+>  int acpi_get_cbo_block_size(struct acpi_table_header *table, unsigned in=
+t cpu, u32 *cbom_size,
+>  			    u32 *cboz_size, u32 *cbop_size);
+> +struct fwnode_handle *acpi_rintc_create_irqchip_fwnode(struct acpi_madt_=
+rintc *rintc);
+>  #else
+>  static inline void acpi_init_rintc_map(void) { }
+>  static inline struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu)
+> diff --git a/drivers/acpi/riscv/Makefile b/drivers/acpi/riscv/Makefile
+> index 8b3b126e0b94..8b664190d172 100644
+> --- a/drivers/acpi/riscv/Makefile
+> +++ b/drivers/acpi/riscv/Makefile
+> @@ -1,2 +1,2 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -obj-y 	+=3D rhct.o
+> +obj-y 	+=3D rhct.o irqchip.o
+> diff --git a/drivers/acpi/riscv/irqchip.c b/drivers/acpi/riscv/irqchip.c
+> new file mode 100644
+> index 000000000000..36f066a2cad5
+> --- /dev/null
+> +++ b/drivers/acpi/riscv/irqchip.c
+> @@ -0,0 +1,46 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2023, Ventana Micro Systems Inc
+> + *	Author: Sunil V L <sunilvl@ventanamicro.com>
+> + *
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/fwnode.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/list.h>
+> +#include <linux/property.h>
+> +
+> +struct riscv_irqchip_list {
+> +	struct fwnode_handle *fwnode;
+> +	struct list_head list;
+> +};
+> +
+> +LIST_HEAD(rintc_list);
+> +
+> +struct fwnode_handle *acpi_rintc_create_irqchip_fwnode(struct acpi_madt_=
+rintc *rintc)
+> +{
+> +	struct property_entry props[6] =3D {};
+> +	struct fwnode_handle *fwnode;
+> +	struct riscv_irqchip_list *rintc_element;
+> +
+> +	props[0] =3D PROPERTY_ENTRY_U64("hartid", rintc->hart_id);
+> +	props[1] =3D PROPERTY_ENTRY_U32("riscv,ext-intc-id", rintc->ext_intc_id=
+);
+> +	props[2] =3D PROPERTY_ENTRY_U64("riscv,imsic-addr", rintc->imsic_addr);
+> +	props[3] =3D PROPERTY_ENTRY_U32("riscv,imsic-size", rintc->imsic_size);
+> +	props[4] =3D PROPERTY_ENTRY_U32("#interrupt-cells", 1);
+> +
+> +	fwnode =3D fwnode_create_software_node_early(props, NULL);
+> +	if (fwnode) {
+> +		rintc_element =3D kzalloc(sizeof(*rintc_element), GFP_KERNEL);
+> +		if (!rintc_element) {
+> +			fwnode_remove_software_node(fwnode);
+> +			return NULL;
+> +		}
+> +
+> +		rintc_element->fwnode =3D fwnode;
+> +		list_add_tail(&rintc_element->list, &rintc_list);
+> +	}
+> +
+> +	return fwnode;
+> +}
+> diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv=
+-intc.c
+> index 1a0fc87152c5..1ef9cada1ed3 100644
+> --- a/drivers/irqchip/irq-riscv-intc.c
+> +++ b/drivers/irqchip/irq-riscv-intc.c
+> @@ -203,6 +203,12 @@ static int __init riscv_intc_acpi_init(union acpi_su=
+btable_headers *header,
+> =20
+>  	rintc =3D (struct acpi_madt_rintc *)header;
+> =20
+> +	fn =3D acpi_rintc_create_irqchip_fwnode(rintc);
+> +	if (!fn) {
+> +		pr_err("unable to create INTC FW node\n");
+> +		return -ENOMEM;
+> +	}
+> +
+>  	/*
+>  	 * The ACPI MADT will have one INTC for each CPU (or HART)
+>  	 * so riscv_intc_acpi_init() function will be called once
+> @@ -212,12 +218,6 @@ static int __init riscv_intc_acpi_init(union acpi_su=
+btable_headers *header,
+>  	if (riscv_hartid_to_cpuid(rintc->hart_id) !=3D smp_processor_id())
+>  		return 0;
+> =20
+> -	fn =3D irq_domain_alloc_named_fwnode("RISCV-INTC");
+> -	if (!fn) {
+> -		pr_err("unable to allocate INTC FW node\n");
+> -		return -ENOMEM;
+> -	}
+> -
+>  	return riscv_intc_init_common(fn);
+>  }
+> =20
+> --=20
+> 2.39.2
+>=20
+>=20
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+--KGbrO9FdUrNn/kR9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZNH9dQAKCRB4tDGHoIJi
+0irpAQCn4tpo+ZUuKBiS5LlN2kTNA7QFVujwPoaS1jfnlSeJTAEAkLdDYwU7W+ML
+Vydp6LtqVqBQYdbOuMRHnZvBwVgH6A0=
+=cP5x
+-----END PGP SIGNATURE-----
+
+--KGbrO9FdUrNn/kR9--
