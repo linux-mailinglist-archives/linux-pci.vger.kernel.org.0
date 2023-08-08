@@ -2,154 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B315B7748F5
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 21:45:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28F4A77471C
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Aug 2023 21:09:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235585AbjHHTpv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Aug 2023 15:45:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53010 "EHLO
+        id S234577AbjHHTJp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Aug 2023 15:09:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230127AbjHHTpc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 15:45:32 -0400
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADBDD16AD4;
-        Tue,  8 Aug 2023 09:49:03 -0700 (PDT)
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 705692011BA;
-        Tue,  8 Aug 2023 08:09:04 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0A7172011C4;
-        Tue,  8 Aug 2023 08:09:04 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 66E3E1800319;
-        Tue,  8 Aug 2023 14:09:02 +0800 (+08)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     frank.li@nxp.com, l.stach@pengutronix.de, shawnguo@kernel.org,
-        lpieralisi@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org
-Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com
-Subject: [PATCH v3 9/9] PCI: imx6: Add i.MX7D PCIe EP support
-Date:   Tue,  8 Aug 2023 13:34:18 +0800
-Message-Id: <1691472858-9383-10-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1691472858-9383-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1691472858-9383-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231631AbjHHTJQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Aug 2023 15:09:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 641C92FA2B
+        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 09:31:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9CEE9623E4
+        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 07:04:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE8C8C433C7;
+        Tue,  8 Aug 2023 07:04:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691478250;
+        bh=0kLVYnJCAHrNEd6IC9dxsFc15LPqkFS44LyZ4cxCS0Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fSB88tEpNsZbn8gqOxe9W3CgFZtxdkO2enG9vqfG8/RIDgsnU89A4kvtQcacVfVc0
+         tOGu8C+c4LLIPhl102KCUrO8ZPPMHu0LVsSlnnQL1k77WEtgHs/+KaS2pxnIPUA5Kh
+         VT0Q+ExeMeFPCQkqyXo1eY1SXLaiGzjizUOTAvqDUq9aiHKWrfTIpe1UNWl+Y+nuTf
+         aeUzieb0/N8tQnxm+bf75KnkwJFzubDXCEIauOwxpLYuWyxGKuZjSQJsJcbUKpEUYi
+         Xc8QqEXVoNnLc72odVBQPq9T/l4Gx+OPc/2nNKIATSql2dih6AtHdUkms8jUGJUUy3
+         1I0VuKNoWdZUg==
+Date:   Tue, 8 Aug 2023 12:33:57 +0530
+From:   mani <mani@kernel.org>
+To:     Li Chen <me@linux.beauty>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC] add __iomem cookie for EPF BAR
+Message-ID: <20230808070357.GC4990@thinkpad>
+References: <189cff865f3.fc7e71c96186.1411633612292556520@linux.beauty>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <189cff865f3.fc7e71c96186.1411633612292556520@linux.beauty>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add the i.MX7D PCIe EP mode support.
+On Mon, Aug 07, 2023 at 08:28:30PM +0800, Li Chen wrote:
+> Hi All
+> 
+> Currently, the EPF's bar is allocated by pci_epf_alloc_space, which internally uses dma_alloc_coherent and the caching behavior of dma_alloc_coherent may vary depending on platforms.
+> 
+> The bar space is exported to RC, which means that RC may modify it without EP being aware of it, so EP still read from the cache and get stalled data. To address this issue, the bar space should be treated as iomem instead and forced to use io read/write APIs, which enforces volatile. 
+> 
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+We already had a similar discussion on using volatile for BAR space and settled
+with {WRITE/READ}_ONCE macros in EPF Test driver [1].
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 43c5251f5160..af7659712537 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -52,6 +52,7 @@ enum imx6_pcie_variants {
- 	IMX6QP,
- 	IMX6QP_EP,
- 	IMX7D,
-+	IMX7D_EP,
- 	IMX8MQ,
- 	IMX8MM,
- 	IMX8MP,
-@@ -359,6 +360,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
- 					   0);
- 		break;
- 	case IMX7D:
-+	case IMX7D_EP:
- 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
- 				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL, 0);
- 		break;
-@@ -590,6 +592,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
- 				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 1 << 16);
- 		break;
- 	case IMX7D:
-+	case IMX7D_EP:
- 		break;
- 	case IMX8MM:
- 	case IMX8MM_EP:
-@@ -638,6 +641,7 @@ static void imx6_pcie_disable_ref_clk(struct imx6_pcie *imx6_pcie)
- 				IMX6Q_GPR1_PCIE_TEST_PD);
- 		break;
- 	case IMX7D:
-+	case IMX7D_EP:
- 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
- 				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
- 				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL);
-@@ -711,6 +715,7 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
- {
- 	switch (imx6_pcie->drvdata->variant) {
- 	case IMX7D:
-+	case IMX7D_EP:
- 	case IMX8MQ:
- 	case IMX8MQ_EP:
- 		reset_control_assert(imx6_pcie->pciephy_reset);
-@@ -763,6 +768,7 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
- 		reset_control_deassert(imx6_pcie->pciephy_reset);
- 		break;
- 	case IMX7D:
-+	case IMX7D_EP:
- 		reset_control_deassert(imx6_pcie->pciephy_reset);
- 
- 		/* Workaround for ERR010728, failure of PCI-e PLL VCO to
-@@ -854,6 +860,7 @@ static void imx6_pcie_ltssm_enable(struct device *dev)
- 				   IMX6Q_GPR12_PCIE_CTL_2);
- 		break;
- 	case IMX7D:
-+	case IMX7D_EP:
- 	case IMX8MQ:
- 	case IMX8MQ_EP:
- 	case IMX8MM:
-@@ -880,6 +887,7 @@ static void imx6_pcie_ltssm_disable(struct device *dev)
- 				   IMX6Q_GPR12_PCIE_CTL_2, 0);
- 		break;
- 	case IMX7D:
-+	case IMX7D_EP:
- 	case IMX8MQ:
- 	case IMX8MQ_EP:
- 	case IMX8MM:
-@@ -1385,6 +1393,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 					     "pcie_aux clock source missing or invalid\n");
- 		fallthrough;
- 	case IMX7D:
-+	case IMX7D_EP:
- 		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
- 			imx6_pcie->controller_id = 1;
- 
-@@ -1572,6 +1581,12 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
- 		.gpr = "fsl,imx7d-iomuxc-gpr",
- 	},
-+	[IMX7D_EP] = {
-+		.variant = IMX7D_EP,
-+		.mode = DW_PCIE_EP_TYPE,
-+		.gpr = "fsl,imx7d-iomuxc-gpr",
-+		.epc_features = &imx6q_pcie_epc_features,
-+	},
- 	[IMX8MQ] = {
- 		.variant = IMX8MQ,
- 		.gpr = "fsl,imx8mq-iomuxc-gpr",
-@@ -1611,6 +1626,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
- 	{ .compatible = "fsl,imx6qp-pcie", .data = &drvdata[IMX6QP], },
- 	{ .compatible = "fsl,imx6qp-pcie-ep", .data = &drvdata[IMX6QP_EP], },
- 	{ .compatible = "fsl,imx7d-pcie",  .data = &drvdata[IMX7D],  },
-+	{ .compatible = "fsl,imx7d-pcie-ep", .data = &drvdata[IMX7D_EP], },
- 	{ .compatible = "fsl,imx8mq-pcie", .data = &drvdata[IMX8MQ], },
- 	{ .compatible = "fsl,imx8mm-pcie", .data = &drvdata[IMX8MM], },
- 	{ .compatible = "fsl,imx8mp-pcie", .data = &drvdata[IMX8MP], },
+Since the BAR space allocated in endpoint is not a MMIO, I don't think it should
+be forced as iomem. Rather EPF drivers should use _ONCE macros to access the
+fields to avoid coherency issues as suggested by Arnd earlier.
+
+- Mani
+
+[1] https://lore.kernel.org/linux-pci/c49df2f9-9848-45aa-9d64-9e4e9841440f@app.fastmail.com/
+
+> If you agree, I would create patches for existing EPF and EPF/EPC core and submit them for review.
+> 
+> Regards,
+> Li
+
 -- 
-2.34.1
-
+மணிவண்ணன் சதாசிவம்
