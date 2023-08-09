@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 94E5C775258
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Aug 2023 07:47:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F0B9775261
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Aug 2023 07:49:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229845AbjHIFrO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Aug 2023 01:47:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52266 "EHLO
+        id S229468AbjHIFtM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Aug 2023 01:49:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229719AbjHIFrO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Aug 2023 01:47:14 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FB2E1BF3
-        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 22:47:13 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1bba04b9df3so56059825ad.0
-        for <linux-pci@vger.kernel.org>; Tue, 08 Aug 2023 22:47:13 -0700 (PDT)
+        with ESMTP id S230188AbjHIFtM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Aug 2023 01:49:12 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5F11BF3
+        for <linux-pci@vger.kernel.org>; Tue,  8 Aug 2023 22:49:10 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-68730bafa6bso389516b3a.1
+        for <linux-pci@vger.kernel.org>; Tue, 08 Aug 2023 22:49:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1691560033; x=1692164833;
+        d=ventanamicro.com; s=google; t=1691560150; x=1692164950;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YCeIptmtpKy5q98QjD4SUtd19PTpMTjSWPCM/pRkRaI=;
-        b=haeX18sUQdxxqI7SQwmn8SHKct03Vake+IzrKwZQdTEOTgqFjhH0yzb6gVvecUp++M
-         LMJV1cVhnL5cBk05TA0BuUeVgPeqBBT5xVYYg8Fmt6oC4KEFpsb20dfFQp1sUhdBnv+U
-         Agka3B9ydKgYsr/ueR6T9DXKuK4mFb7fnEgx45MrDCaANoCelYzVXJwVJd52Zm6ffFeo
-         vlwzfD2WG7skOwNLlyX+ou/s/8GC3sc0bR5XFkYBOl3Ac4CqFz3U8O83n9htUtpGlbxX
-         5MHrYLjZAe/fPUGNNnFPHYXY6gLf92Ljy74BtQmvCjyQU740MtA8mhZgL163A/u/3c14
-         57jQ==
+        bh=LVTaAMwRyC5EbNmGnKMt5GVO62sfdhMkzEYvy7bRsXA=;
+        b=pMiFqkbnzjp3jnyPBYTlRVYHWKdOC3du5VSbz4kIkpsKYuFw9hdbPRFTVwZMALrr6e
+         SZQa4f+4WZaBbUbb6WuQfpPki/JvBjPp3gjUfPEIXaiLa05X12JMBBOfzjSrRxroNd8E
+         U8Edn8SEcynqoXeuGV5OH3SalOEtqtT5FxFqX3SU35gIbEJIMsWiFKFV8NvAmigpo6ZX
+         1VFuoHP8/06kb6ySqnq3J06knDAvIozFyfM6zzK+UBFfagPTFrZhAS/6e+TQ40mMrgEV
+         TIYNk8nuqoeDiKI9nMVSb8/4cZxnMmXu4gGya+KvDa2cNxeo6xZuYxs2vwpsCYCPIRLF
+         DSDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691560033; x=1692164833;
+        d=1e100.net; s=20221208; t=1691560150; x=1692164950;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YCeIptmtpKy5q98QjD4SUtd19PTpMTjSWPCM/pRkRaI=;
-        b=I/LANmbtOCJk1r26b4XshbyQFboL3+cGoT6+emddkjEBROpeF39ewtanhECeEgxeIZ
-         sFDWprVx4TDlTdfpLRFaTowuOBUpK5VVAk7SKKSgkl1MisTeQmq2CqZuGhBsZ8oyR4ZG
-         l7IYSuoytksPL3Adt+5dHi7ZnKLs8Av9VDGDzdABPWeQUx1Dls4VfcJdrA0myPmhs1CR
-         Gs33TSWXydxFctUL14w4cH6uRtisxq+8hM8/ib8iLZxPW5OjIxPgC8MYD6CrKOWJpZ+4
-         Ur8tW/WVJ+lZACYCx2yHJRYjf6DCcFL+JPsOfklcrwKZzsmf8Qi9c2jW59IaXeAEfnl5
-         8QYg==
-X-Gm-Message-State: AOJu0Yx7o5pkTpVibvYoc3Zhdx9vx2hs0PLOKcfKJDkv7xi0aBWbER9l
-        nypx5P7O6r8rpRLEZ66nRRyTWw==
-X-Google-Smtp-Source: AGHT+IFrTYPQ+5b8uQBjS2fcGKsPAzUjAy1/yAOVWR8AwSQ1NP6723J3EcH5VFWoXC6GPw4jT3aUkA==
-X-Received: by 2002:a17:903:230d:b0:1bb:a85c:23cc with SMTP id d13-20020a170903230d00b001bba85c23ccmr2339537plh.15.1691560032814;
-        Tue, 08 Aug 2023 22:47:12 -0700 (PDT)
+        bh=LVTaAMwRyC5EbNmGnKMt5GVO62sfdhMkzEYvy7bRsXA=;
+        b=GjrKMS3nOejOtuUil7LM6m7lBQFwNUbTPMNdEaenlsgBvFsVpLyWwNEKE/Bunw3UKP
+         lH0nQYALYUWgtHb5XvNcRAi2ri7GRFib3izhlfNtv8xu50+v4aQuNgn04YWtwKwf9Ofe
+         EJjQmAEml2Su6+p2lrkOIFwGirzR2HTTbJOL7mHFEaIqyBoaa0Jxy2xh7OXf4J/AI6SG
+         1qYQKcm0Ce7irXtMVxTd2cXOckiV6fqbH+6yyh7xL/N8I3Qf17YWn2oFjIsWajf07kUN
+         lu94L7cMttc4Sh+Ud5QKLIizl0ZK78PF1B9vVmlVcpVzGUBqvCZnAe8KYcm5qrbER0B+
+         klWA==
+X-Gm-Message-State: AOJu0YxcJjsR5w3108akj9zzDgE1OMEP50wiCJJ1zz6CUpu5fn7vRXpC
+        GZ5g7NuQQkbfBDGsVhZ762Mstg==
+X-Google-Smtp-Source: AGHT+IE7jfHYeQCcbaWLiyPRjvliIUWRMsM3DMDq94jcA4CT6KzEh4TL3KUw8Az8khdjGzhK4KpCbw==
+X-Received: by 2002:a05:6a20:9147:b0:141:2cb:2954 with SMTP id x7-20020a056a20914700b0014102cb2954mr2498077pzc.3.1691560149975;
+        Tue, 08 Aug 2023 22:49:09 -0700 (PDT)
 Received: from sunil-laptop ([106.51.83.242])
-        by smtp.gmail.com with ESMTPSA id r14-20020a170902be0e00b001bb381b8260sm10098918pls.100.2023.08.08.22.47.06
+        by smtp.gmail.com with ESMTPSA id z21-20020aa791d5000000b006829969e3b0sm9001358pfa.85.2023.08.08.22.49.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Aug 2023 22:47:12 -0700 (PDT)
-Date:   Wed, 9 Aug 2023 11:17:02 +0530
+        Tue, 08 Aug 2023 22:49:09 -0700 (PDT)
+Date:   Wed, 9 Aug 2023 11:19:00 +0530
 From:   Sunil V L <sunilvl@ventanamicro.com>
 To:     Conor Dooley <conor@kernel.org>
 Cc:     linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
@@ -75,15 +75,16 @@ Cc:     linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Anup Patel <anup@brainfault.org>, Len Brown <lenb@kernel.org>
-Subject: Re: [RFC PATCH v1 20/21] RISC-V: ACPI: Create PLIC platform device
-Message-ID: <ZNMoVgO7mEDV07OJ@sunil-laptop>
+Subject: Re: [RFC PATCH v1 12/21] irqchip/riscv-intc: Use swnode framework to
+ create fwnode
+Message-ID: <ZNMozPV2yU1G9+1z@sunil-laptop>
 References: <20230803175916.3174453-1-sunilvl@ventanamicro.com>
- <20230803175916.3174453-21-sunilvl@ventanamicro.com>
- <20230808-chalice-easing-1369c7386082@spud>
+ <20230803175916.3174453-13-sunilvl@ventanamicro.com>
+ <20230808-chuck-jailhouse-0cb08b55d1bd@spud>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230808-chalice-easing-1369c7386082@spud>
+In-Reply-To: <20230808-chuck-jailhouse-0cb08b55d1bd@spud>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
@@ -94,45 +95,57 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Conor,
-
-On Tue, Aug 08, 2023 at 09:41:45AM +0100, Conor Dooley wrote:
-> On Thu, Aug 03, 2023 at 11:29:15PM +0530, Sunil V L wrote:
-> > Since PLIC needs to be a platform device
+On Tue, Aug 08, 2023 at 09:31:49AM +0100, Conor Dooley wrote:
+> Hey Sunil,
 > 
-> For the unwashed, why does the PLCI need to be a platform device?
-> (And while you're at that, please try to make use of the extra ~20
-> characters per line that you can use here.)
->
-Sure, let me add more details and use extra characters.
- 
-> > probe the
-> > MADT and create platform devices for each PLIC in the
-> > system. Use software node framework for the fwnode
-> > which allows to create properties and hence the
-> > actual irqchip driver doesn't need to do anything
-> > different for ACPI vs DT.
+> On Thu, Aug 03, 2023 at 11:29:07PM +0530, Sunil V L wrote:
+> > By using swnode framework, all data from ACPI tables can
+> > be populated as properties of the swnode. This simplifies
+> > the driver code and removes the need for ACPI vs DT checks.
+> > Use this framework for RISC-V INTC driver.
+> 
+> btw, you are permitted to use more than 60 characters in a commit
+> message...
+> 
+Sure.
+
 > > 
 > > Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
-> > Co-developed-by: Haibo Xu <haibo1.xu@intel.com>
-> > Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
-> 
-> > +static struct fwnode_handle *acpi_plic_create_fwnode(struct acpi_madt_plic *plic)
-> > +{
-> > +	struct fwnode_handle *fwnode, *parent_fwnode;
-> > +	struct riscv_irqchip_list *plic_element;
-> > +	struct software_node_ref_args *refs;
-> > +	struct property_entry props[8] = {};
-> > +	int nr_contexts;
+> > ---
+> >  Documentation/riscv/acpi.rst     | 21 +++++++++++++++
+> >  arch/riscv/include/asm/acpi.h    |  1 +
+> >  drivers/acpi/riscv/Makefile      |  2 +-
+> >  drivers/acpi/riscv/irqchip.c     | 46 ++++++++++++++++++++++++++++++++
+> >  drivers/irqchip/irq-riscv-intc.c | 12 ++++-----
+> >  5 files changed, 75 insertions(+), 7 deletions(-)
+> >  create mode 100644 drivers/acpi/riscv/irqchip.c
+> > 
+> > diff --git a/Documentation/riscv/acpi.rst b/Documentation/riscv/acpi.rst
+> > index 9870a282815b..e2406546bc16 100644
+> > --- a/Documentation/riscv/acpi.rst
+> > +++ b/Documentation/riscv/acpi.rst
+> > @@ -8,3 +8,24 @@ The ISA string parsing rules for ACPI are defined by `Version ASCIIDOC
+> >  Conversion, 12/2022 of the RISC-V specifications, as defined by tag
+> >  "riscv-isa-release-1239329-2023-05-23" (commit 1239329
+> >  ) <https://github.com/riscv/riscv-isa-manual/releases/tag/riscv-isa-release-1239329-2023-05-23>`_
 > > +
-> > +	props[0] = PROPERTY_ENTRY_U32("riscv,gsi-base", plic->gsi_base);
-> > +	props[1] = PROPERTY_ENTRY_U32("riscv,ndev", plic->num_irqs);
-> > +	props[2] = PROPERTY_ENTRY_U32("riscv,max_prio", plic->max_prio);
+> > +Interrupt Controller Drivers
+> > +=======
+> > +
+> > +ACPI drivers for RISC-V interrupt controllers use software node framework to
+> > +create the fwnode for the interrupt controllers. Below properties are
+> > +additionally required for some firmware nodes apart from the properties
+> > +defined by the device tree bindings for these interrupt controllers. The
+> > +properties are created using the data in MADT table.
 > 
-> My OCD wants to know why this gets an _ but the others have a -.
+> I don't really understand this text, specifically what you are getting
+> at w/ the dependency on devicetree properties. What exactly does "apart
+> from the properties defined by the devicetree bindings" mean?
 > 
-It should be -. But with Marc's recommendation, this is no longer
-required.
+> Is there prior art for this kind of "ACPI needs swnodes that look
+> vaguely similar to devicetree" for other interrupt controllers?
+>
+Never mind. This will not be required with Marc's feedback.
 
-Thanks!
-Sunil
+Thanks,
+Sunil 
