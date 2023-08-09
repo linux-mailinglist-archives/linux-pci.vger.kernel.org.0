@@ -2,20 +2,20 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DE75775501
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Aug 2023 10:20:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F6AB7754FD
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Aug 2023 10:20:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229592AbjHIIUo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S231897AbjHIIUo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Wed, 9 Aug 2023 04:20:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36262 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231718AbjHIIUn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Aug 2023 04:20:43 -0400
+        with ESMTP id S229702AbjHIIUo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Aug 2023 04:20:44 -0400
 Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 682F11705;
-        Wed,  9 Aug 2023 01:20:42 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RLNJJ0XFBzmXZJ;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4212FE7D;
+        Wed,  9 Aug 2023 01:20:43 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RLNJJ29p6zmXZQ;
         Wed,  9 Aug 2023 16:19:28 +0800 (CST)
 Received: from localhost.localdomain (10.50.163.32) by
  canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
@@ -28,9 +28,9 @@ CC:     <alexander.shishkin@linux.intel.com>, <helgaas@kernel.org>,
         <linux-pci@vger.kernel.org>, <prime.zeng@hisilicon.com>,
         <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
         <hejunhao3@huawei.com>
-Subject: [PATCH 4/5] hwtracing: hisi_ptt: Don't try to attach a task
-Date:   Wed, 9 Aug 2023 16:18:24 +0800
-Message-ID: <20230809081825.11518-5-yangyicong@huawei.com>
+Subject: [PATCH 5/5] hwtracing: hisi_ptt: Add dummy callback pmu::read()
+Date:   Wed, 9 Aug 2023 16:18:25 +0800
+Message-ID: <20230809081825.11518-6-yangyicong@huawei.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20230809081825.11518-1-yangyicong@huawei.com>
 References: <20230809081825.11518-1-yangyicong@huawei.com>
@@ -50,30 +50,42 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+From: Junhao He <hejunhao3@huawei.com>
 
-PTT is an uncore PMU and shouldn't be attached to any task. Block
-the usage in pmu::event_init().
+When start trace with perf option "-C $cpu" and immediately stop it
+with SIGTERM or others, the perf core will invoke pmu::read() while
+the driver doesn't implement it. Add a dummy pmu::read() to avoid
+any issues.
 
+Signed-off-by: Junhao He <hejunhao3@huawei.com>
 Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 ---
- drivers/hwtracing/ptt/hisi_ptt.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hwtracing/ptt/hisi_ptt.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
-index 3aba7bb6e548..916686c6a9c8 100644
+index 916686c6a9c8..7392e039b8c1 100644
 --- a/drivers/hwtracing/ptt/hisi_ptt.c
 +++ b/drivers/hwtracing/ptt/hisi_ptt.c
-@@ -1003,6 +1003,9 @@ static int hisi_ptt_pmu_event_init(struct perf_event *event)
- 		return -EOPNOTSUPP;
- 	}
+@@ -1184,6 +1184,10 @@ static void hisi_ptt_pmu_del(struct perf_event *event, int flags)
+ 	hisi_ptt_pmu_stop(event, PERF_EF_UPDATE);
+ }
  
-+	if (event->attach_state & PERF_ATTACH_TASK)
-+		return -EOPNOTSUPP;
++static void hisi_ptt_pmu_read(struct perf_event *event)
++{
++}
 +
- 	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
- 		return -ENOENT;
+ static void hisi_ptt_remove_cpuhp_instance(void *hotplug_node)
+ {
+ 	cpuhp_state_remove_instance_nocalls(hisi_ptt_pmu_online, hotplug_node);
+@@ -1227,6 +1231,7 @@ static int hisi_ptt_register_pmu(struct hisi_ptt *hisi_ptt)
+ 		.stop		= hisi_ptt_pmu_stop,
+ 		.add		= hisi_ptt_pmu_add,
+ 		.del		= hisi_ptt_pmu_del,
++		.read		= hisi_ptt_pmu_read,
+ 	};
  
+ 	reg = readl(hisi_ptt->iobase + HISI_PTT_LOCATION);
 -- 
 2.24.0
 
