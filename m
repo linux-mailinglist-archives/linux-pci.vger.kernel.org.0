@@ -2,288 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3463C7752B3
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Aug 2023 08:16:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 878C37753BB
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Aug 2023 09:10:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230516AbjHIGQa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Aug 2023 02:16:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34702 "EHLO
+        id S230420AbjHIHKx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Aug 2023 03:10:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230391AbjHIGQW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Aug 2023 02:16:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E36881BF3;
-        Tue,  8 Aug 2023 23:16:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4143F62F86;
-        Wed,  9 Aug 2023 06:16:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BE7AC433C8;
-        Wed,  9 Aug 2023 06:16:14 +0000 (UTC)
-Date:   Wed, 9 Aug 2023 11:46:04 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     helgaas@kernel.org, bhelgaas@google.com,
-        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
-        imx@lists.linux.dev, kw@linux.com, leoyang.li@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, lpieralisi@kernel.org, mani@kernel.org,
-        minghuan.lian@nxp.com, mingkai.hu@nxp.com, robh+dt@kernel.org,
-        roy.zang@nxp.com, shawnguo@kernel.org, zhiqiang.hou@nxp.com
-Subject: Re: [PATCH v10 resent 3/3] PCI: layerscape: Add power management
- support for ls1028a
-Message-ID: <20230809061604.GC5348@thinkpad>
-References: <20230807165238.569297-1-Frank.Li@nxp.com>
- <20230807165238.569297-4-Frank.Li@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230807165238.569297-4-Frank.Li@nxp.com>
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231511AbjHIHKo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Aug 2023 03:10:44 -0400
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD95B1FDC
+        for <linux-pci@vger.kernel.org>; Wed,  9 Aug 2023 00:10:42 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 9FDA83200934;
+        Wed,  9 Aug 2023 03:10:41 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Wed, 09 Aug 2023 03:10:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm3; t=1691565041; x=1691651441; bh=eb
+        SSyd7sDYt0Yru+YTZUFCPWBRSp4UGynnDfbD/M1DQ=; b=QPm9feMweqYqngVpsO
+        6Nd5yv+FEfHUFwcRaPuVs4mIl476Q6o6e/GUqVFfHWcUUNhMBNrqkdOk5EPPeiQ/
+        FVXyziTKk+tIkP7exl62bI4/58A/Rxk1KtTdVPMbAse4efFRFEOQWqzZSwqQgi97
+        Hm+5r7tbhr3HwFDy/FpBi7NotWikcKE0oLBdBFDTqZkB2KKLUj08eLDphYISCIu+
+        YfKbEm7vKnx46a0Ayk7B9aBQd/mkNvvndfsPjQ8gmew/+14sax86qX/vzGhRRq7z
+        /OQ7yqD+7Zv7rs2eAdrrDtwF1RWkhnu61um4eV1kjZoX+9Ib2rjtzn/lafwk8h3k
+        UJgA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1691565041; x=1691651441; bh=ebSSyd7sDYt0Y
+        ru+YTZUFCPWBRSp4UGynnDfbD/M1DQ=; b=EX5y9FAQu/UHgOizKEjJyjxm+MyW8
+        4jxXRakBtJayJK4gzNuAjSi9pDHVc2rSpbg4dB7FEJBsYrYOOvkyZFAfwwxAZDkN
+        zNSbIDTejuYIpsIFPUkwOjlULvWrZWR0EY1m6+20A60vm+FyW147wupuLMNirzd/
+        40YvIuReM+56rSKvqanktr2BlVrKYNDEoW70/AuLyOnVTRmO6rzL8RXEo+pTME1E
+        iRn8glhNXKvX9FgyhD0RlvgBOeFCvnAlvKWrlrmsGJG/NFPyFvjGRZYxvtw2KYkV
+        Ox1Xx2kwHuZ4jMzTlSPjtIWU5LzOGsGY7Gl5MC25RYiPNtVTKrqUXcnRw==
+X-ME-Sender: <xms:8DvTZMylbN-B5r3AUbaIQ41SePS7Ecma3LnTDJbKqIO2MfTMlVYuPg>
+    <xme:8DvTZAT8PcYL5rYDlL2hsnXT2JQNsOYPwL70x1RB6VL6fyrEBeKYTWKk_XNbU6Gvz
+    WXAlLTi7njmn5MhutM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrleefgdduudegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:8DvTZOU94Nu2Uaf07TxCgco7Z_rDI1De7kYnPmBacmfJxpZXKRR4cg>
+    <xmx:8DvTZKiEFQAvuzSRNQtnVEjS3MsK3VBIgXD3df2-tzQDDkYq8vAN8Q>
+    <xmx:8DvTZOAvfJVqg0AKvz5nQoUdtFxif6QBbUkN8w1NZClh5-ncmqyCHA>
+    <xmx:8TvTZJMI5UU6mljkWS0d_20sVrr-29ZB5qTeWTRD0uCULKg3ZeH8Iw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id D678CB60089; Wed,  9 Aug 2023 03:10:40 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
+Mime-Version: 1.0
+Message-Id: <9b1213cf-a8f4-41b3-8918-a00bf0ff7f28@app.fastmail.com>
+In-Reply-To: <87sf8t58di.wl-me@linux.beauty>
+References: <189cff865f3.fc7e71c96186.1411633612292556520@linux.beauty>
+ <20230808070357.GC4990@thinkpad>
+ <344b8ccd-23c9-4476-9493-1d2b9c23590d@app.fastmail.com>
+ <87sf8t58di.wl-me@linux.beauty>
+Date:   Wed, 09 Aug 2023 09:10:20 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Li Chen" <me@linux.beauty>
+Cc:     "Manivannan Sadhasivam" <mani@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+        "Kishon Vijay Abraham I" <kishon@ti.com>,
+        "Bjorn Helgaas" <helgaas@kernel.org>
+Subject: Re: [RFC] add __iomem cookie for EPF BAR
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 07, 2023 at 12:52:38PM -0400, Frank Li wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> Add PME_Turn_off/PME_TO_Ack handshake sequence for ls1028a platform. Call
-> common dwc dw_pcie_suspend(resume)_noirq() function when system enter/exit
-> suspend state.
-> 
-> Acked-by: Manivannan Sadhasivam <mani@kernel.org>
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-layerscape.c | 130 ++++++++++++++++++--
->  1 file changed, 121 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-> index ed5fb492fe084..7586aece769b2 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
-> @@ -8,9 +8,11 @@
->   * Author: Minghuan Lian <Minghuan.Lian@freescale.com>
->   */
->  
-> +#include <linux/delay.h>
->  #include <linux/kernel.h>
->  #include <linux/interrupt.h>
->  #include <linux/init.h>
-> +#include <linux/iopoll.h>
->  #include <linux/of_pci.h>
->  #include <linux/of_platform.h>
->  #include <linux/of_address.h>
-> @@ -20,6 +22,7 @@
->  #include <linux/mfd/syscon.h>
->  #include <linux/regmap.h>
->  
-> +#include "../../pci.h"
->  #include "pcie-designware.h"
->  
->  /* PEX Internal Configuration Registers */
-> @@ -27,12 +30,26 @@
->  #define PCIE_ABSERR		0x8d0 /* Bridge Slave Error Response Register */
->  #define PCIE_ABSERR_SETTING	0x9401 /* Forward error of non-posted request */
->  
-> +/* PF Message Command Register */
-> +#define LS_PCIE_PF_MCR		0x2c
-> +#define PF_MCR_PTOMR		BIT(0)
-> +#define PF_MCR_EXL2S		BIT(1)
-> +
->  #define PCIE_IATU_NUM		6
->  
-> +struct ls_pcie_drvdata {
-> +	const u32 pf_off;
-> +	bool pm_support;
-> +};
-> +
->  struct ls_pcie {
->  	struct dw_pcie *pci;
-> +	const struct ls_pcie_drvdata *drvdata;
-> +	void __iomem *pf_base;
-> +	bool big_endian;
->  };
->  
-> +#define ls_pcie_pf_readl_addr(addr)	ls_pcie_pf_readl(pcie, addr)
->  #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
->  
->  static bool ls_pcie_is_bridge(struct ls_pcie *pcie)
-> @@ -73,6 +90,60 @@ static void ls_pcie_fix_error_response(struct ls_pcie *pcie)
->  	iowrite32(PCIE_ABSERR_SETTING, pci->dbi_base + PCIE_ABSERR);
->  }
->  
-> +static u32 ls_pcie_pf_readl(struct ls_pcie *pcie, u32 off)
-> +{
-> +	if (pcie->big_endian)
-> +		return ioread32be(pcie->pf_base + off);
-> +
-> +	return ioread32(pcie->pf_base + off);
-> +}
-> +
-> +static void ls_pcie_pf_writel(struct ls_pcie *pcie, u32 off, u32 val)
-> +{
-> +	if (pcie->big_endian)
-> +		iowrite32be(val, pcie->pf_base + off);
-> +	else
-> +		iowrite32(val, pcie->pf_base + off);
-> +}
-> +
-> +static void ls_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct ls_pcie *pcie = to_ls_pcie(pci);
-> +	u32 val;
-> +	int ret;
-> +
-> +	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
-> +	val |= PF_MCR_PTOMR;
-> +	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
-> +
-> +	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
-> +				 val, !(val & PF_MCR_PTOMR),
-> +				 PCIE_PME_TO_L2_TIMEOUT_US/10,
-> +				 PCIE_PME_TO_L2_TIMEOUT_US);
-> +	if (ret)
-> +		dev_err(pcie->pci->dev, "poll turn off message timeout\n");
-> +}
-> +
-> +static void ls_pcie_exit_from_l2(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct ls_pcie *pcie = to_ls_pcie(pci);
-> +	u32 val;
-> +	int ret;
-> +
-> +	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
-> +	val |= PF_MCR_EXL2S;
-> +	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
-> +
-> +	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
-> +				 val, !(val & PF_MCR_EXL2S),
-> +				 PCIE_PME_TO_L2_TIMEOUT_US/10,
-> +				 PCIE_PME_TO_L2_TIMEOUT_US);
-> +	if (ret)
-> +		dev_err(pcie->pci->dev, "poll exit L2 state timeout\n");
+On Wed, Aug 9, 2023, at 03:09, Li Chen wrote:
+> On Tue, 08 Aug 2023 15:44:44 +0800,
+> Arnd Bergmann wrote:
+>> On Tue, Aug 8, 2023, at 09:03, mani wrote:
+>> > On Mon, Aug 07, 2023 at 08:28:30PM +0800, Li Chen wrote:
+>
+>> If the cache is coherent with the device, then reading from the cache
+>> is clearly the right thing to do,
+>
+> I guess that even SoCs with CCI support might not handle cache for RC
+> access if specific bus interfaces are not connected.
 
-I specifically mentioned that you need to change this error message and the one
-below before adding my Acked-by tag. But you just added the tag without
-incorporating the changes :/
+Correct, each device in the system can be cache-coherent or
+noncoherent, independent of the others, and needs to be marked
+correctly in the DT. The dma_alloc_coherent() call will either
+allocate cacheable or noncachable memory based on what the
+kernel thinks is required for the particular device.
 
-- Mani
+>> but the mentioned "stall" problem may
+>> be related to the store buffers, where an dma_wmb() after the
+>> WRITE_ONCE() is missing. Similarly, a dma_rmb() might be missing before
+>> a READ_ONCE() to prevent prefetching during out-of-order execution.
+>> 
+>> With readl()/writel(), you already get very heavy barriers, so it may
+>> end up working by accident, but these barriers are at the other side
+>> of the access (before writel and after readl) and may be the wrong
+>> type of barrier depending on the CPU.
+>
+> For systems that aren't cache-coherent, is it accurate to say that the 
+> store
+> buffer might still be utilized, and that there might still be a need 
+> for dma_wmb and dma_rmb?
 
-> +}
-> +
->  static int ls_pcie_host_init(struct dw_pcie_rp *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> @@ -91,18 +162,28 @@ static int ls_pcie_host_init(struct dw_pcie_rp *pp)
->  
->  static const struct dw_pcie_host_ops ls_pcie_host_ops = {
->  	.host_init = ls_pcie_host_init,
-> +	.pme_turn_off = ls_pcie_send_turnoff_msg,
-> +	.exit_from_l2 = ls_pcie_exit_from_l2,
-> +};
-> +
-> +static const struct ls_pcie_drvdata ls1021a_drvdata = {
-> +};
-> +
-> +static const struct ls_pcie_drvdata layerscape_drvdata = {
-> +	.pf_off = 0xc0000,
-> +	.pm_support = true,
->  };
->  
->  static const struct of_device_id ls_pcie_of_match[] = {
-> -	{ .compatible = "fsl,ls1012a-pcie", },
-> -	{ .compatible = "fsl,ls1021a-pcie", },
-> -	{ .compatible = "fsl,ls1028a-pcie", },
-> -	{ .compatible = "fsl,ls1043a-pcie", },
-> -	{ .compatible = "fsl,ls1046a-pcie", },
-> -	{ .compatible = "fsl,ls2080a-pcie", },
-> -	{ .compatible = "fsl,ls2085a-pcie", },
-> -	{ .compatible = "fsl,ls2088a-pcie", },
-> -	{ .compatible = "fsl,ls1088a-pcie", },
-> +	{ .compatible = "fsl,ls1012a-pcie", .data = &layerscape_drvdata },
-> +	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021a_drvdata },
-> +	{ .compatible = "fsl,ls1028a-pcie", .data = &layerscape_drvdata },
-> +	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1021a_drvdata },
-> +	{ .compatible = "fsl,ls1046a-pcie", .data = &layerscape_drvdata },
-> +	{ .compatible = "fsl,ls2080a-pcie", .data = &layerscape_drvdata },
-> +	{ .compatible = "fsl,ls2085a-pcie", .data = &layerscape_drvdata },
-> +	{ .compatible = "fsl,ls2088a-pcie", .data = &layerscape_drvdata },
-> +	{ .compatible = "fsl,ls1088a-pcie", .data = &layerscape_drvdata },
->  	{ },
->  };
->  
-> @@ -121,6 +202,8 @@ static int ls_pcie_probe(struct platform_device *pdev)
->  	if (!pci)
->  		return -ENOMEM;
->  
-> +	pcie->drvdata = of_device_get_match_data(dev);
-> +
->  	pci->dev = dev;
->  	pci->pp.ops = &ls_pcie_host_ops;
->  
-> @@ -131,6 +214,10 @@ static int ls_pcie_probe(struct platform_device *pdev)
->  	if (IS_ERR(pci->dbi_base))
->  		return PTR_ERR(pci->dbi_base);
->  
-> +	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
-> +
-> +	pcie->pf_base = pci->dbi_base + pcie->drvdata->pf_off;
-> +
->  	if (!ls_pcie_is_bridge(pcie))
->  		return -ENODEV;
->  
-> @@ -139,12 +226,37 @@ static int ls_pcie_probe(struct platform_device *pdev)
->  	return dw_pcie_host_init(&pci->pp);
->  }
->  
-> +static int ls_pcie_suspend_noirq(struct device *dev)
-> +{
-> +	struct ls_pcie *pcie = dev_get_drvdata(dev);
-> +
-> +	if (!pcie->drvdata->pm_support)
-> +		return 0;
-> +
-> +	return dw_pcie_suspend_noirq(pcie->pci);
-> +}
-> +
-> +static int ls_pcie_resume_noirq(struct device *dev)
-> +{
-> +	struct ls_pcie *pcie = dev_get_drvdata(dev);
-> +
-> +	if (!pcie->drvdata->pm_support)
-> +		return 0;
-> +
-> +	return dw_pcie_resume_noirq(pcie->pci);
-> +}
-> +
-> +static const struct dev_pm_ops ls_pcie_pm_ops = {
-> +	NOIRQ_SYSTEM_SLEEP_PM_OPS(ls_pcie_suspend_noirq, ls_pcie_resume_noirq)
-> +};
-> +
->  static struct platform_driver ls_pcie_driver = {
->  	.probe = ls_pcie_probe,
->  	.driver = {
->  		.name = "layerscape-pcie",
->  		.of_match_table = ls_pcie_of_match,
->  		.suppress_bind_attrs = true,
-> +		.pm = &ls_pcie_pm_ops,
->  	},
->  };
->  builtin_platform_driver(ls_pcie_driver);
-> -- 
-> 2.34.1
-> 
+Yes, the ordering is really independent of the cache, so these will
+be needed for portable code either way, the same way you need
+smp_wmb()/smp_rmb() between CPUs accessing shared memory locally.
 
--- 
-மணிவண்ணன் சதாசிவம்
+     Arnd
