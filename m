@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C7FE776926
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Aug 2023 21:48:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAC00776928
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Aug 2023 21:48:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234188AbjHITsD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Aug 2023 15:48:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49602 "EHLO
+        id S234331AbjHITsJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Aug 2023 15:48:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234176AbjHITre (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Aug 2023 15:47:34 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2050.outbound.protection.outlook.com [40.107.220.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50EF32697;
-        Wed,  9 Aug 2023 12:47:21 -0700 (PDT)
+        with ESMTP id S234207AbjHITrg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Aug 2023 15:47:36 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2051.outbound.protection.outlook.com [40.107.223.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 539AE2700;
+        Wed,  9 Aug 2023 12:47:24 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L0IeWBKk60jkabbA2igS7nf9luSicGgh6YPvNJfbnlO7xMyIiv/QjXOxBG+54DFhHLToD9CmLJIV0c78vYSMazE5nXU2KPtVqltiMLgxNMkMo0gamB0qvZfNnZ8wAgAKSeTiA5hOyfEvxq9nWGZM74Tfzpw3YoEYqfkL7sKI62Fajka+UZH2NV2Mgx//Mq7qAqymKUDhcbunrlyCk54vgVIU/OYpG69PEgRvFldUFBVIremITaX4zfG/U8SS4FwNP+1H4V4mQTBF/aob2QxTqrA4PQaxsMKrH4RUdGqLj1l96Krwqv1XBz+M9F/wAzY9eI20xfNvrm4Q8dg1YVOcPQ==
+ b=LLhSdSVQkAD+V0r2DokewZ3/6TseT2B21zbWpIMmQ+N9doXeEWQv86IKTTBIlyEuHGvvxQuMXpNafANngqIB0SjXCOK9u8J9xc364XNg5dc7zA+LaEWxSi+ipZSZf052uM7G0pTs89v5CJ25bpXYhDsJGA8rBD3hj7BjthkLobc/DwTWvVJcI2jHzJs0mJVABVcf03UGr8gAfLDBqg2gk9SGPOYTMbwjEGiJ7fCDPKQLHdtoHUFzLoIAN3un0/91R0DGpznnpGPFApSNVcEtQQsFUF4ZYOYKSdI+fvfHKfhNHBYAtSk0AmtCNDU12NSlVspOMFMSQTfsVoEAyHGlrg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VdDivnYtujAWAa9il7+N1e2ydP3LuW8rnDj+y/wNgT4=;
- b=QRFX8XvWvfAbMOsGqkNVmiHiHYxztU6EJciZdRNeJlZPzk59JwYyKlUv07kgVGbxiEVlLxpDDBXnrqWH0K36jv26jbykXMits6rZn/P8pAooznAa/T8yvBoGxq54CwjspTuFp8V6a8TgNK1p95zo0GsRo5pehb5qtZ2R7IaFUyuLDiMu8gGbKRHHTtwpWZNnYa6/UtiSpndqQUXT5W/pc2CVUW4VDZATw+rqmEaAbF6umt1EAplM7X7EweDqSOQZXlBIOi0pt44mdUmTXzrfRdgOO6/wRz+AZ7rdc0nNTqGNLCFcswAJWlFU13inSiZBa+NircT2VuR3k3wmG4hyzQ==
+ bh=WKNaYVBFM4Xk1GipR8RNik/wQAL5VS75hCyaNge9iE4=;
+ b=oH/7AXLzjMdD5jno6+fxGPxW2Zv403s7qkNoP9TuH3mUmoPbHhfGKn05onRFW7LOLZH81DB5siSrlPSVrLlk1Ts9GxncsZPFzPwC0+w/k5cUkvYfjCGH/LtDIUiUqwnCUB42QavHsi0Wrdf0jkjrATGwakhpZDbDCT8wXb+PPR8BaPrDTwW9bCph4LYQLn3JVFKoxpwaIRuG6//HBMDzJRwzgEYbL26IZV4y6dF1Z3sQTh4zPfoojbyoUMI9d4+mDsuuTM5ib2Fs5q5+vsMVkZEhBl99NksnFL1b1Lm5FORxepNrNcJGhtRUBPWD9smel0kA46bggfaB1wH2QHQbLA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VdDivnYtujAWAa9il7+N1e2ydP3LuW8rnDj+y/wNgT4=;
- b=mDtXHnKeqG30YRh8umoToKK1+ykpQGE61njbZNVzfGwQEWLnANfYFMRZqhkT8vBmGCLQSmHaNQ1Wqt1k+f2XrM8o0ZY9ND4rX0hwLYrpIcImVoN+nhZr59IGTjjsXnIyJdQ/+e0ReQW1NCVteRlSKeWuhWbJkDGyzizxkbCD97k=
-Received: from MW2PR16CA0053.namprd16.prod.outlook.com (2603:10b6:907:1::30)
- by SJ2PR12MB9191.namprd12.prod.outlook.com (2603:10b6:a03:55a::8) with
+ bh=WKNaYVBFM4Xk1GipR8RNik/wQAL5VS75hCyaNge9iE4=;
+ b=UE/uKpJGXJvkz4vZ1K3BSmH2veH2jsZoNu5SZrQthCqGDJ8HDdVCX01RmcWZzw/kVNnT0TvaCfFW4Uah28nG0ocvAqLGPgd31CinlSbrZqJa+gyt7EBPgrSMf+t8JmDlq4d6PBgMG6IXqAuTz8fnkNcXHBVESemtFT1qdu4bKKc=
+Received: from MW2PR16CA0050.namprd16.prod.outlook.com (2603:10b6:907:1::27)
+ by MN2PR12MB4189.namprd12.prod.outlook.com (2603:10b6:208:1d8::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.27; Wed, 9 Aug
- 2023 19:47:18 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.30; Wed, 9 Aug
+ 2023 19:47:21 +0000
 Received: from CO1PEPF000042A9.namprd03.prod.outlook.com
- (2603:10b6:907:1:cafe::a2) by MW2PR16CA0053.outlook.office365.com
- (2603:10b6:907:1::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.27 via Frontend
- Transport; Wed, 9 Aug 2023 19:47:18 +0000
+ (2603:10b6:907:1:cafe::1c) by MW2PR16CA0050.outlook.office365.com
+ (2603:10b6:907:1::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.28 via Frontend
+ Transport; Wed, 9 Aug 2023 19:47:20 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,11 +48,11 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  CO1PEPF000042A9.mail.protection.outlook.com (10.167.243.38) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6652.19 via Frontend Transport; Wed, 9 Aug 2023 19:47:18 +0000
+ 15.20.6652.19 via Frontend Transport; Wed, 9 Aug 2023 19:47:20 +0000
 Received: from SITE-L-T34-2.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 9 Aug
- 2023 14:47:16 -0500
+ 2023 14:47:17 -0500
 From:   Mario Limonciello <mario.limonciello@amd.com>
 To:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -65,9 +65,9 @@ CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         "Iain Lane" <iain@orangesquash.org.uk>,
         Shyam-sundar S-k <Shyam-sundar.S-k@amd.com>,
         Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v11 5/9] ACPI: x86: s2idle: Store if constraint is enabled
-Date:   Wed, 9 Aug 2023 13:54:49 -0500
-Message-ID: <20230809185453.40916-6-mario.limonciello@amd.com>
+Subject: [PATCH v11 6/9] ACPI: x86: s2idle: Add a function to get constraints for a device
+Date:   Wed, 9 Aug 2023 13:54:50 -0500
+Message-ID: <20230809185453.40916-7-mario.limonciello@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230809185453.40916-1-mario.limonciello@amd.com>
 References: <20230809185453.40916-1-mario.limonciello@amd.com>
@@ -79,23 +79,23 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000042A9:EE_|SJ2PR12MB9191:EE_
-X-MS-Office365-Filtering-Correlation-Id: ac39a05e-f0e6-44c0-3abc-08db99117074
+X-MS-TrafficTypeDiagnostic: CO1PEPF000042A9:EE_|MN2PR12MB4189:EE_
+X-MS-Office365-Filtering-Correlation-Id: 03d15408-ff37-43f9-5290-08db991171ef
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eJGCtlU0s4N2PHGwAT1RuDTYPIQUW91BywdC2KnGiDEin9lvZFua1O+T/yuwYJR0Xce7ZUAigN4T69WS3qqZ22tw4TU9sLF+q8BZcR99N0uM21WH2Yu87TW0PPSe9pffz+bMgQ9KG+ZIvd00V/zOjHGKFa48qOYqlsqBapgzeA6cG21EWqe4cLH0k09lH2UB07ADMj5kyV1vY+T8w0q3hBcCNijffgzu6iG/nWngvylUjGx6Uk4YMG0Vpfc8fCkP9JT98DSnr4ForZ69rZE7nIGjlhKJgRK5sb+tu4rJheENZmnmzA6f3eM8lszyWH22iMlzqw7f2hGRfxGiJIUsiOnn6kexmndv+DWEJCodoKls5++dmyYZI3cFR2tZNBrbqtD6n4SNzHaCC0LM7H6hOtxKj6ammUbGvPrN3IoYKsrX6d7/U9dtZI+KaMeN11d1E5MBoFsAlgB5UZRw2dJdl0VDDkOnGBN19S5DHy9/25AXaEFtfVEDm+JDg1zWeXbvYZvXo9iaceI+ByM0/WagImB0tPn66LX3/NuX6toX8/2DxjK19XacHkBRxYD1sjdZEpU05d6tlgwv344K+OyVxhokCUO0j1Uli3l+AcgOZnDrLKyr8tV0Ivr8LhemFM6tcsK252j9MazfczRLvJxxHY22Y6F3ikTR6fbbq0EVQk62XOaE76Qd0HuskBUjsDUZMW0rUei3dNP1dTqePuvSDPWwNqL2XThN/abXM6eB3aCv5thE77gWtn+nGD77AHknDIDDvHcrDKLidWK6cK2sFQ==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(346002)(376002)(136003)(39860400002)(396003)(451199021)(1800799006)(186006)(82310400008)(36840700001)(40470700004)(46966006)(478600001)(83380400001)(81166007)(7696005)(6666004)(2616005)(1076003)(26005)(82740400003)(54906003)(110136005)(356005)(70206006)(70586007)(4326008)(426003)(36860700001)(16526019)(336012)(5660300002)(47076005)(8676002)(8936002)(40460700003)(41300700001)(2906002)(316002)(44832011)(86362001)(40480700001)(36756003)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: uYO5J0LkAdOWnsWp0PbTIeU1jkfMEt4DfvMGwpPcVZMWTdSGUkfYDMNy2BztJyTbF17A2hOfmdopkxfHBGpuYCnGSC5kHr7B9sdK7yiA3/oX4t+ekC6TvkLwInL1dvs/kAfF6TyC7WAEXx+WU/BiVpmDDPuwO2kJqX4DM1F9f/Dord+Z+qb1ngklfE5sAmDNrjqREaoWG01JqHtuyQ4bYNZSsPCsRi1EsulOpJ2jPHN9vJOtc2OFeQ0Vbx6iMGUZBbOP5ywlyiEK8eKjJCMVx/Ke9i2pTnwtp3TieLj6JnDM9BTG1JjyrSFI4c5nGUXJGzGXg8LuXP4GMt5By7oV1qJ9jph3ISzRKsKWm27GtFNeW4kq40LxWQYoZaU/xNVfYg/aGPnqrbHIG5919ZnaIztLYQd4cAB2Z7WK1ncMK+nfi6rg8ituXzI4CSYvai+FwAZHJQl2EgzQ8proRjj3KgYlYpSk3epktt8UxdWDv1vakv0RVIgnT5bbskZ8CvW+1jUlhthYjDx+1pqaUhaZKtOBK9eGXuSYvQr9xdmzEjq27QFmVowuiz2kUYkmBYSOOk+sbvzun+kBH6t7/Dol/l27avGWcgJc4DAByUlS7NMvInRPXEizbrwZUlXBsnIhbqxpQc41sPoKjZl4HzGo9pFIsGA+UF7J1rk9UHrx4IvV/3OdUdTdZMiEgnCup6mHIROPNMSvMW6as3+SvP1aEF6mP8u9oHcg9CeA0U0z1xLgBMFjXJCxNUPTmATGBhrCu+enMZs5N+puf38R6YfIOQ==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(136003)(39860400002)(396003)(346002)(1800799006)(186006)(451199021)(82310400008)(36840700001)(40470700004)(46966006)(36756003)(478600001)(6666004)(70586007)(70206006)(54906003)(26005)(336012)(16526019)(1076003)(110136005)(7696005)(4326008)(2906002)(41300700001)(316002)(44832011)(8676002)(5660300002)(356005)(82740400003)(8936002)(86362001)(81166007)(47076005)(83380400001)(36860700001)(2616005)(426003)(40480700001)(40460700003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2023 19:47:18.1810
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2023 19:47:20.6654
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac39a05e-f0e6-44c0-3abc-08db99117074
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03d15408-ff37-43f9-5290-08db991171ef
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000042A9.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9191
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4189
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
@@ -106,75 +106,77 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Constraints are currently only stored when enabled.  To enable
-the ability to check if constraints are present they need to be
-stored even if disabled.
+Other parts of the kernel may use constraints information to make
+decisions on what power state to put a device into.
 
 Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
 v9->v10:
  * split from other patches
+ * kerneldoc fixes
+ * move debug statement to this function
 ---
- drivers/acpi/x86/s2idle.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/acpi/x86/s2idle.c | 29 +++++++++++++++++++++++++++++
+ include/linux/acpi.h      |  6 ++++++
+ 2 files changed, 35 insertions(+)
 
 diff --git a/drivers/acpi/x86/s2idle.c b/drivers/acpi/x86/s2idle.c
-index 91cd6f8b8ade0..0c8101acc92ef 100644
+index 0c8101acc92ef..2a1a482f4803a 100644
 --- a/drivers/acpi/x86/s2idle.c
 +++ b/drivers/acpi/x86/s2idle.c
-@@ -78,6 +78,7 @@ struct lpi_device_constraint {
- struct lpi_constraints {
- 	acpi_handle handle;
- 	int min_dstate;
-+	bool enabled;
+@@ -295,6 +295,35 @@ static void lpi_device_get_constraints(void)
+ 	ACPI_FREE(out_obj);
+ }
+ 
++/**
++ * acpi_get_lps0_constraint - get any LPS0 constraint for a device
++ * @dev: device to get constraints for
++ *
++ * Returns:
++ *  - If the constraint is enabled, the value for constraint.
++ *  - If the constraint is disabled, 0.
++ *  - Otherwise, -ENODEV.
++ */
++int acpi_get_lps0_constraint(struct device *dev)
++{
++	int i;
++
++	for (i = 0; i < lpi_constraints_table_size; ++i) {
++		static struct lpi_constraints *entry;
++		int val;
++
++		entry = &lpi_constraints_table[i];
++		if (!device_match_acpi_handle(dev, entry->handle))
++			continue;
++		val = entry->enabled ? entry->min_dstate : 0;
++		acpi_handle_debug(entry->handle,
++				  "ACPI device constraint: %d\n", val);
++		return val;
++	}
++
++	return -ENODEV;
++}
++
+ static void lpi_check_constraints(void)
+ {
+ 	int i;
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 13a0fca3539f0..99458502a7510 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -1109,6 +1109,12 @@ struct acpi_s2idle_dev_ops {
  };
- 
- /* AMD Constraint package structure */
-@@ -151,8 +152,7 @@ static void lpi_device_get_constraints_amd(void)
- 					}
- 				}
- 
--				if (!dev_info.enabled || !dev_info.name ||
--				    !dev_info.min_dstate)
-+				if (!dev_info.name)
- 					continue;
- 
- 				status = acpi_get_handle(NULL, dev_info.name, &list->handle);
-@@ -173,6 +173,7 @@ static void lpi_device_get_constraints_amd(void)
- 							  "Incomplete constraint defined\n");
- 					continue;
- 				}
-+				list->enabled = dev_info.enabled;
- 				lpi_constraints_table_size++;
- 			}
- 		}
-@@ -235,7 +236,7 @@ static void lpi_device_get_constraints(void)
- 			}
- 		}
- 
--		if (!info.enabled || !info.package || !info.name)
-+		if (!info.package || !info.name)
- 			continue;
- 
- 		constraint = &lpi_constraints_table[lpi_constraints_table_size];
-@@ -247,7 +248,7 @@ static void lpi_device_get_constraints(void)
- 		acpi_handle_debug(lps0_device_handle,
- 				  "index:%d Name:%s\n", i, info.name);
- 
--		constraint->min_dstate = -1;
-+		constraint->min_dstate = -EINVAL;
- 
- 		for (j = 0; j < package_count; ++j) {
- 			union acpi_object *info_obj = &info.package[j];
-@@ -284,7 +285,7 @@ static void lpi_device_get_constraints(void)
- 					  "Incomplete constraint defined\n");
- 			continue;
- 		}
--
-+		constraint->enabled = info.enabled;
- 		lpi_constraints_table_size++;
- 	}
- 
+ int acpi_register_lps0_dev(struct acpi_s2idle_dev_ops *arg);
+ void acpi_unregister_lps0_dev(struct acpi_s2idle_dev_ops *arg);
++int acpi_get_lps0_constraint(struct device *dev);
++#else /* CONFIG_ACPI_SLEEP && CONFIG_X86 */
++static inline int acpi_get_lps0_constraint(struct device *dev)
++{
++	return -ENODEV;
++}
+ #endif /* CONFIG_ACPI_SLEEP && CONFIG_X86 */
+ #ifndef CONFIG_IA64
+ void arch_reserve_mem_area(acpi_physical_address addr, size_t size);
 -- 
 2.34.1
 
