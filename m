@@ -2,119 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ADD677762DA
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Aug 2023 16:46:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED6367763AA
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Aug 2023 17:28:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230118AbjHIOqC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Aug 2023 10:46:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39784 "EHLO
+        id S233046AbjHIP2b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Aug 2023 11:28:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229999AbjHIOqB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Aug 2023 10:46:01 -0400
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2054.outbound.protection.outlook.com [40.107.21.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8CCE1FCC;
-        Wed,  9 Aug 2023 07:45:57 -0700 (PDT)
+        with ESMTP id S231611AbjHIP2Y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Aug 2023 11:28:24 -0400
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01on2077.outbound.protection.outlook.com [40.107.14.77])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06F7CE7F;
+        Wed,  9 Aug 2023 08:28:23 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aw8pHwWtRjRG5VcIa7pJkYz2as2VmjWw8hTFGEA+N27VDJ2hF0UdD3uMJUr6nUi5gwbNBUkDGAl6gqmIFv4yfBKlvAG0LCkNzXcEIc8Mye/1HK1Og1GQBq5eQdjVEKezsMEeEnyY98LdXkYtm52hC4mqJ8nO9OlkWhlR0D0Uju4faP5MNhwJBYpFfNkKY5jSOEDjBEEGkjpwGzIc0TxjB8HKzzpRDq+jU5ORY8L1Kqk/hcRcivwhD7HWppcMUHTSV0kXy8J8EBRRJZnSCCVkzclCBjOuL0ExLMHLNrJ/+BXAagT0ecmS9NdTJFWhF9V75fqXFSu3LqDtLCbWLEMV/Q==
+ b=EcRV/CAQ4QTBsCBAHbiFokA9L7F44Ip8CZttG2OyLJf4GOBJ/pwd0UPuf260+5Eh2GVbFGykSYgL/4z5PVAcAF1HyU2TDXZtud0INn+pP8c7UBYPLewhpBsSxtRWWR43h/82NbFE0Oynh5mrfCIX0SMymTmUutadQdGGbSEd8Us5pmBZe6gzn00rmyg4wxkF+f95G4on01jkk0Lpy5wOINlwtImpseLkPZEA4EZXebEHfQ0o/2EzTB4OMgZjRHFZ290Ih7pP5pusgnOh/OJgWQqOjvDC+FM1vvMyNNJ+OVI64ZJEpVBP1iQ09kQWfnE38KSsaGrMJjNJV3BVK76EBQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xKgSN+DipQLIqs5gKRMn9UzgNe7NMwabguil4hm8xDg=;
- b=a8pDP54HVE1BeCdV77e6N6TmI9J190VNqJGw+nYQ8gCLegirmmOIPkfKcKw0R6u3yjZqejmMLmkd89cbyOvXyo/KKBmhco4rTDTY4GcKH3jw7Thlz05lR3I5lGZxO/2CRkT2Up5cbLJnTCsRzqs8ZReSS/dAJwlTLHrUUd4K24hRDCtNYELIxtKX/EWJ5v4mHmGOg+6okneqGCelyM3xfrc1kmTpaTYWRm6KFHQjo3Pfk0YUtEUecB6TrAyTiQuB0EA1+d4Vj0qtBVhX9uiC1JXP0UOXiRpxPK+9qanPdo0MP5dZaw9Zdz1dO5X/iLkv5OfQdOuBs7NIZZQqM6A2LA==
+ bh=Cl88XdbWEvGoZCrnC3m0Z3Hp6vxnDQc9nLQCFvK9S3M=;
+ b=j3CQaCr01X8pqYiksDs2I5mYbsItBjlcyT6ptXrojcjizcx5Y1tphO2uFFMl3gnA7Ru3RZ4VFCJnXFWRJKvJ8Cwl/KT4v4JlQQfLtDe+JCZgklWFjkBE0r9VFnW1lzdppoV4CatzdVMmlvlNE2NCvsTpTwlTsM/QplhpEDLATYRFq/lSbknauirw+Ib+lQ2tXZtvlXQdW7OzUI2sC9+xRck9DtJqgwXj6rdcSziuMYG+hqL0GKzNZ2JRKEuW7KCqmHX336gJ+WCnMLniAMlO2rtWZH4G83VM03xFDD2GX8spqgY39//1VyPIXIWoAgCdLD4dPSu539ZgexJLw0N72w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xKgSN+DipQLIqs5gKRMn9UzgNe7NMwabguil4hm8xDg=;
- b=UGFEW8JZ+qefFm7Nl1ugxr5Dc7kgzOs2YJuR8C/9ElW76PvYlq2T0D7tGafJ4DKoQwzmKL4tp9VAoIVNABVjPGKlG/vwAlP/r0MB8qQ3pqnqpNVI+VxEiKrgdwbRlWpN40tpVmLGApp3651m4L7TZGi2VQTx5UQvXqo6xgGsvCU=
+ bh=Cl88XdbWEvGoZCrnC3m0Z3Hp6vxnDQc9nLQCFvK9S3M=;
+ b=lTh+wA5XXhzfaTJl3Izq7Ni+vujuT7GFUPbC43f72Gw8FzwMRu8JSeF8eCTaz/prXdYzudYRdy6vXiKrEZnd7RX9kmnFEH09xh3MSi4XAblI96XXYlYp7qhh/5j+ZMPDjJrK+Ll/+nuNeNXPn0uUkQzT+e1OEOuxxEsuYZMMBXw=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM0PR04MB6452.eurprd04.prod.outlook.com (2603:10a6:208:16d::21)
- by DB9PR04MB10011.eurprd04.prod.outlook.com (2603:10a6:10:4c4::20) with
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by GV1PR04MB9086.eurprd04.prod.outlook.com (2603:10a6:150:21::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.28; Wed, 9 Aug
- 2023 14:45:54 +0000
-Received: from AM0PR04MB6452.eurprd04.prod.outlook.com
- ([fe80::d4ed:20a0:8c0a:d9cf]) by AM0PR04MB6452.eurprd04.prod.outlook.com
- ([fe80::d4ed:20a0:8c0a:d9cf%6]) with mapi id 15.20.6652.028; Wed, 9 Aug 2023
- 14:45:54 +0000
-Date:   Wed, 9 Aug 2023 17:45:49 +0300
-From:   Vladimir Oltean <vladimir.oltean@nxp.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Liu Peibao <liupeibao@loongson.cn>,
-        Binbin Zhou <zhoubinbin@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v2 pci/net 1/3] PCI: move OF status = "disabled"
- detection to dev->match_driver
-Message-ID: <20230809144549.ksw3slllph6kqwg7@skbuf>
-References: <20230803135858.2724342-2-vladimir.oltean@nxp.com>
- <20230808222107.GA331664@bhelgaas>
-Content-Type: text/plain; charset=us-ascii
+ 2023 15:28:19 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::d0d5:3604:98da:20b1]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::d0d5:3604:98da:20b1%7]) with mapi id 15.20.6652.028; Wed, 9 Aug 2023
+ 15:28:19 +0000
+Date:   Wed, 9 Aug 2023 11:28:03 -0400
+From:   Frank Li <Frank.li@nxp.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     helgaas@kernel.org, bhelgaas@google.com,
+        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
+        imx@lists.linux.dev, kw@linux.com, leoyang.li@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, lpieralisi@kernel.org, mani@kernel.org,
+        minghuan.lian@nxp.com, mingkai.hu@nxp.com, robh+dt@kernel.org,
+        roy.zang@nxp.com, shawnguo@kernel.org, zhiqiang.hou@nxp.com
+Subject: Re: [PATCH v10 resent 3/3] PCI: layerscape: Add power management
+ support for ls1028a
+Message-ID: <ZNOwg6En8e+epmGR@lizhi-Precision-Tower-5810>
+References: <20230807165238.569297-1-Frank.Li@nxp.com>
+ <20230807165238.569297-4-Frank.Li@nxp.com>
+ <20230809061604.GC5348@thinkpad>
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230808222107.GA331664@bhelgaas>
-X-ClientProxiedBy: AM0PR02CA0180.eurprd02.prod.outlook.com
- (2603:10a6:20b:28e::17) To AM0PR04MB6452.eurprd04.prod.outlook.com
- (2603:10a6:208:16d::21)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230809061604.GC5348@thinkpad>
+X-ClientProxiedBy: SJ0PR13CA0072.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c4::17) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM0PR04MB6452:EE_|DB9PR04MB10011:EE_
-X-MS-Office365-Filtering-Correlation-Id: 07e95930-8199-4c11-f26a-08db98e75544
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|GV1PR04MB9086:EE_
+X-MS-Office365-Filtering-Correlation-Id: f78db721-2f22-4ec0-f0c4-08db98ed426a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dd4c6LgLRFkOc9HC3JhbSEwTUacy0gDc1Zvl+0GP26ip0OpgWCoAWb2dqU4rySxy3aLxAfLnJ89h2tJFRnm1dfUPYe4VcqelIMV1iO576ONGEcgjcie2lebuxUzvV0D3pw0Fv7YJVFSM4v8eB0MmLRIOH4nc2m1nZpLYhSbe8/LBJMt9bYazU8xB8QmThpMbWCgSN8+iCZ97WGT3q2ZwsfKJ9RLpuRbE4PbgmiLXnQKS66DnBLRl39sEMy2/GUS9bhuLJKaLet/Cx3DhKfjMucd15rZw6mL2DkHQBYuU0SisK+0g5oYAL6MYAOGxMzCF4KONdRvdLftENrOZ4ErvOTwu89QktYPOqHRRjhSsB3n0V28N3Iqr5XCDZYCLtwRUcSku4fByvpupsTFP5TIO8QW7CailCoxRQrdbTQg+nXciZDL98zBLD4mkKG2Uqd5XuB/v97M+BLVQCrkxT5u7Z34Pu4G1sQYAI8Ms33/Y15ucqWhkb/1lzrtVSIVqDoqWlutDlqrAhyT7ojcVDTlD10uUaZky/8Fonp/N7rlLbZhEY0oj5CvSdSXWTsqF8ZOV
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6452.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(136003)(376002)(366004)(396003)(39860400002)(346002)(1800799006)(186006)(451199021)(6506007)(26005)(1076003)(9686003)(6512007)(33716001)(6486002)(6666004)(86362001)(478600001)(54906003)(83380400001)(316002)(66476007)(6916009)(66556008)(66946007)(4326008)(41300700001)(8676002)(8936002)(5660300002)(38100700002)(7416002)(44832011)(30864003)(2906002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: Kl4UHSGAoL/m5g8sd6E00wW6EufwczypHGi43A3UmutnmYEgicOmvH7sDE+LyowFO2BxIKsHZK3m86vMjSwTTYWQ+i4Crl8S0qtRYY/TSEKRNoKdpmb88UJrjshlb0OWGp1s4Hn2vdNtaCKF1eODV9f6AUwc6oAapdwHVq9cdfqOls2OPzaelrj9Pc8hjCF4AS1a5qffywPXdsGM5sIKwpslUFHbzFmq+Q3KZdx8QG7KyGbxpDmzKT9GS05neRYho+A0Hlfc4sCrAJjJbNjNETXvmHFp5HtFPrnSlkMJjRMk4AEuOXetpy/8pnkmjCLz/00mMP+8JpPslTpM/b2C39PJFAJpQncR8JSOcj8+p9LAHyOrlu3kuiDWUnaiBewDLq4qPvw/0fEECR+iAm24paxiwg74yXXafOB9YayHkGNhfl6N4T0AbPnKwyIrkfO9e2r6c0CX/qUO0+r088ZavlrdeqBbxBOB3nt6Wp19fFD0T2CbHz64siVYCJS7GI2l8T3owRoiwSWkrBwZU4Wl8JrhLe+7tTrloFmjFaxQmVU64mm6SGSViY2IY+lpSoXeRhTUVDZsy9RzVy/tNyfbCEWyq0lWCx0GtAGmudaUKgi6XcDVMEnCYfMpWpiN5k2AlUqNX1yaLQHFt8zHwjqRMQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(7916004)(376002)(346002)(39860400002)(366004)(136003)(396003)(451199021)(186006)(1800799006)(26005)(478600001)(6506007)(6486002)(52116002)(83380400001)(6512007)(6666004)(9686003)(66476007)(66946007)(41300700001)(4326008)(66556008)(6916009)(7416002)(5660300002)(8936002)(8676002)(2906002)(38100700002)(38350700002)(33716001)(86362001)(316002)(67856001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?qDEMu78q1KZf9ZaKxNLkWtXkwTM5hW0keOKBkfl0ltnEHJ4yaPP4UdYsD+U/?=
- =?us-ascii?Q?Um7a4VXy7kaYnMIYx10LtEJI6yCfkH2ucB6o2K3GFs/PBWazal1fufQCFgpO?=
- =?us-ascii?Q?ngw4a1SSdZMP5hGB82jJhLzhbJ4NYQ51RdSSb5JbO8Fw7OoQ5hZwD1h+hPeP?=
- =?us-ascii?Q?Ab4J+ibvXYHS4CrG5tTrp78fgIEGasgTYUF+oWwfqo2KOKw2HfOfibhyN5bb?=
- =?us-ascii?Q?kWmpmFTp0zFjumLbDUcYWOTKNOzzALCh1ilyIOREr1dGHGWGAyFJ/0sL89Ki?=
- =?us-ascii?Q?f/5/qM89Nyyq8u6BmsyO5MMPaIdkalHCq6ACFCHaVg06u9iHUpAa8TlMa9fs?=
- =?us-ascii?Q?3d9FE7xEfqpCZiRiSR47DYLu012ZcpYH9zecIR5mJc+RTtdCJD2srQX7QPmG?=
- =?us-ascii?Q?H4s6V/Fl85OrFz7a3HuRRlYY1wlprculLdntTTTP2V5z9H6mlb8mov2/WFWC?=
- =?us-ascii?Q?jCjb9yuY7eILUeRLizikArijlAz+Wt51YQ6Mbn6TIjF8+rrzjBuLeb/M6MmO?=
- =?us-ascii?Q?0rphZdHWI/Xa5ov8/5wLEHUXcz+RgU/5ylM+6zGaNPWO1pFqR1OaUGhB6xli?=
- =?us-ascii?Q?MCk8viAGRTCG7B2gcAKZsKeMn9a66LdPjMN6/i4uMhFOi1Q6PCv7hmnYbOYU?=
- =?us-ascii?Q?s8TC0IO9Fehyue1s34Dg4UQDy9cazKwGyFghS7Ybo4XnDjWJk44NpQiIf4Sw?=
- =?us-ascii?Q?PGpQBM2FhMHbOfRLoZgqvACJPFyD2qyi2O9bdy6zZwfccSZb33THmvxPZhW4?=
- =?us-ascii?Q?nVigfQLFsiJ62uC9znEAh2yja85pf9ggxSmCFa0T0YNPVXqjbsA1r5DKDYE9?=
- =?us-ascii?Q?PSx7Cw4ZLidMwEG68lnJHRgOQ4othxQmMK05oaHUsVRd6KUs1CX/nghF6cDs?=
- =?us-ascii?Q?NjkBzBNUBWr/2sBjBDG9cuLiv4hiCBqskAV8lYm6InnuJw1nlcO+E5wZ2Tq3?=
- =?us-ascii?Q?CA+V8PGhQJAS1O83A+cW9NPwlPo/c6XMvfrmpZw8SDKYQH7LJWaVZKDlTDK1?=
- =?us-ascii?Q?NkGwn7FFpZLDp8Vho17XFL3SFxfA/VeK/F/H54n8hFnZTILCamw9/ZlVszRa?=
- =?us-ascii?Q?iE83tLBO9kIRaDAcxUjdc/WVJJERCn2IUK/U45P+hVPmtB5D24Us1L5B/GVp?=
- =?us-ascii?Q?MCPQFVWUypzAyml3UHosXDlQylEUbcU47iwyZ6EzuIZ5gvkusHsXIMaUXD7D?=
- =?us-ascii?Q?VvxnPLPDFKIAB4Q8i4CmhDgznfsCANY7mLFijLD2KMs+81+zM4PAE2Jd9ngk?=
- =?us-ascii?Q?ivTx23ccR9W9qcd4uBhoC41soPzj5QgH56t9sL3NyeRti8HwgYjmjJPwmJWL?=
- =?us-ascii?Q?4JDJZlPcAr1/2JutNpglXEbDE1GNISl74oZ8yVpz2k4+x+Wjs8lcIsR1RFUT?=
- =?us-ascii?Q?d17afmzfqxsivkeQ7LcmDaMp87rEjSO5yDGvy23zHo9UhSBo27BPRIC1Yufs?=
- =?us-ascii?Q?g37v5yYtFzmoGSxhEgmUpi9CS7ajcKbPzzk4OtXdSeZaoL6Dw4QXvQaiaxX7?=
- =?us-ascii?Q?Nx1t7MKM/AEFyUCo0jxt2dSBlH8ITYjgANKt0xH/rNoGnCd2qzpYyi++cYEf?=
- =?us-ascii?Q?+9PJqacTskl3zNi09/+FFd3Xg5sNvQc3TdwP635isEyWdWyiSBXy/dQe+BWc?=
- =?us-ascii?Q?lA=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?M3hwL0pRM0FicDVScXZEc2pQTUdJeTVjOWFPLzJNVlF0aGpnVzJ6dnp1RHZG?=
+ =?utf-8?B?WkRySkZZNkVUSnhNamx3amcvcy94SWpxcS9UVnYvak5BMHJWTHl3UjNCdTVM?=
+ =?utf-8?B?aWJSYnBWZE5TNWhGcTN0RkJVbzdjdk91dTJ2a1VYVVRaek1CRFpUeWZOMkFt?=
+ =?utf-8?B?NTFYTE5xbTd3eEVZbzYrOGY2SitaRXFESVZJZGJwdmo3K1dxSGVwR1YreEEr?=
+ =?utf-8?B?S1Q5RUttSXJjMnEvUHRFNmkvVkxtbzRaTjYwRDQ4Q2lzRzRTZ0NETWVQUXh5?=
+ =?utf-8?B?dEx5bTROKzZzck52a2s4OEtmckJ2MFhPcmlIWGZRRE5FUklhaWFtQnZ4WnMy?=
+ =?utf-8?B?WlgvbHdrVGtHeWx5VFRxUzlPakNSeE5KaTR5b2tEbHU5bWwyM041NzdhaWpW?=
+ =?utf-8?B?amQxSGNJbzdiSWkzNFgwMXF4aklRM2RDS0NjdjJHU2s4YlpuUkIzV1gzZDFx?=
+ =?utf-8?B?WnlicktSRlpXTVhWei9wcS9iMW5VTG8yRDdBaWtrZHQzQUpHU0xqeGphNVdY?=
+ =?utf-8?B?U1V3V0tEL1pYbGk3VkV5YzBlNVFJcFg2WEVDUUVNWXB3aTZtejdZOWtodEVk?=
+ =?utf-8?B?VXd4YkZubDE3VlpqOUdONDdvdmFUNG5sN0M5Sks5VzhtQmwxYVBRMEpUdGRx?=
+ =?utf-8?B?RTRGNXkxdkh2eXloRlhqdG04MklNUlZpYVdSYnlDQ0JHdkhxNWdVVzlsYkly?=
+ =?utf-8?B?cy8rekcxTG5tME0ycWhzUE11cGJDWCtUMlZxY3lqRm1rK0dMS0FFd25MRWJs?=
+ =?utf-8?B?ZG5HbjFmdnh3dVY4NmxXZFZpcVFqN1AzWnRuVXZ6Y2lHYjd4Z1U2cDBkRzNw?=
+ =?utf-8?B?ajBOeXZvRWlKWjZPdVVtQTZmL0JpSVJwd3drMzJZdnVjQ241VDlGLzdtbnRw?=
+ =?utf-8?B?QXk1RWpIdmZwdHdPVjA3RHVNbmNIZEVZLzNpdGFFSlpwNkZ2c3pWY2o4a2d1?=
+ =?utf-8?B?NGNqdG52NVM0ajkvNUVpZldLR2dBWWpyZVJvWm5Sd1VRd3RhdTREMHlFbkpt?=
+ =?utf-8?B?SlRXa2tYK1phT1hnY3J1ZzZoT3RVQnluNXIyaU15RTRFWEZsQndnVDdXajFI?=
+ =?utf-8?B?M2Z3N0YrUFFTMUJBOUdhTUs0ZXdoQ3dUb2xiOHllaWJ0K3VUMzlNdVVmL1h3?=
+ =?utf-8?B?MzJka2tCTFVIcEhxTEFKWkt6d2drQVlXNXVjWHQ0YVRuVjZLUkVuU3EyZCt5?=
+ =?utf-8?B?dHFQNW5ySTBacUs2STVhQytYTGRnOWRUSWhlRWpxQ1hoZXNjdFJXRkNneUht?=
+ =?utf-8?B?UHl5clJ3RnZNalk0M2NLb2wrM3AvZEtWeGdrWWdNWHNWSXVnbUdiYklrbExY?=
+ =?utf-8?B?Y2R6ZERDL1JpNm5rMGx1YWZNVTBUUUZyaFdOM0Y0Y0ZtY01Pd05ZSEdYbytD?=
+ =?utf-8?B?UU5mdGM2RVRZWVJiTjZOeXdoV1h5Z3pmRDJaNVJDdm1VcXR0NFFFRlBiS1hx?=
+ =?utf-8?B?MDVYL0V6UTgvMjEvcEZJSEowTkFybUJzZTcrc1JUa2ZDdjdvcjhuVWRnbDN4?=
+ =?utf-8?B?M0h4eFpEdk43VzlZeGMxNzNicVJtQjQzd2xtQ002ZzJFalFEbWNONXpwbWNw?=
+ =?utf-8?B?bkxUVUlmZ2lVUW1FRW5rR3VTY2ZPMjA3blIrMWQ4SDg5MlovS1I3bkE0bU81?=
+ =?utf-8?B?em9LK3dGdDVJb2pvZDNibEhMVXZRZWZoQXE3SnhQcnZ3RUxlUkVyaHNEQnFF?=
+ =?utf-8?B?YitkSFRDK2ZRd3V2bWIrWXBTY0xrY01iZjJNTmFCSTk2WEZTRFp2SVN5NU1r?=
+ =?utf-8?B?R05HRGpIN3p6N0tLYk5DS013SHlqRUhJbDhmajVzUEZuQjg4bnU0VnNrd1NF?=
+ =?utf-8?B?THVCRlFiVkxNcXorTGJHNHA2blJwMUNxOWt3YjF5T2ZGTFVweVJmNWorZDlE?=
+ =?utf-8?B?Y3pKdUppMnZabVRPeFlSUkpPZjV2MVJXUHZ4SnBUSHlsQmRTM2d4aDZHYmlS?=
+ =?utf-8?B?LzRlNGgwOTlCdmZucThOMVRReVNVNUIvQmJOaGRUdnM5ZlgzR1NSZktXOHl4?=
+ =?utf-8?B?SHlxVWxxbXpGK05JTDlxRWZvMTJ1anA0MThLT2wyTmhDUXVrTGF5RVlPSW01?=
+ =?utf-8?B?bGlZK1FJL0w1S1g3RVcxNUE5bnVzM3ZhVjVzUHY3U3JGZnVJeHFwT1BXUTl5?=
+ =?utf-8?Q?9V5B/MHhm3V80YFVzAMnksITQ?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 07e95930-8199-4c11-f26a-08db98e75544
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6452.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f78db721-2f22-4ec0-f0c4-08db98ed426a
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2023 14:45:54.0517
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2023 15:28:19.3770
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UoZKNYJ28EMSSH2iOXGBZVqayZshXz6OH0wi+fiidUKTFNf0t4dUW1LAuD7bAqVvYJKZ7YuTb+PZC3SrICChSQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB10011
+X-MS-Exchange-CrossTenant-UserPrincipalName: nBeSJNOFEZYVSlvHlqnyonHU3V4Gb1Eq0M6aIEhlYGGSE6CPgGlteT1WeMjTCEuvHZab51Al1aks9s/aYtpQ6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB9086
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
@@ -125,563 +130,247 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
-
-On Tue, Aug 08, 2023 at 05:21:07PM -0500, Bjorn Helgaas wrote:
-> I think this makes good sense, but let me make sure I understand how
-> this works.
+On Wed, Aug 09, 2023 at 11:46:04AM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Aug 07, 2023 at 12:52:38PM -0400, Frank Li wrote:
+> > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > 
+> > Add PME_Turn_off/PME_TO_Ack handshake sequence for ls1028a platform. Call
+> > common dwc dw_pcie_suspend(resume)_noirq() function when system enter/exit
+> > suspend state.
+> > 
+> > Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+> > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> >  drivers/pci/controller/dwc/pci-layerscape.c | 130 ++++++++++++++++++--
+> >  1 file changed, 121 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+> > index ed5fb492fe084..7586aece769b2 100644
+> > --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> > +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> > @@ -8,9 +8,11 @@
+> >   * Author: Minghuan Lian <Minghuan.Lian@freescale.com>
+> >   */
+> >  
+> > +#include <linux/delay.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/init.h>
+> > +#include <linux/iopoll.h>
+> >  #include <linux/of_pci.h>
+> >  #include <linux/of_platform.h>
+> >  #include <linux/of_address.h>
+> > @@ -20,6 +22,7 @@
+> >  #include <linux/mfd/syscon.h>
+> >  #include <linux/regmap.h>
+> >  
+> > +#include "../../pci.h"
+> >  #include "pcie-designware.h"
+> >  
+> >  /* PEX Internal Configuration Registers */
+> > @@ -27,12 +30,26 @@
+> >  #define PCIE_ABSERR		0x8d0 /* Bridge Slave Error Response Register */
+> >  #define PCIE_ABSERR_SETTING	0x9401 /* Forward error of non-posted request */
+> >  
+> > +/* PF Message Command Register */
+> > +#define LS_PCIE_PF_MCR		0x2c
+> > +#define PF_MCR_PTOMR		BIT(0)
+> > +#define PF_MCR_EXL2S		BIT(1)
+> > +
+> >  #define PCIE_IATU_NUM		6
+> >  
+> > +struct ls_pcie_drvdata {
+> > +	const u32 pf_off;
+> > +	bool pm_support;
+> > +};
+> > +
+> >  struct ls_pcie {
+> >  	struct dw_pcie *pci;
+> > +	const struct ls_pcie_drvdata *drvdata;
+> > +	void __iomem *pf_base;
+> > +	bool big_endian;
+> >  };
+> >  
+> > +#define ls_pcie_pf_readl_addr(addr)	ls_pcie_pf_readl(pcie, addr)
+> >  #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
+> >  
+> >  static bool ls_pcie_is_bridge(struct ls_pcie *pcie)
+> > @@ -73,6 +90,60 @@ static void ls_pcie_fix_error_response(struct ls_pcie *pcie)
+> >  	iowrite32(PCIE_ABSERR_SETTING, pci->dbi_base + PCIE_ABSERR);
+> >  }
+> >  
+> > +static u32 ls_pcie_pf_readl(struct ls_pcie *pcie, u32 off)
+> > +{
+> > +	if (pcie->big_endian)
+> > +		return ioread32be(pcie->pf_base + off);
+> > +
+> > +	return ioread32(pcie->pf_base + off);
+> > +}
+> > +
+> > +static void ls_pcie_pf_writel(struct ls_pcie *pcie, u32 off, u32 val)
+> > +{
+> > +	if (pcie->big_endian)
+> > +		iowrite32be(val, pcie->pf_base + off);
+> > +	else
+> > +		iowrite32(val, pcie->pf_base + off);
+> > +}
+> > +
+> > +static void ls_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
+> > +{
+> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +	struct ls_pcie *pcie = to_ls_pcie(pci);
+> > +	u32 val;
+> > +	int ret;
+> > +
+> > +	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
+> > +	val |= PF_MCR_PTOMR;
+> > +	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
+> > +
+> > +	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
+> > +				 val, !(val & PF_MCR_PTOMR),
+> > +				 PCIE_PME_TO_L2_TIMEOUT_US/10,
+> > +				 PCIE_PME_TO_L2_TIMEOUT_US);
+> > +	if (ret)
+> > +		dev_err(pcie->pci->dev, "poll turn off message timeout\n");
+> > +}
+> > +
+> > +static void ls_pcie_exit_from_l2(struct dw_pcie_rp *pp)
+> > +{
+> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +	struct ls_pcie *pcie = to_ls_pcie(pci);
+> > +	u32 val;
+> > +	int ret;
+> > +
+> > +	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
+> > +	val |= PF_MCR_EXL2S;
+> > +	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
+> > +
+> > +	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
+> > +				 val, !(val & PF_MCR_EXL2S),
+> > +				 PCIE_PME_TO_L2_TIMEOUT_US/10,
+> > +				 PCIE_PME_TO_L2_TIMEOUT_US);
+> > +	if (ret)
+> > +		dev_err(pcie->pci->dev, "poll exit L2 state timeout\n");
 > 
-> I *think* what's happening is that this Function 0 responds to config
-> reads, so PCI enumeration starts by discovering it normally.  But
-> after 6fffbc7ae137 ("PCI: Honor firmware's device disabled status"),
-> we abort in pci_setup_device() if the DT or ACPI status is "disabled,"
-> which means there's no struct pci_dev for it, no quirks can run on it,
-> and no driver can bind to it.  And, since PCI multi-function devices
-> must have a Function 0, we don't enumerate the other functions of this
-> device.
-> 
-> That's a problem because (1) you need to do some initialization on
-> Function 0 even though you don't want a driver to claim it,
+> I specifically mentioned that you need to change this error message and the one
+> below before adding my Acked-by tag. But you just added the tag without
+> incorporating the changes :/
 
-Correction: on functions 0, 1, 2 and 6 (all have PCI_VENDOR_ID_FREESCALE, ENETC_DEV_ID_PF),
-and not just on function 0. The particular nature of a hardware IP bug/afterthought
-makes this necessary.
+Sorry, I found I forget run 'git add' when I run git commit --amend.
+Change just leave in local tree.
 
-It may be best to look at the lspci -vvv output on this SoC:
+Will Send v11.
 
-00:00.0 Ethernet controller: Freescale Semiconductor Inc Device e100 (rev 01) (prog-if 01)
-	Subsystem: Freescale Semiconductor Inc Device e100
-	Device tree node: /sys/firmware/devicetree/base/soc/pcie@1f0000000/ethernet@0,0
-	Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Region 0: Memory at 1f8000000 (32-bit, non-prefetchable) [enhanced] [size=256K]
-	Region 2: Memory at 1f8160000 (32-bit, non-prefetchable) [enhanced] [size=64K]
-	Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE- FLReset+
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
-		DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- LTR-
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS-
-			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled,
-			 AtomicOpsCtl: ReqEn-
-	Capabilities: [80] MSI-X: Enable- Count=32 Masked-
-		Vector table: BAR=2 offset=00000000
-		PBA: BAR=2 offset=00000200
-	Capabilities: [90] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [9c] Enhanced Allocation (EA): NumEntries=4
-		Entry 0: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: BAR 0
-			 PrimaryProperties: memory space, non-prefetchable
-			 SecondaryProperties: entry unavailable for use, PrimaryProperties should be used
-			 Base: 1f8000000
-			 MaxOffset: 0003ffff
-		Entry 1: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: BAR 2
-			 PrimaryProperties: memory space, prefetchable
-			 SecondaryProperties: memory space, non-prefetchable
-			 Base: 1f8160000
-			 MaxOffset: 0000ffff
-		Entry 2: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: VF-BAR 0
-			 PrimaryProperties: VF memory space, non-prefetchable
-			 SecondaryProperties: entry unavailable for use, PrimaryProperties should be used
-			 Base: 1f81d0000
-			 MaxOffset: 0000ffff
-		Entry 3: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: VF-BAR 2
-			 PrimaryProperties: VF memory space, prefetchable
-			 SecondaryProperties: VF memory space, prefetchable
-			 Base: 1f81f0000
-			 MaxOffset: 0000ffff
-	Capabilities: [100 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UESvrt:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-	Capabilities: [130 v1] Access Control Services
-		ACSCap:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-	Capabilities: [140 v1] Single Root I/O Virtualization (SR-IOV)
-		IOVCap:	Migration-, Interrupt Message Number: 000
-		IOVCtl:	Enable- Migration- Interrupt- MSE- ARIHierarchy-
-		IOVSta:	Migration-
-		Initial VFs: 2, Total VFs: 2, Number of VFs: 0, Function Dependency Link: 00
-		VF offset: 8, stride: 1, Device ID: ef00
-		Supported Page Size: 00000013, System Page Size: 00000010
-		VF Migration: offset: 00000000, BIR: 0
-
-00:00.1 Ethernet controller: Freescale Semiconductor Inc Device e100 (rev 01) (prog-if 01)
-	Subsystem: Freescale Semiconductor Inc Device e100
-	Device tree node: /sys/firmware/devicetree/base/soc/pcie@1f0000000/ethernet@0,1
-	Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Region 0: Memory at 1f8040000 (32-bit, non-prefetchable) [enhanced] [size=256K]
-	Region 2: Memory at 1f8170000 (32-bit, non-prefetchable) [enhanced] [size=64K]
-	Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE- FLReset+
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
-		DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- LTR-
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS-
-			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled,
-			 AtomicOpsCtl: ReqEn-
-	Capabilities: [80] MSI-X: Enable- Count=32 Masked-
-		Vector table: BAR=2 offset=00000000
-		PBA: BAR=2 offset=00000200
-	Capabilities: [90] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [9c] Enhanced Allocation (EA): NumEntries=4
-		Entry 0: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: BAR 0
-			 PrimaryProperties: memory space, non-prefetchable
-			 SecondaryProperties: entry unavailable for use, PrimaryProperties should be used
-			 Base: 1f8040000
-			 MaxOffset: 0003ffff
-		Entry 1: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: BAR 2
-			 PrimaryProperties: memory space, prefetchable
-			 SecondaryProperties: memory space, non-prefetchable
-			 Base: 1f8170000
-			 MaxOffset: 0000ffff
-		Entry 2: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: VF-BAR 0
-			 PrimaryProperties: VF memory space, non-prefetchable
-			 SecondaryProperties: entry unavailable for use, PrimaryProperties should be used
-			 Base: 1f8210000
-			 MaxOffset: 0000ffff
-		Entry 3: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: VF-BAR 2
-			 PrimaryProperties: VF memory space, prefetchable
-			 SecondaryProperties: VF memory space, prefetchable
-			 Base: 1f8230000
-			 MaxOffset: 0000ffff
-	Capabilities: [100 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UESvrt:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-	Capabilities: [130 v1] Access Control Services
-		ACSCap:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-	Capabilities: [140 v1] Single Root I/O Virtualization (SR-IOV)
-		IOVCap:	Migration-, Interrupt Message Number: 000
-		IOVCtl:	Enable- Migration- Interrupt- MSE- ARIHierarchy-
-		IOVSta:	Migration-
-		Initial VFs: 2, Total VFs: 2, Number of VFs: 0, Function Dependency Link: 01
-		VF offset: 9, stride: 1, Device ID: ef00
-		Supported Page Size: 00000013, System Page Size: 00000010
-		VF Migration: offset: 00000000, BIR: 0
-
-00:00.2 Ethernet controller: Freescale Semiconductor Inc Device e100 (rev 01) (prog-if 01)
-	Subsystem: Freescale Semiconductor Inc Device e100
-	Device tree node: /sys/firmware/devicetree/base/soc/pcie@1f0000000/ethernet@0,2
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	IOMMU group: 2
-	Region 0: Memory at 1f8080000 (32-bit, non-prefetchable) [enhanced] [size=256K]
-	Region 2: Memory at 1f8180000 (32-bit, non-prefetchable) [enhanced] [size=64K]
-	Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE- FLReset+
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
-		DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- LTR-
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS-
-			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled,
-			 AtomicOpsCtl: ReqEn-
-	Capabilities: [80] MSI-X: Enable+ Count=16 Masked-
-		Vector table: BAR=2 offset=00000000
-		PBA: BAR=2 offset=00000100
-	Capabilities: [90] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [9c] Enhanced Allocation (EA): NumEntries=3
-		Entry 0: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: BAR 0
-			 PrimaryProperties: memory space, non-prefetchable
-			 SecondaryProperties: entry unavailable for use, PrimaryProperties should be used
-			 Base: 1f8080000
-			 MaxOffset: 0003ffff
-		Entry 1: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: BAR 2
-			 PrimaryProperties: memory space, prefetchable
-			 SecondaryProperties: memory space, non-prefetchable
-			 Base: 1f8180000
-			 MaxOffset: 0000ffff
-		Entry 2: Enable- Writable- EntrySize=3
-			 BAR Equivalent Indicator: BAR 4
-			 PrimaryProperties: memory space, non-prefetchable
-			 SecondaryProperties: entry unavailable for use, PrimaryProperties should be used
-			 Base: 1fc000000
-			 MaxOffset: 003fffff
-	Capabilities: [100 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UESvrt:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-	Capabilities: [130 v1] Access Control Services
-		ACSCap:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-	Kernel driver in use: fsl_enetc
-
-00:00.3 System peripheral: Freescale Semiconductor Inc Device ee01 (rev 01) (prog-if 01)
-	Subsystem: Freescale Semiconductor Inc Device ee01
-	Device tree node: /sys/firmware/devicetree/base/soc/pcie@1f0000000/mdio@0,3
-	Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	IOMMU group: 3
-	Region 0: Memory at 1f8100000 (32-bit, non-prefetchable) [enhanced] [size=128K]
-	Region 2: Memory at 1f8190000 (32-bit, non-prefetchable) [enhanced] [size=64K]
-	Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE- FLReset+
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
-		DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- LTR-
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS-
-			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled,
-			 AtomicOpsCtl: ReqEn-
-	Capabilities: [80] MSI-X: Enable- Count=1 Masked-
-		Vector table: BAR=2 offset=00000000
-		PBA: BAR=2 offset=00000010
-	Capabilities: [90] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [9c] Enhanced Allocation (EA): NumEntries=2
-		Entry 0: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: BAR 0
-			 PrimaryProperties: memory space, non-prefetchable
-			 SecondaryProperties: entry unavailable for use, PrimaryProperties should be used
-			 Base: 1f8100000
-			 MaxOffset: 0001ffff
-		Entry 1: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: BAR 2
-			 PrimaryProperties: memory space, prefetchable
-			 SecondaryProperties: memory space, non-prefetchable
-			 Base: 1f8190000
-			 MaxOffset: 0000ffff
-	Capabilities: [100 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UESvrt:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-	Capabilities: [130 v1] Access Control Services
-		ACSCap:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-	Kernel driver in use: fsl_enetc_mdio
-
-00:00.4 System peripheral: Freescale Semiconductor Inc Device ee02 (rev 01) (prog-if 01)
-	Subsystem: Freescale Semiconductor Inc Device ee02
-	Device tree node: /sys/firmware/devicetree/base/soc/pcie@1f0000000/ethernet@0,4
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 32 bytes
-	IOMMU group: 4
-	Region 0: Memory at 1f8120000 (32-bit, non-prefetchable) [enhanced] [size=128K]
-	Region 2: Memory at 1f81a0000 (32-bit, non-prefetchable) [enhanced] [size=64K]
-	Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE- FLReset+
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
-		DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- LTR-
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS-
-			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled,
-			 AtomicOpsCtl: ReqEn-
-	Capabilities: [80] MSI-X: Enable+ Count=2 Masked-
-		Vector table: BAR=2 offset=00000000
-		PBA: BAR=2 offset=00000020
-	Capabilities: [90] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [9c] Enhanced Allocation (EA): NumEntries=2
-		Entry 0: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: BAR 0
-			 PrimaryProperties: memory space, non-prefetchable
-			 SecondaryProperties: entry unavailable for use, PrimaryProperties should be used
-			 Base: 1f8120000
-			 MaxOffset: 0001ffff
-		Entry 1: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: BAR 2
-			 PrimaryProperties: memory space, prefetchable
-			 SecondaryProperties: memory space, non-prefetchable
-			 Base: 1f81a0000
-			 MaxOffset: 0000ffff
-	Capabilities: [100 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UESvrt:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-	Capabilities: [130 v1] Access Control Services
-		ACSCap:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-	Kernel driver in use: fsl_enetc_ptp
-
-00:00.5 Fabric controller: Freescale Semiconductor Inc Device eef0 (rev 01) (prog-if 01)
-	Subsystem: Freescale Semiconductor Inc Device eef0
-	Device tree node: /sys/firmware/devicetree/base/soc/pcie@1f0000000/ethernet-switch@0,5
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 32 bytes
-	Interrupt: pin B routed to IRQ 96
-	IOMMU group: 1
-	Region 0: Memory at 1f8140000 (32-bit, non-prefetchable) [enhanced] [size=128K]
-	Region 2: Memory at 1f81b0000 (32-bit, non-prefetchable) [enhanced] [size=64K]
-	Region 4: Memory at 1fc000000 (32-bit, non-prefetchable) [enhanced] [size=4M]
-	Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE- FLReset+
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
-		DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- LTR-
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS-
-			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled,
-			 AtomicOpsCtl: ReqEn-
-	Capabilities: [80] MSI-X: Enable- Count=1 Masked-
-		Vector table: BAR=2 offset=00000000
-		PBA: BAR=2 offset=00000010
-	Capabilities: [90] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [9c] Enhanced Allocation (EA): NumEntries=3
-		Entry 0: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: BAR 0
-			 PrimaryProperties: memory space, non-prefetchable
-			 SecondaryProperties: entry unavailable for use, PrimaryProperties should be used
-			 Base: 1f8140000
-			 MaxOffset: 0001ffff
-		Entry 1: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: BAR 2
-			 PrimaryProperties: memory space, prefetchable
-			 SecondaryProperties: memory space, non-prefetchable
-			 Base: 1f81b0000
-			 MaxOffset: 0000ffff
-		Entry 2: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: BAR 4
-			 PrimaryProperties: memory space, non-prefetchable
-			 SecondaryProperties: entry unavailable for use, PrimaryProperties should be used
-			 Base: 1fc000000
-			 MaxOffset: 003fffff
-	Capabilities: [100 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UESvrt:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-	Capabilities: [130 v1] Access Control Services
-		ACSCap:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-	Kernel driver in use: mscc_felix
-
-00:00.6 Ethernet controller: Freescale Semiconductor Inc Device e100 (rev 01) (prog-if 01)
-	Subsystem: Freescale Semiconductor Inc Device e100
-	Device tree node: /sys/firmware/devicetree/base/soc/pcie@1f0000000/ethernet@0,6
-	Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Region 0: Memory at 1f80c0000 (32-bit, non-prefetchable) [enhanced] [size=256K]
-	Region 2: Memory at 1f81c0000 (32-bit, non-prefetchable) [enhanced] [size=64K]
-	Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE- FLReset+
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
-		DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- LTR-
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS-
-			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled,
-			 AtomicOpsCtl: ReqEn-
-	Capabilities: [80] MSI-X: Enable- Count=16 Masked-
-		Vector table: BAR=2 offset=00000000
-		PBA: BAR=2 offset=00000100
-	Capabilities: [90] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [9c] Enhanced Allocation (EA): NumEntries=2
-		Entry 0: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: BAR 0
-			 PrimaryProperties: memory space, non-prefetchable
-			 SecondaryProperties: entry unavailable for use, PrimaryProperties should be used
-			 Base: 1f80c0000
-			 MaxOffset: 0003ffff
-		Entry 1: Enable+ Writable- EntrySize=3
-			 BAR Equivalent Indicator: BAR 2
-			 PrimaryProperties: memory space, prefetchable
-			 SecondaryProperties: memory space, non-prefetchable
-			 Base: 1f81c0000
-			 MaxOffset: 0000ffff
-	Capabilities: [100 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UESvrt:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-	Capabilities: [130 v1] Access Control Services
-		ACSCap:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-		ACSCtl:	SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
-
-00:1f.0 Generic system peripheral [0807]: Freescale Semiconductor Inc Device e001 (rev 01)
-	Subsystem: Freescale Semiconductor Inc Device e001
-	Device tree node: /sys/firmware/devicetree/base/soc/pcie@1f0000000/rcec@1f,0
-	Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Interrupt: pin A routed to IRQ 20
-	Capabilities: [40] Express (v2) Root Complex Event Collector, MSI 00
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE-
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
-		RootCap: CRSVisible-
-		RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisible-
-		RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-		DevCap2: Completion Timeout: Not Supported, TimeoutDis- NROPrPrP- LTR-
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled,
-	Capabilities: [80] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [100 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UESvrt:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-		RootCmd: CERptEn+ NFERptEn+ FERptEn+
-		RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
-			 FirstFatal- NonFatalMsg- FatalMsg- IntMsg 0
-		ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
-	Capabilities: [138 v1] Root Complex Event Collector <?>
-	Kernel driver in use: pcieport
-
-> and (2) this is a multi-function device and you need to enumerate the
-> other functions.
-
-correct
-
-> What this patch does is make it so the PCI core enumerates Function 0
-
-The patch does not special-case function 0. Fundamentally it changes the
-meaning of "disabled" in the firmware description from "not enumerable"
-to "driver shouldn't be bound to it" (which is more or less what the
-meaning was, prior to the blamed commit, except that it was down to
-individual drivers to observe the property) and that's absolutely it.
-
-> normally so there will be a struct pci_dev for it, the normal config
-> space access to it will work, and it will appear in the dmesg log and
-> lspci output, all as usual.  But if the DT or ACPI status is
-> "disabled", we will not bind a PCI driver to it.
-> 
-> If that's true, I'd like to highlight the PCI details here and move
-> some of the device-specific things to the driver patches, e.g.,
-> something like this:
-> 
->   PCI: Enumerate device but don't bind driver if firmware status is 'disabled'
-> 
->   In some configurations, the NXP LS1028A has a multi-function NIC
->   where Function 0 is not usable as a NIC, but it's accessible via
->   config space and it's needed for device-specific initialization.
->   Function 0 also indicates that the NIC is a multi-function device
->   and the kernel should look for more functions.
-
-Instead of "multi-function NIC", I'd say "PCIe endpoint integrated into
-a root complex (RCiEP)". Reworded, it's not a NIC, it's 4, plus other
-device classes (system peripherals, fabric controllers).
+Frank
 
 > 
->   arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi marks Function 0 as
->   "disabled," and after 6fffbc7ae137 ("PCI: Honor firmware's device
->   disabled status"), Linux doesn't enumerate Function 0, which means
->   the entire NIC is unusable because Linux doesn't enumerate the other
->   functions either.
+> - Mani
 > 
->   Instead of completely ignoring a function with DT/ACPI "disabled"
->   status, enumerate it as usual but prevent drivers from claiming it.
->   The disabled function will still be accessible via config space,
->   fixups will work, and it will be visible via lspci.
+> > +}
+> > +
+> >  static int ls_pcie_host_init(struct dw_pcie_rp *pp)
+> >  {
+> >  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > @@ -91,18 +162,28 @@ static int ls_pcie_host_init(struct dw_pcie_rp *pp)
+> >  
+> >  static const struct dw_pcie_host_ops ls_pcie_host_ops = {
+> >  	.host_init = ls_pcie_host_init,
+> > +	.pme_turn_off = ls_pcie_send_turnoff_msg,
+> > +	.exit_from_l2 = ls_pcie_exit_from_l2,
+> > +};
+> > +
+> > +static const struct ls_pcie_drvdata ls1021a_drvdata = {
+> > +};
+> > +
+> > +static const struct ls_pcie_drvdata layerscape_drvdata = {
+> > +	.pf_off = 0xc0000,
+> > +	.pm_support = true,
+> >  };
+> >  
+> >  static const struct of_device_id ls_pcie_of_match[] = {
+> > -	{ .compatible = "fsl,ls1012a-pcie", },
+> > -	{ .compatible = "fsl,ls1021a-pcie", },
+> > -	{ .compatible = "fsl,ls1028a-pcie", },
+> > -	{ .compatible = "fsl,ls1043a-pcie", },
+> > -	{ .compatible = "fsl,ls1046a-pcie", },
+> > -	{ .compatible = "fsl,ls2080a-pcie", },
+> > -	{ .compatible = "fsl,ls2085a-pcie", },
+> > -	{ .compatible = "fsl,ls2088a-pcie", },
+> > -	{ .compatible = "fsl,ls1088a-pcie", },
+> > +	{ .compatible = "fsl,ls1012a-pcie", .data = &layerscape_drvdata },
+> > +	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021a_drvdata },
+> > +	{ .compatible = "fsl,ls1028a-pcie", .data = &layerscape_drvdata },
+> > +	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1021a_drvdata },
+> > +	{ .compatible = "fsl,ls1046a-pcie", .data = &layerscape_drvdata },
+> > +	{ .compatible = "fsl,ls2080a-pcie", .data = &layerscape_drvdata },
+> > +	{ .compatible = "fsl,ls2085a-pcie", .data = &layerscape_drvdata },
+> > +	{ .compatible = "fsl,ls2088a-pcie", .data = &layerscape_drvdata },
+> > +	{ .compatible = "fsl,ls1088a-pcie", .data = &layerscape_drvdata },
+> >  	{ },
+> >  };
+> >  
+> > @@ -121,6 +202,8 @@ static int ls_pcie_probe(struct platform_device *pdev)
+> >  	if (!pci)
+> >  		return -ENOMEM;
+> >  
+> > +	pcie->drvdata = of_device_get_match_data(dev);
+> > +
+> >  	pci->dev = dev;
+> >  	pci->pp.ops = &ls_pcie_host_ops;
+> >  
+> > @@ -131,6 +214,10 @@ static int ls_pcie_probe(struct platform_device *pdev)
+> >  	if (IS_ERR(pci->dbi_base))
+> >  		return PTR_ERR(pci->dbi_base);
+> >  
+> > +	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
+> > +
+> > +	pcie->pf_base = pci->dbi_base + pcie->drvdata->pf_off;
+> > +
+> >  	if (!ls_pcie_is_bridge(pcie))
+> >  		return -ENODEV;
+> >  
+> > @@ -139,12 +226,37 @@ static int ls_pcie_probe(struct platform_device *pdev)
+> >  	return dw_pcie_host_init(&pci->pp);
+> >  }
+> >  
+> > +static int ls_pcie_suspend_noirq(struct device *dev)
+> > +{
+> > +	struct ls_pcie *pcie = dev_get_drvdata(dev);
+> > +
+> > +	if (!pcie->drvdata->pm_support)
+> > +		return 0;
+> > +
+> > +	return dw_pcie_suspend_noirq(pcie->pci);
+> > +}
+> > +
+> > +static int ls_pcie_resume_noirq(struct device *dev)
+> > +{
+> > +	struct ls_pcie *pcie = dev_get_drvdata(dev);
+> > +
+> > +	if (!pcie->drvdata->pm_support)
+> > +		return 0;
+> > +
+> > +	return dw_pcie_resume_noirq(pcie->pci);
+> > +}
+> > +
+> > +static const struct dev_pm_ops ls_pcie_pm_ops = {
+> > +	NOIRQ_SYSTEM_SLEEP_PM_OPS(ls_pcie_suspend_noirq, ls_pcie_resume_noirq)
+> > +};
+> > +
+> >  static struct platform_driver ls_pcie_driver = {
+> >  	.probe = ls_pcie_probe,
+> >  	.driver = {
+> >  		.name = "layerscape-pcie",
+> >  		.of_match_table = ls_pcie_of_match,
+> >  		.suppress_bind_attrs = true,
+> > +		.pm = &ls_pcie_pm_ops,
+> >  	},
+> >  };
+> >  builtin_platform_driver(ls_pcie_driver);
+> > -- 
+> > 2.34.1
+> > 
 > 
-> So feel free to merge this along with the other patches via the net
-> tree with:
-> 
->   Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-You may have given the netdev maintainers some mixed signals with the
-rewording suggestion plus the ack for my wording, and now we have commit
-1a8c251cff20 ("PCI: move OF status = "disabled" detection to
-dev->match_driver") in the net.git tree.
-
-I think we are mostly on the same page about what is changing, it's just
-that we are focusing on different aspects of it in the description.
-
-I hope you're ok if we close the topic the way things are now? :)
+> -- 
+> மணிவண்ணன் சதாசிவம்
