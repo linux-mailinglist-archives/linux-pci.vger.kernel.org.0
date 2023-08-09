@@ -2,142 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E3D3A776B9C
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Aug 2023 00:00:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60005776C3B
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Aug 2023 00:36:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230375AbjHIWA1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Aug 2023 18:00:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46212 "EHLO
+        id S232541AbjHIWgo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Aug 2023 18:36:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230132AbjHIWA0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Aug 2023 18:00:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F4FDFE
-        for <linux-pci@vger.kernel.org>; Wed,  9 Aug 2023 15:00:26 -0700 (PDT)
+        with ESMTP id S232516AbjHIWgn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Aug 2023 18:36:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21950DA;
+        Wed,  9 Aug 2023 15:36:43 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D6F5064914
-        for <linux-pci@vger.kernel.org>; Wed,  9 Aug 2023 22:00:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17BDFC433CC;
-        Wed,  9 Aug 2023 22:00:25 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AD3786408E;
+        Wed,  9 Aug 2023 22:36:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0F0DEC433C8;
+        Wed,  9 Aug 2023 22:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691618425;
-        bh=kI130ziR/3fWYxTy+KZzVkIREYDojMKaAT3RnfIaniE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=tYHCjSuTddHhEQPjRMrK3bXHPZIs9ZI8htZCbXHH6Cc9tHMNkcJCjs3/BcYfSUI+6
-         mvVd1K/pKcGjkI1rjsNhz5xOEZyiW0ixcgFNe8VTZIEkW4sKEnN50L/wyZJL1nBoaH
-         9uKNLCytQclnq1apY4rWxq/bMB/2Xm+LmlkgOe5Rn1Ao4SLHHbbeCTWaYY4nGh0Lkj
-         W8+e1H5uQDJI3fz5Ttq2tHsb1+X8U3kkvmYzOmRHxyb3ldiHkWUQoKNfNsgegzOFDR
-         +l/GIfaaWR7aW+Du0JpICaS9CFsOimpko5/N4HwQai9lp4QKkW+PbPf6mcbWPVndeD
-         /k8QnIeO7l8XQ==
-Date:   Wed, 9 Aug 2023 17:00:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4] PCI: vmd: Disable bridge window for domain reset
-Message-ID: <20230809220023.GA7042@bhelgaas>
+        s=k20201202; t=1691620602;
+        bh=4BUjLFkJfQA+chP1T8/lb7tqG9vwUxCWszoSKHdT3eE=;
+        h=From:Subject:Date:To:Cc:Reply-To:From;
+        b=uJZl35QXpiVVmR7onXffLiydLTjAzAL1fzvcV3KaK593lRMauMxyKbhL1iBMvUN19
+         6ii2cOb6p2mjNYPK3vqbz1JqHEc/HFofUfi3Sp0j7rlLZ8P6dMLFQLZT8nNhV57yeX
+         8vcrv0Lj8gQ61sIA5XoUJ5vSGJInQm7onv8vR5OoQOXQHv8fHsn1OELmFU6MINpvrm
+         u80/X9h39D7/pUmJgZ1r18DEvNdUdMzZ3Q/TITdqKycsWIomVjpLqYTr0oCSb0ONI3
+         bFatMbtCtWT9ZZWnYgRrUpwMbl913eif6HGpCbiugeezJT9EqjQaVpCiMMaq0BKVaf
+         SaCnTRzdFE3Cw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.lore.kernel.org (Postfix) with ESMTP id DAA22C0015E;
+        Wed,  9 Aug 2023 22:36:41 +0000 (UTC)
+From:   Mitchell Levy via B4 Relay 
+        <devnull+levymitchell0.gmail.com@kernel.org>
+Subject: [PATCH RFC 0/2] hyperv: Use raw_spinlock_t when not sleepable
+Date:   Wed, 09 Aug 2023 22:36:31 +0000
+Message-Id: <20230809-b4-rt_preempt-fix-v1-0-7283bbdc8b14@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230809211454.1150589-1-nirmal.patel@linux.intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAO8U1GQC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2MDCwNz3SQT3aKS+IKi1NTcghLdtMwKXWPTRDPTZEuDZLNkSyWgPqAcUBh
+ sZrRSkJuzUmxtLQClwbL1aAAAAA==
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Mitchell Levy <levymitchell0@gmail.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1691620601; l=1712;
+ i=levymitchell0@gmail.com; s=20230725; h=from:subject:message-id;
+ bh=4BUjLFkJfQA+chP1T8/lb7tqG9vwUxCWszoSKHdT3eE=;
+ b=zwEsCCDdslAFmIWp4oNviyDHd5myOXZRtA1QQR2rS9NQGtc/DMRVBWzSi1Pr59mMz36bE6h/v
+ PwwMRSmnPQcBjaCXBrPqy1hROOTwu3N5KyJscY76lir1pZb7CmLb6vw
+X-Developer-Key: i=levymitchell0@gmail.com; a=ed25519;
+ pk=o3BLKQtTK7QMnUiW3/7p5JcITesvc3qL/w+Tz19oYeE=
+X-Endpoint-Received: by B4 Relay for levymitchell0@gmail.com/20230725 with auth_id=69
+X-Original-From: Mitchell Levy <levymitchell0@gmail.com>
+Reply-To: <levymitchell0@gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 09, 2023 at 05:14:54PM -0400, Nirmal Patel wrote:
-> During domain reset process vmd_domain_reset() clears PCI
-> configuration space of VMD root ports. But certain platform
-> has observed following errors and failed to boot.
->   ...
->   DMAR: VT-d detected Invalidation Queue Error: Reason f
->   DMAR: VT-d detected Invalidation Time-out Error: SID ffff
->   DMAR: VT-d detected Invalidation Completion Error: SID ffff
->   DMAR: QI HEAD: UNKNOWN qw0 = 0x0, qw1 = 0x0
->   DMAR: QI PRIOR: UNKNOWN qw0 = 0x0, qw1 = 0x0
->   DMAR: Invalidation Time-out Error (ITE) cleared
-> 
-> The root cause is that memset_io() clears prefetchable memory base/limit
-> registers and prefetchable base/limit 32 bits registers sequentially.
-> This seems to be enabling prefetchable memory if the device disabled
-> prefetchable memory originally.
-> 
-> Here is an example (before memset_io()):
-> 
->   PCI configuration space for 10000:00:00.0:
->   86 80 30 20 06 00 10 00 04 00 04 06 00 00 01 00
->   00 00 00 00 00 00 00 00 00 01 01 00 00 00 00 20
->   00 00 00 00 01 00 01 00 ff ff ff ff 75 05 00 00
->   ...
-> 
-> So, prefetchable memory is ffffffff00000000-575000fffff, which is
-> disabled. When memset_io() clears prefetchable base 32 bits register,
-> the prefetchable memory becomes 0000000000000000-575000fffff, which is
-> enabled and incorrect.
+When compiled with PREEMPT_RT, spinlock_t is sleepable. While I did not
+observe this causing any lockups on my system, it did cause warnings to
+be emitted when compiled with lock debugging. This series fixes some
+instances where spinlock_t is used in non-sleepable contexts, though it
+almost certainly does not find every such instance.
 
-It's not clear to me how this window config causes the VT-d errors.
-But empirically it seems to be related, and maybe that's enough.
+An example of the warning raised by lockdep:
+=============================
+[BUG: Invalid wait context ]
+6.5.0-rc1+ #16 Not tainted
+-----------------------------
+swapper/0/1 is trying to lock:
+ffffa05a014d64c0 (&channel→sched_lock) {...}-{3:3}, at: vmbus_isr+0x179/0x320
+other info that might help us debug this:
+context-{2:2}
+2 locks held by swapper/0/1:
+ #0: ffffffff909a9c70 (misc_mtx){+.+.}-{4:4}, at: misc_register+0x34/0x180
+ #1: ffffffff9079b4c8 (rcu_read_lock) {...}-{1:3}, at: rcu_lock_acquire+0x0/0x40
+stack backtrace:
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.5.0-rc1+ #16
+Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.1 05/09/2022
 
-> Here is the quote from section 7.5.1.3.9 of PCI Express Base 6.0 spec:
-> 
->   The Prefetchable Memory Limit register must be programmed to a smaller
->   value than the Prefetchable Memory Base register if there is no
->   prefetchable memory on the secondary side of the bridge.
-> 
-> This is believed to be the reason for the failure and in addition the
-> sequence of operation in vmd_domain_reset() is not following the PCIe
-> specs.
-> 
-> Disable the bridge window by executing a sequence of operations
-> borrowed from pci_disable_bridge_window() and pci_setup_bridge_io(),
-> that comply with the PCI specifications.
-> 
-> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
-> ---
-> v3->v4: Following same operation as pci_setup_bridge_io.
-> v2->v3: Add more information to commit description.
-> v1->v2: Follow same chain of operation as pci_disable_bridge_window
->         and update commit log.
-> ---
->  drivers/pci/controller/vmd.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 769eedeb8802..ae5b4c1704e4 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -526,8 +526,21 @@ static void vmd_domain_reset(struct vmd_dev *vmd)
->  				     PCI_CLASS_BRIDGE_PCI))
->  					continue;
->  
-> -				memset_io(base + PCI_IO_BASE, 0,
-> -					  PCI_ROM_ADDRESS1 - PCI_IO_BASE);
-> +				/* Temporarily disable the I/O range before updating PCI_IO_BASE */
-> +				writel(0x0000ffff, base + PCI_IO_BASE_UPPER16);
-> +				/* Update lower 16 bits of I/O base/limit */
-> +				writew(0x00f0, base + PCI_IO_BASE);
-> +				/* Update upper 16 bits of I/O base/limit */
-> +				writel(0, base + PCI_IO_BASE_UPPER16);
-> +
-> +				/* MMIO Base/Limit */
-> +				writel(0x0000fff0, base + PCI_MEMORY_BASE);
-> +
-> +				/* Prefetchable MMIO Base/Limit */
-> +				writel(0, base + PCI_PREF_LIMIT_UPPER32);
-> +				writel(0x0000fff0, base + PCI_PREF_MEMORY_BASE);
-> +				writel(0xffffffff, base + PCI_PREF_BASE_UPPER32);
-> +				writeb(0, base + PCI_CAPABILITY_LIST);
+Signed-off-by: Mitchell Levy <levymitchell0@gmail.com>
+---
+Mitchell Levy (2):
+      Use raw_spinlock_t for vmbus_channel.sched_lock
+      Use raw_spinlock_t in vmbus_requestor
 
-What's the purpose of this PCI_CAPABILITY_LIST write?  I guess you
-don't want to find PM, MSI, MSI-X, PCIe, etc. capabilities?
+ drivers/hv/channel.c                | 6 +++---
+ drivers/hv/channel_mgmt.c           | 2 +-
+ drivers/hv/vmbus_drv.c              | 4 ++--
+ drivers/pci/controller/pci-hyperv.c | 6 +++---
+ include/linux/hyperv.h              | 8 ++++----
+ 5 files changed, 13 insertions(+), 13 deletions(-)
+---
+base-commit: 14f9643dc90adea074a0ffb7a17d337eafc6a5cc
+change-id: 20230807-b4-rt_preempt-fix-35a65c90c6c9
 
-It's been there since the v1 patch, but the commit log only mentions
-disabling bridge windows.
+Best regards,
+-- 
+Mitchell Levy <levymitchell0@gmail.com>
 
-Bjorn
