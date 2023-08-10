@@ -2,121 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 897307777C7
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Aug 2023 14:04:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 239877777DD
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Aug 2023 14:11:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233391AbjHJMEh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Aug 2023 08:04:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59502 "EHLO
+        id S232065AbjHJMLN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Aug 2023 08:11:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbjHJMEg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Aug 2023 08:04:36 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0F5F01BD;
-        Thu, 10 Aug 2023 05:04:33 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.43])
-        by gateway (Coremail) with SMTP id _____8BxHOtP0tRkSKcUAA--.39405S3;
-        Thu, 10 Aug 2023 20:04:31 +0800 (CST)
-Received: from [10.20.42.43] (unknown [10.20.42.43])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxjiNN0tRkCxtTAA--.36236S3;
-        Thu, 10 Aug 2023 20:04:30 +0800 (CST)
-Message-ID: <ae9c5785-5e76-7c47-5837-2570fa18e6d9@loongson.cn>
-Date:   Thu, 10 Aug 2023 20:04:29 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 06/11] PCI/VGA: Fix two typos in the comments of
- pci_notify()
-Content-Language: en-US
-To:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Sui Jingfeng <sui.jingfeng@linux.dev>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-pci@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20230808223412.1743176-1-sui.jingfeng@linux.dev>
- <20230808223412.1743176-7-sui.jingfeng@linux.dev>
- <d8fa683-bee4-2c6-612a-9fab3269c498@linux.intel.com>
-From:   suijingfeng <suijingfeng@loongson.cn>
-In-Reply-To: <d8fa683-bee4-2c6-612a-9fab3269c498@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8AxjiNN0tRkCxtTAA--.36236S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tw4rZrWrAFyfJrWxJF15WrX_yoW8Ww4rpr
-        W8JFWFkF48GrnrC3WIvF1jqFy5Z393A3s3CF45Kw17uF1DCw1FqFySkFWYyFy5XFW3CF42
-        vr1jqFy3Ga45AagCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-        xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-        AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-        tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-        8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
-        AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-        rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14
-        v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
-        JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4Xo7DU
-        UUU
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S232030AbjHJMLM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Aug 2023 08:11:12 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC6901724
+        for <linux-pci@vger.kernel.org>; Thu, 10 Aug 2023 05:11:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691669471; x=1723205471;
+  h=date:from:to:cc:subject:message-id;
+  bh=UJW5hC9yEqA3SB27tjns9xe3ZhwXgak4YkocNXxpwRM=;
+  b=Qi4qgVsEkWOYu7Y0mVIJMoE+bL7SuhW4da6zLOKWyGsvwfLrDf5eoI1/
+   Iy0+J9n/GcBcakBoWZSfoGE9pPWHjCdUp0ZGlmDi/1EgwroXVNCZuVn5d
+   uezDByhaq01k+3t0KVHbXDt/bdj8PhdJMxie69YOW0fpPrYo4RL9QOcv+
+   QoJxdJNmTsQ6biZcvTPj1OW+CGlBMko6/gsobnMtxRKA5CesplK8n9Laz
+   2WuJnyRVhsfUXg3Kcm+v/QA8UPzpUlZz6ewlrpHz6Rw/7YMm32QGCtraY
+   z+tjvfVbXvzX2H4bGNYF2MMrn6bUEHsHQ1GSABcGWqNhJRB+HmEni2ZIb
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10797"; a="457742301"
+X-IronPort-AV: E=Sophos;i="6.01,162,1684825200"; 
+   d="scan'208";a="457742301"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2023 05:11:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10797"; a="732199370"
+X-IronPort-AV: E=Sophos;i="6.01,162,1684825200"; 
+   d="scan'208";a="732199370"
+Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 10 Aug 2023 05:11:10 -0700
+Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qU4VR-0006za-1I;
+        Thu, 10 Aug 2023 12:11:09 +0000
+Date:   Thu, 10 Aug 2023 20:10:49 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:virtualization] BUILD SUCCESS
+ d5af729dc2071273f14cbb94abbc60608142fd83
+Message-ID: <202308102047.AKpLhFvO-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git virtualization
+branch HEAD: d5af729dc2071273f14cbb94abbc60608142fd83  PCI: Mark NVIDIA T4 GPUs to avoid bus reset
 
+elapsed time: 720m
 
-On 2023/8/9 22:12, Ilpo Järvinen wrote:
-> On Wed, 9 Aug 2023, Sui Jingfeng wrote:
->
->> From: Sui Jingfeng <suijingfeng@loongson.cn>
->>
->> 1) s/intereted/interested
->> 2) s/hotplugable/hot-pluggable
->>
->> While at it, convert the comments to the conventional multi-line style,
->> and rewrap to fill 78 columns.
->>
->> Fixes: deb2d2ecd43d ("PCI/GPU: implement VGA arbitration on Linux")
->> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
->> ---
->>   drivers/pci/vgaarb.c | 8 +++++---
->>   1 file changed, 5 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
->> index 6883067a802a..811510253553 100644
->> --- a/drivers/pci/vgaarb.c
->> +++ b/drivers/pci/vgaarb.c
->> @@ -1535,9 +1535,11 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
->>   	if (!pci_dev_is_vga(pdev))
->>   		return 0;
->>   
->> -	/* For now we're only intereted in devices added and removed. I didn't
->> -	 * test this thing here, so someone needs to double check for the
->> -	 * cases of hotplugable vga cards. */
->> +	/*
->> +	 * For now, we're only interested in devices added and removed.
->> +	 * I didn't test this thing here, so someone needs to double check
->> +	 * for the cases of hot-pluggable VGA cards.
->> +	 */
->>   	if (action == BUS_NOTIFY_ADD_DEVICE)
->>   		notify = vga_arbiter_add_pci_device(pdev);
->>   	else if (action == BUS_NOTIFY_DEL_DEVICE)
-> Don't use Fixes tag for comment changes. After removing it, feel free to
-> add:
+configs tested: 105
+configs skipped: 6
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-OK, I will remove the Fixes tag for comment changes at next version.
-Thanks a lot. Also for other patches in this series.
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r005-20230809   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r043-20230809   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r003-20230809   clang
+arm                  randconfig-r011-20230809   gcc  
+arm                  randconfig-r046-20230809   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r021-20230809   gcc  
+hexagon              randconfig-r033-20230809   clang
+hexagon              randconfig-r041-20230809   clang
+hexagon              randconfig-r045-20230809   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230809   gcc  
+i386         buildonly-randconfig-r005-20230809   gcc  
+i386         buildonly-randconfig-r006-20230809   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230809   gcc  
+i386                 randconfig-i002-20230809   gcc  
+i386                 randconfig-i003-20230809   gcc  
+i386                 randconfig-i004-20230809   gcc  
+i386                 randconfig-i005-20230809   gcc  
+i386                 randconfig-i006-20230809   gcc  
+i386                 randconfig-i011-20230809   clang
+i386                 randconfig-i012-20230809   clang
+i386                 randconfig-i013-20230809   clang
+i386                 randconfig-i014-20230809   clang
+i386                 randconfig-i015-20230809   clang
+i386                 randconfig-i016-20230809   clang
+i386                 randconfig-r004-20230809   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r002-20230809   gcc  
+m68k                 randconfig-r034-20230809   gcc  
+microblaze           randconfig-r001-20230809   gcc  
+microblaze           randconfig-r014-20230809   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r016-20230809   gcc  
+nios2                randconfig-r035-20230809   gcc  
+openrisc             randconfig-r006-20230809   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r023-20230809   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc              randconfig-r025-20230809   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r042-20230809   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r044-20230809   clang
+sh                               allmodconfig   gcc  
+sh                   randconfig-r012-20230809   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r036-20230809   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230809   gcc  
+x86_64       buildonly-randconfig-r002-20230809   gcc  
+x86_64       buildonly-randconfig-r003-20230809   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-r013-20230809   clang
+x86_64               randconfig-r026-20230809   clang
+x86_64               randconfig-x001-20230809   clang
+x86_64               randconfig-x002-20230809   clang
+x86_64               randconfig-x003-20230809   clang
+x86_64               randconfig-x004-20230809   clang
+x86_64               randconfig-x005-20230809   clang
+x86_64               randconfig-x006-20230809   clang
+x86_64               randconfig-x011-20230809   gcc  
+x86_64               randconfig-x012-20230809   gcc  
+x86_64               randconfig-x013-20230809   gcc  
+x86_64               randconfig-x014-20230809   gcc  
+x86_64               randconfig-x015-20230809   gcc  
+x86_64               randconfig-x016-20230809   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa               randconfig-r024-20230809   gcc  
 
-
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->
->
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
