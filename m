@@ -2,237 +2,197 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 709EC7772A4
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Aug 2023 10:17:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45ED87772DF
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Aug 2023 10:27:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234112AbjHJIRh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Aug 2023 04:17:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43756 "EHLO
+        id S232156AbjHJI1J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Aug 2023 04:27:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232701AbjHJIRh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Aug 2023 04:17:37 -0400
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30651ED
-        for <linux-pci@vger.kernel.org>; Thu, 10 Aug 2023 01:17:36 -0700 (PDT)
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id A1655420B6
-        for <linux-pci@vger.kernel.org>; Thu, 10 Aug 2023 08:17:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1691655454;
-        bh=f44e7D2QBwHFCwYMmxTx3K25qEi/6ZVWNBK4zCCggRI=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=ISfInLCmjQRfipfxqPCkq5hMFd9TNwooXJT2iedM4ceU3jDWVcxHoFojj6BRQIfZ7
-         dV1zACTooLJaH55Ji9zRWS7iC7McoNBejBwpm4uLsvnGuSNttv8XuUbav5UqYvHe/I
-         E+A87SGPWLYMwRM6fW+vWvycs8Jwvcg3Y8hFdaxFTY4EWc/Lfvr03H5lTcV+HEPTAQ
-         3Uoj3EnYSlYvn2rV+EIhiGz7ZF6V3YHAq8FWICA/z9ehk8QTojOKjRWommuRg9g/n5
-         hkDBJ8R823uSrlM5iollAidfM5rKo8Hw4uLRS5X4UbWe9NW/RCl3RLbMtXrcdcL8mj
-         G6DzesLkbj4Ww==
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-26957018988so759526a91.0
-        for <linux-pci@vger.kernel.org>; Thu, 10 Aug 2023 01:17:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691655453; x=1692260253;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f44e7D2QBwHFCwYMmxTx3K25qEi/6ZVWNBK4zCCggRI=;
-        b=K9EXD/sfCqJv9C/j2RfgKAFAzuZY7kqZM3KLzst2g/6x3Pf18K3mcSd8ye46rdfgDv
-         Cwgw+RKYI7Q27vgJszxCT0pC/JhVRMC6V+iZ0CxGAvP/KgFIdgT/u0p/lqcz7mIRmPmI
-         TQHdTa/qtrXZyTE/PBZeHIoAInGmltzUGf2DxhV8BEV2iAf89ZZy6NObGzG75f2UqU6y
-         7xb3rX3gpNqqFeNrBrr4K5TDy86F529aD9v9LjZWk/TEIB0oKiY2seAASXzxGAHhoJOp
-         ZbKjnH3Ae3o6aRM7SLqbOdWbYAoi3+hYp6Me66o1N5BxOCdJ5BZEUvLAclTOhRM0dNtL
-         yfHA==
-X-Gm-Message-State: AOJu0Yyjkp41LnJT9rytDKw57qskLhA1mm7AQaUZVtiDGnmYpxsumj7r
-        UqHxpGbkdTwmZN/8nNzSiNtUlvM/Jq7ZMtQAfXzWotFOVv/63GbUl0p17E+i/2n4mk6x73Rlhe8
-        T0G8vjB7REEuShM+K8b6g6rNpk+V9u8ZgbWOyMtsQzUVDFOIL1CMwWA==
-X-Received: by 2002:a17:90b:4c09:b0:268:81c6:a01f with SMTP id na9-20020a17090b4c0900b0026881c6a01fmr1288517pjb.26.1691655453208;
-        Thu, 10 Aug 2023 01:17:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IElxY6iFsqxsLQaf6MEu/kiqWUUF1OuNBubJ3kjGr8Y/2zOMpSfHDBWZaiq094IGcEaQ3UBkRcs6NrBzaytr9g=
-X-Received: by 2002:a17:90b:4c09:b0:268:81c6:a01f with SMTP id
- na9-20020a17090b4c0900b0026881c6a01fmr1288502pjb.26.1691655452859; Thu, 10
- Aug 2023 01:17:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAAd53p7RfVcZjw+ShtkTmhCAA4zpegRZOzwiXgmanthx_KMjxA@mail.gmail.com>
- <20230809185232.GA402997@bhelgaas>
-In-Reply-To: <20230809185232.GA402997@bhelgaas>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Thu, 10 Aug 2023 16:17:21 +0800
-Message-ID: <CAAd53p5QhaCA09G0BrhyDBXTKBbcgpXq0yAsj7PkG6wF8Qr=_w@mail.gmail.com>
-Subject: Re: [PATCH v6 2/3] PCI/AER: Disable AER interrupt on suspend
+        with ESMTP id S234371AbjHJI1G (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Aug 2023 04:27:06 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3F23DC
+        for <linux-pci@vger.kernel.org>; Thu, 10 Aug 2023 01:27:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691656025; x=1723192025;
+  h=date:from:to:cc:subject:message-id;
+  bh=t16RhGOMosnQI/9Yw7KZF12Of01gNVWRs6V1phI3SV4=;
+  b=CXLJWcoauHykj2swQilrJJYdGjU/N/HB6HPDaaXlpgOitk7UsBIsJYQs
+   Td8tac3/Pub5IM54JFmVC9dwK8O40SDn5FAPteaAgRJR5cAY5/JzRlOGs
+   h7z9W1LVoGmzPmljgwHO77vcWib3Ysun1F6D9ZX/IHORJdPx9dUB/bkRL
+   LylnwkbqtS8dSiQWGso7rwnFQeJLgdhoygvbvZ+3qHFhskxCGotjQx+zz
+   TbXAZ5usbGrnFKe0BUh/aHCmWcEf59vXaw3maPrZzyXX5f37C22Li72f/
+   bFmipiK2WugX+9fhXvHm0ubuo21EbO6VVnM87DfHrMrhhVPNxBcLazKds
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10797"; a="402296898"
+X-IronPort-AV: E=Sophos;i="6.01,161,1684825200"; 
+   d="scan'208";a="402296898"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2023 01:27:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10797"; a="725702029"
+X-IronPort-AV: E=Sophos;i="6.01,161,1684825200"; 
+   d="scan'208";a="725702029"
+Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 10 Aug 2023 01:27:04 -0700
+Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qU10Z-0006rB-1H;
+        Thu, 10 Aug 2023 08:27:03 +0000
+Date:   Thu, 10 Aug 2023 16:26:42 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     sathyanarayanan.kuppuswamy@linux.intel.com,
-        mika.westerberg@linux.intel.com, linux-pci@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, koba.ko@canonical.com,
-        "Oliver O'Halloran" <oohall@gmail.com>, bhelgaas@google.com,
-        linuxppc-dev@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:controller/switchtec] BUILD SUCCESS
+ 0fb53e64705ae0fabd9593102e0f0e6812968802
+Message-ID: <202308101641.Uuf6IIEZ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 10, 2023 at 2:52=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Fri, Jul 21, 2023 at 11:58:24AM +0800, Kai-Heng Feng wrote:
-> > On Tue, Jul 18, 2023 at 7:17=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.o=
-rg> wrote:
-> > > On Fri, May 12, 2023 at 08:00:13AM +0800, Kai-Heng Feng wrote:
-> > > > PCIe services that share an IRQ with PME, such as AER or DPC,
-> > > > may cause a spurious wakeup on system suspend. To prevent this,
-> > > > disable the AER interrupt notification during the system suspend
-> > > > process.
-> > >
-> > > I see that in this particular BZ dmesg log, PME, AER, and DPC do shar=
-e
-> > > the same IRQ, but I don't think this is true in general.
-> > >
-> > > Root Ports usually use MSI or MSI-X.  PME and hotplug events use the
-> > > Interrupt Message Number in the PCIe Capability, but AER uses the one
-> > > in the AER Root Error Status register, and DPC uses the one in the DP=
-C
-> > > Capability register.  Those potentially correspond to three distinct
-> > > MSI/MSI-X vectors.
-> > >
-> > > I think this probably has nothing to do with the IRQ being *shared*,
-> > > but just that putting the downstream component into D3cold, where the
-> > > link state is L3, may cause the upstream component to log and signal =
-a
-> > > link-related error as the link goes completely down.
-> >
-> > That's quite likely a better explanation than my wording.
-> > Assuming AER IRQ and PME IRQ are not shared, does system get woken up
-> > by AER IRQ?
->
-> Rafael could answer this better than I can, but
-> Documentation/power/suspend-and-interrupts.rst says device interrupts
-> are generally disabled during suspend after the "late" phase of
-> suspending devices, i.e.,
->
->   dpm_suspend_noirq
->     suspend_device_irqs           <-- disable non-wakeup IRQs
->     dpm_noirq_suspend_devices
->       ...
->         pci_pm_suspend_noirq      # (I assume)
->           pci_prepare_to_sleep
->
-> I think the downstream component would be put in D3cold by
-> pci_prepare_to_sleep(), so non-wakeup interrupts should be disabled by
-> then.
->
-> I assume PME would generally *not* be disabled since it's needed for
-> wakeup, so I think any interrupt that shares the PME IRQ and occurs
-> during suspend may cause a spurious wakeup.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/switchtec
+branch HEAD: 0fb53e64705ae0fabd9593102e0f0e6812968802  PCI: switchtec: Add support for PCIe Gen5 devices
 
-Yes, that's the case here.
+elapsed time: 722m
 
->
-> If so, it's exactly as you said at the beginning: AER/DPC/etc sharing
-> the PME IRQ may cause spurious wakeups, and we would have to disable
-> those other interrupts at the source, e.g., by clearing
-> PCI_ERR_ROOT_CMD_FATAL_EN etc (exactly as your series does).
+configs tested: 121
+configs skipped: 9
 
-So is the series good to be merged now?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Kai-Heng
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r001-20230809   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r043-20230809   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r005-20230809   clang
+arm                  randconfig-r011-20230809   gcc  
+arm                  randconfig-r035-20230809   clang
+arm                  randconfig-r046-20230809   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             alldefconfig   gcc  
+csky                                defconfig   gcc  
+hexagon              randconfig-r023-20230809   clang
+hexagon              randconfig-r041-20230809   clang
+hexagon              randconfig-r045-20230809   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230809   gcc  
+i386         buildonly-randconfig-r005-20230809   gcc  
+i386         buildonly-randconfig-r006-20230809   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230809   gcc  
+i386                 randconfig-i002-20230809   gcc  
+i386                 randconfig-i003-20230809   gcc  
+i386                 randconfig-i004-20230809   gcc  
+i386                 randconfig-i005-20230809   gcc  
+i386                 randconfig-i006-20230809   gcc  
+i386                 randconfig-i011-20230809   clang
+i386                 randconfig-i012-20230809   clang
+i386                 randconfig-i013-20230809   clang
+i386                 randconfig-i014-20230809   clang
+i386                 randconfig-i015-20230809   clang
+i386                 randconfig-i016-20230809   clang
+i386                 randconfig-r024-20230809   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r033-20230809   gcc  
+m68k                 randconfig-r034-20230809   gcc  
+microblaze                          defconfig   gcc  
+microblaze           randconfig-r003-20230809   gcc  
+microblaze           randconfig-r014-20230809   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                         bigsur_defconfig   gcc  
+mips                 decstation_r4k_defconfig   gcc  
+mips                        vocore2_defconfig   gcc  
+nios2                         10m50_defconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r016-20230809   gcc  
+nios2                randconfig-r022-20230809   gcc  
+nios2                randconfig-r026-20230809   gcc  
+nios2                randconfig-r035-20230809   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc              randconfig-r023-20230809   clang
+powerpc              randconfig-r032-20230809   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                    nommu_k210_defconfig   gcc  
+riscv                randconfig-r042-20230809   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r002-20230809   gcc  
+s390                 randconfig-r004-20230809   gcc  
+s390                 randconfig-r044-20230809   clang
+sh                               allmodconfig   gcc  
+sh                        dreamcast_defconfig   gcc  
+sh                   randconfig-r012-20230809   gcc  
+sh                          rsk7264_defconfig   gcc  
+sh                           se7712_defconfig   gcc  
+sh                             sh03_defconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r036-20230809   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r021-20230809   gcc  
+um                   randconfig-r025-20230809   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230809   gcc  
+x86_64       buildonly-randconfig-r002-20230809   gcc  
+x86_64       buildonly-randconfig-r003-20230809   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-r013-20230809   clang
+x86_64               randconfig-r015-20230809   clang
+x86_64               randconfig-r036-20230809   gcc  
+x86_64               randconfig-x001-20230809   clang
+x86_64               randconfig-x002-20230809   clang
+x86_64               randconfig-x003-20230809   clang
+x86_64               randconfig-x004-20230809   clang
+x86_64               randconfig-x005-20230809   clang
+x86_64               randconfig-x006-20230809   clang
+x86_64               randconfig-x011-20230809   gcc  
+x86_64               randconfig-x012-20230809   gcc  
+x86_64               randconfig-x013-20230809   gcc  
+x86_64               randconfig-x014-20230809   gcc  
+x86_64               randconfig-x015-20230809   gcc  
+x86_64               randconfig-x016-20230809   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
 
->
-> > > I don't think D0-D3hot should be relevant here because in all those
-> > > states, the link should be active because the downstream config space
-> > > remains accessible.  So I'm not sure if it's possible, but I wonder i=
-f
-> > > there's a more targeted place we could do this, e.g., in the path tha=
-t
-> > > puts downstream devices in D3cold.
-> >
-> > Let me try to work on this.
-> >
-> > Kai-Heng
-> >
-> > >
-> > > > As Per PCIe Base Spec 5.0, section 5.2, titled "Link State Power Ma=
-nagement",
-> > > > TLP and DLLP transmission are disabled for a Link in L2/L3 Ready (D=
-3hot), L2
-> > > > (D3cold with aux power) and L3 (D3cold) states. So disabling the AE=
-R
-> > > > notification during suspend and re-enabling them during the resume =
-process
-> > > > should not affect the basic functionality.
-> > > >
-> > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216295
-> > > > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > > ---
-> > > > v6:
-> > > > v5:
-> > > >  - Wording.
-> > > >
-> > > > v4:
-> > > > v3:
-> > > >  - No change.
-> > > >
-> > > > v2:
-> > > >  - Only disable AER IRQ.
-> > > >  - No more check on PME IRQ#.
-> > > >  - Use helper.
-> > > >
-> > > >  drivers/pci/pcie/aer.c | 22 ++++++++++++++++++++++
-> > > >  1 file changed, 22 insertions(+)
-> > > >
-> > > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > > > index 1420e1f27105..9c07fdbeb52d 100644
-> > > > --- a/drivers/pci/pcie/aer.c
-> > > > +++ b/drivers/pci/pcie/aer.c
-> > > > @@ -1356,6 +1356,26 @@ static int aer_probe(struct pcie_device *dev=
-)
-> > > >       return 0;
-> > > >  }
-> > > >
-> > > > +static int aer_suspend(struct pcie_device *dev)
-> > > > +{
-> > > > +     struct aer_rpc *rpc =3D get_service_data(dev);
-> > > > +     struct pci_dev *pdev =3D rpc->rpd;
-> > > > +
-> > > > +     aer_disable_irq(pdev);
-> > > > +
-> > > > +     return 0;
-> > > > +}
-> > > > +
-> > > > +static int aer_resume(struct pcie_device *dev)
-> > > > +{
-> > > > +     struct aer_rpc *rpc =3D get_service_data(dev);
-> > > > +     struct pci_dev *pdev =3D rpc->rpd;
-> > > > +
-> > > > +     aer_enable_irq(pdev);
-> > > > +
-> > > > +     return 0;
-> > > > +}
-> > > > +
-> > > >  /**
-> > > >   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
-> > > >   * @dev: pointer to Root Port, RCEC, or RCiEP
-> > > > @@ -1420,6 +1440,8 @@ static struct pcie_port_service_driver aerdri=
-ver =3D {
-> > > >       .service        =3D PCIE_PORT_SERVICE_AER,
-> > > >
-> > > >       .probe          =3D aer_probe,
-> > > > +     .suspend        =3D aer_suspend,
-> > > > +     .resume         =3D aer_resume,
-> > > >       .remove         =3D aer_remove,
-> > > >  };
-> > > >
-> > > > --
-> > > > 2.34.1
-> > > >
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
