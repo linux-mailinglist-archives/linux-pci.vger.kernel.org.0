@@ -2,48 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA6B7777D01
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Aug 2023 17:59:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B8B3777DF7
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Aug 2023 18:17:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229678AbjHJP7a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Aug 2023 11:59:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37184 "EHLO
+        id S232115AbjHJQRP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Aug 2023 12:17:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229654AbjHJP73 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Aug 2023 11:59:29 -0400
+        with ESMTP id S234892AbjHJQRO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Aug 2023 12:17:14 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 285A4E53;
-        Thu, 10 Aug 2023 08:59:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44C6CA8;
+        Thu, 10 Aug 2023 09:17:14 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B09B666151;
-        Thu, 10 Aug 2023 15:59:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8EF5C433C7;
-        Thu, 10 Aug 2023 15:59:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D7A3F662E9;
+        Thu, 10 Aug 2023 16:17:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCD6EC433C9;
+        Thu, 10 Aug 2023 16:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691683168;
-        bh=gaCDJQX2O6yppUzsCM6ukAAErkl/jocCV207jMlCYOM=;
+        s=k20201202; t=1691684233;
+        bh=V/BG7ZXR+7VaA8Qltt4DBHJ7oWs032Dxd6TtWPfC5hw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=byu4qO+z+PHPPb4T0QegjmagBG1lVmv+X1nT8e5g84Hy8rXzbHQiHeixadtbWSGdh
-         aMVQNpOXaZ/OQjPdEZuwkYarYWnlTX8P5yQ52/j9ynwSPAD9kJW9mIr/Inz51/TF8B
-         eBHZ2ComMGKCbz5DcgPOYElNsrxiY8ninrLZdhM4dpp21k1FhHxhnr+9luKumWrmGg
-         PvDFtfPM7yfyIxtMunJOM6yVZS/6fHtWGcVaBz98gxSJNT/3861dBNH1gMTL9qiPJN
-         a7pdJy18+R7rHgjaBA+6nLLY9JI/69r2dJGYdzbK6poFwE9qKHhcoQ8rQKYadczsMC
-         uAhTQFLA5Lemw==
-Date:   Thu, 10 Aug 2023 10:59:26 -0500
+        b=bhGpmQVB+wFkWR49wAIEYUUHWW/irFrO6sGtoASP7Uki3V5tQ1sCXj7fVfiCxvufo
+         24Pw8r7G51R++tVPyqeUq8dBN4zAGyZLCiOFKQy3mqWbIimCZ6YC6kmB8oJQOItS6q
+         97W68FOG5Umb/o9XmMVpWhXQH/31MGxj771bq+i93hlyjK7i5ShG2ivp7JLCNRSWxg
+         ZY6z2cRuAAbotAlNvEOEHQUAveONn6bi39IAEuDoIpDvGF9CZ6mrQFjMIUxxCJ0GiP
+         44ywM36q60zowexlsJgG16aFOuR2uwCbFLeNmLV2eI/t7kByBdiTx2/snNJRzX2SPk
+         Ji2L5PBCLl9hQ==
+Date:   Thu, 10 Aug 2023 11:17:11 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, eric.auger@redhat.com
-Subject: Re: [PATCH v2 1/2] PCI/VPD: Add runtime power management to sysfs
- interface
-Message-ID: <20230810155926.GA32250@bhelgaas>
+To:     Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dean Luick <dean.luick@cornelisnetworks.com>,
+        Jonas =?iso-8859-1?Q?Dre=DFler?= <verdre@v0yd.nl>
+Subject: Re: [PATCH v5 00/11] PCI: Improve PCIe Capability RMW concurrency
+ control
+Message-ID: <20230810161711.GA33938@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20230803171233.3810944-2-alex.williamson@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230717120503.15276-1-ilpo.jarvinen@linux.intel.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -53,91 +64,89 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 03, 2023 at 11:12:32AM -0600, Alex Williamson wrote:
-> Unlike default access to config space through sysfs, the vpd read and
-> write function don't actively manage the runtime power management state
-> of the device during access.  Since commit 7ab5e10eda02 ("vfio/pci: Move
-> the unused device into low power state with runtime PM"), the vfio-pci
-> driver will use runtime power management and release unused devices to
-> make use of low power states.  Attempting to access VPD information in
-> this low power state can result in incorrect information or kernel
-> crashes depending on the system behavior.
+On Mon, Jul 17, 2023 at 03:04:52PM +0300, Ilpo Järvinen wrote:
+> PCI Express Capability RMW accessors don't properly protect against
+> concurrent access. Link Control Register is written by a number of
+> things in the kernel in a RMW fashion without any concurrency control.
+> This could in the unlucky case lead to losing one of the updates. One
+> of the most obvious path which can race with most of the other LNKCTL
+> RMW operations seems to be ASPM policy sysfs write which triggers
+> LNKCTL update. Similarly, Root Control Register can be concurrently
+> accessed by AER and PME.
 > 
-> Wrap the vpd read/write bin attribute handlers in runtime PM and take
-> into account the potential quirk to select the correct device to wake.
+> Make pcie_capability_clear_and_set_word() (and other RMW accessors that
+> call it) to use a per device spinlock to protect the RMW operations to
+> the Capability Registers that require locking. Convert open-coded
+> LNKCTL RMW operations to use pcie_capability_clear_and_set_word() to
+> benefit from the locking.
 > 
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
->  drivers/pci/vpd.c | 34 ++++++++++++++++++++++++++++++++--
->  1 file changed, 32 insertions(+), 2 deletions(-)
+> There's also a related series which improves ASPM service driver and
+> device driver coordination by removing out-of-band ASPM state
+> management from device drivers (which will remove some of the code
+> fragments changed by this series but it has higher regression
+> potential which is why it seems prudent to do these changes in two
+> steps):
+>   https://lore.kernel.org/linux-pci/20230602114751.19671-1-ilpo.jarvinen@linux.intel.com/T/#t
 > 
-> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-> index a4fc4d0690fe..81217dd4789f 100644
-> --- a/drivers/pci/vpd.c
-> +++ b/drivers/pci/vpd.c
-> @@ -275,8 +275,23 @@ static ssize_t vpd_read(struct file *filp, struct kobject *kobj,
->  			size_t count)
->  {
->  	struct pci_dev *dev = to_pci_dev(kobj_to_dev(kobj));
-> +	struct pci_dev *vpd_dev = dev;
-> +	ssize_t ret;
-> +
-> +	if (dev->dev_flags & PCI_DEV_FLAGS_VPD_REF_F0) {
-> +		vpd_dev = pci_get_func0_dev(dev);
-> +		if (!vpd_dev)
-> +			return -ENODEV;
-> +	}
-> +
-> +	pci_config_pm_runtime_get(vpd_dev);
-> +	ret = pci_read_vpd(vpd_dev, off, count, buf);
-> +	pci_config_pm_runtime_put(vpd_dev);
-> +
-> +	if (dev != vpd_dev)
-> +		pci_dev_put(vpd_dev);
-
-I first thought this would leak a reference if dev was func0 and had
-PCI_DEV_FLAGS_VPD_REF_F0 set, because in that case vpd_dev would be
-the same as dev.
-
-But I think that case can't happen because quirk_f0_vpd_link() does
-nothing for func0 devices, so PCI_DEV_FLAGS_VPD_REF_F0 should never be
-set for func0.  But it seems like this might be easier to analyze as:
-
-  if (dev->dev_flags & PCI_DEV_FLAGS_VPD_REF_F0)
-    pci_dev_put(vpd_dev);
-
-Or am I missing something?
-
-> -	return pci_read_vpd(dev, off, count, buf);
-> +	return ret;
->  }
->  
->  static ssize_t vpd_write(struct file *filp, struct kobject *kobj,
-> @@ -284,8 +299,23 @@ static ssize_t vpd_write(struct file *filp, struct kobject *kobj,
->  			 size_t count)
->  {
->  	struct pci_dev *dev = to_pci_dev(kobj_to_dev(kobj));
-> +	struct pci_dev *vpd_dev = dev;
-> +	ssize_t ret;
-> +
-> +	if (dev->dev_flags & PCI_DEV_FLAGS_VPD_REF_F0) {
-> +		vpd_dev = pci_get_func0_dev(dev);
-> +		if (!vpd_dev)
-> +			return -ENODEV;
-> +	}
-> +
-> +	pci_config_pm_runtime_get(vpd_dev);
-> +	ret = pci_write_vpd(vpd_dev, off, count, buf);
-> +	pci_config_pm_runtime_put(vpd_dev);
-> +
-> +	if (dev != vpd_dev)
-> +		pci_dev_put(vpd_dev);
->  
-> -	return pci_write_vpd(dev, off, count, buf);
-> +	return ret;
->  }
->  static BIN_ATTR(vpd, 0600, vpd_read, vpd_write, 0);
->  
-> -- 
-> 2.40.1
+> v5:
+> - Remove reversed logic from a conditional
+> - Use a variable for CCC setup
 > 
+> v4:
+> - Rebased on top of pci/main
+> - Added patch to update documentation
+> 
+> v3:
+> - Split link retraining change off from ASPM patch & reorder it earlier
+> - Adjust changelog to take into account the move of link retraining
+>   code into PCI core and no longer refer to ASPM (currently in
+>   pci/enumeration branch)
+> - based on top of pci/main
+> 
+> v2:
+> - Keep the RMW ops caller API the same
+> - Make pcie_capability_clear_and_set_word() a wrapper that uses
+>   locked/unlocked variant based on the capability reg
+> - Extracted LNKCTL2 changes out from this series to keep this purely
+>   a series which fixes something (LNKCTL2 RMW lock is necessary only
+>   when PCIe BW control is introduced).
+> - Added Fixes tags (it's a bit rathole but yeah, they're there now).
+> - Renamed cap_lock to pcie_cap_lock
+> - Changed ath1* to clear the ASPMC field before setting it
+> 
+> Ilpo Järvinen (11):
+>   PCI: Add locking to RMW PCI Express Capability Register accessors
+>   PCI: Make link retraining use RMW accessors for changing LNKCTL
+>   PCI: pciehp: Use RMW accessors for changing LNKCTL
+>   PCI/ASPM: Use RMW accessors for changing LNKCTL
+>   drm/amdgpu: Use RMW accessors for changing LNKCTL
+>   drm/radeon: Use RMW accessors for changing LNKCTL
+>   net/mlx5: Use RMW accessors for changing LNKCTL
+>   wifi: ath11k: Use RMW accessors for changing LNKCTL
+>   wifi: ath12k: Use RMW accessors for changing LNKCTL
+>   wifi: ath10k: Use RMW accessors for changing LNKCTL
+>   PCI: Document the Capability accessor RMW improvements
+> 
+>  Documentation/PCI/pciebus-howto.rst           | 14 ++++---
+>  drivers/gpu/drm/amd/amdgpu/cik.c              | 36 +++++-------------
+>  drivers/gpu/drm/amd/amdgpu/si.c               | 36 +++++-------------
+>  drivers/gpu/drm/radeon/cik.c                  | 36 +++++-------------
+>  drivers/gpu/drm/radeon/si.c                   | 37 +++++--------------
+>  .../ethernet/mellanox/mlx5/core/fw_reset.c    |  9 +----
+>  drivers/net/wireless/ath/ath10k/pci.c         |  9 +++--
+>  drivers/net/wireless/ath/ath11k/pci.c         | 10 +++--
+>  drivers/net/wireless/ath/ath12k/pci.c         | 10 +++--
+>  drivers/pci/access.c                          | 20 ++++++++--
+>  drivers/pci/hotplug/pciehp_hpc.c              | 12 ++----
+>  drivers/pci/pci.c                             |  8 +---
+>  drivers/pci/pcie/aspm.c                       | 30 +++++++--------
+>  drivers/pci/probe.c                           |  1 +
+>  include/linux/pci.h                           | 34 ++++++++++++++++-
+>  15 files changed, 136 insertions(+), 166 deletions(-)
+
+Applied to pci/pcie-rmw for v6.6, thanks!
+
+I removed the stable tags because we don't know of any actual problems
+these fix.
+
+Bjorn
