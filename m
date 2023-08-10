@@ -2,101 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99535778251
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Aug 2023 22:49:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58BAC778292
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Aug 2023 23:17:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234970AbjHJUtW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Aug 2023 16:49:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46272 "EHLO
+        id S229967AbjHJVRY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Aug 2023 17:17:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234022AbjHJUtW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Aug 2023 16:49:22 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E18E426B2;
-        Thu, 10 Aug 2023 13:49:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691700562; x=1723236562;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Od6lWd4zxNR8Y6Tgtx0NCL3HysEsaLONUvRtKsCh7T4=;
-  b=DMdMtOFFeXw7a2AOwa/NQ5YJ4M3+5bZ3UWRT6cLzEXPlu1khBAEDZbf6
-   sHAC8vMcEOneYVtwbS8gdeJRyRDdz2Kp1CQ2wZqV6Su2K7wcwkRD3Q+ro
-   UR23IQA5YfK1Vf4BP7gzMS7/huy+nbVSIystl2p31V/N2OQQJbaHW7wfW
-   lDD0baXFi1w3Y1nDi6/Cd1eDsDBqOzJ+qU6+WXEQytpiuYPY4KCNacZmz
-   IiseN697ahAtuWxdE1TieHWMc/aXhd1UP6BK2yEeagZKT0ogr3NVu5Oos
-   sYIpbEMq7O2f7iJcazdAuOeaoI8mwKAnwlyVANxV8H9KbRfQcqXLELSr+
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="361657494"
-X-IronPort-AV: E=Sophos;i="6.01,163,1684825200"; 
-   d="scan'208";a="361657494"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2023 13:49:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="732422532"
-X-IronPort-AV: E=Sophos;i="6.01,163,1684825200"; 
-   d="scan'208";a="732422532"
-Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 10 Aug 2023 13:49:19 -0700
-Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qUCas-0007FA-2e;
-        Thu, 10 Aug 2023 20:49:18 +0000
-Date:   Fri, 11 Aug 2023 04:49:04 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Sui Jingfeng <suijingfeng@loongson.cn>
-Cc:     oe-kbuild-all@lists.linux.dev, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, loongson-kernel@lists.loongnix.cn,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] PCI/VGA: Make the vga_is_firmware_default()
- arch-independent
-Message-ID: <202308110416.0wAKt0vo-lkp@intel.com>
-References: <20230803081758.968742-1-suijingfeng@loongson.cn>
+        with ESMTP id S229801AbjHJVRR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Aug 2023 17:17:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 392A92D4B;
+        Thu, 10 Aug 2023 14:17:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CDD6A65957;
+        Thu, 10 Aug 2023 21:17:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49FBCC433C7;
+        Thu, 10 Aug 2023 21:17:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691702231;
+        bh=3LqS9/KtuFBGW+687dYBLh6mzgQ9YDkrvb8IVmwzM3Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HyTWT51uLddJo7JMJG3HL14nmIbE7bBJrQSfOqhuFIyNUnrFzvPrf6A7+jkXmYaTB
+         dalwTR8XEgk+6PBWcPVgEH9l1y4Hkf7yUOKuO9exI1dfUDzkTlltzOfnnDqmP6Z72k
+         E8hLjV2zXGgfgXW5YlxLCETtT0x68jnNRP4KrFB1+qbaKZlOvn3Ddyo8h3FTte/hXC
+         vEpujBUQq71bJ/sKbiNi2wPR0J/3/mRZ9jDq1I4XPRC7o9KS0IuuGvVKfQtyax6FmV
+         34VtWBT9LnDR3vu82T/AqjB5tpe1i1J4d0o/tuURzqulU1YL4GlzIIrv0lZH0zHBFb
+         fdOsSuyOQoqpw==
+Received: (nullmailer pid 1202818 invoked by uid 1000);
+        Thu, 10 Aug 2023 21:17:09 -0000
+Date:   Thu, 10 Aug 2023 15:17:09 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+Cc:     linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        krzysztof.kozlowski@linaro.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, conor+dt@kernel.org,
+        lpieralisi@kernel.org, bharat.kumar.gogada@amd.com,
+        michal.simek@amd.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 2/2] PCI: xilinx-nwl: Increase ECAM size to
+ accommodate 256 buses
+Message-ID: <20230810211709.GA1192858-robh@kernel.org>
+References: <20230810122002.133531-1-thippeswamy.havalige@amd.com>
+ <20230810122002.133531-4-thippeswamy.havalige@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230803081758.968742-1-suijingfeng@loongson.cn>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230810122002.133531-4-thippeswamy.havalige@amd.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Sui,
+On Thu, Aug 10, 2023 at 05:50:02PM +0530, Thippeswamy Havalige wrote:
+> Our controller is expecting ECAM size to be programmed by software. By
+> programming "NWL_ECAM_VALUE_DEFAULT  12" controller can access up to 16MB
+> ECAM region which is used to detect 16 buses, so by updating
+> "NWL_ECAM_VALUE_DEFAULT" to 16 so that controller can access up to 256MB
+> ECAM region to detect 256 buses.
 
-kernel test robot noticed the following build errors:
+What happens when your DT has the smaller size and the kernel configures 
+the larger size? Seems like you could have an ABI issue.
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus linus/master v6.5-rc5 next-20230809]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>
+> ---
+> changes in v3:
+> - Remove unnecessary period at end of subject line.
+> changes in v2:
+> - Update this changes in a seperate patch.
+> ---
+>  drivers/pci/controller/pcie-xilinx-nwl.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
+> index d8a3a08be1d5..b51501921d3b 100644
+> --- a/drivers/pci/controller/pcie-xilinx-nwl.c
+> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+> @@ -126,7 +126,7 @@
+>  #define E_ECAM_CR_ENABLE		BIT(0)
+>  #define E_ECAM_SIZE_LOC			GENMASK(20, 16)
+>  #define E_ECAM_SIZE_SHIFT		16
+> -#define NWL_ECAM_VALUE_DEFAULT		12
+> +#define NWL_ECAM_VALUE_DEFAULT		16
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sui-Jingfeng/PCI-VGA-Make-the-vga_is_firmware_default-arch-independent/20230803-161838
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20230803081758.968742-1-suijingfeng%40loongson.cn
-patch subject: [PATCH] PCI/VGA: Make the vga_is_firmware_default() arch-independent
-config: arm64-randconfig-r052-20230811 (https://download.01.org/0day-ci/archive/20230811/202308110416.0wAKt0vo-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 12.3.0
-reproduce: (https://download.01.org/0day-ci/archive/20230811/202308110416.0wAKt0vo-lkp@intel.com/reproduce)
+Not really a meaningful name. It doesn't explain what '16' means.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308110416.0wAKt0vo-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   aarch64-linux-ld: drivers/pci/vgaarb.o: in function `vga_arb_firmware_fb_addr_tracker':
->> vgaarb.c:(.text+0x138): undefined reference to `screen_info'
-   aarch64-linux-ld: drivers/pci/vgaarb.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
-   vgaarb.c:(.text+0x138): dangerous relocation: unsupported relocation
->> aarch64-linux-ld: vgaarb.c:(.text+0x13c): undefined reference to `screen_info'
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>  #define CFG_DMA_REG_BAR			GENMASK(2, 0)
+>  #define CFG_PCIE_CACHE			GENMASK(7, 0)
+> @@ -165,7 +165,6 @@ struct nwl_pcie {
+>  	u32 ecam_size;
+>  	int irq_intx;
+>  	int irq_misc;
+> -	u32 ecam_value;
+>  	struct nwl_msi msi;
+>  	struct irq_domain *legacy_irq_domain;
+>  	struct clk *clk;
+> @@ -674,7 +673,7 @@ static int nwl_pcie_bridge_init(struct nwl_pcie *pcie)
+>  			  E_ECAM_CR_ENABLE, E_ECAM_CONTROL);
+>  
+>  	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, E_ECAM_CONTROL) |
+> -			  (pcie->ecam_value << E_ECAM_SIZE_SHIFT),
+> +			  (NWL_ECAM_VALUE_DEFAULT << E_ECAM_SIZE_SHIFT),
+>  			  E_ECAM_CONTROL);
+>  
+>  	nwl_bridge_writel(pcie, lower_32_bits(pcie->phys_ecam_base),
+> @@ -782,7 +781,6 @@ static int nwl_pcie_probe(struct platform_device *pdev)
+>  	pcie = pci_host_bridge_priv(bridge);
+>  
+>  	pcie->dev = dev;
+> -	pcie->ecam_value = NWL_ECAM_VALUE_DEFAULT;
+>  
+>  	err = nwl_pcie_parse_dt(pcie, pdev);
+>  	if (err) {
+> -- 
+> 2.17.1
+> 
