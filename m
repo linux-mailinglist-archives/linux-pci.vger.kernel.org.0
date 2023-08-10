@@ -2,165 +2,192 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A66177781C
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Aug 2023 14:21:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B27DF77790E
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Aug 2023 15:05:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234843AbjHJMUk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Aug 2023 08:20:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36592 "EHLO
+        id S230197AbjHJNFv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Aug 2023 09:05:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233666AbjHJMUi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Aug 2023 08:20:38 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2087.outbound.protection.outlook.com [40.107.223.87])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 589F026AF;
-        Thu, 10 Aug 2023 05:20:32 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fxJCcAE5PsV7NTqewok0738UJX9joC6GuNyQjzsZNFv5dw4SFwlR7CBQgzkwwCn9o3hL1fV4jbdNzNCe/00SJIVdm/7Ok0U0kScAB5EsdXBLLwoXLYjl67reX1twjxK60hbN1Rnll5OmDiG6zxmdvyrprkK5cOZylESj4BEC0kYYmodbtgUwPV1ZYn5RxJeOpJLqApW2SBNFLw+qW/TmHQDhaqOC4zSJghdr9atvA3arYceqDGnQH5sQ5WjJP3lwf3oA88GZtlpKSyiQGGVsiyGvyelxpPnc9ddOlxB72JnOV5A32OOdl0fF/c6+rLqJKi65kCBuROTjs5fOt9cciQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qL+9EEhdSw2IZHmeZrle/1tGM2mf6KvizCqtGMRmV6o=;
- b=ATIisK0x4doDyyOzljthnB9LpbR/YwQB3yhq/AeauGFvU/6rd88mzn2tkbNVg5bo/hAbyI4jPfr0HAexZrTG4NLLLNNVaqk4uCzCnsYjM1w01FVmyVlE1Ojq38GgtUk1kiUScy6sohKipjcDY/oXUGH4z9+hBxx3ceQPMUX3Y3d1GOsm/nJlVNoqrlolZt9mff+NmCblYLwthqDkin7GybarloRm7zkHqLRXo7eEdxCi0l8HxTcsTuzM/UgjQGfIrDA7piLF+d1RRYJre2OznGzUb9qbjCuvBlc0PMxjpm/OB4C8ByedqiMcX5/IXTLJtMLH93PAUuN7OwPlOGTBqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qL+9EEhdSw2IZHmeZrle/1tGM2mf6KvizCqtGMRmV6o=;
- b=RT2wKPq7GanLqevK8s4WnQ0LXOvumvO4n5L7UhwHQJave2I5W+7B2ptAm5qvPDsx2n8JJr4H5pCbzIavuum3K/D2og0MTz+l5i6O2MSULR5jGv7xYN3DzC6wPVDUbMePrXhRfaxR7vQ7hx1yfnubXcOqbOTVzJAJv/YubWRJlWk=
-Received: from BN9PR03CA0240.namprd03.prod.outlook.com (2603:10b6:408:f8::35)
- by SN7PR12MB7369.namprd12.prod.outlook.com (2603:10b6:806:298::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.30; Thu, 10 Aug
- 2023 12:20:30 +0000
-Received: from BN8NAM11FT103.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:f8:cafe::7d) by BN9PR03CA0240.outlook.office365.com
- (2603:10b6:408:f8::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.30 via Frontend
- Transport; Thu, 10 Aug 2023 12:20:30 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT103.mail.protection.outlook.com (10.13.176.181) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6678.18 via Frontend Transport; Thu, 10 Aug 2023 12:20:30 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 10 Aug
- 2023 07:20:20 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 10 Aug
- 2023 07:20:19 -0500
-Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.27 via Frontend
- Transport; Thu, 10 Aug 2023 07:20:16 -0500
-From:   Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-To:     <linux-kernel@vger.kernel.org>, <robh+dt@kernel.org>,
-        <bhelgaas@google.com>, <krzysztof.kozlowski@linaro.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <conor+dt@kernel.org>
-CC:     <lpieralisi@kernel.org>, <bharat.kumar.gogada@amd.com>,
-        <michal.simek@amd.com>, <linux-arm-kernel@lists.infradead.org>,
-        "Thippeswamy Havalige" <thippeswamy.havalige@amd.com>
-Subject: [PATCH v3 2/2] PCI: xilinx-nwl: Increase ECAM size to accommodate 256 buses
-Date:   Thu, 10 Aug 2023 17:50:02 +0530
-Message-ID: <20230810122002.133531-4-thippeswamy.havalige@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230810122002.133531-1-thippeswamy.havalige@amd.com>
-References: <20230810122002.133531-1-thippeswamy.havalige@amd.com>
+        with ESMTP id S233927AbjHJNFu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Aug 2023 09:05:50 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 258EA26A2;
+        Thu, 10 Aug 2023 06:05:47 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8AxEvCp4NRkKa4UAA--.43619S3;
+        Thu, 10 Aug 2023 21:05:45 +0800 (CST)
+Received: from [10.20.42.43] (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxF82p4NRkgC9TAA--.8581S3;
+        Thu, 10 Aug 2023 21:05:45 +0800 (CST)
+Message-ID: <a0d6277c-a4ad-38a5-bc6f-883513987547@loongson.cn>
+Date:   Thu, 10 Aug 2023 21:05:44 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2 02/11] PCI: Add the pci_get_class_masked() helper
+Content-Language: en-US
+To:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Sui Jingfeng <sui.jingfeng@linux.dev>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-pci@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20230808223412.1743176-1-sui.jingfeng@linux.dev>
+ <20230808223412.1743176-3-sui.jingfeng@linux.dev>
+ <19dc4b81-5b72-247c-d459-3ea9d1cddff0@linux.intel.com>
+From:   suijingfeng <suijingfeng@loongson.cn>
+In-Reply-To: <19dc4b81-5b72-247c-d459-3ea9d1cddff0@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT103:EE_|SN7PR12MB7369:EE_
-X-MS-Office365-Filtering-Correlation-Id: 24a4a6bb-4661-4109-bf4f-08db999c2fe5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 67zpsX3/Z3mnXSkhrPRdOobXGT6Uu3j2BbnJMQWxEIVZSSR1rdGRTTkw4FlgfGhPZFwZGH7zxwlljKdhhElLU63898ON4jWIpNjiPvgzj4QD8tfsg0zN5/UshPYnvtATgTWZUGEtIajfWs+uBH51quCdnoVQaOEChrQv7i/d3ONgw6RktGMj70Ojp6+DhqnmSRnF3I8izbXZ6VmjqTLX/mwjR4wWPCixyBqU62/bsyuMTa5w/qdW0O3Y0ltcCNceMuQPgMWgv8TqGcceiYSoM+DJAWE7HSO8h8t7WhtOKtVJMTVp8VG+c+SdoLuoeEzs2XZAS/r1AA9/dzHgO/FnnCmQDMQS2cbywuKTKOrgryboSLtJ4t5AazFq1fpoTDGqDT0hdhM/QczI3+9Ct8SxEo5+KCIMun/aTr+GG1Jmbr0c2VCcBw953OcU6hezKgzVUTo7YuFUx1A0k7gBlsCsqXrwj6cJXUli+dl6KO8ualwhw+vQPr0oz/d8eh7GJ5+tlIiy86zYXHvCU4/d5SQA203NizW3VmhRFEzXbYczfu6bI6zI92l9bGRlkI8Muh7Fjzoz9Kf3nMHqhflOCpmPnTUPOhUkY7C2M/Ou6EGje+/HZQFI9E1coBSIsDmz37wzvFkPCvJ1sK9nYIGDs0DZ51T4aRNpjDlGsKlXcVSdv00L2s7cNEMvnUzD04Kz8Gpx9+uv0P9nCMJMbVN0pdZgTnHFGRJG2uqhxuFkclNnqDbHAq6IJhA8keXXwrraD2LdeVq7PeIdAuW0Rbpl6yfnEw==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(136003)(376002)(39860400002)(396003)(346002)(186006)(451199021)(1800799006)(82310400008)(46966006)(36840700001)(40470700004)(316002)(81166007)(356005)(70586007)(70206006)(4326008)(82740400003)(41300700001)(8676002)(8936002)(110136005)(54906003)(36860700001)(47076005)(5660300002)(83380400001)(336012)(40480700001)(2616005)(478600001)(426003)(86362001)(44832011)(26005)(40460700003)(1076003)(36756003)(2906002)(6666004)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2023 12:20:30.0278
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24a4a6bb-4661-4109-bf4f-08db999c2fe5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT103.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7369
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+X-CM-TRANSID: AQAAf8CxF82p4NRkgC9TAA--.8581S3
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWrWUXF4xJFW7KF1UtrW7WrX_yoWruFy8pF
+        W3Aay5KrW8KFy7Gr13Zw4xZFyfX392ya4rCr4Skw1Yk390yF9Yqr97WF15Ar1fArWDuF1U
+        tw4UKryUWr1FqagCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+        xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+        AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+        AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+        8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
+        AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+        rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+        v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
+        JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4SoGDU
+        UUU
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Our controller is expecting ECAM size to be programmed by software. By
-programming "NWL_ECAM_VALUE_DEFAULT  12" controller can access up to 16MB
-ECAM region which is used to detect 16 buses, so by updating
-"NWL_ECAM_VALUE_DEFAULT" to 16 so that controller can access up to 256MB
-ECAM region to detect 256 buses.
+Hi,
 
-Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>
----
-changes in v3:
-- Remove unnecessary period at end of subject line.
-changes in v2:
-- Update this changes in a seperate patch.
----
- drivers/pci/controller/pcie-xilinx-nwl.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-index d8a3a08be1d5..b51501921d3b 100644
---- a/drivers/pci/controller/pcie-xilinx-nwl.c
-+++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-@@ -126,7 +126,7 @@
- #define E_ECAM_CR_ENABLE		BIT(0)
- #define E_ECAM_SIZE_LOC			GENMASK(20, 16)
- #define E_ECAM_SIZE_SHIFT		16
--#define NWL_ECAM_VALUE_DEFAULT		12
-+#define NWL_ECAM_VALUE_DEFAULT		16
- 
- #define CFG_DMA_REG_BAR			GENMASK(2, 0)
- #define CFG_PCIE_CACHE			GENMASK(7, 0)
-@@ -165,7 +165,6 @@ struct nwl_pcie {
- 	u32 ecam_size;
- 	int irq_intx;
- 	int irq_misc;
--	u32 ecam_value;
- 	struct nwl_msi msi;
- 	struct irq_domain *legacy_irq_domain;
- 	struct clk *clk;
-@@ -674,7 +673,7 @@ static int nwl_pcie_bridge_init(struct nwl_pcie *pcie)
- 			  E_ECAM_CR_ENABLE, E_ECAM_CONTROL);
- 
- 	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, E_ECAM_CONTROL) |
--			  (pcie->ecam_value << E_ECAM_SIZE_SHIFT),
-+			  (NWL_ECAM_VALUE_DEFAULT << E_ECAM_SIZE_SHIFT),
- 			  E_ECAM_CONTROL);
- 
- 	nwl_bridge_writel(pcie, lower_32_bits(pcie->phys_ecam_base),
-@@ -782,7 +781,6 @@ static int nwl_pcie_probe(struct platform_device *pdev)
- 	pcie = pci_host_bridge_priv(bridge);
- 
- 	pcie->dev = dev;
--	pcie->ecam_value = NWL_ECAM_VALUE_DEFAULT;
- 
- 	err = nwl_pcie_parse_dt(pcie, pdev);
- 	if (err) {
--- 
-2.17.1
+On 2023/8/9 22:01, Ilpo Järvinen wrote:
+> On Wed, 9 Aug 2023, Sui Jingfeng wrote:
+>
+>> From: Sui Jingfeng <suijingfeng@loongson.cn>
+>>
+>> Because there is no good way to get the mask member used to searching for
+>> devices that conform to a specific PCI class code, an application needs to
+>> process all PCI display devices can achieve its goal as follows:
+> This is mixing old and new way in a single sentence (which is confusing)?
+
+
+Thanks for reviewing, but I can't understand this sentence.
+Are you telling me that my description have grammar problem or something else?
+
+
+I means that before apply this patch, we don't have a function can be used
+to get all PCI(e) devices in a system by matching against its the PCI base class code only,
+while keep the Sub-Class code and the Programming Interface ignored.
+By supply a mask as argument, such thing become possible.
+
+If an application want to process all PCI display devices in the system,
+then it can achieve its goal by calling pci_get_class_masked() function.
+
+
+>> pdev = NULL;
+>> do {
+>> 	pdev = pci_get_class_masked(PCI_BASE_CLASS_DISPLAY << 16, 0xFF0000, pdev);
+>> 	if (pdev)
+>> 		do_something_for_pci_display_device(pdev);
+>> } while (pdev);
+>>
+>> While previously, we just can not ignore Sub-Class code and the Programming
+> cannot
+>
+>> Interface byte when do the searching.
+> doing the search.
+
+
+OK, will be fixed at the next version.
+
+
+>> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
+>> ---
+>>   drivers/pci/search.c | 30 ++++++++++++++++++++++++++++++
+>>   include/linux/pci.h  |  7 +++++++
+>>   2 files changed, 37 insertions(+)
+>>
+>> diff --git a/drivers/pci/search.c b/drivers/pci/search.c
+>> index b4c138a6ec02..f1c15aea868b 100644
+>> --- a/drivers/pci/search.c
+>> +++ b/drivers/pci/search.c
+>> @@ -334,6 +334,36 @@ struct pci_dev *pci_get_device(unsigned int vendor, unsigned int device,
+>>   }
+>>   EXPORT_SYMBOL(pci_get_device);
+>>   
+>> +/**
+>> + * pci_get_class_masked - begin or continue searching for a PCI device by class and mask
+>> + * @class: search for a PCI device with this class designation
+>> + * @from: Previous PCI device found in search, or %NULL for new search.
+>> + *
+>> + * Iterates through the list of known PCI devices.  If a PCI device is
+> No double spaces in kernel comments. Perhaps your editor might be adding
+> them on reflow (might be configurable to not do that).
+>
+>> + * found with a matching @class, the reference count to the device is
+>> + * incremented and a pointer to its device structure is returned.
+>> + * Otherwise, %NULL is returned.
+>> + * A new search is initiated by passing %NULL as the @from argument.
+>> + * Otherwise if @from is not %NULL, searches continue from next device
+>> + * on the global list.  The reference count for @from is always decremented
+>> + * if it is not %NULL.
+> Use kerneldoc's Return: section for describing return value.
+>
+>> + */
+>> +struct pci_dev *pci_get_class_masked(unsigned int class, unsigned int mask,
+>> +				     struct pci_dev *from)
+>> +{
+>> +	struct pci_device_id id = {
+>> +		.vendor = PCI_ANY_ID,
+>> +		.device = PCI_ANY_ID,
+>> +		.subvendor = PCI_ANY_ID,
+>> +		.subdevice = PCI_ANY_ID,
+>> +		.class_mask = mask,
+>> +		.class = class,
+>> +	};
+>> +
+>> +	return pci_get_dev_by_id(&id, from);
+>> +}
+>> +EXPORT_SYMBOL(pci_get_class_masked);
+>> +
+>>   /**
+>>    * pci_get_class - begin or continue searching for a PCI device by class
+>>    * @class: search for a PCI device with this class designation
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index 0ff7500772e6..b20e7ba844bf 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -1180,6 +1180,9 @@ struct pci_dev *pci_get_slot(struct pci_bus *bus, unsigned int devfn);
+>>   struct pci_dev *pci_get_domain_bus_and_slot(int domain, unsigned int bus,
+>>   					    unsigned int devfn);
+>>   struct pci_dev *pci_get_class(unsigned int class, struct pci_dev *from);
+>> +struct pci_dev *pci_get_class_masked(unsigned int class, unsigned int mask,
+>> +				     struct pci_dev *from);
+>> +
+>>   int pci_dev_present(const struct pci_device_id *ids);
+>>   
+>>   int pci_bus_read_config_byte(struct pci_bus *bus, unsigned int devfn,
+>> @@ -1895,6 +1898,10 @@ static inline struct pci_dev *pci_get_class(unsigned int class,
+>>   					    struct pci_dev *from)
+>>   { return NULL; }
+>>   
+>> +static inline struct pci_dev *pci_get_class_masked(unsigned int class,
+>> +						   unsigned int mask,
+>> +						   struct pci_dev *from)
+>> +{ return NULL; }
+>>   
+>>   static inline int pci_dev_present(const struct pci_device_id *ids)
+>>   { return 0; }
+>>
 
