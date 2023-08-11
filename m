@@ -2,155 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83AD9779525
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Aug 2023 18:51:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1AC377969A
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Aug 2023 19:58:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233218AbjHKQv2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Aug 2023 12:51:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47904 "EHLO
+        id S236935AbjHKR6L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Aug 2023 13:58:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231659AbjHKQv2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Aug 2023 12:51:28 -0400
+        with ESMTP id S233860AbjHKR6K (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Aug 2023 13:58:10 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B427D2D78;
-        Fri, 11 Aug 2023 09:51:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10C2D119;
+        Fri, 11 Aug 2023 10:58:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 53E5A66D06;
-        Fri, 11 Aug 2023 16:51:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74C6BC433C8;
-        Fri, 11 Aug 2023 16:51:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A45A76789B;
+        Fri, 11 Aug 2023 17:58:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3F3FC433C8;
+        Fri, 11 Aug 2023 17:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691772686;
-        bh=YSX5UobIdU8VrcDfUp1Fm8UQla0lNaAdeT7xjx65AcQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hL4zqPol8Fqt4WWp08foT18yup+VTVYBBmviYvTxvkwrH6xbLzjdAOuyScf9cath8
-         +HKXyLKcWbKk5CFF77kD2yUQCAezllrfsxLnaL/OXuZNXZv/0sRB3i2o8zs4emaERi
-         3ML/PX0+k7A2KM79lJXxWS1xG+y++bNeUWCwNZ/ANd2hQS78x2f0Z5UKSXyRYfxwc8
-         CORmrGc1OnesvNlAg+1SUtc+uDZF9jRC5bXsTych2uXF3ZITDOH/c2AdtNEwP3gs6U
-         smr3E+ppKgggnPIyhktTKVYm/PjcRSdoF+E1Jza2izpCGlW0i/6y06EWUtFiVROjt8
-         gobNWw3X/6Lig==
-Date:   Fri, 11 Aug 2023 11:51:24 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "krzysztof.kozlowski@linaro.org" <krzysztof.kozlowski@linaro.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "conor+dt@kernel.org" <conor+dt@kernel.org>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>,
-        "Simek, Michal" <michal.simek@amd.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 2/2] PCI: xilinx-nwl: Increase ECAM size to
- accommodate 256 buses
-Message-ID: <20230811165124.GA76405@bhelgaas>
+        s=k20201202; t=1691776689;
+        bh=nLzY07It2/L5hHCx41whVV+ODXNcVQnzlxtOkz/n7m8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q8gBM9leo6Iow0ssUe+4nwbH6367NYk0Qs+HO3i+gO+GvDE2b2koFYRQ2MHARHtXt
+         fAb+q7P/V4G+Nt36zevEfZoVl0RQTQnDzyqLP/lbsneHnfKSXoX2O24AFiApRycuxZ
+         NV42fXZU25BYDskmvvSIETxSsR0OnMn1ZI/arDpnyKSKl2/cP+SEOFbCc3oDt2gJ3c
+         9/7RM9Eoaxf4TzTwAkkaKw8ph9C9pcCcK2ePCdlq9GQ6KnNcybANVmN5ou9EBQ6E84
+         SbQDriIu9BYbI9+2NmmiJTB2WoTj+PMYuSH8sjc7ZkTsprZiw1DlI8iHXofVpYydgI
+         fEVTR+jxhZ0XA==
+Received: (nullmailer pid 3676099 invoked by uid 1000);
+        Fri, 11 Aug 2023 17:58:06 -0000
+Date:   Fri, 11 Aug 2023 11:58:06 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Simon Xue <xxm@rock-chips.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@collabora.com
+Subject: Re: [PATCH v4 0/5] RK3588 PCIe2 support
+Message-ID: <20230811175806.GA3674934-robh@kernel.org>
+References: <20230731165723.53069-1-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SN7PR12MB7201F56A30348C2E861C72D58B10A@SN7PR12MB7201.namprd12.prod.outlook.com>
+In-Reply-To: <20230731165723.53069-1-sebastian.reichel@collabora.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 11, 2023 at 05:07:09AM +0000, Havalige, Thippeswamy wrote:
-> > -----Original Message-----
-> > From: Rob Herring <robh@kernel.org>
-> > On Thu, Aug 10, 2023 at 05:50:02PM +0530, Thippeswamy Havalige wrote:
-> > > Our controller is expecting ECAM size to be programmed by software. By
-> > > programming "NWL_ECAM_VALUE_DEFAULT  12" controller can access up to
-> > > 16MB ECAM region which is used to detect 16 buses, so by updating
-> > > "NWL_ECAM_VALUE_DEFAULT" to 16 so that controller can access up to
-> > > 256MB ECAM region to detect 256 buses.
-> > 
-> > What happens when your DT has the smaller size and the kernel configures
-> > the larger size? Seems like you could have an ABI issue.
->
-> - Here we are enabling hardware to support maximum buses. In this
-> case kernel can enumerate up to device tree exposed ECAM size.  We
-> will not face any issue.
-
-So IIUC, if you have a DT with the smaller size and you boot a kernel
-that includes this change, nothing will break, but the kernel will
-only be able to use 16 buses.
-
-Conversely, if you have a DT with the larger size and boot a kernel
-that does not include change, nothing will break, but the kernel will
-still only be able to use 16 buses.
-
-Probably worth capturing this in the commit log somehow, especially
-the first case.
-
-> > > Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-> > > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>
-> > > ---
-> > > changes in v3:
-> > > - Remove unnecessary period at end of subject line.
-> > > changes in v2:
-> > > - Update this changes in a seperate patch.
-> > > ---
-> > >  drivers/pci/controller/pcie-xilinx-nwl.c | 6 ++----
-> > >  1 file changed, 2 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c
-> > > b/drivers/pci/controller/pcie-xilinx-nwl.c
-> > > index d8a3a08be1d5..b51501921d3b 100644
-> > > --- a/drivers/pci/controller/pcie-xilinx-nwl.c
-> > > +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-> > > @@ -126,7 +126,7 @@
-> > >  #define E_ECAM_CR_ENABLE		BIT(0)
-> > >  #define E_ECAM_SIZE_LOC			GENMASK(20, 16)
-> > >  #define E_ECAM_SIZE_SHIFT		16
-> > > -#define NWL_ECAM_VALUE_DEFAULT		12
-> > > +#define NWL_ECAM_VALUE_DEFAULT		16
->  - Agreed, ll fix it in next patch.
-> > Not really a meaningful name. It doesn't explain what '16' means.
-> > 
-> > >  #define CFG_DMA_REG_BAR			GENMASK(2, 0)
-> > >  #define CFG_PCIE_CACHE			GENMASK(7, 0)
-> > > @@ -165,7 +165,6 @@ struct nwl_pcie {
-> > >  	u32 ecam_size;
-> > >  	int irq_intx;
-> > >  	int irq_misc;
-> > > -	u32 ecam_value;
-> > >  	struct nwl_msi msi;
-> > >  	struct irq_domain *legacy_irq_domain;
-> > >  	struct clk *clk;
-> > > @@ -674,7 +673,7 @@ static int nwl_pcie_bridge_init(struct nwl_pcie *pcie)
-> > >  			  E_ECAM_CR_ENABLE, E_ECAM_CONTROL);
-> > >
-> > >  	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, E_ECAM_CONTROL) |
-> > > -			  (pcie->ecam_value << E_ECAM_SIZE_SHIFT),
-> > > +			  (NWL_ECAM_VALUE_DEFAULT <<
-> > E_ECAM_SIZE_SHIFT),
-> > >  			  E_ECAM_CONTROL);
-> > >
-> > >  	nwl_bridge_writel(pcie, lower_32_bits(pcie->phys_ecam_base),
-> > > @@ -782,7 +781,6 @@ static int nwl_pcie_probe(struct platform_device
-> > *pdev)
-> > >  	pcie = pci_host_bridge_priv(bridge);
-> > >
-> > >  	pcie->dev = dev;
-> > > -	pcie->ecam_value = NWL_ECAM_VALUE_DEFAULT;
-> > >
-> > >  	err = nwl_pcie_parse_dt(pcie, pdev);
-> > >  	if (err) {
-> > > --
-> > > 2.17.1
-> > >
+On Mon, Jul 31, 2023 at 06:57:18PM +0200, Sebastian Reichel wrote:
+> Hi,
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> This adds PCIe v2 support for RK3588. The series has been tested with
+> the onboard RTL8125 network card on Rockchip RK3588 EVB1 (&pcie2x1l1)
+> and Radxa Rock 5B (&pcie2x1l2).
+> 
+> Changes since v3:
+>  * https://lore.kernel.org/all/20230717172651.64324-1-sebastian.reichel@collabora.com/
+>  * Remove unneeded quotes in patch 1 (msi handling)
+>  * Update patch description of patch 2 (interrupt names) adding information
+>    about Rockchip specific parts
+> 
+> Changes since v2:
+>  * https://lore.kernel.org/all/20230713171851.73052-1-sebastian.reichel@collabora.com/
+>  * Removed num-ib-windows/num-ob-windows/num-viewport from DT
+>  * Added patch making 'msi' irq optional, if 'msi-map' property is available
+>  * Updated binding according two discussion with Serge Semin, I provided two
+>    options by adding one extra patch that should be squashed into the main
+>    one or dropped depending on preferences from DT binding  maintainers.
+>  * Collected Reviewed-by/Tested-by from Jagan Teki
+> 
+> Changes since v1:
+>  * https://lore.kernel.org/all/20230616170022.76107-1-sebastian.reichel@collabora.com/
+>  * Dropped patch adding 'RK3588' (queued by Rob)
+>  * Updated patch adding legacy-interrupt-controller according to comments
+>    from Rob and Serge
+>     - added missing additionalProperties: false
+>     - added all properties to new required property
+>     - removed useless quotes around interrupt-controller
+>     - added Rob's Reviewed-by
+>  * Updated patch adding the missing RK356x/RK3588 interrupt names, so that it
+>    provides more details about the interrupts
+>  * Updated the DT patch according to the comment from Jonas Karlman, so that
+>    the addresses are in 32 bit address space starting at 0x40000000
+> 
+> [0] https://lore.kernel.org/all/20230612171337.74576-1-sebastian.reichel@collabora.com/
+> 
+> Thanks,
+> 
+> -- Sebastian
+> 
+> Sebastian Reichel (5):
+>   dt-bindings: PCI: dwc: improve msi handling
+>   dt-bindings: PCI: dwc: rockchip: Fix interrupt-names issue
+>   dt-bindings: PCI: dwc: rockchip: Use generic binding
+>   dt-bindings: PCI: dwc: rockchip: Add missing
+>     legacy-interrupt-controller
+>   arm64: dts: rockchip: rk3588: add PCIe2 support
+
+Patches 1-4 applied.
+
+Rob
