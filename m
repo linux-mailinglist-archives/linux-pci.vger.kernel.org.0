@@ -2,63 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE6B87794A7
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Aug 2023 18:31:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 053917794F1
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Aug 2023 18:44:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234798AbjHKQbs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Aug 2023 12:31:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57692 "EHLO
+        id S235981AbjHKQoI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Aug 2023 12:44:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230010AbjHKQbs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Aug 2023 12:31:48 -0400
+        with ESMTP id S235998AbjHKQoI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Aug 2023 12:44:08 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 852612D66;
-        Fri, 11 Aug 2023 09:31:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9684E30CF;
+        Fri, 11 Aug 2023 09:44:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 113376689D;
-        Fri, 11 Aug 2023 16:31:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2918DC433C8;
-        Fri, 11 Aug 2023 16:31:46 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2887C637CA;
+        Fri, 11 Aug 2023 16:44:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59CEAC433C8;
+        Fri, 11 Aug 2023 16:44:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691771506;
-        bh=4jBRje17YszK5trMhh7GZtZTzlLmAgDuuSaJR0mgWoc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=OZqb0upgzeo7SkQHjb0KLme73aXd2vDW/dg64paTqamVHvMwrgHKfUWEQum+tUqsZ
-         4VzR+EP6iUzXP331t1aRuy5WXz8m8p0mo/PQqwXjGdDanxEt/Ivoob7lm8Q2btCWKT
-         +wyruExtBpClVYLtaK20jxw3ANkIAAc9MlCqvHR5JaVTTo6DB2qqWyWFA7B3SQZoEM
-         5BGfAOLfP6SsIZyDSlntNQDujKrbicEkDsiaX+a7k5h5WP6v6jWOqLRcZ4Ic025Ofg
-         Hq0xXEodbawBF/eYvd0E/RCEYcSOt/ud4w9MsaF2abYCqU0a2PYP4Oq+L6a8z6+Z/u
-         1tfJhgNdGXF5Q==
-Date:   Fri, 11 Aug 2023 11:31:44 -0500
+        s=k20201202; t=1691772246;
+        bh=nn4DsX3NjYDMmCCWyYxoD2bZ/OQoZyEjanF5PEtiF2k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=OOinyVzeNbVD8Kc5kgzzBvWAPHPHaWHv17is5miVFC4Q2sdzbdIYE2emht+9kPmxH
+         iNeQ6iERZBL4Rd4rkAEmWxtwI46wQ4fcx6EIRhkPjbioBcQOO1rRR10arNMYs2a5LO
+         KRifpJXSIl0B/wof1VnFaGALKOdR0YhKhDi7aR5V8L9ITPBqcU2C0cX2A3MMhflhn3
+         5PInPT0hXaHczWepuWKexGPEbzWblv9rGcFZJSPSFcgsUq2lasGhlmue02RBffNP7X
+         vMXT5L5CJDB+oaXNqfoSI9fzZ4uD8RcjuH1tMLXR3Dek6NGZp2Pp7kJbg1LQQii8e2
+         2ksXOYJZHLu/A==
+Date:   Fri, 11 Aug 2023 11:44:04 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Xiaolei Wang <xiaolei.wang@windriver.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Woody Suwalski <terraluna977@gmail.com>,
-        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-        Sajid Dalvi <sdalvi@google.com>,
-        Ajay Agarwal <ajayagarwal@google.com>
-Subject: [GIT PULL] PCI fixes for v6.5
-Message-ID: <20230811163144.GA75144@bhelgaas>
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     rafael@kernel.org, lenb@kernel.org, bhelgaas@google.com,
+        scott@spiteful.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] PCI: Remove unused function declarations
+Message-ID: <20230811164404.GA75943@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230811095933.28652-1-yuehaibing@huawei.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -69,49 +54,70 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The following changes since commit 06c2afb862f9da8dc5efa4b6076a0e48c3fbaaa5:
+On Fri, Aug 11, 2023 at 05:59:33PM +0800, Yue Haibing wrote:
+> These declarations is never implemented since the beginning of git history.
+> 
+> Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
 
-  Linux 6.5-rc1 (2023-07-09 13:53:13 -0700)
+Applied to pci/misc for v6.6, thank you!
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.5-fixes-1
-
-for you to fetch changes up to cc22522fd55e257c86d340ae9aedc122e705a435:
-
-  PCI: acpiphp: Use pci_assign_unassigned_bridge_resources() only for non-root bus (2023-08-08 14:30:00 -0500)
-
-----------------------------------------------------------------
-- Add Manivannan Sadhasivam as DesignWare PCIe driver co-maintainer
-  (Krzysztof Wilczyński)
-
-- Revert "PCI: dwc: Wait for link up only if link is started" to fix a
-  regression on Qualcomm platforms that don't reach interconnect sync state
-  if the slot is empty (Johan Hovold)
-
-- Revert "PCI: mvebu: Mark driver as BROKEN" so people can use pci-mvebu
-  even though some others report problems (Bjorn Helgaas)
-
-- Avoid a NULL pointer dereference when using acpiphp for root bus hotplug
-  to fix a regression added in v6.5-rc1 (Igor Mammedov)
-
-----------------------------------------------------------------
-Bjorn Helgaas (1):
-      Revert "PCI: mvebu: Mark driver as BROKEN"
-
-Igor Mammedov (1):
-      PCI: acpiphp: Use pci_assign_unassigned_bridge_resources() only for non-root bus
-
-Johan Hovold (1):
-      Revert "PCI: dwc: Wait for link up only if link is started"
-
-Krzysztof Wilczyński (1):
-      MAINTAINERS: Add Manivannan Sadhasivam as DesignWare PCIe driver maintainer
-
- MAINTAINERS                                       |  1 +
- drivers/pci/controller/Kconfig                    |  1 -
- drivers/pci/controller/dwc/pcie-designware-host.c | 13 ++++---------
- drivers/pci/controller/dwc/pcie-designware.c      | 20 +++++++-------------
- drivers/pci/controller/dwc/pcie-designware.h      |  1 -
- drivers/pci/hotplug/acpiphp_glue.c                |  8 +++++++-
- 6 files changed, 19 insertions(+), 25 deletions(-)
+> ---
+>  drivers/pci/hotplug/acpiphp.h      | 1 -
+>  drivers/pci/hotplug/cpci_hotplug.h | 2 --
+>  drivers/pci/hotplug/ibmphp.h       | 2 --
+>  include/linux/pci.h                | 1 -
+>  4 files changed, 6 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/acpiphp.h b/drivers/pci/hotplug/acpiphp.h
+> index 1f8ab4377ad8..5745be6018e1 100644
+> --- a/drivers/pci/hotplug/acpiphp.h
+> +++ b/drivers/pci/hotplug/acpiphp.h
+> @@ -178,7 +178,6 @@ void acpiphp_unregister_hotplug_slot(struct acpiphp_slot *slot);
+>  int acpiphp_enable_slot(struct acpiphp_slot *slot);
+>  int acpiphp_disable_slot(struct acpiphp_slot *slot);
+>  u8 acpiphp_get_power_status(struct acpiphp_slot *slot);
+> -u8 acpiphp_get_attention_status(struct acpiphp_slot *slot);
+>  u8 acpiphp_get_latch_status(struct acpiphp_slot *slot);
+>  u8 acpiphp_get_adapter_status(struct acpiphp_slot *slot);
+>  
+> diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
+> index 3fdd1b9bd8c3..6d8970d8c3f2 100644
+> --- a/drivers/pci/hotplug/cpci_hotplug.h
+> +++ b/drivers/pci/hotplug/cpci_hotplug.h
+> @@ -83,8 +83,6 @@ extern int cpci_debug;
+>   * board/chassis drivers.
+>   */
+>  u8 cpci_get_attention_status(struct slot *slot);
+> -u8 cpci_get_latch_status(struct slot *slot);
+> -u8 cpci_get_adapter_status(struct slot *slot);
+>  u16 cpci_get_hs_csr(struct slot *slot);
+>  int cpci_set_attention_status(struct slot *slot, int status);
+>  int cpci_check_and_clear_ins(struct slot *slot);
+> diff --git a/drivers/pci/hotplug/ibmphp.h b/drivers/pci/hotplug/ibmphp.h
+> index 0399c60d2ec1..41eafe511210 100644
+> --- a/drivers/pci/hotplug/ibmphp.h
+> +++ b/drivers/pci/hotplug/ibmphp.h
+> @@ -264,8 +264,6 @@ extern struct list_head ibmphp_slot_head;
+>  void ibmphp_free_ebda_hpc_queue(void);
+>  int ibmphp_access_ebda(void);
+>  struct slot *ibmphp_get_slot_from_physical_num(u8);
+> -int ibmphp_get_total_hp_slots(void);
+> -void ibmphp_free_ibm_slot(struct slot *);
+>  void ibmphp_free_bus_info_queue(void);
+>  void ibmphp_free_ebda_pci_rsrc_queue(void);
+>  struct bus_info *ibmphp_find_same_bus_num(u32);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index eeb2e6f6130f..494470a38abf 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1403,7 +1403,6 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge);
+>  void pci_assign_unassigned_bus_resources(struct pci_bus *bus);
+>  void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus);
+>  int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type);
+> -void pdev_enable_device(struct pci_dev *);
+>  int pci_enable_resources(struct pci_dev *, int mask);
+>  void pci_assign_irq(struct pci_dev *dev);
+>  struct resource *pci_find_resource(struct pci_dev *dev, struct resource *res);
+> -- 
+> 2.34.1
+> 
