@@ -2,48 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 053917794F1
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Aug 2023 18:44:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAFE57794FA
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Aug 2023 18:45:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235981AbjHKQoI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Aug 2023 12:44:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55500 "EHLO
+        id S236266AbjHKQpJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Aug 2023 12:45:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235998AbjHKQoI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Aug 2023 12:44:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9684E30CF;
-        Fri, 11 Aug 2023 09:44:07 -0700 (PDT)
+        with ESMTP id S236256AbjHKQpI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Aug 2023 12:45:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE90530C1;
+        Fri, 11 Aug 2023 09:45:08 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2887C637CA;
-        Fri, 11 Aug 2023 16:44:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59CEAC433C8;
-        Fri, 11 Aug 2023 16:44:06 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 32F33676FB;
+        Fri, 11 Aug 2023 16:45:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 942ABC433CA;
+        Fri, 11 Aug 2023 16:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691772246;
-        bh=nn4DsX3NjYDMmCCWyYxoD2bZ/OQoZyEjanF5PEtiF2k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=OOinyVzeNbVD8Kc5kgzzBvWAPHPHaWHv17is5miVFC4Q2sdzbdIYE2emht+9kPmxH
-         iNeQ6iERZBL4Rd4rkAEmWxtwI46wQ4fcx6EIRhkPjbioBcQOO1rRR10arNMYs2a5LO
-         KRifpJXSIl0B/wof1VnFaGALKOdR0YhKhDi7aR5V8L9ITPBqcU2C0cX2A3MMhflhn3
-         5PInPT0hXaHczWepuWKexGPEbzWblv9rGcFZJSPSFcgsUq2lasGhlmue02RBffNP7X
-         vMXT5L5CJDB+oaXNqfoSI9fzZ4uD8RcjuH1tMLXR3Dek6NGZp2Pp7kJbg1LQQii8e2
-         2ksXOYJZHLu/A==
-Date:   Fri, 11 Aug 2023 11:44:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     rafael@kernel.org, lenb@kernel.org, bhelgaas@google.com,
-        scott@spiteful.org, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] PCI: Remove unused function declarations
-Message-ID: <20230811164404.GA75943@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230811095933.28652-1-yuehaibing@huawei.com>
+        s=k20201202; t=1691772307;
+        bh=I6R5KQkKlw1HwVGsLIBBi/OcOwPSHhWLIQHeR1CZ6BY=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=kmDTDbD0xRs6QkJxlDSb4TRePjEYYHtc6sXi+2OTJ2E4w74djwfYQnVcbrF8fnP4/
+         pjR4y6G2S0fMhk/RAsB+ue2NlVJagwG169prAqKZV833R0VCiZKPmVBEVkNtYIy90z
+         VplQG1N0S7FvsbxgchDfYmhbps3XdYq6OSK+rATtr2/NDNey9DVwu+yUdks587MQMH
+         0is+82QxcithQw6zRxDIG9w96djxlNemMkofuHLxKh9MrM2WwRrIMnidcCIYm1RnN6
+         wQ+01JOafgeree/zOcO0UaEdOvJZV2/adpoWRtrCiaUxGdXBPRmcJHc3+PeuHOTk0l
+         4cgRSz32+R1Lg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7E6D0C3274B;
+        Fri, 11 Aug 2023 16:45:07 +0000 (UTC)
+Subject: Re: [GIT PULL] PCI fixes for v6.5
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20230811163144.GA75144@bhelgaas>
+References: <20230811163144.GA75144@bhelgaas>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20230811163144.GA75144@bhelgaas>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.5-fixes-1
+X-PR-Tracked-Commit-Id: cc22522fd55e257c86d340ae9aedc122e705a435
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9106536c1aa37bcf60202ad93bb8b94bcd29f3f0
+Message-Id: <169177230751.3076.1875490980295081306.pr-tracker-bot@kernel.org>
+Date:   Fri, 11 Aug 2023 16:45:07 +0000
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        Bjorn Andersson <quic_bjorande@quicinc.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Xiaolei Wang <xiaolei.wang@windriver.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Woody Suwalski <terraluna977@gmail.com>,
+        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+        Sajid Dalvi <sdalvi@google.com>,
+        Ajay Agarwal <ajayagarwal@google.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -54,70 +78,15 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 11, 2023 at 05:59:33PM +0800, Yue Haibing wrote:
-> These declarations is never implemented since the beginning of git history.
-> 
-> Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+The pull request you sent on Fri, 11 Aug 2023 11:31:44 -0500:
 
-Applied to pci/misc for v6.6, thank you!
+> git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.5-fixes-1
 
-> ---
->  drivers/pci/hotplug/acpiphp.h      | 1 -
->  drivers/pci/hotplug/cpci_hotplug.h | 2 --
->  drivers/pci/hotplug/ibmphp.h       | 2 --
->  include/linux/pci.h                | 1 -
->  4 files changed, 6 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/acpiphp.h b/drivers/pci/hotplug/acpiphp.h
-> index 1f8ab4377ad8..5745be6018e1 100644
-> --- a/drivers/pci/hotplug/acpiphp.h
-> +++ b/drivers/pci/hotplug/acpiphp.h
-> @@ -178,7 +178,6 @@ void acpiphp_unregister_hotplug_slot(struct acpiphp_slot *slot);
->  int acpiphp_enable_slot(struct acpiphp_slot *slot);
->  int acpiphp_disable_slot(struct acpiphp_slot *slot);
->  u8 acpiphp_get_power_status(struct acpiphp_slot *slot);
-> -u8 acpiphp_get_attention_status(struct acpiphp_slot *slot);
->  u8 acpiphp_get_latch_status(struct acpiphp_slot *slot);
->  u8 acpiphp_get_adapter_status(struct acpiphp_slot *slot);
->  
-> diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
-> index 3fdd1b9bd8c3..6d8970d8c3f2 100644
-> --- a/drivers/pci/hotplug/cpci_hotplug.h
-> +++ b/drivers/pci/hotplug/cpci_hotplug.h
-> @@ -83,8 +83,6 @@ extern int cpci_debug;
->   * board/chassis drivers.
->   */
->  u8 cpci_get_attention_status(struct slot *slot);
-> -u8 cpci_get_latch_status(struct slot *slot);
-> -u8 cpci_get_adapter_status(struct slot *slot);
->  u16 cpci_get_hs_csr(struct slot *slot);
->  int cpci_set_attention_status(struct slot *slot, int status);
->  int cpci_check_and_clear_ins(struct slot *slot);
-> diff --git a/drivers/pci/hotplug/ibmphp.h b/drivers/pci/hotplug/ibmphp.h
-> index 0399c60d2ec1..41eafe511210 100644
-> --- a/drivers/pci/hotplug/ibmphp.h
-> +++ b/drivers/pci/hotplug/ibmphp.h
-> @@ -264,8 +264,6 @@ extern struct list_head ibmphp_slot_head;
->  void ibmphp_free_ebda_hpc_queue(void);
->  int ibmphp_access_ebda(void);
->  struct slot *ibmphp_get_slot_from_physical_num(u8);
-> -int ibmphp_get_total_hp_slots(void);
-> -void ibmphp_free_ibm_slot(struct slot *);
->  void ibmphp_free_bus_info_queue(void);
->  void ibmphp_free_ebda_pci_rsrc_queue(void);
->  struct bus_info *ibmphp_find_same_bus_num(u32);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index eeb2e6f6130f..494470a38abf 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1403,7 +1403,6 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge);
->  void pci_assign_unassigned_bus_resources(struct pci_bus *bus);
->  void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus);
->  int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type);
-> -void pdev_enable_device(struct pci_dev *);
->  int pci_enable_resources(struct pci_dev *, int mask);
->  void pci_assign_irq(struct pci_dev *dev);
->  struct resource *pci_find_resource(struct pci_dev *dev, struct resource *res);
-> -- 
-> 2.34.1
-> 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9106536c1aa37bcf60202ad93bb8b94bcd29f3f0
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
