@@ -2,319 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 155FA7784BB
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Aug 2023 03:04:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50AA07785FC
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Aug 2023 05:25:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230355AbjHKBED (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Aug 2023 21:04:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57240 "EHLO
+        id S231343AbjHKDZb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Aug 2023 23:25:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbjHKBED (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Aug 2023 21:04:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B0E12724;
-        Thu, 10 Aug 2023 18:04:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ADE8F64937;
-        Fri, 11 Aug 2023 01:04:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B85BC433C7;
-        Fri, 11 Aug 2023 01:03:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691715841;
-        bh=/Epzvw0JtUO8GOOQbFQtIu5UKvQ2tn7Fi6fQXEErzUI=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=FdeikvB+xSNjiKTZk4OPBUUMThtZElJUhYA/AlJJRDjrGe0I/26lNfir95VgLs45L
-         4Zs5aiVndYX5Mr7Zj89+EKu8kPHwEGjOZO+DDaBN4qju0CrBhLkWcvqOA2xkiIM6z7
-         lYfSn1K0XQ/vix/HGv0aQEWbJ5pBTwIRGYV6O/461Ld4Bq/plNIGxij8imJKdpRi3S
-         BphIYG6HRfuRryafAe4lW8gbGHys9aZ8LJVqRl2lixN2BX6DYG0sfgCw01jCTOFSVv
-         vjejUXF2SSB318Efe7aqz2XEWeCu6ffqjq8Agn2fsvPuBaFuTgO+m4roDqdLfB5kHn
-         dBCTbdiMQaU+w==
-Message-ID: <b3d437f5-fe33-4677-e336-a67ac9b8d477@kernel.org>
-Date:   Fri, 11 Aug 2023 10:03:58 +0900
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v4] PCI/DOE: Expose the DOE protocols via sysfs
-Content-Language: en-US
-To:     Alistair Francis <alistair23@gmail.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, Jonathan.Cameron@huawei.com,
-        lukas@wunner.de
-Cc:     alex.williamson@redhat.com, christian.koenig@amd.com,
-        kch@nvidia.com, gregkh@linuxfoundation.org, logang@deltatee.com,
-        linux-kernel@vger.kernel.org, chaitanyak@nvidia.com,
-        rdunlap@infradead.org, Alistair Francis <alistair.francis@wdc.com>
-References: <20230810163342.1059509-1-alistair.francis@wdc.com>
-From:   Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20230810163342.1059509-1-alistair.francis@wdc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-9.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229514AbjHKDZa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Aug 2023 23:25:30 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FE1B2D69
+        for <linux-pci@vger.kernel.org>; Thu, 10 Aug 2023 20:25:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691724330; x=1723260330;
+  h=date:from:to:cc:subject:message-id;
+  bh=1D8jDn5U7TlVgIYEp5WSjpZpHgIrx6akXkhAKlTwInY=;
+  b=iS4CfZqQ5l4P2DHiLWT99fjAvqN9f++NBmxEWsEXk6YV9wUYK35F+Ahn
+   XrTWxq942OgwC4tLY04KyF+LBWSWWvXIMvu0wzZnQnSNtHY3w/jPNknRO
+   lgKjXlmVarBGeTFMar31f45puk6OuxC56cmYST+kM1ZkfEgKsBRr4FMsH
+   HEpVnBL2FPgGoJ0kwq2sFRldJ1xNmioWZHv7bDsFnnozWQwqYaoXi4/09
+   Z6aj3hcgMEw4SDzlgngwSpcW1nHLQjVcO8GH+ddVYC+icFI/rVUoaXqw7
+   qpsck2FnM1NUdpRvvHuClZx9FFHbr51wXtFMngzjq5nakMwxfRNKR7XI6
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="402552847"
+X-IronPort-AV: E=Sophos;i="6.01,164,1684825200"; 
+   d="scan'208";a="402552847"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2023 20:25:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="682378714"
+X-IronPort-AV: E=Sophos;i="6.01,164,1684825200"; 
+   d="scan'208";a="682378714"
+Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 10 Aug 2023 20:25:28 -0700
+Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qUImG-0007TO-0Z;
+        Fri, 11 Aug 2023 03:25:28 +0000
+Date:   Fri, 11 Aug 2023 11:24:55 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:misc] BUILD SUCCESS
+ b8bd38e64511c05494ec82a3d46c716e35aabda1
+Message-ID: <202308111153.EO54vIUv-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/11/23 01:33, Alistair Francis wrote:
-> The PCIe 6 specification added support for the Data Object Exchange (DOE).
-> When DOE is supported the Discovery Data Object Protocol must be
-> implemented. The protocol allows a requester to obtain information about
-> the other DOE protocols supported by the device.
-> 
-> The kernel is already querying the DOE protocols supported and cacheing
-> the values. This patch exposes the values via sysfs. This will allow
-> userspace to determine which DOE protocols are supported by the PCIe
-> device.
-> 
-> By exposing the information to userspace tools like lspci can relay the
-> information to users. By listing all of the supported protocols we can
-> allow userspace to parse and support the list, which might include
-> vendor specific protocols as well as yet to be supported protocols.
-> 
-> Each DOE feature is exposed as a single file. The files are empty and
-> the information is contained in the file name.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
+branch HEAD: b8bd38e64511c05494ec82a3d46c716e35aabda1  PCI/sysfs: Move declarations to linux/pci.h
 
-s/feature/protocol ?
+elapsed time: 731m
 
-Personally, I would still have each file content repeat the same information as
-the file name specifies. That is, file value == file name. That will avoid
-people getting confused as empty sysfs files are rather uncommon.
+configs tested: 92
+configs skipped: 7
 
-> 
-> This uses pci_sysfs_init() instead of the ->is_visible() function as
-> is_visible only applies to the attributes under the group. Which
-> means that every PCIe device will see a `doe_protos` directory, no
-> matter if DOE is supported at all on the device.
-> 
-> On top of that ->is_visible() is only called
-> (fs/sysfs/group.c:create_files()) if there are sub attrs, which we
-> don't necessary have. There are no static attrs, instead they are
-> all generated dynamically.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-You said that the kernel caches the protocols supported. So it should not be
-hard to allocate one attribute for each of the supported protocols when these
-are discovered, no ?
-
-> 
-> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-> ---
-> v4:
->  - Fixup typos in the documentation
->  - Make it clear that the file names contain the information
->  - Small code cleanups
->  - Remove most #ifdefs
->  - Remove extra NULL assignment
-> v3:
->  - Expose each DOE feature as a separate file
-> v2:
->  - Add documentation
->  - Code cleanups
-> 
-> We did talk about exposing DOE types under DOE vendor IDs, but I couldn't
-> figure out a simple way to do that
-> 
->  Documentation/ABI/testing/sysfs-bus-pci |  10 +++
->  drivers/pci/doe.c                       | 104 ++++++++++++++++++++++++
->  drivers/pci/pci-sysfs.c                 |   7 ++
->  include/linux/pci-doe.h                 |   1 +
->  4 files changed, 122 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-> index ecf47559f495..e09c51449284 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-pci
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> @@ -500,3 +500,13 @@ Description:
->  		console drivers from the device.  Raw users of pci-sysfs
->  		resourceN attributes must be terminated prior to resizing.
->  		Success of the resizing operation is not guaranteed.
-> +
-> +What:		/sys/bus/pci/devices/.../doe_protos
-> +Date:		August 2023
-> +Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
-> +Description:
-> +		This directory contains a list of the supported Data Object Exchange (DOE)
-> +		features. The feature values are in the file name; the files have no contents.
-> +		The value comes from the device and specifies the vendor and
-> +		data object type supported. The lower byte is the data object type and the next
-> +		two bytes are the vendor ID.
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index 1b97a5ab71a9..918872152fb6 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-> @@ -56,6 +56,8 @@ struct pci_doe_mb {
->  	wait_queue_head_t wq;
->  	struct workqueue_struct *work_queue;
->  	unsigned long flags;
-> +
-> +	struct device_attribute *sysfs_attrs;
->  };
->  
->  struct pci_doe_protocol {
-> @@ -92,6 +94,108 @@ struct pci_doe_task {
->  	struct pci_doe_mb *doe_mb;
->  };
->  
-> +#ifdef CONFIG_SYSFS
-> +static struct attribute *pci_dev_doe_proto_attrs[] = {
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group pci_dev_doe_proto_group = {
-> +	.name	= "doe_protos",
-
-Why is this a static variable instead of being a member of the pci doe_mb struct
-?d Devices without DOE support would always have that as NULL and only the
-devices that support it would get the group and array of attributes that you
-allocate in pci_doe_sysfs_proto_supports(). That would also remove the need for
-the attrs array being a static variable as well.
-
-An let's spell things out to be clear and avoid confusions: s/protos/protocols
-
-> +	.attrs	= pci_dev_doe_proto_attrs,
-> +};
-> +
-> +static void pci_doe_sysfs_remove_desc(struct pci_doe_mb *doe_mb)
-> +{
-> +	struct device_attribute *attrs = doe_mb->sysfs_attrs;
-> +	unsigned long i;
-> +	void *entry;
-> +
-> +	if (!doe_mb->sysfs_attrs)
-> +		return;
-> +
-> +	doe_mb->sysfs_attrs = NULL;
-> +	xa_for_each(&doe_mb->prots, i, entry)
-> +		kfree(attrs[i].attr.name);
-> +
-> +	kfree(attrs);
-> +}
-> +
-> +static int pci_doe_sysfs_proto_supports(struct pci_dev *pdev, struct pci_doe_mb *doe_mb)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_attribute *attrs;
-> +	unsigned long num_protos = 0;
-> +	unsigned long vid, type;
-> +	unsigned long i;
-> +	void *entry;
-> +	int ret;
-> +
-> +	xa_for_each(&doe_mb->prots, i, entry)
-> +		num_protos++;
-> +
-> +	attrs = kcalloc(num_protos, sizeof(*attrs), GFP_KERNEL);
-> +	if (!attrs)
-> +		return -ENOMEM;
-> +
-> +	doe_mb->sysfs_attrs = attrs;
-> +	xa_for_each(&doe_mb->prots, i, entry) {
-> +		sysfs_attr_init(&attrs[i].attr);
-> +		vid = xa_to_value(entry) >> 8;
-> +		type = xa_to_value(entry) & 0xFF;
-> +		attrs[i].attr.name = kasprintf(GFP_KERNEL, "0x%04lX:%02lX", vid, type);
-> +		if (!attrs[i].attr.name) {
-> +			ret = -ENOMEM;
-> +			goto fail;
-> +		}
-> +
-> +		attrs[i].attr.mode = 0444;
-> +
-> +		ret = sysfs_add_file_to_group(&dev->kobj, &attrs[i].attr,
-> +					      pci_dev_doe_proto_group.name);
-> +		if (ret)
-> +			goto fail;
-> +	}
-> +
-> +	return 0;
-> +
-> +fail:
-> +	pci_doe_sysfs_remove_desc(doe_mb);
-> +	return ret;
-> +}
-> +
-> +int doe_sysfs_init(struct pci_dev *pdev)
-> +{
-> +	unsigned long total_protos = 0;
-> +	struct pci_doe_mb *doe_mb;
-> +	unsigned long index, j;
-> +	void *entry;
-> +	int ret;
-> +
-> +	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
-> +		xa_for_each(&doe_mb->prots, j, entry)
-> +			total_protos++;
-> +	}
-> +
-> +	if (total_protos == 0)
-> +		return 0;
-> +
-> +	ret = devm_device_add_group(&pdev->dev, &pci_dev_doe_proto_group);
-> +	if (ret) {
-> +		pci_err(pdev, "can't create DOE goup: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
-> +		ret = pci_doe_sysfs_proto_supports(pdev, doe_mb);
-> +
-
-Remove this blank line.
-
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
->  static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeout)
->  {
->  	if (wait_event_timeout(doe_mb->wq,
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index ab32a91f287b..ad621850a3e2 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -16,6 +16,7 @@
->  #include <linux/kernel.h>
->  #include <linux/sched.h>
->  #include <linux/pci.h>
-> +#include <linux/pci-doe.h>
->  #include <linux/stat.h>
->  #include <linux/export.h>
->  #include <linux/topology.h>
-> @@ -1226,6 +1227,12 @@ static int pci_create_resource_files(struct pci_dev *pdev)
->  	int i;
->  	int retval;
->  
-> +	if (IS_ENABLED(CONFIG_PCI_DOE)) {
-> +		retval = doe_sysfs_init(pdev);
-> +		if (retval)
-> +			return retval;
-> +	}
-> +
->  	/* Expose the PCI resources from this device as files */
->  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->  
-> diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
-> index 1f14aed4354b..4cc13d9ccb50 100644
-> --- a/include/linux/pci-doe.h
-> +++ b/include/linux/pci-doe.h
-> @@ -22,4 +22,5 @@ int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
->  	    const void *request, size_t request_sz,
->  	    void *response, size_t response_sz);
->  
-> +int doe_sysfs_init(struct pci_dev *pci_dev);
->  #endif
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r001-20230811   clang
+arm64                randconfig-r023-20230811   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r031-20230811   gcc  
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230811   clang
+i386                 randconfig-i002-20230811   clang
+i386                 randconfig-i003-20230811   clang
+i386                 randconfig-i004-20230811   clang
+i386                 randconfig-i005-20230811   clang
+i386                 randconfig-i006-20230811   clang
+i386                 randconfig-i011-20230811   gcc  
+i386                 randconfig-i012-20230811   gcc  
+i386                 randconfig-i013-20230811   gcc  
+i386                 randconfig-i014-20230811   gcc  
+i386                 randconfig-i015-20230811   gcc  
+i386                 randconfig-i016-20230811   gcc  
+i386                 randconfig-r033-20230811   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze           randconfig-r024-20230811   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                 randconfig-r003-20230811   gcc  
+mips                 randconfig-r025-20230811   clang
+nios2                               defconfig   gcc  
+nios2                randconfig-r036-20230811   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r022-20230811   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r044-20230811   gcc  
+sh                               allmodconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r006-20230811   gcc  
+sparc                randconfig-r021-20230811   gcc  
+sparc64              randconfig-r005-20230811   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r013-20230811   clang
+um                   randconfig-r015-20230811   clang
+um                   randconfig-r032-20230811   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-r011-20230811   gcc  
+x86_64               randconfig-r014-20230811   gcc  
+x86_64               randconfig-x001-20230811   gcc  
+x86_64               randconfig-x002-20230811   gcc  
+x86_64               randconfig-x003-20230811   gcc  
+x86_64               randconfig-x004-20230811   gcc  
+x86_64               randconfig-x005-20230811   gcc  
+x86_64               randconfig-x006-20230811   gcc  
+x86_64               randconfig-x011-20230811   clang
+x86_64               randconfig-x012-20230811   clang
+x86_64               randconfig-x013-20230811   clang
+x86_64               randconfig-x014-20230811   clang
+x86_64               randconfig-x015-20230811   clang
+x86_64               randconfig-x016-20230811   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa               randconfig-r035-20230811   gcc  
 
 -- 
-Damien Le Moal
-Western Digital Research
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
