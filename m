@@ -2,107 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC086778A75
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Aug 2023 11:58:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45ABE778A81
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Aug 2023 11:59:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233266AbjHKJ6A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Aug 2023 05:58:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50442 "EHLO
+        id S229546AbjHKJ7k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Aug 2023 05:59:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229907AbjHKJ55 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Aug 2023 05:57:57 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CAE319E;
-        Fri, 11 Aug 2023 02:57:57 -0700 (PDT)
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37B98SAP028443;
-        Fri, 11 Aug 2023 09:57:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id; s=qcppdkim1;
- bh=Clns84L0nF1KIwe8/JcfpazhdfXCbcoCDajSYtA5KWU=;
- b=TtzDO1V9eIk0m/XS0BZdQOftKo5DW8+/6w4juF/pS/OfNGR2B0QzZKwpu38HpS6Oaw8i
- 8JI96YCd6IfGES2QWKeK0m/PIr+Y6AS5IUmautGP0SAkUi0HW84WOU80kOLjFVZD9Vtk
- d7BiTT1NyC6sng3X8Ov46jDzNSJKraDmELvTdN49gppoWWZWIfaL90iYWxMg9sz7I0VY
- kf5DOMwBMWAy+e5evneOfYmE0TFDG7TC3jTkxQDiVJ8P7D9HmSum0EWK6wTinR8Pv4Wh
- N9dPRTPHtl44tTHxuGhWLwzFyB3+MqSOpLPcOlsjTD1u+zlfgPVkQHUqpDd9jv+lSIp2 DQ== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3sd8ya1a1y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Aug 2023 09:57:38 +0000
-Received: from pps.filterd (NALASPPMTA01.qualcomm.com [127.0.0.1])
-        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 37B9vbNH012556;
-        Fri, 11 Aug 2023 09:57:37 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by NALASPPMTA01.qualcomm.com (PPS) with ESMTP id 3sdf0ssfhf-1;
-        Fri, 11 Aug 2023 09:57:37 +0000
-Received: from NALASPPMTA01.qualcomm.com (NALASPPMTA01.qualcomm.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37B9saTm009087;
-        Fri, 11 Aug 2023 09:57:37 GMT
-Received: from hu-devc-lv-c.qualcomm.com (hu-skananth-lv.qualcomm.com [10.47.234.42])
-        by NALASPPMTA01.qualcomm.com (PPS) with ESMTP id 37B9vb1W012549;
-        Fri, 11 Aug 2023 09:57:37 +0000
-Received: by hu-devc-lv-c.qualcomm.com (Postfix, from userid 432606)
-        id ED68720FA6; Fri, 11 Aug 2023 02:57:36 -0700 (PDT)
-From:   Subramanian Ananthanarayanan <quic_skananth@quicinc.com>
-To:     manivannan.sadhasivam@linaro.org
-Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
-        quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Jeffrey Hugo <quic_jhugo@quicinc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Carpenter <error27@gmail.com>,
-        mhi@lists.linux.dev (open list:MHI BUS)
-Subject: [PATCH v1] bus: mhi: ep: Clear channel interrupts that are unmasked
-Date:   Fri, 11 Aug 2023 02:57:08 -0700
-Message-Id: <1691747849-15385-1-git-send-email-quic_skananth@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: HCRV8ahvfI5higskXPmV-Kd7b43ZtO7g
-X-Proofpoint-GUID: HCRV8ahvfI5higskXPmV-Kd7b43ZtO7g
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-08-10_20,2023-08-10_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 adultscore=0 priorityscore=1501 phishscore=0
- mlxlogscore=478 spamscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2308110090
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-        autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S230149AbjHKJ7h (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Aug 2023 05:59:37 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B46D9273E;
+        Fri, 11 Aug 2023 02:59:36 -0700 (PDT)
+Received: from canpemm500007.china.huawei.com (unknown [172.30.72.57])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RMfNd0P6yzTmQq;
+        Fri, 11 Aug 2023 17:57:37 +0800 (CST)
+Received: from localhost (10.174.179.215) by canpemm500007.china.huawei.com
+ (7.192.104.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 11 Aug
+ 2023 17:59:34 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <rafael@kernel.org>, <lenb@kernel.org>, <bhelgaas@google.com>,
+        <scott@spiteful.org>, <yuehaibing@huawei.com>
+CC:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] PCI: Remove unused function declarations
+Date:   Fri, 11 Aug 2023 17:59:33 +0800
+Message-ID: <20230811095933.28652-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.215]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500007.china.huawei.com (7.192.104.62)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Change is to avoid clearing of interrupts that could have been masked.
+These declarations is never implemented since the beginning of git history.
 
-Signed-off-by: Subramanian Ananthanarayanan <quic_skananth@quicinc.com>
+Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
 ---
- drivers/bus/mhi/ep/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/hotplug/acpiphp.h      | 1 -
+ drivers/pci/hotplug/cpci_hotplug.h | 2 --
+ drivers/pci/hotplug/ibmphp.h       | 2 --
+ include/linux/pci.h                | 1 -
+ 4 files changed, 6 deletions(-)
 
-diff --git a/drivers/bus/mhi/ep/main.c b/drivers/bus/mhi/ep/main.c
-index 6008818..a818781 100644
---- a/drivers/bus/mhi/ep/main.c
-+++ b/drivers/bus/mhi/ep/main.c
-@@ -867,7 +867,7 @@ static void mhi_ep_check_channel_interrupt(struct mhi_ep_cntrl *mhi_cntrl)
- 		if (ch_int) {
- 			mhi_ep_queue_channel_db(mhi_cntrl, ch_int, ch_idx);
- 			mhi_ep_mmio_write(mhi_cntrl, MHI_CHDB_INT_CLEAR_n(i),
--							mhi_cntrl->chdb[i].status);
-+							ch_int);
- 		}
- 	}
- }
+diff --git a/drivers/pci/hotplug/acpiphp.h b/drivers/pci/hotplug/acpiphp.h
+index 1f8ab4377ad8..5745be6018e1 100644
+--- a/drivers/pci/hotplug/acpiphp.h
++++ b/drivers/pci/hotplug/acpiphp.h
+@@ -178,7 +178,6 @@ void acpiphp_unregister_hotplug_slot(struct acpiphp_slot *slot);
+ int acpiphp_enable_slot(struct acpiphp_slot *slot);
+ int acpiphp_disable_slot(struct acpiphp_slot *slot);
+ u8 acpiphp_get_power_status(struct acpiphp_slot *slot);
+-u8 acpiphp_get_attention_status(struct acpiphp_slot *slot);
+ u8 acpiphp_get_latch_status(struct acpiphp_slot *slot);
+ u8 acpiphp_get_adapter_status(struct acpiphp_slot *slot);
+ 
+diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
+index 3fdd1b9bd8c3..6d8970d8c3f2 100644
+--- a/drivers/pci/hotplug/cpci_hotplug.h
++++ b/drivers/pci/hotplug/cpci_hotplug.h
+@@ -83,8 +83,6 @@ extern int cpci_debug;
+  * board/chassis drivers.
+  */
+ u8 cpci_get_attention_status(struct slot *slot);
+-u8 cpci_get_latch_status(struct slot *slot);
+-u8 cpci_get_adapter_status(struct slot *slot);
+ u16 cpci_get_hs_csr(struct slot *slot);
+ int cpci_set_attention_status(struct slot *slot, int status);
+ int cpci_check_and_clear_ins(struct slot *slot);
+diff --git a/drivers/pci/hotplug/ibmphp.h b/drivers/pci/hotplug/ibmphp.h
+index 0399c60d2ec1..41eafe511210 100644
+--- a/drivers/pci/hotplug/ibmphp.h
++++ b/drivers/pci/hotplug/ibmphp.h
+@@ -264,8 +264,6 @@ extern struct list_head ibmphp_slot_head;
+ void ibmphp_free_ebda_hpc_queue(void);
+ int ibmphp_access_ebda(void);
+ struct slot *ibmphp_get_slot_from_physical_num(u8);
+-int ibmphp_get_total_hp_slots(void);
+-void ibmphp_free_ibm_slot(struct slot *);
+ void ibmphp_free_bus_info_queue(void);
+ void ibmphp_free_ebda_pci_rsrc_queue(void);
+ struct bus_info *ibmphp_find_same_bus_num(u32);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index eeb2e6f6130f..494470a38abf 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1403,7 +1403,6 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge);
+ void pci_assign_unassigned_bus_resources(struct pci_bus *bus);
+ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus);
+ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type);
+-void pdev_enable_device(struct pci_dev *);
+ int pci_enable_resources(struct pci_dev *, int mask);
+ void pci_assign_irq(struct pci_dev *dev);
+ struct resource *pci_find_resource(struct pci_dev *dev, struct resource *res);
 -- 
-2.7.4
+2.34.1
 
