@@ -2,154 +2,319 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCCF0778441
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Aug 2023 01:44:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 155FA7784BB
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Aug 2023 03:04:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232778AbjHJXo3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Aug 2023 19:44:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39114 "EHLO
+        id S230355AbjHKBED (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Aug 2023 21:04:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232726AbjHJXo0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Aug 2023 19:44:26 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87F47271E
-        for <linux-pci@vger.kernel.org>; Thu, 10 Aug 2023 16:44:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691711066; x=1723247066;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=y3f7nrdX0hmeLL/nEGz7uK5kKC3xWQsaLnAPxlrO9Ks=;
-  b=jTiMPI51LfmJ81aZRWckV2d1H/3gHj3rb/yBciBgayxFs1GnDhmEPmNz
-   0Bdip0vTainGFt0b+dFLNq4gIWCEa7DtXNYU7P0LKV5TZwmUGt5bXRS50
-   DBV7pqj7rN6BqvdnDZq+wOByDb6+u5Su09Ldm6xP1p6MT11Kov5UZuFIi
-   Xf61XO0zwZw2jVM4SC+FZOVN1/3YYUqJ3rHUA71HKfr0/rvdwWktqn8nF
-   /pyr4A+J8Mk2Ov7KGh8ZKgUHyZfDJfrkkbJsokiC84TiC2nuLSeqv5dNX
-   0+sKL8WPqsp9R48EyIFXyuPMNmkzc/FmAKf+4wIpe5utZyltiqeA2Jnqq
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="435445251"
-X-IronPort-AV: E=Sophos;i="6.01,163,1684825200"; 
-   d="scan'208";a="435445251"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2023 16:44:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="1063105553"
-X-IronPort-AV: E=Sophos;i="6.01,163,1684825200"; 
-   d="scan'208";a="1063105553"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Aug 2023 16:44:25 -0700
-Received: from tphi-mobl.amr.corp.intel.com (tphi-mobl.amr.corp.intel.com [10.209.57.169])
-        by linux.intel.com (Postfix) with ESMTP id 1ED53580D37;
-        Thu, 10 Aug 2023 16:44:25 -0700 (PDT)
-Message-ID: <64ec2f34620a2b502f2e096fdf7a9f43d742bb7b.camel@linux.intel.com>
-Subject: Re: [PATCH] PCI/ASPM: Add back L1 PM Substate save and restore
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Thomas Witt <thomas@witt.link>
-Cc:     Thomas Witt <kernel@witt.link>, Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Tasev Nikola <tasev.stefanoska@skynet.be>,
-        Mark Enriquez <enriquezmark36@gmail.com>,
-        Koba Ko <koba.ko@canonical.com>, linux-pci@vger.kernel.org
-Date:   Thu, 10 Aug 2023 16:44:24 -0700
-In-Reply-To: <20230807075832.GD14638@black.fi.intel.com>
-References: <650f68a1-8d54-a5ad-079b-e8aea64c5130@witt.link>
-         <20230628105940.GK14638@black.fi.intel.com>
-         <4b47ec58-dc34-1129-4a50-baf2b84b0f53@witt.link>
-         <8af8d82dd0dc69851d0cfc41eba6e2acb22d2666.camel@linux.intel.com>
-         <20230630104154.GS14638@black.fi.intel.com>
-         <7efaf5d9-9469-9710-8a04-1483bc45c8b6@witt.link>
-         <098da63daae434f6ac0d34ea5303ccd8fb0435c1.camel@linux.intel.com>
-         <6673c6a1-16ba-aaa4-707a-70d92d9751f6@witt.link>
-         <20230731150128.GK14638@black.fi.intel.com>
-         <5d5dc59d-0ce0-c98c-c6c8-f1d748a8d968@witt.link>
-         <20230807075832.GD14638@black.fi.intel.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+        with ESMTP id S229447AbjHKBED (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Aug 2023 21:04:03 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B0E12724;
+        Thu, 10 Aug 2023 18:04:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ADE8F64937;
+        Fri, 11 Aug 2023 01:04:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B85BC433C7;
+        Fri, 11 Aug 2023 01:03:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691715841;
+        bh=/Epzvw0JtUO8GOOQbFQtIu5UKvQ2tn7Fi6fQXEErzUI=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=FdeikvB+xSNjiKTZk4OPBUUMThtZElJUhYA/AlJJRDjrGe0I/26lNfir95VgLs45L
+         4Zs5aiVndYX5Mr7Zj89+EKu8kPHwEGjOZO+DDaBN4qju0CrBhLkWcvqOA2xkiIM6z7
+         lYfSn1K0XQ/vix/HGv0aQEWbJ5pBTwIRGYV6O/461Ld4Bq/plNIGxij8imJKdpRi3S
+         BphIYG6HRfuRryafAe4lW8gbGHys9aZ8LJVqRl2lixN2BX6DYG0sfgCw01jCTOFSVv
+         vjejUXF2SSB318Efe7aqz2XEWeCu6ffqjq8Agn2fsvPuBaFuTgO+m4roDqdLfB5kHn
+         dBCTbdiMQaU+w==
+Message-ID: <b3d437f5-fe33-4677-e336-a67ac9b8d477@kernel.org>
+Date:   Fri, 11 Aug 2023 10:03:58 +0900
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v4] PCI/DOE: Expose the DOE protocols via sysfs
+Content-Language: en-US
+To:     Alistair Francis <alistair23@gmail.com>, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, Jonathan.Cameron@huawei.com,
+        lukas@wunner.de
+Cc:     alex.williamson@redhat.com, christian.koenig@amd.com,
+        kch@nvidia.com, gregkh@linuxfoundation.org, logang@deltatee.com,
+        linux-kernel@vger.kernel.org, chaitanyak@nvidia.com,
+        rdunlap@infradead.org, Alistair Francis <alistair.francis@wdc.com>
+References: <20230810163342.1059509-1-alistair.francis@wdc.com>
+From:   Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20230810163342.1059509-1-alistair.francis@wdc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-9.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 2023-08-07 at 10:58 +0300, Mika Westerberg wrote:
-> Hi Thomas,
->=20
-> On Sat, Aug 05, 2023 at 09:57:47AM +0200, Thomas Witt wrote:
-> > On 31/07/2023 17:01, Mika Westerberg wrote:
-> > > Hi Thomas,
-> > >=20
-> > > Thanks for trying that. Did you manage to try out the S0ix script Dav=
-id
-> > > suggested? That should show us hopefully what is draining the battery=
- in
-> > > s2idle.
-> >=20
-> > Hi Mika,
-> >=20
-> > I did, with -s it gives
-> >=20
-> > Your system does not support low power S0 idle capability.
-> > Isolation suggestion:
-> > Please check BIOS low power S0 idle capability setting.
-> >=20
-> > with -r on
-> >=20
-> > Your system did not achieve the runtime PC10 state during screen ON
->=20
-> Thanks for trying. Did you change the "mem_sleep" back to "s2idle"
-> before you run the script?
+On 8/11/23 01:33, Alistair Francis wrote:
+> The PCIe 6 specification added support for the Data Object Exchange (DOE).
+> When DOE is supported the Discovery Data Object Protocol must be
+> implemented. The protocol allows a requester to obtain information about
+> the other DOE protocols supported by the device.
+> 
+> The kernel is already querying the DOE protocols supported and cacheing
+> the values. This patch exposes the values via sysfs. This will allow
+> userspace to determine which DOE protocols are supported by the PCIe
+> device.
+> 
+> By exposing the information to userspace tools like lspci can relay the
+> information to users. By listing all of the supported protocols we can
+> allow userspace to parse and support the list, which might include
+> vendor specific protocols as well as yet to be supported protocols.
+> 
+> Each DOE feature is exposed as a single file. The files are empty and
+> the information is contained in the file name.
 
-The script checks the FADT to determine if the system supports S0ix and it =
-found
-that it didn't which is weird since Thomas is setting "mem_sleep" to "deep"=
- from
-the default "s2idle" which is based on this bit.
+s/feature/protocol ?
 
-Here are the commands to check it.
+Personally, I would still have each file content repeat the same information as
+the file name specifies. That is, file value == file name. That will avoid
+people getting confused as empty sysfs files are rather uncommon.
 
-  sudo acpidump -n FADT -b
-  iasl -d facp.dat
-  grep "Low Power S0 Idle" facp.dsl
+> 
+> This uses pci_sysfs_init() instead of the ->is_visible() function as
+> is_visible only applies to the attributes under the group. Which
+> means that every PCIe device will see a `doe_protos` directory, no
+> matter if DOE is supported at all on the device.
+> 
+> On top of that ->is_visible() is only called
+> (fs/sysfs/group.c:create_files()) if there are sub attrs, which we
+> don't necessary have. There are no static attrs, instead they are
+> all generated dynamically.
 
-Thomas, can you confirm what the value of mem_sleep is when you boot and ru=
-n the
-above to confirm what your hardware supports?
+You said that the kernel caches the protocols supported. So it should not be
+hard to allocate one attribute for each of the supported protocols when these
+are discovered, no ?
 
->=20
-> > additionally, it encounters a syntax error:
-> > ./s0ix-selftest-tool.sh: line 1182: wc:: syntax error in expression (er=
-ror
-> > token is ":")
->=20
-> @David, do you know what might be the issue?
+> 
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> ---
+> v4:
+>  - Fixup typos in the documentation
+>  - Make it clear that the file names contain the information
+>  - Small code cleanups
+>  - Remove most #ifdefs
+>  - Remove extra NULL assignment
+> v3:
+>  - Expose each DOE feature as a separate file
+> v2:
+>  - Add documentation
+>  - Code cleanups
+> 
+> We did talk about exposing DOE types under DOE vendor IDs, but I couldn't
+> figure out a simple way to do that
+> 
+>  Documentation/ABI/testing/sysfs-bus-pci |  10 +++
+>  drivers/pci/doe.c                       | 104 ++++++++++++++++++++++++
+>  drivers/pci/pci-sysfs.c                 |   7 ++
+>  include/linux/pci-doe.h                 |   1 +
+>  4 files changed, 122 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> index ecf47559f495..e09c51449284 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> @@ -500,3 +500,13 @@ Description:
+>  		console drivers from the device.  Raw users of pci-sysfs
+>  		resourceN attributes must be terminated prior to resizing.
+>  		Success of the resizing operation is not guaranteed.
+> +
+> +What:		/sys/bus/pci/devices/.../doe_protos
+> +Date:		August 2023
+> +Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
+> +Description:
+> +		This directory contains a list of the supported Data Object Exchange (DOE)
+> +		features. The feature values are in the file name; the files have no contents.
+> +		The value comes from the device and specifies the vendor and
+> +		data object type supported. The lower byte is the data object type and the next
+> +		two bytes are the vendor ID.
+> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> index 1b97a5ab71a9..918872152fb6 100644
+> --- a/drivers/pci/doe.c
+> +++ b/drivers/pci/doe.c
+> @@ -56,6 +56,8 @@ struct pci_doe_mb {
+>  	wait_queue_head_t wq;
+>  	struct workqueue_struct *work_queue;
+>  	unsigned long flags;
+> +
+> +	struct device_attribute *sysfs_attrs;
+>  };
+>  
+>  struct pci_doe_protocol {
+> @@ -92,6 +94,108 @@ struct pci_doe_task {
+>  	struct pci_doe_mb *doe_mb;
+>  };
+>  
+> +#ifdef CONFIG_SYSFS
+> +static struct attribute *pci_dev_doe_proto_attrs[] = {
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group pci_dev_doe_proto_group = {
+> +	.name	= "doe_protos",
 
-Yes. The latest kernel changes the output of the ltr_show command by adding=
- a
-PMC number prefix (since Meteor Lake has more than one PMC now). The script=
- is
-erring on the unexpected colon. We'll get this fixed.
+Why is this a static variable instead of being a member of the pci doe_mb struct
+?d Devices without DOE support would always have that as NULL and only the
+devices that support it would get the group and array of attributes that you
+allocate in pci_doe_sysfs_proto_supports(). That would also remove the need for
+the attrs array being a static variable as well.
 
-David
+An let's spell things out to be clear and avoid confusions: s/protos/protocols
 
->=20
-> > with -r off, it tries xset which fails due to a lack of xserver.
->=20
-> You do have graphics running right? I mean i915 driver is enabled and
-> all the firmwares are in place (should come with the distro). I'm asking
-> because s2idle typically requires that graphics and pretty much all the
-> devices on the SoC have a driver and the accompanying firmwares, and
-> that they enter D3 properly.
+> +	.attrs	= pci_dev_doe_proto_attrs,
+> +};
+> +
+> +static void pci_doe_sysfs_remove_desc(struct pci_doe_mb *doe_mb)
+> +{
+> +	struct device_attribute *attrs = doe_mb->sysfs_attrs;
+> +	unsigned long i;
+> +	void *entry;
+> +
+> +	if (!doe_mb->sysfs_attrs)
+> +		return;
+> +
+> +	doe_mb->sysfs_attrs = NULL;
+> +	xa_for_each(&doe_mb->prots, i, entry)
+> +		kfree(attrs[i].attr.name);
+> +
+> +	kfree(attrs);
+> +}
+> +
+> +static int pci_doe_sysfs_proto_supports(struct pci_dev *pdev, struct pci_doe_mb *doe_mb)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_attribute *attrs;
+> +	unsigned long num_protos = 0;
+> +	unsigned long vid, type;
+> +	unsigned long i;
+> +	void *entry;
+> +	int ret;
+> +
+> +	xa_for_each(&doe_mb->prots, i, entry)
+> +		num_protos++;
+> +
+> +	attrs = kcalloc(num_protos, sizeof(*attrs), GFP_KERNEL);
+> +	if (!attrs)
+> +		return -ENOMEM;
+> +
+> +	doe_mb->sysfs_attrs = attrs;
+> +	xa_for_each(&doe_mb->prots, i, entry) {
+> +		sysfs_attr_init(&attrs[i].attr);
+> +		vid = xa_to_value(entry) >> 8;
+> +		type = xa_to_value(entry) & 0xFF;
+> +		attrs[i].attr.name = kasprintf(GFP_KERNEL, "0x%04lX:%02lX", vid, type);
+> +		if (!attrs[i].attr.name) {
+> +			ret = -ENOMEM;
+> +			goto fail;
+> +		}
+> +
+> +		attrs[i].attr.mode = 0444;
+> +
+> +		ret = sysfs_add_file_to_group(&dev->kobj, &attrs[i].attr,
+> +					      pci_dev_doe_proto_group.name);
+> +		if (ret)
+> +			goto fail;
+> +	}
+> +
+> +	return 0;
+> +
+> +fail:
+> +	pci_doe_sysfs_remove_desc(doe_mb);
+> +	return ret;
+> +}
+> +
+> +int doe_sysfs_init(struct pci_dev *pdev)
+> +{
+> +	unsigned long total_protos = 0;
+> +	struct pci_doe_mb *doe_mb;
+> +	unsigned long index, j;
+> +	void *entry;
+> +	int ret;
+> +
+> +	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
+> +		xa_for_each(&doe_mb->prots, j, entry)
+> +			total_protos++;
+> +	}
+> +
+> +	if (total_protos == 0)
+> +		return 0;
+> +
+> +	ret = devm_device_add_group(&pdev->dev, &pci_dev_doe_proto_group);
+> +	if (ret) {
+> +		pci_err(pdev, "can't create DOE goup: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
+> +		ret = pci_doe_sysfs_proto_supports(pdev, doe_mb);
+> +
+
+Remove this blank line.
+
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+>  static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeout)
+>  {
+>  	if (wait_event_timeout(doe_mb->wq,
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index ab32a91f287b..ad621850a3e2 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/sched.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-doe.h>
+>  #include <linux/stat.h>
+>  #include <linux/export.h>
+>  #include <linux/topology.h>
+> @@ -1226,6 +1227,12 @@ static int pci_create_resource_files(struct pci_dev *pdev)
+>  	int i;
+>  	int retval;
+>  
+> +	if (IS_ENABLED(CONFIG_PCI_DOE)) {
+> +		retval = doe_sysfs_init(pdev);
+> +		if (retval)
+> +			return retval;
+> +	}
+> +
+>  	/* Expose the PCI resources from this device as files */
+>  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  
+> diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
+> index 1f14aed4354b..4cc13d9ccb50 100644
+> --- a/include/linux/pci-doe.h
+> +++ b/include/linux/pci-doe.h
+> @@ -22,4 +22,5 @@ int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
+>  	    const void *request, size_t request_sz,
+>  	    void *response, size_t response_sz);
+>  
+> +int doe_sysfs_init(struct pci_dev *pci_dev);
+>  #endif
+
+-- 
+Damien Le Moal
+Western Digital Research
 
