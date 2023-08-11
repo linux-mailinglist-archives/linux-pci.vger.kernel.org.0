@@ -2,60 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A07FA778778
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Aug 2023 08:31:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDCD27787C2
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Aug 2023 08:59:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232218AbjHKGbZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Aug 2023 02:31:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38522 "EHLO
+        id S229568AbjHKG7h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Aug 2023 02:59:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229829AbjHKGbZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Aug 2023 02:31:25 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 998D4E3;
-        Thu, 10 Aug 2023 23:31:24 -0700 (PDT)
+        with ESMTP id S229514AbjHKG7h (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Aug 2023 02:59:37 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D411FCF
+        for <linux-pci@vger.kernel.org>; Thu, 10 Aug 2023 23:59:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691735484; x=1723271484;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=V7PsEkPjhDBm1ENkVpxF6OMUVudl/gPj3e7UY4Zbwrc=;
-  b=SF74kWAanqmhu8F2pX7MECYz/55d8SBqiI+RKrKkOWVwb+3QWoJrvOsh
-   IAwCdhzaAmgpKqTwBXmc5LzW2egyUpmOFkuN7aHq6OhJRB01I28LMJzI0
-   9IPU53s1IwwNodPgU3laXJoLykwT10UH5wPgya+765zvWGlAyqcoftvvR
-   ZQWW65f1EobA0SxoibjB/nkJ+w6g5rVsTavNSKi6v4AJ/L33EIrH9g+pt
-   RgNbR6vUzl7dOeeWUk9708WpHn1xcz5DscNB5fWKl+Y+VQHDSfdwYo6xa
-   Lxmokbl/mdSq55T9dSW1dHF797H+ajIpn+r9OtaKbTi5YaSb0+cUAP8hX
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="356571517"
+  t=1691737176; x=1723273176;
+  h=date:from:to:cc:subject:message-id;
+  bh=xohxMl9L6Y61GohJ+xnQLma3skhayXRx2l/Z7SYjHB0=;
+  b=I+LNexUdcD6cKPDzppi2551FZyvpl1nWfZU0eNLkg7JMI1KpU+V7ICrl
+   vh88m5uy9WsRGsLqQQH8YCro9ZFY5cXF0BA/xfkO7nSk4nPhRlMb1UjRc
+   Fak6QYzc7/QpQC0HSVNAPKzDV2Wa3DqR79hN1LMGYMxIkHBXnio71F1r7
+   PKvi0M13KS38HTvJrKPd6QSmTpA3iIyOycm0RXMeb1/KQ232rqHyVKtyU
+   1avwY+au0wC4qlHcLUH3MSd133StfyGA/I5mik+S2nUFKy6DXrN+ePY14
+   4yJ6YR6zvuou1mfpvPuu9qmeRkou0+eZwrD1zrNZQvp8LIbSAOMcUOTE1
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="402586232"
 X-IronPort-AV: E=Sophos;i="6.01,164,1684825200"; 
-   d="scan'208";a="356571517"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2023 23:31:23 -0700
+   d="scan'208";a="402586232"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2023 23:59:36 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="822550154"
+X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="1063221349"
 X-IronPort-AV: E=Sophos;i="6.01,164,1684825200"; 
-   d="scan'208";a="822550154"
-Received: from aberko-mobl1.ger.corp.intel.com ([10.252.51.87])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2023 23:31:21 -0700
-Date:   Fri, 11 Aug 2023 09:31:15 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     suijingfeng <suijingfeng@loongson.cn>
-cc:     Sui Jingfeng <sui.jingfeng@linux.dev>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-pci@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 02/11] PCI: Add the pci_get_class_masked() helper
-In-Reply-To: <a0d6277c-a4ad-38a5-bc6f-883513987547@loongson.cn>
-Message-ID: <9e512f44-c47f-85e8-0ea-81d7cbc99a67@linux.intel.com>
-References: <20230808223412.1743176-1-sui.jingfeng@linux.dev> <20230808223412.1743176-3-sui.jingfeng@linux.dev> <19dc4b81-5b72-247c-d459-3ea9d1cddff0@linux.intel.com> <a0d6277c-a4ad-38a5-bc6f-883513987547@loongson.cn>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-1349199904-1691734933=:1742"
-Content-ID: <50a536e7-4387-1688-4c95-d3496f7b66d@linux.intel.com>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+   d="scan'208";a="1063221349"
+Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Aug 2023 23:59:35 -0700
+Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qUM7S-0007b2-2L;
+        Fri, 11 Aug 2023 06:59:34 +0000
+Date:   Fri, 11 Aug 2023 14:58:55 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:vpd] BUILD SUCCESS
+ 0f37aee923cef45c6350436ac7aed987e259b8ec
+Message-ID: <202308111454.h0o96rGE-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
         SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -64,161 +60,68 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git vpd
+branch HEAD: 0f37aee923cef45c6350436ac7aed987e259b8ec  PCI: Fix runtime PM race with PME polling
 
---8323329-1349199904-1691734933=:1742
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <c27f82a-0f7-f05b-1721-225a83cded3@linux.intel.com>
+elapsed time: 721m
 
-On Thu, 10 Aug 2023, suijingfeng wrote:
+configs tested: 49
+configs skipped: 2
 
-> Hi,
-> 
-> 
-> On 2023/8/9 22:01, Ilpo Järvinen wrote:
-> > On Wed, 9 Aug 2023, Sui Jingfeng wrote:
-> > 
-> > > From: Sui Jingfeng <suijingfeng@loongson.cn>
-> > > 
-> > > Because there is no good way to get the mask member used to searching for
-> > > devices that conform to a specific PCI class code, an application needs to
-> > > process all PCI display devices can achieve its goal as follows:
-> > This is mixing old and new way in a single sentence (which is confusing)?
-> 
-> 
-> Thanks for reviewing, but I can't understand this sentence.
-> Are you telling me that my description have grammar problem or something else?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I think it's a bit of both.
-
-> I means that before apply this patch, we don't have a function can be used
-> to get all PCI(e) devices in a system by matching against its the PCI base
-> class code only,
-> while keep the Sub-Class code and the Programming Interface ignored.
-> By supply a mask as argument, such thing become possible.
-
-This explanation you put into this reply is much easier to follow and 
-understand. I recommend you'd use it to replace the unclear fragment 
-above. So something along the lines of:
-
-  There is no function that can be used to get all PCI(e) devices in a 
-  system by matching against its the PCI base class code only, while keep 
-  the Sub-Class code and the Programming Interface ignored.
-
-  Add pci_get_class_masked() to allow supplying a mask for the get.
-
-  [After this you can put the explanining code block+its intro if you 
-   want]
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                                defconfig   gcc  
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                               defconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+sh                               allmodconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
 
 -- 
- i.
-
-> If an application want to process all PCI display devices in the system,
-> then it can achieve its goal by calling pci_get_class_masked() function.
-> 
-> 
-> > > pdev = NULL;
-> > > do {
-> > > 	pdev = pci_get_class_masked(PCI_BASE_CLASS_DISPLAY << 16, 0xFF0000,
-> > > pdev);
-> > > 	if (pdev)
-> > > 		do_something_for_pci_display_device(pdev);
-> > > } while (pdev);
-> > > 
-> > > While previously, we just can not ignore Sub-Class code and the
-> > > Programming
-> > cannot
-> > 
-> > > Interface byte when do the searching.
-> > doing the search.
-> 
-> 
-> OK, will be fixed at the next version.
-> 
-> 
-> > > Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
-> > > ---
-> > >   drivers/pci/search.c | 30 ++++++++++++++++++++++++++++++
-> > >   include/linux/pci.h  |  7 +++++++
-> > >   2 files changed, 37 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/search.c b/drivers/pci/search.c
-> > > index b4c138a6ec02..f1c15aea868b 100644
-> > > --- a/drivers/pci/search.c
-> > > +++ b/drivers/pci/search.c
-> > > @@ -334,6 +334,36 @@ struct pci_dev *pci_get_device(unsigned int vendor,
-> > > unsigned int device,
-> > >   }
-> > >   EXPORT_SYMBOL(pci_get_device);
-> > >   +/**
-> > > + * pci_get_class_masked - begin or continue searching for a PCI device by
-> > > class and mask
-> > > + * @class: search for a PCI device with this class designation
-> > > + * @from: Previous PCI device found in search, or %NULL for new search.
-> > > + *
-> > > + * Iterates through the list of known PCI devices.  If a PCI device is
-> > No double spaces in kernel comments. Perhaps your editor might be adding
-> > them on reflow (might be configurable to not do that).
-> > 
-> > > + * found with a matching @class, the reference count to the device is
-> > > + * incremented and a pointer to its device structure is returned.
-> > > + * Otherwise, %NULL is returned.
-> > > + * A new search is initiated by passing %NULL as the @from argument.
-> > > + * Otherwise if @from is not %NULL, searches continue from next device
-> > > + * on the global list.  The reference count for @from is always
-> > > decremented
-> > > + * if it is not %NULL.
-> > Use kerneldoc's Return: section for describing return value.
-> > 
-> > > + */
-> > > +struct pci_dev *pci_get_class_masked(unsigned int class, unsigned int
-> > > mask,
-> > > +				     struct pci_dev *from)
-> > > +{
-> > > +	struct pci_device_id id = {
-> > > +		.vendor = PCI_ANY_ID,
-> > > +		.device = PCI_ANY_ID,
-> > > +		.subvendor = PCI_ANY_ID,
-> > > +		.subdevice = PCI_ANY_ID,
-> > > +		.class_mask = mask,
-> > > +		.class = class,
-> > > +	};
-> > > +
-> > > +	return pci_get_dev_by_id(&id, from);
-> > > +}
-> > > +EXPORT_SYMBOL(pci_get_class_masked);
-> > > +
-> > >   /**
-> > >    * pci_get_class - begin or continue searching for a PCI device by class
-> > >    * @class: search for a PCI device with this class designation
-> > > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > > index 0ff7500772e6..b20e7ba844bf 100644
-> > > --- a/include/linux/pci.h
-> > > +++ b/include/linux/pci.h
-> > > @@ -1180,6 +1180,9 @@ struct pci_dev *pci_get_slot(struct pci_bus *bus,
-> > > unsigned int devfn);
-> > >   struct pci_dev *pci_get_domain_bus_and_slot(int domain, unsigned int
-> > > bus,
-> > >   					    unsigned int devfn);
-> > >   struct pci_dev *pci_get_class(unsigned int class, struct pci_dev *from);
-> > > +struct pci_dev *pci_get_class_masked(unsigned int class, unsigned int
-> > > mask,
-> > > +				     struct pci_dev *from);
-> > > +
-> > >   int pci_dev_present(const struct pci_device_id *ids);
-> > >     int pci_bus_read_config_byte(struct pci_bus *bus, unsigned int devfn,
-> > > @@ -1895,6 +1898,10 @@ static inline struct pci_dev
-> > > *pci_get_class(unsigned int class,
-> > >   					    struct pci_dev *from)
-> > >   { return NULL; }
-> > >   +static inline struct pci_dev *pci_get_class_masked(unsigned int class,
-> > > +						   unsigned int mask,
-> > > +						   struct pci_dev *from)
-> > > +{ return NULL; }
-> > >     static inline int pci_dev_present(const struct pci_device_id *ids)
-> > >   { return 0; }
-> > > 
-> 
---8323329-1349199904-1691734933=:1742--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
