@@ -2,56 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C597779E19
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Aug 2023 10:32:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1C13779E28
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Aug 2023 10:32:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230092AbjHLIWL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 12 Aug 2023 04:22:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36182 "EHLO
+        id S235902AbjHLI0e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 12 Aug 2023 04:26:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235918AbjHLIWF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Aug 2023 04:22:05 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D2B92108
-        for <linux-pci@vger.kernel.org>; Sat, 12 Aug 2023 01:22:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691828529; x=1723364529;
-  h=date:from:to:cc:subject:message-id;
-  bh=sF8JJ5L3SLDwMsgBhxNy5qtBn0zIgFyU9/KiScsxZbo=;
-  b=JoSF83Ph7X1+EIUe5T6cM3H9VAoUf7TJpqqXbuV09oR3yB7vpt1C3WwK
-   RM9yrT+XuUPE1iqzgv9r6bMMlvYrRDoFHqVunf78RLRLQiz+KaPa/6arW
-   kwhtGJqDkGAuF1aFEVSWZrSsQuD0HL3jtrz4r7Jc/yoU19mk9dNRyuEpK
-   4qsvAZtv4o5tIgOeINuXwOeWOubgER4Y2Pdt56Ov6xfCt6QNHenLTC/Ig
-   3YU2rn8dT8h5bjPxmZYzX7Y6vZ8beeIiXVXAMiE/rhvppPz0wP2sWf9pq
-   3ziwchOTulG/PWFJA4YfW8AdiJEXWazjjgSg4D7JE5A+AEReLy81IHvzb
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10799"; a="371818932"
-X-IronPort-AV: E=Sophos;i="6.01,167,1684825200"; 
-   d="scan'208";a="371818932"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2023 01:22:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10799"; a="906672237"
-X-IronPort-AV: E=Sophos;i="6.01,167,1684825200"; 
-   d="scan'208";a="906672237"
-Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 12 Aug 2023 01:22:07 -0700
-Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qUjst-0008Pi-0K;
-        Sat, 12 Aug 2023 08:22:07 +0000
-Date:   Sat, 12 Aug 2023 16:21:16 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- b2c47cd736296cbb8d5a15a5ffb089a615e3d033
-Message-ID: <202308121612.uJGCmebw-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        with ESMTP id S235175AbjHLI0d (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Aug 2023 04:26:33 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DDD6270E;
+        Sat, 12 Aug 2023 01:26:36 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 293EB602FB;
+        Sat, 12 Aug 2023 08:26:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3E10C433C7;
+        Sat, 12 Aug 2023 08:26:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1691828795;
+        bh=ZvU+Ji3lEtuChDKihxuZBn05RJ9fLwG7X3gfqnGgG/g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MiLzYoIWsPw9lXFle737i8jKOA2d1j8tVQaPJiVoDDrQIKfCgX0Gdm1SMasl//pXa
+         vNl+cpaetVg1KINPFmTvA2AfCAkkpm5OtPiLACyamHfFkDdM6FB+oJkKtPXWtGPVuU
+         6NsSLQvSsGxNXzoG2omiB/z4yJdq18pUXbiMkjpQ=
+Date:   Sat, 12 Aug 2023 10:26:32 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Alistair Francis <alistair23@gmail.com>, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, Jonathan.Cameron@huawei.com,
+        alex.williamson@redhat.com, christian.koenig@amd.com,
+        kch@nvidia.com, logang@deltatee.com, linux-kernel@vger.kernel.org,
+        Alistair Francis <alistair.francis@wdc.com>
+Subject: Re: [PATCH v3] PCI/DOE: Expose the DOE protocols via sysfs
+Message-ID: <2023081224-famished-devotion-6e0e@gregkh>
+References: <20230809232851.1004023-1-alistair.francis@wdc.com>
+ <20230810073457.GA26246@wunner.de>
+ <CAKmqyKPm_BFnNxVLXCO_PVRDJaVb+XOj=kEEzXd+MgkwDiZhXA@mail.gmail.com>
+ <20230812081526.GC9469@wunner.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230812081526.GC9469@wunner.de>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,124 +57,71 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: b2c47cd736296cbb8d5a15a5ffb089a615e3d033  Merge branch 'pci/misc'
+On Sat, Aug 12, 2023 at 10:15:26AM +0200, Lukas Wunner wrote:
+> On Thu, Aug 10, 2023 at 11:34:11AM -0400, Alistair Francis wrote:
+> > On Thu, Aug 10, 2023 at 3:34???AM Lukas Wunner <lukas@wunner.de> wrote:
+> > > On Wed, Aug 09, 2023 at 07:28:51PM -0400, Alistair Francis wrote:
+> > > > --- a/drivers/pci/pci-sysfs.c
+> > > > +++ b/drivers/pci/pci-sysfs.c
+> > > > @@ -1226,6 +1227,12 @@ static int pci_create_resource_files(struct pci_dev *pdev)
+> > > >       int i;
+> > > >       int retval;
+> > > >
+> > > > +#ifdef CONFIG_PCI_DOE
+> > > > +     retval = doe_sysfs_init(pdev);
+> > > > +     if (retval)
+> > > > +             return retval;
+> > > > +#endif
+> > > > +
+> > >
+> > > The preferred way to expose PCI sysfs attributes nowadays is to add them
+> > > to pci_dev_attr_groups[] and use the ->is_visible callback to check
+> > > whether they're applicable to a particular pci_dev.  The alternative
+> > > via pci_create_resource_files() has race conditions which I think
+> > > still haven't been fixed. Bjorn recommended the ->is_visible approach
+> > > in response to the most recent attempt to fix the race:
+> > >
+> > > https://lore.kernel.org/linux-pci/20230427161458.GA249886@bhelgaas/
+> > 
+> > The is_visible doen't seem to work in this case.
+> > 
+> > AFAIK is_visible only applies to the attributes under the group. Which
+> > means that every PCIe device will see a `doe_protos` directory, no
+> > matter if DOE is supported.
+> 
+> internal_create_group() in fs/sysfs/group.c does this:
+> 
+> 	if (grp->name) {
+> 			...
+> 			kn = kernfs_create_dir_ns(kobj->sd, grp->name, ...
+> 
+> So I'm under the impression that if you set the ->name member of
+> struct attribute_group, the attributes in that group appear under
+> a directory of that name.
+> 
+> In fact, the kernel-doc for struct attribute_group claims as much:
+> 
+>  * struct attribute_group - data structure used to declare an attribute group.
+>  * @name:	Optional: Attribute group name
+>  *		If specified, the attribute group will be created in
+>  *		a new subdirectory with this name.
+> 
+> So I don't quite understand why you think that "every PCIe device will
+> see a `doe_protos` directory, no matter if DOE is supported"?
+> 
+> Am I missing something?
 
-elapsed time: 726m
+I think the issue might be that the directory will be created even if no
+attributes are present in it due to the is_visable() check not returning
+any valid files?
 
-configs tested: 105
-configs skipped: 6
+If so, I had a patch somewhere around here where I was trying to fix
+that up:
+	https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=debugfs_cleanup&id=f670945dfbaf353fe068544c31e3fa45575da5b5
+but it didn't seem to work properly and kept crashing.  I didn't spend
+much time on looking into it, but if this is an issue, I can work on
+fixing this properly.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+thanks,
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r032-20230812   gcc  
-arc                  randconfig-r043-20230812   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r001-20230812   clang
-arm                  randconfig-r013-20230812   gcc  
-arm                  randconfig-r046-20230812   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r026-20230812   clang
-csky                                defconfig   gcc  
-csky                 randconfig-r005-20230812   gcc  
-csky                 randconfig-r021-20230812   gcc  
-hexagon              randconfig-r031-20230812   clang
-hexagon              randconfig-r041-20230812   clang
-hexagon              randconfig-r045-20230812   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230812   gcc  
-i386         buildonly-randconfig-r005-20230812   gcc  
-i386         buildonly-randconfig-r006-20230812   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230812   gcc  
-i386                 randconfig-i002-20230812   gcc  
-i386                 randconfig-i003-20230812   gcc  
-i386                 randconfig-i004-20230812   gcc  
-i386                 randconfig-i005-20230812   gcc  
-i386                 randconfig-i006-20230812   gcc  
-i386                 randconfig-i011-20230812   clang
-i386                 randconfig-i012-20230812   clang
-i386                 randconfig-i013-20230812   clang
-i386                 randconfig-i014-20230812   clang
-i386                 randconfig-i015-20230812   clang
-i386                 randconfig-i016-20230812   clang
-i386                 randconfig-r016-20230812   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r015-20230812   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze           randconfig-r002-20230812   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc             randconfig-r023-20230812   gcc  
-openrisc             randconfig-r035-20230812   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r014-20230812   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r042-20230812   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r006-20230812   gcc  
-s390                 randconfig-r034-20230812   gcc  
-s390                 randconfig-r044-20230812   clang
-sh                               allmodconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r033-20230812   gcc  
-sparc64              randconfig-r022-20230812   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230812   gcc  
-x86_64       buildonly-randconfig-r002-20230812   gcc  
-x86_64       buildonly-randconfig-r003-20230812   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r003-20230812   gcc  
-x86_64               randconfig-r012-20230812   clang
-x86_64               randconfig-x001-20230812   clang
-x86_64               randconfig-x002-20230812   clang
-x86_64               randconfig-x003-20230812   clang
-x86_64               randconfig-x004-20230812   clang
-x86_64               randconfig-x005-20230812   clang
-x86_64               randconfig-x006-20230812   clang
-x86_64               randconfig-x011-20230812   gcc  
-x86_64               randconfig-x012-20230812   gcc  
-x86_64               randconfig-x013-20230812   gcc  
-x86_64               randconfig-x014-20230812   gcc  
-x86_64               randconfig-x015-20230812   gcc  
-x86_64               randconfig-x016-20230812   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r025-20230812   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+greg k-h
