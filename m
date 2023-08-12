@@ -2,380 +2,310 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EFCC6779BA5
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Aug 2023 01:49:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74FB0779C1A
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Aug 2023 02:45:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232348AbjHKXth (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Aug 2023 19:49:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44692 "EHLO
+        id S229793AbjHLApP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Aug 2023 20:45:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234479AbjHKXtg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Aug 2023 19:49:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 049EEC5;
-        Fri, 11 Aug 2023 16:49:36 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7EC71663FB;
-        Fri, 11 Aug 2023 23:49:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B577AC433C8;
-        Fri, 11 Aug 2023 23:49:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691797774;
-        bh=lvyc5+WYzavz74MfhYZvuWoQcJPYUBOS18BDP6pLKVA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=PJyz9LGZInzYKoqqxS7x5q/cVNuyXxPcB9c2dJy/JUYmqHGL5kHzkB9W+682c15O5
-         NzXHH+LjraNWokF/Jop8Ry5RA56GE3Giqwp2Q3FzvyA/Bly03vuH+daxwU5kMGLQce
-         bDH+p29fVitq6xq9fSs3vIrSZFG8O7xBUvRledPphTjSNdblErVxdGY3LDXmG2AhgH
-         OlriE8wQlxr9BziYwvpLd0JGUrMXj8E5Tqqia4Gecqixkc78SC8jY1+JMTQkwaATQP
-         7Iv5tYQOXtYU52Xv9aYD5M/ggWdDBkOIjzApSA7W3Nn+jvVmtdzFyzlh9Im16l+qRX
-         0kxw2UB5d7g/Q==
-Date:   Fri, 11 Aug 2023 18:49:32 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sui Jingfeng <suijingfeng@loongson.cn>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        loongson-kernel@lists.loongnix.cn, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] PCI/VGA: Make the vga_is_firmware_default() less
- arch-independent
-Message-ID: <20230811234932.GA116749@bhelgaas>
+        with ESMTP id S232651AbjHLApN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Aug 2023 20:45:13 -0400
+Received: from mail-oo1-xc2a.google.com (mail-oo1-xc2a.google.com [IPv6:2607:f8b0:4864:20::c2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 042BE2686;
+        Fri, 11 Aug 2023 17:45:13 -0700 (PDT)
+Received: by mail-oo1-xc2a.google.com with SMTP id 006d021491bc7-56d6dfa8b52so1976322eaf.3;
+        Fri, 11 Aug 2023 17:45:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691801112; x=1692405912;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8U2rb5bbZciiUVGhG6iW04W/aJ7xYLN22CGCHBT/DZA=;
+        b=itBAOp9hHki7jXdU8QyopEy8993FP+dd5Sug33CBhmPjn35o7hI6DdhrOdZbRzCDyo
+         e5JX0dPOJ6SESKbhWXgfF58GypzpnQ2pDnLRIoMon8uABRAaiwtJuFFmwf2orXYKOZC8
+         pijfbkULrN2ElbRrugW/fyx4L5dAx3CNjv9KrYOQlXBZ+tDw/ZFFR8eO3W17tBzOcpEY
+         Um1Fiv+aDAZXc5tUUKVWzSQZCSkaY60rYOfNoozdtWM/bNpzBiicEa0deeRQ/pMnlHNC
+         BFKUjyI87rGO0dGzDn6zb2dQGtFA/cT6O85e7bsoFEJYAHPRHnjBQmnEgK6C4p5SQUdI
+         h1kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691801112; x=1692405912;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8U2rb5bbZciiUVGhG6iW04W/aJ7xYLN22CGCHBT/DZA=;
+        b=QfGaIy/PG9Y6IzagMQNlZPU6WHzAG/WFG7QBpqvPHQyKhh4IB3/Im1zIugCtxDuR7p
+         K3mNUb5szlK10MZjaYsV/QZOY1WPHGT4nwnBQVMiTfz9qCljtCLppqQAqz1e7rRW0X01
+         UgFefRzXkqBdcB+fEPOJiHMUpwl3xoyDRguitRu0XtjHZEfMIG62pc62x+i/loZi4+QN
+         fZ44P+e8v65qLkkFkfh/FANg3QaT/mzPwZxvOhCw0jo+DAiMiIFZrgcYl8tcixIiTGNG
+         TwoXyIQ9DplcEEBU+hcqZozUeClf73okzzuEVTt4ULG/eL8mZsM1zo0KUH346Rpkxnde
+         2foQ==
+X-Gm-Message-State: AOJu0Yy7uNPQKoLItGksi/tGZ7EXsH4wLA/9u1ivX84znIiLDXBX76vS
+        hO9P4IeIwUBhPtElz/dIj8I=
+X-Google-Smtp-Source: AGHT+IFpXcndJNgooV6+QR7pDzPBFicA6z/JhhwV83cl29GBd8WZ+JBubglmi1ikglIWcuDJerxrwA==
+X-Received: by 2002:a05:6358:4297:b0:139:e7db:3f3f with SMTP id s23-20020a056358429700b00139e7db3f3fmr3663316rwc.10.1691801112072;
+        Fri, 11 Aug 2023 17:45:12 -0700 (PDT)
+Received: from localhost.localdomain ([146.70.187.10])
+        by smtp.gmail.com with ESMTPSA id k24-20020ab05398000000b00796e08ed58dsm749254uaa.29.2023.08.11.17.45.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Aug 2023 17:45:11 -0700 (PDT)
+From:   Alistair Francis <alistair23@gmail.com>
+X-Google-Original-From: Alistair Francis <alistair.francis@wdc.com>
+To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        Jonathan.Cameron@huawei.com, lukas@wunner.de
+Cc:     alex.williamson@redhat.com, christian.koenig@amd.com,
+        kch@nvidia.com, gregkh@linuxfoundation.org, logang@deltatee.com,
+        linux-kernel@vger.kernel.org, alistair23@gmail.com,
+        chaitanyak@nvidia.com, rdunlap@infradead.org,
+        Alistair Francis <alistair.francis@wdc.com>
+Subject: [PATCH v5] PCI/DOE: Expose the DOE protocols via sysfs
+Date:   Fri, 11 Aug 2023 20:44:53 -0400
+Message-ID: <20230812004453.1241736-1-alistair.francis@wdc.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230808145859.1590625-1-suijingfeng@loongson.cn>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 08, 2023 at 10:58:59PM +0800, Sui Jingfeng wrote:
-> Currently, the vga_is_firmware_default() function works only on x86 and
-> IA64 architectures, but it is a no-op on ARM64, PPC, RISC-V, etc. This
-> patch completes the implementation by tracking the firmware framebuffer's
-> address range. The added code is trying to identify the VRAM aperture that
-> contains the firmware framebuffer. Once found, related information about
-> the VRAM aperture will be tracked.
-> 
-> Note that we need to identify the VRAM aperture before it get moved. We
-> achieve this by using DECLARE_PCI_FIXUP_CLASS_HEADER(), which ensures that
-> vga_arb_firmware_fb_addr_tracker() gets called before PCI resource
-> allocation. Once we found the VRAM aperture that contains firmware fb, we
-> are able to monitor the address changes of it. If the VRAM aperture of the
-> primary GPU do moved, we will update our cached firmware framebuffer's
-> address range accordingly. This approach overcomes the VRAM bar relocation
-> issue successfully. Hence, this patch make the vga_is_firmware_default()
-> function works on whatever arch that has UEFI GOP support, including x86
-> and IA64. But, at the first step, we make it available only on platforms
-> which PCI resource relocation do happens. Once provided method proved to
-> be effective and reliable, it can be expanded to other arch easily.
+The PCIe 6 specification added support for the Data Object Exchange (DOE).
+When DOE is supported the Discovery Data Object Protocol must be
+implemented. The protocol allows a requester to obtain information about
+the other DOE protocols supported by the device.
 
-I think this patch tries to solve two problems, and it should be split
-into two patches:
+The kernel is already querying the DOE protocols supported and cacheing
+the values. This patch exposes the values via sysfs. This will allow
+userspace to determine which DOE protocols are supported by the PCIe
+device.
 
-  1) Identify firmware framebuffer on arches other than x86 and ia64
-  2) Deal with VGA devices where the PCI core has moved the BAR
-     containing the framebuffer
+By exposing the information to userspace tools like lspci can relay the
+information to users. By listing all of the supported protocols we can
+allow userspace to parse and support the list, which might include
+vendor specific protocols as well as yet to be supported protocols.
 
-For x86 and ia64, vga_is_firmware_default() currently gets the
-framebuffer base and size from screen_info.  Whenever
-vga_arbiter_add_pci_device() adds a VGA device, we check to see if it
-has a BAR containing the framebuffer.
+Each DOE protocol is exposed as a single file. The files are empty and
+the information is contained in the file name.
 
-It looks like this patch retains that for x86 and ia64, but only if
-CONFIG_EFI=y.  I think CONFIG_EFI is optional for both x86 and ia64,
-so it looks like this will break systems where CONFIG_X86=y and
-CONFIG_EFI is not set.
+This uses pci_sysfs_init() instead of the ->is_visible() function as
+is_visible only applies to the attributes under the group. Which
+means that every PCIe device will see a `doe_protos` directory, no
+matter if DOE is supported at all on the device.
 
-> This patch is tested on
-> 1) LS3A5000+LS7A2000 and LS3A5000+LS7A1000 platform.
-> 2) Intel i3-8100 CPU + H110 D4L motherboard with triple video cards:
-> 
-> $ lspci | grep VGA
-> 
-> Intel Corporation CoffeeLake-S GT2 [UHD Graphics 630]
-> Advanced Micro Devices, Inc. [AMD/ATI] Ellesmere [Radeon RX 470] (rev cf)
-> ASPEED Technology, Inc. ASPEED Graphics Family (rev 52)
-> 
-> Note that on x86, in order to testing the new approach this patch provided,
-> we remove the vga_arb_get_fb_range_from_screen_info() call in
-> vga_is_firmware_default() function, as following.
-> 
-> -#if defined(CONFIG_X86) || defined(CONFIG_IA64)
-> -       ret = vga_arb_get_fb_range_from_screen_info(&fb_start, &fb_end);
-> -#else
->         ret = vga_arb_get_fb_range_from_tracker(&fb_start, &fb_end);
-> -#endif
-> 
-> It is just that we don't observe the case which VRAM Bar of VGA compatible
-> controller moves, so there just no need to unify it. But on LoongArch,
-> the VRAM Bar of AMDGPU do moves.
-> 
-> v2:
-> 	* Fix test robot warnnings and fix typos
-> 
-> v3:
-> 	* Fix linkage problems if the global screen_info is not exported
+On top of that ->is_visible() is only called
+(fs/sysfs/group.c:create_files()) if there are sub attrs, which we
+don't necessary have. There are no static attrs, instead they are
+all generated dynamically.
 
-This doesn't build on x86:
+Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+---
+v5:
+ - Return the file name as the file contents
+ - Code cleanups and simplifications
+v4:
+ - Fixup typos in the documentation
+ - Make it clear that the file names contain the information
+ - Small code cleanups
+ - Remove most #ifdefs
+ - Remove extra NULL assignment
+v3:
+ - Expose each DOE feature as a separate file
+v2:
+ - Add documentation
+ - Code cleanups
 
-  $ git checkout -b wip/sui-vga-default-arch-independent v6.5-rc1
-  $ b4 am 20230808145859.1590625-1-suijingfeng@loongson.cn
-  $ git am ./20230808_suijingfeng_pci_vga_make_the_vga_is_firmware_default_less_arch_independent.mbx
-  $ make drivers/pci/vgaarb.o
-    CC      drivers/pci/vgaarb.o
-  drivers/pci/vgaarb.c:114:13: error: ‘vga_arb_get_fb_range_from_tracker’ defined but not used [-Werror=unused-function]
-    114 | static bool vga_arb_get_fb_range_from_tracker(resource_size_t *start,
-	|             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ Documentation/ABI/testing/sysfs-bus-pci |  11 +++
+ drivers/pci/doe.c                       | 110 ++++++++++++++++++++++++
+ drivers/pci/pci-sysfs.c                 |   7 ++
+ include/linux/pci-doe.h                 |   1 +
+ 4 files changed, 129 insertions(+)
 
-> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
-> ---
->  drivers/pci/vgaarb.c | 154 ++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 139 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-> index 5a696078b382..e0919a70af3e 100644
-> --- a/drivers/pci/vgaarb.c
-> +++ b/drivers/pci/vgaarb.c
-> @@ -61,6 +61,92 @@ static bool vga_arbiter_used;
->  static DEFINE_SPINLOCK(vga_lock);
->  static DECLARE_WAIT_QUEUE_HEAD(vga_wait_queue);
->  
-> +static struct firmware_fb_tracker {
-> +	/* The PCI(e) device who owns the firmware framebuffer */
-> +	struct pci_dev *pdev;
-> +	/* The index of the VRAM Bar */
-> +	unsigned int bar;
-> +	/* Firmware fb's offset from the VRAM aperture start */
-> +	resource_size_t offset;
-> +	/* The firmware fb's size, in bytes */
-> +	resource_size_t size;
-> +
-> +	/* Firmware fb's address range, suffer from change */
-> +	resource_size_t start;
-> +	resource_size_t end;
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+index ecf47559f495..1002a276dac9 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci
++++ b/Documentation/ABI/testing/sysfs-bus-pci
+@@ -500,3 +500,14 @@ Description:
+ 		console drivers from the device.  Raw users of pci-sysfs
+ 		resourceN attributes must be terminated prior to resizing.
+ 		Success of the resizing operation is not guaranteed.
++
++What:		/sys/bus/pci/devices/.../doe_protocols
++Date:		August 2023
++Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
++Description:
++		This directory contains a list of the supported
++		Data Object Exchange (DOE) features. The feature values are in the
++		file name. The contents of each file is the same as the name.
++		The value comes from the device and specifies the vendor and
++		data object type supported. The lower byte is the data object
++		type and the next two bytes are the vendor ID.
+diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+index 1b97a5ab71a9..3eb3160c4ba7 100644
+--- a/drivers/pci/doe.c
++++ b/drivers/pci/doe.c
+@@ -56,6 +56,8 @@ struct pci_doe_mb {
+ 	wait_queue_head_t wq;
+ 	struct workqueue_struct *work_queue;
+ 	unsigned long flags;
++
++	struct device_attribute *sysfs_attrs;
+ };
+ 
+ struct pci_doe_protocol {
+@@ -92,6 +94,114 @@ struct pci_doe_task {
+ 	struct pci_doe_mb *doe_mb;
+ };
+ 
++#ifdef CONFIG_SYSFS
++static struct attribute *pci_dev_doe_proto_attrs[] = {
++	NULL,
++};
++
++static const struct attribute_group pci_dev_doe_proto_group = {
++	.name	= "doe_protocols",
++	.attrs	= pci_dev_doe_proto_attrs,
++};
++
++static ssize_t pci_doe_sysfs_proto_show(struct device *dev,
++					struct device_attribute *attr,
++					char *buf)
++{
++	return sysfs_emit(buf, "%s\n", attr->attr.name);
++}
++
++static int pci_doe_sysfs_proto_supports(struct pci_dev *pdev,
++					struct pci_doe_mb *doe_mb)
++{
++	struct device *dev = &pdev->dev;
++	struct device_attribute *attrs;
++	unsigned long num_protos = 0;
++	unsigned long vid, type;
++	unsigned long i;
++	void *entry;
++	int ret;
++
++	xa_for_each(&doe_mb->prots, i, entry)
++		num_protos++;
++
++	attrs = kcalloc(num_protos, sizeof(*attrs), GFP_KERNEL);
++	if (!attrs)
++		return -ENOMEM;
++
++	doe_mb->sysfs_attrs = attrs;
++	xa_for_each(&doe_mb->prots, i, entry) {
++		sysfs_attr_init(&attrs[i].attr);
++		vid = xa_to_value(entry) >> 8;
++		type = xa_to_value(entry) & 0xFF;
++		attrs[i].attr.name = kasprintf(GFP_KERNEL,
++					       "0x%04lX:%02lX", vid, type);
++		if (!attrs[i].attr.name) {
++			ret = -ENOMEM;
++			goto fail;
++		}
++
++		attrs[i].attr.mode = 0444;
++		attrs[i].show = pci_doe_sysfs_proto_show;
++
++		ret = sysfs_add_file_to_group(&dev->kobj, &attrs[i].attr,
++					      pci_dev_doe_proto_group.name);
++		if (ret)
++			goto fail;
++	}
++
++	return 0;
++
++fail:
++	doe_mb->sysfs_attrs = NULL;
++	xa_for_each(&doe_mb->prots, i, entry) {
++		if (attrs[i].show)
++			sysfs_remove_file_from_group(&dev->kobj, &attrs[i].attr,
++						     pci_dev_doe_proto_group.name);
++		kfree(attrs[i].attr.name);
++	}
++
++	kfree(attrs);
++
++	return ret;
++}
++
++int doe_sysfs_init(struct pci_dev *pdev)
++{
++	bool add_doe_group = false;
++	struct pci_doe_mb *doe_mb;
++	unsigned long index, j;
++	void *entry;
++	int ret;
++
++	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
++		xa_for_each(&doe_mb->prots, j, entry) {
++			add_doe_group = true;
++			goto add_doe_group;
++		}
++	}
++
++	if (!add_doe_group)
++		return 0;
++
++add_doe_group:
++	ret = devm_device_add_group(&pdev->dev, &pci_dev_doe_proto_group);
++	if (ret) {
++		pci_err(pdev, "can't create DOE goup: %d\n", ret);
++		return ret;
++	}
++
++	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
++		ret = pci_doe_sysfs_proto_supports(pdev, doe_mb);
++
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++#endif
++
+ static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeout)
+ {
+ 	if (wait_event_timeout(doe_mb->wq,
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index ab32a91f287b..ad621850a3e2 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -16,6 +16,7 @@
+ #include <linux/kernel.h>
+ #include <linux/sched.h>
+ #include <linux/pci.h>
++#include <linux/pci-doe.h>
+ #include <linux/stat.h>
+ #include <linux/export.h>
+ #include <linux/topology.h>
+@@ -1226,6 +1227,12 @@ static int pci_create_resource_files(struct pci_dev *pdev)
+ 	int i;
+ 	int retval;
+ 
++	if (IS_ENABLED(CONFIG_PCI_DOE)) {
++		retval = doe_sysfs_init(pdev);
++		if (retval)
++			return retval;
++	}
++
+ 	/* Expose the PCI resources from this device as files */
+ 	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+ 
+diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
+index 1f14aed4354b..4cc13d9ccb50 100644
+--- a/include/linux/pci-doe.h
++++ b/include/linux/pci-doe.h
+@@ -22,4 +22,5 @@ int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
+ 	    const void *request, size_t request_sz,
+ 	    void *response, size_t response_sz);
+ 
++int doe_sysfs_init(struct pci_dev *pci_dev);
+ #endif
+-- 
+2.41.0
 
-It's redundant to save start, size, and end.  Start and end should be
-enough, and maybe you could use a struct resource for that.
-
-It's not clear to me why you need to save the start/end/etc anyway.
-All we need to know is which pci_dev is the firmware device.  Doesn't
-your fixup quirk identify it?  Once you set firmware_fb.pdev, I don't
-think it's ever changed.
-
-> +} firmware_fb;
-> +
-> +/*
-> + * Get the physical address range that the firmware framebuffer occupies.
-> + *
-> + * The global screen_info is arch-specific; it will not be exported if the
-> + * CONFIG_EFI is not selected on Arm64. Hence, CONFIG_EFI is chosen as
-> + * compile-time conditional to suppress linkage problems. This guard can be
-> + * removed if the global screen_info became arch-independent one day.
-
-What's the connection between CONFIG_EFI and screen_info?  I see
-screen_info global symbols for alpha, hexagon, powerpc, sparc, and
-several more if CONFIG_VT.  Please explain the connection so we can
-easily verify it.
-
-> +static bool vga_arb_get_fb_range_from_screen_info(resource_size_t *start,
-> +						  resource_size_t *end)
-> +{
-> +	resource_size_t fb_start = 0;
-> +	resource_size_t fb_size = 0;
-> +	resource_size_t fb_end;
-> +
-> +#if defined(CONFIG_EFI)
-> +	fb_start = screen_info.lfb_base;
-> +	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
-> +		fb_start |= (u64)screen_info.ext_lfb_base << 32;
-> +
-> +	fb_size = screen_info.lfb_size;
-> +#endif
-> +
-> +	/* No firmware framebuffer support */
-> +	if (!fb_start || !fb_size)
-> +		return false;
-> +
-> +	fb_end = fb_start + fb_size - 1;
-> +
-> +	*start = fb_start;
-> +	*end = fb_end;
-> +
-> +	return true;
-> +}
-> +
-> +static bool vga_arb_get_fb_range_from_tracker(resource_size_t *start,
-> +					      resource_size_t *end)
-> +{
-> +	struct pci_dev *pdev = firmware_fb.pdev;
-> +	resource_size_t new_vram_base;
-> +	resource_size_t new_fb_start;
-> +	resource_size_t old_fb_start;
-> +	resource_size_t old_fb_end;
-> +
-> +	/*
-> +	 * No firmware framebuffer support or no aperture that contains the
-> +	 * firmware FB is found. In this case, the firmware_fb.pdev will be
-> +	 * NULL. We will return immediately.
-> +	 */
-> +	if (!pdev)
-> +		return false;
-> +
-> +	new_vram_base = pdev->resource[firmware_fb.bar].start;
-> +	new_fb_start = new_vram_base + firmware_fb.offset;
-> +	old_fb_start = firmware_fb.start;
-> +	old_fb_end = firmware_fb.end;
-> +
-> +	if (new_fb_start != old_fb_start) {
-> +		firmware_fb.start = new_fb_start;
-> +		firmware_fb.end = new_fb_start + firmware_fb.size - 1;
-> +		vgaarb_dbg(&pdev->dev,
-> +			   "[0x%llx, 0x%llx] -> [0x%llx, 0x%llx]\n",
-> +			   (u64)old_fb_start, (u64)old_fb_end,
-> +			   (u64)firmware_fb.start, (u64)firmware_fb.end);
-
-This should be %pR format (see
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/core-api/printk-formats.rst?id=v6.4#n205).
-
-Maybe you could even use struct resource directly instead of
-new_fb_start old_fb_start, old_fb_end.
-
-Maybe these "get_fb_range" functions could even *return* a struct
-resource * instead of a boolean?  Boolean functions should not have
-side-effects anyway, and ideally their names should be questions with
-true/false answers or assertions that are true or false, e.g.,
-"pcie_cap_has_lnkctl()", "pci_ats_supported()",
-"of_device_is_compatible()", etc.
-
-> +	}
-> +
-> +	*start = firmware_fb.start;
-> +	*end = firmware_fb.end;
-> +
-> +	return true;
-> +}
->  
->  static const char *vga_iostate_to_str(unsigned int iostate)
->  {
-> @@ -543,20 +629,21 @@ void vga_put(struct pci_dev *pdev, unsigned int rsrc)
->  }
->  EXPORT_SYMBOL(vga_put);
->  
-> +/* Select the device owning the boot framebuffer if there is one */
->  static bool vga_is_firmware_default(struct pci_dev *pdev)
->  {
-> -#if defined(CONFIG_X86) || defined(CONFIG_IA64)
-> -	u64 base = screen_info.lfb_base;
-> -	u64 size = screen_info.lfb_size;
->  	struct resource *r;
-> -	u64 limit;
-> +	resource_size_t fb_start;
-> +	resource_size_t fb_end;
-> +	bool ret;
->  
-> -	/* Select the device owning the boot framebuffer if there is one */
-> -
-> -	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
-> -		base |= (u64)screen_info.ext_lfb_base << 32;
-> -
-> -	limit = base + size;
-> +#if defined(CONFIG_X86) || defined(CONFIG_IA64)
-> +	ret = vga_arb_get_fb_range_from_screen_info(&fb_start, &fb_end);
-> +#else
-> +	ret = vga_arb_get_fb_range_from_tracker(&fb_start, &fb_end);
-
-vga_is_firmware_default() is a boolean function and should have no
-side effects.  But vga_arb_get_fb_range_from_tracker() *does* have
-side effects -- it may update firmware_fb.start/end.
-
-It's OK if you need to update those, but I don't think it should be in
-the vga_is_boot_device().  And vga_arb_get_fb_range_from_tracker()
-doesn't have anything to do with the specific device being added by
-vga_arbiter_add_pci_device(), so it should only need to be called
-once.  If you only need a one-time thing, maybe it should be called
-from vga_arb_device_init()?
-
-> +#endif
-> +	if (!ret)
-> +		return false;
->  
->  	/* Does firmware framebuffer belong to us? */
->  	pci_dev_for_each_resource(pdev, r) {
-> @@ -566,12 +653,10 @@ static bool vga_is_firmware_default(struct pci_dev *pdev)
->  		if (!r->start || !r->end)
->  			continue;
->  
-> -		if (base < r->start || limit >= r->end)
-> -			continue;
-> -
-> -		return true;
-> +		if (fb_start >= r->start && fb_end <= r->end)
-> +			return true;
->  	}
-> -#endif
-> +
->  	return false;
->  }
->  
-> @@ -1555,3 +1640,42 @@ static int __init vga_arb_device_init(void)
->  	return rc;
->  }
->  subsys_initcall_sync(vga_arb_device_init);
-> +
-> +static void vga_arb_firmware_fb_addr_tracker(struct pci_dev *pdev)
-> +{
-> +	resource_size_t fb_start;
-> +	resource_size_t fb_end;
-> +	unsigned int i;
-> +
-> +	/* Already found the pdev which has firmware framebuffer ownership */
-> +	if (firmware_fb.pdev)
-> +		return;
-> +
-> +	if (!vga_arb_get_fb_range_from_screen_info(&fb_start, &fb_end))
-> +		return;
-> +
-> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> +		struct resource *ap = &pdev->resource[i];
-
-What does "ap" mean?  Typical name for such a pointer is "r" or "res".
-
-> +		if (resource_type(ap) != IORESOURCE_MEM)
-> +			continue;
-> +
-> +		if (!ap->start || !ap->end)
-> +			continue;
-> +
-> +		if (ap->start <= fb_start && fb_end <= ap->end) {
-> +			firmware_fb.pdev = pdev;
-> +			firmware_fb.bar = i;
-> +			firmware_fb.size = fb_end - fb_start + 1;
-> +			firmware_fb.offset = fb_start - ap->start;
-> +			firmware_fb.start = fb_start;
-> +			firmware_fb.end = fb_end;
-> +
-> +			vgaarb_dbg(&pdev->dev,
-> +				   "BAR %u contains firmware FB\n", i);
-
-Include at least the %pR of the BAR and maybe of the framebuffer
-itself as well.
-
-> +			break;
-> +		}
-> +	}
-> +}
-> +DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID, PCI_CLASS_DISPLAY_VGA,
-> +			       8, vga_arb_firmware_fb_addr_tracker);
-> -- 
-> 2.34.1
-> 
