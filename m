@@ -2,120 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B79277A45C
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Aug 2023 02:45:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FBEF77A5CB
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Aug 2023 11:25:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229716AbjHMApB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 12 Aug 2023 20:45:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36604 "EHLO
+        id S230194AbjHMJZM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 13 Aug 2023 05:25:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbjHMApB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Aug 2023 20:45:01 -0400
-Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA5C010EB;
-        Sat, 12 Aug 2023 17:44:59 -0700 (PDT)
-Received: from [10.0.0.200] (unknown [10.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ixit.cz (Postfix) with ESMTPSA id 622A91603AD;
-        Sun, 13 Aug 2023 02:44:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
-        t=1691887497; h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=JkFYVHjXNXjnsFctRK5sD71AhL+gPbD1MLBbtLqMg/Y=;
-        b=KgLnX1QNAyvAK3bomX4RfzLfgJxSdvZxuvegaewVIlU5WMdqPo1ITjp/CG8FfeQq4mxzBW
-        m+rn36xbaBA3EtOZIC1+IAJDmxVR0Ih8hQISDSBb38QLInD5YUh8ex0pJ4gCYjwOVLgyYj
-        vXh/YOID+WHuGT/Rm/9q6y4XI0oj5JU=
-Message-ID: <4fa1e0fe-eec4-4e5c-8acd-274a039c048a@ixit.cz>
-Date:   Sun, 13 Aug 2023 02:44:57 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To:     grundler@chromium.org
-Cc:     bhelgaas@google.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        mahesh@linux.ibm.com, oohall@gmail.com,
-        rajat.khandelwal@linux.intel.com, rajatja@chromium.org
-References: <20230606035442.2886343-1-grundler@chromium.org>
-Subject: Re: [PATCHv3 pci-next 1/2] PCI/AER: correctable error message as
- KERN_INFO
-Content-Language: en-US
-Reply-To: 20230606035442.2886343-1-grundler@chromium.org
-From:   David Heidelberg <david@ixit.cz>
-Autocrypt: addr=david@ixit.cz; keydata=
- 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
-In-Reply-To: <20230606035442.2886343-1-grundler@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,PDS_RDNS_DYNAMIC_FP,
-        RDNS_DYNAMIC,SPF_HELO_PASS,SPF_PASS autolearn=no autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229441AbjHMJZL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Aug 2023 05:25:11 -0400
+X-Greylist: delayed 302 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 13 Aug 2023 02:25:07 PDT
+Received: from ciao.gmane.io (ciao.gmane.io [116.202.254.214])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AF0D170C
+        for <linux-pci@vger.kernel.org>; Sun, 13 Aug 2023 02:25:07 -0700 (PDT)
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+        (envelope-from <glp-linux-pci@m.gmane-mx.org>)
+        id 1qV7GU-0003lY-L8
+        for linux-pci@vger.kernel.org; Sun, 13 Aug 2023 11:20:02 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To:     linux-pci@vger.kernel.org
+From:   deloptes <emanoil.kotsev@deloptes.org>
+Subject: SSD SATA 3.3 and Broadcom / LSI SAS1068E PCI-Express Fusion-MPT SAS
+Date:   Sun, 13 Aug 2023 11:15:31 +0200
+Lines:  96
+Message-ID: <uba6vj$10n6$1@ciao.gmane.io>
+Reply-To: emanoil.kotsev@deloptes.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+User-Agent: KNode/0.10.9
+X-Face: &bB+dG6r\D$gd^NFeYm<f{n8m&2W,Lr'h>#MNOHtI/(z<->Su~)mL1rYXAE7W:U2d;tQAEP  ?3('tC@:iV_x)~3Kq.-X\\j1HU;i6/u\An"y=\gO%d`v#QdRgaw9JySH|xOp&6giT2q+z3j<t`[9@b  _&-<C%rE*@-)n9uI5?P_u9`8x.@SeM*h,'bBR~v^^XiU[Y&\/L6(jEpen8eNtlhu!p)GYOW6Iny
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Tested-by: David Heidelberg <david@ixit.cz>
+Hi all,
 
-For PATCH v4 please fix the typo reported by the bot :)
+I hope I am in the right news group. If not please point me to a place where
+someone can give me an advice in which direction I could look for an
+answer.
 
-Seeing messages as
+I've been using the below mentioned board (see dmidecode) with the below
+mentioned SAS controllers (see lspci) for many years with normal
+(rotating/spinning) disk drives.
+I now bought 2 SSD disks to replace 2 of the spinning once and I was
+surprised to find out that the older disks are using 3Gb/s transfer rate
+while the SSDs are using 1.5Gb/s. The SSDs are reporting SATA 3.3 (see
+below)
 
-__aer_print_error: 72 callbacks suppressed
+In the mptsas driver I see 3 and 6 but no 3.3 or similar. 
 
-but it still prints many errors on my laptop. Anyway, the log is less 
-filled with this patch, so great!
+https://github.com/torvalds/linux/blob/ae545c3283dc673f7e748065efa46ba95f678ef2/drivers/message/fusion/mptsas.c#L3087C1-L3111C3
 
-Thank you
-David
+If I understand correctly the rate is negotiated by the controller and the
+mobo. I am wondering where could be the problem. Is it really matter of
+negotiation i.e. the driver does not understand 3.3 or a technical
+constrains/incompatibility at 3Gb/s?
+
+Last question: If I would have to replace the controllers, what controller
+would be recommended?
+
+Thank you in advance
+
+BR
+
+
+# lspci
+01:00.0 SCSI storage controller: Broadcom / LSI SAS1068E PCI-Express
+Fusion-MPT SAS (rev 08)
+08:00.0 SCSI storage controller: Broadcom / LSI SAS1068E PCI-Express
+Fusion-MPT SAS (rev 08)
+
+# dmidecode
+
+Handle 0x0002, DMI type 2, 15 bytes
+Base Board Information
+        Manufacturer: ASUSTeK COMPUTER INC.
+        Product Name: M5A97 EVO R2.0
+        Version: Rev 1.xx
+
+Handle 0x0028, DMI type 9, 17 bytes
+System Slot Information
+        Designation: PCIEX16_2
+        Type: x16 PCI Express
+        Current Usage: Available
+        Length: Short
+        ID: 3
+        Characteristics:
+                3.3 V is provided
+                Opening is shared
+                PME signal is supported
+        Bus Address: 0000:00:1c.5
+
+
+
+# smartctl
+
+=== START OF INFORMATION SECTION ===
+Model Family:     WD Blue / Red / Green SSDs
+Device Model:     WDC  WDS200T1R0A-68A4W0
+...
+Firmware Version: 411010WR
+User Capacity:    2,000,398,934,016 bytes [2.00 TB]
+Sector Size:      512 bytes logical/physical
+Rotation Rate:    Solid State Device
+Form Factor:      2.5 inches
+TRIM Command:     Available, deterministic, zeroed
+Device is:        In smartctl database [for details use: -P show]
+ATA Version is:   ACS-4 T13/BSR INCITS 529 revision 5
+SATA Version is:  SATA 3.3, 6.0 Gb/s (current: 1.5 Gb/s) <<<<<<<<<<<< HERE
+Local Time is:    Sun Aug 13 10:38:11 2023 CEST
+SMART support is: Available - device has SMART capability.
+SMART support is: Enabled
+
+=== START OF INFORMATION SECTION ===
+Model Family:     Western Digital Red
+Device Model:     WDC WD20EFRX-68EUZN0
+...
+Firmware Version: 82.00A82
+User Capacity:    2,000,398,934,016 bytes [2.00 TB]
+Sector Sizes:     512 bytes logical, 4096 bytes physical
+Rotation Rate:    5400 rpm
+Device is:        In smartctl database [for details use: -P show]
+ATA Version is:   ACS-2 (minor revision not indicated)
+SATA Version is:  SATA 3.0, 6.0 Gb/s (current: 3.0 Gb/s) <<<<<<<<<<<< HERE
+Local Time is:    Sun Aug 13 10:38:11 2023 CEST
+SMART support is: Available - device has SMART capability.
+SMART support is: Enabled
 
 -- 
-David Heidelberg
-Certified Linux Magician
+FCD6 3719 0FFB F1BF 38EA 4727 5348 5F1F DCFE BCB0
 
