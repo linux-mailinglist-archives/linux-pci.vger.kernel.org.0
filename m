@@ -2,146 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC38A77B9F0
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Aug 2023 15:28:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 936A377BA1C
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Aug 2023 15:33:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbjHNN1f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Aug 2023 09:27:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53348 "EHLO
+        id S229748AbjHNNdJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Aug 2023 09:33:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231378AbjHNN1d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Aug 2023 09:27:33 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8205012D;
-        Mon, 14 Aug 2023 06:27:32 -0700 (PDT)
+        with ESMTP id S231390AbjHNNc7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Aug 2023 09:32:59 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EA83ED;
+        Mon, 14 Aug 2023 06:32:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692019652; x=1723555652;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=uEAgFuelBW2HgyEvKYz5wAP7z+RpkG1urn+9Q46Dy7I=;
-  b=bk+eyYKuBrFmu+7+0R+2HpsogVQuD8ts7xFdW/Pp6C1EArEkdnu3+4jI
-   19OxaOgzzDCvlgIdF31Qfb81FZ5JC+8hVhXRw2AoiTPVARHq+I/PSLLtT
-   VAo//rcdqEiftiPjRrctjwm1jYol+8CbssBn4+NebN9+jReQd6FxBQ4XC
-   k0Lu5V7ZoKjKnMGQQSStms3U4wqk8jwDZzQXQPKI7YndgjTSV2OTYNlJ7
-   ltntS49aTu0bsbBU1cBTAmYrlTaSLz265XprDPcXdxMZfNQjXxRLXtcD7
-   ZcISf1J/O2BUV3jqCqdGaQFvGLtPfGcMtiQfdeVHCqFhvrucMpD6nDkGD
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="458399097"
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1692019978; x=1723555978;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lLCW8exBkCQ0+KhPTI7tohXMvPiVJbwAMeY/3NzBgkk=;
+  b=j7+KEoPUSHrTKLyM3DSS4c+xabUcp1NI+Lpw9bLNONkk6pxPCvz2lzSK
+   MPsMNI3otH+9Jzdv4yKAlGPhfU1mSpf9EzDhNLX5t3CFmHMx0ELEfwMZG
+   ng5QaVp+A2xnOb3dAyrITb/76Pkszqz/+yminB/JhdlaiERpa9gW6G5HB
+   KSHbMPUx5hREwoiiLcnB/zRZB3Xqcq/bNjecXzbOPiZaFNpUv83ehAYUR
+   2ZVGWDHD5PVPA+q/RJmEK+Cctl5myDK7q8ge/k6sgr76AUFZW+6L/l9+Z
+   FipXnaInPIB81aRPQHQwCGerj7Nli06+5oqD8vyKpRtelGd14hsg51EPl
+   w==;
 X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
-   d="scan'208";a="458399097"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 06:27:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="768452779"
-X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
-   d="scan'208";a="768452779"
-Received: from lgarello-mobl.ger.corp.intel.com (HELO ijarvine-mobl2.ger.corp.intel.com) ([10.249.40.121])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 06:27:28 -0700
-From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Moshe Shemesh <moshe@mellanox.com>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 1/1] net/mlx5: Convert PCI error values to generic errnos
-Date:   Mon, 14 Aug 2023 16:27:20 +0300
-Message-Id: <20230814132721.26608-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
+   d="asc'?scan'208";a="225309518"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Aug 2023 06:32:57 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Mon, 14 Aug 2023 06:32:56 -0700
+Received: from wendy (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
+ Transport; Mon, 14 Aug 2023 06:32:53 -0700
+Date:   Mon, 14 Aug 2023 14:32:14 +0100
+From:   Conor Dooley <conor.dooley@microchip.com>
+To:     Minda Chen <minda.chen@starfivetech.com>
+CC:     Daire McNamara <daire.mcnamara@microchip.com>,
+        Conor Dooley <conor@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Kevin Xie <kevin.xie@starfivetech.com>
+Subject: Re: [PATCH v3 03/11] PCI: microchip: Move PLDA IP register macros to
+ pcie-plda.h
+Message-ID: <20230814-enslave-shove-7d664aa2e446@wendy>
+References: <20230814082016.104181-1-minda.chen@starfivetech.com>
+ <20230814082016.104181-4-minda.chen@starfivetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ip6kD9UvSz6fmmdl"
+Content-Disposition: inline
+In-Reply-To: <20230814082016.104181-4-minda.chen@starfivetech.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-mlx5_pci_link_toggle() returns mix PCI specific error codes and generic
-errnos.
+--ip6kD9UvSz6fmmdl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Convert the PCI specific error values to generic errno using
-pcibios_err_to_errno() before returning them.
+On Mon, Aug 14, 2023 at 04:20:08PM +0800, Minda Chen wrote:
+> Move PLDA PCIe host controller IP registers macros to
+> pcie-plda.h, Including bridge and configuration space
+> registers.
+>=20
+> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
 
-Fixes: eabe8e5e88f5 ("net/mlx5: Handle sync reset now event")
-Fixes: 212b4d7251c1 ("net/mlx5: Wait for firmware to enable CRS before pci_restore_state")
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
----
+Thanks,
+Conor.
 
-Maintainers beware, this will conflict with read+write -> set/clear_word
-fixes in pci.git/pcie-rmw. As such, it might be the easiest for Bjorn to
-take it instead of net people.
+--ip6kD9UvSz6fmmdl
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-I wonder if these PCIBIOS_* error codes are useful at all? There's 1:1
-mapping into errno values so no information loss if the functions would just
-return errnos directly. Perhaps this is just legacy nobody has bothered to
-remove? If nobody opposes, I could take a look at getting rid of them.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZNos3gAKCRB4tDGHoIJi
+0rF/AQDCOE4Xmu5oEEQTrRyiRXstNx4FD2D6//vnFqowm2aMcgD+OWRPiXR7DDGX
+Q4jYPDKCqmQDkItWe+4xurKC8uXvJA4=
+=J3qt
+-----END PGP SIGNATURE-----
 
----
- drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
-index 4804990b7f22..0afd9dbfc471 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
-@@ -371,7 +371,7 @@ static int mlx5_pci_link_toggle(struct mlx5_core_dev *dev)
- 
- 	err = pci_read_config_word(dev->pdev, PCI_DEVICE_ID, &dev_id);
- 	if (err)
--		return err;
-+		return pcibios_err_to_errno(err);
- 	err = mlx5_check_dev_ids(dev, dev_id);
- 	if (err)
- 		return err;
-@@ -386,16 +386,16 @@ static int mlx5_pci_link_toggle(struct mlx5_core_dev *dev)
- 	/* PCI link toggle */
- 	err = pci_read_config_word(bridge, cap + PCI_EXP_LNKCTL, &reg16);
- 	if (err)
--		return err;
-+		return pcibios_err_to_errno(err);
- 	reg16 |= PCI_EXP_LNKCTL_LD;
- 	err = pci_write_config_word(bridge, cap + PCI_EXP_LNKCTL, reg16);
- 	if (err)
--		return err;
-+		return pcibios_err_to_errno(err);
- 	msleep(500);
- 	reg16 &= ~PCI_EXP_LNKCTL_LD;
- 	err = pci_write_config_word(bridge, cap + PCI_EXP_LNKCTL, reg16);
- 	if (err)
--		return err;
-+		return pcibios_err_to_errno(err);
- 
- 	/* Check link */
- 	if (!bridge->link_active_reporting) {
-@@ -408,7 +408,7 @@ static int mlx5_pci_link_toggle(struct mlx5_core_dev *dev)
- 	do {
- 		err = pci_read_config_word(bridge, cap + PCI_EXP_LNKSTA, &reg16);
- 		if (err)
--			return err;
-+			return pcibios_err_to_errno(err);
- 		if (reg16 & PCI_EXP_LNKSTA_DLLLA)
- 			break;
- 		msleep(20);
-@@ -426,7 +426,7 @@ static int mlx5_pci_link_toggle(struct mlx5_core_dev *dev)
- 	do {
- 		err = pci_read_config_word(dev->pdev, PCI_DEVICE_ID, &reg16);
- 		if (err)
--			return err;
-+			return pcibios_err_to_errno(err);
- 		if (reg16 == dev_id)
- 			break;
- 		msleep(20);
--- 
-2.30.2
-
+--ip6kD9UvSz6fmmdl--
