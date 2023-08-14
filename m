@@ -2,126 +2,228 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DFB677C374
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Aug 2023 00:30:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4689077C383
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Aug 2023 00:33:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233272AbjHNW33 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Aug 2023 18:29:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46592 "EHLO
+        id S233273AbjHNWdP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Aug 2023 18:33:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233297AbjHNW3Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Aug 2023 18:29:24 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CBE01718
-        for <linux-pci@vger.kernel.org>; Mon, 14 Aug 2023 15:29:24 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d6ac5db336eso1823067276.2
-        for <linux-pci@vger.kernel.org>; Mon, 14 Aug 2023 15:29:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692052163; x=1692656963;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=RcDIHEJOfIIWu/ve0ihwsZwkiAHO9c4r9RpAYPgPp0Q=;
-        b=nijWK+10BpOOGjaNzFF/ySkAzQyd1bpPMAfTFZ15CB3RONAkpICnZD9HkZuF0WDOdr
-         GmWZDXkttlQgwIrweQ06htMhP1y5c4dLLYcFiXhr2DYygC4CPaLl+lXkCBPRFGdQyA3Y
-         s0zI+dAdAYnKv6EAMUSqioCW8e6SUoVkxKzh/BalivDSLxU2tVRr4qXnh5FjJ1xE2yPt
-         a40o8fKsSE0Y9fz5Eo6vn5qAG36WTiaG55mlMnja0ivOXsUFnoJ6U8R5a08Thl6oiixp
-         tuICWzWVtM21YVHhiB6Q48LsBlDn/7IG53hgwDBPDI0W6fINqvXu2McNcBRTy83aW9hk
-         5vcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692052163; x=1692656963;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RcDIHEJOfIIWu/ve0ihwsZwkiAHO9c4r9RpAYPgPp0Q=;
-        b=CiAPOplnpaG/awtGGJLfHMkx35p6iEBwbJ+/mpir1Pi2zpdVeQVmtuqOaHXZVsf0f+
-         aS+WqFzP3M/TtOe/yBQFHqt7AYU1wpKV65RE1wtZLW3mdtKui6+keWhVTzvctyQXdpNg
-         M4hDiqq6rOCKmjN8FmuYLDIVq+j1mCG33y9PXEtveJe+oyOXRfOdKrDFRkXbly8VbfFp
-         vZDjnk41KoDOGFe8OB/o0ddSizDol9pzDOl3lqS+diboBdu0SpS/80sxJLLAmuP1S/MZ
-         4v9lbZiElqFhFlcxIjb0K39OqhWJAi8fDxFUr+dY3WsBntPEYvVjB7lgmVsucZOoJuTM
-         Cqqg==
-X-Gm-Message-State: AOJu0YyCnCybvcBQDW+872Ht+Q3QRj1ywEdVkckKbxO2r/5OeLou/Fb0
-        Z49v5yEsMlp4KAJ0qft4mLkC7rFeLhLtqnC7Hg==
-X-Google-Smtp-Source: AGHT+IFOorN5wnUKQMgqROu8nIpxAopwbZ9DVt7NA03X2ZwvhZWl7WSRhbOBwhQ2hjOiEXxNdv8EMmqvUlMFUGlkFQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:4c7:b0:d5d:511b:16da with
- SMTP id v7-20020a05690204c700b00d5d511b16damr152077ybs.2.1692052163298; Mon,
- 14 Aug 2023 15:29:23 -0700 (PDT)
-Date:   Mon, 14 Aug 2023 22:29:22 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAMGq2mQC/x3N0QrCMAyF4VcZuTawzYnOV5FdhDTTQG1KOoow9
- u5WLz/4OWeHIq5S4N7t4FK1qKWG4dQBvyg9BTU0w9iP5/42TFhNAwbXKl4wsyJb2txiFP+x9dm NMUfaVvM3UqCJeKaZrhdoq9ll1c//8bEcxxf6NaK4gQAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1692052162; l=1795;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=toFi8SLwCRTpw1/0M43OmJYYHtAj7TdhUp1prlUqvx0=; b=U3QTlDMvdylVxAWgbG3pK732X8XyFTgIFb66Bd2VJBtoqOoT1q9iVC/u9LcAgyIsk9+LM9r9F
- EJcOv89AN5mAXhCnqYlgISVYhs9mDM/pbsSB1w8FWz7dQcfdDIwtpq1
-X-Mailer: b4 0.12.3
-Message-ID: <20230814-void-drivers-pci-controller-pcie-iproc-platform-v1-1-81a121607851@google.com>
-Subject: [PATCH] PCI: iproc: fix -Wvoid-pointer-to-enum-cast warning
-From:   Justin Stitt <justinstitt@google.com>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        "=?utf-8?q?Krzysztof_Wilczy=C5=84ski?=" <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        with ESMTP id S233343AbjHNWcp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Aug 2023 18:32:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1360C1723;
+        Mon, 14 Aug 2023 15:32:36 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A595064ABB;
+        Mon, 14 Aug 2023 22:32:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 963D2C433C8;
+        Mon, 14 Aug 2023 22:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692052355;
+        bh=fNvbnPblE97vAUcJkov68DyQCZiCJ762WhRrdDSXMKk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=m186P7fQpmg6zfJXBT7tLHECFS2PvRf9qof7SD3dZuBOLHMKmmkIBn/XNrIYlPw2o
+         BU0pH0o1JrKcy/IRsnJai2OaqxRZKl3pJxkZKUmwWdyj87n5gA87cvYO9sHnn7mlAw
+         /SNvpFZQyRrKKFoSNCw9mL2ZgC9nw2Ik1PiamQ2tOnxxTinTEhhm1a+onGOSyhBXSz
+         iiwHdaHN2iobrrQer6JmoxyIdhYZPsgSOT3aZxUjiUvWyz9K3BdPL/nMQAdsOrV1R9
+         fxG5s8WqX9udiQjXXfwLJje45ok9OoVJpggj/xKRnXzLoD0I1A8Ap9EhRP3ynG15nj
+         KDRKI5HfdZsqg==
+Date:   Mon, 14 Aug 2023 17:32:32 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Moshe Shemesh <moshe@mellanox.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] net/mlx5: Convert PCI error values to generic errnos
+Message-ID: <20230814223232.GA195681@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230814132721.26608-1-ilpo.jarvinen@linux.intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When building with clang 18 I see the following warning:
-|       drivers/pci/controller/pcie-iproc-platform.c:55:15: warning: cast to smaller
-|                integer type 'enum iproc_pcie_type' from 'const void *' [-Wvoid-pointer-to-enum-cast]
-|          55 |         pcie->type = (enum iproc_pcie_type) of_device_get_match_data(dev);
+On Mon, Aug 14, 2023 at 04:27:20PM +0300, Ilpo Järvinen wrote:
+> mlx5_pci_link_toggle() returns mix PCI specific error codes and generic
+> errnos.
+> 
+> Convert the PCI specific error values to generic errno using
+> pcibios_err_to_errno() before returning them.
+> 
+> Fixes: eabe8e5e88f5 ("net/mlx5: Handle sync reset now event")
+> Fixes: 212b4d7251c1 ("net/mlx5: Wait for firmware to enable CRS before pci_restore_state")
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> 
+> ---
+> 
+> Maintainers beware, this will conflict with read+write -> set/clear_word
+> fixes in pci.git/pcie-rmw. As such, it might be the easiest for Bjorn to
+> take it instead of net people.
 
-This is due to the fact that `of_device_get_match_data` returns a void*
-while `enum iproc_pcie_type` has the size of an int. This leads to
-truncation and possible data loss.
+I provisionally rebased and applied it on pci/pcie-rmw.  Take a look
+and make sure I didn't botch it -- I also found a case in
+mlx5_check_dev_ids() that looks like it needs the same conversion.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/1910
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: There is likely no data loss occurring here since `enum
-iproc_pcie_type` has only a few fields enumerated from 0. Definitely not
-enough to cause data loss from pointer-width to int-width.
----
- drivers/pci/controller/pcie-iproc-platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The commit as applied is below.
 
-diff --git a/drivers/pci/controller/pcie-iproc-platform.c b/drivers/pci/controller/pcie-iproc-platform.c
-index acdc583d2980..83cbc95f4384 100644
---- a/drivers/pci/controller/pcie-iproc-platform.c
-+++ b/drivers/pci/controller/pcie-iproc-platform.c
-@@ -52,7 +52,7 @@ static int iproc_pltfm_pcie_probe(struct platform_device *pdev)
- 	pcie = pci_host_bridge_priv(bridge);
+If networking folks would prefer to take this, let me know and I can
+drop it.
+
+> I wonder if these PCIBIOS_* error codes are useful at all? There's 1:1
+> mapping into errno values so no information loss if the functions would just
+> return errnos directly. Perhaps this is just legacy nobody has bothered to
+> remove? If nobody opposes, I could take a look at getting rid of them.
+
+I don't think the PCIBIOS error codes are very useful outside of
+arch/x86.  They're returned by x86 PCIBIOS functions, and I think we
+still use those calls, but I don't think there's value in exposing the
+x86 error codes outside arch/x86.  Looks like a big job to clean it up
+though ;)
+
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
+> index 4804990b7f22..0afd9dbfc471 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
+> @@ -371,7 +371,7 @@ static int mlx5_pci_link_toggle(struct mlx5_core_dev *dev)
+>  
+>  	err = pci_read_config_word(dev->pdev, PCI_DEVICE_ID, &dev_id);
+>  	if (err)
+> -		return err;
+> +		return pcibios_err_to_errno(err);
+>  	err = mlx5_check_dev_ids(dev, dev_id);
+>  	if (err)
+>  		return err;
+> @@ -386,16 +386,16 @@ static int mlx5_pci_link_toggle(struct mlx5_core_dev *dev)
+>  	/* PCI link toggle */
+>  	err = pci_read_config_word(bridge, cap + PCI_EXP_LNKCTL, &reg16);
+>  	if (err)
+> -		return err;
+> +		return pcibios_err_to_errno(err);
+>  	reg16 |= PCI_EXP_LNKCTL_LD;
+>  	err = pci_write_config_word(bridge, cap + PCI_EXP_LNKCTL, reg16);
+>  	if (err)
+> -		return err;
+> +		return pcibios_err_to_errno(err);
+>  	msleep(500);
+>  	reg16 &= ~PCI_EXP_LNKCTL_LD;
+>  	err = pci_write_config_word(bridge, cap + PCI_EXP_LNKCTL, reg16);
+>  	if (err)
+> -		return err;
+> +		return pcibios_err_to_errno(err);
+>  
+>  	/* Check link */
+>  	if (!bridge->link_active_reporting) {
+> @@ -408,7 +408,7 @@ static int mlx5_pci_link_toggle(struct mlx5_core_dev *dev)
+>  	do {
+>  		err = pci_read_config_word(bridge, cap + PCI_EXP_LNKSTA, &reg16);
+>  		if (err)
+> -			return err;
+> +			return pcibios_err_to_errno(err);
+>  		if (reg16 & PCI_EXP_LNKSTA_DLLLA)
+>  			break;
+>  		msleep(20);
+> @@ -426,7 +426,7 @@ static int mlx5_pci_link_toggle(struct mlx5_core_dev *dev)
+>  	do {
+>  		err = pci_read_config_word(dev->pdev, PCI_DEVICE_ID, &reg16);
+>  		if (err)
+> -			return err;
+> +			return pcibios_err_to_errno(err);
+>  		if (reg16 == dev_id)
+>  			break;
+>  		msleep(20);
+
+commit a48c6af2d2a5 ("net/mlx5: Convert PCI error values to generic errnos")
+Author: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Date:   Mon Aug 14 16:27:20 2023 +0300
+
+    net/mlx5: Convert PCI error values to generic errnos
+    
+    mlx5_pci_link_toggle() returns a mix of PCI-specific error codes and
+    generic errnos.
+    
+    Convert the PCI-specific error values to generic errno using
+    pcibios_err_to_errno() before returning them.
+    
+    Fixes: eabe8e5e88f5 ("net/mlx5: Handle sync reset now event")
+    Fixes: 212b4d7251c1 ("net/mlx5: Wait for firmware to enable CRS before pci_restore_state")
+    Link: https://lore.kernel.org/r/20230814132721.26608-1-ilpo.jarvinen@linux.intel.com
+    Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+    [bhelgaas: rebase to pci/pcie-rmw, also convert in mlx5_check_dev_ids()]
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
+index 99dcbd006357..85a2dfbb5c46 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
+@@ -311,7 +311,7 @@ static int mlx5_check_dev_ids(struct mlx5_core_dev *dev, u16 dev_id)
+ 	list_for_each_entry(sdev, &bridge_bus->devices, bus_list) {
+ 		err = pci_read_config_word(sdev, PCI_DEVICE_ID, &sdev_id);
+ 		if (err)
+-			return err;
++			return pcibios_err_to_errno(err);
+ 		if (sdev_id != dev_id) {
+ 			mlx5_core_warn(dev, "unrecognized dev_id (0x%x)\n", sdev_id);
+ 			return -EPERM;
+@@ -371,7 +371,7 @@ static int mlx5_pci_link_toggle(struct mlx5_core_dev *dev)
  
- 	pcie->dev = dev;
--	pcie->type = (enum iproc_pcie_type) of_device_get_match_data(dev);
-+	pcie->type = (uintptr_t) of_device_get_match_data(dev);
+ 	err = pci_read_config_word(dev->pdev, PCI_DEVICE_ID, &dev_id);
+ 	if (err)
+-		return err;
++		return pcibios_err_to_errno(err);
+ 	err = mlx5_check_dev_ids(dev, dev_id);
+ 	if (err)
+ 		return err;
+@@ -386,11 +386,11 @@ static int mlx5_pci_link_toggle(struct mlx5_core_dev *dev)
+ 	/* PCI link toggle */
+ 	err = pcie_capability_set_word(bridge, PCI_EXP_LNKCTL, PCI_EXP_LNKCTL_LD);
+ 	if (err)
+-		return err;
++		return pcibios_err_to_errno(err);
+ 	msleep(500);
+ 	err = pcie_capability_clear_word(bridge, PCI_EXP_LNKCTL, PCI_EXP_LNKCTL_LD);
+ 	if (err)
+-		return err;
++		return pcibios_err_to_errno(err);
  
- 	ret = of_address_to_resource(np, 0, &reg);
- 	if (ret < 0) {
-
----
-base-commit: 2ccdd1b13c591d306f0401d98dedc4bdcd02b421
-change-id: 20230814-void-drivers-pci-controller-pcie-iproc-platform-ada4ac9a9a75
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+ 	/* Check link */
+ 	if (!bridge->link_active_reporting) {
+@@ -403,7 +403,7 @@ static int mlx5_pci_link_toggle(struct mlx5_core_dev *dev)
+ 	do {
+ 		err = pci_read_config_word(bridge, cap + PCI_EXP_LNKSTA, &reg16);
+ 		if (err)
+-			return err;
++			return pcibios_err_to_errno(err);
+ 		if (reg16 & PCI_EXP_LNKSTA_DLLLA)
+ 			break;
+ 		msleep(20);
+@@ -421,7 +421,7 @@ static int mlx5_pci_link_toggle(struct mlx5_core_dev *dev)
+ 	do {
+ 		err = pci_read_config_word(dev->pdev, PCI_DEVICE_ID, &reg16);
+ 		if (err)
+-			return err;
++			return pcibios_err_to_errno(err);
+ 		if (reg16 == dev_id)
+ 			break;
+ 		msleep(20);
