@@ -2,163 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B52A77C342
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Aug 2023 00:07:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2B8D77C36F
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Aug 2023 00:29:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233180AbjHNWHP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Aug 2023 18:07:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42252 "EHLO
+        id S233266AbjHNW2z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Aug 2023 18:28:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233200AbjHNWHC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Aug 2023 18:07:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B410D1;
-        Mon, 14 Aug 2023 15:07:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 055C36365C;
-        Mon, 14 Aug 2023 22:07:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B356C433C8;
-        Mon, 14 Aug 2023 22:07:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692050820;
-        bh=48/dlFQB8VC8OlFHrcOt82tycaKer65es1u2ufvLD58=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UWXDOGb+6lxSCIFUkhYUzHoFKnMvkonIzu77lc35b/bkXmfr9EvhQk9Oh42iH2jgJ
-         PiU3eNOV7okYxO/Rq6denjg4BE0Nz/HZIoS1pKXdss3usGxi/O47grdSOtoEE0+uXx
-         HgXIPSUKZNQRrJlWQXNUJufNA5oWJ5H8GRT0Xes7EXP6f5/LSmh1iDNvfqxwXcZGwy
-         45X/mzQ0t6zZh5voiG9Nx0OMenYSgrnzNhGaPef8q+Tsdhvc44ZOftcs2efA+m4PIi
-         qoinwz2o4NMCUGE0dByVp7G+R1FyPLZWEsIG/ceA5vB4JzhlS67qkRkLkvcusSJ+cr
-         /88ZA4FibG6FA==
-Date:   Mon, 14 Aug 2023 17:06:58 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        Phil Elwell <phil@raspberrypi.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jim Quinlan <jim2101024@gmail.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 3/5] PCI: brcmstb: Set higher value for internal bus
- timeout
-Message-ID: <20230814220658.GA193031@bhelgaas>
+        with ESMTP id S233317AbjHNW2l (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Aug 2023 18:28:41 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7975B171A;
+        Mon, 14 Aug 2023 15:28:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692052119; x=1723588119;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9oOBn1v8SHtGrgH+6GcV/nLem9oDmQtlr+e36iqVfw4=;
+  b=T3nlBuZDDThmwVhU19+JsiumYSL6c8c+p1/5iv0FqgPhbmKyxt5Pl+ia
+   fD3Qj5ixhJ/3R3DwyhK5qXPUkb6/YXoy72gx9ujQ6lcPT+VkfCmIT1jKY
+   ox4tpp/Mjf7CwPcJ6rGdp99RJ6WAGUQGs9Nob+tTeT4SiULZDqWIHpAqC
+   NY8TVVzi2vKbdTV9LYQaf/kCPMUpXTQdoJx3t8CaykD9xX04GZdgG3yEm
+   ovvWiHK/7tXH7gTINzcoj+pbduSVMum2rfcyyI6kIXWjStBxG8FdeXSCQ
+   Gy2zPwjZQ2BJDbAdJ14tJQ8xTwDcV7lgQ+4U3kz15zqx09SgFYIyCGmLv
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="374919687"
+X-IronPort-AV: E=Sophos;i="6.01,173,1684825200"; 
+   d="scan'208";a="374919687"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 15:28:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="803602476"
+X-IronPort-AV: E=Sophos;i="6.01,173,1684825200"; 
+   d="scan'208";a="803602476"
+Received: from lkp-server02.sh.intel.com (HELO b5fb8d9e1ffc) ([10.239.97.151])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Aug 2023 15:28:36 -0700
+Received: from kbuild by b5fb8d9e1ffc with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qVg39-0000Sp-2W;
+        Mon, 14 Aug 2023 22:28:35 +0000
+Date:   Tue, 15 Aug 2023 06:28:24 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lizhi Hou <lizhi.hou@amd.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh@kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, Lizhi Hou <lizhi.hou@amd.com>,
+        max.zhen@amd.com, sonal.santan@amd.com,
+        stefano.stabellini@xilinx.com
+Subject: Re: [PATCH V12 5/5] of: unittest: Add pci_dt_testdrv pci driver
+Message-ID: <202308150643.iteeGiQb-lkp@intel.com>
+References: <1690564018-11142-6-git-send-email-lizhi.hou@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+-6iNzKB4vMkM4Qt6781GN-WwzCCdUYY3o=stgPSjQyJPr6vQ@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <1690564018-11142-6-git-send-email-lizhi.hou@amd.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 14, 2023 at 03:30:07PM -0400, Jim Quinlan wrote:
-> On Fri, Jul 28, 2023 at 12:15 PM Jim Quinlan <james.quinlan@broadcom.com> wrote:
-> > On Thu, Jul 27, 2023, 10:44 PM Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> >> On Fri, Jun 23, 2023 at 10:40:56AM -0400, Jim Quinlan wrote:
-> >> > During long periods of the PCIe RC HW being in an L1SS sleep state, there
-> >> > may be a timeout on an internal bus access, even though there may not be
-> >> > any PCIe access involved.  Such a timeout will cause a subsequent CPU
-> >> > abort.
-> >> >
-> >> > So, when "brcm,enable-l1ss" is observed, we increase the timeout value to
-> >> > four seconds instead of using its HW default.
-> >> >
-> >> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> >> > Tested-by: Florian Fainelli <f.fainelli@gmail.com>
-> >> > ---
-> >> >  drivers/pci/controller/pcie-brcmstb.c | 16 ++++++++++++++++
-> >> >  1 file changed, 16 insertions(+)
-> >> >
-> >> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> >> > index d30636a725d7..fe0415a98c63 100644
-> >> > --- a/drivers/pci/controller/pcie-brcmstb.c
-> >> > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> >> > @@ -1034,6 +1034,21 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
-> >> >       return 0;
-> >> >  }
-> >> >
-> >> > +/*
-> >> > + * This extends the timeout period for an access to an internal bus.  This
-> >> > + * access timeout may occur during L1SS sleep periods even without the
-> >> > + * presence of a PCIe access.
-> >> > + */
-> >> > +static void brcm_extend_rbus_timeout(struct brcm_pcie *pcie)
-> >> > +{
-> >> > +     /* TIMEOUT register is two registers before RGR1_SW_INIT_1 */
-> >> > +     const unsigned int REG_OFFSET = PCIE_RGR1_SW_INIT_1(pcie) - 8;
-> >>
-> >> Nit: you could define an offset for the TIMEOUT register, if that makes
-> >> it any cleaner, up to you.
-> >>
-> >> > +     u32 timeout_us = 4000000; /* 4 seconds, our setting for L1SS */
-> >>
-> >> It would be useful to describe why this has to be 4 seconds in case
-> >> someone in the future will have to change it.
-> >
-> > IIRC our customer requested 2s and we doubled it.  Bjorn, can you
-> > please add this comment or a paraphrase of it before applying --
-> > I'm currently on vacation.
-> 
-> Is the above request okay with you?  What is the status of these
-> commits -- will they be applied to pci-next in the near future?
+Hi Lizhi,
 
-The "brcm,enable-l1ss" DT property is either unnecessary or an
-indication of a hardware defect in the controller.
+kernel test robot noticed the following build warnings:
 
-Requiring the property is a terrible user experience, completely
-antithetical to the PCI compatibility story, and per the conversation
-at [1], there are no known problems that would occur if we ignored
-"brcm,enable-l1ss" and always configured mode (c) ("Bidirectional
-CLKREQ# for L1SS capable devices").
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus robh/for-next linus/master v6.5-rc6 next-20230809]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Even when configured as mode (c), L1SS is not *always* enabled.  It's
-certainly not enabled before ASPM init, and users can always disable
-L1SS whenever they desire via the sysfs interfaces or pcie_aspm=off,
-so if there's some problem with running in mode (c) with L1SS
-disabled, we're still likely to see it.
+url:    https://github.com/intel-lab-lkp/linux/commits/Lizhi-Hou/of-dynamic-Add-interfaces-for-creating-device-node-dynamically/20230729-010934
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/1690564018-11142-6-git-send-email-lizhi.hou%40amd.com
+patch subject: [PATCH V12 5/5] of: unittest: Add pci_dt_testdrv pci driver
+config: x86_64-allmodconfig (https://download.01.org/0day-ci/archive/20230815/202308150643.iteeGiQb-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20230815/202308150643.iteeGiQb-lkp@intel.com/reproduce)
 
-But if you want to require the DT property, I guess it's mainly an
-issue for you and your customers.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308150643.iteeGiQb-lkp@intel.com/
 
-So to answer your question, yes, I'm OK with this series.
+sparse warnings: (new ones prefixed by >>)
+>> drivers/of/unittest.c:3737:5: sparse: sparse: symbol 'of_unittest_pci_dev_num' was not declared. Should it be static?
+>> drivers/of/unittest.c:3738:5: sparse: sparse: symbol 'of_unittest_pci_child_num' was not declared. Should it be static?
 
-Bjorn
+vim +/of_unittest_pci_dev_num +3737 drivers/of/unittest.c
 
-[1] https://lore.kernel.org/r/20230428223500.23337-2-jim2101024@gmail.com
+  3736	
+> 3737	int of_unittest_pci_dev_num;
+> 3738	int of_unittest_pci_child_num;
+  3739	
 
-> >> > +     /* Each unit in timeout register is 1/216,000,000 seconds */
-> >> > +     writel(216 * timeout_us, pcie->base + REG_OFFSET);
-> >> > +}
-> >> > +
-> >> >  static void brcm_config_clkreq(struct brcm_pcie *pcie)
-> >> >  {
-> >> >       bool l1ss = of_property_read_bool(pcie->np, "brcm,enable-l1ss");
-> >> > @@ -1059,6 +1074,7 @@ static void brcm_config_clkreq(struct brcm_pcie *pcie)
-> >> >                * of 400ns, as specified in 3.2.5.2.2 of the PCI Express
-> >> >                * Mini CEM 2.0 specification.
-> >> >                */
-> >> > +             brcm_extend_rbus_timeout(pcie);
-> >> >               clkreq_set |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK;
-> >> >               dev_info(pcie->dev, "bi-dir CLKREQ# for L1SS power savings");
-> >> >       } else {
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
