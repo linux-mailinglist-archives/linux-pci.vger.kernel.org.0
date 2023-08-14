@@ -2,101 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B60777BD46
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Aug 2023 17:41:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE3E377BE63
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Aug 2023 18:52:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230500AbjHNPks (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Aug 2023 11:40:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34122 "EHLO
+        id S229720AbjHNQwS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Aug 2023 12:52:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232456AbjHNPkT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Aug 2023 11:40:19 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 224BE10DD
-        for <linux-pci@vger.kernel.org>; Mon, 14 Aug 2023 08:40:19 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-40c72caec5cso410551cf.0
-        for <linux-pci@vger.kernel.org>; Mon, 14 Aug 2023 08:40:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692027618; x=1692632418;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+dLgm844GB6Z3fMbxyoE9eaBHbokNuf66/HVIlaX7MM=;
-        b=l+cCvhAB9wOLXvKNN1PPOKmB4IOF9ISPjTYdgNK1gPENn3ARa+QjY3NGulY8JEqZWB
-         ti6JsTRa2BVhDdsNmXcMqRrXZvV7ZHQnfUdmgWy2fPU10hIUz8VpfUfq7Ezxjwuy6iZW
-         qvDga0XHQiklD2L8nSSrqRSidJke0G5GtxABM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692027618; x=1692632418;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+dLgm844GB6Z3fMbxyoE9eaBHbokNuf66/HVIlaX7MM=;
-        b=efxzm1UkINtqziUfAXdDqUF5JG7zu8WK5mzgN9VWGh/v1JAvKgoZG/sjapPVFMbw/i
-         WuDbvk/+Ab3xRBb3+z7fq1haHNbwW7yP4Om1uFKiTzArsFoDc6+2KUa1L3yNKugFI7Nd
-         hOuuIF/a5GvGDPobyPSxvs60Z1lx1bT8HAIpny3QCzwFL/4Lh//GX33awpMIlFM7ZBMy
-         /3PMO5u/XYWu4clZJZ0tWqUHaOB5SU8edabKqV083h69AT5IZO9PG7+TigCycnqvnrVv
-         IzrHNDDdTu4nIL8UPYv4T8AwBFHa9gX8wRx2tqkMVGg+ZNSBqqObyAgfM4ygiJ95HHLk
-         XH4A==
-X-Gm-Message-State: AOJu0YzIEkTFU8oSNFXq36S1qdA10pFXkXqRS2Q7xUC0ytpqjX8ZxVdT
-        d7qfgOJ/0SU4rTFdxDVxBl5CpiLVTF6MmYJesgh8HQ==
-X-Google-Smtp-Source: AGHT+IEgKSIl2LLAEhDVdA1r7ugEIxS2NS6kEgSE2VqUH4qw73YE2OrO5yXybxuZ1jkiYNr+8vQAJw08v4XNzTCFNP8=
-X-Received: by 2002:a05:622a:c1:b0:410:4c49:1aeb with SMTP id
- p1-20020a05622a00c100b004104c491aebmr170281qtw.7.1692027617881; Mon, 14 Aug
- 2023 08:40:17 -0700 (PDT)
+        with ESMTP id S231237AbjHNQwP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Aug 2023 12:52:15 -0400
+X-Greylist: delayed 2571 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 14 Aug 2023 09:52:13 PDT
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A73BD2
+        for <linux-pci@vger.kernel.org>; Mon, 14 Aug 2023 09:52:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=9QXxUli/HfvZrh8nreL+5LP1oT4Q98TBa8d8G2NIFhY=; b=P8l7dX8qjLjgu/+i6c681BUsPx
+        F8F/ah8ruAN38lg2vO1aRsTAFgsGxuY8WIrSO0/yqL40HRAPVkF/zgAzhIwoQTr29rc4tHVL+7epL
+        WFE624IVaIQao5PIXcAdkgJL2XIfsQtTDX/1aUsLI9sznR3ln7ORAy4pZw0bq/DWhNWdtoN+ZOsM7
+        d4CVn0Cw4A6tN/seoiR0j6wsG3XXCYYwpNP2aWr1GkN3f8DMuPhHA96XfSxxzwlogeU7chu4iFtag
+        hOc+EsjQZIAsd2It/JCqvjcX10aqyIPOBh1RUnZvTI/G0h/iPX0Q/3vDGUr6NeN1NP9/JwtDGf5Bs
+        whHquWNQ==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1qVa88-00BDKm-Fi; Mon, 14 Aug 2023 10:09:21 -0600
+Message-ID: <135cf02e-9f27-96c3-1c68-2cfbb3a1261e@deltatee.com>
+Date:   Mon, 14 Aug 2023 10:09:19 -0600
 MIME-Version: 1.0
-References: <20230606035442.2886343-1-grundler@chromium.org> <4fa1e0fe-eec4-4e5c-8acd-274a039c048a@ixit.cz>
-In-Reply-To: <4fa1e0fe-eec4-4e5c-8acd-274a039c048a@ixit.cz>
-From:   Grant Grundler <grundler@chromium.org>
-Date:   Mon, 14 Aug 2023 08:40:06 -0700
-Message-ID: <CANEJEGt-6+AGGSdZb9OTv3UrBn1fFFqk=A6TdYjBsq4SqTTxsA@mail.gmail.com>
-Subject: Re: [PATCHv3 pci-next 1/2] PCI/AER: correctable error message as KERN_INFO
-To:     20230606035442.2886343-1-grundler@chromium.org
-Cc:     grundler@chromium.org, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, mahesh@linux.ibm.com,
-        oohall@gmail.com, rajat.khandelwal@linux.intel.com,
-        rajatja@chromium.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-9.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_SPF_WL
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Content-Language: en-CA
+To:     Zheng Zengkai <zhengzengkai@huawei.com>, bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, wangxiongfeng2@huawei.com
+References: <20230811111057.31900-1-zhengzengkai@huawei.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20230811111057.31900-1-zhengzengkai@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: zhengzengkai@huawei.com, bhelgaas@google.com, linux-pci@vger.kernel.org, wangxiongfeng2@huawei.com
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH -next] PCI/P2PDMA: Use pci_dev_id() to simplify the code
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Aug 12, 2023 at 5:45=E2=80=AFPM David Heidelberg <david@ixit.cz> wr=
-ote:
->
-> Tested-by: David Heidelberg <david@ixit.cz>
 
-Thanks David!
 
-> For PATCH v4 please fix the typo reported by the bot :)
+On 2023-08-11 05:10, Zheng Zengkai wrote:
+> PCI core API pci_dev_id() can be used to get the BDF number for a pci
+> device. We don't need to compose it manually. Use pci_dev_id() to
+> simplify the code a little bit.
+> 
+> Signed-off-by: Zheng Zengkai <zhengzengkai@huawei.com>
+> ---
+>  drivers/pci/p2pdma.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index 6cd98ffca198..ec04d0ed157b 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -532,8 +532,7 @@ static bool host_bridge_whitelist(struct pci_dev *a, struct pci_dev *b,
+>  
+>  static unsigned long map_types_idx(struct pci_dev *client)
+>  {
+> -	return (pci_domain_nr(client->bus) << 16) |
+> -		(client->bus->number << 8) | client->devfn;
+> +	return (pci_domain_nr(client->bus) << 16) | pci_dev_id(client);
+>  }
+>  
+>  /*
 
-Sorry - I'll do that today.
+Looks good to me, thanks!
 
-> Seeing messages as
->
-> __aer_print_error: 72 callbacks suppressed
->
-> but it still prints many errors on my laptop. Anyway, the log is less
-> filled with this patch, so great!
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
-Awesome! That's what I'm hoping for. :)
-
-cheers,
-grant
-
->
->
-> Thank you
-> David
->
-> --
-> David Heidelberg
-> Certified Linux Magician
->
+Logan
