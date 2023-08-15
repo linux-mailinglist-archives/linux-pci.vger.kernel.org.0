@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CC5E77D505
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Aug 2023 23:21:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23EB277D507
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Aug 2023 23:21:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240207AbjHOVVG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Aug 2023 17:21:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60894 "EHLO
+        id S240217AbjHOVVH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Aug 2023 17:21:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239976AbjHOVVD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Aug 2023 17:21:03 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2076.outbound.protection.outlook.com [40.107.223.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94C2C138;
-        Tue, 15 Aug 2023 14:21:01 -0700 (PDT)
+        with ESMTP id S240204AbjHOVVF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Aug 2023 17:21:05 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2075.outbound.protection.outlook.com [40.107.92.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6349983;
+        Tue, 15 Aug 2023 14:21:04 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RI5+sewwyHAKOzAOMTY+E2ZnpYve/K9hto14YM0ArkLJ9IFiDcokbtXFzZULVjzr9FOoUmi3wcKpriPUiKmYQ6P2slGYNgnJu1zjEdTYACG7n/Mv6cNhCTk43nuNFpdcOOKFut7bOwubdWZYlFw1Ys1E+IRDE30sfUjoBkR2wYdFyyFk+kC91/toKj+pZJg7PHiTjs/0WecLtBF+VcVrUUnFNnP4hJSqG0tJM5YrAk+SNeEgce1UaFpZ+uGzG1bK85HcXCxGRuQpftTgSly4lApnFAgtI/Mv5117EwaJ0lIRYCr06nlfLD5L/E07qYqZCUfAMfhEKEsnWW4HYmOtiA==
+ b=oL/8kNWlB5MPRiDosyTFAMi4OvO7+ztJtbblfMVsP8tBWI+UbGItujmMqUOY+nWRuVYvQk7UZKzHC0NB6fMDUg6xJccJoMa/JXFlp4KOhadRENlGg07a1pb8DU6LiWUIDclhsyBNSUxc13P6J5PugsF4vdH+WD+yy+vEddj7L0RhKArft7PfgypApZX1cEuZTcch9vEflw4DMlgsyQ3G+WM4l0lQFLgUWMf/1sSkYOdvT57DWaRxDWdlQpgKgGuTF4+6iGTe5wSYe7YvxkYtaQ48MS6HphDyyWf+0EjAhE0FysW6pBlb9k8DPkosnpPaJK/cwDgckraUSY5ECFFtWQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iysh+Fj92oXMw8RV3ptTnLREUUiu7cjK8cLhsTh4V+4=;
- b=l0qTtVTFR8X8eonVWkt0DWXZ+unGAn34XWE0VRS5Rc6QZ28kqc2Jyq374UuSyvgck4Kz/EYiU5htY5bC9QYjlfimQbUsrvoUtCjj5BjyhYLZ2CsGDL8Ix+Pme/SSJeBoVZcNCf4E+bID6h5W+6INNYhLngpFTSDwDidQyX4BSk/LwiZpckyT3n7fbjkZa5M5NDX53WVVeI9SIZr9hM/Axa0uHaGOpyofuKFi9P0K8eUicSNn4PgUHGrOBZdkKZFKLuThpEg+AURwejSEjDHz5WbB0Aa8gDBI+J4Gc74RA6JrKV3W9cM41xO1lxzOH8fAenT2ZD1MlhLj/K75BpAXaQ==
+ bh=cWprRObvXf9OMNdL4a+rtxGP6oo5OXfa43tOgS1W80o=;
+ b=Cc3b359Voe0CBe35Czxr28DNBBFI8VfjeAu3UDnB8ob+IIyPTSqau1rGBhSC1hB7JC1O+fqufsmHq3rkFyBLe1fmkyET3slB7EyDibfoicY68Ur0DzQabMa4oh/MHo0OomecGk3vleUCcNZUgYZUuRj49aX/P2/u++cJtNMzOe4UvfKxHUkLDjRFXJllpyCAbAqjlCmnJzrYh5e/mRUosuhuK35MBQNUh7zCAJ5NI1oavx0mv+ospW1e17bdAGvcLn9UW1Vff5mnJDMiFK2xwqNfShpytOpJn671agUK1E0zHjxEFxztv1Zm0zus9YiHPmffrl76FdwHw2SyrYgatg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iysh+Fj92oXMw8RV3ptTnLREUUiu7cjK8cLhsTh4V+4=;
- b=DHX7mNK6O9gE6gZAtdFfaYfZftDF30KA3IRoIcSKNVGYFjoVZkf5BPdrU6UUVDrhrrLA29K3A6MH3RWKHh/Tn9IGPdcoRu2ozsCQRFmC+Fn191XKTSPiNoZyvODCzcLZXF2hZjqB8Fv4z7MrnTYvJHlLIHbQoyvxellodpedT1k=
-Received: from MW4PR03CA0028.namprd03.prod.outlook.com (2603:10b6:303:8f::33)
- by IA1PR12MB8465.namprd12.prod.outlook.com (2603:10b6:208:457::8) with
+ bh=cWprRObvXf9OMNdL4a+rtxGP6oo5OXfa43tOgS1W80o=;
+ b=XJfq+/9j/HImxz7IjljY3ASXz2mSYLZ+3VcF08R46XqRPw3U0YN+kEPvGQDqUgwnVUE9u6aT5/wh+5HzPfuya/ouUaupmRMWrmtCVkyTpZCGvZNwuZrCU8xta2MZN5sjgfPb6fLLX+SCspoJUEwVP98TFy0Oltw+5IbMPPRvvBA=
+Received: from MW4PR03CA0027.namprd03.prod.outlook.com (2603:10b6:303:8f::32)
+ by MN0PR12MB6126.namprd12.prod.outlook.com (2603:10b6:208:3c6::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.26; Tue, 15 Aug
- 2023 21:20:59 +0000
+ 2023 21:21:01 +0000
 Received: from MWH0EPF000971E5.namprd02.prod.outlook.com
- (2603:10b6:303:8f:cafe::da) by MW4PR03CA0028.outlook.office365.com
- (2603:10b6:303:8f::33) with Microsoft SMTP Server (version=TLS1_2,
+ (2603:10b6:303:8f:cafe::5d) by MW4PR03CA0027.outlook.office365.com
+ (2603:10b6:303:8f::32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.33 via Frontend
- Transport; Tue, 15 Aug 2023 21:20:58 +0000
+ Transport; Tue, 15 Aug 2023 21:21:01 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,7 +48,7 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  MWH0EPF000971E5.mail.protection.outlook.com (10.167.243.73) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6699.14 via Frontend Transport; Tue, 15 Aug 2023 21:20:58 +0000
+ 15.20.6699.14 via Frontend Transport; Tue, 15 Aug 2023 21:21:01 +0000
 Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 15 Aug
@@ -62,9 +62,9 @@ CC:     Bjorn Helgaas <bhelgaas@google.com>,
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Yazen Ghannam <yazen.ghannam@amd.com>,
         Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Subject: [PATCH v4 1/3] PCI: pciehp: Add support for async hotplug with native AER and DPC/EDR
-Date:   Tue, 15 Aug 2023 21:20:41 +0000
-Message-ID: <20230815212043.114913-2-Smita.KoralahalliChannabasappa@amd.com>
+Subject: [PATCH v4 2/3] PCI: Enable support for 10-bit Tag during device enumeration
+Date:   Tue, 15 Aug 2023 21:20:42 +0000
+Message-ID: <20230815212043.114913-3-Smita.KoralahalliChannabasappa@amd.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20230815212043.114913-1-Smita.KoralahalliChannabasappa@amd.com>
 References: <20230815212043.114913-1-Smita.KoralahalliChannabasappa@amd.com>
@@ -75,23 +75,23 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E5:EE_|IA1PR12MB8465:EE_
-X-MS-Office365-Filtering-Correlation-Id: dab1509d-8dfe-4f6a-db48-08db9dd584e1
+X-MS-TrafficTypeDiagnostic: MWH0EPF000971E5:EE_|MN0PR12MB6126:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1fb83442-6391-43f4-8f0d-08db9dd58679
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Q8rE17DHwavh4jbTbOGsHf6fB852nWRVFUZRJ1OnuT5Apm0t3tsWlTzvnygJ5XYDlePqhHvIBie69OTc/NMklWrJM3ONUqR5+cL//iDuHr+WcJ8jOdYxFEOc/gbDgaB4NIZISNgv7G96kW7dMqsvJ+EOuFqc0E7VXIbhGNTHBxErzc41XagB5Jm0KQykyNXLBx09HshtOiv8vZhUF/1SOYsGkqIOX6MbzuTPCwxFghXY4Vk37joKS8wlHms1wNALLEgM2C8kABpRNEhgDR129TiIn6JW2Sj9JKwNSaQl+cwHCD8vXV8E6dTXhgmhMd6H+ysc5fvCpGnpqvNd6pMHgwZEkrmcUhZkgVfOySf4DRZGtpLb0/hf87Z8C6EZq72FN+TiR2w/imjR8Em3J2UUD/6G5VyaMAkRP+bvoldb+YQ7ZZID3HMnERsTNPeYXrEfwLGLBmQUVYg+tEZY8wOzRt0hToFUm6CwQE8qQvf7R2at6/YqBlJXVxQr89gLF6Z3Q1ZHtt6Sw5BySl2WPP9GKCrtsYGIEU70bfJjoe7fT5dkWGMo+c+qVOmcyikGzHGtg7p2aVYuno88gesxK7ijRm1RmoB/iWbgJNUsCgBS1DgNQyiCRCAlNFWtNiY0KlsoM3fR1Lv+opIh5jwhKLsvIaZnrtx+2DecIRcN5xznm0ubjOAjwKJjG/Xqc2kJp9DtSHv/TpnLT8zJP9rHHbRu94dvhkhf71cu+m5evq4uGWoiaZLqOV/DV37Za9zEfk2Zwze5xGLuevw3T281yzaxdA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(376002)(136003)(396003)(39860400002)(1800799009)(82310400011)(186009)(451199024)(36840700001)(46966006)(40470700004)(36756003)(110136005)(54906003)(82740400003)(7696005)(41300700001)(70206006)(4326008)(86362001)(70586007)(8676002)(966005)(336012)(40460700003)(16526019)(8936002)(26005)(1076003)(6666004)(5660300002)(426003)(2616005)(2906002)(81166007)(47076005)(316002)(478600001)(356005)(83380400001)(36860700001)(40480700001)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: tVhZTYxqindjIRlIYI/BGwP+1ba9DaPbGxSCR1dnadNpwqeLDmrbdYioscGS96CWj5ZLYaAcishzNLGG4GKYziU3di+izjtu8bo1oPek+E0blYkwhDyBwA/1QhdjfA8Uh3sDeMDX9LbN9zp0qCAar7FjQNJD5aIDd6ltE1Y18AsDlPMCcAenp8HCLxMm+HHOmoar25HBSScRzyaWA2r/gVniS/y1RB4kgBdVazkjcyYHFEF5FlPVeglImuqllL/3hQJZZDXRqXe/YWkco7tW1Y+QE2U8fDlx7bNUYHDTRKG5LpjHju5pPttY8tXiTrPwFjz+FCJcXVxWOpP195JNckpGTxNoP6qBjymwjBe+l1X/6Rm4e1gQGXX0LqvSiF/GRz9/5PGydYHK9gM9urp/Bd7eETZGAVIl/Dw4z/+7RbvEtqUlB194u7nplYIP9Db4n39dQdQ5B9taSPbmT/7kWrQwMHIc1qMsBNwGc3R/kZFobdhVR7tKafW0idfno9NMyEYBcSWpn1fHzUE7dr3zHHuJGL3KOXuKRbVzucTehHTCXtqzYXNIgXF9XaN1a+oOEtt3jm+gcpOnoche9rKdPSPsuOqiSuLC2gRb4gdFfDwlFFYF/OgqZu6hmHzo1T33Kq4APpgl7DcnZJjcV1jokKW2DjfKooFexUIjO616dDwm+P7hIW5aN+d5KLcqr4chh86u0NkYdyFJTNbUIcQl1GgmsaxGIDl+LKWNo4gk9qs604C9welmhIz7DV+Ua2ONmfLSSoJt9eqc7LdlDCfI/A==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(39860400002)(396003)(346002)(376002)(1800799009)(82310400011)(186009)(451199024)(36840700001)(40470700004)(46966006)(2906002)(8936002)(8676002)(4326008)(966005)(478600001)(86362001)(83380400001)(110136005)(1076003)(54906003)(7696005)(426003)(16526019)(336012)(47076005)(5660300002)(40460700003)(41300700001)(316002)(70206006)(2616005)(36756003)(356005)(70586007)(6666004)(26005)(36860700001)(40480700001)(82740400003)(81166007)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Aug 2023 21:20:58.4483
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Aug 2023 21:21:01.1046
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dab1509d-8dfe-4f6a-db48-08db9dd584e1
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1fb83442-6391-43f4-8f0d-08db9dd58679
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource: MWH0EPF000971E5.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8465
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6126
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
@@ -102,177 +102,169 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-According to PCIe r6.0 sec 6.7.6 [1], async removal with DPC may result in
-surprise down error. This error is expected and is just a side-effect of
-async remove.
+Enable support for PCI Express 10-bit Tag.
 
-Add support to handle the surprise down error generated as a side-effect
-of async remove. Typically, this error is benign as the pciehp handler
-invoked by PDC or/and DLLSC alongside DPC, de-enumerates and brings down
-the device appropriately. But the error messages might confuse users. Get
-rid of these irritating log messages with a 1s delay while pciehp waits
-for dpc recovery.
+A requester may use 10-bit Tag only if its "10-bit Tag Requester Enable"
+control bit (PCI_EXP_DEVCTL2_10BIT_TAG_REQ) is set. Enable 10-bit Tag
+Requester Enable if the requester supports 10-bit Tag Requester capability
+and its completer supports 10-bit Tag Completions.
 
-The implementation is as follows: On an async remove a DPC is triggered
-along with a Presence Detect State change and/or DLL State Change.
-Determine it's an async remove by checking for DPC Trigger Status in DPC
-Status Register and Surprise Down Error Status in AER Uncorrected Error
-Status to be non-zero. If true, treat the DPC event as a side-effect of
-async remove, clear the error status registers and continue with hot-plug
-tear down routines. If not, follow the existing routine to handle AER and
-DPC errors.
+Platform FW may enable 10-bit Tag Requester during boot for performance
+reasons as per PCIe r6.0 sec 2.2.6.2 [1]. It states that "For platforms
+where the RC supports 10-Bit Tag Completer capability, it is highly
+recommended for platform firmware or operating software that configures
+PCIe hierarchies to Set the 10-Bit Tag Requester Enable bit automatically
+in Endpoints with 10-Bit Tag Requester capability".
 
-Please note that, masking Surprise Down Errors was explored as an
-alternative approach, but left due to the odd behavior that masking only
-avoids the interrupt, but still records an error per PCIe r6.0.1 Section
-6.2.3.2.2. That stale error is going to be reported the next time some
-error other than Surprise Down is handled.
+And, failure to enable 10-bit Tag appropriately has led to issues reaching
+to the device. The device became inaccessible and the port was not able to
+be recovered without a system reset when a device with 10-bit Tag was
+removed and replaced with a device that didn't support 10-bit Tag.
 
-Dmesg before:
+PCIe r6.0 sec 2.2.6.2 [1], also implies that:
 
-  pcieport 0000:00:01.4: DPC: containment event, status:0x1f01 source:0x0000
-  pcieport 0000:00:01.4: DPC: unmasked uncorrectable error detected
-  pcieport 0000:00:01.4: PCIe Bus Error: severity=Uncorrected (Fatal), type=Transaction Layer, (Receiver ID)
-  pcieport 0000:00:01.4:   device [1022:14ab] error status/mask=00000020/04004000
-  pcieport 0000:00:01.4:    [ 5] SDES (First)
-  nvme nvme2: frozen state error detected, reset controller
-  pcieport 0000:00:01.4: DPC: Data Link Layer Link Active not set in 1000 msec
-  pcieport 0000:00:01.4: AER: subordinate device reset failed
-  pcieport 0000:00:01.4: AER: device recovery failed
-  pcieport 0000:00:01.4: pciehp: Slot(16): Link Down
-  nvme2n1: detected capacity change from 1953525168 to 0
-  pci 0000:04:00.0: Removing from iommu group 49
+* If a Requester sends a 10-Bit Tag Request to a Completer that lacks
+10-Bit Completer capability, the returned Completion(s) will have Tags with
+Tag[9:8] equal to 00b. Since the Requester is forbidden to generate these
+Tag values for 10-Bit Tags, such Completions will be handled as Unexpected
+Completions, which by default are Advisory Non-Fatal Errors. The Requester
+must follow standard PCI Express error handling requirements.
 
-Dmesg after:
+* In configurations where a Requester with 10-Bit Tag Requester capability
+needs to target multiple Completers, one needs to ensure that the Requester
+sends 10-Bit Tag Requests only to Completers that have 10-Bit Tag Completer
+capability.
 
- pcieport 0000:00:01.4: pciehp: Slot(16): Link Down
- nvme1n1: detected capacity change from 1953525168 to 0
- pci 0000:04:00.0: Removing from iommu group 37
+Hence, ensure whether these capabilities are re-negotiated and enable them
+appropriately, especially when a device is surprise removed and replaced
+with a new one.
 
 [1] PCI Express Base Specification Revision 6.0, Dec 16 2021.
     https://members.pcisig.com/wg/PCI-SIG/document/16609
 
 Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
 ---
-v2:
-	Indentation is taken care. (Bjorn)
-	Unrelevant dmesg logs are removed. (Bjorn)
-	Rephrased commit message, to be clear on native vs FW-First
-	handling. (Bjorn and Sathyanarayanan)
-	Prefix changed from pciehp_ to dpc_. (Lukas)
-	Clearing ARI and AtomicOp Requester are performed as a part of
-	(de-)enumeration in pciehp_unconfigure_device(). (Lukas)
-	Changed to clearing all optional capabilities in DEVCTL2.
-	OS-First -> native. (Sathyanarayanan)
+ drivers/pci/pci.c             | 59 +++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.h             |  1 +
+ drivers/pci/probe.c           |  1 +
+ include/uapi/linux/pci_regs.h |  3 ++
+ 4 files changed, 64 insertions(+)
 
-v3:
-	Added error message when root port become inactive.
-	Modified commit description to add more details.
-	Rearranged code comments and function calls with no functional
-	change.
-	Additional check for is_hotplug_bridge.
-	dpc_completed_waitqueue to wakeup pciehp handler.
-	Cleared only Fatal error detected in DEVSTA.
-
-v4:
-	Made read+write conditional on "if (pdev->dpc_rp_extensions)"
-	for DPC_RP_PIO_STATUS.
-	Wrapped to 80 chars.
-	Code comment for clearing PCI_STATUS and PCI_EXP_DEVSTA.
-	Added pcie_wait_for_link() check.
-	Removed error message for root port inactive as the message
-	already existed.
-	Check for is_hotplug_bridge before registers read.
-	Section 6.7.6 of the PCIe Base Spec 6.0 -> PCIe r6.0 sec 6.7.6.
-	Made code comment more meaningful.
----
- drivers/pci/pcie/dpc.c | 69 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
-
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 3ceed8e3de41..25e9ddeeb271 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -292,10 +292,79 @@ void dpc_process_error(struct pci_dev *pdev)
- 	}
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 60230da957e0..7e640694fa03 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3795,6 +3795,65 @@ int pci_rebar_set_size(struct pci_dev *pdev, int bar, int size)
+ 	return 0;
  }
  
-+static void pci_clear_surpdn_errors(struct pci_dev *pdev)
++/*
++ * pci_configure_ten_bit_tag - enable or disable 10-bit Tag Requester
++ * @dev: the PCI device
++ */
++void pci_configure_ten_bit_tag(struct pci_dev *dev)
 +{
-+	u16 reg16;
-+	u32 reg32;
++	struct pci_dev *bridge;
++	u32 cap;
 +
-+	if (pdev->dpc_rp_extensions) {
-+		pci_read_config_dword(pdev, pdev->dpc_cap + PCI_EXP_DPC_RP_PIO_STATUS,
-+				      &reg32);
-+		pci_write_config_dword(pdev, pdev->dpc_cap + PCI_EXP_DPC_RP_PIO_STATUS,
-+				       reg32);
++	if (!pci_is_pcie(dev))
++		return;
++
++	bridge = dev->bus->self;
++	if (!bridge)
++		return;
++
++	/*
++	 * According to PCIe r6.0 sec 7.5.3.16, the result is undefined if
++	 * the value of this bit is changed while the Function has outstanding
++	 * Non-Posted Requests.
++	 */
++	if (!pci_wait_for_pending_transaction(dev)) {
++		pci_info(dev, "Transaction in progress, 10-bit Tag not configured properly\n");
++		return;
 +	}
 +
 +	/*
-+	 * In practice, Surprise Down errors have been observed to also set
-+	 * error bits in the Status Register as well as the Fatal Error
-+	 * Detected bit in the Device Status Register.
++	 * According to PCIe r6.0 sec 7.5.3.15, Requester Supported can only be
++	 * set if 10-Bit Tag Completer Supported bit is set.
 +	 */
-+	pci_read_config_word(pdev, PCI_STATUS, &reg16);
-+	pci_write_config_word(pdev, PCI_STATUS, reg16);
-+
-+	pcie_capability_write_word(pdev, PCI_EXP_DEVSTA, PCI_EXP_DEVSTA_FED);
-+}
-+
-+static void dpc_handle_surprise_removal(struct pci_dev *pdev)
-+{
-+	if (!pcie_wait_for_link(pdev, false)) {
-+		pci_info(pdev, "Data Link Layer Link Active not cleared in 1000 msec\n");
++	pcie_capability_read_dword(bridge, PCI_EXP_DEVCAP2, &cap);
++	if (!(cap & PCI_EXP_DEVCAP2_10BIT_TAG_COMP))
 +		goto out;
++
++	if (cap & PCI_EXP_DEVCAP2_10BIT_TAG_REQ) {
++		pcie_capability_read_dword(dev, PCI_EXP_DEVCAP2, &cap);
++
++		if (!(cap & PCI_EXP_DEVCAP2_10BIT_TAG_COMP))
++			goto out;
++
++		pcie_capability_set_word(bridge, PCI_EXP_DEVCTL2,
++					 PCI_EXP_DEVCTL2_10BIT_TAG_REQ);
++
++		if (cap & PCI_EXP_DEVCAP2_10BIT_TAG_REQ)
++			pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
++						 PCI_EXP_DEVCTL2_10BIT_TAG_REQ);
++		else
++			pcie_capability_clear_word(dev, PCI_EXP_DEVCTL2,
++						   PCI_EXP_DEVCTL2_10BIT_TAG_REQ);
++		return;
 +	}
-+
-+	if (pdev->dpc_rp_extensions && dpc_wait_rp_inactive(pdev))
-+		goto out;
-+
-+	pci_aer_raw_clear_status(pdev);
-+	pci_clear_surpdn_errors(pdev);
-+
-+	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_STATUS,
-+			      PCI_EXP_DPC_STATUS_TRIGGER);
 +
 +out:
-+	clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
-+	wake_up_all(&dpc_completed_waitqueue);
++	pcie_capability_clear_word(bridge, PCI_EXP_DEVCTL2,
++				   PCI_EXP_DEVCTL2_10BIT_TAG_REQ);
++	pcie_capability_clear_word(dev, PCI_EXP_DEVCTL2,
++				   PCI_EXP_DEVCTL2_10BIT_TAG_REQ);
 +}
 +
-+static bool dpc_is_surprise_removal(struct pci_dev *pdev)
-+{
-+	u16 status;
-+
-+	if (!pdev->is_hotplug_bridge)
-+		return false;
-+
-+	pci_read_config_word(pdev, pdev->aer_cap + PCI_ERR_UNCOR_STATUS,
-+			     &status);
-+
-+	if (!(status & PCI_ERR_UNC_SURPDN))
-+		return false;
-+
-+	return true;
-+}
-+
- static irqreturn_t dpc_handler(int irq, void *context)
- {
- 	struct pci_dev *pdev = context;
- 
-+	/*
-+	 * According to PCIe r6.0 sec 6.7.6, errors are an expected side effect
-+	 * of async removal and should be ignored by software.
-+	 */
-+	if (dpc_is_surprise_removal(pdev)) {
-+		dpc_handle_surprise_removal(pdev);
-+		return IRQ_HANDLED;
-+	}
-+
- 	dpc_process_error(pdev);
- 
- 	/* We configure DPC so it only triggers on ERR_FATAL */
+ /**
+  * pci_enable_atomic_ops_to_root - enable AtomicOp requests to root port
+  * @dev: the PCI device
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index a4c397434057..dee6241878fc 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -239,6 +239,7 @@ int pci_setup_device(struct pci_dev *dev);
+ int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
+ 		    struct resource *res, unsigned int reg);
+ void pci_configure_ari(struct pci_dev *dev);
++void pci_configure_ten_bit_tag(struct pci_dev *dev);
+ void __pci_bus_size_bridges(struct pci_bus *bus,
+ 			struct list_head *realloc_head);
+ void __pci_bus_assign_resources(const struct pci_bus *bus,
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 8bac3ce02609..5a3c1ec6fad6 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2476,6 +2476,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
+ 	pci_pm_init(dev);		/* Power Management */
+ 	pci_vpd_init(dev);		/* Vital Product Data */
+ 	pci_configure_ari(dev);		/* Alternative Routing-ID Forwarding */
++	pci_configure_ten_bit_tag(dev); /* 10-bit Tag Requester */
+ 	pci_iov_init(dev);		/* Single Root I/O Virtualization */
+ 	pci_ats_init(dev);		/* Address Translation Services */
+ 	pci_pri_init(dev);		/* Page Request Interface */
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index e5f558d96493..b0a41c987ac5 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -656,6 +656,8 @@
+ #define  PCI_EXP_DEVCAP2_ATOMIC_COMP128	0x00000200 /* 128b AtomicOp completion */
+ #define  PCI_EXP_DEVCAP2_LTR		0x00000800 /* Latency tolerance reporting */
+ #define  PCI_EXP_DEVCAP2_OBFF_MASK	0x000c0000 /* OBFF support mechanism */
++#define  PCI_EXP_DEVCAP2_10BIT_TAG_COMP 0x00010000 /* 10-bit Tag Completer */
++#define  PCI_EXP_DEVCAP2_10BIT_TAG_REQ  0x00020000 /* 10-bit Tag Requester */
+ #define  PCI_EXP_DEVCAP2_OBFF_MSG	0x00040000 /* New message signaling */
+ #define  PCI_EXP_DEVCAP2_OBFF_WAKE	0x00080000 /* Re-use WAKE# for OBFF */
+ #define  PCI_EXP_DEVCAP2_EE_PREFIX	0x00200000 /* End-End TLP Prefix */
+@@ -668,6 +670,7 @@
+ #define  PCI_EXP_DEVCTL2_IDO_REQ_EN	0x0100	/* Allow IDO for requests */
+ #define  PCI_EXP_DEVCTL2_IDO_CMP_EN	0x0200	/* Allow IDO for completions */
+ #define  PCI_EXP_DEVCTL2_LTR_EN		0x0400	/* Enable LTR mechanism */
++#define  PCI_EXP_DEVCTL2_10BIT_TAG_REQ  0x1000  /* Enable 10-bit Tag Requester */
+ #define  PCI_EXP_DEVCTL2_OBFF_MSGA_EN	0x2000	/* Enable OBFF Message type A */
+ #define  PCI_EXP_DEVCTL2_OBFF_MSGB_EN	0x4000	/* Enable OBFF Message type B */
+ #define  PCI_EXP_DEVCTL2_OBFF_WAKE_EN	0x6000	/* OBFF using WAKE# signaling */
 -- 
 2.17.1
 
