@@ -2,170 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 38E1277D3ED
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Aug 2023 22:11:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C09DA77D506
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Aug 2023 23:21:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240126AbjHOUKc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Aug 2023 16:10:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48928 "EHLO
+        id S234119AbjHOVVG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Aug 2023 17:21:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240173AbjHOUKO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Aug 2023 16:10:14 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 334A01BE2;
-        Tue, 15 Aug 2023 13:10:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B53B665D4A;
-        Tue, 15 Aug 2023 20:10:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEB47C433C8;
-        Tue, 15 Aug 2023 20:10:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1692130212;
-        bh=49CtHvFLjsWdVP/KunpxEt8LNawrL89+unX3+egWjbM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SVCSHdehYMNtSTV1erQHKXY4UotrI6NWoQqT0HHfEJmYaZRZN92QgUwIJ3xYfODoj
-         piYUzW7kePpvMdmoPuRndNpJ76NlR8sFUtQ6/K+IfPXbDRct9+O9myWLqIiBVaV2Z9
-         saj1XhW480uTqT7FWgHOynpnh6MOv/A441SvTBcg=
-Date:   Tue, 15 Aug 2023 22:10:09 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Alistair Francis <alistair23@gmail.com>
-Cc:     Lukas Wunner <lukas@wunner.de>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, Jonathan.Cameron@huawei.com,
-        alex.williamson@redhat.com, christian.koenig@amd.com,
-        kch@nvidia.com, logang@deltatee.com, linux-kernel@vger.kernel.org,
-        Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [PATCH v3] PCI/DOE: Expose the DOE protocols via sysfs
-Message-ID: <2023081538-grab-alongside-ce24@gregkh>
-References: <20230809232851.1004023-1-alistair.francis@wdc.com>
- <20230810073457.GA26246@wunner.de>
- <CAKmqyKPm_BFnNxVLXCO_PVRDJaVb+XOj=kEEzXd+MgkwDiZhXA@mail.gmail.com>
- <20230812081526.GC9469@wunner.de>
- <2023081224-famished-devotion-6e0e@gregkh>
- <CAKmqyKPx9Oi-ZF0grdUzkHi5BjyyNQZ2r30vgShR6cOY9xZ9YQ@mail.gmail.com>
- <2023081543-clarify-deniable-8de8@gregkh>
- <CAKmqyKMHpo8MA9cRAzxWNT+P9poHCKbSpNF4yk8MrVg9+k8=_A@mail.gmail.com>
+        with ESMTP id S239101AbjHOVVC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Aug 2023 17:21:02 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2040.outbound.protection.outlook.com [40.107.237.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D3F883;
+        Tue, 15 Aug 2023 14:21:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TXFvRMoMjDTP2bRS6SfaCOyxrNjzk9Jg3htvlLRp8oCc+MzQU4xMSLylzZL/8oV/FKxgPUtqW1UMNjW9OXObW1eFqJXsWk7lYqtawHTvosjAYpY30Q5FG4DQQ6twbbbNhhZYoQvS5eqFefmsnjjmEDl1EQk5n5ZI0SIIL0fqHG6g0kjOf97dnRsaSSkp9T86+hz+AwCltVtmHqsXRIyR/mwLFu+kAr2BUE3XjBaRmX3O2Fu66AxcZJZHLwCINinDp4I4uIRfCMrzlIu4WiFtLjFFWtWRAKCSt5/9X+Fb0SZGAF3H/53JdUL8CU26aIYOaS/rF2J3WoS+8mUeuncrnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UYW/QtOaFXrXMsuX6438/s+C7fuYpXv8Sy7GOFUjlww=;
+ b=DRicM0LhgNht5bR2O5tSqPZXtXhqHUMj41x/E5O1suX31p7xfWKANAZC7MCRL8cTaa6c6LrAAyiwzYZuUDutzwKlPVYkh9ROMQqVUdft7cT/7rvoqOOTFqmtX4O+SCdCZU9255I80Q799czWCRDWJpnl4hmnoNkkhxkAdDlByrqumq77oxHK5Wz4YEAOpGdGfBEU/o+wreTRWtZ3pooEWMvMjA5Wi3CxJRkwXFDMw6tEbuyczGYH95H64N5lOUq0p79FRxhgiO2pfiFun4ntmCMIPnI+7os9hQAvgdvRzjSBWtRXTONdTaNizzAGGz3im13OWhLl4ewReNcQTe4A+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UYW/QtOaFXrXMsuX6438/s+C7fuYpXv8Sy7GOFUjlww=;
+ b=OE9ikviJarrXsai6caL+PYYPZ9rAceLIhEwb1iGTXqud3jAFLkRhIqzXEyrc6wiP5tbIbymhEuwlIN9zSCvef7zsTQ/S2k6fwH/eoW8pXQRaXiJz/aDO3TVH4Y4XSWkrW8XFWqLH32YUokId6VhYzSqKgkQUwhLrjRBrbxAUa2A=
+Received: from MW4PR03CA0008.namprd03.prod.outlook.com (2603:10b6:303:8f::13)
+ by CH0PR12MB5387.namprd12.prod.outlook.com (2603:10b6:610:d6::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.26; Tue, 15 Aug
+ 2023 21:20:58 +0000
+Received: from MWH0EPF000971E5.namprd02.prod.outlook.com
+ (2603:10b6:303:8f:cafe::9) by MW4PR03CA0008.outlook.office365.com
+ (2603:10b6:303:8f::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.14 via Frontend
+ Transport; Tue, 15 Aug 2023 21:20:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MWH0EPF000971E5.mail.protection.outlook.com (10.167.243.73) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6699.14 via Frontend Transport; Tue, 15 Aug 2023 21:20:57 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 15 Aug
+ 2023 16:20:56 -0500
+From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "Kuppuswamy Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Subject: [PATCH v4 0/3] PCI: pciehp: Add support for native AER and DPC handling on async remove
+Date:   Tue, 15 Aug 2023 21:20:40 +0000
+Message-ID: <20230815212043.114913-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKmqyKMHpo8MA9cRAzxWNT+P9poHCKbSpNF4yk8MrVg9+k8=_A@mail.gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000971E5:EE_|CH0PR12MB5387:EE_
+X-MS-Office365-Filtering-Correlation-Id: a4b70a67-8f5c-459b-1a98-08db9dd58480
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Lv9NPGmRQNlEbWr8NEvdns4HH8qqJY0QoHsZb3g3NC86r2izZrnlfXFNzx5keEeDGKumpRk1Z6izXzVN0+hQ7KQUIbrTRxxWMZzbD/WZj+NpAXgcUXSb72VvaonxIKqURAmvBwZ58MsdAUR2hPnalvSqGg713jC+ZMu5RgCnKNAHl3xX4F0lTgz7W3a6uyC1C/pI9eL5Xj0PJPtFzCkF6PtL2Ik3rSjOiuKtnBMhNSfYZo26aN4xL/lEk4TCA5IEW8gVksDJ/q5ulvx/qqT+WfMFRyI+0Lzc0AoZuaTfZH+lRrDbHZvb3FVaoLkNCHH5luhhhzKJAo+CmSmCaNXy1mkvxMa8SFweWy92ZTo0guRKrRGUuqp6LX2hoNRTjrChjkwXnIokhz8P/8/Qyalg7nPnbWAeCw4zHjkYq2RSqt49ctCHSdM8Ae7dq3uKLTwA2xS9r1J3jGxkRIih5RnuZUDIlAlb1llMZ/M94Ps0S5wjOeLRYzW2hgHVDxYBNqSZjgoq2xkzevgQpI7CTAn5Y0Vy1lhoBBZeG5lsLvPorDuC6AIuxkXppANSom1R7Prleh/HjhKF3BKR47SRu8D+xRu1kkmM48rh/leTOdn0u64JPT/Y1QJyhPbL031Pgda/CPKscBrLX0v/COrXWKY86UtID12KCLKtjV4DkjhHIh1f4DwbY8YLqX3FMdNvtOK3JhIuZeRvrR6/pNtzvb0PyzSZDFeDnCsKQp0zeFOSHQ4yPYsD+tdqwm991NXF0ILF
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(376002)(136003)(396003)(346002)(1800799009)(82310400011)(186009)(451199024)(46966006)(40470700004)(36840700001)(5660300002)(6666004)(41300700001)(86362001)(36756003)(110136005)(316002)(16526019)(336012)(426003)(47076005)(4744005)(478600001)(36860700001)(40480700001)(40460700003)(2616005)(8936002)(356005)(82740400003)(966005)(8676002)(2906002)(26005)(4326008)(81166007)(1076003)(70586007)(54906003)(70206006)(7696005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Aug 2023 21:20:57.8077
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4b70a67-8f5c-459b-1a98-08db9dd58480
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: MWH0EPF000971E5.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5387
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 15, 2023 at 03:50:31PM -0400, Alistair Francis wrote:
-> On Tue, Aug 15, 2023 at 11:11 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Aug 15, 2023 at 09:44:32AM -0400, Alistair Francis wrote:
-> > > On Sat, Aug 12, 2023 at 4:26 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Sat, Aug 12, 2023 at 10:15:26AM +0200, Lukas Wunner wrote:
-> > > > > On Thu, Aug 10, 2023 at 11:34:11AM -0400, Alistair Francis wrote:
-> > > > > > On Thu, Aug 10, 2023 at 3:34???AM Lukas Wunner <lukas@wunner.de> wrote:
-> > > > > > > On Wed, Aug 09, 2023 at 07:28:51PM -0400, Alistair Francis wrote:
-> > > > > > > > --- a/drivers/pci/pci-sysfs.c
-> > > > > > > > +++ b/drivers/pci/pci-sysfs.c
-> > > > > > > > @@ -1226,6 +1227,12 @@ static int pci_create_resource_files(struct pci_dev *pdev)
-> > > > > > > >       int i;
-> > > > > > > >       int retval;
-> > > > > > > >
-> > > > > > > > +#ifdef CONFIG_PCI_DOE
-> > > > > > > > +     retval = doe_sysfs_init(pdev);
-> > > > > > > > +     if (retval)
-> > > > > > > > +             return retval;
-> > > > > > > > +#endif
-> > > > > > > > +
-> > > > > > >
-> > > > > > > The preferred way to expose PCI sysfs attributes nowadays is to add them
-> > > > > > > to pci_dev_attr_groups[] and use the ->is_visible callback to check
-> > > > > > > whether they're applicable to a particular pci_dev.  The alternative
-> > > > > > > via pci_create_resource_files() has race conditions which I think
-> > > > > > > still haven't been fixed. Bjorn recommended the ->is_visible approach
-> > > > > > > in response to the most recent attempt to fix the race:
-> > > > > > >
-> > > > > > > https://lore.kernel.org/linux-pci/20230427161458.GA249886@bhelgaas/
-> > > > > >
-> > > > > > The is_visible doen't seem to work in this case.
-> > > > > >
-> > > > > > AFAIK is_visible only applies to the attributes under the group. Which
-> > > > > > means that every PCIe device will see a `doe_protos` directory, no
-> > > > > > matter if DOE is supported.
-> > > > >
-> > > > > internal_create_group() in fs/sysfs/group.c does this:
-> > > > >
-> > > > >       if (grp->name) {
-> > > > >                       ...
-> > > > >                       kn = kernfs_create_dir_ns(kobj->sd, grp->name, ...
-> > > > >
-> > > > > So I'm under the impression that if you set the ->name member of
-> > > > > struct attribute_group, the attributes in that group appear under
-> > > > > a directory of that name.
-> > > > >
-> > > > > In fact, the kernel-doc for struct attribute_group claims as much:
-> > > > >
-> > > > >  * struct attribute_group - data structure used to declare an attribute group.
-> > > > >  * @name:     Optional: Attribute group name
-> > > > >  *            If specified, the attribute group will be created in
-> > > > >  *            a new subdirectory with this name.
-> > > > >
-> > > > > So I don't quite understand why you think that "every PCIe device will
-> > > > > see a `doe_protos` directory, no matter if DOE is supported"?
-> > > > >
-> > > > > Am I missing something?
-> > > >
-> > > > I think the issue might be that the directory will be created even if no
-> > > > attributes are present in it due to the is_visable() check not returning
-> > > > any valid files?
-> > >
-> > > Yes, that's what I'm seeing. I see the directory for all PCIe devices
-> > >
-> > > This is a WIP that I had:
-> > > https://github.com/alistair23/linux/commit/61925cd174c31386eaa7e51e3a1be606b38f847c
-> > >
-> > > >
-> > > > If so, I had a patch somewhere around here where I was trying to fix
-> > > > that up:
-> > > >         https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=debugfs_cleanup&id=f670945dfbaf353fe068544c31e3fa45575da5b5
-> > > > but it didn't seem to work properly and kept crashing.  I didn't spend
-> > > > much time on looking into it, but if this is an issue, I can work on
-> > > > fixing this properly.
-> > >
-> > > That patch sounds like it would fix the issue of empty directories
-> > > that I'm seeing. Do you mind fixing it up properly?
-> >
-> > I am currently unable to do so due to travel and stuff for a few weeks,
-> > sorry.  Feel free to take it and fix the boot crash that is seen with it
-> > and make it part of your patch series if you can't wait that long.
-> 
-> No worries.
-> 
-> It's much harder than I first thought though. There are currently lots
-> of users who expect the group to remain even if empty, as they
-> dynamically add/merge properties later. Which is what we end up doing
-> for DOE as well
-> 
-> I'll keep looking into this and see if I can figure something out.
+This series of patches adds native support to handle AER and DPC events
+occurred as a side-effect on an async remove.
 
-Yeah, now that I think about it, that's where stuff fell apart for me as
-well.  We should be able to create the group and then only create the
-file when they are added/merged, so I bet I missed a codepath somewhere.
+Link to v3:
+https://lore.kernel.org/all/20230621185152.105320-1-Smita.KoralahalliChannabasappa@amd.com
 
-> Would an .attr_is_visible() function pointer for struct
-> attribute_group something that the kernel would accept?
+Smita Koralahalli (3):
+  PCI: pciehp: Add support for async hotplug with native AER and DPC/EDR
+  PCI: Enable support for 10-bit Tag during device enumeration
+  PCI: pciehp: Clear AtomicOps unconditionally on hot remove.
 
-Worst case, yes, that would be acceptable.  But try to see where I
-messed up on the original patch, it should be able to be done
-automatically somehow...
+ drivers/pci/hotplug/pciehp_pci.c |  3 ++
+ drivers/pci/pci.c                | 59 +++++++++++++++++++++++++++
+ drivers/pci/pci.h                |  1 +
+ drivers/pci/pcie/dpc.c           | 69 ++++++++++++++++++++++++++++++++
+ drivers/pci/probe.c              |  1 +
+ include/uapi/linux/pci_regs.h    |  3 ++
+ 6 files changed, 136 insertions(+)
 
-thanks,
+-- 
+2.17.1
 
-greg k-h
