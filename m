@@ -2,202 +2,401 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BE0B77D50D
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Aug 2023 23:23:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41F6577D5C5
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Aug 2023 00:06:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239333AbjHOVXR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Aug 2023 17:23:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39836 "EHLO
+        id S238698AbjHOWFi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Aug 2023 18:05:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229952AbjHOVXN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Aug 2023 17:23:13 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on20608.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe5b::608])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1055919B6;
-        Tue, 15 Aug 2023 14:23:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d3T81sRM1PvQNJi7kAQPEKb0PGV/WVA2Xqf4lWJY/QvuABAKpHPvmdFYowz2V+xXtWszj4eWaTuLvl0Vk3Ialc4JWCwVOkxfHbySSz8wS8GxxI6KicUyOnX/kAijVjhFPUYegdy5o6UxJtYI+suWEbmhuLKHDb7lKd7d0WLTyZRKxRxoDWYfMi6pFopgaW0SRECspvQng3NE4Wcyykny/N259tXL552jorvzMuythWal4xjnIZfaSD36R/NixdwTkhvNiBXLj575WsvE0Z8x1ejRS/QTBJlMGv5adDeliXXQRqS4HxqUCeJmuNBP4szBLgRIzYGpvS442IogZOgxOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B3bE5WntX6yPzDoJsE6t4bDSjjl3fQRFxkSHAD+o6yk=;
- b=ONu+lQpufJNcyjYvbRabajE7agBsRRGE4XTLd6Je9ubNTQKQDa/CaneOtmqAASjUuoPgRsmjZ06oPRyqDDCeVYVAiT9w3fMn8sHuqNjBUQs2SeZTGEaDzLN//WNqAaGUN1DMiHg/p2+VO/3UpOiS7PzNxyODR13jE8SSdm20YNTNmRX0qk6to/dkXB0m94m7JJGvBpzu/yyxJn/6W6k6JSJp9/+p+2BdyjZ+4TUplnEPnMen04c5pzzCjS/xw/1Kda+GmPTOqvMWrmCHzJv193601dMiuK8qcobt6Equ2U/EU8J32rKS1vLh6FaHHWAN+dmxTyi1dssCgVRvtpmRUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B3bE5WntX6yPzDoJsE6t4bDSjjl3fQRFxkSHAD+o6yk=;
- b=YSPvqbk1k8go6qpaXMFuZ2TLxA5YT0tYBdjRxy7SQP6C8uY9B0AN+AV+XYOAUbX0+kvXswnCGJhDSerQrQYolxc3xr4pN6lBnnrAJJkawFIa5kyPv72F9RyhJ4KlqBHjUZXbRiQBOzSYo7Y3f+JbhiRZf4R2t8FCUpyqd0bdzNk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
- by DM6PR12MB5006.namprd12.prod.outlook.com (2603:10b6:5:1b8::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.26; Tue, 15 Aug
- 2023 21:23:02 +0000
-Received: from BYAPR12MB2869.namprd12.prod.outlook.com
- ([fe80::54fc:703:94d8:4241]) by BYAPR12MB2869.namprd12.prod.outlook.com
- ([fe80::54fc:703:94d8:4241%4]) with mapi id 15.20.6678.025; Tue, 15 Aug 2023
- 21:23:01 +0000
-Message-ID: <1c0f0e51-d1b5-b46a-2333-4b1315ba10e0@amd.com>
-Date:   Tue, 15 Aug 2023 14:22:58 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v3 2/2] PCI: pciehp: Clear the optional capabilities in
- DEVCTL2 on a hot-plug
-Content-Language: en-US
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Fontenot Nathan <Nathan.Fontenot@amd.com>,
-        Jay Cornwall <Jay.Cornwall@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>
-References: <20230621185152.105320-1-Smita.KoralahalliChannabasappa@amd.com>
- <20230621185152.105320-3-Smita.KoralahalliChannabasappa@amd.com>
- <20230622063105.GA624@wunner.de>
- <d64f8de4-cac1-ccca-33fe-1fda418837e2@amd.com>
- <20230622214247.GB11993@wunner.de>
- <4599d885-219f-3ee0-f425-62746f31cc67@amd.com>
- <20230628132526.GA14276@wunner.de>
-From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-In-Reply-To: <20230628132526.GA14276@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY3PR05CA0032.namprd05.prod.outlook.com
- (2603:10b6:a03:39b::7) To BYAPR12MB2869.namprd12.prod.outlook.com
- (2603:10b6:a03:132::30)
+        with ESMTP id S239374AbjHOWFh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Aug 2023 18:05:37 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 592701FEC;
+        Tue, 15 Aug 2023 15:05:34 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8CxfOqr9ttkgOUYAA--.24226S3;
+        Wed, 16 Aug 2023 06:05:31 +0800 (CST)
+Received: from openarena.loongson.cn (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8DxJ82n9ttk23JbAA--.26360S2;
+        Wed, 16 Aug 2023 06:05:27 +0800 (CST)
+From:   Sui Jingfeng <suijingfeng@loongson.cn>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        loongson-kernel@lists.loongnix.cn
+Subject: [PATCH v4] PCI/VGA: Make the vga_is_firmware_default() less arch-dependent
+Date:   Wed, 16 Aug 2023 06:05:27 +0800
+Message-Id: <20230815220527.1316537-1-suijingfeng@loongson.cn>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|DM6PR12MB5006:EE_
-X-MS-Office365-Filtering-Correlation-Id: c7bfe1ec-2fb2-4696-5942-08db9dd5cdf1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ygqGGU87kkN1JWBsTyEHXHtyENDEHpIVgDcsvjlFyPj/Ej4gTl2L6OOWUF1ofjo9ooripJHgu2DwvuYkf38kwvYB8K3OFkTuNP25AmNxAUrCW3Jkaldo4IEuJTsKlgAKvDU9DzX9yfquUjqnNA//6kaROS76Sreh/Gw2in0aTqcnGA2blGm3cBzqlCwLqX1nPlozzSsMtaU4kIYiMGDEXhE0O1Baj7IwMnkjDw56WedhPsvHnFSCuuB5ftwwl/LyH9iMSiG6/b9ZNbjm/v8pcwKmBmLEHnk5vGoFREOu98tSWxXgZNGUQTE9I+IQTXKoGhwD7KVjjr6W+sP98KUDpsr5n1+wrvhifPThkimpsZR7t+CMCDLdfb5MZeOarD2/NF7C3sLq4iJBN7wh6a1ta+YBujxaKkkacMpekzsKeEmWKf/CmTjOhTBfjki1YvNDHiDQrrROB99AW9lLfdZ9cQB+MA4dpsCbgd1Uhd7Vi5YaiN1i/oqHGgiITF1tMRJquwGK5wkygv5GgBi4RKWxqCIy3eELxidp9yo3DzIgbqEnw6SFgjsxjXvoVFzMZtYIBUM8cfo+8b3sabnPDYe/XM2gCgnYZ3IGdn/27Lam/ZlA0613Wic69dfw2fTFFkrJxoiK+FI001LqErjMsrAPsg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(396003)(366004)(346002)(376002)(1800799009)(186009)(451199024)(2906002)(8936002)(8676002)(4326008)(6512007)(6486002)(478600001)(86362001)(83380400001)(54906003)(6506007)(66476007)(66556008)(5660300002)(6916009)(41300700001)(316002)(66946007)(31696002)(2616005)(36756003)(31686004)(38100700002)(6666004)(26005)(53546011)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cGJwamRBdEpmNmUwaVlLeVFqL2VBOW9IaCt1Q3lmWjM3RVBucTAveGUyUGlk?=
- =?utf-8?B?L0Z4WlB2bzF6dEcwV0hWRjhRL3JJQ2lFVDl6Z1l1S0NxcGFWQ2x2bmZuS0ZU?=
- =?utf-8?B?Z0V1bDd5K3NtN3N1Y0FPYmFGSWYrMlN3dHBoM0RSRC84M3hreUZ2YXRJSUVI?=
- =?utf-8?B?ZUdnZklEaGx1c2VCaUZkVGpmWElJQlNoUU91MFhodU1CeVplMmluUUVuS2hQ?=
- =?utf-8?B?UTZGTmFFQTRoaEUvWVg0UUR6ZEt5c1RERTZqQkZHV2YvbW14anhzQ2Vxc21t?=
- =?utf-8?B?WnliOVZDNXNoTmsxT1dZclNlaUJDU2FqTW5qb0RVNUcxQVMwd1lRamZOY2wz?=
- =?utf-8?B?MDR5bm52S1Vja0dlamV5NUx3SVJVSjNzWGJhQmlQZTk2N1JpamxycWxCcE9T?=
- =?utf-8?B?Q1NJUWdGU1M4WUtIOUh3UEZwazc2S0NrMEVOcDhrMjBZTzBGaFQ1M0U5MmMy?=
- =?utf-8?B?dzV4MWZRUEs5bGVFZUdtOWtaeVlhdHRZREhpbS9oQjdmaEhkOVFEVmFzc1Y5?=
- =?utf-8?B?REgyZWduNXBHQUhIdDlKRGNNamdqZGxCcWFEbkJNR1piTHgwVm84czdEaGJt?=
- =?utf-8?B?Y0hQUmd5RUE0enY2ZUpxcWZtU1NxSHl1VWhNcWJESjFyQWFQSnVDSVhzV2hN?=
- =?utf-8?B?TjVBMmwxejNjVU5VTWVVSTZWVkpoK2dLZ2Fid2pHYjZQZlNCMGNSK05nQklE?=
- =?utf-8?B?ODR0blpYWWZ4UzdXVGtEaEdLTExsOHNyV1B4aDNZNXQwVFpCd1c0cEc0citv?=
- =?utf-8?B?SXRMWUhZTWtEZ05SWnYwZFk5TktZcGQ5UlM3bmRrb1RKQnJlR215S0crNjNI?=
- =?utf-8?B?VXlVQ2pTN3k3cWNQR3dCK3kvbWl4TGIyUlRhSVoyUXRqcFFiVDliR2MzRjF2?=
- =?utf-8?B?UU0xNnVHbHYwWHJDdy9CMkxEZzk5Y3JTNERDenpDbnJTTmtmbUQvR3FvTlRw?=
- =?utf-8?B?aHlCSTFjZ1E5U0dtbDNVOVgrQTN2NGM5MlJxTXkvNEJwbGJia1dZTzZXd216?=
- =?utf-8?B?UFZwcWRNWndBLysxZGJhczBuRkpveFVKM0plOEFrdVplc2dVU0I4QkxaMm1P?=
- =?utf-8?B?VTEzbE5qT001SG1qWDJhOWxKSTNBUDlwWGh6SWlwUE9pbm1PYndCbWhGcU5N?=
- =?utf-8?B?UWpSa1lkWUg3dVE0Ylk3QVgybmE5NUNRTlA3U2o3WjJjVlpvNTNnd0JzaitY?=
- =?utf-8?B?ZytoT01nKzVhWWphckg3RCtLOEs0ZTFuL1poNVkrL2V5NVE3NDBzeWNVNmFS?=
- =?utf-8?B?THloVjhtNnlnNWVQWTlqenR4RlJvU0pGdTlpSjEzZ3Yyb29UUE1KNmlKWTBS?=
- =?utf-8?B?aFEzeHZhMVBpV2hKejRqam44NFlFZkJabkxPNzdpSEVmTmFmUGZIOFMzcHpC?=
- =?utf-8?B?ck1wQjQxVVBWTFY2czA4cXp1OWNDN1pCSjVNT3h1NXY4OUZtOWJjZGd0Si9q?=
- =?utf-8?B?QjhvNWpLd1ZuSzA4dHZWV0ptV2dCRVNqYm8wcXVDUHRQQXE3cXV4TDdNNU5v?=
- =?utf-8?B?Zi80U0pVUHgxa01jMFIwT0VZUEVOdkp6aWNGZU0rb3IrWTI3bmwwYjZXNmdt?=
- =?utf-8?B?SzRiUC9aUTNZZC9PRXJsd29RcUIwb2MxenIvVWhSUmhXNjFVVHYwNUZmWjNh?=
- =?utf-8?B?amRNRU1UWXhEanB3MHJFaGNoNWJVVnBMS0ErMG1Lb0toeUlEblJUSnVjNUd2?=
- =?utf-8?B?ZXEySGpMekdrS085OVMrK2FkWDRQak1SSVd0aGhrajdTZnRtdnkwU05XVzdL?=
- =?utf-8?B?NHNCZDJGcGNvR0liNEQ5SGg5QWw2ZDMyendwN0FNbkxMYy9hbUNoamIrQVZS?=
- =?utf-8?B?c2U0SEQ4MEI0UDF2WlYyaGFuc21GMlg0QmdGdWRkTmR1cjhSSTF2bUZzRDRm?=
- =?utf-8?B?TE94RHFRTlBMczlHSnBXVlNKcGgwZFo2aWhVL3dsaEpqSjdSdkxadXBBdmlR?=
- =?utf-8?B?U0pyTWVBcmdUQWJ1OEg2eERQeS9NTmJEcGNON3VteHBPQWhoT2FUQjBYNGIv?=
- =?utf-8?B?TndXZSthaFU4bklsR3hFMkNxL00rc3h1MW84QzZEaU5UY01jR1VzcjA3U3JR?=
- =?utf-8?B?UStPZ3F2Q2tkK2EvUzREUFhPQzdZbW1GbitZUDliU05GNW9mVWdSNTVPK1Y5?=
- =?utf-8?Q?2REM3fcUQnwZ02+BsHD9I4R4p?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7bfe1ec-2fb2-4696-5942-08db9dd5cdf1
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Aug 2023 21:23:01.4733
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3D+meN/ZoG2yZSQVl0jBis3TS/akY2MRK7GANPapo4revLeaF7hsluD/FVcz0ruvsVHCIvxSJOt9iQW7RyvePw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB5006
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,SPF_HELO_PASS,SPF_NONE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8DxJ82n9ttk23JbAA--.26360S2
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj9fXoW3uw4DCw13Xw15Jw4fKw4ftFc_yoW8XFW8Wo
+        WDGrsrZrW8Gr4Uuw4rA342qF47Xay3KFsakF1UCw4DGFs7Aw4UGr4av3WxX39xZF10y34U
+        Zw12kFn8Ww1Dtrn3l-sFpf9Il3svdjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf
+        9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
+        UjIYCTnIWjp_UUUYh7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+        8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+        Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+        v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+        6r1j6r4UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+        kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+        twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+        8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
+        6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+        AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
+        2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
+        C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73
+        UjIFyTuYvjxUc0eHDUUUU
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/28/2023 6:25 AM, Lukas Wunner wrote:
-> On Tue, Jun 27, 2023 at 10:38:54AM -0700, Smita Koralahalli wrote:
->> Okay, I see there are no objections except for Bjorn/Jay's comments on
->>
->> "But there could be devices where AtomicOps are nominally supported but
->> untested or broken.."
->>
->> Would this be an issue?
-> 
-> I think you said that BIOS enables AtomicOps on certain AMD machines?
-> Or did that observation only apply to 10 Bit tags?
-> 
-> If BIOS does enable AtomicOps, it would be interesting to know which
-> logic BIOS follows, i.e. how does it determine whether to set
-> AtomicOp Requester Enable on Endpoints?
-> 
-> It would also be interesting to know how far that BIOS has proliferated,
-> i.e. how much experience with various Endpoint devices exists in the
-> real world.  If it turns out that BIOS has enabled the feature for
-> years on a wide range of Endpoints without any issues, I think
-> that would render concerns mute that enabling it in the kernel
-> might cause regressions.
-> 
-> I don't know why the spec says that "discovery of AtomicOp Requester
-> capabilities is outside the scope of this specification".  I imagine
-> it would be possible to set AtomicOp Requester Enable, then read it
-> to determine whether the bit is now indeed 1 or hard-wired to 0.
-> In the latter case, AtomicOp Requester capabilities can be assumed
-> to be absent.  So that would be a way to make do without any other
-> specific discovery of AtomicOp Requester capabilities.
+Currently, the vga_is_firmware_default() function only works on x86 and
+ia64, it is a no-op on ARM, ARM64, PPC, RISC-V, etc. This patch completes
+the implementation for the rest of the architectures. The added code tries
+to identify the PCI(e) VGA device that owns the firmware framebuffer
+before PCI resource reallocation happens.
 
-Sorry for getting back to this very late.
+This patch makes the vga_is_firmware_default() function works on whatever
+arch that has UEFI GOP support. But we make it available only on platforms
+where PCI resource relocation happens. if the provided method proves to be
+effective and reliable, it can be expanded to other arch easily.
 
-The approach taken by our Platform FW is not as robust as how it is
-handled by SW. And also they haven't come across issues for AtomicOps 
-similar to 10-bit tags.
+v2:
+	* Fix test robot warnnings and fix typos
 
-Hence, I worked on the approach of reading back the "AtomicOp Requester 
-Enable" to determine whether it is indeed 1 or hard-wired to 0.
+v3:
+	* Fix linkage problems if the global screen_info is not exported
 
-I came across two issues.
+v4:
+	* Handle linkage problems by hiding behind of CONFIG_SYSFB,
+	* Drop side-effects and simplify.
 
-This approach did not eliminate calling pci_enable_atomic_ops_to_root() 
-on all drivers as some of them enabled AtomicOp by only checking for 
-32-bit and 64-bit Completion capabilities.
+Since only one GPU could owns the firmware fb in normal case, things
+are almost done once we determine the boot VGA selected by firmware.
+By using the DECLARE_PCI_FIXUP_CLASS_HEADER(), we also ensure that we
+could identify the primary display (if there do have one) before PCI
+resource reallocation happen.
 
-And, on internal review I received comments that this approach wouldn't 
-help in determining the presence/absence of AtomicOps. PCIe r6.0 sec 
-7.5.3.16 [1], states "AtomicOps Requester Enable is permitted to be RW 
-even if no AtomicOp Requester capabilities are supported by the Endpoint 
-or Root Port", thereby substantiating devices that hardwires this bit to 
-'1' is also valid..
+The method provided in this patch will be effective as long as the target
+platform has a way set up the kernel's screen_info. For the machines with
+UEFI firmware, the screen_info is typically set up by the UEFI stub with
+respect to the UEFI GOP protocol. Since the UEFI stub executes in the
+context of the decompressor, and it cannot access the kernel's screen_info
+directly. Hence, the efi stub copies the screen_info provided by firmware
+to kernel's counterpart. Therefore, we handle linkage problems by using
+the CONFIG_EFI guard. Since when CONFIG_EFI is set, the kernel's
+screen_info is guaranteed to be static linkable for arm, arm64, riscv.
+V4 of this patch handle linkage problems by hiding behind of CONFIG_SYSFB,
+since sysfb reference the global screen_info as well.
 
-I have sent v4 considering all these constraints. Let me know what you 
-think.
+This patch is tested on:
 
-Thanks,
-Smita
+1) LS3A5000+LS7A1000 platform with three video cards
 
-> 
-> Thanks,
-> 
-> Lukas
+$ lspci | grep VGA
+
+ 00:06.1 VGA compatible controller: Loongson Technology LLC DC (Display Controller) (rev 01)
+ 03:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Caicos XT [Radeon HD 7470/8470 / R5 235/310 OEM]
+ 07:00.0 VGA compatible controller: S3 Graphics Ltd. Device 9070 (rev 01)
+ 08:00.0 VGA compatible controller: S3 Graphics Ltd. Device 9070 (rev 01)
+
+Before apply this patch:
+
+[    0.361748] pci 0000:00:06.1: vgaarb: setting as boot VGA device
+[    0.361751] pci 0000:00:06.1: vgaarb: bridge control possible
+[    0.361753] pci 0000:00:06.1: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+[    0.361763] pci 0000:03:00.0: vgaarb: bridge control possible
+[    0.361765] pci 0000:03:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+[    0.361771] pci 0000:07:00.0: vgaarb: bridge control possible
+[    0.361773] pci 0000:07:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+[    0.361777] pci 0000:08:00.0: vgaarb: bridge control possible
+[    0.361779] pci 0000:08:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+[    0.361781] vgaarb: loaded
+[    0.367838] pci 0000:00:06.1: Overriding boot device as 1002:6778
+[    0.367841] pci 0000:00:06.1: Overriding boot device as 5333:9070
+[    0.367843] pci 0000:00:06.1: Overriding boot device as 5333:9070
+
+After apply this patch:
+
+[    0.357780] pci 0000:03:00.0: vgaarb: BAR 0 contains firmware FB
+[    0.361726] pci 0000:00:06.1: vgaarb: setting as boot VGA device
+[    0.361729] pci 0000:00:06.1: vgaarb: bridge control possible
+[    0.361731] pci 0000:00:06.1: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+[    0.361741] pci 0000:03:00.0: vgaarb: setting as boot VGA device (overriding previous)
+[    0.361743] pci 0000:03:00.0: vgaarb: bridge control possible
+[    0.361745] pci 0000:03:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+[    0.361751] pci 0000:07:00.0: vgaarb: bridge control possible
+[    0.361753] pci 0000:07:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+[    0.361757] pci 0000:08:00.0: vgaarb: bridge control possible
+[    0.361759] pci 0000:08:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+[    0.361761] vgaarb: loaded
+[   14.730255] radeon 0000:03:00.0: vgaarb: changed VGA decodes: olddecodes=io+mem,decodes=none:owns=none
+
+Please note that before apply this patch, vgaarb can not select the right
+boot vga due to weird logic introduced with the commit 57fc7323a8e7c ("LoongArch: Add PCI controller support")
+
+Please also note that VARM Bar do moves on LoongArch:
+
+$ dmesg | grep 0000:03:00.0
+
+[    0.357688] pci 0000:03:00.0: [1002:6778] type 00 class 0x030000
+[    0.357713] pci 0000:03:00.0: reg 0x10: [mem 0xe0050000000-0xe005fffffff 64bit pref]
+[    0.357730] pci 0000:03:00.0: reg 0x18: [mem 0xe0065300000-0xe006531ffff 64bit]
+[    0.357741] pci 0000:03:00.0: reg 0x20: [io  0x20000-0x200ff]
+[    0.357762] pci 0000:03:00.0: reg 0x30: [mem 0xfffe0000-0xffffffff pref]
+[    0.357780] pci 0000:03:00.0: vgaarb: BAR0 contains firmware FB
+
+[    0.359809] pci 0000:03:00.0: BAR 0: assigned [mem 0xe0030000000-0xe003fffffff 64bit pref]
+[    0.359821] pci 0000:03:00.0: BAR 2: assigned [mem 0xe0065200000-0xe006521ffff 64bit]
+[    0.359832] pci 0000:03:00.0: BAR 6: assigned [mem 0xe0065220000-0xe006523ffff pref]
+[    0.359846] pci 0000:03:00.0: BAR 4: assigned [io  0x5000-0x50ff]
+[    0.361741] pci 0000:03:00.0: vgaarb: setting as boot VGA device (overriding previous)
+[    0.361743] pci 0000:03:00.0: vgaarb: bridge control possible
+[    0.361745] pci 0000:03:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+
+2) LS3A5000+LS7A2000 platform with four video cards
+
+$ lspci | grep VGA
+
+00:06.1 VGA compatible controller: Loongson Technology LLC Device 7a36 (rev 02)
+01:00.0 VGA compatible controller: Silicon Motion, Inc. Device 0768 (rev 03)
+04:00.0 VGA compatible controller: Device 0709:0001 (rev 01)
+05:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Lexa PRO [Radeon 540/540X/550/550X / RX 540X/550/550X] (rev c7)
+
+Before apply this patch:
+
+[    0.359345] pci 0000:00:06.1: vgaarb: setting as boot VGA device
+[    0.359347] pci 0000:00:06.1: vgaarb: bridge control possible
+[    0.359349] pci 0000:00:06.1: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+[    0.359358] pci 0000:01:00.0: vgaarb: bridge control possible
+[    0.359360] pci 0000:01:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+[    0.359364] pci 0000:04:00.0: vgaarb: bridge control possible
+[    0.359366] pci 0000:04:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+[    0.359369] pci 0000:05:00.0: vgaarb: bridge control possible
+[    0.359370] pci 0000:05:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+[    0.359373] vgaarb: loaded
+[    0.365852] pci 0000:00:06.1: Overriding boot device as 126F:768
+[    0.365855] pci 0000:00:06.1: Overriding boot device as 709:1
+[    0.365857] pci 0000:00:06.1: Overriding boot device as 1002:699F
+[   14.011380] amdgpu 0000:05:00.0: vgaarb: changed VGA decodes: olddecodes=io+mem,decodes=none:owns=none
+
+After apply this patch:
+
+[    0.357142] pci 0000:05:00.0: vgaarb: BAR 0 contains firmware FB
+[    0.359291] pci 0000:00:06.1: vgaarb: setting as boot VGA device
+[    0.359294] pci 0000:00:06.1: vgaarb: bridge control possible
+[    0.359296] pci 0000:00:06.1: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+[    0.359305] pci 0000:01:00.0: vgaarb: bridge control possible
+[    0.359307] pci 0000:01:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+[    0.359311] pci 0000:04:00.0: vgaarb: bridge control possible
+[    0.359312] pci 0000:04:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+[    0.359316] pci 0000:05:00.0: vgaarb: setting as boot VGA device (overriding previous)
+[    0.359318] pci 0000:05:00.0: vgaarb: bridge control possible
+[    0.359319] pci 0000:05:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+[    0.359321] vgaarb: loaded
+[   14.399907] amdgpu 0000:05:00.0: vgaarb: changed VGA decodes: olddecodes=io+mem,decodes=none:owns=none
+
+Again, the VRAM Bar do moves:
+
+$ dmesg | grep 0000:05:00.0
+
+[    0.357076] pci 0000:05:00.0: [1002:699f] type 00 class 0x030000
+[    0.357093] pci 0000:05:00.0: reg 0x10: [mem 0xe0030000000-0xe003fffffff 64bit pref]
+[    0.357104] pci 0000:05:00.0: reg 0x18: [mem 0xe0040000000-0xe00401fffff 64bit pref]
+[    0.357112] pci 0000:05:00.0: reg 0x20: [io  0x40000-0x400ff]
+[    0.357120] pci 0000:05:00.0: reg 0x24: [mem 0xe0074300000-0xe007433ffff]
+[    0.357128] pci 0000:05:00.0: reg 0x30: [mem 0xfffe0000-0xffffffff pref]
+[    0.357142] pci 0000:05:00.0: vgaarb: BAR0 contains firmware FB
+[    0.357720] pci 0000:05:00.0: BAR 0: assigned [mem 0xe0060000000-0xe006fffffff 64bit pref]
+[    0.357728] pci 0000:05:00.0: BAR 2: assigned [mem 0xe0058000000-0xe00581fffff 64bit pref]
+[    0.357736] pci 0000:05:00.0: BAR 5: assigned [mem 0xe0072b00000-0xe0072b3ffff]
+[    0.357740] pci 0000:05:00.0: BAR 6: assigned [mem 0xe0072b40000-0xe0072b5ffff pref]
+[    0.357750] pci 0000:05:00.0: BAR 4: assigned [io  0x5000-0x50ff]
+[    0.359316] pci 0000:05:00.0: vgaarb: setting as boot VGA device (overriding previous)
+[    0.359318] pci 0000:05:00.0: vgaarb: bridge control possible
+[    0.359319] pci 0000:05:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+
+3) Mips (LS3A4000/LS7A1000 + SM750 + Radeon)
+
+Loongson Mips have no UEFI GOP support, we test this patch by modifying the
+screen_info manually.
+
+$ lspci | grep VGA
+
+ 04:00.0 VGA compatible controller: Silicon Motion, Inc. SM750 (rev a1)
+ 05:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Oland [Radeon HD 8570 / R7 240/340 OEM] (rev 87)
+
+$ dmesg | grep 04:00.0
+
+ pci 0000:04:00.0: [126f:0750] type 00 class 0x030000
+ pci 0000:04:00.0: reg 0x10: [mem 0x58000000-0x5bffffff pref]
+ pci 0000:04:00.0: reg 0x14: [mem 0x5f000000-0x5f1fffff]
+ pci 0000:04:00.0: reg 0x30: [mem 0xffff0000-0xffffffff pref]
+ pci 0000:04:00.0: BAR 0: assigned [mem 0x50000000-0x53ffffff pref]
+ pci 0000:04:00.0: BAR 1: assigned [mem 0x54000000-0x541fffff]
+ pci 0000:04:00.0: BAR 6: assigned [mem 0x54200000-0x5420ffff pref]
+
+$ dmesg | grep 05:00.0
+
+ pci 0000:05:00.0: [1002:6611] type 00 class 0x030000
+ pci 0000:05:00.0: reg 0x10: [mem 0x40000000-0x4fffffff 64bit pref]
+ pci 0000:05:00.0: reg 0x18: [mem 0x5f300000-0x5f33ffff 64bit]
+ pci 0000:05:00.0: reg 0x20: [io  0x40000-0x400ff]
+ pci 0000:05:00.0: reg 0x30: [mem 0xfffe0000-0xffffffff pref]
+ pci 0000:05:00.0: BAR 0: assigned [mem 0x40000000-0x4fffffff 64bit pref]
+ pci 0000:05:00.0: BAR 2: assigned [mem 0x5b300000-0x5b33ffff 64bit]
+ pci 0000:05:00.0: BAR 6: assigned [mem 0x5b340000-0x5b35ffff pref]
+ pci 0000:05:00.0: BAR 4: assigned [io  0x21000-0x210ff]
+
+Specify the firmware fb at BAR 0 of SM750 by hardcode:
+
+screen_info = (struct screen_info) {
+    .orig_video_isVGA = VIDEO_TYPE_EFI,
+    .lfb_base = 0x58000000,
+    .lfb_size = 1280 * 800 * 4 * 2,
+};
+
+$ dmesg | grep vgaarb
+
+ vgaarb: loaded
+ pci 0000:04:00.0: vgaarb: BAR 0 contains firmware FB
+ pci 0000:04:00.0: vgaarb: setting as boot VGA device
+ pci 0000:04:00.0: vgaarb: bridge control possible
+ pci 0000:04:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:05:00.0: vgaarb: bridge control possible
+ pci 0000:05:00.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+
+Specify the firmware fb at BAR 0 of ATI GPU by hardcode:
+
+screen_info = (struct screen_info) {
+    .orig_video_isVGA = VIDEO_TYPE_EFI,
+    .lfb_base = 0x40000000,
+    .lfb_size = 1280 * 800 * 4 * 2,
+};
+
+$ dmesg | grep vgaarb
+
+ vgaarb: loaded
+ pci 0000:04:00.0: vgaarb: setting as boot VGA device
+ pci 0000:04:00.0: vgaarb: bridge control possible
+ pci 0000:04:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:05:00.0: vgaarb: BAR 0 contains firmware FB
+ pci 0000:05:00.0: vgaarb: setting as boot VGA device (overriding previous)
+ pci 0000:05:00.0: vgaarb: bridge control possible
+ pci 0000:05:00.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+ radeon 0000:05:00.0: vgaarb: changed VGA decodes: olddecodes=io+mem,decodes=none:owns=io+mem
+
+Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
+---
+ drivers/pci/vgaarb.c | 76 +++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 75 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+index 5a696078b382..7b6c3a772e91 100644
+--- a/drivers/pci/vgaarb.c
++++ b/drivers/pci/vgaarb.c
+@@ -60,7 +60,8 @@ static int vga_count, vga_decode_count;
+ static bool vga_arbiter_used;
+ static DEFINE_SPINLOCK(vga_lock);
+ static DECLARE_WAIT_QUEUE_HEAD(vga_wait_queue);
+-
++/* The PCI(e) device who owns the firmware framebuffer */
++static struct pci_dev *pdev_boot_vga;
+ 
+ static const char *vga_iostate_to_str(unsigned int iostate)
+ {
+@@ -571,6 +572,9 @@ static bool vga_is_firmware_default(struct pci_dev *pdev)
+ 
+ 		return true;
+ 	}
++#else
++	if (pdev_boot_vga && pdev_boot_vga == pdev)
++		return true;
+ #endif
+ 	return false;
+ }
+@@ -1555,3 +1559,73 @@ static int __init vga_arb_device_init(void)
+ 	return rc;
+ }
+ subsys_initcall_sync(vga_arb_device_init);
++
++/*
++ * Get the physical address range that the firmware framebuffer occupies.
++ *
++ * The global screen_info is arch-specific, CONFIG_SYSFB is chosen as
++ * compile-time conditional to suppress linkage problems.
++ */
++static bool vga_arb_get_firmware_fb_range(resource_size_t *start,
++					  resource_size_t *end)
++{
++	resource_size_t fb_start = 0;
++	resource_size_t fb_size = 0;
++	resource_size_t fb_end;
++
++#if defined(CONFIG_X86) || defined(CONFIG_IA64) || defined(CONFIG_SYSFB)
++	fb_start = screen_info.lfb_base;
++	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
++		fb_start |= (u64)screen_info.ext_lfb_base << 32;
++
++	fb_size = screen_info.lfb_size;
++#endif
++
++	/* No firmware framebuffer support */
++	if (!fb_start || !fb_size)
++		return false;
++
++	fb_end = fb_start + fb_size - 1;
++
++	*start = fb_start;
++	*end = fb_end;
++
++	return true;
++}
++
++/*
++ * Identify the PCI VGA device that contains the firmware framebuffer
++ */
++static void pci_boot_vga_finder(struct pci_dev *pdev)
++{
++	resource_size_t fb_start;
++	resource_size_t fb_end;
++	unsigned int i;
++
++	/* Already found the pdev which has firmware framebuffer ownership */
++	if (pdev_boot_vga)
++		return;
++
++	if (!vga_arb_get_firmware_fb_range(&fb_start, &fb_end))
++		return;
++
++	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
++		struct resource *res = &pdev->resource[i];
++
++		if (resource_type(res) != IORESOURCE_MEM)
++			continue;
++
++		if (!res->start || !res->end)
++			continue;
++
++		if (res->start <= fb_start && fb_end <= res->end) {
++			pdev_boot_vga = pdev;
++
++			vgaarb_info(&pdev->dev,
++				    "BAR %d contains firmware FB\n", i);
++			break;
++		}
++	}
++}
++DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID, PCI_CLASS_DISPLAY_VGA,
++			       8, pci_boot_vga_finder);
+-- 
+2.34.1
 
