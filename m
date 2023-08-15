@@ -2,70 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5518477CD7A
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Aug 2023 15:45:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48BA977CDC3
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Aug 2023 16:04:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237020AbjHONpW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Aug 2023 09:45:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33574 "EHLO
+        id S235519AbjHOOES (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Aug 2023 10:04:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236861AbjHONpB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Aug 2023 09:45:01 -0400
-Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC9781986;
-        Tue, 15 Aug 2023 06:44:59 -0700 (PDT)
-Received: by mail-vk1-xa2d.google.com with SMTP id 71dfb90a1353d-4871e5dd7ebso1656349e0c.3;
-        Tue, 15 Aug 2023 06:44:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692107099; x=1692711899;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WblyutNp33S229/zIZJPyXVBU1XRv+8u1otRBaxdntI=;
-        b=Oyjj7U5CclMg5Pz4u81j8aDDCdnEpGVhJrAXYcdyhsmoS3UXI0ZY2RmAqNLxGagS54
-         Bn/fPY/gq4YoY7VS8TACO4EgSOB9ntGEb+RzKAJWexRtbdrO1Is8nuMjqDrQAoN0NVJY
-         53UHd8GxEqh5MQ2aWy2EVbbVt7nZ8loMmsw2XruL794EbKwsNf/urpIhwJGugiNUU6OX
-         k8jbsn7yF9ez77fmp6TiHHDT6ib2u0LMUT5+w4CO52Yg4hN1zxY/WItjWuDnjXg63Zvm
-         R0ghDtUegSzJsPaqtbY0CeqB6BoGYm3KDnXaKmi+ROJR0YjaZLo/P1ESd0SMdb47AXxf
-         WlaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692107099; x=1692711899;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WblyutNp33S229/zIZJPyXVBU1XRv+8u1otRBaxdntI=;
-        b=CHJMoouxxExOpH4ZJOsoI16NL3XGovFn+PYM0OC29CNiqtnMeU4I7VLDmjKCUhFBb5
-         Nkx1ZBcKvKQcg8ecUAk82hBiF9ezaak0v0JOp8k/KrIdjZzDNm4s811rGHxv/cfxqmpE
-         Uzvnx/Xxr1jcW5EVa+DqRRF1SZ3nLVo3QupBM/za9J+dLPNyuXtQOTetiUX1/E/VJtgd
-         +KkRqQ8Ar/VwBD5X+nwwZNvZPVBUs454NEigIe9AL6xWrbbP67mhdspZOKv9KwCjtmSb
-         88Gce+MhX1+wNSiueHDKEfTe4nMznDE4q21uPejmW/K+XaPeTX2iXxRDVrWRVjEqZkHY
-         +Fmg==
-X-Gm-Message-State: AOJu0Ywo2u89tNGLw+m655ikBYizrHEElMvFkwIBPsl3AJe3fa22Xzjo
-        KiJbl//fYQD+PRMbzZlXN3ckPbrbmyi+odgwM7Q1X3OKeJbgOHnz0iM=
-X-Google-Smtp-Source: AGHT+IHn8Jmamqj0py2syUKvxiqwXjlm6ujhhP3NVdE9Y/5QrTeOKAbRNnGCs+99DF+wRpfPL0C5EF+u56pPfmc0TKg=
-X-Received: by 2002:a67:fc0a:0:b0:447:60f4:cc51 with SMTP id
- o10-20020a67fc0a000000b0044760f4cc51mr10404664vsq.28.1692107098888; Tue, 15
- Aug 2023 06:44:58 -0700 (PDT)
+        with ESMTP id S237525AbjHOOED (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Aug 2023 10:04:03 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB91199A;
+        Tue, 15 Aug 2023 07:04:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692108242; x=1723644242;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=izWgYyGZvbclOsqOoh8da70BMbSJcA4xvR918o81ihw=;
+  b=AlXviWrYxP9m1sl1b6df1I03oq2CfUwMi74fRuZASsfQFjd9qAHhDCa4
+   PenirDCQ+KN8InBK23jEdfzMMyMxSlAe3lH4f2wqRUIYVhSLbTKok8UdR
+   NKX78Y8hosEvo0GQqaLL60HBuF7EE6hRN9e76m1q4TtiX/riMn6FiBeSw
+   pqZSVVV2nB3h96X+tcMR9DiXNmEn7eKpKc+hIlbXkCGH99p+fbhaLmln6
+   xdevjkjE6KY2JXIleNGJwl+nqqwTp518YtcRF806AyuQjtiBSRExRqtfv
+   lUOdIqGfHRKiSAY4Ax4Mo2fPR+VlO5YotQ0mUcmsy1mcC2z0y15IZIxsz
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="371191779"
+X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
+   d="scan'208";a="371191779"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2023 07:03:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="848076379"
+X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
+   d="scan'208";a="848076379"
+Received: from lkp-server02.sh.intel.com (HELO b5fb8d9e1ffc) ([10.239.97.151])
+  by fmsmga002.fm.intel.com with ESMTP; 15 Aug 2023 07:03:10 -0700
+Received: from kbuild by b5fb8d9e1ffc with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qVuda-00010n-04;
+        Tue, 15 Aug 2023 14:03:10 +0000
+Date:   Tue, 15 Aug 2023 22:03:08 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        manivannan.sadhasivam@linaro.org
+Cc:     oe-kbuild-all@lists.linux.dev, helgaas@kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, quic_parass@quicinc.com,
+        krzysztof.kozlowski@linaro.org,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 3/3] PCI: qcom: Add OPP suuport for speed based
+ performance state of RPMH
+Message-ID: <202308152125.sU1aQfAd-lkp@intel.com>
+References: <1692102408-7010-4-git-send-email-quic_krichai@quicinc.com>
 MIME-Version: 1.0
-References: <20230809232851.1004023-1-alistair.francis@wdc.com>
- <20230810073457.GA26246@wunner.de> <CAKmqyKPm_BFnNxVLXCO_PVRDJaVb+XOj=kEEzXd+MgkwDiZhXA@mail.gmail.com>
- <20230812081526.GC9469@wunner.de> <2023081224-famished-devotion-6e0e@gregkh>
-In-Reply-To: <2023081224-famished-devotion-6e0e@gregkh>
-From:   Alistair Francis <alistair23@gmail.com>
-Date:   Tue, 15 Aug 2023 09:44:32 -0400
-Message-ID: <CAKmqyKPx9Oi-ZF0grdUzkHi5BjyyNQZ2r30vgShR6cOY9xZ9YQ@mail.gmail.com>
-Subject: Re: [PATCH v3] PCI/DOE: Expose the DOE protocols via sysfs
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Lukas Wunner <lukas@wunner.de>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, Jonathan.Cameron@huawei.com,
-        alex.williamson@redhat.com, christian.koenig@amd.com,
-        kch@nvidia.com, logang@deltatee.com, linux-kernel@vger.kernel.org,
-        Alistair Francis <alistair.francis@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1692102408-7010-4-git-send-email-quic_krichai@quicinc.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,100 +78,85 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Aug 12, 2023 at 4:26=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Sat, Aug 12, 2023 at 10:15:26AM +0200, Lukas Wunner wrote:
-> > On Thu, Aug 10, 2023 at 11:34:11AM -0400, Alistair Francis wrote:
-> > > On Thu, Aug 10, 2023 at 3:34???AM Lukas Wunner <lukas@wunner.de> wrot=
-e:
-> > > > On Wed, Aug 09, 2023 at 07:28:51PM -0400, Alistair Francis wrote:
-> > > > > --- a/drivers/pci/pci-sysfs.c
-> > > > > +++ b/drivers/pci/pci-sysfs.c
-> > > > > @@ -1226,6 +1227,12 @@ static int pci_create_resource_files(struc=
-t pci_dev *pdev)
-> > > > >       int i;
-> > > > >       int retval;
-> > > > >
-> > > > > +#ifdef CONFIG_PCI_DOE
-> > > > > +     retval =3D doe_sysfs_init(pdev);
-> > > > > +     if (retval)
-> > > > > +             return retval;
-> > > > > +#endif
-> > > > > +
-> > > >
-> > > > The preferred way to expose PCI sysfs attributes nowadays is to add=
- them
-> > > > to pci_dev_attr_groups[] and use the ->is_visible callback to check
-> > > > whether they're applicable to a particular pci_dev.  The alternativ=
-e
-> > > > via pci_create_resource_files() has race conditions which I think
-> > > > still haven't been fixed. Bjorn recommended the ->is_visible approa=
-ch
-> > > > in response to the most recent attempt to fix the race:
-> > > >
-> > > > https://lore.kernel.org/linux-pci/20230427161458.GA249886@bhelgaas/
-> > >
-> > > The is_visible doen't seem to work in this case.
-> > >
-> > > AFAIK is_visible only applies to the attributes under the group. Whic=
-h
-> > > means that every PCIe device will see a `doe_protos` directory, no
-> > > matter if DOE is supported.
-> >
-> > internal_create_group() in fs/sysfs/group.c does this:
-> >
-> >       if (grp->name) {
-> >                       ...
-> >                       kn =3D kernfs_create_dir_ns(kobj->sd, grp->name, =
-...
-> >
-> > So I'm under the impression that if you set the ->name member of
-> > struct attribute_group, the attributes in that group appear under
-> > a directory of that name.
-> >
-> > In fact, the kernel-doc for struct attribute_group claims as much:
-> >
-> >  * struct attribute_group - data structure used to declare an attribute=
- group.
-> >  * @name:     Optional: Attribute group name
-> >  *            If specified, the attribute group will be created in
-> >  *            a new subdirectory with this name.
-> >
-> > So I don't quite understand why you think that "every PCIe device will
-> > see a `doe_protos` directory, no matter if DOE is supported"?
-> >
-> > Am I missing something?
->
-> I think the issue might be that the directory will be created even if no
-> attributes are present in it due to the is_visable() check not returning
-> any valid files?
+Hi Krishna,
 
-Yes, that's what I'm seeing. I see the directory for all PCIe devices
+kernel test robot noticed the following build warnings:
 
-This is a WIP that I had:
-https://github.com/alistair23/linux/commit/61925cd174c31386eaa7e51e3a1be606=
-b38f847c
+[auto build test WARNING on pci/for-linus]
+[also build test WARNING on robh/for-next linus/master v6.5-rc6 next-20230809]
+[cannot apply to pci/next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
->
-> If so, I had a patch somewhere around here where I was trying to fix
-> that up:
->         https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-cor=
-e.git/commit/?h=3Ddebugfs_cleanup&id=3Df670945dfbaf353fe068544c31e3fa45575d=
-a5b5
-> but it didn't seem to work properly and kept crashing.  I didn't spend
-> much time on looking into it, but if this is an issue, I can work on
-> fixing this properly.
+url:    https://github.com/intel-lab-lkp/linux/commits/Krishna-chaitanya-chundru/dt-bindings-pci-qcom-Add-binding-for-operating-points-v2/20230815-203103
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+patch link:    https://lore.kernel.org/r/1692102408-7010-4-git-send-email-quic_krichai%40quicinc.com
+patch subject: [PATCH v1 3/3] PCI: qcom: Add OPP suuport for speed based performance state of RPMH
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20230815/202308152125.sU1aQfAd-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 12.3.0
+reproduce: (https://download.01.org/0day-ci/archive/20230815/202308152125.sU1aQfAd-lkp@intel.com/reproduce)
 
-That patch sounds like it would fix the issue of empty directories
-that I'm seeing. Do you mind fixing it up properly?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308152125.sU1aQfAd-lkp@intel.com/
 
-Then I just need to address the race condition and we can switch to
-using .is_visible()
+All warnings (new ones prefixed by >>):
 
-Alistair
+   drivers/pci/controller/dwc/pcie-qcom.c: In function 'qcom_pcie_opp_update':
+>> drivers/pci/controller/dwc/pcie-qcom.c:1368:13: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
+    1368 |         int ret = 0;
+         |             ^~~
 
->
-> thanks,
->
-> greg k-h
+
+vim +/ret +1368 drivers/pci/controller/dwc/pcie-qcom.c
+
+  1360	
+  1361	static void qcom_pcie_opp_update(struct qcom_pcie *pcie)
+  1362	{
+  1363		struct dw_pcie *pci = pcie->pci;
+  1364		struct dev_pm_opp *opp;
+  1365		u32 offset, status;
+  1366		uint32_t freq;
+  1367		int speed;
+> 1368		int ret = 0;
+  1369	
+  1370		offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+  1371		status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
+  1372	
+  1373		/* Only update constraints if link is up. */
+  1374		if (!(status & PCI_EXP_LNKSTA_DLLLA))
+  1375			return;
+  1376	
+  1377		speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
+  1378	
+  1379		switch (speed) {
+  1380		case 1:
+  1381			freq = 2500000;
+  1382			break;
+  1383		case 2:
+  1384			freq = 5000000;
+  1385			break;
+  1386		case 3:
+  1387			freq = 8000000;
+  1388			break;
+  1389		default:
+  1390			WARN_ON_ONCE(1);
+  1391			fallthrough;
+  1392		case 4:
+  1393			freq = 16000000;
+  1394			break;
+  1395		}
+  1396	
+  1397		opp = dev_pm_opp_find_freq_exact(pci->dev, freq, true);
+  1398	
+  1399		if (!IS_ERR(opp)) {
+  1400			ret = dev_pm_opp_get_voltage(opp);
+  1401			dev_pm_opp_put(opp);
+  1402		}
+  1403	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
