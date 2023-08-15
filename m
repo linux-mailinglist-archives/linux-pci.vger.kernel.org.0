@@ -2,135 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8090877CBC9
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Aug 2023 13:33:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D97D377CC9B
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Aug 2023 14:28:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236749AbjHOLcm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Aug 2023 07:32:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46342 "EHLO
+        id S231451AbjHOM2G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Aug 2023 08:28:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236804AbjHOLcV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Aug 2023 07:32:21 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E7B519B5;
-        Tue, 15 Aug 2023 04:32:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692099140; x=1723635140;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=X/Zl8lNEOMUjBo2HEP/9UjIEWgeFJBCrEJY1o8E1UTU=;
-  b=hpqBwTRQHV5rKex0sUE/vGHV0J8p0rIrPTrIcgDZmj7F2Hg9+fH++DVo
-   4zups1ySdFMdm5r6Fg8Glt9uVUD6fp34RWxDjZY4cDklW6Z9kYuJJPQtq
-   2cGbcvEP2c240TjRIzc3f9jCX/gPGDgG+6PP5yPJIGMHFQLDTve4bcYdn
-   EBgsrXPLSCNRx7/wg27o3kxkKVs7q01nLLZIzPJGXhh6qNT+pBlQ5lQtC
-   tgV0C6dtOPHeQp77a6zA4m0ShI23JodzhTRh9Bs2BCLSK8i9F00DIKolr
-   yJu9SFAEcbU3fKqwGZZxI38uUVf64O5ShtMMbgduRKBi6XgJbtUvJfJvS
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="357223073"
-X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
-   d="scan'208";a="357223073"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2023 04:31:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="683624911"
-X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
-   d="scan'208";a="683624911"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO ijarvine-mobl2.mshome.net) ([10.237.66.35])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2023 04:31:07 -0700
-Date:   Tue, 15 Aug 2023 14:31:05 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-cc:     linux-pci@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        Netdev <netdev@vger.kernel.org>, linux-rdma@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] net/mlx5: Convert PCI error values to generic
- errnos
-In-Reply-To: <20230814223232.GA195681@bhelgaas>
-Message-ID: <91ccdd4-797-5d8b-d5c9-5fef5742575@linux.intel.com>
-References: <20230814223232.GA195681@bhelgaas>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-1196577994-1692084854=:1736"
-Content-ID: <84212c7-179e-c114-6b3a-246baa8988f2@linux.intel.com>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S237119AbjHOM1p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Aug 2023 08:27:45 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06C1019AD;
+        Tue, 15 Aug 2023 05:27:28 -0700 (PDT)
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37FCGwDi015058;
+        Tue, 15 Aug 2023 12:27:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=9VcILIdlJgSnUSWdHiNzsomq2OEegMHdDkCV43rQmhU=;
+ b=GgDT8Ph9MAzKNdO18sDA5zA+XS4L+LcgM9PGdxuE5n8fM2eIRE8J9rtPleIsneFXosGi
+ fUousHWryxLb6Z+3rE/p1ZgFbbAPaRbTgzpUmsQXYgLpPg1k5/LuvhXmcWNrozdI+QcK
+ 0HZnza+gs/IAOrQfMZJQL9q/fGs4xsUpqAmwaWv3ds8SCUtuYxOlPcsAkXuJV3IO1dMq
+ vTdqCgylG9Sx+95NKCsAFaK9aGTF0k1Rrx66oMIIy6t/fAeDKbux6nUIzfXoe2OhMPMT
+ N0/1K2rJ1AK5AizB2toLl6cqe4fvhR8Vq6OihOicYAF3NpQb1ins2iz3dW54Ca8cW9n6 QQ== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3sg450ggkn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Aug 2023 12:27:24 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 37FCRLSB022253;
+        Tue, 15 Aug 2023 12:27:21 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3se35kb8py-1;
+        Tue, 15 Aug 2023 12:27:21 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37FCRLDG022247;
+        Tue, 15 Aug 2023 12:27:21 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-krichai-hyd.qualcomm.com [10.213.110.112])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 37FCRLAO022245;
+        Tue, 15 Aug 2023 12:27:21 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
+        id 8A8DC4BC5; Tue, 15 Aug 2023 17:57:20 +0530 (+0530)
+From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
+        quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: [PATCH v1 0/3] PCI: qcom: Add support for OPP
+Date:   Tue, 15 Aug 2023 17:56:45 +0530
+Message-Id: <1692102408-7010-1-git-send-email-quic_krichai@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: UA7UezNcVe9bUb2TQlGiKS4jDyqlNk_f
+X-Proofpoint-GUID: UA7UezNcVe9bUb2TQlGiKS4jDyqlNk_f
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-15_13,2023-08-15_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 malwarescore=0 lowpriorityscore=0 mlxscore=0
+ suspectscore=0 phishscore=0 adultscore=0 impostorscore=0 mlxlogscore=358
+ clxscore=1011 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308150111
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+This patch adds support for OPP to vote for the performance state of RPMH
+power domain based upon GEN speed it PCIe got enumerated.
 
---8323329-1196577994-1692084854=:1736
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <ab37c490-8a70-1af8-bf3f-c082c34ed047@linux.intel.com>
+Before link up PCIe driver will vote for the maximum performance state.
 
-On Mon, 14 Aug 2023, Bjorn Helgaas wrote:
+Krishna chaitanya chundru (3):
+  dt-bindings: pci: qcom: Add binding for operating-points-v2
+  arm64: dts: qcom: sm8450: Add opp table support to PCIe
+  PCI: qcom: Add OPP suuport for speed based performance state of RPMH
 
-> On Mon, Aug 14, 2023 at 04:27:20PM +0300, Ilpo Järvinen wrote:
-> > mlx5_pci_link_toggle() returns mix PCI specific error codes and generic
-> > errnos.
-> > 
-> > Convert the PCI specific error values to generic errno using
-> > pcibios_err_to_errno() before returning them.
-> > 
-> > Fixes: eabe8e5e88f5 ("net/mlx5: Handle sync reset now event")
-> > Fixes: 212b4d7251c1 ("net/mlx5: Wait for firmware to enable CRS before pci_restore_state")
-> > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > 
-> > ---
-> > 
-> > Maintainers beware, this will conflict with read+write -> set/clear_word
-> > fixes in pci.git/pcie-rmw. As such, it might be the easiest for Bjorn to
-> > take it instead of net people.
-> 
-> I provisionally rebased and applied it on pci/pcie-rmw.  Take a look
-> and make sure I didn't botch it --
-
-Looks okay.
-
-> I also found a case in
-> mlx5_check_dev_ids() that looks like it needs the same conversion.
-
-Ah, that where the one of them went (my first version had that fixed 
-inside link_toggle but then when rebasing I didn't realize it had moved 
-into another function).
- 
-> The commit as applied is below.
-> 
-> If networking folks would prefer to take this, let me know and I can
-> drop it.
-> 
-> > I wonder if these PCIBIOS_* error codes are useful at all? There's 1:1
-> > mapping into errno values so no information loss if the functions would just
-> > return errnos directly. Perhaps this is just legacy nobody has bothered to
-> > remove? If nobody opposes, I could take a look at getting rid of them.
-> 
-> I don't think the PCIBIOS error codes are very useful outside of
-> arch/x86.  They're returned by x86 PCIBIOS functions, and I think we
-> still use those calls, but I don't think there's value in exposing the
-> x86 error codes outside arch/x86.  Looks like a big job to clean it up
-> though ;)
-
-Hmm... Do you mean pci_bios_read/write() in arch/x86/pci/pcbios.c?
-...Because those functions are already inconsistent even with themselves, 
-returning either -EINVAL or the PCI BIOS error code (or what I assume that 
-masking of result to yield).
-
-And unfortunately, that's far from the only inconsistency within arch PCI
-read/write func return values...
-
+ .../devicetree/bindings/pci/qcom,pcie.yaml         |  2 +
+ arch/arm64/boot/dts/qcom/sm8450.dtsi               | 47 +++++++++++++++++
+ drivers/pci/controller/dwc/pcie-qcom.c             | 61 ++++++++++++++++++++++
+ 3 files changed, 110 insertions(+)
 
 -- 
- i.
---8323329-1196577994-1692084854=:1736--
+2.7.4
+
+
