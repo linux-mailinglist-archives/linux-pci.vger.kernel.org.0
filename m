@@ -2,174 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D98C277CD2C
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Aug 2023 15:12:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5518477CD7A
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Aug 2023 15:45:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237363AbjHONLf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Aug 2023 09:11:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52000 "EHLO
+        id S237020AbjHONpW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Aug 2023 09:45:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237381AbjHONLS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Aug 2023 09:11:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2548F10C0;
-        Tue, 15 Aug 2023 06:11:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AEEAA62F74;
-        Tue, 15 Aug 2023 13:11:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23D53C433C7;
-        Tue, 15 Aug 2023 13:11:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692105076;
-        bh=fxLQn7G8NKCIulwKp9YBaEwTHFcd16tQqNSCGDeE3/c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mctXEb2qdlOCfYwVyM1iF+Jo9WO8j6aRzuEBwJEAJX8XXUVabnZIlbpiYuGKOx2Lt
-         Ouw99X+Pq5Vdeo1qUTDRmn3x8elOW7mJ7uORHH5L99BMTfGUT/TdTifUot+otgJYme
-         d1TNeKS/ZT6KVQH18h/hXXkeFT5YSMX4hNbMYmNWSF/n+iZpUgt79or2pw6iguVpDb
-         f1OWUk0wFWWoQuOhSNM6Ia62+uAjwJ/Dr/pikln1fgEBghlnKMAarCcHz5ARAXgYwQ
-         YyJfk1nZChIEtz66Murubc3iyFhL6eXJIpZsBL5+6/4jPzPZiTwLLK8S6BkpT4C9+L
-         kqX9hVC45IgvQ==
-Date:   Tue, 15 Aug 2023 14:11:09 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Minda Chen <minda.chen@starfivetech.com>
-Cc:     Conor Dooley <conor.dooley@microchip.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        Kevin Xie <kevin.xie@starfivetech.com>
-Subject: Re: [PATCH v3 06/11] PCI: plda: Add event interrupt codes and IRQ
- domain ops
-Message-ID: <20230815-five-comment-cff5fb01909f@spud>
-References: <20230814082016.104181-1-minda.chen@starfivetech.com>
- <20230814082016.104181-7-minda.chen@starfivetech.com>
- <20230814-episode-untidy-c66107a33ea0@wendy>
- <f983f3cc-ebb5-18fb-891a-adc073742bb9@starfivetech.com>
+        with ESMTP id S236861AbjHONpB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Aug 2023 09:45:01 -0400
+Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC9781986;
+        Tue, 15 Aug 2023 06:44:59 -0700 (PDT)
+Received: by mail-vk1-xa2d.google.com with SMTP id 71dfb90a1353d-4871e5dd7ebso1656349e0c.3;
+        Tue, 15 Aug 2023 06:44:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692107099; x=1692711899;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WblyutNp33S229/zIZJPyXVBU1XRv+8u1otRBaxdntI=;
+        b=Oyjj7U5CclMg5Pz4u81j8aDDCdnEpGVhJrAXYcdyhsmoS3UXI0ZY2RmAqNLxGagS54
+         Bn/fPY/gq4YoY7VS8TACO4EgSOB9ntGEb+RzKAJWexRtbdrO1Is8nuMjqDrQAoN0NVJY
+         53UHd8GxEqh5MQ2aWy2EVbbVt7nZ8loMmsw2XruL794EbKwsNf/urpIhwJGugiNUU6OX
+         k8jbsn7yF9ez77fmp6TiHHDT6ib2u0LMUT5+w4CO52Yg4hN1zxY/WItjWuDnjXg63Zvm
+         R0ghDtUegSzJsPaqtbY0CeqB6BoGYm3KDnXaKmi+ROJR0YjaZLo/P1ESd0SMdb47AXxf
+         WlaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692107099; x=1692711899;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WblyutNp33S229/zIZJPyXVBU1XRv+8u1otRBaxdntI=;
+        b=CHJMoouxxExOpH4ZJOsoI16NL3XGovFn+PYM0OC29CNiqtnMeU4I7VLDmjKCUhFBb5
+         Nkx1ZBcKvKQcg8ecUAk82hBiF9ezaak0v0JOp8k/KrIdjZzDNm4s811rGHxv/cfxqmpE
+         Uzvnx/Xxr1jcW5EVa+DqRRF1SZ3nLVo3QupBM/za9J+dLPNyuXtQOTetiUX1/E/VJtgd
+         +KkRqQ8Ar/VwBD5X+nwwZNvZPVBUs454NEigIe9AL6xWrbbP67mhdspZOKv9KwCjtmSb
+         88Gce+MhX1+wNSiueHDKEfTe4nMznDE4q21uPejmW/K+XaPeTX2iXxRDVrWRVjEqZkHY
+         +Fmg==
+X-Gm-Message-State: AOJu0Ywo2u89tNGLw+m655ikBYizrHEElMvFkwIBPsl3AJe3fa22Xzjo
+        KiJbl//fYQD+PRMbzZlXN3ckPbrbmyi+odgwM7Q1X3OKeJbgOHnz0iM=
+X-Google-Smtp-Source: AGHT+IHn8Jmamqj0py2syUKvxiqwXjlm6ujhhP3NVdE9Y/5QrTeOKAbRNnGCs+99DF+wRpfPL0C5EF+u56pPfmc0TKg=
+X-Received: by 2002:a67:fc0a:0:b0:447:60f4:cc51 with SMTP id
+ o10-20020a67fc0a000000b0044760f4cc51mr10404664vsq.28.1692107098888; Tue, 15
+ Aug 2023 06:44:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="y/9ZHub3+HOs9Hmr"
-Content-Disposition: inline
-In-Reply-To: <f983f3cc-ebb5-18fb-891a-adc073742bb9@starfivetech.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230809232851.1004023-1-alistair.francis@wdc.com>
+ <20230810073457.GA26246@wunner.de> <CAKmqyKPm_BFnNxVLXCO_PVRDJaVb+XOj=kEEzXd+MgkwDiZhXA@mail.gmail.com>
+ <20230812081526.GC9469@wunner.de> <2023081224-famished-devotion-6e0e@gregkh>
+In-Reply-To: <2023081224-famished-devotion-6e0e@gregkh>
+From:   Alistair Francis <alistair23@gmail.com>
+Date:   Tue, 15 Aug 2023 09:44:32 -0400
+Message-ID: <CAKmqyKPx9Oi-ZF0grdUzkHi5BjyyNQZ2r30vgShR6cOY9xZ9YQ@mail.gmail.com>
+Subject: Re: [PATCH v3] PCI/DOE: Expose the DOE protocols via sysfs
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Lukas Wunner <lukas@wunner.de>, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, Jonathan.Cameron@huawei.com,
+        alex.williamson@redhat.com, christian.koenig@amd.com,
+        kch@nvidia.com, logang@deltatee.com, linux-kernel@vger.kernel.org,
+        Alistair Francis <alistair.francis@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Sat, Aug 12, 2023 at 4:26=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+>
+> On Sat, Aug 12, 2023 at 10:15:26AM +0200, Lukas Wunner wrote:
+> > On Thu, Aug 10, 2023 at 11:34:11AM -0400, Alistair Francis wrote:
+> > > On Thu, Aug 10, 2023 at 3:34???AM Lukas Wunner <lukas@wunner.de> wrot=
+e:
+> > > > On Wed, Aug 09, 2023 at 07:28:51PM -0400, Alistair Francis wrote:
+> > > > > --- a/drivers/pci/pci-sysfs.c
+> > > > > +++ b/drivers/pci/pci-sysfs.c
+> > > > > @@ -1226,6 +1227,12 @@ static int pci_create_resource_files(struc=
+t pci_dev *pdev)
+> > > > >       int i;
+> > > > >       int retval;
+> > > > >
+> > > > > +#ifdef CONFIG_PCI_DOE
+> > > > > +     retval =3D doe_sysfs_init(pdev);
+> > > > > +     if (retval)
+> > > > > +             return retval;
+> > > > > +#endif
+> > > > > +
+> > > >
+> > > > The preferred way to expose PCI sysfs attributes nowadays is to add=
+ them
+> > > > to pci_dev_attr_groups[] and use the ->is_visible callback to check
+> > > > whether they're applicable to a particular pci_dev.  The alternativ=
+e
+> > > > via pci_create_resource_files() has race conditions which I think
+> > > > still haven't been fixed. Bjorn recommended the ->is_visible approa=
+ch
+> > > > in response to the most recent attempt to fix the race:
+> > > >
+> > > > https://lore.kernel.org/linux-pci/20230427161458.GA249886@bhelgaas/
+> > >
+> > > The is_visible doen't seem to work in this case.
+> > >
+> > > AFAIK is_visible only applies to the attributes under the group. Whic=
+h
+> > > means that every PCIe device will see a `doe_protos` directory, no
+> > > matter if DOE is supported.
+> >
+> > internal_create_group() in fs/sysfs/group.c does this:
+> >
+> >       if (grp->name) {
+> >                       ...
+> >                       kn =3D kernfs_create_dir_ns(kobj->sd, grp->name, =
+...
+> >
+> > So I'm under the impression that if you set the ->name member of
+> > struct attribute_group, the attributes in that group appear under
+> > a directory of that name.
+> >
+> > In fact, the kernel-doc for struct attribute_group claims as much:
+> >
+> >  * struct attribute_group - data structure used to declare an attribute=
+ group.
+> >  * @name:     Optional: Attribute group name
+> >  *            If specified, the attribute group will be created in
+> >  *            a new subdirectory with this name.
+> >
+> > So I don't quite understand why you think that "every PCIe device will
+> > see a `doe_protos` directory, no matter if DOE is supported"?
+> >
+> > Am I missing something?
+>
+> I think the issue might be that the directory will be created even if no
+> attributes are present in it due to the is_visable() check not returning
+> any valid files?
 
---y/9ZHub3+HOs9Hmr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, that's what I'm seeing. I see the directory for all PCIe devices
 
-On Tue, Aug 15, 2023 at 06:12:07PM +0800, Minda Chen wrote:
->=20
->=20
-> On 2023/8/14 21:52, Conor Dooley wrote:
-> > On Mon, Aug 14, 2023 at 04:20:11PM +0800, Minda Chen wrote:
-> >> For PolarFire implements non-PLDA local interrupt events, most of
-> >> event interrupt process codes can not be re-used. PLDA implements
-> >> new codes and IRQ domain ops like PolarFire.
-> >>=20
-> >> plda_handle_event adds a new IRQ num to event num mapping codes for
-> >> PLDA local event except DMA engine interrupt events. The DMA engine
-> >> interrupt events are implemented by vendors.
-> >>=20
-> >> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-> >> ---
-> >>  .../pci/controller/plda/pcie-microchip-host.c | 29 +++---
-> >>  drivers/pci/controller/plda/pcie-plda-host.c  | 99 +++++++++++++++++++
-> >>  drivers/pci/controller/plda/pcie-plda.h       | 19 ++++
-> >>  3 files changed, 133 insertions(+), 14 deletions(-)
-> >>=20
-> >> diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drive=
-rs/pci/controller/plda/pcie-microchip-host.c
-> >> index c28840315019..b42f1aac3ec3 100644
-> >> --- a/drivers/pci/controller/plda/pcie-microchip-host.c
-> >> +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-> >> @@ -96,20 +96,21 @@
-> >>  #define EVENT_LOCAL_DMA_END_ENGINE_1		12
-> >>  #define EVENT_LOCAL_DMA_ERROR_ENGINE_0		13
-> >>  #define EVENT_LOCAL_DMA_ERROR_ENGINE_1		14
-> >> -#define EVENT_LOCAL_A_ATR_EVT_POST_ERR		15
-> >> -#define EVENT_LOCAL_A_ATR_EVT_FETCH_ERR		16
-> >> -#define EVENT_LOCAL_A_ATR_EVT_DISCARD_ERR	17
-> >> -#define EVENT_LOCAL_A_ATR_EVT_DOORBELL		18
-> >> -#define EVENT_LOCAL_P_ATR_EVT_POST_ERR		19
-> >> -#define EVENT_LOCAL_P_ATR_EVT_FETCH_ERR		20
-> >> -#define EVENT_LOCAL_P_ATR_EVT_DISCARD_ERR	21
-> >> -#define EVENT_LOCAL_P_ATR_EVT_DOORBELL		22
-> >> -#define EVENT_LOCAL_PM_MSI_INT_INTX		23
-> >> -#define EVENT_LOCAL_PM_MSI_INT_MSI		24
-> >> -#define EVENT_LOCAL_PM_MSI_INT_AER_EVT		25
-> >> -#define EVENT_LOCAL_PM_MSI_INT_EVENTS		26
-> >> -#define EVENT_LOCAL_PM_MSI_INT_SYS_ERR		27
-> >> -#define NUM_EVENTS				28
-> >> +#define NUM_MC_EVENTS				15
-> >> +#define EVENT_LOCAL_A_ATR_EVT_POST_ERR		(NUM_MC_EVENTS + EVENT_A_ATR_=
-EVT_POST_ERR)
-> >> +#define EVENT_LOCAL_A_ATR_EVT_FETCH_ERR		(NUM_MC_EVENTS + EVENT_A_ATR=
-_EVT_FETCH_ERR)
-> >> +#define EVENT_LOCAL_A_ATR_EVT_DISCARD_ERR	(NUM_MC_EVENTS + EVENT_A_AT=
-R_EVT_DISCARD_ERR)
-> >> +#define EVENT_LOCAL_A_ATR_EVT_DOORBELL		(NUM_MC_EVENTS + EVENT_A_ATR_=
-EVT_DOORBELL)
-> >> +#define EVENT_LOCAL_P_ATR_EVT_POST_ERR		(NUM_MC_EVENTS + EVENT_P_ATR_=
-EVT_POST_ERR)
-> >> +#define EVENT_LOCAL_P_ATR_EVT_FETCH_ERR		(NUM_MC_EVENTS + EVENT_P_ATR=
-_EVT_FETCH_ERR)
-> >> +#define EVENT_LOCAL_P_ATR_EVT_DISCARD_ERR	(NUM_MC_EVENTS + EVENT_P_AT=
-R_EVT_DISCARD_ERR)
-> >> +#define EVENT_LOCAL_P_ATR_EVT_DOORBELL		(NUM_MC_EVENTS + EVENT_P_ATR_=
-EVT_DOORBELL)
-> >> +#define EVENT_LOCAL_PM_MSI_INT_INTX		(NUM_MC_EVENTS + EVENT_PM_MSI_IN=
-T_INTX)
-> >> +#define EVENT_LOCAL_PM_MSI_INT_MSI		(NUM_MC_EVENTS + EVENT_PM_MSI_INT=
-_MSI)
-> >> +#define EVENT_LOCAL_PM_MSI_INT_AER_EVT		(NUM_MC_EVENTS + EVENT_PM_MSI=
-_INT_AER_EVT)
-> >> +#define EVENT_LOCAL_PM_MSI_INT_EVENTS		(NUM_MC_EVENTS + EVENT_PM_MSI_=
-INT_EVENTS)
-> >> +#define EVENT_LOCAL_PM_MSI_INT_SYS_ERR		(NUM_MC_EVENTS + EVENT_PM_MSI=
-_INT_SYS_ERR)
-> >> +#define NUM_EVENTS				(NUM_MC_EVENTS + NUM_PLDA_EVENTS)
-> >=20
-> > Is this change not in the wrong patch & should be changed alongside the
-> > movement of defines?=20
-> EVENT_xxx is new added one for PLDA codes and The event num start from 0.=
- This add association to PLDA events.
-> Maybe this can be moved to patch8 or a new patch.
+This is a WIP that I had:
+https://github.com/alistair23/linux/commit/61925cd174c31386eaa7e51e3a1be606=
+b38f847c
 
-It feels like it should be in patch 3 to me.
+>
+> If so, I had a patch somewhere around here where I was trying to fix
+> that up:
+>         https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-cor=
+e.git/commit/?h=3Ddebugfs_cleanup&id=3Df670945dfbaf353fe068544c31e3fa45575d=
+a5b5
+> but it didn't seem to work properly and kept crashing.  I didn't spend
+> much time on looking into it, but if this is an issue, I can work on
+> fixing this properly.
 
---y/9ZHub3+HOs9Hmr
-Content-Type: application/pgp-signature; name="signature.asc"
+That patch sounds like it would fix the issue of empty directories
+that I'm seeing. Do you mind fixing it up properly?
 
------BEGIN PGP SIGNATURE-----
+Then I just need to address the race condition and we can switch to
+using .is_visible()
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZNt5XAAKCRB4tDGHoIJi
-0ibSAQDzTMya4WyGRaKayC8dXzfWOFoV0m26PddhCyqWuBme3wD+Knf7YQM8iaqS
-nlBsWj+sLO1ExkovRY+V/9w6aPl/CgI=
-=+JHy
------END PGP SIGNATURE-----
+Alistair
 
---y/9ZHub3+HOs9Hmr--
+>
+> thanks,
+>
+> greg k-h
