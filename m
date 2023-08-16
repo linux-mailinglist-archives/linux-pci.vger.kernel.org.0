@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E46B77E780
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Aug 2023 19:22:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C96DC77E77F
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Aug 2023 19:22:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242857AbjHPRWD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Aug 2023 13:22:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52514 "EHLO
+        id S1345176AbjHPRWE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Aug 2023 13:22:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345229AbjHPRVn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Aug 2023 13:21:43 -0400
+        with ESMTP id S1345241AbjHPRVq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Aug 2023 13:21:46 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFB412709
-        for <linux-pci@vger.kernel.org>; Wed, 16 Aug 2023 10:21:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31CA92D45
+        for <linux-pci@vger.kernel.org>; Wed, 16 Aug 2023 10:21:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692206501; x=1723742501;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ANmMxD17e41soOPq9NMDsVaWbYaUwLNNqqoK5nsDsDo=;
-  b=VNV4bc8pHOKOsUz6Y7Mga9ocrI3ztU0m9fvi9nsoC0nwdRgqxtyxbocK
-   p9jfzpFIyiqPQTbxDsAw5IbTQuuKj5//H6D3Pxvq/f0iUIfH8pUVSGE2B
-   giAE/CSAA/Zo7nPKTs+VUj8FuAGD5W1VncFRLfax5mQsQb4MWtk9+2zAW
-   mb479zHDhRot/iDpnR8NssPM068i9jwhDODrHqDi4ZiJmdECVFgEkqTqW
-   BIYyWmAklufJreMSb6NNo2xG9r2cS94HDidV5sXtvpGExdk/I4T+08gBJ
-   9NWk1SfhQBCycZdOUS8LsXsY4CSNNSRO0mZswxYTUuCBSK/FUZP1eGVXY
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="372596270"
+  t=1692206505; x=1723742505;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=huWn2mwZZ2Ngy4H7xrIUHBwD/SQ1RTl0qEma5ZY/NpY=;
+  b=ZyHYSftmJPtlyPzrZ2sBiGN2Uf4awugl/mrbWH8YcXynRnWFbfWjEuKo
+   NvNIpcqkw8DvsddktK5nG2r4xHM5sKP9RpnDbzaDIvfTEFUH5C7L8vH4i
+   6kCD/DYv38ETF6qTw0alIoyd2RZ65083KuB3nFRMhypFYge6Obqnq42QU
+   n79jvZWuFZvR+te8MFnxZ0rbrXNuPW03ZiOAC79a7CM00gLxlJiRhl93N
+   BN4ZxLeZY3LmRC9TpEHYtD0wDsqNoDH142VI3OysYfSe/m+z31RIZOTWh
+   NOP/zMqcptrB3kIqK5bV2iYHlh6gXTZH4OypnA6Fa5HHnaQoMa4ePrCXt
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="372596292"
 X-IronPort-AV: E=Sophos;i="6.01,177,1684825200"; 
-   d="scan'208";a="372596270"
+   d="scan'208";a="372596292"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2023 10:21:40 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2023 10:21:44 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="769280019"
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="769280037"
 X-IronPort-AV: E=Sophos;i="6.01,177,1684825200"; 
-   d="scan'208";a="769280019"
+   d="scan'208";a="769280037"
 Received: from bartoszp-dev.igk.intel.com ([10.91.3.51])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2023 10:21:36 -0700
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2023 10:21:41 -0700
 From:   Bartosz Pawlowski <bartosz.pawlowski@intel.com>
 To:     linux-pci@vger.kernel.org, bhelgaas@google.com
 Cc:     sheenamo@google.com, justai@google.com,
@@ -45,11 +45,14 @@ Cc:     sheenamo@google.com, justai@google.com,
         emil.s.tantilov@intel.com, gaurav.s.emmanuel@intel.com,
         mike.conover@intel.com, shaopeng.he@intel.com,
         anthony.l.nguyen@intel.com, pavan.kumar.linga@intel.com,
-        Bartosz Pawlowski <bartosz.pawlowski@intel.com>
-Subject: [PATCH 0/2] PCI: Disable ATS for specific Intel IPU E2000 devices
-Date:   Wed, 16 Aug 2023 17:21:13 +0000
-Message-ID: <20230816172115.1375716-1-bartosz.pawlowski@intel.com>
+        Bartosz Pawlowski <bartosz.pawlowski@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 1/2] PCI: Extract ATS disabling to a helper function
+Date:   Wed, 16 Aug 2023 17:21:14 +0000
+Message-ID: <20230816172115.1375716-2-bartosz.pawlowski@intel.com>
 X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230816172115.1375716-1-bartosz.pawlowski@intel.com>
+References: <20230816172115.1375716-1-bartosz.pawlowski@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -63,18 +66,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch series addresses the problem with A an B steppings of
-Intel IPU E2000 which expects incorrect endianness in data field of ATS
-invalidation request TLP by disabling ATS capability for vulnerable
-devices.
+Introduce quirk_no_ats() helper function to provide a standard way to
+disable ATS capability in PCI quirks.
 
-Bartosz Pawlowski (2):
-  PCI: Extract ATS disabling to a helper function
-  PCI: Disable ATS for specific Intel IPU E2000 devices
+Signed-off-by: Bartosz Pawlowski <bartosz.pawlowski@intel.com>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pci/quirks.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
- drivers/pci/quirks.c | 38 +++++++++++++++++++++++++++++++-------
- 1 file changed, 31 insertions(+), 7 deletions(-)
-
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 321156ca273d..a900546d8d45 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5505,6 +5505,12 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0420, quirk_no_ext_tags);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422, quirk_no_ext_tags);
+ 
+ #ifdef CONFIG_PCI_ATS
++static void quirk_no_ats(struct pci_dev *pdev)
++{
++	pci_info(pdev, "disabling ATS\n");
++	pdev->ats_cap = 0;
++}
++
+ /*
+  * Some devices require additional driver setup to enable ATS.  Don't use
+  * ATS for those devices as ATS will be enabled before the driver has had a
+@@ -5518,14 +5524,10 @@ static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)
+ 		    (pdev->subsystem_device == 0xce19 ||
+ 		     pdev->subsystem_device == 0xcc10 ||
+ 		     pdev->subsystem_device == 0xcc08))
+-			goto no_ats;
+-		else
+-			return;
++			quirk_no_ats(pdev);
++	} else {
++		quirk_no_ats(pdev);
+ 	}
+-
+-no_ats:
+-	pci_info(pdev, "disabling ATS\n");
+-	pdev->ats_cap = 0;
+ }
+ 
+ /* AMD Stoney platform GPU */
 -- 
 2.41.0
 
