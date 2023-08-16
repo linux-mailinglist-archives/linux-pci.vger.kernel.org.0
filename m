@@ -2,89 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 62B9C77DCD2
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Aug 2023 10:54:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D0DA77DDE1
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Aug 2023 11:52:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243149AbjHPIyP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Aug 2023 04:54:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57394 "EHLO
+        id S243594AbjHPJv7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Aug 2023 05:51:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243157AbjHPIxo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Aug 2023 04:53:44 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57B6F13D;
-        Wed, 16 Aug 2023 01:53:43 -0700 (PDT)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37G7ldEF006071;
-        Wed, 16 Aug 2023 08:53:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=N8pAXBarq5a+zUCq5m202B9YAGdwbDmkS5Fv+6+22rc=;
- b=aeqk4pgmAYX09ogaQCoB/L5gNXDEKPkO2IASEC98MD81wkaLzbANXMMO/drPInjAFwNf
- JMpMnGAtFiZhszKSW2gs4I0wIdsgAFTvAeH25INfrLkazjvYF6SSsmvXl0eo+zwYN9ys
- HknKtK608XmqS1I4dtdVIzmYRb2AjL9Vgt4xnlrywxxdd8tV+x52y7SmrFjy0vYSIlmh
- BxCghT7jfsPYewuBSX3kzxNZHAkqxWi+xHXeDzWq3jJIxATHOZPnBGupn6UgkHq4sN2T
- QiQ5GU1OGUqekSK3uOLL4GgqxJjXa+3b5x8avKQpWr6Jtvqd1LpUIKT8SnHcmU27CzeY yQ== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3sfuj8kac1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Aug 2023 08:53:36 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 37G8rYX5026145
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Aug 2023 08:53:34 GMT
-Received: from [10.218.41.203] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Wed, 16 Aug
- 2023 01:53:28 -0700
-Message-ID: <2b61913c-d93b-af30-f75d-0958d912dc8f@quicinc.com>
-Date:   Wed, 16 Aug 2023 14:23:25 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v1 3/3] PCI: qcom: Add OPP suuport for speed based
- performance state of RPMH
-Content-Language: en-US
-To:     Pavan Kondeti <quic_pkondeti@quicinc.com>
-CC:     <manivannan.sadhasivam@linaro.org>, <helgaas@kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <quic_parass@quicinc.com>,
-        <krzysztof.kozlowski@linaro.org>, Andy Gross <agross@kernel.org>,
-        "Bjorn Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
+        with ESMTP id S243655AbjHPJvv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Aug 2023 05:51:51 -0400
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 962F82724
+        for <linux-pci@vger.kernel.org>; Wed, 16 Aug 2023 02:51:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        sang-engineering.com; h=date:from:to:cc:subject:message-id
+        :references:mime-version:content-type:in-reply-to; s=k1; bh=pjnA
+        d2IvOCH765Y6OcYlBsPrnBHU+4w4cKdan2DbybU=; b=Xhhdf8ZjHtgq+MdOxieJ
+        WaCHz4HSOhFXUaU/1owOoy3az1S9NZ8SDkSYFIImzZZCBwy/E5BAQLveLdOUq60Y
+        whd6UTJtBbfaTIjk+NYXcEP8YzCS6a2JeVvh2xViHN1/sSChflB46iuWIcDh6Acu
+        JfALuaHYsLUIx9rQrcnlvkqs8oezWdU/p48gsHtWpP86zRgDq+j+hDEoTPl8bULE
+        iPtlT30Qr21PqTsvtgH2QIdX/WyWlLEXp5F7czy/PTSdGYOoxkQx19FkxK2PQDvQ
+        FFwFKdAmH7n2qc6OaQTBaYjR3LkVnozlXbAKFIIouMaHWoxaK/u7y9oUakQzOYU0
+        Qw==
+Received: (qmail 87517 invoked from network); 16 Aug 2023 11:51:17 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 16 Aug 2023 11:51:17 +0200
+X-UD-Smtp-Session: l3s3148p1@nPd0PAcDELwgAwDPXy5qAJ1huuy56R1W
+Date:   Wed, 16 Aug 2023 11:51:13 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <1692102408-7010-1-git-send-email-quic_krichai@quicinc.com>
- <1692102408-7010-4-git-send-email-quic_krichai@quicinc.com>
- <076196e4-36e5-4a90-b3cc-b0ffd61627a3@quicinc.com>
-From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <076196e4-36e5-4a90-b3cc-b0ffd61627a3@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: FZitCQzzO_zTzkrRat30Q6w-7caZd3E1
-X-Proofpoint-GUID: FZitCQzzO_zTzkrRat30Q6w-7caZd3E1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-16_06,2023-08-15_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- spamscore=0 malwarescore=0 priorityscore=1501 phishscore=0
- lowpriorityscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
- clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2308160078
-X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 RESEND 2/2] PCI: rcar-host: add support for optional
+ regulators
+Message-ID: <ZNycEWhT7a7llUSZ@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230712103916.1631-3-wsa+renesas@sang-engineering.com>
+ <20230713153401.GA317502@bhelgaas>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Z+q6h2c7HBqfnx+w"
+Content-Disposition: inline
+In-Reply-To: <20230713153401.GA317502@bhelgaas>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -92,131 +70,49 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-On 8/16/2023 11:54 AM, Pavan Kondeti wrote:
-> On Tue, Aug 15, 2023 at 05:56:48PM +0530, Krishna chaitanya chundru wrote:
->> Before link training vote for the maximum performance state of RPMH
->> and once the link is up, vote for the performance state based upon
->> the link speed.
->> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-qcom.c | 61 ++++++++++++++++++++++++++++++++++
->>   1 file changed, 61 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
->> index 7a87a47..e29a986 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->> @@ -22,6 +22,7 @@
->>   #include <linux/of_device.h>
->>   #include <linux/of_gpio.h>
->>   #include <linux/pci.h>
->> +#include <linux/pm_opp.h>
->>   #include <linux/pm_runtime.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/phy/pcie.h>
->> @@ -1357,6 +1358,51 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
->>   	return 0;
->>   }
->>   
->> +static void qcom_pcie_opp_update(struct qcom_pcie *pcie)
->> +{
->> +	struct dw_pcie *pci = pcie->pci;
->> +	struct dev_pm_opp *opp;
->> +	u32 offset, status;
->> +	uint32_t freq;
->> +	int speed;
->> +	int ret = 0;
->> +
->> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->> +	status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
->> +
->> +	/* Only update constraints if link is up. */
->> +	if (!(status & PCI_EXP_LNKSTA_DLLLA))
->> +		return;
->> +
->> +	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
->> +
->> +	switch (speed) {
->> +	case 1:
->> +		freq = 2500000;
->> +		break;
->> +	case 2:
->> +		freq = 5000000;
->> +		break;
->> +	case 3:
->> +		freq = 8000000;
->> +		break;
->> +	default:
->> +		WARN_ON_ONCE(1);
->> +		fallthrough;
->> +	case 4:
->> +		freq = 16000000;
->> +		break;
->> +	}
->> +
->> +	opp = dev_pm_opp_find_freq_exact(pci->dev, freq, true);
->> +
->> +	if (!IS_ERR(opp)) {
->> +		ret = dev_pm_opp_get_voltage(opp);
->> +		dev_pm_opp_put(opp);
->> +	}
->> +
-> Where are we setting the OPP here?
->
->> +}
->> +
->>   static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
->>   {
->>   	struct dw_pcie *pci = pcie->pci;
->> @@ -1439,8 +1485,10 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
->>   static int qcom_pcie_probe(struct platform_device *pdev)
->>   {
->>   	const struct qcom_pcie_cfg *pcie_cfg;
->> +	unsigned long max_freq = INT_MAX;
->>   	struct device *dev = &pdev->dev;
->>   	struct qcom_pcie *pcie;
->> +	struct dev_pm_opp *opp;
->>   	struct dw_pcie_rp *pp;
->>   	struct resource *res;
->>   	struct dw_pcie *pci;
->> @@ -1511,6 +1559,17 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->>   	if (ret)
->>   		goto err_pm_runtime_put;
->>   
->> +	/* OPP table is optional */
->> +	ret = devm_pm_opp_of_add_table(dev);
->> +	if (ret && ret != -ENODEV) {
->> +		dev_err(dev, "Invalid OPP table in Device tree\n");
->> +		goto err_pm_runtime_put;
->> +	}
->> +
->> +	opp = dev_pm_opp_find_freq_floor(dev, &max_freq);
->> +	if (!IS_ERR(opp))
->> +		dev_pm_opp_put(opp);
->> +
-> This OPP (corresponding to max freq) is not used, so how are we voting
-> for max perf state during probe?
->
->>   	ret = pcie->cfg->ops->get_resources(pcie);
->>   	if (ret)
->>   		goto err_pm_runtime_put;
->> @@ -1531,6 +1590,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->>   
->>   	qcom_pcie_icc_update(pcie);
->>   
->> +	qcom_pcie_opp_update(pcie);
->> +
-> commit description says, OPP voting is done as per the link speed after
-> probe? I don't see any calls to qcom_pcie_opp_update() outside probe.
+--Z+q6h2c7HBqfnx+w
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-my mistake dev_pm_opp_set_opp somehow missed here I will update in next 
-patch.
+On Thu, Jul 13, 2023 at 10:34:01AM -0500, Bjorn Helgaas wrote:
+> On Wed, Jul 12, 2023 at 12:39:16PM +0200, Wolfram Sang wrote:
+> > The KingFisher board has regulators. They just need to be en-/disabled,
+> > so we can leave the handling to devm. Order variables in reverse-xmas
+> > while we are here.
+> >=20
+> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>=20
+> Krzysztof or Lorenzo may fix this up for you, but:
+> s/add support/Add support/ in subject to match history
+> and recast commit log to say what the patch *does* ("enable optional
+> regulators using devm, so devm will automatically disable them when
+> the driver releases the device"), not *what needs to be done*.
 
-- KC
+I will fix the commit messages and resend. But frankly, except the
+latter is a tad more explicit, they both qualify for "what needs to be
+done" for me *shrug* Still, thanks for the review, I appreciate it!
 
->>   	if (pcie->mhi)
->>   		qcom_pcie_init_debugfs(pcie);
->>   
->>
-> Thanks,
-> Pavan
+
+--Z+q6h2c7HBqfnx+w
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmTcnAsACgkQFA3kzBSg
+KbZriw/+I09tLqG4hjE4xb6HV6gZWEB8x6u5l7Y9HEkqwcyECM/IWZT2iULs1Jf8
+l0MK5fOJB61p+VhicbfwXmcTaVgeOL22o1I0QfrW3bk8a79nueFH87x46jziYu3V
+aAtelZIvxpxYnI50UIM8Vkh1So674QWdfZ9mw70smbj9jF3uGnNdlIENqj0ufo+G
+Viogt7/KlncssCj5GRT1HKqjG5GLZXHPXk9FADMRLJGBJIryqK4hnsjfHymi+PYr
+tW1BtPN5jJDWUMT7wFNpewqO4lqtywJC36hIxdOtaGJlE+W4uHtm0YT4XkW29hlw
+JU0lij5nD/BwpfhW8DJjdhJn9Hggyh/pucizMGfAkpqpK75qnxiUMECFtXtLtiVl
+5Ra2snfJjqj9pse2A/jNs90cN6UkGLqeWp338Rt4dJKbPl9s01j7HdPqCkbKCeSx
+Yhoqjk1iCyXod4WyE6uRvvQ5v+LKw6uwjQVTSCSNICwZJuaUCpltgyc8Zgw0lROo
+TMpoVGKUXMGP5zSejs5bYTWet+JS4kGN/jhy8YHGCKidf/EOY+dRqeLuBSRcvlwD
+SDqfS4lz1CULEywwESn+xQDVAg6JYbzu/eQoaG8pdHXxuQP4N8ZXularhO+7wFlR
+lpnnke2tlPHgyb50k9Ccpzu8pszblXyBRDOogF4yPZ+elhQn5EQ=
+=VFZt
+-----END PGP SIGNATURE-----
+
+--Z+q6h2c7HBqfnx+w--
