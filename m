@@ -2,125 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E0CF77D98A
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Aug 2023 06:56:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 934E377D9BF
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Aug 2023 07:21:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241789AbjHPEzn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Aug 2023 00:55:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43240 "EHLO
+        id S241660AbjHPFUY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Aug 2023 01:20:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241801AbjHPEzl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Aug 2023 00:55:41 -0400
-Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021020.outbound.protection.outlook.com [52.101.57.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9B0D268F;
-        Tue, 15 Aug 2023 21:55:38 -0700 (PDT)
+        with ESMTP id S241850AbjHPFUU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Aug 2023 01:20:20 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2049.outbound.protection.outlook.com [40.107.243.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DAAC1999;
+        Tue, 15 Aug 2023 22:20:17 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bDVa7PYfbRB/kAbD6IgjyvBxOOXQtVmO4UMIPIoWSJMs5OlLbNK/EO+O1pR3peiK0XaHJNFcgNgF7sLoGXoyRVOLT3CpHrmNbWx3VkL9omfoY0sHzp/7U87q30wWbUzwScPzCCOhcbOWy8DBkRDheEeniaaNOK+yE8BkvI9/4+AMSs5b1Z4n6JcKukpu1zHz1x2VJv5mYFQ3H4/DMCUhnBWl4pCdM13HF/oKrLGChUcZJcAALrmvFn/ByZ/i2a5vQAWG3MVT3UeOmM3LkPDDFaJcg/Ah3SzUGcs07EM861BpyY9ePMSBsTvdWuDtscPBPJUNN912wZ8MNIjtlPZFyw==
+ b=kKufe2s85WsTL6NIXN0QIyTIBxhI2bXTnfzr+pkpnakaXGYx/uy+yJ+0P/jIaXnfaY3i13LAVFF1IR4VxVYMWiOhjCGmzLICz6JKoiUiflapVJO0tjX7a58LNKWp0gkjmwlaFr7gMK+0PFVrhiNT1JcXUqireTJJOq8qeuY5JheKUaQyeZtnNYIGD2/Xe7QGImsvOQuG1HDQqroZdh7Z0yFG4gIswsIt9giQnPkqUyQY9ULmY9wMUTzHZv7BuLmqXpDRcMu9fxZPP0Y960xoklDQwENFvKkhIklkqHcIKAh9WT3qmXGqQXnefKGZFganB/UH6efRut9Wmy1TbZDSKg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7oR0/QpFuzZFC+BaLbFx79AHLsv+AGL6/VA6c402f2w=;
- b=JrvbuaRWJE4rMLX4FWxY6o2DzpsknFqc60ZmDJsQ0JnsevsvLlgLBEn+seJsw0kGMNQkIAGJ0AfTNXMH0uvGDSk/TwJzQgvJTYKc4l0lAapR6PhS0GE34fq+SF2kNF0FWjbGicv0BYdUkOcdVaRbL1WzYi824qpEpV8tutQbEiyVvbkXHJLthpc95VWhuRwF3UNyLWDYk1Va2QgpniRpbnIhmbvk7Qo53X89o/jJItBsmBNWnEoRvcn65oUEEL3GOJoiXk+s+fteAP/+L7pk6hHgxnYfC2zqCz51FdVxOCUxVZzIa2VmY+UDZk12KrrTLDTIY0m/O6X90WNQGU+pbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ bh=2Tk+JYvf5UeY8XEYcBdNYTw7vyC1DOs3pZFEu1aj99s=;
+ b=HGnB9AAGie3cIVpv86TEFxSbhVqT3gdcGIFCga/dtghSIb2LReE/P+kc2Sh8K/zabwY0HMBSMQcC69Gd5oXemIKOQ09S7G7EEdYBQiskK042zregJftNxF96+ypoHj024YodXPAivao4N+HmDcZK89J+QWhAapKXd/tXrUmyJGuLfRjTMqhX4sMkRbStDD1Q9Vcs8w9VchqCrfhz2KWjRvPAEZyQsPeUFWjuTttRZgshg6epMWXq5d5MDzkHVI7qe72hXsqATJC6zr3WVXtNdkx0HDewvdWCE13hf31XVcSFIE8Cdp+hV4jMs5NfV7DYtBKOQv6CdMODUzyZdKlbpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7oR0/QpFuzZFC+BaLbFx79AHLsv+AGL6/VA6c402f2w=;
- b=DHFjgnH4/3CnajdhUEsiTKwefVr3L7fRzSNT69Fmev+q8EZT4pxn5RoyGuBl27Rzbg4gNHZlLfAjEQlR8vE5ZQjO80U5/0E0UebxwG+Uy8cDynSudmizR0pIqn/NPKEBNZcFM7QPaFOmpReuAJYYPLU/Qs7hEvWMoEESGBk38FI=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by BY1PR21MB3966.namprd21.prod.outlook.com (2603:10b6:a03:522::6) with
+ bh=2Tk+JYvf5UeY8XEYcBdNYTw7vyC1DOs3pZFEu1aj99s=;
+ b=S1wXTPF4i6HmBWDQQxIVLUcAOCn+VSwX1GxMeCttrQlxLjbzBxVknTPGWE3GWn7g0vn8l26/D4MKXRPinTQ2ZHAvGmyAI03oozT3rnOkUVwTF/6ERSEcVPIiafqqB7z7QbxhBvDTf9AMeSDtuKle2TvQJO1wNHpuV8lhprQjnbE=
+Received: from MW4PR04CA0059.namprd04.prod.outlook.com (2603:10b6:303:6a::34)
+ by PH7PR12MB7260.namprd12.prod.outlook.com (2603:10b6:510:208::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.9; Wed, 16 Aug
- 2023 04:55:35 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::ed39:f9ac:9110:dd9a]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::ed39:f9ac:9110:dd9a%4]) with mapi id 15.20.6699.012; Wed, 16 Aug 2023
- 04:55:35 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "kw@linux.com" <kw@linux.com>, KY Srinivasan <kys@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] PCI: hv: Fix a crash in hv_pci_restore_msi_msg() during
- hibernation
-Thread-Topic: [PATCH] PCI: hv: Fix a crash in hv_pci_restore_msi_msg() during
- hibernation
-Thread-Index: AQHZzXrpqqhsyu6SnEq5GlDNhSPBZK/sFCqQgAAUKZCAADgp0A==
-Date:   Wed, 16 Aug 2023 04:55:35 +0000
-Message-ID: <BYAPR21MB16887E4BF391F977901398E3D715A@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <20230813001218.19716-1-decui@microsoft.com>
- <BYAPR21MB1688E86B4DB69DB8F3796DDED715A@BYAPR21MB1688.namprd21.prod.outlook.com>
- <SA1PR21MB13357832AE84D20073CDA9BABF15A@SA1PR21MB1335.namprd21.prod.outlook.com>
-In-Reply-To: <SA1PR21MB13357832AE84D20073CDA9BABF15A@SA1PR21MB1335.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a6ba78a7-fcb6-4ad8-93e4-b5c3c340b1be;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-08-16T00:21:12Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|BY1PR21MB3966:EE_
-x-ms-office365-filtering-correlation-id: 05b26c0a-5421-4a91-f2a6-08db9e15070f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1xB1hb1W2bwWHjoR26B9gQV2sqs6m80Co9nMWJE9OaxJq1yWtUOekqAH7aj0G/8lQsdadYO4P7mBvBGJ5mDTRykDclPAu8p3hQHHNJtvdUM2E5R22aNegp/Zc0GxoWssKcGROlTZgj3qmV2SM5VDDVTnqdrx+6nkZ4k3Zsxrr19oyE6+TTOPVLvjHzcwi+yh7OGjAI56OKSzpq595yGsh28GsFmQL5GruX7SxuwXlyR5IxkSrVPPC78wsZt3g107yjyftz8FXOnb0gb/GG83ZKkBRCMjlGEZhqV4wgHRVHK+MWOk0ZjCoRv7opRz4Yx62RbkHjOiGOI4vuCRF8nuP90R+3aUTUA+ubvclanBVc6rM3CsW/tCDXOnEDfeOSgsSCXREcBNfK4Fo5eZdYtH1+DGFolTUFBrIPQ1mA6Mt6XwCNsnbpwt3/wGCvR1GK+VMkFZXH1pOabxogOEsNZI87T38YFjKhi7FjZ76zKfC84sPWpUlY2ydPwfbktlp1meh+Xw85Mu3Dkec4A/RYQ7GchMj9uSdIB6fBq+Rst7GuD8KzVU7Kh6INN3G2MX/dkQAXpU9EGTK6ZQKq0am3Zi0HEt6f//JYpyuqHwZ8qvfPPID1QCHSFyXVQlckJIkEKUF5q7j5k7fogKUToI/RzViWBYSoiswRpYUL8jObQ63Kt8oYXewPaaLluWXInCUfFfPloLu3YmLXr1wiDp0Tqmng==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(136003)(396003)(376002)(366004)(1800799009)(186009)(451199024)(12101799020)(7696005)(478600001)(110136005)(38100700002)(55016003)(6506007)(82950400001)(7416002)(71200400001)(10290500003)(921005)(122000001)(82960400001)(52536014)(5660300002)(38070700005)(2906002)(33656002)(86362001)(8990500004)(316002)(8676002)(66556008)(41300700001)(64756008)(66446008)(76116006)(8936002)(66476007)(66946007)(26005)(4326008)(83380400001)(9686003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Mhcta4AKeZd+D0pYQqzOue6cqdvdFmWGBNjLUaiys4iD8/H6xnTO0QUGbAwy?=
- =?us-ascii?Q?gdM7/F5GF6JAMU1vYISO/1GX6QD71wYqVn4GLvGeg9xuRwf83+U9JgUYSWPF?=
- =?us-ascii?Q?xQ5i683Mmt1G4ESqXn/m/Nsk4GUxWIRxImQgNbypZTdk6a/E6hYshfQxDqx2?=
- =?us-ascii?Q?tbJAWE2IeP310Z+hCQ6o/U1BpYzAKwteDIWo+wbUOsdvMYcI2hqDPGYuQy7J?=
- =?us-ascii?Q?JCfBWNJJQXSB9eWsud7ekiMXEWwZ6eBpdW/nL/nA93KNnb3r+kd9itEglVKM?=
- =?us-ascii?Q?BRdRh2SrFFpKZu6wymadO3k0Gmw7TYllKsSC7ANBz7vyul4e2ia9vAidNsT6?=
- =?us-ascii?Q?+RibAMds6K+fjn+dJKCDnAQ9G6cHUBjB1pRDtS+u+wyP6GE3cbk2zRbdGUXg?=
- =?us-ascii?Q?sj5rDkcL2w1JYfYzC7Ifct2/aBHFQTTy64TwWwdzXQUizGjLdnbMvc30xaiE?=
- =?us-ascii?Q?R+xOPXNstZCJ5OVW5ciHj7+VELbXqC9urmi1XRPzn0ztNiPkVcIZ5arq8iiB?=
- =?us-ascii?Q?fW+fWyPgmGxK8KaF41tEH+cv6B5yIjnZbH1O27Lgqq9fT4Ad8PPwhHatdaPg?=
- =?us-ascii?Q?bKIV1o7iVFyuSAz1pYxa/GXfHBFQKtXf1auxMfgjHBk3sz9IhkZVTmpkwmis?=
- =?us-ascii?Q?s+iNQZUU4dLEaJnABqQWm0F5IpEH2otI2ssBVHFOZVwrDnf38/RRwnDYWTaj?=
- =?us-ascii?Q?gv5nXYKjZgdOYBYTxHADlKGpSNnkXaadf7uwS4dsAvB4L3q1SVOsqRsh7Es+?=
- =?us-ascii?Q?PHtqPS8MjQdHRAbpTbXHcoYYcOa7aEx4ZoKxNpuS4I5ycWTLVpSW+7Hbjx9F?=
- =?us-ascii?Q?wNGP8boPGetCTNH9jTM40qlArh4dmZfs+rms73PEeAcNWNgXT/7TUlvCrIjA?=
- =?us-ascii?Q?VZdfFAifsgz5BKeaU5LeKBTBtvKQKS4F/hq0L6FzxF4RcJWf6RdFR/+uh46Y?=
- =?us-ascii?Q?e+CzBxWFweG2DLZOnIWWa875KdjGDRsTXtjgQoSWbX87sRHmnC6NabbuSxBk?=
- =?us-ascii?Q?eUk4vtNuHS19iwS1deztdGcjo+BYpBos7RGvCagTrIcbjkJPmBhVtMu7Q0Vq?=
- =?us-ascii?Q?3J77duKXyG3Mh0jGEfDHM6VdOv/GDt8QhbLCvJv233U7rvDr7DFqghuKGnSL?=
- =?us-ascii?Q?3482YcLtDLr2pgxGuP9hQ7kDNOeIFcTq8pzfTj9T3u1/rz9/C3HZk9MH7joE?=
- =?us-ascii?Q?2eDyN7PrEGDsebu+iRXA87GIAgWBReE/VX9quhTiNSUWiecg4+2q+5U0TP3t?=
- =?us-ascii?Q?ddhOwFjxY6unMxJs/ExS7+99Vq7/LVQ76nxohffLMafiamVx75JZNbPFvHaB?=
- =?us-ascii?Q?WGob1j6uk/kUvPGfkAMZfTaGYSXnQX7Ey313+R8TpG0TSdzvEV4/jS/mCg+e?=
- =?us-ascii?Q?NzzPNtTlqBVjEahGaK3KU/0EMZBSWk924/QeVDMNmEvfaiqqXrE1hMtkoZqc?=
- =?us-ascii?Q?rbSob+QgO5NNuZF+8aDv+r+ogBBOZcWOv7C6logBIUQmaH3whzDvoizGFbgs?=
- =?us-ascii?Q?Q9KrGHt4ReiLxHmo952fXyBxKloLVKop2azEZ8w4Nt30jtzP4Zg0J1SHTtyg?=
- =?us-ascii?Q?9FcNazRrZmpuWYNJ3DFHNjO6rYfiX3bpZfTeKK9kDkvSI60umlsUShBML6Xa?=
- =?us-ascii?Q?Pg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.26; Wed, 16 Aug
+ 2023 05:20:13 +0000
+Received: from MWH0EPF000971E3.namprd02.prod.outlook.com
+ (2603:10b6:303:6a:cafe::d3) by MW4PR04CA0059.outlook.office365.com
+ (2603:10b6:303:6a::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.33 via Frontend
+ Transport; Wed, 16 Aug 2023 05:20:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MWH0EPF000971E3.mail.protection.outlook.com (10.167.243.70) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6699.15 via Frontend Transport; Wed, 16 Aug 2023 05:20:13 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 16 Aug
+ 2023 00:20:10 -0500
+From:   Sanath S <Sanath.S@amd.com>
+To:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mario.limonciello@amd.com>,
+        Sanath S <Sanath.S@amd.com>,
+        Sanjay R Mehta <sanju.mehta@amd.com>
+Subject: [PATCH] PCI: Allocate maximum available buses to help extending the daisy chain
+Date:   Wed, 16 Aug 2023 10:49:23 +0530
+Message-ID: <20230816051923.2287912-1-Sanath.S@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05b26c0a-5421-4a91-f2a6-08db9e15070f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2023 04:55:35.2852
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000971E3:EE_|PH7PR12MB7260:EE_
+X-MS-Office365-Filtering-Correlation-Id: c9012912-40fa-411e-dc39-08db9e187802
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: v0hZhLwfTidJkZtS0F242jCntL/uQ/Y45WG5PDpyml638qKtacalmHa9lkevsndR3OsDD8sjTxBc01B8ZWkFDErut4wMYR8mWNXqoicrXSstSMzvYXkdhpid41cVMdIJCDOFD3EqnXuybNnEU+PkoW9TgJ7HJsIQyKxPHQNkXkizognGtSKLMrlZZGZrWeHYK+dHsdTkeAS9q17R6a/rrxvHJBUb8s9ZlCKX1AZ/1mGnXE31gLkQV6aUnFIPxKNTh3dQZOPVBMYB5b+8HQqAM0JWt93Bz0FO5EaM4n5HLTEEql9ZfYsmsmc0KqCEoan2a0AjXl6iXqGEScAAoCbBto8bUvOqupUrgVyJGEzlnZAx7F9XXd+qZhOqfzT30WGtvosDZIyzPlaRaGgG05OSoLTUERMhi4zNlGAjkHbhDLBCu9EKYT2Rev0JdBHnqB4+spSSi3XSs1Jtah20Nv9vhZ9U9qVAy8+lUma07Dy0t4m2K+LilbAouBfKN/DouYMkp2/T7fdeMXRIkV3iv8/kG+2NofLi5sT8SFjC9oEjBqTGwEXZl15fOmCOvW2bcWsdrU5AAPi1hVYwxPh9t1LwwZB0aNr90vsXsMgb8w+c/h4EemV0ZTTNaNpGnwoQ5ZLgJonH91MfY9E1bdCHlKeswik5nHLoO5/EaQyGmrbmJDjQ3EjxoUWPCho0TIoVe8BdQORF+py3g19xJ5pZ65KePDGV/vsWvfexFQ9jKC0qJk0vkvTrF7kiO4L99L1xwAskWrNPyCDFgxYHIWl18UBbuJaMrQAleoJD6bRHFN9aNzU=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(39860400002)(396003)(346002)(136003)(1800799009)(82310400011)(451199024)(186009)(46966006)(36840700001)(40470700004)(6666004)(54906003)(70586007)(70206006)(7696005)(2906002)(478600001)(966005)(16526019)(1076003)(336012)(426003)(26005)(110136005)(5660300002)(2616005)(83380400001)(41300700001)(316002)(47076005)(36860700001)(8936002)(4326008)(82740400003)(8676002)(81166007)(356005)(40460700003)(36756003)(86362001)(40480700001)(131093003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2023 05:20:13.1351
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 80BrsyqwFm7Y8MoCrGOPkpp+zgngaWYLNIBY8ZKGB+RT2cj9U0Xl/hxZy7rW9+JOfdXlz0ZcHnhOqXBE9m6uNsVUwEgPpVIpXHi3seIQggU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR21MB3966
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9012912-40fa-411e-dc39-08db9e187802
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: MWH0EPF000971E3.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7260
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
@@ -131,80 +97,75 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com> Sent: Tuesday, August 15, 2023 9:00 =
-PM
->=20
-> > From: Michael Kelley (LINUX) <mikelley@microsoft.com>
-> > Sent: Tuesday, August 15, 2023 5:35 PM
-> > > [...]
-> > > For a Linux VM with a NVIDIA GPU running on Hyper-V, before the GPU d=
-river
-> > > is installed, hibernating the VM will trigger a panic: if the GPU dri=
-ver
-> > > is not installed and loaded, MSI-X/MSI is not enabled on the device, =
-so
-> > > pdev->dev.msi.data is NULL, and msi_lock_descs(&pdev->dev) causes the
-> > > NULL pointer dereference. Fix this by checking pdev->dev.msi.data.
-> >
-> > Is the scenario here a little broader than just the NVIDIA GPU driver? =
- For
-> > any virtual PCI device that is presented in the guest VM as a VMBus dev=
-ice,
-> > the driver might not be installed.  There could have been some initial
-> > problem getting the driver installed, or it might have been manually
-> > uninstalled later in the life of the VM.  Also the host might have resc=
-inded
-> > the virtual PCI device and added it back later, creating another opport=
-unity
-> > where the driver might not be loaded.  In any case, it seems like we co=
-uld
-> > have the VMBus aspects of the device setup, but not the driver for the
-> > device.  This suspend/resume code in pci-hyperv.c is all about handling
-> > the VMBus aspects of the device anyway.
->=20
-> Good point! The bug also affects other PCI devices, e.g. if I unload mlx5=
-_core
-> and let the VM with a Mellanox VF NIC hibernate, I hit the same NULL
-> pointer dereference.
->=20
-> > Assuming my thinking is correct, is there some Hyper-V/VMBus setting
-> > owned by the pci-hyperv.c driver that would be better to test here than
-> > the low-level dev.msi.data pointer?  The MSI code rework that added
->=20
-> IMO there is no easy and reliable way in Hyper-V/VMBus/pci-hyperv to
-> tell if MSI/MSI-X is enabled for a PCI device. We can potentially track t=
-he
-> MSI/MSI-X irqs in hv_compose_msi_msg() and hv_irq_unmask(), but
-> IMO that's not very easy and may be inaccurate.
->=20
-> > the descriptor lock encapsulates the internals with appropriate accesso=
-r
-> > functions, and reaching in to directly test dev.msi.data violates that
-> > encapsulation.
->=20
-> I agree.
->=20
-> Compared with:
-> 	if (!pdev->dev.msi.data)
-> 		return 0;
->=20
-> I think it's better to use this:
->             if (!pdev->msi_enabled && !pdev->msix_enabled)
-> 		return 0;
->=20
-> pdev-> msix_enabled has been used in many drivers, e.g.
->=20
-> "arch/x86/pci/xen.c": xen_pv_teardown_msi_irqs()
-> "drivers/hid/intel-ish-hid/ipc/pci-ish.c": ish_probe()
-> "drivers/infiniband/hw/vmw_pvrdma/pvrdma_main.c": pvrdma_intr0_handler()
-> "drivers/scsi/vmw_pvscsi.c": pvscsi_probe()
-> and more.
->=20
-> So it looks like pdev-> msix_enabled is a legit and stable API.
-> I'll post v2 with it. I'll update the changelog accordingly.
-> Please let me know if you have concerns about it.
+In the case of Thunderbolt, it contains a PCIe switch and one or
+more hotplug-capable PCIe downstream ports where the daisy chain
+can be extended.
 
-Sounds good.  I agree that what you propose is a better approach.
+Currently when a Thunderbolt Dock is plugged in during S5/Reboot,
+System BIOS allocates a very minimal number of buses for bridges and
+hot-plug capable PCIe downstream ports to enumerate the dock during
+boot. Because of this, we run out of bus space pretty quickly when
+more PCIe devices are attached to hotplug downstream ports in order
+to extend the chain.
 
-Michael
+Before:
+           +-04.0
+           +-04.1-[63-c1]----00.0-[64-69]--+-00.0-[65]--
+           |                               +-01.0-[66]--
+           |                               +-02.0-[67]--
+           |                               +-03.0-[68]--
+           |                               \-04.0-[69]--
+           +-08.0
+
+In case of a thunderbolt capable bridge, reconfigure the buses allocated
+by BIOS to the maximum available buses. So that the hot-plug bridges gets
+maximum buses and chain can be extended to accommodate more PCIe devices.
+This fix is necessary for all the PCIe downstream ports where the daisy
+chain can be extended.
+
+After:
+           +-04.0
+           +-04.1-[63-c1]----00.0-[64-c1]--+-00.0-[65]--
+           |                               +-01.0-[66-84]--
+           |                               +-02.0-[85-a3]--
+           |                               +-03.0-[a4-c0]--
+           |                               \-04.0-[c1]--
+           +-08.0
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=216000
+Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
+Signed-off-by: Sanath S <Sanath.S@amd.com>
+---
+ drivers/pci/probe.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 8bac3ce02609..ab7e90ef2382 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1263,6 +1263,8 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 	bool fixed_buses;
+ 	u8 fixed_sec, fixed_sub;
+ 	int next_busnr;
++	int start = bus->busn_res.start;
++	int end = bus->busn_res.end;
+ 
+ 	/*
+ 	 * Make sure the bridge is powered on to be able to access config
+@@ -1292,6 +1294,13 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 		broken = 1;
+ 	}
+ 
++	/* Reconfigure, If maximum buses are not allocated */
++	if (!pass && start != 0 && end != 0xff && subordinate != end) {
++		pci_info(dev, "Bridge has subordinate 0x%x but max busn 0x%x, reconfiguring\n",
++			 subordinate, end);
++		broken = 1;
++	}
++
+ 	/*
+ 	 * Disable Master-Abort Mode during probing to avoid reporting of
+ 	 * bus errors in some architectures.
+-- 
+2.34.1
 
