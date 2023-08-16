@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0853877DCCA
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Aug 2023 10:53:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62B9C77DCD2
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Aug 2023 10:54:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243101AbjHPIwh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Aug 2023 04:52:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47506 "EHLO
+        id S243149AbjHPIyP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Aug 2023 04:54:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243156AbjHPIwF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Aug 2023 04:52:05 -0400
+        with ESMTP id S243157AbjHPIxo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Aug 2023 04:53:44 -0400
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E07A410C8;
-        Wed, 16 Aug 2023 01:52:03 -0700 (PDT)
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37G7lfPA001894;
-        Wed, 16 Aug 2023 08:52:00 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57B6F13D;
+        Wed, 16 Aug 2023 01:53:43 -0700 (PDT)
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37G7ldEF006071;
+        Wed, 16 Aug 2023 08:53:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
  mime-version : subject : to : cc : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=qcppdkim1;
- bh=ZfD++9r9JeIl8KODbqqMNO/rVxhbqdn9kGFpH6XB+FY=;
- b=LEIfa8mlfV2Hay55q25Ekw/SOk+ThmYZvcwWEQUWwM2/C3zICrADdu9SNCVB+/FTSCpq
- EvX/FxNb5V2lHsqUe+NHeHt4YvPEQCV174o2K1wCTgvb/vwhb/OTqXueWyr7DKhiylZ/
- l4xT6QYF7V75IOn1huOmvqaZ95kWQgxsHiV7TBe2R27cxvZS7jA+Yzmko52MuyXaKfyY
- V5idJjY9gD/a96qgV0Kh70DLr6TJeN0NNy3YQMdqhnKkaRv8k9aexNCRlWHYOFlC1sqZ
- M5HgGXlobG3edr95cyLQU1XvENFsCzFcTwEJuArGL6m95BWAOiSIGLL02jf/qxAS5+sF cQ== 
+ bh=N8pAXBarq5a+zUCq5m202B9YAGdwbDmkS5Fv+6+22rc=;
+ b=aeqk4pgmAYX09ogaQCoB/L5gNXDEKPkO2IASEC98MD81wkaLzbANXMMO/drPInjAFwNf
+ JMpMnGAtFiZhszKSW2gs4I0wIdsgAFTvAeH25INfrLkazjvYF6SSsmvXl0eo+zwYN9ys
+ HknKtK608XmqS1I4dtdVIzmYRb2AjL9Vgt4xnlrywxxdd8tV+x52y7SmrFjy0vYSIlmh
+ BxCghT7jfsPYewuBSX3kzxNZHAkqxWi+xHXeDzWq3jJIxATHOZPnBGupn6UgkHq4sN2T
+ QiQ5GU1OGUqekSK3uOLL4GgqxJjXa+3b5x8avKQpWr6Jtvqd1LpUIKT8SnHcmU27CzeY yQ== 
 Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3sfxqru14q-1
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3sfuj8kac1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Aug 2023 08:52:00 +0000
+        Wed, 16 Aug 2023 08:53:36 +0000
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 37G8pwsD024321
+        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 37G8rYX5026145
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Aug 2023 08:51:59 GMT
+        Wed, 16 Aug 2023 08:53:34 GMT
 Received: from [10.218.41.203] (10.80.80.8) by nalasex01a.na.qualcomm.com
  (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Wed, 16 Aug
- 2023 01:51:53 -0700
-Message-ID: <fea290b8-374c-f6fd-bef1-a8944fb16c53@quicinc.com>
-Date:   Wed, 16 Aug 2023 14:21:50 +0530
+ 2023 01:53:28 -0700
+Message-ID: <2b61913c-d93b-af30-f75d-0958d912dc8f@quicinc.com>
+Date:   Wed, 16 Aug 2023 14:23:25 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.13.1
-Subject: Re: [PATCH v1 2/3] arm64: dts: qcom: sm8450: Add opp table support to
- PCIe
+Subject: Re: [PATCH v1 3/3] PCI: qcom: Add OPP suuport for speed based
+ performance state of RPMH
 Content-Language: en-US
 To:     Pavan Kondeti <quic_pkondeti@quicinc.com>
 CC:     <manivannan.sadhasivam@linaro.org>, <helgaas@kernel.org>,
@@ -55,32 +55,32 @@ CC:     <manivannan.sadhasivam@linaro.org>, <helgaas@kernel.org>,
         <krzysztof.kozlowski@linaro.org>, Andy Gross <agross@kernel.org>,
         "Bjorn Andersson" <andersson@kernel.org>,
         Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
 References: <1692102408-7010-1-git-send-email-quic_krichai@quicinc.com>
- <1692102408-7010-3-git-send-email-quic_krichai@quicinc.com>
- <dc14acb4-9fe8-4b3b-a9da-7f7915de4d5c@quicinc.com>
+ <1692102408-7010-4-git-send-email-quic_krichai@quicinc.com>
+ <076196e4-36e5-4a90-b3cc-b0ffd61627a3@quicinc.com>
 From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <dc14acb4-9fe8-4b3b-a9da-7f7915de4d5c@quicinc.com>
+In-Reply-To: <076196e4-36e5-4a90-b3cc-b0ffd61627a3@quicinc.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: cwIP8DIqmGgk2846J7K-dV1E5DdmKBsi
-X-Proofpoint-ORIG-GUID: cwIP8DIqmGgk2846J7K-dV1E5DdmKBsi
+X-Proofpoint-ORIG-GUID: FZitCQzzO_zTzkrRat30Q6w-7caZd3E1
+X-Proofpoint-GUID: FZitCQzzO_zTzkrRat30Q6w-7caZd3E1
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
  definitions=2023-08-16_06,2023-08-15_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=933 adultscore=0
- clxscore=1015 impostorscore=0 mlxscore=0 phishscore=0 bulkscore=0
- spamscore=0 malwarescore=0 priorityscore=1501 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ spamscore=0 malwarescore=0 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
+ clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2306200000 definitions=main-2308160078
 X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
@@ -92,79 +92,131 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-On 8/16/2023 12:35 PM, Pavan Kondeti wrote:
-> On Tue, Aug 15, 2023 at 05:56:47PM +0530, Krishna chaitanya chundru wrote:
->> PCIe needs to choose the appropriate performance state of RPMH power
->> domain based upon the PCIe gen speed.
->>
->> So, let's add the OPP table support to specify RPMH performance states.
->>
+On 8/16/2023 11:54 AM, Pavan Kondeti wrote:
+> On Tue, Aug 15, 2023 at 05:56:48PM +0530, Krishna chaitanya chundru wrote:
+>> Before link training vote for the maximum performance state of RPMH
+>> and once the link is up, vote for the performance state based upon
+>> the link speed.
 >> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 >> ---
->>   arch/arm64/boot/dts/qcom/sm8450.dtsi | 47 ++++++++++++++++++++++++++++++++++++
->>   1 file changed, 47 insertions(+)
+>>   drivers/pci/controller/dwc/pcie-qcom.c | 61 ++++++++++++++++++++++++++++++++++
+>>   1 file changed, 61 insertions(+)
 >>
->> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
->> index 595533a..681ea9c 100644
->> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
->> @@ -381,6 +381,49 @@
->>   		};
->>   	};
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>> index 7a87a47..e29a986 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>> @@ -22,6 +22,7 @@
+>>   #include <linux/of_device.h>
+>>   #include <linux/of_gpio.h>
+>>   #include <linux/pci.h>
+>> +#include <linux/pm_opp.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/phy/pcie.h>
+>> @@ -1357,6 +1358,51 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+>>   	return 0;
+>>   }
 >>   
->> +	pcie0_opp_table: opp-table-pcie0 {
->> +		compatible = "operating-points-v2";
+>> +static void qcom_pcie_opp_update(struct qcom_pcie *pcie)
+>> +{
+>> +	struct dw_pcie *pci = pcie->pci;
+>> +	struct dev_pm_opp *opp;
+>> +	u32 offset, status;
+>> +	uint32_t freq;
+>> +	int speed;
+>> +	int ret = 0;
 >> +
->> +		opp-2500000 {
->> +			opp-hz = /bits/ 64 <2500000>;
->> +			opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
->> +		};
+>> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>> +	status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
 >> +
->> +		opp-5000000 {
->> +			opp-hz = /bits/ 64 <5000000>;
->> +			opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
->> +		};
+>> +	/* Only update constraints if link is up. */
+>> +	if (!(status & PCI_EXP_LNKSTA_DLLLA))
+>> +		return;
 >> +
->> +		opp-8000000 {
->> +			opp-hz = /bits/ 64 <8000000>;
->> +			opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
->> +		};
->> +	};
+>> +	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
 >> +
->> +	pcie1_opp_table: opp-table-pcie1 {
->> +		compatible = "operating-points-v2";
+>> +	switch (speed) {
+>> +	case 1:
+>> +		freq = 2500000;
+>> +		break;
+>> +	case 2:
+>> +		freq = 5000000;
+>> +		break;
+>> +	case 3:
+>> +		freq = 8000000;
+>> +		break;
+>> +	default:
+>> +		WARN_ON_ONCE(1);
+>> +		fallthrough;
+>> +	case 4:
+>> +		freq = 16000000;
+>> +		break;
+>> +	}
 >> +
->> +		opp-2500000 {
->> +			opp-hz = /bits/ 64 <2500000>;
->> +			opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
->> +		};
+>> +	opp = dev_pm_opp_find_freq_exact(pci->dev, freq, true);
 >> +
->> +		opp-5000000 {
->> +			opp-hz = /bits/ 64 <5000000>;
->> +			opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
->> +		};
+>> +	if (!IS_ERR(opp)) {
+>> +		ret = dev_pm_opp_get_voltage(opp);
+>> +		dev_pm_opp_put(opp);
+>> +	}
 >> +
->> +		opp-8000000 {
->> +			opp-hz = /bits/ 64 <8000000>;
->> +			opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
->> +		};
->> +
->> +		opp-16000000 {
->> +			opp-hz = /bits/ 64 <16000000>;
->> +			opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
->> +		};
->> +	};
->> +
-> Should not we using required-opps property to pass the
-> rpmhpd_opp_xxx phandle so that when this OPP is selected based on your
-> clock rate, the appropriate OPP (voltage) would be selected on the RPMH side?
+> Where are we setting the OPP here?
 >
-> Please see SDHCI/MMC voting (sdhc2_opp_table) as an example.
+>> +}
+>> +
+>>   static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
+>>   {
+>>   	struct dw_pcie *pci = pcie->pci;
+>> @@ -1439,8 +1485,10 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
+>>   static int qcom_pcie_probe(struct platform_device *pdev)
+>>   {
+>>   	const struct qcom_pcie_cfg *pcie_cfg;
+>> +	unsigned long max_freq = INT_MAX;
+>>   	struct device *dev = &pdev->dev;
+>>   	struct qcom_pcie *pcie;
+>> +	struct dev_pm_opp *opp;
+>>   	struct dw_pcie_rp *pp;
+>>   	struct resource *res;
+>>   	struct dw_pcie *pci;
+>> @@ -1511,6 +1559,17 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>>   	if (ret)
+>>   		goto err_pm_runtime_put;
+>>   
+>> +	/* OPP table is optional */
+>> +	ret = devm_pm_opp_of_add_table(dev);
+>> +	if (ret && ret != -ENODEV) {
+>> +		dev_err(dev, "Invalid OPP table in Device tree\n");
+>> +		goto err_pm_runtime_put;
+>> +	}
+>> +
+>> +	opp = dev_pm_opp_find_freq_floor(dev, &max_freq);
+>> +	if (!IS_ERR(opp))
+>> +		dev_pm_opp_put(opp);
+>> +
+> This OPP (corresponding to max freq) is not used, so how are we voting
+> for max perf state during probe?
+>
+>>   	ret = pcie->cfg->ops->get_resources(pcie);
+>>   	if (ret)
+>>   		goto err_pm_runtime_put;
+>> @@ -1531,6 +1590,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>>   
+>>   	qcom_pcie_icc_update(pcie);
+>>   
+>> +	qcom_pcie_opp_update(pcie);
+>> +
+> commit description says, OPP voting is done as per the link speed after
+> probe? I don't see any calls to qcom_pcie_opp_update() outside probe.
 
-Sure I will try to use rpmhpd_opp_xxx phandle in next patch
+my mistake dev_pm_opp_set_opp somehow missed here I will update in next 
+patch.
 
 - KC
 
->
+>>   	if (pcie->mhi)
+>>   		qcom_pcie_init_debugfs(pcie);
+>>   
+>>
 > Thanks,
 > Pavan
