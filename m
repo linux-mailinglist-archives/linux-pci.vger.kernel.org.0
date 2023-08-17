@@ -2,66 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 66BCC77EF2B
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Aug 2023 04:44:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02CE477EFA7
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Aug 2023 05:52:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347669AbjHQCm3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Aug 2023 22:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34120 "EHLO
+        id S1347908AbjHQDv0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Aug 2023 23:51:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347661AbjHQCmX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Aug 2023 22:42:23 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9484E40;
-        Wed, 16 Aug 2023 19:42:21 -0700 (PDT)
+        with ESMTP id S245313AbjHQDvR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Aug 2023 23:51:17 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A1326A8;
+        Wed, 16 Aug 2023 20:51:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692240141; x=1723776141;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=b0hvnRtj7c2uqp+h9qOvxBa7aFoPHQTQcLU68J0GbGQ=;
-  b=L5pchrA/XxPS//Q5XYklXcb5ae4+3k9SkGrCDkKoZMFuCBkU7Y/C+l0S
-   G816rSGESu8yUFalX+7tcsCApKeGICPMfJHUq+gp24gYqJYwQ7ehOHxVU
-   Wuew5y8chmOGvkAnCqkubb/uzb9DpdiTIkhrEDGjyJ5l6kF2M+samfAGW
-   GNTo4opKPqVZjbqdUVdyVH1QnqD18OLPctHjOwfy/v6vVXHBKvWrzmkW+
-   vwXRL7C1GOMGFfmmGBDtg20v5vKGB0yMj7DffKToABqALYtWdOZ7QnMi1
-   JR8bRxVha4RtaJi9ksRm6/eLgBCC5b1QUwodhM+cFn+YUsDYCCuvWbBSU
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="439048682"
-X-IronPort-AV: E=Sophos;i="6.01,178,1684825200"; 
-   d="scan'208";a="439048682"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2023 19:42:21 -0700
+  t=1692244276; x=1723780276;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xwI3wmGXcs0Evg0bbeV61o6vXuck4y6AiG6Pb05I7Qw=;
+  b=R+aqwDL3I7WVp2gFIFijYWh3RnDkRw33xVBsCD/JVEkAdNftMqnonZ52
+   6W/+ZaijgawHtNBXNUDMm2EPJip4AV5gzfUD2GFZ7X5YalhFjc7lDyrx5
+   2r7iRka/CvgO6wrHzmqFxQED1Nds/yNqkXir6SpfzgtUWZ2RdvgxcL1o5
+   YOv/Bu+AJwSh5C0oJk0dTCbmHsML2Q0duNoRXMROxhReal+RP+/ytFNz2
+   yNj4q4GfJ5OBlqUrCELSWL58Jg81mHXLqV3uP0go1h9LDGzq3NPGgfEcz
+   ImdAoIQjqZz7ZNCdgpouPrf/xgVnebcjnZIguy9Zde0puDldch0LtflnS
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="353020864"
+X-IronPort-AV: E=Sophos;i="6.01,179,1684825200"; 
+   d="scan'208";a="353020864"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2023 20:51:16 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="734481454"
-X-IronPort-AV: E=Sophos;i="6.01,178,1684825200"; 
-   d="scan'208";a="734481454"
-Received: from gokunbor-mobl1.amr.corp.intel.com (HELO [10.255.229.16]) ([10.255.229.16])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2023 19:42:19 -0700
-Message-ID: <404044b2-8e7a-4420-9c10-b2ca75d7e3aa@linux.intel.com>
-Date:   Wed, 16 Aug 2023 19:42:19 -0700
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="763875568"
+X-IronPort-AV: E=Sophos;i="6.01,179,1684825200"; 
+   d="scan'208";a="763875568"
+Received: from lkp-server02.sh.intel.com (HELO a9caf1a0cf30) ([10.239.97.151])
+  by orsmga008.jf.intel.com with ESMTP; 16 Aug 2023 20:51:11 -0700
+Received: from kbuild by a9caf1a0cf30 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qWU2R-0000lx-0m;
+        Thu, 17 Aug 2023 03:51:11 +0000
+Date:   Thu, 17 Aug 2023 11:50:51 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        manivannan.sadhasivam@linaro.org
+Cc:     oe-kbuild-all@lists.linux.dev, helgaas@kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, quic_parass@quicinc.com,
+        krzysztof.kozlowski@linaro.org,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1] PCI: qcom: Add sysfs entry to change link speed
+ dynamically
+Message-ID: <202308171155.o5viLJ3O-lkp@intel.com>
+References: <1692239684-12697-1-git-send-email-quic_krichai@quicinc.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 3/9] ACPI: x86: s2idle: Post-increment variables when
- getting constraints
-Content-Language: en-US
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, Iain Lane <iain@orangesquash.org.uk>,
-        Shyam-sundar S-k <Shyam-sundar.S-k@amd.com>
-References: <20230816204143.66281-1-mario.limonciello@amd.com>
- <20230816204143.66281-4-mario.limonciello@amd.com>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20230816204143.66281-4-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1692239684-12697-1-git-send-email-quic_krichai@quicinc.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,58 +77,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Krishna,
 
-On 8/16/2023 1:41 PM, Mario Limonciello wrote:
-> There is no reason for the variables to be pre-incremented.
-> No intended functional changes.
->
-> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
+kernel test robot noticed the following build warnings:
 
-I think you need to explain bit more in commit log.  Otherwise, looks good.
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.5-rc6 next-20230816]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Reviewed-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
+url:    https://github.com/intel-lab-lkp/linux/commits/Krishna-chaitanya-chundru/PCI-qcom-Add-sysfs-entry-to-change-link-speed-dynamically/20230817-103734
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/1692239684-12697-1-git-send-email-quic_krichai%40quicinc.com
+patch subject: [PATCH v1] PCI: qcom: Add sysfs entry to change link speed dynamically
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20230817/202308171155.o5viLJ3O-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 12.3.0
+reproduce: (https://download.01.org/0day-ci/archive/20230817/202308171155.o5viLJ3O-lkp@intel.com/reproduce)
 
->   drivers/acpi/x86/s2idle.c | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/acpi/x86/s2idle.c b/drivers/acpi/x86/s2idle.c
-> index ce62e61a9605e..7711dde68947f 100644
-> --- a/drivers/acpi/x86/s2idle.c
-> +++ b/drivers/acpi/x86/s2idle.c
-> @@ -123,13 +123,13 @@ static void lpi_device_get_constraints_amd(void)
->   			acpi_handle_debug(lps0_device_handle,
->   					  "LPI: constraints list begin:\n");
->   
-> -			for (j = 0; j < package->package.count; ++j) {
-> +			for (j = 0; j < package->package.count; j++) {
->   				union acpi_object *info_obj = &package->package.elements[j];
->   				struct lpi_device_constraint_amd dev_info = {};
->   				struct lpi_constraints *list;
->   				acpi_status status;
->   
-> -				for (k = 0; k < info_obj->package.count; ++k) {
-> +				for (k = 0; k < info_obj->package.count; k++) {
->   					union acpi_object *obj = &info_obj->package.elements[k];
->   
->   					list = &lpi_constraints_table[lpi_constraints_table_size];
-> @@ -214,7 +214,7 @@ static void lpi_device_get_constraints(void)
->   		if (!package)
->   			continue;
->   
-> -		for (j = 0; j < package->package.count; ++j) {
-> +		for (j = 0; j < package->package.count; j++) {
->   			union acpi_object *element =
->   					&(package->package.elements[j]);
->   
-> @@ -246,7 +246,7 @@ static void lpi_device_get_constraints(void)
->   
->   		constraint->min_dstate = -1;
->   
-> -		for (j = 0; j < package_count; ++j) {
-> +		for (j = 0; j < package_count; j++) {
->   			union acpi_object *info_obj = &info.package[j];
->   			union acpi_object *cnstr_pkg;
->   			union acpi_object *obj;
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308171155.o5viLJ3O-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/pci/controller/dwc/pcie-qcom.c:249:13: warning: 'qcom_pcie_opp_update' used but never defined
+     249 | static void qcom_pcie_opp_update(struct qcom_pcie *pcie);
+         |             ^~~~~~~~~~~~~~~~~~~~
+
+
+vim +/qcom_pcie_opp_update +249 drivers/pci/controller/dwc/pcie-qcom.c
+
+   247	
+   248	static void qcom_pcie_icc_update(struct qcom_pcie *pcie);
+ > 249	static void qcom_pcie_opp_update(struct qcom_pcie *pcie);
+   250	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
