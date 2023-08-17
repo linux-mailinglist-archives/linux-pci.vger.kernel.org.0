@@ -2,164 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0723677F398
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Aug 2023 11:37:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F35277F3E5
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Aug 2023 11:53:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349773AbjHQJhL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Aug 2023 05:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57572 "EHLO
+        id S1349097AbjHQJws (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Aug 2023 05:52:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349916AbjHQJgh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Aug 2023 05:36:37 -0400
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 950DB2724;
-        Thu, 17 Aug 2023 02:36:35 -0700 (PDT)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 37H9aMbv130389;
-        Thu, 17 Aug 2023 04:36:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1692264982;
-        bh=cM2v5idW6LPns03CXo999YFb/jfLx+ptnb6APGeD3xc=;
-        h=From:To:CC:Subject:Date;
-        b=JCpoUKTSRGM3I9svuYGs0nI+tSY9C83ZPgI4YIT+b4Mls6wBNs55eiR7Dg93VZB2C
-         YN8M0nrmEAOY8U7lQyCWcHLkfTBPTx6uQEUCEr83L/Fhp7hbUgfHXV4DcoGSuFMMde
-         HasRk0xKB45E/33Mi0GYhPDzeRcb0lamgZEgjH0s=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 37H9aM5T048780
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 17 Aug 2023 04:36:22 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 17
- Aug 2023 04:36:21 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 17 Aug 2023 04:36:21 -0500
-Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 37H9aK5Y007933;
-        Thu, 17 Aug 2023 04:36:20 -0500
-From:   Achal Verma <a-verma1@ti.com>
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof Wilczy_ski <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Achal Verma <a-verma1@ti.com>
-Subject: [PATCH v5] PCI: j721e: Delay T_PVPERL+TPERST_CLK before PERST# inactive
-Date:   Thu, 17 Aug 2023 15:06:19 +0530
-Message-ID: <20230817093619.1079267-1-a-verma1@ti.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S1349917AbjHQJwf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Aug 2023 05:52:35 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0BB12D70
+        for <linux-pci@vger.kernel.org>; Thu, 17 Aug 2023 02:52:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692265950; x=1723801950;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PJi/Q8dj4yi4on93hBoFYDWUTR8/2O0OdhVauE9vWLQ=;
+  b=IEtWiE0CBgytfyVkhUhesfjyMO9wyISJe7ZxhDrrtQ/puvigTill5u4t
+   zb1cjVlV3kCmykLLfYDNWuhQ+LdGpTffBRkJWh405A+hcn+3vsBhPp+f5
+   AEysr8NCEr8XhpWGWt5sLae9GU4XM8ny3UL74C68LU43dyrUWLI5LcpHC
+   ZGMlqeoX/yaBWp86Ip0bCSqkW5uUnCrvVxgLcVK8+iAyEZ2RnsxsUfYHd
+   QV4UHTVuW0ITEaCUpUKqEID7XYlZkIqSbGF2bQahWT2m2y4bv587V5gQ7
+   4Y5EeqHkYVQtbf+VrspM7mopQI4mWhWjggPEH+9mbkicHM3wiADogHOb4
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="352354084"
+X-IronPort-AV: E=Sophos;i="6.01,179,1684825200"; 
+   d="scan'208";a="352354084"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2023 02:52:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.01,202,1684825200"; 
+   d="scan'208";a="878158589"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Aug 2023 02:52:31 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qWZg1-005zrv-1u;
+        Thu, 17 Aug 2023 12:52:25 +0300
+Date:   Thu, 17 Aug 2023 12:52:25 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bartosz Pawlowski <bartosz.pawlowski@intel.com>,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        linux-pci@vger.kernel.org, bhelgaas@google.com,
+        sheenamo@google.com, justai@google.com, joel.a.gibson@intel.com,
+        emil.s.tantilov@intel.com, gaurav.s.emmanuel@intel.com,
+        mike.conover@intel.com, shaopeng.he@intel.com,
+        anthony.l.nguyen@intel.com, pavan.kumar.linga@intel.com
+Subject: Re: [PATCH 2/2] PCI: Disable ATS for specific Intel IPU E2000 devices
+Message-ID: <ZN3t2eYU09iW/4At@smile.fi.intel.com>
+References: <20230816172115.1375716-3-bartosz.pawlowski@intel.com>
+ <20230816173906.GA292642@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230816173906.GA292642@bhelgaas>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As per the PCIe Card Electromechanical specification REV. 5.0, PERST#
-signal should be de-asserted after minimum 100ms from the time power-rails
-achieve specified operating limits and 100us after reference clock gets
-stable.
+On Wed, Aug 16, 2023 at 12:39:06PM -0500, Bjorn Helgaas wrote:
+> On Wed, Aug 16, 2023 at 05:21:15PM +0000, Bartosz Pawlowski wrote:
+> > There is a HW issue in A and B steppings of Intel IPU E2000 that it
+> > expects wrong endianness in ATS invalidation message body. This problem
+> > can lead to outdated translations being returned as valid and finally
+> > cause system instability.
+> > 
+> > In order to prevent such issues introduce quirk_intel_e2000_no_ats()
+> > function to disable ATS for vulnerable IPU E2000 devices.
+> > 
+> > Signed-off-by: Bartosz Pawlowski <bartosz.pawlowski@intel.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Reviewed-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+> 
+> Andy, Alexander, would you please reiterate your reviewed-by on the
+> mailing list?  I try to avoid relying on internal reviews collected by
+> the author.  Those are great and I'm glad they happen, but it's good
+> if they also appear as part of the public conversation on the mailing
+> list.
 
-From PCIe Card Electromechanical specification REV. 5.0 section 2.9.2:
-TPVPERL: Power stable to PERST# inactive - 100ms
-TPERST_CLK: REFCLK stable before PERST# inactive - 100us
+They are legit for my name, I dunno what exactly you want to hear from me.
+The internal process of review requires these tags by default, it's hard
+to deviate from maintainer to maintainer.
 
-Fixes: f3e25911a430 ("PCI: j721e: Add TI J721E PCIe driver")
-Signed-off-by: Achal Verma <a-verma1@ti.com>
----
- drivers/pci/controller/cadence/pci-j721e.c | 30 +++++++++++-----------
- drivers/pci/pci.h                          |  3 +++
- 2 files changed, 18 insertions(+), 15 deletions(-)
+> > Intel Technology Poland sp. z o.o.
+> > ul. Slowackiego 173 | 80-298 Gdansk | Sad Rejonowy Gdansk Polnoc | VII Wydzial Gospodarczy Krajowego Rejestru Sadowego - KRS 101882 | NIP 957-07-52-316 | Kapital zakladowy 200.000 PLN.
+> > Spolka oswiadcza, ze posiada status duzego przedsiebiorcy w rozumieniu ustawy z dnia 8 marca 2013 r. o przeciwdzialaniu nadmiernym opoznieniom w transakcjach handlowych.
+> > 
+> > Ta wiadomosc wraz z zalacznikami jest przeznaczona dla okreslonego adresata i moze zawierac informacje poufne. W razie przypadkowego otrzymania tej wiadomosci, prosimy o powiadomienie nadawcy oraz trwale jej usuniecie; jakiekolwiek przegladanie lub rozpowszechnianie jest zabronione.
+> > This e-mail and any attachments may contain confidential material for the sole use of the intended recipient(s). If you are not the intended recipient, please contact the sender and delete all copies; any review or distribution by others is strictly prohibited.
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index e70213c9060a..b09924b010ab 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -34,6 +34,8 @@
- #define J721E_PCIE_USER_LINKSTATUS	0x14
- #define LINK_STATUS			GENMASK(1, 0)
- 
-+#define PERST_INACTIVE_US (PCIE_TPVPERL_MS*USEC_PER_MSEC + PCIE_TPERST_CLK_US)
-+
- enum link_status {
- 	NO_RECEIVERS_DETECTED,
- 	LINK_TRAINING_IN_PROGRESS,
-@@ -359,7 +361,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 	struct j721e_pcie *pcie;
- 	struct cdns_pcie_rc *rc = NULL;
- 	struct cdns_pcie_ep *ep = NULL;
--	struct gpio_desc *gpiod;
-+	struct gpio_desc *perst_gpiod;
- 	void __iomem *base;
- 	struct clk *clk;
- 	u32 num_lanes;
-@@ -468,11 +470,10 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 
- 	switch (mode) {
- 	case PCI_MODE_RC:
--		gpiod = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
--		if (IS_ERR(gpiod)) {
--			ret = PTR_ERR(gpiod);
--			if (ret != -EPROBE_DEFER)
--				dev_err(dev, "Failed to get reset GPIO\n");
-+		perst_gpiod = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-+		if (IS_ERR(perst_gpiod)) {
-+			ret = PTR_ERR(perst_gpiod);
-+			dev_err(dev, "Failed to get reset GPIO\n");
- 			goto err_get_sync;
- 		}
- 
-@@ -498,16 +499,15 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 
- 		/*
- 		 * "Power Sequencing and Reset Signal Timings" table in
--		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
--		 * indicates PERST# should be deasserted after minimum of 100us
--		 * once REFCLK is stable. The REFCLK to the connector in RC
--		 * mode is selected while enabling the PHY. So deassert PERST#
--		 * after 100 us.
-+		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 5.0
-+		 * indicates PERST# should be deasserted after minimum of 100ms
-+		 * after power rails achieve specified operating limits and
-+		 * 100us after reference clock gets stable.
-+		 * PERST_INACTIVE_US accounts for both delays.
- 		 */
--		if (gpiod) {
--			usleep_range(100, 200);
--			gpiod_set_value_cansleep(gpiod, 1);
--		}
-+
-+		fsleep(PERST_INACTIVE_US);
-+		gpiod_set_value_cansleep(perst_gpiod, 1);
- 
- 		ret = cdns_pcie_host_setup(rc);
- 		if (ret < 0) {
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index a4c397434057..80d520be34e6 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -13,6 +13,9 @@
- 
- #define PCIE_LINK_RETRAIN_TIMEOUT_MS	1000
- 
-+#define PCIE_TPVPERL_MS		100	/* see PCIe CEM r5.0, sec 2.9.2 */
-+#define PCIE_TPERST_CLK_US	100
-+
- extern const unsigned char pcie_link_speed[];
- extern bool pci_early_dump;
- 
+What really needs to be dropped is the footer.
+Bartosz, consult with the internal resources on how to get rid of it.
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
