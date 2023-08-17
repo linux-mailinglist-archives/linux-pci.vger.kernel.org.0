@@ -2,154 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC44B77F7D2
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Aug 2023 15:35:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 112B877FAB9
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Aug 2023 17:29:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351521AbjHQNeu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Aug 2023 09:34:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45120 "EHLO
+        id S244444AbjHQP2p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Aug 2023 11:28:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351508AbjHQNea (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Aug 2023 09:34:30 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22E8D125;
-        Thu, 17 Aug 2023 06:34:29 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-5280ef23593so536960a12.3;
-        Thu, 17 Aug 2023 06:34:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692279267; x=1692884067;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JR0Q0d09hsKTDKbYA0pjf4pzrGdAoGkqv4iO4jpul4I=;
-        b=AbcKmlqeyGsSF/u8D5HOpGj/IEmB2NzJ8HHpFlEBNEQ2vJ0SCZHQa9EG9+3BOw36gh
-         tvlBhyAKc46muuBZcE84F+fl018ZhsfmNVxoLf3QKyGZSu4HPsSWOPwxeIzyik17Mx23
-         9r1MuF5ehJHYXRD9mDq7wlmgnDvFnJwJkHXVRHXMYBiq8LXPzRV6EiVJs9yzp4Xw09NO
-         I4MytnE5UqT6ufIQdxJ7L62SutQTxIzSDSkdaJxUURD+hE3gbz3jfc6YB6gVolS0pamq
-         tEwoE8ATPrAexOCCFJOoEp5H9Ds+caG0ChbsijeA7QOeOAM0nVPvSAaMj/FYye0csQIZ
-         VNOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692279267; x=1692884067;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JR0Q0d09hsKTDKbYA0pjf4pzrGdAoGkqv4iO4jpul4I=;
-        b=k5Hn8Wuw11YjqmDB4xgqYE8tKhCbJP0WCj0YKI8UI5sdzfNrpesYkIWoSr5Eszs+fO
-         WU8r/wEhMou+UUTAcsV9M5dH3+0Q6U0tYZMZv6Ma47iqHuo9wt4uc/+IGuflVA762xw7
-         msThbTulSsdDsPhIRr9SlWqxteT6+6Ur7uXyjWrtvbH5VClCo+GKo1UwEDiYL8whh0gq
-         CLV21njjiV7SwO+lTYbHKqD7zLkwioTLplqtWyHv7fxA0Mn7z05eMOXRRw3+48mEvW/t
-         0hKOevAXiD+RfQjxBsrqBG2JOA+Okod0+/zIMVL8UvmKu/UAVs5er9gzWy7xEkhJys6k
-         d32Q==
-X-Gm-Message-State: AOJu0YwqVl1hCQmpnzO/DNNXue0Tq8Z5kZgiaWzRAjJKU98BuqY6hWbu
-        SwPa1fP3++2kBx4h3Ip0cXs=
-X-Google-Smtp-Source: AGHT+IH0NYrAIF80Ft5V6M0HW4OOQ/tqZky3HFMVT64UREfIeJb7VFg6HoBjKY3mhepnvtjU4h4VYQ==
-X-Received: by 2002:a50:e70b:0:b0:523:38ea:48bb with SMTP id a11-20020a50e70b000000b0052338ea48bbmr4142072edn.24.1692279267291;
-        Thu, 17 Aug 2023 06:34:27 -0700 (PDT)
-Received: from A13PC04R.einet.ad.eivd.ch ([193.134.219.72])
-        by smtp.googlemail.com with ESMTPSA id n4-20020aa7d044000000b00523eff8f3eesm7934963edo.80.2023.08.17.06.34.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Aug 2023 06:34:26 -0700 (PDT)
-From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
-To:     rick.wertenbroek@heig-vd.ch
-Cc:     dlemoal@kernel.org, Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: endpoint: Return error code when callback is not implemented
-Date:   Thu, 17 Aug 2023 15:33:41 +0200
-Message-Id: <20230817133341.212747-1-rick.wertenbroek@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S1353206AbjHQP2b (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Aug 2023 11:28:31 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B478419A1;
+        Thu, 17 Aug 2023 08:28:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692286109; x=1723822109;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WAN7gFFX+EQnFjTTs/RO+AHy6uW7VHGPY/LGIkShE8o=;
+  b=b09Npq7u8DtA7Z54YUufGh7rr3z1j4alLso486J57tynW+UFHQ0OWS4p
+   i72tohSJZWs31pKKdqrqESpQbKSuGjVtWBfgQ9rlQooHbLiuVluWue2F9
+   cpPiuYAhoC7X0N/sZOzV6BCOAXHUxNFG/YxO1nFYIADRhqaR3f8c6fQPV
+   jtJ1Ml6U9qNbCo93akA6HDHW+u+AJ3XWB+crsRtrv4QsEmwPLFoI4Z2NV
+   hJ1FI/fVov7o7teEruLED5Z2qKpuAeQ/twaeRHBJAcV2BYCcWsx0AhqJR
+   uOVXfIIPtie3TbS60JzVgbxxamvMBWUSk+0ofTFluWj0xWJkhUVnF8JtI
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10805"; a="436760079"
+X-IronPort-AV: E=Sophos;i="6.01,180,1684825200"; 
+   d="scan'208";a="436760079"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2023 08:28:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10805"; a="981223064"
+X-IronPort-AV: E=Sophos;i="6.01,180,1684825200"; 
+   d="scan'208";a="981223064"
+Received: from orparaju-mobl2.amr.corp.intel.com (HELO [10.212.148.199]) ([10.212.148.199])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2023 08:28:08 -0700
+Message-ID: <78b8e5bc-9147-4c07-acfc-d653cfe2d1a1@linux.intel.com>
+Date:   Thu, 17 Aug 2023 08:28:09 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 3/9] ACPI: x86: s2idle: Post-increment variables when
+ getting constraints
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mario Limonciello <mario.limonciello@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Iain Lane <iain@orangesquash.org.uk>,
+        Shyam-sundar S-k <Shyam-sundar.S-k@amd.com>
+References: <20230816204143.66281-1-mario.limonciello@amd.com>
+ <20230816204143.66281-4-mario.limonciello@amd.com>
+ <404044b2-8e7a-4420-9c10-b2ca75d7e3aa@linux.intel.com>
+ <ZN3yE3V8Ni8uJMse@smile.fi.intel.com>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <ZN3yE3V8Ni8uJMse@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Return an error code when the callback for an endpoint controller
-function is not implemented (is null). Among all the functions, only
-map_msi_irq() had an error returned if the callback was null. Extend
-this error handling to other functions as well.
 
-Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
----
- drivers/pci/endpoint/pci-epc-core.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index 5a4a8b0be626..14f4256b9410 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -196,7 +196,7 @@ int pci_epc_start(struct pci_epc *epc)
- 		return -EINVAL;
- 
- 	if (!epc->ops->start)
--		return 0;
-+		return -EINVAL;
- 
- 	mutex_lock(&epc->lock);
- 	ret = epc->ops->start(epc);
-@@ -228,7 +228,7 @@ int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 		return -EINVAL;
- 
- 	if (!epc->ops->raise_irq)
--		return 0;
-+		return -EINVAL;
- 
- 	mutex_lock(&epc->lock);
- 	ret = epc->ops->raise_irq(epc, func_no, vfunc_no, type, interrupt_num);
-@@ -340,7 +340,7 @@ int pci_epc_set_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no, u8 interrupts)
- 		return -EINVAL;
- 
- 	if (!epc->ops->set_msi)
--		return 0;
-+		return -EINVAL;
- 
- 	encode_int = order_base_2(interrupts);
- 
-@@ -408,7 +408,7 @@ int pci_epc_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 		return -EINVAL;
- 
- 	if (!epc->ops->set_msix)
--		return 0;
-+		return -EINVAL;
- 
- 	mutex_lock(&epc->lock);
- 	ret = epc->ops->set_msix(epc, func_no, vfunc_no, interrupts - 1, bir,
-@@ -469,7 +469,7 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 		return -EINVAL;
- 
- 	if (!epc->ops->map_addr)
--		return 0;
-+		return -EINVAL;
- 
- 	mutex_lock(&epc->lock);
- 	ret = epc->ops->map_addr(epc, func_no, vfunc_no, phys_addr, pci_addr,
-@@ -537,7 +537,7 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 		return -EINVAL;
- 
- 	if (!epc->ops->set_bar)
--		return 0;
-+		return -EINVAL;
- 
- 	mutex_lock(&epc->lock);
- 	ret = epc->ops->set_bar(epc, func_no, vfunc_no, epf_bar);
-@@ -575,7 +575,7 @@ int pci_epc_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 		return -EINVAL;
- 
- 	if (!epc->ops->write_header)
--		return 0;
-+		return -EINVAL;
- 
- 	mutex_lock(&epc->lock);
- 	ret = epc->ops->write_header(epc, func_no, vfunc_no, header);
+On 8/17/2023 3:10 AM, Andy Shevchenko wrote:
+> On Wed, Aug 16, 2023 at 07:42:19PM -0700, Kuppuswamy Sathyanarayanan wrote:
+>> On 8/16/2023 1:41 PM, Mario Limonciello wrote:
+> 
+> ...
+> 
+>> Reviewed-by: Kuppuswamy Sathyanarayanan
+>> <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> It's not the first time your tag gets broken. Can you fix it?
+> 
+
+Sorry, changed the system recently and did not re-configure the email
+client settings. I hope it is fixed now.
+
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
 -- 
-2.25.1
-
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
