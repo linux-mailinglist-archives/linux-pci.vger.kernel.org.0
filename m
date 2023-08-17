@@ -2,101 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E15077FB3C
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Aug 2023 17:53:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83B0D77FC78
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Aug 2023 19:05:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353350AbjHQPxZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Aug 2023 11:53:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40796 "EHLO
+        id S1353806AbjHQREh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Aug 2023 13:04:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353346AbjHQPw4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Aug 2023 11:52:56 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A3C130D1;
-        Thu, 17 Aug 2023 08:52:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692287575; x=1723823575;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8pyoYWpEbN8fAeydCcQAWOOE9Rlz6EBq69dDlZGJ2is=;
-  b=m027MSZv/siKpF1arMcmDsjZ/jO6w0cCnTnZtR6PKJZ+o/2Ozn4Iq3FA
-   QU8MDfOD4wt560z5fyhO1owKN0k7WJ0EhBn9RQN2Ejr7iVbRcTvauILBg
-   LeYDYg0nVQHBz+jl4k4B7xOYkFjrNERHsxjxDr0MSly9tmIulLIXMK8q6
-   lv0CaR8PapBTRsXGNv1zSt8Vkw1Iq98kqkVamaoEy8slTlP1TZ/0NpRg2
-   D1b3i2MypnnzDbaEmTS6B4HjuGLwPZEtXf+yG/ZJCFDzxQFa8o9tqauRY
-   hUoC67o72VrCarWjP2XUpZW5zEVYOQntkZvVZ4VapD6tOVs9Jxl3ul+Us
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10805"; a="370315140"
-X-IronPort-AV: E=Sophos;i="6.01,180,1684825200"; 
-   d="scan'208";a="370315140"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2023 08:52:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10805"; a="981233364"
-X-IronPort-AV: E=Sophos;i="6.01,180,1684825200"; 
-   d="scan'208";a="981233364"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Aug 2023 08:52:52 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qWfIo-000jtM-1f;
-        Thu, 17 Aug 2023 18:52:50 +0300
-Date:   Thu, 17 Aug 2023 18:52:50 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Mario Limonciello <mario.limonciello@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Iain Lane <iain@orangesquash.org.uk>,
-        Shyam-sundar S-k <Shyam-sundar.S-k@amd.com>
-Subject: Re: [PATCH v12 3/9] ACPI: x86: s2idle: Post-increment variables when
- getting constraints
-Message-ID: <ZN5CUqxW1ATR7QF8@smile.fi.intel.com>
-References: <20230816204143.66281-1-mario.limonciello@amd.com>
- <20230816204143.66281-4-mario.limonciello@amd.com>
- <404044b2-8e7a-4420-9c10-b2ca75d7e3aa@linux.intel.com>
- <ZN3yE3V8Ni8uJMse@smile.fi.intel.com>
- <78b8e5bc-9147-4c07-acfc-d653cfe2d1a1@linux.intel.com>
+        with ESMTP id S1353815AbjHQREW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Aug 2023 13:04:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 944A630C2;
+        Thu, 17 Aug 2023 10:04:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3260961F16;
+        Thu, 17 Aug 2023 17:04:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FA81C433C7;
+        Thu, 17 Aug 2023 17:04:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692291859;
+        bh=IUsc1dlDugnr6ByC8ySX3bNJAeDpRdUJA6/XtcW0ZB4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=r3Z+lRPlDnQqU2+3I3DThI66ZNzutA3ShL/STD5dNv27ogS7aOGEkI4XbDU3KrkdM
+         uoaavOVO4f2S2hnn1PmSNNovQbcXWx+JtMz0ygn+/JM2GQs/Ih3Q8iQHTZJJ4Ws8bA
+         bPZnHSQBoV61Ex+Yerm+n9IV5e+emUPUe875OxlHqhxi4dLbK/o4Jp2CgRL5JB0XBm
+         ffx4cBNoUhk4VrX3EncBVzVt19n/z8p2XXV8TFPSzEcsYVwhpiJS+xugEHhLEJfJeB
+         BiLNr7ufNOncsadja8vx/OZ+xmxKlZkwgBzS4vIITOg3/UxGoWkwFgB+BkRrUK/TuQ
+         SVzxTAX3PmmOQ==
+Date:   Thu, 17 Aug 2023 12:04:17 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Achal Verma <a-verma1@ti.com>
+Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof Wilczy_ski <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] PCI: j721e: Add support to build pci-j721e as a
+ kernel module
+Message-ID: <20230817170417.GA320486@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <78b8e5bc-9147-4c07-acfc-d653cfe2d1a1@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20230817120823.1158766-3-a-verma1@ti.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 17, 2023 at 08:28:09AM -0700, Kuppuswamy Sathyanarayanan wrote:
-> On 8/17/2023 3:10 AM, Andy Shevchenko wrote:
-> > On Wed, Aug 16, 2023 at 07:42:19PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> >> On 8/16/2023 1:41 PM, Mario Limonciello wrote:
+On Thu, Aug 17, 2023 at 05:38:23PM +0530, Achal Verma wrote:
+> pci-j721e driver can be build as a in-built kernel driver only, which is
+> not required as it is not used during boot time in most cases.
+> This change add support to build pci-j721e as a kernel loadable module.
+>=20
+> J721e PCIe controller can work in both host mode and end-point mode.
+> In order to enable host mode driver and endpoint driver to be built
+> independently either as built-in or kernel module, the pcie-j721e.c driver
+> is refactored into following components:
+>=20
+> 1) pci-j721e-host.c: Driver used when PCIe controller has to be
+> initialized in host mode.
+>=20
+> 2) pci-j721e-ep.c: Driver used when PCIe controller has to be
+> initialized in endpoint mode.
+>=20
+> 3) pci-j721e.c: contains common code required in both modes.
 
-...
+Sounds like at least two commits (I'm not sure what the best order
+would be):
 
-> >> Reviewed-by: Kuppuswamy Sathyanarayanan
-> >> <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > 
-> > It's not the first time your tag gets broken. Can you fix it?
-> > 
-> 
-> Sorry, changed the system recently and did not re-configure the email
-> client settings. I hope it is fixed now.
-> 
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+  1) Split into separate host mode and endpoint mode drivers
 
-Seems good to me, thank you!
+  2) Make both drivers tristate
 
--- 
-With Best Regards,
-Andy Shevchenko
+It looks like you implement both module loading and removal.  Do we
+now think removal of these modules is safe?  IIRC there used to be a
+question related to irq_desc lifetimes, e.g., there's some discussion
+here: https://lore.kernel.org/linux-pci/87k085xekg.wl-maz@kernel.org/
 
+The ability to *load* drivers as modules is definitely useful.  The
+ability to *remove* them is useful for developers but not really
+useful for users.
 
+But I guess j721e_pcie_remove() already exists, so maybe you're not
+changing anything as far as irq_desc lifetimes=06
+
+Since you're splitting into new files, maybe this is an opportunity to
+fix my naming mistake of suggesting a "pci-" prefix instead of
+"pcie-"?
+
+Bjorn
+
+>  config PCI_J721E_HOST
+> -	bool "TI J721E PCIe controller (host mode)"
+> +	tristate "TI J721E PCIe controller (host mode)"
+>  	depends on OF
+>  	select PCIE_CADENCE_HOST
+>  	select PCI_J721E
+> @@ -56,7 +56,7 @@ config PCI_J721E_HOST
+>  	  core.
+> =20
+>  config PCI_J721E_EP
+> -	bool "TI J721E PCIe controller (endpoint mode)"
+> +	tristate "TI J721E PCIe controller (endpoint mode)"
+>  	depends on OF
+>  	depends on PCI_ENDPOINT
+>  	select PCIE_CADENCE_EP
+
+> +static struct platform_driver j721e_pcie_ep_driver =3D {
+> +	.probe  =3D j721e_pcie_probe,
+> +	.remove_new =3D j721e_pcie_remove,
+> +	.driver =3D {
+> +		.name	=3D "j721e-pcie-ep",
+> +		.of_match_table =3D of_j721e_pcie_ep_match,
+> +		.suppress_bind_attrs =3D true,
+> +	},
+> +};
+
+> +static struct platform_driver j721e_pcie_host_driver =3D {
+> +	.probe  =3D j721e_pcie_probe,
+> +	.remove_new =3D j721e_pcie_remove,
+> +	.driver =3D {
+> +		.name	=3D "j721e-pcie-host",
+> +		.of_match_table =3D of_j721e_pcie_host_match,
+> +		.suppress_bind_attrs =3D true,
+> +	},
+> +};
