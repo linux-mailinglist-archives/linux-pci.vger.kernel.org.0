@@ -2,107 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8371780825
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Aug 2023 11:20:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E688678088C
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Aug 2023 11:33:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352902AbjHRJUS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Aug 2023 05:20:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56568 "EHLO
+        id S1353467AbjHRJdL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Aug 2023 05:33:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359020AbjHRJTl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Aug 2023 05:19:41 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED6043A82
-        for <linux-pci@vger.kernel.org>; Fri, 18 Aug 2023 02:19:39 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-991c786369cso85271566b.1
-        for <linux-pci@vger.kernel.org>; Fri, 18 Aug 2023 02:19:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692350378; x=1692955178;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DY8KEU42wJyONdvFAuAwtQpgN/LqKQPJnRBi7LCo0Jw=;
-        b=PGCZDux2vtV7ztu4QilXBDEBove9IzsV9bl/zTfi31T6aTBe71Vb1BXL5UTCJNwAvH
-         cFidTdHFSiaLUP+m+db/JpNKcXmUy/60trAlwsWokAy7/+5n38qmS/NUgRQ9lCZuQoFM
-         T/3KbwyjXEstRavj7uXJb3yXZL4/TuStlvWVvtjkU2RUwP5GV1QZh7riYtq+y7PXhb/B
-         ezlGCmkrUsVVr3SWhNe9CdvyFuK1n+0M622BRRU0c1Wac/rxtEiPt2zWGJ+T+eQFGxAM
-         rGNNbgbmSlewKRSOfu0ubc/S9tM5+u6MWBW9usCMVQ0XZULry+Auq4oNKgXGsjURb2HI
-         lElw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692350378; x=1692955178;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DY8KEU42wJyONdvFAuAwtQpgN/LqKQPJnRBi7LCo0Jw=;
-        b=HWhNfzJ+UcmmCcL8rZsa5whvHsUIX6kO6V3tYsXrKfA+jAgzexOEzVUyxq2fwRa6nP
-         iTs+oI0CX9U2/XUggO+XHyqs9P2+l/tZl1kDlwGcpehGwz5ZfDCvm2R18fAnEzItvlcq
-         pI3HJUYtX4J4rF/oHRxZLKWP/O0nt7A6B6XCR5uz1J8TmN2VMofiskAiTVxE0Vx0gIRl
-         HolBajqUJyIfxMBUAVuJadHP+66v5PcNNrniR8b703iyQ1gUze70dS9iTTjMffG200q4
-         3CEP2++rYI8TI2L0mC9t/K9DU04tOjgPKbOANGF1gYWXJMfMu3aFKPEJHpXvgVfV4Shu
-         T1hw==
-X-Gm-Message-State: AOJu0YzgwzH5Y30Gf0f49mt2Qi08KW54r7FH4TVYOHWRz9ci+X463bfy
-        Ds3CTyVmzpFpKQh0PYQrIB5Yhw==
-X-Google-Smtp-Source: AGHT+IHBgmT3LP7egpVe8pisvlD08m+U3szA9+vzZ9fLwy3b5TghIPmErMjDWF2xtxDtB8hW1zNRbQ==
-X-Received: by 2002:a17:906:7395:b0:992:d013:1131 with SMTP id f21-20020a170906739500b00992d0131131mr1663697ejl.52.1692350378359;
-        Fri, 18 Aug 2023 02:19:38 -0700 (PDT)
-Received: from [192.168.0.22] ([77.252.47.198])
-        by smtp.gmail.com with ESMTPSA id jw11-20020a17090776ab00b0099d0a8ccb5fsm941471ejc.152.2023.08.18.02.19.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Aug 2023 02:19:37 -0700 (PDT)
-Message-ID: <05550eda-d95a-6847-ad5d-cdc64b7f4bbd@linaro.org>
-Date:   Fri, 18 Aug 2023 11:19:36 +0200
+        with ESMTP id S1359249AbjHRJca (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Aug 2023 05:32:30 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8A3BB3C24;
+        Fri, 18 Aug 2023 02:31:59 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8BxIvCOOt9k89QZAA--.52310S3;
+        Fri, 18 Aug 2023 17:31:58 +0800 (CST)
+Received: from [10.20.42.43] (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax98x3Ot9kTIJdAA--.12208S3;
+        Fri, 18 Aug 2023 17:31:55 +0800 (CST)
+Message-ID: <8ffb3525-487e-20b3-4024-66470f1407f1@loongson.cn>
+Date:   Fri, 18 Aug 2023 17:31:34 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v2 1/3] dt-bindings: pci: qcom: Add opp table
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v4] PCI/VGA: Make the vga_is_firmware_default() less
+ arch-dependent
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        loongson-kernel@lists.loongnix.cn, linux-pci@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+References: <20230817220853.GA328159@bhelgaas>
 Content-Language: en-US
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        manivannan.sadhasivam@linaro.org
-Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
-        quic_parass@quicinc.com, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <1692192264-18515-1-git-send-email-quic_krichai@quicinc.com>
- <1692192264-18515-2-git-send-email-quic_krichai@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <1692192264-18515-2-git-send-email-quic_krichai@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+From:   suijingfeng <suijingfeng@loongson.cn>
+In-Reply-To: <20230817220853.GA328159@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8Ax98x3Ot9kTIJdAA--.12208S3
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7JryDGFy5WrWDXrWfZw17XFc_yoWDWrX_CF
+        W3GFW5C3y8CFsYqa1rGFsxCFn0k39xZF1rZF10qrnFva4rG3Z8Xa92g3s2vr1rJFWFkrnF
+        9Fy7Grn5X342gosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+        s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+        cSsGvfJTRUUUbS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+        vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+        w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+        WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+        6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+        xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+        6r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+        1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+        JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+        vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IY
+        x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+        xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
+        wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jFE__UUUUU=
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 16/08/2023 15:24, Krishna chaitanya chundru wrote:
-> PCIe needs to choose the appropriate performance state of RPMH power
-> domain based upon the PCIe gen speed.
-> 
-> Adding the Operating Performance Points table allows to adjust power domain
-> performance state, depending on the PCIe gen speed.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
+Hi,
 
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+On 2023/8/18 06:08, Bjorn Helgaas wrote:
+>> This patch makes the vga_is_firmware_default() function works on whatever
+>> arch that has UEFI GOP support. But we make it available only on platforms
+>> where PCI resource relocation happens. if the provided method proves to be
+>> effective and reliable, it can be expanded to other arch easily.
+>>
+>> v2:
+>> 	* Fix test robot warnnings and fix typos
+>>
+>> v3:
+>> 	* Fix linkage problems if the global screen_info is not exported
+>>
+>> v4:
+>> 	* Handle linkage problems by hiding behind of CONFIG_SYSFB,
+>> 	* Drop side-effects and simplify.
+> The v2, v3, v4 changelog is nice, but we don't need it in the commit
+> log itself, where it will become part of the git history.  It should
+> go in a cover letter or after the "---" marker:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.0#n678
 
-Best regards,
-Krzysztof
+Thanks for point it out, now I know. Will be fixed at the next version.
 
