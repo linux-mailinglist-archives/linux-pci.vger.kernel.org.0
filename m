@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5585780588
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Aug 2023 07:16:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AECC780584
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Aug 2023 07:16:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356858AbjHRFPy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Aug 2023 01:15:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37662 "EHLO
+        id S1356102AbjHRFPu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Aug 2023 01:15:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356531AbjHRFPX (ORCPT
+        with ESMTP id S1356521AbjHRFPX (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Aug 2023 01:15:23 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2085.outbound.protection.outlook.com [40.107.237.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38ED2171C;
-        Thu, 17 Aug 2023 22:15:11 -0700 (PDT)
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2050.outbound.protection.outlook.com [40.107.94.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFDED26A8;
+        Thu, 17 Aug 2023 22:15:12 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bFM2lKq+eYovLZxKCMioy2+K9/r5Y7AbZwtP23aSTwpzp9KqcoGhHLaLg5AvdJBqvA0/PkJd1JsZ1IBQmsU4FTNvtxM+kAO0GsgNSSmCFCHTMGjbLoaBPskaAmkfmrYO0YhvnFsqk4A462AS3nQgN6Kk3eeDafuQJJNJx76g1XDkMX6//r5a9aujfcm4VOzW2qKPu1VRb2JXn8iOmHGpsML0ngtbUoVcL5nLmDrhzLoNuWUiDthsmsDhfIAhVHz9+LFEd2rmZPR7P3U0Y8ALgfCaH+vrc6mUEgGhQqYIwyG5v831YlTgBehbB5i4Eza7aax2Tfdxw6sZqZqp4irBkw==
+ b=fLQ7ed/+00mE+7yMQAXAwTOmM3HSt+L0/q+apUkPQnZDMCE0Rhj/AoPCeRDeHmD7kUmWtbMoRJIXH7UpQE8VeFqCvQeroelO9rS6AwMXmscL+SpAEafP89LLFBYRRMu6nTvV1RlBXJatSci54be+8su5Ozbw5sFvaUZqc6A2AjtDEZCBPj3byWFZciEyjfGSSDK2KHPULv1KBhWfRmOs1ve5PC3RxeL4DYG8bWXw7A5B8I8G7OXrx25CPXWFtlus94peOPtqh7YHa7zJBvOOlCrknVeTbwfTQhtCp+sJWNg2TDSrzaOSHF9dqs6nSUJP+vO6kKLpGtcbyed22BGtCg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=p8t9dWr3SYEGcReSvoWYqCJ1XUDQSml1FxGQjktYRqU=;
- b=eUMa2BEvCKK3N3rhTkig5SCJOr9UwLYz7uy3CkKnjDylWTehChKQ2rJY2j3eW3nqzKYe1oVJEP4gQZjB2Pi7ZposoZbFsT087hfMfGTZHrGqHxVza4ZCmx9t87sRw1eD5A/kVe3gUR4doDUDCvw5J8XF3geLbmlUn7q8gfoEgPCtC/2N6RjSLCSYnYOepZCFGP0UMOWY2YCaTkt7nRUF9LHEZX9fVN+4JYBzoilL+v66YlDFEvPYyQtyo+zrBNFy66XF4jHfnqKzlzxD7HJt3tuAAM94EOhn4/Boj4uRzMDx1Z71DDcVMGvxCvCxHNcYtVCvpN6vucT5AoBxp9QZpg==
+ bh=4/GLBpTALHfSqTaJk2XKOp4/BksOjAi5Q1lEo7YK8fw=;
+ b=Qt1N2qjcQWW4+fcEXKHq9fGg7WwhLwkw3+gVGaPpPKgn6DdGOddKxAUGmh62tOpzcvfhC3TVqRDZglj96ccGZeeEeR9t0IVHex2yZtXcQCPXS1LED7yuqia9qnBgUFOhp+/NF5gmf5lJG29Oq4e9lvV4QlJUO4R1Ptr4R2J4aveHs2qkYMXfUa0s1vn69j9qqUOZ0A3H3AF9uN9PJAF8JX4PYdvm67/K3dD1x79J4cRN4s1tuq2ZG0y4SMoBAYU/Br51/NKQljMWUFDV2L2E32WeiIVvdsfwJHOCg2He0q90CTLBK8ArvxAplMDKUEargDolgt3/A+4xChI+zarFVw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p8t9dWr3SYEGcReSvoWYqCJ1XUDQSml1FxGQjktYRqU=;
- b=2YdYBYTB38EjdRFCLoR/R+29AnbvQxfOvDIjV4BMBwcOZZBlz5LMwig89OqzKy7PZrB4EzuRS0iAWuYo6346JjZeLRjzdNfkjOlo9/eQOLoSQzkJEIJ2oJJ2AFBk77Ty1PyuNdMf08lEDhou7LkyHAaqJ/rNjgSOP24fGuCvMzQ=
-Received: from SN7PR04CA0195.namprd04.prod.outlook.com (2603:10b6:806:126::20)
- by CH0PR12MB5385.namprd12.prod.outlook.com (2603:10b6:610:d4::14) with
+ bh=4/GLBpTALHfSqTaJk2XKOp4/BksOjAi5Q1lEo7YK8fw=;
+ b=QMdR7UtsS9SkEuYWerrBs9Er0gph2R8TNS9seFkylWXWiHR1ossAvJCc3HErvhTLXC+NZwJ2mrDqJMnA+CWh5qxLtPCJ8kQrtBB5WfVBvuOnr1TgDdTSpxIe5S6pPj7Vna2fM9BFlDeu44EExE3FEGZB7JPPzJ50nfD644nxnyE=
+Received: from SN7PR04CA0206.namprd04.prod.outlook.com (2603:10b6:806:126::31)
+ by SJ0PR12MB6712.namprd12.prod.outlook.com (2603:10b6:a03:44e::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.31; Fri, 18 Aug
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.26; Fri, 18 Aug
  2023 05:15:08 +0000
 Received: from SN1PEPF0002636C.namprd02.prod.outlook.com
- (2603:10b6:806:126:cafe::c) by SN7PR04CA0195.outlook.office365.com
- (2603:10b6:806:126::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.17 via Frontend
- Transport; Fri, 18 Aug 2023 05:15:07 +0000
+ (2603:10b6:806:126:cafe::51) by SN7PR04CA0206.outlook.office365.com
+ (2603:10b6:806:126::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.20 via Frontend
+ Transport; Fri, 18 Aug 2023 05:15:08 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,11 +48,11 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  SN1PEPF0002636C.mail.protection.outlook.com (10.167.241.137) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6699.15 via Frontend Transport; Fri, 18 Aug 2023 05:15:07 +0000
+ 15.20.6699.15 via Frontend Transport; Fri, 18 Aug 2023 05:15:08 +0000
 Received: from SITE-L-T34-2.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 18 Aug
- 2023 00:15:04 -0500
+ 2023 00:15:06 -0500
 From:   Mario Limonciello <mario.limonciello@amd.com>
 To:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -65,9 +65,9 @@ CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         "Iain Lane" <iain@orangesquash.org.uk>,
         Shyam-sundar S-k <Shyam-sundar.S-k@amd.com>,
         Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v13 10/12] PCI: ACPI: Add helper functions for converting ACPI <->PCI states
-Date:   Fri, 18 Aug 2023 00:13:17 -0500
-Message-ID: <20230818051319.551-11-mario.limonciello@amd.com>
+Subject: [PATCH v13 11/12] PCI: ACPI: Use device constraints to opt devices into D3 support
+Date:   Fri, 18 Aug 2023 00:13:18 -0500
+Message-ID: <20230818051319.551-12-mario.limonciello@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230818051319.551-1-mario.limonciello@amd.com>
 References: <20230818051319.551-1-mario.limonciello@amd.com>
@@ -79,23 +79,23 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002636C:EE_|CH0PR12MB5385:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3d003abc-7830-48d6-a769-08db9faa16cc
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002636C:EE_|SJ0PR12MB6712:EE_
+X-MS-Office365-Filtering-Correlation-Id: c3d6738d-c21b-47c6-059f-08db9faa172c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PbSi6u2RVLgUPs5dbR+6mJ+DkAXfnywjmcEwmNGLhELH5V5Fs67YPINOK/hcUIXCXzXn4MnmNZUXI6qTEr8qMuLKnUEeTsU1OarQJpQ5DZIwebPaz9QVNsJL+yYtYBGebwoc4SSHW7LhCXObO1ECZbSF87D4XaWIv6mOtUN7b4FPEoQXxmuoNwgwRBJWW2GxCqS0VU63XFgpBt0T/+ODn1+J07/4yUJEz3bvTuMj+zK156oc0eWP/K73VyhFr+hVJCWPyJ0FRGtUUDmYnk1a7SFfQwKdpPCh6ZYtElqXISEbR4bVnfCIo1hH//h47ob5d6+ZXYS16DASvbc4SwrjNk9Vos2ZQM6pmSuqEyqs3c9BjkXPeita+XTCd7eKTST4T2Pyt+ugToxFj2xPjazICZ5hVGLU9sat3uA//rO0U+4xEyMwiA12JADcdw/eAYjfyUdi/g8rzvAngtAXuZ3GAt+PQLvJI8+asq/KXQYkKcUS7KgIotCl0gCZAcX3jnzM0XLT9gpGBQQAnEk4FaI2cs6ZXC7zsx+lGhDCK5KE0u0Kv/3mam1V63RdwvbH1PEcnJCMEbgDINlMH4sN5mtbF8k56HV/mpkCGc3ttOWvlIs7RIU3I98x8rPqgsm9+r/Vdm8b62WwlG0/8DCeytoJvFwtkmZFXjZBZqUHw5Y0BdQWbu4HikpBXx97Q7yhC/s3ieFCJjUEHfxxvLQ6voeCT65kPr/rcKksZ20Bm6uEZkdpCE1hDTN+KoQk1nHBRZNc0Ihi0BK6dwkYgjV7Q/ztJA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(136003)(346002)(376002)(451199024)(1800799009)(82310400011)(186009)(46966006)(40470700004)(36840700001)(40480700001)(83380400001)(40460700003)(70206006)(70586007)(316002)(54906003)(478600001)(110136005)(81166007)(356005)(82740400003)(44832011)(2906002)(41300700001)(8676002)(4326008)(5660300002)(8936002)(36860700001)(426003)(2616005)(47076005)(7696005)(6666004)(1076003)(26005)(336012)(16526019)(86362001)(36756003)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: kRVwmhQLwmUE9PkHdyQdvA4DVZ1OzCosKlYZWaLHUhzGaLqF0K4dpoC5tpaVYNqsWY/cncPqCZe942Qo7lNrcIkNbwuEVzNWYl7tZppMOgyuRcRfgV4TUFJrCeQa2Rmq1w3r4GXnYmy49I4hc8/5BYWqJSk4ScwAHwDSd66P13yX0p+KgKvDhmpsLzOb3pyVSsYocSG51Yao01VUT8eVGJVJLmC3ByyI9wPo/ilk89HHYHdzRXKKXzX3lP5CZR484TddiSoF4MzdFQetPvtaxXLs5scHTCPIlWf4rnR7zm18ro6YHgiCttBHLt41Px5dUEGv8CGe5uYQQ4DDVEbxrCpcoB8Fp3nBjHw3rQcBOpAVI+9pBkXl8PDRTOeQDS7GYFyv8BRlBdsLvBE2W46TKKxmCaYFwkDm5PPodkJic1K2XCq2p4VXnzzi8Ku9dR6cl3f4iHfaKphZEw8gBJA1jgvkeHRhMR64pAGrsSbf5o0Z0RfhQ00UzsX+fsrbvcOlwvDyOvoX/nNFzee9JLFHYo1zfS+0G9xZLOkZTlQVbTMuqrBpwjuWKds0A1vnVg/N2izkMRXuJAvUJ95ZQX3Mtuve6pgSne3vMoej+AzI3pu7wNug4INr025Lqvb/rvQWlrs88A4drCiT031zkvvadJNSC3Wyp5aLg9MBZHMe7iMEs+hpqaaXfzVIzs1ppYWlTalE7bgcXnhhQkfcXV0wbcsDKBk8nL8WrwDGVKtbKkD+bOqMVd6v35fMw4ojF6d5Eoh1xqNf6zylRWjxN+m7CW1k2S9ob5+ShCpVYLByIfY=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(376002)(346002)(39860400002)(396003)(186009)(451199024)(1800799009)(82310400011)(46966006)(40470700004)(36840700001)(2906002)(40460700003)(83380400001)(26005)(86362001)(336012)(40480700001)(478600001)(426003)(7696005)(6666004)(2616005)(1076003)(36756003)(16526019)(966005)(44832011)(5660300002)(36860700001)(41300700001)(70586007)(82740400003)(356005)(54906003)(70206006)(81166007)(316002)(110136005)(4326008)(8936002)(8676002)(47076005)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2023 05:15:07.8199
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2023 05:15:08.4449
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d003abc-7830-48d6-a769-08db9faa16cc
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3d6738d-c21b-47c6-059f-08db9faa172c
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource: SN1PEPF0002636C.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5385
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6712
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
@@ -106,147 +106,116 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Several functions do internal mappings in either direction. Add
-helpers for this functionality.  No intended functional changes.
+In Windows, systems that support Modern Standby specify hardware
+pre-conditions for the SoC to be able to achieve the lowest power state
+by using 'device constraints' in a SOC specific "Power Engine
+Plugin" (PEP) [1] [2].
 
+Device constraints are specified in the return value for a _DSM of
+a PNP0D80 device, and Linux enumerates the constraints during probing.
+
+In cases that the existing logic for pci_bridge_d3_possible() may not
+enable D3 support query for any constraints specified by the device.
+If the constraints specify D3 support, then use D3 for the PCI device.
+
+Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/platform-design-for-modern-standby#low-power-core-silicon-cpu-soc-dram [1]
+Link: https://uefi.org/sites/default/files/resources/Intel_ACPI_Low_Power_S0_Idle.pdf [2]
 Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
+v12->v13:
+ * Move back to PCI code
+ * Trim commit message
+v11->v12:
+ * Adjust for dropped patch 8/9 from v11.
+ * Update comment
 v10->v11:
- * New patch
+ * Fix kernel kernel build robot errors and various sparse warnings
+   related to new handling of pci_power_t.
+ * Use the new helpers introduced in previous patches
 ---
- drivers/pci/pci-acpi.c | 87 +++++++++++++++++++++++++-----------------
- 1 file changed, 53 insertions(+), 34 deletions(-)
+ drivers/pci/pci-acpi.c | 14 ++++++++++++++
+ drivers/pci/pci.c      | 12 ++++++++++++
+ drivers/pci/pci.h      |  5 +++++
+ 3 files changed, 31 insertions(+)
 
 diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index a05350a4e49cb..b5b65cdfa3b8b 100644
+index b5b65cdfa3b8b..bcc76e9d399c5 100644
 --- a/drivers/pci/pci-acpi.c
 +++ b/drivers/pci/pci-acpi.c
-@@ -884,6 +884,56 @@ acpi_status pci_acpi_add_pm_notifier(struct acpi_device *dev,
- 	return acpi_add_pm_notifier(dev, &pci_dev->dev, pci_acpi_wake_dev);
+@@ -1081,6 +1081,20 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ 	return false;
  }
  
 +/**
-+ * map_pci_to_acpi - map a PCI power state to an ACPI D-state
-+ * @state: PCI power state to map
++ * acpi_pci_check_d3_constraint - Check if device specifies a D3 platform constraint
++ * @dev: PCI device to check
 + *
-+ * Returns: Corresponding ACPI D-state, otherwise ACPI_STATE_UNKNOWN
++ * This function checks if the platform specifies that a given PCI device should
++ * be put into D3 to satisfy a low power platform constraint
++ *
++ * Returns: TRUE if constraint for D3hot or deeper, FALSE otherwise.
 + */
-+static u8 map_pci_to_acpi(pci_power_t state)
++bool acpi_pci_check_d3_constraint(struct pci_dev *dev)
 +{
-+	switch (state) {
-+	case PCI_D0:
-+		return ACPI_STATE_D0;
-+	case PCI_D1:
-+		return ACPI_STATE_D1;
-+	case PCI_D2:
-+		return ACPI_STATE_D2;
-+	case PCI_D3hot:
-+		return ACPI_STATE_D3_HOT;
-+	case PCI_D3cold:
-+		return ACPI_STATE_D3_COLD;
-+	}
-+
-+	return ACPI_STATE_UNKNOWN;
++	return acpi_get_lps0_constraint(&dev->dev) >= ACPI_STATE_D3_HOT;
 +}
 +
-+/**
-+ * map_acpi_to_pci - map an ACPI D-state to a PCI power state
-+ * @state: ACPI D-state to map
-+ *
-+ * Returns: Corresponding PCI power state, otherwise PCI_POWER_ERROR.
-+ */
-+static pci_power_t map_acpi_to_pci(int state)
+ static void acpi_pci_config_space_access(struct pci_dev *dev, bool enable)
+ {
+ 	int val = enable ? ACPI_REG_CONNECT : ACPI_REG_DISCONNECT;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 051e88ee64c63..0fc8d35154f97 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1082,6 +1082,14 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
+ 	return acpi_pci_bridge_d3(dev);
+ }
+ 
++static inline bool platform_check_d3_constraint(struct pci_dev *dev)
 +{
-+	switch (state) {
-+	case ACPI_STATE_D0:
-+		return PCI_D0;
-+	case ACPI_STATE_D1:
-+		return PCI_D1;
-+	case ACPI_STATE_D2:
-+		return PCI_D2;
-+	case ACPI_STATE_D3_HOT:
-+		return PCI_D3hot;
-+	case ACPI_STATE_D3_COLD:
-+		return PCI_D3cold;
-+	case ACPI_STATE_UNKNOWN:
-+		return PCI_UNKNOWN;
-+	}
++	if (pci_use_mid_pm())
++		return false;
 +
-+	return PCI_POWER_ERROR;
++	return acpi_pci_check_d3_constraint(dev);
 +}
 +
- /*
-  * _SxD returns the D-state with the highest power
-  * (lowest D-state number) supported in the S-state "x".
-@@ -919,19 +969,7 @@ pci_power_t acpi_pci_choose_state(struct pci_dev *pdev)
- 	if (acpi_state < 0)
- 		return PCI_POWER_ERROR;
+ /**
+  * pci_update_current_state - Read power state of given device and cache it
+  * @dev: PCI device to handle.
+@@ -3036,6 +3044,10 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+ 		if (dmi_check_system(bridge_d3_blacklist))
+ 			return false;
  
--	switch (acpi_state) {
--	case ACPI_STATE_D0:
--		return PCI_D0;
--	case ACPI_STATE_D1:
--		return PCI_D1;
--	case ACPI_STATE_D2:
--		return PCI_D2;
--	case ACPI_STATE_D3_HOT:
--		return PCI_D3hot;
--	case ACPI_STATE_D3_COLD:
--		return PCI_D3cold;
--	}
--	return PCI_POWER_ERROR;
-+	return map_acpi_to_pci(acpi_state);
- }
- 
- static struct acpi_device *acpi_pci_find_companion(struct device *dev);
-@@ -1056,13 +1094,6 @@ static void acpi_pci_config_space_access(struct pci_dev *dev, bool enable)
- int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
++		/* the platform specifies in LPS0 constraints to use D3 */
++		if (platform_check_d3_constraint(bridge))
++			return true;
++
+ 		/*
+ 		 * It is safe to put Intel PCIe ports from 2015 or newer
+ 		 * to D3.
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index a4c3974340576..ac06c781a9b7c 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -707,6 +707,7 @@ void pci_set_acpi_fwnode(struct pci_dev *dev);
+ int pci_dev_acpi_reset(struct pci_dev *dev, bool probe);
+ bool acpi_pci_power_manageable(struct pci_dev *dev);
+ bool acpi_pci_bridge_d3(struct pci_dev *dev);
++bool acpi_pci_check_d3_constraint(struct pci_dev *dev);
+ int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state);
+ pci_power_t acpi_pci_get_power_state(struct pci_dev *dev);
+ void acpi_pci_refresh_power_state(struct pci_dev *dev);
+@@ -731,6 +732,10 @@ static inline bool acpi_pci_bridge_d3(struct pci_dev *dev)
  {
- 	struct acpi_device *adev = ACPI_COMPANION(&dev->dev);
--	static const u8 state_conv[] = {
--		[PCI_D0] = ACPI_STATE_D0,
--		[PCI_D1] = ACPI_STATE_D1,
--		[PCI_D2] = ACPI_STATE_D2,
--		[PCI_D3hot] = ACPI_STATE_D3_HOT,
--		[PCI_D3cold] = ACPI_STATE_D3_COLD,
--	};
- 	int error;
- 
- 	/* If the ACPI device has _EJ0, ignore the device */
-@@ -1089,7 +1120,7 @@ int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
- 		acpi_pci_config_space_access(dev, false);
- 	}
- 
--	error = acpi_device_set_power(adev, state_conv[state]);
-+	error = acpi_device_set_power(adev, map_pci_to_acpi(state));
- 	if (error)
- 		return error;
- 
-@@ -1111,23 +1142,11 @@ int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
- pci_power_t acpi_pci_get_power_state(struct pci_dev *dev)
- {
- 	struct acpi_device *adev = ACPI_COMPANION(&dev->dev);
--	static const pci_power_t state_conv[] = {
--		[ACPI_STATE_D0]      = PCI_D0,
--		[ACPI_STATE_D1]      = PCI_D1,
--		[ACPI_STATE_D2]      = PCI_D2,
--		[ACPI_STATE_D3_HOT]  = PCI_D3hot,
--		[ACPI_STATE_D3_COLD] = PCI_D3cold,
--	};
--	int state;
- 
- 	if (!adev || !acpi_device_power_manageable(adev))
- 		return PCI_UNKNOWN;
- 
--	state = adev->power.state;
--	if (state == ACPI_STATE_UNKNOWN)
--		return PCI_UNKNOWN;
--
--	return state_conv[state];
-+	return map_acpi_to_pci(adev->power.state);
+ 	return false;
  }
- 
- void acpi_pci_refresh_power_state(struct pci_dev *dev)
++static inline bool acpi_pci_check_d3_constraint(struct pci_dev *dev)
++{
++	return false;
++}
+ static inline int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+ {
+ 	return -ENODEV;
 -- 
 2.34.1
 
