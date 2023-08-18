@@ -2,141 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C44B7780585
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Aug 2023 07:16:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF0047805C5
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Aug 2023 07:52:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356843AbjHRFPx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Aug 2023 01:15:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37688 "EHLO
+        id S1357803AbjHRFvy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Aug 2023 01:51:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356508AbjHRFPX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Aug 2023 01:15:23 -0400
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2082.outbound.protection.outlook.com [40.107.101.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7A2726B6;
-        Thu, 17 Aug 2023 22:15:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ImAx0XHXweq9cxFzwr/38kpHevq4xVbdblWlY4eY2lhnY2sDEAz4tGzvAfm2khQQ3T9sOhJRQi9BFnJgDUTNr68d5VDjZ+UwGMiEa9iiBMm43FduywxkE2O1CM0zrSpljhw6G5VNyLzZwweXhYWoequMkiJRKBC3T30MAgx9d9jU1yU2OzZGRiLXuA9kc91UDpJzTTKAyRsowJYIdrPrt2cb49oavd0WbKH2+Ysdz7t2rkf7KhLru06yNwzz5bF0Q2k5m9/6R5P7yD7RuiBJWX2faRElZyU7LMtnl26bCJMzufFSMA+xaO9r3UwniolV5405wrzXnfHUJ0+x4uYgSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6mdpErebdeUHIqJqXzE4h8gfzDj6nsgjdNisiSYee2M=;
- b=ItxB9DbmieBzS/7lNZlfGpiJX8M0gRkXW3OCM8IEYyv9712WUdsgzYFXOIdP9eN/YCwNEHs+cW33uG7/ZjlUplzGkQJxySuEk4lTVuDWNRYwfAc6x+BvmrC3jdhPzYUUuD5cv02CgCgulcbMh9P68N3YO/GpqFvzgVaDfLxvtbkcoJp42nNEvq/3qBdZCgT0rnKF/Uq1TOH62UVTT/X0YOJRHsH4LDbik+7xdAAxGcAPWK2dcNG5pRjPhUXCwlocEAO/ZNqAcCARTz0BDKJzKeB6IGAyyx59mjfXVR7TmxdHRtWxDtLpK1oiuHFhgP8js7+pznfusD6nNVWWZryvpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6mdpErebdeUHIqJqXzE4h8gfzDj6nsgjdNisiSYee2M=;
- b=xbgoxgWZBlHK0lcc1p9FE4WFjfIsfJPZ9RAxb9lVoVkn3Z0p1TLa5Sw6sxksrmH7D7PZGNU7wY054xMGHMB91T6SKTG3gtT0slq5lHvS7XmInRjrxv4EstoGgVFlUicONWVrFvLixJMSQXd2g6oKHn6tPXPPhv4Tk4OC/m4q7BM=
-Received: from SN7PR04CA0194.namprd04.prod.outlook.com (2603:10b6:806:126::19)
- by SA1PR12MB7367.namprd12.prod.outlook.com (2603:10b6:806:2b5::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.31; Fri, 18 Aug
- 2023 05:15:09 +0000
-Received: from SN1PEPF0002636C.namprd02.prod.outlook.com
- (2603:10b6:806:126:cafe::7c) by SN7PR04CA0194.outlook.office365.com
- (2603:10b6:806:126::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.17 via Frontend
- Transport; Fri, 18 Aug 2023 05:15:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF0002636C.mail.protection.outlook.com (10.167.241.137) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6699.15 via Frontend Transport; Fri, 18 Aug 2023 05:15:09 +0000
-Received: from SITE-L-T34-2.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 18 Aug
- 2023 00:15:07 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        <linux-acpi@vger.kernel.org>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "Iain Lane" <iain@orangesquash.org.uk>,
-        Shyam-sundar S-k <Shyam-sundar.S-k@amd.com>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v13 12/12] PCI: ACPI: Limit the Intel specific opt-in to D3 to 2024
-Date:   Fri, 18 Aug 2023 00:13:19 -0500
-Message-ID: <20230818051319.551-13-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230818051319.551-1-mario.limonciello@amd.com>
-References: <20230818051319.551-1-mario.limonciello@amd.com>
+        with ESMTP id S1357744AbjHRFvW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Aug 2023 01:51:22 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 056032D7F;
+        Thu, 17 Aug 2023 22:51:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692337881; x=1723873881;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UEcu83cy8Od5Jkea6QF5T9Zq+9si5UHFbRMs9/J/T5U=;
+  b=PR42pRNSABMv9ftiYuCnc9CUcYytvcUBhLp9K2ZIC2UznoKGzemdsyGs
+   vTwgwL5hMCtJ8tHrn0VEn+nbuLTfrg5zsln2w7UV8aepLDgFlMBzAplhX
+   XMg224W1tVkKYCt2J+jxYysMkl4GsHvVf4EzBK3nfDGFoLOgiYFyFEmGr
+   vftj8LqSveZGXLRYem7dPtx/kKNlz7pxS3+waF03N70+W3SYBYxfgbAaP
+   Ry+8+gZQW6OcIFl7U7Thvsq0D4NNOfSWprl2lgeRscPpI6aK18VipMp/m
+   L5fb6+MZci5kiB8hB8o4PEa1BxXXUgdduDSF9tUuPVJeS4WHVbLn4CIqq
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10805"; a="436935373"
+X-IronPort-AV: E=Sophos;i="6.01,182,1684825200"; 
+   d="scan'208";a="436935373"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2023 22:51:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10805"; a="1065613717"
+X-IronPort-AV: E=Sophos;i="6.01,182,1684825200"; 
+   d="scan'208";a="1065613717"
+Received: from lkp-server02.sh.intel.com (HELO a9caf1a0cf30) ([10.239.97.151])
+  by fmsmga005.fm.intel.com with ESMTP; 17 Aug 2023 22:51:16 -0700
+Received: from kbuild by a9caf1a0cf30 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qWsNs-00029M-0q;
+        Fri, 18 Aug 2023 05:51:01 +0000
+Date:   Fri, 18 Aug 2023 13:48:58 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Alistair Francis <alistair23@gmail.com>, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, Jonathan.Cameron@huawei.com,
+        lukas@wunner.de
+Cc:     oe-kbuild-all@lists.linux.dev, alex.williamson@redhat.com,
+        christian.koenig@amd.com, kch@nvidia.com,
+        gregkh@linuxfoundation.org, logang@deltatee.com,
+        linux-kernel@vger.kernel.org, alistair23@gmail.com,
+        chaitanyak@nvidia.com, rdunlap@infradead.org,
+        Alistair Francis <alistair.francis@wdc.com>
+Subject: Re: [PATCH v6 1/3] PCI/DOE: Expose the DOE features via sysfs
+Message-ID: <202308181341.DWHmL2Au-lkp@intel.com>
+References: <20230817235810.596458-1-alistair.francis@wdc.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002636C:EE_|SA1PR12MB7367:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3e262cff-f303-4be1-12d1-08db9faa17bb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6GYZafMXTYjq2f0Gk9HfJWdLzCfZARHLscM/nu4D4J3PWWnsoVnp58mO2bQ/j7OM1mkFrUDJpLlLKNjOtnfnpIt5a21ir+eaRraBUOJ+Es0qA234tjXwEudwU7+r0VprHgE5H1igKGM6BcsGlWxu3BnYYc1Z/IMrhhXlOWmyBayBmz+9/+YdvBLPWY15X1dvi0DJJcWqPtiTKMlQpWyzzZaAmR8WcNfXudiFSwfZFQgQs/wvn7dWy9shcP/GuGLZ8V6+I4fJPXEiZo/b10cd5awMVDhJAAPkVEs8to7DCo6ztBi0zFaHN7ZXE9AgyCXXpXXvxMhqfF32JRVvVwZx9sS7KnNSnAVUcjdD/veUuncqJAWzn+Z44hL88+f0r9wbD5g4vXAJAKx9oFwXEVTwHHXwXe3paLPX9HSfYNkTDRLgDUxnntuLh3yzkFa7fdn4wsBd+0KlsM8DSVKzg1WlW1UjWjlefEn3kcuioOv5BDG2aznOfbQUXL2ABKpn4eWprJ0MddfV8aOAJQgcPP1drg++5eRhHMn5BPkYw8uKwi+52vWdakQKw0FVATWmrMw86KNKRHF55tlxO3vNTcwSHEMXpzIonGfI0zGvriJYl5s2yiMt9zzSTAytx/G25XaomgNLsNT6voLuyM3gTo1hTUARG0lqcKePQDvBmb811KXNJMYi/oeqFaouhe4k+fEBWU0w5XMg8Mcf2IRZtZVnKIGiQkiFVTT0oxysp73TeluUZX0Ewaz6xPCdDDNw146by7BPCwc4RVlqC6oqoFG77Q==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(376002)(136003)(396003)(39860400002)(451199024)(1800799009)(82310400011)(186009)(40470700004)(36840700001)(46966006)(86362001)(36756003)(82740400003)(356005)(81166007)(40480700001)(2616005)(5660300002)(44832011)(110136005)(16526019)(70586007)(478600001)(70206006)(7696005)(6666004)(54906003)(316002)(26005)(1076003)(4326008)(8676002)(8936002)(41300700001)(40460700003)(47076005)(336012)(36860700001)(83380400001)(426003)(4744005)(2906002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2023 05:15:09.3668
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e262cff-f303-4be1-12d1-08db9faa17bb
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: SN1PEPF0002636C.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7367
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230817235810.596458-1-alistair.francis@wdc.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Intel systems that need to have PCIe ports in D3 for low power idle
-specify this by constraints on the ACPI PNP0D80 device. As this information
-is queried, limit the DMI BIOS year check to stop at 2024. This will
-allow future systems to rely on the constraints check to set up policy
-like non-Intel systems do.
+Hi Alistair,
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v12->v13:
- * New patch
----
- drivers/pci/pci.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 0fc8d35154f97..5b9e11e254f34 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3049,10 +3049,11 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
- 			return true;
- 
- 		/*
--		 * It is safe to put Intel PCIe ports from 2015 or newer
-+		 * It is safe to put Intel PCIe ports from 2015 to 2024
- 		 * to D3.
- 		 */
- 		if (bridge->vendor == PCI_VENDOR_ID_INTEL &&
-+		    dmi_get_bios_year() <= 2024 &&
- 		    dmi_get_bios_year() >= 2015)
- 			return true;
- 		break;
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus linus/master v6.5-rc6 next-20230817]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Alistair-Francis/sysfs-Add-a-attr_is_visible-function-to-attribute_group/20230818-080110
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20230817235810.596458-1-alistair.francis%40wdc.com
+patch subject: [PATCH v6 1/3] PCI/DOE: Expose the DOE features via sysfs
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20230818/202308181341.DWHmL2Au-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 12.3.0
+reproduce: (https://download.01.org/0day-ci/archive/20230818/202308181341.DWHmL2Au-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308181341.DWHmL2Au-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/pci/doe.c:61: warning: Function parameter or member 'sysfs_attrs' not described in 'pci_doe_mb'
+
+
+vim +61 drivers/pci/doe.c
+
+a4ff8e7a716013 Li Ming          2022-11-16  36  
+9d24322e887b6a Jonathan Cameron 2022-07-19  37  /**
+9d24322e887b6a Jonathan Cameron 2022-07-19  38   * struct pci_doe_mb - State for a single DOE mailbox
+9d24322e887b6a Jonathan Cameron 2022-07-19  39   *
+9d24322e887b6a Jonathan Cameron 2022-07-19  40   * This state is used to manage a single DOE mailbox capability.  All fields
+9d24322e887b6a Jonathan Cameron 2022-07-19  41   * should be considered opaque to the consumers and the structure passed into
+022b66f38195f6 Lukas Wunner     2023-03-11  42   * the helpers below after being created by pci_doe_create_mb().
+9d24322e887b6a Jonathan Cameron 2022-07-19  43   *
+9d24322e887b6a Jonathan Cameron 2022-07-19  44   * @pdev: PCI device this mailbox belongs to
+9d24322e887b6a Jonathan Cameron 2022-07-19  45   * @cap_offset: Capability offset
+9d24322e887b6a Jonathan Cameron 2022-07-19  46   * @prots: Array of protocols supported (encoded as long values)
+9d24322e887b6a Jonathan Cameron 2022-07-19  47   * @wq: Wait queue for work item
+9d24322e887b6a Jonathan Cameron 2022-07-19  48   * @work_queue: Queue of pci_doe_work items
+9d24322e887b6a Jonathan Cameron 2022-07-19  49   * @flags: Bit array of PCI_DOE_FLAG_* flags
+9d24322e887b6a Jonathan Cameron 2022-07-19  50   */
+9d24322e887b6a Jonathan Cameron 2022-07-19  51  struct pci_doe_mb {
+9d24322e887b6a Jonathan Cameron 2022-07-19  52  	struct pci_dev *pdev;
+9d24322e887b6a Jonathan Cameron 2022-07-19  53  	u16 cap_offset;
+9d24322e887b6a Jonathan Cameron 2022-07-19  54  	struct xarray prots;
+9d24322e887b6a Jonathan Cameron 2022-07-19  55  
+9d24322e887b6a Jonathan Cameron 2022-07-19  56  	wait_queue_head_t wq;
+9d24322e887b6a Jonathan Cameron 2022-07-19  57  	struct workqueue_struct *work_queue;
+9d24322e887b6a Jonathan Cameron 2022-07-19  58  	unsigned long flags;
+2a8556606e90c6 Alistair Francis 2023-08-17  59  
+2a8556606e90c6 Alistair Francis 2023-08-17  60  	struct device_attribute *sysfs_attrs;
+9d24322e887b6a Jonathan Cameron 2022-07-19 @61  };
+9d24322e887b6a Jonathan Cameron 2022-07-19  62  
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
