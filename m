@@ -2,154 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E537D781391
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Aug 2023 21:41:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE21C78153E
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Aug 2023 00:13:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379673AbjHRTlX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Aug 2023 15:41:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46716 "EHLO
+        id S240488AbjHRWMn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Aug 2023 18:12:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379708AbjHRTk4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Aug 2023 15:40:56 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2052.outbound.protection.outlook.com [40.107.244.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5696C422A;
-        Fri, 18 Aug 2023 12:40:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V6BnGn6jfhfCdf0Y5T0HZFpcHyktHGzMVxjK2CmoPM0AGARnrxZMcvA0alK2ML3O3xb1bBXKk9H/F8f1wPP1QRHNSi2uHC1Zsqmm9tfyxca59tyHkLizizv5ief4uHLcLqMLLkrQ0yLYu5E/bTP2u2FDWi8s33lubr9YHnULGWGRqlR/Gk7ERKoXdFO9zYE8dRZsXQ9ydTDGNaZ9I47RjJD1yZLF4ZimzL8hf7/g0dAa0fZf5l44IKq+T6pbO5DGkEL55wIurQMpEGUNXXAfqC8Vfg3wtz2WnEG+FOwj2ybqyMPH0Z3STM90/M+WHmtxFAyIeY/n1vvQwjsLqU6Daw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N4Sayu4PEU9K07ryNQslCaryOHfbIA30KHQDdC6fFVw=;
- b=Pg6HPpNmBRsZ6i4dDD2gQmlnht8txlv01DmL7gd1hQnMQ3vvXM+INZKIWtnUkf5mMdDtKd2K9bFSZ8Zr2fsFRgvdGrudSTeTSjodYifHrhDRZX0yiO+fhyGrzVNeJmLu9oy1ql7jC+uy6bRt1o0Idtu5w5+9QN026/8GTAkPPXdeYpE2h9LlBG04VFQCcOMQ9pe5RO3uh0Hraxcz4IKOH/QoeyRE+vziJ85vhCHw9fuoOvZOPWW16tYpy2Ux1n+uB8ylCIcpS84XggDL/ocl7raaLsMgYz0WguM26ziEA69FRHj3sIHyiLNAaM05dUwwDMyL+6pcJosuwjfsJjj1IA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N4Sayu4PEU9K07ryNQslCaryOHfbIA30KHQDdC6fFVw=;
- b=ARdzCqsPP+8WBPNPP5bhoaoqR86SbCCuM3ZMjTlX53ExEVB2d1wRFn2DhkWwMwU6nMkKg6B1AvHDBF10jjLfCDtNwNSknjy9hHlh3K62jpkYpXBez3kuO/pvb4b9aMqcgweCHCjkygBSJuochl0oFLn9H7kCi41QUXAOsfvkMZs=
-Received: from MW4PR03CA0154.namprd03.prod.outlook.com (2603:10b6:303:8d::9)
- by DS7PR12MB6022.namprd12.prod.outlook.com (2603:10b6:8:86::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6699.20; Fri, 18 Aug 2023 19:40:50 +0000
-Received: from MWH0EPF000989E7.namprd02.prod.outlook.com
- (2603:10b6:303:8d:cafe::80) by MW4PR03CA0154.outlook.office365.com
- (2603:10b6:303:8d::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.20 via Frontend
- Transport; Fri, 18 Aug 2023 19:40:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000989E7.mail.protection.outlook.com (10.167.241.134) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6699.15 via Frontend Transport; Fri, 18 Aug 2023 19:40:50 +0000
-Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 18 Aug
- 2023 14:40:47 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, Iain Lane <iain@orangesquash.org.uk>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v14.c 4/4] PCI: ACPI: Limit the Intel specific opt-in to D3 to 2024
-Date:   Fri, 18 Aug 2023 14:40:27 -0500
-Message-ID: <20230818194027.27559-5-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230818194027.27559-1-mario.limonciello@amd.com>
-References: <20230818194027.27559-1-mario.limonciello@amd.com>
+        with ESMTP id S241368AbjHRWMm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Aug 2023 18:12:42 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1E873ABB
+        for <linux-pci@vger.kernel.org>; Fri, 18 Aug 2023 15:12:40 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-525656acf4bso1779318a12.0
+        for <linux-pci@vger.kernel.org>; Fri, 18 Aug 2023 15:12:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gateworks-com.20221208.gappssmtp.com; s=20221208; t=1692396759; x=1693001559;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xYKH/NmU6WV361FL98pZbDTKYddplM6+NEj0oVT8uKk=;
+        b=Z5Zxxs0eMs94Ds3sUbkzLP7u9yfDV9lr+Z66ZxbuXlaF2dV0bTvguGofF3tLlq3e2v
+         dQ0yHQjDGWRSiNVGDj1hFg10sAWFJ5b+gra5fHttSqwx5Mpn8aN5hiaqCfmodMM9q+g0
+         LQbhvzUe/iqGoqAPoIVuVI3/+GoEl8JeRlUo2k3Feb0iwKyhFG3HCVSULbJwgV1QZUsO
+         WQCskDq2fIy5vkov1V1A4Kz8Cus4acsm7G7wC3feapARz2XjEx1BHH80NNKOLu1yMiKZ
+         g3lqH9GXAs/ABAZe8PbpgjNUZa7VQqcMaUrMhqwuD4R/4afxLyHFe/NVb1U1DCAN0BGa
+         Kkuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692396759; x=1693001559;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xYKH/NmU6WV361FL98pZbDTKYddplM6+NEj0oVT8uKk=;
+        b=IkSJ4AdpGDTdA8oeAl+0Afq3O93S199cFegs8Mqt2GUrabD4Nus66FwM+eKr8af+nI
+         b85KWnpZkAMArL7puAyykHUmV/9W0fdFNQjt4iSv1YpFmHJ0qqOnTXCp+hg0WH2M1GuJ
+         IIeiTw3M387OtBaRS8oSHXNTluECxcsRjXyiUSCOdRihQNHTPYVXSjKONDyzHHAQR9nC
+         I8Ue7EsRTsFPh1c/LtVDZrIG3PzqHbtbMFK687WyOojwkapnUTTWCb5BfK/SIxhf4ULU
+         2KZGmEVD5XQ28pI2JNHfp641gdTPxrmVYYV9TZ3zIyIP5lYINoW4ZeLwg4yAPUppoEPL
+         GtjA==
+X-Gm-Message-State: AOJu0Yz+uivbK/O8GmHmhbWoA7vh1JJ0fJgZf6iiy6+cb3VcZL26nrsE
+        4grkfXqro2QausLA+zmmDEAUnef+WmG7UYn51BOYJxJqv2L3FJx0ALE=
+X-Google-Smtp-Source: AGHT+IGdg5/w55xesx3/t5IW99arRUYvtJWJpEYDA/sD/Qp4SjA3LMtC/aTcGpqUBYxuXngwtX4UXBHFldHLkDgzpvQ=
+X-Received: by 2002:a17:907:7886:b0:99b:f49c:fcfa with SMTP id
+ ku6-20020a170907788600b0099bf49cfcfamr329037ejc.21.1692396759089; Fri, 18 Aug
+ 2023 15:12:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000989E7:EE_|DS7PR12MB6022:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2f41c213-d296-4309-cbb4-08dba02306ed
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hZnqqU9Bwopuqsz2FkS4Xdt3JVy9iDlT/k1a7xkLQqiCXRrHYR1tRxWr8LNlqxS0pSJuwiyEsyKGK5LbvrUzTHMfIVKLDni68+odDJaDqkZfmzipJBVzudgc/uOM2KpFDvLcnpH4VCo5x87+BVrHRjAQHjW9hV0ii9/Zt2F8PK2mC/y1+RKrWIwDEnPt4ifxSXQPAGfQB2CI0BSJGwkCUqvfhs/ZMLSEbicGO/g3Mgub0Bs5CsjoUbR1CeLQVDquQDPAud1RcqFH/XNih4HI06ccOqhJo6Hd9YeDUfeKW4RvlfTddC3oxvtzz8YgcnPG2R/f2zz7xywwmZYFcZCL6z1jrmhmWgB6QsyT1XIz+Mv+Ej8nu26KB8P3oV2q+jM2kGhqtUXCEJq1nfihW6HSk4XR5jPGHKE9RQ6HZMfEJeqPc21RKXdQXiZIjU6wlTWhZq2D/hW/XzhBqrTCc75r+sW50lLVDJ5GK4xtIlmX0Nw3D40I8TklM6VbMWlTPon++1StqdsaP05Dm0XmnJyBK3wCGi9DWsG9Ldbztd1Z8bc/XylZVgE7SqqpBwgOPHbYNDGBZ24bXGj+QOJCBOl2mMF1wyEZEMrP0yFmy9yiLiDnkcjdH5TH1fcls6En+41cLVIF1yzNypHZA5ukVRAzEJ8yA75L9sO08TmpGXBSk2BLp4341H6pe4g1kGu/UOWrcu2unM95qEnwucNR0lumUxF9lKDl0l9jp9E8A6Dj+e67a9kWZshHLyqp7ugFVyzlVC2YbWtaF9YZGusXC1ILmQ==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(376002)(136003)(396003)(346002)(451199024)(186009)(1800799009)(82310400011)(36840700001)(40470700004)(46966006)(110136005)(70206006)(70586007)(5660300002)(44832011)(2616005)(41300700001)(2906002)(316002)(54906003)(8936002)(8676002)(4326008)(478600001)(40460700003)(6666004)(7696005)(86362001)(82740400003)(356005)(81166007)(47076005)(36756003)(16526019)(426003)(336012)(36860700001)(83380400001)(1076003)(26005)(40480700001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2023 19:40:50.2041
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f41c213-d296-4309-cbb4-08dba02306ed
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: MWH0EPF000989E7.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6022
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+References: <20230817171242.GA320904@bhelgaas> <alpine.DEB.2.21.2308180051080.8596@angie.orcam.me.uk>
+In-Reply-To: <alpine.DEB.2.21.2308180051080.8596@angie.orcam.me.uk>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Fri, 18 Aug 2023 15:12:26 -0700
+Message-ID: <CAJ+vNU3DNgJXWN7KebD89zJvNqr_4QF_vnxFwN7LytNVFc-i-A@mail.gmail.com>
+Subject: Re: imx8mp pci hang during init
+To:     "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Bjorn Helgaas <helgaas@kernel.org>, Marek Vasut <marex@denx.de>
+Cc:     linux-pci@vger.kernel.org, Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Intel systems that need to have PCIe ports in D3 for low power idle
-specify this by constraints on the ACPI PNP0D80 device. As this information
-is queried by acpi_pci_bridge_d3(), limit the DMI BIOS year check to stop
-at 2024. This will allow future systems to rely on the constraints check
-and ACPI checks to set up policy like non-Intel systems do.
+On Thu, Aug 17, 2023 at 5:05=E2=80=AFPM Maciej W. Rozycki <macro@orcam.me.u=
+k> wrote:
+>
+> On Thu, 17 Aug 2023, Bjorn Helgaas wrote:
+>
+> > [+cc Maciej, smells similar to a89c82249c37 ("PCI: Work around PCIe
+> > link training failures") ]
+>
+>  Quite so indeed.
+>
+> > > [ 0.499660] imx6q-pcie 33800000.pcie: host bridge /soc@0/pcie@3380000=
+0 ranges:
+> > > [ 0.500276] clk: Not disabling unused clocks
+> > > [ 0.506960] imx6q-pcie 33800000.pcie: IO 0x001ff80000..0x001ff8ffff -=
+>
+> > > 0x0000000000
+> > > [ 0.519401] imx6q-pcie 33800000.pcie: MEM 0x0018000000..0x001fefffff
+> > > -> 0x0018000000
+> > > [ 0.743554] imx6q-pcie 33800000.pcie: iATU: unroll T, 4 ob, 4 ib,
+> > > align 64K, limit 16G
+> > > [ 0.851578] imx6q-pcie 33800000.pcie: PCIe Gen.1 x1 link up
+> > > ^^^ hang at this point until watchdog resets
+>
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v13->v14:
- * Use a variable instead
-v12->v13:
- * New patch
----
- drivers/pci/pci.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+Maciej and Bjorn,
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index bfdad2eb36d13..c8787d898c377 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3037,16 +3037,22 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
- 			return false;
- 
- 		/*
--		 * Allow Intel PCIe ports from 2015 onward to go into D3 to
-+		 * Allow Intel PCIe ports from 2015 to 2024 to go into D3 to
- 		 * achieve additional energy conservation on some platforms.
- 		 *
-+		 * Intel systems from 2025 onward that need this are expected
-+		 * to specify this in an LPS0 device constraint instead.
-+		 *
- 		 * This is only set for Intel PCIe ports as it causes problems
- 		 * on both AMD Rembrandt and Phoenix platforms where USB keyboards
- 		 * can not be used to wake the system from suspend.
- 		 */
--		if (bridge->vendor == PCI_VENDOR_ID_INTEL &&
--		    dmi_get_bios_year() >= 2015)
--			return true;
-+		if (bridge->vendor == PCI_VENDOR_ID_INTEL) {
-+			int year = dmi_get_bios_year();
-+
-+			if (year >= 2015 && year <= 2024)
-+				return true;
-+		}
- 		break;
- 	}
- 
--- 
-2.34.1
+Thank you for the responses!
 
+>  So I think it's important to figure out where exactly in the kernel code
+> the hang happens; this is presumably in host-bridge-specific link bring-u=
+p
+> code polling link status, which may have to be updated according to or
+> otherwise make use of a89c82249c37.  It may also be something completely
+> different of course.
+>
+
+It's hanging in imx6_pcie_start_link() after the PCI_EXP_LNKCAP
+register is updated to allow gen2 during the subsequent
+dw_pcie_wait_for_link, specifically within the dw_pcie_read_dbi
+function that does a memory read. Due to the mem read hanging the CPU
+this tells me that the DWC core has crashed at this point.
+
+What I found is that if I essentially revert the effect of commit
+fa33a6d87eac ("PCI: imx6: Start link in Gen1 before negotiating for
+Gen2 mode") to start linking at gen3 (or forced to gen2) it appears to
+downgrade to gen2 (due to the PI7C9X2G608GPB being a gen2 switch) and
+work fine:
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c
+b/drivers/pci/controller/dwc/pci-imx6.c
+index 27aaa2a6bf39..81caaef76e8a 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -876,6 +876,7 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+        u32 tmp;
+        int ret;
+
++#if 0
+        /*
+         * Force Gen1 operation when starting the link.  In case the link i=
+s
+         * started in Gen2 mode, there is a possibility the devices on the
+@@ -887,6 +888,7 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+        tmp |=3D PCI_EXP_LNKCAP_SLS_2_5GB;
+        dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
+        dw_pcie_dbi_ro_wr_dis(pci);
++#endif
+
+        /* Start LTSSM. */
+        imx6_pcie_ltssm_enable(dev);
+@@ -895,6 +897,7 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+        if (ret)
+                goto err_reset_phy;
+
++#if 0
+        if (pci->link_gen > 1) {
+                /* Allow faster modes after the link is up */
+                dw_pcie_dbi_ro_wr_en(pci);
+@@ -937,6 +940,7 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+        } else {
+                dev_info(dev, "Link: Only Gen1 is enabled\n");
+        }
++#endif
+
+        imx6_pcie->link_is_up =3D true;
+        tmp =3D dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
+
+So I think you are correct in that I need to do the same thing that
+was done in a89c82249c37 for the imx6 dwc driver which essentially
+forces it the other way going from gen1->gen2->gen3 (upward) instead
+of gen3->gen2->gen1 (downard).
+
+I've cc'd Marek who authored commit fa33a6d87eac ("PCI: imx6: Start
+link in Gen1 before negotiating for Gen2 mode") in hopes that he might
+remember what switch or switches he needed this change for. I'm not
+even clear what IMX6 SoC 10 years ago even had gen2 capability.
+
+I found that the PI7C9X2G608GPB used here has an errata "E11: GEN2
+Change-Rate Issue with Certain Root Complex Platforms" that describes
+an issue observed in certain PCIe gen3 platforms during a rate change
+from 2.5Gbps to 5Gbps caused by the switch entering a recovery state
+that can timeout at which point according to the errata "After the
+link-down process, all the registers are reset to the default values"
+which is likely whats causing the DWC controller to hang.
+
+My gut feel is that commit a89c82249c37 ("PCI: Work around PCIe link
+training failures") likely would resolve the issues that Marek had
+which prompted him to make the imx6 driver go from gen1 upward and
+that if we changed the driver to go from gen3 downward it would
+resolve my issue as well. However, I don't know what the 'correct'
+link training sequence should really be (upward or downward) so it's
+hard to say what the right workaround is. Is there a correct link
+training sequence and if so how many controllers are using it vs
+having to reverse it to workaround hardware quirks?
+
+>  Can you see if you can bump the link up beyond 2.5GT/s by poking at host
+> bridge registers by hand with `setpci' once the link been successfully
+> established at 2.5GT/s?
+>
+
+I'll have to try that. Instead of using the PCI_EXP_LNKCTL like the
+pcie_retrain_link() function does the imx6 driver touches some DWC
+register that I don't have documentation for so essentially what your
+asking will test retraining the more standard way using the config
+registers:
+                /*
+                 * Start Directed Speed Change so the best possible
+                 * speed both link partners support can be negotiated.
+                 */
+                tmp =3D dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTRO=
+L);
+                tmp |=3D PORT_LOGIC_SPEED_CHANGE;
+                dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, tmp)=
+;
+                dw_pcie_dbi_ro_wr_dis(pci);
+
+Best regards,
+
+Tim
