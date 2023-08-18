@@ -2,189 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E1BC47802BA
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Aug 2023 02:35:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B063780381
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Aug 2023 03:49:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356430AbjHRAfO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Aug 2023 20:35:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53548 "EHLO
+        id S1351822AbjHRBsw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Aug 2023 21:48:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356761AbjHRAfG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Aug 2023 20:35:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 720172D5F;
-        Thu, 17 Aug 2023 17:35:04 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0097C66975;
-        Fri, 18 Aug 2023 00:35:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0885C433C8;
-        Fri, 18 Aug 2023 00:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692318903;
-        bh=9LK9sY0lbVycmuqop6sGmE86axZD6Ag6YMdWTQxkE6s=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=PIGjp+gAWYSIMdy309ziikHCyQTSLLrY7Xmcrg91W10RNbQv7WSIpo+58Q3VhDxCm
-         gQs9p1uv90Q1UJA6E/7YccABPNmcY5VWMe8LAQYgydArxPwUOkw7a4QxF/YkU0Zug2
-         HQw2JKxC00Mq3bG+/pviKk7Qj86oz9C/tCBeNq6INOjZu30mTbQZ2rsWedW7ldaStc
-         LONyCB9ym6aEyDzvwfCfVmHmi1US1d/yKLtx7WbT+SUcWn+55VxHuJrI68Rcpr6+BD
-         BvhQDQwDScPbsx9W81Grs+FHjVwsDQvqTsovpalBKi+0SlJrBOHOLDrZ3eR37Cqw8P
-         QihoKaYjo3A+A==
-Message-ID: <aa9d1a32-5388-97dc-3ed4-da78fab81bd3@kernel.org>
-Date:   Fri, 18 Aug 2023 09:35:00 +0900
+        with ESMTP id S1357116AbjHRBsv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Aug 2023 21:48:51 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 03A15100;
+        Thu, 17 Aug 2023 18:48:48 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8Dxfev_zd5k5r0ZAA--.50632S3;
+        Fri, 18 Aug 2023 09:48:47 +0800 (CST)
+Received: from [10.20.42.43] (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx7yP+zd5kaEddAA--.57387S3;
+        Fri, 18 Aug 2023 09:48:46 +0800 (CST)
+Message-ID: <9fb7ace8-2f07-17b6-10ce-7116b05b0148@loongson.cn>
+Date:   Fri, 18 Aug 2023 09:48:46 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.14.0
-Subject: Re: [PATCH v6 2/3] sysfs: Add a attr_is_visible function to
- attribute_group
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v4] PCI/VGA: Make the vga_is_firmware_default() less
+ arch-dependent
 Content-Language: en-US
-To:     Alistair Francis <alistair23@gmail.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, Jonathan.Cameron@huawei.com,
-        lukas@wunner.de
-Cc:     alex.williamson@redhat.com, christian.koenig@amd.com,
-        kch@nvidia.com, gregkh@linuxfoundation.org, logang@deltatee.com,
-        linux-kernel@vger.kernel.org, chaitanyak@nvidia.com,
-        rdunlap@infradead.org, Alistair Francis <alistair.francis@wdc.com>
-References: <20230817235810.596458-1-alistair.francis@wdc.com>
- <20230817235810.596458-2-alistair.francis@wdc.com>
-From:   Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20230817235810.596458-2-alistair.francis@wdc.com>
-Content-Type: text/plain; charset=UTF-8
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        loongson-kernel@lists.loongnix.cn, linux-pci@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@gmail.com>,
+        "Limonciello, Mario" <Mario.Limonciello@amd.com>
+References: <20230817220853.GA328159@bhelgaas>
+From:   suijingfeng <suijingfeng@loongson.cn>
+In-Reply-To: <20230817220853.GA328159@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-CM-TRANSID: AQAAf8Cx7yP+zd5kaEddAA--.57387S3
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7JryDCF4fZr17XryUJw48KrX_yoWkZwbE9F
+        W8ta4xGa4UJa47JanFkF4ruasY9rW5W3WxG34DJr4xX3yfurZ3X3yDtryxtr4ag3WjkrnI
+        g34Utw48KwnY9osvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+        s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+        cSsGvfJTRUUUbDkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+        vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+        w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+        W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+        JVW8Jr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+        x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+        McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+        I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+        x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+        1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+        64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+        0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
+X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2023/08/18 8:58, Alistair Francis wrote:
-> When creating an attribute group, if it is named a subdirectory it is
-> created and the sysfs files are placed into that subdirectory.  If no
-> files are created, normally the directory would still be present, but it
-> would be empty.
-> 
-> This can be confusing for users, as it appears the feature is avaliable
-> as there is a directory, but it isn't supported by the hardware or the
-> kernel.
-> 
-> One way to fix this is to remove directories that don't contain any
-> files, such as [1]. The problem with this is that there are currently
-> lots of users in the kernel who expect the group to remain even if
-> empty, as they dynamically add/merge properties later.
-> 
-> The documentation for sysfs_merge_group() specifically says
-> 
->     This function returns an error if the group doesn't exist or any of the
->     files already exist in that group, in which case none of the new files
->     are created.
-> 
-> So just not adding the group if it's empty doesn't work, at least not
-> with the code we currently have. The code can be changed to support
-> this, but it is difficult to determine how this will affect existing use
-> cases.
-> 
-> This approach instead adds a new function pointer, attr_is_visible(), to
-> `struct attribute_group` which can be set if the user wants to filter
-> the avaliablility of the function.
-> 
-> This matches the .is_visible() function pointer that already exists and
-> is commonly used. This approach provides greater control over if the
-> directory should be visible or not.
-> 
-> This will be used by the PCIe DOE sysfs attributes to kind the directory
-> on devices that don't support DOE.
-> 
-> 1: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=debugfs_cleanup&id=f670945dfbaf353fe068544c31e3fa45575da5b5
-> 
-> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-> ---
-> v6:
->  - Add patch
-> 
->  fs/sysfs/group.c      | 12 +++++++++++-
->  include/linux/sysfs.h |  6 ++++++
->  2 files changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
-> index 138676463336..34afd5becdbe 100644
-> --- a/fs/sysfs/group.c
-> +++ b/fs/sysfs/group.c
-> @@ -111,6 +111,7 @@ static int internal_create_group(struct kobject *kobj, int update,
->  	kuid_t uid;
->  	kgid_t gid;
->  	int error;
-> +	umode_t mode;
->  
->  	if (WARN_ON(!kobj || (!update && !kobj->sd)))
->  		return -EINVAL;
-> @@ -125,6 +126,15 @@ static int internal_create_group(struct kobject *kobj, int update,
->  		return 0;
->  	}
->  
-> +	if (grp->attr_is_visible) {
-> +		mode = grp->attr_is_visible(kobj);
-> +
+Hi,
 
-Remove the blank line here.
 
-> +		if (mode == 0)
+On 2023/8/18 06:08, Bjorn Helgaas wrote:
+>> +		if (resource_type(res) != IORESOURCE_MEM)
+>> +			continue;
+>> +
+>> +		if (!res->start || !res->end)
+>> +			continue;
+>> +
+>> +		if (res->start <= fb_start && fb_end <= res->end) {
+>> +			pdev_boot_vga = pdev;
+>> +
+>> +			vgaarb_info(&pdev->dev,
+>> +				    "BAR %d contains firmware FB\n", i);
+> Print the BAR with %pR and include the framebuffer region from
+> screen_info in the same format.
+>
 
-Nit: if (!mode)
+I do remember that you already told me to do this in V3, sorry for not 
+replying to you at V3. Most of the time, what you tell me is right.But 
+here, I think I need to explain. Because doing it that way will make the 
+code line too long,and it will exceed 80 characters in the column if we 
+print too much.
+I believe that the vgaarb_info() at here is already the most compact and 
+simplest form. Printing the BAR with %pR is not absolute necessary, 
+because we can get the additional information by: $ lspci | grep VGA
 
-> +			return 0;
-> +	} else {
-> +		mode = S_IRWXU | S_IRUGO | S_IXUGO;
-> +	}
-> +
->  	kobject_get_ownership(kobj, &uid, &gid);
->  	if (grp->name) {
->  		if (update) {
-> @@ -136,7 +146,7 @@ static int internal_create_group(struct kobject *kobj, int update,
->  			}
->  		} else {
->  			kn = kernfs_create_dir_ns(kobj->sd, grp->name,
-> -						  S_IRWXU | S_IRUGO | S_IXUGO,
-> +						  mode,
->  						  uid, gid, kobj, NULL);
->  			if (IS_ERR(kn)) {
->  				if (PTR_ERR(kn) == -EEXIST)
-> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-> index fd3fe5c8c17f..808e7fc0ca57 100644
-> --- a/include/linux/sysfs.h
-> +++ b/include/linux/sysfs.h
-> @@ -63,6 +63,11 @@ do {							\
->   * @name:	Optional: Attribute group name
->   *		If specified, the attribute group will be created in
->   *		a new subdirectory with this name.
-> + * @attr_is_visible:	Optional: Function to return permissions
+$ dmesg | grep 05:00.0
+$ dmesg | grep 0000:03:00.0
+$ dmesg | grep PCI
 
-Given that the existing is_visible() function apply to an attribute, naming this
-one "grp_is_visible" may be better. Otherwise, this is really confusing I think.
 
-> + *		associated with the attribute group. Only read/write
-> + *		permissions as well as SYSFS_PREALLOC are accepted. Must
-> + *		return 0 if an attribute is not visible. The returned value
-> + *		will replace static permissions defined in struct attribute.
->   * @is_visible:	Optional: Function to return permissions associated with an
->   *		attribute of the group. Will be called repeatedly for each
->   *		non-binary attribute in the group. Only read/write
-> @@ -83,6 +88,7 @@ do {							\
->   */
->  struct attribute_group {
->  	const char		*name;
-> +	umode_t			(*attr_is_visible)(struct kobject *);
->  	umode_t			(*is_visible)(struct kobject *,
->  					      struct attribute *, int);
->  	umode_t			(*is_bin_visible)(struct kobject *,
-
--- 
-Damien Le Moal
-Western Digital Research
+Actually, I only add something that is absolute necessary.
+Printing BAR with %pR and/or Printing the framebuffer region
+is consider to only for *debugging* purpose.
 
