@@ -2,133 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D8E0780210
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Aug 2023 01:59:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B835780264
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Aug 2023 02:07:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356312AbjHQX7D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Aug 2023 19:59:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43008 "EHLO
+        id S1347470AbjHRAGb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Aug 2023 20:06:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356341AbjHQX6p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Aug 2023 19:58:45 -0400
-Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02E823A8C;
-        Thu, 17 Aug 2023 16:58:43 -0700 (PDT)
-Received: by mail-ua1-x934.google.com with SMTP id a1e0cc1a2514c-79a31d66002so131075241.3;
-        Thu, 17 Aug 2023 16:58:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692316722; x=1692921522;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=55+40jxtA3P6XkOphpXmjT7MqNRWcdiP6Y+qR2y2ujc=;
-        b=qDn4+b0HNawkSs2NxxKkhIeOhkmvQxP9CAXvBXRjHkRvKRYOyRsASjvgVnEAGrrBq0
-         6S8y15U0msACFoEbuBSbnhxmbww7Vi3juvXZhbECHqC06aZn4SodAj/WvhbU0lJuCYQl
-         hN2m6gk/egUW7lzy06FO2sBdODqnX3l4ltD/4ogHo0m+hw9QLwuS1/kOy8wSxNF3ps1T
-         fJH81vQNi8Rb4MSWgu13lnEtQunOhr3t/5MVEnXRWD2KuWgVjFKZMw/0qdAaodKXQ9rX
-         1xqEYEG4O8EzeOQGyrlVtD91uE1Dpq9ZNx5+MPl2lMGf8mscPi0dhPXLT1iPO3Gf3IBi
-         94gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692316722; x=1692921522;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=55+40jxtA3P6XkOphpXmjT7MqNRWcdiP6Y+qR2y2ujc=;
-        b=bZhMgOovec4YpIvm+XW3T3e+a1pe4dQBx4Cb71Rm0lrErWZCT7Sr2XMlUeQENrhQUS
-         rF4DhL+jQ9pUJOkiLUaXo48Y0w8MfoWpi8TtLYLJvicB1mUnHn/7TzEFSAF9P50bfEiF
-         4EfhRXUKfC+lpnzUk32Rq3TEj5HjaMnfFbRy1K2ln/F85T+SRySahLS7smXVGqCzcgNm
-         bo6WU6B7OqipKd90QGNWz+fXJPKuhZJuGg1SBR+pQ8GStR4ssVFMmcWDaEX9dvdNn7tc
-         R5LRTWAU9Fk/XuUzw0qHhdH2UUeFIeEIUhos1Z94dmYS4wDQFh7gf3uSaE84hJFyAkW4
-         1OpA==
-X-Gm-Message-State: AOJu0Yzjo7pleFyQVKHtCM0MiOzNxMV3xnlx4vGkzZ8vZ42xjwJFhkTw
-        ld8wwu5YRkFXs1yiyA/Ywok=
-X-Google-Smtp-Source: AGHT+IFsTd4DINM89FbHHi3BCycS0X3bSd402Jmg0SpgktNoFaAV3+CmOUS88KSP3qlykyzXCWIEIg==
-X-Received: by 2002:a67:e41a:0:b0:445:4996:1d27 with SMTP id d26-20020a67e41a000000b0044549961d27mr1612084vsf.3.1692316722052;
-        Thu, 17 Aug 2023 16:58:42 -0700 (PDT)
-Received: from localhost.localdomain ([146.70.187.10])
-        by smtp.gmail.com with ESMTPSA id k19-20020a67c293000000b0044bf2750d30sm135182vsj.10.2023.08.17.16.58.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Aug 2023 16:58:41 -0700 (PDT)
-From:   Alistair Francis <alistair23@gmail.com>
-X-Google-Original-From: Alistair Francis <alistair.francis@wdc.com>
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        Jonathan.Cameron@huawei.com, lukas@wunner.de
-Cc:     alex.williamson@redhat.com, christian.koenig@amd.com,
-        kch@nvidia.com, gregkh@linuxfoundation.org, logang@deltatee.com,
-        linux-kernel@vger.kernel.org, alistair23@gmail.com,
-        chaitanyak@nvidia.com, rdunlap@infradead.org,
-        Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH v6 3/3] PCI/DOE: Only expose the sysfs attribute group if DOE is supported
-Date:   Thu, 17 Aug 2023 19:58:10 -0400
-Message-ID: <20230817235810.596458-3-alistair.francis@wdc.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230817235810.596458-1-alistair.francis@wdc.com>
-References: <20230817235810.596458-1-alistair.francis@wdc.com>
+        with ESMTP id S1352560AbjHRAGB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Aug 2023 20:06:01 -0400
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D396B2710
+        for <linux-pci@vger.kernel.org>; Thu, 17 Aug 2023 17:05:27 -0700 (PDT)
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id AA9D292009C; Fri, 18 Aug 2023 02:05:04 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id A7BCC92009B;
+        Fri, 18 Aug 2023 01:05:04 +0100 (BST)
+Date:   Fri, 18 Aug 2023 01:05:04 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     Tim Harvey <tharvey@gateworks.com>, linux-pci@vger.kernel.org,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: imx8mp pci hang during init
+In-Reply-To: <20230817171242.GA320904@bhelgaas>
+Message-ID: <alpine.DEB.2.21.2308180051080.8596@angie.orcam.me.uk>
+References: <20230817171242.GA320904@bhelgaas>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Now that the new attr_is_visible() function is avaliable as part of
-`struct attribute_group` we can use that to hide the attribute group
-on devices that don't support DOE.
+On Thu, 17 Aug 2023, Bjorn Helgaas wrote:
 
-Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
----
-v6:
- - Add patch
+> [+cc Maciej, smells similar to a89c82249c37 ("PCI: Work around PCIe
+> link training failures") ]
 
- drivers/pci/doe.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ Quite so indeed.
 
-diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-index 316aac60ccd5..1a021e8b3e0c 100644
---- a/drivers/pci/doe.c
-+++ b/drivers/pci/doe.c
-@@ -95,8 +95,7 @@ struct pci_doe_task {
- };
- 
- #ifdef CONFIG_SYSFS
--static umode_t pci_doe_sysfs_attr_is_visible(struct kobject *kobj,
--					     struct attribute *a, int n)
-+static umode_t pci_doe_sysfs_group_is_visible(struct kobject *kobj)
- {
- 	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
- 	unsigned long total_features = 0;
-@@ -112,7 +111,17 @@ static umode_t pci_doe_sysfs_attr_is_visible(struct kobject *kobj,
- 	if (total_features == 0)
- 		return 0;
- 
--	return a->mode;
-+	return S_IRWXU | S_IRUGO | S_IXUGO;
-+}
-+
-+static umode_t pci_doe_sysfs_attr_is_visible(struct kobject *kobj,
-+					     struct attribute *a, int n)
-+{
-+	if (pci_doe_sysfs_group_is_visible(kobj)) {
-+		return a->mode;
-+	}
-+
-+	return 0;
- }
- 
- static struct attribute *pci_dev_doe_feature_attrs[] = {
-@@ -122,6 +131,7 @@ static struct attribute *pci_dev_doe_feature_attrs[] = {
- const struct attribute_group pci_dev_doe_feature_group = {
- 	.name	= "doe_features",
- 	.attrs	= pci_dev_doe_feature_attrs,
-+	.attr_is_visible = pci_doe_sysfs_group_is_visible,
- 	.is_visible = pci_doe_sysfs_attr_is_visible,
- };
- 
--- 
-2.41.0
+> > [ 0.499660] imx6q-pcie 33800000.pcie: host bridge /soc@0/pcie@33800000 ranges:
+> > [ 0.500276] clk: Not disabling unused clocks
+> > [ 0.506960] imx6q-pcie 33800000.pcie: IO 0x001ff80000..0x001ff8ffff ->
+> > 0x0000000000
+> > [ 0.519401] imx6q-pcie 33800000.pcie: MEM 0x0018000000..0x001fefffff
+> > -> 0x0018000000
+> > [ 0.743554] imx6q-pcie 33800000.pcie: iATU: unroll T, 4 ob, 4 ib,
+> > align 64K, limit 16G
+> > [ 0.851578] imx6q-pcie 33800000.pcie: PCIe Gen.1 x1 link up
+> > ^^^ hang at this point until watchdog resets
 
+ So I think it's important to figure out where exactly in the kernel code 
+the hang happens; this is presumably in host-bridge-specific link bring-up 
+code polling link status, which may have to be updated according to or 
+otherwise make use of a89c82249c37.  It may also be something completely 
+different of course.
+
+ Can you see if you can bump the link up beyond 2.5GT/s by poking at host 
+bridge registers by hand with `setpci' once the link been successfully 
+established at 2.5GT/s?
+
+  Maciej
