@@ -2,113 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAE067816C2
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Aug 2023 04:41:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6955B7816C6
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Aug 2023 04:43:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244143AbjHSCkf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Aug 2023 22:40:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37562 "EHLO
+        id S244190AbjHSCmp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Aug 2023 22:42:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244235AbjHSCke (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Aug 2023 22:40:34 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 056273ABC;
-        Fri, 18 Aug 2023 19:40:31 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.43])
-        by gateway (Coremail) with SMTP id _____8CxLOudK+BkdQ0aAA--.48059S3;
-        Sat, 19 Aug 2023 10:40:29 +0800 (CST)
-Received: from [10.20.42.43] (unknown [10.20.42.43])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax8uScK+BksBReAA--.33767S3;
-        Sat, 19 Aug 2023 10:40:29 +0800 (CST)
-Message-ID: <ed87b8de-9fb6-fbee-2c6d-cebf712ccda5@loongson.cn>
-Date:   Sat, 19 Aug 2023 10:40:28 +0800
+        with ESMTP id S244254AbjHSCmi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Aug 2023 22:42:38 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 499714223
+        for <linux-pci@vger.kernel.org>; Fri, 18 Aug 2023 19:42:37 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4ff975a9318so2237073e87.2
+        for <linux-pci@vger.kernel.org>; Fri, 18 Aug 2023 19:42:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692412955; x=1693017755;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=7acdhpg3sia0HTiOORSZxWs0IKp/G5AcbjrZmqozbxI=;
+        b=oX5r2xZZwdR6QtRQyYMTGWMaU2GzGyc2/EarYg0cXvNqHQK7NodcNNjBOTzjxs8xA/
+         ZivxL3zxvnlV/W0JdISCX066p1FcF96wPBwoZCFNfRW3k3kxUNio+eX+JEwzDv22NOLS
+         zO7QIz9FvTcQppMCEw9mVN6qZiUafG6Iy6/3GPej80tX1OqSiaUB9GJex9cYt4fH5z3Y
+         At74OIBxgCiTCpIQSRNUfpuWt4stkwjwny0XEVnKmOYuyXhmBZx8z9eJyqZRTlBe/PMa
+         PIm1WPMjglg4pm6irxS62rLOkoRCy8s+YopcXygUpkUvruz/yNAf925ir8UDgjIz9lM+
+         OxKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692412955; x=1693017755;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7acdhpg3sia0HTiOORSZxWs0IKp/G5AcbjrZmqozbxI=;
+        b=j7Z3iyxRxtyLlwLBK+ecgjp+h2Itb00snal97iuqcihpmiWyqIju2Tu5Ptav/7KlOJ
+         jByw9Te8htUWhH6YuvmJeJGpJI4Jhu/ndMLEjbg2z0Ves2XFfINfdmpErT7lmhHJogUx
+         ErlrpOTZvKlUb8O3621tktsqmR2C6e8cKRKgCZ7DkdKsXVbq4BC5Qzug7oQpyeI415uF
+         5m3gldymXdRdkQydRq4WyQMtjAWzpSg2jfTZWG2ju3myH/UulGUf/AWR7KgM2giilL5N
+         MOJcFLsDrnRfKFAV5bZutfXeFZXr2cNnsSy82EnxA4xGpJO9tDS++SVUwXReztWgGfq/
+         sl7Q==
+X-Gm-Message-State: AOJu0YwwGeHtq6rBd/dBnCuSSTgkhqZUeTsBU3AttBR2L7NhwdSezrha
+        uVPUWOJm+JXwXnYh6go6q98N/5Ok0loS46x+2/hlKeXQ/c5Usw==
+X-Google-Smtp-Source: AGHT+IGQrivof/SO6vpAvOav+P2boAKR0u2M2QPpS/IedinGEZUaOfIs17LgGmDNa/EEQwJJUDfm0IMFWXs4Ad+cRe0=
+X-Received: by 2002:a05:6512:1088:b0:4fb:89b3:3373 with SMTP id
+ j8-20020a056512108800b004fb89b33373mr728779lfg.43.1692412955366; Fri, 18 Aug
+ 2023 19:42:35 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v4] PCI/VGA: Make the vga_is_firmware_default() less
- arch-dependent
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        loongson-kernel@lists.loongnix.cn, linux-pci@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-References: <20230817220853.GA328159@bhelgaas>
-From:   suijingfeng <suijingfeng@loongson.cn>
-In-Reply-To: <20230817220853.GA328159@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf8Ax8uScK+BksBReAA--.33767S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tr48uw4xGw17Zr43Xry3WrX_yoW8CF48pr
-        4YganrGF4kG3Z7A3sxAws5XF45uayvyFZ8Gry5Ar18ur45Gr1aqrnrKrZ0gwnrCrnxt3WS
-        krn8Kr4IkFyDZagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-        Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-        kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
-        twAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-        k0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-        Gr1l4IxYO2xFxVAFwI0_GFv_Wrylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-        AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-        cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-        8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
-        6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU466zUUUUU
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6504:1482:b0:233:69b6:e3e1 with HTTP; Fri, 18 Aug 2023
+ 19:42:34 -0700 (PDT)
+Reply-To: mohammedabuhamman066@gmail.com
+From:   Barrister Mohammed Abu Hamman <btimothykimberly@gmail.com>
+Date:   Fri, 18 Aug 2023 21:42:34 -0500
+Message-ID: <CAMJXB=txg5aVoaeBa3+QcWukZR_3CZW2e+N6C+6qf9xK27dPDQ@mail.gmail.com>
+Subject: Thank you for your kind attention
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=4.4 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_PASS,UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-
-On 2023/8/18 06:08, Bjorn Helgaas wrote:
-> I guess the point here is that:
->
->    - 03:00.0 BAR 0 is [mem 0xe0050000000-0xe005fffffff]
->
->    - screen_info says the framebuffer is
->      [mem 0xe0050000000-0xe005fffffff] (or part of it)
->
->    - Therefore, we want 03:00.0 to be the default VGA
->
->    - PCI core reassigns 03:00.0 BAR 0 to
->      [mem 0xe0030000000-0xe003fffffff]
->
->    - PCI core assigns a 00:06.1 BAR to contain
->      [mem 0xe0050000000-0xe005fffffff]
->
->    - vga_is_firmware_default() incorrectly decides 00:06.1 should be
->      the default VGA because it has a BAR that contains the screen_info
->      address range
->
-> Is that right?
-
-Yes, The 00:06.1 is loongson integrated display controller, integrated in LS7A1000 North bridge.
-
-
-On loongarch, before apply apply any patch, VGAARB always select 00:06.1 as the default boot device.
-because it is enumerated first. It is always the first VGA compatible device found on our system.
-Because its PCI domain, bus, function number is smallest. And it own IO and MEM, so the 00:06.1 will
-always be selected as the default boot device. Even you plug a discrete GPU on the mother board.
-
-
-Therefore we need help the vga_is_firmware_default() to overriding previous.
-On a multiple GPU co-exist case (on loongson platform), if no "overriding previous" being printed.
-then there something wrong. On normal case, we need the discrete GPU overriding the integrated one.
-Because the discrete GPU is more powerful than the platform integrated.
-
-But what we want is let the VGAARB determine the primary GPU by referencing the firmware.
-
-If firmware put the firmware framebuffer in the VRAM of the integrated display card(00:06.1).
-then the integrated display card should be the primary GPU.
-
-If firmware put the firmware framebuffer in the VRAM of the discrete display card,
-then the discrete display card should be the primary GPU.
-
+Good day.
+I emailed you a week ago, but I=E2=80=99m not sure if you received it. Plea=
+se
+confirm if you receive it or not so I can be sure. Thank you.
+Yours Sincerely,
+Mr.Mohammed
