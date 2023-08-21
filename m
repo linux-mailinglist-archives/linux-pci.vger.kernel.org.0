@@ -2,46 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C13C2783055
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Aug 2023 20:37:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F63F783065
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Aug 2023 20:45:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229560AbjHUSh2 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 21 Aug 2023 14:37:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57070 "EHLO
+        id S229453AbjHUSo7 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 21 Aug 2023 14:44:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbjHUSh1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Aug 2023 14:37:27 -0400
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60FC955046;
-        Mon, 21 Aug 2023 11:37:23 -0700 (PDT)
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6b9cd6876bbso1000366a34.1;
-        Mon, 21 Aug 2023 11:37:23 -0700 (PDT)
+        with ESMTP id S229437AbjHUSo6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Aug 2023 14:44:58 -0400
+Received: from mail-oo1-xc36.google.com (mail-oo1-xc36.google.com [IPv6:2607:f8b0:4864:20::c36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 138566C90;
+        Mon, 21 Aug 2023 11:44:56 -0700 (PDT)
+Received: by mail-oo1-xc36.google.com with SMTP id 006d021491bc7-570d3039f1cso152033eaf.0;
+        Mon, 21 Aug 2023 11:44:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692643012; x=1693247812;
+        d=1e100.net; s=20221208; t=1692643142; x=1693247942;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lLN5fVke3UiE4d8PldnT9vbamakvgY2iEAu+8/GhTRs=;
-        b=bP3Sq7oOV+lN+c8Lh6RZYnDyhiPzXk6tByu4T5LdRPU1XFmiCZLd7DsnJQMB/SANkA
-         rt01ilUsBSfYO2w+ueLkMdk/NdteLZHqbbkDDIfQyaK/gc3W3X/5wqLiqxBkEc//c0/j
-         EnRwON1XqGLXpxA5UfPpt6Zpnpdk6H46xqj7B7bY3KwRnLvtuZkhsaNeh16ya6sGcA4n
-         occMlrkV+H+MNZEY2y6daPUztpXgkOAayBHrEyLQbnm+32zssMb4AP5HPjmHjFW37d8d
-         QDE0n3YZ7YA9Ug4FMVtZiAXxl3+qGlmiWOh0sVAB/DGZ+AX7Z8sNlDryT2FPmTHzlH7J
-         jC5Q==
-X-Gm-Message-State: AOJu0Yxl8TeI4m5h8GR4/pTAkvDbhsgG1faj2J3tPmfXrNjtiOactjJ4
-        wbFYqVjGEvjTXsCwuP2Cv1Sy/VDEZ5G/lmpBb6o/d2Q/
-X-Google-Smtp-Source: AGHT+IHFSj6NlHd3WUqvMhgYOEr0g69zmYhq8Xxe/pVdYKuLur2tvJrWNoPWpi1JVIqOn5JLCaCczdhuZRAbjZGcVVk=
-X-Received: by 2002:a4a:da10:0:b0:56e:6532:467a with SMTP id
- e16-20020a4ada10000000b0056e6532467amr6560066oou.1.1692643011815; Mon, 21 Aug
- 2023 11:36:51 -0700 (PDT)
+        bh=DqPPUrt9KeYhVa9fnzE/uDwtP7K+EETKPssBOXtMCik=;
+        b=C+yB8VPsL8V8TiIE/BzCZqpZkla+OS5QcZ0ocGxpuKhNarlPCukNz1w/mebt4ggo2Y
+         PltamID+OTCkibN5kosfmV6EHhj8VkyroKpqivW4pcUrPTfjCbXb31BOUSilltUWnStw
+         nWeokGkOugGnVlcVVZUQjVBnZVM0oUUcaHCb/+zOcQJsdwiAIXX21gUyNncJ+97mNAL7
+         gnKwkQZxlInM7ITCviw5bOgnkZbhb/uRUrtAeMOXRBwSEY5xzCCEEd0twbIpTvGc6RP1
+         iqxiGxLG4ntnm8+J2Qo9chN/TcVseIjNvcqZWt/wTKOGqiWz54/zePpCWyL90tp5yiIl
+         /qKw==
+X-Gm-Message-State: AOJu0Yyzu8nATwDLIxWMprxd8e+g5JSJNDaQPIvYs0EhOp2HMywit2+c
+        H+AB8/ZS7yrrwmg+8GVg8qDmq+z7UnMazXD2h/tnimAW
+X-Google-Smtp-Source: AGHT+IE7P/LVq3p+kL8FThy2tHNGf3afWoWZDF12dtGlKOlEuP3D2AwHgxbH4+duc/4bAVIoH52dt0IyJXXthCD5gcQ=
+X-Received: by 2002:a4a:c3c8:0:b0:56e:487f:8caa with SMTP id
+ e8-20020a4ac3c8000000b0056e487f8caamr6796294ooq.1.1692643142475; Mon, 21 Aug
+ 2023 11:39:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230818194027.27559-1-mario.limonciello@amd.com> <20230818194027.27559-3-mario.limonciello@amd.com>
-In-Reply-To: <20230818194027.27559-3-mario.limonciello@amd.com>
+References: <20230818194027.27559-1-mario.limonciello@amd.com> <20230818194027.27559-4-mario.limonciello@amd.com>
+In-Reply-To: <20230818194027.27559-4-mario.limonciello@amd.com>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 21 Aug 2023 20:36:40 +0200
-Message-ID: <CAJZ5v0jvaT1XR0_BDAvg70CHhNjZ+KHEe7pgewaSBaaqROGpOQ@mail.gmail.com>
-Subject: Re: [PATCH v14.c 2/4] PCI: ACPI: Consider non-hotplug bridges for D3
- in acpi_pci_bridge_d3()
+Date:   Mon, 21 Aug 2023 20:38:51 +0200
+Message-ID: <CAJZ5v0gGi8s3o5e0AJXPMwAwFAwEg=Mbtu6iQ2-6rhACmCBQ+w@mail.gmail.com>
+Subject: Re: [PATCH v14.c 3/4] PCI: ACPI: Use device constraints to opt
+ devices into D3 support
 To:     Mario Limonciello <mario.limonciello@amd.com>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
@@ -55,8 +55,8 @@ Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -66,44 +66,77 @@ X-Mailing-List: linux-pci@vger.kernel.org
 On Fri, Aug 18, 2023 at 9:40 PM Mario Limonciello
 <mario.limonciello@amd.com> wrote:
 >
-> acpi_pci_bridge_d3() only runs on hotplug bridges. Two checks are made
-> for _S0W and for whether a device is power manageable contingent upon
-> an ACPI companion being present.
+> In Windows, systems that support Modern Standby specify hardware
+> pre-conditions for the SoC to be able to achieve the lowest power state
+> by using 'device constraints' in a SOC specific "Power Engine
+> Plugin" (PEP) [1] [2].
 >
-> These checks also make sense for non-hotplug bridges, so move the
-> check for hotplug bridge after the acpi companion checks.
+> For each device, the constraint is the minimum (shallowest) power
+> state in which the device can be for the platform to be still able to
+> achieve significant energy conservation in a system-wide low-power
+> idle configuration.
 >
+> Device constraints are specified in the return value for a _DSM of
+> a PNP0D80 device, and Linux enumerates the constraints during probing.
+>
+> For PCI bridges (including PCIe ports), the constraints may be
+> regarded as an additional source of information regarding the power
+> state to put the device into when it is suspended.  In particular, if
+> the constraint for a given PCI bridge is D3hot, the platform regards
+> D3hot as a valid power state for the bridge and it is reasonable to
+> expect that there won't be any side effects caused by putting the
+> bridge into that power state.
+>
+> Accordingly, take the low-power S0 idle (LPS0) constraints into
+> account when deciding whether or not to allow a given PCI bridge to be
+> put into D3.
+>
+> Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/platform-design-for-modern-standby#low-power-core-silicon-cpu-soc-dram [1]
+> Link: https://uefi.org/sites/default/files/resources/Intel_ACPI_Low_Power_S0_Idle.pdf [2]
 > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Looks reasonable to me.
+All feedback addressed AFAICS, so
 
-Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
 
 > ---
->  drivers/pci/pci-acpi.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> v13->v14:
+>  * Move code as another way to satisfy acpi_pci_bridge_d3() instead
+>  * Update commit with Rafael's suggestions
+> v12->v13:
+>  * Move back to PCI code
+>  * Trim commit message
+> v11->v12:
+>  * Adjust for dropped patch 8/9 from v11.
+>  * Update comment
+> v10->v11:
+>  * Fix kernel kernel build robot errors and various sparse warnings
+>    related to new handling of pci_power_t.
+>  * Use the new helpers introduced in previous patches
+> ---
+>  drivers/pci/pci-acpi.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 >
 > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index b5b65cdfa3b8b..64e6ada024235 100644
+> index 64e6ada024235..8331aea22d327 100644
 > --- a/drivers/pci/pci-acpi.c
 > +++ b/drivers/pci/pci-acpi.c
-> @@ -1017,7 +1017,7 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
->         struct acpi_device *adev, *rpadev;
->         const union acpi_object *obj;
->
-> -       if (acpi_pci_disabled || !dev->is_hotplug_bridge)
-> +       if (acpi_pci_disabled)
->                 return false;
+> @@ -1022,6 +1022,15 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
 >
 >         adev = ACPI_COMPANION(&dev->dev);
-> @@ -1039,6 +1039,9 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
->                         return true;
->         }
->
-> +       if (!dev->is_hotplug_bridge)
-> +               return false;
+>         if (adev) {
+> +               int acpi_state;
 > +
->         rpdev = pcie_find_root_port(dev);
->         if (!rpdev)
->                 return false;
+> +               /* Check if the platform specifies an LPS0 constraint of D3. */
+> +               acpi_state = acpi_get_lps0_constraint(adev);
+> +               pci_dbg(dev, "LPS0 constraint: %d\n", acpi_state);
+> +               if (acpi_state != ACPI_STATE_UNKNOWN &&
+> +                   acpi_state >= ACPI_STATE_D3_HOT)
+> +                       return true;
+> +
+>                 /*
+>                  * If the bridge has _S0W, whether or not it can go into D3
+>                  * depends on what is returned by that object.  In particular,
 > --
+> 2.34.1
+>
