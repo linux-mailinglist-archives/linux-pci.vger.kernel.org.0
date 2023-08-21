@@ -2,189 +2,226 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 41CEB782B5F
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Aug 2023 16:16:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7173E782C47
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Aug 2023 16:42:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235772AbjHUOQJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Aug 2023 10:16:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32850 "EHLO
+        id S236095AbjHUOmT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Aug 2023 10:42:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235742AbjHUOP5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Aug 2023 10:15:57 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB890F1;
-        Mon, 21 Aug 2023 07:15:55 -0700 (PDT)
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37LBrJ7v011825;
-        Mon, 21 Aug 2023 14:15:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=qcppdkim1;
- bh=CEscM31QPbJj4xxdgQzQilxtvtR0eecbT3LIAc3boMs=;
- b=o5LXU3Jl7LVCoDIvOI8Mf8lfWyDZbcgL1M8KYRfvNl1ZTCGuarPbZYGte+2L3Ra27yRE
- b19kPNHxfhoX1PWum0+3pGYd1zzFjlA93T10h2efF+hIzOKbWT3ZoVQkgOeUyZAEDeU8
- 7mr+wPaQ29NbiZsNuNjYMqiKjQLYhde3c5SY+D/zdlru15mvfvWhVY75VMNYrtDldQrW
- otmY6MmSJPlREyHQS8GGlYZ8jMAXwFP6+EldyCBqQ8wMw6i809G/Yq0pDEnrXUwJvQg5
- CZGg5wGRfKsJgP3gqJM2iikY7vgoCX1pVhNqPJ+n0op05nk/V8EOCqhDBe3Vm1jS2RFc Eg== 
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3sjk3tky7c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Aug 2023 14:15:49 +0000
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-        by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 37LEFklX010028;
-        Mon, 21 Aug 2023 14:15:46 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3sjptkpqfg-1;
-        Mon, 21 Aug 2023 14:15:46 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37LEFjrb010021;
-        Mon, 21 Aug 2023 14:15:45 GMT
-Received: from hu-sgudaval-hyd.qualcomm.com (hu-krichai-hyd.qualcomm.com [10.213.110.112])
-        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 37LEFjq0010006;
-        Mon, 21 Aug 2023 14:15:45 +0000
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
-        id F11FA4C17; Mon, 21 Aug 2023 19:45:44 +0530 (+0530)
-From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
-To:     manivannan.sadhasivam@linaro.org
-Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
-        quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org,
-        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v3 3/3] PCI: qcom: Add OPP support for speed based performance state of RPMH
-Date:   Mon, 21 Aug 2023 19:45:43 +0530
-Message-Id: <1692627343-4380-4-git-send-email-quic_krichai@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1692627343-4380-1-git-send-email-quic_krichai@quicinc.com>
-References: <1692627343-4380-1-git-send-email-quic_krichai@quicinc.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: b5I7jqd5g6SCxl_e19hrmF97Mt7wO-VV
-X-Proofpoint-ORIG-GUID: b5I7jqd5g6SCxl_e19hrmF97Mt7wO-VV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-21_01,2023-08-18_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 lowpriorityscore=0 adultscore=0 priorityscore=1501
- suspectscore=0 phishscore=0 clxscore=1015 mlxscore=0 spamscore=0
- mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2306200000 definitions=main-2308210131
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
-        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S236096AbjHUOmR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Aug 2023 10:42:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13086F0;
+        Mon, 21 Aug 2023 07:42:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 655D563A5F;
+        Mon, 21 Aug 2023 14:42:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF976C433C7;
+        Mon, 21 Aug 2023 14:42:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692628932;
+        bh=52OKjdLnV3pWDyoccRcefrV4SrypcfY1Bxxz8eiiXcw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=key8/FoxfX/Cfe3tNBW4IoMMuBqGOTSFlcN9Mplhx1Ln1eR3+jgv+0n+9YvOHaQk1
+         n60IZ+xZod07cPxz58E21zZ2Ra0rTd5R9Jv926H7aNUI79R6F288GGkTJZxW3WdLVx
+         oGp2hEF8xeCkWcQDWR3JA5Mj4NGGCkNDuwB7bqSJY4tBhpPKMc7BB44Gw5stcqvx4m
+         UuI26qmvFHSPwRixC44a6v15jHrhLf2Ldc5kI9qUQvAuImnRDkh6mBPQC/3VC/fPDT
+         kBgVUmaq78SYChr+hrauXEYzYjgmM3f7lVFBkTbHVYnihVM66UVyruGOWQ2qZNmTi1
+         NSRvSGFomGvAw==
+Date:   Mon, 21 Aug 2023 16:42:05 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>, robh@kernel.org
+Cc:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        Phil Elwell <phil@raspberrypi.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Conor Dooley <conor+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jim Quinlan <jim2101024@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>
+Subject: Re: [PATCH v6 0/5] PCI: brcmstb: Configure appropriate HW CLKREQ#
+ mode
+Message-ID: <ZON3vXwjkSpoqY2K@lpieralisi>
+References: <20230623144100.34196-1-james.quinlan@broadcom.com>
+ <ZOMhq8a/wnURWsFP@lpieralisi>
+ <CA+-6iNy7bqxSgCrgtPv3R-0ZePT92LWL0s3Zvz8kAANVH9b=cQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+-6iNy7bqxSgCrgtPv3R-0ZePT92LWL0s3Zvz8kAANVH9b=cQ@mail.gmail.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Before link training vote for the maximum performance state of RPMH
-and once link is up, vote for the performance state based upon the link
-speed.
+On Mon, Aug 21, 2023 at 08:15:02AM -0400, Jim Quinlan wrote:
+> On Mon, Aug 21, 2023 at 4:35 AM Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> >
+> > On Fri, Jun 23, 2023 at 10:40:53AM -0400, Jim Quinlan wrote:
+> > > v6 -- No code has been changed.
+> > >    -- Changed commit subject and comment in "#PERST" commit (Bjorn, Cyril)
+> > >    -- Changed sign-off and author email address for all commits.
+> > >       This was due to a change in Broadcom's upstreaming policy.
+> > >
+> > > v5 -- Remove DT property "brcm,completion-timeout-us" from
+> > >       "DT bindings" commit.  Although this error may be reported
+> > >       as a completion timeout, its cause was traced to an
+> > >       internal bus timeout which may occur even when there is
+> > >       no PCIe access being processed.  We set a timeout of four
+> > >       seconds only if we are operating in "L1SS CLKREQ#" mode.
+> > >    -- Correct CEM 2.0 reference provided by HW engineer,
+> > >       s/3.2.5.2.5/3.2.5.2.2/ (Bjorn)
+> > >    -- Add newline to dev_info() string (Stefan)
+> > >    -- Change variable rval to unsigned (Stefan)
+> > >    -- s/implementaion/implementation/ (Bjorn)
+> > >    -- s/superpowersave/powersupersave/ (Bjorn)
+> > >    -- Slightly modify message on "PERST#" commit.
+> > >    -- Rebase to torvalds master
+> > >
+> > > v4 -- New commit that asserts PERST# for 2711/RPi SOCs at PCIe RC
+> > >       driver probe() time.  This is done in Raspian Linux and its
+> > >       absence may be the cause of a failing test case.
+> > >    -- New commit that removes stale comment.
+> > >
+> > > v3 -- Rewrote commit msgs and comments refering panics if L1SS
+> > >       is enabled/disabled; the code snippet that unadvertises L1SS
+> > >       eliminates the panic scenario. (Bjorn)
+> > >    -- Add reference for "400ns of CLKREQ# assertion" blurb (Bjorn)
+> > >    -- Put binding names in DT commit Subject (Bjorn)
+> > >    -- Add a verb to a commit's subject line (Bjorn)
+> > >    -- s/accomodat(\w+)/accommodat$1/g (Bjorn)
+> > >    -- Rewrote commit msgs and comments refering panics if L1SS
+> > >       is enabled/disabled; the code snippet that unadvertises L1SS
+> > >       eliminates the panic scenario. (Bjorn)
+> > >
+> > > v2 -- Changed binding property 'brcm,completion-timeout-msec' to
+> > >       'brcm,completion-timeout-us'.  (StefanW for standard suffix).
+> > >    -- Warn when clamping timeout value, and include clamped
+> > >       region in message. Also add min and max in YAML. (StefanW)
+> > >    -- Qualify description of "brcm,completion-timeout-us" so that
+> > >       it refers to PCIe transactions. (StefanW)
+> > >    -- Remvove mention of Linux specifics in binding description. (StefanW)
+> > >    -- s/clkreq#/CLKREQ#/g (Bjorn)
+> > >    -- Refactor completion-timeout-us code to compare max and min to
+> > >       value given by the property (as opposed to the computed value).
+> > >
+> > > v1 -- The current driver assumes the downstream devices can
+> > >       provide CLKREQ# for ASPM.  These commits accomodate devices
+> > >       w/ or w/o clkreq# and also handle L1SS-capable devices.
+> > >
+> > >    -- The Raspian Linux folks have already been using a PCIe RC
+> > >       property "brcm,enable-l1ss".  These commits use the same
+> > >       property, in a backward-compatible manner, and the implementaion
+> > >       adds more detail and also automatically identifies devices w/o
+> > >       a clkreq# signal, i.e. most devices plugged into an RPi CM4
+> > >       IO board.
+> > >
+> > >
+> > > Jim Quinlan (5):
+> > >   dt-bindings: PCI: brcmstb: Add brcm,enable-l1ss property
+> > >   PCI: brcmstb: Configure HW CLKREQ# mode appropriate for downstream
+> > >     device
+> >
+> > I am not merging the first two patches since the discussion thread
+> > is still open and I'd like to understand better what can/should be
+> > done, sorry.
+> 
+> Hello Lorenzo,
+> 
+> This patch-set has been stable for months, V5 was out early May and
+> the V6 changes
+> did not involve code.  I'm a little surprised that you are voicing
+> concern at this stage.
+> 
+> The previous discussions covered all aspects of these commits AFAICT.
+> Please  review
+> them and the commit messages and let me know what issues you do not understand
+> or any topics that were not considered.
 
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 47 ++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+I disagree with the reasoning behind "brcm,enable-l1ss" property usage
+instead of a command line option - at least I would like to get a
+comment from DT maintainers about it.
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 7a87a47..c57ca1a 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -22,6 +22,7 @@
- #include <linux/of_device.h>
- #include <linux/of_gpio.h>
- #include <linux/pci.h>
-+#include <linux/pm_opp.h>
- #include <linux/pm_runtime.h>
- #include <linux/platform_device.h>
- #include <linux/phy/pcie.h>
-@@ -1357,6 +1358,32 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
- 	return 0;
- }
- 
-+static void qcom_pcie_opp_update(struct qcom_pcie *pcie)
-+{
-+	struct dw_pcie *pci = pcie->pci;
-+	struct dev_pm_opp *opp;
-+	u32 offset, status;
-+	int speed, ret = 0;
-+
-+	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-+	status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
-+
-+	/* Only update constraints if link is up. */
-+	if (!(status & PCI_EXP_LNKSTA_DLLLA))
-+		return;
-+
-+	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
-+
-+	opp = dev_pm_opp_find_level_exact(pci->dev, speed);
-+	if (!IS_ERR(opp)) {
-+		ret = dev_pm_opp_set_opp(pci->dev, opp);
-+		if (ret)
-+			dev_err(pci->dev, "Failed to set opp: %d\n", ret);
-+		dev_pm_opp_put(opp);
-+	}
-+
-+}
-+
- static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
- {
- 	struct dw_pcie *pci = pcie->pci;
-@@ -1439,8 +1466,10 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
- static int qcom_pcie_probe(struct platform_device *pdev)
- {
- 	const struct qcom_pcie_cfg *pcie_cfg;
-+	unsigned long max_freq = INT_MAX;
- 	struct device *dev = &pdev->dev;
- 	struct qcom_pcie *pcie;
-+	struct dev_pm_opp *opp;
- 	struct dw_pcie_rp *pp;
- 	struct resource *res;
- 	struct dw_pcie *pci;
-@@ -1511,6 +1540,22 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_pm_runtime_put;
- 
-+	/* OPP table is optional */
-+	ret = devm_pm_opp_of_add_table(dev);
-+	if (ret && ret != -ENODEV) {
-+		dev_err(dev, "Invalid OPP table in Device tree\n");
-+		goto err_pm_runtime_put;
-+	}
-+
-+	/* vote for max level in the opp table */
-+	opp = dev_pm_opp_find_freq_floor(dev, &max_freq);
-+	if (!IS_ERR(opp)) {
-+		ret = dev_pm_opp_set_opp(dev, opp);
-+		if (ret)
-+			dev_err(pci->dev, "Failed to set opp: %d\n", ret);
-+		dev_pm_opp_put(opp);
-+	}
-+
- 	ret = pcie->cfg->ops->get_resources(pcie);
- 	if (ret)
- 		goto err_pm_runtime_put;
-@@ -1531,6 +1576,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 
- 	qcom_pcie_icc_update(pcie);
- 
-+	qcom_pcie_opp_update(pcie);
-+
- 	if (pcie->mhi)
- 		qcom_pcie_init_debugfs(pcie);
- 
--- 
-2.7.4
+I think Bjorn made the point consistently and I also think he is right.
+
+I would like to get Rob's opinion on this. I know he acked the DT
+bindings (I have a comment on those too) but regardless, it is clearly a
+property used for what is a command line configuration parameter,
+no two ways about it.
+
+Thanks,
+Lorenzo
+
+> 
+> Are you concerned about the Broadcom STB/CM community  or the RPi community?
+> For the former, I have direct communication w/ our customers and none of them
+> are even close to using upstream (they may backport my commits).  For
+> the latter, I have
+> tested these commits on the official RPi4 and CM4 IO platforms, and
+> Cyril has also put in
+> an admiral amount of testing.
+> 
+> Note that I have on my desk a CM4 IO board w/ a conventional PCIe
+> device, and it does not boot
+> upstream master Linux until these patches are applied.
+> 
+> Further, Raspian OS has already introduced the "brcm,enable-l1ss"
+> property but did not upstream it, and
+> my commits are backwards compatible with this.
+> 
+> >
+> > >   PCI: brcmstb: Set higher value for internal bus timeout
+> > >   PCI: brcmstb: Assert PERST# on BCM2711
+> > >   PCI: brcmstb: Remove stale comment
+> >
+> > Is it OK to apply these three on their own ? Overall it would be
+> > great to avoid mixing patches with different end goals in a single
+> > series.
+> 
+> Well, they are related for one customer who wants to use L1SS power
+> savings AND require
+> a long  period for the internal timeout.  But, yes, these commits are
+> fine  to apply
+> independently.
+> 
+> Regards,
+> Jim Quinlan
+> Broadcom STB
+> 
+> >
+> > Thanks,
+> > Lorenzo
+> >
+> > >  .../bindings/pci/brcm,stb-pcie.yaml           |  9 ++
+> > >  drivers/pci/controller/pcie-brcmstb.c         | 91 ++++++++++++++++---
+> > >  2 files changed, 89 insertions(+), 11 deletions(-)
+> > >
+> > >
+> > > base-commit: 8a28a0b6f1a1dcbf5a834600a9acfbe2ba51e5eb
+> > > --
+> > > 2.17.1
+> > >
+> >
+> >
+
 
