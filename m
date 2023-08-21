@@ -2,131 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A356782D27
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Aug 2023 17:24:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A2E9782D2F
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Aug 2023 17:25:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233216AbjHUPYH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Aug 2023 11:24:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50860 "EHLO
+        id S236317AbjHUPZ2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Aug 2023 11:25:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233083AbjHUPYH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Aug 2023 11:24:07 -0400
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2050.outbound.protection.outlook.com [40.107.21.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8619E9;
-        Mon, 21 Aug 2023 08:24:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Py/KNI4NG6jN5dcTqahwhwFhjAV1uepROtXC6jMrXtS1gmGyX/p2+QwS+WSzvvm9vDL0WF8VsuFftI0pZC1DKtejUP9EAM9tmH2nFPV8wkEnMRKr5mZNxe0N44FTmM24cYCPKiDT0raE02zC6J3KxaXkD2cymP89oRHTzfDHlyerTWJrKrKwojze3aE9kyz341AP7+PIFmOMaTgV0gYEUvrgLEVSiFlv0eRFs10OViyMvOHNpsGoE8oehPZKuEKJeGOv3o/zrG4hnAX2iTU2X5SkFey/See1aMFIe14PvO7qTt3aW4g8QTvKNRsm37f7na35dUbmlPRptvH26eOBuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FwCFeABb07X7XRPAri9widF2bfVqybF848zEJt9DQ0M=;
- b=AO+ZQL5bbaQMguCAOYz7/fHbzxzEG6TRIWcz8HMuVPQRn9sQKIleosC/bfpXSZbATrLMkNlW+QrEIKbQeaQ6bYgulJEDeMImIONfLAOxtzrZmOLt6y1UQ3BafU+rKlQynTuxZ2hanJvrD3jZsPI8wQljP4LZRn7WQSiD2dAdsGnaLluXzMWM9SC1mVJNLlWqUVcXB625+OPna9AlxSNMU7vl8W7JNRb94XNx5omnXvYN4Yo44HUUOksXwAS9wsAlNgwYb+c42CWjecx5DYN0BWPML1O8DSjaO04q5m8dHLeM6yhjlc7h1nYG0fEOQf0DaWIGErq+PGDck9StngF6iA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FwCFeABb07X7XRPAri9widF2bfVqybF848zEJt9DQ0M=;
- b=D0rfnTr5DCvkbiWe54zKCBax5KRcwkHGsWq9G3zZkaqKV6nuF0BCoUTUJZKpLdyKLFqdebbeR5KLodDOKxlBGQ4HlvkBLI0jlXjOgSJLquhIqbk9v+47v1Dpncc5RPnBlKtVCBTFMhQJW1bTaYvrJUlUIxgHSz69lMmOQ7CBnU8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
- by AS8PR04MB9512.eurprd04.prod.outlook.com (2603:10a6:20b:40f::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.24; Mon, 21 Aug
- 2023 15:24:01 +0000
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::a680:2943:82d1:6aa8]) by AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::a680:2943:82d1:6aa8%3]) with mapi id 15.20.6699.022; Mon, 21 Aug 2023
- 15:24:01 +0000
-Date:   Mon, 21 Aug 2023 11:23:42 -0400
-From:   Frank Li <Frank.li@nxp.com>
-To:     Manivannan Sadhasivam <mani@kernel.org>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        manivannan.sadhasivam@linaro.org, helgaas@kernel.org,
-        bhelgaas@google.com, devicetree@vger.kernel.org,
-        gustavo.pimentel@synopsys.com, imx@lists.linux.dev, kw@linux.com,
-        leoyang.li@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        minghuan.lian@nxp.com, mingkai.hu@nxp.com, robh+dt@kernel.org,
-        roy.zang@nxp.com, shawnguo@kernel.org, zhiqiang.hou@nxp.com
-Subject: Re: [PATCH v11 3/3] PCI: layerscape: Add power management support
- for ls1028a
-Message-ID: <ZOOAUlPEMWG4LrUI@lizhi-Precision-Tower-5810>
-References: <20230809153540.834653-1-Frank.Li@nxp.com>
- <20230809153540.834653-4-Frank.Li@nxp.com>
- <ZNzrgr3a13vm6Yqi@lpieralisi>
- <ZN6iarqhryMHmwLh@lizhi-Precision-Tower-5810>
- <ZOMecaueyN3cutUH@lpieralisi>
- <20230821103357.GA36455@thinkpad>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230821103357.GA36455@thinkpad>
-X-ClientProxiedBy: BYAPR11CA0067.namprd11.prod.outlook.com
- (2603:10b6:a03:80::44) To AM6PR04MB4838.eurprd04.prod.outlook.com
- (2603:10a6:20b:4::16)
+        with ESMTP id S236263AbjHUPZ2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Aug 2023 11:25:28 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49E99F1
+        for <linux-pci@vger.kernel.org>; Mon, 21 Aug 2023 08:25:25 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4fe457ec6e7so5080496e87.3
+        for <linux-pci@vger.kernel.org>; Mon, 21 Aug 2023 08:25:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1692631523; x=1693236323;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=E0sz3cRRpYeYgp9Wfhd4OZBNA7lkRBy6XkHlrSTuJ1Y=;
+        b=P81849KCnVmP7DNKlx75H70pq3HCGVEJGhAtegQwJd5ZXTpmY3tzUUs87PQUmOHaU5
+         2+c1gDI0u3qOpP2h5qIvuCtRULKEh8w2p2ngoIZZMxBd+eDZpTXG39Tyof6umLNvHCUb
+         7CYRf82q4FXCb3nPmmwD7aRFEdqOMSaag5MLM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692631523; x=1693236323;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E0sz3cRRpYeYgp9Wfhd4OZBNA7lkRBy6XkHlrSTuJ1Y=;
+        b=i4pWz603faYC6xGcFdoCbUdZQjIj5niTjzDniSTOZ7I8uVBw4nrddMTG+nThYa5PhS
+         F1ZqfYxjifxLeihexfKnTjI37MXCvya852lUjBQqCqCIULZ7bQrwjuVzkGBQXS9C3JkA
+         IdtZqYxw5mSt+CkBbhxHcPFYdzKoTULekp6L7BlHtKloDYzvJxIIVXkJeRPjeJrW7R52
+         5gSkPygsYXZbYOk11JC6mDx3lGNBQ+SX4f9mCSBqG66cCN/16/8yElEzGktDCnAiIHVi
+         DzaYe6llyapO4okNy+cJmNonPR/7pfFGKKlbFsnnaQakgwyWSu1Z4WBJHqfYhRLfh6gF
+         99Pw==
+X-Gm-Message-State: AOJu0Yz5CwkmqFuytVAHAGmx76bxZtans7GqFD/pdGVKz4Z7jHZD7JmB
+        DOzx3gJfv0uaeM1KNPu23ezGtd2PFYcRopxzGYVqUw==
+X-Google-Smtp-Source: AGHT+IFNhzfolpmxqzMalcvm35gkAt2n9Mapht2JCd050Jjl/rb4ewNLjyuRd8FV62MPAolIdLzXcZoftB8gBrFW3y8=
+X-Received: by 2002:a05:651c:97:b0:2b9:d7b7:36de with SMTP id
+ 23-20020a05651c009700b002b9d7b736demr5353682ljq.20.1692631523517; Mon, 21 Aug
+ 2023 08:25:23 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|AS8PR04MB9512:EE_
-X-MS-Office365-Filtering-Correlation-Id: bace7f2d-cbd2-4d3e-e1af-08dba25aa58c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lN1v5sGJAHylZTLdev8dqy+VlCeffVQJKNSuilO/BY5wcmD/o9J2bLzTaowCk+8szWcOqHucv855s8/hlHErQmq98M/fyxt/g6xABkyn8Lsg0xIOcbMnb6wr+s4FNkoztRjpHHYSoj0fLNaNldnDfU1LEu33+xbTHMauI18JCapNgPe6h6keIgc8FDNBTor7IEYxDAWTASJkh1WpsetRZxv83lGB9RSLd/szFroy5Fn2bzE7Ar9uriwpisVk4rVqrYoIeAO5LIL8xt2LdzaEdFT4/jMSRkw7ZgnXS5PhbxsijucfEHjdHONSQaQkmf6EQxUD3BAOqa2WYeLPhdQ9U9ecTIGWB/PJboD0zZDkabzT8nl+DKn3LNHqmaVnw+4ufH6zMQPWCHHiOuXOPtvhIj1TIjTWLyK7tTvYyYa/9MVM9xvAbHEn114p0lM65K9oxy8CV782M6/1t79Hp8L3aoxnI2K+0vur+lrcsXiE0R4BtZtNQEQ8sWKSgF8btUAGPRMYTz/PJZhH855rVjscpaEiZIY7/IkXU7ckW1fpL9UJAuwRAFF4T0mrlTGYe4ByjwfmvVkArQyrstVjy8I0f5h0dnVDnHDWiPTnwKZ0T7LCcDhGQ1O6UvmW1Dw6avHa
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(346002)(366004)(39860400002)(376002)(136003)(396003)(451199024)(186009)(1800799009)(2906002)(7416002)(52116002)(38350700002)(38100700002)(6506007)(6486002)(83380400001)(5660300002)(26005)(86362001)(8676002)(8936002)(4326008)(316002)(9686003)(66946007)(6512007)(6916009)(66556008)(66476007)(478600001)(6666004)(41300700001)(33716001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N2ExTFd0Z1VXMzBocTZ5Mmx4UUFwV0dlbkxaN0djd3k2eFJTaUhtRU9QUkRP?=
- =?utf-8?B?Y1JvZzZtVlFWcDltYVl0azV5dEd6TE9leXhtcHpDUWdqTkxzcU5Bb0wxbjBT?=
- =?utf-8?B?Q1dtVUJjOUdERTZraDIwNGg3UFY3dWlVRmVaaHpRZVFpSzdzS2xvVThMc1BH?=
- =?utf-8?B?U3g5L29LL1dub2N0enJmcktPcHpkVjlITXVLcXdadG5ZRFltcWdPZTlXMUpR?=
- =?utf-8?B?dHgyZUpSOTIvdTh0R1VUTzl4ZDU5aEhsMzl2QWNzZThuSXlFOUF6ZVNhK281?=
- =?utf-8?B?MFNudjBERzhmRTVDbXB1c2RyTThqcmREdmVBOFhOd2lFUjFaNldLaXRYeFg3?=
- =?utf-8?B?Uzg2QVd5Q3BxQ1pEZlVRdUlEMXBqSHBlbjdIVVFYOVJidDV5aDhQdE5UU3dV?=
- =?utf-8?B?aWJrOEFTaG4zN3hwTkRJcVNtMlFIMjMzRk1HQlZFWmN2Ymc4M2VRRW82ZUxF?=
- =?utf-8?B?aHMxRVVJSC9yZk0vYzdwcUxMdTVJa3p6WGRxbnl4WnlxQ0ZLZU9DcGJiL0R5?=
- =?utf-8?B?blNneEMxcGw0QktZbzhNRW9iU0VzcTNTVHE4cmVLcTF1NHA3TXoyMEsyUy9v?=
- =?utf-8?B?T0FYb1BTSGswdjVYZjBCMURvL3FYaUtML085L1lBNEhRNDZVV2Y3L0hQdnYw?=
- =?utf-8?B?Sk5meEdkUWJyK29MRThYN3dOSXlqdHp4eTJLdVpuNjhVWFMrTHFzV0FvQXlu?=
- =?utf-8?B?bk1sUVJyRDVjSjJyMlI2eS9KZHdWNml6Qit6K3BHUVJybzN3M0M1RG1yUGIv?=
- =?utf-8?B?SU9hS1BvWkJzTzBuNDFkVjhtZCtkd0FvOXZGc1B1R3R2ME5lWGIzek9NTllW?=
- =?utf-8?B?NkZWejlTbnJoRTc0WWhZNGwzaU56L01GMEdUVkZwcXJNd2VaaVpZSkgrcS9M?=
- =?utf-8?B?dFJESzg1Rm1hWEIxc0dndWRVaWNWSVljQTlUSlU2WFdSY2pDYTlNTVVPVU1H?=
- =?utf-8?B?cTVKNEJlakxaZ3pyaWZNazhvL1V6UUZSS09GanFqRUJYVDJ4U204VXhXeDFw?=
- =?utf-8?B?Y2h1ODZ4cGpGU1pOdmZHS0dpQXBQU0VBc3JULzZxSGxXMCtmeWhNUnRIY0NE?=
- =?utf-8?B?WjNHVzRxeHlSRjRBRlJtczFKTm1KQnpVWDhKYXl4MkdGOWZtSEdRaytOL2lG?=
- =?utf-8?B?akxzQ3pJTENhUGRNTEFuUW40N29SRnVHWVV3Mkw2L1Mva1lBK1d5RXByR3g3?=
- =?utf-8?B?OGlReldZMnRzWkdiWHg2eTQ3UHJCdm1iSGt1M2d5WXl6QVV2SFFTajhkKzBW?=
- =?utf-8?B?NXErZys3Q3ZjNTNkcTFyVExsNTJidHBOMjJzTzNsUUo5TzY4eHZWSzFTTWZk?=
- =?utf-8?B?MmptSGVuWVVsazhuOWNnUTFlZkFIVWh0UVl5Vmw0eEdWQmVMUVZGRVp0RGRF?=
- =?utf-8?B?SHRQdzBBWE0zMS9meUoyL3Q4NWNhVGdxeHNLQXByQldDMTNDSWorWXBWYmlj?=
- =?utf-8?B?MDZobnJvRGsxUXJEQlMxcndWeW9GM3JjL3BLS2tldHdOWk5Bbk9RZUZKMHFx?=
- =?utf-8?B?cTN4TDNpMTVTb1ZueVUwczhCaURDdGNOUkx3dHIwWlpLc05FMHhHc1RjcGx2?=
- =?utf-8?B?NHdrMHVobG5ScUt1VGRqS09YbXI0di9tOElHYWpJZzM0ekpjTERvNjFNWjV3?=
- =?utf-8?B?d1RTcm1ub21qUER4Unc1U1orOTc5ZmczUFZzd0FRRkFGYUM3T1dXd3pVQnRi?=
- =?utf-8?B?dS9abXBNdjhEbm5lMVQyVFM5cVBoSnlFeU9vRnQzdGE5UU5mUDJTNW5ORGRY?=
- =?utf-8?B?Y2RNOURVTVJYZVZmMmsyUUx5Ynp3U0UxaHZoQnVjekFaNHFMZU5KTXZXalRk?=
- =?utf-8?B?RHJpeGVQTkgxR0VlaEk2OTNrejM4R240R3dpWDJBTkIrQ0JMTUpmMGFXcGFL?=
- =?utf-8?B?YzFXNldiVEtSamJTc1JyN3ZZU0gvTUorNXgzcytVYThZdHNMb0ptUlU1Y2VM?=
- =?utf-8?B?V09MN0RZbGFYcjhiV012OXRvUkxtUlpSSUxyeVpRbFkyd044VEEySVVoOG01?=
- =?utf-8?B?dFNMWFZ1czBFM0JTMk53REN6aENpRDdTcThQTFlQRkVuRk1NanovYklYRzdG?=
- =?utf-8?B?WEhMNERiaWh5dTcyQWVPN2hVWlZkTlZJOWIvOE1rRWg3a1lNZ3VhSDNkSHRL?=
- =?utf-8?Q?uvDY1syAWUf6VEQZidgVvMaXG?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bace7f2d-cbd2-4d3e-e1af-08dba25aa58c
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2023 15:24:01.3010
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7RACZziD68an1RPHZSQOv/1KHozEr0G42CPPLDk+6ptxuVU1VYj+/lei57sXP2TUMSDKmgo1SoFokDTYXypOHg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9512
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+References: <20230623144100.34196-1-james.quinlan@broadcom.com>
+ <20230623144100.34196-2-james.quinlan@broadcom.com> <ZON43rPGJGzjTTj/@lpieralisi>
+In-Reply-To: <ZON43rPGJGzjTTj/@lpieralisi>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Mon, 21 Aug 2023 11:25:11 -0400
+Message-ID: <CA+-6iNwRGsnRsT9R=iEzaJNCTLu_pQNG4x+noE8bqLYCRm_PHQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/5] dt-bindings: PCI: brcmstb: Add brcm,enable-l1ss property
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        Phil Elwell <phil@raspberrypi.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Jim Quinlan <jim2101024@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="000000000000b76bbc0603707cba"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -134,197 +83,182 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 21, 2023 at 04:03:57PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Aug 21, 2023 at 10:21:05AM +0200, Lorenzo Pieralisi wrote:
-> > On Thu, Aug 17, 2023 at 06:42:50PM -0400, Frank Li wrote:
-> > > On Wed, Aug 16, 2023 at 05:30:10PM +0200, Lorenzo Pieralisi wrote:
-> > > > On Wed, Aug 09, 2023 at 11:35:40AM -0400, Frank Li wrote:
-> > > > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > > > 
-> > > > > Add PME_Turn_off/PME_TO_Ack handshake sequence for ls1028a platform. Call
-> > > > > common dwc dw_pcie_suspend(resume)_noirq() function when system enter/exit
-> > > > > suspend state.
-> > > > > 
-> > > > > Acked-by: Manivannan Sadhasivam <mani@kernel.org>
-> > > > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > > ---
-> > > > >  drivers/pci/controller/dwc/pci-layerscape.c | 130 ++++++++++++++++++--
-> > > > >  1 file changed, 121 insertions(+), 9 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-> > > > > index ed5fb492fe084..b49f654335fd7 100644
-> > > > > --- a/drivers/pci/controller/dwc/pci-layerscape.c
-> > > > > +++ b/drivers/pci/controller/dwc/pci-layerscape.c
-> > > > > @@ -8,9 +8,11 @@
-> > > > >   * Author: Minghuan Lian <Minghuan.Lian@freescale.com>
-> > > > >   */
-> > > > >  
-> > > > > +#include <linux/delay.h>
-> > > > >  #include <linux/kernel.h>
-> > > > >  #include <linux/interrupt.h>
-> > > > >  #include <linux/init.h>
-> > > > > +#include <linux/iopoll.h>
-> > > > >  #include <linux/of_pci.h>
-> > > > >  #include <linux/of_platform.h>
-> > > > >  #include <linux/of_address.h>
-> > > > > @@ -20,6 +22,7 @@
-> > > > >  #include <linux/mfd/syscon.h>
-> > > > >  #include <linux/regmap.h>
-> > > > >  
-> > > > > +#include "../../pci.h"
-> > > > >  #include "pcie-designware.h"
-> > > > >  
-> > > > >  /* PEX Internal Configuration Registers */
-> > > > > @@ -27,12 +30,26 @@
-> > > > >  #define PCIE_ABSERR		0x8d0 /* Bridge Slave Error Response Register */
-> > > > >  #define PCIE_ABSERR_SETTING	0x9401 /* Forward error of non-posted request */
-> > > > >  
-> > > > > +/* PF Message Command Register */
-> > > > > +#define LS_PCIE_PF_MCR		0x2c
-> > > > > +#define PF_MCR_PTOMR		BIT(0)
-> > > > > +#define PF_MCR_EXL2S		BIT(1)
-> > > > > +
-> > > > >  #define PCIE_IATU_NUM		6
-> > > > >  
-> > > > > +struct ls_pcie_drvdata {
-> > > > > +	const u32 pf_off;
-> > > > > +	bool pm_support;
-> > > > > +};
-> > > > > +
-> > > > >  struct ls_pcie {
-> > > > >  	struct dw_pcie *pci;
-> > > > > +	const struct ls_pcie_drvdata *drvdata;
-> > > > > +	void __iomem *pf_base;
-> > > > > +	bool big_endian;
-> > > > >  };
-> > > > >  
-> > > > > +#define ls_pcie_pf_readl_addr(addr)	ls_pcie_pf_readl(pcie, addr)
-> > > > >  #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
-> > > > >  
-> > > > >  static bool ls_pcie_is_bridge(struct ls_pcie *pcie)
-> > > > > @@ -73,6 +90,60 @@ static void ls_pcie_fix_error_response(struct ls_pcie *pcie)
-> > > > >  	iowrite32(PCIE_ABSERR_SETTING, pci->dbi_base + PCIE_ABSERR);
-> > > > >  }
-> > > > >  
-> > > > > +static u32 ls_pcie_pf_readl(struct ls_pcie *pcie, u32 off)
-> > > > > +{
-> > > > > +	if (pcie->big_endian)
-> > > > > +		return ioread32be(pcie->pf_base + off);
-> > > > > +
-> > > > > +	return ioread32(pcie->pf_base + off);
-> > > > > +}
-> > > > > +
-> > > > > +static void ls_pcie_pf_writel(struct ls_pcie *pcie, u32 off, u32 val)
-> > > > > +{
-> > > > > +	if (pcie->big_endian)
-> > > > > +		iowrite32be(val, pcie->pf_base + off);
-> > > > > +	else
-> > > > > +		iowrite32(val, pcie->pf_base + off);
-> > > > > +}
-> > > > > +
-> > > > > +static void ls_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
-> > > > > +{
-> > > > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > > > > +	struct ls_pcie *pcie = to_ls_pcie(pci);
-> > > > > +	u32 val;
-> > > > > +	int ret;
-> > > > > +
-> > > > > +	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
-> > > > > +	val |= PF_MCR_PTOMR;
-> > > > > +	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
-> > > > > +
-> > > > > +	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
-> > > > > +				 val, !(val & PF_MCR_PTOMR),
-> > > > > +				 PCIE_PME_TO_L2_TIMEOUT_US/10,
-> > > > > +				 PCIE_PME_TO_L2_TIMEOUT_US);
-> > > > > +	if (ret)
-> > > > > +		dev_err(pcie->pci->dev, "PME_Turn_off timeout\n");
-> > > > > +}
-> > > > > +
-> > > > > +static void ls_pcie_exit_from_l2(struct dw_pcie_rp *pp)
-> > > > > +{
-> > > > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > > > > +	struct ls_pcie *pcie = to_ls_pcie(pci);
-> > > > > +	u32 val;
-> > > > > +	int ret;
-> > > > > +
-> > > > > +	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
-> > > > > +	val |= PF_MCR_EXL2S;
-> > > > > +	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
-> > > > 
-> > > > What is this write transaction generating in HW ?
-> > > 
-> > > I don't think send anything to to pci bus because it was called before
-> > > host init.
-> > > 
-> > > The spec of ls1028 is not clear enough.
-> > > 
-> > > `EXL2S: exit l2 state command. when set to 1, an L2 exit command is
-> > > generated. The bit is self clearing. Once the bit is set. SW needs to wait
-> > > for the bit to selfclear before sending a new command'
-> > > 
-> > > > 
-> > > > Why is it needed ? Shouldn't L2 exit happen automatically
-> > > > in HW ?
-> > > 
-> > > I tried remove this, PCI can't resume. I think this is specific for ls1028
-> > > chip to clear internal logic.
-> > 
-> > Well, if you don't even know what this does how can you write a sane
-> > device driver ?
-> > 
-> > Can you ask designers a more detailed description please ?
-> > 
-> 
-> I often encounter hw quirks like this one and the hw designers will just say
-> that "set bit X to make Y happpen". IMO a comment saying that the driver need to
-> set PF_MCR_EXL2S bit in LS_PCIE_PF_MCR register for the link to exit L2 state is
-> good enough.
-> 
-> > > > > +
-> > > > > +	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
-> > > > > +				 val, !(val & PF_MCR_EXL2S),
-> > > > > +				 PCIE_PME_TO_L2_TIMEOUT_US/10,
-> > > > > +			PCIE_PME_TO_L2_TIMEOUT_US);
-> > > > 
-> > > > And why is the timeout value the same used for the PME_turn_off message ?
-> > > 
-> > > I think No spec define it, just reused it. use PCIE_PME_TO_L2_TIMEOUT_US
-> > > may cause confuse. What's do you prefered? Just use number,such as 10ms.
-> > 
-> > This delay value is misleading, it is not good to reuse a value for
-> > a delay that is most certainly controller specific.
-> > 
-> > From this discussion I would say that having pme_turn_off() and
-> > exit_from_l2() hooks is generalizing something we don't know yet
-> > it is needed for all DWC based controllers.
-> > 
-> > It is probably worth keeping the layerscape specific changes in
-> > the layerscape driver and from there call the "generic" DWC
-> > suspend/resume functions:
-> > 
-> > dw_pcie_suspend_noirq()
-> > dw_pcie_resume_noirq()
-> > 
-> > rather than adding hooks that we barely know what they are needed for.
-> > 
-> > Mani, what do you think ?
-> > 
-> 
-> PME_Turn_off procedure may vary between controllers and is really required
-> from core DWC perspective. So I'd prefer to keep the pme_turn_off() callback
-> and leave exit_from_l2() since later seems to be only required for layerscape.
+--000000000000b76bbc0603707cba
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-There are at least two chips that need use exit_from_l2 at layerscape
-platform. I think not all dwc platforms implement suspend/resume yet. 
-Maybe some platform need it also. Of course I can leave it to layerscape
-driver. we can change when new platform really need it.
+On Mon, Aug 21, 2023 at 10:47=E2=80=AFAM Lorenzo Pieralisi
+<lpieralisi@kernel.org> wrote:
+>
+> On Fri, Jun 23, 2023 at 10:40:54AM -0400, Jim Quinlan wrote:
+> > This commit adds the boolean "brcm,enable-l1ss" property:
+> >
+> >   The Broadcom STB/CM PCIe HW -- a core that is also used by RPi SOCs -=
+-
+> >   requires the driver probe() to deliberately place the HW one of three
+> >   CLKREQ# modes:
+> >
+> >   (a) CLKREQ# driven by the RC unconditionally
+> >   (b) CLKREQ# driven by the EP for ASPM L0s, L1
+> >   (c) Bidirectional CLKREQ#, as used for L1 Substates (L1SS).
+> >
+> >   The HW+driver can tell the difference between downstream devices that
+> >   need (a) and (b), but does not know when to configure (c).  All devic=
+es
+> >   should work fine when the driver chooses (a) or (b), but (c) may be
+> >   desired to realize the extra power savings that L1SS offers.  So we
+> >   introduce the boolean "brcm,enable-l1ss" property to inform the drive=
+r
+> >   that (c) is desired.  Setting this property only makes sense when the
+> >   downstream device is L1SS-capable and the OS is configured to activat=
+e
+> >   this mode (e.g. policy=3D=3Dpowersupersave).
+> >
+> >   This property is already present in the Raspian version of Linux, but=
+ the
+> >   upstream driver implementation that follows adds more details and
+> >   discerns between (a) and (b).
+> >
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b=
+/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > index 7e15aae7d69e..8b61c2179608 100644
+> > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > @@ -64,6 +64,15 @@ properties:
+> >
+> >    aspm-no-l0s: true
+> >
+> > +  brcm,enable-l1ss:
+> > +    description: Indicates that PCIe L1SS power savings
+> > +      are desired, the downstream device is L1SS-capable, and the
+> > +      OS has been configured to enable this mode.  For boards
+>
+> What does this mean ? I don't think DT properties are supposed
+> to carry information related to how the OS is configured.
 
-Frank
+The DT setting in question is unrelated to the statement "and the OS
+has been configured to
+enable this mode".
 
-> 
-> - Mani
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+This is merely saying that even if you enable "brcm,l1ss-enable"
+that you may not get L1SS power savings w/o setting
+"CONFIG_PCIEASPM_POWER_SUPERSAVE=3Dy".
+I mentioned that exact term but a reviewer nakked it because
+apparently DT descriptions should not be OS specific.
+
+I am actually open for this to be a command-line option but I wanted to hon=
+or
+what the Raspian OS folks have already done.  RaspianOS already has
+"brcm,enable-l1ss"
+set in their DTS files.
+
+Regards,
+Jim
+
+> Again - it depends on what DT should be used for, I am not claiming to
+> have any authority on that, just asking.
+>
+> Thanks,
+> Lorenzo
+>
+> > +      using a mini-card connector, this mode may not meet the
+> > +      TCRLon maximum time of 400ns, as specified in 3.2.5.2.2
+> > +      of the PCI Express Mini CEM 2.0 specification.
+> > +    type: boolean
+> > +
+> >    brcm,scb-sizes:
+> >      description: u64 giving the 64bit PCIe memory
+> >        viewport size of a memory controller.  There may be up to
+> > --
+> > 2.17.1
+> >
+>
+>
+
+--000000000000b76bbc0603707cba
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
+AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCBrRGDtcAiX4EyviQdTvkbLpOMvnr8x
+zHqkF7zxLW4z0jAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzA4
+MjExNTI1MjNaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
+AgEwDQYJKoZIhvcNAQEBBQAEggEAo3yIOGPstokMF2KM3zs9bTnljpayk29X8UwKzlDY7cdgQXO2
+9B0MxHZ4939EUc6sjWB/ZoYebDL0qhHZeXAxw6wIlPAC4/aDAitBfQVG0ONw2co4Vx58iCrMWELu
+cHWhGF7IlXLfoGnYSFOgrLU9pgVHO8NTGY4wqEF2T2TB21yJTv8nRNB3ILO22S9hhjVhMVxqBQR1
+5Wx9aYkdo7aQkffmxuFf7+FWpjFwLsK0ams77E1SCqBKiMlSBpX80zQMydUG3ckB8yGo83Atjwkr
+7tlZZWC5WfqboaNKyndi4UFrJFVNo55Tm8j+3b82EzF3vEbgnK0BX/WEjg8mwkX3yQ==
+--000000000000b76bbc0603707cba--
