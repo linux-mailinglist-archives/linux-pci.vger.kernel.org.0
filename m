@@ -2,349 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDA7578306F
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Aug 2023 20:53:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7879E7830A8
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Aug 2023 21:13:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229445AbjHUSxI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Aug 2023 14:53:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43890 "EHLO
+        id S229784AbjHUTIW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Aug 2023 15:08:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjHUSxH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Aug 2023 14:53:07 -0400
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2053.outbound.protection.outlook.com [40.107.22.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C059F541BF;
-        Mon, 21 Aug 2023 11:53:04 -0700 (PDT)
+        with ESMTP id S229762AbjHUTIV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Aug 2023 15:08:21 -0400
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2054.outbound.protection.outlook.com [40.107.102.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 414991BB;
+        Mon, 21 Aug 2023 12:08:20 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j7Z/Eq53fbVVySZG0GrDkA3d8XYrSWRzXdgmAFck20CVlDaIDOxxucr9E4dv3x35cO/6h/MFEr6vSs9BoqcBUytUtO7A7WiMcO3XbybKH5iHG6Hup7MLZK5nqoefu4b32nXVYEEjBFZaSguhQvw1M06fcA0fV5Eb+cfX3yj4M390qklJUaUP+rIXeXmDBy2xBqalD6OdW6NchacET7x3ybQvtfthqwmy94/pbo/SQaiAJhbYvn8/2qyO6A4ACfklRvemXkN/4XGgF9Zkv2b/rYgibt5bAO/1r47Nm8ESww3Xx+XSz7v/tGV+pnG7B9979hcTVun/499dH+nlItkgZQ==
+ b=a+Ir2iwjUUF2AbQYyn1hnl/RVusMj96c4blZwhTMG+f1N9SUH2SfRWWp/WIBML8LNZ1PHwqS2ZdMAg/wmAp6/88J3pXGJ5YJKqGwfE2bmtRJJEB0MBYWurpQTB+qAliSsbiVmuYY5eh/XyrMQFefDt7XUEKonnHRp8GqdfzWt9Dgt6WUdnOi1hOTdqIyE1NKlqROlf7Q/KXCW57D1UCcLd0C57xnos4PQtXHIBDPIkmTLK+DyokhYdS5I/1Z9C3sjrP+IqnOdVq/HDzNK67EknjsyJW7a1tbmcEtnhBj3SAUYc4nM36/cY4WnVda0REpTEWodtAGiBL+PetCFwP/1Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Eh4j8R2AsEoSCwxNgCfAY9dclfLuEv1xBwyGi7KvZdw=;
- b=hk6NrlKIAU+kkGELtHhQ63tw9VWSkT1jATTdrXiwnehpljkI/nOYZGAWseNouIFiq5uqliyiMH++32gpQVth9smW8/Ujdhnf/dZsNQIzoMY//BmcWUI11dZnVJ5KpHS7y8kpATeJEA60GTRk70z1qqtIOxoJC/2tFDd3O6QChtrLnsio7xZtUMEwh0UI/vT/E1fpnkKcrn4YJyHwwKFcjIHTgfji4btOu6Xcp5+65HikTiP0H/OXueE84v7NcpgsB+7Z6HnZrAsPzggnrBdb9cvY/NeUKMLWS1rtTxYOJTs+uaU3U+NT6QltcN1vgnKyxkZVDyAn1Srt50gXfo+2/g==
+ bh=ikGcVF3RzrpuanPRnXZOfXLC3ZJ8N8vkYp0iCDN8H00=;
+ b=ewsf68uqRdFljRGCHLey71bZn4zb3p/iNzD5A3SBz4r7qNurdgWivwPe++Vhd7zEjeFBsojxPcQL9Z9uIT6gBFsWUvY8z75RXK8FXfyE/X1wUpJ2bcCmekkVlWtjng0RGTIkWCrldROHoveWIXIP48E5zFBiwu6w6dOH8ExroUsywN+336mv2e72ZB7rL7XuGUMDTXKG0EGWjYPQqqUgWAk+b7Qf/KDJEGK/+WIV7C8N0jHJniBzc7NPSDpNtxG5m6JWRQjEjWPtJD6EDZXhtuggTPn0OdBb7yqpCR1nqBJvtGtI/Nlqogqu76nNy+MHYGvGMTdrJf+ZmaWk14vPew==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Eh4j8R2AsEoSCwxNgCfAY9dclfLuEv1xBwyGi7KvZdw=;
- b=B8RbyYIDYSERIN7QapAGI2UkzDrNxpg4P3B5s2SRpOdHCe2/3rqHrvcej/T4yBHnrim9EpHIRYFj6WIvigG4IULId7rh/zSkfuxSPKQklpOjkP3iWU6TikdCCqUq19aJrKiUGSVnm4LylTXw7H3XcA0tseyTQmzIwmAOUHP6v8o=
+ bh=ikGcVF3RzrpuanPRnXZOfXLC3ZJ8N8vkYp0iCDN8H00=;
+ b=HVOdFdFmvROMTm94f3JIYN5lJQXP9yv8aJEQ7Ghe7WA+CLAYBgdx0/hthYdwGE+eKtD2uGIRH+3JUXvQt0XVyXjLPrPQ1mlHrLbrUwSypXDSfYbbyHI09CliSeDyK25glcpFM4tSWPWs4fbWYNQ7EOFRhbhd6gT1cQ7imSEhkpE=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
- by PA4PR04MB9566.eurprd04.prod.outlook.com (2603:10a6:102:26c::6) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SJ2PR12MB8783.namprd12.prod.outlook.com (2603:10b6:a03:4d0::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.20; Mon, 21 Aug
- 2023 18:48:51 +0000
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::a680:2943:82d1:6aa8]) by AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::a680:2943:82d1:6aa8%3]) with mapi id 15.20.6699.022; Mon, 21 Aug 2023
- 18:48:51 +0000
-From:   Frank Li <Frank.Li@nxp.com>
-To:     frank.li@nxp.com
-Cc:     bhelgaas@google.com, devicetree@vger.kernel.org,
-        gustavo.pimentel@synopsys.com, helgaas@kernel.org,
-        imx@lists.linux.dev, kw@linux.com, leoyang.li@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, lpieralisi@kernel.org, mani@kernel.org,
-        manivannan.sadhasivam@linaro.org, minghuan.lian@nxp.com,
-        mingkai.hu@nxp.com, robh+dt@kernel.org, roy.zang@nxp.com,
-        shawnguo@kernel.org, zhiqiang.hou@nxp.com
-Subject: [PATCH v12 3/3] PCI: layerscape: Add power management support for ls1028a
-Date:   Mon, 21 Aug 2023 14:48:15 -0400
-Message-Id: <20230821184815.2167131-4-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230821184815.2167131-1-Frank.Li@nxp.com>
-References: <20230821184815.2167131-1-Frank.Li@nxp.com>
+ 2023 19:08:15 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146%7]) with mapi id 15.20.6699.022; Mon, 21 Aug 2023
+ 19:08:15 +0000
+Message-ID: <eceb8980-d957-44b8-961c-3accfce962de@amd.com>
+Date:   Mon, 21 Aug 2023 14:08:12 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14.b 0/7] Export LPS0 constraints
+Content-Language: en-US
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Iain Lane <iain@orangesquash.org.uk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <20230818194007.27410-1-mario.limonciello@amd.com>
+ <CAJZ5v0gNZNRs4hpV5QxxTaPDu1Mp-vDhN-fZZ+_6AZg+nDmg1A@mail.gmail.com>
+From:   "Limonciello, Mario" <mario.limonciello@amd.com>
+In-Reply-To: <CAJZ5v0gNZNRs4hpV5QxxTaPDu1Mp-vDhN-fZZ+_6AZg+nDmg1A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR05CA0022.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::27) To AM6PR04MB4838.eurprd04.prod.outlook.com
- (2603:10a6:20b:4::16)
+X-ClientProxiedBy: SA1PR04CA0011.namprd04.prod.outlook.com
+ (2603:10b6:806:2ce::18) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|PA4PR04MB9566:EE_
-X-MS-Office365-Filtering-Correlation-Id: 69d98819-f2e2-44c2-4880-08dba27742c9
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ2PR12MB8783:EE_
+X-MS-Office365-Filtering-Correlation-Id: a53c9afd-7054-41fa-f2e7-08dba279f8ac
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rVL2yQYMAhy9WT8IuIj6rLUTm9vR2koZSAOk3D+c6Y0b7JhSBXc6nen1LTipcnyQXyDE+WiaidywvRGvpcJz6bfSv9JqRmamjDQWr8vADY/EdxJaYiRWLp3eWI410ZZib3PJg54c3XTqlWiO/piRVIONPW19pV7XsonIfXNIZTDBOJRxkch3RTteruf0ifXSrTYLpW7m6YrfugZEwciTNJQNWJnkwG7NbZwOof1lOVJXPuFfJb/z08W0D1jyfjrtmwO1ENiLCUtF4oPfcrSDKm9vgmx49I3h1kQUBuISBA6RZYyGCCAC0WTIxe+e9jqCqR4K+vaKfPObi6bl+iBjXfEo7CiXgBeDyYXKDBoxOj2EyxmKr3zWo3ekT6ERsUq4DBx2d9vveO3pgXrO+IK1Sw0ms/ORJPtKx+ItXFC1NEDVu9BGY6zW9Z2keaKRCYeNvjOD+0kKuDvH3mcmFO9Y1AZ5EVNe4SZbRKtk8LzVlcj69WK+KJs/b1FGxXK19s26jz6oELWFW6SnTh8aAl60SebtWW+7EgaO1J3IxR0+g67NLGyGEwBEhLA8546850Lkm6WD8+Nd2WXz1HF5538ePn7bN7YE6nUnTd6Cced/Jn4RawfIu58gODequJbmqaG0
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(376002)(396003)(366004)(346002)(186009)(1800799009)(451199024)(86362001)(36756003)(478600001)(66946007)(66556008)(37006003)(66476007)(34206002)(316002)(41300700001)(38100700002)(38350700002)(6486002)(26005)(6666004)(6512007)(52116002)(1076003)(8676002)(2906002)(5660300002)(7416002)(6506007)(4326008)(2616005)(8936002)(83380400001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 4pYTy3rq1vGL7vHFLAlB9Qln1vLR8USDitER/j8LiSDjGfvOLlcc8+xuut5lR1MOVUWhWkmlcjXOPyOXuw+dRxfSXbYsmdc96gtQjMJSXHrSpaQVR5SDAw3hjZLg0ubsQBmrXI3vnb/cmKNiLiRBTelxijg7FCaaPUm3nP3y1hmLCb5y5lclFdAKrd0ZicuyHzV/Y5T3Y2zenchqJ2COGNKIXSk5aYDvn654ujPJroQkwhdQaH121buhzwEL7WJo9barUFcBtk8II8+RdSJg6S/f/DVWNRsxf1rCkFf+XPQdBYCX7SENJJ3/TKUgUx0TLMU1KnK4hXChMAkq2lyclKmKp2LGGrj7BXtPjcD2hfm1m/DlyszfNTXE1uEQWJsXNkKS3iYvLmBd3pUapec89EuHQKs8Iebgddxnu6i82o2JwqqahykOFEQSNwOF7DXkjfCCrGj6L9S7SHvDbugB1xTkaq1RmhDurbTinJkmuJeotq3F4bTqa3jQAgu1T8kYx7bbuur2Ir2Mgo8K5uIy7GaUM5Kk9FvKdId+hThT2h8lfAuRVUwM5nPmDghXJSO4+ZEIqVWxoIdF0S+r0d7qtWF/Pu1G1XZ1YeOyO8C5e6xF6POovxBNazvGEebXBElnRmtqP90TnEx+j32ezJOZBw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(366004)(396003)(136003)(346002)(451199024)(1800799009)(186009)(86362001)(5660300002)(2616005)(41300700001)(66556008)(66476007)(316002)(2906002)(66946007)(6916009)(54906003)(31686004)(8676002)(478600001)(4326008)(8936002)(31696002)(6666004)(6486002)(53546011)(6506007)(38100700002)(6512007)(26005)(36756003)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Qt8rD/7Foddj/EKSqKeKO8o4xWWrrI7TFvd/4RAVcSDuLtNuhpKiXiorfvIl?=
- =?us-ascii?Q?SE1Kebs7581bV6E+5STw02hGAJFsHl/39LEE3nfU8hDNmW7DeEZYQlXLsIzQ?=
- =?us-ascii?Q?IqUAiVzn7FbFgSTIzJllEnOBIhXDvz8pzmZNpg/M36k2h8DBroBJ8gpXdSBy?=
- =?us-ascii?Q?L/f0ypQDciAY1AaM5HYoVEMyoZmLkWFZ7zH+Hx9Bt/3u3I3yGYYV40JXRdWY?=
- =?us-ascii?Q?eHGm6Fjtq2GSippIWIp0uTtE3R/bLIwRdB1nS44mGY8TptUSF+uMMOjgD+YI?=
- =?us-ascii?Q?BfOBtYnyOC7urbRr/iHmICa4q1ONno7/skpX39laffwTiXIhR2Uflj7e9q3V?=
- =?us-ascii?Q?m91f0lBUExp+dPWD1jpbE6kxGZlpPFJdFXYFIJTbV1Sorh80fNftCy46+kqV?=
- =?us-ascii?Q?h78FpkL9tFrmGsVoWS2sSdVtKC5fmsGRbH0JkWnRwBKytyQ4moAxv6FRC+hb?=
- =?us-ascii?Q?TilHQ0uFYzE2umGABV3vbtGqEbXeRwxGpFkfwGMdxaPNXRSs1fSR4BEPIN9o?=
- =?us-ascii?Q?jbu90a0CoW+cB+gscZMGE2zhV3+FQspqpMifxvDLNVFL0FCFWQbswUB1+3x3?=
- =?us-ascii?Q?+s0/Kzq8LAeOptJR14E2VwdWi9Z+IemxL9nmJ/aqbSbo6FJuyd5nTaESeeN8?=
- =?us-ascii?Q?AOVwf2CZBFZW1ZvCrgc5wKt7eCRIf1HFocPFH8lOCPP+wNEsn59maFMqHiHp?=
- =?us-ascii?Q?7PXcdiO0sKlYTq1eYlMl6YyXM/XnW7t18u+b2NvtsG7Gwk0tMwv6c0WhA7Jn?=
- =?us-ascii?Q?safiDZUo9MN7FZ4hUaYwp+wKNRc2iSt1aH5D1/Sa7d8d6RysSVe/oJbDrYxy?=
- =?us-ascii?Q?c78k91erb6VULMPOEKCvLSL8tNKnpbZN/rn6in87+fzyYG3xU4L5LRWd62eL?=
- =?us-ascii?Q?Dd/jg/V4+5A5iPgZZ6p3mMVQR1tkKiDl4lj4GTRpMXNfNtRKrupOqekOv+Zf?=
- =?us-ascii?Q?SIesNmN71WVOcI5FREC63Ev514y6vQje0GsrLaX8qK3EXpXwpK837KRspQSJ?=
- =?us-ascii?Q?tEE9pLcmb9nLGt6rdEQ8k4zSNpbTteCrM6Ixey2tmu/FfAJ23x9IgpTdy4xd?=
- =?us-ascii?Q?a+c9XnFfzHaRNJxzTeadAcOw/rXzoLmDidbU2RNfwbEy2MeYLNZlUjW0ozIs?=
- =?us-ascii?Q?Nx7/98RVQHNQ2//9ZHR/zgMvFn8EyHNH3LL5sc3+eo6YxRMama6iKwrq3B33?=
- =?us-ascii?Q?MkUVy//BZnh/1mnPFUGkV8ZFGag6b5XyyKihtaYTPX3GkgTTpa5DWh9yrlFI?=
- =?us-ascii?Q?88NEe8qy1Cq6lS/QndrIBud5Oxs073U7GP97k/OWzttwTKE2b8wcOJPLGQ+M?=
- =?us-ascii?Q?rLktXLUV5UAPmDRg+lbsluoOeD6UZwSpM6I/5HWI90z3W1sFL3FSr0+ZxfdY?=
- =?us-ascii?Q?cY+i4+pL/7o/sXXYJrrakNL79T2MviUNnIoajFTX54EQQnVAzsc5DC9ZRMIJ?=
- =?us-ascii?Q?TwnvWTWayX0mm8+y7NfzOZsNr7EXjguDuFtd9YoI22rG4w+R2teLHQWtS98N?=
- =?us-ascii?Q?CClYqc6M/+cIBPK3vvl2VKc0E1eREbPcUxzxeUSs0jXGZ12gGve170fnNDEl?=
- =?us-ascii?Q?JZX/KLydDM/HfCJm1sC+8N3TullhV4lSvIrY+eDn?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69d98819-f2e2-44c2-4880-08dba27742c9
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?clVZNkRjbUNyNVhvL3FwbFViL090Rnk0QnoycHJHRVZTN21Gdno4QzhOamNV?=
+ =?utf-8?B?YUowOVZ4eVpYdFp3N21JZFU5bEU3M1liV2FhMllXN2RvR29rRVRSbEUxa3lN?=
+ =?utf-8?B?R0hZdmk2WURaWGhjM2lEMU1UOFFoUWtnMlUwTEtBL0NPeVBNS0JNckxDRTJz?=
+ =?utf-8?B?a0wydWlWekw4Wk4wb2lmdkRhaENLaXBuaUJrVUlPaW1UM2VaamxMQXhMM3Va?=
+ =?utf-8?B?WGNGNlNuSnFiMlJhaisyWjZOaVpHbitYZ3ZHL0hkZDZVbXlyc244c1ZrNTYr?=
+ =?utf-8?B?N2dGUmp3dDEyY0pOalpNY3Q4N0FqVjNxakFvbGxYN216QUovZHVrbHhrOW5Q?=
+ =?utf-8?B?Vy8xWWZVVldCWUJXdENlRlJPc1NiajJpNWVkRi9WcTVvWjkyOTYyMmlISjhD?=
+ =?utf-8?B?Z0N1NUhJNTRZQ0J1WDRwNkMzYWhVb0lYeG90M2VISnpoLzFXMVM4aE5iaVla?=
+ =?utf-8?B?eUd1bFJicThPWlI2UzgrV0ZFR09nMXN0SkFLU3NGemFpZzdhNWVFdnVXUHY5?=
+ =?utf-8?B?YU5JM3RxOTBzS2lzNllNNExCMVhsVlZpU0V1aEM0STJJb3VsYmFVLytVY0xh?=
+ =?utf-8?B?dVMrRmtGY011MzJpOTk5ekZmOFBCeVczdTJDVGI5SXFKYkc4RGRYODlFOG1C?=
+ =?utf-8?B?Qi9YNTd4bGpBTFhzUFNKTG9GSjYwQ1FGRXVvcjdHZGEwY0xuT2w2M2kzYTQv?=
+ =?utf-8?B?L0U1V1czT2J0bkRLZzF3YVM1aHlhelYrOUJXQ0M0NkFwT3BuNUYwREo0Zlh1?=
+ =?utf-8?B?S2FENGU4a3RRZUl5ZlhjWXErMGF2VkdiWDJnSVIyZCtCS3k2N1BMYXlHSmlr?=
+ =?utf-8?B?Zm5KZDJ5cGFOOGlYWFVFVDcwejNzdlp4UWZJeGZrMGZQemsxdHQ0bmxWM3NR?=
+ =?utf-8?B?aE1iRmFISGt2ZkZVQm1sL3lJV04yRzhDUjZRaTNnM2RNRWp0SjU0NkRUTFBh?=
+ =?utf-8?B?OXNhaWhLRC9EUTBQUTJhWFlxVU5saEVCZ2lDejlhYm1xekM1QlJiRTdpZGQz?=
+ =?utf-8?B?K0w2NGxCUVMvTDFlWFJ5T3cvK2l1L214MlJteThJRHMvanRlOFpNMW9xUGRx?=
+ =?utf-8?B?UXRDZnRRQUtCZnNHR0lUeWFxUVpReWFxeDM4Y0tvbWpSd3NEMWlrYU5CR1N1?=
+ =?utf-8?B?cnRWZHZZbW9SaFlnMnpHWmdSSXVOQkFLOUpsMmY1TGkwemNHSHZRdzJNS2o5?=
+ =?utf-8?B?ZmhDVHg5QkxKQ3Z3bnZsaE96RUorMTNDUjlzQkZPUG5TTTgxb2pPcEs4MDcz?=
+ =?utf-8?B?c25mYVROMDhNNG9pTTNaRGcvZ0VoSDVMTzgxaFBCYUdlYWRPYnlyMW1ON0c4?=
+ =?utf-8?B?YTJ1b3MrcFBLRFlXNmtIdkNQamExQzJGVHF2aURBZEdjeU4vaWR1dCtXbE4w?=
+ =?utf-8?B?cE4vRFkxN21hYjlhME0vWmNBUkVDOUpyWDU3d2tTRk5pYnNYN3FUWGpyZ24w?=
+ =?utf-8?B?Um9rTXdualplSzk2NitkOXBsM2FhMVFFTzQzRWVyMlFpMW5pOUt5a28xbk1k?=
+ =?utf-8?B?dm9PQ1RxLzBueGlDcjBQQ0g0YUVKV0plZXFVK1psZm1wVkZ0WER4YzhHN3JK?=
+ =?utf-8?B?K2VQYjNjN1R6QndKR0JpcGVabldMZWpiNUZoZ3B1SVpERU13dGkzYVBxTndI?=
+ =?utf-8?B?YzN2dy9wZ2F3UVdWWUs2MVc1bklkVndqU01md2FiV3BoWjBxdXczWURLOW11?=
+ =?utf-8?B?VHB0YlpQcmhmRnJSVWdCUDhNZ09HbDVsNHcvUXhISVB4RlQ2ZlgxR1B1WWg5?=
+ =?utf-8?B?UG5QdmNwV1h5YlcxTUVrUDc4amt4Qm1hamNLVVJ6TmFVTWRZS3BuODB0VUFw?=
+ =?utf-8?B?N0dLY21CMzZUZGVOUUxhNFFEZFRkZzJQTEVBcFIyR2c4Z0NvK3hKcnB0TGN4?=
+ =?utf-8?B?N2E5UkdQaEVMZncza0VzR1NhNUt1K2RNSzR0VnZialAzRzJHaDdHZUQzaXpL?=
+ =?utf-8?B?OFpJYlR6bkhQcitTT0Y5Qy8vcmd4ek5saWRIUXZmMldxM3lJQWhtSzJ4bzI2?=
+ =?utf-8?B?T0tTOWNsdkUrRS8xczJUMjMwZGk1YWJ5aEhXQy84YUpDMlVwamZnMHFNQitO?=
+ =?utf-8?B?UXdBNFRuajZldWNucmI5djNXc3V4aFJsT2w4bU1wUHlaT0J2NlVremRnWjhw?=
+ =?utf-8?Q?olSDxut1eIwbQv+24mRui2ibo?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a53c9afd-7054-41fa-f2e7-08dba279f8ac
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2023 18:48:51.0282
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2023 19:08:15.1716
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: C2FRSy9K/BJF3U7gHx7Mbc+k8VJFfk6O7d3IhuGVbNwxfsl6wU9VB1Tqqm4xC3DDj3wtqoLFwNH8X1qOhsbDGw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9566
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-UserPrincipalName: YkkPOyKbqR4/iY1nrJb7zqS1sU5qXUVNMh1N4M9RoniEGUiSMVX9OfZbBeIspa9KHZFHUuQzS7jYiMP8lO7e6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8783
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Add PME_Turn_off/PME_TO_Ack handshake sequence for ls1028a platform. Call
-common dwc dw_pcie_suspend(resume)_noirq() function when system enter/exit
-suspend state.
 
-Acked-by: Manivannan Sadhasivam <mani@kernel.org>
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- drivers/pci/controller/dwc/pci-layerscape.c | 135 ++++++++++++++++++--
- 1 file changed, 126 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-index ed5fb492fe08..97b8d3329df7 100644
---- a/drivers/pci/controller/dwc/pci-layerscape.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape.c
-@@ -8,9 +8,11 @@
-  * Author: Minghuan Lian <Minghuan.Lian@freescale.com>
-  */
- 
-+#include <linux/delay.h>
- #include <linux/kernel.h>
- #include <linux/interrupt.h>
- #include <linux/init.h>
-+#include <linux/iopoll.h>
- #include <linux/of_pci.h>
- #include <linux/of_platform.h>
- #include <linux/of_address.h>
-@@ -20,6 +22,7 @@
- #include <linux/mfd/syscon.h>
- #include <linux/regmap.h>
- 
-+#include "../../pci.h"
- #include "pcie-designware.h"
- 
- /* PEX Internal Configuration Registers */
-@@ -27,12 +30,26 @@
- #define PCIE_ABSERR		0x8d0 /* Bridge Slave Error Response Register */
- #define PCIE_ABSERR_SETTING	0x9401 /* Forward error of non-posted request */
- 
-+/* PF Message Command Register */
-+#define LS_PCIE_PF_MCR		0x2c
-+#define PF_MCR_PTOMR		BIT(0)
-+#define PF_MCR_EXL2S		BIT(1)
-+
- #define PCIE_IATU_NUM		6
- 
-+struct ls_pcie_drvdata {
-+	const u32 pf_off;
-+	bool pm_support;
-+};
-+
- struct ls_pcie {
- 	struct dw_pcie *pci;
-+	const struct ls_pcie_drvdata *drvdata;
-+	void __iomem *pf_base;
-+	bool big_endian;
- };
- 
-+#define ls_pcie_pf_readl_addr(addr)	ls_pcie_pf_readl(pcie, addr)
- #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
- 
- static bool ls_pcie_is_bridge(struct ls_pcie *pcie)
-@@ -73,6 +90,64 @@ static void ls_pcie_fix_error_response(struct ls_pcie *pcie)
- 	iowrite32(PCIE_ABSERR_SETTING, pci->dbi_base + PCIE_ABSERR);
- }
- 
-+static u32 ls_pcie_pf_readl(struct ls_pcie *pcie, u32 off)
-+{
-+	if (pcie->big_endian)
-+		return ioread32be(pcie->pf_base + off);
-+
-+	return ioread32(pcie->pf_base + off);
-+}
-+
-+static void ls_pcie_pf_writel(struct ls_pcie *pcie, u32 off, u32 val)
-+{
-+	if (pcie->big_endian)
-+		iowrite32be(val, pcie->pf_base + off);
-+	else
-+		iowrite32(val, pcie->pf_base + off);
-+}
-+
-+static void ls_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct ls_pcie *pcie = to_ls_pcie(pci);
-+	u32 val;
-+	int ret;
-+
-+	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
-+	val |= PF_MCR_PTOMR;
-+	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
-+
-+	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
-+				 val, !(val & PF_MCR_PTOMR),
-+				 PCIE_PME_TO_L2_TIMEOUT_US/10,
-+				 PCIE_PME_TO_L2_TIMEOUT_US);
-+	if (ret)
-+		dev_err(pcie->pci->dev, "PME_Turn_off timeout\n");
-+}
-+
-+static void ls_pcie_exit_from_l2(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct ls_pcie *pcie = to_ls_pcie(pci);
-+	u32 val;
-+	int ret;
-+
-+	/*
-+	 * Set PF_MCR_EXL2S bit in LS_PCIE_PF_MCR register for the link
-+	 * to exit L2 state.
-+	 */
-+	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
-+	val |= PF_MCR_EXL2S;
-+	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
-+
-+	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
-+				 val, !(val & PF_MCR_EXL2S),
-+				 1000,
-+				 10000);
-+	if (ret)
-+		dev_err(pcie->pci->dev, "L2 exit timeout\n");
-+}
-+
- static int ls_pcie_host_init(struct dw_pcie_rp *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-@@ -91,18 +166,27 @@ static int ls_pcie_host_init(struct dw_pcie_rp *pp)
- 
- static const struct dw_pcie_host_ops ls_pcie_host_ops = {
- 	.host_init = ls_pcie_host_init,
-+	.pme_turn_off = ls_pcie_send_turnoff_msg,
-+};
-+
-+static const struct ls_pcie_drvdata ls1021a_drvdata = {
-+};
-+
-+static const struct ls_pcie_drvdata layerscape_drvdata = {
-+	.pf_off = 0xc0000,
-+	.pm_support = true,
- };
- 
- static const struct of_device_id ls_pcie_of_match[] = {
--	{ .compatible = "fsl,ls1012a-pcie", },
--	{ .compatible = "fsl,ls1021a-pcie", },
--	{ .compatible = "fsl,ls1028a-pcie", },
--	{ .compatible = "fsl,ls1043a-pcie", },
--	{ .compatible = "fsl,ls1046a-pcie", },
--	{ .compatible = "fsl,ls2080a-pcie", },
--	{ .compatible = "fsl,ls2085a-pcie", },
--	{ .compatible = "fsl,ls2088a-pcie", },
--	{ .compatible = "fsl,ls1088a-pcie", },
-+	{ .compatible = "fsl,ls1012a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021a_drvdata },
-+	{ .compatible = "fsl,ls1028a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1021a_drvdata },
-+	{ .compatible = "fsl,ls1046a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls2080a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls2085a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls2088a-pcie", .data = &layerscape_drvdata },
-+	{ .compatible = "fsl,ls1088a-pcie", .data = &layerscape_drvdata },
- 	{ },
- };
- 
-@@ -121,6 +205,8 @@ static int ls_pcie_probe(struct platform_device *pdev)
- 	if (!pci)
- 		return -ENOMEM;
- 
-+	pcie->drvdata = of_device_get_match_data(dev);
-+
- 	pci->dev = dev;
- 	pci->pp.ops = &ls_pcie_host_ops;
- 
-@@ -131,6 +217,10 @@ static int ls_pcie_probe(struct platform_device *pdev)
- 	if (IS_ERR(pci->dbi_base))
- 		return PTR_ERR(pci->dbi_base);
- 
-+	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
-+
-+	pcie->pf_base = pci->dbi_base + pcie->drvdata->pf_off;
-+
- 	if (!ls_pcie_is_bridge(pcie))
- 		return -ENODEV;
- 
-@@ -139,12 +229,39 @@ static int ls_pcie_probe(struct platform_device *pdev)
- 	return dw_pcie_host_init(&pci->pp);
- }
- 
-+static int ls_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct ls_pcie *pcie = dev_get_drvdata(dev);
-+
-+	if (!pcie->drvdata->pm_support)
-+		return 0;
-+
-+	return dw_pcie_suspend_noirq(pcie->pci);
-+}
-+
-+static int ls_pcie_resume_noirq(struct device *dev)
-+{
-+	struct ls_pcie *pcie = dev_get_drvdata(dev);
-+
-+	if (!pcie->drvdata->pm_support)
-+		return 0;
-+
-+	ls_pcie_exit_from_l2(&pcie->pci->pp);
-+
-+	return dw_pcie_resume_noirq(pcie->pci);
-+}
-+
-+static const struct dev_pm_ops ls_pcie_pm_ops = {
-+	NOIRQ_SYSTEM_SLEEP_PM_OPS(ls_pcie_suspend_noirq, ls_pcie_resume_noirq)
-+};
-+
- static struct platform_driver ls_pcie_driver = {
- 	.probe = ls_pcie_probe,
- 	.driver = {
- 		.name = "layerscape-pcie",
- 		.of_match_table = ls_pcie_of_match,
- 		.suppress_bind_attrs = true,
-+		.pm = &ls_pcie_pm_ops,
- 	},
- };
- builtin_platform_driver(ls_pcie_driver);
--- 
-2.34.1
-
+On 8/21/2023 1:31 PM, Rafael J. Wysocki wrote:
+> On Fri, Aug 18, 2023 at 9:40 PM Mario Limonciello
+> <mario.limonciello@amd.com> wrote:
+>> LPS0 constraints can be useful to other parts of the kernel to make
+>> decisions what state to put devices into.
+>>
+>> In v14 this series has been split into 3 parts.
+>>   part A: Immediate fix for AMD issue.
+>>   part B: LPS0 export improvements
+>>   part C: Long term solution for all vendors
+>>
+>> This is part B, it can be applied and reviewed independently from part A.
+>>
+>> Andy Shevchenko (1):
+>>    ACPI: x86: s2idle: Add for_each_lpi_constraint() helper
+>>
+>> Mario Limonciello (6):
+>>    ACPI: Adjust #ifdef for *_lps0_dev use
+>>    ACPI: x86: s2idle: Post-increment variables when getting constraints
+>>    ACPI: x86: s2idle: Catch multiple ACPI_TYPE_PACKAGE objects
+>>    ACPI: x86: s2idle: Fix a logic error parsing AMD constraints table
+>>    ACPI: x86: s2idle: Add more debugging for AMD constraints parsing
+>>    ACPI: x86: s2idle: Add a function to get constraints for a device
+>>
+>>   drivers/acpi/x86/s2idle.c | 96 +++++++++++++++++++++++++--------------
+>>   include/linux/acpi.h      | 10 +++-
+>>   2 files changed, 70 insertions(+), 36 deletions(-)
+>>
+>> --
+> All applied as 6.6 material, but I rewrote the last patch my way, so
+> please see the result in the bleeding-edge branch and let me know if
+> there's anything wrong with it.
+>
+> Thanks!
+Looks great, thanks!
