@@ -2,253 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A4B078272C
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Aug 2023 12:34:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BB0078273A
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Aug 2023 12:40:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234739AbjHUKeV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Aug 2023 06:34:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45096 "EHLO
+        id S230208AbjHUKkT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Aug 2023 06:40:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234770AbjHUKeS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Aug 2023 06:34:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C0F6EB;
-        Mon, 21 Aug 2023 03:34:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 00DF263048;
-        Mon, 21 Aug 2023 10:34:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1767DC433C8;
-        Mon, 21 Aug 2023 10:34:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692614055;
-        bh=V8jNWGK/w70MbYYsY5Sv9WvKJR1us7t+YIKDHFfEVFU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BzKRQSkZS3pcsylS9Xb+eR147O/3mSfYsNTa1bJGyqpgZg/dlEZJc547PrNkbTaHm
-         kjuw1J7vSzfs+AGn9JPQMJ1wKbUxfrY6fO85oFSrdBnIprBSwHZHetYNhwbMkhZrzI
-         QqTabHLZ9lHUO1zfW5CudtwoqV1UGwwNQZoql1/lXcTnunHnzLczuAwGS9reYFFAEu
-         yfOWfj8WtE/IbP4y2z8j6EgqxJKQU41qwZ5wzeGSQ+hsoNrOxsHiKqHYIdaXdtLoAj
-         5L6Rocg+E979zg0I1X25lgmkUaQO6sE+58K/N067nzlYmQpHuVdXBmiOpF1N96P1us
-         eRs9e4GZEYbwA==
-Date:   Mon, 21 Aug 2023 16:03:57 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Frank Li <Frank.li@nxp.com>, manivannan.sadhasivam@linaro.org,
-        helgaas@kernel.org, bhelgaas@google.com,
-        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
-        imx@lists.linux.dev, kw@linux.com, leoyang.li@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, minghuan.lian@nxp.com,
-        mingkai.hu@nxp.com, robh+dt@kernel.org, roy.zang@nxp.com,
-        shawnguo@kernel.org, zhiqiang.hou@nxp.com
-Subject: Re: [PATCH v11 3/3] PCI: layerscape: Add power management support
- for ls1028a
-Message-ID: <20230821103357.GA36455@thinkpad>
-References: <20230809153540.834653-1-Frank.Li@nxp.com>
- <20230809153540.834653-4-Frank.Li@nxp.com>
- <ZNzrgr3a13vm6Yqi@lpieralisi>
- <ZN6iarqhryMHmwLh@lizhi-Precision-Tower-5810>
- <ZOMecaueyN3cutUH@lpieralisi>
+        with ESMTP id S230050AbjHUKkT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Aug 2023 06:40:19 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09F46D9
+        for <linux-pci@vger.kernel.org>; Mon, 21 Aug 2023 03:39:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1692614371;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=eb39vEwU6YS1gjwjbC+gfgmbn74x4GCsfZvxii4hs5c=;
+        b=fjOER6X13c0okIXy/l3Km3FraPsJRxQ97A+ZahMxq9iv89gfzECSwKaAPwHYtdLX20osVg
+        CFebr9OEp+7tlz0IboBtXufxtd96g53HvSrqByLWVWu6afYJ1DbUzWqBTtLVpEdy6xMCrd
+        v2M/t6DKzTrLCZMgECc8H0hSqR3SioA=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-260-FH6eV54mMdq0rJwvhVNyZw-1; Mon, 21 Aug 2023 06:39:30 -0400
+X-MC-Unique: FH6eV54mMdq0rJwvhVNyZw-1
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-26f49ad3b86so971922a91.3
+        for <linux-pci@vger.kernel.org>; Mon, 21 Aug 2023 03:39:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692614368; x=1693219168;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eb39vEwU6YS1gjwjbC+gfgmbn74x4GCsfZvxii4hs5c=;
+        b=iP0r/sBGH1W2hvKp2uUo3UExAAsOVak8JtPEujSykvbAggmsn8so44cItOPRvi8k6B
+         uKK0fVg+xLB6KkAsSmXCiiJ/ENQiRdRZPlkYTrzLzPvmTogaxXCUDPulRfVHkciijPsP
+         1fr0VVsHKfw4TJ+mq4aNOUsdYNKSAKq5jhHSxgvbHHrLVXM2oIcguC1deOUS0qBOSyHO
+         DBZGJnyNHILgEAQCP6IW5gHxcLIHoZwCL8UhgtfBR7KlRH8riuDqzsR/1hBEQTKOzTKq
+         rLibvRcXffAXJu5PDyxNa8EEOEn5ati8VLI7y6/ARgvVEcaLtxY7zqWxBrUxdVfD5S4b
+         OF5w==
+X-Gm-Message-State: AOJu0YxQn9HJZK5gpwxCC4W50uXjf7c2D2oKzRe5AsiaTT9kr3NB89GE
+        7PSqlwBUA6LyTN/4L/5Q1FvsOiCedRFboQGjt9Pz4+cwUl9qUwWvhzWRI8KoWI5bwCC0eU6E/bO
+        BEySjGTMgiDAlHPZxnKoDPE3H8xZdd31jw2LoMusu2I3ZNw==
+X-Received: by 2002:a17:90a:e285:b0:268:c7fc:b771 with SMTP id d5-20020a17090ae28500b00268c7fcb771mr3271810pjz.14.1692614368573;
+        Mon, 21 Aug 2023 03:39:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGEjcynWgeddgVf3x/UFb7711wXal1zhaohdOU1viEpeONCTG+12SD6nMzh1fLrcEkPxVq7lW3NUuClo15cCfw=
+X-Received: by 2002:a17:90a:e285:b0:268:c7fc:b771 with SMTP id
+ d5-20020a17090ae28500b00268c7fcb771mr3271803pjz.14.1692614368290; Mon, 21 Aug
+ 2023 03:39:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZOMecaueyN3cutUH@lpieralisi>
+From:   Kamil Paral <kparal@redhat.com>
+Date:   Mon, 21 Aug 2023 12:39:02 +0200
+Message-ID: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
+Subject: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+To:     linux-pci@vger.kernel.org
+Cc:     regressions@lists.linux.dev, mika.westerberg@linux.intel.com,
+        bhelgaas@google.com, chris.chiu@canonical.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 21, 2023 at 10:21:05AM +0200, Lorenzo Pieralisi wrote:
-> On Thu, Aug 17, 2023 at 06:42:50PM -0400, Frank Li wrote:
-> > On Wed, Aug 16, 2023 at 05:30:10PM +0200, Lorenzo Pieralisi wrote:
-> > > On Wed, Aug 09, 2023 at 11:35:40AM -0400, Frank Li wrote:
-> > > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > > 
-> > > > Add PME_Turn_off/PME_TO_Ack handshake sequence for ls1028a platform. Call
-> > > > common dwc dw_pcie_suspend(resume)_noirq() function when system enter/exit
-> > > > suspend state.
-> > > > 
-> > > > Acked-by: Manivannan Sadhasivam <mani@kernel.org>
-> > > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > ---
-> > > >  drivers/pci/controller/dwc/pci-layerscape.c | 130 ++++++++++++++++++--
-> > > >  1 file changed, 121 insertions(+), 9 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-> > > > index ed5fb492fe084..b49f654335fd7 100644
-> > > > --- a/drivers/pci/controller/dwc/pci-layerscape.c
-> > > > +++ b/drivers/pci/controller/dwc/pci-layerscape.c
-> > > > @@ -8,9 +8,11 @@
-> > > >   * Author: Minghuan Lian <Minghuan.Lian@freescale.com>
-> > > >   */
-> > > >  
-> > > > +#include <linux/delay.h>
-> > > >  #include <linux/kernel.h>
-> > > >  #include <linux/interrupt.h>
-> > > >  #include <linux/init.h>
-> > > > +#include <linux/iopoll.h>
-> > > >  #include <linux/of_pci.h>
-> > > >  #include <linux/of_platform.h>
-> > > >  #include <linux/of_address.h>
-> > > > @@ -20,6 +22,7 @@
-> > > >  #include <linux/mfd/syscon.h>
-> > > >  #include <linux/regmap.h>
-> > > >  
-> > > > +#include "../../pci.h"
-> > > >  #include "pcie-designware.h"
-> > > >  
-> > > >  /* PEX Internal Configuration Registers */
-> > > > @@ -27,12 +30,26 @@
-> > > >  #define PCIE_ABSERR		0x8d0 /* Bridge Slave Error Response Register */
-> > > >  #define PCIE_ABSERR_SETTING	0x9401 /* Forward error of non-posted request */
-> > > >  
-> > > > +/* PF Message Command Register */
-> > > > +#define LS_PCIE_PF_MCR		0x2c
-> > > > +#define PF_MCR_PTOMR		BIT(0)
-> > > > +#define PF_MCR_EXL2S		BIT(1)
-> > > > +
-> > > >  #define PCIE_IATU_NUM		6
-> > > >  
-> > > > +struct ls_pcie_drvdata {
-> > > > +	const u32 pf_off;
-> > > > +	bool pm_support;
-> > > > +};
-> > > > +
-> > > >  struct ls_pcie {
-> > > >  	struct dw_pcie *pci;
-> > > > +	const struct ls_pcie_drvdata *drvdata;
-> > > > +	void __iomem *pf_base;
-> > > > +	bool big_endian;
-> > > >  };
-> > > >  
-> > > > +#define ls_pcie_pf_readl_addr(addr)	ls_pcie_pf_readl(pcie, addr)
-> > > >  #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
-> > > >  
-> > > >  static bool ls_pcie_is_bridge(struct ls_pcie *pcie)
-> > > > @@ -73,6 +90,60 @@ static void ls_pcie_fix_error_response(struct ls_pcie *pcie)
-> > > >  	iowrite32(PCIE_ABSERR_SETTING, pci->dbi_base + PCIE_ABSERR);
-> > > >  }
-> > > >  
-> > > > +static u32 ls_pcie_pf_readl(struct ls_pcie *pcie, u32 off)
-> > > > +{
-> > > > +	if (pcie->big_endian)
-> > > > +		return ioread32be(pcie->pf_base + off);
-> > > > +
-> > > > +	return ioread32(pcie->pf_base + off);
-> > > > +}
-> > > > +
-> > > > +static void ls_pcie_pf_writel(struct ls_pcie *pcie, u32 off, u32 val)
-> > > > +{
-> > > > +	if (pcie->big_endian)
-> > > > +		iowrite32be(val, pcie->pf_base + off);
-> > > > +	else
-> > > > +		iowrite32(val, pcie->pf_base + off);
-> > > > +}
-> > > > +
-> > > > +static void ls_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
-> > > > +{
-> > > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > > > +	struct ls_pcie *pcie = to_ls_pcie(pci);
-> > > > +	u32 val;
-> > > > +	int ret;
-> > > > +
-> > > > +	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
-> > > > +	val |= PF_MCR_PTOMR;
-> > > > +	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
-> > > > +
-> > > > +	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
-> > > > +				 val, !(val & PF_MCR_PTOMR),
-> > > > +				 PCIE_PME_TO_L2_TIMEOUT_US/10,
-> > > > +				 PCIE_PME_TO_L2_TIMEOUT_US);
-> > > > +	if (ret)
-> > > > +		dev_err(pcie->pci->dev, "PME_Turn_off timeout\n");
-> > > > +}
-> > > > +
-> > > > +static void ls_pcie_exit_from_l2(struct dw_pcie_rp *pp)
-> > > > +{
-> > > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > > > +	struct ls_pcie *pcie = to_ls_pcie(pci);
-> > > > +	u32 val;
-> > > > +	int ret;
-> > > > +
-> > > > +	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
-> > > > +	val |= PF_MCR_EXL2S;
-> > > > +	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
-> > > 
-> > > What is this write transaction generating in HW ?
-> > 
-> > I don't think send anything to to pci bus because it was called before
-> > host init.
-> > 
-> > The spec of ls1028 is not clear enough.
-> > 
-> > `EXL2S: exit l2 state command. when set to 1, an L2 exit command is
-> > generated. The bit is self clearing. Once the bit is set. SW needs to wait
-> > for the bit to selfclear before sending a new command'
-> > 
-> > > 
-> > > Why is it needed ? Shouldn't L2 exit happen automatically
-> > > in HW ?
-> > 
-> > I tried remove this, PCI can't resume. I think this is specific for ls1028
-> > chip to clear internal logic.
-> 
-> Well, if you don't even know what this does how can you write a sane
-> device driver ?
-> 
-> Can you ask designers a more detailed description please ?
-> 
+=3D Summary =3D
+A Thinkpad T480s laptop with a Thinkpad Thunderbolt 3 Dock connected
+can no longer resume from suspend. The problem was introduced in
+e8b908146d44 "PCI/PM: Increase wait time after resume".
 
-I often encounter hw quirks like this one and the hw designers will just say
-that "set bit X to make Y happpen". IMO a comment saying that the driver need to
-set PF_MCR_EXL2S bit in LS_PCIE_PF_MCR register for the link to exit L2 state is
-good enough.
+=3D Detailed description =3D
+When running a kernel containing the identified commit and trying to
+resume the laptop from sleep, the laptop's power light changes from
+blinking (sleep state) to shining (running state), but the display
+stays black and it doesn't respond to any keyboard input, nor to
+ping/ssh, and no logs are written to the disk (which means I don't
+know how to gather error logs). It needs to be force-rebooted. I
+bisected the kernel and identified the commit which causes this
+behavior. I used the vanilla kernel with a Fedora kernel config.
 
-> > > > +
-> > > > +	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
-> > > > +				 val, !(val & PF_MCR_EXL2S),
-> > > > +				 PCIE_PME_TO_L2_TIMEOUT_US/10,
-> > > > +			PCIE_PME_TO_L2_TIMEOUT_US);
-> > > 
-> > > And why is the timeout value the same used for the PME_turn_off message ?
-> > 
-> > I think No spec define it, just reused it. use PCIE_PME_TO_L2_TIMEOUT_US
-> > may cause confuse. What's do you prefered? Just use number,such as 10ms.
-> 
-> This delay value is misleading, it is not good to reuse a value for
-> a delay that is most certainly controller specific.
-> 
-> From this discussion I would say that having pme_turn_off() and
-> exit_from_l2() hooks is generalizing something we don't know yet
-> it is needed for all DWC based controllers.
-> 
-> It is probably worth keeping the layerscape specific changes in
-> the layerscape driver and from there call the "generic" DWC
-> suspend/resume functions:
-> 
-> dw_pcie_suspend_noirq()
-> dw_pcie_resume_noirq()
-> 
-> rather than adding hooks that we barely know what they are needed for.
-> 
-> Mani, what do you think ?
-> 
+The reproducer is:
+1. Connect the dock to the laptop.
+2. Boot the laptop (in my case, to the gdm).
+3. Suspend the laptop.
+4. Resume the laptop. This is successful before the identified commit
+(the last tested good commit was cc8a983d0fce), and unsuccessful
+(black screen, frozen system) after the identified commit
+(e8b908146d44).
 
-PME_Turn_off procedure may vary between controllers and is really required
-from core DWC perspective. So I'd prefer to keep the pme_turn_off() callback
-and leave exit_from_l2() since later seems to be only required for layerscape.
+The reproducibility is 100%, I tested it many many times in a row.
 
-- Mani
+When the dock is unplugged, suspend and resume works as expected. When
+I connect a different laptop to the dock (Thinkpad P1 gen3), I don't
+see any resume failure. So this is somehow related to the particular
+combination of Thinkpad T480s and Thinkpad Thunderbolt 3 Dock. The
+dock is running the latest firmware. I also tested "pcie_aspm=3Doff",
+and that allows the laptop to resume properly, but then there's a race
+condition whether devices on the dock are visible to the OS or not
+after resume, so this is not useful even just as a workaround.
 
--- 
-மணிவண்ணன் சதாசிவம்
+
+I already created a downstream Fedora bug report in Red Hat Bugzilla:
+https://bugzilla.redhat.com/show_bug.cgi?id=3D2230357
+
+lspci of the laptop:
+https://bugzilla-attachments.redhat.com/attachment.cgi?id=3D1982541
+git bisect log:
+https://bugzilla-attachments.redhat.com/attachment.cgi?id=3D1983351
+
+
+The commit which broke resume is the following:
+
+e8b908146d44310473e43b3382eca126e12d279c is the first bad commit
+commit e8b908146d44310473e43b3382eca126e12d279c
+Author: Mika Westerberg <mika.westerberg.com>
+Date:   Tue Apr 4 08:27:13 2023 +0300
+
+    PCI/PM: Increase wait time after resume
+
+    PCIe r6.0 sec 6.6.1 prescribes that a device must be able to respond to
+    config requests within 1.0 s (PCI_RESET_WAIT) after exiting conventiona=
+l
+    reset and this same delay is prescribed when coming out of D3cold (as t=
+hat
+    involves reset too).
+
+    A device that requires more than 1 second to initialize after reset may
+    respond to config requests with Request Retry Status completions (sec
+    2.3.1), and we accommodate that in Linux with a 60 second cap
+    (PCIE_RESET_READY_POLL_MS).
+
+    Previously we waited up to PCIE_RESET_READY_POLL_MS only in the reset c=
+ode
+    path, not in the resume path.  However, a device has surfaced, namely I=
+ntel
+    Titan Ridge xHCI, which requires a longer delay also in the resume code
+    path.
+
+    Make the resume code path to use this same extended delay as the reset
+    path.
+
+    Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216728
+    Link: https://lore.kernel.org/r/20230404052714.51315-2-mika.westerberg@=
+linux.intel.com
+    Reported-by: Chris Chiu <chris.chiu>
+    Signed-off-by: Mika Westerberg <mika.westerberg.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas>
+    Cc: Lukas Wunner <lukas>
+
+ drivers/pci/pci-driver.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+
+I'm happy to add further details, perform additional debugging, or
+test some experimental patches in order to resolve this regression.
+Please CC me in your replies, I'm not subscribed to this list. Thank
+you!
+Kamil P=C3=A1ral
+
+
+#regzbot introduced: e8b908146d44
+
