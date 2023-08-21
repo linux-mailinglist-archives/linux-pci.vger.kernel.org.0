@@ -2,46 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F63F783065
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Aug 2023 20:45:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7177E7830C5
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Aug 2023 21:13:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229453AbjHUSo7 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 21 Aug 2023 14:44:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35166 "EHLO
+        id S229490AbjHUSyZ convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 21 Aug 2023 14:54:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjHUSo6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Aug 2023 14:44:58 -0400
-Received: from mail-oo1-xc36.google.com (mail-oo1-xc36.google.com [IPv6:2607:f8b0:4864:20::c36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 138566C90;
-        Mon, 21 Aug 2023 11:44:56 -0700 (PDT)
-Received: by mail-oo1-xc36.google.com with SMTP id 006d021491bc7-570d3039f1cso152033eaf.0;
-        Mon, 21 Aug 2023 11:44:56 -0700 (PDT)
+        with ESMTP id S229499AbjHUSyY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Aug 2023 14:54:24 -0400
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABEB65A5;
+        Mon, 21 Aug 2023 11:54:03 -0700 (PDT)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6874a386ec7so460145b3a.1;
+        Mon, 21 Aug 2023 11:54:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692643142; x=1693247942;
+        d=1e100.net; s=20221208; t=1692644023; x=1693248823;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DqPPUrt9KeYhVa9fnzE/uDwtP7K+EETKPssBOXtMCik=;
-        b=C+yB8VPsL8V8TiIE/BzCZqpZkla+OS5QcZ0ocGxpuKhNarlPCukNz1w/mebt4ggo2Y
-         PltamID+OTCkibN5kosfmV6EHhj8VkyroKpqivW4pcUrPTfjCbXb31BOUSilltUWnStw
-         nWeokGkOugGnVlcVVZUQjVBnZVM0oUUcaHCb/+zOcQJsdwiAIXX21gUyNncJ+97mNAL7
-         gnKwkQZxlInM7ITCviw5bOgnkZbhb/uRUrtAeMOXRBwSEY5xzCCEEd0twbIpTvGc6RP1
-         iqxiGxLG4ntnm8+J2Qo9chN/TcVseIjNvcqZWt/wTKOGqiWz54/zePpCWyL90tp5yiIl
-         /qKw==
-X-Gm-Message-State: AOJu0Yyzu8nATwDLIxWMprxd8e+g5JSJNDaQPIvYs0EhOp2HMywit2+c
-        H+AB8/ZS7yrrwmg+8GVg8qDmq+z7UnMazXD2h/tnimAW
-X-Google-Smtp-Source: AGHT+IE7P/LVq3p+kL8FThy2tHNGf3afWoWZDF12dtGlKOlEuP3D2AwHgxbH4+duc/4bAVIoH52dt0IyJXXthCD5gcQ=
-X-Received: by 2002:a4a:c3c8:0:b0:56e:487f:8caa with SMTP id
- e8-20020a4ac3c8000000b0056e487f8caamr6796294ooq.1.1692643142475; Mon, 21 Aug
- 2023 11:39:02 -0700 (PDT)
+        bh=AjNsowUK9gird43ia4GlcF2/+kMuvjQMQyQUr20YgY8=;
+        b=amwrs4uh45BMtmtUtzHNXlwhVSjGqBD76zMSECZDaXl+dtPX9a5THloXqYsZv5SSx+
+         GhsYMWBuQ//jlDXawrcaTaR4pvALU9H53LVU0L/j8ztAQSfKDYygplHam3MivfZgB6XS
+         2utuKvz2ckcnVLjKo1T0AqZaQfFjb0jghYGohaUbokXhdJlAlDxWYHjAwHuav3gH7YG8
+         F4RB9IxwgYh/jL9I91ZNAVRjED6f2f8+aV0sjE2m9LSlwhIHgbKmr3VGOJ1QuVX8Yfk1
+         j5+fLNLdQ1dqu/OLEwAqz07RoUDU0aZsr/c0OhXYeB3yAz+lR1PXmmwVpU+2pSGwFdFx
+         L5xw==
+X-Gm-Message-State: AOJu0YyiPbab9WQt6/FqQsKbaK4SBUdCr+9O+PEVndr6rhfR4Ol9Q3aJ
+        oOK0/8UpVh8OSMOj5FuCksH0R4FhQTS6tCsFpIh7k8si
+X-Google-Smtp-Source: AGHT+IGbkE5EtyoRuBeaQEblim4mO21X78UOxSVlgSlgdlH4DAwReaNaX8x02A4Ls5imOEsvndnFA+E2HFdO+x3TqsA=
+X-Received: by 2002:a4a:e882:0:b0:570:d852:f77f with SMTP id
+ g2-20020a4ae882000000b00570d852f77fmr3034647ooe.1.1692643588293; Mon, 21 Aug
+ 2023 11:46:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230818194027.27559-1-mario.limonciello@amd.com> <20230818194027.27559-4-mario.limonciello@amd.com>
-In-Reply-To: <20230818194027.27559-4-mario.limonciello@amd.com>
+References: <20230818194027.27559-1-mario.limonciello@amd.com> <20230818194027.27559-5-mario.limonciello@amd.com>
+In-Reply-To: <20230818194027.27559-5-mario.limonciello@amd.com>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 21 Aug 2023 20:38:51 +0200
-Message-ID: <CAJZ5v0gGi8s3o5e0AJXPMwAwFAwEg=Mbtu6iQ2-6rhACmCBQ+w@mail.gmail.com>
-Subject: Re: [PATCH v14.c 3/4] PCI: ACPI: Use device constraints to opt
- devices into D3 support
+Date:   Mon, 21 Aug 2023 20:46:17 +0200
+Message-ID: <CAJZ5v0j_tmW1uWZF7ShK=fwnVGjjy8CSf7DJErJdSaD_dgW8WQ@mail.gmail.com>
+Subject: Re: [PATCH v14.c 4/4] PCI: ACPI: Limit the Intel specific opt-in to
+ D3 to 2024
 To:     Mario Limonciello <mario.limonciello@amd.com>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
@@ -55,8 +55,8 @@ Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -66,77 +66,65 @@ X-Mailing-List: linux-pci@vger.kernel.org
 On Fri, Aug 18, 2023 at 9:40 PM Mario Limonciello
 <mario.limonciello@amd.com> wrote:
 >
-> In Windows, systems that support Modern Standby specify hardware
-> pre-conditions for the SoC to be able to achieve the lowest power state
-> by using 'device constraints' in a SOC specific "Power Engine
-> Plugin" (PEP) [1] [2].
->
-> For each device, the constraint is the minimum (shallowest) power
-> state in which the device can be for the platform to be still able to
-> achieve significant energy conservation in a system-wide low-power
-> idle configuration.
->
-> Device constraints are specified in the return value for a _DSM of
-> a PNP0D80 device, and Linux enumerates the constraints during probing.
->
-> For PCI bridges (including PCIe ports), the constraints may be
-> regarded as an additional source of information regarding the power
-> state to put the device into when it is suspended.  In particular, if
-> the constraint for a given PCI bridge is D3hot, the platform regards
-> D3hot as a valid power state for the bridge and it is reasonable to
-> expect that there won't be any side effects caused by putting the
-> bridge into that power state.
->
-> Accordingly, take the low-power S0 idle (LPS0) constraints into
-> account when deciding whether or not to allow a given PCI bridge to be
-> put into D3.
->
-> Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/platform-design-for-modern-standby#low-power-core-silicon-cpu-soc-dram [1]
-> Link: https://uefi.org/sites/default/files/resources/Intel_ACPI_Low_Power_S0_Idle.pdf [2]
+> Intel systems that need to have PCIe ports in D3 for low power idle
+> specify this by constraints on the ACPI PNP0D80 device. As this information
+> is queried by acpi_pci_bridge_d3(), limit the DMI BIOS year check to stop
+> at 2024. This will allow future systems to rely on the constraints check
+> and ACPI checks to set up policy like non-Intel systems do.
+
+So I'm not sure about the value of this change.
+
+The behavior is made Intel-specific in [14a 1/1] and it will be that
+way at least for some time.  This change only sets the date after
+which it won't be Intel-specific any more, but for what reason
+exactly?
+
+And why is 2024 the cut-off year (and not 2025, for example)?
+
+If Intel platforms continue to be OK with putting all PCIe ports into
+D3hot beyond 2024, why restrict the kernel from doing so on them?
+
 > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-
-All feedback addressed AFAICS, so
-
-Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
-
 > ---
 > v13->v14:
->  * Move code as another way to satisfy acpi_pci_bridge_d3() instead
->  * Update commit with Rafael's suggestions
+>  * Use a variable instead
 > v12->v13:
->  * Move back to PCI code
->  * Trim commit message
-> v11->v12:
->  * Adjust for dropped patch 8/9 from v11.
->  * Update comment
-> v10->v11:
->  * Fix kernel kernel build robot errors and various sparse warnings
->    related to new handling of pci_power_t.
->  * Use the new helpers introduced in previous patches
+>  * New patch
 > ---
->  drivers/pci/pci-acpi.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  drivers/pci/pci.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
 >
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 64e6ada024235..8331aea22d327 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -1022,6 +1022,15 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index bfdad2eb36d13..c8787d898c377 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3037,16 +3037,22 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+>                         return false;
 >
->         adev = ACPI_COMPANION(&dev->dev);
->         if (adev) {
-> +               int acpi_state;
-> +
-> +               /* Check if the platform specifies an LPS0 constraint of D3. */
-> +               acpi_state = acpi_get_lps0_constraint(adev);
-> +               pci_dbg(dev, "LPS0 constraint: %d\n", acpi_state);
-> +               if (acpi_state != ACPI_STATE_UNKNOWN &&
-> +                   acpi_state >= ACPI_STATE_D3_HOT)
-> +                       return true;
-> +
 >                 /*
->                  * If the bridge has _S0W, whether or not it can go into D3
->                  * depends on what is returned by that object.  In particular,
+> -                * Allow Intel PCIe ports from 2015 onward to go into D3 to
+> +                * Allow Intel PCIe ports from 2015 to 2024 to go into D3 to
+>                  * achieve additional energy conservation on some platforms.
+>                  *
+> +                * Intel systems from 2025 onward that need this are expected
+> +                * to specify this in an LPS0 device constraint instead.
+> +                *
+>                  * This is only set for Intel PCIe ports as it causes problems
+>                  * on both AMD Rembrandt and Phoenix platforms where USB keyboards
+>                  * can not be used to wake the system from suspend.
+>                  */
+> -               if (bridge->vendor == PCI_VENDOR_ID_INTEL &&
+> -                   dmi_get_bios_year() >= 2015)
+> -                       return true;
+> +               if (bridge->vendor == PCI_VENDOR_ID_INTEL) {
+> +                       int year = dmi_get_bios_year();
+> +
+> +                       if (year >= 2015 && year <= 2024)
+> +                               return true;
+> +               }
+>                 break;
+>         }
+>
 > --
 > 2.34.1
 >
