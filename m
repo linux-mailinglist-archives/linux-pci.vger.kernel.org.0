@@ -2,183 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3314F784D95
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 02:02:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D9D3784E48
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 03:37:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231842AbjHWACs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Aug 2023 20:02:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40332 "EHLO
+        id S232049AbjHWBhR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Aug 2023 21:37:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229796AbjHWACs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Aug 2023 20:02:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B801FB;
-        Tue, 22 Aug 2023 17:02:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 28DD46151A;
-        Wed, 23 Aug 2023 00:02:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A7FDC433C8;
-        Wed, 23 Aug 2023 00:02:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692748965;
-        bh=ctdCJfL67RtKCkpOnTUgVh2uDuaL/GwwnDDhyi3PCTw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UhnLUUvfdySw2w4ijgC9BvYkVmDrTPblB96PrgJsVG3X15mtylUcjS0Ae5EWiMRfv
-         8gwnSXsSF9JCVnID8g8bA2bU9XJwPCvebqxHcsc5gPCPZ0BJCDPKeO62J4vJJ16Ows
-         znxOdJtpbnG8uOFU5A8bSDRpe3NRaDYCmIairamVNGfGJKHHqg9zTxZ20wxBVO+PH6
-         NMe4TI+NyZh/9v+3GRrSP3pZLM5xWwJsPJr+CUYEAk5CdXzEvDLn9UddZqR5qw10pp
-         o7c3d64FFGIty7NaSO2YoBImNopsUpy4xocQ4qRGwofyBFWGVYk5rXjqjDD9T82Xpw
-         OnI91RwI/hJWQ==
-Date:   Tue, 22 Aug 2023 19:02:43 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mario Limonciello <mario.limonciello@amd.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Iain Lane <iain@orangesquash.org.uk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v14.a 1/1] PCI: Only put Intel PCIe ports >= 2015 into D3
-Message-ID: <20230823000243.GA391238@bhelgaas>
+        with ESMTP id S230025AbjHWBhQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Aug 2023 21:37:16 -0400
+X-Greylist: delayed 917 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 22 Aug 2023 18:37:14 PDT
+Received: from symantec4.comsats.net.pk (symantec4.comsats.net.pk [203.124.41.30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB403E46
+        for <linux-pci@vger.kernel.org>; Tue, 22 Aug 2023 18:37:14 -0700 (PDT)
+X-AuditID: cb7c291e-06dff70000002aeb-ff-64e54a4ceadf
+Received: from iesco.comsatshosting.com (iesco.comsatshosting.com [210.56.28.11])
+        (using TLS with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        by symantec4.comsats.net.pk (Symantec Messaging Gateway) with SMTP id 80.3A.10987.C4A45E46; Wed, 23 Aug 2023 04:52:45 +0500 (PKT)
+DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns;
+        d=iesco.com.pk; s=default;
+        h=received:content-type:mime-version:content-transfer-encoding
+          :content-description:subject:to:from:date:reply-to;
+        b=hNYr6cFMYwQeGRs4CnYcKcCt0qwvzpcI5ZrI9JbxVcTPkd/ohgEYrZNAhdIQemcDm
+          JCA9m/H34it6f/By5U5rfHrG7qwalPtpUySUEl20Uy9BH3ZoHDHk+E2pBQXCaK0iY
+          Qg9vO7KsO3c2qDteyOudR4Q0n+AtQvqVf558DUjMk=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=iesco.com.pk; s=default;
+        h=reply-to:date:from:to:subject:content-description
+          :content-transfer-encoding:mime-version:content-type;
+        bh=GMzYzcyTxDsE6wX/XHG6MHqAdAiHrhqbmmLQ/TZ1QnQ=;
+        b=WkqUsnBo3AfL4pczW8w2v7q2ZtXqxvyF19EccskHMXHq30idthjZdULLlYiNXQh5S
+          hU9xHFfVUFEqAjmu9Q/TCVGDnmX9cD9OnwjqQ9S1iBZ/XhQyVkNgwRjtNjMIULGtl
+          cNH2DeYDrgvX24VhD0QYIuVUcGLLv4lE6ibuq2Fq4=
+Received: from [94.156.6.90] (UnknownHost [94.156.6.90]) by iesco.comsatshosting.com with SMTP;
+   Wed, 23 Aug 2023 04:31:06 +0500
+Message-ID: <80.3A.10987.C4A45E46@symantec4.comsats.net.pk>
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0hU3mWFaaujWozHnPw8+A=bf2OwzcendXjpP35wCv_B6g@mail.gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Re; Interest,
+To:     linux-pci@vger.kernel.org
+From:   "Chen Yun" <pso.chairmanbod@iesco.com.pk>
+Date:   Tue, 22 Aug 2023 16:31:19 -0700
+Reply-To: chnyne@gmail.com
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLLMWRmVeSWpSXmKPExsVyyUKGW9fX62mKwemd3BZn5x1nc2D0+LxJ
+        LoAxissmJTUnsyy1SN8ugStjyboLLAW7mSva+hexNDA+Zupi5OSQEDCR2DrxB3sXIxeHkMAe
+        Jon13zrAHBaB1cwS/69dZ4JwHjJLbHr7jAmirJlR4k/HTTaQfl4Ba4kVhxaxg9jMAnoSN6ZO
+        gYoLSpyc+YQFIq4tsWzha+YuRg4gW03ia1cJSFhYQEzi07RlYK0iArISHy/vAWtlE9CXWPG1
+        mRHEZhFQleic8wPMFhKQkth4ZT3bBEb+WUi2zUKybRaSbbMQti1gZFnFKFFcmZsIDLZkE73k
+        /NzixJJivbzUEr2C7E2MwEA8XaMpt4Nx6aXEQ4wCHIxKPLw/1z1JEWJNLAPqOsQowcGsJMIr
+        /f1hihBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFeW6FnyUIC6YklqdmpqQWpRTBZJg5OqQbGy7f1
+        XnHZZW49Xqv00/G92OEXNXOLW+sZ5hU8tD8wbbupXJQG+yP/IO+5xXmzF+6ZyfzmmkjChXnL
+        mKR2rjh0tLx/W23AkaB74dP0uk2430W3H1BI4JaWfl+aPuvWjA2TJ8yN/SN8dHWE7m/D3xf/
+        ma0NVL766EGc0cSjSfvt3x7i9NRzYzM0V2Ipzkg01GIuKk4EAKo7iuBAAgAA
+X-Spam-Status: Yes, score=5.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_REPLYTO,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_SBL,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
+        *      blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [URIs: iesco.com.pk]
+        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
+        *      [94.156.6.90 listed in zen.spamhaus.org]
+        *  0.1 RCVD_IN_SBL RBL: Received via a relay in Spamhaus SBL
+        * -0.7 RCVD_IN_DNSWL_LOW RBL: Sender listed at https://www.dnswl.org/,
+        *       low trust
+        *      [203.124.41.30 listed in list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 22, 2023 at 12:11:10PM +0200, Rafael J. Wysocki wrote:
-> On Tue, Aug 22, 2023 at 12:42 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Fri, Aug 18, 2023 at 02:39:32PM -0500, Mario Limonciello wrote:
-> > > commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-> > > changed pci_bridge_d3_possible() so that any vendor's PCIe ports
-> > > from modern machines (>=2015) are allowed to be put into D3.
-> > >
-> > > Iain reports that USB devices can't be used to wake a Lenovo Z13
-> > > from suspend. This is because the PCIe root port has been put
-> > > into D3 and AMD's platform can't handle USB devices waking in this
-> > > case.
-> > >
-> > > This behavior is only reported on Linux. Comparing the behavior
-> > > on Windows and Linux, Windows doesn't put the root ports into D3.
-> > >
-> > > To fix the issue without regressing existing Intel systems,
-> > > limit the >=2015 check to only apply to Intel PCIe ports.
+Re; Interest,
 
-> > > @@ -3037,10 +3037,15 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
-> > >                       return false;
-> > >
-> > >               /*
-> > > -              * It should be safe to put PCIe ports from 2015 or newer
-> > > -              * to D3.
-> > > +              * Allow Intel PCIe ports from 2015 onward to go into D3 to
-> > > +              * achieve additional energy conservation on some platforms.
-> > > +              *
-> > > +              * This is only set for Intel PCIe ports as it causes problems
-> > > +              * on both AMD Rembrandt and Phoenix platforms where USB keyboards
-> > > +              * can not be used to wake the system from suspend.
-> > >                */
-> > > -             if (dmi_get_bios_year() >= 2015)
-> > > +             if (bridge->vendor == PCI_VENDOR_ID_INTEL &&
-> > > +                 dmi_get_bios_year() >= 2015)
-> > >                       return true;
-> >
-> > Hmm.  I'm really not a fan of checks like this that aren't connected
-> > to an actual property of the platform.  The Intel Vendor ID tells us
-> > nothing about what the actual problem is, which makes it really hard
-> > to maintain in the future.  It's also very AMD- and Intel-centric,
-> > when this code is ostensibly arch-agnostic, so this potentially
-> > regresses ARM64, RISC-V, powerpc, etc.
-> 
-> That's a fair point.
-> 
-> Would it be better to reverse this and filter out AMD systems as they
-> are affected by the existing check?
+I am interested in discussing the Investment proposal as I explained
+in my previous mail. May you let me know your interest and the
+possibility of a cooperation aimed for mutual interest.
 
-Since we're trying to avoid an issue on AMD systems, I would
-definitely prefer to have the code change mention AMD instead of
-Intel.
+Looking forward to your mail for further discussion.
 
-> > It's bad enough that we check for 2015.  A BIOS security update to a
-> > 2014 platform will break things,
-> 
-> Well, not necessarily.  Pre-2015 systems already worked and the check
-> was added as "surely, everything 2015 or newer should work either".
-> While it is true that putting PCIe Root Ports into D3hot was necessary
-> for extra energy conservation on Intel systems, it actually has been
-> expected to work everywhere.
+Regards
 
-This is a tangent; I was just trying to make the point that the date
-check means a BIOS update may change Linux behavior even if the update
-has nothing to do with PM, and I think that's a bad thing even if the
-new behavior is not a failure.  But this is water under the bridge and
-is probably not going to cause problems in the future.
+------
+Chen Yun - Chairman of CREC
+China Railway Engineering Corporation - CRECG
+China Railway Plaza, No.69 Fuxing Road, Haidian District, Beijing, P.R.
+China
 
-> > even though the update has nothing to do with D3.  We're stuck
-> > with that one, and it's old enough that maybe it won't bite us any
-> > more, but I hate to add more.
-> 
-> Well, how would you like to deal with the systems that don't work
-> today, because they expect a different behavior?
->
-> Effectively, the current behavior for all modern systems is to allow
-> bridge D3 if there are no indications that it shouldn't be allowed.
-> The platforms in question assume the reverse, so what else can be
-> done?
-> 
-> > The list of conditions in pci_bridge_d3_possible() is a pretty good
-> > clue that we don't really know what we're doing, and all we can do is
-> > find configurations that happen to work.
-> 
-> Yes, because by the spec it all should work just fine.  The PCI PM 1.2
-> specification defines the expected behavior for bridges and the PCIe
-> specification claims to be a superset of that.
-> 
-> What we need to deal with here is basically non-compliant systems and
-> so we have to catch the various forms of non-compliance.
-
-Thanks for this, that helps.  If pci_bridge_d3_possible() is a list of
-quirks for systems that are known to be broken (or at least not known
-to work correctly and avoiding D3 is acceptable), then we should
-document and use it that way.
-
-The current documentation ("checks if it is possible to move to D3")
-frames it as "does the bridge have the required features?" instead of
-"do we know about something broken in this bridge or this platform?"
-
-If something is broken, I would expect tests based on the device or
-DMI check.  But several some are not obvious defects.  E.g.,
-"bridge->is_hotplug_bridge && !pciehp_is_native(bridge)" -- what
-defect are we finding there?  What does the spec require that isn't
-happening?
-
-In this particular patch, apparently we assume any non-Intel port or
-any BIOS before 2015 is broken.  Obviously way too general.  We know
-"USB keyboards don't wake from suspend," but I think we need something
-at the PCI level like "PME interrupt doesn't happen when bridge is in
-state X" (i.e., the part that is non-compliant), and "one consequence
-is that downstream devices can't wake from suspend."
-
-> > I don't have any better suggestions, other than that this should be
-> > described somehow via ACPI (and not in vendor-specific stuff like
-> > PNP0D80).
-> 
-> Well, it isn't in practice.
-
-If this is basically quirks and we treat it that way (comments about
-the breakage and references to what the spec violations are), maybe
-this is the best we can do.
-
-Bjorn
