@@ -2,99 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A65B784511
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Aug 2023 17:10:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED5A678451C
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Aug 2023 17:12:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233381AbjHVPKW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Aug 2023 11:10:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50070 "EHLO
+        id S234859AbjHVPMn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Aug 2023 11:12:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233317AbjHVPKV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Aug 2023 11:10:21 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E454198
-        for <linux-pci@vger.kernel.org>; Tue, 22 Aug 2023 08:10:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692717020; x=1724253020;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wNUHzu8X1xyIKy57Le2aOs1vQxwpc2Z6lXeZFfNSOS0=;
-  b=FPTpgF5u6o4SCyI5lNgMoZ2sIxa2IhzM37zIvKYXM3MRA/dOsoJtPece
-   /znsUCKj9L0zATvy95Lusp9Y7W0+EnsRXIsbuFxSOdqSDPEYZNXVbvQnb
-   FNXrPyEVMgEJKeB1CV3CTmbI1PG9ORunTfj5J+iH3IQ059MfpYzSkV4lE
-   cQbXCYEhajLcvoL90tXsihAv6mEg9RnB9GWxPdINcTHlasARFccDlzoBr
-   Me+Nwp6wwOx8xMbmHo9Mw9CrgXhnOgc9skK/2f446S8VXFxGU7vc9zKc3
-   QWJVjis52gOgqrUHOXSACTzDQyfr1tDSsOBH83BV/6xKH8ww5j58h+zbR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="372795273"
-X-IronPort-AV: E=Sophos;i="6.01,193,1684825200"; 
-   d="scan'208";a="372795273"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 08:10:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="713193450"
-X-IronPort-AV: E=Sophos;i="6.01,193,1684825200"; 
-   d="scan'208";a="713193450"
-Received: from unknown (HELO localhost.ch.intel.com) ([10.2.230.30])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 08:10:19 -0700
-From:   Nirmal Patel <nirmal.patel@linux.intel.com>
-To:     nirmal.patel@linux.intel.com, <linux-pci@vger.kernel.org>
-Subject: [PATCH v3] PCI: vmd: Do not change the BIOS Hotplug setting on VMD rootports
-Date:   Tue, 22 Aug 2023 10:45:22 -0400
-Message-Id: <20230822144522.1310839-1-nirmal.patel@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S233516AbjHVPMn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Aug 2023 11:12:43 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B775B1B9;
+        Tue, 22 Aug 2023 08:12:38 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37MDeZUq031343;
+        Tue, 22 Aug 2023 15:12:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=eW3RyZ4QBo5qREd9Dm/xiHKptXK3qCzHQrZPKpZK2RI=;
+ b=OnUnN7jW96N68HWnAWf5npCy4FqlBSMNSr52o4oMdWnmlduTPbGY6rthyktUVEhYxsmG
+ v4BXnQOO3vpdDSGyuZlMfsYHYXTRGAdrzpyUMG/xCgg2mgvSa8mnt1M2ixOTFHmwC2ba
+ m1rOHIuxVcJSx8z4128d4C5x8UsRdUGrR8ObLP1YEloNyrieaS2k4c33OtTmiofVwRm1
+ vL3SNtuad1okCrE40DMcOnfM62cPvCHgT0RheRJeLul4NE0KET4I+6BkggGo0SlAnK8c
+ WZgpIJBtbt0thOb0/MH0C7zo7NaDR+YV7qZ+Togp6FifljThj4EHqznuKMTjS2kGRgTG iA== 
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3smx3009hr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 22 Aug 2023 15:12:27 +0000
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 37MFCNgY032346;
+        Tue, 22 Aug 2023 15:12:23 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3sjptkwbvh-1;
+        Tue, 22 Aug 2023 15:12:23 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37MFCNGw032338;
+        Tue, 22 Aug 2023 15:12:23 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-krichai-hyd.qualcomm.com [10.213.110.112])
+        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 37MFCNet032335;
+        Tue, 22 Aug 2023 15:12:23 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
+        id 8414D4B78; Tue, 22 Aug 2023 20:42:22 +0530 (+0530)
+From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
+        quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: [PATCH v4 0/4] PCI: qcom: Add support for OPP
+Date:   Tue, 22 Aug 2023 20:42:17 +0530
+Message-Id: <1692717141-32743-1-git-send-email-quic_krichai@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: qZQIbarT60QCB-nINTHD-fZsWanizyuS
+X-Proofpoint-GUID: qZQIbarT60QCB-nINTHD-fZsWanizyuS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-22_13,2023-08-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ adultscore=0 mlxlogscore=558 priorityscore=1501 impostorscore=0 mlxscore=0
+ phishscore=0 suspectscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
+ definitions=main-2308220116
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The hotplug functionality is broken in various combinations of guest
-OSes i.e. RHEL, SLES and hypervisors i.e. KVM and ESXI.
+This patch adds support for OPP to vote for the performance state of RPMH
+power domain based upon GEN speed it PCIe got enumerated.
 
-During the VMD rootport creation, VMD honors ACPI settings and assigns
-respective values to Hotplug, AER, DPC, PM etc which works in case of
-Host OS. But these have been restored back to the power on default
-state in Guest OSes, which puts the root port hot plug enable to
-default OFF.
+Before link up PCIe driver will vote for the maximum performance state.
 
-The VMD UEFI driver loads and configure all devices under VMD in Host.
-This is how AER, power management, DPC and Hotplug gets enabled.
-Since the Guest BIOS doesn't have VMD UEFI driver, Hotplug  along with
-DPC, AER, PM are Disabled.
+Add API dev_pm_opp_find_level_floor to find To find the highest opp for a device
+based on the level.
 
-This change will make the VMD Host and Guest Driver to keep the settings
-implemented by the UEFI VMD DXE driver and thus honoring the user
-selections for Hotplug in the BIOS.
+changes from v3:
+	- Removing the opp vote on suspend when the link is not up and link is not
+	  up and add debug prints as suggested by pavan.
+	- Added dev_pm_opp_find_level_floor API to find the highest opp to vote.
+changes from v2:
+	- Instead of using the freq based opp search use level based as suggested
+	  by Dmitry Baryshkov.
+Changes from v1:
+        - Addressed comments from Krzysztof Kozlowski.
+        - Added the rpmhpd_opp_xxx phandle as suggested by pavan.
+        - Added dev_pm_opp_set_opp API call which was missed on previous patch.
 
-Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
----
-v2->v3: Update commit log.
-v1->v2: Update commit log.
----
- drivers/pci/controller/vmd.c | 2 --
- 1 file changed, 2 deletions(-)
+Krishna chaitanya chundru (4):
+  dt-bindings: pci: qcom: Add opp table
+  arm64: dts: qcom: sm8450: Add opp table support to PCIe
+  OPP: Add api to retrieve opps which is at most the provided level
+  PCI: qcom: Add OPP support for speed based performance state of RPMH
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 769eedeb8802..52c2461b4761 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -701,8 +701,6 @@ static int vmd_alloc_irqs(struct vmd_dev *vmd)
- static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
- 				       struct pci_host_bridge *vmd_bridge)
- {
--	vmd_bridge->native_pcie_hotplug = root_bridge->native_pcie_hotplug;
--	vmd_bridge->native_shpc_hotplug = root_bridge->native_shpc_hotplug;
- 	vmd_bridge->native_aer = root_bridge->native_aer;
- 	vmd_bridge->native_pme = root_bridge->native_pme;
- 	vmd_bridge->native_ltr = root_bridge->native_ltr;
+ .../devicetree/bindings/pci/qcom,pcie.yaml         |  4 ++
+ arch/arm64/boot/dts/qcom/sm8450.dtsi               | 47 +++++++++++++++++++
+ drivers/opp/core.c                                 | 26 +++++++++++
+ drivers/pci/controller/dwc/pcie-qcom.c             | 52 ++++++++++++++++++++++
+ include/linux/pm_opp.h                             |  4 ++
+ 5 files changed, 133 insertions(+)
+
 -- 
-2.31.1
+2.7.4
 
