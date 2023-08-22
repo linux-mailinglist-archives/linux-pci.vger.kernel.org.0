@@ -2,121 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B320978405F
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Aug 2023 14:09:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C818F78418B
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Aug 2023 15:06:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234838AbjHVMJM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Aug 2023 08:09:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51624 "EHLO
+        id S235975AbjHVNG3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Aug 2023 09:06:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234679AbjHVMJM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Aug 2023 08:09:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEFC193
-        for <linux-pci@vger.kernel.org>; Tue, 22 Aug 2023 05:09:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3D04165530
-        for <linux-pci@vger.kernel.org>; Tue, 22 Aug 2023 12:09:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B3EFC433C9;
-        Tue, 22 Aug 2023 12:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692706149;
-        bh=GSufGp04k7WSywYxrG+LIxVSRqd8DgsTxFexeWGc5CM=;
-        h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-        b=CA0TugwLQb/EM1yN0TTteZDXjpLtsAJP7B6fb03TWuF8fO5rcLaSYMDo7AI3WmRhR
-         VqGRVRvcayrKrYAqkntJqJ60XKaetG3yIorcddrszaecBKLDQVne212yrbvs1hFc7D
-         JErTAgQ0a3tNmSSbP7zItSzN3U28Qcvv9UZGcNb0Xi2bJyAlZTdbG+/CUu/wFeaR+M
-         +3jCS1Rloa6WzjoM3BCFvTowUA0q+W1ip5bD4AJ3VGHItMFr97xe02vUxuyznUns7S
-         dQnSUBGgGNP3uh09dKwaIYV/oMgWZYHX/3umZWM2blwwIuE6HaBgK/EbEcCxPCredw
-         bsZT4w99vggEw==
-Message-ID: <feef32b8-2eab-4fa2-c27b-0c482c5ef1dd@kernel.org>
-Date:   Tue, 22 Aug 2023 21:09:07 +0900
+        with ESMTP id S232195AbjHVNG2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Aug 2023 09:06:28 -0400
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB2F6CC6
+        for <linux-pci@vger.kernel.org>; Tue, 22 Aug 2023 06:06:24 -0700 (PDT)
+Received: by mail-qk1-x72d.google.com with SMTP id af79cd13be357-76dafe9574bso79419785a.1
+        for <linux-pci@vger.kernel.org>; Tue, 22 Aug 2023 06:06:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1692709584; x=1693314384;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=YEozutqkXIFfgpUL8ezNRdTzgciBgR3nzmNF7BsP0bU=;
+        b=AA8v20EcekmUnFmJ3zPtbgzvo+2d/djHmK3mPyr5tr7Wdr6NmsqgVD+A1tshEbvAex
+         cqFSQ54gGLbl4mt3pEkEd7OqGhxug5mPVyjYj0sR/BCPU05oMELeFjqBvYXbrfm9pOI3
+         jLScxqZu7g7k9cj6g9SyHwWhta5GWDTfYAKdJw0IhS7HK1pShu6b0cxOgT1Tqm7GlYGI
+         +6tqW7snagMGFVFrHpn1obO7By4F1RQZIgWFYSGhbqTch3NXxiMCkQOTNLAkOe1HUrCj
+         IhzQ6duKFiw/5GvqnSxtuuXUZ+0uZwEQddX1TBjTZayDNllIy7NpIAaQtursdHgFnAjB
+         dGMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692709584; x=1693314384;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YEozutqkXIFfgpUL8ezNRdTzgciBgR3nzmNF7BsP0bU=;
+        b=AdAsZ/jy+UD7twDOu8awekkOW51oCnCSFCEVCBaEBLQot6W+T2TlgF0NT2vHiDG82G
+         tpts1CIglOipMnjPczL99WHOxfXxFDkGVnxL/fb8yairNATvx22YFgMaR5nZ6jjpkSSi
+         dxtk/rVdb9OIb9ib43KB65rz1ghh75RNpMDeBbNDFg4SJFyc2fCAtNwcAPGQLwyS/vqP
+         HsQHqTpJHr06fhaPSmBKtqLrhyvMHTs3wc8oTYHOJR1eDnT2d22y5EvQrdeAbcnvQjM0
+         XoYf7H8q/UzjgeDdDZYjIeTnaHP5EI6By6tZpj3SIkhZPCaaOMmbQqbVSkcpK/F24nL3
+         Ku0g==
+X-Gm-Message-State: AOJu0YzDzea3esGrkqWUh90bR6OtUjAMqfQZF53bgzeIdq8ZNSTvziMv
+        /jUY4p1/UgvTHvAqpZiL1JhFgIQH/yQk0Sdl9bcfew==
+X-Google-Smtp-Source: AGHT+IH7FFokEykaZUogckv9j1QPt0YaIMYfzav6itMDlNog7eheQ5lpUgXhgXXjW8nbNIUBqe/wIgFVFSuH2I/1uCM=
+X-Received: by 2002:a0c:dd0f:0:b0:64b:33ae:ef9f with SMTP id
+ u15-20020a0cdd0f000000b0064b33aeef9fmr9461493qvk.4.1692709584004; Tue, 22 Aug
+ 2023 06:06:24 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v3 0/2] Cleanup IRQ type definitions
-Content-Language: en-US
-From:   Damien Le Moal <dlemoal@kernel.org>
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Cc:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-References: <20230802094036.1052472-1-dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20230802094036.1052472-1-dlemoal@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230822115514.999111-1-chenfeiyang@loongson.cn>
+In-Reply-To: <20230822115514.999111-1-chenfeiyang@loongson.cn>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Tue, 22 Aug 2023 15:06:13 +0200
+Message-ID: <CADYN=9L-RS1NPZqogi4M9oLEB8Tod31pn2+D6sk1Am++b8LE9g@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI/PM: Only read PCI_PM_CTRL register when available
+To:     Feiyang Chen <chenfeiyang@loongson.cn>
+Cc:     bhelgaas@google.com, rafael.j.wysocki@intel.com,
+        mika.westerberg@linux.intel.com, helgaas@kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        guyinggang@loongson.cn, siyanteng@loongson.cn,
+        chenhuacai@loongson.cn, loongson-kernel@lists.loongnix.cn,
+        chris.chenfeiyang@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/2/23 18:40, Damien Le Moal wrote:
-> The first patch renames PCI_IRQ_LEGACY to PCI_IRQ_INTX as suggested by
-> Bjorn (hence the patch authorship is given to him).
-> 
-> The second patch removes the redundant IRQ type definitions
-> PCI_EPC_IRQ_XXX and replace these with a direct use of the PCI_IRQ_XXX
-> definitions. Going forward, more cleanups renaming "legacy" to "intx"
-> in various drivers can be added on top of this series.
+On Tue, 22 Aug 2023 at 13:55, Feiyang Chen <chenfeiyang@loongson.cn> wrote:
+>
+> When the current state is already PCI_D0, pci_power_up() will return
+> 0 even though dev->pm_cap is not set. In that case, we should not
+> read the PCI_PM_CTRL register in pci_set_full_power_state().
+>
+> Fixes: e200904b275c ("PCI/PM: Split pci_power_up()")
+> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+> ---
+>  drivers/pci/pci.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 60230da957e0..7e90ab7b47a1 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1242,9 +1242,6 @@ int pci_power_up(struct pci_dev *dev)
+>                 else
+>                         dev->current_state = state;
+>
+> -               if (state == PCI_D0)
+> -                       return 0;
+> -
+>                 return -EIO;
+>         }
+>
+> @@ -1302,8 +1299,12 @@ static int pci_set_full_power_state(struct pci_dev *dev)
+>         int ret;
+>
+>         ret = pci_power_up(dev);
+> -       if (ret < 0)
+> +       if (ret < 0) {
+> +               if (dev->current_state == PCI_D0)
+> +                       return 0;
+> +
+>                 return ret;
+> +       }
+>
+>         pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+>         dev->current_state = pmcsr & PCI_PM_CTRL_STATE_MASK;
 
-Ping ?
-I do not see queued in pci/next. Can we get it there please ? More coming on top
-of this, so it would be nice to avoid one cycle delay. Thanks.
+In fuction pci_power_up() there's another if-statement
+if (state == PCI_D0)
+        goto end;
 
-> 
-> Changes from v2:
->  - Modified PCI_IRQ_LEGACY comment in patch 1 as suggested by Serge
->  - Fixed forgotten rename in patch 2
-> 
-> Changes from v1:
->  - Updated first patch Signed-of tag and commit message as suggested by
->    Bjorn.
->  - Added review tags.
-> 
-> Bjorn Helgaas (1):
->   PCI: Rename PCI_IRQ_LEGACY to PCI_IRQ_INTX
-> 
-> Damien Le Moal (1):
->   PCI: endpoint: Drop PCI_EPC_IRQ_XXX definitions
-> 
->  drivers/pci/controller/cadence/pcie-cadence-ep.c  |  9 ++++-----
->  drivers/pci/controller/dwc/pci-dra7xx.c           |  6 +++---
->  drivers/pci/controller/dwc/pci-imx6.c             |  9 ++++-----
->  drivers/pci/controller/dwc/pci-keystone.c         |  9 ++++-----
->  drivers/pci/controller/dwc/pci-layerscape-ep.c    |  8 ++++----
->  drivers/pci/controller/dwc/pcie-artpec6.c         |  8 ++++----
->  drivers/pci/controller/dwc/pcie-designware-ep.c   |  2 +-
->  drivers/pci/controller/dwc/pcie-designware-plat.c |  9 ++++-----
->  drivers/pci/controller/dwc/pcie-designware.h      |  2 +-
->  drivers/pci/controller/dwc/pcie-keembay.c         | 13 ++++++-------
->  drivers/pci/controller/dwc/pcie-qcom-ep.c         |  6 +++---
->  drivers/pci/controller/dwc/pcie-tegra194.c        |  9 ++++-----
->  drivers/pci/controller/dwc/pcie-uniphier-ep.c     |  7 +++----
->  drivers/pci/controller/pcie-rcar-ep.c             |  7 +++----
->  drivers/pci/controller/pcie-rockchip-ep.c         |  7 +++----
->  drivers/pci/endpoint/functions/pci-epf-mhi.c      |  2 +-
->  drivers/pci/endpoint/functions/pci-epf-ntb.c      |  4 ++--
->  drivers/pci/endpoint/functions/pci-epf-test.c     |  6 +++---
->  drivers/pci/endpoint/functions/pci-epf-vntb.c     |  7 ++-----
->  drivers/pci/endpoint/pci-epc-core.c               |  2 +-
->  include/linux/pci-epc.h                           | 11 ++---------
->  include/linux/pci.h                               |  4 +++-
->  22 files changed, 65 insertions(+), 82 deletions(-)
-> 
+That also will return 0 if need_restore isn't true.
+What will happen then?
 
--- 
-Damien Le Moal
-Western Digital Research
 
+Would this work?
+
+        ret = pci_power_up(dev);
+-       if (ret < 0)
++       if (ret <= 0)
+                 return ret;
+
+
+Cheers,
+Anders
