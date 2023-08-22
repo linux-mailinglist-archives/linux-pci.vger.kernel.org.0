@@ -2,133 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1486F783805
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Aug 2023 04:38:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F31E07838B1
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Aug 2023 06:04:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232252AbjHVCiD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Aug 2023 22:38:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60040 "EHLO
+        id S231326AbjHVEER (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Aug 2023 00:04:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232218AbjHVCiC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Aug 2023 22:38:02 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DAD38184;
-        Mon, 21 Aug 2023 19:37:59 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.43])
-        by gateway (Coremail) with SMTP id _____8Dx_+uGH+RkOMcaAA--.53723S3;
-        Tue, 22 Aug 2023 10:37:58 +0800 (CST)
-Received: from [10.20.42.43] (unknown [10.20.42.43])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxX8+EH+RkBPhfAA--.37065S3;
-        Tue, 22 Aug 2023 10:37:56 +0800 (CST)
-Message-ID: <79c3b66a-61b0-aafb-0935-975b0ce1ecb3@loongson.cn>
-Date:   Tue, 22 Aug 2023 10:37:56 +0800
+        with ESMTP id S229531AbjHVEEQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Aug 2023 00:04:16 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C0C193;
+        Mon, 21 Aug 2023 21:04:11 -0700 (PDT)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37M42Pmk030740;
+        Tue, 22 Aug 2023 04:03:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
+ cc : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=qcppdkim1; bh=wg9c5TjeH+uwYknKtQQ4OzrxTvY8oxOG1F7P0n/+Hps=;
+ b=loWcS/5sjLuwjgF+3ZRcOUgRGDUcFML8e+PYTJX8+R4FmhnDZqA+cfWQ/Q8KnVGZdC2w
+ +dUBYON+XQ/drCcPIywFHKQK3bUhOMaK6B8Z1e/IejEedWPP9yYoVn/vAJoL5H3uyZs5
+ HaA88xN5HF8PS81daHxeg4spyBhYi18amK0/yIXAp8GXkP3vgRcSLjNDze11IdGuUZ0c
+ Us3Szo25FS+4s3v2VUkEh0WxgbDwhpSZlSWWtX4ldOQPwhhQzM7FBRT0hljrtd3ujECS
+ 7xS2gf/kwWrHSdWnGmvWVpY88C9LRQ8YtzbKctHWcYZ5s9t1EcsTmxMgVWTQG32EvlkL oA== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3smdhwgr1k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 22 Aug 2023 04:03:58 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 37M43vN4019215
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 22 Aug 2023 04:03:57 GMT
+Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.36; Mon, 21 Aug 2023 21:03:51 -0700
+Date:   Tue, 22 Aug 2023 09:33:48 +0530
+From:   Pavan Kondeti <quic_pkondeti@quicinc.com>
+To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
+CC:     <manivannan.sadhasivam@linaro.org>, <helgaas@kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_vbadigan@quicinc.com>,
+        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
+        <quic_ramkri@quicinc.com>, <quic_parass@quicinc.com>,
+        <krzysztof.kozlowski@linaro.org>, Andy Gross <agross@kernel.org>,
+        "Bjorn Andersson" <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3 3/3] PCI: qcom: Add OPP support for speed based
+ performance state of RPMH
+Message-ID: <95078a8b-857d-4900-8737-a495212db935@quicinc.com>
+References: <1692627343-4380-1-git-send-email-quic_krichai@quicinc.com>
+ <1692627343-4380-4-git-send-email-quic_krichai@quicinc.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v4] PCI/VGA: Make the vga_is_firmware_default() less
- arch-dependent
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        loongson-kernel@lists.loongnix.cn, linux-pci@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Limonciello, Mario" <Mario.Limonciello@amd.com>
-References: <20230821173819.GA362570@bhelgaas>
-From:   suijingfeng <suijingfeng@loongson.cn>
-In-Reply-To: <20230821173819.GA362570@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf8AxX8+EH+RkBPhfAA--.37065S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGFy8Cr13Cw1rGw17Gw4rJFc_yoW5WF4xpr
-        WrJFs5KF4kJr4Syrs7Gw1kXF1Fyw4rXas0kFn0vwn8A345urnaqFW0yrZ09FnrWrs7J3W2
-        vF4Fg34rWFWYvagCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-        6r4j6r4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-        Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-        Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-        CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
-        MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
-        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1l
-        IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8uc_3UUUU
-        U==
-X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1692627343-4380-4-git-send-email-quic_krichai@quicinc.com>
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: noE1vk51qwNrmBmMuR4yEVRjyyWds4Ay
+X-Proofpoint-GUID: noE1vk51qwNrmBmMuR4yEVRjyyWds4Ay
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-22_01,2023-08-18_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ impostorscore=0 adultscore=0 lowpriorityscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 priorityscore=1501 suspectscore=0 bulkscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308220031
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Mon, Aug 21, 2023 at 07:45:43PM +0530, Krishna chaitanya chundru wrote:
+> Before link training vote for the maximum performance state of RPMH
+> and once link is up, vote for the performance state based upon the link
+> speed.
+> 
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 47 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 7a87a47..c57ca1a 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/of_device.h>
+>  #include <linux/of_gpio.h>
+>  #include <linux/pci.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/phy/pcie.h>
+> @@ -1357,6 +1358,32 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+>  	return 0;
+>  }
+>  
+> +static void qcom_pcie_opp_update(struct qcom_pcie *pcie)
+> +{
+> +	struct dw_pcie *pci = pcie->pci;
+> +	struct dev_pm_opp *opp;
+> +	u32 offset, status;
+> +	int speed, ret = 0;
+> +
+> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> +	status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
+> +
+> +	/* Only update constraints if link is up. */
+> +	if (!(status & PCI_EXP_LNKSTA_DLLLA))
+> +		return;
+> +
 
-On 2023/8/22 01:38, Bjorn Helgaas wrote:
-> On Fri, Aug 18, 2023 at 12:09:29PM +0800, suijingfeng wrote:
->> On 2023/8/18 06:08, Bjorn Helgaas wrote:
->>> On Wed, Aug 16, 2023 at 06:05:27AM +0800, Sui Jingfeng wrote:
->>>> Currently, the vga_is_firmware_default() function only works on x86 and
->>>> ia64, it is a no-op on ARM, ARM64, PPC, RISC-V, etc. This patch completes
->>>> the implementation for the rest of the architectures. The added code tries
->>>> to identify the PCI(e) VGA device that owns the firmware framebuffer
->>>> before PCI resource reallocation happens.
->>> As far as I can tell, this is basically identical to the existing
->>> vga_is_firmware_default(), except that this patch funs that code as a
->>> header fixup, so it happens before any PCI BAR reallocations happen.
->> Yes, what you said is right in overall.
->> But I think I should mention a few tiny points that make a difference.
->>
->> 1) My version is *less arch-dependent*
-> Of course.  If we make the patch simple and the commit log simple by
-> removing extraneous details, this will all be obvious.
->
->> 2) My version focus on the address in ranges, weaken the size parameter.
->>
->> Which make the code easy to read and follow the canonical convention to
->> express the address range. while the vga_is_firmware_default() is not.
-> Whether it's start/size or start/end is a trivial question.  We don't
-> need to waste time on it now.
->
->> 3) A tiny change make a big difference.
->>
->> The original vga_is_firmware_default() only works with the assumption
->> that the PCI resource reallocation won't happens. While I see no clue
->> that why this is true even on X86 and IA64. The original patch[1] not
->> mention this assumption explicitly.
->> [1] 86fd887b7fe3 ('vgaarb: Don't default exclusively to first video device with mem+io')
->>
->>> That sounds like a good idea, because this is all based on the
->>> framebuffer in screen_info, and screen_info was initialized before PCI
->>> enumeration, and it certainly doesn't account for any BAR changes done
->>> by the PCI core.
->> Yes.
->>
->>> So why would we keep vga_is_firmware_default() at all?  If the header
->>> fixup has already identified the firmware framebuffer, it seems
->>> pointless to look again later.
->> It need another patch to do the cleanup work, while my patch just
->> add code to solve the real problem.  It focus on provide a solution
->> for the architectures which have a decent way set up the
->> screen_info.  Other things except that is secondary.
-> I don't want both mechanisms when only one of them is useful.  PCI BAR
-> reassignment is completely fine, and keeping the assumption in
-> vga_is_firmware_default() that we can compare reassigned BAR values to
-> the pre-reassignment screen_info range is a trap that we should
-> remove.
+What happens if link is not up during probe? We set max vote before
+this, should not we bring it down in suspend and vote it back again in
+resume? 
 
+> +	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
+> +
+> +	opp = dev_pm_opp_find_level_exact(pci->dev, speed);
+> +	if (!IS_ERR(opp)) {
+> +		ret = dev_pm_opp_set_opp(pci->dev, opp);
+> +		if (ret)
+> +			dev_err(pci->dev, "Failed to set opp: %d\n", ret);
+> +		dev_pm_opp_put(opp);
+> +	}
 
-OK,it's clear now.  I know what to do next.
-Thanks.
+Since you added an error message, make it more useful by printing the
+opp level also. dev_pm_opp_get_level().
 
+> +
+> +}
+> +
+>  static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
+>  {
+>  	struct dw_pcie *pci = pcie->pci;
+> @@ -1439,8 +1466,10 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
+>  static int qcom_pcie_probe(struct platform_device *pdev)
+>  {
+>  	const struct qcom_pcie_cfg *pcie_cfg;
+> +	unsigned long max_freq = INT_MAX;
+>  	struct device *dev = &pdev->dev;
+>  	struct qcom_pcie *pcie;
+> +	struct dev_pm_opp *opp;
+>  	struct dw_pcie_rp *pp;
+>  	struct resource *res;
+>  	struct dw_pcie *pci;
+> @@ -1511,6 +1540,22 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto err_pm_runtime_put;
+>  
+> +	/* OPP table is optional */
+> +	ret = devm_pm_opp_of_add_table(dev);
+> +	if (ret && ret != -ENODEV) {
+> +		dev_err(dev, "Invalid OPP table in Device tree\n");
+> +		goto err_pm_runtime_put;
+> +	}
+> +
+> +	/* vote for max level in the opp table */
+> +	opp = dev_pm_opp_find_freq_floor(dev, &max_freq);
+> +	if (!IS_ERR(opp)) {
+> +		ret = dev_pm_opp_set_opp(dev, opp);
+> +		if (ret)
+> +			dev_err(pci->dev, "Failed to set opp: %d\n", ret);
+> +		dev_pm_opp_put(opp);
+> +	}
+> +
 
-> Bjorn
+This needs an update since you moved from frequency based voting to link
+speed based voting.
 
+>  	ret = pcie->cfg->ops->get_resources(pcie);
+>  	if (ret)
+>  		goto err_pm_runtime_put;
+> @@ -1531,6 +1576,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  
+>  	qcom_pcie_icc_update(pcie);
+>  
+> +	qcom_pcie_opp_update(pcie);
+> +
+>  	if (pcie->mhi)
+>  		qcom_pcie_init_debugfs(pcie);
+>  
+> 
+
+Thanks,
+Pavan
