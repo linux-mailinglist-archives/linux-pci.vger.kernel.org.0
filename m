@@ -2,76 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B4210783C8A
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Aug 2023 11:11:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 822FA783D25
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Aug 2023 11:41:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229728AbjHVJLI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Aug 2023 05:11:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36400 "EHLO
+        id S234423AbjHVJlq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Aug 2023 05:41:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229637AbjHVJLH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Aug 2023 05:11:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63A9F189
-        for <linux-pci@vger.kernel.org>; Tue, 22 Aug 2023 02:11:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F28D260C6E
-        for <linux-pci@vger.kernel.org>; Tue, 22 Aug 2023 09:11:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FD0BC433C7;
-        Tue, 22 Aug 2023 09:11:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692695465;
-        bh=BrNSb2HvY13bt1egoOwfkcjX4OCdk+/NfVk+KYNZH4M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OAjpVKETLcHyfQ//GU+qUO4qtfP9E2qmQcFopnmpU+ir5TZnAt0uCf9y2TA6mKwrn
-         Vm/D0y16LJSRJPgtxof9lKxGd3f6jRntw3I06WVY27W+aDNsKX+t6zl9zKstvO93eV
-         9kr0MY84O6Q2LWIAJwqFuvz+yimaoAy5yRRwzVad9iNT3md05B5QcNSX8oysN4ClgK
-         duVrW2+e5uOmL/Ch5yxtya+4zYubANN61a5PcUoxVBHt8wdO9aDZoNY/xoGiy264KQ
-         D7Vtb43iNCfih8BDdOrqnRGtB/QsEQKuqR6rqbgJNtfPV2mo0upDVGRE5U09Hlp2Bh
-         CJk3HubvzsZNw==
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     linux-pci@vger.kernel.org,
-        Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Subject: Re: [PATCH v5] PCI: vmd: Disable bridge window for domain reset
-Date:   Tue, 22 Aug 2023 11:10:55 +0200
-Message-Id: <169269543810.11372.3647092123892841759.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230810215029.1177379-1-nirmal.patel@linux.intel.com>
-References: <20230810215029.1177379-1-nirmal.patel@linux.intel.com>
+        with ESMTP id S234416AbjHVJlp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Aug 2023 05:41:45 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A2DEA1B2;
+        Tue, 22 Aug 2023 02:41:43 -0700 (PDT)
+Received: from loongson.cn (unknown [112.20.109.102])
+        by gateway (Coremail) with SMTP id _____8DxfevVguRkbuAaAA--.52666S3;
+        Tue, 22 Aug 2023 17:41:41 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.109.102])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax3c7TguRkuzVgAA--.38685S2;
+        Tue, 22 Aug 2023 17:41:40 +0800 (CST)
+From:   Feiyang Chen <chenfeiyang@loongson.cn>
+To:     bhelgaas@google.com, rafael.j.wysocki@intel.com
+Cc:     Feiyang Chen <chenfeiyang@loongson.cn>,
+        mika.westerberg@linux.intel.com, helgaas@kernel.org,
+        anders.roxell@linaro.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, guyinggang@loongson.cn,
+        siyanteng@loongson.cn, chenhuacai@loongson.cn,
+        loongson-kernel@lists.loongnix.cn, chris.chenfeiyang@gmail.com
+Subject: [PATCH] PCI/PM: Only read PCI_PM_CTRL register when available
+Date:   Tue, 22 Aug 2023 17:41:36 +0800
+Message-Id: <20230822094136.621740-1-chenfeiyang@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-CM-TRANSID: AQAAf8Ax3c7TguRkuzVgAA--.38685S2
+X-CM-SenderInfo: hfkh0wphl1t03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrtr4UKFy3KF4Dtr4fAr13Awc_yoWDZrbE9a
+        yxZa1xAF4UCFykCasIyw48Xry093ZxZ397WF4xtFW3uF1rXa4kJrWUZr1qyF9xuF45Wrn8
+        ZasrGw15ur92kosvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+        s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+        cSsGvfJTRUUUbvxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+        vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+        w2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+        W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
+        wI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
+        xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+        Gryq6s0DMcIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0x
+        vY0x0EwIxGrwACjcxG6xCI17CEII8vrVW3JVW8Jr1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK
+        82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2
+        IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
+        6r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_tr0E3s1lIxAIcVC0I7IYx2
+        IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
+        jsIE14v26r4UJVWxJr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvj
+        DU0xZFpf9x07b3iihUUUUU=
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 10 Aug 2023 17:50:29 -0400, Nirmal Patel wrote:
-> During domain reset process vmd_domain_reset() clears PCI
-> configuration space of VMD root ports. But certain platform
-> has observed following errors and failed to boot.
->   ...
->   DMAR: VT-d detected Invalidation Queue Error: Reason f
->   DMAR: VT-d detected Invalidation Time-out Error: SID ffff
->   DMAR: VT-d detected Invalidation Completion Error: SID ffff
->   DMAR: QI HEAD: UNKNOWN qw0 = 0x0, qw1 = 0x0
->   DMAR: QI PRIOR: UNKNOWN qw0 = 0x0, qw1 = 0x0
->   DMAR: Invalidation Time-out Error (ITE) cleared
-> 
-> [...]
+If the pm_cap of the PCI device is unset, do not read the
+PCI_PM_CTRL register in pci_set_full_power_state().
 
-Applied to controller/vmd, thanks!
+Fixes: e200904b275c ("PCI/PM: Split pci_power_up()")
+Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+---
+ drivers/pci/pci.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-[1/1] PCI: vmd: Disable bridge window for domain reset
-      https://git.kernel.org/pci/pci/c/f73eedc90bf7
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 60230da957e0..d6671cefcfa7 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1305,8 +1305,10 @@ static int pci_set_full_power_state(struct pci_dev *dev)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+-	dev->current_state = pmcsr & PCI_PM_CTRL_STATE_MASK;
++	if (dev->pm_cap) {
++		pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
++		dev->current_state = pmcsr & PCI_PM_CTRL_STATE_MASK;
++	}
+ 	if (dev->current_state != PCI_D0) {
+ 		pci_info_ratelimited(dev, "Refused to change power state from %s to D0\n",
+ 				     pci_power_name(dev->current_state));
+-- 
+2.39.3
 
-Thanks,
-Lorenzo
