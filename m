@@ -2,69 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 615F97847D4
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Aug 2023 18:38:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 802647847E7
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Aug 2023 18:45:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231359AbjHVQiE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Aug 2023 12:38:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54122 "EHLO
+        id S237497AbjHVQpM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Aug 2023 12:45:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235235AbjHVQiE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Aug 2023 12:38:04 -0400
+        with ESMTP id S234891AbjHVQpL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Aug 2023 12:45:11 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5789184
-        for <linux-pci@vger.kernel.org>; Tue, 22 Aug 2023 09:37:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 455B1184
+        for <linux-pci@vger.kernel.org>; Tue, 22 Aug 2023 09:44:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1692722240;
+        s=mimecast20190719; t=1692722663;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=WnGdXfhYpeYSemU19xhB8UMjBrCGspmXkJpZEmSbZjM=;
-        b=epWEZhn92Ub8WGEgP/3k7iEceTqr5JX5EQ/tfShTDBtUIX7RhnIwFWOWvV3j928VNvR7Nr
-        7lIR4r1h5AiN32pkZm3GRIaUOLZ7dVIbs9ufYwwj16RuB5y0gpBvDyNtNDDZsdbmM2/A21
-        4XB/hKdDhCbVxkU5S6tfVIi+ulr0XeU=
+        bh=drSKQmIr7hHEh3n3jADc2gpNo2nyOeHA8jWVVkOgk/o=;
+        b=Hss+rFhpoBP2kldt802xXHam1OMPmL6DxHqZS+M0YQVGm4TsZwcygBkoboGBqcPxURkYS5
+        IzCM/bkcOwyn+8vRkGXVlpX0xAeAomr9/5Iq6+OZxJS71mRCurrAUEeS/LsW/HKW0Eiebj
+        W80tokf7J37cRseX9oMkZWt2MQZPN/M=
 Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
  [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-600-DOoNHf4mNGSHLPw4XESX6w-1; Tue, 22 Aug 2023 12:37:18 -0400
-X-MC-Unique: DOoNHf4mNGSHLPw4XESX6w-1
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-267f00f6876so5155948a91.3
-        for <linux-pci@vger.kernel.org>; Tue, 22 Aug 2023 09:37:18 -0700 (PDT)
+ us-mta-692-c2C4OzcMPDqjFWp3jBZblg-1; Tue, 22 Aug 2023 12:44:21 -0400
+X-MC-Unique: c2C4OzcMPDqjFWp3jBZblg-1
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-26f51613d05so2744794a91.2
+        for <linux-pci@vger.kernel.org>; Tue, 22 Aug 2023 09:44:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692722237; x=1693327037;
+        d=1e100.net; s=20221208; t=1692722661; x=1693327461;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WnGdXfhYpeYSemU19xhB8UMjBrCGspmXkJpZEmSbZjM=;
-        b=R5Wd9UReTQ6t+fwkhL0jERL9FQubSazNuGzp93tSQXEXFZciakU0DbT3LQ+fRX9SGD
-         Vv+QbIOvALIntnN7PcG6aAlDdS6lo2wV5z5NoKB1Gulh+0Kf34sdAihicKbR5GueJ1GP
-         2xKaL87uzjmfERiMfU/gHDPgpi0JpB30KnwYkhvRYkuhfM+y6KQhxXX470N8mtWUp1ie
-         rBj56C0QuSXKVYsKNNmOPq0urk7ncWEVJr7OpSk2Q8ieCjE0L8Hpmsd/YZzDwrMJCKCo
-         wCbBYl65sBi2uT6+Y0TbQ5M90bAIWXwoczulvoPModOL558nXCPIcctSIKf9RDYfC0aQ
-         WdeA==
-X-Gm-Message-State: AOJu0YywY5n9a4SQTJP/KDdtu3NEo+e2GzPH2wMHRcc27Hmc0+rZJTX2
-        cYKLs72PeROOiuw/Bi5Rv5fhwHJP6S019h0DZHfbEr5T2cD4exEz55eHJFKLHnEvs+GF7gSmjwD
-        M9fS+pwK2r5jwx3Wh+qlkf7beRt7wMk0iz9k=
-X-Received: by 2002:a17:90a:6bc2:b0:269:5adb:993 with SMTP id w60-20020a17090a6bc200b002695adb0993mr6518744pjj.22.1692722237552;
-        Tue, 22 Aug 2023 09:37:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGKrBspwI7hWFcRVdnctcIzftV6xUGBzXsFOt81Kbgvk/KkCkDNG8gw4FZ7HQ3q4DafK7fwpPZsU7HhpPwhAHs=
-X-Received: by 2002:a17:90a:6bc2:b0:269:5adb:993 with SMTP id
- w60-20020a17090a6bc200b002695adb0993mr6518726pjj.22.1692722237206; Tue, 22
- Aug 2023 09:37:17 -0700 (PDT)
+        bh=drSKQmIr7hHEh3n3jADc2gpNo2nyOeHA8jWVVkOgk/o=;
+        b=Sk0jOOKoRA7cHY+ZqPJMQPBq8BRyDN4nhzX4kZuqtuofin/fcOkZaBHyfKMhj0JjDL
+         utNtXGdleHFzPrfl2ynvJ5cb3fc0+i6gD9WFfD+2LA79MoP8WnRCaC/pD4jKVx1W6v4q
+         AcNBW1N8AmTw9/jsJiEVockacQRwqa5r8sbG8nHVQxNyvmifkWE84RXn2KpBAKbJWvVq
+         AbyyILmpJ7UdQuKpiMAgJy740Yeuox7L5oraCMV0PME3JhOk7b6QihQGkYJ+IAAAlf7m
+         Zqj0Z4hJAvzBiQjU3EoRLZEka/MEr5idVcnyzoHf9QmIcMN9fdW8qUpAujIapXSW72Ab
+         0CaA==
+X-Gm-Message-State: AOJu0Yz56ZSSvZxqmBweRymfjEtoCJ3w6mhhswg62F2fvpZeKQ6GhwDt
+        eYy8qrAJyhW996EBv3c92INnX/ED3V+RbW8C7fDpcF4KwFQUDJ78B45d/zakWC4DT5xsNM1H5Sr
+        TAFEvmDypr/HzPr7Yu9nKLSDWtDrHZ5Wrumw=
+X-Received: by 2002:a17:90a:b017:b0:268:ee6:6bdf with SMTP id x23-20020a17090ab01700b002680ee66bdfmr7276865pjq.47.1692722660854;
+        Tue, 22 Aug 2023 09:44:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF87zFT+7w/2xuyn819nEqi0XKnQ9k5kT7k+IdPntcNXLV6sv7bznE1y2rk8e5Xm+mArgWezgi7gwWrImFugh4=
+X-Received: by 2002:a17:90a:b017:b0:268:ee6:6bdf with SMTP id
+ x23-20020a17090ab01700b002680ee66bdfmr7276851pjq.47.1692722660596; Tue, 22
+ Aug 2023 09:44:20 -0700 (PDT)
 MIME-Version: 1.0
 References: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
- <20230821191055.GA362994@bhelgaas>
-In-Reply-To: <20230821191055.GA362994@bhelgaas>
+ <20230821131223.GJ3465@black.fi.intel.com>
+In-Reply-To: <20230821131223.GJ3465@black.fi.intel.com>
 From:   Kamil Paral <kparal@redhat.com>
-Date:   Tue, 22 Aug 2023 18:36:50 +0200
-Message-ID: <CA+cBOTfRbok8D+J-SuxWYoDbJT_uOG6CJ4Y4rqvYNAjq5G-Mvw@mail.gmail.com>
+Date:   Tue, 22 Aug 2023 18:43:54 +0200
+Message-ID: <CA+cBOTc-7U_sumg6g-uBs9w3m8xipuOV1VY=4nmBcyuppgi8_g@mail.gmail.com>
 Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
  e8b908146d44 "PCI/PM: Increase wait time after resume"
-To:     Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc:     linux-pci@vger.kernel.org, regressions@lists.linux.dev,
-        mika.westerberg@linux.intel.com, bhelgaas@google.com,
-        chris.chiu@canonical.com
+        bhelgaas@google.com, chris.chiu@canonical.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -77,59 +76,26 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Aug 21, 2023 at 9:20=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
-> Wow, this is super interesting.  e8b908146d44 literally just increases
-> a timeout; the complete patch is:
+On Mon, Aug 21, 2023 at 3:13=E2=80=AFPM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> Thanks for the detailed description! There was follow up patch that made
+> the timeout shorter for slow links, I wonder if you could try that first
+> and see if that changes anything? It is this commit in the mainline:
 >
->    static void pci_pm_bridge_power_up_actions(struct pci_dev *pci_dev)
->    {
->   -       pci_bridge_wait_for_secondary_bus(pci_dev, "resume", PCI_RESET_=
-WAIT);
->   +       pci_bridge_wait_for_secondary_bus(pci_dev, "resume",
->   +                                         PCIE_RESET_READY_POLL_MS);
+> 7b3ba09febf4 PCI/PM: Shorten pci_bridge_wait_for_secondary_bus() wait tim=
+e for slow links
 >
-> Increasing a timeout should never cause a failure like this, so
-> there must be something really unexpected going on.
 
-Hello Bjorn, thanks for a quick response.
+Hello Mika, thanks for a quick response. Please see my reply to Bjorn,
+the resume is just 60+ seconds delayed, not completely failing, I was
+wrong about that. I attached my logs there.
 
-Your reply helped me discover that the laptop doesn't really *fail* to
-resume, it just makes the resume much *longer*. I just never waited
-that long. PCI_RESET_WAIT is 1 second, PCIE_RESET_READY_POLL_MS is 60
-seconds. If I wait long enough, the laptop finally resumes correctly
-after roughly 70 seconds (before the patch the resume took roughly 5
-seconds). Sorry for not spotting that earlier!
+To respond to your question, I applied 7b3ba09febf4 on top of
+fe15c26ee26e (which is the parent of e8b908146d44) and tested that.
+Hopefully I understood the instructions correctly. That kernel resumes
+just fine, with the expected speed (~5 seconds), no extra delay. (If
+there's a speed-up, I can't really tell).
 
-I also tested this with the current git master tip (commit
-f7757129e3de). Without any adjustments, the resume delay is roughly 70
-seconds. But if I change PCIE_RESET_READY_POLL_MS from 60 seconds to 2
-seconds and recompile it, the resume delay is roughly 6 seconds.
-
-With the latest kernel f7757129e3de, here are some debugging logs:
-* dmesg collected after delayed resume (extra 60 seconds):
-  https://bugzilla-attachments.redhat.com/attachment.cgi?id=3D1984636
-* system journal after delayed resume:
-  https://bugzilla-attachments.redhat.com/attachment.cgi?id=3D1984637
-* lspci -vv before suspend:
-  https://bugzilla-attachments.redhat.com/attachment.cgi?id=3D1984638
-* lspci -vv after delayed resume:
-  https://bugzilla-attachments.redhat.com/attachment.cgi?id=3D1984639
-
-
-> Would you mind
-> collecting the output of "sudo lspci -vv" both with and without
-> "pcie_aspm=3Doff"?  No need to try suspend/resume to collect these.
->
-> Also, what does this race condition look like?  Dock devices are
-> visible before suspend, but sometimes none of them are visible *after*
-> resume?  We don't re-enumerate on resume, so does this mean they still
-> appear in lspci output but they just don't work?
-
-I didn't manage to debug this today. Given the newly discovered
-circumstances described above, I wonder whether your request still
-applies. If it does, I can provide it tomorrow.
-
-Thanks for looking into this,
+Thank you for looking into this.
 Kamil P=C3=A1ral
 
