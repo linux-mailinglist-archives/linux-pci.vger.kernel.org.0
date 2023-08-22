@@ -2,113 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0CB27841F4
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Aug 2023 15:24:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BD997843F2
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Aug 2023 16:24:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235022AbjHVNYn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Aug 2023 09:24:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54546 "EHLO
+        id S235276AbjHVOYY convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 22 Aug 2023 10:24:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229805AbjHVNYn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Aug 2023 09:24:43 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA99618B;
-        Tue, 22 Aug 2023 06:24:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692710679; x=1724246679;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Oyh1DVtXWTFJxIjmbrfImZE0rxDAK+zFpWsXtCZGakM=;
-  b=PnWckcIb2oCT+5fv6GE4B/p7RhiC9mcdoMXL9d7zk94rQSmrY8bMOO9Q
-   92AI53Jf+NmnTR1zxYwlyR02IyaFfo6nab7Mh1hEVCm9+BJpRTwwJE52v
-   RcyypPoaq3WbLI0bH4jS92lw2brIT7NivH4+ydWMuUXKYdAmVCoABorFU
-   hbmtSlw/m5O1dT7D6ItZz1f/ggQgFU47D1whc6kISJkVLpNEq/eQ6VDNU
-   Gju29grh/VYfGFcA3PTtTA3mpZLtpD0U67smUyjySBnvx9zSMAm5wiXtk
-   kofnt/8egXzrXtCRWCCF9S2zOU2IDp1OrigzqJMzU5f47yuoeqrd0AkTX
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="376613689"
-X-IronPort-AV: E=Sophos;i="6.01,193,1684825200"; 
-   d="scan'208";a="376613689"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 06:24:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="859920517"
-X-IronPort-AV: E=Sophos;i="6.01,193,1684825200"; 
-   d="scan'208";a="859920517"
-Received: from refaase-mobl.ger.corp.intel.com ([10.252.53.244])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 06:24:33 -0700
-Date:   Tue, 22 Aug 2023 16:24:31 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Feiyang Chen <chenfeiyang@loongson.cn>
-cc:     bhelgaas@google.com, rafael.j.wysocki@intel.com,
-        mika.westerberg@linux.intel.com, helgaas@kernel.org,
-        anders.roxell@linaro.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, guyinggang@loongson.cn,
-        siyanteng@loongson.cn, chenhuacai@loongson.cn,
-        loongson-kernel@lists.loongnix.cn, chris.chenfeiyang@gmail.com
-Subject: Re: [PATCH v2] PCI/PM: Only read PCI_PM_CTRL register when
- available
-In-Reply-To: <20230822115514.999111-1-chenfeiyang@loongson.cn>
-Message-ID: <c8beef70-1639-c11e-ae38-d8a07279720@linux.intel.com>
-References: <20230822115514.999111-1-chenfeiyang@loongson.cn>
+        with ESMTP id S231964AbjHVOYY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Aug 2023 10:24:24 -0400
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBB4AD7;
+        Tue, 22 Aug 2023 07:24:22 -0700 (PDT)
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-56e9b517f85so614091eaf.0;
+        Tue, 22 Aug 2023 07:24:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692714262; x=1693319062;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KmSCrZH9zH56Z617nsLmAsTMojl4ZJS3KiHCDxmS6QY=;
+        b=QVJPu/Xt8Az9RpnmeBUhK4HXvN9PlQDrhf0sZYRhVJl+deJ3X2dGhIkal5yvsNul4W
+         uS+0Dt0KcMfPorpgiC3v3Qjxdmc+4ZVlOuGO9pm13z12xqR5u0uoVzbkiNeqSOAmSNoU
+         HUfkPN/MQ8kgVmyM/flozhppF2qB0qoVomPWR7iUfrxV5EGv68t8J2SlEFbmpLbRWkL/
+         BjFioeDZ6vDYW+Ha17SXFBR+QyfsNyiP4wiVFHl+IGd/1QPRjPBkYDKesRFeKKVP/Bm/
+         i43z3v1qen0+4Uydn1Kfw2tp5ljfr2uHDpFqCSEMTMVdBBgtAfr60I35Rws1yBUM6f86
+         E5kw==
+X-Gm-Message-State: AOJu0YzPgl/OiC+qvpVmuGmScQ1MwQq2ZePuAWUOSkKisEOyGp2Q6I0F
+        FlHKy9xBqXDRPmeH8mTYLPYR6qDbYUZmEMH9SOs=
+X-Google-Smtp-Source: AGHT+IEEdGlZBWwY7yJerpt9YwN/bszz4ZO++XFidrVpQNglkrKdNyEcCzGGMOCj/YAvRnZxQSAu/+zCkvgnsu5Yohk=
+X-Received: by 2002:a4a:bc85:0:b0:560:b01a:653d with SMTP id
+ m5-20020a4abc85000000b00560b01a653dmr9136308oop.0.1692714261958; Tue, 22 Aug
+ 2023 07:24:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+References: <20230822115514.999111-1-chenfeiyang@loongson.cn> <c8beef70-1639-c11e-ae38-d8a07279720@linux.intel.com>
+In-Reply-To: <c8beef70-1639-c11e-ae38-d8a07279720@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 22 Aug 2023 16:24:09 +0200
+Message-ID: <CAJZ5v0hpngg6WF7Q2P-MhcTGN8qtAx2U2-ODm=YMzs9=C44DSQ@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI/PM: Only read PCI_PM_CTRL register when available
+To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     Feiyang Chen <chenfeiyang@loongson.cn>, bhelgaas@google.com,
+        rafael.j.wysocki@intel.com, mika.westerberg@linux.intel.com,
+        helgaas@kernel.org, anders.roxell@linaro.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        guyinggang@loongson.cn, siyanteng@loongson.cn,
+        chenhuacai@loongson.cn, loongson-kernel@lists.loongnix.cn,
+        chris.chenfeiyang@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 22 Aug 2023, Feiyang Chen wrote:
+On Tue, Aug 22, 2023 at 3:24 PM Ilpo Järvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Tue, 22 Aug 2023, Feiyang Chen wrote:
+>
+> > When the current state is already PCI_D0, pci_power_up() will return
+> > 0 even though dev->pm_cap is not set. In that case, we should not
+> > read the PCI_PM_CTRL register in pci_set_full_power_state().
+>
+> IMHO, this is a bit misleading because after this patch, pci_power_up()
+> returns always an error if dev->pm_cap is not set.
 
-> When the current state is already PCI_D0, pci_power_up() will return
-> 0 even though dev->pm_cap is not set. In that case, we should not
-> read the PCI_PM_CTRL register in pci_set_full_power_state().
-
-IMHO, this is a bit misleading because after this patch, pci_power_up() 
-returns always an error if dev->pm_cap is not set.
-
--- 
- i.
-
-
-> Fixes: e200904b275c ("PCI/PM: Split pci_power_up()")
-> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-> ---
->  drivers/pci/pci.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 60230da957e0..7e90ab7b47a1 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1242,9 +1242,6 @@ int pci_power_up(struct pci_dev *dev)
->  		else
->  			dev->current_state = state;
->  
-> -		if (state == PCI_D0)
-> -			return 0;
-> -
->  		return -EIO;
->  	}
->  
-> @@ -1302,8 +1299,12 @@ static int pci_set_full_power_state(struct pci_dev *dev)
->  	int ret;
->  
->  	ret = pci_power_up(dev);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		if (dev->current_state == PCI_D0)
-> +			return 0;
-> +
->  		return ret;
-> +	}
->  
->  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->  	dev->current_state = pmcsr & PCI_PM_CTRL_STATE_MASK;
-> 
+Yes, it does, but it has 2 callers only and the other one ignores the
+return value, so this only matters here.
