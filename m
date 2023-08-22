@@ -2,88 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BA22783B57
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Aug 2023 10:00:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F32E3783C69
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Aug 2023 11:02:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233663AbjHVIA5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Aug 2023 04:00:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34640 "EHLO
+        id S234156AbjHVJCX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Aug 2023 05:02:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233618AbjHVIAT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Aug 2023 04:00:19 -0400
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D15B0CCD
-        for <linux-pci@vger.kernel.org>; Tue, 22 Aug 2023 01:00:16 -0700 (PDT)
-Received: by mail-ot1-x32a.google.com with SMTP id 46e09a7af769-6bd77864e05so3031773a34.3
-        for <linux-pci@vger.kernel.org>; Tue, 22 Aug 2023 01:00:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692691216; x=1693296016;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=n3VViHsFxlPFAPr63U9JvG58yR6RMSw03dS38fpjRKw=;
-        b=kEUJ8tova0sWmKZ6bvTwW4OP0MQLl6BVY41Mwc/ZIfjm5xVSwRiOfdAcyLqbjplugR
-         5xLYBjx8IsCe/1BUhE5UC7nF5HZKWIlf/pUP3LmhuCR7RLeCT0H3/KTtC/7gCq2X0BQu
-         dVklsfn4q2RpUilASToM75Nac+P1QJdkdp9PBPLsf33LgzHG8GgU8UZt/6gL/TSAS59w
-         NpME9h9mDX75vDnd/+QfhltDu8iHKCoj0ycy4vWAXkxeq+emVyYgg6tgkUMA5eb4bAWZ
-         XOO4SSwAk8HSBfd3jMwt7l305OIyMKWSLFAL92BFmPx8aVr5vc1x28rb2TgXLDe/5Chw
-         nNCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692691216; x=1693296016;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n3VViHsFxlPFAPr63U9JvG58yR6RMSw03dS38fpjRKw=;
-        b=fbau4Ek1nrDd2Bda2oaOyHYT0jBeUvaWpbDwhYtDyrnqJqh1KiT3rgBMVQ0CMk0k/0
-         SKLvaZtCOqhSsFXc8Z5mEOFyMFcK/QZ4kX6+iXDbGACDmaBx5tCxpdvw3ezC9OgT6+xN
-         wicbfZtmIh8CK2HAULw8jgVFL6mp7hsNRZQ1Lf6LCs3FNmVOsO2mdeQ9TeNHpMV7qVH+
-         fklYPYiUmaJng9GgkR4etfKNzyfdRCbUBleCqFiTzwq3+Y1Dgz3NFVPuL2yleD5wuGb1
-         v48vPYBuDaVQD2TpWGEZpZsvlkQjqq6/mntuN7EwFfBxYlmEiyLJpl9MGnOKFhVvIr9T
-         JNzA==
-X-Gm-Message-State: AOJu0YxC4WBPJ/HnwBMQtBs4QyADY4atsXDaz8Ze4zot9mjFzc6/92Gd
-        JQagiEPkKFRkGSqmu+Cif/qiXg==
-X-Google-Smtp-Source: AGHT+IGmh/rVLTK3rvnSpFjCcFQAC30iokXX35BjBJboi7/mvGuN/LFYZsml4vDwAgsZssXQp0hW+w==
-X-Received: by 2002:a05:6830:1009:b0:6b9:2869:bd81 with SMTP id a9-20020a056830100900b006b92869bd81mr10738128otp.18.1692691216025;
-        Tue, 22 Aug 2023 01:00:16 -0700 (PDT)
-Received: from localhost ([122.172.87.195])
-        by smtp.gmail.com with ESMTPSA id p8-20020a63ab08000000b005642a68a508sm7536867pgf.35.2023.08.22.01.00.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Aug 2023 01:00:15 -0700 (PDT)
-Date:   Tue, 22 Aug 2023 13:30:13 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Pavan Kondeti <quic_pkondeti@quicinc.com>
-Cc:     Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
-        manivannan.sadhasivam@linaro.org, helgaas@kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, quic_parass@quicinc.com,
-        krzysztof.kozlowski@linaro.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] PCI: qcom: Add OPP support for speed based
- performance state of RPMH
-Message-ID: <20230822080013.4bedtd5bkjjltfqo@vireshk-i7>
-References: <1692627343-4380-1-git-send-email-quic_krichai@quicinc.com>
- <1692627343-4380-4-git-send-email-quic_krichai@quicinc.com>
- <95078a8b-857d-4900-8737-a495212db935@quicinc.com>
- <162b135d-7e27-bf3b-df8f-45e2a5e73897@quicinc.com>
- <a0465222-6e03-4fef-a662-4a2c22240d91@quicinc.com>
+        with ESMTP id S234151AbjHVJCX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Aug 2023 05:02:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C06F113;
+        Tue, 22 Aug 2023 02:02:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C8344612CB;
+        Tue, 22 Aug 2023 09:02:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 281D1C433C7;
+        Tue, 22 Aug 2023 09:02:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692694940;
+        bh=54luh6aWDj+Dj6PCgagvuO1k+5MIOroKY5M7KCBKnsw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I5NWbbQmafaI/unLPzRx2CDciEoxctCBCvzlAgz2f0THOSfkd6gFdWSKEx3ZHmox6
+         5g3aIfJgb3li19UAfb41tbDKfwnxVn6OD3bvIkx085TRPEm11sXWYz0q76RKDkeuWs
+         86CsYc8qV+tXfj7ANzydP9E+9I0kYqVrVqgwIm+45ZCW6Cnt5H39EZvuwxgLWm1nCx
+         ZOJMiLxNlYz/FdtelyeoXu5MrT3FQSTCDJ3/avpHrmhjoId5hs7Qm6vMTcAa0nC5tB
+         mF3+KyKwPhMuyutmf2nDVDS2u+TcQDfdyRA8n7g7BW89aAeeeEMNcWmWUZ4z75xu68
+         Tb828Ha8kERMQ==
+Date:   Tue, 22 Aug 2023 11:02:11 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     bhelgaas@google.com, devicetree@vger.kernel.org,
+        gustavo.pimentel@synopsys.com, helgaas@kernel.org,
+        imx@lists.linux.dev, kw@linux.com, leoyang.li@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, mani@kernel.org,
+        manivannan.sadhasivam@linaro.org, minghuan.lian@nxp.com,
+        mingkai.hu@nxp.com, robh+dt@kernel.org, roy.zang@nxp.com,
+        shawnguo@kernel.org, zhiqiang.hou@nxp.com
+Subject: Re: [PATCH v12 3/3] PCI: layerscape: Add power management support
+ for ls1028a
+Message-ID: <ZOR5k7B3qRFEjPXR@lpieralisi>
+References: <20230821184815.2167131-1-Frank.Li@nxp.com>
+ <20230821184815.2167131-4-Frank.Li@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a0465222-6e03-4fef-a662-4a2c22240d91@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+In-Reply-To: <20230821184815.2167131-4-Frank.Li@nxp.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -91,126 +63,245 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 22-08-23, 10:23, Pavan Kondeti wrote:
-> +linux-pm and OPP maintainers
+On Mon, Aug 21, 2023 at 02:48:15PM -0400, Frank Li wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> On Tue, Aug 22, 2023 at 09:57:41AM +0530, Krishna Chaitanya Chundru wrote:
-> > 
-> > On 8/22/2023 9:33 AM, Pavan Kondeti wrote:
-> > > On Mon, Aug 21, 2023 at 07:45:43PM +0530, Krishna chaitanya chundru wrote:
-> > > > Before link training vote for the maximum performance state of RPMH
-> > > > and once link is up, vote for the performance state based upon the link
-> > > > speed.
-> > > > 
-> > > > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> > > > ---
-> > > >   drivers/pci/controller/dwc/pcie-qcom.c | 47 ++++++++++++++++++++++++++++++++++
-> > > >   1 file changed, 47 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > index 7a87a47..c57ca1a 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > @@ -22,6 +22,7 @@
-> > > >   #include <linux/of_device.h>
-> > > >   #include <linux/of_gpio.h>
-> > > >   #include <linux/pci.h>
-> > > > +#include <linux/pm_opp.h>
-> > > >   #include <linux/pm_runtime.h>
-> > > >   #include <linux/platform_device.h>
-> > > >   #include <linux/phy/pcie.h>
-> > > > @@ -1357,6 +1358,32 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
-> > > >   	return 0;
-> > > >   }
-> > > > +static void qcom_pcie_opp_update(struct qcom_pcie *pcie)
-> > > > +{
-> > > > +	struct dw_pcie *pci = pcie->pci;
-> > > > +	struct dev_pm_opp *opp;
-> > > > +	u32 offset, status;
-> > > > +	int speed, ret = 0;
-> > > > +
-> > > > +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> > > > +	status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
-> > > > +
-> > > > +	/* Only update constraints if link is up. */
-> > > > +	if (!(status & PCI_EXP_LNKSTA_DLLLA))
-> > > > +		return;
-> > > > +
-> > > What happens if link is not up during probe? We set max vote before
-> > > this, should not we bring it down in suspend and vote it back again in
-> > > resume?
-> > 
-> > ok, I will set to lower value in the suspend path if the link is not up.  If
-> > the link is already up driver will not
-> > 
-> > do any modifications.
-> > 
-> > > 
-> > > > +	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
-> > > > +
-> > > > +	opp = dev_pm_opp_find_level_exact(pci->dev, speed);
-> > > > +	if (!IS_ERR(opp)) {
-> > > > +		ret = dev_pm_opp_set_opp(pci->dev, opp);
-> > > > +		if (ret)
-> > > > +			dev_err(pci->dev, "Failed to set opp: %d\n", ret);
-> > > > +		dev_pm_opp_put(opp);
-> > > > +	}
-> > > Since you added an error message, make it more useful by printing the
-> > > opp level also. dev_pm_opp_get_level().
-> > Sure I will add this in next patch.
-> > > 
-> > > > +
-> > > > +}
-> > > > +
-> > > >   static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
-> > > >   {
-> > > >   	struct dw_pcie *pci = pcie->pci;
-> > > > @@ -1439,8 +1466,10 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
-> > > >   static int qcom_pcie_probe(struct platform_device *pdev)
-> > > >   {
-> > > >   	const struct qcom_pcie_cfg *pcie_cfg;
-> > > > +	unsigned long max_freq = INT_MAX;
-> > > >   	struct device *dev = &pdev->dev;
-> > > >   	struct qcom_pcie *pcie;
-> > > > +	struct dev_pm_opp *opp;
-> > > >   	struct dw_pcie_rp *pp;
-> > > >   	struct resource *res;
-> > > >   	struct dw_pcie *pci;
-> > > > @@ -1511,6 +1540,22 @@ static int qcom_pcie_probe(struct platform_device *pdev)
-> > > >   	if (ret)
-> > > >   		goto err_pm_runtime_put;
-> > > > +	/* OPP table is optional */
-> > > > +	ret = devm_pm_opp_of_add_table(dev);
-> > > > +	if (ret && ret != -ENODEV) {
-> > > > +		dev_err(dev, "Invalid OPP table in Device tree\n");
-> > > > +		goto err_pm_runtime_put;
-> > > > +	}
-> > > > +
-> > > > +	/* vote for max level in the opp table */
-> > > > +	opp = dev_pm_opp_find_freq_floor(dev, &max_freq);
-> > > > +	if (!IS_ERR(opp)) {
-> > > > +		ret = dev_pm_opp_set_opp(dev, opp);
-> > > > +		if (ret)
-> > > > +			dev_err(pci->dev, "Failed to set opp: %d\n", ret);
-> > > > +		dev_pm_opp_put(opp);
-> > > > +	}
-> > > > +
-> > > This needs an update since you moved from frequency based voting to link
-> > > speed based voting.
-> > 
-> > dev_pm_opp_find_freq_floor will give us the max the opp level opp we don't
-> > have a similar API to get max opp-level
-> > 
-> > For that reason we are using this API.
-> > 
+> Add PME_Turn_off/PME_TO_Ack handshake sequence for ls1028a platform. Call
+> common dwc dw_pcie_suspend(resume)_noirq() function when system enter/exit
+> suspend state.
 > 
-> Ok, thanks. I get that it is working. Would you be not knowing the exact
-> level for the max speed supported? if that is unknown, I believe we have
-> a use case for dev_pm_opp_find_level_floor() API. Adding the best people
-> on this matter for thei valuable opinion/suggestions.
+> Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-layerscape.c | 135 ++++++++++++++++++--
+>  1 file changed, 126 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+> index ed5fb492fe08..97b8d3329df7 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> @@ -8,9 +8,11 @@
+>   * Author: Minghuan Lian <Minghuan.Lian@freescale.com>
+>   */
+>  
+> +#include <linux/delay.h>
+>  #include <linux/kernel.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/init.h>
+> +#include <linux/iopoll.h>
+>  #include <linux/of_pci.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/of_address.h>
+> @@ -20,6 +22,7 @@
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/regmap.h>
+>  
+> +#include "../../pci.h"
+>  #include "pcie-designware.h"
+>  
+>  /* PEX Internal Configuration Registers */
+> @@ -27,12 +30,26 @@
+>  #define PCIE_ABSERR		0x8d0 /* Bridge Slave Error Response Register */
+>  #define PCIE_ABSERR_SETTING	0x9401 /* Forward error of non-posted request */
+>  
+> +/* PF Message Command Register */
+> +#define LS_PCIE_PF_MCR		0x2c
+> +#define PF_MCR_PTOMR		BIT(0)
+> +#define PF_MCR_EXL2S		BIT(1)
+> +
+>  #define PCIE_IATU_NUM		6
+>  
+> +struct ls_pcie_drvdata {
+> +	const u32 pf_off;
+> +	bool pm_support;
+> +};
+> +
+>  struct ls_pcie {
+>  	struct dw_pcie *pci;
+> +	const struct ls_pcie_drvdata *drvdata;
+> +	void __iomem *pf_base;
+> +	bool big_endian;
+>  };
+>  
+> +#define ls_pcie_pf_readl_addr(addr)	ls_pcie_pf_readl(pcie, addr)
+>  #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
+>  
+>  static bool ls_pcie_is_bridge(struct ls_pcie *pcie)
+> @@ -73,6 +90,64 @@ static void ls_pcie_fix_error_response(struct ls_pcie *pcie)
+>  	iowrite32(PCIE_ABSERR_SETTING, pci->dbi_base + PCIE_ABSERR);
+>  }
+>  
+> +static u32 ls_pcie_pf_readl(struct ls_pcie *pcie, u32 off)
+> +{
+> +	if (pcie->big_endian)
+> +		return ioread32be(pcie->pf_base + off);
+> +
+> +	return ioread32(pcie->pf_base + off);
+> +}
+> +
+> +static void ls_pcie_pf_writel(struct ls_pcie *pcie, u32 off, u32 val)
+> +{
+> +	if (pcie->big_endian)
+> +		iowrite32be(val, pcie->pf_base + off);
+> +	else
+> +		iowrite32(val, pcie->pf_base + off);
+> +}
+> +
+> +static void ls_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct ls_pcie *pcie = to_ls_pcie(pci);
+> +	u32 val;
+> +	int ret;
+> +
+> +	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
+> +	val |= PF_MCR_PTOMR;
+> +	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
+> +
+> +	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
+> +				 val, !(val & PF_MCR_PTOMR),
+> +				 PCIE_PME_TO_L2_TIMEOUT_US/10,
+> +				 PCIE_PME_TO_L2_TIMEOUT_US);
+> +	if (ret)
+> +		dev_err(pcie->pci->dev, "PME_Turn_off timeout\n");
+> +}
+> +
+> +static void ls_pcie_exit_from_l2(struct dw_pcie_rp *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct ls_pcie *pcie = to_ls_pcie(pci);
+> +	u32 val;
+> +	int ret;
+> +
+> +	/*
+> +	 * Set PF_MCR_EXL2S bit in LS_PCIE_PF_MCR register for the link
+> +	 * to exit L2 state.
+> +	 */
+> +	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
+> +	val |= PF_MCR_EXL2S;
+> +	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
+> +
+> +	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
+> +				 val, !(val & PF_MCR_EXL2S),
+> +				 1000,
+> +				 10000);
 
-If required feel free to add dev_pm_opp_find_level_floor(), based on
-dev_pm_opp_find_level_ceil().
+I can add a comment myself - please explain how this delay was chosen,
+any piece of information could be useful for a future developer, let
+me know and I will add it.
 
--- 
-viresh
+> +	if (ret)
+> +		dev_err(pcie->pci->dev, "L2 exit timeout\n");
+> +}
+> +
+>  static int ls_pcie_host_init(struct dw_pcie_rp *pp)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> @@ -91,18 +166,27 @@ static int ls_pcie_host_init(struct dw_pcie_rp *pp)
+>  
+>  static const struct dw_pcie_host_ops ls_pcie_host_ops = {
+>  	.host_init = ls_pcie_host_init,
+> +	.pme_turn_off = ls_pcie_send_turnoff_msg,
+> +};
+> +
+> +static const struct ls_pcie_drvdata ls1021a_drvdata = {
+
+I suggest adding .pm_support = false explicitly here, I can
+do it myself.
+
+Thanks,
+Lorenzo
+
+> +};
+> +
+> +static const struct ls_pcie_drvdata layerscape_drvdata = {
+> +	.pf_off = 0xc0000,
+> +	.pm_support = true,
+>  };
+>  
+>  static const struct of_device_id ls_pcie_of_match[] = {
+> -	{ .compatible = "fsl,ls1012a-pcie", },
+> -	{ .compatible = "fsl,ls1021a-pcie", },
+> -	{ .compatible = "fsl,ls1028a-pcie", },
+> -	{ .compatible = "fsl,ls1043a-pcie", },
+> -	{ .compatible = "fsl,ls1046a-pcie", },
+> -	{ .compatible = "fsl,ls2080a-pcie", },
+> -	{ .compatible = "fsl,ls2085a-pcie", },
+> -	{ .compatible = "fsl,ls2088a-pcie", },
+> -	{ .compatible = "fsl,ls1088a-pcie", },
+> +	{ .compatible = "fsl,ls1012a-pcie", .data = &layerscape_drvdata },
+> +	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021a_drvdata },
+> +	{ .compatible = "fsl,ls1028a-pcie", .data = &layerscape_drvdata },
+> +	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1021a_drvdata },
+> +	{ .compatible = "fsl,ls1046a-pcie", .data = &layerscape_drvdata },
+> +	{ .compatible = "fsl,ls2080a-pcie", .data = &layerscape_drvdata },
+> +	{ .compatible = "fsl,ls2085a-pcie", .data = &layerscape_drvdata },
+> +	{ .compatible = "fsl,ls2088a-pcie", .data = &layerscape_drvdata },
+> +	{ .compatible = "fsl,ls1088a-pcie", .data = &layerscape_drvdata },
+>  	{ },
+>  };
+>  
+> @@ -121,6 +205,8 @@ static int ls_pcie_probe(struct platform_device *pdev)
+>  	if (!pci)
+>  		return -ENOMEM;
+>  
+> +	pcie->drvdata = of_device_get_match_data(dev);
+> +
+>  	pci->dev = dev;
+>  	pci->pp.ops = &ls_pcie_host_ops;
+>  
+> @@ -131,6 +217,10 @@ static int ls_pcie_probe(struct platform_device *pdev)
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+>  
+> +	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
+> +
+> +	pcie->pf_base = pci->dbi_base + pcie->drvdata->pf_off;
+> +
+>  	if (!ls_pcie_is_bridge(pcie))
+>  		return -ENODEV;
+>  
+> @@ -139,12 +229,39 @@ static int ls_pcie_probe(struct platform_device *pdev)
+>  	return dw_pcie_host_init(&pci->pp);
+>  }
+>  
+> +static int ls_pcie_suspend_noirq(struct device *dev)
+> +{
+> +	struct ls_pcie *pcie = dev_get_drvdata(dev);
+> +
+> +	if (!pcie->drvdata->pm_support)
+> +		return 0;
+> +
+> +	return dw_pcie_suspend_noirq(pcie->pci);
+> +}
+> +
+> +static int ls_pcie_resume_noirq(struct device *dev)
+> +{
+> +	struct ls_pcie *pcie = dev_get_drvdata(dev);
+> +
+> +	if (!pcie->drvdata->pm_support)
+> +		return 0;
+> +
+> +	ls_pcie_exit_from_l2(&pcie->pci->pp);
+> +
+> +	return dw_pcie_resume_noirq(pcie->pci);
+> +}
+> +
+> +static const struct dev_pm_ops ls_pcie_pm_ops = {
+> +	NOIRQ_SYSTEM_SLEEP_PM_OPS(ls_pcie_suspend_noirq, ls_pcie_resume_noirq)
+> +};
+> +
+>  static struct platform_driver ls_pcie_driver = {
+>  	.probe = ls_pcie_probe,
+>  	.driver = {
+>  		.name = "layerscape-pcie",
+>  		.of_match_table = ls_pcie_of_match,
+>  		.suppress_bind_attrs = true,
+> +		.pm = &ls_pcie_pm_ops,
+>  	},
+>  };
+>  builtin_platform_driver(ls_pcie_driver);
+> -- 
+> 2.34.1
+> 
