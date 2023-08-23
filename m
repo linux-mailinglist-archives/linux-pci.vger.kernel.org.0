@@ -2,73 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D815978568D
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 13:14:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF40C78570D
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 13:46:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233443AbjHWLOI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Aug 2023 07:14:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41202 "EHLO
+        id S232887AbjHWLqw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Aug 2023 07:46:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234363AbjHWLOI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 07:14:08 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08354E54;
-        Wed, 23 Aug 2023 04:14:06 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-4ff8f2630e3so8739482e87.1;
-        Wed, 23 Aug 2023 04:14:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692789244; x=1693394044;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8LFiYT+pIjp+Hsb3mX0ePhlRFgF0GYMvthbRS9/QaYc=;
-        b=k5rNDQfd1CgQrGDl2UgR2a+v7kZTRPgc3icHUApqMK8NAZ3zUsojnh1HG6YzHQUlNs
-         V4rFz+DITZyCBCNmRe1ytB4Ohfekl2ZpME3zn2o3loBh9BMycx07PrCuD/EoyaZ27ED5
-         s10fzT3fAUeJZyB3GCYMIN3SFP29RBr8Pa2pcsYF6a0hlDh8UWSxb0XgygcMhAuBPhfJ
-         OcFCCcpZdlEPKU09meWYrb88w7YBJcqJB50eWE4AxDcC/gOeUKzFO3XXH21tFEM329HK
-         nc8PD7cyqFokAcyJW0o7xDnH+eO3r3RjFD8vt7oj76fGfnSXtFbfo9nFDjhPwZQRYaaQ
-         4fRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692789244; x=1693394044;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8LFiYT+pIjp+Hsb3mX0ePhlRFgF0GYMvthbRS9/QaYc=;
-        b=MeK4uo+4VjsdGzUxfnDeHR4po9ogMTz2J52hocljX4zvA7yj/UZzptscAeiSl2IjhW
-         ZByO2+rg8cD94Leo/tSgJCwPeKFa67okM6z4E+9eQrVZN/4nJ4SaWwGLTM5uxtpmKzLv
-         R+TmEn1Tyb06ZD3KaHCIdC/nBp+WbHFLPtI3K1+u+n0LideQV1a8wf57vc1QrIxyu4Wd
-         69R3X2EJ/nxV2ExuDPshzSvHzF0dPYd+in3AOautYmpy0QPNtqqCXhXDia7kDf03IdjI
-         gnC5GObAC5IzTwuOWKybpUM2v2FTkmk75XfC5vZ5HT3Y8H3rGs+XYKj53KqRUhwWfWf1
-         RxFQ==
-X-Gm-Message-State: AOJu0YyiFFm4bTC4kwe5CKiQfRPDzBIE76BCgaK4IPMxAlf7hDBW2hwT
-        Xb3on4t8CGvfQ9uJlT7zM8c=
-X-Google-Smtp-Source: AGHT+IGEhuX3AJgr7kRRmlBb7GnCKIL6iyJhI2LWkVfTFbXR99qexfNvmCi7FMFQfKH9KGaz7QzKzw==
-X-Received: by 2002:ac2:4c52:0:b0:4fe:7e1f:766a with SMTP id o18-20020ac24c52000000b004fe7e1f766amr11911255lfk.24.1692789243814;
-        Wed, 23 Aug 2023 04:14:03 -0700 (PDT)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id b15-20020ac247ef000000b004ffa0e5d805sm2592714lfp.174.2023.08.23.04.14.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Aug 2023 04:14:03 -0700 (PDT)
-Date:   Wed, 23 Aug 2023 14:14:00 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
-        manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
-        kishon@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, marek.vasut+renesas@gmail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v19 12/19] PCI: dwc: endpoint: Introduce .pre_init() and
- .deinit()
-Message-ID: <asg4u7vfyk5scq4wzzpfogdhrnzrlz77gxrn76ak4jfwixj4ej@qztokrh6lyys>
-References: <20230823091153.2578417-1-yoshihiro.shimoda.uh@renesas.com>
- <20230823091153.2578417-13-yoshihiro.shimoda.uh@renesas.com>
+        with ESMTP id S232626AbjHWLqw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 07:46:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFFE8E6F;
+        Wed, 23 Aug 2023 04:46:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 02ECB61440;
+        Wed, 23 Aug 2023 11:46:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EFEAC433C8;
+        Wed, 23 Aug 2023 11:46:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692791181;
+        bh=jTWkIBPlkZDuvv58mCc64rD2EEiyM2COyuLVATArL6Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=WM9EN99kxxWcAXwdC/R76C4d7qAZplzMxsNTsxj8FKt9/bSDZpiG9eFn/NXNXbCMW
+         jWJeK5lBukC8T0JiymVJ0NilMUY7ki72aPWC/7UTvAE7YvM5U9ob3gFuF32v+RHoHs
+         1NmDAxt8kUl5Gie1TlBXMlNVMntjtrls1GeEUww7CUGlJBTG3y25uTXv7WUxqjKJl5
+         WLLz8sP3HFmpplO95/WgaFQOMVLiRxbi8tepxxaFu7UBzOEebfVmZJox6R+mGdz5Q0
+         mnmTZLY3dh5asACvr9Zlk6u147MDPQDelF8nR/X+gLMdXQASt3qRfmaAqhsoITG/Yu
+         z0tXJ7IqhIsXg==
+Date:   Wed, 23 Aug 2023 06:46:19 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Iain Lane <iain@orangesquash.org.uk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v14.a 1/1] PCI: Only put Intel PCIe ports >= 2015 into D3
+Message-ID: <20230823114619.GA414059@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230823091153.2578417-13-yoshihiro.shimoda.uh@renesas.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+In-Reply-To: <20230823050453.GA9103@wunner.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -77,91 +60,72 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 23, 2023 at 06:11:46PM +0900, Yoshihiro Shimoda wrote:
-> Renesas R-Car Gen4 PCIe controllers require vendor-specific
-> initialization before .init(). To use dw->dbi and dw->num-lanes
-> in the initialization code, introduce .pre_init() into struct
-> dw_pcie_ep_ops. Also introduce .deinit() to disable the controller
-> by using vendor-specific de-initialization.
+On Wed, Aug 23, 2023 at 07:04:53AM +0200, Lukas Wunner wrote:
+> On Tue, Aug 22, 2023 at 07:02:43PM -0500, Bjorn Helgaas wrote:
+> > On Tue, Aug 22, 2023 at 12:11:10PM +0200, Rafael J. Wysocki wrote:
+> > > What we need to deal with here is basically non-compliant systems and
+> > > so we have to catch the various forms of non-compliance.
+> > 
+> > Thanks for this, that helps.  If pci_bridge_d3_possible() is a list of
+> > quirks for systems that are known to be broken (or at least not known
+> > to work correctly and avoiding D3 is acceptable), then we should
+> > document and use it that way.
+> > 
+> > The current documentation ("checks if it is possible to move to D3")
+> > frames it as "does the bridge have the required features?" instead of
+> > "do we know about something broken in this bridge or this platform?"
+> > 
+> > If something is broken, I would expect tests based on the device or
+> > DMI check.  But several some are not obvious defects.  E.g.,
+> > "bridge->is_hotplug_bridge && !pciehp_is_native(bridge)" -- what
+> > defect are we finding there?  What does the spec require that isn't
+> > happening?
 > 
-
-> Note that the ep_init in the struct dw_pcie_ep_ops should be renamed
-> to init later.
-
-Note this message look very little related to the patch itself. If you
-want to signify your agreement with Mani then just put that note below
-the "---" line.
-
-Anyway. The callbacks execution order looks correct now. Thanks.
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-
--Serge(y)
-
+> This particular check doesn't pertain to a defect, but indeed
+> follows from the spec:
 > 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 12 +++++++++++-
->  drivers/pci/controller/dwc/pcie-designware.h    |  2 ++
->  2 files changed, 13 insertions(+), 1 deletion(-)
+> If hotplug control wasn't granted to the OS, the OS shall not put
+> the hotplug port in D3 behind firmware's back because the power state
+> affects accessibility of devices downstream of the hotplug port.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 9a51a723b892..ea8063742fac 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -695,6 +695,9 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
->  			      epc->mem->window.page_size);
->  
->  	pci_epc_mem_exit(epc);
-> +
-> +	if (ep->ops->deinit)
-> +		ep->ops->deinit(ep);
->  }
->  EXPORT_SYMBOL_GPL(dw_pcie_ep_exit);
->  
-> @@ -798,6 +801,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  	ep->phys_base = res->start;
->  	ep->addr_size = resource_size(res);
->  
-> +	if (ep->ops->pre_init)
-> +		ep->ops->pre_init(ep);
-> +
->  	dw_pcie_version_detect(pci);
->  
->  	dw_pcie_iatu_detect(pci);
-> @@ -852,7 +858,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  			       ep->page_size);
->  	if (ret < 0) {
->  		dev_err(dev, "Failed to initialize address space\n");
-> -		return ret;
-> +		goto err_ep_deinit;
->  	}
->  
->  	ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys,
-> @@ -898,6 +904,10 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  err_exit_epc_mem:
->  	pci_epc_mem_exit(epc);
->  
-> +err_ep_deinit:
-> +	if (ep->ops->deinit)
-> +		ep->ops->deinit(ep);
-> +
->  	return ret;
->  }
->  EXPORT_SYMBOL_GPL(dw_pcie_ep_init);
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 89999c483c37..77a9c3e70120 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -332,7 +332,9 @@ struct dw_pcie_rp {
->  };
->  
->  struct dw_pcie_ep_ops {
-> +	void	(*pre_init)(struct dw_pcie_ep *ep);
->  	void	(*ep_init)(struct dw_pcie_ep *ep);
-> +	void	(*deinit)(struct dw_pcie_ep *ep);
->  	int	(*raise_irq)(struct dw_pcie_ep *ep, u8 func_no,
->  			     unsigned int type, u16 interrupt_num);
->  	const struct pci_epc_features* (*get_features)(struct dw_pcie_ep *ep);
-> -- 
-> 2.25.1
+> Put another way, the firmware expects to have control of hotplug
+> and hotplug may break if the OS fiddles with the power state of the
+> hotplug port.
 > 
+> Here's a bugzilla where this caused issues:
+> https://bugzilla.kernel.org/show_bug.cgi?id=53811
+> 
+> On the other hand Thunderbolt hotplug ports are required to runtime
+> suspend to D3 in order to save power.  
+
+Sounds like there may be a requirement in a Thunderbolt spec about
+this, so maybe we could add that citation?  I guess this goes with the
+"bridge->is_thunderbolt" check?
+
+> On Macs they're always handled
+> natively by the OS.  Hence the code comment.
+
+And I guess this goes with the "System Management Mode" and
+"Thunderbolt on non-Macs" comments?  A citation to the source behind
+"OS shall not put the hotplug port in D3 behind firmware's back" would
+be super helpful here.
+
+> A somewhat longer explanation I gave in 2016:
+> https://lore.kernel.org/all/20160617213209.GA1927@wunner.de/
+> 
+> Perhaps the code comment preceding that check can be rephrased to
+> convey its meaning more clearly...
+
+Thanks!  I think it would be worth trying to separate out the "normal"
+things that correspond to the spec from the "quirk" things that work
+around defects.  That's not material for *this* patch, though.
+
+It's also a little weird that pci_bridge_d3_possible() itself looks
+like it's invariant for the life of the system, but we call it several
+times (pci_pm_init(), pci_bridge_d3_update(), pcie_portdrv_probe(),
+etc).  I guess this is because we save the result in dev->bridge_d3,
+but then pci_bridge_d3_update() updates dev->bridge_d3 based on other
+things, so the original value is lost.  Maybe another bit or two could
+avoid those extra calls.
+
+Bjorn
