@@ -2,126 +2,228 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D08D778510D
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 09:02:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F17578511E
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 09:07:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233094AbjHWHCn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Aug 2023 03:02:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45924 "EHLO
+        id S233139AbjHWHHS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Aug 2023 03:07:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233090AbjHWHCn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 03:02:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B8BECE8;
-        Wed, 23 Aug 2023 00:02:40 -0700 (PDT)
+        with ESMTP id S233134AbjHWHHR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 03:07:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC51E62;
+        Wed, 23 Aug 2023 00:07:13 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DAA3464982;
-        Wed, 23 Aug 2023 07:02:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86C11C433C7;
-        Wed, 23 Aug 2023 07:02:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1692774159;
-        bh=GA8OiRBj8V4niqfWdyzMuban8l3H8iUS+3bcTCjZzJ4=;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 57CBE646E6;
+        Wed, 23 Aug 2023 07:07:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7E98C433C7;
+        Wed, 23 Aug 2023 07:07:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692774432;
+        bh=9lAErBwNVSX9i0L/x3hQKTCaogOpT3lhljOUK8I9jXk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lys1sm1gp/HmfpCprl8w8lst1MQRZK8lZUXzbUUWDghJla0YZGpqyuLJQfkd9/fwV
-         sg9U79OrJ1bozUcZDlES6Y4kf5wSIOQQDSArLgZP3/pX85hPTA1AP6HtOMK9Lijz66
-         7Xrr9zFZM/GPoW9oi0HkxDz78+5/pxUDS67eU0xk=
-Date:   Wed, 23 Aug 2023 09:02:36 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Alistair Francis <alistair23@gmail.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        Jonathan.Cameron@huawei.com, lukas@wunner.de,
-        alex.williamson@redhat.com, christian.koenig@amd.com,
-        kch@nvidia.com, logang@deltatee.com, linux-kernel@vger.kernel.org,
-        chaitanyak@nvidia.com, rdunlap@infradead.org,
-        Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [PATCH v6 2/3] sysfs: Add a attr_is_visible function to
- attribute_group
-Message-ID: <2023082325-cognitive-dispose-1180@gregkh>
-References: <20230817235810.596458-1-alistair.francis@wdc.com>
- <20230817235810.596458-2-alistair.francis@wdc.com>
- <2023081959-spinach-cherisher-b025@gregkh>
- <CAKmqyKM+DNTF1f0FvDEda_db792Ta4w_uAKNTZ6E3NkYoVcPFQ@mail.gmail.com>
+        b=JIuXPG6QtLR0bvZoo2ngJlyQk+7LsJVFPTU1jGmH8csY7KgRMPv7OIjKQfJRSS56S
+         hT2LC0olMAeg4cHgTuJ5fGsUVUobfL971GvZiTGQwv07nTMs8/uFHbO7YP+6FtT1r+
+         3HGMWCAWGS1J1kWE2hKABP50XiwBUGRREIFET2UHv7jz5B7SU7R8EfKep24UH5VF5Q
+         OO+8NQKLQD30IzmdEJSdMSh2kN+Hzd9rkpUw0vp8XKaxjxTHSZB9Y1D2ExWkDKkuMe
+         7Tl9Ht5vIbDNONrhmVS9C5FGhN2dOxYW63PvYPRvKOaCU+DVS9zQQef7ihvcFkHrqD
+         XUWD9z6URI1Pw==
+Date:   Wed, 23 Aug 2023 12:36:52 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc:     manivannan.sadhasivam@linaro.org, helgaas@kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, quic_parass@quicinc.com,
+        krzysztof.kozlowski@linaro.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v4 4/4] PCI: qcom: Add OPP support for speed based
+ performance state of RPMH
+Message-ID: <20230823070652.GE3737@thinkpad>
+References: <1692717141-32743-1-git-send-email-quic_krichai@quicinc.com>
+ <1692717141-32743-5-git-send-email-quic_krichai@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKmqyKM+DNTF1f0FvDEda_db792Ta4w_uAKNTZ6E3NkYoVcPFQ@mail.gmail.com>
+In-Reply-To: <1692717141-32743-5-git-send-email-quic_krichai@quicinc.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 22, 2023 at 04:20:06PM -0400, Alistair Francis wrote:
-> On Sat, Aug 19, 2023 at 6:57 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Aug 17, 2023 at 07:58:09PM -0400, Alistair Francis wrote:
-> > > The documentation for sysfs_merge_group() specifically says
-> > >
-> > >     This function returns an error if the group doesn't exist or any of the
-> > >     files already exist in that group, in which case none of the new files
-> > >     are created.
-> > >
-> > > So just not adding the group if it's empty doesn't work, at least not
-> > > with the code we currently have. The code can be changed to support
-> > > this, but it is difficult to determine how this will affect existing use
-> > > cases.
-> >
-> > Did you try?  I'd really really really prefer we do it this way as it's
-> > much simpler overall to have the sysfs core "do the right thing
-> > automatically" than to force each and every bus/subsystem to have to
-> > manually add this type of attribute.
-> >
-> > Also, on a personal level, I want this function to work as it will allow
-> > us to remove some code in some busses that don't really need to be there
-> > (dynamic creation of some device attributes), which will then also allow
-> > me to remove some apis in the driver core that should not be used at all
-> > anymore (but keep creeping back in as there is still a few users.)
-> >
-> > So I'll be selfish here and say "please try to get my proposed change to
-> > work, it's really the correct thing to do here."
-> 
-> I did try!
-> 
-> This is an attempt:
-> https://github.com/alistair23/linux/commit/56b55756a2d7a66f7b6eb8a5692b1b5e2f81a9a9
-> 
-> It is based on your original patch with a bunch of:
-> 
-> if (!parent) {
->     parent = kernfs_create_dir_ns(kobj->sd, grp->name,
->                   S_IRWXU | S_IRUGO | S_IXUGO,
->                   uid, gid, kobj, NULL);
->     ...
->     }
-> 
-> 
-> added throughout the code base.
-> 
-> Very basic testing shows that it does what I need it to do and I don't
-> see any kernel oops on boot.
+Subject should be, "PCI: qcom: Add OPP support to scale performance state of
+power domain"
 
-Nice!
+On Tue, Aug 22, 2023 at 08:42:21PM +0530, Krishna chaitanya chundru wrote:
+> Before link training vote for the maximum performance state of RPMH
+> and once link is up, vote for the performance state based upon the link
+> speed.
+> 
 
-Mind if I take it and clean it up a bit and test with it here?  Again, I
-need this functionality for other stuff as well, so getting it merged
-for your feature is fine with me.
+Commit message should have the justification on why OPP support should be
+addded, not just how you add it. The reasoning should be, "While scaling the
+interconnect clocks based on PCIe link speed, it is also mandatory to scale the
+power domain performance state so that the SoC can run under optimum power
+conditions."
 
-> I prefer the approach I have in this mailing list patch. But if you
-> like the commit mentioned above I can tidy and clean it up and then
-> use that instead
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 52 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 7a87a47..161fdad 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/of_device.h>
+>  #include <linux/of_gpio.h>
+>  #include <linux/pci.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/phy/pcie.h>
+> @@ -1357,6 +1358,33 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+>  	return 0;
+>  }
+>  
+> +static void qcom_pcie_opp_update(struct qcom_pcie *pcie)
+> +{
+> +	struct dw_pcie *pci = pcie->pci;
+> +	struct dev_pm_opp *opp;
+> +	u32 offset, status;
+> +	int speed, ret = 0;
+> +
+> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> +	status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
+> +
+> +	/* Only update constraints if link is up. */
+> +	if (!(status & PCI_EXP_LNKSTA_DLLLA))
+> +		return;
+> +
+> +	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
+> +
 
-I would rather do it this way.  I can work on this on Friday if you want
-me to.
+Since icc_update() also queries link status register, this could be moved inside
+icc_update() to avoid code duplication and probably the function con be renamed
+to "qcom_pcie_icc_opp_update()".
 
-thanks,
+> +	opp = dev_pm_opp_find_level_exact(pci->dev, speed);
+> +	if (!IS_ERR(opp)) {
 
-greg k-h
+As we decided for pcie-qcom-ep, let's return error from _update() function if
+icc paths/opp support were specified in DT.
+
+Use a separate patch for returning error from existing qcom_pcie_icc_update()
+function and add opp support on top.
+
+> +		ret = dev_pm_opp_set_opp(pci->dev, opp);
+> +		if (ret)
+> +			dev_err(pci->dev, "Failed to set opp: level %d ret %d\n",
+> +						dev_pm_opp_get_level(opp), ret);
+> +		dev_pm_opp_put(opp);
+> +	}
+> +
+> +}
+> +
+>  static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
+>  {
+>  	struct dw_pcie *pci = pcie->pci;
+> @@ -1439,8 +1467,10 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
+>  static int qcom_pcie_probe(struct platform_device *pdev)
+>  {
+>  	const struct qcom_pcie_cfg *pcie_cfg;
+> +	unsigned long max_level = INT_MAX;
+>  	struct device *dev = &pdev->dev;
+>  	struct qcom_pcie *pcie;
+> +	struct dev_pm_opp *opp;
+>  	struct dw_pcie_rp *pp;
+>  	struct resource *res;
+>  	struct dw_pcie *pci;
+> @@ -1511,6 +1541,23 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto err_pm_runtime_put;
+>  
+> +	/* OPP table is optional */
+> +	ret = devm_pm_opp_of_add_table(dev);
+> +	if (ret && ret != -ENODEV) {
+> +		dev_err(dev, "Invalid OPP table in Device tree\n");
+
+"Failed to add OPP table"
+
+Also, use dev_err_probe() here and below.
+
+> +		goto err_pm_runtime_put;
+> +	}
+> +
+> +	/* vote for max level in the opp table */
+> +	opp = dev_pm_opp_find_level_floor(dev, &max_level);
+
+Use a bool flag to check whether opp support is present or not and use that to
+decide calling these APIs.
+
+> +	if (!IS_ERR(opp)) {
+> +		ret = dev_pm_opp_set_opp(dev, opp);
+> +		if (ret)
+> +			dev_err(pci->dev, "Failed to set opp: level %d ret %d\n",
+> +						dev_pm_opp_get_level(opp), ret);
+> +		dev_pm_opp_put(opp);
+> +	}
+> +
+>  	ret = pcie->cfg->ops->get_resources(pcie);
+>  	if (ret)
+>  		goto err_pm_runtime_put;
+> @@ -1531,6 +1578,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  
+>  	qcom_pcie_icc_update(pcie);
+>  
+> +	qcom_pcie_opp_update(pcie);
+> +
+>  	if (pcie->mhi)
+>  		qcom_pcie_init_debugfs(pcie);
+>  
+> @@ -1577,6 +1626,7 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
+>  	 */
+>  	if (!dw_pcie_link_up(pcie->pci)) {
+>  		qcom_pcie_host_deinit(&pcie->pci->pp);
+> +		dev_pm_opp_set_opp(dev, NULL);
+
+This will print error when OPP table was not specified in DT. So use the flag as
+I suggested above.
+
+- Mani
+
+>  		pcie->suspended = true;
+>  	}
+>  
+> @@ -1593,6 +1643,8 @@ static int qcom_pcie_resume_noirq(struct device *dev)
+>  		if (ret)
+>  			return ret;
+>  
+> +		qcom_pcie_opp_update(pcie);
+> +
+>  		pcie->suspended = false;
+>  	}
+>  
+> -- 
+> 2.7.4
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
