@@ -2,126 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7266784F16
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 05:06:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B33AB784FC6
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 07:05:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229572AbjHWDG0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Aug 2023 23:06:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57592 "EHLO
+        id S232599AbjHWFFC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Aug 2023 01:05:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231545AbjHWDGZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Aug 2023 23:06:25 -0400
-Received: from mail-oo1-xc34.google.com (mail-oo1-xc34.google.com [IPv6:2607:f8b0:4864:20::c34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 399E7E50
-        for <linux-pci@vger.kernel.org>; Tue, 22 Aug 2023 20:06:18 -0700 (PDT)
-Received: by mail-oo1-xc34.google.com with SMTP id 006d021491bc7-570e88ee36aso1278940eaf.1
-        for <linux-pci@vger.kernel.org>; Tue, 22 Aug 2023 20:06:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1692759977; x=1693364777;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CgAdcTBlf+rIuiyzkn5utTBoPjOIxfw/48rc208BTeI=;
-        b=ndAiRnpDXzVUWLLl5T97M9fSBcG9cHpmr5AAPWDa60A3Oj9PfC2I7jmqWlMoSmok6Z
-         QUvZXXy3r1/yHCykLBATiTk7v58j6LC2bZT4Sd47aS7dxKDh7XtNFOacINcbUctan+RK
-         2pENJdE4/LngNLNKEai9R2WjwFA4IERbNig6SYRqmKcIYdqhc92cFbXtcxlsxSHg2GRJ
-         7vKMr4+DQuotpXKa8ycfSIzOtOu2yCthd85zkqp4fulikdkLA/+D+cQG4I5f/GYJfz6Z
-         1rLv9xLODMs4NW87KRU/FRcx+CLAI6uXgnqHiKd3XYP/BTABl79vrbjfDKELFsiC0oTe
-         eXCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692759977; x=1693364777;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CgAdcTBlf+rIuiyzkn5utTBoPjOIxfw/48rc208BTeI=;
-        b=Jga67S3hQ8Tj+QzN66nT0kVZw/IHHNC1zKEnYvUez9tQOkPSTLHFiGsYn76+xXY+zA
-         W3RjYCipI1LPMiVS74W8Cr988Jl49zoGkXaoU4QbP7nWRJYYa5sWqldBxyckSQ588Tc1
-         CTgw8N6gf6JOcKIKUfwNw0z342GU2Qs10seDwx2Ba81MiBEhpyHjBEg/kfXY+WwzFWvL
-         qRIAIlpTFGxGRlb6XcL/+Ifpe7WVJa1RybTvl+5p2QiDHITj/88mHRn7lXrh4d7umQI5
-         RZyXNe1/oIDH9RrFQznPbRpnwcY3+gpAqTo0fXsh5A2YVzwNYWskSxtLjrBFkNMt1h2C
-         fbNQ==
-X-Gm-Message-State: AOJu0YwCZqskP2iIy304Q16/3qNPLpil043/fG72qXmGoadGdLE4cV7c
-        CWhVwV8nE4DRTnUKs0cmnjeU88QWUJfexRI5+J4pQy+yKkviO49NTKY=
-X-Google-Smtp-Source: AGHT+IEe/IeXdwsKt7uz522E5VBJO2YyNMsBoedoBFarQ4/ay5kmErLM6TAkGrD2r8XFUm0rKC3He7KTqIteQ1tjEk8=
-X-Received: by 2002:a05:6820:41:b0:56c:7a55:f6b3 with SMTP id
- v1-20020a056820004100b0056c7a55f6b3mr12126745oob.5.1692759977358; Tue, 22 Aug
- 2023 20:06:17 -0700 (PDT)
+        with ESMTP id S231189AbjHWFFC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 01:05:02 -0400
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6E07E4A;
+        Tue, 22 Aug 2023 22:04:55 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 7A49B30000D25;
+        Wed, 23 Aug 2023 07:04:53 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 6C9A6316BE2; Wed, 23 Aug 2023 07:04:53 +0200 (CEST)
+Date:   Wed, 23 Aug 2023 07:04:53 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Iain Lane <iain@orangesquash.org.uk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v14.a 1/1] PCI: Only put Intel PCIe ports >= 2015 into D3
+Message-ID: <20230823050453.GA9103@wunner.de>
+References: <CAJZ5v0hU3mWFaaujWozHnPw8+A=bf2OwzcendXjpP35wCv_B6g@mail.gmail.com>
+ <20230823000243.GA391238@bhelgaas>
 MIME-Version: 1.0
-References: <20230807055621.2431-1-yongxuan.wang@sifive.com>
-In-Reply-To: <20230807055621.2431-1-yongxuan.wang@sifive.com>
-From:   Yong-Xuan Wang <yongxuan.wang@sifive.com>
-Date:   Wed, 23 Aug 2023 11:06:06 +0800
-Message-ID: <CAMWQL2jY=pRaYjFq19QBR3X9OtWxHqTThUDJxtyeBmMhOcF+BQ@mail.gmail.com>
-Subject: Re: [PATCH v3] PCI: fu740: Set the number of MSI vectors
-To:     linux-pci@vger.kernel.org
-Cc:     paul.walmsley@sifive.com, greentime.hu@sifive.com,
-        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, p.zabel@pengutronix.de, palmer@dabbelt.com,
-        fancer.lancer@gmail.com, zong.li@sifive.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230823000243.GA391238@bhelgaas>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Tue, Aug 22, 2023 at 07:02:43PM -0500, Bjorn Helgaas wrote:
+> On Tue, Aug 22, 2023 at 12:11:10PM +0200, Rafael J. Wysocki wrote:
+> > What we need to deal with here is basically non-compliant systems and
+> > so we have to catch the various forms of non-compliance.
+> 
+> Thanks for this, that helps.  If pci_bridge_d3_possible() is a list of
+> quirks for systems that are known to be broken (or at least not known
+> to work correctly and avoiding D3 is acceptable), then we should
+> document and use it that way.
+> 
+> The current documentation ("checks if it is possible to move to D3")
+> frames it as "does the bridge have the required features?" instead of
+> "do we know about something broken in this bridge or this platform?"
+> 
+> If something is broken, I would expect tests based on the device or
+> DMI check.  But several some are not obvious defects.  E.g.,
+> "bridge->is_hotplug_bridge && !pciehp_is_native(bridge)" -- what
+> defect are we finding there?  What does the spec require that isn't
+> happening?
 
-Kindly ping on this, any comments or suggestions are appreciated.
+This particular check doesn't pertain to a defect, but indeed
+follows from the spec:
 
-Regards,
-Yong-Xuan
+If hotplug control wasn't granted to the OS, the OS shall not put
+the hotplug port in D3 behind firmware's back because the power state
+affects accessibility of devices downstream of the hotplug port.
 
+Put another way, the firmware expects to have control of hotplug
+and hotplug may break if the OS fiddles with the power state of the
+hotplug port.
 
-On Mon, Aug 7, 2023 at 1:56=E2=80=AFPM Yong-Xuan Wang <yongxuan.wang@sifive=
-.com> wrote:
->
-> The iMSI-RX module of the DW PCIe controller provides multiple sets of
-> MSI_CTRL_INT_i_* registers, and each set is capable of handling 32 MSI
-> interrupts. However, the fu740 PCIe controller driver only enabled one se=
-t
-> of MSI_CTRL_INT_i_* registers, as the total number of supported interrupt=
-s
-> was not specified.
->
-> Set the supported number of MSI vectors to enable all the MSI_CTRL_INT_i_=
-*
-> registers on the fu740 PCIe core, allowing the system to fully utilize th=
-e
-> available MSI interrupts.
->
-> Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
-> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-> ---
-> Changelog
-> v3:
-> - refined the commit message
-> v2:
-> - recast the subject and the commit message
-> ---
->  drivers/pci/controller/dwc/pcie-fu740.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-fu740.c b/drivers/pci/contro=
-ller/dwc/pcie-fu740.c
-> index 0c90583c078b..1e9b44b8bba4 100644
-> --- a/drivers/pci/controller/dwc/pcie-fu740.c
-> +++ b/drivers/pci/controller/dwc/pcie-fu740.c
-> @@ -299,6 +299,7 @@ static int fu740_pcie_probe(struct platform_device *p=
-dev)
->         pci->dev =3D dev;
->         pci->ops =3D &dw_pcie_ops;
->         pci->pp.ops =3D &fu740_pcie_host_ops;
-> +       pci->pp.num_vectors =3D MAX_MSI_IRQS;
->
->         /* SiFive specific region: mgmt */
->         afp->mgmt_base =3D devm_platform_ioremap_resource_byname(pdev, "m=
-gmt");
-> --
-> 2.17.1
->
+Here's a bugzilla where this caused issues:
+https://bugzilla.kernel.org/show_bug.cgi?id=53811
+
+On the other hand Thunderbolt hotplug ports are required to runtime
+suspend to D3 in order to save power.  On Macs they're always handled
+natively by the OS.  Hence the code comment.
+
+A somewhat longer explanation I gave in 2016:
+https://lore.kernel.org/all/20160617213209.GA1927@wunner.de/
+
+Perhaps the code comment preceding that check can be rephrased to
+convey its meaning more clearly...
+
+Thanks,
+
+Lukas
