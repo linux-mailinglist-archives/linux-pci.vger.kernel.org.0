@@ -2,143 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7B287851DD
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 09:44:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E2C27851E2
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 09:44:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233512AbjHWHoB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Aug 2023 03:44:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47878 "EHLO
+        id S231483AbjHWHo6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Aug 2023 03:44:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233510AbjHWHoA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 03:44:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88E71E52;
-        Wed, 23 Aug 2023 00:43:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1306D6511C;
-        Wed, 23 Aug 2023 07:43:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DABBDC433C7;
-        Wed, 23 Aug 2023 07:43:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692776633;
-        bh=oK3yV228DJKbwbTXFb4RHff/R+/hOvYP/LBJ/ZoSh30=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kAzSuLjKrRLBN4VfR9xeAelF/xpKdHk+wzqKwaO/hba0tM4UzeZkHmiHxLx6D0gQL
-         /DICzsBbMFRC16rjQw+IOXs5Fu3Mxcbw/6k0xFX6fVTqimBOlQH8ioTTbhWPorP5eF
-         HVJo5EZc3Pc7m6l8r8t5X8F0q2XObe7kWmblm0WiIVKhJbDvCWhG+uWr9YaTvL65N9
-         cEByENw8+lfaSkDzJPhJTH5ffX4yFI6ap7iqgKvtKX7pCFU1I94cjn4KQGPeQEKpOO
-         JxhimQjOmUoz1vBwWdHVMRtkYew6NlkoTQvs/PZBX7OmGZslAoSNA2Gb66GN+DLLJp
-         XbREhkVVlIc9w==
-Date:   Wed, 23 Aug 2023 13:13:30 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        Phil Elwell <phil@raspberrypi.com>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 1/5] dt-bindings: PCI: brcmstb: Add brcm,enable-l1ss
- property
-Message-ID: <20230823074330.GF3737@thinkpad>
-References: <20230508220126.16241-1-jim2101024@gmail.com>
- <20230508220126.16241-2-jim2101024@gmail.com>
+        with ESMTP id S233529AbjHWHo5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 03:44:57 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9E70E52
+        for <linux-pci@vger.kernel.org>; Wed, 23 Aug 2023 00:44:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692776693; x=1724312693;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=gWF9lIW+t/6DusPBoJ4eADfOEV4Z6H4F6mqyvQP0dk0=;
+  b=jjBYgwZoQwp1AG3JNqI+5c1mHwQxhRCVZ3b2McjZ+o1eDorr6dKascgg
+   3vd/eM0qKHs8KYF00baUXrTw6G7v+oYJCnt78tZG+OAhb6ccBlzFCLbCo
+   3WNGZwVJyuiFZHBqraO3c2NFbF+eJ5JX0uaslFcJnUZGCrTG1II0SVz1f
+   JsQotKfsO14Vg97fzV/KgKCw3Zgr8FnW3eU4qdC7yK3KxwSdDuT7l6AS9
+   bf4ZjB9xsr2oiWhDx3xxzA/yg0DhlCIaI5xPAgZR6H4X9/dVwFXYITK41
+   tP12HdZW2qHmNPi/U0d/v7vvpO7Ps11YHThI7YYg1/sxNi2+MaOmaM09E
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="377854247"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="377854247"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 00:44:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.01,202,1684825200"; 
+   d="scan'208";a="880307366"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Aug 2023 00:44:53 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 98FAC379; Wed, 23 Aug 2023 10:44:47 +0300 (EEST)
+Date:   Wed, 23 Aug 2023 10:44:47 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Kamil Paral <kparal@redhat.com>
+Cc:     linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+        bhelgaas@google.com, chris.chiu@canonical.com
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+Message-ID: <20230823074447.GR3465@black.fi.intel.com>
+References: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
+ <20230821131223.GJ3465@black.fi.intel.com>
+ <CA+cBOTc-7U_sumg6g-uBs9w3m8xipuOV1VY=4nmBcyuppgi8_g@mail.gmail.com>
+ <20230823050714.GP3465@black.fi.intel.com>
+ <CA+cBOTdS5djXL=93VThP9K67pjYKHtjceqSczKf8NQonhpgo5Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230508220126.16241-2-jim2101024@gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <CA+cBOTdS5djXL=93VThP9K67pjYKHtjceqSczKf8NQonhpgo5Q@mail.gmail.com>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 08, 2023 at 06:01:21PM -0400, Jim Quinlan wrote:
-> This commit adds the boolean "brcm,enable-l1ss" property:
+On Wed, Aug 23, 2023 at 09:00:39AM +0200, Kamil Paral wrote:
+> On Wed, Aug 23, 2023 at 7:07 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> > Okay if I understand correctly with commit 7b3ba09febf4 things works as
+> > before and you don't see any delays in resume?
 > 
->   The Broadcom STB/CM PCIe HW -- a core that is also used by RPi SOCs --
->   requires the driver probe() to deliberately place the HW one of three
->   CLKREQ# modes:
-> 
->   (a) CLKREQ# driven by the RC unconditionally
->   (b) CLKREQ# driven by the EP for ASPM L0s, L1
->   (c) Bidirectional CLKREQ#, as used for L1 Substates (L1SS).
-> 
->   The HW+driver can tell the difference between downstream devices that
->   need (a) and (b), but does not know when to configure (c).  All devices
->   should work fine when the driver chooses (a) or (b), but (c) may be
->   desired to realize the extra power savings that L1SS offers.  So we
->   introduce the boolean "brcm,enable-l1ss" property to inform the driver
->   that (c) is desired.  Setting this property only makes sense when the
->   downstream device is L1SS-capable and the OS is configured to activate
->   this mode (e.g. policy==powersupersave).
-> 
->   This property is already present in the Raspian version of Linux, but the
->   upstream driver implementation that follows adds more details and
->   discerns between (a) and (b).
-> 
-> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> index 7e15aae7d69e..8b61c2179608 100644
-> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> @@ -64,6 +64,15 @@ properties:
->  
->    aspm-no-l0s: true
->  
-> +  brcm,enable-l1ss:
-> +    description: Indicates that PCIe L1SS power savings
-> +      are desired, the downstream device is L1SS-capable, and the
-> +      OS has been configured to enable this mode.  For boards
-> +      using a mini-card connector, this mode may not meet the
-> +      TCRLon maximum time of 400ns, as specified in 3.2.5.2.2
-> +      of the PCI Express Mini CEM 2.0 specification.
+> If commit 7b3ba09febf4 is included but commit e8b908146d44 is
+> excluded, the resume works as usual. Once e8b908146d44 is included (it
+> doesn't matter whether 7b3ba09febf4 is included or not), the resume
+> gets delayed by ~60 seconds.
 
-As Lorenzo said, this property doesn't belong in DT. DT is supposed to specify
-the hardware capability and not system/OS behavior. If this flag specifies
-whether the PCIe controller supports L1SS or not, then it is fine but apparantly
-this specifies that all downstream devices are L1SS capable which you cannot
-guarantee unless you poke into their LNKCAP during runtime.
+Okay thanks for clarifying. The ~60s means that the PCIe link does not
+come up and this is unexpected so most likely there is something else
+going on during resume. I will check the logs you shared if there is
+something but what is expected is that regardless of the timeout the
+PCIe tunnel gets established to the dock pretty quickly and the OS does
+not notice that the link is even down.
 
-You should handle this in the driver itself.
-
-- Mani
-
-> +    type: boolean
-> +
->    brcm,scb-sizes:
->      description: u64 giving the 64bit PCIe memory
->        viewport size of a memory controller.  There may be up to
-> -- 
-> 2.17.1
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+I guess even without the 60s delay you see in the logs that the PCIe
+link is down and Linux starts tearing the device stack towards the dock
+on resume?
