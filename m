@@ -2,48 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E1BB4786091
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 21:23:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF5B27860F6
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 21:48:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235219AbjHWTXT convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 23 Aug 2023 15:23:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49434 "EHLO
+        id S238379AbjHWTsL convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 23 Aug 2023 15:48:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237409AbjHWTXC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 15:23:02 -0400
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F06B0E50;
-        Wed, 23 Aug 2023 12:23:00 -0700 (PDT)
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6bcde3d8657so976630a34.0;
-        Wed, 23 Aug 2023 12:23:00 -0700 (PDT)
+        with ESMTP id S238393AbjHWTsH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 15:48:07 -0400
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2D2EE67;
+        Wed, 23 Aug 2023 12:48:04 -0700 (PDT)
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-56e280cc606so830753eaf.1;
+        Wed, 23 Aug 2023 12:48:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692818580; x=1693423380;
+        d=1e100.net; s=20221208; t=1692820084; x=1693424884;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UTrH4o5ux4AfIjhNwUonXXt16pkl+RCpCrneQG4XR6k=;
-        b=bmuiIdnvOGR88TP4MMAQXWCHenmT2Kc6fDb8K6MUej+/xxcUr6TIA2jFa5BfFwJCyj
-         pdHXfrg+RvN88vEZPDTEzjJ4xkcErQfeC0Sc+KipVb1Y9vMEO1KM7m5/ZQMWSi1n8kls
-         n5KDs0otVKpTe8H0GGhTywFCxU8Lr8ZdCByvwFiTETfCxsjA5W1pw9jz+MmkUjyeRF4G
-         6dtamN/nNzRcjI+DhPAdSWC/HKnBuwzbJSYQcC64rpAurbyzRUyNUiAkStzWjm+ngmGN
-         Ay8p6sdpXL+moEK6FTqSe5pbi36Um9GHAeXxGPwbBHo6Y4lPwEc2aIhX9U1fAbKN57J1
-         nNOQ==
-X-Gm-Message-State: AOJu0YxeKsIQhapB63hnxo0mjP1bAYwj5APOKOvtFxVo2AVQU8dvFDqy
-        3qwwlb+icDhjOgnx9/a5xFBvXiUTpiB124UPLWf6YLgp
-X-Google-Smtp-Source: AGHT+IEDvX+ecDZ1RwPEufppWxoRbprGo8Soq3d6K9vgfOzxnTKsqRCM9rpZnGomGtUUbEiybgCcgQ6zjBvUuebKFcs=
-X-Received: by 2002:a4a:37c3:0:b0:570:cad0:fce9 with SMTP id
- r186-20020a4a37c3000000b00570cad0fce9mr9352284oor.1.1692818580204; Wed, 23
- Aug 2023 12:23:00 -0700 (PDT)
+        bh=mUbM/KdpGCgimFPfXr+6AV3VyC3hBFQTEUDZY4ceXN4=;
+        b=F32X19K/uPD2/LWG9TqPD4uwOFEoETRB8qdRCTYTUVnMNOFbHeauSuvrlv38dwo8w5
+         tCKrre3fHY5Ov30v6BtDoPzIXlfP6D5DpLLO8RvqT2Gb/56fIy0uKpCS8eyGr//aTH+S
+         WMLs7QYTnW8+Vy9ROw4X/No4OrptYvtRQ8o83mO03Zofl3ThKjnDl8kqVz8HeoLA0zz+
+         B64GLCR1A+O2rE0IGQuayswdMW0cqGwpThY5C4Anq+7c89lAV6JgjBm1EXiIgOWTGz0Z
+         00LDlFiU02kHf0EQMv14UoCg07xRsBENS8sxzVQg0+pHQ8RFrIgi6C+J/2AnI/ayzUiR
+         wGmQ==
+X-Gm-Message-State: AOJu0YyXzF9OcpKtRPSpTs4JHzIkhyF8pVua2Xap7ES1CHzrZ/hYhzys
+        fZDRmwwVjo6V1FTxhJs1ABIyiE6SGUcZjATObKG0uMrqgqI=
+X-Google-Smtp-Source: AGHT+IGXcR0z6U8SimjrfPnSLkQuU9h9dwB9H4avyPrSARyBB0ZMENS7MS0f4fTm026nuB2Y2BXva4BKLY/sneB3Nx0=
+X-Received: by 2002:a4a:bc82:0:b0:569:a08a:d9c5 with SMTP id
+ m2-20020a4abc82000000b00569a08ad9c5mr12326345oop.0.1692820083931; Wed, 23 Aug
+ 2023 12:48:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230823191831.476579-1-helgaas@kernel.org>
-In-Reply-To: <20230823191831.476579-1-helgaas@kernel.org>
+References: <20230817121708.53213-1-ilpo.jarvinen@linux.intel.com> <20230817121708.53213-10-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20230817121708.53213-10-ilpo.jarvinen@linux.intel.com>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 23 Aug 2023 21:22:49 +0200
-Message-ID: <CAJZ5v0hAw7fB3YuQ2SGNccV_tPhr0GTYAEkv5NpMxgSuUUVXxw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Tidy save/restore config messages
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Date:   Wed, 23 Aug 2023 21:47:53 +0200
+Message-ID: <CAJZ5v0jZvKTMmjgb+iSdJaHpiwpWnB1fNxgreRteCyyUBS194Q@mail.gmail.com>
+Subject: Re: [PATCH 09/10] thermal: Add PCIe cooling driver
+To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Alex Deucher <alexdeucher@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -56,61 +69,258 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 23, 2023 at 9:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Thu, Aug 17, 2023 at 2:18 PM Ilpo Järvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
 >
-> From: Bjorn Helgaas <bhelgaas@google.com>
+> Add a thermal cooling driver to provide path to access PCIe bandwidth
+> controller using the usual thermal interfaces.
 >
-> Update config space save/restore debug messages so they line up better.
-> Previously:
+> A cooling device is instantiated for controllable PCIe ports from the
+> bwctrl service driver.
 >
->   nvme 0000:05:00.0: saving config space at offset 0x4 (reading 0x20100006)
->   nvme 0000:05:00.0: saving config space at offset 0x8 (reading 0x1080200)
->   nvme 0000:05:00.0: saving config space at offset 0xc (reading 0x0)
+> The thermal side state 0 means no throttling, i.e., maximum supported
+> PCIe speed.
 >
->   nvme 0000:05:00.0: restoring config space at offset 0x4 (was 0x0, writing 0x20100006)
->
-> Now:
->
->   nvme 0000:05:00.0: save config 0x04: 0x20100006
->   nvme 0000:05:00.0: save config 0x08: 0x01080200
->   nvme 0000:05:00.0: save config 0x0c: 0x00000000
->
->   nvme 0000:05:00.0: restore config 0x04: 0x00000000 -> 0x20100006
->
-> No functional change intended.  Enable these messages by setting
-> CONFIG_DYNAMIC_DEBUG=y and adding 'dyndbg="file drivers/pci/* +p"'
-> to kernel parameters.
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+From the cooling device interface perspective
 
 Acked-by: Rafael J. Wysocki <rafael@kernel.org>
 
 > ---
->  drivers/pci/pci.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  MAINTAINERS                    |   1 +
+>  drivers/pci/pcie/bwctrl.c      |  11 ++++
+>  drivers/thermal/Kconfig        |  10 +++
+>  drivers/thermal/Makefile       |   2 +
+>  drivers/thermal/pcie_cooling.c | 107 +++++++++++++++++++++++++++++++++
+>  include/linux/pci-bwctrl.h     |  15 +++++
+>  6 files changed, 146 insertions(+)
+>  create mode 100644 drivers/thermal/pcie_cooling.c
 >
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 60230da957e0..920c161575d4 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1681,7 +1681,7 @@ int pci_save_state(struct pci_dev *dev)
->         /* XXX: 100% dword access ok here? */
->         for (i = 0; i < 16; i++) {
->                 pci_read_config_dword(dev, i * 4, &dev->saved_config_space[i]);
-> -               pci_dbg(dev, "saving config space at offset %#x (reading %#x)\n",
-> +               pci_dbg(dev, "save config %#04x: %#010x\n",
->                         i * 4, dev->saved_config_space[i]);
->         }
->         dev->state_saved = true;
-> @@ -1712,7 +1712,7 @@ static void pci_restore_config_dword(struct pci_dev *pdev, int offset,
->                 return;
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d2eed2883a43..a0b40253fd5a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16421,6 +16421,7 @@ PCIE BANDWIDTH CONTROLLER
+>  M:     Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+>  S:     Supported
+>  F:     drivers/pci/pcie/bwctrl.c
+> +F:     drivers/thermal/pcie_cooling.c
+>  F:     include/linux/pci-bwctrl.h
 >
->         for (;;) {
-> -               pci_dbg(pdev, "restoring config space at offset %#x (was %#x, writing %#x)\n",
-> +               pci_dbg(pdev, "restore config %#04x: %#010x -> %#010x\n",
->                         offset, val, saved_val);
->                 pci_write_config_dword(pdev, offset, saved_val);
->                 if (retry-- <= 0)
+>  PCIE DRIVER FOR AMAZON ANNAPURNA LABS
+> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+> index e3172d69476f..13c73546244e 100644
+> --- a/drivers/pci/pcie/bwctrl.c
+> +++ b/drivers/pci/pcie/bwctrl.c
+> @@ -34,9 +34,11 @@
+>  /**
+>   * struct bwctrl_service_data - PCIe Port Bandwidth Controller
+>   * @set_speed_mutex: serializes link speed changes
+> + * @cdev: thermal cooling device associated with the port
+>   */
+>  struct bwctrl_service_data {
+>         struct mutex set_speed_mutex;
+> +       struct thermal_cooling_device *cdev;
+>  };
+>
+>  static bool bwctrl_valid_pcie_speed(enum pci_bus_speed speed)
+> @@ -253,8 +255,16 @@ static int pcie_bandwidth_notification_probe(struct pcie_device *srv)
+>         pcie_enable_link_bandwidth_notification(port);
+>         pci_info(port, "enabled with IRQ %d\n", srv->irq);
+>
+> +       data->cdev = pcie_cooling_device_register(port, srv);
+> +       if (IS_ERR(data->cdev)) {
+> +               ret = PTR_ERR(data->cdev);
+> +               goto disable_notifications;
+> +       }
+>         return 0;
+>
+> +disable_notifications:
+> +       pcie_disable_link_bandwidth_notification(srv->port);
+> +       kfree(data);
+>  free_irq:
+>         free_irq(srv->irq, srv);
+>         return ret;
+> @@ -264,6 +274,7 @@ static void pcie_bandwidth_notification_remove(struct pcie_device *srv)
+>  {
+>         struct bwctrl_service_data *data = get_service_data(srv);
+>
+> +       pcie_cooling_device_unregister(data->cdev);
+>         pcie_disable_link_bandwidth_notification(srv->port);
+>         free_irq(srv->irq, srv);
+>         mutex_destroy(&data->set_speed_mutex);
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 19a4b33cb564..7deda3a0237d 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -219,6 +219,16 @@ config DEVFREQ_THERMAL
+>
+>           If you want this support, you should say Y here.
+>
+> +config PCIE_THERMAL
+> +       bool "PCIe cooling support"
+> +       depends on PCIEPORTBUS
+> +       select PCIE_BW
+> +       help
+> +         This implements PCIe cooling mechanism through bandwidth reduction
+> +         for PCIe devices.
+> +
+> +         If you want this support, you should say Y here.
+> +
+>  config THERMAL_EMULATION
+>         bool "Thermal emulation mode support"
+>         help
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index 058664bc3ec0..065972a08c84 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -30,6 +30,8 @@ thermal_sys-$(CONFIG_CPU_IDLE_THERMAL)        += cpuidle_cooling.o
+>  # devfreq cooling
+>  thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
+>
+> +thermal_sys-$(CONFIG_PCIE_THERMAL) += pcie_cooling.o
+> +
+>  obj-$(CONFIG_K3_THERMAL)       += k3_bandgap.o k3_j72xx_bandgap.o
+>  # platform thermal drivers
+>  obj-y                          += broadcom/
+> diff --git a/drivers/thermal/pcie_cooling.c b/drivers/thermal/pcie_cooling.c
+> new file mode 100644
+> index 000000000000..d86265c03e80
+> --- /dev/null
+> +++ b/drivers/thermal/pcie_cooling.c
+> @@ -0,0 +1,107 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * PCIe cooling device
+> + *
+> + * Copyright (C) 2023 Intel Corporation.
+> + */
+> +
+> +#include <linux/build_bug.h>
+> +#include <linux/err.h>
+> +#include <linux/kernel.h>
+> +#include <linux/pci.h>
+> +#include <linux/pci-bwctrl.h>
+> +#include <linux/slab.h>
+> +#include <linux/string.h>
+> +#include <linux/thermal.h>
+> +
+> +#define COOLING_DEV_TYPE_PREFIX                "PCIe_Port_"
+> +
+> +struct pcie_cooling_device {
+> +       struct pci_dev *port;
+> +       struct pcie_device *pdev;
+> +};
+> +
+> +static int pcie_cooling_get_max_level(struct thermal_cooling_device *cdev, unsigned long *state)
+> +{
+> +       struct pcie_cooling_device *pcie_cdev = cdev->devdata;
+> +
+> +       /* cooling state 0 is same as the maximum PCIe speed */
+> +       *state = pcie_cdev->port->subordinate->max_bus_speed - PCIE_SPEED_2_5GT;
+> +
+> +       return 0;
+> +}
+> +
+> +static int pcie_cooling_get_cur_level(struct thermal_cooling_device *cdev, unsigned long *state)
+> +{
+> +       struct pcie_cooling_device *pcie_cdev = cdev->devdata;
+> +
+> +       /* cooling state 0 is same as the maximum PCIe speed */
+> +       *state = cdev->max_state -
+> +                (pcie_cdev->port->subordinate->cur_bus_speed - PCIE_SPEED_2_5GT);
+> +
+> +       return 0;
+> +}
+> +
+> +static int pcie_cooling_set_cur_level(struct thermal_cooling_device *cdev, unsigned long state)
+> +{
+> +       struct pcie_cooling_device *pcie_cdev = cdev->devdata;
+> +       enum pci_bus_speed speed;
+> +
+> +       /* cooling state 0 is same as the maximum PCIe speed */
+> +       speed = (cdev->max_state - state) + PCIE_SPEED_2_5GT;
+> +
+> +       return bwctrl_set_current_speed(pcie_cdev->pdev, speed);
+> +}
+> +
+> +static struct thermal_cooling_device_ops pcie_cooling_ops = {
+> +       .get_max_state = pcie_cooling_get_max_level,
+> +       .get_cur_state = pcie_cooling_get_cur_level,
+> +       .set_cur_state = pcie_cooling_set_cur_level,
+> +};
+> +
+> +struct thermal_cooling_device *pcie_cooling_device_register(struct pci_dev *port,
+> +                                                           struct pcie_device *pdev)
+> +{
+> +       struct pcie_cooling_device *pcie_cdev;
+> +       struct thermal_cooling_device *cdev;
+> +       size_t name_len;
+> +       char *name;
+> +
+> +       pcie_cdev = kzalloc(sizeof(*pcie_cdev), GFP_KERNEL);
+> +       if (!pcie_cdev)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       pcie_cdev->port = port;
+> +       pcie_cdev->pdev = pdev;
+> +
+> +       name_len = strlen(COOLING_DEV_TYPE_PREFIX) + strlen(pci_name(port)) + 1;
+> +       name = kzalloc(name_len, GFP_KERNEL);
+> +       if (!name) {
+> +               kfree(pcie_cdev);
+> +               return ERR_PTR(-ENOMEM);
+> +       }
+> +
+> +       snprintf(name, name_len, COOLING_DEV_TYPE_PREFIX "%s", pci_name(port));
+> +       cdev = thermal_cooling_device_register(name, pcie_cdev, &pcie_cooling_ops);
+> +       kfree(name);
+> +
+> +       return cdev;
+> +}
+> +
+> +void pcie_cooling_device_unregister(struct thermal_cooling_device *cdev)
+> +{
+> +       struct pcie_cooling_device *pcie_cdev = cdev->devdata;
+> +
+> +       thermal_cooling_device_unregister(cdev);
+> +       kfree(pcie_cdev);
+> +}
+> +
+> +/* For bus_speed <-> state arithmetic */
+> +static_assert(PCIE_SPEED_2_5GT + 1 == PCIE_SPEED_5_0GT);
+> +static_assert(PCIE_SPEED_5_0GT + 1 == PCIE_SPEED_8_0GT);
+> +static_assert(PCIE_SPEED_8_0GT + 1 == PCIE_SPEED_16_0GT);
+> +static_assert(PCIE_SPEED_16_0GT + 1 == PCIE_SPEED_32_0GT);
+> +static_assert(PCIE_SPEED_32_0GT + 1 == PCIE_SPEED_64_0GT);
+> +
+> +MODULE_AUTHOR("Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>");
+> +MODULE_DESCRIPTION("PCIe cooling driver");
+> diff --git a/include/linux/pci-bwctrl.h b/include/linux/pci-bwctrl.h
+> index 46026fa25deb..366445517b72 100644
+> --- a/include/linux/pci-bwctrl.h
+> +++ b/include/linux/pci-bwctrl.h
+> @@ -15,4 +15,19 @@ struct thermal_cooling_device;
+>
+>  int bwctrl_set_current_speed(struct pcie_device *srv, enum pci_bus_speed speed);
+>
+> +#ifdef CONFIG_PCIE_THERMAL
+> +struct thermal_cooling_device *pcie_cooling_device_register(struct pci_dev *port,
+> +                                                           struct pcie_device *pdev);
+> +void pcie_cooling_device_unregister(struct thermal_cooling_device *cdev);
+> +#else
+> +static inline struct thermal_cooling_device *pcie_cooling_device_register(struct pci_dev *port,
+> +                                                                         struct pcie_device *pdev)
+> +{
+> +       return NULL;
+> +}
+> +static inline void pcie_cooling_device_unregister(struct thermal_cooling_device *cdev)
+> +{
+> +}
+> +#endif
+> +
+>  #endif
 > --
-> 2.34.1
+> 2.30.2
 >
