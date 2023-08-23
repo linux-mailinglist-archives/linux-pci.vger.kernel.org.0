@@ -2,52 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E3C7678519C
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 09:34:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7B287851DD
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 09:44:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233036AbjHWHeb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Aug 2023 03:34:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42440 "EHLO
+        id S233512AbjHWHoB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Aug 2023 03:44:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231473AbjHWHeb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 03:34:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E22EFFB
-        for <linux-pci@vger.kernel.org>; Wed, 23 Aug 2023 00:34:29 -0700 (PDT)
+        with ESMTP id S233510AbjHWHoA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 03:44:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88E71E52;
+        Wed, 23 Aug 2023 00:43:54 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7766F615B3
-        for <linux-pci@vger.kernel.org>; Wed, 23 Aug 2023 07:34:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42ADBC433C7;
-        Wed, 23 Aug 2023 07:34:25 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1306D6511C;
+        Wed, 23 Aug 2023 07:43:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DABBDC433C7;
+        Wed, 23 Aug 2023 07:43:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692776068;
-        bh=sHktYZcnipIAz1DG5Eat0kbdC1HNjyjYX886Bz4WWUk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d2iyZkagvyHNy+WDH7upkbwlwJaR7eU+GZeCAl3UEjN5N33y/IN75b9gKkDCL46UR
-         RZc17NHVpt/yesxoduwilGhyeeKiXLXeWw+pzGV9TCamLhmz4NR/qiENmksXS+MObk
-         zjqxhde5F2PXdH36GBCBWhZLIJJrsXpufZktLQtLCmNyj5vWCsPLzOd+4QwvWGSfIw
-         sHGSIbLHW69+xqS5qsWXu+co8vnPB305+hnAmq3VmmxlUxRzvxnAKxfx24aAfX85zF
-         hpUTmuV2R9To1fuUQLy/rVVTnvte4fPjBA24TYAJibEUnH7HCYK50tqrF2EhY6OLrb
-         ImV2R0X5MWVAg==
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     linux-pci@vger.kernel.org,
-        Yong-Xuan Wang <yongxuan.wang@sifive.com>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        paul.walmsley@sifive.com, greentime.hu@sifive.com, kw@linux.com,
-        robh@kernel.org, bhelgaas@google.com, p.zabel@pengutronix.de,
-        palmer@dabbelt.com, fancer.lancer@gmail.com, zong.li@sifive.com
-Subject: Re: [PATCH v3] PCI: fu740: Set the number of MSI vectors
-Date:   Wed, 23 Aug 2023 09:34:21 +0200
-Message-Id: <169277604470.30911.15667199430574906551.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230807055621.2431-1-yongxuan.wang@sifive.com>
-References: <20230807055621.2431-1-yongxuan.wang@sifive.com>
+        s=k20201202; t=1692776633;
+        bh=oK3yV228DJKbwbTXFb4RHff/R+/hOvYP/LBJ/ZoSh30=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kAzSuLjKrRLBN4VfR9xeAelF/xpKdHk+wzqKwaO/hba0tM4UzeZkHmiHxLx6D0gQL
+         /DICzsBbMFRC16rjQw+IOXs5Fu3Mxcbw/6k0xFX6fVTqimBOlQH8ioTTbhWPorP5eF
+         HVJo5EZc3Pc7m6l8r8t5X8F0q2XObe7kWmblm0WiIVKhJbDvCWhG+uWr9YaTvL65N9
+         cEByENw8+lfaSkDzJPhJTH5ffX4yFI6ap7iqgKvtKX7pCFU1I94cjn4KQGPeQEKpOO
+         JxhimQjOmUoz1vBwWdHVMRtkYew6NlkoTQvs/PZBX7OmGZslAoSNA2Gb66GN+DLLJp
+         XbREhkVVlIc9w==
+Date:   Wed, 23 Aug 2023 13:13:30 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        Phil Elwell <phil@raspberrypi.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 1/5] dt-bindings: PCI: brcmstb: Add brcm,enable-l1ss
+ property
+Message-ID: <20230823074330.GF3737@thinkpad>
+References: <20230508220126.16241-1-jim2101024@gmail.com>
+ <20230508220126.16241-2-jim2101024@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230508220126.16241-2-jim2101024@gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -58,23 +75,70 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 07 Aug 2023 05:56:21 +0000, Yong-Xuan Wang wrote:
-> The iMSI-RX module of the DW PCIe controller provides multiple sets of
-> MSI_CTRL_INT_i_* registers, and each set is capable of handling 32 MSI
-> interrupts. However, the fu740 PCIe controller driver only enabled one set
-> of MSI_CTRL_INT_i_* registers, as the total number of supported interrupts
-> was not specified.
+On Mon, May 08, 2023 at 06:01:21PM -0400, Jim Quinlan wrote:
+> This commit adds the boolean "brcm,enable-l1ss" property:
 > 
-> Set the supported number of MSI vectors to enable all the MSI_CTRL_INT_i_*
-> registers on the fu740 PCIe core, allowing the system to fully utilize the
-> available MSI interrupts.
+>   The Broadcom STB/CM PCIe HW -- a core that is also used by RPi SOCs --
+>   requires the driver probe() to deliberately place the HW one of three
+>   CLKREQ# modes:
 > 
-> [...]
+>   (a) CLKREQ# driven by the RC unconditionally
+>   (b) CLKREQ# driven by the EP for ASPM L0s, L1
+>   (c) Bidirectional CLKREQ#, as used for L1 Substates (L1SS).
+> 
+>   The HW+driver can tell the difference between downstream devices that
+>   need (a) and (b), but does not know when to configure (c).  All devices
+>   should work fine when the driver chooses (a) or (b), but (c) may be
+>   desired to realize the extra power savings that L1SS offers.  So we
+>   introduce the boolean "brcm,enable-l1ss" property to inform the driver
+>   that (c) is desired.  Setting this property only makes sense when the
+>   downstream device is L1SS-capable and the OS is configured to activate
+>   this mode (e.g. policy==powersupersave).
+> 
+>   This property is already present in the Raspian version of Linux, but the
+>   upstream driver implementation that follows adds more details and
+>   discerns between (a) and (b).
+> 
+> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index 7e15aae7d69e..8b61c2179608 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -64,6 +64,15 @@ properties:
+>  
+>    aspm-no-l0s: true
+>  
+> +  brcm,enable-l1ss:
+> +    description: Indicates that PCIe L1SS power savings
+> +      are desired, the downstream device is L1SS-capable, and the
+> +      OS has been configured to enable this mode.  For boards
+> +      using a mini-card connector, this mode may not meet the
+> +      TCRLon maximum time of 400ns, as specified in 3.2.5.2.2
+> +      of the PCI Express Mini CEM 2.0 specification.
 
-Applied to controller/fu740, thanks!
+As Lorenzo said, this property doesn't belong in DT. DT is supposed to specify
+the hardware capability and not system/OS behavior. If this flag specifies
+whether the PCIe controller supports L1SS or not, then it is fine but apparantly
+this specifies that all downstream devices are L1SS capable which you cannot
+guarantee unless you poke into their LNKCAP during runtime.
 
-[1/1] PCI: fu740: Set the number of MSI vectors
-      https://git.kernel.org/pci/pci/c/551a60e1225e
+You should handle this in the driver itself.
 
-Thanks,
-Lorenzo
+- Mani
+
+> +    type: boolean
+> +
+>    brcm,scb-sizes:
+>      description: u64 giving the 64bit PCIe memory
+>        viewport size of a memory controller.  There may be up to
+> -- 
+> 2.17.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
