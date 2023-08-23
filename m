@@ -2,140 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C7D2378539F
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 11:15:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B779378541C
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 11:31:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235084AbjHWJPM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Aug 2023 05:15:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46914 "EHLO
+        id S235235AbjHWJbm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Aug 2023 05:31:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235245AbjHWJMU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 05:12:20 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60AC1172A
-        for <linux-pci@vger.kernel.org>; Wed, 23 Aug 2023 02:05:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692781534; x=1724317534;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=NlDtiuNoTa06J6TdkXaQq1gMsjcxGXExnbW9+T10Bcs=;
-  b=NML9tWJljRE5+SyqqxGk+/9aVYUYwKtpjn43mq38Twuu1NRsi5Yhpelu
-   ICMk+rzWzqnyPNFvQwUYEckgFDcs0yg3J2QP4CAz7je/F0HJwUMLOr+iK
-   Byuu6ymE1zb0O09CmjFvG9PfwPODUM9uGDhTDHkHncouSOh0riZBFZ9gq
-   BALIwOho2akFOtIf/h+ogiWk7j0ilQUW3RBS2PUG1E8UntvjXAtcjK9HW
-   T5aeBGUKnkkUif1DaycAMfV04kzG/WkanTCBLJJHT16vAqGUCu3WdLso+
-   spzas9cjcXp8jjIUwSdabg90tSIW6pPg2809k/uLRFjyDEvpbJX2IJi6o
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="364286849"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="364286849"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 02:05:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="802022722"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="802022722"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 23 Aug 2023 02:05:26 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 405772FF; Wed, 23 Aug 2023 12:05:25 +0300 (EEST)
-Date:   Wed, 23 Aug 2023 12:05:25 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Kamil Paral <kparal@redhat.com>
-Cc:     linux-pci@vger.kernel.org, regressions@lists.linux.dev,
-        bhelgaas@google.com, chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20230823090525.GT3465@black.fi.intel.com>
-References: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
- <20230821131223.GJ3465@black.fi.intel.com>
- <CA+cBOTc-7U_sumg6g-uBs9w3m8xipuOV1VY=4nmBcyuppgi8_g@mail.gmail.com>
- <20230823050714.GP3465@black.fi.intel.com>
- <CA+cBOTdS5djXL=93VThP9K67pjYKHtjceqSczKf8NQonhpgo5Q@mail.gmail.com>
- <20230823074447.GR3465@black.fi.intel.com>
- <20230823075649.GS3465@black.fi.intel.com>
- <CA+cBOTco17b_8ZMhU8gXy8z2mtZXvVxrEUdKaAuZMhyFYC3yeQ@mail.gmail.com>
+        with ESMTP id S235580AbjHWJYC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 05:24:02 -0400
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5A0775B9F;
+        Wed, 23 Aug 2023 02:12:02 -0700 (PDT)
+X-IronPort-AV: E=Sophos;i="6.01,195,1684767600"; 
+   d="scan'208";a="173694712"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 23 Aug 2023 18:12:01 +0900
+Received: from localhost.localdomain (unknown [10.166.15.32])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id CC25D4002942;
+        Wed, 23 Aug 2023 18:12:01 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
+        manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
+        kishon@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org
+Cc:     marek.vasut+renesas@gmail.com, fancer.lancer@gmail.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v19 00/19] PCI: rcar-gen4: Add R-Car Gen4 PCIe support
+Date:   Wed, 23 Aug 2023 18:11:34 +0900
+Message-Id: <20230823091153.2578417-1-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+cBOTco17b_8ZMhU8gXy8z2mtZXvVxrEUdKaAuZMhyFYC3yeQ@mail.gmail.com>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=1.1 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Add R-Car S4-8 (R-Car Gen4) PCIe Host and Endpoint support.
+To support them, modify PCIe DesignWare common codes.
 
-On Wed, Aug 23, 2023 at 10:20:52AM +0200, Kamil Paral wrote:
-> On Wed, Aug 23, 2023 at 9:56 AM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> > So directly after resume the PCIe link (tunnel) from the Thunderbolt host router
-> > PCIe downstream port does not get re-established and this brings down
-> > the whole device hierarchy behind that port. The delay just made it take
-> > longer but the actual problem is not the delay but why the tunnel is not
-> > re-established properly.
-> 
-> If you want to compare it to a "fast" resume (~5 sec, before commit
-> e8b908146d44), here's dmesg:
-> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984726
-> 
-> Even when the resume is fast, it takes a few extra seconds before the
-> devices on the dock are usable in the OS. For example, my USB mouse
-> connected to the dock doesn't work immediately, I have to wait a few
-> more seconds. The ethernet on the dock also reconnects only after a
-> few extra seconds.
+Changes from v18:
+https://lore.kernel.org/linux-pci/20230721074452.65545-1-yoshihiro.shimoda.uh@renesas.com/
+ - Based on the latest pci.git / next branch and the following patches:
+   [PATCH v3 0/2] Cleanup IRQ type definitions
+   https://lore.kernel.org/linux-pci/20230802094036.1052472-1-dlemoal@kernel.org/
+ - Drop some patches about converting "legacy" to "INTx".
+ - Add detailed description in the patch 0[26]/19.
+ - Add a new patch "Expose dw_pcie_write_dbi2" in the patch 11/19.
+ - Revise typo in the patch 12/19.
+ - Fix calling order of deinit in the patch 12/19.
+ - Revise Kconfig about kernel module names in the patch 1[67]/19.
+ - Rename drivers' file names in the patch 1[67]/19.
+ - Some other minor change/fix in the patch 1[67]/19.
 
-Yes, this is exactly the issue. The PCIe tunnel is not up and that makes
-the OS to remove the devices during resume. The delay just makes it more
-"visible".
+Changes from v17:m
+https://lore.kernel.org/linux-pci/20230705114206.3585188-1-yoshihiro.shimoda.uh@renesas.com/
+ - Based on the latest pci.git / next branch.
+ - Add comments ine the commit log in the patch 01/20.
+ - Drop "Implicit" from "Message Routing" in the patch 01/20.
+ - Add Reviewed-by tag in the patch 0[14569]/20.
+ - Fix typo in the patch 07/20.
+ - Drop unnecessary description from the commit log in the patch 09/20.
+ - Add clk_bulk_disable_unprepare() calling in the patch 1[78]/20.
+ - Use .remove_new() in the patch 1[78]/20.
+ - Add rcar_gen4_pcie_basic_deinit() and .deinit() in the patch 17/20.
+ - Call rcar_gen4_pcie_basic_deinit() in .ep_deinit() in the patch 18/20.
+ - Minor updates for improved code readability in the patch 1[78]/20.
 
-> > Next question is that what's the Thunderbolt firmware version? You can
-> > check it throughs sysfs: /sys/bus/thunderbolt/devices/0-0/nvm_version
-> 
-> $ sudo cat /sys/bus/thunderbolt/devices/0-0/nvm_version
-> 20.0
+Yoshihiro Shimoda (19):
+  PCI: Add INTx Mechanism Messages macros
+  PCI: dwc: Change arguments of dw_pcie_prog_outbound_atu()
+  PCI: dwc: Add outbound MSG TLPs support
+  PCI: designware-ep: Add INTx IRQs support
+  PCI: dwc: endpoint: Add multiple PFs support for dbi2
+  PCI: dwc: Add dw_pcie_link_set_max_link_width()
+  PCI: dwc: Add missing PCI_EXP_LNKCAP_MLW handling
+  PCI: tegra194: Drop PCI_EXP_LNKSTA_NLW setting
+  PCI: dwc: Add EDMA_UNROLL capability flag
+  PCI: dwc: Expose dw_pcie_ep_exit() to module
+  PCI: dwc: Expose dw_pcie_write_dbi2() to module
+  PCI: dwc: endpoint: Introduce .pre_init() and .deinit()
+  dt-bindings: PCI: dwc: Update maxItems of reg and reg-names
+  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Host
+  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Endpoint
+  PCI: rcar-gen4: Add R-Car Gen4 PCIe Host support
+  PCI: rcar-gen4-ep: Add R-Car Gen4 PCIe Endpoint support
+  MAINTAINERS: Update PCI DRIVER FOR RENESAS R-CAR for R-Car Gen4
+  misc: pci_endpoint_test: Add Device ID for R-Car S4-8 PCIe controller
 
-OK, this is "Alpine Ridge Low Power" and for that the firmware seems to
-be quite recent.
+ .../bindings/pci/rcar-gen4-pci-ep.yaml        | 106 +++++++++
+ .../bindings/pci/rcar-gen4-pci-host.yaml      | 123 +++++++++++
+ .../bindings/pci/snps,dw-pcie-ep.yaml         |   4 +-
+ .../devicetree/bindings/pci/snps,dw-pcie.yaml |   4 +-
+ MAINTAINERS                                   |   1 +
+ drivers/misc/pci_endpoint_test.c              |   4 +
+ drivers/pci/controller/dwc/Kconfig            |  20 ++
+ drivers/pci/controller/dwc/Makefile           |   4 +
+ .../pci/controller/dwc/pcie-designware-ep.c   | 136 ++++++++++--
+ .../pci/controller/dwc/pcie-designware-host.c |  52 +++--
+ drivers/pci/controller/dwc/pcie-designware.c  | 156 ++++++-------
+ drivers/pci/controller/dwc/pcie-designware.h  |  29 ++-
+ .../controller/dwc/pcie-rcar-gen4-ep-drv.c    | 178 +++++++++++++++
+ .../controller/dwc/pcie-rcar-gen4-host-drv.c  | 145 ++++++++++++
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c   | 208 ++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-rcar-gen4.h   |  44 ++++
+ drivers/pci/controller/dwc/pcie-tegra194.c    |   6 -
+ drivers/pci/pci.h                             |  18 ++
+ 18 files changed, 1107 insertions(+), 131 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-ep-drv.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-host-drv.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.h
 
-> Here's whole `fwupdmgr get-devices` output, if that helps:
-> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984728
-> 
-> Before reporting this bug, I updated the firmware on the Dock itself
-> to the latest version (had to use Windows for that). The dock should
-> have now this firmware:
-> https://pcsupport.lenovo.com/us/en/downloads/DS506176
-> Which is:
->     Tool package V1.0.25
->     TBT FW: C44
->     PD FW: 1.38.07
->     DP hub: 3.13.005
->     Audio: 04-0E-87_Rev_0087
-> according to the Readme file. That seems to match the "44" version in
-> the fwupdmgr output.
+-- 
+2.25.1
 
-[You could do that in Linux too but Lenovo does not seem to ship the
-firmware through LVFS.]
-
-> > I
-> > see the BIOS you have seems to be quite recent (06/12/2023) so that
-> > probably should be good enough.
-> 
-> Lenovo seems to support it through LVFS, so that's what I use for
-> updating the BIOS. Version 0.1.54 was updated quite recently and it
-> seems to be also the latest version they have on their website.
-
-OK. Did you change any BIOS settings from the defaults that might have
-affect on this? Sometimes these are exposed to through the BIOS menu and
-the user can change those (Lenovo typically does not, expose them
-though).
-
-Can you also attach output of acpidump to and dmesg with
-"thunderbolt.dyndbg=+p" in the command line?
