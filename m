@@ -2,84 +2,255 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C4C7785486
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 11:48:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8958785519
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 12:14:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231419AbjHWJrc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Aug 2023 05:47:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42154 "EHLO
+        id S232774AbjHWKOa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Aug 2023 06:14:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236106AbjHWJlb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 05:41:31 -0400
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2EC995BBD;
-        Wed, 23 Aug 2023 02:12:34 -0700 (PDT)
-X-IronPort-AV: E=Sophos;i="6.01,195,1684767600"; 
-   d="scan'208";a="177395354"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 23 Aug 2023 18:12:05 +0900
-Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 03ABC4002942;
-        Wed, 23 Aug 2023 18:12:05 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
-        manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
-        kishon@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org
-Cc:     marek.vasut+renesas@gmail.com, fancer.lancer@gmail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Manivannan Sadhasivam <mani@kernel.org>
-Subject: [PATCH v19 19/19] misc: pci_endpoint_test: Add Device ID for R-Car S4-8 PCIe controller
-Date:   Wed, 23 Aug 2023 18:11:53 +0900
-Message-Id: <20230823091153.2578417-20-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230823091153.2578417-1-yoshihiro.shimoda.uh@renesas.com>
-References: <20230823091153.2578417-1-yoshihiro.shimoda.uh@renesas.com>
+        with ESMTP id S234091AbjHWISZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 04:18:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE95E10D0;
+        Wed, 23 Aug 2023 01:13:58 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4A58865456;
+        Wed, 23 Aug 2023 08:13:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECED7C433C8;
+        Wed, 23 Aug 2023 08:13:50 +0000 (UTC)
+Date:   Wed, 23 Aug 2023 13:43:39 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_skananth@quicinc.com, quic_ramkri@quicinc.com,
+        quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v1] PCI: qcom: Add sysfs entry to change link speed
+ dynamically
+Message-ID: <20230823081339.GK3737@thinkpad>
+References: <1692239684-12697-1-git-send-email-quic_krichai@quicinc.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <1692239684-12697-1-git-send-email-quic_krichai@quicinc.com>
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add Renesas R8A779F0 in pci_device_id table so that pci-epf-test
-can be used for testing PCIe EP on R-Car S4-8.
+On Thu, Aug 17, 2023 at 08:04:43AM +0530, Krishna chaitanya chundru wrote:
+> PCIe can operate on lower GEN speed if client decided based upon
+> the bandwidth & latency requirements. To support dynamic GEN speed
+> switch adding this sysfs support.
+> 
+> To change the GEN speed the link should be in L0, so first disable
+> L0s & L1.
+> 
+> L0s needs to be disabled at both RC & EP because L0s entry is
+> independent. For enabling L0s both ends of the link needs to support
+> it, so first check if L0s is supported on both ends and then enable
+> L0s.
+> 
+> This patch is dependent on "PCI: qcom: Add support for OPP"
+> https://lore.kernel.org/linux-arm-msm/1692192264-18515-1-git-send-email-quic_krichai@quicinc.com/T/#t
+> 
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Acked-by: Manivannan Sadhasivam <mani@kernel.org>
----
- drivers/misc/pci_endpoint_test.c | 4 ++++
- 1 file changed, 4 insertions(+)
+There is also an ongoing proposal to add PCIe bandwidth controller driver [1]
+which more or less does the same thing. Check if you can make use of it.
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index ed4d0ef5e5c3..150083dab71a 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -81,6 +81,7 @@
- #define PCI_DEVICE_ID_RENESAS_R8A774B1		0x002b
- #define PCI_DEVICE_ID_RENESAS_R8A774C0		0x002d
- #define PCI_DEVICE_ID_RENESAS_R8A774E1		0x0025
-+#define PCI_DEVICE_ID_RENESAS_R8A779F0		0x0031
- 
- static DEFINE_IDA(pci_endpoint_test_ida);
- 
-@@ -990,6 +991,9 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A774B1),},
- 	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A774C0),},
- 	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A774E1),},
-+	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A779F0),
-+	  .driver_data = (kernel_ulong_t)&default_data,
-+	},
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721E),
- 	  .driver_data = (kernel_ulong_t)&j721e_data,
- 	},
+- Mani
+
+[1] https://lore.kernel.org/linux-pci/20230817121708.53213-1-ilpo.jarvinen@linux.intel.com/
+
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 141 +++++++++++++++++++++++++++++++++
+>  1 file changed, 141 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 831d158..ad67d17 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -241,10 +241,150 @@ struct qcom_pcie {
+>  	const struct qcom_pcie_cfg *cfg;
+>  	struct dentry *debugfs;
+>  	bool suspended;
+> +	bool l0s_supported;
+>  };
+>  
+>  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+>  
+> +static void qcom_pcie_icc_update(struct qcom_pcie *pcie);
+> +static void qcom_pcie_opp_update(struct qcom_pcie *pcie);
+> +
+> +static int qcom_pcie_disable_l0s(struct pci_dev *pdev, void *userdata)
+> +{
+> +	int lnkctl;
+> +
+> +	pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCTL, &lnkctl);
+> +	lnkctl &= ~(PCI_EXP_LNKCTL_ASPM_L0S);
+> +	pci_write_config_word(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCTL, lnkctl);
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_pcie_check_l0s_support(struct pci_dev *pdev, void *userdata)
+> +{
+> +	struct pci_dev *parent = pdev->bus->self;
+> +	struct qcom_pcie *pcie = userdata;
+> +	struct dw_pcie *pci = pcie->pci;
+> +	int lnkcap;
+> +
+> +	 /* check parent supports L0s */
+> +	if (parent) {
+> +		dev_err(pci->dev, "parent\n");
+> +		pci_read_config_dword(parent, pci_pcie_cap(parent) + PCI_EXP_LNKCAP,
+> +				  &lnkcap);
+> +		if (!(lnkcap & PCI_EXP_LNKCAP_ASPM_L0S)) {
+> +			dev_info(pci->dev, "Parent does not support L0s\n");
+> +			pcie->l0s_supported = false;
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
+> +			  &lnkcap);
+> +	dev_err(pci->dev, "child %x\n", lnkcap);
+> +	if (!(lnkcap & PCI_EXP_LNKCAP_ASPM_L0S)) {
+> +		dev_info(pci->dev, "Device does not support L0s\n");
+> +		pcie->l0s_supported = false;
+> +		return 0;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_pcie_enable_l0s(struct pci_dev *pdev, void *userdata)
+> +{
+> +	int lnkctl;
+> +
+> +	pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCTL, &lnkctl);
+> +	lnkctl |= (PCI_EXP_LNKCTL_ASPM_L0S);
+> +	pci_write_config_word(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCTL, lnkctl);
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t qcom_pcie_speed_change_store(struct device *dev,
+> +			       struct device_attribute *attr,
+> +			       const char *buf,
+> +			       size_t count)
+> +{
+> +	unsigned int current_speed, target_speed, max_speed;
+> +	struct qcom_pcie *pcie = dev_get_drvdata(dev);
+> +	struct pci_bus *child, *root_bus = NULL;
+> +	struct dw_pcie_rp *pp = &pcie->pci->pp;
+> +	struct dw_pcie *pci = pcie->pci;
+> +	struct pci_dev *pdev;
+> +	u16 offset;
+> +	u32 val;
+> +	int ret;
+> +
+> +	list_for_each_entry(child, &pp->bridge->bus->children, node) {
+> +		if (child->parent == pp->bridge->bus) {
+> +			root_bus = child;
+> +			break;
+> +		}
+> +	}
+> +
+> +	pdev = root_bus->self;
+> +
+> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> +
+> +	val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
+> +	max_speed = FIELD_GET(PCI_EXP_LNKCAP_SLS, val);
+> +
+> +	val = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
+> +	current_speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, val);
+> +
+> +	ret = kstrtouint(buf, 10, &target_speed);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (target_speed > max_speed)
+> +		return -EINVAL;
+> +
+> +	if (current_speed == target_speed)
+> +		return count;
+> +
+> +	pci_walk_bus(pp->bridge->bus, qcom_pcie_disable_l0s, pcie);
+> +
+> +	/* Disable L1 */
+> +	val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCTL);
+> +	val &= ~(PCI_EXP_LNKCTL_ASPM_L1);
+> +	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCTL, val);
+> +
+> +	/* Set target GEN speed */
+> +	val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCTL2);
+> +	val &= ~PCI_EXP_LNKCTL2_TLS;
+> +	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCTL2, val | target_speed);
+> +
+> +	ret = pcie_retrain_link(pdev, true);
+> +	if (ret)
+> +		dev_err(dev, "Link retrain failed %d\n", ret);
+> +
+> +	/* Enable L1 */
+> +	val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCTL);
+> +	val |= (PCI_EXP_LNKCTL_ASPM_L1);
+> +	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCTL, val);
+> +
+> +	pcie->l0s_supported = true;
+> +	pci_walk_bus(pp->bridge->bus, qcom_pcie_check_l0s_support, pcie);
+> +
+> +	if (pcie->l0s_supported)
+> +		pci_walk_bus(pp->bridge->bus, qcom_pcie_enable_l0s, pcie);
+> +
+> +	qcom_pcie_icc_update(pcie);
+> +
+> +	qcom_pcie_opp_update(pcie);
+> +
+> +	return count;
+> +}
+> +static DEVICE_ATTR_WO(qcom_pcie_speed_change);
+> +
+> +static struct attribute *qcom_pcie_attrs[] = {
+> +	&dev_attr_qcom_pcie_speed_change.attr,
+> +	NULL,
+> +};
+> +ATTRIBUTE_GROUPS(qcom_pcie);
+> +
+>  static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
+>  {
+>  	gpiod_set_value_cansleep(pcie->reset, 1);
+> @@ -1716,6 +1856,7 @@ static struct platform_driver qcom_pcie_driver = {
+>  		.of_match_table = qcom_pcie_match,
+>  		.pm = &qcom_pcie_pm_ops,
+>  		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> +		.dev_groups = qcom_pcie_groups,
+>  	},
+>  };
+>  builtin_platform_driver(qcom_pcie_driver);
+> -- 
+> 2.7.4
+> 
+
 -- 
-2.25.1
-
+மணிவண்ணன் சதாசிவம்
