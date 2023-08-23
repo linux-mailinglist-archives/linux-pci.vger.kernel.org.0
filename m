@@ -2,131 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E6B278521B
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 09:56:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6647D785231
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Aug 2023 10:02:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233653AbjHWH4z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Aug 2023 03:56:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35190 "EHLO
+        id S233338AbjHWICS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Aug 2023 04:02:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233652AbjHWH4z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 03:56:55 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B50CF1
-        for <linux-pci@vger.kernel.org>; Wed, 23 Aug 2023 00:56:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692777413; x=1724313413;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jm0B5WPijalEIr5WwlHC8LtuIzY6ui0xwi/KzjmaziA=;
-  b=BNEBrhTVo8g3IqOIC27Him9F9vC8rIaOyaBYlQ9/k2K8aG238MM498FY
-   MB2b9tgtDrGd7bCKcqYoJI7bW5ueHZwm3aXZ0mQtOtK8alUFQC3SANn57
-   uz4lfyrO8loRAzblrff+lsIncorzY1gQAJkmXFDCJyueMKPbx4+UiICap
-   Xu08hpLAdZILFwxRSla9mADE8bulrR6Lie+Q50xP4XEBiIcRAfEHTYOMh
-   fcTkKnoQZ9tmq2WJGb3s8kGIw+NSvTdWp3K6RdVifQCKZVTF9knrXdnSq
-   W/MLXUgAOFKD52XtdedKdMdWWmhPcgOn/8JsHIFKvtcCtGE/TxkofxziY
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="353647415"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="353647415"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 00:56:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="983185156"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="983185156"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Aug 2023 00:56:51 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id D0187379; Wed, 23 Aug 2023 10:56:49 +0300 (EEST)
-Date:   Wed, 23 Aug 2023 10:56:49 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Kamil Paral <kparal@redhat.com>
-Cc:     linux-pci@vger.kernel.org, regressions@lists.linux.dev,
-        bhelgaas@google.com, chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20230823075649.GS3465@black.fi.intel.com>
-References: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
- <20230821131223.GJ3465@black.fi.intel.com>
- <CA+cBOTc-7U_sumg6g-uBs9w3m8xipuOV1VY=4nmBcyuppgi8_g@mail.gmail.com>
- <20230823050714.GP3465@black.fi.intel.com>
- <CA+cBOTdS5djXL=93VThP9K67pjYKHtjceqSczKf8NQonhpgo5Q@mail.gmail.com>
- <20230823074447.GR3465@black.fi.intel.com>
+        with ESMTP id S233273AbjHWICN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 04:02:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37165CD0;
+        Wed, 23 Aug 2023 01:02:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9870E616CF;
+        Wed, 23 Aug 2023 08:02:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7D2FC433C8;
+        Wed, 23 Aug 2023 08:02:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692777728;
+        bh=5wXBowWi/z5rX1b22zzh2tsRtXiSEcMH1JeaAg4xXBE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KdIHGVGipE/SD8BcM3OhOE9pSHYblDozh2QqSPBLFYuiEvc3hBpFgK15u2CewKKzt
+         FDR1MVWz0U9PqC7T5VqRNIaJ7l7JGwXA1kA+szvS6B7BbaDDhRbaTSGsE1SvYs8KIJ
+         blG5XlSbZo0QEeoeLrzdzA0XYFvRauz2B6r6LJVDsKJMX170QwCxdzWM3/TVkSXzzR
+         sET8MWO1Po972tNYAq8acyWzJVGUlJUypUeaC7M2UynnyadoArO6irj8osYvcyQRpg
+         KnQmDla1SkZYFmLIAkUDacxNtcvjawEUe0tfvDu6htO5qJovGePrJqogw41wS6MTDC
+         LcoFAjiZ1LFuA==
+Date:   Wed, 23 Aug 2023 13:31:52 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] PCI: rcar-host: add support for optional
+ regulators
+Message-ID: <20230823080152.GI3737@thinkpad>
+References: <20230816104251.19744-1-wsa+renesas@sang-engineering.com>
+ <20230816104251.19744-3-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230823074447.GR3465@black.fi.intel.com>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230816104251.19744-3-wsa+renesas@sang-engineering.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 23, 2023 at 10:44:47AM +0300, Mika Westerberg wrote:
-> I guess even without the 60s delay you see in the logs that the PCIe
-> link is down and Linux starts tearing the device stack towards the dock
-> on resume?
+On Wed, Aug 16, 2023 at 12:42:50PM +0200, Wolfram Sang wrote:
+> The KingFisher board has regulators for miniPCIe, so enable these
+> optional regulators using devm. devm will automatically disable them
+> when the driver releases the device. Order variables in reverse-xmas
+> while we are here.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Okay this is what happens (from your log):
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
 
-srp 22 18:19:50 fenix kernel: pcieport 0000:05:01.0: Data Link Layer Link Active not set in 1000 msec
-srp 22 18:19:50 fenix kernel: pcieport 0000:07:00.0: Unable to change power state from D3cold to D0, device inaccessible
-srp 22 18:19:50 fenix kernel: pcieport 0000:08:00.0: Unable to change power state from D3cold to D0, device inaccessible
-srp 22 18:19:50 fenix kernel: pcieport 0000:08:04.0: Unable to change power state from D3cold to D0, device inaccessible
-srp 22 18:19:50 fenix kernel: pcieport 0000:08:01.0: Unable to change power state from D3cold to D0, device inaccessible
-srp 22 18:19:50 fenix kernel: pcieport 0000:08:03.0: Unable to change power state from D3cold to D0, device inaccessible
-srp 22 18:19:50 fenix kernel: pcieport 0000:08:02.0: Unable to change power state from D3cold to D0, device inaccessible
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:09:00.0: not ready 1023ms after resume; waiting
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:0b:00.0: not ready 1023ms after resume; waiting
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:09:00.0: not ready 2047ms after resume; waiting
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:0b:00.0: not ready 2047ms after resume; waiting
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:0b:00.0: not ready 4095ms after resume; waiting
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:09:00.0: not ready 4095ms after resume; waiting
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:09:00.0: not ready 8191ms after resume; waiting
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:0b:00.0: not ready 8191ms after resume; waiting
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:0b:00.0: not ready 16383ms after resume; waiting
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:09:00.0: not ready 16383ms after resume; waiting
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:09:00.0: not ready 32767ms after resume; waiting
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:0b:00.0: not ready 32767ms after resume; waiting
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:09:00.0: not ready 65535ms after resume; giving up
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:0b:00.0: not ready 65535ms after resume; giving up
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:0b:00.0: Unable to change power state from D3cold to D0, device inaccessible
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:09:00.0: Unable to change power state from D3cold to D0, device inaccessible
-srp 22 18:19:50 fenix kernel: ACPI: EC: event unblocked
-srp 22 18:19:50 fenix kernel: i915 0000:00:02.0: [drm] [ENCODER:94:DDI A/PHY A] is disabled/in DSI mode with an ungated DDI clock, gate it
-srp 22 18:19:50 fenix kernel: i915 0000:00:02.0: [drm] [ENCODER:102:DDI B/PHY B] is disabled/in DSI mode with an ungated DDI clock, gate it
-srp 22 18:19:50 fenix kernel: i915 0000:00:02.0: [drm] [ENCODER:118:DDI C/PHY C] is disabled/in DSI mode with an ungated DDI clock, gate it
-srp 22 18:19:50 fenix kernel: pcieport 0000:05:01.0: pciehp: Slot(1): Card not present
-srp 22 18:19:50 fenix kernel: pcieport 0000:08:04.0: pciehp: pcie_do_write_cmd: no response from device
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:09:00.0: Unable to change power state from D3cold to D0, device inaccessible
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:0b:00.0: Unable to change power state from D3cold to D0, device inaccessible
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:09:00.0: Controller not ready at resume -19
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:09:00.0: PCI post-resume error -19!
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:09:00.0: HC died; cleaning up
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:0b:00.0: Controller not ready at resume -19
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:0b:00.0: PCI post-resume error -19!
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:0b:00.0: HC died; cleaning up
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:09:00.0: PM: dpm_run_callback(): pci_pm_resume+0x0/0xf0 returns -19
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:0b:00.0: PM: dpm_run_callback(): pci_pm_resume+0x0/0xf0 returns -19
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:09:00.0: PM: failed to resume async: error -19
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:0b:00.0: PM: failed to resume async: error -19
-srp 22 18:19:50 fenix kernel: xhci_hcd 0000:3c:00.0: xHC error in resume, USBSTS 0x401, Reinit
+- Mani
 
-So directly after resume the PCIe link (tunnel) from the Thunderbolt host router
-PCIe downstream port does not get re-established and this brings down
-the whole device hierarchy behind that port. The delay just made it take
-longer but the actual problem is not the delay but why the tunnel is not
-re-established properly.
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/pci/controller/pcie-rcar-host.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+> index 88975e40ee2f..7aecc114af4f 100644
+> --- a/drivers/pci/controller/pcie-rcar-host.c
+> +++ b/drivers/pci/controller/pcie-rcar-host.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/regulator/consumer.h>
+>  
+>  #include "pcie-rcar.h"
+>  
+> @@ -953,14 +954,20 @@ static const struct of_device_id rcar_pcie_of_match[] = {
+>  	{},
+>  };
+>  
+> +/* Design note 346 from Linear Technology says order is not important */
+> +static const char * const rcar_pcie_supplies[] = {
+> +	"vpcie12v", "vpcie3v3", "vpcie1v5"
+> +};
+> +
+>  static int rcar_pcie_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> +	struct pci_host_bridge *bridge;
+>  	struct rcar_pcie_host *host;
+>  	struct rcar_pcie *pcie;
+> +	unsigned int i;
+>  	u32 data;
+>  	int err;
+> -	struct pci_host_bridge *bridge;
+>  
+>  	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*host));
+>  	if (!bridge)
+> @@ -971,6 +978,13 @@ static int rcar_pcie_probe(struct platform_device *pdev)
+>  	pcie->dev = dev;
+>  	platform_set_drvdata(pdev, host);
+>  
+> +	for (i = 0; i < ARRAY_SIZE(rcar_pcie_supplies); i++) {
+> +		err = devm_regulator_get_enable_optional(dev, rcar_pcie_supplies[i]);
+> +		if (err < 0 && err != -ENODEV)
+> +			return dev_err_probe(dev, err, "can't enable regulator %s\n",
+> +					     rcar_pcie_supplies[i]);
+> +	}
+> +
+>  	pm_runtime_enable(pcie->dev);
+>  	err = pm_runtime_get_sync(pcie->dev);
+>  	if (err < 0) {
+> -- 
+> 2.35.1
+> 
 
-Next question is that what's the Thunderbolt firmware version? You can
-check it throughs sysfs: /sys/bus/thunderbolt/devices/0-0/nvm_version. I
-see the BIOS you have seems to be quite recent (06/12/2023) so that
-probably should be good enough.
-
-@Chris Chiu, have you guys run Linux on that particular Lenovo system?
+-- 
+மணிவண்ணன் சதாசிவம்
