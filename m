@@ -2,122 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8A08786A17
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 10:32:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0EB5786B11
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 11:05:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231910AbjHXIbm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Aug 2023 04:31:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47364 "EHLO
+        id S237052AbjHXJEj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Aug 2023 05:04:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240544AbjHXIb3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 04:31:29 -0400
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 931161724
-        for <linux-pci@vger.kernel.org>; Thu, 24 Aug 2023 01:31:25 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:3c6b:f703:5ab5:f36d])
-        by andre.telenet-ops.be with bizsmtp
-        id dLXN2A00B01sfPQ01LXNtj; Thu, 24 Aug 2023 10:31:22 +0200
-Received: from geert (helo=localhost)
-        by ramsan.of.borg with local-esmtp (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1qZ5kQ-001ccI-BO;
-        Thu, 24 Aug 2023 10:31:22 +0200
-Date:   Thu, 24 Aug 2023 10:31:22 +0200 (CEST)
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Lizhi Hou <lizhi.hou@amd.com>
-cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh@kernel.org, max.zhen@amd.com,
-        sonal.santan@amd.com, stefano.stabellini@xilinx.com
-Subject: Re: [PATCH V13 4/5] of: overlay: Extend of_overlay_fdt_apply() to
- specify the target node
-In-Reply-To: <1692120000-46900-5-git-send-email-lizhi.hou@amd.com>
-Message-ID: <2aae84b8-41f9-3c24-bac9-8f882d2211b@linux-m68k.org>
-References: <1692120000-46900-1-git-send-email-lizhi.hou@amd.com> <1692120000-46900-5-git-send-email-lizhi.hou@amd.com>
+        with ESMTP id S240592AbjHXJEX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 05:04:23 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 516F4199A;
+        Thu, 24 Aug 2023 02:04:18 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1692867857;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=eCMjIY4GzgEy46TDr3zke0Rgwv+ZthP+ksbKBkZYF4g=;
+        b=0sSAGTftbTYFtXlp20olU+1Gsj8EH7c33ds2hE73tK5EyguAfOUXNItblb8m2CzEc/RIVA
+        BTX+evvo5oHYoisahgumcXM79deUxq5Hl6abbFpKMjA5KjPzM3mznz2mRUFZ7+oSJ21R6e
+        Gi37VgKhnekPPNGSIMg6u9qVz4PCzUAlENcw+SJq+aH3cta9nE5rp/Yr462qvLRRWyFwVb
+        WBoiOyv7GKTmfWSgWFzyT7mV52dtJ7IWh21BcnFsidxb7i+uXrObB0pW5mEvCD4wh8UI1M
+        QoaQOQPZT1NqPYOCg0Vh823Fk14Vfnxcczajqsn1cti6EUPHxOsd55ZZ/nk6mA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1692867857;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=eCMjIY4GzgEy46TDr3zke0Rgwv+ZthP+ksbKBkZYF4g=;
+        b=3G7HzwGxWw+wyu1+9cnBlG6vKpSDn0V+IY8uspaJDthWBjJymqqwNQpQ5+n0q7iz1jodX5
+        sTlD3Ihzp5n2I2Ag==
+To:     huangshaobo3@xiaomi.com
+Cc:     bhelgaas@google.com, chenwei29@xiaomi.com, darwi@linutronix.de,
+        huangshaobo3@xiaomi.com, jgg@ziepe.ca, kevin.tian@intel.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        weipengliang@xiaomi.com, wengjinfei@xiaomi.com
+Subject: Re: Subject: [PATCH] pci/msi: remove redundant calculation in
+ msi_setup_msi_desc
+In-Reply-To: <1692862032-37839-1-git-send-email-huangshaobo3@xiaomi.com>
+References: <87bkexetfk.ffs@tglx>
+ <1692862032-37839-1-git-send-email-huangshaobo3@xiaomi.com>
+Date:   Thu, 24 Aug 2023 11:04:16 +0200
+Message-ID: <87o7iwdd67.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-249000650-1692865882=:386713"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-249000650-1692865882=:386713
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
-Content-Transfer-Encoding: 8BIT
-
- 	Hi Lizhi,
-
-On Tue, 15 Aug 2023, Lizhi Hou wrote:
-> Currently, in an overlay fdt fragment, it needs to specify the exact
-> location in base DT. In another word, when the fdt fragment is generated,
-> the base DT location for the fragment is already known.
+On Thu, Aug 24 2023 at 00:27, huangshaobo3@xiaomi.com wrote:
+> On Wed, 23 Aug 2023 16:15:27 +0200, Thomas Gleixner wrote:
+>> I'm not seeing what this solves:
 >
-> There is new use case that the base DT location is unknown when fdt
-> fragment is generated. For example, the add-on device provide a fdt
-> overlay with its firmware to describe its downstream devices. Because it
-> is add-on device which can be plugged to different systems, its firmware
-> will not be able to know the overlay location in base DT. Instead, the
-> device driver will load the overlay fdt and apply it to base DT at runtime.
-> In this case, of_overlay_fdt_apply() needs to be extended to specify
-> the target node for device driver to apply overlay fdt.
->    int overlay_fdt_apply(..., struct device_node *base);
+>> > -       if (control & PCI_MSI_FLAGS_64BIT)
+>> > +       if (desc.pci.msi_attrib.is_64)
 >
-> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+>> Both variants resolve to a test of a bit and a conditional instruction
+>> on the result. It's exactly zero difference in terms of "calculation".
+>
+>> So all this does is change the memory location to test. Not more not
+>> less. It does not generate better code and does not save anything.
+>
+> It may not be appropriate to write to eliminate duplicate calculations,
+> can it be proposed again with clean code?
 
-Thanks for your patch, which is now commit 47284862bfc7fd56 ("of:
-overlay: Extend of_overlay_fdt_apply() in dt-rh/for-next.
-
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -715,6 +730,7 @@ static struct device_node *find_target(struct device_node *info_node)
-> /**
->  * init_overlay_changeset() - initialize overlay changeset from overlay tree
->  * @ovcs:		Overlay changeset to build
-> + * @target_base:	Point to the target node to apply overlay
->  *
->  * Initialize @ovcs.  Populate @ovcs->fragments with node information from
->  * the top level of @overlay_root.  The relevant top level nodes are the
-
-As an overlay can contain one or more fragments, this means the
-base (when specified) will be applied to all fragments, and will thus
-override the target-path properties in all fragments.
-
-However, for the use case of an overlay that you can plug into
-a random location (and of which there can be multiple instances),
-there can really be only a single fragment.  Even nodes that typically
-live at the root level (e.g. gpio-leds or gpio-keys) must be inserted
-below the specified location, to avoid conflicts.
-
-Hence:
-   1. Should init_overlay_changeset() return -EINVAL if target_base is
-      specified, and there is more than one fragment?
-
-   2. Should there be a convention about the target-path property's
-      contents in the original overlay?
-      drivers/of/unittest-data/overlay_pci_node.dtso in "[PATCH V13 5/5]
-      of: unittest: Add pci_dt_testdrv pci driver" uses
-
-          target-path="";
-
-      which cannot be represented when using sugar syntax.
-      "/" should work fine, though.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
- 						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
- 							    -- Linus Torvalds
---8323329-249000650-1692865882=:386713--
+What's wrong with the existing code?
