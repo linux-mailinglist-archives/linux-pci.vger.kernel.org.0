@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B3D87878A5
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 21:38:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9FF17878A2
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 21:38:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243244AbjHXThi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Aug 2023 15:37:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41850 "EHLO
+        id S243248AbjHXThj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Aug 2023 15:37:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243297AbjHXTh3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 15:37:29 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA6C1BDF;
-        Thu, 24 Aug 2023 12:37:27 -0700 (PDT)
+        with ESMTP id S243300AbjHXThb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 15:37:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351781B0;
+        Thu, 24 Aug 2023 12:37:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 71B7F63E83;
-        Thu, 24 Aug 2023 19:37:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A40EEC433C8;
-        Thu, 24 Aug 2023 19:37:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C781D62F30;
+        Thu, 24 Aug 2023 19:37:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB6AC433C7;
+        Thu, 24 Aug 2023 19:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692905846;
-        bh=FvE1bHfRSq51w6iPVI+P4zuQ2+MxIoKwCRP0Ix/yP+E=;
+        s=k20201202; t=1692905849;
+        bh=6dM5htjtuz3wYC09SylqU1yXQX9msSG6lGcCCxKAt6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g96co2jU1FMBovyFhehbgptyzNlsDEAqOgx7UEf7JnL/hPhLBHNM5GGQga0FETAZD
-         cP4rU2av5pEMkeMzPYZNRb5HcBCp+HyytKrPO9rUXQZ7Um2Tc3VMhNC9jpKuIlWtgW
-         ye4xZp/jitoGtGUrRGbC0rThujL4qeKvGEhUcPL+H8n6FYBfmpuXQTOFEyAnPvf97i
-         8KXcGmemPrWNZb+plyoTl3isFImLmAemghhS2bz26LjwKoCYZpPuTWIkarZSXYHjdJ
-         hXDGLCBBrOP+wxx5TJ7DawCa6NVkHhc1NJGrVjT+LqMHESvNFLxDeMcgzBn8CJVFpL
-         pwT7FP1eOXipw==
+        b=Fn+ehaV0/RbQC0DvyBVHKcvkixkdD9xx2cL1ADIPUoRtHQqQnxTwXmu8cYramlh5Q
+         dLajzUyk/gVPAZfY063PWlZgPHzOSZxHhzrENyY4PJ3rnFhkscDO7tmAmHydxvIS7W
+         F9Wxe0M3RBvkmuk3H2/iCXNlZIzJnk/rKBEIojd0VVnc1pODITYtl+d9IdTlEklPi8
+         8VpCFTWNcrsYovHLDDWMyV1KWYmo0iSO7tSD7foz2d741czmihufXtNZ9tyWfidJpN
+         G3yybza14PT9fP1xXA4raYAHvqWsQfru9DXojOSc75K3nCQdDQEjkzBIiDpo3KiIEB
+         vCg0qISdN87AQ==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 02/12] PCI: Unexport pcie_port_bus_type
-Date:   Thu, 24 Aug 2023 14:37:02 -0500
-Message-Id: <20230824193712.542167-3-helgaas@kernel.org>
+Subject: [PATCH 03/12] PCI: Remove unnecessary initializations
+Date:   Thu, 24 Aug 2023 14:37:03 -0500
+Message-Id: <20230824193712.542167-4-helgaas@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230824193712.542167-1-helgaas@kernel.org>
 References: <20230824193712.542167-1-helgaas@kernel.org>
@@ -55,27 +55,36 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-pcie_port_bus_type is used only in pci-driver.c and pcie/portdrv_core.c and
-pcie/portdrv_pci.c.  None of these can be built as modules, so
-pcie_port_bus_type doesn't need to be exported.  Unexport it.
+We always assign "fields" immediately, so remove the unnecessary
+initializations.  No functional change intended.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/pci-driver.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pci/pci-driver.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index ae9baf801681..1f9845377eff 100644
+index 1f9845377eff..a44ecf6bf5d2 100644
 --- a/drivers/pci/pci-driver.c
 +++ b/drivers/pci/pci-driver.c
-@@ -1705,7 +1705,6 @@ struct bus_type pcie_port_bus_type = {
- 	.name		= "pci_express",
- 	.match		= pcie_port_bus_match,
- };
--EXPORT_SYMBOL_GPL(pcie_port_bus_type);
- #endif
+@@ -193,7 +193,7 @@ static ssize_t new_id_store(struct device_driver *driver, const char *buf,
+ 	u32 vendor, device, subvendor = PCI_ANY_ID,
+ 		subdevice = PCI_ANY_ID, class = 0, class_mask = 0;
+ 	unsigned long driver_data = 0;
+-	int fields = 0;
++	int fields;
+ 	int retval = 0;
  
- static int __init pci_driver_init(void)
+ 	fields = sscanf(buf, "%x %x %x %x %x %x %lx",
+@@ -260,7 +260,7 @@ static ssize_t remove_id_store(struct device_driver *driver, const char *buf,
+ 	struct pci_driver *pdrv = to_pci_driver(driver);
+ 	u32 vendor, device, subvendor = PCI_ANY_ID,
+ 		subdevice = PCI_ANY_ID, class = 0, class_mask = 0;
+-	int fields = 0;
++	int fields;
+ 	size_t retval = -ENODEV;
+ 
+ 	fields = sscanf(buf, "%x %x %x %x %x %x",
 -- 
 2.34.1
 
