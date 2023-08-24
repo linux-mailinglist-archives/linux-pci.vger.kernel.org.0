@@ -2,158 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EE63786402
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 01:44:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02B8D786495
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 03:28:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231812AbjHWXnn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Aug 2023 19:43:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55406 "EHLO
+        id S238958AbjHXB2S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Aug 2023 21:28:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237231AbjHWXnY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 19:43:24 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2084.outbound.protection.outlook.com [40.107.223.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C7E10CA;
-        Wed, 23 Aug 2023 16:43:23 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FUxpEdeb1wKg9c+OAciEr8KHJ66dFs925Ot4Zx5MdSomgVIAM0hWe+3ZGr+eohi5a24TwGoJ6CMDeaYFRL14mmBjeCzqIzlJLefVBkT6b0ikLmK49TxeYI7mIGo0sg/Bwx0rsGwakxXGriPirgI5PGHX8AQCA/Y4UC5NEYJ1wihkSHtoJ7Vij+x4zKcLULY5Bd/0G8dSzTZL9AbImA2Ytu+pwwcRqs4iRSiyhAajuvsyWT1IiMe/hB1Q920NXT8DDnms5waoI0r1WvBU3y41J8eZbpiwWKnqoNLi25LBXNEOxr/DNG834EbTXt1DhCqomT2E6zjHCGSWodu2foqdCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pa8LkD68VuMhzP3AVJE3fgnl/waNovkmLFkpeUWMd5Q=;
- b=LsJNhMROR7C+HNVlb2UxKWUaznXGqp6FL6mqqoy7V8r4ydcaAE/WEqoE7xZwEBfl1vCoL2AUz7AKyAqHVorKL999qJqREXiBlqRXc3h8KqJGtF0oi15SBF1HoIbM5YomNxuQ9wByrkCT9BRmBhPcdN/f0mBNa7x2hXko5IjtH3D3oMrQMORcr+qqEuuy12PfPh0rEvW8mGbXvwbj+z9Utuili/QxJ/u+BRZa5qsxM6I07IkgklK/AMPU06OZvwBO2yjDcH4e3Y4Qku7zz/1LXGbyQH4JtKVkbdSaeNzNqiQIkjbWx5AIVRdakc8pzixMzrvEKAZqPUK9ycWLMB87JQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pa8LkD68VuMhzP3AVJE3fgnl/waNovkmLFkpeUWMd5Q=;
- b=X2DKeqZ0gmgNA3og/sU2+CpKMBMfkmOkCLubDr+jcIs94bv68y/7ccc4lBdzQ9HWwMVmdDRAujZMRr5ZFOCgeVgL8YJqlk4il19+w4iK8O8Z5Ha81WbB2L5XUgzpqiOs/TDA+lRaRo0s2eUFADI/eIOUue3x80Ly5WuskLeEkIU=
-Received: from CY5PR10CA0005.namprd10.prod.outlook.com (2603:10b6:930:1c::18)
- by SJ0PR12MB8139.namprd12.prod.outlook.com (2603:10b6:a03:4e8::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.24; Wed, 23 Aug
- 2023 23:43:20 +0000
-Received: from CY4PEPF0000E9DA.namprd05.prod.outlook.com
- (2603:10b6:930:1c:cafe::27) by CY5PR10CA0005.outlook.office365.com
- (2603:10b6:930:1c::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.26 via Frontend
- Transport; Wed, 23 Aug 2023 23:43:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000E9DA.mail.protection.outlook.com (10.167.241.79) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6699.15 via Frontend Transport; Wed, 23 Aug 2023 23:43:20 +0000
-Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 23 Aug
- 2023 18:43:19 -0500
-From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>, <oohall@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Robert Richter <rrichter@amd.com>,
-        Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Subject: [PATCH v4 3/3] cxl/pci: Replace host_bridge->native_aer with pcie_aer_is_native()
-Date:   Wed, 23 Aug 2023 23:43:05 +0000
-Message-ID: <20230823234305.27333-4-Smita.KoralahalliChannabasappa@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230823234305.27333-1-Smita.KoralahalliChannabasappa@amd.com>
-References: <20230823234305.27333-1-Smita.KoralahalliChannabasappa@amd.com>
+        with ESMTP id S238963AbjHXB2F (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Aug 2023 21:28:05 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E792A8;
+        Wed, 23 Aug 2023 18:28:03 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4ffa6e25ebbso485210e87.0;
+        Wed, 23 Aug 2023 18:28:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692840481; x=1693445281;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vetduGgViyjJuBVB9gXghwBbpYcZ8lgc6rsEZ+ryBhg=;
+        b=bSPmJe7askH7b9NH4mjqq6RLQC6eX0h5LXpSMm8NM6ys8+iLfWFFcs5CzdsXh4pKE9
+         qFLctkzCQzkdxYUm1VpTW8hNn0+HY57iabA36hAMbn5n8N/9dy0SiBHxpHzH/w10JKuM
+         mRnpIsqCND3C6BrmGekgBOTcA2yUgIeGtM3sZ60STB+b3pkhzzOAdHal6gS6dyK/pyB8
+         yz9Km4D6q8iokTdZdGaTpyi1BPpIiPiA6Ks7QpZY+53Voa3iEkKV3RTyt8GzVhWDMXSL
+         NRrSGqvtFEAhUux7POZyI2GNNkWac/19vUWIPUIKTCvZPz+JdehTW9P+iERmWneG+t29
+         +u/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692840481; x=1693445281;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vetduGgViyjJuBVB9gXghwBbpYcZ8lgc6rsEZ+ryBhg=;
+        b=liT9Kw9J0jzM7GcqGx4swcip2TCkNfQjpFsWvUCLlVdMB7a6UybbvHgB/gtIH0Ih5O
+         gjanRfUnaBYciVSU4I6IJgAx4ZPbT9xlYA/pztjXGGLZjcBetPUkye1wEXGFxN9VRfKu
+         3ozmc/UiBKY5ffdlJvVxdO5IjrYXqPLnxqmdz5zYWtX8YKY8EX+cMq1yZEngTh7yJBiC
+         MUbTwegZMxsB+GUpxfWST0Wxah+O3cPgCo2hPxZG0sGvrn9YZl/RLedHtvWZ1TNVmt+z
+         H/Fp5CaZnGnn/WIV7Gwwm88PsIqWJAXZ0rl7t2YaijGMo0HBy9k0J6CTSyjcUTUb//qY
+         fiLg==
+X-Gm-Message-State: AOJu0YxkcrPXm0+DHz4XTMY60vEpcRdYZDZHZPZrNyJHYnd8DNEROKBA
+        yV17WdhQt9c7vSF/9f6cDVdcbupPiPSj6q8+TzyrgRMc6/E=
+X-Google-Smtp-Source: AGHT+IFi/Mw7Vt2L+WyArvzM1+AIiEFUSEpUSgFh1dVwGs4f+9QtM7KcOZYse+N1/w7fBFFj2jDgMctFRlOKndymaYc=
+X-Received: by 2002:a05:6512:615:b0:4f8:5e62:b94b with SMTP id
+ b21-20020a056512061500b004f85e62b94bmr4577882lfe.9.1692840481031; Wed, 23 Aug
+ 2023 18:28:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9DA:EE_|SJ0PR12MB8139:EE_
-X-MS-Office365-Filtering-Correlation-Id: eda58d8a-2d44-4c38-1973-08dba432bb9e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KPSoNQ3NQmMPVdDQBgioOzWjr95NqMeEK6u5SW3jvSimfw6zKeBWW2jBfi8RcHuykAPs8DDGWLhfEeEGlELxRV6ujoMjGIwL9WghnxQPKDYR8K/w4yvStEvFJ8Aos9IFZaHZw6TyhMOrzLrZi81n1OJU0U0kJBpeM8YcapPo+oyptu1+yakvZLge61oTDbgw5Mcans0D9GeSwXEzd+p20ocVl4t1JNIqjH2hs+gujWGb5HaXHjWNYeenpInRIRAsaLN1Lq+C7LhZdQOjJkCZ5JlwjMBqFOUtSqC29eYBzlLcz6ccIxcTifG9wK06JK0UnmFho0tJBq0ImVYoqWLRD7qvUOY9NWIjx2j7MF95cHkB1mwKPWsKbiFDnwfr3hi2D5EkRlRtOJk0hNnIFI4CNp/slV7BF3S1gFF0JmhMHf4L7wRU5wrOJ3zzgcQtFK6EtgD1lKIxUQ5waNFSmm2YsnuowDp7JUWguujegJEdofvPTujY8Ot7iWWSVgc4GLObA+yR4qqxvFiYwHkC6gSvS2QDRt909YkPmrjInFvVNZuMWdKhyKnWtfw+TcXgK8TlmUWj14hLCp7sLeHRJW5Y2y3hLF/mIxSKXrCh9Pl2AaNV/3cIT98enCpsiwxVl56scTmDj3FgJvk+cMiNGAJHXmq+sQmvWqxmgsf2qltL+94UXhbJ5WMYH/tEPq7DRqBscZfhJ2f3sQc4rqOvLrW4VwY2rQDK3J38bydFBCbPAdBjW+g4M2xV8F816Je9alS9BRQeodhZNZ6A21AnR91yPw==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(39860400002)(396003)(346002)(136003)(1800799009)(82310400011)(451199024)(186009)(40470700004)(36840700001)(46966006)(40480700001)(2616005)(54906003)(41300700001)(110136005)(81166007)(70586007)(316002)(6666004)(70206006)(40460700003)(7696005)(82740400003)(356005)(1076003)(26005)(16526019)(8676002)(8936002)(5660300002)(36860700001)(47076005)(4326008)(426003)(7416002)(83380400001)(2906002)(336012)(86362001)(36756003)(478600001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Aug 2023 23:43:20.5140
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: eda58d8a-2d44-4c38-1973-08dba432bb9e
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000E9DA.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB8139
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+References: <CAJZ5v0gvP3YRWTLtV9_b+W_QQ=K_wkFEDj-qT4cNW2RYfTPEgg@mail.gmail.com>
+ <20230823205024.GA481013@bhelgaas>
+In-Reply-To: <20230823205024.GA481013@bhelgaas>
+From:   Feiyang Chen <chris.chenfeiyang@gmail.com>
+Date:   Thu, 24 Aug 2023 09:27:47 +0800
+Message-ID: <CACWXhKniWqJBHaMk7jQUnuF7PGHxoOtFQ4fYpHxFRkJ+9n5mJA@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI/PM: Only read PCI_PM_CTRL register when available
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Feiyang Chen <chenfeiyang@loongson.cn>, bhelgaas@google.com,
+        rafael.j.wysocki@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        anders.roxell@linaro.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, guyinggang@loongson.cn,
+        siyanteng@loongson.cn, chenhuacai@loongson.cn,
+        loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use pcie_aer_is_native() to determine the native AER ownership as the
-usage of host_bride->native_aer does not cover command line override of
-AER ownership.
+On Thu, Aug 24, 2023 at 4:50=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>
+> On Wed, Aug 23, 2023 at 02:46:25PM +0200, Rafael J. Wysocki wrote:
+> > On Wed, Aug 23, 2023 at 9:28=E2=80=AFAM Ilpo J=C3=A4rvinen
+> > <ilpo.jarvinen@linux.intel.com> wrote:
+> > > On Tue, 22 Aug 2023, Rafael J. Wysocki wrote:
+> > > > On Tue, Aug 22, 2023 at 3:24=E2=80=AFPM Ilpo J=C3=A4rvinen
+> > > > <ilpo.jarvinen@linux.intel.com> wrote:
+> > > > >
+> > > > > On Tue, 22 Aug 2023, Feiyang Chen wrote:
+> > > > >
+> > > > > > When the current state is already PCI_D0, pci_power_up() will r=
+eturn
+> > > > > > 0 even though dev->pm_cap is not set. In that case, we should n=
+ot
+> > > > > > read the PCI_PM_CTRL register in pci_set_full_power_state().
+> > > > >
+> > > > > IMHO, this is a bit misleading because after this patch, pci_powe=
+r_up()
+> > > > > returns always an error if dev->pm_cap is not set.
+> > > >
+> > > > Yes, it does, but it has 2 callers only and the other one ignores t=
+he
+> > > > return value, so this only matters here.
+> > >
+> > > I did only mean that the changelog could be more clear how it achieve=
+s
+> > > the desired result (as currently it states opposite of what the code
+> > > does w.r.t. that return value).
+> >
+> > Fair enough.
+> >
+> > It looks like the changelog has not been updated since v1.
+> >
+> > > I'm not against the approach taken by patch.
+>
+> Feiyang, would you update the commit log so it matches the code and
+> post it as a v3?
+>
 
-Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Reviewed-by: Robert Richter <rrichter@amd.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
----
-v2:
-	Replaced pcie_aer_is_native() at a later stage for automated
-	backports.
-v3:
-	Added more context to commit message.
-	Added "Reviewed-by" tag.
-v4:
-	No changes. Just "Reviewed-by" tags.
----
- drivers/cxl/pci.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Sure. I will update the commit log.
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 2323169b6e5f..44a21ab7add5 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -529,7 +529,6 @@ static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
- 
- static int cxl_pci_ras_unmask(struct pci_dev *pdev)
- {
--	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
- 	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
- 	void __iomem *addr;
- 	u32 orig_val, val, mask;
-@@ -542,7 +541,7 @@ static int cxl_pci_ras_unmask(struct pci_dev *pdev)
- 	}
- 
- 	/* BIOS has PCIe AER error control */
--	if (!host_bridge->native_aer)
-+	if (!pcie_aer_is_native(pdev))
- 		return 0;
- 
- 	rc = pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &cap);
--- 
-2.17.1
+Thanks,
+Feiyang
 
+> Bjorn
