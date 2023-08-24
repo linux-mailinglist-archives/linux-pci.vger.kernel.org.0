@@ -2,221 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C351D787822
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 20:41:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65F46787852
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 21:02:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232774AbjHXSkm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Aug 2023 14:40:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54904 "EHLO
+        id S242159AbjHXTBz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Aug 2023 15:01:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243120AbjHXSkJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 14:40:09 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2057.outbound.protection.outlook.com [40.107.244.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5339F19A3;
-        Thu, 24 Aug 2023 11:40:06 -0700 (PDT)
+        with ESMTP id S229768AbjHXTBu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 15:01:50 -0400
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2067.outbound.protection.outlook.com [40.107.6.67])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030951BCE;
+        Thu, 24 Aug 2023 12:01:48 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V7dbECpc9YUdrIw5ULKG1gvgBmtz3F8Pl9QT8VX5yk7hzalHsHDPR3QdrswaKCCzASSR/6xcCwr5YlC+cw8m0WEX78mg99oagwjs3baFqdV3H178LfVKSmpCMcn8wKXKIU5SwubVXcUxGqwYBgr5wYTIuQUDiFekmXwNe8TVaEYHnNAzmcZr/NyJJ0Dvc15/RsqkEVD89J+N3ntMjGHOE3K/lBCbQm1b5S1TAFZv5WXRqFKfQwPEJroTUmhl/u9vRy1eX0PybCWZTS+K3ewiRQ+RdxingE2KcpMLnI5a4brVdXDwxijtsVng1A8p7pqcjOsEI7mHUvAmd3WwcZWYAg==
+ b=H5YID0RQWM8HBYkbRMiEyE1/vFv+ZLJ4a5m9AVWg+Gnnxn7Ayuj9BJPvv1PoGk4t+qMSbm+nD21R0eespfqyDpkQLHqlT83ZNju2ert4o3X7ifnfIlEmm3H8BGSITSiFU7PrmJURGRYiF+x2gBxVflHAsjcR50S8rJWUr1HLfoHwJhn8O315CzK0iqxHqntmOwYRdvxTni88pEvhQjoWd8pabx/OJJBS9UhFF9S9Y67V63OiGyJpVCe1fG/s+xtk2l6qLuz5Fq3O3vSVfXrvN2YMcgHgGz/E+Ih/01kNBTs/OfNU2ImBKTNhYAT11Xq7lEuKAR7XCxd5/N7plNvyjQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CKUP0Pkcf3Qy7UtuYHdaeWIV9xzCQBmw/9hbUiumlU4=;
- b=JyEK6qgus7c+CGsVUt1IwXAGncF4NULbAQIVBzNNzWmEdzfz10QHiar3z2Vffglu3hl01dAvtQBRFnCy2GGmFpxFfI7pFiyexrLcIgPh5AWOSfzD/oA+9DdnQY47fGqTYjVM2e8rLxSHaJCGBzZjwDVTnbAP6h7lV1gIR4V9qO5j96oWF0TXzhUbjlcJPYdrMTnXKX3Kc0B8FzGby19QENqGh9ia4ot7fPO2PlWBcskTfZJvvh8+r71ewnLO7tWg9PQ3DGiG6oS7gfvlvU7K3QQdWeGMBUc5YyFqGzSwVDnUd8bC/O5DPHnr4n5Zbzu4EoyGdFqMRm+6xXJ47iOszA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux-m68k.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=tL9T7NwWO7l2JB7m2fFJb3CYzqYVl/uoOP21Vk2r+lY=;
+ b=FxVEnOngExikka1OueOWHKBLi/lpreBJNh66VVh6IrKIHhGEbgi5qgiXvFIVWYh4+RXTVhAK9dRR8ZL5Os10AizOWTAwVpJPElnahfXW34H3EyOM/rjfHggujvzi1zM5jE8HzINaT7HNkUFTlE0HWaFOZlbhQRVfUI33pdvz0mf57+YN4jYyditpTO+0Y8W10HNvJGFvqsAkq9dD8AOHT15OtsR5XaKnpbuvWGtv4MJ4KiAmZkt5SEWnwCBs7RRV934fvohirfT4B3SMF3Fu4buySjguDrY/Y/WWRlbmjb7NkoTb+6EmdqRJr0inYaJ1yF4CbreecSH9bDCo2XdjuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CKUP0Pkcf3Qy7UtuYHdaeWIV9xzCQBmw/9hbUiumlU4=;
- b=B7UxS8FiNkEvndB4xNbK1/oiec0NM3hYReRHQ19pbEtvzx0IBH5jFkgUaR2rbGk3vU8x5zDKdNQPldnVfmDKf4Ogh+jVuOZq7JF8bLqZR53jhgdDrck04fTOu7eXiZS+y3APfrVTn38Ge0NEP4n9+ViZWRHqY1jHUFBydFvTI80=
-Received: from SN7PR04CA0231.namprd04.prod.outlook.com (2603:10b6:806:127::26)
- by DS0PR12MB6656.namprd12.prod.outlook.com (2603:10b6:8:d2::10) with
+ bh=tL9T7NwWO7l2JB7m2fFJb3CYzqYVl/uoOP21Vk2r+lY=;
+ b=lHoldhJmP2cft3iAF98qdIzJJ+OF3Zl/AWvVWeQoh/0Q7h2kGeCjKny9ZuRXsqwFnO21D7257AQAgu1CzS3r7IbboNDgfRVXLohQbGhbSjbdoVUsO1MwjSQafREcRMhK9GDgRBW4lsf6mDZrav0x/c1e3g4dkCBekEL4jjyN66k=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by AS1PR04MB9477.eurprd04.prod.outlook.com (2603:10a6:20b:4d9::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.25; Thu, 24 Aug
- 2023 18:40:03 +0000
-Received: from SA2PEPF00001507.namprd04.prod.outlook.com
- (2603:10b6:806:127:cafe::5) by SN7PR04CA0231.outlook.office365.com
- (2603:10b6:806:127::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.20 via Frontend
- Transport; Thu, 24 Aug 2023 18:40:03 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- SA2PEPF00001507.mail.protection.outlook.com (10.167.242.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6699.14 via Frontend Transport; Thu, 24 Aug 2023 18:40:02 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 24 Aug
- 2023 13:40:01 -0500
-Received: from [172.19.74.144] (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.27 via Frontend
- Transport; Thu, 24 Aug 2023 13:40:01 -0500
-Message-ID: <2d2efa50-43b2-242c-028b-76554ed30962@amd.com>
-Date:   Thu, 24 Aug 2023 11:40:00 -0700
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.27; Thu, 24 Aug
+ 2023 19:01:45 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::a680:2943:82d1:6aa8]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::a680:2943:82d1:6aa8%3]) with mapi id 15.20.6699.027; Thu, 24 Aug 2023
+ 19:01:44 +0000
+Date:   Thu, 24 Aug 2023 15:01:30 -0400
+From:   Frank Li <Frank.li@nxp.com>
+To:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "imx@lists.linux.dev" <imx@lists.linux.dev>,
+        "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>, "kw@linux.com" <kw@linux.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "ntb@lists.linux.dev" <ntb@lists.linux.dev>,
+        Peng Fan <peng.fan@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>
+Subject: Re: [PATCH 0/3] Add RC-to-EP doorbell with platform MSI controller
+Message-ID: <ZOepCkqSnUmTdGHX@lizhi-Precision-Tower-5810>
+References: <20230426203436.1277307-1-Frank.Li@nxp.com>
+ <AM6PR04MB483849BE4788EE893306F38E88759@AM6PR04MB4838.eurprd04.prod.outlook.com>
+ <ZIdFFV5TdAy//Aat@lizhi-Precision-Tower-5810>
+ <ZLVK7xX7kPjNaah+@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZLVK7xX7kPjNaah+@lizhi-Precision-Tower-5810>
+X-ClientProxiedBy: SJ0PR13CA0062.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c4::7) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V13 4/5] of: overlay: Extend of_overlay_fdt_apply() to
- specify the target node
-Content-Language: en-US
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <robh@kernel.org>,
-        <max.zhen@amd.com>, <sonal.santan@amd.com>,
-        <stefano.stabellini@xilinx.com>
-References: <1692120000-46900-1-git-send-email-lizhi.hou@amd.com>
- <1692120000-46900-5-git-send-email-lizhi.hou@amd.com>
- <2aae84b8-41f9-3c24-bac9-8f882d2211b@linux-m68k.org>
-From:   Lizhi Hou <lizhi.hou@amd.com>
-In-Reply-To: <2aae84b8-41f9-3c24-bac9-8f882d2211b@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00001507:EE_|DS0PR12MB6656:EE_
-X-MS-Office365-Filtering-Correlation-Id: 154c9212-04e0-43af-7276-08dba4d18711
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|AS1PR04MB9477:EE_
+X-MS-Office365-Filtering-Correlation-Id: f4fddd50-2eef-4927-b081-08dba4d48efb
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qhImtycGmtlPFCtV4t3v1wA2che4qpQbjzNhutzfr7E+7Osc5zttdUhrSJ5EbM7D1ke6A8aIPgBLeVhmjMdu7+zgQuz4BCVU5YAgGRfftqJiPkx+KRIWq9FoaQLiUUKkE52h12uHJnanugdFwIvaaZnb43E8Bk6M+whSyYfmK+kO0Wpj10jihXrCXiF8TZzw8pIwb04LWm15YlTcXKQYV572kBUYmAK1fm/faX54MBnBO5iBeHgQkHHlBD+b+TPzAhS+Qg3gZNu2uhXtlOD4qX0kqE8UwXbH2W8yUkyVgqmu2IDAzb3A+Nv65Vssk4lBzuesJva6YwCwgakg6+m2kvuQ1Sz57vxsed0hfYBW5Dp8JkgZN1zh2si5orCYXbPFYN+uSvgp1nsH41PLTtu4v10rkTnSwuNjoH27A3rFLuQ57J0inD7gmKRQTp3DKJUZ+wQ5Na19n34S0yI2EV3VtYMhUdzJqtgjPcTECoEwhnGUNMhiMMt9TzJ43EHjsVdgrSmryyz3Qf9jwozDcy6uP3wS9J/myw5RoiW6TvUpChqx8FiwRuPFcjOvg7TvYY7ShNRpO0ipigdA4vUjJSasZSXlfaOYdO2N5+8puqk/0NmvJy4eK6Kbhu3IGeCzSx2ISSD4eIcNkkFmRPs5KpVn/9ooBTAXRWYfMt77YHElP41kgyacRqZbVSTe7p0QeEzf+NJZWpvQxRBB7gI4Srtr50mr67W8VXLsKdekG8nO9LBwNjD/GoBbr2j7vOPthTcyS2RqeMrPAcpHhgKTUqk9LBNZaSFhOVDXyk3hhJhuXOyxIsbbGloI/Gf4k11xFkev
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(346002)(396003)(136003)(39860400002)(1800799009)(186009)(82310400011)(451199024)(36840700001)(46966006)(40470700004)(53546011)(40480700001)(2616005)(40460700003)(86362001)(31696002)(5660300002)(2906002)(44832011)(70206006)(70586007)(54906003)(4326008)(8676002)(6916009)(8936002)(41300700001)(36756003)(16576012)(316002)(81166007)(478600001)(82740400003)(36860700001)(356005)(31686004)(426003)(47076005)(336012)(26005)(36900700001)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2023 18:40:02.3619
+X-Microsoft-Antispam-Message-Info: kOJjNhuwIo4tGF212aUHbDJja5Gg2dhCK9CedxvoV7BKUlJVfV8kt70ib/hDMP7dEAIhj/Uzaclf2Q7ppAMwVWR6yC/FKlz7FHOBk1RsHKDmpf95GAbTE74s05IRQ1QiNWjKGRuUdA/rNnUHx6K/BXlpUcltQljVibn7XBwWTKVPkexA8pjSDsgd9/X70UnPv8ee/GdQymJlFOJPTvBEsAOo2i+tFzOv7zE/IAY4PBJjuTXUF+hqrGTzZF7tI3VLiMl/FsrepgIU7BRysmJmrsx/JZvc4hxDhxZ+B/5D6f9mA0mThFuwkgE2SyLv6kcf378rT5AfsH2c5G7mvbX/HLszQCEeWSRkz5oafDyawA8irzWkDnaay7KPzFtlMt5QxDlFwGk/li5cMuBatk+LimpvBJ1BchWc6d6LFz5zONe0ZE6BCLICfVoen308zFxIUCth9pqC0/kfFmHqj/e4KdhA0K+uaWocX2TV0GRHqjq5v8a0rE3s6TUO2lSEauJiqslspGFgw+fhWs/nkzXVUvfoCF/5i4EDz/QAgLb0CWGcGiTdSuU88jVzsT/y2JSF5leNePIsCDVjzMKmImEf7Iy0VPzKZ80txOqzpxWTJHjm0klnFFmCWTh2wCKrlIoN
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(376002)(39860400002)(396003)(366004)(136003)(346002)(186009)(1800799009)(451199024)(5660300002)(8936002)(4326008)(8676002)(83380400001)(7416002)(38350700002)(26005)(38100700002)(6666004)(66556008)(66946007)(66476007)(6506007)(54906003)(33716001)(316002)(110136005)(478600001)(41300700001)(52116002)(2906002)(6512007)(9686003)(86362001)(6486002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PbCHERB2t17Yh8fASB2woDylN4RvJ2RUYHzFJidw3IzDxhC+HYiEcyiixuOB?=
+ =?us-ascii?Q?mKLlcHe0ISPLb0+P5dOAUVBfPUS0zn+fl7WZxyniK70/+rM9+upFEeeQz1B/?=
+ =?us-ascii?Q?6ETX3EHIXvjukuNEq3qa3+ufEBYUdlmiKleCwHlyoqvfDdekuiDKbq4I8uLZ?=
+ =?us-ascii?Q?1oIMWhStSSt8eJa0luzf/F1FvKAmLZPXVaSD56fn9eBw3juKOBR2M4c94ymX?=
+ =?us-ascii?Q?Yfjzqi+llUXAp+XLlSYkC+jPqatObKtaZq3FDytKBSQKWwQUWAN9PLYOXuXD?=
+ =?us-ascii?Q?JWFjOVt9o2WsCuBYoKox/Y21C55nxqlhuAZvhw6STN0uI+SxGt3JQTnywtQP?=
+ =?us-ascii?Q?0ec3ejC+EYy/FiUdgBGtDRpJdsOlE0ELIJ/blziFIkNbB3MTApYG9OEmsZYg?=
+ =?us-ascii?Q?z3XNgv+qPasWxp+0HiAKFK/njQlhBdYHeJkPQyuKmkL5txB1HGowkZr9IRrs?=
+ =?us-ascii?Q?dnDA8f6kpOLI1PzfcxJIpOksQow7FARiL4MQlerXtGtaTMd7PY0t8YlPwfyU?=
+ =?us-ascii?Q?AN95tY7FQRoFL80UVYScZly/6W4Ej8N6raCHW+Gnff1NOd1g/pMQR8MEeQdc?=
+ =?us-ascii?Q?jDuj2V52v6A2Rb0yJaBme+PP9vmkWbEniC4e9BvUnfB7pk61tY+qbifOynCY?=
+ =?us-ascii?Q?AxFRkb1eZpdqsUVzwBVJXxvDzG3iHHunWEW2CpVs7kBwpXS8rVD/+nEnbiXO?=
+ =?us-ascii?Q?acXlucwrGKVumlBtdm57iangXkQUr+w3iPOSJ7755ISGUk/iz97URtSjyL4f?=
+ =?us-ascii?Q?+KgSqmfeLSXM9zS5hZ97LT/i2GYIlDTp7z+sNtUU01Wp0ini8Y159tlcONzI?=
+ =?us-ascii?Q?XToQAWKT6su249ovlow02lVVwYCMAi4RQWNgwuGM5WMT0Yn8XBvJXU8EEava?=
+ =?us-ascii?Q?kTrCgbPLy/eOyit5JO4p6JYkD/DOiFLp1Rcm/TT7kYMQUSm7Ajxg2vfzGRkE?=
+ =?us-ascii?Q?lk8vBnxxEoBi6R/A0w1zCMx1GpCpnXhbD21gWVFmy91TnZgHKW2yrEcbTRCE?=
+ =?us-ascii?Q?o0FU7m4bOduKNGz97n8ePxXJ99yvkxomftC8fgPt9FhX7z3lkVGtw5fAUYls?=
+ =?us-ascii?Q?iHehqiBaGyLj5nMvjhLG0FD8FoHG4A3aa2lZM06i6qTunNPapmxlt11Z2pZw?=
+ =?us-ascii?Q?oIaC5WpfLDTvqDJiqiQ6xwFLUf5rdfIyNZIM/b2WEtJkySZf9Y0gRU9cdbks?=
+ =?us-ascii?Q?etSuyumDnZNfCa3uSxh4JAyf1Urx0CmnvzQkUgh2rPbEfSREPKn1SxqA7M2W?=
+ =?us-ascii?Q?Psa1MDuvQaqbLvMt8kPvtzKQ1Ix24OHilrqrVZvwDx8bGJd1a7CYY1J6cdSg?=
+ =?us-ascii?Q?HvPCdZSfGWDhGtewvuHetrgLHjia3PoO7TT4c73dg/3LChssF6ZDrUgvjId6?=
+ =?us-ascii?Q?meyWTfFsBCCpI5Q/qdnPvcGuQXtzsJ/HnNcmCMy9gAoX/ErseSxx4pqgDWMG?=
+ =?us-ascii?Q?ywCyTf6Jy5kGBUTLDh8S+lycK20+BN8zPuBuB9Z6meCtoe7HszWJYwGJkcQz?=
+ =?us-ascii?Q?C0yDgUwC4uoCU87E6gKPm34/+FSpFiGh7fwQyLMsFhcgo3S+tmxWGNsJDdmf?=
+ =?us-ascii?Q?sjrV4BSbfL/siR8mkulsA7z++o86ckTDiTXUyf5V?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4fddd50-2eef-4927-b081-08dba4d48efb
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2023 19:01:44.5602
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 154c9212-04e0-43af-7276-08dba4d18711
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: SA2PEPF00001507.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6656
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: N6FgnfEuLhH0/XHO8ZM3JDZqzGOiDxC11Xn4oYPs/m8xD3Iz5MackjP5fPL3qBZmPQNc8ZiSHtTSYAAmjgCfPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9477
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Geert,
+On Mon, Jul 17, 2023 at 10:06:39AM -0400, Frank Li wrote:
+> On Mon, Jun 12, 2023 at 12:17:25PM -0400, Frank Li wrote:
+> > On Fri, May 12, 2023 at 02:45:12PM +0000, Frank Li wrote:
+> > > > 
+> > > > This patches add new API to pci-epf-core, so any EP driver can use it.
+> > > > 
+> > > > The key point is comments from Thomas Gleixner, who suggest use new
+> > > > PCI/IMS. But arm platform change still not be merged yet.
+> > > > 
+> > > > git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git devmsi-v2-arm
+> > > > 
+> > > > So I still use existed method implement RC to EP doorbell.
+> > > > 
+> > > > If Thomas Gleixner want to continue work on devmsi-v2-arm, I can help test
+> > > > and update this patch.
+> > > > 
+> > > 
+> > > Ping?
+> > 
+> > Ping? 
+> 
+> ping? 
 
-Thanks for reviewing the patch. I add my comment in-line.
+@Mani
+     Do you have chance to review these patches? It provide a common
+method with GIC ITS to implement notification from RC to EP.
 
-On 8/24/23 01:31, Geert Uytterhoeven wrote:
->     Hi Lizhi,
->
-> On Tue, 15 Aug 2023, Lizhi Hou wrote:
->> Currently, in an overlay fdt fragment, it needs to specify the exact
->> location in base DT. In another word, when the fdt fragment is 
->> generated,
->> the base DT location for the fragment is already known.
->>
->> There is new use case that the base DT location is unknown when fdt
->> fragment is generated. For example, the add-on device provide a fdt
->> overlay with its firmware to describe its downstream devices. Because it
->> is add-on device which can be plugged to different systems, its firmware
->> will not be able to know the overlay location in base DT. Instead, the
->> device driver will load the overlay fdt and apply it to base DT at 
->> runtime.
->> In this case, of_overlay_fdt_apply() needs to be extended to specify
->> the target node for device driver to apply overlay fdt.
->>    int overlay_fdt_apply(..., struct device_node *base);
->>
->> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
->
-> Thanks for your patch, which is now commit 47284862bfc7fd56 ("of:
-> overlay: Extend of_overlay_fdt_apply() in dt-rh/for-next.
->
->> --- a/drivers/of/overlay.c
->> +++ b/drivers/of/overlay.c
->> @@ -715,6 +730,7 @@ static struct device_node *find_target(struct 
->> device_node *info_node)
->> /**
->>  * init_overlay_changeset() - initialize overlay changeset from 
->> overlay tree
->>  * @ovcs:        Overlay changeset to build
->> + * @target_base:    Point to the target node to apply overlay
->>  *
->>  * Initialize @ovcs.  Populate @ovcs->fragments with node information 
->> from
->>  * the top level of @overlay_root.  The relevant top level nodes are the
->
-> As an overlay can contain one or more fragments, this means the
-> base (when specified) will be applied to all fragments, and will thus
-> override the target-path properties in all fragments.
->
-> However, for the use case of an overlay that you can plug into
-> a random location (and of which there can be multiple instances),
-> there can really be only a single fragment.  Even nodes that typically
-> live at the root level (e.g. gpio-leds or gpio-keys) must be inserted
-> below the specified location, to avoid conflicts.
->
-> Hence:
->   1. Should init_overlay_changeset() return -EINVAL if target_base is
->      specified, and there is more than one fragment?
+Frank
 
-Maybe allowing more than one fragment make the interface more generic?  
-For example, it could support the use case that multiple fragments share 
-the same base node.
-
-Currently, the fragment overlay path is "base node path" + "fragment 
-target path". Thus, for the structure:
-
-/a/b/c/fragment0
-
-/a/b/d/fagment1
-
-It can be two fragments in one fdt by using
-
-   base node path = /a/b
-
-   fragment0 target path = /c
-
-   fragment1 target path = /d
-
-I am not sure if there will be this kind of use case or not. And I think 
-it would not be hurt to allow that.
-
->
->   2. Should there be a convention about the target-path property's
->      contents in the original overlay?
->      drivers/of/unittest-data/overlay_pci_node.dtso in "[PATCH V13 5/5]
->      of: unittest: Add pci_dt_testdrv pci driver" uses
->
->          target-path="";
->
->      which cannot be represented when using sugar syntax.
->      "/" should work fine, though.
-
-Because the fragment overlay path is "base node path" + "fragment target 
-path", I may add code to check if "fragment target patch is '/' and 
-ignore it. I think that would support sugar syntax with only '/' specified.
-
-
-Thanks,
-
-Lizhi
-
->
-> Thanks!
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- 
-> geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a 
-> hacker. But
-> when I'm talking to journalists I just say "programmer" or something 
-> like that.
->                                 -- Linus Torvalds
+> 
+> > 
+> > > 
+> > > > Frank Li (3):
+> > > >   PCI: endpoint: Add RC-to-EP doorbell support using platform MSI
+> > > >     controller
+> > > >   misc: pci_endpoint_test: Add doorbell test case
+> > > >   tools: PCI: Add 'B' option for test doorbell
+> > > > 
+> > > >  drivers/misc/pci_endpoint_test.c    |  41 +++++++++++
+> > > >  drivers/pci/endpoint/pci-epf-core.c | 109
+> > > > ++++++++++++++++++++++++++++
+> > > >  include/linux/pci-epf.h             |  16 ++++
+> > > >  include/uapi/linux/pcitest.h        |   1 +
+> > > >  tools/pci/pcitest.c                 |  16 +++-
+> > > >  5 files changed, 182 insertions(+), 1 deletion(-)
+> > > > 
+> > > > --
+> > > > 2.34.1
+> > > 
