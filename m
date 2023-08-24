@@ -2,131 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98989786C79
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 12:00:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C9F7786C9B
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 12:14:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236667AbjHXJ7w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Aug 2023 05:59:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51416 "EHLO
+        id S238544AbjHXKN3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Aug 2023 06:13:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240829AbjHXJ7g (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 05:59:36 -0400
-Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2095.outbound.protection.outlook.com [40.107.113.95])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9171C1984;
-        Thu, 24 Aug 2023 02:59:33 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ThX7BILnHwM0qn5FO+7MQWyLzqqRcLZ2lbbyUuniyLyGQZRHkjP7KcvQmAUIfIR643JzfCV5/99F3wCAlzUpxpgnSWBuAYtnddwKPgA8GPz6Hn0Z6Wcb0NUBYOc2s2tQYGpJAJmCDTKYjQeljoZNo6kszXZ7MypcEldn7SzHtygb8N3TObs2izyTCec37v1oTbbOynUFIlqdL5ICLQ5GKc6Xy6QhllJLp+hOE8y6DIYKKI8t4DPWfTvJAxq8Ivv5DA/ahugoB7PQXu0TnLEF1JWMWPciT8pcfuVUxXYNJvF/tTqY4ha4wK/mkY+wh/ppO6cJQ1MixoVAcFeQ6k+2PA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1qiOOhodBYI+8EW2ITwbh65t0HOBCrl/i3Zp7CaJFI0=;
- b=iLNgAejtrdj0E0ctksA6wd7dP4qn5+dL3sF9/nPK5c/I1ANzIi+9y96QHpgiH8m1tc46yU2aejdqRLqFjf/8pi0pWokzrhohGxlBLI7dueUimN44VEQ3YHXyRRUNMOCrnN/Ghw5x+xfcQn57fLcUcM2YdaAcoXDVaVnH38nlIG6+tEJM5RQ5a13KKLD71p0eYsH4Svfw+CVdlPmCeV8ZRRxom5t2HL1RlJaCsN5RpBT7BJZ0Ul5z8cZLZBY3vz+a9uAeKdJUl6YEYptOGS7ftc1+v6e6jVnlJuKb+w9bLWCmSNX0A9U2FRPYTvuIVnpPBufj4Ae6CbOVwLBBR6iXHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1qiOOhodBYI+8EW2ITwbh65t0HOBCrl/i3Zp7CaJFI0=;
- b=ppxXi7cQfVF54r3W8PSp5TS8kI6Wu+4nc/KY9+eBNvn9CDdc52/H027HQ7HsDpFocjXxuRXSKo2kKCuFKwLMQwIxbUrMMVGDcdVGiF+yOBDi7tJkRx7yOVP7jG1B/4CTkGmwqUgDClIJk7VfcBzvGOKgaHJ1Wu/k6LzKWklh53I=
-Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
- (2603:1096:404:8028::13) by TYCPR01MB10494.jpnprd01.prod.outlook.com
- (2603:1096:400:306::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.27; Thu, 24 Aug
- 2023 09:59:30 +0000
-Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
- ([fe80::e5cd:66a0:248f:1d30]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
- ([fe80::e5cd:66a0:248f:1d30%4]) with mapi id 15.20.6699.027; Thu, 24 Aug 2023
- 09:59:30 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Serge Semin <fancer.lancer@gmail.com>
-CC:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "kw@linux.com" <kw@linux.com>,
-        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "kishon@kernel.org" <kishon@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "conor+dt@kernel.org" <conor+dt@kernel.org>,
-        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v19 17/19] PCI: rcar-gen4-ep: Add R-Car Gen4 PCIe Endpoint
- support
-Thread-Topic: [PATCH v19 17/19] PCI: rcar-gen4-ep: Add R-Car Gen4 PCIe
- Endpoint support
-Thread-Index: AQHZ1aHja3fL6wd8w0qlLZS7XbKlsa/3yB4AgAFvv/A=
-Date:   Thu, 24 Aug 2023 09:59:30 +0000
-Message-ID: <TYBPR01MB5341C69DA05F0341A0D4B78DD81DA@TYBPR01MB5341.jpnprd01.prod.outlook.com>
-References: <20230823091153.2578417-1-yoshihiro.shimoda.uh@renesas.com>
- <20230823091153.2578417-18-yoshihiro.shimoda.uh@renesas.com>
- <agtnd477is7pphizfdoyltbak5pdjpvcx34lwvtnch5zbi7rfd@75ndc53djrgv>
-In-Reply-To: <agtnd477is7pphizfdoyltbak5pdjpvcx34lwvtnch5zbi7rfd@75ndc53djrgv>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|TYCPR01MB10494:EE_
-x-ms-office365-filtering-correlation-id: e05a9ee0-85a8-4e1e-aee7-08dba488cf78
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: U72vzXiFbYuJO4Y0motda7xqYMl5Xkmv1chbH8Tv2c23fy4MrO+taN9W3ohKbuz4TgvffH61WTnlTjqdKvsAyC05ZoGZWBQfs/vPP4e5dvys8NlvLl2cLm0vWYd/PJUayx2lHvUMrpRxSUyBiouTPp7tGcOFXwdgX4P5EKuI1qls3FuUyoAv9wMpiTyHjwYR/XJlCllccWj0NPcZo1MFnK9WvJE0lURu5MJy1mG3jKoFcZNRS4gmqL+/qlVXndzmZat7PngulSKEZLZk5ALL6X7zkRP0IfTF2/49WTTwpg1yhZ5d1d4iFz+xE4hEvKaK1F7/KZ1H2DDy97VkiY2CkPPqVAS1G1/DhvzkWhIgkqd23nS6EbuFN+T57naTfom3IlwwcuBLky/oX15iTg9UAbChCTstu/a44sivIjkeauNi9jtxpbh03LvuH/I/yY+opjAhu47P67UClnXbSPQESCfAhCEDXCOsStPCTuVlN5e08wP+Ce+AUxuSPuy0jMXUlDkswJ5LN4F5jEsDBVZnuJN927Vi1rUR5j4JXoO/9isO/yhVQJmRdHKfUJeDZwLgwD2iHTAI3a90aNfKoU0d0kAZHTO6wIjb0ZtDpPKkqOTLpIQAKPvvucAeX27/Dk45
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(366004)(39860400002)(376002)(346002)(451199024)(186009)(1800799009)(54906003)(64756008)(66446008)(66946007)(76116006)(66476007)(66556008)(6916009)(316002)(122000001)(478600001)(55016003)(26005)(38070700005)(38100700002)(71200400001)(41300700001)(86362001)(2906002)(6506007)(9686003)(7696005)(4326008)(8676002)(8936002)(52536014)(5660300002)(7416002)(83380400001)(33656002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?oEeGh9UrageDC+JZ5YmsUKQnun5IJgadyBG2lp4KGTW+es7zyBNqfS5FmxvJ?=
- =?us-ascii?Q?COx9mLgWdZO9ZYT6Ad5GvUeXcL6DAAIoyp8Tdjmj2aEvRYShIlU4F2htU8c2?=
- =?us-ascii?Q?BWcr5PvRkyv/YMemV4TmlqMW/QxAbI240oTj4Hxfoycse+94GoWarxncDbCT?=
- =?us-ascii?Q?CiE7B0tuwPNSTkm1PIcszKpG7aLzY1F0gSnT2SQtjnBaOHGOb2jDOvFCcEva?=
- =?us-ascii?Q?xYiYNYcZ77o83jg6VKFoU/nDS7NM7o8jpLd6ww/CBciVVehk3Bundn8dLQ/i?=
- =?us-ascii?Q?fE53gQQqjfpOCPzCpsohhMWoYxD6w+r+HNyUuWfjVMKFeOGYSGeW5hjeQA8T?=
- =?us-ascii?Q?V3dvP/qvaoE9wnQ+qmEe2GtS/HdHmCwup5xZ9Qt7eQZkUZEGkpUW0e+I667M?=
- =?us-ascii?Q?K0uDMhrQgzgQ8iUDEp1baUOyLZVSYeIlUUdHP+nHRof27ynoKsiLMFWanQEj?=
- =?us-ascii?Q?GOZbHEqLZNsrxVwpUNMmD1n4hNCydqZD5OaODsSfvZlnzh4pYasaS3nD1Lid?=
- =?us-ascii?Q?MMoUtIeAjAd31G9EMoNgHKOujXbevvJswdHb0ZoV12uWJvLnNevY34t70PtB?=
- =?us-ascii?Q?4Aagm4j3ztyClDPFUc8JAkjPJiCGrD4CqrKVMRwsBVoasFfgAomid3nTFikf?=
- =?us-ascii?Q?yg1IEBYUa6jmiVzzN4I1N9Ubx5xISaJtYu/8AdSHiztHKRgoQiYIQ29yyCH7?=
- =?us-ascii?Q?9nc5RM+bslGrYnQZkUMimjFBNEQm6Q8D1fVm3QY4Gm2e+3scVTLqR9L3bCPC?=
- =?us-ascii?Q?/6GZLmlgJD+i0VOgZQk7wKK+fc8UrmdNGWqEQUEOCyQzUBM78dBOjODFJjKA?=
- =?us-ascii?Q?bERo0SczP0qKVi1a7RATThq9tJgMjX0OR4eGKKqQEuKCoyI12t6huG12VeTq?=
- =?us-ascii?Q?oTV+oMUCLO9tSPzw/zbg3UbUHsYl+ddOe+7PDk1a88V/DBWrprXEUxJhSyFr?=
- =?us-ascii?Q?81UdpWA97+/9NAa4WSmy3pte7lIqtpUx7kviHUEo4fXw8nXKp/A8gyAI/5Rf?=
- =?us-ascii?Q?jH5UMs7SmyEtR0shBokGRt6RwctYbWxKDYenIf5+umjQshn0M+VyB1zdNbGE?=
- =?us-ascii?Q?/Kar4+ePYH6sCWsSYZmkZyleDkGgzNePzvKKNABYPX1WF8eLE5BEqmtf5XjG?=
- =?us-ascii?Q?Wd2fYpDyCJ1oei4hzM34bUFKlDpQ2EbG2roeXgKkjonrxp7Qq8eCFLkyNcIX?=
- =?us-ascii?Q?cYrEif1lqNAejz+cKFi+S2enwE8kAhy67OBfuouRfKvmzbKoKuoMA85qLC1G?=
- =?us-ascii?Q?07WPHljqQILJx7SQQ85qaHm5NgZ03eSAzz4RK+x4R7VwVG6+ltBhutR6iucS?=
- =?us-ascii?Q?lHXF/GhfrFnkD6Ju4CPU60LbCQ8aqQV0t4uh0llATX5ubF1SPGOQj1vHCjHS?=
- =?us-ascii?Q?O3/8kglUiuxCfl1JVvjJY00RrwTZEZsr/LMHBQtDfQ4+JWdUCZg4znYD3tSp?=
- =?us-ascii?Q?hy108VDACu1YRRRI8caevO6t1ozkpvr/X+b1p5V8I4zx3uMMv3XQFeSrbu2o?=
- =?us-ascii?Q?5X8m26No5+yHwwOAVajJDoV5iUtMo0+AFojKI+upnYAevivdpXLmzOA7umDi?=
- =?us-ascii?Q?GbWD96ssscwpU5370r2S0zHYgaUMzlR5T/kdOFsY6cL13Ocdx+8R5vmAP7d/?=
- =?us-ascii?Q?BA=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S240830AbjHXKNH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 06:13:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0573198A;
+        Thu, 24 Aug 2023 03:13:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5AB6C64415;
+        Thu, 24 Aug 2023 10:13:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF4E3C433C8;
+        Thu, 24 Aug 2023 10:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692871983;
+        bh=4UDSCTf4UzQ5mpd8+4A0j7OY2qBf4OTnvs5eIzuBsHQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IbOV1urTSkudunwOCH1Ibv38fRYfnw7bT5+LQfIchxJd71hR54VeyBEWuAyr6RM/f
+         bk6awpjFKXaodurv1iBhrMk4svkdySvBiy5AbOgaINsks5l4zUfvD9BF4W4wvaSWyE
+         Pgk9rYiGHiIwI+DLyEUVWbWXZ9X+VWCoR4aviSQMzDxjgriFkjjmFNC33ap+Th7zOa
+         qKzznRR8T+7j1RPvNCqQuOruCIJcvv2QS80pgjuN0xlSDd1M1riQUO3HbfKBD9gFPS
+         M6f3AGQAWUfv1a8OR5mdxezWZ3iFWgzdb0eBxV239XplNc8viCDyiE0dMUnn3+vYbG
+         s6SgWI5Kj+2YA==
+Date:   Thu, 24 Aug 2023 12:12:55 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        Phil Elwell <phil@raspberrypi.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 1/5] dt-bindings: PCI: brcmstb: Add brcm,enable-l1ss
+ property
+Message-ID: <ZOctJ3t1/UPc4kPj@lpieralisi>
+References: <20230508220126.16241-1-jim2101024@gmail.com>
+ <20230508220126.16241-2-jim2101024@gmail.com>
+ <20230823074330.GF3737@thinkpad>
+ <CA+-6iNwP+NbAdm0kNxZ5GwyPdTQyOjq7E2O-+mCU4fG-94BKBA@mail.gmail.com>
+ <20230823181650.GL3737@thinkpad>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e05a9ee0-85a8-4e1e-aee7-08dba488cf78
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Aug 2023 09:59:30.6233
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kVM0KGnzMxH0qwnop0DQtxBzFYNv7mTW/Vi0ohJMVbl2PD+p6B9fPitnZSYXoemjHynYiwsqX760SzyCgmo2TCZyTCudxU2hUjPBKcS8xQGcecnDN7X7pwHD2zDwDf1E
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB10494
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230823181650.GL3737@thinkpad>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -134,272 +78,189 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Serge,
+On Wed, Aug 23, 2023 at 11:46:50PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Aug 23, 2023 at 09:09:25AM -0400, Jim Quinlan wrote:
+> > On Wed, Aug 23, 2023 at 3:43 AM Manivannan Sadhasivam <mani@kernel.org> wrote:
+> > >
+> > > On Mon, May 08, 2023 at 06:01:21PM -0400, Jim Quinlan wrote:
+> > > > This commit adds the boolean "brcm,enable-l1ss" property:
+> > > >
+> > > >   The Broadcom STB/CM PCIe HW -- a core that is also used by RPi SOCs --
+> > > >   requires the driver probe() to deliberately place the HW one of three
+> > > >   CLKREQ# modes:
+> > > >
+> > > >   (a) CLKREQ# driven by the RC unconditionally
+> > > >   (b) CLKREQ# driven by the EP for ASPM L0s, L1
+> > > >   (c) Bidirectional CLKREQ#, as used for L1 Substates (L1SS).
+> > > >
+> > > >   The HW+driver can tell the difference between downstream devices that
+> > > >   need (a) and (b), but does not know when to configure (c).  All devices
+> > > >   should work fine when the driver chooses (a) or (b), but (c) may be
+> > > >   desired to realize the extra power savings that L1SS offers.  So we
+> > > >   introduce the boolean "brcm,enable-l1ss" property to inform the driver
+> > > >   that (c) is desired.  Setting this property only makes sense when the
+> > > >   downstream device is L1SS-capable and the OS is configured to activate
+> > > >   this mode (e.g. policy==powersupersave).
+> > > >
+> > > >   This property is already present in the Raspian version of Linux, but the
+> > > >   upstream driver implementation that follows adds more details and
+> > > >   discerns between (a) and (b).
+> > > >
+> > > > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 9 +++++++++
+> > > >  1 file changed, 9 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > > > index 7e15aae7d69e..8b61c2179608 100644
+> > > > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > > > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > > > @@ -64,6 +64,15 @@ properties:
+> > > >
+> > > >    aspm-no-l0s: true
+> > > >
+> > > > +  brcm,enable-l1ss:
+> > > > +    description: Indicates that PCIe L1SS power savings
+> > > > +      are desired, the downstream device is L1SS-capable, and the
+> > > > +      OS has been configured to enable this mode.  For boards
+> > > > +      using a mini-card connector, this mode may not meet the
+> > > > +      TCRLon maximum time of 400ns, as specified in 3.2.5.2.2
+> > > > +      of the PCI Express Mini CEM 2.0 specification.
+> > >
+> > > As Lorenzo said, this property doesn't belong in DT. DT is supposed to specify
+> > > the hardware capability and not system/OS behavior.
+> > 
+> > The "brcm,enable-l1ss" does NOT configure the OS behavior.
+> > It sets or not a mode bit to enable l1SS HW, whether or not the OS is
+> > configured for L1SS.
+> > It compensates for a problem in the PCIe core: the HW is not capable
+> > of dynamically
+> > switching between ASPM modes powersave and superpowersave.  I am actively
+> > advocating for our HW to change but that will take years.
+> > 
+> 
+> Okay, then I would say that the property name and commit message were a bit
+> misleading. 
+> 
+> I had briefly gone through the driver patch now. As per my understanding, you
+> have 2 modes in hw:
+> 
+> 1. Clock PM - Refclk will be turned off by the host if CLKREQ# is deasserted by
+> the device (driving high) when the link is in L1.
+> 
+> 2. L1SS - CLKREQ# will be used to decide L1SS entry and exit by the host.
+> 
+> Till now the driver only supported Clock PM through mode (1) but for supporting
+> L1SS you need to enable mode (2). And you are using this property to select mode
+> (2) when the L1SS supported devices are connected to the slot. Also, by
+> selecting this mode, you are loosing the benefit of mode (1) as both are not
+> compatible.
+> 
+> My suggestion would be to just drop mode (1) and use mode (2) in the driver as
+> most of the recent devices should support L1SS (ofc there are exemptions).
+> 
+> But moving that decision to DT still doesn't seem right to me as the hardware
+> supports both modes and you are (ab)using DT to choose one or the other.
 
-> From: Serge Semin, Sent: Wednesday, August 23, 2023 9:03 PM
->=20
-> On Wed, Aug 23, 2023 at 06:11:51PM +0900, Yoshihiro Shimoda wrote:
-> > Add R-Car Gen4 PCIe Endpoint support. This controller is based on
-> > Synopsys DesignWare PCIe.
-> >
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > ---
-> >  drivers/pci/controller/dwc/Kconfig            |  10 +
-> >  drivers/pci/controller/dwc/Makefile           |   2 +
-> >  .../controller/dwc/pcie-rcar-gen4-ep-drv.c    | 178 ++++++++++++++++++
-> >  3 files changed, 190 insertions(+)
-> >  create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-ep-drv.c
-> >
-> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controlle=
-r/dwc/Kconfig
-> > index 3884a67e4d56..65a7c56e64bd 100644
-> > --- a/drivers/pci/controller/dwc/Kconfig
-> > +++ b/drivers/pci/controller/dwc/Kconfig
-> > @@ -425,4 +425,14 @@ config PCIE_RCAR_GEN4
-> >  	  To compile this driver as a module, choose M here: the module will =
-be
-> >  	  called pcie-rcar-gen4-host.ko. This uses the DesignWare core.
-> >
-> > +config PCIE_RCAR_GEN4_EP
-> > +	tristate "Renesas R-Car Gen4 PCIe Endpoint controller"
-> > +	depends on ARCH_RENESAS || COMPILE_TEST
-> > +	depends on PCI_ENDPOINT
-> > +	select PCIE_DW_EP
-> > +	help
-> > +	  Say Y here if you want PCIe endpoint controller support on R-Car Ge=
-n4
-> > +	  SoCs. To compile this driver as a module, choose M here: the module
-> > +	  will be called pcie-rcar-gen4-ep.ko. This uses the DesignWare core.
-> > +
-> >  endmenu
-> > diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controll=
-er/dwc/Makefile
-> > index ab2c6bc16216..4d53d660e4fe 100644
-> > --- a/drivers/pci/controller/dwc/Makefile
-> > +++ b/drivers/pci/controller/dwc/Makefile
-> > @@ -28,6 +28,8 @@ obj-$(CONFIG_PCIE_UNIPHIER_EP) +=3D pcie-uniphier-ep.=
-o
-> >  obj-$(CONFIG_PCIE_VISCONTI_HOST) +=3D pcie-visconti.o
-> >  pcie-rcar-gen4-host-objs :=3D pcie-rcar-gen4.o pcie-rcar-gen4-host-drv=
-.o
-> >  obj-$(CONFIG_PCIE_RCAR_GEN4) +=3D pcie-rcar-gen4-host.o
-> > +pcie-rcar-gen4-ep-objs :=3D pcie-rcar-gen4.o pcie-rcar-gen4-ep-drv.o
-> > +obj-$(CONFIG_PCIE_RCAR_GEN4_EP) +=3D pcie-rcar-gen4-ep.o
-> >
-> >  # The following drivers are for devices that use the generic ACPI
-> >  # pci_root.c driver but don't support standard ECAM config access.
-> > diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4-ep-drv.c b/drive=
-rs/pci/controller/dwc/pcie-rcar-gen4-ep-drv.c
-> > new file mode 100644
-> > index 000000000000..71f496ba0eeb
-> > --- /dev/null
-> > +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4-ep-drv.c
-> > @@ -0,0 +1,178 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * PCIe Endpoint driver for Renesas R-Car Gen4 Series SoCs
-> > + * Copyright (C) 2022-2023 Renesas Electronics Corporation
-> > + */
-> > +
-> > +#include <linux/interrupt.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/pci.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#include "pcie-rcar-gen4.h"
-> > +#include "pcie-designware.h"
-> > +
-> > +#define RCAR_GEN4_PCIE_EP_FUNC_DBI_OFFSET	0x1000
-> > +#define RCAR_GEN4_PCIE_EP_FUNC_DBI2_OFFSET	0x800
-> > +
-> > +static void rcar_gen4_pcie_ep_pre_init(struct dw_pcie_ep *ep)
-> > +{
-> > +	struct dw_pcie *dw =3D to_dw_pcie_from_ep(ep);
-> > +	struct rcar_gen4_pcie *rcar =3D to_rcar_gen4_pcie(dw);
-> > +	int ret;
-> > +
->=20
-> > +	ret =3D clk_bulk_prepare_enable(DW_PCIE_NUM_CORE_CLKS, dw->core_clks)=
-;
-> > +	if (ret) {
-> > +		dev_err(dw->dev, "Failed to enable ref clocks\n");
-> > +		return;
-> > +	}
-> > +
-> > +	rcar_gen4_pcie_common_init(rcar);
->=20
-> The same note as to the previous patch. The clk_bulk_prepare_enable()
-> method invocation can be moved to rcar_gen4_pcie_common_init().
+Jim ? We need to queue this series as soon as possible, if we don't
+reach consensus by this evening I will queue the last three patches
+only.
 
-I got it.
+Lorenzo
 
-> > +
-> > +	writel(PCIEDMAINTSTSEN_INIT, rcar->base + PCIEDMAINTSTSEN);
-> > +}
-> > +
-> > +static void rcar_gen4_pcie_ep_init(struct dw_pcie_ep *ep)
-> > +{
-> > +	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
-> > +	enum pci_barno bar;
-> > +
-> > +	for (bar =3D 0; bar < PCI_STD_NUM_BARS; bar++)
-> > +		dw_pcie_ep_reset_bar(pci, bar);
-> > +}
-> > +
-> > +static void rcar_gen4_pcie_ep_deinit(struct dw_pcie_ep *ep)
-> > +{
-> > +	struct dw_pcie *dw =3D to_dw_pcie_from_ep(ep);
-> > +	struct rcar_gen4_pcie *rcar =3D to_rcar_gen4_pcie(dw);
-> > +
-> > +	writel(0, rcar->base + PCIEDMAINTSTSEN);
->=20
-> > +	rcar_gen4_pcie_common_deinit(rcar);
-> > +	clk_bulk_disable_unprepare(DW_PCIE_NUM_CORE_CLKS, dw->core_clks);
->=20
-> and clk_bulk_disable_unprepare() - to rcar_gen4_pcie_common_deinit().
->=20
-> With the above notes fixed feel free to add:
->=20
-> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-
-Thank you very much for your review!
-
-Best regards,
-Yoshihiro Shimoda
-
-> -Serge(y)
->=20
-> > +}
-> > +
-> > +static int rcar_gen4_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_=
-no,
-> > +				       unsigned int type, u16 interrupt_num)
-> > +{
-> > +	struct dw_pcie *dw =3D to_dw_pcie_from_ep(ep);
-> > +
-> > +	switch (type) {
-> > +	case PCI_IRQ_LEGACY:
-> > +		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
-> > +	case PCI_IRQ_MSI:
-> > +		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-> > +	default:
-> > +		dev_err(dw->dev, "Unknown IRQ type\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct pci_epc_features rcar_gen4_pcie_epc_features =3D {
-> > +	.linkup_notifier =3D false,
-> > +	.msi_capable =3D true,
-> > +	.msix_capable =3D false,
-> > +	.reserved_bar =3D 1 << BAR_1 | 1 << BAR_3 | 1 << BAR_5,
-> > +	.align =3D SZ_1M,
-> > +};
-> > +
-> > +static const struct pci_epc_features*
-> > +rcar_gen4_pcie_ep_get_features(struct dw_pcie_ep *ep)
-> > +{
-> > +	return &rcar_gen4_pcie_epc_features;
-> > +}
-> > +
-> > +static unsigned int rcar_gen4_pcie_ep_func_conf_select(struct dw_pcie_=
-ep *ep,
-> > +						       u8 func_no)
-> > +{
-> > +	return func_no * RCAR_GEN4_PCIE_EP_FUNC_DBI_OFFSET;
-> > +}
-> > +
-> > +static unsigned int rcar_gen4_pcie_ep_get_dbi2_offset(struct dw_pcie_e=
-p *ep,
-> > +						      u8 func_no)
-> > +{
-> > +	return func_no * RCAR_GEN4_PCIE_EP_FUNC_DBI2_OFFSET;
-> > +}
-> > +
-> > +static const struct dw_pcie_ep_ops pcie_ep_ops =3D {
-> > +	.pre_init =3D rcar_gen4_pcie_ep_pre_init,
-> > +	.ep_init =3D rcar_gen4_pcie_ep_init,
-> > +	.deinit =3D rcar_gen4_pcie_ep_deinit,
-> > +	.raise_irq =3D rcar_gen4_pcie_ep_raise_irq,
-> > +	.get_features =3D rcar_gen4_pcie_ep_get_features,
-> > +	.func_conf_select =3D rcar_gen4_pcie_ep_func_conf_select,
-> > +	.get_dbi2_offset =3D rcar_gen4_pcie_ep_get_dbi2_offset,
-> > +};
-> > +
-> > +static int rcar_gen4_add_pcie_ep(struct rcar_gen4_pcie *rcar)
-> > +{
-> > +	struct dw_pcie_ep *ep =3D &rcar->dw.ep;
-> > +
-> > +	rcar->mode =3D DW_PCIE_EP_TYPE;
-> > +	ep->ops =3D &pcie_ep_ops;
-> > +
-> > +	return dw_pcie_ep_init(ep);
-> > +}
-> > +
-> > +static void rcar_gen4_remove_pcie_ep(struct rcar_gen4_pcie *rcar)
-> > +{
-> > +	dw_pcie_ep_exit(&rcar->dw.ep);
-> > +}
-> > +
-> > +static int rcar_gen4_pcie_ep_probe(struct platform_device *pdev)
-> > +{
-> > +	struct rcar_gen4_pcie *rcar;
-> > +	int err;
-> > +
-> > +	rcar =3D rcar_gen4_pcie_devm_alloc(pdev);
-> > +	if (IS_ERR(rcar))
-> > +		return PTR_ERR(rcar);
-> > +
-> > +	err =3D rcar_gen4_pcie_get_resources(rcar);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	err =3D rcar_gen4_pcie_prepare(rcar);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	err =3D rcar_gen4_add_pcie_ep(rcar);
-> > +	if (err)
-> > +		goto err_unprepare;
-> > +
-> > +	return 0;
-> > +
-> > +err_unprepare:
-> > +	rcar_gen4_pcie_unprepare(rcar);
-> > +
-> > +	return err;
-> > +}
-> > +
-> > +static void rcar_gen4_pcie_ep_remove(struct platform_device *pdev)
-> > +{
-> > +	struct rcar_gen4_pcie *rcar =3D platform_get_drvdata(pdev);
-> > +
-> > +	rcar_gen4_remove_pcie_ep(rcar);
-> > +	rcar_gen4_pcie_unprepare(rcar);
-> > +}
-> > +
-> > +static const struct of_device_id rcar_gen4_pcie_of_match[] =3D {
-> > +	{ .compatible =3D "renesas,rcar-gen4-pcie-ep", },
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, rcar_gen4_pcie_of_match);
-> > +
-> > +static struct platform_driver rcar_gen4_pcie_ep_driver =3D {
-> > +	.driver =3D {
-> > +		.name =3D "pcie-rcar-gen4-ep",
-> > +		.of_match_table =3D rcar_gen4_pcie_of_match,
-> > +	},
-> > +	.probe =3D rcar_gen4_pcie_ep_probe,
-> > +	.remove_new =3D rcar_gen4_pcie_ep_remove,
-> > +};
-> > +module_platform_driver(rcar_gen4_pcie_ep_driver);
-> > +
-> > +MODULE_DESCRIPTION("Renesas R-Car Gen4 PCIe endpoint controller driver=
-");
-> > +MODULE_LICENSE("GPL");
-> > --
-> > 2.25.1
-> >
+> - Mani
+> 
+> > If this flag specifies
+> > > whether the PCIe controller supports L1SS or not, then it is fine but apparantly
+> > > this specifies that all downstream devices are L1SS capable which you cannot
+> > > guarantee unless you poke into their LNKCAP during runtime.
+> > Not true at all.  This setting affects only RC and whatever device is
+> > connected to its single downstream
+> > port.
+> > 
+> > >
+> > > You should handle this in the driver itself.
+> > 
+> > The driver has no way of knowing if the PCI subsystem is going from power_save
+> > to power_supersave or vice-versa -- there is no notification chain for this.  So
+> > what you say is not currently possible from the driver's perspective.
+> > 
+> > Perhaps you would be happy if we changed it to "l1ss-support" in the
+> > spirit of the
+> > existing "clkreq-support" PCI parameter?
+> > 
+> > Regards,
+> > Jim Quinlan
+> > Broadcom STB/CMi
+> > 
+> > >
+> > > - Mani
+> > >
+> > > > +    type: boolean
+> > > > +
+> > > >    brcm,scb-sizes:
+> > > >      description: u64 giving the 64bit PCIe memory
+> > > >        viewport size of a memory controller.  There may be up to
+> > > > --
+> > > > 2.17.1
+> > > >
+> > >
+> > > --
+> > > மணிவண்ணன் சதாசிவம்
+> 
+> > Date: Tue, 22 Aug 2023 21:01:47 +0000 (UTC)
+> > From: Florian Fainelli <messenger@webex.com>
+> > To: james.quinlan@broadcom.com
+> > Subject: Join me now in my Personal Room
+> > 
+> > Hello,
+> > 
+> > Join me now in my Personal Room. 
+> > 
+> > JOIN WEBEX MEETING
+> > https://broadcom.webex.com/join/florian.fainelli  |  490 282 179
+> > 
+> > 
+> > JOIN FROM A VIDEO CONFERENCING SYSTEM OR APPLICATION
+> > Dial sip:florian.fainelli@broadcom.webex.com
+> > You can also dial 173.243.2.68 and enter your meeting number.
+> > 
+> > 
+> > 
+> > Can't join the meeting?
+> > https://help.webex.com/docs/DOC-5412
+> > 
+> > PHONE DIALING GUIDELINES:
+> >         - Use Call Me when you are using office phone or Jabber.
+> >         - Use Call Using Computer when you are at home or traveling.
+> > 
+> > In Office Calls:
+> > 	- From Broadcom Office: 1-MEETING (1-6338464)
+> > 
+> > Offsite Numbers Toll (Local) Calls:
+> > 	- Canada, Richmond: +1-778-308-4007
+> > 	- China: +86-400-819-1044
+> > 	- Germany, Munich: +49-892-312-9611
+> >         - Germany, Regensburg: +49-(9)419-923-5940
+> >         - India: 00-080-0050-1631
+> > 	- Israel: +97-239-786-477
+> >         - Japan, Tokyo: +81-366-344-937
+> >         - Malaysia: +603-2053-5189
+> > 	- Singapore: +65-6349-2439
+> > 	- South Korea, Seoul: +82-70-4732-0218
+> > 	- Taiwan, Taipei: +886-277-047-765
+> > 	- US, Denver: +1-720-726-9995
+> >         - US, Los Angeles: +1-310-616-5312
+> >         - US, Philadelphia: +1-215-305-7603
+> > 	- UK, London: +44-207-660-8897
+> >         - UK, Manchester: +44-161-619-8089
+> > 
+> > IMPORTANT NOTICE: Please note that this Webex service allows audio and other information sent during the session to be recorded, which may be discoverable in a legal matter. By joining this session, you automatically consent to such recordings. If you do not consent to being recorded, discuss your concerns with the host or do not join the session.
+> 
+> 
+> 
+> 
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
