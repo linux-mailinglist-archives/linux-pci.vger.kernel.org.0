@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05BA47878BE
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 21:39:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93F8F7878C7
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 21:39:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243352AbjHXTiJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Aug 2023 15:38:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40612 "EHLO
+        id S239015AbjHXTiK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Aug 2023 15:38:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243246AbjHXThi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 15:37:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4403F1B0;
-        Thu, 24 Aug 2023 12:37:37 -0700 (PDT)
+        with ESMTP id S243269AbjHXThl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 15:37:41 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B4DE10EF;
+        Thu, 24 Aug 2023 12:37:39 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D4E6E644D4;
-        Thu, 24 Aug 2023 19:37:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC6BAC433C8;
-        Thu, 24 Aug 2023 19:37:35 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C6731654DF;
+        Thu, 24 Aug 2023 19:37:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07B10C433C7;
+        Thu, 24 Aug 2023 19:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692905856;
-        bh=1t2ILVttvG2baHxYO98XJvw4Fig3WnypnrHpCN9ddyI=;
+        s=k20201202; t=1692905858;
+        bh=cRcXheMwP6+1IJC+RJCLu/hAsRt8eGGz+8gJIYd9Mr4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SOutsIpLq8bf8j3nxL6eCa8Al5TsCQhqNQAvgRIOorLBNx5vMo9jpjCGM45grTGBc
-         kXeMvwCl1BdVQQXg1XszUU3QV3WDbuoLTkM96H1OBDBt4com6BFkdm34LEwtLgSfO8
-         MWJ7GDvfc13KR/Hajcl33CyWWLq1XYd1bNqXdEfG3N7LNyr9BlYaNqs3+1uYBGUP48
-         O5DLZdSffx0yC1qg0DgEVuGNlX6+i5bOn197gEedw14lnTZ5xSvhlcAlry69l1bTAg
-         eHWErwzd5i+tvSKeXoKxm3gU/LSgbA/eUiO3jrCh4Nq8as6nnlTxu77PnmS02biGxx
-         uZND+HvvRPvfQ==
+        b=Fnx+q3wot+N0rwZlsRkmOo/a0ur9OMBcgzbVfO3Q8KyWCUaQeV6CE76fqtj4mNNnh
+         v97rUHuo2De5LEkm26rmn5ClFd2dKmfOKv9bac/BrqNzLcHhU8LGFEHi1VBDwqpRF8
+         LR3QN/egT81La04HcYJpfRMcO5J8/kOgQYM/6K+RP4MQ3Jtw1RmVYfXUsYGOYHzCmH
+         +uYo/OAZQ5v8jUuYBrZkZm4wTSAuHNursZE06y3MYBcj2gEkLEYkje42oaVtyVW6n6
+         GBynX9Mr9JsBjTYJ7OjXlFPRfktdzX7qTIp3xy52+JwD3M7oMe2Ma6/xOjCJFpANXp
+         qgLtgWRu8xhpg==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 06/12] PCI/AER: Simplify AER_RECOVER_RING_SIZE definition
-Date:   Thu, 24 Aug 2023 14:37:06 -0500
-Message-Id: <20230824193712.542167-7-helgaas@kernel.org>
+Subject: [PATCH 07/12] PCI: Simplify pci_pio_to_address()
+Date:   Thu, 24 Aug 2023 14:37:07 -0500
+Message-Id: <20230824193712.542167-8-helgaas@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230824193712.542167-1-helgaas@kernel.org>
 References: <20230824193712.542167-1-helgaas@kernel.org>
@@ -55,36 +55,38 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-ACPI Platform Error Interfaces (APEI) convey error information to the OS.
-If the APEI GHES driver receives information about PCI errors, it queues it
-in aer_recover_ring for processing by the PCI AER code.
-
-AER_RECOVER_RING_SIZE is the size of the aer_recover_ring FIFO and is
-arbitrary, with no direct connection to hardware.
-
-AER_RECOVER_RING_ORDER was only used to compute AER_RECOVER_RING_SIZE.
-Remove it and define AER_RECOVER_RING_SIZE directly.  No functional change
-intended.
+Simplify pci_pio_to_address() by removing an unnecessary local variable.
+No functional change intended.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/pcie/aer.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pci/pci.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 2bc03937452b..a30784dabdd7 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -981,8 +981,7 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 60230da957e0..4d2b11c71e62 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4191,16 +4191,12 @@ int pci_register_io_range(struct fwnode_handle *fwnode, phys_addr_t addr,
  
- #ifdef CONFIG_ACPI_APEI_PCIEAER
+ phys_addr_t pci_pio_to_address(unsigned long pio)
+ {
+-	phys_addr_t address = (phys_addr_t)OF_BAD_ADDR;
+-
+ #ifdef PCI_IOBASE
+-	if (pio >= MMIO_UPPER_LIMIT)
+-		return address;
+-
+-	address = logic_pio_to_hwaddr(pio);
++	if (pio < MMIO_UPPER_LIMIT)
++		return logic_pio_to_hwaddr(pio);
+ #endif
  
--#define AER_RECOVER_RING_ORDER		4
--#define AER_RECOVER_RING_SIZE		(1 << AER_RECOVER_RING_ORDER)
-+#define AER_RECOVER_RING_SIZE		16
+-	return address;
++	return (phys_addr_t) OF_BAD_ADDR;
+ }
+ EXPORT_SYMBOL_GPL(pci_pio_to_address);
  
- struct aer_recover_entry {
- 	u8	bus;
 -- 
 2.34.1
 
