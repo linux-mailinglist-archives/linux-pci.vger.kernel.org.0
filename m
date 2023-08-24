@@ -2,75 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0EB5786B11
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 11:05:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22FDF786C4B
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 11:51:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237052AbjHXJEj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Aug 2023 05:04:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41670 "EHLO
+        id S240694AbjHXJvG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Aug 2023 05:51:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240592AbjHXJEX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 05:04:23 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 516F4199A;
-        Thu, 24 Aug 2023 02:04:18 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1692867857;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eCMjIY4GzgEy46TDr3zke0Rgwv+ZthP+ksbKBkZYF4g=;
-        b=0sSAGTftbTYFtXlp20olU+1Gsj8EH7c33ds2hE73tK5EyguAfOUXNItblb8m2CzEc/RIVA
-        BTX+evvo5oHYoisahgumcXM79deUxq5Hl6abbFpKMjA5KjPzM3mznz2mRUFZ7+oSJ21R6e
-        Gi37VgKhnekPPNGSIMg6u9qVz4PCzUAlENcw+SJq+aH3cta9nE5rp/Yr462qvLRRWyFwVb
-        WBoiOyv7GKTmfWSgWFzyT7mV52dtJ7IWh21BcnFsidxb7i+uXrObB0pW5mEvCD4wh8UI1M
-        QoaQOQPZT1NqPYOCg0Vh823Fk14Vfnxcczajqsn1cti6EUPHxOsd55ZZ/nk6mA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1692867857;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eCMjIY4GzgEy46TDr3zke0Rgwv+ZthP+ksbKBkZYF4g=;
-        b=3G7HzwGxWw+wyu1+9cnBlG6vKpSDn0V+IY8uspaJDthWBjJymqqwNQpQ5+n0q7iz1jodX5
-        sTlD3Ihzp5n2I2Ag==
-To:     huangshaobo3@xiaomi.com
-Cc:     bhelgaas@google.com, chenwei29@xiaomi.com, darwi@linutronix.de,
-        huangshaobo3@xiaomi.com, jgg@ziepe.ca, kevin.tian@intel.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        weipengliang@xiaomi.com, wengjinfei@xiaomi.com
-Subject: Re: Subject: [PATCH] pci/msi: remove redundant calculation in
- msi_setup_msi_desc
-In-Reply-To: <1692862032-37839-1-git-send-email-huangshaobo3@xiaomi.com>
-References: <87bkexetfk.ffs@tglx>
- <1692862032-37839-1-git-send-email-huangshaobo3@xiaomi.com>
-Date:   Thu, 24 Aug 2023 11:04:16 +0200
-Message-ID: <87o7iwdd67.ffs@tglx>
+        with ESMTP id S240724AbjHXJvF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 05:51:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE0DA10C7;
+        Thu, 24 Aug 2023 02:51:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 814C561216;
+        Thu, 24 Aug 2023 09:51:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCCD2C433C8;
+        Thu, 24 Aug 2023 09:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692870662;
+        bh=9Jx0lVj3qzfW3B1hjRBsqUAJlImDihTKFS0HifQopt0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BeXEpdTAHbEmxGE0OInYqS1CXwTCazHHuBXAwLxH3Gj7/wm9Hkz82gJNsLsOJaFvB
+         DNsBUnNZ/0KRWGJ36+QwhQbKFhmSeAxp+GAVQridXrsUm+yZaEdTFcT/xWiK3esaI7
+         OMVdjII1Bb+5MJp1fW2S+RBDMVpvjWu26y6RPH23A1wQ716FJYh7stL0WrerCBd6z9
+         Yn3AezjFTXGkL6nkNnyHaOmXcVVDRDi6+x2U4P/owBr+5aLTVF6zqtmukrlTfZAwuD
+         52/qL2E6REVseu0TqD38R4ZjQEuiXlRLryH+wZlfbtecerP5qbXS2E4xeG0TznlbEC
+         vmQrAjomzX3Jw==
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     frank.li@nxp.com, Frank Li <Frank.Li@nxp.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>, bhelgaas@google.com,
+        devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com,
+        helgaas@kernel.org, imx@lists.linux.dev, kw@linux.com,
+        leoyang.li@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, mani@kernel.org, minghuan.lian@nxp.com,
+        mingkai.hu@nxp.com, robh+dt@kernel.org, roy.zang@nxp.com,
+        shawnguo@kernel.org, zhiqiang.hou@nxp.com
+Subject: Re: [PATCH v12 0/3] dwc general suspend/resume functionality
+Date:   Thu, 24 Aug 2023 11:50:54 +0200
+Message-Id: <169287064160.65192.2353415497041867559.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230821184815.2167131-1-Frank.Li@nxp.com>
+References: <20230821184815.2167131-1-Frank.Li@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Aug 24 2023 at 00:27, huangshaobo3@xiaomi.com wrote:
-> On Wed, 23 Aug 2023 16:15:27 +0200, Thomas Gleixner wrote:
->> I'm not seeing what this solves:
->
->> > -       if (control & PCI_MSI_FLAGS_64BIT)
->> > +       if (desc.pci.msi_attrib.is_64)
->
->> Both variants resolve to a test of a bit and a conditional instruction
->> on the result. It's exactly zero difference in terms of "calculation".
->
->> So all this does is change the memory location to test. Not more not
->> less. It does not generate better code and does not save anything.
->
-> It may not be appropriate to write to eliminate duplicate calculations,
-> can it be proposed again with clean code?
+On Mon, 21 Aug 2023 14:48:12 -0400, Frank Li wrote:
+> Change log
+>  - Change from v11 to v12
+>    Move exit_l2() to layerscape platform
+> 
+>  - Change from v10 to v11
+>    Fixed two missed dev_err message change base on Mani's feedback
+> 
+> [...]
 
-What's wrong with the existing code?
+Applied to controller/dwc, thanks!
+
+[1/3] PCI: Add macro PCIE_PME_TO_L2_TIMEOUT_US
+      https://git.kernel.org/pci/pci/c/e78bd50b4078
+[2/3] PCI: dwc: Implement general suspend/resume functionality for L2/L3 transitions
+      https://git.kernel.org/pci/pci/c/4774faf854f5
+[3/3] PCI: layerscape: Add power management support for ls1028a
+      https://git.kernel.org/pci/pci/c/9fda4d09905d
+
+Thanks,
+Lorenzo
