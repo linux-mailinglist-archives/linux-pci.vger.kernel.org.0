@@ -2,419 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9CE97872A2
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 16:56:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0917787370
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 17:04:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237428AbjHXOzk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Aug 2023 10:55:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38558 "EHLO
+        id S239251AbjHXPDm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Aug 2023 11:03:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241909AbjHXOzU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 10:55:20 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E340219AD
-        for <linux-pci@vger.kernel.org>; Thu, 24 Aug 2023 07:55:16 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2b9cdba1228so106605401fa.2
-        for <linux-pci@vger.kernel.org>; Thu, 24 Aug 2023 07:55:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1692888915; x=1693493715;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gzQfaxWKor5XYpPWiombsiXfp2BWU87Acm4Yvt7gS0k=;
-        b=WtJufP+OcsiWxDCutvAK2Teedne3sS5Wv9yVdqU8AYC0UbHMdAANLVdDn6W7SWlhlT
-         yx3v42ItaEphbN8U6mycGmyz8nglRaNmwhRbRzqAyvGz5orAcUoqTpSijai+NKvfoXLD
-         CPN5nwazT5Eh0I0gKCdETonMDP2IxW1SCiKXw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692888915; x=1693493715;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gzQfaxWKor5XYpPWiombsiXfp2BWU87Acm4Yvt7gS0k=;
-        b=EuaCy9gWgZLOgLTnA2YPt7Ffje+7u+xOUZygKoIayW+0LnVTJAzYxbzgMScw/cw4QV
-         g1pD4fmNPUFPESwTrL7NsjHxO+mE0GKe5Id0O6vFenJUqgdctg8lhBbMj8SRzAU34DZ6
-         JWEUoJT+CSXbFgwldfJiUeccHfGi3OYc/VbVuA2IloCqq1IgRnZNu1KB7qZuvp3Mos2C
-         kkV/BIZQKwTXHlBTnbgSe5FOXq4jC6FxCiiszDO7H9pitBwlxRHe3HcXv3Scd5HMqYSA
-         tNuS+CtAIQQEX4O0cgrUF7nlrWY7ZzYk6B2Bkm9plWBB/rg8r+/9Klr7mkmAiZBAvGWB
-         qm4A==
-X-Gm-Message-State: AOJu0YzCcuJO3uM9n/CXuq8sZ5LzJ472rRJ8xsSc7VH2HrA4M9NKBj2J
-        +KyqbUcRSU0ocM9b9MpHkNGEU7/IGPQyCColjYyTvyo24dLaVaO1NAo=
-X-Google-Smtp-Source: AGHT+IFQ0wH5Nggy/TvFwKoI+aqPdUzLT7fK7WqUAIIav/xfz02YF+iBSEGa7dXyJjGsFg3mswjgUEM/F9exnEwMf6A=
-X-Received: by 2002:a2e:b0db:0:b0:2bc:e470:1412 with SMTP id
- g27-20020a2eb0db000000b002bce4701412mr2167442ljl.43.1692888914923; Thu, 24
- Aug 2023 07:55:14 -0700 (PDT)
+        with ESMTP id S238062AbjHXPDj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 11:03:39 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DC69D19A6;
+        Thu, 24 Aug 2023 08:03:35 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8AxZ+hFcedkmJAbAA--.20381S3;
+        Thu, 24 Aug 2023 23:03:33 +0800 (CST)
+Received: from openarena.loongson.cn (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx_c5EcedkEYBiAA--.42989S2;
+        Thu, 24 Aug 2023 23:03:32 +0800 (CST)
+From:   Sui Jingfeng <suijingfeng@loongson.cn>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, loongson-kernel@lists.loongnix.cn
+Subject: [PATCH v5 0/2] PCI/VGA: Make the vga_is_firmware_default() less arch-dependent
+Date:   Thu, 24 Aug 2023 23:03:30 +0800
+Message-Id: <20230824150332.6434-1-suijingfeng@loongson.cn>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20230508220126.16241-1-jim2101024@gmail.com> <20230508220126.16241-2-jim2101024@gmail.com>
- <20230823074330.GF3737@thinkpad> <CA+-6iNwP+NbAdm0kNxZ5GwyPdTQyOjq7E2O-+mCU4fG-94BKBA@mail.gmail.com>
- <20230823181650.GL3737@thinkpad>
-In-Reply-To: <20230823181650.GL3737@thinkpad>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Thu, 24 Aug 2023 10:55:02 -0400
-Message-ID: <CA+-6iNzdYDJqwFofqkdS+iUK4w_s3eY_qa8JpbisyDn+fYg8XA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/5] dt-bindings: PCI: brcmstb: Add brcm,enable-l1ss property
-To:     Manivannan Sadhasivam <mani@kernel.org>
-Cc:     Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        Phil Elwell <phil@raspberrypi.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="00000000000072f32d0603ac6a94"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8Cx_c5EcedkEYBiAA--.42989S2
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Ww48Xr1ftFyUtrW8uFyxCrX_yoW3AFW8pr
+        18Wa13Ww4kG3WrKrW7XF15CF1YgrW8Ca97Jr1Igr48Cw4xKw18CF9IqF4jg347ArnFqw17
+        X3Z7Aa4rtw17JagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+        GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+        xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v2
+        6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+        xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+        Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7
+        IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+        6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
+        AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jea0PUUUUU=
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---00000000000072f32d0603ac6a94
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Currently, the vga_is_firmware_default() function only works on x86 and
+ia64, it is a no-op on the rest of the architectures. This patch completes
+the implementation for it, the added code tries to capture the PCI (e) VGA
+device that owns the firmware framebuffer address range before the PCI
+resource relocation. Since only one GPU could owns the firmware fb in
+normal case, things are almost done once we have determined the boot VGA
+successfully.
 
-On Wed, Aug 23, 2023 at 2:17=E2=80=AFPM Manivannan Sadhasivam <mani@kernel.=
-org> wrote:
->
-> On Wed, Aug 23, 2023 at 09:09:25AM -0400, Jim Quinlan wrote:
-> > On Wed, Aug 23, 2023 at 3:43=E2=80=AFAM Manivannan Sadhasivam <mani@ker=
-nel.org> wrote:
-> > >
-> > > On Mon, May 08, 2023 at 06:01:21PM -0400, Jim Quinlan wrote:
-> > > > This commit adds the boolean "brcm,enable-l1ss" property:
-> > > >
-> > > >   The Broadcom STB/CM PCIe HW -- a core that is also used by RPi SO=
-Cs --
-> > > >   requires the driver probe() to deliberately place the HW one of t=
-hree
-> > > >   CLKREQ# modes:
-> > > >
-> > > >   (a) CLKREQ# driven by the RC unconditionally
-> > > >   (b) CLKREQ# driven by the EP for ASPM L0s, L1
-> > > >   (c) Bidirectional CLKREQ#, as used for L1 Substates (L1SS).
-> > > >
-> > > >   The HW+driver can tell the difference between downstream devices =
-that
-> > > >   need (a) and (b), but does not know when to configure (c).  All d=
-evices
-> > > >   should work fine when the driver chooses (a) or (b), but (c) may =
-be
-> > > >   desired to realize the extra power savings that L1SS offers.  So =
-we
-> > > >   introduce the boolean "brcm,enable-l1ss" property to inform the d=
-river
-> > > >   that (c) is desired.  Setting this property only makes sense when=
- the
-> > > >   downstream device is L1SS-capable and the OS is configured to act=
-ivate
-> > > >   this mode (e.g. policy=3D=3Dpowersupersave).
-> > > >
-> > > >   This property is already present in the Raspian version of Linux,=
- but the
-> > > >   upstream driver implementation that follows adds more details and
-> > > >   discerns between (a) and (b).
-> > > >
-> > > > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> > > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 9 +++++=
-++++
-> > > >  1 file changed, 9 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.ya=
-ml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > > index 7e15aae7d69e..8b61c2179608 100644
-> > > > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > > > @@ -64,6 +64,15 @@ properties:
-> > > >
-> > > >    aspm-no-l0s: true
-> > > >
-> > > > +  brcm,enable-l1ss:
-> > > > +    description: Indicates that PCIe L1SS power savings
-> > > > +      are desired, the downstream device is L1SS-capable, and the
-> > > > +      OS has been configured to enable this mode.  For boards
-> > > > +      using a mini-card connector, this mode may not meet the
-> > > > +      TCRLon maximum time of 400ns, as specified in 3.2.5.2.2
-> > > > +      of the PCI Express Mini CEM 2.0 specification.
-> > >
-> > > As Lorenzo said, this property doesn't belong in DT. DT is supposed t=
-o specify
-> > > the hardware capability and not system/OS behavior.
-> >
-> > The "brcm,enable-l1ss" does NOT configure the OS behavior.
-> > It sets or not a mode bit to enable l1SS HW, whether or not the OS is
-> > configured for L1SS.
-> > It compensates for a problem in the PCIe core: the HW is not capable
-> > of dynamically
-> > switching between ASPM modes powersave and superpowersave.  I am active=
-ly
-> > advocating for our HW to change but that will take years.
-> >
->
-> Okay, then I would say that the property name and commit message were a b=
-it
-> misleading.
->
-> I had briefly gone through the driver patch now. As per my understanding,=
- you
-> have 2 modes in hw:
->
-> 1. Clock PM - Refclk will be turned off by the host if CLKREQ# is deasser=
-ted by
-> the device (driving high) when the link is in L1.
->
-> 2. L1SS - CLKREQ# will be used to decide L1SS entry and exit by the host.
+Note that this patch requires the target platform has a way to set up the
+kernel's screen_info. On muiltiple GPU co-exist machines, the firmware
+framebuffer should be put into the VRAM BAR of the primary GPU. While
+changing PCI class code of the GPU to be non-primary is not required for
+the arbitration purpose.
 
-No, there are three, as enumerated in the commit message of
-"PCI: brcmstb: Configure HW CLKREQ# mode appropriate for downstream device"
+The provided method is effective at least on x86, arm64 and loongarch, see
+below for more testing information.
 
->
-> Till now the driver only supported Clock PM through mode (1) but for supp=
-orting
-> L1SS you need to enable mode (2). And you are using this property to sele=
-ct mode
-> (2) when the L1SS supported devices are connected to the slot. Also, by
-> selecting this mode, you are loosing the benefit of mode (1) as both are =
-not
-> compatible.
->
-> My suggestion would be to just drop mode (1) and use mode (2) in the driv=
-er as
-> most of the recent devices should support L1SS (ofc there are exemptions)=
-.
-The disadvantage of this, as stated by the PCIe core HW designer, was
-that "doing so means
-we cannot enable the Cock Power Management capability since it may run afou=
-l of
-the Tclron requirement."
 
-I will attempt to press him on exactly what configurations and form
-factors would be
-vulnerable to this -- he was so convinced that it was a danger that he
-is against
-making L1SS mode the default.
+1) LS3A5000+LS7A1000 platform with three video cards:
 
->
-> But moving that decision to DT still doesn't seem right to me as the hard=
-ware
-> supports both modes and you are (ab)using DT to choose one or the other.
+$ lspci | grep VGA
 
-May be true, but there does not appear to be a Linux upstream-acceptable
-way of doing this on the command line either; please see my recent post
-on why this is so.
+00:06.1 VGA compatible controller: Loongson Technology LLC DC (Display Controller) (rev 01)
+03:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Caicos XT [Radeon HD 7470/8470 / R5 235/310 OEM]
+07:00.0 VGA compatible controller: S3 Graphics Ltd. Device 9070 (rev 01)
+08:00.0 VGA compatible controller: S3 Graphics Ltd. Device 9070 (rev 01)
 
-There will be cases where we want to override the default setting, either b=
-y
-command line or DT, but you folks have to give me a viable path on
-how to do this with it actually being accepted.
+Before apply this series:
 
-Regards,
-Jim Quinlan
-Broadcom STB/CM
+ pci 0000:00:06.1: vgaarb: setting as boot VGA device
+ pci 0000:00:06.1: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+ pci 0000:03:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:07:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:08:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ vgaarb: loaded
 
->
-> - Mani
->
-> > If this flag specifies
-> > > whether the PCIe controller supports L1SS or not, then it is fine but=
- apparantly
-> > > this specifies that all downstream devices are L1SS capable which you=
- cannot
-> > > guarantee unless you poke into their LNKCAP during runtime.
-> > Not true at all.  This setting affects only RC and whatever device is
-> > connected to its single downstream
-> > port.
-> >
-> > >
-> > > You should handle this in the driver itself.
-> >
-> > The driver has no way of knowing if the PCI subsystem is going from pow=
-er_save
-> > to power_supersave or vice-versa -- there is no notification chain for =
-this.  So
-> > what you say is not currently possible from the driver's perspective.
-> >
-> > Perhaps you would be happy if we changed it to "l1ss-support" in the
-> > spirit of the
-> > existing "clkreq-support" PCI parameter?
-> >
-> > Regards,
-> > Jim Quinlan
-> > Broadcom STB/CMi
-> >
-> > >
-> > > - Mani
-> > >
-> > > > +    type: boolean
-> > > > +
-> > > >    brcm,scb-sizes:
-> > > >      description: u64 giving the 64bit PCIe memory
-> > > >        viewport size of a memory controller.  There may be up to
-> > > > --
-> > > > 2.17.1
-> > > >
-> > >
-> > > --
-> > > =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=
-=A9=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=
-=AE=E0=AF=8D
->
-> > Date: Tue, 22 Aug 2023 21:01:47 +0000 (UTC)
-> > From: Florian Fainelli <messenger@webex.com>
-> > To: james.quinlan@broadcom.com
-> > Subject: Join me now in my Personal Room
-> >
-> > Hello,
-> >
-> > Join me now in my Personal Room.
-> >
-> > JOIN WEBEX MEETING
-> > https://broadcom.webex.com/join/florian.fainelli  |  490 282 179
-> >
-> >
-> > JOIN FROM A VIDEO CONFERENCING SYSTEM OR APPLICATION
-> > Dial sip:florian.fainelli@broadcom.webex.com
-> > You can also dial 173.243.2.68 and enter your meeting number.
-> >
-> >
-> >
-> > Can't join the meeting?
-> > https://help.webex.com/docs/DOC-5412
-> >
-> > PHONE DIALING GUIDELINES:
-> >         - Use Call Me when you are using office phone or Jabber.
-> >         - Use Call Using Computer when you are at home or traveling.
-> >
-> > In Office Calls:
-> >       - From Broadcom Office: 1-MEETING (1-6338464)
-> >
-> > Offsite Numbers Toll (Local) Calls:
-> >       - Canada, Richmond: +1-778-308-4007
-> >       - China: +86-400-819-1044
-> >       - Germany, Munich: +49-892-312-9611
-> >         - Germany, Regensburg: +49-(9)419-923-5940
-> >         - India: 00-080-0050-1631
-> >       - Israel: +97-239-786-477
-> >         - Japan, Tokyo: +81-366-344-937
-> >         - Malaysia: +603-2053-5189
-> >       - Singapore: +65-6349-2439
-> >       - South Korea, Seoul: +82-70-4732-0218
-> >       - Taiwan, Taipei: +886-277-047-765
-> >       - US, Denver: +1-720-726-9995
-> >         - US, Los Angeles: +1-310-616-5312
-> >         - US, Philadelphia: +1-215-305-7603
-> >       - UK, London: +44-207-660-8897
-> >         - UK, Manchester: +44-161-619-8089
-> >
-> > IMPORTANT NOTICE: Please note that this Webex service allows audio and =
-other information sent during the session to be recorded, which may be disc=
-overable in a legal matter. By joining this session, you automatically cons=
-ent to such recordings. If you do not consent to being recorded, discuss yo=
-ur concerns with the host or do not join the session.
->
->
->
->
->
-> --
-> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
+After apply this series:
 
---00000000000072f32d0603ac6a94
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+ pci 0000:03:00.0: vgaarb: BAR 0: [mem 0xe0050000000-0xe005fffffff 64bit pref] contains firmware FB [0xe0050000000-0xe00500ea5ff]
+ pci 0000:00:06.1: vgaarb: setting as boot VGA device
+ pci 0000:00:06.1: vgaarb: bridge control possible
+ pci 0000:03:00.0: vgaarb: setting as boot VGA device (overriding previous)
+ pci 0000:03:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:07:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:08:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ vgaarb: loaded
 
-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
-mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
-uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
-AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
-c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
-AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
-TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
-bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
-L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
-BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
-VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
-z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
-b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
-+R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
-AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
-75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
-AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
-AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCBJruPs6cljr1CaRjdcCsXlV572hxCt
-+8NugtT/qzsbazAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMzA4
-MjQxNDU1MTVaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAQ4+qyQ3kyX2Yq7Glw2u26Y0R3goKIxhCdpJVtgQWl642KjIZ
-4nelRRh7dp7Ub3GINZ+UCnWPf8/sJ2dvYxcFuiIM743hd7AXEPcS2R57hcyjzKZYRiW/j5YXDCex
-dRrkz5YcqU7mXKn9yOWh1ikhlMaGTHAv3EpsCeODQCyhPGpVIPwD0/nulx8ba4fvo4iCDFINLj3n
-C3dshIZILOf1g3tx/ZdYMlknfOkh8h+v+5LgKRb5sCBFEyeXUdKYjkGm6KNBlKMmLQ6/xSFf8X/r
-BrCU8ACu5qnKMZQHXV7nGaQ8xMBWovfZ0BKbnUJiNA+7JClaMhwQYtn2IroQkFx4Ig==
---00000000000072f32d0603ac6a94--
+$ dmesg | grep 0000:03:00.0
+
+ pci 0000:03:00.0: [1002:6778] type 00 class 0x030000
+ pci 0000:03:00.0: reg 0x10: [mem 0xe0050000000-0xe005fffffff 64bit pref]
+ pci 0000:03:00.0: reg 0x18: [mem 0xe0065300000-0xe006531ffff 64bit]
+ pci 0000:03:00.0: reg 0x20: [io  0x20000-0x200ff]
+ pci 0000:03:00.0: reg 0x30: [mem 0xfffe0000-0xffffffff pref]
+ pci 0000:03:00.0: vgaarb: BAR 0: [mem 0xe0050000000-0xe005fffffff 64bit pref] contains firmware FB [0xe0050000000-0xe00500ea5ff]
+ pci 0000:03:00.0: BAR 0: assigned [mem 0xe0030000000-0xe003fffffff 64bit pref]
+ pci 0000:03:00.0: BAR 2: assigned [mem 0xe0065200000-0xe006521ffff 64bit]
+ pci 0000:03:00.0: BAR 6: assigned [mem 0xe0065220000-0xe006523ffff pref]
+ pci 0000:03:00.0: BAR 4: assigned [io  0x5000-0x50ff]
+ pci 0000:03:00.0: vgaarb: setting as boot VGA device (overriding previous)
+ pci 0000:03:00.0: vgaarb: bridge control possible
+ pci 0000:03:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+
+Loongson UEFI firmware does not support specify which GPU to be the primary,
+the firmware set the ATI GPU(03:00.0) as the primary GPU with this hardware
+configuration by hardcode. However, the firmware do support passing the
+screen_into the to kernel. The problem is that VGAARB can not override the
+platform integrated one(00:06.1) before apply this series.
+
+Please note that BAR 0 of the ATI GPU moved by PCI core from
+[0xe0050000000-0xe005fffffff] to [0xe0030000000-0xe003fffffff], the
+vga_is_firmware_default() function will return wrong results by simply
+remove #ifdefs while without take relocation into account.
+
+
+2) ARM64 (Kunpeng 920) with three video card:
+
+Before apply this series:
+
+ pci 0000:02:00.0: vgaarb: setting as boot VGA device
+ pci 0000:02:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:05:00.0: vgaarb: setting as boot VGA device (overriding previous) <--- (Because it has IO or MEM enabled)
+ pci 0000:05:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:06:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ vgaarb: loaded
+
+After apply this series:
+
+ pci 0000:05:00.0: vgaarb: BAR 0: [mem 0x80010000000-0x8001fffffff 64bit pref] contains firmware FB [0x80010000000-0x800101e77ff]
+ pci 0000:02:00.0: vgaarb: setting as boot VGA device
+ pci 0000:02:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:05:00.0: vgaarb: Boot VGA selected by firmware
+ pci 0000:05:00.0: vgaarb: setting as boot VGA device (overriding previous) <--- (Because it owns firmware framebuffer)
+ pci 0000:05:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:06:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ vgaarb: loaded
+
+3) x86 with three video card
+
+lspci | grep VGA
+05:00.0 VGA compatible controller: Silicon Motion, Inc. SM750 (rev a1)
+0c:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Navi 10 [Radeon RX 5600 OEM/5600 XT / 5700/5700 XT] (rev c1)
+0d:00.0 VGA compatible controller: Jingjia Microelectronics Co Ltd Device 9100 (rev 01)
+
+Before apply this series:
+
+ pci 0000:05:00.0: vgaarb: setting as boot VGA device
+ pci 0000:05:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:0c:00.0: vgaarb: setting as boot VGA device (overriding previous)
+ pci 0000:0c:00.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+ pci 0000:0d:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ vgaarb: loaded
+ amdgpu 0000:0c:00.0: vgaarb: deactivate vga console
+ amdgpu 0000:0c:00.0: vgaarb: changed VGA decodes: olddecodes=io+mem,decodes=none:owns=io+me
+
+After apply this series:
+
+ pci 0000:0c:00.0: vgaarb: BAR 0: [mem 0xa0000000-0xafffffff 64bit pref] contains firmware FB [0xa0000000-0xa1fa3fff]
+ pci 0000:05:00.0: vgaarb: setting as boot VGA device
+ pci 0000:05:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:0c:00.0: vgaarb: Boot VGA selected by firmware
+ pci 0000:0c:00.0: vgaarb: setting as boot VGA device (overriding previous)
+ pci 0000:0c:00.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+ pci 0000:0d:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ vgaarb: loaded
+ amdgpu 0000:0c:00.0: vgaarb: deactivate vga console
+ amdgpu 0000:0c:00.0: vgaarb: changed VGA decodes: olddecodes=io+mem,decodes=none:owns=io+mem
+
+
+v2:
+	* Fix test robot warnnings and fix typos
+v3:
+	* Fix linkage problems if the global screen_info is not exported
+v4:
+	* Handle linkage problems by hiding behind of CONFIG_SYSFB,
+	* Drop side-effects and simplify.
+v5:
+	* Print the BAR and the framebuffer region (Bjorn)
+	* Use pci_dev_for_each_resource() (Bjorn)
+	* Cleanup the old mechanisms (Bjorn)
+	* Make the commit log simple by moving the extraneous details to cover letter (Bjorn)
+	* Carry on test on arm64
+
+Sui Jingfeng (2):
+  PCI/VGA: Make the vga_is_firmware_default() less arch-dependent
+  PCI/VGA: Remove vga_is_firmware_default() function
+
+ drivers/pci/vgaarb.c | 116 ++++++++++++++++++++++++++++---------------
+ 1 file changed, 75 insertions(+), 41 deletions(-)
+
+
+base-commit: 06c2afb862f9da8dc5efa4b6076a0e48c3fbaaa5
+-- 
+2.34.1
+
