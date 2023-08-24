@@ -2,49 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 62FA57878A6
+	by mail.lfdr.de (Postfix) with ESMTP id 3B3D87878A5
 	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 21:38:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243242AbjHXThi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S243244AbjHXThi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 24 Aug 2023 15:37:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41828 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243295AbjHXTh1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 15:37:27 -0400
+        with ESMTP id S243297AbjHXTh3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 15:37:29 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D7A1B0;
-        Thu, 24 Aug 2023 12:37:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA6C1BDF;
+        Thu, 24 Aug 2023 12:37:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4DB3164D1A;
-        Thu, 24 Aug 2023 19:37:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F8BAC433C8;
-        Thu, 24 Aug 2023 19:37:24 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 71B7F63E83;
+        Thu, 24 Aug 2023 19:37:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A40EEC433C8;
+        Thu, 24 Aug 2023 19:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692905844;
-        bh=uwnOv8ykMOOeD+ibS/fZChJMfKd7KuQkACNqTUSfvyA=;
+        s=k20201202; t=1692905846;
+        bh=FvE1bHfRSq51w6iPVI+P4zuQ2+MxIoKwCRP0Ix/yP+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j4myrX6gGHeNR8hZWhahtDggeTynf1j/bDmva4MFKEe0J04/E/9KtMPxSJVKWi9CI
-         QqBHNrEw1M0DvXVvTlDPpTbwA0IdZ+R55U3OfUXhW7k9KxREzID/r0ODOQQNNLJjvf
-         2Ctnd7Cd4D9aJHkA0BXwu28Bo6vRXxeh3Hyi/AafO/J92YnOmPqK0LRNgnFIcJNVmv
-         K+yiGMHWr92SGPCs70gHrd2xswfmAvGzElx4b8foMC/ZZ7rt1/cMiphDhpHh3M9/t+
-         9HpWhVRHpa/pKjzBVZ3A21DXVQG4hyu0tmspUPSX9UuUg6KxiXglMd/z5MB4GL0ULE
-         0yQeqZO4fMHzA==
+        b=g96co2jU1FMBovyFhehbgptyzNlsDEAqOgx7UEf7JnL/hPhLBHNM5GGQga0FETAZD
+         cP4rU2av5pEMkeMzPYZNRb5HcBCp+HyytKrPO9rUXQZ7Um2Tc3VMhNC9jpKuIlWtgW
+         ye4xZp/jitoGtGUrRGbC0rThujL4qeKvGEhUcPL+H8n6FYBfmpuXQTOFEyAnPvf97i
+         8KXcGmemPrWNZb+plyoTl3isFImLmAemghhS2bz26LjwKoCYZpPuTWIkarZSXYHjdJ
+         hXDGLCBBrOP+wxx5TJ7DawCa6NVkHhc1NJGrVjT+LqMHESvNFLxDeMcgzBn8CJVFpL
+         pwT7FP1eOXipw==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-Subject: [PATCH 01/12] PCI: mvebu: Remove unused struct mvebu_pcie.busn
-Date:   Thu, 24 Aug 2023 14:37:01 -0500
-Message-Id: <20230824193712.542167-2-helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 02/12] PCI: Unexport pcie_port_bus_type
+Date:   Thu, 24 Aug 2023 14:37:02 -0500
+Message-Id: <20230824193712.542167-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230824193712.542167-1-helgaas@kernel.org>
 References: <20230824193712.542167-1-helgaas@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
@@ -58,27 +55,27 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-The busn member of struct mvebu_pcie is unused, so drop it.
+pcie_port_bus_type is used only in pci-driver.c and pcie/portdrv_core.c and
+pcie/portdrv_pci.c.  None of these can be built as modules, so
+pcie_port_bus_type doesn't need to be exported.  Unexport it.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Pali Rohár <pali@kernel.org>
 ---
- drivers/pci/controller/pci-mvebu.c | 1 -
+ drivers/pci/pci-driver.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index c931b1b07b1d..60810a1fbfb7 100644
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -87,7 +87,6 @@ struct mvebu_pcie {
- 	struct resource io;
- 	struct resource realio;
- 	struct resource mem;
--	struct resource busn;
- 	int nports;
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index ae9baf801681..1f9845377eff 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1705,7 +1705,6 @@ struct bus_type pcie_port_bus_type = {
+ 	.name		= "pci_express",
+ 	.match		= pcie_port_bus_match,
  };
+-EXPORT_SYMBOL_GPL(pcie_port_bus_type);
+ #endif
  
+ static int __init pci_driver_init(void)
 -- 
 2.34.1
 
