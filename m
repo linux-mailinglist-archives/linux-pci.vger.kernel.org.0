@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E5DA7878A9
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 21:38:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05BA47878BE
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Aug 2023 21:39:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243258AbjHXThj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Aug 2023 15:37:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40598 "EHLO
+        id S243352AbjHXTiJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Aug 2023 15:38:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243303AbjHXThg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 15:37:36 -0400
+        with ESMTP id S243246AbjHXThi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 15:37:38 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE3C21B0;
-        Thu, 24 Aug 2023 12:37:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4403F1B0;
+        Thu, 24 Aug 2023 12:37:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6901C644D4;
-        Thu, 24 Aug 2023 19:37:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A183C433C7;
-        Thu, 24 Aug 2023 19:37:33 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D4E6E644D4;
+        Thu, 24 Aug 2023 19:37:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC6BAC433C8;
+        Thu, 24 Aug 2023 19:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692905853;
-        bh=fSgKkOz6KJKW51DIFdH/cpNTVrz4ktudomud2D4E+30=;
+        s=k20201202; t=1692905856;
+        bh=1t2ILVttvG2baHxYO98XJvw4Fig3WnypnrHpCN9ddyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tTImTmQa3rgEXJUfnXB3J7KmfFGqi0sDbao4O/gRM0G30huBZ1Pv+2lhNaQzGl0E6
-         2jPoal+4Pad7Qf9fuiZ9ajBTBjYQxqhUP3e3pFX6gNCeyb0beidOXPLCvQ/D9UI0vg
-         Y9Yd/AYC6wRBIG0No310afDAoXGyZI46EYP0Uh0WfTtzlWZh7i33g+EtYqwLgg8mj3
-         rAx9IJJQpUbZtabR07AnpauV4ZFW4EviZNbYoXefmwSGusRHHhRyiNxIDSDvALiG5y
-         yLJXZF6UUkPaiPqVyF8kHghjBlFXNeDnaxGG9Ge47Hq+V6InF7+KbIUBwBTyNC7Iog
-         DqPp9JnD7HFPQ==
+        b=SOutsIpLq8bf8j3nxL6eCa8Al5TsCQhqNQAvgRIOorLBNx5vMo9jpjCGM45grTGBc
+         kXeMvwCl1BdVQQXg1XszUU3QV3WDbuoLTkM96H1OBDBt4com6BFkdm34LEwtLgSfO8
+         MWJ7GDvfc13KR/Hajcl33CyWWLq1XYd1bNqXdEfG3N7LNyr9BlYaNqs3+1uYBGUP48
+         O5DLZdSffx0yC1qg0DgEVuGNlX6+i5bOn197gEedw14lnTZ5xSvhlcAlry69l1bTAg
+         eHWErwzd5i+tvSKeXoKxm3gU/LSgbA/eUiO3jrCh4Nq8as6nnlTxu77PnmS02biGxx
+         uZND+HvvRPvfQ==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 05/12] PCI: Use consistent put_user() pointer types
-Date:   Thu, 24 Aug 2023 14:37:05 -0500
-Message-Id: <20230824193712.542167-6-helgaas@kernel.org>
+Subject: [PATCH 06/12] PCI/AER: Simplify AER_RECOVER_RING_SIZE definition
+Date:   Thu, 24 Aug 2023 14:37:06 -0500
+Message-Id: <20230824193712.542167-7-helgaas@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230824193712.542167-1-helgaas@kernel.org>
 References: <20230824193712.542167-1-helgaas@kernel.org>
@@ -55,55 +55,36 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-We used u8, u16, and u32 for get_user() pointer types, but "unsigned char",
-"unsigned short", and "unsigned int" for put_user().
+ACPI Platform Error Interfaces (APEI) convey error information to the OS.
+If the APEI GHES driver receives information about PCI errors, it queues it
+in aer_recover_ring for processing by the PCI AER code.
 
-Use u8, u16, and u32 for put_user() for consistency.  No functional change
+AER_RECOVER_RING_SIZE is the size of the aer_recover_ring FIFO and is
+arbitrary, with no direct connection to hardware.
+
+AER_RECOVER_RING_ORDER was only used to compute AER_RECOVER_RING_SIZE.
+Remove it and define AER_RECOVER_RING_SIZE directly.  No functional change
 intended.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/syscall.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/pci/pcie/aer.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/pci/syscall.c b/drivers/pci/syscall.c
-index 61a6fe3cde21..803acbf33eb2 100644
---- a/drivers/pci/syscall.c
-+++ b/drivers/pci/syscall.c
-@@ -52,13 +52,13 @@ SYSCALL_DEFINE5(pciconfig_read, unsigned long, bus, unsigned long, dfn,
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 2bc03937452b..a30784dabdd7 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -981,8 +981,7 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
  
- 	switch (len) {
- 	case 1:
--		err = put_user(byte, (unsigned char __user *)buf);
-+		err = put_user(byte, (u8 __user *)buf);
- 		break;
- 	case 2:
--		err = put_user(word, (unsigned short __user *)buf);
-+		err = put_user(word, (u16 __user *)buf);
- 		break;
- 	case 4:
--		err = put_user(dword, (unsigned int __user *)buf);
-+		err = put_user(dword, (u32 __user *)buf);
- 		break;
- 	}
- 	pci_dev_put(dev);
-@@ -70,13 +70,13 @@ SYSCALL_DEFINE5(pciconfig_read, unsigned long, bus, unsigned long, dfn,
- 	   they get instead of a machine check on x86.  */
- 	switch (len) {
- 	case 1:
--		put_user(-1, (unsigned char __user *)buf);
-+		put_user(-1, (u8 __user *)buf);
- 		break;
- 	case 2:
--		put_user(-1, (unsigned short __user *)buf);
-+		put_user(-1, (u16 __user *)buf);
- 		break;
- 	case 4:
--		put_user(-1, (unsigned int __user *)buf);
-+		put_user(-1, (u32 __user *)buf);
- 		break;
- 	}
- 	pci_dev_put(dev);
+ #ifdef CONFIG_ACPI_APEI_PCIEAER
+ 
+-#define AER_RECOVER_RING_ORDER		4
+-#define AER_RECOVER_RING_SIZE		(1 << AER_RECOVER_RING_ORDER)
++#define AER_RECOVER_RING_SIZE		16
+ 
+ struct aer_recover_entry {
+ 	u8	bus;
 -- 
 2.34.1
 
