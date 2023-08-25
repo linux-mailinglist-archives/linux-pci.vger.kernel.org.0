@@ -2,55 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8293B788EB9
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 20:29:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB09F788EF2
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 20:52:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229817AbjHYS3I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Aug 2023 14:29:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51864 "EHLO
+        id S229478AbjHYSvt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Aug 2023 14:51:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231299AbjHYS2w (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 14:28:52 -0400
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5577E210B;
-        Fri, 25 Aug 2023 11:28:49 -0700 (PDT)
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-68bec3a9bdbso957168b3a.3;
-        Fri, 25 Aug 2023 11:28:49 -0700 (PDT)
+        with ESMTP id S229722AbjHYSvo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 14:51:44 -0400
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B82591BD2;
+        Fri, 25 Aug 2023 11:51:42 -0700 (PDT)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-68a410316a2so1059733b3a.0;
+        Fri, 25 Aug 2023 11:51:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692988129; x=1693592929;
+        d=1e100.net; s=20221208; t=1692989502; x=1693594302;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bVPjVbkeFQW+k+rS69O04AwUmTqmPJ8iKUK95i5fNeE=;
-        b=fF1w4QJ2VwB0G5XFpAfz7lf3QwohA/PJ0Z2+2/eYTlYO2TGgH0wLRD09dhp2GVs3JF
-         FzYVP/VQy7QiO1bUMoPLf7pb4hJW3UVO/G94F2rIq29R4CpTh72k2VZp2pAO6fc/O0Xd
-         9vqpE7SBhT4r2HXmNh00tjZjS7Jh2JHEtpNw5Yv8vsBWQ0RK38BW2vcKZFrupl0SADVH
-         pcpEvBthPGiPlSWhc9/zcu+gDdEknteOkmUIeEuOj7/ffzxK/v0qvMx76D7oTvwnuvo7
-         LaFX3A+5QnfJ8WhQwcz28UcvKD3gIOyzHMIofOH8YwFo5RXVSrMEWdz04YnKJuwpdDyh
-         RF1Q==
-X-Gm-Message-State: AOJu0YzB4mT0ZjyEUyuVFsX9hJfrzqkc4hOyMIdTXw6lIhmjTHzxBiHG
-        U9DQyNsvXp5YK4R9Ym5Vm2M=
-X-Google-Smtp-Source: AGHT+IGsoglscHwEIlTZ9oCa6M57NI5i3jg8ZDWq9H9QWb00TMRmROKwNFAFGhVqz2Xvhx08qVK2CA==
-X-Received: by 2002:a05:6a20:244f:b0:133:215e:7230 with SMTP id t15-20020a056a20244f00b00133215e7230mr18563461pzc.55.1692988128639;
-        Fri, 25 Aug 2023 11:28:48 -0700 (PDT)
+        bh=jK7KD8HF4PhBc+cTqfWRNS12aut4EeqmSJ9uZlCQTS4=;
+        b=j8/2bG+KneD+xvHrdd6FPkex/OT2piEuvTzXIrxpFeU42ySnQHkTxkOhLWpl/LLcZs
+         OjR/W2NzdZ27elBupCDR3CUiPrcEJZW2NKVUgdfoiHjlWBsExsNnsAGPQwkKc1E1YGuh
+         +p643DtanWQXQaawrosc5IMEHo2SkVXStSTSE792PzPoGsb3PH7xVmWc7R8bj/stmoO8
+         CdMduM82Mg3YeEbioanfed5xJWCxqzIcIBtf3LpwrHwfYdhlG0uxX3DFTsvWwabr/lcf
+         kCMw1BQeDVIvki8xScO39OCoQ7a7HZxkojmqFxhFC8M5mwlQZf3H4jYroT++OdCrYY74
+         ov1w==
+X-Gm-Message-State: AOJu0YzsfaGQqjPhayEwb4n6khXYBLsDPrTFU86Cnh3j6ksbkCmWlY0y
+        8wGEo5IWh+pnpILj1KNotLc=
+X-Google-Smtp-Source: AGHT+IFmcnlS3VBsWnTplhrPL0WM6frgzGzBegYlGQBjcSUOr8KxYSgf1h8BlPYi+CSzCX3cNts1nw==
+X-Received: by 2002:a05:6a21:999f:b0:14c:d5d8:9fed with SMTP id ve31-20020a056a21999f00b0014cd5d89fedmr162958pzb.54.1692989502152;
+        Fri, 25 Aug 2023 11:51:42 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id bm2-20020a056a00320200b00682a61fa525sm1918298pfb.91.2023.08.25.11.28.47
+        by smtp.gmail.com with ESMTPSA id t21-20020aa79395000000b0068be3489b0dsm1961572pfe.172.2023.08.25.11.51.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Aug 2023 11:28:48 -0700 (PDT)
-Date:   Sat, 26 Aug 2023 03:28:46 +0900
+        Fri, 25 Aug 2023 11:51:41 -0700 (PDT)
+Date:   Sat, 26 Aug 2023 03:51:40 +0900
 From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] Improvements to Qcom PCIe EP and EPF MHI drivers
-Message-ID: <20230825182846.GC131548@rocinante>
-References: <20230717065459.14138-1-manivannan.sadhasivam@linaro.org>
+To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        konrad.dybcio@linaro.org, mani@kernel.org,
+        quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+        dmitry.baryshkov@linaro.org,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] arm64: qcom: sa8775p: add support for PCIe
+Message-ID: <20230825185140.GD131548@rocinante>
+References: <1689960276-29266-1-git-send-email-quic_msarkar@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230717065459.14138-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <1689960276-29266-1-git-send-email-quic_msarkar@quicinc.com>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
@@ -63,18 +70,15 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hello,
 
-> This series adds eDMA (embedded DMA) support to the Qcom PCIe EP and EPF 
-> MHI drivers for offloading the transfers between PCIe bus and the EP
-> memory. eDMA support makes use of the recently merged eDMA DMAEngine driver
-> and its integration with DWC PCIe EP core [1].
-> 
-> This series also adds Qcom SM8450 SoC support to EPF MHI driver that has
-> the eDMA support built-in.
+> Update the relavent DT bindings for PCIe, add new config to the phy
+> driver add pcie and phy nodes to the .dtsi file and enable then in 
+> board .dts file for the sa8775p-ride platform.
 
-Apologies, I accidentally responded to an older series:
+Applied to controller/qcom, thank you!
 
-  https://lore.kernel.org/linux-pci/20230825175729.GB131548@rocinante
-
-This series version was applied, of course.
+[1/4] dt-bindings: PCI: qcom: Add sa8775p compatible
+      https://git.kernel.org/pci/pci/c/9169e03946b9
+[2/4] PCI: qcom: Add support for sa8775p SoC
+      https://git.kernel.org/pci/pci/c/d60379d65d2b
 
 	Krzysztof
