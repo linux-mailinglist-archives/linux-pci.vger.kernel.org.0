@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9F607883AE
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 11:33:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25B487883B8
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 11:33:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244302AbjHYJcq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S244258AbjHYJcq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Fri, 25 Aug 2023 05:32:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54202 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244262AbjHYJca (ORCPT
+        with ESMTP id S244261AbjHYJca (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 05:32:30 -0400
 Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F19F21FE3;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 01C071FEC;
         Fri, 25 Aug 2023 02:32:26 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="6.02,195,1688396400"; 
-   d="scan'208";a="177667246"
+   d="scan'208";a="177667249"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
   by relmlie6.idc.renesas.com with ESMTP; 25 Aug 2023 18:32:24 +0900
 Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 49BDA40134E1;
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 6DE9740134E8;
         Fri, 25 Aug 2023 18:32:24 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
@@ -31,9 +31,9 @@ Cc:     marek.vasut+renesas@gmail.com, fancer.lancer@gmail.com,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v20 09/19] PCI: dwc: Add EDMA_UNROLL capability flag
-Date:   Fri, 25 Aug 2023 18:32:09 +0900
-Message-Id: <20230825093219.2685912-10-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v20 10/19] PCI: dwc: Expose dw_pcie_ep_exit() to module
+Date:   Fri, 25 Aug 2023 18:32:10 +0900
+Message-Id: <20230825093219.2685912-11-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230825093219.2685912-1-yoshihiro.shimoda.uh@renesas.com>
 References: <20230825093219.2685912-1-yoshihiro.shimoda.uh@renesas.com>
@@ -47,55 +47,32 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Renesas R-Car Gen4 PCIe controllers have an unexpected register value in
-the eDMA CTRL register. So, add a new capability flag "EDMA_UNROLL"
-which would force the unrolled eDMA mapping for the problematic device.
+Since no PCIe controller drivers call this, this change is not required
+for now. But, Renesas R-Car Gen4 PCIe controller driver will call this
+and if the controller driver is built as a kernel module, the following
+build error happens. So, expose dw_pcie_ep_exit() for it.
 
-Suggested-by: Serge Semin <fancer.lancer@gmail.com>
+ERROR: modpost: "dw_pcie_ep_exit" [drivers/pci/controller/dwc/pcie-rcar-gen4-ep-drv.ko] undefined!
+
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/controller/dwc/pcie-designware.c | 8 +++++++-
- drivers/pci/controller/dwc/pcie-designware.h | 5 +++--
- 2 files changed, 10 insertions(+), 3 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index c4998194fe74..4812ce040f1e 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -883,8 +883,14 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
- 	 * Indirect eDMA CSRs access has been completely removed since v5.40a
- 	 * thus no space is now reserved for the eDMA channels viewport and
- 	 * former DMA CTRL register is no longer fixed to FFs.
-+	 *
-+	 * Note that Renesas R-Car S4-8's PCIe controllers for unknown reason
-+	 * have zeros in the eDMA CTRL register even though the HW-manual
-+	 * explicitly states there must FFs if the unrolled mapping is enabled.
-+	 * For such cases the low-level drivers are supposed to manually
-+	 * activate the unrolled mapping to bypass the auto-detection procedure.
- 	 */
--	if (dw_pcie_ver_is_ge(pci, 540A))
-+	if (dw_pcie_ver_is_ge(pci, 540A) || dw_pcie_cap_is(pci, EDMA_UNROLL))
- 		val = 0xFFFFFFFF;
- 	else
- 		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index b731e38a71fc..c7759a508ca9 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -51,8 +51,9 @@
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index feeb2ea3c9c7..6eb897572d2b 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -696,6 +696,7 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
  
- /* DWC PCIe controller capabilities */
- #define DW_PCIE_CAP_REQ_RES		0
--#define DW_PCIE_CAP_IATU_UNROLL		1
--#define DW_PCIE_CAP_CDM_CHECK		2
-+#define DW_PCIE_CAP_EDMA_UNROLL		1
-+#define DW_PCIE_CAP_IATU_UNROLL		2
-+#define DW_PCIE_CAP_CDM_CHECK		3
+ 	pci_epc_mem_exit(epc);
+ }
++EXPORT_SYMBOL_GPL(dw_pcie_ep_exit);
  
- #define dw_pcie_cap_is(_pci, _cap) \
- 	test_bit(DW_PCIE_CAP_ ## _cap, &(_pci)->caps)
+ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
+ {
 -- 
 2.25.1
 
