@@ -2,132 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 745A77891F4
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Aug 2023 00:50:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B44C3789230
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Aug 2023 01:03:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230163AbjHYWuS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Aug 2023 18:50:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37338 "EHLO
+        id S229783AbjHYXDR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Aug 2023 19:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230359AbjHYWuM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 18:50:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6A69E77;
-        Fri, 25 Aug 2023 15:50:09 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7845F60F87;
-        Fri, 25 Aug 2023 22:50:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C734C433C7;
-        Fri, 25 Aug 2023 22:50:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693003808;
-        bh=nMm5vYE7JaMjDPPEEJlEV36deplR3ba5q9rfZPaSY1k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=AMtEe3DOiGC1QLWjcFukR0M7E2vIwgKNtgx5fHNyxgA1n7hamGnAADlmamBiCVXG2
-         Wcty+n3SunqeQFcfRgHo7PDo5jJywwHuB7BH/OnV25WhKjOCYQW451ZLamu65Rrxyc
-         M8Eys1xc6pioCdEjia+rq54QUWucD8VZfFENuGgK656UzCfRZTZgMYMjryg3QjeGNj
-         J8246kA3g2WB5c/+IIV/QNjMRPYAxPdD07TK1oWMOdM0fVHN+LzHyU2llpaRZBDyJj
-         hLuzT8C6qH+RWQw0ILn5ZRotXukNy9zOzLyumNpWgRsliHNAK2eyDtZuFYPt3n4z2M
-         4fyayf86TzJqg==
-Date:   Fri, 25 Aug 2023 17:50:06 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
+        with ESMTP id S230378AbjHYXDN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 19:03:13 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5833D2117
+        for <linux-pci@vger.kernel.org>; Fri, 25 Aug 2023 16:03:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693004590; x=1724540590;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=D+n8FOf2EUbEzVVnxZ3i+tksrWjGpWMByBhLJXJGWPs=;
+  b=CvkhAl4yFDuyfQVb9Jbgy/AqTRaswd4l2OVlf2KT13dug/MU1jJf6+N7
+   7WwpLSiVW7hlFxmbVU6sAHsLIldErWSg+qHcwSDd1eylaUvZl9css6gpy
+   ICbrDR6zcT5BOyX4/s5VaUNOIiaLvqzcDa3HD3QFhywKi8M9/qCj4IMzx
+   sM62u5ThDDof/hssdtmZ5KPqf7rA/OpPHzv6cfmfBSuuA1ncoiq00URQo
+   7XarXxhfCtTcbgjoB6rc8GTt2/F8bU9agj4/tRUeMrYsf7ptWSh3aQ+Bd
+   jyk9d1wC2ZSfgow9HOvTKZ2CzF59g4xvVXdghrHzmGTP4hIUlEBcatX1t
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10813"; a="378604037"
+X-IronPort-AV: E=Sophos;i="6.02,202,1688454000"; 
+   d="scan'208";a="378604037"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 16:03:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.01,202,1684825200"; 
+   d="scan'208";a="881317071"
+Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Aug 2023 16:03:13 -0700
+Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qZfpb-00046I-1u;
+        Fri, 25 Aug 2023 23:03:07 +0000
+Date:   Sat, 26 Aug 2023 07:03:06 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     lpieralisi@kernel.org, kw@linux.com, kishon@kernel.org,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] PCI: epf-mhi: Make use of the alignment
- restriction from EPF core
-Message-ID: <20230825225006.GA642059@bhelgaas>
+Cc:     oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: [pci:controller/qcom-edma 2/7] ERROR: modpost: "__umoddi3"
+ [drivers/pci/endpoint/functions/pci-epf-mhi.ko] undefined!
+Message-ID: <202308260652.rZm0oJCE-lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230717065459.14138-3-manivannan.sadhasivam@linaro.org>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jul 17, 2023 at 12:24:54PM +0530, Manivannan Sadhasivam wrote:
-> Instead of hardcoding the alignment restriction in the EPF_MHI driver, make
-> use of the info available from the EPF core that reflects the alignment
-> restriction of the endpoint controller.
-> 
-> For this purpose, let's introduce the get_align_offset() static function.
+Hi Manivannan,
 
-I thought this might be related to the [1/7] patch since they both
-mention an alignment restriction in the EPF core, but [1/7] sets
-pci_epc_features.align and this patch doesn't reference .align, so
-this must be a different alignment restriction?
+First bad commit (maybe != root cause):
 
-I'm sure there's nothing wrong here, and this is already applied, so
-no need to do anything unless .align *should* appear here.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/qcom-edma
+head:   bcf054a26edc6cbe6d6b3af6570e4e3e2afc81ad
+commit: e0ea11b2b094d356d3baaf689aea9ba8f0ddd775 [2/7] PCI: epf-mhi: Make use of the alignment restriction from EPF core
+config: parisc-allmodconfig (https://download.01.org/0day-ci/archive/20230826/202308260652.rZm0oJCE-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 13.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20230826/202308260652.rZm0oJCE-lkp@intel.com/reproduce)
 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/pci/endpoint/functions/pci-epf-mhi.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> index 9c1f5a154fbd..bb7de6884824 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> @@ -102,6 +102,11 @@ struct pci_epf_mhi {
->  	int irq;
->  };
->  
-> +static size_t get_align_offset(struct pci_epc *epc, u64 addr)
-> +{
-> +	return addr % epc->mem->window.page_size;
-> +}
-> +
->  static int __pci_epf_mhi_alloc_map(struct mhi_ep_cntrl *mhi_cntrl, u64 pci_addr,
->  				 phys_addr_t *paddr, void __iomem **vaddr,
->  				 size_t offset, size_t size)
-> @@ -134,7 +139,7 @@ static int pci_epf_mhi_alloc_map(struct mhi_ep_cntrl *mhi_cntrl, u64 pci_addr,
->  {
->  	struct pci_epf_mhi *epf_mhi = to_epf_mhi(mhi_cntrl);
->  	struct pci_epc *epc = epf_mhi->epf->epc;
-> -	size_t offset = pci_addr & (epc->mem->window.page_size - 1);
-> +	size_t offset = get_align_offset(epc, pci_addr);
->  
->  	return __pci_epf_mhi_alloc_map(mhi_cntrl, pci_addr, paddr, vaddr,
->  				      offset, size);
-> @@ -161,7 +166,7 @@ static void pci_epf_mhi_unmap_free(struct mhi_ep_cntrl *mhi_cntrl, u64 pci_addr,
->  	struct pci_epf_mhi *epf_mhi = to_epf_mhi(mhi_cntrl);
->  	struct pci_epf *epf = epf_mhi->epf;
->  	struct pci_epc *epc = epf->epc;
-> -	size_t offset = pci_addr & (epc->mem->window.page_size - 1);
-> +	size_t offset = get_align_offset(epc, pci_addr);
->  
->  	__pci_epf_mhi_unmap_free(mhi_cntrl, pci_addr, paddr, vaddr, offset,
->  				 size);
-> @@ -185,7 +190,8 @@ static int pci_epf_mhi_read_from_host(struct mhi_ep_cntrl *mhi_cntrl, u64 from,
->  				      void *to, size_t size)
->  {
->  	struct pci_epf_mhi *epf_mhi = to_epf_mhi(mhi_cntrl);
-> -	size_t offset = from % SZ_4K;
-> +	struct pci_epc *epc = epf_mhi->epf->epc;
-> +	size_t offset = get_align_offset(epc, from);
->  	void __iomem *tre_buf;
->  	phys_addr_t tre_phys;
->  	int ret;
-> @@ -213,7 +219,8 @@ static int pci_epf_mhi_write_to_host(struct mhi_ep_cntrl *mhi_cntrl,
->  				     void *from, u64 to, size_t size)
->  {
->  	struct pci_epf_mhi *epf_mhi = to_epf_mhi(mhi_cntrl);
-> -	size_t offset = to % SZ_4K;
-> +	struct pci_epc *epc = epf_mhi->epf->epc;
-> +	size_t offset = get_align_offset(epc, to);
->  	void __iomem *tre_buf;
->  	phys_addr_t tre_phys;
->  	int ret;
-> -- 
-> 2.25.1
-> 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308260652.rZm0oJCE-lkp@intel.com/
+
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/netfilter/ipvs/ip_vs_rr.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/netfilter/ipvs/ip_vs_wrr.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/netfilter/ipvs/ip_vs_lc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/netfilter/ipvs/ip_vs_wlc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/netfilter/ipvs/ip_vs_fo.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/netfilter/ipvs/ip_vs_ovf.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/netfilter/ipvs/ip_vs_lblc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/netfilter/ipvs/ip_vs_lblcr.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/netfilter/ipvs/ip_vs_dh.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/netfilter/ipvs/ip_vs_sh.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/netfilter/ipvs/ip_vs_sed.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/netfilter/ipvs/ip_vs_nq.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/netfilter/ipvs/ip_vs_twos.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/netfilter/ipvs/ip_vs_ftp.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/netfilter/ipvs/ip_vs_pe_sip.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/netfilter/nf_defrag_ipv4.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/netfilter/nf_reject_ipv4.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/netfilter/iptable_nat.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/netfilter/iptable_raw.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/ip_tunnel.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/ipip.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/ip_gre.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/udp_tunnel.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/ip_vti.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/ah4.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/esp4.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/xfrm4_tunnel.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/tunnel4.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/inet_diag.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/tcp_diag.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/udp_diag.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/raw_diag.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/xfrm/xfrm_algo.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/xfrm/xfrm_user.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/unix/unix_diag.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv6/netfilter/ip6table_raw.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv6/netfilter/ip6table_nat.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv6/netfilter/nf_defrag_ipv6.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv6/netfilter/nf_reject_ipv6.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv6/ah6.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv6/esp6.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv6/xfrm6_tunnel.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv6/tunnel6.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv6/mip6.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv6/sit.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv6/ip6_udp_tunnel.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_ar9331.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_brcm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_dsa.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_gswip.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_hellcreek.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_ksz.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_lan9303.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_mtk.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_none.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_ocelot.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_ocelot_8021q.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_qca.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_rtl4_a.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_rtl8_4.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_rzn1_a5psw.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_sja1105.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_trailer.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/dsa/tag_xrs700x.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/8021q/8021q.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/xdp/xsk_diag.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/mptcp/mptcp_diag.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/mptcp/mptcp_crypto_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/mptcp/mptcp_token_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/packet/af_packet.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/packet/af_packet_diag.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/key/af_key.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/bridge/netfilter/nf_conntrack_bridge.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/bridge/netfilter/ebtables.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/bridge/netfilter/ebtable_broute.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/bridge/netfilter/ebtable_filter.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/bridge/netfilter/ebtable_nat.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/bridge/bridge.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/sunrpc/sunrpc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/sunrpc/auth_gss/auth_rpcgss.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/sunrpc/auth_gss/rpcsec_gss_krb5.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/kcm/kcm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/atm/atm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/atm/lec.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/atm/mpoa.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/sctp/sctp_diag.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/tipc/diag.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/smc/smc_diag.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/caif/caif.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/caif/chnl_net.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/caif/caif_socket.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/caif/caif_usb.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/6lowpan/6lowpan.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ieee802154/6lowpan/ieee802154_6lowpan.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/ieee802154/ieee802154_socket.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/nfc/nci/nci.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/nfc/nci/nci_spi.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/nfc/nfc_digital.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/vmw_vsock/vsock_diag.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in net/hsr/hsr.o
+>> ERROR: modpost: "__umoddi3" [drivers/pci/endpoint/functions/pci-epf-mhi.ko] undefined!
+ERROR: modpost: ".L858" [drivers/mtd/nand/raw/nand.ko] undefined!
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
