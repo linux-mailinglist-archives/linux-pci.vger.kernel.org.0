@@ -2,53 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 34DA1787CE0
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 03:14:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DFAE787D2C
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 03:31:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238642AbjHYBOA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Aug 2023 21:14:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51814 "EHLO
+        id S236049AbjHYBbG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Aug 2023 21:31:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236757AbjHYBNs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 21:13:48 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 724A51BF1;
-        Thu, 24 Aug 2023 18:13:46 -0700 (PDT)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37OJEN3l010276;
-        Fri, 25 Aug 2023 01:13:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-03-30;
- bh=uhEjckime6bsF1xq0dmnY+LwEHiDmuGwjHJQ7hVpFpk=;
- b=xT4JwIyBXmmvopnLoTqXTVQDIyq4jGSov+rjFGn7JrEsFJ0nGwiZ57rChZOcNtxS8gnd
- 32i9D/0gBNdAu6wmrSv4Tj5XGTtiOMTcrD7d8d7sIx9zu+UBUHmYA/WieiP0xKAeu3gF
- eHe1MsKPNrAZDzygQo0FmmEXELlSaZ2xMctwoLvlgndq1xchpQqBIi92sT4g6z/NC03I
- Sq45+sJdryY0Xt3UtsdNEeUPJQQwXRC0pKx/6zSsrk8N0z228cv46+9188htxHxgrJuH
- O19AK6RPcqphkoDDRpvAZZx3qvPOulLbxkXwvTBtVM7s38ELpJEo9mWBxT45N4g00a45 fg== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3sn1yv5ft9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Aug 2023 01:13:38 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 37P03oRV035625;
-        Fri, 25 Aug 2023 01:13:37 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3sn1ywqfhw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Aug 2023 01:13:37 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37P1DVDv019787;
-        Fri, 25 Aug 2023 01:13:36 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3sn1ywqf8n-3;
-        Fri, 25 Aug 2023 01:13:36 +0000
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
+        with ESMTP id S230008AbjHYBbA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 21:31:00 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BABC1707;
+        Thu, 24 Aug 2023 18:30:58 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-68a4bcf8a97so371279b3a.1;
+        Thu, 24 Aug 2023 18:30:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692927057; x=1693531857;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Z7ELdHtTL5wYh7Mk37fDEn5rWUjAm0EdSJQg/6HWPPQ=;
+        b=Tmlz4s2OgK58rZBzZOqQBOTKsewJsSbr0lEcw148TWgipwzPC4h3leu6DHGlT2r85/
+         Uip0aLw7OTRJ61MyT/fB+2M0fG4g6LWvilyhBIrARSkzuGacd0puWelGLD8sQFEorTQR
+         iWM9dveRRwtXAAMgsQ1/wPN9YLRbtznx8UH3GB/Gc6Kl2jKJWnRhPY+VLZrWbWEKV9yS
+         nafEaqYDFpVR5/DPJmFBDt9xOQCxtCGGHTqymDFSbzyjxleu1nAu7M/vlGloF4CFWAV1
+         1Mn9tQCCGOF3Z8ZylRnT1zAlhIOy4YB5/0u2bxeQjx03+CoamjdoA+ECCtWPkVPf8KF0
+         7rAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692927057; x=1693531857;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z7ELdHtTL5wYh7Mk37fDEn5rWUjAm0EdSJQg/6HWPPQ=;
+        b=fM6GEZbv05t42z2NV4sGBa9/2lUb7io90jGSiDUW8YhiDysvXswGIFawZ9ZP0kTMcE
+         gCLiKMevD5iXdtA5LuXFBolfAIJ/roaOo8b52DkkE2kuaPDy3jCmskFd48YlfA210aPB
+         yx7XYOotFIoJkAkGbI+tgj7xVxUN+LwKcnYuzUzEOVK+Xyb6vsfQ0AqWBre2JukZnzAi
+         utyi/1jjs1rDNSrJ1NzVHeGM/OabHxipQMvz2zRCQNU0uu+9rhFK3Tdv6Zd2DWhBJKTM
+         /fLViFtJu/M/BZAxnoUIClMrSDaoDTBE3kHIUYSfgdKNXBYmbwM0k2n10DhoNknjjYcm
+         x34Q==
+X-Gm-Message-State: AOJu0YzfjOT/Rp8EsVPasCS3PmWILcds+i4rAwQs02vHZor4rpX1rymb
+        qczmV1p/UcaV7R/DqaSVORo=
+X-Google-Smtp-Source: AGHT+IGkdO3IAVMt9b8NA6cgzJYFAF5G39z8+OmHSySwOLhyKezYRWYjT2VqAbDb9GTS6Db8Rjs5TA==
+X-Received: by 2002:a05:6a00:1a13:b0:68a:49bc:9be3 with SMTP id g19-20020a056a001a1300b0068a49bc9be3mr14483212pfv.29.1692927057420;
+        Thu, 24 Aug 2023 18:30:57 -0700 (PDT)
+Received: from ?IPV6:2001:df0:0:200c:cd10:2fec:7ce0:fe0a? ([2001:df0:0:200c:cd10:2fec:7ce0:fe0a])
+        by smtp.gmail.com with ESMTPSA id y19-20020aa78553000000b00682af93093dsm367550pfn.45.2023.08.24.18.30.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Aug 2023 18:30:57 -0700 (PDT)
+Message-ID: <3956e2a4-c545-1212-e95f-3cf61a60d6a4@gmail.com>
+Date:   Fri, 25 Aug 2023 13:30:32 +1200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: (subset) [PATCH 00/17] -Wmissing-prototype warning fixes
+Content-Language: en-US
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Matt Turner <mattst88@gmail.com>,
+Cc:     Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>,
         Vineet Gupta <vgupta@kernel.org>,
         Russell King <linux@armlinux.org.uk>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -93,54 +104,59 @@ Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
         linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
         linux-mtd@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: (subset) [PATCH 00/17] -Wmissing-prototype warning fixes
-Date:   Thu, 24 Aug 2023 21:12:49 -0400
-Message-Id: <169292577153.789945.11297239773543112051.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230810141947.1236730-1-arnd@kernel.org>
 References: <20230810141947.1236730-1-arnd@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+ <169292577153.789945.11297239773543112051.b4-ty@oracle.com>
+From:   Michael Schmitz <schmitzmic@gmail.com>
+In-Reply-To: <169292577153.789945.11297239773543112051.b4-ty@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-25_01,2023-08-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
- malwarescore=0 spamscore=0 phishscore=0 mlxlogscore=763 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2308250009
-X-Proofpoint-GUID: X2SaJXDprf48MqrqrcFkis4RNSuOroKu
-X-Proofpoint-ORIG-GUID: X2SaJXDprf48MqrqrcFkis4RNSuOroKu
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 10 Aug 2023 16:19:18 +0200, Arnd Bergmann wrote:
+Hi Martin, Arnd,
 
-> Most of the patches I sent so far for the -Wmissing-prototype warnings
-> have made it into linux-next now. There are a few that I'm resending
-> now as nobody has picked them up, and then a number of fixes that I
-> found while test-building across all architectures rather than just the
-> ones I usually test.
-> 
-> The first 15 patches in this series should be uncontroversial, so
-> I expect that either a subsystem maintainer or Andrew Morton can
-> apply these directly.
-> 
-> [...]
+On 25/08/23 13:12, Martin K. Petersen wrote:
+> On Thu, 10 Aug 2023 16:19:18 +0200, Arnd Bergmann wrote:
+>
+>> Most of the patches I sent so far for the -Wmissing-prototype warnings
+>> have made it into linux-next now. There are a few that I'm resending
+>> now as nobody has picked them up, and then a number of fixes that I
+>> found while test-building across all architectures rather than just the
+>> ones I usually test.
+>>
+>> The first 15 patches in this series should be uncontroversial, so
+>> I expect that either a subsystem maintainer or Andrew Morton can
+>> apply these directly.
+>>
+>> [...]
+> Applied to 6.6/scsi-queue, thanks!
+>
+> [07/17] scsi: qlogicpti: mark qlogicpti_info() static
+>          https://git.kernel.org/mkp/scsi/c/71cc486335c4
+> [11/17] scsi: gvp11: remove unused gvp11_setup() function
+>          https://git.kernel.org/mkp/scsi/c/bfaa4a0ce1bb
 
-Applied to 6.6/scsi-queue, thanks!
+I somehow missed that one ...
 
-[07/17] scsi: qlogicpti: mark qlogicpti_info() static
-        https://git.kernel.org/mkp/scsi/c/71cc486335c4
-[11/17] scsi: gvp11: remove unused gvp11_setup() function
-        https://git.kernel.org/mkp/scsi/c/bfaa4a0ce1bb
+The gvp11_setup() function was probably a relic from the times before 
+module parameters.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Since gvp11_xfer_mask appears to be required for some Amiga systems to 
+set the DMA mask, I'd best send a patch to add such a module parameter ...
+
+Do you know any details around the use of DMA masks for Amiga WD33C93 
+drivers, Geert?
+
+Cheers,
+
+     Michael
+
+
+>
