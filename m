@@ -2,117 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DFAE787D2C
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 03:31:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 150F8787ED1
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 05:58:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236049AbjHYBbG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Aug 2023 21:31:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42612 "EHLO
+        id S233794AbjHYD5o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Aug 2023 23:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230008AbjHYBbA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 21:31:00 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BABC1707;
-        Thu, 24 Aug 2023 18:30:58 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-68a4bcf8a97so371279b3a.1;
-        Thu, 24 Aug 2023 18:30:58 -0700 (PDT)
+        with ESMTP id S236443AbjHYD5Q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Aug 2023 23:57:16 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7131F1FD0;
+        Thu, 24 Aug 2023 20:57:14 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-500a398cda5so730919e87.0;
+        Thu, 24 Aug 2023 20:57:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692927057; x=1693531857;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z7ELdHtTL5wYh7Mk37fDEn5rWUjAm0EdSJQg/6HWPPQ=;
-        b=Tmlz4s2OgK58rZBzZOqQBOTKsewJsSbr0lEcw148TWgipwzPC4h3leu6DHGlT2r85/
-         Uip0aLw7OTRJ61MyT/fB+2M0fG4g6LWvilyhBIrARSkzuGacd0puWelGLD8sQFEorTQR
-         iWM9dveRRwtXAAMgsQ1/wPN9YLRbtznx8UH3GB/Gc6Kl2jKJWnRhPY+VLZrWbWEKV9yS
-         nafEaqYDFpVR5/DPJmFBDt9xOQCxtCGGHTqymDFSbzyjxleu1nAu7M/vlGloF4CFWAV1
-         1Mn9tQCCGOF3Z8ZylRnT1zAlhIOy4YB5/0u2bxeQjx03+CoamjdoA+ECCtWPkVPf8KF0
-         7rAQ==
+        d=gmail.com; s=20221208; t=1692935833; x=1693540633;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z3aiMVXtgxLUKAnBwJFLxkNXC0ELKqaEOEAXJ+cSOAE=;
+        b=VQx3J+kpts+XqPfFEWm0jC30Fe2CYNS5pfG++3AGlA5bAMcmy+vgrafWAe9YNuRZKH
+         ZS48462A3+F2BdJAI9SUAj22rdstK6g8cqdxZpMG79EX7/ZNkjUgypXtyDQkw9CHPwpr
+         cfKXVZPMk5x9rZhenDnBfhQyVgt8Qsx9kRyal6+3hKEtP1g5sFbev85o2ILJQrqE6qRy
+         wfiSoIrfdGHp+bx5S5I9et8z5WFmQzhwPrwGcJDWXe2B43J5TDL7+pFj4vE8oB1c3ouL
+         X7+ybhNMPpSWc5kpJG5U5FBScZr4wW7F6P8+rbHhVgyj9ljiiI4EnQftCp6FN9TSD+FZ
+         wXuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692927057; x=1693531857;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z7ELdHtTL5wYh7Mk37fDEn5rWUjAm0EdSJQg/6HWPPQ=;
-        b=fM6GEZbv05t42z2NV4sGBa9/2lUb7io90jGSiDUW8YhiDysvXswGIFawZ9ZP0kTMcE
-         gCLiKMevD5iXdtA5LuXFBolfAIJ/roaOo8b52DkkE2kuaPDy3jCmskFd48YlfA210aPB
-         yx7XYOotFIoJkAkGbI+tgj7xVxUN+LwKcnYuzUzEOVK+Xyb6vsfQ0AqWBre2JukZnzAi
-         utyi/1jjs1rDNSrJ1NzVHeGM/OabHxipQMvz2zRCQNU0uu+9rhFK3Tdv6Zd2DWhBJKTM
-         /fLViFtJu/M/BZAxnoUIClMrSDaoDTBE3kHIUYSfgdKNXBYmbwM0k2n10DhoNknjjYcm
-         x34Q==
-X-Gm-Message-State: AOJu0YzfjOT/Rp8EsVPasCS3PmWILcds+i4rAwQs02vHZor4rpX1rymb
-        qczmV1p/UcaV7R/DqaSVORo=
-X-Google-Smtp-Source: AGHT+IGkdO3IAVMt9b8NA6cgzJYFAF5G39z8+OmHSySwOLhyKezYRWYjT2VqAbDb9GTS6Db8Rjs5TA==
-X-Received: by 2002:a05:6a00:1a13:b0:68a:49bc:9be3 with SMTP id g19-20020a056a001a1300b0068a49bc9be3mr14483212pfv.29.1692927057420;
-        Thu, 24 Aug 2023 18:30:57 -0700 (PDT)
-Received: from ?IPV6:2001:df0:0:200c:cd10:2fec:7ce0:fe0a? ([2001:df0:0:200c:cd10:2fec:7ce0:fe0a])
-        by smtp.gmail.com with ESMTPSA id y19-20020aa78553000000b00682af93093dsm367550pfn.45.2023.08.24.18.30.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Aug 2023 18:30:57 -0700 (PDT)
-Message-ID: <3956e2a4-c545-1212-e95f-3cf61a60d6a4@gmail.com>
-Date:   Fri, 25 Aug 2023 13:30:32 +1200
+        d=1e100.net; s=20221208; t=1692935833; x=1693540633;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z3aiMVXtgxLUKAnBwJFLxkNXC0ELKqaEOEAXJ+cSOAE=;
+        b=KpaYtd+TOmrp4u7KG/Zokrh2c6bWVb02TeoWoX6ws7/MvPPlP5uD9uTFgXrRr+Hx/m
+         wBf80byVPPCQyAbFCM+NK3Cp9Ps7lJuG4YX7Ut37HpWd6rqkvfQnYwe/4KKNat9OFYCq
+         Iv3gdWfcOinWSd0wbayXgeNijVjq2Fxh1IU1LMxNG01HZUqfAo3NGLali0VTJ2BvCeAH
+         rrATUNinstoq4Xjgr3v1RT5wjOkfLb/a1dxL9JLLH6FONqcDNMyB/Vz1I8pFkItxaJ6P
+         tHwNm45FwMjPa5qWSwmeBrlkpno7nAWoPcuo6Q/4FKRqeu2+p0NYGp3Co8qu9dVAyjQB
+         MxzA==
+X-Gm-Message-State: AOJu0YzBW4BHpQ//5HMqGg43XHwM3y6LXYT13YtpR1CRIX+TLw06q1eZ
+        yRTaw1okUhj5OMHjv96qb+kQAODV1DxZcVuQrIk=
+X-Google-Smtp-Source: AGHT+IFnzdbO7zeBDwHrFNo7dbksrsB/geohTsIWWpQ1xGeaooFVOPphakNoGDrLCHbAToPyg88UJnrBDxcfb/CJa+U=
+X-Received: by 2002:a05:6512:3191:b0:4fb:9f93:365f with SMTP id
+ i17-20020a056512319100b004fb9f93365fmr16497912lfe.38.1692935832393; Thu, 24
+ Aug 2023 20:57:12 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: (subset) [PATCH 00/17] -Wmissing-prototype warning fixes
-Content-Language: en-US
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>,
-        Vineet Gupta <vgupta@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-        Brian Cain <bcain@quicinc.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Stafford Horne <shorne@gmail.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        x86@kernel.org, Borislav Petkov <bp@alien8.de>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-next@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kbuild@vger.kernel.org
-References: <20230810141947.1236730-1-arnd@kernel.org>
- <169292577153.789945.11297239773543112051.b4-ty@oracle.com>
-From:   Michael Schmitz <schmitzmic@gmail.com>
-In-Reply-To: <169292577153.789945.11297239773543112051.b4-ty@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <20230824013738.1894965-1-chenfeiyang@loongson.cn> <20230824215904.GA604126@bhelgaas>
+In-Reply-To: <20230824215904.GA604126@bhelgaas>
+From:   Feiyang Chen <chris.chenfeiyang@gmail.com>
+Date:   Fri, 25 Aug 2023 11:57:00 +0800
+Message-ID: <CACWXhKnyq_-Y_NSWznEr+gV7z0Uoo+dqT5jd-OygtdEmZWCW5A@mail.gmail.com>
+Subject: Re: [PATCH v3] PCI/PM: Only read PCI_PM_CTRL register when available
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Feiyang Chen <chenfeiyang@loongson.cn>, bhelgaas@google.com,
+        rafael.j.wysocki@intel.com, mika.westerberg@linux.intel.com,
+        anders.roxell@linaro.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, guyinggang@loongson.cn,
+        siyanteng@loongson.cn, chenhuacai@loongson.cn,
+        loongson-kernel@lists.loongnix.cn,
+        "Rafael J . Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -120,43 +73,81 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Martin, Arnd,
-
-On 25/08/23 13:12, Martin K. Petersen wrote:
-> On Thu, 10 Aug 2023 16:19:18 +0200, Arnd Bergmann wrote:
+On Fri, Aug 25, 2023 at 5:59=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
 >
->> Most of the patches I sent so far for the -Wmissing-prototype warnings
->> have made it into linux-next now. There are a few that I'm resending
->> now as nobody has picked them up, and then a number of fixes that I
->> found while test-building across all architectures rather than just the
->> ones I usually test.
->>
->> The first 15 patches in this series should be uncontroversial, so
->> I expect that either a subsystem maintainer or Andrew Morton can
->> apply these directly.
->>
->> [...]
-> Applied to 6.6/scsi-queue, thanks!
+> On Thu, Aug 24, 2023 at 09:37:38AM +0800, Feiyang Chen wrote:
+> > When the current state is already PCI_D0, pci_power_up() will return
+> > 0 even though dev->pm_cap is not set. In that case, we should not
+> > read the PCI_PM_CTRL register in pci_set_full_power_state().
+> >
+> > There is nothing more needs to be done below in that case.
+> > Additionally, pci_power_up() has two callers only and the other one
+> > ignores the return value, so we can safely move the current state
+> > check from pci_power_up() to pci_set_full_power_state().
 >
-> [07/17] scsi: qlogicpti: mark qlogicpti_info() static
->          https://git.kernel.org/mkp/scsi/c/71cc486335c4
-> [11/17] scsi: gvp11: remove unused gvp11_setup() function
->          https://git.kernel.org/mkp/scsi/c/bfaa4a0ce1bb
-
-I somehow missed that one ...
-
-The gvp11_setup() function was probably a relic from the times before 
-module parameters.
-
-Since gvp11_xfer_mask appears to be required for some Amiga systems to 
-set the DMA mask, I'd best send a patch to add such a module parameter ...
-
-Do you know any details around the use of DMA masks for Amiga WD33C93 
-drivers, Geert?
-
-Cheers,
-
-     Michael
-
-
+> Does this fix a bug?  I guess it does, because previously
+> pci_set_full_power_state() did a config read at 0 + PCI_PM_CTRL, i.e.,
+> offset 4, which is actually PCI_COMMAND, and set dev->current_state
+> based on that.  So dev->current_state is now junk, right?
 >
+
+Yes.
+
+> This might account for some "Refused to change power state from %s to D0"
+> messages.
+>
+> How did you find this?  It's nice if we can mention a symptom so
+> people can connect the problem with this fix.
+>
+
+We are attempting to add MSI support for our stmmac driver, but the
+pci_alloc_irq_vectors() function always fails.
+After looking into it more, we came across the message "Refused to
+change power state from D3hot to D0" :)
+
+> This sounds like something that probably should have a stable tag?
+>
+
+Do I need to include the symptom and Cc in the commit message and then send=
+ v4?
+
+> > Fixes: e200904b275c ("PCI/PM: Split pci_power_up()")
+> > Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+> > Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
+> > ---
+> >  drivers/pci/pci.c | 9 +++++----
+> >  1 file changed, 5 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 60230da957e0..7e90ab7b47a1 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -1242,9 +1242,6 @@ int pci_power_up(struct pci_dev *dev)
+> >               else
+> >                       dev->current_state =3D state;
+> >
+> > -             if (state =3D=3D PCI_D0)
+> > -                     return 0;
+> > -
+> >               return -EIO;
+> >       }
+> >
+> > @@ -1302,8 +1299,12 @@ static int pci_set_full_power_state(struct pci_d=
+ev *dev)
+> >       int ret;
+> >
+> >       ret =3D pci_power_up(dev);
+> > -     if (ret < 0)
+> > +     if (ret < 0) {
+> > +             if (dev->current_state =3D=3D PCI_D0)
+> > +                     return 0;
+> > +
+> >               return ret;
+> > +     }
+> >
+> >       pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+> >       dev->current_state =3D pmcsr & PCI_PM_CTRL_STATE_MASK;
+> > --
+> > 2.39.3
+> >
