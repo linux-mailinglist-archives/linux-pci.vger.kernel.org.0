@@ -2,215 +2,187 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 733EF789060
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 23:26:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B6A27891DD
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Aug 2023 00:45:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229982AbjHYVZc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Aug 2023 17:25:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35442 "EHLO
+        id S230307AbjHYWo5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Aug 2023 18:44:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231472AbjHYVZQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 17:25:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7C3726A2;
-        Fri, 25 Aug 2023 14:25:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3E8FF61EE0;
-        Fri, 25 Aug 2023 21:25:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BA37C433C8;
-        Fri, 25 Aug 2023 21:25:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692998709;
-        bh=/ndd9JvcnOZbrZ59TJ6yt5tniui40+xM/DyzWVsM1tI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=IybtaUFxSdTUnn2pZh+WWdSykTWHRi0lD13eMCFhqvngsarg0CzPMfJuf1eflfUiN
-         PK3gN8/vzav9SvRCG8ibtFyc9QaZJFfVFuDzt4V24YZXoCaEhpLYIOvLMuwI1iFkbU
-         j/FSx5kVwmCtn/LJahKCWOPBBd+rc9A8lOgOJcEVrjclIW8nOOt0BiARAgychZx1ld
-         J20YolI4eMFxW1Om9ZJSinBAV8yTwub87pPr1pE/YJhLSHGvap56/TvKhisJk06tmA
-         0HBt+NYdChA/O9+ek60ZXZ1x9j5WAH9XmKuK3j013iBx8Wt5mxCrsU1MiaoRJXpGd1
-         6A3qXjjEyLctQ==
-Date:   Fri, 25 Aug 2023 16:25:07 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Feiyang Chen <chris.chenfeiyang@gmail.com>
-Cc:     Feiyang Chen <chenfeiyang@loongson.cn>, bhelgaas@google.com,
-        rafael.j.wysocki@intel.com, mika.westerberg@linux.intel.com,
-        anders.roxell@linaro.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, guyinggang@loongson.cn,
-        siyanteng@loongson.cn, chenhuacai@loongson.cn,
-        loongson-kernel@lists.loongnix.cn,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v3] PCI/PM: Only read PCI_PM_CTRL register when available
-Message-ID: <20230825212507.GA627427@bhelgaas>
+        with ESMTP id S230153AbjHYWok (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 18:44:40 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A203269F;
+        Fri, 25 Aug 2023 15:44:38 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1bdbbede5d4so11971175ad.2;
+        Fri, 25 Aug 2023 15:44:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693003477; x=1693608277;
+        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:subject:from:references:cc:to:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+EfHZKV5Rs50FUqRYXClC9vzZD5WlxrYeYbs3IamXT4=;
+        b=YxGLOPcaOZR604IVjJRcGcoKnB33IZ0CTfYuHyWKXt+0pInUOQSMoNyJ0dS6B1KmgY
+         cxaBOMvor3UlQ6MZnz8hco99YltIQ+TVGTfUiOj3M6EtIom4aLy5Ogu10qSlU6URXk+W
+         RnRGmXEhLIg0POh+PDKptxk33OVTKsM2/52zz5494dr8R8CSNGpoqbrRI3gpmS9Q+cTN
+         hJYUsHOFyiz+AcMtmJLq8rt6PHOWgX+jhYTNJt4ghkMZ1YZYHd+UADqGIVtKxfSRzrdW
+         eHx1TWLsT9QLE3Re7SH9KzLMTXlxKvezJrH+R76CylIu77symnMHbROv+J2zJ4UP/BTK
+         7yuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693003477; x=1693608277;
+        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:subject:from:references:cc:to:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+EfHZKV5Rs50FUqRYXClC9vzZD5WlxrYeYbs3IamXT4=;
+        b=cp1KRCgcYkUTSF2D8a/65bm9gqUzQihVnP8c6wC6//KEb6d0JIiky/UAp7xRjHFcih
+         8s1FHO+UQbhcKHIGH6ZyjVwvqRLBbhsB1N1lNaZ9FL0owO1HKhy/Fwso4Cvtq+DxE50o
+         vA7XJSYq98tq7HF5W5D9gEn1VMwaEF0hgGVUNno9jMKLX7vah3BgtHwPV9vdnNbsncU0
+         TFZg16oEAiXNzdM5iLR35aiSR8KTJ8GuInan1PFH3GSggW5Y8J+wCiQEH3fo8NVkPoAi
+         od40573Ua718hlQrOtxancrF5a/ztQX6HBg4R5oi+P8L7kdh3pR2ZE6vtGyfLme3mm8e
+         BgfA==
+X-Gm-Message-State: AOJu0Yx8RZpbLX9s4Wh8CoyI+NHVzTMAIgKR8W9FocKvYDSC9GX2MXs6
+        LP3g7lpzxzcizs6KrVtcVCocaJKsEpB/tg==
+X-Google-Smtp-Source: AGHT+IHfISCtSa05UGz9PT6tDA2qtVyoG70cJPjb2fBEQ6/U+mzxDHROeZB/hJ4FR5D+DwWhbVxiGA==
+X-Received: by 2002:a17:903:25d4:b0:1bd:bbc3:c87b with SMTP id jc20-20020a17090325d400b001bdbbc3c87bmr18047490plb.41.1693003477133;
+        Fri, 25 Aug 2023 15:44:37 -0700 (PDT)
+Received: from Schmitz-MacBook-Pro.local (125-236-136-221-fibre.sparkbb.co.nz. [125.236.136.221])
+        by smtp.googlemail.com with ESMTPSA id b1-20020a170902d50100b001adf6b21c77sm2280761plg.107.2023.08.25.15.44.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Aug 2023 15:44:36 -0700 (PDT)
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matt Turner <mattst88@gmail.com>,
+        Vineet Gupta <vgupta@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Brian Cain <bcain@quicinc.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        x86@kernel.org, Borislav Petkov <bp@alien8.de>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-next@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kbuild@vger.kernel.org
+References: <20230810141947.1236730-1-arnd@kernel.org>
+ <169292577153.789945.11297239773543112051.b4-ty@oracle.com>
+ <3956e2a4-c545-1212-e95f-3cf61a60d6a4@gmail.com>
+ <CAMuHMdWC2S330_Vb_NTHTDC=BakBsw4ouP-eFJv0erV1-jmvTQ@mail.gmail.com>
+From:   Michael Schmitz <schmitzmic@gmail.com>
+Subject: Re: (subset) [PATCH 00/17] -Wmissing-prototype warning fixes
+Message-ID: <130b3b57-edb0-184d-5b5f-69b013715773@gmail.com>
+Date:   Sat, 26 Aug 2023 10:44:13 +1200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:78.0)
+ Gecko/20100101 Thunderbird/78.14.0
 MIME-Version: 1.0
+In-Reply-To: <CAMuHMdWC2S330_Vb_NTHTDC=BakBsw4ouP-eFJv0erV1-jmvTQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACWXhKnyq_-Y_NSWznEr+gV7z0Uoo+dqT5jd-OygtdEmZWCW5A@mail.gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 25, 2023 at 11:57:00AM +0800, Feiyang Chen wrote:
-> On Fri, Aug 25, 2023 at 5:59 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Thu, Aug 24, 2023 at 09:37:38AM +0800, Feiyang Chen wrote:
-> > > When the current state is already PCI_D0, pci_power_up() will return
-> > > 0 even though dev->pm_cap is not set. In that case, we should not
-> > > read the PCI_PM_CTRL register in pci_set_full_power_state().
-> > >
-> > > There is nothing more needs to be done below in that case.
-> > > Additionally, pci_power_up() has two callers only and the other one
-> > > ignores the return value, so we can safely move the current state
-> > > check from pci_power_up() to pci_set_full_power_state().
-> >
-> > Does this fix a bug?  I guess it does, because previously
-> > pci_set_full_power_state() did a config read at 0 + PCI_PM_CTRL, i.e.,
-> > offset 4, which is actually PCI_COMMAND, and set dev->current_state
-> > based on that.  So dev->current_state is now junk, right?
-> 
-> Yes.
-> 
-> > This might account for some "Refused to change power state from %s to D0"
-> > messages.
-> >
-> > How did you find this?  It's nice if we can mention a symptom so
-> > people can connect the problem with this fix.
-> 
-> We are attempting to add MSI support for our stmmac driver, but the
-> pci_alloc_irq_vectors() function always fails.
-> After looking into it more, we came across the message "Refused to
-> change power state from D3hot to D0" :)
+Hi Geert,
 
-So I guess this device doesn't have a PM Capability at all?  Can you
-collect the "sudo lspci -vv" output?  The PM Capability is required
-for all PCIe devices, so maybe this is a conventional PCI device?
+Am 25.08.23 um 19:39 schrieb Geert Uytterhoeven:
+> Hi Michael,
+>
+> On Fri, Aug 25, 2023 at 3:31=E2=80=AFAM Michael Schmitz <schmitzmic@gma=
+il.com> wrote:
+>> On 25/08/23 13:12, Martin K. Petersen wrote:
+>>> [11/17] scsi: gvp11: remove unused gvp11_setup() function
+>>>          https://git.kernel.org/mkp/scsi/c/bfaa4a0ce1bb
+>> I somehow missed that one ...
+>>
+>> The gvp11_setup() function was probably a relic from the times before
+>> module parameters.
+>>
+>> Since gvp11_xfer_mask appears to be required for some Amiga systems to=
 
-> > This sounds like something that probably should have a stable tag?
-> 
-> Do I need to include the symptom and Cc in the commit message and
-> then send v4?
+>> set the DMA mask, I'd best send a patch to add such a module parameter=
+ ...
+>>
+>> Do you know any details around the use of DMA masks for Amiga WD33C93
+>> drivers, Geert?
+> Doh, it's been a while, and I never had an affected system.
+> Probably it's needed on A2000 with an accelerator card and GVP II SCSI,=
 
-> > > Fixes: e200904b275c ("PCI/PM: Split pci_power_up()")
-> > > Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-> > > Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
-> > > ---
-> > >  drivers/pci/pci.c | 9 +++++----
-> > >  1 file changed, 5 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > index 60230da957e0..7e90ab7b47a1 100644
-> > > --- a/drivers/pci/pci.c
-> > > +++ b/drivers/pci/pci.c
-> > > @@ -1242,9 +1242,6 @@ int pci_power_up(struct pci_dev *dev)
-> > >               else
-> > >                       dev->current_state = state;
-> > >
-> > > -             if (state == PCI_D0)
-> > > -                     return 0;
-> > > -
-> > >               return -EIO;
-> > >       }
-> > >
-> > > @@ -1302,8 +1299,12 @@ static int pci_set_full_power_state(struct pci_dev *dev)
-> > >       int ret;
-> > >
-> > >       ret = pci_power_up(dev);
-> > > -     if (ret < 0)
-> > > +     if (ret < 0) {
-> > > +             if (dev->current_state == PCI_D0)
-> > > +                     return 0;
-> > > +
-> > >               return ret;
-> > > +     }
-> > >       pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> > >       dev->current_state = pmcsr & PCI_PM_CTRL_STATE_MASK;
+> to prevent DMA to RAM banks that do not support fast DMA cycles.
 
-One thing that makes me hesitate a little bit is that we rely on the
-failure return from pci_power_up() to guard the dev->pm_cap usage.
-That's slightly obscure, and I liked the way the v1 patch made it
-explicit.
+Thanks, that's good enough for me.
 
-And it seems slightly weird that when there's no PM cap,
-pci_power_up() always returns failure even if the platform was able to
-put the device in D0.
+Linux 2.0 had this comment:
 
-Anyway, here's a proposal for commit log and updated comment for
-pci_power_up():
+|/* * DMA transfer mask for GVP Series II SCSI controller. * Some
+versions can only DMA into the 24 bit address space * (0->16M). Others
+can DMA into the full 32 bit address * space. The default is to only
+allow DMA into the 24 bit * address space. The "gvp11=3D0xFFFFFFFE" setup=
+
+parameter can * be supplied to force an alternate (32 bit) mask. */ |
+
+|We now handle that (since 2.6.35) through masks defined in
+gvp11_zorro_tbl[] (though I note these don't account for unaligned
+addresses such as implied by the example in the comment. Are unaligned
+DMA buffers still possible today?). Would that cover the 'A2000 with
+accelerator' case?
+|
+
+||
+
+I'm happy to send a patch if an override to the device default DMA mask
+is still necessary.
+
+(Incidentally - did you ever publish the m68k full history tree anywhere
+in git?)
+
+Cheers,
+
+=C2=A0=C2=A0=C2=A0 Michael
 
 
-commit 5694ba13b004 ("PCI/PM: Only read PCI_PM_CTRL register when available")
-Author: Feiyang Chen <chenfeiyang@loongson.cn>
-Date:   Thu Aug 24 09:37:38 2023 +0800
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
 
-    PCI/PM: Only read PCI_PM_CTRL register when available
-    
-    For a device with no Power Management Capability, pci_power_up() previously
-    returned 0 (success) if the platform was able to put the device in D0,
-    which led to pci_set_full_power_state() trying to read PCI_PM_CTRL, even
-    though it doesn't exist.
-    
-    Since dev->pm_cap == 0 in this case, pci_set_full_power_state() actually
-    read the wrong register, interpreted it as PCI_PM_CTRL, and corrupted
-    dev->current_state.  This led to messages like this in some cases:
-    
-      pci 0000:01:00.0: Refused to change power state from D3hot to D0
-    
-    To prevent this, make pci_power_up() always return a negative failure code
-    if the device lacks a Power Management Capability, even if non-PCI platform
-    power management has been able to put the device in D0.  The failure will
-    prevent pci_set_full_power_state() from trying to access PCI_PM_CTRL.
-    
-    Fixes: e200904b275c ("PCI/PM: Split pci_power_up()")
-    Link: https://lore.kernel.org/r/20230824013738.1894965-1-chenfeiyang@loongson.cn
-    Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Reviewed-by: "Rafael J. Wysocki" <rafael@kernel.org>
-    Cc: stable@vger.kernel.org	# v5.19+
-
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 60230da957e0..39728196e295 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1226,6 +1226,10 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
-  *
-  * On success, return 0 or 1, depending on whether or not it is necessary to
-  * restore the device's BARs subsequently (1 is returned in that case).
-+ *
-+ * On failure, return a negative error code.  Always return failure if @dev
-+ * lacks a Power Management Capability, even if the platform was able to
-+ * put the device in D0 via non-PCI means.
-  */
- int pci_power_up(struct pci_dev *dev)
- {
-@@ -1242,9 +1246,6 @@ int pci_power_up(struct pci_dev *dev)
- 		else
- 			dev->current_state = state;
- 
--		if (state == PCI_D0)
--			return 0;
--
- 		return -EIO;
- 	}
- 
-@@ -1302,8 +1303,12 @@ static int pci_set_full_power_state(struct pci_dev *dev)
- 	int ret;
- 
- 	ret = pci_power_up(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		if (dev->current_state == PCI_D0)
-+			return 0;
-+
- 		return ret;
-+	}
- 
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
- 	dev->current_state = pmcsr & PCI_PM_CTRL_STATE_MASK;
