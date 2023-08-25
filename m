@@ -2,101 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37138787FD7
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 08:28:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76439788017
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 08:41:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241805AbjHYG14 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Aug 2023 02:27:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52830 "EHLO
+        id S241996AbjHYGkp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Aug 2023 02:40:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242190AbjHYG1n (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 02:27:43 -0400
-Received: from out-58.mta1.migadu.com (out-58.mta1.migadu.com [95.215.58.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB8E1FCB
-        for <linux-pci@vger.kernel.org>; Thu, 24 Aug 2023 23:27:40 -0700 (PDT)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1692944859;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wTA7bapxplGCnZjVDiPGvbUqrHLJXwFDRMTQ/Lj8/HE=;
-        b=xGiuH5OBd++On3BrycBzuioMtaX2agvln1PBzVzQu/x0OZDbgoFgvDf6fWfHxc0n1L3VAN
-        y6FoqMZ8veBkMFIVMnCTQiZgUkHh2lHd3kESt2wuULl1bBQuT5deUKizVb5T4KjXJNCf7o
-        rd1OAKaROEGNaEtx0iiLhAjv82tun74=
-From:   Sui Jingfeng <sui.jingfeng@linux.dev>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
-        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
-        Sui Jingfeng <suijingfeng@loongson.cn>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5/5] drm/radeon: Use pci_get_base_class() to reduce duplicated code
-Date:   Fri, 25 Aug 2023 14:27:14 +0800
-Message-Id: <20230825062714.6325-6-sui.jingfeng@linux.dev>
-In-Reply-To: <20230825062714.6325-1-sui.jingfeng@linux.dev>
-References: <20230825062714.6325-1-sui.jingfeng@linux.dev>
+        with ESMTP id S242453AbjHYGkT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 02:40:19 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 013E91FF3;
+        Thu, 24 Aug 2023 23:40:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692945609; x=1724481609;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=etGYANIF6LqY7TvLbzOmTClwc0aVFSmG7bkx+aHoS2s=;
+  b=GXWBBhTCQO6k3dVt+PiOKnpB2Ra3PyZ85JTbAG7V3zGsRB0gSWVmOzJX
+   abJL5nFBr5iZ2/9nbNNzGgDTODxQm8sgfBBCJICyOLGeQKxojw9Oc3mGz
+   fS/QyhAUs/FXSbwZKb4WbXNDyJ3RFJYepB3UfKmfNJ4nT2T4H+zOM69Gp
+   exW6UqfYHjhYLWYfqGXwZCm2geUeh6YnlFxURRCUFb5DpDeMSbO1Q5LIM
+   Cv1r3Rt7b05D6RKexVlav+yS4hmzq4eJI00hZQYmpMdM+fRbqazOeQaJQ
+   sQMNcdnf+b6oN3lH53ZPhyYBh4xA6zBTSkGIeiGUZg1HVaSCvjIQXlUhE
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="440991156"
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="scan'208";a="440991156"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2023 23:39:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="1068133216"
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="scan'208";a="1068133216"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 24 Aug 2023 23:39:49 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 454961CA; Fri, 25 Aug 2023 09:39:48 +0300 (EEST)
+Date:   Fri, 25 Aug 2023 09:39:48 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, koba.ko@canonical.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] PCI: Add helper to check if any of ancestor device
+ support D3cold
+Message-ID: <20230825063948.GY3465@black.fi.intel.com>
+References: <20230824044645.423378-1-kai.heng.feng@canonical.com>
+ <20230824115656.GW3465@black.fi.intel.com>
+ <CAAd53p4Ey15SRkeW-5rDQfxrT8Cif+hYOk2BZ6iQpfd8s51wEw@mail.gmail.com>
+ <20230825052946.GX3465@black.fi.intel.com>
+ <CAAd53p71gLHq71WtnWBXOaX6K6rXyZ=nrGND5x8ZKXvyNsWBtw@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CAAd53p71gLHq71WtnWBXOaX6K6rXyZ=nrGND5x8ZKXvyNsWBtw@mail.gmail.com>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Sui Jingfeng <suijingfeng@loongson.cn>
+On Fri, Aug 25, 2023 at 01:43:08PM +0800, Kai-Heng Feng wrote:
+> On Fri, Aug 25, 2023 at 1:29 PM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> >
+> > On Thu, Aug 24, 2023 at 09:46:00PM +0800, Kai-Heng Feng wrote:
+> > > Hi,
+> > >
+> > > On Thu, Aug 24, 2023 at 7:57 PM Mika Westerberg
+> > > <mika.westerberg@linux.intel.com> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Thu, Aug 24, 2023 at 12:46:43PM +0800, Kai-Heng Feng wrote:
+> > > > > In addition to nearest upstream bridge, driver may want to know if the
+> > > > > entire hierarchy can be powered off to perform different action.
+> > > > >
+> > > > > So walk higher up the hierarchy to find out if any device has valid
+> > > > > _PR3.
+> > > >
+> > > > I'm not entirely sure this is good idea. The drivers should expect that
+> > > > the power will be turned off pretty soon after device enters D3hot. Also
+> > > > _PR3 is not PCI concept it's ACPI concept so API like this would only
+> > > > work on systems with ACPI.
+> > >
+> > > IIUC, Bjorn wants to limit the AER/DPC disablement when device power
+> > > is really off.
+> > > Is "the power will be turned off pretty soon after device enters
+> > > D3hot" applicable to most devices? Since config space is still
+> > > accessible when device is in D3hot.
+> >
+> > Well the device may be part of a topology, say Thunderbolt/USB4 (but can
+> > be NVMe or similar) where it initially goes into D3hot but in the end
+> > the whole topology is put into D3cold. The device driver really should
+> > expect that this happens always and not try to distinguish between the
+> > D3hot or D3cold.
+> 
+> What if the device is not in such topology? There are cases that the
+> rootport doesn't have Power Resources associated so the rootport also
+> stays in D3hot.
 
-Should be no functional change.
+Yes and this is why the driver should not care. Otherwise it just
+complicates things.
 
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
----
- drivers/gpu/drm/radeon/radeon_bios.c | 20 +++++---------------
- 1 file changed, 5 insertions(+), 15 deletions(-)
+For instance, a root port may have _PR3 that allows the whole thing to
+enter L2/3 (D3cold) but some device has d3cold_allowed set to false or
+there may be a device that does not support PME on D3cold which prevents
+the power to be turned off.
 
-diff --git a/drivers/gpu/drm/radeon/radeon_bios.c b/drivers/gpu/drm/radeon/radeon_bios.c
-index 63bdc9f6fc24..3a8c5199a0fe 100644
---- a/drivers/gpu/drm/radeon/radeon_bios.c
-+++ b/drivers/gpu/drm/radeon/radeon_bios.c
-@@ -199,7 +199,11 @@ static bool radeon_atrm_get_bios(struct radeon_device *rdev)
- 	if (rdev->flags & RADEON_IS_IGP)
- 		return false;
- 
--	while ((pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, pdev)) != NULL) {
-+	while ((pdev = pci_get_base_class(PCI_BASE_CLASS_DISPLAY, pdev))) {
-+		if ((pdev->class != PCI_CLASS_DISPLAY_VGA << 8) &&
-+		    (pdev->class != PCI_CLASS_DISPLAY_OTHER << 8))
-+			continue;
-+
- 		dhandle = ACPI_HANDLE(&pdev->dev);
- 		if (!dhandle)
- 			continue;
-@@ -211,20 +215,6 @@ static bool radeon_atrm_get_bios(struct radeon_device *rdev)
- 		}
- 	}
- 
--	if (!found) {
--		while ((pdev = pci_get_class(PCI_CLASS_DISPLAY_OTHER << 8, pdev)) != NULL) {
--			dhandle = ACPI_HANDLE(&pdev->dev);
--			if (!dhandle)
--				continue;
--
--			status = acpi_get_handle(dhandle, "ATRM", &atrm_handle);
--			if (ACPI_SUCCESS(status)) {
--				found = true;
--				break;
--			}
--		}
--	}
--
- 	if (!found)
- 		return false;
- 	pci_dev_put(pdev);
--- 
-2.34.1
+> I think what Bjorn suggested is to keep AER enabled for D3hot, and
+> only disable it for D3cold and S3.
+> 
+> >
+> > > Unless there are cases when device firmware behave differently to
+> > > D3hot? Then maybe it's better to disable AER for both D3hot, D3cold
+> > > and system S3.
+> >
+> > Yes, this makes sense.
+> 
+> I agree that differentiate between D3hot and D3cold unnecessarily make
+> things more complicated, but Bjorn suggested errors reported by AER
+> under D3hot should still be recorded.
+> Do you have more compelling data to persuade Bjorn that AER should be
+> disabled for both D3 states?
 
+Is there even an AER error that can happen when a device is in D3hot
+(link is in L1) or D3cold (link is in L2/3)? I'm not an expert in AER
+but AFAICT these errors are reported when the device is in active state
+not when it is in low power state.
+
+All that said, Bjorn is the maintainer so he gets to decide. If this is
+what he suggested then I'm fine with it. Just wanted to mention this. I
+too want to see this issue fixed, one way or another ;-) Thanks for
+working on this BTW!
