@@ -2,70 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC1BF788E7A
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 20:19:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD09E788EB5
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 20:28:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230364AbjHYSSx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Aug 2023 14:18:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49112 "EHLO
+        id S230236AbjHYS2E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Aug 2023 14:28:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231354AbjHYSSe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 14:18:34 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 415212705;
-        Fri, 25 Aug 2023 11:18:11 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-4ff9b389677so1802652e87.3;
-        Fri, 25 Aug 2023 11:18:11 -0700 (PDT)
+        with ESMTP id S229924AbjHYS1i (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 14:27:38 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 589DDE67;
+        Fri, 25 Aug 2023 11:27:33 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-4ffa94a7a47so1845056e87.1;
+        Fri, 25 Aug 2023 11:27:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692987489; x=1693592289;
+        d=gmail.com; s=20221208; t=1692988051; x=1693592851;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=G0X3UqX4m99dG470vbFBA7W9C4W7OMNMtr/Z96kDhMs=;
-        b=iG1qbLOX8d+NuaIbJ1xmEQqMRolLCEzoM5JPoNp4iFH96pIGlbFXSx3BPClrUVQ3Ww
-         aJR2GTNgSqQF14VR9Z1s6WpqC+Wlzj2cRqXSgE3dxMa5yAiWa+1/Pg8itG21Dh15LxX4
-         jJLUEBk9+734O8LnUnHHG41pof4Lky1VZ2P00M5sIVETXcLIxlX+ONjDKQEO/nHTL0AL
-         YRfPpwglkvCncq6rREgHMTxi95gliBR8Zyl+kEKkwyQJ/Oi74KZ6JoJIDThPTP8+3K98
-         oBKAu6alXubNJqGEZELyDs+lHXilgYHGjIctLNBOqX/9HKyoWvzm6eio4C6qSy0kojHT
-         R+EQ==
+        bh=Pi91gNrlpnAXuraBHh2yRna/sc+hxfkLOoI5kXfHcng=;
+        b=nJarkQiUNw56JjTilZn474jTNxZhpJtFMLXVQrEUUSvwZF7lOKl/1aUpzLnMKFe/ya
+         VD5Zi43DJ5Xwr9LZAIYb3mfJqzrPC0Y16Csonw5vdKhYc6nW6nHKKDqdDWcBPFKxQq0R
+         3i3hBzGy3QwU4TRPXep/h/B8nP+5QYI7U0tK0OhZOpJVIx6hhpOXH7nkfNmcnJDdOnMF
+         NeTey5GVUROANT9t/n6g7aPJOVR/kAwkltCyiQofE9sPitqBK/WrkfxjzpszS6Lk+rt+
+         9IIPXljUgiSNGaMkC6IfUSsmpSWWYBKBpBzFph7ZHvJEIrk06KaJq7Wm9LpOAR88mzRw
+         EIcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692987489; x=1693592289;
+        d=1e100.net; s=20221208; t=1692988051; x=1693592851;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=G0X3UqX4m99dG470vbFBA7W9C4W7OMNMtr/Z96kDhMs=;
-        b=f6fo1apF0qC5iuCLIIc4hfZSQBOgdaU4Qya4wSbVPPxcfcexjkxrNzv7idftrKqpUz
-         tBaQ0vUU5uwpdovZv9bZR890Mh0wyiANlC149KEmxkzc1l9FRyZjZBXqBXa1tb7DZD68
-         Bbbb4ozes5aVNsmUOAEqSCtpCqkOz412VmmfgUazX0OMdrpJz9kBn/iwT4uILVZHqq00
-         uCE5xMz2QBcsudhHP/eVCXONJO1SkjdXmsGIPlBNwr3rwTVSp+2T6ZGpEONuzQM3I3TC
-         hANEDK8tbZRVF2hyXsiJYe7i3CVkRrc7SJNqdz2ZdJOMbXtnz1O2UGOn98DdVFUGbAGY
-         Xc8Q==
-X-Gm-Message-State: AOJu0Yym4bBLFdi4il09eaRHhSwhkdDp0u2+n5go3yuNcUpm39Ia4f0Q
-        xnwSkGz8SpX737qXc3gN780=
-X-Google-Smtp-Source: AGHT+IH5d+Nt32DIwba3HQHbsK6SbVRgHFZWL8JySCUSi7WSepToNY476wR1fVaKgms6PZG7slXPqg==
-X-Received: by 2002:ac2:4285:0:b0:500:9977:bdce with SMTP id m5-20020ac24285000000b005009977bdcemr5509455lfh.62.1692987489262;
-        Fri, 25 Aug 2023 11:18:09 -0700 (PDT)
+        bh=Pi91gNrlpnAXuraBHh2yRna/sc+hxfkLOoI5kXfHcng=;
+        b=bBD0qcZtzuFKRKFTNrSXApvy/uc8wellqfgpOfb3zpsG7DDJ92DZlwpVPPK5AdH1se
+         cHrLTMyB+GBGKTaT/18sgobOyNasNBXW5eao4KLp+FdQcn75UhF7Qyv2TzxEv9jSPped
+         PMuNSfyoju7hJ9oC4wVWw3bDcfShu7A7S9DEHKHGWBtu/HhUjTeRBFmbRC9juIeTus11
+         7v+Nc7ACvfKk0+q35XkBOj3zs06KT4NBipMXY2gFMyuTqHKLveZl3/hgVhR2qMJz2bfW
+         05j7JlR6jhUKnlmqGJnU0afsgqY/EshNiPoU3FHx7SCndiDXpEZLbudIAyUyjZ6ZZiwT
+         lpgw==
+X-Gm-Message-State: AOJu0YwvKXi/4fMmuPFQ6+k0G12Y7TDn7cbjQDVAk9d4vbcHdkWzy5EA
+        CNG6xkQgwraGeK7oAXMPJJA=
+X-Google-Smtp-Source: AGHT+IHpGxAAwWUcVwj27QtGoPWpakbTp4dHkAJsfti+D6luypuzh5eVe+BFZjw0Ql787CzbGhLE+Q==
+X-Received: by 2002:a05:6512:2029:b0:4fb:81f2:4228 with SMTP id s9-20020a056512202900b004fb81f24228mr12561802lfs.31.1692988051262;
+        Fri, 25 Aug 2023 11:27:31 -0700 (PDT)
 Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id i22-20020ac25236000000b004ff981955cesm376054lfl.228.2023.08.25.11.18.07
+        by smtp.gmail.com with ESMTPSA id f17-20020ac25331000000b00500a2091e2bsm376753lfh.99.2023.08.25.11.27.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Aug 2023 11:18:08 -0700 (PDT)
-Date:   Fri, 25 Aug 2023 21:18:05 +0300
+        Fri, 25 Aug 2023 11:27:30 -0700 (PDT)
+Date:   Fri, 25 Aug 2023 21:27:26 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
-        manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
+To:     Manivannan Sadhasivam <mani@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        robh+dt@kernel.org, manivannan.sadhasivam@linaro.org,
         kishon@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         conor+dt@kernel.org, marek.vasut+renesas@gmail.com,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v20 11/19] PCI: dwc: Expose dw_pcie_write_dbi2() to module
-Message-ID: <bc26tzeh5bcqtuz6opfb4pxp7avtmqlzm6xszmqvmjalwi7yhi@iy6ogi4beqpi>
+Subject: Re: [PATCH v20 00/19] PCI: rcar-gen4: Add R-Car Gen4 PCIe support
+Message-ID: <dgxpl5ubvpdgtgtkokgtn23kski2j57dwjddsthv6flza7bw2j@gp6rnifrxpbr>
 References: <20230825093219.2685912-1-yoshihiro.shimoda.uh@renesas.com>
- <20230825093219.2685912-12-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230825093219.2685912-12-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20230825093219.2685912-1-yoshihiro.shimoda.uh@renesas.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -76,36 +79,92 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 25, 2023 at 06:32:11PM +0900, Yoshihiro Shimoda wrote:
-> Since no PCIe controller drivers call this, this change is not required
-> for now. But, Renesas R-Car Gen4 PCIe controller driver will call this
-> and if the controller driver is built as a kernel module, the following
-> build error happens. So, expose dw_pcie_write_dbi2() for it.
-> 
-> ERROR: modpost: "dw_pcie_write_dbi2" [drivers/pci/controller/dwc/pcie-rcar-gen4-host-drv.ko] undefined!
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Hi Mani, Bjorn, Lorenzo, Krzysztof, Rob
 
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+On Fri, Aug 25, 2023 at 06:32:00PM +0900, Yoshihiro Shimoda wrote:
+> Add R-Car S4-8 (R-Car Gen4) PCIe Host and Endpoint support.
+> To support them, modify PCIe DesignWare common codes.
+
+No more comments from my side for this series. It looks good to me
+now. If you have nothing to note too please merge it in especially
+seeing it's already v20.)
 
 -Serge(y)
 
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 1 +
->  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 4812ce040f1e..0251fa1357f9 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -365,6 +365,7 @@ void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 val)
->  	if (ret)
->  		dev_err(pci->dev, "write DBI address failed\n");
->  }
-> +EXPORT_SYMBOL_GPL(dw_pcie_write_dbi2);
->  
->  static inline void __iomem *dw_pcie_select_atu(struct dw_pcie *pci, u32 dir,
->  					       u32 index)
+> Changes from v19:
+> https://lore.kernel.org/linux-pci/20230823091153.2578417-1-yoshihiro.shimoda.uh@renesas.com/
+>  - Based on the latest pci.git / next branch and the following patches:
+>    [PATCH v3 0/2] Cleanup IRQ type definitions
+>    https://lore.kernel.org/linux-pci/20230802094036.1052472-1-dlemoal@kernel.org/
+>  - Rename PCI_MSG_TYPE_R_* macros in the patch 01/19.
+>  - Fix the comment in the patch 04/19.
+>  - Add Reviewed-by in the patch {06,1[2678]/19.
+>  - Modify common functions for the same method of clock handling in the patch
+>    1[78]/19.
+>  - Remove redundant gpio handling in the patch 16/19.
+> 
+> Changes from v18:
+> https://lore.kernel.org/linux-pci/20230721074452.65545-1-yoshihiro.shimoda.uh@renesas.com/
+>  - Based on the latest pci.git / next branch and the following patches:
+>    [PATCH v3 0/2] Cleanup IRQ type definitions
+>    https://lore.kernel.org/linux-pci/20230802094036.1052472-1-dlemoal@kernel.org/
+>  - Drop some patches about converting "legacy" to "INTx".
+>  - Add detailed description in the patch 0[26]/19.
+>  - Add a new patch "Expose dw_pcie_write_dbi2" in the patch 11/19.
+>  - Revise typo in the patch 12/19.
+>  - Fix calling order of deinit in the patch 12/19.
+>  - Revise Kconfig about kernel module names in the patch 1[67]/19.
+>  - Rename drivers' file names in the patch 1[67]/19.
+>  - Some other minor change/fix in the patch 1[67]/19.
+> 
+> Yoshihiro Shimoda (19):
+>   PCI: Add INTx Mechanism Messages macros
+>   PCI: dwc: Change arguments of dw_pcie_prog_outbound_atu()
+>   PCI: dwc: Add outbound MSG TLPs support
+>   PCI: designware-ep: Add INTx IRQs support
+>   PCI: dwc: endpoint: Add multiple PFs support for dbi2
+>   PCI: dwc: Add dw_pcie_link_set_max_link_width()
+>   PCI: dwc: Add missing PCI_EXP_LNKCAP_MLW handling
+>   PCI: tegra194: Drop PCI_EXP_LNKSTA_NLW setting
+>   PCI: dwc: Add EDMA_UNROLL capability flag
+>   PCI: dwc: Expose dw_pcie_ep_exit() to module
+>   PCI: dwc: Expose dw_pcie_write_dbi2() to module
+>   PCI: dwc: endpoint: Introduce .pre_init() and .deinit()
+>   dt-bindings: PCI: dwc: Update maxItems of reg and reg-names
+>   dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Host
+>   dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Endpoint
+>   PCI: rcar-gen4: Add R-Car Gen4 PCIe Host support
+>   PCI: rcar-gen4-ep: Add R-Car Gen4 PCIe Endpoint support
+>   MAINTAINERS: Update PCI DRIVER FOR RENESAS R-CAR for R-Car Gen4
+>   misc: pci_endpoint_test: Add Device ID for R-Car S4-8 PCIe controller
+> 
+>  .../bindings/pci/rcar-gen4-pci-ep.yaml        | 106 ++++++++
+>  .../bindings/pci/rcar-gen4-pci-host.yaml      | 123 ++++++++++
+>  .../bindings/pci/snps,dw-pcie-ep.yaml         |   4 +-
+>  .../devicetree/bindings/pci/snps,dw-pcie.yaml |   4 +-
+>  MAINTAINERS                                   |   1 +
+>  drivers/misc/pci_endpoint_test.c              |   4 +
+>  drivers/pci/controller/dwc/Kconfig            |  20 ++
+>  drivers/pci/controller/dwc/Makefile           |   4 +
+>  .../pci/controller/dwc/pcie-designware-ep.c   | 136 +++++++++--
+>  .../pci/controller/dwc/pcie-designware-host.c |  52 ++--
+>  drivers/pci/controller/dwc/pcie-designware.c  | 156 ++++++------
+>  drivers/pci/controller/dwc/pcie-designware.h  |  29 ++-
+>  .../controller/dwc/pcie-rcar-gen4-ep-drv.c    | 173 +++++++++++++
+>  .../controller/dwc/pcie-rcar-gen4-host-drv.c  | 135 +++++++++++
+>  drivers/pci/controller/dwc/pcie-rcar-gen4.c   | 227 ++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-rcar-gen4.h   |  44 ++++
+>  drivers/pci/controller/dwc/pcie-tegra194.c    |   6 -
+>  drivers/pci/pci.h                             |  18 ++
+>  18 files changed, 1111 insertions(+), 131 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+>  create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-ep-drv.c
+>  create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-host-drv.c
+>  create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.c
+>  create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.h
+> 
 > -- 
 > 2.25.1
 > 
