@@ -2,220 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0EA17882DC
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 11:02:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5610F7882CE
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 11:02:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244044AbjHYJCV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Aug 2023 05:02:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37536 "EHLO
+        id S233456AbjHYJBl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Aug 2023 05:01:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242047AbjHYJBm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 05:01:42 -0400
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EADA1BFA;
-        Fri, 25 Aug 2023 02:01:40 -0700 (PDT)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-        by fd01.gateway.ufhost.com (Postfix) with ESMTP id C433B81FB;
-        Fri, 25 Aug 2023 17:01:38 +0800 (CST)
-Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 25 Aug
- 2023 17:01:38 +0800
-Received: from ubuntu.localdomain (113.72.145.205) by EXMBX171.cuchost.com
- (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 25 Aug
- 2023 17:01:37 +0800
-From:   Minda Chen <minda.chen@starfivetech.com>
-To:     Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        Kevin Xie <kevin.xie@starfivetech.com>,
-        Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v4 06/11] PCI: plda: Add event interrupt codes and IRQ domain ops
-Date:   Fri, 25 Aug 2023 17:01:24 +0800
-Message-ID: <20230825090129.65721-7-minda.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230825090129.65721-1-minda.chen@starfivetech.com>
-References: <20230825090129.65721-1-minda.chen@starfivetech.com>
+        with ESMTP id S232648AbjHYJBh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 05:01:37 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A65A1CD2;
+        Fri, 25 Aug 2023 02:01:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692954095; x=1724490095;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=wt7Z9jwm6HYtpbqOcPwsAZgItQ7w8UhRblltQlxs1JU=;
+  b=VRYKE4CkgjBrwmQZ6OE93a5hROwLJxqwhgaOiFfoNrw/Tve1QF5qWNg3
+   7V+7YbXKL+J2ihs/q5g0Cgm7Zizlomo3QasmSE1uzrhPfJsqVKJN5tzdw
+   9jQ9UPF85Hxe0uOxC6U7hmzTeNR6DmicA3/CKNxermoDchLa5kopaeFrM
+   lSjqT8ODowrxNo5941F3ImoAmX3bCf1+kudyF9SlyO7JHVOad9txtcg4G
+   B3KIfxx857pdmNBc518vSMop7J47fz5b9b0o5cngozUkHHG1O2LAC0l4c
+   llyY9DXsJ6WxK/2CGTxBeyTm6i4sBH73gEGxOf4Oygu3L3woQd28ObK6s
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="354999053"
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="scan'208";a="354999053"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 02:01:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="984039519"
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="scan'208";a="984039519"
+Received: from enguerra-mobl.ger.corp.intel.com ([10.251.213.8])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 02:01:27 -0700
+Date:   Fri, 25 Aug 2023 12:01:25 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 00/12] PCI: Miscellaneous cleanups
+In-Reply-To: <20230824193712.542167-1-helgaas@kernel.org>
+Message-ID: <bfdee8c-ed51-94ba-418-6f69c9c62@linux.intel.com>
+References: <20230824193712.542167-1-helgaas@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [113.72.145.205]
-X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX171.cuchost.com
- (172.16.6.91)
-X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/mixed; boundary="8323329-613642315-1692954088=:3206"
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-For PolarFire implements non-PLDA local interrupt events, most of
-event interrupt process codes can not be re-used. PLDA implements
-new codes and IRQ domain ops like PolarFire.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-plda_handle_event() adds a new IRQ num to event num mapping codes for
-PLDA local event except DMA engine interrupt events. The DMA engine
-interrupt events are implemented by vendors.
+--8323329-613642315-1692954088=:3206
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
----
- drivers/pci/controller/plda/pcie-plda-host.c | 99 ++++++++++++++++++++
- drivers/pci/controller/plda/pcie-plda.h      |  4 +
- 2 files changed, 103 insertions(+)
+On Thu, 24 Aug 2023, Bjorn Helgaas wrote:
 
-diff --git a/drivers/pci/controller/plda/pcie-plda-host.c b/drivers/pci/controller/plda/pcie-plda-host.c
-index ce02cfe6b5fa..bf63f220a518 100644
---- a/drivers/pci/controller/plda/pcie-plda-host.c
-+++ b/drivers/pci/controller/plda/pcie-plda-host.c
-@@ -250,6 +250,105 @@ int plda_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
- 	return 0;
- }
- 
-+irqreturn_t plda_event_handler(int irq, void *dev_id)
-+{
-+	return IRQ_HANDLED;
-+}
-+
-+void plda_handle_event(struct irq_desc *desc)
-+{
-+	struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	unsigned long events = 0;
-+	u32 bit, val, origin;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	val = readl_relaxed(port->bridge_addr + ISTATUS_LOCAL);
-+	origin = val;
-+	val = val >> A_ATR_EVT_POST_ERR_SHIFT;
-+	events |= val & 0xff;
-+	if (origin & PM_MSI_INT_INTX_MASK)
-+		events |= BIT(EVENT_PM_MSI_INT_INTX);
-+	val = (origin >> PM_MSI_INT_MSI_SHIFT) & 0xf;
-+	events |= val << EVENT_PM_MSI_INT_MSI;
-+
-+	for_each_set_bit(bit, &events, port->num_events)
-+		generic_handle_domain_irq(port->event_domain, bit);
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static u32 plda_hwirq_to_mask(int hwirq)
-+{
-+	u32 mask;
-+
-+	if (hwirq < EVENT_PM_MSI_INT_INTX)
-+		mask = BIT(hwirq + A_ATR_EVT_POST_ERR_SHIFT);
-+	else if (hwirq == EVENT_PM_MSI_INT_INTX)
-+		mask = PM_MSI_INT_INTX_MASK;
-+	else
-+		mask = BIT(hwirq + PM_MSI_TO_MASK_OFFSET);
-+
-+	return mask;
-+}
-+
-+static void plda_ack_event_irq(struct irq_data *data)
-+{
-+	struct plda_pcie_rp *port = irq_data_get_irq_chip_data(data);
-+
-+	writel_relaxed(plda_hwirq_to_mask(data->hwirq),
-+		       port->bridge_addr + ISTATUS_LOCAL);
-+}
-+
-+static void plda_mask_event_irq(struct irq_data *data)
-+{
-+	struct plda_pcie_rp *port = irq_data_get_irq_chip_data(data);
-+	u32 mask, val;
-+
-+	mask = plda_hwirq_to_mask(data->hwirq);
-+
-+	raw_spin_lock(&port->lock);
-+	val = readl_relaxed(port->bridge_addr + IMASK_LOCAL);
-+	val &= ~mask;
-+	writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
-+	raw_spin_unlock(&port->lock);
-+}
-+
-+static void plda_unmask_event_irq(struct irq_data *data)
-+{
-+	struct plda_pcie_rp *port = irq_data_get_irq_chip_data(data);
-+	u32 mask, val;
-+
-+	mask = plda_hwirq_to_mask(data->hwirq);
-+
-+	raw_spin_lock(&port->lock);
-+	val = readl_relaxed(port->bridge_addr + IMASK_LOCAL);
-+	val |= mask;
-+	writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
-+	raw_spin_unlock(&port->lock);
-+}
-+
-+static struct irq_chip plda_event_irq_chip = {
-+	.name = "PLDA PCIe EVENT",
-+	.irq_ack = plda_ack_event_irq,
-+	.irq_mask = plda_mask_event_irq,
-+	.irq_unmask = plda_unmask_event_irq,
-+};
-+
-+static int plda_pcie_event_map(struct irq_domain *domain, unsigned int irq,
-+			       irq_hw_number_t hwirq)
-+{
-+	irq_set_chip_and_handler(irq, &plda_event_irq_chip, handle_level_irq);
-+	irq_set_chip_data(irq, domain->host_data);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops plda_evt_dom_ops = {
-+	.map = plda_pcie_event_map,
-+};
-+
- void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
- 			    phys_addr_t axi_addr, phys_addr_t pci_addr,
- 			    size_t size)
-diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
-index a5eb02ec6171..315d9874b899 100644
---- a/drivers/pci/controller/plda/pcie-plda.h
-+++ b/drivers/pci/controller/plda/pcie-plda.h
-@@ -102,6 +102,8 @@
- #define EVENT_PM_MSI_INT_SYS_ERR		12
- #define NUM_PLDA_EVENTS				13
- 
-+#define PM_MSI_TO_MASK_OFFSET			19
-+
- struct plda_msi {
- 	struct mutex lock;		/* Protect used bitmap */
- 	struct irq_domain *msi_domain;
-@@ -118,10 +120,12 @@ struct plda_pcie_rp {
- 	raw_spinlock_t lock;
- 	struct plda_msi msi;
- 	void __iomem *bridge_addr;
-+	int num_events;
- };
- 
- void plda_handle_msi(struct irq_desc *desc);
- int plda_allocate_msi_domains(struct plda_pcie_rp *port);
-+irqreturn_t plda_event_handler(int irq, void *dev_id);
- void plda_handle_intx(struct irq_desc *desc);
- int plda_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
- 		       irq_hw_number_t hwirq);
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Simplify some trivial things and fix some typos and formatting
+> inconsistencies.
+> 
+> Most are based on v6.5-rc1 (actually on the current "misc" branch, so there
+> may be minor conflicts).
+> 
+> The last ("Simplify pcie_capability_clear_and_set_word()") is based on the
+> current "pcie-rmw" branch because it changes the same code as that branch
+> does.
+> 
+> No functional change intended for any of this, except the printk changes
+> ("%#08x" vs "%#010x").
+> 
+> Bjorn Helgaas (12):
+>   PCI: mvebu: Remove unused struct mvebu_pcie.busn
+>   PCI: Unexport pcie_port_bus_type
+>   PCI: Remove unnecessary initializations
+>   PCI: Fix printk field formatting
+>   PCI: Use consistent put_user() pointer types
+>   PCI/AER: Simplify AER_RECOVER_RING_SIZE definition
+>   PCI: Simplify pci_pio_to_address()
+>   PCI: Simplify pci_dev_driver()
+>   PCI: Fix pci_bus_resetable(), pci_slot_resetable() name typos
+>   PCI: Fix typos in docs and comments
+>   PCI: Fix code formatting inconsistencies
+>   PCI: Simplify pcie_capability_clear_and_set_word() control flow
+
+I read through all these patches. For the whole series:
+
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+
 -- 
-2.17.1
+ i.
 
+--8323329-613642315-1692954088=:3206--
