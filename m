@@ -2,113 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB598788370
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 11:22:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9833788399
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 11:33:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235619AbjHYJWC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Aug 2023 05:22:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42154 "EHLO
+        id S234471AbjHYJcn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Aug 2023 05:32:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244268AbjHYJVk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 05:21:40 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD3591FD5
-        for <linux-pci@vger.kernel.org>; Fri, 25 Aug 2023 02:21:29 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-52889bc61b6so1107060a12.0
-        for <linux-pci@vger.kernel.org>; Fri, 25 Aug 2023 02:21:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692955288; x=1693560088;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BZgZaMT5PxJw7tH308zexA8qRHLlWqjM6kGNr72Z26s=;
-        b=jgOPuKgBX8LsnrVBpxagR7rRtJfRP/bebUcJD3vsbi9xMm9l58gC5cw0r9Rwle91RV
-         Wja0F4kONox6Ip3jRnT9XV1l0mvTExirg4luRv4XJDQm2JvV9/i18ZZPEhs3fb8wp/EA
-         Wxi/KVB6lDqtjacSQIuEtNyipWhI37UPSYngi9L0IhEotJPJIBsZrQPxd+O2kFkqjPap
-         Oyj83NsoppXK2usstyN2s52q7Xr8jf836fC2pwmfwgYphLNfckGneihT7c9/Z5C1tu3I
-         pJV+fMDodmM9NYPDGckACE9KsEhilTtRo1YK5WuEF22EomDIDkAmJ9enp9I9A6eEpXa/
-         D9dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692955288; x=1693560088;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BZgZaMT5PxJw7tH308zexA8qRHLlWqjM6kGNr72Z26s=;
-        b=fdEqupEveY/iqBNYX96n24TvUWVwCzjG6jbV3VEG4DBG//4E9+pzuNBaTnfK43KYD6
-         2HY5cyBbsGdB8QWDFBAxQS/nM3haleavDl9Ri12UO3vjpAgt6HK4uSjcnC/ni4Njv4rZ
-         62bbVBCTDClmDjDxTRKFsb4pgu4n1XZ4GUx8s/DNrmBzVnU5zh5sxHj9yWJjVtT+2klV
-         sGicbSWlu5JZKNoA7ebrn70HpA6UxONvAaejhkY2a3y6oRe0SAuiuDNf4tIGBso4tiTD
-         3EYSd9hSwpQJpo7PND9BveeJtFnQCQjYYkenKYrSCNWPtsWDHB9LqODw/HuHYOtDmrrC
-         kW1Q==
-X-Gm-Message-State: AOJu0Ywfa3oHWrC6vWvAWCYFbxoY5mxcN3D4vbdA7g6QAIe8xZCZGkAj
-        NAUHejObY/qQPtoKKukdQcY1jg==
-X-Google-Smtp-Source: AGHT+IEo+aS/DfSwbspGBPf6zJxemZO9RG5G7PRer+UtxBoyL3dwDOJaiFVu4h7L5dLcZvA/9TmNCQ==
-X-Received: by 2002:a17:906:76cf:b0:9a1:b98a:c723 with SMTP id q15-20020a17090676cf00b009a1b98ac723mr9218632ejn.4.1692955287927;
-        Fri, 25 Aug 2023 02:21:27 -0700 (PDT)
-Received: from [192.168.0.22] ([77.252.47.198])
-        by smtp.gmail.com with ESMTPSA id ck16-20020a170906c45000b00992b8d56f3asm738608ejb.105.2023.08.25.02.21.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Aug 2023 02:21:27 -0700 (PDT)
-Message-ID: <f04b6606-6ca9-28d1-6a10-1e543a5d5fb7@linaro.org>
-Date:   Fri, 25 Aug 2023 11:21:25 +0200
+        with ESMTP id S234237AbjHYJc0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 05:32:26 -0400
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A6DBB1FD4;
+        Fri, 25 Aug 2023 02:32:23 -0700 (PDT)
+X-IronPort-AV: E=Sophos;i="6.02,195,1688396400"; 
+   d="scan'208";a="177667233"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 25 Aug 2023 18:32:22 +0900
+Received: from localhost.localdomain (unknown [10.166.15.32])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id CC71F40071FF;
+        Fri, 25 Aug 2023 18:32:22 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
+        manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
+        kishon@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org
+Cc:     marek.vasut+renesas@gmail.com, fancer.lancer@gmail.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v20 00/19] PCI: rcar-gen4: Add R-Car Gen4 PCIe support
+Date:   Fri, 25 Aug 2023 18:32:00 +0900
+Message-Id: <20230825093219.2685912-1-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v3 09/11] dt-bindings: PCI: Add StarFive JH7110 PCIe
- controller
-To:     Minda Chen <minda.chen@starfivetech.com>,
-        Rob Herring <robh@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
-        Kevin Xie <kevin.xie@starfivetech.com>,
-        linux-riscv@lists.infradead.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84s?= =?UTF-8?Q?ki?= <kw@linux.com>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Conor Dooley <conor@kernel.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        linux-kernel@vger.kernel.org,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        devicetree@vger.kernel.org
-References: <20230814082016.104181-1-minda.chen@starfivetech.com>
- <20230814082016.104181-10-minda.chen@starfivetech.com>
- <169228685644.1140409.12427674208274594176.robh@kernel.org>
- <5450650c-3750-a0ee-72a1-bfa0a4545e0a@starfivetech.com>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <5450650c-3750-a0ee-72a1-bfa0a4545e0a@starfivetech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=1.1 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 25/08/2023 11:06, Minda Chen wrote:
->>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->>
-> Hi Rob
-> Thanks. 
-> I see other PCIe maintainer have not reviewed PCIe driver codes(or no coments).
-> Could you help to review PCIe driver codes patches? (I just commit new version 4). Thanks.
+Add R-Car S4-8 (R-Car Gen4) PCIe Host and Endpoint support.
+To support them, modify PCIe DesignWare common codes.
 
-Please relax, and help out by reviewing other patches on the mailing
-lists in order to relieve the burden of maintainers and move your
-patches higher up the list.
+Changes from v19:
+https://lore.kernel.org/linux-pci/20230823091153.2578417-1-yoshihiro.shimoda.uh@renesas.com/
+ - Based on the latest pci.git / next branch and the following patches:
+   [PATCH v3 0/2] Cleanup IRQ type definitions
+   https://lore.kernel.org/linux-pci/20230802094036.1052472-1-dlemoal@kernel.org/
+ - Rename PCI_MSG_TYPE_R_* macros in the patch 01/19.
+ - Fix the comment in the patch 04/19.
+ - Add Reviewed-by in the patch {06,1[2678]/19.
+ - Modify common functions for the same method of clock handling in the patch
+   1[78]/19.
+ - Remove redundant gpio handling in the patch 16/19.
 
-Best regards,
-Krzysztof
+Changes from v18:
+https://lore.kernel.org/linux-pci/20230721074452.65545-1-yoshihiro.shimoda.uh@renesas.com/
+ - Based on the latest pci.git / next branch and the following patches:
+   [PATCH v3 0/2] Cleanup IRQ type definitions
+   https://lore.kernel.org/linux-pci/20230802094036.1052472-1-dlemoal@kernel.org/
+ - Drop some patches about converting "legacy" to "INTx".
+ - Add detailed description in the patch 0[26]/19.
+ - Add a new patch "Expose dw_pcie_write_dbi2" in the patch 11/19.
+ - Revise typo in the patch 12/19.
+ - Fix calling order of deinit in the patch 12/19.
+ - Revise Kconfig about kernel module names in the patch 1[67]/19.
+ - Rename drivers' file names in the patch 1[67]/19.
+ - Some other minor change/fix in the patch 1[67]/19.
+
+Yoshihiro Shimoda (19):
+  PCI: Add INTx Mechanism Messages macros
+  PCI: dwc: Change arguments of dw_pcie_prog_outbound_atu()
+  PCI: dwc: Add outbound MSG TLPs support
+  PCI: designware-ep: Add INTx IRQs support
+  PCI: dwc: endpoint: Add multiple PFs support for dbi2
+  PCI: dwc: Add dw_pcie_link_set_max_link_width()
+  PCI: dwc: Add missing PCI_EXP_LNKCAP_MLW handling
+  PCI: tegra194: Drop PCI_EXP_LNKSTA_NLW setting
+  PCI: dwc: Add EDMA_UNROLL capability flag
+  PCI: dwc: Expose dw_pcie_ep_exit() to module
+  PCI: dwc: Expose dw_pcie_write_dbi2() to module
+  PCI: dwc: endpoint: Introduce .pre_init() and .deinit()
+  dt-bindings: PCI: dwc: Update maxItems of reg and reg-names
+  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Host
+  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Endpoint
+  PCI: rcar-gen4: Add R-Car Gen4 PCIe Host support
+  PCI: rcar-gen4-ep: Add R-Car Gen4 PCIe Endpoint support
+  MAINTAINERS: Update PCI DRIVER FOR RENESAS R-CAR for R-Car Gen4
+  misc: pci_endpoint_test: Add Device ID for R-Car S4-8 PCIe controller
+
+ .../bindings/pci/rcar-gen4-pci-ep.yaml        | 106 ++++++++
+ .../bindings/pci/rcar-gen4-pci-host.yaml      | 123 ++++++++++
+ .../bindings/pci/snps,dw-pcie-ep.yaml         |   4 +-
+ .../devicetree/bindings/pci/snps,dw-pcie.yaml |   4 +-
+ MAINTAINERS                                   |   1 +
+ drivers/misc/pci_endpoint_test.c              |   4 +
+ drivers/pci/controller/dwc/Kconfig            |  20 ++
+ drivers/pci/controller/dwc/Makefile           |   4 +
+ .../pci/controller/dwc/pcie-designware-ep.c   | 136 +++++++++--
+ .../pci/controller/dwc/pcie-designware-host.c |  52 ++--
+ drivers/pci/controller/dwc/pcie-designware.c  | 156 ++++++------
+ drivers/pci/controller/dwc/pcie-designware.h  |  29 ++-
+ .../controller/dwc/pcie-rcar-gen4-ep-drv.c    | 173 +++++++++++++
+ .../controller/dwc/pcie-rcar-gen4-host-drv.c  | 135 +++++++++++
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c   | 227 ++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-rcar-gen4.h   |  44 ++++
+ drivers/pci/controller/dwc/pcie-tegra194.c    |   6 -
+ drivers/pci/pci.h                             |  18 ++
+ 18 files changed, 1111 insertions(+), 131 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-ep-drv.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-host-drv.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.h
+
+-- 
+2.25.1
 
