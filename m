@@ -2,121 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92573788226
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 10:35:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70FCD788296
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 10:45:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239259AbjHYIfL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Aug 2023 04:35:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37718 "EHLO
+        id S242521AbjHYIpY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Aug 2023 04:45:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234947AbjHYIey (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 04:34:54 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A71519AC;
-        Fri, 25 Aug 2023 01:34:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692952492; x=1724488492;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=o8sa3XGpijYGYefLCVVAo4o9RIa9+XLPTSaFDF+9KEQ=;
-  b=jzdqrqHmKbw5hyvFmb0NSiUaljyDLJ9P6fpiN8bBCswreaP0QNBC6W+n
-   2eRiQvHPrZSjyDJRzkOD4bK0QquEoznfdHAE9LWikIk8wjnXmEtvK7Vne
-   yATFeB5i8XkT3VStiM6Z33S6R9yHQEhoJyvQbFWEdpyBRMPOoDPUQ5RiO
-   2RWUMHYadw/x9bNBhruIjDVK6/gjIEULgxTwsc3gVuTC1mQWoDADSLLWv
-   NXtIcJz3BXjsIDU/S5Ep7qQRGyajr7XlwTSoRBGjLcHZMVss6Cd5GzarO
-   5vJt32Jpou6RG823BiKdCOUxS8Pu4RWFoUVu5PH5OYCrixVxFBfsA8pwO
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="441010686"
-X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
-   d="scan'208";a="441010686"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 01:34:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="1068164200"
-X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
-   d="scan'208";a="1068164200"
-Received: from enguerra-mobl.ger.corp.intel.com ([10.251.213.8])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 01:34:49 -0700
-Date:   Fri, 25 Aug 2023 11:34:47 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Andi Shyti <andi.shyti@kernel.org>
-cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>, linux-i2c@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 07/14] I2C: ali15x3: Do PCI error checks on own line
-In-Reply-To: <20230824160006.ahcv2twl4c4q5cd5@intel.intel>
-Message-ID: <41c95216-ed27-28fe-919a-beecc138888c@linux.intel.com>
-References: <20230824132832.78705-1-ilpo.jarvinen@linux.intel.com> <20230824132832.78705-8-ilpo.jarvinen@linux.intel.com> <20230824160006.ahcv2twl4c4q5cd5@intel.intel>
+        with ESMTP id S244092AbjHYIpO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 04:45:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2E901FFD
+        for <linux-pci@vger.kernel.org>; Fri, 25 Aug 2023 01:43:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1692953005;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eCP2Xqg2OKBHB7tOPm2sgvbABZBA3Of3A/9A5xghgpE=;
+        b=U7/fevyiUWSc/8VuKZ6EdR4+TBdZ/Q0qfVC+HgPYPf94qK2Yh7OYWoD9ni3lqDqLiAdi6s
+        Yrf3yL6oZrIdPIreNR71YGr1Nfn+JjujGfdDySXOZK3mbYduTSLdWtojJE7s9e4w26xMkr
+        HHglevMhqt2NqUWsNWm7ihR7oMIGMwI=
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
+ [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-530-oSO4fmh6OgqP43O1gm9zwA-1; Fri, 25 Aug 2023 04:43:23 -0400
+X-MC-Unique: oSO4fmh6OgqP43O1gm9zwA-1
+Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-6b9ef9b1920so683468a34.1
+        for <linux-pci@vger.kernel.org>; Fri, 25 Aug 2023 01:43:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692953002; x=1693557802;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eCP2Xqg2OKBHB7tOPm2sgvbABZBA3Of3A/9A5xghgpE=;
+        b=kT4C2mZYGBi2FwJeXFKDPO6OL3vzlSMBUU/qaUzpSokpYl4ABIaJF9vwIaf422i8zF
+         cZTnZgxIw37oh5+2/vh0YE3I6xG/b3Av0aOYt5nUaZvJn8a8rSK2b5FBN2dobX1HW4eO
+         vxGDfX//KnNfjxAw5oaLzXnlfzTlZJoogzU+scn/hDFXbk+c4bJMSdXpvM1D+KkXeMmO
+         wcz2vHMIAkhMxK+z9nfju6XEs9E5elO9XOCIDF47uMeZRGWxVi7oykCtktBitCEvYt5H
+         KfNknboIDt4RmswPf/yxSEiya6A7qMsP1G3QYGE2g7jAB9kxpFsAtAijxrq6sQYpiJHo
+         g/xQ==
+X-Gm-Message-State: AOJu0YyfGCjjAV8v7L20UhjJ4OVRAiJ3OvBvRMOG+teXZn9wtsxGvzRP
+        UfduHMcDnDx5IsBqOVMgaoRrouoad0yM+73JUr/sO/7UgZtgmGdCUZdsn1J4U8krnHjvou69wa+
+        eE8FUTvws5vvrG7UUy4ncBGLSq6+qZ5T7JTUK3YqN+2KJCQ==
+X-Received: by 2002:a05:6870:d1ca:b0:1c8:39a6:77a9 with SMTP id b10-20020a056870d1ca00b001c839a677a9mr2329016oac.31.1692953002302;
+        Fri, 25 Aug 2023 01:43:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE+Z/kiU7ATmiquWx9l1gQfwBTS3mrikpiiF2jq2BCklQjFyUDEiDnWhj/JdW/QWLIfyvO23NoK11yKVsyDc2E=
+X-Received: by 2002:a05:6870:d1ca:b0:1c8:39a6:77a9 with SMTP id
+ b10-20020a056870d1ca00b001c839a677a9mr2329007oac.31.1692953002103; Fri, 25
+ Aug 2023 01:43:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-228556480-1692952491=:3206"
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
+ <20230821131223.GJ3465@black.fi.intel.com> <CA+cBOTc-7U_sumg6g-uBs9w3m8xipuOV1VY=4nmBcyuppgi8_g@mail.gmail.com>
+ <20230823050714.GP3465@black.fi.intel.com> <CA+cBOTdS5djXL=93VThP9K67pjYKHtjceqSczKf8NQonhpgo5Q@mail.gmail.com>
+ <20230823074447.GR3465@black.fi.intel.com> <20230823075649.GS3465@black.fi.intel.com>
+ <CA+cBOTco17b_8ZMhU8gXy8z2mtZXvVxrEUdKaAuZMhyFYC3yeQ@mail.gmail.com>
+ <20230823090525.GT3465@black.fi.intel.com> <CA+cBOTeOSBkw_-AM6desmdVQjTXUZbKppK_PDiOM3sXQW5QKiA@mail.gmail.com>
+ <20230824114300.GU3465@black.fi.intel.com>
+In-Reply-To: <20230824114300.GU3465@black.fi.intel.com>
+From:   Kamil Paral <kparal@redhat.com>
+Date:   Fri, 25 Aug 2023 10:42:55 +0200
+Message-ID: <CA+cBOTej22hWEFvMOnFfKy16tuzS_+S7kccPPYXNoGVbYMoEdA@mail.gmail.com>
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+        bhelgaas@google.com, chris.chiu@canonical.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, Aug 24, 2023 at 1:43=E2=80=AFPM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> One thing I noticed, probably has nothing to do with this, but you have
+> the "security level" set to "secure". Now this is fine and actually
+> recommended but I wonder if anything changes if you switch that
+> temporarily to "user"? What is happening here is that once the system
+> enters S3 the Thunderbolt driver tells the firmware to save the
+> connected device list, and then once it exits S3 it is expected to
+> re-connect the PCIe tunnels of the devices on that list but this is not
+> happening and that's why the dock "dissappears" during resume.
 
---8323329-228556480-1692952491=:3206
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: 8BIT
+That was a great suggestion. After switching to the user security
+level, the resume delay is gone, and my dock devices seem to be
+working almost immediately after resume! The dmesg for that is here:
+https://bugzilla-attachments.redhat.com/attachment.cgi?id=3D1985262
 
-On Thu, 24 Aug 2023, Andi Shyti wrote:
-> On Thu, Aug 24, 2023 at 04:28:25PM +0300, Ilpo Järvinen wrote:
-> > Instead of if conditions with line splits, use the usual error handling
-> > pattern with a separate variable to improve readability.
-> > 
-> > No functional changes intended.
-> > 
-> > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > ---
-> >  drivers/i2c/busses/i2c-ali15x3.c | 10 +++++-----
-> >  1 file changed, 5 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/i2c/busses/i2c-ali15x3.c b/drivers/i2c/busses/i2c-ali15x3.c
-> > index cc58feacd082..6fedecef9df3 100644
-> > --- a/drivers/i2c/busses/i2c-ali15x3.c
-> > +++ b/drivers/i2c/busses/i2c-ali15x3.c
-> > @@ -122,6 +122,7 @@ static int ali15x3_setup(struct pci_dev *ALI15X3_dev)
-> >  {
-> >  	u16 a;
-> >  	unsigned char temp;
-> > +	int ret;
-> 
-> can you please add this ret declaration inside the
-> "if (force_addr)"?
+I've done tens of cycles and haven't found any race conditions, unlike
+with the TB assist mode. (Only once, my USB mouse wasn't working at
+all, but that's something that occasionally happens on most docks I've
+worked with and seems to be some different issue).
 
-Sure.
+I'm sorry I haven't found this earlier myself. I did try switching
+these options, but I bundled it together with enabling the TB assist
+mode, which has quirks, so I didn't realize switching just this one
+option might have an impact.
 
-Thanks for taking a look.
+> In any case we can conclude that the commit in question has nothing to
+> do with the issue. This is completely Thunderbolt related problem.
 
--- 
- i.
+Considering the information above, does this appear to be a solely
+dock-related issue (bugged firmware), or does it make sense to follow
+up on this in some different kernel list? I have to say I'm completely
+OK with running the laptop using the "user" TB security level, but if
+you think I should follow up somewhere to get the "secure" level fixed
+(or some workaround applied, etc), I can.
 
+Thanks a lot for all your help debugging this, Mika and Bjorn.
 
-> >  	/* Check the following things:
-> >  		- SMB I/O address is initialized
-> > @@ -167,12 +168,11 @@ static int ali15x3_setup(struct pci_dev *ALI15X3_dev)
-> >  	if(force_addr) {
-> >  		dev_info(&ALI15X3_dev->dev, "forcing ISA address 0x%04X\n",
-> >  			ali15x3_smba);
-> > -		if (PCIBIOS_SUCCESSFUL != pci_write_config_word(ALI15X3_dev,
-> > -								SMBBA,
-> > -								ali15x3_smba))
-> > +		ret = pci_write_config_word(ALI15X3_dev, SMBBA, ali15x3_smba);
-> > +		if (ret != PCIBIOS_SUCCESSFUL)
-> >  			goto error;
-> > -		if (PCIBIOS_SUCCESSFUL != pci_read_config_word(ALI15X3_dev,
-> > -								SMBBA, &a))
-> > +		ret = pci_read_config_word(ALI15X3_dev, SMBBA, &a);
-> > +		if (ret != PCIBIOS_SUCCESSFUL)
-> >  			goto error;
-> >  		if ((a & ~(ALI15X3_SMB_IOSIZE - 1)) != ali15x3_smba) {
-> >  			/* make sure it works */
-
---8323329-228556480-1692952491=:3206--
