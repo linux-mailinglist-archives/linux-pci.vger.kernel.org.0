@@ -2,132 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B96657881A1
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 10:10:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03827788222
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Aug 2023 10:35:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233900AbjHYIJx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Aug 2023 04:09:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39526 "EHLO
+        id S232159AbjHYIfK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Aug 2023 04:35:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243390AbjHYIJZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 04:09:25 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 869E71FF9;
-        Fri, 25 Aug 2023 01:09:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692950963; x=1724486963;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=DDYB9hgCGLLt7dGj4L2dfzxCUOAizYUlniAtMkNplVo=;
-  b=Kmuh6f5VF7GcD1ggRZEsQPgZZq7sab+TWO+eM6CMmNwG5s4r3Mf+4yP2
-   cJOpjXNO9f+OGZO7zX+Hdy94SXbotyONO0onk7D+mFN5CJRE0EYEI1EQ5
-   JTf4zTg1EMwHaM+UUSedbf8kQBnIlMeWZqK0+noDUm6W8IaNKMHzJqtWK
-   Vr99XOaHLuE8GrJezaZdxRsJ+u1UbjBgkl30INvt/tSEhRR7lCmv3JCWF
-   Qi54rieK03pooAyD0xWWRlOsi4UzY0j1l9s/r6oaXrVH41hzMfpaXiRQW
-   kGa9tVLcMORUaErwiDSaDmN7J4rQq5NiDBEW3p06ZYk/BlDf8o7WpCT5G
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="378446107"
-X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
-   d="scan'208";a="378446107"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 01:09:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="860998431"
-X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
-   d="scan'208";a="860998431"
-Received: from enguerra-mobl.ger.corp.intel.com ([10.251.213.8])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 01:09:21 -0700
-Date:   Fri, 25 Aug 2023 11:09:14 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-cc:     linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 12/12] PCI: Simplify pcie_capability_clear_and_set_word()
- control flow
-In-Reply-To: <20230824193712.542167-13-helgaas@kernel.org>
-Message-ID: <8f5f10be-333a-9d88-7acf-1cbb2b11680@linux.intel.com>
-References: <20230824193712.542167-1-helgaas@kernel.org> <20230824193712.542167-13-helgaas@kernel.org>
+        with ESMTP id S233535AbjHYIeh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Aug 2023 04:34:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B2B619AC;
+        Fri, 25 Aug 2023 01:34:36 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9822A64BF7;
+        Fri, 25 Aug 2023 08:34:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78E9DC433C8;
+        Fri, 25 Aug 2023 08:34:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692952475;
+        bh=FCtRh2nslorTFJV46o2tCNp1DvRCnNrBaxwZsCG8tak=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YjUNLrJPPiUJlG4lIcryD4r6V7wD8BPdtN0Ru12DQxleU4yaYHjuDkNDBDT/NXTYM
+         foQVACKGxnBJNgqBD/Ws8daYb96WqoJeu+rQzFCM8cvktNR5z2N++6A+E3jjn+YTAk
+         /ohehroDPeQdRm3mrlNgtQcwknIF7kyqIjYcOUr7lMgoGGxKSzTTPFWneav12hT9IU
+         WqRprG4dHsJr+lkGpeZsLMMhIPlg+Nz8tV1LqqtAbqdnMFIsqCcX/tfh33E5TUCo2s
+         hqXsqYxB2vEcU5tvL5c/JAWCneZdAKxec1eKgxrMUnLZGQ3TZeMpuEsuEMk6YWDGr0
+         kP+8Ix7YnG26w==
+Date:   Fri, 25 Aug 2023 14:04:22 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Frank Li <Frank.li@nxp.com>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "imx@lists.linux.dev" <imx@lists.linux.dev>,
+        "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>, "kw@linux.com" <kw@linux.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "ntb@lists.linux.dev" <ntb@lists.linux.dev>,
+        Peng Fan <peng.fan@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>
+Subject: Re: [PATCH 0/3] Add RC-to-EP doorbell with platform MSI controller
+Message-ID: <20230825083422.GB6005@thinkpad>
+References: <20230426203436.1277307-1-Frank.Li@nxp.com>
+ <AM6PR04MB483849BE4788EE893306F38E88759@AM6PR04MB4838.eurprd04.prod.outlook.com>
+ <ZIdFFV5TdAy//Aat@lizhi-Precision-Tower-5810>
+ <ZLVK7xX7kPjNaah+@lizhi-Precision-Tower-5810>
+ <ZOepCkqSnUmTdGHX@lizhi-Precision-Tower-5810>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1153837569-1692950962=:3206"
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZOepCkqSnUmTdGHX@lizhi-Precision-Tower-5810>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1153837569-1692950962=:3206
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-On Thu, 24 Aug 2023, Bjorn Helgaas wrote:
-
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Thu, Aug 24, 2023 at 03:01:30PM -0400, Frank Li wrote:
+> On Mon, Jul 17, 2023 at 10:06:39AM -0400, Frank Li wrote:
+> > On Mon, Jun 12, 2023 at 12:17:25PM -0400, Frank Li wrote:
+> > > On Fri, May 12, 2023 at 02:45:12PM +0000, Frank Li wrote:
+> > > > > 
+> > > > > This patches add new API to pci-epf-core, so any EP driver can use it.
+> > > > > 
+> > > > > The key point is comments from Thomas Gleixner, who suggest use new
+> > > > > PCI/IMS. But arm platform change still not be merged yet.
+> > > > > 
+> > > > > git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git devmsi-v2-arm
+> > > > > 
+> > > > > So I still use existed method implement RC to EP doorbell.
+> > > > > 
+> > > > > If Thomas Gleixner want to continue work on devmsi-v2-arm, I can help test
+> > > > > and update this patch.
+> > > > > 
+> > > > 
+> > > > Ping?
+> > > 
+> > > Ping? 
+> > 
+> > ping? 
 > 
-> Return early for errors in pcie_capability_clear_and_set_word_unlocked()
-> and pcie_capability_clear_and_set_dword() to simplify the control flow.
+> @Mani
+>      Do you have chance to review these patches? It provide a common
+> method with GIC ITS to implement notification from RC to EP.
 > 
-> No functional change intended.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Sorry for the delay. I was wating for a review from Thomas. But since this
+series hasn't caught his attention, I'll provide my review next week.
+
+- Mani
+
+> Frank
+> 
+> > 
+> > > 
+> > > > 
+> > > > > Frank Li (3):
+> > > > >   PCI: endpoint: Add RC-to-EP doorbell support using platform MSI
+> > > > >     controller
+> > > > >   misc: pci_endpoint_test: Add doorbell test case
+> > > > >   tools: PCI: Add 'B' option for test doorbell
+> > > > > 
+> > > > >  drivers/misc/pci_endpoint_test.c    |  41 +++++++++++
+> > > > >  drivers/pci/endpoint/pci-epf-core.c | 109
+> > > > > ++++++++++++++++++++++++++++
+> > > > >  include/linux/pci-epf.h             |  16 ++++
+> > > > >  include/uapi/linux/pcitest.h        |   1 +
+> > > > >  tools/pci/pcitest.c                 |  16 +++-
+> > > > >  5 files changed, 182 insertions(+), 1 deletion(-)
+> > > > > 
+> > > > > --
+> > > > > 2.34.1
+> > > > 
 
 -- 
- i.
-
-> ---
->  drivers/pci/access.c | 22 ++++++++++------------
->  1 file changed, 10 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> index 0b2e90d2f04f..6554a2e89d36 100644
-> --- a/drivers/pci/access.c
-> +++ b/drivers/pci/access.c
-> @@ -504,13 +504,12 @@ int pcie_capability_clear_and_set_word_unlocked(struct pci_dev *dev, int pos,
->  	u16 val;
->  
->  	ret = pcie_capability_read_word(dev, pos, &val);
-> -	if (!ret) {
-> -		val &= ~clear;
-> -		val |= set;
-> -		ret = pcie_capability_write_word(dev, pos, val);
-> -	}
-> +	if (ret)
-> +		return ret;
->  
-> -	return ret;
-> +	val &= ~clear;
-> +	val |= set;
-> +	return pcie_capability_write_word(dev, pos, val);
->  }
->  EXPORT_SYMBOL(pcie_capability_clear_and_set_word_unlocked);
->  
-> @@ -535,13 +534,12 @@ int pcie_capability_clear_and_set_dword(struct pci_dev *dev, int pos,
->  	u32 val;
->  
->  	ret = pcie_capability_read_dword(dev, pos, &val);
-> -	if (!ret) {
-> -		val &= ~clear;
-> -		val |= set;
-> -		ret = pcie_capability_write_dword(dev, pos, val);
-> -	}
-> +	if (ret)
-> +		return ret;
->  
-> -	return ret;
-> +	val &= ~clear;
-> +	val |= set;
-> +	return pcie_capability_write_dword(dev, pos, val);
->  }
->  EXPORT_SYMBOL(pcie_capability_clear_and_set_dword);
->  
-> 
---8323329-1153837569-1692950962=:3206--
+மணிவண்ணன் சதாசிவம்
