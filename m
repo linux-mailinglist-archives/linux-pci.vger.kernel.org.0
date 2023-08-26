@@ -2,192 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B303789655
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Aug 2023 13:49:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A9207896E0
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Aug 2023 15:11:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232591AbjHZLr6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 26 Aug 2023 07:47:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48492 "EHLO
+        id S231901AbjHZNLM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 26 Aug 2023 09:11:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232496AbjHZLr1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Aug 2023 07:47:27 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CDD619BA
-        for <linux-pci@vger.kernel.org>; Sat, 26 Aug 2023 04:47:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693050445; x=1724586445;
-  h=date:from:to:cc:subject:message-id;
-  bh=emHMrC4jQuECJf6YbljzryAQuVFiULF3Omyl7IO8/Lg=;
-  b=faYthpwM5TDhbHg+PqnC3PFbnlaC/rsM2S3VGblvGlBgQwwW+wdxw+VT
-   /C0y+aT+8R0XGCAUZQ+tMydwG4l3zDXJRl2qFIxURNx0hvSl2oyiT2ZQY
-   9hJb8cbmzuNTJxDr94vMmlqE5l++3Xb7EEyKASq/yP5fwB+C9VhiEpDbx
-   +swf28DSlRLDpjp+7cUjheafT/p4punNoITTiwVPKrtQ7Oq/27t9LPOpI
-   bInZdYj3mgZF9tTpAVxniDFtZQZ4gc6cr8gYhKQHKDwfV1PIHIaKc6rEw
-   gZQyLz+6Vbd7824/9Nvy2dQ762tR/CXZeV+TTQyUmaY+TDbKYg1ojeCjQ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10813"; a="372270906"
-X-IronPort-AV: E=Sophos;i="6.02,203,1688454000"; 
-   d="scan'208";a="372270906"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2023 04:47:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10813"; a="803219227"
-X-IronPort-AV: E=Sophos;i="6.02,203,1688454000"; 
-   d="scan'208";a="803219227"
-Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
-  by fmsmga008.fm.intel.com with ESMTP; 26 Aug 2023 04:47:23 -0700
-Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qZrlD-0004ed-0T;
-        Sat, 26 Aug 2023 11:47:23 +0000
-Date:   Sat, 26 Aug 2023 19:46:49 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:controller/layerscape] BUILD SUCCESS
- 17cf8661ee0f065c08152e611a568dd1fb0285f1
-Message-ID: <202308261947.7Ik1spGA-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S232655AbjHZNLK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Aug 2023 09:11:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8E581BCD;
+        Sat, 26 Aug 2023 06:11:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 77A6661520;
+        Sat, 26 Aug 2023 13:11:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A73A6C433C8;
+        Sat, 26 Aug 2023 13:11:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693055467;
+        bh=k1KBNma+mj9R6FSjzC6LtY+2F3uIa1IqFiWhk15mOYs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Vuu19/SERi1EBgk27a3l85/2K+GMkEwHBqiiCXXqg7sU/pZ246pcBNXqH8DjCKgse
+         qFNjioHYAAQq7i2QNUY6PZKniqvR0sjakPuifbKDY6ar3B2Vtl/mkW04Sumj8xY4Kj
+         OM3ciKR7d9S4xjbkiBZwjqx5rVPLABNPTWdzSUiZ50OPuHGa3bfr0PURx957FlSoq/
+         pTOM6yrWvuOf1j+qodQjKqZTh9oBPp7ntXn40NALfmFFfuY2nFC9/CfMFghH+pqL9c
+         GYtyp5CNNX2KFFGv9Xr4dukWnMJxCuFl5fFv4Bx/nETtaoJRIYbGwytde4Y4hWeE/8
+         vgo/wU7r9PmTw==
+Date:   Sat, 26 Aug 2023 08:11:05 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com,
+        koba.ko@canonical.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] PCI: Add helper to check if any of ancestor device
+ support D3cold
+Message-ID: <20230826131105.GA691555@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230825063948.GY3465@black.fi.intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/layerscape
-branch HEAD: 17cf8661ee0f065c08152e611a568dd1fb0285f1  PCI: layerscape: Add workaround for lost link capabilities during reset
+On Fri, Aug 25, 2023 at 09:39:48AM +0300, Mika Westerberg wrote:
+> On Fri, Aug 25, 2023 at 01:43:08PM +0800, Kai-Heng Feng wrote:
+> > On Fri, Aug 25, 2023 at 1:29 PM Mika Westerberg
+> > <mika.westerberg@linux.intel.com> wrote:
+> > > On Thu, Aug 24, 2023 at 09:46:00PM +0800, Kai-Heng Feng wrote:
+> > > > On Thu, Aug 24, 2023 at 7:57 PM Mika Westerberg
+> > > > <mika.westerberg@linux.intel.com> wrote:
 
-elapsed time: 3089m
+> > I think what Bjorn suggested is to keep AER enabled for D3hot, and
+> > only disable it for D3cold and S3.
+> > 
+> > > > Unless there are cases when device firmware behave differently to
+> > > > D3hot? Then maybe it's better to disable AER for both D3hot, D3cold
+> > > > and system S3.
+> > >
+> > > Yes, this makes sense.
+> > 
+> > I agree that differentiate between D3hot and D3cold unnecessarily make
+> > things more complicated, but Bjorn suggested errors reported by AER
+> > under D3hot should still be recorded.
+> > Do you have more compelling data to persuade Bjorn that AER should be
+> > disabled for both D3 states?
+> 
+> Is there even an AER error that can happen when a device is in D3hot
+> (link is in L1) or D3cold (link is in L2/3)? I'm not an expert in AER
+> but AFAICT these errors are reported when the device is in active state
+> not when it is in low power state.
 
-configs tested: 117
-configs skipped: 2
+I don't think a device in D3cold can signal its own errors.  But the
+link transition to L2/L3 as a device goes to D3cold may cause the
+bridge above to log an error.  And of course a config access to a
+device in D3cold will probably result in an Unsupported Request being
+logged by the bridge above it.  I think these are the sorts of errors
+we do need to avoid or ignore somehow.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+But Configuration and Message requests definitely happen in D3hot, and
+they can cause errors reported via AER.  The spec (r6.0, sec 2.2.8)
+recommends that Messages be handled the same in D0-D3hot.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r015-20230824   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20230824   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                   randconfig-001-20230824   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r012-20230824   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r005-20230824   gcc  
-csky                 randconfig-r011-20230824   gcc  
-csky                 randconfig-r032-20230824   gcc  
-hexagon               randconfig-001-20230824   clang
-hexagon               randconfig-002-20230824   clang
-i386                              allnoconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-r022-20230824   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20230824   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r014-20230824   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r001-20230824   gcc  
-nios2                randconfig-r004-20230824   gcc  
-nios2                randconfig-r035-20230824   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r024-20230824   gcc  
-parisc               randconfig-r031-20230824   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc              randconfig-r025-20230824   clang
-powerpc64            randconfig-r002-20230824   gcc  
-powerpc64            randconfig-r023-20230824   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20230824   gcc  
-riscv                randconfig-r026-20230824   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20230824   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                   randconfig-r016-20230824   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r006-20230824   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r003-20230824   clang
-um                   randconfig-r036-20230824   clang
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64               randconfig-r013-20230824   clang
-x86_64               randconfig-r034-20230824   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa               randconfig-r021-20230824   gcc  
-xtensa               randconfig-r033-20230824   gcc  
+PTM is an example of where we had errors being reported at suspend/
+resume because we had it configured incorrectly.  If we disabled AER
+in D3hot we might not learn about that kind of configuration problem.
+That's what makes me think there's some value in keeping AER enabled
+in D3hot.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Bjorn
