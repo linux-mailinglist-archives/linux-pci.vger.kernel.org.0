@@ -2,117 +2,192 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1030F789633
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Aug 2023 13:11:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B303789655
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Aug 2023 13:49:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231917AbjHZLLF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 26 Aug 2023 07:11:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37262 "EHLO
+        id S232591AbjHZLr6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 26 Aug 2023 07:47:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232554AbjHZLKr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Aug 2023 07:10:47 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936ED2123
-        for <linux-pci@vger.kernel.org>; Sat, 26 Aug 2023 04:10:44 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-99bf3f59905so211615666b.3
-        for <linux-pci@vger.kernel.org>; Sat, 26 Aug 2023 04:10:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693048243; x=1693653043;
-        h=content-transfer-encoding:subject:cc:to:from:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RscCfWDw9c63T+sdZkyQR+p1Wc4siTTiyVhc4ustSlk=;
-        b=sqy9GVMYqQSGAXhqcnSDscFEiNLlz0oyJUo+gyA3Rs0Emug8kSVkz8/N2gizi3042x
-         c622csD+2FbaxqujaIx3xPjoQaUV7K4ehSMQb6wBydpLOnANuXQtdFw49M9L3fROf9Hc
-         o5G5hTasasYs74K8Qwq88+qRGtaG4ixa5eymY2VKliLMVy3rBMaPSy50RBivHVteNZYL
-         jb2XZGjYqq9SiuY9IGnDVmivcRCTS/dQcv20Qrp6z/KaOi3wb3FPsHLljfSDd2HFn0l5
-         0199+nQr8F1lriLjvv05WjxVsmgoTIhQlb06sZ1L5sPTcs5ZJ/5Nq6jLxtBWVQHi9Eu6
-         fXMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693048243; x=1693653043;
-        h=content-transfer-encoding:subject:cc:to:from:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=RscCfWDw9c63T+sdZkyQR+p1Wc4siTTiyVhc4ustSlk=;
-        b=SNgsS5bgThSwLtPTXkvkGLkMqifYlDef1o8brqrwOg017yU2bj77HF1p4Z1To/TvZQ
-         T18nsMyliwqWvstOZn5R1/88ZSt76wAJWkvbKdpP+ANQxf9NqYZQFlkNFm7p3TDCtTXl
-         O+SRlCPhaYoCih4qIlxhEfl3WVw8rtmo2AHgK3MLZZ/qhCMstBwzsFE5UwRljI/5EU1T
-         Ix5mkReDDBwtVP9O5ON/fYgIXxElJBJPLIlrvGGfuDcBMt5wVlADx0btghgsHR9c+dWe
-         WPmldQ40QMyW9ZXaOcSsSt/Zmzpf/zZwvOvr8N2YLqF/bGOvYqclOJp5k0ObvaB/9U22
-         jzlQ==
-X-Gm-Message-State: AOJu0YyxVc7kg2ZpSEKov56et2y2Y+3mkS8sPmZJrdDZbpgQSh6HrsYp
-        JQI71lx39dwe6mGuBWRlFUcV78K8nas=
-X-Google-Smtp-Source: AGHT+IH1OR7cJxJ/CFX4j6gPvV4CWKAd/zyFSlJVem6f+5UIa+u7IG6+bJw5MBnzpAFzcZgZv04AmQ==
-X-Received: by 2002:a17:906:10c9:b0:9a1:c669:6e66 with SMTP id v9-20020a17090610c900b009a1c6696e66mr9482672ejv.70.1693048242739;
-        Sat, 26 Aug 2023 04:10:42 -0700 (PDT)
-Received: from ?IPV6:2a01:c22:7a9d:3800:1d42:e85f:c31a:dd4f? (dynamic-2a01-0c22-7a9d-3800-1d42-e85f-c31a-dd4f.c22.pool.telefonica.de. [2a01:c22:7a9d:3800:1d42:e85f:c31a:dd4f])
-        by smtp.googlemail.com with ESMTPSA id n4-20020a170906688400b0099cf840527csm2039618ejr.153.2023.08.26.04.10.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Aug 2023 04:10:42 -0700 (PDT)
-Message-ID: <99e1891d-cd15-5e7b-6ac8-8c6dc5d138ec@gmail.com>
-Date:   Sat, 26 Aug 2023 13:10:35 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Content-Language: en-US
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Ajay Agarwal <ajayagarwal@google.com>
-Subject: [PATCH] PCI/ASPM: fix unexpected behavior when re-enabling L1
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S232496AbjHZLr1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Aug 2023 07:47:27 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CDD619BA
+        for <linux-pci@vger.kernel.org>; Sat, 26 Aug 2023 04:47:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693050445; x=1724586445;
+  h=date:from:to:cc:subject:message-id;
+  bh=emHMrC4jQuECJf6YbljzryAQuVFiULF3Omyl7IO8/Lg=;
+  b=faYthpwM5TDhbHg+PqnC3PFbnlaC/rsM2S3VGblvGlBgQwwW+wdxw+VT
+   /C0y+aT+8R0XGCAUZQ+tMydwG4l3zDXJRl2qFIxURNx0hvSl2oyiT2ZQY
+   9hJb8cbmzuNTJxDr94vMmlqE5l++3Xb7EEyKASq/yP5fwB+C9VhiEpDbx
+   +swf28DSlRLDpjp+7cUjheafT/p4punNoITTiwVPKrtQ7Oq/27t9LPOpI
+   bInZdYj3mgZF9tTpAVxniDFtZQZ4gc6cr8gYhKQHKDwfV1PIHIaKc6rEw
+   gZQyLz+6Vbd7824/9Nvy2dQ762tR/CXZeV+TTQyUmaY+TDbKYg1ojeCjQ
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10813"; a="372270906"
+X-IronPort-AV: E=Sophos;i="6.02,203,1688454000"; 
+   d="scan'208";a="372270906"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2023 04:47:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10813"; a="803219227"
+X-IronPort-AV: E=Sophos;i="6.02,203,1688454000"; 
+   d="scan'208";a="803219227"
+Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
+  by fmsmga008.fm.intel.com with ESMTP; 26 Aug 2023 04:47:23 -0700
+Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qZrlD-0004ed-0T;
+        Sat, 26 Aug 2023 11:47:23 +0000
+Date:   Sat, 26 Aug 2023 19:46:49 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:controller/layerscape] BUILD SUCCESS
+ 17cf8661ee0f065c08152e611a568dd1fb0285f1
+Message-ID: <202308261947.7Ik1spGA-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-After the referenced commit we may see L1 sub-states being active
-unexpectedly. Following scenario as an example:
-r8169 disables L1 because of known hardware issues on a number of
-systems. Implicitly L1.1 and L1.2 are disabled too.
-On my system L1 and L1.1 work fine, but L1.2 causes missed
-rx packets. Therefore I write 1 to aspm_l1_1.
-This removes ASPM_STATE_L1 from the disabled modes and therefore
-unexpectedly enables also L1.2. So return to the old behavior.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/layerscape
+branch HEAD: 17cf8661ee0f065c08152e611a568dd1fb0285f1  PCI: layerscape: Add workaround for lost link capabilities during reset
 
-A comment in the commit message of the referenced change correctly points
-out that this behavior is inconsistent with aspm_attr_store_common().
-So change aspm_attr_store_common() accordingly.
+elapsed time: 3089m
 
-Fixes: fb097dcd5a28 ("PCI/ASPM: Disable only ASPM_STATE_L1 when driver disables L1")
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
- drivers/pci/pcie/aspm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+configs tested: 117
+configs skipped: 2
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 3dafba0b5..6d3788257 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -1063,7 +1063,7 @@ static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
- 	if (state & PCIE_LINK_STATE_L0S)
- 		link->aspm_disable |= ASPM_STATE_L0S;
- 	if (state & PCIE_LINK_STATE_L1)
--		link->aspm_disable |= ASPM_STATE_L1;
-+		link->aspm_disable |= ASPM_STATE_L1 | ASPM_STATE_L1SS;
- 	if (state & PCIE_LINK_STATE_L1_1)
- 		link->aspm_disable |= ASPM_STATE_L1_1;
- 	if (state & PCIE_LINK_STATE_L1_2)
-@@ -1251,6 +1251,8 @@ static ssize_t aspm_attr_store_common(struct device *dev,
- 			link->aspm_disable &= ~ASPM_STATE_L1;
- 	} else {
- 		link->aspm_disable |= state;
-+		if (state & ASPM_STATE_L1)
-+			link->aspm_disable |= ASPM_STATE_L1SS;
- 	}
- 
- 	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r015-20230824   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20230824   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                   randconfig-001-20230824   gcc  
+arm64                            allmodconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r012-20230824   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r005-20230824   gcc  
+csky                 randconfig-r011-20230824   gcc  
+csky                 randconfig-r032-20230824   gcc  
+hexagon               randconfig-001-20230824   clang
+hexagon               randconfig-002-20230824   clang
+i386                              allnoconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-r022-20230824   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20230824   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                 randconfig-r014-20230824   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r001-20230824   gcc  
+nios2                randconfig-r004-20230824   gcc  
+nios2                randconfig-r035-20230824   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r024-20230824   gcc  
+parisc               randconfig-r031-20230824   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   gcc  
+powerpc              randconfig-r025-20230824   clang
+powerpc64            randconfig-r002-20230824   gcc  
+powerpc64            randconfig-r023-20230824   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                 randconfig-001-20230824   gcc  
+riscv                randconfig-r026-20230824   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20230824   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                   randconfig-r016-20230824   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r006-20230824   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r003-20230824   clang
+um                   randconfig-r036-20230824   clang
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64               randconfig-r013-20230824   clang
+x86_64               randconfig-r034-20230824   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa               randconfig-r021-20230824   gcc  
+xtensa               randconfig-r033-20230824   gcc  
+
 -- 
-2.42.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
