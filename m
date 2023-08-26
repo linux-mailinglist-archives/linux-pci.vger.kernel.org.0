@@ -2,228 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56A5A7898D2
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Aug 2023 21:52:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 651667898E9
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Aug 2023 22:04:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229457AbjHZTvv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 26 Aug 2023 15:51:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38896 "EHLO
+        id S229516AbjHZUDq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 26 Aug 2023 16:03:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbjHZTvm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Aug 2023 15:51:42 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C587CFA
-        for <linux-pci@vger.kernel.org>; Sat, 26 Aug 2023 12:51:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693079500; x=1724615500;
-  h=date:from:to:cc:subject:message-id;
-  bh=UsPlL0sQzJx69GzSC2iAOTxsBYSt6XuMnFY6SiHXXWY=;
-  b=bS0ttJmI1fMwvFiqTNPwP6RDk7E6lGzT79oRHC9XFNuVaA1MK9BHmCya
-   GemKEBtP7ZjxPUUZ68igo0Bil+eNZaYJBOW0YXEtJu3a4y4jDC+mUIZ04
-   HxAriD3SkaOSkRmviWXiLBmCJnNw8mKo2w/8VK2tKdmodK211OGzNVUEV
-   tp2z7Uxo9/pfd+5afhKBnwcUuL3XmP9uKfVVdYcUSataEyS5Uknm4MoPd
-   ejmJcBPSZ69uWwo708utQKhTPQig5k3FPa57hShJ/KPm5eUSekx7y+Hcl
-   Ane84ND7pG0tKU30fm8VSeKEi6LDG7Zek/aILFOI0qvU92FiBnovAD9rW
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10814"; a="365096457"
-X-IronPort-AV: E=Sophos;i="6.02,203,1688454000"; 
-   d="scan'208";a="365096457"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2023 12:51:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10814"; a="852342888"
-X-IronPort-AV: E=Sophos;i="6.02,203,1688454000"; 
-   d="scan'208";a="852342888"
-Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 26 Aug 2023 12:51:38 -0700
-Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qZzJp-00051n-2o;
-        Sat, 26 Aug 2023 19:51:37 +0000
-Date:   Sun, 27 Aug 2023 03:51:37 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:vga] BUILD SUCCESS
- cc64ca4b62f5035c87e955f256b338c32dfdbb19
-Message-ID: <202308270335.Ov2FKGRd-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229563AbjHZUDa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Aug 2023 16:03:30 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3072C2;
+        Sat, 26 Aug 2023 13:03:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de;
+ s=s31663417; t=1693080194; x=1693684994; i=lundril@gmx.de;
+ bh=VKmid4DgGwdhkduyFFOwkjxOAZ+7/XvDyZOOaVvaafk=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+ b=Z/Wz3DSv2iGqskTDMScoquO/B+5EmamBn4A3EA6zRRUOF61rXDTs+K1QLiXghL/Ym4NK467
+ m1FN/dRyaz42ZXRBDO/CD2R2l/wHQT6HepEC6i5BssEz+rRvPh+DtzM6CXdlbo2qHOksNu9Mh
+ lrPY8YwrcD6A75YBvfuX0h1TYXL04cXnMMTcVmDVImFe6dwImrMREgjOHr3+WjK3IlC6ZF55K
+ Ax8LKB6msoTwiE3APxdWiyCwnAW7Egpcnu1AITaGPpBQ+CAsWbK2s9usz/SWekZnTW3fSTYBS
+ BAuqCVSW+RjpdqidEMWyiA2P3OKRdPFjyZFIiVWKTcYCh37PPNFw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from flatline.fritz.box ([82.135.64.125]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MsYqv-1pgmJl1trX-00ty7C; Sat, 26
+ Aug 2023 22:03:14 +0200
+From:   Ingo Rohloff <lundril@gmx.de>
+To:     Felix Fietkau <nbd@nbd.name>, Ryder Lee <ryder.lee@mediatek.com>
+Cc:     linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-pci@vger.kernel.org, Ingo Rohloff <lundril@gmx.de>
+Subject: [PATCH v2] wifi: mt76: mt7921e: Support MT7992 IP in Xiaomi Redmibook 15 Pro (2023)
+Date:   Sat, 26 Aug 2023 22:02:41 +0200
+Message-Id: <20230826200241.5077-1-lundril@gmx.de>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:6HXsIeaGdaVYxWnfks5S8gUzsa+W+nEDtWV4ESWV1Ns7HZie/7y
+ RpEWLjRSlhjQLc5jDfIKxqgEMvuSG9lJvR5qt4Ni9LpkmdEZ5WdiOSJmsTG4InPFt8bKcoh
+ peqjtoUPRk5c8g4WzVD6srTLsv8HlaWO/6r1Zc3xhu4vSmgrNTBQNF3S92ZxpchPMHTQ9dL
+ qheb1QOi0prZEbnhAR8xA==
+UI-OutboundReport: notjunk:1;M01:P0:d7mXSTQLF/U=;lEF8NTLf8pBeUbRM8C2BfCfesw7
+ iA5qu7oEgHBFpEIAztmJW7rDLG0+k00WMqzalLJXj3XLF7XbNPtv7l5qACmEKdsnWkOHTbUtZ
+ kieytIjW7kt58XPd2tA0HEzuUU4uicwgI61IE5VxJYFMrig+eNkafxJXfVEKoDfXE+g9e9lRz
+ 4ijDHkeHLFflhFJpKLHUXJ36knSC3MumOVftRAzlevkLTF5nSOcwYv1i9Ms5NUiwd6hH+kGXs
+ 2y5qWZ9pGI4nCmtA+mrYdCYqvFSimdDTDKZ7wMnSWwq678lzkNyt2QNGsb2qSrrppJwdKuYuv
+ ikmgarYDKhGb5qj40tHjzY0IJwzHeuUDylFXFktSUep0qv8wsb07iPSLzAA884Qwlwcjk1xwT
+ 7gLtfe0CZ2zQy57Y35uWv8PyKuITJGlLkgblnV+wd0wJC6mlfDEOKikkZkqryoNDi9f9Wxhld
+ I87xlld9iIyr5TFpQI5pd3w+M8b2OXTmhz/PbhxckdZhHWYBiOhgUPA5HiOysOR9t+b8BDzBE
+ vX4SiFxYPZi5eK9kf4PidaRtSWXxJca8F9sUGNhjEYjpapsXX9qoOXfc8FjiTVNtOwKtNlKIy
+ cGRjfMR4g1hXOp4k0pRSmgtDX9YwVhjs8sBf/kpEYTZSoE35o8lZltHIZCw3RVBvMmXG2mxyn
+ mOnlHGxvvvJ8QzSLd9K8LKU4XSk4ICBhTW5gUeVjcbKWUwaUCuVm/hIFoTgDZg2YLMlrLS4Q3
+ GFVKl5gyUL4EAqv+PECahvY3qge62ZQINLkdvMt2fsGsKUH+995H0ShRV2VPzxxjSV04eosLh
+ /YpxqsMDre0fopVx/m/jHvYA+AEqKOm3B7S8axuLoHqWlcNCGGr/MFwhEI/v1kuPQ1JUJZhrU
+ u31nSDfr92i4o2dPsOIUPPHCgvmAjzhuStVebgddWUkGinZSfle9WT6ivEem8+Of54pdrgDzW
+ 2PI0x080g1BKgXRJ7kpU78UX14M=
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git vga
-branch HEAD: cc64ca4b62f5035c87e955f256b338c32dfdbb19  PCI/VGA: Fix typos
+In the Xiaomi Redmibook 15 Pro (2023) laptop I have got, a wifi chip is
+used, which according to its PCI Vendor ID is from "ITTIM Technology".
 
-elapsed time: 2934m
+This chip works flawlessly with the mt7921e module.  The driver doesn't
+bind to this PCI device, because the Vendor ID from "ITTIM Technology" is
+not recognized.
 
-configs tested: 152
-configs skipped: 2
+This patch adds the PCI Vendor ID from "ITTIM Technology" to the list of
+PCI Vendor IDs and lets the mt7921e driver bind to the mentioned wifi
+chip.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Signed-off-by: Ingo Rohloff <lundril@gmx.de>
+=2D--
+Changes in v2:
+As requested, move the definition of the PCI Vendor ID for
+ITTIM Technology to the (hopefully) right place in pci_ids.h
+=2D--
+ drivers/net/wireless/mediatek/mt76/mt7921/pci.c | 2 ++
+ include/linux/pci_ids.h                         | 2 ++
+ 2 files changed, 4 insertions(+)
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20230825   gcc  
-arc                  randconfig-r015-20230825   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                   randconfig-001-20230825   clang
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r003-20230825   clang
-arm64                randconfig-r021-20230825   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r005-20230825   gcc  
-csky                 randconfig-r022-20230825   gcc  
-csky                 randconfig-r033-20230825   gcc  
-hexagon               randconfig-001-20230825   clang
-hexagon               randconfig-002-20230825   clang
-hexagon              randconfig-r032-20230825   clang
-i386         buildonly-randconfig-001-20230825   clang
-i386         buildonly-randconfig-002-20230825   clang
-i386         buildonly-randconfig-003-20230825   clang
-i386         buildonly-randconfig-004-20230825   clang
-i386         buildonly-randconfig-005-20230825   clang
-i386         buildonly-randconfig-006-20230825   clang
-i386                                defconfig   gcc  
-i386                  randconfig-001-20230825   clang
-i386                  randconfig-002-20230825   clang
-i386                  randconfig-003-20230825   clang
-i386                  randconfig-004-20230825   clang
-i386                  randconfig-005-20230825   clang
-i386                  randconfig-006-20230825   clang
-i386                  randconfig-016-20230825   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20230825   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r011-20230825   gcc  
-nios2                randconfig-r016-20230825   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r025-20230825   gcc  
-parisc               randconfig-r031-20230825   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc              randconfig-r002-20230825   clang
-powerpc              randconfig-r014-20230825   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20230825   clang
-riscv                randconfig-r036-20230825   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20230825   gcc  
-s390                 randconfig-r004-20230825   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                   randconfig-r023-20230825   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64              randconfig-r024-20230825   gcc  
-sparc64              randconfig-r026-20230825   gcc  
-sparc64              randconfig-r034-20230825   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r006-20230825   gcc  
-um                   randconfig-r012-20230825   clang
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20230825   clang
-x86_64       buildonly-randconfig-002-20230825   clang
-x86_64       buildonly-randconfig-003-20230825   clang
-x86_64       buildonly-randconfig-004-20230825   clang
-x86_64       buildonly-randconfig-005-20230825   clang
-x86_64       buildonly-randconfig-006-20230825   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20230825   gcc  
-x86_64                randconfig-002-20230825   gcc  
-x86_64                randconfig-003-20230825   gcc  
-x86_64                randconfig-004-20230825   gcc  
-x86_64                randconfig-005-20230825   gcc  
-x86_64                randconfig-006-20230825   gcc  
-x86_64                randconfig-011-20230825   clang
-x86_64                randconfig-012-20230825   clang
-x86_64                randconfig-013-20230825   clang
-x86_64                randconfig-014-20230825   clang
-x86_64                randconfig-015-20230825   clang
-x86_64                randconfig-016-20230825   clang
-x86_64                randconfig-071-20230825   clang
-x86_64                randconfig-072-20230825   clang
-x86_64                randconfig-073-20230825   clang
-x86_64                randconfig-074-20230825   clang
-x86_64                randconfig-075-20230825   clang
-x86_64                randconfig-076-20230825   clang
-x86_64               randconfig-r001-20230825   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa               randconfig-r013-20230825   gcc  
-xtensa               randconfig-r035-20230825   gcc  
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/pci.c b/drivers/net=
+/wireless/mediatek/mt76/mt7921/pci.c
+index 95610a117d2f..ed5a220763ce 100644
+=2D-- a/drivers/net/wireless/mediatek/mt76/mt7921/pci.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7921/pci.c
+@@ -17,6 +17,8 @@ static const struct pci_device_id mt7921_pci_device_tabl=
+e[] =3D {
+ 		.driver_data =3D (kernel_ulong_t)MT7921_FIRMWARE_WM },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x7922),
+ 		.driver_data =3D (kernel_ulong_t)MT7922_FIRMWARE_WM },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ITTIM, 0x7922),
++		.driver_data =3D (kernel_ulong_t)MT7922_FIRMWARE_WM },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x0608),
+ 		.driver_data =3D (kernel_ulong_t)MT7921_FIRMWARE_WM },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x0616),
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 2dc75df1437f..6ae1803bcd2f 100644
+=2D-- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -180,6 +180,8 @@
+ #define PCI_DEVICE_ID_BERKOM_A4T		0xffa4
+ #define PCI_DEVICE_ID_BERKOM_SCITEL_QUADRO	0xffa8
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
++#define PCI_VENDOR_ID_ITTIM		0x0b48
++
+ #define PCI_VENDOR_ID_COMPAQ		0x0e11
+ #define PCI_DEVICE_ID_COMPAQ_TOKENRING	0x0508
+ #define PCI_DEVICE_ID_COMPAQ_TACHYON	0xa0fc
+=2D-
+2.30.2
+
