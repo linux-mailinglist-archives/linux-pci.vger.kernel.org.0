@@ -2,54 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44EFB789F8A
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Aug 2023 15:38:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D802789F8D
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Aug 2023 15:38:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231179AbjH0Nh5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 27 Aug 2023 09:37:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56074 "EHLO
+        id S231228AbjH0Nh6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 27 Aug 2023 09:37:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231178AbjH0Nhe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Aug 2023 09:37:34 -0400
+        with ESMTP id S231252AbjH0Nhm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Aug 2023 09:37:42 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CEEEBF;
-        Sun, 27 Aug 2023 06:37:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EFF418D;
+        Sun, 27 Aug 2023 06:37:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693143452; x=1724679452;
+  t=1693143458; x=1724679458;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=tnx7Bflw7Y/aVGaG8EH0QBwqdgCKqxJb3mqsR3QL2Es=;
-  b=UwmpY7wJMrGnknhcUFiJBm8SVMv6W83CUB3e6L0s8YXoB+5MGgZBZ5B7
-   oPVX0tsrP1AmUvoVo0mDNhDUKa8JP79AHXwv0+YCKwfzTE8dCIHr+KUua
-   UISiDkcnvZ2a+uwxrv6mOri2yvdmjs2JeLu9NV9FKWFFhYYwUQvkhBd02
-   f4I0w66q8ZL0TvhfAWPyGeFoxryhn9NTpfzRzX04NgZCa+x/V50TMmGgb
-   voNtzUXJHn6a9b+XBlLidw70LMg2XI8I5sHpaUIwveloE1+B74uEe0L5E
-   CcRj9Z6bHCm22Qia1182g9rIeLzz9XD9a0SlyvlZUM2VVperR9S1MNoQq
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10815"; a="354471005"
+  bh=RKVN1bWO+6tJ6WlmxsOXbk1vq7oGMYXcJ+RHQjqKcpI=;
+  b=M1j/VzE2owymIttDRH7CpB18nft2F8ryiP2IJkji3PYzExMRcjAvTxmU
+   dQW8Kndd32OrQ5FOc9dmb8bkE11X1Ma48TOREPh0v28/QEC3B/319yS3C
+   ZagnVz7I/qRhOOC0hLGwXR3CuFFZA32iBRQ1CAqKh3pzk41LV1yyT9hIu
+   yi2IBpHjY1jGQN2ca/QzlaZ38CnYARDRCTemws8nSIks6S2q46T4nTMTn
+   M4tRu8FcYmgFyuCVam0+TLloG323ghzpUscNn8iSceE9j5xTYtgDTfca7
+   08+D+3zJlqzoCr+ow7b+9UKhF/VIY0u5U6fDh4lRhufZQTyiMrlcb1YB+
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10815"; a="354471018"
 X-IronPort-AV: E=Sophos;i="6.02,205,1688454000"; 
-   d="scan'208";a="354471005"
+   d="scan'208";a="354471018"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2023 06:37:32 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2023 06:37:38 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10815"; a="1068752128"
+X-IronPort-AV: E=McAfee;i="6600,9927,10815"; a="1068752164"
 X-IronPort-AV: E=Sophos;i="6.02,205,1688454000"; 
-   d="scan'208";a="1068752128"
+   d="scan'208";a="1068752164"
 Received: from dplotkin-mobl.ger.corp.intel.com (HELO ijarvine-mobl2.ger.corp.intel.com) ([10.249.41.231])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2023 06:37:28 -0700
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2023 06:37:34 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
         Andi Shyti <andi.shyti@kernel.org>,
         =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+        Chas Williams <3chas3@gmail.com>,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v2 3/8] sh: pci: Do PCI error check on own line
-Date:   Sun, 27 Aug 2023 16:37:00 +0300
-Message-Id: <20230827133705.12991-4-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 4/8] atm: iphase: Do PCI error checks on own line
+Date:   Sun, 27 Aug 2023 16:37:01 +0300
+Message-Id: <20230827133705.12991-5-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230827133705.12991-1-ilpo.jarvinen@linux.intel.com>
 References: <20230827133705.12991-1-ilpo.jarvinen@linux.intel.com>
@@ -65,41 +64,56 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Instead of a if condition with a line split, use the usual error
-handling pattern with a separate variable to improve readability.
+In get_esi() PCI errors are checked inside line-split if conditions (in
+addition to the file not following the coding style). To make the code
+in get_esi() more readable, fix the coding style and use the usual
+error handling pattern with a separate variable.
 
-No functional changes intended.
+In addition, initialization of 'error' variable at declaration is not
+needed.
+
+No function changes intended.
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Acked-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 ---
- arch/sh/drivers/pci/common.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/atm/iphase.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/arch/sh/drivers/pci/common.c b/arch/sh/drivers/pci/common.c
-index 2fd2b77e12ce..f59e5b9a6a80 100644
---- a/arch/sh/drivers/pci/common.c
-+++ b/arch/sh/drivers/pci/common.c
-@@ -53,15 +53,16 @@ int __init pci_is_66mhz_capable(struct pci_channel *hose,
- 	unsigned short vid;
- 	int cap66 = -1;
- 	u16 stat;
-+	int ret;
- 
- 	pr_info("PCI: Checking 66MHz capabilities...\n");
- 
- 	for (pci_devfn = 0; pci_devfn < 0xff; pci_devfn++) {
- 		if (PCI_FUNC(pci_devfn))
- 			continue;
--		if (early_read_config_word(hose, top_bus, current_bus,
--					   pci_devfn, PCI_VENDOR_ID, &vid) !=
--		    PCIBIOS_SUCCESSFUL)
-+		ret = early_read_config_word(hose, top_bus, current_bus,
-+					     pci_devfn, PCI_VENDOR_ID, &vid);
-+		if (ret != PCIBIOS_SUCCESSFUL)
- 			continue;
- 		if (vid == 0xffff)
- 			continue;
+diff --git a/drivers/atm/iphase.c b/drivers/atm/iphase.c
+index 324148686953..9bba8f280a4d 100644
+--- a/drivers/atm/iphase.c
++++ b/drivers/atm/iphase.c
+@@ -2291,19 +2291,21 @@ static int get_esi(struct atm_dev *dev)
+ static int reset_sar(struct atm_dev *dev)  
+ {  
+ 	IADEV *iadev;  
+-	int i, error = 1;  
++	int i, error;
+ 	unsigned int pci[64];  
+ 	  
+ 	iadev = INPH_IA_DEV(dev);  
+-	for(i=0; i<64; i++)  
+-	  if ((error = pci_read_config_dword(iadev->pci,  
+-				i*4, &pci[i])) != PCIBIOS_SUCCESSFUL)  
+-  	      return error;  
++	for (i = 0; i < 64; i++) {
++		error = pci_read_config_dword(iadev->pci, i * 4, &pci[i]);
++		if (error != PCIBIOS_SUCCESSFUL)
++			return error;
++	}
+ 	writel(0, iadev->reg+IPHASE5575_EXT_RESET);  
+-	for(i=0; i<64; i++)  
+-	  if ((error = pci_write_config_dword(iadev->pci,  
+-					i*4, pci[i])) != PCIBIOS_SUCCESSFUL)  
+-	    return error;  
++	for (i = 0; i < 64; i++) {
++		error = pci_write_config_dword(iadev->pci, i * 4, pci[i]);
++		if (error != PCIBIOS_SUCCESSFUL)
++			return error;
++	}
+ 	udelay(5);  
+ 	return 0;  
+ }  
 -- 
 2.30.2
 
