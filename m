@@ -2,58 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBF4278A02A
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Aug 2023 18:28:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00D0D78A04B
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Aug 2023 18:53:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229881AbjH0Q17 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 27 Aug 2023 12:27:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37546 "EHLO
+        id S229809AbjH0QxP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 27 Aug 2023 12:53:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229885AbjH0Q10 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Aug 2023 12:27:26 -0400
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D05D0C1;
-        Sun, 27 Aug 2023 09:27:23 -0700 (PDT)
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1c0c6d4d650so19760255ad.0;
-        Sun, 27 Aug 2023 09:27:23 -0700 (PDT)
+        with ESMTP id S230073AbjH0QxB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Aug 2023 12:53:01 -0400
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80DA139;
+        Sun, 27 Aug 2023 09:52:55 -0700 (PDT)
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-565334377d0so1556061a12.2;
+        Sun, 27 Aug 2023 09:52:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693153643; x=1693758443;
+        d=1e100.net; s=20221208; t=1693155175; x=1693759975;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bqf0ICl6pyvfSGedRrmWV0KgewJjUsjj+Fcfy2g8HFo=;
-        b=fPYGWMVyNHz1bWlQBm+sdmzx1HlSGu9BPc8YZZwqQORxKiZZxaLgV59Lp4twfQl07H
-         ftjMJ4Lat4jIGYWHnJ7n0L0JWAQpVuoXKkgfzguKsI7C20PAwB/JMUfaN+BjhOZca5px
-         KmMVVrqDNpQmgD3RRU1916a4K7CIxqJdZOtjL9Qb/GNxwyCIWexYIqKnc2XKRAhDKaRP
-         UzyEPydqmrKqCcMdgo9o7YpegPjRT3MHFvvHJO2oQxkpTo6ViWBEiH+4FKO7Cj2VttND
-         RZ6tQok07VqVEz3faorV3GURHeO4eq/0+fE5L6FKzmseFibilPi0EdxYHmvVdG0q+FNe
-         gp8Q==
-X-Gm-Message-State: AOJu0Yyr129nplK5jNeYLouh0PqXfMNDp9UcSluBz4YpaaX+lSW89yDv
-        QKhG7WnJwyh8wShzgz632rQ=
-X-Google-Smtp-Source: AGHT+IGxjUi4tzjyOdm0G81ktTducGNMEGVWFe9lvPLMKSECgLhft8mo7kS+LhCku+FVsnyBtcAunQ==
-X-Received: by 2002:a17:903:22c6:b0:1be:f45c:bc38 with SMTP id y6-20020a17090322c600b001bef45cbc38mr25969686plg.2.1693153643118;
-        Sun, 27 Aug 2023 09:27:23 -0700 (PDT)
+        bh=ImkyWrYqH8lg/cu5/toGD9Vw+jK2UHolY7FUCZL6OdE=;
+        b=hwoyIGOuN4MJaB+1+5Fb0FIJaWkKb9UKcG+ZTWs5FSfhLzHAwu9wqzSWZnjyPfA+w9
+         RCjJLVmvULAGYD5DXYpal0MkHdRjk7K5ydL2W0N3+8GqhGdzlRsvle0plPcA+PnoaaGT
+         ozB1ErVvTyjz3qD6gscBhWDnw1KSOcdGuDTrBGioVyBnu0kXB/ZhLZ/h303FnnvGIctQ
+         E8DlbPRct/rVSWTuBfDyGTEODh0z02nKISVeql2RhUiJHcnYn3kQieLUbJcZxH6BhDKt
+         hWxT74KIgP9ZmWukTWMse5vxfZQRd1FtZC/9bNW8fIpsFaQHzaLod2ceIOzYZq9Mhx+U
+         Z+EA==
+X-Gm-Message-State: AOJu0YyXajby3gntrN3oChd0+/oleq0ZZg6tzHuQkXgKPW58wknCVsTH
+        mPENdQNIwL4suLb3aH3DK9c=
+X-Google-Smtp-Source: AGHT+IGQtRfWPaISyzI4T0Mr5/nRWzHuzFWUjp93ZJlkqnVi4QGK3coCaHFP+i/PC3lqhGoTNciR9w==
+X-Received: by 2002:a05:6a20:1444:b0:149:424e:b26a with SMTP id a4-20020a056a20144400b00149424eb26amr22909646pzi.19.1693155175186;
+        Sun, 27 Aug 2023 09:52:55 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id e4-20020a170902744400b001b03b7f8adfsm5464272plt.246.2023.08.27.09.27.22
+        by smtp.gmail.com with ESMTPSA id fk22-20020a056a003a9600b006887037cde6sm5072546pfb.60.2023.08.27.09.52.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Aug 2023 09:27:22 -0700 (PDT)
-Date:   Mon, 28 Aug 2023 01:27:21 +0900
+        Sun, 27 Aug 2023 09:52:54 -0700 (PDT)
+Date:   Mon, 28 Aug 2023 01:52:52 +0900
 From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh+dt@kernel.org,
-        manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
-        kishon@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, marek.vasut+renesas@gmail.com,
-        fancer.lancer@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v20 00/19] PCI: rcar-gen4: Add R-Car Gen4 PCIe support
-Message-ID: <20230827162721.GA2932694@rocinante>
-References: <20230825093219.2685912-1-yoshihiro.shimoda.uh@renesas.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Manivannan Sadhasivam <mani@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Rohit Agarwal <quic_rohiagar@quicinc.com>,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: PCI: qcom: fix SDX65 compatible
+Message-ID: <20230827165252.GB2932694@rocinante>
+References: <20230827085351.21932-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230825093219.2685912-1-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20230827085351.21932-1-krzysztof.kozlowski@linaro.org>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
@@ -66,48 +72,17 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hello,
 
-> Add R-Car S4-8 (R-Car Gen4) PCIe Host and Endpoint support.
-> To support them, modify PCIe DesignWare common codes.
+> Commit c0aba9f32801 ("dt-bindings: PCI: qcom: Add SDX65 SoC") adding
+> SDX65 was not ever tested and is clearly bogus.  The qcom,sdx65-pcie-ep
+> compatible is followed by fallback in DTS and there is no driver
+> matching by this compatible.  Driver matches by its fallback
+> qcom,sdx55-pcie-ep.  This fixes also dtbs_check warnings like:
+> 
+>   qcom-sdx65-mtp.dtb: pcie-ep@1c00000: compatible: ['qcom,sdx65-pcie-ep', 'qcom,sdx55-pcie-ep'] is too long
 
-Applied to controller/rcar, thank you!
+Applied to controller/qcom, thank you!
 
-[01/19] PCI: Add INTx Mechanism Messages macros
-        https://git.kernel.org/pci/pci/c/b6dc5750a17a
-[02/19] PCI: dwc: Change arguments of dw_pcie_prog_outbound_atu()
-        https://git.kernel.org/pci/pci/c/6cbd4d406cb0
-[03/19] PCI: dwc: Add outbound MSG TLPs support
-        https://git.kernel.org/pci/pci/c/6ab660b25520
-[04/19] PCI: designware-ep: Add INTx IRQs support
-        https://git.kernel.org/pci/pci/c/b788d6fd273e
-[05/19] PCI: dwc: endpoint: Add multiple PFs support for dbi2
-        https://git.kernel.org/pci/pci/c/6e4db9846cf4
-[06/19] PCI: dwc: Add dw_pcie_link_set_max_link_width()
-        https://git.kernel.org/pci/pci/c/d0f961f40da8
-[07/19] PCI: dwc: Add missing PCI_EXP_LNKCAP_MLW handling
-        https://git.kernel.org/pci/pci/c/a0473c77b4c1
-[08/19] PCI: tegra194: Drop PCI_EXP_LNKSTA_NLW setting
-        https://git.kernel.org/pci/pci/c/e45ff874cede
-[09/19] PCI: dwc: Add EDMA_UNROLL capability flag
-        https://git.kernel.org/pci/pci/c/2424c3ddbd4c
-[10/19] PCI: dwc: Expose dw_pcie_ep_exit() to module
-        https://git.kernel.org/pci/pci/c/3f937c80eb8e
-[11/19] PCI: dwc: Expose dw_pcie_write_dbi2() to module
-        https://git.kernel.org/pci/pci/c/a986f6fd339e
-[12/19] PCI: dwc: endpoint: Introduce .pre_init() and .deinit()
-        https://git.kernel.org/pci/pci/c/6504d294399e
-[13/19] dt-bindings: PCI: dwc: Update maxItems of reg and reg-names
-        https://git.kernel.org/pci/pci/c/5ca157f7d36c
-[14/19] dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Host
-        https://git.kernel.org/pci/pci/c/af285bc39885
-[15/19] dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Endpoint
-        https://git.kernel.org/pci/pci/c/738bded11aaa
-[16/19] PCI: rcar-gen4: Add R-Car Gen4 PCIe Host support
-        https://git.kernel.org/pci/pci/c/943a310da907
-[17/19] PCI: rcar-gen4-ep: Add R-Car Gen4 PCIe Endpoint support
-        https://git.kernel.org/pci/pci/c/db4499d11f46
-[18/19] MAINTAINERS: Update PCI DRIVER FOR RENESAS R-CAR for R-Car Gen4
-        https://git.kernel.org/pci/pci/c/2e0ef5776946
-[19/19] misc: pci_endpoint_test: Add Device ID for R-Car S4-8 PCIe controller
-        https://git.kernel.org/pci/pci/c/33fa67818fe7
+[1/1] dt-bindings: PCI: qcom: Fix SDX65 compatible
+      https://git.kernel.org/pci/pci/c/15d63a897f79
 
 	Krzysztof
