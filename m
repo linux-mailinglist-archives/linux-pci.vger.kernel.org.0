@@ -2,227 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 76CD578A022
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Aug 2023 18:11:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBF4278A02A
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Aug 2023 18:28:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229489AbjH0QLC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 27 Aug 2023 12:11:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37242 "EHLO
+        id S229881AbjH0Q17 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 27 Aug 2023 12:27:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230271AbjH0QKz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Aug 2023 12:10:55 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83A0DEB
-        for <linux-pci@vger.kernel.org>; Sun, 27 Aug 2023 09:10:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693152653; x=1724688653;
-  h=date:from:to:cc:subject:message-id;
-  bh=EHIoQwptDb/D4TQ1+Jr2VcK/smcvOTbyySZXZFipHJU=;
-  b=JydWLS8lUfwItDf6mrAy1u4XmndB8FBODGxUebsyLSv9Hy96yTvwesPP
-   /jzAZ1rVBIFaXosndh/rNUF3DqfF+jN+EmdmCWSko3FRUZ3BSglUASAMz
-   Bl+7lyiArtaBQJ9Bkt1X5TucVF0PiOQ/DcqLoNWxPrQNuADYuRXYI09bD
-   VJ/NmWef6dYf/rBtz/NVUVdDRb7mDiV9Yrv3TgDO9IihJKSBj0WsLqFDj
-   ct976yz7I9apZCA00IYfMMUXjQcoeWSQZ9x7H8L3+ar9HRS/gRqIQ2YIU
-   KddC0m16GViJ12qFMxLRPtVfrEV0oNNd/8RWMivQiugW2XShxgBZaKJAO
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10815"; a="372358198"
-X-IronPort-AV: E=Sophos;i="6.02,205,1688454000"; 
-   d="scan'208";a="372358198"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2023 09:10:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10815"; a="714875970"
-X-IronPort-AV: E=Sophos;i="6.02,205,1688454000"; 
-   d="scan'208";a="714875970"
-Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 27 Aug 2023 09:10:51 -0700
-Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qaILi-0005yL-2H;
-        Sun, 27 Aug 2023 16:10:50 +0000
-Date:   Mon, 28 Aug 2023 00:09:33 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pm] BUILD SUCCESS
- 5694ba13b004eea683c6d4faeb6d6e7a9636bda0
-Message-ID: <202308280032.L58TCcoN-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229885AbjH0Q10 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Aug 2023 12:27:26 -0400
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D05D0C1;
+        Sun, 27 Aug 2023 09:27:23 -0700 (PDT)
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1c0c6d4d650so19760255ad.0;
+        Sun, 27 Aug 2023 09:27:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693153643; x=1693758443;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bqf0ICl6pyvfSGedRrmWV0KgewJjUsjj+Fcfy2g8HFo=;
+        b=fPYGWMVyNHz1bWlQBm+sdmzx1HlSGu9BPc8YZZwqQORxKiZZxaLgV59Lp4twfQl07H
+         ftjMJ4Lat4jIGYWHnJ7n0L0JWAQpVuoXKkgfzguKsI7C20PAwB/JMUfaN+BjhOZca5px
+         KmMVVrqDNpQmgD3RRU1916a4K7CIxqJdZOtjL9Qb/GNxwyCIWexYIqKnc2XKRAhDKaRP
+         UzyEPydqmrKqCcMdgo9o7YpegPjRT3MHFvvHJO2oQxkpTo6ViWBEiH+4FKO7Cj2VttND
+         RZ6tQok07VqVEz3faorV3GURHeO4eq/0+fE5L6FKzmseFibilPi0EdxYHmvVdG0q+FNe
+         gp8Q==
+X-Gm-Message-State: AOJu0Yyr129nplK5jNeYLouh0PqXfMNDp9UcSluBz4YpaaX+lSW89yDv
+        QKhG7WnJwyh8wShzgz632rQ=
+X-Google-Smtp-Source: AGHT+IGxjUi4tzjyOdm0G81ktTducGNMEGVWFe9lvPLMKSECgLhft8mo7kS+LhCku+FVsnyBtcAunQ==
+X-Received: by 2002:a17:903:22c6:b0:1be:f45c:bc38 with SMTP id y6-20020a17090322c600b001bef45cbc38mr25969686plg.2.1693153643118;
+        Sun, 27 Aug 2023 09:27:23 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id e4-20020a170902744400b001b03b7f8adfsm5464272plt.246.2023.08.27.09.27.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Aug 2023 09:27:22 -0700 (PDT)
+Date:   Mon, 28 Aug 2023 01:27:21 +0900
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lpieralisi@kernel.org, robh+dt@kernel.org,
+        manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
+        kishon@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, marek.vasut+renesas@gmail.com,
+        fancer.lancer@gmail.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v20 00/19] PCI: rcar-gen4: Add R-Car Gen4 PCIe support
+Message-ID: <20230827162721.GA2932694@rocinante>
+References: <20230825093219.2685912-1-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230825093219.2685912-1-yoshihiro.shimoda.uh@renesas.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pm
-branch HEAD: 5694ba13b004eea683c6d4faeb6d6e7a9636bda0  PCI/PM: Only read PCI_PM_CTRL register when available
+Hello,
 
-elapsed time: 2460m
+> Add R-Car S4-8 (R-Car Gen4) PCIe Host and Endpoint support.
+> To support them, modify PCIe DesignWare common codes.
 
-configs tested: 151
-configs skipped: 2
+Applied to controller/rcar, thank you!
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+[01/19] PCI: Add INTx Mechanism Messages macros
+        https://git.kernel.org/pci/pci/c/b6dc5750a17a
+[02/19] PCI: dwc: Change arguments of dw_pcie_prog_outbound_atu()
+        https://git.kernel.org/pci/pci/c/6cbd4d406cb0
+[03/19] PCI: dwc: Add outbound MSG TLPs support
+        https://git.kernel.org/pci/pci/c/6ab660b25520
+[04/19] PCI: designware-ep: Add INTx IRQs support
+        https://git.kernel.org/pci/pci/c/b788d6fd273e
+[05/19] PCI: dwc: endpoint: Add multiple PFs support for dbi2
+        https://git.kernel.org/pci/pci/c/6e4db9846cf4
+[06/19] PCI: dwc: Add dw_pcie_link_set_max_link_width()
+        https://git.kernel.org/pci/pci/c/d0f961f40da8
+[07/19] PCI: dwc: Add missing PCI_EXP_LNKCAP_MLW handling
+        https://git.kernel.org/pci/pci/c/a0473c77b4c1
+[08/19] PCI: tegra194: Drop PCI_EXP_LNKSTA_NLW setting
+        https://git.kernel.org/pci/pci/c/e45ff874cede
+[09/19] PCI: dwc: Add EDMA_UNROLL capability flag
+        https://git.kernel.org/pci/pci/c/2424c3ddbd4c
+[10/19] PCI: dwc: Expose dw_pcie_ep_exit() to module
+        https://git.kernel.org/pci/pci/c/3f937c80eb8e
+[11/19] PCI: dwc: Expose dw_pcie_write_dbi2() to module
+        https://git.kernel.org/pci/pci/c/a986f6fd339e
+[12/19] PCI: dwc: endpoint: Introduce .pre_init() and .deinit()
+        https://git.kernel.org/pci/pci/c/6504d294399e
+[13/19] dt-bindings: PCI: dwc: Update maxItems of reg and reg-names
+        https://git.kernel.org/pci/pci/c/5ca157f7d36c
+[14/19] dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Host
+        https://git.kernel.org/pci/pci/c/af285bc39885
+[15/19] dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Endpoint
+        https://git.kernel.org/pci/pci/c/738bded11aaa
+[16/19] PCI: rcar-gen4: Add R-Car Gen4 PCIe Host support
+        https://git.kernel.org/pci/pci/c/943a310da907
+[17/19] PCI: rcar-gen4-ep: Add R-Car Gen4 PCIe Endpoint support
+        https://git.kernel.org/pci/pci/c/db4499d11f46
+[18/19] MAINTAINERS: Update PCI DRIVER FOR RENESAS R-CAR for R-Car Gen4
+        https://git.kernel.org/pci/pci/c/2e0ef5776946
+[19/19] misc: pci_endpoint_test: Add Device ID for R-Car S4-8 PCIe controller
+        https://git.kernel.org/pci/pci/c/33fa67818fe7
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r012-20230826   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20230826   gcc  
-arc                  randconfig-r021-20230826   gcc  
-arc                  randconfig-r031-20230826   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                   randconfig-001-20230826   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r001-20230826   gcc  
-csky                 randconfig-r036-20230826   gcc  
-hexagon               randconfig-001-20230826   clang
-hexagon               randconfig-002-20230826   clang
-hexagon              randconfig-r006-20230826   clang
-i386         buildonly-randconfig-001-20230826   gcc  
-i386         buildonly-randconfig-002-20230826   gcc  
-i386         buildonly-randconfig-003-20230826   gcc  
-i386         buildonly-randconfig-004-20230826   gcc  
-i386         buildonly-randconfig-005-20230826   gcc  
-i386         buildonly-randconfig-006-20230826   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20230826   gcc  
-i386                  randconfig-002-20230826   gcc  
-i386                  randconfig-003-20230826   gcc  
-i386                  randconfig-004-20230826   gcc  
-i386                  randconfig-005-20230826   gcc  
-i386                  randconfig-006-20230826   gcc  
-i386                  randconfig-011-20230826   clang
-i386                  randconfig-012-20230826   clang
-i386                  randconfig-013-20230826   clang
-i386                  randconfig-014-20230826   clang
-i386                  randconfig-015-20230826   clang
-i386                  randconfig-016-20230826   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20230826   gcc  
-loongarch            randconfig-r022-20230826   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r013-20230826   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-microblaze           randconfig-r025-20230826   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r005-20230826   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc64            randconfig-r011-20230826   clang
-powerpc64            randconfig-r014-20230826   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20230826   gcc  
-riscv                randconfig-r015-20230826   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20230826   clang
-s390                 randconfig-r003-20230826   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                   randconfig-r033-20230826   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r023-20230826   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64              randconfig-r016-20230826   gcc  
-sparc64              randconfig-r034-20230826   gcc  
-sparc64              randconfig-r035-20230826   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r026-20230826   gcc  
-um                   randconfig-r032-20230826   clang
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20230826   gcc  
-x86_64       buildonly-randconfig-002-20230826   gcc  
-x86_64       buildonly-randconfig-003-20230826   gcc  
-x86_64       buildonly-randconfig-004-20230826   gcc  
-x86_64       buildonly-randconfig-005-20230826   gcc  
-x86_64       buildonly-randconfig-006-20230826   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20230826   clang
-x86_64                randconfig-002-20230826   clang
-x86_64                randconfig-003-20230826   clang
-x86_64                randconfig-004-20230826   clang
-x86_64                randconfig-005-20230826   clang
-x86_64                randconfig-006-20230826   clang
-x86_64                randconfig-011-20230826   gcc  
-x86_64                randconfig-012-20230826   gcc  
-x86_64                randconfig-013-20230826   gcc  
-x86_64                randconfig-014-20230826   gcc  
-x86_64                randconfig-015-20230826   gcc  
-x86_64                randconfig-016-20230826   gcc  
-x86_64               randconfig-r004-20230826   gcc  
-x86_64               randconfig-r024-20230826   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa               randconfig-r002-20230826   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+	Krzysztof
