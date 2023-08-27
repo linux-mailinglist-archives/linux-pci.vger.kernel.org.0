@@ -2,52 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ED23789F85
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Aug 2023 15:38:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B11D789F87
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Aug 2023 15:38:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231317AbjH0Nhx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 27 Aug 2023 09:37:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49528 "EHLO
+        id S231130AbjH0Nhz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 27 Aug 2023 09:37:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230449AbjH0NhV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Aug 2023 09:37:21 -0400
+        with ESMTP id S231160AbjH0Nh0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Aug 2023 09:37:26 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29A7D139;
-        Sun, 27 Aug 2023 06:37:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2256EEB;
+        Sun, 27 Aug 2023 06:37:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693143438; x=1724679438;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=jtC8JeCuHQBuQkuR379mt3V20ulh/Vbw9AsnZRG2Oak=;
-  b=BxXeLcrO6PGUCpFVtXKmyCpHhGLkTlw4Wrf3lf+2vHBNkUKFo2JJUG6g
-   /whlZRj5deWRJvTm0eWCMrZC4L5lHSAFEq4EM34GUCT/uUgh9uN5Rha2E
-   9hkhjHIZFIwdZaFVZdcQQHwGx06LJ2lMbe3wmI46hWcHOWL6+/4vOEUNk
-   3zzPhQh96dIe5T4rv9xU7bbPGm7E+zHAte3nYSpqaRvPRtodfdCsBsXYj
-   sv1dgkwiHiML9PlPyMSqb0CIjpcnhTtuRaXg2usZEb3INZB+ztc38SyVx
-   qHJR7rdHUkXhhx5HSsfax0Fy2SGkod6Ovnfk55Kc/04kKePajBNMD6Kyu
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10815"; a="354470944"
+  t=1693143443; x=1724679443;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=EIzH6I89fHcXXY3uRmCZDeB2Y9jdsZHRRgZCynpqYTM=;
+  b=GUNmTWfUnQ3USJ2i76sdpcu2Z5viK76MZf3bg4btBT6emCFd7cy4cXvb
+   3iaOh5um5DJ4cuRPMVyOKx5ptiom3dofpLdUPFhe64XWI6bT278HS/8D8
+   nbwZ7/tyboK4lJrhL0LNq/2Fl7HDoY8puPx/jAnH51uRkf6CSu4lCH5/j
+   ZGDxSgrUkjgt50rHe7AP50GmSVnk06AIk416P+QgTLgHKem0fi+P3VmkF
+   e1yOQiSyidL/MKLMbiJdsGaE63yweeDxH8q7rWGsBBpLRvt8b3b+Fvtvt
+   FhSuBhS+SNQPfZBtQnbUTdjWMyjZKjfKy9Ec4oXMcZLTIIeKbsMfMvToR
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10815"; a="354470982"
 X-IronPort-AV: E=Sophos;i="6.02,205,1688454000"; 
-   d="scan'208";a="354470944"
+   d="scan'208";a="354470982"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2023 06:37:17 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2023 06:37:22 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10815"; a="1068752070"
+X-IronPort-AV: E=McAfee;i="6600,9927,10815"; a="1068752085"
 X-IronPort-AV: E=Sophos;i="6.02,205,1688454000"; 
-   d="scan'208";a="1068752070"
+   d="scan'208";a="1068752085"
 Received: from dplotkin-mobl.ger.corp.intel.com (HELO ijarvine-mobl2.ger.corp.intel.com) ([10.249.41.231])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2023 06:37:14 -0700
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2023 06:37:19 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
         Andi Shyti <andi.shyti@kernel.org>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v2 0/8] PCI/treewide: Cleanup/streamline PCI error code handling
-Date:   Sun, 27 Aug 2023 16:36:57 +0300
-Message-Id: <20230827133705.12991-1-ilpo.jarvinen@linux.intel.com>
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 1/8] alpha: Streamline convoluted PCI error handling
+Date:   Sun, 27 Aug 2023 16:36:58 +0300
+Message-Id: <20230827133705.12991-2-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230827133705.12991-1-ilpo.jarvinen@linux.intel.com>
+References: <20230827133705.12991-1-ilpo.jarvinen@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,36 +65,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As the first step towards converting PCI accessor function return codes
-into normal errnos this series cleans up related code paths which have
-complicated multi-line construct to handle the PCI error checking.
+miata_map_irq() handles PCI device and read config related errors in a
+conditional block that is more complex than necessary.
 
-v2:
-- Moved ret local var to the inner block (I2C: ali15x3)
-- Removed already accepted patches
+Streamline the code flow and error handling.
 
-Ilpo Järvinen (8):
-  alpha: Streamline convoluted PCI error handling
-  MIPS: TXx9: Do PCI error checks on own line
-  sh: pci: Do PCI error check on own line
-  atm: iphase: Do PCI error checks on own line
-  I2C: ali15x3: Do PCI error checks on own line
-  PCI: Do error check on own line to split long if conditions
-  PCI: xgene: Do PCI error check on own line
-  scsi: ipr: Do PCI error checks on own line
+No functional changes intended.
 
- arch/alpha/kernel/sys_miata.c      | 17 ++++++------
- arch/mips/txx9/generic/pci.c       | 43 ++++++++++++++++--------------
- arch/sh/drivers/pci/common.c       |  7 ++---
- drivers/atm/iphase.c               | 20 +++++++-------
- drivers/i2c/busses/i2c-ali15x3.c   | 11 ++++----
- drivers/pci/controller/pci-xgene.c |  5 ++--
- drivers/pci/pci.c                  |  9 ++++---
- drivers/pci/probe.c                |  6 ++---
- drivers/pci/quirks.c               |  6 ++---
- drivers/scsi/ipr.c                 | 12 ++++++---
- 10 files changed, 76 insertions(+), 60 deletions(-)
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ arch/alpha/kernel/sys_miata.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
+diff --git a/arch/alpha/kernel/sys_miata.c b/arch/alpha/kernel/sys_miata.c
+index e1bee8f84c58..33b2798de8fc 100644
+--- a/arch/alpha/kernel/sys_miata.c
++++ b/arch/alpha/kernel/sys_miata.c
+@@ -183,16 +183,17 @@ miata_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+            the 2nd 8259 controller. So we have to check for it first. */
+ 
+ 	if((slot == 7) && (PCI_FUNC(dev->devfn) == 3)) {
+-		u8 irq=0;
+ 		struct pci_dev *pdev = pci_get_slot(dev->bus, dev->devfn & ~7);
+-		if(pdev == NULL || pci_read_config_byte(pdev, 0x40,&irq) != PCIBIOS_SUCCESSFUL) {
+-			pci_dev_put(pdev);
++		u8 irq = 0;
++		int ret;
++
++		if (!pdev)
+ 			return -1;
+-		}
+-		else	{
+-			pci_dev_put(pdev);
+-			return irq;
+-		}
++
++		ret = pci_read_config_byte(pdev, 0x40, &irq);
++		pci_dev_put(pdev);
++
++		return ret == PCIBIOS_SUCCESSFUL ? irq : -1;
+ 	}
+ 
+ 	return COMMON_TABLE_LOOKUP;
 -- 
 2.30.2
 
