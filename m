@@ -2,64 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9056878A682
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Aug 2023 09:31:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D717A78A695
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Aug 2023 09:36:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229525AbjH1HbL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Aug 2023 03:31:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55474 "EHLO
+        id S229745AbjH1HgB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Aug 2023 03:36:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229757AbjH1Hav (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Aug 2023 03:30:51 -0400
-Received: from mail.profitpathwaygo.com (mail.profitpathwaygo.com [141.94.21.238])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA127116
-        for <linux-pci@vger.kernel.org>; Mon, 28 Aug 2023 00:30:38 -0700 (PDT)
-Received: by mail.profitpathwaygo.com (Postfix, from userid 1002)
-        id 99785499EE; Mon, 28 Aug 2023 07:30:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=profitpathwaygo.com;
-        s=mail; t=1693207837;
-        bh=qp3Ofokho6Ql+WtI8ZPVilyHYhskXL7fod7u9CWs8W4=;
-        h=Date:From:To:Subject:From;
-        b=SbgTsxpUnHNYoXCA7rr7FV3wo6B3f2hskbOkmjExg7Q0lMxtuKE1aSU7FsdGyTdL7
-         kRPprK1ogJuXzHexHXyUonBZ4uZHfV/WGbOxRXRkG2Md18Q+Y+8D2hWs+J3PxtAlNz
-         hAdCuUvtRZbUozdMRp8Klx0uaX2ydtNB9/mmD6ZUMw9hkyoHeXD6jTsihepY5WS+kV
-         x0GQenD/JBlHwIwqyr99dex2CXNu7ADAp3Atlp2WT61SnkoFmhHTUgTcNKCD21PFck
-         rlbMGol0zGWRUZegZqzq35TSifc7bB0vViXYrAykRDKya2AC4pzGxrXEKSrUvVHXx4
-         oLi/aF7xSYuKw==
-Received: by mail.profitpathwaygo.com for <linux-pci@vger.kernel.org>; Mon, 28 Aug 2023 07:30:28 GMT
-Message-ID: <20230828064500-0.1.1e.dc3m.0.xm1kmfi5ug@profitpathwaygo.com>
-Date:   Mon, 28 Aug 2023 07:30:28 GMT
-From:   "Adam Charachuta" <adam.charachuta@profitpathwaygo.com>
-To:     <linux-pci@vger.kernel.org>
-Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania_?=
-X-Mailer: mail.profitpathwaygo.com
+        with ESMTP id S229821AbjH1Hft (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Aug 2023 03:35:49 -0400
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42753126;
+        Mon, 28 Aug 2023 00:35:44 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 59433300002CB;
+        Mon, 28 Aug 2023 09:35:42 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 4BF6E2F90C9; Mon, 28 Aug 2023 09:35:42 +0200 (CEST)
+Date:   Mon, 28 Aug 2023 09:35:42 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>
+Subject: Re: [PATCH v4 1/3] PCI: pciehp: Add support for async hotplug with
+ native AER and DPC/EDR
+Message-ID: <20230828073542.GA12658@wunner.de>
+References: <20230815212043.114913-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20230815212043.114913-2-Smita.KoralahalliChannabasappa@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,URIBL_CSS_A,URIBL_DBL_SPAM
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ***
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230815212043.114913-2-Smita.KoralahalliChannabasappa@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dzie=C5=84 dobry,
+On Tue, Aug 15, 2023 at 09:20:41PM +0000, Smita Koralahalli wrote:
+> According to PCIe r6.0 sec 6.7.6 [1], async removal with DPC may result in
+> surprise down error. This error is expected and is just a side-effect of
+> async remove.
+> 
+> Add support to handle the surprise down error generated as a side-effect
+> of async remove. Typically, this error is benign as the pciehp handler
+> invoked by PDC or/and DLLSC alongside DPC, de-enumerates and brings down
+> the device appropriately. But the error messages might confuse users. Get
+> rid of these irritating log messages with a 1s delay while pciehp waits
+> for dpc recovery.
+[...]
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
 
-zapozna=C5=82em si=C4=99 z Pa=C5=84stwa ofert=C4=85 i z przyjemno=C5=9Bci=
-=C4=85 przyznaj=C4=99, =C5=BCe przyci=C4=85ga uwag=C4=99 i zach=C4=99ca d=
-o dalszych rozm=C3=B3w.=20
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
 
-Pomy=C5=9Bla=C5=82em, =C5=BCe mo=C5=BCe m=C3=B3g=C5=82bym mie=C4=87 sw=C3=
-=B3j wk=C5=82ad w Pa=C5=84stwa rozw=C3=B3j i pom=C3=B3c dotrze=C4=87 z t=C4=
-=85 ofert=C4=85 do wi=C4=99kszego grona odbiorc=C3=B3w. Pozycjonuj=C4=99 =
-strony www, dzi=C4=99ki czemu generuj=C4=85 =C5=9Bwietny ruch w sieci.
+The subject is slightly inaccurate as this doesn't touch pciehp source
+files, although it is *related* to pciehp.
 
-Mo=C5=BCemy porozmawia=C4=87 w najbli=C5=BCszym czasie?
+As an example, a perhaps more accurate subject might be something like...
 
+  PCI/DPC: Ignore Surprise Down errors on hot removal
 
-Pozdrawiam serdecznie
-Adam Charachuta
+...but I don't think it's necessary to respin just for that as Bjorn is
+probably able to adjust the subject to his liking when applying the patch.
+
+Thanks a lot for patiently pursuing this issue, good to see it fixed.
+
+Five years ago there was an attempt to solve it through masking Surprise
+Down errors, which you've verified to not be a viable approach:
+
+https://patchwork.kernel.org/project/linux-pci/patch/20180818065126.77912-2-okaya@kernel.org/
+
+Lukas
