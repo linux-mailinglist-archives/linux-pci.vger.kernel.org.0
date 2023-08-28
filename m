@@ -2,281 +2,285 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E21578AF6F
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Aug 2023 14:02:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 048E778B0D9
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Aug 2023 14:45:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232240AbjH1MC2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Aug 2023 08:02:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58316 "EHLO
+        id S231367AbjH1Mot (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Aug 2023 08:44:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232539AbjH1MCB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Aug 2023 08:02:01 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2074.outbound.protection.outlook.com [40.107.244.74])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E71F8128;
-        Mon, 28 Aug 2023 05:01:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UoeUU9JkfV0pbnd2E2ZR5JwLe2dKE6Htt7qKXdW1EJ62aoPEAPhfkniHOif06r11z/3LWRyz9eByVbGJx4WekOvWFSodmN3Fl82v4UsjaB03N46lkUOCFJ6rJWdb+I0rAvFPGUYLrWTufftptRHIouD21Y5CDREIH6T+wCwcDJrYSdf2aDTeCUU+iMc8LKDLYyiFO7uGJGfaTrn2ZSXeUzuKfwWdAyET3XdHIkTTD+PktoK3oZ1NzEFxasfGPBItas75O0KvvcmlnfEB7zZf2HzMj2G6RTQhxOI516V4okBM3trqMXMMF5i7Zr/JF9+miw4FGSr5FUde7CMMNUKKEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7WngzMr+yxbS0y/fhosPucSfRvitMtzi3E0U0AXdSgo=;
- b=PkGpzt32XNGp896uKxpNYvS5Ec/KIVLdOTIVYOw7XEte0SsxN4jhwkXHCDD4ZRU+1/b0/fZk/E9Uvu/eV9/BohebCYPc183hAd2Jb3cMw4B+33HzMMJ7LgsoInmBZvqRxHz+XU+NnLJQJaSSFDiGLwgzp7b2I5qB8muShS7kacrpPQe/+eROXpXD/0hYgzZCIZaHurm/IoUMtbMFm2KxpFKg94HlNEZHwR9iWC0kvXD3vvuwW/XtAMnB9ABi9ire2KpTwDi7Yxe4rHA/lxvTkMZaT9/Xz1l5E612WXNpt9ZruCQOACnS3s9QV5LWH1cblnaF0Vgg3uSvYvDs6f6TcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7WngzMr+yxbS0y/fhosPucSfRvitMtzi3E0U0AXdSgo=;
- b=sUgxEVC4NLcRuDy1smMqLWsqhhUEvky+pmgh0xR8+mYL2S5tywzF/K58XnVpj8iTe0bkVCSHJyFjKW8BiZXnBIvHeDHiLHe+ZCR3krxRrXVdZY8O2PQ6UiNhAOTBSb5ST29s0uGr0YYcnfhwV7IMuytZwxmfH1vn36QoZNjburc=
-Received: from SN7PR12MB7201.namprd12.prod.outlook.com (2603:10b6:806:2a8::22)
- by IA0PR12MB8645.namprd12.prod.outlook.com (2603:10b6:208:48f::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.27; Mon, 28 Aug
- 2023 12:01:52 +0000
-Received: from SN7PR12MB7201.namprd12.prod.outlook.com
- ([fe80::2525:9c2a:5446:7605]) by SN7PR12MB7201.namprd12.prod.outlook.com
- ([fe80::2525:9c2a:5446:7605%6]) with mapi id 15.20.6699.027; Mon, 28 Aug 2023
- 12:01:52 +0000
-From:   "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "Simek, Michal" <michal.simek@amd.com>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>
-Subject: RE: [PATCH v6 3/3] PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver
-Thread-Topic: [PATCH v6 3/3] PCI: xilinx-xdma: Add Xilinx XDMA Root Port
- driver
-Thread-Index: AQHZ0bd0UZnWQ2UfsUKGgBlWnmvLwK/1NJwAgAo9UBCAABo3oA==
-Date:   Mon, 28 Aug 2023 12:01:52 +0000
-Message-ID: <SN7PR12MB7201459AEFB6DFF600E753928BE0A@SN7PR12MB7201.namprd12.prod.outlook.com>
-References: <20230818093507.24435-4-thippeswamy.havalige@amd.com>
- <20230821201400.GA367570@bhelgaas>
- <SN7PR12MB72019898876F049A932209038BE0A@SN7PR12MB7201.namprd12.prod.outlook.com>
-In-Reply-To: <SN7PR12MB72019898876F049A932209038BE0A@SN7PR12MB7201.namprd12.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN7PR12MB7201:EE_|IA0PR12MB8645:EE_
-x-ms-office365-filtering-correlation-id: 2079f6a6-aaf0-4fa8-fd00-08dba7be914b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: D/M2ZZZUac7D67EVceZGGJAjmLQLJ9d9Tw/BxtvjYS188CQKIYHZuj//FVNzoEL0m1oQH/N1rz3WIW6JaB84iy7YuWCSqyYGhvd3UmiwaRgSKWv/Q/cCG0mhYPPigUgmfU4SyQcCNHh1ZtWmP8bzxUpJ4HLQ+ZMh05ygojR7V3e7G8NYHgSl+X3JqBRzKmCn1s7nlEOZ6A7c8nCgFqMhan/N/QRTS1JbYJ+rasWeWrd9u19DEYfGXYKkqZT6yNXoSErC5+pH/w7ZGE4as+UhT7/WipTUysxZ02LTUTwaLaNp1HZlUqzjZtmQ7W4KiCkksSUXqV9hf5mypNCkpfVrfs+IbQOy28Na+Iv15r4rOkxxiLfcudl26ycYlnWS7wH8/hOCixT+TzuzYkG9rcQ+CwnVbybsI8PynWPyDCU3j6CXS/Os7LbeS/qGKOCtCzHCy5FoVxeLKERJCF2jRwELgxRuRAmgXs2TAD/l/axWce9KewDHUEC4Z+CF37oBSVDlpI3bI87S7Oc8SG8V7hYB3VbQPnA+/GssvATqFPyJaRK2/uEFP/45wSZDgjhSyaayTTQkzJfwkADIoYM6uFRXg2M8kdrj9zUZVCRgKfreDT6+xWsLJ70SHB0kwB5/tsH5
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7201.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(376002)(396003)(39860400002)(346002)(451199024)(1800799009)(186009)(7696005)(6506007)(71200400001)(9686003)(33656002)(86362001)(38100700002)(38070700005)(122000001)(55016003)(2906002)(26005)(83380400001)(2940100002)(53546011)(478600001)(76116006)(52536014)(66476007)(66556008)(66946007)(41300700001)(8676002)(4326008)(8936002)(5660300002)(64756008)(7416002)(66446008)(54906003)(6916009)(316002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?JkMYUWsbhG0Z2bqanmUJb5ZQVrNDhc0Puu+W0QNpSNepmPDfH4HULjCm4vZk?=
- =?us-ascii?Q?PM1j0NkwtVRBvjKaUmHLlcCFLNspmsbhmTGVUJDry4aES84+LMqNMxZqehRD?=
- =?us-ascii?Q?2Xxq0x9bBrznyX31xUYjjzvCVUArP0XAGi0TGcCuiAm3AePpAHfwk8yYuN0S?=
- =?us-ascii?Q?+m03kBZvHJcyRu9cc6BOmAzYsHEOrlyn978rCzjFd2Sr+Ek4DfQCm5Gb0K6l?=
- =?us-ascii?Q?WZL7tkNZob3A9gISmZVl7TyztrAgnUsjZtHJuxSkpVPPyfs1h7Kycckl2exE?=
- =?us-ascii?Q?SDhDcDtPsOx+h4L2IJPZ9ExwxllpwJ9cSfDe6YZLkhcDZG+vR+9Ng3m+s73T?=
- =?us-ascii?Q?22+bp7/DHRaaNPQGCAqJH1H8q9NwRSkgyPH7vgjb4AvlADBInc1yV9UGZhEB?=
- =?us-ascii?Q?ur6MbobqqwaAzL71MiPcQhfpa4XIhJdHWUJ4io7bptAnSJZNDLUAqLuspYxE?=
- =?us-ascii?Q?BgwkyAZbzlYn0sGlZ8jiJlYuhW8GgTqpxfrqeO5Kb8qEH7eX8eO4kXx9nnH3?=
- =?us-ascii?Q?wOXAP6Ny2hj99qPY+gnTlQR7YARD2Inrgymt0o0OryXtuIMhFPPbLKMcphIs?=
- =?us-ascii?Q?rhLomCG2ZaTtHzmBivtWQcbjaqQynFvFxSTXmHaAQlagBH4c/QuwrUjEeK4M?=
- =?us-ascii?Q?BuHvHy4lKQd7A6H0jDxkUJW5YMF32enUJIuk0CWEzK5+v36jFjsqCNbWWjoV?=
- =?us-ascii?Q?9TXkqRbSY9AWvCz/f6UyAmI6YCd28PFjTZ2N2i/gi1QJnERmbUdEOOuTZ+e3?=
- =?us-ascii?Q?pjGYdZLovbCu32XfFqAImLpRp2Cis4m+CzQHfnypq6mmmB7XOcrMop30Ln79?=
- =?us-ascii?Q?PCObqqbsQSHnglMJ+Yx0f6Q6+T6G78nujKEtGP53aM5N9BMGYmdiZ8G326/c?=
- =?us-ascii?Q?3BSe2moDHCbDyzHJEeus3vD5GRpXg06dt3Dk8DkvAUbmwC4bydEw9f5pwHyO?=
- =?us-ascii?Q?cnzeG4Grjk3n8QYyIdwpxJFiLglzBWFhHlXy7nTqu2owtZfiZ8vutTTW1/pg?=
- =?us-ascii?Q?UDddGiPO8kang7Ojg7GlfqcXiepSSPEHZ1kVATx4d2XjaeadYYhgsfAptZ4g?=
- =?us-ascii?Q?5bySrQmt+X+rVRHZHEt8MXJKKt62pVvxgaHulnX5dtkn5Zvch3vTIxkBLD9f?=
- =?us-ascii?Q?kW3QiBewEmkFv2zMcp6Iv1R+sy/JpXSeqw2D/HVP+JdmpO/R34DFYS+csh8f?=
- =?us-ascii?Q?ia3hQg90XUTP/lmtXbx5l71raHgaGTlQIfW154T9066unTzYNfqxBAO1Ptnx?=
- =?us-ascii?Q?3IEl35ykLahQQxUE8HO3RvjVT6qOLiknv7r2TSBWOzmvva3sSdeUGtpnPEMo?=
- =?us-ascii?Q?g0JsRkAL+YnAJg9qHjr6RXIJP5IxtQ5X+0+AqPuCStjcmhlVPhEayuNJEYxg?=
- =?us-ascii?Q?fdR2SB8RG4hRJ/dceZS6npNkJQ3a5F39CHgP4/gRANDhxee8gqHj2LpIW2PK?=
- =?us-ascii?Q?31kOZVWgmXsk3eK5yD6g+QPL4bPBZE+FHjfpzX8myV0Q9ymwL1Fgt8pYrKi5?=
- =?us-ascii?Q?69fD2y8lWWw3bwvv03GvW9dLWncS+ukKy8mDo8uI1sffDTj0ykeXBnK5HYQd?=
- =?us-ascii?Q?0GC6iJhFBqCwtIWoRRI=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S231414AbjH1MoV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Aug 2023 08:44:21 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 77CBE102;
+        Mon, 28 Aug 2023 05:44:16 -0700 (PDT)
+Received: from loongson.cn (unknown [112.20.109.102])
+        by gateway (Coremail) with SMTP id _____8CxtPCbluxkhIEcAA--.58922S3;
+        Mon, 28 Aug 2023 20:44:11 +0800 (CST)
+Received: from [192.168.100.8] (unknown [112.20.109.102])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxzyOXluxkS7NlAA--.8361S3;
+        Mon, 28 Aug 2023 20:44:09 +0800 (CST)
+Message-ID: <2637fb35-4328-4cfe-ab16-566994c44b5a@loongson.cn>
+Date:   Mon, 28 Aug 2023 20:44:07 +0800
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7201.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2079f6a6-aaf0-4fa8-fd00-08dba7be914b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2023 12:01:52.5826
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YyBc0pz/Smsc/Ac4v4CpKIXe0f9cUVdeEYE9ZJVtkjcc9g0OJI2OzAWYcwWOFU6hZU5h87wfsWVluiGu3Zmveg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8645
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] PCI/PM: Only read PCI_PM_CTRL register when available
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Feiyang Chen <chris.chenfeiyang@gmail.com>
+Cc:     Feiyang Chen <chenfeiyang@loongson.cn>, bhelgaas@google.com,
+        rafael.j.wysocki@intel.com, mika.westerberg@linux.intel.com,
+        anders.roxell@linaro.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, guyinggang@loongson.cn,
+        chenhuacai@loongson.cn, loongson-kernel@lists.loongnix.cn,
+        "Rafael J . Wysocki" <rafael@kernel.org>
+References: <20230825212507.GA627427@bhelgaas>
+From:   Yanteng Si <siyanteng@loongson.cn>
+In-Reply-To: <20230825212507.GA627427@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8AxzyOXluxkS7NlAA--.8361S3
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxuw17Zr45XrW7Kw48Gr4xXwc_yoW3uw4Up3
+        9YkFnxGFWkJa48GFnIqr1UCF90939Fyr98Wr95C342vFnFgr95Kr15XFyYga47ArZ7Wa18
+        XFWjvr4UuF45CagCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AK
+        xVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+        xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY
+        6Fy7McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+        8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+        6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+        AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+        0xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+        v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
+        xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU022NJUUUUU==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
 
-> -----Original Message-----
-> From: Havalige, Thippeswamy
-> Sent: Monday, August 28, 2023 2:39 PM
-> To: Bjorn Helgaas <helgaas@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; l=
-inux-
-> pci@vger.kernel.org; devicetree@vger.kernel.org; bhelgaas@google.com;
-> lpieralisi@kernel.org; robh@kernel.org; kw@linux.com; Simek, Michal
-> <michal.simek@amd.com>; krzysztof.kozlowski+dt@linaro.org; Gogada,
-> Bharat Kumar <bharat.kumar.gogada@amd.com>
-> Subject: RE: [PATCH v6 3/3] PCI: xilinx-xdma: Add Xilinx XDMA Root Port d=
-river
->=20
-> Hi Bjorn,
->=20
-> Thanks, ll take all your comments and update them in next patch.
->=20
-> Regards,
-> Thippeswamy H
->=20
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: Tuesday, August 22, 2023 1:44 AM
-> > To: Havalige, Thippeswamy <thippeswamy.havalige@amd.com>
-> > Cc: linux-arm-kernel@lists.infradead.org;
-> > linux-kernel@vger.kernel.org; linux- pci@vger.kernel.org;
-> > devicetree@vger.kernel.org; bhelgaas@google.com;
-> > lpieralisi@kernel.org; robh@kernel.org; kw@linux.com; Simek, Michal
-> > <michal.simek@amd.com>; krzysztof.kozlowski+dt@linaro.org; Gogada,
-> > Bharat Kumar <bharat.kumar.gogada@amd.com>
-> > Subject: Re: [PATCH v6 3/3] PCI: xilinx-xdma: Add Xilinx XDMA Root
-> > Port driver
-> >
-> > On Fri, Aug 18, 2023 at 03:05:07PM +0530, Thippeswamy Havalige wrote:
-> > > Add support for Xilinx XDMA Soft IP core as Root Port.
-> > >
-> > > The Zynq UltraScale+ MPSoCs devices support XDMA soft IP module in
-> > > programmable logic.
-> > >
-> > > The integrated XDMA soft IP block has integrated bridge function
-> > > that can act as PCIe Root Port.
-> > >
-> > > Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-> > > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>
-> > > ---
-> > > changes in v6:
-> > > - Replaced chained irq's with regular interrupts.
-> >
-> > Thanks a million for working this out!
-> >
-> > Trivial comments below, wait a couple days before reposting in case
-> > there are other comments.
-> >
-> > > +static inline bool xilinx_pl_dma_pcie_link_up(struct pl_dma_pcie
-> > > +*port) {
-> > > +	return (pcie_read(port, XILINX_PCIE_DMA_REG_PSCR) &
-> > > +		XILINX_PCIE_DMA_REG_PSCR_LNKUP) ? 1 : 0;
-> >
-> > This function returns bool, so I think true/false would be more
-> > appropriate than 1/0.
-> >
-> > > +static bool xilinx_pl_dma_pcie_valid_device(struct pci_bus *bus,
-> > > +					    unsigned int devfn)
-> > > +{
-> > > +	struct pl_dma_pcie *port =3D bus->sysdata;
-> > > +
-> > > +	/* Check if link is up when trying to access downstream ports */
-> > > +	if (!pci_is_root_bus(bus)) {
-> > > +		/*
-> > > +		 * Checking whether link is up here is a last line of defence,
-> > > +		 * if the link goes down after we check for link-up, we have a
-> > > +		 * problem: if a PIO request is initiated while link-down, the
-> > > +		 * whole controller hangs, and even after link comes up again,
-> > > +		 * previous PIO requests won't work, and a reset of the whole
-> > > +		 * PCIe controller is needed. Henceforth we need link-up
-> > check
-> > > +		 * here to avoid sending PIO request when link is down. This
-> > > +		 * check is racy by definition and does not make controller
-> > hang
-> > > +		 * if the link goes down after this check is performed.
-> >
-> > This comment doesn't make sense to me.  "If PIO request initiated
-> > while link- down, controller hangs ... This check is racy and does not
-> > make controller hang if link goes down."  Which is it?
-- Here checking link up treats device as invalid.
+在 2023/8/26 05:25, Bjorn Helgaas 写道:
+> On Fri, Aug 25, 2023 at 11:57:00AM +0800, Feiyang Chen wrote:
+>> On Fri, Aug 25, 2023 at 5:59 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>> On Thu, Aug 24, 2023 at 09:37:38AM +0800, Feiyang Chen wrote:
+>>>> When the current state is already PCI_D0, pci_power_up() will return
+>>>> 0 even though dev->pm_cap is not set. In that case, we should not
+>>>> read the PCI_PM_CTRL register in pci_set_full_power_state().
+>>>>
+>>>> There is nothing more needs to be done below in that case.
+>>>> Additionally, pci_power_up() has two callers only and the other one
+>>>> ignores the return value, so we can safely move the current state
+>>>> check from pci_power_up() to pci_set_full_power_state().
+>>> Does this fix a bug?  I guess it does, because previously
+>>> pci_set_full_power_state() did a config read at 0 + PCI_PM_CTRL, i.e.,
+>>> offset 4, which is actually PCI_COMMAND, and set dev->current_state
+>>> based on that.  So dev->current_state is now junk, right?
+>> Yes.
+>>
+>>> This might account for some "Refused to change power state from %s to D0"
+>>> messages.
+>>>
+>>> How did you find this?  It's nice if we can mention a symptom so
+>>> people can connect the problem with this fix.
+>> We are attempting to add MSI support for our stmmac driver, but the
+>> pci_alloc_irq_vectors() function always fails.
+>> After looking into it more, we came across the message "Refused to
+>> change power state from D3hot to D0" :)
+> So I guess this device doesn't have a PM Capability at all?  Can you
+> collect the "sudo lspci -vv" output?  The PM Capability is required
+> for all PCIe devices, so maybe this is a conventional PCI device?
 
-Please find comment that I ll update in next patch and=20
-Please letme know if any changes are needed.
+Hi
 
-  /*
-                 * Checking whether the link is up. Here is the last line o=
-f
-                 * defence. If the link goes down after we check for link-u=
-p,
-                 * we have a problem. If a PIO request is initiated while l=
-ink
-                 * is down, the whole controller hangs. Even after link com=
-es up
-                 * again, previous PIO requests won't work, and a reset of =
-the
-                 * whole PCIe controller is needed. Henceforth we need link=
--up
-                 * check here to treat device as invalid and avoid sending =
-PIO
-                 * request when link is down and this check is inherently r=
-acy
-                 * by definition.
-*/
-> >
-> > My *guess* is that this check narrows the window but doesn't close it,
-> > so if
-> > xilinx_pl_dma_pcie_link_up() finds the link up, but the link goes down
-> > before
-> > pci_generic_config_read() initiates the PIO request, the controller
-> > hangs, and a reset is required.
-> >
-> > > +		 */
-> > > +		if (!xilinx_pl_dma_pcie_link_up(port))
-> > > +			return false;
-> > > +	} else if (devfn > 0)
-> > > +		/* Only one device down on each root port */
-> > > +		return false;
-> > > +
-> > > +	return true;
-> > > +}
-> >
-> > > +/* INTx error interrupts are Xilinx controller specific interrupt,
-> > > +used to
-> > > + * notify user about error's such as cfg timeout, slave unsupported
-> > > +requests,
-> >
-> > s/error's/errors/
-> >
-> > > + * fatal and non fatal error etc.
-> >
-> > > +		err =3D devm_request_irq(dev, irq,
-> > xilinx_pl_dma_pcie_intr_handler,
-> > > +				       IRQF_SHARED | IRQF_NO_THREAD,
-> > intr_cause[i].sym, port);
-> >
-> > Rewrap to fit in 80 columns.
-> >
-> > > +	/* Needed for MSI DECODE MODE */
-> > > +	pcie_write(port, XILINX_PCIE_DMA_IDR_ALL_MASK,
-> > XILINX_PCIE_DMA_REG_MSI_LOW_MASK);
-> > > +	pcie_write(port, XILINX_PCIE_DMA_IDR_ALL_MASK,
-> > > +XILINX_PCIE_DMA_REG_MSI_HI_MASK);
-> >
-> > Rewrap.
-> >
-> > Bjorn
+
+I executed this command on the LS2k2000 platform, and this is part of 
+the output：
+
+
+00:03.0 Ethernet controller: Loongson Technology LLC Device 7a13 (rev 01)
+
+     Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop+ ParErr- 
+Stepping- SERR- FastB2B- DisINTx-
+     Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+     Latency: 0
+     Interrupt: pin A routed to IRQ 45
+     NUMA node: 0
+     Region 0: Memory at 51290000 (64-bit, non-prefetchable) [size=32K]
+     Capabilities: [40] MSI: Enable+ Count=32/32 Maskable- 64bit-
+         Address: 1fe01140  Data: 0060
+     Kernel driver in use: dwmac-loongson-pci
+
+00:03.1 Ethernet controller: Loongson Technology LLC Device 7a13 (rev 01)
+     Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop+ ParErr- 
+Stepping- SERR- FastB2B- DisINTx-
+     Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+     Latency: 0
+     Interrupt: pin B routed to IRQ 78
+     NUMA node: 0
+     Region 0: Memory at 51298000 (64-bit, non-prefetchable) [size=32K]
+     Capabilities: [40] MSI: Enable+ Count=32/32 Maskable- 64bit-
+         Address: 1fe01140  Data: 0080
+     Kernel driver in use: dwmac-loongson-pci
+
+00:03.2 Ethernet controller: Loongson Technology LLC Gigabit Ethernet 
+Controller (rev 02)
+     Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop+ ParErr- 
+Stepping- SERR- FastB2B- DisINTx+
+     Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+     Latency: 64, Cache Line Size: 64 bytes
+     Interrupt: pin C routed to IRQ 111
+     NUMA node: 0
+     Region 0: Memory at 512a0000 (64-bit, non-prefetchable) [size=32K]
+     Expansion ROM at 512b3000 [disabled] [size=2K]
+     Capabilities: [40] MSI: Enable+ Count=32/32 Maskable- 64bit-
+         Address: 1fe01140  Data: 00a0
+
+     Kernel driver in use: dwmac-loongson-pci
+
+
+00:04.0 USB controller: Loongson Technology LLC Device 7a44 (prog-if 30 
+[XHCI])
+
+...
+
+
+>
+>>> This sounds like something that probably should have a stable tag?
+>> Do I need to include the symptom and Cc in the commit message and
+>> then send v4?
+>>>> Fixes: e200904b275c ("PCI/PM: Split pci_power_up()")
+>>>> Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+>>>> Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
+>>>> ---
+>>>>   drivers/pci/pci.c | 9 +++++----
+>>>>   1 file changed, 5 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>>>> index 60230da957e0..7e90ab7b47a1 100644
+>>>> --- a/drivers/pci/pci.c
+>>>> +++ b/drivers/pci/pci.c
+>>>> @@ -1242,9 +1242,6 @@ int pci_power_up(struct pci_dev *dev)
+>>>>                else
+>>>>                        dev->current_state = state;
+>>>>
+>>>> -             if (state == PCI_D0)
+>>>> -                     return 0;
+>>>> -
+>>>>                return -EIO;
+>>>>        }
+>>>>
+>>>> @@ -1302,8 +1299,12 @@ static int pci_set_full_power_state(struct pci_dev *dev)
+>>>>        int ret;
+>>>>
+>>>>        ret = pci_power_up(dev);
+>>>> -     if (ret < 0)
+>>>> +     if (ret < 0) {
+>>>> +             if (dev->current_state == PCI_D0)
+>>>> +                     return 0;
+>>>> +
+>>>>                return ret;
+>>>> +     }
+>>>>        pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+>>>>        dev->current_state = pmcsr & PCI_PM_CTRL_STATE_MASK;
+> One thing that makes me hesitate a little bit is that we rely on the
+> failure return from pci_power_up() to guard the dev->pm_cap usage.
+> That's slightly obscure, and I liked the way the v1 patch made it
+> explicit.
+>
+> And it seems slightly weird that when there's no PM cap,
+> pci_power_up() always returns failure even if the platform was able to
+> put the device in D0.
+>
+> Anyway, here's a proposal for commit log and updated comment for
+> pci_power_up():
+>
+>
+> commit 5694ba13b004 ("PCI/PM: Only read PCI_PM_CTRL register when available")
+> Author: Feiyang Chen <chenfeiyang@loongson.cn>
+> Date:   Thu Aug 24 09:37:38 2023 +0800
+>
+>      PCI/PM: Only read PCI_PM_CTRL register when available
+>      
+>      For a device with no Power Management Capability, pci_power_up() previously
+>      returned 0 (success) if the platform was able to put the device in D0,
+>      which led to pci_set_full_power_state() trying to read PCI_PM_CTRL, even
+>      though it doesn't exist.
+>      
+>      Since dev->pm_cap == 0 in this case, pci_set_full_power_state() actually
+>      read the wrong register, interpreted it as PCI_PM_CTRL, and corrupted
+>      dev->current_state.  This led to messages like this in some cases:
+>      
+>        pci 0000:01:00.0: Refused to change power state from D3hot to D0
+>      
+>      To prevent this, make pci_power_up() always return a negative failure code
+>      if the device lacks a Power Management Capability, even if non-PCI platform
+>      power management has been able to put the device in D0.  The failure will
+>      prevent pci_set_full_power_state() from trying to access PCI_PM_CTRL.
+>      
+>      Fixes: e200904b275c ("PCI/PM: Split pci_power_up()")
+>      Link: https://lore.kernel.org/r/20230824013738.1894965-1-chenfeiyang@loongson.cn
+>      Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
+>      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>      Reviewed-by: "Rafael J. Wysocki" <rafael@kernel.org>
+>      Cc: stable@vger.kernel.org	# v5.19+
+>
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 60230da957e0..39728196e295 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1226,6 +1226,10 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+>    *
+>    * On success, return 0 or 1, depending on whether or not it is necessary to
+>    * restore the device's BARs subsequently (1 is returned in that case).
+> + *
+> + * On failure, return a negative error code.  Always return failure if @dev
+> + * lacks a Power Management Capability, even if the platform was able to
+> + * put the device in D0 via non-PCI means.
+>    */
+>   int pci_power_up(struct pci_dev *dev)
+>   {
+> @@ -1242,9 +1246,6 @@ int pci_power_up(struct pci_dev *dev)
+>   		else
+>   			dev->current_state = state;
+>   
+> -		if (state == PCI_D0)
+> -			return 0;
+> -
+>   		return -EIO;
+>   	}
+>   
+> @@ -1302,8 +1303,12 @@ static int pci_set_full_power_state(struct pci_dev *dev)
+>   	int ret;
+>   
+>   	ret = pci_power_up(dev);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		if (dev->current_state == PCI_D0)
+> +			return 0;
+> +
+>   		return ret;
+> +	}
+>   
+>   	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+>   	dev->current_state = pmcsr & PCI_PM_CTRL_STATE_MASK;
+
+Thanks a lot!
+
+
+Thanks,
+
+Yanteng
+
