@@ -2,138 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9637978C4E1
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Aug 2023 15:07:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90A6778C794
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Aug 2023 16:32:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230306AbjH2NHI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Aug 2023 09:07:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37598 "EHLO
+        id S233009AbjH2OcQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Aug 2023 10:32:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235886AbjH2NGn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Aug 2023 09:06:43 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0E0B61B7;
-        Tue, 29 Aug 2023 06:06:37 -0700 (PDT)
-Received: from loongson.cn (unknown [112.20.109.102])
-        by gateway (Coremail) with SMTP id _____8Ax1fBb7e1kGcQcAA--.58704S3;
-        Tue, 29 Aug 2023 21:06:35 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.109.102])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_yNW7e1kXntmAA--.10656S2;
-        Tue, 29 Aug 2023 21:06:31 +0800 (CST)
-From:   Yanteng Si <siyanteng@loongson.cn>
-To:     bhelgaas@google.com, rafael.j.wysocki@intel.com
-Cc:     mika.westerberg@linux.intel.com, helgaas@kernel.org,
-        anders.roxell@linaro.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, guyinggang@loongson.cn,
-        siyanteng@loongson.cn, chenhuacai@loongson.cn,
-        loongson-kernel@lists.loongnix.cn, chris.chenfeiyang@gmail.com,
-        rafael@kernel.org, Feiyang Chen <chenfeiyang@loongson.cn>
-Subject: [PATCH v4] PCI/PM: Only read PCI_PM_CTRL register when available
-Date:   Tue, 29 Aug 2023 21:06:26 +0800
-Message-Id: <20230829130626.1978944-1-siyanteng@loongson.cn>
-X-Mailer: git-send-email 2.31.4
+        with ESMTP id S236511AbjH2OcP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Aug 2023 10:32:15 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6837CC
+        for <linux-pci@vger.kernel.org>; Tue, 29 Aug 2023 07:32:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693319532; x=1724855532;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=bKbUC7frJEONdCr40wx4Z/CyLzHeBQhegSW+hMKs8Ss=;
+  b=kEfCw6XUB45DAm4Ai8fptklI45IZBaHYM+rStyGqINCLd2Bo1UXfEZ50
+   MSWXZSZMJAEwJVDLnpW1WnDgc63pU4/2cA2UJSAZAVNu++vyI/17LF4l8
+   ngyrbsYz9th/UlWvKfyHnWkg9b1bUjip0cB8zmUYcURwjOOGAmxrxcGgz
+   VFrCF0kkZd7V4dUb3qDpM3eABmyVEXkuna2xXTTnKXiAyOc6cNGCfHkSj
+   kp5xCsy83ID4BuXYsu4FSRomcGC+zlkaGfT7+1/HwLcIgSaZCe7Ik7LQN
+   +xJX5uEC/8nyTkuQ+orL/crDUFSnhM8qqpQn/tKVtZ7IqzjG8EAaFkWgT
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="355703396"
+X-IronPort-AV: E=Sophos;i="6.02,210,1688454000"; 
+   d="scan'208";a="355703396"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2023 07:31:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="1069481405"
+X-IronPort-AV: E=Sophos;i="6.02,210,1688454000"; 
+   d="scan'208";a="1069481405"
+Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
+  by fmsmga005.fm.intel.com with ESMTP; 29 Aug 2023 07:31:34 -0700
+Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qazkL-0008oD-0p;
+        Tue, 29 Aug 2023 14:31:14 +0000
+Date:   Tue, 29 Aug 2023 22:30:11 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc:     oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [pci:controller/qcom-ep 3/3]
+ drivers/pci/controller/dwc/pcie-qcom-ep.c:198: warning: Function parameter
+ or member 'icc_mem' not described in 'qcom_pcie_ep'
+Message-ID: <202308292252.HNCCTM4u-lkp@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8Dx_yNW7e1kXntmAA--.10656S2
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZF13Wr43urW3Wr4UCrW7GFX_yoW5GFWkp3
-        95GF9rGF18JF18t3ZIqFsrZFn8ua92yrZ3ZFyI9w17u3W7W395tr1ftFyYqF1rZrZrXFy3
-        Xa9Fyr18Wa15GacCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-        6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-        kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
-        twAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-        6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-        AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-        0xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
-        v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-        xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU4SoGDUUUU
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Feiyang Chen <chenfeiyang@loongson.cn>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/qcom-ep
+head:   0c104996e6a856536e311c6fee66d8099c5c6c7b
+commit: 0c104996e6a856536e311c6fee66d8099c5c6c7b [3/3] PCI: qcom-ep: Add ICC bandwidth voting support
+config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20230829/202308292252.HNCCTM4u-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230829/202308292252.HNCCTM4u-lkp@intel.com/reproduce)
 
-    For a device with no Power Management Capability, pci_power_up() previously
-    returned 0 (success) if the platform was able to put the device in D0,
-    which led to pci_set_full_power_state() trying to read PCI_PM_CTRL, even
-    though it doesn't exist.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308292252.HNCCTM4u-lkp@intel.com/
 
-    Since dev->pm_cap == 0 in this case, pci_set_full_power_state() actually
-    read the wrong register, interpreted it as PCI_PM_CTRL, and corrupted
-    dev->current_state.  This led to messages like this in some cases:
+All warnings (new ones prefixed by >>):
 
-    pci 0000:01:00.0: Refused to change power state from D3hot to D0
+>> drivers/pci/controller/dwc/pcie-qcom-ep.c:198: warning: Function parameter or member 'icc_mem' not described in 'qcom_pcie_ep'
 
-    To prevent this, make pci_power_up() always return a negative failure code
-    if the device lacks a Power Management Capability, even if non-PCI platform
-    power management has been able to put the device in D0.  The failure will
-    prevent pci_set_full_power_state() from trying to access PCI_PM_CTRL.
 
-    Fixes: e200904b275c ("PCI/PM: Split pci_power_up()")
-    Link: https://lore.kernel.org/r/20230824013738.1894965-1-chenfeiyang@loongson.cn
-    Signed-off-by: Feiyang Chen <chenfeiyang@loongson.cn>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
-    Reviewed-by: "Rafael J. Wysocki" <rafael@kernel.org>
-    Cc: stable@vger.kernel.org	# v5.19+
----
-v4:
-Modify commit messages.
+vim +198 drivers/pci/controller/dwc/pcie-qcom-ep.c
 
-BTW, Feiyang went on vacation, I will continue this patch.
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  150  
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  151  /**
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  152   * struct qcom_pcie_ep - Qualcomm PCIe Endpoint Controller
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  153   * @pci: Designware PCIe controller struct
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  154   * @parf: Qualcomm PCIe specific PARF register base
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  155   * @elbi: Designware PCIe specific ELBI register base
+6dbba2b53c3bcb Manivannan Sadhasivam     2022-09-14  156   * @mmio: MMIO register base
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  157   * @perst_map: PERST regmap
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  158   * @mmio_res: MMIO region resource
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  159   * @core_reset: PCIe Endpoint core reset
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  160   * @reset: PERST# GPIO
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  161   * @wake: WAKE# GPIO
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  162   * @phy: PHY controller block
+6dbba2b53c3bcb Manivannan Sadhasivam     2022-09-14  163   * @debugfs: PCIe Endpoint Debugfs directory
+e2efd31465b1d9 Manivannan Sadhasivam     2022-09-14  164   * @clks: PCIe clocks
+e2efd31465b1d9 Manivannan Sadhasivam     2022-09-14  165   * @num_clks: PCIe clocks count
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  166   * @perst_en: Flag for PERST enable
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  167   * @perst_sep_en: Flag for PERST separation enable
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  168   * @link_status: PCIe Link status
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  169   * @global_irq: Qualcomm PCIe specific Global IRQ
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  170   * @perst_irq: PERST# IRQ
+f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  171   */
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  172  struct qcom_pcie_ep {
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  173  	struct dw_pcie pci;
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  174  
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  175  	void __iomem *parf;
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  176  	void __iomem *elbi;
+6dbba2b53c3bcb Manivannan Sadhasivam     2022-09-14  177  	void __iomem *mmio;
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  178  	struct regmap *perst_map;
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  179  	struct resource *mmio_res;
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  180  
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  181  	struct reset_control *core_reset;
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  182  	struct gpio_desc *reset;
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  183  	struct gpio_desc *wake;
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  184  	struct phy *phy;
+6dbba2b53c3bcb Manivannan Sadhasivam     2022-09-14  185  	struct dentry *debugfs;
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  186  
+0c104996e6a856 Krishna chaitanya chundru 2023-07-19  187  	struct icc_path *icc_mem;
+0c104996e6a856 Krishna chaitanya chundru 2023-07-19  188  
+e2efd31465b1d9 Manivannan Sadhasivam     2022-09-14  189  	struct clk_bulk_data *clks;
+e2efd31465b1d9 Manivannan Sadhasivam     2022-09-14  190  	int num_clks;
+e2efd31465b1d9 Manivannan Sadhasivam     2022-09-14  191  
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  192  	u32 perst_en;
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  193  	u32 perst_sep_en;
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  194  
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  195  	enum qcom_pcie_ep_link_status link_status;
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  196  	int global_irq;
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  197  	int perst_irq;
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20 @198  };
+f55fee56a63103 Manivannan Sadhasivam     2021-09-20  199  
 
- drivers/pci/pci.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+:::::: The code at line 198 was first introduced by commit
+:::::: f55fee56a631032969480e4b0ee5d79734fe3c69 PCI: qcom-ep: Add Qualcomm PCIe Endpoint controller driver
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index f59f3c1c9869..59c01d68c6d5 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1226,6 +1226,10 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
-  *
-  * On success, return 0 or 1, depending on whether or not it is necessary to
-  * restore the device's BARs subsequently (1 is returned in that case).
-+ *
-+ * On failure, return a negative error code.  Always return failure if @dev
-+ * lacks a Power Management Capability, even if the platform was able to
-+ * put the device in D0 via non-PCI means.
-  */
- int pci_power_up(struct pci_dev *dev)
- {
-@@ -1242,9 +1246,6 @@ int pci_power_up(struct pci_dev *dev)
- 		else
- 			dev->current_state = state;
- 
--		if (state == PCI_D0)
--			return 0;
--
- 		return -EIO;
- 	}
- 
-@@ -1302,8 +1303,12 @@ static int pci_set_full_power_state(struct pci_dev *dev)
- 	int ret;
- 
- 	ret = pci_power_up(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		if (dev->current_state == PCI_D0)
-+			return 0;
-+
- 		return ret;
-+	}
- 
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
- 	dev->current_state = pmcsr & PCI_PM_CTRL_STATE_MASK;
+:::::: TO: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+:::::: CC: Bjorn Helgaas <bhelgaas@google.com>
+
 -- 
-2.31.4
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
