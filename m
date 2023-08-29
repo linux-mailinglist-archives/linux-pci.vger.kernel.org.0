@@ -2,128 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCA0178C407
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Aug 2023 14:16:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D324D78C40F
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Aug 2023 14:18:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231846AbjH2MQC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Aug 2023 08:16:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60592 "EHLO
+        id S233358AbjH2MRl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Aug 2023 08:17:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234839AbjH2MPc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Aug 2023 08:15:32 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A46CE4
-        for <linux-pci@vger.kernel.org>; Tue, 29 Aug 2023 05:15:04 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-997c4107d62so556087866b.0
-        for <linux-pci@vger.kernel.org>; Tue, 29 Aug 2023 05:15:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693311300; x=1693916100;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NuSqHXD31D4rgwV6avUd8bNaF7QG/6g57P8yYOHyObM=;
-        b=yzCG2sGObYfnmIReGnbAydo4kKKSBPJb3gGuQ7DgchEAHmfvZ1UCs5Ip/8wJiAcwkv
-         J7SZQWUjWzs09d8LsiGSeIhfiSGulbXF2+AsyR4LjGRwhZ0SlROX2UEzatjvxAR0gwcq
-         gyTtvJEURpPTIcBC8cx4YejzqqbAaHmun54IFNwVoKQV3lULtlPl0NyUId4rzHYWYros
-         5IFfjbgk5keSooHi6zhemQ+A0atZnBE7ZB4SD45wGSVxproEX68+HWEP734eUFFzweie
-         JGyaEpEZwAlDBBuKv1tldgh9dpBy4FiywuxeGHmfo/3SCy+QnoOmwyviezIX1lCocuTd
-         cDRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693311300; x=1693916100;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NuSqHXD31D4rgwV6avUd8bNaF7QG/6g57P8yYOHyObM=;
-        b=OMs0bSq/Tk04DkFhKCCNaJhpBGhnJMgGkcO8mjCkEAM+DOVoAXoOiB5+JET76u1aid
-         HjFx8F8LHsW6MxxksnGw9q/0bFDfQ77JjwNeDTF4ohuM3+sugH4y/UNv1o/5PcROr8Nr
-         xLt9eMafxGvRCanNhAASpeaw23HlMRho33yt4R2U+G2N+FWIWMHVNinSX33nOYeyDy/B
-         cVFoPkdQZHdGdlgakxse3POrTzv4RVa9XmnpiUUbt+sfBfcESDA83dA8LJGDtuPAHUyU
-         FQ//8e8Qk6jCm+RAtGHiiyJLLuIeyhGuZy4ToREHpJ9pHEKGQ76JISQYKInR+Ar6ncKh
-         hK1g==
-X-Gm-Message-State: AOJu0Yx7H9BkXHlVYhjvWKPKkxhkmuBU04eRawjDPqLqE+aRPcntShWv
-        4qE9xMHSa7sdgmE9aVT3d1Vnbg==
-X-Google-Smtp-Source: AGHT+IFHGUVchPQl+mF3sfUS3twhA0v9fn2dsAElqV/Z6NlDSTjZS3t04ZJcxcPizZMoJHsXHGLXzg==
-X-Received: by 2002:a17:906:224c:b0:9a1:bd33:4389 with SMTP id 12-20020a170906224c00b009a1bd334389mr13676379ejr.74.1693311299737;
-        Tue, 29 Aug 2023 05:14:59 -0700 (PDT)
-Received: from [192.168.0.22] ([77.252.47.196])
-        by smtp.gmail.com with ESMTPSA id u22-20020a17090626d600b009a1fd22257fsm5891367ejc.207.2023.08.29.05.14.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Aug 2023 05:14:59 -0700 (PDT)
-Message-ID: <ecc6076b-2278-70e6-3863-3dcf89adfd0f@linaro.org>
-Date:   Tue, 29 Aug 2023 14:14:58 +0200
+        with ESMTP id S235165AbjH2MRN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Aug 2023 08:17:13 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18DEE1AA;
+        Tue, 29 Aug 2023 05:16:56 -0700 (PDT)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37TAm2I5021381;
+        Tue, 29 Aug 2023 12:16:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=llxaos4mQo6Fgz94bvhY8Vrz3R1XenyuxOe4AfKIMVk=;
+ b=dBEEnNJIcckxKJpXFqz9OHFJL1Vn6vpiO7aIP0zO/8v3G+kzDrja+WxGu3wUlCZ5qOMp
+ 0UavakbMcLpTAEexdPR6v1RIroYzVvWXGy//BqLs/XkhPMCnx84gVmC8Y1MAXdbHYkMf
+ 6zyo/6E10zMvHUQqPB3KmcDakuV802SvosZYgt0ciAELv/wgsOPaVYvxqGoA5/tP7LGo
+ 4Y8o2b0HYGta+b3MeLwzua+Ob3zXw61xrwHm1MjlrTMMtkkLwPsMQlY2qqircpfJVxjy
+ Djg1Iy9lHy/Fd18xb988UQLJGcv4GGu6qaSKDmYTMz3xmQLEqM8W7U0k2sGadJnfN1Ss hQ== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ss0521wk4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 29 Aug 2023 12:16:51 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 37TCGoaw022305
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 29 Aug 2023 12:16:50 GMT
+Received: from [10.217.219.216] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Tue, 29 Aug
+ 2023 05:16:46 -0700
+Message-ID: <425807b5-2194-f682-4841-bfcfe414d289@quicinc.com>
+Date:   Tue, 29 Aug 2023 17:46:43 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
 Subject: Re: [PATCH v10 0/4] PCI: qcom: ep: Add basic interconnect support
 Content-Language: en-US
-To:     Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     helgaas@kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_skananth@quicinc.com, quic_ramkri@quicinc.com
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>
+CC:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_vbadigan@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_ramkri@quicinc.com>
 References: <1689751218-24492-1-git-send-email-quic_krichai@quicinc.com>
  <20230728025648.GC4433@thinkpad>
  <b7f5d32f-6f1a-d584-4cdd-4c5faf08a72e@quicinc.com>
  <73700e92-2308-3fe0-51b1-c2373be2893e@linaro.org>
- <bed64143-8803-5027-d9ec-eafaaeb64e35@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <bed64143-8803-5027-d9ec-eafaaeb64e35@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <a0fc7f8b-dfb1-f5f8-40f2-43a4f13944ae@quicinc.com>
+ <fb2abd03-7393-0d41-8b8e-8fe8dade0923@linaro.org>
+From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <fb2abd03-7393-0d41-8b8e-8fe8dade0923@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: CaxgwdPeufIP1pO3FayMwTLhSSC1OrGg
+X-Proofpoint-GUID: CaxgwdPeufIP1pO3FayMwTLhSSC1OrGg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-29_09,2023-08-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
+ spamscore=0 lowpriorityscore=0 mlxlogscore=297 mlxscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 adultscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
+ definitions=main-2308290106
 X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 29/08/2023 14:13, Krishna Chaitanya Chundru wrote:
-> 
-> On 8/29/2023 5:26 PM, Krzysztof Kozlowski wrote:
->> On 29/08/2023 13:41, Krishna Chaitanya Chundru wrote:
->>> On 7/28/2023 8:26 AM, Manivannan Sadhasivam wrote:
->>>> On Wed, Jul 19, 2023 at 12:50:14PM +0530, Krishna chaitanya chundru wrote:
->>>>> Add basic support for managing "pcie-mem" interconnect path by setting
->>>>> a low constraint before enabling clocks and updating it after the link
->>>>> is up based on link speed and width the device got enumerated.
+
+On 8/29/2023 5:42 PM, Krzysztof Kozlowski wrote:
+> On 29/08/2023 14:10, Krishna Chaitanya Chundru wrote:
+>>>>> Krzysztof, can this series be merged for 6.6? Bjorn A will pick the dts patches.
 >>>>>
->>>> Krzysztof, can this series be merged for 6.6? Bjorn A will pick the dts patches.
+>>>>> - Mani
+>>>> A Gentle ping
 >>>>
->>>> - Mani
->>> A Gentle ping
+>>> Whom do you ping and why me? If you choose not to use
+>>> scripts/get_maintainers.pl, it's your right, but then you might get
+>>> maintainers wrong and no surprise patches got not accepted...
 >>>
->> Whom do you ping and why me? If you choose not to use
->> scripts/get_maintainers.pl, it's your right, but then you might get
->> maintainers wrong and no surprise patches got not accepted...
+>>> Plus, it's merge window, so why pinging now?
+>>>
+>>> Best regards,
+>>> Krzysztof
+>> Krzyszto,
 >>
->> Plus, it's merge window, so why pinging now?
+>> The series is already reviewed and there are some patches which is
+>> reviewed by you also.
 >>
->> Best regards,
->> Krzysztof
-> 
-> Krzyszto,
-> 
-> The series is already reviewed and there are some patches which is 
-> reviewed by you also.
-> 
-> I am using the same command to send patches it looks like this script is 
-> fetching based upon the source file where there was change due to that 
-> only I was seeing the problem of all patches are not going to all the 
-> maintainers.
-> 
-> I was trying to install b4 and make sure to send all patches to all the 
-> maintainers next time on wards.
-> 
-> we pinged it now so that as this is already reviewed and no comments on 
-> this series so that this can picked up.
+>> I am using this command to send patches it looks like this script is
+>> fetching based upon the source file where there was change due to that
+>> only I was seeing the problem of all patches are not going to all the
+>> maintainers.
+>>
+>>    --cc-cmd=scripts/get_maintainer.pl ./patch-series
+>>
+>> I was trying to install b4 and make sure to send all patches to all the
+>> maintainers next time on wards.
+> This looks good.
+>
+>> we pinged it now so that as this is already reviewed and no comments on
+>> this series so that this can picked up.
+> And what is has anything to do with me? You got everything needed from
+> me, don't you?
+>
+> Anyway, do not ping during merge window.
+>
+>
+> Best regards,
+> Krzysztof
 
-It is the fifth same email from you. With just few differences. Please
-stop. Please fix your email client.
+I meant to ping all maintainers I should pinged as new reply to cover 
+message instead of replying back to mani's comment.
 
-Best regards,
-Krzysztof
+sure Krzysztof we will make sure we don't ping in merge window.
 
+- KC
+
+
+I
+
+>
