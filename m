@@ -2,144 +2,215 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 90A6778C794
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Aug 2023 16:32:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0513778C7E2
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Aug 2023 16:47:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233009AbjH2OcQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Aug 2023 10:32:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45820 "EHLO
+        id S236182AbjH2Oqm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Aug 2023 10:46:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236511AbjH2OcP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Aug 2023 10:32:15 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6837CC
-        for <linux-pci@vger.kernel.org>; Tue, 29 Aug 2023 07:32:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693319532; x=1724855532;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=bKbUC7frJEONdCr40wx4Z/CyLzHeBQhegSW+hMKs8Ss=;
-  b=kEfCw6XUB45DAm4Ai8fptklI45IZBaHYM+rStyGqINCLd2Bo1UXfEZ50
-   MSWXZSZMJAEwJVDLnpW1WnDgc63pU4/2cA2UJSAZAVNu++vyI/17LF4l8
-   ngyrbsYz9th/UlWvKfyHnWkg9b1bUjip0cB8zmUYcURwjOOGAmxrxcGgz
-   VFrCF0kkZd7V4dUb3qDpM3eABmyVEXkuna2xXTTnKXiAyOc6cNGCfHkSj
-   kp5xCsy83ID4BuXYsu4FSRomcGC+zlkaGfT7+1/HwLcIgSaZCe7Ik7LQN
-   +xJX5uEC/8nyTkuQ+orL/crDUFSnhM8qqpQn/tKVtZ7IqzjG8EAaFkWgT
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="355703396"
-X-IronPort-AV: E=Sophos;i="6.02,210,1688454000"; 
-   d="scan'208";a="355703396"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2023 07:31:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="1069481405"
-X-IronPort-AV: E=Sophos;i="6.02,210,1688454000"; 
-   d="scan'208";a="1069481405"
-Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 29 Aug 2023 07:31:34 -0700
-Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qazkL-0008oD-0p;
-        Tue, 29 Aug 2023 14:31:14 +0000
-Date:   Tue, 29 Aug 2023 22:30:11 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [pci:controller/qcom-ep 3/3]
- drivers/pci/controller/dwc/pcie-qcom-ep.c:198: warning: Function parameter
- or member 'icc_mem' not described in 'qcom_pcie_ep'
-Message-ID: <202308292252.HNCCTM4u-lkp@intel.com>
+        with ESMTP id S237104AbjH2Oqg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Aug 2023 10:46:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7950E1A3;
+        Tue, 29 Aug 2023 07:46:26 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 00D9061B76;
+        Tue, 29 Aug 2023 14:46:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 949A6C433C7;
+        Tue, 29 Aug 2023 14:46:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693320385;
+        bh=Wu0JrSkHxk64keNMxXEukarfI1FylnbMH++UFrVPUQU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pNxCY4W5J7TVKTnWEpIH6LL/ofOv7VXNzp7DRUziVaVwpCbs/wNLFZqBIpute9oUv
+         KB+tsMzxlB6CKTI0qEH8qziTykAlmGoIhifn2fZmLALILd8k6UbVXRcEqEhfpZfMVA
+         lnkKxJ7a5uMe1nnJDrAabr//MOvqcFTDpDVfY2/aPyeAtymh8I8H1s9TJqiEAMegGQ
+         BKlBQ1xwFIPYVC2kUnDZ2UtUd8uKwEchume7olFB93j1dgz6xD6y0AwuCm0VlKNsy9
+         v2eUerAgHDzYB4hMSrlMpyC9M4KbOB9aPlOg1aGSLqQXYCQUEmlAoVyEkVVxkx8/JZ
+         OqDOsElEYvMPQ==
+Date:   Tue, 29 Aug 2023 20:16:06 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Manivannan Sadhasivam <mani@kernel.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        Phil Elwell <phil@raspberrypi.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 1/5] dt-bindings: PCI: brcmstb: Add brcm,enable-l1ss
+ property
+Message-ID: <20230829144606.GB33903@thinkpad>
+References: <20230508220126.16241-1-jim2101024@gmail.com>
+ <20230508220126.16241-2-jim2101024@gmail.com>
+ <20230823074330.GF3737@thinkpad>
+ <CA+-6iNwP+NbAdm0kNxZ5GwyPdTQyOjq7E2O-+mCU4fG-94BKBA@mail.gmail.com>
+ <20230823181650.GL3737@thinkpad>
+ <CA+-6iNzdYDJqwFofqkdS+iUK4w_s3eY_qa8JpbisyDn+fYg8XA@mail.gmail.com>
+ <20230825064505.GA6005@thinkpad>
+ <CAL_JsqK7LBLVrw9mF6ksrc70gikbjQe7EAYfLytoVySKxvTd=w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqK7LBLVrw9mF6ksrc70gikbjQe7EAYfLytoVySKxvTd=w@mail.gmail.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/qcom-ep
-head:   0c104996e6a856536e311c6fee66d8099c5c6c7b
-commit: 0c104996e6a856536e311c6fee66d8099c5c6c7b [3/3] PCI: qcom-ep: Add ICC bandwidth voting support
-config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20230829/202308292252.HNCCTM4u-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230829/202308292252.HNCCTM4u-lkp@intel.com/reproduce)
+On Tue, Aug 29, 2023 at 07:22:18AM -0500, Rob Herring wrote:
+> On Fri, Aug 25, 2023 at 1:45 AM Manivannan Sadhasivam <mani@kernel.org> wrote:
+> >
+> > On Thu, Aug 24, 2023 at 10:55:02AM -0400, Jim Quinlan wrote:
+> > > On Wed, Aug 23, 2023 at 2:17 PM Manivannan Sadhasivam <mani@kernel.org> wrote:
+> > > >
+> > > > On Wed, Aug 23, 2023 at 09:09:25AM -0400, Jim Quinlan wrote:
+> > > > > On Wed, Aug 23, 2023 at 3:43 AM Manivannan Sadhasivam <mani@kernel.org> wrote:
+> > > > > >
+> > > > > > On Mon, May 08, 2023 at 06:01:21PM -0400, Jim Quinlan wrote:
+> > > > > > > This commit adds the boolean "brcm,enable-l1ss" property:
+> > > > > > >
+> > > > > > >   The Broadcom STB/CM PCIe HW -- a core that is also used by RPi SOCs --
+> > > > > > >   requires the driver probe() to deliberately place the HW one of three
+> > > > > > >   CLKREQ# modes:
+> > > > > > >
+> > > > > > >   (a) CLKREQ# driven by the RC unconditionally
+> > > > > > >   (b) CLKREQ# driven by the EP for ASPM L0s, L1
+> > > > > > >   (c) Bidirectional CLKREQ#, as used for L1 Substates (L1SS).
+> > > > > > >
+> > > > > > >   The HW+driver can tell the difference between downstream devices that
+> > > > > > >   need (a) and (b), but does not know when to configure (c).  All devices
+> > > > > > >   should work fine when the driver chooses (a) or (b), but (c) may be
+> > > > > > >   desired to realize the extra power savings that L1SS offers.  So we
+> > > > > > >   introduce the boolean "brcm,enable-l1ss" property to inform the driver
+> > > > > > >   that (c) is desired.  Setting this property only makes sense when the
+> > > > > > >   downstream device is L1SS-capable and the OS is configured to activate
+> > > > > > >   this mode (e.g. policy==powersupersave).
+> > > > > > >
+> > > > > > >   This property is already present in the Raspian version of Linux, but the
+> > > > > > >   upstream driver implementation that follows adds more details and
+> > > > > > >   discerns between (a) and (b).
+> > > > > > >
+> > > > > > > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> > > > > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > > > > ---
+> > > > > > >  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 9 +++++++++
+> > > > > > >  1 file changed, 9 insertions(+)
+> > > > > > >
+> > > > > > > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > > > > > > index 7e15aae7d69e..8b61c2179608 100644
+> > > > > > > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > > > > > > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > > > > > > @@ -64,6 +64,15 @@ properties:
+> > > > > > >
+> > > > > > >    aspm-no-l0s: true
+> > > > > > >
+> > > > > > > +  brcm,enable-l1ss:
+> > > > > > > +    description: Indicates that PCIe L1SS power savings
+> > > > > > > +      are desired, the downstream device is L1SS-capable, and the
+> > > > > > > +      OS has been configured to enable this mode.  For boards
+> > > > > > > +      using a mini-card connector, this mode may not meet the
+> > > > > > > +      TCRLon maximum time of 400ns, as specified in 3.2.5.2.2
+> > > > > > > +      of the PCI Express Mini CEM 2.0 specification.
+> > > > > >
+> > > > > > As Lorenzo said, this property doesn't belong in DT. DT is supposed to specify
+> > > > > > the hardware capability and not system/OS behavior.
+> > > > >
+> > > > > The "brcm,enable-l1ss" does NOT configure the OS behavior.
+> > > > > It sets or not a mode bit to enable l1SS HW, whether or not the OS is
+> > > > > configured for L1SS.
+> > > > > It compensates for a problem in the PCIe core: the HW is not capable
+> > > > > of dynamically
+> > > > > switching between ASPM modes powersave and superpowersave.  I am actively
+> > > > > advocating for our HW to change but that will take years.
+> > > > >
+> > > >
+> > > > Okay, then I would say that the property name and commit message were a bit
+> > > > misleading.
+> > > >
+> > > > I had briefly gone through the driver patch now. As per my understanding, you
+> > > > have 2 modes in hw:
+> > > >
+> > > > 1. Clock PM - Refclk will be turned off by the host if CLKREQ# is deasserted by
+> > > > the device (driving high) when the link is in L1.
+> > > >
+> > > > 2. L1SS - CLKREQ# will be used to decide L1SS entry and exit by the host.
+> > >
+> > > No, there are three, as enumerated in the commit message of
+> > > "PCI: brcmstb: Configure HW CLKREQ# mode appropriate for downstream device"
+> > >
+> >
+> > Yeah, another one is refclk always on.
+> >
+> > > >
+> > > > Till now the driver only supported Clock PM through mode (1) but for supporting
+> > > > L1SS you need to enable mode (2). And you are using this property to select mode
+> > > > (2) when the L1SS supported devices are connected to the slot. Also, by
+> > > > selecting this mode, you are loosing the benefit of mode (1) as both are not
+> > > > compatible.
+> > > >
+> > > > My suggestion would be to just drop mode (1) and use mode (2) in the driver as
+> > > > most of the recent devices should support L1SS (ofc there are exemptions).
+> > > The disadvantage of this, as stated by the PCIe core HW designer, was
+> > > that "doing so means
+> > > we cannot enable the Cock Power Management capability since it may run afoul of
+> > > the Tclron requirement."
+> > >
+> >
+> > Ok.
+> >
+> > > I will attempt to press him on exactly what configurations and form
+> > > factors would be
+> > > vulnerable to this -- he was so convinced that it was a danger that he
+> > > is against
+> > > making L1SS mode the default.
+> > >
+> >
+> > Hmm. After looking at this problem in detail, it looks to me that you can still
+> > use DT but not with the property you proposed. Since these are hardware modes,
+> > you can have a single DT property that specifies the mode that the driver can
+> > use to configure the hw. It is similar to "phy-mode" property we have for the
+> > network controllers.
+> >
+> > So you should have the property defined as below in binding:
+> >
+> > brcm,clkreq-mode:
+> >   $ref: /schemas/types.yaml#/definitions/uint32
+> >   enum: [ 0, 1, 2 ]
+> 
+> Is this really Broadcom specific?
+> 
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308292252.HNCCTM4u-lkp@intel.com/
+AFAIU, rest of the controllers do not have issues supporting Clock PM and L1SS
+in hw. Neither does the spec define any incompatibility. So to me, this looks
+like Broadcom specific.
 
-All warnings (new ones prefixed by >>):
+- Mani
 
->> drivers/pci/controller/dwc/pcie-qcom-ep.c:198: warning: Function parameter or member 'icc_mem' not described in 'qcom_pcie_ep'
-
-
-vim +198 drivers/pci/controller/dwc/pcie-qcom-ep.c
-
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  150  
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  151  /**
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  152   * struct qcom_pcie_ep - Qualcomm PCIe Endpoint Controller
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  153   * @pci: Designware PCIe controller struct
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  154   * @parf: Qualcomm PCIe specific PARF register base
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  155   * @elbi: Designware PCIe specific ELBI register base
-6dbba2b53c3bcb Manivannan Sadhasivam     2022-09-14  156   * @mmio: MMIO register base
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  157   * @perst_map: PERST regmap
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  158   * @mmio_res: MMIO region resource
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  159   * @core_reset: PCIe Endpoint core reset
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  160   * @reset: PERST# GPIO
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  161   * @wake: WAKE# GPIO
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  162   * @phy: PHY controller block
-6dbba2b53c3bcb Manivannan Sadhasivam     2022-09-14  163   * @debugfs: PCIe Endpoint Debugfs directory
-e2efd31465b1d9 Manivannan Sadhasivam     2022-09-14  164   * @clks: PCIe clocks
-e2efd31465b1d9 Manivannan Sadhasivam     2022-09-14  165   * @num_clks: PCIe clocks count
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  166   * @perst_en: Flag for PERST enable
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  167   * @perst_sep_en: Flag for PERST separation enable
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  168   * @link_status: PCIe Link status
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  169   * @global_irq: Qualcomm PCIe specific Global IRQ
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  170   * @perst_irq: PERST# IRQ
-f1bfbd000f3bc4 Manivannan Sadhasivam     2022-09-14  171   */
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  172  struct qcom_pcie_ep {
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  173  	struct dw_pcie pci;
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  174  
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  175  	void __iomem *parf;
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  176  	void __iomem *elbi;
-6dbba2b53c3bcb Manivannan Sadhasivam     2022-09-14  177  	void __iomem *mmio;
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  178  	struct regmap *perst_map;
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  179  	struct resource *mmio_res;
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  180  
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  181  	struct reset_control *core_reset;
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  182  	struct gpio_desc *reset;
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  183  	struct gpio_desc *wake;
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  184  	struct phy *phy;
-6dbba2b53c3bcb Manivannan Sadhasivam     2022-09-14  185  	struct dentry *debugfs;
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  186  
-0c104996e6a856 Krishna chaitanya chundru 2023-07-19  187  	struct icc_path *icc_mem;
-0c104996e6a856 Krishna chaitanya chundru 2023-07-19  188  
-e2efd31465b1d9 Manivannan Sadhasivam     2022-09-14  189  	struct clk_bulk_data *clks;
-e2efd31465b1d9 Manivannan Sadhasivam     2022-09-14  190  	int num_clks;
-e2efd31465b1d9 Manivannan Sadhasivam     2022-09-14  191  
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  192  	u32 perst_en;
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  193  	u32 perst_sep_en;
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  194  
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  195  	enum qcom_pcie_ep_link_status link_status;
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  196  	int global_irq;
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  197  	int perst_irq;
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20 @198  };
-f55fee56a63103 Manivannan Sadhasivam     2021-09-20  199  
-
-:::::: The code at line 198 was first introduced by commit
-:::::: f55fee56a631032969480e4b0ee5d79734fe3c69 PCI: qcom-ep: Add Qualcomm PCIe Endpoint controller driver
-
-:::::: TO: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-:::::: CC: Bjorn Helgaas <bhelgaas@google.com>
+> Rob
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+மணிவண்ணன் சதாசிவம்
