@@ -2,163 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C9DE78CED0
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Aug 2023 23:36:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81A9C78D18E
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Aug 2023 03:12:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238485AbjH2VgF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Aug 2023 17:36:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34430 "EHLO
+        id S241508AbjH3BLm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Aug 2023 21:11:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239227AbjH2Vf4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Aug 2023 17:35:56 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7749B1BC
-        for <linux-pci@vger.kernel.org>; Tue, 29 Aug 2023 14:35:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693344953; x=1724880953;
-  h=message-id:date:mime-version:subject:to:references:from:
-   cc:in-reply-to:content-transfer-encoding;
-  bh=GOwehU8MkVh+l56Y0/vuHOlZpjFJVdFCJZAXgNjhYbY=;
-  b=lV0kWuG9z317HuaIvKcLFykhNK3V+fFGxwxuT6iX2K5zvaJ6rvPsTpE/
-   7tcV5xh0194OorZ0EBePKd0JIqIVfkIQZeQzlOMGmJwII+sfamRxIwCiV
-   3nWT/sRT0UXBuP4SDyz9RKXqyAHUeQOJ08nuIc9svYabpYV+UfIHG8xcg
-   iAJd1pN0ykiimrX5+kgwOVrVCrRxQguk413LPsFCdgwjrJgFD7ItiJE8C
-   p6Gadggan9Rp2t0qoHNTAjA91fYi6mllvO36lT+x9iTFmKkS6d1l7/1aw
-   WbdEAS+/6JQfxk+3GgME1wtktogiZG0nJ1yfrWBV6g+bXBiV9rVBytLMS
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="372895346"
-X-IronPort-AV: E=Sophos;i="6.02,211,1688454000"; 
-   d="scan'208";a="372895346"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2023 14:35:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="1069617617"
-X-IronPort-AV: E=Sophos;i="6.02,211,1688454000"; 
-   d="scan'208";a="1069617617"
-Received: from patelni-mobl1.amr.corp.intel.com (HELO [10.78.16.133]) ([10.78.16.133])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2023 14:35:36 -0700
-Message-ID: <3f7046d5-2e2c-4a6b-9e3d-507717528567@linux.intel.com>
-Date:   Tue, 29 Aug 2023 14:35:36 -0700
+        with ESMTP id S241488AbjH3BLQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Aug 2023 21:11:16 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27AF783;
+        Tue, 29 Aug 2023 18:11:14 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-68bed286169so4309569b3a.1;
+        Tue, 29 Aug 2023 18:11:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693357873; x=1693962673; darn=vger.kernel.org;
+        h=subject:from:cc:to:content-language:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=am71R2qky8a6PNSlnd6gAGC+SFc1FXxSFKR0Xr/vvSc=;
+        b=pMfInPpcsPSBTNiuG1N/vRUMWsymCo+7tQtn++J3pVRu0X1TfAkUX1ecjveCAtAz3I
+         yeQu8SUnRVye//iAcuLyL3WpahedEp9N9PnTR+WUlbMnv862bH3zXyRLBWFv4U5ocROg
+         AStz4vGCM2znOQri2lsASghhky3Mxi85BqZlwR6k0XrG/7vvEibVM5dCVIvCZE6HWRIA
+         BjB5KgVVqg8Ct6L4N9hvOIVbKRsGlSn/7bzKuklcXs2RgwbMdWLBSBKgGz2l6ZN8T897
+         TFWA+OtFRA/q/Jq641quLF/TVjrNw4mZBUTuqE+Ujp1o8tkXDfFd7/WxRfZzgyFfU0Nv
+         cgqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693357873; x=1693962673;
+        h=subject:from:cc:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=am71R2qky8a6PNSlnd6gAGC+SFc1FXxSFKR0Xr/vvSc=;
+        b=Y9LTezBOQVwAOlKiErAxARNlr0t/NVbpa4xLasOt/iL2GYsPB79kbFX5nOkkxgU+8N
+         h4E/wOnV01N2Ec1B7kBrBB8fCsC8vRPtHWtbB8qJ1y7XXm6z/go3LjUGrbZhzONDJ7Ce
+         LRvxkZwlL97gkq3n643pXmnW/sJYN+Q8GQDn4k5zud/ItJfJ/1KP9RUDJPVNTkrlS+DZ
+         4ANr55C+LFcIgspyKgOrbgvY+Aa5dO0H1IyrqkFLeE8+idAeiu9Q9lrV0h9dcNW9f7H2
+         I5uyYd1Y40FPqlQ9RyAgJZ1ZHVX/LNCcokKW/r26zwq8+Pv4+x+caLH+ph5w/NA30pDU
+         lnzA==
+X-Gm-Message-State: AOJu0Yw9DQI2vGGdX1gdtnCFmu5/sVLxCq5aI6XnF05okCCPwWjARKFO
+        LDgztWS8w9eGBt8hxrWc7Yc=
+X-Google-Smtp-Source: AGHT+IGW6Mnz5eiZOzB0GyC2Mxdqc4toEBDK29wnYzzWWxk/0O8RTvhbGwKvv+gZCMgY+cnRZ51JeQ==
+X-Received: by 2002:a05:6a20:9497:b0:141:d640:794a with SMTP id hs23-20020a056a20949700b00141d640794amr889158pzb.39.1693357873498;
+        Tue, 29 Aug 2023 18:11:13 -0700 (PDT)
+Received: from [192.168.0.105] ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id jc17-20020a17090325d100b001aaf2e8b1eesm10032834plb.248.2023.08.29.18.11.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Aug 2023 18:11:12 -0700 (PDT)
+Content-Type: multipart/mixed; boundary="------------aBQJrJJmhb2JJibgl8bG5LWq"
+Message-ID: <88ffb216-96f9-f232-7fe5-48bf82e6aa70@gmail.com>
+Date:   Wed, 30 Aug 2023 08:11:06 +0700
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] PCI: vmd: Do not change the BIOS Hotplug setting on
- VMD rootports
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
 Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <20230829180045.GA800434@bhelgaas>
-From:   "Patel, Nirmal" <nirmal.patel@linux.intel.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-In-Reply-To: <20230829180045.GA800434@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Ajay Agarwal <ajayagarwal@google.com>,
+        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Michael Bottini <michael.a.bottini@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Brett Hassall <brett.hassall@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Power Management <linux-pm@vger.kernel.org>
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: upstream linux cannot achieve package C8 power saving
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/29/2023 11:00 AM, Bjorn Helgaas wrote:
-> On Tue, Aug 29, 2023 at 01:10:22AM -0400, Nirmal Patel wrote:
->> Currently during Host boot up, VMD UEFI driver loads and configures
->> all the VMD endpoints devices and devices behind VMD. Then during
->> VMD rootport creation, VMD driver honors ACPI settings for Hotplug,
->> AER, DPC, PM and enables these features based on BIOS settings.
->>
->> During the Guest boot up, ACPI settings along with VMD UEFI driver are
->> not present in Guest BIOS which results in assigning default values to
->> Hotplug, AER, DPC, etc. As a result hotplug is disabled on the VMD
->> rootports in the Guest OS.
->>
->> VMD driver in Guest should be able to see the same settings as seen
->> by Host VMD driver. Because of the missing implementation of VMD UEFI
->> driver in Guest BIOS, the Hotplug is disabled on VMD rootport in
->> Guest OS. Hot inserted drives don't show up and hot removed drives
->> do not disappear even if VMD supports Hotplug in Guest. This
->> behavior is observed in various combinations of guest OSes i.e. RHEL,
->> SLES and hypervisors i.e. KVM and ESXI.
->>
->> This change will make the VMD Host and Guest Driver to keep the settings
->> implemented by the UEFI VMD DXE driver and thus honoring the user
->> selections for hotplug in the BIOS.
-> These settings are negotiated between the OS and the BIOS.  The guest
-> runs a different BIOS than the host, so why should the guest setting
-> be related to the host setting?
->
-> I'm not a virtualization whiz, and I don't understand all of what's
-> going on here, so please correct me when I go wrong:
->
-> IIUC you need to change the guest behavior.  The guest currently sees
-> vmd_bridge->native_pcie_hotplug as FALSE, and you need it to be TRUE?
+This is a multi-part message in MIME format.
+--------------aBQJrJJmhb2JJibgl8bG5LWq
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Correct.
+Hi,
 
-> Currently this is copied from the guest's
-> root_bridge->native_pcie_hotplug, so that must also be FALSE.
->
-> I guess the guest sees a fabricated host bridge, which would start
-> with native_pcie_hotplug as TRUE (from pci_init_host_bridge()), and
-> then it must be set to FALSE because the guest _OSC didn't grant
-> ownership to the OS?  (The guest dmesg should show this, right?)
+I notice a bug report on Bugzilla [1]. Quoting from it:
 
-This is my understanding too. I don't know much in detail about Guest
-expectation.
+> v6.5 (and at least v5.15, v5.19 and v6.4 as well) will not go to a higher power saving level than package C3.
+> 
+> With the inclusion of a patch that combines 3 Ubuntu commits related to VMD ASPM & LTR, package C8 is used.
 
->
-> In the guest, vmd_enable_domain() allocates a host bridge via
-> pci_create_root_bus(), and that would again start with
-> native_pcie_hotplug as TRUE.  It's not an ACPI host bridge, so I don't
-> think we do _OSC negotiation for it.  After this patch removes the
-> copy from the fabricated host bridge, it would be left as TRUE.
+See Bugzilla for the full thread.
 
-VMD was not dependent on _OSC settings and is not ACPI Host bridge. It
-became _OSC dependent after the patch 04b12ef163d1.
-https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/drivers/pci/controller/vmd.c?id=04b12ef163d10e348db664900ae7f611b83c7a0e
+FYI, the attached proposed fix is the same as Brett's another BZ report [2].
+I include it for upstreaming.
 
-This patch was added as a quick fix for AER flooding but it could
-have been avoided by using rate limit for AER.
-
-I don't know all the history of VMD driver but does it have to be
-dependent on root_bridge flags from _OSC? Is reverting 04b12ef163d1
-a better idea than not allowing just hotplug flags to be copied from
-root_bridge?
+To Brett: Would you like to submit the proper, formal patch (see
+Documentation/process/submitting-patches.rst for details)?
 
 Thanks.
 
->
-> If this is on track, it seems like if we want the guest to own PCIe
-> hotplug, the guest BIOS _OSC for the fabricated host bridge should
-> grant ownership of it.
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217841
+[2]: https://bugzilla.kernel.org/show_bug.cgi?id=217828
 
-I will try to check this option.
+-- 
+An old man doll... just what I always wanted! - Clara
+--------------aBQJrJJmhb2JJibgl8bG5LWq
+Content-Type: text/x-patch; charset=UTF-8; name="proposed.patch"
+Content-Disposition: attachment; filename="proposed.patch"
+Content-Transfer-Encoding: base64
 
->
->> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
->> ---
->> v3->v4: Rewrite the commit log.
->> v2->v3: Update the commit log.
->> v1->v2: Update the commit log.
->> ---
->>  drivers/pci/controller/vmd.c | 2 --
->>  1 file changed, 2 deletions(-)
->>
->> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
->> index 769eedeb8802..52c2461b4761 100644
->> --- a/drivers/pci/controller/vmd.c
->> +++ b/drivers/pci/controller/vmd.c
->> @@ -701,8 +701,6 @@ static int vmd_alloc_irqs(struct vmd_dev *vmd)
->>  static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
->>  				       struct pci_host_bridge *vmd_bridge)
->>  {
->> -	vmd_bridge->native_pcie_hotplug = root_bridge->native_pcie_hotplug;
->> -	vmd_bridge->native_shpc_hotplug = root_bridge->native_shpc_hotplug;
->>  	vmd_bridge->native_aer = root_bridge->native_aer;
->>  	vmd_bridge->native_pme = root_bridge->native_pme;
->>  	vmd_bridge->native_ltr = root_bridge->native_ltr;
->> -- 
->> 2.31.1
->>
+Y29tbWl0IDk0OTFiZmEwYjFlNWY2NThlMDkxMzU3NTllN2ViYzM3M2Q5YTcyY2UKQXV0aG9y
+OiBicmV0dC5oYXNzYWxsIDxicmV0dC5oYXNzYWxsQGdtYWlsLmNvbT4KRGF0ZTogICBUaHUg
+QXVnIDI0IDE5OjI2OjM2IDIwMjMgKzEwMDAKCiAgICBjb21iaW5lZCBjb21taXQgb2Y6IDcx
+MzE1YjhlIC0gVUJVTlRVOiBTQVVDRTogUENJL0FTUE06IEVuYWJsZSBBU1BNIGZvciBsaW5r
+cyB1bmRlciBWTUQgZG9tYWluOyBkODNlNmY2ZSAtICBVQlVOVFU6IFNBVUNFOiBQQ0kvQVNQ
+TTogRW5hYmxlIExUUiBmb3IgZW5kcG9pbnRzIGJlaGluZCBWTUQ7IDA2OWQwNTIzIC0gVUJV
+TlRVOiBTQVVDRTogdm1kOiBmaXh1cCBicmlkZ2UgQVNQTSBieSBkcml2ZXIgbmFtZSBpbnN0
+ZWFkCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcGNpZS9hc3BtLmMgYi9kcml2ZXJzL3Bj
+aS9wY2llL2FzcG0uYwppbmRleCA2NmQ3NTE0Y2ExMTEuLjI5ZjJmNjJhYWVmYSAxMDA2NDQK
+LS0tIGEvZHJpdmVycy9wY2kvcGNpZS9hc3BtLmMKKysrIGIvZHJpdmVycy9wY2kvcGNpZS9h
+c3BtLmMKQEAgLTY4Miw3ICs2ODIsOCBAQCBzdGF0aWMgdm9pZCBwY2llX2FzcG1fY2FwX2lu
+aXQoc3RydWN0IHBjaWVfbGlua19zdGF0ZSAqbGluaywgaW50IGJsYWNrbGlzdCkKIAlhc3Bt
+X2wxc3NfaW5pdChsaW5rKTsKIAogCS8qIFNhdmUgZGVmYXVsdCBzdGF0ZSAqLwotCWxpbmst
+PmFzcG1fZGVmYXVsdCA9IGxpbmstPmFzcG1fZW5hYmxlZDsKKwlsaW5rLT5hc3BtX2RlZmF1
+bHQgPSBwYXJlbnQtPmRldl9mbGFncyAmIFBDSV9ERVZfRkxBR1NfRU5BQkxFX0FTUE0gPwor
+CQkJICAgICBBU1BNX1NUQVRFX0FMTCA6IGxpbmstPmFzcG1fZW5hYmxlZDsKIAogCS8qIFNl
+dHVwIGluaXRpYWwgY2FwYWJsZSBzdGF0ZS4gV2lsbCBiZSB1cGRhdGVkIGxhdGVyICovCiAJ
+bGluay0+YXNwbV9jYXBhYmxlID0gbGluay0+YXNwbV9zdXBwb3J0OwpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9wY2kvcXVpcmtzLmMgYi9kcml2ZXJzL3BjaS9xdWlya3MuYwppbmRleCBjNTI1
+ODY3NzYwYmYuLmE3N2UyZTM4ZmE2YSAxMDA2NDQKLS0tIGEvZHJpdmVycy9wY2kvcXVpcmtz
+LmMKKysrIGIvZHJpdmVycy9wY2kvcXVpcmtzLmMKQEAgLTYwNDEsMyArNjA0MSw3MSBAQCBE
+RUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHg5YTJkLCBk
+cGNfbG9nX3NpemUpOwogREVDTEFSRV9QQ0lfRklYVVBfSEVBREVSKFBDSV9WRU5ET1JfSURf
+SU5URUwsIDB4OWEyZiwgZHBjX2xvZ19zaXplKTsKIERFQ0xBUkVfUENJX0ZJWFVQX0hFQURF
+UihQQ0lfVkVORE9SX0lEX0lOVEVMLCAweDlhMzEsIGRwY19sb2dfc2l6ZSk7CiAjZW5kaWYK
+KworLyoKKyAqIEJJT1MgbWF5IG5vdCBiZSBhYmxlIHRvIGFjY2VzcyBjb25maWcgc3BhY2Ug
+b2YgZGV2aWNlcyB1bmRlciBWTUQgZG9tYWluLCBzbworICogaXQgcmVsaWVzIG9uIHNvZnR3
+YXJlIHRvIGVuYWJsZSBBU1BNIGZvciBsaW5rcyB1bmRlciBWTUQuCisgKi8KK3N0YXRpYyBi
+b29sIHBjaV9maXh1cF9pc192bWRfYnJpZGdlKHN0cnVjdCBwY2lfZGV2ICpwZGV2KQorewor
+CXN0cnVjdCBwY2lfYnVzICpidXMgPSBwZGV2LT5idXM7CisJc3RydWN0IGRldmljZSAqZGV2
+OworCXN0cnVjdCBwY2lfZHJpdmVyICpwZHJ2OworCisJaWYgKCFwY2lfaXNfcm9vdF9idXMo
+YnVzKSkKKwkJcmV0dXJuIGZhbHNlOworCisJZGV2ID0gYnVzLT5icmlkZ2UtPnBhcmVudDsK
+KwlpZiAoZGV2ID09IE5VTEwpCisJCXJldHVybiBmYWxzZTsKKworCXBkcnYgPSBwY2lfZGV2
+X2RyaXZlcih0b19wY2lfZGV2KGRldikpOworCWlmIChwZHJ2ID09IE5VTEwgfHwgc3RyY21w
+KCJ2bWQiLCBwZHJ2LT5uYW1lKSkKKwkJcmV0dXJuIGZhbHNlOworCisJcmV0dXJuIHRydWU7
+Cit9CisKK3N0YXRpYyB2b2lkIHBjaV9maXh1cF9lbmFibGVfYXNwbShzdHJ1Y3QgcGNpX2Rl
+diAqcGRldikKK3sKKwlpZiAoIXBjaV9maXh1cF9pc192bWRfYnJpZGdlKHBkZXYpKQorCQly
+ZXR1cm47CisKKwlwZGV2LT5kZXZfZmxhZ3MgfD0gUENJX0RFVl9GTEFHU19FTkFCTEVfQVNQ
+TTsKKwlwY2lfaW5mbyhwZGV2LCAiZW5hYmxlIEFTUE0gZm9yIHBjaSBicmlkZ2UgYmVoaW5k
+IHZtZCIpOworfQorREVDTEFSRV9QQ0lfRklYVVBfQ0xBU1NfSEVBREVSKFBDSV9WRU5ET1Jf
+SURfSU5URUwsIFBDSV9BTllfSUQsCisJCQkgICAgICAgUENJX0NMQVNTX0JSSURHRV9QQ0ks
+IDgsIHBjaV9maXh1cF9lbmFibGVfYXNwbSk7CisKK3N0YXRpYyB2b2lkIHBjaV9maXh1cF9l
+bmFibGVfdm1kX252bWVfbHRyKHN0cnVjdCBwY2lfZGV2ICpwZGV2KQoreworCXN0cnVjdCBw
+Y2lfZGV2ICpwYXJlbnQ7CisJaW50IHBvczsKKwl1MTYgdmFsOworCisJcGFyZW50ID0gcGNp
+X3Vwc3RyZWFtX2JyaWRnZShwZGV2KTsKKwlpZiAoIXBhcmVudCkKKwkJcmV0dXJuOworCisJ
+aWYgKCFwY2lfZml4dXBfaXNfdm1kX2JyaWRnZShwYXJlbnQpKQorCQlyZXR1cm47CisKKwlw
+b3MgPSBwY2lfZmluZF9leHRfY2FwYWJpbGl0eShwZGV2LCBQQ0lfRVhUX0NBUF9JRF9MVFIp
+OworCWlmICghcG9zKQorCQlyZXR1cm47CisKKwlwY2lfcmVhZF9jb25maWdfd29yZChwZGV2
+LCBwb3MgKyBQQ0lfTFRSX01BWF9TTk9PUF9MQVQsICZ2YWwpOworCWlmICh2YWwpCisJCXJl
+dHVybjsKKworCXBjaV9yZWFkX2NvbmZpZ193b3JkKHBkZXYsIHBvcyArIFBDSV9MVFJfTUFY
+X05PU05PT1BfTEFULCAmdmFsKTsKKwlpZiAodmFsKQorCQlyZXR1cm47CisKKwkvKiAzMTQ1
+NzI4bnMsIGkuZS4gMHgzMDAwMDBucyAqLworCXBjaV93cml0ZV9jb25maWdfd29yZChwZGV2
+LCBwb3MgKyBQQ0lfTFRSX01BWF9TTk9PUF9MQVQsIDB4MTAwMyk7CisJcGNpX3dyaXRlX2Nv
+bmZpZ193b3JkKHBkZXYsIHBvcyArIFBDSV9MVFJfTUFYX05PU05PT1BfTEFULCAweDEwMDMp
+OworCXBjaV9pbmZvKHBkZXYsICJlbmFibGUgTFRSIGZvciBudm1lIGJlaGluZCB2bWQiKTsK
+K30KK0RFQ0xBUkVfUENJX0ZJWFVQX0NMQVNTX0VBUkxZKFBDSV9BTllfSUQsIFBDSV9BTllf
+SUQsCisJCQkgICAgICBQQ0lfQ0xBU1NfU1RPUkFHRV9FWFBSRVNTLCAwLCBwY2lfZml4dXBf
+ZW5hYmxlX3ZtZF9udm1lX2x0cik7CmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3BjaS5o
+IGIvaW5jbHVkZS9saW51eC9wY2kuaAppbmRleCA2MGI4NzcyYjViZDQuLmQzZjk2ZDExMTI1
+MCAxMDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9wY2kuaAorKysgYi9pbmNsdWRlL2xpbnV4
+L3BjaS5oCkBAIC0yNDUsNiArMjQ1LDggQEAgZW51bSBwY2lfZGV2X2ZsYWdzIHsKIAlQQ0lf
+REVWX0ZMQUdTX05PX1JFTEFYRURfT1JERVJJTkcgPSAoX19mb3JjZSBwY2lfZGV2X2ZsYWdz
+X3QpICgxIDw8IDExKSwKIAkvKiBEZXZpY2UgZG9lcyBob25vciBNU0kgbWFza2luZyBkZXNw
+aXRlIHNheWluZyBvdGhlcndpc2UgKi8KIAlQQ0lfREVWX0ZMQUdTX0hBU19NU0lfTUFTS0lO
+RyA9IChfX2ZvcmNlIHBjaV9kZXZfZmxhZ3NfdCkgKDEgPDwgMTIpLAorCS8qIEVuYWJsZSBB
+U1BNIHJlZ2FyZGxlc3Mgb2YgaG93IExua0N0bCBpcyBwcm9ncmFtbWVkICovCisJUENJX0RF
+Vl9GTEFHU19FTkFCTEVfQVNQTSA9IChfX2ZvcmNlIHBjaV9kZXZfZmxhZ3NfdCkgKDEgPDwg
+MTMpLAogfTsKIAogZW51bSBwY2lfaXJxX3Jlcm91dGVfdmFyaWFudCB7Cg==
 
+--------------aBQJrJJmhb2JJibgl8bG5LWq--
