@@ -2,58 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2160D78E620
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Aug 2023 08:08:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 878FB78E671
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Aug 2023 08:23:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244683AbjHaGID (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 31 Aug 2023 02:08:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54150 "EHLO
+        id S233573AbjHaGXo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 31 Aug 2023 02:23:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239854AbjHaGH6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 31 Aug 2023 02:07:58 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9547C1B0
-        for <linux-pci@vger.kernel.org>; Wed, 30 Aug 2023 23:07:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693462075; x=1724998075;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=POl0Uav65JgYVAE4rMxRK3jcILf1eVYB+bBSz0ajJTI=;
-  b=MT1YuTjOdcw+daNqyDflA8xnF5j85ntWO83B3MOD2ZhmUmFbOO9HkXLt
-   UtYRHj73IGe+YKU11Cpl/1U48UQJ4MYQa0xqCDO40FsL4bUWsBBQkW1ru
-   5cNcHcFZUyC55Ky14imAmS4PnvFWYdUWd8D6Id1kbU+hhD3MR3+7jEAMQ
-   GFr7IJY21sqRsgC7mKJsAOplFZj1hCepzG7Uoi2cFXSkN1k9tVoKzl6vo
-   Ze9EjYg0iKOP2pBVcyNbNMBsmffW5NCi2COcoL2Dmv6+pgf8/3voyd6k/
-   yLtXldTjVzyQWozIo5IrZqkSrSb33bvAl8HfJb0zPp/OwUqjs4YEaeq0d
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="375774960"
-X-IronPort-AV: E=Sophos;i="6.02,215,1688454000"; 
-   d="scan'208";a="375774960"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2023 23:07:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="862893383"
-X-IronPort-AV: E=Sophos;i="6.02,215,1688454000"; 
-   d="scan'208";a="862893383"
-Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 30 Aug 2023 23:07:51 -0700
-Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qbaqM-000AzM-2t;
-        Thu, 31 Aug 2023 06:07:50 +0000
-Date:   Thu, 31 Aug 2023 14:04:47 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Krzysztof =?utf-8?Q?Wilczy=C5=84ski" ?= <kwilczynski@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:controller/qcom-ep] BUILD SUCCESS
- 01794236666abef69a07b48fa0948c4157d7ca70
-Message-ID: <202308311445.XezlxEhi-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+        with ESMTP id S234884AbjHaGXn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 31 Aug 2023 02:23:43 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 211F2E65;
+        Wed, 30 Aug 2023 23:23:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 04BA2B821AD;
+        Thu, 31 Aug 2023 06:22:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A49DFC433C9;
+        Thu, 31 Aug 2023 06:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693462969;
+        bh=NnIkxLpJHMcAeGNpbH7LMO7pryQqZWxaBW6GTtNQqU0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Dg8qbf7TmXktAwhzqLqsUy/BpGdPaW/L83G835vuDNTUSrvx0uDZP4bPAt+PjIJm0
+         DyqLe6DwNGiLAqpPBAjw9usYShRvJyrpGksnqM7MOy/j6teJQnA7JWId5sePZwLVsV
+         wvayQWVQm7611OCtuV9uzRgOtI0qMiyXdn1IhpbYEfU5zwP88+8sAynX+l/86LUlH0
+         FsasjT9XbH/L9bRTk3KI89uPyCrqQpn+UrF7Tbb4yICNKQr/pyPYRFd1nRi5YClnmF
+         h7SNOYdKdZWXuC8gHBtJRk6vXaE8RIOgeC4CtYYmwwFIBAmV1a6XTfldIuDlldLm+Z
+         eV588VNEMcd0g==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-99bed101b70so41340966b.3;
+        Wed, 30 Aug 2023 23:22:49 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwWenqt29kmF5wcpt+S7KS5NKzpsxIJ3FAQBPphgHUgdMpxvQfX
+        s0WmWSiihDclPlxS12J7B6w4sqlmcDDVIXRLeNo=
+X-Google-Smtp-Source: AGHT+IHDKeKoZUnXrtwQUVQn3sHN+bI5YOhGIcndZ1GL5ifhpu8EHIcYfoKbSvSWIRrUF57RE0hfYw1Vcx0wp4DHLPk=
+X-Received: by 2002:a17:906:113:b0:9a5:9f8d:764 with SMTP id
+ 19-20020a170906011300b009a59f8d0764mr3200584eje.77.1693462967838; Wed, 30 Aug
+ 2023 23:22:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+References: <20230725061008.1504292-1-jiaxun.yang@flygoat.com>
+ <e9c103dc-98ac-9a51-7291-f5da1467b2ff@flygoat.com> <CAAhV-H7_OjTaU_wn6mUW0-JSrXS+=A2rXCiBc8cyce5ob49BLg@mail.gmail.com>
+ <861a809d-3df1-327e-e033-87506f6d89e5@flygoat.com>
+In-Reply-To: <861a809d-3df1-327e-e033-87506f6d89e5@flygoat.com>
+From:   Huacai Chen <chenhuacai@kernel.org>
+Date:   Thu, 31 Aug 2023 14:22:35 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H67ehyqtm4ocOTWQPGBioWjQjLoyN5H9hALdq0oXdzWVg@mail.gmail.com>
+Message-ID: <CAAhV-H67ehyqtm4ocOTWQPGBioWjQjLoyN5H9hALdq0oXdzWVg@mail.gmail.com>
+Subject: Re: [PATCH v2] pci: loongson: Workaround MIPS firmware MRRS settings
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
+        linux-kernel@vger.kernel.org, kw@linux.com, lpieralisi@kernel.org,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,180 +66,136 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/qcom-ep
-branch HEAD: 01794236666abef69a07b48fa0948c4157d7ca70  PCI: qcom-ep: Add ICC bandwidth voting support
+Hi, Jiaxun,
 
-elapsed time: 2292m
+On Tue, Aug 8, 2023 at 3:38=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoat.com=
+> wrote:
+>
+>
+>
+> =E5=9C=A8 2023/8/6 22:30, Huacai Chen =E5=86=99=E9=81=93:
+> > Hi, Jiaxun,
+> >
+> > On Sun, Aug 6, 2023 at 10:20=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flygoa=
+t.com> wrote:
+> >>
+> >>
+> >> =E5=9C=A8 2023/7/25 14:10, Jiaxun Yang =E5=86=99=E9=81=93:
+> >>> This is a partial revert of commit 8b3517f88ff2 ("PCI:
+> >>> loongson: Prevent LS7A MRRS increases") for MIPS based Loongson.
+> >>>
+> >>> There are many MIPS based Loongson systems in wild that
+> >>> shipped with firmware which does not set maximum MRRS properly.
+> >>>
+> >>> Limiting MRRS to 256 for all as MIPS Loongson comes with higher
+> >>> MRRS support is considered rare.
+> >>>
+> >>> Cc: stable@vger.kernel.org
+> >>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D217680
+> >>> Fixes: 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases")
+> >>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> >> Ping?
+> >> I expect this patch to go through PCI fixes tree.
+> > Can we do it like this by modifying the existing loongson_mrrs_quirk()?
+>
+> Hmm, I'm not sure this will work, since loongson_mrrs_quirk only run on
+> bridges
+But it is worth to try, and you can walk the children to set mrrs when
+the quirk runs on bridges, I think.
 
-configs tested: 161
-configs skipped: 2
+> but the old quirk should run on every single device.
+Your current patch has a drawback that both quirks will run for MIPS,
+and their order is random (though it may cause nothing, but not
+elegant).
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Huacai
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r034-20230830   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20230830   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                   randconfig-001-20230830   clang
-arm                  randconfig-r035-20230830   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r023-20230830   gcc  
-arm64                randconfig-r024-20230830   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-hexagon               randconfig-001-20230830   clang
-hexagon               randconfig-002-20230830   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20230830   clang
-i386         buildonly-randconfig-002-20230830   clang
-i386         buildonly-randconfig-003-20230830   clang
-i386         buildonly-randconfig-004-20230830   clang
-i386         buildonly-randconfig-005-20230830   clang
-i386         buildonly-randconfig-006-20230830   clang
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20230830   clang
-i386                  randconfig-002-20230830   clang
-i386                  randconfig-003-20230830   clang
-i386                  randconfig-004-20230830   clang
-i386                  randconfig-005-20230830   clang
-i386                  randconfig-006-20230830   clang
-i386                  randconfig-011-20230830   gcc  
-i386                  randconfig-012-20230830   gcc  
-i386                  randconfig-013-20230830   gcc  
-i386                  randconfig-014-20230830   gcc  
-i386                  randconfig-015-20230830   gcc  
-i386                  randconfig-016-20230830   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20230830   gcc  
-loongarch            randconfig-r011-20230830   gcc  
-loongarch            randconfig-r032-20230830   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r016-20230830   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-microblaze           randconfig-r003-20230830   gcc  
-microblaze           randconfig-r031-20230830   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r025-20230830   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r036-20230830   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc              randconfig-r015-20230830   gcc  
-powerpc              randconfig-r021-20230830   gcc  
-powerpc              randconfig-r022-20230830   gcc  
-powerpc              randconfig-r026-20230830   gcc  
-powerpc64            randconfig-r005-20230830   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20230830   clang
-riscv                randconfig-r014-20230830   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20230830   gcc  
-s390                 randconfig-r033-20230830   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                   randconfig-r006-20230830   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64              randconfig-r012-20230830   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r001-20230830   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20230830   clang
-x86_64       buildonly-randconfig-002-20230830   clang
-x86_64       buildonly-randconfig-003-20230830   clang
-x86_64       buildonly-randconfig-004-20230830   clang
-x86_64       buildonly-randconfig-005-20230830   clang
-x86_64       buildonly-randconfig-006-20230830   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20230830   gcc  
-x86_64                randconfig-002-20230830   gcc  
-x86_64                randconfig-003-20230830   gcc  
-x86_64                randconfig-004-20230830   gcc  
-x86_64                randconfig-005-20230830   gcc  
-x86_64                randconfig-006-20230830   gcc  
-x86_64                randconfig-011-20230830   clang
-x86_64                randconfig-012-20230830   clang
-x86_64                randconfig-013-20230830   clang
-x86_64                randconfig-014-20230830   clang
-x86_64                randconfig-015-20230830   clang
-x86_64                randconfig-016-20230830   clang
-x86_64                randconfig-071-20230830   clang
-x86_64                randconfig-072-20230830   clang
-x86_64                randconfig-073-20230830   clang
-x86_64                randconfig-074-20230830   clang
-x86_64                randconfig-075-20230830   clang
-x86_64                randconfig-076-20230830   clang
-x86_64               randconfig-r002-20230830   clang
-x86_64               randconfig-r004-20230830   clang
-x86_64               randconfig-r013-20230830   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>
+> Thanks
+> Jiaxun
+>
+> >
+> > static void loongson_mrrs_quirk(struct pci_dev *pdev)
+> > {
+> >          /*
+> >           * Some Loongson PCIe ports have h/w limitations of maximum re=
+ad
+> >           * request size. They can't handle anything larger than this. =
+So
+> >           * force this limit on any devices attached under these ports.
+> >           */
+> >          struct pci_host_bridge *bridge =3D pci_find_host_bridge(pdev->=
+bus);
+> >
+> > #ifdef CONFIG_MIPS
+> >          set_pcie_ports_to_mrrs_256_to_emulate_the_firmware_behavior();
+> > #endif
+> >
+> >          bridge->no_inc_mrrs =3D 1;
+> > }
+> >
+> >> Thanks
+> >> - Jiaxun
+> >>
+> >>> ---
+> >>> v2: Rename quirk name to: loongson_old_mrrs_quirk
+> >>> ---
+> >>>    drivers/pci/controller/pci-loongson.c | 38 +++++++++++++++++++++++=
+++++
+> >>>    1 file changed, 38 insertions(+)
+> >>>
+> >>> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/cont=
+roller/pci-loongson.c
+> >>> index fe0f732f6e43..d0f68b102d10 100644
+> >>> --- a/drivers/pci/controller/pci-loongson.c
+> >>> +++ b/drivers/pci/controller/pci-loongson.c
+> >>> @@ -108,6 +108,44 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> >>>    DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> >>>                        DEV_LS7A_PCIE_PORT6, loongson_mrrs_quirk);
+> >>>
+> >>> +#ifdef CONFIG_MIPS
+> >>> +static void loongson_old_mrrs_quirk(struct pci_dev *pdev)
+> >>> +{
+> >>> +     struct pci_bus *bus =3D pdev->bus;
+> >>> +     struct pci_dev *bridge;
+> >>> +     static const struct pci_device_id bridge_devids[] =3D {
+> >>> +             { PCI_VDEVICE(LOONGSON, DEV_LS2K_PCIE_PORT0) },
+> >>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT0) },
+> >>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT1) },
+> >>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT2) },
+> >>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT3) },
+> >>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT4) },
+> >>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT5) },
+> >>> +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT6) },
+> >>> +             { 0, },
+> >>> +     };
+> >>> +
+> >>> +     /* look for the matching bridge */
+> >>> +     while (!pci_is_root_bus(bus)) {
+> >>> +             bridge =3D bus->self;
+> >>> +             bus =3D bus->parent;
+> >>> +             /*
+> >>> +              * There are still some wild MIPS Loongson firmware won=
+'t
+> >>> +              * set MRRS properly. Limiting MRRS to 256 as MIPS Loon=
+gson
+> >>> +              * comes with higher MRRS support is considered rare.
+> >>> +              */
+> >>> +             if (pci_match_id(bridge_devids, bridge)) {
+> >>> +                     if (pcie_get_readrq(pdev) > 256) {
+> >>> +                             pci_info(pdev, "limiting MRRS to 256\n"=
+);
+> >>> +                             pcie_set_readrq(pdev, 256);
+> >>> +                     }
+> >>> +                     break;
+> >>> +             }
+> >>> +     }
+> >>> +}
+> >>> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_old_mrrs_q=
+uirk);
+> >>> +#endif
+> >>> +
+> >>>    static void loongson_pci_pin_quirk(struct pci_dev *pdev)
+> >>>    {
+> >>>        pdev->pin =3D 1 + (PCI_FUNC(pdev->devfn) & 3);
+>
