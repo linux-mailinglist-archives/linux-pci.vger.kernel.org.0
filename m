@@ -2,54 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C7E42790517
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Sep 2023 06:53:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98A1A790530
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Sep 2023 07:12:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238036AbjIBExo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 2 Sep 2023 00:53:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46936 "EHLO
+        id S1351511AbjIBFMM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 2 Sep 2023 01:12:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351514AbjIBExo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 2 Sep 2023 00:53:44 -0400
-Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C69A61702
-        for <linux-pci@vger.kernel.org>; Fri,  1 Sep 2023 21:53:39 -0700 (PDT)
-Received: by mail-qk1-x72c.google.com with SMTP id af79cd13be357-76ef8b91a72so161541085a.0
-        for <linux-pci@vger.kernel.org>; Fri, 01 Sep 2023 21:53:39 -0700 (PDT)
+        with ESMTP id S1351518AbjIBFML (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 2 Sep 2023 01:12:11 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C6511703
+        for <linux-pci@vger.kernel.org>; Fri,  1 Sep 2023 22:12:08 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-56a8794b5adso1975458a12.2
+        for <linux-pci@vger.kernel.org>; Fri, 01 Sep 2023 22:12:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693630419; x=1694235219; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1693631527; x=1694236327; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=mSrdqkK/YWmlh3vCPMhy+g/xG+srgnlt8Tk8MZ4U6lw=;
-        b=BjLJxkBu/WE2H7zbaQULD0ZblgwfqxEkLAXhjF7WKGg5I7qdBNNhRM9OWD8W0AeQt7
-         D8EMvqC4vjMgRGIlffWWH5A0s7F2EDK+k3eqULlGqSIEebhSy38AHpqHogNCtTrOERXc
-         eMX4FnuM8yhNpz03oChJoES1O48G4YZKGHudZkndzQRlsch9rOa3MBUwQmDE4gFoK307
-         QqAn4iVCQTqWOvS+bKmtVvAt4NKqukeFk2ydI1dhaBMFgTb7Kc00AoL/EXVA9Om0zUPs
-         YTFECY0f1NueKlQsfodmLbKNrEseCW6J+VLvNPCqdO9pi7DTg/Su/r1qaHf0aKMP1fwV
-         FkpQ==
+        bh=r8vaSTPW9tq/2PvzUS7UQE38t7wNIDxl1GYzejiN7sk=;
+        b=LYrEmEemuCK7BWJly5+ccV0sZZHUzuYd4THosOI2kJtDX9v6/pvqFYtCL7GSVY2CqT
+         3SPRunvEeuSVtcptlQb10p+10cuFeTb/feHfCmGgYvtA4tun4GsPnqoRoZ/FLsMhUfXj
+         Hkt4WGKeMJA5RdC9rnZipkgAN9Q0X7/Dy/iYueIkyU/Mpn0KPJfkELrYzS7fX+mD1io/
+         DdRogJVz+1DvKfhlDZ9PNDCOiC4hSmOqZtYg4MT72yTyILQLnw1pyy78PZtVC4W/k7aZ
+         1f/BTOFoMo3qydxLfCbVkVklZIsvHQ7UFpgKEkGLzvt0/TKFy54DRW2TU2pF45fHumBZ
+         qaUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693630419; x=1694235219;
+        d=1e100.net; s=20221208; t=1693631527; x=1694236327;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mSrdqkK/YWmlh3vCPMhy+g/xG+srgnlt8Tk8MZ4U6lw=;
-        b=B17Apuxn2GPB8vY0QiwI+ni9L+K50Kd1g7oY5ZegajJhOGViGmNmLM5O3oyQgtW8J0
-         EZNaZJCpURChVT4r+MzpYWs4jUXwQGbFzGJsLKnbF+R4nyrENj4BkCsm4pjG5LJl7U6o
-         DP5oaK0lIQ8ziYqvIfz0tJXKSc4f9v2LEmqKZLIACPqX471ZunQmnYzra+ATTkwJLMih
-         lxuOPJiYsICd2rITCGM1F1YRLzbJ9XMczeHapcUROZwaVAJklQdIANCGh5Lfosq8CwiQ
-         ebbv5KPNQVCuCqhvLKb5VzbOUd2iAXoonM/8r4FXPf4ULrToM/Agdj042sa5/Ap7BeF/
-         0uzQ==
-X-Gm-Message-State: AOJu0YyDOShIlGyuWBgJj5bv4h0FLKuLLNoYKwxiE3CjH98bj1K63Ycs
-        AhSGMf1/67w+2wMj1j1FhaJR
-X-Google-Smtp-Source: AGHT+IGqrcIpxRkoq9FWOnm8ggRiN0EmtrGNqwZRIcpgch1RX8Lec7OaIvtoqd+eHR15wKkD43mpHQ==
-X-Received: by 2002:a05:620a:11b7:b0:76f:1742:2f6c with SMTP id c23-20020a05620a11b700b0076f17422f6cmr4567182qkk.66.1693630418878;
-        Fri, 01 Sep 2023 21:53:38 -0700 (PDT)
+        bh=r8vaSTPW9tq/2PvzUS7UQE38t7wNIDxl1GYzejiN7sk=;
+        b=IfGy+v1FADrAENEh0He88Ow3ax5rEn8ksA3ib0w/w9FANJqp9GGC3u3nQkdmtDB1Pp
+         ighZvU5gOAAu6rdM7KQJwf8WhjzESq/d5Ed4mhdjEaLeh146e4kaefb0bw5aTZK4J19/
+         YWXxaBvGk1ZsAkNj5dl/JeZ+tyyDuJsFexBWmniaIbRp5uAkU2/hEaDsqN7//5NUU/Is
+         6iiE3K6/dry9fMS7+ii5H0aYZcnKPJXnldZJAfmBn90fMGlQCBvLcOu3P6lPekLQVAz4
+         I4/FTsGP2MlTnFTW6FDUsOI2RmdRyoaG3cv3tCltNw3hNnnsZCy6uj72ubWgQM0QnLVa
+         VbQQ==
+X-Gm-Message-State: AOJu0YxtjbtmQ35mLVY8op8gxDXtnyWLsfbxN3s+/gtjnX0ysFHNpZyK
+        C2NbjAAlZ42SqIB80DhOIdkN
+X-Google-Smtp-Source: AGHT+IHgsXpqTNSkB6YwoRAaMwF4G43/AdpXBzgcVLTWHC96ohQGa3KhTjGgDtkfaxi1IoC3pHwD6A==
+X-Received: by 2002:a05:6a20:938d:b0:138:64d4:b055 with SMTP id x13-20020a056a20938d00b0013864d4b055mr5948002pzh.55.1693631527333;
+        Fri, 01 Sep 2023 22:12:07 -0700 (PDT)
 Received: from thinkpad ([117.217.187.8])
-        by smtp.gmail.com with ESMTPSA id c2-20020a639602000000b0056365ee8603sm3627992pge.67.2023.09.01.21.53.32
+        by smtp.gmail.com with ESMTPSA id k188-20020a636fc5000000b0055bf13811f5sm3658873pgc.15.2023.09.01.22.12.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Sep 2023 21:53:38 -0700 (PDT)
-Date:   Sat, 2 Sep 2023 10:23:28 +0530
+        Fri, 01 Sep 2023 22:12:06 -0700 (PDT)
+Date:   Sat, 2 Sep 2023 10:41:55 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Frank Li <Frank.Li@nxp.com>
 Cc:     tglx@linutronix.de, aisheng.dong@nxp.com, bhelgaas@google.com,
@@ -61,19 +61,17 @@ Cc:     tglx@linutronix.de, aisheng.dong@nxp.com, bhelgaas@google.com,
         lorenzo.pieralisi@arm.com, lpieralisi@kernel.org, maz@kernel.org,
         ntb@lists.linux.dev, peng.fan@nxp.com, robh+dt@kernel.org,
         s.hauer@pengutronix.de, shawnguo@kernel.org
-Subject: Re: [PATCH 1/3] PCI: endpoint: Add RC-to-EP doorbell support using
- platform MSI controller
-Message-ID: <20230902045328.GB2913@thinkpad>
+Subject: Re: [PATCH 2/3] misc: pci_endpoint_test: Add doorbell test case
+Message-ID: <20230902051155.GC2913@thinkpad>
 References: <20230426203436.1277307-1-Frank.Li@nxp.com>
- <20230426203436.1277307-2-Frank.Li@nxp.com>
- <20230902045214.GA2913@thinkpad>
+ <20230426203436.1277307-3-Frank.Li@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230902045214.GA2913@thinkpad>
+In-Reply-To: <20230426203436.1277307-3-Frank.Li@nxp.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -82,262 +80,159 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Sep 02, 2023 at 10:22:25AM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Apr 26, 2023 at 04:34:34PM -0400, Frank Li wrote:
-> > This commit introduces a common method for sending messages from the Root Complex
-> > (RC) to the Endpoint (EP) by utilizing the platform MSI interrupt controller,
-> > such as ARM GIC, as an EP doorbell. Maps the memory assigned for the BAR region
-> > by the PCI host to the message address of the platform MSI interrupt controller
-> > in the PCI EP. As a result, when the PCI RC writes to the BAR region, it triggers
-> > an IRQ at the EP. This implementation serves as a common method for all endpoint
-> > function drivers.
-> > 
-> > However, it currently supports only one EP physical function due to limitations
-> > in ARM MSI/IMS readiness.
-> > 
-> 
-> I've provided generic comments below, but I will do one more thorough review
-> after seeing epf-test driver patch.
-> 
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> >  drivers/pci/endpoint/pci-epf-core.c | 109 ++++++++++++++++++++++++++++
-> >  include/linux/pci-epf.h             |  16 ++++
-> >  2 files changed, 125 insertions(+)
-> > 
-> > diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-> > index 355a6f56fcea..94ac82bf84c5 100644
-> > --- a/drivers/pci/endpoint/pci-epf-core.c
-> > +++ b/drivers/pci/endpoint/pci-epf-core.c
-> > @@ -6,10 +6,12 @@
-> >   * Author: Kishon Vijay Abraham I <kishon@ti.com>
-> >   */
-> >  
-> > +#include <linux/irqreturn.h>
-> 
-> Why is this needed?
-> 
-> >  #include <linux/device.h>
-> >  #include <linux/dma-mapping.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/module.h>
-> > +#include <linux/msi.h>
-> >  
-> >  #include <linux/pci-epc.h>
-> >  #include <linux/pci-epf.h>
-> > @@ -300,6 +302,113 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_epf_alloc_space);
-> >  
-> > +static enum irqreturn pci_epf_interrupt_handler(int irq, void *data)
-> 
-> static irqreturn_t
-> 
-> s/pci_epf_interrupt_handler/pci_epf_doorbell_handler
-> 
-> > +{
-> > +	struct pci_epf *epf = data;
-> > +
-> > +	if (epf->event_ops && epf->event_ops->doorbell)
-> > +		epf->event_ops->doorbell(epf, irq - epf->virq_base);
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +static void pci_epf_write_msi_msg(struct msi_desc *desc, struct msi_msg *msg)
-> > +{
-> > +	struct pci_epc *epc = container_of(desc->dev, struct pci_epc, dev);
-> > +	struct pci_epf *epf;
-> > +
-> > +	/* Todo: Need check correct epf if multi epf supported */
-> > +	list_for_each_entry(epf, &epc->pci_epf, list) {
-> > +		if (epf->msg && desc->msi_index < epf->num_msgs)
-> > +			epf->msg[desc->msi_index] = *msg;
-> > +	}
-> > +}
-> > +
-> > +int pci_epf_alloc_doorbell(struct pci_epf *epf, u16 num_msgs)
-> > +{
-> > +	struct irq_domain *domain;
-> > +	struct pci_epc *epc;
-> > +	struct device *dev;
-> > +	int virq;
-> > +	int ret;
-> > +	int i;
-> > +
-> > +	epc = epf->epc;
-> > +	dev = &epc->dev;
-> 
-> "epc_dev" to make it explicit
-> 
-> > +
-> > +	/*
-> > +	 * Current only support 1 function.
-> 
-> What does this mean exactly? Even a single EPC can support multiple EPFs
+On Wed, Apr 26, 2023 at 04:34:35PM -0400, Frank Li wrote:
+> Reused flags as capability register in pci_endpoint_test struct to
+> support older driver versions. Save capability flags to 'cap' field
+> of struct pci_endpoint_test to prevent reading non-existent address.
 > 
 
-Please ignore above comment.
+This won't work, please see below.
+
+> Add three registers: PCIE_ENDPOINT_TEST_DB_BAR, PCIE_ENDPOINT_TEST_DB_ADDR,
+> PCIE_ENDPOINT_TEST_DB_DATA.
+> 
+> Write data from PCI_ENDPOINT_TEST_DB_DATA to address from
+> PCI_ENDPOINT_TEST_DB_ADDR to trigger doorbell and wait for remote
+> endpoint feedback.
+
+"wait for endpoint response"
+
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/misc/pci_endpoint_test.c | 41 ++++++++++++++++++++++++++++++++
+>  include/uapi/linux/pcitest.h     |  1 +
+>  2 files changed, 42 insertions(+)
+> 
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index ed4d0ef5e5c3..3320a3334594 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -52,6 +52,7 @@
+>  #define STATUS_IRQ_RAISED			BIT(6)
+>  #define STATUS_SRC_ADDR_INVALID			BIT(7)
+>  #define STATUS_DST_ADDR_INVALID			BIT(8)
+> +#define STATUS_DOORBELL_SUCCESS			BIT(9)
+>  
+>  #define PCI_ENDPOINT_TEST_LOWER_SRC_ADDR	0x0c
+>  #define PCI_ENDPOINT_TEST_UPPER_SRC_ADDR	0x10
+> @@ -66,7 +67,12 @@
+>  #define PCI_ENDPOINT_TEST_IRQ_NUMBER		0x28
+>  
+>  #define PCI_ENDPOINT_TEST_FLAGS			0x2c
+> +#define PCI_ENDPOINT_TEST_DB_BAR		0x30
+> +#define PCI_ENDPOINT_TEST_DB_ADDR		0x34
+> +#define PCI_ENDPOINT_TEST_DB_DATA		0x38
+> +
+>  #define FLAG_USE_DMA				BIT(0)
+> +#define FLAG_SUPPORT_DOORBELL			BIT(1)
+>  
+>  #define PCI_DEVICE_ID_TI_AM654			0xb00c
+>  #define PCI_DEVICE_ID_TI_J7200			0xb00f
+> @@ -102,6 +108,7 @@ enum pci_barno {
+>  	BAR_3,
+>  	BAR_4,
+>  	BAR_5,
+> +	NO_BAR = -1,
+>  };
+>  
+>  struct pci_endpoint_test {
+> @@ -118,6 +125,7 @@ struct pci_endpoint_test {
+>  	enum pci_barno test_reg_bar;
+>  	size_t alignment;
+>  	const char *name;
+> +	u32 cap;
+>  };
+>  
+>  struct pci_endpoint_test_data {
+> @@ -713,6 +721,35 @@ static bool pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
+>  	return false;
+>  }
+>  
+> +static bool pci_endpoint_test_doorbell(struct pci_endpoint_test *test)
+> +{
+> +	enum pci_barno bar;
+> +	u32 data;
+> +	u32 addr;
+> +
+> +	if (!(test->cap & FLAG_SUPPORT_DOORBELL))
+> +		return false;
+> +
+> +	bar = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_BAR);
+> +	if (bar == NO_BAR)
+> +		return false;
+
+Is this possible?
+
+> +
+> +	data = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_DATA);
+> +	addr = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_ADDR);
+> +	bar = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_BAR);
+> +
+> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_STATUS, 0);
+> +	pci_endpoint_test_bar_writel(test, bar, addr, data);
+
+From patch 1, I understood that EP supports multiple doorbell. But you are not
+making use of it here?
+
+> +
+> +	wait_for_completion(&test->irq_raised);
+> +
+
+No timeout?
+
+> +	data = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_STATUS);
+> +	if (data & STATUS_DOORBELL_SUCCESS)
+
+Please use a separate variable.
+
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>  static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
+>  				    unsigned long arg)
+>  {
+> @@ -760,6 +797,9 @@ static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
+>  	case PCITEST_CLEAR_IRQ:
+>  		ret = pci_endpoint_test_clear_irq(test);
+>  		break;
+> +	case PCITEST_DOORBELL:
+> +		ret = pci_endpoint_test_doorbell(test);
+> +		break;
+>  	}
+>  
+>  ret:
+> @@ -887,6 +927,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+>  	misc_device->parent = &pdev->dev;
+>  	misc_device->fops = &pci_endpoint_test_fops;
+>  
+> +	test->cap = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_FLAGS);
+
+This register will be overwritten by this driver during (copy,read,write) tests.
+So this logic will not work.
 
 - Mani
 
-> > +	 * PCI IMS(interrupt message store) ARM support have not been
-> > +	 * ready yet.
-> 
-> No need to mention platform irq controller name.
-> 
-> > +	 */
-> > +	if (epc->function_num_map != 1)
-> 
-> Why can't you use, epf->func_no?
-> 
-> > +		return -EOPNOTSUPP;
-> > +
-> > +	domain = dev_get_msi_domain(dev->parent);
-> > +	if (!domain)
-> > +		return -EOPNTSUPP;
-> 
-> Newline
-> 
-> > +	dev_set_msi_domain(dev, domain);
-> > +
-> > +	/* use parent of_node to get device id information */
-> > +	dev->of_node = dev->parent->of_node;
-> > +
-> 
-> Why do you need of_node assignment inside EPF core?
-> 
-> > +	epf->msg = kcalloc(num_msgs, sizeof(struct msi_msg), GFP_KERNEL);
-> > +	if (!epf->msg)
-> > +		return -ENOMEM;
-> > +
-> > +	epf->num_msgs = num_msgs;
-> > +
-> 
-> Move this to the start of the function, after checks.
-> 
-> > +	ret = platform_msi_domain_alloc_irqs(dev, num_msgs, pci_epf_write_msi_msg);
-> > +	if (ret) {
-> > +		dev_err(dev, "Can't allocate MSI from system MSI controller\n");
-> 
-> "Failed to allocate MSI"
-> 
-> > +		goto err_mem;
-> 
-> err_free_mem
-> 
-> > +	}
-> > +
-> > +	for (i = 0; i < num_msgs; i++) {
-> > +		virq = msi_get_virq(dev, i);
-> > +		if (i == 0)
-> > +			epf->virq_base = virq;
-> > +
-> > +		ret = request_irq(virq, pci_epf_interrupt_handler, 0,
-> > +				  "pci-epf-doorbell", epf);
-> 
-> IRQ name should have an index, otherwise all of them will have the same name.
-> 
-> > +
-> > +		if (ret) {
-> > +			dev_err(dev, "Failure request doorbell IRQ\n");
-> 
-> "Failed to request doorbell"
-> 
-> > +			goto err_irq;
-> 
-> err_free_irq
-> 
-> > +		}
-> > +	}
-> > +
-> > +	epf->num_msgs = num_msgs;
-> 
-> Newline
-> 
-> > +	return ret;
-> > +
-> > +err_irq:
-> > +	platform_msi_domain_free_irqs(dev);
-> > +err_mem:
-> > +	kfree(epf->msg);
-> > +	epf->msg = NULL;
-> > +	epf->num_msgs = 0;
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(pci_epf_alloc_doorbell);
-> > +
-> > +void pci_epf_free_doorbell(struct pci_epf *epf)
-> > +{
-> > +	struct pci_epc *epc;
-> > +	int i;
-> > +
-> > +	epc = epf->epc;
-> > +
-> > +	for (i = 0; i < epf->num_msgs; i++)
-> > +		free_irq(epf->virq_base + i, epf);
-> > +
-> > +	platform_msi_domain_free_irqs(&epc->dev);
-> > +	kfree(epf->msg);
-> > +	epf->msg = NULL;
-> > +	epf->num_msgs = 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(pci_epf_free_doorbell);
-> > +
-> >  static void pci_epf_remove_cfs(struct pci_epf_driver *driver)
-> >  {
-> >  	struct config_group *group, *tmp;
-> > diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
-> > index b8441db2fa52..e187e3ee48d2 100644
-> > --- a/include/linux/pci-epf.h
-> > +++ b/include/linux/pci-epf.h
-> > @@ -75,6 +75,7 @@ struct pci_epf_ops {
-> >  struct pci_epc_event_ops {
-> >  	int (*core_init)(struct pci_epf *epf);
-> >  	int (*link_up)(struct pci_epf *epf);
-> > +	int (*doorbell)(struct pci_epf *epf, int index);
-> >  };
-> >  
-> >  /**
-> > @@ -173,6 +174,9 @@ struct pci_epf {
-> >  	unsigned long		vfunction_num_map;
-> >  	struct list_head	pci_vepf;
-> >  	const struct pci_epc_event_ops *event_ops;
-> > +	struct msi_msg *msg;
-> > +	u16 num_msgs;
-> > +	int virq_base;
-> >  };
-> >  
-> >  /**
-> > @@ -216,4 +220,16 @@ int pci_epf_bind(struct pci_epf *epf);
-> >  void pci_epf_unbind(struct pci_epf *epf);
-> >  int pci_epf_add_vepf(struct pci_epf *epf_pf, struct pci_epf *epf_vf);
-> >  void pci_epf_remove_vepf(struct pci_epf *epf_pf, struct pci_epf *epf_vf);
-> > +int pci_epf_alloc_doorbell(struct pci_epf *epf, u16 nums);
-> > +void pci_epf_free_doorbell(struct pci_epf *epf);
-> > +
-> > +static inline struct msi_msg *epf_get_msg(struct pci_epf *epf)
-> > +{
-> > +	return epf->msg;
-> > +}
-> > +
-> > +static inline u16 epf_get_msg_num(struct pci_epf *epf)
-> > +{
-> > +	return epf->num_msgs;
-> > +}
-> 
-> I don't see a need for these two functions as they are doing just dereferences.
-> 
-> - Mani
-> 
-> >  #endif /* __LINUX_PCI_EPF_H */
-> > -- 
-> > 2.34.1
-> > 
-> 
+>  	err = misc_register(misc_device);
+>  	if (err) {
+>  		dev_err(dev, "Failed to register device\n");
+> diff --git a/include/uapi/linux/pcitest.h b/include/uapi/linux/pcitest.h
+> index f9c1af8d141b..479ca1aa3ae0 100644
+> --- a/include/uapi/linux/pcitest.h
+> +++ b/include/uapi/linux/pcitest.h
+> @@ -20,6 +20,7 @@
+>  #define PCITEST_SET_IRQTYPE	_IOW('P', 0x8, int)
+>  #define PCITEST_GET_IRQTYPE	_IO('P', 0x9)
+>  #define PCITEST_CLEAR_IRQ	_IO('P', 0x10)
+> +#define PCITEST_DOORBELL	_IO('P', 0x11)
+>  
+>  #define PCITEST_FLAGS_USE_DMA	0x00000001
+>  
 > -- 
-> மணிவண்ணன் சதாசிவம்
+> 2.34.1
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
