@@ -2,43 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF76F791DDB
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Sep 2023 21:57:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00C74791DDF
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Sep 2023 21:57:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232824AbjIDT5n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Sep 2023 15:57:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49286 "EHLO
+        id S235627AbjIDT5r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Sep 2023 15:57:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232051AbjIDT5n (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Sep 2023 15:57:43 -0400
-Received: from out-230.mta1.migadu.com (out-230.mta1.migadu.com [95.215.58.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAB0F180
-        for <linux-pci@vger.kernel.org>; Mon,  4 Sep 2023 12:57:39 -0700 (PDT)
+        with ESMTP id S235288AbjIDT5p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Sep 2023 15:57:45 -0400
+Received: from out-227.mta1.migadu.com (out-227.mta1.migadu.com [95.215.58.227])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFF11180
+        for <linux-pci@vger.kernel.org>; Mon,  4 Sep 2023 12:57:41 -0700 (PDT)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1693857456;
+        t=1693857458;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=FYKJvWL/qZgH1oNH2DJwbsBn+zY36FSv76Wxof0/Hpw=;
-        b=ahZRccD3k1MiGRI8O0BWNWRD3IedOUtr/0keRN1KW1Sx8oxxGBC/H8Fk52Fj8jEpSRkMCU
-        UHifg3825MK625kjMOhTvVz9nwlZISqtuuktamAc+GlDkFDhz8QxW5+KAoxBAwZGU1L9k4
-        DZC8AnO8nWX01emVpChRA3WXuoiRVQQ=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OcmG12mmWiMHQssRNKwGSMzorFeF7+pAcaQIVBtY3KU=;
+        b=Umc5L5nksLtIUADB5XoXaVOKwwgwfgU/GIOj+4XCQLNTz0mvoFjDIp/jmf3nc7NzaoqPb2
+        n2s7xkPFZx919FUwVXLGsNjMQi7OOnbsmlJ9JX9QRgvBM1COB7+xNpO8kgn51VOj6kbWzL
+        GXfNbDGpzPsfxMmC33vtxKIDur1mSdA=
 From:   Sui Jingfeng <sui.jingfeng@linux.dev>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
         nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org,
-        Sui Jingfeng <suijingfeng@loongson.cn>
-Subject: [RFC,drm-misc-next v4 0/9] PCI/VGA: Allowing the user to select the primary video adapter at boot time
-Date:   Tue,  5 Sep 2023 03:57:15 +0800
-Message-Id: <20230904195724.633404-1-sui.jingfeng@linux.dev>
+        Sui Jingfeng <suijingfeng@loongson.cn>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Lyude Paul <lyude@redhat.com>
+Subject: [RFC,drm-misc-next v4 1/9] PCI/VGA: Allowing the user to select the primary video adapter at boot time
+Date:   Tue,  5 Sep 2023 03:57:16 +0800
+Message-Id: <20230904195724.633404-2-sui.jingfeng@linux.dev>
+In-Reply-To: <20230904195724.633404-1-sui.jingfeng@linux.dev>
+References: <20230904195724.633404-1-sui.jingfeng@linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -57,86 +62,231 @@ Once the driver bound the device successfully, VGAARB will call back to
 the device driver. To query if the device drivers want to be primary or
 not. Device drivers can just pass NULL if have no such needs.
 
-Please note that:
+Acked-by: Jani Nikula <jani.nikula@intel.com> # i915
+Reviewed-by: Lyude Paul <lyude@redhat.com> # nouveau
+Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  2 +-
+ drivers/gpu/drm/i915/display/intel_vga.c   |  3 +-
+ drivers/gpu/drm/loongson/lsdc_drv.c        |  2 +-
+ drivers/gpu/drm/nouveau/nouveau_vga.c      |  2 +-
+ drivers/gpu/drm/radeon/radeon_device.c     |  2 +-
+ drivers/pci/vgaarb.c                       | 43 +++++++++++++++++++---
+ drivers/vfio/pci/vfio_pci_core.c           |  2 +-
+ include/linux/vgaarb.h                     |  8 ++--
+ 8 files changed, 49 insertions(+), 15 deletions(-)
 
-1) The ARM64, Loongarch, Mips servers have a lot PCIe slot, and I would
-   like to mount at least three video cards.
-
-2) Typically, those non-86 machines don't have a good UEFI firmware
-   support, which doesn't support select primary GPU as firmware stage.
-   Even on x86, there are old UEFI firmwares which already made undesired
-   decision for you.
-
-3) This series is attempt to solve the remain problems at the driver level,
-   while another series[1] of me is target to solve the majority of the
-   problems at device level.
-
-Tested (limited) on x86 with four video card mounted, Intel UHD Graphics
-630 is the default boot VGA, successfully override by ast2400 with
-ast.modeset=10 append at the kernel cmd line.
-
-$ lspci | grep VGA
-
- 00:02.0 VGA compatible controller: Intel Corporation CoffeeLake-S GT2 [UHD Graphics 630]
- 01:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Caicos XTX [Radeon HD 8490 / R5 235X OEM]
- 04:00.0 VGA compatible controller: ASPEED Technology, Inc. ASPEED Graphics Family (rev 30)
- 05:00.0 VGA compatible controller: NVIDIA Corporation GK208B [GeForce GT 720] (rev a1)
-
-$ sudo dmesg | grep vgaarb
-
- pci 0000:00:02.0: vgaarb: setting as boot VGA device
- pci 0000:00:02.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
- pci 0000:01:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
- pci 0000:04:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
- pci 0000:05:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
- vgaarb: loaded
- ast 0000:04:00.0: vgaarb: Override as primary by driver
- i915 0000:00:02.0: vgaarb: changed VGA decodes: olddecodes=io+mem,decodes=none:owns=io+mem
- radeon 0000:01:00.0: vgaarb: changed VGA decodes: olddecodes=io+mem,decodes=none:owns=none
- ast 0000:04:00.0: vgaarb: changed VGA decodes: olddecodes=io+mem,decodes=none:owns=none
-
-v2:
-	* Add a simple implemment for drm/i915 and drm/ast
-	* Pick up all tags (Mario)
-v3:
-	* Fix a mistake for drm/i915 implement
-	* Fix patch can not be applied problem because of merge conflect.
-v4:
-	* Focus on solve the real problem.
-
-v1,v2 at https://patchwork.freedesktop.org/series/120059/
-   v3 at https://patchwork.freedesktop.org/series/120562/
-
-[1] https://patchwork.freedesktop.org/series/122845/
-
-Sui Jingfeng (9):
-  PCI/VGA: Allowing the user to select the primary video adapter at boot
-    time
-  drm/nouveau: Implement .be_primary() callback
-  drm/radeon: Implement .be_primary() callback
-  drm/amdgpu: Implement .be_primary() callback
-  drm/i915: Implement .be_primary() callback
-  drm/loongson: Implement .be_primary() callback
-  drm/ast: Register as a VGA client by calling vga_client_register()
-  drm/hibmc: Register as a VGA client by calling vga_client_register()
-  drm/gma500: Register as a VGA client by calling vga_client_register()
-
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c    | 11 +++-
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c       | 13 ++++-
- drivers/gpu/drm/ast/ast_drv.c                 | 31 ++++++++++
- drivers/gpu/drm/gma500/psb_drv.c              | 57 ++++++++++++++++++-
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c   | 15 +++++
- drivers/gpu/drm/i915/display/intel_vga.c      | 15 ++++-
- drivers/gpu/drm/loongson/loongson_module.c    |  2 +-
- drivers/gpu/drm/loongson/loongson_module.h    |  1 +
- drivers/gpu/drm/loongson/lsdc_drv.c           | 10 +++-
- drivers/gpu/drm/nouveau/nouveau_vga.c         | 11 +++-
- drivers/gpu/drm/radeon/radeon_device.c        | 10 +++-
- drivers/pci/vgaarb.c                          | 43 ++++++++++++--
- drivers/vfio/pci/vfio_pci_core.c              |  2 +-
- include/linux/vgaarb.h                        |  8 ++-
- 14 files changed, 210 insertions(+), 19 deletions(-)
-
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index e77f048c99d8..ecc4564ceac0 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -3916,7 +3916,7 @@ int amdgpu_device_init(struct amdgpu_device *adev,
+ 	 * ignore it
+ 	 */
+ 	if ((adev->pdev->class >> 8) == PCI_CLASS_DISPLAY_VGA)
+-		vga_client_register(adev->pdev, amdgpu_device_vga_set_decode);
++		vga_client_register(adev->pdev, amdgpu_device_vga_set_decode, NULL);
+ 
+ 	px = amdgpu_device_supports_px(ddev);
+ 
+diff --git a/drivers/gpu/drm/i915/display/intel_vga.c b/drivers/gpu/drm/i915/display/intel_vga.c
+index 286a0bdd28c6..98d7d4dffe9f 100644
+--- a/drivers/gpu/drm/i915/display/intel_vga.c
++++ b/drivers/gpu/drm/i915/display/intel_vga.c
+@@ -115,7 +115,6 @@ intel_vga_set_decode(struct pci_dev *pdev, bool enable_decode)
+ 
+ int intel_vga_register(struct drm_i915_private *i915)
+ {
+-
+ 	struct pci_dev *pdev = to_pci_dev(i915->drm.dev);
+ 	int ret;
+ 
+@@ -127,7 +126,7 @@ int intel_vga_register(struct drm_i915_private *i915)
+ 	 * then we do not take part in VGA arbitration and the
+ 	 * vga_client_register() fails with -ENODEV.
+ 	 */
+-	ret = vga_client_register(pdev, intel_vga_set_decode);
++	ret = vga_client_register(pdev, intel_vga_set_decode, NULL);
+ 	if (ret && ret != -ENODEV)
+ 		return ret;
+ 
+diff --git a/drivers/gpu/drm/loongson/lsdc_drv.c b/drivers/gpu/drm/loongson/lsdc_drv.c
+index 188ec82afcfb..d10a28c2c494 100644
+--- a/drivers/gpu/drm/loongson/lsdc_drv.c
++++ b/drivers/gpu/drm/loongson/lsdc_drv.c
+@@ -289,7 +289,7 @@ static int lsdc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	pci_set_drvdata(pdev, ddev);
+ 
+-	vga_client_register(pdev, lsdc_vga_set_decode);
++	vga_client_register(pdev, lsdc_vga_set_decode, NULL);
+ 
+ 	drm_kms_helper_poll_init(ddev);
+ 
+diff --git a/drivers/gpu/drm/nouveau/nouveau_vga.c b/drivers/gpu/drm/nouveau/nouveau_vga.c
+index f8bf0ec26844..162b4f4676c7 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_vga.c
++++ b/drivers/gpu/drm/nouveau/nouveau_vga.c
+@@ -92,7 +92,7 @@ nouveau_vga_init(struct nouveau_drm *drm)
+ 		return;
+ 	pdev = to_pci_dev(dev->dev);
+ 
+-	vga_client_register(pdev, nouveau_vga_set_decode);
++	vga_client_register(pdev, nouveau_vga_set_decode, NULL);
+ 
+ 	/* don't register Thunderbolt eGPU with vga_switcheroo */
+ 	if (pci_is_thunderbolt_attached(pdev))
+diff --git a/drivers/gpu/drm/radeon/radeon_device.c b/drivers/gpu/drm/radeon/radeon_device.c
+index afbb3a80c0c6..71f2ff39d6a1 100644
+--- a/drivers/gpu/drm/radeon/radeon_device.c
++++ b/drivers/gpu/drm/radeon/radeon_device.c
+@@ -1425,7 +1425,7 @@ int radeon_device_init(struct radeon_device *rdev,
+ 	/* if we have > 1 VGA cards, then disable the radeon VGA resources */
+ 	/* this will fail for cards that aren't VGA class devices, just
+ 	 * ignore it */
+-	vga_client_register(rdev->pdev, radeon_vga_set_decode);
++	vga_client_register(rdev->pdev, radeon_vga_set_decode, NULL);
+ 
+ 	if (rdev->flags & RADEON_IS_PX)
+ 		runtime = true;
+diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+index 5a696078b382..552ac7df10ee 100644
+--- a/drivers/pci/vgaarb.c
++++ b/drivers/pci/vgaarb.c
+@@ -53,6 +53,7 @@ struct vga_device {
+ 	bool bridge_has_one_vga;
+ 	bool is_firmware_default;	/* device selected by firmware */
+ 	unsigned int (*set_decode)(struct pci_dev *pdev, bool decode);
++	bool (*be_primary)(struct pci_dev *pdev);
+ };
+ 
+ static LIST_HEAD(vga_list);
+@@ -956,6 +957,10 @@ EXPORT_SYMBOL(vga_set_legacy_decoding);
+  * @set_decode callback: If a client can disable its GPU VGA resource, it
+  * will get a callback from this to set the encode/decode state.
+  *
++ * @be_primary callback: Callback to the device driver, query if a device
++ * want to be the primary display. This callback is optional, device drivers
++ * who have no special needs can simply pass a NULL.
++ *
+  * Rationale: we cannot disable VGA decode resources unconditionally some single
+  * GPU laptops seem to require ACPI or BIOS access to the VGA registers to
+  * control things like backlights etc.  Hopefully newer multi-GPU laptops do
+@@ -971,7 +976,8 @@ EXPORT_SYMBOL(vga_set_legacy_decoding);
+  * Returns: 0 on success, -1 on failure
+  */
+ int vga_client_register(struct pci_dev *pdev,
+-		unsigned int (*set_decode)(struct pci_dev *pdev, bool decode))
++		unsigned int (*set_decode)(struct pci_dev *pdev, bool decode),
++		bool (*be_primary)(struct pci_dev *pdev))
+ {
+ 	int ret = -ENODEV;
+ 	struct vga_device *vgadev;
+@@ -983,6 +989,7 @@ int vga_client_register(struct pci_dev *pdev,
+ 		goto bail;
+ 
+ 	vgadev->set_decode = set_decode;
++	vgadev->be_primary = be_primary;
+ 	ret = 0;
+ 
+ bail:
+@@ -1493,6 +1500,21 @@ static void vga_arbiter_notify_clients(void)
+ 	spin_unlock_irqrestore(&vga_lock, flags);
+ }
+ 
++static void vga_arbiter_do_arbitration(struct pci_dev *pdev)
++{
++	struct vga_device *vgadev;
++
++	if (pdev == vga_default_device())
++		return;
++
++	vgadev = vgadev_find(pdev);
++	if (vgadev && vgadev->be_primary && vgadev->be_primary(pdev)) {
++		vga_set_default_device(pdev);
++
++		vgaarb_info(&pdev->dev, "Override as primary by driver\n");
++	}
++}
++
+ static int pci_notify(struct notifier_block *nb, unsigned long action,
+ 		      void *data)
+ {
+@@ -1505,13 +1527,24 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
+ 	/* For now we're only intereted in devices added and removed. I didn't
+ 	 * test this thing here, so someone needs to double check for the
+ 	 * cases of hotplugable vga cards. */
+-	if (action == BUS_NOTIFY_ADD_DEVICE)
++	switch (action) {
++	case BUS_NOTIFY_ADD_DEVICE:
+ 		notify = vga_arbiter_add_pci_device(pdev);
+-	else if (action == BUS_NOTIFY_DEL_DEVICE)
++		if (notify)
++			vga_arbiter_notify_clients();
++		break;
++	case BUS_NOTIFY_DEL_DEVICE:
+ 		notify = vga_arbiter_del_pci_device(pdev);
++		if (notify)
++			vga_arbiter_notify_clients();
++		break;
++	case BUS_NOTIFY_BOUND_DRIVER:
++		vga_arbiter_do_arbitration(pdev);
++		break;
++	default:
++		break;
++	}
+ 
+-	if (notify)
+-		vga_arbiter_notify_clients();
+ 	return 0;
+ }
+ 
+diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+index 20d7b69ea6ff..531c4d8ef26e 100644
+--- a/drivers/vfio/pci/vfio_pci_core.c
++++ b/drivers/vfio/pci/vfio_pci_core.c
+@@ -2108,7 +2108,7 @@ static int vfio_pci_vga_init(struct vfio_pci_core_device *vdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = vga_client_register(pdev, vfio_pci_set_decode);
++	ret = vga_client_register(pdev, vfio_pci_set_decode, NULL);
+ 	if (ret)
+ 		return ret;
+ 	vga_set_legacy_decoding(pdev, vfio_pci_set_decode(pdev, false));
+diff --git a/include/linux/vgaarb.h b/include/linux/vgaarb.h
+index b4b9137f9792..291d82b9f05a 100644
+--- a/include/linux/vgaarb.h
++++ b/include/linux/vgaarb.h
+@@ -52,7 +52,8 @@ struct pci_dev *vga_default_device(void);
+ void vga_set_default_device(struct pci_dev *pdev);
+ int vga_remove_vgacon(struct pci_dev *pdev);
+ int vga_client_register(struct pci_dev *pdev,
+-		unsigned int (*set_decode)(struct pci_dev *pdev, bool state));
++		unsigned int (*set_decode)(struct pci_dev *pdev, bool state),
++		bool (*be_primary)(struct pci_dev *pdev));
+ #else /* CONFIG_VGA_ARB */
+ static inline void vga_set_legacy_decoding(struct pci_dev *pdev,
+ 		unsigned int decodes)
+@@ -78,7 +79,8 @@ static inline int vga_remove_vgacon(struct pci_dev *pdev)
+ 	return 0;
+ }
+ static inline int vga_client_register(struct pci_dev *pdev,
+-		unsigned int (*set_decode)(struct pci_dev *pdev, bool state))
++		unsigned int (*set_decode)(struct pci_dev *pdev, bool state),
++		bool (*be_primary)(struct pci_dev *pdev))
+ {
+ 	return 0;
+ }
+@@ -116,7 +118,7 @@ static inline int vga_get_uninterruptible(struct pci_dev *pdev,
+ 
+ static inline void vga_client_unregister(struct pci_dev *pdev)
+ {
+-	vga_client_register(pdev, NULL);
++	vga_client_register(pdev, NULL, NULL);
+ }
+ 
+ #endif /* LINUX_VGA_H */
 -- 
 2.34.1
 
