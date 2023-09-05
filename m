@@ -2,181 +2,217 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F05807928B5
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Sep 2023 18:46:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 705227928BA
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Sep 2023 18:46:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345595AbjIEQX7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Sep 2023 12:23:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34774 "EHLO
+        id S241552AbjIEQYD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Sep 2023 12:24:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354308AbjIEKkH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Sep 2023 06:40:07 -0400
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74313E8;
-        Tue,  5 Sep 2023 03:40:02 -0700 (PDT)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 385AdcUM085354;
-        Tue, 5 Sep 2023 05:39:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1693910378;
-        bh=IEGtvOplK8tYLUbkKdeIFl1pBYO1Ul1m2t260iBSZ4E=;
-        h=Date:Subject:To:CC:References:From:In-Reply-To;
-        b=BG8uVS0SC/m8qYToFzh09jECI5Al6rMABO1abPcr8QSkUVo85kgmrYa2vxVV0XWN2
-         z8p8+XIC7NI1zAD+3iNeQQIiFBhPLT1bXmfSO/luEEs33qt/DpsGTdPGcgyRc5ZIO7
-         jH2icq6VCE1cZt2+qTbL+c54EYaDKY601re0pHY4=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 385Adc84012893
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 Sep 2023 05:39:38 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 5
- Sep 2023 05:39:38 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 5 Sep 2023 05:39:38 -0500
-Received: from [172.24.19.15] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 385AdYIL014368;
-        Tue, 5 Sep 2023 05:39:35 -0500
-Message-ID: <ed9164d7-e2a2-1a63-3574-a305d8f8d3fc@ti.com>
-Date:   Tue, 5 Sep 2023 16:09:34 +0530
+        with ESMTP id S1354331AbjIEKpV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Sep 2023 06:45:21 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6029E199;
+        Tue,  5 Sep 2023 03:45:17 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 1733921853;
+        Tue,  5 Sep 2023 10:45:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1693910716; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hi9B89fg5HTXSyf3WMrSDcgO7uE0bPSzn7lT6dwsbIY=;
+        b=oZ9ye6AE6Ox0fEdxccTPJizt6gUL+Jy1HDCbF0yTrI3j+Th/X+/rVY+CMWy8uPdxfHIU/4
+        lNtmhTIYVny53NeNiop7FqkvP5wlWR6IGAxsKg4mVYC2YAkOdRj31pWQuplS75KN6kdLq6
+        HwW/TUmCt0KR1Kjm9am9/3gratreBbo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1693910716;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hi9B89fg5HTXSyf3WMrSDcgO7uE0bPSzn7lT6dwsbIY=;
+        b=hLW/r+BhmKquhYTGrl++IiYCC3720gATPfan7395kMKxnGkza7uZiQsCVXcrvOY5cQzJJw
+        8EuQooxweBz7r7Cw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D9ED513499;
+        Tue,  5 Sep 2023 10:45:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id usUvNLsG92Q1WgAAMHmgww
+        (envelope-from <tzimmermann@suse.de>); Tue, 05 Sep 2023 10:45:15 +0000
+Message-ID: <44ec8549-dc36-287e-4359-abd3ec8d22d6@suse.de>
+Date:   Tue, 5 Sep 2023 12:45:15 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.14.0
-Subject: Re: [EXTERNAL] Re: [RFC PATCH 2/2] PCI: j721e: Add support to build
- pci-j721e as a kernel module
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof Wilczy_ski <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20230817170417.GA320486@bhelgaas>
+Subject: Re: [Nouveau] [RFC, drm-misc-next v4 0/9] PCI/VGA: Allowing the user
+ to select the primary video adapter at boot time
 Content-Language: en-US
-From:   "Verma, Achal" <a-verma1@ti.com>
-In-Reply-To: <20230817170417.GA320486@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+To:     Sui Jingfeng <sui.jingfeng@linux.dev>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Sui Jingfeng <suijingfeng@loongson.cn>,
+        nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org
+References: <20230904195724.633404-1-sui.jingfeng@linux.dev>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+In-Reply-To: <20230904195724.633404-1-sui.jingfeng@linux.dev>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------BTstAG8q8zg5VW0v3P4ZzVup"
+X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------BTstAG8q8zg5VW0v3P4ZzVup
+Content-Type: multipart/mixed; boundary="------------3ZPp6QYt3D76sVOXL0p4Kqe0";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Sui Jingfeng <sui.jingfeng@linux.dev>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Sui Jingfeng <suijingfeng@loongson.cn>, nouveau@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+ linux-pci@vger.kernel.org
+Message-ID: <44ec8549-dc36-287e-4359-abd3ec8d22d6@suse.de>
+Subject: Re: [Nouveau] [RFC, drm-misc-next v4 0/9] PCI/VGA: Allowing the user
+ to select the primary video adapter at boot time
+References: <20230904195724.633404-1-sui.jingfeng@linux.dev>
+In-Reply-To: <20230904195724.633404-1-sui.jingfeng@linux.dev>
 
+--------------3ZPp6QYt3D76sVOXL0p4Kqe0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-On 8/17/2023 10:34 PM, Bjorn Helgaas wrote:
-> On Thu, Aug 17, 2023 at 05:38:23PM +0530, Achal Verma wrote:
->> pci-j721e driver can be build as a in-built kernel driver only, which is
->> not required as it is not used during boot time in most cases.
->> This change add support to build pci-j721e as a kernel loadable module.
->>
->> J721e PCIe controller can work in both host mode and end-point mode.
->> In order to enable host mode driver and endpoint driver to be built
->> independently either as built-in or kernel module, the pcie-j721e.c driver
->> is refactored into following components:
->>
->> 1) pci-j721e-host.c: Driver used when PCIe controller has to be
->> initialized in host mode.
->>
->> 2) pci-j721e-ep.c: Driver used when PCIe controller has to be
->> initialized in endpoint mode.
->>
->> 3) pci-j721e.c: contains common code required in both modes.
-> 
-> Sounds like at least two commits (I'm not sure what the best order
-> would be):
-> 
->    1) Split into separate host mode and endpoint mode drivers
-> 
->    2) Make both drivers tristate
+SGkNCg0KQW0gMDQuMDkuMjMgdW0gMjE6NTcgc2NocmllYiBTdWkgSmluZ2Zlbmc6DQo+IEZy
+b206IFN1aSBKaW5nZmVuZyA8c3VpamluZ2ZlbmdAbG9vbmdzb24uY24+DQo+IA0KPiBPbiBh
+IG1hY2hpbmUgd2l0aCBtdWx0aXBsZSBHUFVzLCBhIExpbnV4IHVzZXIgaGFzIG5vIGNvbnRy
+b2wgb3ZlciB3aGljaA0KPiBvbmUgaXMgcHJpbWFyeSBhdCBib290IHRpbWUuIFRoaXMgc2Vy
+aWVzIHRyaWVzIHRvIHNvbHZlIGFib3ZlIG1lbnRpb25lZA0KDQpJZiBhbnl0aGluZywgdGhl
+IHByaW1hcnkgZ3JhcGhpY3MgYWRhcHRlciBpcyB0aGUgb25lIGluaXRpYWxpemVkIGJ5IHRo
+ZSANCmZpcm13YXJlLiBJIHRoaW5rIG91ciBib290LXVwIGdyYXBoaWNzIGFsc28gbWFrZSB0
+aGlzIGFzc3VtcHRpb24gaW1wbGljaXRseS4NCg0KQnV0IHdoYXQncyB0aGUgdXNlIGNhc2Ug
+Zm9yIG92ZXJyaWRpbmcgdGhpcyBzZXR0aW5nPw0KDQpCZXN0IHJlZ2FyZHMNClRob21hcw0K
+DQo+IHByb2JsZW0gYnkgaW50cm9kdWNlZCB0aGUgLT5iZV9wcmltYXJ5KCkgZnVuY3Rpb24g
+c3R1Yi4gVGhlIHNwZWNpZmljDQo+IGRldmljZSBkcml2ZXJzIGNhbiBwcm92aWRlIGFuIGlt
+cGxlbWVudGF0aW9uIHRvIGhvb2sgdXAgd2l0aCB0aGlzIHN0dWIgYnkNCj4gY2FsbGluZyB0
+aGUgdmdhX2NsaWVudF9yZWdpc3RlcigpIGZ1bmN0aW9uLg0KPiANCj4gT25jZSB0aGUgZHJp
+dmVyIGJvdW5kIHRoZSBkZXZpY2Ugc3VjY2Vzc2Z1bGx5LCBWR0FBUkIgd2lsbCBjYWxsIGJh
+Y2sgdG8NCj4gdGhlIGRldmljZSBkcml2ZXIuIFRvIHF1ZXJ5IGlmIHRoZSBkZXZpY2UgZHJp
+dmVycyB3YW50IHRvIGJlIHByaW1hcnkgb3INCj4gbm90LiBEZXZpY2UgZHJpdmVycyBjYW4g
+anVzdCBwYXNzIE5VTEwgaWYgaGF2ZSBubyBzdWNoIG5lZWRzLg0KPiANCj4gUGxlYXNlIG5v
+dGUgdGhhdDoNCj4gDQo+IDEpIFRoZSBBUk02NCwgTG9vbmdhcmNoLCBNaXBzIHNlcnZlcnMg
+aGF2ZSBhIGxvdCBQQ0llIHNsb3QsIGFuZCBJIHdvdWxkDQo+ICAgICBsaWtlIHRvIG1vdW50
+IGF0IGxlYXN0IHRocmVlIHZpZGVvIGNhcmRzLg0KPiANCj4gMikgVHlwaWNhbGx5LCB0aG9z
+ZSBub24tODYgbWFjaGluZXMgZG9uJ3QgaGF2ZSBhIGdvb2QgVUVGSSBmaXJtd2FyZQ0KPiAg
+ICAgc3VwcG9ydCwgd2hpY2ggZG9lc24ndCBzdXBwb3J0IHNlbGVjdCBwcmltYXJ5IEdQVSBh
+cyBmaXJtd2FyZSBzdGFnZS4NCj4gICAgIEV2ZW4gb24geDg2LCB0aGVyZSBhcmUgb2xkIFVF
+RkkgZmlybXdhcmVzIHdoaWNoIGFscmVhZHkgbWFkZSB1bmRlc2lyZWQNCj4gICAgIGRlY2lz
+aW9uIGZvciB5b3UuDQo+IA0KPiAzKSBUaGlzIHNlcmllcyBpcyBhdHRlbXB0IHRvIHNvbHZl
+IHRoZSByZW1haW4gcHJvYmxlbXMgYXQgdGhlIGRyaXZlciBsZXZlbCwNCj4gICAgIHdoaWxl
+IGFub3RoZXIgc2VyaWVzWzFdIG9mIG1lIGlzIHRhcmdldCB0byBzb2x2ZSB0aGUgbWFqb3Jp
+dHkgb2YgdGhlDQo+ICAgICBwcm9ibGVtcyBhdCBkZXZpY2UgbGV2ZWwuDQo+IA0KPiBUZXN0
+ZWQgKGxpbWl0ZWQpIG9uIHg4NiB3aXRoIGZvdXIgdmlkZW8gY2FyZCBtb3VudGVkLCBJbnRl
+bCBVSEQgR3JhcGhpY3MNCj4gNjMwIGlzIHRoZSBkZWZhdWx0IGJvb3QgVkdBLCBzdWNjZXNz
+ZnVsbHkgb3ZlcnJpZGUgYnkgYXN0MjQwMCB3aXRoDQo+IGFzdC5tb2Rlc2V0PTEwIGFwcGVu
+ZCBhdCB0aGUga2VybmVsIGNtZCBsaW5lLg0KPiANCj4gJCBsc3BjaSB8IGdyZXAgVkdBDQo+
+IA0KPiAgIDAwOjAyLjAgVkdBIGNvbXBhdGlibGUgY29udHJvbGxlcjogSW50ZWwgQ29ycG9y
+YXRpb24gQ29mZmVlTGFrZS1TIEdUMiBbVUhEIEdyYXBoaWNzIDYzMF0NCj4gICAwMTowMC4w
+IFZHQSBjb21wYXRpYmxlIGNvbnRyb2xsZXI6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIElu
+Yy4gW0FNRC9BVEldIENhaWNvcyBYVFggW1JhZGVvbiBIRCA4NDkwIC8gUjUgMjM1WCBPRU1d
+DQo+ICAgMDQ6MDAuMCBWR0EgY29tcGF0aWJsZSBjb250cm9sbGVyOiBBU1BFRUQgVGVjaG5v
+bG9neSwgSW5jLiBBU1BFRUQgR3JhcGhpY3MgRmFtaWx5IChyZXYgMzApDQo+ICAgMDU6MDAu
+MCBWR0EgY29tcGF0aWJsZSBjb250cm9sbGVyOiBOVklESUEgQ29ycG9yYXRpb24gR0syMDhC
+IFtHZUZvcmNlIEdUIDcyMF0gKHJldiBhMSkNCj4gDQo+ICQgc3VkbyBkbWVzZyB8IGdyZXAg
+dmdhYXJiDQo+IA0KPiAgIHBjaSAwMDAwOjAwOjAyLjA6IHZnYWFyYjogc2V0dGluZyBhcyBi
+b290IFZHQSBkZXZpY2UNCj4gICBwY2kgMDAwMDowMDowMi4wOiB2Z2FhcmI6IFZHQSBkZXZp
+Y2UgYWRkZWQ6IGRlY29kZXM9aW8rbWVtLG93bnM9aW8rbWVtLGxvY2tzPW5vbmUNCj4gICBw
+Y2kgMDAwMDowMTowMC4wOiB2Z2FhcmI6IFZHQSBkZXZpY2UgYWRkZWQ6IGRlY29kZXM9aW8r
+bWVtLG93bnM9bm9uZSxsb2Nrcz1ub25lDQo+ICAgcGNpIDAwMDA6MDQ6MDAuMDogdmdhYXJi
+OiBWR0EgZGV2aWNlIGFkZGVkOiBkZWNvZGVzPWlvK21lbSxvd25zPW5vbmUsbG9ja3M9bm9u
+ZQ0KPiAgIHBjaSAwMDAwOjA1OjAwLjA6IHZnYWFyYjogVkdBIGRldmljZSBhZGRlZDogZGVj
+b2Rlcz1pbyttZW0sb3ducz1ub25lLGxvY2tzPW5vbmUNCj4gICB2Z2FhcmI6IGxvYWRlZA0K
+PiAgIGFzdCAwMDAwOjA0OjAwLjA6IHZnYWFyYjogT3ZlcnJpZGUgYXMgcHJpbWFyeSBieSBk
+cml2ZXINCj4gICBpOTE1IDAwMDA6MDA6MDIuMDogdmdhYXJiOiBjaGFuZ2VkIFZHQSBkZWNv
+ZGVzOiBvbGRkZWNvZGVzPWlvK21lbSxkZWNvZGVzPW5vbmU6b3ducz1pbyttZW0NCj4gICBy
+YWRlb24gMDAwMDowMTowMC4wOiB2Z2FhcmI6IGNoYW5nZWQgVkdBIGRlY29kZXM6IG9sZGRl
+Y29kZXM9aW8rbWVtLGRlY29kZXM9bm9uZTpvd25zPW5vbmUNCj4gICBhc3QgMDAwMDowNDow
+MC4wOiB2Z2FhcmI6IGNoYW5nZWQgVkdBIGRlY29kZXM6IG9sZGRlY29kZXM9aW8rbWVtLGRl
+Y29kZXM9bm9uZTpvd25zPW5vbmUNCj4gDQo+IHYyOg0KPiAJKiBBZGQgYSBzaW1wbGUgaW1w
+bGVtbWVudCBmb3IgZHJtL2k5MTUgYW5kIGRybS9hc3QNCj4gCSogUGljayB1cCBhbGwgdGFn
+cyAoTWFyaW8pDQo+IHYzOg0KPiAJKiBGaXggYSBtaXN0YWtlIGZvciBkcm0vaTkxNSBpbXBs
+ZW1lbnQNCj4gCSogRml4IHBhdGNoIGNhbiBub3QgYmUgYXBwbGllZCBwcm9ibGVtIGJlY2F1
+c2Ugb2YgbWVyZ2UgY29uZmxlY3QuDQo+IHY0Og0KPiAJKiBGb2N1cyBvbiBzb2x2ZSB0aGUg
+cmVhbCBwcm9ibGVtLg0KPiANCj4gdjEsdjIgYXQgaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRl
+c2t0b3Aub3JnL3Nlcmllcy8xMjAwNTkvDQo+ICAgICB2MyBhdCBodHRwczovL3BhdGNod29y
+ay5mcmVlZGVza3RvcC5vcmcvc2VyaWVzLzEyMDU2Mi8NCj4gDQo+IFsxXSBodHRwczovL3Bh
+dGNod29yay5mcmVlZGVza3RvcC5vcmcvc2VyaWVzLzEyMjg0NS8NCj4gDQo+IFN1aSBKaW5n
+ZmVuZyAoOSk6DQo+ICAgIFBDSS9WR0E6IEFsbG93aW5nIHRoZSB1c2VyIHRvIHNlbGVjdCB0
+aGUgcHJpbWFyeSB2aWRlbyBhZGFwdGVyIGF0IGJvb3QNCj4gICAgICB0aW1lDQo+ICAgIGRy
+bS9ub3V2ZWF1OiBJbXBsZW1lbnQgLmJlX3ByaW1hcnkoKSBjYWxsYmFjaw0KPiAgICBkcm0v
+cmFkZW9uOiBJbXBsZW1lbnQgLmJlX3ByaW1hcnkoKSBjYWxsYmFjaw0KPiAgICBkcm0vYW1k
+Z3B1OiBJbXBsZW1lbnQgLmJlX3ByaW1hcnkoKSBjYWxsYmFjaw0KPiAgICBkcm0vaTkxNTog
+SW1wbGVtZW50IC5iZV9wcmltYXJ5KCkgY2FsbGJhY2sNCj4gICAgZHJtL2xvb25nc29uOiBJ
+bXBsZW1lbnQgLmJlX3ByaW1hcnkoKSBjYWxsYmFjaw0KPiAgICBkcm0vYXN0OiBSZWdpc3Rl
+ciBhcyBhIFZHQSBjbGllbnQgYnkgY2FsbGluZyB2Z2FfY2xpZW50X3JlZ2lzdGVyKCkNCj4g
+ICAgZHJtL2hpYm1jOiBSZWdpc3RlciBhcyBhIFZHQSBjbGllbnQgYnkgY2FsbGluZyB2Z2Ff
+Y2xpZW50X3JlZ2lzdGVyKCkNCj4gICAgZHJtL2dtYTUwMDogUmVnaXN0ZXIgYXMgYSBWR0Eg
+Y2xpZW50IGJ5IGNhbGxpbmcgdmdhX2NsaWVudF9yZWdpc3RlcigpDQo+IA0KPiAgIGRyaXZl
+cnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9kZXZpY2UuYyAgICB8IDExICsrKy0NCj4g
+ICBkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfZHJ2LmMgICAgICAgfCAxMyAr
+KysrLQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS9hc3QvYXN0X2Rydi5jICAgICAgICAgICAgICAg
+ICB8IDMxICsrKysrKysrKysNCj4gICBkcml2ZXJzL2dwdS9kcm0vZ21hNTAwL3BzYl9kcnYu
+YyAgICAgICAgICAgICAgfCA1NyArKysrKysrKysrKysrKysrKystDQo+ICAgLi4uL2dwdS9k
+cm0vaGlzaWxpY29uL2hpYm1jL2hpYm1jX2RybV9kcnYuYyAgIHwgMTUgKysrKysNCj4gICBk
+cml2ZXJzL2dwdS9kcm0vaTkxNS9kaXNwbGF5L2ludGVsX3ZnYS5jICAgICAgfCAxNSArKysr
+LQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS9sb29uZ3Nvbi9sb29uZ3Nvbl9tb2R1bGUuYyAgICB8
+ICAyICstDQo+ICAgZHJpdmVycy9ncHUvZHJtL2xvb25nc29uL2xvb25nc29uX21vZHVsZS5o
+ICAgIHwgIDEgKw0KPiAgIGRyaXZlcnMvZ3B1L2RybS9sb29uZ3Nvbi9sc2RjX2Rydi5jICAg
+ICAgICAgICB8IDEwICsrKy0NCj4gICBkcml2ZXJzL2dwdS9kcm0vbm91dmVhdS9ub3V2ZWF1
+X3ZnYS5jICAgICAgICAgfCAxMSArKystDQo+ICAgZHJpdmVycy9ncHUvZHJtL3JhZGVvbi9y
+YWRlb25fZGV2aWNlLmMgICAgICAgIHwgMTAgKysrLQ0KPiAgIGRyaXZlcnMvcGNpL3ZnYWFy
+Yi5jICAgICAgICAgICAgICAgICAgICAgICAgICB8IDQzICsrKysrKysrKysrKy0tDQo+ICAg
+ZHJpdmVycy92ZmlvL3BjaS92ZmlvX3BjaV9jb3JlLmMgICAgICAgICAgICAgIHwgIDIgKy0N
+Cj4gICBpbmNsdWRlL2xpbnV4L3ZnYWFyYi5oICAgICAgICAgICAgICAgICAgICAgICAgfCAg
+OCArKy0NCj4gICAxNCBmaWxlcyBjaGFuZ2VkLCAyMTAgaW5zZXJ0aW9ucygrKSwgMTkgZGVs
+ZXRpb25zKC0pDQo+IA0KDQotLSANClRob21hcyBaaW1tZXJtYW5uDQpHcmFwaGljcyBEcml2
+ZXIgRGV2ZWxvcGVyDQpTVVNFIFNvZnR3YXJlIFNvbHV0aW9ucyBHZXJtYW55IEdtYkgNCkZy
+YW5rZW5zdHJhc3NlIDE0NiwgOTA0NjEgTnVlcm5iZXJnLCBHZXJtYW55DQpHRjogSXZvIFRv
+dGV2LCBBbmRyZXcgTXllcnMsIEFuZHJldyBNY0RvbmFsZCwgQm91ZGllbiBNb2VybWFuDQpI
+UkIgMzY4MDkgKEFHIE51ZXJuYmVyZykNCg==
 
-So one patch for .c files and Makefile and other one for Kconfig.
-> 
-> It looks like you implement both module loading and removal.  Do we
-> now think removal of these modules is safe?  IIRC there used to be a
-> question related to irq_desc lifetimes, e.g., there's some discussion
-> here: https://lore.kernel.org/linux-pci/87k085xekg.wl-maz@kernel.org/
-> 
-> The ability to *load* drivers as modules is definitely useful.  The
-> ability to *remove* them is useful for developers but not really
-> useful for users.
-> 
-> But I guess j721e_pcie_remove() already exists, so maybe you're not
-> changing anything as far as irq_desc lifetimes
-I went through the email-thread you have shared.
-It looks like its related to the issue when pcie bridge driver also 
-working as a interrupt domain/controller for EP.
-In case of legacy interrupt support, its required that pcie host driver 
-free interrupt mapping before freeing the interrupt domain.
+--------------3ZPp6QYt3D76sVOXL0p4Kqe0--
 
-Note that current upstream implementation of pci-j721e doesn't support 
-interrupt domain, so issue doesn't applies here but its there in TI 
-kernel and I believe we are handling this in proper way by freeing the 
-mappings before.
+--------------BTstAG8q8zg5VW0v3P4ZzVup
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
 
-Also pci-j721e remove() was lacking some important clean-up functions 
-including pci_remove_root_bus() without which remove wasn't possible, so 
-added required calls and checked the correct sequence of calls.
+-----BEGIN PGP SIGNATURE-----
 
-I have tested load/un-load multiple times on J784S4 EVM PCIe1 instance, 
-it worked fine but reload after load->un-load in case of j721e fails 
-leading to kernel hung, I suspect this as something to do with improper 
-(sequence) handling of refclk for endpoint (shutting down and then 
-powering up) as the only difference between these is that for J784S4 
-both host controller and EP side use shared ref-clk generated by pcie 
-phy while in j721e case host controller use pcie-phy clock while EP side 
-uses board generated ref-clock, so something to do with power and clock 
-off/on sequence.
-> 
-> Since you're splitting into new files, maybe this is an opportunity to
-> fix my naming mistake of suggesting a "pci-" prefix instead of
-> "pcie-"?
-> 
-> Bjorn
-> 
->>   config PCI_J721E_HOST
->> -	bool "TI J721E PCIe controller (host mode)"
->> +	tristate "TI J721E PCIe controller (host mode)"
->>   	depends on OF
->>   	select PCIE_CADENCE_HOST
->>   	select PCI_J721E
->> @@ -56,7 +56,7 @@ config PCI_J721E_HOST
->>   	  core.
->>   
->>   config PCI_J721E_EP
->> -	bool "TI J721E PCIe controller (endpoint mode)"
->> +	tristate "TI J721E PCIe controller (endpoint mode)"
->>   	depends on OF
->>   	depends on PCI_ENDPOINT
->>   	select PCIE_CADENCE_EP
-> 
->> +static struct platform_driver j721e_pcie_ep_driver = {
->> +	.probe  = j721e_pcie_probe,
->> +	.remove_new = j721e_pcie_remove,
->> +	.driver = {
->> +		.name	= "j721e-pcie-ep",
->> +		.of_match_table = of_j721e_pcie_ep_match,
->> +		.suppress_bind_attrs = true,
->> +	},
->> +};
-> 
->> +static struct platform_driver j721e_pcie_host_driver = {
->> +	.probe  = j721e_pcie_probe,
->> +	.remove_new = j721e_pcie_remove,
->> +	.driver = {
->> +		.name	= "j721e-pcie-host",
->> +		.of_match_table = of_j721e_pcie_host_match,
->> +		.suppress_bind_attrs = true,
->> +	},
->> +};
+wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmT3BrsFAwAAAAAACgkQlh/E3EQov+CS
+8RAAiF0CggcJT9N2Ltb2z5+iPEE0JHOT7Qg60S1nY31dw/TchEcloYeqWymWzXj5BLYHgxTNzV2P
+6BLpPqz/8kgb7RGb20atNYW+sHNMD2l8Y3fbUfBxgA1ZgDm3FGGkiOEYPWZrAuHuBqjUGvKbpxEc
+67nqG+KapwZCpHZqF37yjzfpHKHVl6CNBIhlFAvNk1iZ61GQc/Pe/N9gINmdbP3iZfI70y0yK6mZ
+uw8EE7Ihz4nf2+fYkKAUMe6dJKO1e6+3OyMzaCiXaIxJ8Q1zsaBmg+CDzZKULMVhJoHKsxlpurQx
+SgKJ+4wHnQR7iPFU7RJuoScA3QdfqR7DRtVII86qhnGc9yRhecE786DGiCAeU8vkcOFFo+wty8q8
+k7FhRjwdysEtsDvQIJSjrjwz1wHFsnikkOEKgqMwLiRwBizC1O5501jhgUDjorbRgR9b0Fa6ewM0
+CiKDabNBoGqnTmCcJrBYtGhpqczwYjPv51IQtGfwZlyzbIJpQgYjzvV4BNe+z7jMCqMQl0jlpjET
+2YsVfkQUWl8Xgl/+JG0LVKlUWh5QjAPOKozcCeT1NEYdhWnaIU85UXVjjskDsSiywE8YMFwYKFst
+uWJktoqdgTJmCEblcE1eMsRyqbFlHOXfVT/FxSICyRnkavGM1oydu+Jo8bSoJPpCTdcnU4SFNRYV
+g6A=
+=Vpmn
+-----END PGP SIGNATURE-----
+
+--------------BTstAG8q8zg5VW0v3P4ZzVup--
