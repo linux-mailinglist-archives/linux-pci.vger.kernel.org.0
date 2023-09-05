@@ -2,117 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43FD1792DC3
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Sep 2023 20:51:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93013792D86
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Sep 2023 20:44:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238490AbjIESvg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Sep 2023 14:51:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42618 "EHLO
+        id S232518AbjIESop (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Sep 2023 14:44:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233497AbjIESvf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Sep 2023 14:51:35 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 793D6E59;
-        Tue,  5 Sep 2023 11:51:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 2FED8CE1271;
-        Tue,  5 Sep 2023 16:27:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F8B2C433C7;
-        Tue,  5 Sep 2023 16:27:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693931261;
-        bh=6OD2DtqpQyrf+VYg+lhq13/Z18Z/KJYFIEncqN8AVJc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qWXXETCWpvfvJCm4x1IJ64Ctc18TlZM2MzkaMuhtTOpYRZUNxtRFeHm+6TwJgAssj
-         sHIY0UwfGW62Iej5s51hlDNGJ+tThvIAsA6pnpTrrHA262Z1hFNt07zg1UmpQmjdu+
-         SJS7ml6xMTQIXFLs0cDuVf5BKnp7MdkQE7u1TeMkSGSajp7m6JwRHrcIT76Nt6vjPq
-         SKfQ94A4wJ+hFrLL6WJnvHcjGNdClDfkRXC1KxjJylcvCTfpjNXbTHWSPVzPG/Er4W
-         99qNWA6OE0jKKenj6mt7WaQh9/7z54LsVJGuGuK1d3m9sw7o8Xs4RZv/PeKmgH+Jq4
-         F81l1aIe5db1A==
-Date:   Tue, 5 Sep 2023 11:27:39 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Achal Verma <a-verma1@ti.com>
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof Wilczy_ski <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] pci: j721e: Enable reference clock output from
- serdes
-Message-ID: <20230905162739.GA175146@bhelgaas>
+        with ESMTP id S233633AbjIESon (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Sep 2023 14:44:43 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DEDACE4
+        for <linux-pci@vger.kernel.org>; Tue,  5 Sep 2023 11:44:14 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-5009d4a4897so4847242e87.0
+        for <linux-pci@vger.kernel.org>; Tue, 05 Sep 2023 11:44:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.com; s=cloud; t=1693939397; x=1694544197; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OfYnmYbnlw/oOdEXRRJF1VOqzdakA8jCVvd4ZjMv2EM=;
+        b=GzKoQODVSeqGzroH0R1N7OloJKzQwEniXzrD/hXT0oqdibIWZ75b8VdmnCqNO8KR93
+         xLUL/hHqpKMWxjvpvsNSGKiXt8UujcAtzZ6TsiRLNdA13iXN44NAHGajbo4lR3i65IIk
+         kYklsGMyNV6sAngXgTJbM6FBAJsVyfgTOsx7I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693939397; x=1694544197;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OfYnmYbnlw/oOdEXRRJF1VOqzdakA8jCVvd4ZjMv2EM=;
+        b=MZnCx7AAgH0bQmUAoVCOm5sIW0VYvbALhvtoHRxCV0uwYM+igB6jHkEim+NXzXXNkE
+         XEOcSFpxoi4UTb5Qv37nFTxKYXm6lrfrLitytdbdIF7Y+Tbq9TjyBve+shpD2jBw6y2C
+         HtSnvdQNqKIBBbUXkvSasJCJ66OHEobTIBKfW6fIXAUcPwVyaQKv3prlLcZlpl2/ZnRg
+         lqlWZVTnkEpjtnrVJK/BZMuzi7/oaWB4xyI4Mb1ghXuUqtGSs471q4IzWGxXIE25MDxF
+         /uclKexk1i4YPJXpqNjzby9ctI7XTbX5rxZHp/CvZWHtXf7eT/FmMO/Vrry5oBwmFpea
+         NANg==
+X-Gm-Message-State: AOJu0YweeN09xbLBvVXh7U/x8jbfhFoptkONtTpnSnv2LMSoBKIBpoTd
+        Ux0WifeKm4oFrrU9eVIS3ncprg26toBt7/BnPsjRj4zzL0ri6maamA==
+X-Google-Smtp-Source: AGHT+IHRpYJwtBkvQItpDOzpsoiC8Dj7/UWfHFdTNS2CIKeWgrIXNYkWJnDsvCEq1d6lrwFV0p0pXAjnk5zgzKOzDrQ=
+X-Received: by 2002:ac2:5925:0:b0:500:b828:7a04 with SMTP id
+ v5-20020ac25925000000b00500b8287a04mr259335lfi.18.1693931329871; Tue, 05 Sep
+ 2023 09:28:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230905114816.2993628-3-a-verma1@ti.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <878r9sga1t.fsf@kernel.org>
+In-Reply-To: <878r9sga1t.fsf@kernel.org>
+From:   Ross Lagerwall <ross.lagerwall@cloud.com>
+Date:   Tue, 5 Sep 2023 17:28:38 +0100
+Message-ID: <CAG7k0Epk6KJvoDJKVc86sc_ems3DTbKvPLouBzOoVvn1tZwQ=w@mail.gmail.com>
+Subject: Re: [regression v6.5-rc1] PCI: comm "swapper/0" leaking memory
+To:     Kalle Valo <kvalo@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ath11k@lists.infradead.org,
+        regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Previous j721e subject line history is like this:
+On Wed, Aug 30, 2023 at 10:21=E2=80=AFAM Kalle Valo <kvalo@kernel.org> wrot=
+e:
+>
+> [CAUTION - EXTERNAL EMAIL] DO NOT reply, click links, or open attachments=
+ unless you have verified the sender and know the content is safe.
+>
+> Hi,
+>
+> I noticed that starting from v6.5-rc1 my ath11k tests reported several
+> memory leaks from swapper/0:
+>
+> unreferenced object 0xffff88810a02b7a8 (size 96):
+>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
+>   hex dump (first 32 bytes):
+>     80 b8 02 0a 81 88 ff ff b8 72 07 00 00 c9 ff ff  .........r......
+>     c8 b7 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+> unreferenced object 0xffff88810a02b880 (size 96):
+>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
+>   hex dump (first 32 bytes):
+>     58 b9 02 0a 81 88 ff ff a8 b7 02 0a 81 88 ff ff  X...............
+>     a0 b8 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+> unreferenced object 0xffff88810a02b958 (size 96):
+>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
+>   hex dump (first 32 bytes):
+>     30 ba 02 0a 81 88 ff ff 80 b8 02 0a 81 88 ff ff  0...............
+>     78 b9 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  x...............
+>   backtrace:
+> unreferenced object 0xffff88810a02ba30 (size 96):
+>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
+>   hex dump (first 32 bytes):
+>     08 bb 02 0a 81 88 ff ff 58 b9 02 0a 81 88 ff ff  ........X.......
+>     50 ba 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  P...............
+>   backtrace:
+> unreferenced object 0xffff88810a02bb08 (size 96):
+>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
+>   hex dump (first 32 bytes):
+>     e0 bb 02 0a 81 88 ff ff 30 ba 02 0a 81 88 ff ff  ........0.......
+>     28 bb 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  (...............
+>   backtrace:
+>
+> I can easily reproduce this by doing a simple insmod and rmmod of ath11k
+> and it's dependencies (mac80211, MHI etc). I can reliability reproduce
+> the leaks but I only see them once after a boot, I need to reboot the
+> host to see the leaks again. v6.4 has no leaks.
+>
+> I did a bisect and found the commit below. I verified reverting the
+> commit makes the leaks go away.
+>
+> commit e54223275ba1bc6f704a6bab015fcd2ae4f72572
+> Author:     Ross Lagerwall <ross.lagerwall@citrix.com>
+> AuthorDate: Thu May 25 16:32:48 2023 +0100
+> Commit:     Bjorn Helgaas <bhelgaas@google.com>
+> CommitDate: Fri Jun 9 15:06:16 2023 -0500
+>
+>     PCI: Release resource invalidated by coalescing
+>
+> Kalle
+>
 
-  c86f4bd6008e ("PCI: j721e: Convert to platform remove callback returning void")
-  053ca37c87af ("PCI: j721e: Initialize pcie->cdns_pcie before using it")
-  19e863828acf ("PCI: j721e: Drop redundant struct device *")
-  72de208f2bda ("PCI: j721e: Drop pointless of_device_get_match_data() cast")
-  496bb18483cc ("PCI: j721e: Fix j721e_pcie_probe() error path")
-  c8a375a8e15a ("PCI: j721e: Add PCIe support for AM64")
+Hi Kalle,
 
-Match capitalization style, i.e., "PCI: " instead of "pci: "
+I can't reproduce the leak by loading/unloading the ath11k module. I suspec=
+t
+that the leak is always there when PCI resources are coalesced but
+kmemleak doesn't notice until ath11k is loaded.
 
-On Tue, Sep 05, 2023 at 05:18:16PM +0530, Achal Verma wrote:
-> PCIe1 in J7AHP EVM has EP side connector reference clock connection from
-> serdes named SOC_SERDES0_REFCLK(PCIE_REFCLK_OUT) unlike PCIe0 which has
-> reference clock connection from on-board serdes. To enable this reference
-> clock out, ACSPCIE clock buffer pads have to be enabled.
-> 
-> This change enables ACSPCIE clock buffer pads and select clock source for
-> reference clock output.
+Can you please try the following to confirm it fixes it?
 
-s/This change enables/Enable/
-s/and select/and selects/
+Ross
 
-> +static int j721e_enable_acspcie(struct j721e_pcie *pcie)
-> +{
-> +	struct device *dev = pcie->cdns_pcie->dev;
-> +	struct device_node *node = dev->of_node;
-> +	struct of_phandle_args args;
-> +	unsigned int lock2_kick0_offset, lock2_kick1_offset;
-> +	unsigned int acspcie_pad_offset, refclk_clksel_offset;
-> +	unsigned int refclk_clksel_source;
-> +	struct regmap *syscon;
-> +	u32 val = 0, mask = 0;
+8<-----------------------
 
-Looks like these initializations are unnecessary?
-
-> +	syscon = syscon_regmap_lookup_by_phandle(node, "ti,syscon-pcie-refclk-out");
-
-Looks like this and the of_parse_phandle_with_fixed_args() below don't
-fit in 80 columns like the rest of the file.
-
-> +	ret = of_parse_phandle_with_fixed_args(node, "ti,syscon-pcie-refclk-out", 5,
-> +						0, &args);
-
-> +	/* Enable ACSPCIe PADS  */
-
-Spurious extra space at end of comment.
-
-> +	/*
-> +	 * Enable ACSPCIe clock buffer to source out reference clock for EP
-> +	 */
-
-Looks like it could be a single-line comment, e.g.,
-
-  /* Enable ACSPCIe clock buffer to source out reference clock for EP */
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 8bac3ce02609..907c873473e2 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -998,6 +998,7 @@ static int pci_register_host_bridge(struct
+pci_host_bridge *bridge)
+         res =3D window->res;
+         if (!res->flags && !res->start && !res->end) {
+             release_resource(res);
++            resource_list_destroy_entry(window);
+             continue;
+         }
