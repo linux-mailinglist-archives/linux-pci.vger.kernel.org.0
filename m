@@ -2,168 +2,252 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 174C0792E79
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Sep 2023 21:11:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E62B4792D5D
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Sep 2023 20:26:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241972AbjIETLl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Sep 2023 15:11:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45532 "EHLO
+        id S240079AbjIES0t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Sep 2023 14:26:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230502AbjIETLi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Sep 2023 15:11:38 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04F04CFB
-        for <linux-pci@vger.kernel.org>; Tue,  5 Sep 2023 12:10:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693940961;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1FYmV1SAUAP6clEqFptERvvV4+Mtfaips/SG+vcFGBs=;
-        b=f62s2e7/ierk1C/XRVyx70fKNJ8rP5BMfhyVF0HJtICwHrru75tXNNm94jZ0KODVnJoRnh
-        1MoqafIMLg9BJn/AyYTB83+FGK21ST9NE5+JonTI9Xc5RmrF6ZbKYLoJej4zf+EKFOM5/E
-        AhiCzJBwPt3rJ7NzJ0oC837Q3xNi80s=
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
- [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-173-TijdnIgsMMaexQ2L7J7EWQ-1; Tue, 05 Sep 2023 12:39:29 -0400
-X-MC-Unique: TijdnIgsMMaexQ2L7J7EWQ-1
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-794c9992f15so1335639f.0
-        for <linux-pci@vger.kernel.org>; Tue, 05 Sep 2023 09:39:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693931968; x=1694536768;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1FYmV1SAUAP6clEqFptERvvV4+Mtfaips/SG+vcFGBs=;
-        b=k0hrjMePN40FmMWhI4vTZObWEGDTyw0wEPbz4MAZ4AHe4ZcLPYA8sh0AH4vzQVTD9R
-         j2PFH0MDa/yroBEhIFhsYzSCb/e+FXmoaJJih6739B6oVlYSZygm9SZ7QpNN4glyed77
-         IP/XekhITVGPioSD3a6oDI72Qf0Pz2FOlJ1MmYyFeo9QcaOVoztTQaxufExi+NgUnhJE
-         tPY23ywzugMhkRCjelkhRf1WriITCsY6VjV5Jz8TX+oULh7SL/TXSf4HbOS6yZKbCdSC
-         DVd6sArVJrSC7MSU3RTowakmydDTNzUQifmfMMjdv5cw8fEojUW4puY4LWn9m98F4Z2e
-         rn0A==
-X-Gm-Message-State: AOJu0Yyhl6ObrnBX9nR50YrP6Cob/dJ2OGs1V8/FY2kxCLynK4/xFX64
-        SqkTh2X/QCte94r+vqj7lSQGXRCHem4uFdQ/qSQPRCJZ0H9PX24ukpVMuaHvLYoNjy/y8HfzZQT
-        WTdQt4HvNToCfMKIekURz
-X-Received: by 2002:a05:6602:3707:b0:790:83e7:5000 with SMTP id bh7-20020a056602370700b0079083e75000mr15181200iob.2.1693931968720;
-        Tue, 05 Sep 2023 09:39:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGrWgqWuvOjsPoQobmizp2yeXMxuOnvBLg+UYg0lVO0d7NoPYToo5iwU98Xj9J9TSkNPuS/Gw==
-X-Received: by 2002:a05:6602:3707:b0:790:83e7:5000 with SMTP id bh7-20020a056602370700b0079083e75000mr15181190iob.2.1693931968466;
-        Tue, 05 Sep 2023 09:39:28 -0700 (PDT)
-Received: from redhat.com ([38.15.60.12])
-        by smtp.gmail.com with ESMTPSA id l14-20020a02ccee000000b0042b929d3d2fsm4177089jaq.86.2023.09.05.09.39.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Sep 2023 09:39:27 -0700 (PDT)
-Date:   Tue, 5 Sep 2023 10:39:26 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     suijingfeng <suijingfeng@loongson.cn>
-Cc:     Sui Jingfeng <sui.jingfeng@linux.dev>,
-        nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [RFC, drm-misc-next v4 0/9] PCI/VGA: Allowing the user to
- select the primary video adapter at boot time
-Message-ID: <20230905103926.2eda2c36.alex.williamson@redhat.com>
-In-Reply-To: <ce81413d-4872-8804-d816-0f1ef88b82cb@loongson.cn>
-References: <20230904195724.633404-1-sui.jingfeng@linux.dev>
-        <20230905085243.4b22725e.alex.williamson@redhat.com>
-        <ce81413d-4872-8804-d816-0f1ef88b82cb@loongson.cn>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.35; x86_64-redhat-linux-gnu)
+        with ESMTP id S232744AbjIES0t (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Sep 2023 14:26:49 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7396813E
+        for <linux-pci@vger.kernel.org>; Tue,  5 Sep 2023 11:26:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693938379; x=1725474379;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=bo77MIsE7TC9LPx5x1LU0yPU5Ea/493vuZ/HOOinzEQ=;
+  b=RYSWHhqnecudHmcw+0isUaXXLix7GLGe7B+I+/B+ZGOpMiK4JVPZc+VX
+   nzq6gGYrLHPbrOvqDNeb43Xdb8bNJlaGhPg4tj1vesbJufXjU2VjGEDba
+   y9x04533lqwxas4li8izTkfynCyR3G8fQmVtrf1URfw+ojEoAHAfP3hZM
+   zRiZE1cyr5fp6O5gcqHWLtecfwkcGhY0y30Lq6JgKrHBTn/xfLUaN76N3
+   SZGhGEduBvxB4QtoMc6WdFL+OwkTJHQRw6mACyA9OSQRmyPCAqIR3XzQ+
+   F1yIyhhee1/zuccrSCVwa/W3Fr2ho/esBa79uf9GUOctVXYNQ9C/9mrsF
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="443239564"
+X-IronPort-AV: E=Sophos;i="6.02,229,1688454000"; 
+   d="scan'208";a="443239564"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 10:04:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="734725034"
+X-IronPort-AV: E=Sophos;i="6.02,229,1688454000"; 
+   d="scan'208";a="734725034"
+Received: from lkp-server02.sh.intel.com (HELO e0b2ea88afd5) ([10.239.97.151])
+  by orsmga007.jf.intel.com with ESMTP; 05 Sep 2023 10:04:03 -0700
+Received: from kbuild by e0b2ea88afd5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qdZST-0001td-2u;
+        Tue, 05 Sep 2023 17:03:31 +0000
+Date:   Wed, 06 Sep 2023 00:59:19 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Krzysztof =?utf-8?Q?Wilczy=C5=84ski" ?= <kwilczynski@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:controller/rcar] BUILD SUCCESS
+ 7af65c1120567de8624e021d798438252cbde876
+Message-ID: <202309060016.f4MbIrcz-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 6 Sep 2023 00:21:09 +0800
-suijingfeng <suijingfeng@loongson.cn> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rcar
+branch HEAD: 7af65c1120567de8624e021d798438252cbde876  misc: pci_endpoint_test: Add Device ID for R-Car S4-8 PCIe controller
 
-> Hi,
-> 
-> On 2023/9/5 22:52, Alex Williamson wrote:
-> > On Tue,  5 Sep 2023 03:57:15 +0800
-> > Sui Jingfeng <sui.jingfeng@linux.dev> wrote:
-> >  
-> >> From: Sui Jingfeng <suijingfeng@loongson.cn>
-> >>
-> >> On a machine with multiple GPUs, a Linux user has no control over which
-> >> one is primary at boot time. This series tries to solve above mentioned
-> >> problem by introduced the ->be_primary() function stub. The specific
-> >> device drivers can provide an implementation to hook up with this stub by
-> >> calling the vga_client_register() function.
-> >>
-> >> Once the driver bound the device successfully, VGAARB will call back to
-> >> the device driver. To query if the device drivers want to be primary or
-> >> not. Device drivers can just pass NULL if have no such needs.
-> >>
-> >> Please note that:
-> >>
-> >> 1) The ARM64, Loongarch, Mips servers have a lot PCIe slot, and I would
-> >>     like to mount at least three video cards.
-> >>
-> >> 2) Typically, those non-86 machines don't have a good UEFI firmware
-> >>     support, which doesn't support select primary GPU as firmware stage.
-> >>     Even on x86, there are old UEFI firmwares which already made undesired
-> >>     decision for you.
-> >>
-> >> 3) This series is attempt to solve the remain problems at the driver level,
-> >>     while another series[1] of me is target to solve the majority of the
-> >>     problems at device level.
-> >>
-> >> Tested (limited) on x86 with four video card mounted, Intel UHD Graphics
-> >> 630 is the default boot VGA, successfully override by ast2400 with
-> >> ast.modeset=10 append at the kernel cmd line.
-> >>
-> >> $ lspci | grep VGA
-> >>
-> >>   00:02.0 VGA compatible controller: Intel Corporation CoffeeLake-S GT2 [UHD Graphics 630]  
-> > In all my previous experiments with VGA routing and IGD I found that
-> > IGD can't actually release VGA routing and Intel confirmed the hardware
-> > doesn't have the ability to do so.  It will always be primary from a
-> > VGA routing perspective.  Was this actually tested with non-UEFI?  
-> 
-> Yes, I have tested on my aspire e471 notebook (i5 5200U),
-> because that notebook using legacy firmware (also have UEFI, double firmware).
-> But this machine have difficult in install ubuntu under UEFI firmware in the past.
-> So I keep it using the legacy firmware.
-> 
-> It have two video card, IGD and nvidia video card(GFORCE 840M).
-> nvidia call its video card as 3D controller (pci->class = 0x030200)
-> 
-> I have tested this patch and another patch mention at [1] together.
-> I can tell you that the firmware framebuffer of this notebook using vesafb, not efifb.
-> And the framebuffer size (lfb.size) is very small. This is very strange,
-> but I don't have enough time to look in details. But still works.
-> 
-> I'm using and tesing my patch whenever and wherever possible.
+elapsed time: 723m
 
-So you're testing VGA routing using a non-VGA 3D controller through the
-VESA address space?  How does that test anything about VGA routing?
+configs tested: 174
+configs skipped: 2
 
-> > I suspect it might only work in UEFI mode where we probably don't
-> > actually have a dependency on VGA routing.  This is essentially why
-> > vfio requires UEFI ROMs when assigning GPUs to VMs, VGA routing is too
-> > broken to use on Intel systems with IGD.  Thanks,  
-> 
-> 
-> What you tell me here is the side effect come with the VGA-compatible,
-> but I'm focus on the arbitration itself. I think there no need to keep
-> the VGA routing hardware features nowadays except that hardware vendor
-> want keep the backward compatibility and/or comply the PCI VGA compatible spec.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-"VGA arbitration" is the mediation of VGA routing between devices, so
-I'm confused how you can be focused on the arbitration without the
-routing itself.  Thanks,
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r025-20230905   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20230905   gcc  
+arc                  randconfig-r022-20230905   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                      integrator_defconfig   gcc  
+arm                   randconfig-001-20230905   clang
+arm64                            allmodconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r026-20230905   gcc  
+arm64                randconfig-r031-20230905   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r011-20230905   gcc  
+hexagon               randconfig-001-20230905   clang
+hexagon               randconfig-002-20230905   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20230905   clang
+i386         buildonly-randconfig-002-20230905   clang
+i386         buildonly-randconfig-003-20230905   clang
+i386         buildonly-randconfig-004-20230905   clang
+i386         buildonly-randconfig-005-20230905   clang
+i386         buildonly-randconfig-006-20230905   clang
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20230905   clang
+i386                  randconfig-002-20230905   clang
+i386                  randconfig-003-20230905   clang
+i386                  randconfig-004-20230905   clang
+i386                  randconfig-005-20230905   clang
+i386                  randconfig-006-20230905   clang
+i386                  randconfig-011-20230905   gcc  
+i386                  randconfig-012-20230905   gcc  
+i386                  randconfig-013-20230905   gcc  
+i386                  randconfig-014-20230905   gcc  
+i386                  randconfig-015-20230905   gcc  
+i386                  randconfig-016-20230905   gcc  
+i386                 randconfig-r006-20230905   clang
+loongarch                        alldefconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20230905   gcc  
+loongarch            randconfig-r014-20230905   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                        mvme16x_defconfig   gcc  
+m68k                 randconfig-r015-20230905   gcc  
+m68k                 randconfig-r036-20230905   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                     cu1000-neo_defconfig   clang
+mips                           ip32_defconfig   gcc  
+mips                      malta_kvm_defconfig   clang
+mips                           rs90_defconfig   clang
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r002-20230905   gcc  
+nios2                randconfig-r023-20230905   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+openrisc                 simple_smp_defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r016-20230905   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   gcc  
+powerpc                   lite5200b_defconfig   clang
+powerpc              randconfig-r001-20230905   clang
+powerpc                        warp_defconfig   gcc  
+powerpc64            randconfig-r021-20230905   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                 randconfig-001-20230905   clang
+riscv                randconfig-r005-20230905   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20230905   gcc  
+s390                 randconfig-r013-20230905   gcc  
+s390                 randconfig-r035-20230905   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                        apsh4ad0a_defconfig   gcc  
+sh                                  defconfig   gcc  
+sh                   randconfig-r003-20230905   gcc  
+sh                           se7751_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r004-20230905   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r032-20230905   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-001-20230905   clang
+x86_64       buildonly-randconfig-002-20230905   clang
+x86_64       buildonly-randconfig-003-20230905   clang
+x86_64       buildonly-randconfig-004-20230905   clang
+x86_64       buildonly-randconfig-005-20230905   clang
+x86_64       buildonly-randconfig-006-20230905   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20230905   gcc  
+x86_64                randconfig-002-20230905   gcc  
+x86_64                randconfig-003-20230905   gcc  
+x86_64                randconfig-004-20230905   gcc  
+x86_64                randconfig-005-20230905   gcc  
+x86_64                randconfig-006-20230905   gcc  
+x86_64                randconfig-011-20230905   clang
+x86_64                randconfig-012-20230905   clang
+x86_64                randconfig-013-20230905   clang
+x86_64                randconfig-014-20230905   clang
+x86_64                randconfig-015-20230905   clang
+x86_64                randconfig-016-20230905   clang
+x86_64                randconfig-071-20230905   clang
+x86_64                randconfig-072-20230905   clang
+x86_64                randconfig-073-20230905   clang
+x86_64                randconfig-074-20230905   clang
+x86_64                randconfig-075-20230905   clang
+x86_64                randconfig-076-20230905   clang
+x86_64               randconfig-r033-20230905   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                       common_defconfig   gcc  
+xtensa               randconfig-r012-20230905   gcc  
+xtensa               randconfig-r024-20230905   gcc  
+xtensa               randconfig-r034-20230905   gcc  
 
-Alex
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
