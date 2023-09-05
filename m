@@ -2,53 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F70A792FB4
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Sep 2023 22:15:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D325A792FAD
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Sep 2023 22:14:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242763AbjIEUOm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Sep 2023 16:14:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58450 "EHLO
+        id S242745AbjIEUOH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Sep 2023 16:14:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243741AbjIEUO1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Sep 2023 16:14:27 -0400
-X-Greylist: delayed 327 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Sep 2023 13:14:06 PDT
+        with ESMTP id S243737AbjIEUOE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Sep 2023 16:14:04 -0400
+X-Greylist: delayed 304 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Sep 2023 13:13:41 PDT
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 282591711;
-        Tue,  5 Sep 2023 13:14:06 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28D04C433D9;
-        Tue,  5 Sep 2023 18:08:56 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5065719AA
+        for <linux-pci@vger.kernel.org>; Tue,  5 Sep 2023 13:13:41 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4597C43391;
+        Tue,  5 Sep 2023 18:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693937337;
-        bh=VVC3ib3yzE5r+s4aYfv/gsIn3joMY0xc0kaVf9r7Pjo=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=Glp/DEi794B19AMkAOdIIUixhFhfqKy+S3zCb/RYTWw5CVfyaOr7GzrqrSqy5Q23T
-         gEMybJBxWZVovfCR+BIeD8IMVKlYaRw0omHeILDvJ8l4PNrz3bJG9vDv63rmvcNkXu
-         RQZ2vY5NCGYbUMj/pKIq0U+9ZEQph85omsAF1BMSo/9z7VsmiDr7MYp0au9wbndkz1
-         I0SaBQTjBzUk4k+rHLKT+ejWyvyjDlKRPB5gSu2YlvP/iQT+D/+bjKv72we8T6zw3b
-         9JyCyU9O/Of7wJvahxZPIR6oYIGCzR20UJcnZVuy5OqYIxLGzT3FgncoqpMQdPyZmF
-         gptmozQSDwfhQ==
-Received: (nullmailer pid 3699774 invoked by uid 1000);
-        Tue, 05 Sep 2023 18:08:55 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        s=k20201202; t=1693937612;
+        bh=JZ89/z9Ht6rDA/XSMnZOdqIrwGbncflIYGN6is8GLGg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=AgicTTkon2sgYiY1BmJKdYNXN2Jo83G2WX7aZBT80rQZiIwxH6CiuUxNLPZ+MuWVy
+         yvHuhR+wwaA49xmJWX8Llr4MUXUw7zlZz6v08RXwOQRC6a+ECt3jE2FiHE/DbqR2tG
+         F4e83LrM9BaxV8l8sW/5H+AuuTEfrGQyfhWju5+i3Mmoy8cvwavbSBErwI2ieRmPwF
+         oIKXvPt7/Zb1Jy7EWP9fo4Yax8oNj94hobS7Zr8GPRsQY+fAn+x2mMA7Q+lSvr49Dm
+         E++sDVbhMfwOsCyw1lrgD14UcjJF3x/3M/KJgDos85T7725dVFkOh9Bsnkc9q2sTiA
+         3LsIUFSNI/Bvg==
+Date:   Tue, 5 Sep 2023 13:13:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lizhi Hou <lizhi.hou@amd.com>
+Cc:     groeck7@gmail.com, robh@kernel.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Fix CONFIG_PCI_DYNAMIC_OF_NODES kconfig dependencies
+Message-ID: <20230905181329.GA177410@bhelgaas>
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Achal Verma <a-verma1@ti.com>
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Krzysztof Wilczy_ski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>
-In-Reply-To: <20230905114816.2993628-2-a-verma1@ti.com>
-References: <20230905114816.2993628-1-a-verma1@ti.com>
- <20230905114816.2993628-2-a-verma1@ti.com>
-Message-Id: <169393733505.3699703.7061210607519627009.robh@kernel.org>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: PCI: ti,j721e-pci-*: Add
- "ti,syscon-pcie-refclk-out" property
-Date:   Tue, 05 Sep 2023 13:08:55 -0500
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1693505947-29786-1-git-send-email-lizhi.hou@amd.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
@@ -59,76 +48,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Aug 31, 2023 at 11:19:07AM -0700, Lizhi Hou wrote:
+> Generating interrupt-map property depends on of_irq_parse_raw() which
+> is enabled by CONFIG_OF_IRQ. Change CONFIG_PCI_DYNAMIC_OF_NODES
+> dependency from CONFIG_OF to CONFIG_OF_IRQ.
 
-On Tue, 05 Sep 2023 17:18:15 +0530, Achal Verma wrote:
-> Added "ti,syscon-pcie-refclk-out" property to specify the ACSPCIE clock
-> buffer register offset in SYSCON, which would be used to enable serdes
-> reference clock output.
-> 
-> Signed-off-by: Achal Verma <a-verma1@ti.com>
+Most of include/linux/of_irq.h is under #ifdef CONFIG_OF_IRQ, with
+stubs for the non-CONFIG_OF_IRQ case, with of_irq_parse_raw() being
+one of a few exceptions.
+
+In the PCI_DYNAMIC_OF_NODES case, I think we probably want the Kconfig
+change in this patch because adding a stub would avoid the build error
+but the PCI_DYNAMIC_OF_NODES functionality wouldn't work.
+
+I dunno about the other uses of of_irq_parse_raw().
+arch/powerpc/platforms/fsl_uli1575.c also uses it but has no obvious
+CONFIG_OF dependency.
+
+drivers/bcma/main.c uses it, but the call is under a CONFIG_OF_IRQ
+guard, and I guess the dead code gets eliminated when building without
+CONFIG_OF.
+
+> Reported-by: Guenter Roeck <groeck7@gmail.com>
+> Closes: https://lore.kernel.org/linux-devicetree/2187619d-55bc-41bb-bbb4-6059399db997@roeck-us.net/
+> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+
+Applied to for-linus for v6.6-rc1.  Rob, let me know if you want it.
+
 > ---
->  .../bindings/pci/ti,j721e-pci-host.yaml       | 53 +++++++++++++++++++
->  1 file changed, 53 insertions(+)
+>  drivers/pci/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
-
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:171:6: [error] missing starting space in comment (comments)
-./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:172:6: [error] missing starting space in comment (comments)
-./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:173:6: [error] missing starting space in comment (comments)
-./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:174:6: [error] missing starting space in comment (comments)
-./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:177:10: [error] missing starting space in comment (comments)
-./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:178:10: [error] missing starting space in comment (comments)
-./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:180:9: [error] syntax error: expected <block end>, but found '<block mapping start>' (syntax)
-./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:197:18: [error] missing starting space in comment (comments)
-./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:198:18: [error] missing starting space in comment (comments)
-./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:199:17: [warning] wrong indentation: expected 8 but found 16 (indentation)
-
-dtschema/dtc warnings/errors:
-make[2]: *** Deleting file 'Documentation/devicetree/bindings/pci/ti,j721e-pci-host.example.dts'
-Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:180:9: expected <block end>, but found '<block mapping start>'
-make[2]: *** [Documentation/devicetree/bindings/Makefile:26: Documentation/devicetree/bindings/pci/ti,j721e-pci-host.example.dts] Error 1
-make[2]: *** Waiting for unfinished jobs....
-Traceback (most recent call last):
-  File "/usr/bin/yamllint", line 33, in <module>
-    sys.exit(load_entry_point('yamllint==1.29.0', 'console_scripts', 'yamllint')())
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3/dist-packages/yamllint/cli.py", line 228, in run
-    prob_level = show_problems(problems, file, args_format=args.format,
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3/dist-packages/yamllint/cli.py", line 113, in show_problems
-    for problem in problems:
-  File "/usr/lib/python3/dist-packages/yamllint/linter.py", line 200, in _run
-    for problem in get_cosmetic_problems(buffer, conf, filepath):
-  File "/usr/lib/python3/dist-packages/yamllint/linter.py", line 137, in get_cosmetic_problems
-    for problem in rule.check(rule_conf,
-  File "/usr/lib/python3/dist-packages/yamllint/rules/indentation.py", line 583, in check
-    yield from _check(conf, token, prev, next, nextnext, context)
-  File "/usr/lib/python3/dist-packages/yamllint/rules/indentation.py", line 344, in _check
-    if expected < 0:
-       ^^^^^^^^^^^^
-TypeError: '<' not supported between instances of 'NoneType' and 'int'
-./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:180:9: expected <block end>, but found '<block mapping start>'
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml: ignoring, error parsing file
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1500: dt_binding_check] Error 2
-make: *** [Makefile:234: __sub-make] Error 2
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230905114816.2993628-2-a-verma1@ti.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 49bd09c7dd0a..e9ae66cc4189 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -196,7 +196,7 @@ config PCI_HYPERV
+>  
+>  config PCI_DYNAMIC_OF_NODES
+>  	bool "Create Device tree nodes for PCI devices"
+> -	depends on OF
+> +	depends on OF_IRQ
+>  	select OF_DYNAMIC
+>  	help
+>  	  This option enables support for generating device tree nodes for some
+> -- 
+> 2.34.1
+> 
