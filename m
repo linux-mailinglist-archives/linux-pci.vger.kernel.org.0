@@ -2,67 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 425FC792D7F
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Sep 2023 20:41:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F70A792FB4
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Sep 2023 22:15:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231941AbjIESla (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Sep 2023 14:41:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55814 "EHLO
+        id S242763AbjIEUOm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Sep 2023 16:14:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240551AbjIESWT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Sep 2023 14:22:19 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CEE5BCA;
-        Tue,  5 Sep 2023 11:21:47 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.43])
-        by gateway (Coremail) with SMTP id _____8Cx7+tgZPdkSMQfAA--.62735S3;
-        Wed, 06 Sep 2023 01:24:48 +0800 (CST)
-Received: from [0.0.0.0] (unknown [10.20.42.43])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx5sxgZPdk7UltAA--.46048S3;
-        Wed, 06 Sep 2023 01:24:48 +0800 (CST)
-Message-ID: <40f32814-ca87-6e29-0e10-4b4463a2920d@loongson.cn>
-Date:   Wed, 6 Sep 2023 01:24:47 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [RFC,drm-misc-next v4 3/9] drm/radeon: Implement .be_primary()
- callback
-Content-Language: en-US
-To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Sui Jingfeng <sui.jingfeng@linux.dev>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org,
-        Alex Deucher <alexander.deucher@amd.com>
-References: <20230904195724.633404-1-sui.jingfeng@linux.dev>
- <20230904195724.633404-4-sui.jingfeng@linux.dev>
- <d3e6a9ce-1c7a-8e44-3127-413cd471a8e9@amd.com>
-From:   suijingfeng <suijingfeng@loongson.cn>
-In-Reply-To: <d3e6a9ce-1c7a-8e44-3127-413cd471a8e9@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        with ESMTP id S243741AbjIEUO1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Sep 2023 16:14:27 -0400
+X-Greylist: delayed 327 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Sep 2023 13:14:06 PDT
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 282591711;
+        Tue,  5 Sep 2023 13:14:06 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28D04C433D9;
+        Tue,  5 Sep 2023 18:08:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693937337;
+        bh=VVC3ib3yzE5r+s4aYfv/gsIn3joMY0xc0kaVf9r7Pjo=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=Glp/DEi794B19AMkAOdIIUixhFhfqKy+S3zCb/RYTWw5CVfyaOr7GzrqrSqy5Q23T
+         gEMybJBxWZVovfCR+BIeD8IMVKlYaRw0omHeILDvJ8l4PNrz3bJG9vDv63rmvcNkXu
+         RQZ2vY5NCGYbUMj/pKIq0U+9ZEQph85omsAF1BMSo/9z7VsmiDr7MYp0au9wbndkz1
+         I0SaBQTjBzUk4k+rHLKT+ejWyvyjDlKRPB5gSu2YlvP/iQT+D/+bjKv72we8T6zw3b
+         9JyCyU9O/Of7wJvahxZPIR6oYIGCzR20UJcnZVuy5OqYIxLGzT3FgncoqpMQdPyZmF
+         gptmozQSDwfhQ==
+Received: (nullmailer pid 3699774 invoked by uid 1000);
+        Tue, 05 Sep 2023 18:08:55 -0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8Dx5sxgZPdk7UltAA--.46048S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGry3tr4UZrW7Zr1fCw13WrX_yoWruFW8pa
-        ySqFW7ArykG3W0y347Aw4UuFyrX3yrJayUtrn5Jas5Zws8JrW0vryjvw4qgasrJrZ3Aw4Y
-        va4ag3W7ZFyDA3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUU9Sb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-        xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-        1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-        67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-        AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE
-        7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
-        8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
-        CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
-        1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
-        daVFxhVjvjDU0xZFpf9x07j0WlkUUUUU=
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+MIME-Version: 1.0
+From:   Rob Herring <robh@kernel.org>
+To:     Achal Verma <a-verma1@ti.com>
+Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Krzysztof Wilczy_ski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>
+In-Reply-To: <20230905114816.2993628-2-a-verma1@ti.com>
+References: <20230905114816.2993628-1-a-verma1@ti.com>
+ <20230905114816.2993628-2-a-verma1@ti.com>
+Message-Id: <169393733505.3699703.7061210607519627009.robh@kernel.org>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: PCI: ti,j721e-pci-*: Add
+ "ti,syscon-pcie-refclk-out" property
+Date:   Tue, 05 Sep 2023 13:08:55 -0500
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,116 +59,76 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
 
+On Tue, 05 Sep 2023 17:18:15 +0530, Achal Verma wrote:
+> Added "ti,syscon-pcie-refclk-out" property to specify the ACSPCIE clock
+> buffer register offset in SYSCON, which would be used to enable serdes
+> reference clock output.
+> 
+> Signed-off-by: Achal Verma <a-verma1@ti.com>
+> ---
+>  .../bindings/pci/ti,j721e-pci-host.yaml       | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+> 
 
-On 2023/9/5 13:50, Christian König wrote:
-> Am 04.09.23 um 21:57 schrieb Sui Jingfeng:
->> From: Sui Jingfeng <suijingfeng@loongson.cn>
->>
->> On a machine with multiple GPUs, a Linux user has no control over 
->> which one
->> is primary at boot time.
->
-> Question is why is that useful? Should we give users the ability to 
-> control that?
->
-> I don't see an use case for this.
->
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-On a specific machine with multiple GPUs mounted, only the
-primary graphics get POST-ed (initialized) by the firmware.
-Therefore the DRM drivers for the rest video cards have to
-work without the prerequisite setups done by firmware, This
-is called as POST.
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:171:6: [error] missing starting space in comment (comments)
+./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:172:6: [error] missing starting space in comment (comments)
+./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:173:6: [error] missing starting space in comment (comments)
+./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:174:6: [error] missing starting space in comment (comments)
+./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:177:10: [error] missing starting space in comment (comments)
+./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:178:10: [error] missing starting space in comment (comments)
+./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:180:9: [error] syntax error: expected <block end>, but found '<block mapping start>' (syntax)
+./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:197:18: [error] missing starting space in comment (comments)
+./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:198:18: [error] missing starting space in comment (comments)
+./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:199:17: [warning] wrong indentation: expected 8 but found 16 (indentation)
 
-One of the use cases is to test if a specific DRM driver
-would works properly, under the circumstance of not being
-POST-ed, The ast drm driver is the first one which refused
-to work if not being POST-ed by the firmware.
+dtschema/dtc warnings/errors:
+make[2]: *** Deleting file 'Documentation/devicetree/bindings/pci/ti,j721e-pci-host.example.dts'
+Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:180:9: expected <block end>, but found '<block mapping start>'
+make[2]: *** [Documentation/devicetree/bindings/Makefile:26: Documentation/devicetree/bindings/pci/ti,j721e-pci-host.example.dts] Error 1
+make[2]: *** Waiting for unfinished jobs....
+Traceback (most recent call last):
+  File "/usr/bin/yamllint", line 33, in <module>
+    sys.exit(load_entry_point('yamllint==1.29.0', 'console_scripts', 'yamllint')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/yamllint/cli.py", line 228, in run
+    prob_level = show_problems(problems, file, args_format=args.format,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/yamllint/cli.py", line 113, in show_problems
+    for problem in problems:
+  File "/usr/lib/python3/dist-packages/yamllint/linter.py", line 200, in _run
+    for problem in get_cosmetic_problems(buffer, conf, filepath):
+  File "/usr/lib/python3/dist-packages/yamllint/linter.py", line 137, in get_cosmetic_problems
+    for problem in rule.check(rule_conf,
+  File "/usr/lib/python3/dist-packages/yamllint/rules/indentation.py", line 583, in check
+    yield from _check(conf, token, prev, next, nextnext, context)
+  File "/usr/lib/python3/dist-packages/yamllint/rules/indentation.py", line 344, in _check
+    if expected < 0:
+       ^^^^^^^^^^^^
+TypeError: '<' not supported between instances of 'NoneType' and 'int'
+./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:180:9: expected <block end>, but found '<block mapping start>'
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml: ignoring, error parsing file
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1500: dt_binding_check] Error 2
+make: *** [Makefile:234: __sub-make] Error 2
 
-Before apply this series, I was unable make drm/ast as the
-primary video card easily. The problem is that on a multiple
-video card configuration, the monitor connected with my
-AST2400 card not light up. While confusing, a naive programmer
-may suspect the PRIME is not working.
+doc reference errors (make refcheckdocs):
 
-After applied this series and passing ast.modeset=10 on the
-kernel cmd line, I found that the monitor connected with my
-ast2400 video card still black, It doesn't display and It
-doesn't show image to me.
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230905114816.2993628-2-a-verma1@ti.com
 
-While in the process of study drm/ast, I know that drm/ast
-driver has the POST code shipped, See the ast_post_gpu() function.
-Then, I was wondering why this function doesn't works.
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-After a short-time (hasty) debugging, I found that the ast_post_gpu()
-function didn't get run. Because it have something to do with the
-ast->config_mode. Without thinking too much, I hardcoded the
-ast->config_mode as ast_use_p2a, the key point is to force the
-ast_post_gpu() function to run.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
+pip3 install dtschema --upgrade
 
-```
-
---- a/drivers/gpu/drm/ast/ast_main.c
-+++ b/drivers/gpu/drm/ast/ast_main.c
-@@ -132,6 +132,8 @@ static int ast_device_config_init(struct ast_device 
-*ast)
-                 }
-         }
-
-+       ast->config_mode = ast_use_p2a;
-+
-         switch (ast->config_mode) {
-         case ast_use_defaults:
-                 drm_info(dev, "Using default configuration\n");
-
-```
-
-Then, the monitor light up, it display the Ubuntu greeter to me. Therefore
-my patch is useful, at least for the Linux drm driver tester and developer.
-It allow programmers to test the specific part of a specific driver without
-changing a line of the source code and without the need of sudo authority.
-
-It improves the efficiency of the testing and patch verification. I know
-the PrimaryGPU option of Xorg conf, but this approach will remember the
-setup have been made, you need modify it with root authority each time
-you want to switch the primary. But on the process of rapid developing
-and/or testing for multiple video drivers, with only one computer hardware
-resource available. What we really want is a one-shot command, as provided
-by this series.  So, this is the first use case.
-
-
-The second use case is that sometime the firmware is not reliable.
-While there are thousands of ARM64, PowerPC and Mips servers machine,
-Most of them don't have a good UEFI firmware support. I haven't test the
-drm/amdgpu and drm/radeon at my ARM64 server yet. Because this ARM64
-server always use the platform(BMC) integrated display controller as primary.
-The UEFI firmware of it does not provide options menu to tune.
-So, for the first time, the discrete card because useless, despite more powerful.
-I will take time to carry on the testing, so I will be able to tell more
-in the future.
-
-
-Even on X86, when select the PEG as primary on the UEFI BIOS menu.
-There is no way to tell the bios which one of my three
-discrete video be the primary. Not to mention some old UEFI
-firmware, which doesn't provide a setting at all.
-While the benefit of my approach is the flexibility.
-Yes the i915, amdgpu and radeon are good quality,
-but there may have programmers want to try nouveau.
-
-
-The third use case is that VGAARB is also not reliable, It will
-select a wrong device as primary. Especially on Arm64, Loongarch
-and mips arch etc. And the X server will use this wrong device
-as primary and completely crash there. Either because of lacking
-a driver or the driver has a bug which can not bear the graphic
-environment up. VGAARB is firmware dependent.
-My patch provide a temporary method to rescue.
-
-
-The forth is probably the PRIME and reverse PRIME development
-and developing driver for new video cards.
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
