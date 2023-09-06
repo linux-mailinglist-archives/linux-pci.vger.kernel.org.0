@@ -2,126 +2,218 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 922E179438D
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Sep 2023 21:06:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 809B37943CF
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Sep 2023 21:30:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231875AbjIFTGd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Sep 2023 15:06:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36852 "EHLO
+        id S244198AbjIFTaC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Sep 2023 15:30:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230383AbjIFTGa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Sep 2023 15:06:30 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8F161B7
-        for <linux-pci@vger.kernel.org>; Wed,  6 Sep 2023 12:06:26 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA42BC433C7;
-        Wed,  6 Sep 2023 19:06:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694027186;
-        bh=sKV4K8jZ7ZZS/G3QzzJscICwzJXJtX/pQ1RQD+dXKh0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jq2aXMExvjRMqe0vTlYY17RabqbUCTEBls2TVxzUKZAzv0ScO6KzspYr4d9rVyhx1
-         HCS1PIXseeMrApqtMizZir/ugSqQsoROajcL/PEn/XAlAOYfjbJq9dSdHTiLUfD8W5
-         MQAK4HScw2qaKIGxZ8gBdfyZHP7JxyBfgt/dT0uU5j7uHV2/lIbLWuaGtqEGOIwXHh
-         gwKBMB0u0GuGoooV0jTpFVd5ouHw4ZcgazhKqzj7g8R1AJJvoYjLtLROwrl+w0d+jX
-         M/pE+QubqdTAPT/lm1DLL68vpw6pkRGx/oE4DhTR0Uo8ZCgSLSA2lFC2hyCldX+A5t
-         9//upU4rVbrMA==
-Date:   Wed, 6 Sep 2023 14:06:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Bartosz Pawlowski <bartosz.pawlowski@intel.com>
-Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
-        Sheena Mohan <sheenamo@google.com>,
-        Aahil Awatramani <aahila@google.com>,
-        Justin Tai <justai@google.com>, andriy.shevchenko@intel.com,
-        joel.a.gibson@intel.com, emil.s.tantilov@intel.com,
-        gaurav.s.emmanuel@intel.com, mike.conover@intel.com,
-        shaopeng.he@intel.com, anthony.l.nguyen@intel.com,
-        pavan.kumar.linga@intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>
-Subject: Re: [PATCH 2/2] PCI: Disable ATS for specific Intel IPU E2000 devices
-Message-ID: <20230906190623.GA234852@bhelgaas>
+        with ESMTP id S242758AbjIFTaA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Sep 2023 15:30:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F049EE41
+        for <linux-pci@vger.kernel.org>; Wed,  6 Sep 2023 12:29:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1694028548;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BkNqqrFNSye+85FOkqcxyjqr5JGuixiZESeFlYs5s54=;
+        b=IsTS3+6fEHweIbXR6J/mJPEfQ9EPsjkIHiBk7ChChv4w0trKNxcjHsypXHP/n5hU391G/Y
+        mERCo2JMncadXJxedTyM/Qox3Zf8/nBBfF8lf2hxg2+SPCgrfh4mv8MobDZaxrlntIbUz7
+        7UVX+5Zr8tn/DGaC4k/DtB2yDlKCnMM=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-628-UnGz1_mYPQClVWHDlWuaTg-1; Wed, 06 Sep 2023 15:29:07 -0400
+X-MC-Unique: UnGz1_mYPQClVWHDlWuaTg-1
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-34bb89fa29eso1264535ab.3
+        for <linux-pci@vger.kernel.org>; Wed, 06 Sep 2023 12:29:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694028546; x=1694633346;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BkNqqrFNSye+85FOkqcxyjqr5JGuixiZESeFlYs5s54=;
+        b=IZ0nJJhiH68PGHR/7c3kMEmkG9/Xus3oFqJBcCC6h3u4T8Veu4z5a1+6N+UQXUxbTT
+         fXmrECt/4p8/y4MpYjQdIMNbgLbje0YuIVtICv59A3BIsY9KXeYStxW8iwyq9vRwBex6
+         cFSLdg6OxgaEnLUtTq/7aAne6eV2TXKlIC8W7jguebqwre3lIuT1Vklb8bn15ce5d+bC
+         DmMHk+9q3zTbF0YQSWxxiWC6PAu8JO9vFAAWrfsbFhcUtutDBf736aV1dHsqQi9XZFWi
+         +B7j1im8vnAOoNvpG2PdBTzUlPGH+6pgasNjghIljeo2lCg+ubQZwlSQDHs01FnjzkgK
+         iBqA==
+X-Gm-Message-State: AOJu0YwHbFaZFVRLyZ1ljBWx34vtXKrYtnjroO93ouAJfh0ML4JfWcvQ
+        Yrq/WsXoQoZuxP0iLDdfWoSFGeVKpQUHb6CQ7oT/xNS5ttXdaoL2dEj76d+pbHXH8S+6dsPg91c
+        vVjkFWiIhQUdwbEhgbLE+
+X-Received: by 2002:a05:6e02:1d11:b0:347:6b30:5bd3 with SMTP id i17-20020a056e021d1100b003476b305bd3mr21867132ila.13.1694028546537;
+        Wed, 06 Sep 2023 12:29:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEyKFIvkN7zuLMbU6PvggO334g+2dgeQZvJcZ8JKJqA6E6EEEA4iTKmp69E/q99AN/ZBKFIOQ==
+X-Received: by 2002:a05:6e02:1d11:b0:347:6b30:5bd3 with SMTP id i17-20020a056e021d1100b003476b305bd3mr21867112ila.13.1694028546213;
+        Wed, 06 Sep 2023 12:29:06 -0700 (PDT)
+Received: from redhat.com ([38.15.60.12])
+        by smtp.gmail.com with ESMTPSA id m11-20020a92710b000000b0034e28100d1csm3233596ilc.58.2023.09.06.12.29.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Sep 2023 12:29:05 -0700 (PDT)
+Date:   Wed, 6 Sep 2023 13:29:04 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Sui Jingfeng <sui.jingfeng@linux.dev>
+Cc:     Sui Jingfeng <suijingfeng@loongson.cn>,
+        nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Subject: Re: [RFC, drm-misc-next v4 0/9] PCI/VGA: Allowing the user to
+ select the primary video adapter at boot time
+Message-ID: <20230906132904.4e49e269.alex.williamson@redhat.com>
+In-Reply-To: <a6337007-b6fa-2ce9-d0cd-46465b540205@linux.dev>
+References: <20230904195724.633404-1-sui.jingfeng@linux.dev>
+        <20230905085243.4b22725e.alex.williamson@redhat.com>
+        <a6337007-b6fa-2ce9-d0cd-46465b540205@linux.dev>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.35; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230816172115.1375716-3-bartosz.pawlowski@intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 16, 2023 at 05:21:15PM +0000, Bartosz Pawlowski wrote:
-> There is a HW issue in A and B steppings of Intel IPU E2000 that it
-> expects wrong endianness in ATS invalidation message body. This problem
-> can lead to outdated translations being returned as valid and finally
-> cause system instability.
+On Wed, 6 Sep 2023 11:51:59 +0800
+Sui Jingfeng <sui.jingfeng@linux.dev> wrote:
 
-Is there a published erratum for this?  Or at least a number to
-identify it?
+> Hi,
+>=20
+>=20
+> On 2023/9/5 22:52, Alex Williamson wrote:
+> > On Tue,  5 Sep 2023 03:57:15 +0800
+> > Sui Jingfeng <sui.jingfeng@linux.dev> wrote:
+> > =20
+> >> From: Sui Jingfeng <suijingfeng@loongson.cn>
+> >>
+> >> On a machine with multiple GPUs, a Linux user has no control over which
+> >> one is primary at boot time. This series tries to solve above mentioned
+> >> problem by introduced the ->be_primary() function stub. The specific
+> >> device drivers can provide an implementation to hook up with this stub=
+ by
+> >> calling the vga_client_register() function.
+> >>
+> >> Once the driver bound the device successfully, VGAARB will call back to
+> >> the device driver. To query if the device drivers want to be primary or
+> >> not. Device drivers can just pass NULL if have no such needs.
+> >>
+> >> Please note that:
+> >>
+> >> 1) The ARM64, Loongarch, Mips servers have a lot PCIe slot, and I would
+> >>     like to mount at least three video cards.
+> >>
+> >> 2) Typically, those non-86 machines don't have a good UEFI firmware
+> >>     support, which doesn't support select primary GPU as firmware stag=
+e.
+> >>     Even on x86, there are old UEFI firmwares which already made undes=
+ired
+> >>     decision for you.
+> >>
+> >> 3) This series is attempt to solve the remain problems at the driver l=
+evel,
+> >>     while another series[1] of me is target to solve the majority of t=
+he
+> >>     problems at device level.
+> >>
+> >> Tested (limited) on x86 with four video card mounted, Intel UHD Graphi=
+cs
+> >> 630 is the default boot VGA, successfully override by ast2400 with
+> >> ast.modeset=3D10 append at the kernel cmd line.
+> >>
+> >> $ lspci | grep VGA
+> >>
+> >>   00:02.0 VGA compatible controller: Intel Corporation CoffeeLake-S GT=
+2 [UHD Graphics 630] =20
+> > In all my previous experiments with VGA routing and IGD I found that
+> > IGD can't actually release VGA routing and Intel confirmed the hardware
+> > doesn't have the ability to do so. =20
+>=20
+> Which model of the IGD you are using?=C2=A0even for the IGD in Atom D2550,
+> the legacy 128KB VGA memory range can be=C2=A0tuned to be mapped to IGD
+> or to the DMI Interface. See the 1.7.3.2 section of the N2000 datasheet[1=
+].
 
-> In order to prevent such issues introduce quirk_intel_e2000_no_ats()
-> function to disable ATS for vulnerable IPU E2000 devices.
-> 
-> Signed-off-by: Bartosz Pawlowski <bartosz.pawlowski@intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Alexander Lobakin <aleksander.lobakin@intel.com>
-> ---
->  drivers/pci/quirks.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index a900546d8d45..9aa1e0148ed2 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5550,6 +5550,28 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7347, quirk_amd_harvest_no_ats);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x734f, quirk_amd_harvest_no_ats);
->  /* AMD Raven platform iGPU */
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x15d8, quirk_amd_harvest_no_ats);
-> +
-> +/*
-> + * Intel IPU E2000 revisions before C0 implement incorrect endianness
-> + * in ATS Invalidate Request message body. Although there is existing software
-> + * workaround for this issue, it is not functionally complete (no 5-lvl paging
-> + * support) and it requires changes in all IOMMU implementations supporting
-> + * ATS. Therefore, disabling ATS seems to be more reasonable.
+I believe it's the VGA I/O that can't be disabled, there's no means to
+do so other than the I/O enable bit in the command register and iirc
+the driver depends on this for other features.  The history of this is
+pretty old, but here are some links:
 
-Can we reference the commit that added the existing software
-workaround?
+https://lore.kernel.org/all/1376486637.31494.19.camel@ul30vt.home/
+https://bbs.archlinux.org/viewtopic.php?pid=3D1400212#p1400212
+https://lore.kernel.org/all/20130815223917.27890.28003.stgit@bling.home/
+https://lore.kernel.org/all/20130824144701.23370.42110.stgit@bling.home/
+https://lore.kernel.org/all/20140509201655.2849.97478.stgit@bling.home/
 
-It sounds like systems that (a) don't require 5-level paging and (b)
-use an IOMMU implementation that include the appropriate changes might
-still be able to use ATS?  Is there a way for them to do that?
+I think the issue was that i915 doesn't claim to the VGA arbiter to be
+controlling legacy VGA ranges, but in fact the hardware does claim
+those ranges.  We can "fix" i915 to report that VGA MMIO space is
+owned and can be controlled, but then Xorg likely sees multiple VGA
+arbiter clients and disables DRI because it wants to mmap VGA MMIO
+space.
 
-> + */
-> +static void quirk_intel_e2000_no_ats(struct pci_dev *pdev)
-> +{
-> +	if (pdev->revision < 0x20)
-> +		quirk_no_ats(pdev);
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1451, quirk_intel_e2000_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1452, quirk_intel_e2000_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1453, quirk_intel_e2000_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1454, quirk_intel_e2000_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1455, quirk_intel_e2000_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1457, quirk_intel_e2000_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1459, quirk_intel_e2000_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x145a, quirk_intel_e2000_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x145c, quirk_intel_e2000_no_ats);
->  #endif /* CONFIG_PCI_ATS */
->  
->  /* Freescale PCIe doesn't support MSI in RC mode */
-> -- 
-> 2.41.0
-> 
-> ---------------------------------------------------------------------
-> Intel Technology Poland sp. z o.o.
-> ul. Slowackiego 173 | 80-298 Gdansk | Sad Rejonowy Gdansk Polnoc | VII Wydzial Gospodarczy Krajowego Rejestru Sadowego - KRS 101882 | NIP 957-07-52-316 | Kapital zakladowy 200.000 PLN.
-> Spolka oswiadcza, ze posiada status duzego przedsiebiorcy w rozumieniu ustawy z dnia 8 marca 2013 r. o przeciwdzialaniu nadmiernym opoznieniom w transakcjach handlowych.
-> 
-> Ta wiadomosc wraz z zalacznikami jest przeznaczona dla okreslonego adresata i moze zawierac informacje poufne. W razie przypadkowego otrzymania tej wiadomosci, prosimy o powiadomienie nadawcy oraz trwale jej usuniecie; jakiekolwiek przegladanie lub rozpowszechnianie jest zabronione.
-> This e-mail and any attachments may contain confidential material for the sole use of the intended recipient(s). If you are not the intended recipient, please contact the sender and delete all copies; any review or distribution by others is strictly prohibited.
-> 
+Therefore unless something has changed in the past 10yrs, i915 owns but
+does not advertise ownership of the VGA address spaces and therefore
+the arbiter can't and doesn't know to change VGA routing to enable a
+"be_primary" path to another device.
+=20
+> If a specific model of Intel has a bug in the VGA routing hardware logic =
+unit,
+> I would like to ignore it. Or switch to the UEFI firmware on such hardwar=
+e.
+
+That's a convenient and impractical approach.  I expect all Intel HD
+graphics has this issue.  Unknown for Xe.
+
+> It is the hardware engineer's responsibility, I will not worry about it.
+
+We often need to deal with broken hardware in the kernel.
+
+> Thanks for you tell this.
+>=20
+> [1] https://www.intel.com/content/dam/doc/datasheet/atom-d2000-n2000-vol-=
+2-datasheet.pdf
+>=20
+>=20
+> >   It will always be primary from a
+> > VGA routing perspective.  Was this actually tested with non-UEFI? =20
+>=20
+>=20
+> As you already said,=C2=A0the generous Intel already have confirmed that =
+the hardware defect.
+> So probably this is a good chance to switch to UEFI to solve the problem.=
+ Then, no
+> testing for legacy is needed.
+
+Then why are we hacking on VGA arbitration in this series at all?
+
+> > I suspect it might only work in UEFI mode where we probably don't
+> > actually have a dependency on VGA routing.  This is essentially why
+> > vfio requires UEFI ROMs when assigning GPUs to VMs, VGA routing is too
+> > broken to use on Intel systems with IGD.  Thanks, =20
+>=20
+> Thanks for you tell me this.
+>=20
+> To be honest, I have only tested my patch on machines with UEFI=C2=A0firm=
+ware.
+> Since UEFI because the main stream, but if this patch is really useful for
+> majority machine, I'm satisfied. The results is not too bad.
+
+This looks like a pretty significant scoping issue if you're proposing
+changes to the VGA arbiter which specifically handles the routing of
+legacy VGA address spaces but are not willing to commit to testing
+legacy configurations.  Thanks,
+
+Alex
+
