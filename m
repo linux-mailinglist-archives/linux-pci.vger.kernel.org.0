@@ -2,48 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AE40793745
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Sep 2023 10:40:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1324E7937B6
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Sep 2023 11:08:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230339AbjIFIlA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Sep 2023 04:41:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49370 "EHLO
+        id S233572AbjIFJIV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Sep 2023 05:08:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229640AbjIFIlA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Sep 2023 04:41:00 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E6C68F;
-        Wed,  6 Sep 2023 01:40:56 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D520CC433C9;
-        Wed,  6 Sep 2023 08:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693989656;
-        bh=33osJvMi9BkVlhAaa6FIokdBDnUZlNZzV6kbO/dmsVI=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=qXSpfDQOyB1xWgYrcNz+6QSgQyCR06Yj44CINKaWehowHXiUO73ng8lfQD0d2Jpoj
-         wqHa7F3iZl7r0mzZIOu8Npa4pa9ZU/Qqssm7fcr6nWHRkT1aH7RSDg7gUeKcVp7EH6
-         dZsxh/Paw9NOLeWCrgtA8ps8tS3Va+53HBzYUaQZA/oBzj/yg96aBdGgGATzXa4T/k
-         gUQE6g+sDDTpHu4E6sRzJHM3uRN0AhxEzO0JyCErPqdh8hkiuOvDyZGiBODWbN/DJQ
-         02E2qr4cQGvwmYdHBbfLNm9v8oxAd2hJXhmWOn8lAYZ9ALF7QU+T3QtYGQAdcK7uXt
-         3ErZC2knqhscA==
-From:   Kalle Valo <kvalo@kernel.org>
-To:     Ross Lagerwall <ross.lagerwall@cloud.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ath11k@lists.infradead.org,
-        regressions@lists.linux.dev
-Subject: Re: [regression v6.5-rc1] PCI: comm "swapper/0" leaking memory
-References: <878r9sga1t.fsf@kernel.org>
-        <CAG7k0Epk6KJvoDJKVc86sc_ems3DTbKvPLouBzOoVvn1tZwQ=w@mail.gmail.com>
-Date:   Wed, 06 Sep 2023 11:40:52 +0300
-In-Reply-To: <CAG7k0Epk6KJvoDJKVc86sc_ems3DTbKvPLouBzOoVvn1tZwQ=w@mail.gmail.com>
-        (Ross Lagerwall's message of "Tue, 5 Sep 2023 17:28:38 +0100")
-Message-ID: <87o7ifelt7.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+        with ESMTP id S234922AbjIFJIU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Sep 2023 05:08:20 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1DDC9CFD;
+        Wed,  6 Sep 2023 02:08:13 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8Cxh+h8Qfhk0kAgAA--.29184S3;
+        Wed, 06 Sep 2023 17:08:12 +0800 (CST)
+Received: from [0.0.0.0] (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxvM56QfhkpFxuAA--.3166S3;
+        Wed, 06 Sep 2023 17:08:10 +0800 (CST)
+Message-ID: <b51d49f3-e3de-6b8d-9cb4-df5c03f3cdc0@loongson.cn>
+Date:   Wed, 6 Sep 2023 17:08:10 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [Nouveau] [RFC, drm-misc-next v4 0/9] PCI/VGA: Allowing the user
+ to select the primary video adapter at boot time
+Content-Language: en-US
+To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Sui Jingfeng <sui.jingfeng@linux.dev>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Cc:     nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org
+References: <20230904195724.633404-1-sui.jingfeng@linux.dev>
+ <44ec8549-dc36-287e-4359-abd3ec8d22d6@suse.de>
+ <5afd2efb-f838-f9b7-02a9-2cf4d4fd2382@loongson.cn>
+ <2adfa653-ac35-d560-be52-c92848a1eef5@gmail.com>
+From:   suijingfeng <suijingfeng@loongson.cn>
+In-Reply-To: <2adfa653-ac35-d560-be52-c92848a1eef5@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8CxvM56QfhkpFxuAA--.3166S3
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxArWruw1kuFW8Ar4UKF1xJFc_yoWrJw1rpF
+        4YqFyUtr4kGr1rAr4Skw48WFZ5AFsFqFy5GF1vgr1Fv398Xr1Fvr9rtF4UCa4UXrn7Z3W0
+        9rWFqrW7GF4DZFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+        6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+        Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+        Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+        CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48J
+        MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
+        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+        W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1l
+        IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8loGPUUUU
+        U==
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,81 +75,94 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Ross Lagerwall <ross.lagerwall@cloud.com> writes:
+Hi,
 
-> On Wed, Aug 30, 2023 at 10:21=E2=80=AFAM Kalle Valo <kvalo@kernel.org> wr=
-ote:
+
+On 2023/9/6 14:45, Christian König wrote:
+> Am 05.09.23 um 15:30 schrieb suijingfeng:
+>> Hi,
+>>
+>>
+>> On 2023/9/5 18:45, Thomas Zimmermann wrote:
+>>> Hi
+>>>
+>>> Am 04.09.23 um 21:57 schrieb Sui Jingfeng:
+>>>> From: Sui Jingfeng <suijingfeng@loongson.cn>
+>>>>
+>>>> On a machine with multiple GPUs, a Linux user has no control over 
+>>>> which
+>>>> one is primary at boot time. This series tries to solve above 
+>>>> mentioned
+>>>
+>>> If anything, the primary graphics adapter is the one initialized by 
+>>> the firmware. I think our boot-up graphics also make this assumption 
+>>> implicitly.
+>>>
+>>
+>> Yes, but by the time of DRM drivers get loaded successfully,the 
+>> boot-up graphics already finished.
 >
->>
->> I noticed that starting from v6.5-rc1 my ath11k tests reported several
->> memory leaks from swapper/0:
->>
->> unreferenced object 0xffff88810a02b7a8 (size 96):
->>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
->>   hex dump (first 32 bytes):
->>     80 b8 02 0a 81 88 ff ff b8 72 07 00 00 c9 ff ff  .........r......
->>     c8 b7 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  ................
->>   backtrace:
->> unreferenced object 0xffff88810a02b880 (size 96):
->>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
->>   hex dump (first 32 bytes):
->>     58 b9 02 0a 81 88 ff ff a8 b7 02 0a 81 88 ff ff  X...............
->>     a0 b8 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  ................
->>   backtrace:
->> unreferenced object 0xffff88810a02b958 (size 96):
->>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
->>   hex dump (first 32 bytes):
->>     30 ba 02 0a 81 88 ff ff 80 b8 02 0a 81 88 ff ff  0...............
->>     78 b9 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  x...............
->>   backtrace:
->> unreferenced object 0xffff88810a02ba30 (size 96):
->>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
->>   hex dump (first 32 bytes):
->>     08 bb 02 0a 81 88 ff ff 58 b9 02 0a 81 88 ff ff  ........X.......
->>     50 ba 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  P...............
->>   backtrace:
->> unreferenced object 0xffff88810a02bb08 (size 96):
->>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
->>   hex dump (first 32 bytes):
->>     e0 bb 02 0a 81 88 ff ff 30 ba 02 0a 81 88 ff ff  ........0.......
->>     28 bb 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  (...............
->>   backtrace:
->>
->> I can easily reproduce this by doing a simple insmod and rmmod of ath11k
->> and it's dependencies (mac80211, MHI etc). I can reliability reproduce
->> the leaks but I only see them once after a boot, I need to reboot the
->> host to see the leaks again. v6.4 has no leaks.
->>
->> I did a bisect and found the commit below. I verified reverting the
->> commit makes the leaks go away.
->>
->> commit e54223275ba1bc6f704a6bab015fcd2ae4f72572
->> Author:     Ross Lagerwall <ross.lagerwall@citrix.com>
->> AuthorDate: Thu May 25 16:32:48 2023 +0100
->> Commit:     Bjorn Helgaas <bhelgaas@google.com>
->> CommitDate: Fri Jun 9 15:06:16 2023 -0500
->>
->>     PCI: Release resource invalidated by coalescing
+> This is an incorrect assumption.
 >
-> Hi Kalle,
+> drm_aperture_remove_conflicting_pci_framebuffers() and co don't kill 
+> the framebuffer, 
+
+Well, my original description to this technique point is that
+
+1) "Firmware framebuffer device already get killed by the drm_aperture_remove_conflicting_pci_framebuffers() function (or its siblings)"
+2) "By the time of DRM drivers get loaded successfully, the boot-up graphics already finished."
+
+The word "killed" here is rough and coarse description about
+how does the drm device driver take over the firmware framebuffer.
+Since there seems have something obscure our communication,
+lets make the things clear. See below for more elaborate description.
+
+
+> they just remove the current framebuffer driver to avoid further updates.
 >
-> I can't reproduce the leak by loading/unloading the ath11k module. I susp=
-ect
-> that the leak is always there when PCI resources are coalesced but
-> kmemleak doesn't notice until ath11k is loaded.
->
-> Can you please try the following to confirm it fixes it?
+This statement doesn't sound right, for UEFI environment,
+a correct description is that they remove the platform device, not the framebuffer driver.
+For the machines with the UEFI firmware, framebuffer driver here definitely refer to the efifb.
+The efifb still reside in the system(linux kernel).
 
-I run various tests with your patch and I don't see leaks anymore. I
-also veried that without your patch I see the leak immediately.
+Please see the aperture_detach_platform_device() function in video/aperture.c
 
-Thanks for fixing this so quickly, it would good to have this fix in
-v6.6 if possible.
+> So what happens (at least for amdgpu) is that we take over the 
+> framebuffer,
 
-Tested-by: Kalle Valo <kvalo@kernel.org>
+This statement here is also not an accurate description.
 
---=20
-https://patchwork.kernel.org/project/linux-wireless/list/
+Strictly speaking, drm/amdgpu takes over the device (the VRAM hardware),
+not the framebuffer.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+The word "take over" here is also dubious, because drm/amdgpu takes over nothing.
+
+ From the perspective of device-driver model, the GPU hardware *belongs* to the amdgpu drivers.
+Why you need to take over a thing originally and belong to you?
+
+If you could build the drm/amdgpu into the kernel and make it get loaded
+before the efifb. Then, there no need to use the firmware framebuffer (
+the talking is limited to the display boot graphics purpose here).
+On such a case, the so-called "take over" will not happen.
+
+The truth is that the efifb create a platform device, which *occupy*
+part of the VRAM hardware resource. Thus, the efifb and the drm/amdgpu
+form the conflict. There are conflict because they share the same
+hardware resource. It is the hardware resources(address ranges) used
+by two different driver are conflict. Not the efifb driver itself
+conflict with drm/amdgpu driver.
+
+Thus, drm_aperture_remove_conflicting_xxxxxx() function have to kill
+one of the device are conflicting. Not to kill the driver. Therefore,
+the correct word would be the "reclaim".
+drm/amdgpu *reclaim* the hardware resource (vram address range) originally belong to you.
+
+The modeset state (including the framebuffer content) still reside in the amdgpu device.
+You just get the dirty framebuffer image in the framebuffer object.
+But the framebuffer object already dirty since it in the UEFI firmware stage.
+
+In conclusion, *reclaim* is more accurate than the "take over".
+And as far as I'm understanding, the drm/amdgpu take over nothing, no gains.
+
+Well, welcome to correct me if I'm wrong.
+
