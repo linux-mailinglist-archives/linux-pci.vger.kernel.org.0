@@ -2,236 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2AFC7935BC
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Sep 2023 08:55:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 945847935CF
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Sep 2023 09:00:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236435AbjIFGzI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Sep 2023 02:55:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50140 "EHLO
+        id S233074AbjIFHAo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Sep 2023 03:00:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238291AbjIFGzH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Sep 2023 02:55:07 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5588E5C
-        for <linux-pci@vger.kernel.org>; Tue,  5 Sep 2023 23:54:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693983275; x=1725519275;
-  h=date:from:to:cc:subject:message-id;
-  bh=Nk8UfGjGl75hXC11CHH4+TYowKDdKYZlC3CnRFHmkFY=;
-  b=PmNxrIUZ4bylyYu+ODR3mhx15FnUjTDsIGKXNQSVFkB487FWBQKDNfgB
-   XZR51yk9I5S88BFN4Y/oLh6ofCpBT8W5KDNDe5pztVDp0MRKwHiNlFlUm
-   xSj+hlRcefFbeDV+ILjkrrr0xhz2Au7kfl+0ZoWdTCma6PA+JigQA9KPC
-   I5AAhrls7JatM4IZ87bqjATw9W2olD2LskKo7Yawlp6WGuh3DozwUMpwY
-   ly+E/ivhjQ8FgAzH/H/pCTB+9pEi7cOSUtv6rdDmU1bD5/2APGDfY4G7y
-   zBP/jEiS5jQc5umnsQBPfgBUSB2OYCfqgfn0iW2UHb1fdG/F2XrNg8UJW
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="376904098"
-X-IronPort-AV: E=Sophos;i="6.02,231,1688454000"; 
-   d="scan'208";a="376904098"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 23:53:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="744563323"
-X-IronPort-AV: E=Sophos;i="6.02,231,1688454000"; 
-   d="scan'208";a="744563323"
-Received: from lkp-server02.sh.intel.com (HELO e0b2ea88afd5) ([10.239.97.151])
-  by fmsmga007.fm.intel.com with ESMTP; 05 Sep 2023 23:53:51 -0700
-Received: from kbuild by e0b2ea88afd5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qdmQ8-0002Xm-2p;
-        Wed, 06 Sep 2023 06:53:48 +0000
-Date:   Wed, 06 Sep 2023 14:53:14 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- 26641b3f22abe3f03bd8e078c116cc98de740f43
-Message-ID: <202309061412.q6TePZi0-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231145AbjIFHAn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Sep 2023 03:00:43 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39DBFCFC;
+        Wed,  6 Sep 2023 00:00:40 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id EC4932241E;
+        Wed,  6 Sep 2023 07:00:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1693983638; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=lxSJsWB1ylv2KntbbZas6fIVYa/2+q6JTBUTnIgymps=;
+        b=Ui5sveWkzp7Z55EkFAN8YDp3EARPttCtZR7fjW/yvcSnanZNZ5FG4sUNm3rkKlf2suhuZN
+        AhYCV2gxkpWPM1nZ/BGvDI599LgqjEYFUPCRbt4gHGPbL/MHrarZNgI0jMkdpfgJjvbTn4
+        ABOgGxHyYmn6sXcYvy5syGW+pTLOP+E=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1693983638;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=lxSJsWB1ylv2KntbbZas6fIVYa/2+q6JTBUTnIgymps=;
+        b=kWmll6OMEDUMrQQssJcEER9bbQMyfF6sv8eT+LzIEa9pnVD0zhg38E5/JTNtVeTikeuPUx
+        Q9RHj6b/vaYQLUDw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AED1D1333E;
+        Wed,  6 Sep 2023 07:00:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id qwfEKZYj+GRPNQAAMHmgww
+        (envelope-from <tzimmermann@suse.de>); Wed, 06 Sep 2023 07:00:38 +0000
+Message-ID: <22e8f3a4-63e6-63bd-9e6a-c0a42cb2c33a@suse.de>
+Date:   Wed, 6 Sep 2023 09:00:37 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [Nouveau] [RFC, drm-misc-next v4 0/9] PCI/VGA: Allowing the user
+ to select the primary video adapter at boot time
+To:     suijingfeng <suijingfeng@loongson.cn>,
+        Sui Jingfeng <sui.jingfeng@linux.dev>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Cc:     nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org
+References: <20230904195724.633404-1-sui.jingfeng@linux.dev>
+ <44ec8549-dc36-287e-4359-abd3ec8d22d6@suse.de>
+ <5afd2efb-f838-f9b7-02a9-2cf4d4fd2382@loongson.cn>
+ <773be4c6-0b3d-be39-7857-b3e2942007d9@suse.de>
+ <42c907fe-a8c3-5a07-a792-737e45f8134e@loongson.cn>
+Content-Language: en-US
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+In-Reply-To: <42c907fe-a8c3-5a07-a792-737e45f8134e@loongson.cn>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------KYZ86D8lIziF85L0q28xAh3G"
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-branch HEAD: 26641b3f22abe3f03bd8e078c116cc98de740f43  PCI: Fix CONFIG_PCI_DYNAMIC_OF_NODES kconfig dependencies
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------KYZ86D8lIziF85L0q28xAh3G
+Content-Type: multipart/mixed; boundary="------------LN1ZlLEbEZdmmpEoynl00UYi";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: suijingfeng <suijingfeng@loongson.cn>,
+ Sui Jingfeng <sui.jingfeng@linux.dev>, Bjorn Helgaas <bhelgaas@google.com>,
+ "Koenig, Christian" <Christian.Koenig@amd.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>, Daniel Vetter <daniel@ffwll.ch>,
+ "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Cc: nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org
+Message-ID: <22e8f3a4-63e6-63bd-9e6a-c0a42cb2c33a@suse.de>
+Subject: Re: [Nouveau] [RFC, drm-misc-next v4 0/9] PCI/VGA: Allowing the user
+ to select the primary video adapter at boot time
+References: <20230904195724.633404-1-sui.jingfeng@linux.dev>
+ <44ec8549-dc36-287e-4359-abd3ec8d22d6@suse.de>
+ <5afd2efb-f838-f9b7-02a9-2cf4d4fd2382@loongson.cn>
+ <773be4c6-0b3d-be39-7857-b3e2942007d9@suse.de>
+ <42c907fe-a8c3-5a07-a792-737e45f8134e@loongson.cn>
+In-Reply-To: <42c907fe-a8c3-5a07-a792-737e45f8134e@loongson.cn>
 
-elapsed time: 730m
+--------------LN1ZlLEbEZdmmpEoynl00UYi
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-configs tested: 161
-configs skipped: 2
+SGkNCg0KQW0gMDYuMDkuMjMgdW0gMDQ6MTQgc2NocmllYiBzdWlqaW5nZmVuZzoNCj4gSGks
+DQo+IA0KPiANCj4gT24gMjAyMy85LzUgMjM6MDUsIFRob21hcyBaaW1tZXJtYW5uIHdyb3Rl
+Og0KPj4gSG93ZXZlciwgb24gbW9kZXJuIExpbnV4IHN5c3RlbXMgdGhlIHByaW1hcnkgZGlz
+cGxheSBkb2VzIG5vdCByZWFsbHkgDQo+PiBleGlzdC4NCj4gDQo+IA0KPiBObywgaXQgZG8g
+ZXhpc3QuwqAgWCBzZXJ2ZXIgbmVlZCB0byBrbm93IHdoaWNoIG9uZSBpcyB0aGUgcHJpbWFy
+eSBHUFUuDQo+IFRoZSAnKicgY2hhcmFjdGVyIGF0IHRoZSBvZiAoNEAwOjA6MCkgUENJIGRl
+dmljZcKgaXMgdGhlIFByaW1hcnkuDQo+IFRoZSAnKicgZGVub3RlIHByaW1hcnksIHNlZSB0
+aGUgbG9nIGJlbG93Lg0KPiANCj4gKElJKSB4ZnJlZTg2OiBBZGRpbmcgZHJtIGRldmljZSAo
+L2Rldi9kcmkvY2FyZDIpDQo+IChJSSkgeGZyZWU4NjogQWRkaW5nIGRybSBkZXZpY2UgKC9k
+ZXYvZHJpL2NhcmQwKQ0KPiAoSUkpIFBsYXRmb3JtIHByb2JlIGZvciANCj4gL3N5cy9kZXZp
+Y2VzL3BjaTAwMDA6MDAvMDAwMDowMDoxYy41LzAwMDA6MDAzOjAwLjAvMDAwMDowNDowMC4w
+L2RybS9jYXJkMA0KPiAoSUkpIHhmcmVlODY6IEFkZGluZyBkcm0gZGV2aWNlICgvZGV2L2Ry
+aS9jYXJkMykNCj4gKElJKSBQbGF0Zm9ybSBwcm9iZSBmb3IgDQo+IC9zeXMvZGV2aWNlcy9w
+Y2kwMDAwOjAwLzAwMDA6MDA6MWMuNi8wMDAwOjAwNTowMC4wL2RybS9jYXJkMw0KPiAoLS0p
+IFBDSTogKDBAMDoyOjApIDgwODY6M2U5MTo4MDg2OjNlOTEgcmV2IDAsIE1lbSBAIA0KPiAw
+eGRiMDAwMDAwLzE2Nzc3NzIxNiwgMHhhMDAwMDAwMC81MzY4NzA5MTIsIEkvTyBAIDB4MDAw
+MGYwMDAvNjQsIEJJT1MgQCANCj4gMHg/Pz8/Pz8/Py8xMzEwNzINCj4gKC0tKSBQQ0k6ICgx
+QDA6MDowKSAxMDAyOjY3NzE6MTA0Mzo4NjM2IHJldiAwLCBNZW0gQCANCj4gMHhjMDAwMDAw
+MC8yNjg4NDM1NDU2LCAweGRmMjIwMDAwLzEzMTA3MiwgSS9PIEAgMHgwMDAwZTAwMC8yNTYs
+IEJJT1MgQCANCj4gMHg/Pz8/Pz8/Py8xMzEwNzINCj4gKC0tKSBQQ0k6Kig0QDA6MDowKSAx
+YTAzOjIwMDA6MWEwMzoyMDAwIHJldiA0OCwgTWVtIEAgDQo+IDB4ZGUwMDAwMDAvMTY2Nzc3
+MjE2LCAweGRmMDIwMDAwLzEzMTA3MiwgSS9PIEAgMHgwMDAwYzAwMC8xMjgsIEJJT1MgQCAN
+Cj4gMHg/Pz8/Pz8/Py8xMzEwNzINCj4gKC0tKSBQQ0k6ICg1QDA6MDowKSAxMGRlOjEyODg6
+MTc0YjpiMzI0IHJldiAxNjEsIE1lbSBAIA0KPiAweGRjMDAwMDAwLzExNjc3NzIxNiwgMHhk
+MDAwMDAwMC8xMzQyMTc3MjgsIDB4ZDgwMDAwMDAvMzM1NTQ0MzIsIEkvTyBAIA0KPiAweDAw
+MDBiMDAwLzEyOCwgQklPUyBAQDB4Pz8/Pz8/Pz8vNTI0Mjg4DQo+IA0KPiBUaGUgbW9kZXNl
+dHRpbmcgZHJpdmVyIG9mIFggc2VydmVyIHdpbGwgY3JlYXRlIGZyYW1lYnVmZmVyIG9uIHRo
+ZSANCj4gcHJpbWFyeSB2aWRlbyBhZGFwdGVyLg0KPiBJZiBhIDJEIHZpZGVvIGFkYXB0ZXIg
+KGxpa2UgdGhlIGFzcGVlZCBCTUMpIGlzIG5vdCB0aGUgcHJpbWFyeSwgdGhlbiBpdCANCj4g
+cHJvYmFibHkgd2lsbCBub3QNCj4gYmUgdXNlZC4gVGhlIG9ubHkgY2hhbmNlIHRvIGJlIGFi
+bGUgdG8gZGlzcGxheSBzb21ldGhpbmcgaXMgdG8gDQo+IGZ1bmN0aW9uYWwgYXMgYSBvdXRw
+dXQgc2xhdmUuDQo+IEJ1dCB0aGUgb3V0cHV0IHNsYXZlIHRlY2hub2xvZ3kgbmVlZCB0aGUg
+UFJJTUUgc3VwcG9ydCBmb3IgY3Jvc3MgZHJpdmVyIA0KPiBidWZmZXIgc2hhcmluZy4NCj4g
+DQo+IFNvLCB0aGVyZSBkbyBoYXZlIHNvbWUgZGlmZmVyZW5jZSBiZXR3ZWVuIHRoZSBwcmlt
+YXJ5IGFuZCBub24tcHJpbWFyeSANCj4gdmlkZW8gYWRhcHRlcnMuDQoNClhvcmcgaXMgYSBw
+cmV0dHkgYmFkIGV4YW1wbGUsIGJlY2F1c2UgWCBwYXJzZXMgdGhlIFBDSSBidXMgYW5kIHRo
+ZW4gDQp0cmllcyB0byBtYXRjaCBkZXZpY2VzIHRvIC9kZXYvZHJpLyBmaWxlcy4gVGhhdCdz
+IGFsc28gbm90IGZpeGFibGUgaW4gDQpYb3JnJ3MgY3VycmVudCBjb2RlIGJhc2UuIFBsZWFz
+ZSBkb24ndCBwcm9tb3RlIFhvcmcncyBkZXNpZ24uIEl0IGRhdGVzIA0KYmFjayB0byB0aGUg
+dGltZSB3aGVuIFhvcmcgZGlkIHRoZSBtb2Rlc2V0dGluZyBieSBpdHNlbGYuDQoNClVzZXJz
+cGFjZSBzaG91bGQganVzdCBvcGVuIGV4aXN0aW5nIGRldmljZSBmaWxlcyBhbmQgc3RhcnQg
+cmVuZGVyaW5nLiANCk1heWJlIHBpY2sgdGhlIHByZXZpb3VzIHNldHRpbmdzIGFuZC9vciBk
+byBzb21lIGd1ZXNzIHdvcmsgYWJvdXQgdGhlIA0KYXJyYW5nbWVudCBvZiB0aGVzZSBkZXZp
+Y2VzLiBBRkFJSyB0aGF0J3Mgd2hhdCB0aGUgbW9kZXJuIGNvbXBvc2l0b3JzIGRvLg0KDQpC
+ZXN0IHJlZ2FyZHMNClRob21hcw0KDQo+IA0KPiANCj4+ICdQcmltYXJ5JyBpcyB0aGUgZGV2
+aWNlIHRoYXQgaXMgYXZhaWxhYmxlIHZpYSBWR0EsIFZFU0Egb3IgRUZJLiBPdXIgDQo+PiBk
+cml2ZXJzIGRvbid0IHVzZSB0aGVzZSBpbnRlcmZhY2VzLCBidXQgdGhlIG5hdGl2ZSByZWdp
+c3RlcnMuIEFzIHlvdSANCj4+IHNhaWQgeW91cnNlbGYsIHRoZXNlIGZpcm13YXJlIGRldmlj
+ZXMgKFZHQSwgVkVTQSwgRUZJKSBhcmUgcmVtb3ZlZCANCj4+IEFTQVAgYnkgdGhlIG5hdGl2
+ZSBkcml2ZXJzLiANCj4gDQoNCi0tIA0KVGhvbWFzIFppbW1lcm1hbm4NCkdyYXBoaWNzIERy
+aXZlciBEZXZlbG9wZXINClNVU0UgU29mdHdhcmUgU29sdXRpb25zIEdlcm1hbnkgR21iSA0K
+RnJhbmtlbnN0cmFzc2UgMTQ2LCA5MDQ2MSBOdWVybmJlcmcsIEdlcm1hbnkNCkdGOiBJdm8g
+VG90ZXYsIEFuZHJldyBNeWVycywgQW5kcmV3IE1jRG9uYWxkLCBCb3VkaWVuIE1vZXJtYW4N
+CkhSQiAzNjgwOSAoQUcgTnVlcm5iZXJnKQ0K
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+--------------LN1ZlLEbEZdmmpEoynl00UYi--
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r013-20230906   gcc  
-alpha                randconfig-r034-20230906   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20230906   gcc  
-arc                  randconfig-r012-20230906   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                   randconfig-001-20230906   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r004-20230906   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r006-20230906   gcc  
-hexagon               randconfig-001-20230906   clang
-hexagon               randconfig-002-20230906   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20230906   gcc  
-i386         buildonly-randconfig-002-20230906   gcc  
-i386         buildonly-randconfig-003-20230906   gcc  
-i386         buildonly-randconfig-004-20230906   gcc  
-i386         buildonly-randconfig-005-20230906   gcc  
-i386         buildonly-randconfig-006-20230906   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20230906   gcc  
-i386                  randconfig-002-20230906   gcc  
-i386                  randconfig-003-20230906   gcc  
-i386                  randconfig-004-20230906   gcc  
-i386                  randconfig-005-20230906   gcc  
-i386                  randconfig-006-20230906   gcc  
-i386                  randconfig-011-20230906   clang
-i386                  randconfig-012-20230906   clang
-i386                  randconfig-013-20230906   clang
-i386                  randconfig-014-20230906   clang
-i386                  randconfig-015-20230906   clang
-i386                  randconfig-016-20230906   clang
-i386                 randconfig-r022-20230906   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20230906   gcc  
-loongarch            randconfig-r031-20230906   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r033-20230906   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-microblaze           randconfig-r016-20230906   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r001-20230906   clang
-mips                 randconfig-r026-20230906   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-openrisc             randconfig-r024-20230906   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r035-20230906   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc64            randconfig-r021-20230906   clang
-powerpc64            randconfig-r036-20230906   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20230906   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20230906   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                   randconfig-r015-20230906   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r002-20230906   gcc  
-sparc                randconfig-r003-20230906   gcc  
-sparc                randconfig-r005-20230906   gcc  
-sparc                randconfig-r014-20230906   gcc  
-sparc                randconfig-r025-20230906   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20230906   gcc  
-x86_64       buildonly-randconfig-002-20230906   gcc  
-x86_64       buildonly-randconfig-003-20230906   gcc  
-x86_64       buildonly-randconfig-004-20230906   gcc  
-x86_64       buildonly-randconfig-005-20230906   gcc  
-x86_64       buildonly-randconfig-006-20230906   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20230906   clang
-x86_64                randconfig-002-20230906   clang
-x86_64                randconfig-003-20230906   clang
-x86_64                randconfig-004-20230906   clang
-x86_64                randconfig-005-20230906   clang
-x86_64                randconfig-006-20230906   clang
-x86_64                randconfig-011-20230906   gcc  
-x86_64                randconfig-012-20230906   gcc  
-x86_64                randconfig-013-20230906   gcc  
-x86_64                randconfig-014-20230906   gcc  
-x86_64                randconfig-015-20230906   gcc  
-x86_64                randconfig-016-20230906   gcc  
-x86_64                randconfig-071-20230906   gcc  
-x86_64                randconfig-072-20230906   gcc  
-x86_64                randconfig-073-20230906   gcc  
-x86_64                randconfig-074-20230906   gcc  
-x86_64                randconfig-075-20230906   gcc  
-x86_64                randconfig-076-20230906   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa               randconfig-r011-20230906   gcc  
-xtensa               randconfig-r023-20230906   gcc  
-xtensa               randconfig-r032-20230906   gcc  
+--------------KYZ86D8lIziF85L0q28xAh3G
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmT4I5UFAwAAAAAACgkQlh/E3EQov+As
+LBAAywJbx/82a4kzBkPg9aE9JI6eCWr6ObjJU3j0lAb//Khw3fGlnKGYZJm1P/3THDHewIhOgTnv
+IRUH7VGvyEHL770iX4XwWF7noE+TXVqDbButx7V6SMUF9LlcaQmG2nPeX8n/rwzh2IatlrP0bWBm
+7mIAGNnqpWMS0c5tMUS9w4aznXdtuD4QyV/TEWW6/ZlTgmjbi3P7enfs81zpZ6Qvp0FJOqcYdqsv
+Y1cnRpTN1UxDxZgf4nEKlss0cXFp52wOCvUr+EVkRVMftQQhLDgSMlmXLZWYjhRCJpflDU5zoJwt
+tYxxJ7n7iPZPYbe+kNYGyZ8rxJ1I9Atsd3+0ytXP0DHhIrtLTMMbHLB+f2RhpDHp7QRfmKRNCfkZ
+ym6AHDE2Mx70wiBhJtfunyR5IL8WBB+6BN1uqko4Q0lLYp0OOJnAjJIE+lxaHvcxi5+vqhugOXnl
+Sjo516Gd35D+aMhuWX6uFiBXNXxZhl7p3FZ4HXNo8d1rwI0kcENLY6QpYLW3gmOzX+SKNKdh649E
+pYbVaSSoHDbTv/BOKME7WefiychZhRFSEGiPs+pO5Sa7rFlv1zE2LAn5euwMhoTu+jXubxeoBvhG
+Vt3+dB5waqKpQQHfjMNU1h3q1gI8w8k+jwefMmyqIvgUxkMdDoPei7+NuYksfqJi7oOQlahn17yC
+0Bk=
+=2vYu
+-----END PGP SIGNATURE-----
+
+--------------KYZ86D8lIziF85L0q28xAh3G--
