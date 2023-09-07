@@ -2,132 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A24E796EF6
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Sep 2023 04:30:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0718F796F2F
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Sep 2023 05:13:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229509AbjIGCax (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Sep 2023 22:30:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58416 "EHLO
+        id S232570AbjIGDNN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Sep 2023 23:13:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229934AbjIGCau (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Sep 2023 22:30:50 -0400
-Received: from out-228.mta0.migadu.com (out-228.mta0.migadu.com [IPv6:2001:41d0:1004:224b::e4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 311D519A6
-        for <linux-pci@vger.kernel.org>; Wed,  6 Sep 2023 19:30:27 -0700 (PDT)
-Message-ID: <a9af88c5-4509-96ff-a7fd-a0f72d2f1e6a@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1694053816;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zWKuDI3UfELqoaKOu5alhaGYIMfDF3Uc/CsxX8KNpcw=;
-        b=GgeP92P4/naoXz26vwG4GdsQK6IicmdS3p/1rSEio3gSFjQdIr414+XfvCVmk/THfA7ZKv
-        4z62dV1LCO5X2T+9nr7deC3FDvEwA8Rt+pc1TYHpt6j3guxm7EdgbMKutPbEWqVZwt5ffu
-        P1CoPAj1PHHuBRbiwyeoXcKFjbqv6Jk=
-Date:   Thu, 7 Sep 2023 10:30:05 +0800
+        with ESMTP id S231859AbjIGDNN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Sep 2023 23:13:13 -0400
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFAE3133;
+        Wed,  6 Sep 2023 20:13:08 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 120CE3200945;
+        Wed,  6 Sep 2023 23:13:04 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Wed, 06 Sep 2023 23:13:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+        cc:cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm2; t=
+        1694056384; x=1694142784; bh=OXTmpIBOV1UxZ2xEwVd1/NfVXC6bFY0UiDJ
+        AKT3kajw=; b=OVaTFjB+tJuF36xZSClXZas6bTYFmPOna6qLbLDFZhgSatZrtnn
+        4gwbd9eHcFxub5sNNfvCMVkTtnimU1fwez+9V7e0zTaW/X/C2fZ7gxKOk+qYOFLY
+        cklVFF3/25+2RJgahWL+o99rbtAsi1F5SBZF+vMgljIHFHmmH6KBh7ce97sG4rLn
+        A/ZZef/pctp+jl59atieAklcNx7KuuxMKvbDMIXKjX9zJsmaLzSnolf28VzKG6rn
+        nahZt+Ilho7A485CAtM8EyrzTsN60v7fiB5aFn+vnbBYqZxOElXheNzQaQ3ivFaO
+        WvmuRkMHm57zE7ygqq1lHVZ4+aOzPk8U4IA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+        1694056384; x=1694142784; bh=OXTmpIBOV1UxZ2xEwVd1/NfVXC6bFY0UiDJ
+        AKT3kajw=; b=dcvtZApRAQ25C9kUF/inYTfY+NZ59bEC5fBt0T+fDcowjKXOp6G
+        3Xw7319JGehT03+VzQKfLTYdXixXa+NVKtPP3d/fIusvNhIeB92RSozSsJMD3DhS
+        1GsJfFsJ3I5v61jz61Xftirt2wmY6de3ILDhZkFzBTKCPcePJnfn//XOk1KD1uEK
+        KMZ3UZM6C893FXLYsGuQPFMSe1U6USSegGqn/ciciIUo3h1u2iObsk5mvmBGtsR6
+        Kq/LNsN5AWudHQ2jBjOnzl0BNVo8k4pTvXEqbxIlkxWLI/s4ydJIUgZtq6rP+gU2
+        ZuXb0VaGknVvX8fFdxeCElbj7E2TCWqQfQg==
+X-ME-Sender: <xms:wD_5ZLP_chSquTqoyxrVvL8UEBegLh6ZYbEc04LGbx2vRtF-BnkTQg>
+    <xme:wD_5ZF_Nq0Hd891p2lCG29m-rQkXW-BQhlS19SoL9YlBxg6LzBIWQokKsCTSCja5y
+    inJLvzSGfTrEBte-Us>
+X-ME-Received: <xmr:wD_5ZKQjnv1GQ5RbsUWYOUWBCFijHAuBksc8JWZAeVTLHhL4nMKSKOSrhdyVOzHUKAWx>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudehgedgjeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkfffgggfvfevfhfhufgjtgfgsehtkeertddtfeejnecuhfhrohhmpeflihgr
+    gihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqne
+    cuggftrfgrthhtvghrnhephfehveeggeevieehgfdtveeigffgteehieehffetleetffeh
+    hfeuteffudehfeffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:wD_5ZPvwbWgx_JGmNH8GwhIdVSybYLKOBDnObtybPy7PkK6de4nb_Q>
+    <xmx:wD_5ZDfh-EqlwMPbl7J3IPNZkDikT273jogD2FjiGcG8LnZ9QF8bvg>
+    <xmx:wD_5ZL3q6VewV6BjH7guA4Z8WopUXw0u-pf88iDH4XDNYGm4GsIQPA>
+    <xmx:wD_5ZLS3u7_Utkx4heRsal_gPtub5k5DqgnX5wgOHwsJ4clQ-psq8g>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 6 Sep 2023 23:13:02 -0400 (EDT)
+Message-ID: <6e1bdebf-f335-23a5-c79f-d603c5d0150c@flygoat.com>
+Date:   Thu, 7 Sep 2023 11:13:00 +0800
 MIME-Version: 1.0
-Subject: Re: [Nouveau] [RFC, drm-misc-next v4 0/9] PCI/VGA: Allowing the user
- to select the primary video adapter at boot time
-Content-Language: en-US
-To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>,
-        suijingfeng <suijingfeng@loongson.cn>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>
-Cc:     nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org
-References: <20230904195724.633404-1-sui.jingfeng@linux.dev>
- <44ec8549-dc36-287e-4359-abd3ec8d22d6@suse.de>
- <5afd2efb-f838-f9b7-02a9-2cf4d4fd2382@loongson.cn>
- <2adfa653-ac35-d560-be52-c92848a1eef5@gmail.com>
- <b51d49f3-e3de-6b8d-9cb4-df5c03f3cdc0@loongson.cn>
- <10509692-ce04-e225-5a27-abc955554bdc@gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Sui Jingfeng <sui.jingfeng@linux.dev>
-In-Reply-To: <10509692-ce04-e225-5a27-abc955554bdc@gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Huacai Chen <chenhuacai@kernel.org>, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org, kw@linux.com,
+        lpieralisi@kernel.org, stable@vger.kernel.org
+References: <20230725061008.1504292-1-jiaxun.yang@flygoat.com>
+ <e9c103dc-98ac-9a51-7291-f5da1467b2ff@flygoat.com>
+ <CAAhV-H7_OjTaU_wn6mUW0-JSrXS+=A2rXCiBc8cyce5ob49BLg@mail.gmail.com>
+ <861a809d-3df1-327e-e033-87506f6d89e5@flygoat.com>
+ <20230907011828.GA2865@thinkpad>
+Content-Language: en-GB
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH v2] pci: loongson: Workaround MIPS firmware MRRS settings
+In-Reply-To: <20230907011828.GA2865@thinkpad>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
 
 
-On 2023/9/6 17:40, Christian König wrote:
-> Am 06.09.23 um 11:08 schrieb suijingfeng:
->> Well, welcome to correct me if I'm wrong.
->
-> You seem to have some very basic misunderstandings here.
->
-> The term framebuffer describes some VRAM memory used for scanout.
->
-> This framebuffer is exposed to userspace through some framebuffer 
-> driver, on UEFI platforms that is usually efifb but can be quite a 
-> bunch of different drivers.
->
-> When the DRM drivers load they remove the previous drivers using 
-> drm_aperture_remove_conflicting_pci_framebuffers() (or similar 
-> function), but this does not mean that the framebuffer or scanout 
-> parameters are modified in any way. It just means that the framebuffer 
-> is just no longer exposed through this driver.
->
-> Take over is the perfectly right description here because that's 
-> exactly what's happening. The framebuffer configuration including the 
-> VRAM memory as well as the parameters for scanout are exposed by the 
-> newly loaded DRM driver.
->
-> In other words userspace can query through the DRM interfaces which 
-> monitors already driven by the hardware and so in your terminology 
-> figure out which is the primary one.
->
-I'm a little bit of not convinced about this idea, you might be correct.
-But there cases where three are multiple monitors and each video card
-connect one.
+在 2023/9/7 9:18, Manivannan Sadhasivam 写道:
+[...]
+> Why do you need to walk through every single device instead of just bridges?
+> I'm not the maintainer, but my suggestion is to go for Huacai Chen's solution.
+Hi Mani,
 
-It also quite common that no monitors is connected, let the machine boot
-first, then find a monitors to connect to a random display output. See
-which will display. I don't expect the primary shake with.
-The primary one have to be determined as early as possible, because of
-the VGA console and the framebuffer console may directly output the primary.
-Get the DDC and/or HPD involved may necessary complicated the problem.
+Thanks for your reply, unfortunately Huacai's solution is impractical in 
+this case.
 
-There are ASpeed BMC who add a virtual connector in order to able display remotely.
-There are also have commands to force a connector to be connected status.
+The problem we have, is firmware (or BIOS) setting improper MRRS for devices
+attached under those bridges. So we have to fix up MRRS for every single 
+device.
+We can't iterate child device in bridge quirk because there is no 
+guarantee that
+bridge will be probed before  it's child device, partly due to hotplug.
 
+This quirk has been in tree for a while, until Huacai refactored it and 
+broke some
+systems in 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases").
 
-> It's just that as Thomas explained as well that this completely 
-> irrelevant to any modern desktop. Both X and Wayland both iterate the 
-> available devices and start rendering to them which one was used 
-> during boot doesn't really matter to them.
+Also to note that ks_pcie_quirk in drivers/pci/controller/dwc/pci-keystone.c
+uses similar approach.
+> This avoids iterating over bridges/devices two times.
 >
-You may be correct, but I'm still not sure.
-I probably need more times to investigate.
-Me and my colleagues are mainly using X server,
-the version varies from 1.20.4 and 1.21.1.4.
-Even this is true, the problems still exist for non-modern desktops.
+> Also, please rename firmware to BIOS, as firmware commonly represents the
+> software running on PCIe endpoint devices.
+Ack, will fix in next reversion.
 
-> Apart from that ranting like this and trying to explain stuff to 
-> people who obviously have much better background in the topic is not 
-> going to help your patches getting upstream.
+Thanks
+- Jiaxun
 >
-
-Thanks for you tell me so much knowledge,
-I'm realized where are the problems now.
-I will try to resolve the concerns at the next version.
-
-
-> Regards,
-> Christian.
->
+> - Mani
+[...]
