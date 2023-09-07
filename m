@@ -2,200 +2,206 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50537796E80
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Sep 2023 03:18:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 639B9796E9A
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Sep 2023 03:40:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241276AbjIGBSj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Sep 2023 21:18:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55558 "EHLO
+        id S241607AbjIGBkd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Sep 2023 21:40:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239495AbjIGBSi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Sep 2023 21:18:38 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D83EAE7F
-        for <linux-pci@vger.kernel.org>; Wed,  6 Sep 2023 18:18:34 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-68bec3a9bdbso363397b3a.3
-        for <linux-pci@vger.kernel.org>; Wed, 06 Sep 2023 18:18:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694049514; x=1694654314; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7u27T0bQj1X7QekOBppD1CzIesHT7gApB9/gnZSSYp0=;
-        b=sJab0hyXibX8SGB/sEXxDAWjLzR4lls4wFsyNKjyo+FA4zwReNEjdbQUBcqCPOCn3l
-         z2ckB7zv5vjOMrQ/z2nOrd+8aUsyYBfPZWTwLWiEsa67lBnVGvKn0ejjFK7DM6wFrAhl
-         hWc7Ua/bqZsSKuY8jcGPz3SG4TFmhTZm01/+EP3WnuqI/QniwfA6oUjHJZI21CX3cB55
-         tvEWY6KttNYtnk5kRrmLQZlN8qtmo3y4HkSji55PZPi78JTIKHAbZ4XGSHiglx0fKR1E
-         TLz0HHnty6HmoT8PnEYulbZqZeY73pb8yWbUfw/92jkFJn3X533aDhaPvGqMe7weNgYO
-         sCQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694049514; x=1694654314;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7u27T0bQj1X7QekOBppD1CzIesHT7gApB9/gnZSSYp0=;
-        b=H9XFBbrrD7eO3K6DSlgnIXxv9DTQBgeKAK9ZASDXLqKCuyfbFpN3o5qNSQ93tFvD/E
-         XpR7vfLjV/k4pxrU9qxuzezrQG//owWhgIeT9YqFH8dz7s/KOchMfnEUleF06bjzZBJf
-         VnTdUWdVQgE3J2CQ+6eAy0IU41ayBaCQlrV9ILeOs5ZNRaaMDtKNcYFTru50gwCNut3Z
-         N3V95qfbxcGhQty+p/mKP88Lw8iSLlVph/F3PyiogOt0lsQHF28S8SkpFXHD5OuEz7V6
-         4675HP2rSAbcUnPlzqhzW3Rjn5eIP44wkW1jJp4AKsjt2co5UWy07yBaP03bnAPzHjLE
-         WYIQ==
-X-Gm-Message-State: AOJu0YyLAklr4/u6lPJtwyu5Y73x3y+CfyLgY5Xhr07sAD5Kk4qH6gyR
-        rm9muB2PbmUBil2YdyODR6QV
-X-Google-Smtp-Source: AGHT+IHDyJS7/XnXMH6CR9TlIy/WCuIpyVOSQCL2gGQws/HrGH4V/9reg7NV0VAcFTfcb6xNJHJYUw==
-X-Received: by 2002:a05:6a20:ce92:b0:14d:6309:fc90 with SMTP id if18-20020a056a20ce9200b0014d6309fc90mr16187594pzb.8.1694049514254;
-        Wed, 06 Sep 2023 18:18:34 -0700 (PDT)
-Received: from thinkpad ([120.138.12.139])
-        by smtp.gmail.com with ESMTPSA id v25-20020a62a519000000b0068be348e35fsm11277982pfm.166.2023.09.06.18.18.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Sep 2023 18:18:33 -0700 (PDT)
-Date:   Thu, 7 Sep 2023 06:48:28 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     Huacai Chen <chenhuacai@kernel.org>, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, linux-kernel@vger.kernel.org, kw@linux.com,
-        lpieralisi@kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] pci: loongson: Workaround MIPS firmware MRRS settings
-Message-ID: <20230907011828.GA2865@thinkpad>
-References: <20230725061008.1504292-1-jiaxun.yang@flygoat.com>
- <e9c103dc-98ac-9a51-7291-f5da1467b2ff@flygoat.com>
- <CAAhV-H7_OjTaU_wn6mUW0-JSrXS+=A2rXCiBc8cyce5ob49BLg@mail.gmail.com>
- <861a809d-3df1-327e-e033-87506f6d89e5@flygoat.com>
+        with ESMTP id S229902AbjIGBkc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Sep 2023 21:40:32 -0400
+Received: from out-218.mta0.migadu.com (out-218.mta0.migadu.com [91.218.175.218])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0940E133
+        for <linux-pci@vger.kernel.org>; Wed,  6 Sep 2023 18:40:28 -0700 (PDT)
+Message-ID: <2da16c01-260b-365d-4651-91d9172e5ed8@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1694050826;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fdSJjVdF9N9VyWi8d0E/+tvyLt2iN7wqg3meq10BBqk=;
+        b=ZKxMImLVCYGgQdGo7wEp8md0rexO3whf38TT14IgmeA2I8lJ1+FpCjs5ckzNyIl70hWb0l
+        zhA/AEeUrYoo62kwzMEaVZue9c3989ZAOnT0QDm2vWL4fu5sqETOIWyXlnvsipgb5d/tj2
+        dmoljB5GmkWXZn1QdoOXvE7jhONfgh0=
+Date:   Thu, 7 Sep 2023 09:40:15 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [RFC,drm-misc-next v4 3/9] drm/radeon: Implement .be_primary()
+ callback
+Content-Language: en-US
+To:     Alex Deucher <alexdeucher@gmail.com>,
+        suijingfeng <suijingfeng@loongson.cn>
+Cc:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+References: <20230904195724.633404-1-sui.jingfeng@linux.dev>
+ <20230904195724.633404-4-sui.jingfeng@linux.dev>
+ <d3e6a9ce-1c7a-8e44-3127-413cd471a8e9@amd.com>
+ <40f32814-ca87-6e29-0e10-4b4463a2920d@loongson.cn>
+ <CADnq5_OYPha5cGF+tSj4fvSmf-6tObzNSe2__nG-SbjX6v_2vw@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Sui Jingfeng <sui.jingfeng@linux.dev>
+In-Reply-To: <CADnq5_OYPha5cGF+tSj4fvSmf-6tObzNSe2__nG-SbjX6v_2vw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <861a809d-3df1-327e-e033-87506f6d89e5@flygoat.com>
+X-Migadu-Flow: FLOW_OUT
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 08, 2023 at 03:38:19PM +0800, Jiaxun Yang wrote:
-> 
-> 
-> 在 2023/8/6 22:30, Huacai Chen 写道:
-> > Hi, Jiaxun,
-> > 
-> > On Sun, Aug 6, 2023 at 10:20 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
-> > > 
-> > > 
-> > > 在 2023/7/25 14:10, Jiaxun Yang 写道:
-> > > > This is a partial revert of commit 8b3517f88ff2 ("PCI:
-> > > > loongson: Prevent LS7A MRRS increases") for MIPS based Loongson.
-> > > > 
-> > > > There are many MIPS based Loongson systems in wild that
-> > > > shipped with firmware which does not set maximum MRRS properly.
-> > > > 
-> > > > Limiting MRRS to 256 for all as MIPS Loongson comes with higher
-> > > > MRRS support is considered rare.
-> > > > 
-> > > > Cc: stable@vger.kernel.org
-> > > > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217680
-> > > > Fixes: 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases")
-> > > > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > > Ping?
-> > > I expect this patch to go through PCI fixes tree.
-> > Can we do it like this by modifying the existing loongson_mrrs_quirk()?
-> 
-> Hmm, I'm not sure this will work, since loongson_mrrs_quirk only run on
-> bridges
-> but the old quirk should run on every single device.
-> 
 
-Why do you need to walk through every single device instead of just bridges?
-I'm not the maintainer, but my suggestion is to go for Huacai Chen's solution.
+On 2023/9/7 00:00, Alex Deucher wrote:
+> On Tue, Sep 5, 2023 at 1:25 PM suijingfeng <suijingfeng@loongson.cn> wrote:
+>> Hi,
+>>
+>>
+>> On 2023/9/5 13:50, Christian König wrote:
+>>> Am 04.09.23 um 21:57 schrieb Sui Jingfeng:
+>>>> From: Sui Jingfeng <suijingfeng@loongson.cn>
+>>>>
+>>>> On a machine with multiple GPUs, a Linux user has no control over
+>>>> which one
+>>>> is primary at boot time.
+>>> Question is why is that useful? Should we give users the ability to
+>>> control that?
+>>>
+>>> I don't see an use case for this.
+>>>
+>> On a specific machine with multiple GPUs mounted, only the
+>> primary graphics get POST-ed (initialized) by the firmware.
+>> Therefore the DRM drivers for the rest video cards have to
+>> work without the prerequisite setups done by firmware, This
+>> is called as POST.
+> I think that should be regarded as a bug in the driver that should be
+> fixed and this would not help with that case.  If a driver can't
+> initialize a device without aid from the pre-OS environment, that
+> should be fixed in the driver.  This solution also doesn't fix which
+> device is selected as the primary by the pre-OS environment.  That can
+> only be fixed in the pre-OS environment code.
+>
+>> One of the use cases is to test if a specific DRM driver
+>> would works properly, under the circumstance of not being
+>> POST-ed, The ast drm driver is the first one which refused
+>> to work if not being POST-ed by the firmware.
+>>
+>> Before apply this series, I was unable make drm/ast as the
+>> primary video card easily. The problem is that on a multiple
+>> video card configuration, the monitor connected with my
+>> AST2400 card not light up. While confusing, a naive programmer
+>> may suspect the PRIME is not working.
+>>
+>> After applied this series and passing ast.modeset=10 on the
+>> kernel cmd line, I found that the monitor connected with my
+>> ast2400 video card still black, It doesn't display and It
+>> doesn't show image to me.
+> The problem with adding modeset=10 is that it only helps when you have
+> one GPU driven by that driver in the system.  If you have multiple
+> GPUs driven by that driver, which one would that apply to?  E.g., what
+> if you have 2 AMD GPUs in the system.
+>
+>> While in the process of study drm/ast, I know that drm/ast
+>> driver has the POST code shipped, See the ast_post_gpu() function.
+>> Then, I was wondering why this function doesn't works.
+>>
+>> After a short-time (hasty) debugging, I found that the ast_post_gpu()
+>> function didn't get run. Because it have something to do with the
+>> ast->config_mode. Without thinking too much, I hardcoded the
+>> ast->config_mode as ast_use_p2a, the key point is to force the
+>> ast_post_gpu() function to run.
+>>
+>>
+>> ```
+>>
+>> --- a/drivers/gpu/drm/ast/ast_main.c
+>> +++ b/drivers/gpu/drm/ast/ast_main.c
+>> @@ -132,6 +132,8 @@ static int ast_device_config_init(struct ast_device
+>> *ast)
+>>                   }
+>>           }
+>>
+>> +       ast->config_mode = ast_use_p2a;
+>> +
+>>           switch (ast->config_mode) {
+>>           case ast_use_defaults:
+>>                   drm_info(dev, "Using default configuration\n");
+>>
+>> ```
+>>
+>> Then, the monitor light up, it display the Ubuntu greeter to me. Therefore
+>> my patch is useful, at least for the Linux drm driver tester and developer.
+>> It allow programmers to test the specific part of a specific driver without
+>> changing a line of the source code and without the need of sudo authority.
+>>
+>> It improves the efficiency of the testing and patch verification. I know
+>> the PrimaryGPU option of Xorg conf, but this approach will remember the
+>> setup have been made, you need modify it with root authority each time
+>> you want to switch the primary. But on the process of rapid developing
+>> and/or testing for multiple video drivers, with only one computer hardware
+>> resource available. What we really want is a one-shot command, as provided
+>> by this series.  So, this is the first use case.
+>>
+>>
+>> The second use case is that sometime the firmware is not reliable.
+>> While there are thousands of ARM64, PowerPC and Mips servers machine,
+>> Most of them don't have a good UEFI firmware support. I haven't test the
+>> drm/amdgpu and drm/radeon at my ARM64 server yet. Because this ARM64
+>> server always use the platform(BMC) integrated display controller as primary.
+>> The UEFI firmware of it does not provide options menu to tune.
+>> So, for the first time, the discrete card because useless, despite more powerful.
+>> I will take time to carry on the testing, so I will be able to tell more
+>> in the future.
+>>
+>>
+>> Even on X86, when select the PEG as primary on the UEFI BIOS menu.
+>> There is no way to tell the bios which one of my three
+>> discrete video be the primary. Not to mention some old UEFI
+>> firmware, which doesn't provide a setting at all.
+>> While the benefit of my approach is the flexibility.
+>> Yes the i915, amdgpu and radeon are good quality,
+>> but there may have programmers want to try nouveau.
+>>
+>>
+>> The third use case is that VGAARB is also not reliable, It will
+>> select a wrong device as primary. Especially on Arm64, Loongarch
+>> and mips arch etc. And the X server will use this wrong device
+>> as primary and completely crash there. Either because of lacking
+>> a driver or the driver has a bug which can not bear the graphic
+>> environment up. VGAARB is firmware dependent.
+>> My patch provide a temporary method to rescue.
+>>
+> It sounds like we need a general purpose "primary" selector.  I think
+> it's sort of orthogonal to VGA.  VGAARB is just for managing VGA
+> routing on PCI.  It's not really directly related to which GPU you
+> want to be the primary when the OS loads.  Maybe some new kernel
+> parameter, E.g., primary_display=<string> where the string would be
+> the specific device you wanted to be the primary,  E.g., you could use
+> the PCI BDF on PCI devices, primary_display=0000:0a:00.0 or some other
+> device string for non-PCI devices.
 
-This avoids iterating over bridges/devices two times.
 
-Also, please rename firmware to BIOS, as firmware commonly represents the
-software running on PCIe endpoint devices.
+Indeed, thanks for you give the right direction.
+Bjorn and Willianson also told me something similar,
+but I didn't realized until today.
 
-- Mani
+historically, VGAARB is only for managing VGA compatible device.
+For legacy BIOS environment, the routing related to this need to handled.
+I didn't realized those technique point by the time this series is sending.
+Beside this, It not uncommon that a specific machine ship multiple identical
+GPUs models Or GPUs from the same company (likely a integrated one and a discrete one)
+My naive approach in v4 cannot solve complex problems like this.
+I will try to solve this problems and concerns at the next version.
 
-> Thanks
-> Jiaxun
-> 
-> > 
-> > static void loongson_mrrs_quirk(struct pci_dev *pdev)
-> > {
-> >          /*
-> >           * Some Loongson PCIe ports have h/w limitations of maximum read
-> >           * request size. They can't handle anything larger than this. So
-> >           * force this limit on any devices attached under these ports.
-> >           */
-> >          struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
-> > 
-> > #ifdef CONFIG_MIPS
-> >          set_pcie_ports_to_mrrs_256_to_emulate_the_firmware_behavior();
-> > #endif
-> > 
-> >          bridge->no_inc_mrrs = 1;
-> > }
-> > 
-> > > Thanks
-> > > - Jiaxun
-> > > 
-> > > > ---
-> > > > v2: Rename quirk name to: loongson_old_mrrs_quirk
-> > > > ---
-> > > >    drivers/pci/controller/pci-loongson.c | 38 +++++++++++++++++++++++++++
-> > > >    1 file changed, 38 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> > > > index fe0f732f6e43..d0f68b102d10 100644
-> > > > --- a/drivers/pci/controller/pci-loongson.c
-> > > > +++ b/drivers/pci/controller/pci-loongson.c
-> > > > @@ -108,6 +108,44 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> > > >    DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> > > >                        DEV_LS7A_PCIE_PORT6, loongson_mrrs_quirk);
-> > > > 
-> > > > +#ifdef CONFIG_MIPS
-> > > > +static void loongson_old_mrrs_quirk(struct pci_dev *pdev)
-> > > > +{
-> > > > +     struct pci_bus *bus = pdev->bus;
-> > > > +     struct pci_dev *bridge;
-> > > > +     static const struct pci_device_id bridge_devids[] = {
-> > > > +             { PCI_VDEVICE(LOONGSON, DEV_LS2K_PCIE_PORT0) },
-> > > > +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT0) },
-> > > > +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT1) },
-> > > > +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT2) },
-> > > > +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT3) },
-> > > > +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT4) },
-> > > > +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT5) },
-> > > > +             { PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT6) },
-> > > > +             { 0, },
-> > > > +     };
-> > > > +
-> > > > +     /* look for the matching bridge */
-> > > > +     while (!pci_is_root_bus(bus)) {
-> > > > +             bridge = bus->self;
-> > > > +             bus = bus->parent;
-> > > > +             /*
-> > > > +              * There are still some wild MIPS Loongson firmware won't
-> > > > +              * set MRRS properly. Limiting MRRS to 256 as MIPS Loongson
-> > > > +              * comes with higher MRRS support is considered rare.
-> > > > +              */
-> > > > +             if (pci_match_id(bridge_devids, bridge)) {
-> > > > +                     if (pcie_get_readrq(pdev) > 256) {
-> > > > +                             pci_info(pdev, "limiting MRRS to 256\n");
-> > > > +                             pcie_set_readrq(pdev, 256);
-> > > > +                     }
-> > > > +                     break;
-> > > > +             }
-> > > > +     }
-> > > > +}
-> > > > +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_old_mrrs_quirk);
-> > > > +#endif
-> > > > +
-> > > >    static void loongson_pci_pin_quirk(struct pci_dev *pdev)
-> > > >    {
-> > > >        pdev->pin = 1 + (PCI_FUNC(pdev->devfn) & 3);
-> 
+Thanks.
 
--- 
-மணிவண்ணன் சதாசிவம்
+
+> Alex
