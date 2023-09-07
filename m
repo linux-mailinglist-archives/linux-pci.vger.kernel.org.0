@@ -2,206 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 639B9796E9A
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Sep 2023 03:40:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A24E796EF6
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Sep 2023 04:30:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241607AbjIGBkd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Sep 2023 21:40:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36068 "EHLO
+        id S229509AbjIGCax (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Sep 2023 22:30:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229902AbjIGBkc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Sep 2023 21:40:32 -0400
-Received: from out-218.mta0.migadu.com (out-218.mta0.migadu.com [91.218.175.218])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0940E133
-        for <linux-pci@vger.kernel.org>; Wed,  6 Sep 2023 18:40:28 -0700 (PDT)
-Message-ID: <2da16c01-260b-365d-4651-91d9172e5ed8@linux.dev>
+        with ESMTP id S229934AbjIGCau (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Sep 2023 22:30:50 -0400
+Received: from out-228.mta0.migadu.com (out-228.mta0.migadu.com [IPv6:2001:41d0:1004:224b::e4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 311D519A6
+        for <linux-pci@vger.kernel.org>; Wed,  6 Sep 2023 19:30:27 -0700 (PDT)
+Message-ID: <a9af88c5-4509-96ff-a7fd-a0f72d2f1e6a@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1694050826;
+        t=1694053816;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=fdSJjVdF9N9VyWi8d0E/+tvyLt2iN7wqg3meq10BBqk=;
-        b=ZKxMImLVCYGgQdGo7wEp8md0rexO3whf38TT14IgmeA2I8lJ1+FpCjs5ckzNyIl70hWb0l
-        zhA/AEeUrYoo62kwzMEaVZue9c3989ZAOnT0QDm2vWL4fu5sqETOIWyXlnvsipgb5d/tj2
-        dmoljB5GmkWXZn1QdoOXvE7jhONfgh0=
-Date:   Thu, 7 Sep 2023 09:40:15 +0800
+        bh=zWKuDI3UfELqoaKOu5alhaGYIMfDF3Uc/CsxX8KNpcw=;
+        b=GgeP92P4/naoXz26vwG4GdsQK6IicmdS3p/1rSEio3gSFjQdIr414+XfvCVmk/THfA7ZKv
+        4z62dV1LCO5X2T+9nr7deC3FDvEwA8Rt+pc1TYHpt6j3guxm7EdgbMKutPbEWqVZwt5ffu
+        P1CoPAj1PHHuBRbiwyeoXcKFjbqv6Jk=
+Date:   Thu, 7 Sep 2023 10:30:05 +0800
 MIME-Version: 1.0
-Subject: Re: [RFC,drm-misc-next v4 3/9] drm/radeon: Implement .be_primary()
- callback
+Subject: Re: [Nouveau] [RFC, drm-misc-next v4 0/9] PCI/VGA: Allowing the user
+ to select the primary video adapter at boot time
 Content-Language: en-US
-To:     Alex Deucher <alexdeucher@gmail.com>,
-        suijingfeng <suijingfeng@loongson.cn>
-Cc:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>,
+        suijingfeng <suijingfeng@loongson.cn>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Alex Williamson <alex.williamson@redhat.com>
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Cc:     nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org
 References: <20230904195724.633404-1-sui.jingfeng@linux.dev>
- <20230904195724.633404-4-sui.jingfeng@linux.dev>
- <d3e6a9ce-1c7a-8e44-3127-413cd471a8e9@amd.com>
- <40f32814-ca87-6e29-0e10-4b4463a2920d@loongson.cn>
- <CADnq5_OYPha5cGF+tSj4fvSmf-6tObzNSe2__nG-SbjX6v_2vw@mail.gmail.com>
+ <44ec8549-dc36-287e-4359-abd3ec8d22d6@suse.de>
+ <5afd2efb-f838-f9b7-02a9-2cf4d4fd2382@loongson.cn>
+ <2adfa653-ac35-d560-be52-c92848a1eef5@gmail.com>
+ <b51d49f3-e3de-6b8d-9cb4-df5c03f3cdc0@loongson.cn>
+ <10509692-ce04-e225-5a27-abc955554bdc@gmail.com>
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From:   Sui Jingfeng <sui.jingfeng@linux.dev>
-In-Reply-To: <CADnq5_OYPha5cGF+tSj4fvSmf-6tObzNSe2__nG-SbjX6v_2vw@mail.gmail.com>
+In-Reply-To: <10509692-ce04-e225-5a27-abc955554bdc@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
 
-On 2023/9/7 00:00, Alex Deucher wrote:
-> On Tue, Sep 5, 2023 at 1:25 PM suijingfeng <suijingfeng@loongson.cn> wrote:
->> Hi,
->>
->>
->> On 2023/9/5 13:50, Christian König wrote:
->>> Am 04.09.23 um 21:57 schrieb Sui Jingfeng:
->>>> From: Sui Jingfeng <suijingfeng@loongson.cn>
->>>>
->>>> On a machine with multiple GPUs, a Linux user has no control over
->>>> which one
->>>> is primary at boot time.
->>> Question is why is that useful? Should we give users the ability to
->>> control that?
->>>
->>> I don't see an use case for this.
->>>
->> On a specific machine with multiple GPUs mounted, only the
->> primary graphics get POST-ed (initialized) by the firmware.
->> Therefore the DRM drivers for the rest video cards have to
->> work without the prerequisite setups done by firmware, This
->> is called as POST.
-> I think that should be regarded as a bug in the driver that should be
-> fixed and this would not help with that case.  If a driver can't
-> initialize a device without aid from the pre-OS environment, that
-> should be fixed in the driver.  This solution also doesn't fix which
-> device is selected as the primary by the pre-OS environment.  That can
-> only be fixed in the pre-OS environment code.
+
+On 2023/9/6 17:40, Christian König wrote:
+> Am 06.09.23 um 11:08 schrieb suijingfeng:
+>> Well, welcome to correct me if I'm wrong.
 >
->> One of the use cases is to test if a specific DRM driver
->> would works properly, under the circumstance of not being
->> POST-ed, The ast drm driver is the first one which refused
->> to work if not being POST-ed by the firmware.
->>
->> Before apply this series, I was unable make drm/ast as the
->> primary video card easily. The problem is that on a multiple
->> video card configuration, the monitor connected with my
->> AST2400 card not light up. While confusing, a naive programmer
->> may suspect the PRIME is not working.
->>
->> After applied this series and passing ast.modeset=10 on the
->> kernel cmd line, I found that the monitor connected with my
->> ast2400 video card still black, It doesn't display and It
->> doesn't show image to me.
-> The problem with adding modeset=10 is that it only helps when you have
-> one GPU driven by that driver in the system.  If you have multiple
-> GPUs driven by that driver, which one would that apply to?  E.g., what
-> if you have 2 AMD GPUs in the system.
+> You seem to have some very basic misunderstandings here.
 >
->> While in the process of study drm/ast, I know that drm/ast
->> driver has the POST code shipped, See the ast_post_gpu() function.
->> Then, I was wondering why this function doesn't works.
->>
->> After a short-time (hasty) debugging, I found that the ast_post_gpu()
->> function didn't get run. Because it have something to do with the
->> ast->config_mode. Without thinking too much, I hardcoded the
->> ast->config_mode as ast_use_p2a, the key point is to force the
->> ast_post_gpu() function to run.
->>
->>
->> ```
->>
->> --- a/drivers/gpu/drm/ast/ast_main.c
->> +++ b/drivers/gpu/drm/ast/ast_main.c
->> @@ -132,6 +132,8 @@ static int ast_device_config_init(struct ast_device
->> *ast)
->>                   }
->>           }
->>
->> +       ast->config_mode = ast_use_p2a;
->> +
->>           switch (ast->config_mode) {
->>           case ast_use_defaults:
->>                   drm_info(dev, "Using default configuration\n");
->>
->> ```
->>
->> Then, the monitor light up, it display the Ubuntu greeter to me. Therefore
->> my patch is useful, at least for the Linux drm driver tester and developer.
->> It allow programmers to test the specific part of a specific driver without
->> changing a line of the source code and without the need of sudo authority.
->>
->> It improves the efficiency of the testing and patch verification. I know
->> the PrimaryGPU option of Xorg conf, but this approach will remember the
->> setup have been made, you need modify it with root authority each time
->> you want to switch the primary. But on the process of rapid developing
->> and/or testing for multiple video drivers, with only one computer hardware
->> resource available. What we really want is a one-shot command, as provided
->> by this series.  So, this is the first use case.
->>
->>
->> The second use case is that sometime the firmware is not reliable.
->> While there are thousands of ARM64, PowerPC and Mips servers machine,
->> Most of them don't have a good UEFI firmware support. I haven't test the
->> drm/amdgpu and drm/radeon at my ARM64 server yet. Because this ARM64
->> server always use the platform(BMC) integrated display controller as primary.
->> The UEFI firmware of it does not provide options menu to tune.
->> So, for the first time, the discrete card because useless, despite more powerful.
->> I will take time to carry on the testing, so I will be able to tell more
->> in the future.
->>
->>
->> Even on X86, when select the PEG as primary on the UEFI BIOS menu.
->> There is no way to tell the bios which one of my three
->> discrete video be the primary. Not to mention some old UEFI
->> firmware, which doesn't provide a setting at all.
->> While the benefit of my approach is the flexibility.
->> Yes the i915, amdgpu and radeon are good quality,
->> but there may have programmers want to try nouveau.
->>
->>
->> The third use case is that VGAARB is also not reliable, It will
->> select a wrong device as primary. Especially on Arm64, Loongarch
->> and mips arch etc. And the X server will use this wrong device
->> as primary and completely crash there. Either because of lacking
->> a driver or the driver has a bug which can not bear the graphic
->> environment up. VGAARB is firmware dependent.
->> My patch provide a temporary method to rescue.
->>
-> It sounds like we need a general purpose "primary" selector.  I think
-> it's sort of orthogonal to VGA.  VGAARB is just for managing VGA
-> routing on PCI.  It's not really directly related to which GPU you
-> want to be the primary when the OS loads.  Maybe some new kernel
-> parameter, E.g., primary_display=<string> where the string would be
-> the specific device you wanted to be the primary,  E.g., you could use
-> the PCI BDF on PCI devices, primary_display=0000:0a:00.0 or some other
-> device string for non-PCI devices.
+> The term framebuffer describes some VRAM memory used for scanout.
+>
+> This framebuffer is exposed to userspace through some framebuffer 
+> driver, on UEFI platforms that is usually efifb but can be quite a 
+> bunch of different drivers.
+>
+> When the DRM drivers load they remove the previous drivers using 
+> drm_aperture_remove_conflicting_pci_framebuffers() (or similar 
+> function), but this does not mean that the framebuffer or scanout 
+> parameters are modified in any way. It just means that the framebuffer 
+> is just no longer exposed through this driver.
+>
+> Take over is the perfectly right description here because that's 
+> exactly what's happening. The framebuffer configuration including the 
+> VRAM memory as well as the parameters for scanout are exposed by the 
+> newly loaded DRM driver.
+>
+> In other words userspace can query through the DRM interfaces which 
+> monitors already driven by the hardware and so in your terminology 
+> figure out which is the primary one.
+>
+I'm a little bit of not convinced about this idea, you might be correct.
+But there cases where three are multiple monitors and each video card
+connect one.
+
+It also quite common that no monitors is connected, let the machine boot
+first, then find a monitors to connect to a random display output. See
+which will display. I don't expect the primary shake with.
+The primary one have to be determined as early as possible, because of
+the VGA console and the framebuffer console may directly output the primary.
+Get the DDC and/or HPD involved may necessary complicated the problem.
+
+There are ASpeed BMC who add a virtual connector in order to able display remotely.
+There are also have commands to force a connector to be connected status.
 
 
-Indeed, thanks for you give the right direction.
-Bjorn and Willianson also told me something similar,
-but I didn't realized until today.
+> It's just that as Thomas explained as well that this completely 
+> irrelevant to any modern desktop. Both X and Wayland both iterate the 
+> available devices and start rendering to them which one was used 
+> during boot doesn't really matter to them.
+>
+You may be correct, but I'm still not sure.
+I probably need more times to investigate.
+Me and my colleagues are mainly using X server,
+the version varies from 1.20.4 and 1.21.1.4.
+Even this is true, the problems still exist for non-modern desktops.
 
-historically, VGAARB is only for managing VGA compatible device.
-For legacy BIOS environment, the routing related to this need to handled.
-I didn't realized those technique point by the time this series is sending.
-Beside this, It not uncommon that a specific machine ship multiple identical
-GPUs models Or GPUs from the same company (likely a integrated one and a discrete one)
-My naive approach in v4 cannot solve complex problems like this.
-I will try to solve this problems and concerns at the next version.
+> Apart from that ranting like this and trying to explain stuff to 
+> people who obviously have much better background in the topic is not 
+> going to help your patches getting upstream.
+>
 
-Thanks.
+Thanks for you tell me so much knowledge,
+I'm realized where are the problems now.
+I will try to resolve the concerns at the next version.
 
 
-> Alex
+> Regards,
+> Christian.
+>
