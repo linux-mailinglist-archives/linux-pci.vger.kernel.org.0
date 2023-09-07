@@ -2,237 +2,243 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A4617974FC
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Sep 2023 17:45:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93244797504
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Sep 2023 17:45:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230351AbjIGPmn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Sep 2023 11:42:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52294 "EHLO
+        id S233871AbjIGPmy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Sep 2023 11:42:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344953AbjIGPeJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Sep 2023 11:34:09 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 685A21BF0
-        for <linux-pci@vger.kernel.org>; Thu,  7 Sep 2023 08:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694100832; x=1725636832;
-  h=date:from:to:cc:subject:message-id;
-  bh=MZUIwOBiIutI0/60YX0OWUbMDWA6EPoOcwXykqWQQ2g=;
-  b=dAegVrJQDJieJKESWRGBlCsEJb9GtoT7gdUh549ZfQZHnH9RCYO3dgK+
-   Kuf7Y5czjiT2nkjZek8dWKVaadTtNcTry3bXrEPm/TNAaoe9l++BryloL
-   y6A2e/5n/PntG6+8tnDOh1d7UU0uTPfjHKZtbLCQ6Lbg50LTlyTrj8T+e
-   jKnhvLYW2De9mNNMQqEaktQuH7Sjg7g5gPQ6pySh/M4UIW9Kb9LGJnn54
-   0q2xjCes0QsL80dwQ/Y+/0PFCYurjGzbNxm1b4Bqt7O3UUYuxb8ekeNPC
-   IAvP8jGLqoACOeXz2rO7H9U79K+T/YWrtGUTWTfA50rAOu3iLp+zAmSBR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="408282747"
-X-IronPort-AV: E=Sophos;i="6.02,234,1688454000"; 
-   d="scan'208";a="408282747"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2023 00:18:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="718578174"
-X-IronPort-AV: E=Sophos;i="6.02,234,1688454000"; 
-   d="scan'208";a="718578174"
-Received: from lkp-server01.sh.intel.com (HELO 59b3c6e06877) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 07 Sep 2023 00:18:42 -0700
-Received: from kbuild by 59b3c6e06877 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qe9Hk-0000yx-2E;
-        Thu, 07 Sep 2023 07:18:40 +0000
-Date:   Thu, 07 Sep 2023 15:18:17 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- 8ec9c1d5d0a5a4744516adb483b97a238892f9d5
-Message-ID: <202309071515.9M5LtU8x-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S1344164AbjIGPch (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Sep 2023 11:32:37 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on20608.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe5a::608])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1E561FD4;
+        Thu,  7 Sep 2023 08:32:07 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GW9XWVBJiDk0wTCwYIGHO7XlXsrc09Mlx1rAjwgIinudeFjbO7oo9l9rNvevBKEspQrYH5dwkFKY4gwAxjGJMBOO+oq5Bk3NarsCX/j//E1SvTsMIcu9555KWhj1cuXLalfN5q+cRP6VoimsAxB8ShOVWqedKvybY+JBlSFRGC2EXH61FFETVT2ZH7P5+JPehl+1x0B4bMQjmzg3xNGupkuOLXF9neBv7ktiVJ2hq+Cr/SCmsxuRF8x99kb7nHPfDAZ+CASyFk+0u1PiTWfp7ShzCZgTox9MheBj38VKuL/C0XLXbDLPHSKPTzUS0jpZW2A1xeRt0wCW/0hfogRERA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xeAvkaJPL83aU7IXXb/klJXeSAlmHmhd0ecy6cuov44=;
+ b=XbphyThQ9/jU0mBJUXGhh/FQwt3uaNG9J0QpbewB5VaE+fJ6ubuwP+WOuuiHphxLgXXSQ2m38eVbvCmYQW24dWk/Sm7p3gUPO/fXY/t8H7Gv6cLMAjFubMk2j+ZP8DRXi2TkcnJka6t9pSjhL7ublDntLAsRgfPOWwgtTzF2iaQV7tTVE4UhmFTUSGlNUQy1ReGw9FMao0z7uj+jKSWUqrcUuEw/zRzoAKHS3T5661SvDVUKR49QJ3bAZks0gkq0w1xlL8Te636LiCTai7H/mWCtpHNlqVNIz+zXf7IiX4gz6ZvQsyiRLuVpYfC7VvXlYAk+c1W0OaxhjeBO5MabCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xeAvkaJPL83aU7IXXb/klJXeSAlmHmhd0ecy6cuov44=;
+ b=nmymfg3WSc3vJo8Z5fvjcW0peM4FMvehBLzSQJr0BSA0pNk85s06uy1ACD3HhQN+JoXTZDm2rYGK2pLE5xAiIsiK6SLltV0pMZXR/NRXjZu9hllFL7KsXfg2Qi8ZN+rGPMnX923JjSPMiFmy7HSBcOnkxqJ387h2Cr4/2CSvCk4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB3587.namprd12.prod.outlook.com (2603:10b6:408:43::13)
+ by PH0PR12MB8051.namprd12.prod.outlook.com (2603:10b6:510:26d::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.34; Thu, 7 Sep
+ 2023 09:08:25 +0000
+Received: from BN8PR12MB3587.namprd12.prod.outlook.com
+ ([fe80::3d:c14:667a:1c81]) by BN8PR12MB3587.namprd12.prod.outlook.com
+ ([fe80::3d:c14:667a:1c81%4]) with mapi id 15.20.6745.034; Thu, 7 Sep 2023
+ 09:08:24 +0000
+Message-ID: <127fab21-bc5c-f782-e42b-1092fbb8df34@amd.com>
+Date:   Thu, 7 Sep 2023 11:08:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [Nouveau] [RFC, drm-misc-next v4 0/9] PCI/VGA: Allowing the user
+ to select the primary video adapter at boot time
+Content-Language: en-US
+To:     Sui Jingfeng <sui.jingfeng@linux.dev>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>,
+        suijingfeng <suijingfeng@loongson.cn>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Cc:     nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org
+References: <20230904195724.633404-1-sui.jingfeng@linux.dev>
+ <44ec8549-dc36-287e-4359-abd3ec8d22d6@suse.de>
+ <5afd2efb-f838-f9b7-02a9-2cf4d4fd2382@loongson.cn>
+ <2adfa653-ac35-d560-be52-c92848a1eef5@gmail.com>
+ <b51d49f3-e3de-6b8d-9cb4-df5c03f3cdc0@loongson.cn>
+ <10509692-ce04-e225-5a27-abc955554bdc@gmail.com>
+ <a9af88c5-4509-96ff-a7fd-a0f72d2f1e6a@linux.dev>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+In-Reply-To: <a9af88c5-4509-96ff-a7fd-a0f72d2f1e6a@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR0P281CA0258.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:b5::10) To BN8PR12MB3587.namprd12.prod.outlook.com
+ (2603:10b6:408:43::13)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3587:EE_|PH0PR12MB8051:EE_
+X-MS-Office365-Filtering-Correlation-Id: d587aba3-a456-4f16-eacd-08dbaf81fda5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JoV9/E07wa/GoAELsbfGhj2VakEGYD320UHtsTbXueDzaUfWXAjvPj3HLu1mEXNHnatzRRIyjJVfglszrw2T9r7tqt6sX4q1Gywq/5yVi1UJYqxVnYTfOzOCTwLXWOfhFxTE75xHMLevM2cKsTr6zvma1vmz4RDhlJQt8Uzwm4Gdyot5e9le2tMBuw3NPT4j7BVFcJosY5Uh/onjLHujaTGEPRZvolmhtCE1f5jsFUK1BE0E6qHCsyuGqc9Hzx4gI/HDHaG7SSuLGVpmGI84Izu7pfwzm94WgSXaAsxciTnNI/LWSGh3/gl4mfJvRIUWL+lCDUImW2ZqbaIX81931HLnc8JQOlw78sBy7cV2S4II+Z83i42ZCY3TOGIuWhFSuWEKf4kXmdZ0JMWTLlOFN2fZzQX9ivHGOwupUuC6Ul1G2l5PmcgoiI6VHb1f816KJx7ktgQvlDFIGRYv2vLPOFWsC76VM7bIfe8xWqaLoTJM2iEOtZYCePDh8aWUf6PbE6NQ4Tvwi/n0pv3/DNTHAua7K/meDiYdMLY0d7vXFd36AR5sT4FcEh2icbbTMvCslHPyJr/YnfLjfca8N1rRgobWtErhtWhJXXdLaMePodb0SGzZhx8wUMqZ+ZJA9UXrvES8KZN5JlTKWyzP4gPv9Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3587.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(346002)(136003)(396003)(376002)(451199024)(1800799009)(186009)(53546011)(6506007)(6486002)(6666004)(6512007)(2616005)(66574015)(83380400001)(26005)(2906002)(7416002)(6636002)(110136005)(66476007)(41300700001)(66556008)(4326008)(8676002)(8936002)(66946007)(478600001)(5660300002)(86362001)(31696002)(36756003)(38100700002)(316002)(66899024)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ek5kWjNibEYxNHNLMmFBazZCdFVUaVl4cXVhRG52clhMaVRaclNiT0J4MWpl?=
+ =?utf-8?B?MWNFL3RYYmVzcUthbHRmN1RpL1ZBZWdlUXVrUERnOWpoYjhLS0NnVXh3RjRT?=
+ =?utf-8?B?d3dodTl4QmpQYnorbDZNN3ZQMUZMUDhnYTloUW5YdnhWNElNNHhoZjdjdXBw?=
+ =?utf-8?B?VDVCSUIxQ0xqcTluTzZBRWkyOVEvYitBZENwdG1wNWd2azA0YnZVMXVGaktl?=
+ =?utf-8?B?QkREQU9GWHNKMU5yODRIVkR0b1F4OVVMSDdNRW9uQjFuakVBS0JVOWZ1Q05N?=
+ =?utf-8?B?c3pWV21IOER6WHJJQVJXNjVMa1ZSZzUrWEp1NnR5S0VpQWF4RGE5RWVFS005?=
+ =?utf-8?B?NmhUNUFwSHJ3UnpQWkxWN0JkNnV2WmVkSmVyVkFqQzY2azJYRlRqeDBCT29E?=
+ =?utf-8?B?YXNvcUVXZDBsSzMzYmNza2paNlE3c3BHUDJ5azhvRmVURTdOYWU0UXdHdnlX?=
+ =?utf-8?B?Z2kwcjJIVXhwSDYxSG5WdTBkd2s0VUZEU2FHZWxrSStwdmp4NVNmK2tlbklm?=
+ =?utf-8?B?YjJmY1p2NkpGc3p3K2swamNtZnE4elV2WTRqQzN1b3pkeFljZi8yWmJRZlVh?=
+ =?utf-8?B?YTZicmdHQ3pKRVFlMFFRN09aQ2pCS2RUeGt6RzlFK21RS1BmOUgzSGp1Vmls?=
+ =?utf-8?B?elpzNkFTeS84dzIxTzBGZHZ2aE83NXY4bkp1eURmaGloQ0NkVkFtQkErVzhO?=
+ =?utf-8?B?L2J0QmFaRmN3ZE9PdUhHWmpKaGFlMC9tZ1ZjeXkvd3Z6OVVpaXBHbHlJcW9h?=
+ =?utf-8?B?TmNZa2FrOU8xQVp3MFBTVTF3K014ZXhvL09qMGY3cm9yNDI0dFlCb3NWMlZ0?=
+ =?utf-8?B?bFR0dnl3bHdzeERqNHVyNFcvQi83MmxGM003a0U1Q2NtejVTNVkvMzVIMGxy?=
+ =?utf-8?B?RVp0WGlRVW9kTjZPUU5XK3VYYmYwcFZ6cGpVYk1lQzAwNlRRMVJTQVBoWXF5?=
+ =?utf-8?B?cC9zWHZoZmI2UnpMMkNDQVRQQU01U05sN0RPMmp6UndPOVRqQzZudGtzTjdJ?=
+ =?utf-8?B?NlpTSDVWaHltZnVwT2VRR2pkVmpkWGs2bkFuNWErWVNGZUxrVkRGQkswby9D?=
+ =?utf-8?B?eVBZZzFqUHlBMWhRaFNFZ2hGUlI2ckdXYlY4c0piNkZGV3RGVHU2VGlJc0th?=
+ =?utf-8?B?RGxubjN5VDkrLzRqRi9DUGQ0N2xSbFh1K2lsL1ltQXFwMlp3bVNzVVJMUXRG?=
+ =?utf-8?B?TkhqQjQxT2ZFRERnVnBoaTgyTG9yVjdnZng3dHk3cWx3bjFJd2NmZWJWSVlF?=
+ =?utf-8?B?L0dCKzVlSzhWRmRwQ0w5NmdpQnIxQm9aQm5BVDlmcS8yVGNNTG9FRll6WGhq?=
+ =?utf-8?B?SU8wZVFBbDZLMllja2FYT2FjaWZDM0FnRjJqRVVaSDdudHhXQitIUTJKTlY2?=
+ =?utf-8?B?bWlQUWM1VGd0cVlvYlZOWkw1b0xVZXpWUmtUQVE2dGFHN2lXYk1BamQ4Yk5T?=
+ =?utf-8?B?RmhsYVFkblhmYXVVaEtoc3owTC9NaUhvZkF5NDMrVnE1alEvZDBnYkdpMmJr?=
+ =?utf-8?B?aE5aRW1yL1ZqSFVkWjQ2akkzRzI1REpUbHZoMGp3WjVqNmZjWEcyNkM2d2JM?=
+ =?utf-8?B?RFVjcmNxVWV5ZWFESkNnYXYrMVdjR0dCNXZYVWNTSUQ3R1dZQVN6ZFVSSU81?=
+ =?utf-8?B?QW82NVZiKzc0Nkk0N1dFM0xLZDBxK3RvOStOU3MwblZKVzFmUUhKdnQ1b1lX?=
+ =?utf-8?B?YmpCczBadWRqK1AwMy9MQXlUSmQxZ0M2Vyt1WVB1cGZqNXl0WVlzRW9pRm9O?=
+ =?utf-8?B?VGlmWi9vTnFGN1JxanVCY2JBejJRdDhBL3NodnBCUHJCUEtGU1Z4bXNoUG1D?=
+ =?utf-8?B?eGRQT0FxREYxMXNiU1hPeDRlZ1hNOTY2SmxiZ2d3dXY4MTZNaGZnVkdZVEhP?=
+ =?utf-8?B?QTNGbFFiWm5qNXJKV1lRTnpEanE4NEJjRnd3YnBib1A1a09wNzRpNEo3b0ZN?=
+ =?utf-8?B?WDNCbGJwSjJCOEVUMlZVMHBiUTR1blFLbVVxS0J1czcrcHhqbnFJOEZzemtt?=
+ =?utf-8?B?RGtFbldOSStxcGp3NXFRbXAvUUJpSncrNlVpaGJEZjQ4UnZtNnBQeXJZblY2?=
+ =?utf-8?B?SzcxQmFDbldXbTVnTHlLZ3V4cDJPcFR2MTZCcUZsRjVSdGkrdVFab0xYU0xk?=
+ =?utf-8?Q?ohDAv5XCgCarHxDQdK41rxQMK?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d587aba3-a456-4f16-eacd-08dbaf81fda5
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3587.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2023 09:08:24.9082
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QAdYlxZFdyRXrLit0w3tdO37aAF/yt5LeogJuqOG4hnh11l9FimsFFK27CXcWbw7
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8051
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-branch HEAD: 8ec9c1d5d0a5a4744516adb483b97a238892f9d5  PCI: Free released resource after coalescing
+Am 07.09.23 um 04:30 schrieb Sui Jingfeng:
+> Hi,
+>
+>
+> On 2023/9/6 17:40, Christian König wrote:
+>> Am 06.09.23 um 11:08 schrieb suijingfeng:
+>>> Well, welcome to correct me if I'm wrong.
+>>
+>> You seem to have some very basic misunderstandings here.
+>>
+>> The term framebuffer describes some VRAM memory used for scanout.
+>>
+>> This framebuffer is exposed to userspace through some framebuffer 
+>> driver, on UEFI platforms that is usually efifb but can be quite a 
+>> bunch of different drivers.
+>>
+>> When the DRM drivers load they remove the previous drivers using 
+>> drm_aperture_remove_conflicting_pci_framebuffers() (or similar 
+>> function), but this does not mean that the framebuffer or scanout 
+>> parameters are modified in any way. It just means that the 
+>> framebuffer is just no longer exposed through this driver.
+>>
+>> Take over is the perfectly right description here because that's 
+>> exactly what's happening. The framebuffer configuration including the 
+>> VRAM memory as well as the parameters for scanout are exposed by the 
+>> newly loaded DRM driver.
+>>
+>> In other words userspace can query through the DRM interfaces which 
+>> monitors already driven by the hardware and so in your terminology 
+>> figure out which is the primary one.
+>>
+> I'm a little bit of not convinced about this idea, you might be correct.
 
-elapsed time: 805m
+Well I can point you to the code if you don't believe me.
 
-configs tested: 161
-configs skipped: 2
+> But there cases where three are multiple monitors and each video card
+> connect one.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Yeah, but this is irrelevant. The key point is the configuration is 
+taken over when the driver loads.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20230907   gcc  
-arc                  randconfig-r004-20230907   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                   randconfig-001-20230907   clang
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r001-20230907   clang
-arm64                randconfig-r012-20230907   gcc  
-arm64                randconfig-r016-20230907   gcc  
-arm64                randconfig-r034-20230907   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-hexagon               randconfig-001-20230907   clang
-hexagon               randconfig-002-20230907   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20230907   clang
-i386         buildonly-randconfig-002-20230907   clang
-i386         buildonly-randconfig-003-20230907   clang
-i386         buildonly-randconfig-004-20230907   clang
-i386         buildonly-randconfig-005-20230907   clang
-i386         buildonly-randconfig-006-20230907   clang
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20230907   clang
-i386                  randconfig-002-20230907   clang
-i386                  randconfig-003-20230907   clang
-i386                  randconfig-004-20230907   clang
-i386                  randconfig-005-20230907   clang
-i386                  randconfig-006-20230907   clang
-i386                  randconfig-011-20230907   gcc  
-i386                  randconfig-012-20230907   gcc  
-i386                  randconfig-013-20230907   gcc  
-i386                  randconfig-014-20230907   gcc  
-i386                  randconfig-015-20230907   gcc  
-i386                  randconfig-016-20230907   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20230907   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r031-20230907   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-microblaze           randconfig-r022-20230907   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r011-20230907   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r014-20230907   gcc  
-nios2                randconfig-r033-20230907   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-openrisc             randconfig-r002-20230907   gcc  
-openrisc             randconfig-r013-20230907   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc64            randconfig-r024-20230907   gcc  
-powerpc64            randconfig-r036-20230907   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20230907   clang
-riscv                randconfig-r021-20230907   gcc  
-riscv                randconfig-r023-20230907   gcc  
-riscv                randconfig-r032-20230907   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20230907   gcc  
-s390                 randconfig-r003-20230907   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r025-20230907   gcc  
-sparc                randconfig-r035-20230907   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r005-20230907   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20230907   clang
-x86_64       buildonly-randconfig-002-20230907   clang
-x86_64       buildonly-randconfig-003-20230907   clang
-x86_64       buildonly-randconfig-004-20230907   clang
-x86_64       buildonly-randconfig-005-20230907   clang
-x86_64       buildonly-randconfig-006-20230907   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20230907   gcc  
-x86_64                randconfig-002-20230907   gcc  
-x86_64                randconfig-003-20230907   gcc  
-x86_64                randconfig-004-20230907   gcc  
-x86_64                randconfig-005-20230907   gcc  
-x86_64                randconfig-006-20230907   gcc  
-x86_64                randconfig-011-20230907   clang
-x86_64                randconfig-012-20230907   clang
-x86_64                randconfig-013-20230907   clang
-x86_64                randconfig-014-20230907   clang
-x86_64                randconfig-015-20230907   clang
-x86_64                randconfig-016-20230907   clang
-x86_64                randconfig-071-20230907   clang
-x86_64                randconfig-072-20230907   clang
-x86_64                randconfig-073-20230907   clang
-x86_64                randconfig-074-20230907   clang
-x86_64                randconfig-075-20230907   clang
-x86_64                randconfig-076-20230907   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa               randconfig-r006-20230907   gcc  
-xtensa               randconfig-r015-20230907   gcc  
-xtensa               randconfig-r026-20230907   gcc  
+So whatever is there before as setup (one monitor showing console, three 
+monitors mirrored, whatever) should be there after loading the driver as 
+well. This configuration is just immediately overwritten because nobody 
+cares about it.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>
+> It also quite common that no monitors is connected, let the machine boot
+> first, then find a monitors to connect to a random display output. See
+> which will display. I don't expect the primary shake with.
+> The primary one have to be determined as early as possible, because of
+> the VGA console and the framebuffer console may directly output the 
+> primary.
+
+Well that is simply not correct. There is not concept of "primary" 
+display, it can just be that a monitor was brought up by the BIOS or 
+bootloader and we take over this configuration.
+
+> Get the DDC and/or HPD involved may necessary complicated the problem.
+>
+> There are ASpeed BMC who add a virtual connector in order to able 
+> display remotely.
+> There are also have commands to force a connector to be connected status.
+>
+>
+>> It's just that as Thomas explained as well that this completely 
+>> irrelevant to any modern desktop. Both X and Wayland both iterate the 
+>> available devices and start rendering to them which one was used 
+>> during boot doesn't really matter to them.
+>>
+> You may be correct, but I'm still not sure.
+> I probably need more times to investigate.
+> Me and my colleagues are mainly using X server,
+> the version varies from 1.20.4 and 1.21.1.4.
+> Even this is true, the problems still exist for non-modern desktops.
+
+Well, I have over 25 years of experience with display hardware and what 
+you describe here was never an issue.
+
+What you have is simply a broken display driver which for some reason 
+can't handle your use case.
+
+I strongly suggest that you just completely drop this here and go into 
+the AST driver and try to fix it.
+
+Regards,
+Christian.
+
+
+>
+>> Apart from that ranting like this and trying to explain stuff to 
+>> people who obviously have much better background in the topic is not 
+>> going to help your patches getting upstream.
+>>
+>
+> Thanks for you tell me so much knowledge,
+> I'm realized where are the problems now.
+> I will try to resolve the concerns at the next version.
+>
+>
+>> Regards,
+>> Christian.
+>>
+
