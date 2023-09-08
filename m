@@ -2,153 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1919A7982D2
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Sep 2023 08:54:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0101E7982ED
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Sep 2023 08:59:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242431AbjIHGyg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Sep 2023 02:54:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52592 "EHLO
+        id S240114AbjIHG7s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Sep 2023 02:59:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242442AbjIHGyc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Sep 2023 02:54:32 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 104691FDF;
-        Thu,  7 Sep 2023 23:54:22 -0700 (PDT)
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3885Tbdt007733;
-        Fri, 8 Sep 2023 06:54:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : date :
- subject : mime-version : content-type : content-transfer-encoding :
- message-id : references : in-reply-to : to : cc; s=qcppdkim1;
- bh=xbPGXFjhk3rQpoGLqXnqN54My/xDiWdIVQN0PE1OG6s=;
- b=nObuKNjCR0mlCsMCZJ+dY4DGu6UQOVbhb8UPIKqoyPxahi9WmjjKCza/wKcHxb6W2fel
- EXAOYmuNKQ0bHbY8UA+qCx5ck+HRNgffgTuh8ow55OnyyRAZ+PaKm8Ff7lzwzzzjP/9I
- RrunlqK3oeeUrUkoOjqY0czJfEU2OjHh0HAgByOI+XJaMUyUuewUjCRRYaBI4GOt9NRT
- sMbvNvquv/Kkta8msBZ0FJ4zWhQnjYrUUc4Ry10CSuNtYQbvIR4VYw+N21K2c6xXKKmt
- yjBYWIBEfKgXJC7M/kVereseWxk8VKDbvYfm5n2jQK9R8CKUo3Tx0igqh4DfRbLHAh/u gw== 
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3syf5c1ygc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Sep 2023 06:54:13 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3886sCcQ015257
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 8 Sep 2023 06:54:12 GMT
-Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.36; Thu, 7 Sep 2023 23:54:08 -0700
-From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Date:   Fri, 8 Sep 2023 12:23:38 +0530
-Subject: [PATCH v6 4/4] PCI: epf-mhi: Add support for handling D-state
- notify from EPC
+        with ESMTP id S242386AbjIHG7o (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Sep 2023 02:59:44 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA7281BD8;
+        Thu,  7 Sep 2023 23:59:39 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-401d10e3e54so18413385e9.2;
+        Thu, 07 Sep 2023 23:59:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694156378; x=1694761178; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mjDLcllXuQB9fMiD1YO8Am5UOuvL3MHNOtNmYPG4ZJ8=;
+        b=p2FZWxbONSl1R86+/40cckBkJO9iPjm+zl9cZI6ppn9bNxotbGgUwVxz3Wx+RoMTDv
+         VIPI17r6bVHr/8F/1QP2J8Ss9zrjc2N3/5crv4EtTfrIGqBuQvNaWF1AyATuYUAvZp30
+         9MpM0tsRoLvmjaC2wchD3H/fBiCqRDADFcm4i05mcQvILYxefa3FtnjPb59RMQ2MC5Ke
+         kbwimWjiMNfpGOnTJdoHkIKYA+37umP3Wy6fPQZjbwhpFrF1gAVleGV35wUPhIHoqFvC
+         nFg/CiFRYS6mpFsieemt1yQCr81x1+Yhl0w6CeVw0mP7odplMXHSjwHCWJc0iu+4FPrh
+         4RZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694156378; x=1694761178;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mjDLcllXuQB9fMiD1YO8Am5UOuvL3MHNOtNmYPG4ZJ8=;
+        b=hayPoPrxhpX3cKxCxgi7YWwpdUYJ99FsJMAhneC8mvKhK9KjMx/QwnsLL1bJWvpSO3
+         So0k/3ZUO7ImcQ9Ktd3MVrgZ8FM+dX337omZq9x6lOeSxY60ZuvKLUgmuGlEL1mZjXJe
+         X8s3eX2hMtpdKmeCy9Bo7Log43R0EV+lKo1HpbqWZ9HfTZFRC+UK5WivXlozscz0xPsJ
+         dN+GkmNi3UX5kM+uzqccKD3KdRVH1w6KDmBFb4rUJ3pPLartsAMDwzgNkGiP0jigvUeC
+         8nU9TVoAiaOtuEv87bbiXUZ7JBBUqn/Yw1dcRFKCX/cVVwXemhA9MeKn0hka/WHr26JF
+         7aNg==
+X-Gm-Message-State: AOJu0YyuyXl4ytw0O7vQ4F7Ia7wb4VMY649Tphf0lvOBR+aQEq3Kyqsd
+        RSEO489n34fhQvWe48ondYs=
+X-Google-Smtp-Source: AGHT+IGM1JfDgyy/2dl6TEtwz/XvcIH37J3N2Fej+DS87LarA2/uYFOpOKc2ATIxC/1AxjCVyF/5iw==
+X-Received: by 2002:a05:6000:1081:b0:30e:3caa:971b with SMTP id y1-20020a056000108100b0030e3caa971bmr1187063wrw.51.1694156378079;
+        Thu, 07 Sep 2023 23:59:38 -0700 (PDT)
+Received: from [10.254.108.106] (munvpn.amd.com. [165.204.72.6])
+        by smtp.gmail.com with ESMTPSA id c16-20020a5d4150000000b00317a29af4b2sm1250339wrq.68.2023.09.07.23.59.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Sep 2023 23:59:37 -0700 (PDT)
+Message-ID: <c9f33bc8-85be-5234-5bc8-7f50abc2dadd@gmail.com>
+Date:   Fri, 8 Sep 2023 08:59:35 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20230908-dstate_change-v6-4-b414a6edd765@quicinc.com>
-References: <20230908-dstate_change-v6-0-b414a6edd765@quicinc.com>
-In-Reply-To: <20230908-dstate_change-v6-0-b414a6edd765@quicinc.com>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [Nouveau] [RFC, drm-misc-next v4 0/9] PCI/VGA: Allowing the user
+ to select the primary video adapter at boot time
+Content-Language: en-US
+To:     suijingfeng <suijingfeng@loongson.cn>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Sui Jingfeng <sui.jingfeng@linux.dev>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <mhi@lists.linux.dev>,
-        Krishna chaitanya chundru <quic_krichai@quicinc.com>
-X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1694156032; l=1755;
- i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
- bh=vF/dQCu3TPF1bViARZ8lDBrNRejc29BwCNshPXeJqbg=;
- b=CfyLczHQOj9gA4+LDiEHuovleozRyYYl3Bj/1Z2z8PLGXS+8pl/cTnSnsz8JNRLCLi9DztnP/
- S5SJklpzlk4BFXLqeeEm8++BySsMPGlp2D7sMs3NuY5Oj0BRnLGCjLg
-X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: VwRbAi8vdbHXtvqrYeXxho8-t81XDIZV
-X-Proofpoint-ORIG-GUID: VwRbAi8vdbHXtvqrYeXxho8-t81XDIZV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-08_03,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 spamscore=0 lowpriorityscore=0 phishscore=0
- malwarescore=0 suspectscore=0 impostorscore=0 bulkscore=0 mlxlogscore=857
- mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309080062
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Cc:     nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org
+References: <20230904195724.633404-1-sui.jingfeng@linux.dev>
+ <44ec8549-dc36-287e-4359-abd3ec8d22d6@suse.de>
+ <5afd2efb-f838-f9b7-02a9-2cf4d4fd2382@loongson.cn>
+ <2adfa653-ac35-d560-be52-c92848a1eef5@gmail.com>
+ <b51d49f3-e3de-6b8d-9cb4-df5c03f3cdc0@loongson.cn>
+ <10509692-ce04-e225-5a27-abc955554bdc@gmail.com>
+ <a9af88c5-4509-96ff-a7fd-a0f72d2f1e6a@linux.dev>
+ <127fab21-bc5c-f782-e42b-1092fbb8df34@amd.com>
+ <39736dad-41e3-8b24-ccef-ac3425a6c9f4@loongson.cn>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
+In-Reply-To: <39736dad-41e3-8b24-ccef-ac3425a6c9f4@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add support for handling D-state notify for MHI EPF.
+Am 07.09.23 um 18:33 schrieb suijingfeng:
+> Hi,
+>
+>
+> On 2023/9/7 17:08, Christian König wrote:
+>
+>
+>> I strongly suggest that you just completely drop this here 
+>
+>
+> Drop this is OK, no problem. Then I will go to develop something else.
+> This version is not intended to merge originally, as it's a RFC.
+> Also, the core mechanism already finished, it is the first patch in 
+> this series.
+> Things left are just policy (how to specify one and parse the kernel 
+> CMD line) and nothing interesting left.
+> It is actually to fulfill my promise at V3 which is to give some 
+> examples as usage cases.
+>
+>
+>> and go into the AST driver and try to fix it. 
+>
+> Well, someone tell me that this is well defined behavior yesterday,
+> which imply that it is not a bug. I'm not going to fix a non-bug.
 
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
----
- drivers/pci/endpoint/functions/pci-epf-mhi.c | 11 +++++++++++
- include/linux/mhi_ep.h                       |  3 +++
- 2 files changed, 14 insertions(+)
+Sorry for that, I wasn't realizing what you are actually trying to do.
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-index b7b9d3e21f97..7bd15cca686c 100644
---- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-@@ -592,6 +592,16 @@ static int pci_epf_mhi_bme(struct pci_epf *epf)
- 	return 0;
- }
- 
-+static int pci_epf_mhi_dstate_notify(struct pci_epf *epf, pci_power_t state)
-+{
-+	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-+	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-+
-+	mhi_cntrl->dstate = state;
-+
-+	return 0;
-+}
-+
- static int pci_epf_mhi_bind(struct pci_epf *epf)
- {
- 	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-@@ -649,6 +659,7 @@ static struct pci_epc_event_ops pci_epf_mhi_event_ops = {
- 	.link_up = pci_epf_mhi_link_up,
- 	.link_down = pci_epf_mhi_link_down,
- 	.bme = pci_epf_mhi_bme,
-+	.dstate_notify = pci_epf_mhi_dstate_notify,
- };
- 
- static int pci_epf_mhi_probe(struct pci_epf *epf,
-diff --git a/include/linux/mhi_ep.h b/include/linux/mhi_ep.h
-index f198a8ac7ee7..c3a068592d21 100644
---- a/include/linux/mhi_ep.h
-+++ b/include/linux/mhi_ep.h
-@@ -8,6 +8,7 @@
- 
- #include <linux/dma-direction.h>
- #include <linux/mhi.h>
-+#include <linux/pci.h>
- 
- #define MHI_EP_DEFAULT_MTU 0x8000
- 
-@@ -139,6 +140,8 @@ struct mhi_ep_cntrl {
- 
- 	enum mhi_state mhi_state;
- 
-+	pci_power_t dstate;
-+
- 	u32 max_chan;
- 	u32 mru;
- 	u32 event_rings;
+> But if thomas ask me to fix it, then I probably have to try to fix.
+> But I suggest if things not broken, don't fix it. Otherwise this may
+> incur more big trouble. For server's single display use case, it is
+> good enough.
 
--- 
-2.42.0
+Yeah, exactly that's the reason why you shouldn't mess with this.
+
+In theory you could try to re-program the necessary north bridge blocks 
+to make integrated graphics work even if you installed a dedicated VGA 
+adapter, but you will most likely be missing something.
+
+The only real fix is to tell the BIOS that you want to use the 
+integrated VGA device even if a dedicated one is detected.
+
+If you want to learn more about the background AMD has a bunch of 
+documentation around this on their website: 
+https://www.amd.com/en/search/documentation/hub.html
+
+The most interesting document for you is probably the BIOS programming 
+manual, but don't ask me what exactly the title of that one. @Alex do 
+you remember what that was called?
+
+IIRC Intel had similar documentations public, but I don't know where to 
+find those of hand.
+
+Regards,
+Christian.
+
+>
+>
+> Thanks.
+>
 
