@@ -2,39 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFDD379932E
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Sep 2023 02:22:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B2AF799330
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Sep 2023 02:22:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244570AbjIIAWv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1345418AbjIIAWv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Fri, 8 Sep 2023 20:22:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53538 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345457AbjIIAWo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Sep 2023 20:22:44 -0400
+        with ESMTP id S1345491AbjIIAWu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Sep 2023 20:22:50 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75A0626AE;
-        Fri,  8 Sep 2023 17:22:29 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48B6DC433CB;
-        Sat,  9 Sep 2023 00:22:28 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38E3526BF;
+        Fri,  8 Sep 2023 17:22:31 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 984E4C433CC;
+        Sat,  9 Sep 2023 00:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694218949;
-        bh=L9x+G8UCR33S83uNdYr1KZLtat2puAJtZl52yQPvtj4=;
+        s=k20201202; t=1694218950;
+        bh=2s3vHOMcNdcrZU+wGpSckbUw5LTnWIjmBpY4tiNXT3Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WVR4ZBPM6+bToZvBFbpuRLjyziNyB51bGgDLo8SVCCm1mXvCGWpzjwsiYpalWR8s9
-         DcYSSoRgjCVemzOGfIdOpHQITlGlPA836OPhqiuHxOr7uyZu5HgAF4c6c33+0yOyQT
-         r3QCR0Z/REFmFiPMBL9puRARs158kKaH3RaJP2GvYeyT8ij/i1Pa/Nr06a4o5XaGV5
-         9fCsBFOLM7DLbbRBEZGvVe77P8K9KikhvfeHAxGrqpLJAywHQ/V5r7Xp/EgywYH8dj
-         McGrA8D270h9sj0fqRUxKPpmZHuPdpE0VN+473J4z7YBazkf2G8DKakSrYoLWTt5vN
-         6p4Pcn5pXTmgQ==
+        b=h1jK6Px8UVMlZIyTRqfF3Ol2MbaiWqIUw+lFYEUnmxCEVXlIRjUnpZ6VG4vflzmOO
+         NDlkNfxXV1v5sT+gImxLpyc3GYj8ah/8gm5+ztxr8L3YSXUNykBMPK4WlNNUF56p6C
+         xYz4lq2wIrwr14mCziSOPg3LW5pTZroF+wvuyJy8mzokiSvLVVHe1pkekPAvKHt6F1
+         9BnmPRXn8e/lLchQi6bjNiU+C2NOXGjA++2wQwBUMnJiCy4LgEHYnUVhvTasG/aVJJ
+         QgVTCS2ocz6KoZIefQ7z+X+hRTkQU7/MxWCFgGQ726HsFn2497e0Z253a+/AXFxOF6
+         rnSqj9VNgYPnw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nirmal Patel <nirmal.patel@linux.intel.com>,
+Cc:     Yong-Xuan Wang <yongxuan.wang@sifive.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, kw@linux.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.5 10/11] PCI: vmd: Disable bridge window for domain reset
-Date:   Fri,  8 Sep 2023 20:22:03 -0400
-Message-Id: <20230909002205.3578068-10-sashal@kernel.org>
+        Serge Semin <fancer.lancer@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, paul.walmsley@sifive.com,
+        greentime.hu@sifive.com, kw@linux.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.5 11/11] PCI: fu740: Set the number of MSI vectors
+Date:   Fri,  8 Sep 2023 20:22:04 -0400
+Message-Id: <20230909002205.3578068-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230909002205.3578068-1-sashal@kernel.org>
 References: <20230909002205.3578068-1-sashal@kernel.org>
@@ -53,91 +55,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Nirmal Patel <nirmal.patel@linux.intel.com>
+From: Yong-Xuan Wang <yongxuan.wang@sifive.com>
 
-[ Upstream commit f73eedc90bf73d48e8368e6b0b4ad76a7fffaef7 ]
+[ Upstream commit 551a60e1225e71fff8efd9390204c505b0870e0f ]
 
-During domain reset process vmd_domain_reset() clears PCI
-configuration space of VMD root ports. But certain platform
-has observed following errors and failed to boot.
-  ...
-  DMAR: VT-d detected Invalidation Queue Error: Reason f
-  DMAR: VT-d detected Invalidation Time-out Error: SID ffff
-  DMAR: VT-d detected Invalidation Completion Error: SID ffff
-  DMAR: QI HEAD: UNKNOWN qw0 = 0x0, qw1 = 0x0
-  DMAR: QI PRIOR: UNKNOWN qw0 = 0x0, qw1 = 0x0
-  DMAR: Invalidation Time-out Error (ITE) cleared
+The iMSI-RX module of the DW PCIe controller provides multiple sets of
+MSI_CTRL_INT_i_* registers, and each set is capable of handling 32 MSI
+interrupts. However, the fu740 PCIe controller driver only enabled one set
+of MSI_CTRL_INT_i_* registers, as the total number of supported interrupts
+was not specified.
 
-The root cause is that memset_io() clears prefetchable memory base/limit
-registers and prefetchable base/limit 32 bits registers sequentially.
-This seems to be enabling prefetchable memory if the device disabled
-prefetchable memory originally.
+Set the supported number of MSI vectors to enable all the MSI_CTRL_INT_i_*
+registers on the fu740 PCIe core, allowing the system to fully utilize the
+available MSI interrupts.
 
-Here is an example (before memset_io()):
-
-  PCI configuration space for 10000:00:00.0:
-  86 80 30 20 06 00 10 00 04 00 04 06 00 00 01 00
-  00 00 00 00 00 00 00 00 00 01 01 00 00 00 00 20
-  00 00 00 00 01 00 01 00 ff ff ff ff 75 05 00 00
-  ...
-
-So, prefetchable memory is ffffffff00000000-575000fffff, which is
-disabled. When memset_io() clears prefetchable base 32 bits register,
-the prefetchable memory becomes 0000000000000000-575000fffff, which is
-enabled and incorrect.
-
-Here is the quote from section 7.5.1.3.9 of PCI Express Base 6.0 spec:
-
-  The Prefetchable Memory Limit register must be programmed to a smaller
-  value than the Prefetchable Memory Base register if there is no
-  prefetchable memory on the secondary side of the bridge.
-
-This is believed to be the reason for the failure and in addition the
-sequence of operation in vmd_domain_reset() is not following the PCIe
-specs.
-
-Disable the bridge window by executing a sequence of operations
-borrowed from pci_disable_bridge_window() and pci_setup_bridge_io(),
-that comply with the PCI specifications.
-
-Link: https://lore.kernel.org/r/20230810215029.1177379-1-nirmal.patel@linux.intel.com
-Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+Link: https://lore.kernel.org/r/20230807055621.2431-1-yongxuan.wang@sifive.com
+Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
 Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/vmd.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pcie-fu740.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index e718a816d4814..ad56df98b8e63 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -541,8 +541,23 @@ static void vmd_domain_reset(struct vmd_dev *vmd)
- 				     PCI_CLASS_BRIDGE_PCI))
- 					continue;
+diff --git a/drivers/pci/controller/dwc/pcie-fu740.c b/drivers/pci/controller/dwc/pcie-fu740.c
+index 0c90583c078bf..1e9b44b8bba48 100644
+--- a/drivers/pci/controller/dwc/pcie-fu740.c
++++ b/drivers/pci/controller/dwc/pcie-fu740.c
+@@ -299,6 +299,7 @@ static int fu740_pcie_probe(struct platform_device *pdev)
+ 	pci->dev = dev;
+ 	pci->ops = &dw_pcie_ops;
+ 	pci->pp.ops = &fu740_pcie_host_ops;
++	pci->pp.num_vectors = MAX_MSI_IRQS;
  
--				memset_io(base + PCI_IO_BASE, 0,
--					  PCI_ROM_ADDRESS1 - PCI_IO_BASE);
-+				/*
-+				 * Temporarily disable the I/O range before updating
-+				 * PCI_IO_BASE.
-+				 */
-+				writel(0x0000ffff, base + PCI_IO_BASE_UPPER16);
-+				/* Update lower 16 bits of I/O base/limit */
-+				writew(0x00f0, base + PCI_IO_BASE);
-+				/* Update upper 16 bits of I/O base/limit */
-+				writel(0, base + PCI_IO_BASE_UPPER16);
-+
-+				/* MMIO Base/Limit */
-+				writel(0x0000fff0, base + PCI_MEMORY_BASE);
-+
-+				/* Prefetchable MMIO Base/Limit */
-+				writel(0, base + PCI_PREF_LIMIT_UPPER32);
-+				writel(0x0000fff0, base + PCI_PREF_MEMORY_BASE);
-+				writel(0xffffffff, base + PCI_PREF_BASE_UPPER32);
- 			}
- 		}
- 	}
+ 	/* SiFive specific region: mgmt */
+ 	afp->mgmt_base = devm_platform_ioremap_resource_byname(pdev, "mgmt");
 -- 
 2.40.1
 
