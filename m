@@ -2,250 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F11F3799711
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Sep 2023 11:29:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A8447999A4
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Sep 2023 18:25:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344405AbjIIJ3M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 9 Sep 2023 05:29:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59086 "EHLO
+        id S233234AbjIIQZ2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 9 Sep 2023 12:25:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229957AbjIIJ3K (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Sep 2023 05:29:10 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B158170C
-        for <linux-pci@vger.kernel.org>; Sat,  9 Sep 2023 02:29:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694251745; x=1725787745;
-  h=date:from:to:cc:subject:message-id;
-  bh=Z76sXLaM+JAZm8gr3kUoF5XPy8KgTXdYIPkUbTJAT9c=;
-  b=T81zQDsaMAFkkP+FliihMvtVTSPyx7v7jYtuzWGtOgKOlBy9UWVG6Oh3
-   I6e3FtMuswPhYZgWDEO5Bwfp1shSOCZvhb7uGUvkd0s00g1zz8O//FtyC
-   4S3m6zvygT3VAkf4PwxLR/ZWTkmTq5/gN0onG6yibssKiWgyEWQ8nKwBK
-   A1J3TDDm4kfvvnC1hDW1cqeZAqZh1bf13pKWuShbEWK87cVUXJ2wVbGNx
-   1EUy0HF/mh0VCV1eLFngUEIEQBgS1x3Gf1dwZqY7orytltewNs0JaWPos
-   sWdJXMXeMIvn7cBVVgmBnIvY1yY1rILoItxN7sDQTzqdpRNVN8529IyDU
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10827"; a="357273722"
-X-IronPort-AV: E=Sophos;i="6.02,239,1688454000"; 
-   d="scan'208";a="357273722"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2023 02:29:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10827"; a="866377623"
-X-IronPort-AV: E=Sophos;i="6.02,239,1688454000"; 
-   d="scan'208";a="866377623"
-Received: from lkp-server01.sh.intel.com (HELO 59b3c6e06877) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 09 Sep 2023 02:29:02 -0700
-Received: from kbuild by 59b3c6e06877 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qeuGy-0003EP-0g;
-        Sat, 09 Sep 2023 09:29:00 +0000
-Date:   Sat, 09 Sep 2023 17:28:56 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- 5260bd6d36c83c5b269c33baaaf8c78e520908b0
-Message-ID: <202309091755.ZH7lvTWB-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S238651AbjIIOor (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Sep 2023 10:44:47 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAA2718E;
+        Sat,  9 Sep 2023 07:44:39 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3E23C433C8;
+        Sat,  9 Sep 2023 14:44:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694270679;
+        bh=DcYP9gXImssH6qVhHL9lB+FT1skacKc26mctiFmVKTM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HgsTSfTM5gW3/jjHSlv81oZAzCCB90EDzjvcVIt33gHUe3AXUTMHcYkPeQDswgTuJ
+         QyOPLeC/g/qrxu8uAn4w2l7RBih2jxKrj7usknqWyU0H/MNm2Q3/z0KoSZ+UXV0jkk
+         lL+S7xCfL2JRkP/w/UV8/dsZgvQQ4qn4BaXHd0G/JpMaIIOqCDGk/6rJEgm044cEoL
+         qyJo1Rcrl3cU/AZNDoXMIhwmiEyqY+033yOK7UqCB4V+Hn7jwqtEJtiU24gsW6uoSQ
+         7RIGjqqsCU/kwIqkcXe1DAHCl928zGCDHLmRoeREXbIpvlxQyajWsv0EAY5BK67cMI
+         uG0mXwdY2Vitw==
+Date:   Sat, 9 Sep 2023 09:44:37 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Wu Zongyong <wuzongyong@linux.alibaba.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Kalle Valo <kvalo@kernel.org>, Lizhi Hou <lizhi.hou@amd.com>,
+        Guenter Roeck <groeck7@gmail.com>
+Subject: [GIT PULL] PCI changes for v6.6
+Message-ID: <20230909144437.GA326030@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-branch HEAD: 5260bd6d36c83c5b269c33baaaf8c78e520908b0  Revert "PCI: Mark NVIDIA T4 GPUs to avoid bus reset"
+The following changes since commit b6f6167ea8a424d14b41c172fe7a5f49e164f221:
 
-elapsed time: 724m
+  Merge tag 'pci-v6.6-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci (2023-08-30 20:23:07 -0700)
 
-configs tested: 172
-configs skipped: 2
+are available in the Git repository at:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.6-fixes-1
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r004-20230909   gcc  
-alpha                randconfig-r031-20230909   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                     nsimosci_hs_defconfig   gcc  
-arc                   randconfig-001-20230909   gcc  
-arc                    vdk_hs38_smp_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                      jornada720_defconfig   gcc  
-arm                         lpc32xx_defconfig   clang
-arm                         orion5x_defconfig   clang
-arm                   randconfig-001-20230909   clang
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r002-20230909   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-hexagon               randconfig-001-20230909   clang
-hexagon               randconfig-002-20230909   clang
-hexagon              randconfig-r001-20230909   clang
-hexagon              randconfig-r026-20230909   clang
-i386                             allmodconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   clang
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20230909   clang
-i386         buildonly-randconfig-002-20230909   clang
-i386         buildonly-randconfig-003-20230909   clang
-i386         buildonly-randconfig-004-20230909   clang
-i386         buildonly-randconfig-005-20230909   clang
-i386         buildonly-randconfig-006-20230909   clang
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20230909   clang
-i386                  randconfig-002-20230909   clang
-i386                  randconfig-003-20230909   clang
-i386                  randconfig-004-20230909   clang
-i386                  randconfig-005-20230909   clang
-i386                  randconfig-006-20230909   clang
-i386                  randconfig-011-20230909   gcc  
-i386                  randconfig-012-20230909   gcc  
-i386                  randconfig-013-20230909   gcc  
-i386                  randconfig-014-20230909   gcc  
-i386                  randconfig-015-20230909   gcc  
-i386                  randconfig-016-20230909   gcc  
-i386                 randconfig-r025-20230909   gcc  
-i386                 randconfig-r035-20230909   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20230909   gcc  
-loongarch            randconfig-r033-20230909   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-microblaze           randconfig-r003-20230909   gcc  
-microblaze           randconfig-r014-20230909   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                      bmips_stb_defconfig   clang
-mips                 randconfig-r024-20230909   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r023-20230909   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r032-20230909   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc                 canyonlands_defconfig   gcc  
-powerpc                      ep88xc_defconfig   gcc  
-powerpc                      katmai_defconfig   clang
-powerpc                      ppc44x_defconfig   clang
-powerpc                     tqm8541_defconfig   gcc  
-powerpc64            randconfig-r005-20230909   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20230909   clang
-riscv                randconfig-r022-20230909   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20230909   gcc  
-s390                 randconfig-r034-20230909   clang
-s390                 randconfig-r036-20230909   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                   randconfig-r013-20230909   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r011-20230909   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64              randconfig-r012-20230909   gcc  
-sparc64              randconfig-r021-20230909   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20230909   clang
-x86_64       buildonly-randconfig-002-20230909   clang
-x86_64       buildonly-randconfig-003-20230909   clang
-x86_64       buildonly-randconfig-004-20230909   clang
-x86_64       buildonly-randconfig-005-20230909   clang
-x86_64       buildonly-randconfig-006-20230909   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20230909   gcc  
-x86_64                randconfig-002-20230909   gcc  
-x86_64                randconfig-003-20230909   gcc  
-x86_64                randconfig-004-20230909   gcc  
-x86_64                randconfig-005-20230909   gcc  
-x86_64                randconfig-006-20230909   gcc  
-x86_64                randconfig-011-20230909   clang
-x86_64                randconfig-012-20230909   clang
-x86_64                randconfig-013-20230909   clang
-x86_64                randconfig-014-20230909   clang
-x86_64                randconfig-015-20230909   clang
-x86_64                randconfig-016-20230909   clang
-x86_64                randconfig-071-20230909   clang
-x86_64                randconfig-072-20230909   clang
-x86_64                randconfig-073-20230909   clang
-x86_64                randconfig-074-20230909   clang
-x86_64                randconfig-075-20230909   clang
-x86_64                randconfig-076-20230909   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa               randconfig-r006-20230909   gcc  
-xtensa               randconfig-r015-20230909   gcc  
-xtensa               randconfig-r016-20230909   gcc  
+for you to fetch changes up to 5260bd6d36c83c5b269c33baaaf8c78e520908b0:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  Revert "PCI: Mark NVIDIA T4 GPUs to avoid bus reset" (2023-09-08 15:11:45 -0500)
+
+----------------------------------------------------------------
+- Add PCI_DYNAMIC_OF_NODES dependency on OF_IRQ to fix sparc64 build error
+  (Lizhi Hou)
+
+- After coalescing host bridge resources, free any released resources to
+  avoid a leak (Ross Lagerwall)
+
+- Revert a quirk that prevented NVIDIA T4 GPUs from using Secondary Bus
+  Reset.  The quirk worked around an issue that we now think is related to
+  the Root Port, not the GPU (Bjorn Helgaas)
+
+----------------------------------------------------------------
+Bjorn Helgaas (1):
+      Revert "PCI: Mark NVIDIA T4 GPUs to avoid bus reset"
+
+Lizhi Hou (1):
+      PCI: Fix CONFIG_PCI_DYNAMIC_OF_NODES kconfig dependencies
+
+Ross Lagerwall (1):
+      PCI: Free released resource after coalescing
+
+ drivers/pci/Kconfig  | 2 +-
+ drivers/pci/probe.c  | 1 +
+ drivers/pci/quirks.c | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
