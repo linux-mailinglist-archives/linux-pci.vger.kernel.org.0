@@ -2,50 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF718799391
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Sep 2023 02:25:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5CC879939D
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Sep 2023 02:26:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234754AbjIIAZr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Sep 2023 20:25:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43944 "EHLO
+        id S1345537AbjIIA0C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Sep 2023 20:26:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345524AbjIIAZo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Sep 2023 20:25:44 -0400
+        with ESMTP id S1345548AbjIIAZ5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Sep 2023 20:25:57 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88A6D2705;
-        Fri,  8 Sep 2023 17:25:11 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF15CC113C9;
-        Sat,  9 Sep 2023 00:24:32 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5069526A5;
+        Fri,  8 Sep 2023 17:25:19 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C15C8C43397;
+        Sat,  9 Sep 2023 00:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694219074;
-        bh=cB6ddkVcttJmN0WANwNBY0DVzGE1tj3HG4JPnwCrU94=;
+        s=k20201202; t=1694219090;
+        bh=MUAy4YLJX/Ulh0SKNkIFJu0Mk9JjG0u+FYtd/Na8of8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=laV0L+K3dKsMmhOm+q1KZo5KQfZqTmzRPQ5X99Sux/scqfn8BsWccyoAjVBzf12P5
-         +EYoIC6Cd8jPw7mkN5ehjGehwjCIHcbDS9JciSPnUCLk5j+WLvSD6N7GE/yA+kksN8
-         DenUx5iNsC4YPhMZlTSuqFxLfRrugIjKFFhzNekkz4csyIbVLsZi1ZPAeQQtRhyH19
-         MOG+bxf2BpEjBx79lkvWaVQj3H7rZL0LiX++pZ0DUVAm33mDfGsKzv4IxIta9owy8d
-         RNc3DGa64eIotXAcVtr1VhFqtoMQ9tWStu8SXZ7AqH36S9mq80rzdM+Fn+105l5TLz
-         ZnGRGn0KqukUw==
+        b=B5WMh+lgp492ezzoFEt6c3uL4GAmXfEkFY8Co1ocjJxR00h4qgYdGcOH6iJpJbDtv
+         5/vQWfHIicjR8uKLYBMeqzTrYk81oWHxHjMQP6g1v/TouEeOp44VAlT/UQ9i5IcFd5
+         J7vi9f9rfaehaSnLN5B8rGHI1HYonfvdT4mwi5G1O/glbj4qTwwWPlNZ67sR25ZtKR
+         WJ1WnjcrJ4TyIcTcXGv2qDth5vNkgsMh6d8EQQ5uZ3AJitg0WZnM/Q/5dvKBq7eWKJ
+         6JhBKBQKpiYk3xGusZq8jw6TAP74L/2LP5WrmE64xWosGA+eZLoAjGB3iLHcvIMGyd
+         MLTORcCnkgeyg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, l.stach@pengutronix.de,
-        kw@linux.com, bhelgaas@google.com, shawnguo@kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 4/6] PCI: dwc: Provide deinit callback for i.MX
-Date:   Fri,  8 Sep 2023 20:24:20 -0400
-Message-Id: <20230909002424.3578867-4-sashal@kernel.org>
+Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Arnd Bergmann <arnd@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 3/5] PCI: Make quirk using inw() depend on HAS_IOPORT
+Date:   Fri,  8 Sep 2023 20:24:38 -0400
+Message-Id: <20230909002442.3578957-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230909002424.3578867-1-sashal@kernel.org>
-References: <20230909002424.3578867-1-sashal@kernel.org>
+In-Reply-To: <20230909002442.3578957-1-sashal@kernel.org>
+References: <20230909002442.3578957-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.19.294
+X-stable-base: Linux 4.14.325
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
@@ -57,49 +53,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Mark Brown <broonie@kernel.org>
+From: Niklas Schnelle <schnelle@linux.ibm.com>
 
-[ Upstream commit fc8b24c28bec19fc0621d108b9ee81ddfdedb25a ]
+[ Upstream commit f768c75d61582b011962f9dcb9ff8eafb8da0383 ]
 
-The i.MX integration for the DesignWare PCI controller has a _host_exit()
-operation which undoes everything that the _host_init() operation does but
-does not wire this up as the host_deinit callback for the core, or call it
-in any path other than suspend. This means that if we ever unwind the
-initial probe of the device, for example because it fails, the regulator
-core complains that the regulators for the device were left enabled:
+In the future inw() and friends will not be compiled on architectures
+without I/O port support.
 
-imx6q-pcie 33800000.pcie: iATU: unroll T, 4 ob, 4 ib, align 64K, limit 16G
-imx6q-pcie 33800000.pcie: Phy link never came up
-imx6q-pcie 33800000.pcie: Phy link never came up
-imx6q-pcie: probe of 33800000.pcie failed with error -110
-------------[ cut here ]------------
-WARNING: CPU: 2 PID: 46 at drivers/regulator/core.c:2396 _regulator_put+0x110/0x128
-
-Wire up the callback so that the core can clean up after itself.
-
-Link: https://lore.kernel.org/r/20230731-pci-imx-regulator-cleanup-v2-1-fc8fa5c9893d@kernel.org
-Tested-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+Link: https://lore.kernel.org/r/20230703135255.2202721-2-schnelle@linux.ibm.com
+Signed-off-by: Arnd Bergmann <arnd@kernel.org>
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/quirks.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 3b2ceb5667289..c949d11f95507 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -642,6 +642,7 @@ static int imx6_pcie_host_init(struct pcie_port *pp)
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 7ca82b8c5c37e..0669b0d93f6f1 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -102,6 +102,7 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NEC,	PCI_DEVICE_ID_NEC_CBUS_1,	quirk_isa_d
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NEC,	PCI_DEVICE_ID_NEC_CBUS_2,	quirk_isa_dma_hangs);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NEC,	PCI_DEVICE_ID_NEC_CBUS_3,	quirk_isa_dma_hangs);
  
- static const struct dw_pcie_host_ops imx6_pcie_host_ops = {
- 	.host_init = imx6_pcie_host_init,
-+	.host_deinit = imx6_pcie_host_exit,
- };
++#ifdef CONFIG_HAS_IOPORT
+ /*
+  * Intel NM10 "TigerPoint" LPC PM1a_STS.BM_STS must be clear
+  * for some HT machines to use C4 w/o hanging.
+@@ -121,6 +122,7 @@ static void quirk_tigerpoint_bm_sts(struct pci_dev *dev)
+ 	}
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TGP_LPC, quirk_tigerpoint_bm_sts);
++#endif
  
- static int imx6_add_pcie_port(struct imx6_pcie *imx6_pcie,
+ /*
+  *	Chipsets where PCI->PCI transfers vanish or hang
 -- 
 2.40.1
 
