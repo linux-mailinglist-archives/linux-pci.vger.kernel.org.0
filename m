@@ -2,54 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CFCFC79B9CE
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 02:10:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2A4279B5D6
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 02:04:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239118AbjIKViU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Sep 2023 17:38:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56912 "EHLO
+        id S1350660AbjIKVk3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Sep 2023 17:40:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237866AbjIKNQ3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 09:16:29 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7958EB;
-        Mon, 11 Sep 2023 06:16:24 -0700 (PDT)
+        with ESMTP id S237926AbjIKNVz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 09:21:55 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B48712A;
+        Mon, 11 Sep 2023 06:21:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694438184; x=1725974184;
+  t=1694438511; x=1725974511;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
   bh=6hZ/scxqcpisakdOuYAsA4BjUmqsqsB5dHsi1FpGb4o=;
-  b=D8J7rx6zDkq1jaOsq2pgR5TdASrO1eGjqhWR41L+ORodTL/CTafIlkjq
-   mQGwLZiwoNEUTKh0KI7P5sRbCHMZ9lJ1s7bAIqnHL46ZfsykKgunhiblf
-   MQTn1HK0MaH5mYRkhW4bPAGH43VTVoM7gQxpfqWtjyA+Avhi3dnQmALK2
-   2jb8nMyjJX4l5Ml3DTG32ZF6DNujLaQtTieEI5ijDE0Wd2PCN04eaTTJA
-   Hq8WDyeXiQOtkPn7wBu6j0PXTDKW0DQTYa9UxcLVsYm2fFZY5qdDfYY7R
-   oxL3p7AbJmWSIyGub/3lzNFVxIChki7ktecu0u9csABO+WjZBTXm9IGhj
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="377990554"
+  b=kPxgy4SFmu43byrcW8dGg7a35TeX9SNQ3ftzIF5bo+8iZO5keqF/vm5K
+   aX6N+PmMeid6thrjH65DwfiFMY9hS0lBa3osmgd7TX2Q/ItLA7FxN7kZ1
+   39kWjaPRqD9Ic5zznO7JrQrchY+rnOmhVHmsN+NONZadxbd6rrMJkQb2i
+   kKAslRR6cSpAzkLG+X+6GZtKIINEGSIVcBiYaEcPNzuktL7v1IJOSLw3Y
+   3kcJnXTfwsC+KNnuvTC2uZD6G83zD4zN57D1czv+sOyYTZik3jKWhkSbW
+   DxyrSWvz5xeIAErP7W+HG1q8CX43cWKUtO0q8HC6xZBntvU3tcQ+XMxon
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="357517084"
 X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="377990554"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 06:16:24 -0700
+   d="scan'208";a="357517084"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 06:21:50 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="719982451"
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="858312464"
 X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="719982451"
+   d="scan'208";a="858312464"
 Received: from unknown (HELO bapvecise024..) ([10.190.254.46])
-  by orsmga006.jf.intel.com with ESMTP; 11 Sep 2023 06:16:21 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 11 Sep 2023 06:21:47 -0700
 From:   sharath.kumar.d.m@intel.com
 To:     helgaas@kernel.org
-Cc:     bhelgaas@google.com, dinguyen@kernel.org, kw@linux.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lpieralisi@kernel.org, robh@kernel.org, sharath.kumar.d.m@intel.com
+Cc:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        dinguyen@kernel.org, linux-kernel@vger.kernel.org,
+        D M Sharath Kumar <sharath.kumar.d.m@intel.com>
 Subject: [PATCH v3 2/2] PCI: altera: add support for agilex family fpga
-Date:   Mon, 11 Sep 2023 18:46:49 +0530
-Message-Id: <20230911131649.1775971-3-sharath.kumar.d.m@intel.com>
+Date:   Mon, 11 Sep 2023 18:52:14 +0530
+Message-Id: <20230911132214.1776157-3-sharath.kumar.d.m@intel.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230911131649.1775971-1-sharath.kumar.d.m@intel.com>
+In-Reply-To: <20230911132214.1776157-1-sharath.kumar.d.m@intel.com>
 References: <20230906110918.1501376-3-sharath.kumar.d.m@intel.com>
- <20230911131649.1775971-1-sharath.kumar.d.m@intel.com>
+ <20230911132214.1776157-1-sharath.kumar.d.m@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
