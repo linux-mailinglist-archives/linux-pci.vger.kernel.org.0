@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 209FF79B92A
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 02:09:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 982BB79B7E4
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 02:07:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350463AbjIKVim (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Sep 2023 17:38:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42502 "EHLO
+        id S242275AbjIKVhw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Sep 2023 17:37:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237673AbjIKNIE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 09:08:04 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63102E5;
-        Mon, 11 Sep 2023 06:08:00 -0700 (PDT)
+        with ESMTP id S237864AbjIKNQW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 09:16:22 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EB10EB;
+        Mon, 11 Sep 2023 06:16:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694437680; x=1725973680;
+  t=1694438176; x=1725974176;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
   bh=hhntH08KwDzWZFhlYntAoxLtfPyiIglkNSydQprvVBY=;
-  b=et+QbcxD/gVNwp6hJ9hLvxBVpnX9AkX+GsWJbZvMmLffCFd9FnhX9QpJ
-   Moy/KM1qcGLivqvXu/RvfDD3owJgoY/M+FKgumRfAN7wX382+SjNcTzDX
-   B9Y5uibMKXCbVb1rMb96orDyWDOwrpVkDsQgRa/7Y3T7bcPviDkucGZo5
-   zZeVltUpxEM4PbuRseVjafP2BrsNviVVisYDOKWI//zhk9h40QWoUYjUW
-   7R7Xyt6F8PJ1Cdo+apLSInY5ZFuIIYFyfQg+YVSAPxPfLspFdPio0HH6L
-   YSoS/TJQUhiLnRg8zSWBp67uzSM4Lk7jaaJlgjUa1rt28YWVyylI78c04
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="357514643"
+  b=RV7fzJqTsQdOG9xacXnLCeJFPasq0HpTZnEF/cxL3e2LiOv3h+/hWsI+
+   G0lKUGCdUAEBEgXi96Nw6mPVejtj0cwvA8DFFbupuoS7TOgAt6+J3JSp6
+   vbPZg3tcKNDadsZgCMl8movxIHL30v6OtJ3bxQxC8Ga4bFHFDs4/pMA45
+   N9D4j8OF21Wl7/SntIB+upI2nchbx8ejXGE2cBIwIkZru6HSOQApHvhTI
+   hfza0geP2LvybY+0gb9lSrXHsjMHROmZObywDJj38+uzBiHdJDCzoVQDN
+   Rs7NFXn9Z+onaN2vYi/S3Spr+qwHSDgJzj209vkcRmn8tT1itAL+qNTfb
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="377990534"
 X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="357514643"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 06:07:59 -0700
+   d="scan'208";a="377990534"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 06:16:15 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="858309826"
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="719982415"
 X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="858309826"
+   d="scan'208";a="719982415"
 Received: from unknown (HELO bapvecise024..) ([10.190.254.46])
-  by fmsmga002.fm.intel.com with ESMTP; 11 Sep 2023 06:07:56 -0700
+  by orsmga006.jf.intel.com with ESMTP; 11 Sep 2023 06:16:12 -0700
 From:   sharath.kumar.d.m@intel.com
 To:     helgaas@kernel.org
 Cc:     bhelgaas@google.com, dinguyen@kernel.org, kw@linux.com,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         lpieralisi@kernel.org, robh@kernel.org, sharath.kumar.d.m@intel.com
 Subject: [PATCH v3 0/2] PCI: altera: add support to agilex family
-Date:   Mon, 11 Sep 2023 18:38:31 +0530
-Message-Id: <20230911130833.1775668-1-sharath.kumar.d.m@intel.com>
+Date:   Mon, 11 Sep 2023 18:46:47 +0530
+Message-Id: <20230911131649.1775971-1-sharath.kumar.d.m@intel.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230908194842.GA304176@bhelgaas>
-References: <20230908194842.GA304176@bhelgaas>
+In-Reply-To: <20230906110918.1501376-3-sharath.kumar.d.m@intel.com>
+References: <20230906110918.1501376-3-sharath.kumar.d.m@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
