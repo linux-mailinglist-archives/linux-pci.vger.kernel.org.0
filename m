@@ -2,143 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAFFD79B6D6
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 02:05:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5091979B83D
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 02:08:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350476AbjIKVit (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Sep 2023 17:38:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60876 "EHLO
+        id S1350414AbjIKViJ convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 11 Sep 2023 17:38:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242551AbjIKPry (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 11:47:54 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36E46121;
-        Mon, 11 Sep 2023 08:47:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694447270; x=1725983270;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=X08U4r/zjdzoD2xlVs+dRrXtqyQrZjNfvPMLi8zpWCM=;
-  b=Zq2JNCIc+9yIqGHnEy76FHTSvESKp2+Skka2V9E3cgWOvKIYc3Ou7mvl
-   05D2kVK8KjQ/Jenmr4sQaDJmo8E5pD9XSjUacWDWYIeePZuUpJpNmzpdg
-   qfWodjQaBUXLBzut9SD48+7CQX+JL8YFP3SoLq3X7DJqx/kJOoDL4orgt
-   GUK3wv7mU4eJLJmsButhTPknq48xz+K86Cah72JdHmxEZZLma+0J3Jc7N
-   WtJfJZeuM3mp5LKG+171ToB9hD4zWM8r2hgCAjTgBpO6SnqZ783QqK8Gz
-   CbzBRSPuwm2cITFuVo/XHCZtlS5coxDd/WT0+qSt3pPahL0kSlvNhn32c
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="378034289"
-X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="378034289"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 08:47:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="772630737"
-X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="772630737"
-Received: from mzarkov-mobl3.ger.corp.intel.com ([10.252.36.200])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 08:47:21 -0700
-Date:   Mon, 11 Sep 2023 18:47:19 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org
-cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alex Deucher <alexdeucher@gmail.com>
-Subject: Re: [PATCH 00/10] Add PCIe Bandwidth Controller
-In-Reply-To: <647e2b5e-6064-dbfa-bb56-f74358efd1fe@quicinc.com>
-Message-ID: <25bf206e-864b-644-9b4-a0f461b4285@linux.intel.com>
-References: <20230817121708.53213-1-ilpo.jarvinen@linux.intel.com> <fa5a20d0-77db-58bd-3956-ac664dffa587@quicinc.com> <21b95d9-86a5-dcb0-9dda-3f1cdd426b9e@linux.intel.com> <647e2b5e-6064-dbfa-bb56-f74358efd1fe@quicinc.com>
+        with ESMTP id S242550AbjIKPrx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 11:47:53 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2C01121;
+        Mon, 11 Sep 2023 08:47:45 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RkrfP5T1Pz67KPR;
+        Mon, 11 Sep 2023 23:46:05 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 11 Sep
+ 2023 16:47:42 +0100
+Date:   Mon, 11 Sep 2023 16:47:41 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Herve Codina <herve.codina@bootlin.com>
+CC:     Lizhi Hou <lizhi.hou@amd.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <robh@kernel.org>, <max.zhen@amd.com>, <sonal.santan@amd.com>,
+        <stefano.stabellini@xilinx.com>,
+        =?ISO-8859-1?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH V13 2/5] PCI: Create device tree node for bridge
+Message-ID: <20230911164741.00003904@Huawei.com>
+In-Reply-To: <20230911173503.0db85e4b@bootlin.com>
+References: <1692120000-46900-1-git-send-email-lizhi.hou@amd.com>
+        <1692120000-46900-3-git-send-email-lizhi.hou@amd.com>
+        <20230911154856.000076c3@Huawei.com>
+        <20230911173503.0db85e4b@bootlin.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-2146389531-1694445120=:1823"
-Content-ID: <d4d8e4d9-df60-ff9e-806d-24cbd22967d6@linux.intel.com>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, 11 Sep 2023 17:35:03 +0200
+Herve Codina <herve.codina@bootlin.com> wrote:
 
---8323329-2146389531-1694445120=:1823
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <c9761ce4-b9a2-dcba-a6f7-24d03a34d4@linux.intel.com>
-
-+ thermal people.
-
-On Mon, 11 Sep 2023, Krishna Chaitanya Chundru wrote:
-> On 9/4/2023 4:46 PM, Ilpo Järvinen wrote:
-> > On Mon, 4 Sep 2023, Krishna Chaitanya Chundru wrote:
-> > > On 8/17/2023 5:46 PM, Ilpo Järvinen wrote:
-> > > > 
-> > > > This series adds PCIe bandwidth controller (bwctrl) and associated PCIe
-> > > > cooling driver to the thermal core side for limiting PCIe link speed
-> > > > due to thermal reasons. PCIe bandwidth controller is a PCI express bus
-> > > > port service driver. A cooling device is created for each port the
-> > > > service driver finds if they support changing speeds.
-> > > I see we had support for only link speed changes here but we need to add
-> > > support for
+> Hi Jonathan,
+> 
+> On Mon, 11 Sep 2023 15:48:56 +0100
+> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> 
+> > On Tue, 15 Aug 2023 10:19:57 -0700
+> > Lizhi Hou <lizhi.hou@amd.com> wrote:
+> >   
+> > > The PCI endpoint device such as Xilinx Alveo PCI card maps the register
+> > > spaces from multiple hardware peripherals to its PCI BAR. Normally,
+> > > the PCI core discovers devices and BARs using the PCI enumeration process.
+> > > There is no infrastructure to discover the hardware peripherals that are
+> > > present in a PCI device, and which can be accessed through the PCI BARs.
 > > > 
-> > > link width change also as bandwidth notification from PCIe supports both
-> > > link
-> > > speed and link width.
-> > Hi,
+> > > Apparently, the device tree framework requires a device tree node for the
+> > > PCI device. Thus, it can generate the device tree nodes for hardware
+> > > peripherals underneath. Because PCI is self discoverable bus, there might
+> > > not be a device tree node created for PCI devices. Furthermore, if the PCI
+> > > device is hot pluggable, when it is plugged in, the device tree nodes for
+> > > its parent bridges are required. Add support to generate device tree node
+> > > for PCI bridges.
+> > > 
+> > > Add an of_pci_make_dev_node() interface that can be used to create device
+> > > tree node for PCI devices.
+> > > 
+> > > Add a PCI_DYNAMIC_OF_NODES config option. When the option is turned on,
+> > > the kernel will generate device tree nodes for PCI bridges unconditionally.
+> > > 
+> > > Initially, add the basic properties for the dynamically generated device
+> > > tree nodes which include #address-cells, #size-cells, device_type,
+> > > compatible, ranges, reg.
+> > > 
+> > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>    
 > > 
-> > Thanks for the comment. In case you mean that the changes in Link Width
-> > should be reported correctly, they already are since the sysfs interface
-> > reads them directly from LNKSTA register.
+> > I tried to bring this up for a custom PCIe card emulated in QEMU on an ARM ACPI
+> > machine.
 > > 
-> > Or did you perhaps mean that Bandwidth Controller should support also
-> > changing Link Width? If this is the case I don't know how it can be
-> > realized so a pointer on how it can be achieved would be appreciated.
+> > There are some missing parts that were present in Clements series, but not this
+> > one, particularly creation of the root pci object.
+> > 
+> > Anyhow, hit an intermittent crash...  
 > 
-> I didn't have any idea on how thermal framework works.
+> I am facing the same issues.
 > 
-> But as we are adding bandwidth controller support we need to add support for
-> width change also, may be we are not using this now, but we may need it in the
-> future.
+> I use a custom PCIe board too but on x86 ACPI machine.
 > 
-> We had similar use case based on the bandwidth requirement on devices like
-> WLAN, the client try to reduce or increase the link speed and link width.
+> In order to have a working system, I need also to build a DT node for the PCI
+> Host bridge (previously done by Clement's patch) and I am a bit stuck with
+> interrupts.
 > 
-> So in the bandwidth controller driver we can add support for link width also.
-> So any client can easily use the driver to change link speed or width or both
-> to reduce the power consumption.
-> 
-> Adding link width support should be similar to how you added the link speed
-> supported.
-> 
-> Please correct me if I misunderstood something here.
+> On your side (ACPI machine) how do you handle this ?
 
-Hi,
+That was next on my list to look at now I've gotten the device tree stuff
+to show up.
 
-Okay, thanks for the clarification. So the point is to plan for adding 
-support for Link Width later and currently only support throttling Link 
-Speed. In any case, the Link Width control seems to be controlled using 
-a different approach (Link Width change does not require Link Retraining).
+> I mean is your PCI host bridge provided by ACPI ? And if so, you probably need
+> to build a DT node for this PCI host bridge and add some interrupt-map,
+> interrupt-map-mask properties in the DT node.
 
-I don't know either how such 2 dimensioned throttling (Link Speed and 
-Link Width) is supposed to be realized using the thermal/cooling device 
-interface which only provides a single integer as the current state. That 
-is, whether to provide a single cooling device (with a single integer 
-exposed to userspace) or separate cooling device for each dimension?
+Agreed. Potentially some other stuff, but interrupts are the thing that
+showed up first as an issue.
 
-Perhaps thermal people could provide some insight on this? Is there some 
-precedent I could take look at?
+Given the only reason I'm looking at this is to potentially solve
+a long term CXL / MCTP over I2C upstreaming problem on QEMU side, I've only
+limited time to throw at this (thought it was a short activity
+for a Friday afternoon :)  Will see if it turns out not too be
+too hard to build the rest.
 
--- 
- i.
---8323329-2146389531-1694445120=:1823--
+I can at least boot same system with device tree and check I'm matching
+what is being generated by QEMU.
+
+Jonathan
+
+
+> 
+> Best regards,
+> Hervé
+> 
+
