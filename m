@@ -2,96 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3555579B19A
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 01:57:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BE2879B31E
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 01:59:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244334AbjIKVkM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Sep 2023 17:40:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48538 "EHLO
+        id S1350433AbjIKViX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Sep 2023 17:38:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240620AbjIKOtG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 10:49:06 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95A63E40;
-        Mon, 11 Sep 2023 07:49:00 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RkqLc5GfBz687wh;
-        Mon, 11 Sep 2023 22:47:20 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 11 Sep
- 2023 15:48:57 +0100
-Date:   Mon, 11 Sep 2023 15:48:56 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+        with ESMTP id S241777AbjIKPOW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 11:14:22 -0400
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::226])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF9B5FA;
+        Mon, 11 Sep 2023 08:14:16 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6E69BC0025;
+        Mon, 11 Sep 2023 15:13:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1694445255;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ojuPiNmXmCazeh3wr8WutwjTo9jG8jJh57glhlUbxKQ=;
+        b=IjcYBOellcOfTpijLCpK9WnTM4/S/aHyvMuAt5a98uJnhkxBmZKIURIgO3VH/+TVpKUVf2
+        aG+r9ONNUgm0rHj8yq6enm0iDDgY7XptJJipf55c1DMLRXAKUjwPa+QVs87DmPJHVL2K/m
+        7Wu0kxenpt3iwns8cXXXFRSxcxoHCSdozRAE1ddfnLZone36fnaQUhOPIL8h4g8sTgDrMi
+        J5/RQinVOdc3JHbQDIlFv8bWneJfngxF6pk6Y6YWiOBCrFNQeIPlldLSgmo+hyHu2TvCPQ
+        XWWAJyKyrx+9XCOhC3y6VaPdoPSK7MWUWFCYv6COmBp6ITiS5UNbvwXWPZSljw==
+Date:   Mon, 11 Sep 2023 17:13:19 +0200
+From:   Herve Codina <herve.codina@bootlin.com>
 To:     Lizhi Hou <lizhi.hou@amd.com>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+Cc:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <robh@kernel.org>,
         <max.zhen@amd.com>, <sonal.santan@amd.com>,
-        <stefano.stabellini@xilinx.com>,
-        =?ISO-8859-1?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>
+        <stefano.stabellini@xilinx.com>
 Subject: Re: [PATCH V13 2/5] PCI: Create device tree node for bridge
-Message-ID: <20230911154856.000076c3@Huawei.com>
+Message-ID: <20230911171319.495bb837@bootlin.com>
 In-Reply-To: <1692120000-46900-3-git-send-email-lizhi.hou@amd.com>
 References: <1692120000-46900-1-git-send-email-lizhi.hou@amd.com>
         <1692120000-46900-3-git-send-email-lizhi.hou@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Lizhi,
+
 On Tue, 15 Aug 2023 10:19:57 -0700
 Lizhi Hou <lizhi.hou@amd.com> wrote:
+...
+> +void of_pci_make_dev_node(struct pci_dev *pdev)
+> +{
+> +	struct device_node *ppnode, *np = NULL;
+> +	const char *pci_type;
+> +	struct of_changeset *cset;
+> +	const char *name;
+> +	int ret;
+> +
+> +	/*
+> +	 * If there is already a device tree node linked to this device,
+> +	 * return immediately.
+> +	 */
+> +	if (pci_device_to_OF_node(pdev))
+> +		return;
+> +
+> +	/* Check if there is device tree node for parent device */
+> +	if (!pdev->bus->self)
+> +		ppnode = pdev->bus->dev.of_node;
+> +	else
+> +		ppnode = pdev->bus->self->dev.of_node;
+> +	if (!ppnode)
+> +		return;
+> +
+> +	if (pci_is_bridge(pdev))
+> +		pci_type = "pci";
+> +	else
+> +		pci_type = "dev";
+> +
+> +	name = kasprintf(GFP_KERNEL, "%s@%x,%x", pci_type,
+> +			 PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn));
+> +	if (!name)
+> +		return;
+> +
+> +	cset = kmalloc(sizeof(*cset), GFP_KERNEL);
+> +	if (!cset)
+> +		goto failed;
+> +	of_changeset_init(cset);
+> +
+> +	np = of_changeset_create_node(ppnode, name, cset);
+> +	if (!np)
+> +		goto failed;
 
-> The PCI endpoint device such as Xilinx Alveo PCI card maps the register
-> spaces from multiple hardware peripherals to its PCI BAR. Normally,
-> the PCI core discovers devices and BARs using the PCI enumeration process.
-> There is no infrastructure to discover the hardware peripherals that are
-> present in a PCI device, and which can be accessed through the PCI BARs.
-> 
-> Apparently, the device tree framework requires a device tree node for the
-> PCI device. Thus, it can generate the device tree nodes for hardware
-> peripherals underneath. Because PCI is self discoverable bus, there might
-> not be a device tree node created for PCI devices. Furthermore, if the PCI
-> device is hot pluggable, when it is plugged in, the device tree nodes for
-> its parent bridges are required. Add support to generate device tree node
-> for PCI bridges.
-> 
-> Add an of_pci_make_dev_node() interface that can be used to create device
-> tree node for PCI devices.
-> 
-> Add a PCI_DYNAMIC_OF_NODES config option. When the option is turned on,
-> the kernel will generate device tree nodes for PCI bridges unconditionally.
-> 
-> Initially, add the basic properties for the dynamically generated device
-> tree nodes which include #address-cells, #size-cells, device_type,
-> compatible, ranges, reg.
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+The "goto failed" will leak the cset previously allocated.
 
-I tried to bring this up for a custom PCIe card emulated in QEMU on an ARM ACPI
-machine.
+np->data = cset; (next line) allows to free the cset when the node is destroyed
+(of_node_put() calls). When the node cannot be created, the allocated cset should
+be freed.
 
-There are some missing parts that were present in Clements series, but not this
-one, particularly creation of the root pci object.
-
-Anyhow, hit an intermittent crash...
-
-
-> ---
+> +	np->data = cset;
+> +
+> +	ret = of_pci_add_properties(pdev, cset, np);
+> +	if (ret)
+> +		goto failed;
+> +
+> +	ret = of_changeset_apply(cset);
+> +	if (ret)
+> +		goto failed;
+> +
+> +	pdev->dev.of_node = np;
+> +	kfree(name);
+> +
+> +	return;
+> +
+> +failed:
+> +	if (np)
+> +		of_node_put(np);
+> +	kfree(name);
+> +}
+> +#endif
+> +
+>  #endif /* CONFIG_PCI */
+>  
+...
 > +static int of_pci_prop_intr_map(struct pci_dev *pdev, struct of_changeset *ocs,
 > +				struct device_node *np)
 > +{
@@ -124,34 +165,90 @@ Anyhow, hit an intermittent crash...
 > +		if (ret) {
 > +			pci_err(pdev, "parse irq %d failed, ret %d", pin, ret);
 > +			continue;
-
-If all the interrupt parsing fails we continue ever time...
-
 > +		}
 > +		ret = of_property_read_u32(out_irq[i].np, "#address-cells",
 > +					   &addr_sz[i]);
 > +		if (ret)
 > +			addr_sz[i] = 0;
-
-This never happens.
-
 > +	}
+
+if of_irq_parse_raw() fails, addr_sz[i] is not initialized and map_sz bellow is
+computed with uninitialized values.
+On the test I did, this lead to a kernel crash due to the following kcalloc()
+called with incorrect values.
+
+Are interrupt-map and interrupt-map-mask properties needed in all cases ?
+I mean are they mandatory for the host pci bridge ?
+
 > +
 > +	list_for_each_entry(child, &pdev->subordinate->devices, bus_list) {
 > +		for (pin = 1; pin <= OF_PCI_MAX_INT_PIN; pin++) {
 > +			i = pci_swizzle_interrupt_pin(child, pin) - 1;
 > +			map_sz += 5 + addr_sz[i] + out_irq[i].args_count;
 
-and here we end up derefencing random memory which happens in my case to cause
-a massive allocation sometimes and that fails one of the assertions in the
-allocator.
-
-I'd suggest just setting addr_sz[xxx] = {}; above
-to ensure it's initialized. Then the if(ret) handling should not be needed
-as well as of_property_read_u32 should be side effect free I hope!
+of_irq_parse_raw() can fail on some pins.
+Is it correct to set map_sz based on information related to all pins even if
+of_irq_parse_raw() previously failed on some pins ?
 
 > +		}
 > +	}
 > +
 > +	int_map = kcalloc(map_sz, sizeof(u32), GFP_KERNEL);
 > +	mapp = int_map;
+> +
+> +	list_for_each_entry(child, &pdev->subordinate->devices, bus_list) {
+> +		for (pin = 1; pin <= OF_PCI_MAX_INT_PIN; pin++) {
+> +			*mapp = (child->bus->number << 16) |
+> +				(child->devfn << 8);
+> +			mapp += OF_PCI_ADDRESS_CELLS;
+> +			*mapp = pin;
+> +			mapp++;
+> +			i = pci_swizzle_interrupt_pin(child, pin) - 1;
+> +			*mapp = out_irq[i].np->phandle;
+> +			mapp++;
+> +			if (addr_sz[i]) {
+> +				ret = of_property_read_u32_array(out_irq[i].np,
+> +								 "reg", mapp,
+> +								 addr_sz[i]);
+> +				if (ret)
+> +					goto failed;
+> +			}
+> +			mapp += addr_sz[i];
+> +			memcpy(mapp, out_irq[i].args,
+> +			       out_irq[i].args_count * sizeof(u32));
+> +			mapp += out_irq[i].args_count;
+> +		}
+> +	}
+> +
+> +	ret = of_changeset_add_prop_u32_array(ocs, np, "interrupt-map", int_map,
+> +					      map_sz);
+> +	if (ret)
+> +		goto failed;
+> +
+> +	ret = of_changeset_add_prop_u32(ocs, np, "#interrupt-cells", 1);
+> +	if (ret)
+> +		goto failed;
+> +
+> +	ret = of_changeset_add_prop_u32_array(ocs, np, "interrupt-map-mask",
+> +					      int_map_mask,
+> +					      ARRAY_SIZE(int_map_mask));
+> +	if (ret)
+> +		goto failed;
+> +
+> +	kfree(int_map);
+> +	return 0;
+> +
+> +failed:
+> +	kfree(int_map);
+> +	return ret;
+> +}
+> +
+...
+
+Regards,
+Hervé
+
+-- 
+Hervé Codina, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
