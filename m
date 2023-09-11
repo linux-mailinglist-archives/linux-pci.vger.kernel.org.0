@@ -2,107 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ED0079B59D
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 02:03:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0AA279B383
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 02:00:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350558AbjIKVjL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Sep 2023 17:39:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43778 "EHLO
+        id S237864AbjIKVhy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Sep 2023 17:37:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243192AbjIKQ6V (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 12:58:21 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on20628.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e89::628])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F787116;
-        Mon, 11 Sep 2023 09:58:15 -0700 (PDT)
+        with ESMTP id S243830AbjIKRx1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 13:53:27 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD5AEDD;
+        Mon, 11 Sep 2023 10:53:22 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=egMeOfAHEbFjcR20EfONq4fxEbge4UZcY6J/th1/d0VkyOsVKm/qwVvfB3bOB20jrwIfEWmTzXrIpeGyFt+KNp87iTn53CKibaDXpqzcTYC8S7H1TCZ3zx5LYwjzp54jiCLo5Y7IXrobiP+qfON4hofMo7bpxcQaDe02SA44Cyh2ipCvA9X7ubSHy2LdbXsm0x4f/690kPIfKI4lY2SfKKGG9OE96gFdXc1yAQR6KdzimkS/yIDwhvM28MPdQ/NO1pEtpQuoVy/1wtYlhe+4Q1YojTLJHxT0IWT2xNrWGMixABIVNbbRbomk35k/wf5vUE45042C6JFvLOA7uz9ybQ==
+ b=Ecxj+zMmjY/HvGShvryJTqaI0Hs3Lc1iCpENL0B4uHWgY1Zh/d73Tw9eHNGpKXRlGSieoiK7ffwTxFatgPemk5XC6V8fjaSL+TpSfTKFRKUIB3xLsU6r5VYE6Jb5N70C2EKGHcxsMHtBAyxnI4tqDWZrhwn/fC1V/q9ekceinzxYtWPCD9cobnRHTlpJvnhq79c66SNZtORX1gaq++1QAiwjwWdXrSHDlJcQBTOANyx2S32yNc5E/oCLBJ/9RAHKNrD6IO44JL+60XWYiYVK8HHDkUZrEwURTdnp/F+GMKgeYrdAJv1DGrY7iZu+zOz1XrmwQFjjF9r+gRnJP8AXOg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Dm+WLfx5mTuFZBv/UjkMb7jqHSMALpbCw4pb9imL9KU=;
- b=fBTtnmoVz2HJPELtwOgfRJXdTcXSGD+WwzV7g/OM0CRGkzoLheLETbqjMYD07OeFFpbULok/MWzGi0BLGDO37A1KIVfxHwzpuWLrcPfAKF7WPM/2NAM4UIwl5MnG2GYvV0TunlS3whPKLHi/CjYbfBbmarebGr8Ydg8DhjbgnKCMyajiBMYygjLhuZnaI9fDwk+Vl3wf+rQUHH1jil5nvsrop7hI08d/01Vo8pcectw0U4sfa97kcqoPPVKXkLM8pY1GyfwRmaXKPQsyVc7cd3Qr6Ndk92VZyH4z2itrZiECUpqtLTcCAFZtSPku5RfxlRR1yjoA2Gipttz5AqWIfQ==
+ bh=I27CdA9nGIjjkUPqrkXDOeQckuPZX9UDZHmF4o7dkg0=;
+ b=aV7K/K65y6dTMrMPzjDlFaaejyQQZHtxZrFaanPN0zW0vzeilF5PAn40hVkGd5X693d3t4SV3R85zTlllZHvI09WEwsmTYm6X74idDOmTrkjeQW0tJE2gP992wKAL7hfLroEN3p3M3N93BAL6s/dTkl52XCgES7gPUYw7pAqpVF+GH+W6MgruovINmFqRyBPQeuI7xefmJmyKZ1MZEqJ2glGXutg6sPivFegDoXVcuNhASRc4QPvGPrMjnOTD/Oo4NTTP2rDtO1XUp1pPAw2XwaM6eXxZ+0oHhzwSEYiheB5QCj/XOY3ptgGzgR6nXG7cFIPhsP0oL4W5Hh+JsSsJg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
+ 165.204.84.17) smtp.rcpttodomain=bootlin.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dm+WLfx5mTuFZBv/UjkMb7jqHSMALpbCw4pb9imL9KU=;
- b=rPHYDUATpyBuP6HzapvpkK1uMTWgyp4nEXEDbtZgqWhjEQCyhSucKcbtrRBLYOoz2bVhMCA3WQU+7Wz0SK9Qxj3vB0LkhyRcc8UQWTIO1INbAnvjXKkfGAPBoIuUvA1RQhX6ioGu0w2laLargvPiQnguJAdKw8VUFhPC6hEoL7Y=
-Received: from DM6PR03CA0079.namprd03.prod.outlook.com (2603:10b6:5:333::12)
- by BN9PR12MB5083.namprd12.prod.outlook.com (2603:10b6:408:134::18) with
+ bh=I27CdA9nGIjjkUPqrkXDOeQckuPZX9UDZHmF4o7dkg0=;
+ b=u9KlbuOGq2UvjW4NEjKj9KZ2rZbR5rov87RiFzdsbsp15r1+OJrg+yib/qixtzhp57q7E/gsN7zv5hi6nuV1SR2oZyd3yhUBE76PLxL4OkSvCs9yrlXCoYSj9Xb6DHxEAbq9HNk6unl4dIEl1lqUu3eS70oQW7u/YrvM/veW2Xk=
+Received: from CY5PR13CA0011.namprd13.prod.outlook.com (2603:10b6:930::16) by
+ BL3PR12MB6572.namprd12.prod.outlook.com (2603:10b6:208:38f::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.35; Mon, 11 Sep
- 2023 16:58:12 +0000
-Received: from CY4PEPF0000EE38.namprd03.prod.outlook.com
- (2603:10b6:5:333:cafe::de) by DM6PR03CA0079.outlook.office365.com
- (2603:10b6:5:333::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.35 via Frontend
- Transport; Mon, 11 Sep 2023 16:58:12 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.30; Mon, 11 Sep
+ 2023 17:53:20 +0000
+Received: from CY4PEPF0000FCBF.namprd03.prod.outlook.com
+ (2603:10b6:930:0:cafe::84) by CY5PR13CA0011.outlook.office365.com
+ (2603:10b6:930::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.16 via Frontend
+ Transport; Mon, 11 Sep 2023 17:53:20 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
 Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EE38.mail.protection.outlook.com (10.167.242.12) with Microsoft
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ CY4PEPF0000FCBF.mail.protection.outlook.com (10.167.242.101) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6792.17 via Frontend Transport; Mon, 11 Sep 2023 16:58:11 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.6792.16 via Frontend Transport; Mon, 11 Sep 2023 17:53:19 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 11 Sep
- 2023 11:58:10 -0500
+ 2023 12:53:18 -0500
 Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
  (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 11 Sep
- 2023 11:58:10 -0500
+ 2023 12:53:18 -0500
 Received: from [172.19.74.144] (10.180.168.240) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.27 via Frontend
- Transport; Mon, 11 Sep 2023 11:58:09 -0500
-Message-ID: <0cc232a2-1743-aeaa-cb87-ce320cc9fc39@amd.com>
-Date:   Mon, 11 Sep 2023 09:58:04 -0700
+ Transport; Mon, 11 Sep 2023 12:53:17 -0500
+Message-ID: <4ccd9525-455d-3608-dd39-caf2753620c1@amd.com>
+Date:   Mon, 11 Sep 2023 10:53:17 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
 Subject: Re: [PATCH V13 2/5] PCI: Create device tree node for bridge
 Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Herve Codina <herve.codina@bootlin.com>
 CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <robh@kernel.org>,
         <max.zhen@amd.com>, <sonal.santan@amd.com>,
-        <stefano.stabellini@xilinx.com>,
-        =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>
+        <stefano.stabellini@xilinx.com>
 References: <1692120000-46900-1-git-send-email-lizhi.hou@amd.com>
  <1692120000-46900-3-git-send-email-lizhi.hou@amd.com>
- <20230911154856.000076c3@Huawei.com>
+ <20230911171319.495bb837@bootlin.com>
 From:   Lizhi Hou <lizhi.hou@amd.com>
-In-Reply-To: <20230911154856.000076c3@Huawei.com>
+In-Reply-To: <20230911171319.495bb837@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE38:EE_|BN9PR12MB5083:EE_
-X-MS-Office365-Filtering-Correlation-Id: caef1a57-9a8a-4dc0-2d3b-08dbb2e847e6
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCBF:EE_|BL3PR12MB6572:EE_
+X-MS-Office365-Filtering-Correlation-Id: 557140f8-d229-4494-1e22-08dbb2effbc7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 131yAs/9YlkQqKqAhvXXcVbf30HrVGN1grIh/XjtJG4zLYLdH9UBzQcTvo6f/ocLLcbX3suMkvFIWcvE7HVx2h9jZSdk6+KZPm3+2/qqHqrG3xwlsP7gYCvZsCs2egighyvOvuPofuHG1G6wGPd7OVaCN11uVy4TVYJ77MNrGyYEJ/HvmnC/W5KdyaCDSjCb4PyPBXDP4KUolWFNqGhnEhOLlmpJ6O4JkFzb7pK2wHHEJRr8//lSnfmsQ3bwz11vd/IALYDhMExsaHaUfTCwGddrwzoOJIJhxagJG89q8af1Q6PN1gyFgYzUzNHOXNRwVLnfW2AluGJv8XN9fAv7HJU0LoLAlsM2VEJO3rPkMsmG/0IQldYidrv5ADQd79BmlH6266I2nIRJwLZ2lBQDLpFsywFk1Ojw6BgQSrSwpopmlOzoCZ0K5PsZv1UrQxEDnUfez9LUjGADleKGGI8h4YFl3GczDklqn+DImUJUZwFKE1zCAIunCuEAXfKqbIU5DQI+0ZoeJe2K3XMliw97fAGlWJF4URYMLmYu/4+yFuug0giOQsIUO/czHffi+BqCNgY+yroOfnhnMvqfe4RjdlaHQBTwW48C3OSiHHz839FiqZuN7iqFgD4/Q78a2K0BLsDU4NOFyR9MwP8SP7Dp7oef3KEo9+vcFDpFVWCLUATfCB/Hk7k3W7S0UeVfEq4AIf5J5q+ng20df8OEBuMizZ1rWjv/Xqh9sQSyxF0UVaG8GnKH3aretxcIYqUpSfEkveAjlHRBsOC666WrpyHMbUWSi6h9uOA/hpX/cgYNX+oauJLqiGbj+WdvZdiSPC2IqIi3HUMGoU1UGo3dIu7/ng==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(136003)(346002)(376002)(396003)(82310400011)(186009)(1800799009)(451199024)(46966006)(40470700004)(36840700001)(53546011)(6666004)(478600001)(83380400001)(2616005)(336012)(2906002)(426003)(54906003)(44832011)(16576012)(6916009)(26005)(316002)(5660300002)(70586007)(41300700001)(8936002)(8676002)(4326008)(70206006)(40460700003)(81166007)(40480700001)(47076005)(36860700001)(36756003)(31696002)(86362001)(82740400003)(356005)(31686004)(21314003)(43740500002)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: o2v7awokjMN3F8H/nlfq2iHYyRwtgFgS+lqFYXWCpYh1PPup0nGL3Q5qBnVOhLuu/DxWaK7P9NbTERVs8/YZALbyTtC5cn6mPzp4fNWQm1bHB5XlgGuYsb1lLQiaUc75iSEsxvwlNGpUEcEdLyjzAi00whc+MS102T9jgD/a2cqNbGxBys7OwqpFOqrNU7nyzWKuvdJmfNIW2dWiIrrUFqQHx2bVroONUl+K8pg4EdWm03MGofyZkO2TTdFcFYLSodsXyNC0pYtAazZiGKxvjWV2QqzulOUIC0hSmoGFmpFFAjPqIFExfZPHV2cUpkCNYG5vCLwCDPz6dSZ6fNmmol+aVDKWyTHG6taMRVcdu0vIrD8kmB3T+lZTkjWw4cDqdSpP/wT7WHirVb6Dwscz4+fntFXmBVedgshDCkdW20sJ9kRA7Zuf5VQe2bEFVkec9KfyQyx2wkqf5kVPuhIbWSRmVgjfCBSc0Usa2KfYpYwGK2jehX6RacBu1P5+7DN1zifcP/JOqT5IFT2C3JhXJuGMTYPP/favgn+Id1rUTVpt+/Ak8gwjFH8EkoyDEjMXUwfC+TrPFks8J7mK3dYpze1LzDoIF1VcevCDGAtyZ8W7DwR5KRTtS/si5SKRtY4Bba8KShidcPxccSnD3VAQEX4ItKXM5BF3L4p7VrLxDzrP7nV+cUc/phQUXRxb+tvn42xyRXckNWiZvzykTQ+L/VYt6sgmj68BoyMOyLOF3yUDAMsKT8rO7O8SAu5aC9uOq4B1gEp0fzg2TzRdWlrztMBVLEzI2SW996jIX8oPknkoz/v0m8ngrq/cr5mmqNGo
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(346002)(136003)(396003)(376002)(1800799009)(451199024)(82310400011)(186009)(46966006)(36840700001)(40470700004)(44832011)(5660300002)(31686004)(4326008)(8936002)(8676002)(41300700001)(316002)(70586007)(70206006)(6916009)(54906003)(478600001)(2906002)(53546011)(16576012)(2616005)(26005)(426003)(336012)(36860700001)(47076005)(83380400001)(356005)(81166007)(82740400003)(31696002)(40460700003)(36756003)(40480700001)(86362001)(43740500002)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2023 16:58:11.0387
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2023 17:53:19.3021
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: caef1a57-9a8a-4dc0-2d3b-08dbb2e847e6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 557140f8-d229-4494-1e22-08dbb2effbc7
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000EE38.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000FCBF.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5083
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6572
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -110,48 +109,85 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-On 9/11/23 07:48, Jonathan Cameron wrote:
+On 9/11/23 08:13, Herve Codina wrote:
+> Hi Lizhi,
+>
 > On Tue, 15 Aug 2023 10:19:57 -0700
 > Lizhi Hou <lizhi.hou@amd.com> wrote:
+> ...
+>> +void of_pci_make_dev_node(struct pci_dev *pdev)
+>> +{
+>> +	struct device_node *ppnode, *np = NULL;
+>> +	const char *pci_type;
+>> +	struct of_changeset *cset;
+>> +	const char *name;
+>> +	int ret;
+>> +
+>> +	/*
+>> +	 * If there is already a device tree node linked to this device,
+>> +	 * return immediately.
+>> +	 */
+>> +	if (pci_device_to_OF_node(pdev))
+>> +		return;
+>> +
+>> +	/* Check if there is device tree node for parent device */
+>> +	if (!pdev->bus->self)
+>> +		ppnode = pdev->bus->dev.of_node;
+>> +	else
+>> +		ppnode = pdev->bus->self->dev.of_node;
+>> +	if (!ppnode)
+>> +		return;
+>> +
+>> +	if (pci_is_bridge(pdev))
+>> +		pci_type = "pci";
+>> +	else
+>> +		pci_type = "dev";
+>> +
+>> +	name = kasprintf(GFP_KERNEL, "%s@%x,%x", pci_type,
+>> +			 PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn));
+>> +	if (!name)
+>> +		return;
+>> +
+>> +	cset = kmalloc(sizeof(*cset), GFP_KERNEL);
+>> +	if (!cset)
+>> +		goto failed;
+>> +	of_changeset_init(cset);
+>> +
+>> +	np = of_changeset_create_node(ppnode, name, cset);
+>> +	if (!np)
+>> +		goto failed;
+> The "goto failed" will leak the cset previously allocated.
 >
->> The PCI endpoint device such as Xilinx Alveo PCI card maps the register
->> spaces from multiple hardware peripherals to its PCI BAR. Normally,
->> the PCI core discovers devices and BARs using the PCI enumeration process.
->> There is no infrastructure to discover the hardware peripherals that are
->> present in a PCI device, and which can be accessed through the PCI BARs.
->>
->> Apparently, the device tree framework requires a device tree node for the
->> PCI device. Thus, it can generate the device tree nodes for hardware
->> peripherals underneath. Because PCI is self discoverable bus, there might
->> not be a device tree node created for PCI devices. Furthermore, if the PCI
->> device is hot pluggable, when it is plugged in, the device tree nodes for
->> its parent bridges are required. Add support to generate device tree node
->> for PCI bridges.
->>
->> Add an of_pci_make_dev_node() interface that can be used to create device
->> tree node for PCI devices.
->>
->> Add a PCI_DYNAMIC_OF_NODES config option. When the option is turned on,
->> the kernel will generate device tree nodes for PCI bridges unconditionally.
->>
->> Initially, add the basic properties for the dynamically generated device
->> tree nodes which include #address-cells, #size-cells, device_type,
->> compatible, ranges, reg.
->>
->> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
-> I tried to bring this up for a custom PCIe card emulated in QEMU on an ARM ACPI
-> machine.
+> np->data = cset; (next line) allows to free the cset when the node is destroyed
+> (of_node_put() calls). When the node cannot be created, the allocated cset should
+> be freed.
+Thanks for pointing this out.
 >
-> There are some missing parts that were present in Clements series, but not this
-> one, particularly creation of the root pci object.
-Thanks for trying this. The entire effort was separated in different 
-phases. That is why this patchset does not include creating of_root.
->
-> Anyhow, hit an intermittent crash...
->
->
->> ---
+>> +	np->data = cset;
+>> +
+>> +	ret = of_pci_add_properties(pdev, cset, np);
+>> +	if (ret)
+>> +		goto failed;
+>> +
+>> +	ret = of_changeset_apply(cset);
+>> +	if (ret)
+>> +		goto failed;
+>> +
+>> +	pdev->dev.of_node = np;
+>> +	kfree(name);
+>> +
+>> +	return;
+>> +
+>> +failed:
+>> +	if (np)
+>> +		of_node_put(np);
+>> +	kfree(name);
+>> +}
+>> +#endif
+>> +
+>>   #endif /* CONFIG_PCI */
+>>   
+> ...
 >> +static int of_pci_prop_intr_map(struct pci_dev *pdev, struct of_changeset *ocs,
 >> +				struct device_node *np)
 >> +{
@@ -184,43 +220,94 @@ phases. That is why this patchset does not include creating of_root.
 >> +		if (ret) {
 >> +			pci_err(pdev, "parse irq %d failed, ret %d", pin, ret);
 >> +			continue;
-> If all the interrupt parsing fails we continue ever time...
-
-Did you use Clement's patch to create of_root? I am just wondering if 
-parsing irq could fail on a dt-based system.
-
-And yes, the failure case should be handled without crash. I think if 
-irq parsing failed,  the interrupt-map pair generation should be skipped.
-
-
-Thanks,
-
-Lizhi
-
->
 >> +		}
 >> +		ret = of_property_read_u32(out_irq[i].np, "#address-cells",
 >> +					   &addr_sz[i]);
 >> +		if (ret)
 >> +			addr_sz[i] = 0;
-> This never happens.
->
 >> +	}
+> if of_irq_parse_raw() fails, addr_sz[i] is not initialized and map_sz bellow is
+> computed with uninitialized values.
+> On the test I did, this lead to a kernel crash due to the following kcalloc()
+> called with incorrect values.
+>
+> Are interrupt-map and interrupt-map-mask properties needed in all cases ?
+> I mean are they mandatory for the host pci bridge ?
+interrupt-map is required for bridges when a legacy interrupt device is 
+underneath. Otherwise, of_irq_parse_pci() needs to be changed for legacy 
+interrupt device. Please see my previous patch and comments.
+>
 >> +
 >> +	list_for_each_entry(child, &pdev->subordinate->devices, bus_list) {
 >> +		for (pin = 1; pin <= OF_PCI_MAX_INT_PIN; pin++) {
 >> +			i = pci_swizzle_interrupt_pin(child, pin) - 1;
 >> +			map_sz += 5 + addr_sz[i] + out_irq[i].args_count;
-> and here we end up derefencing random memory which happens in my case to cause
-> a massive allocation sometimes and that fails one of the assertions in the
-> allocator.
->
-> I'd suggest just setting addr_sz[xxx] = {}; above
-> to ensure it's initialized. Then the if(ret) handling should not be needed
-> as well as of_property_read_u32 should be side effect free I hope!
+> of_irq_parse_raw() can fail on some pins.
+> Is it correct to set map_sz based on information related to all pins even if
+> of_irq_parse_raw() previously failed on some pins ?
+
+I think the interrupt-map pair should be skipped if of_irq_parse_raw() 
+is failed. Thanks.
+
+
+Lizhi
+
 >
 >> +		}
 >> +	}
 >> +
 >> +	int_map = kcalloc(map_sz, sizeof(u32), GFP_KERNEL);
 >> +	mapp = int_map;
+>> +
+>> +	list_for_each_entry(child, &pdev->subordinate->devices, bus_list) {
+>> +		for (pin = 1; pin <= OF_PCI_MAX_INT_PIN; pin++) {
+>> +			*mapp = (child->bus->number << 16) |
+>> +				(child->devfn << 8);
+>> +			mapp += OF_PCI_ADDRESS_CELLS;
+>> +			*mapp = pin;
+>> +			mapp++;
+>> +			i = pci_swizzle_interrupt_pin(child, pin) - 1;
+>> +			*mapp = out_irq[i].np->phandle;
+>> +			mapp++;
+>> +			if (addr_sz[i]) {
+>> +				ret = of_property_read_u32_array(out_irq[i].np,
+>> +								 "reg", mapp,
+>> +								 addr_sz[i]);
+>> +				if (ret)
+>> +					goto failed;
+>> +			}
+>> +			mapp += addr_sz[i];
+>> +			memcpy(mapp, out_irq[i].args,
+>> +			       out_irq[i].args_count * sizeof(u32));
+>> +			mapp += out_irq[i].args_count;
+>> +		}
+>> +	}
+>> +
+>> +	ret = of_changeset_add_prop_u32_array(ocs, np, "interrupt-map", int_map,
+>> +					      map_sz);
+>> +	if (ret)
+>> +		goto failed;
+>> +
+>> +	ret = of_changeset_add_prop_u32(ocs, np, "#interrupt-cells", 1);
+>> +	if (ret)
+>> +		goto failed;
+>> +
+>> +	ret = of_changeset_add_prop_u32_array(ocs, np, "interrupt-map-mask",
+>> +					      int_map_mask,
+>> +					      ARRAY_SIZE(int_map_mask));
+>> +	if (ret)
+>> +		goto failed;
+>> +
+>> +	kfree(int_map);
+>> +	return 0;
+>> +
+>> +failed:
+>> +	kfree(int_map);
+>> +	return ret;
+>> +}
+>> +
+> ...
+>
+> Regards,
+> Hervé
+>
