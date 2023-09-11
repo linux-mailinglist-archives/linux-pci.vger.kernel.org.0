@@ -2,421 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1B3A79C3B9
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 05:08:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D40B679C24E
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 04:08:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241676AbjILDIP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Sep 2023 23:08:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42334 "EHLO
+        id S237143AbjILCIU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Sep 2023 22:08:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241695AbjILDID (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 23:08:03 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10EC22F8D5;
-        Mon, 11 Sep 2023 14:10:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694466654; x=1726002654;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HodeLA1YPF9rQu/xpkdJPTv/y/IotPBfmXtWfqkNx48=;
-  b=S/SNebapO1XdWMYQrvXOOIPCsBfO3aU7OJ2oQgi3X8DnvmFlNmPqWVq1
-   pzI4A2wXOWhsUYlPOJVyayE1ttm8hU1u5dV728hiPFNDVy9QmB11PUcDA
-   I1ngv8mxMf6nblClKI21DWdHcqStJarZmxCoOpnp+key5a4OtNhIqAlA7
-   LlOD6fs4ffU4EJqws+82pKN28hhYB8a38uCG+rWh8wPohhS4zbL+UzgCq
-   edNXlQU1V7jxfn/kXU4xQibtFqbBMxOSCwcLcvOsguXWLcT2J2MXmyKNk
-   SiI/UrVHbfRmL8ozRGB6PHfEaLgZ6Jk1W5isHyFFoqnnWeVx5q7XZIXo9
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="442211111"
-X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="442211111"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 14:07:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="990248630"
-X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="990248630"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 14:07:01 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1qfo7W-008QLa-2v;
-        Tue, 12 Sep 2023 00:06:58 +0300
-Date:   Tue, 12 Sep 2023 00:06:58 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Lizhi Hou <lizhi.hou@amd.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh@kernel.org, max.zhen@amd.com,
-        sonal.santan@amd.com, stefano.stabellini@xilinx.com
-Subject: Re: [PATCH V13 2/5] PCI: Create device tree node for bridge
-Message-ID: <ZP+BcnBl3+QdAl08@smile.fi.intel.com>
-References: <1692120000-46900-1-git-send-email-lizhi.hou@amd.com>
- <1692120000-46900-3-git-send-email-lizhi.hou@amd.com>
+        with ESMTP id S235253AbjILBzb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 21:55:31 -0400
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2041.outbound.protection.outlook.com [40.107.21.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B9FF1B7EB2;
+        Mon, 11 Sep 2023 18:26:41 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ys7D5ZsP6PsywLDbvxEZI8q4r/EG7vkiA6/7R+eBrzHBb/QJVmyzuKWkxilEHLQ/4mpE3gV2lYADQ4tksPCeJQKkohGiR4NQ4MpsPvEsVrxbvXWzRla+YLG4r2IqC2NvYmvtrdBhY8WvKEOz52f+vbDg9LqMdxTav8Johw0tFDXB1kXYmPnLMzG/o+RkntvqZf1LaxCxH1zKythzsru80x9oiyj+EVPw9jLQN044ETLB9I4EJW6qJwMKffeytDcRJ7KjoJo0KZki2Bysf2GGVtQJ4ZphZgUfBYhrYxxOw7OOw+/Ts1OPWJM4jz8Aw3ePYPi5OidtSzM0ZEp6hyOr+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=swA+Mv5Ko8rpGiwnsn9lzKn2XyQXSyIoXb5iBljgaCI=;
+ b=cXPIG3VUN8tVkQT4/m11oYl/QLR39Sjq9kcRpbiXNJLMxYMTlgIOWJ1VWxRYyO4XuDdypvBhcRm3RL3vnrJSk/GoEZIdvBC+zNPdmoYvqXBEX8+nwQmea/hgQaLYNbMeAPEHkK5YVgTGLtnYeKoxQsJejthpzvOQAEmulVOVVIpC+5YpHFJkTAllp+4OghMBMltF5fefl9hT2A4q1kdQCOzv9ExA65L4CxnLCfbzh7B1hpHfCKmstgTmov6gUV08YBQ6LqYJvbVJHNJWRMnYDan2A/E5Or+5toVAQOJO9cfdTsB4qfsSPCcw/tkJ28XT3IFKVqmiB6F865IdE10uvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=swA+Mv5Ko8rpGiwnsn9lzKn2XyQXSyIoXb5iBljgaCI=;
+ b=clebLMIRCDx3MxQJ8DwR/S3KbqXE+kueZCi/ZAfTMyW3t6YCDSDRVTeFQ4koVnXD9zQGWb5SCzw4rN1VzUKi0wAjIDmvu6kkK9eZpy8oaHJ+lxnA7p9aORHzHF0R3IC7n68vwokOtb4SoVu/G249epezxBUv0THyL5WC4wWA9zY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by PAXPR04MB8125.eurprd04.prod.outlook.com (2603:10a6:102:1cc::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.35; Mon, 11 Sep
+ 2023 22:10:07 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::aa90:117d:c1d0:346a]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::aa90:117d:c1d0:346a%3]) with mapi id 15.20.6768.029; Mon, 11 Sep 2023
+ 22:10:07 +0000
+From:   Frank Li <Frank.Li@nxp.com>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     Frank.li@nxp.com, aisheng.dong@nxp.com, bhelgaas@google.com,
+        devicetree@vger.kernel.org, festevam@gmail.com,
+        imx@lists.linux.dev, jdmason@kudzu.us, kernel@pengutronix.de,
+        kishon@kernel.org, kw@linux.com,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, lpieralisi@kernel.org, maz@kernel.org,
+        s.hauer@pengutronix.de, shawnguo@kernel.org, tglx@linutronix.de
+Subject: [PATCH v2 5/5] tools: PCI: Add 'B' option for test doorbell
+Date:   Mon, 11 Sep 2023 18:09:20 -0400
+Message-Id: <20230911220920.1817033-6-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230911220920.1817033-1-Frank.Li@nxp.com>
+References: <20230911220920.1817033-1-Frank.Li@nxp.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR07CA0010.namprd07.prod.outlook.com
+ (2603:10b6:a02:bc::23) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1692120000-46900-3-git-send-email-lizhi.hou@amd.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|PAXPR04MB8125:EE_
+X-MS-Office365-Filtering-Correlation-Id: e66a8d84-6a46-43c7-904c-08dbb313db80
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: r2LdZ4NGK+EPRmiJGRz+eBPgr7ZJOC6Rm02C11ij6NlJhkp2sFTxySoNTpk/BMH5VQi/2RanHIz98WHQ8sOSHOWfnmOvGdK9GzEX5oZnigIqP9Cy56ZPV+cD53osdWsSx+uV0htOhPih+ts04LfeQNmv8pv/3i9qO5P6WLmHWvo9x/usf3ZDMbpA/f8dmiozXMhPOiIEQEXRYO5CEDvXWfRFmI+teywJvxuGbi7kGMbskrZm9g5hyQrWyArhMvnQQ61b8G3LlcUwU8rIV2rFHpLQpixbEL7D48hnWO68+30DrX8dsTdsTIGD9+CwfGhJ5YfsohavI/yixQHoTFzX/qq7DzAE/IJfY7gks2AK/ch8rgPSFwHTw4kPW3eU3aC+uZ8CYxpLIGsyCHs+nkT+DujHaKgdeaizvSUKxwvjbh2tUWysLC1Wv6VZQYwziGC5e4Kd66588M7cQYOeb1qNQJYutO0d/Uw+62Lyp63lAlRUDUgWb5oXTqiLH/jtVKuENVbrLn52E8fd91gPO2j689NxHmLbRzA+bpRGTML/W1TbJ7b1/L5WIaWSYjrJMueK43jA5gcPmmzjS8tksMvf4zZrrfT+2JqsuexiK/NiQg4mB8fwC+qlJnTvDgx2qzji
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(366004)(136003)(396003)(346002)(1800799009)(186009)(451199024)(6512007)(26005)(1076003)(86362001)(2906002)(83380400001)(6486002)(2616005)(52116002)(6506007)(6666004)(7416002)(38350700002)(478600001)(38100700002)(36756003)(5660300002)(8676002)(8936002)(66476007)(66556008)(4326008)(6916009)(316002)(66946007)(41300700001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?XNqEVW8xHXXaA2vMQOdiUzBYMShA7HxIl5558OUEU/+tT8ExO2Uxaw9fKXn3?=
+ =?us-ascii?Q?/sRL7IdfaIZ5x9OfQn/pftf5AI/GHjFYEPgL/6ce4h6xYtu0c2angq/sgurB?=
+ =?us-ascii?Q?WBzRMEAS2mD7RPhmnrAsMDDkYjXGIlavvoScUsGDGmxNKTwYFxsRp5fCus6u?=
+ =?us-ascii?Q?fHVFEcsromlbb2MSXtWtk4K0omfe5DCZopn8yALXIZtQh6yJ27w3CIZ2/nVU?=
+ =?us-ascii?Q?Ud1VCo4pFsG+TzzxvJwnDUvbZaOD3mr81b5E5qJwrttP5jT6leHq6K1IPUMR?=
+ =?us-ascii?Q?IxuCXmG5ENCiVmz1YEDsBKQGdwmMykA65mbJtPQ+EsSveXc33LPtcDuirVJ4?=
+ =?us-ascii?Q?q6/zUAlKPu5IIYgsccrFbqkHPc7GG1tZLGhDWWPxTQf/ErxsGwbGRMPjWVvC?=
+ =?us-ascii?Q?++d5EyP6kw5Eg7GbM0pLG2rHHLV3KrvfPFfYZq+Xan1KL7qVsJa9RjNqCpUt?=
+ =?us-ascii?Q?RFKs/rJ9V73b2lDZ7eJIxvzfTtKB9WjK8N9uWN2eWmZD6QgPuXrJ0i4gsFe7?=
+ =?us-ascii?Q?unn8nG64B0xCWYbeMtw/dfXbSqrB3Bh1t9bhwLkxRXmiINqqwqpUrGPSz1Km?=
+ =?us-ascii?Q?4X8z6x2X6J/AA5Y3MhjNFKrsfoOwvIrwysnq+o8luSSA7QoxXPKu1Mp0YqPO?=
+ =?us-ascii?Q?86O6JjkETE9aAOjxMSuQcYMx9CnHitsNUDvMHxSypCYWs4+u+Vkbv78gpPWt?=
+ =?us-ascii?Q?aGwr1Bh34nUCdRT1C2DfZPxTztw+vEh5mxZs2HGxzAoJigycJMcF/MJ9tuTO?=
+ =?us-ascii?Q?xPqSaPCWdtZjyKRqe/do1MjGMiXyAZall+6JsnU5Kodaem2DK+OM7XuKYG/j?=
+ =?us-ascii?Q?FfhTWdL+LwlSpqv7IPyZFKkmZbx0s5CK3qZynqcJEF+XXU9cBzd4SpnWGKN3?=
+ =?us-ascii?Q?If0Jv6KnHfbd2YPZ79eZ0RrnWOAtT/DMISlL1MrezJCsOysfMDGbK8SkKkMW?=
+ =?us-ascii?Q?tiNrbvZOsvxFKJwGzRKyfJABS/IaiC+yhcWuTTam40WKf5jfUd+PeTlR8hgx?=
+ =?us-ascii?Q?lXlJAXhBTVgMDBULmaaHV1AQDXxCD1LRe2tncmcZIO+1UZXU0GSKtXvdWjR8?=
+ =?us-ascii?Q?Vjcgk/QjobAqO9ZawBAjhHOqZs6BmbyZfu+YCGAbhqjclBFZx/L5Jm6VXAgK?=
+ =?us-ascii?Q?RwEIvKKQRTXDCE2WgwkHdNDlcjvcTBar9oQTDCZkfhWQsMVFubWJsJtZjpv6?=
+ =?us-ascii?Q?57/pfbTLuehehKA2hf/4Nj4k6mOtBtvw0c2pBwhv4XsoelRvtDr2acP1N7DK?=
+ =?us-ascii?Q?GDGjgUpnNdFdR3tcey5kfnsl92G56B2/1Z04RmkzBTym9ctbBm4dbVzzpwu/?=
+ =?us-ascii?Q?Dw9xlAMbABxV6ilPwKueeUqk3nBmZUcJlg9mAbCmiPH0Nd3byrRWrQr02mhE?=
+ =?us-ascii?Q?Gr1xKoje9HyXAQpHhN6eoeyEyuV6VEpGKAaDTJywI0Ufz6IFfk4PlhwEsBFY?=
+ =?us-ascii?Q?fzn3UwVWltUpHBigxGZbhEz7JtpdkUZzTqnPIf4HaFnC/dEuFpQzO0a2RP2j?=
+ =?us-ascii?Q?KCixoekAuceN71XOFV2VEl5b6iHV/vB9qeLvtjjyPk26tc6mtcMZ+PUxmY43?=
+ =?us-ascii?Q?Rv66BBD0Qbc9rfaQxjGSwFcwOBSxCSYN8BgPP+Ex?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e66a8d84-6a46-43c7-904c-08dbb313db80
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2023 22:10:07.3149
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: F6zgntwo0w6LJ86NUEJyaRQOnt4KlBm9G6tW39cGqBCbmb0pIhlf5Z7gSzeWQjBfwUE7atMgT+eOTiahrS8bfg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8125
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 15, 2023 at 10:19:57AM -0700, Lizhi Hou wrote:
-> The PCI endpoint device such as Xilinx Alveo PCI card maps the register
-> spaces from multiple hardware peripherals to its PCI BAR. Normally,
-> the PCI core discovers devices and BARs using the PCI enumeration process.
-> There is no infrastructure to discover the hardware peripherals that are
-> present in a PCI device, and which can be accessed through the PCI BARs.
-> 
-> Apparently, the device tree framework requires a device tree node for the
-> PCI device. Thus, it can generate the device tree nodes for hardware
-> peripherals underneath. Because PCI is self discoverable bus, there might
-> not be a device tree node created for PCI devices. Furthermore, if the PCI
-> device is hot pluggable, when it is plugged in, the device tree nodes for
-> its parent bridges are required. Add support to generate device tree node
-> for PCI bridges.
-> 
-> Add an of_pci_make_dev_node() interface that can be used to create device
-> tree node for PCI devices.
-> 
-> Add a PCI_DYNAMIC_OF_NODES config option. When the option is turned on,
-> the kernel will generate device tree nodes for PCI bridges unconditionally.
-> 
-> Initially, add the basic properties for the dynamically generated device
-> tree nodes which include #address-cells, #size-cells, device_type,
-> compatible, ranges, reg.
-
-...
-
-> @@ -32,6 +32,7 @@ obj-$(CONFIG_PCI_P2PDMA)	+= p2pdma.o
->  obj-$(CONFIG_XEN_PCIDEV_FRONTEND) += xen-pcifront.o
->  obj-$(CONFIG_VGA_ARB)		+= vgaarb.o
->  obj-$(CONFIG_PCI_DOE)		+= doe.o
-
-> +obj-$(CONFIG_PCI_DYNAMIC_OF_NODES) += of_property.o
-
-Maybe a bit ordered?
-
-...
-
-> +void of_pci_remove_node(struct pci_dev *pdev)
-> +{
-> +	struct device_node *np;
-> +
-> +	np = pci_device_to_OF_node(pdev);
-
-CamelCase out of a sudden?!
-
-> +	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
-
-Do you need a first check? Shouldn't the second return false for you in such a
-case?
-
-> +		return;
-
-> +	pdev->dev.of_node = NULL;
-
-This will mess up with fwnode, isn't it?
-
-
-> +	of_changeset_revert(np->data);
-> +	of_changeset_destroy(np->data);
-> +	of_node_put(np);
-> +}
-
-...
-
-> +void of_pci_make_dev_node(struct pci_dev *pdev)
-> +{
-> +	struct device_node *ppnode, *np = NULL;
-> +	const char *pci_type;
-> +	struct of_changeset *cset;
-> +	const char *name;
-> +	int ret;
-> +
-> +	/*
-> +	 * If there is already a device tree node linked to this device,
-> +	 * return immediately.
-> +	 */
-> +	if (pci_device_to_OF_node(pdev))
-> +		return;
-> +
-> +	/* Check if there is device tree node for parent device */
-> +	if (!pdev->bus->self)
-
-While not positive conditional?
-
-> +		ppnode = pdev->bus->dev.of_node;
-> +	else
-> +		ppnode = pdev->bus->self->dev.of_node;
-
-What about firmware nodes?
-
-> +	if (!ppnode)
-> +		return;
-> +
-> +	if (pci_is_bridge(pdev))
-> +		pci_type = "pci";
-> +	else
-> +		pci_type = "dev";
-> +
-> +	name = kasprintf(GFP_KERNEL, "%s@%x,%x", pci_type,
-> +			 PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn));
-> +	if (!name)
-> +		return;
-> +
-> +	cset = kmalloc(sizeof(*cset), GFP_KERNEL);
-> +	if (!cset)
-> +		goto failed;
-> +	of_changeset_init(cset);
-> +
-> +	np = of_changeset_create_node(ppnode, name, cset);
-> +	if (!np)
-> +		goto failed;
-> +	np->data = cset;
-> +
-> +	ret = of_pci_add_properties(pdev, cset, np);
-> +	if (ret)
-> +		goto failed;
-> +
-> +	ret = of_changeset_apply(cset);
-> +	if (ret)
-> +		goto failed;
-> +
-> +	pdev->dev.of_node = np;
-
-Firmware node?
-
-> +	kfree(name);
-> +
-> +	return;
-> +
-> +failed:
-
-> +	if (np)
-
-Dup check.
-
-> +		of_node_put(np);
-> +	kfree(name);
-> +}
-
-...
-
-> +#include <linux/pci.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/bits.h>
-
-Can it be ordered?
-
-...
-
-> +struct of_pci_addr_pair {
-> +	u32		phys_addr[OF_PCI_ADDRESS_CELLS];
-> +	u32		size[OF_PCI_SIZE_CELLS];
-> +};
-
-Why not
-
-struct foo {
-	u32 phys_addr; // why not 64-bit?
-	u32 size; // same Q, btw
-};
-
-struct _pairs {
-	strict foo pairs[...];
-}
-
-?
-
-...
-
-> +struct of_pci_range {
-> +	u32		child_addr[OF_PCI_ADDRESS_CELLS];
-> +	u32		parent_addr[OF_PCI_ADDRESS_CELLS];
-> +	u32		size[OF_PCI_SIZE_CELLS];
-> +};
-
-In the similar way?
-
-...
-
-> +enum of_pci_prop_compatible {
-> +	PROP_COMPAT_PCI_VVVV_DDDD,
-> +	PROP_COMPAT_PCICLASS_CCSSPP,
-> +	PROP_COMPAT_PCICLASS_CCSS,
-> +	PROP_COMPAT_NUM,
-
-No comma for the terminator entry (as far as I got it).
-
-> +};
-
-...
-
-> +static void of_pci_set_address(struct pci_dev *pdev, u32 *prop, u64 addr,
-> +			       u32 reg_num, u32 flags, bool reloc)
-> +{
-> +	prop[0] = FIELD_PREP(OF_PCI_ADDR_FIELD_BUS, pdev->bus->number) |
-> +		FIELD_PREP(OF_PCI_ADDR_FIELD_DEV, PCI_SLOT(pdev->devfn)) |
-> +		FIELD_PREP(OF_PCI_ADDR_FIELD_FUNC, PCI_FUNC(pdev->devfn));
-> +	prop[0] |= flags | reg_num;
-
-No checks? No masks? flags or reg_num may easily / mistakenly rewrite the above.
-
-> +	if (!reloc) {
-
-	if (reloc)
-		return;
-
-?
-
-> +		prop[0] |= OF_PCI_ADDR_FIELD_NONRELOC;
-> +		prop[1] = upper_32_bits(addr);
-> +		prop[2] = lower_32_bits(addr);
-> +	}
-> +}
-
-...
-
-> +static int of_pci_get_addr_flags(struct resource *res, u32 *flags)
-> +{
-> +	u32 ss;
-
-> +	if (res->flags & IORESOURCE_IO)
-> +		ss = OF_PCI_ADDR_SPACE_IO;
-> +	else if (res->flags & IORESOURCE_MEM_64)
-> +		ss = OF_PCI_ADDR_SPACE_MEM64;
-> +	else if (res->flags & IORESOURCE_MEM)
-> +		ss = OF_PCI_ADDR_SPACE_MEM32;
-> +	else
-> +		return -EINVAL;
-
-We have ioport.h and respective helpers, can you use them?
-resource_type(), for example.
-
-> +	*flags = 0;
-> +	if (res->flags & IORESOURCE_PREFETCH)
-> +		*flags |= OF_PCI_ADDR_FIELD_PREFETCH;
-> +
-> +	*flags |= FIELD_PREP(OF_PCI_ADDR_FIELD_SS, ss);
-> +
-> +	return 0;
-> +}
-
-...
-
-> +static int of_pci_prop_bus_range(struct pci_dev *pdev,
-> +				 struct of_changeset *ocs,
-> +				 struct device_node *np)
-> +{
-> +	u32 bus_range[] = { pdev->subordinate->busn_res.start,
-> +			    pdev->subordinate->busn_res.end };
-
-Wrong. It won't work on 64-bit resources.
-
-> +	return of_changeset_add_prop_u32_array(ocs, np, "bus-range", bus_range,
-> +					       ARRAY_SIZE(bus_range));
-> +}
-
-...
-
-> +	if (pci_is_bridge(pdev)) {
-> +		num = PCI_BRIDGE_RESOURCE_NUM;
-> +		res = &pdev->resource[PCI_BRIDGE_RESOURCES];
-> +	} else {
-> +		num = PCI_STD_NUM_BARS;
-> +		res = &pdev->resource[PCI_STD_RESOURCES];
-> +	}
-
-Don't we have pci_resource() macro?
-
-...
-
-> +	for (i = 0, j = 0; j < num; j++) {
-> +		if (!resource_size(&res[j]))
-> +			continue;
-> +
-> +		if (of_pci_get_addr_flags(&res[j], &flags))
-> +			continue;
-> +
-> +		val64 = res[j].start;
-> +		of_pci_set_address(pdev, rp[i].parent_addr, val64, 0, flags,
-> +				   false);
-> +		if (pci_is_bridge(pdev)) {
-
-> +			memcpy(rp[i].child_addr, rp[i].parent_addr,
-> +			       sizeof(rp[i].child_addr));
-
-Why simple assignment is not good enough here?
-
-> +		} else {
-> +			/*
-> +			 * For endpoint device, the lower 64-bits of child
-> +			 * address is always zero.
-> +			 */
-> +			rp[i].child_addr[0] = j;
-> +		}
-
-> +		val64 = resource_size(&res[j]);
-
-Dup. You already called this at the top of the loop, why to repeat?
-
-> +		rp[i].size[0] = upper_32_bits(val64);
-> +		rp[i].size[1] = lower_32_bits(val64);
-> +
-> +		i++;
-> +	}
-
-...
-
-> +static int of_pci_prop_reg(struct pci_dev *pdev, struct of_changeset *ocs,
-> +			   struct device_node *np)
-> +{
-> +	struct of_pci_addr_pair reg = { 0 };
-
-0 is redundant.
-
-> +
-> +	/* configuration space */
-> +	of_pci_set_address(pdev, reg.phys_addr, 0, 0, 0, true);
-> +
-> +	return of_changeset_add_prop_u32_array(ocs, np, "reg", (u32 *)&reg,
-> +					       sizeof(reg) / sizeof(u32));
-> +}
-
-...
-
-> +	ret = pci_read_config_byte(pdev, PCI_INTERRUPT_PIN, &pin);
-> +	if (ret != 0)
-
-Why this pattern?
-
-> +		return ret;
-
-Are you aware that above can return positive codes, aren't you?
-You probably want to translate them to the Linux error codes
-Same applies to all generic PCI config space accessors used in
-the code.
-
-> +	if (!pin)
-> +		return 0;
-> +
-> +	return of_changeset_add_prop_u32(ocs, np, "interrupts", (u32)pin);
-
-Why casting?
-
-> +}
-
+Add doorbell test support.
+
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+ tools/pci/pcitest.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
+index 441b542346354..215d0aa8a09fe 100644
+--- a/tools/pci/pcitest.c
++++ b/tools/pci/pcitest.c
+@@ -36,6 +36,7 @@ struct pci_test {
+ 	bool		copy;
+ 	unsigned long	size;
+ 	bool		use_dma;
++	bool		doorbell;
+ };
+ 
+ static int run_test(struct pci_test *test)
+@@ -149,6 +150,15 @@ static int run_test(struct pci_test *test)
+ 			fprintf(stdout, "%s\n", result[ret]);
+ 	}
+ 
++	if (test->doorbell) {
++		ret = ioctl(fd, PCITEST_DOORBELL, 0);
++		fprintf(stdout, "Push doorbell\t\t");
++		if (ret < 0)
++			fprintf(stdout, "TEST FAILED\n");
++		else
++			fprintf(stdout, "%s\n", result[ret]);
++	}
++
+ 	fflush(stdout);
+ 	close(fd);
+ 	return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
+@@ -174,7 +184,7 @@ int main(int argc, char **argv)
+ 	/* set default endpoint device */
+ 	test->device = "/dev/pci-endpoint-test.0";
+ 
+-	while ((c = getopt(argc, argv, "D:b:m:x:i:deIlhrwcs:")) != EOF)
++	while ((c = getopt(argc, argv, "D:b:m:x:i:BdeIlhrwcs:")) != EOF)
+ 	switch (c) {
+ 	case 'D':
+ 		test->device = optarg;
+@@ -224,6 +234,9 @@ int main(int argc, char **argv)
+ 	case 'd':
+ 		test->use_dma = true;
+ 		continue;
++	case 'B':
++		test->doorbell = true;
++		continue;
+ 	case 'h':
+ 	default:
+ usage:
+@@ -243,6 +256,7 @@ int main(int argc, char **argv)
+ 			"\t-w			Write buffer test\n"
+ 			"\t-c			Copy buffer test\n"
+ 			"\t-s <size>		Size of buffer {default: 100KB}\n"
++			"\t-B			Doorbell test\n"
+ 			"\t-h			Print this help message\n",
+ 			argv[0]);
+ 		return -EINVAL;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
