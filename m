@@ -2,120 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B83CD79B80A
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 02:07:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 209FF79B92A
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 02:09:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244403AbjIKVjm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Sep 2023 17:39:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36506 "EHLO
+        id S1350463AbjIKVim (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Sep 2023 17:38:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237520AbjIKMzB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 08:55:01 -0400
+        with ESMTP id S237673AbjIKNIE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 09:08:04 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CB85E4B;
-        Mon, 11 Sep 2023 05:54:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63102E5;
+        Mon, 11 Sep 2023 06:08:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694436895; x=1725972895;
+  t=1694437680; x=1725973680;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=2++8yCZGRSSz4uOxVbgjndMH1wIP9iMn3E11M0dDVTs=;
-  b=gCGHIlGfQjuCY7y+fw999ccOxpU8+lC4sYWL1gBcU19oOVzJJfErBGjc
-   11x2jZct6m/2n1sAGsv/3jczRAj00bEXS8/EAtvo/GzZU1hrbTc+DHcX+
-   jfIwgGYkJLgeUJL2SjSlMzpnnXlCQVuARADh1oOqPUIVVTXG7NmaorA3F
-   xZC6eVPZQ5w8JCBNituSRJYblbU4S1sv5HCSW+3F+ozPK/xWYdphrhDi8
-   mKgQ1Cx0Cq8Co11VohjYDI+CEDGyCvp3+ww0UM8xV3cTRfNiZ2JFwvx2b
-   Xrqp6iD3gf1R5KfMSmMvq946MuR1l6zaBG4DRlb9GG9+dR64CrdowA3Hj
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="357511300"
+  bh=hhntH08KwDzWZFhlYntAoxLtfPyiIglkNSydQprvVBY=;
+  b=et+QbcxD/gVNwp6hJ9hLvxBVpnX9AkX+GsWJbZvMmLffCFd9FnhX9QpJ
+   Moy/KM1qcGLivqvXu/RvfDD3owJgoY/M+FKgumRfAN7wX382+SjNcTzDX
+   B9Y5uibMKXCbVb1rMb96orDyWDOwrpVkDsQgRa/7Y3T7bcPviDkucGZo5
+   zZeVltUpxEM4PbuRseVjafP2BrsNviVVisYDOKWI//zhk9h40QWoUYjUW
+   7R7Xyt6F8PJ1Cdo+apLSInY5ZFuIIYFyfQg+YVSAPxPfLspFdPio0HH6L
+   YSoS/TJQUhiLnRg8zSWBp67uzSM4Lk7jaaJlgjUa1rt28YWVyylI78c04
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="357514643"
 X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="357511300"
+   d="scan'208";a="357514643"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 05:54:54 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 06:07:59 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="858304520"
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="858309826"
 X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="858304520"
-Received: from mzarkov-mobl3.ger.corp.intel.com (HELO ijarvine-mobl2.ger.corp.intel.com) ([10.252.36.200])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 05:54:47 -0700
-From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-        linux-pci@vger.kernel.org, Brian King <brking@us.ibm.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     3chas3@gmail.com, dalias@libc.org, glaubitz@physik.fu-berlin.de,
-        ink@jurassic.park.msu.ru, kw@linux.com,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-atm-general@lists.sourceforge.net, linux-sh@vger.kernel.org,
-        lpieralisi@kernel.org, mattst88@gmail.com, netdev@vger.kernel.org,
-        richard.henderson@linaro.org, toan@os.amperecomputing.com,
-        ysato@users.sourceforge.jp,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v3 6/6] scsi: ipr: Do PCI error checks on own line
-Date:   Mon, 11 Sep 2023 15:53:54 +0300
-Message-Id: <20230911125354.25501-7-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230911125354.25501-1-ilpo.jarvinen@linux.intel.com>
-References: <20230911125354.25501-1-ilpo.jarvinen@linux.intel.com>
+   d="scan'208";a="858309826"
+Received: from unknown (HELO bapvecise024..) ([10.190.254.46])
+  by fmsmga002.fm.intel.com with ESMTP; 11 Sep 2023 06:07:56 -0700
+From:   sharath.kumar.d.m@intel.com
+To:     helgaas@kernel.org
+Cc:     bhelgaas@google.com, dinguyen@kernel.org, kw@linux.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lpieralisi@kernel.org, robh@kernel.org, sharath.kumar.d.m@intel.com
+Subject: [PATCH v3 0/2] PCI: altera: add support to agilex family
+Date:   Mon, 11 Sep 2023 18:38:31 +0530
+Message-Id: <20230911130833.1775668-1-sharath.kumar.d.m@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230908194842.GA304176@bhelgaas>
+References: <20230908194842.GA304176@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Instead of if conditions with line splits, use the usual error handling
-pattern with a separate variable to improve readability.
+From: D M Sharath Kumar <sharath.kumar.d.m@intel.com>
 
-No functional changes intended.
+added new callback for
+1) read,write to root port configuration registers
+2) read,write to endpoint configuration registers
+3) root port interrupt handler
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/scsi/ipr.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+agilex and newer platforms need to implemant the callback and generic root 
+port driver should work ( without much changes ) , legacy platforms (arria
+ and startix) implement configuration read,write directly in wrapper 
+api _altera_pcie_cfg_read/_altera_pcie_cfg_write
 
-diff --git a/drivers/scsi/ipr.c b/drivers/scsi/ipr.c
-index 4e13797b2a4a..81e3d464d1f6 100644
---- a/drivers/scsi/ipr.c
-+++ b/drivers/scsi/ipr.c
-@@ -761,12 +761,14 @@ static void ipr_mask_and_clear_interrupts(struct ipr_ioa_cfg *ioa_cfg,
- static int ipr_save_pcix_cmd_reg(struct ipr_ioa_cfg *ioa_cfg)
- {
- 	int pcix_cmd_reg = pci_find_capability(ioa_cfg->pdev, PCI_CAP_ID_PCIX);
-+	int rc;
- 
- 	if (pcix_cmd_reg == 0)
- 		return 0;
- 
--	if (pci_read_config_word(ioa_cfg->pdev, pcix_cmd_reg + PCI_X_CMD,
--				 &ioa_cfg->saved_pcix_cmd_reg) != PCIBIOS_SUCCESSFUL) {
-+	rc = pci_read_config_word(ioa_cfg->pdev, pcix_cmd_reg + PCI_X_CMD,
-+				  &ioa_cfg->saved_pcix_cmd_reg);
-+	if (rc != PCIBIOS_SUCCESSFUL) {
- 		dev_err(&ioa_cfg->pdev->dev, "Failed to save PCI-X command register\n");
- 		return -EIO;
- 	}
-@@ -785,10 +787,12 @@ static int ipr_save_pcix_cmd_reg(struct ipr_ioa_cfg *ioa_cfg)
- static int ipr_set_pcix_cmd_reg(struct ipr_ioa_cfg *ioa_cfg)
- {
- 	int pcix_cmd_reg = pci_find_capability(ioa_cfg->pdev, PCI_CAP_ID_PCIX);
-+	int rc;
- 
- 	if (pcix_cmd_reg) {
--		if (pci_write_config_word(ioa_cfg->pdev, pcix_cmd_reg + PCI_X_CMD,
--					  ioa_cfg->saved_pcix_cmd_reg) != PCIBIOS_SUCCESSFUL) {
-+		rc = pci_write_config_word(ioa_cfg->pdev, pcix_cmd_reg + PCI_X_CMD,
-+					   ioa_cfg->saved_pcix_cmd_reg);
-+		if (rc != PCIBIOS_SUCCESSFUL) {
- 			dev_err(&ioa_cfg->pdev->dev, "Failed to setup PCI-X command register\n");
- 			return -EIO;
- 		}
+changelog v2:
+saperated into two patches
+1.refactored the driver for easily portability to future Altera FPGA
+platforms
+2.added support for "Agilex" FPGA
+
+this driver supports PCI RP IP on Agilex FPGA, as these are FPGA its up
+to the user to add PCI RP or not ( as per his needs). we are not adding
+the device tree as part of this commit. we are expecting the add device
+tree changes only if he is adding PCI RP IP in his design
+
+changelog v3:
+incorporate review comments from Bjorn Helgaas
+
+
+D M Sharath Kumar (2):
+  PCI: altera: refactor driver for supporting new platforms
+  PCI: altera: add support for agilex family fpga
+
+ drivers/pci/controller/pcie-altera.c | 305 ++++++++++++++++++++++++---
+ 1 file changed, 275 insertions(+), 30 deletions(-)
+
 -- 
-2.30.2
+2.34.1
 
