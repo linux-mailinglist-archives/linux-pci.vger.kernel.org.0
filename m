@@ -2,447 +2,254 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C7C379AE5A
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 01:44:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BE1F79B2E7
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 01:59:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237240AbjIKViK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Sep 2023 17:38:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53972 "EHLO
+        id S1350627AbjIKVjy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Sep 2023 17:39:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236224AbjIKKAE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 06:00:04 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D348CE67;
-        Mon, 11 Sep 2023 02:59:58 -0700 (PDT)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1qfdhy-0003xd-Tq; Mon, 11 Sep 2023 11:59:55 +0200
-Message-ID: <04d28fd1-f43b-467e-9edd-24da777aca43@leemhuis.info>
-Date:   Mon, 11 Sep 2023 11:59:54 +0200
+        with ESMTP id S236232AbjIKKB5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 06:01:57 -0400
+Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 819BDE68
+        for <linux-pci@vger.kernel.org>; Mon, 11 Sep 2023 03:01:52 -0700 (PDT)
+X-ASG-Debug-ID: 1694426509-1eb14e75131cf40001-0c9NHn
+Received: from ZXSHMBX2.zhaoxin.com (ZXSHMBX2.zhaoxin.com [10.28.252.164]) by mx2.zhaoxin.com with ESMTP id 3x4PcVHX4EIasQrC (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Mon, 11 Sep 2023 18:01:49 +0800 (CST)
+X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
+Received: from ZXBJMBX03.zhaoxin.com (10.29.252.7) by ZXSHMBX2.zhaoxin.com
+ (10.28.252.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 11 Sep
+ 2023 18:01:48 +0800
+Received: from [192.168.1.204] (125.76.214.122) by ZXBJMBX03.zhaoxin.com
+ (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 11 Sep
+ 2023 18:01:47 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
+Message-ID: <bb01b8f1-bb25-48e5-9445-63d40703e919@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 192.168.1.204
+Date:   Mon, 11 Sep 2023 18:01:46 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Ask for a regression issue of vfio-pci driver with Intel DG2
- (A770) discrete graphics card from Linux 6.1
-Content-Language: en-US, de-DE
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-To:     Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     mika.westerberg@linux.intel.com, bhelgaas@google.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20230705220135.GA75408@bhelgaas>
- <52cbccda-e18e-5bdf-c32f-88bdbfee230a@intel.com>
- <9c26b17f-4894-7f35-c91c-29b2a83e4df6@leemhuis.info>
-In-Reply-To: <9c26b17f-4894-7f35-c91c-29b2a83e4df6@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v3 4/5] ACPI/PCI: Add pci_acpi_program_hest_aer_params()
+To:     Bjorn Helgaas <helgaas@kernel.org>
+X-ASG-Orig-Subj: Re: [PATCH v3 4/5] ACPI/PCI: Add pci_acpi_program_hest_aer_params()
+CC:     <lenb@kernel.org>, <james.morse@arm.com>, <tony.luck@intel.com>,
+        <bp@alien8.de>, <bhelgaas@google.com>, <robert.moore@intel.com>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>,
+        <acpica-devel@lists.linuxfoundation.org>, <ErosZhang@zhaoxin.com>
+References: <20230810233007.GA41830@bhelgaas>
+From:   LeoLiu-oc <leoliu-oc@zhaoxin.com>
+In-Reply-To: <20230810233007.GA41830@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694426398;c0d6dcf0;
-X-HE-SMSGID: 1qfdhy-0003xd-Tq
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Originating-IP: [125.76.214.122]
+X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
+ ZXBJMBX03.zhaoxin.com (10.29.252.7)
+X-Barracuda-Connect: ZXSHMBX2.zhaoxin.com[10.28.252.164]
+X-Barracuda-Start-Time: 1694426509
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 5996
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.113957
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 29.08.23 13:25, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> for once, to make this easily accessible to everyone.
+
+
+在 2023/8/11 7:30, Bjorn Helgaas 写道:
+> On Tue, Jul 04, 2023 at 08:05:44PM +0800, LeoLiu-oc wrote:
+>> From: leoliu-oc <leoliu-oc@zhaoxin.com>
+>>
+>> The extracted register values from HEST PCI Express AER structures are
+>> written to AER Capabilities.
 > 
-> Gwan-gyeong Mun, was this regression ever addressed? Doesn't look like
-> it from here, but I might have missed something.
+> In the subject, the prevailing style for this file is
+> (see "git log --oneline drivers/pci/pci-acpi.c"):
+> 
+>    PCI/ACPI: ...
+> 
+> And I'd like the subject to tell users why they might want this patch.
+> It's obvious from the patch that this adds a function.  What's *not*
+> obvious is *why* we want this new function.  So the commit log should
+> tell us what the benefit is, and the subject line should be one-line
+> summary of that benefit.
+> 
+> This patch adds a function but no caller.  The next patch is one-liner
+> that adds the caller.  I think these two should be squashed so it's
+> easier to review (and easier to explain the benefit of *this* patch :))
+> 
 
-No reply, then I assume nobody cares anymore and will stop tracking this
-issue:
+Ok, I will merge this patch with 5/5 in the next version.
 
-#regzbot inconclusive: seem nobody cares anymore
+>> Signed-off-by: leoliu-oc <leoliu-oc@zhaoxin.com>
+>> ---
+>>   drivers/pci/pci-acpi.c | 92 ++++++++++++++++++++++++++++++++++++++++++
+>>   drivers/pci/pci.h      |  5 +++
+>>   2 files changed, 97 insertions(+)
+>>
+>> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+>> index a05350a4e49cb..cff54410e2427 100644
+>> --- a/drivers/pci/pci-acpi.c
+>> +++ b/drivers/pci/pci-acpi.c
+>> @@ -18,6 +18,7 @@
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/pm_qos.h>
+>>   #include <linux/rwsem.h>
+>> +#include <acpi/apei.h>
+>>   #include "pci.h"
+>>   
+>>   /*
+>> @@ -783,6 +784,97 @@ int pci_acpi_program_hp_params(struct pci_dev *dev)
+>>   	return -ENODEV;
+>>   }
+>>   
+>> +/*
+>> + * program_aer_structure_to_aer_registers - Write the AER structure to
+>> + * the corresponding dev's AER registers.
+>> + *
+>> + * @info - the AER structure information
+>> + *
+> 
+> Remove the spurious blank comment line.
+>
 
-Gwan-gyeong Mun, if this is wrong and you want to see this fixed, please
-speak up.
+OK.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+>> + */
+>> +static void program_aer_structure_to_aer_registers(struct acpi_hest_parse_aer_info info)
+>> +{
+>> +	u32 uncorrectable_mask;
+>> +	u32 uncorrectable_severity;
+>> +	u32 correctable_mask;
+>> +	u32 advanced_capabilities;
+>> +	u32 root_error_command;
+>> +	u32 uncorrectable_mask2;
+>> +	u32 uncorrectable_severity2;
+>> +	u32 advanced_capabilities2;
+>> +	int port_type;
+>> +	int pos;
+>> +	struct pci_dev *dev;
+> 
+> Order these declarations in order of use.
+> 
 
+OK.
 
-> On 07.07.23 16:16, Gwan-gyeong Mun wrote:
+>> +	dev = info.pci_dev;
+>> +	port_type = pci_pcie_type(dev);
+>> +
+>> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
+>> +	if (!pos)
+>> +		return;
+>> +
+>> +	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
+>> +		uncorrectable_mask = info.acpi_hest_aer_root_port->uncorrectable_mask;
+>> +		uncorrectable_severity = info.acpi_hest_aer_root_port->uncorrectable_severity;
+>> +		correctable_mask = info.acpi_hest_aer_root_port->correctable_mask;
+>> +		advanced_capabilities = info.acpi_hest_aer_root_port->advanced_capabilities;
+>> +		root_error_command = info.acpi_hest_aer_root_port->root_error_command;
+> 
+> Except for this new code, this file fits in 80 columns, so I'd like
+> the new code to match.
+>
+
+OK.
+
+>> +
+>> +		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, uncorrectable_mask);
+> 
+> I'm not sure we need to copy everything into local variables.  Maybe
+> this could be split into three helper functions, which would save a
+> level of indent and a level of struct traversal (e.g., "rp->" instead
+> of "info.acpi_hest_aer_root_port->".
+> 
+>    pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, rp->uncorrectable_mask);
+> 
+> or
+> 
+>    pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK,
+>                           rp->uncorrectable_mask);
+> 
+> If you have to define a new struct acpi_hest_aer_root_port, you could
+> make the member names shorter.  But hopefully you *don't* have to do
+> that, so maybe we're stuck with the long existing member names in
+> acpi_hest_aer_common.
+> >> +int pci_acpi_program_hest_aer_params(struct pci_dev *dev)
+>> +{
+>> +	struct acpi_hest_parse_aer_info info = {
+>> +		.pci_dev	= dev,
+>> +		.hest_matched_with_dev	= 0,
+>> +		.acpi_hest_aer_endpoint = NULL,
+>> +		.acpi_hest_aer_root_port = NULL,
+>> +		.acpi_hest_aer_for_bridge = NULL,
+> 
+> Drop the tab from the .pci_dev initialization since the other members
+> aren't lined up anyway.  I think you can drop the other
+> initializations completely since they will be initialized to 0 or NULL
+> pointers by default.
+> 
+
+Thanks for your guidance, I will make changes to the code where it fits 
+and does not conform to the specification.
+
+Best Regards.
+LeoLiu-oc
+
+>> +	};
+>> +
+>> +	if (!pci_is_pcie(dev))
+>> +		return -ENODEV;
+>> +
+>> +	apei_hest_parse(apei_hest_parse_aer, &info);
+>> +	if (info.hest_matched_with_dev == 1)
+>> +		program_aer_structure_to_aer_registers(info);
+>> +	else
+>> +		return -ENODEV;
+>> +	return 0;
+>> +}
+>> +
+>>   /**
+>>    * pciehp_is_native - Check whether a hotplug port is handled by the OS
+>>    * @bridge: Hotplug port to check
+>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>> index a4c3974340576..37aa4a33eeed2 100644
+>> --- a/drivers/pci/pci.h
+>> +++ b/drivers/pci/pci.h
+>> @@ -713,6 +713,7 @@ void acpi_pci_refresh_power_state(struct pci_dev *dev);
+>>   int acpi_pci_wakeup(struct pci_dev *dev, bool enable);
+>>   bool acpi_pci_need_resume(struct pci_dev *dev);
+>>   pci_power_t acpi_pci_choose_state(struct pci_dev *pdev);
+>> +int pci_acpi_program_hest_aer_params(struct pci_dev *dev);
+>>   #else
+>>   static inline int pci_dev_acpi_reset(struct pci_dev *dev, bool probe)
+>>   {
+>> @@ -752,6 +753,10 @@ static inline pci_power_t acpi_pci_choose_state(struct pci_dev *pdev)
+>>   {
+>>   	return PCI_POWER_ERROR;
+>>   }
+>> +static inline int pci_acpi_program_hest_aer_params(struct pci_dev *dev)
+>> +{
+>> +	return -ENODEV;
+>> +}
+>>   #endif
+>>   
+>>   #ifdef CONFIG_PCIEASPM
+>> -- 
+>> 2.34.1
 >>
->>
->> On 7/6/23 1:01 AM, Bjorn Helgaas wrote:
->>> On Mon, Jul 03, 2023 at 01:37:42PM +0300, Gwan-gyeong Mun wrote:
->>>> Since Linux 6.2 kernel (same happens in Linux 6.4.1), loading vfio-pci
->>>> driver to a specific HW (Intel DG2 A770) target does not work properly.
->>>> (It works fine on Linux 6.1 kernel with the same HW).
->>>
->>> Thank you very much for the report!
->>>
->>> Does this problem only happen with vfio-pci?  d8d2b65a940b appeared in
->>> v6.2-rc1 (Dec 25, 2022), so I would think somebody would have used DG2
->>> on a v6.2 or newer kernel.
->>>
->> Hi Bjorn,
->>
->> Yes, the problem only occurred when I set DG2 to vfio-pci as shown below
->> in the settings [1].
->> (The reason for setting DG2 to vfio-pci is to use dg2 as a qemu pci
->> paththru device).
->> If you don't set DG2 to vfio-pci, you won't see any logs of the problem.
->>
->>
->>> Can you please collect the complete "sudo lspci -vv" output (not just
->>> the DG2 items)?  We need info about the switch ports and all the
->>> capabilities, since d8d2b65a940b has to do with switch ports, AER, and
->>> MSI.
->>>
->>> Also, please collect the complete dmesg log with v6.4.1 (which does
->>> not work) and v6.4.1 with d8d2b65a940b reverted (which should work).
->>>
->>
->> I've filed this issue with kernel bugzilla[2] and added the dmesg and
->> lspci information you asked about as attachments.
->> I've also added direct links to the relevant logs below.
->>
->> 1. complete dmesg log with v6.4.1 with d8d2b65a940b reverted.[3]
->> 2. lspci -vv with v6.4.1 with d8d2b65a940b reverted [4]
->> 3. complete dmesg log with v6.4.1 [5]
->> 4. lspci -vv with v6.4.1 [6]
->>
->> [1]
->> $ cat /etc/modprobe.d/vfio.conf
->>
->> options vfio-pci ids=8086:56a0,8086:4f90
->> softdep drm pre: vfio-pci
->>
->> [2] https://bugzilla.kernel.org/show_bug.cgi?id=217641
->> [3] https://bugzilla.kernel.org/attachment.cgi?id=304560
->> [4] https://bugzilla.kernel.org/attachment.cgi?id=304561
->> [5] https://bugzilla.kernel.org/attachment.cgi?id=304562
->> [6] https://bugzilla.kernel.org/attachment.cgi?id=304563
->>
->>
->>> I know you said that on v6.4.1 with d8d2b65a940b reverted, the system
->>> boots but there's still a problem with suspend.  I'm intentionally
->>> ignoring this problem for now.  After we figure out the boot-time
->>> problem with the DG2 being left in D3cold, we can come back to the
->>> suspend problem.
->> Yes, I understand, and I agree.
->>
->> Br,
->>
->> G.G.
->>>
->>> Bjorn
->>>
->>>> The configuration and hardware information used is described in [1].
->>>>
->>>> Starting with the Linux 6.2 kernel, the following log is output to dmesg
->>>> when a problem occurs.
->>>> ...
->>>> [ 15.049948] pcieport 0000:00:01.0: Data Link Layer Link Active not
->>>> set in
->>>> 1000 msec
->>>> [ 15.050024] pcieport 0000:01:00.0: Unable to change power state from
->>>> D3cold
->>>> to D0, device inaccessible
->>>> [ 15.051067] pcieport 0000:02:01.0: Unable to change power state from
->>>> D3cold
->>>> to D0, device inaccessible
->>>> [ 15.052141] pcieport 0000:02:04.0: Unable to change power state from
->>>> D3cold
->>>> to D0, device inaccessible
->>>> [ 17.286554] vfio-pci 0000:03:00.0: not ready 1023ms after resume;
->>>> giving up
->>>> [ 17.286553] vfio-pci 0000:04:00.0: not ready 1023ms after resume;
->>>> giving up
->>>> [ 17.286576] vfio-pci 0000:03:00.0: Unable to change power state from
->>>> D3cold
->>>> to D0, device inaccessible
->>>> [ 17.286578] vfio-pci 0000:04:00.0: Unable to change power state from
->>>> D3cold
->>>> to D0, device inaccessible
->>>> ...
->>>>
->>>> And if you check the DG2 hardware using the "lspci -nnv" command, you
->>>> will
->>>> see that "Flags:" is displayed as "!!! Unknown header type 7f" as shown
->>>> below. [2]
->>>> The normal output log looks like [3].
->>>>
->>>> This issue has been occurring since the patch below was applied. [4]
->>>>
->>>> d8d2b65a940bb497749d66bdab59b530901d3854 is the first bad commit
->>>> commit d8d2b65a940bb497749d66bdab59b530901d3854
->>>> Author: Bjorn Helgaas <bhelgaas@google.com>
->>>> Date:   Fri Dec 9 11:01:00 2022 -0600
->>>>
->>>>      PCI/portdrv: Allow AER service only for Root Ports & RCECs
->>>>
->>>>
->>>> Rolling back the [4] patch makes it work on boot with the latest
->>>> version of
->>>> the kernel, but the same problem still occurs after "suspend to s2idle".
->>>> This problem existed even before applying [4].
->>>>
->>>> Suspend has been tested with the following command.
->>>> $ systemctl suspend -i
->>>>
->>>> $ cat /sys/power/mem_sleep
->>>> [s2idle] deep
->>>>
->>>>
->>>> Here is the log that is issued when testing suspend to s2idle. [5]
->>>>
->>>>
->>>> Br,
->>>>
->>>> G.G.
->>>>
->>>>
->>>> [1] Env:
->>>>
->>>> NUC: intel-nuc-13-extreme-kit-nuc13rngi7
->>>> (https://ark.intel.com/content/www/us/en/ark/products/229784/intel-nuc-13-extreme-kit-nuc13rngi7.html)
->>>> (MB: Z690, CPU: RPL-S i13700k)
->>>>
->>>> PCIE Card: Intel A770 GPU
->>>>
->>>> Add boot parameter: intel_iommu=on iommu=pt
->>>>
->>>> $ lspci -nn |grep DG2
->>>> 03:00.0 VGA compatible controller [0300]: Intel Corporation DG2 [Arc
->>>> A770]
->>>> [8086:56a0] (rev 08)
->>>> 04:00.0 Audio device [0403]: Intel Corporation DG2 Audio Controller
->>>> [8086:4f90]
->>>>
->>>>
->>>> $ cat /etc/modprobe.d/vfio.conf
->>>>
->>>> options vfio-pci ids=8086:56a0,8086:4f90
->>>> softdep drm pre: vfio-pci
->>>>
->>>> [2]
->>>> 03:00.0 VGA compatible controller [0300]: Intel Corporation DG2 [Arc
->>>> A770]
->>>> [8086:56a0] (rev 08) (prog-if 00 [VGA controller])
->>>>     Subsystem: Intel Corporation Device [8086:1020]
->>>>     !!! Unknown header type 7f
->>>>     Memory at 93000000 (64-bit, non-prefetchable) [size=16M]
->>>>     Memory at 6000000000 (64-bit, prefetchable) [size=16G]
->>>>     Expansion ROM at 94000000 [disabled] [size=2M]
->>>>     Kernel driver in use: vfio-pci
->>>>     Kernel modules: i915
->>>>
->>>> 04:00.0 Audio device [0403]: Intel Corporation DG2 Audio Controller
->>>> [8086:4f90]
->>>>     Subsystem: Intel Corporation Device [8086:1020]
->>>>     !!! Unknown header type 7f
->>>>     Memory at 94300000 (64-bit, non-prefetchable) [size=16K]
->>>>     Kernel driver in use: vfio-pci
->>>>     Kernel modules: snd_hda_intel
->>>>
->>>>
->>>> [3]
->>>> 03:00.0 VGA compatible controller [0300]: Intel Corporation DG2 [Arc
->>>> A770]
->>>> [8086:56a0] (rev 08) (prog-if 00 [VGA controller])
->>>>     Subsystem: Intel Corporation Device [8086:1020]
->>>>     Flags: bus master, fast devsel, latency 0, IOMMU group 19
->>>>     Memory at 93000000 (64-bit, non-prefetchable) [size=16M]
->>>>     Memory at 6000000000 (64-bit, prefetchable) [size=16G]
->>>>     Expansion ROM at 94000000 [disabled] [size=2M]
->>>>     Capabilities: <access denied>
->>>>     Kernel driver in use: vfio-pci
->>>>     Kernel modules: i915
->>>>
->>>> 04:00.0 Audio device [0403]: Intel Corporation DG2 Audio Controller
->>>> [8086:4f90]
->>>>     Subsystem: Intel Corporation Device [8086:1020]
->>>>     Flags: fast devsel, IOMMU group 20
->>>>     Memory at 94300000 (64-bit, non-prefetchable) [disabled] [size=16K]
->>>>     Capabilities: <access denied>
->>>>     Kernel driver in use: vfio-pci
->>>>     Kernel modules: snd_hda_intel
->>>>
->>>>
->>>> [4]
->>>> commit d8d2b65a940bb497749d66bdab59b530901d3854
->>>> Author: Bjorn Helgaas <bhelgaas@google.com>
->>>> Date:   Fri Dec 9 11:01:00 2022 -0600
->>>>
->>>>      PCI/portdrv: Allow AER service only for Root Ports & RCECs
->>>>
->>>>      Previously portdrv allowed the AER service for any device with
->>>> an AER
->>>>      capability (assuming Linux had control of AER) even though the AER
->>>> service
->>>>      driver only attaches to Root Port and RCECs.
->>>>
->>>>      Because get_port_device_capability() included AER for non-RP,
->>>> non-RCEC
->>>>      devices, we tried to initialize the AER IRQ even though these
->>>> devices
->>>>      don't generate AER interrupts.
->>>>
->>>>      Intel DG1 and DG2 discrete graphics cards contain a switch
->>>> leading to a
->>>>      GPU.  The switch supports AER but not MSI, so initializing an
->>>> AER IRQ
->>>>      failed, and portdrv failed to claim the switch port at all.  The
->>>> GPU
->>>> itself
->>>>      could be suspended, but the switch could not be put in a
->>>> low-power state
->>>>      because it had no driver.
->>>>
->>>>      Don't allow the AER service on non-Root Port, non-Root Complex
->>>> Event
->>>>      Collector devices.  This means we won't enable Bus Mastering if the
->>>> device
->>>>      doesn't require MSI, the AER service will not appear in sysfs,
->>>> and the
->>>> AER
->>>>      service driver will not bind to the device.
->>>>
->>>>      Link:
->>>> https://lore.kernel.org/r/20221207084105.84947-1-mika.westerberg@linux.intel.com
->>>>      Link:
->>>> https://lore.kernel.org/r/20221210002922.1749403-1-helgaas@kernel.org
->>>>      Based-on-patch-by: Mika Westerberg
->>>> <mika.westerberg@linux.intel.com>
->>>>      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->>>>      Reviewed-by: Kuppuswamy Sathyanarayanan
->>>> <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>
->>>> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
->>>> index a6c4225505d5..8b16e96ec15c 100644
->>>> --- a/drivers/pci/pcie/portdrv.c
->>>> +++ b/drivers/pci/pcie/portdrv.c
->>>> @@ -232,7 +232,9 @@ static int get_port_device_capability(struct pci_dev
->>>> *dev)
->>>>          }
->>>>
->>>>   #ifdef CONFIG_PCIEAER
->>>> -       if (dev->aer_cap && pci_aer_available() &&
->>>> +       if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
->>>> +             pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
->>>> +           dev->aer_cap && pci_aer_available() &&
->>>>              (pcie_ports_native || host->native_aer))
->>>>                  services |= PCIE_PORT_SERVICE_AER;
->>>>   #endif
->>>>
->>>>
->>>> [5]
->>>> [   71.995824] PM: suspend entry (s2idle)
->>>> [   72.000793] Filesystems sync: 0.004 seconds
->>>> [   72.153926] Freezing user space processes
->>>> [   72.156234] Freezing user space processes completed (elapsed 0.002
->>>> seconds)
->>>> [   72.156244] OOM killer disabled.
->>>> [   72.156246] Freezing remaining freezable tasks
->>>> [   72.157616] Freezing remaining freezable tasks completed (elapsed
->>>> 0.001
->>>> seconds)
->>>> [   72.157619] printk: Suspending console(s) (use no_console_suspend to
->>>> debug)
->>>> [   73.756457] ACPI: EC: interrupt blocked
->>>> [   75.103988] ucsi_acpi USBC000:00: ucsi_handle_connector_change:
->>>> GET_CONNECTOR_STATUS failed (-5)
->>>> [   84.052478] ACPI: EC: interrupt unblocked
->>>> [   86.085388] pcieport 0000:00:01.0: Data Link Layer Link Active not
->>>> set in
->>>> 1000 msec
->>>> [   86.085523] pcieport 0000:01:00.0: Unable to change power state from
->>>> D3cold to D0, device inaccessible
->>>> [   86.086984] pci 0000:02:01.0: Unable to change power state from
->>>> D3cold to
->>>> D0, device inaccessible
->>>> [   86.087005] pci 0000:02:04.0: Unable to change power state from
->>>> D3cold to
->>>> D0, device inaccessible
->>>> [   88.335403] vfio-pci 0000:04:00.0: not ready 1023ms after resume;
->>>> waiting
->>>> [   88.335427] vfio-pci 0000:03:00.0: not ready 1023ms after resume;
->>>> waiting
->>>> [   89.375444] vfio-pci 0000:04:00.0: not ready 2047ms after resume;
->>>> waiting
->>>> [   89.375471] vfio-pci 0000:03:00.0: not ready 2047ms after resume;
->>>> waiting
->>>> [   91.615418] vfio-pci 0000:04:00.0: not ready 4095ms after resume;
->>>> waiting
->>>> [   91.615439] vfio-pci 0000:03:00.0: not ready 4095ms after resume;
->>>> waiting
->>>> [   95.882059] vfio-pci 0000:04:00.0: not ready 8191ms after resume;
->>>> waiting
->>>> [   95.882081] vfio-pci 0000:03:00.0: not ready 8191ms after resume;
->>>> waiting
->>>> [  104.202062] vfio-pci 0000:04:00.0: not ready 16383ms after resume;
->>>> waiting
->>>> [  104.202066] vfio-pci 0000:03:00.0: not ready 16383ms after resume;
->>>> waiting
->>>> [  121.482058] vfio-pci 0000:04:00.0: not ready 32767ms after resume;
->>>> waiting
->>>> [  121.482067] vfio-pci 0000:03:00.0: not ready 32767ms after resume;
->>>> waiting
->>>> [  155.615409] vfio-pci 0000:04:00.0: not ready 65535ms after resume;
->>>> giving
->>>> up
->>>> [  155.615412] vfio-pci 0000:03:00.0: not ready 65535ms after resume;
->>>> giving
->>>> up
->>>> [  155.633757] i915 0000:00:02.0: [drm] GT0: GuC firmware
->>>> i915/tgl_guc_70.bin version 70.5.1
->>>> [  155.633761] i915 0000:00:02.0: [drm] GT0: HuC firmware
->>>> i915/tgl_huc.bin
->>>> version 7.9.3
->>>> [  155.636177] i915 0000:00:02.0: [drm] GT0: HuC: authenticated!
->>>> [  155.636860] i915 0000:00:02.0: [drm] GT0: GUC: submission enabled
->>>> [  155.636860] i915 0000:00:02.0: [drm] GT0: GUC: SLPC enabled
->>>> [  155.637228] i915 0000:00:02.0: [drm] GT0: GUC: RC enabled
->>>> [  155.661583] nvme nvme0: Shutdown timeout set to 10 seconds
->>>> [  155.663188] nvme nvme0: 24/0/0 default/read/poll queues
->>>> [  155.674267] iwlwifi 0000:00:14.3: WRT: Invalid buffer destination
->>>> [  155.823379] ucsi_acpi USBC000:00: possible UCSI driver bug 1
->>>> [  155.823390] ucsi_acpi USBC000:00: failed to re-enable
->>>> notifications (-22)
->>>> [  155.833326] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
->>>> [  155.833358] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x0
->>>> [  155.833367] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
->>>> [  155.833377] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x960
->>>> [  155.942363] ata6: SATA link down (SStatus 4 SControl 300)
->>>> [  155.942537] ata5: SATA link down (SStatus 4 SControl 300)
->>>> [  156.030241] mei_hdcp
->>>> 0000:00:16.0-b638ab7e-94e2-4ea2-a552-d1c54b627f04:
->>>> bound 0000:00:02.0 (ops i915_hdcp_ops [i915])
->>>> [  156.030830] OOM killer enabled.
->>>> [  156.030831] Restarting tasks ...
->>>> [  156.030894] mei_pxp
->>>> 0000:00:16.0-fbf6fcf1-96cf-4e2e-a6a6-1bab8cbe36b1:
->>>> bound 0000:00:02.0 (ops i915_pxp_tee_component_ops [i915])
->>>> [  156.031827] done.
->>>> [  156.031837] random: crng reseeded on system resumption
->>>> [  156.036058] PM: suspend exit
->>>> [  158.962881] wlp0s20f3: authenticate with 4c:ed:fb:a0:7f:6c
->>>> [  158.966647] wlp0s20f3: send auth to 4c:ed:fb:a0:7f:6c (try 1/3)
->>>> [  159.001337] wlp0s20f3: authenticated
->>>> [  159.001858] wlp0s20f3: associate with 4c:ed:fb:a0:7f:6c (try 1/3)
->>>> [  159.002882] wlp0s20f3: RX AssocResp from 4c:ed:fb:a0:7f:6c
->>>> (capab=0x11
->>>> status=0 aid=1)
->>>> [  159.010807] wlp0s20f3: associated
->>>> [  159.159528] IPv6: ADDRCONF(NETDEV_CHANGE): wlp0s20f3: link becomes
->>>> ready
->>>> [  287.875205] vfio-pci 0000:04:00.0: Unable to change power state from
->>>> D3cold to D0, device inaccessible
->>>> [  287.936500] vfio-pci 0000:04:00.0: Unable to change power state from
->>>> D3cold to D0, device inaccessible
->>>> [  289.414087] vfio-pci 0000:03:00.0: Unable to change power state from
->>>> D3cold to D0, device inaccessible
->>>> [  289.475297] vfio-pci 0000:03:00.0: Unable to change power state from
->>>> D3cold to D0, device inaccessible
