@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E2DE579C183
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 03:15:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C79C779C148
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 02:46:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233689AbjILBPY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Sep 2023 21:15:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57584 "EHLO
+        id S231349AbjILAqM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Sep 2023 20:46:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231362AbjILBPJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 21:15:09 -0400
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on0602.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe0c::602])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDA22174387;
-        Mon, 11 Sep 2023 18:02:12 -0700 (PDT)
+        with ESMTP id S232043AbjILAqE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 20:46:04 -0400
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on060b.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe0e::60b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9AA8141923;
+        Mon, 11 Sep 2023 17:35:22 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hpMb7IX+7oA73X33ItmyizZ43fdwVOyJLgNjpD9prLE7PKTUI2yDnxoy2AcEyP80dkwNd6TE+nVQiNfkMZGyFAMRij395U45XYwY+hrJMlJXSDN1PeAkpJDPt813bAoGkBqIN2ZTHPcOPr/ydQjQ1K3y5RtA+mjcX1FJtSIlVVtqit/wjbWtqJVmED9ojU2TuRN5zaY0mAzBsxUaPXQgBl9kPHXMrCPD1kFlB/1txj/ZZurXDLwOZ9Cw+wQrn1ROFoOptZdHy5dczZvJTDgb1xB8eJeAewiSQxMX8H4A6xOo0xZNhgLz7vlseJ5gswdQfYI6BeKgu11zAdZspCvQrA==
+ b=JM9T91Hk2Yy0wLB09pZdnPTd9iFpXDHoc24rfWyQ8tJKgTQL6aEO9b8qTWcqE1iIU29oI0eBWJZuvub3t16yRjp1JaZRfK6I9QzGU7UUFJT4d6Wd9cCTp0pnvCqVIDpuND22uWYhYmfnmqoclH/sq1eQxNq6pI24b6+gtfbBpssetXp43M6efkC6bmQ5w5aK/JOd1YFiNxRxpgN6eTmbW15kO0pSvFxavNOtlQ9zfK8UBSOwmK2L62IRuvUK2gTx2nNdMDlt+7N2jzxEc/5jRYSgAtSf5Jj88p7mV0mLS4jYSHMMjeb+x/HPx0pW2XWNbakuOI0AhsL8At4E5BkRgg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=g+bjztS/6vJwT0O0RAzLFlqabXhUpXXiyiK6O/MCCdA=;
- b=KcPV/darBv8kD/G+b8NDEZaXkOgY7xHdxRR+NrsdYi7OUs8umVUSV4ookgt7BmH2oeg1fgIo55xnVcKaMuHoGHIU45P+vtlAB+yJ53629icQYbBNquR/hVeOZZLJAL8b4zj23pXamHilElO/axMfv9y/R0Ik0ubwb+VQUL/gQIjSrQ+K8iaxH5fFtwQP2HfhQvbB8icN8wT/AMH9LeoEpYf7UQ+lKnh9iwZ3BIUNNzd5ymYS36zpZJ90GBAq4WQWnfvm79alcvWacKkiq0zZwYXc6AIUC95+rDyM+Pll8YkyaqO9aGee0bMAyT2zmlhrtZrZ0KeuHRy7C0ARJFs1IQ==
+ bh=4EhE1gap6D3kYZSQq/ASaMYmSkecBwLLo1zEPZt2hAI=;
+ b=CWrHluc6fKzH68k4DRjjWfzn5kBQ5aWAILiCXFSHtkfqPEpK7Mdshwttgeb9MQrxnCS+ewgpzlXx3YVhUqUjlHKfaNxuI7D/ULgAYA5WbVcE0Eii/1yN/qm6whoxVwyrKBqhv7BTUINH4AmBWK+lyRzgJHkRgYM/d3gOlyjMjANe1EvAWSgsPS4cUGm7s7UoqldD4bo7RgL0e7jZcptgSUKyHcXzRBzvREKlrIj08jOqVXvnEBE0oUdCQov00e/UWquOQUOzHxICSpp4y3WfMSdYoKBNnbY0EFQP1khXTdT9++r2xCc1A59iWlvwroeWkXhXCAzJGHySX/VTirk52w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g+bjztS/6vJwT0O0RAzLFlqabXhUpXXiyiK6O/MCCdA=;
- b=sTahCCtK5S+nZDllaajvvbsYPQg3PRMMqUZF6K+4exkhQcqRW6wNWq0z5IsyRFOqXm0TgZpCP8EWqVTcRcmWZcNk34J0lH3ROa0nSoauLRYM03SdQAKWGqSegyl18EutGI3iTDxRJ8o+EnTVoO0QRb/yEaixEldegvilZ4/rXs0=
+ bh=4EhE1gap6D3kYZSQq/ASaMYmSkecBwLLo1zEPZt2hAI=;
+ b=SXQlHhfGySxEy+U7abpSFU/Yy1bwUQXigpBOy3Uy+oTM1c0WPukunK/J2d1h+lkMYBtFR4UYooxID3R6ibf7meU0wb3F5erP5/didx6ErVbWiatlq2A+wyP8NN7dfGRWg3q8Z6glB7/ws2mPedrjk3cIIfB4cFXz/hu4l8KM7ls=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
  by PAXPR04MB8125.eurprd04.prod.outlook.com (2603:10a6:102:1cc::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.35; Mon, 11 Sep
- 2023 22:09:48 +0000
+ 2023 22:09:52 +0000
 Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
  ([fe80::aa90:117d:c1d0:346a]) by AM6PR04MB4838.eurprd04.prod.outlook.com
  ([fe80::aa90:117d:c1d0:346a%3]) with mapi id 15.20.6768.029; Mon, 11 Sep 2023
- 22:09:47 +0000
+ 22:09:52 +0000
 From:   Frank Li <Frank.Li@nxp.com>
 To:     manivannan.sadhasivam@linaro.org
 Cc:     Frank.li@nxp.com, aisheng.dong@nxp.com, bhelgaas@google.com,
@@ -49,9 +49,9 @@ Cc:     Frank.li@nxp.com, aisheng.dong@nxp.com, bhelgaas@google.com,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         lorenzo.pieralisi@arm.com, lpieralisi@kernel.org, maz@kernel.org,
         s.hauer@pengutronix.de, shawnguo@kernel.org, tglx@linutronix.de
-Subject: [PATCH v2 1/5] PCI: endpoint: Add RC-to-EP doorbell support using platform MSI controller
-Date:   Mon, 11 Sep 2023 18:09:16 -0400
-Message-Id: <20230911220920.1817033-2-Frank.Li@nxp.com>
+Subject: [PATCH v2 2/5] PCI: dwc: add doorbell support by use MSI controller
+Date:   Mon, 11 Sep 2023 18:09:17 -0400
+Message-Id: <20230911220920.1817033-3-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230911220920.1817033-1-Frank.Li@nxp.com>
 References: <20230911220920.1817033-1-Frank.Li@nxp.com>
@@ -63,404 +63,84 @@ X-ClientProxiedBy: BYAPR07CA0010.namprd07.prod.outlook.com
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|PAXPR04MB8125:EE_
-X-MS-Office365-Filtering-Correlation-Id: defeff76-23ec-4301-9d8d-08dbb313cfef
+X-MS-Office365-Filtering-Correlation-Id: 132e49fa-d0a7-43f8-1fcf-08dbb313d2c9
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lprMpiLy3lfhuL9aWimIP0hW31Rd7stM6KetKarLdtW8i7Ex/N5pM1o5/hh4c5hx0GQOjEn/A6cTfrUR3POD3jzeHRmtyJLJf2lMYxSaLRIth01USa16LKQ2lethX32lJfbmM4nP0+UGjn+VZRXJS1pD5dQNOYHkB16KBRswIdTYalSG9W9zS3ksEzNuy3yCe+0WloUjw1VkmvTc3nyKUvUOqzYBxDrjdBrhiX8EJjQzP5ErwytKMYEsJVS881KN1bBcDhDqg5Q0k6upAENOU4hM1AlrO7F/aE2GPS8XTOEelUpTWAoJxOuCqT3CgJ/lxhVJR6iU7QsAZUPAg3byAlCE9i9LLh6f+7ZH2NE54FzkzRm3K14f9NY58QTdwAvdTRPf5dQBKKQnQjyyViJKkexXXmYl6CYQxCjy2v3BjX7W68gDFK/cxtIw/hnAyDpw4VP19jFYi2wEYewC4cTaee1O6Y8CGzen+XssWojzHgrIS2+37PKAyBQHZuZPXv1FLGt+RkS8nJD4lzvnSPB/Bhu8/YMQlatnoHdv2cNqLltm6qX6PAHEgQThsRyvOEHKq5BMGK6y4c7Hi9qcrfj0G2Vnu2sCRr6yuGIp5mJGOLeBAX+lMffOsOjaWAr+KPP4
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(366004)(136003)(396003)(346002)(1800799009)(186009)(451199024)(6512007)(26005)(1076003)(86362001)(30864003)(2906002)(83380400001)(6486002)(2616005)(52116002)(6506007)(6666004)(7416002)(38350700002)(478600001)(38100700002)(36756003)(5660300002)(8676002)(8936002)(66476007)(66556008)(4326008)(6916009)(316002)(66946007)(41300700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: Si/R84P0WKU4WEEhixSFHJEqa94WJUkEPAYKQSyWPPWVccxPc2G97kwIARoiDSHTlsVWJsjJRvk6VQVZrCpAs4rAYtWr+o5k5LqoofYFVt/2agpi1OofJCCGUvSAm6GkTC8gfnPmb4rNgVaI4PDEi/8VCbfhXNwHIdNgfC7B7BEAoK+CG5LnhX9j4YlDo9ryEJwCl+I6j9ogugTAO0tEVd5aQhAwWB6ReCI1Kpj5JOQiKYucILn5CzxnxGKlgMdOSC1jIUBWgWVG/rpaZSPwpuSGBigWDrvGLO6Ba4WA8jJICANOvf3fDpFNkbcp/3CE37APk/JVPgyt9L9R5SpEFruPkZjqN0XqNOm0CPfpIGz3KJbWol3hHJqAbbrL99E3CU9DSxFxx5t35Q9VTZXb+q627hIQVw+chfmi8MZ2mN/yH6yqLRgYlsN97t2pJdq5HaHEQ4BFAuUkZLZxtMkLGA5gIZ4G8OVtO1k9idHo6oVZ5hdIJYBL+dXdav44WoQR69vMnFtMTxFx94wzENMDLWFJOwqik7ZhMQ572gX5Le1fJ7mWgiF/RpwBoaoA4UJgj6I44KjA1KlmUdS44i+KkcrBmSXGdX2di6Tg0FnguzFO080hJZGa3R4iPWX18pe4
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(366004)(136003)(396003)(346002)(1800799009)(186009)(451199024)(6512007)(26005)(1076003)(86362001)(2906002)(83380400001)(6486002)(2616005)(52116002)(6506007)(6666004)(7416002)(38350700002)(478600001)(38100700002)(36756003)(5660300002)(8676002)(8936002)(66476007)(66556008)(4326008)(6916009)(316002)(66946007)(41300700001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?RHPr7vHg0qxX3txC6ASjwmwVtiJG9pff8fCyTdV6R/71sNPe7OSH7onXrvvV?=
- =?us-ascii?Q?1zXtj4bVEYwQ5zYTrRRW+qQ58GAMbMxAgGajjD7WF5p20o4QPyLp0ImrtN6Z?=
- =?us-ascii?Q?J8bZGj14KpwSgvgYVPlnxYLqhPPwmoC4Sb/XXMTjVjO8irwj3XFamUUbIyrk?=
- =?us-ascii?Q?qdpqLscbO2n87j9XKYN+KYzmPOnj+zojmQHi8FuxGquikSd3J1VwBaTcMxrp?=
- =?us-ascii?Q?CUUykVPakmj01UqXjiaZ2xhNWJMdS3GgF9cFnPxVq1y8Vg8jj5q5vqopBQBa?=
- =?us-ascii?Q?ldHPJ4m8B+pzeWkw5dXqWKcHH8dCdDsL1Ba8/6YaMJHxFAyfIaB0p50NKoaA?=
- =?us-ascii?Q?OndzpuaOWflp0mWvnVYS/pluh37hQeIX6hd+y1jbiPl853iE3OExZfrDSyUQ?=
- =?us-ascii?Q?hrys7zItFPs1s8kEuJvT8tveObN+eUbq+bJ7I4OuX7c38dy04dGhRMMlv1RO?=
- =?us-ascii?Q?La8LuCmx+z07TjYJmGkC8wTj0is63uKrbh9uFc5TkVJjNSRGLkCSZlNF2TW8?=
- =?us-ascii?Q?EIo/WG/+LR6MXnteG6nEgtWxHmn2UaN1HMkAjNlZcRLV7OKBeukZZ2gHN8Dn?=
- =?us-ascii?Q?IZDsFU07cmURtMzjLEFnum9RJPc5FcRLRcq1qN6lrzMuT9qJiXYEM/CFod43?=
- =?us-ascii?Q?H8AqETV55dLq+DqDAxkwHIXXqP8nRfVrzt2dX/FsMJblUk3iauLjmR18qA8u?=
- =?us-ascii?Q?UpX4aL9HhTwl99EMEnzm6mfXQ3OfHXz/VzHsEH8HMb9WLHyjVXwqbhsgBqxJ?=
- =?us-ascii?Q?MMq1ZkgRWXzHqPCSTQ1FWeh/dZKQxp874wC14fvCOXrb/68Ko9c6qIBF99b8?=
- =?us-ascii?Q?36IXvvqEFwhqJ1pgS8gzjBhkBWJWWPF0L3s8avqcBDpuIDBmkoa92KkrG5L3?=
- =?us-ascii?Q?jV5mnJaQPSlc71UzxxaJ4kOr2n9b1QTKx5wfLYrLz72cVUis1SAIKTHB8svE?=
- =?us-ascii?Q?Rf4JYpg8INLZl2hqLHGcQzfLe09kJiwlJVp8tvcSyCEfiKSKi0YvnAiaKRIB?=
- =?us-ascii?Q?Ch9Som2y9epLNoyt9SYyWfYcksNMD+VaCbGnomiTMitsgm9YACLPGeaMSHeS?=
- =?us-ascii?Q?v/r2OnjGEWlQohQmuaut3O/AJkLBRPNqLfYfzFyCxsqgACr14qcZLmkJw3jn?=
- =?us-ascii?Q?lWpn8EgkY6jL6ST1sefvDcm5a/On4qk/zmHlezAi1+ydEtr79FjqF+Npq/z6?=
- =?us-ascii?Q?u/MzmuFPKDprLqKQzpBhH6PV2TjNJUBkW9ntlqUovYx+O9tZxzZDWFYnzqyZ?=
- =?us-ascii?Q?58Ml032W6Ysl6oGsiJMqMhP6fk8Vc2EcHOdJ/ySABeb9zd7fBW6Tjs8fctEb?=
- =?us-ascii?Q?t/1YvRsyJ5W/BznqJbr4fsXV5jnrKoQLYfLvkET3sIP8DROS9J2sT5ZOTfSD?=
- =?us-ascii?Q?IhsgBetlCRBSxM77kOVX7z8r5zRKjRWCaGm/q5/3IhYu6mGtOFM6JxptWfJv?=
- =?us-ascii?Q?OItZQyCVEV9aBsZ5QFOgDoVezkjOJwwwsAK99oegzUzHU9IVwrotMT1jEtX/?=
- =?us-ascii?Q?hUg/KzMidx4GovftQI0lNTOpgoqTBZlnw6XZkHkn5EZqjjcAZX1TYNySdfyj?=
- =?us-ascii?Q?9JTi/x4PjjeM9UF5Di2274FNJkHH+5YK+eUQ3KtV?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?RrNdvTxONOmEkXTSjRRVJ1pswjZ6mcc3kJTyhwlLIqafNei71LKqzhBiSobF?=
+ =?us-ascii?Q?h2fMDT11AaXtqYlSzU8Rza1Jc2925QD19qNPGRvl91S05gJmAKrWAZ0B3OpA?=
+ =?us-ascii?Q?srO5HpRUUlcxfv0VNu4yCp+YnmmcS/DiNkCvXG8w8xj2BJuS+4Vwth1hSKjN?=
+ =?us-ascii?Q?+Kt5fJTduUwRvUfKEBeEbmqhAR/OhCKs0JwdhaeC45PfmFI+2eJSctSeOUC/?=
+ =?us-ascii?Q?uh667IZtBDSVNzdbyfTuZ99kqejrWHXzfS7SGCH8mgZ169kpdKrUJ/JXpgDG?=
+ =?us-ascii?Q?54URkGeuj7hAH1FigDwYEaPjNrQq3PX40B7gjlAkKycfRk36aUxLrtIW/4fs?=
+ =?us-ascii?Q?YcmuwCP5IJ45PrETBWs15lSLDn/x1KU8NJ/LimmnZQ7syqXtOuFvm0tnXOwz?=
+ =?us-ascii?Q?+eqqaCQ8JeI/WgDkBvLZtE1+oFe/yQtVYHPEZLxl9pJiZwrZiR63Xpuw+ZH8?=
+ =?us-ascii?Q?Nc6roMVCA11asIMvtJv2mlR1bj2H57dREBcPgDm1jWZH3N7DJ0FzZd9JipBv?=
+ =?us-ascii?Q?N9pz3EfHuOHfmdcF+xRUFV30tRABFdASMry2PJKiICkE62ptxEB0RxXGalJR?=
+ =?us-ascii?Q?kUKDdeGAiav37Nh7SqTR/uUzLei/iBBMQAykEOZEWDp7tgpA5jhqpWLk7yXW?=
+ =?us-ascii?Q?SwgcrRCk2wlL3L9y4AAplZ8oWgg9iUKqyiUuxnjKPIBeQyQ3zHDszDUCeS2W?=
+ =?us-ascii?Q?fW8kGSVCEg8/t/yem7B+f9rrpWfNqG1RFzwQEpzYsL9DWWNXVEGZaa1y7eT7?=
+ =?us-ascii?Q?ssZAfaoyHQ5YrMg2tKnxjntSwDDa/5jr6Cf1qWr9Dpfmgs+P0RCaQuhuaJlQ?=
+ =?us-ascii?Q?pIR7SLqToc8UB7/L8aHMIN7p8EDzxBr+nLshjFj7tjGyA6H/kS2EAQZCUOoq?=
+ =?us-ascii?Q?32bCrDuiodCVDsx1JsIU6guT1TDBz/P1gavLTpMwc/OA2irKWArE87e3Zyjh?=
+ =?us-ascii?Q?9gK9OPaHbR69//fM9fFIAVZd1KiokDEnURahNfpOZ9uTCvWGus9J3lk5rTwF?=
+ =?us-ascii?Q?n8otDZlw5lzvK21RSD9hFPJFFM0WphwpfzEYSbhXwIMmmai2C17Xnu2/ac+E?=
+ =?us-ascii?Q?XoauVjl9+kPgBTKr6FJgEf01e+G046VL8gTKXW11Z4ElaGO3GRCS+MbLi/xQ?=
+ =?us-ascii?Q?ks0G/fo+6lkRy21mlNJ86ccw+4Y1fIQ8Basxr2N2Zj3S7a6SDmQ6NY05w7gx?=
+ =?us-ascii?Q?vbiy/VssMcSm3IdyWLbMTERDgyNiXzrjuvQ+VaWWoKaVv1sVJBUt5I2sH6So?=
+ =?us-ascii?Q?dHRuAY5EWeNrjLmPPJ7nkIE3v1p5/UDpYGxnCZ4ycyVqfKFzN7rJNO7KII/d?=
+ =?us-ascii?Q?FtkIjfXgY5mpZTGv5WT8Duh0w8apIUCFmo/BGDCCdn8RGUTo1cyArxRhtNIg?=
+ =?us-ascii?Q?wF6ZuCtPK4BjemAb8Ft5/C5zGCQ/4UknbgKa/VtQhqdEPxjZaVY+kvsZRCy2?=
+ =?us-ascii?Q?RMPlGkCEaHoiiieRO9ua6357ALARGg/Bjqbed2O3CMRr03AiU32TERjrx7ov?=
+ =?us-ascii?Q?2sSE1jo7B3Ko3wNEDrLdgMcwgbYQHa5ECThU1iTn4CPXBkCh2VQXc4FFYBSU?=
+ =?us-ascii?Q?y4U7iHPVVOi0g5HLJA1aLdHMakmlX6xn599Ffi/q?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: defeff76-23ec-4301-9d8d-08dbb313cfef
+X-MS-Exchange-CrossTenant-Network-Message-Id: 132e49fa-d0a7-43f8-1fcf-08dbb313d2c9
 X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2023 22:09:47.8851
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2023 22:09:52.8026
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jRuUPpgkwk9/49haExCk5Z66DgNC8GcGERZpdDwm0JFvOsi605XaMGJhpy8x+RrYyoc6yyPhB3km+ta2RMLUtA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: KMH0qVgSc6npN8FBytjjLhSMnBIQ2uFR7th6qglISl/+6FaGrK4P6C506/3NBkk4Yu9hl7G1IbfvFk2Da8fngQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8125
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,T_SPF_PERMERROR autolearn=no
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,SPF_HELO_PASS,
+        T_SPF_PERMERROR autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This commit introduces a common method for sending messages from the Root
-Complex (RC) to the Endpoint (EP) by utilizing the platform MSI interrupt
-controller, such as ARM GIC, as an EP doorbell. Maps the memory assigned
-for the BAR region by the PCI host to the message address of the platform
-MSI interrupt controller in the PCI EP. As a result, when the PCI RC writes
-to the BAR region, it triggers an IRQ at the EP. This implementation serves
-as a common method for all endpoint function drivers.
-
-However, it currently supports only one EP physical function due to
-limitations in ARM MSI/IMS readiness.
+Call pci_epc_generic_alloc_doorbell() to alloc an platform MSI address
+space.The Endpoint (EP) function drver can maps the memory assigned for the
+BAR region by the PCI host to the message address of the platform MSI
+interrupt controller in the PCI EP. As a result, when the PCI RC writes to
+the BAR region, it triggers an IRQ at the EP.
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- drivers/pci/endpoint/pci-epc-core.c | 192 ++++++++++++++++++++++++++++
- drivers/pci/endpoint/pci-epf-core.c |  44 +++++++
- include/linux/pci-epc.h             |   6 +
- include/linux/pci-epf.h             |   7 +
- 4 files changed, 249 insertions(+)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index 5a4a8b0be6262..d336a99c6a94f 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -10,6 +10,7 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- 
-+#include <linux/msi.h>
- #include <linux/pci-epc.h>
- #include <linux/pci-epf.h>
- #include <linux/pci-ep-cfs.h>
-@@ -783,6 +784,197 @@ void pci_epc_bme_notify(struct pci_epc *epc)
- }
- EXPORT_SYMBOL_GPL(pci_epc_bme_notify);
- 
-+/**
-+ * pci_epc_alloc_doorbell() - alloc an address space to let RC trigger EP side IRQ by write data to
-+ *			      the space.
-+ *
-+ * @epc: the EPC device that need doorbell address and data from RC.
-+ * @func_no: the physical endpoint function number in the EPC device.
-+ * @vfunc_no: the virtual endpoint function number in the physical function.
-+ * @num_msgs: the total number of doorbell messages
-+ *
-+ * Return: 0 success, other is failure
-+ */
-+int pci_epc_alloc_doorbell(struct pci_epc *epc, u8 func_no, u8 vfunc_no, int num_msgs)
-+{
-+	int ret;
-+
-+	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
-+		return -EINVAL;
-+
-+	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+		return -EINVAL;
-+
-+	if (!epc->ops->alloc_doorbell)
-+		return 0;
-+
-+	mutex_lock(&epc->lock);
-+	ret = epc->ops->alloc_doorbell(epc, func_no, vfunc_no, num_msgs);
-+	mutex_unlock(&epc->lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(pci_epc_alloc_doorbell);
-+
-+/**
-+ * pci_epc_free_doorbell() - free resource allocated by pci_epc_alloc_doorbell()
-+ *
-+ * @epc: the EPC device that need doorbell address and data from RC.
-+ * @func_no: the physical endpoint function number in the EPC device.
-+ * @vfunc_no: the virtual endpoint function number in the physical function.
-+ *
-+ * Return: 0 success, other is failure
-+ */
-+void pci_epc_free_doorbell(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
-+{
-+	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
-+		return;
-+
-+	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+		return;
-+
-+	if (!epc->ops->free_doorbell)
-+		return;
-+
-+	mutex_lock(&epc->lock);
-+	epc->ops->free_doorbell(epc, func_no, vfunc_no);
-+	mutex_unlock(&epc->lock);
-+}
-+EXPORT_SYMBOL_GPL(pci_epc_free_doorbell);
-+
-+static irqreturn_t pci_epf_generic_doorbell_handler(int irq, void *data)
-+{
-+	struct pci_epf *epf = data;
-+
-+	if (epf->event_ops && epf->event_ops->doorbell)
-+		epf->event_ops->doorbell(epf, irq - epf->virq_base);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void pci_epc_generic_write_msi_msg(struct msi_desc *desc, struct msi_msg *msg)
-+{
-+	struct pci_epc *epc = NULL;
-+	struct class_dev_iter iter;
-+	struct pci_epf *epf;
-+	struct device *dev;
-+
-+	class_dev_iter_init(&iter, pci_epc_class, NULL, NULL);
-+	while ((dev = class_dev_iter_next(&iter))) {
-+		if (dev->parent != desc->dev)
-+			continue;
-+
-+		epc = to_pci_epc(dev);
-+
-+		class_dev_iter_exit(&iter);
-+		break;
-+	}
-+
-+	if (!epc)
-+		return;
-+
-+	/* Only support one EPF for doorbell */
-+	epf = list_first_entry_or_null(&epc->pci_epf, struct pci_epf, list);
-+
-+	if (!epf)
-+		return;
-+
-+	if (epf->msg && desc->msi_index < epf->num_msgs)
-+		epf->msg[desc->msi_index] = *msg;
-+}
-+
-+
-+/**
-+ * pci_epc_generic_alloc_doorbell() - Common help function. Allocate address space from MSI
-+ *                                    controller
-+ *
-+ * @epc: the EPC device that need doorbell address and data from RC.
-+ * @func_no: the physical endpoint function number in the EPC device.
-+ * @vfunc_no: the virtual endpoint function number in the physical function.
-+ * @num_msgs: the total number of doorbell messages
-+ *
-+ * Remark: use this function only if EPC driver just register one EPC device.
-+ *
-+ * Return: 0 success, other is failure
-+ */
-+int pci_epc_generic_alloc_doorbell(struct pci_epc *epc, u8 func_no, u8 vfunc_no, int num_msgs)
-+{
-+	struct pci_epf *epf;
-+	struct device *dev;
-+	int virq, last;
-+	int ret;
-+	int i;
-+
-+	if (IS_ERR_OR_NULL(epc))
-+		return -EINVAL;
-+
-+	/* Currently only support one func and one vfunc for doorbell */
-+	if (func_no || vfunc_no)
-+		return -EINVAL;
-+
-+	epf = list_first_entry_or_null(&epc->pci_epf, struct pci_epf, list);
-+	if (!epf)
-+		return -EINVAL;
-+
-+	dev = epc->dev.parent;
-+	ret = platform_msi_domain_alloc_irqs(dev, num_msgs, pci_epc_generic_write_msi_msg);
-+	if (ret) {
-+		dev_err(dev, "Failed to allocate MSI\n");
-+		return -ENOMEM;
-+	}
-+
-+	last = -1;
-+	for (i = 0; i < num_msgs; i++) {
-+		virq = msi_get_virq(dev, i);
-+		if (i == 0)
-+			epf->virq_base = virq;
-+
-+		ret = request_irq(virq, pci_epf_generic_doorbell_handler, 0,
-+				  kasprintf(GFP_KERNEL, "pci-epc-doorbell%d", i), epf);
-+
-+		if (ret) {
-+			dev_err(dev, "Failed to request doorbell\n");
-+			goto err_free_irq;
-+		}
-+		last = i;
-+	}
-+
-+	return 0;
-+
-+err_free_irq:
-+	for (i = 0; i < last; i++)
-+		kfree(free_irq(epf->virq_base + i, epf));
-+	platform_msi_domain_free_irqs(dev);
-+
-+	return -EINVAL;
-+}
-+EXPORT_SYMBOL_GPL(pci_epc_generic_alloc_doorbell);
-+
-+/**
-+ * pci_epc_generic_free_doorbell() - Common help function. Free resource created by
-+ *				     pci_epc_generic_alloc_doorbell()
-+ *
-+ * @epc: the EPC device that need doorbell address and data from RC.
-+ * @func_no: the physical endpoint function number in the EPC device.
-+ * @vfunc_no: the virtual endpoint function number in the physical function.
-+ * @num_msgs: the total number of doorbell messages
-+ */
-+void pci_epc_generic_free_doorbell(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
-+{
-+	struct pci_epf *epf;
-+	int i;
-+
-+	epf = list_first_entry_or_null(&epc->pci_epf, struct pci_epf, list);
-+	if (!epf)
-+		return;
-+
-+	for (i = 0; i < epf->num_msgs; i++)
-+		kfree(free_irq(epf->virq_base + i, epf));
-+
-+	platform_msi_domain_free_irqs(epc->dev.parent);
-+}
-+EXPORT_SYMBOL_GPL(pci_epc_generic_free_doorbell);
-+
- /**
-  * pci_epc_destroy() - destroy the EPC device
-  * @epc: the EPC device that has to be destroyed
-diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-index 2c32de6679377..eab82c6b0119a 100644
---- a/drivers/pci/endpoint/pci-epf-core.c
-+++ b/drivers/pci/endpoint/pci-epf-core.c
-@@ -10,6 +10,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/slab.h>
- #include <linux/module.h>
-+#include <linux/msi.h>
- 
- #include <linux/pci-epc.h>
- #include <linux/pci-epf.h>
-@@ -300,6 +301,49 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
- }
- EXPORT_SYMBOL_GPL(pci_epf_alloc_space);
- 
-+int pci_epf_alloc_doorbell(struct pci_epf *epf, u16 num_msgs)
-+{
-+	struct pci_epc *epc;
-+	struct device *dev;
-+	int ret;
-+
-+	epc = epf->epc;
-+	dev = &epc->dev;
-+
-+	epf->msg = kcalloc(num_msgs, sizeof(struct msi_msg), GFP_KERNEL);
-+	if (!epf->msg)
-+		return -ENOMEM;
-+
-+	epf->num_msgs = num_msgs;
-+
-+	ret = pci_epc_alloc_doorbell(epc, epf->func_no, epf->vfunc_no, num_msgs);
-+	if (ret)
-+		goto err_free_mem;
-+
-+	return ret;
-+
-+err_free_mem:
-+	kfree(epf->msg);
-+	epf->msg = NULL;
-+	epf->num_msgs = 0;
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(pci_epf_alloc_doorbell);
-+
-+void pci_epf_free_doorbell(struct pci_epf *epf)
-+{
-+	struct pci_epc *epc;
-+
-+	epc = epf->epc;
-+	pci_epc_free_doorbell(epc, epf->func_no, epf->vfunc_no);
-+
-+	kfree(epf->msg);
-+	epf->msg = NULL;
-+	epf->num_msgs = 0;
-+}
-+EXPORT_SYMBOL_GPL(pci_epf_free_doorbell);
-+
- static void pci_epf_remove_cfs(struct pci_epf_driver *driver)
- {
- 	struct config_group *group, *tmp;
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index 5cb6940310729..605fb0debd6bc 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -88,6 +88,8 @@ struct pci_epc_ops {
- 	void	(*stop)(struct pci_epc *epc);
- 	const struct pci_epc_features* (*get_features)(struct pci_epc *epc,
- 						       u8 func_no, u8 vfunc_no);
-+	int	(*alloc_doorbell)(struct pci_epc *epc, u8 func_no, u8 vfunc_no, int num_msgs);
-+	void	(*free_doorbell)(struct pci_epc *epc, u8 func_no, u8 vfunc_no);
- 	struct module *owner;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index f9182f8d552f4..4f6be5f4ba18a 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -477,6 +477,8 @@ static const struct pci_epc_ops epc_ops = {
+ 	.start			= dw_pcie_ep_start,
+ 	.stop			= dw_pcie_ep_stop,
+ 	.get_features		= dw_pcie_ep_get_features,
++	.alloc_doorbell		= pci_epc_generic_alloc_doorbell,
++	.free_doorbell		= pci_epc_generic_free_doorbell,
  };
  
-@@ -251,4 +253,8 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
- 				     phys_addr_t *phys_addr, size_t size);
- void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
- 			   void __iomem *virt_addr, size_t size);
-+int pci_epc_alloc_doorbell(struct pci_epc *epc, u8 func_no, u8 vfunc_no, int num_msgs);
-+void pci_epc_free_doorbell(struct pci_epc *epc, u8 func_no, u8 vfunc_no);
-+int pci_epc_generic_alloc_doorbell(struct pci_epc *epc, u8 func_no, u8 vfunc_no, int num_msgs);
-+void pci_epc_generic_free_doorbell(struct pci_epc *epc, u8 func_no, u8 vfunc_no);
- #endif /* __LINUX_PCI_EPC_H */
-diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
-index 3f44b6aec4770..485c146a5efe2 100644
---- a/include/linux/pci-epf.h
-+++ b/include/linux/pci-epf.h
-@@ -79,6 +79,7 @@ struct pci_epc_event_ops {
- 	int (*link_up)(struct pci_epf *epf);
- 	int (*link_down)(struct pci_epf *epf);
- 	int (*bme)(struct pci_epf *epf);
-+	int (*doorbell)(struct pci_epf *epf, int index);
- };
- 
- /**
-@@ -180,6 +181,9 @@ struct pci_epf {
- 	unsigned long		vfunction_num_map;
- 	struct list_head	pci_vepf;
- 	const struct pci_epc_event_ops *event_ops;
-+	struct msi_msg *msg;
-+	u16 num_msgs;
-+	int virq_base;
- };
- 
- /**
-@@ -223,4 +227,7 @@ int pci_epf_bind(struct pci_epf *epf);
- void pci_epf_unbind(struct pci_epf *epf);
- int pci_epf_add_vepf(struct pci_epf *epf_pf, struct pci_epf *epf_vf);
- void pci_epf_remove_vepf(struct pci_epf *epf_pf, struct pci_epf *epf_vf);
-+int pci_epf_alloc_doorbell(struct pci_epf *epf, u16 nums);
-+void pci_epf_free_doorbell(struct pci_epf *epf);
-+
- #endif /* __LINUX_PCI_EPF_H */
+ int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no)
 -- 
 2.34.1
 
