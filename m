@@ -2,163 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3C2179B033
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 01:49:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39E3179B329
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 01:59:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236007AbjIKVha (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Sep 2023 17:37:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35056 "EHLO
+        id S231445AbjIKXRC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Sep 2023 19:17:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241588AbjIKU5N (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 16:57:13 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ADD13C17;
-        Mon, 11 Sep 2023 13:52:17 -0700 (PDT)
+        with ESMTP id S1347195AbjIKVYc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 17:24:32 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4C411B194;
+        Mon, 11 Sep 2023 14:11:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694465537; x=1726001537;
+  t=1694466711; x=1726002711;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=74b3SgpPHonhG4WHBUjAVxMA0p2luRUXXNpPdJQ6VmM=;
-  b=ZD4CtUBMMEDFKYmZfGaxg2zC7KIvLz9IlKK9Umv3V9jMuNGVYJ31uW73
-   0/LiwocYMGaEGTy23kyH/UVRkHjQeBeKCnmAXol4OsN8WeaRJbiI2Z/SN
-   KGrjRlT6+avAMSpOMpI5g7B6p+taGwV9+CIbMttvpoAZTgJENGQWPBRKt
-   xoRfjN7EAiWuzKKrv0vhIyXKGrWHGY42UbL63Xb5qXYe6l8YgM4KioQnD
-   WOuWQ1l5p3gf5UEaH3CdR6JSty+nqQCbNJ+WfINEF04pELNiC2OitVJ15
-   qylip/jEy6sagpDcjS0UStWwsZjZYp1/O6ADZK+LUa829L1Zvc/C6pS7z
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="368455909"
+  bh=ej0zR/ZPGvA8Tfy05E1nu86gMtOlLF6H6/avtJBmGSE=;
+  b=IofKu3Z5iBymBezuzHJij0ObtDeSy9pdVy7AoTpGweJex9XGLqaplRkf
+   XKeED3u+ghug1Gcv4AbskfGfC4ml02FDh4LSxqPz+uZM0UqcFmJ7tyXeF
+   Ag3BxLy0wdff5XQlb4XqjtkJEbvtviW2VqQyM7mJNK+Xy2aYK9Y+GZ1g5
+   NE9b290TTN7Hg5sB+jCe0QHN75j8y7DwCY27LEBLEpJAaw16ZPEITciof
+   bggPxQQLJunNvLeAYGVpOLMLYX2MFG4+Sgn4euiaQpyHJpzN9Dr2BGg9G
+   os9aFruV82iMxMGJmJjNtMC00ErhbJJsgT7OiQJIbfxH6G6ZLXEPrLd4U
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="377117647"
 X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="368455909"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 13:48:19 -0700
+   d="scan'208";a="377117647"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 14:08:22 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="720125738"
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="746590016"
 X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="720125738"
+   d="scan'208";a="746590016"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 13:48:17 -0700
+  by fmsmga007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 14:08:19 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@intel.com>)
-        id 1qfnpO-008Q8E-01;
-        Mon, 11 Sep 2023 23:48:14 +0300
-Date:   Mon, 11 Sep 2023 23:48:13 +0300
+        id 1qfo8n-008QN4-0g;
+        Tue, 12 Sep 2023 00:08:17 +0300
+Date:   Tue, 12 Sep 2023 00:08:16 +0300
 From:   Andy Shevchenko <andriy.shevchenko@intel.com>
 To:     Lizhi Hou <lizhi.hou@amd.com>
 Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, robh@kernel.org, max.zhen@amd.com,
-        sonal.santan@amd.com, stefano.stabellini@xilinx.com,
-        =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>
-Subject: Re: [PATCH V13 1/5] of: dynamic: Add interfaces for creating device
- node dynamically
-Message-ID: <ZP99DdtruXfI6L/L@smile.fi.intel.com>
+        sonal.santan@amd.com, stefano.stabellini@xilinx.com
+Subject: Re: [PATCH V13 0/5] Generate device tree node for pci devices
+Message-ID: <ZP+BwM0s4rf1ydcc@smile.fi.intel.com>
 References: <1692120000-46900-1-git-send-email-lizhi.hou@amd.com>
- <1692120000-46900-2-git-send-email-lizhi.hou@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1692120000-46900-2-git-send-email-lizhi.hou@amd.com>
+In-Reply-To: <1692120000-46900-1-git-send-email-lizhi.hou@amd.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Aug 15, 2023 at 10:19:56AM -0700, Lizhi Hou wrote:
-> of_changeset_create_node() creates device node dynamically and attaches
-> the newly created node to a changeset.
+On Tue, Aug 15, 2023 at 10:19:55AM -0700, Lizhi Hou wrote:
+> This patch series introduces OF overlay support for PCI devices which
+> primarily addresses two use cases. First, it provides a data driven method
+> to describe hardware peripherals that are present in a PCI endpoint and
+> hence can be accessed by the PCI host. Second, it allows reuse of a OF
+> compatible driver -- often used in SoC platforms -- in a PCI host based
+> system.
 > 
-> Expand of_changeset APIs to handle specific types of properties.
->     of_changeset_add_prop_string()
->     of_changeset_add_prop_string_array()
->     of_changeset_add_prop_u32_array()
+> There are 2 series devices rely on this patch:
+> 
+>   1) Xilinx Alveo Accelerator cards (FPGA based device)
+>   2) Microchip LAN9662 Ethernet Controller
+> 
+>      Please see: https://lore.kernel.org/lkml/20220427094502.456111-1-clement.leger@bootlin.com/
+> 
+> Normally, the PCI core discovers PCI devices and their BARs using the
+> PCI enumeration process. However, the process does not provide a way to
+> discover the hardware peripherals that are present in a PCI device, and
+> which can be accessed through the PCI BARs. Also, the enumeration process
+> does not provide a way to associate MSI-X vectors of a PCI device with the
+> hardware peripherals that are present in the device. PCI device drivers
+> often use header files to describe the hardware peripherals and their
+> resources as there is no standard data driven way to do so. This patch
+> series proposes to use flattened device tree blob to describe the
+> peripherals in a data driven way. Based on previous discussion, using
+> device tree overlay is the best way to unflatten the blob and populate
+> platform devices. To use device tree overlay, there are three obvious
+> problems that need to be resolved.
+> 
+> First, we need to create a base tree for non-DT system such as x86_64. A
+> patch series has been submitted for this:
+> https://lore.kernel.org/lkml/20220624034327.2542112-1-frowand.list@gmail.com/
+> https://lore.kernel.org/lkml/20220216050056.311496-1-lizhi.hou@xilinx.com/
+> 
+> Second, a device tree node corresponding to the PCI endpoint is required
+> for overlaying the flattened device tree blob for that PCI endpoint.
+> Because PCI is a self-discoverable bus, a device tree node is usually not
+> created for PCI devices. This series adds support to generate a device
+> tree node for a PCI device which advertises itself using PCI quirks
+> infrastructure.
+> 
+> Third, we need to generate device tree nodes for PCI bridges since a child
+> PCI endpoint may choose to have a device tree node created.
+> 
+> This patch series is made up of three patches.
+> 
+> The first patch is adding OF interface to create or destroy OF node
+> dynamically.
+> 
+> The second patch introduces a kernel option, CONFIG_PCI_DYNAMIC_OF_NODES.
+> When the option is turned on, the kernel will generate device tree nodes
+> for all PCI bridges unconditionally. The patch also shows how to use the
+> PCI quirks infrastructure, DECLARE_PCI_FIXUP_FINAL to generate a device
+> tree node for a device. Specifically, the patch generates a device tree
+> node for Xilinx Alveo U50 PCIe accelerator device. The generated device
+> tree nodes do not have any property.
+> 
+> The third patch adds basic properties ('reg', 'compatible' and
+> 'device_type') to the dynamically generated device tree nodes. More
+> properties can be added in the future.
 
-...
-
-> +/**
-> + * of_changeset_add_prop_string - Add a string property to a changeset
-> + *
-> + * @ocs:	changeset pointer
-> + * @np:		device node pointer
-> + * @prop_name:	name of the property to be added
-> + * @str:	pointer to null terminated string
-> + *
-> + * Create a string property and add it to a changeset.
-> + *
-> + * Return: 0 on success, a negative error value in case of an error.
-> + */
-> +int of_changeset_add_prop_string(struct of_changeset *ocs,
-> +				 struct device_node *np,
-> +				 const char *prop_name, const char *str)
-> +{
-> +	struct property prop;
-> +
-> +	prop.name = (char *)prop_name;
-
-This looks not nice. You dropped const qualifier, which is a bit worrying.
-Can  you fix underneath APIs/data types so we can avoid this?
-
-> +	prop.length = strlen(str) + 1;
-
-> +	prop.value = (void *)str;
-
-Do you need this casting?
-
-Okay, seems also related to the const qualifier. I would accept this in a form
-of const void *, but it will probably look a bit weird. What about to have a value
-to be a union?
-
-> +	return of_changeset_add_prop_helper(ocs, np, &prop);
-> +}
-
-...
-
-> +	prop.name = (char *)prop_name;
-
-Same comment as per above.
-
-...
-
-> +	prop.length = 0;
-> +	for (i = 0; i < sz; i++)
-> +		prop.length += strlen(str_array[i]) + 1;
-> +
-> +	prop.value = kmalloc(prop.length, GFP_KERNEL);
-> +	if (!prop.value)
-> +		return -ENOMEM;
-> +
-> +	vp = prop.value;
-> +	for (i = 0; i < sz; i++) {
-> +		vp += snprintf(vp, (char *)prop.value + prop.length - vp, "%s",
-> +			       str_array[i]) + 1;
-> +	}
-
-Is all this kinda of reinventing kasprintf()? Perhaps you can somehow utilize
-kasprintf_strarray()? It might require to get a common denominator that takes
-a formatting string as a parameter.
-
-> +	ret = of_changeset_add_prop_helper(ocs, np, &prop);
-> +	kfree(prop.value);
-
-...
-
-> +	for (i = 0; i < sz; i++)
-> +		val[i] = cpu_to_be32(array[i]);
-
-NIH cpu_to_be32_array()
-
-...
-
-> +	prop.name = (char *)prop_name;
-> +	prop.length = sizeof(u32) * sz;
-> +	prop.value = (void *)val;
-
-Do you need this casting?
+In my opinion this series needs much more work (esp. cleaning up one)
+to not look like a NIH here and there.
 
 -- 
 With Best Regards,
