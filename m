@@ -2,50 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB31B79AD62
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 01:39:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF71279AE8C
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 01:45:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350438AbjIKVi2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Sep 2023 17:38:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40394 "EHLO
+        id S243845AbjIKVj1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Sep 2023 17:39:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237204AbjIKMPP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 08:15:15 -0400
+        with ESMTP id S237207AbjIKMPT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 08:15:19 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54763198;
-        Mon, 11 Sep 2023 05:15:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59D01198;
+        Mon, 11 Sep 2023 05:15:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694434511; x=1725970511;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=3dD4ERLPrydK12d07yl5BuAZY/vrO1N+CXctHyNn6JM=;
-  b=Y5+QstJn4r9XqCWcFpDjPSHsguBzlg8ggZoju/QmUoRoWAfLAmKQfvXb
-   zYy7tF6hl97uH61PJ8lYbROhxS4aJIB9OWqVrz2TrOI5H5pmcGIdAnEXO
-   1Cx8IDDCooLvGnK91wkrQl1Wzazj71/C8wlLx8aEjv138VUJSz2kJCIYQ
-   qD0z4CnV7Jg1WrCYRjBH/l/vEnlpX0vsRBGPAozSWnSHvikBx8UVhAOz4
-   oc2mStr2gx6hKxaKngZ4fTJ3w3boAO3KvFa6ZSSoNKF3Ow7gSOBO9AIPL
-   ssef+szktWpk50Kv1sR348GDuBg9tovUnMHnGC5gcz+Vmh1WZp59+Z+YU
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="381863419"
+  t=1694434515; x=1725970515;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=i3M/qRLC52zinS1Ub+dGO9M7VTVBWgGGC/7YYN8zcDU=;
+  b=MzeGmzY0PNN1POP30aXAL45CTzd6gpo7SdlbuA5hkZwwDToiWxBEii6x
+   0dSqKsGuyOgTI0IafKVckRfrF6e9j7XiFat0cYnT2rrin8PHKLHQ8LtPz
+   WxNNFYOVYz0CdvoP1a/G5fRrfWEB4r3xoApMq+YPfc8HujpMF1lZGcmaq
+   kr7XQqGktZOaT/D3kZskYdtrmHkK2lN7v3wJLgQTEf8au6/NKHqzKSxTP
+   CZ3XNegKY+hjahf3vxcwDMcyQTCxjzmf9uowE5HmuWhck3GhuW4IA5znh
+   3yyt5mpOFzaja+nPgWGzigz+lNjT4mczilCGn3zlZFveSPI//FqQvHqAM
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="381863433"
 X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="381863419"
+   d="scan'208";a="381863433"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 05:15:10 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 05:15:15 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="746383240"
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="746383254"
 X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="746383240"
+   d="scan'208";a="746383254"
 Received: from mzarkov-mobl3.ger.corp.intel.com (HELO ijarvine-mobl2.ger.corp.intel.com) ([10.252.36.200])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 05:15:09 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 05:15:12 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 0/8] PCI/treewide: PCIe Link Width field access cleanup
-Date:   Mon, 11 Sep 2023 15:14:53 +0300
-Message-Id: <20230911121501.21910-1-ilpo.jarvinen@linux.intel.com>
+To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 1/8] IB/hfi1: Use FIELD_GET() to extract Link Width
+Date:   Mon, 11 Sep 2023 15:14:54 +0300
+Message-Id: <20230911121501.21910-2-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230911121501.21910-1-ilpo.jarvinen@linux.intel.com>
+References: <20230911121501.21910-1-ilpo.jarvinen@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -58,30 +63,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Instead of custom code to extract the PCIe Negotiated and Maximum Link
-Width fields, make the code more obvious using FIELD_GET/PREP().
+Use FIELD_GET() to extract PCIe Negotiated Link Width field instead of
+custom masking and shifting.
 
-Ilpo Järvinen (8):
-  IB/hfi1: Use FIELD_GET() to extract Link Width
-  media: cobalt: Use FIELD_GET() to extract Link Width
-  igb: Use FIELD_GET() to extract Link Width
-  PCI: tegra194: Use FIELD_GET()/FIELD_PREP() with Link Width fields
-  PCI: mvebu: Use FIELD_PREP() with Link Width
-  PCI: Use FIELD_GET() to extract Link Width
-  scsi: esas2r: Use FIELD_GET() to extract Link Width
-  scsi: qla2xxx: Use FIELD_GET() to extract Link Width
+While at it, also fix function's comment.
 
- drivers/infiniband/hw/hfi1/pcie.c          |  5 +++--
- drivers/media/pci/cobalt/cobalt-driver.c   | 11 ++++++-----
- drivers/net/ethernet/intel/igb/e1000_mac.c |  6 +++---
- drivers/pci/controller/dwc/pcie-tegra194.c |  9 ++++-----
- drivers/pci/controller/pci-mvebu.c         |  2 +-
- drivers/pci/pci-sysfs.c                    |  5 ++---
- drivers/pci/pci.c                          |  6 +++---
- drivers/scsi/esas2r/esas2r_ioctl.c         |  8 ++++----
- drivers/scsi/qla2xxx/qla_os.c              |  3 ++-
- 9 files changed, 28 insertions(+), 27 deletions(-)
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/infiniband/hw/hfi1/pcie.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/infiniband/hw/hfi1/pcie.c b/drivers/infiniband/hw/hfi1/pcie.c
+index 08732e1ac966..d497e4c623c1 100644
+--- a/drivers/infiniband/hw/hfi1/pcie.c
++++ b/drivers/infiniband/hw/hfi1/pcie.c
+@@ -3,6 +3,7 @@
+  * Copyright(c) 2015 - 2019 Intel Corporation.
+  */
+ 
++#include <linux/bitfield.h>
+ #include <linux/pci.h>
+ #include <linux/io.h>
+ #include <linux/delay.h>
+@@ -210,10 +211,10 @@ static u32 extract_speed(u16 linkstat)
+ 	return speed;
+ }
+ 
+-/* return the PCIe link speed from the given link status */
++/* return the PCIe Link Width from the given link status */
+ static u32 extract_width(u16 linkstat)
+ {
+-	return (linkstat & PCI_EXP_LNKSTA_NLW) >> PCI_EXP_LNKSTA_NLW_SHIFT;
++	return FIELD_GET(PCI_EXP_LNKSTA_NLW, linkstat);
+ }
+ 
+ /* read the link status and set dd->{lbus_width,lbus_speed,lbus_info} */
 -- 
 2.30.2
 
