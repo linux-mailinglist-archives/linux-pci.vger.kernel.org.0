@@ -2,137 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B201779D85E
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 20:08:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50FDF79D95D
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 21:12:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236917AbjILSIm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Sep 2023 14:08:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56962 "EHLO
+        id S231381AbjILTMZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Sep 2023 15:12:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231754AbjILSIl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Sep 2023 14:08:41 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D8A1115;
-        Tue, 12 Sep 2023 11:08:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694542118; x=1726078118;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=mprH+mImacg4v8l6F2x/ClD1vyYpU9i+YE6QNB46q8g=;
-  b=T3WEemOGFfPeGCdn4XFsjDiO5mF1oxToA0qfD/F579+KeyEeLpH1s7Ky
-   IN+zVwyeSGI4KaRv0Fzimo+SyBL6X7cEEQyiMcB6Dgvi9P1LxeXMZH2li
-   RXw2kB92mQoQuqRQ6bsBmARk3VW1qKsqpcJkWCfq9brwCr0HSI66TiFsI
-   iRo2rvGQdLHKHT9iNTh9aEHe9lqe9iq58Xr2FUeIXpzswl+Gn0yGlu7rt
-   5yDe5xeygR4O+SBLEXv738aM10jFTesOCJvShwJwyELFi1ypJ/FrffaRg
-   QWtmm2vR47EXC5WeiPB41cnwtDovqQpo3zsWroHdkYotTEr11ePuSNcbS
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="368726732"
-X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
-   d="scan'208";a="368726732"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 11:08:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="813942731"
-X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
-   d="scan'208";a="813942731"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.209.66.7])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 11:08:34 -0700
-Message-ID: <502357b828dd2dd4aa6b5e29969a78dfd206b262.camel@linux.intel.com>
-Subject: Re: [PATCH 00/10] Add PCIe Bandwidth Controller
-From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 12 Sep 2023 11:08:34 -0700
-In-Reply-To: <59c7b5dc2adddf574d0a920e5f7195c418292042.camel@linux.intel.com>
-References: <20230817121708.53213-1-ilpo.jarvinen@linux.intel.com>
-         <fa5a20d0-77db-58bd-3956-ac664dffa587@quicinc.com>
-         <21b95d9-86a5-dcb0-9dda-3f1cdd426b9e@linux.intel.com>
-         <647e2b5e-6064-dbfa-bb56-f74358efd1fe@quicinc.com>
-         <25bf206e-864b-644-9b4-a0f461b4285@linux.intel.com>
-         <f35db90cd67adf4b0f48cd6f2a6ad8fbd0c1a679.camel@linux.intel.com>
-         <8c5b7c51-12c2-602c-b70-f819ae8610ee@linux.intel.com>
-         <59c7b5dc2adddf574d0a920e5f7195c418292042.camel@linux.intel.com>
+        with ESMTP id S229946AbjILTMX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Sep 2023 15:12:23 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 645EFE50;
+        Tue, 12 Sep 2023 12:12:19 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E37C6C433C9;
+        Tue, 12 Sep 2023 19:12:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694545938;
+        bh=ZUqNcVFP2YsCnPCuq9+9HC+Xhdgu+7zaDoHoj+ZEStY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CGPXL/wuRrbNORoLjjtLuyfvL1e0D3sJM7eshi+1nEeMV0u95vFCzs8sST2sXqasc
+         oicR5jLTrZpyh1r5icM9C+jEuFjtqNI0mFbRyKFtXERbj2jERBmj6lFZrLDmC2gU0y
+         bCoCkXNxQ0us9hpj+ehMa4ioZZzKrR8OlqhQS4TO2fGGTt99RrQcgyxzqLYu03ckLg
+         Fidx239sVgBiSJ4NelDrlRsdTymzS+0ppeyq2eoNEqp1uaxNZ4+ezpPTzZKzbpUcv+
+         hiRJ8/d56mmKhD0fBgrnZns5wmHtBS59P/cxFreT8nvGJk+TsCe9xOBsuixdy109Or
+         8+ujWy7g5RYvQ==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-501cef42bc9so9860160e87.0;
+        Tue, 12 Sep 2023 12:12:18 -0700 (PDT)
+X-Gm-Message-State: AOJu0YyH9VRQ5i0KPXqR1favNAazwAIRCKSm4L9I3BXmooXVvwJMSTCG
+        SZB3aVeYZkiepa0ZUyM6y6Ft718Yujz7F+4/zQ==
+X-Google-Smtp-Source: AGHT+IGYLguwjOafV6zaD9hG6eJnYMUjeQqWWTEiBeuLOANCZ7akM40kZq41oikseMMfO4WgWofzezXn4ytW1TvEZfI=
+X-Received: by 2002:ac2:599c:0:b0:4ff:8f45:ab86 with SMTP id
+ w28-20020ac2599c000000b004ff8f45ab86mr333033lfn.25.1694545937160; Tue, 12 Sep
+ 2023 12:12:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <1692120000-46900-1-git-send-email-lizhi.hou@amd.com> <ZP96feVs2ev7098Y@smile.fi.intel.com>
+In-Reply-To: <ZP96feVs2ev7098Y@smile.fi.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 12 Sep 2023 14:12:04 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKfQJFrd8MOdjW55cYdEb8yyPyR+P3ran9+X3dCwUgdyA@mail.gmail.com>
+Message-ID: <CAL_JsqKfQJFrd8MOdjW55cYdEb8yyPyR+P3ran9+X3dCwUgdyA@mail.gmail.com>
+Subject: Re: [PATCH V13 0/5] Generate device tree node for pci devices
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Lizhi Hou <lizhi.hou@amd.com>, Andrew Lunn <andrew@lunn.ch>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, max.zhen@amd.com,
+        sonal.santan@amd.com, stefano.stabellini@xilinx.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
-MIME-Version: 1.0
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2023-09-12 at 10:45 -0700, srinivas pandruvada wrote:
-> On Tue, 2023-09-12 at 15:52 +0300, Ilpo J=C3=A4rvinen wrote:
-> > On Mon, 11 Sep 2023, srinivas pandruvada wrote:
-> > > On Mon, 2023-09-11 at 18:47 +0300, Ilpo J=C3=A4rvinen wrote:
-> > >=20
-> > >=20
->=20
-> [...]
->=20
-> > > But I don't suggest using such method. This causes confusion and
-> > > difficult to change. For example if we increase range of P-state
-> > > control, then there is no way to know what is the start point of
-> > > T-
-> > > states.
-> >=20
-> > Yes. I understand it would be confusing.
-> >=20
-> > > It is best to create to separate cooling devices for BW and link
-> > > width.
-> >=20
-> > Okay. If that's the case, then I see no reason to add the Link
-> > Width=20
-> > cooling device now as it could do nothing besides reporting the
-> > current=20
-> > link width.
-> >=20
-> > The only question that then remains is how to take this into
-> > account
-> > in=20
-> > the naming of the cooling devices, currently PCIe_Port_<pci_name()>
-> > is=20
-> > used but perhaps it would be better to change that to=20
-> > PCIe_Port_Link_Speed_... to allow PCI_Port_Link_Width_... to be
-> > added
-> > later beside it?
-> It is better in that way to add BW=C2=A0
-sorry, link width controller
+On Mon, Sep 11, 2023 at 3:37=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Tue, Aug 15, 2023 at 10:19:55AM -0700, Lizhi Hou wrote:
+> > This patch series introduces OF overlay support for PCI devices which
+> > primarily addresses two use cases. First, it provides a data driven met=
+hod
+> > to describe hardware peripherals that are present in a PCI endpoint and
+> > hence can be accessed by the PCI host. Second, it allows reuse of a OF
+> > compatible driver -- often used in SoC platforms -- in a PCI host based
+> > system.
+> >
+> > There are 2 series devices rely on this patch:
+> >
+> >   1) Xilinx Alveo Accelerator cards (FPGA based device)
+>
+> >   2) Microchip LAN9662 Ethernet Controller
+>
+> I believe you should Cc this to Andrew Lunn for the comments.
+> IIRC something similar was tried to being solved for DSA (?)
+> devices where SFP hotpluggable hardware can be attached or
+> detached at run-time (sorry if I messes / mixing up things,
+> I wrote this from my memory, might be completely wrong).
 
-> controller later.
->=20
-> Also adding separate cooling device will let thermal configuration,
-> choose different method at different thermal thresholds or all
-> together.
->=20
-> Thanks,
-> Srinivas
->=20
-> >=20
-> > > Also there is a requirement that anything you add to thermal
-> > > sysfs,
-> > > it
-> > > should have some purpose for thermal control. I hope Link width
-> > > control
-> > > is targeted to similar use case BW control.
-> >=20
-> > Ability to control Link Width seems to be part of PCIe 6.0 L0p.
-> > AFAICT,=20
-> > the reasons are to lower/control power consumption so it seems to
-> > be=20
-> > within scope.
-> >=20
-> >=20
->=20
+Could be similar in the sense that this problem exists on any
+discoverable bus with non-discoverable devices downstream.
 
+The LAN9662 case is that it's an SoC that can run Linux. Standard
+stuff there. You have a DT and a bunch of drivers and SoC support in
+the kernel. Now take that same SoC with the CPU cores disabled and
+expose the whole (or part of) SoC via PCIe to Linux running on another
+host. How to reuse all the drivers? Yes, you could define swnode
+stuff, but then the PCI driver becomes a board file (or multiple). In
+fact that's what they started doing at one point. It doesn't scale.
+
+> >      Please see: https://lore.kernel.org/lkml/20220427094502.456111-1-c=
+lement.leger@bootlin.com/
+> >
+> > Normally, the PCI core discovers PCI devices and their BARs using the
+> > PCI enumeration process. However, the process does not provide a way to
+> > discover the hardware peripherals that are present in a PCI device, and
+> > which can be accessed through the PCI BARs. Also, the enumeration proce=
+ss
+> > does not provide a way to associate MSI-X vectors of a PCI device with =
+the
+> > hardware peripherals that are present in the device. PCI device drivers
+> > often use header files to describe the hardware peripherals and their
+> > resources as there is no standard data driven way to do so. This patch
+> > series proposes to use flattened device tree blob to describe the
+> > peripherals in a data driven way. Based on previous discussion, using
+> > device tree overlay is the best way to unflatten the blob and populate
+> > platform devices. To use device tree overlay, there are three obvious
+> > problems that need to be resolved.
+> >
+> > First, we need to create a base tree for non-DT system such as x86_64. =
+A
+> > patch series has been submitted for this:
+> > https://lore.kernel.org/lkml/20220624034327.2542112-1-frowand.list@gmai=
+l.com/
+> > https://lore.kernel.org/lkml/20220216050056.311496-1-lizhi.hou@xilinx.c=
+om/
+>
+> Can you point out to the ACPI excerpt(s) of the description of anything r=
+elated
+> to the device(s) in question?
+
+I don't understand what you are asking for.
+
+Rob
