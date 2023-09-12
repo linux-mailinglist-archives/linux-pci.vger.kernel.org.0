@@ -2,276 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A2EC79C314
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 04:37:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70E4179CB3C
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 11:12:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239461AbjILCho convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 11 Sep 2023 22:37:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51292 "EHLO
+        id S232755AbjILJML convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 12 Sep 2023 05:12:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239809AbjILCh3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Sep 2023 22:37:29 -0400
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40E83161116;
-        Mon, 11 Sep 2023 19:02:50 -0700 (PDT)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-        by fd01.gateway.ufhost.com (Postfix) with ESMTP id 1276724E2C7;
-        Tue, 12 Sep 2023 10:02:41 +0800 (CST)
-Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 12 Sep
- 2023 10:02:41 +0800
-Received: from [192.168.125.136] (113.72.145.181) by EXMBX172.cuchost.com
- (172.16.6.92) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 12 Sep
- 2023 10:02:39 +0800
-Message-ID: <071513f5-941c-5152-f9c9-07406b6a0641@starfivetech.com>
-Date:   Tue, 12 Sep 2023 10:02:39 +0800
+        with ESMTP id S229504AbjILJMK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Sep 2023 05:12:10 -0400
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BED2170D;
+        Tue, 12 Sep 2023 02:12:07 -0700 (PDT)
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5733d11894dso1155639eaf.0;
+        Tue, 12 Sep 2023 02:12:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694509926; x=1695114726;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LnBKGyRSUKcxckQc3XRY6QVkUrcVLqMdIRsgoISjA1s=;
+        b=a6ic7U1j9GLMmGRYt62JbaGNpnUNS/cM4y5wgI6HAO806sZtwcwCLi/bDsa3aUzOrj
+         D3M6uYKNOXkUhcO9/LWgTIlWP5xMBgW8EgRDq6nBwkYKX2dgyAPtgUTm4ImvJMxxRgCZ
+         4Qofg/3HK5GwsRQSpWc8MFpv7VJLYovmAfPQFfoY9W8ENW61bRLMhrkWlm3nMJyQo2mH
+         Ha+vr1PHCkJ3EUsEtCx4TJ0U9jz4jhHMcUI9xRpIGFFGeAWEsHjjtR/ZeD7XEWInZs4z
+         s6VysjLLr33xT64VnxM+mng6Go6oxHGqTnzd+/p5x0ibn35HEh0cL8enWFFp7/4Xop3H
+         vRRA==
+X-Gm-Message-State: AOJu0YyzoL4MEGP84Cox9OxH0yKXLc1Hk+w8hi3D0QDO3MML2lCkXm/p
+        oBJKjOdZ9CsR3wMGSuYVT1fCtzrTHNmMKXLaEBE3bkAtj1M=
+X-Google-Smtp-Source: AGHT+IGGZJyReIDgrMZtiubQRbMwIKbiT4QSpHxhHeKHsqnI25JjR/27HBwLNz1LdOK9tuR5yIy/TSHHfrPL+PDzg7Q=
+X-Received: by 2002:a05:6820:81f:b0:573:3a3b:594b with SMTP id
+ bg31-20020a056820081f00b005733a3b594bmr13187897oob.1.1694509926275; Tue, 12
+ Sep 2023 02:12:06 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v5 11/11] riscv: dts: starfive: add PCIe dts configuration
- for JH7110
-To:     Rob Herring <robh+dt@kernel.org>,
-        Minda Chen <minda.chen@starfivetech.com>
-CC:     Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+References: <20230906184354.45846-1-mario.limonciello@amd.com>
+ <20230906184354.45846-3-mario.limonciello@amd.com> <CAJZ5v0jgGOPcFMfRObAM1St1KLjZS0tEki4f32Rbr3ZXwFyFzA@mail.gmail.com>
+ <0cd6648d-21f1-445d-95f6-20f580bbcfd1@amd.com>
+In-Reply-To: <0cd6648d-21f1-445d-95f6-20f580bbcfd1@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 12 Sep 2023 11:11:55 +0200
+Message-ID: <CAJZ5v0h0LN1W5Q6Wp-jSJA4QE4ZGurf8Ye26ST5j6W2P+xHCFg@mail.gmail.com>
+Subject: Re: [PATCH v17 2/4] PCI: Add support for drivers to register optin or
+ veto of D3
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>
-References: <20230907091058.125630-1-minda.chen@starfivetech.com>
- <20230907091058.125630-12-minda.chen@starfivetech.com>
- <CAL_Jsq+TeDK0Lh7Yf9CwLPDPfvuv9C8A6dKDEBVxMtncyuzQQg@mail.gmail.com>
-Content-Language: en-US
-From:   Kevin Xie <kevin.xie@starfivetech.com>
-In-Reply-To: <CAL_Jsq+TeDK0Lh7Yf9CwLPDPfvuv9C8A6dKDEBVxMtncyuzQQg@mail.gmail.com>
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        linux-pm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Originating-IP: [113.72.145.181]
-X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX172.cuchost.com
- (172.16.6.92)
-X-YovoleRuleAgent: yovoleflag
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, Sep 11, 2023 at 10:23 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> On 9/11/2023 13:34, Rafael J. Wysocki wrote:
+> > On Wed, Sep 6, 2023 at 9:16 PM Mario Limonciello
+> > <mario.limonciello@amd.com> wrote:
+> >>
 
+[cut]
 
-On 2023/9/8 1:19, Rob Herring wrote:
-> On Thu, Sep 7, 2023 at 4:11 AM Minda Chen <minda.chen@starfivetech.com> wrote:
->>
->> Add PCIe dts configuraion for JH7110 SoC platform.
->>
->> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
->> Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
->> ---
->>  .../jh7110-starfive-visionfive-2.dtsi         | 64 ++++++++++++++
->>  arch/riscv/boot/dts/starfive/jh7110.dtsi      | 86 +++++++++++++++++++
->>  2 files changed, 150 insertions(+)
->>
->> diff --git a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
->> index de0f40a8be93..4dd61e2fec7d 100644
->> --- a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
->> +++ b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
->> @@ -15,6 +15,8 @@
->>                 i2c2 = &i2c2;
->>                 i2c5 = &i2c5;
->>                 i2c6 = &i2c6;
->> +               pcie0 = &pcie0;
->> +               pcie1 = &pcie1;
-> 
-> That's not a defined alias. We already have "linux,pci-domain" if you
-> need to number PCI host bridges.
-> 
+> >
+> > IMV, the underlying issue all boils down to the platform firmware
+> > inadequately describing the behavior of the system to the OS.
+> > Specifically, had it provided a _S0W returning 0 for the Root Port(s)
+> > in question, wakeup signaling would have worked (or else there would
+> > have been a defect in the kernel code to be addressed).
+>
+> I think you're right.  I'll try and get BIOS guys to provide a test BIOS
+> to prove this direction is correct.
+>
+> It wouldn't help all the machines already in the field but if it can be
+> done without harm to Windows maybe future SoCs could use it.
+>
+> > Instead, it
+> > decided to kind-of guide Windows in the "right" direction through PEP
+> > constraints which doesn't have the same effect on Linux and honestly
+> > I'm not even sure if it is a good idea to adjust Linux to that.
+> >
+>
+> What is the worry with bringing Linux in this direction (using constraints)?
 
-Okay, we will number PCI host bridges by "linux,pci-domain".
+First off, ostensibly the purpose of the constraints is to indicate to
+Windows when it can attempt to put the system into the deepest power
+state.  Specifically, AFAICS, Windows is not expected to do so when
+the current power state of a given device is shallower than the
+relevant constraint.  Consequently, a constraint of D0 means that
+effectively Windows is expected to ignore the given device as far as
+Modern Standby goes.
 
->>                 serial0 = &uart0;
->>         };
->>
->> @@ -208,6 +210,54 @@
->>                 };
->>         };
->>
->> +       pcie0_pins: pcie0-0 {
->> +               wake-pins {
->> +                       pinmux = <GPIOMUX(32, GPOUT_LOW,
->> +                                             GPOEN_DISABLE,
->> +                                             GPI_NONE)>;
->> +                       bias-pull-up;
->> +                       drive-strength = <2>;
->> +                       input-enable;
->> +                       input-schmitt-disable;
->> +                       slew-rate = <0>;
->> +               };
->> +
->> +               clkreq-pins {
->> +                       pinmux = <GPIOMUX(27, GPOUT_LOW,
->> +                                             GPOEN_DISABLE,
->> +                                             GPI_NONE)>;
->> +                       bias-pull-down;
->> +                       drive-strength = <2>;
->> +                       input-enable;
->> +                       input-schmitt-disable;
->> +                       slew-rate = <0>;
->> +               };
->> +       };
->> +
->> +       pcie1_pins: pcie1-0 {
->> +               wake-pins {
->> +                       pinmux = <GPIOMUX(21, GPOUT_LOW,
->> +                                             GPOEN_DISABLE,
->> +                                             GPI_NONE)>;
->> +                       bias-pull-up;
->> +                       drive-strength = <2>;
->> +                       input-enable;
->> +                       input-schmitt-disable;
->> +                       slew-rate = <0>;
->> +               };
->> +
->> +               clkreq-pins {
->> +                       pinmux = <GPIOMUX(29, GPOUT_LOW,
->> +                                             GPOEN_DISABLE,
->> +                                             GPI_NONE)>;
->> +                       bias-pull-down;
->> +                       drive-strength = <2>;
->> +                       input-enable;
->> +                       input-schmitt-disable;
->> +                       slew-rate = <0>;
->> +               };
->> +       };
->> +
->>         uart0_pins: uart0-0 {
->>                 tx-pins {
->>                         pinmux = <GPIOMUX(5, GPOUT_SYS_UART0_TX,
->> @@ -233,6 +283,20 @@
->>         };
->>  };
->>
->> +&pcie0 {
->> +       pinctrl-names = "default";
->> +       perst-gpios = <&sysgpio 26 GPIO_ACTIVE_LOW>;
->> +       pinctrl-0 = <&pcie0_pins>;
->> +       status = "okay";
->> +};
->> +
->> +&pcie1 {
->> +       pinctrl-names = "default";
->> +       perst-gpios = <&sysgpio 28 GPIO_ACTIVE_LOW>;
->> +       pinctrl-0 = <&pcie1_pins>;
->> +       status = "okay";
->> +};
->> +
->>  &uart0 {
->>         pinctrl-names = "default";
->>         pinctrl-0 = <&uart0_pins>;
->> diff --git a/arch/riscv/boot/dts/starfive/jh7110.dtsi b/arch/riscv/boot/dts/starfive/jh7110.dtsi
->> index 02354e642c44..7a5dc43cf63c 100644
->> --- a/arch/riscv/boot/dts/starfive/jh7110.dtsi
->> +++ b/arch/riscv/boot/dts/starfive/jh7110.dtsi
->> @@ -629,5 +629,91 @@
->>                         #reset-cells = <1>;
->>                         power-domains = <&pwrc JH7110_PD_VOUT>;
->>                 };
->> +
->> +               pcie0: pcie@940000000 {
->> +                       compatible = "starfive,jh7110-pcie";
->> +                       reg = <0x9 0x40000000 0x0 0x1000000>,
->> +                             <0x0 0x2b000000 0x0 0x100000>;
->> +                       reg-names = "cfg", "apb";
->> +                       #address-cells = <3>;
->> +                       #size-cells = <2>;
->> +                       #interrupt-cells = <1>;
->> +                       ranges = <0x82000000  0x0 0x30000000  0x0 0x30000000 0x0 0x08000000>,
->> +                                <0xc3000000  0x9 0x00000000  0x9 0x00000000 0x0 0x40000000>;
->> +                       interrupts = <56>;
->> +                       interrupt-parent = <&plic>;
->> +                       interrupt-map-mask = <0x0 0x0 0x0 0x7>;
->> +                       interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc0 0x1>,
->> +                                       <0x0 0x0 0x0 0x2 &pcie_intc0 0x2>,
->> +                                       <0x0 0x0 0x0 0x3 &pcie_intc0 0x3>,
->> +                                       <0x0 0x0 0x0 0x4 &pcie_intc0 0x4>;
->> +                       msi-controller;
->> +                       device_type = "pci";
->> +                       starfive,stg-syscon = <&stg_syscon>;
->> +                       bus-range = <0x0 0xff>;
->> +                       clocks = <&syscrg JH7110_SYSCLK_NOC_BUS_STG_AXI>,
->> +                                <&stgcrg JH7110_STGCLK_PCIE0_TL>,
->> +                                <&stgcrg JH7110_STGCLK_PCIE0_AXI_MST0>,
->> +                                <&stgcrg JH7110_STGCLK_PCIE0_APB>;
->> +                       clock-names = "noc", "tl", "axi_mst0", "apb";
->> +                       resets = <&stgcrg JH7110_STGRST_PCIE0_AXI_MST0>,
->> +                                <&stgcrg JH7110_STGRST_PCIE0_AXI_SLV0>,
->> +                                <&stgcrg JH7110_STGRST_PCIE0_AXI_SLV>,
->> +                                <&stgcrg JH7110_STGRST_PCIE0_BRG>,
->> +                                <&stgcrg JH7110_STGRST_PCIE0_CORE>,
->> +                                <&stgcrg JH7110_STGRST_PCIE0_APB>;
->> +                       reset-names = "mst0", "slv0", "slv", "brg",
->> +                                     "core", "apb";
->> +                       status = "disabled";
->> +
->> +                       pcie_intc0: interrupt-controller {
->> +                               #address-cells = <0>;
->> +                               #interrupt-cells = <1>;
->> +                               interrupt-controller;
->> +                       };
->> +               };
->> +
->> +               pcie1: pcie@9c0000000 {
->> +                       compatible = "starfive,jh7110-pcie";
->> +                       reg = <0x9 0xc0000000 0x0 0x1000000>,
->> +                             <0x0 0x2c000000 0x0 0x100000>;
->> +                       reg-names = "cfg", "apb";
->> +                       #address-cells = <3>;
->> +                       #size-cells = <2>;
->> +                       #interrupt-cells = <1>;
->> +                       ranges = <0x82000000  0x0 0x38000000  0x0 0x38000000 0x0 0x08000000>,
->> +                                <0xc3000000  0x9 0x80000000  0x9 0x80000000 0x0 0x40000000>;
->> +                       interrupts = <57>;
->> +                       interrupt-parent = <&plic>;
->> +                       interrupt-map-mask = <0x0 0x0 0x0 0x7>;
->> +                       interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc1 0x1>,
->> +                                       <0x0 0x0 0x0 0x2 &pcie_intc1 0x2>,
->> +                                       <0x0 0x0 0x0 0x3 &pcie_intc1 0x3>,
->> +                                       <0x0 0x0 0x0 0x4 &pcie_intc1 0x4>;
->> +                       msi-controller;
->> +                       device_type = "pci";
->> +                       starfive,stg-syscon = <&stg_syscon>;
->> +                       bus-range = <0x0 0xff>;
->> +                       clocks = <&syscrg JH7110_SYSCLK_NOC_BUS_STG_AXI>,
->> +                                <&stgcrg JH7110_STGCLK_PCIE1_TL>,
->> +                                <&stgcrg JH7110_STGCLK_PCIE1_AXI_MST0>,
->> +                                <&stgcrg JH7110_STGCLK_PCIE1_APB>;
->> +                       clock-names = "noc", "tl", "axi_mst0", "apb";
->> +                       resets = <&stgcrg JH7110_STGRST_PCIE1_AXI_MST0>,
->> +                                <&stgcrg JH7110_STGRST_PCIE1_AXI_SLV0>,
->> +                                <&stgcrg JH7110_STGRST_PCIE1_AXI_SLV>,
->> +                                <&stgcrg JH7110_STGRST_PCIE1_BRG>,
->> +                                <&stgcrg JH7110_STGRST_PCIE1_CORE>,
->> +                                <&stgcrg JH7110_STGRST_PCIE1_APB>;
->> +                       reset-names = "mst0", "slv0", "slv", "brg",
->> +                                     "core", "apb";
->> +                       status = "disabled";
->> +
->> +                       pcie_intc1: interrupt-controller {
->> +                               #address-cells = <0>;
->> +                               #interrupt-cells = <1>;
->> +                               interrupt-controller;
->> +                       };
->> +               };
->>         };
->>  };
->> --
->> 2.17.1
->>
+In any case, this has no bearing on the behavior of suspend-to-idle in Linux.
+
+Now, there may be other undocumented side-effects of setting a
+constraint of D0 in Windows, but it is generally risky to rely on such
+things.
+
+Second, it is not entirely clear to me whether or not the future
+versions of Windows will continue to use the constraints in the same
+way.
+
+> My main hope is that by generalizing this fundamental difference in how
+> Windows and Linux handle Modern Standby / suspend-to-idle we can avoid
+> other future bugs.
+
+There is a fundamental difference between Modern Standby and
+suspend-to-idle already, as the former is opportunistic and the latter
+is on-demand.  They can both follow the exact same set of rules.
