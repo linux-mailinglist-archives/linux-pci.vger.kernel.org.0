@@ -2,168 +2,215 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 360A279DC0E
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Sep 2023 00:45:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56B4779DC4A
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Sep 2023 00:54:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235041AbjILWpo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Sep 2023 18:45:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43168 "EHLO
+        id S237815AbjILWyw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Sep 2023 18:54:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231491AbjILWpn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Sep 2023 18:45:43 -0400
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2083.outbound.protection.outlook.com [40.107.96.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E06310EB;
-        Tue, 12 Sep 2023 15:45:39 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RgSqVRQHQOCp+MHU7KaCuVLcsplUjgFHGL6MmkJP3IDoXN8ctAsADPTjz9DAUxSCnyBgbzmF6nty5A1EYmsyzLkTs+yPy5vYGi1NU8jG0HcTY5dTh6ytf/ddASsd54vEbm3xHpty5tmgerwutqnIX97UrkpwK+di2aNxaKmtZn6Wum0LhQ3WohoY8EURqrqrJ605GNW6nL2y8lpJ6/PmHteHrvWBKLYqnFIXF9CRN4YpXi1wn+Mvo6alcKRK9gB9ns0cJu1TDpU60hkMjg15MTsegNqfaaCi3SiitN8stBveKXm70hgNpThtAx8kFb98IV3IlrxNNFcTSc9uzmZkQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B+UTD/1ZJo5ZJG5uTuQwx6YXJgtLfv3gWf+wozm9Cko=;
- b=L8nGJMLpgRJifIYg9puw6Hd8SajyzIWOA8J4rkJxPgK3yy90RRp5/yZjEAXgY0nTVNRmWFZIA3SRhGK5VRvPrwp6U/zN1cjhaoIXvXGsakaVKcoFVAONUPXcNj3Xy0X4cLhIcd9pDhiYCtY8czNiw5AcdJQZvv8HFQ32yfsYfcTpRvG2lqfc2J/BZwb4O6ROyd5Xsm3Y6bpJeEH45GMYffo/BdUilHCNEtrvod70BKB9ONSMumimZdVt3uKyBenEmq9vNmb6ndq52gxIiQ3ajsiMRs0mC2H7KsaH/rdvCoGvz/xhn6l+pcYnDsgjwJnKBiNcStVrrw2OYPv/s+aYJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B+UTD/1ZJo5ZJG5uTuQwx6YXJgtLfv3gWf+wozm9Cko=;
- b=WyY2pWN/XXYMiGAgQsqexIfzyI0VbOSmjtKoOwEGG4sD8c35dICi1pl/7PiswGIcMDQ6dXAZ7VOsT53MOCcgvec39v11j/XzoZphkQWho1E57vq7m8nS3VxlUeOQxGAEJuXptXN8KuJIwviu3odL+2JcuXmY78D8o+n1i9hNUNs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
- by DM6PR12MB4386.namprd12.prod.outlook.com (2603:10b6:5:28f::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.37; Tue, 12 Sep
- 2023 22:45:36 +0000
-Received: from BYAPR12MB2869.namprd12.prod.outlook.com
- ([fe80::2709:2c34:f842:ce33]) by BYAPR12MB2869.namprd12.prod.outlook.com
- ([fe80::2709:2c34:f842:ce33%5]) with mapi id 15.20.6768.029; Tue, 12 Sep 2023
- 22:45:36 +0000
-Message-ID: <440ad7c8-35f7-5b15-5de6-f220cae2cde0@amd.com>
-Date:   Tue, 12 Sep 2023 15:45:34 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v4 1/3] PCI: pciehp: Add support for async hotplug with
- native AER and DPC/EDR
-Content-Language: en-US
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>
-References: <20230815212043.114913-1-Smita.KoralahalliChannabasappa@amd.com>
- <20230815212043.114913-2-Smita.KoralahalliChannabasappa@amd.com>
- <20230828073542.GA12658@wunner.de>
-From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-In-Reply-To: <20230828073542.GA12658@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ2PR07CA0016.namprd07.prod.outlook.com
- (2603:10b6:a03:505::16) To BYAPR12MB2869.namprd12.prod.outlook.com
- (2603:10b6:a03:132::30)
+        with ESMTP id S237811AbjILWyw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Sep 2023 18:54:52 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F7A410F2
+        for <linux-pci@vger.kernel.org>; Tue, 12 Sep 2023 15:54:48 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 136F7C433C8;
+        Tue, 12 Sep 2023 22:54:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694559288;
+        bh=jUwAlgHteacUKxUy5o57Jfr2B9N1RX/uV9gbjQk879w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=cXkTKkG4DSTfp0MSfA1WOQ4kbS81Q3o8lGJ8FydE958rDy4JTh5sghPMmrThdunVv
+         CHMWJ9UaV/4htPS0Hro46RsH/ENGnGNzwmNMIk1sGpBVl6+iyNUxuCCz9VbVDW0fmb
+         6VU2HWVnIxt/GG1bheKlGXeaTZtvp0Hr3A/VJLR3F/KV5O1/EbTf2fNffGylOVNF8v
+         m3QK3BRgIImD23JV7KNQiSzeTDV+ta+a8P4U9VN7c2qd9WAXvm/4V8tqaZx6eSuO/5
+         aL/dwZy5O5gaxMXa6LhVLH8X3kc+pXtiHD6flfUA4G+m8ayhQAwHKDGgbcbLld1Jm9
+         uupgmJtToq5Cg==
+Date:   Tue, 12 Sep 2023 17:54:46 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Patel, Nirmal" <nirmal.patel@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v4] PCI: vmd: Do not change the BIOS Hotplug setting on
+ VMD rootports
+Message-ID: <20230912225446.GA414359@bhelgaas>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|DM6PR12MB4386:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4bd5b1b2-c94e-47c7-3a9c-08dbb3e1fb3a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xt2MiAhpRfVc09Ukbd35rNcrRFnAVCgECSnD6wJFYWHqy5b6KvXsqPQqqtsGXk4S8JMeBUax8dz0ZYNjO7O6vWyyGmBkzchPmWRZs60rPcmUkapuoiEIKu6PDtZHySGH0lXYInY1CA/n8L4f5eQiS6OqmeLtm8ve8XO1nVX2M33quiMoKEYkRVK6YB8dxlZ/TP8REQE7T8lL/+dEJ9ltSk4jd/roTNBpGn39Abz6LbCoIcEb2Imu86CFdk14WveX5N0YQvrS8aKD/0lmjRtE9TNcRRas4RzmDfiYGYYwYpgdXmp397JZ1mTLVp/gaYwhG+jtW29LW58wRV2nhw3xrdtWjWmhm51Bg4MpbqUAiNBQX9nqOCmv3PVLvsAjquo9VnE5fnHOsn9NagIs+CfDMkv0v+rT1dBdUl+spvvEljez/yOhu91oHRDQzcQjLSwqSdoJP8+t0nV8u8Kn//nIuABVPGx7V96LYZhfKuagngXPnnCger16uFDrNAAY318vlsvh0dtOjEM+KV38UHq6sUl8w6SEk/Gr9W0KateTFRcegs+hshVBUFSHV3FKNiml7zoJJtBy9KRuLZognlEd20UkW7stSZU4uWXaRGnh+x/iC017rFXXXx7J2ZtmFNNSfhMbGWeLnMmaWIIzwFaFjQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(376002)(396003)(136003)(39860400002)(451199024)(1800799009)(186009)(31696002)(86362001)(2906002)(38100700002)(478600001)(966005)(53546011)(6486002)(6506007)(6512007)(66476007)(316002)(6916009)(66946007)(54906003)(83380400001)(66556008)(31686004)(26005)(2616005)(4326008)(8676002)(36756003)(5660300002)(8936002)(41300700001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NU5YcHBqcEUyeDN1ZlRNb280b3hlSThRWjFUUmRVNXIxdnRkakJnK2dmTXFm?=
- =?utf-8?B?RldhTFl3cGZhSVVxM3RkVlo0WE1QSXJjWGI4d1pZTUlmV1VzeGhaQjVaZ0I4?=
- =?utf-8?B?M01PcTdWRHlQZTg3LzFGVGoxZjV4SEFNTGJHZmhmVmVoL0xyY3REV1crR3NU?=
- =?utf-8?B?R1UwM2t4SzI4UFpBRFBQdGVRUVRGSGRIMHZxd3p5OHlSVXMyS3JLMTVFNVhX?=
- =?utf-8?B?REFXb1Y3TmRWUTN2NlJCNE5TOFg3aS9TQUo3Y2tOSnlhaEsxVHhzTS9QV2xv?=
- =?utf-8?B?QVphLy9WYytBUUpBYzA3VklzcFM4S21mN0VIeE1hdzVPUFRjbEFBYUk0MVk1?=
- =?utf-8?B?S3JUTTRSMElBWEdTK1RtRngwTE43enBCWUxTMWVtREd4ME5wR1NENnBEdmFt?=
- =?utf-8?B?dWg2NS90MW45dTl3MVFLNXFFOFlEbHZhR1cyOE00aStQWHFvc2RidllxOGYx?=
- =?utf-8?B?ZTlxQXBubnBCdm1iMHkrNlA1czFjdWpPeDV5Uk9lMDFrTmJLbEF5MmtuYk1w?=
- =?utf-8?B?Z1k3TUlNZmZ1VUM4Zk5aL2p1ZCtnZ0hSdEl2OTh1QjU3TElyNGgyVVpleXIx?=
- =?utf-8?B?R2FSVHNIc3dnTUpyNWZlUzdVa29UY3pJdnBtMDlRMStnNUlCNzUrS3lCc0pl?=
- =?utf-8?B?MC9hUFgrYlltR2U5Y0VkMmdrVWR1VGE1bEZhalNQNjJnbkRPT012UjFoU1dz?=
- =?utf-8?B?b0U1ZEdpbC92eGVOREFKUGNjKy9HUmhEYmgyalZxK25pRkk1R0IvS2VNblMw?=
- =?utf-8?B?Y3hVSi9SQ2R1Q01Xek80WDJzVkQ4UUxxYTZtbE9vVTBpOFVJSitmUk4rVW9a?=
- =?utf-8?B?ZVVPbkxoZ216NkhXZzVkcjZFaTB1bVZIVkdSUURhWXNhS3JpQjBiZ2xEZGpu?=
- =?utf-8?B?T0pDd1VuOGZSa1FEdnFCMHdqQUE1bUFVd1BCd2haK1llK2d4SnZsUGM4TzVy?=
- =?utf-8?B?WjFXNHVRWEZJRlM2UUZMa2o3ek9iTjhWTTdXbUkvSktuM2NYeFptREpmT1Nz?=
- =?utf-8?B?S1dvUy85RE9RdGtObUNuRXowTmUwYTAxdTltd1NhV2xYM0VYSDhCTUVMWG5Y?=
- =?utf-8?B?bitFN2c4SVFtK2VLWThoOUVEU3NpZEFjUXVCc0MvcTk3NlpRdTlxaUVaWjdU?=
- =?utf-8?B?bHlwTjZqNUdqYUdLdUYyRVl5MXZMcEduZjIxbUs0Z0t0WFIxNGh2dlZ6ZXEw?=
- =?utf-8?B?cGsxeW5MTC95TlBXYjZ3ZzhvSHNLbGFQc1VZckpIMkx5dmRsZnVXWUZQb2Mw?=
- =?utf-8?B?SWxQTVhhcFZ6eVFDMEtZemo3RURuMFV1VDhWdG4rUGYvekJ6WG1XNU5mUFUx?=
- =?utf-8?B?bW9UdnI1MnV6VmZoNjIwY2ZrVWNHMHAzRWRRSnJueDRRR1dTdkw2OXZGNHVW?=
- =?utf-8?B?bU9DdXRvbHIwZ0xaSE5LOWI2Vy9LUGdWWEdIVXYreXp6QVZNTEZXU1hZb2FR?=
- =?utf-8?B?TUxyTTh4akpZaTZjQmFMMkUrL3cyd2xvTzcrU3BBQ2J6dGFXSlBNS0RsKzkz?=
- =?utf-8?B?VS9PaDR4TlEyMHBiUkIwQ0FkbVpDam4xcVNQRVFCcnhRem40bUlZK0JPcEZq?=
- =?utf-8?B?c09VOUZzV1ljck03bU5obURGaHpKSmlyTlJaNy9hMHZsZVBEcWFoQzlNdm1D?=
- =?utf-8?B?cGRoTmZnRHlRb08yN2NxZUp6MTAyRE9RYlZQaHhYY2IxWDRYQXIzTnVzZXNw?=
- =?utf-8?B?VGM2UUN6N2ZzQjdLUk1RMGJPbldXR2U1a0dBUHJJYTFKMDdLYXZ4VVFIekJL?=
- =?utf-8?B?Qzlyam95NTVybENkSTlHZG0vVm45Q0lxMWRCZkZDRy9wLzlDclBKZHpYcjlS?=
- =?utf-8?B?V0VUWHZxTG42c1BZL1dMYTh6dnB5eWJmK3BuTkxzcUdmVW1pSm5RY0F3dGI3?=
- =?utf-8?B?aThUZERoU3paY0RtajdaVE4ybnZVb2IxU01IeXorZDU1TmRKTFZZNDBvaU1x?=
- =?utf-8?B?UkI3eDJMRVFTdnNrNFlqaDU3YVpoNUVKd3lHOHRmVWJKMU1lc2tKNThqQ3ND?=
- =?utf-8?B?OFdadjlJOWtTUmNrZC8rTU8vTkZXNDhJYmZUT2dEeWl2ZXU0NGQ1VThRTHZk?=
- =?utf-8?B?bmhQWitNWHByWGlVdFplcjVkVEZYVVBFSlcrZG1tWFJBZGNxeFRpd1lPVmhv?=
- =?utf-8?Q?Zx5O2D5vPetNz8WDvAZMuV9Tn?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4bd5b1b2-c94e-47c7-3a9c-08dbb3e1fb3a
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Sep 2023 22:45:36.8620
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RJrjkvjzCt2y4AFHQJiz2ruoY1ZFjggY6NHRT0P4K9iW6r62/TI9WoxGHo8tS8WQl+/HL1GDMTiqoo4SREv1WQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4386
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <df47f7ba-7139-4306-b049-bb0ce28502e3@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 8/28/2023 12:35 AM, Lukas Wunner wrote:
-> On Tue, Aug 15, 2023 at 09:20:41PM +0000, Smita Koralahalli wrote:
->> According to PCIe r6.0 sec 6.7.6 [1], async removal with DPC may result in
->> surprise down error. This error is expected and is just a side-effect of
->> async remove.
->>
->> Add support to handle the surprise down error generated as a side-effect
->> of async remove. Typically, this error is benign as the pciehp handler
->> invoked by PDC or/and DLLSC alongside DPC, de-enumerates and brings down
->> the device appropriately. But the error messages might confuse users. Get
->> rid of these irritating log messages with a 1s delay while pciehp waits
->> for dpc recovery.
-> [...]
->> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> 
-> Reviewed-by: Lukas Wunner <lukas@wunner.de>
-> 
-> The subject is slightly inaccurate as this doesn't touch pciehp source
-> files, although it is *related* to pciehp.
-> 
-> As an example, a perhaps more accurate subject might be something like...
-> 
->    PCI/DPC: Ignore Surprise Down errors on hot removal
-> 
-> ...but I don't think it's necessary to respin just for that as Bjorn is
-> probably able to adjust the subject to his liking when applying the patch.
-> 
-> Thanks a lot for patiently pursuing this issue, good to see it fixed.
-> 
-> Five years ago there was an attempt to solve it through masking Surprise
-> Down errors, which you've verified to not be a viable approach:
-> 
-> https://patchwork.kernel.org/project/linux-pci/patch/20180818065126.77912-2-okaya@kernel.org/
-> 
-> Lukas
+On Tue, Sep 12, 2023 at 02:35:39PM -0700, Patel, Nirmal wrote:
+> On 8/30/2023 9:55 AM, Bjorn Helgaas wrote:
+> > On Tue, Aug 29, 2023 at 02:35:36PM -0700, Patel, Nirmal wrote:
+> >> On 8/29/2023 11:00 AM, Bjorn Helgaas wrote:
+> >>> On Tue, Aug 29, 2023 at 01:10:22AM -0400, Nirmal Patel wrote:
+> >>>> Currently during Host boot up, VMD UEFI driver loads and configures
+> >>>> all the VMD endpoints devices and devices behind VMD. Then during
+> >>>> VMD rootport creation, VMD driver honors ACPI settings for Hotplug,
+> >>>> AER, DPC, PM and enables these features based on BIOS settings.
+> >>>>
+> >>>> During the Guest boot up, ACPI settings along with VMD UEFI driver are
+> >>>> not present in Guest BIOS which results in assigning default values to
+> >>>> Hotplug, AER, DPC, etc. As a result hotplug is disabled on the VMD
+> >>>> rootports in the Guest OS.
+> >>>>
+> >>>> VMD driver in Guest should be able to see the same settings as seen
+> >>>> by Host VMD driver. Because of the missing implementation of VMD UEFI
+> >>>> driver in Guest BIOS, the Hotplug is disabled on VMD rootport in
+> >>>> Guest OS. Hot inserted drives don't show up and hot removed drives
+> >>>> do not disappear even if VMD supports Hotplug in Guest. This
+> >>>> behavior is observed in various combinations of guest OSes i.e. RHEL,
+> >>>> SLES and hypervisors i.e. KVM and ESXI.
+> >>>>
+> >>>> This change will make the VMD Host and Guest Driver to keep the settings
+> >>>> implemented by the UEFI VMD DXE driver and thus honoring the user
+> >>>> selections for hotplug in the BIOS.
+> >>> These settings are negotiated between the OS and the BIOS.  The guest
+> >>> runs a different BIOS than the host, so why should the guest setting
+> >>> be related to the host setting?
+> >>>
+> >>> I'm not a virtualization whiz, and I don't understand all of what's
+> >>> going on here, so please correct me when I go wrong:
+> >>>
+> >>> IIUC you need to change the guest behavior.  The guest currently sees
+> >>> vmd_bridge->native_pcie_hotplug as FALSE, and you need it to be TRUE?
+> >> Correct.
+> >>
+> >>> Currently this is copied from the guest's
+> >>> root_bridge->native_pcie_hotplug, so that must also be FALSE.
+> >>>
+> >>> I guess the guest sees a fabricated host bridge, which would start
+> >>> with native_pcie_hotplug as TRUE (from pci_init_host_bridge()), and
+> >>> then it must be set to FALSE because the guest _OSC didn't grant
+> >>> ownership to the OS?  (The guest dmesg should show this, right?)
+> >> This is my understanding too. I don't know much in detail about Guest
+> >> expectation.
+> >>
+> >>> In the guest, vmd_enable_domain() allocates a host bridge via
+> >>> pci_create_root_bus(), and that would again start with
+> >>> native_pcie_hotplug as TRUE.  It's not an ACPI host bridge, so I don't
+> >>> think we do _OSC negotiation for it.  After this patch removes the
+> >>> copy from the fabricated host bridge, it would be left as TRUE.
+> >> VMD was not dependent on _OSC settings and is not ACPI Host bridge. It
+> >> became _OSC dependent after the patch 04b12ef163d1.
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/drivers/pci/controller/vmd.c?id=04b12ef163d10e348db664900ae7f611b83c7a0e
+> >>
+> >> This patch was added as a quick fix for AER flooding but it could
+> >> have been avoided by using rate limit for AER.
+> >>
+> >> I don't know all the history of VMD driver but does it have to be
+> >> dependent on root_bridge flags from _OSC? Is reverting 04b12ef163d1
+> >> a better idea than not allowing just hotplug flags to be copied from
+> >> root_bridge?
+> > It seems like the question is who owns AER, hotplug, etc for devices
+> > below VMD.  AER rate limiting sounds itself like a quick fix without
+> > addressing the underlying problem.
+> >
+> >>> If this is on track, it seems like if we want the guest to own PCIe
+> >>> hotplug, the guest BIOS _OSC for the fabricated host bridge should
+> >>> grant ownership of it.
+> >> I will try to check this option.
+> > On second thought, this doesn't seem right to me.  An _OSC method
+> > clearly applies to the hierarchy under that device, e.g., if we have a
+> > PNP0A03 host bridge with _SEG 0000 and _CRS that includes [bus 00-ff],
+> > its _OSC clearly applies to any devices in domain 0000, which in this
+> > case would include the VMD bridge.
+> >
+> > But I don't think it should apply to the devices *below* the VMD
+> > bridge.  Those are in a different domain, and if the platform wants to
+> > manage AER, hotplug, etc., for those devices, it would have to know
+> > some alternate config access method in order to read the AER and
+> > hotplug registers.  I think that config access depends on the setup
+> > done by the VMD driver, so the platform doesn't know that.
+> >
+> > By this argument, I would think the guest _OSC would apply to the VMD
+> > device itself, but not to the children of the VMD, and the guest could
+> > retain the default native control of all these services inside the VMD
+> > domain.
+> >
+> > But prior to 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on PCIe
+> > features"), the guest *did* retain native control, so we would have to 
+> > resolve the issue solved by 04b12ef163d1 in some other way.
+>
+> Yes, _OSC settings should applied to devices on 0000 domain.
 
-Thanks for the review. Would it be possible to consider this patch as a 
-standalone while I work on 10-bit tags enumeration? I can do v5 for this 
-patch with $SUBJECT changes and also include clearing Atomic Ops and 
-10-bit tags unconditionally on hot-remove if that works..
+To be careful here, I think a PNP0A03 _OSC applies to the devices in
+the PNP0A03 hierarchy, which could be any domain, not just 0000.
 
-Thanks,
-Smita
+But I think we agree that devices behind a VMD bridge are in some
+hierarchy separate from the PNP0A03 one because the PNP0A03 device
+doesn't tell OSPM how to find things behind the VMD.
+
+> VMD creates its own domain to manage the child devices. So it is
+> against the VMD design to force _OSC settings and overwrite VMD
+> settings.
+> 
+> The patch 04b12ef163d1 disables AER on VMD rootports by using BIOS system
+> settings for AER, Hotplug, etc.
+> The patch 04b12ef163d1 *assumes VMD is a bridge device* and copies
+> and *imposes system settings* for AER, DPC, Hotplug, PM, etc on VMD.
+> Borrowing and applying system settings on VMD rootports is
+> not correct.
+
+Yes, agreed, and I think this suggests that we really should remove
+04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on PCIe features")
+completely.
+
+> VMD is *type 0 PCI endpoint device* and all the PCI devices
+> under VMD are *privately* owned by VMD not by the OS. Also VMD has
+> its *own Hotplug settings* for its rootports and child devices in BIOS
+> under VMD settings that are different from BIOS system settings.
+> It is these settings that give VMD its own unique functionality.
+> 
+> For the above reason, VMD driver should disable AER generation by
+> devices it owns. There are two possible solutions.
+>
+> Possible options to fix: There are two possible solutions.
+> 
+> Options 1: VMD driver disables AER by copying AER BIOS system settings
+> which the patch 04b12ef163d1 does but do not change other settings
+> including Hotplug. The proposed patch does that.
+
+This doesn't seem right because I don't think we should be applying
+any _OSC settings to devices below VMD unless there's a PNP0A03 device
+that describes the domain below VMD.
+
+> Option 2: Either disable AER by adding an extra BIOS settings under
+> VMD settings or disable AER by Linux VMD driver by adding a boot
+> parameter and remove the patch 04b12ef163d1.
+
+I think we should remove 04b12ef163d1 and figure out some other way
+of handling devices below VMD.  Maybe you just hard-code those items
+to be what you want.
+
+> >>>> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> >>>> ---
+> >>>> v3->v4: Rewrite the commit log.
+> >>>> v2->v3: Update the commit log.
+> >>>> v1->v2: Update the commit log.
+> >>>> ---
+> >>>>  drivers/pci/controller/vmd.c | 2 --
+> >>>>  1 file changed, 2 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> >>>> index 769eedeb8802..52c2461b4761 100644
+> >>>> --- a/drivers/pci/controller/vmd.c
+> >>>> +++ b/drivers/pci/controller/vmd.c
+> >>>> @@ -701,8 +701,6 @@ static int vmd_alloc_irqs(struct vmd_dev *vmd)
+> >>>>  static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
+> >>>>  				       struct pci_host_bridge *vmd_bridge)
+> >>>>  {
+> >>>> -	vmd_bridge->native_pcie_hotplug = root_bridge->native_pcie_hotplug;
+> >>>> -	vmd_bridge->native_shpc_hotplug = root_bridge->native_shpc_hotplug;
+> >>>>  	vmd_bridge->native_aer = root_bridge->native_aer;
+> >>>>  	vmd_bridge->native_pme = root_bridge->native_pme;
+> >>>>  	vmd_bridge->native_ltr = root_bridge->native_ltr;
+> >>>> -- 
+> >>>> 2.31.1
+> >>>>
+> 
