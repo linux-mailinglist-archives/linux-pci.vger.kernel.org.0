@@ -2,61 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D303879D0C6
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 14:11:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2349B79D16A
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 14:53:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235001AbjILMLm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Sep 2023 08:11:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55382 "EHLO
+        id S235295AbjILMxH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Sep 2023 08:53:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235002AbjILMLk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Sep 2023 08:11:40 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2AFE10DC;
-        Tue, 12 Sep 2023 05:11:35 -0700 (PDT)
+        with ESMTP id S235302AbjILMxH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Sep 2023 08:53:07 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E78BC4;
+        Tue, 12 Sep 2023 05:53:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694520696; x=1726056696;
+  t=1694523183; x=1726059183;
   h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=s4B/T6itIbA12r0ps1vdM+hwzQ3jFlRsKTz0S71M4xM=;
-  b=hwtoEnJR5EfzmX98bQxlv1bznBa8ylqnlE+eQ0dFBRt/1m/H60eHp/Gu
-   knxeqThyXGaRp+efZySOA/y4Oy9ASg1zcQMmswxM/TWcsU+PQaewCWZ0k
-   36ZBxzLxjr2As124+JFHqj9yDDb9wFtVlClheZfABmi1HaACwoq4+9XDS
-   tzbnt7fOTvnl2AOyDLhL9gt9Gz5gAeCO6f3ONrFX4ZvJmCQoYlsjWK/7+
-   5MeINApRn/jXljyZKuTFphN51V+Eb/QvrDQgXKkIawCNNHDMVzrMlNgyP
-   ldOnescqcqDLhfsBsViyLAVtLwV0Z1oX1fFPGVykI0dWlJPayWGqqyXS8
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="378267951"
+   references:mime-version;
+  bh=/qKLUiqSeY+lsbMsVjaPVYKIqR7Sz69ai5lJ4YtASLU=;
+  b=GsGK8qoyHsfVLxYrWNkdk9ys4KIsXvOOIPCyLtnkWysV0dVsMdgTl9cR
+   9Vh57Y1iI/Q2pvGlCH7MsS6HrykC+Hvnx63c5iwcpZrpFwwMGhTieYRK0
+   dv9F34sjRGO3cQlWvu+UKfyX4lQZSkbycJPwoKYnh3BM3ogQPcFpLAdEl
+   e3HccEvGCvBgu2JBuOqeZedgQalz/SwG4nC1QctE9JFwgiXG+hTZFMcUS
+   maAP+hiNrM3Qwi93NZoJmdZOmQQgcxIGgxjxTAucJkOiqxnlnM57NwRPw
+   0u6svNzA4mMYDcX+dLfjDLfjrJrte6/ZvzeqlNaPPI+kDqwcUIK6RAOyM
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="377278389"
 X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
-   d="scan'208";a="378267951"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 05:11:34 -0700
+   d="scan'208";a="377278389"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 05:53:02 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="833886306"
+X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="778784295"
 X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
-   d="scan'208";a="833886306"
+   d="scan'208";a="778784295"
 Received: from npejicx-mobl.ger.corp.intel.com ([10.251.217.90])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 05:11:30 -0700
-Date:   Tue, 12 Sep 2023 15:11:28 +0300 (EEST)
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 05:52:57 -0700
+Date:   Tue, 12 Sep 2023 15:52:54 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        intel-wired-lan@lists.osuosl.org, Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/8] igb: Use FIELD_GET() to extract Link Width
-In-Reply-To: <20230912113403.00006c39@Huawei.com>
-Message-ID: <942077c8-a44a-5831-55b-afceb4412c2@linux.intel.com>
-References: <20230911121501.21910-1-ilpo.jarvinen@linux.intel.com> <20230911121501.21910-4-ilpo.jarvinen@linux.intel.com> <20230912113403.00006c39@Huawei.com>
+To:     srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+cc:     Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alex Deucher <alexdeucher@gmail.com>
+Subject: Re: [PATCH 00/10] Add PCIe Bandwidth Controller
+In-Reply-To: <f35db90cd67adf4b0f48cd6f2a6ad8fbd0c1a679.camel@linux.intel.com>
+Message-ID: <8c5b7c51-12c2-602c-b70-f819ae8610ee@linux.intel.com>
+References: <20230817121708.53213-1-ilpo.jarvinen@linux.intel.com>  <fa5a20d0-77db-58bd-3956-ac664dffa587@quicinc.com>  <21b95d9-86a5-dcb0-9dda-3f1cdd426b9e@linux.intel.com>  <647e2b5e-6064-dbfa-bb56-f74358efd1fe@quicinc.com>  <25bf206e-864b-644-9b4-a0f461b4285@linux.intel.com>
+ <f35db90cd67adf4b0f48cd6f2a6ad8fbd0c1a679.camel@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-525986759-1694519782=:2125"
-Content-ID: <70baab3-03e-d377-677-c25fa8176a57@linux.intel.com>
+Content-Type: multipart/mixed; boundary="8323329-160313703-1694523182=:2125"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -64,94 +67,66 @@ X-Mailing-List: linux-pci@vger.kernel.org
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-525986759-1694519782=:2125
-Content-Type: text/plain; CHARSET=ISO-8859-15
+--8323329-160313703-1694523182=:2125
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
-Content-ID: <e51e5bf7-e092-ac4f-59c9-117fbfcad42f@linux.intel.com>
 
-On Tue, 12 Sep 2023, Jonathan Cameron wrote:
-
-> On Mon, 11 Sep 2023 15:14:56 +0300
-> Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
-> 
-> > Use FIELD_GET() to extract PCIe Negotiated Link Width field instead of
-> > custom masking and shifting.
+On Mon, 11 Sep 2023, srinivas pandruvada wrote:
+> On Mon, 2023-09-11 at 18:47 +0300, Ilpo JÃ¤rvinen wrote:
 > > 
-> > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > ---
-> >  drivers/net/ethernet/intel/igb/e1000_mac.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > Okay, thanks for the clarification. So the point is to plan for
+> > adding 
+> > support for Link Width later and currently only support throttling
+> > Link 
+> > Speed. In any case, the Link Width control seems to be controlled
+> > using 
+> > a different approach (Link Width change does not require Link
+> > Retraining).
 > > 
-> > diff --git a/drivers/net/ethernet/intel/igb/e1000_mac.c b/drivers/net/ethernet/intel/igb/e1000_mac.c
-> > index caf91c6f52b4..5a23b9cfec6c 100644
-> > --- a/drivers/net/ethernet/intel/igb/e1000_mac.c
-> > +++ b/drivers/net/ethernet/intel/igb/e1000_mac.c
-> > @@ -1,6 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  /* Copyright(c) 2007 - 2018 Intel Corporation. */
-> >  
-> > +#include <linux/bitfield.h>
-> >  #include <linux/if_ether.h>
-> >  #include <linux/delay.h>
-> >  #include <linux/pci.h>
-> > @@ -50,9 +51,8 @@ s32 igb_get_bus_info_pcie(struct e1000_hw *hw)
-> >  			break;
-> >  		}
-> >  
-> > -		bus->width = (enum e1000_bus_width)((pcie_link_status &
-> > -						     PCI_EXP_LNKSTA_NLW) >>
-> > -						     PCI_EXP_LNKSTA_NLW_SHIFT);
-> > +		bus->width = (enum e1000_bus_width)FIELD_GET(PCI_EXP_LNKSTA_NLW,
-> > +							     pcie_link_status);
+> > I don't know either how such 2 dimensioned throttling (Link Speed and
+> > Link Width) is supposed to be realized using the thermal/cooling
+> > device 
+> > interface which only provides a single integer as the current state.
+> > That 
+> > is, whether to provide a single cooling device (with a single integer
+> > exposed to userspace) or separate cooling device for each dimension?
+> > 
+> > Perhaps thermal people could provide some insight on this? Is there
+> > some 
+> > precedent I could take look at?
+>
+> Yes. The processor cooling device does similar. 1-3 are reserved for P-
+> state and and 4-7 for T-states.
 > 
-> This cast is a bit ugly given it takes the values 0, 1, 2, 3 and
-> we extra a field that the spec says contains 1, 2, 4, 8 etc
-> Hence it only works because only 1 and 2 are used I think...  Not nice.
+> But I don't suggest using such method. This causes confusion and
+> difficult to change. For example if we increase range of P-state
+> control, then there is no way to know what is the start point of T-
+> states.
 
-Not perfect but I guess the enum definition could use 
-PCI_EXP_LNKSTA_NLW_X* to ensure at least the PCIe ones match.
+Yes. I understand it would be confusing.
 
-> Also, whilst looking at this I note that e1000e has it's own defines
-> for PCIE_LINK_WIDTH_MASK and PCIE_LINK_WIDTH_SHIFT 
-> 
-> Looks like those should be changed to use the standard defines.
+> It is best to create to separate cooling devices for BW and link width.
 
-Yes, thanks. I added a patch to address those duplicated defines and 
-I also noticed it had a duplicated copy for PCI_EXP_LNKSTA which I also 
-converted.
+Okay. If that's the case, then I see no reason to add the Link Width 
+cooling device now as it could do nothing besides reporting the current 
+link width.
 
-I'll send v2 which has most of your suggestions taken into account once 
-the build bot has done its thing.
+The only question that then remains is how to take this into account in 
+the naming of the cooling devices, currently PCIe_Port_<pci_name()> is 
+used but perhaps it would be better to change that to 
+PCIe_Port_Link_Speed_... to allow PCI_Port_Link_Width_... to be added 
+later beside it?
 
-> For extra giggles there are two e1000_bus_width enum definitions in different
-> headers.
+> Also there is a requirement that anything you add to thermal sysfs, it
+> should have some purpose for thermal control. I hope Link width control
+> is targeted to similar use case BW control.
 
-No, there are actually 3 if one looks carefully, and many more if the 
-ones named according to the driver are also counted all following this 
-same "not nice" pattern. ;-)
-
-That's 3 different drivers though which just happen to be similarly named 
-so it's not entirely fair as it would be same as saying drivers x, y, and 
-z have something with the same name. It's pretty obviously those come from 
-copy paste though which usually means some common code might have been 
-handy.
-
-> Actual patch is good - just 'interesting' stuff noticed whilst looking 
-> at it :) 
-
-Yeah, I've plenty of 'interesting' stuff I've noticed while looking around 
-on my todo list. I even thought I had that general PCI_EXP_* FIELD_GET() 
-cleanup on it as I recall eyeing what it would take to find all of them 
-but it seems I never added that there (now it is).
-
-But then I was taking a look at these Link Width ones and there was just 
-so much low-hanging fruit (some of which are like you put it, an 
-excellent example of good cleanup) so I went to do that right away 
-without considering all the other fields.
-
-Thanks a lot for taking a look.
+Ability to control Link Width seems to be part of PCIe 6.0 L0p. AFAICT, 
+the reasons are to lower/control power consumption so it seems to be 
+within scope.
 
 
 -- 
  i.
---8323329-525986759-1694519782=:2125--
+
+--8323329-160313703-1694523182=:2125--
