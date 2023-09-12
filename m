@@ -2,117 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70E4179CB3C
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 11:12:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D68979CD71
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Sep 2023 12:11:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232755AbjILJML convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 12 Sep 2023 05:12:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33174 "EHLO
+        id S232888AbjILKLK convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 12 Sep 2023 06:11:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbjILJMK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Sep 2023 05:12:10 -0400
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BED2170D;
-        Tue, 12 Sep 2023 02:12:07 -0700 (PDT)
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5733d11894dso1155639eaf.0;
-        Tue, 12 Sep 2023 02:12:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694509926; x=1695114726;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LnBKGyRSUKcxckQc3XRY6QVkUrcVLqMdIRsgoISjA1s=;
-        b=a6ic7U1j9GLMmGRYt62JbaGNpnUNS/cM4y5wgI6HAO806sZtwcwCLi/bDsa3aUzOrj
-         D3M6uYKNOXkUhcO9/LWgTIlWP5xMBgW8EgRDq6nBwkYKX2dgyAPtgUTm4ImvJMxxRgCZ
-         4Qofg/3HK5GwsRQSpWc8MFpv7VJLYovmAfPQFfoY9W8ENW61bRLMhrkWlm3nMJyQo2mH
-         Ha+vr1PHCkJ3EUsEtCx4TJ0U9jz4jhHMcUI9xRpIGFFGeAWEsHjjtR/ZeD7XEWInZs4z
-         s6VysjLLr33xT64VnxM+mng6Go6oxHGqTnzd+/p5x0ibn35HEh0cL8enWFFp7/4Xop3H
-         vRRA==
-X-Gm-Message-State: AOJu0YyzoL4MEGP84Cox9OxH0yKXLc1Hk+w8hi3D0QDO3MML2lCkXm/p
-        oBJKjOdZ9CsR3wMGSuYVT1fCtzrTHNmMKXLaEBE3bkAtj1M=
-X-Google-Smtp-Source: AGHT+IGGZJyReIDgrMZtiubQRbMwIKbiT4QSpHxhHeKHsqnI25JjR/27HBwLNz1LdOK9tuR5yIy/TSHHfrPL+PDzg7Q=
-X-Received: by 2002:a05:6820:81f:b0:573:3a3b:594b with SMTP id
- bg31-20020a056820081f00b005733a3b594bmr13187897oob.1.1694509926275; Tue, 12
- Sep 2023 02:12:06 -0700 (PDT)
+        with ESMTP id S233688AbjILKK7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Sep 2023 06:10:59 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2143172E;
+        Tue, 12 Sep 2023 03:10:38 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RlK6w4s01z6HJlZ;
+        Tue, 12 Sep 2023 18:08:56 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 12 Sep
+ 2023 11:10:35 +0100
+Date:   Tue, 12 Sep 2023 11:10:35 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Lizhi Hou <lizhi.hou@amd.com>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <robh@kernel.org>,
+        <max.zhen@amd.com>, <sonal.santan@amd.com>,
+        <stefano.stabellini@xilinx.com>,
+        =?ISO-8859-1?Q?C?= =?ISO-8859-1?Q?l=E9ment_L=E9ger?= 
+        <clement.leger@bootlin.com>
+Subject: Re: [PATCH V13 2/5] PCI: Create device tree node for bridge
+Message-ID: <20230912111035.00002e9b@Huawei.com>
+In-Reply-To: <0cc232a2-1743-aeaa-cb87-ce320cc9fc39@amd.com>
+References: <1692120000-46900-1-git-send-email-lizhi.hou@amd.com>
+        <1692120000-46900-3-git-send-email-lizhi.hou@amd.com>
+        <20230911154856.000076c3@Huawei.com>
+        <0cc232a2-1743-aeaa-cb87-ce320cc9fc39@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-References: <20230906184354.45846-1-mario.limonciello@amd.com>
- <20230906184354.45846-3-mario.limonciello@amd.com> <CAJZ5v0jgGOPcFMfRObAM1St1KLjZS0tEki4f32Rbr3ZXwFyFzA@mail.gmail.com>
- <0cd6648d-21f1-445d-95f6-20f580bbcfd1@amd.com>
-In-Reply-To: <0cd6648d-21f1-445d-95f6-20f580bbcfd1@amd.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 12 Sep 2023 11:11:55 +0200
-Message-ID: <CAJZ5v0h0LN1W5Q6Wp-jSJA4QE4ZGurf8Ye26ST5j6W2P+xHCFg@mail.gmail.com>
-Subject: Re: [PATCH v17 2/4] PCI: Add support for drivers to register optin or
- veto of D3
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 10:23 PM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> On 9/11/2023 13:34, Rafael J. Wysocki wrote:
-> > On Wed, Sep 6, 2023 at 9:16 PM Mario Limonciello
-> > <mario.limonciello@amd.com> wrote:
+On Mon, 11 Sep 2023 09:58:04 -0700
+Lizhi Hou <lizhi.hou@amd.com> wrote:
+
+> On 9/11/23 07:48, Jonathan Cameron wrote:
+> > On Tue, 15 Aug 2023 10:19:57 -0700
+> > Lizhi Hou <lizhi.hou@amd.com> wrote:
+> >  
+> >> The PCI endpoint device such as Xilinx Alveo PCI card maps the register
+> >> spaces from multiple hardware peripherals to its PCI BAR. Normally,
+> >> the PCI core discovers devices and BARs using the PCI enumeration process.
+> >> There is no infrastructure to discover the hardware peripherals that are
+> >> present in a PCI device, and which can be accessed through the PCI BARs.
 > >>
-
-[cut]
-
+> >> Apparently, the device tree framework requires a device tree node for the
+> >> PCI device. Thus, it can generate the device tree nodes for hardware
+> >> peripherals underneath. Because PCI is self discoverable bus, there might
+> >> not be a device tree node created for PCI devices. Furthermore, if the PCI
+> >> device is hot pluggable, when it is plugged in, the device tree nodes for
+> >> its parent bridges are required. Add support to generate device tree node
+> >> for PCI bridges.
+> >>
+> >> Add an of_pci_make_dev_node() interface that can be used to create device
+> >> tree node for PCI devices.
+> >>
+> >> Add a PCI_DYNAMIC_OF_NODES config option. When the option is turned on,
+> >> the kernel will generate device tree nodes for PCI bridges unconditionally.
+> >>
+> >> Initially, add the basic properties for the dynamically generated device
+> >> tree nodes which include #address-cells, #size-cells, device_type,
+> >> compatible, ranges, reg.
+> >>
+> >> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> >> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>  
+> > I tried to bring this up for a custom PCIe card emulated in QEMU on an ARM ACPI
+> > machine.
 > >
-> > IMV, the underlying issue all boils down to the platform firmware
-> > inadequately describing the behavior of the system to the OS.
-> > Specifically, had it provided a _S0W returning 0 for the Root Port(s)
-> > in question, wakeup signaling would have worked (or else there would
-> > have been a defect in the kernel code to be addressed).
->
-> I think you're right.  I'll try and get BIOS guys to provide a test BIOS
-> to prove this direction is correct.
->
-> It wouldn't help all the machines already in the field but if it can be
-> done without harm to Windows maybe future SoCs could use it.
->
-> > Instead, it
-> > decided to kind-of guide Windows in the "right" direction through PEP
-> > constraints which doesn't have the same effect on Linux and honestly
-> > I'm not even sure if it is a good idea to adjust Linux to that.
+> > There are some missing parts that were present in Clements series, but not this
+> > one, particularly creation of the root pci object.  
+> Thanks for trying this. The entire effort was separated in different 
+> phases. That is why this patchset does not include creating of_root.
 > >
->
-> What is the worry with bringing Linux in this direction (using constraints)?
+> > Anyhow, hit an intermittent crash...
+> >
+> >  
+> >> ---
+> >> +static int of_pci_prop_intr_map(struct pci_dev *pdev, struct of_changeset *ocs,
+> >> +				struct device_node *np)
+> >> +{
+> >> +	struct of_phandle_args out_irq[OF_PCI_MAX_INT_PIN];
+> >> +	u32 i, addr_sz[OF_PCI_MAX_INT_PIN], map_sz = 0;
+> >> +	__be32 laddr[OF_PCI_ADDRESS_CELLS] = { 0 };
+> >> +	u32 int_map_mask[] = { 0xffff00, 0, 0, 7 };
+> >> +	struct device_node *pnode;
+> >> +	struct pci_dev *child;
+> >> +	u32 *int_map, *mapp;
+> >> +	int ret;
+> >> +	u8 pin;
+> >> +
+> >> +	pnode = pci_device_to_OF_node(pdev->bus->self);
+> >> +	if (!pnode)
+> >> +		pnode = pci_bus_to_OF_node(pdev->bus);
+> >> +
+> >> +	if (!pnode) {
+> >> +		pci_err(pdev, "failed to get parent device node");
+> >> +		return -EINVAL;
+> >> +	}
+> >> +
+> >> +	laddr[0] = cpu_to_be32((pdev->bus->number << 16) | (pdev->devfn << 8));
+> >> +	for (pin = 1; pin <= OF_PCI_MAX_INT_PIN;  pin++) {
+> >> +		i = pin - 1;
+> >> +		out_irq[i].np = pnode;
+> >> +		out_irq[i].args_count = 1;
+> >> +		out_irq[i].args[0] = pin;
+> >> +		ret = of_irq_parse_raw(laddr, &out_irq[i]);
+> >> +		if (ret) {
+> >> +			pci_err(pdev, "parse irq %d failed, ret %d", pin, ret);
+> >> +			continue;  
+> > If all the interrupt parsing fails we continue ever time...  
+> 
+> Did you use Clement's patch to create of_root? I am just wondering if 
+> parsing irq could fail on a dt-based system.
 
-First off, ostensibly the purpose of the constraints is to indicate to
-Windows when it can attempt to put the system into the deepest power
-state.  Specifically, AFAICS, Windows is not expected to do so when
-the current power state of a given device is shallower than the
-relevant constraint.  Consequently, a constraint of D0 means that
-effectively Windows is expected to ignore the given device as far as
-Modern Standby goes.
+For qemu already have of_root as there is still a device tree, it's just
+used to pass some stuff to EDK2 I think. I was carrying the Frank's
+series adding a bare device tree, it's just not doing anything on these
+systems
 
-In any case, this has no bearing on the behavior of suspend-to-idle in Linux.
+I used Clements patch to add the pci root (cleaned up a bit to
+match the style of your series more closely).
 
-Now, there may be other undocumented side-effects of setting a
-constraint of D0 in Windows, but it is generally risky to rely on such
-things.
+However, my interest is in ACPI based systems, not DT based ones.
 
-Second, it is not entirely clear to me whether or not the future
-versions of Windows will continue to use the constraints in the same
-way.
+Jonathan
 
-> My main hope is that by generalizing this fundamental difference in how
-> Windows and Linux handle Modern Standby / suspend-to-idle we can avoid
-> other future bugs.
 
-There is a fundamental difference between Modern Standby and
-suspend-to-idle already, as the former is opportunistic and the latter
-is on-demand.  They can both follow the exact same set of rules.
+> 
+> And yes, the failure case should be handled without crash. I think if 
+> irq parsing failed,� the interrupt-map pair generation should be skipped.
+> 
+> 
+> Thanks,
+> 
+> Lizhi
+> 
+> >  
+> >> +		}
+> >> +		ret = of_property_read_u32(out_irq[i].np, "#address-cells",
+> >> +					   &addr_sz[i]);
+> >> +		if (ret)
+> >> +			addr_sz[i] = 0;  
+> > This never happens.
+> >  
+> >> +	}
+> >> +
+> >> +	list_for_each_entry(child, &pdev->subordinate->devices, bus_list) {
+> >> +		for (pin = 1; pin <= OF_PCI_MAX_INT_PIN; pin++) {
+> >> +			i = pci_swizzle_interrupt_pin(child, pin) - 1;
+> >> +			map_sz += 5 + addr_sz[i] + out_irq[i].args_count;  
+> > and here we end up derefencing random memory which happens in my case to cause
+> > a massive allocation sometimes and that fails one of the assertions in the
+> > allocator.
+> >
+> > I'd suggest just setting addr_sz[xxx] = {}; above
+> > to ensure it's initialized. Then the if(ret) handling should not be needed
+> > as well as of_property_read_u32 should be side effect free I hope!
+> >  
+> >> +		}
+> >> +	}
+> >> +
+> >> +	int_map = kcalloc(map_sz, sizeof(u32), GFP_KERNEL);
+> >> +	mapp = int_map;  
+
