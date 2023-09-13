@@ -2,54 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF7CB79E803
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Sep 2023 14:31:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4067B79E80E
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Sep 2023 14:31:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240586AbjIMMbK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Sep 2023 08:31:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60780 "EHLO
+        id S240631AbjIMMbg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Sep 2023 08:31:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240601AbjIMMbC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Sep 2023 08:31:02 -0400
+        with ESMTP id S240629AbjIMMbf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Sep 2023 08:31:35 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 191941BE9;
-        Wed, 13 Sep 2023 05:30:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75DE11BC7;
+        Wed, 13 Sep 2023 05:31:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694608257; x=1726144257;
+  t=1694608291; x=1726144291;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Mu9Ph5F+vByInHmgU9mzAsly58jmdXUJoUDkh08q/ug=;
-  b=JAvIhe8oBLKfmvI9HXmfC/i4MUtzb0+pztsqyPCJ/ImY8YSzZB0uNgE3
-   vlCxwYd0FgmMGAcm42qTEvaSqX6/gS/D+VgwS1qmwQRmFqqIL4Xk0P4C8
-   3Z/zlbDGjjt1UI/5BVOnbPswv+IRlohbnwb8OEfrNW9GWMVbxAO2zjuME
-   dZhqjT79uquVosQqbIE1qyHdRqijbiP6NBnYCpIT9+x/jHLni1XSGJHa3
-   ah27Az1P09XIqwwFRPbtUP8gOQpJ3Xn9CXXbUByjz1DTk7BTmy5gAzZYu
-   bCa0PdYAXX3agSWxHZSsB7ROYogQrev3+Amx5BEpeXZ5OcpDo/j1MPHei
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="368912589"
+  bh=h23ccGE5WuEhEsJ1piAqm7UfKXwPFLCCzGvyJoEQsXM=;
+  b=bWkO0aC09I1gdaes/RX+cM0ugVa/3UYNJWcHpRnDBJKOQIggO0mMpZSL
+   9aH6LMHEBeBF/X+qbgwtb5ie3XarYzwXvcOV8sUe1l/mCcKxIFGWWDgUG
+   YtcgF4bJMVBI9xz6Iy5ImddTm4Vxn2dROICi4XOfa5JFDRfXOOum/+t0K
+   4YVjX+mVXhTto/PF/EmqzNhOzko70nB0r9PM9Eq3kTNCvk5iStdwKUQXe
+   g2aRXGFMd7uicibFe61R6BgSF6oSRwZDjNfJTDdGRz/T1RyCWHVLpd8TA
+   UZdLdAmLh/zebxSN21vmYj6S3EWxKKF/CqQcDiKABsI64lKDzTTobVUIn
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="368912633"
 X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="368912589"
+   d="scan'208";a="368912633"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 05:28:33 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 05:28:37 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="693836663"
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="693836688"
 X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="693836663"
+   d="scan'208";a="693836688"
 Received: from pakurapo-mobl3.ger.corp.intel.com (HELO ijarvine-mobl2.ger.corp.intel.com) ([10.249.45.213])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 05:28:29 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 05:28:33 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Nilesh Javali <njavali@marvell.com>,
-        GR-QLogic-Storage-Upstream@marvell.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v2 08/10] scsi: qla2xxx: Use FIELD_GET() to extract PCIe capability fields
-Date:   Wed, 13 Sep 2023 15:27:46 +0300
-Message-Id: <20230913122748.29530-9-ilpo.jarvinen@linux.intel.com>
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v2 09/10] e1000e: Use PCI_EXP_LNKSTA_NLW & FIELD_GET() instead of custom defines/code
+Date:   Wed, 13 Sep 2023 15:27:47 +0300
+Message-Id: <20230913122748.29530-10-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230913122748.29530-1-ilpo.jarvinen@linux.intel.com>
 References: <20230913122748.29530-1-ilpo.jarvinen@linux.intel.com>
@@ -60,37 +64,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use FIELD_GET() to extract PCIe capability registers field instead of
-custom masking and shifting.
+e1000e has own copy of PCI Negotiated Link Width field defines. Use the
+one from include/uapi/linux/pci_regs.h instead of the custom ones and
+remove the custom ones. Also convert to use FIELD_GET().
 
+Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/intel/e1000e/defines.h | 2 --
+ drivers/net/ethernet/intel/e1000e/mac.c     | 7 ++++---
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 50db08265c51..7e103d711825 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -5,6 +5,7 @@
-  */
- #include "qla_def.h"
+diff --git a/drivers/net/ethernet/intel/e1000e/defines.h b/drivers/net/ethernet/intel/e1000e/defines.h
+index 63c3c79380a1..a4d29c9e03a6 100644
+--- a/drivers/net/ethernet/intel/e1000e/defines.h
++++ b/drivers/net/ethernet/intel/e1000e/defines.h
+@@ -681,8 +681,6 @@
+ #define PCIE_LINK_STATUS             0x12
+ 
+ #define PCI_HEADER_TYPE_MULTIFUNC    0x80
+-#define PCIE_LINK_WIDTH_MASK         0x3F0
+-#define PCIE_LINK_WIDTH_SHIFT        4
+ 
+ #define PHY_REVISION_MASK      0xFFFFFFF0
+ #define MAX_PHY_REG_ADDRESS    0x1F  /* 5 bit address bus (0-0x1F) */
+diff --git a/drivers/net/ethernet/intel/e1000e/mac.c b/drivers/net/ethernet/intel/e1000e/mac.c
+index 5df7ad93f3d7..5340cf73778d 100644
+--- a/drivers/net/ethernet/intel/e1000e/mac.c
++++ b/drivers/net/ethernet/intel/e1000e/mac.c
+@@ -1,6 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright(c) 1999 - 2018 Intel Corporation. */
  
 +#include <linux/bitfield.h>
- #include <linux/moduleparam.h>
- #include <linux/vmalloc.h>
- #include <linux/delay.h>
-@@ -633,8 +634,8 @@ qla24xx_pci_info_str(struct scsi_qla_host *vha, char *str, size_t str_len)
- 		const char *speed_str;
++
+ #include "e1000.h"
  
- 		pcie_capability_read_dword(ha->pdev, PCI_EXP_LNKCAP, &lstat);
--		lspeed = lstat & PCI_EXP_LNKCAP_SLS;
--		lwidth = (lstat & PCI_EXP_LNKCAP_MLW) >> 4;
-+		lspeed = FIELD_GET(PCI_EXP_LNKCAP_SLS, lstat);
-+		lwidth = FIELD_GET(PCI_EXP_LNKCAP_MLW, lstat);
+ /**
+@@ -25,9 +27,8 @@ s32 e1000e_get_bus_info_pcie(struct e1000_hw *hw)
+ 		pci_read_config_word(adapter->pdev,
+ 				     cap_offset + PCIE_LINK_STATUS,
+ 				     &pcie_link_status);
+-		bus->width = (enum e1000_bus_width)((pcie_link_status &
+-						     PCIE_LINK_WIDTH_MASK) >>
+-						    PCIE_LINK_WIDTH_SHIFT);
++		bus->width = (enum e1000_bus_width)FIELD_GET(PCI_EXP_LNKSTA_NLW,
++							     pcie_link_status);
+ 	}
  
- 		switch (lspeed) {
- 		case 1:
+ 	mac->ops.set_lan_id(hw);
 -- 
 2.30.2
 
