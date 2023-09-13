@@ -2,364 +2,285 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5427479DE62
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Sep 2023 04:49:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED99379DED2
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Sep 2023 05:54:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238199AbjIMCtq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Sep 2023 22:49:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52648 "EHLO
+        id S232367AbjIMDy1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Sep 2023 23:54:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbjIMCtp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Sep 2023 22:49:45 -0400
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2041.outbound.protection.outlook.com [40.107.105.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0842A1724;
-        Tue, 12 Sep 2023 19:49:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fELRAigxp86sDcY1cBq6AWi3eezT0glzKe+MHV06RQc71PMLak/7mwtFgiZK8gm3seuB6PM8AKUWLJfyvyLQ0Q3GhpZHfgsxzcJyDTCMPb4pnYm+/RPDtJNtftMIJp5+H3N+4Xa3+TsBdYidA4ySgu7p+HW0iE6/OphC0HJqCcoG8g09v/okUGuPx5ZVivUdJiqMGogqt45hwCEnVEkR+LM1nSiejCb0btYRz/Rk9JLduo/rzGrjYu1BlBhHkFDoJTbglgX82mrro+PUM9UTv1mpfyUqQCbZDMM+qV901IswkEomRrItgzIxjLa7onuVOPK00+GCieB7RW/fwNy9gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VPT8WA6NTtkZvz8aG90l+RoiXPtgEYNVmvkOwIGPY1c=;
- b=basIlytAxRufRWDt8bKWUvEOpWqYLaj3Q0bcwiibSL7ProVfvlxhrknuALsO/eHnMSEvoaP5dkgaN9bpMWuKqaF3hluPUy5gmdFR9RPHrfSRnImDz8ukVNhBn2BqqByrsMNyFYdrv4CdYsZbOL7MQWoMMahippyIMFaDr+vfdWd9mnnvVAvldrW5Jycp71OBx/fYJBY93lzEMDE765Eznm3ukEN6Rr67IUOwMayu0ZroUmU0+x08od5Dq4UdFsONnR5KRY5g+0WxwfPVdQmiW6vr4FrFFshG48Q97pC8ieQdiLCCs1J/jA3PflSaoWbg/LJIMG9pgSBrg0mIWzuSFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VPT8WA6NTtkZvz8aG90l+RoiXPtgEYNVmvkOwIGPY1c=;
- b=MnebWpbkvH8Qs5i0y4JZWioSyXgR+cax26uuoR2Gcv0uZ4nhfh/1H2nr1YYGo83L2s8h95wCwyUL0+abcVEy9Pr39GWI8qwUBWUxWFo6R2t0SpCm0Ji5k+NQxOUddpwhCj4foT47s0rjaSedY36au8EEKTrcGeNEuynjVL4BL+A=
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by AS8PR04MB8167.eurprd04.prod.outlook.com (2603:10a6:20b:3f9::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.19; Wed, 13 Sep
- 2023 02:49:38 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::2b3:d8de:95c8:b28b]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::2b3:d8de:95c8:b28b%3]) with mapi id 15.20.6768.029; Wed, 13 Sep 2023
- 02:49:37 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "pali@kernel.org" <pali@kernel.org>,
-        "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH V2] pci: introduce static_nr to indicate domain_nr from
- which IDA
-Thread-Topic: [PATCH V2] pci: introduce static_nr to indicate domain_nr from
- which IDA
-Thread-Index: AQHZzxhuyRkzZgDao0KEaKWaunEMhbAX8PmAgAAxQqCAAA8+AIAACMAg
-Date:   Wed, 13 Sep 2023 02:49:37 +0000
-Message-ID: <DU0PR04MB941790B85BCDD60ACA2601A588F0A@DU0PR04MB9417.eurprd04.prod.outlook.com>
-References: <DU0PR04MB9417E04B52A553984D83540188F0A@DU0PR04MB9417.eurprd04.prod.outlook.com>
- <20230913021306.GA418113@bhelgaas>
-In-Reply-To: <20230913021306.GA418113@bhelgaas>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|AS8PR04MB8167:EE_
-x-ms-office365-filtering-correlation-id: 019e0d65-aedf-49a0-581f-08dbb40411f5
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FIV10PzO/cIkMdaAWW73rBI8e4hTVA8CdhytCohGUnCU3L5gCJu3+u77Z4uFXWIsDi9Dl3CmP7IDe88hdOdnYmN91fc3nHTCl6bCqYsK57bHb/R6MAJGauXyG0BN5KRok2tY1dTAk/NcTDzetR5tjtMbemnmVpbJ5KJGtKcE8jXzFhl5GmCGpB98wdQ825+iJir8YhF3JSrdjLtL5FguGCbpzljWAFaI0J+aHq6Qu8LSePfsVs6ZBdK1vlpH1ZCkPlsR9qRWTWpVlM4JcWCS6rIw81WEqH0aCwLKx8KRbgsQ0X01yEUUgbHCtG4Nl5KR1xEp0bo8EWtFJ7TmoDnlgFp2+8JPd1Xfd/1cH57mQhIdVgjHbwaEs/o4Js5X+Y6VWylvD/eT2ctUvDacHxo9ziVLp+xz7ppMADezp7XSOA9olxJKjF5VnzZm2cWqyCtlUAGB2fyJqrJLIo9yI78lgtcAgGtxL3kI3fnzYKdIImGf7+mBBJVKhlJ8bt6SW8/oBK+69146IsViEEXFRd+hskw3W66zkdOShIMthAi0IFRqej+2ai0B/tR1icu5MKc6P6npEH6CYqBRtaYPRoMkHggT9c4JHlokWsktBKO/xPKTmKx3RTQJ51GBoMdUWfkM
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(366004)(39860400002)(376002)(396003)(186009)(1800799009)(451199024)(316002)(66446008)(66556008)(66476007)(66946007)(76116006)(6916009)(54906003)(64756008)(26005)(83380400001)(45080400002)(9686003)(7696005)(6506007)(71200400001)(33656002)(122000001)(86362001)(38100700002)(38070700005)(55016003)(478600001)(966005)(2906002)(4326008)(8936002)(8676002)(41300700001)(52536014)(44832011)(5660300002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?+4uiVUilp8V+2dWUJ3ScSauHNET6hMDt6ewnO9W68jgXMTvhiChHPBnc0Nba?=
- =?us-ascii?Q?5uLK3D5Qhd8WF+mdHHuCFnckRvT5kMIhnAHz1fGfJV3B8pqo66R8eAQ3Cu0c?=
- =?us-ascii?Q?7EGzIF5+MxPVvAnP6Y4i62pgX9XL/vs9CTJfdFNu+MgRlESkk4rfBmfEA6p6?=
- =?us-ascii?Q?315lbeO8T14cJ2Y1KlQbWKtS2XRxRQqNoTF2LFE1n7UbYvgDbcNewsbxRJXB?=
- =?us-ascii?Q?fW1ynZukVvUkKrUheesp3QzJKwTIgjdmPZA47vx9vLAJ7RFZBLZaaE4p7X8S?=
- =?us-ascii?Q?CalchC3IYRco3ocM9EsCONF2UjdcYFll+MOcYB2yCY9MVBaucd86ODFWCQr4?=
- =?us-ascii?Q?sgwGxoDDW9Yfdwtds89RDANXbV3RRviEU/QvMbZ8PMhEuXm7HNsjjqvg4HF3?=
- =?us-ascii?Q?WrisCEH8CsS/SJ9+B5Egd2tAPNWM0aE6dPMoKm8qwLN44mwzsOqym9j6v0Bi?=
- =?us-ascii?Q?G4EJpvzi5WdO8zVwlkvpSUhdHb6pCVWTuyGmWCFpEIbaSG3klYtls/R6SQuL?=
- =?us-ascii?Q?BvyGS+MgZRrCRQNbkJbUjghiPMv4h1TzYdy+zM7ugQ3UQyrIDv9CWnRf+EgS?=
- =?us-ascii?Q?2EqRzXPX7TabD0O92pVE7AKEFmSCuclIZNG5KoRce8hZGSRt8JJvUczA1uER?=
- =?us-ascii?Q?89Bc0GuwzxD3YH2gCvci5OPwxV1/twbyCree4GUOT4Rv0LLPWwYlggw+r20j?=
- =?us-ascii?Q?qPtGXqTh0S9Zn9U0HS9qCb9raUOFzPJsAdjIoIIz3/+0K49DZc9BQfeX+mcv?=
- =?us-ascii?Q?soPE0+EiWvzEHaBVPZReKVlrgVvvdQ/FKi6jRmQ+H7boApnjhYiasnkQsvW1?=
- =?us-ascii?Q?SJsvCUbHvWIc/DFE4MxNC4omYF9w/noABRhrC/AFT7GlvvdSayqDCzbVnLJ9?=
- =?us-ascii?Q?XorvIxX/nFSdzXGZP/Y8c52tZKqoRaBRRr/4Qrz9IYftZ5bODffBw0zpqIb3?=
- =?us-ascii?Q?mZoyekEEOYLo56fZ4iIjVC/bN09OEIkgB1e4r8pM5hPYbIwkzbBlGTfF/KcN?=
- =?us-ascii?Q?wGme2xOqpcVK3jWmUIehPkHBr4S/NTsHAZFnXZIvY/Jn/Mh/B+qJ7g3BVS+m?=
- =?us-ascii?Q?7lq01RQpn52qc29EYlkAQELrYpJkRB7y3sk8z18lJGohFZYMbKTMV7LuAjmo?=
- =?us-ascii?Q?n8nmKaJxxE6lPQf/s0ntYOnsci9wZiAN5shX1zXWT6KJzHJqyAJof2IV0Feq?=
- =?us-ascii?Q?gUxSlTM4TIgKHclKiJxZ239ZTXcKpNr7XwKJ//Llpc2X3Q/6HJT96p5A1oiK?=
- =?us-ascii?Q?cgzyhO4ODphm8wAyiVNRX4xEftYWsM7J0yoK1dnPUgXwhwN6YmR5qpgKMcJy?=
- =?us-ascii?Q?ihPdCipO326AEitRfecj/puTI3w8a9vNrjOuS2lQXo5xRcraXDmX3D6SBs71?=
- =?us-ascii?Q?eHqeEwxMPJVIpI3ct9UINDAetqfkgJvBzH7l0jpUtUPg49MueT38CvCuZgJm?=
- =?us-ascii?Q?xs69um/vQgo+nhm8LinbWhjAPjwLXeKHFFK1at4vjfhgJ2ORcbMte8/3cWvs?=
- =?us-ascii?Q?expDo6Jbmgz6XkLf9T+nwe2qP3GqaaSBnZKOeD+r3kvIgetNYI6NvJ2y+9zm?=
- =?us-ascii?Q?W6WCjB2K46eJTnOzhWs=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S230052AbjIMDy1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Sep 2023 23:54:27 -0400
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 815551719
+        for <linux-pci@vger.kernel.org>; Tue, 12 Sep 2023 20:54:23 -0700 (PDT)
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 6EB663F66B
+        for <linux-pci@vger.kernel.org>; Wed, 13 Sep 2023 03:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1694577261;
+        bh=pM/fzUaoVJgO67KsuXdR1Snz5sCXW1mYSZpxUcT/F9w=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=WfM8q2uOgPwSawrEHdrDXcUu33rmvpNzEuP6RaeLwMC7ySZzmtw3KmZj4104YirQO
+         S4lYv+/9sjgSOZBvQp/jJEQjEm3oxJw5wBTanuc/0ul085PnkC5WZjY59N3aR/q6Az
+         5Rk18nkSKUnh50tXPR2uBzq3v2W3IoElc2dPvNDXxKTH8+o7MmekrkYJ5+xQee75SA
+         VxWOC4Xwiegufy8FnBqsSTD619M4ojbIaf1n8ZwwxcbZB5p/owLNu+TUBj+nf+UdaP
+         BA7R5N0ez66WYSCoxKa6ZTFBhbJnH9WSKHQBPkblfZPFEqy5qvEngD88x1QNzTKl+T
+         8pps+7YVgT4TQ==
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-68fba07a904so4231356b3a.0
+        for <linux-pci@vger.kernel.org>; Tue, 12 Sep 2023 20:54:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694577260; x=1695182060;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pM/fzUaoVJgO67KsuXdR1Snz5sCXW1mYSZpxUcT/F9w=;
+        b=uRFdcy0gG4icCp4o5LP2DT7PkN72cdfERbGIYTOIv9GGKUoCmMUlXQ9RQNq+zqYygG
+         UpAoVhTNaqJ3kZTYSPXD/KlSvrSZ5VFqYWwKPOUqwlv8C+ACIRaly6Bodjyh//uvNHEx
+         DUm1CddheYa7iRnKm1CEUqqJ5M1oCIbyikNW8ZmiUPsZOeB1NF97dJTZSvEZkGpm4jw2
+         JKV+l7a2w8Xujg/9yVgKd6iPB7/UYgSsyTfCDfA9V5kNQCstiEmrEPCF+k9PUwJPf87/
+         hUHm5jZuXUvaY4svByhP/uhB8F2zw4LCuUOMncaBVuaKh25WcWKB/sH4X5/IkFaNIKrC
+         X9FA==
+X-Gm-Message-State: AOJu0Yz5tR06B1RVkxjRhMo4RRT24Sn9yWdcZbrYeCF4UrA7vUDS7MTX
+        ALsxjFuzyAB9AEsHtJDfSXwj8oWQWpa2T20b8MfN70BN/+0NBg/Pxd+ZXcgdeERpSbcomrmkE2k
+        UApfv8BcfER4RkRcbBZk4310nBnzQMKlNCwZMk6M+4orqK/tfpBokGQ==
+X-Received: by 2002:a05:6a20:12c3:b0:153:556e:a78d with SMTP id v3-20020a056a2012c300b00153556ea78dmr1483485pzg.43.1694577259800;
+        Tue, 12 Sep 2023 20:54:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEKkowRaRxJUbHZN/ntX7bpTk968Lut0zOPCk36jUNlSwN2GSAwyElmJV8R3qoFUJ7PcTHqqxbMfUtN9BBRmQc=
+X-Received: by 2002:a05:6a20:12c3:b0:153:556e:a78d with SMTP id
+ v3-20020a056a2012c300b00153556ea78dmr1483468pzg.43.1694577259320; Tue, 12 Sep
+ 2023 20:54:19 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 019e0d65-aedf-49a0-581f-08dbb40411f5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2023 02:49:37.6751
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Tyn8ncdINyY5wlr1aOEhaMd8gmuHCDjX4pRMfxktvvUkIKjUDXDc6u9v3bZMydRxSu51LLB61sNJvAvjf+ZMBA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8167
+References: <df47f7ba-7139-4306-b049-bb0ce28502e3@linux.intel.com> <20230912225446.GA414359@bhelgaas>
+In-Reply-To: <20230912225446.GA414359@bhelgaas>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Wed, 13 Sep 2023 11:54:05 +0800
+Message-ID: <CAAd53p6TJm+KP2X2AtgjGoyA7KkJx8ZHNCkuEQ-2kxxgYVJpOA@mail.gmail.com>
+Subject: Re: [PATCH v4] PCI: vmd: Do not change the BIOS Hotplug setting on
+ VMD rootports
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Patel, Nirmal" <nirmal.patel@linux.intel.com>,
+        linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> Subject: Re: [PATCH V2] pci: introduce static_nr to indicate domain_nr fr=
-om
-> which IDA
->=20
-> On Wed, Sep 13, 2023 at 01:24:26AM +0000, Peng Fan wrote:
-> > > Subject: Re: [PATCH V2] pci: introduce static_nr to indicate
-> > > domain_nr from which IDA
+On Wed, Sep 13, 2023 at 6:54=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>
+> On Tue, Sep 12, 2023 at 02:35:39PM -0700, Patel, Nirmal wrote:
+> > On 8/30/2023 9:55 AM, Bjorn Helgaas wrote:
+> > > On Tue, Aug 29, 2023 at 02:35:36PM -0700, Patel, Nirmal wrote:
+> > >> On 8/29/2023 11:00 AM, Bjorn Helgaas wrote:
+> > >>> On Tue, Aug 29, 2023 at 01:10:22AM -0400, Nirmal Patel wrote:
+> > >>>> Currently during Host boot up, VMD UEFI driver loads and configure=
+s
+> > >>>> all the VMD endpoints devices and devices behind VMD. Then during
+> > >>>> VMD rootport creation, VMD driver honors ACPI settings for Hotplug=
+,
+> > >>>> AER, DPC, PM and enables these features based on BIOS settings.
+> > >>>>
+> > >>>> During the Guest boot up, ACPI settings along with VMD UEFI driver=
+ are
+> > >>>> not present in Guest BIOS which results in assigning default value=
+s to
+> > >>>> Hotplug, AER, DPC, etc. As a result hotplug is disabled on the VMD
+> > >>>> rootports in the Guest OS.
+> > >>>>
+> > >>>> VMD driver in Guest should be able to see the same settings as see=
+n
+> > >>>> by Host VMD driver. Because of the missing implementation of VMD U=
+EFI
+> > >>>> driver in Guest BIOS, the Hotplug is disabled on VMD rootport in
+> > >>>> Guest OS. Hot inserted drives don't show up and hot removed drives
+> > >>>> do not disappear even if VMD supports Hotplug in Guest. This
+> > >>>> behavior is observed in various combinations of guest OSes i.e. RH=
+EL,
+> > >>>> SLES and hypervisors i.e. KVM and ESXI.
+> > >>>>
+> > >>>> This change will make the VMD Host and Guest Driver to keep the se=
+ttings
+> > >>>> implemented by the UEFI VMD DXE driver and thus honoring the user
+> > >>>> selections for hotplug in the BIOS.
+> > >>> These settings are negotiated between the OS and the BIOS.  The gue=
+st
+> > >>> runs a different BIOS than the host, so why should the guest settin=
+g
+> > >>> be related to the host setting?
+> > >>>
+> > >>> I'm not a virtualization whiz, and I don't understand all of what's
+> > >>> going on here, so please correct me when I go wrong:
+> > >>>
+> > >>> IIUC you need to change the guest behavior.  The guest currently se=
+es
+> > >>> vmd_bridge->native_pcie_hotplug as FALSE, and you need it to be TRU=
+E?
+> > >> Correct.
+> > >>
+> > >>> Currently this is copied from the guest's
+> > >>> root_bridge->native_pcie_hotplug, so that must also be FALSE.
+> > >>>
+> > >>> I guess the guest sees a fabricated host bridge, which would start
+> > >>> with native_pcie_hotplug as TRUE (from pci_init_host_bridge()), and
+> > >>> then it must be set to FALSE because the guest _OSC didn't grant
+> > >>> ownership to the OS?  (The guest dmesg should show this, right?)
+> > >> This is my understanding too. I don't know much in detail about Gues=
+t
+> > >> expectation.
+> > >>
+> > >>> In the guest, vmd_enable_domain() allocates a host bridge via
+> > >>> pci_create_root_bus(), and that would again start with
+> > >>> native_pcie_hotplug as TRUE.  It's not an ACPI host bridge, so I do=
+n't
+> > >>> think we do _OSC negotiation for it.  After this patch removes the
+> > >>> copy from the fabricated host bridge, it would be left as TRUE.
+> > >> VMD was not dependent on _OSC settings and is not ACPI Host bridge. =
+It
+> > >> became _OSC dependent after the patch 04b12ef163d1.
+> > >> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/comm=
+it/drivers/pci/controller/vmd.c?id=3D04b12ef163d10e348db664900ae7f611b83c7a=
+0e
+> > >>
+> > >> This patch was added as a quick fix for AER flooding but it could
+> > >> have been avoided by using rate limit for AER.
+> > >>
+> > >> I don't know all the history of VMD driver but does it have to be
+> > >> dependent on root_bridge flags from _OSC? Is reverting 04b12ef163d1
+> > >> a better idea than not allowing just hotplug flags to be copied from
+> > >> root_bridge?
+> > > It seems like the question is who owns AER, hotplug, etc for devices
+> > > below VMD.  AER rate limiting sounds itself like a quick fix without
+> > > addressing the underlying problem.
 > > >
-> > > On Tue, Aug 15, 2023 at 09:37:44AM +0800, Peng Fan (OSS) wrote:
-> > > > From: Peng Fan <peng.fan@nxp.com>
-> > > >
-> > > > When PCI node was created using an overlay and the overlay is
-> > > > reverted/destroyed, the "linux,pci-domain" property no longer
-> > > > exists, so of_get_pci_domain_nr will return failure.
+> > >>> If this is on track, it seems like if we want the guest to own PCIe
+> > >>> hotplug, the guest BIOS _OSC for the fabricated host bridge should
+> > >>> grant ownership of it.
+> > >> I will try to check this option.
+> > > On second thought, this doesn't seem right to me.  An _OSC method
+> > > clearly applies to the hierarchy under that device, e.g., if we have =
+a
+> > > PNP0A03 host bridge with _SEG 0000 and _CRS that includes [bus 00-ff]=
+,
+> > > its _OSC clearly applies to any devices in domain 0000, which in this
+> > > case would include the VMD bridge.
 > > >
-> > > I'm not familiar with how overlays work.  What's the call path where
-> > > the overlay is removed?  I see an of_overlay_remove(), but I don't
-> > > see any callers except test cases.
-> >
-> > We are using an out of tree hypervisor driver:
-> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit=
-h
-> >
-> ub.com%2Fsiemens%2Fjailhouse%2Fblob%2Fmaster%2Fdriver%2Fpci.c%23L
-> 483&d
-> >
-> ata=3D05%7C01%7Cpeng.fan%40nxp.com%7C1bf0364c585f42dae7f108dbb3fe
-> fcc4%7C
-> >
-> 686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63830167996269745
-> 6%7CUnknow
-> >
-> n%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1ha
-> WwiLC
-> >
-> JXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=3DraIsz2HIH%2FQ0nmolBBwd81
-> WxQh2vmFeXN
-> > t3n6OIQaSU%3D&reserved=3D0
+> > > But I don't think it should apply to the devices *below* the VMD
+> > > bridge.  Those are in a different domain, and if the platform wants t=
+o
+> > > manage AER, hotplug, etc., for those devices, it would have to know
+> > > some alternate config access method in order to read the AER and
+> > > hotplug registers.  I think that config access depends on the setup
+> > > done by the VMD driver, so the platform doesn't know that.
 > > >
-> > > I guess the problem happens in a PCI host bridge remove path, e.g.,
+> > > By this argument, I would think the guest _OSC would apply to the VMD
+> > > device itself, but not to the children of the VMD, and the guest coul=
+d
+> > > retain the default native control of all these services inside the VM=
+D
+> > > domain.
 > > >
-> > >   pci_host_common_remove
-> > >     pci_remove_root_bus
-> > >       pci_bus_release_domain_nr
-> > >         of_pci_bus_release_domain_nr
-> > >
-> > > But I don't know how that's related to the overlay removal.
+> > > But prior to 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on PCIe
+> > > features"), the guest *did* retain native control, so we would have t=
+o
+> > > resolve the issue solved by 04b12ef163d1 in some other way.
 > >
-> > When the overlay node got removed, the device removal will be invoked
-> > and the domain number indicated by linux,pci-domain should also get fre=
-ed.
+> > Yes, _OSC settings should applied to devices on 0000 domain.
+>
+> To be careful here, I think a PNP0A03 _OSC applies to the devices in
+> the PNP0A03 hierarchy, which could be any domain, not just 0000.
+>
+> But I think we agree that devices behind a VMD bridge are in some
+> hierarchy separate from the PNP0A03 one because the PNP0A03 device
+> doesn't tell OSPM how to find things behind the VMD.
+>
+> > VMD creates its own domain to manage the child devices. So it is
+> > against the VMD design to force _OSC settings and overwrite VMD
+> > settings.
 > >
-> > But actually the domain number not got freed because of bug as this
-> > patch shows. "of_pci_bus_release_domain_nr will actually use the
-> > dynamic IDA, even if the IDA was allocated in static IDA."
+> > The patch 04b12ef163d1 disables AER on VMD rootports by using BIOS syst=
+em
+> > settings for AER, Hotplug, etc.
+> > The patch 04b12ef163d1 *assumes VMD is a bridge device* and copies
+> > and *imposes system settings* for AER, DPC, Hotplug, PM, etc on VMD.
+> > Borrowing and applying system settings on VMD rootports is
+> > not correct.
+>
+> Yes, agreed, and I think this suggests that we really should remove
+> 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on PCIe features")
+> completely.
+>
+> > VMD is *type 0 PCI endpoint device* and all the PCI devices
+> > under VMD are *privately* owned by VMD not by the OS. Also VMD has
+> > its *own Hotplug settings* for its rootports and child devices in BIOS
+> > under VMD settings that are different from BIOS system settings.
+> > It is these settings that give VMD its own unique functionality.
 > >
-> > So after the overlay node got destroyed and our test recreate the
-> > overlay node with same domain number, issue triggered, the device
-> > could not be created.
+> > For the above reason, VMD driver should disable AER generation by
+> > devices it owns. There are two possible solutions.
 > >
-> > > Is this an ordering issue?  It seems possibly problematic that the
-> > > OF overlay is destroyed before the device it describes (e.g., the
-> > > host
+> > Possible options to fix: There are two possible solutions.
 > >
-> > No. it is "of_pci_bus_release_domain_nr will actually use the dynamic
-> > IDA, even if the IDA was allocated in static IDA "
->=20
-> Yes, that's the *symptom*, to be sure.  My question was why the overlay w=
-as
-> removed before the host bridge.
+> > Options 1: VMD driver disables AER by copying AER BIOS system settings
+> > which the patch 04b12ef163d1 does but do not change other settings
+> > including Hotplug. The proposed patch does that.
+>
+> This doesn't seem right because I don't think we should be applying
+> any _OSC settings to devices below VMD unless there's a PNP0A03 device
+> that describes the domain below VMD.
+>
+> > Option 2: Either disable AER by adding an extra BIOS settings under
+> > VMD settings or disable AER by Linux VMD driver by adding a boot
+> > parameter and remove the patch 04b12ef163d1.
+>
+> I think we should remove 04b12ef163d1 and figure out some other way
+> of handling devices below VMD.  Maybe you just hard-code those items
+> to be what you want.
 
-I am not sure.
-I added a dump_stack, would this help to understand?
-root@imx93evk:~# jailhouse disable
-[  595.150529] CPU: 1 PID: 582 Comm: jailhouse Tainted: G           O      =
- 6.5.0-rc4-next-20230804-05021-g3d4cc14b42ef-dirty #355
-[  595.161998] Hardware name: NXP i.MX93 11X11 EVK board (DT)
-[  595.167475] Call trace:
-[  595.169908]  dump_backtrace+0x94/0xec
-[  595.173573]  show_stack+0x18/0x24
-[  595.176884]  dump_stack_lvl+0x48/0x60
-[  595.180541]  dump_stack+0x18/0x24
-[  595.183843]  pci_bus_release_domain_nr+0x34/0x84
-[  595.188453]  pci_remove_root_bus+0xa0/0xa4
-[  595.192544]  pci_host_common_remove+0x28/0x40
-[  595.196895]  platform_remove+0x54/0x6c
-[  595.200641]  device_remove+0x4c/0x80
-[  595.204209]  device_release_driver_internal+0x1d4/0x230
-[  595.209430]  device_release_driver+0x18/0x24
-[  595.213691]  bus_remove_device+0xcc/0x10c
-[  595.217686]  device_del+0x15c/0x41c
-[  595.221170]  platform_device_del.part.0+0x1c/0x88
-[  595.225861]  platform_device_unregister+0x24/0x40
-[  595.230557]  of_platform_device_destroy+0xfc/0x10c
-[  595.235344]  of_platform_notify+0x13c/0x178
-[  595.239518]  blocking_notifier_call_chain+0x6c/0xa0
-[  595.244389]  __of_changeset_entry_notify+0x148/0x16c
-[  595.249346]  of_changeset_revert+0xa8/0xcc
-[  595.253437]  jailhouse_pci_virtual_root_devices_remove+0x50/0x74 [jailho=
-use]
-[  595.260484]  jailhouse_cmd_disable+0x70/0x1ac [jailhouse]
-[  595.265883]  jailhouse_ioctl+0x60/0xf0 [jailhouse]
-[  595.270674]  __arm64_sys_ioctl+0xac/0xf0
-[  595.274595]  invoke_syscall+0x48/0x114
-[  595.278336]  el0_svc_common.constprop.0+0xc4/0xe4
->=20
-> The current ordering is this, where A happens before B:
->=20
->   A overlay is removed
->   B pci_host_common_remove
->       pci_bus_release_domain_nr
->         of_pci_bus_release_domain_nr
->           of_get_pci_domain_nr      # fails because overlay is gone
->           ida_free(&pci_domain_nr_dynamic_ida)
->=20
-> But if the host bridge were removed first, the ordering would be as follo=
-ws,
-> and the problem would not occur:
->=20
->   B pci_host_common_remove
->       pci_bus_release_domain_nr
->         of_pci_bus_release_domain_nr
->           of_get_pci_domain_nr      # succeeds in this order
->           ida_free(&pci_domain_nr_static_ida)
->   A overlay is removed
->=20
-> Is there a reason the overlay should be removed before the host bridge?
->=20
-> Obviously the overlay is loaded before the host bridge is created, and
-> symmetry would suggest that the overlay should be removed after the host
-> bridge is removed.
+The idea was that the same physical root ports were used by 0000
+domain and VMD domain, so it's reasonable to use the same PCIe
+services.
 
-Hmm, I need check more. But do you think this patch is fix a real issue or
-If order is did as you say above, this patch is not required anymore?
+So what items should be hard-coded, assuming 04b12ef163d1 gets reverted?
 
-Thanks,
-Peng.
+Kai-Heng
 
->=20
-> > > bridge) is removed.  I would expect the device to be removed before
-> > > the description of the device is removed.
-> > >
-> > > > Then of_pci_bus_release_domain_nr will actually use the dynamic
-> > > > IDA, even if the IDA was allocated in static IDA.
-> > > >
-> > > > Introduce a static_nr field in pci_bus to indicate whether the IDA
-> > > > is a dynamic or static in order to free the correct one.
-> > > >
-> > > > Fixes: c14f7ccc9f5d ("PCI: Assign PCI domain IDs by ida_alloc()")
-> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > > ---
-> > > >
-> > > > V2:
-> > > >  Update commit message
-> > > >  Move static_nr:1 to stay besides others :1 fields.
-> > > >
-> > > >  drivers/pci/pci.c   | 22 ++++++++++++++--------
-> > > >  include/linux/pci.h |  1 +
-> > > >  2 files changed, 15 insertions(+), 8 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c index
-> > > > 60230da957e0..5c98502bcda6 100644
-> > > > --- a/drivers/pci/pci.c
-> > > > +++ b/drivers/pci/pci.c
-> > > > @@ -6881,10 +6881,10 @@ static void
-> > > of_pci_reserve_static_domain_nr(void)
-> > > >  	}
-> > > >  }
-> > > >
-> > > > -static int of_pci_bus_find_domain_nr(struct device *parent)
-> > > > +static int of_pci_bus_find_domain_nr(struct pci_bus *bus, struct
-> > > > +device *parent)
-> > > >  {
-> > > >  	static bool static_domains_reserved =3D false;
-> > > > -	int domain_nr;
-> > > > +	int domain_nr, ret;
-> > > >
-> > > >  	/* On the first call scan device tree for static allocations. */
-> > > >  	if (!static_domains_reserved) {
-> > > > @@ -6892,6 +6892,8 @@ static int of_pci_bus_find_domain_nr(struct
-> > > device *parent)
-> > > >  		static_domains_reserved =3D true;
-> > > >  	}
-> > > >
-> > > > +	bus->static_nr =3D 0;
-> > > > +
-> > > >  	if (parent) {
-> > > >  		/*
-> > > >  		 * If domain is in DT, allocate it in static IDA.  This @@ -
-> > > 6899,10
-> > > > +6901,14 @@ static int of_pci_bus_find_domain_nr(struct device
-> > > > +*parent)
-> > > >  		 * in DT.
-> > > >  		 */
-> > > >  		domain_nr =3D of_get_pci_domain_nr(parent->of_node);
-> > > > -		if (domain_nr >=3D 0)
-> > > > -			return ida_alloc_range(&pci_domain_nr_static_ida,
-> > > > -					       domain_nr, domain_nr,
-> > > > -					       GFP_KERNEL);
-> > > > +		if (domain_nr >=3D 0) {
-> > > > +			ret =3D ida_alloc_range(&pci_domain_nr_static_ida,
-> > > > +					      domain_nr, domain_nr,
-> > > GFP_KERNEL);
-> > > > +			if (ret >=3D 0)
-> > > > +				bus->static_nr =3D 1;
-> > > > +
-> > > > +			return ret;
-> > > > +		}
-> > > >  	}
-> > > >
-> > > >  	/*
-> > > > @@ -6920,7 +6926,7 @@ static void
-> > > > of_pci_bus_release_domain_nr(struct
-> > > pci_bus *bus, struct device *par
-> > > >  		return;
-> > > >
-> > > >  	/* Release domain from IDA where it was allocated. */
-> > > > -	if (of_get_pci_domain_nr(parent->of_node) =3D=3D bus->domain_nr)
-> > > > +	if (bus->static_nr)
-> > > >  		ida_free(&pci_domain_nr_static_ida, bus->domain_nr);
-> > > >  	else
-> > > >  		ida_free(&pci_domain_nr_dynamic_ida, bus->domain_nr);
-> > > @@ -6928,7
-> > > > +6934,7 @@ static void of_pci_bus_release_domain_nr(struct pci_bus
-> > > > *bus, struct device *par
-> > > >
-> > > >  int pci_bus_find_domain_nr(struct pci_bus *bus, struct device
-> > > > *parent)  {
-> > > > -	return acpi_disabled ? of_pci_bus_find_domain_nr(parent) :
-> > > > +	return acpi_disabled ? of_pci_bus_find_domain_nr(bus, parent) :
-> > > >  			       acpi_pci_bus_find_domain_nr(bus);  }
-> > > >
-> > > > diff --git a/include/linux/pci.h b/include/linux/pci.h index
-> > > > eeb2e6f6130f..222a1729ea7e 100644
-> > > > --- a/include/linux/pci.h
-> > > > +++ b/include/linux/pci.h
-> > > > @@ -677,6 +677,7 @@ struct pci_bus {
-> > > >  	struct bin_attribute	*legacy_mem;	/* Legacy mem */
-> > > >  	unsigned int		is_added:1;
-> > > >  	unsigned int		unsafe_warn:1;	/* warned about RW1C
-> > > config write */
-> > > > +	unsigned int		static_nr:1;
-> > > >  };
-> > > >
-> > > >  #define to_pci_bus(n)	container_of(n, struct pci_bus, dev)
-> > > > --
-> > > > 2.37.1
-> > > >
+>
+> > >>>> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> > >>>> ---
+> > >>>> v3->v4: Rewrite the commit log.
+> > >>>> v2->v3: Update the commit log.
+> > >>>> v1->v2: Update the commit log.
+> > >>>> ---
+> > >>>>  drivers/pci/controller/vmd.c | 2 --
+> > >>>>  1 file changed, 2 deletions(-)
+> > >>>>
+> > >>>> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller=
+/vmd.c
+> > >>>> index 769eedeb8802..52c2461b4761 100644
+> > >>>> --- a/drivers/pci/controller/vmd.c
+> > >>>> +++ b/drivers/pci/controller/vmd.c
+> > >>>> @@ -701,8 +701,6 @@ static int vmd_alloc_irqs(struct vmd_dev *vmd)
+> > >>>>  static void vmd_copy_host_bridge_flags(struct pci_host_bridge *ro=
+ot_bridge,
+> > >>>>                                         struct pci_host_bridge *vm=
+d_bridge)
+> > >>>>  {
+> > >>>> -        vmd_bridge->native_pcie_hotplug =3D root_bridge->native_p=
+cie_hotplug;
+> > >>>> -        vmd_bridge->native_shpc_hotplug =3D root_bridge->native_s=
+hpc_hotplug;
+> > >>>>          vmd_bridge->native_aer =3D root_bridge->native_aer;
+> > >>>>          vmd_bridge->native_pme =3D root_bridge->native_pme;
+> > >>>>          vmd_bridge->native_ltr =3D root_bridge->native_ltr;
+> > >>>> --
+> > >>>> 2.31.1
+> > >>>>
+> >
