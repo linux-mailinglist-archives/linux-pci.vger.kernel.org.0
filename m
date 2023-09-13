@@ -2,53 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 897DF79E463
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Sep 2023 11:57:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C82279E4B2
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Sep 2023 12:18:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234107AbjIMJ5b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Sep 2023 05:57:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58992 "EHLO
+        id S239672AbjIMKSe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Sep 2023 06:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233406AbjIMJ52 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Sep 2023 05:57:28 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20E30198C;
-        Wed, 13 Sep 2023 02:57:24 -0700 (PDT)
+        with ESMTP id S239654AbjIMKSc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Sep 2023 06:18:32 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F5EF19B0;
+        Wed, 13 Sep 2023 03:18:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694599044; x=1726135044;
+  t=1694600308; x=1726136308;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=G6iexW6NeS3/7WoIvYgLCIg4BhecbQA9JIkAQqpjq7A=;
-  b=kdFlcrI6lZm+OZOItbCDchAWyszdG8w4EbLyW3jxDPdOFMfUA1xglRqI
-   QO0C5xIeytvAfAYj4IcswvpZ7g9r7gaBxsFVr6PE7XNBL71VNtKon+ZyL
-   yl6UNQXTe7B0OkUIB6+1vzl2lQ1kz2YdaDTIKBcu9nJHzbo76x4RUCN66
-   UeBTVN3AuxO7felwnKIOtcTjLgchoOzpjUkg4scaeOKfzr7r4gdmnERDD
-   izB8BkNB1jwOGK3YNGHaChTLi1YYKtLB+z5CiUDrb4CpqBIHCW5xX4/f0
-   rlLowVqVfJks5hNqZsT0atDDy0OJ6TYunCKh/H3CKIAcBZj/OFIj3IurC
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="442645855"
+  bh=jvJr9OQ5XaplZ2MlNIADa5rR127QA75ZhurnRWf+Y9g=;
+  b=H46bAszrVuPu8HsZl57yGGmRRr8pfemT8lSQfrjlGd9cw+q80JrdFITK
+   Y5OUWkrQDbfWBaaKQio+7Qs1lvHKkJbpLGX1TWg0W1p9vixBkMud3soPL
+   YSOTHLK6wZeam3O/RD3vKR5EdKAHpsiQj0CLARYYMcmlq4RLPy2D/MO7I
+   GyvIOF3Y9Wwkoh02Jh6JXRIaMjW7wNPQ4HO7C3adLZi3oliRuBZNb/Me5
+   ZVzOmAYftIjm7lSQzpWMvnyemsodsHT10O9CSG49w0Ov1bFUHkYy4VzwS
+   Ru/g2Z15d/8MTH9kqp+XGuFgs2a9nDBhcKRgLibM8Qg3XvCtmukLPgbg2
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="445058235"
 X-IronPort-AV: E=Sophos;i="6.02,142,1688454000"; 
-   d="scan'208";a="442645855"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 02:57:23 -0700
+   d="scan'208";a="445058235"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 03:18:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="917769574"
+X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="814171606"
 X-IronPort-AV: E=Sophos;i="6.02,142,1688454000"; 
-   d="scan'208";a="917769574"
+   d="scan'208";a="814171606"
 Received: from lkp-server02.sh.intel.com (HELO cf13c67269a2) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 13 Sep 2023 02:57:20 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 13 Sep 2023 03:18:23 -0700
 Received: from kbuild by cf13c67269a2 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1qgMcY-0000Mf-0d;
-        Wed, 13 Sep 2023 09:57:18 +0000
-Date:   Wed, 13 Sep 2023 17:56:56 +0800
+        id 1qgMwt-0000OF-1K;
+        Wed, 13 Sep 2023 10:18:19 +0000
+Date:   Wed, 13 Sep 2023 18:17:55 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Mario Limonciello <mario.limonciello@amd.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     oe-kbuild-all@lists.linux.dev, Hans de Goede <hdegoede@redhat.com>,
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        Hans de Goede <hdegoede@redhat.com>,
         Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
         "open list:X86 PLATFORM DRIVERS" 
         <platform-driver-x86@vger.kernel.org>,
@@ -59,7 +60,7 @@ Cc:     oe-kbuild-all@lists.linux.dev, Hans de Goede <hdegoede@redhat.com>,
         Mario Limonciello <mario.limonciello@amd.com>
 Subject: Re: [PATCH v18 2/2] PCI: Add a quirk for AMD PCIe root ports w/ USB4
  controllers
-Message-ID: <202309131736.HcuHnd8S-lkp@intel.com>
+Message-ID: <202309131834.q68yWKdZ-lkp@intel.com>
 References: <20230913040832.114610-3-mario.limonciello@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -79,21 +80,29 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/PCI-Mov
 base:   0bb80ecc33a8fb5a682236443c1e740d5c917d1d
 patch link:    https://lore.kernel.org/r/20230913040832.114610-3-mario.limonciello%40amd.com
 patch subject: [PATCH v18 2/2] PCI: Add a quirk for AMD PCIe root ports w/ USB4 controllers
-config: riscv-defconfig (https://download.01.org/0day-ci/archive/20230913/202309131736.HcuHnd8S-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230913/202309131736.HcuHnd8S-lkp@intel.com/reproduce)
+config: i386-randconfig-r023-20230913 (https://download.01.org/0day-ci/archive/20230913/202309131834.q68yWKdZ-lkp@intel.com/config)
+compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230913/202309131834.q68yWKdZ-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202309131736.HcuHnd8S-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309131834.q68yWKdZ-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
-   drivers/pci/quirks.c: In function 'quirk_ryzen_rp_d3':
->> drivers/pci/quirks.c:3890:16: warning: suggest parentheses around assignment used as truth value [-Wparentheses]
-    3890 |         while (child = pci_get_class(PCI_CLASS_SERIAL_USB_USB4, child)) {
-         |                ^~~~~
+>> drivers/pci/quirks.c:3890:15: warning: using the result of an assignment as a condition without parentheses [-Wparentheses]
+           while (child = pci_get_class(PCI_CLASS_SERIAL_USB_USB4, child)) {
+                  ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/pci/quirks.c:3890:15: note: place parentheses around the assignment to silence this warning
+           while (child = pci_get_class(PCI_CLASS_SERIAL_USB_USB4, child)) {
+                        ^
+                  (                                                      )
+   drivers/pci/quirks.c:3890:15: note: use '==' to turn this assignment into an equality comparison
+           while (child = pci_get_class(PCI_CLASS_SERIAL_USB_USB4, child)) {
+                        ^
+                        ==
+   1 warning generated.
 
 
 vim +3890 drivers/pci/quirks.c
