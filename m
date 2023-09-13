@@ -2,87 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E97F79E675
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Sep 2023 13:17:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84CB379E6A7
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Sep 2023 13:25:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240038AbjIMLSB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Sep 2023 07:18:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37950 "EHLO
+        id S239978AbjIMLZo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Sep 2023 07:25:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239952AbjIMLRr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Sep 2023 07:17:47 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 718BC212F;
-        Wed, 13 Sep 2023 04:17:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694603856; x=1726139856;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=EINwWwU3qdAxq238HtvPTy5ZZC9fwj5Kb64aFwlmnKA=;
-  b=hCgtB19j3gze5LQduMLa2fAsAlqLqw+L4ENuunch4Tg43U6dpjmNkQX6
-   Gj6ZpKRlvZY1y17F1HS1L/1z1hfWz+m/mlApsK8XL4/TAq6S+uHRElVjV
-   B9xJS2Le3k49L6N0hl2htiUQ+MLiVKEnSVQyIjcNJ4EcfRfrIC0DnTBGj
-   LHRdOzLoeL6okjwjqnf7S20/z778ispEQO/6lr+8LJZzNW1rHTFH6Q6aO
-   da4IHcAA4bj09mdRWcy9Kmztu3UvGcLo+6Sid4/b2WD1HAo2lOu1T92O6
-   +lIigPsBo0ipTNjxvP0bXfKiM9ITXdY9Mccm60McTBQK5nFUQ+Ogu7D6u
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="382435268"
-X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="382435268"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 04:17:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="867753665"
-X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="867753665"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 04:17:33 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1qgNsA-008qeM-1X;
-        Wed, 13 Sep 2023 14:17:30 +0300
-Date:   Wed, 13 Sep 2023 14:17:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Lizhi Hou <lizhi.hou@amd.com>, Andrew Lunn <andrew@lunn.ch>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, max.zhen@amd.com,
-        sonal.santan@amd.com, stefano.stabellini@xilinx.com
-Subject: Re: [PATCH V13 0/5] Generate device tree node for pci devices
-Message-ID: <ZQGaSr+G5qu/8nJZ@smile.fi.intel.com>
-References: <1692120000-46900-1-git-send-email-lizhi.hou@amd.com>
- <ZP96feVs2ev7098Y@smile.fi.intel.com>
- <CAL_JsqKfQJFrd8MOdjW55cYdEb8yyPyR+P3ran9+X3dCwUgdyA@mail.gmail.com>
+        with ESMTP id S240140AbjIMLZn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Sep 2023 07:25:43 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AEED19BE;
+        Wed, 13 Sep 2023 04:25:36 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1bf7a6509deso46795345ad.3;
+        Wed, 13 Sep 2023 04:25:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694604336; x=1695209136; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U+snWdPw4OwpiJyYyKW+q+QdDJNbVDVuE7cCYvKasOM=;
+        b=sKsV+IUYxLdwt5cxFuM2gCePh2mHyys5NDnL78hhOOHOz70l6FlJELNsL36Vwv1JKf
+         ECgr5qdgpQxAACF+fItM+1HaFw2Ku7hGc1O+I/GU39dNq18fL+TiJhcFBUB6OpYmlmoQ
+         1ELeMtOSlw6YYHG9ICwQLn2e682nSF90on8ay+3Xowe7SRDL7faeaguF4axWMMbhvTZZ
+         C4KpT8E70bBXLkR1IMFFPnmTUeEonKuk/9/mZIMylN/sKRwPcfXu/M+8nW1PQtz8Q2Rm
+         wm4sYdQE78CwSl8T36nmXxyCJ6TqmZO0zuoMZ/Wl8wRIhtq7yREJUTEWQuJtQQhF+dJs
+         U2NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694604336; x=1695209136;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=U+snWdPw4OwpiJyYyKW+q+QdDJNbVDVuE7cCYvKasOM=;
+        b=L1SwDb0PJtB0UrtaWtwCsM9to4rzTUZayEGRGkwYJOkYAxoYeE7rvd9Dz3GGct5aBJ
+         GAc9uKMWgP7q0Ht1DEAn9aaGX2XuDPZCXKHadJTikKBqMkX8dTE3eMDDaUndzTeuAQJN
+         t5LqsZNzIKTies3XRHWucAF5SB+4yRMHY1uPOKsDHO/iqJzSq6SOviV+LZjg/o5vBod9
+         RmgUrbjrGF4ucJmjugyuRGEIPEtzEk3DamsuEdXUk/03paNacGDF3fDXxvkMFnrQtcWC
+         a5UNmpgwBWoKvtzy9Ur7NQXlbTz56QDpE7c+p9e4MBZZ1kazDAxlA/OTbYP96eBNoEXj
+         kalQ==
+X-Gm-Message-State: AOJu0YxoHPGBS8s6u7PuZ1mmF/KNYyWcKBSt89Z3xZEYVe8UMdDXFs25
+        /eXs0nPr5FnwDORahnfkubmsaaXjJAg=
+X-Google-Smtp-Source: AGHT+IG6qnNRjP8VGlU50n41ujtaU5WA8G9CE3Sr2eMhkVR7KTZlFt9dF+9n+pjjZ8ne4icdXU8kdQ==
+X-Received: by 2002:a17:902:d70a:b0:1c3:8230:30d8 with SMTP id w10-20020a170902d70a00b001c3823030d8mr2375056ply.38.1694604336213;
+        Wed, 13 Sep 2023 04:25:36 -0700 (PDT)
+Received: from [192.168.0.106] ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id e4-20020a170902d38400b001b890009634sm10230532pld.139.2023.09.13.04.25.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Sep 2023 04:25:35 -0700 (PDT)
+Message-ID: <dacb34e4-ce58-bc0e-8206-672d743a3e34@gmail.com>
+Date:   Wed, 13 Sep 2023 18:25:31 +0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqKfQJFrd8MOdjW55cYdEb8yyPyR+P3ran9+X3dCwUgdyA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Content-Language: en-US
+To:     Damien Le Moal <dlemoal@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        patenteng <dimitar@daskalov.co.uk>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Linux IDE and libata <linux-ide@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: Kernel 6.5.2 Causes Marvell Technology Group 88SE9128 PCIe SATA
+ to Constantly Reset
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 12, 2023 at 02:12:04PM -0500, Rob Herring wrote:
-> On Mon, Sep 11, 2023 at 3:37 PM Andy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
-> > On Tue, Aug 15, 2023 at 10:19:55AM -0700, Lizhi Hou wrote:
+Hi,
 
-...
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-> > Can you point out to the ACPI excerpt(s) of the description of anything related
-> > to the device(s) in question?
+> After upgrading to 6.5.2 from 6.4.12 I keep getting the following kernel messages around three times per second:
 > 
-> I don't understand what you are asking for.
+> [ 9683.269830] ata16: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+> [ 9683.270399] ata16.00: configured for UDMA/66
+> 
+> So I've tracked the offending device:
+> 
+> ll /sys/class/ata_port/ata16
+> lrwxrwxrwx 1 root root 0 Sep 10 21:51 /sys/class/ata_port/ata16 -> ../../devices/pci0000:00/0000:00:1c.7/0000:0a:00.0/ata16/ata_port/ata16
+> 
+> cat /sys/bus/pci/devices/0000:0a:00.0/uevent
+> DRIVER=ahci
+> PCI_CLASS=10601
+> PCI_ID=1B4B:9130
+> PCI_SUBSYS_ID=1043:8438
+> PCI_SLOT_NAME=0000:0a:00.0
+> MODALIAS=pci:v00001B4Bd00009130sv00001043sd00008438bc01sc06i01
+> 
+> lspci | grep 0a:00.0
+> 0a:00.0 SATA controller: Marvell Technology Group Ltd. 88SE9128 PCIe SATA 6 Gb/s RAID controller with HyperDuo (rev 11)
+> 
+> I am not using the 88SE9128, so I have no way of knowing whether it works or not. It may simply be getting reset a couple of times per second or it may not function at all.
 
-Through the email thread it was mentioned that this series was tested on the
-ACPI enabled platform, Jonathan (IIRC) asked why do we need to have a shadow
-DT for the something that ACPI already describes. That's why I'm trying to
-understand if it's the case. and if so, how can we improve the approach.
+See Bugzilla for the full thread.
+
+patenteng: I have asked you to bisect this regression. Any conclusion?
+
+Anyway, I'm adding this regression to regzbot:
+
+#regzbot: introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=217902
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217902
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+An old man doll... just what I always wanted! - Clara
