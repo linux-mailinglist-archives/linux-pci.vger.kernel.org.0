@@ -2,52 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DBF779E80A
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Sep 2023 14:31:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0388079E80D
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Sep 2023 14:31:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240627AbjIMMbA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Sep 2023 08:31:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46158 "EHLO
+        id S240617AbjIMMbC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Sep 2023 08:31:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240507AbjIMMav (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Sep 2023 08:30:51 -0400
+        with ESMTP id S240609AbjIMMbA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Sep 2023 08:31:00 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D93619AD;
-        Wed, 13 Sep 2023 05:30:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CAE61BC8;
+        Wed, 13 Sep 2023 05:30:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694608247; x=1726144247;
+  t=1694608249; x=1726144249;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=lGsBT0uuTDOMajlNgJ3siJtE8uolW3uxhY8d88dRxik=;
-  b=hlU6qkgP3pB5mUXJDy67iBLnatEEj6x8+/Koo7MXG3go6EQ0rgEWu3J7
-   vp4kuGiA2n5Sy+wdl73KdfWLg/Se+l/WWcFGJ4StsBa45WogMnqdRf9zN
-   H4oq0yj2mw4qUUp6nGY9jWhiFGUFwKlekFAmkJ8pDpFPE7RtT/I1I5ycU
-   b9YBwj+hlHUZRtWW5vS8uKD8gf9gAq9rWwuQSIMYRLMu2v/FOp2a7RBET
-   NaljDv+TDVOuqx0oX8Y6d4e5qSYWD9sRkd/mPkBAdDGjKaWZqnKccQ0Oe
-   ANybNPWBb5Gz9VO3rMZVTSfMSVE7BeWDOvpbwV/KiiEH+c6fWuJhsGLw4
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="368912521"
+  bh=1/Ks4shsYec7fIvyglfV0nBYf14xH5c+nwe3xSib8S0=;
+  b=IuwJfy2bN+EuGCvy3e79A+V2ExaFySKwqOsDAhHkzsFsrZF+azWEA7Xl
+   D5GIRJdv5aCCU+lz3VogF4NrSajM1cZbghT3dlNBhKfuDoY2KQvK+DtJf
+   0Im4iBl7MFbmi2AhU/6TgkTSitqzYB6uMxPz+7H3vdcdiM1IhVY6nXSKB
+   6z5AAB82B+EUuoi4xp2PJsEeunf6vMKYuzk6+ZGmatqTSXJQXuqDiStCR
+   OS31pFICW2F7keSpgMyF7tSeBzTD0+n+AUJIUoOt67dh1jRku1IAaXjlH
+   o3VRX9tarh2V3zdawY4xgMN7Y+dU9xKmSnCFoHhozKhXY+nfyhA34tsKI
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="368912530"
 X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="368912521"
+   d="scan'208";a="368912530"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 05:28:30 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="693836655"
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="693836656"
 X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="693836655"
+   d="scan'208";a="693836656"
 Received: from pakurapo-mobl3.ger.corp.intel.com (HELO ijarvine-mobl2.ger.corp.intel.com) ([10.249.45.213])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 05:28:22 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 05:28:25 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v2 06/10] PCI: Use FIELD_GET() to extract Link Width
-Date:   Wed, 13 Sep 2023 15:27:44 +0300
-Message-Id: <20230913122748.29530-7-ilpo.jarvinen@linux.intel.com>
+        Bradley Grove <linuxdrivers@attotech.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 07/10] scsi: esas2r: Use FIELD_GET() to extract PCIe capability fields
+Date:   Wed, 13 Sep 2023 15:27:45 +0300
+Message-Id: <20230913122748.29530-8-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230913122748.29530-1-ilpo.jarvinen@linux.intel.com>
 References: <20230913122748.29530-1-ilpo.jarvinen@linux.intel.com>
@@ -58,70 +59,49 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use FIELD_GET() to extract PCIe Negotiated and Maximum Link Width fields
-instead of custom masking and shifting.
+Use FIELD_GET() to extract PCIe capability register fields instead of
+custom masking and shifting. Also remove the unnecessary cast to u8,
+the value in those fields always fits to u8.
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/pci/pci-sysfs.c | 5 ++---
- drivers/pci/pci.c       | 6 +++---
- 2 files changed, 5 insertions(+), 6 deletions(-)
+ drivers/scsi/esas2r/esas2r_ioctl.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index d9eede2dbc0e..5a6241044c3c 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -12,7 +12,7 @@
-  * Modeled after usb's driverfs.c
+diff --git a/drivers/scsi/esas2r/esas2r_ioctl.c b/drivers/scsi/esas2r/esas2r_ioctl.c
+index 055d2e87a2c8..3f7c1d131ec3 100644
+--- a/drivers/scsi/esas2r/esas2r_ioctl.c
++++ b/drivers/scsi/esas2r/esas2r_ioctl.c
+@@ -41,6 +41,8 @@
+  * USA.
   */
  
--
 +#include <linux/bitfield.h>
- #include <linux/kernel.h>
- #include <linux/sched.h>
- #include <linux/pci.h>
-@@ -230,8 +230,7 @@ static ssize_t current_link_width_show(struct device *dev,
- 	if (err)
- 		return -EINVAL;
++
+ #include "esas2r.h"
  
--	return sysfs_emit(buf, "%u\n",
--		(linkstat & PCI_EXP_LNKSTA_NLW) >> PCI_EXP_LNKSTA_NLW_SHIFT);
-+	return sysfs_emit(buf, "%u\n", FIELD_GET(PCI_EXP_LNKSTA_NLW, linkstat));
- }
- static DEVICE_ATTR_RO(current_link_width);
+ /*
+@@ -792,16 +794,10 @@ static int hba_ioctl_callback(struct esas2r_adapter *a,
+ 			pcie_capability_read_dword(a->pcid, PCI_EXP_LNKCAP,
+ 						   &caps);
  
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 59c01d68c6d5..a8adc34dc86f 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -9,6 +9,7 @@
-  */
+-			gai->pci.link_speed_curr =
+-				(u8)(stat & PCI_EXP_LNKSTA_CLS);
+-			gai->pci.link_speed_max =
+-				(u8)(caps & PCI_EXP_LNKCAP_SLS);
+-			gai->pci.link_width_curr =
+-				(u8)((stat & PCI_EXP_LNKSTA_NLW)
+-				     >> PCI_EXP_LNKSTA_NLW_SHIFT);
+-			gai->pci.link_width_max =
+-				(u8)((caps & PCI_EXP_LNKCAP_MLW)
+-				     >> 4);
++			gai->pci.link_speed_curr = FIELD_GET(PCI_EXP_LNKSTA_CLS, stat);
++			gai->pci.link_speed_max = FIELD_GET(PCI_EXP_LNKCAP_SLS, caps);
++			gai->pci.link_width_curr = FIELD_GET(PCI_EXP_LNKSTA_NLW, stat);
++			gai->pci.link_width_max = FIELD_GET(PCI_EXP_LNKCAP_MLW, caps);
+ 		}
  
- #include <linux/acpi.h>
-+#include <linux/bitfield.h>
- #include <linux/kernel.h>
- #include <linux/delay.h>
- #include <linux/dmi.h>
-@@ -6257,8 +6258,7 @@ u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
- 		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
- 
- 		next_speed = pcie_link_speed[lnksta & PCI_EXP_LNKSTA_CLS];
--		next_width = (lnksta & PCI_EXP_LNKSTA_NLW) >>
--			PCI_EXP_LNKSTA_NLW_SHIFT;
-+		next_width = FIELD_GET(PCI_EXP_LNKSTA_NLW, lnksta);
- 
- 		next_bw = next_width * PCIE_SPEED2MBS_ENC(next_speed);
- 
-@@ -6330,7 +6330,7 @@ enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev)
- 
- 	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
- 	if (lnkcap)
--		return (lnkcap & PCI_EXP_LNKCAP_MLW) >> 4;
-+		return FIELD_GET(PCI_EXP_LNKCAP_MLW, lnkcap);
- 
- 	return PCIE_LNK_WIDTH_UNKNOWN;
- }
+ 		gai->pci.msi_vector_cnt = 1;
 -- 
 2.30.2
 
