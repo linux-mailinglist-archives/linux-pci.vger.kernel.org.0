@@ -2,58 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE57079E7FE
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Sep 2023 14:30:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E5AF79E7FF
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Sep 2023 14:30:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240581AbjIMMao (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Sep 2023 08:30:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57784 "EHLO
+        id S240610AbjIMMar (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Sep 2023 08:30:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236266AbjIMMak (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Sep 2023 08:30:40 -0400
+        with ESMTP id S240570AbjIMMan (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Sep 2023 08:30:43 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 776B11BDD;
-        Wed, 13 Sep 2023 05:30:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF8BC1BCE;
+        Wed, 13 Sep 2023 05:30:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694608235; x=1726144235;
+  t=1694608239; x=1726144239;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=zQpj7OaTDonluY2E3OGQf5kVh3FqltWnatkxOc0duHk=;
-  b=eDfgN0MfyQUdB5ZYrBp0kmgE5KJ/Hn6imRmwhkLYeSWBAMDQO4Qwdbx9
-   RAFTBcjqI6eZwr0LlRJoTP/iom81QI1Wfhr/NPMjkKv8tnvm8/PmXVtOy
-   48iCNCzjUXeHnf1iQDrStnH3EbPKmltJHNSmbgiX818BqcrzeeC6YuRF8
-   WurnHQwNdY25crh9NlxWu/g00Ef/uFSA0m87I/T/EUIMKUo8C3rSFYQeW
-   VLwGKBgYadRL1NFtp7veXPXV6fdFVyuzEYe6pja4I4MA+FACELjyQApeu
-   30uy+1Td5n5XuVKpt0qXkjuLmp9o0ZJ1hXKgxPNdqj4W1kJq+FR6KIj2F
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="368912417"
+  bh=+p2qHcmN288VJTNmarM516bgZohk8ZtzFjtp/gNHNio=;
+  b=Hdi8p3qADp2DedEUei1iJZvjf3hCAgdsrd2EdoSFdpPGWpoiKzHkzIKx
+   ucotlmanpLA3thVUoPCGHYGVHueYRbr7yRRdxiBxA/GUYbn8XIQzRhxmc
+   N1/9obp7db0kMrGUIV5jAq17CzYP4BXUqbDhGNEGGImqZ2K+fPD3jUVib
+   x0UtFbJKNDGmlnUM8Hdg4CjgET0mBq+CrTIsroqunETsa1pb/szVnQ41p
+   1og7louorEMT34L1GJpSoA3bSYkltpyJxBQJ240Fxb3xKdokbQYawraVW
+   8ePH/P7w0sCav2rvOmlCFMA5qNwyg7bl1zIOa5Gmlu/9UVhAKsr5l6IR0
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="368912450"
 X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="368912417"
+   d="scan'208";a="368912450"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 05:28:12 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 05:28:17 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="693836628"
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="693836640"
 X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="693836628"
+   d="scan'208";a="693836640"
 Received: from pakurapo-mobl3.ger.corp.intel.com (HELO ijarvine-mobl2.ger.corp.intel.com) ([10.249.45.213])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 05:28:08 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 05:28:13 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v2 03/10] igb: Use FIELD_GET() to extract Link Width
-Date:   Wed, 13 Sep 2023 15:27:41 +0300
-Message-Id: <20230913122748.29530-4-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 04/10] PCI: tegra194: Use FIELD_GET()/FIELD_PREP() with Link Width fields
+Date:   Wed, 13 Sep 2023 15:27:42 +0300
+Message-Id: <20230913122748.29530-5-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230913122748.29530-1-ilpo.jarvinen@linux.intel.com>
 References: <20230913122748.29530-1-ilpo.jarvinen@linux.intel.com>
@@ -67,36 +66,57 @@ X-Mailing-List: linux-pci@vger.kernel.org
 Use FIELD_GET() to extract PCIe Negotiated Link Width field instead of
 custom masking and shifting.
 
+Similarly, change custom code that misleadingly used
+PCI_EXP_LNKSTA_NLW_SHIFT to prepare value for PCI_EXP_LNKCAP write
+to use FIELD_PREP() with correct field define (PCI_EXP_LNKCAP_MLW).
+
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/net/ethernet/intel/igb/e1000_mac.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pci/controller/dwc/pcie-tegra194.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/igb/e1000_mac.c b/drivers/net/ethernet/intel/igb/e1000_mac.c
-index caf91c6f52b4..5a23b9cfec6c 100644
---- a/drivers/net/ethernet/intel/igb/e1000_mac.c
-+++ b/drivers/net/ethernet/intel/igb/e1000_mac.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- /* Copyright(c) 2007 - 2018 Intel Corporation. */
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 4bba31502ce1..248cd9347e8f 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -9,6 +9,7 @@
+  * Author: Vidya Sagar <vidyas@nvidia.com>
+  */
  
 +#include <linux/bitfield.h>
- #include <linux/if_ether.h>
+ #include <linux/clk.h>
+ #include <linux/debugfs.h>
  #include <linux/delay.h>
- #include <linux/pci.h>
-@@ -50,9 +51,8 @@ s32 igb_get_bus_info_pcie(struct e1000_hw *hw)
- 			break;
- 		}
+@@ -346,8 +347,7 @@ static void apply_bad_link_workaround(struct dw_pcie_rp *pp)
+ 	 */
+ 	val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA);
+ 	if (val & PCI_EXP_LNKSTA_LBMS) {
+-		current_link_width = (val & PCI_EXP_LNKSTA_NLW) >>
+-				     PCI_EXP_LNKSTA_NLW_SHIFT;
++		current_link_width = FIELD_GET(PCI_EXP_LNKSTA_NLW, val);
+ 		if (pcie->init_link_width > current_link_width) {
+ 			dev_warn(pci->dev, "PCIe link is bad, width reduced\n");
+ 			val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base +
+@@ -760,8 +760,7 @@ static void tegra_pcie_enable_system_interrupts(struct dw_pcie_rp *pp)
  
--		bus->width = (enum e1000_bus_width)((pcie_link_status &
--						     PCI_EXP_LNKSTA_NLW) >>
--						     PCI_EXP_LNKSTA_NLW_SHIFT);
-+		bus->width = (enum e1000_bus_width)FIELD_GET(PCI_EXP_LNKSTA_NLW,
-+							     pcie_link_status);
- 	}
+ 	val_w = dw_pcie_readw_dbi(&pcie->pci, pcie->pcie_cap_base +
+ 				  PCI_EXP_LNKSTA);
+-	pcie->init_link_width = (val_w & PCI_EXP_LNKSTA_NLW) >>
+-				PCI_EXP_LNKSTA_NLW_SHIFT;
++	pcie->init_link_width = FIELD_GET(PCI_EXP_LNKSTA_NLW, val_w);
  
- 	reg = rd32(E1000_STATUS);
+ 	val_w = dw_pcie_readw_dbi(&pcie->pci, pcie->pcie_cap_base +
+ 				  PCI_EXP_LNKCTL);
+@@ -920,7 +919,7 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
+ 	/* Configure Max lane width from DT */
+ 	val = dw_pcie_readl_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKCAP);
+ 	val &= ~PCI_EXP_LNKCAP_MLW;
+-	val |= (pcie->num_lanes << PCI_EXP_LNKSTA_NLW_SHIFT);
++	val |= FIELD_PREP(PCI_EXP_LNKCAP_MLW, pcie->num_lanes);
+ 	dw_pcie_writel_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKCAP, val);
+ 
+ 	/* Clear Slot Clock Configuration bit if SRNS configuration */
 -- 
 2.30.2
 
