@@ -2,20 +2,20 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CE967A027B
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Sep 2023 13:25:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE8F77A0281
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Sep 2023 13:26:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230367AbjINLZ2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Sep 2023 07:25:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50002 "EHLO
+        id S234334AbjINLZ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Sep 2023 07:25:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229992AbjINLZ1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Sep 2023 07:25:27 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DD691A5;
-        Thu, 14 Sep 2023 04:25:23 -0700 (PDT)
+        with ESMTP id S234742AbjINLZz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Sep 2023 07:25:55 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA441A5;
+        Thu, 14 Sep 2023 04:25:25 -0700 (PDT)
 Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RmZgX5RV2z1N7yV;
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RmZgX1ZwGzgZgH;
         Thu, 14 Sep 2023 19:23:04 +0800 (CST)
 Received: from localhost.localdomain (10.50.163.32) by
  canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
@@ -28,9 +28,9 @@ CC:     <alexander.shishkin@linux.intel.com>, <helgaas@kernel.org>,
         <linux-pci@vger.kernel.org>, <prime.zeng@hisilicon.com>,
         <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
         <hejunhao3@huawei.com>
-Subject: [PATCH v2 1/5] hwtracing: hisi_ptt: Disable interrupt after trace end
-Date:   Thu, 14 Sep 2023 19:22:19 +0800
-Message-ID: <20230914112223.27165-2-yangyicong@huawei.com>
+Subject: [PATCH v2 2/5] hwtracing: hisi_ptt: Handle the interrupt in hardirq context
+Date:   Thu, 14 Sep 2023 19:22:20 +0800
+Message-ID: <20230914112223.27165-3-yangyicong@huawei.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20230914112223.27165-1-yangyicong@huawei.com>
 References: <20230914112223.27165-1-yangyicong@huawei.com>
@@ -47,45 +47,39 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Yicong Yang <yangyicong@hisilicon.com>
 
-On trace end we disable the hardware but leave the interrupt
-unmasked. Mask the interrupt to make the process reverse to
-the start. No actual issue since hardware should send no
-interrupt after disabled.
+Handle the trace interrupt in the hardirq context, make sure the irq
+core won't threaded it by declaring IRQF_NO_THREAD and userspace won't
+balance it by declaring IRQF_NOBALANCING. Otherwise we may violate the
+synchronization requirements of the perf core, referenced to the
+change of arm-ccn PMU commit 0811ef7e2f54 ("bus: arm-ccn: fix PMU interrupt flags").
+
+In the interrupt handler we mainly doing 2 things:
+- Copy the data from the local DMA buffer to the AUX buffer
+- Commit the data in the AUX buffer
 
 Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/hwtracing/ptt/hisi_ptt.c | 4 ++++
- drivers/hwtracing/ptt/hisi_ptt.h | 1 +
- 2 files changed, 5 insertions(+)
+ drivers/hwtracing/ptt/hisi_ptt.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
-index 49ea1b0f7489..428cca54217e 100644
+index 428cca54217e..3041238a6e54 100644
 --- a/drivers/hwtracing/ptt/hisi_ptt.c
 +++ b/drivers/hwtracing/ptt/hisi_ptt.c
-@@ -183,6 +183,10 @@ static void hisi_ptt_wait_dma_reset_done(struct hisi_ptt *hisi_ptt)
- static void hisi_ptt_trace_end(struct hisi_ptt *hisi_ptt)
- {
- 	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
-+
-+	/* Mask the interrupt on the end */
-+	writel(HISI_PTT_TRACE_INT_MASK_ALL, hisi_ptt->iobase + HISI_PTT_TRACE_INT_MASK);
-+
- 	hisi_ptt->trace_ctrl.started = false;
- }
+@@ -346,9 +346,9 @@ static int hisi_ptt_register_irq(struct hisi_ptt *hisi_ptt)
+ 		return ret;
  
-diff --git a/drivers/hwtracing/ptt/hisi_ptt.h b/drivers/hwtracing/ptt/hisi_ptt.h
-index e17f045d7e72..46030aa88081 100644
---- a/drivers/hwtracing/ptt/hisi_ptt.h
-+++ b/drivers/hwtracing/ptt/hisi_ptt.h
-@@ -47,6 +47,7 @@
- #define HISI_PTT_TRACE_INT_STAT		0x0890
- #define   HISI_PTT_TRACE_INT_STAT_MASK	GENMASK(3, 0)
- #define HISI_PTT_TRACE_INT_MASK		0x0894
-+#define   HISI_PTT_TRACE_INT_MASK_ALL	GENMASK(3, 0)
- #define HISI_PTT_TUNING_INT_STAT	0x0898
- #define   HISI_PTT_TUNING_INT_STAT_MASK	BIT(0)
- #define HISI_PTT_TRACE_WR_STS		0x08a0
+ 	hisi_ptt->trace_irq = pci_irq_vector(pdev, HISI_PTT_TRACE_DMA_IRQ);
+-	ret = devm_request_threaded_irq(&pdev->dev, hisi_ptt->trace_irq,
+-					NULL, hisi_ptt_isr, 0,
+-					DRV_NAME, hisi_ptt);
++	ret = devm_request_irq(&pdev->dev, hisi_ptt->trace_irq, hisi_ptt_isr,
++				IRQF_NOBALANCING | IRQF_NO_THREAD, DRV_NAME,
++				hisi_ptt);
+ 	if (ret) {
+ 		pci_err(pdev, "failed to request irq %d, ret = %d\n",
+ 			hisi_ptt->trace_irq, ret);
 -- 
 2.24.0
 
