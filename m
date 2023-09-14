@@ -2,105 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F01477A0A79
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Sep 2023 18:09:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B79197A0A9C
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Sep 2023 18:19:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238801AbjINQJs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Sep 2023 12:09:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51094 "EHLO
+        id S231552AbjINQTo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Sep 2023 12:19:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233860AbjINQJs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Sep 2023 12:09:48 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68A401BEF;
-        Thu, 14 Sep 2023 09:09:44 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F0DFC433C8;
-        Thu, 14 Sep 2023 16:09:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694707784;
-        bh=iG88UtPlCrOIAvGQL1fL5TxzQKU6atcBWhCTHpJ9NdI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LAC9eY/p98qqoGW+p+QG0Vx4L3JGPYf/WEo9KjQxn2iY/s+U9sMSt5hLrDShTZo7w
-         bfZpgFP+jZGRXW12kBYVr3ntcBqNI/4qI/lfIA+eeRJAOe+qucZOQHe/uD6pTLkP0j
-         st7zYWVMc+Y2Gj0HqIBsFZkAkzeDB/zYKTV20QAd8EMBTG40407YQytq3nRlFVQzMX
-         +wDnwYv7rPDmTXIY0HXy+U3LUUss63NpSaibpO3UYdEvwaDP903cA0OK3d6js0GI2P
-         +NUntL2o+Sw/cgpkgP5DSqfzJpD8wF15vMiEVqJqU3BSb+73mjwStP+aClgZD0S8Ek
-         e6bUy4lXt03Ig==
-Date:   Thu, 14 Sep 2023 11:09:41 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
-        manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
-        kishon@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, marek.vasut+renesas@gmail.com,
-        fancer.lancer@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v20 09/19] PCI: dwc: Add EDMA_UNROLL capability flag
-Message-ID: <20230914160941.GA32484@bhelgaas>
+        with ESMTP id S229992AbjINQTn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Sep 2023 12:19:43 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 819D11BE1;
+        Thu, 14 Sep 2023 09:19:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694708379; x=1726244379;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=9L18DpglYGuALGNLgXH0mKUUMhmDOGiuLGfiAw6wnxM=;
+  b=TXKQnOtMYbRGiNfhOfrwmp9Um67ZvIrtIsMHqDEsPRFYDxWAeNGzRIkz
+   8HXelzMQrtMOFfJLaxRrHK9s59gO3Om02EmpC3X+hQsyPvtWP8Q3AIXeD
+   Dkq+lhny4Pv+Eqxoe1iYxdCvDxbR07wwcHSGsmMfe0Hr+ZqFmv+a15OnT
+   4sMjE01Rf884VK5YayrYlknKkiiDbS+bPkbTc24L7e3L3Iq5Pi4dKF2LZ
+   TMXRWsT4VA/13mg4i3Im5Ev3EhfUClKAFcGzf6joNVFRn+Z5GGK80DYZy
+   IPClIDzSqpEbIVOgzg9vz1opHYuvTMJGa7yxBMcBBe6frjr9NXHQPClPs
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="359258172"
+X-IronPort-AV: E=Sophos;i="6.02,146,1688454000"; 
+   d="scan'208";a="359258172"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2023 09:11:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="859763286"
+X-IronPort-AV: E=Sophos;i="6.02,146,1688454000"; 
+   d="scan'208";a="859763286"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.209.46.39])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2023 09:11:30 -0700
+Message-ID: <7b45ac2ed091497b4e21a6a5c19956161175ba16.camel@linux.intel.com>
+Subject: Re: [PATCH] HID: intel-ish-hid: ipc: Rework EHL OOB wakeup
+From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, jikos@kernel.org,
+        benjamin.tissoires@redhat.com
+Cc:     linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
+        Jian Hui Lee <jianhui.lee@canonical.com>,
+        Even Xu <even.xu@intel.com>, Zhang Lixu <lixu.zhang@intel.com>,
+        Najumon Ba <najumon.ba@intel.com>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 14 Sep 2023 09:11:29 -0700
+In-Reply-To: <20230914041806.816741-1-kai.heng.feng@canonical.com>
+References: <20230914041806.816741-1-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230825093219.2685912-10-yoshihiro.shimoda.uh@renesas.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 25, 2023 at 06:32:09PM +0900, Yoshihiro Shimoda wrote:
-> Renesas R-Car Gen4 PCIe controllers have an unexpected register value in
-> the eDMA CTRL register. So, add a new capability flag "EDMA_UNROLL"
-> which would force the unrolled eDMA mapping for the problematic device.
-> 
-> Suggested-by: Serge Semin <fancer.lancer@gmail.com>
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 8 +++++++-
->  drivers/pci/controller/dwc/pcie-designware.h | 5 +++--
->  2 files changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index c4998194fe74..4812ce040f1e 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -883,8 +883,14 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
->  	 * Indirect eDMA CSRs access has been completely removed since v5.40a
->  	 * thus no space is now reserved for the eDMA channels viewport and
->  	 * former DMA CTRL register is no longer fixed to FFs.
-> +	 *
-> +	 * Note that Renesas R-Car S4-8's PCIe controllers for unknown reason
-> +	 * have zeros in the eDMA CTRL register even though the HW-manual
-> +	 * explicitly states there must FFs if the unrolled mapping is enabled.
-> +	 * For such cases the low-level drivers are supposed to manually
-> +	 * activate the unrolled mapping to bypass the auto-detection procedure.
->  	 */
-> -	if (dw_pcie_ver_is_ge(pci, 540A))
-> +	if (dw_pcie_ver_is_ge(pci, 540A) || dw_pcie_cap_is(pci, EDMA_UNROLL))
->  		val = 0xFFFFFFFF;
->  	else
->  		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index b731e38a71fc..c7759a508ca9 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -51,8 +51,9 @@
->  
->  /* DWC PCIe controller capabilities */
->  #define DW_PCIE_CAP_REQ_RES		0
-> -#define DW_PCIE_CAP_IATU_UNROLL		1
-> -#define DW_PCIE_CAP_CDM_CHECK		2
-> +#define DW_PCIE_CAP_EDMA_UNROLL		1
-> +#define DW_PCIE_CAP_IATU_UNROLL		2
-> +#define DW_PCIE_CAP_CDM_CHECK		3
+SGkgRXZlbiwKCk9uIFRodSwgMjAyMy0wOS0xNCBhdCAxMjoxOCArMDgwMCwgS2FpLUhlbmcgRmVu
+ZyB3cm90ZToKPiBTeXN0ZW0gY2Fubm90IHN1c3BlbmQgbW9yZSB0aGFuIDI1NSB0aW1lcyBiZWNh
+dXNlIHRoZSBkcml2ZXIgZG9lc24ndAo+IGhhdmUgY29ycmVzcG9uZGluZyBhY3BpX2Rpc2FibGVf
+Z3BlKCkgZm9yIGFjcGlfZW5hYmxlX2dwZSgpLCBzbyB0aGUKPiBHUEUKPiByZWZjb3VudCBvdmVy
+Zmxvd3MuCj4gCj4gU2luY2UgUENJIGNvcmUgYW5kIEFDUEkgY29yZSBhbHJlYWR5IGhhbmRsZXMg
+UENJIFBNRSB3YWtlIGFuZCBHUEUKPiB3YWtlCj4gd2hlbiB0aGUgZGV2aWNlIGhhcyB3YWtldXAg
+Y2FwYWJpbGl0eSwgdXNlIGRldmljZV9pbml0X3dha2V1cCgpIHRvCj4gbGV0Cj4gdGhlbSBkbyB0
+aGUgd2FrZXVwIHNldHRpbmcgd29yay4KPiAKPiBBbHNvIGFkZCBhIHNodXRkb3duIGNhbGxiYWNr
+IHdoaWNoIHVzZXMgcGNpX3ByZXBhcmVfdG9fc2xlZXAoKSB0byBsZXQKPiBQQ0kgYW5kIEFDUEkg
+c2V0IE9PQiB3YWtldXAgZm9yIFM1Lgo+IApQbGVhc2UgdGVzdCB0aGlzIGNoYW5nZS4KClRoYW5r
+cywKU3Jpbml2YXMKCj4gRml4ZXM6IDJlMjNhNzBlZGFiZSAoIkhJRDogaW50ZWwtaXNoLWhpZDog
+aXBjOiBmaW5pc2ggcG93ZXIgZmxvdyBmb3IKPiBFSEwgT09CIikKPiBDYzogSmlhbiBIdWkgTGVl
+IDxqaWFuaHVpLmxlZUBjYW5vbmljYWwuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEthaS1IZW5nIEZl
+bmcgPGthaS5oZW5nLmZlbmdAY2Fub25pY2FsLmNvbT4KPiAtLS0KPiDCoGRyaXZlcnMvaGlkL2lu
+dGVsLWlzaC1oaWQvaXBjL3BjaS1pc2guYyB8IDU5ICsrKysrKystLS0tLS0tLS0tLS0tLS0tCj4g
+LS0KPiDCoDEgZmlsZSBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspLCA0NCBkZWxldGlvbnMoLSkK
+PiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9oaWQvaW50ZWwtaXNoLWhpZC9pcGMvcGNpLWlzaC5j
+Cj4gYi9kcml2ZXJzL2hpZC9pbnRlbC1pc2gtaGlkL2lwYy9wY2ktaXNoLmMKPiBpbmRleCA1NWNi
+MjUwMzhlNjMuLjY1ZTdlZWIyZmE2NCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2hpZC9pbnRlbC1p
+c2gtaGlkL2lwYy9wY2ktaXNoLmMKPiArKysgYi9kcml2ZXJzL2hpZC9pbnRlbC1pc2gtaGlkL2lw
+Yy9wY2ktaXNoLmMKPiBAQCAtMTE5LDQyICsxMTksNiBAQCBzdGF0aWMgaW5saW5lIGJvb2wgaXNo
+X3Nob3VsZF9sZWF2ZV9kMGkzKHN0cnVjdAo+IHBjaV9kZXYgKnBkZXYpCj4gwqDCoMKgwqDCoMKg
+wqDCoHJldHVybiAhcG1fcmVzdW1lX3ZpYV9maXJtd2FyZSgpIHx8IHBkZXYtPmRldmljZSA9PQo+
+IENIVl9ERVZJQ0VfSUQ7Cj4gwqB9Cj4gwqAKPiAtc3RhdGljIGludCBlbmFibGVfZ3BlKHN0cnVj
+dCBkZXZpY2UgKmRldikKPiAtewo+IC0jaWZkZWYgQ09ORklHX0FDUEkKPiAtwqDCoMKgwqDCoMKg
+wqBhY3BpX3N0YXR1cyBhY3BpX3N0czsKPiAtwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgYWNwaV9kZXZp
+Y2UgKmFkZXY7Cj4gLcKgwqDCoMKgwqDCoMKgc3RydWN0IGFjcGlfZGV2aWNlX3dha2V1cCAqd2Fr
+ZXVwOwo+IC0KPiAtwqDCoMKgwqDCoMKgwqBhZGV2ID0gQUNQSV9DT01QQU5JT04oZGV2KTsKPiAt
+wqDCoMKgwqDCoMKgwqBpZiAoIWFkZXYpIHsKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgZGV2X2VycihkZXYsICJnZXQgYWNwaSBoYW5kbGUgZmFpbGVkXG4iKTsKPiAtwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIC1FTk9ERVY7Cj4gLcKgwqDCoMKgwqDCoMKgfQo+
+IC3CoMKgwqDCoMKgwqDCoHdha2V1cCA9ICZhZGV2LT53YWtldXA7Cj4gLQo+IC3CoMKgwqDCoMKg
+wqDCoGFjcGlfc3RzID0gYWNwaV9lbmFibGVfZ3BlKHdha2V1cC0+Z3BlX2RldmljZSwgd2FrZXVw
+LQo+ID5ncGVfbnVtYmVyKTsKPiAtwqDCoMKgwqDCoMKgwqBpZiAoQUNQSV9GQUlMVVJFKGFjcGlf
+c3RzKSkgewo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBkZXZfZXJyKGRldiwgImVu
+YWJsZSBvc2VfZ3BlIGZhaWxlZFxuIik7Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oHJldHVybiAtRUlPOwo+IC3CoMKgwqDCoMKgwqDCoH0KPiAtCj4gLcKgwqDCoMKgwqDCoMKgcmV0
+dXJuIDA7Cj4gLSNlbHNlCj4gLcKgwqDCoMKgwqDCoMKgcmV0dXJuIC1FTk9ERVY7Cj4gLSNlbmRp
+Zgo+IC19Cj4gLQo+IC1zdGF0aWMgdm9pZCBlbmFibGVfcG1lX3dha2Uoc3RydWN0IHBjaV9kZXYg
+KnBkZXYpCj4gLXsKPiAtwqDCoMKgwqDCoMKgwqBpZiAoKHBjaV9wbWVfY2FwYWJsZShwZGV2LCBQ
+Q0lfRDApIHx8Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGNpX3BtZV9jYXBhYmxlKHBkZXYs
+IFBDSV9EM2hvdCkgfHwKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwY2lfcG1lX2NhcGFibGUo
+cGRldiwgUENJX0QzY29sZCkpICYmICFlbmFibGVfZ3BlKCZwZGV2LQo+ID5kZXYpKSB7Cj4gLcKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHBjaV9wbWVfYWN0aXZlKHBkZXYsIHRydWUpOwo+
+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBkZXZfZGJnKCZwZGV2LT5kZXYsICJpc2gg
+aXBjIGRyaXZlciBwbWUgd2FrZQo+IGVuYWJsZWRcbiIpOwo+IC3CoMKgwqDCoMKgwqDCoH0KPiAt
+fQo+IC0KPiDCoC8qKgo+IMKgICogaXNoX3Byb2JlKCkgLSBQQ0kgZHJpdmVyIHByb2JlIGNhbGxi
+YWNrCj4gwqAgKiBAcGRldjrCoMKgwqDCoMKgwqBwY2kgZGV2aWNlCj4gQEAgLTIyNSw3ICsxODks
+NyBAQCBzdGF0aWMgaW50IGlzaF9wcm9iZShzdHJ1Y3QgcGNpX2RldiAqcGRldiwgY29uc3QKPiBz
+dHJ1Y3QgcGNpX2RldmljZV9pZCAqZW50KQo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoC8qIEVuYWJs
+ZSBQTUUgZm9yIEVITCAqLwo+IMKgwqDCoMKgwqDCoMKgwqBpZiAocGRldi0+ZGV2aWNlID09IEVI
+TF9BeF9ERVZJQ0VfSUQpCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGVuYWJsZV9w
+bWVfd2FrZShwZGV2KTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGV2aWNlX2lu
+aXRfd2FrZXVwKGRldiwgdHJ1ZSk7Cj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgcmV0ID0gaXNoX2lu
+aXQoaXNodHApOwo+IMKgwqDCoMKgwqDCoMKgwqBpZiAocmV0KQo+IEBAIC0yNDgsNiArMjEyLDE5
+IEBAIHN0YXRpYyB2b2lkIGlzaF9yZW1vdmUoc3RydWN0IHBjaV9kZXYgKnBkZXYpCj4gwqDCoMKg
+wqDCoMKgwqDCoGlzaF9kZXZpY2VfZGlzYWJsZShpc2h0cF9kZXYpOwo+IMKgfQo+IMKgCj4gKwo+
+ICsvKioKPiArICogaXNoX3NodXRkb3duKCkgLSBQQ0kgZHJpdmVyIHNodXRkb3duIGNhbGxiYWNr
+Cj4gKyAqIEBwZGV2OsKgwqDCoMKgwqDCoHBjaSBkZXZpY2UKPiArICoKPiArICogVGhpcyBmdW5j
+dGlvbiBzZXRzIHVwIHdha2V1cCBmb3IgUzUKPiArICovCj4gK3N0YXRpYyB2b2lkIGlzaF9zaHV0
+ZG93bihzdHJ1Y3QgcGNpX2RldiAqcGRldikKPiArewo+ICvCoMKgwqDCoMKgwqDCoGlmIChwZGV2
+LT5kZXZpY2UgPT0gRUhMX0F4X0RFVklDRV9JRCkKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgcGNpX3ByZXBhcmVfdG9fc2xlZXAocGRldik7Cj4gK30KPiArCj4gwqBzdGF0aWMgc3Ry
+dWN0IGRldmljZSBfX21heWJlX3VudXNlZCAqaXNoX3Jlc3VtZV9kZXZpY2U7Cj4gwqAKPiDCoC8q
+IDUwbXMgdG8gZ2V0IHJlc3VtZSByZXNwb25zZSAqLwo+IEBAIC0zNzAsMTMgKzM0Nyw2IEBAIHN0
+YXRpYyBpbnQgX19tYXliZV91bnVzZWQgaXNoX3Jlc3VtZShzdHJ1Y3QKPiBkZXZpY2UgKmRldmlj
+ZSkKPiDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IHBjaV9kZXYgKnBkZXYgPSB0b19wY2lfZGV2KGRl
+dmljZSk7Cj4gwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBpc2h0cF9kZXZpY2UgKmRldiA9IHBjaV9n
+ZXRfZHJ2ZGF0YShwZGV2KTsKPiDCoAo+IC3CoMKgwqDCoMKgwqDCoC8qIGFkZCB0aGlzIHRvIGZp
+bmlzaCBwb3dlciBmbG93IGZvciBFSEwgKi8KPiAtwqDCoMKgwqDCoMKgwqBpZiAoZGV2LT5wZGV2
+LT5kZXZpY2UgPT0gRUhMX0F4X0RFVklDRV9JRCkgewo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqBwY2lfc2V0X3Bvd2VyX3N0YXRlKHBkZXYsIFBDSV9EMCk7Cj4gLcKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoGVuYWJsZV9wbWVfd2FrZShwZGV2KTsKPiAtwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgZGV2X2RiZyhkZXYtPmRldmMsICJzZXQgcG93ZXIgc3RhdGUgdG8g
+RDAgZm9yCj4gZWhsXG4iKTsKPiAtwqDCoMKgwqDCoMKgwqB9Cj4gLQo+IMKgwqDCoMKgwqDCoMKg
+wqBpc2hfcmVzdW1lX2RldmljZSA9IGRldmljZTsKPiDCoMKgwqDCoMKgwqDCoMKgZGV2LT5yZXN1
+bWVfZmxhZyA9IDE7Cj4gwqAKPiBAQCAtMzkyLDYgKzM2Miw3IEBAIHN0YXRpYyBzdHJ1Y3QgcGNp
+X2RyaXZlciBpc2hfZHJpdmVyID0gewo+IMKgwqDCoMKgwqDCoMKgwqAuaWRfdGFibGUgPSBpc2hf
+cGNpX3RibCwKPiDCoMKgwqDCoMKgwqDCoMKgLnByb2JlID0gaXNoX3Byb2JlLAo+IMKgwqDCoMKg
+wqDCoMKgwqAucmVtb3ZlID0gaXNoX3JlbW92ZSwKPiArwqDCoMKgwqDCoMKgwqAuc2h1dGRvd24g
+PSBpc2hfc2h1dGRvd24sCj4gwqDCoMKgwqDCoMKgwqDCoC5kcml2ZXIucG0gPSAmaXNoX3BtX29w
+cywKPiDCoH07Cj4gwqAKCg==
 
-Why did you make the new DW_PCIE_CAP_EDMA_UNROLL "1" and shift all the
-existing ones down?  If they don't need to be ordered like this,
-leaving the existing ones alone and making DW_PCIE_CAP_EDMA_UNROLL "3"
-would be a simpler one-line diff.
-
->  #define dw_pcie_cap_is(_pci, _cap) \
->  	test_bit(DW_PCIE_CAP_ ## _cap, &(_pci)->caps)
-> -- 
-> 2.25.1
-> 
