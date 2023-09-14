@@ -2,232 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CAF1B7A01FF
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Sep 2023 12:52:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CE967A027B
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Sep 2023 13:25:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230141AbjINKww (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Sep 2023 06:52:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40052 "EHLO
+        id S230367AbjINLZ2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Sep 2023 07:25:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231404AbjINKww (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Sep 2023 06:52:52 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEE9FDC
-        for <linux-pci@vger.kernel.org>; Thu, 14 Sep 2023 03:52:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694688767; x=1726224767;
-  h=date:from:to:cc:subject:message-id;
-  bh=Gr7ff8fBNJmZmbyUuj1xiJD0wJNxE0iAOo+KzjHzk84=;
-  b=WBFKFJTi6EA56NxIgnwTtCyMuHblLEj/qtK9lxsDX0u4U02FEy4Agyyu
-   r5MQ26N8LdbNbrT7/YKAzyJG/fCUkrF6qHT/vaKi47uxXxbdwsQ3dD3Xf
-   /uTbfumai3NmlpAPd2jGfaClNItFjJpZ8BmocHluoTI7YvsaPM7BnGE3r
-   kuasLwWAN6D0xrCk5XXpd52gCXy0NnS8HDsFRCqbEVGyxd/hUJJtKUwsV
-   cpBZdFOJMtWFIWz+n4P/i0+9OAxGNI9+OcjmCBlLJyRz5vSiq9vIiP8TQ
-   c1ouA3wIPClAolguO3dbD9vCwuuSvdqzwX2mY1NbQt1G9XOWdDqEyHYWI
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="382720286"
-X-IronPort-AV: E=Sophos;i="6.02,145,1688454000"; 
-   d="scan'208";a="382720286"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2023 03:52:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="991352014"
-X-IronPort-AV: E=Sophos;i="6.02,145,1688454000"; 
-   d="scan'208";a="991352014"
-Received: from lkp-server02.sh.intel.com (HELO 9ef86b2655e5) ([10.239.97.151])
-  by fmsmga006.fm.intel.com with ESMTP; 14 Sep 2023 03:52:45 -0700
-Received: from kbuild by 9ef86b2655e5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qgjxk-0001W0-06;
-        Thu, 14 Sep 2023 10:52:44 +0000
-Date:   Thu, 14 Sep 2023 18:52:22 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:controller/cadence] BUILD SUCCESS
- 77e50a40c63ee4f509f363442b862fb2f10afbc8
-Message-ID: <202309141820.wRsKzWRM-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+        with ESMTP id S229992AbjINLZ1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Sep 2023 07:25:27 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DD691A5;
+        Thu, 14 Sep 2023 04:25:23 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RmZgX5RV2z1N7yV;
+        Thu, 14 Sep 2023 19:23:04 +0800 (CST)
+Received: from localhost.localdomain (10.50.163.32) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Thu, 14 Sep 2023 19:25:02 +0800
+From:   Yicong Yang <yangyicong@huawei.com>
+To:     <suzuki.poulose@arm.com>, <mathieu.poirier@linaro.org>,
+        <jonathan.cameron@huawei.com>, <linux-kernel@vger.kernel.org>
+CC:     <alexander.shishkin@linux.intel.com>, <helgaas@kernel.org>,
+        <linux-pci@vger.kernel.org>, <prime.zeng@hisilicon.com>,
+        <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
+        <hejunhao3@huawei.com>
+Subject: [PATCH v2 1/5] hwtracing: hisi_ptt: Disable interrupt after trace end
+Date:   Thu, 14 Sep 2023 19:22:19 +0800
+Message-ID: <20230914112223.27165-2-yangyicong@huawei.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20230914112223.27165-1-yangyicong@huawei.com>
+References: <20230914112223.27165-1-yangyicong@huawei.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.50.163.32]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/cadence
-branch HEAD: 77e50a40c63ee4f509f363442b862fb2f10afbc8  PCI: cadence: Drop unused member from struct cdns_plat_pcie
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-elapsed time: 721m
+On trace end we disable the hardware but leave the interrupt
+unmasked. Mask the interrupt to make the process reverse to
+the start. No actual issue since hardware should send no
+interrupt after disabled.
 
-configs tested: 161
-configs skipped: 3
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/hwtracing/ptt/hisi_ptt.c | 4 ++++
+ drivers/hwtracing/ptt/hisi_ptt.h | 1 +
+ 2 files changed, 5 insertions(+)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20230914   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                          collie_defconfig   clang
-arm                                 defconfig   gcc  
-arm                      integrator_defconfig   gcc  
-arm                        neponset_defconfig   clang
-arm                         nhk8815_defconfig   gcc  
-arm                   randconfig-001-20230914   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   clang
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20230914   gcc  
-i386         buildonly-randconfig-002-20230914   gcc  
-i386         buildonly-randconfig-003-20230914   gcc  
-i386         buildonly-randconfig-004-20230914   gcc  
-i386         buildonly-randconfig-005-20230914   gcc  
-i386         buildonly-randconfig-006-20230914   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20230914   gcc  
-i386                  randconfig-002-20230914   gcc  
-i386                  randconfig-003-20230914   gcc  
-i386                  randconfig-004-20230914   gcc  
-i386                  randconfig-005-20230914   gcc  
-i386                  randconfig-006-20230914   gcc  
-i386                  randconfig-011-20230914   gcc  
-i386                  randconfig-012-20230914   gcc  
-i386                  randconfig-013-20230914   gcc  
-i386                  randconfig-014-20230914   gcc  
-i386                  randconfig-015-20230914   gcc  
-i386                  randconfig-016-20230914   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20230914   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                          atari_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        mvme16x_defconfig   gcc  
-m68k                           virt_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                         bigsur_defconfig   gcc  
-mips                       lemote2f_defconfig   clang
-mips                       rbtx49xx_defconfig   clang
-mips                         rt305x_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc                          g5_defconfig   clang
-powerpc                       holly_defconfig   gcc  
-powerpc                       maple_defconfig   gcc  
-powerpc                 mpc8313_rdb_defconfig   clang
-powerpc                      obs600_defconfig   clang
-powerpc                      pcm030_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20230914   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20230914   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                ecovec24-romimage_defconfig   gcc  
-sh                          r7780mp_defconfig   gcc  
-sh                          sdk7786_defconfig   gcc  
-sh                           sh2007_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                 randconfig-001-20230914   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20230914   gcc  
-x86_64       buildonly-randconfig-002-20230914   gcc  
-x86_64       buildonly-randconfig-003-20230914   gcc  
-x86_64       buildonly-randconfig-004-20230914   gcc  
-x86_64       buildonly-randconfig-005-20230914   gcc  
-x86_64       buildonly-randconfig-006-20230914   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                randconfig-001-20230914   gcc  
-x86_64                randconfig-002-20230914   gcc  
-x86_64                randconfig-003-20230914   gcc  
-x86_64                randconfig-004-20230914   gcc  
-x86_64                randconfig-005-20230914   gcc  
-x86_64                randconfig-006-20230914   gcc  
-x86_64                randconfig-011-20230914   gcc  
-x86_64                randconfig-012-20230914   gcc  
-x86_64                randconfig-013-20230914   gcc  
-x86_64                randconfig-014-20230914   gcc  
-x86_64                randconfig-015-20230914   gcc  
-x86_64                randconfig-016-20230914   gcc  
-x86_64                randconfig-071-20230914   gcc  
-x86_64                randconfig-072-20230914   gcc  
-x86_64                randconfig-073-20230914   gcc  
-x86_64                randconfig-074-20230914   gcc  
-x86_64                randconfig-075-20230914   gcc  
-x86_64                randconfig-076-20230914   gcc  
-x86_64                           rhel-8.3-bpf   gcc  
-x86_64                         rhel-8.3-kunit   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                       common_defconfig   gcc  
-
+diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+index 49ea1b0f7489..428cca54217e 100644
+--- a/drivers/hwtracing/ptt/hisi_ptt.c
++++ b/drivers/hwtracing/ptt/hisi_ptt.c
+@@ -183,6 +183,10 @@ static void hisi_ptt_wait_dma_reset_done(struct hisi_ptt *hisi_ptt)
+ static void hisi_ptt_trace_end(struct hisi_ptt *hisi_ptt)
+ {
+ 	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
++
++	/* Mask the interrupt on the end */
++	writel(HISI_PTT_TRACE_INT_MASK_ALL, hisi_ptt->iobase + HISI_PTT_TRACE_INT_MASK);
++
+ 	hisi_ptt->trace_ctrl.started = false;
+ }
+ 
+diff --git a/drivers/hwtracing/ptt/hisi_ptt.h b/drivers/hwtracing/ptt/hisi_ptt.h
+index e17f045d7e72..46030aa88081 100644
+--- a/drivers/hwtracing/ptt/hisi_ptt.h
++++ b/drivers/hwtracing/ptt/hisi_ptt.h
+@@ -47,6 +47,7 @@
+ #define HISI_PTT_TRACE_INT_STAT		0x0890
+ #define   HISI_PTT_TRACE_INT_STAT_MASK	GENMASK(3, 0)
+ #define HISI_PTT_TRACE_INT_MASK		0x0894
++#define   HISI_PTT_TRACE_INT_MASK_ALL	GENMASK(3, 0)
+ #define HISI_PTT_TUNING_INT_STAT	0x0898
+ #define   HISI_PTT_TUNING_INT_STAT_MASK	BIT(0)
+ #define HISI_PTT_TRACE_WR_STS		0x08a0
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.24.0
+
