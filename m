@@ -2,56 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 312BD7A24D3
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 19:31:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D67257A250A
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 19:46:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236008AbjIORbU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Sep 2023 13:31:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52394 "EHLO
+        id S235246AbjIORpo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Sep 2023 13:45:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236470AbjIORa7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 13:30:59 -0400
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0058A2D5A;
-        Fri, 15 Sep 2023 10:30:11 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 701BC60007;
-        Fri, 15 Sep 2023 17:30:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1694799010;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/JtjgsgOyPbwm6BWL60L1iUo+eWhjWgnDribpTAUHbw=;
-        b=GCM8fr7nhBiojP+OOcmNg4lRKP/Bc6b9HshzoiPy41bAJdfe58QnbVWRol0erQlfEeYyrN
-        MEPHy0Z9KRr6MlHTIFTzO04Lw3MR1kgdmXlHhAPGkzhHWh7fGvstnv8vN+0sIbb7Yr8klM
-        LgdH4FaFskd8ZT66hYqhhCCKU4ZsIUFZNHxTuaXDSOwXpSNXXXXL8lnTzZsuyia1ote48D
-        WV4rUKKg0gKZ4oqQXjeMVQpg8lyGX5d4SzfWm5NHuZ2v9/RGvcZsVCTwC/6EjhC2w6k091
-        nVLDn4OxQI6u4oztghtrG23WeBsq+Wc8F1KG1/ECv6XONwRcq5bekBG6NTKKVA==
-Date:   Fri, 15 Sep 2023 19:30:08 +0200
-From:   Herve Codina <herve.codina@bootlin.com>
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     Rob Herring <robh@kernel.org>, Lizhi Hou <lizhi.hou@amd.com>,
-        Andrew Lunn <andrew@lunn.ch>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        max.zhen@amd.com, sonal.santan@amd.com,
-        stefano.stabellini@xilinx.com
-Subject: Re: [PATCH V13 0/5] Generate device tree node for pci devices
-Message-ID: <20230915193008.6d87b8a0@bootlin.com>
-In-Reply-To: <ZQGaSr+G5qu/8nJZ@smile.fi.intel.com>
-References: <1692120000-46900-1-git-send-email-lizhi.hou@amd.com>
-        <ZP96feVs2ev7098Y@smile.fi.intel.com>
-        <CAL_JsqKfQJFrd8MOdjW55cYdEb8yyPyR+P3ran9+X3dCwUgdyA@mail.gmail.com>
-        <ZQGaSr+G5qu/8nJZ@smile.fi.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+        with ESMTP id S236367AbjIORpb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 13:45:31 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51907210A;
+        Fri, 15 Sep 2023 10:45:22 -0700 (PDT)
+Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RnM0j2d3Sz67bgN;
+        Sat, 16 Sep 2023 01:40:37 +0800 (CST)
+Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
+ lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Fri, 15 Sep 2023 18:45:19 +0100
+From:   <shiju.jose@huawei.com>
+To:     <helgaas@kernel.org>, <rafael@kernel.org>, <lenb@kernel.org>,
+        <tony.luck@intel.com>, <james.morse@arm.com>, <bp@alien8.de>,
+        <ying.huang@intel.com>, <linux-acpi@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
+        <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
+        <shiju.jose@huawei.com>
+Subject: [RFC PATCH 1/1] ACPI / APEI: Fix for overwriting aer info when error status data have multiple sections
+Date:   Sat, 16 Sep 2023 01:44:35 +0800
+Message-ID: <20230915174435.779-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.35.1.windows.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.234]
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500006.china.huawei.com (7.191.161.198)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,56 +49,120 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Andy,
+From: Shiju Jose <shiju.jose@huawei.com>
 
-On Wed, 13 Sep 2023 14:17:30 +0300
-Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
+ghes_handle_aer() lacks synchronization with aer_recover_work_func(),
+so when error status data have multiple sections, aer_recover_work_func()
+may use estatus data for aer_capability_regs after it has been overwritten.
 
-> On Tue, Sep 12, 2023 at 02:12:04PM -0500, Rob Herring wrote:
-> > On Mon, Sep 11, 2023 at 3:37 PM Andy Shevchenko
-> > <andriy.shevchenko@intel.com> wrote:  
-> > > On Tue, Aug 15, 2023 at 10:19:55AM -0700, Lizhi Hou wrote:  
-> 
-> ...
-> 
-> > > Can you point out to the ACPI excerpt(s) of the description of anything related
-> > > to the device(s) in question?  
-> > 
-> > I don't understand what you are asking for.  
-> 
-> Through the email thread it was mentioned that this series was tested on the
-> ACPI enabled platform, Jonathan (IIRC) asked why do we need to have a shadow
-> DT for the something that ACPI already describes. That's why I'm trying to
-> understand if it's the case. and if so, how can we improve the approach.
-> 
+The problem statement is here,
+https://lore.kernel.org/all/20230901225755.GA90053@bhelgaas/
 
-Patches from Frank Rowand series [1] are needed to create an of_root_node if a DT
-was not provided by the firmware, bootloader, etc that run the kernel.
+In ghes_handle_aer() allocates memory for aer_capability_regs from the
+ghes_estatus_pool and copy data for aer_capability_regs from the estatus
+buffer. Free the memory in aer_recover_work_func() after processing the
+data using the ghes_estatus_pool_region_free() added.
 
-[1]: https://lore.kernel.org/lkml/20220624034327.2542112-1-frowand.list@gmail.com/
+Reported-by: Bjorn Helgaas <helgaas@kernel.org>
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+ drivers/acpi/apei/ghes.c | 23 ++++++++++++++++++++++-
+ drivers/pci/pcie/aer.c   | 10 ++++++++++
+ include/acpi/ghes.h      |  1 +
+ 3 files changed, 33 insertions(+), 1 deletion(-)
 
-Current Lizhi's series creates nodes from the PCI host node during the PCI
-enumeration. It creates PCI-PCI bridge and PCI device nodes.
-
-I use these series on an ACPI system.
-
-I need one more missing component: the node related to the PCI host bridge
-This was the purpose of Clement's work. This work was not sent upstream yet and I
-am working on it in order to have a full tree from the of_root to the PCI device
-ie:
- of_root                  <-- Frank Rowand series 
-   + of_host_pci_bridge   <-- Clement's work
-       + pci_bridge       <-- Current Lizhi series
-           + pci_bridge   <-- Current Lizhi series
-            ...
-             + pci_dev    <-- Current Lizhi series
-
-Hope that this status helped.
-
-Regards,
-Hervé
-
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index ef59d6ea16da..63ad0541db38 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -209,6 +209,20 @@ int ghes_estatus_pool_init(unsigned int num_ghes)
+ 	return -ENOMEM;
+ }
+ 
++/**
++ * ghes_estatus_pool_region_free - free previously allocated memory
++ *				   from the ghes_estatus_pool.
++ * @addr: address of memory to free.
++ * @size: size of memory to free.
++ *
++ * Returns none.
++ */
++void ghes_estatus_pool_region_free(unsigned long addr, u32 size)
++{
++	gen_pool_free(ghes_estatus_pool, addr, size);
++}
++EXPORT_SYMBOL_GPL(ghes_estatus_pool_region_free);
++
+ static int map_gen_v2(struct ghes *ghes)
+ {
+ 	return apei_map_generic_address(&ghes->generic_v2->read_ack_register);
+@@ -564,6 +578,7 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
+ 	    pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO) {
+ 		unsigned int devfn;
+ 		int aer_severity;
++		u8 *aer_info;
+ 
+ 		devfn = PCI_DEVFN(pcie_err->device_id.device,
+ 				  pcie_err->device_id.function);
+@@ -577,11 +592,17 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
+ 		if (gdata->flags & CPER_SEC_RESET)
+ 			aer_severity = AER_FATAL;
+ 
++		aer_info = (void *)gen_pool_alloc(ghes_estatus_pool,
++						  sizeof(struct aer_capability_regs));
++		if (!aer_info)
++			return;
++		memcpy(aer_info, pcie_err->aer_info, sizeof(struct aer_capability_regs));
++
+ 		aer_recover_queue(pcie_err->device_id.segment,
+ 				  pcie_err->device_id.bus,
+ 				  devfn, aer_severity,
+ 				  (struct aer_capability_regs *)
+-				  pcie_err->aer_info);
++				  aer_info);
+ 	}
+ #endif
+ }
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index e85ff946e8c8..388b614c11fd 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -29,6 +29,7 @@
+ #include <linux/kfifo.h>
+ #include <linux/slab.h>
+ #include <acpi/apei.h>
++#include <acpi/ghes.h>
+ #include <ras/ras_event.h>
+ 
+ #include "../pci.h"
+@@ -996,6 +997,15 @@ static void aer_recover_work_func(struct work_struct *work)
+ 			continue;
+ 		}
+ 		cper_print_aer(pdev, entry.severity, entry.regs);
++		/*
++		 * Memory for aer_capability_regs(entry.regs) is being allocated from the
++		 * ghes_estatus_pool to protect it from overwriting when multiple sections
++		 * are present in the error status. Thus free the same after processing
++		 * the data.
++		 */
++		ghes_estatus_pool_region_free((unsigned long)entry.regs,
++					      sizeof(struct aer_capability_regs));
++
+ 		if (entry.severity == AER_NONFATAL)
+ 			pcie_do_recovery(pdev, pci_channel_io_normal,
+ 					 aer_root_reset);
+diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
+index 3c8bba9f1114..40d89e161076 100644
+--- a/include/acpi/ghes.h
++++ b/include/acpi/ghes.h
+@@ -78,6 +78,7 @@ static inline struct list_head *ghes_get_devices(void) { return NULL; }
+ #endif
+ 
+ int ghes_estatus_pool_init(unsigned int num_ghes);
++void ghes_estatus_pool_region_free(unsigned long addr, u32 size);
+ 
+ static inline int acpi_hest_get_version(struct acpi_hest_generic_data *gdata)
+ {
 -- 
-Hervé Codina, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.34.1
+
