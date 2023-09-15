@@ -2,168 +2,283 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8CB87A1E09
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 14:05:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D9427A1EB2
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 14:27:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234482AbjIOMFW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Sep 2023 08:05:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53762 "EHLO
+        id S234903AbjIOM1Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Sep 2023 08:27:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232836AbjIOMFV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 08:05:21 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2054.outbound.protection.outlook.com [40.107.220.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B103F4209
-        for <linux-pci@vger.kernel.org>; Fri, 15 Sep 2023 05:04:17 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EIB0IMbriysHjr/t8EzBZ077kRJLpaApjLO5l55a/pK72F5+ehHge62Kg/AgIJwBkXEv8YIlhVMAdF3L2i8HArt3VUATy6lzdjODqc3yF+d9zZ4RjekZxAflUcv+Nlw5Ljg2fYgT4N1ND5jmNBEaUzg8pcjslRkU9SZcYjw0GkGEdJK5CbabuMZZYl2gxatFukbfV7A3VnqsqNrN0P/Oa4riTSKw2D624ixjG2JxdCrinTlZUbTDtDd/r1EQCpBXxuXArclgOt13HZ2cwKSRNzsDijFv3PzYY5dxWAwywXxp1SyysdCuX8IcTgb31EUYOtmRVvI1pTT/7ge4Eoowfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EDKIllUExeY3iIrgG2EbXIHrVyvNWRQfolTqU+i/BEk=;
- b=X1hfBxVZAW8Y9xN1XX+9pSo/fCFLdo7hDIcpBf1ybKWW0uLYVTxauAh0VDe7DL/PUpgPgaxC/ZQKdI5+rGHigLsBScJi7d4OEHT0ve7w1FmStUgmjPoG/lwxJxFAMmOFw8PvEl8vD30c+NESxEJj2OlD8XF5YGZ9bku1DmEn8FPby2950mBuyVaJ4KZ6LctHvy+crBM6qjcEEW7yx09vuk48yh1b6zwiVNdR7weIxcqkYPraKHiBxOkj4F+WgI6GQlGBd21GGMrONsd4qBQy4o8geZ4H0KgNz6L7Jtjg581hkE1idE8rhG09oEkIP3TZVKj+Ka/MG9ViXGgfIxsdvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EDKIllUExeY3iIrgG2EbXIHrVyvNWRQfolTqU+i/BEk=;
- b=tfur87nP7N2uOeiuUspFgpxfSolJVAWHm0rOzonPgpo0E7mmebwiq3SNDzw3drFjhtTP/VISv2p6iQZzG5u3WqI63Mk9EUHlAQu2PSAOh4kCZvODDi+z/dq8wztv2bWry2TIFAj14BKiQznRcZS1Bty/eQ31bl4OFNgdmX1IbFk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CH3PR12MB9282.namprd12.prod.outlook.com (2603:10b6:610:1cb::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.20; Fri, 15 Sep
- 2023 12:04:14 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::36f9:ffa7:c770:d146]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::36f9:ffa7:c770:d146%7]) with mapi id 15.20.6768.029; Fri, 15 Sep 2023
- 12:04:14 +0000
-Message-ID: <5a562f6b-6e4d-42a1-bbc1-08f7f3279dfd@amd.com>
-Date:   Fri, 15 Sep 2023 07:04:11 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 2/2] PCI: Add a quirk for AMD PCIe root ports w/ USB4
- controllers
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        iain@orangesquash.org.uk,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
-References: <20230915023354.939-1-mario.limonciello@amd.com>
- <20230915023354.939-3-mario.limonciello@amd.com>
- <20230915070802.GA5934@wunner.de>
-Content-Language: en-US
-From:   Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20230915070802.GA5934@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0052.namprd04.prod.outlook.com
- (2603:10b6:806:120::27) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH3PR12MB9282:EE_
-X-MS-Office365-Filtering-Correlation-Id: c201f9f1-b12d-4171-af7c-08dbb5e3e154
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 46aY4hczR6riGzctQ94nuBb8KjP6kEfYjEq0shSFXHcqOxU0NCcniS6eCJuNTj9Yh6SShA2T5Z2KwwSZbnK6wpCiIHrEElW21YCw5lVpSMUvmOrCeTyGPQiy5ovd3ASvn5jdu3Q3HwREOhY4Xciz8TxV77XGgs0OEZwcJf2yHUwxoc3y5X35r57qrXF5Sxooc9V7wqwrNfkyU7pg259PLV/9ZbtE8B7Mkl02xZoDDcTqlnE4rFBQYVEVzLeN7cIyuwLlA6W6vmFtIwWcZoLcaCQVZGT4glz4YJ3pmOz4zFxNUOMm3Axn/t0IxtRhgPEinElqnTY8WTVta/LzEcJPtuyhgYWGj7QuJTVL7jr5/wXLWnzVJm+LvlOvEME8624MtrJFr0tpLcUfgbLhvSczr9gelX3NZIwFtT70muTx9d7Jxg22WbYXiG8PS3K88beMdKoi5Qc0FDMI6XjYOpL4P10j3CnC2fz2CrBKalIB+8hfdkkLOBuUWEvi93IRlCtxRAT3C8WH4MeCgIxL1qH8YfktGXgwKqOWBdVhEp1Rhu0Vg264uUAdw7cMdi3Fg4hBH5Q25hkSmNw+/WlDT2Wz0f+LDrTltUunA8uNusl692xQ5tTAE2A26ttSu5P9zoDtMrXkbS3++2cU0CQHtZFp6Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(376002)(136003)(396003)(346002)(1800799009)(451199024)(186009)(26005)(2616005)(478600001)(6512007)(6486002)(6506007)(53546011)(2906002)(6666004)(4326008)(31696002)(5660300002)(8676002)(36756003)(41300700001)(86362001)(66946007)(66556008)(66476007)(316002)(31686004)(54906003)(6916009)(8936002)(44832011)(38100700002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RFc1U0lmaFIrNVpuc2FYaXFwSTVDUnN5S1hmNHNyRFZIUnNNUUtmMEtnT2Ry?=
- =?utf-8?B?MER6blQxWXFpakNtZXF2Mi93SEx3dnl2NnR1YW1KWUhHb2VGYWszM3RZMVRM?=
- =?utf-8?B?UEoyUnU2WW5CNzk4VGRDZ1laV1IwSUZ0V2ZYVlVDZUJXN3RrZHFGbDJ6UGNW?=
- =?utf-8?B?SWdpZlRoU0hvZVYzOG11ckFtZFNkZ2l3YitSeEdlbGNmekVvVmY0aWlyMU81?=
- =?utf-8?B?U1FqdlBxS1lVQ29RckVyaHdMYVBPVytWZFdQZWZrYWFOWjc5WXVoWmxDSXNO?=
- =?utf-8?B?eDVTLzJzU2J1NjZ4Y29HTC9JbzNCdlJDVENWT0xQZ1d2R1VESDA0S2gzbGFy?=
- =?utf-8?B?QkpFSFVlTWczb0Y3aUsySExYWGJjU20vYU9lL2dMdmMwQ1AzN2hTRDZFYzBo?=
- =?utf-8?B?U1FrampONDZvTzBiZXB6K1EzK1dDUXFPQk9sS0lRS1dlRnNtWkhMZWxKeDgw?=
- =?utf-8?B?Sm1vWUV0aTVjOUpubUt6SUpna2NMd0tPTFVZaFJJUnpWblc5Y0dtQ2o2MzZT?=
- =?utf-8?B?ZXhCQTgxZGhUMDlYOTg2QTI5RUlhd01hVDcxOWJnaERlQ2ZnYXpKNFhZL2lq?=
- =?utf-8?B?a0dUTzBqVkw0TGpOWFljZ0MzWkpKWXBoc0RwQUlKWFNKOXpERTJ5Mm4zbEpt?=
- =?utf-8?B?cVpTN1RtNlFUMmR1eEhUU0JEeDM0NFRieGl4MVBxZFhnVDFod3IrYnp2blY3?=
- =?utf-8?B?RFNCWG5idDdaelQwVVRIYk5BWXVyaHJ0OXlyR0tyaEk5Wm1lWW1qRlZMdnh4?=
- =?utf-8?B?ZVNGYU1Jb1RsTjFxYzA4WHRnWmY4QXR1ZG1PYUVDcUJsalF6UnNobXlCVW1r?=
- =?utf-8?B?QUdYWkZsQUFudzFNM01JZ1VXU0dtNmNXcGVKVW9jUXdyc1VjSTRJeDBVTFRz?=
- =?utf-8?B?aFFtSE5wNjF6SHRJeFZtNnp4eFZSTVFXUDFzMytMWVMrcnM0dzJydzRzMnlU?=
- =?utf-8?B?RDg4MnNVSkpORmpQMWFlUzMvS3lpbWFlWndQUlA0a2xueHArTnZlWU1ublVk?=
- =?utf-8?B?V25ib2w0YW9lMWhZdnN4TFR3UmZjcHB6V05HMStsQ0FSbllTNytVUWFNa01R?=
- =?utf-8?B?d2RNQnVQNzJCdnU3N3BpbWxCanB1MGl2MmlKczhpcVlpbWw2aUlTcldwSUpV?=
- =?utf-8?B?UEk3emYrMnFvcUZTTTJ5TGt4QjA5MWo1cVJoWmtzbEs5cEZ2TXBwRUxLMHZS?=
- =?utf-8?B?TDdhSzBsR1QyeFBCRXY4Vi9vVW96b1BFZjduYW8xTzlyZGpGY0FlM0pEZW1v?=
- =?utf-8?B?TlA0aXpqbjluU3V5YnNSTmI1eUc3QWdkOUYzVlovck5Eb3MxWFNGWi9mMXli?=
- =?utf-8?B?eWpoemJ0NHU4TnUzTDNjRFZEWGxCQkprNFpvTVRLWjlDakpWMjlNNkxaTXBr?=
- =?utf-8?B?Ykk4ajhLckNnQUh2c3kweTFVRm9ZS3dGODR0ZHJHUjFJK1I4Z0NLNTcrRkxj?=
- =?utf-8?B?cFhQUlNvczVaajZOYlc3dUx0eTFBYnJNZ3d0Rm9hNHptOWpOSUhVL3pYRWYx?=
- =?utf-8?B?MktFRmF6WDIvbkE1M21Wd1IyUzdqYVR4eWJkWVA3TmdPRnFmTUZqeHNGWEFD?=
- =?utf-8?B?c1dDNjZMcEl0UHlUWXRpams0ZCtRSWZXMHZnWC9wVHpoQ1QyOWV3dkhxNzJi?=
- =?utf-8?B?UFpLYXJMLzRRRC9iY0R2YksxM3dkbVo1Zk1Kd1h3L1J4bGc5SjZ3T1hOMVV0?=
- =?utf-8?B?Nkg0SFlmZU5vMlZ4QVVuUHRFS211cjNGMzNJVjloUUNQY01uWi9nd2JlbnRH?=
- =?utf-8?B?QW95Vk5CSWJnQjU5Vmg4NEtNTThRUXNYWHFEVDBlU1VXVzZTRXJvN3dkU1c0?=
- =?utf-8?B?cUpEaUdIekViUVJKYjVFMkxueHNxQUFGbUdxdVg4R216Nkc4ODFWRTUwR1cr?=
- =?utf-8?B?UEUwRkMyV0x4em44c280MzJ1QTFUVlpMNUZsYlRHTG5uRTd3L2hteWpMeHY5?=
- =?utf-8?B?VEdobjNiOFVveFphMEdrTks2azB5VVVkYlhvalJKK2hqVDQrZHZCMHFzb3ln?=
- =?utf-8?B?TkREcGdUQjhDbnZQWXJvWnNvVlRpbzJsaFNxWnpNV2R5QkJYSGU0VkN2bzBk?=
- =?utf-8?B?WlhJQmRacVhmMHJhMGRVSWJROVlWYmZYSkM1WU5nZVUxRGsvcHQ4bWRVcFFs?=
- =?utf-8?Q?lRfrEFiDyzCJWybyMC3MehUzz?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c201f9f1-b12d-4171-af7c-08dbb5e3e154
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2023 12:04:14.7492
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xzgTsarnYNiYqXD4NGxnstEbH41XRrWadQW8hnQ0xpdmV9bMW/9HWU2csCLCo5sAbbYbNwuQlp8S/FvmLQBwkw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9282
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S234900AbjIOM1P (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 08:27:15 -0400
+Received: from sphereful.davidgow.net (sphereful.davidgow.net [IPv6:2404:9400:4:0:216:3eff:fee2:5328])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAF1C2119;
+        Fri, 15 Sep 2023 05:27:06 -0700 (PDT)
+Received: by sphereful.davidgow.net (Postfix, from userid 119)
+        id E1F391D5819; Fri, 15 Sep 2023 20:27:04 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=davidgow.net;
+        s=201606; t=1694780824;
+        bh=hnw4+F5CXXiG5poJbVxyNM5eJG1cjLqBF2kaMkJl0BE=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=TxAAlBJPFVqzL5j2iwYtGs7mBBQ/yKL1dlnrWvpkKxXMg3zmQLkokz1LgK2na3hyy
+         +h6/HT48rgVqpm6bQaSFOFiOHBqVsWwXaezs0JVuS9IteiuUQXGgfarvlOa01eVKdp
+         wJs80VPWh2Ey6Zj9gKZsxxIqwtWq6cL9du1+Md0WLDKWWP1xNcQwWPY1YQruAelOzR
+         dvtW2Aa4WRClAoxlaS9Qp7DxP/B4P94Ay1UERSSqwgTHXUL35gX3RDb6wuz78smsqw
+         Stul+Ii4Ph3WyutepaBHYWbAmBjZpUcfmpEzt28TJtXVN41b3peOkN9B0tFXR9TJx6
+         e182cwHt0mCk8aHHzVctogl2ozDKIT9o8LAqJonWQWXHc8kiNnerCY8A7f0ET16qXd
+         xh+ljsxHIn3rdH+HUmdzjRIG+Dn9QjJTHOcOkdofzxAvItWRbD+3JvwG1FBwd677b4
+         coSTKmF0lvmr57xcv51zOEe6tJfCpfpMdXBqxqWupIPERsjD9ra1I9BLYoR0gjpXZ9
+         e4G69UbqD0moCQFpvsgig5g3ah1WnagsicVirVnNwpMK2m09tPwla9YfakakTJFNk3
+         sQdewDiiHHhcTMFjKaD80HA4aws6jgXbo/wfQ99jAw3r0jpGYK/fcYVlUMS5nyzQZ3
+         SoUhb+pBnBf+6BhQzfEygQ+8=
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: from [IPV6:2001:8003:8824:9e00::bec] (unknown [IPv6:2001:8003:8824:9e00::bec])
+        by sphereful.davidgow.net (Postfix) with ESMTPSA id 8B6BA1D5811;
+        Fri, 15 Sep 2023 20:27:01 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=davidgow.net;
+        s=201606; t=1694780821;
+        bh=hnw4+F5CXXiG5poJbVxyNM5eJG1cjLqBF2kaMkJl0BE=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=elX93ZgJtmwnMCrAD2oBI6HWJnjcy9PNuzOd3e4eJyOtbszyDSKZQoQYoi+JH9clH
+         SqpQwsqAGdn6J5reO9koZ++WxMvFFXVU1Nv/OxaPnRs5TXKk4xt0wl2uAMPDqAe7Ju
+         Z1X39iB7bev37B+NYUfvrnzHky5wefVyMFrCqBGPA0mkXq1D2yAYHGFuc59tpOCIX7
+         cygWhQVbs8rp8wZoglyLPlAhy/64JtSAVooYUI6+2Y0K2z2F5xZPOLNyonK7PWNGpO
+         RZhV6mMfr6xQCAJ3vwVyDiyNO9KWCUrbU8xVafJCH4jSbDrIe+BoE1K+YxMVbh3EV2
+         6bqP3XQYvAN8+wUehyvAEHXeeyXBtppeSquAYNt2F8wNIBvSOzWcS9K+ZJXUNOEIS6
+         eHRxYrV377uKCvegcxdT2/wOg8IMeai7KGSm9YJuylqVphBEHWDQ0ms65sbgHRmNgT
+         tUJK2OpBaKr9CN7lgcHsqKHG+2hX/5UnAvThy2qmTDvOZpYjlFiOFEwYilsu0FZwYs
+         i5mRH1hqc0fDkBFAT7AeXowq8Jxl6v0jji3GRS6tEr6yTrJeYcr65sWlonw9kElwPd
+         6PlAvyBsedAF0D++e2p+6sYvaDaI/Gb3ynqDMudnnIy1YIkjnjLM/ZREaf7z8MbWEa
+         TRFKuB55Eae8ZYxvRmq9w93c=
+Message-ID: <49d92af6-4968-4066-b33c-0fd06f8fdf28@davidgow.net>
+Date:   Fri, 15 Sep 2023 20:26:58 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: Kernel 6.5.2 Causes Marvell Technology Group 88SE9128 PCIe
+ SATA to Constantly Reset
+Content-Language: fr
+To:     Niklas Cassel <Niklas.Cassel@wdc.com>,
+        Damien Le Moal <dlemoal@kernel.org>
+Cc:     Bagas Sanjaya <bagasdotme@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        patenteng <dimitar@daskalov.co.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Linux IDE and libata <linux-ide@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+References: <dacb34e4-ce58-bc0e-8206-672d743a3e34@gmail.com>
+ <ZQHRQHAPQdG+Nu1o@x1-carbon>
+ <59f6ff78-6b45-465a-bd41-28c7a5d10931@davidgow.net>
+ <10f65dfe-5e8a-10ab-4d89-efe693c07caa@kernel.org>
+ <658b9285-e030-4987-86a7-57cdb6c7f161@davidgow.net>
+ <ZQQa0QRhm1BuI5IT@x1-carbon>
+From:   David Gow <david@davidgow.net>
+In-Reply-To: <ZQQa0QRhm1BuI5IT@x1-carbon>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/15/2023 02:08, Lukas Wunner wrote:
-> On Thu, Sep 14, 2023 at 09:33:54PM -0500, Mario Limonciello wrote:
->> +static bool child_has_amd_usb4(struct pci_dev *pdev)
->> +{
->> +	struct pci_dev *child = NULL;
->> +
->> +	while ((child = pci_get_class(PCI_CLASS_SERIAL_USB_USB4, child))) {
->> +		if (child->vendor != PCI_VENDOR_ID_AMD)
->> +			continue;
->> +		if (pcie_find_root_port(child) != pdev)
->> +			continue;
->> +		return true;
->> +	}
->> +
->> +	return false;
->> +}
+Le 2023/09/15 à 16:50, Niklas Cassel a écrit :
+> On Fri, Sep 15, 2023 at 02:54:19PM +0800, David Gow wrote:
+>> Le 2023/09/15 à 13:41, Damien Le Moal a écrit :
+>>> On 9/15/23 12:22, David Gow wrote:
+>>>> Le 2023/09/13 à 23:12, Niklas Cassel a écrit :
+>>>>> On Wed, Sep 13, 2023 at 06:25:31PM +0700, Bagas Sanjaya wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> I notice a regression report on Bugzilla [1]. Quoting from it:
+>>>>>>
+>>>>>>> After upgrading to 6.5.2 from 6.4.12 I keep getting the following kernel messages around three times per second:
+>>>>>>>
+>>>>>>> [ 9683.269830] ata16: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+>>>>>>> [ 9683.270399] ata16.00: configured for UDMA/66
+>>>>>>>
+>>>>>>> So I've tracked the offending device:
+>>>>>>>
+>>>>>>> ll /sys/class/ata_port/ata16
+>>>>>>> lrwxrwxrwx 1 root root 0 Sep 10 21:51 /sys/class/ata_port/ata16 -> ../../devices/pci0000:00/0000:00:1c.7/0000:0a:00.0/ata16/ata_port/ata16
+>>>>>>>
+>>>>>>> cat /sys/bus/pci/devices/0000:0a:00.0/uevent
+>>>>>>> DRIVER=ahci
+>>>>>>> PCI_CLASS=10601
+>>>>>>> PCI_ID=1B4B:9130
+>>>>>>> PCI_SUBSYS_ID=1043:8438
+>>>>>>> PCI_SLOT_NAME=0000:0a:00.0
+>>>>>>> MODALIAS=pci:v00001B4Bd00009130sv00001043sd00008438bc01sc06i01
+>>>>>>>
+>>>>>>> lspci | grep 0a:00.0
+>>>>>>> 0a:00.0 SATA controller: Marvell Technology Group Ltd. 88SE9128 PCIe SATA 6 Gb/s RAID controller with HyperDuo (rev 11)
+>>>>>>>
+>>>>>>> I am not using the 88SE9128, so I have no way of knowing whether it works or not. It may simply be getting reset a couple of times per second or it may not function at all.
+>>>>>>
+>>>>>> See Bugzilla for the full thread.
+>>>>>>
+>>>>>> patenteng: I have asked you to bisect this regression. Any conclusion?
+>>>>>>
+>>>>>> Anyway, I'm adding this regression to regzbot:
+>>>>>>
+>>>>>> #regzbot: introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=217902
+>>>>>
+>>>>> Hello Bagas, patenteng,
+>>>>>
+>>>>>
+>>>>> FYI, the prints:
+>>>>> [ 9683.269830] ata16: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+>>>>> [ 9683.270399] ata16.00: configured for UDMA/66
+>>>>>
+>>>>> Just show that ATA error handler has been invoked.
+>>>>> There was no reset performed.
+>>>>>
+>>>>> If there was a reset, you would have seen something like:
+>>>>> [    1.441326] ata8: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
+>>>>> [    1.541250] ata8.00: configured for UDMA/133
+>>>>> [    1.541411] ata8: hard resetting link
+>>>>>
+>>>>>
+>>>>> Could you please try this patch and see if it improves things for you:
+>>>>> https://lore.kernel.org/linux-ide/20230913150443.1200790-1-nks@flawful.org/T/#u
+>>>>>
+>>>>
+>>>> FWIW, I'm seeing a very similar issue both in 6.5.2 and in git master
+>>>> [aed8aee11130 ("Merge tag 'pmdomain-v6.6-rc1' of
+>>>> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/linux-pm") with that
+>>>> patch applied.
+>>>>
+>>>>
+>>>> The log is similar (the last two lines repeat several times a second):
+>>>> [    0.369632] ata14: SATA max UDMA/133 abar m2048@0xf7c10000 port
+>>>> 0xf7c10480 irq 33
+>>>> [    0.683693] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+>>>> [    1.031662] ata14.00: ATAPI: MARVELL VIRTUALL, 1.09, max UDMA/66
+>>>> [    1.031852] ata14.00: configured for UDMA/66
+>>>> [    1.414145] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+>>>> [    1.414505] ata14.00: configured for UDMA/66
+>>>> [    1.744094] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+>>>> [    1.744368] ata14.00: configured for UDMA/66
+>>>> [    2.073916] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+>>>> [    2.074276] ata14.00: configured for UDMA/66
+>>>>
+>>>>
+>>>> lspci shows:
+>>>> 09:00.0 SATA controller: Marvell Technology Group Ltd. 88SE9230 PCIe 2.0
+>>>> x2 4-port SATA 6 Gb/s RAID Controller (rev 10) (prog-if 01 [AHCI 1.0])
+>>>>            Subsystem: Gigabyte Technology Co., Ltd Device b000
+>>>>            Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
+>>>> ParErr- Stepping- SERR- FastB2B- DisINTx+
+>>>>            Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+>>>> <TAbort- <MAbort- >SERR- <PERR- INTx-
+>>>>            Latency: 0, Cache Line Size: 64 bytes
+>>>>            Interrupt: pin A routed to IRQ 33
+>>>>            Region 0: I/O ports at b050 [size=8]
+>>>>            Region 1: I/O ports at b040 [size=4]
+>>>>            Region 2: I/O ports at b030 [size=8]
+>>>>            Region 3: I/O ports at b020 [size=4]
+>>>>            Region 4: I/O ports at b000 [size=32]
+>>>>            Region 5: Memory at f7c10000 (32-bit, non-prefetchable) [size=2K]
+>>>>            Expansion ROM at f7c00000 [disabled] [size=64K]
+>>>>            Capabilities: <access denied>
+>>>>            Kernel driver in use: ahci
+>>>>
+>>>> The controller in question lives on a Gigabyte Z87X-UD5H-CF motherboard.
+>>>> I'm using the controller for several drives, and it's working, it's just
+>>>> spammy. (At worst, there's some performance hitching, but that might
+>>>> just be journald rotating logs as they fill up with the message).
+>>>>
+>>>> I haven't had a chance to bisect yet (this is a slightly awkward machine
+>>>> for me to install test kernels on), but can also confirm it worked with
+>>>> 6.4.12.
+>>>>
+>>>> Hopefully that's useful. I'll get back to you if I manage to bisect it.
+>>>
+>>> Bisect will definitely be welcome. But first, please try adding the patch that
+>>> Niklas mentioned above:
+>>>
+>>> https://lore.kernel.org/linux-ide/20230913150443.1200790-1-nks@flawful.org/T/#u
+>>>
+>>> If that fixes the issue, we know the culprit :)
+>>>
+>>
+>>
+>> Sorry: I wasn't clear. I did try with that patch (applied on top of
+>> torvalds/master), and the issue remained.
+>>
+>> I've started bisecting, but fear it'll take a while.
 > 
-> What's the purpose of the pcie_find_root_port() check?  PCI is a hierarchy,
-> not a graph, so a device cannot have any other Root Port but the one below
-> which you're searching.
+> I can recommend using QEMU and PCI passthrough to bisect, as it is much
+> faster to boot a kernel using QEMU with KVM than to do a real reboot.
 > 
-> If the purpose is to check that the port is a Root Port (if the PCI IDs
-> you're using in the DECLARE_PCI_FIXUP_* clauses match non-Root Ports),
-> check for pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT.  (No need to
-> check for that in every loop iteration obviously, just check once in
-> the fixup.)
+> It takes a while to set up the first time, but you know what they say:
+> "give a man a fish and you feed him for a day;
+> teach a man to fish and you feed him for a lifetime".
 > 
-> Thanks,
+> There are many ways to do it, but here is an example guide:
+> https://github.com/floatious/qemu-bisect-doc
 > 
-> Lukas
 
-The reason to look for it the way that I did was that there are multiple 
-root ports with the exact same PCI ID.
+Thanks. Alas, this machine doesn't have an IOMMU, which makes that 
+difficult. I've definitely saved the link for the future, though.
 
-The problem only occurs on the root port that happens to have an AMD 
-USB4 controller connected.
+In any case, the bisect is done:
+
+624885209f31eb9985bf51abe204ecbffe2fdeea is the first bad commit
+commit 624885209f31eb9985bf51abe204ecbffe2fdeea
+Author: Damien Le Moal <dlemoal@kernel.org>
+Date:   Thu May 11 03:13:41 2023 +0200
+
+     scsi: core: Detect support for command duration limits
+
+     Introduce the function scsi_cdl_check() to detect if a device supports
+     command duration limits (CDL). Support for the READ 16, WRITE 16, 
+READ 32
+     and WRITE 32 commands are checked using the function 
+scsi_report_opcode()
+     to probe the rwcdlp and cdlp bits as they indicate the mode page 
+defining
+     the command duration limits descriptors that apply to the command being
+     tested.
+
+     If any of these commands support CDL, the field cdl_supported of struct
+     scsi_device is set to 1 to indicate that the device supports CDL.
+
+     Support for CDL for a device is advertizes through sysfs using the new
+     cdl_supported device attribute. This attribute value is 1 for a device
+     supporting CDL and 0 otherwise.
+
+     Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+     Reviewed-by: Hannes Reinecke <hare@suse.de>
+     Co-developed-by: Niklas Cassel <niklas.cassel@wdc.com>
+     Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
+     Link: https://lore.kernel.org/r/20230511011356.227789-9-nks@flawful.org
+     Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+
+  Documentation/ABI/testing/sysfs-block-device |  9 ++++
+  drivers/scsi/scsi.c                          | 81 
+++++++++++++++++++++++++++++
+  drivers/scsi/scsi_scan.c                     |  3 ++
+  drivers/scsi/scsi_sysfs.c                    |  2 +
+  include/scsi/scsi_device.h                   |  3 ++
+  5 files changed, 98 insertions(+)
+
+
+This seems to match what was found on the Arch Linux forums, too:
+https://bbs.archlinux.org/viewtopic.php?id=288723&p=3
+
+I haven't tried it yet, but according to that forum thread, removing the 
+calls to scsi_cdl_check() seems to resolve the issue. This is all well 
+beyond my SCSI knowledge, but maybe a quirk to disable these CDL checks 
+for these older marvell controllers is required? Though it seems odd 
+that the device would be rescanned and/or scsi_add_lun called multiple 
+times a second -- is that normal?
+
+In any case, this seems to be the cause.
+
+Thanks!
+-- David
 
