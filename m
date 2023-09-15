@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB5E97A1DF0
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 14:03:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C1647A1DF7
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 14:03:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234569AbjIOMDT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Sep 2023 08:03:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47652 "EHLO
+        id S234508AbjIOMDq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Sep 2023 08:03:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234584AbjIOMDR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 08:03:17 -0400
+        with ESMTP id S234495AbjIOMDq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 08:03:46 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAFC62D52;
-        Fri, 15 Sep 2023 05:02:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C1332D75;
+        Fri, 15 Sep 2023 05:03:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694779369; x=1726315369;
+  t=1694779385; x=1726315385;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=5GI9De0NedLS8Fb+1iCt8QAfte6ia8Vm/9fJLfKqyBE=;
-  b=gH0arkA97F8RRCais4AVL+rYXaitkPJ/uVA6ezsFJNl2TcaC1YLpo+hl
-   HGG8B3vDz1rPKOvVY2quwsc5veJaT8kWZHrY5+jGkY2kvbl3rt/c3Wi4o
-   HCpgOo81lXN4YOI8upslYohs41gq9uCMulgmgyEiiIR/OmvRreS0So6K7
-   N/r0WnyCkBRWJzL1YtT06H/DTdaKa0hroiykTb5PE8SG8E3dgkZwR/oQG
-   AuILiXfg7Rhob8c4EuWsIOEz2b91mDw6XfwMnSCy5zzRcMl8V6eJuBSBZ
-   +b/CJebkiTGwq0qCF8a1PNS4WD2uEwMdNPA/kd92bchtmHykP/WSnuQsS
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="378146062"
+  bh=WxEVy4hdhGkm4tL7rKxsWilDBWWfyowIoUWmNvGZdbc=;
+  b=hsxPK0Cd1ryfz8ut5UiQz8NjvmBGqm5C3N+ntI6zZGPJa6KFd5WEo1IL
+   WaLcks3RzVv/fruJ6/jiE0PwDGNfnJRjxf/eOg73m6bp7pMoBLldCoCfo
+   wTk+U4XNiebs/BKItKx8Hk/UgEG1Zj+g20r4Hgr77RuR7kgu/faWoAOKV
+   BFLlfEzM6iKcXyWPsUxO16twFHoUQqVGvm1fpk/v9+wGF43krure2vXAX
+   lZFLwyj8W0xiCcXcDA/+xfI+GeJr/dMeO10oSjwMa2AsEIWqEHqO76H37
+   MdPTiwsrnrPTkrmXEvwzPLx6RBvpBNwqUVuFoga3Axx9ieu9nBaS0iiPP
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="378146082"
 X-IronPort-AV: E=Sophos;i="6.02,149,1688454000"; 
-   d="scan'208";a="378146062"
+   d="scan'208";a="378146082"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 05:02:32 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 05:02:38 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="774292920"
+X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="774292950"
 X-IronPort-AV: E=Sophos;i="6.02,149,1688454000"; 
-   d="scan'208";a="774292920"
+   d="scan'208";a="774292950"
 Received: from srdoo-mobl1.ger.corp.intel.com (HELO ijarvine-mobl2.ger.corp.intel.com) ([10.252.38.99])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 05:02:27 -0700
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 05:02:33 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -49,15 +49,15 @@ To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         linux-kernel@vger.kernel.org
 Cc:     Alex Deucher <alexdeucher@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v2 06/10] PCI: Cache PCIe device's Supported Speed Vector
-Date:   Fri, 15 Sep 2023 15:01:38 +0300
-Message-Id: <20230915120142.32987-7-ilpo.jarvinen@linux.intel.com>
+        Zhang Rui <rui.zhang@intel.com>
+Subject: [PATCH v2 07/10] PCI/LINK: Re-add BW notification portdrv as PCIe BW controller
+Date:   Fri, 15 Sep 2023 15:01:39 +0300
+Message-Id: <20230915120142.32987-8-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230915120142.32987-1-ilpo.jarvinen@linux.intel.com>
 References: <20230915120142.32987-1-ilpo.jarvinen@linux.intel.com>
@@ -73,84 +73,283 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The Supported Link Speeds Vector in the Link Capabilities Register 2
-corresponds to the bus below on Root Ports and Downstream Ports,
-whereas it corresponds to the bus above on Upstream Ports and
-Endpoints. Only the former is currently cached in pcie_bus_speeds in
-the struct pci_bus. The link speeds that are supported is the
-intersection of these two.
+This mostly reverts b4c7d2076b4e ("PCI/LINK: Remove bandwidth
+notification"), however, there are small tweaks:
 
-Store the device's Supported Link Speeds Vector into the struct pci_bus
-when the Function 0 is enumerated (the Multi-Function Devices must have
-same speeds the same for all Functions) to be easily able to calculate
-the intersection of Supported Link Speeds.
+1) Call it PCIe bwctrl (bandwidth controller) instead of just
+   bandwidth notifications.
+2) Don't print the notifications into kernel log, just keep the current
+   link speed updated.
+3) Use concurrency safe LNKCTL RMW operations.
+4) Read link speed after enabling the notification to ensure the
+   current link speed is correct from the start.
+5) Add local variable in probe for srv->port.
+6) Handle link speed read and LBMS write race in
+   pcie_bw_notification_irq().
 
+The reason for 1) is to indicate the increased scope of the driver. A
+subsequent commit extends the driver to allow controlling PCIe
+bandwidths from user space upon crossing thermal thresholds.
+
+While 2) is somewhat unfortunate, the log spam was the source of
+complaints that eventually lead to the removal of the bandwidth
+notifications driver (see the links below for further information).
+After re-adding this driver back the userspace can, if it wishes to,
+observe the link speed changes using the current bus speed files under
+sysfs.
+
+Link: https://lore.kernel.org/all/20190429185611.121751-1-helgaas@kernel.org/
+Link: https://lore.kernel.org/linux-pci/20190501142942.26972-1-keith.busch@intel.com/
+Link: https://lore.kernel.org/linux-pci/20200115221008.GA191037@google.com/
 Suggested-by: Lukas Wunner <lukas@wunner.de>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/probe.c  | 10 ++++++++++
- drivers/pci/remove.c |  2 ++
- include/linux/pci.h  |  1 +
- 3 files changed, 13 insertions(+)
+ drivers/pci/pcie/Kconfig   |   8 +++
+ drivers/pci/pcie/Makefile  |   1 +
+ drivers/pci/pcie/bwctrl.c  | 131 +++++++++++++++++++++++++++++++++++++
+ drivers/pci/pcie/portdrv.c |   9 +--
+ drivers/pci/pcie/portdrv.h |  10 ++-
+ 5 files changed, 153 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/pci/pcie/bwctrl.c
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index ca1d797a30cb..a9408f2420e5 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2564,6 +2564,7 @@ static void pci_set_msi_domain(struct pci_dev *dev)
+diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+index 228652a59f27..1ef8073fa89a 100644
+--- a/drivers/pci/pcie/Kconfig
++++ b/drivers/pci/pcie/Kconfig
+@@ -137,6 +137,14 @@ config PCIE_PTM
+ 	  This is only useful if you have devices that support PTM, but it
+ 	  is safe to enable even if you don't.
  
- void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
- {
-+	u8 dev_speeds = 0;
- 	int ret;
- 
- 	pci_configure_device(dev);
-@@ -2590,11 +2591,20 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
- 
- 	pci_init_capabilities(dev);
- 
-+	if (pci_is_pcie(dev) && PCI_FUNC(dev->devfn) == 0) {
-+		u32 linkcap, linkcap2;
++config PCIE_BW
++	bool "PCI Express Bandwidth Change Notification"
++	depends on PCIEPORTBUS
++	help
++	  This enables PCI Express Bandwidth Change Notification.  If
++	  you know link width or rate changes occur to correct unreliable
++	  links, you may answer Y.
 +
-+		pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &linkcap);
-+		pcie_capability_read_dword(dev, PCI_EXP_LNKCAP2, &linkcap2);
-+		dev_speeds = pcie_get_supported_speeds(linkcap, linkcap2);
-+	}
- 	/*
- 	 * Add the device to our list of discovered devices
- 	 * and the bus list for fixup functions, etc.
+ config PCIE_EDR
+ 	bool "PCI Express Error Disconnect Recover support"
+ 	depends on PCIE_DPC && ACPI
+diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
+index 8de4ed5f98f1..175065a495cf 100644
+--- a/drivers/pci/pcie/Makefile
++++ b/drivers/pci/pcie/Makefile
+@@ -12,4 +12,5 @@ obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
+ obj-$(CONFIG_PCIE_PME)		+= pme.o
+ obj-$(CONFIG_PCIE_DPC)		+= dpc.o
+ obj-$(CONFIG_PCIE_PTM)		+= ptm.o
++obj-$(CONFIG_PCIE_BW)		+= bwctrl.o
+ obj-$(CONFIG_PCIE_EDR)		+= edr.o
+diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+new file mode 100644
+index 000000000000..4fc6718fc0e5
+--- /dev/null
++++ b/drivers/pci/pcie/bwctrl.c
+@@ -0,0 +1,131 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * PCI Express Link Bandwidth Notification services driver
++ * Author: Alexandru Gagniuc <mr.nuke.me@gmail.com>
++ *
++ * Copyright (C) 2019, Dell Inc
++ *
++ * The PCIe Link Bandwidth Notification provides a way to notify the
++ * operating system when the link width or data rate changes.  This
++ * capability is required for all root ports and downstream ports
++ * supporting links wider than x1 and/or multiple link speeds.
++ *
++ * This service port driver hooks into the bandwidth notification interrupt
++ * watching for link speed changes or links becoming degraded in operation
++ * and updates the cached link speed exposed to user space.
++ */
++
++#define dev_fmt(fmt) "bwctrl: " fmt
++
++#include "../pci.h"
++#include "portdrv.h"
++
++static bool pcie_link_bandwidth_notification_supported(struct pci_dev *dev)
++{
++	int ret;
++	u32 lnk_cap;
++
++	ret = pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnk_cap);
++	return (ret == PCIBIOS_SUCCESSFUL) && (lnk_cap & PCI_EXP_LNKCAP_LBNC);
++}
++
++static void pcie_enable_link_bandwidth_notification(struct pci_dev *dev)
++{
++	u16 link_status;
++	int ret;
++
++	pcie_capability_write_word(dev, PCI_EXP_LNKSTA, PCI_EXP_LNKSTA_LBMS);
++	pcie_capability_set_word(dev, PCI_EXP_LNKCTL, PCI_EXP_LNKCTL_LBMIE);
++
++	/* Read after enabling notifications to ensure link speed is up to date */
++	ret = pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &link_status);
++	if (ret == PCIBIOS_SUCCESSFUL)
++		pcie_update_link_speed(dev->subordinate, link_status);
++}
++
++static void pcie_disable_link_bandwidth_notification(struct pci_dev *dev)
++{
++	pcie_capability_clear_word(dev, PCI_EXP_LNKCTL, PCI_EXP_LNKCTL_LBMIE);
++}
++
++static irqreturn_t pcie_bw_notification_irq(int irq, void *context)
++{
++	struct pcie_device *srv = context;
++	struct pci_dev *port = srv->port;
++	u16 link_status, events;
++	int ret;
++
++	ret = pcie_capability_read_word(port, PCI_EXP_LNKSTA, &link_status);
++	events = link_status & PCI_EXP_LNKSTA_LBMS;
++
++	if (ret != PCIBIOS_SUCCESSFUL || !events)
++		return IRQ_NONE;
++
++	pcie_capability_write_word(port, PCI_EXP_LNKSTA, events);
++
++	/*
++	 * The write to clear LBMS prevents getting interrupt from the
++	 * latest link speed when the link speed changes between the above
++	 * LNKSTA read and write. Therefore, re-read the speed before
++	 * updating it.
++	 */
++	ret = pcie_capability_read_word(port, PCI_EXP_LNKSTA, &link_status);
++	if (ret != PCIBIOS_SUCCESSFUL)
++		return IRQ_HANDLED;
++	pcie_update_link_speed(port->subordinate, link_status);
++
++	return IRQ_HANDLED;
++}
++
++static int pcie_bandwidth_notification_probe(struct pcie_device *srv)
++{
++	struct pci_dev *port = srv->port;
++	int ret;
++
++	/* Single-width or single-speed ports do not have to support this. */
++	if (!pcie_link_bandwidth_notification_supported(port))
++		return -ENODEV;
++
++	ret = request_irq(srv->irq, pcie_bw_notification_irq,
++			  IRQF_SHARED, "PCIe BW ctrl", srv);
++	if (ret)
++		return ret;
++
++	pcie_enable_link_bandwidth_notification(port);
++	pci_info(port, "enabled with IRQ %d\n", srv->irq);
++
++	return 0;
++}
++
++static void pcie_bandwidth_notification_remove(struct pcie_device *srv)
++{
++	pcie_disable_link_bandwidth_notification(srv->port);
++	free_irq(srv->irq, srv);
++}
++
++static int pcie_bandwidth_notification_suspend(struct pcie_device *srv)
++{
++	pcie_disable_link_bandwidth_notification(srv->port);
++	return 0;
++}
++
++static int pcie_bandwidth_notification_resume(struct pcie_device *srv)
++{
++	pcie_enable_link_bandwidth_notification(srv->port);
++	return 0;
++}
++
++static struct pcie_port_service_driver pcie_bandwidth_notification_driver = {
++	.name		= "pcie_bwctrl",
++	.port_type	= PCIE_ANY_PORT,
++	.service	= PCIE_PORT_SERVICE_BWCTRL,
++	.probe		= pcie_bandwidth_notification_probe,
++	.suspend	= pcie_bandwidth_notification_suspend,
++	.resume		= pcie_bandwidth_notification_resume,
++	.remove		= pcie_bandwidth_notification_remove,
++};
++
++int __init pcie_bwctrl_init(void)
++{
++	return pcie_port_service_register(&pcie_bandwidth_notification_driver);
++}
+diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+index 46fad0d813b2..ed33049bffd6 100644
+--- a/drivers/pci/pcie/portdrv.c
++++ b/drivers/pci/pcie/portdrv.c
+@@ -67,7 +67,7 @@ static int pcie_message_numbers(struct pci_dev *dev, int mask,
  	 */
- 	down_write(&pci_bus_sem);
-+	if (dev_speeds)
-+		bus->pcie_dev_speeds = dev_speeds;
- 	list_add_tail(&dev->bus_list, &bus->devices);
- 	up_write(&pci_bus_sem);
  
-diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-index d749ea8250d6..656784cfb291 100644
---- a/drivers/pci/remove.c
-+++ b/drivers/pci/remove.c
-@@ -36,6 +36,8 @@ static void pci_destroy_dev(struct pci_dev *dev)
- 	device_del(&dev->dev);
+ 	if (mask & (PCIE_PORT_SERVICE_PME | PCIE_PORT_SERVICE_HP |
+-		    PCIE_PORT_SERVICE_BWNOTIF)) {
++		    PCIE_PORT_SERVICE_BWCTRL)) {
+ 		pcie_capability_read_word(dev, PCI_EXP_FLAGS, &reg16);
+ 		*pme = (reg16 & PCI_EXP_FLAGS_IRQ) >> 9;
+ 		nvec = *pme + 1;
+@@ -149,11 +149,11 @@ static int pcie_port_enable_irq_vec(struct pci_dev *dev, int *irqs, int mask)
  
- 	down_write(&pci_bus_sem);
-+	if (pci_is_pcie(dev) && PCI_FUNC(dev->devfn) == 0)
-+		dev->bus->pcie_dev_speeds = 0;
- 	list_del(&dev->bus_list);
- 	up_write(&pci_bus_sem);
+ 	/* PME, hotplug and bandwidth notification share an MSI/MSI-X vector */
+ 	if (mask & (PCIE_PORT_SERVICE_PME | PCIE_PORT_SERVICE_HP |
+-		    PCIE_PORT_SERVICE_BWNOTIF)) {
++		    PCIE_PORT_SERVICE_BWCTRL)) {
+ 		pcie_irq = pci_irq_vector(dev, pme);
+ 		irqs[PCIE_PORT_SERVICE_PME_SHIFT] = pcie_irq;
+ 		irqs[PCIE_PORT_SERVICE_HP_SHIFT] = pcie_irq;
+-		irqs[PCIE_PORT_SERVICE_BWNOTIF_SHIFT] = pcie_irq;
++		irqs[PCIE_PORT_SERVICE_BWCTRL_SHIFT] = pcie_irq;
+ 	}
  
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index cb03f3ff9d23..b8bd3dc92032 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -665,6 +665,7 @@ struct pci_bus {
- 	unsigned char	max_bus_speed;	/* enum pci_bus_speed */
- 	unsigned char	cur_bus_speed;	/* enum pci_bus_speed */
- 	u8		pcie_bus_speeds;/* Supported Link Speeds Vector (+ reserved 0 at LSB) */
-+	u8		pcie_dev_speeds;/* Device's Supported Link Speeds Vector (+ 0 at LSB) */
- #ifdef CONFIG_PCI_DOMAINS_GENERIC
- 	int		domain_nr;
+ 	if (mask & PCIE_PORT_SERVICE_AER)
+@@ -270,7 +270,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+ 
+ 		pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &linkcap);
+ 		if (linkcap & PCI_EXP_LNKCAP_LBNC)
+-			services |= PCIE_PORT_SERVICE_BWNOTIF;
++			services |= PCIE_PORT_SERVICE_BWCTRL;
+ 	}
+ 
+ 	return services;
+@@ -828,6 +828,7 @@ static void __init pcie_init_services(void)
+ 	pcie_pme_init();
+ 	pcie_dpc_init();
+ 	pcie_hp_init();
++	pcie_bwctrl_init();
+ }
+ 
+ static int __init pcie_portdrv_init(void)
+diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+index 58a2b1a1cae4..f622c8a02a5b 100644
+--- a/drivers/pci/pcie/portdrv.h
++++ b/drivers/pci/pcie/portdrv.h
+@@ -20,8 +20,8 @@
+ #define PCIE_PORT_SERVICE_HP		(1 << PCIE_PORT_SERVICE_HP_SHIFT)
+ #define PCIE_PORT_SERVICE_DPC_SHIFT	3	/* Downstream Port Containment */
+ #define PCIE_PORT_SERVICE_DPC		(1 << PCIE_PORT_SERVICE_DPC_SHIFT)
+-#define PCIE_PORT_SERVICE_BWNOTIF_SHIFT	4	/* Bandwidth notification */
+-#define PCIE_PORT_SERVICE_BWNOTIF	(1 << PCIE_PORT_SERVICE_BWNOTIF_SHIFT)
++#define PCIE_PORT_SERVICE_BWCTRL_SHIFT	4	/* Bandwidth Controller (notifications) */
++#define PCIE_PORT_SERVICE_BWCTRL	(1 << PCIE_PORT_SERVICE_BWCTRL_SHIFT)
+ 
+ #define PCIE_PORT_DEVICE_MAXSERVICES   5
+ 
+@@ -53,6 +53,12 @@ int pcie_dpc_init(void);
+ static inline int pcie_dpc_init(void) { return 0; }
  #endif
+ 
++#ifdef CONFIG_PCIE_BW
++int pcie_bwctrl_init(void);
++#else
++static inline int pcie_bwctrl_init(void) { return 0; }
++#endif
++
+ /* Port Type */
+ #define PCIE_ANY_PORT			(~0)
+ 
 -- 
 2.30.2
 
