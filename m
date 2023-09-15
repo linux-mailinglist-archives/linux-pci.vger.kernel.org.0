@@ -2,167 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D67257A250A
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 19:46:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51ED67A26B9
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 21:00:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235246AbjIORpo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Sep 2023 13:45:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44850 "EHLO
+        id S236601AbjIOS7p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Sep 2023 14:59:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236367AbjIORpb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 13:45:31 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51907210A;
-        Fri, 15 Sep 2023 10:45:22 -0700 (PDT)
-Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RnM0j2d3Sz67bgN;
-        Sat, 16 Sep 2023 01:40:37 +0800 (CST)
-Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
- lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Fri, 15 Sep 2023 18:45:19 +0100
-From:   <shiju.jose@huawei.com>
-To:     <helgaas@kernel.org>, <rafael@kernel.org>, <lenb@kernel.org>,
-        <tony.luck@intel.com>, <james.morse@arm.com>, <bp@alien8.de>,
-        <ying.huang@intel.com>, <linux-acpi@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
-        <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
-        <shiju.jose@huawei.com>
-Subject: [RFC PATCH 1/1] ACPI / APEI: Fix for overwriting aer info when error status data have multiple sections
-Date:   Sat, 16 Sep 2023 01:44:35 +0800
-Message-ID: <20230915174435.779-1-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.35.1.windows.2
+        with ESMTP id S236641AbjIOS7Q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 14:59:16 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2051.outbound.protection.outlook.com [40.107.94.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78C5AF9;
+        Fri, 15 Sep 2023 11:59:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hootONcXvIkJMkj4bo9UwN9nvylPlOWitxeOEpiVa7yq4umaOwexFR3uttSu1Knrjk4RM732L/UAw0tEQ2hM2xMyf/1zk2cbK+OoX5YeRwjQlbGtUpsGBOcWK1fCs3S+jtoR0/B+C9c1GD/kZUbPJmXOXpT+9EO/7WwX+o9M2ddmlwI+xFxFkLOq2u63ihyCspCM1bQuqobOyEY0L85PDuTyDcnUs4Jr7zHuCkDBqMvVrqQbw9vEhv2JlsUCmC9fw2JHTQrpz8VGfQHcUbyZuIGxtQqq9L70iOIYxtI6LY4XgBKVNJIIzEC0utnCF7pIcsIrO7YxCZr1DM6Pn4EdPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gjyaxVsTLBhP//KKYCPbJ27HdfiX3W3zpkxt1SQlsZc=;
+ b=ZXHOW5EJ8+xarP118dU6tIqkN67zFeknzDxQXQISso2CrYLOMNJkSLfpchnGjP0vo50Q4wU8T9In5z9fBtDFZ+OvBtyE2/0krbRysv8hW0bLBku9poOyijaAA1YXVfHc6BgdmK2OpXdggkJO4ceqaI1nLVtKE0DpNOCSaTTEV7Pheew1y1PtCrNKkxrryF8pfwdsd4pdolS9CqEwYLL5mxttFSgzE0vO5/eglPQeBlHNkJNAwenOUFeOmqQdJdys2SmqTrTNf27kqmuLyviu43YC31H0BICphvOufuOcqbgkrBmx5+K9I84XwKj1RMgDrLqV+2Ps3g+YKB1gZKgFSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gjyaxVsTLBhP//KKYCPbJ27HdfiX3W3zpkxt1SQlsZc=;
+ b=xhDGzLyodC7uh79AeF2h+WHQVh3bQTWuQ1kZpaOQyV2bWbT10OZhRuVbhdDn9p6eVTnQNgr8eXg7RRwKY3/QN2GMXy2b4zc/kYk/fzU2cORUdrru+uBmhTDK4lTSBnfg2P/UvLz8VJ8otY93VXneS5BppZ1b6Fo5UdLXRELpdtQ=
+Received: from BL1PR13CA0151.namprd13.prod.outlook.com (2603:10b6:208:2bd::6)
+ by SJ0PR12MB5610.namprd12.prod.outlook.com (2603:10b6:a03:423::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.19; Fri, 15 Sep
+ 2023 18:59:09 +0000
+Received: from BL02EPF0001A0F9.namprd03.prod.outlook.com
+ (2603:10b6:208:2bd:cafe::8c) by BL1PR13CA0151.outlook.office365.com
+ (2603:10b6:208:2bd::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.22 via Frontend
+ Transport; Fri, 15 Sep 2023 18:59:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ BL02EPF0001A0F9.mail.protection.outlook.com (10.167.242.100) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6792.19 via Frontend Transport; Fri, 15 Sep 2023 18:59:08 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 15 Sep
+ 2023 13:59:08 -0500
+Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.27 via Frontend
+ Transport; Fri, 15 Sep 2023 13:59:07 -0500
+From:   Lizhi Hou <lizhi.hou@amd.com>
+To:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <herve.codina@bootlin.com>,
+        <Jonathan.Cameron@Huawei.com>
+CC:     Lizhi Hou <lizhi.hou@amd.com>, <bhelgaas@google.com>,
+        <robh@kernel.org>
+Subject: [PATCH 1/2] PCI: of: Fix memory leak when of_changeset_create_node() failed
+Date:   Fri, 15 Sep 2023 11:08:06 -0700
+Message-ID: <1694801287-17217-1-git-send-email-lizhi.hou@amd.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.234]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500006.china.huawei.com (7.191.161.198)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A0F9:EE_|SJ0PR12MB5610:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9dad24ac-d755-4ca9-f7fb-08dbb61dd782
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: emtoL4aaGJ/LY+LTUjwq1FdGkKDazvmqrACL3+9X5RjHvKV4bSoVanYQwW8w+kolpkK+mo+tZ2sOnoNOnvNLn9anGvkL39FzOIGIPKxRX12Fpjv3mL884ra/0NVocMRTcGL9NX9x6YvIN2x29VisIDrcqseS1QxHdZG35E1fA6ZdjSm3qMQAC3Q+v+P5gljeCk5eT4/v3tl2G8wRuTvKmvzMpL+g6+QWC5LU/Vq455MWhNoOUMNfggll69/iEm3Ml77UMB/K49Bi4pIoQBoFyzkYy9xO80USLjdK9QaXZ7+pkNXEMIlwB+BlQweUjZK+IuAhrbSCh6nwB57GzOCJN5OPSn3cV0M41nh71vnJtqy2qbShIcWd2CSgN2bERsE3e34r9bSXBWiF63lPcgTaY9usiVXMDxqWvd0A8JhyDPC/00D6crul4j7De6R3iIPBnzfyxydr5cc//CQ0DVP/B6NvuvlUnBM4BtV1P2rfiwlxzgRYhUunFmQ5TtfiJVT66xiBTrohFdgssGuYjcOh551eUGknbajz0a1g4Ernfg4V6V+7Rv0JJa0RGmX5kVJRlnWKYXkWh+AbshmRtwFvKTbqURkWT2O4esBNvdoEVsy1r+PpUwZ3Cxd9nj0wzODO2z8FIk49Hi3uz9P/AwAGkqZJ2+17EZmv+Rw1LMGxhTXeQKrUN23MgGq6abKVK4Dl1t5s+C0z3G4W3pjLP09chcChss6WXZap4792HCvLESl+1hXV3POBMfk9f77BGWCbgcH7OgHZK/GRkGOpvb4SgQ==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(346002)(136003)(39860400002)(396003)(1800799009)(451199024)(186009)(82310400011)(46966006)(36840700001)(40470700004)(40460700003)(36860700001)(2906002)(47076005)(36756003)(86362001)(356005)(81166007)(4326008)(8676002)(40480700001)(8936002)(2616005)(5660300002)(26005)(70206006)(70586007)(110136005)(54906003)(316002)(426003)(41300700001)(82740400003)(336012)(966005)(478600001)(83380400001)(44832011)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2023 18:59:08.8579
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9dad24ac-d755-4ca9-f7fb-08dbb61dd782
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BL02EPF0001A0F9.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5610
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Shiju Jose <shiju.jose@huawei.com>
+Destroy and free cset when failure happens.
 
-ghes_handle_aer() lacks synchronization with aer_recover_work_func(),
-so when error status data have multiple sections, aer_recover_work_func()
-may use estatus data for aer_capability_regs after it has been overwritten.
-
-The problem statement is here,
-https://lore.kernel.org/all/20230901225755.GA90053@bhelgaas/
-
-In ghes_handle_aer() allocates memory for aer_capability_regs from the
-ghes_estatus_pool and copy data for aer_capability_regs from the estatus
-buffer. Free the memory in aer_recover_work_func() after processing the
-data using the ghes_estatus_pool_region_free() added.
-
-Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+Reported-by: Herve Codina <herve.codina@bootlin.com>
+Closes: https://lore.kernel.org/all/20230911171319.495bb837@bootlin.com/
+Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
 ---
- drivers/acpi/apei/ghes.c | 23 ++++++++++++++++++++++-
- drivers/pci/pcie/aer.c   | 10 ++++++++++
- include/acpi/ghes.h      |  1 +
- 3 files changed, 33 insertions(+), 1 deletion(-)
+ drivers/pci/of.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index ef59d6ea16da..63ad0541db38 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -209,6 +209,20 @@ int ghes_estatus_pool_init(unsigned int num_ghes)
- 	return -ENOMEM;
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 2af64bcb7da3..498b5cae8bca 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -657,30 +657,33 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
+ 
+ 	cset = kmalloc(sizeof(*cset), GFP_KERNEL);
+ 	if (!cset)
+-		goto failed;
++		goto failed_alloc_cset;
+ 	of_changeset_init(cset);
+ 
+ 	np = of_changeset_create_node(cset, ppnode, name);
+ 	if (!np)
+-		goto failed;
+-	np->data = cset;
++		goto failed_create_node;
+ 
+ 	ret = of_pci_add_properties(pdev, cset, np);
+ 	if (ret)
+-		goto failed;
++		goto failed_add_prop;
+ 
+ 	ret = of_changeset_apply(cset);
+ 	if (ret)
+-		goto failed;
++		goto failed_add_prop;
+ 
++	np->data = cset;
+ 	pdev->dev.of_node = np;
+ 	kfree(name);
+ 
+ 	return;
+ 
+-failed:
+-	if (np)
+-		of_node_put(np);
++failed_add_prop:
++	of_node_put(np);
++failed_create_node:
++	of_changeset_destroy(cset);
++	kfree(cset);
++failed_alloc_cset:
+ 	kfree(name);
  }
- 
-+/**
-+ * ghes_estatus_pool_region_free - free previously allocated memory
-+ *				   from the ghes_estatus_pool.
-+ * @addr: address of memory to free.
-+ * @size: size of memory to free.
-+ *
-+ * Returns none.
-+ */
-+void ghes_estatus_pool_region_free(unsigned long addr, u32 size)
-+{
-+	gen_pool_free(ghes_estatus_pool, addr, size);
-+}
-+EXPORT_SYMBOL_GPL(ghes_estatus_pool_region_free);
-+
- static int map_gen_v2(struct ghes *ghes)
- {
- 	return apei_map_generic_address(&ghes->generic_v2->read_ack_register);
-@@ -564,6 +578,7 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
- 	    pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO) {
- 		unsigned int devfn;
- 		int aer_severity;
-+		u8 *aer_info;
- 
- 		devfn = PCI_DEVFN(pcie_err->device_id.device,
- 				  pcie_err->device_id.function);
-@@ -577,11 +592,17 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
- 		if (gdata->flags & CPER_SEC_RESET)
- 			aer_severity = AER_FATAL;
- 
-+		aer_info = (void *)gen_pool_alloc(ghes_estatus_pool,
-+						  sizeof(struct aer_capability_regs));
-+		if (!aer_info)
-+			return;
-+		memcpy(aer_info, pcie_err->aer_info, sizeof(struct aer_capability_regs));
-+
- 		aer_recover_queue(pcie_err->device_id.segment,
- 				  pcie_err->device_id.bus,
- 				  devfn, aer_severity,
- 				  (struct aer_capability_regs *)
--				  pcie_err->aer_info);
-+				  aer_info);
- 	}
  #endif
- }
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index e85ff946e8c8..388b614c11fd 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -29,6 +29,7 @@
- #include <linux/kfifo.h>
- #include <linux/slab.h>
- #include <acpi/apei.h>
-+#include <acpi/ghes.h>
- #include <ras/ras_event.h>
- 
- #include "../pci.h"
-@@ -996,6 +997,15 @@ static void aer_recover_work_func(struct work_struct *work)
- 			continue;
- 		}
- 		cper_print_aer(pdev, entry.severity, entry.regs);
-+		/*
-+		 * Memory for aer_capability_regs(entry.regs) is being allocated from the
-+		 * ghes_estatus_pool to protect it from overwriting when multiple sections
-+		 * are present in the error status. Thus free the same after processing
-+		 * the data.
-+		 */
-+		ghes_estatus_pool_region_free((unsigned long)entry.regs,
-+					      sizeof(struct aer_capability_regs));
-+
- 		if (entry.severity == AER_NONFATAL)
- 			pcie_do_recovery(pdev, pci_channel_io_normal,
- 					 aer_root_reset);
-diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
-index 3c8bba9f1114..40d89e161076 100644
---- a/include/acpi/ghes.h
-+++ b/include/acpi/ghes.h
-@@ -78,6 +78,7 @@ static inline struct list_head *ghes_get_devices(void) { return NULL; }
- #endif
- 
- int ghes_estatus_pool_init(unsigned int num_ghes);
-+void ghes_estatus_pool_region_free(unsigned long addr, u32 size);
- 
- static inline int acpi_hest_get_version(struct acpi_hest_generic_data *gdata)
- {
 -- 
 2.34.1
 
