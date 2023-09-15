@@ -2,164 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CF25B7A245B
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 19:12:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 312BD7A24D3
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 19:31:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230179AbjIORME (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Sep 2023 13:12:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55294 "EHLO
+        id S236008AbjIORbU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Sep 2023 13:31:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235340AbjIORMB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 13:12:01 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2064.outbound.protection.outlook.com [40.107.94.64])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C24110C7;
-        Fri, 15 Sep 2023 10:11:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KZE2zRdhIIMI/WECYkWMasJtLCstliltcpiHoIXbMt5BQDSh7UP3XspLV/200+RxRCcJDu+GdRP8FSzuwmKOCFc7NmlvQhNkly6VR8rQ23P7U1dKSYfo6x1oaYMNtMVJ8jhSu2R68TTZIuXFbOA6kZStkS4UUQYyxG3qsKlwGKAKE5+cfp08JNj9x16c2Cvfh4cllf4yZOqquNRkQVTOV0ID64+Tbgvrckv52C7geJ0S3+u6s3FvtHYEkHhkYEPfgj+nS/0IO2uUrWT0yGtQjeWzZ/r97J9UmZHPWfLbMaiZxVq+4LbKvMstr5s55NxMCBz1AaQNuXUCAxF/w0KbfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZSmvsNU+vvFApQ0DIuwhDn8loTvkxTJB/UQXk0vJMas=;
- b=PEFfNcgYjAaA3FDGgrL99f3yKJi0tZU+drdwDOPjV63mHwiUWczwk/tDAnKlX6CyPrz2ahuTNzB3YcuJCQDMkaOkJ2pAIxud/OQRaX2ZQCLhArbAP2c7nd/KgFyuAjSaVOEOAwVJT2kMSnWfqSlfQe414ZbRnn7FI57gMF+mYNxtnzZfYVlrtB7KCsQ/Bfw3tmhy2EbIKjHnrKLpof7sSusXEj6qpHWJLPQQIhYhM+PnK1F6BcX0nTQcuEGed0ap4SRaVI1ki1xej+c3bIuZW2r9FL5544EWJ6AgPa/0Sre1UMc6T0bFvbkIbzmVQJhWjeVz1GqUdWT/8idoeEmayw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZSmvsNU+vvFApQ0DIuwhDn8loTvkxTJB/UQXk0vJMas=;
- b=PzqQtuDrLmm7lpfOxzAknmQNkJHV45hNfSr/ZQpeNcShhu6u/iISVvmk1RUeuz7Qv67h8KQs/YoNnF5d4mD0Sqqb+ldqoHscAkNht+X5L8vYOpdId99oW1rc3yE7ohawojTSBHdRKhET/GJGQDLUTeo2zYfDKZMzLgdi7jlxres=
-Received: from MW4PR04CA0317.namprd04.prod.outlook.com (2603:10b6:303:82::22)
- by PH0PR12MB8775.namprd12.prod.outlook.com (2603:10b6:510:28e::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.33; Fri, 15 Sep
- 2023 17:11:53 +0000
-Received: from MWH0EPF000989EC.namprd02.prod.outlook.com
- (2603:10b6:303:82:cafe::71) by MW4PR04CA0317.outlook.office365.com
- (2603:10b6:303:82::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.21 via Frontend
- Transport; Fri, 15 Sep 2023 17:11:53 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000989EC.mail.protection.outlook.com (10.167.241.139) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6792.19 via Frontend Transport; Fri, 15 Sep 2023 17:11:53 +0000
-Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 15 Sep
- 2023 12:11:52 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB08.amd.com
- (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 15 Sep
- 2023 10:11:51 -0700
-Received: from [172.19.74.144] (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.27 via Frontend
- Transport; Fri, 15 Sep 2023 12:11:51 -0500
-Message-ID: <ebdc4295-f9ee-7e5f-2616-10f7567054ec@amd.com>
-Date:   Fri, 15 Sep 2023 10:11:46 -0700
+        with ESMTP id S236470AbjIORa7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 13:30:59 -0400
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0058A2D5A;
+        Fri, 15 Sep 2023 10:30:11 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 701BC60007;
+        Fri, 15 Sep 2023 17:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1694799010;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/JtjgsgOyPbwm6BWL60L1iUo+eWhjWgnDribpTAUHbw=;
+        b=GCM8fr7nhBiojP+OOcmNg4lRKP/Bc6b9HshzoiPy41bAJdfe58QnbVWRol0erQlfEeYyrN
+        MEPHy0Z9KRr6MlHTIFTzO04Lw3MR1kgdmXlHhAPGkzhHWh7fGvstnv8vN+0sIbb7Yr8klM
+        LgdH4FaFskd8ZT66hYqhhCCKU4ZsIUFZNHxTuaXDSOwXpSNXXXXL8lnTzZsuyia1ote48D
+        WV4rUKKg0gKZ4oqQXjeMVQpg8lyGX5d4SzfWm5NHuZ2v9/RGvcZsVCTwC/6EjhC2w6k091
+        nVLDn4OxQI6u4oztghtrG23WeBsq+Wc8F1KG1/ECv6XONwRcq5bekBG6NTKKVA==
+Date:   Fri, 15 Sep 2023 19:30:08 +0200
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Rob Herring <robh@kernel.org>, Lizhi Hou <lizhi.hou@amd.com>,
+        Andrew Lunn <andrew@lunn.ch>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        max.zhen@amd.com, sonal.santan@amd.com,
+        stefano.stabellini@xilinx.com
+Subject: Re: [PATCH V13 0/5] Generate device tree node for pci devices
+Message-ID: <20230915193008.6d87b8a0@bootlin.com>
+In-Reply-To: <ZQGaSr+G5qu/8nJZ@smile.fi.intel.com>
+References: <1692120000-46900-1-git-send-email-lizhi.hou@amd.com>
+        <ZP96feVs2ev7098Y@smile.fi.intel.com>
+        <CAL_JsqKfQJFrd8MOdjW55cYdEb8yyPyR+P3ran9+X3dCwUgdyA@mail.gmail.com>
+        <ZQGaSr+G5qu/8nJZ@smile.fi.intel.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] PCI: of: Fix memory leak when of_changeset_create_node()
- failed
-Content-Language: en-US
-To:     Rob Herring <robh@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <herve.codina@bootlin.com>,
-        <bhelgaas@google.com>
-References: <1694715351-58279-1-git-send-email-lizhi.hou@amd.com>
- <CAL_JsqLLfTONAA4XPsQdYC0XL-F0jmMhaz_mmr_uTCOf6SqOqQ@mail.gmail.com>
-From:   Lizhi Hou <lizhi.hou@amd.com>
-In-Reply-To: <CAL_JsqLLfTONAA4XPsQdYC0XL-F0jmMhaz_mmr_uTCOf6SqOqQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000989EC:EE_|PH0PR12MB8775:EE_
-X-MS-Office365-Filtering-Correlation-Id: 57ba5076-8548-4c89-dfbf-08dbb60edb82
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: G8DCmLYS1XgmF8FAC5VyqGvS8uOOKvjNafhwJfD9kC4X16HOnSYNZyl2z3tEABptvDNctY9VFMMlQ1UOH5+IOFqTBisRK6I21idqtekurw9Al6yq8oBv112Hwa9QcGgOkh9KJZPPBzeaPSdjMvMZlkRNIr8dXiARyfQEHi+PvY12UGLYncb1/yw+hISo/D4K4Xg2MQbBhn+DqWpiKlguhXzIsZai1qN0/cioc/ahyjOlCzwTvGVkasidAoB4W6MShVwpzSJ+BK+nBerigGG+7mCj3nVIyRTIfW77SJ8bPnlPVT3sOd1livu6RL3T4xpSHnvZD6rrEQl213rnHg+0LcKznyug1ZC3/hjAEfQxXziODtHQzDtHMnq8kfywJ1Rx/tlRB1r/STR2l/P9uc3PbqjWewNEm+s10jV/mUTjEIqmmL8IgKGV6NfS5lU2GGWg+NkK6sVjEwyrF2CtuEKXYcnmP4rCkzGTJfA9iv7hzkFtXGv/LTN8+0aU03c6qRJI3sXsW25bTkDtlTTKXKeD3p+arkejn1tmi0svXsRvk/JLRvXywjc+WSPAx0geuEiMd/RVacVDm0ACqMlCnH1v5kSw5X+UPvKCQLQW9gE9Rb4iWtOh3O8ytxREWaXOFdRgSvA95+bXRaB5BKa/xqEOFCHbvDUI4DxSto2XXbFQbrjjBxcr9HnWF3ELvoiGUdXPmle5zqKgaLeuNFm/BWFhQgVKtbdtsD0eqdeXqzineyUQg4jlZFz9Qarl3fHpaDiPwWmC2oycON6CkM+mpcuimeNdhFdJXMuYfdoM/hXczp8=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(396003)(376002)(136003)(39860400002)(82310400011)(186009)(451199024)(1800799009)(36840700001)(40470700004)(46966006)(53546011)(6666004)(40460700003)(83380400001)(82740400003)(86362001)(356005)(81166007)(31696002)(47076005)(36756003)(36860700001)(2616005)(336012)(40480700001)(26005)(31686004)(70586007)(6916009)(8936002)(16576012)(41300700001)(316002)(8676002)(70206006)(426003)(54906003)(44832011)(478600001)(4326008)(5660300002)(2906002)(966005)(36900700001)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2023 17:11:53.0235
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57ba5076-8548-4c89-dfbf-08dbb60edb82
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: MWH0EPF000989EC.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8775
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-GND-Sasl: herve.codina@bootlin.com
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Andy,
 
-On 9/15/23 09:20, Rob Herring wrote:
-> On Thu, Sep 14, 2023 at 1:16 PM Lizhi Hou <lizhi.hou@amd.com> wrote:
->> Destroy and free cset when failure happens.
->>
->> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
->> Reported-by: Herve Codina <herve.codina@bootlin.com>
->> Closes: https://lore.kernel.org/all/20230911171319.495bb837@bootlin.com/
->> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
->> ---
->>   drivers/pci/of.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
->> index 2af64bcb7da3..67bbfa2fca59 100644
->> --- a/drivers/pci/of.c
->> +++ b/drivers/pci/of.c
->> @@ -663,7 +663,6 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
->>          np = of_changeset_create_node(cset, ppnode, name);
->>          if (!np)
->>                  goto failed;
->> -       np->data = cset;
->>
->>          ret = of_pci_add_properties(pdev, cset, np);
->>          if (ret)
->> @@ -673,12 +672,17 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
->>          if (ret)
->>                  goto failed;
->>
->> +       np->data = cset;
->>          pdev->dev.of_node = np;
->>          kfree(name);
->>
->>          return;
->>
->>   failed:
->> +       if (cset) {
-> Instead of adding more if's, use multiple goto labels which is the
-> normal cleanup style. Note that there's a new cleanup.h thing that can
-> do some automatic cleanups. Not sure if that works or helps here.
+On Wed, 13 Sep 2023 14:17:30 +0300
+Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
 
-Ok. I will create another patch to use multiple goto labels.
+> On Tue, Sep 12, 2023 at 02:12:04PM -0500, Rob Herring wrote:
+> > On Mon, Sep 11, 2023 at 3:37 PM Andy Shevchenko
+> > <andriy.shevchenko@intel.com> wrote:  
+> > > On Tue, Aug 15, 2023 at 10:19:55AM -0700, Lizhi Hou wrote:  
+> 
+> ...
+> 
+> > > Can you point out to the ACPI excerpt(s) of the description of anything related
+> > > to the device(s) in question?  
+> > 
+> > I don't understand what you are asking for.  
+> 
+> Through the email thread it was mentioned that this series was tested on the
+> ACPI enabled platform, Jonathan (IIRC) asked why do we need to have a shadow
+> DT for the something that ACPI already describes. That's why I'm trying to
+> understand if it's the case. and if so, how can we improve the approach.
+> 
 
+Patches from Frank Rowand series [1] are needed to create an of_root_node if a DT
+was not provided by the firmware, bootloader, etc that run the kernel.
 
-Lizhi
+[1]: https://lore.kernel.org/lkml/20220624034327.2542112-1-frowand.list@gmail.com/
 
->
->> +               of_changeset_destroy(cset);
->> +               kfree(cset);
->> +       }
->>          if (np)
->>                  of_node_put(np);
->>          kfree(name);
->> --
->> 2.34.1
->>
+Current Lizhi's series creates nodes from the PCI host node during the PCI
+enumeration. It creates PCI-PCI bridge and PCI device nodes.
+
+I use these series on an ACPI system.
+
+I need one more missing component: the node related to the PCI host bridge
+This was the purpose of Clement's work. This work was not sent upstream yet and I
+am working on it in order to have a full tree from the of_root to the PCI device
+ie:
+ of_root                  <-- Frank Rowand series 
+   + of_host_pci_bridge   <-- Clement's work
+       + pci_bridge       <-- Current Lizhi series
+           + pci_bridge   <-- Current Lizhi series
+            ...
+             + pci_dev    <-- Current Lizhi series
+
+Hope that this status helped.
+
+Regards,
+Hervé
+
+-- 
+Hervé Codina, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
