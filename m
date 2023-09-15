@@ -2,180 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC35E7A26BA
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 21:00:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 469EA7A2688
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 20:49:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233362AbjIOS7p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Sep 2023 14:59:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43846 "EHLO
+        id S236589AbjIOSsd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Sep 2023 14:48:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236652AbjIOS7R (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 14:59:17 -0400
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2074.outbound.protection.outlook.com [40.107.102.74])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E89E1AF;
-        Fri, 15 Sep 2023 11:59:11 -0700 (PDT)
+        with ESMTP id S236998AbjIOSsa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 14:48:30 -0400
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2046.outbound.protection.outlook.com [40.107.21.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2805E3A94;
+        Fri, 15 Sep 2023 11:45:18 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jpVoEKcxpwiuzKcMbtoMhAq/5sEcEBrwLLR0DkD7jGZk9KXyXMimdIbfLQ7EfznxkG0ilyUE9E/P0AjJ2xrj0kXMQOTnWa1Zjqct3S+xBq/Ajlc7ETfpwyKrf5sE2uRrYiWlEMlDRDfGw6AycXYIuxjH2IlDd3GoURV28XrF3rrWB2gJ5vkvNP5Y2fA3DvCaGnT32ypfxeo/RLNV5JGo4hX6GItzjvM+wsrDz9rEADN3RP1Cf3OUbo7V5CvrEfab08TulpVqXI4wmnlPZIGDap4yj0C/K/mydpQUOYqfO0LNXB7+svVjnvgAVAJ2nJ76QhCLZlTgU1zc5rtkY7gvSg==
+ b=Gbj9NZ+KUU0uJAbCeuBkPgjWdmM+j5v8imj4YTJSp89jMtHpljv5jiINy3uESQzRBfBpZP8Z9k+pAuYHjDQ6KpNfmMATtJ/C202yU06B4t7VLyKJ/6Ud1j5HnxKaczz1D/xIa/QGkaNptD/FTk4FhtB8crJCSFfz8o1Z+elPvfU3J6Vn0qp4vu/GupUTRKoggkmowB65QuWGVxQy0AeFTplmwtHqcUtxgj8nd3+dkFc3gvI1mDWUQwxrAUSVwV5LgfIcCjimhBqbWWsCYi4tB3XfiFNbLy/DkTgRZtUA9aweIXSz3YgJ0SokE7gC2STPdhEv7X7fSMyGGh8wKfSAAg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nM6ZWZakbe+IBI1miklYz4jGu8Gbpl9xf2mO7nvcpH0=;
- b=ZDjbu/qySScK8yNrOTl14z4mCJGXNsA0lzfyihH0t159xdOXo/qWYaldzZgwPk8Kn9e+CA9ziFOwNFgC1geXI4Pf64F2aF9bjzbkUAozv5DjEka+MA/g6mbPOZg83J8uR4mLM8cU1eY6ZMkqJSXiFG+/0b2w1jx9PEAyTLY2qKi7mIEMIbd3cMDrqRjembkezxIVRaGpnxPHHpslyPXVOlyP79o0iHcOangcT5ioMtjaKjBQQs6x7VWZGTJiIoFNjSz8xA4NQSG8c9Up09fqFlHofjVKq7gMWDl0cFglBmYUKxNzclWqxjVaBTPoTECS/Y6pQDfgbm7gND4yCgRMAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=fa0JrSzrIWObI+M3MwG4/GbDzXhyXZdAEdLKKyybH2Q=;
+ b=VUQFnWmVHASVylRMMUuQAEF4KLLo+hUgGt3usDvlI3Z8RouynkzM9+jSQ4EjzSvOKCm5KnZccUtjsRE3EE2cuwBo8LVIzOvd4sVjoIIKNQfs0qEa0xlBWHMfO2qxPZw9Ux6Wf9XuqFDmBfanWutOGpZfFJzB5qDVFcdRM9dPpbKky+xr8WdswB7n24w6Qp15RJx1Yaqca6PI7ccLM1qRQA/8cD0fxXKGp1vnB2zL3wVYGoKe2gDOjtJY263dRrcNDQykJFmXgsCDc3jTaYaWs1NRcTGgc8jq/36riUtCF1+57DJ8Z+hmDiZ+GuuiefsyqRg/pU45qKNM3Ct2HjZmSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nM6ZWZakbe+IBI1miklYz4jGu8Gbpl9xf2mO7nvcpH0=;
- b=nPCuxiBUdewwJAVkIR6R4+vmHvgrbZaBbjsETge6qg2vOeG1khS5MQDBUjN8fdf1w7ChFiFX9p1kf4uMVUiyVsl5MppbyMGXubYdBmvcYWDRoY/p0nCywNxl2qO+/xegjUvdEvSbsENQCkMQ2vn79bFvxrNEVrdXZYXzMRWMO6w=
-Received: from BL1PR13CA0178.namprd13.prod.outlook.com (2603:10b6:208:2bd::33)
- by BN9PR12MB5381.namprd12.prod.outlook.com (2603:10b6:408:102::24) with
+ bh=fa0JrSzrIWObI+M3MwG4/GbDzXhyXZdAEdLKKyybH2Q=;
+ b=PmPzzvK/p5Uh/xliv24cjTM87dU378bz7bnPkhaWWpAOrwwcpZpScyS0DhbBR/sRMTaTPSi/xUmCmfvObf7LEvLBkFxn43V3bv2A8e51pH9UEj7INBtPSfggM1YBFMTEpOBgGhI65TSIn9PPusAmcH7ZBrY/nERq7i8cmZjswAI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by GV1PR04MB9184.eurprd04.prod.outlook.com (2603:10a6:150:28::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.21; Fri, 15 Sep
- 2023 18:59:09 +0000
-Received: from BL02EPF0001A0F9.namprd03.prod.outlook.com
- (2603:10b6:208:2bd:cafe::ac) by BL1PR13CA0178.outlook.office365.com
- (2603:10b6:208:2bd::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.21 via Frontend
- Transport; Fri, 15 Sep 2023 18:59:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BL02EPF0001A0F9.mail.protection.outlook.com (10.167.242.100) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6792.19 via Frontend Transport; Fri, 15 Sep 2023 18:59:09 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 15 Sep
- 2023 13:59:09 -0500
-Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.27 via Frontend
- Transport; Fri, 15 Sep 2023 13:59:08 -0500
-From:   Lizhi Hou <lizhi.hou@amd.com>
-To:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <herve.codina@bootlin.com>,
-        <Jonathan.Cameron@Huawei.com>
-CC:     Lizhi Hou <lizhi.hou@amd.com>, <bhelgaas@google.com>,
-        <robh@kernel.org>
-Subject: [PATCH 2/2] PCI: of_property: Fix uninitialized variable when of_irq_parse_raw() failed
-Date:   Fri, 15 Sep 2023 11:08:07 -0700
-Message-ID: <1694801287-17217-2-git-send-email-lizhi.hou@amd.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1694801287-17217-1-git-send-email-lizhi.hou@amd.com>
-References: <1694801287-17217-1-git-send-email-lizhi.hou@amd.com>
-MIME-Version: 1.0
+ 2023 18:43:28 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::aa90:117d:c1d0:346a]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::aa90:117d:c1d0:346a%3]) with mapi id 15.20.6792.020; Fri, 15 Sep 2023
+ 18:43:27 +0000
+From:   Frank Li <Frank.Li@nxp.com>
+To:     Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linuxppc-dev@lists.ozlabs.org (open list:PCI DRIVER FOR FREESCALE
+        LAYERSCAPE),
+        linux-pci@vger.kernel.org (open list:PCI DRIVER FOR FREESCALE
+        LAYERSCAPE),
+        linux-arm-kernel@lists.infradead.org (moderated list:PCI DRIVER FOR
+        FREESCALE LAYERSCAPE), linux-kernel@vger.kernel.org (open list)
+Cc:     imx@lists.linux.dev
+Subject: [PATCH 1/3] PCI: layerscape: add function pointer for exit_from_l2()
+Date:   Fri, 15 Sep 2023 14:43:04 -0400
+Message-Id: <20230915184306.2374670-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EOPAttributedMessage: 0
+X-ClientProxiedBy: SJ0PR03CA0186.namprd03.prod.outlook.com
+ (2603:10b6:a03:2ef::11) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
+MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A0F9:EE_|BN9PR12MB5381:EE_
-X-MS-Office365-Filtering-Correlation-Id: e65c5161-bd34-4747-0543-08dbb61dd812
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|GV1PR04MB9184:EE_
+X-MS-Office365-Filtering-Correlation-Id: d87edcb0-45e6-48d9-c32f-08dbb61ba657
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nNvggFL68bNTYVWHSPdxZdudNoxKDmhsjIWOkQCIGhD7ZaS3EEPO+L4A46J+e47l+jO1epGwgKwZ9qDxUG2KBJoMBTbk6VFUOxoSW955SKaeyxYuiADbXEy+d9zTdlT5MWcPsKFu27u3yZG/A4BMv4rsYOnmoTG8j4I6BtPvdX8qCZXvEyUkqxFdyPdKcGXBJnlnRxyx+IJsck3QGG1L2bF3Hi0WJiTamjBe62ONg08N+0qKbMEmmrnP5YLhhrv40jwpKxTgao3r39XIz6JFU7yYnBEbwu+jGvK+aVEfH2r2t0pQ7ZD0qLVnx3jALRiITR6nNkneX42aMKgrm1LSacOe/KiI8n5HJrJHgmszy0mgVd4wNwHZdd1j+RqwVdGbtiuyOA6dUdZFoDmtDdl1jA5cJhlSzTEPBh5STr22KmpcLxq3+IlcEhAOFAqURwqJk0WJvg66nlyazv7CZtyxafVEOVPawUrW3yGlefo1t51WZxT99sSfm9lEVd8v7Q7tegQsl23G231KQcJjkAZWBt/rPJYu1nvTN4LVJs2yay/XSV3D2IBX+M7tVNejK38OOQn6OvYidW3a5H1xy295oewCWBbd++Q7OQIBzWYeQLe81lxxPe5k26SoyvtPWGwpAmlF2ArSw540rAUmTG947xWPm1Wa0tM0QhbM16ooh4AnagboOMmMp06XIytMGlDJKtW5XsrONQtsl27nWfHJlFtLo20f+svrxJu8e7hOWgw02M/FuWTrcWdvJmRV66acySdK/DJ2+Kd6XsKLOuD5Ng==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(39860400002)(346002)(376002)(136003)(82310400011)(451199024)(1800799009)(186009)(36840700001)(40470700004)(46966006)(336012)(40480700001)(2906002)(426003)(83380400001)(2616005)(478600001)(966005)(26005)(86362001)(40460700003)(356005)(36860700001)(70206006)(36756003)(70586007)(82740400003)(81166007)(47076005)(5660300002)(54906003)(316002)(41300700001)(110136005)(44832011)(4326008)(8676002)(8936002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2023 18:59:09.8111
+X-Microsoft-Antispam-Message-Info: xQJgz11ms0ET0a/a5/+B21+ko6ahYCMjdpO6k9+CjPwYG1F4RMx0b+IdYIx7ewKlY8eBjihH+84E5TyAmDmZlHQ1xgF6ii2/KPKBrf3BVzvJpAmfJePOwxh+tnTH2ArBCW2trZBU8YRNGn8B6VdLfZxayGYboK/OG/2WTf6LWJJ7NIcO751dPbS7Mblaw6AWTYx4KaH/vKCIyQWkmOc/W/fceHNtCLYXqCFZvjTYJL5BIG1ETiCnX5nqZzoeY4WSVSNNG5WBJYcZHpPgCH0riBpE/PScYkD1fEiJ6qeRUYSrAfCp+TzIv1v7VCKvQ7EvfJw4STk5FrNtVwibmLS0m4yQ3YQvUcgKiP/1HMGBcJWEcL2iv/mBOJVxyH9BYuh6EEwgPI8U5Jw15p6Um4YCk7R0GPDBjFnpuDtgwskMQh+Xfuu+FcUzHbn98NjaOc930tob79OkekFTZ/MLIRD490CizKBP90tsn2+N7spi8u0n/IkjeZ4L9Ld+KoKbUvZaJ+DzX/Fd3jPubDLHyno/YPvEw6uP30lZ86bJQG4jqu0MlzMRS4t29DKBgRgtC0tyFEMiOAKtkyDbPXEYSeGbYOiNNReWQ1da9dSFxMJlg6i5w1qTRWWJ8Zrh4U76irEpeFxTNSrBg8VKnAS0Gzrd6Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(136003)(376002)(366004)(396003)(451199024)(1800799009)(186009)(478600001)(6512007)(6506007)(6486002)(6666004)(52116002)(2906002)(4326008)(86362001)(8676002)(5660300002)(8936002)(41300700001)(316002)(110136005)(66476007)(66946007)(66556008)(38350700002)(1076003)(2616005)(26005)(921005)(36756003)(83380400001)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zqxivQnPFaQ6+A2jiF0kKNL7NpgqRKPsbr/YDXPCD0UmRTP/J46Zt9DtOdaq?=
+ =?us-ascii?Q?yUNj4k7xBBKMjie0isGbgmI28V+pWD5dvDFyRvSZSrswNcfP9lhEd5BUicJQ?=
+ =?us-ascii?Q?7XQO+pp7EamoR1LO928lvVAYqA+LYY2OHg02VNn3aGOSMRU6Hx3OqtLiDTeD?=
+ =?us-ascii?Q?9My3UpSEpyebWwatj2nf2T+uYKBfiNrwCOIMmKw/qBlX+BlepaSnq6bOILJI?=
+ =?us-ascii?Q?Zphp75eOV8e21OLNF6vEEIH5nAVt3+LNykVBSSs2uTRxC/fxbtr6Q+3qeBLV?=
+ =?us-ascii?Q?6jmY72UbOWzGQb8BCD1qNqNuEWR58cqy/rJqR65kqiN3mvRi9zGP6q72cuIC?=
+ =?us-ascii?Q?dPEs1hO/a9RYiIeaG4gXNHwfhgnHZNIOozuc6frbWZm/CXtYo/5K45gaujKb?=
+ =?us-ascii?Q?CoLkzbBJTxzEdMtVAh8mwLlNZQt5K4S5V3D3pJJoq+YHU4NRrUvqoyw29VLe?=
+ =?us-ascii?Q?ogK7gdz0hjlynp7YXWUlFNQLUnU9xmKpJlVzKolJrPAMfgQu8M6IfNX4XyD3?=
+ =?us-ascii?Q?5GlGkCGGJ3locK6diKizgN/pAnSniOTeo+KWfy0nYGM3SZy2yGkoYwzHvYOP?=
+ =?us-ascii?Q?ueVukBW0+abjPcXqsdr5KvD6OnxJLz6UU+2ZQj03XM/oe8LmgbdwkXPo4o3W?=
+ =?us-ascii?Q?dk1l3cQ2PCyV9TZmXfhtiA5s5mebpoX9p0XTTcs6aPJctp53gN56FbvZETqZ?=
+ =?us-ascii?Q?n+h0HmOpPQKPCirTqdafEwtejoWKabP5SSBSM3D9PDpECz7Kiq7y58UZx7ym?=
+ =?us-ascii?Q?U/cycbzabhLvtUWxH2AEY71U2Ms68vMgWRYmfTG9iueaLfOyma7yaTSN+9aE?=
+ =?us-ascii?Q?IVVuNYtjgssHpr8Rt8CcOm9HKziH9mOGRAg0uQ5PBPCSzTxz+miacfGycad4?=
+ =?us-ascii?Q?5UMwjoFI8T4elQv1/3Eq8jwS3XLmg1b8Yl6GOTOw2i7Wj3MdHzIcEfrYLQ8G?=
+ =?us-ascii?Q?2XqOGtDZkpdqTqY3AyTAQoTZt69kQxY/LqdmRnjje3bUxVVhuGRRgNTKZe9/?=
+ =?us-ascii?Q?ngzoc/ZvRO/NSwMjPkASWyLZJnaQiFlZrZPZzAmFGnyxpVe1DRkhU06TwXL7?=
+ =?us-ascii?Q?0kYaV3qzC3mPR558G1SE318+a/PHZsa1EwWMNM/4+M5pAPTrHT8VKygtp4Sh?=
+ =?us-ascii?Q?kBaHIinlR3YW3lNR32xQQ3rmbnoflCoPLy/Ah0WESzkiDynAv1Ybs0VX5gbB?=
+ =?us-ascii?Q?xo/t3jSnODbHyH/+w36+14Ol35OLAJXHypiNmB1jSaot9TUTauvMD8MecEas?=
+ =?us-ascii?Q?xwmbvmkIB4NvdXsZVuksHA7TiVlKRNhxHC02LKYaqlTEY1uqdVGXxFlwLMvc?=
+ =?us-ascii?Q?uxe+28GcYHMPE6WIpTt3Hp3FYyC8rL5b//7eHaD/iBpdbIp0mKEkiyGjL1/U?=
+ =?us-ascii?Q?V+qEarBnDIUnXZDZHbonVt99OzDLFgeO+hty/3FifkeLJmax0ePug+neekRF?=
+ =?us-ascii?Q?PB8L6NDw7gTRB8lIiC8PhhKtmbtZL4lyBJTDKHFcSo7aNY+KOgiuExo2O7pB?=
+ =?us-ascii?Q?/iK1Uu0rwgptdXRSJoSHrGZ9+9zsDEAlAcGewEeoTZaNsY+iyKA4wn+1vKne?=
+ =?us-ascii?Q?5Bz8zh95ppR13Cws3glrmovcoPvGVYNNXKSn30AD?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d87edcb0-45e6-48d9-c32f-08dbb61ba657
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2023 18:43:27.6351
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e65c5161-bd34-4747-0543-08dbb61dd812
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BL02EPF0001A0F9.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5381
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NpogN6G/T+EQPwiVETH42g+cXHPXNssHdf9FBZPr37tEU0D/Sqk6HMhMY8vQC9u2uf68nS2zGK9R6/IcUjWjWA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB9184
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In function of_pci_prop_intr_map(), addr_sz[i] will be uninitialized if
-of_irq_parse_raw() returns failure. Add addr_sz array initialization. And
-when parsing irq failed, skip generating interrupt-map pair for the pin.
+Difference layerscape chip have not difference exit_from_l2() method.
+Using function pointer for ls1028. It prepare for other layerscape
+suspend/resume support.
 
-Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
-Reported-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Closes: https://lore.kernel.org/all/20230911154856.000076c3@Huawei.com/
-Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- drivers/pci/of_property.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ drivers/pci/controller/dwc/pci-layerscape.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
-index 710ec35ba4a1..c2c7334152bc 100644
---- a/drivers/pci/of_property.c
-+++ b/drivers/pci/of_property.c
-@@ -186,8 +186,8 @@ static int of_pci_prop_interrupts(struct pci_dev *pdev,
- static int of_pci_prop_intr_map(struct pci_dev *pdev, struct of_changeset *ocs,
- 				struct device_node *np)
- {
-+	u32 i, addr_sz[OF_PCI_MAX_INT_PIN] = { 0 }, map_sz = 0;
- 	struct of_phandle_args out_irq[OF_PCI_MAX_INT_PIN];
--	u32 i, addr_sz[OF_PCI_MAX_INT_PIN], map_sz = 0;
- 	__be32 laddr[OF_PCI_ADDRESS_CELLS] = { 0 };
- 	u32 int_map_mask[] = { 0xffff00, 0, 0, 7 };
- 	struct device_node *pnode;
-@@ -213,33 +213,44 @@ static int of_pci_prop_intr_map(struct pci_dev *pdev, struct of_changeset *ocs,
- 		out_irq[i].args[0] = pin;
- 		ret = of_irq_parse_raw(laddr, &out_irq[i]);
- 		if (ret) {
--			pci_err(pdev, "parse irq %d failed, ret %d", pin, ret);
-+			out_irq[i].np = NULL;
-+			pci_dbg(pdev, "parse irq %d failed, ret %d", pin, ret);
- 			continue;
- 		}
--		ret = of_property_read_u32(out_irq[i].np, "#address-cells",
--					   &addr_sz[i]);
--		if (ret)
--			addr_sz[i] = 0;
-+		of_property_read_u32(out_irq[i].np, "#address-cells",
-+				     &addr_sz[i]);
- 	}
+diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+index b931d597656f6..20c48c06e2248 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape.c
++++ b/drivers/pci/controller/dwc/pci-layerscape.c
+@@ -39,6 +39,8 @@
  
- 	list_for_each_entry(child, &pdev->subordinate->devices, bus_list) {
- 		for (pin = 1; pin <= OF_PCI_MAX_INT_PIN; pin++) {
- 			i = pci_swizzle_interrupt_pin(child, pin) - 1;
-+			if (!out_irq[i].np)
-+				continue;
- 			map_sz += 5 + addr_sz[i] + out_irq[i].args_count;
- 		}
- 	}
+ struct ls_pcie_drvdata {
+ 	const u32 pf_off;
++	const struct dw_pcie_host_ops *ops;
++	void (*exit_from_l2)(struct dw_pcie_rp *pp);
+ 	bool pm_support;
+ };
  
-+	/*
-+	 * Parsing interrupt failed for all pins. In this case, it does not
-+	 * need to generate interrupt-map property.
-+	 */
-+	if (!map_sz)
-+		return 0;
-+
- 	int_map = kcalloc(map_sz, sizeof(u32), GFP_KERNEL);
- 	mapp = int_map;
+@@ -180,6 +182,7 @@ static const struct ls_pcie_drvdata ls1021a_drvdata = {
+ static const struct ls_pcie_drvdata layerscape_drvdata = {
+ 	.pf_off = 0xc0000,
+ 	.pm_support = true,
++	.exit_from_l2 = ls_pcie_exit_from_l2,
+ };
  
- 	list_for_each_entry(child, &pdev->subordinate->devices, bus_list) {
- 		for (pin = 1; pin <= OF_PCI_MAX_INT_PIN; pin++) {
-+			i = pci_swizzle_interrupt_pin(child, pin) - 1;
-+			if (!out_irq[i].np)
-+				continue;
-+
- 			*mapp = (child->bus->number << 16) |
- 				(child->devfn << 8);
- 			mapp += OF_PCI_ADDRESS_CELLS;
- 			*mapp = pin;
- 			mapp++;
--			i = pci_swizzle_interrupt_pin(child, pin) - 1;
- 			*mapp = out_irq[i].np->phandle;
- 			mapp++;
- 			if (addr_sz[i]) {
+ static const struct of_device_id ls_pcie_of_match[] = {
+@@ -213,7 +216,7 @@ static int ls_pcie_probe(struct platform_device *pdev)
+ 	pcie->drvdata = of_device_get_match_data(dev);
+ 
+ 	pci->dev = dev;
+-	pci->pp.ops = &ls_pcie_host_ops;
++	pci->pp.ops = pcie->drvdata->ops ? pcie->drvdata->ops : &ls_pcie_host_ops;
+ 
+ 	pcie->pci = pci;
+ 
+@@ -251,7 +254,7 @@ static int ls_pcie_resume_noirq(struct device *dev)
+ 	if (!pcie->drvdata->pm_support)
+ 		return 0;
+ 
+-	ls_pcie_exit_from_l2(&pcie->pci->pp);
++	pcie->drvdata->exit_from_l2(&pcie->pci->pp);
+ 
+ 	return dw_pcie_resume_noirq(pcie->pci);
+ }
 -- 
 2.34.1
 
