@@ -2,58 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 142847A158F
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 07:42:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5DEC7A15C9
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 07:58:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232057AbjIOFmH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Sep 2023 01:42:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51776 "EHLO
+        id S231616AbjIOF6O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Sep 2023 01:58:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231997AbjIOFmG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 01:42:06 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0961C1FC8;
-        Thu, 14 Sep 2023 22:42:01 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41B76C433C8;
-        Fri, 15 Sep 2023 05:42:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694756521;
-        bh=qgukgSQliG5UKLUjUQfOpI4jxUuXNFnLMEkfK97Qfo4=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=gZUjdtteoNW6CcWoDJntN+p7gfh0GNXx985j6AdwtgeZBRxu2QE841FlY+FMMwhxU
-         a8PBs0RrljCbKmh2M2WCmamq6BcW9zqJ+33K4sSDwBVgc8R+IZ3COUOrfOHFzBu+ef
-         s+k+Nc+sny+Bd+bQFY6U4USE+RSmAzHqLZcpCH/jrY9mRsTUvDQ18DmP8Nk2H36jFc
-         NgLYjkPdt7TqH8FaD6QPxmkASuwvWx8WKe/TimRdhCYjDYf9fc70iAsW7ITvGEciAv
-         aaskqs/oSZnb4WUzbdXAFwbrHUT3uI/TBjVIb8Jn/jYPkxVnv4imOAp8KFzriy8aDQ
-         itkGGdEMzw5jw==
-Message-ID: <10f65dfe-5e8a-10ab-4d89-efe693c07caa@kernel.org>
-Date:   Fri, 15 Sep 2023 14:41:58 +0900
+        with ESMTP id S230097AbjIOF6N (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 01:58:13 -0400
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F9619A6
+        for <linux-pci@vger.kernel.org>; Thu, 14 Sep 2023 22:58:06 -0700 (PDT)
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 56A683F656
+        for <linux-pci@vger.kernel.org>; Fri, 15 Sep 2023 05:58:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1694757485;
+        bh=G7gSDZoI4sEqH2VruW2vcuYSTgnnacSUGs/AzU3emLo=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=u9KaS3UiOPi2GaVQQG3FXo4z/5cacdXDdzqZjivoYHdujxLgRSrlJrh9cZUgmpkJ8
+         d8wQlA4ebxx42bmIxqdqyxAa5jExL9Ut0VURErTzQ46gsaCcda5BvCTE9rg3VNZDXV
+         azAEs4SCy5LQdnOYnH8LA+7HaKE1cqtnlU7O0GO8sFeGJtPYtdUWNxW6ShH6PeQzKZ
+         K9a6lbUsnykruTT1TkZnahP1MJV1lkaheMcAFvO9e9KJ8hwIMHEYRvA+rHwxuz07Gi
+         SGWTZ56ZQuqV8X9ZXcooCVi2c7+6CEhvLjnbB5OUj9Z8gzwnFoSwreo5OI3OFTKOhv
+         E8ZbzcRLcEqpw==
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-273983789adso1521942a91.0
+        for <linux-pci@vger.kernel.org>; Thu, 14 Sep 2023 22:58:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694757483; x=1695362283;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G7gSDZoI4sEqH2VruW2vcuYSTgnnacSUGs/AzU3emLo=;
+        b=IGSJ/eU18WhqMR4ikT90qy6XHFLtS1+GmS2m3AotuGv6//CvQYeJ4DddqgSPGOoJHA
+         k57WQhJprpqZryjXYB29Q2rZCButX+7OSnQiWgrsBFrM+lgZK5kZBn1nF7JjglIILG9M
+         AiJRFQcN16O8AJv2SfQ2DkVzPMhUXWgpwy23jfA8sfdvJjP+CTNQzqV4dN54bpd5sH3l
+         al/S7Il35V96HZZHBKtDoZZ6uB2dWiLCVDmkQX5EMlZgHkE1UoGmLtR/rOn8DEPp67qR
+         q/X1akyurzcXr9EF3yrTF/uNiW81vd7/5pVD01CXbTZSwb+vX/kcK0+ysCbvkmrLtAth
+         sj8Q==
+X-Gm-Message-State: AOJu0YwlmFu9hdhY8MQPV2/gbSNo14+muoroQre8K4AO/wk4r7MPJZKX
+        o4e0xncEJzAoFZpes7wxcgARvacMg0r6WtyHFGakwMOvXSJ0LqkgCLQdJjgUM/OtYe9xKh8kIeg
+        ULDuqzbXKucJqMSvlWQuHW8TcbJx/z0pxi+eQzSlpgsjRppc7un6wtw==
+X-Received: by 2002:a17:90a:fc89:b0:268:b0b:a084 with SMTP id ci9-20020a17090afc8900b002680b0ba084mr521085pjb.46.1694757483489;
+        Thu, 14 Sep 2023 22:58:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFXAyS32h8VDw2UAqI2lPwt1s3JNBSwGSKvt79p6I3Se6AjB/ygKexGUaXsMp2W5pWSlawyXZF1gagjRK9nKpg=
+X-Received: by 2002:a17:90a:fc89:b0:268:b0b:a084 with SMTP id
+ ci9-20020a17090afc8900b002680b0ba084mr521077pjb.46.1694757483114; Thu, 14 Sep
+ 2023 22:58:03 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: Fwd: Kernel 6.5.2 Causes Marvell Technology Group 88SE9128 PCIe
- SATA to Constantly Reset
-Content-Language: en-US
-To:     David Gow <david@davidgow.net>,
-        Niklas Cassel <Niklas.Cassel@wdc.com>,
-        Bagas Sanjaya <bagasdotme@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        patenteng <dimitar@daskalov.co.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Regressions <regressions@lists.linux.dev>,
-        Linux IDE and libata <linux-ide@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
-References: <dacb34e4-ce58-bc0e-8206-672d743a3e34@gmail.com>
- <ZQHRQHAPQdG+Nu1o@x1-carbon>
- <59f6ff78-6b45-465a-bd41-28c7a5d10931@davidgow.net>
-From:   Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <59f6ff78-6b45-465a-bd41-28c7a5d10931@davidgow.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <20230914041806.816741-1-kai.heng.feng@canonical.com> <20230914184249.GA74069@bhelgaas>
+In-Reply-To: <20230914184249.GA74069@bhelgaas>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Fri, 15 Sep 2023 13:57:50 +0800
+Message-ID: <CAAd53p4=oLYiH2YbVSmrPNj1zpMcfp=Wxbasb5vhMXOWCArLCg@mail.gmail.com>
+Subject: Re: [PATCH] HID: intel-ish-hid: ipc: Rework EHL OOB wakeup
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     srinivas.pandruvada@linux.intel.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, linux-pm@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        Jian Hui Lee <jianhui.lee@canonical.com>,
+        Even Xu <even.xu@intel.com>, Zhang Lixu <lixu.zhang@intel.com>,
+        Najumon Ba <najumon.ba@intel.com>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,127 +81,177 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/15/23 12:22, David Gow wrote:
-> Le 2023/09/13 à 23:12, Niklas Cassel a écrit :
->> On Wed, Sep 13, 2023 at 06:25:31PM +0700, Bagas Sanjaya wrote:
->>> Hi,
->>>
->>> I notice a regression report on Bugzilla [1]. Quoting from it:
->>>
->>>> After upgrading to 6.5.2 from 6.4.12 I keep getting the following kernel messages around three times per second:
->>>>
->>>> [ 9683.269830] ata16: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
->>>> [ 9683.270399] ata16.00: configured for UDMA/66
->>>>
->>>> So I've tracked the offending device:
->>>>
->>>> ll /sys/class/ata_port/ata16
->>>> lrwxrwxrwx 1 root root 0 Sep 10 21:51 /sys/class/ata_port/ata16 -> ../../devices/pci0000:00/0000:00:1c.7/0000:0a:00.0/ata16/ata_port/ata16
->>>>
->>>> cat /sys/bus/pci/devices/0000:0a:00.0/uevent
->>>> DRIVER=ahci
->>>> PCI_CLASS=10601
->>>> PCI_ID=1B4B:9130
->>>> PCI_SUBSYS_ID=1043:8438
->>>> PCI_SLOT_NAME=0000:0a:00.0
->>>> MODALIAS=pci:v00001B4Bd00009130sv00001043sd00008438bc01sc06i01
->>>>
->>>> lspci | grep 0a:00.0
->>>> 0a:00.0 SATA controller: Marvell Technology Group Ltd. 88SE9128 PCIe SATA 6 Gb/s RAID controller with HyperDuo (rev 11)
->>>>
->>>> I am not using the 88SE9128, so I have no way of knowing whether it works or not. It may simply be getting reset a couple of times per second or it may not function at all.
->>>
->>> See Bugzilla for the full thread.
->>>
->>> patenteng: I have asked you to bisect this regression. Any conclusion?
->>>
->>> Anyway, I'm adding this regression to regzbot:
->>>
->>> #regzbot: introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=217902
->>
->> Hello Bagas, patenteng,
->>
->>
->> FYI, the prints:
->> [ 9683.269830] ata16: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
->> [ 9683.270399] ata16.00: configured for UDMA/66
->>
->> Just show that ATA error handler has been invoked.
->> There was no reset performed.
->>
->> If there was a reset, you would have seen something like:
->> [    1.441326] ata8: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
->> [    1.541250] ata8.00: configured for UDMA/133
->> [    1.541411] ata8: hard resetting link
->>
->>
->> Could you please try this patch and see if it improves things for you:
->> https://lore.kernel.org/linux-ide/20230913150443.1200790-1-nks@flawful.org/T/#u
->>
-> 
-> FWIW, I'm seeing a very similar issue both in 6.5.2 and in git master 
-> [aed8aee11130 ("Merge tag 'pmdomain-v6.6-rc1' of 
-> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/linux-pm") with that 
-> patch applied.
-> 
-> 
-> The log is similar (the last two lines repeat several times a second):
-> [    0.369632] ata14: SATA max UDMA/133 abar m2048@0xf7c10000 port 
-> 0xf7c10480 irq 33
-> [    0.683693] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
-> [    1.031662] ata14.00: ATAPI: MARVELL VIRTUALL, 1.09, max UDMA/66
-> [    1.031852] ata14.00: configured for UDMA/66
-> [    1.414145] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
-> [    1.414505] ata14.00: configured for UDMA/66
-> [    1.744094] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
-> [    1.744368] ata14.00: configured for UDMA/66
-> [    2.073916] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
-> [    2.074276] ata14.00: configured for UDMA/66
-> 
-> 
-> lspci shows:
-> 09:00.0 SATA controller: Marvell Technology Group Ltd. 88SE9230 PCIe 2.0 
-> x2 4-port SATA 6 Gb/s RAID Controller (rev 10) (prog-if 01 [AHCI 1.0])
->          Subsystem: Gigabyte Technology Co., Ltd Device b000
->          Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-> ParErr- Stepping- SERR- FastB2B- DisINTx+
->          Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-> <TAbort- <MAbort- >SERR- <PERR- INTx-
->          Latency: 0, Cache Line Size: 64 bytes
->          Interrupt: pin A routed to IRQ 33
->          Region 0: I/O ports at b050 [size=8]
->          Region 1: I/O ports at b040 [size=4]
->          Region 2: I/O ports at b030 [size=8]
->          Region 3: I/O ports at b020 [size=4]
->          Region 4: I/O ports at b000 [size=32]
->          Region 5: Memory at f7c10000 (32-bit, non-prefetchable) [size=2K]
->          Expansion ROM at f7c00000 [disabled] [size=64K]
->          Capabilities: <access denied>
->          Kernel driver in use: ahci
-> 
-> The controller in question lives on a Gigabyte Z87X-UD5H-CF motherboard. 
-> I'm using the controller for several drives, and it's working, it's just 
-> spammy. (At worst, there's some performance hitching, but that might 
-> just be journald rotating logs as they fill up with the message).
-> 
-> I haven't had a chance to bisect yet (this is a slightly awkward machine 
-> for me to install test kernels on), but can also confirm it worked with 
-> 6.4.12.
-> 
-> Hopefully that's useful. I'll get back to you if I manage to bisect it.
+On Fri, Sep 15, 2023 at 2:42=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>
+> On Thu, Sep 14, 2023 at 12:18:05PM +0800, Kai-Heng Feng wrote:
+> > System cannot suspend more than 255 times because the driver doesn't
+> > have corresponding acpi_disable_gpe() for acpi_enable_gpe(), so the GPE
+> > refcount overflows.
+>
+> How can a user know they are seeing this problem?  Is there a public
+> bug report for it?
 
-Bisect will definitely be welcome. But first, please try adding the patch that
-Niklas mentioned above:
+Here's the error when it happens:
+[46307.532037] intel_ish_ipc 0000:00:1d.0: enable ose_gpe failed
 
-https://lore.kernel.org/linux-ide/20230913150443.1200790-1-nks@flawful.org/T/#u
+The ticket was filed privately.
 
-If that fixes the issue, we know the culprit :)
+>
+> > Since PCI core and ACPI core already handles PCI PME wake and GPE wake
+> > when the device has wakeup capability, use device_init_wakeup() to let
+> > them do the wakeup setting work.
+> >
+> > Also add a shutdown callback which uses pci_prepare_to_sleep() to let
+> > PCI and ACPI set OOB wakeup for S5.
+>
+> Is this logically required to be part of this patch, or could it be a
+> separate patch?
 
-> 
-> Cheers,
-> -- David
+Because that's what 2e23a70edabe ("HID: intel-ish-hid: ipc: finish
+power flow for EHL OOB") intended to do, to enable wakeup from S5.
 
--- 
-Damien Le Moal
-Western Digital Research
+>
+> > Fixes: 2e23a70edabe ("HID: intel-ish-hid: ipc: finish power flow for EH=
+L OOB")
+> > Cc: Jian Hui Lee <jianhui.lee@canonical.com>
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > ---
+> >  drivers/hid/intel-ish-hid/ipc/pci-ish.c | 59 +++++++------------------
+> >  1 file changed, 15 insertions(+), 44 deletions(-)
+> >
+> > diff --git a/drivers/hid/intel-ish-hid/ipc/pci-ish.c b/drivers/hid/inte=
+l-ish-hid/ipc/pci-ish.c
+> > index 55cb25038e63..65e7eeb2fa64 100644
+> > --- a/drivers/hid/intel-ish-hid/ipc/pci-ish.c
+> > +++ b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
+> > @@ -119,42 +119,6 @@ static inline bool ish_should_leave_d0i3(struct pc=
+i_dev *pdev)
+> >       return !pm_resume_via_firmware() || pdev->device =3D=3D CHV_DEVIC=
+E_ID;
+> >  }
+> >
+> > -static int enable_gpe(struct device *dev)
+> > -{
+> > -#ifdef CONFIG_ACPI
+> > -     acpi_status acpi_sts;
+> > -     struct acpi_device *adev;
+> > -     struct acpi_device_wakeup *wakeup;
+> > -
+> > -     adev =3D ACPI_COMPANION(dev);
+> > -     if (!adev) {
+> > -             dev_err(dev, "get acpi handle failed\n");
+> > -             return -ENODEV;
+> > -     }
+> > -     wakeup =3D &adev->wakeup;
+> > -
+> > -     acpi_sts =3D acpi_enable_gpe(wakeup->gpe_device, wakeup->gpe_numb=
+er);
+> > -     if (ACPI_FAILURE(acpi_sts)) {
+> > -             dev_err(dev, "enable ose_gpe failed\n");
+> > -             return -EIO;
+> > -     }
+> > -
+> > -     return 0;
+> > -#else
+> > -     return -ENODEV;
+> > -#endif
+> > -}
+> > -
+> > -static void enable_pme_wake(struct pci_dev *pdev)
+> > -{
+> > -     if ((pci_pme_capable(pdev, PCI_D0) ||
+> > -          pci_pme_capable(pdev, PCI_D3hot) ||
+> > -          pci_pme_capable(pdev, PCI_D3cold)) && !enable_gpe(&pdev->dev=
+)) {
+> > -             pci_pme_active(pdev, true);
+> > -             dev_dbg(&pdev->dev, "ish ipc driver pme wake enabled\n");
+> > -     }
+> > -}
+>
+> I LOVE the removal of all this code.  Thanks for doing it!
 
+Thanks :)
+
+>
+> >  /**
+> >   * ish_probe() - PCI driver probe callback
+> >   * @pdev:    pci device
+> > @@ -225,7 +189,7 @@ static int ish_probe(struct pci_dev *pdev, const st=
+ruct pci_device_id *ent)
+> >
+> >       /* Enable PME for EHL */
+> >       if (pdev->device =3D=3D EHL_Ax_DEVICE_ID)
+> > -             enable_pme_wake(pdev);
+> > +             device_init_wakeup(dev, true);
+> >
+> >       ret =3D ish_init(ishtp);
+> >       if (ret)
+> > @@ -248,6 +212,19 @@ static void ish_remove(struct pci_dev *pdev)
+> >       ish_device_disable(ishtp_dev);
+> >  }
+> >
+> > +
+> > +/**
+> > + * ish_shutdown() - PCI driver shutdown callback
+> > + * @pdev:    pci device
+> > + *
+> > + * This function sets up wakeup for S5
+> > + */
+> > +static void ish_shutdown(struct pci_dev *pdev)
+> > +{
+> > +     if (pdev->device =3D=3D EHL_Ax_DEVICE_ID)
+> > +             pci_prepare_to_sleep(pdev);
+>
+> There are only five drivers that use pci_prepare_to_sleep(), so I have
+> to ask what is special about this device that makes it necessary here?
+
+The idea is that use pci_enable_wake() and pci_set_power_state() in
+pci_prepare_to_sleep() to support S5 wakeup, by replacing the original
+enable_pme_wake().
+
+>
+> It doesn't seem to match any of the scenarios mentioned in
+> Documentation/power/pci.rst for using pci_prepare_to_sleep().
+>
+> Previously EHL_Ax_DEVICE_ID was used only in ish_probe(),
+> ish_resume(), and _dma_no_cache_snooping().  None of those look like
+> this, so this *looks* like new functionality that could/should be in a
+> separate patch.
+
+Because it's for S5 wakeup, so it's not a new functionality.
+
+Kai-Heng
+
+>
+> > +}
+> > +
+> >  static struct device __maybe_unused *ish_resume_device;
+> >
+> >  /* 50ms to get resume response */
+> > @@ -370,13 +347,6 @@ static int __maybe_unused ish_resume(struct device=
+ *device)
+> >       struct pci_dev *pdev =3D to_pci_dev(device);
+> >       struct ishtp_device *dev =3D pci_get_drvdata(pdev);
+> >
+> > -     /* add this to finish power flow for EHL */
+> > -     if (dev->pdev->device =3D=3D EHL_Ax_DEVICE_ID) {
+> > -             pci_set_power_state(pdev, PCI_D0);
+> > -             enable_pme_wake(pdev);
+> > -             dev_dbg(dev->devc, "set power state to D0 for ehl\n");
+> > -     }
+> > -
+> >       ish_resume_device =3D device;
+> >       dev->resume_flag =3D 1;
+> >
+> > @@ -392,6 +362,7 @@ static struct pci_driver ish_driver =3D {
+> >       .id_table =3D ish_pci_tbl,
+> >       .probe =3D ish_probe,
+> >       .remove =3D ish_remove,
+> > +     .shutdown =3D ish_shutdown,
+> >       .driver.pm =3D &ish_pm_ops,
+> >  };
+> >
+> > --
+> > 2.34.1
+> >
