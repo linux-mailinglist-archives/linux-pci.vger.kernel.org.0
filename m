@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 356187A1DEA
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 14:03:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B2617A1DEE
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 14:03:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234444AbjIOMDJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Sep 2023 08:03:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55688 "EHLO
+        id S234600AbjIOMDS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Sep 2023 08:03:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232836AbjIOMDJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 08:03:09 -0400
+        with ESMTP id S234567AbjIOMDN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 08:03:13 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F37B2722;
-        Fri, 15 Sep 2023 05:02:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 879D62729;
+        Fri, 15 Sep 2023 05:02:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694779365; x=1726315365;
+  t=1694779368; x=1726315368;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=vDsDIHqtLtfNmUG3Y8t5VDuHkp8RJgeZagGcp/a8iuA=;
-  b=PD0Pbphd+cTrXrBvdDVaWpF4myBOn9G1gLBVBDyobay5CxrmEKWRdZ2Q
-   uNwoCAp//+s9Mu8gny17P13Q9g0MdpUipcjuqUFBn9n2LI7YoLFsy8ozP
-   rJirOo8WNVjdm9ZRKwIlA7oQ5pxpvCnLnuge/hEqB0qSVvHWXR4wtKK8X
-   RhJXm8RZxIlHbB+ER9GUxQDyGPe3BlsHkwXfZ3CVaKNtKlUNTq7sXpa7d
-   f3VAKlTLy6HE9/MGAF0HZnq895dqlZJek1tMBRnX7YQ339zDQl0MyzYBz
-   IUGpuhzuWtwDfmZyQ0C7IZiD98i4iHHZti+uNtqCG0s0QaBHAvsZmsaSL
+  bh=jEq8VuTODvxdM49avhgWzqUC3yyIiRlCMHso5pMiaHY=;
+  b=mUqBlUGikBC/pQGXNhUiux4ISA+vf0dIYTyR4kL6wpm78vLB4eDqPsM6
+   1zZZKOlnYd4xaReJj7BV8G8T7u9Oxl3Igl8G20hMUSDSbjAzC/zkyGN4X
+   OSQiKTsqeLFIqo+qStkiJSk/uG97tjMqpDYVxmM9Kv3eZpG9fu1sif6Kd
+   nJ2NTXolH6plBSEO5BZgxfCQIgdxqvtK4ZzEoO875s+2Ephzrw3bVmd3O
+   +jhH/79sirtk3tSJqhSRC/FqFIf9pIOiZd0XTEUzEXeFcg03C56c9Djvq
+   j0JQM7bjJGaVYEA+oNwdRqkrz1pt5cTDXaL/3BVZ2tSPaoYGye4PQ5Pyg
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="378146017"
+X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="378146041"
 X-IronPort-AV: E=Sophos;i="6.02,149,1688454000"; 
-   d="scan'208";a="378146017"
+   d="scan'208";a="378146041"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 05:02:22 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 05:02:26 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="774292848"
+X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="774292874"
 X-IronPort-AV: E=Sophos;i="6.02,149,1688454000"; 
-   d="scan'208";a="774292848"
+   d="scan'208";a="774292874"
 Received: from srdoo-mobl1.ger.corp.intel.com (HELO ijarvine-mobl2.ger.corp.intel.com) ([10.252.38.99])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 05:02:14 -0700
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 05:02:21 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -48,18 +48,16 @@ To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
         Krishna chaitanya chundru <quic_krichai@quicinc.com>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
         linux-kernel@vger.kernel.org
 Cc:     Alex Deucher <alexdeucher@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Amit Kucheria <amitk@kernel.org>,
         Zhang Rui <rui.zhang@intel.com>,
         =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v2 04/10] drm/IB/hfi1: Use RMW accessors for changing LNKCTL2
-Date:   Fri, 15 Sep 2023 15:01:36 +0300
-Message-Id: <20230915120142.32987-5-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 05/10] PCI: Store all PCIe Supported Link Speeds
+Date:   Fri, 15 Sep 2023 15:01:37 +0300
+Message-Id: <20230915120142.32987-6-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230915120142.32987-1-ilpo.jarvinen@linux.intel.com>
 References: <20230915120142.32987-1-ilpo.jarvinen@linux.intel.com>
@@ -75,70 +73,102 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Don't assume that only the driver would be accessing LNKCTL2. In the
-case of upstream (parent), the driver does not even own the device it's
-changing the registers for.
+struct pci_bus stores max_bus_speed. Implementation Note in PCIe r6.0.1
+sec 7.5.3.18, however, recommends determining supported Link Speeds
+using the Supported Link Speeds Vector in the Link Capabilities 2
+Register (when available).
 
-Use RMW capability accessors which do proper locking to avoid losing
-concurrent updates to the register value. This change is also useful as
-a cleanup.
+Add pcie_bus_speeds into struct pci_bus which caches the Supported Link
+Speeds. The value is taken directly from the Supported Link Speeds
+Vector or synthetized from the Max Link Speed in the Link Capabilities
+Register when the Link Capabilities 2 Register is not available.
+
+pcie_bus_speeds field keeps the extra reserved zero at the least
+significant bit to match the Link Capabilities 2 Register layouting.
 
 Suggested-by: Lukas Wunner <lukas@wunner.de>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/infiniband/hw/hfi1/pcie.c | 30 ++++++++----------------------
- 1 file changed, 8 insertions(+), 22 deletions(-)
+ drivers/pci/probe.c           | 28 +++++++++++++++++++++++++++-
+ include/linux/pci.h           |  1 +
+ include/uapi/linux/pci_regs.h |  1 +
+ 3 files changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/pcie.c b/drivers/infiniband/hw/hfi1/pcie.c
-index 08732e1ac966..60a177f52eb5 100644
---- a/drivers/infiniband/hw/hfi1/pcie.c
-+++ b/drivers/infiniband/hw/hfi1/pcie.c
-@@ -1212,14 +1212,11 @@ int do_pcie_gen3_transition(struct hfi1_devdata *dd)
- 		    (u32)lnkctl2);
- 	/* only write to parent if target is not as high as ours */
- 	if ((lnkctl2 & PCI_EXP_LNKCTL2_TLS) < target_vector) {
--		lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
--		lnkctl2 |= target_vector;
--		dd_dev_info(dd, "%s: ..new link control2: 0x%x\n", __func__,
--			    (u32)lnkctl2);
--		ret = pcie_capability_write_word(parent,
--						 PCI_EXP_LNKCTL2, lnkctl2);
-+		ret = pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL2,
-+							 PCI_EXP_LNKCTL2_TLS,
-+							 target_vector);
- 		if (ret) {
--			dd_dev_err(dd, "Unable to write to PCI config\n");
-+			dd_dev_err(dd, "Unable to change PCI target speed\n");
- 			return_error = 1;
- 			goto done;
- 		}
-@@ -1228,22 +1225,11 @@ int do_pcie_gen3_transition(struct hfi1_devdata *dd)
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 795534589b98..ca1d797a30cb 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -767,6 +767,29 @@ static enum pci_bus_speed agp_speed(int agp3, int agpstat)
+ 	return agp_speeds[index];
+ }
+ 
++/*
++ * Implementation Note in PCIe r6.0.1 sec 7.5.3.18 recommends determining
++ * supported link speeds using the Supported Link Speeds Vector in the Link
++ * Capabilities 2 Register (when available).
++ */
++static u8 pcie_get_supported_speeds(u32 linkcap, u32 linkcap2)
++{
++	u8 speeds;
++
++	speeds = linkcap2 & PCI_EXP_LNKCAP2_SLS;
++	if (speeds)
++		return speeds;
++
++	/*
++	 * Synthetize supported link speeds from the Max Link Speed in the
++	 * Link Capabilities Register.
++	 */
++	speeds = PCI_EXP_LNKCAP2_SLS_2_5GB;
++	if ((linkcap & PCI_EXP_LNKCAP_SLS) == PCI_EXP_LNKCAP_SLS_5_0GB)
++		speeds |= PCI_EXP_LNKCAP2_SLS_5_0GB;
++	return speeds;
++}
++
+ static void pci_set_bus_speed(struct pci_bus *bus)
+ {
+ 	struct pci_dev *bridge = bus->self;
+@@ -814,12 +837,15 @@ static void pci_set_bus_speed(struct pci_bus *bus)
  	}
  
- 	dd_dev_info(dd, "%s: setting target link speed\n", __func__);
--	ret = pcie_capability_read_word(dd->pcidev, PCI_EXP_LNKCTL2, &lnkctl2);
-+	ret = pcie_capability_clear_and_set_word(dd->pcidev, PCI_EXP_LNKCTL2,
-+						 PCI_EXP_LNKCTL2_TLS,
-+						 target_vector);
- 	if (ret) {
--		dd_dev_err(dd, "Unable to read from PCI config\n");
--		return_error = 1;
--		goto done;
--	}
--
--	dd_dev_info(dd, "%s: ..old link control2: 0x%x\n", __func__,
--		    (u32)lnkctl2);
--	lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
--	lnkctl2 |= target_vector;
--	dd_dev_info(dd, "%s: ..new link control2: 0x%x\n", __func__,
--		    (u32)lnkctl2);
--	ret = pcie_capability_write_word(dd->pcidev, PCI_EXP_LNKCTL2, lnkctl2);
--	if (ret) {
--		dd_dev_err(dd, "Unable to write to PCI config\n");
-+		dd_dev_err(dd, "Unable to change PCI target speed\n");
- 		return_error = 1;
- 		goto done;
+ 	if (pci_is_pcie(bridge)) {
+-		u32 linkcap;
++		u32 linkcap, linkcap2;
+ 		u16 linksta;
+ 
+ 		pcie_capability_read_dword(bridge, PCI_EXP_LNKCAP, &linkcap);
+ 		bus->max_bus_speed = pcie_link_speed[linkcap & PCI_EXP_LNKCAP_SLS];
+ 
++		pcie_capability_read_dword(bridge, PCI_EXP_LNKCAP2, &linkcap2);
++		bus->pcie_bus_speeds = pcie_get_supported_speeds(linkcap, linkcap2);
++
+ 		pcie_capability_read_word(bridge, PCI_EXP_LNKSTA, &linksta);
+ 		pcie_update_link_speed(bus, linksta);
  	}
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 16db80f8b15c..cb03f3ff9d23 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -664,6 +664,7 @@ struct pci_bus {
+ 	unsigned char	primary;	/* Number of primary bridge */
+ 	unsigned char	max_bus_speed;	/* enum pci_bus_speed */
+ 	unsigned char	cur_bus_speed;	/* enum pci_bus_speed */
++	u8		pcie_bus_speeds;/* Supported Link Speeds Vector (+ reserved 0 at LSB) */
+ #ifdef CONFIG_PCI_DOMAINS_GENERIC
+ 	int		domain_nr;
+ #endif
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index e5f558d96493..2b27e4f6854a 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -674,6 +674,7 @@
+ #define PCI_EXP_DEVSTA2		0x2a	/* Device Status 2 */
+ #define PCI_CAP_EXP_RC_ENDPOINT_SIZEOF_V2 0x2c	/* end of v2 EPs w/o link */
+ #define PCI_EXP_LNKCAP2		0x2c	/* Link Capabilities 2 */
++#define  PCI_EXP_LNKCAP2_SLS		0x000000fe /* Supported Link Speeds Vector */
+ #define  PCI_EXP_LNKCAP2_SLS_2_5GB	0x00000002 /* Supported Speed 2.5GT/s */
+ #define  PCI_EXP_LNKCAP2_SLS_5_0GB	0x00000004 /* Supported Speed 5GT/s */
+ #define  PCI_EXP_LNKCAP2_SLS_8_0GB	0x00000008 /* Supported Speed 8GT/s */
 -- 
 2.30.2
 
