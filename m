@@ -2,70 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 177937A2080
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 16:08:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78E9B7A2144
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 16:44:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235563AbjIOOIu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Sep 2023 10:08:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37732 "EHLO
+        id S235795AbjIOOow (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Sep 2023 10:44:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235472AbjIOOIt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 10:08:49 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B561FCC;
-        Fri, 15 Sep 2023 07:08:45 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id d9443c01a7336-1c364fb8a4cso20014515ad.1;
-        Fri, 15 Sep 2023 07:08:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1694786924; x=1695391724; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1NDJ58ec50IQsUHGc8bDLmZWjrMQrltSqdri1VsBajU=;
-        b=NG0s6OMtiX+RCUZvaSq7fSQmQpexu3slqEedtJapmcdRrt/+4Bs7znbpMKp+/RM11u
-         AN2OwgLxxYY9mPqu3xvfCqHtJ7naZLif04aN5il5SwZKJVrP7ldLUVHEsz4OLLKkSiaJ
-         hL41AxhTuyRB1jMJGjOE55kRMiVARt8HopHgJktlt6jCqwizNJ6grmZGm0KwWtNerseW
-         6kGOKQv01NLgk+VzKdkK9aoxtoE9KzlhdLZtieO/Lgljf9GnyrLBq4+xcB/ZmXOsYwbO
-         HaxHSNN3naBSRqRs1+aY1SyVqzCf+QQLsyc+ftJ9l054+zVKnK7oAxbOlCmnFoaw3MPU
-         oA3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694786924; x=1695391724;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1NDJ58ec50IQsUHGc8bDLmZWjrMQrltSqdri1VsBajU=;
-        b=tSOAHBwZnHBw/ad2EHhKYiKJYAimYeKdTd6xEQ2vjfWoDvTNNXkeP+JgTOFuBvu77b
-         t3WVc2P1IETi3lhFImZEeRViacMlM0Tn2yfXfChavT1+kGC5Ggc5JOivQ4+oqxLVIkoZ
-         jXPhZXG4oTqb326YkfwwduTsR/ljIT2eQO2Zizvzaa285Du8Szn/+FRxE1yKVtx6EYk1
-         o25YTz7dNpfCMGqP5LjynefxcrxknpdIw7gK2hJRWQFGuykDlx6e9OBe6VMXPDC3efx1
-         +a4S6L3Ws+U9c+G2+AhbQEaX5mkMiuX/SuuW5elvq2d5dflAWWimcpERZNMzasH/8Wfj
-         8pPg==
-X-Gm-Message-State: AOJu0YyBXk4+4UI+Ss8NTkrAO1AvrBJ8h7ttE5RxtxhsbWq7gTzrZsqN
-        2TjGAz2ghHaXO7lFCEgSPAg=
-X-Google-Smtp-Source: AGHT+IFghbrUNgchmUKvHdeCDgfHoRzvBZZQffZ0F9OCDvCdZo1SCQvxRq3RqfFm+uCk3eUxEgMEEw==
-X-Received: by 2002:a17:903:4288:b0:1c3:2dcb:25c9 with SMTP id ju8-20020a170903428800b001c32dcb25c9mr1627294plb.40.1694786924235;
-        Fri, 15 Sep 2023 07:08:44 -0700 (PDT)
-Received: from localhost ([2409:8a3c:3645:83a1:1b76:f2f8:95d1:4704])
-        by smtp.gmail.com with ESMTPSA id jc12-20020a17090325cc00b001bf574dd1fesm194580plb.141.2023.09.15.07.08.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 07:08:37 -0700 (PDT)
-From:   John Sanpe <sanpeqf@gmail.com>
-To:     catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
-        akpm@linux-foundation.org, xuwei5@hisilicon.com,
-        lorenzo.pieralisi@arm.com, helgaas@kernel.org,
-        jiaxun.yang@flygoat.com, song.bao.hua@hisilicon.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-pci@vger.kernel.org, linuxarm@openeuler.org,
-        John Sanpe <sanpeqf@gmail.com>
-Subject: [PATCH] logic_pio: remove duplicate declarations of function
-Date:   Fri, 15 Sep 2023 22:06:50 +0800
-Message-ID: <20230915140650.3562504-1-sanpeqf@gmail.com>
-X-Mailer: git-send-email 2.41.0
+        with ESMTP id S235789AbjIOOow (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 10:44:52 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 295161BC7;
+        Fri, 15 Sep 2023 07:44:47 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B96E1FB;
+        Fri, 15 Sep 2023 07:45:24 -0700 (PDT)
+Received: from [10.57.94.184] (unknown [10.57.94.184])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F4253F738;
+        Fri, 15 Sep 2023 07:44:45 -0700 (PDT)
+Message-ID: <03da788f-584b-1be5-2cc3-70a9e57c11ba@arm.com>
+Date:   Fri, 15 Sep 2023 15:44:43 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.0
+Subject: Re: [PATCH v2 3/5] hwtracing: hisi_ptt: Optimize the trace data
+ committing
+To:     Yicong Yang <yangyicong@huawei.com>, mathieu.poirier@linaro.org,
+        jonathan.cameron@huawei.com, linux-kernel@vger.kernel.org
+Cc:     alexander.shishkin@linux.intel.com, helgaas@kernel.org,
+        linux-pci@vger.kernel.org, prime.zeng@hisilicon.com,
+        linuxarm@huawei.com, yangyicong@hisilicon.com, hejunhao3@huawei.com
+References: <20230914112223.27165-1-yangyicong@huawei.com>
+ <20230914112223.27165-4-yangyicong@huawei.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20230914112223.27165-4-yangyicong@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.7 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,27 +47,59 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Remove duplicate declarations of logic_out* functions.
+On 14/09/2023 12:22, Yicong Yang wrote:
+> From: Yicong Yang <yangyicong@hisilicon.com>
+> 
+> Currently during the PTT trace, we'll only commit the data
+> to the perf core when its full, which means after 4 interrupts
+> and totally 16MiB data while the AUX buffer is 16MiB length.
+> Then the userspace gets notified and handle the data. The driver
+> cannot apply a new AUX buffer immediately until the committed data
+> are handled and there's enough room in the buffer again.
+> 
+> This patch tries to optimize this by commit the data in every
+> interrupts in a 4MiB granularity. Then the userspace can have
+> enough time to consume the data and there's always enough room
+> in the AUX buffer.
 
-Signed-off-by: John Sanpe <sanpeqf@gmail.com>
----
- include/linux/logic_pio.h | 3 ---
- 1 file changed, 3 deletions(-)
+Instead of always committing at 4M, could we not use the existing
+markers used by the handle->wakeup to decide if we should commit it ?
 
-diff --git a/include/linux/logic_pio.h b/include/linux/logic_pio.h
-index 54945aa824b4..babf4e3c28ba 100644
---- a/include/linux/logic_pio.h
-+++ b/include/linux/logic_pio.h
-@@ -39,9 +39,6 @@ struct logic_pio_host_ops {
- 
- #ifdef CONFIG_INDIRECT_PIO
- u8 logic_inb(unsigned long addr);
--void logic_outb(u8 value, unsigned long addr);
--void logic_outw(u16 value, unsigned long addr);
--void logic_outl(u32 value, unsigned long addr);
- u16 logic_inw(unsigned long addr);
- u32 logic_inl(unsigned long addr);
- void logic_outb(u8 value, unsigned long addr);
--- 
-2.41.0
+
+Suzuki
+
+> 
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>   drivers/hwtracing/ptt/hisi_ptt.c | 15 +++++++--------
+>   1 file changed, 7 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+> index 3041238a6e54..4f355df8da23 100644
+> --- a/drivers/hwtracing/ptt/hisi_ptt.c
+> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
+> @@ -274,15 +274,14 @@ static int hisi_ptt_update_aux(struct hisi_ptt *hisi_ptt, int index, bool stop)
+>   	buf->pos += size;
+>   
+>   	/*
+> -	 * Just commit the traced data if we're going to stop. Otherwise if the
+> -	 * resident AUX buffer cannot contain the data of next trace buffer,
+> -	 * apply a new one.
+> +	 * Always commit the data to the AUX buffer in time to make sure
+> +	 * userspace got enough time to consume the data.
+> +	 *
+> +	 * If we're not going to stop, apply a new one and check whether
+> +	 * there's enough room for the next trace.
+>   	 */
+> -	if (stop) {
+> -		perf_aux_output_end(handle, buf->pos);
+> -	} else if (buf->length - buf->pos < HISI_PTT_TRACE_BUF_SIZE) {
+> -		perf_aux_output_end(handle, buf->pos);
+> -
+> +	perf_aux_output_end(handle, size);
+> +	if (!stop) {
+>   		buf = perf_aux_output_begin(handle, event);
+>   		if (!buf)
+>   			return -EINVAL;
 
