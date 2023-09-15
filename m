@@ -2,63 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C7A67A1C11
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 12:23:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 118167A1C4E
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 12:33:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234444AbjIOKX1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Sep 2023 06:23:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54350 "EHLO
+        id S231841AbjIOKdc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Sep 2023 06:33:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234395AbjIOKXO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 06:23:14 -0400
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB2010DF;
-        Fri, 15 Sep 2023 03:23:04 -0700 (PDT)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+        with ESMTP id S229527AbjIOKdc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 06:33:32 -0400
+Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BFF294;
+        Fri, 15 Sep 2023 03:33:26 -0700 (PDT)
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
         (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-        by ex01.ufhost.com (Postfix) with ESMTP id 0C09A24E268;
-        Fri, 15 Sep 2023 18:23:03 +0800 (CST)
-Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 15 Sep
- 2023 18:23:03 +0800
-Received: from ubuntu.localdomain (113.72.144.67) by EXMBX171.cuchost.com
+        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+        by fd01.gateway.ufhost.com (Postfix) with ESMTP id 39BBE7FEF;
+        Fri, 15 Sep 2023 18:33:25 +0800 (CST)
+Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 15 Sep
+ 2023 18:33:25 +0800
+Received: from [192.168.125.57] (113.72.144.67) by EXMBX171.cuchost.com
  (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 15 Sep
- 2023 18:23:01 +0800
-From:   Minda Chen <minda.chen@starfivetech.com>
+ 2023 18:33:23 +0800
+Message-ID: <88ba051e-040c-4ff0-1cb0-2b6f01cb950c@starfivetech.com>
+Date:   Fri, 15 Sep 2023 18:33:18 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v6 0/19] Refactoring Microchip PCIe driver and add
+ StarFive PCIe
 To:     Daire McNamara <daire.mcnamara@microchip.com>,
         Conor Dooley <conor@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
         Emil Renner Berthing <emil.renner.berthing@canonical.com>
 CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Mason Huo <mason.huo@starfivetech.com>,
         Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        Kevin Xie <kevin.xie@starfivetech.com>,
-        Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v6 19/19] riscv: dts: starfive: add PCIe dts configuration for JH7110
-Date:   Fri, 15 Sep 2023 18:22:43 +0800
-Message-ID: <20230915102243.59775-20-minda.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230915102243.59775-1-minda.chen@starfivetech.com>
+        Kevin Xie <kevin.xie@starfivetech.com>
 References: <20230915102243.59775-1-minda.chen@starfivetech.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Content-Language: en-US
+From:   Minda Chen <minda.chen@starfivetech.com>
+In-Reply-To: <20230915102243.59775-1-minda.chen@starfivetech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 X-Originating-IP: [113.72.144.67]
-X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX171.cuchost.com
+X-ClientProxiedBy: EXCAS061.cuchost.com (172.16.6.21) To EXMBX171.cuchost.com
  (172.16.6.91)
 X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,195 +69,70 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add PCIe dts configuraion for JH7110 SoC platform.
 
-Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
-Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
----
- .../jh7110-starfive-visionfive-2.dtsi         | 63 +++++++++++++
- arch/riscv/boot/dts/starfive/jh7110.dtsi      | 88 +++++++++++++++++++
- 2 files changed, 151 insertions(+)
 
-diff --git a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-index d79f94432b27..8c84852f1c06 100644
---- a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-@@ -402,6 +402,53 @@
- 		};
- 	};
- 
-+	pcie0_pins: pcie0-0 {
-+		wake-pins {
-+			pinmux = <GPIOMUX(32, GPOUT_LOW,
-+					      GPOEN_DISABLE,
-+					      GPI_NONE)>;
-+			bias-pull-up;
-+			drive-strength = <2>;
-+			input-enable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+		clkreq-pins {
-+			pinmux = <GPIOMUX(27, GPOUT_LOW,
-+					      GPOEN_DISABLE,
-+					      GPI_NONE)>;
-+			bias-pull-down;
-+			drive-strength = <2>;
-+			input-enable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+	};
-+
-+	pcie1_pins: pcie1-0 {
-+		wake-pins {
-+			pinmux = <GPIOMUX(21, GPOUT_LOW,
-+					      GPOEN_DISABLE,
-+					      GPI_NONE)>;
-+			bias-pull-up;
-+			drive-strength = <2>;
-+			input-enable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+
-+		clkreq-pins {
-+			pinmux = <GPIOMUX(29, GPOUT_LOW,
-+					      GPOEN_DISABLE,
-+					      GPI_NONE)>;
-+			bias-pull-down;
-+			drive-strength = <2>;
-+			input-enable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+	};
-+
- 	spi0_pins: spi0-0 {
- 		mosi-pins {
- 			pinmux = <GPIOMUX(52, GPOUT_SYS_SPI0_TXD,
-@@ -499,6 +546,22 @@
- 	};
- };
- 
-+&pcie0 {
-+	pinctrl-names = "default";
-+	perst-gpios = <&sysgpio 26 GPIO_ACTIVE_LOW>;
-+	pinctrl-0 = <&pcie0_pins>;
-+	phys = <&pciephy0>;
-+	status = "okay";
-+};
-+
-+&pcie1 {
-+	pinctrl-names = "default";
-+	perst-gpios = <&sysgpio 28 GPIO_ACTIVE_LOW>;
-+	pinctrl-0 = <&pcie1_pins>;
-+	phys = <&pciephy1>;
-+	status = "okay";
-+};
-+
- &tdm {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&tdm_pins>;
-diff --git a/arch/riscv/boot/dts/starfive/jh7110.dtsi b/arch/riscv/boot/dts/starfive/jh7110.dtsi
-index e85464c328d0..97fe5a242d60 100644
---- a/arch/riscv/boot/dts/starfive/jh7110.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7110.dtsi
-@@ -1045,5 +1045,93 @@
- 			#reset-cells = <1>;
- 			power-domains = <&pwrc JH7110_PD_VOUT>;
- 		};
-+
-+		pcie0: pcie@940000000 {
-+			compatible = "starfive,jh7110-pcie";
-+			reg = <0x9 0x40000000 0x0 0x1000000>,
-+			      <0x0 0x2b000000 0x0 0x100000>;
-+			reg-names = "cfg", "apb";
-+			linux,pci-domain = <0>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			ranges = <0x82000000  0x0 0x30000000  0x0 0x30000000 0x0 0x08000000>,
-+				 <0xc3000000  0x9 0x00000000  0x9 0x00000000 0x0 0x40000000>;
-+			interrupts = <56>;
-+			interrupt-parent = <&plic>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc0 0x1>,
-+					<0x0 0x0 0x0 0x2 &pcie_intc0 0x2>,
-+					<0x0 0x0 0x0 0x3 &pcie_intc0 0x3>,
-+					<0x0 0x0 0x0 0x4 &pcie_intc0 0x4>;
-+			msi-controller;
-+			device_type = "pci";
-+			starfive,stg-syscon = <&stg_syscon>;
-+			bus-range = <0x0 0xff>;
-+			clocks = <&syscrg JH7110_SYSCLK_NOC_BUS_STG_AXI>,
-+				 <&stgcrg JH7110_STGCLK_PCIE0_TL>,
-+				 <&stgcrg JH7110_STGCLK_PCIE0_AXI_MST0>,
-+				 <&stgcrg JH7110_STGCLK_PCIE0_APB>;
-+			clock-names = "noc", "tl", "axi_mst0", "apb";
-+			resets = <&stgcrg JH7110_STGRST_PCIE0_AXI_MST0>,
-+				 <&stgcrg JH7110_STGRST_PCIE0_AXI_SLV0>,
-+				 <&stgcrg JH7110_STGRST_PCIE0_AXI_SLV>,
-+				 <&stgcrg JH7110_STGRST_PCIE0_BRG>,
-+				 <&stgcrg JH7110_STGRST_PCIE0_CORE>,
-+				 <&stgcrg JH7110_STGRST_PCIE0_APB>;
-+			reset-names = "mst0", "slv0", "slv", "brg",
-+				      "core", "apb";
-+			status = "disabled";
-+
-+			pcie_intc0: interrupt-controller {
-+				#address-cells = <0>;
-+				#interrupt-cells = <1>;
-+				interrupt-controller;
-+			};
-+		};
-+
-+		pcie1: pcie@9c0000000 {
-+			compatible = "starfive,jh7110-pcie";
-+			reg = <0x9 0xc0000000 0x0 0x1000000>,
-+			      <0x0 0x2c000000 0x0 0x100000>;
-+			reg-names = "cfg", "apb";
-+			linux,pci-domain = <1>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			ranges = <0x82000000  0x0 0x38000000  0x0 0x38000000 0x0 0x08000000>,
-+				 <0xc3000000  0x9 0x80000000  0x9 0x80000000 0x0 0x40000000>;
-+			interrupts = <57>;
-+			interrupt-parent = <&plic>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc1 0x1>,
-+					<0x0 0x0 0x0 0x2 &pcie_intc1 0x2>,
-+					<0x0 0x0 0x0 0x3 &pcie_intc1 0x3>,
-+					<0x0 0x0 0x0 0x4 &pcie_intc1 0x4>;
-+			msi-controller;
-+			device_type = "pci";
-+			starfive,stg-syscon = <&stg_syscon>;
-+			bus-range = <0x0 0xff>;
-+			clocks = <&syscrg JH7110_SYSCLK_NOC_BUS_STG_AXI>,
-+				 <&stgcrg JH7110_STGCLK_PCIE1_TL>,
-+				 <&stgcrg JH7110_STGCLK_PCIE1_AXI_MST0>,
-+				 <&stgcrg JH7110_STGCLK_PCIE1_APB>;
-+			clock-names = "noc", "tl", "axi_mst0", "apb";
-+			resets = <&stgcrg JH7110_STGRST_PCIE1_AXI_MST0>,
-+				 <&stgcrg JH7110_STGRST_PCIE1_AXI_SLV0>,
-+				 <&stgcrg JH7110_STGRST_PCIE1_AXI_SLV>,
-+				 <&stgcrg JH7110_STGRST_PCIE1_BRG>,
-+				 <&stgcrg JH7110_STGRST_PCIE1_CORE>,
-+				 <&stgcrg JH7110_STGRST_PCIE1_APB>;
-+			reset-names = "mst0", "slv0", "slv", "brg",
-+				      "core", "apb";
-+			status = "disabled";
-+
-+			pcie_intc1: interrupt-controller {
-+				#address-cells = <0>;
-+				#interrupt-cells = <1>;
-+				interrupt-controller;
-+			};
-+		};
- 	};
- };
--- 
-2.17.1
+On 2023/9/15 18:22, Minda Chen wrote:
+> This patchset final purpose is add PCIe driver for StarFive JH7110 SoC.
+> JH7110 using PLDA XpressRICH PCIe IP. Microchip PolarFire Using the
+> same IP and have commit their codes, which are mixed with PLDA
+> controller codes and Microchip platform codes.
+> 
+> For re-use the PLDA controller codes, I request refactoring microchip
+> codes, move PLDA common codes to PLDA files.
+> Desigware and Cadence is good example for refactoring codes.
+> 
+> So first step is extract the PLDA common codes from microchip, and
+> refactoring the microchip codes.(patch1 - 16)
+> Then, add Starfive codes. (patch17 - 19)
+> 
+> This patchset is base on v6.6-rc1
+> 
+> patch1 is move PLDA XpressRICH PCIe host common properties dt-binding
+>        docs from microchip,pcie-host.yaml
+> patch2 is move PolarFire codes to PLDA directory.
+> patch3 is move PLDA IP register macros to plda-pcie.h
+> patch4 is rename data structure in microchip codes.
+> patch5 is rename two setup functions in microchip codes, prepare to move
+> to common file.
+> patch6 is change the arguments of plda_pcie_setup_iomems()
+> patch7 is move the two setup functions to common file pcie-plda-host.c
+> patch8 is Add PLDA event interrupt codes and IRQ domain ops.
+> patch9 is rename the IRQ related functions, prepare to move to
+> pcie-plda-host.
+> patch10 - 14 is modify the event codes, preparing for support starfive
+> and microchip two platforms.
+> patch15 is move IRQ related functions to pcie-plda-host.c
+> patch16 is set plda_event_handler to static.
+> patch17 is add StarFive JH7110 PCIe dt-binding doc.
+> patch18 is add StarFive JH7110 Soc PCIe codes.
+> patch19 is Starfive dts config
+> 
+> previous version:
+> v1:https://patchwork.kernel.org/project/linux-pci/cover/20230719102057.22329-1-minda.chen@starfivetech.com/
+> v2:https://patchwork.kernel.org/project/linux-pci/cover/20230727103949.26149-1-minda.chen@starfivetech.com/
+> v3:https://patchwork.kernel.org/project/linux-pci/cover/20230814082016.104181-1-minda.chen@starfivetech.com/
+> v4:https://patchwork.kernel.org/project/linux-pci/cover/20230825090129.65721-1-minda.chen@starfivetech.com/
+> v5:https://patchwork.kernel.org/project/linux-pci/cover/20230907091058.125630-1-minda.chen@starfivetech.com/
+> 
+> change:
+>   v6:
+>     v5 patch 4 split to patch 4 -6. New patches just contain one
+> function modification. It is more reguluar.
+>     patch 7: Just move the two setup functions only
+>     patch 8 : draw a graph of PLDA local register, make it easier to
+> review the codes.
+>     v5 patch 7 split to patch 9- 14. Each patch just contain one
+> function modification. It is more regular.
+>     patch 9: rename IRQ related functions.
+>     patch 10 - 14 : modify the events codes, total five patch.
+>     patch 15: move IRQ related functions to pcie-plda-host.c
+>     patch 16: Add new patch 16.
+>     patch 18- 19 using "linux,pci-domain" dts setting.
+> 
+Hi Bjorn
+I have noticed that the previous patches of refactoring codes is not so regular( the patched of modify Microchip' codes), and you
+don't give any comment to the patches. 
+Now this verison is more regular and easier to review. Could you please review the driver codes?
 
+Hi Conor and Daire
+Thanks for reviewing. Now I split more patches and make it easier to review. 
