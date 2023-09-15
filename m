@@ -2,334 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89BF07A1E04
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 14:04:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8CB87A1E09
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 14:05:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234460AbjIOMEe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Sep 2023 08:04:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47892 "EHLO
+        id S234482AbjIOMFW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Sep 2023 08:05:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234444AbjIOMEd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 08:04:33 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C8433A87;
-        Fri, 15 Sep 2023 05:03:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694779422; x=1726315422;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=0aSOAVXV3pig4axO9+jHlML+tu/afJdMdghU/1L+h8Q=;
-  b=LYnF/WXkwsqXg5q3WVKYknZVhocc3RVjBdRDL2kcRSDtNX4/da+tX257
-   pAt6W13pGA8bdxdffCQTURqXVd4JJ/uPSZwEAS5R/IpubkuyDrpypBs8t
-   m4x97iMWHSzJS9EFQsJNw6PUXXnnTMfK+0KohRKcL/+BDpWXZx74nEALM
-   U2qWIlyp3e5EZOfKvcOafDJKDjEwFLTyiW+IrliP3acuIJtjegk+FkRKo
-   jACKJ2dcQFeyqKnHeS8sjXwMlakvhl6ubBu/52m99VrpSD+/vHes8qqtO
-   eSP6+WpUj7KBZ6qttBxwuY36wm1WdrySehQMsgfirnq/ND7KxChX3rHr5
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="378146139"
-X-IronPort-AV: E=Sophos;i="6.02,149,1688454000"; 
-   d="scan'208";a="378146139"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 05:02:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="774293067"
-X-IronPort-AV: E=Sophos;i="6.02,149,1688454000"; 
-   d="scan'208";a="774293067"
-Received: from srdoo-mobl1.ger.corp.intel.com (HELO ijarvine-mobl2.ger.corp.intel.com) ([10.252.38.99])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 05:02:51 -0700
-From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc:     Alex Deucher <alexdeucher@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>
-Subject: [PATCH v2 10/10] selftests/pcie_bwctrl: Create selftests
-Date:   Fri, 15 Sep 2023 15:01:42 +0300
-Message-Id: <20230915120142.32987-11-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230915120142.32987-1-ilpo.jarvinen@linux.intel.com>
-References: <20230915120142.32987-1-ilpo.jarvinen@linux.intel.com>
+        with ESMTP id S232836AbjIOMFV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 08:05:21 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2054.outbound.protection.outlook.com [40.107.220.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B103F4209
+        for <linux-pci@vger.kernel.org>; Fri, 15 Sep 2023 05:04:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EIB0IMbriysHjr/t8EzBZ077kRJLpaApjLO5l55a/pK72F5+ehHge62Kg/AgIJwBkXEv8YIlhVMAdF3L2i8HArt3VUATy6lzdjODqc3yF+d9zZ4RjekZxAflUcv+Nlw5Ljg2fYgT4N1ND5jmNBEaUzg8pcjslRkU9SZcYjw0GkGEdJK5CbabuMZZYl2gxatFukbfV7A3VnqsqNrN0P/Oa4riTSKw2D624ixjG2JxdCrinTlZUbTDtDd/r1EQCpBXxuXArclgOt13HZ2cwKSRNzsDijFv3PzYY5dxWAwywXxp1SyysdCuX8IcTgb31EUYOtmRVvI1pTT/7ge4Eoowfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EDKIllUExeY3iIrgG2EbXIHrVyvNWRQfolTqU+i/BEk=;
+ b=X1hfBxVZAW8Y9xN1XX+9pSo/fCFLdo7hDIcpBf1ybKWW0uLYVTxauAh0VDe7DL/PUpgPgaxC/ZQKdI5+rGHigLsBScJi7d4OEHT0ve7w1FmStUgmjPoG/lwxJxFAMmOFw8PvEl8vD30c+NESxEJj2OlD8XF5YGZ9bku1DmEn8FPby2950mBuyVaJ4KZ6LctHvy+crBM6qjcEEW7yx09vuk48yh1b6zwiVNdR7weIxcqkYPraKHiBxOkj4F+WgI6GQlGBd21GGMrONsd4qBQy4o8geZ4H0KgNz6L7Jtjg581hkE1idE8rhG09oEkIP3TZVKj+Ka/MG9ViXGgfIxsdvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EDKIllUExeY3iIrgG2EbXIHrVyvNWRQfolTqU+i/BEk=;
+ b=tfur87nP7N2uOeiuUspFgpxfSolJVAWHm0rOzonPgpo0E7mmebwiq3SNDzw3drFjhtTP/VISv2p6iQZzG5u3WqI63Mk9EUHlAQu2PSAOh4kCZvODDi+z/dq8wztv2bWry2TIFAj14BKiQznRcZS1Bty/eQ31bl4OFNgdmX1IbFk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by CH3PR12MB9282.namprd12.prod.outlook.com (2603:10b6:610:1cb::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.20; Fri, 15 Sep
+ 2023 12:04:14 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146%7]) with mapi id 15.20.6768.029; Fri, 15 Sep 2023
+ 12:04:14 +0000
+Message-ID: <5a562f6b-6e4d-42a1-bbc1-08f7f3279dfd@amd.com>
+Date:   Fri, 15 Sep 2023 07:04:11 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 2/2] PCI: Add a quirk for AMD PCIe root ports w/ USB4
+ controllers
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        iain@orangesquash.org.uk,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
+References: <20230915023354.939-1-mario.limonciello@amd.com>
+ <20230915023354.939-3-mario.limonciello@amd.com>
+ <20230915070802.GA5934@wunner.de>
+Content-Language: en-US
+From:   Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20230915070802.GA5934@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR04CA0052.namprd04.prod.outlook.com
+ (2603:10b6:806:120::27) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH3PR12MB9282:EE_
+X-MS-Office365-Filtering-Correlation-Id: c201f9f1-b12d-4171-af7c-08dbb5e3e154
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 46aY4hczR6riGzctQ94nuBb8KjP6kEfYjEq0shSFXHcqOxU0NCcniS6eCJuNTj9Yh6SShA2T5Z2KwwSZbnK6wpCiIHrEElW21YCw5lVpSMUvmOrCeTyGPQiy5ovd3ASvn5jdu3Q3HwREOhY4Xciz8TxV77XGgs0OEZwcJf2yHUwxoc3y5X35r57qrXF5Sxooc9V7wqwrNfkyU7pg259PLV/9ZbtE8B7Mkl02xZoDDcTqlnE4rFBQYVEVzLeN7cIyuwLlA6W6vmFtIwWcZoLcaCQVZGT4glz4YJ3pmOz4zFxNUOMm3Axn/t0IxtRhgPEinElqnTY8WTVta/LzEcJPtuyhgYWGj7QuJTVL7jr5/wXLWnzVJm+LvlOvEME8624MtrJFr0tpLcUfgbLhvSczr9gelX3NZIwFtT70muTx9d7Jxg22WbYXiG8PS3K88beMdKoi5Qc0FDMI6XjYOpL4P10j3CnC2fz2CrBKalIB+8hfdkkLOBuUWEvi93IRlCtxRAT3C8WH4MeCgIxL1qH8YfktGXgwKqOWBdVhEp1Rhu0Vg264uUAdw7cMdi3Fg4hBH5Q25hkSmNw+/WlDT2Wz0f+LDrTltUunA8uNusl692xQ5tTAE2A26ttSu5P9zoDtMrXkbS3++2cU0CQHtZFp6Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(376002)(136003)(396003)(346002)(1800799009)(451199024)(186009)(26005)(2616005)(478600001)(6512007)(6486002)(6506007)(53546011)(2906002)(6666004)(4326008)(31696002)(5660300002)(8676002)(36756003)(41300700001)(86362001)(66946007)(66556008)(66476007)(316002)(31686004)(54906003)(6916009)(8936002)(44832011)(38100700002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RFc1U0lmaFIrNVpuc2FYaXFwSTVDUnN5S1hmNHNyRFZIUnNNUUtmMEtnT2Ry?=
+ =?utf-8?B?MER6blQxWXFpakNtZXF2Mi93SEx3dnl2NnR1YW1KWUhHb2VGYWszM3RZMVRM?=
+ =?utf-8?B?UEoyUnU2WW5CNzk4VGRDZ1laV1IwSUZ0V2ZYVlVDZUJXN3RrZHFGbDJ6UGNW?=
+ =?utf-8?B?SWdpZlRoU0hvZVYzOG11ckFtZFNkZ2l3YitSeEdlbGNmekVvVmY0aWlyMU81?=
+ =?utf-8?B?U1FqdlBxS1lVQ29RckVyaHdMYVBPVytWZFdQZWZrYWFOWjc5WXVoWmxDSXNO?=
+ =?utf-8?B?eDVTLzJzU2J1NjZ4Y29HTC9JbzNCdlJDVENWT0xQZ1d2R1VESDA0S2gzbGFy?=
+ =?utf-8?B?QkpFSFVlTWczb0Y3aUsySExYWGJjU20vYU9lL2dMdmMwQ1AzN2hTRDZFYzBo?=
+ =?utf-8?B?U1FrampONDZvTzBiZXB6K1EzK1dDUXFPQk9sS0lRS1dlRnNtWkhMZWxKeDgw?=
+ =?utf-8?B?Sm1vWUV0aTVjOUpubUt6SUpna2NMd0tPTFVZaFJJUnpWblc5Y0dtQ2o2MzZT?=
+ =?utf-8?B?ZXhCQTgxZGhUMDlYOTg2QTI5RUlhd01hVDcxOWJnaERlQ2ZnYXpKNFhZL2lq?=
+ =?utf-8?B?a0dUTzBqVkw0TGpOWFljZ0MzWkpKWXBoc0RwQUlKWFNKOXpERTJ5Mm4zbEpt?=
+ =?utf-8?B?cVpTN1RtNlFUMmR1eEhUU0JEeDM0NFRieGl4MVBxZFhnVDFod3IrYnp2blY3?=
+ =?utf-8?B?RFNCWG5idDdaelQwVVRIYk5BWXVyaHJ0OXlyR0tyaEk5Wm1lWW1qRlZMdnh4?=
+ =?utf-8?B?ZVNGYU1Jb1RsTjFxYzA4WHRnWmY4QXR1ZG1PYUVDcUJsalF6UnNobXlCVW1r?=
+ =?utf-8?B?QUdYWkZsQUFudzFNM01JZ1VXU0dtNmNXcGVKVW9jUXdyc1VjSTRJeDBVTFRz?=
+ =?utf-8?B?aFFtSE5wNjF6SHRJeFZtNnp4eFZSTVFXUDFzMytMWVMrcnM0dzJydzRzMnlU?=
+ =?utf-8?B?RDg4MnNVSkpORmpQMWFlUzMvS3lpbWFlWndQUlA0a2xueHArTnZlWU1ublVk?=
+ =?utf-8?B?V25ib2w0YW9lMWhZdnN4TFR3UmZjcHB6V05HMStsQ0FSbllTNytVUWFNa01R?=
+ =?utf-8?B?d2RNQnVQNzJCdnU3N3BpbWxCanB1MGl2MmlKczhpcVlpbWw2aUlTcldwSUpV?=
+ =?utf-8?B?UEk3emYrMnFvcUZTTTJ5TGt4QjA5MWo1cVJoWmtzbEs5cEZ2TXBwRUxLMHZS?=
+ =?utf-8?B?TDdhSzBsR1QyeFBCRXY4Vi9vVW96b1BFZjduYW8xTzlyZGpGY0FlM0pEZW1v?=
+ =?utf-8?B?TlA0aXpqbjluU3V5YnNSTmI1eUc3QWdkOUYzVlovck5Eb3MxWFNGWi9mMXli?=
+ =?utf-8?B?eWpoemJ0NHU4TnUzTDNjRFZEWGxCQkprNFpvTVRLWjlDakpWMjlNNkxaTXBr?=
+ =?utf-8?B?Ykk4ajhLckNnQUh2c3kweTFVRm9ZS3dGODR0ZHJHUjFJK1I4Z0NLNTcrRkxj?=
+ =?utf-8?B?cFhQUlNvczVaajZOYlc3dUx0eTFBYnJNZ3d0Rm9hNHptOWpOSUhVL3pYRWYx?=
+ =?utf-8?B?MktFRmF6WDIvbkE1M21Wd1IyUzdqYVR4eWJkWVA3TmdPRnFmTUZqeHNGWEFD?=
+ =?utf-8?B?c1dDNjZMcEl0UHlUWXRpams0ZCtRSWZXMHZnWC9wVHpoQ1QyOWV3dkhxNzJi?=
+ =?utf-8?B?UFpLYXJMLzRRRC9iY0R2YksxM3dkbVo1Zk1Kd1h3L1J4bGc5SjZ3T1hOMVV0?=
+ =?utf-8?B?Nkg0SFlmZU5vMlZ4QVVuUHRFS211cjNGMzNJVjloUUNQY01uWi9nd2JlbnRH?=
+ =?utf-8?B?QW95Vk5CSWJnQjU5Vmg4NEtNTThRUXNYWHFEVDBlU1VXVzZTRXJvN3dkU1c0?=
+ =?utf-8?B?cUpEaUdIekViUVJKYjVFMkxueHNxQUFGbUdxdVg4R216Nkc4ODFWRTUwR1cr?=
+ =?utf-8?B?UEUwRkMyV0x4em44c280MzJ1QTFUVlpMNUZsYlRHTG5uRTd3L2hteWpMeHY5?=
+ =?utf-8?B?VEdobjNiOFVveFphMEdrTks2azB5VVVkYlhvalJKK2hqVDQrZHZCMHFzb3ln?=
+ =?utf-8?B?TkREcGdUQjhDbnZQWXJvWnNvVlRpbzJsaFNxWnpNV2R5QkJYSGU0VkN2bzBk?=
+ =?utf-8?B?WlhJQmRacVhmMHJhMGRVSWJROVlWYmZYSkM1WU5nZVUxRGsvcHQ4bWRVcFFs?=
+ =?utf-8?Q?lRfrEFiDyzCJWybyMC3MehUzz?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c201f9f1-b12d-4171-af7c-08dbb5e3e154
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2023 12:04:14.7492
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xzgTsarnYNiYqXD4NGxnstEbH41XRrWadQW8hnQ0xpdmV9bMW/9HWU2csCLCo5sAbbYbNwuQlp8S/FvmLQBwkw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9282
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Create selftests for PCIe BW control through the PCIe cooling device
-sysfs interface.
+On 9/15/2023 02:08, Lukas Wunner wrote:
+> On Thu, Sep 14, 2023 at 09:33:54PM -0500, Mario Limonciello wrote:
+>> +static bool child_has_amd_usb4(struct pci_dev *pdev)
+>> +{
+>> +	struct pci_dev *child = NULL;
+>> +
+>> +	while ((child = pci_get_class(PCI_CLASS_SERIAL_USB_USB4, child))) {
+>> +		if (child->vendor != PCI_VENDOR_ID_AMD)
+>> +			continue;
+>> +		if (pcie_find_root_port(child) != pdev)
+>> +			continue;
+>> +		return true;
+>> +	}
+>> +
+>> +	return false;
+>> +}
+> 
+> What's the purpose of the pcie_find_root_port() check?  PCI is a hierarchy,
+> not a graph, so a device cannot have any other Root Port but the one below
+> which you're searching.
+> 
+> If the purpose is to check that the port is a Root Port (if the PCI IDs
+> you're using in the DECLARE_PCI_FIXUP_* clauses match non-Root Ports),
+> check for pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT.  (No need to
+> check for that in every loop iteration obviously, just check once in
+> the fixup.)
+> 
+> Thanks,
+> 
+> Lukas
 
-First, the BW control selftest finds the PCIe port to test with. By
-default, the PCIe port with the highest bus speed is selected but
-another PCIe port can be provided with -d parameter.
+The reason to look for it the way that I did was that there are multiple 
+root ports with the exact same PCI ID.
 
-The actual test steps the cur_state of the cooling device one-by-one
-from max_state to what the cur_state was initially. The speed change
-is confirmed by observing the current_link_speed for the corresponding
-PCIe port.
-
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- MAINTAINERS                                   |   1 +
- tools/testing/selftests/Makefile              |   1 +
- tools/testing/selftests/pcie_bwctrl/Makefile  |   2 +
- .../pcie_bwctrl/set_pcie_cooling_state.sh     | 122 ++++++++++++++++++
- .../selftests/pcie_bwctrl/set_pcie_speed.sh   |  67 ++++++++++
- 5 files changed, 193 insertions(+)
- create mode 100644 tools/testing/selftests/pcie_bwctrl/Makefile
- create mode 100755 tools/testing/selftests/pcie_bwctrl/set_pcie_cooling_state.sh
- create mode 100755 tools/testing/selftests/pcie_bwctrl/set_pcie_speed.sh
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 32974417ad52..84e6687a646b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16575,6 +16575,7 @@ S:	Supported
- F:	drivers/pci/pcie/bwctrl.c
- F:	drivers/thermal/pcie_cooling.c
- F:	include/linux/pci-bwctrl.h
-+F:	tools/testing/selftests/pcie_bwctrl/
- 
- PCIE DRIVER FOR AMAZON ANNAPURNA LABS
- M:	Jonathan Chocron <jonnyc@amazon.com>
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 42806add0114..18ad9acd440a 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -59,6 +59,7 @@ TARGETS += net/mptcp
- TARGETS += net/openvswitch
- TARGETS += netfilter
- TARGETS += nsfs
-+TARGETS += pcie_bwctrl
- TARGETS += perf_events
- TARGETS += pidfd
- TARGETS += pid_namespace
-diff --git a/tools/testing/selftests/pcie_bwctrl/Makefile b/tools/testing/selftests/pcie_bwctrl/Makefile
-new file mode 100644
-index 000000000000..3e84e26341d1
---- /dev/null
-+++ b/tools/testing/selftests/pcie_bwctrl/Makefile
-@@ -0,0 +1,2 @@
-+TEST_PROGS = set_pcie_cooling_state.sh
-+include ../lib.mk
-diff --git a/tools/testing/selftests/pcie_bwctrl/set_pcie_cooling_state.sh b/tools/testing/selftests/pcie_bwctrl/set_pcie_cooling_state.sh
-new file mode 100755
-index 000000000000..3a8f91f0309e
---- /dev/null
-+++ b/tools/testing/selftests/pcie_bwctrl/set_pcie_cooling_state.sh
-@@ -0,0 +1,122 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+
-+SYSFS=
-+# Kselftest framework requirement - SKIP code is 4.
-+ksft_skip=4
-+retval=0
-+skipmsg="skip all tests:"
-+
-+PCIEPORTTYPE="PCIe_Port_Link_Speed"
-+
-+prerequisite()
-+{
-+	local ports
-+
-+	if [ $UID != 0 ]; then
-+		echo $skipmsg must be run as root >&2
-+		exit $ksft_skip
-+	fi
-+
-+	SYSFS=`mount -t sysfs | head -1 | awk '{ print $3 }'`
-+
-+	if [ ! -d "$SYSFS" ]; then
-+		echo $skipmsg sysfs is not mounted >&2
-+		exit $ksft_skip
-+	fi
-+
-+	if ! ls $SYSFS/class/thermal/cooling_device* > /dev/null 2>&1; then
-+		echo $skipmsg thermal cooling devices missing >&2
-+		exit $ksft_skip
-+        fi
-+
-+	ports=`grep -e "^$PCIEPORTTYPE" $SYSFS/class/thermal/cooling_device*/type | wc -l`
-+	if [ $ports -eq 0 ]; then
-+		echo $skipmsg pcie cooling devices missing >&2
-+		exit $ksft_skip
-+	fi
-+}
-+
-+testport=
-+find_pcie_port()
-+{
-+	local patt="$1"
-+	local pcieports
-+	local max
-+	local cur
-+	local delta
-+	local bestdelta=-1
-+
-+	pcieports=`grep -l -F -e "$patt" /sys/class/thermal/cooling_device*/type`
-+	if [ -z "$pcieports" ]; then
-+		return
-+	fi
-+	pcieports=${pcieports//\/type/}
-+	# Find the port with the highest PCIe Link Speed
-+	for port in $pcieports; do
-+		max=`cat $port/max_state`
-+		cur=`cat $port/cur_state`
-+		delta=$((max-cur))
-+		if [ $delta -gt $bestdelta ]; then
-+			testport="$port"
-+			bestdelta=$delta
-+		fi
-+	done
-+}
-+
-+sysfspcidev=
-+find_sysfs_pci_dev()
-+{
-+	local typefile="$1/type"
-+	local pcidir
-+
-+	pcidir="$SYSFS/bus/pci/devices/`sed -e "s|^${PCIEPORTTYPE}_||g" $typefile`"
-+
-+	if [ -r "$pcidir/current_link_speed" ]; then
-+		sysfspcidev="$pcidir/current_link_speed"
-+	fi
-+}
-+
-+usage()
-+{
-+	echo "Usage $0 [ -d dev ]"
-+	echo -e "\t-d: PCIe port BDF string (e.g., 0000:00:04.0)"
-+}
-+
-+pattern="$PCIEPORTTYPE"
-+parse_arguments()
-+{
-+	while getopts d:h opt; do
-+		case $opt in
-+			h)
-+				usage "$0"
-+				exit 0
-+				;;
-+			d)
-+				pattern="$PCIEPORTTYPE_$OPTARG"
-+				;;
-+			*)
-+				usage "$0"
-+				exit 0
-+				;;
-+		esac
-+	done
-+}
-+
-+parse_arguments "$@"
-+prerequisite
-+find_pcie_port "$pattern"
-+if [ -z "$testport" ]; then
-+	echo $skipmsg "pcie cooling device not found from sysfs" >&2
-+	exit $ksft_skip
-+fi
-+find_sysfs_pci_dev "$testport"
-+if [ -z "$sysfspcidev" ]; then
-+	echo $skipmsg "PCIe port device not found from sysfs" >&2
-+	exit $ksft_skip
-+fi
-+
-+./set_pcie_speed.sh "$testport" "$sysfspcidev"
-+retval=$?
-+
-+exit $retval
-diff --git a/tools/testing/selftests/pcie_bwctrl/set_pcie_speed.sh b/tools/testing/selftests/pcie_bwctrl/set_pcie_speed.sh
-new file mode 100755
-index 000000000000..584596949312
---- /dev/null
-+++ b/tools/testing/selftests/pcie_bwctrl/set_pcie_speed.sh
-@@ -0,0 +1,67 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+
-+set -e
-+
-+TESTNAME=set_pcie_speed
-+
-+declare -a PCIELINKSPEED=(
-+	"2.5 GT/s PCIe"
-+	"5.0 GT/s PCIe"
-+	"8.0 GT/s PCIe"
-+	"16.0 GT/s PCIe"
-+	"32.0 GT/s PCIe"
-+	"64.0 GT/s PCIe"
-+)
-+
-+# Kselftest framework requirement - SKIP code is 4.
-+ksft_skip=4
-+retval=0
-+
-+coolingdev="$1"
-+statefile="$coolingdev/cur_state"
-+maxfile="$coolingdev/max_state"
-+linkspeedfile="$2"
-+
-+oldstate=`cat $statefile`
-+maxstate=`cat $maxfile`
-+
-+set_state()
-+{
-+	local state=$1
-+	local linkspeed
-+	local expected_linkspeed
-+
-+	echo $state > $statefile
-+
-+	sleep 1
-+
-+	linkspeed="`cat $linkspeedfile`"
-+	expected_linkspeed=$((maxstate-state))
-+	expected_str="${PCIELINKSPEED[$expected_linkspeed]}"
-+	if [ ! "${expected_str}" = "${linkspeed}" ]; then
-+		echo "$TESTNAME failed: expected: ${expected_str}; got ${linkspeed}"
-+		retval=1
-+	fi
-+}
-+
-+cleanup_skip ()
-+{
-+	set_state $oldstate
-+	exit $ksft_skip
-+}
-+
-+trap cleanup_skip EXIT
-+
-+echo "$TESTNAME: testing states $maxstate .. $oldstate with $coolingdev"
-+for i in $(seq $maxstate -1 $oldstate); do
-+	set_state "$i"
-+done
-+
-+trap EXIT
-+if [ $retval -eq 0 ]; then
-+	echo "$TESTNAME [PASS]"
-+else
-+	echo "$TESTNAME [FAIL]"
-+fi
-+exit $retval
--- 
-2.30.2
+The problem only occurs on the root port that happens to have an AMD 
+USB4 controller connected.
 
