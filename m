@@ -2,227 +2,193 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9D4D7A148F
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 05:47:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A56907A145F
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Sep 2023 05:28:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229554AbjIODsC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Sep 2023 23:48:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47712 "EHLO
+        id S230497AbjIOD2a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Sep 2023 23:28:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231374AbjIODsB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Sep 2023 23:48:01 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2051.outbound.protection.outlook.com [40.107.220.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8339196
-        for <linux-pci@vger.kernel.org>; Thu, 14 Sep 2023 20:47:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JKFSqmUzu0CQduTtBBybn8gub3J5VsV37a+QgyW9EjQw8A7V1BFZpeaw2+fw/WXJ7l3wSUJeAyu8qfnFtZmimsqNAFQIOEjRtYgPffDJ9whbIs6W1xwAoHGf95CcGfM+a2eyLEh0m+RLRzmna21KVIC8qN/wwmzlJyMn+B3a30J//pV+U4yNgq4uFpFI1ITg0DbY9BQ5g71zGM7a9Fw9Mytv0Kyq3VNx48V1YZr1TrQhMaW2KNNB95vueWXMzVEctCvVlim8O1INIYc0pyA5vFIGBuf6dxBsCkAgea/dJSsbOEj3fc+088JsT3BX/BhMt9IHNTvWO1COfHCzwD7uTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5s7Q+iSzvXLKuT/QPMSj0K1v1qv3Kr37HtECqIw0rVc=;
- b=fs36dMt8ZYJVq2+mLWT25Ni3zeQsHGphYUe0mCVCmKzgS0pK0/qt831Kbad2EhGc+QyABGmpnrHv35dEfYJ46zARieLMDIgs3mNx0mbOxQx59szjAGrhaPeiX3LVFE6r83V2v5W6tY8jflSxy07Vx+G0d5MDzI71hzM41syadsIwZpFpAy1RaOjkFUhNVaXSGwSc3f6Xc3PTaQbszaY5bs67ZR0synqquleTwLhCrTgWxHJiUvvIJcGOWZFqjZCE8zPJOomLVj8OlvqML7ADp5PK4eSphRKluaIuWt4ndhjpeFU1qYZPyfazyHBRn1f8Vq3dc3fi8HHmoSehc37w3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5s7Q+iSzvXLKuT/QPMSj0K1v1qv3Kr37HtECqIw0rVc=;
- b=0euwEhbJUlDjuTW3rTrh06STU2HAPl280QVoaxEVeaka/hv7c01MtPy7LFg2cu8/gf7ce9Dc/09lb1HoTM5Q1WgFbXjwVd4ZHKXMwp9C5T3q08tUgmayT4g/t92i3JI4CYysB97Kc/ODyahUqknDIbQexaSasclmQsnz/tjgTlk=
-Received: from BL6PEPF0001641B.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:22e:400:0:1004:0:10) by SA3PR12MB8023.namprd12.prod.outlook.com
- (2603:10b6:806:320::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.21; Fri, 15 Sep
- 2023 03:47:47 +0000
-Received: from MN1PEPF0000ECD8.namprd02.prod.outlook.com
- (2a01:111:f403:f902::2) by BL6PEPF0001641B.outlook.office365.com
- (2603:1036:903:4::a) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.20 via Frontend
- Transport; Fri, 15 Sep 2023 03:47:46 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MN1PEPF0000ECD8.mail.protection.outlook.com (10.167.242.137) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6792.20 via Frontend Transport; Fri, 15 Sep 2023 03:47:46 +0000
-Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 14 Sep
- 2023 22:47:41 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        <iain@orangesquash.org.uk>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v19 2/2] PCI: Add a quirk for AMD PCIe root ports w/ USB4 controllers
-Date:   Thu, 14 Sep 2023 21:33:54 -0500
-Message-ID: <20230915023354.939-3-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230915023354.939-1-mario.limonciello@amd.com>
-References: <20230915023354.939-1-mario.limonciello@amd.com>
+        with ESMTP id S231571AbjIOD2a (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Sep 2023 23:28:30 -0400
+X-Greylist: delayed 355 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 14 Sep 2023 20:28:25 PDT
+Received: from sphereful.davidgow.net (sphereful.davidgow.net [203.29.242.92])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39EF11FCE;
+        Thu, 14 Sep 2023 20:28:24 -0700 (PDT)
+Received: by sphereful.davidgow.net (Postfix, from userid 119)
+        id 10F751D57FC; Fri, 15 Sep 2023 11:22:21 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=davidgow.net;
+        s=201606; t=1694748141;
+        bh=yXQyOokVKuRuBBGZrk5jYZQNuKOW+gvtulUP9frgc30=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=rAI9KNCTGOfH9Y/6xji5DOjHpGEGwwZ+ZnUriMWVeYVdctJXRs0SEDiLErZwyrw2D
+         mSPmK7tD54B8o3crc7Uel+uImTo4ScMn9GghjOVC7jKoLuqhNFVAGL9/iH+2AjAiHY
+         aGfw2Bz619HInRZ9LTtJb681AdWHos5CeBTgGMJT/cAn8zlLAL0vmi/lvrCgHrmvI5
+         vgPwTCwF002HsirhkGiWmvl2ZokYG0yp0tmgDAQgLx08JNJH1I4bI+t23CjGUuazXb
+         ZQNLMzMB+5C2fc5/kUHPkMUb/1qGOh6QqBddgHHhjeuxUpRedq0ewWiiM4lrqS8jky
+         8uEYO77qqz97GcXIv9QUuPzi1D4bVCSZWzPP7g6nFQqFTV1+Av2nlr6Ead/6R86r+4
+         Nk0JRs2mBPlz6UeBrsDkKAleiiaiX2VQSR96eokzeZ26KR2WCXi/EWU501AaDGnrSR
+         oZTtJDS2nfn73LayND+owWa6tmfaAg4fS+HVWb31LoBfywRaE80ZpJHf0iRC7zr3/t
+         nyuzl1jP5Xc3bRIVByQGsD5t4IdQpWAAnD7xSZugAEuqVtyPewWfgXReG4RJCWvv0Q
+         McBxOXcK4xAzmue/0V5KFfhgstI5jyT91VLT3WGDzmjKYWxkq1DW3Q2xO9KJeuwGFO
+         5vLcRG+EhU9Pb5+yP1mMjcN8=
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+        sphereful.davidgow.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.1 required=5.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU autolearn=unavailable autolearn_force=no
+        version=3.4.4
+Received: from [IPV6:2001:8003:8824:9e00::bec] (unknown [IPv6:2001:8003:8824:9e00::bec])
+        by sphereful.davidgow.net (Postfix) with ESMTPSA id 573341D57F7;
+        Fri, 15 Sep 2023 11:22:19 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=davidgow.net;
+        s=201606; t=1694748139;
+        bh=yXQyOokVKuRuBBGZrk5jYZQNuKOW+gvtulUP9frgc30=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=FT+c/0nqvmmJ8ErjgrsLbfav1tec05UdP3xK4Pvl4IDdhNFHWnqdOMMiKVwE2a/6q
+         0gzNpznDu0czUXO9709+kdU0dJlEPQFGhFt3coVTkhsmlHnOl1SBNu2RGVnMYt0gyg
+         NouksuUX6OEKW1uRbFrpUJMdTyM94q84t3m6BTH2zpkoBt1qkuXkQs7ELsyxoFVG9q
+         EOlDdN6BmyqhcAXxNeHTULTq9ednE/5dH6M2X5m07JRYEflxGfB4CEz5/KSjdWpdh6
+         JOFJZ9ptoJ5ugjymetQ/5b7WFkOp7ULrwNAfVya4DO4g4M++VEpKeXf9FQoDsGUD1+
+         tyGBgmk3qlaJjiv3kS+maOTnE9s/Ok5hd4SGYGQ06dwSPX3u4/+Vkl36zOQoAxHHE/
+         Wx44cg97pDuj3VECDJFUqntpgwKKwlSXQ17fVDRWGXm39mG2KGA/+eKKgo3nCi7soz
+         0lBVQ51ROAz8zIOZRLiVoLBAqWFOcw7RX8y72LyjjZSQtzuiR716/ybba7/S1jbl7k
+         hpxsYNjHSNWoenDDnsArDnHnTFDaySmaVAfu+6ZZR0Js6VoR8UyG1vd6Tv3GW1udIi
+         4qwg2zV5DFRiM23LeJjRu4I9h1evATV/4/yHeDmf9qqAAw4BKSenvA4Znagx7WE/DW
+         awbxQbN5I0CRTF47i5YiUT0c=
+Message-ID: <59f6ff78-6b45-465a-bd41-28c7a5d10931@davidgow.net>
+Date:   Fri, 15 Sep 2023 11:22:14 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: Kernel 6.5.2 Causes Marvell Technology Group 88SE9128 PCIe
+ SATA to Constantly Reset
+Content-Language: fr
+To:     Niklas Cassel <Niklas.Cassel@wdc.com>,
+        Bagas Sanjaya <bagasdotme@gmail.com>
+Cc:     Damien Le Moal <dlemoal@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        patenteng <dimitar@daskalov.co.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Linux IDE and libata <linux-ide@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+References: <dacb34e4-ce58-bc0e-8206-672d743a3e34@gmail.com>
+ <ZQHRQHAPQdG+Nu1o@x1-carbon>
+From:   David Gow <david@davidgow.net>
+In-Reply-To: <ZQHRQHAPQdG+Nu1o@x1-carbon>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECD8:EE_|SA3PR12MB8023:EE_
-X-MS-Office365-Filtering-Correlation-Id: fb9185b4-7949-48f6-ba3d-08dbb59e8662
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: W4T2HDG3sKfgSzlfU591JmaKkFwNzgfepKeX4p0uHPIoZ2gxOutSH9i8AFmKz5SIVR28tbIt0La8txYdhlUIpQdp+QAeDql8KI8aziDDMHV3rb+gOxQs2loyRXzBbOVQlk+V1RaJ9cfu/MgBpJfW/zFhbL5IKcq9kCGVdeJrzxPm+Qc5LhZxmXhR9r66NcK6JojEknosLB6GtLf5jCjNymFigJ+JqSXVHRASk3LIkGfhZjCsiqMedIKr+P/31gMBEjHcHhqKfQ7CnsM447d+522iKFI+ePC1CFbvWZf9mhQDaYVGFwm5L79I/6yvGjU7lrM64ws2aGHu5FU2l9X/jG4tkF8j0efXoz/GYpCMlpDNKjJ+iP9jPSTE8/DoRlOENrEwHDr1alni0M4X6+59PZpWip37FPumWUIMM6BN7kxfzDi98yyfyVe7ZMEPPyC0IIbdJZggh2uM+vEe6RodZRU4lYYbayYd8pI0iGlSG2fD5LKHcvChFtc63VwvnaOp566EfTct+eNX1EDL2OhoB8rhKOkry8uuH5QBmKXdBvque7ap5Hxu82n8yJPambmZbhLaovAITSMAAFm5etw8xMi/kL5A2lTrxqVrFVyR9ZHiidlQ2qtD9O9grVmSl1++AdmwUfdOe0fDZmOlk93DLe0FIo2RHK2zQ8auwfAmr41wAABjF4EXtIEqZREL6Ytgr0/in8HUBa6ZyDLTctscBPMpE79Cmb9F8q/QRhyr2dYTGpwRArRWsddzapqsU1RugHf5RPnozQaWV3wUu+7wYA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(39860400002)(136003)(376002)(346002)(186009)(451199024)(82310400011)(1800799009)(36840700001)(46966006)(40470700004)(36756003)(86362001)(40460700003)(40480700001)(1076003)(478600001)(966005)(26005)(426003)(336012)(5660300002)(16526019)(70206006)(110136005)(70586007)(54906003)(316002)(44832011)(7696005)(8936002)(41300700001)(2616005)(8676002)(4326008)(2906002)(36860700001)(47076005)(81166007)(82740400003)(356005)(83380400001)(6666004)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2023 03:47:46.6822
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb9185b4-7949-48f6-ba3d-08dbb59e8662
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: MN1PEPF0000ECD8.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8023
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Iain reports that USB devices can't be used to wake a Lenovo Z13
-from suspend. This problem occurs because the PCIe root port has been put
-into D3hot and AMD's platform can't handle USB devices waking the platform
-from a hardware sleep state in this case. The platform is put into
-a hardware sleep state by the actions of the amd-pmc driver.
+Le 2023/09/13 à 23:12, Niklas Cassel a écrit :
+> On Wed, Sep 13, 2023 at 06:25:31PM +0700, Bagas Sanjaya wrote:
+>> Hi,
+>>
+>> I notice a regression report on Bugzilla [1]. Quoting from it:
+>>
+>>> After upgrading to 6.5.2 from 6.4.12 I keep getting the following kernel messages around three times per second:
+>>>
+>>> [ 9683.269830] ata16: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+>>> [ 9683.270399] ata16.00: configured for UDMA/66
+>>>
+>>> So I've tracked the offending device:
+>>>
+>>> ll /sys/class/ata_port/ata16
+>>> lrwxrwxrwx 1 root root 0 Sep 10 21:51 /sys/class/ata_port/ata16 -> ../../devices/pci0000:00/0000:00:1c.7/0000:0a:00.0/ata16/ata_port/ata16
+>>>
+>>> cat /sys/bus/pci/devices/0000:0a:00.0/uevent
+>>> DRIVER=ahci
+>>> PCI_CLASS=10601
+>>> PCI_ID=1B4B:9130
+>>> PCI_SUBSYS_ID=1043:8438
+>>> PCI_SLOT_NAME=0000:0a:00.0
+>>> MODALIAS=pci:v00001B4Bd00009130sv00001043sd00008438bc01sc06i01
+>>>
+>>> lspci | grep 0a:00.0
+>>> 0a:00.0 SATA controller: Marvell Technology Group Ltd. 88SE9128 PCIe SATA 6 Gb/s RAID controller with HyperDuo (rev 11)
+>>>
+>>> I am not using the 88SE9128, so I have no way of knowing whether it works or not. It may simply be getting reset a couple of times per second or it may not function at all.
+>>
+>> See Bugzilla for the full thread.
+>>
+>> patenteng: I have asked you to bisect this regression. Any conclusion?
+>>
+>> Anyway, I'm adding this regression to regzbot:
+>>
+>> #regzbot: introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=217902
+> 
+> Hello Bagas, patenteng,
+> 
+> 
+> FYI, the prints:
+> [ 9683.269830] ata16: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+> [ 9683.270399] ata16.00: configured for UDMA/66
+> 
+> Just show that ATA error handler has been invoked.
+> There was no reset performed.
+> 
+> If there was a reset, you would have seen something like:
+> [    1.441326] ata8: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
+> [    1.541250] ata8.00: configured for UDMA/133
+> [    1.541411] ata8: hard resetting link
+> 
+> 
+> Could you please try this patch and see if it improves things for you:
+> https://lore.kernel.org/linux-ide/20230913150443.1200790-1-nks@flawful.org/T/#u
+> 
 
-Although the issue is initially reported on a single model it actually
-affects all Yellow Carp (Rembrandt) and Pink Sardine (Phoenix) SoCs.
-This problem only occurs on Linux specifically when attempting to
-wake the platform from a hardware sleep state.
-Comparing the behavior on Windows and Linux, Windows doesn't put
-the root ports into D3 at this time.
+FWIW, I'm seeing a very similar issue both in 6.5.2 and in git master 
+[aed8aee11130 ("Merge tag 'pmdomain-v6.6-rc1' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/linux-pm") with that 
+patch applied.
 
-Linux decides the target state to put the device into at suspend by
-this policy:
-1. If platform_pci_power_manageable():
-   Use platform_pci_choose_state()
-2. If the device is armed for wakeup:
-   Select the deepest D-state that supports a PME.
-3. Else:
-   Use D3hot.
 
-Devices are considered power manageable by the platform when they have
-one or more objects described in the table in section 7.3 of the ACPI 6.5
-specification [1]. In this case the root ports are not power manageable.
+The log is similar (the last two lines repeat several times a second):
+[    0.369632] ata14: SATA max UDMA/133 abar m2048@0xf7c10000 port 
+0xf7c10480 irq 33
+[    0.683693] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+[    1.031662] ata14.00: ATAPI: MARVELL VIRTUALL, 1.09, max UDMA/66
+[    1.031852] ata14.00: configured for UDMA/66
+[    1.414145] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+[    1.414505] ata14.00: configured for UDMA/66
+[    1.744094] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+[    1.744368] ata14.00: configured for UDMA/66
+[    2.073916] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+[    2.074276] ata14.00: configured for UDMA/66
 
-If devices are not considered power manageable; specs are ambiguous as
-to what should happen.  In this situation Windows 11 puts PCIe ports
-in D0 ostensibly due the policy from the "uPEP driver" which is a
-complimentary driver the Linux "amd-pmc" driver.
 
-Linux chooses to allow D3 for these root ports due to the policy
-introduced by commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during
-suspend").
+lspci shows:
+09:00.0 SATA controller: Marvell Technology Group Ltd. 88SE9230 PCIe 2.0 
+x2 4-port SATA 6 Gb/s RAID Controller (rev 10) (prog-if 01 [AHCI 1.0])
+         Subsystem: Gigabyte Technology Co., Ltd Device b000
+         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
+ParErr- Stepping- SERR- FastB2B- DisINTx+
+         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+         Latency: 0, Cache Line Size: 64 bytes
+         Interrupt: pin A routed to IRQ 33
+         Region 0: I/O ports at b050 [size=8]
+         Region 1: I/O ports at b040 [size=4]
+         Region 2: I/O ports at b030 [size=8]
+         Region 3: I/O ports at b020 [size=4]
+         Region 4: I/O ports at b000 [size=32]
+         Region 5: Memory at f7c10000 (32-bit, non-prefetchable) [size=2K]
+         Expansion ROM at f7c00000 [disabled] [size=64K]
+         Capabilities: <access denied>
+         Kernel driver in use: ahci
 
-The Windows uPEP driver expresses the desired state that should be
-selected for suspend but Linux doesn't, so introduce a quirk for the
-problematic root ports.
+The controller in question lives on a Gigabyte Z87X-UD5H-CF motherboard. 
+I'm using the controller for several drives, and it's working, it's just 
+spammy. (At worst, there's some performance hitching, but that might 
+just be journald rotating logs as they fill up with the message).
 
-The quirk removes PME support for D3hot and D3cold at suspend time if the
-system will be using s2idle. When the port is configured for wakeup this
-will prevent these states from being selected in pci_target_state().
+I haven't had a chance to bisect yet (this is a slightly awkward machine 
+for me to install test kernels on), but can also confirm it worked with 
+6.4.12.
 
-After the system is resumes the PME support is re-read from the PM
-capabilities register to allow opportunistic power savings at runtime by
-letting the root port go into D3hot or D3cold.
+Hopefully that's useful. I'll get back to you if I manage to bisect it.
 
-Cc: stable@vger.kernel.org
-Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/platform-design-for-modern-standby#low-power-core-silicon-cpu-soc-dram [1]
-Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-Reported-by: Iain Lane <iain@orangesquash.org.uk>
-Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/pci/quirks.c | 61 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index eeec1d6f9023..ebc0afbc814e 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -6188,3 +6188,64 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
-+
-+/*
-+ * When AMD PCIe root ports with AMD USB4 controllers attached to them are put
-+ * into D3hot or D3cold downstream USB devices may fail to wakeup the system.
-+ * This manifests as a missing wakeup interrupt.
-+ *
-+ * Prevent the associated root port from using PME to wake from D3hot or
-+ * D3cold power states during s2idle.
-+ * This will effectively put the root port into D0 power state over s2idle.
-+ */
-+static bool child_has_amd_usb4(struct pci_dev *pdev)
-+{
-+	struct pci_dev *child = NULL;
-+
-+	while ((child = pci_get_class(PCI_CLASS_SERIAL_USB_USB4, child))) {
-+		if (child->vendor != PCI_VENDOR_ID_AMD)
-+			continue;
-+		if (pcie_find_root_port(child) != pdev)
-+			continue;
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+static void quirk_reenable_pme(struct pci_dev *dev)
-+{
-+	u16 pmc;
-+
-+	if (!dev->pm_cap)
-+		return;
-+
-+	if (!child_has_amd_usb4(dev))
-+		return;
-+
-+	pci_read_config_word(dev, dev->pm_cap + PCI_PM_PMC, &pmc);
-+	pmc &= PCI_PM_CAP_PME_MASK;
-+	dev->pme_support = pmc >> PCI_PM_CAP_PME_SHIFT;
-+}
-+
-+static void quirk_disable_pme_suspend(struct pci_dev *dev)
-+{
-+	int mask;
-+
-+	if (pm_suspend_via_firmware())
-+		return;
-+
-+	if (!child_has_amd_usb4(dev))
-+		return;
-+
-+	mask = (PCI_PM_CAP_PME_D3hot|PCI_PM_CAP_PME_D3cold) >> PCI_PM_CAP_PME_SHIFT;
-+	if (!(dev->pme_support & mask))
-+		return;
-+	dev->pme_support &= ~mask;
-+	dev_info_once(&dev->dev, "quirk: disabling PME from D3hot and D3cold at suspend\n");
-+}
-+
-+DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x14b9, quirk_disable_pme_suspend);
-+DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x14b9, quirk_reenable_pme);
-+DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x14eb, quirk_disable_pme_suspend);
-+DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x14eb, quirk_reenable_pme);
--- 
-2.34.1
-
+Cheers,
+-- David
