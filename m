@@ -2,278 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96FF67A2B72
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Sep 2023 02:12:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0A397A2D6B
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Sep 2023 04:22:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238499AbjIPAMM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Sep 2023 20:12:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33392 "EHLO
+        id S236560AbjIPCWa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Sep 2023 22:22:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238212AbjIPALm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 20:11:42 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7306B268E;
-        Fri, 15 Sep 2023 17:11:36 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 077AEC43395;
-        Sat, 16 Sep 2023 00:11:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694823095;
-        bh=dq0gRhkJrXoyD7UZPSlpp03O/GEcsop/t6dIUGgIroQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K73BPAb1o1Q5WMT1Brwxt2fC0w5ujmXrmozlmjmsdA94dt42YoAz8e1DVamkVGIGg
-         832FY7FOq4XLoA32MiQGkadv0D4WLK81VXGw2PvIaMMzO10SNsGjJ622zIqL25m5t5
-         9nf1a0zNW9vX4IYJxFKxYpyyGk+1/D7H8n5zL9V7f1UgCxWN8SOapz0kAIpwO3bdoy
-         UooVVZ41ohMz4ixF7j2McO8ycbBh1Y3sXBZDicANkKem6nKc+Kx9wV7py729GYMcXj
-         OtzmKpt0ksny08DA0wyAl3YKfIwiheS1TezeD/4oSpg28N4FtoaIQe2Q0/b19TV4zz
-         CJ9xA0S44INeA==
-Date:   Sat, 16 Sep 2023 01:11:29 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Minda Chen <minda.chen@starfivetech.com>
-Cc:     Daire McNamara <daire.mcnamara@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        Kevin Xie <kevin.xie@starfivetech.com>
-Subject: Re: [PATCH v6 08/19] PCI: plda: Add event interrupt codes and IRQ
- domain ops
-Message-ID: <20230916-rescuer-enroll-dd4fb1320676@spud>
-References: <20230915102243.59775-1-minda.chen@starfivetech.com>
- <20230915102243.59775-9-minda.chen@starfivetech.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="MF1vEsgt7mymeqoW"
-Content-Disposition: inline
-In-Reply-To: <20230915102243.59775-9-minda.chen@starfivetech.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S238659AbjIPCWN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Sep 2023 22:22:13 -0400
+Received: from sphereful.davidgow.net (sphereful.davidgow.net [IPv6:2404:9400:4:0:216:3eff:fee2:5328])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB20E6;
+        Fri, 15 Sep 2023 19:22:05 -0700 (PDT)
+Received: by sphereful.davidgow.net (Postfix, from userid 119)
+        id 6B6011D5837; Sat, 16 Sep 2023 10:22:00 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=davidgow.net;
+        s=201606; t=1694830920;
+        bh=Hjtk5BbVsm8eL9+VXeOx9qTRndZHLmAyy1xJeOlFiBs=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=bt0sq8rpKmyJtSfTvpTeQHNuYIr4PwCfKXLf/gJU/KfUHfxeyR+snNUYyHDv7vLKR
+         eT1N5OpmQ1dIV7LzG8VuLa/CdzNemLPNKk4SYVZ2O4q6arqU9a7iuhqNsbQ0xeWPUu
+         v/imFF9FKEJjPUHYUPYnKI4/QEKdRhloEroYtydKfPq1grdBClolt6fwgXPNMv5ERh
+         byeVX5WXPUBFg/684XOXgtuL3rvDvNkCyL6w16BxMQOaOjO47WRckgLaRaDjGPrbzB
+         EXSQFfo+b45VS6HiXs1FX39QXH159OyAqwVF/oHhRamBu641xgkBackzQOg3mO3Qx0
+         ho36lWsCvtQhQxpe/PgZs9OvyaW9CMTtN5S8o4D2J6SKCXPEa563oOq4SUJIYPFapo
+         znPZVdSMEPqvA5AJeQYBDUeFnGjVzwP7N2Q7Z14d2mzeWF1YMatp2OlrXXk3K+k2Xp
+         r+FSBJ4gyTp1T2hc+ZcCAFENCicevBXL0FEjEZ1m9AooSvT0LEXZOUwE14ooPeMEiD
+         t9kZ065fVa0RxzQqJpDxwl71dxi7fAyya7a2n2nWFIVYIQbucilZaBgcRTHz9ToHOd
+         McrQP3Cqg4k7KUOole9pLVKbxSFavmT6oaIhRHSqMkYOKq9BlLrpLt8UIzBZ9ejrqu
+         HmUEjHU24QKwxkBCVwPZUWkE=
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Received: from [IPV6:2001:8003:8824:9e00::bec] (unknown [IPv6:2001:8003:8824:9e00::bec])
+        by sphereful.davidgow.net (Postfix) with ESMTPSA id C55A21D580B;
+        Sat, 16 Sep 2023 10:21:57 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=davidgow.net;
+        s=201606; t=1694830917;
+        bh=Hjtk5BbVsm8eL9+VXeOx9qTRndZHLmAyy1xJeOlFiBs=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=d3c1T6dDVieNLo1yeoJaClHy8gD1NTEsUphxaHWqXVNgPzKoEsTeDWecTQ0zSy8B5
+         ZLjYFhBEJdf9zNGTjrbzaw4uCg8iAycQuFgIrk21wl1Lvk1QMCezUTVp/B91OGfrfK
+         Usew6qzj+mXdiwYKyhl75Kf7yGcbXbTBk8C9YnfF+CmyBS6qRYeNIiQ6Kv5epbPWbt
+         Sqb9+tYsnuAAv2h4toCYBoawXbuwHleAtETHixVO5Txk56VcwunisJmg5DdaO8mm7q
+         1GWEUeXYRqqGY9yL6uOuRvPlupQaOQI7qCrZJBVTj1OKZSyeESd03jp2tIZ95AldVp
+         laxrLuNmlOca8z6lVJ54h2R7vEvCAhm7C/SeWSwWraNM4CcW2051ssb+Yku/xhsi3S
+         uPOvHU8WzS9gCvj7tuv1e/y1yVuThPu28x0hlo4+pu0iHpnH3x7XLE7nx+me0zmOK6
+         2PFxoKomldV4lMj7Z/J/6NS41RLW6xBJ2uwqOiqi38TrUePzmLcWTnHh1lkb6Rk8zX
+         LAQMKmXcoROhzrtKC2bXfPGmURsrthCoSLq3cijcyN1m+uzvJd0W7xmQAcF8mFMHug
+         7+JC17Z7LGiXAAY9y6IVMh1CbazdYk4C8P3SFzn0crdk2pJzvQtWX4Q3KWkBP22kIv
+         kaNho1Sa5AbfVCLvrtQ9zA68=
+Message-ID: <bbe4ae16-86b3-4629-b5e0-c704881fe5cb@davidgow.net>
+Date:   Sat, 16 Sep 2023 10:21:53 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: Kernel 6.5.2 Causes Marvell Technology Group 88SE9128 PCIe
+ SATA to Constantly Reset
+Content-Language: fr
+To:     Niklas Cassel <Niklas.Cassel@wdc.com>
+Cc:     Damien Le Moal <dlemoal@kernel.org>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        patenteng <dimitar@daskalov.co.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Linux IDE and libata <linux-ide@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+References: <dacb34e4-ce58-bc0e-8206-672d743a3e34@gmail.com>
+ <ZQHRQHAPQdG+Nu1o@x1-carbon>
+ <59f6ff78-6b45-465a-bd41-28c7a5d10931@davidgow.net>
+ <10f65dfe-5e8a-10ab-4d89-efe693c07caa@kernel.org>
+ <658b9285-e030-4987-86a7-57cdb6c7f161@davidgow.net>
+ <ZQQa0QRhm1BuI5IT@x1-carbon>
+ <49d92af6-4968-4066-b33c-0fd06f8fdf28@davidgow.net>
+ <ZQSEXl0GB3iKoqjZ@x1-carbon>
+From:   David Gow <david@davidgow.net>
+In-Reply-To: <ZQSEXl0GB3iKoqjZ@x1-carbon>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Le 2023/09/16 à 0:20, Niklas Cassel a écrit :
+> On Fri, Sep 15, 2023 at 08:26:58PM +0800, David Gow wrote:
+>> In any case, the bisect is done:
+>>
+>> 624885209f31eb9985bf51abe204ecbffe2fdeea is the first bad commit
+>> commit 624885209f31eb9985bf51abe204ecbffe2fdeea
+>> Author: Damien Le Moal <dlemoal@kernel.org>
+>> Date:   Thu May 11 03:13:41 2023 +0200
+>>
+>>      scsi: core: Detect support for command duration limits
+>>
+>>      Introduce the function scsi_cdl_check() to detect if a device supports
+>>      command duration limits (CDL). Support for the READ 16, WRITE 16, READ
+>> 32
+>>      and WRITE 32 commands are checked using the function
+>> scsi_report_opcode()
+>>      to probe the rwcdlp and cdlp bits as they indicate the mode page
+>> defining
+>>      the command duration limits descriptors that apply to the command being
+>>      tested.
+>>
+>>      If any of these commands support CDL, the field cdl_supported of struct
+>>      scsi_device is set to 1 to indicate that the device supports CDL.
+>>
+>>      Support for CDL for a device is advertizes through sysfs using the new
+>>      cdl_supported device attribute. This attribute value is 1 for a device
+>>      supporting CDL and 0 otherwise.
+>>
+>>      Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+>>      Reviewed-by: Hannes Reinecke <hare@suse.de>
+>>      Co-developed-by: Niklas Cassel <niklas.cassel@wdc.com>
+>>      Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
+>>      Link: https://lore.kernel.org/r/20230511011356.227789-9-nks@flawful.org
+>>      Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+>>
+>>   Documentation/ABI/testing/sysfs-block-device |  9 ++++
+>>   drivers/scsi/scsi.c                          | 81
+>> ++++++++++++++++++++++++++++
+>>   drivers/scsi/scsi_scan.c                     |  3 ++
+>>   drivers/scsi/scsi_sysfs.c                    |  2 +
+>>   include/scsi/scsi_device.h                   |  3 ++
+>>   5 files changed, 98 insertions(+)
+>>
+>>
+>> This seems to match what was found on the Arch Linux forums, too:
+>> https://bbs.archlinux.org/viewtopic.php?id=288723&p=3
+>>
+>> I haven't tried it yet, but according to that forum thread, removing the
+>> calls to scsi_cdl_check() seems to resolve the issue. This is all well
+>> beyond my SCSI knowledge, but maybe a quirk to disable these CDL checks for
+>> these older marvell controllers is required? Though it seems odd that the
+>> device would be rescanned and/or scsi_add_lun called multiple times a second
+>> -- is that normal?
+>>
+>> In any case, this seems to be the cause.
+> 
+> Hello David,
+> 
+> Thank you very much for your effort of bisecting this.
+> 
+> Could you please try this patch and see if it improves things for you:
+> https://lore.kernel.org/linux-scsi/20230915022034.678121-1-dlemoal@kernel.org/
+> 
 
---MF1vEsgt7mymeqoW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Sep 15, 2023 at 06:22:32PM +0800, Minda Chen wrote:
-> For PolarFire implements non-PLDA local interrupt events, most of
-> event interrupt process codes can not be re-used. PLDA implements
-> new codes and IRQ domain ops like PolarFire.
->=20
-> plda_get_events() adds a new IRQ num to event num mapping codes for
-> PLDA local event except DMA engine interrupt events. The DMA engine
-> interrupt events are implemented by vendors.
->=20
-> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-
-Perhaps not important as they will go away in the next patch, but for
-this patch the riscv patchwork stuff noticed:
-drivers/pci/controller/plda/pcie-plda-host.c:114:36: warning: unused variab=
-le 'plda_evt_dom_ops' [-Wunused-const-variable]
-drivers/pci/controller/plda/pcie-plda-host.c:118:36: warning: unused variab=
-le 'plda_event_ops' [-Wunused-const-variable]
+Thanks very much: this seems to fix it here (on top of torvalds/master).
 
 Cheers,
-Conor.
+-- David
 
-> ---
->  drivers/pci/controller/plda/pcie-plda-host.c | 99 ++++++++++++++++++++
->  drivers/pci/controller/plda/pcie-plda.h      | 33 +++++++
->  2 files changed, 132 insertions(+)
->=20
-> diff --git a/drivers/pci/controller/plda/pcie-plda-host.c b/drivers/pci/c=
-ontroller/plda/pcie-plda-host.c
-> index f0c7636f1f64..f29ff0f00dda 100644
-> --- a/drivers/pci/controller/plda/pcie-plda-host.c
-> +++ b/drivers/pci/controller/plda/pcie-plda-host.c
-> @@ -20,6 +20,105 @@
-> =20
->  #include "pcie-plda.h"
-> =20
-> +irqreturn_t plda_event_handler(int irq, void *dev_id)
-> +{
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static u32 plda_get_events(struct plda_pcie_rp *port)
-> +{
-> +	u32 events, val, origin;
-> +
-> +	origin =3D readl_relaxed(port->bridge_addr + ISTATUS_LOCAL);
-> +
-> +	/* Error events and doorbell events */
-> +	events =3D (origin >> A_ATR_EVT_POST_ERR_SHIFT) & 0xff;
-> +
-> +	/* INTx events */
-> +	if (origin & PM_MSI_INT_INTX_MASK)
-> +		events |=3D BIT(EVENT_PM_MSI_INT_INTX);
-> +
-> +	/* MSI event and sys events */
-> +	val =3D (origin >> PM_MSI_INT_MSI_SHIFT) & 0xf;
-> +	events |=3D val << EVENT_PM_MSI_INT_MSI;
-> +
-> +	return events;
-> +}
-> +
-> +static u32 plda_hwirq_to_mask(int hwirq)
-> +{
-> +	u32 mask;
-> +
-> +	if (hwirq < EVENT_PM_MSI_INT_INTX)
-> +		mask =3D BIT(hwirq + A_ATR_EVT_POST_ERR_SHIFT);
-> +	else if (hwirq =3D=3D EVENT_PM_MSI_INT_INTX)
-> +		mask =3D PM_MSI_INT_INTX_MASK;
-> +	else
-> +		mask =3D BIT(hwirq + PM_MSI_TO_MASK_OFFSET);
-> +
-> +	return mask;
-> +}
-> +
-> +static void plda_ack_event_irq(struct irq_data *data)
-> +{
-> +	struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
-> +
-> +	writel_relaxed(plda_hwirq_to_mask(data->hwirq),
-> +		       port->bridge_addr + ISTATUS_LOCAL);
-> +}
-> +
-> +static void plda_mask_event_irq(struct irq_data *data)
-> +{
-> +	struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
-> +	u32 mask, val;
-> +
-> +	mask =3D plda_hwirq_to_mask(data->hwirq);
-> +
-> +	raw_spin_lock(&port->lock);
-> +	val =3D readl_relaxed(port->bridge_addr + IMASK_LOCAL);
-> +	val &=3D ~mask;
-> +	writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
-> +	raw_spin_unlock(&port->lock);
-> +}
-> +
-> +static void plda_unmask_event_irq(struct irq_data *data)
-> +{
-> +	struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
-> +	u32 mask, val;
-> +
-> +	mask =3D plda_hwirq_to_mask(data->hwirq);
-> +
-> +	raw_spin_lock(&port->lock);
-> +	val =3D readl_relaxed(port->bridge_addr + IMASK_LOCAL);
-> +	val |=3D mask;
-> +	writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
-> +	raw_spin_unlock(&port->lock);
-> +}
-> +
-> +static struct irq_chip plda_event_irq_chip =3D {
-> +	.name =3D "PLDA PCIe EVENT",
-> +	.irq_ack =3D plda_ack_event_irq,
-> +	.irq_mask =3D plda_mask_event_irq,
-> +	.irq_unmask =3D plda_unmask_event_irq,
-> +};
-> +
-> +static int plda_pcie_event_map(struct irq_domain *domain, unsigned int i=
-rq,
-> +			       irq_hw_number_t hwirq)
-> +{
-> +	irq_set_chip_and_handler(irq, &plda_event_irq_chip, handle_level_irq);
-> +	irq_set_chip_data(irq, domain->host_data);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops plda_evt_dom_ops =3D {
-> +	.map =3D plda_pcie_event_map,
-> +};
-> +
-> +static const struct plda_event_ops plda_event_ops =3D {
-> +	.get_events =3D plda_get_events,
-> +};
-> +
->  void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
->  			    phys_addr_t axi_addr, phys_addr_t pci_addr,
->  			    size_t size)
-> diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/contro=
-ller/plda/pcie-plda.h
-> index 3deefd35fa5a..32a913d4101f 100644
-> --- a/drivers/pci/controller/plda/pcie-plda.h
-> +++ b/drivers/pci/controller/plda/pcie-plda.h
-> @@ -102,6 +102,38 @@
->  #define EVENT_PM_MSI_INT_SYS_ERR		12
->  #define NUM_PLDA_EVENTS				13
-> =20
-> +/*
-> + * PLDA local interrupt register
-> + *
-> + * 31         27     23              15           7          0
-> + * +--+--+--+-+------+-+-+-+-+-+-+-+-+-----------+-----------+
-> + * |12|11|10|9| intx |7|6|5|4|3|2|1|0| DMA error | DMA end   |
-> + * +--+--+--+-+------+-+-+-+-+-+-+-+-+-----------+-----------+
-> + * 0:  AXI post error
-> + * 1:  AXI fetch error
-> + * 2:  AXI discard error
-> + * 3:  AXI doorbell
-> + * 4:  PCIe post error
-> + * 5:  PCIe fetch error
-> + * 6:  PCIe discard error
-> + * 7:  PCIe doorbell
-> + * 8:  4 INTx interruts
-> + * 9:  MSI interrupt
-> + * 10: AER event
-> + * 11: PM/LTR/Hotplug
-> + * 12: System error
-> + * DMA error : reserved for vendor implement
-> + * DMA end : reserved for vendor implement
-> + */
-> +
-> +#define PM_MSI_TO_MASK_OFFSET			19
-> +
-> +struct plda_pcie_rp;
-> +
-> +struct plda_event_ops {
-> +	u32 (*get_events)(struct plda_pcie_rp *pcie);
-> +};
-> +
->  struct plda_msi {
->  	struct mutex lock;		/* Protect used bitmap */
->  	struct irq_domain *msi_domain;
-> @@ -120,6 +152,7 @@ struct plda_pcie_rp {
->  	void __iomem *bridge_addr;
->  };
-> =20
-> +irqreturn_t plda_event_handler(int irq, void *dev_id);
->  void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
->  			    phys_addr_t axi_addr, phys_addr_t pci_addr,
->  			    size_t size);
-> --=20
-> 2.17.1
->=20
-
---MF1vEsgt7mymeqoW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZQTysQAKCRB4tDGHoIJi
-0uu+AP4/FNnCefKntlXj3FGco54xkVXHnqAR+caTOE3c45xdSQEAtxTTb9CrXcVb
-hw4PndW9LMDpYwZZc5tsXxenKVWDtwM=
-=aNcC
------END PGP SIGNATURE-----
-
---MF1vEsgt7mymeqoW--
