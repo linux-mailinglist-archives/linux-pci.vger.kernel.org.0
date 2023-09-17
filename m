@@ -2,72 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D82A7A3354
-	for <lists+linux-pci@lfdr.de>; Sun, 17 Sep 2023 01:06:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3EE07A34AF
+	for <lists+linux-pci@lfdr.de>; Sun, 17 Sep 2023 10:51:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233268AbjIPXFu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 16 Sep 2023 19:05:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39464 "EHLO
+        id S231899AbjIQIuF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 17 Sep 2023 04:50:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231316AbjIPXFr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 16 Sep 2023 19:05:47 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11062CD1;
-        Sat, 16 Sep 2023 16:05:41 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-50300cb4776so1409157e87.3;
-        Sat, 16 Sep 2023 16:05:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1694905539; x=1695510339; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8qmry3f1dKS9XSay+/EcqKiwhJ290GuK83cA4dSJTow=;
-        b=Z2Ah3o8j0PFJcpOXlPobPQmry97fkq6aKbnN9ZpGBrzW9LDfJAF8A7gzj4v2BnM731
-         m50IDM4u//4agiSZmcft5bhZJRdGceuB3Y4CfY9rOZi5VEB1+Qo0mgIvytFnOrrh29Yp
-         h7FAi4lyNwKslS4Vb0CnXjNYviM7EirOybynrpfZUK4Ix82hSAHIri1k8Hl9HLWpypd2
-         8twyVWWM5+q8yQ03pOMIwdbcW1FBEAAXl21aMrMGI7DroKrK/zsIH/5r+t2AkokP7iyj
-         i1RPHwcarcaOnSbZnFlxwdm0bL6Axe3DJlgAN3kLs0+nfTQ8595fOKYH+R3gqK/M/CTI
-         v9SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694905539; x=1695510339;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8qmry3f1dKS9XSay+/EcqKiwhJ290GuK83cA4dSJTow=;
-        b=lv0NZyAjvtUXS7dRCS3nvX4ctXbTY1O/jLB6Abfg9UxAWNBaQRel8WG9doANodPdK5
-         tRFbzbOXVzFd5PkY95/b/3vICaHUrPmtAfFHfuDXSy3zg9k4n/bjjWgZmruocOzME3Jf
-         9SAaSFDIY6uKmEYLOBBaVyJRFd8R9EaT/ZX/51lfSGCz5GuzIICH/XDrRFOgrAk8xiP3
-         DTTgaZeclFypVVez5qxzf9v8jER/257WcbNOEll4405MFI+EePTakmcdW7FevYUP5qV+
-         ayF4wVgts80S4A9VX0sQZPRgY53XfKJhple85bL2wFIyf3maNerRxqb2iaTTnowopVg0
-         IC0Q==
-X-Gm-Message-State: AOJu0YyEBAc/1l1BNvte1TwuMDjO06OK2H5PlDsDgypYmSD3xHE+7dQD
-        JY8o5Gc4eYCZU/TUisxJllUmihNGEFV9KiSKilE=
-X-Google-Smtp-Source: AGHT+IEVVgRoyN4fUdQy321FNnju/vPTuIiGoc4HDyEWId4+9iEJEh17spLil47FB9PdGig5vTI7bQicgK2TNBUKxlE=
-X-Received: by 2002:a05:6512:28c:b0:500:daf6:3898 with SMTP id
- j12-20020a056512028c00b00500daf63898mr4364733lfp.26.1694905539036; Sat, 16
- Sep 2023 16:05:39 -0700 (PDT)
+        with ESMTP id S235140AbjIQIte (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 17 Sep 2023 04:49:34 -0400
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C8B3185;
+        Sun, 17 Sep 2023 01:49:27 -0700 (PDT)
+Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
+        by ex01.ufhost.com (Postfix) with ESMTP id 6C53224DCA6;
+        Sun, 17 Sep 2023 16:49:20 +0800 (CST)
+Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX165.cuchost.com
+ (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Sun, 17 Sep
+ 2023 16:49:20 +0800
+Received: from [192.168.125.57] (113.72.144.67) by EXMBX171.cuchost.com
+ (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Sun, 17 Sep
+ 2023 16:49:19 +0800
+Message-ID: <0ce30520-7286-dfa0-2e16-e5145b950945@starfivetech.com>
+Date:   Sun, 17 Sep 2023 16:49:18 +0800
 MIME-Version: 1.0
-References: <88ffb216-96f9-f232-7fe5-48bf82e6aa70@gmail.com> <CANiJ1U9-2zfc5aJJUaYnTBTg+2vMjcfgsuxcFFnn+CjVQ1fCoA@mail.gmail.com>
-In-Reply-To: <CANiJ1U9-2zfc5aJJUaYnTBTg+2vMjcfgsuxcFFnn+CjVQ1fCoA@mail.gmail.com>
-From:   brett hassall <brett.hassall@gmail.com>
-Date:   Sun, 17 Sep 2023 09:05:27 +1000
-Message-ID: <CANiJ1U9renpjKDfSbFVTvt-G+P6iP3n4iN3_gzuVk_3DTWfJdg@mail.gmail.com>
-Subject: Re: upstream linux cannot achieve package C8 power saving
-To:     Bagas Sanjaya <bagasdotme@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ajay Agarwal <ajayagarwal@google.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Michael Bottini <michael.a.bottini@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Power Management <linux-pm@vger.kernel.org>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v6 02/19] PCI: microchip: Move pcie-microchip-host.c to
+ plda directory
+Content-Language: en-US
+To:     Conor Dooley <conor@kernel.org>
+CC:     Daire McNamara <daire.mcnamara@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Kevin Xie <kevin.xie@starfivetech.com>
+References: <20230915102243.59775-1-minda.chen@starfivetech.com>
+ <20230915102243.59775-3-minda.chen@starfivetech.com>
+ <20230916-outcome-obedient-fda7043bcca7@spud>
+From:   Minda Chen <minda.chen@starfivetech.com>
+In-Reply-To: <20230916-outcome-obedient-fda7043bcca7@spud>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [113.72.144.67]
+X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX171.cuchost.com
+ (172.16.6.91)
+X-YovoleRuleAgent: yovoleflag
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -76,59 +71,42 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi
-
-The Ubuntu devs have reverted their 3 patches and replaced them with 2
-new patches.
-
-Given this happened in the last week, I'll hold off submitting a patch
-for now and see what Ubuntu does
-
-Thanks
-Brett
 
 
-On Tue, 5 Sept 2023 at 06:25, brett hassall <brett.hassall@gmail.com> wrote:
->
-> Hi
->
-> I contacted the Ubuntu developers to see if they were ok with using
-> their patches.
->
-> They advised the patches were outdated and further development was
-> under discussion.
->
-> The current patches work and would benefit Linux users until something
-> better comes along.
->
-> Would you like me to proceed with the formal patch still ?
->
-> Thanks
-> Brett
->
->
-> On Wed, 30 Aug 2023 at 11:11, Bagas Sanjaya <bagasdotme@gmail.com> wrote:
-> >
-> > Hi,
-> >
-> > I notice a bug report on Bugzilla [1]. Quoting from it:
-> >
-> > > v6.5 (and at least v5.15, v5.19 and v6.4 as well) will not go to a higher power saving level than package C3.
-> > >
-> > > With the inclusion of a patch that combines 3 Ubuntu commits related to VMD ASPM & LTR, package C8 is used.
-> >
-> > See Bugzilla for the full thread.
-> >
-> > FYI, the attached proposed fix is the same as Brett's another BZ report [2].
-> > I include it for upstreaming.
-> >
-> > To Brett: Would you like to submit the proper, formal patch (see
-> > Documentation/process/submitting-patches.rst for details)?
-> >
-> > Thanks.
-> >
-> > [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217841
-> > [2]: https://bugzilla.kernel.org/show_bug.cgi?id=217828
-> >
-> > --
-> > An old man doll... just what I always wanted! - Clara
+On 2023/9/16 8:09, Conor Dooley wrote:
+> On Fri, Sep 15, 2023 at 06:22:26PM +0800, Minda Chen wrote:
+>> For Microchip Polarfire PCIe host is PLDA XpressRich IP,
+>> move to plda directory. Prepare for refactor the codes.
+>> 
+>> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+>> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+>> ---
+>>  MAINTAINERS                                        |  2 +-
+>>  drivers/pci/controller/Kconfig                     |  9 +--------
+>>  drivers/pci/controller/Makefile                    |  2 +-
+>>  drivers/pci/controller/plda/Kconfig                | 14 ++++++++++++++
+>>  drivers/pci/controller/plda/Makefile               |  2 ++
+>>  .../controller/{ => plda}/pcie-microchip-host.c    |  2 +-
+>>  6 files changed, 20 insertions(+), 11 deletions(-)
+>>  create mode 100644 drivers/pci/controller/plda/Kconfig
+>>  create mode 100644 drivers/pci/controller/plda/Makefile
+>>  rename drivers/pci/controller/{ => plda}/pcie-microchip-host.c (99%)
+>> 
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 90f13281d297..b1050804e6d2 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -16647,7 +16647,7 @@ M:	Daire McNamara <daire.mcnamara@microchip.com>
+>>  L:	linux-pci@vger.kernel.org
+>>  S:	Supported
+>>  F:	Documentation/devicetree/bindings/pci/microchip*
+>> -F:	drivers/pci/controller/*microchip*
+>> +F:	drivers/pci/controller/plda/*microchip*
+> 
+> The riscv patchwork automation is complaining that you have added
+> maintainers pattern errors with this patch. If you run
+> ./scripts/get_maintainer.pl --self-test=patterns
+> it'll tell you what the bad pattern is. Not sure why I never actually
+> dumped the output of that test into the failure report, so I can't
+> immediately tell you what is wrong.
+Okay. I will check this.
