@@ -2,42 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 575427A5324
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Sep 2023 21:33:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99FEA7A532B
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Sep 2023 21:39:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229449AbjIRTdq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Sep 2023 15:33:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45162 "EHLO
+        id S229538AbjIRTjW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Sep 2023 15:39:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbjIRTdp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Sep 2023 15:33:45 -0400
+        with ESMTP id S229477AbjIRTjV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Sep 2023 15:39:21 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E044F7;
-        Mon, 18 Sep 2023 12:33:40 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E229C433C7;
-        Mon, 18 Sep 2023 19:33:39 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC283109;
+        Mon, 18 Sep 2023 12:39:15 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D4B4C433C9;
+        Mon, 18 Sep 2023 19:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695065620;
-        bh=+buqqO/wnxA4xEuxrSuwfqJ0mRpiDdrP2TUcBhwJcy4=;
+        s=k20201202; t=1695065955;
+        bh=MYLjauQjUNrziNJesoyG56GkzOngzUfwuVsg4uLhDPI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EP2czQnXqV3N/X+pRZ3nA3IWx9Wrh9dTvgTacetMYvPO53Kd83yuL2gu69e6GgQXt
-         nqJJ0rbiYlX9IMqs1uCuTu5k8PRA8bIVnukUODB3D9wr5vUCxeAuEiq6QfuTRoZbGY
-         N9uOjmzLLpcKlzQd+ILTKna0mSwLZEOtXQfLjNdK+uTbJKcSwUejh9TpyCJZOCgEG5
-         Kw0kM7uFvTgk/hUsTEuid8aRWJ0GPDQatmnlq/Athc3tR2374nuUvWkFF+MqK0tJRY
-         i1SKCkwRO5Ni8zeIwhIMWQhmalHYtID0DVURUIPCUvsSyg2l0C5z2aMWTNvGfJJyvF
-         bWhT++gEtXS1w==
-Date:   Mon, 18 Sep 2023 14:33:37 -0500
+        b=ldS5Vrqt10ANiv7CRtlv8OWAbxjZAbr2jQoAK1U/2bEAltPy3Ya/7ueilB1o0ORRr
+         lDrFXXPrRwSj/IIjQih8dI3OptEqKRPQXSRiIEnFdNxvkKWDMP+m5VXxgE9EKkWsAw
+         vaWVhkDCG3CtDT4yHexV8pyuu5v8f9+e4XQYlrOa/ur4anhGnb6YiFvrx0NKzuz+RN
+         C2G9DudfC5tNyNlgEPfuYL1bT2ydNTbJxwkHvbbKdAxgiT8gPZuf1N2yC9mPsOa4Bo
+         Sj9wpjI9+604TvjWgU4k8cVt1Ae9o7Sum1jTCEeRtyBTWErpPjmE8lHq3NYwZcDXT0
+         rQVNfDvE+ni3Q==
+Date:   Mon, 18 Sep 2023 14:39:13 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc:     linux-sh@vger.kernel.org, glaubitz@physik.fu-berlin.de,
-        linux-pci@vger.kernel.org
-Subject: Re: [RFC PATCH v2 08/30] drivers/pci: Add SH7751 Host bridge
- controller
-Message-ID: <20230918193337.GA203483@bhelgaas>
+To:     Xi Ruoyao <xry111@xry111.site>
+Cc:     Grant Grundler <grundler@chromium.org>, bhelgaas@google.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, mahesh@linux.ibm.com,
+        oohall@gmail.com, rajat.khandelwal@linux.intel.com,
+        rajatja@chromium.org
+Subject: Re: [PATCHv3 pci-next 1/2] PCI/AER: correctable error message as
+ KERN_INFO
+Message-ID: <20230918193913.GA203601@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87db26af4a30210ab54519b91bb8541e88519185.1694596125.git.ysato@users.sourceforge.jp>
+In-Reply-To: <3c3f9a2ee7f9effe7cf9d1077652e85de0eae66c.camel@xry111.site>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -47,44 +50,19 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 13, 2023 at 06:23:33PM +0900, Yoshinori Sato wrote:
+On Mon, Sep 18, 2023 at 07:42:30PM +0800, Xi Ruoyao wrote:
+> ...
 
-Update subject line and include a commit log.
+> My workstation suffers from too much correctable AER reporting as well
+> (related to Intel's errata "RPL013: Incorrectly Formed PCIe Packets May
+> Generate Correctable Errors" and/or the motherboard design, I guess).
 
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-> ---
->  drivers/pci/controller/Kconfig  | 9 +++++++++
->  drivers/pci/controller/Makefile | 1 +
->  2 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index c0c3f2824990..037ff44bd1e8 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -342,6 +342,15 @@ config PCIE_XILINX_CPM
->  	  Say 'Y' here if you want kernel support for the
->  	  Xilinx Versal CPM host bridge.
->  
-> +config PCI_SH7751
-> +	bool "Renesas SH7751 PCI controller"
-> +	depends on OF
-> +	depends on CPU_SUBTYPE_SH7751 || CPU_SUBTYPE_SH7751R || COMPILE_TEST
-> +	select PCI_HOST_COMMON
-> +	help
-> +	  Say 'Y' here if you want kernel to support the Renesas SH7751 PCI
-> +	  Host Bridge driver.
+We should rate-limit correctable error reporting so it's not
+overwhelming.
 
-Sort this so it appears in alpha order by vendor, device in
-menuconfig, etc.
+At the same time, I'm *also* interested in the cause of these errors,
+in case there's a Linux defect or a hardware erratum that we can work
+around.  Do you have a bug report with any more details, e.g., a dmesg
+log and "sudo lspci -vv" output?
 
-Since I didn't get the entire series, here are the whitespace errors
-from git-am:
-
-  Applying: arch/sh: head_32.S passing FDT address to initialize function.
-  .git/rebase-apply/patch:25: trailing whitespace.
-  Applying: Documentation/devicetree: Add renesas,sh7751-cpg binding document.
-  .git/rebase-apply/patch:66: space before tab in indent.
-		  clocks = <&xtal>;
-  Applying: drivers/irqchip: SH7751 IRL external encoder with enable gate.
-  .git/rebase-apply/patch:33: new blank line at EOF.
-
+Bjorn
