@@ -2,292 +2,317 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D0E87A3F15
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Sep 2023 03:09:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E66F47A3F25
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Sep 2023 03:17:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231730AbjIRBJX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 17 Sep 2023 21:09:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42442 "EHLO
+        id S231540AbjIRBR0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 17 Sep 2023 21:17:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229966AbjIRBJJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 17 Sep 2023 21:09:09 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430C0126
-        for <linux-pci@vger.kernel.org>; Sun, 17 Sep 2023 18:09:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QJDzDUsMrC05yDSSB6IgwalT6ozdlxYZC63NCl7WU48E7si6dmTKuKUID9aam+/cdZAi1ibz+qtf8WSnzffr94QXjJjSzfXY8Ct5hQBfIQ3BhHVacxAx+982jyqSFuytC/N0VV43nM2zndjRH/6zIWw64ZlrGlbYS4by5HfkbQcX3L6135aQbbJ65mvDETj7inpkxnqSkT1mxfNIiO0tbsIF8c5kSjjB5ikSliuB5btLcj7AghOMpotMMeqYzbMY0N36inztQBY0X0ZZd6mYVo0hXxgdccUg9tW/vpmgqwBzHguEH//UvUM84wZHGRgi95JtHYKA5mUqm3xr62v1Ow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xxhDQj6OfZfP9WquLJLR8fXedfqVP7F7C1IBLPxroQY=;
- b=GJyDsBuUK9dYrajrMp2fJVHzBl5kbnokTk355+iZX7hBhMQf4mbfHEH985DSKwki6oC2N4MqKIfy+f03K0vTMWZUL6YI/jkydDUkMO73HpzmGdaeHN8tz/TTXKnXDgI+at+ceSAoq5o8v9A91YMUICa5Z/w3rIhFar0zPU1XmWPlH8brB72+pylnKHG2l326/KFKozqm3wlGeBTsQqH2SvdrL7o+IQF0sQwFs0aN+r9s+5dWZxU8p7i+SMXTqomyaOTqp1qkKzjLsFFxX18mHq91Cm0o4cTUuv9Dk29N0ZuUdlV7jjEAxmoATgjr7yaYUQxDreovNaUnfOBNocWtgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xxhDQj6OfZfP9WquLJLR8fXedfqVP7F7C1IBLPxroQY=;
- b=xyLV/aKr93llQL3obhlYnSsQtyIul/AU8p+KMfByiN16jXC8Ct+fg7B/Hx5jqkOKhK9cZ35oaY8OeoQRcgaPIF8fbOqS9LK/HioXjQeAEo3+s/bkmgQiRkHot+kgT1W9/JyEpgpfoBZ0kvtxGMwctD08+zLWAz5RNqlPmx1Uh9A=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DM4PR12MB6278.namprd12.prod.outlook.com (2603:10b6:8:a4::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.23; Mon, 18 Sep
- 2023 01:08:58 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::96b:b6f7:193d:82d5]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::96b:b6f7:193d:82d5%2]) with mapi id 15.20.6792.024; Mon, 18 Sep 2023
- 01:08:58 +0000
-Message-ID: <ff3fa36d-dcc9-43bb-9069-fa0939227a1e@amd.com>
-Date:   Sun, 17 Sep 2023 20:08:55 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 2/2] PCI: Add a quirk for AMD PCIe root ports w/ USB4
- controllers
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        iain@orangesquash.org.uk,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
-References: <20230917215637.GA172139@bhelgaas>
-From:   Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20230917215637.GA172139@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0224.namprd04.prod.outlook.com
- (2603:10b6:806:127::19) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+        with ESMTP id S235169AbjIRBR0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 17 Sep 2023 21:17:26 -0400
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10FD1128
+        for <linux-pci@vger.kernel.org>; Sun, 17 Sep 2023 18:17:18 -0700 (PDT)
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 0FBD43F13B
+        for <linux-pci@vger.kernel.org>; Mon, 18 Sep 2023 01:17:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1694999836;
+        bh=eaTKx3J1vilBDf/S3SS7BBAAYhcj6+Y8iTvJpOcU5qQ=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=uZav1LKfzMuIYyW9zmBs5rx1GHnWjTItYxeZt/XgaN4r7qIH6/ZlUV5T1ciTJ+pwS
+         2tJowHUfZN5o3M8GBV0zh31WtRGGULjU4egg4DA4aeWrrbuSOom3g73mtaPWkYf0Gr
+         06yDzWaZufAGxpSOoNItFC2kNUHuByhlh7IwPHzRo2V+RLRqXR/xNKf0lxEgduTVRm
+         q9UwB7uXAfS0MhsBVncwaBCQwQq1Ts7h0IwwLnVM0R5jhOITHCVZ4f6RwKeqj4UNaC
+         ww7qsxwjq5/O+1yE7i1FnvQYhnHWrZK5/0L2lUtFgGg6rFPXYLPAGmqI2Jiqs1yJdc
+         Ig4LEfM7iyyEA==
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-577af72294bso2868862a12.2
+        for <linux-pci@vger.kernel.org>; Sun, 17 Sep 2023 18:17:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694999834; x=1695604634;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eaTKx3J1vilBDf/S3SS7BBAAYhcj6+Y8iTvJpOcU5qQ=;
+        b=dkUTgkE/AKk+xQ/zfFq6+cbSIlwgY3jbUk1qQtZ5Bq+Mw+d7d/QW9GNRS22+6YucQX
+         AX2HJhu0zmbShIQGLjq/mRs6fzD4HJBMaRb5HE5n6MTbtFENz3atN8nW4Xl4Hjh1L6sD
+         MN1PRO30koW9hIn4U21OfKQrg/k4bXnfooy6snAlbqKwwdPaIYqE05mXbhxKmMFjOqiB
+         pteu+Wk+FWtSNUJMi7DQCs/kZ0MD5YBoyyyE7bnrWYYyanuAzbKSPd4Ntl2eoyNZfE+2
+         tR2I8r9Pn490FMWC+eg8Y+a94EQl5cdNyEDGl0Wi6/vw92opr9+GkshQcQw0vJdN7nl+
+         2ihg==
+X-Gm-Message-State: AOJu0Yxek6NTeLmF38cQycvYv/HLq9hqNQZrHOCyZzbRCEYoZM8X4OjQ
+        dikcAVXfxrY1q+LMM7Z5D4OGx6OdU6QDfZuAQQ1Y761+LP7ma8bZwq9zkmG3OgOObfcQFG72+Nn
+        L8aELbVO8zVqVCxaYm8BzApK8fv7CxEjORa+g4xCJfGoVcbQXV9XvZQ==
+X-Received: by 2002:a05:6a20:7f99:b0:14e:3daf:bef9 with SMTP id d25-20020a056a207f9900b0014e3dafbef9mr8305787pzj.16.1694999834048;
+        Sun, 17 Sep 2023 18:17:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG9XdnkKx4bRdB+wJ/4jlxrMVittz8T67e6iHCVYSUjzE7q+Us1NpG9ZIlMtjSLihoG46Ki9C3MWeIx/gSTNQA=
+X-Received: by 2002:a05:6a20:7f99:b0:14e:3daf:bef9 with SMTP id
+ d25-20020a056a207f9900b0014e3dafbef9mr8305771pzj.16.1694999833732; Sun, 17
+ Sep 2023 18:17:13 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM4PR12MB6278:EE_
-X-MS-Office365-Filtering-Correlation-Id: d721b12a-7dbe-4d76-575b-08dbb7e3d663
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xSxxQ5axz6cRWg/nUFrTOxaFn2jkdaGQoE4yESYjr7u/GmPmGNT0GNTsoNRVe8FgkuqZzZYBYapBI7/6WZbVi9O4SahK93Cmc8xKRL6/GFR33FP/ZuIuNWiFg+DpA98y6ipC16CEzCzew0ghR8ERlflvzS5xUppwMPOTXiDOZsWns5s0cUyB8S6F3og705Q3G117YzEMlMNvA6SY0rZmiDZCRwpXcDtWGWCNY1LPqsvwKmWC6BidD3cMj4Mad9Xnuv7UJXh7ZqVL6vk+K5lLLHy7WuyQtbKI/GQ1lyxWhxmtRA4EJ4Uf9xZJlEh8rQJH9Ea1wNY1K0AjU6QpJq3VzYBWq++ifA2KNGM1IXVPZjn8064xs45fhXG1lMPH7phx5eXVEL/4+ow7Gckpc8/DRCuEUWUNPzu0OvCXVGLIIzqPnfijxbhxvHjjADsgS/qqzCD88cW/VUGUlLTz5QdF/ChOKdXRtBAx+sE3SDTk1smn7Y+1+9DTlLSVKWNy4uYg2mvHZJnGNBwq6Bpi6rBIDq+d56Oc6Qn34MrGB82GEBzBKmyDA4X+hJsLJTybER7gojIGlDgdFOB6sATosKCS6BmecSKIML3pA3rBvHgVYUy22EDFT4PZnksxEFXlFkC+7yFr9cMij3xFQGUQQhCoTw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(39860400002)(366004)(136003)(396003)(451199024)(186009)(1800799009)(66476007)(66556008)(54906003)(36756003)(31686004)(5660300002)(2616005)(38100700002)(44832011)(26005)(2906002)(86362001)(31696002)(8676002)(4326008)(8936002)(6916009)(316002)(41300700001)(66946007)(6666004)(478600001)(966005)(83380400001)(53546011)(6486002)(6506007)(6512007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Q2drQkdnQm5nTmxtR203S00waHJmbGZZN0VVN3B6RGtZZHdQeiswVi94UGFJ?=
- =?utf-8?B?L3ZMRm5QT1pjdndudEhaMzdkRTcvZHcvYVZzYlU5WkRxQmc5cm1icXJqa0Vo?=
- =?utf-8?B?czNvdnhNZmNMUklVUVMzTHJ6cVNISWVyeTVXMWIvNmxYRE9nb3p3YmZOeXpr?=
- =?utf-8?B?ZTQ0L1NqMnI3RVBTV2dlNmFtSGVLSDZmRlRHUXpCWEU3K0hCSUdPQkFXV1NE?=
- =?utf-8?B?M1pjU2ZLNGhNQzJUT1RvMldwbXA2T1BtTHlGdXU3TW1leDdmUUhEUDNxWEYz?=
- =?utf-8?B?aFFFWHVzd0toTjNQY2pnRUZQYlU5YVpFdDdjbUpZSU40dXpuRWd3LytUaWRu?=
- =?utf-8?B?cjBXL1VLc0Y2eVNYMDgwdjV3dm9vTTg4Mkdrd3RqOHdxYmN0cEY5ckZocTZK?=
- =?utf-8?B?RHVhQ2tTVXBJUEw0NTRBc2RJYnJBTXl6Z2tCTEc0eGxlWEdKWTlFRDBPSkhD?=
- =?utf-8?B?c2lDY1J1a2hNSndvZC8vZ1dseUZhMUt2TmhSTzlVell2T2pNajlyeHhGRE5q?=
- =?utf-8?B?d3Jha0RJaHJSK0VLckNHV0J4azQwcllWbGszeDNpRlJyTUVJdzcrYjJMalZR?=
- =?utf-8?B?UVpxbEt5WGNPck9TQTBCY3MzY3ZwamdHcFhCVGhrV2E1ZXBPT04wU0ZrZkdQ?=
- =?utf-8?B?YVZqcXhMMm5rWm80dTlMVy9LY21TcGEyQ1RacHBSc1RtbnRoQ1ErL0U5eDlj?=
- =?utf-8?B?aFF3M3puVU1CSlVxc0EvcE0yWEc2NFVuTC9OMkNUSFlhdGFtOEFpWDVMUGVL?=
- =?utf-8?B?MUEwdFJrUzRyT2wxK2pRU1hoSXd5N29uTmdpTUlrUW8xUkt1VkZoSjJNcVlo?=
- =?utf-8?B?UmRyOWRzSlE3NjlHNFJWV3Y1UXFycUNFREg1cVdFRXRneHNyU3FrL2dDb1VO?=
- =?utf-8?B?eTdPb21xYVorR2FjNktwc3VLWkNDSUU5SHJQN1RBOGNGY0tmNmZVaFpQRFdj?=
- =?utf-8?B?dEFWNU5hZ1pnK3p0cXVkM3JLL2VrZ0FJb2ZabGZvbmNFdjAzTEswek5Fb2Uz?=
- =?utf-8?B?T0VoV2t1bXhLZ2VZTU1vWUpQMHdFMm16NDlzK1BDR2lMamIvNWZ2TWo2Ymov?=
- =?utf-8?B?NndyelJKK1k1c2tBblVUZ09hVnNiUWUrSUtOQzg5Z3NBbEtvTCt5cGVoaEcy?=
- =?utf-8?B?bnFCd1oxNzRCVDcxK0FxVXZLT0VzZXFDcy8zeG8ralp2enNva3Q4YjVRVkRB?=
- =?utf-8?B?S1BzbVFOOG05MmtWV2liK211aEJKQk00VlVJUkJWRWdvdk82amU1Wk9IaTlq?=
- =?utf-8?B?Y2c5R29MTlhabkYyNUhiYmd3U1B5UjRodW9mc2g1Mmlxc3p3MWV5bDMxTHBG?=
- =?utf-8?B?aHZVTXFNT01Uc01TV0loVXVkYmNYN0EwZ0x4VWdtbkZSc1dNZnlSdmFTRkNP?=
- =?utf-8?B?LytvTGJQSDlWN1Bnd1BKcUQ0cHI3enhsakJ5SnZIOERNNU1kNjJIaG1MS0Rt?=
- =?utf-8?B?eXFQWnhwUHd5WUZzU3gxWDJJOTJNN2pLVm96Ym1IaWlZbUtITTlUZ2x1UHFj?=
- =?utf-8?B?UUExRjZaaGhOd1J6Qm80NU1NWTRtRk9OWFN3Wk1SeG9rRnNEckZvWVZwUUR4?=
- =?utf-8?B?S3Rnb0J6dHVoTThwelNWUWx0Q1lDRDlkUXFDZVIyUldZNUg5dGd3SDhwUnZS?=
- =?utf-8?B?ZkZITmQrbENLRkJWMDJMWHJidXhobHdYT2hJck1rRU1VVnVNUm1VU2dmK1hs?=
- =?utf-8?B?K01ibFJmc3lYRUZheDFpZmROdlBTekZjRUg5ei82Z3NRdFJmb3hIV0ZNOVJX?=
- =?utf-8?B?RlMwaTN1N3RzM0Qyd0swQjZXVVhCQUlxUlJldFltMHpLMllaOU1QdGExemZD?=
- =?utf-8?B?ZllXcjBhSzBEcUdwaHdtOGcra2dLR0JaLy84Vk1rWUdXYXVJdGxjNmVtNTFZ?=
- =?utf-8?B?dEpzU2J5aFkxcVBKSVl1MFgzL3lpT2VaSU4zQzRlRVozSWVDVkdYVDhPdWVt?=
- =?utf-8?B?UWwvMlUxZzdvRk16bnZUaTc2Qk9EVlI4Tm4yRGxPNXcxRlA2Q1ltcXdXR2dX?=
- =?utf-8?B?a3JBdDlBNnQ0bm00TDVXNUdSd0lWYi9vT1RLZG1FbVJycGZUaC9ka1Jram5U?=
- =?utf-8?B?RVdaUEpsM3lKTzZ2cERHTXJkd2JSUzBSdUJmVXE1VTZQdThlY2RhWXY5UmNa?=
- =?utf-8?Q?fzBVPtvBhwxFXlDZIC5EPXRlC?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d721b12a-7dbe-4d76-575b-08dbb7e3d663
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2023 01:08:58.7190
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BXU6DuA/tGh8Nfw4/BVZAAhH1DXpmXRwyVtGNZZdPro9KjyL4Q7KX8kx9UD/UfO7AT1C820IFp/i+W3XaQGiRw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6278
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+References: <20230914041806.816741-1-kai.heng.feng@canonical.com>
+ <7b45ac2ed091497b4e21a6a5c19956161175ba16.camel@linux.intel.com>
+ <SN6PR11MB26245C44E84C37C1B551260EF4F6A@SN6PR11MB2624.namprd11.prod.outlook.com>
+ <CAAd53p5ywMVKWzhn0nYzvBnW_Bc=sntgBttJdcVUuf_a4AnX5w@mail.gmail.com>
+ <SN6PR11MB262473E2BF4057F4D285A613F4F6A@SN6PR11MB2624.namprd11.prod.outlook.com>
+ <DM6PR11MB26184A8A3F955589F5FC6836F4FBA@DM6PR11MB2618.namprd11.prod.outlook.com>
+In-Reply-To: <DM6PR11MB26184A8A3F955589F5FC6836F4FBA@DM6PR11MB2618.namprd11.prod.outlook.com>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Mon, 18 Sep 2023 09:17:00 +0800
+Message-ID: <CAAd53p4o1pB-yzpvUCYsvuYEvQQK0my=u-ogrByRCx_Lvns=hw@mail.gmail.com>
+Subject: Re: [PATCH] HID: intel-ish-hid: ipc: Rework EHL OOB wakeup
+To:     "Xu, Even" <even.xu@intel.com>
+Cc:     srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Lee, Jian Hui" <jianhui.lee@canonical.com>,
+        "Zhang, Lixu" <lixu.zhang@intel.com>,
+        "Ba, Najumon" <najumon.ba@intel.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/17/2023 16:56, Bjorn Helgaas wrote:
-> On Thu, Sep 14, 2023 at 09:33:54PM -0500, Mario Limonciello wrote:
->> Iain reports that USB devices can't be used to wake a Lenovo Z13
->> from suspend. This problem occurs because the PCIe root port has been put
->> into D3hot and AMD's platform can't handle USB devices waking the platform
->> from a hardware sleep state in this case. The platform is put into
->> a hardware sleep state by the actions of the amd-pmc driver.
->>
->> Although the issue is initially reported on a single model it actually
->> affects all Yellow Carp (Rembrandt) and Pink Sardine (Phoenix) SoCs.
->> This problem only occurs on Linux specifically when attempting to
->> wake the platform from a hardware sleep state.
->> Comparing the behavior on Windows and Linux, Windows doesn't put
->> the root ports into D3 at this time.
->>
->> Linux decides the target state to put the device into at suspend by
->> this policy:
->> 1. If platform_pci_power_manageable():
->>     Use platform_pci_choose_state()
->> 2. If the device is armed for wakeup:
->>     Select the deepest D-state that supports a PME.
->> 3. Else:
->>     Use D3hot.
->>
->> Devices are considered power manageable by the platform when they have
->> one or more objects described in the table in section 7.3 of the ACPI 6.5
->> specification [1]. In this case the root ports are not power manageable.
->>
->> If devices are not considered power manageable; specs are ambiguous as
->> to what should happen.  In this situation Windows 11 puts PCIe ports
->> in D0 ostensibly due the policy from the "uPEP driver" which is a
->> complimentary driver the Linux "amd-pmc" driver.
->>
->> Linux chooses to allow D3 for these root ports due to the policy
->> introduced by commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during
->> suspend").
->>
->> The Windows uPEP driver expresses the desired state that should be
->> selected for suspend but Linux doesn't, so introduce a quirk for the
->> problematic root ports.
->>
->> The quirk removes PME support for D3hot and D3cold at suspend time if the
->> system will be using s2idle. When the port is configured for wakeup this
->> will prevent these states from being selected in pci_target_state().
->>
->> After the system is resumes the PME support is re-read from the PM
->> capabilities register to allow opportunistic power savings at runtime by
->> letting the root port go into D3hot or D3cold.
-> 
-> There's a lot of text here, but I think the essential thing is:
-> 
->    These Root Ports advertise D3hot and D3cold in the PME_Support
->    register, but PMEs do not work in those states when the amd-pmc
->    driver has put the platform in a sleep state.
-> 
+Hi Even,
 
-It's specific to the PMEs for root ports with USB4 controller connected, 
-but yes otherwise correct.
+On Mon, Sep 18, 2023 at 8:33=E2=80=AFAM Xu, Even <even.xu@intel.com> wrote:
+>
+> Hi, Kai-Heng,
+>
+> I just got feedback, for testing EHL S5 wakeup feature, you need several =
+steps to setup and access  "https://portal.devicewise.com/things/browse" to=
+ trigger wake.
+> But currently, our test account of this website are all out of data.
+> So maybe you need double check with the team who required you preparing t=
+he patch for the verification.
 
-I've confirmed that XHCI controllers connected to other root ports work 
-fine.
+The patch is to solve the GPE refcount overflow, while maintaining S5
+wakeup. I don't have any mean to test S5 wake.
 
->> Cc: stable@vger.kernel.org
->> Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/platform-design-for-modern-standby#low-power-core-silicon-cpu-soc-dram [1]
->> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
->> Reported-by: Iain Lane <iain@orangesquash.org.uk>
->> Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->>   drivers/pci/quirks.c | 61 ++++++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 61 insertions(+)
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index eeec1d6f9023..ebc0afbc814e 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -6188,3 +6188,64 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
->>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
->>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
->>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
->> +
->> +/*
->> + * When AMD PCIe root ports with AMD USB4 controllers attached to them are put
->> + * into D3hot or D3cold downstream USB devices may fail to wakeup the system.
->> + * This manifests as a missing wakeup interrupt.
->> + *
->> + * Prevent the associated root port from using PME to wake from D3hot or
->> + * D3cold power states during s2idle.
->> + * This will effectively put the root port into D0 power state over s2idle.
->> + */
->> +static bool child_has_amd_usb4(struct pci_dev *pdev)
->> +{
->> +	struct pci_dev *child = NULL;
->> +
->> +	while ((child = pci_get_class(PCI_CLASS_SERIAL_USB_USB4, child))) {
->> +		if (child->vendor != PCI_VENDOR_ID_AMD)
->> +			continue;
->> +		if (pcie_find_root_port(child) != pdev)
->> +			continue;
->> +		return true;
->> +	}
->> +
->> +	return false;
->> +}
->> +
->> +static void quirk_reenable_pme(struct pci_dev *dev)
->> +{
->> +	u16 pmc;
->> +
->> +	if (!dev->pm_cap)
->> +		return;
->> +
->> +	if (!child_has_amd_usb4(dev))
->> +		return;
->> +
->> +	pci_read_config_word(dev, dev->pm_cap + PCI_PM_PMC, &pmc);
->> +	pmc &= PCI_PM_CAP_PME_MASK;
->> +	dev->pme_support = pmc >> PCI_PM_CAP_PME_SHIFT;
->> +}
->> +
->> +static void quirk_disable_pme_suspend(struct pci_dev *dev)
->> +{
->> +	int mask;
->> +
->> +	if (pm_suspend_via_firmware())
->> +		return;
-> 
-> There's always something more to confuse me.  Why does
-> pm_suspend_via_firmware() matter?  I can sort of see that Linux
-> platform power management, which uses the PMC, is not the same
-> as platform firmware being invoked at the end of a system-wide power
-> management transition to a sleep state.
-> 
-> I guess this must have something to do with acpi_suspend_begin() and
-> acpi_hibernation_begin() (the callers of
-> pm_set_suspend_via_firmware())?
-> 
+So if you also don't have ways to verify S5 wake functionality, maybe
+we can simply revert 2e23a70edabe  ("HID: intel-ish-hid: ipc: finish
+power flow for EHL OOB") as alternative?
 
-The "why" has to do with the implementation details of how the platform 
-enters and exits hardware sleep and what happens.
-It's much different than how ACPI S3 works.
+Kai-Heng
 
-Most OEM platforms don't support S3, so if it distracts from the issue 
-and quirk I'm fine to drop this check.
-
->> +	if (!child_has_amd_usb4(dev))
->> +		return;
->> +
->> +	mask = (PCI_PM_CAP_PME_D3hot|PCI_PM_CAP_PME_D3cold) >> PCI_PM_CAP_PME_SHIFT;
->> +	if (!(dev->pme_support & mask))
->> +		return;
->> +	dev->pme_support &= ~mask;
->> +	dev_info_once(&dev->dev, "quirk: disabling PME from D3hot and D3cold at suspend\n");
->> +}
->> +
->> +DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x14b9, quirk_disable_pme_suspend);
->> +DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x14b9, quirk_reenable_pme);
->> +DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x14eb, quirk_disable_pme_suspend);
->> +DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x14eb, quirk_reenable_pme);
->> -- 
->> 2.34.1
->>
-
+> Thanks!
+>
+> Best Regards,
+> Even Xu
+>
+> -----Original Message-----
+> From: Xu, Even
+> Sent: Friday, September 15, 2023 3:27 PM
+> To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Cc: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>; jikos@kern=
+el.org; benjamin.tissoires@redhat.com; linux-pm@vger.kernel.org; linux-pci@=
+vger.kernel.org; Lee, Jian Hui <jianhui.lee@canonical.com>; Zhang, Lixu <Li=
+xu.Zhang@intel.com>; Ba, Najumon <najumon.ba@intel.com>; linux-input@vger.k=
+ernel.org; linux-kernel@vger.kernel.org
+> Subject: RE: [PATCH] HID: intel-ish-hid: ipc: Rework EHL OOB wakeup
+>
+> Hi, Kai-Heng,
+>
+> I am also not familiar with this S5 wakeup test case.
+> I already sent out mails to ask for help on it.
+> Will come back to you once I get feedback.
+> Thanks!
+>
+> Best Regards,
+> Even Xu
+>
+> -----Original Message-----
+> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Sent: Friday, September 15, 2023 2:01 PM
+> To: Xu, Even <even.xu@intel.com>
+> Cc: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>; jikos@kern=
+el.org; benjamin.tissoires@redhat.com; linux-pm@vger.kernel.org; linux-pci@=
+vger.kernel.org; Lee, Jian Hui <jianhui.lee@canonical.com>; Zhang, Lixu <li=
+xu.zhang@intel.com>; Ba, Najumon <najumon.ba@intel.com>; linux-input@vger.k=
+ernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH] HID: intel-ish-hid: ipc: Rework EHL OOB wakeup
+>
+> Hi Even,
+>
+> On Fri, Sep 15, 2023 at 1:31=E2=80=AFPM Xu, Even <even.xu@intel.com> wrot=
+e:
+> >
+> > Hi, Srinivas,
+> >
+> > Sure, I will test it.
+> > As long term not working on EHL, I doesn't have EHL board on hand right=
+ now, I can test this patch on other ISH related platforms.
+> > From the patch, it's focus on EHL platform, I assume Kai-Heng already v=
+erified the function on EHL board.
+>
+> I only made sure the GPE overflow issue is fixed by the patch, but I didn=
+'t test the S5 wakeup.
+> That's because I don't know how to test it on the EHL system I have.
+> I'll test it if you can let me know how to test the S5 wakeup.
+>
+> Kai-Heng
+>
+> > I don't think it will take effect on other platforms, anyway, I will te=
+st it on the platforms I have to provide cross platform verification.
+> >
+> > Thanks!
+> >
+> > Best Regards,
+> > Even Xu
+> >
+> > -----Original Message-----
+> > From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+> > Sent: Friday, September 15, 2023 12:11 AM
+> > To: Kai-Heng Feng <kai.heng.feng@canonical.com>; jikos@kernel.org;
+> > benjamin.tissoires@redhat.com
+> > Cc: linux-pm@vger.kernel.org; linux-pci@vger.kernel.org; Lee, Jian Hui
+> > <jianhui.lee@canonical.com>; Xu, Even <even.xu@intel.com>; Zhang, Lixu
+> > <lixu.zhang@intel.com>; Ba, Najumon <najumon.ba@intel.com>;
+> > linux-input@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH] HID: intel-ish-hid: ipc: Rework EHL OOB wakeup
+> >
+> > Hi Even,
+> >
+> > On Thu, 2023-09-14 at 12:18 +0800, Kai-Heng Feng wrote:
+> > > System cannot suspend more than 255 times because the driver doesn't
+> > > have corresponding acpi_disable_gpe() for acpi_enable_gpe(), so the
+> > > GPE refcount overflows.
+> > >
+> > > Since PCI core and ACPI core already handles PCI PME wake and GPE
+> > > wake when the device has wakeup capability, use device_init_wakeup()
+> > > to let them do the wakeup setting work.
+> > >
+> > > Also add a shutdown callback which uses pci_prepare_to_sleep() to
+> > > let PCI and ACPI set OOB wakeup for S5.
+> > >
+> > Please test this change.
+> >
+> > Thanks,
+> > Srinivas
+> >
+> > > Fixes: 2e23a70edabe ("HID: intel-ish-hid: ipc: finish power flow for
+> > > EHL OOB")
+> > > Cc: Jian Hui Lee <jianhui.lee@canonical.com>
+> > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > > ---
+> > >  drivers/hid/intel-ish-hid/ipc/pci-ish.c | 59
+> > > +++++++----------------
+> > > --
+> > >  1 file changed, 15 insertions(+), 44 deletions(-)
+> > >
+> > > diff --git a/drivers/hid/intel-ish-hid/ipc/pci-ish.c
+> > > b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
+> > > index 55cb25038e63..65e7eeb2fa64 100644
+> > > --- a/drivers/hid/intel-ish-hid/ipc/pci-ish.c
+> > > +++ b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
+> > > @@ -119,42 +119,6 @@ static inline bool ish_should_leave_d0i3(struct
+> > > pci_dev *pdev)
+> > >         return !pm_resume_via_firmware() || pdev->device =3D=3D
+> > > CHV_DEVICE_ID;  }
+> > >
+> > > -static int enable_gpe(struct device *dev) -{ -#ifdef CONFIG_ACPI
+> > > -       acpi_status acpi_sts;
+> > > -       struct acpi_device *adev;
+> > > -       struct acpi_device_wakeup *wakeup;
+> > > -
+> > > -       adev =3D ACPI_COMPANION(dev);
+> > > -       if (!adev) {
+> > > -               dev_err(dev, "get acpi handle failed\n");
+> > > -               return -ENODEV;
+> > > -       }
+> > > -       wakeup =3D &adev->wakeup;
+> > > -
+> > > -       acpi_sts =3D acpi_enable_gpe(wakeup->gpe_device, wakeup-
+> > > >gpe_number);
+> > > -       if (ACPI_FAILURE(acpi_sts)) {
+> > > -               dev_err(dev, "enable ose_gpe failed\n");
+> > > -               return -EIO;
+> > > -       }
+> > > -
+> > > -       return 0;
+> > > -#else
+> > > -       return -ENODEV;
+> > > -#endif
+> > > -}
+> > > -
+> > > -static void enable_pme_wake(struct pci_dev *pdev) -{
+> > > -       if ((pci_pme_capable(pdev, PCI_D0) ||
+> > > -            pci_pme_capable(pdev, PCI_D3hot) ||
+> > > -            pci_pme_capable(pdev, PCI_D3cold)) && !enable_gpe(&pdev-
+> > > >dev)) {
+> > > -               pci_pme_active(pdev, true);
+> > > -               dev_dbg(&pdev->dev, "ish ipc driver pme wake
+> > > enabled\n");
+> > > -       }
+> > > -}
+> > > -
+> > >  /**
+> > >   * ish_probe() - PCI driver probe callback
+> > >   * @pdev:      pci device
+> > > @@ -225,7 +189,7 @@ static int ish_probe(struct pci_dev *pdev, const
+> > > struct pci_device_id *ent)
+> > >
+> > >         /* Enable PME for EHL */
+> > >         if (pdev->device =3D=3D EHL_Ax_DEVICE_ID)
+> > > -               enable_pme_wake(pdev);
+> > > +               device_init_wakeup(dev, true);
+> > >
+> > >         ret =3D ish_init(ishtp);
+> > >         if (ret)
+> > > @@ -248,6 +212,19 @@ static void ish_remove(struct pci_dev *pdev)
+> > >         ish_device_disable(ishtp_dev);  }
+> > >
+> > > +
+> > > +/**
+> > > + * ish_shutdown() - PCI driver shutdown callback
+> > > + * @pdev:      pci device
+> > > + *
+> > > + * This function sets up wakeup for S5  */ static void
+> > > +ish_shutdown(struct pci_dev *pdev) {
+> > > +       if (pdev->device =3D=3D EHL_Ax_DEVICE_ID)
+> > > +               pci_prepare_to_sleep(pdev); }
+> > > +
+> > >  static struct device __maybe_unused *ish_resume_device;
+> > >
+> > >  /* 50ms to get resume response */
+> > > @@ -370,13 +347,6 @@ static int __maybe_unused ish_resume(struct
+> > > device *device)
+> > >         struct pci_dev *pdev =3D to_pci_dev(device);
+> > >         struct ishtp_device *dev =3D pci_get_drvdata(pdev);
+> > >
+> > > -       /* add this to finish power flow for EHL */
+> > > -       if (dev->pdev->device =3D=3D EHL_Ax_DEVICE_ID) {
+> > > -               pci_set_power_state(pdev, PCI_D0);
+> > > -               enable_pme_wake(pdev);
+> > > -               dev_dbg(dev->devc, "set power state to D0 for ehl\n")=
+;
+> > > -       }
+> > > -
+> > >         ish_resume_device =3D device;
+> > >         dev->resume_flag =3D 1;
+> > >
+> > > @@ -392,6 +362,7 @@ static struct pci_driver ish_driver =3D {
+> > >         .id_table =3D ish_pci_tbl,
+> > >         .probe =3D ish_probe,
+> > >         .remove =3D ish_remove,
+> > > +       .shutdown =3D ish_shutdown,
+> > >         .driver.pm =3D &ish_pm_ops,
+> > >  };
+> > >
+> >
