@@ -2,59 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3017D7A4935
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Sep 2023 14:07:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 818CD7A4951
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Sep 2023 14:11:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241833AbjIRMHA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Sep 2023 08:07:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44256 "EHLO
+        id S241862AbjIRML0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Sep 2023 08:11:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241843AbjIRMGa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Sep 2023 08:06:30 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED296CE2
-        for <linux-pci@vger.kernel.org>; Mon, 18 Sep 2023 05:05:53 -0700 (PDT)
+        with ESMTP id S241987AbjIRMLN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Sep 2023 08:11:13 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A03129
+        for <linux-pci@vger.kernel.org>; Mon, 18 Sep 2023 05:10:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695038753; x=1726574753;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=hCwjbYk+tLY4KWufN+WBSOpXE9kWTmNLfEWTMygRxpo=;
-  b=d3gKM+XYzF745PeRQvsxN1jBdy0qK1T+T/U7ykcsQUHl3hnvNn5qwm3h
-   MfasyijcW+6nU/An0hR37b75c2gr+aXFlwkMCk9v/0hiZ4w74pw9/2LAs
-   8yem1vZsWb+BG+dF3p3asIL6YxU/nRVCp9iZTH8zv2LzmhXJIGLvo8vF9
-   hbNcR9lwaV4DqZHaiwCQYMYmyhM5S2aJZyY85q9QqAaQ0x9I14AxhVTL6
-   PrPJrvaZSLSpqZBEp5x0UBPtHQQWESbbWS2Ii1cC2zt9jsqvHDMKOL3CT
-   nGZyysiMOy0G4KLlZ2WPsu5g0mY5ybe2ixmv5x4Yr9qwp2R0taUG5GfMO
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10836"; a="364677575"
+  t=1695039025; x=1726575025;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=jBBo3GXkW4eUl6cvm0p9hcTHNwbJlntefX+PLj15UNo=;
+  b=JVROgXgvI7qQkd4YUpnWbczD5QqiDPvbjmbBTqjn0Vys4O2rSkMgLaxY
+   yNyUGCrVR9GM6CmfZeNH6NqWZjHGlJDsZShUsiB8s3/BME18Yezlg0S3/
+   VSn1+uOIUALgmakBINX6WnBaRxxRExOeHAzx9iQDXJjZVCKbV6fz+G+gc
+   ivzJanEfKOK/2UKGPEZYJKSUX50dF8qBMlIAj0cF+DxUHXWo2ZAywbXfJ
+   ihLIpI4PXWycDiPlqxabQZE2AGJvJxcA9Hqb6X8FzMYkx5PFj5FDtxLti
+   ZyAtPtOnfYjMnkBvJtg3SrkaJpUQbF4zcPlCoWw8UETsCNn0cHP0cntp7
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10836"; a="383458157"
 X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="364677575"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 04:59:33 -0700
+   d="scan'208";a="383458157"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 05:09:22 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10836"; a="1076558189"
+X-IronPort-AV: E=McAfee;i="6600,9927,10836"; a="889032119"
 X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="1076558189"
-Received: from nprotaso-mobl1.ccr.corp.intel.com ([10.252.49.156])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 04:59:30 -0700
-Date:   Mon, 18 Sep 2023 14:59:28 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        iain@orangesquash.org.uk,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v19 2/2] PCI: Add a quirk for AMD PCIe root ports w/ USB4
- controllers
-In-Reply-To: <20230915023354.939-3-mario.limonciello@amd.com>
-Message-ID: <9d3ea5-da3a-cd60-bc6c-442eae404073@linux.intel.com>
-References: <20230915023354.939-1-mario.limonciello@amd.com> <20230915023354.939-3-mario.limonciello@amd.com>
+   d="scan'208";a="889032119"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 18 Sep 2023 05:08:35 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id EFAE71CA; Mon, 18 Sep 2023 15:09:16 +0300 (EEST)
+Date:   Mon, 18 Sep 2023 15:09:16 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Michael Bottini <michael.a.bottini@linux.intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Tasev Nikola <tasev.stefanoska@skynet.be>,
+        Mark Enriquez <enriquezmark36@gmail.com>,
+        Thomas Witt <kernel@witt.link>,
+        Koba Ko <koba.ko@canonical.com>,
+        Werner Sembach <wse@tuxedocomputers.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI/ASPM: Add back L1 PM Substate save and restore
+Message-ID: <20230918120916.GS1599918@black.fi.intel.com>
+References: <20230911073352.3472918-1-mika.westerberg@linux.intel.com>
+ <fd414b6e-ebe0-9a2b-b9b0-e0131197b434@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fd414b6e-ebe0-9a2b-b9b0-e0131197b434@linux.intel.com>
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
@@ -64,138 +75,349 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 14 Sep 2023, Mario Limonciello wrote:
+Hi Ilpo,
 
-> Iain reports that USB devices can't be used to wake a Lenovo Z13
-> from suspend. This problem occurs because the PCIe root port has been put
-> into D3hot and AMD's platform can't handle USB devices waking the platform
-> from a hardware sleep state in this case. The platform is put into
-> a hardware sleep state by the actions of the amd-pmc driver.
+On Mon, Sep 18, 2023 at 02:46:07PM +0300, Ilpo Järvinen wrote:
+> On Mon, 11 Sep 2023, Mika Westerberg wrote:
 > 
-> Although the issue is initially reported on a single model it actually
-> affects all Yellow Carp (Rembrandt) and Pink Sardine (Phoenix) SoCs.
-> This problem only occurs on Linux specifically when attempting to
-> wake the platform from a hardware sleep state.
-> Comparing the behavior on Windows and Linux, Windows doesn't put
-> the root ports into D3 at this time.
+> > Commit a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability
+> > for suspend/resume"") reverted saving and restoring of ASPM L1 Substates
+> > due to a regression that caused resume from suspend to fail on certain
+> > systems. However, we never added this capability back and this is now
+> > causing systems fail to enter low power CPU states, drawing more power
+> > from the battery.
+> > 
+> > The original revert mentioned that we restore L1 PM substate configuration
+> > even though ASPM L1 may already be enabled. This is due the fact that
+> > the pci_restore_aspm_l1ss_state() was called before pci_restore_pcie_state().
+> > 
+> > Try to enable this functionality again following PCIe r6.0.1, sec 5.5.4
+> > more closely by:
+> > 
+> >   1) Do not restore ASPM configuration in pci_restore_pcie_state() but
+> >      do that after PCIe capability is restored in pci_restore_aspm_state()
+> >      following PCIe r6.0, sec 5.5.4.
+> > 
+> >   2) ASPM is first enabled on the upstream component and then downstream
+> >      (this is already forced by the parent-child ordering of Linux
+> >      Device Power Management framework).
+> > 
+> >   3) Program ASPM L1 PM substate configuration before L1 enables.
+> > 
+> >   4) Program ASPM L1 PM substate enables last after rest of the fields
+> >      in the capability are programmed.
+> > 
+> >   5) Add denylist that skips restoring on the ASUS and TUXEDO systems
+> >      where these regressions happened, just in case. For the TUXEDO case
+> >      we only skip restore if the BIOS is involved in system suspend
+> >      (that's forcing "mem_sleep=deep" in the command line). This is to
+> >      avoid possible power regression when the default suspend to idle is
+> >      used, and at the same time make sure the devices continue working
+> >      after resume when the BIOS is involved.
+> > 
+> > Reported-by: Koba Ko <koba.ko@canonical.com>
+> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217321
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=216782
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=216877
+> > Cc: Tasev Nikola <tasev.stefanoska@skynet.be>
+> > Cc: Mark Enriquez <enriquezmark36@gmail.com>
+> > Cc: Thomas Witt <kernel@witt.link>
+> > Cc: Werner Sembach <wse@tuxedocomputers.com>
+> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > ---
+> > Hi,
+> > 
+> > This is second try. The previous version of the patch can be found here:
+> > 
+> >   https://lore.kernel.org/linux-pci/20230627062442.54008-1-mika.westerberg@linux.intel.com/
+> > 
+> > In this version:
+> > 
+> >   - We move ASPM enables from pci_restore_pcie_state() into
+> >     pci_restore_aspm_state() to make sure they are clear when L1SS bits
+> >     are programmed (as per PCIe spec).
+> > 
+> >   - The denylist includes the TUXEDO system as well but only if suspend
+> >     is done via BIOS (e.g mem_sleep=deep is forced by user). This way
+> >     the PCIe devices should continue working after S3 resume, and at the
+> >     same time allow better power savings. If the default s2idle is used
+> >     then we restore L1SS to allow the CPU enter lower power states. This
+> >     is the best I was able to come up to make everyone happy.
+> > 
+> >  drivers/pci/pci.c       |  18 ++++-
+> >  drivers/pci/pci.h       |   4 ++
+> >  drivers/pci/pcie/aspm.c | 148 ++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 168 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 59c01d68c6d5..7c72d40ec0ff 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -1576,7 +1576,7 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
+> >  {
+> >  	int i = 0;
+> >  	struct pci_cap_saved_state *save_state;
+> > -	u16 *cap;
+> > +	u16 *cap, val;
+> >  
+> >  	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_EXP);
+> >  	if (!save_state)
+> > @@ -1591,7 +1591,14 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
+> >  
+> >  	cap = (u16 *)&save_state->cap.data[0];
+> >  	pcie_capability_write_word(dev, PCI_EXP_DEVCTL, cap[i++]);
+> > -	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, cap[i++]);
+> > +	/*
+> > +	 * Restoring ASPM L1 substates has special requirements
+> > +	 * according to the PCIe spec 6.0. So we restore here only the
+> > +	 * LNKCTL register with the ASPM control field clear. ASPM will
+> > +	 * be restored in pci_restore_aspm_state().
+> > +	 */
+> > +	val = cap[i++] & ~PCI_EXP_LNKCTL_ASPMC;
+> > +	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, val);
+> >  	pcie_capability_write_word(dev, PCI_EXP_SLTCTL, cap[i++]);
+> >  	pcie_capability_write_word(dev, PCI_EXP_RTCTL, cap[i++]);
+> >  	pcie_capability_write_word(dev, PCI_EXP_DEVCTL2, cap[i++]);
+> > @@ -1702,6 +1709,7 @@ int pci_save_state(struct pci_dev *dev)
+> >  	pci_save_ltr_state(dev);
+> >  	pci_save_dpc_state(dev);
+> >  	pci_save_aer_state(dev);
+> > +	pci_save_aspm_state(dev);
+> >  	pci_save_ptm_state(dev);
+> >  	return pci_save_vc_state(dev);
+> >  }
+> > @@ -1815,6 +1823,7 @@ void pci_restore_state(struct pci_dev *dev)
+> >  	pci_restore_rebar_state(dev);
+> >  	pci_restore_dpc_state(dev);
+> >  	pci_restore_ptm_state(dev);
+> > +	pci_restore_aspm_state(dev);
+> >  
+> >  	pci_aer_clear_status(dev);
+> >  	pci_restore_aer_state(dev);
+> > @@ -3507,6 +3516,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
+> >  	if (error)
+> >  		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
+> >  
+> > +	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_L1SS,
+> > +					    2 * sizeof(u32));
+> > +	if (error)
+> > +		pci_err(dev, "unable to allocate suspend buffer for ASPM-L1SS\n");
+> > +
+> >  	pci_allocate_vc_save_buffers(dev);
+> >  }
+> >  
+> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > index 39a8932dc340..11cec757a624 100644
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -567,10 +567,14 @@ int pcie_retrain_link(struct pci_dev *pdev, bool use_lt);
+> >  void pcie_aspm_init_link_state(struct pci_dev *pdev);
+> >  void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+> >  void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+> > +void pci_save_aspm_state(struct pci_dev *pdev);
+> > +void pci_restore_aspm_state(struct pci_dev *pdev);
+> >  #else
+> >  static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+> >  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+> >  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+> > +static inline void pci_save_aspm_state(struct pci_dev *pdev) { }
+> > +static inline void pci_restore_aspm_state(struct pci_dev *pdev) { }
+> >  #endif
+> >  
+> >  #ifdef CONFIG_PCIE_ECRC
+> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > index 1bf630059264..94e7a21c37dc 100644
+> > --- a/drivers/pci/pcie/aspm.c
+> > +++ b/drivers/pci/pcie/aspm.c
+> > @@ -7,6 +7,7 @@
+> >   * Copyright (C) Shaohua Li (shaohua.li@intel.com)
+> >   */
+> >  
+> > +#include <linux/dmi.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/math.h>
+> >  #include <linux/module.h>
+> > @@ -17,6 +18,7 @@
+> >  #include <linux/pm.h>
+> >  #include <linux/init.h>
+> >  #include <linux/slab.h>
+> > +#include <linux/suspend.h>
+> >  #include <linux/jiffies.h>
+> >  #include <linux/delay.h>
+> >  #include "../pci.h"
+> > @@ -712,6 +714,152 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+> >  				PCI_L1SS_CTL1_L1SS_MASK, val);
+> >  }
+> >  
+> > +void pci_save_aspm_state(struct pci_dev *pdev)
+> > +{
+> > +	struct pci_cap_saved_state *save_state;
+> > +	u16 l1ss = pdev->l1ss;
+> > +	u32 *cap;
+> > +
+> > +	/*
+> > +	 * Save L1 substate configuration. The ASPM L0s/L1 configuration
+> > +	 * is already saved in pci_save_pcie_state().
+> > +	 */
+> > +	if (!l1ss)
+> > +		return;
+> > +
+> > +	save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_L1SS);
+> > +	if (!save_state)
+> > +		return;
+> > +
+> > +	cap = (u32 *)&save_state->cap.data[0];
 > 
-> Linux decides the target state to put the device into at suspend by
-> this policy:
-> 1. If platform_pci_power_manageable():
->    Use platform_pci_choose_state()
-> 2. If the device is armed for wakeup:
->    Select the deepest D-state that supports a PME.
-> 3. Else:
->    Use D3hot.
-> 
-> Devices are considered power manageable by the platform when they have
-> one or more objects described in the table in section 7.3 of the ACPI 6.5
-> specification [1]. In this case the root ports are not power manageable.
-> 
-> If devices are not considered power manageable; specs are ambiguous as
-> to what should happen.  In this situation Windows 11 puts PCIe ports
-> in D0 ostensibly due the policy from the "uPEP driver" which is a
-> complimentary driver the Linux "amd-pmc" driver.
-> 
-> Linux chooses to allow D3 for these root ports due to the policy
-> introduced by commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during
-> suspend").
-> 
-> The Windows uPEP driver expresses the desired state that should be
-> selected for suspend but Linux doesn't, so introduce a quirk for the
-> problematic root ports.
-> 
-> The quirk removes PME support for D3hot and D3cold at suspend time if the
-> system will be using s2idle. When the port is configured for wakeup this
-> will prevent these states from being selected in pci_target_state().
-> 
-> After the system is resumes the PME support is re-read from the PM
-> capabilities register to allow opportunistic power savings at runtime by
-> letting the root port go into D3hot or D3cold.
-> 
-> Cc: stable@vger.kernel.org
-> Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/platform-design-for-modern-standby#low-power-core-silicon-cpu-soc-dram [1]
-> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-> Reported-by: Iain Lane <iain@orangesquash.org.uk>
-> Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/pci/quirks.c | 61 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 61 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index eeec1d6f9023..ebc0afbc814e 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -6188,3 +6188,64 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
-> +
-> +/*
-> + * When AMD PCIe root ports with AMD USB4 controllers attached to them are put
-> + * into D3hot or D3cold downstream USB devices may fail to wakeup the system.
-> + * This manifests as a missing wakeup interrupt.
-> + *
-> + * Prevent the associated root port from using PME to wake from D3hot or
-> + * D3cold power states during s2idle.
-> + * This will effectively put the root port into D0 power state over s2idle.
-> + */
-> +static bool child_has_amd_usb4(struct pci_dev *pdev)
-> +{
-> +	struct pci_dev *child = NULL;
-> +
-> +	while ((child = pci_get_class(PCI_CLASS_SERIAL_USB_USB4, child))) {
-> +		if (child->vendor != PCI_VENDOR_ID_AMD)
-> +			continue;
-> +		if (pcie_find_root_port(child) != pdev)
-> +			continue;
-> +		return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static void quirk_reenable_pme(struct pci_dev *dev)
-> +{
-> +	u16 pmc;
-> +
-> +	if (!dev->pm_cap)
-> +		return;
-> +
-> +	if (!child_has_amd_usb4(dev))
-> +		return;
-> +
-> +	pci_read_config_word(dev, dev->pm_cap + PCI_PM_PMC, &pmc);
-> +	pmc &= PCI_PM_CAP_PME_MASK;
-> +	dev->pme_support = pmc >> PCI_PM_CAP_PME_SHIFT;
+> Isn't .data u32 already so why cast it??
 
-FIELD_GET(PCI_PM_CAP_PME_MASK, pmc);
+This is basically a revert of a7152be79b627428c628da2a887ca4b2512a78fd so
+I left them there but you are right, those should not be needed.
 
--- 
- i.
-
-> +}
-> +
-> +static void quirk_disable_pme_suspend(struct pci_dev *dev)
-> +{
-> +	int mask;
-> +
-> +	if (pm_suspend_via_firmware())
-> +		return;
-> +
-> +	if (!child_has_amd_usb4(dev))
-> +		return;
-> +
-> +	mask = (PCI_PM_CAP_PME_D3hot|PCI_PM_CAP_PME_D3cold) >> PCI_PM_CAP_PME_SHIFT;
-> +	if (!(dev->pme_support & mask))
-> +		return;
-> +	dev->pme_support &= ~mask;
-> +	dev_info_once(&dev->dev, "quirk: disabling PME from D3hot and D3cold at suspend\n");
-> +}
-> +
-> +DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x14b9, quirk_disable_pme_suspend);
-> +DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x14b9, quirk_reenable_pme);
-> +DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x14eb, quirk_disable_pme_suspend);
-> +DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x14eb, quirk_reenable_pme);
+> > +	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL2, cap++);
+> > +	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, cap++);
+> > +}
+> > +
+> > +static int aspm_l1ss_suspend_via_firmware(const struct dmi_system_id *not_used)
+> > +{
+> > +	return pm_suspend_via_firmware();
+> > +}
+> > +
+> > +/*
+> > + * Do not restore L1 substates for the below systems even if BIOS has enabled
+> > + * it initially. This breaks resume from suspend otherwise on these.
+> > + */
+> > +static const struct dmi_system_id aspm_l1ss_denylist[] = {
+> > +	{
+> > +		/* https://bugzilla.kernel.org/show_bug.cgi?id=216782 */
+> > +		.ident = "ASUS UX305FA",
+> > +		.matches = {
+> > +			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK COMPUTER INC."),
+> > +			DMI_MATCH(DMI_BOARD_NAME, "UX305FA"),
+> > +		},
+> > +	},
+> > +	{
+> > +		/*
+> > +		 * https://bugzilla.kernel.org/show_bug.cgi?id=216877
+> > +		 *
+> > +		 * This system needs to use suspend to mem instead of its
+> > +		 * default (suspend to idle) to avoid draining the battery.
+> > +		 * However, the BIOS gets confused if we try to restore the
+> > +		 * L1SS registers so avoid doing that if the user forced
+> > +		 * suspend to mem. The default suspend to idle on the other
+> > +		 * hand needs restoring L1SS to allow the CPU to enter low
+> > +		 * power states. This entry should handle both.
+> > +		 */
+> > +		.callback = aspm_l1ss_suspend_via_firmware,
+> > +		.ident = "TUXEDO InfinityBook S 14 v5",
+> > +		.matches = {
+> > +			DMI_MATCH(DMI_BOARD_VENDOR, "TUXEDO"),
+> > +			DMI_MATCH(DMI_BOARD_NAME, "L140CU"),
+> > +		},
+> > +	},
+> > +	{ }
+> > +};
+> > +
+> > +static bool aspm_l1ss_skip_restore(const struct pci_dev *pdev)
+> > +{
+> > +	const struct dmi_system_id *dmi;
+> > +
+> > +	dmi = dmi_first_match(aspm_l1ss_denylist);
+> > +	if (dmi) {
+> > +		/* If the callback returns zero we can restore L1SS */
+> > +		if (dmi->callback && !dmi->callback(dmi))
+> > +			return false;
+> > +
+> > +		pci_dbg(pdev, "skipping restoring L1 substates on this system\n");
+> > +		return true;
+> > +	}
+> > +
+> > +	return false;
+> > +}
+> > +
+> > +static void pcie_restore_aspm_l1ss(struct pci_dev *pdev)
+> > +{
+> > +	struct pci_cap_saved_state *save_state;
+> > +	u32 *cap, ctl1, ctl2, l1_2_enable;
+> > +	u16 l1ss = pdev->l1ss;
+> > +
+> > +	if (!l1ss)
+> > +		return;
+> > +
+> > +	if (aspm_l1ss_skip_restore(pdev))
+> > +		return;
+> > +
+> > +	save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_L1SS);
+> > +	if (!save_state)
+> > +		return;
+> > +
+> > +	cap = (u32 *)&save_state->cap.data[0];
 > 
+> The same cast here.
+
+Same explanation :)
+
+> > +	ctl2 = *cap++;
+> > +	ctl1 = *cap;
+> > +
+> > +	/*
+> > +	 * In addition, Common_Mode_Restore_Time and LTR_L1.2_THRESHOLD
+> > +	 * in PCI_L1SS_CTL1 must be programmed *before* setting the L1.2
+> > +	 * enable bits, even though they're all in PCI_L1SS_CTL1.
+> > +	 */
+> > +	l1_2_enable = ctl1 & PCI_L1SS_CTL1_L1_2_MASK;
+> > +	ctl1 &= ~PCI_L1SS_CTL1_L1_2_MASK;
+> > +
+> > +	/* Write back without enables first (above we cleared them in ctl1) */
+> > +	pci_write_config_dword(pdev, l1ss + PCI_L1SS_CTL1, ctl1);
+> > +	pci_write_config_dword(pdev, l1ss + PCI_L1SS_CTL2, ctl2);
+> > +
+> > +	/* Then write back the enables */
+> > +	if (l1_2_enable)
+> > +		pci_write_config_dword(pdev, l1ss + PCI_L1SS_CTL1,
+> > +				       ctl1 | l1_2_enable);
+> > +}
+> > +
+> > +void pci_restore_aspm_state(struct pci_dev *pdev)
+> > +{
+> > +	struct pci_cap_saved_state *save_state;
+> > +	u16 *cap, val, tmp;
+> > +
+> > +	save_state = pci_find_saved_cap(pdev, PCI_CAP_ID_EXP);
+> > +	if (!save_state)
+> > +		return;
+> > +
+> > +	cap = (u16 *)&save_state->cap.data[0];
+> > +	/*
+> > +	 * Must match the ordering in pci_save/restore_pcie_state().
+> > +	 * This is PCI_EXP_LNKCTL.
+> 
+> I don't understand the purpose of the second sentence (or it's just
+> very obvious from the name of the constant on the following line).
+
+I tried to document that the index matching PCI_EXP_LNKCTL (that's 1) is
+being used below. pci_save_pcie_state() saves bunch of registers and
+this needs to match the one saved from PCI_EXP_LNKCTL.
+
+> > +	 */
+> > +	val = cap[1] & PCI_EXP_LNKCTL_ASPMC;
+> > +	if (!val)
+> > +		return;
+> > +
+> > +	/*
+> > +	 * We restore L1 substate configuration first before enabling L1
+> > +	 * as the PCIe spec 6.0 sec 5.5.4 suggests.
+> > +	 */
+> > +	pcie_restore_aspm_l1ss(pdev);
+> > +
+> > +	pcie_capability_read_word(pdev, PCI_EXP_LNKCTL, &tmp);
+> > +	/* Re-enable L0s/L1 */
+> > +	pcie_capability_write_word(pdev, PCI_EXP_LNKCTL, tmp | val);
+> > +}
+> > +
+> >  static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+> >  {
+> >  	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
+> > 
+> 
+> -- 
+>  i.
