@@ -2,159 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 072517A4BBD
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Sep 2023 17:21:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4235F7A4C35
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Sep 2023 17:29:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237619AbjIRPVm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Sep 2023 11:21:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47406 "EHLO
+        id S229470AbjIRP2y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Sep 2023 11:28:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237639AbjIRPVm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Sep 2023 11:21:42 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2071.outbound.protection.outlook.com [40.107.244.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECF18CE2
-        for <linux-pci@vger.kernel.org>; Mon, 18 Sep 2023 08:19:25 -0700 (PDT)
+        with ESMTP id S229602AbjIRP2k (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Sep 2023 11:28:40 -0400
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on20615.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eb2::615])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B52C210A
+        for <linux-pci@vger.kernel.org>; Mon, 18 Sep 2023 08:26:38 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P07iZEn0pQap6YuGYZVR4vNWgKNuJDSo+3zYZ07bfAkURHeGPsQqzEz9Tlo2io/jSKW31gyp4PViN0pK0QYxCq50ImECkVUw0v5V9WilDGdlYei1IDCbntjVsRlt+6AXPe8IVnbAyvA7Rkk9UuVeMhbdfCcJCTS1dyWnw9CVgnYZJzxp2Lv2iAGN9HrYxNnUHvehIqBtOXctjqDDSr1DllrkFQ44yrp/t8v9aeqE52+4+gSrlFu3u2zY4IEOmmXDkmkimvKxu1ezeGFSYKIbqTUgH0BnCyAcSmVmcXeO/c3hKzbwyd2oT3g7rDcoQ0bnSRwxzZeK0bGEnGNOi2kQxA==
+ b=hcRh7qlYHliRtcwLgrUE6OLMuk81ZFDiEMk5dWRz/RxXwGO5tj7G7W79pgQ57l3nRl9qXxw5hv6/RigoVKtE7qoTZKl17TKZAObwv4qqlKai1uw7N2GpMZ/y266ESOkOpuP9JQimblojj528BoFqqZ8lrYNhWc6K18KeDMYxHg7ns14fPdmnDyAoglF3vM7spoZGa94IDPu+n8+YsnURoKL1S+i+T8ja1h3GHEVwOuOlYVZbBAii+ELYyaJPmi17VGomhH72kkf0QqADI+n5WNo8+67HHIgDP91wV+0BUmHCZqOJANglzvsa+nt09rTHA11uRC4o5IIgQvXM9OI8WA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zHx83XkbZJtMrx+HBQFK28cFpx9eGqeW55gHRktPRjU=;
- b=DWLMrMa+OT3nF7AwrUa3ONUBDRA9JZhlA+eAgRbp1RwYkfdv0RJtxSPCfnitDYoiuM1LZe8mSYI13AArjJrfwqMLpdNPLKsH6E0oGkaX3F88GDJBGhSFpsWQOENoEz5xO4hht+rilkW7E2ZpPU1Tr9As0EWct4oT6ZiJ+z7zLnlfnJ8SThU8Eho3HAqElNSIxJqrFTzWcRsyKWFWhTGWGclrhlSkY1UIKtDOzXDhjixzonf1swXSF1koPBfmJGmsvmTbIxxiOv5vweffo+y1S0zKVI+7UDVJ46DFk3nEMrwMdy1VS6RtGuxLVwmI3IwAWxV/bHflPETf7Jo1ABdtSQ==
+ bh=8fmKGwZ4W0fnHvHNH5PDrREmQScYxFo7cC405zstauY=;
+ b=A2F3TRNRUqwnOtUZlhEt5BReiPkjLdx3R96vxlCHoqt0Byjfms8wPE52nBbRDLIH7cgrvF+YV3m7OKy/g4HfJwOvgtp3HOLf+1vpQuVkKMWCbOGuzoehytud4ytg5QhyruAdrNr5BRDlFp50SWA2alfgmjsF6+Fs1YGg51n0Qncu2YjtPWMgR3cnFVNZGs6gV9AesyV/x/UxKT7c67EhPZWs1uYQEMFoTuLRGSZhWYy+3jE0QB5HCNAssHFvXxv4162uE4tCph8diMPYUJiRXmWloIWAhJXhCySMmjB2yfkY9PYYMN2PtHAzQ1+XttbVO95h+nkAxg5K/DKdk0v5sQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zHx83XkbZJtMrx+HBQFK28cFpx9eGqeW55gHRktPRjU=;
- b=XqpHNqKK4fRrZCtV6ROQTqgczmcT+uE/08IWrigIxOzAc6dupS7CYOmZESpmehKZvWGb44pIV50WwYnzzhz5COhb6zjYoAHZ47SUADVTA7Wr9QA4ndCOO5fKY/6jj786jyzR/FYPRVkT35nsrOPg39D1lRYmvag4Tpkx1ERch7I=
+ bh=8fmKGwZ4W0fnHvHNH5PDrREmQScYxFo7cC405zstauY=;
+ b=QlR5Nfo4U7EQuTtrpXn6qC/3GKEV5ri+2p6RfUNnyr5Ked4YtjqfcieO+KzgeUBhP2LxMgDjrDtpCk3/9xY5Rloxv6zVABIsYAJqmDLlCt2J+yZbxMSj17swsYdWp4g4Dx3seNYEqG1gEW7TxQohKs/xTe4vQ27bixsnLQqxvC4=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DS7PR12MB6095.namprd12.prod.outlook.com (2603:10b6:8:9c::19) by
- DM4PR12MB6038.namprd12.prod.outlook.com (2603:10b6:8:ab::12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6792.26; Mon, 18 Sep 2023 13:14:23 +0000
+ CH3PR12MB9456.namprd12.prod.outlook.com (2603:10b6:610:1c2::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.24; Mon, 18 Sep
+ 2023 13:28:53 +0000
 Received: from DS7PR12MB6095.namprd12.prod.outlook.com
  ([fe80::44a:f414:7a0f:9dae]) by DS7PR12MB6095.namprd12.prod.outlook.com
  ([fe80::44a:f414:7a0f:9dae%7]) with mapi id 15.20.6792.026; Mon, 18 Sep 2023
- 13:14:23 +0000
-Message-ID: <fd432ea4-247a-49ca-88e6-c9f88485eb98@amd.com>
-Date:   Mon, 18 Sep 2023 08:14:21 -0500
+ 13:28:53 +0000
+Message-ID: <888824f7-06b5-4df4-ac04-c6cd599ff6f7@amd.com>
+Date:   Mon, 18 Sep 2023 08:28:51 -0500
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] PCI/sysfs: Protect driver's D3cold preference from user
  space
 Content-Language: en-US
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pci@vger.kernel.org
 References: <b8a7f4af2b73f6b506ad8ddee59d747cbf834606.1695025365.git.lukas@wunner.de>
  <20230918130742.GU1599918@black.fi.intel.com>
+ <fd432ea4-247a-49ca-88e6-c9f88485eb98@amd.com>
+ <20230918132424.GA11357@wunner.de>
 From:   Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20230918130742.GU1599918@black.fi.intel.com>
+In-Reply-To: <20230918132424.GA11357@wunner.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1PR05CA0003.namprd05.prod.outlook.com
- (2603:10b6:806:2d2::14) To DS7PR12MB6095.namprd12.prod.outlook.com
+X-ClientProxiedBy: SN7PR04CA0009.namprd04.prod.outlook.com
+ (2603:10b6:806:f2::14) To DS7PR12MB6095.namprd12.prod.outlook.com
  (2603:10b6:8:9c::19)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6095:EE_|DM4PR12MB6038:EE_
-X-MS-Office365-Filtering-Correlation-Id: f1a5dbb1-f8fa-4b15-89db-08dbb8492d15
+X-MS-TrafficTypeDiagnostic: DS7PR12MB6095:EE_|CH3PR12MB9456:EE_
+X-MS-Office365-Filtering-Correlation-Id: c6cfcb73-3351-4e44-30a7-08dbb84b3380
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KtFwc56mzLRnK5ziDjtyPh3sX0MODlV/nY4sGDbQrvB/3IfkahG7IHxjFKHKB8d8G+8fg1kxohtRbRIghqKwprUek4cmpKaIa8z8zFszUWNCdw80UmRt/+o5tSja93to6WV+Bt8Pzu8/XkZ+ezloyxv0VM+inkogiPqeexCnfzy6R7H7aOrHNZ0JOpscBpHFCousOdWuZ8k6nYtbJuSh+gXE4nLMvVhCOw9qrjAVLGsZ6NM6NE54uEIOXYclpQGWNIZudtSLkODhp9uGyacXEZjdxUK9uN2Zce6rF1C4F4lljUJ40oXtFeLLsoCACpO7ICVjt4r/8byGRIAeMEFBpkebb9x2TeI6CVzDLWswW2FX4t2A/3P1ymEfxa7Csxgxa4iwnbzP0EWGgg/+wl1/d1ryApv+/JLauh/fJRvwWc3b0BX6dJiFWqzzzwyAVb+He0sAunBrkIrGG6NBL6j9uxl+fCZ6aZl+WM7BrJThRVJGpmyBsfLiILv1Nd/hKaU17IfVFve4JRl6z2TxFR38NlTZ4e3cJXNO/uCCBZYtWAcn7ZTpxWA/9IGYkQWOfKVudooEGjYLehYpMFtc+vYnCeoWB//BNX6pXNFigMXKtDLc8HIWSO3UPqX5i2QWXUAVJpIekKKoot0CcpJ6eamENRfdHuNrXhgTTymy9gqZ8GU=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6095.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(346002)(396003)(376002)(39860400002)(1800799009)(186009)(451199024)(26005)(2616005)(8936002)(4326008)(8676002)(83380400001)(2906002)(36756003)(31696002)(5660300002)(44832011)(86362001)(53546011)(6506007)(6486002)(478600001)(31686004)(316002)(54906003)(6512007)(110136005)(66946007)(41300700001)(38100700002)(66556008)(66476007)(32563001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 37v65ThusC12sDxBYvdfi4EyD5GHFCJMWlNn8uIwkS4CJEyKyrhVLS+7FCJMzjn2czMIG4p3xbV7QtXfx/w9MyY3u+I9rtop5Jgv5Vx+5r6jZtZW1uiUwd3YO97B5KyqISJ1lb+8EIpsAsEjXxVxQsgXzW3pelmVY3YfxLSQVcvLBQHCZ9horFPd1EYozEGjQMHVToROvAVkLmbJxxqQFaQUxtSQup52y8Uq2e+MEP7yQOMt5F15JSfFUZiX3H0qp+ypkrMWlJEizJQgvKche7c9vfjYVbGDDaeJj/2TsT6f/LfKPEgbvnIEZvbyFBzrIype9VNz/EuPRuW/0BlMOzoDibebZ1i5ztLE5Pv0+tDcVfBB5fJOEWyOnalJiVFEg3zQXvTTZLf+lZtUPv5MgFq5Nxm/vGhWrnCrWojVvv46Vg/rFv2G8H/0NuKxAykeCbEZGRw88azKQ5bJ4IagibKfzf5t7dLl9VUyfg5iEPIuyOVeHDzVV56ltK363rLaaXdJ+eI33J0j1Qvc5rKLA9O6r/61EMf6XDJbaJVcBizZ2fI4hgiFYvFdmaInb0VEyOIAdLDKdCbf0ow8/lepuMIIyYHvaotweU/oKitSoUAIMFqLUO8BSWpKkl2ozIGPyfZIReKuy8ytSZmfO5gPnpt0ma2fTGxDcIQs6raQ1sA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6095.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(39860400002)(136003)(366004)(396003)(451199024)(186009)(1800799009)(6486002)(5660300002)(44832011)(6506007)(53546011)(86362001)(6512007)(54906003)(316002)(66946007)(66556008)(66476007)(38100700002)(41300700001)(31686004)(478600001)(6916009)(2616005)(8936002)(26005)(2906002)(31696002)(36756003)(4326008)(8676002)(83380400001)(32563001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aVhyWUhicnlqVkRNYnVZLzVJcTRuN1kwMGsydE9tMjF6OEdsUWhaN3BBNk1r?=
- =?utf-8?B?RFNMWFd3SWlla0hFRE93TTRtTVUvbmxLTjlhQVFMSVdZWXdkY0dHZ3ViMktN?=
- =?utf-8?B?dEdtSzlmb1VDa1ZqVVF0QmY3MWg3TEZjZmZ6K25IbDArR2t4WGNFNGQ5NGlV?=
- =?utf-8?B?aGhBWGQyaXl0QTN6K3hLYUs2cnhjaElNQ2I4b0NGUFdxOFNVSzVwczV0RUl4?=
- =?utf-8?B?d2FzWFYxQUhYby8xaklkVnVaOVY4Q2JWb0ZHR0ZzUW1UbXRHdU01a2VxTkc0?=
- =?utf-8?B?dEtwYVRiM216dkpCa0FlYStINlFGTWxyU3ZONE0rbXBzeWxacWQvbmtiNVRV?=
- =?utf-8?B?eW80RmlsanJBVDlid0V2Sldha2I2U2pKU2pRWXNxNEpYUkU1amdvcko3UlpZ?=
- =?utf-8?B?TitselhIWDBWaUl0citwMndUZmY2elRHU2xIZmErUkFQaG0wWkVjSTFkRXF0?=
- =?utf-8?B?R2ZHWGQzZnk4T1ZpcDJQNGtLVzN2Vjk5ZVpydEFiNE54dUtrdjZ3TkRialAy?=
- =?utf-8?B?Vzh6ZW9pSTc2SDJvd0R0M09rS3A2bWlzYjZEVUxJdkpKZyt0QjhzdXFkb1h1?=
- =?utf-8?B?VGpVSlZoVitsUDJycTFtT2NYcFhvV2tHTVBXT3hJMksvZGMwa2oyRVFrQUFB?=
- =?utf-8?B?TWFTQzJkZ1dyNTN0Uksrb3FMd1hBWHFSM3l1eWxpZ2JyMHlzUk5nTGwvZFpV?=
- =?utf-8?B?RmxSYVdCZWZUS1JBb0FqbmNLMlNBOG1NUHdzVUUvNjhjRnBlcDVRaC8wNXgz?=
- =?utf-8?B?SlRvbDVQcmYxakg1ckJ4SSsxTFhYSzJBN0x6aWxnNzZVazNEZUxta1JEL2tE?=
- =?utf-8?B?VmcwOTUxU1RDbSs1V3JRTE8yNWljK0x0UTlPSUFJU0h0UnJKcW9yRkI5b0wx?=
- =?utf-8?B?SFlFRUpoR2QvOFZkUUkxS2RFRmZzU1dERzB2T3A5aTFIM0V2UDRtUXNuTE4v?=
- =?utf-8?B?ZFd6c2o4YUVPaG80RFRqWFlMYk9hL2hFcGkydzdSOEJBSEVEQjBPa3FJMmFU?=
- =?utf-8?B?eHRoRUdyRS9pckprb0F0VlFHRVhRaFVuZ1JVbnp1QTloYVZtS05iYmpqcUJp?=
- =?utf-8?B?T2REbEpkNHA2VjJtbGlVT0FKUXFGRU9SNllpSWY3aWRXT3NxdVdUS095bENE?=
- =?utf-8?B?c01lUFl6enV5cExOQTdHZDRhbkhCZ3hUZ01GRldONXRmL1IyVEpoVVMybmJT?=
- =?utf-8?B?R2gwNnlweEJKM0ttUFRTTzVPMWxxclVZZ29BYnE1a1N3QndKNG1WYzBpQStH?=
- =?utf-8?B?Z2tza3JyQkNFU2ZxMDE2dHVXZ1phR29GaU1va2Z6dnBRNi9Idmx4ZEJSUk1n?=
- =?utf-8?B?cmc1Rm9GOGpOTHdZeHZxK2Jrc0xtMmhGSzNrRlpkeGFnbUlYTG5nalNNbkZi?=
- =?utf-8?B?T0ZRdHZBeWdZanRTODVFVGl2NmFOcklyLzNaUUhEd2Y2dlJXVjhsbnJEdlBO?=
- =?utf-8?B?S0ZjUzJra3BzYWFQcmxKUE1rN0tsQWhqdVQ2ZEZNcCs2UmtXZFVDekNyZTRG?=
- =?utf-8?B?UVpQSVQvd20vd1cydm1KVEJwZk5rM1FGY3Bib3FLMzN6L00zVVVOY2tBS3hn?=
- =?utf-8?B?bHZBUG1CVHVpc00weXhwUXBSRGtPRzVzZ3N6bDc5eWFweXRqRzdoQ2R4V1o5?=
- =?utf-8?B?VFQ3dnY3V1NkRTc4R1hmM2d1eTZocFYwS2pvcFluakJzZ2NseFR3Rk1ISndH?=
- =?utf-8?B?ck5nZEdZVytLME5mR1Z6UUwwaFRSSzNSOHphQmxsZ205OVhNN0htblpwZ3RS?=
- =?utf-8?B?U2tZQ1RuR3krdlQ3a3U4a1hjTnZRZFFNYUUrM0RjMlhFWWRUNW8zSFlIeFpG?=
- =?utf-8?B?VVQvYlpRd0pGRnRrazJYWmU2YklqUU11clVIVWdRSGpvV1paeURabGZQRlR1?=
- =?utf-8?B?Q0dFOTJ0M0JGU1ErbTJEMHJNQU9DWXgvd09jUnJwUlNSNTlWRm1WUVpwU1hU?=
- =?utf-8?B?UUlSUG5DaFdGelFRWGdnK3JJSEo2ZDh5eW5DbWpINDFiWDREMWJwbzhkWUFv?=
- =?utf-8?B?cWRvdGo1bEJTVm9JL0t0ZXhXVldPbVhwZE5BdVNjUEFMekRTN2NoZ3NaSk9P?=
- =?utf-8?B?QzcwWkExQ0dldGIzajB3RE1XRS9OMzZEek0xK01abTdiZEFaNWtRZGFrbWlV?=
- =?utf-8?Q?azaw7INhoYB8xwiyl0hhr4QVo?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?M204d1laSUZrNktUcnlGVmRQdGFVUkVoVHNtSWRlTzdVRDhrMWxWWHlHakl2?=
+ =?utf-8?B?SzNNSnQ5emxvTk9LVWQvU00zanNpTzhHcklVK05VdDRFcDRQcEROSkxMd0Jx?=
+ =?utf-8?B?TitrMEhQcEd2T0U2RHFqdjg5RklKWVVrZnoxVjZ3bVRIb1NyeURYWDhsNG80?=
+ =?utf-8?B?UHlXN3diV2d2YytOK2x1NFk3a3pNb28xR242OXFPYURZakRkUU5SMXNGQlJ1?=
+ =?utf-8?B?Q3BBL05nNEtLMy9uZ2R4dzBJMkdwQ3dlTHg4ZlRML0ZGNFI2K2ptdHlFRVVT?=
+ =?utf-8?B?bnkyVXhCNGV6dTg5TlMvbFNlSzk0N2t5U0NlTERRenR5MG5MNFBnUTFsckxH?=
+ =?utf-8?B?bm5tMXlVZlpFc0RmUkUxUE9hN0JOSGtaeFJLRzFMM2Nna1BDOU93QmcvRUtm?=
+ =?utf-8?B?eGJOUXlpZVovcmszUHhQbHNnbCtMWCt1TlB5bVNtYWc0WVBDOXdPTXpxRzFI?=
+ =?utf-8?B?bW9jdndoN01QOUV0dE1BZHptVjVVTzk5VGRXMUZIRERDcHlaNXltcWRnWFE2?=
+ =?utf-8?B?VWZVdThXa3BqOStubTIrUnVDTkpKSTZpTjd3VjkwZUs5NzhNbTRrT1pTelU5?=
+ =?utf-8?B?VmlJUW1BQXhJU3dYNnRtRXZEeGYzWTdNVkVBeE94ZG5oVUk2UExWNklsS2pj?=
+ =?utf-8?B?b1RwYVM3QUJkTVdmVERhMEhwYzNXNUlvVG1WOU8zekxmVzV2TEpyZkZEZUVm?=
+ =?utf-8?B?ZGFZRXlobDhFWVAzU29LRWxjWUJwcEhjdmtEVElnMkplYSttSnllTHpySTZW?=
+ =?utf-8?B?SjM2YnV5ZHlpL0pFRzVxWFFYVnB4cDNFYVE5dlZXdHE2VUhmSmkwTGxyUVhS?=
+ =?utf-8?B?dlR4VWpZTlBMbDBSY3FRbklKditVdHNrTG5Wd3VkN3RxeE5BWmY2N092VElC?=
+ =?utf-8?B?WjNQQU0zVy9vNFlETWd3Q3NJcmtuR011dVExRyt6YWVUVVB3LyszV2twdDhP?=
+ =?utf-8?B?QURyOTNxTVU4S1Y3UDcxOVNPYmdhemtERERPUm1vQW5vajNYVVNXQTliTWIz?=
+ =?utf-8?B?MFdQc2tEdUpSK2YreFM3VFlKeE9GQVFTS2d2Y0VHcnBJRkR4ZzhFL0hEREZ2?=
+ =?utf-8?B?YUJ2Q0tIM3hKMEJOSjVDTUYxdStjN3h0bVFVMzh3QmdrNkk2VFkxdFVIMnk1?=
+ =?utf-8?B?M1ZJeCtnRGJ1ZlJDeFY0OS90TXBjYkRKakFmRDY0OHFndmRReFJnOFlkSmdo?=
+ =?utf-8?B?TURNcXlwRERxaU1CNFFld3RmbkVvZHQzUUlMQ2xtNDdndWk0V2QzZ2k0YjE0?=
+ =?utf-8?B?TnkrbFZhbXRFdkxWVjQ2SmxOUTBuMkFjTU5hTWNyT1VSTUltblk3cHpoUjZ6?=
+ =?utf-8?B?UUZYTjBFbWtKcTRHUzRQZXNkenJSb3JZUTV3cDlNUk4rWTNsa25IOEJmeTBw?=
+ =?utf-8?B?WERGTTFVV2g0Mi9GdGNlWVRvcmNlYThjRVA1YitNa1FZdG1JZkZaNkNQMity?=
+ =?utf-8?B?bXRlekt4NmlDUjE3ZFdKYlphQkNMWVZVY2JzRUVKdzE4R2Jrb2cxVWJUd1Z4?=
+ =?utf-8?B?YVZJSk9JRThRdTdmRHZpY0ZOVUZTbkNsdTd0VW1scTJuZHpoWVkrVlVNc0xZ?=
+ =?utf-8?B?THVFOE52V1FLSlRpNlJNdHpEbHpONnowaG5NUmI1RHNmU2hEVTNaQVBvWktU?=
+ =?utf-8?B?RDIyajdjSmh1dm1BRERTNHZkN0I4cmZ2WUJ2L3dXcjB3aHdmTE9VVzhqeGdo?=
+ =?utf-8?B?ZmJ0WldHSFF4MVhxMlJUTHc2TTU1Nk4ydEJFTDlQVTIvMDZGSE05UllDTmZs?=
+ =?utf-8?B?dlNJWmI5bjYrWGZCN3hXNXBsbk9lNHhrMFNpMGY1U05qcDluZ21wMzBSMUlo?=
+ =?utf-8?B?N2U3Y3pUOUNGQzVkT0dCWVVId1RVSWZDdFVOSDMvUmpqMitMYythbXl4R2lM?=
+ =?utf-8?B?VGxqbmdHM2xkTHkySWZ2MGdKUGxmeWs5MlZDSThJZEFJdGQ5QmVUemhyZHc1?=
+ =?utf-8?B?NXNYaVpIcjBxc1M4WmNaRVVNNDhkL2xNRklSS0J1UmhUN2hPcTh2eGhkcXl6?=
+ =?utf-8?B?TFlrZWMwTzkwTitaRVhZN1M1cUFCWXFGZTh1TzRyL1I1ZEpLY0Y2Ui80TFh6?=
+ =?utf-8?B?S3o0RnZSdG1tWFo3L0tua0FuZlExdlN2VG9QVnV3YnRDMzZNQWd2QVpBd3JG?=
+ =?utf-8?Q?ZlinhX/Jk9g5Hna/FmHODa+X2?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1a5dbb1-f8fa-4b15-89db-08dbb8492d15
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6cfcb73-3351-4e44-30a7-08dbb84b3380
 X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6095.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2023 13:14:23.3447
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2023 13:28:53.0729
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5Z9wjNoF6APe7xK50nL6V8ymUMcSkTMLIwjyKhxhj06XBmJk7zQOlIGAl7DbsWkQdws8sCDlFc/DX8gG7wOx5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6038
+X-MS-Exchange-CrossTenant-UserPrincipalName: JWwwWN7cJkSz2c5xqGYvh110q7et62BijDOgC7XUwSL4qYNRS0jD8CG7u4K3JWz2QcBFcDooW/87yTQhlgLD0A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9456
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_NONE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/18/2023 08:07, Mika Westerberg wrote:
-> Hi Lukas,
+On 9/18/2023 08:24, Lukas Wunner wrote:
+> On Mon, Sep 18, 2023 at 08:14:21AM -0500, Mario Limonciello wrote:
+>> On 9/18/2023 08:07, Mika Westerberg wrote:
+>>> On Mon, Sep 18, 2023 at 02:48:01PM +0200, Lukas Wunner wrote:
+>>>> struct pci_dev contains two flags which govern whether the device may
+>>>> suspend to D3cold:
+>>>>
+>>>> * no_d3cold provides an opt-out for drivers (e.g. if a device is known
+>>>>     to not wake from D3cold)
+>>>>
+>>>> * d3cold_allowed provides an opt-out for user space (default is true,
+>>>>     user space may set to false)
+>>>>
+>>>> Since commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend"),
+>>>> the user space setting overwrites the driver setting.  Essentially user
+>>>> space is trusted to know better than the driver whether D3cold is
+>>>> working.
+>>>>
+>>>> That feels unsafe and wrong.  Assume that the change was introduced
+>>>> inadvertently and do not overwrite no_d3cold when d3cold_allowed is
+>>>> modified.  Instead, consider d3cold_allowed in addition to no_d3cold
+>>>> when choosing a suspend state for the device.
+>>>>
+>>>> That way, user space may opt out of D3cold if the driver hasn't, but it
+>>>> may no longer force an opt in if the driver has opted out.
+>>>
+>>> Makes sense. I just wonder should the sysfs write fail from userspace
+>>> perspective if the driver has opted out and userspace tries to force it?
+>>> Or it does that already?
+>>
+>> What's the history behind why userspace is allowed to opt a device out of
+>> D3cold in the first place?
+>>
+>> It feels like it should have been a debugging only thing to me.
 > 
-> On Mon, Sep 18, 2023 at 02:48:01PM +0200, Lukas Wunner wrote:
->> struct pci_dev contains two flags which govern whether the device may
->> suspend to D3cold:
->>
->> * no_d3cold provides an opt-out for drivers (e.g. if a device is known
->>    to not wake from D3cold)
->>
->> * d3cold_allowed provides an opt-out for user space (default is true,
->>    user space may set to false)
->>
->> Since commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend"),
->> the user space setting overwrites the driver setting.  Essentially user
->> space is trusted to know better than the driver whether D3cold is
->> working.
->>
->> That feels unsafe and wrong.  Assume that the change was introduced
->> inadvertently and do not overwrite no_d3cold when d3cold_allowed is
->> modified.  Instead, consider d3cold_allowed in addition to no_d3cold
->> when choosing a suspend state for the device.
->>
->> That way, user space may opt out of D3cold if the driver hasn't, but it
->> may no longer force an opt in if the driver has opted out.
+> That's a fair question.
 > 
-> Makes sense. I just wonder should the sysfs write fail from userspace
-> perspective if the driver has opted out and userspace tries to force it?
-> Or it does that already?
+> Apparently the default for d3cold_allowed was originally "false"
+> and user space could opt in to D3cold.  Then commit 4f9c1397e2e8
+> ("PCI/PM: Enable D3/D3cold by default for most devices") changed
+> the default to "true".  That was 11 years ago.
+> 
+> I agree that today this should all work automatically and a
+> user space option to disable D3cold on a per-device basis only
+> really makes sense as a debugging aid, hence belongs in debugfs.
+> 
 
-What's the history behind why userspace is allowed to opt a device out 
-of D3cold in the first place?
+Thanks.  Then perhaps as part of moving it to debugfs it makes sense to 
+simplify the logic.
 
-It feels like it should have been a debugging only thing to me.
+IE also drop the d3cold_allowed member from struct pci_dev and instead 
+make the debugfs item reflect the "no_d3cold" member.
+
