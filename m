@@ -2,209 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D3B77A51F0
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Sep 2023 20:23:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AFEC7A5216
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Sep 2023 20:34:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbjIRSXE convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 18 Sep 2023 14:23:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37874 "EHLO
+        id S229502AbjIRSeG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Sep 2023 14:34:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjIRSXD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Sep 2023 14:23:03 -0400
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 918D9FB;
-        Mon, 18 Sep 2023 11:22:57 -0700 (PDT)
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-578a49f7e57so658140eaf.1;
-        Mon, 18 Sep 2023 11:22:57 -0700 (PDT)
+        with ESMTP id S229485AbjIRSeF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Sep 2023 14:34:05 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7B5DF7
+        for <linux-pci@vger.kernel.org>; Mon, 18 Sep 2023 11:33:59 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1c0e7e3d170so22725ad.1
+        for <linux-pci@vger.kernel.org>; Mon, 18 Sep 2023 11:33:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1695062039; x=1695666839; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hKTgwH+a7GA+sqcUVWql5MlsB+4X33g9465h/429Hc0=;
+        b=eY+SONDkdvjVZnQUD/Fa+usiIdFmyQ3XnUt5s4HnxwXaL25VjpVDGr0KgPf9jWnGpa
+         /45Rl1e1IzZtlLB+k5mV0BpXO9Lj/puMycaKLhJlDYXlThLov54Vt/NhiOD6TCC+NeB/
+         cDX4KClRmgmsd/ssbribrZPW+LjyPV1ur46ro=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695061377; x=1695666177;
+        d=1e100.net; s=20230601; t=1695062039; x=1695666839;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ieBf/hMr/hpAEX/C0CiEwBQf3tOTKGFzMMH/tQKhbPE=;
-        b=KZmhXmZH7fGZQDuFh42Y3TbgpxtOzE36C5ZSVLWJAAKRd5xmi7O0aq5HP2Q7F7n7SE
-         r1a7nqnu552CXhLDame9x4oLgoeGR48YsJebCK9+/ES5P/s0kLiTHKTqTFNidu9M9K7p
-         1I/jFcwowPqiboF8ZTf5TKsppU3NKfPbuQl3dBKUzk2Q4stZPEf7G9nMrzqrTvVqz9wo
-         kO0eSIW0fQlLm2UZjqtEZH/kUmD/QYyFW+ZJpufHIAv/PDO+FfE1zysrSTdm78R2A8e7
-         1fSmrVfuAVpl5l9sjLFdsooQ2x8Ku0jnl8ec9xTADxphUnu1LkxMa7fKJMYOUWfU+v4a
-         jNJw==
-X-Gm-Message-State: AOJu0YyaBoVjHtnhI2xk06pa1dEArcF3wwKG5Sr5/ptfSSlSAqapspVa
-        wnCsudocrftp2oaVYuQQqQzPW6BDYk4W7nAYW5o=
-X-Google-Smtp-Source: AGHT+IEaxW9g0SbTeoSTZfJFHWBgYiwc3lG+mmAMfTzaneCYLI8jeEpdntTA2GIHBSt3y0As+RrAVWpzfYS6FivWl7Q=
-X-Received: by 2002:a4a:de83:0:b0:56e:94ed:c098 with SMTP id
- v3-20020a4ade83000000b0056e94edc098mr8897573oou.0.1695061376820; Mon, 18 Sep
- 2023 11:22:56 -0700 (PDT)
+        bh=hKTgwH+a7GA+sqcUVWql5MlsB+4X33g9465h/429Hc0=;
+        b=eeZJL3GDRMMUi1DE+6Yo21/DEw/tzqDEBliJ2mS5pSQL+p4ja5NdtBimcDgCzrZL8D
+         pTDnuvnCOIO91q6rAN4t6z/WKPdHksh/h1E1wySOpWXLT7ZS45xwXvxkh0NDCN5lCtka
+         4WAaHx5E/2M6eeA8cKtvJPavVi4ZiCYqPgTikzuzTSvYqa6DRaN8iDjDx9qxD+xJq8+E
+         EbWrzdRvYp8n/j9MMDfvSMB2OdY5VTWYtZ2Xa5KTMa3++bBriVjbCEebgCduvwD7llFy
+         4cW+Pd9LPcnmvarUUh8V8mlZngxBa6sNvQLo1WKXMxp/OeFAVC9heS4zls+fZIq9K7ug
+         DK7Q==
+X-Gm-Message-State: AOJu0Yw4swsv561/OF7YWdv0xF+6dr8LS3vP+6wSxpS7lEYB9disi2jZ
+        dGIoMMlqqcRp9/u1jbtDRfYn+0HhSS4vT1di8JQ4zg==
+X-Google-Smtp-Source: AGHT+IG9iiAMseb4ZhGyHZ3N9oA8N0efd7OyAIeu0TwA2wzqNBLYcNnR5qYso1PzbWQf4f8ZoUvyOG8za+GE/Uy6LvY=
+X-Received: by 2002:a17:902:cecc:b0:1c5:59ea:84c3 with SMTP id
+ d12-20020a170902cecc00b001c559ea84c3mr17897plg.21.1695062038771; Mon, 18 Sep
+ 2023 11:33:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <c1a4d76b89c44437b328fe8a6d3517dc@huawei.com> <20230918181644.GA197123@bhelgaas>
-In-Reply-To: <20230918181644.GA197123@bhelgaas>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 18 Sep 2023 20:22:45 +0200
-Message-ID: <CAJZ5v0jRRHqRttovFC-sqtW-XhCS_VUAZnshRfUcQHTpygHT=w@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/1] ACPI / APEI: Fix for overwriting aer info when
- error status data have multiple sections
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Shiju Jose <shiju.jose@huawei.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "ying.huang@intel.com" <ying.huang@intel.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Dave Jiang <dave.jiang@intel.com>
+References: <20230606035442.2886343-1-grundler@chromium.org>
+ <4fa1e0fe-eec4-4e5c-8acd-274a039c048a@ixit.cz> <CANEJEGt-6+AGGSdZb9OTv3UrBn1fFFqk=A6TdYjBsq4SqTTxsA@mail.gmail.com>
+ <3c3f9a2ee7f9effe7cf9d1077652e85de0eae66c.camel@xry111.site>
+In-Reply-To: <3c3f9a2ee7f9effe7cf9d1077652e85de0eae66c.camel@xry111.site>
+From:   Grant Grundler <grundler@chromium.org>
+Date:   Mon, 18 Sep 2023 11:33:47 -0700
+Message-ID: <CANEJEGtSFAGEvKS0fJd_5OapXGeyWDZeJQYVZ7X_+wUOXBSK8A@mail.gmail.com>
+Subject: Re: [PATCHv3 pci-next 1/2] PCI/AER: correctable error message as KERN_INFO
+To:     Xi Ruoyao <xry111@xry111.site>
+Cc:     Grant Grundler <grundler@chromium.org>, bhelgaas@google.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, mahesh@linux.ibm.com,
+        oohall@gmail.com, rajat.khandelwal@linux.intel.com,
+        rajatja@chromium.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-9.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_SPF_WL
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 18, 2023 at 8:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Mon, Sep 18, 2023 at 4:42=E2=80=AFAM Xi Ruoyao <xry111@xry111.site> wrot=
+e:
 >
-> [+to Rafael, probably the logical place to apply this]
+> On Mon, 2023-08-14 at 08:40 -0700, Grant Grundler wrote:
+> > On Sat, Aug 12, 2023 at 5:45=E2=80=AFPM David Heidelberg <david@ixit.cz=
 >
-> On Mon, Sep 18, 2023 at 01:07:45PM +0000, Shiju Jose wrote:
-> > >-----Original Message-----
-> > >From: Bjorn Helgaas <helgaas@kernel.org>
-> > > ...
->
-> > >On Sat, Sep 16, 2023 at 01:44:35AM +0800, shiju.jose@huawei.com wrote:
-> > >> From: Shiju Jose <shiju.jose@huawei.com>
-> > >>
-> > >> ghes_handle_aer() lacks synchronization with
-> > >> aer_recover_work_func(), so when error status data have multiple
-> > >> sections, aer_recover_work_func() may use estatus data for
-> > >> aer_capability_regs after it has been overwritten.
-> > >>
-> > >> The problem statement is here,
-> > >> https://lore.kernel.org/all/20230901225755.GA90053@bhelgaas/
-> > >>
-> > >> In ghes_handle_aer() allocates memory for aer_capability_regs from the
-> > >> ghes_estatus_pool and copy data for aer_capability_regs from the
-> > >> estatus buffer. Free the memory in aer_recover_work_func() after
-> > >> processing the data using the ghes_estatus_pool_region_free() added.
+> > wrote:
 > > >
-> > >Thanks for working this up!  I had it on my to-do list, but
-> > >obviously had not gotten to it yet.
-> > >
-> > >> Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-> > >> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> > >> ---
-> > >>  drivers/acpi/apei/ghes.c | 23 ++++++++++++++++++++++-
-> > >>  drivers/pci/pcie/aer.c   | 10 ++++++++++
-> > >>  include/acpi/ghes.h      |  1 +
-> > >>  3 files changed, 33 insertions(+), 1 deletion(-)
-> > >>
-> > >> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c index
-> > >> ef59d6ea16da..63ad0541db38 100644
-> > >> --- a/drivers/acpi/apei/ghes.c
-> > >> +++ b/drivers/acpi/apei/ghes.c
-> > >> @@ -209,6 +209,20 @@ int ghes_estatus_pool_init(unsigned int num_ghes)
-> > >>    return -ENOMEM;
-> > >>  }
-> > >>
-> > >> +/**
-> > >> + * ghes_estatus_pool_region_free - free previously allocated memory
-> > >> + *                                   from the ghes_estatus_pool.
-> > >> + * @addr: address of memory to free.
-> > >> + * @size: size of memory to free.
-> > >> + *
-> > >> + * Returns none.
-> > >> + */
-> > >> +void ghes_estatus_pool_region_free(unsigned long addr, u32 size) {
-> > >> +  gen_pool_free(ghes_estatus_pool, addr, size); }
-> > >> +EXPORT_SYMBOL_GPL(ghes_estatus_pool_region_free);
-> > >> +
-> > >>  static int map_gen_v2(struct ghes *ghes)  {
-> > >>    return
-> > >> apei_map_generic_address(&ghes->generic_v2->read_ack_register);
-> > >> @@ -564,6 +578,7 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
-> > >>        pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO) {
-> > >>            unsigned int devfn;
-> > >>            int aer_severity;
-> > >> +          u8 *aer_info;
-> > >>
-> > >>            devfn = PCI_DEVFN(pcie_err->device_id.device,
-> > >>                              pcie_err->device_id.function);
-> > >> @@ -577,11 +592,17 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
-> > >>            if (gdata->flags & CPER_SEC_RESET)
-> > >>                    aer_severity = AER_FATAL;
-> > >>
-> > >> +          aer_info = (void *)gen_pool_alloc(ghes_estatus_pool,
-> > >> +                                            sizeof(struct aer_capability_regs));
-> > >> +          if (!aer_info)
-> > >> +                  return;
-> > >> +          memcpy(aer_info, pcie_err->aer_info, sizeof(struct
-> > >> +aer_capability_regs));
-> > >
-> > >This is a very straightforward approach to fixing this, and it looks pretty
-> > >reasonable, although I'd rather not have to pull more GHES stuff into aer.c
-> > >(ghes.h and ghes_estatus_pool_region_free()).
-> > >
-> > >What I had in mind was to put a queue of aer_capability_regs on the PCI side
-> > >that could be used by both the APEI path and the native path.
-> > >
-> > >In the APEI path, platform firmware reads the error information from the
-> > >hardware, and it feeds into PCI AER via aer_recover_queue().
-> > >
-> > >In the native path, Linux should be reading reads the same error information
-> > >from the hardware, but it feeds into PCI AER quite differently, via
-> > >aer_process_err_devices() and handle_error_source().
-> > >
-> > >These paths are fundamentally doing the exact same thing, but the data
-> > >handling and dmesg logging are needlessly different.  I'd like to see them get a
-> > >little more unified, so the native path could someday also feed into
-> > >aer_recover_queue().
-> > >
-> > >Does that make any sense?
+> > > Tested-by: David Heidelberg <david@ixit.cz>
 > >
-> > Thanks for letting us know.
-> > Make sense, solution with in the AER looks better.
+> > Thanks David!
+> >
+> > > For PATCH v4 please fix the typo reported by the bot :)
+> >
+> > Sorry - I'll do that today.
 >
-> Thanks for considering this.  The AER rework I have in mind is a
-> longer-term project, so unless you have time and interest in doing
-> that, I think we should apply your patch since it's all ready to go.
+> Hi Grant,
 >
-> You pointed to the problem statement, but I think it would be good to
-> include a brief outline directly in the commit log, e.g., something
-> like this:
+> Is there an update of this series?
 
-Agreed.
+Sorry, while I had good intentions, my work has completely derailed my
+attempts to make time for this. :(
 
->   ghes_handle_aer() passes AER data to the PCI core for logging and
->   recovery by calling aer_recover_queue() with a pointer to struct
->   aer_capability_regs.
->
->   The problem was that aer_recover_queue() queues the pointer directly
->   without copying the aer_capability_regs data.  The pointer was to
->   the ghes->estatus buffer, which could be reused before
->   aer_recover_work_func() reads the data.
->
->   To avoid this problem, allocate a new aer_capability_regs structure
->   from the ghes_estatus_pool, copy the AER data from the ghes->estatus
->   buffer into it, pass a pointer to the new struct to
->   aer_recover_queue(), and free it after aer_recover_work_func() has
->   processed it.
->
-> What's your take on this, Rafael?
+I'll give this another run.
 
-I can apply it if the changelog is updated along the lines of the above.
+I'm also not offended if someone else picks this up and improves the situat=
+ion.
 
->  The biggest change is in
-> drivers/acpi, so if you want to take it, feel free to add my:
+cheers,
+grant
+
 >
->   Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Thanks!
+> My workstation suffers from too much correctable AER reporting as well
+> (related to Intel's errata "RPL013: Incorrectly Formed PCIe Packets May
+> Generate Correctable Errors" and/or the motherboard design, I guess).
+>
+> --
+> Xi Ruoyao <xry111@xry111.site>
+> School of Aerospace Science and Technology, Xidian University
