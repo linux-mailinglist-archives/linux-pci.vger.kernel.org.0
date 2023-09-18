@@ -2,170 +2,188 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 79C227A4B7A
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Sep 2023 17:17:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BC697A4CAF
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Sep 2023 17:38:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231555AbjIRPRB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Sep 2023 11:17:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60956 "EHLO
+        id S229456AbjIRPio convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 18 Sep 2023 11:38:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231398AbjIRPRB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Sep 2023 11:17:01 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2040.outbound.protection.outlook.com [40.107.94.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F982109
-        for <linux-pci@vger.kernel.org>; Mon, 18 Sep 2023 08:16:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=equ5g1ZZmnhT5Z6qEl+Ag3dlEZ6E34mlvCEYF2LYK/7o29LsWpyW1d8LWhQNcSIBk2HWe6e2yRasLJ8mQBGQ6+yyG6Vrf6FnkqfNIDfS6aQFpR8cUlSfu9pX1qfSQ9h5LlOKuj+fyqU7fv1yaHNF6J+Vq6/oFbxY7FG22JEEG6OH0R2bdcM3LFNRGDfBJ2mGI6ySD+87mEoydTJi7ylp6Wio2tH0e6EqL3Jw0K+Q+rjiUhFODF9H7rgAeKnEqCKvhfee2zzA7FWwCfLgewZNOXlgKFVW32MoIoY/KDrVbqRLwpKtJdfsiZgwgdF7kCrWcCQOaUKJ62La1VDenK1Mxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zXjV3Ob5xjV69a3IY8eob8Gmvvj9p8v98zUzkr9X/1E=;
- b=jH7Q2Q89ElTd4pfzve9nIUyhsJPKnWhkAdZzn7tm5h9xFeLIJV6H6UZV81+TCjMPj1fgkx+i8HLgPFx9/dV+CSxP45ajV26dd3ytITvzMVOvzm4KtwZiS0yxS9JVrp98EUdX1eJz5o5N3qSV8FKuxEBI5SVEJv987FfXVShzfZHE/7JYkK9XQZsYKeBYTijoTdX6bvXdLnkF+IbHotP2YeKzql1H2c8SeMtWhStKpsN+cXCAlz1qu/BANSfvc8Jl1GpXYs+T+ZAM1B4Ir/uj9P9b5MG1Y4bDCU34Fws0+fsuNIE2bhV8AJoLhZirUjt2vuiF2X9tVYIPowgDejCSeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zXjV3Ob5xjV69a3IY8eob8Gmvvj9p8v98zUzkr9X/1E=;
- b=Tv6TG3EV0wdaGc3KmJqwkYKPuikouEajUdLlw4Og/FwiOsttPOi+1dKwmxmvuaR+mcX5w5h0q8KNKd9rC4B2jQjUOZoId9PBggwen58l6qzc/oy1WIzoGP69ukJxa+SEw9ft72e3TDrSMD5v7ptZoCbR6HafZsH0OP9ZoddHcGQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6095.namprd12.prod.outlook.com (2603:10b6:8:9c::19) by
- SA1PR12MB8967.namprd12.prod.outlook.com (2603:10b6:806:38b::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.26; Mon, 18 Sep
- 2023 14:52:31 +0000
-Received: from DS7PR12MB6095.namprd12.prod.outlook.com
- ([fe80::44a:f414:7a0f:9dae]) by DS7PR12MB6095.namprd12.prod.outlook.com
- ([fe80::44a:f414:7a0f:9dae%7]) with mapi id 15.20.6792.026; Mon, 18 Sep 2023
- 14:52:30 +0000
-Message-ID: <92a12451-0950-48b7-b816-642ad506cd41@amd.com>
-Date:   Mon, 18 Sep 2023 09:52:28 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI/sysfs: Protect driver's D3cold preference from user
- space
-Content-Language: en-US
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pci@vger.kernel.org
-References: <b8a7f4af2b73f6b506ad8ddee59d747cbf834606.1695025365.git.lukas@wunner.de>
- <20230918130742.GU1599918@black.fi.intel.com>
- <fd432ea4-247a-49ca-88e6-c9f88485eb98@amd.com>
- <20230918132424.GA11357@wunner.de>
- <888824f7-06b5-4df4-ac04-c6cd599ff6f7@amd.com>
- <20230918142637.GA28754@wunner.de>
-From:   Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20230918142637.GA28754@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR10CA0012.namprd10.prod.outlook.com
- (2603:10b6:806:a7::17) To DS7PR12MB6095.namprd12.prod.outlook.com
- (2603:10b6:8:9c::19)
+        with ESMTP id S229379AbjIRPin (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Sep 2023 11:38:43 -0400
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0534B30CB;
+        Mon, 18 Sep 2023 08:37:20 -0700 (PDT)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-58dce1f42d6so77857367b3.0;
+        Mon, 18 Sep 2023 08:37:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695051179; x=1695655979;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4usGc9aalGjopd8uzawCJLzJGsJptzLIU24rQ6XhnjI=;
+        b=CJC+Dzuyx0hBIgzj0+XXED1FolP+ueNadQqrPdT3AxP6t2uX0ut4MwaVcuMxnExCw4
+         MuMsj9oS3gf3KGX/ggW+9ArpZuVD+gB3XHVOXx+tbITx3SNG12oev/GL2wPV4p9t8H7g
+         xq8C674Yjh0/8qNI4fpPGqQAeCBM/jCUVOTvZJ5NjNP9rfyT/6VUFY9Z0w+83hA0P8CC
+         ZJwOGMGOzb2ETWXAFmixuh0TC6f1Ul+5YNtMhadx2R6cwpYm2HBxRRJcL13Fom0Ii2PG
+         qoGsn+gCVw7OnuNG9rXBrho9GEU1n9ur6bxGSetyhs1X7HmzchIkKyKwOTgkZyUSoNfV
+         75wg==
+X-Gm-Message-State: AOJu0YxE6dn19xjtxqemIUUlj7rWOub2htay8rTVr1WqEccSVVWfMtLx
+        TWo7gHL+U42MngAVfne09O96XtLAh0bfxQ==
+X-Google-Smtp-Source: AGHT+IG91vIgu8arEHRAiDnDxKlmz2nE3NJ80tnQhQgtrk4W/ltJPWRk9m/iW8HRoBEe7WiPA/IdGA==
+X-Received: by 2002:a0d:d60e:0:b0:583:8c61:de8 with SMTP id y14-20020a0dd60e000000b005838c610de8mr11001999ywd.16.1695051179089;
+        Mon, 18 Sep 2023 08:32:59 -0700 (PDT)
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
+        by smtp.gmail.com with ESMTPSA id s66-20020a0dd045000000b00589e68edac6sm2657593ywd.39.2023.09.18.08.32.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Sep 2023 08:32:58 -0700 (PDT)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-59e6ebdf949so27286677b3.0;
+        Mon, 18 Sep 2023 08:32:58 -0700 (PDT)
+X-Received: by 2002:a81:8301:0:b0:59b:d5eb:3a83 with SMTP id
+ t1-20020a818301000000b0059bd5eb3a83mr13424998ywf.16.1695051178689; Mon, 18
+ Sep 2023 08:32:58 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6095:EE_|SA1PR12MB8967:EE_
-X-MS-Office365-Filtering-Correlation-Id: bf217673-1b0f-442b-a482-08dbb856e23c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eJY4EYczkA1HvmVEJq9XA7ysDboMkSaF8rVSrD8+3HKfcjdDm1yiW2O5wCZiafaO7J9icQ3hW1VBi5qM2GQF6148P4gW6wWD8pOKG53RVFNCKNlYkNyz5wAWR95LV7DzXILcrisJE9DNc6fSByan0IOH2xi0J1H3PyWHcdnJgw3kjauYoYuy4eNQxAR+o+sVVefruUaLphgQ8+VZjEh/AozWiNEr/Bk9BOxQWClJVBkQtcYLno1BTWR6v29R4wVKZSd/qy/Z0z3W6aqvvLvuvEav8rx+xFB42bQhltLdh4ZKmk/8Jpx1s6tGiOwuJjc2YDXMf4D8VAeCcm6n0bb1eZ27w+A5VKQwfEtJIlKA9A0Ygb6Tt0mrVnM1DsjkQeuQzBx3tF31LdPCbxYjDl7DPPFT8Ef6j7cT+yeWthELE4b/+xU+mErilW7o3PopjGFxzElBXYpgiwxx99lWkQCdHmMoHVSrooZw+gnF9j2yV/bU3KUbh35Dambj1kiE0L6tZk94Yz8pYih+W90F2F6w/UinK3bHgQIZ6D8WthALWVy3Dz7HfDewsjq7YVwSSBNqE5d9aPAz6CT+Fnxgdw68qH0vapWsc5JYGpJLW0mL+tgzESK/T5TcJkKvinsWZxWJgMQPvvIDSG7e3qjTEMBsCttSKnqPaOAntazS71e/xw4=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6095.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(346002)(396003)(376002)(39860400002)(1800799009)(186009)(451199024)(26005)(2616005)(8936002)(8676002)(4326008)(83380400001)(2906002)(36756003)(31696002)(5660300002)(44832011)(86362001)(53546011)(6506007)(6486002)(478600001)(31686004)(6916009)(316002)(54906003)(6512007)(38100700002)(66946007)(66476007)(41300700001)(66556008)(32563001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OWdYbXFXNHdXemQ5Vk15a3dLN3N4aU0yWGwxc3J4bDdFNGJ0dEJzcjkrNnNx?=
- =?utf-8?B?eDRhSHdkVlZHR1JnRTZyMkdYaGVFS1FvbDdTRkVuRmN4OGxpajZkMjc2L1VU?=
- =?utf-8?B?NlJDM0RWbnluRzg5ektOZ1BFTlB0akRRenQzZjYwUXkyU0dTbnA2WEFPUVpV?=
- =?utf-8?B?akx1TEZyNkdQSFJCVUtLRDc1dXI3Tzl0Y2NraVpjait6Y2dwd2JDdHhuT1Ew?=
- =?utf-8?B?elI0UXc2N2x1akdONkJJTzY0NThVZVZ4TDkwMnBVdkhvUDhOSkNsQWhqN2tq?=
- =?utf-8?B?SExUMU81RUtnaEFyMmsxL1I4NXRJWEwrQTFkd0VDRngwUFlYMHNYM1p1c0ZF?=
- =?utf-8?B?WUI1ZHl5aWx4M0lIb05ueTFzUURHeGwyR2VSQU9QRVBRbjMwc25nbk5ZRGht?=
- =?utf-8?B?T25SY2NlVG1kUVFrbTBFRmhxaDJLaUhuNmZ2REV5MmNaaEZyaTNOckhINUR4?=
- =?utf-8?B?S24rYnlIZzdoY09TR1BqUnpCWkZlam12YzBibzROYUxnQ2VOSEJZek8vekhy?=
- =?utf-8?B?VWpHRkF0TjJMbzRHOHhOa0QxN0EzelhxRE5LMGFUZjlEV3dPTkpLN0t0VWxs?=
- =?utf-8?B?N1NYVzVsZG9vcFdUQy9DL0t1VkE5MU94cFNiSFZNbDg4cTlEQUxnMHFpOEg1?=
- =?utf-8?B?ejBFL2FvL0lYL0NOTjF5NUVIT3hvRmFnam9SRDZkbUQ2QnpsL21ZNFJPc2F0?=
- =?utf-8?B?dnByS05zNk5BaG1yY3RSZTFnS2hJSmhVaUpCQTJMU1pXaDRrZjVnR3loampk?=
- =?utf-8?B?ODZXcEpoa0poUUhRc1picUlpT1RXNDZtUmRSVjZFSkpUcnFsWmI4N1hFTTdp?=
- =?utf-8?B?azdWL2R1dXpYenh0ZzJoSzFBTnozSEhsTnFkQ2k0SVYzYlNVTGxIcTJ2MWlw?=
- =?utf-8?B?U29VVjlvRVVrTEJxYTF4d0F0RmlVVUxHK1BiL2tOcWcyZUh4Nkd1VXYrZ01r?=
- =?utf-8?B?VzlrOXd2bUJzb2xkVUtNWmhiS2lLSDVsQnV1cGdSZE02QWQ5S25ZcS9wY1F1?=
- =?utf-8?B?Ky9uR2pHQzlQQXJFRXVUNnUrRkJlRGZOb3JmSU9ZUVRqdlNxckptbFpheGVl?=
- =?utf-8?B?UjZVUUVNamZqdTBuR29BUGJPMXNHaWV3TkpqdjFjRkMrZlNmRW9MQm5kSmFI?=
- =?utf-8?B?L2VIQ3Q2TWRpTjlncjlFeHV4T2IvM0pKU2VSaVE1L0lPL3M3NnpPNmdpeTJD?=
- =?utf-8?B?bWVSK3J1K0ltQ2FITlpwaVZJbnZKRVlXbVNHVzNkeFp0MUtDdk9GUHk5Nytq?=
- =?utf-8?B?UzhMa3h0alhyYWw2a2RHL2cxMTQ3L0Zha04ycHY5clEyektvNS92Z0Q1Sm9n?=
- =?utf-8?B?ZzB1NVlZRmdhMDB4NVRDdFBQcWtwOWJkMkpyNHVFT0F0RFdPdDhXUWQ5SllD?=
- =?utf-8?B?eU0vS3ZiZ3JtMEZzeEhYWXBWUW9laUcvSWRyYWt5WjZKRWluSzlzM25nN3Jm?=
- =?utf-8?B?djVWek1RRWVGemh3aVI3UGNNNWcrVjI2SVRMcVJjM0kwaXJ6eUNUOGw5ak5U?=
- =?utf-8?B?TUVFRWhTMld2N2hxQkFBVnZhMjhleDQ5ejdoWHRxUkxaWjE4YmtoYUJlSCt6?=
- =?utf-8?B?TWo3RXRHZC92L3NGcUVJT1pFbmRqcjlJZTFlUkxtNVh3K003VkVOMXpzeUlD?=
- =?utf-8?B?ZlA5UTRHaVJvZTlUQWN2djhzTkZydXdGTjhrL2ZKYUpKREViZkxzd0xaZjdD?=
- =?utf-8?B?cnptZGlLV1FGUGdjU2ttNTVVcXZjZFlSazM5L0FFcDZGOHltWkpZMjZnQU1l?=
- =?utf-8?B?eGJieDBvekRWSEJzRWlnakZZV2dkYnNDczJqdjJnSlMreG1kM0hPQlg2OEdq?=
- =?utf-8?B?cGM5WjNMdmtaZkdSSEk5RjIvMkdPdzNmUU1lbk9pM2w5TkFpcXRFeGlOTW1r?=
- =?utf-8?B?YkNERm1JaUM4WVg5WFhvVHEzWHdKQkJybGhPakhTclJnUi9ueFRENDBzT09R?=
- =?utf-8?B?RVYxVVBaUFNLNE9TL0RjYlF0SWdpTm5JN241U1pUMEdtQVBvMHlQdVM0Q0Iz?=
- =?utf-8?B?WjdmR25XY25kSjRtNHVVVzdhTGtHQk1QeUR6a3NJY3dLNVBUK01Hdi8rSG1R?=
- =?utf-8?B?RG1qMGpNTnRuQWFXb3loT2IxbytyeEZmMnRNeXA5ZWJxZzdOZGlhcEk5M25m?=
- =?utf-8?Q?E5i1KOlS4zrRrh0tPv5U17ydT?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf217673-1b0f-442b-a482-08dbb856e23c
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6095.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2023 14:52:30.8796
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vFAvux3+b3eW1lT6DULYrsVE2wiJdcKKtWiq3DQovM6JKz2v4WoJkU8014CW3zVSIH4b1wdgEM9SN3Tt1GVFtw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8967
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+References: <cover.1694596125.git.ysato@users.sourceforge.jp> <7f25af9e93fbb84c8e4fe6da3c0c13b0a6be2c73.1694596125.git.ysato@users.sourceforge.jp>
+In-Reply-To: <7f25af9e93fbb84c8e4fe6da3c0c13b0a6be2c73.1694596125.git.ysato@users.sourceforge.jp>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 18 Sep 2023 17:32:46 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX0enQeLcLO6hmKFXqMeZVfoT0qrz3XTCWuUUTWwS-vHw@mail.gmail.com>
+Message-ID: <CAMuHMdX0enQeLcLO6hmKFXqMeZVfoT0qrz3XTCWuUUTWwS-vHw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 07/30] drivers/pci: SH7751 PCI Host bridge
+ controller driver.
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc:     linux-sh@vger.kernel.org, glaubitz@physik.fu-berlin.de,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9/18/2023 09:26, Lukas Wunner wrote:
-> On Mon, Sep 18, 2023 at 08:28:51AM -0500, Mario Limonciello wrote:
->> On 9/18/2023 08:24, Lukas Wunner wrote:
->>> On Mon, Sep 18, 2023 at 08:14:21AM -0500, Mario Limonciello wrote:
->>>> What's the history behind why userspace is allowed to opt a device out of
->>>> D3cold in the first place?
->>>>
->>>> It feels like it should have been a debugging only thing to me.
->>>
->>> That's a fair question.
->>>
->>> Apparently the default for d3cold_allowed was originally "false"
->>> and user space could opt in to D3cold.  Then commit 4f9c1397e2e8
->>> ("PCI/PM: Enable D3/D3cold by default for most devices") changed
->>> the default to "true".  That was 11 years ago.
->>>
->>> I agree that today this should all work automatically and a
->>> user space option to disable D3cold on a per-device basis only
->>> really makes sense as a debugging aid, hence belongs in debugfs.
->>>
->>
->> Thanks.  Then perhaps as part of moving it to debugfs it makes sense to
->> simplify the logic.
-> 
-> d3cold_allowed is documented in Documentation/ABI/testing/sysfs-bus-pci,
-> so it's user space ABI which we're not allowed to break.  We'd have to
-> declare it deprecated, emit a warning when it's used and slowly phase
-> it out over the years.
+Hi Sato-san,
 
-What about as part of deprecating it to make it always return -EINVAL no 
-matter the input?  The ABI isn't broken, but it allows for the optimization.
+On Wed, Sep 13, 2023 at 11:35 AM Yoshinori Sato
+<ysato@users.sourceforge.jp> wrote:
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 
-> 
-> Until then, the $SUBJECT_PATCH probably still makes sense to reinstate
-> the behavior we had until 2016...
-> 
-> Thanks,
-> 
-> Lukas
+Thanks for your patch!
 
+> --- /dev/null
+> +++ b/drivers/pci/controller/pci-sh7751.c
+> @@ -0,0 +1,338 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * SH7751 PCI driver
+> + * Copyright (C) 2023 Yoshinori Sato
+> + *
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/pci-ecam.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/io.h>
+> +#include <asm-generic/pci.h>
+> +#include "pci-sh7751.h"
+> +
+> +#define pcic_writel(val, reg) __raw_writel(val, pci_reg_base + (reg))
+> +#define pcic_readl(reg) __raw_readl(pci_reg_base + (reg))
+> +
+> +DEFINE_RAW_SPINLOCK(pci_config_lock);
+> +
+> +/*
+> + * PCIC fixups
+> + */
+> +
+> +#define PCIMCR_MRSET 0x40000000
+> +#define PCIMCR_RFSH  0x00000004
+> +
+> +/* board depend PCI bus fixups */
+> +static void __init julian_fixup(void __iomem *pci_reg_base, void __iomem *bcr)
+
+Please drop all the __init* annotations.
+Although I no longer see invalid section warnings, all symbols tagged
+with __init* are still referenced from sh7751_pci_probe(), eventually.
+
+> +{
+> +       unsigned long bcr1, mcr;
+> +
+> +       bcr1 = __raw_readl(bcr + SH7751_BCR1);
+> +       bcr1 |= 0x00080000;     /* Enable Bit 19 BREQEN, set PCIC to slave */
+> +       pcic_writel(bcr1, SH4_PCIBCR1);
+> +
+> +       mcr = __raw_readl(bcr + SH7751_MCR);
+> +       mcr &= (~PCIMCR_MRSET) & (~PCIMCR_RFSH);
+> +       pcic_writel(mcr, SH4_PCIMCR);
+> +
+> +       pcic_writel(0x0c000000, SH7751_PCICONF5);
+> +       pcic_writel(0xd0000000, SH7751_PCICONF6);
+> +       pcic_writel(0x0c000000, SH4_PCILAR0);
+> +       pcic_writel(0x00000000, SH4_PCILAR1);
+> +}
+> +
+> +static void __init r2d_fixup(void __iomem *pci_reg_base, void __iomem *bcr)
+> +{
+> +       unsigned long bcr1, mcr;
+> +
+> +       bcr1 = ioread32(bcr + SH7751_BCR1);
+> +       bcr1 |= 0x40080000;     /* Enable Bit 19 BREQEN, set PCIC to slave */
+> +       pcic_writel(bcr1, SH4_PCIBCR1);
+> +
+> +       /* Enable all interrupts, so we known what to fix */
+> +       pcic_writel(0x0000c3ff, SH4_PCIINTM);
+> +       pcic_writel(0x0000380f, SH4_PCIAINTM);
+> +
+> +       pcic_writel(0xfb900047, SH7751_PCICONF1);
+> +       pcic_writel(0xab000001, SH7751_PCICONF4);
+> +
+> +       mcr = ioread32(bcr + SH7751_MCR);
+> +       mcr &= (~PCIMCR_MRSET) & (~PCIMCR_RFSH);
+> +       pcic_writel(mcr, SH4_PCIMCR);
+> +
+> +       pcic_writel(0x0c000000, SH7751_PCICONF5);
+> +       pcic_writel(0xd0000000, SH7751_PCICONF6);
+> +       pcic_writel(0x0c000000, SH4_PCILAR0);
+> +       pcic_writel(0x00000000, SH4_PCILAR1);
+> +}
+> +
+> +static const __initconst struct fixups {
+> +       char *compatible;
+> +       void (*fixup)(void __iomem *pci_reg_base, void __iomem *bcr);
+> +} fixup_list[] = {
+> +       {
+> +               .compatible = "iodata,julian-pci",
+> +               .fixup = julian_fixup,
+> +       },
+> +       {
+> +               .compatible = "renesas,r2d-pci",
+> +               .fixup = r2d_fixup,
+> +       },
+> +};
+
+These fixups seem to be board-specific instead of specific to the
+PCI block in the SoCs on these boards.
+
+I see three options to handle this in a more appropriate way:
+  1. Handle this in the bootloader.
+     Not an attractive solution, as not everyone can/wants to update
+     the bootloader,
+  2. Use of_machine_is_compatible() in a platform-specific quirk
+     handler, outside the PCI driver,
+  3. Move the common parts into sh7751_pci_probe(), and the
+     handle the differences through DT topology analysis and/or
+     properties in DT.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
