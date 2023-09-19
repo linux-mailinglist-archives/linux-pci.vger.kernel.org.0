@@ -2,127 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A7FB07A66CA
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Sep 2023 16:34:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D2817A6779
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Sep 2023 16:59:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232761AbjISOez (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Sep 2023 10:34:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55878 "EHLO
+        id S233022AbjISO7f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Sep 2023 10:59:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232727AbjISOey (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 10:34:54 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D2C183
-        for <linux-pci@vger.kernel.org>; Tue, 19 Sep 2023 07:34:49 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDB15C433C8;
-        Tue, 19 Sep 2023 14:34:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695134089;
-        bh=JEKZNCS1h1kVkCRliBHnbfxH3Gb3kj+yOVfViU7Ji64=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LBYrNr+WYb++FRcK4UV1/2JlDssWRPgoup5jYPw6hINpQ9mPKqBo9NJsCFV0HjNZ+
-         bRtNuW/eCTLca2Qc1kFZbwHTD9xkyOSbZbsm42/g7cYzFNxZO2hXrqhaG8KuN1c3FS
-         1+8fMBYeJvdLI3xfPMvxPg8pI4UVlwULYGmg4Wc6M+Ks17l/vK1ENfzX9mjR/edX4L
-         hVW95Mt78VwxvUvkR361HlLM7hUh2DL8YcoaX0NPPJY00jWsvwCILbJzVbVI4jEHmz
-         dKI+H3STK9Ot/RJXjYq8d+SxLVHRG9I9hTRAm6sKwiVylJpaAVH6tW1WkPU/fVzeaO
-         R5eWZ30sLNiVA==
-Date:   Tue, 19 Sep 2023 09:34:46 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     "Patel, Nirmal" <nirmal.patel@linux.intel.com>,
-        linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v4] PCI: vmd: Do not change the BIOS Hotplug setting on
- VMD rootports
-Message-ID: <20230919143446.GA226696@bhelgaas>
+        with ESMTP id S232987AbjISO7d (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 10:59:33 -0400
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 231F4185
+        for <linux-pci@vger.kernel.org>; Tue, 19 Sep 2023 07:59:23 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 681E0103201BB;
+        Tue, 19 Sep 2023 16:59:21 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 3A4AD517D5; Tue, 19 Sep 2023 16:59:21 +0200 (CEST)
+Date:   Tue, 19 Sep 2023 16:59:21 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     "Schroeder, Chad" <CSchroeder@sonifi.com>
+Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: PCIe device issue since v6.1.16
+Message-ID: <20230919145921.GA8609@wunner.de>
+References: <DM6PR16MB2844903E34CAB910082DF019B1FAA@DM6PR16MB2844.namprd16.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAd53p45+jxCE-tnr-Mb2YOnDwppv7GYmp+usYehO87s33qpjg@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <DM6PR16MB2844903E34CAB910082DF019B1FAA@DM6PR16MB2844.namprd16.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 19, 2023 at 11:31:57AM +0800, Kai-Heng Feng wrote:
-> On Wed, Sep 13, 2023 at 8:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> [snipped]
-> > Hmm.  In some ways the VMD device acts as a Root Port, since it
-> > originates a new hierarchy in a separate domain, but on the upstream
-> > side, it's just a normal endpoint.
-> >
-> > How does AER for the new hierarchy work?  A device below the VMD can
-> > generate ERR_COR/ERR_NONFATAL/ERR_FATAL messages.  I guess I was
-> > assuming those messages would terminate at the VMD, and the VMD could
-> > generate an AER interrupt just like a Root Port.  But that can't be
-> > right because I don't think VMD would have the Root Error Command
-> > register needed to manage that interrupt.
+Hi Chad,
+
+On Tue, Sep 19, 2023 at 02:17:29PM +0000, Schroeder, Chad wrote:
+> 	After researching the issue, I found the commit that lead system error:
 > 
-> VMD itself doesn't seem to manage AER, the rootport that "moved" from
-> 0000 domain does:
-> [ 2113.507345] pcieport 10000:e0:06.0: AER: Corrected error received:
-> 10000:e1:00.0
-> [ 2113.507380] nvme 10000:e1:00.0: PCIe Bus Error: severity=Corrected,
-> type=Physical Layer, (Receiver ID)
-> [ 2113.507389] nvme 10000:e1:00.0:   device [144d:a80a] error
-> status/mask=00000001/0000e000
-> [ 2113.507398] nvme 10000:e1:00.0:    [ 0] RxErr                  (First)
-
-Oh, I forgot how VMD works.  It sounds like there *is* a Root Port
-that is logically below the VMD, e.g., (from
-https://bugzilla.kernel.org/show_bug.cgi?id=215027):
-
-  ACPI: PCI Root Bridge [PC00] (domain 0000 [bus 00-e0])
-  acpi PNP0A08:00: _OSC: platform does not support [AER]
-  acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug SHPCHotplug PME PCIeCapability LTR]
-  pci  0000:00:0e.0: [8086:467f] type 00         # VMD
-  vmd  0000:00:0e.0: PCI host bridge to bus 10000:e0
-  pci 10000:e0:06.0: [8086:464d] type 01         # Root Port to [bus e1]
-  pci 10000:e1:00.0: [144d:a80a] type 00         # Samsung NVMe
-
-So ERR_* messages from the e1:00.0 Samsung device would terminate at
-the e0:06.0 Root Port.  That Root Port has an AER Capability with Root
-Error Command/Status/Error Source registers.
-
-> > But if VMD just passes those messages up to the Root Port, the source
-> > of the messages (the Requester ID) won't make any sense because
-> > they're in a hierarchy the Root Port doesn't know anything about.
+> 	https://lore.kernel.org/all/da77c92796b99ec568bd070cbe4725074a117038.1673769517.git.lukas@wunner.de/
 > 
-> Not sure what's current status is but I think Nirmal's patch is valid
-> for both our cases.
+> 	Specifically, this removal:
+> 
+> 	- Drop an unnecessary 1 sec delay from pci_reset_secondary_bus() which
+> 	is now performed by pci_bridge_wait_for_secondary_bus().  A static
+> 	delay this long is only necessary for Conventional PCI, so modern
+> 	PCIe systems benefit from shorter reset times as a side effect.
 
-So I think the question is whether that PNP0A08:00 _OSC applies to
-domain 10000.  I think the answer is "no" because the platform doesn't
-know about the existence of domain 10000, and it can't access config
-space in that domain.
+Thanks for the report and sorry for the breakage.
 
-E.g., if _OSC negotiated that the platform owned AER in domain 0000, I
-don't think it would make sense for that to mean the platform *also*
-owned AER in domain 10000, because the platform doesn't know how to
-configure AER or handle AER interrupts in that domain.
+This endpoint device only supports Gen1 speed (2.5GT/s) and does not support
+Data Link Layer Link Active Reporting.  I have a suspicion that I neglected
+to take this case into account in pci_bridge_wait_for_secondary_bus().
 
-Nirmal's patch ignores _OSC for hotplug, but keeps the _OSC results
-for AER, PME, and LTR.  I think we should ignore _OSC for *all* of
-them.
+To better understand what's going on, could you also provide "lspci -vvv"
+output of the parent bridge above 0000:65:00.0 (i.e. of the bridge whose
+secondary bus is 65)?
 
-That would mean reverting 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on
-PCIe features") completely, so of course we'd have to figure out how
-to resolve the AER message flood a different way.
+Thanks!
 
-Bjorn
-
-> > > > > >>>>  static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
-> > > > > >>>>                                         struct pci_host_bridge *vmd_bridge)
-> > > > > >>>>  {
-> > > > > >>>> -        vmd_bridge->native_pcie_hotplug = root_bridge->native_pcie_hotplug;
-> > > > > >>>> -        vmd_bridge->native_shpc_hotplug = root_bridge->native_shpc_hotplug;
-> > > > > >>>>          vmd_bridge->native_aer = root_bridge->native_aer;
-> > > > > >>>>          vmd_bridge->native_pme = root_bridge->native_pme;
-> > > > > >>>>          vmd_bridge->native_ltr = root_bridge->native_ltr;
+Lukas
