@@ -2,125 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DB427A5F8E
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Sep 2023 12:30:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CB117A5FD0
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Sep 2023 12:39:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230504AbjISKal (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Sep 2023 06:30:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51780 "EHLO
+        id S231757AbjISKjo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Sep 2023 06:39:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbjISKak (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 06:30:40 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13F96E8;
-        Tue, 19 Sep 2023 03:30:35 -0700 (PDT)
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38J3wpiX010036;
-        Tue, 19 Sep 2023 10:30:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=qcppdkim1;
- bh=J4hOINlXke9uREob4JWDzUId/9wjHUUxaSUVg5YcoIM=;
- b=Ba/uSBhA5GPVKW2xU6y+vkppV/ZxqEe9gaOV7c+ZS+PuuncYajMujbUDdQwr5m7fNMLL
- wBx9nbhuCI9cb05hX6w5s4xG6Vv4rl9iSINpFmBD207vLZAnp3ggKf1Q0pMzm5VSdBoH
- 6yzRKnEniDr62lZhnf3xHlgZZJE5f5FYxhCQIyzaY56XAJYD4y/iBZ0cEgy4mvN/xNEq
- Uj3YgPniqt/OYWk8GNp5yvurcoPY3Xvv35B4XmXYYFH2QcYjeC17jyaDpPP7/buTfnhN
- fSY6b7eJabq274+EURFUp0xPw515+JdUETPFMAB23YVRPh0s//3VtD+jwLtC8f9fz4dX dg== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t6pmq2b0n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Sep 2023 10:30:12 +0000
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38JAUBq8009078
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Sep 2023 10:30:11 GMT
-Received: from win-platform-upstream01.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.30; Tue, 19 Sep 2023 03:30:06 -0700
-From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh@kernel.org>, <mani@kernel.org>,
-        <lpieralisi@kernel.org>, <bhelgaas@google.com>, <kw@linux.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <gregkh@linuxfoundation.org>,
-        <dmitry.baryshkov@linaro.org>, <stable@vger.kernel.org>,
-        <robimarko@gmail.com>, <quic_srichara@quicinc.com>
-CC:     <Stable@vger.kernel.org>
-Subject: [PATCH V6] PCI: qcom: Fix broken pcie enumeration for 2_3_3 configs ops
-Date:   Tue, 19 Sep 2023 15:59:48 +0530
-Message-ID: <20230919102948.1844909-1-quic_srichara@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S231797AbjISKjl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 06:39:41 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8F66E8;
+        Tue, 19 Sep 2023 03:39:35 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 047E5C433C7;
+        Tue, 19 Sep 2023 10:39:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695119975;
+        bh=SwqyI2ls96i9WI3cBqA2P5LPEhg4f7G0zB8SlzqGeIY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=M6/glViXEI0+uahqefPKtfBxf3k+xxHCLC0zD0xdWY92IhO8dm5JWri6CUHKTMR42
+         4NMUTVBbuXVsAw3uMuNgpjAlN7Y46LpGiCTXux+fMBH9NqTi+L7prY3MrjKWXJ5MdU
+         OV4RtZa6tNOh4FEgDvNi1ihUB6adSJOWVmKbKeTo2EHk+QJL8eAnZQqo41F5rXaH0o
+         nl0cw5B2CUw7a/dHNqzCD5Tkb5oZ0aHvMltve1XTAGDeSWhSQuqpU1WjXW9rvMziGZ
+         WcKrXoeUr8SGZGs37v/p09Z8LCVdCY8Pk6pVKyFVw84pMzcXjpK/mbhVtFM9/iv5Bj
+         LoCQLqouqSk+g==
+Date:   Tue, 19 Sep 2023 05:39:33 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "kw@linux.com" <kw@linux.com>,
+        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "kishon@kernel.org" <kishon@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "conor+dt@kernel.org" <conor+dt@kernel.org>,
+        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
+        "fancer.lancer@gmail.com" <fancer.lancer@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v20 04/19] PCI: designware-ep: Add INTx IRQs support
+Message-ID: <20230919103933.GA226055@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: f00P1RcoxC1xV01SXBnn0XiJmT3ATX3I
-X-Proofpoint-ORIG-GUID: f00P1RcoxC1xV01SXBnn0XiJmT3ATX3I
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-19_05,2023-09-18_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- priorityscore=1501 impostorscore=0 mlxlogscore=999 mlxscore=0 phishscore=0
- clxscore=1011 lowpriorityscore=0 adultscore=0 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
- definitions=main-2309190089
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYBPR01MB5341FBF030A8A4F35CA74B62D8FAA@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PARF_SLV_ADDR_SPACE_SIZE_2_3_3 macro is used for qcom_pcie_post_init_2_3_3.
-PCIe slave address space size register offset is 0x358, but was wrongly
-changed to 0x16c as a part of commit 39171b33f652 ("PCI: qcom: Remove
-PCIE20_ prefix from register definitions"). Fixing it, by using the right
-macro and remove the unused PARF_SLV_ADDR_SPACE_SIZE_2_3_3.
+On Tue, Sep 19, 2023 at 07:22:48AM +0000, Yoshihiro Shimoda wrote:
+> > From: Bjorn Helgaas, Sent: Saturday, September 16, 2023 6:24 AM
+> > On Thu, Sep 14, 2023 at 07:56:21AM +0000, Yoshihiro Shimoda wrote:
+> > ...
 
-Without this access to the registers of slave addr space like iATU etc
-are broken leading to PCIe enumeration failure on IPQ8074.
+> > > The following patches are not needed if INTx support should be dropped:
+> > >
+> > > eb185e1e628a PCI: designware-ep: Add INTx IRQs support
+> > > 5d0e51f85b23 PCI: dwc: Add outbound MSG TLPs support
+> > > 4758bef61cc2 PCI: dwc: Change arguments of dw_pcie_prog_outbound_atu()
+> > > 44938b13046b PCI: Add INTx Mechanism Messages macros
+> > 
+> > Since INTx support isn't mandatory at this time, I think we should
+> > drop these patches for now.  If/when somebody definitely needs INTx
+> > support, we can resurrect them, and then we'll have more clarity on
+> > how it should work and we'll be better able to test it.
+> 
+> I got it.
+> 
+> In this case, should I submit the patch series as v21?
 
-Fixes: 39171b33f652 ("PCI: qcom: Remove PCIE20_ prefix from register definitions")
-Cc: <Stable@vger.kernel.org>
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Tested-by: Robert Marko <robimarko@gmail.com>
-Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
----
- [V6] Fixed subject and commit text as per Bjorn Helgaas
+I think it will be simpler if you post a v21 that includes squashing
+the R-Car drivers together as well as dropping these INTx patches.
 
- drivers/pci/controller/dwc/pcie-qcom.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index e2f29404c84e..64420ecc24d1 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -43,7 +43,6 @@
- #define PARF_PHY_REFCLK				0x4c
- #define PARF_CONFIG_BITS			0x50
- #define PARF_DBI_BASE_ADDR			0x168
--#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x16c /* Register offset specific to IP ver 2.3.3 */
- #define PARF_MHI_CLOCK_RESET_CTRL		0x174
- #define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
- #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
-@@ -797,8 +796,7 @@ static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
- 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
- 	u32 val;
- 
--	writel(SLV_ADDR_SPACE_SZ,
--		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_2_3_3);
-+	writel(SLV_ADDR_SPACE_SZ, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
- 
- 	val = readl(pcie->parf + PARF_PHY_CTRL);
- 	val &= ~PHY_TEST_PWR_DOWN;
--- 
-2.34.1
-
+Bjorn
