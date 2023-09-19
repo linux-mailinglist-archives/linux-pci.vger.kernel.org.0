@@ -2,50 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 369D27A640A
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Sep 2023 14:57:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCC077A640E
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Sep 2023 14:58:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232328AbjISM5u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Sep 2023 08:57:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48380 "EHLO
+        id S232440AbjISM6E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Sep 2023 08:58:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232354AbjISM5l (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 08:57:41 -0400
+        with ESMTP id S232383AbjISM5t (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 08:57:49 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB3B1F4;
-        Tue, 19 Sep 2023 05:57:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2BCB1A7;
+        Tue, 19 Sep 2023 05:57:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695128253; x=1726664253;
+  t=1695128259; x=1726664259;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=lGsBT0uuTDOMajlNgJ3siJtE8uolW3uxhY8d88dRxik=;
-  b=T1G0/CXcHctM6ppj4iVgezGygY5YnnZMMdckACs8lpILcAzU0uDGoj/H
-   TFeI41KPn48SLBal6NNUct5EvOrVoKQE16PWr/q19uZBX0FAaiZgSKJr1
-   Ai4P2Y//wSJDWuVnlOepNovH2AUDICmUnrn8IXxdBVh6Iw++g3i2A2Gw6
-   GqES6DG367XdVJknpg1LrLicnN00R6/b2+C4rusXfY7Ig9EQP3JGSLrO2
-   2dXhGj+8uBjTxEzCJBF1IKbkWBEIG1tb8rR+upy0f9+h8rOx2YIyJ1Hyc
-   tCUUrBQ/2FBfS0SmsZl+2+xwfcnjAqZEAqCS3r5BhkSCOlg+uLrZdKcUh
+  bh=HMH5KEeZn7aezfXFMh9Smzjm5lwAV6MHWZcT0k35UEI=;
+  b=hrWhKcoo2kvcvJ7TE0zbB7iQCOQdfgOYqfde/MVLOpM4tiWsjFSsNSs8
+   bktttr8nq8g7qtV41nXfumwYnoOslEyNXeAPq5qQdPBOOSf1jUiRZcU0S
+   eHUdLv3Bfn9ap0ynfKqVcO30zKP9amMXSUxllsmjzj4OudY4UX6QxRBNK
+   Toc7WaV5aagfgw4+yl8abkMfDb4nn3EzD3aniVinxnDVlfhLNz17YMALz
+   h0ro4FmTq8pL1hq17oeZn2nQKHnpg8TgdOPQ2iosHVoQPEfriPKr7PY6y
+   mEVf3xNPOKxjM5O6oIbKVhupnAbOAww+0MFFPeFjs8G29wiyRzF5nMtb+
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="359324709"
+X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="359324719"
 X-IronPort-AV: E=Sophos;i="6.02,159,1688454000"; 
-   d="scan'208";a="359324709"
+   d="scan'208";a="359324719"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 05:57:33 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 05:57:39 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="746228856"
+X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="746228913"
 X-IronPort-AV: E=Sophos;i="6.02,159,1688454000"; 
-   d="scan'208";a="746228856"
+   d="scan'208";a="746228913"
 Received: from vdesserx-mobl1.ger.corp.intel.com (HELO localhost.localdomain) ([10.249.32.31])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 05:57:31 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 05:57:34 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v3 6/8] PCI: Use FIELD_GET() to extract Link Width
-Date:   Tue, 19 Sep 2023 15:56:46 +0300
-Message-Id: <20230919125648.1920-7-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v3 7/8] e1000e: Use PCI_EXP_LNKSTA_NLW & FIELD_GET() instead of custom defines/code
+Date:   Tue, 19 Sep 2023 15:56:47 +0300
+Message-Id: <20230919125648.1920-8-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230919125648.1920-1-ilpo.jarvinen@linux.intel.com>
 References: <20230919125648.1920-1-ilpo.jarvinen@linux.intel.com>
@@ -61,70 +68,56 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use FIELD_GET() to extract PCIe Negotiated and Maximum Link Width fields
-instead of custom masking and shifting.
+e1000e has own copy of PCI Negotiated Link Width field defines. Use the
+ones from include/uapi/linux/pci_regs.h instead of the custom ones and
+remove the custom ones and convert to FIELD_GET().
 
+Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/pci/pci-sysfs.c | 5 ++---
- drivers/pci/pci.c       | 6 +++---
- 2 files changed, 5 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/intel/e1000e/defines.h | 2 --
+ drivers/net/ethernet/intel/e1000e/mac.c     | 7 ++++---
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index d9eede2dbc0e..5a6241044c3c 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -12,7 +12,7 @@
-  * Modeled after usb's driverfs.c
-  */
+diff --git a/drivers/net/ethernet/intel/e1000e/defines.h b/drivers/net/ethernet/intel/e1000e/defines.h
+index 63c3c79380a1..a4d29c9e03a6 100644
+--- a/drivers/net/ethernet/intel/e1000e/defines.h
++++ b/drivers/net/ethernet/intel/e1000e/defines.h
+@@ -681,8 +681,6 @@
+ #define PCIE_LINK_STATUS             0x12
  
--
+ #define PCI_HEADER_TYPE_MULTIFUNC    0x80
+-#define PCIE_LINK_WIDTH_MASK         0x3F0
+-#define PCIE_LINK_WIDTH_SHIFT        4
+ 
+ #define PHY_REVISION_MASK      0xFFFFFFF0
+ #define MAX_PHY_REG_ADDRESS    0x1F  /* 5 bit address bus (0-0x1F) */
+diff --git a/drivers/net/ethernet/intel/e1000e/mac.c b/drivers/net/ethernet/intel/e1000e/mac.c
+index 5df7ad93f3d7..5340cf73778d 100644
+--- a/drivers/net/ethernet/intel/e1000e/mac.c
++++ b/drivers/net/ethernet/intel/e1000e/mac.c
+@@ -1,6 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright(c) 1999 - 2018 Intel Corporation. */
+ 
 +#include <linux/bitfield.h>
- #include <linux/kernel.h>
- #include <linux/sched.h>
- #include <linux/pci.h>
-@@ -230,8 +230,7 @@ static ssize_t current_link_width_show(struct device *dev,
- 	if (err)
- 		return -EINVAL;
++
+ #include "e1000.h"
  
--	return sysfs_emit(buf, "%u\n",
--		(linkstat & PCI_EXP_LNKSTA_NLW) >> PCI_EXP_LNKSTA_NLW_SHIFT);
-+	return sysfs_emit(buf, "%u\n", FIELD_GET(PCI_EXP_LNKSTA_NLW, linkstat));
- }
- static DEVICE_ATTR_RO(current_link_width);
+ /**
+@@ -25,9 +27,8 @@ s32 e1000e_get_bus_info_pcie(struct e1000_hw *hw)
+ 		pci_read_config_word(adapter->pdev,
+ 				     cap_offset + PCIE_LINK_STATUS,
+ 				     &pcie_link_status);
+-		bus->width = (enum e1000_bus_width)((pcie_link_status &
+-						     PCIE_LINK_WIDTH_MASK) >>
+-						    PCIE_LINK_WIDTH_SHIFT);
++		bus->width = (enum e1000_bus_width)FIELD_GET(PCI_EXP_LNKSTA_NLW,
++							     pcie_link_status);
+ 	}
  
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 59c01d68c6d5..a8adc34dc86f 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -9,6 +9,7 @@
-  */
- 
- #include <linux/acpi.h>
-+#include <linux/bitfield.h>
- #include <linux/kernel.h>
- #include <linux/delay.h>
- #include <linux/dmi.h>
-@@ -6257,8 +6258,7 @@ u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
- 		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
- 
- 		next_speed = pcie_link_speed[lnksta & PCI_EXP_LNKSTA_CLS];
--		next_width = (lnksta & PCI_EXP_LNKSTA_NLW) >>
--			PCI_EXP_LNKSTA_NLW_SHIFT;
-+		next_width = FIELD_GET(PCI_EXP_LNKSTA_NLW, lnksta);
- 
- 		next_bw = next_width * PCIE_SPEED2MBS_ENC(next_speed);
- 
-@@ -6330,7 +6330,7 @@ enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev)
- 
- 	pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
- 	if (lnkcap)
--		return (lnkcap & PCI_EXP_LNKCAP_MLW) >> 4;
-+		return FIELD_GET(PCI_EXP_LNKCAP_MLW, lnkcap);
- 
- 	return PCIE_LNK_WIDTH_UNKNOWN;
- }
+ 	mac->ops.set_lan_id(hw);
 -- 
 2.30.2
 
