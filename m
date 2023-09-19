@@ -2,53 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ED0E77A581E
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Sep 2023 05:54:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10D697A594A
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Sep 2023 07:23:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231451AbjISDyv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Sep 2023 23:54:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55024 "EHLO
+        id S231272AbjISFXJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Sep 2023 01:23:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231469AbjISDys (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Sep 2023 23:54:48 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD7A191
-        for <linux-pci@vger.kernel.org>; Mon, 18 Sep 2023 20:54:31 -0700 (PDT)
+        with ESMTP id S231178AbjISFXH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 01:23:07 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 956C5FC
+        for <linux-pci@vger.kernel.org>; Mon, 18 Sep 2023 22:23:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695095671; x=1726631671;
-  h=date:from:to:cc:subject:message-id;
-  bh=E0SsyOYmqslMuOaA+jfiHsGY2R2NYwR9v3phF2H6mMw=;
-  b=HmvyHt53jFQInYixZ2b6hfDulQN82pdwB3BKnh29MWHdiwH4e/f3qsC2
-   y4gQeOTKsMeiVt8myWLIQHiUnDQwkYNagZIPcg5xrQ7Wzb+9NGzHfs2y8
-   ejUKUHU/miEPaOGDG7ZPRim2Xa2K+YyBv4SbJke9aJaNT2NuMNg5GwJDp
-   nILARCNVONn7co3YnsPoqFzheZx5hoKI9YC5SiZ3CDXtr/bfrmnqerG0j
-   huyTJSH34Uv1X9OUyr+jlnTpCWfNwuzPvzJ46Lem4x9sNW5OkAkzR+iIn
-   c80EFiGFC6C9c0dwkdK3zxWeHNcAerMbJ8oUKcbeYEO+HLyC/dGvU0gy+
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="383668715"
+  t=1695100981; x=1726636981;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=9UarvGE5f985VRjvYnzEmkakOmB3zztnFvoWOpYQP0g=;
+  b=hQSrU4iA/HIHeTciTLXIFE16YoMM8Nx7O0sVYYWM7tqIZ9EpsSzM8cHo
+   6bRGBHK0aopVNOsQSK4mj8gD7pzw9PSfPDXG16sv0/5ivir/MlevG1+UF
+   FhtHn+XVUjih6Z4DeODexwELgc5eSNnxAg5LCo0MlilXRFzRbt3r9jAvq
+   Znrp9f6vLOnI6itFKW+Hc6oZzUycRGiPp1ASQI1YXN+XLlsYCjNFJjNM4
+   6HXGT3MVhAHDNtbj+PfsdXuqXysS6nTWQA2OostZ13epSjcIYtGJM7psD
+   2cRGGG8WjzFRW+ebEk41y9y/y1viq92lwxByJXRsUoSo//TZWhmTP1Sf7
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="359254786"
 X-IronPort-AV: E=Sophos;i="6.02,158,1688454000"; 
-   d="scan'208";a="383668715"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 20:54:26 -0700
+   d="scan'208";a="359254786"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 22:23:01 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="869831586"
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="749329604"
 X-IronPort-AV: E=Sophos;i="6.02,158,1688454000"; 
-   d="scan'208";a="869831586"
+   d="scan'208";a="749329604"
 Received: from lkp-server02.sh.intel.com (HELO 9ef86b2655e5) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 18 Sep 2023 20:54:25 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 18 Sep 2023 22:23:00 -0700
 Received: from kbuild by 9ef86b2655e5 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1qiRoY-0006rf-33;
-        Tue, 19 Sep 2023 03:54:19 +0000
-Date:   Tue, 19 Sep 2023 11:53:57 +0800
+        id 1qiTCM-0006w0-11;
+        Tue, 19 Sep 2023 05:22:58 +0000
+Date:   Tue, 19 Sep 2023 13:22:47 +0800
 From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
+To:     "Krzysztof =?utf-8?Q?Wilczy=C5=84ski" ?= <kwilczynski@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- 87ab156b7bb2a117a79692a96239c667f5b4f08e
-Message-ID: <202309191155.1xgRHmyJ-lkp@intel.com>
+Subject: [pci:controller/vmd] BUILD SUCCESS
+ 4c64d708f99378e6719294cc63a77adf8eeb82b4
+Message-ID: <202309191345.C0qlXzqv-lkp@intel.com>
 User-Agent: s-nail v14.9.24
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
@@ -58,12 +60,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: 87ab156b7bb2a117a79692a96239c667f5b4f08e  Merge branch 'pci/endpoint'
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/vmd
+branch HEAD: 4c64d708f99378e6719294cc63a77adf8eeb82b4  PCI: vmd: Fix inconsistent indentation in vmd_resume()
 
-elapsed time: 723m
+elapsed time: 886m
 
-configs tested: 150
+configs tested: 158
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -78,6 +80,7 @@ arc                               allnoconfig   gcc
 arc                              allyesconfig   gcc  
 arc                                 defconfig   gcc  
 arc                            hsdk_defconfig   gcc  
+arc                   randconfig-001-20230918   gcc  
 arc                   randconfig-001-20230919   gcc  
 arm                              allmodconfig   gcc  
 arm                               allnoconfig   gcc  
@@ -85,6 +88,7 @@ arm                              allyesconfig   gcc
 arm                         assabet_defconfig   gcc  
 arm                                 defconfig   gcc  
 arm                      footbridge_defconfig   gcc  
+arm                   randconfig-001-20230918   gcc  
 arm                   randconfig-001-20230919   gcc  
 arm                           stm32_defconfig   gcc  
 arm64                            allmodconfig   gcc  
@@ -122,6 +126,7 @@ loongarch                        allmodconfig   gcc
 loongarch                         allnoconfig   gcc  
 loongarch                        allyesconfig   gcc  
 loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20230918   gcc  
 loongarch             randconfig-001-20230919   gcc  
 m68k                             allmodconfig   gcc  
 m68k                              allnoconfig   gcc  
@@ -158,12 +163,14 @@ riscv                             allnoconfig   gcc
 riscv                            allyesconfig   gcc  
 riscv                               defconfig   gcc  
 riscv             nommu_k210_sdcard_defconfig   gcc  
+riscv                 randconfig-001-20230918   gcc  
 riscv                 randconfig-001-20230919   gcc  
 riscv                          rv32_defconfig   gcc  
 s390                             allmodconfig   gcc  
 s390                              allnoconfig   gcc  
 s390                             allyesconfig   gcc  
 s390                                defconfig   gcc  
+s390                  randconfig-001-20230918   gcc  
 s390                  randconfig-001-20230919   gcc  
 sh                               allmodconfig   gcc  
 sh                                allnoconfig   gcc  
@@ -196,6 +203,7 @@ x86_64       buildonly-randconfig-004-20230919   gcc
 x86_64       buildonly-randconfig-005-20230919   gcc  
 x86_64       buildonly-randconfig-006-20230919   gcc  
 x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
 x86_64                randconfig-001-20230919   gcc  
 x86_64                randconfig-002-20230919   gcc  
 x86_64                randconfig-003-20230919   gcc  
@@ -214,6 +222,8 @@ x86_64                randconfig-073-20230919   gcc
 x86_64                randconfig-074-20230919   gcc  
 x86_64                randconfig-075-20230919   gcc  
 x86_64                randconfig-076-20230919   gcc  
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                         rhel-8.3-kunit   gcc  
 x86_64                          rhel-8.3-rust   clang
 x86_64                               rhel-8.3   gcc  
 xtensa                            allnoconfig   gcc  
