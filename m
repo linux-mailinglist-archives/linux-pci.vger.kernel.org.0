@@ -2,115 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 90C0A7A64D8
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Sep 2023 15:27:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C3A77A654F
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Sep 2023 15:36:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232274AbjISN12 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 19 Sep 2023 09:27:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48158 "EHLO
+        id S232357AbjISNgk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Sep 2023 09:36:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231849AbjISN12 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 09:27:28 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCDA2EC;
-        Tue, 19 Sep 2023 06:27:22 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Rqj9b5SvDz6K5nL;
-        Tue, 19 Sep 2023 21:26:27 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 19 Sep
- 2023 14:27:19 +0100
-Date:   Tue, 19 Sep 2023 14:27:17 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        "Jesse Brandeburg" <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric Dumazet" <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Paolo Abeni" <pabeni@redhat.com>,
-        <intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 8/8] e1000e: Use pcie_capability_read_word() for
- reading LNKSTA
-Message-ID: <20230919142717.0000247c@Huawei.com>
-In-Reply-To: <20230919125648.1920-9-ilpo.jarvinen@linux.intel.com>
-References: <20230919125648.1920-1-ilpo.jarvinen@linux.intel.com>
-        <20230919125648.1920-9-ilpo.jarvinen@linux.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S231960AbjISNgk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 09:36:40 -0400
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E43FF9;
+        Tue, 19 Sep 2023 06:36:34 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 0A3D15C00A5;
+        Tue, 19 Sep 2023 09:36:34 -0400 (EDT)
+Received: from imap47 ([10.202.2.97])
+  by compute5.internal (MEProxy); Tue, 19 Sep 2023 09:36:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+         h=cc:cc:content-transfer-encoding:content-type:content-type
+        :date:date:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to;
+         s=fm2; t=1695130594; x=1695216994; bh=G3Kkrzt0AGrrY/tjL0EyntUuI
+        Bb8mCCGj+mtTnmx+Q8=; b=UnODe/CFFm/fKyGaSWbPPfJGyccMgh1Fl4ql7J8B2
+        9jTTCbW7SBL9mmZVXktU9NHHOKE59vNmIt0/3PhYLyfB2ct9PpB2TtdW2GrTNk0N
+        p54KxQZhj60LKixvUfYSDQa4v3EbvN8Xt+LCAGQGVQ26IZGNwzMCGuce3Gghezi+
+        NDemRIJWikj5y3YJh93ZKtlx/6vlOGJnSRujwbi6RlScOarSzktohPxAwVVayDgE
+        wc1G63LzMMrc7gbgXgfjjE3fjf+QuIdkFrVuooWiII9CtYxJ0KGYCqtctLBBxlXB
+        a0MaGet4EcXXzcNEDj0hlAAITshodNu2ZUQSCM82e95IQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+        1695130594; x=1695216994; bh=G3Kkrzt0AGrrY/tjL0EyntUuIBb8mCCGj+m
+        tTnmx+Q8=; b=Ki98uDeNfz0jsUIT+QrBfvj6hR3UdAj0JGP0Kk0m3is6XGITVnc
+        DitfO8Z+GtWWohKTB22DWPAWKANFWZvwpnHoOdj68y6C4Z7ADQwwOPv0cl9n2b+x
+        ySjituYs4vc8wTr6657lSCf6nuZlPaevwRT+ZlC5EloYB2OJvQKrFkiBrlsDjKms
+        R/4JDdefME8w8YDPy5+wnxG2+Fya9/liDAL5qCMMKpXum+43+FmCAvT5DhfpQlfI
+        HT3jt59lJiwFge+hvLDqbVFgQ4bt7cNR/bPeevGW7CpYG9z9TksRHzzWy5ZpkhSc
+        +qvxWapAs7q7hQNor2DKBFbtWnh42FwH2mg==
+X-ME-Sender: <xms:4KMJZbW9LbqWPcHkGh_DlPuxCBkGLtv3JnsYlVzXjKzSIeeti7RIhg>
+    <xme:4KMJZTmAvH4L7z_nGaP5KdfIvqOZiks__CHr-LlmDmPx7zd2plYewMvSEyaWyUHFk
+    jKbOhCbS2QMQUW6WgU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudekuddgfeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfu
+    vhgvnhcurfgvthgvrhdfuceoshhvvghnsehsvhgvnhhpvghtvghrrdguvghvqeenucggtf
+    frrghtthgvrhhnpeevhedthffgffelhedujefgueduudeutdefleevvdetudelhfeihfdv
+    ffelteeuudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehsvhgvnhesshhvvghnphgvthgvrhdruggvvh
+X-ME-Proxy: <xmx:4KMJZXYmYuvL3nH0_SgD_kNdsC7XHLClfVBAmruidR-V60B6y3P-MQ>
+    <xmx:4KMJZWXQA3WzRBb5zCu-QYvcA4iZm-q-O5n5rA4kxuHe43SgaGHuSg>
+    <xmx:4KMJZVk9Oi99N4mk7qm3lIUI4afyU90X7PI_XuVzNp7f82_pACbMKw>
+    <xmx:4qMJZdNsFBGmk6guzMsje_BoEdpEh-d6HrZzup8N865hs4SPZgsPDA>
+Feedback-ID: i51094778:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 0378AA60077; Tue, 19 Sep 2023 09:36:31 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-761-gece9e40c48-fm-20230913.001-gece9e40c
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Message-Id: <aabaa49f-8988-42c0-bf8e-2266005e2155@app.fastmail.com>
+In-Reply-To: <20230918131103.24119-7-ilpo.jarvinen@linux.intel.com>
+References: <20230918131103.24119-1-ilpo.jarvinen@linux.intel.com>
+ <20230918131103.24119-7-ilpo.jarvinen@linux.intel.com>
+Date:   Tue, 19 Sep 2023 15:36:10 +0200
+From:   "Sven Peter" <sven@svenpeter.dev>
+To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        linux-pci@vger.kernel.org, "Bjorn Helgaas" <helgaas@kernel.org>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        "Rob Herring" <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        "Lukas Wunner" <lukas@wunner.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Heiner Kallweit" <hkallweit1@gmail.com>,
+        "Emmanuel Grumbach" <emmanuel.grumbach@intel.com>,
+        linux-kernel@vger.kernel.org, "Hector Martin" <marcan@marcan.st>,
+        "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
+        "Marcel Holtmann" <marcel@holtmann.org>,
+        "Johan Hedberg" <johan.hedberg@gmail.com>,
+        "Luiz Augusto von Dentz" <luiz.dentz@gmail.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>, asahi@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org,
+        linux-bluetooth@vger.kernel.org
+Cc:     ath10k@lists.infradead.org, ath11k@lists.infradead.org,
+        ath12k@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
+        linux-mediatek@lists.infradead.org, linux-rdma@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2 06/13] Bluetooth: hci_bcm4377: Convert aspm disable to quirk
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 19 Sep 2023 15:56:48 +0300
-Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
+Hi,
 
-> Use pcie_capability_read_word() for reading LNKSTA and remove the
-> custom define that matches to PCI_EXP_LNKSTA.
-> 
-> As only single user for cap_offset remains, replace it with a call to
-> pci_pcie_cap(). Instead of e1000_adapter, make local variable out of
-> pci_dev because both users are interested in it.
-> 
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-LGTM
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
+On Mon, Sep 18, 2023, at 15:10, Ilpo J=C3=A4rvinen wrote:
+> pci_disable_link_state() was made reliable regardless of ASPM CONFIG
+> and OS being disallowed to change ASPM states to allow drivers to rely
+> on pci_disable_link_state() working.
+>
+> Remove driver working around unreliable pci_disable_link_state() from
+> hci_bcm4377 driver and add a PCI quirk to disable ASPM.
+>
+> Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 > ---
->  drivers/net/ethernet/intel/e1000e/defines.h |  1 -
->  drivers/net/ethernet/intel/e1000e/mac.c     | 11 ++++-------
->  2 files changed, 4 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/e1000e/defines.h b/drivers/net/ethernet/intel/e1000e/defines.h
-> index a4d29c9e03a6..23a58cada43a 100644
-> --- a/drivers/net/ethernet/intel/e1000e/defines.h
-> +++ b/drivers/net/ethernet/intel/e1000e/defines.h
-> @@ -678,7 +678,6 @@
->  
->  /* PCI/PCI-X/PCI-EX Config space */
->  #define PCI_HEADER_TYPE_REGISTER     0x0E
-> -#define PCIE_LINK_STATUS             0x12
->  
->  #define PCI_HEADER_TYPE_MULTIFUNC    0x80
->  
-> diff --git a/drivers/net/ethernet/intel/e1000e/mac.c b/drivers/net/ethernet/intel/e1000e/mac.c
-> index 5340cf73778d..694a779e718d 100644
-> --- a/drivers/net/ethernet/intel/e1000e/mac.c
-> +++ b/drivers/net/ethernet/intel/e1000e/mac.c
-> @@ -17,16 +17,13 @@ s32 e1000e_get_bus_info_pcie(struct e1000_hw *hw)
->  {
->  	struct e1000_mac_info *mac = &hw->mac;
->  	struct e1000_bus_info *bus = &hw->bus;
-> -	struct e1000_adapter *adapter = hw->adapter;
-> -	u16 pcie_link_status, cap_offset;
-> +	struct pci_dev *pdev = hw->adapter->pdev;
-> +	u16 pcie_link_status;
->  
-> -	cap_offset = adapter->pdev->pcie_cap;
-> -	if (!cap_offset) {
-> +	if (!pci_pcie_cap(pdev)) {
->  		bus->width = e1000_bus_width_unknown;
->  	} else {
-> -		pci_read_config_word(adapter->pdev,
-> -				     cap_offset + PCIE_LINK_STATUS,
-> -				     &pcie_link_status);
-> +		pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &pcie_link_status);
->  		bus->width = (enum e1000_bus_width)FIELD_GET(PCI_EXP_LNKSTA_NLW,
->  							     pcie_link_status);
->  	}
 
+Acked-by: Sven Peter <sven@svenpeter.dev>
+
+
+Thanks,
+
+Sven
