@@ -2,159 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF9227A6ABD
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Sep 2023 20:32:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91CB37A6ACC
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Sep 2023 20:41:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230469AbjISScl convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 19 Sep 2023 14:32:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45580 "EHLO
+        id S229853AbjISSlf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Sep 2023 14:41:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229772AbjISSck (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 14:32:40 -0400
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4978297
-        for <linux-pci@vger.kernel.org>; Tue, 19 Sep 2023 11:32:34 -0700 (PDT)
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5733d11894dso979474eaf.0
-        for <linux-pci@vger.kernel.org>; Tue, 19 Sep 2023 11:32:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695148353; x=1695753153;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jrgbXkVRXj9thX7Tkf7Heh2HSLmbCp5DxrBfFbH29rQ=;
-        b=gv+XNCNwzQTaWBqyQii35RfPAS315jMqxIazZomfq6cw0Y9vW6tgELzhOiH7zqib3w
-         XPRCgclIjn4B1uE2uEoUnd58PikcG2E3u67ctYCjNbnyQRy7kJ0w2i9RtDZ7v9bpj3FP
-         MiN9jYU+1Pa13lG4/2R8btV6ZULitY57b3zY4MYa1hyUi4cPdLtIV5yRU25Pu8tHAW5K
-         RloYXJyGbitbXd04I22asXZiyuqTTNeWQCVOw4wfVB+NhSMYBJB3ogoqNFO+uWQFXJDE
-         d+2WkK8zvESp6xBU4UgXCQYKLNOJIpoaUFpD9Il33Pu2TnJwL3zPPyXHrYqOXuJstnDS
-         8w0A==
-X-Gm-Message-State: AOJu0YxrUpA/ENe+2+On31oTiVzEBg0zcQW/z7CyxBpSdgA03ZoAZ9Ib
-        wy/QKO0cS0jJ7DjuDBSaioi5eHm5aZhNTt9WUyI=
-X-Google-Smtp-Source: AGHT+IEg6QEPgkQB1QHY7+py462eGRwd4jXmP+u8mE991T5zQePBWIyf8o7qVxn18gstPqUjGh06ID/m8MjTJPASM6s=
-X-Received: by 2002:a4a:2a4e:0:b0:573:3a3b:594b with SMTP id
- x14-20020a4a2a4e000000b005733a3b594bmr373995oox.1.1695148353341; Tue, 19 Sep
- 2023 11:32:33 -0700 (PDT)
+        with ESMTP id S229552AbjISSlf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 14:41:35 -0400
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BC319D
+        for <linux-pci@vger.kernel.org>; Tue, 19 Sep 2023 11:41:29 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 6B8141033362A;
+        Tue, 19 Sep 2023 20:41:27 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 3959A25D6FC; Tue, 19 Sep 2023 20:41:27 +0200 (CEST)
+Date:   Tue, 19 Sep 2023 20:41:27 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     "Schroeder, Chad" <CSchroeder@sonifi.com>
+Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: PCIe device issue since v6.1.16
+Message-ID: <20230919184127.GA13587@wunner.de>
+References: <DM6PR16MB2844903E34CAB910082DF019B1FAA@DM6PR16MB2844.namprd16.prod.outlook.com>
+ <20230919145921.GA8609@wunner.de>
+ <DM6PR16MB2844AC71B336A5AD50005221B1FAA@DM6PR16MB2844.namprd16.prod.outlook.com>
 MIME-Version: 1.0
-References: <CAJZ5v0jCrYA8UX8OXLgv1NLZGRevYHdOBu8FN0i+HHi8+XDuxw@mail.gmail.com>
- <20230919173318.GA235394@bhelgaas>
-In-Reply-To: <20230919173318.GA235394@bhelgaas>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 19 Sep 2023 20:32:22 +0200
-Message-ID: <CAJZ5v0hDm-B9zAMcf0aYXDjTaOnvgGNsaPYX=yc5kVy9YR1cdQ@mail.gmail.com>
-Subject: Re: [PATCH v4] PCI: vmd: Do not change the BIOS Hotplug setting on
- VMD rootports
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Patel, Nirmal" <nirmal.patel@linux.intel.com>,
-        linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR16MB2844AC71B336A5AD50005221B1FAA@DM6PR16MB2844.namprd16.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 19, 2023 at 7:33 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Sep 19, 2023 at 05:52:33PM +0200, Rafael J. Wysocki wrote:
-> > On Tue, Sep 19, 2023 at 4:34 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Tue, Sep 19, 2023 at 11:31:57AM +0800, Kai-Heng Feng wrote:
-> > > > On Wed, Sep 13, 2023 at 8:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > [snipped]
-> > > > > Hmm.  In some ways the VMD device acts as a Root Port, since it
-> > > > > originates a new hierarchy in a separate domain, but on the upstream
-> > > > > side, it's just a normal endpoint.
-> > > > >
-> > > > > How does AER for the new hierarchy work?  A device below the VMD can
-> > > > > generate ERR_COR/ERR_NONFATAL/ERR_FATAL messages.  I guess I was
-> > > > > assuming those messages would terminate at the VMD, and the VMD could
-> > > > > generate an AER interrupt just like a Root Port.  But that can't be
-> > > > > right because I don't think VMD would have the Root Error Command
-> > > > > register needed to manage that interrupt.
-> > > >
-> > > > VMD itself doesn't seem to manage AER, the rootport that "moved" from
-> > > > 0000 domain does:
-> > > > [ 2113.507345] pcieport 10000:e0:06.0: AER: Corrected error received:
-> > > > 10000:e1:00.0
-> > > > [ 2113.507380] nvme 10000:e1:00.0: PCIe Bus Error: severity=Corrected,
-> > > > type=Physical Layer, (Receiver ID)
-> > > > [ 2113.507389] nvme 10000:e1:00.0:   device [144d:a80a] error
-> > > > status/mask=00000001/0000e000
-> > > > [ 2113.507398] nvme 10000:e1:00.0:    [ 0] RxErr                  (First)
-> > >
-> > > Oh, I forgot how VMD works.  It sounds like there *is* a Root Port
-> > > that is logically below the VMD, e.g., (from
-> > > https://bugzilla.kernel.org/show_bug.cgi?id=215027):
-> > >
-> > >   ACPI: PCI Root Bridge [PC00] (domain 0000 [bus 00-e0])
-> > >   acpi PNP0A08:00: _OSC: platform does not support [AER]
-> > >   acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug SHPCHotplug PME PCIeCapability LTR]
-> > >   pci  0000:00:0e.0: [8086:467f] type 00         # VMD
-> > >   vmd  0000:00:0e.0: PCI host bridge to bus 10000:e0
-> > >   pci 10000:e0:06.0: [8086:464d] type 01         # Root Port to [bus e1]
-> > >   pci 10000:e1:00.0: [144d:a80a] type 00         # Samsung NVMe
-> > >
-> > > So ERR_* messages from the e1:00.0 Samsung device would terminate at
-> > > the e0:06.0 Root Port.  That Root Port has an AER Capability with Root
-> > > Error Command/Status/Error Source registers.
-> > >
-> > > > > But if VMD just passes those messages up to the Root Port, the source
-> > > > > of the messages (the Requester ID) won't make any sense because
-> > > > > they're in a hierarchy the Root Port doesn't know anything about.
-> > > >
-> > > > Not sure what's current status is but I think Nirmal's patch is valid
-> > > > for both our cases.
-> > >
-> > > So I think the question is whether that PNP0A08:00 _OSC applies to
-> > > domain 10000.  I think the answer is "no" because the platform doesn't
-> > > know about the existence of domain 10000, and it can't access config
-> > > space in that domain.
-> >
-> > Well, the VMD device itself is there in domain 0000, however, and sure
-> > enough, the platform firmware can access its config space.
-> >
-> > > E.g., if _OSC negotiated that the platform owned AER in domain 0000, I
-> > > don't think it would make sense for that to mean the platform *also*
-> > > owned AER in domain 10000, because the platform doesn't know how to
-> > > configure AER or handle AER interrupts in that domain.
-> >
-> > I'm not sure about this.
-> >
-> > AFAICS, domain 10000 is not physically independent of domain 0000, so
-> > I'm not sure to what extent the above applies.
->
-> Domain 10000 definitely isn't physically independent of domain 0000
-> since all TLPs to/from 10000 traverse the domain 0000 link to the VMD
-> at 0000:00:0e.0.
->
-> The platform can access the VMD endpoint (0000:00:0e.0) config space.
-> But I don't think the platform can access config space of anything in
-> domain 10000, which in my mind makes it *logically* independent.
->
-> IIUC, config access to anything below the VMD (e.g., domain 10000) is
-> done by the vmd driver itself using BAR 0 of the VMD device
-> (vmd_cfg_addr(), vmd_pci_read(), vmd_pci_write(), see [1]).
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/vmd.c?id=v6.5#n378
+Hi Chad,
 
-I know, but the platform firmware may not need to go through the VMD
-BAR in order to change the configuration of the devices in the "VMD
-segment".
+On Tue, Sep 19, 2023 at 03:08:08PM +0000, Schroeder, Chad wrote:
+> 0000:64:00.0 PCI bridge: Intel Corporation Sky Lake-E PCI Express Root Port A (rev 07) (prog-if 00 [Normal decode])
+[...]
+> 	Bus: primary=64, secondary=65, subordinate=65, sec-latency=0
+[...]
+> 	Capabilities: [90] Express (v2) Root Port (Slot+), MSI 00
+[...]
+> 		LnkCap:	Port #5, Speed 8GT/s, Width x16, ASPM L1, Exit Latency L1 <16us
+> 			ClockPM- Surprise+ LLActRep+ BwNot+ ASPMOptComp+
+> 		LnkCtl:	ASPM Disabled; RCB 64 bytes, Disabled- CommClk+
+> 			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> 		LnkSta:	Speed 2.5GT/s, Width x1
+> 			TrErr- Train- SlotClk+ DLActive+ BWMgmt- ABWMgmt-
 
-The question is whether or not the OS should attempt to control the
-_OSC features on the VMD segment if the firmware has not allowed it to
-control those features on the primary "parent" segment and the way the
-config space on the VMD segment is accessed may not be entirely
-relevant in that respect.
+pci_bridge_secondary_bus_reset() calls pcibios_reset_secondary_bus()
+to perform the SBR, then calls pci_bridge_wait_for_secondary_bus()
+to perform the delays prescribed by the spec.
 
-Note that VMD may want to impose additional restrictions on the OS
-control of those features, but it is not clear to me whether or not it
-should attempt to override the refusal to grant control of them on the
-primary host bridge.
+At the bottom of pci_bridge_wait_for_secondary_bus(), there's an if-else
+clause and based on the lspci output quoted above, I'd expect that control
+flow enters the else branch (because the SkyLake Root Port supports more
+than 5 GT/s, namely 8 GT/s.
+
+The function then calls pcie_wait_for_link_delay() to wait for the link
+to come up, then waits 100 msec per PCIe r6.1 sec 6.6.1.
+
+Afterwards it calls pci_dev_wait() to poll the Vendor ID register of the
+VideoPropulsion card.
+
+My guess is that the VideoPropulsion card requires a longer delay than
+100 msec before its config space is first accessed.  The PCI system errors
+that you mention are probably raised by the card because it is not ready
+yet to handle those config space accesses.
+
+Since this is a PCIe r1.0 card, I've checked whether PCIe r1.0 has
+longer delays after reset than contemporary revisions of the PCIe
+Base Spec.  But that's not the case.  PCIe r1.0 sec 7.6 says:
+
+   "To allow components to perform internal initialization, system
+    software must wait for at least 100 ms from the end of a reset
+    (cold/warm/hot) before it is permitted to issue Configuration
+    Requests to PCI Express devices
+    [...]
+    The Root Complex and/or system software must allow 1.0s (+50% / -0%)
+    after a reset (hot/warm/cold), before it may determine that a device
+    which fails to return a Successful Completion status for a valid
+    Configuration Request is a broken device"
+
+Those timing requirements are essentially identical to what contemporary
+PCIe revisions prescribe.  It's also what the code in the kernel follows.
+
+Which leads me to believe that the longer delay before the first config
+space access required by this particular card is a quirk.  So I'm
+proposing the following patch:
+
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 20ac67d..3cbff71 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5993,3 +5993,9 @@ static void dpc_log_size(struct pci_dev *dev)
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2f, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
+ #endif
++
++static void pci_fixup_d3cold_delay_1sec(struct pci_dev *pdev)
++{
++	pdev->d3cold_delay = 1000;
++}
++DECLARE_PCI_FIXUP_FINAL(0x5555, 0x0004, pci_fixup_d3cold_delay_1sec);
+
+
+Could you test if applying this on top of v6.1.16 fixes the issue?
+(Apply with "patch -p1 < filename.patch" at the top of the kernel
+source tree.)
+
+Thanks,
+
+Lukas
