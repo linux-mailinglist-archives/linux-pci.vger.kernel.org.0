@@ -2,122 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 603117A6414
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Sep 2023 14:58:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D846F7A6446
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Sep 2023 15:03:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232462AbjISM62 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Sep 2023 08:58:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34112 "EHLO
+        id S231739AbjISNDZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Sep 2023 09:03:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232425AbjISM6R (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 08:58:17 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15E871AB;
-        Tue, 19 Sep 2023 05:58:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695128281; x=1726664281;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=wybvJEwkKu9h7qtl+C0LlmYtIk8v3lXqyQYeuG0CfZU=;
-  b=eEYsWEHt9Do6GBf/16Gq4r8MZMz34VTVNvOJlsIcmr4qmkqRNdUWN6BN
-   /Pp3ZGJTbhVS2KWnVfCw27UM5PHTvBjnDINF7/iZVIvcAYZxS27MMsncm
-   snrDbMickYQ8lOkd1LY+p6gvLOjuv013EK+DUNu4LUzNctQnzihxDOu37
-   AB7g7VfBrFotS/jqBDzXZHBBDgWCXywIqOBKPlTMzQ5A17VxE9aDZWWuH
-   ZOWjjjYdASDkqhb0wowGyCjOiCWP/ajY3lZpRNtnb9hii+d6eUcjtdUuc
-   qdcqGMZq41JV/AlprzKAr5KTL+rBm4J+IRSpYRPOALLyXJblySWDl1TZs
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="359324748"
-X-IronPort-AV: E=Sophos;i="6.02,159,1688454000"; 
-   d="scan'208";a="359324748"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 05:57:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="746228994"
-X-IronPort-AV: E=Sophos;i="6.02,159,1688454000"; 
-   d="scan'208";a="746228994"
-Received: from vdesserx-mobl1.ger.corp.intel.com (HELO localhost.localdomain) ([10.249.32.31])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 05:57:40 -0700
-From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v3 8/8] e1000e: Use pcie_capability_read_word() for reading LNKSTA
-Date:   Tue, 19 Sep 2023 15:56:48 +0300
-Message-Id: <20230919125648.1920-9-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230919125648.1920-1-ilpo.jarvinen@linux.intel.com>
-References: <20230919125648.1920-1-ilpo.jarvinen@linux.intel.com>
+        with ESMTP id S231360AbjISNDZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 09:03:25 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5464AF3;
+        Tue, 19 Sep 2023 06:03:18 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.54])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4RqhZh6WJvzMl6D;
+        Tue, 19 Sep 2023 20:59:40 +0800 (CST)
+Received: from [10.67.121.177] (10.67.121.177) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Tue, 19 Sep 2023 21:03:14 +0800
+CC:     <yangyicong@hisilicon.com>, <alexander.shishkin@linux.intel.com>,
+        <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
+        <prime.zeng@hisilicon.com>, <linuxarm@huawei.com>,
+        <hejunhao3@huawei.com>
+Subject: Re: [PATCH v2 5/5] hwtracing: hisi_ptt: Add dummy callback
+ pmu::read()
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        <mathieu.poirier@linaro.org>, <jonathan.cameron@huawei.com>,
+        <linux-kernel@vger.kernel.org>
+References: <20230914112223.27165-1-yangyicong@huawei.com>
+ <20230914112223.27165-6-yangyicong@huawei.com>
+ <73655f9b-9ea4-cb46-d712-20f1c4ac7c95@arm.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <75b93d15-f099-5d17-caa9-94b0390773cf@huawei.com>
+Date:   Tue, 19 Sep 2023 21:03:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <73655f9b-9ea4-cb46-d712-20f1c4ac7c95@arm.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Originating-IP: [10.67.121.177]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use pcie_capability_read_word() for reading LNKSTA and remove the
-custom define that matches to PCI_EXP_LNKSTA.
+On 2023/9/15 20:53, Suzuki K Poulose wrote:
+> On 14/09/2023 12:22, Yicong Yang wrote:
+>> From: Junhao He <hejunhao3@huawei.com>
+>>
+>> When start trace with perf option "-C $cpu" and immediately stop it
+>> with SIGTERM or others, the perf core will invoke pmu::read() while
+>> the driver doesn't implement it. Add a dummy pmu::read() to avoid
+>> any issues.
+> 
+> What issues are we talking about here ? Shouldn't the core perf
+> skip the call, if pmu::read() is not available ?
+> 
 
-As only single user for cap_offset remains, replace it with a call to
-pci_pcie_cap(). Instead of e1000_adapter, make local variable out of
-pci_dev because both users are interested in it.
+Actually no, the core doesn't check it. So I think that's why some PMUs
+like SPE implements a dummy pmu::read() callback. Otherwise we'll
+dereference a NULL pointer.
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/net/ethernet/intel/e1000e/defines.h |  1 -
- drivers/net/ethernet/intel/e1000e/mac.c     | 11 ++++-------
- 2 files changed, 4 insertions(+), 8 deletions(-)
+Currently we only met this on emulated platforms with very slow CPUs,
+follow the instructions in the commit above.
 
-diff --git a/drivers/net/ethernet/intel/e1000e/defines.h b/drivers/net/ethernet/intel/e1000e/defines.h
-index a4d29c9e03a6..23a58cada43a 100644
---- a/drivers/net/ethernet/intel/e1000e/defines.h
-+++ b/drivers/net/ethernet/intel/e1000e/defines.h
-@@ -678,7 +678,6 @@
- 
- /* PCI/PCI-X/PCI-EX Config space */
- #define PCI_HEADER_TYPE_REGISTER     0x0E
--#define PCIE_LINK_STATUS             0x12
- 
- #define PCI_HEADER_TYPE_MULTIFUNC    0x80
- 
-diff --git a/drivers/net/ethernet/intel/e1000e/mac.c b/drivers/net/ethernet/intel/e1000e/mac.c
-index 5340cf73778d..694a779e718d 100644
---- a/drivers/net/ethernet/intel/e1000e/mac.c
-+++ b/drivers/net/ethernet/intel/e1000e/mac.c
-@@ -17,16 +17,13 @@ s32 e1000e_get_bus_info_pcie(struct e1000_hw *hw)
- {
- 	struct e1000_mac_info *mac = &hw->mac;
- 	struct e1000_bus_info *bus = &hw->bus;
--	struct e1000_adapter *adapter = hw->adapter;
--	u16 pcie_link_status, cap_offset;
-+	struct pci_dev *pdev = hw->adapter->pdev;
-+	u16 pcie_link_status;
- 
--	cap_offset = adapter->pdev->pcie_cap;
--	if (!cap_offset) {
-+	if (!pci_pcie_cap(pdev)) {
- 		bus->width = e1000_bus_width_unknown;
- 	} else {
--		pci_read_config_word(adapter->pdev,
--				     cap_offset + PCIE_LINK_STATUS,
--				     &pcie_link_status);
-+		pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &pcie_link_status);
- 		bus->width = (enum e1000_bus_width)FIELD_GET(PCI_EXP_LNKSTA_NLW,
- 							     pcie_link_status);
- 	}
--- 
-2.30.2
-
+> Suzuki
+> 
+>>
+>> Signed-off-by: Junhao He <hejunhao3@huawei.com>
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> ---
+>>   drivers/hwtracing/ptt/hisi_ptt.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+>> index 62a444f5228e..c1b5fd2b8974 100644
+>> --- a/drivers/hwtracing/ptt/hisi_ptt.c
+>> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
+>> @@ -1184,6 +1184,10 @@ static void hisi_ptt_pmu_del(struct perf_event *event, int flags)
+>>       hisi_ptt_pmu_stop(event, PERF_EF_UPDATE);
+>>   }
+>>   +static void hisi_ptt_pmu_read(struct perf_event *event)
+>> +{
+>> +}
+>> +
+>>   static void hisi_ptt_remove_cpuhp_instance(void *hotplug_node)
+>>   {
+>>       cpuhp_state_remove_instance_nocalls(hisi_ptt_pmu_online, hotplug_node);
+>> @@ -1227,6 +1231,7 @@ static int hisi_ptt_register_pmu(struct hisi_ptt *hisi_ptt)
+>>           .stop        = hisi_ptt_pmu_stop,
+>>           .add        = hisi_ptt_pmu_add,
+>>           .del        = hisi_ptt_pmu_del,
+>> +        .read        = hisi_ptt_pmu_read,
+>>       };
+>>         reg = readl(hisi_ptt->iobase + HISI_PTT_LOCATION);
+> 
+> 
+> .
