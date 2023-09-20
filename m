@@ -2,115 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCB1D7A73C8
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Sep 2023 09:15:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E16C7A7427
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Sep 2023 09:31:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229593AbjITHPL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Sep 2023 03:15:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58136 "EHLO
+        id S233728AbjITHb3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Sep 2023 03:31:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233567AbjITHPK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Sep 2023 03:15:10 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D7A893
-        for <linux-pci@vger.kernel.org>; Wed, 20 Sep 2023 00:15:03 -0700 (PDT)
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 38K7Etsb036802;
-        Wed, 20 Sep 2023 02:14:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1695194096;
-        bh=KVcAdfq5a5X4kQHPesUltWMh4vo4p2mYilAwZCmQUcs=;
-        h=From:To:CC:Subject:Date;
-        b=wjg+bhyoK5euFvlqztpX/B7YsW3R4PaVwpGAzL5rIYgI9h+pkK2WcvSMXOvlJdgKi
-         DOdlCueO0sYlYqXkmMFpakGNpSVKefxnyBHTqlLtUsswpxNEE05sbWqvzgClTQ+UVj
-         wR6NZ33R9x192pCEkYkL5Pvt9HWlXeYXpdxK1LmU=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 38K7EtMN065122
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 Sep 2023 02:14:55 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 20
- Sep 2023 02:14:55 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 20 Sep 2023 02:14:55 -0500
-Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 38K7EsT6005391;
-        Wed, 20 Sep 2023 02:14:55 -0500
-From:   Achal Verma <a-verma1@ti.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Russell Currey <ruscur@russell.cc>,
-        "Jan H . Sch_nherr" <jschoenh@amazon.de>
-CC:     <linux-pci@vger.kernel.org>, Achal Verma <a-verma1@ti.com>
-Subject: [PATCH v2] PCI/IOV: Add pci_ari_enabled check before adding virtual functions
-Date:   Wed, 20 Sep 2023 12:44:54 +0530
-Message-ID: <20230920071454.363245-1-a-verma1@ti.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S233753AbjITHb2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Sep 2023 03:31:28 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56390D7;
+        Wed, 20 Sep 2023 00:31:22 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56C9BC433C8;
+        Wed, 20 Sep 2023 07:31:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695195081;
+        bh=hU52SYwvUa68CMm7CAUtso5H9LNTlljDIWx6EdheBHs=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=tnikUu7kNFOKmRNvjZ90VttjaizflA+nEASVJVpEx8xqZPx71pP6PUcmZofaMLw6c
+         ax71ixqyjwIed+hOrCy9nz8EtXbcDfX6xY+wPe78N5Z4s+OuyDm2Y0PyJaUaOL3gNP
+         ymvcYERFkIvlO33M2je/XLpJPRG1od8nDsI4+/5HIyPsLSJv/FmxHdnFRO4d21+D7n
+         e233JegozX8XzLUe+020o/H8XK9+aq71ZUzfCiKw9WM2C0oI23H5BOZN1hFd1zqfM2
+         /XseirgYk1+l19aVvfrCLO2c7iHsPrM098w7blYM/CnefWqnMwcZdCxD3OS0CpT0at
+         gaLjcjMYeT2FQ==
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Ilpo =?utf-8?q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org
+In-Reply-To: <20230919125648.1920-1-ilpo.jarvinen@linux.intel.com>
+References: <20230919125648.1920-1-ilpo.jarvinen@linux.intel.com>
+Subject: Re: (subset) [PATCH v3 0/8] PCI/treewide: PCIe capability access cleanups
+Message-Id: <169519507781.1031333.15270013101496091274.b4-ty@kernel.org>
+Date:   Wed, 20 Sep 2023 10:31:17 +0300
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Mailer: b4 0.12-dev-a055d
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Absence of pci_ari_enabled() check in pci_iov_add_virtfn() allows addition
-of virtual functions with function number > 7, even for devices which
-doesn't have ARI Fowarding Support. So, adding pci_ari_enabled() check to
-prevent addition of function number > 7 and thus avoid later invalid access
-to such functions resulting in "Unsupported Request" error response.
 
-Fixes: 753f61247181 ("PCI: Remove reset argument from pci_iov_{add,remove}_virtfn()")
-Signed-off-by: Achal Verma <a-verma1@ti.com>
----
+On Tue, 19 Sep 2023 15:56:40 +0300, Ilpo Järvinen wrote:
+> Instead of custom code to extract the PCIe capabilities, make the code
+> more obvious using FIELD_GET/PREP().
+> 
+> Also cleanup some duplicated defines in e1000e.
+> 
+> This is just a step into the right direction, there's plenty of places
+> still to cleanup which will have to wait for another patch series.
+> 
+> [...]
 
-Changes from v1:
-* Rebased on next-20230920
+Applied, thanks!
 
- drivers/pci/iov.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+[1/8] RDMA/hfi1: Use FIELD_GET() to extract Link Width
+      https://git.kernel.org/rdma/rdma/c/8bf7187d978610
 
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index 25dbe85c4217..cac647ac4cd6 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -287,7 +287,7 @@ const struct attribute_group sriov_vf_dev_attr_group = {
- 
- int pci_iov_add_virtfn(struct pci_dev *dev, int id)
- {
--	int i;
-+	int i, devfn;
- 	int rc = -ENOMEM;
- 	u64 size;
- 	struct pci_dev *virtfn;
-@@ -295,6 +295,10 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
- 	struct pci_sriov *iov = dev->sriov;
- 	struct pci_bus *bus;
- 
-+	devfn = pci_iov_virtfn_devfn(dev, id);
-+	if ((devfn > 7) && !pci_ari_enabled(dev->bus))
-+		return -ENODEV;
-+
- 	bus = virtfn_add_bus(dev->bus, pci_iov_virtfn_bus(dev, id));
- 	if (!bus)
- 		goto failed;
-@@ -303,7 +307,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
- 	if (!virtfn)
- 		goto failed0;
- 
--	virtfn->devfn = pci_iov_virtfn_devfn(dev, id);
-+	virtfn->devfn = devfn;
- 	virtfn->vendor = dev->vendor;
- 	virtfn->device = iov->vf_device;
- 	virtfn->is_virtfn = 1;
+Best regards,
 -- 
-2.25.1
-
+Leon Romanovsky <leon@kernel.org>
