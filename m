@@ -2,197 +2,213 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8A207A8E9A
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Sep 2023 23:40:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FBC07A8FAF
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Sep 2023 01:03:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbjITVkJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Sep 2023 17:40:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
+        id S229547AbjITXDG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Sep 2023 19:03:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjITVkJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Sep 2023 17:40:09 -0400
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2051.outbound.protection.outlook.com [40.107.105.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A82429E;
-        Wed, 20 Sep 2023 14:40:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HJrK9watHPJKQxUgMDkDJS4IisTVunYzotyfLGD1vh1qAFibEunaspld9GroxjzTSYqTMK151VOLTZYOxi9hccITPD9BEsm6Rn/Jo3I1oXfOOG9N7uEUr/ZPi9DsytrYiVtCQVRp54MriHFqj5YwXsLYlgf+aYeCuZUglqSSQ1kZPVJhVmmtG0QtQ/Izd9ldAZjGISsER1gi8Pm+JYVMcCVHYpF6JoMXcdAnJAWdQ6AERGiLPeK+D1oi6vyHM4erw8VbDwfk7tV44tIWhQvjVz/A+Wghf/NvjEVLd+r0zj+mKU208gaxMIGotlojtHKQnhnHiioWC/3De6u14GZkAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tq/C/pID4iz4Jjz4P79msRy2xU9IP5O4y5A1YZr1GTo=;
- b=dtG5OConzbm22sgmeffby/bTJXlSSjBPtsz9uszgVn1evRAwS2nn5Id+NfNZ2E/l+EWry6MlVr6/grv3xDJz/IuQsOxm/I0kud2syVv4jwlxiElvWEJS8TMopaOmml5XXTpQb9eJJ3LVFQFS8i7Y5l+Mm6F6g5Wmq+Dz2xMAIrNSdAchx6MIKy0va0zRJ61UiWS4YX7110KjaiBm7k+nVPINbwngU9GvyD2OkHuOYmSFO0klZqUz8q3LwvDXZvNKg4snwlVhvmu62OtIUugYqQlNhLgD6TrAhnNxfimg1w8EfAo5U6hJVOQPSYMCPLpgm1kNizK6TewUC3/KwuH+KA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tq/C/pID4iz4Jjz4P79msRy2xU9IP5O4y5A1YZr1GTo=;
- b=snn1fR2Ue7leH2pNkv8T0KXBPoRQnMk968e0WhRM3oOP0kckG3iydOKjc33Yi/GmTA3dxbJP20ufykEOuAcg2ArpYnTTmbxXDeBCllm6y50CwYIW6lqwH0dhOgMur7CYhtWUrDXmrj/4syyrdqvlX41OGLqERwwHeZjZIZcsHcg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
- by AM7PR04MB7158.eurprd04.prod.outlook.com (2603:10a6:20b:120::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.19; Wed, 20 Sep
- 2023 21:40:00 +0000
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::1774:e25f:f99:aca2]) by AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::1774:e25f:f99:aca2%4]) with mapi id 15.20.6792.026; Wed, 20 Sep 2023
- 21:40:00 +0000
-Date:   Wed, 20 Sep 2023 17:39:48 -0400
-From:   Frank Li <Frank.li@nxp.com>
-To:     manivannan.sadhasivam@linaro.org
-Cc:     aisheng.dong@nxp.com, bhelgaas@google.com,
-        devicetree@vger.kernel.org, festevam@gmail.com,
-        imx@lists.linux.dev, jdmason@kudzu.us, kernel@pengutronix.de,
-        kishon@kernel.org, kw@linux.com,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, lpieralisi@kernel.org, maz@kernel.org,
-        s.hauer@pengutronix.de, shawnguo@kernel.org, tglx@linutronix.de
-Subject: Re: [PATCH v2 0/5] Add RC-to-EP doorbell with platform MSI controller
-Message-ID: <ZQtmpL2vCMgR+Upu@lizhi-Precision-Tower-5810>
-References: <20230911220920.1817033-1-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230911220920.1817033-1-Frank.Li@nxp.com>
-X-ClientProxiedBy: BY5PR13CA0005.namprd13.prod.outlook.com
- (2603:10b6:a03:180::18) To AM6PR04MB4838.eurprd04.prod.outlook.com
- (2603:10a6:20b:4::16)
+        with ESMTP id S229486AbjITXDG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Sep 2023 19:03:06 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9BD0A3;
+        Wed, 20 Sep 2023 16:02:59 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26AF1C433C8;
+        Wed, 20 Sep 2023 23:02:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695250979;
+        bh=Zk4ujfkFmSNtiTgBEOrvD7R3EsDa5uPjHsUOQXft7vY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=E9/5vRGEsGzKegCu2DninNk52ODyzPtj9qhHx85u3mWzdAHeA20G5Mp9dW87NblaK
+         0cXnTww3yriMw6vJ6QHjgIqZNNwpNp5HVHGc7ErMbTIyFmFjiClXWC4rm+BRLxKaQi
+         uu+rfqrd3XpBh9nygaet6ZX/g8SLibnfgi+1K3Ap5W6nK12o3lcxVgXuau0iM8tMgp
+         3ixA4xKV6Njt1tRobAyf1FGa79OZDdERK0D0s6VU6OM768Ulb6sTbaONRuBJMOWOs8
+         XPca1/1qBBbCKo78mCbwspK2EqcAKTKRJ13vU8wmPtkvW9apmyCt2hkaOYbb9apZeW
+         ii2dsu1p0GLGg==
+Date:   Wed, 20 Sep 2023 18:02:57 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shuai Xue <xueshuai@linux.alibaba.com>
+Cc:     "lenb@kernel.org" <lenb@kernel.org>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>, mahesh@linux.ibm.com,
+        bhelgaas@google.com,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        gregkh@linuxfoundation.org,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>
+Subject: Re: Questions: Should kernel panic when PCIe fatal error occurs?
+Message-ID: <20230920230257.GA280837@bhelgaas>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|AM7PR04MB7158:EE_
-X-MS-Office365-Filtering-Correlation-Id: a0919d92-ae04-4342-15be-08dbba2223f3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wQ3i3PvbcZ15FUEfL9nUVfUmvxgA4DCz19PyurFkz7NTSmRkjnKV/YnNkiAJpRoSr+tV9m9qAGhezv/K1z0F/L0z+85L6bHR5M5Yw/mJDmTOzogwNJnAoRT2AFp9mUOm9ZpzieB+V9CXLsSP5vnx00eSoyzn6kOfK71rY1yZxnsbs4LmMw/xmJaXZQKWTF6FWFB7bOH6MvNJRzPG0BK9/ky1lZ/77MSPN1i9abS866oyRcSWTA8j3HWJlHt1G1ypIcIb+8aXO/Fd7AI+3px8qQzyw3r6fGmICJ8AXauxQZfOdGKupPMgHHzDRtA5TIC8of53B7kYPZ+N1lAvBmWp3A0jGNxxn+TnKzxBPEwPTKDqecK59tz0xcIOqON4uWukQtQrsm+UMdJQgmhuDXSiFK9hbbRJ0v2PKX//6Ew6bxnPUmr777slKk4gjkO6/A/VlAV1JddF7EHz82JfecsGDwke1fVVOGGOcY3Ftu19SMrTiTZUEvF2lqHLyu+2BEppkE0/tRQh9ctJ2e1JBo5YXZwxwvXF2SR85Mzl+gLMWZXeUbhDl2GndPN5VnmPBNX7/tyaA7K5rsIIXHEfXulj/Z1HCVjh33yj+1drYLHedYdf7tTkmWpvKypC9m5qaOQH
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(136003)(366004)(39860400002)(396003)(376002)(346002)(1800799009)(186009)(451199024)(9686003)(6486002)(52116002)(6666004)(478600001)(6512007)(6506007)(83380400001)(8936002)(8676002)(66476007)(66946007)(66556008)(966005)(316002)(6916009)(5660300002)(38350700002)(86362001)(38100700002)(4326008)(7416002)(2906002)(26005)(41300700001)(33716001)(67856001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?K2FtaHpEdjRYWVZ4TjZxeVlYMUdaRjkxdG40RC9KUEJxMDhyeUhSVCtrSlYz?=
- =?utf-8?B?OXdHR1BINlhUM3RpR1Zna0lLOUUwa1c0RlZ6V25Kay9zalBJR2ZTaXhlUVdB?=
- =?utf-8?B?MVlYTUQ5K0RmRlMrbEYySXZhQmQzZmJCME8xZTlPSlJJdU9BSDFRVzlJdTZC?=
- =?utf-8?B?M0QxNUtraldTK2JVWkFPcExwVzlmV3VTVkNCdTVmUDF4N3RUV01nR3B2dHE2?=
- =?utf-8?B?VnN3Q1JQV0hHS29iNFdIYXVpRGRPMUtSUnlEZEZFSHNpWll3MzVpRkNVdlV4?=
- =?utf-8?B?TWJpbGRUT2FhTVJmT1VhU2pySmJtOWVBMHBDcTR6MTd3bW01a2duWGNmMlZQ?=
- =?utf-8?B?WUtZZldvaGU5NmpIYVBidUQ4SkszYm9HWnNYOHpEV2lCOGhrbjZJOXlHcVZo?=
- =?utf-8?B?UE1NLzB5MmVLZ0lsNWNHK1NPbXd4WXdkK1pVRXZ1aW84VnlvRXB5WEc5U0pk?=
- =?utf-8?B?T1NvczVYbGRhSm4za2RPb2FPTEdXK1VQNjkxSDNYWWQ2ZjVIWm5rNXNuTHB2?=
- =?utf-8?B?eTZEaExVNEFyNC9TUWJxbVNtVVZZUFRFNXFmbXdJUDBTL0ZxSkNSc2JTbk9n?=
- =?utf-8?B?L0QvbkFZZkZDU2NUNTRRek9xempLZlRuKzYyZjBHN1QrUjV4SGZuZm9OTmQ1?=
- =?utf-8?B?NlJwZHVlRW9ycnNWRlc4QWpsN09MSHE1UDlhbzZ3SmV3TDlicGY1K2pSVkdI?=
- =?utf-8?B?dUtUYXo1NDQxOFBHTlY0UXZ3eVdyU2pFMkFxU1FSYVRUTkxMNW1YdHlxY3l4?=
- =?utf-8?B?UThJeTdXa2hEQkZ5cWVhYllGVDNQTFRldWxlYmd1VG4xdmVaU0JIK0s5V1dG?=
- =?utf-8?B?dDJhaEZ6NFgrTG02cWVialNyOHhxSlpLc3Z2OEpJMFEyS0lIaFFvUklaMlc2?=
- =?utf-8?B?UnozWlJUemJzZy9vc0hZckg4UU5LV3hvZHUrTVh6aiszTnZya1ZtNjBrdmpl?=
- =?utf-8?B?WXRDR2xoOUNuVWNqM2c4VmVKdE1xb0hLODkwNHRGbSs4endvaVhnaHQ4Wkhz?=
- =?utf-8?B?YTVSWkFpN0JnTXJhcmRzSUhVTGZ0S2prK1R1ckE1WkpHZmlDK1RwbEExQ1Z2?=
- =?utf-8?B?dWMrd0VSWEFyaHc4dnlVc0ZDSXF3NTlUZWpDRVBBOE11a25wa1NyQXlQUGZ1?=
- =?utf-8?B?TUQ2VkRxTVlJVGQ1dW5VMlNjaUsxdVl6L0dtOEg0R2NFeGh2bENrSGhlUEVj?=
- =?utf-8?B?VjJOcm01REN5NysrWkVYcWhTOHFPMjVnRFpnWUdhdTNMSHVKenJGMnp4dXhV?=
- =?utf-8?B?T1NiOGJoUngrSlRHQmYycGRTYnZ4L0F3RGUwQkoxNFJyU1VrekdMMk1QK0My?=
- =?utf-8?B?TzNQSjdnVFZCNW1oMVJ5Q0t4TFpSeFV3UzZXL1lvVHF6WllyNFo0bGpmMmdH?=
- =?utf-8?B?cFl4ZmpMNktmWCtJR2lzT3cwSEs1YXdlNGYrUmErOURocHZIZzdldFNRSUJi?=
- =?utf-8?B?MmhtZ0ZYSjBoVzBZeVNxamF0bDI3RlJMNEVCRDhJY2lIS0FZbkJCN0ltZFIv?=
- =?utf-8?B?YVZTemhtK3U4TFhHSWVnMlNQUmMxdjRta25UTjZLR2pOd1djVGJ4cXJweHNJ?=
- =?utf-8?B?YlkxQ1NiNlV6ZGhvN2IyODBUNForOWttYnlMckthdkdZU1lZRU9SSVNnRDZV?=
- =?utf-8?B?M0dmZ1ZNdVFKL3AvNFJsWDEvL2NWTUhYMm9ETFBySStQZmNaZnRPYWRrcnlF?=
- =?utf-8?B?di9GZExjRHFVWDlhbkErYmJ1emNwSENXZ01iREkvMlBJYnoyUmNXTFBtcFlo?=
- =?utf-8?B?VUxmbmZ3d2dQWDJZNlBxQ1U4SlFldHNMS01xaFBnZGpNWnNHQTAzN2U2QVBX?=
- =?utf-8?B?U051R3NmT3F4ZlVZUWl2NlF0U2NyMTZDeWNCaU9QTmdSd3FqaGpvdDBnbkNa?=
- =?utf-8?B?Q1BONEVsSHBQQndEbTdES0o5aHBOQXRmYmxnZFFFWHk2ajJXWll0K0UzMlk2?=
- =?utf-8?B?dmJqVDQ1dUJzOFpWNW9pWHRzQ3JCWjBsbzk1L2NEQ2RSYlQ0dVZLN3ZpbUxS?=
- =?utf-8?B?VHordFFDWG16Q3ppS3kxMTlMZm1GRVNTVTJsQXU3SEErZlZMUWd4V05tTERk?=
- =?utf-8?B?d1gvcVFOcUpoVVVpd0psN3ZtZmpKeXRHRzcxT0R5SDgvSHNsaGxtSFVXQi9v?=
- =?utf-8?Q?ieAPog6kYVOrELXZgXlAk5zhT?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0919d92-ae04-4342-15be-08dbba2223f3
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Sep 2023 21:39:59.9282
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kIpEl9sd4DYMFSr/kvSHIs/5sA73Gr1yXHUBPVUbBOaqPA6oetlOr6yzB0BPBhH86VJLM0k+izstLqgOaFl3FQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7158
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e486db16-d36d-9e14-4f10-dc755c0ef97d@linux.alibaba.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 06:09:15PM -0400, Frank Li wrote:
-> ┌────────────┐   ┌───────────────────────────────────┐   ┌────────────────┐
-> │            │   │                                   │   │                │
-> │            │   │ PCI Endpoint                      │   │ PCI Host       │
-> │            │   │                                   │   │                │
-> │            │◄──┤ 1.platform_msi_domain_alloc_irqs()│   │                │
-> │            │   │                                   │   │                │
-> │ MSI        ├──►│ 2.write_msi_msg()                 ├──►├─BAR<n>         │
-> │ Controller │   │   update doorbell register address│   │                │
-> │            │   │   for BAR                         │   │                │
-> │            │   │                                   │   │ 3. Write BAR<n>│
-> │            │◄──┼───────────────────────────────────┼───┤                │
-> │            │   │                                   │   │                │
-> │            ├──►│ 4.Irq Handle                      │   │                │
-> │            │   │                                   │   │                │
-> │            │   │                                   │   │                │
-> └────────────┘   └───────────────────────────────────┘   └────────────────┘
+On Mon, Sep 18, 2023 at 05:39:58PM +0800, Shuai Xue wrote:
+> Hi, all folks,
+> 
+> Error reporting and recovery are one of the important features of PCIe, and
+> the kernel has been supporting them since version 2.6, 17 years ago.
+> I am very curious about the expected behavior of the software.
+> I first recap the error classification and then list my questions bellow it.
+> 
+> ## Recap: Error classification
+> 
+> - Fatal Errors
+> 
+> Fatal errors are uncorrectable error conditions which render the particular
+> Link and related hardware unreliable. For Fatal errors, a reset of the
+> components on the Link may be required to return to reliable operation.
+> Platform handling of Fatal errors, and any efforts to limit the effects of
+> these errors, is platform implementation specific. (PCIe 6.0.1, sec
+> 6.2.2.2.1 Fatal Errors).
+> 
+> - Non-Fatal Errors
+> 
+> Non-fatal errors are uncorrectable errors which cause a particular
+> transaction to be unreliable but the Link is otherwise fully functional.
+> Isolating Non-fatal from Fatal errors provides Requester/Receiver logic in
+> a device or system management software the opportunity to recover from the
+> error without resetting the components on the Link and disturbing other
+> transactions in progress. Devices not associated with the transaction in
+> error are not impacted by the error.  (PCIe 6.0.1, sec 6.2.2.2.1 Non-Fatal
+> Errors).
+> 
+> ## What the kernel do?
+> 
+> The Linux kernel supports both the OS native and firmware first modes in
+> AER and DPC drivers. The error recovery API is defined in `struct
+> pci_error_handlers`, and the recovery process is performed in several
+> stages in pcie_do_recovery(). One main difference in handling PCIe errors
+> is that the kernel only resets the link when a fatal error is detected.
+> 
+> ## Questions
+> 
+> 1. Should kernel panic when fatal errors occur without AER recovery?
+> 
+> IMHO, the answer is NO. The AER driver handles both fatal and
+> non-fatal errors, and I have not found any panic changes in the
+> recovery path in OS native mode.
+> 
+> As far as I know, on many X86 platforms, struct
+> `acpi_hest_generic_status::error_severity` is set as CPER_SEV_FATAL
+> in firmware first mode. As a result, kernel will panic immediately
+> in ghes_proc() when fatal AER errors occur, and there is no chance
+> to handle the error and perform recovery in AER driver.
 
-@mani:
-	Do you have chance to review this patch again?
+UEFI r2.10, sec N.2.1,, defines CPER_SEV_FATAL, and platform firmware
+decides which Error Severity to put in the error record.  I don't see
+anything in UEFI about how the OS should handle fatal errors.
 
-Frank
+ACPI r6.5, sec 18.1, says on fatal uncorrected error, the system
+should be restarted to prevent propagation of the error.  For
+CPER_SEV_FATAL errors, it looks like ghes_proc() panics even before
+trying AER recovery.
 
+I guess your point is that for CPER_SEV_FATAL errors, the APEI/GHES
+path always panics but the native path never does, and that maybe both
+paths should work the same way?
+
+It would be nice if they worked the same, but I suspect that vendors
+may rely on the fact that CPER_SEV_FATAL forces a restart/panic as
+part of their system integrity story.
+
+It doesn't seem like the native path should always panic.  If we can
+tell that data was corrupted, we may want to panic, but otherwise I
+don't think we should crash the entire system even if some device is
+permanently broken.
+
+> For fatal and non-fatal errors, struct
+> `acpi_hest_generic_status::error_severity` should as
+> CPER_SEV_RECOVERABLE, and struct
+> `acpi_hest_generic_data::error_severity` should reflect its real
+> severity. Then, the kernel is equivalent to handling PCIe errors in
+> Firmware first mode as it does in OS native mode.  Please correct me
+> if I am wrong.
+
+I don't know enough to comment on how Error Severity should be used in
+the Generic Error Status Block vs the Generic Error Data Entry.
+
+> However, I have changed my mind on this issue as I encounter a case where
+> a error propagation is detected due to fatal DLLP (Data Link Protocol
+> Error) error. A DLLP error occurred in the Compute node, causing the
+> node to panic because `struct acpi_hest_generic_status::error_severity` was
+> set as CPER_SEV_FATAL. However, data corruption was still detected in the
+> storage node by CRC.
+
+The only mention of Data Link Protocol Error that looks relevant is
+PCIe r6.0, sec 3.6.2.2, which basically says a DLLP with an unexpected
+Sequence Number should be discarded:
+
+  For Ack and Nak DLLPs, the following steps are followed (see Figure
+  3-21):
+
+    - If the Sequence Number specified by the AckNak_Seq_Num does not
+      correspond to an unacknowledged TLP, or to the value in
+      ACKD_SEQ, the DLLP is discarded
+
+      - This is a Data Link Protocol Error, which is a reported error
+	associated with the Port (see Section 6.2).
+
+So data from that DLLP should not have made it to memory, although of
+course the DMA may not have been completed.  But it sounds like you
+did see corrupted data written to memory?
+
+I assume it is not reproducible and we have no reason to think the
+receiver of the DLLP has a design defect, e.g., it reported the error
+but failed to drop the DLLP?
+
+> 2. Should kernel panic when AER recovery failed?
 > 
-> This patches based on old https://lore.kernel.org/imx/20221124055036.1630573-1-Frank.Li@nxp.com/
+> This question is actually a TODO that was added when the AER driver was
+> first upstreamed 17 years ago, and it is still relevant today. The kernel
+> does not proactively panic regardless of the error types occurring in OS
+> native mode. The DLLP error propagation case indicates that the kernel
+> might should panic when recovery failed?
+
+I'm not a hardware engineer, but I'm not yet convinced that a Data
+Link Protocol Error should cause a panic because sec 3.6.2.2 suggests
+that this error should not cause data corruption.  Certainly willing
+to be proved wrong!
+
+> 3. Should DPC be enabled by default to contain fatal and non-fatal error?
 > 
-> Original patch only target to vntb driver. But actually it is common
-> method.
+> According to the PCIe specification, DPC halts PCIe traffic below a
+> Downstream Port after an unmasked uncorrectable error is detected at or
+> below the Port, avoiding the potential spread of any data corruption.
 > 
-> This patches add new API to pci-epf-core, so any EP driver can use it.
-> 
-> The key point is comments from Thomas Gleixner, who suggest use new
-> PCI/IMS. But arm platform change still not be merged yet.
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git devmsi-v2-arm
-> 
-> So I still use existed method implement RC to EP doorbell.
-> 
-> If Thomas Gleixner want to continue work on devmsi-v2-arm, I can help test
-> and update this patch.
-> 
-> Change from v1 to v2
-> - Add missed patch for endpont/pci-epf-test.c
-> - Move alloc and free to epc driver from epf.
-> - Provide general help function for EPC driver to alloc platform msi irq.
-> - Fixed manivannan's comments.
-> 
-> Frank Li (5):
->   PCI: endpoint: Add RC-to-EP doorbell support using platform MSI
->     controller
->   PCI: dwc: add doorbell support by use MSI controller
->   PCI: endpoint: pci-epf-test: add doorbell test
->   misc: pci_endpoint_test: Add doorbell test case
->   tools: PCI: Add 'B' option for test doorbell
-> 
->  drivers/misc/pci_endpoint_test.c              |  48 +++++
->  .../pci/controller/dwc/pcie-designware-ep.c   |   2 +
->  drivers/pci/endpoint/functions/pci-epf-test.c |  59 +++++-
->  drivers/pci/endpoint/pci-epc-core.c           | 192 ++++++++++++++++++
->  drivers/pci/endpoint/pci-epf-core.c           |  44 ++++
->  include/linux/pci-epc.h                       |   6 +
->  include/linux/pci-epf.h                       |   7 +
->  include/uapi/linux/pcitest.h                  |   1 +
->  tools/pci/pcitest.c                           |  16 +-
->  9 files changed, 373 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
+> The kernel configures DPC to be triggered only on ERR_FATAL. Literally
+> speaking, only fatal error have the potential spread of any data
+> corruption?
+
+Sec 6.2.2.2 talks about fatal vs non-fatal but only in terms of
+whether the error affects a particular transaction (non-fatal) or
+everything related to a Link (fatal).  Unless there's more detail
+elsewhere, I would assume either could corrupt data.
+
+> In addition, the AER Severity is programable by the
+> Uncorrectable Error Severity Register (Offset 0Ch in PCIe AER cap). If a
+> default fatal error, e.g. DLLP, set as non-fatal, DPC will not be
+> triggered.
+
+Sec 6.2.7 and 7.8.4.4 suggest the Data Link Protocol Error should be
+a fatal error by default.
+
+I don't think Linux changes PCI_ERR_UNC_DLP (unless there's an _HPX or
+similar method), so I would expect it to be set as fatal.
+
+Bjorn
+
+> [1] https://github.com/torvalds/linux/commit/6c2b374d74857e892080ee726184ec1d15e7d4e4#diff-fea64904d30501b59d2e948189bbedc476fc270ed4c15e4ae29d7f0efd06771aR438
