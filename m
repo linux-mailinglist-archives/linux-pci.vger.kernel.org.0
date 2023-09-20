@@ -2,392 +2,555 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E09F97A6C95
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Sep 2023 22:58:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99D267A7009
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Sep 2023 03:35:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233279AbjISU6a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Sep 2023 16:58:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45814 "EHLO
+        id S229534AbjITBfK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Sep 2023 21:35:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233288AbjISU63 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 16:58:29 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2047.outbound.protection.outlook.com [40.107.243.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DF48BF;
-        Tue, 19 Sep 2023 13:58:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GD73qAAuiN5TGyLNZkimfwWp4vPoc9v4gZquXhaiH+boWLEbWrBr1F0iNFfz/xt51FD3pyMfV8KBYcIAkNiUliXH3Xq7QrbfrQ9UllaCQVl0E4Y9bLc8EWw0HnICBEa/wXch0RXCIy4AB64k/oEKgeGWnHaRLq2iQnB1Hsy+9wzaoAPyhlmiPkipJYY6q5yaGpNzf9cKLxp1+3e+plSm8Syof78WOk1paUFq7pIW8+zLlZGNqGwT/Fn7bg8HI7LDmpqA4YPhReehGTStyhefnp2zwGu9SRho8XubqtlYgJze6gspC3H1DIUZa3pxM1KaMbySlv2F8W7Xnz1e43HTyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7zElzrxuNAbWiS9RwjEVapl/4lKIEH2mbNZK6HPzhqc=;
- b=lEh1rxQc1iEkoU9P61EdKXjICFEOg8AIXZb2PwV9aFT1aWb4JmIiCIo3IjaPXvbOjx5XQ1b4j57im66MVazoduK6ZDRHpvFgZESwG1MsBRm3enKEgJF77Ef8LeCHq2rgJoixHJ2msSr0ejxgsqCy4ipjf/Ozxy8ks7L8Xr9Tf2BUHUbUzX9fT8a4S1R9V2Vw4vg4DT8zslVErnjSgYlWUSV6LTpm0OHOh8zvYh3Bq3wbw/2v/HiZ1Lon/rloYHnwKYFeUkYMSbmeb1PQH+27+hdsUzZuMCKgQRgxWpBnNVFvS/iGZSvZTSaJprOY0xPU74FnP1Li8IF6z52NUTqMlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7zElzrxuNAbWiS9RwjEVapl/4lKIEH2mbNZK6HPzhqc=;
- b=Zx6Rl/ry4Fif136yKBzGj9DNvp2gsxkDf7dvtDs7R4vBVjhoEGMsEPMH46vEuxo93eGRa4GtX0W/UsReZk7XbS2pWXmbGxvMcU8FwufbxE1/ZPnDPJwxtKkrjqVlRIEAnO0HxH7tzJVt491YY6SwAoWOhsNk85Qk6UXTSCKdYXk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- MN0PR12MB5931.namprd12.prod.outlook.com (2603:10b6:208:37e::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6792.27; Tue, 19 Sep 2023 20:58:15 +0000
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::5b90:dbf9:e0a5:64cc]) by DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::5b90:dbf9:e0a5:64cc%6]) with mapi id 15.20.6792.026; Tue, 19 Sep 2023
- 20:58:15 +0000
-Message-ID: <cfa1aaca-49f1-cb8c-f4d9-f96e5bdc9892@amd.com>
-Date:   Tue, 19 Sep 2023 15:58:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v10 13/15] PCI/AER: Forward RCH downstream port-detected
- errors to the CXL.mem dev handler
-Content-Language: en-US
-To:     Dan Williams <dan.j.williams@intel.com>,
-        alison.schofield@intel.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, bwidawsk@kernel.org, dave.jiang@intel.com,
-        Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org
-Cc:     rrichter@amd.com, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, Oliver O'Halloran <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
-References: <20230831170248.185078-1-terry.bowman@amd.com>
- <20230831170248.185078-6-terry.bowman@amd.com>
- <64f0f9984932b_31c2db29461@dwillia2-xfh.jf.intel.com.notmuch>
-From:   Terry Bowman <Terry.Bowman@amd.com>
-In-Reply-To: <64f0f9984932b_31c2db29461@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR11CA0003.namprd11.prod.outlook.com
- (2603:10b6:806:6e::8) To DS0PR12MB6390.namprd12.prod.outlook.com
- (2603:10b6:8:ce::7)
+        with ESMTP id S229521AbjITBfJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 21:35:09 -0400
+X-Greylist: delayed 400 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 19 Sep 2023 18:34:57 PDT
+Received: from devico.uberspace.de (devico.uberspace.de [185.26.156.185])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F35B3C6
+        for <linux-pci@vger.kernel.org>; Tue, 19 Sep 2023 18:34:57 -0700 (PDT)
+Received: (qmail 23521 invoked by uid 990); 20 Sep 2023 01:28:15 -0000
+Authentication-Results: devico.uberspace.de;
+        auth=pass (plain)
+Message-ID: <dd299e87-1e69-40a2-a429-fbcd2b48d2ee@lausen.nl>
+Date:   Tue, 19 Sep 2023 21:28:09 -0400
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|MN0PR12MB5931:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7412abf0-d5e5-4f5d-6393-08dbb9532481
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 47xGYoJRM9oc/dA4IVGgxe7AcmzIzsRH644hpTczp757TMtaXlaJ0Jp4O5kckNBXwCI/nv04NGBu/hHzJG5PtUAq2QdxoDs6bXE7L4zTpIlWs0rHgk3IgKJ1QOD7KAP7gBVFTxDtk9MVI8PiQ7+OsufFyQGfW3fetW6w/hz+c9Bw3/muzl2JGLfhNpMrW+vQC4fD8sbb1pykcytz5oOmVGegD61wm7aA6+WPx670ead22HeznpjWX3X3IHVaTOZSStPx8Xgv7OwO5ryQgC9iTzDy6RUjAuIxMNj/Gj8Zk89QhzhTRSu6HHoow8/KQq6MmdTqkh3lkm1eE0fj60rtOe0A5fPoF+/rZaGu7359Vxz5UVZSeUilWjcxnGHH49j/57d3R85nW4Sems4cwfReHrTzkCE/uh8gB4W/JaJcWJ9scXnoCZMUQzbhLHstz0bVRuZWChhrq0quI1ZWd9CNzTENa6339Netu0J+hYnpRlONM4HCVgsTpG+M9MFcGPu7/EPKkbjasFtPBvhqqD74fld4Bhoxp4nn57gFU8icF/1AqG1UdSJU0uHv6L0bHSXB++usba69tcpTxJIBKtuOxZgvoi42trQbMWYYFGCkBmS0UdxOG0WD0DtZvXS5eBwCEO4q8x86IgOHUQ5k+tRFOw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(366004)(39860400002)(376002)(346002)(451199024)(186009)(1800799009)(38100700002)(36756003)(31696002)(86362001)(478600001)(966005)(66476007)(66556008)(66946007)(2906002)(6512007)(6666004)(53546011)(6506007)(6486002)(8936002)(8676002)(5660300002)(4326008)(41300700001)(7416002)(31686004)(316002)(26005)(2616005)(83380400001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?a0svSkNWYzdOYXIxaU1mQVRPVG9VckowL3czZ2dvQmZZL2JOWFJHUTY3b0NY?=
- =?utf-8?B?MHdzTEFVbnZ2ck4yZFM3WVJSYXFYRGRxaDhRTDhpQlRUWm1YMGwyVGRwUFlJ?=
- =?utf-8?B?Rk43YVNNMkhjQ01rK3hHNGlXQ3BpQzNXOXlyWGg5ekgvYVNVMmdOM0FMWTJr?=
- =?utf-8?B?cGZsRzQrQnRjc0VYUmZUU1BYWHlEVVN2am1nMm1MYmI1UEhkYUU5OFQzdGJh?=
- =?utf-8?B?LzNyU0ltRWVqRktkS05KTUxLbG52QTl4Nk1wVGVvd003U3dtQmZuYWE5Y0x5?=
- =?utf-8?B?UWR2OXAwOHFkdy96dms3MEZqZDV3UEszT2ZPYmttbmtnNXJoUDdHVkVuRjha?=
- =?utf-8?B?b0Nwam91Szk3T3A1R3JCcG5sTnhEVFhhQmk0RjZlUmhnRU5lcWoyblovSTRv?=
- =?utf-8?B?Zm1lOFNqNk14Zy9HeG9ZTjF4Qi9Rbk9LSCtnWE5XVnNjWTBOek1UamNRNWRK?=
- =?utf-8?B?aEJkczRLQ0RJRXo1Y2RoNzRqL0NmQm42MEVqaGRPMHdtOEFnODNHMThmS25R?=
- =?utf-8?B?QklOV0tWVlpueDdlS1JDRzV6ZVFqUEQ5Z2dKMStidWdlandOTnBDWGhlM3NO?=
- =?utf-8?B?WjlBSmVPYVI2VW1Wb1FRaUxXRVBVc2lQR0lMZTQvRHdSWlpON2wwRnpnT0Z3?=
- =?utf-8?B?a0x6eXFBZW8zSWhtcXY1TXk5dTJ5bDBRSHlXd05pbFkyaGluWkx5ZUVZVlJy?=
- =?utf-8?B?VnlFL2thZUlRVE9aRE1Pdm9FblYrcE5qNHk2bXIwdjVNWUdXWmpTcUlLb1JV?=
- =?utf-8?B?SU5zampPTzBlR0dOcVBCb0I2MGFDRkhaSnMzd0Y2QkF2bjZMOHlDWG42RElO?=
- =?utf-8?B?cTJ2Q0QyMUpuZXdVMEplQ1BOQjYvM05mODAwb2pXMFVHVHM4clZyb2hoUGo2?=
- =?utf-8?B?YjdWblJyRldzeEhzcVZtemNDdTA4ekpRVXk3TlZLWWFZb1QrNXJUaWpic1Uz?=
- =?utf-8?B?cytneE9PMHNkR2Qvdm1PeUVTUE0wN2RzNEp3cWZ2dW4xWUU0SjZBU3d1OU5F?=
- =?utf-8?B?ZlkxNFlFSWxsVjdhMVYrZ1hvczE2TFp0ZVUvbDIzaUpLdUVvL2lzQXNBSWVS?=
- =?utf-8?B?TUNlR3MxZXRlRXpTY0h0RUk3cWJ4Qk5ZN2E3OEVpMzB3WnNCdlYvM1Yza08r?=
- =?utf-8?B?VVlYT256dmtDTVdXc25LWnhQVWRwZHJML0NtemF1dmlIMU9yRytMVGtmSW04?=
- =?utf-8?B?d0RyRytoZFdMMVZJMERmazd0QW9Wc1hoeXgvWmd5NXdUb3k2V3puZVJlQTk1?=
- =?utf-8?B?QWg1L0dtZWZUTFE2bEZiMTRoTUJFK0ZtR0tBQlFZSEM5empuSnJ6c25uQ2ds?=
- =?utf-8?B?dFZnUS9hVlhoeGs5VnhuWkpyV1hwbnJOZUNPT0N6NUhPZUlFWnZzdnZrWUJU?=
- =?utf-8?B?c3FTUnZqSGhMcElpQ0Ryd2RSYklGMW05UFpITTRKZUo3Y0dJekVMMDI2UmN4?=
- =?utf-8?B?WHZjUnJEaGJBL0RNeFBWWmxMYUk3VDIwS3lyb25la3dTQUNiMXVWVW9hVm9n?=
- =?utf-8?B?MkJld0JzK0txNEFRaXVnbWd1eHlDNitseXZSdlh0bHVHYTFzWElOSkhwa3pj?=
- =?utf-8?B?QzdpeFJaVW9lZS9NYXYwVjdyaUF6aTFxOU12dUkxTGtNSjhLMk16NW95MFRm?=
- =?utf-8?B?SWUwd3NFS3o3YU01czMyUWR0YXZjYnBVdEY4bjN1aDFRcDZDSmwwQXRNRlRT?=
- =?utf-8?B?SldFLzJsdGdTQ1R2bmpaeExXTzdTMXhxNTZwOEFZREUxN2c5ZnJzdlNLbVBI?=
- =?utf-8?B?bndEQWVLdk9kM3BlTmd4MVAvZ3greDhvUDQ4RWxrRGF4V3Bqdk9ldHdUbUZE?=
- =?utf-8?B?Tm5acWMzUjNyWktzRXE1Yzh3Y3FicnU1a2hsS1B4WWtRc0xmZWV4bUQ2QWVi?=
- =?utf-8?B?ZGlVNUtubU1JVWNZNCtOMXFVOTVTeWdOekpXSTB5aUR2NkFQcW94UmJaa0RQ?=
- =?utf-8?B?UGNwNXhaVlBteGU1RXNYTkg4RkpjdHdIMnNMaVl4SStkanR4SG5mbTVveDNM?=
- =?utf-8?B?YUE1ZHRqUDJZclBuaGd5aDlJd1dmMkozSlJKOGp5RTZDRFFrTUxjVmxiMEk0?=
- =?utf-8?B?aVJ0am9IRDNacEJwWENxM2tBaEhIYTFydmkybG9nUnJrQWdQcHlNUmhKcUo2?=
- =?utf-8?Q?RQQRKZEw5KtJdY0ON6kU5CQW1?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7412abf0-d5e5-4f5d-6393-08dbb9532481
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2023 20:58:15.0418
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jJku53xsmc8nEY9L/Whj8oXylE7Mz+zEa2R5i9RHs3IiwICSxAlt/Ll0XCZsbX/eJ7GW5ULrSbtDqWeM1pisJQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5931
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From:   Leonard Lausen <leonard@lausen.nl>
+To:     Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org
+Subject: PROBLEM: mtk_pcie_suspend_noirq sleep hang breaking suspend on MT8192
+ Asurada Spherion
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Bar: /
+X-Rspamd-Report: XM_UA_NO_VERSION(0.01) MIME_GOOD(-0.1)
+X-Rspamd-Score: -0.089999
+Received: from unknown (HELO unkown) (::1)
+        by devico.uberspace.de (Haraka/3.0.1) with ESMTPSA; Wed, 20 Sep 2023 03:28:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=lausen.nl; s=uberspace;
+        h=from;
+        bh=13v+oQKago9ACQK2/HtMWV41duPkTngbBF00GKqMNhA=;
+        b=Yr3sVai2nGESXsXpaMndfDCHFZoEGM3F+5NqOY7QbeTgU5JSC52AE6KNfBwCVzdWOTobx++vuM
+        hZaEi7q5kh3DuqK4w67DYtscVZr14v8Mk89o+djTMTUR+s8usLWRWeoEuwB5KWfyO4Ynb47VcjAC
+        XfSMaipxd/PG5zoiF+5cQShi0o1E8TKIswSeoJbd53gDC0uFOkogcGXLcLkiGfhYkkHcRV3AFmVU
+        nFju5Hkh4GweoANNehIiLG1hqRuStxx38kL8WeQddjVu3VhwGu0hPhdoKDq9U0dUWkkIEEDmRFSq
+        frhTvo3pm7MtvcMIPeXm/5bbkd8LdwAz823WI1esu7Q9jvns4oEujz00vEDHEdUuPgTanEeqTc3r
+        3mFJPohkSNN17ySDxBp7TfCvJBCQAh5JQr0Mo6nuwAKTSA8xUEnakYbcuHpRNx2uGzyT500q/2EQ
+        e4DCU707cYcNHIbygFmM9+smY3Vwd0sTPdXXqhpA1osGaMXmk60X4DZRlT7tfnAIgL16ETQz7Y5b
+        UFOQJ8A1Ag32VyR48mJGLeLP/KkpECQogY8XeZzyEPQZC2HIHKzCMylVpM5gmzur3T573wzw5Kvj
+        hQCopZ2DC+ev/PEu2FvMbHYPmcYdkwvIww7Z1nJ+G8ZWEG4w2kFxovWdzcYPvPhrulUWADSwJwWf
+        I=
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,MSGID_FROM_MTA_HEADER,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Dan,
+Dear AngeloGioacchino, Dear Maintainers,
 
-On 8/31/23 15:35, Dan Williams wrote:
-> Terry Bowman wrote:
->> From: Robert Richter <rrichter@amd.com>
->>
->> In Restricted CXL Device (RCD) mode a CXL device is exposed as an
->> RCiEP, but CXL downstream and upstream ports are not enumerated and
->> not visible in the PCIe hierarchy. [1] Protocol and link errors from
->> these non-enumerated ports are signaled as internal AER errors, either
->> Uncorrectable Internal Error (UIE) or Corrected Internal Errors (CIE)
->> via an RCEC.
->>
->> Restricted CXL host (RCH) downstream port-detected errors have the
->> Requester ID of the RCEC set in the RCEC's AER Error Source ID
->> register. A CXL handler must then inspect the error status in various
->> CXL registers residing in the dport's component register space (CXL
->> RAS capability) or the dport's RCRB (PCIe AER extended
->> capability). [2]
->>
->> Errors showing up in the RCEC's error handler must be handled and
->> connected to the CXL subsystem. Implement this by forwarding the error
->> to all CXL devices below the RCEC. Since the entire CXL device is
->> controlled only using PCIe Configuration Space of device 0, function
->> 0, only pass it there [3]. The error handling is limited to currently
->> supported devices with the Memory Device class code set (CXL Type 3
->> Device, PCI_CLASS_MEMORY_CXL, 502h), handle downstream port errors in
->> the device's cxl_pci driver. Support for other CXL Device Types
->> (e.g. a CXL.cache Device) can be added later.
->>
->> To handle downstream port errors in addition to errors directed to the
->> CXL endpoint device, a handler must also inspect the CXL RAS and PCIe
->> AER capabilities of the CXL downstream port the device is connected
->> to.
->>
->> Since CXL downstream port errors are signaled using internal errors,
->> the handler requires those errors to be unmasked. This is subject of a
->> follow-on patch.
->>
->> The reason for choosing this implementation is that the AER service
->> driver claims the RCEC device, but does not allow it to register a
->> custom specific handler to support CXL. Connecting the RCEC hard-wired
->> with a CXL handler does not work, as the CXL subsystem might not be
->> present all the time. The alternative to add an implementation to the
->> portdrv to allow the registration of a custom RCEC error handler isn't
->> worth doing it as CXL would be its only user. Instead, just check for
->> an CXL RCEC and pass it down to the connected CXL device's error
->> handler. With this approach the code can entirely be implemented in
->> the PCIe AER driver and is independent of the CXL subsystem. The CXL
->> driver only provides the handler.
->>
->> [1] CXL 3.0 spec: 9.11.8 CXL Devices Attached to an RCH
->> [2] CXL 3.0 spec, 12.2.1.1 RCH Downstream Port-detected Errors
->> [3] CXL 3.0 spec, 8.1.3 PCIe DVSEC for CXL Devices
->>
->> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
->> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->> Signed-off-by: Robert Richter <rrichter@amd.com>
->> Cc: "Oliver O'Halloran" <oohall@gmail.com>
->> Cc: Bjorn Helgaas <bhelgaas@google.com>
->> Cc: linuxppc-dev@lists.ozlabs.org
->> Cc: linux-pci@vger.kernel.org
->> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>  drivers/pci/pcie/Kconfig | 12 +++++
->>  drivers/pci/pcie/aer.c   | 96 +++++++++++++++++++++++++++++++++++++++-
->>  2 files changed, 106 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
->> index 228652a59f27..4f0e70fafe2d 100644
->> --- a/drivers/pci/pcie/Kconfig
->> +++ b/drivers/pci/pcie/Kconfig
->> @@ -49,6 +49,18 @@ config PCIEAER_INJECT
->>  	  gotten from:
->>  	     https://git.kernel.org/cgit/linux/kernel/git/gong.chen/aer-inject.git/
->>  
->> +config PCIEAER_CXL
->> +	bool "PCI Express CXL RAS support for Restricted Hosts (RCH)"
-> 
-> Why the "for Restricted Hosts (RCH)" clarification? I am seeing nothing
-> that prevents this from working with RCECs on VH topologies.
-> 
+on MT8192 Asurada Spherion (Acer 514), I observe the following sleep 
+hang, causing a failure to suspend the system. The hang looks related to 
+the deadlock you fixed for MT8195 Tomato Chromebook in the past, thus 
+I'm including you in the To: line. The sleep hang happens with both 
+v6.5.4 as well as v6.5.4 with tags/mediatek-drm-next-6.6 merged in. (I'm 
+unable to validate v6.6-rc2 currently, as there's a regression breaking 
+boot.) Please let me know if I can provide any additional information to 
+help debug this issue or if you have any ideas how to address this bug.
 
-The same option can be used in VH mode. Will remove the RCH reference.
+[   42.539500] Freezing user space processes
+[   42.547466] Freezing user space processes completed (elapsed 0.003 
+seconds)
+[   42.554563] OOM killer disabled.
+[   42.557800] Freezing remaining freezable tasks
+[   42.563843] Freezing remaining freezable tasks completed (elapsed 
+0.001 seconds)
+[   42.571243] printk: Suspending console(s) (use no_console_suspend to 
+debug)
+[   42.655255] queueing ieee80211 work while going to suspend
+[   42.791520]
+[   42.791528] ========================================================
+[   42.791530] WARNING: possible irq lock inversion dependency detected
+[   42.791533] 6.5.4-cos-mt9 #1 Tainted: G        W
+[   42.791538] --------------------------------------------------------
+[   42.791540] systemd-sleep/1138 just changed the state of lock:
+[   42.791544] ffff676344fc1560 (&pcie->irq_lock){+...}-{2:2}, at: 
+mtk_pcie_suspend_noirq+0xd0/0x14c
+[   42.791568] but this lock was taken by another, HARDIRQ-safe lock in 
+the past:
+[   42.791571]  (&irq_desc_lock_class){-.-.}-{2:2}
+[   42.791576]
+[   42.791576]
+[   42.791576] and interrupts could create inverse lock ordering between 
+them.
+[   42.791576]
+[   42.791578]
+[   42.791578] other info that might help us debug this:
+[   42.791580]  Possible interrupt unsafe locking scenario:
+[   42.791580]
+[   42.791582]        CPU0                    CPU1
+[   42.791583]        ----                    ----
+[   42.791585]   lock(&pcie->irq_lock);
+[   42.791589]                                local_irq_disable();
+[   42.791591]                                lock(&irq_desc_lock_class);
+[   42.791595]                                lock(&pcie->irq_lock);
+[   42.791599]   <Interrupt>
+[   42.791601]     lock(&irq_desc_lock_class);
+[   42.791604]
+[   42.791604]  *** DEADLOCK ***
+[   42.791604]
+[   42.791606] 4 locks held by systemd-sleep/1138:
+[   42.791609]  #0: ffff6763486953e8 (sb_writers#6){.+.+}-{0:0}, at: 
+vfs_write+0xa4/0x2e4
+[   42.791628]  #1: ffff67636def1288 (&of->mutex){+.+.}-{3:3}, at: 
+kernfs_fop_write_iter+0xf0/0x1b0
+[   42.791643]  #2: ffff676340a89158 (kn->active#114){.+.+}-{0:0}, at: 
+kernfs_fop_write_iter+0xf8/0x1b0
+[   42.791658]  #3: ffffc5a79f9624a8 
+(system_transition_mutex){+.+.}-{3:3}, at: pm_suspend+0x98/0x330
+[   42.791673]
+[   42.791673] the shortest dependencies between 2nd lock and 1st lock:
+[   42.791677]  -> (&irq_desc_lock_class){-.-.}-{2:2} {
+[   42.791685]     IN-HARDIRQ-W at:
+[   42.791688]                       lock_acquire+0x11c/0x324
+[   42.791698]                       _raw_spin_lock+0x48/0x60
+[   42.791705]                       handle_fasteoi_irq+0x2c/0x234
+[   42.791714]                       generic_handle_domain_irq+0x2c/0x44
+[   42.791719]                       gic_handle_irq+0x180/0x2c0
+[   42.791724]                       call_on_irq_stack+0x24/0x4c
+[   42.791730]                       do_interrupt_handler+0x80/0x84
+[   42.791736]                       el1_interrupt+0x48/0xac
+[   42.791741]                       el1h_64_irq_handler+0x18/0x24
+[   42.791747]                       el1h_64_irq+0x78/0x7c
+[   42.791750]                       default_idle_call+0xa0/0x14c
+[   42.791756]                       do_idle+0x270/0x2d0
+[   42.791762]                       cpu_startup_entry+0x24/0x2c
+[   42.791767]                       rest_init+0x118/0x1a8
+[   42.791773]                       arch_post_acpi_subsys_init+0x0/0x8
+[   42.791781]                       start_kernel+0x5b8/0x6ac
+[   42.791785]                       __primary_switched+0xbc/0xc4
+[   42.791790]     IN-SOFTIRQ-W at:
+[   42.791793]                       lock_acquire+0x11c/0x324
+[   42.791801]                       _raw_spin_lock+0x48/0x60
+[   42.791805]                       handle_fasteoi_irq+0x2c/0x234
+[   42.791811]                       generic_handle_domain_irq+0x2c/0x44
+[   42.791816]                       gic_handle_irq+0x180/0x2c0
+[   42.791820]                       do_interrupt_handler+0x50/0x84
+[   42.791826]                       el1_interrupt+0x48/0xac
+[   42.791830]                       el1h_64_irq_handler+0x18/0x24
+[   42.791835]                       el1h_64_irq+0x78/0x7c
+[   42.791839]                       _nohz_idle_balance.isra.0+0x280/0x384
+[   42.791847]                       run_rebalance_domains+0x64/0x74
+[   42.791854]                       __do_softirq+0x148/0x51c
+[   42.791858]                       ____do_softirq+0x10/0x1c
+[   42.791863]                       call_on_irq_stack+0x24/0x4c
+[   42.791868]                       do_softirq_own_stack+0x1c/0x2c
+[   42.791873]                       __irq_exit_rcu+0x144/0x160
+[   42.791881]                       irq_exit_rcu+0x10/0x38
+[   42.791887]                       el1_interrupt+0x4c/0xac
+[   42.791892]                       el1h_64_irq_handler+0x18/0x24
+[   42.791897]                       el1h_64_irq+0x78/0x7c
+[   42.791900]                       default_idle_call+0xa0/0x14c
+[   42.791906]                       do_idle+0x270/0x2d0
+[   42.791910]                       cpu_startup_entry+0x24/0x2c
+[   42.791915]                       rest_init+0x118/0x1a8
+[   42.791921]                       arch_post_acpi_subsys_init+0x0/0x8
+[   42.791926]                       start_kernel+0x5b8/0x6ac
+[   42.791931]                       __primary_switched+0xbc/0xc4
+[   42.791935]     INITIAL USE at:
+[   42.791938]                      lock_acquire+0x11c/0x324
+[   42.791945]                      _raw_spin_lock_irqsave+0x68/0xbc
+[   42.791950]                      __irq_get_desc_lock+0x58/0x98
+[   42.791955]                      irq_modify_status+0x38/0x140
+[   42.791962]                      irq_set_percpu_devid+0x70/0x94
+[   42.791967]                      gic_irq_domain_alloc+0x208/0x248
+[   42.791976]                      irq_domain_alloc_irqs_locked+0xf8/0x358
+[   42.791981]                      __irq_domain_alloc_irqs+0x6c/0xc0
+[   42.791986]                      gic_init_bases+0x34c/0x6bc
+[   42.791992]                      gic_of_init+0x290/0x314
+[   42.791997]                      of_irq_init+0x304/0x390
+[   42.792004]                      irqchip_init+0x18/0x24
+[   42.792008]                      init_IRQ+0xb4/0x15c
+[   42.792014]                      start_kernel+0x26c/0x6ac
+[   42.792019]                      __primary_switched+0xbc/0xc4
+[   42.792022]   }
+[   42.792024]   ... key      at: [<ffffc5a7a0780f60>] 
+irq_desc_lock_class+0x0/0x10
+[   42.792034]   ... acquired at:
+[   42.792036]    _raw_spin_lock_irqsave+0x68/0xbc
+[   42.792041]    mtk_msi_bottom_irq_unmask+0x30/0x70
+[   42.792047]    irq_chip_unmask_parent+0x1c/0x28
+[   42.792054]    mtk_pcie_msi_irq_unmask+0x20/0x30
+[   42.792060]    irq_enable+0x40/0x8c
+[   42.792067]    __irq_startup+0x78/0xa4
+[   42.792074]    irq_startup+0xfc/0x164
+[   42.792081]    __setup_irq+0x43c/0x784
+[   42.792087]    request_threaded_irq+0xec/0x1a4
+[   42.792093]    pcie_pme_probe+0xf4/0x1bc
+[   42.792101]    pcie_port_probe_service+0x38/0x64
+[   42.792107]    really_probe+0x148/0x2ac
+[   42.792115]    __driver_probe_device+0x78/0x12c
+[   42.792122]    driver_probe_device+0x3c/0x160
+[   42.792128]    __device_attach_driver+0xb8/0x138
+[   42.792135]    bus_for_each_drv+0x80/0xdc
+[   42.792141]    __device_attach+0x9c/0x188
+[   42.792148]    device_initial_probe+0x14/0x20
+[   42.792155]    bus_probe_device+0xac/0xb0
+[   42.792161]    device_add+0x5bc/0x778
+[   42.792166]    device_register+0x20/0x30
+[   42.792171]    pcie_portdrv_probe+0x340/0x5c4
+[   42.792176]    local_pci_probe+0x40/0xa4
+[   42.792183]    pci_device_probe+0xac/0x1e0
+[   42.792189]    really_probe+0x148/0x2ac
+[   42.792195]    __driver_probe_device+0x78/0x12c
+[   42.792202]    driver_probe_device+0x3c/0x160
+[   42.792208]    __device_attach_driver+0xb8/0x138
+[   42.792215]    bus_for_each_drv+0x80/0xdc
+[   42.792221]    __device_attach+0x9c/0x188
+[   42.792227]    device_attach+0x14/0x20
+[   42.792234]    pci_bus_add_device+0x64/0xd4
+[   42.792239]    pci_bus_add_devices+0x3c/0x88
+[   42.792243]    pci_host_probe+0x44/0xbc
+[   42.792249]    mtk_pcie_probe+0x288/0x47c
+[   42.792255]    platform_probe+0x68/0xc4
+[   42.792260]    really_probe+0x148/0x2ac
+[   42.792266]    __driver_probe_device+0x78/0x12c
+[   42.792272]    driver_probe_device+0x3c/0x160
+[   42.792279]    __device_attach_driver+0xb8/0x138
+[   42.792285]    bus_for_each_drv+0x80/0xdc
+[   42.792291]    __device_attach+0x9c/0x188
+[   42.792298]    device_initial_probe+0x14/0x20
+[   42.792304]    bus_probe_device+0xac/0xb0
+[   42.792311]    deferred_probe_work_func+0x8c/0xc8
+[   42.792317]    process_one_work+0x2d0/0x598
+[   42.792324]    worker_thread+0x70/0x434
+[   42.792329]    kthread+0xfc/0x100
+[   42.792333]    ret_from_fork+0x10/0x20
+[   42.792338]
+[   42.792340] -> (&pcie->irq_lock){+...}-{2:2} {
+[   42.792347]    HARDIRQ-ON-W at:
+[   42.792350]                     lock_acquire+0x11c/0x324
+[   42.792357]                     _raw_spin_lock+0x48/0x60
+[   42.792361]                     mtk_pcie_suspend_noirq+0xd0/0x14c
+[   42.792367]                     dpm_run_callback+0x34/0x9c
+[   42.792376]                     __device_suspend_noirq+0x68/0x1f0
+[   42.792384]                     dpm_noirq_suspend_devices+0x1b8/0x24c
+[   42.792391]                     dpm_suspend_noirq+0x24/0x98
+[   42.792395]                     suspend_devices_and_enter+0x3b0/0x65c
+[   42.792401]                     pm_suspend+0x1fc/0x330
+[   42.792406]                     state_store+0x80/0xec
+[   42.792411]                     kobj_attr_store+0x18/0x2c
+[   42.792418]                     sysfs_kf_write+0x4c/0x78
+[   42.792425]                     kernfs_fop_write_iter+0x120/0x1b0
+[   42.792431]                     vfs_write+0x1a4/0x2e4
+[   42.792437]                     ksys_write+0x6c/0x100
+[   42.792443]                     __arm64_sys_write+0x1c/0x28
+[   42.792449]                     invoke_syscall+0x48/0x114
+[   42.792456]                     el0_svc_common.constprop.0+0x64/0x138
+[   42.792464]                     do_el0_svc+0x38/0x98
+[   42.792471]                     el0_svc+0x40/0xe0
+[   42.792475]                     el0t_64_sync_handler+0x100/0x12c
+[   42.792480]                     el0t_64_sync+0x1a4/0x1a8
+[   42.792484]    INITIAL USE at:
+[   42.792487]                    lock_acquire+0x11c/0x324
+[   42.792494]                    _raw_spin_lock_irqsave+0x68/0xbc
+[   42.792499]                    mtk_msi_bottom_irq_unmask+0x30/0x70
+[   42.792505]                    irq_chip_unmask_parent+0x1c/0x28
+[   42.792512]                    mtk_pcie_msi_irq_unmask+0x20/0x30
+[   42.792518]                    irq_enable+0x40/0x8c
+[   42.792525]                    __irq_startup+0x78/0xa4
+[   42.792532]                    irq_startup+0xfc/0x164
+[   42.792539]                    __setup_irq+0x43c/0x784
+[   42.792545]                    request_threaded_irq+0xec/0x1a4
+[   42.792550]                    pcie_pme_probe+0xf4/0x1bc
+[   42.792557]                    pcie_port_probe_service+0x38/0x64
+[   42.792563]                    really_probe+0x148/0x2ac
+[   42.792569]                    __driver_probe_device+0x78/0x12c
+[   42.792576]                    driver_probe_device+0x3c/0x160
+[   42.792582]                    __device_attach_driver+0xb8/0x138
+[   42.792589]                    bus_for_each_drv+0x80/0xdc
+[   42.792595]                    __device_attach+0x9c/0x188
+[   42.792601]                    device_initial_probe+0x14/0x20
+[   42.792608]                    bus_probe_device+0xac/0xb0
+[   42.792614]                    device_add+0x5bc/0x778
+[   42.792619]                    device_register+0x20/0x30
+[   42.792624]                    pcie_portdrv_probe+0x340/0x5c4
+[   42.792630]                    local_pci_probe+0x40/0xa4
+[   42.792635]                    pci_device_probe+0xac/0x1e0
+[   42.792640]                    really_probe+0x148/0x2ac
+[   42.792647]                    __driver_probe_device+0x78/0x12c
+[   42.792653]                    driver_probe_device+0x3c/0x160
+[   42.792660]                    __device_attach_driver+0xb8/0x138
+[   42.792666]                    bus_for_each_drv+0x80/0xdc
+[   42.792672]                    __device_attach+0x9c/0x188
+[   42.792679]                    device_attach+0x14/0x20
+[   42.792685]                    pci_bus_add_device+0x64/0xd4
+[   42.792690]                    pci_bus_add_devices+0x3c/0x88
+[   42.792694]                    pci_host_probe+0x44/0xbc
+[   42.792700]                    mtk_pcie_probe+0x288/0x47c
+[   42.792706]                    platform_probe+0x68/0xc4
+[   42.792710]                    really_probe+0x148/0x2ac
+[   42.792716]                    __driver_probe_device+0x78/0x12c
+[   42.792723]                    driver_probe_device+0x3c/0x160
+[   42.792729]                    __device_attach_driver+0xb8/0x138
+[   42.792736]                    bus_for_each_drv+0x80/0xdc
+[   42.792742]                    __device_attach+0x9c/0x188
+[   42.792748]                    device_initial_probe+0x14/0x20
+[   42.792755]                    bus_probe_device+0xac/0xb0
+[   42.792761]                    deferred_probe_work_func+0x8c/0xc8
+[   42.792767]                    process_one_work+0x2d0/0x598
+[   42.792773]                    worker_thread+0x70/0x434
+[   42.792778]                    kthread+0xfc/0x100
+[   42.792782]                    ret_from_fork+0x10/0x20
+[   42.792787]  }
+[   42.792788]  ... key      at: [<ffffc5a7a07bdfa0>] __key.1+0x0/0x10
+[   42.792794]  ... acquired at:
+[   42.792796]    __lock_acquire+0x73c/0x1970
+[   42.792803]    lock_acquire+0x11c/0x324
+[   42.792810]    _raw_spin_lock+0x48/0x60
+[   42.792814]    mtk_pcie_suspend_noirq+0xd0/0x14c
+[   42.792821]    dpm_run_callback+0x34/0x9c
+[   42.792828]    __device_suspend_noirq+0x68/0x1f0
+[   42.792835]    dpm_noirq_suspend_devices+0x1b8/0x24c
+[   42.792842]    dpm_suspend_noirq+0x24/0x98
+[   42.792846]    suspend_devices_and_enter+0x3b0/0x65c
+[   42.792852]    pm_suspend+0x1fc/0x330
+[   42.792857]    state_store+0x80/0xec
+[   42.792862]    kobj_attr_store+0x18/0x2c
+[   42.792868]    sysfs_kf_write+0x4c/0x78
+[   42.792874]    kernfs_fop_write_iter+0x120/0x1b0
+[   42.792880]    vfs_write+0x1a4/0x2e4
+[   42.792886]    ksys_write+0x6c/0x100
+[   42.792892]    __arm64_sys_write+0x1c/0x28
+[   42.792898]    invoke_syscall+0x48/0x114
+[   42.792905]    el0_svc_common.constprop.0+0x64/0x138
+[   42.792912]    do_el0_svc+0x38/0x98
+[   42.792919]    el0_svc+0x40/0xe0
+[   42.792923]    el0t_64_sync_handler+0x100/0x12c
+[   42.792928]    el0t_64_sync+0x1a4/0x1a8
+[   42.792932]
+[   42.792933]
+[   42.792933] stack backtrace:
+[   42.792936] CPU: 4 PID: 1138 Comm: systemd-sleep Tainted: G        W 
+         6.5.4-cos-mt9 #1
+[   42.792942] Hardware name: Google Spherion (rev0 - 3) (DT)
+[   42.792945] Call trace:
+[   42.792947]  dump_backtrace+0x98/0xf0
+[   42.792951]  show_stack+0x18/0x24
+[   42.792955]  dump_stack_lvl+0xb8/0x118
+[   42.792960]  dump_stack+0x18/0x24
+[   42.792964]  print_irq_inversion_bug.part.0+0x1ec/0x27c
+[   42.792971]  mark_lock+0x300/0x720
+[   42.792978]  __lock_acquire+0x73c/0x1970
+[   42.792985]  lock_acquire+0x11c/0x324
+[   42.792993]  _raw_spin_lock+0x48/0x60
+[   42.792996]  mtk_pcie_suspend_noirq+0xd0/0x14c
+[   42.793003]  dpm_run_callback+0x34/0x9c
+[   42.793010]  __device_suspend_noirq+0x68/0x1f0
+[   42.793017]  dpm_noirq_suspend_devices+0x1b8/0x24c
+[   42.793025]  dpm_suspend_noirq+0x24/0x98
+[   42.793028]  suspend_devices_and_enter+0x3b0/0x65c
+[   42.793033]  pm_suspend+0x1fc/0x330
+[   42.793039]  state_store+0x80/0xec
+[   42.793043]  kobj_attr_store+0x18/0x2c
+[   42.793050]  sysfs_kf_write+0x4c/0x78
+[   42.793056]  kernfs_fop_write_iter+0x120/0x1b0
+[   42.793062]  vfs_write+0x1a4/0x2e4
+[   42.793068]  ksys_write+0x6c/0x100
+[   42.793073]  __arm64_sys_write+0x1c/0x28
+[   42.793079]  invoke_syscall+0x48/0x114
+[   42.793086]  el0_svc_common.constprop.0+0x64/0x138
+[   42.793093]  do_el0_svc+0x38/0x98
+[   42.793100]  el0_svc+0x40/0xe0
+[   42.793105]  el0t_64_sync_handler+0x100/0x12c
+[   42.793110]  el0t_64_sync+0x1a4/0x1a8
+[   42.796314] Disabling non-boot CPUs ...
+[   42.799859] IRQ273: set affinity failed(-22).
+[   42.799921] IRQ290: set affinity failed(-22).
+[   42.800023] psci: CPU1 killed (polled 0 ms)
+[   42.803929] IRQ273: set affinity failed(-22).
+[   42.803982] IRQ290: set affinity failed(-22).
+[   42.804336] psci: CPU2 killed (polled 1 ms)
+[   42.807855] IRQ273: set affinity failed(-22).
+[   42.807907] IRQ290: set affinity failed(-22).
+[   42.807992] psci: CPU3 killed (polled 0 ms)
+[   42.809756] IRQ273: set affinity failed(-22).
+[   42.809775] IRQ290: set affinity failed(-22).
+[   42.809829] psci: CPU4 killed (polled 0 ms)
+[   42.813594] IRQ273: set affinity failed(-22).
+[   42.813616] IRQ290: set affinity failed(-22).
+[   42.813672] psci: CPU5 killed (polled 0 ms)
+[   42.816944] psci: CPU6 killed (polled 0 ms)
+[   42.818815] psci: CPU7 killed (polled 0 ms)
+[   42.821422] Enabling non-boot CPUs ...
+[   42.822247] Detected VIPT I-cache on CPU1
+[   42.822306] GICv3: CPU1: found redistributor 100 region 
+0:0x000000000c060000
+[   42.822376] CPU1: Booted secondary processor 0x0000000100 [0x412fd050]
+[   42.824953] CPU1 is up
+[   42.825773] Detected VIPT I-cache on CPU2
+[   42.825822] GICv3: CPU2: found redistributor 200 region 
+0:0x000000000c080000
+[   42.825880] CPU2: Booted secondary processor 0x0000000200 [0x412fd050]
+[   42.828463] CPU2 is up
+[   42.829162] Detected VIPT I-cache on CPU3
+[   42.829206] GICv3: CPU3: found redistributor 300 region 
+0:0x000000000c0a0000
+[   42.829256] CPU3: Booted secondary processor 0x0000000300 [0x412fd050]
+[   42.831963] CPU3 is up
+[   42.832750] CPU features: detected: Hardware dirty bit management
+[   42.832778] Detected PIPT I-cache on CPU4
+[   42.832799] GICv3: CPU4: found redistributor 400 region 
+0:0x000000000c0c0000
+[   42.832824] CPU4: Booted secondary processor 0x0000000400 [0x414fd0b0]
+[   42.834001] CPU4 is up
+[   42.834870] Detected PIPT I-cache on CPU5
+[   42.834895] GICv3: CPU5: found redistributor 500 region 
+0:0x000000000c0e0000
+[   42.834920] CPU5: Booted secondary processor 0x0000000500 [0x414fd0b0]
+[   42.836053] CPU5 is up
+[   42.836871] Detected PIPT I-cache on CPU6
+[   42.836897] GICv3: CPU6: found redistributor 600 region 
+0:0x000000000c100000
+[   42.836921] CPU6: Booted secondary processor 0x0000000600 [0x414fd0b0]
+[   42.838100] CPU6 is up
+[   42.838936] Detected PIPT I-cache on CPU7
+[   42.838962] GICv3: CPU7: found redistributor 700 region 
+0:0x000000000c120000
+[   42.838986] CPU7: Booted secondary processor 0x0000000700 [0x414fd0b0]
+[   42.840235] CPU7 is up
+[   42.978808] ------------[ cut here ]------------
+[   42.978823] EC detected sleep transition timeout. Total sleep 
+transitions: 0
+[   42.978919] WARNING: CPU: 0 PID: 1138 at 
+drivers/platform/chrome/cros_ec.c:142 cros_ec_sleep_event.isra.0+0xf8/0x104
+[   42.978952] Modules linked in: rfcomm qrtr bnep btusb btrtl btintel 
+mt7921e btmtk btbcm mt7921_common mt76_connac_lib mt76 bluetooth 
+mtk_vcodec_dec_hw ecdh_generic mac80211 ecc mtk_vcodec_dec uvcvideo uvc 
+v4l2_vp9 videobuf2_vmalloc cfg80211 mtk_vcodec_enc v4l2_h264 
+mtk_vcodec_dbgfs mtk_vcodec_common mtk_vpu elants_i2c rfkill elan_i2c 
+tpm_tis_spi cros_usbpd_logger tpm_tis_core cros_usbpd_charger 
+sbs_battery coreboot_table fuse ip_tables x_tables ipv6
+[   42.979171] CPU: 0 PID: 1138 Comm: systemd-sleep Tainted: G        W 
+         6.5.4-cos-mt9 #1
+[   42.979184] Hardware name: Google Spherion (rev0 - 3) (DT)
+[   42.979191] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS 
+BTYPE=--)
+[   42.979203] pc : cros_ec_sleep_event.isra.0+0xf8/0x104
+[   42.979219] lr : cros_ec_sleep_event.isra.0+0xf8/0x104
+[   42.979233] sp : ffff8000831fba40
+[   42.979239] x29: ffff8000831fba40 x28: ffff676363e38000 x27: 
+ffffc5a79f1cd938
+[   42.979261] x26: ffffc5a79fc8ac38 x25: ffffc5a79f968abc x24: 
+0000000000000010
+[   42.979282] x23: ffffc5a7a07c7fe0 x22: ffff676340e2f080 x21: 
+ffffc5a79e866dc4
+[   42.979303] x20: 0000000000000002 x19: ffff676343034480 x18: 
+ffffffffffffffff
+[   42.979323] x17: 0000000000000000 x16: 0000000000000001 x15: 
+ffffffffffffffff
+[   42.979343] x14: ffffc5a7a07520a1 x13: ffffc5a7a075209f x12: 
+736e617274207065
+[   42.979364] x11: 656c73206c61746f x10: 54202e74756f656d x9 : 
+6d6974206e6f6974
+[   42.979384] x8 : ffffc5a79f49c008 x7 : 0000000000000000 x6 : 
+ffffc5a79db3df70
+[   42.979404] x5 : ffff67647ee9ec08 x4 : ffffa1bcdfa00000 x3 : 
+ffff676363e38000
+[   42.979424] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 
+ffff676363e38000
+[   42.979444] Call trace:
+[   42.979449]  cros_ec_sleep_event.isra.0+0xf8/0x104
+[   42.979464]  cros_ec_resume+0x3c/0xec
+[   42.979479]  cros_ec_spi_resume+0x14/0x20
+[   42.979489]  dpm_run_callback+0x34/0x9c
+[   42.979505]  device_resume+0x8c/0x198
+[   42.979519]  dpm_resume+0x12c/0x258
+[   42.979529]  dpm_resume_end+0x18/0x30
+[   42.979539]  suspend_devices_and_enter+0xbc/0x65c
+[   42.979554]  pm_suspend+0x1fc/0x330
+[   42.979566]  state_store+0x80/0xec
+[   42.979576]  kobj_attr_store+0x18/0x2c
+[   42.979592]  sysfs_kf_write+0x4c/0x78
+[   42.979607]  kernfs_fop_write_iter+0x120/0x1b0
+[   42.979621]  vfs_write+0x1a4/0x2e4
+[   42.979635]  ksys_write+0x6c/0x100
+[   42.979647]  __arm64_sys_write+0x1c/0x28
+[   42.979659]  invoke_syscall+0x48/0x114
+[   42.979677]  el0_svc_common.constprop.0+0x64/0x138
+[   42.979691]  do_el0_svc+0x38/0x98
+[   42.979704]  el0_svc+0x40/0xe0
+[   42.979716]  el0t_64_sync_handler+0x100/0x12c
+[   42.979727]  el0t_64_sync+0x1a4/0x1a8
+[   42.979739] irq event stamp: 66299
+[   42.979745] hardirqs last  enabled at (66299): [<ffffc5a79eb89890>] 
+__schedule+0xab8/0xbe8
+[   42.979761] hardirqs last disabled at (66298): [<ffffc5a79eb891d0>] 
+__schedule+0x3f8/0xbe8
+[   42.979776] softirqs last  enabled at (65704): [<ffffc5a79da10794>] 
+__do_softirq+0x424/0x51c
+[   42.979788] softirqs last disabled at (65699): [<ffffc5a79da16af0>] 
+____do_softirq+0x10/0x1c
+[   42.979803] ---[ end trace 0000000000000000 ]---
+[   45.407309] OOM killer enabled.
+[   45.410445] Restarting tasks ... done.
+[   45.414855] random: crng reseeded on system resumption
+[   45.423237] PM: suspend exit
 
-> 
->> +	default y
-> 
-> Minor, but I think "default PCIEAER" makes it slightly clearer that CXL
-> error handling comes along for the ride with PCIE AER.
->
+Please also find the CrOS EC log starting with the first message printed 
+after "suspend" begins:
 
-We found Kconfig entries do not typically list a dependancy and the default 
-to be the same. We prefer to leave as 'default y'. If you want we can make 
-your requested change. 
+[651878.494408 HC 0x400b err 1]
+[651878.497188 HC 0x8d err 1]
+[651878.501734 HC 0x2b err 1]
+[651878.505423 HC 0x134 err 1]
+[651878.510886 HC 0x26 err 3]
+[651878.917783 Handle sleep: 0]
+[651878.931282 HC 0x67 err 9]
+[651891.650633 Unhandled VB reg 11]
+[651891.654386 Unhandled VB reg 11]
+[651891.688083 Unhandled VB reg 11]
+[651891.690206 Unhandled VB reg 11]
+[651891.865486 Unhandled VB reg 11]
+[651891.867628 Unhandled VB reg 11]
+[651891.953322 Unhandled VB reg 11]
+[651891.957136 Unhandled VB reg 11]
+[651892.034630 Unhandled VB reg 11]
+[651892.038440 Unhandled VB reg 11]
+[651892.073436 Unhandled VB reg 11]
+[651892.075545 Unhandled VB reg 11]
+[651892.097180 Unhandled VB reg 11]
+[651892.099232 Unhandled VB reg 11]
+[651892.314986 Unhandled VB reg 11]
+[651892.319744 Unhandled VB reg 11]
+[651892.327483 Unhandled VB reg 11]
+[651892.350593 Unhandled VB reg 11]
+[651892.355511 Unhandled VB reg 11]
+[651892.371166 Unhandled VB reg 11]
+[651892.374825 Unhandled VB reg 11]
+[651892.411053 Unhandled VB reg 11]
+[651892.415335 Unhandled VB reg 11]
+[651892.479204 Unhandled VB reg 11]
+[651892.481260 Unhandled VB reg 11]
+[651892.500444 Unhandled VB reg 11]
+[651892.504106 Unhandled VB reg 11]
+[651918.803375 Handle sleep: 1]
+[651928.805549 Warning: Detected sleep hang! Waking host up!]
+[651928.806288 event set 0x0000000000080000]
+[651928.966033 Handle sleep: 2]
+[651928.970547 HC 0x67 err 9]
 
->> +	depends on PCIEAER && CXL_PCI
->> +	help
->> +	  Enables error handling of downstream ports of a CXL host
->> +	  that is operating in RCD mode (Restricted CXL Host, RCH).
->> +	  The downstream port reports AER errors to a given RCEC.
->> +	  Errors are handled by the CXL memory device driver.
->> +
->> +	  If unsure, say Y.
->> +
->>  #
->>  # PCI Express ECRC
->>  #
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index d3344fcf1f79..c354ca5e8f2b 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -946,14 +946,100 @@ static bool find_source_device(struct pci_dev *parent,
->>  	return true;
->>  }
->>  
->> +#ifdef CONFIG_PCIEAER_CXL
->> +
->> +static bool is_cxl_mem_dev(struct pci_dev *dev)
->> +{
->> +	/*
->> +	 * The capability, status, and control fields in Device 0,
->> +	 * Function 0 DVSEC control the CXL functionality of the
->> +	 * entire device (CXL 3.0, 8.1.3).
->> +	 */
->> +	if (dev->devfn != PCI_DEVFN(0, 0))
->> +		return false;
->> +
->> +	/*
->> +	 * CXL Memory Devices must have the 502h class code set (CXL
->> +	 * 3.0, 8.1.12.1).
->> +	 */
->> +	if ((dev->class >> 8) != PCI_CLASS_MEMORY_CXL)
->> +		return false;
-> 
-> Type-2 devices are going to support the same error flows but without
-> advertising the CXL class code. Should this perhaps be something that
-> CXL drivers can opt into by setting a flag in the pci_dev? It is already
-> the case that the driver needs to be attached for the error handler to
-> be found, so might as well allow the CXL AER handling to be opted-in by
-> the driver as well.
-> 
-
-At the momment type-2 devices are unsupported and the drivers are not 
-available. The absence of CXL class information in type-2 devices will present 
-a challenge in identifying here. We would like to defer making change here 
-and address this in a future a patchset. 
-
->> +
->> +	return true;
->> +}
->> +
->> +static bool cxl_error_is_native(struct pci_dev *dev)
->> +{
->> +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
->> +
->> +	if (pcie_ports_native)
->> +		return true;
->> +
->> +	return host->native_aer && host->native_cxl_error;
->> +}
->> +
->> +static bool is_internal_error(struct aer_err_info *info)
->> +{
->> +	if (info->severity == AER_CORRECTABLE)
->> +		return info->status & PCI_ERR_COR_INTERNAL;
->> +
->> +	return info->status & PCI_ERR_UNC_INTN;
->> +}
->> +
->> +static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
->> +{
->> +	struct aer_err_info *info = (struct aer_err_info *)data;
->> +	const struct pci_error_handlers *err_handler;
->> +
->> +	if (!is_cxl_mem_dev(dev) || !cxl_error_is_native(dev))
->> +		return 0;
->> +
->> +	/* protect dev->driver */
->> +	device_lock(&dev->dev);
->> +
->> +	err_handler = dev->driver ? dev->driver->err_handler : NULL;
->> +	if (!err_handler)
->> +		goto out;
->> +
->> +	if (info->severity == AER_CORRECTABLE) {
->> +		if (err_handler->cor_error_detected)
->> +			err_handler->cor_error_detected(dev);
->> +	} else if (err_handler->error_detected) {
->> +		if (info->severity == AER_NONFATAL)
->> +			err_handler->error_detected(dev, pci_channel_io_normal);
->> +		else if (info->severity == AER_FATAL)
->> +			err_handler->error_detected(dev, pci_channel_io_frozen);
->> +	}
->> +out:
->> +	device_unlock(&dev->dev);
->> +	return 0;
->> +}
->> +
->> +static void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
->> +{
->> +	/*
->> +	 * Internal errors of an RCEC indicate an AER error in an
->> +	 * RCH's downstream port. Check and handle them in the CXL.mem
->> +	 * device driver.
->> +	 */
->> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
->> +	    is_internal_error(info))
->> +		pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
-> 
-> This would seem to work generically for RCEC reported errors in a VH
-> topology, so I think the "_rch" distinction can be dropped.
-> 
-
-The pcie_walk_rcec() filters on PCI_EXP_TYPE_RC_END devices. As a result this 
-iterator will not apply to VH mode devices (PCI_EXP_TYPE_ENDPOINT, PCI_EXP_TYPE_ROOT_PORT,
-PCI_EXP_TYPE_DOWNSTREAM). This series is focused on RCH mode. VH mode port error 
-handling will be addressed in future patchset. 
-
-Regards,
-Terry
-
->> +}
->> +
->> +#else
->> +static inline void cxl_rch_handle_error(struct pci_dev *dev,
->> +					struct aer_err_info *info) { }
->> +#endif
->> +
->>  /**
->> - * handle_error_source - handle logging error into an event log
->> + * pci_aer_handle_error - handle logging error into an event log
->>   * @dev: pointer to pci_dev data structure of error source device
->>   * @info: comprehensive error information
->>   *
->>   * Invoked when an error being detected by Root Port.
->>   */
->> -static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
->> +static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
->>  {
->>  	int aer = dev->aer_cap;
->>  
->> @@ -977,6 +1063,12 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
->>  		pcie_do_recovery(dev, pci_channel_io_normal, aer_root_reset);
->>  	else if (info->severity == AER_FATAL)
->>  		pcie_do_recovery(dev, pci_channel_io_frozen, aer_root_reset);
->> +}
->> +
->> +static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
->> +{
->> +	cxl_rch_handle_error(dev, info);
->> +	pci_aer_handle_error(dev, info);
->>  	pci_dev_put(dev);
->>  }
->>  
->> -- 
->> 2.34.1
->>
-> 
-> 
