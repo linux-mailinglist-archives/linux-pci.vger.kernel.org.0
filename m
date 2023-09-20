@@ -2,68 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A7E547A70AE
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Sep 2023 04:46:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D78007A70C2
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Sep 2023 05:00:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231269AbjITCq6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Sep 2023 22:46:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44226 "EHLO
+        id S229641AbjITDAt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Sep 2023 23:00:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbjITCq5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 22:46:57 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BD21699;
-        Tue, 19 Sep 2023 19:46:49 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.43])
-        by gateway (Coremail) with SMTP id _____8AxZ+gXXQplBCIqAA--.44903S3;
-        Wed, 20 Sep 2023 10:46:47 +0800 (CST)
-Received: from [10.20.42.43] (unknown [10.20.42.43])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxP90HXQplwS4MAA--.26420S3;
-        Wed, 20 Sep 2023 10:46:44 +0800 (CST)
-Message-ID: <c505a778-bc37-93be-1ac1-c3d651ae1525@loongson.cn>
-Date:   Wed, 20 Sep 2023 10:46:16 +0800
+        with ESMTP id S231968AbjITDAs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Sep 2023 23:00:48 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A5C1C6;
+        Tue, 19 Sep 2023 20:00:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695178843; x=1726714843;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mSL99h1syLWVif7Chcbad4B1xPqXmzezMeLKDzPTmvM=;
+  b=FkcZEP17vH+JQO1NngYOQq+Feimniydz/rtZuOhzX+WSvJzua7hswEd+
+   o3U2y2Sl7ivjoVrW/6HAo54/KN0jbSWKOFhM0wLKVQ2KA4/P84mpgYqxs
+   PDBp0RdDL67o0awKQAiZKsN0VZTsRRMRtGo5AidT7QokWw+gn+ltCdxN7
+   M+EHPxyLWvQMVgKo+xBi4JAdc3UfA195E2ob7IL/hCIlTYNbkYVJHp9RW
+   FR6/XrmmExKOSKug/BDVJAs4WANquXDWXe0sWbcEYAMoTm8Pmzbw9vvmm
+   N3oNK51AnO+SM88IHa8g/RJF8R6fn2ObmCp/nmJMXH7XSMmas8hvX+kyn
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="378999145"
+X-IronPort-AV: E=Sophos;i="6.02,160,1688454000"; 
+   d="scan'208";a="378999145"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 20:00:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="889737344"
+X-IronPort-AV: E=Sophos;i="6.02,160,1688454000"; 
+   d="scan'208";a="889737344"
+Received: from lkp-server02.sh.intel.com (HELO 9ef86b2655e5) ([10.239.97.151])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Sep 2023 19:59:52 -0700
+Received: from kbuild by 9ef86b2655e5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qinS9-0008Co-08;
+        Wed, 20 Sep 2023 03:00:37 +0000
+Date:   Wed, 20 Sep 2023 10:59:52 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     shiju.jose@huawei.com, helgaas@kernel.org, rafael@kernel.org,
+        lenb@kernel.org, tony.luck@intel.com, james.morse@arm.com,
+        bp@alien8.de, ying.huang@intel.com, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, linuxarm@huawei.com,
+        jonathan.cameron@huawei.com, tanxiaofei@huawei.com,
+        prime.zeng@hisilicon.com, shiju.jose@huawei.com
+Subject: Re: [PATCH v2 1/1] ACPI / APEI: Fix for overwriting AER info when
+ error status data has multiple sections
+Message-ID: <202309201046.jwWoGRvA-lkp@intel.com>
+References: <20230919091543.794-1-shiju.jose@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 0/5] Add the pci_get_base_class() helper and use it
-To:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        Sui Jingfeng <sui.jingfeng@linux.dev>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <20230825062714.6325-1-sui.jingfeng@linux.dev>
- <BL1PR12MB514444DF0C2E304A46DE0F4BF7E3A@BL1PR12MB5144.namprd12.prod.outlook.com>
-Content-Language: en-US
-From:   suijingfeng <suijingfeng@loongson.cn>
-In-Reply-To: <BL1PR12MB514444DF0C2E304A46DE0F4BF7E3A@BL1PR12MB5144.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf8CxP90HXQplwS4MAA--.26420S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Zr45ZFW8ZF4rJr43KF4rWFX_yoW8ur4kpF
-        43AF4YkF1kJrsrGr97Wrn3uF18G3ykXryrJr1v934I93s0vrnIqan7Cw4Du39IvrWY9a1q
-        qrWIyr12g34YqagCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-        xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-        AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-        AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-        8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
-        AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-        rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
-        v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-        JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUU
-        UU=
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230919091543.794-1-shiju.jose@huawei.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -72,61 +70,32 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi,
 
+kernel test robot noticed the following build errors:
 
-On 2023/8/25 21:18, Deucher, Alexander wrote:
-> [Public]
->
->> -----Original Message-----
->> From: amd-gfx <amd-gfx-bounces@lists.freedesktop.org> On Behalf Of Sui
->> Jingfeng
->> Sent: Friday, August 25, 2023 2:27 AM
->> To: Bjorn Helgaas <bhelgaas@google.com>
->> Cc: alsa-devel@alsa-project.org; Sui Jingfeng <suijingfeng@loongson.cn>;
->> nouveau@lists.freedesktop.org; linux-kernel@vger.kernel.org; dri-
->> devel@lists.freedesktop.org; amd-gfx@lists.freedesktop.org; linux-
->> pci@vger.kernel.org
->> Subject: [PATCH 0/5] Add the pci_get_base_class() helper and use it
->>
->> From: Sui Jingfeng <suijingfeng@loongson.cn>
->>
->> There is no function that can be used to get all PCI(e) devices in a system by
->> matching against its the PCI base class code only, while keep the sub-class code
->> and the programming interface ignored. Therefore, add the
->> pci_get_base_class() function to suit the need.
->>
->> For example, if an application want to process all PCI(e) display devices in a
->> system, it can achieve such goal by writing the code as following:
->>
->>      pdev = NULL;
->>      do {
->>          pdev = pci_get_base_class(PCI_BASE_CLASS_DISPLAY, pdev);
->>          if (!pdev)
->>              break;
->>
->>          do_something_for_pci_display_device(pdev);
->>      } while (1);
->>
->> Sui Jingfeng (5):
->>    PCI: Add the pci_get_base_class() helper
->>    ALSA: hda/intel: Use pci_get_base_class() to reduce duplicated code
->>    drm/nouveau: Use pci_get_base_class() to reduce duplicated code
->>    drm/amdgpu: Use pci_get_base_class() to reduce duplicated code
->>    drm/radeon: Use pci_get_base_class() to reduce duplicated code
->>
-> Series is:
-> Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+[auto build test ERROR on rafael-pm/linux-next]
+[also build test ERROR on pci/next pci/for-linus linus/master v6.6-rc2 next-20230919]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Thanks a lot.
+url:    https://github.com/intel-lab-lkp/linux/commits/shiju-jose-huawei-com/ACPI-APEI-Fix-for-overwriting-AER-info-when-error-status-data-has-multiple-sections/20230919-171718
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+patch link:    https://lore.kernel.org/r/20230919091543.794-1-shiju.jose%40huawei.com
+patch subject: [PATCH v2 1/1] ACPI / APEI: Fix for overwriting AER info when error status data has multiple sections
+config: i386-buildonly-randconfig-006-20230920 (https://download.01.org/0day-ci/archive/20230920/202309201046.jwWoGRvA-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230920/202309201046.jwWoGRvA-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309201046.jwWoGRvA-lkp@intel.com/
 
-What to do next then?
+All errors (new ones prefixed by >>):
 
-By the way, Bjorn, what's your opinion?
-I'm ask because I don't know what to do next with this series.
+   ld: drivers/pci/pcie/aer.o: in function `aer_recover_work_func':
+>> aer.c:(.text+0xec5): undefined reference to `ghes_estatus_pool_region_free'
 
-As they belong to different system of Linux kernel,
-the rest of patch (0002 ~ 0005) depend on the first one.
-
-I think, merge the 0001-patch firstly, then wait it arrive at drm-misc, alsa branch.
-Or, to do something else?
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
