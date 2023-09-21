@@ -2,73 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CE7C7A997F
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Sep 2023 20:15:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 267187A9CF5
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Sep 2023 21:27:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230273AbjIUSP2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Sep 2023 14:15:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37618 "EHLO
+        id S229779AbjIUT1Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Sep 2023 15:27:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230098AbjIUSPB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Sep 2023 14:15:01 -0400
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 418D4884BD;
-        Thu, 21 Sep 2023 10:39:14 -0700 (PDT)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-59c0442a359so15400667b3.0;
-        Thu, 21 Sep 2023 10:39:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695317953; x=1695922753; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t1F+jNn4p2YFYWnyRLpXhofZQpKLhDAtPlwv/PrP4WI=;
-        b=H0ivDVGLZ79q0aLnFpwiEeAAEEUUWflb8Ah/Xysl9WQ/0gc6IuHUuyZWGMEeiKaive
-         GfdMS0KYesiM0LBArEnDShfy5Dm4DkjfynAtPKtCsXUQG5abkB3R5/RrdYgtePJ4y7OG
-         zf3fCC6oXa7PalM+vcECQ8kx7uzkciFQXvjklD4pNDh5RL6PR8tBLyh1rDX2tz4J1a36
-         3YMqqi+9ewHFarkWLv5y80On08yNRJT6F6aVLl4TDEUbkoduC6oFbqYZ4Wite5aysROQ
-         y2MRfL6Lr0jKSK6UbSR9v5hFs/fr/a1yc4hkcciaaxEIpcfSmsgnjEy3N/Bv+EdkWuB5
-         7rVg==
+        with ESMTP id S229754AbjIUT1W (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Sep 2023 15:27:22 -0400
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FD7898A6C
+        for <linux-pci@vger.kernel.org>; Thu, 21 Sep 2023 10:56:52 -0700 (PDT)
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 9EFF73F688
+        for <linux-pci@vger.kernel.org>; Thu, 21 Sep 2023 06:08:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1695276528;
+        bh=LGLvEUCLByX56ZHTlqmLlwmZ6pTbCna8gvztcJYDoU8=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=rauudwVUP8l7s8SwO4VSe69N7gnmCVEH1jsNY1fFoKehhXjOrLiPmAoeqI7widzy7
+         ZUxhg4oe+oHsZfKmL/AMw6mjza/a7C4z12xb4eiJ+dfy2KR5I2nipRDHlvAGbxCnWh
+         canQ+lz3VdI78sZMi0Yr86AqHTZJxAVIREWSg5gLp6dut/4Ne+d7F4W7G8Xtw5M+jq
+         IC6PBAWXzjBkgllANmR9e7E1ru5kZ0cJkRwgmeuSWpu/kP7PIlyLwPRCCZdh7Pb3Bs
+         Y3VCQo9nYSaSkQcZC2VDeulP1/JUSxlpXKP4s509rTW/mPkfmwJ0hUIp87GeLa6yEs
+         sEkFWaQd34ztQ==
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-27472e97c0bso384303a91.3
+        for <linux-pci@vger.kernel.org>; Wed, 20 Sep 2023 23:08:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695317953; x=1695922753;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1695276527; x=1695881327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=t1F+jNn4p2YFYWnyRLpXhofZQpKLhDAtPlwv/PrP4WI=;
-        b=BUmppY0Xah5LyQrhmwmhVAfQsODbT7qAdbFFbsT64YEz4O9+8Wq4o1Yn+ElIZJSzxY
-         ZE16fZdF9vtvo9WJNeHc1R0mCPWxi1oLFMa0cyUY17CnqfeNe/lLZzSVs+N6sxGh8dsD
-         E1y9KQ3Vps2jJ3MZcPRKB02ILWfRCtx87anD2Bx6Jw0k28j2sStRfULH3362Np3R+Zjk
-         ksyYgAzUJiNiMYxxMIxKePiDt+EzrM/8haOfHnUUhd/+AZqqT6r1ndTVXEktIeWyxmdx
-         /cah79wRSt7bCNQefi6Ngwd30M+3OWtTiBISccXwBNBHXrWBRP6Jl3GGdGcVaJ7zAUmC
-         dYVQ==
-X-Gm-Message-State: AOJu0YxkPKKkAO2ryOKM8keCwXA9SZLbmwBqkluQDh/f6RGzXuYD54Wm
-        abkq6MlD9xRR8juQkGHqqMqykjj145675u2I
-X-Google-Smtp-Source: AGHT+IEex6NSKgWXUjJK9NtDKEBemVHgyoAvkJToFZZV4i38mLrQmkXb+UjR3aIEY0G94D6xXHU65Q==
-X-Received: by 2002:a05:6a21:7795:b0:15d:42d5:6cc1 with SMTP id bd21-20020a056a21779500b0015d42d56cc1mr717960pzc.33.1695275776544;
-        Wed, 20 Sep 2023 22:56:16 -0700 (PDT)
-Received: from toolbox.alistair23.me (2403-580b-97e8-0-321-6fb2-58f1-a1b1.ip6.aussiebb.net. [2403:580b:97e8:0:321:6fb2:58f1:a1b1])
-        by smtp.gmail.com with ESMTPSA id jw18-20020a170903279200b001adf6b21c77sm502841plb.107.2023.09.20.22.56.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Sep 2023 22:56:16 -0700 (PDT)
-From:   Alistair Francis <alistair23@gmail.com>
-X-Google-Original-From: Alistair Francis <alistair.francis@wdc.com>
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        Jonathan.Cameron@huawei.com, lukas@wunner.de
-Cc:     alex.williamson@redhat.com, christian.koenig@amd.com,
-        kch@nvidia.com, gregkh@linuxfoundation.org, logang@deltatee.com,
-        linux-kernel@vger.kernel.org, alistair23@gmail.com,
-        chaitanyak@nvidia.com, rdunlap@infradead.org,
-        Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH v8 3/3] PCI/DOE: Allow enabling DOE without CXL
-Date:   Thu, 21 Sep 2023 15:55:31 +1000
-Message-ID: <20230921055531.2028834-3-alistair.francis@wdc.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230921055531.2028834-1-alistair.francis@wdc.com>
-References: <20230921055531.2028834-1-alistair.francis@wdc.com>
+        bh=LGLvEUCLByX56ZHTlqmLlwmZ6pTbCna8gvztcJYDoU8=;
+        b=Sw5/smui6JqIPu7VZX1WK2FG99SYC024INCzqDo9OzV8bsxW9k7aLCVBOfTYMg8ori
+         EbhDQJ/cf7frP3hQ/NoGrsuQDwk1l+CDCLe7eje7VcY0RaIk4+sDscVzIqPj1q0lwpQ6
+         m+iFzWkq9qmiPFoMjNLUhlehDGvVPE0/s4wR2oytRrP5xGrsYdlOZhZZ89y7xPKFETxk
+         IwD7Jj3Bs1+6KPN9O4oRlVAWQ+xnLOsDO6NzF5IA483unRx1oAQ56GHGxgv6Y/EuXBK8
+         XFPJTOQ19L4xEe8BdwX06Zxq6sKmmAoh3Lkft9evQyq4wGfQ4cmS3mqUlo896CeZ8hoZ
+         MCHw==
+X-Gm-Message-State: AOJu0YzdPzNyxGDQDqR9gAHsKzUNwYui1F7DwTegJqgx0RB7F0I2OHaW
+        wJtBKTBwvFUGfQGuByHVwrEih9KHxCMor/mIXWes7YWQObPgyyJrFEypwS2cNQEodypKRhBjJoP
+        XCRP1I710DT/GjF7LHF3qKgeS7rEOamNge3xB2AHrE5evDjmVah4O8w==
+X-Received: by 2002:a17:90b:60f:b0:271:9237:a07f with SMTP id gb15-20020a17090b060f00b002719237a07fmr4869854pjb.32.1695276527090;
+        Wed, 20 Sep 2023 23:08:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH3mcQsaQ+FE/ji4v4nyF6aUsilUttOw7YcXgkdZG82nw6jvzjNPhHOMNN3PnauJxNw7lKirmfAfZZ+zIWZCFI=
+X-Received: by 2002:a17:90b:60f:b0:271:9237:a07f with SMTP id
+ gb15-20020a17090b060f00b002719237a07fmr4869844pjb.32.1695276526779; Wed, 20
+ Sep 2023 23:08:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <20230914041806.816741-1-kai.heng.feng@canonical.com>
+ <7b45ac2ed091497b4e21a6a5c19956161175ba16.camel@linux.intel.com>
+ <SN6PR11MB26245C44E84C37C1B551260EF4F6A@SN6PR11MB2624.namprd11.prod.outlook.com>
+ <CAAd53p5ywMVKWzhn0nYzvBnW_Bc=sntgBttJdcVUuf_a4AnX5w@mail.gmail.com>
+ <SN6PR11MB262473E2BF4057F4D285A613F4F6A@SN6PR11MB2624.namprd11.prod.outlook.com>
+ <DM6PR11MB26184A8A3F955589F5FC6836F4FBA@DM6PR11MB2618.namprd11.prod.outlook.com>
+ <CAAd53p4o1pB-yzpvUCYsvuYEvQQK0my=u-ogrByRCx_Lvns=hw@mail.gmail.com>
+ <bbbf36724d63f7532696a960a9d56d7ccd5a5bee.camel@linux.intel.com>
+ <CAAd53p6MA9YLbcXxpC8=YEtbO6frFJk1LQ1BNUgPk=r1_uR8iw@mail.gmail.com>
+ <67c85f083201ed2cda2cab198b40141ad21912a2.camel@linux.intel.com> <CAJZ5v0iFLxpWHW=sDZ7=Wne3Yt=8_EwhW9SeCmRP6REpVqo8rA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0iFLxpWHW=sDZ7=Wne3Yt=8_EwhW9SeCmRP6REpVqo8rA@mail.gmail.com>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Thu, 21 Sep 2023 14:08:33 +0800
+Message-ID: <CAAd53p67tiP0xXwhn=NviU_rvrSveSxbAhDieYG9AmUWF2e__Q@mail.gmail.com>
+Subject: Re: [PATCH] HID: intel-ish-hid: ipc: Rework EHL OOB wakeup
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Xu, Even" <even.xu@intel.com>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Lee, Jian Hui" <jianhui.lee@canonical.com>,
+        "Zhang, Lixu" <lixu.zhang@intel.com>,
+        "Ba, Najumon" <najumon.ba@intel.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,36 +94,62 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCIe devices (not CXL) can support DOE as well, so allow DOE to be
-enabled even if CXL isn't.
+On Wed, Sep 20, 2023 at 2:00=E2=80=AFAM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
+>
+> On Tue, Sep 19, 2023 at 6:54=E2=80=AFPM srinivas pandruvada
+> <srinivas.pandruvada@linux.intel.com> wrote:
+> >
+> > On Tue, 2023-09-19 at 15:36 +0800, Kai-Heng Feng wrote:
+> > > On Mon, Sep 18, 2023 at 11:57=E2=80=AFPM srinivas pandruvada
+> > > <srinivas.pandruvada@linux.intel.com> wrote:
+> > > >
+> > > > Hi Kai-Heng,
+> > > > On Mon, 2023-09-18 at 09:17 +0800, Kai-Heng Feng wrote:
+> > > > > Hi Even,
+> > > > >
+> > > > > On Mon, Sep 18, 2023 at 8:33=E2=80=AFAM Xu, Even <even.xu@intel.c=
+om>
+> > > > > wrote:
+> > > > > >
+> > > > > > Hi, Kai-Heng,
+> > > > > >
+> > > > > > I just got feedback, for testing EHL S5 wakeup feature, you
+> > > > > > need
+> > > > > > several steps to setup and access
+> > > > > > "https://portal.devicewise.com/things/browse" to trigger wake.
+> > > > > > But currently, our test account of this website are all out of
+> > > > > > data.
+> > > > > > So maybe you need double check with the team who required you
+> > > > > > preparing the patch for the verification.
+> > > > >
+> > > > > The patch is to solve the GPE refcount overflow, while
+> > > > > maintaining S5
+> > > > > wakeup. I don't have any mean to test S5 wake.
+> > > > >
+> > > > The issue is not calling acpi_disable_gpe(). To reduce the scope of
+> > > > change can we just add that instead of a adding new callbacks. This
+> > > > way
+> > > > scope is reduced.
+> > >
+> > > This patch does exactly the same thing by letting PCI and ACPI handle
+> > > the PME and GPE.
+> > > Though the change seems to be bigger, it actually reduces the duped
+> > > code, while keep the S5 wakeup ability intact.
+> > It may be doing the same. But with long chain of calls without
+> > verification, I am not comfortable.
+> > This can be another patch by itself to use the framework.
+>
+> I agree.
+>
+> Let's change one thing at a time.
+>
+> > But you are targeting a fix for overflow issue, which is separate from
+> > the use of PCI/ACPI framework.
+>
+> Yes, let's fix the bug first and make things look nicer separately.
 
-Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
-v8:
- - No changes
-v7:
- - Initial patch
+Right, please use the fix from Srinivas and I'll send a separate patch
+to make things looks better.
 
- drivers/pci/Kconfig | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index e9ae66cc4189..672a1f5178c6 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -117,7 +117,10 @@ config PCI_ATS
- 	bool
- 
- config PCI_DOE
--	bool
-+	bool "Enable PCI Data Object Exchange (DOE) support"
-+	help
-+	  Say Y here if you want be able to communicate with PCIe DOE
-+	  mailboxes.
- 
- config PCI_ECAM
- 	bool
--- 
-2.41.0
-
+Kai-Heng
