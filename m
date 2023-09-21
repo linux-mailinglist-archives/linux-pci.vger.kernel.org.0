@@ -2,165 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DF997AA159
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Sep 2023 23:01:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF47C7AA04A
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Sep 2023 22:35:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232335AbjIUVBF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Sep 2023 17:01:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37710 "EHLO
+        id S231578AbjIUUfz convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 21 Sep 2023 16:35:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232342AbjIUVAh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Sep 2023 17:00:37 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86EFB83F4D;
-        Thu, 21 Sep 2023 10:37:16 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA915C116B1;
-        Thu, 21 Sep 2023 08:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695283900;
-        bh=Gewh+X/afwnYE29YDMBBSxcYouKp+J6pI9o/VDPi61s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OOA97oSA87QUXG8tkGzL4e+OSoo31vbKdlGVmS82Rki1F6e6aK/ISRu3oFg3WttHU
-         hzASotkvmkEWgGL97btIXv1zY0ngfxmtdLZBbCPkYelDLUT7JFSaLbzD4C9di3BSRa
-         15TTx1vPfe5HUOO2e6VENo6GqHKp4RgPcCW6zSDK69bYfQrPm02bNtZZapQMWRCw7b
-         c5yYrG9EmjRXx3OWJ5D/VwlH3ZO4UVCOC7E/R9M6WC78qrfh1h9I4vP47H1w9YT55m
-         9fy/q6WY3fczWq9OLQN+8Dqyxfk6PWf12G6xLK69kEifZm3iUQR1hZ7HflCin9DRbO
-         NLGEIL3TcplMw==
-Date:   Thu, 21 Sep 2023 10:11:32 +0200
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        konrad.dybcio@linaro.org, mani@kernel.org,
-        quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
-        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
-        quic_parass@quicinc.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
-        linux-phy@lists.infradead.org
-Subject: Re: [PATCH v1 1/5] dt-bindings: PCI: qcom-ep: Add support for
- SA8775P SoC
-Message-ID: <20230921081132.GA2891@thinkpad>
-References: <1695218113-31198-1-git-send-email-quic_msarkar@quicinc.com>
- <1695218113-31198-2-git-send-email-quic_msarkar@quicinc.com>
+        with ESMTP id S232256AbjIUUew (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Sep 2023 16:34:52 -0400
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53AF473547;
+        Thu, 21 Sep 2023 10:33:03 -0700 (PDT)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-59be81cf0d8so2356287b3.0;
+        Thu, 21 Sep 2023 10:33:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695317439; x=1695922239;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n4u4Ae4qmn0j8vaZq8VmeR6efjSH5qgFemSVQPrsJHw=;
+        b=IeSZRoz0xYezONjfazpVXRNfgFOYVTLPNTLaRcSeMX/ChQiXY9rIR+q8jiG9UwewH3
+         urqstrUwTjnJJKLN58Ek6jzfbnEDLzTqDv4K5/DjmGQCdr+tFQvzbkDm6Xj0oaKuQpVo
+         P1gvp4jKK2Gtjx3F4COC6HMj/nHbxqWbQolYDkNQxrGrXqjNQ+uBa5GTjnWvFAnSGxgR
+         o04VYvGFj29h8LKfVRIliHwxjRodCr75sOEn5GgXMqTBFuc5AfoEENLuCfCs5jfmCPxI
+         vBAUhYEAu+WupKjrc8FRDAUnne6Gi4xO82pGXroFReESVshDgnnMvtgRpOKBuXQe3xTs
+         YUKA==
+X-Gm-Message-State: AOJu0YwOe6Zxht7KScDLO8EQKvne7TK9InHfxquIheCSxnN2zRQk5HaU
+        1z/CsGW9+AVR7m8/R1UutP9BkAe01+w1z9HVNooEMNlL
+X-Google-Smtp-Source: AGHT+IFqOKRaoSGisF4HxZ5+8mAFkH7uuxt1CiZ2fWObTP62x0ne77EscHn7VM8hUS0SM0xgt3WWxah+cm9vG27xjLg=
+X-Received: by 2002:a4a:2a4e:0:b0:573:3a3b:594b with SMTP id
+ x14-20020a4a2a4e000000b005733a3b594bmr4666981oox.1.1695288795434; Thu, 21 Sep
+ 2023 02:33:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1695218113-31198-2-git-send-email-quic_msarkar@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230914041806.816741-1-kai.heng.feng@canonical.com>
+ <7b45ac2ed091497b4e21a6a5c19956161175ba16.camel@linux.intel.com>
+ <SN6PR11MB26245C44E84C37C1B551260EF4F6A@SN6PR11MB2624.namprd11.prod.outlook.com>
+ <CAAd53p5ywMVKWzhn0nYzvBnW_Bc=sntgBttJdcVUuf_a4AnX5w@mail.gmail.com>
+ <SN6PR11MB262473E2BF4057F4D285A613F4F6A@SN6PR11MB2624.namprd11.prod.outlook.com>
+ <DM6PR11MB26184A8A3F955589F5FC6836F4FBA@DM6PR11MB2618.namprd11.prod.outlook.com>
+ <CAAd53p4o1pB-yzpvUCYsvuYEvQQK0my=u-ogrByRCx_Lvns=hw@mail.gmail.com>
+ <bbbf36724d63f7532696a960a9d56d7ccd5a5bee.camel@linux.intel.com>
+ <CAAd53p6MA9YLbcXxpC8=YEtbO6frFJk1LQ1BNUgPk=r1_uR8iw@mail.gmail.com>
+ <67c85f083201ed2cda2cab198b40141ad21912a2.camel@linux.intel.com>
+ <CAJZ5v0iFLxpWHW=sDZ7=Wne3Yt=8_EwhW9SeCmRP6REpVqo8rA@mail.gmail.com> <CAAd53p67tiP0xXwhn=NviU_rvrSveSxbAhDieYG9AmUWF2e__Q@mail.gmail.com>
+In-Reply-To: <CAAd53p67tiP0xXwhn=NviU_rvrSveSxbAhDieYG9AmUWF2e__Q@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 21 Sep 2023 11:33:02 +0200
+Message-ID: <CAJZ5v0hzLNeDyFE=NTAAf1Uwj_kLxP_424T3riO2GG0LUmzpNw@mail.gmail.com>
+Subject: Re: [PATCH] HID: intel-ish-hid: ipc: Rework EHL OOB wakeup
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Xu, Even" <even.xu@intel.com>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Lee, Jian Hui" <jianhui.lee@canonical.com>,
+        "Zhang, Lixu" <lixu.zhang@intel.com>,
+        "Ba, Najumon" <najumon.ba@intel.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=0.1 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 20, 2023 at 07:25:08PM +0530, Mrinmay Sarkar wrote:
-> Add devicetree bindings support for SA8775P SoC.
-> Define reg and interrupt per platform.
-> 
-> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 130 +++++++++++++++++----
->  1 file changed, 108 insertions(+), 22 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> index a223ce0..e860e8f 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> @@ -13,6 +13,7 @@ properties:
->    compatible:
->      oneOf:
->        - enum:
-> +          - qcom,sa8775p-pcie-ep
->            - qcom,sdx55-pcie-ep
->            - qcom,sm8450-pcie-ep
->        - items:
-> @@ -20,29 +21,19 @@ properties:
->            - const: qcom,sdx55-pcie-ep
->  
->    reg:
-> -    items:
-> -      - description: Qualcomm-specific PARF configuration registers
-> -      - description: DesignWare PCIe registers
-> -      - description: External local bus interface registers
-> -      - description: Address Translation Unit (ATU) registers
-> -      - description: Memory region used to map remote RC address space
-> -      - description: BAR memory region
-> +    minItems: 6
-> +    maxItems: 7
->  
->    reg-names:
-> -    items:
-> -      - const: parf
-> -      - const: dbi
-> -      - const: elbi
-> -      - const: atu
-> -      - const: addr_space
-> -      - const: mmio
-> +    minItems: 6
-> +    maxItems: 7
->  
->    clocks:
-> -    minItems: 7
-> +    minItems: 5
->      maxItems: 8
->  
->    clock-names:
-> -    minItems: 7
-> +    minItems: 5
->      maxItems: 8
->  
->    qcom,perst-regs:
-> @@ -57,14 +48,12 @@ properties:
->            - description: Perst separation enable offset
->  
->    interrupts:
-> -    items:
-> -      - description: PCIe Global interrupt
-> -      - description: PCIe Doorbell interrupt
-> +    minItems: 2
-> +    maxItems: 3
->  
->    interrupt-names:
-> -    items:
-> -      - const: global
-> -      - const: doorbell
-> +    minItems: 2
-> +    maxItems: 3
->  
->    reset-gpios:
->      description: GPIO used as PERST# input signal
-> @@ -122,6 +111,51 @@ allOf:
->          compatible:
->            contains:
->              enum:
-> +              - qcom,sa8775p-pcie-ep
-> +    then:
-> +      properties:
-> +        reg:
-> +          items:
-> +            - description: Qualcomm-specific PARF configuration registers
-> +            - description: DesignWare PCIe registers
-> +            - description: External local bus interface registers
-> +            - description: Address Translation Unit (ATU) registers
-> +            - description: Memory region used to map remote RC address space
-> +            - description: BAR memory region
-> +            - description: DMA memory region
+On Thu, Sep 21, 2023 at 8:08 AM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+>
+> On Wed, Sep 20, 2023 at 2:00 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Tue, Sep 19, 2023 at 6:54 PM srinivas pandruvada
+> > <srinivas.pandruvada@linux.intel.com> wrote:
+> > >
+> > > On Tue, 2023-09-19 at 15:36 +0800, Kai-Heng Feng wrote:
+> > > > On Mon, Sep 18, 2023 at 11:57 PM srinivas pandruvada
+> > > > <srinivas.pandruvada@linux.intel.com> wrote:
+> > > > >
+> > > > > Hi Kai-Heng,
+> > > > > On Mon, 2023-09-18 at 09:17 +0800, Kai-Heng Feng wrote:
+> > > > > > Hi Even,
+> > > > > >
+> > > > > > On Mon, Sep 18, 2023 at 8:33 AM Xu, Even <even.xu@intel.com>
+> > > > > > wrote:
+> > > > > > >
+> > > > > > > Hi, Kai-Heng,
+> > > > > > >
+> > > > > > > I just got feedback, for testing EHL S5 wakeup feature, you
+> > > > > > > need
+> > > > > > > several steps to setup and access
+> > > > > > > "https://portal.devicewise.com/things/browse" to trigger wake.
+> > > > > > > But currently, our test account of this website are all out of
+> > > > > > > data.
+> > > > > > > So maybe you need double check with the team who required you
+> > > > > > > preparing the patch for the verification.
+> > > > > >
+> > > > > > The patch is to solve the GPE refcount overflow, while
+> > > > > > maintaining S5
+> > > > > > wakeup. I don't have any mean to test S5 wake.
+> > > > > >
+> > > > > The issue is not calling acpi_disable_gpe(). To reduce the scope of
+> > > > > change can we just add that instead of a adding new callbacks. This
+> > > > > way
+> > > > > scope is reduced.
+> > > >
+> > > > This patch does exactly the same thing by letting PCI and ACPI handle
+> > > > the PME and GPE.
+> > > > Though the change seems to be bigger, it actually reduces the duped
+> > > > code, while keep the S5 wakeup ability intact.
+> > > It may be doing the same. But with long chain of calls without
+> > > verification, I am not comfortable.
+> > > This can be another patch by itself to use the framework.
+> >
+> > I agree.
+> >
+> > Let's change one thing at a time.
+> >
+> > > But you are targeting a fix for overflow issue, which is separate from
+> > > the use of PCI/ACPI framework.
+> >
+> > Yes, let's fix the bug first and make things look nicer separately.
+>
+> Right, please use the fix from Srinivas and I'll send a separate patch
+> to make things looks better.
 
-It should be described as "DMA register space" or something, because this could
-be misinterpreted as memory region for doing DMA.
+OK
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Srinivas, please resend the patch with a changelog etc.
