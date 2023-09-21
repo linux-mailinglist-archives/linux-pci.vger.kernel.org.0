@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 060897A96D4
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Sep 2023 19:11:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AF867A97E2
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Sep 2023 19:28:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229932AbjIURGv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Sep 2023 13:06:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39312 "EHLO
+        id S230160AbjIUR2V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Sep 2023 13:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229667AbjIURGS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Sep 2023 13:06:18 -0400
+        with ESMTP id S230241AbjIUR1z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Sep 2023 13:27:55 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66EEC3AB3;
-        Thu, 21 Sep 2023 10:03:40 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27D61C116B8;
-        Thu, 21 Sep 2023 08:17:39 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1797C1702;
+        Thu, 21 Sep 2023 10:01:02 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A02BC116D2;
+        Thu, 21 Sep 2023 08:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695284266;
-        bh=E0OEX/w3VVEk1x8eRqdQdU8ItP99tfJG4PyFQG1J0g4=;
+        s=k20201202; t=1695285664;
+        bh=2VdLPNsimLvVm8/OS9eY5PGJy7+LPxUcwGgt59gxfqY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Klw3oKFy5tL56p7fZHyWWBnTD8cEEPU9Y6G19ZzJLhHUSb60hiDJ7HHYa/N8ZB+q5
-         bxSq4BQROo2YafCvxVhDbKdTnXyVQGC0jV5sQjnIYsvjo5OtZbooaZDxNLvRxRMzgL
-         Coy5hmpV5qfDq6Bky8njlJYlYWspj/d/Hljf7Z2zVPbEwmy64K15qYlxRrfzjUZd5+
-         jON3SLH93Z3eI52XF/IzvWqbm1/h+HdawKwUJggKFrPOC1NTVxlqHI77PdfIYXjd0W
-         uERxMyy9AvW9VRRQ9EZGzcdOOxWmvIwyrEgQH4nFl93Li5LiaM/1Rlnpz7kkRXxBIV
-         NtSGwN3tXsbRQ==
-Date:   Thu, 21 Sep 2023 10:17:36 +0200
+        b=rxRvquE2e5HPBCLFPy0H0o6E9xx6fbywXnllqYBDTKVWRTLi2mp7JMvhCtcIcBY3x
+         Ol1oxICfHa4EYEfwwjeGYtpYo5mOrqX3V3Y9mwJb9VQOHMFy49jqlik4yKXmCVzpMl
+         LGcgit6XPqXOz4KRMx9ziyC3rhDv4L9W4AWNqrvRi87IrO3zTvwmNLO+OMu97Ln5GZ
+         eXmSk8jtD7LGwZlJjN1GGKNbnxpuC/Rd/PCre5eQrhRA3d86X3UqMdQo4IMZydEyut
+         2L7sEZBa5yx/S7oKM7elxZ/sanZGgxgbptJJ7UsDLB/W0b29LNAQGUWBc5beBAsL6Z
+         /D4Nwe+O2G7oA==
+Date:   Thu, 21 Sep 2023 10:40:55 +0200
 From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc:     Mrinmay Sarkar <quic_msarkar@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, quic_shazhuss@quicinc.com,
+To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        konrad.dybcio@linaro.org, quic_shazhuss@quicinc.com,
         quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
         quic_nayiluri@quicinc.com, quic_krichai@quicinc.com,
         quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
@@ -44,43 +44,82 @@ Cc:     Mrinmay Sarkar <quic_msarkar@quicinc.com>, agross@kernel.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
         linux-phy@lists.infradead.org
-Subject: Re: [PATCH v1 2/5] PCI: qcom-ep: Add support for SA8775P SoC
-Message-ID: <20230921081736.GB2891@thinkpad>
+Subject: Re: [PATCH v1 4/5] PCI: epf-mhi: Add support for SA8775P
+Message-ID: <20230921084055.GD2891@thinkpad>
 References: <1695218113-31198-1-git-send-email-quic_msarkar@quicinc.com>
- <1695218113-31198-3-git-send-email-quic_msarkar@quicinc.com>
- <4b20d3bb-d2d2-0864-013f-104e26ae558c@linaro.org>
+ <1695218113-31198-5-git-send-email-quic_msarkar@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4b20d3bb-d2d2-0864-013f-104e26ae558c@linaro.org>
+In-Reply-To: <1695218113-31198-5-git-send-email-quic_msarkar@quicinc.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 20, 2023 at 04:24:30PM +0200, Konrad Dybcio wrote:
+On Wed, Sep 20, 2023 at 07:25:11PM +0530, Mrinmay Sarkar wrote:
+> Add support for Qualcomm Snapdragon SA8775P SoC to the EPF driver.
+> SA8775P has the PID (0x0306) and supports HDMA. Currently, it has
+> no fixed PCI class, so it is being advertised as "PCI_CLASS_OTHERS".
 > 
+> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-mhi.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 > 
-> On 9/20/23 15:55, Mrinmay Sarkar wrote:
-> > Add support for SA8775P SoC to the Qualcomm PCIe Endpoint Controller
-> > driver.
-> > 
-> > Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> > ---
-> This compatible does not bring anything new to the table
-> on its own. Please create a fallback compatible, document it
-> in the bindings and use that. See [1] and [2] for example.
-> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> index b7b9d3e..4b349fd 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> @@ -114,6 +114,23 @@ static const struct pci_epf_mhi_ep_info sm8450_info = {
+>  	.flags = MHI_EPF_USE_DMA,
+>  };
+>  
+> +static struct pci_epf_header sa8775p_header = {
 
-Ack.
+static const struct...
+
+> +	.vendorid = PCI_VENDOR_ID_QCOM,
+> +	.deviceid = 0x0306,
+
+Why are you not using a distinct device id?
 
 - Mani
 
-> Konrad
+> +	.baseclass_code = PCI_CLASS_OTHERS,
+> +	.interrupt_pin = PCI_INTERRUPT_INTA,
+> +};
+> +
+> +static const struct pci_epf_mhi_ep_info sa8775p_info = {
+> +	.config = &mhi_v1_config,
+> +	.epf_header = &sa8775p_header,
+> +	.bar_num = BAR_0,
+> +	.epf_flags = PCI_BASE_ADDRESS_MEM_TYPE_32,
+> +	.msi_count = 32,
+> +	.mru = 0x8000,
+> +	.flags = MHI_EPF_USE_DMA,
+> +};
+> +
+>  struct pci_epf_mhi {
+>  	const struct pci_epc_features *epc_features;
+>  	const struct pci_epf_mhi_ep_info *info;
+> @@ -677,6 +694,7 @@ static int pci_epf_mhi_probe(struct pci_epf *epf,
+>  }
+>  
+>  static const struct pci_epf_device_id pci_epf_mhi_ids[] = {
+> +	{ .name = "sa8775p", .driver_data = (kernel_ulong_t)&sa8775p_info },
+>  	{ .name = "sdx55", .driver_data = (kernel_ulong_t)&sdx55_info },
+>  	{ .name = "sm8450", .driver_data = (kernel_ulong_t)&sm8450_info },
+>  	{},
+> -- 
+> 2.7.4
 > 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/phy/qcom,snps-eusb2-repeater.yaml?h=next-20230920
-> 
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm64/boot/dts/qcom/pm7550ba.dtsi?h=next-20230920#n65
 
 -- 
 மணிவண்ணன் சதாசிவம்
