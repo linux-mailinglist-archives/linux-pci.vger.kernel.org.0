@@ -2,168 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D6527AA58A
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Sep 2023 01:20:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E80217AA4FA
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Sep 2023 00:27:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229745AbjIUXUX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Sep 2023 19:20:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42082 "EHLO
+        id S232887AbjIUW1L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Sep 2023 18:27:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229995AbjIUXUV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Sep 2023 19:20:21 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7462083326;
-        Thu, 21 Sep 2023 10:37:26 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7D23C116CB;
-        Thu, 21 Sep 2023 08:39:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695285550;
-        bh=SRktlw97rAUxXvmGZYe3/jusIyIMFE7ZdMCiBS5jEGw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=crg4JG5LjedFtliw5QRvtI7SuUOmrrTBU+sHkBFQwYAKW8BwtVoP7z2ZeOOKtHjP7
-         1tCR0qfp2JfJ1IqYaY7uOBsOiTPTFP0I6ptfLB1BtsOZ1RPvio2SzKn7ueQona0vTj
-         WCcngKA0W+mDqjk30/xRyTNQFN80zqTumpd6YfSeEHlntqWw4CIipoM+j0dxDHPujl
-         NUKxajPOP7KzwemqUufWx4FlS/JXCg8xABT5xtQRUBeHWc8fFYH+LV7fYfoh7XUbgD
-         hW4/uMKVDOKp5KVyRlZouLkIZTcnEi99l4G3rR1Ryqa++3Lkls8uA5Ku3heJh5zPlb
-         JcM0+hhDpddiQ==
-Date:   Thu, 21 Sep 2023 10:39:01 +0200
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        konrad.dybcio@linaro.org, quic_shazhuss@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
-        quic_nayiluri@quicinc.com, quic_krichai@quicinc.com,
-        quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
-        linux-phy@lists.infradead.org
-Subject: Re: [PATCH v1 3/5] phy: qcom-qmp-pcie: add endpoint support for
- sa8775p
-Message-ID: <20230921083901.GC2891@thinkpad>
-References: <1695218113-31198-1-git-send-email-quic_msarkar@quicinc.com>
- <1695218113-31198-4-git-send-email-quic_msarkar@quicinc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1695218113-31198-4-git-send-email-quic_msarkar@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S232417AbjIUW0w (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Sep 2023 18:26:52 -0400
+Received: from mailout1.hostsharing.net (mailout1.hostsharing.net [83.223.95.204])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3224A75DB
+        for <linux-pci@vger.kernel.org>; Thu, 21 Sep 2023 11:01:09 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by mailout1.hostsharing.net (Postfix) with ESMTPS id 9417C100411AD;
+        Thu, 21 Sep 2023 16:23:37 +0200 (CEST)
+Received: from localhost (unknown [89.246.108.87])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by h08.hostsharing.net (Postfix) with ESMTPSA id 67BE360DC7C4;
+        Thu, 21 Sep 2023 16:23:37 +0200 (CEST)
+X-Mailbox-Line: From 47727e792c7f0282dc144e3ec8ce8eb6e713394e Mon Sep 17 00:00:00 2001
+Message-Id: <47727e792c7f0282dc144e3ec8ce8eb6e713394e.1695304512.git.lukas@wunner.de>
+From:   Lukas Wunner <lukas@wunner.de>
+Date:   Thu, 21 Sep 2023 16:23:34 +0200
+Subject: [PATCH] PCI: Lengthen reset delay for VideoPropulsion Torrent QN16e
+ card
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Chad Schroeder <CSchroeder@sonifi.com>, linux-pci@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 20, 2023 at 07:25:10PM +0530, Mrinmay Sarkar wrote:
-> Add support for dual lane end point mode PHY found on sa8755p platform.
-> 
-> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c           | 41 ++++++++++++++++++++++
->  drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5.h         |  2 ++
->  drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v5.h |  1 +
->  3 files changed, 44 insertions(+)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-> index a63ca74..351047c 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-> @@ -2147,6 +2147,38 @@ static const struct qmp_phy_init_tbl sa8775p_qmp_gen4x4_pcie_rc_serdes_alt_tbl[]
->  	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CLK_SELECT, 0x34),
->  };
->  
-> +static const struct qmp_phy_init_tbl sa8775p_qmp_gen4x2_pcie_ep_serdes_alt_tbl[] = {
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_BG_TIMER, 0x02),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SYS_CLK_CTRL, 0x07),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CP_CTRL_MODE0, 0x27),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CP_CTRL_MODE1, 0x0a),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_RCTRL_MODE0, 0x17),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_RCTRL_MODE1, 0x19),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_CCTRL_MODE0, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_CCTRL_MODE1, 0x03),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SYSCLK_EN_SEL, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_INTEGLOOP_GAIN0_MODE0, 0xfb),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_INTEGLOOP_GAIN1_MODE0, 0x01),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_INTEGLOOP_GAIN0_MODE1, 0xfb),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_INTEGLOOP_GAIN1_MODE1, 0x01),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_CMN_MODE, 0x14),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP1_MODE0, 0xff),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP2_MODE0, 0x04),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP1_MODE1, 0xff),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP2_MODE1, 0x09),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DEC_START_MODE0, 0x19),
-> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DEC_START_MODE1, 0x28),
-> +};
-> +
-> +static const struct qmp_phy_init_tbl sa8775p_qmp_gen4_pcie_ep_pcs_misc_tbl[] = {
-> +	QMP_PHY_INIT_CFG(QPHY_V5_20_PCS_PCIE_OSC_DTCT_MODE2_CONFIG5, 0x08),
-> +};
-> +
-> +static const struct qmp_phy_init_tbl sa8775p_qmp_gen4x2_pcie_ep_pcs_alt_tbl[] = {
-> +	QMP_PHY_INIT_CFG(QPHY_V5_PCS_INSIG_MX_CTRL7, 0x00),
-> +	QMP_PHY_INIT_CFG(QPHY_V5_PCS_INSIG_SW_CTRL7, 0x00),
-> +};
-> +
->  struct qmp_pcie_offsets {
->  	u16 serdes;
->  	u16 pcs;
-> @@ -3043,6 +3075,15 @@ static const struct qmp_phy_cfg sa8775p_qmp_gen4x2_pciephy_cfg = {
->  		.pcs_misc_num	= ARRAY_SIZE(sa8775p_qmp_gen4_pcie_rc_pcs_misc_tbl),
->  	},
->  
-> +	.tbls_ep = &(const struct qmp_phy_cfg_tbls) {
-> +		.serdes		= sa8775p_qmp_gen4x2_pcie_ep_serdes_alt_tbl,
-> +		.serdes_num	= ARRAY_SIZE(sa8775p_qmp_gen4x2_pcie_ep_serdes_alt_tbl),
-> +		.pcs_misc	= sa8775p_qmp_gen4_pcie_ep_pcs_misc_tbl,
-> +		.pcs_misc_num	= ARRAY_SIZE(sa8775p_qmp_gen4_pcie_ep_pcs_misc_tbl),
-> +		.pcs		= sa8775p_qmp_gen4x2_pcie_ep_pcs_alt_tbl,
-> +		.pcs_num	= ARRAY_SIZE(sa8775p_qmp_gen4x2_pcie_ep_pcs_alt_tbl),
-> +	},
-> +
->  	.reset_list		= sdm845_pciephy_reset_l,
->  	.num_resets		= ARRAY_SIZE(sdm845_pciephy_reset_l),
->  	.vreg_list		= qmp_phy_vreg_l,
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5.h b/drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5.h
-> index 36cc80b..2b33dc7 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5.h
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5.h
-> @@ -30,5 +30,7 @@
->  #define QPHY_V5_PCS_EQ_CONFIG2				0x1e0
->  #define QPHY_V5_PCS_EQ_CONFIG3				0x1e4
->  #define QPHY_V5_PCS_EQ_CONFIG5				0x1ec
-> +#define QPHY_V5_PCS_INSIG_MX_CTRL7			0x07c
-> +#define QPHY_V5_PCS_INSIG_SW_CTRL7			0x060
+Commit ac91e6980563 ("PCI: Unify delay handling for reset and resume")
+shortened an unconditional 1 sec delay after a Secondary Bus Reset to
+100 msec for PCIe (per PCIe r6.1 sec 6.6.1).  The 1 sec delay is only
+required for Conventional PCI.
 
-Sort the defines please, here and below.
+But it turns out that there are PCIe devices which require a longer
+delay than prescribed before first config space access after reset
+recovery or resume from D3cold:
 
-- Mani
+Chad reports that a "VideoPropulsion Torrent QN16e" MPEG QAM Modulator
+"raises a PCI system error (PERR), as reported by the IPMI event log,
+and the hardware itself would suffer a catastrophic event, cycling the
+server" unless the longer delay is observed.
 
->  
->  #endif
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v5.h b/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v5.h
-> index c8afdf7..ad587c8 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v5.h
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v5.h
-> @@ -120,5 +120,6 @@
->  #define QSERDES_V5_COM_BIN_VCOCAL_CMP_CODE2_MODE1	0x1b8
->  #define QSERDES_V5_COM_BIN_VCOCAL_HSCLK_SEL		0x1bc
->  #define QSERDES_V5_COM_RESERVED_1			0x1c0
-> +#define QSERDES_V5_COM_PLL_CMN_MODE			0x1a0
->  
->  #endif
-> -- 
-> 2.7.4
-> 
+The card is specified to conform to PCIe r1.0 and indeed only supports
+Gen1 speed (2.5 GT/s) according to lspci.  PCIe r1.0 sec 7.6 prescribes
+the same 100 msec delay as PCIe r6.1 sec 6.6.1:
 
+ "To allow components to perform internal initialization, system software
+  must wait for at least 100 ms from the end of a reset (cold/warm/hot)
+  before it is permitted to issue Configuration Requests"
+
+The behavior of the Torrent QN16e card thus appears to be a quirk.
+Treat it as such and lengthen the reset delay for this specific device.
+
+Fixes: ac91e6980563 ("PCI: Unify delay handling for reset and resume")
+Closes: https://lore.kernel.org/linux-pci/DM6PR16MB2844903E34CAB910082DF019B1FAA@DM6PR16MB2844.namprd16.prod.outlook.com/
+Reported-by: Chad Schroeder <CSchroeder@sonifi.com>
+Tested-by: Chad Schroeder <CSchroeder@sonifi.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v5.4+
+---
+ drivers/pci/quirks.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index eeec1d6f9023..91a15d79c7c4 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -6188,3 +6188,15 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
++
++/*
++ * Devices known to require a longer delay before first config space access
++ * after reset recovery or resume from D3cold:
++ *
++ * VideoPropulsion (aka Genroco) Torrent QN16e MPEG QAM Modulator
++ */
++static void pci_fixup_d3cold_delay_1sec(struct pci_dev *pdev)
++{
++	pdev->d3cold_delay = 1000;
++}
++DECLARE_PCI_FIXUP_FINAL(0x5555, 0x0004, pci_fixup_d3cold_delay_1sec);
 -- 
-மணிவண்ணன் சதாசிவம்
+2.40.1
+
