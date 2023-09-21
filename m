@@ -2,64 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4143F7A992C
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Sep 2023 20:12:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A28FC7A9962
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Sep 2023 20:14:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230286AbjIUSLz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Sep 2023 14:11:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47734 "EHLO
+        id S229583AbjIUSOJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Sep 2023 14:14:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230028AbjIUSLQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Sep 2023 14:11:16 -0400
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C71B6566F4;
-        Thu, 21 Sep 2023 10:18:11 -0700 (PDT)
-Received: from relay3-d.mail.gandi.net (unknown [217.70.183.195])
-        by mslow1.mail.gandi.net (Postfix) with ESMTP id 44DA2D2A89;
-        Thu, 21 Sep 2023 13:27:08 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 19EC960004;
-        Thu, 21 Sep 2023 13:26:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1695302806;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Kj1DdUWkzlgEljhadlQHHpn2eO93iRvKozJKFFaqhJ8=;
-        b=k/IBP72ImwLm+awCTGPrjbS+9xPBl/wQE7MrB0pTrwtdaHL0T3h2bgW/tfGWDJX5/FaUzZ
-        ucasGuuEi2qGwTfUXODyhmvGuZPGLxrMiktcTXKLnxyAJb115p2g+RnZ1p2Vn0//jG0AP2
-        VJZe3/2LTYjSwv08HPPS7EMm9C910Pm/W8pf/u/tiDR0S6ZRADeJOlRaVqOEFhm4Uixu4U
-        NPSruaQ85lvz9znzHKhRpWXFd0aglRj3mpJvbUIxEFvBt3LuimSgHl1XHedffeFwluZjEz
-        +v8DwwjSLp26HyR7BGLIzfnGQnkleztC4200qm3Ds7BDgzel0IWUcvAQKLXPmA==
-Date:   Thu, 21 Sep 2023 15:26:43 +0200
-From:   Herve Codina <herve.codina@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Lizhi Hou <lizhi.hou@amd.com>, Andrew Lunn <andrew@lunn.ch>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, max.zhen@amd.com,
-        sonal.santan@amd.com, stefano.stabellini@xilinx.com,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH V13 0/5] Generate device tree node for pci devices
-Message-ID: <20230921152611.19e07907@bootlin.com>
-In-Reply-To: <CAL_JsqKNC1Qv+fucobnzoXmxUYNockWR=BbGhds2tNAYZWqgOA@mail.gmail.com>
-References: <1692120000-46900-1-git-send-email-lizhi.hou@amd.com>
-        <ZP96feVs2ev7098Y@smile.fi.intel.com>
-        <CAL_JsqKfQJFrd8MOdjW55cYdEb8yyPyR+P3ran9+X3dCwUgdyA@mail.gmail.com>
-        <ZQGaSr+G5qu/8nJZ@smile.fi.intel.com>
-        <20230915193008.6d87b8a0@bootlin.com>
-        <ZQf5huX2AMuf9kHC@smile.fi.intel.com>
-        <CAL_JsqKNC1Qv+fucobnzoXmxUYNockWR=BbGhds2tNAYZWqgOA@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+        with ESMTP id S229699AbjIUSNi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Sep 2023 14:13:38 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B2E8613D;
+        Thu, 21 Sep 2023 10:37:59 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75DA4C4E761;
+        Thu, 21 Sep 2023 15:08:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695308896;
+        bh=L0Y9YCcXIfYgNBjuyvMWPQWu9ej2m027Mk4wviryPFc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=gFqOvKwD82XZsHe76trqDACk/ukmKSHQJwz7bCZ7MJEH6nifbgBEjKRk6FWVzvDum
+         ooqrhdbeY3pDtPMG4uXEcnIVGNJGRkxhdeX81V/m+WYU6IG4sOSGXuQOwEfFfHhY8/
+         cQ3dnRizGPzyY24kv5ahl5Qxo2rqKrpqZqQNU6zkqXhBy36+wTFXYaYfAH9NH3701w
+         3tk7aPFDVUmL5+XcB13lGwt7TITWrmlIM+um0rBia3JEQEPMyQWXUXGogl03F+zXUs
+         I6fouyBEvFdignF5f+LWfr7ti9Gvs6tWnXCG+Y0wACYnSmQvrXmLQf/FjekRCApaKS
+         lwKCQM68yqdAg==
+Date:   Thu, 21 Sep 2023 10:08:14 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Conor Dooley <conor@kernel.org>
+Cc:     Minda Chen <minda.chen@starfivetech.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
+        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Kevin Xie <kevin.xie@starfivetech.com>
+Subject: Re: [PATCH v6 08/19] PCI: plda: Add event interrupt codes and IRQ
+ domain ops
+Message-ID: <20230921150814.GA330660@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230916-rescuer-enroll-dd4fb1320676@spud>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,73 +64,24 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 21 Sep 2023 07:20:46 -0500
-Rob Herring <robh@kernel.org> wrote:
-
-> On Mon, Sep 18, 2023 at 2:17 AM Andy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
-> >
-> > On Fri, Sep 15, 2023 at 07:30:08PM +0200, Herve Codina wrote:  
-> > > On Wed, 13 Sep 2023 14:17:30 +0300
-> > > Andy Shevchenko <andriy.shevchenko@intel.com> wrote:  
-> > > > On Tue, Sep 12, 2023 at 02:12:04PM -0500, Rob Herring wrote:  
-> > > > > On Mon, Sep 11, 2023 at 3:37 PM Andy Shevchenko
-> > > > > <andriy.shevchenko@intel.com> wrote:  
-> > > > > > On Tue, Aug 15, 2023 at 10:19:55AM -0700, Lizhi Hou wrote:  
-> >
-> > ...
-> >  
-> > > > > > Can you point out to the ACPI excerpt(s) of the description of anything related
-> > > > > > to the device(s) in question?  
-> > > > >
-> > > > > I don't understand what you are asking for.  
-> > > >
-> > > > Through the email thread it was mentioned that this series was tested on the
-> > > > ACPI enabled platform, Jonathan (IIRC) asked why do we need to have a shadow
-> > > > DT for the something that ACPI already describes. That's why I'm trying to
-> > > > understand if it's the case. and if so, how can we improve the approach.  
-> > >
-> > > Patches from Frank Rowand series [1] are needed to create an of_root_node if a DT
-> > > was not provided by the firmware, bootloader, etc that run the kernel.
-> > >
-> > > [1]: https://lore.kernel.org/lkml/20220624034327.2542112-1-frowand.list@gmail.com/
-> > >
-> > > Current Lizhi's series creates nodes from the PCI host node during the PCI
-> > > enumeration. It creates PCI-PCI bridge and PCI device nodes.
-> > >
-> > > I use these series on an ACPI system.
-> > >
-> > > I need one more missing component: the node related to the PCI host bridge
-> > > This was the purpose of Clement's work. This work was not sent upstream yet and I
-> > > am working on it in order to have a full tree from the of_root to the PCI device
-> > > ie:
-> > >  of_root                  <-- Frank Rowand series
-> > >    + of_host_pci_bridge   <-- Clement's work
-> > >        + pci_bridge       <-- Current Lizhi series
-> > >            + pci_bridge   <-- Current Lizhi series
-> > >             ...
-> > >              + pci_dev    <-- Current Lizhi series
-> > >
-> > > Hope that this status helped.  
-> >
-> > Thanks for the explanation! I suppose it's better to have three series combined
-> > into one and being sent with a better cover letter to explain all this.  
+On Sat, Sep 16, 2023 at 01:11:29AM +0100, Conor Dooley wrote:
+> On Fri, Sep 15, 2023 at 06:22:32PM +0800, Minda Chen wrote:
+> > For PolarFire implements non-PLDA local interrupt events, most of
+> > event interrupt process codes can not be re-used. PLDA implements
+> > new codes and IRQ domain ops like PolarFire.
+> > 
+> > plda_get_events() adds a new IRQ num to event num mapping codes for
+> > PLDA local event except DMA engine interrupt events. The DMA engine
+> > interrupt events are implemented by vendors.
+> > 
+> > Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
 > 
-> You can go back (years now) and see that. I asked for this to be split
-> up into manageable chunks and not solve multiple problems at once. No
-> point in trying to do DT on top of ACPI if DT on top of DT doesn't
-> work first.
+> Perhaps not important as they will go away in the next patch, but for
+> this patch the riscv patchwork stuff noticed:
+> drivers/pci/controller/plda/pcie-plda-host.c:114:36: warning: unused variable 'plda_evt_dom_ops' [-Wunused-const-variable]
+> drivers/pci/controller/plda/pcie-plda-host.c:118:36: warning: unused variable 'plda_event_ops' [-Wunused-const-variable]
 
-I agree.
+Details like this *are* important because fixing them makes the
+individual patches more readable, thanks for noticing!
 
-Hervé
-
-> 
-> Rob
-
-
-
--- 
-Hervé Codina, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Bjorn
