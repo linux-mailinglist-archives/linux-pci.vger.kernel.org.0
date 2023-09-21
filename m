@@ -2,209 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 433817A9B09
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Sep 2023 20:53:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 852217A9A71
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Sep 2023 20:39:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229643AbjIUSxT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Sep 2023 14:53:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46510 "EHLO
+        id S230428AbjIUSjy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Sep 2023 14:39:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230397AbjIUSw4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Sep 2023 14:52:56 -0400
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2072.outbound.protection.outlook.com [40.107.7.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5037A20A7D;
-        Thu, 21 Sep 2023 11:35:52 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LVO+HWLShYNGQUHhIsR1WS6wvT3mleY9fi6ynuyKjdpboJqphBKX0NvNxYriuHTKgwnl/VU8Lz3DS4lnnXn4EgTZHDIm5kOMLuFICv/4Az94hj3WsnD16E/1B/Lq2ekEHLawe4gwlUcTL39nTDbiOsCLSuvAVlhLe3pBh1XQr6xaV9CP+sEAMBphvModRtkfD9tZRWXDf5e7A3a+X2ZcGUHgkDpK+x9jK+uvbi9alFIRHASCUrfKAvdBvXgxTt7tAuuPe6YCykDQL52Z5NfIgvsGnoEeqxQFb7duycFJ0HDb5Qrt+XMQZLnm3nJanfY7F5SlDsWaRCmUdKlGeGFtrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DynwwEOL73OehDW+iTf2aX1o3zuFWul6RwC0NbRtdlc=;
- b=FHe0Wm5fayx+g3l5eBP8dky9qOOkaQJW5w/DvFKWtteO1QhlQOZjR8FabpFmwaFZRsG7VSzaZ2nkPxnZfRtD6QYTstf5hQpP7eGRo/oivQkbCaNscMYLd4noTW+invVMoFCoPdIe+LYoYkmM1V/sv2yXV2O+znhFmm1WK7jqUe/paxwns87FzpgLzHI479VxiNwVNhI6TCGD2NigT3sDfvEmweOJjTl79fwWMsrL23C78saIzWEWVBKaOEwR+NnqxAqCxi5QgbDcQMLESeLKdnmAAkBUCdc2HQkXjrMoj/78NwXvaPhYxzvcf8BEQ8ORcMVwM9sBKfoghzHGEDjmHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DynwwEOL73OehDW+iTf2aX1o3zuFWul6RwC0NbRtdlc=;
- b=bfb9xwk2WBQkVxFYQpI1ygcd4/48nS0qkicL42bGL6Lsnt2mHlUexbOwOSAwyNuJhHRbNuX/P1ejenDjLB0ABwq3x0H7G9N0Q99PV538X4Gywgf93xvZGmkTHFUo8aSrtc96WvPSFsEfNUtHzOvgX9VFqVGja9IwPtTiAmqpDD8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
- by VE1PR04MB7376.eurprd04.prod.outlook.com (2603:10a6:800:1a0::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.20; Thu, 21 Sep
- 2023 18:35:49 +0000
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::1774:e25f:f99:aca2]) by AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::1774:e25f:f99:aca2%4]) with mapi id 15.20.6792.026; Thu, 21 Sep 2023
- 18:35:49 +0000
-Date:   Thu, 21 Sep 2023 14:35:39 -0400
-From:   Frank Li <Frank.li@nxp.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        with ESMTP id S229878AbjIUSjp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Sep 2023 14:39:45 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A788B0F5E;
+        Thu, 21 Sep 2023 11:39:11 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A46C433C7;
+        Thu, 21 Sep 2023 18:38:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695321533;
+        bh=Jo3M7JtBDMiHK2zM7MVLMg4fZ9vIWVE8KTJC0QLndO8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BcnsYo6A8D09XBG+riw76rhi9G0pfINMuDAzNBm524D+q7PUAIk1b3wUl5vL4ug18
+         hgJfsn8lAIay59okmDzzZwjUKxpAnKyoGIxQ9Q1cvfaRd0ZnV3LchtOZi8alhoZtkl
+         QLpEEFlUpgggXoSESoS1Scm1qIBqt6Cfnj7rzPUkGzvPjAbQI4LHFFeD7AqJpwSD21
+         PIeVEK+LegHr1y88bqx+U9dXi70CoZA9tjFag7pxUk/GRgGVpsVtV9Yzv2VD232p8w
+         QqTO8HIV5FhRxbPI84b2rnjLD23VMFddu64fvvrJBWf5XrNIsrOaur8YH/XXrVRyAk
+         Duge0PLfpwgZA==
+Received: (nullmailer pid 782544 invoked by uid 1000);
+        Thu, 21 Sep 2023 18:38:50 -0000
+Date:   Thu, 21 Sep 2023 13:38:50 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        konrad.dybcio@linaro.org, mani@kernel.org,
+        quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        quic_parass@quicinc.com, Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linux-pci@vger.kernel.org>,
-        "moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH 1/1] PCI: layerscape-ep: set 64-bit DMA mask
-Message-ID: <ZQyM+9uxFoX5TgPa@lizhi-Precision-Tower-5810>
-References: <20230921153702.3281289-1-Frank.Li@nxp.com>
- <925da248-f582-6dd5-57ab-0fadc4e84f9e@wanadoo.fr>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <925da248-f582-6dd5-57ab-0fadc4e84f9e@wanadoo.fr>
-X-ClientProxiedBy: SJ0PR03CA0231.namprd03.prod.outlook.com
- (2603:10b6:a03:39f::26) To AM6PR04MB4838.eurprd04.prod.outlook.com
- (2603:10a6:20b:4::16)
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+        linux-phy@lists.infradead.org
+Subject: Re: [PATCH v1 1/5] dt-bindings: PCI: qcom-ep: Add support for
+ SA8775P SoC
+Message-ID: <20230921183850.GA762694-robh@kernel.org>
+References: <1695218113-31198-1-git-send-email-quic_msarkar@quicinc.com>
+ <1695218113-31198-2-git-send-email-quic_msarkar@quicinc.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|VE1PR04MB7376:EE_
-X-MS-Office365-Filtering-Correlation-Id: d4e5d6fd-6923-4ddc-f0a6-08dbbad19399
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tzzH++hdmy9ZuqTzKtwiAenmr4Oe0DjgKARv1LEDRHg6KQ3ci+hi3D8crowLbbai+i2fRtJct/64Lx3MdrYos/Aj2w6PSfUbDB/BeR4fm0bidI5XNKzrzWiHR2V+BqVvgfKWYNfWMyTJOJKy0YuGelR+7SgyYqeyHR8Qo7mLTVX08oYYKfh7ZjeC9teA5WnCclIXUnChdp6EnhuAHlGzsHHD0gjQ076bjSrqZfw5ipJooWUn2DHjwO8qGtUgJQgKD+NOJCHmiSkkniHgK7QSsXSLRUxGGVfYl78N93IQSBhlEeOXHrM/weiqnwXSpYFZNDZBfqJD2rt5OKcuRthISejyEy39+bkR2FBezIxjaUHjqgvnDhJ65/AWmgzUIIjiZ85cJ0yqG67EggRkz0cDYuluV8l5by56lr0yEP9DKhNKUzASqCK9DbhWSOhCIQDtKtw+vzq7vOK0hh/oktwslDfqQcKUsp8lMQ68iXda5zt9uU7RgqrwIU2QcuIPSOPp4nQX1BqhTvwh3u5ajs+gvTui6q2J/3cXlzONm6Uh3jYLmTTEX3HgpPBGvQdx18MALgMxmsyQ6lI9kjW2xmn+gnHONu5OFplFAjBPjyaB4yJEWUWCOctu8OM83Fd2oNKc
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(366004)(396003)(39860400002)(136003)(376002)(346002)(1800799009)(186009)(451199024)(52116002)(9686003)(6506007)(6512007)(38350700002)(38100700002)(66946007)(86362001)(478600001)(6666004)(966005)(6486002)(66574015)(26005)(66476007)(66556008)(5660300002)(4326008)(7416002)(8676002)(6916009)(316002)(8936002)(54906003)(41300700001)(2906002)(33716001)(83380400001)(67856001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?2mIjHa/uWwnNH2AUKMw3i0uNej2NWFJwg5K+MFybI9rQfGAD7miDyraLMl?=
- =?iso-8859-1?Q?1rNIqwYZzb1ot1ezDHmxxC9RK7la7csyuSgImDP51zNO2jUUQyTEha5Noq?=
- =?iso-8859-1?Q?iARtVhQ2vy0YKcnUkJnH+qTKj7uHYYsAy/EJCA5C0/XD0bdRyD3Y9gKndG?=
- =?iso-8859-1?Q?OdsJlX32iAn9pHAbRZoLLvxUc9vbjOt713TuMeGkMLYHXubU15oWl3+OQA?=
- =?iso-8859-1?Q?IsmF7vWO3wFsqWE5diwlB1dSZf83xQcM7olGSAyXZs4sflmx4KUxCzUnTX?=
- =?iso-8859-1?Q?awsXInO8CZ7Yd8GnJYR4ax8zOkA9FnMfrDSyvx1E3EkD5LFU9FdCBktWi8?=
- =?iso-8859-1?Q?l6WTPn/ripsNCDYIyAdzu6HmbO8871moQgrZ9OEyxrdFlL9TvqEf6q2Aej?=
- =?iso-8859-1?Q?AxvpwfggzMl3Bqr8vGiPhEXkkrG2NND2xNPfubVihc/mjG9pz2QK6JHRJW?=
- =?iso-8859-1?Q?mLdKygPoSgJRP8UdFG3xJmUbz5ThvpGHQKQLLPbtxWcUiw/o4qcQgDNI9+?=
- =?iso-8859-1?Q?9h/9vP5mzgPYSLZAe6goSbHnVggXp43dSqcwKt+WsymbnrHUAKJA2r3+hE?=
- =?iso-8859-1?Q?SiuzeNVKknLWtJS8vuvyOl7d153q0AnViyyQGLr5Bs+GOQBhvA+AR3HYO+?=
- =?iso-8859-1?Q?1HXqDHYWfV0jg0QDPvOco4fkHGPv7cDfdp/L9EtNnpym3EDJYOwpCLVBU8?=
- =?iso-8859-1?Q?FtF+VyehkipWBXHva0OV94fCvfzkI0WJPPQ+k6CShQH6XazBedM/S/j9a5?=
- =?iso-8859-1?Q?ornqYNVa0A4jXUrgNxzfFI+mt5Hnb6b+nMzSbrZn4nT+GPBWN+UdEnKHQ/?=
- =?iso-8859-1?Q?ZUG5xqRhpwejlFki8g49rHXH0OnldDaekLP+lXpUDQYlwZJnpUoec8W/on?=
- =?iso-8859-1?Q?vC4krC+LQNAqJc79/2ERovowwBBQQzn+w9DKOU5Obne31nXDUVS8lfdh3M?=
- =?iso-8859-1?Q?AioOhYLUdsC3L1bo9XwhSjWxfL92/JK527vS4ics+RmeL0ZQ1ATCcZItNL?=
- =?iso-8859-1?Q?0ULe6y253FC8X7bSxJ86VbWax0SxsLJ4pJMBmbD3Alki7558qed5VxbZsT?=
- =?iso-8859-1?Q?+wf5RLQ0UAR088hhv3MJr+VmF7FBH/ZPSLfwBOItL6MzkAQuvApdTSEMwq?=
- =?iso-8859-1?Q?QtKUnzN9EVMxRQLBVrw/RpCVnexdMwh1q0K5PAefYllPBHMphCpO1jX5yY?=
- =?iso-8859-1?Q?X5CnmxCWGuYs9QvzVtW81Pv9bfKBj/vUrrJfGMmefN8IB0XZ2tz7u0JDPI?=
- =?iso-8859-1?Q?4MblQf2IZeESPqdTgGbtr1Jv4KETabFp3IpbQ1m1s1dNKyYNkQWevVF8mT?=
- =?iso-8859-1?Q?5bdv5xyppNvzXtPyVKnbBPGSdZjivqOLl2nUvR0FqYmUjzhUzDUekM7NlY?=
- =?iso-8859-1?Q?yN+DUNejYrYI48kcdcDy/M1FylcaJmMjkARMlb8cweOBPLok8jba9r8Odx?=
- =?iso-8859-1?Q?6l9epuiRzauxtXqNfd7UbT1Nrg+uq5MT9K7WyjyK1dTZ5CApBUR27l7w0j?=
- =?iso-8859-1?Q?3S9mTHSPDOO4BVK1NiFErK9x/A/wDcCASkrUgGM+v0/u4YeGUtoGE9rK2K?=
- =?iso-8859-1?Q?N8oTjcNMHkjqI+FQ/y0IqNOSYGI0IHnRC2r8NKOoGcXB8D92EVj7iM7yVT?=
- =?iso-8859-1?Q?BZ5q6sdQUxCxQ=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d4e5d6fd-6923-4ddc-f0a6-08dbbad19399
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2023 18:35:49.1810
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 72YoimipLbMh5m7f5rP2i/CtGopX03zF7XlporivROQ22Qi6qFCWvDU2ybzPaXdjWoxIT9ZxXmRwoQhoEP1Yjw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7376
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1695218113-31198-2-git-send-email-quic_msarkar@quicinc.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 21, 2023 at 07:59:51PM +0200, Christophe JAILLET wrote:
-> Le 21/09/2023 à 17:37, Frank Li a écrit :
-> > From: Guanhua Gao <guanhua.gao@nxp.com>
-> > 
-> > Set DMA mask and coherent DMA mask to enable 64-bit addressing.
-> > 
-> > Signed-off-by: Guanhua Gao <guanhua.gao@nxp.com>
-> > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> >   drivers/pci/controller/dwc/pci-layerscape-ep.c | 5 +++++
-> >   1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > index de4c1758a6c33..6fd0dea38a32c 100644
-> > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > @@ -249,6 +249,11 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
-> >   	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
-> > +	/* set 64-bit DMA mask and coherent DMA mask */
-> > +	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)))
-> > +		if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32)))
+On Wed, Sep 20, 2023 at 07:25:08PM +0530, Mrinmay Sarkar wrote:
+> Add devicetree bindings support for SA8775P SoC.
+> Define reg and interrupt per platform.
 > 
-> As stated in [1], dma_set_mask() with a 64-bit mask will never
-> fail if dev->dma_mask is non-NULL.
+> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 130 +++++++++++++++++----
+>  1 file changed, 108 insertions(+), 22 deletions(-)
 > 
-> So, if it fails, the 32 bits case will also fail for the same reason.
-> There is no need for the 2nd test.
-> 
-> 
-> See [1] for Christoph Hellwig comment about it.
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> index a223ce0..e860e8f 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> @@ -13,6 +13,7 @@ properties:
+>    compatible:
+>      oneOf:
+>        - enum:
+> +          - qcom,sa8775p-pcie-ep
+>            - qcom,sdx55-pcie-ep
+>            - qcom,sm8450-pcie-ep
+>        - items:
+> @@ -20,29 +21,19 @@ properties:
+>            - const: qcom,sdx55-pcie-ep
+>  
+>    reg:
+> -    items:
+> -      - description: Qualcomm-specific PARF configuration registers
+> -      - description: DesignWare PCIe registers
+> -      - description: External local bus interface registers
+> -      - description: Address Translation Unit (ATU) registers
+> -      - description: Memory region used to map remote RC address space
+> -      - description: BAR memory region
+> +    minItems: 6
+> +    maxItems: 7
+>  
+>    reg-names:
+> -    items:
+> -      - const: parf
+> -      - const: dbi
+> -      - const: elbi
+> -      - const: atu
+> -      - const: addr_space
+> -      - const: mmio
+> +    minItems: 6
+> +    maxItems: 7
 
-I don't think it is true. the below is dma_set_mask()'s implementation
+Don't move these into if/then schemas. Then we are duplicating the 
+names, and there is no reason to keep them aligned for new compatibles.
 
-int dma_set_mask(struct device *dev, u64 mask)
-{
-	/*
-	 * Truncate the mask to the actually supported dma_addr_t width to
-	 * avoid generating unsupportable addresses.
-	 */
-	mask = (dma_addr_t)mask;
-
-	if (!dev->dma_mask || !dma_supported(dev, mask))
-				^^^^^^^
-		return -EIO;
-
-	arch_dma_set_mask(dev, mask);
-	*dev->dma_mask = mask;
-	return 0;
-}
-
-dma_supported() may return failiure.
-
-static int dma_supported(struct device *dev, u64 mask)
-{
-	const struct dma_map_ops *ops = get_dma_ops(dev);
-
-	/*
-	 * ->dma_supported sets the bypass flag, so we must always call
-	 * into the method here unless the device is truly direct mapped.
-	 */
-	if (!ops)
-		return dma_direct_supported(dev, mask);
-	if (!ops->dma_supported)
-		return 1;
-	return ops->dma_supported(dev, mask);
-                    ^^^^^^
-			DMA driver or IOMMU driver may return failure.
-}
-
- 
-Frank
-
-> 
-> CJ
-> 
-> 
-> [1]: https://lkml.org/lkml/2021/6/7/398
-> 
-> > +			return -EIO;
-> > +
-> >   	platform_set_drvdata(pdev, pcie);
-> >   	ret = dw_pcie_ep_init(&pci->ep);
-> 
+Rob
