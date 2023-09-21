@@ -2,213 +2,251 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FBC07A8FAF
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Sep 2023 01:03:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 490357A9020
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Sep 2023 02:21:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229547AbjITXDG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Sep 2023 19:03:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52566 "EHLO
+        id S229473AbjIUAVL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Sep 2023 20:21:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbjITXDG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Sep 2023 19:03:06 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9BD0A3;
-        Wed, 20 Sep 2023 16:02:59 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26AF1C433C8;
-        Wed, 20 Sep 2023 23:02:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695250979;
-        bh=Zk4ujfkFmSNtiTgBEOrvD7R3EsDa5uPjHsUOQXft7vY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=E9/5vRGEsGzKegCu2DninNk52ODyzPtj9qhHx85u3mWzdAHeA20G5Mp9dW87NblaK
-         0cXnTww3yriMw6vJ6QHjgIqZNNwpNp5HVHGc7ErMbTIyFmFjiClXWC4rm+BRLxKaQi
-         uu+rfqrd3XpBh9nygaet6ZX/g8SLibnfgi+1K3Ap5W6nK12o3lcxVgXuau0iM8tMgp
-         3ixA4xKV6Njt1tRobAyf1FGa79OZDdERK0D0s6VU6OM768Ulb6sTbaONRuBJMOWOs8
-         XPca1/1qBBbCKo78mCbwspK2EqcAKTKRJ13vU8wmPtkvW9apmyCt2hkaOYbb9apZeW
-         ii2dsu1p0GLGg==
-Date:   Wed, 20 Sep 2023 18:02:57 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     "lenb@kernel.org" <lenb@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "bp@alien8.de" <bp@alien8.de>, mahesh@linux.ibm.com,
-        bhelgaas@google.com,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        gregkh@linuxfoundation.org,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>
-Subject: Re: Questions: Should kernel panic when PCIe fatal error occurs?
-Message-ID: <20230920230257.GA280837@bhelgaas>
+        with ESMTP id S229478AbjIUAVK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Sep 2023 20:21:10 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66F19DC
+        for <linux-pci@vger.kernel.org>; Wed, 20 Sep 2023 17:21:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695255661; x=1726791661;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9i3e8wy+vOuBmUCugWXqfgECjzaVxa2azzSOh2LvW5k=;
+  b=ZviFjsB2JDgdmnySRtK9UUx5R7CyPyY+UWOIz/fuVqFKlm3vQdx59yhN
+   hvheRWbJntrRzR8cgYKmjTGKTByGptYqSHCrvVW0vdwrJjQG8VqLpvrdx
+   5iWXrvDILcGw/e5JJF4hLvN7HgTLWcV7CXLmz3ZNOKkp+4nruWCWftCin
+   GeeBvdQHJQlhWLEAv71gZ9HW6f/UDWl8kMQjZUoRhH+cXWJ/+UcyRZGHb
+   nfWNmW7GCJPrJH0VYVEPZN1Z9QIBsMUR5IwGmnziFkdE7/Occ7E+v/Dye
+   nggjPdCHvC32bFR1R4WWd/ojFOczL6wUdzq0L+uDIWQJTNF73pXgC2Bv3
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="365442044"
+X-IronPort-AV: E=Sophos;i="6.03,162,1694761200"; 
+   d="scan'208";a="365442044"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2023 17:21:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="750156443"
+X-IronPort-AV: E=Sophos;i="6.03,162,1694761200"; 
+   d="scan'208";a="750156443"
+Received: from patelni-mobl1.amr.corp.intel.com (HELO [10.213.160.43]) ([10.213.160.43])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2023 17:21:00 -0700
+Message-ID: <1a6ad83f-3757-4503-93db-c3597132b020@linux.intel.com>
+Date:   Wed, 20 Sep 2023 17:20:58 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e486db16-d36d-9e14-4f10-dc755c0ef97d@linux.alibaba.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] PCI: vmd: Do not change the BIOS Hotplug setting on
+ VMD rootports
+Content-Language: en-US
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        samruddh.dhope@intel.com
+References: <CAJZ5v0hDm-B9zAMcf0aYXDjTaOnvgGNsaPYX=yc5kVy9YR1cdQ@mail.gmail.com>
+ <20230919200907.GA241545@bhelgaas>
+ <CAJZ5v0jjj+0sasfMd5Vd9oPV6uD2nP3Zo34h0fBR02GcWMYJ_Q@mail.gmail.com>
+From:   "Patel, Nirmal" <nirmal.patel@linux.intel.com>
+In-Reply-To: <CAJZ5v0jjj+0sasfMd5Vd9oPV6uD2nP3Zo34h0fBR02GcWMYJ_Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 18, 2023 at 05:39:58PM +0800, Shuai Xue wrote:
-> Hi, all folks,
-> 
-> Error reporting and recovery are one of the important features of PCIe, and
-> the kernel has been supporting them since version 2.6, 17 years ago.
-> I am very curious about the expected behavior of the software.
-> I first recap the error classification and then list my questions bellow it.
-> 
-> ## Recap: Error classification
-> 
-> - Fatal Errors
-> 
-> Fatal errors are uncorrectable error conditions which render the particular
-> Link and related hardware unreliable. For Fatal errors, a reset of the
-> components on the Link may be required to return to reliable operation.
-> Platform handling of Fatal errors, and any efforts to limit the effects of
-> these errors, is platform implementation specific. (PCIe 6.0.1, sec
-> 6.2.2.2.1 Fatal Errors).
-> 
-> - Non-Fatal Errors
-> 
-> Non-fatal errors are uncorrectable errors which cause a particular
-> transaction to be unreliable but the Link is otherwise fully functional.
-> Isolating Non-fatal from Fatal errors provides Requester/Receiver logic in
-> a device or system management software the opportunity to recover from the
-> error without resetting the components on the Link and disturbing other
-> transactions in progress. Devices not associated with the transaction in
-> error are not impacted by the error.  (PCIe 6.0.1, sec 6.2.2.2.1 Non-Fatal
-> Errors).
-> 
-> ## What the kernel do?
-> 
-> The Linux kernel supports both the OS native and firmware first modes in
-> AER and DPC drivers. The error recovery API is defined in `struct
-> pci_error_handlers`, and the recovery process is performed in several
-> stages in pcie_do_recovery(). One main difference in handling PCIe errors
-> is that the kernel only resets the link when a fatal error is detected.
-> 
-> ## Questions
-> 
-> 1. Should kernel panic when fatal errors occur without AER recovery?
-> 
-> IMHO, the answer is NO. The AER driver handles both fatal and
-> non-fatal errors, and I have not found any panic changes in the
-> recovery path in OS native mode.
-> 
-> As far as I know, on many X86 platforms, struct
-> `acpi_hest_generic_status::error_severity` is set as CPER_SEV_FATAL
-> in firmware first mode. As a result, kernel will panic immediately
-> in ghes_proc() when fatal AER errors occur, and there is no chance
-> to handle the error and perform recovery in AER driver.
+On 9/20/2023 3:08 AM, Rafael J. Wysocki wrote:
+> On Tue, Sep 19, 2023 at 10:09 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>> On Tue, Sep 19, 2023 at 08:32:22PM +0200, Rafael J. Wysocki wrote:
+>>> On Tue, Sep 19, 2023 at 7:33 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>> On Tue, Sep 19, 2023 at 05:52:33PM +0200, Rafael J. Wysocki wrote:
+>>>>> On Tue, Sep 19, 2023 at 4:34 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>>>> On Tue, Sep 19, 2023 at 11:31:57AM +0800, Kai-Heng Feng wrote:
+>>>>>>> On Wed, Sep 13, 2023 at 8:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>>>>> [snipped]
+>>>>>>>> Hmm.  In some ways the VMD device acts as a Root Port, since it
+>>>>>>>> originates a new hierarchy in a separate domain, but on the upstream
+>>>>>>>> side, it's just a normal endpoint.
+>>>>>>>>
+>>>>>>>> How does AER for the new hierarchy work?  A device below the VMD can
+>>>>>>>> generate ERR_COR/ERR_NONFATAL/ERR_FATAL messages.  I guess I was
+>>>>>>>> assuming those messages would terminate at the VMD, and the VMD could
+>>>>>>>> generate an AER interrupt just like a Root Port.  But that can't be
+>>>>>>>> right because I don't think VMD would have the Root Error Command
+>>>>>>>> register needed to manage that interrupt.
+>>>>>>> VMD itself doesn't seem to manage AER, the rootport that "moved" from
+>>>>>>> 0000 domain does:
+>>>>>>> [ 2113.507345] pcieport 10000:e0:06.0: AER: Corrected error received:
+>>>>>>> 10000:e1:00.0
+>>>>>>> [ 2113.507380] nvme 10000:e1:00.0: PCIe Bus Error: severity=Corrected,
+>>>>>>> type=Physical Layer, (Receiver ID)
+>>>>>>> [ 2113.507389] nvme 10000:e1:00.0:   device [144d:a80a] error
+>>>>>>> status/mask=00000001/0000e000
+>>>>>>> [ 2113.507398] nvme 10000:e1:00.0:    [ 0] RxErr                  (First)
+>>>>>> Oh, I forgot how VMD works.  It sounds like there *is* a Root Port
+>>>>>> that is logically below the VMD, e.g., (from
+>>>>>> https://bugzilla.kernel.org/show_bug.cgi?id=215027):
+>>>>>>
+>>>>>>   ACPI: PCI Root Bridge [PC00] (domain 0000 [bus 00-e0])
+>>>>>>   acpi PNP0A08:00: _OSC: platform does not support [AER]
+>>>>>>   acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug SHPCHotplug PME PCIeCapability LTR]
+>>>>>>   pci  0000:00:0e.0: [8086:467f] type 00         # VMD
+>>>>>>   vmd  0000:00:0e.0: PCI host bridge to bus 10000:e0
+>>>>>>   pci 10000:e0:06.0: [8086:464d] type 01         # Root Port to [bus e1]
+>>>>>>   pci 10000:e1:00.0: [144d:a80a] type 00         # Samsung NVMe
+>>>>>>
+>>>>>> So ERR_* messages from the e1:00.0 Samsung device would terminate at
+>>>>>> the e0:06.0 Root Port.  That Root Port has an AER Capability with Root
+>>>>>> Error Command/Status/Error Source registers.
+>>>>>>
+>>>>>>>> But if VMD just passes those messages up to the Root Port, the source
+>>>>>>>> of the messages (the Requester ID) won't make any sense because
+>>>>>>>> they're in a hierarchy the Root Port doesn't know anything about.
+>>>>>>> Not sure what's current status is but I think Nirmal's patch is valid
+>>>>>>> for both our cases.
+>>>>>> So I think the question is whether that PNP0A08:00 _OSC applies to
+>>>>>> domain 10000.  I think the answer is "no" because the platform doesn't
+>>>>>> know about the existence of domain 10000, and it can't access config
+>>>>>> space in that domain.
+>>>>> Well, the VMD device itself is there in domain 0000, however, and sure
+>>>>> enough, the platform firmware can access its config space.
+>>>>>
+>>>>>> E.g., if _OSC negotiated that the platform owned AER in domain 0000, I
+>>>>>> don't think it would make sense for that to mean the platform *also*
+>>>>>> owned AER in domain 10000, because the platform doesn't know how to
+>>>>>> configure AER or handle AER interrupts in that domain.
+>>>>> I'm not sure about this.
+>>>>>
+>>>>> AFAICS, domain 10000 is not physically independent of domain 0000, so
+>>>>> I'm not sure to what extent the above applies.
+>>>> Domain 10000 definitely isn't physically independent of domain 0000
+>>>> since all TLPs to/from 10000 traverse the domain 0000 link to the VMD
+>>>> at 0000:00:0e.0.
+>>>>
+>>>> The platform can access the VMD endpoint (0000:00:0e.0) config space.
+>>>> But I don't think the platform can access config space of anything in
+>>>> domain 10000, which in my mind makes it *logically* independent.
+>>>>
+>>>> IIUC, config access to anything below the VMD (e.g., domain 10000) is
+>>>> done by the vmd driver itself using BAR 0 of the VMD device
+>>>> (vmd_cfg_addr(), vmd_pci_read(), vmd_pci_write(), see [1]).
+>>>>
+>>>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/vmd.c?id=v6.5#n378
+>>> I know, but the platform firmware may not need to go through the VMD
+>>> BAR in order to change the configuration of the devices in the "VMD
+>>> segment".
+>> I'm assuming that firmware can only access "VMD segment" config space
+>> if it has its own VMD driver.  It sounds like there might be another
+>> way that I don't know about?  Is there some way to do things via AML
+>> and _REG?
+> I would need to ask the VMD people about this TBH.
 
-UEFI r2.10, sec N.2.1,, defines CPER_SEV_FATAL, and platform firmware
-decides which Error Severity to put in the error record.  I don't see
-anything in UEFI about how the OS should handle fatal errors.
+Sorry for the previous message!
 
-ACPI r6.5, sec 18.1, says on fatal uncorrected error, the system
-should be restarted to prevent propagation of the error.  For
-CPER_SEV_FATAL errors, it looks like ghes_proc() panics even before
-trying AER recovery.
+Once VMD is enabled from the BIOS, entire PCI tree behind VMD is owned
+and managed by UEFI VMD driver. So 10000 domain is owned by VMD Linux
+driver after boot up.
 
-I guess your point is that for CPER_SEV_FATAL errors, the APEI/GHES
-path always panics but the native path never does, and that maybe both
-paths should work the same way?
+The entire PCI topology behind VMD is mapped into a memory whose
+address is programmed in BAR0/1 of VMD endpoint. Any config access to
+rootports or NVMe behind VMD is an MMIO access.
 
-It would be nice if they worked the same, but I suspect that vendors
-may rely on the fact that CPER_SEV_FATAL forces a restart/panic as
-part of their system integrity story.
+>
+>>> The question is whether or not the OS should attempt to control the
+>>> _OSC features on the VMD segment if the firmware has not allowed it to
+>>> control those features on the primary "parent" segment and the way the
+>>> config space on the VMD segment is accessed may not be entirely
+>>> relevant in that respect.
+I agree. The way the config space on VMD segment is accessed may
+not be important. Since we have the question of ownership of VMD
+domain.
 
-It doesn't seem like the native path should always panic.  If we can
-tell that data was corrupted, we may want to panic, but otherwise I
-don't think we should crash the entire system even if some device is
-permanently broken.
+When firmware disables native_aer support, the VMD driver doesn't
+know about it. We can verify this by looking at difference in
+values of native_aer for VMD host_bridge and VMD root_bridge.
+(i.e. vmd_copy_host_bridge_flags)
+OS needs to make VMD driver aware if AER is enabled or disabled by
+the firmware.
 
-> For fatal and non-fatal errors, struct
-> `acpi_hest_generic_status::error_severity` should as
-> CPER_SEV_RECOVERABLE, and struct
-> `acpi_hest_generic_data::error_severity` should reflect its real
-> severity. Then, the kernel is equivalent to handling PCIe errors in
-> Firmware first mode as it does in OS native mode.  Please correct me
-> if I am wrong.
+We should also consider the case of VM.
+VM firmware is not aware of VMD or VMD Hotplug support. Host firmware
+needs to provide a way to pass the Hotplug settings to VM firmware
+but it is not possible at the moment as VM firmware doesn't know
+about VMD.
 
-I don't know enough to comment on how Error Severity should be used in
-the Generic Error Status Block vs the Generic Error Data Entry.
+Also another impact of _OSC ownership of VMD domain for all the
+settings is that the VMD Hotplug setting from BIOS becomes irrelevant.
+BIOS allows enabling and disabling of Hotplug on VMD's rootports from
+BIOS menu but it doesn't allow enabling or disabling of AER, PM, DPC,
+etc.
+>> All these features are managed via config space.
+> As far as the OS is concerned.
+>
+>> I don't know how to
+>> interpret "firmware has no way to read the AER Capability of a Root
+>> Port in the VMD segment, but firmware still owns AER".  That sounds to
+>> me like "nobody can do anything with AER".
+> This assumes that the config space access method used by Linux is the
+> only one available, but I'm not sure that this is the case.  It would
+> be nice if someone could confirm or deny this.  Nirmal?
+>
+> Also, I know for a fact that the firmware running on certain tiny
+> cores included in the SoC may talk to the PCI devices on it via I2C or
+> similar (at least on servers).  This communication channel can be used
+> to control the features in question AFAICS.
+>
+>>> Note that VMD may want to impose additional restrictions on the OS
+>>> control of those features, but it is not clear to me whether or not it
+>>> should attempt to override the refusal to grant control of them on the
+>>> primary host bridge.
+>> In practical terms, I think you're saying vmd_copy_host_bridge_flags()
+>> could CLEAR vmd_bridge->native_* flags (i.e., restrict the OS from
+>> using features even if the platform has granted control of them), but
+>> it's not clear that it should SET them (i.e., override platform's
+>> refusal to grant control)?  Is that right?
+> Yes, it is.
+That may be true for host but in case of VM where VM BIOS is
+disabling everything and setting them to default power off state.
 
-> However, I have changed my mind on this issue as I encounter a case where
-> a error propagation is detected due to fatal DLLP (Data Link Protocol
-> Error) error. A DLLP error occurred in the Compute node, causing the
-> node to panic because `struct acpi_hest_generic_status::error_severity` was
-> set as CPER_SEV_FATAL. However, data corruption was still detected in the
-> storage node by CRC.
+Since VMD driver doesn't know if native_aer is enabled or disabled on
+the platform by the firmware, we should keep using
+vmd_copy_host_bridge_flags to get native_aer settings.
 
-The only mention of Data Link Protocol Error that looks relevant is
-PCIe r6.0, sec 3.6.2.2, which basically says a DLLP with an unexpected
-Sequence Number should be discarded:
+I can think of two approaches at the moment that can solve our issue.
 
-  For Ack and Nak DLLPs, the following steps are followed (see Figure
-  3-21):
+Option #1: Keep the proposed changes.
 
-    - If the Sequence Number specified by the AckNak_Seq_Num does not
-      correspond to an unacknowledged TLP, or to the value in
-      ACKD_SEQ, the DLLP is discarded
+Option #2: Keep the patch 04b12ef163d1 and find a way to set Hotplug
+for VMD in VM. One way to do is to read Hotplug capable bit in SltCap
+as defined in PCI specs and enable or disable native_hotplug based on
+that value.
 
-      - This is a Data Link Protocol Error, which is a reported error
-	associated with the Port (see Section 6.2).
+For more information.
+Since VMD Linux driver doesn't have independent AER handling, it
+should honor the platform or _OSC AER settings. Before the patch
+04b12ef163d1, AER was getting enabled on its VMD rootports when VMD
+driver makes call to pci_create_root_bus -> pci_alloc_host_bridge
+-> pci_init_host_bridge. see [1]
 
-So data from that DLLP should not have made it to memory, although of
-course the DMA may not have been completed.  But it sounds like you
-did see corrupted data written to memory?
+[1] https://elixir.bootlin.com/linux/latest/C/ident/pci_init_host_bridge
 
-I assume it is not reproducible and we have no reason to think the
-receiver of the DLLP has a design defect, e.g., it reported the error
-but failed to drop the DLLP?
+>
+>> I've been assuming config space access is the critical piece, but it
+>> sounds like maybe it's not?
+> It may not be in principle, so it would be good to have more
+> information regarding this.  I would like the VMD people to tell us
+> what exactly the expectations are.
 
-> 2. Should kernel panic when AER recovery failed?
-> 
-> This question is actually a TODO that was added when the AER driver was
-> first upstreamed 17 years ago, and it is still relevant today. The kernel
-> does not proactively panic regardless of the error types occurring in OS
-> native mode. The DLLP error propagation case indicates that the kernel
-> might should panic when recovery failed?
 
-I'm not a hardware engineer, but I'm not yet convinced that a Data
-Link Protocol Error should cause a panic because sec 3.6.2.2 suggests
-that this error should not cause data corruption.  Certainly willing
-to be proved wrong!
-
-> 3. Should DPC be enabled by default to contain fatal and non-fatal error?
-> 
-> According to the PCIe specification, DPC halts PCIe traffic below a
-> Downstream Port after an unmasked uncorrectable error is detected at or
-> below the Port, avoiding the potential spread of any data corruption.
-> 
-> The kernel configures DPC to be triggered only on ERR_FATAL. Literally
-> speaking, only fatal error have the potential spread of any data
-> corruption?
-
-Sec 6.2.2.2 talks about fatal vs non-fatal but only in terms of
-whether the error affects a particular transaction (non-fatal) or
-everything related to a Link (fatal).  Unless there's more detail
-elsewhere, I would assume either could corrupt data.
-
-> In addition, the AER Severity is programable by the
-> Uncorrectable Error Severity Register (Offset 0Ch in PCIe AER cap). If a
-> default fatal error, e.g. DLLP, set as non-fatal, DPC will not be
-> triggered.
-
-Sec 6.2.7 and 7.8.4.4 suggest the Data Link Protocol Error should be
-a fatal error by default.
-
-I don't think Linux changes PCI_ERR_UNC_DLP (unless there's an _HPX or
-similar method), so I would expect it to be set as fatal.
-
-Bjorn
-
-> [1] https://github.com/torvalds/linux/commit/6c2b374d74857e892080ee726184ec1d15e7d4e4#diff-fea64904d30501b59d2e948189bbedc476fc270ed4c15e4ae29d7f0efd06771aR438
