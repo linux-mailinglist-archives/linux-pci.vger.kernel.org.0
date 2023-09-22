@@ -2,99 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10E4A7AA65B
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Sep 2023 03:06:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37DD17AA671
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Sep 2023 03:24:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229452AbjIVBGe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Sep 2023 21:06:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41494 "EHLO
+        id S229509AbjIVBYI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Sep 2023 21:24:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230022AbjIVBGd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Sep 2023 21:06:33 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 041E6195;
-        Thu, 21 Sep 2023 18:06:27 -0700 (PDT)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38LIsR7Z018736;
-        Fri, 22 Sep 2023 01:06:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-03-30;
- bh=PaV2/eM0GTH4uo+cZQYOKUgL2TPNKr4vxGBi/Auf04c=;
- b=bfUxlRQpdJ4bBoRxasUV9RwYTDGBe3oVsuLOsIsIb5LcOXdHd6yXw8i75zzYfJgOc0Zs
- qzDsQVxZB8PINutrlwU/SHg7YFUj6Mx2EzmJm9zPpt8uHbw5FvJcg4oPyEwfusEVCgWQ
- kqrI03p0/6c8OJPQ/q+ewyFZiQiLLHjg/g26ykYbCT/Pfg4XJr5nLZ4QSr9/2kYWSciZ
- T2BM0EIJdbgjfoQ+pZ/iJNRbem4lPZTjnP2AmJEBNFoLqrMKrLNyLTnwiN3w3MaI0HFx
- EVoLLiWcZe8eEiCdvPTJm0RVKvLKhbOCIY5vLS7ackLP/Ips4W8/7oPkNMBD6+N+XJRF Bg== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3t8tt00ka9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Sep 2023 01:06:09 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 38LMjJbi040584;
-        Fri, 22 Sep 2023 01:06:08 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3t8u19bn40-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Sep 2023 01:06:08 +0000
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38M164sv032168;
-        Fri, 22 Sep 2023 01:06:08 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3t8u19bn0m-4;
-        Fri, 22 Sep 2023 01:06:07 +0000
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH v2 00/10] PCI/treewide: PCIe capability access cleanups
-Date:   Thu, 21 Sep 2023 21:05:54 -0400
-Message-Id: <169534443603.456601.11816529763697878783.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230913122748.29530-1-ilpo.jarvinen@linux.intel.com>
-References: <20230913122748.29530-1-ilpo.jarvinen@linux.intel.com>
+        with ESMTP id S229458AbjIVBYH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Sep 2023 21:24:07 -0400
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3897CF;
+        Thu, 21 Sep 2023 18:23:57 -0700 (PDT)
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+        by ex01.ufhost.com (Postfix) with ESMTP id BF08C24DBC0;
+        Fri, 22 Sep 2023 09:23:48 +0800 (CST)
+Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 22 Sep
+ 2023 09:23:48 +0800
+Received: from [192.168.125.57] (113.72.146.252) by EXMBX171.cuchost.com
+ (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 22 Sep
+ 2023 09:23:47 +0800
+Message-ID: <1d29eea8-9053-2250-cff1-68b16436ba36@starfivetech.com>
+Date:   Fri, 22 Sep 2023 09:23:47 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-09-22_01,2023-09-21_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 spamscore=0
- suspectscore=0 mlxlogscore=999 phishscore=0 mlxscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2309180000
- definitions=main-2309220008
-X-Proofpoint-GUID: nHAfgE7Y28nFPrLNBjnRIzOL48I-snaf
-X-Proofpoint-ORIG-GUID: nHAfgE7Y28nFPrLNBjnRIzOL48I-snaf
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v6 08/19] PCI: plda: Add event interrupt codes and IRQ
+ domain ops
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>, Conor Dooley <conor@kernel.org>
+CC:     Daire McNamara <daire.mcnamara@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Kevin Xie <kevin.xie@starfivetech.com>
+References: <20230921150814.GA330660@bhelgaas>
+From:   Minda Chen <minda.chen@starfivetech.com>
+In-Reply-To: <20230921150814.GA330660@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [113.72.146.252]
+X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX171.cuchost.com
+ (172.16.6.91)
+X-YovoleRuleAgent: yovoleflag
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 13 Sep 2023 15:27:38 +0300, Ilpo Järvinen wrote:
 
-> Instead of custom code to extract the PCIe capabilities, make the code
-> more obvious using FIELD_GET/PREP().
+
+On 2023/9/21 23:08, Bjorn Helgaas wrote:
+> On Sat, Sep 16, 2023 at 01:11:29AM +0100, Conor Dooley wrote:
+>> On Fri, Sep 15, 2023 at 06:22:32PM +0800, Minda Chen wrote:
+>> > For PolarFire implements non-PLDA local interrupt events, most of
+>> > event interrupt process codes can not be re-used. PLDA implements
+>> > new codes and IRQ domain ops like PolarFire.
+>> > 
+>> > plda_get_events() adds a new IRQ num to event num mapping codes for
+>> > PLDA local event except DMA engine interrupt events. The DMA engine
+>> > interrupt events are implemented by vendors.
+>> > 
+>> > Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+>> 
+>> Perhaps not important as they will go away in the next patch, but for
+>> this patch the riscv patchwork stuff noticed:
+>> drivers/pci/controller/plda/pcie-plda-host.c:114:36: warning: unused variable 'plda_evt_dom_ops' [-Wunused-const-variable]
+>> drivers/pci/controller/plda/pcie-plda-host.c:118:36: warning: unused variable 'plda_event_ops' [-Wunused-const-variable]
 > 
-> Also cleanup some duplicated defines in e1000e.
+> Details like this *are* important because fixing them makes the
+> individual patches more readable, thanks for noticing!
 > 
-> I've only put Jonathan's Reviewed-by to patches I didn't modify
-> significantly.
-> 
-> [...]
-
-Applied to 6.7/scsi-queue, thanks!
-
-[07/10] scsi: esas2r: Use FIELD_GET() to extract PCIe capability fields
-        https://git.kernel.org/mkp/scsi/c/5532f2495150
-[08/10] scsi: qla2xxx: Use FIELD_GET() to extract PCIe capability fields
-        https://git.kernel.org/mkp/scsi/c/dc1d7b363301
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+> Bjorn
+OK, I will solve this.
