@@ -2,300 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B4D717AAFD5
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Sep 2023 12:44:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 779887AB004
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Sep 2023 12:55:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233462AbjIVKnD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Sep 2023 06:43:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46728 "EHLO
+        id S233467AbjIVKzk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Sep 2023 06:55:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233533AbjIVKmz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Sep 2023 06:42:55 -0400
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61AC3E48;
-        Fri, 22 Sep 2023 03:42:36 -0700 (PDT)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-        by ex01.ufhost.com (Postfix) with ESMTP id 86A4624E26F;
-        Fri, 22 Sep 2023 18:42:28 +0800 (CST)
-Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 22 Sep
- 2023 18:42:28 +0800
-Received: from [192.168.125.57] (113.72.146.252) by EXMBX171.cuchost.com
- (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 22 Sep
- 2023 18:42:27 +0800
-Message-ID: <57267a7d-c03a-6abe-c64a-08766a0ce01b@starfivetech.com>
-Date:   Fri, 22 Sep 2023 18:42:26 +0800
+        with ESMTP id S229564AbjIVKzj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Sep 2023 06:55:39 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56325AC;
+        Fri, 22 Sep 2023 03:55:33 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-3226cc3e324so1113775f8f.3;
+        Fri, 22 Sep 2023 03:55:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695380132; x=1695984932; darn=vger.kernel.org;
+        h=content-transfer-encoding:autocrypt:subject:from:cc:to
+         :content-language:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=janjVMwgJq+oTkf1VaERpcS2q+YlzGOoJGgDx48XVcM=;
+        b=WVr8opDJcFRUyvCnSQZZjAq21vD9iJBSyXDD9e7QzoYlzRbAaIhH6jVcLlPijPz6Sr
+         r4bJXIQb7A6vm/FGv0r3Shv3zJzcUKD+mDeN24RwNNiMhbA8MbppdMq22Zu9QxRB8LkY
+         dNyfTze7JoRGdW10s8Ynchg0bAoapd2Nfxiwa60Xalzm3S3Qd4YFoAPKb6CxhWAtKYfn
+         2MzD/jh3awoj+jNMoaMV43XyEyPHlccXOE3iyzaZLgN9vMGMTZDJTZfmOtchilOKMwCd
+         Sw3ZiUqQQ+rqbSEsy0dLzs44PtxdAadq4Dc5ze/58TC/INCv6Hj31Jg4Fid1WRItIQc1
+         YjKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695380132; x=1695984932;
+        h=content-transfer-encoding:autocrypt:subject:from:cc:to
+         :content-language:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=janjVMwgJq+oTkf1VaERpcS2q+YlzGOoJGgDx48XVcM=;
+        b=vc7HKNyUZYw99JkW1SDoZHcILCiZvkc+6Fe9X62ap7iZSlEMhT6Z1sBCbVSQrx/qJ4
+         ktV7CDLJDlLfQeQwN+LvsMCFVWZJ1FR5E4p1UWgac5e7/nPOE20xU4P8NBjORLMk0DUW
+         kR6KsHO401ni5uiM1HjwaB+gWImEqd5jegeXNwDhmfLONoQogCUBaQGpiJNLTHJwruk/
+         kr7CCl2tsqxUspEvKHU85sAY/BxIKQGGAGsKOUx0rxR32TPKq1IH10PmVE2TU3w4Poh/
+         JU4Z4TUqWBitVvOcsTxZW3Ig/28izM3UMPDfn5RrWW3ii/5cdfPfLzx5bf/XKIs/CL1H
+         u5eg==
+X-Gm-Message-State: AOJu0YwXn3FffpEi8qRF7zTfmcwbK2VRgGoLFz04ByG9D6G0gvv7s6jC
+        gzr4t5G2vAZVPLpDjYjbtVyldHVOTSI=
+X-Google-Smtp-Source: AGHT+IE3y58W1GV+NXk6RRZ6uYHM9TGQSFg317edLswgtYEGe9J4vHXrgOJUa3VtpKv6WLn4dbiTUw==
+X-Received: by 2002:adf:fdc3:0:b0:321:6388:bccb with SMTP id i3-20020adffdc3000000b003216388bccbmr6865512wrs.21.1695380131561;
+        Fri, 22 Sep 2023 03:55:31 -0700 (PDT)
+Received: from ?IPV6:2a02:3100:9589:7c00:b10e:5fd8:e6fa:a54? (dynamic-2a02-3100-9589-7c00-b10e-5fd8-e6fa-0a54.310.pool.telefonica.de. [2a02:3100:9589:7c00:b10e:5fd8:e6fa:a54])
+        by smtp.googlemail.com with ESMTPSA id a3-20020a5d5083000000b003198a9d758dsm4190330wrt.78.2023.09.22.03.55.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Sep 2023 03:55:31 -0700 (PDT)
+Message-ID: <9f72dd81-7caa-49de-b776-55851a9eeac7@gmail.com>
+Date:   Fri, 22 Sep 2023 12:55:31 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v6 07/19] PCI: plda: Move the setup functions to
- pcie-plda-host.c
+User-Agent: Mozilla Thunderbird
 Content-Language: en-US
-To:     Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        Kevin Xie <kevin.xie@starfivetech.com>
-References: <20230915102243.59775-1-minda.chen@starfivetech.com>
- <20230915102243.59775-8-minda.chen@starfivetech.com>
- <CAJM55Z-wD4+TUJCsXsbgR49Zux5fuMZQmJ5bXEVW96QVNJbBFQ@mail.gmail.com>
-From:   Minda Chen <minda.chen@starfivetech.com>
-In-Reply-To: <CAJM55Z-wD4+TUJCsXsbgR49Zux5fuMZQmJ5bXEVW96QVNJbBFQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Andi Shyti <andi.shyti@kernel.org>
+Cc:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Marius Hoch <mail@mariushoch.de>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: i2c: i801: Force no IRQ for Dell Latitude E7450
+Autocrypt: addr=hkallweit1@gmail.com; keydata=
+ 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
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [113.72.146.252]
-X-ClientProxiedBy: EXCAS063.cuchost.com (172.16.6.23) To EXMBX171.cuchost.com
- (172.16.6.91)
-X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Just became aware of this patch because Wolfram listed open i801 patches.
 
+http://patchwork.ozlabs.org/project/linux-i2c/patch/20230514103634.235917-2-mail@mariushoch.de/
 
-On 2023/9/18 6:45, Emil Renner Berthing wrote:
-> Minda Chen wrote:
->> Move setup functions to common pcie-plda-host.c.
->>
->> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
->> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
->> ---
->>  drivers/pci/controller/plda/Kconfig           |  4 +
->>  drivers/pci/controller/plda/Makefile          |  1 +
->>  .../pci/controller/plda/pcie-microchip-host.c | 59 -------------
->>  drivers/pci/controller/plda/pcie-plda-host.c  | 82 +++++++++++++++++++
->>  drivers/pci/controller/plda/pcie-plda.h       |  6 ++
->>  5 files changed, 93 insertions(+), 59 deletions(-)
->>  create mode 100644 drivers/pci/controller/plda/pcie-plda-host.c
->>
->> diff --git a/drivers/pci/controller/plda/Kconfig b/drivers/pci/controller/plda/Kconfig
->> index 5cb3be4fc98c..e54a82ee94f5 100644
->> --- a/drivers/pci/controller/plda/Kconfig
->> +++ b/drivers/pci/controller/plda/Kconfig
->> @@ -3,10 +3,14 @@
->>  menu "PLDA-based PCIe controllers"
->>  	depends on PCI
->>
->> +config PCIE_PLDA_HOST
->> +	bool
->> +
->>  config PCIE_MICROCHIP_HOST
->>  	tristate "Microchip AXI PCIe controller"
->>  	depends on PCI_MSI && OF
->>  	select PCI_HOST_COMMON
->> +	select PCIE_PLDA_HOST
->>  	help
->>  	  Say Y here if you want kernel to support the Microchip AXI PCIe
->>  	  Host Bridge driver.
->> diff --git a/drivers/pci/controller/plda/Makefile b/drivers/pci/controller/plda/Makefile
->> index e1a265cbf91c..4340ab007f44 100644
->> --- a/drivers/pci/controller/plda/Makefile
->> +++ b/drivers/pci/controller/plda/Makefile
->> @@ -1,2 +1,3 @@
->>  # SPDX-License-Identifier: GPL-2.0
->> +obj-$(CONFIG_PCIE_PLDA_HOST) += pcie-plda-host.o
->>  obj-$(CONFIG_PCIE_MICROCHIP_HOST) += pcie-microchip-host.o
->> diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
->> index 1d253acd6bc2..ac7126b0bacf 100644
->> --- a/drivers/pci/controller/plda/pcie-microchip-host.c
->> +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
->> @@ -837,65 +837,6 @@ static int mc_pcie_init_irq_domains(struct plda_pcie_rp *port)
->>  	return mc_allocate_msi_domains(port);
->>  }
->>
->> -static void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
->> -				   phys_addr_t axi_addr, phys_addr_t pci_addr,
->> -				   size_t size)
->> -{
->> -	u32 atr_sz = ilog2(size) - 1;
->> -	u32 val;
->> -
->> -	if (index == 0)
->> -		val = PCIE_CONFIG_INTERFACE;
->> -	else
->> -		val = PCIE_TX_RX_INTERFACE;
->> -
->> -	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> -	       ATR0_AXI4_SLV0_TRSL_PARAM);
->> -
->> -	val = lower_32_bits(axi_addr) | (atr_sz << ATR_SIZE_SHIFT) |
->> -			    ATR_IMPL_ENABLE;
->> -	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> -	       ATR0_AXI4_SLV0_SRCADDR_PARAM);
->> -
->> -	val = upper_32_bits(axi_addr);
->> -	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> -	       ATR0_AXI4_SLV0_SRC_ADDR);
->> -
->> -	val = lower_32_bits(pci_addr);
->> -	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> -	       ATR0_AXI4_SLV0_TRSL_ADDR_LSB);
->> -
->> -	val = upper_32_bits(pci_addr);
->> -	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> -	       ATR0_AXI4_SLV0_TRSL_ADDR_UDW);
->> -
->> -	val = readl(bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
->> -	val |= (ATR0_PCIE_ATR_SIZE << ATR0_PCIE_ATR_SIZE_SHIFT);
->> -	writel(val, bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
->> -	writel(0, bridge_base_addr + ATR0_PCIE_WIN0_SRC_ADDR);
->> -}
->> -
->> -static int plda_pcie_setup_iomems(struct pci_host_bridge *bridge,
->> -				  struct plda_pcie_rp *port)
->> -{
->> -	void __iomem *bridge_base_addr = port->bridge_addr;
->> -	struct resource_entry *entry;
->> -	u64 pci_addr;
->> -	u32 index = 1;
->> -
->> -	resource_list_for_each_entry(entry, &bridge->windows) {
->> -		if (resource_type(entry->res) == IORESOURCE_MEM) {
->> -			pci_addr = entry->res->start - entry->offset;
->> -			plda_pcie_setup_window(bridge_base_addr, index,
->> -					       entry->res->start, pci_addr,
->> -					       resource_size(entry->res));
->> -			index++;
->> -		}
->> -	}
->> -
->> -	return 0;
->> -}
->> -
->>  static inline void mc_clear_secs(struct mc_pcie *port)
->>  {
->>  	void __iomem *ctrl_base_addr = port->axi_base_addr + MC_PCIE_CTRL_ADDR;
->> diff --git a/drivers/pci/controller/plda/pcie-plda-host.c b/drivers/pci/controller/plda/pcie-plda-host.c
->> new file mode 100644
->> index 000000000000..f0c7636f1f64
->> --- /dev/null
->> +++ b/drivers/pci/controller/plda/pcie-plda-host.c
->> @@ -0,0 +1,82 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * PLDA PCIe XpressRich host controller driver
->> + *
->> + * Copyright (C) 2023 Microchip Co. Ltd
->> + *		      StarFive Co. Ltd.
->> + *
->> + * Author: Daire McNamara <daire.mcnamara@microchip.com>
->> + * Author: Minda Chen <minda.chen@starfivetech.com>
->> + */
->> +
->> +#include <linux/irqchip/chained_irq.h>
->> +#include <linux/irqdomain.h>
->> +#include <linux/msi.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_pci.h>
->> +#include <linux/pci_regs.h>
->> +#include <linux/pci-ecam.h>
->> +#include <linux/platform_device.h>
->> +
->> +#include "pcie-plda.h"
->> +
->> +void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
->> +			    phys_addr_t axi_addr, phys_addr_t pci_addr,
->> +			    size_t size)
->> +{
->> +	u32 atr_sz = ilog2(size) - 1;
->> +	u32 val;
->> +
->> +	if (index == 0)
->> +		val = PCIE_CONFIG_INTERFACE;
->> +	else
->> +		val = PCIE_TX_RX_INTERFACE;
->> +
->> +	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> +	       ATR0_AXI4_SLV0_TRSL_PARAM);
->> +
->> +	val = lower_32_bits(axi_addr) | (atr_sz << ATR_SIZE_SHIFT) |
->> +			    ATR_IMPL_ENABLE;
->> +	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> +	       ATR0_AXI4_SLV0_SRCADDR_PARAM);
->> +
->> +	val = upper_32_bits(axi_addr);
->> +	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> +	       ATR0_AXI4_SLV0_SRC_ADDR);
->> +
->> +	val = lower_32_bits(pci_addr);
->> +	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> +	       ATR0_AXI4_SLV0_TRSL_ADDR_LSB);
->> +
->> +	val = upper_32_bits(pci_addr);
->> +	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> +	       ATR0_AXI4_SLV0_TRSL_ADDR_UDW);
->> +
->> +	val = readl(bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
->> +	val |= (ATR0_PCIE_ATR_SIZE << ATR0_PCIE_ATR_SIZE_SHIFT);
-> 
-> I know this code is just a straight copy, but for future cleanups are we
-> guaranteed that this field is always zero?
-> 
-> Otherwise it looks a little suspicious to do read-modify-write, but just
-> set the (0x25 << 1) bits without clearing the field first.
-> 
-The reset value is zero. And this is called once.
-Maybe I can add a patch to fix this.
->> +	writel(val, bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
->> +	writel(0, bridge_base_addr + ATR0_PCIE_WIN0_SRC_ADDR);
->> +}
->> +EXPORT_SYMBOL_GPL(plda_pcie_setup_window);
->> +
->> +int plda_pcie_setup_iomems(struct pci_host_bridge *bridge,
->> +			   struct plda_pcie_rp *port)
->> +{
->> +	void __iomem *bridge_base_addr = port->bridge_addr;
->> +	struct resource_entry *entry;
->> +	u64 pci_addr;
->> +	u32 index = 1;
->> +
->> +	resource_list_for_each_entry(entry, &bridge->windows) {
->> +		if (resource_type(entry->res) == IORESOURCE_MEM) {
->> +			pci_addr = entry->res->start - entry->offset;
->> +			plda_pcie_setup_window(bridge_base_addr, index,
->> +					       entry->res->start, pci_addr,
->> +					       resource_size(entry->res));
->> +			index++;
->> +		}
->> +	}
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(plda_pcie_setup_iomems);
->> diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
->> index d04a571404b9..3deefd35fa5a 100644
->> --- a/drivers/pci/controller/plda/pcie-plda.h
->> +++ b/drivers/pci/controller/plda/pcie-plda.h
->> @@ -119,4 +119,10 @@ struct plda_pcie_rp {
->>  	struct plda_msi msi;
->>  	void __iomem *bridge_addr;
->>  };
->> +
->> +void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
->> +			    phys_addr_t axi_addr, phys_addr_t pci_addr,
->> +			    size_t size);
->> +int plda_pcie_setup_iomems(struct pci_host_bridge *bridge,
->> +			   struct plda_pcie_rp *port);
->>  #endif
->> --
->> 2.17.1
+I understand that BIOS is broken and assigns an interrupt to the SMBUS PCI
+host controller that is actually used by another device.
+
+Dealing with internal low-level flag irq_managed in a device driver seems
+to be fundamentally wrong. Also we may be in trouble if pirq_disable_irq()
+should ever be called for the SMBUS host controller driver with
+irq_managed being set and irq set to the one of the other device.
+
+Not sure whether setting pci_dev->irq to 255 before calling pci_enable_device()
+would help. As this isn't an i2c/smbus issue but a PCI/BIOS issue, maybe
+the PCI folks have an idea what the least ugly quirk could be.
+
+And to ask the obvious question: How about a BIOS update from DELL fixing
+the broken interrupt assignment?
