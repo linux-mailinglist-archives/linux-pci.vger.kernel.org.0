@@ -2,205 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE5727AA77E
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Sep 2023 06:08:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87AB47AA7C6
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Sep 2023 06:29:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229520AbjIVEI2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Sep 2023 00:08:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57696 "EHLO
+        id S230212AbjIVE3N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Sep 2023 00:29:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbjIVEI1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Sep 2023 00:08:27 -0400
-Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D2F9F1;
-        Thu, 21 Sep 2023 21:08:21 -0700 (PDT)
-Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-59e77e4f707so20471117b3.0;
-        Thu, 21 Sep 2023 21:08:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695355701; x=1695960501; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=pS0vFjLEeynWuo5eyZ4Lt8qmI3NL/UzOQsJs0PGGLxA=;
-        b=IEjCPe5Mgh4mIxvJVE8+v+eAfda7ng13CWoqrjOsRJBuaeX3K4DTqUcVOnRSifEVK2
-         GVwUuO+zq3Idg+Ea8q/XAUMd9W8BeCjWdpsz2orCWLkiBtZavfHf9LTiSxg52dpZVqn8
-         ECtle4SZT2G70DCWez77wpx66xD2eQ+C4APle/9huIe6DNN8N9vViwxN2UPBqesm6TyT
-         6RkJcxocFVFp4sGl8MMpLNiB9EywTD+7bZ73LRan87i38XL348y2TXnPCb57lXEyRIQ/
-         HcYV0zUKvSYcad3HUomD6Q4FH1rT5PbbNWa0PDJbBcLwDt+ATXIPFhHHXxmRwY0JJnGH
-         nwVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695355701; x=1695960501;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pS0vFjLEeynWuo5eyZ4Lt8qmI3NL/UzOQsJs0PGGLxA=;
-        b=aY8gzGPzX+fVsqaWVz2fj2NSLPlYvxSR937PRt4mS2SC3zV7dzlbpwFl46YMwFys4L
-         ngd0Ck9TlBjOnjxunAbB+Xn6gljtytCJopFV+yVLbP3Ln2/Hkn3dTMnagCovq0QaLt5/
-         poaMdKdsfN0xEyzexo4jRZwh6rJwS26XrQRzrJfK5Bebqf6uVVTBusxsFXMQ1VDPuR/v
-         jZCUdzvpsFlEosGOH4PQ5ujnG6IsgjVMC0lGz6XrfOW9QJ6zhmkS3MF1hn5wQ/e4FPqR
-         HnLefweOjkcr/2PlWB+rA4DBI3f1LKslazIcFgS/1+5lgvsZwC8Cclf7kHARgRirC2rr
-         n6qw==
-X-Gm-Message-State: AOJu0YzwRr7Q6IST06j3WAPIza1cLQp7ZMgjIEehGncKGr/MnIaJR+IQ
-        zn8/5uC3ruRWdiub+B4bQmwxQxIVKEgp64RRSTgjKHsK60o=
-X-Google-Smtp-Source: AGHT+IGcGFK3u+XlwUkOXMhFa2xfKD0T5AOAyPtA1kKDncrTwc4zcxQ+bVpMITzb9cwx2hVc4uTerBGLOZNZQY69yAA=
-X-Received: by 2002:a81:4f85:0:b0:589:e7ab:d4e5 with SMTP id
- d127-20020a814f85000000b00589e7abd4e5mr7459187ywb.0.1695355700724; Thu, 21
- Sep 2023 21:08:20 -0700 (PDT)
+        with ESMTP id S230227AbjIVE3M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Sep 2023 00:29:12 -0400
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2058.outbound.protection.outlook.com [40.107.22.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E6D1AA;
+        Thu, 21 Sep 2023 21:28:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fIrY/v1vmG4R/C8F9oOcpRAMNazU0fJ5C9w4H88SiXDDTPKFLX1hDgsHkggzS1p8SkaRu8KwbpUCezerMouLacRmNbA7MNDZGa4grt5GatLhkbl6StogNbMNio6I0djFghhQBDi4gdGnBf2HdXYkwhXp8QVkMc82EemaF1uJm27zyNupnCjuULfeOD6u+pkXDfjw2kTCflPl6nXzbUKn+aTi9C27XKLsFQbXoHaibppyZy3juNGS9+e0LrQEGK16n91JEE8SD+WSJ/l7SEG6A0d0xZeyKVC78htjwAHMwxl3N8+9LiK1TYAGMV/CXFiCS6eysCsVjgittUY/Ldt73w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ch0fIy8u8ZzKD9dw6NfdlEgvdYMI3x8irCe6QTsdiEI=;
+ b=D7i39q61muuBz4F2TKw8gksm+EHXNncyi/QXqO4ON71mOPQitRNas6Ho7qGS4bQmYpAzitsixwsAfS/Lkvi2awp1QCKhi/B5Yn6NIN8J/nOBJShPGWUD9EP/zbftVAbMjK/5v0jUxDuDUB6B6ATJt/dm9naPIxG7JkmYpYPlyR6af2zOHSrKERwu6/bPssRBZfJJhWNf01nyLlSdmukI3pGEuVbbowFu3KcnL4Fh2fn0RnRjdgAVurC8PrLP0TBWtGh5BjLZDoGe8D4OY/pTm7nY96xFbXGfF/+MlK3fvBfstASixqigiEsIjsUm9bG/c1eeMPespms6DcSyfsdHIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ch0fIy8u8ZzKD9dw6NfdlEgvdYMI3x8irCe6QTsdiEI=;
+ b=VlLuyN0yLobAu9Q6AJhRPjiFactcunRp7s0BIn1W1wDJi4Q3Jl26EAg5+qESkj69ianvnjUXabLI2tugp+xReNxXHxWeLOdZJWLgmsQhfdT0KsSlNenazfOdan4baYYnyDRBbc9q2NaWlbRm1vIEDcIiK2rcPQty06cD+KXaxB4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by AS8PR04MB8851.eurprd04.prod.outlook.com (2603:10a6:20b:42e::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.20; Fri, 22 Sep
+ 2023 04:28:57 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::1774:e25f:f99:aca2]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::1774:e25f:f99:aca2%4]) with mapi id 15.20.6792.026; Fri, 22 Sep 2023
+ 04:28:56 +0000
+From:   Frank Li <Frank.Li@nxp.com>
+To:     christophe.jaillet@wanadoo.fr
+Cc:     Frank.li@nxp.com, bhelgaas@google.com, hch@infradead.org,
+        imx@lists.linux.dev, kw@linux.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        lpieralisi@kernel.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
+        robh@kernel.org, roy.zang@nxp.com
+Subject: [PATCH v2 1/1] PCI: layerscape-ep: set 64-bit DMA mask
+Date:   Fri, 22 Sep 2023 00:28:36 -0400
+Message-Id: <20230922042836.3311689-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: PH7PR17CA0016.namprd17.prod.outlook.com
+ (2603:10b6:510:324::19) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 MIME-Version: 1.0
-From:   Tom Yan <tom.ty89@gmail.com>
-Date:   Fri, 22 Sep 2023 12:08:09 +0800
-Message-ID: <CAGnHSE=KP8rArKmNbgo3iG489PXrwjqWXLTmUp+nCOPd4VVRhA@mail.gmail.com>
-Subject: [BUG?] Weird battery detection issue triggered by extra PCIe slot/port
-To:     rafael.j.wysocki@intel.com, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|AS8PR04MB8851:EE_
+X-MS-Office365-Filtering-Correlation-Id: 705c4718-dbc7-470d-0730-08dbbb246f47
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gEnN5iZ3hfrZVgq0qL+t+CWfkapi/9ziOccaFx6xHJ2TFlbZaM25Y19xOeNyIUbrRrtk+AY9viyVyG/KYbJmHxP9jHPKec0RZIatVcV/C+rlzFb2f0vISbkiMGrbjda8AiwhvZk2Tj9iKRUW5oSUObMDuFxeHgAIz3sOdWXe7LilTUgKskybb8V7OfYIuNK8+m3Gz192DbW2l42ALtPIOrto8qJfsaYHP7D+PaJxh3RKtncdYXxAmZXOMwnrPuiayPl1Uima2SSu3gpe8sBGTGJ1mhzVwJYaAGOhX28H+zxyHoxdBwi8lRKv+NLQHHaKtDkH6ZoOE41n+qoLtzJNUDKsW+LID81DbsSYoQQ0UwXwT+znxZn2xkZ93OQAHpC/ItpRzC5iZepAatt7ssUuMgDvfsM+6DrbFjTH6AcC5qq4npz7XoNmjMIuY6wd5FqUWLuYSx1a00G6zj+y6dX8gd5dB46I54cUMpyVhwqbFpwx6CeYSDDgY5RTzH0LPSJkfwlLfvuwtyVrcKx0ABqARZIZYsDhBy4I5BPUL1sCrWyV7vS4y8ul09CKAOQqF56K04R8VhoxTUqNDAOepuSNc17bHwWVifSnFh/UW85pD8JQrPhctNoLrz1ntZxooSnm3MnjUWDoM+bhW58hLjjmvGOUo38sab1AMSirtURS2BY=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(136003)(366004)(39860400002)(376002)(1800799009)(451199024)(186009)(6666004)(38350700002)(38100700002)(1076003)(6512007)(2616005)(86362001)(7416002)(4326008)(36756003)(5660300002)(8936002)(2906002)(6506007)(66476007)(66946007)(66556008)(6486002)(52116002)(6916009)(41300700001)(316002)(26005)(478600001)(8676002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?WNcGkH5YfBpfyFMsHSCfaCh/tt0QnQyrp5v7z8+sMU5o17lGJrKjstxf5PWG?=
+ =?us-ascii?Q?VcpB/ssdWamagxNdqts83OqZEKL3Ck3SfIo2432ZL7KoQwzLnVKgxnJ8FycE?=
+ =?us-ascii?Q?dz/ycGNB5Q3NL0ifR4YAJWUQ5+vwDbY+JG9KGyYpCL+d0wF8VromGHVYac2k?=
+ =?us-ascii?Q?hftLwwZBEEX2sLbGcLoRzYEw/c1DygDStnf9nVq+5NpZuD2D/4LiPo8QyKJp?=
+ =?us-ascii?Q?OPH7RQeUhXEdakFdc4lpvoSf5+IAZaUSCJcVBw9co1QgRmazvaNcAVLHlug8?=
+ =?us-ascii?Q?khcohfX5jm7XQFsAAyULhipVziwCkXqN64unEzyaVPvLwyJm523/2cdx+pOI?=
+ =?us-ascii?Q?YfAr2tuPebEpmDu2OTXRKE1TovERZ+gyvLEhrzTwYWO0I19AdQ2emiUwoD0/?=
+ =?us-ascii?Q?K87aR2AYe21sX/7lfHBMbPXBBibOikyJQ8umW7rdfB40ldGPFmMkh6TR18PJ?=
+ =?us-ascii?Q?s19IPehqNFi7TLJkVZdrhyLj5mQkrBSMz4TPbe47n3TuK5XFGBrpECsnQgxs?=
+ =?us-ascii?Q?WqLdhfmHNvBDDunqMh591piBNRQQY7jSmPCOmEOrtdNrFzBdpeukiCK0UbTR?=
+ =?us-ascii?Q?BqTKIjdRk4eY2hUebsh1EabWTzOxDVfQCBBa12YrQio4HzuKvlEHUKARtkHg?=
+ =?us-ascii?Q?2sUsrNO9TtwDeMh5jSUUKBnzHLg25cjrb6cW5nAcBGSpbu+EhggavQ3raIaY?=
+ =?us-ascii?Q?+M6ERn03Hie7rTKiQNwbp1vbeCnOm/2KqooUlEnYj6xQ3e3JH4POFYEWgXZ2?=
+ =?us-ascii?Q?1+Ok36MqB24CCynpBaN2QthZRZM8XCeTw4AE7DKSCI3MVwwAERrQGkE2cbYv?=
+ =?us-ascii?Q?FVO4IOf9MgOz/CWPWOklDMn0HXz/bUp3PO9cV4c2ZARaU1mr3y40VuWu1f6u?=
+ =?us-ascii?Q?+Csgaa5Wbyltr7uIplL2FI7iHKt7v5HmzEA/bSpW3ZUR46+SCHozpdwIOrlk?=
+ =?us-ascii?Q?sDw9Nmj/3FD1qeib31dR7X0IXW5xTWnpFbzEoCEJmiW1PONifKP8t1Rt65R3?=
+ =?us-ascii?Q?/ggHZEhNX0LnU3gMmvxSteZYt5Yq23djdeaCwLfUZEDnnz0f2SGjy0QCYkAZ?=
+ =?us-ascii?Q?HHAWGuG8Yjyn8k0lC7b8Lm2YNFx/rb4av6bRrLP0Q+hP/Fa1bLZOJsq+h/yP?=
+ =?us-ascii?Q?dkgzwgT7K0VKOOh+bxB0Nr70AMTO3VQQ4tZoCCDVqAuV2wtmQz1rCO8Vo0fH?=
+ =?us-ascii?Q?hsM7CwfmwkdeFAfgwN33V3LE7hQQSmormJIM4hqz1SJz5ayO5RQAK1Zi4ADm?=
+ =?us-ascii?Q?yO6mTyZ3k/k/Vtv8aYDdnWrPJhbw0/H4RjGwgbh9gibdVqdSj5+7h1Ocv3QH?=
+ =?us-ascii?Q?HNTVJmUrTsNmdt7ZejS4mAux141ffvPihcXWQOhXAnoTbqmgsVHe9RBU/zbr?=
+ =?us-ascii?Q?yFj3/OIFVpNiwWskR7cy57+mQqCTiiMuhrEwCJfJ2WhzIQ/xL2jdcerhtJS3?=
+ =?us-ascii?Q?gew6kR+hiSNvv4DeuoiyaJZ2TmWqKsIXmM3BeQMiixHpUaCh11JDvya5hiEh?=
+ =?us-ascii?Q?9e5aN+Qui/8LamMZO7eBpcM2toSORGFDaNnIH0F3JWe7YO29lAOZ5WYAwGks?=
+ =?us-ascii?Q?3ZtBiP+AbhEyw4wIlko=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 705c4718-dbc7-470d-0730-08dbbb246f47
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Sep 2023 04:28:56.7340
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7hXAINvKAJocNDMqZ+KTdEDkY9Tqr2Qk6orHWU9L/aFISryKpBuviqoBPWRA6QnKNgQ9W5oDIQ/zmzNcJC86Jg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8851
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+From: Guanhua Gao <guanhua.gao@nxp.com>
 
-So I have a laptop with two M.2 slot / PCIe port:
+Set DMA mask and coherent DMA mask to enable 64-bit addressing.
 
-00:06.0 PCI bridge: Intel Corporation 12th Gen Core Processor PCI
-Express x4 Controller #0 (rev 04)
-00:1d.0 PCI bridge: Intel Corporation Device 51b0 (rev 01)
+Signed-off-by: Guanhua Gao <guanhua.gao@nxp.com>
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
 
-Apparently 00:06.0 is wired to the CPU directly and the 00:1d.0 is
-weird to the PCH. Both of them can be disabled independently in UEFI
-settings, and both have an NVMe drive installed.
+Notes:
+    change from v1 to v2
+    - Remove 32bit DMA mask set.
 
-Currently only the drive on the "CPU slot" is used, with both Windows
-and Linux installed. The other drive has been wiped and remains unused
-for now due to the issue I'm reporting here.
+ drivers/pci/controller/dwc/pci-layerscape-ep.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-The problem I am having is that for some reason, when the "PCH slot"
-is enabled, Linux has estimatedly only < 50% chance to detect the
-battery. If it has failed to do so, seemingly I have to "cold reboot"
-(I mean like, shutdown normally and power on again, but not just
-reboot or S3 suspend) to get it back, in which case the successful
-rate is the same.
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index de4c1758a6c33..026bf08611e13 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -249,6 +249,11 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+ 
+ 	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
+ 
++	/* set 64-bit DMA mask and coherent DMA mask */
++	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
++	if (ret)
++		return ret;
++
+ 	platform_set_drvdata(pdev, pcie);
+ 
+ 	ret = dw_pcie_ep_init(&pci->ep);
+-- 
+2.34.1
 
-I track it down to have the following sysfs findings:
-
-[tom@corebook ~]$ ls -Al '/sys/devices/pci0000:00/0000:00:1f.0/PNP0C09:00/'
-total 0
--rw-r--r-- 1 root root 4096 Sep 17 11:01 driver_override
-lrwxrwxrwx 1 root root    0 Sep 17 11:01 firmware_node ->
-../../../LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:0b/PNP0C09:00
-drwxr-xr-x 3 root root    0 Sep 17 11:01 INT33D3:00
-drwxr-xr-x 3 root root    0 Sep 17 11:01 INT33D4:00
-drwxr-xr-x 3 root root    0 Sep 17 11:01 INTC1046:01
-drwxr-xr-x 3 root root    0 Sep 17 11:01 INTC1046:02
-drwxr-xr-x 3 root root    0 Sep 17 11:01 INTC1046:03
-drwxr-xr-x 3 root root    0 Sep 17 11:01 INTC1048:00
--r--r--r-- 1 root root 4096 Sep 17 11:01 modalias
-drwxr-xr-x 3 root root    0 Sep 17 11:01 PNP0C0D:00
-drwxr-xr-x 2 root root    0 Sep 17 11:01 power
-lrwxrwxrwx 1 root root    0 Sep 17 11:01 subsystem -> ../../../../bus/platform
--rw-r--r-- 1 root root 4096 Sep 17 11:01 uevent
--r--r--r-- 1 root root 4096 Sep 17 11:01 waiting_for_supplier
-[tom@corebook ~]$ ls -Al
-'/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:0b/PNP0C09:00/PNP0C0A:00/'
-total 0
--r--r--r-- 1 root root 4096 Sep 17 11:02 hid
--r--r--r-- 1 root root 4096 Sep 17 11:02 modalias
--r--r--r-- 1 root root 4096 Sep 17 11:02 path
-drwxr-xr-x 2 root root    0 Sep 17 11:02 power
--r--r--r-- 1 root root 4096 Sep 17 11:02 status
-lrwxrwxrwx 1 root root    0 Sep 17 11:01 subsystem ->
-../../../../../../../bus/acpi
--rw-r--r-- 1 root root 4096 Sep 17 11:01 uevent
--r--r--r-- 1 root root 4096 Sep 17 11:02 uid
-
-whereas if the "PCH slot" is disabled, or if it succeeded in the
-"detection trial":
-
-[tom@corebook ~]$ ls -Al '/sys/devices/pci0000:00/0000:00:1f.0/PNP0C09:00/'
-total 0
--rw-r--r-- 1 root root 4096 Sep 17 11:56 driver_override
-lrwxrwxrwx 1 root root    0 Sep 17 11:56 firmware_node ->
-../../../LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:0b/PNP0C09:00
-drwxr-xr-x 3 root root    0 Sep 17 11:53 INT33D3:00
-drwxr-xr-x 3 root root    0 Sep 17 11:53 INT33D4:00
-drwxr-xr-x 3 root root    0 Sep 17 11:53 INTC1046:01
-drwxr-xr-x 3 root root    0 Sep 17 11:53 INTC1046:02
-drwxr-xr-x 3 root root    0 Sep 17 11:53 INTC1046:03
-drwxr-xr-x 3 root root    0 Sep 17 11:53 INTC1048:00
--r--r--r-- 1 root root 4096 Sep 17 11:56 modalias
-drwxr-xr-x 3 root root    0 Sep 17 11:53 PNP0C0A:00
-drwxr-xr-x 3 root root    0 Sep 17 11:53 PNP0C0D:00
-drwxr-xr-x 2 root root    0 Sep 17 11:56 power
-lrwxrwxrwx 1 root root    0 Sep 17 11:53 subsystem -> ../../../../bus/platform
--rw-r--r-- 1 root root 4096 Sep 17 11:53 uevent
--r--r--r-- 1 root root 4096 Sep 17 11:56 waiting_for_supplier
-[tom@corebook ~]$ ls -Al
-'/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:0b/PNP0C09:00/PNP0C0A:00/'
-total 0
-lrwxrwxrwx 1 root root    0 Sep 17 11:53 driver ->
-../../../../../../../bus/acpi/drivers/battery
--r--r--r-- 1 root root 4096 Sep 17 11:56 hid
--r--r--r-- 1 root root 4096 Sep 17 11:56 modalias
--r--r--r-- 1 root root 4096 Sep 17 11:56 path
-lrwxrwxrwx 1 root root    0 Sep 17 11:56 physical_node ->
-../../../../../../pci0000:00/0000:00:1f.0/PNP0C09:00/PNP0C0A:00
-drwxr-xr-x 2 root root    0 Sep 17 11:56 power
-drwxr-xr-x 3 root root    0 Sep 17 11:53 power_supply
--r--r--r-- 1 root root 4096 Sep 17 11:56 status
-lrwxrwxrwx 1 root root    0 Sep 17 11:53 subsystem ->
-../../../../../../../bus/acpi
--rw-r--r-- 1 root root 4096 Sep 17 11:53 uevent
--r--r--r-- 1 root root 4096 Sep 17 11:56 uid
-drwxr-xr-x 3 root root    0 Sep 17 11:53 wakeup
-
-As you can see, the "physical node" `PNP0C0A:00` is gone in the
-failing case and the "firmware node" of it hence has nothing to
-"attach"(?) to, so the battery driver will therefore see nothing. (The
-parent device `PNP0C09:00` is managed by the driver `ec`, for the
-record.)
-
-I don't know if this issue is caused by a certain bug or flaw in the
-UEFI/EC firmware, but the problem does not seem to occur in Windows.
-Either way, I'm writing to see if I can get any insight from you guys
-on what might be the potential reason/rationale here. (Note that as
-mentioned, it does not always occur in Linux either, so it looks like
-some kind of "mapping race"(?) to me.)
-
-P.S. While there are some ACPI errors (as it does for most laptops
-these days), I don't see any potentially relevant difference in the
-kernel log between the successful and failing cases. The only
-difference is that in the successful case, there's the extra expected
-line of "battery detected". Anyway, I'm adding the warnings/errors in
-the kernel log that might be remotely relevant, but please do note
-that I see them all in both cases:
-
-ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PC00.I2C0.TPD0],
-AE_NOT_FOUND (20230331/dswload2-162)
-ACPI Error: AE_NOT_FOUND, During name lookup/catalog (20230331/psobject-220)
-pnp 00:02: disabling [mem 0xc0000000-0xcfffffff] because it overlaps
-0000:00:02.0 BAR 9 [mem 0x00000000-0xdfffffff 64bit pref]
-hpet_acpi_add: no address or irqs in _CRS
-i8042: PNP: PS/2 appears to have AUX port disabled, if this is
-incorrect please boot with i8042.nopnp
-ACPI BIOS Error (bug): Could not resolve symbol
-[\_SB.PC00.LPCB.HEC.TSR1], AE_NOT_FOUND (20230331/psargs-330)
-ACPI Error: Aborting method \_SB.PC00.LPCB.H_EC.SEN1._TMP due to
-previous error (AE_NOT_FOUND) (20230331/psparse-529)
-ACPI BIOS Error (bug): Could not resolve symbol
-[\_SB.PC00.LPCB.HEC.TSR1], AE_NOT_FOUND (20230331/psargs-330)
-ACPI Error: Aborting method \_SB.PC00.LPCB.H_EC.SEN1._TMP due to
-previous error (AE_NOT_FOUND) (20230331/psparse-529)
-intel-hid INTC1070:00: failed to enable HID power button
-resource: resource sanity check: requesting [mem
-0x00000000fedc0000-0x00000000fedcffff], which spans more than pnp
-00:02 [mem 0xfedc0000-0xfedc7fff]
-caller igen6_probe+0x1a0/0x8d0 [igen6_edac] mapping multiple BARs
-i2c i2c-11: Systems with more than 4 memory slots not supported yet,
-not instantiating SPD
-
-Regards,
-Tom
