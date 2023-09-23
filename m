@@ -2,83 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AABE7ABE9C
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Sep 2023 09:51:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A010F7ABF11
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Sep 2023 10:59:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230334AbjIWHvN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 23 Sep 2023 03:51:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49750 "EHLO
+        id S230525AbjIWI7Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 23 Sep 2023 04:59:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229808AbjIWHvM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 23 Sep 2023 03:51:12 -0400
-Received: from shiva.jussieu.fr (shiva.jussieu.fr [134.157.0.129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E4A0D11D;
-        Sat, 23 Sep 2023 00:51:05 -0700 (PDT)
-Received: from mailix1.insp.jussieu.fr (mailix1.insp.jussieu.fr [134.157.37.11])
-          by shiva.jussieu.fr (8.15.2/jtpda-5.4) with ESMTP id 38N7mEO5035034
-          ; Sat, 23 Sep 2023 09:48:14 +0200 (CEST)
-X-Ids:  164
-Received: from hordix.insp.jussieu.fr (hordix.insp.jussieu.fr [134.157.37.9])
-        by mailix1.insp.jussieu.fr (Postfix-INSP-2.10.1) with ESMTPSA id EE6E9C06B5F6;
-        Sat, 23 Sep 2023 09:48:08 +0200 (CEST)
-Received: from [105.112.214.216] ([105.112.214.216]) by
- webmail.insp.jussieu.fr (Horde Framework) with HTTPS; Sat, 23 Sep 2023
- 07:48:08 +0000
-Date:   Sat, 23 Sep 2023 07:48:08 +0000
-Message-ID: <20230923074808.Horde.cbloaD0KutWc0KgVIYXLh1O@webmail.insp.jussieu.fr>
-From:   Victoria Cleland <lamya.essaoui@insp.upmc.fr>
-Subject: Hallo
-Reply-to: v.cleland10@aol.com
-User-Agent: Horde Application Framework 5
-Organization: Institut des NanoSciences de Paris
-X-InspUpmcSession: essaoui
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+        with ESMTP id S230416AbjIWI7Q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 23 Sep 2023 04:59:16 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DF20136;
+        Sat, 23 Sep 2023 01:59:10 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 274C3C433C8;
+        Sat, 23 Sep 2023 08:59:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695459549;
+        bh=09E8iJecgFYMexjTYJZ5CJ3jBfm+QiwYB3b9gl5Rd3g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tUhnc/sqC/wOn9t/Ho8mYpdoZNToa8x6ToMKPC7Y7Fs4OFRmNXmR1f74PlI9UKLU3
+         YCOq9U+1jMLm0Pt2mOk34zT2wUvnj1/whZWWZCLEW9imKz5gF5U7WaFMA1b6n+uLjo
+         rLo4BTYA8cxQv2YNn9qRhrHCMkY0Lp54kqv60r2Y9oabBpaiziQpyGPFE8WdCzcwg7
+         3IOVPohUye91FVAHJ6PVWS6QGzFjX2ZS9Ueb2vRwbotb2oCrutuF8AYxux4Mmk1Swk
+         zyFHDJkgCWO+04LGqCVZXmFNEnCV3ijKetwc7asvEUUo7e/nkdnFI0NRTgPRvocAV7
+         3pYGPyFdF668Q==
+Date:   Sat, 23 Sep 2023 11:00:11 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] PCI: hv: Annotate struct hv_dr_state with __counted_by
+Message-ID: <ZQ8Zmy+NpCkqXomh@work>
+References: <20230922175257.work.900-kees@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Miltered: at jchkmail2.reseau.jussieu.fr with ID 650E983E.001 by Joe's j-chkmail (http : // j-chkmail dot ensmp dot fr)!
-X-j-chkmail-Enveloppe: 650E983E.001 from mailix1.insp.jussieu.fr/mailix1.insp.jussieu.fr/134.157.37.11/mailix1.insp.jussieu.fr/<lamya.essaoui@insp.upmc.fr>
-X-Spam-Status: Yes, score=5.7 required=5.0 tests=BAYES_50,
-        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,MISSING_HEADERS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        REPLYTO_WITHOUT_TO_CC,SPF_HELO_NONE,SPF_PASS autolearn=no
+In-Reply-To: <20230922175257.work.900-kees@kernel.org>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
-X-Spam-Report: *  0.0 RCVD_IN_DNSWL_BLOCKED RBL: ADMINISTRATOR NOTICE: The query to
-        *      DNSWL was blocked.  See
-        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
-        *      for more information.
-        *      [134.157.0.129 listed in list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 RCVD_IN_MSPIKE_H3 RBL: Good reputation (+3)
-        *      [134.157.0.129 listed in wl.mailspike.net]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [v.cleland10[at]aol.com]
-        *  1.0 MISSING_HEADERS Missing To: header
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  1.6 REPLYTO_WITHOUT_TO_CC No description available.
-        *  0.0 RCVD_IN_MSPIKE_WL Mailspike good senders
-        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
-X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Sep 22, 2023 at 10:52:57AM -0700, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> As found with Coccinelle[1], add __counted_by for struct hv_dr_state.
+> 
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> 
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Wei Liu <wei.liu@kernel.org>
+> Cc: Dexuan Cui <decui@microsoft.com>
+> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linux-hyperv@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-23. September 2023.
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Hallo,
+Thanks
+--
+Gustavo
 
-Ich möchte Ihnen einen Geschäftsvorschlag mitteilen. Für weitere  
-Details antworten Sie auf Englisch.
-
-Grüße
-Frau Victoria Cleland
-_________________________
-Sekretärin: Lamya Essaoui
-
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index bed3cefdaf19..30c7dfeccb16 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -545,7 +545,7 @@ struct hv_pcidev_description {
+>  struct hv_dr_state {
+>  	struct list_head list_entry;
+>  	u32 device_count;
+> -	struct hv_pcidev_description func[];
+> +	struct hv_pcidev_description func[] __counted_by(device_count);
+>  };
+>  
+>  struct hv_pci_dev {
+> -- 
+> 2.34.1
+> 
+> 
