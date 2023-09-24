@@ -2,60 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 914FD7AC92F
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Sep 2023 15:28:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E81967AC9D2
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Sep 2023 15:44:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229688AbjIXN2v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 24 Sep 2023 09:28:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34196 "EHLO
+        id S229745AbjIXNoW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 24 Sep 2023 09:44:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230047AbjIXN2n (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 24 Sep 2023 09:28:43 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B78A1F2E
-        for <linux-pci@vger.kernel.org>; Sun, 24 Sep 2023 06:27:26 -0700 (PDT)
+        with ESMTP id S229716AbjIXNoW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 24 Sep 2023 09:44:22 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E762983
+        for <linux-pci@vger.kernel.org>; Sun, 24 Sep 2023 06:44:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695562046; x=1727098046;
+  t=1695563055; x=1727099055;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=257TgUycqUXof0i9t3smtepdJsVt1J3l3I2hdtspGxc=;
-  b=JQySza9H3zThYhs6tx9zpENMDRVQDRRDoufLqfHB5kpK4qNOxPw0DL3o
-   7RvsbB9ZXdOSn9t4OeQtjpM6HuHMTm1v1D6Sk4xnALwchkuuRZJhPWkt0
-   xrH9x0ZlN0DoC7FZwJif6jzqr7gfrEd9kq0coRAYa0DJIhQWxp6ww5wDz
-   qPACK6+uIE5iciZ+M5lMJChVmJeUIeEPrhezE1tEU5e8VcACzlmZ6jw1S
-   xMjbf38rdV8z8MetCFZKfdZJSQYMuyr56stBzpE9gcqdrduFYL33aaQ2J
-   xDL4hMXXWMp9irOrfkBMgpqnJq0hUtIeq7ydeSPG2+B2a974KhoM6sn/d
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="384928169"
+   mime-version:in-reply-to;
+  bh=yXFHrMifaWDbHekYfC2ckQalu8l/ZL7juCFJEozuv2o=;
+  b=hETkas+QNnLhSQBQo07FOLqUnxBHaSob/z4/vazja4AZy2lfvFxlcsJI
+   y961YsD9cvTuG0mGZnW0Qwmw9uFlVF9bxpC7Ts3fUBzHuQJNak5yXuopS
+   YZBnD3ArfI1w8Igfs+aJcbqRf62+oMdTNkjZy5XS69Zkoo/mfjnuGCXBt
+   0ZdzNQG9hQFotW/Iqgv0gZauHosWLupdgNlbt6IPxSmi95Yz6w/FdxG/s
+   qhEy8zkN1lZiAxdDqqea14sKjB3MENYYcJ23PqVCz2CuJ5c1IYoUQfHe4
+   Ngr129KJ2cBEVLGKpTY5GSqzgIulN9JNvbBHpjKR5YgU7R9Q92dnV33qa
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="360485374"
 X-IronPort-AV: E=Sophos;i="6.03,173,1694761200"; 
-   d="scan'208";a="384928169"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2023 06:27:25 -0700
+   d="scan'208";a="360485374"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2023 06:44:15 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="783183525"
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="818329698"
 X-IronPort-AV: E=Sophos;i="6.03,173,1694761200"; 
-   d="scan'208";a="783183525"
+   d="scan'208";a="818329698"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 24 Sep 2023 06:27:24 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 24 Sep 2023 06:44:13 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id CEE2F1C7; Sun, 24 Sep 2023 16:27:22 +0300 (EEST)
-Date:   Sun, 24 Sep 2023 16:27:22 +0300
+        id B39B51C7; Sun, 24 Sep 2023 16:44:11 +0300 (EEST)
+Date:   Sun, 24 Sep 2023 16:44:11 +0300
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kamil Paral <kparal@redhat.com>, linux-pci@vger.kernel.org,
-        regressions@lists.linux.dev, bhelgaas@google.com,
-        chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20230924132722.GE3208943@black.fi.intel.com>
-References: <CA+cBOTej22hWEFvMOnFfKy16tuzS_+S7kccPPYXNoGVbYMoEdA@mail.gmail.com>
- <20230923224610.GA371821@bhelgaas>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mark Blakeney <mark.blakeney@bullet-systems.net>,
+        Kamil Paral <kparal@redhat.com>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        linux-pci@vger.kernel.org,
+        Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [PATCH] PCI/PM: Mark devices disconnected if their upstream PCIe
+ link is down on resume
+Message-ID: <20230924134411.GF3208943@black.fi.intel.com>
+References: <20230922044237.GC3208943@black.fi.intel.com>
+ <20230922125926.GA367919@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230923224610.GA371821@bhelgaas>
+In-Reply-To: <20230922125926.GA367919@bhelgaas>
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
@@ -65,93 +68,60 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Sep 23, 2023 at 05:46:10PM -0500, Bjorn Helgaas wrote:
-> On Fri, Aug 25, 2023 at 10:42:55AM +0200, Kamil Paral wrote:
-> > On Thu, Aug 24, 2023 at 1:43 PM Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > > One thing I noticed, probably has nothing to do with this, but you have
-> > > the "security level" set to "secure". Now this is fine and actually
-> > > recommended but I wonder if anything changes if you switch that
-> > > temporarily to "user"? What is happening here is that once the system
-> > > enters S3 the Thunderbolt driver tells the firmware to save the
-> > > connected device list, and then once it exits S3 it is expected to
-> > > re-connect the PCIe tunnels of the devices on that list but this is not
-> > > happening and that's why the dock "dissappears" during resume.
+On Fri, Sep 22, 2023 at 07:59:26AM -0500, Bjorn Helgaas wrote:
+> [+cc Thorsten]
+> 
+> On Fri, Sep 22, 2023 at 07:42:37AM +0300, Mika Westerberg wrote:
+> > On Thu, Sep 21, 2023 at 03:19:45PM -0500, Bjorn Helgaas wrote:
+> > > On Mon, Sep 18, 2023 at 08:30:41AM +0300, Mika Westerberg wrote:
+> > ...
+> 
+> > > Kamil also bisected a 60+ second resume delay to e8b908146d44
+> > > (https://lore.kernel.org/r/CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com),
+> > > but IIUC at
+> > > https://lore.kernel.org/linux-pci/20230824114300.GU3465@black.fi.intel.com/T/#u
+> > > you concluded that Kamil's issue was related to firmware and actually
+> > > had nothing to do with e8b908146d44.
+> > > 
+> > > Do you still think Kamil's issue is unrelated to e8b908146d44 and this
+> > > patch?  If so, how do we handle Kamil's issue?  An answer like "users
+> > > of v6.4+ must upgrade their Thunderbolt firmware" seems like it would
+> > > be kind of a nightmare for users.
 > > 
-> > That was a great suggestion. After switching to the user security
-> > level, the resume delay is gone, and my dock devices seem to be
-> > working almost immediately after resume! The dmesg for that is here:
-> > https://bugzilla-attachments.redhat.com/attachment.cgi?id=1985262
-> > 
-> > I've done tens of cycles and haven't found any race conditions, unlike
-> > with the TB assist mode. (Only once, my USB mouse wasn't working at
-> > all, but that's something that occasionally happens on most docks I've
-> > worked with and seems to be some different issue).
-> > 
-> > I'm sorry I haven't found this earlier myself. I did try switching
-> > these options, but I bundled it together with enabling the TB assist
-> > mode, which has quirks, so I didn't realize switching just this one
-> > option might have an impact.
-> > 
-> > > In any case we can conclude that the commit in question has nothing to
-> > > do with the issue. This is completely Thunderbolt related problem.
-> > 
-> > Considering the information above, does this appear to be a solely
-> > dock-related issue (bugged firmware), or does it make sense to follow
-> > up on this in some different kernel list? I have to say I'm completely
-> > OK with running the laptop using the "user" TB security level, but if
-> > you think I should follow up somewhere to get the "secure" level fixed
-> > (or some workaround applied, etc), I can.
+> > It's a different issue. What happens in his system is that the link went
+> > down even though the dock was still connected and this should not happen
+> > (the firmware should bring the link up during resume). The delay was
+> > just a "symptom".
 > 
-> I'm confused about this issue.  Correct me if I go wrong:
-> 
-> The hierarchy is:
-> 
->   00:1c.4 Root Port to [bus 04-3c]
->   04:00.0 Upstream Port (Thunderbolt) to [bus 05-3c]
->   05:01.0 Downstream Port (Thunderbolt) to [bus 07-3b]
->   07:00.0 Upstream Port (Thunderbolt) to [bus 08-3b]
-> 
-> With security level=secure, before e8b908146d44 ("PCI/PM: Increase
-> wait time after resume"), resume takes ~5 seconds, but the hierarchy
-> below 05:01.0 gets removed and re-enumerated (dmesg [1]).  After
-> e8b908146d44, the same thing happens except the resume takes 60+
-> seconds (dmesg [2]).  In both cases, the devices (USB mouse, LAN, etc)
-> below 05:01.0 work after resume.
-> 
-> With security level=user, resume takes << 5 seconds regardless of
-> e8b908146d44, and the hierarchy below 05:01.0 does not get removed and
-> re-enumerated (dmesg [3]).
-> 
-> So if that's all accurate, it sounds like we've always had some
-> problem with security level=secure that causes the hierarchy to get
-> removed and re-enumerated, and e8b908146d44 just makes this problem
-> much more visible?
+> Do you have any leads for Kamil's issue?  If we had known that
+> e8b908146d44 would cause that problem, we never would have applied it
+> in the first place.
 
-Yes.
+I explained it in the other email I just sent. I should mention here
+that the two issues are different.
 
-> I don't know anything at all about how Thunderbolt security levels
-> work.  If "secure" means the hierarchy must be re-enumerated after
-> resume, we can detect that case immediately and get on with it without
-> having to wait for a timeout?
+> No OS would accept that resume delay, so there must be some way to fix
+> that in the OS without requiring a firmware update.
 
-"secure" means that the Thunderbolt device that is connected can "prove"
-it is the device we "authorized". It basically has a random number we
-generated flashed on the NVM. This is the security "measure" used before
-PC world aligned to use IOMMU instead.
+It is not "resume" delay. It is the delay what we wait for the device to
+become ready until we decide it is not functional/disconnect. That delay
+is completely arbitrary.
 
-(there is an explanation of all these here:
-https://docs.kernel.org/admin-guide/thunderbolt.html#security-levels-and-how-to-use-them).
+> If Kamil's issue is that firmware doesn't bring up the link during
+> resume, how *does* the link get brought up, and what does the delay
+> have to do with it?
 
-Now, in case of resume the Thunderbolt firmware is expected to connect
-the PCIe tunnel before the OS gets to resume its PCIe stack but this is
-not happening in this particular system when the security level is set
-to "secure". It could be firmware issue, and also if the BIOS settings
-get changed from the defaults it is entirely possible that the system
-enters paths that are not fully validated. Yes, changing security level
-should definitely work and the PCIe tunnel should be properly
-established but in any case this is Thunderbolt issue not PCIe issue.
+The PCIe tunnel (the "link" above) gets established after D3cold by the
+Thunderbolt firmware running inside the host controller. The trigger is
+typically when _PR0 ACPI method is called, this sends special command
+through the mailbox that makes the firmware re-connect all the tunnels
+that were previously connected.
 
-I don't recall if I suggested this already but if not, try to see there
-is a firmware update for your system. Lenovo supports LVFS so if there
-is newer one fwupd should allow you to upgrade it.
+The delay we are talking about here is the PCIe spec required delay
+after the device went through a reset that the OS must observe before it
+can send configuration requests to that device. Now, the PCIe spec does
+not specify how long the OS should wait for device on a link that does
+not come up. We increased that delay to the ~60s to fix another issue on
+a xHCI controller but forgot the fact that when the device is
+deliberately unplugged we still wait for the ~60s which is wasted effort
+and just ends up annoying users.
