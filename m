@@ -2,137 +2,210 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 526C17AD2B3
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Sep 2023 10:08:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E7F67AD38D
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Sep 2023 10:40:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232607AbjIYIIB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Sep 2023 04:08:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35870 "EHLO
+        id S232970AbjIYIkg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Sep 2023 04:40:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232585AbjIYIH4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Sep 2023 04:07:56 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90592AF
-        for <linux-pci@vger.kernel.org>; Mon, 25 Sep 2023 01:07:49 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-40-yCHXM_ZnNDeRG6PClZKq0A-1; Mon, 25 Sep 2023 09:07:37 +0100
-X-MC-Unique: yCHXM_ZnNDeRG6PClZKq0A-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 25 Sep
- 2023 09:07:36 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 25 Sep 2023 09:07:36 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Shuai Xue' <xueshuai@linux.alibaba.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "mahesh@linux.ibm.com" <mahesh@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "bp@alien8.de" <bp@alien8.de>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "lenb@kernel.org" <lenb@kernel.org>
-Subject: RE: Questions: Should kernel panic when PCIe fatal error occurs?
-Thread-Topic: Questions: Should kernel panic when PCIe fatal error occurs?
-Thread-Index: AQHZ7ISwt0MI+BDoAEe5dUPUvfmXNrAlQDAwgAV5fACAAHb74A==
-Date:   Mon, 25 Sep 2023 08:07:35 +0000
-Message-ID: <acd250505687437b85830a0b2f4d69b0@AcuMS.aculab.com>
-References: <20230920230257.GA280837@bhelgaas>
- <d84b6d17-7fe9-222a-c874-798af4d9faea@linux.alibaba.com>
- <2e5870e416f84e8fad8340061ec303e2@AcuMS.aculab.com>
- <f70e93c6-ba5b-a71c-4b82-33b279c76b0e@linux.alibaba.com>
-In-Reply-To: <f70e93c6-ba5b-a71c-4b82-33b279c76b0e@linux.alibaba.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        with ESMTP id S232975AbjIYIke (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Sep 2023 04:40:34 -0400
+Received: from forwardcorp1a.mail.yandex.net (forwardcorp1a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:df01])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84B47AF
+        for <linux-pci@vger.kernel.org>; Mon, 25 Sep 2023 01:40:25 -0700 (PDT)
+Received: from mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net [IPv6:2a02:6b8:c18:d11:0:640:6943:0])
+        by forwardcorp1a.mail.yandex.net (Yandex) with ESMTP id A16ED5FC6D;
+        Mon, 25 Sep 2023 11:40:22 +0300 (MSK)
+Received: from valesini-ubuntu.yandex.net (unknown [2a02:6b8:0:419:ef2d:88e2:d835:7089])
+        by mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id DeJIo00OrSw0-AnaQ5rUI;
+        Mon, 25 Sep 2023 11:40:22 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
+        s=default; t=1695631222;
+        bh=2F7xP1LoDe/CpqUIukmaAK745pPhfrT0S8HrzVM8pgk=;
+        h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
+        b=zcu/FDcI5Nj6sMhnjxvzJyAOpvN2Izj9K9ru1kPArBBq7XrmoofQ6HNQZJAxpRJlk
+         vFWUiiHBnIpZ14fjLIHfegW4HzeZWqgXCWX2fq8LMeCBYs2aatd0Km5S7bQ6FUW66z
+         3FtqSOnK317Kwe2pt1bCOTuS30j6ZWMwq3+nCSOM=
+Authentication-Results: mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
+From:   Valentine Sinitsyn <valesini@yandex-team.ru>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH v9 1/2] kernfs: sysfs: support custom llseek method for sysfs entries
+Date:   Mon, 25 Sep 2023 11:40:12 +0300
+Message-Id: <20230925084013.309399-1-valesini@yandex-team.ru>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <2023092241-obedient-squirt-966c@gregkh>
+References: <2023092241-obedient-squirt-966c@gregkh>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-RnJvbTogU2h1YWkgWHVlDQo+IFNlbnQ6IDI1IFNlcHRlbWJlciAyMDIzIDAyOjQ0DQo+IA0KPiBP
-biAyMDIzLzkvMjEgMjE6MjAsIERhdmlkIExhaWdodCB3cm90ZToNCj4gPiAuLi4NCj4gPiBJJ3Zl
-IGdvdCBhIHRhcmdldCB0byBnZW5lcmF0ZSBBRVIgZXJyb3JzIGJ5IGdlbmVyYXRpbmcgcmVhZCBj
-eWNsZXMNCj4gPiB0aGF0IGFyZSBpbnNpZGUgdGhlIGFkZHJlc3MgcmFuZ2UgdGhhdCB0aGUgYnJp
-ZGdlIGZvcndhcmRzIGJ1dA0KPiA+IG91dHNpZGUgb2YgYW55IEJBUiBiZWNhdXNlIHRoZXJlIGFy
-ZSAyIGRpZmZlcmVudCBzaXplZCBCQVJzLg0KPiA+IChQcmV0dHkgZWFzeSB0byBzZXR1cC4pDQo+
-ID4gT24gdGhlIHN5c3RlbSBJIHdhcyB1c2luZyB0aGV5IGRpZG4ndCBnZXQgcHJvcGFnYXRlZCBh
-bGwgdGhlIHdheQ0KPiA+IHRvIHRoZSByb290IGJyaWRnZSAtIGJ1dCB3ZXJlIHZpc2libGUgaW4g
-dGhlIGxvd2VyIGJyaWRnZS4NCj4gDQo+IFNvIGhvdyBkaWQgeW91IG9ic2VydmUgaXQ/IElmIHRo
-ZSBlcnJvciBtZXNzYWdlIGRvZXMgbm90IHByb3BhZ2F0ZQ0KPiB0byB0aGUgcm9vdCBicmlkZ2Us
-IEkgdGhpbmsgbm8gQUVSIGludGVycnVwdCB3aWxsIGJlIHRyaWdnZXIuDQoNCkkgbG9va2VkIGF0
-IHRoZSBpbnRlcm5hbCByZWdpc3RlcnMgKElJUkMgaW4gUENJZSBjb25maWcgc3BhY2UpDQpvZiB0
-aGUgaW50ZXJtZWRpYXRlIGJyaWRnZS4NCkkgZG9uJ3QgdGhpbmsgdGhlIHJvb3QgYnJpZGdlIG9u
-IHRoYXQgc3lzdGVtIHN1cHBvcnRlZCBBRVIuDQooSSB3YXMgdGVzdGluZyB0aGUgZ2VuZXJhdGlv
-biBvZiBBRVIgaW5kaWNhdGlvbnMgYnkgb3VyIGZwZ2EuKQ0KDQo+IA0KPiA+IEl0IHdvdWxkIGJl
-IG5pY2UgZm9yIGEgZHJpdmVyIHRvIGJlIGFibGUgdG8gZGV0ZWN0L2NsZWFyIHN1Y2gNCj4gPiBh
-IGZsYWcgaWYgaXQgZ2V0cyBhbiB1bmV4cGVjdGVkIH4wdSByZWFkIHZhbHVlLg0KPiA+IChJJ20g
-bm90IHN1cmUgYW4gZXJyb3IgY2FsbGJhY2sgaGVscHMuKQ0KPiANCj4gSU1ITywgYSBnZW5lcmFs
-IG1vZGVsIGlzIHRoYXQgZXJyb3IgZGV0ZWN0ZWQgYXQgZW5kcG9pbnQgc2hvdWxkIGJlDQo+IHJv
-dXRlZCB0byB1cHN0cmVhbSBwb3J0IGZvciBleGFtcGxlOiBSQ2lFUCByb3V0ZSBlcnJvciBtZXNz
-YWdlIHRvIFJDRUMsDQo+IHNvIHRoYXQgdGhlIEFFUiBwb3J0IHNlcnZpY2UgY291bGQgaGFuZGxl
-IHRoZSBlcnJvciwgdGhlIGRldmljZSBkcml2ZXINCj4gb25seSBoYXZlIHRvIGltcGxlbWVudCBl
-cnJvciBoYW5kbGVyIGNhbGxiYWNrLg0KDQpUaGUgcHJvYmxlbSBpcyB0aGF0IHRoYXQgYW5kIGNh
-bGxiYWNrIGlzIHRvbyBsYXRlIGZvciBzb21ldGhpbmcNCnRyaWdnZXJlZCBieSBhIFBDSWUgcmVh
-ZC4NClRoZSBkcml2ZXIgaGFzIHRvIGRldGVjdCB0aGF0IHRoZSB2YWx1ZSBpcyAnZHViaW91cycg
-YW5kIHdhbnRzDQphIG1ldGhvZCBvZiBkZXRlY3Rpbmcgd2hldGhlciB0aGVyZSB3YXMgYW4gYXNz
-b2NpYXRlZCBBRVIgKG9yIG90aGVyKQ0KZXJyb3IuDQpJZiB0aGUgQUVSIGluZGljYXRpb24gaXMg
-cm91dGVkIHRocm91Z2ggc29tZSBleHRlcm5hbCBlbnRpdHkgKGxpa2UNCmJvYXJkIG1hbmFnZW1l
-bnQgaGFyZHdhcmUpIHRoZXJlIHdpbGwgYmUgYWRkaXRpb25hbCBsYXRlbmN5IHRoYXQNCm1lYW5z
-IHRoYXQgdGhlIGFzc29jaWF0ZWQgaW50ZXJydXB0IChldmVuIGlmIGFuIE5NSSkgbWF5IG5vdCBo
-YXZlDQpiZWVuIHByb2Nlc3NlZCB3aGVuIHRoZSBkcml2ZXIgY29kZSBpcyB0cnlpbmcgdG8gZGV0
-ZXJtaW5lIHdoYXQNCmhhcHBlbmVkLg0KVGhpcyBjYW4gb25seSBiZSBtYWRlIHdvcnNlIGJ5IHRo
-ZSBpbnRlcnJ1cHQgY29taW5nIGluIG9uIGENCmRpZmZlcmVudCBjcHUuDQoNCj4gPiBPVE9IIGEg
-J25lYnMgY29tcGxpYW50JyBzZXJ2ZXIgcm91dGVkIGFueSBraW5kIG9mIFBDSWUgbGluayBlcnJv
-cg0KPiA+IHRocm91Z2ggdG8gc29tZSAnc3lzdGVtIG1hbmFnZW1lbnQnIGxvZ2ljIHRoYXQgdGhl
-biByYWlzZWQgYW4gTk1JLg0KPiA+IEknbSBub3Qgc3VyZSB3aG8gdGhvdWdodCBhbiBOTUkgd2Fz
-IGEgZ29vZCBpZGVhIC0gdGhleSBhcmUgcHJldHR5DQo+ID4gaW1wb3NzaWJsZSB0byBoYW5kbGUg
-aW4gdGhlIGtlcm5lbCBhbmQgdG9vIGxhdGUgdG8gYmUgb2YgdXNlIHRvDQo+ID4gdGhlIGNvZGUg
-cGVyZm9ybWluZyB0aGUgYWNjZXNzLg0KPiANCj4gSSB0aGluayBpdCBpcyB0aGUgcmVzcG9uc2li
-aWxpdHkgb2YgdGhlIGRldmljZSB0byBwcmV2ZW50IHRoZSBzcHJlYWQgb2YNCj4gZXJyb3JzIHdo
-aWxlIHJlcG9ydGluZyB0aGF0IGVycm9ycyBoYXZlIGJlZW4gZGV0ZWN0ZWQuIEZvciBleGFtcGxl
-LCBkcm9wDQo+IHRoZSBjdXJyZW50LCAoZHJhaW4gc3VibWl0IHF1ZXVlKSBhbmQgcmVwb3J0IGVy
-cm9yIGluIGNvbXBsZXRpb24gcmVjb3JkLg0KDQpFaD8NCkkgY2FuIGdlbmVyYXRlIHR3byB0eXBl
-cyBvZiBQQ0llIGVycm9yOg0KLSBSZWFkL3dyaXRlIHJlcXVlc3RzIGZvciBhZGRyZXNzZXMgdGhh
-dCBhcmVuJ3QgaW5zaWRlIGEgQkFSLg0KLSBMaW5rIGZhaWx1cmVzIHRoYXQgY2F1c2UgcmV0cmFp
-bmluZyBhbmQgbWlnaHQgbmVlZCBjb25maWcNCiAgc3BhY2UgcmVjb25maWd1cmluZy4NCg0KPiBC
-b3RoIE5NSSBhbmQgTVNJIGFyZSBhc3luY2hyb25vdXMgaW50ZXJydXB0cy4NCg0KSW5kZWVkLCB3
-aGljaCBtYWtlcyBuZWl0aGVyIG9mIHRoZW0gc3VpdGFibGUgZm9yIGFueSBpbmRpY2F0aW9uDQpy
-ZWxhdGluZyB0byBhIGJ1cyBjeWNsZSBmYWlsdXJlLg0KDQo+ID4gSW4gYW55IGNhc2Ugd2Ugd2Vy
-ZSBnZXR0aW5nIG9uZSBhZnRlciAnZWNobyAxID54eHgvcmVtb3ZlJyBhbmQNCj4gPiB0aGVuIHRh
-a2luZyB0aGUgUENJZSBsaW5rIGRvd24gYnkgcmVwcm9ncmFtbWluZyB0aGUgZnBnYS4NCj4gPiBT
-byB0aGUgbGluayBnb2luZyBkb3duIHdhcyBlbnRpcmVseSBleHBlY3RlZCwgYnV0IHRoZXJlIHNl
-ZW1lZA0KPiA+IHRvIGJlIG5vdGhpbmcgd2UgY291bGQgZG8gdG8gc3RvcCB0aGUga2VybmVsIGNy
-YXNoaW5nLg0KPiA+DQo+ID4gSSdtIHN1cmUgJ25lYnMgY29tcGxpYW50JyBvdWdodCB0byBjb250
-YWluIHNvbWUgcmVxdWlyZW1lbnRzIGZvcg0KPiA+IHJlc2lsaWVuY2UgdG8gaGFyZHdhcmUgZmFp
-bHVyZXMhDQo+IA0KPiBIb3cgdGhlIGtlcm5lbCBjcmFzaCBhZnRlciBhIGxpbmsgZG93bj8gRGlk
-IHRoZSBzeXN0ZW0gZGV0ZWN0IGEgc3VycHJpc2UNCj4gZG93biBlcnJvcj8NCg0KSXQgd2FzIGEg
-Y291cGxlIG9mIHllYXJzIGFnby4uDQpJSVJDIHRoZSAnbGluayBkb3duJyBjYXVzZSB0aGUgaHVi
-IHRvIGdlbmVyYXRlIGFuIEFFUiBlcnJvci4NClRoZSByb290IGh1YiBmb3J3YXJkZWQgaXQgdG8g
-c29tZSAnYm9hcmQgbWFuYWdlbWVudCBoYXJkd2FyZS9zb2Z0d2FyZScNCnRoYXQgdGhlbiByYWlz
-ZWQgYW5kIE5NSS4NClRoZSBrZXJuZWwgY3Jhc2hlZCBiZWNhdXNlIG9mIGFuIHVuZXhwZWN0ZWQg
-Tk1JLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5
-IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRp
-b24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+As of now, seeking in sysfs files is handled by generic_file_llseek().
+There are situations where one may want to customize seeking logic:
+
+- Many sysfs entries are fixed files while generic_file_llseek() accepts
+  past-the-end positions. Not only being useless by itself, this
+  also means a bug in userspace code will trigger not at lseek(), but at
+  some later point making debugging harder.
+- generic_file_llseek() relies on f_mapping->host to get the file size
+  which might not be correct for all sysfs entries.
+  See commit 636b21b50152 ("PCI: Revoke mappings like devmem") as an example.
+
+Implement llseek method to override this behavior at sysfs attribute
+level. The method is optional, and if it is absent,
+generic_file_llseek() is called to preserve backwards compatibility.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Valentine Sinitsyn <valesini@yandex-team.ru>
+---
+Changelog:
+
+v9:
+        - Rebased on the latest Linus tree per GregKH's request
+v8:
+        - This is real v7; previous v7 is a buggy earlier patch sent by
+          mistake
+v7:
+        - Use proper locking in kernfs_fop_llseek()
+v6:
+        - Mark pci_llseek_resource() as __maybe_unused
+        - Fix a typo in pci_create_legacy_files()
+v5:
+        - Fix builds without PCI mmap support (e.g. Alpha)
+v4:
+        - Fix builds which #define HAVE_PCI_LEGACY (e.g. PowerPC)
+v3:
+        - Grammar fixes
+        - Add base-patch: and prerequisite-patch-id: to make kernel test
+          robot happy
+v2:
+        - Add infrastructure to customize llseek per sysfs entry type
+        - Override llseek for PCI sysfs entries with fixed_file_llseek()--
+ fs/kernfs/file.c       | 29 ++++++++++++++++++++++++++++-
+ fs/sysfs/file.c        | 13 +++++++++++++
+ include/linux/kernfs.h |  1 +
+ include/linux/sysfs.h  |  2 ++
+ 4 files changed, 44 insertions(+), 1 deletion(-)
+
+diff --git a/fs/kernfs/file.c b/fs/kernfs/file.c
+index 180906c36f51..855e3f9d8dcc 100644
+--- a/fs/kernfs/file.c
++++ b/fs/kernfs/file.c
+@@ -903,6 +903,33 @@ static __poll_t kernfs_fop_poll(struct file *filp, poll_table *wait)
+ 	return ret;
+ }
+ 
++static loff_t kernfs_fop_llseek(struct file *file, loff_t offset, int whence)
++{
++	struct kernfs_open_file *of = kernfs_of(file);
++	const struct kernfs_ops *ops;
++	loff_t ret;
++
++	/*
++	 * @of->mutex nests outside active ref and is primarily to ensure that
++	 * the ops aren't called concurrently for the same open file.
++	 */
++	mutex_lock(&of->mutex);
++	if (!kernfs_get_active(of->kn)) {
++		mutex_unlock(&of->mutex);
++		return -ENODEV;
++	}
++
++	ops = kernfs_ops(of->kn);
++	if (ops->llseek)
++		ret = ops->llseek(of, offset, whence);
++	else
++		ret = generic_file_llseek(file, offset, whence);
++
++	kernfs_put_active(of->kn);
++	mutex_unlock(&of->mutex);
++	return ret;
++}
++
+ static void kernfs_notify_workfn(struct work_struct *work)
+ {
+ 	struct kernfs_node *kn;
+@@ -1005,7 +1032,7 @@ EXPORT_SYMBOL_GPL(kernfs_notify);
+ const struct file_operations kernfs_file_fops = {
+ 	.read_iter	= kernfs_fop_read_iter,
+ 	.write_iter	= kernfs_fop_write_iter,
+-	.llseek		= generic_file_llseek,
++	.llseek		= kernfs_fop_llseek,
+ 	.mmap		= kernfs_fop_mmap,
+ 	.open		= kernfs_fop_open,
+ 	.release	= kernfs_fop_release,
+diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+index a12ac0356c69..6b7652fb8050 100644
+--- a/fs/sysfs/file.c
++++ b/fs/sysfs/file.c
+@@ -167,6 +167,18 @@ static int sysfs_kf_bin_mmap(struct kernfs_open_file *of,
+ 	return battr->mmap(of->file, kobj, battr, vma);
+ }
+ 
++static loff_t sysfs_kf_bin_llseek(struct kernfs_open_file *of, loff_t offset,
++				  int whence)
++{
++	struct bin_attribute *battr = of->kn->priv;
++	struct kobject *kobj = of->kn->parent->priv;
++
++	if (battr->llseek)
++		return battr->llseek(of->file, kobj, battr, offset, whence);
++	else
++		return generic_file_llseek(of->file, offset, whence);
++}
++
+ static int sysfs_kf_bin_open(struct kernfs_open_file *of)
+ {
+ 	struct bin_attribute *battr = of->kn->priv;
+@@ -249,6 +261,7 @@ static const struct kernfs_ops sysfs_bin_kfops_mmap = {
+ 	.write		= sysfs_kf_bin_write,
+ 	.mmap		= sysfs_kf_bin_mmap,
+ 	.open		= sysfs_kf_bin_open,
++	.llseek		= sysfs_kf_bin_llseek,
+ };
+ 
+ int sysfs_add_file_mode_ns(struct kernfs_node *parent,
+diff --git a/include/linux/kernfs.h b/include/linux/kernfs.h
+index 2a36f3218b51..99aaa050ccb7 100644
+--- a/include/linux/kernfs.h
++++ b/include/linux/kernfs.h
+@@ -316,6 +316,7 @@ struct kernfs_ops {
+ 			 struct poll_table_struct *pt);
+ 
+ 	int (*mmap)(struct kernfs_open_file *of, struct vm_area_struct *vma);
++	loff_t (*llseek)(struct kernfs_open_file *of, loff_t offset, int whence);
+ };
+ 
+ /*
+diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+index fd3fe5c8c17f..b717a70219f6 100644
+--- a/include/linux/sysfs.h
++++ b/include/linux/sysfs.h
+@@ -181,6 +181,8 @@ struct bin_attribute {
+ 			char *, loff_t, size_t);
+ 	ssize_t (*write)(struct file *, struct kobject *, struct bin_attribute *,
+ 			 char *, loff_t, size_t);
++	loff_t (*llseek)(struct file *, struct kobject *, struct bin_attribute *,
++			 loff_t, int);
+ 	int (*mmap)(struct file *, struct kobject *, struct bin_attribute *attr,
+ 		    struct vm_area_struct *vma);
+ };
+
+base-commit: 27bbf45eae9ca98877a2d52a92a188147cd61b07
+-- 
+2.34.1
 
