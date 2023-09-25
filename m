@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 160697AD174
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Sep 2023 09:21:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BA507AD17A
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Sep 2023 09:21:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230302AbjIYHV4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Sep 2023 03:21:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43494 "EHLO
+        id S232060AbjIYHV6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Sep 2023 03:21:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231397AbjIYHVv (ORCPT
+        with ESMTP id S231666AbjIYHVv (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Sep 2023 03:21:51 -0400
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1BA62EE;
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1016011B;
         Mon, 25 Sep 2023 00:21:39 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="6.03,174,1694703600"; 
-   d="scan'208";a="180864182"
+   d="scan'208";a="177131133"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 25 Sep 2023 16:21:35 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 25 Sep 2023 16:21:35 +0900
 Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 9BE954008C71;
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id CB11A4008C6F;
         Mon, 25 Sep 2023 16:21:35 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
@@ -28,166 +28,46 @@ To:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
         gustavo.pimentel@synopsys.com, mani@kernel.org
 Cc:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v22 11/16] dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Endpoint
-Date:   Mon, 25 Sep 2023 16:21:25 +0900
-Message-Id: <20230925072130.3901087-12-yoshihiro.shimoda.uh@renesas.com>
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v22 12/16] PCI: add T_PVPERL macro
+Date:   Mon, 25 Sep 2023 16:21:26 +0900
+Message-Id: <20230925072130.3901087-13-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230925072130.3901087-1-yoshihiro.shimoda.uh@renesas.com>
 References: <20230925072130.3901087-1-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Document bindings for Renesas R-Car Gen4 and R-Car S4-8 (R8A779F0)
-PCIe endpoint module.
+According to the PCI Express Card Electromechanical Specification,
+Power stable to PERST# inactive interval is 100 ms as minimum.
+So, add the macro to use PCIe controller drivers.
 
-Link: https://lore.kernel.org/linux-pci/20230825093219.2685912-16-yoshihiro.shimoda.uh@renesas.com
-Link: https://lore.kernel.org/linux-pci/20230901131711.2861283-4-yoshihiro.shimoda.uh@renesas.com
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Acked-by: Manivannan Sadhasivam <mani@kernel.org>
 ---
- .../bindings/pci/rcar-gen4-pci-ep.yaml        | 115 ++++++++++++++++++
- 1 file changed, 115 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+ drivers/pci/pci.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
-new file mode 100644
-index 000000000000..fe38f62da066
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
-@@ -0,0 +1,115 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2022-2023 Renesas Electronics Corp.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/rcar-gen4-pci-ep.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 39a8932dc340..5ecbcf041179 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -13,6 +13,9 @@
+ 
+ #define PCIE_LINK_RETRAIN_TIMEOUT_MS	1000
+ 
++/* Power stable to PERST# inactive from PCIe card Electromechanical Spec */
++#define PCIE_T_PVPERL_MS		100
 +
-+title: Renesas R-Car Gen4 PCIe Endpoint
-+
-+maintainers:
-+  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-+
-+allOf:
-+  - $ref: snps,dw-pcie-ep.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: renesas,r8a779f0-pcie-ep   # R-Car S4-8
-+      - const: renesas,rcar-gen4-pcie-ep  # R-Car Gen4
-+
-+  reg:
-+    maxItems: 7
-+
-+  reg-names:
-+    items:
-+      - const: dbi
-+      - const: dbi2
-+      - const: atu
-+      - const: dma
-+      - const: app
-+      - const: phy
-+      - const: addr_space
-+
-+  interrupts:
-+    maxItems: 3
-+
-+  interrupt-names:
-+    items:
-+      - const: dma
-+      - const: sft_ce
-+      - const: app
-+
-+  clocks:
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: core
-+      - const: ref
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  reset-names:
-+    items:
-+      - const: pwr
-+
-+  max-link-speed:
-+    maximum: 4
-+
-+  num-lanes:
-+    maximum: 4
-+
-+  max-functions:
-+    maximum: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - interrupt-names
-+  - clocks
-+  - clock-names
-+  - power-domains
-+  - resets
-+  - reset-names
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/r8a779f0-cpg-mssr.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/r8a779f0-sysc.h>
-+
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        pcie0_ep: pcie-ep@e65d0000 {
-+            compatible = "renesas,r8a779f0-pcie-ep", "renesas,rcar-gen4-pcie-ep";
-+            reg = <0 0xe65d0000 0 0x2000>, <0 0xe65d2000 0 0x1000>,
-+                  <0 0xe65d3000 0 0x2000>, <0 0xe65d5000 0 0x1200>,
-+                  <0 0xe65d6200 0 0x0e00>, <0 0xe65d7000 0 0x0400>,
-+                  <0 0xfe000000 0 0x400000>;
-+            reg-names = "dbi", "dbi2", "atu", "dma", "app", "phy", "addr_space";
-+            interrupts = <GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>;
-+            interrupt-names = "dma", "sft_ce", "app";
-+            clocks = <&cpg CPG_MOD 624>, <&pcie0_clkref>;
-+            clock-names = "core", "ref";
-+            power-domains = <&sysc R8A779F0_PD_ALWAYS_ON>;
-+            resets = <&cpg 624>;
-+            reset-names = "pwr";
-+            max-link-speed = <4>;
-+            num-lanes = <2>;
-+            max-functions = /bits/ 8 <2>;
-+        };
-+    };
+ /*
+  * PCIe r6.0, sec 5.3.3.2.1 <PME Synchronization>
+  * Recommends 1ms to 10ms timeout to check L2 ready.
 -- 
 2.25.1
 
