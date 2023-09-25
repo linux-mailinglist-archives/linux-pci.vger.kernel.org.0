@@ -2,192 +2,238 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56D847ACF4C
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Sep 2023 06:59:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 418F57ACF66
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Sep 2023 07:20:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231779AbjIYE7l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Sep 2023 00:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53848 "EHLO
+        id S229658AbjIYFUO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Sep 2023 01:20:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229578AbjIYE7j (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Sep 2023 00:59:39 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08CBADA
-        for <linux-pci@vger.kernel.org>; Sun, 24 Sep 2023 21:59:32 -0700 (PDT)
+        with ESMTP id S229578AbjIYFUO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Sep 2023 01:20:14 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C49CB3
+        for <linux-pci@vger.kernel.org>; Sun, 24 Sep 2023 22:20:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695617973; x=1727153973;
+  t=1695619207; x=1727155207;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=pdaB8lXOLYn4cozBzE1hRgyOBU92AGkqXVw8MKc21s8=;
-  b=E97U9vv3EM2xaCJIoYalZX034YYpbRu1oG0lVnRXvuZM4cF8pN/bwwyx
-   ihqR9rd+eG51Fm0iBlkbs2vRSID2kkpeNes8HvrbqjN+aQE3ytTAt9iOT
-   ecMf8QKQJZMftdKEsY5X0uCbt4n2XdIiFq534udgSyWERFs3FhINWjYxg
-   IPrv5Mnod+fauXZBOpn7lwX622Gl9uQokNisRIWwSoe675XttaMqzhdGv
-   zfo+WmS6QqbQcQeLY+x1Dzez3ZMtt5Z9rzYsljOWDQbbep4Iek9dbsMo7
-   pCbuosMXGVCs5ZM6wKyLzYKpMP2EzTwktapOg5oZWWp56OM26wKVZ0i0W
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="384996310"
+   mime-version:in-reply-to;
+  bh=ItqVNKMrgLMoeW5Wrb+w5dJH/svfQBdwraQeiYAD4q0=;
+  b=UH1UvzrE0f8dAyT256lLxRQ+Wz8++OR/rhKrtpZOhUxAB+G36ZVkLw0m
+   Pc4kc9JetWv/0eN31V+To0sacEHWFqSI7rnsmQ5xbgvQ7IUxxB33ik6/9
+   7piU5ynw4cDSD34jMuelK4SRh9iTQhRGLcbKZnxmgue/IpksGLKAEvINo
+   qyAmzfiQUMs1i3qCVtGjYSXpq3K9Qmk1gBNMMrVq/wPrxzQbYBEtsTcvS
+   8fsU4DI7wIhXYxd0D3jyur9NjJswOl42YvRPWikz4lKJNT0d7szMyQmYQ
+   Lssh6e827VxtpV5VPD7AXB1LhVNM97sBoofT6iktlBQIdSmAGZZjoAn4i
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="360553345"
 X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="384996310"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2023 21:59:32 -0700
+   d="scan'208";a="360553345"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2023 22:20:06 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="741781123"
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="724861056"
 X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="741781123"
+   d="scan'208";a="724861056"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 24 Sep 2023 21:59:30 -0700
+  by orsmga006.jf.intel.com with ESMTP; 24 Sep 2023 22:20:03 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 07CDB1C7; Mon, 25 Sep 2023 07:59:28 +0300 (EEST)
-Date:   Mon, 25 Sep 2023 07:59:28 +0300
+        id 0E8391C7; Mon, 25 Sep 2023 08:20:02 +0300 (EEST)
+Date:   Mon, 25 Sep 2023 08:20:01 +0300
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kamil Paral <kparal@redhat.com>, linux-pci@vger.kernel.org,
-        regressions@lists.linux.dev, bhelgaas@google.com,
-        chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20230925045928.GH3208943@black.fi.intel.com>
-References: <20230924132722.GE3208943@black.fi.intel.com>
- <20230924201800.GA375331@bhelgaas>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        iain@orangesquash.org.uk,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH v20 2/2] PCI: Add a quirk for AMD PCIe root ports w/ USB4
+ controllers
+Message-ID: <20230925052001.GK3208943@black.fi.intel.com>
+References: <20230920032724.71083-1-mario.limonciello@amd.com>
+ <20230920032724.71083-3-mario.limonciello@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230924201800.GA375331@bhelgaas>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230920032724.71083-3-mario.limonciello@amd.com>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Sep 24, 2023 at 03:18:00PM -0500, Bjorn Helgaas wrote:
-> On Sun, Sep 24, 2023 at 04:27:22PM +0300, Mika Westerberg wrote:
-> > On Sat, Sep 23, 2023 at 05:46:10PM -0500, Bjorn Helgaas wrote:
-> > > On Fri, Aug 25, 2023 at 10:42:55AM +0200, Kamil Paral wrote:
-> > > > On Thu, Aug 24, 2023 at 1:43 PM Mika Westerberg
-> > > > <mika.westerberg@linux.intel.com> wrote:
-> > > > > One thing I noticed, probably has nothing to do with this, but you have
-> > > > > the "security level" set to "secure". Now this is fine and actually
-> > > > > recommended but I wonder if anything changes if you switch that
-> > > > > temporarily to "user"? What is happening here is that once the system
-> > > > > enters S3 the Thunderbolt driver tells the firmware to save the
-> > > > > connected device list, and then once it exits S3 it is expected to
-> > > > > re-connect the PCIe tunnels of the devices on that list but this is not
-> > > > > happening and that's why the dock "dissappears" during resume.
-> > > > 
-> > > > That was a great suggestion. After switching to the user security
-> > > > level, the resume delay is gone, and my dock devices seem to be
-> > > > working almost immediately after resume! The dmesg for that is here:
-> > > > https://bugzilla-attachments.redhat.com/attachment.cgi?id=1985262
-> > > > 
-> > > > I've done tens of cycles and haven't found any race conditions, unlike
-> > > > with the TB assist mode. (Only once, my USB mouse wasn't working at
-> > > > all, but that's something that occasionally happens on most docks I've
-> > > > worked with and seems to be some different issue).
-> > > > 
-> > > > I'm sorry I haven't found this earlier myself. I did try switching
-> > > > these options, but I bundled it together with enabling the TB assist
-> > > > mode, which has quirks, so I didn't realize switching just this one
-> > > > option might have an impact.
-> > > > 
-> > > > > In any case we can conclude that the commit in question has nothing to
-> > > > > do with the issue. This is completely Thunderbolt related problem.
-> > > > 
-> > > > Considering the information above, does this appear to be a solely
-> > > > dock-related issue (bugged firmware), or does it make sense to follow
-> > > > up on this in some different kernel list? I have to say I'm completely
-> > > > OK with running the laptop using the "user" TB security level, but if
-> > > > you think I should follow up somewhere to get the "secure" level fixed
-> > > > (or some workaround applied, etc), I can.
-> > > 
-> > > I'm confused about this issue.  Correct me if I go wrong:
-> > > 
-> > > The hierarchy is:
-> > > 
-> > >   00:1c.4 Root Port to [bus 04-3c]
-> > >   04:00.0 Upstream Port (Thunderbolt) to [bus 05-3c]
-> > >   05:01.0 Downstream Port (Thunderbolt) to [bus 07-3b]
-> > >   07:00.0 Upstream Port (Thunderbolt) to [bus 08-3b]
-> > > 
-> > > With security level=secure, before e8b908146d44 ("PCI/PM: Increase
-> > > wait time after resume"), resume takes ~5 seconds, but the hierarchy
-> > > below 05:01.0 gets removed and re-enumerated (dmesg [1]).  After
-> > > e8b908146d44, the same thing happens except the resume takes 60+
-> > > seconds (dmesg [2]).  In both cases, the devices (USB mouse, LAN, etc)
-> > > below 05:01.0 work after resume.
-> > > 
-> > > With security level=user, resume takes << 5 seconds regardless of
-> > > e8b908146d44, and the hierarchy below 05:01.0 does not get removed and
-> > > re-enumerated (dmesg [3]).
-> > > 
-> > > So if that's all accurate, it sounds like we've always had some
-> > > problem with security level=secure that causes the hierarchy to get
-> > > removed and re-enumerated, and e8b908146d44 just makes this problem
-> > > much more visible?
-> > 
-> > Yes.
-> > 
-> > > I don't know anything at all about how Thunderbolt security levels
-> > > work.  If "secure" means the hierarchy must be re-enumerated after
-> > > resume, we can detect that case immediately and get on with it without
-> > > having to wait for a timeout?
-> > 
-> > "secure" means that the Thunderbolt device that is connected can "prove"
-> > it is the device we "authorized". It basically has a random number we
-> > generated flashed on the NVM. This is the security "measure" used before
-> > PC world aligned to use IOMMU instead.
-> > 
-> > (there is an explanation of all these here:
-> > https://docs.kernel.org/admin-guide/thunderbolt.html#security-levels-and-how-to-use-them).
+On Tue, Sep 19, 2023 at 10:27:24PM -0500, Mario Limonciello wrote:
+> Iain reports that USB devices can't be used to wake a Lenovo Z13
+> from suspend. This problem occurs because the PCIe root port has been put
+> into D3hot and AMD's platform can't handle the PME associated with USB
+> devices waking the platform from a hardware sleep state in this case.
+> The platform is put into a hardware sleep state by the actions of the
+> amd-pmc driver.
 > 
-> So is there some user-level software that runs between the removal and
-> re-enumeration?  Something that authorizes the 07:00.0 Upstream Port?
-
-No.
-
-They get "authorized" upon plug by boltd based on user decision and
-after that the firmware should keep them authorized as long as the
-device is connected, including also resume.
-
-> > Now, in case of resume the Thunderbolt firmware is expected to connect
-> > the PCIe tunnel before the OS gets to resume its PCIe stack but this is
-> > not happening in this particular system when the security level is set
-> > to "secure". It could be firmware issue, and also if the BIOS settings
-> > get changed from the defaults it is entirely possible that the system
-> > enters paths that are not fully validated. Yes, changing security level
-> > should definitely work and the PCIe tunnel should be properly
-> > established but in any case this is Thunderbolt issue not PCIe issue.
-> > 
-> > I don't recall if I suggested this already but if not, try to see there
-> > is a firmware update for your system. Lenovo supports LVFS so if there
-> > is newer one fwupd should allow you to upgrade it.
+> Although the issue is initially reported on a single model it actually
+> affects all Yellow Carp (Rembrandt) and Pink Sardine (Phoenix) SoCs.
+> This problem only occurs on Linux specifically when attempting to
+> wake the platform from a hardware sleep state.
+> Comparing the behavior on Windows and Linux, Windows doesn't put
+> the root ports into D3 at this time.
 > 
-> I think you have suggested a firmware update, but I don't think that's
-> a great solution for most users.  An ordinary user who has the
-> security level set to "secure" and updates to a v6.4 kernel is just
-> going to think resume is broken.  That user will not be willing or
-> able to diagnose it as a security setting that could be changed or
-> firmware that could be updated.
+> Linux decides the target state to put the device into at suspend by
+> this policy:
+> 1. If platform_pci_power_manageable():
+>    Use platform_pci_choose_state()
+> 2. If the device is armed for wakeup:
+>    Select the deepest D-state that supports a PME.
+> 3. Else:
+>    Use D3hot.
+> 
+> Devices are considered power manageable by the platform when they have
+> one or more objects described in the table in section 7.3 of the ACPI 6.5
+> specification [1]. In this case the root ports are not power manageable.
+> 
+> If devices are not considered power manageable; specs are ambiguous as
+> to what should happen.  In this situation Windows 11 puts PCIe ports
+> in D0 ostensibly due the policy from the "uPEP driver" which is a
+> complimentary driver the Linux "amd-pmc" driver.
+> 
+> Linux chooses to allow D3 for these root ports due to the policy
+> introduced by commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during
+> suspend"). Since Linux allows D3 for these ports, it follows the
+> assertion that a PME can be used to wake from D3hot or D3cold and selects
+> D3hot at suspend time.
+> 
+> Even though the PCIe PM capabilities advertise PME from D3hot or D3cold
+> the Windows uPEP driver expresses the desired state that should be
+> selected for suspend is still D30.  As Linux doesn't use this information,
+> for makin ga policy decision introduce a quirk for the problematic root
+> ports.
+> 
+> The quirk removes PME support for D3hot and D3cold at system suspend time.
+> When the port is configured for wakeup this will prevent these states
+> from being selected in pci_target_state().
+> 
+> After the system is resumes the PME support is re-read from the PM
+> capabilities register to allow opportunistic power savings at runtime by
+> letting the root port go into D3hot or D3cold.
+> 
+> Cc: stable@vger.kernel.org
+> Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/platform-design-for-modern-standby#low-power-core-silicon-cpu-soc-dram [1]
+> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
+> Reported-by: Iain Lane <iain@orangesquash.org.uk>
+> Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-It does not affect every single system there with security level set to
-"secure". It is just this one AFAICT. Like I said the firmware is
-expected to connect the PCIe tunnel (and for some unknown reason in this
-particular system it does not).
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-> It would be ideal if we could make "secure" resume as fast as "user"
-> resume, but at the very least, I think we need to make it no worse
-> than it was in v6.3.
+One super-minor comment, no need to send a new version just for this.
 
-Well what else can we do here? The link goes down regardless what we do
-in the PCI stack. If you want to revert the patch that caused the delay,
-fine but that does not cure the problem tha thet device stack get torn
-down upon resume. For instance if there is USB stick connected to the
-dock and the filesystem is mounted, all that is gone upon resume
-regardless of the delay. If you want to detect the "secure" vs. "user"
-fine feel free to do so but keep in mind that there are other systems
-out there where this works just fine so avoid breaking them.
+> ---
+> v19->v20:
+>  * Adjust commit message (Bjorn)
+>  * Use FIELD_GET (Ilpo)
+>  * Use pci_walk_bus (Lukas)
+> ---
+>  drivers/pci/quirks.c | 71 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index eeec1d6f9023..4159b7f20fd5 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -6188,3 +6188,74 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
+> +
+> +#ifdef CONFIG_SUSPEND
+> +/*
+> + * When AMD PCIe root ports with AMD USB4 controllers attached to them are put
+> + * into D3hot or D3cold downstream USB devices may fail to wakeup the system
+> + * from suspend to idle.  This manifests as a missing wakeup interrupt.
+> + *
+> + * Prevent the associated root port from using PME to wake from D3hot or
+> + * D3cold power states during suspend.
+> + * This will effectively put the root port into D0 power state over suspend.
+> + */
+> +#define PCI_PM_CAP_D3_PME_MASK	((PCI_PM_CAP_PME_D3hot|PCI_PM_CAP_PME_D3cold) \
+> +				>> PCI_PM_CAP_PME_SHIFT)
+> +static int modify_pme_amd_usb4(struct pci_dev *dev, void *data)
+> +{
+> +	bool *suspend = (bool *)data;
+
+You could also pass the bool as value because void * can hold it so
+
+	bool suspend = (bool)data;
+
+> +	struct pci_dev *rp;
+> +	u16 pmc;
+> +
+> +	if (dev->vendor != PCI_VENDOR_ID_AMD ||
+> +	    dev->class != PCI_CLASS_SERIAL_USB_USB4)
+> +		return 0;
+> +	rp = pcie_find_root_port(dev);
+> +	if (!rp->pm_cap)
+> +		return -ENODEV;
+> +
+> +	if (*suspend) {
+> +		if (!(rp->pme_support & PCI_PM_CAP_D3_PME_MASK))
+> +			return -EINVAL;
+> +
+> +		rp->pme_support &= ~PCI_PM_CAP_D3_PME_MASK;
+> +		dev_info_once(&rp->dev, "quirk: disabling PME from D3hot and D3cold at suspend\n");
+> +
+> +		/* no need to check any more devices, found and applied quirk */
+> +		return -EEXIST;
+> +	}
+> +
+> +	/* already done */
+> +	if (rp->pme_support & PCI_PM_CAP_D3_PME_MASK)
+> +		return -EINVAL;
+> +
+> +	/* restore hardware defaults so runtime suspend can use it */
+> +	pci_read_config_word(rp, rp->pm_cap + PCI_PM_PMC, &pmc);
+> +	rp->pme_support = FIELD_GET(PCI_PM_CAP_PME_MASK, pmc);
+> +
+> +	return -EEXIST;
+> +}
+> +
+> +static void quirk_reenable_pme(struct pci_dev *dev)
+> +{
+> +	bool suspend = FALSE;
+> +
+> +	pci_walk_bus(dev->bus, modify_pme_amd_usb4, (void *)&suspend);
+
+and here
+
+	pci_walk_bus(dev->bus, modify_pme_amd_usb4, (void *)false);
+
+> +}
+> +
+> +static void quirk_disable_pme_suspend(struct pci_dev *dev)
+> +{
+> +	bool suspend = TRUE;
+> +
+> +	/* skip for runtime suspend */
+> +	if (pm_suspend_target_state == PM_SUSPEND_ON)
+> +		return;
+> +
+> +	pci_walk_bus(dev->bus, modify_pme_amd_usb4, (void *)&suspend);
+
+here
+
+	pci_walk_bus(dev->bus, modify_pme_amd_usb4, (void *)true);
+> +}
+> +
+> +DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x14b9, quirk_disable_pme_suspend);
+> +DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x14b9, quirk_reenable_pme);
+> +DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x14eb, quirk_disable_pme_suspend);
+> +DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x14eb, quirk_reenable_pme);
+> +#endif /* CONFIG_SUSPEND */
+> -- 
+> 2.34.1
