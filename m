@@ -2,44 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A0847AF208
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Sep 2023 19:55:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C644E7AF569
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Sep 2023 22:41:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234339AbjIZRzk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Sep 2023 13:55:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39606 "EHLO
+        id S235855AbjIZUmB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Sep 2023 16:42:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234911AbjIZRzj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Sep 2023 13:55:39 -0400
+        with ESMTP id S232008AbjIZUmA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Sep 2023 16:42:00 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60838120
-        for <linux-pci@vger.kernel.org>; Tue, 26 Sep 2023 10:55:32 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6224C433C8;
-        Tue, 26 Sep 2023 17:55:31 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C029120;
+        Tue, 26 Sep 2023 13:41:54 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72EC6C433C7;
+        Tue, 26 Sep 2023 20:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695750932;
-        bh=lkEslfpHFJOejPCis8PiWAyTpaGoKi32im5FR7jFJx8=;
+        s=k20201202; t=1695760913;
+        bh=N2QpnX4X8HwQVgjzeeJZ7MIIAWZJSRZ5g3bKytjYUhI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=n5YPCAIHTnmW1FD4bOtkgnOUpykgsLjTEpT7DEgr03d28cV6YAhC6CXllVolejvfL
-         6Sd37idQP/cTDjdpRs3jQT9X4hoWkHQniQksV5PD8Ipzq15gTik9ywKZGYY+yEFCEw
-         EcwQDEVbsyRKpEvGp5bqWcQ2OJekkrOb1AVYGk+3goPtv9SuiwK34bYddI5HnHjGrJ
-         Ma0dJiXRBR2qfGt8+5IcJ6T95tmK7HawiqphlthdC8hf1aZW1WG3Dxe2r+mVCnvfve
-         AAgeEAh7FTLKLfBcLeEKWcBT1JZ36z4+Vxs/MShMQnTXLlh6YI917BJsGTHdNoDqs9
-         jzpY95s/gyPhQ==
-Date:   Tue, 26 Sep 2023 12:55:30 -0500
+        b=ZS5hgKLGvGY2GRwRYPGitNJPG8okzPN1/yY2HHQ9wbn23wvKmBUbmDlGgIIawb2C/
+         JNB+b7DgYdDU7T2pcfaDyiKt0HD3AYyHZzlNP9G1p+0yS23P9kdRFKhk/csFQ9a4Rg
+         +1j0OLB/N3NS+mV7Kb7ss1xGc8jEeCoVmNwZ67FwY9M6X/XSPtUVXsm5t7vkqsF09v
+         aOBZ8Td9pKgS+R3O5hWy0VzsXXBWBmm3nn6zp6cnbIhS8JgkCeirLOwVBqM7aY9Ogy
+         LcAzVocL9rMpZ8yp1aK1B8Q+n81hTFfD0OqoPL7zpSYnqBnuRS+sahImFU7xaYDDF1
+         K6GxHr0gvKzBw==
+Date:   Tue, 26 Sep 2023 15:41:51 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Kamil Paral <kparal@redhat.com>, linux-pci@vger.kernel.org,
-        regressions@lists.linux.dev, bhelgaas@google.com,
-        chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20230926175530.GA418550@bhelgaas>
+To:     Suma Hegde <suma.hegde@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, borislav.petkov@amd.com,
+        hdegoede@redhat.com, nchatrad@amd.com,
+        Muralidhara M K <muralidhara.mk@amd.com>
+Subject: Re: [PATCH v2] x86/amd_nb: Add AMD Family MI300 PCI IDs
+Message-ID: <20230926204151.GA427239@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230925141930.GA21033@wunner.de>
+In-Reply-To: <20230926051932.193239-1-suma.hegde@amd.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -50,47 +49,90 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 25, 2023 at 04:19:30PM +0200, Lukas Wunner wrote:
-> On Mon, Sep 25, 2023 at 08:48:41AM -0500, Bjorn Helgaas wrote:
-> > Now pciehp thinks the slot is occupied and the link is up, so we
-> > re-enumerate the hierarchy.  Is this because thunderbolt did something
-> > to 06:00.0 that made the link from 05:01.0 come up?
+On Tue, Sep 26, 2023 at 05:19:32AM +0000, Suma Hegde wrote:
+> From: Muralidhara M K <muralidhara.mk@amd.com>
 > 
-> PCIe TLPs are encapsulated into Thunderbolt packets and transmitted
-> alongside DisplayPort and other data over the same physical link.
+> Add new Root, Device 18h Function 3, and Function 4 PCI IDS
+> for AMD F19h Model 90h-9fh (MI300A).
 > 
-> For this to work, PCIe tunnels need to be set up between the Thunderbolt
-> host controller and attached devices.  Once a tunnel is established,
-> the PCIe link magically goes up and TLPs can be transmitted.
-> 
-> There are two ways to establish those tunnels:
-> 
-> 1/ By a firmware in the Thunderbolt host controller.
->    (firmware or "internal" connection manager, drivers/thunderbolt/icm.c)
-> 
-> 2/ Natively by the kernel.
->    (software connection manager)
-> 
-> I'm assuming that the laptop in question exclusively uses the firmware
-> connection manager, hence the kernel is reliant on that firmware to
-> establish tunnels and can't really do anything if it fails to do so.
+> Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
+> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
 
-Thanks for the background; that improves my meager understanding a
-lot.
+As long as the pci_ids.h addition meets the criteria at the top of the
+file, which I assume it does because you add other IDs to amd_nb.c:
 
-Since this seems to be a firmware issue, it does sound like this
-laptop uses a firmware connection manager.  But there still seems to
-be some kernel connection because pre-e8b908146d44, the link came up
-in <5 seconds, and after the minor e8b908146d44 change, it takes >60
-seconds.
+ *      Do not add new entries to this file unless the definitions
+ *      are shared between multiple drivers.
 
-I'm kind of at a loss here because I don't have a clear path forward.
-What I'm hearing is that the real fix is a firmware update or a BIOS
-setting change (Thunderbolt "user" instead of "secure" mode).
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# for pci_ids.h
 
-That is problematic for users, who will think resume got broken and
-they don't know how to fix it.  It's problematic for me, because it
-*looks* like a PCI issue and a PCI change exposed it, so I'll have to
-deal with the reports.
-
-Bjorn
+> ---
+> v1 of this patch was submitted as part of
+> https://lore.kernel.org/linux-edac/20230720125425.3735538-1-muralimk@amd.com/T/#m577beb44c3eceb0371cb0306c9ea0cb51f16b16d
+> Submitting this patch separately because this change is needed for HSMP
+> driver submitted at
+> https://lore.kernel.org/platform-driver-x86/166b4e9d-71e7-a95d-e11a-895f2c5dd2f8@linux.intel.com/T/#u to work on mi300 platform.
+> 
+>  arch/x86/kernel/amd_nb.c | 5 +++++
+>  include/linux/pci_ids.h  | 1 +
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+> index 356de955e78d..10c2a3c9114e 100644
+> --- a/arch/x86/kernel/amd_nb.c
+> +++ b/arch/x86/kernel/amd_nb.c
+> @@ -27,6 +27,7 @@
+>  #define PCI_DEVICE_ID_AMD_1AH_M00H_ROOT		0x153a
+>  #define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT		0x1507
+>  #define PCI_DEVICE_ID_AMD_MI200_ROOT		0x14bb
+> +#define PCI_DEVICE_ID_AMD_MI300_ROOT		0x14f8
+>  
+>  #define PCI_DEVICE_ID_AMD_17H_DF_F4		0x1464
+>  #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4	0x15ec
+> @@ -43,6 +44,7 @@
+>  #define PCI_DEVICE_ID_AMD_19H_M78H_DF_F4	0x12fc
+>  #define PCI_DEVICE_ID_AMD_1AH_M00H_DF_F4	0x12c4
+>  #define PCI_DEVICE_ID_AMD_MI200_DF_F4		0x14d4
+> +#define PCI_DEVICE_ID_AMD_MI300_DF_F4		0x152c
+>  
+>  /* Protect the PCI config register pairs used for SMN. */
+>  static DEFINE_MUTEX(smn_mutex);
+> @@ -62,6 +64,7 @@ static const struct pci_device_id amd_root_ids[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M00H_ROOT) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M20H_ROOT) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI200_ROOT) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI300_ROOT) },
+>  	{}
+>  };
+>  
+> @@ -93,6 +96,7 @@ static const struct pci_device_id amd_nb_misc_ids[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M00H_DF_F3) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M20H_DF_F3) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI200_DF_F3) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI300_DF_F3) },
+>  	{}
+>  };
+>  
+> @@ -115,6 +119,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M00H_DF_F4) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI200_DF_F4) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI300_DF_F4) },
+>  	{}
+>  };
+>  
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 5fb3d4c393a9..91b457de262e 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -579,6 +579,7 @@
+>  #define PCI_DEVICE_ID_AMD_1AH_M00H_DF_F3 0x12c3
+>  #define PCI_DEVICE_ID_AMD_1AH_M20H_DF_F3 0x16fb
+>  #define PCI_DEVICE_ID_AMD_MI200_DF_F3	0x14d3
+> +#define PCI_DEVICE_ID_AMD_MI300_DF_F3	0x152b
+>  #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
+>  #define PCI_DEVICE_ID_AMD_LANCE		0x2000
+>  #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
+> -- 
+> 2.25.1
+> 
