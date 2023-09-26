@@ -2,43 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C644E7AF569
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Sep 2023 22:41:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDAAC7AF6E4
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Sep 2023 01:46:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235855AbjIZUmB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Sep 2023 16:42:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45676 "EHLO
+        id S233706AbjIZXqB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Sep 2023 19:46:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232008AbjIZUmA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Sep 2023 16:42:00 -0400
+        with ESMTP id S234035AbjIZXoA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Sep 2023 19:44:00 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C029120;
-        Tue, 26 Sep 2023 13:41:54 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72EC6C433C7;
-        Tue, 26 Sep 2023 20:41:53 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB8C79008;
+        Tue, 26 Sep 2023 16:02:49 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CD1EC433C7;
+        Tue, 26 Sep 2023 23:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695760913;
-        bh=N2QpnX4X8HwQVgjzeeJZ7MIIAWZJSRZ5g3bKytjYUhI=;
+        s=k20201202; t=1695769369;
+        bh=je6g4sK4peKsh1qGI9bWWT/XBfOKZh3dIb4/VXqVR94=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ZS5hgKLGvGY2GRwRYPGitNJPG8okzPN1/yY2HHQ9wbn23wvKmBUbmDlGgIIawb2C/
-         JNB+b7DgYdDU7T2pcfaDyiKt0HD3AYyHZzlNP9G1p+0yS23P9kdRFKhk/csFQ9a4Rg
-         +1j0OLB/N3NS+mV7Kb7ss1xGc8jEeCoVmNwZ67FwY9M6X/XSPtUVXsm5t7vkqsF09v
-         aOBZ8Td9pKgS+R3O5hWy0VzsXXBWBmm3nn6zp6cnbIhS8JgkCeirLOwVBqM7aY9Ogy
-         LcAzVocL9rMpZ8yp1aK1B8Q+n81hTFfD0OqoPL7zpSYnqBnuRS+sahImFU7xaYDDF1
-         K6GxHr0gvKzBw==
-Date:   Tue, 26 Sep 2023 15:41:51 -0500
+        b=EAvZ3vNy2vbk5wk/qfuZFLTEzYgxPC0IYYVZYNR1ywjJCc/PknMAGU9l9YgkeUC0D
+         IuCC0cbREtDSWvQO/d+8xxXF+rvW+7sIJh4gkPkycF0XSKWoHqOd8kzk10XbDgzylE
+         y6loJllN6SBw6Lqj3JNsIraIOGu+Q1prRZTdWYcFyEXnYtiHcGW/Nbdv9wpENKYprW
+         3Zt76Rn69EOBuO3S/HiKtmJg9qR2z4o6HsIVeHe3BhsCs8hvQWo1SEXbnScSnTsI0w
+         bLtk+MvKaBJqKNx4vERctWe0Lk/crpGPtb3oigWZknhckvTcDY3fmVO5ShaLZpfJxG
+         5z1iuIuI0PrsA==
+Date:   Tue, 26 Sep 2023 18:02:47 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Suma Hegde <suma.hegde@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, borislav.petkov@amd.com,
-        hdegoede@redhat.com, nchatrad@amd.com,
-        Muralidhara M K <muralidhara.mk@amd.com>
-Subject: Re: [PATCH v2] x86/amd_nb: Add AMD Family MI300 PCI IDs
-Message-ID: <20230926204151.GA427239@bhelgaas>
+To:     Shuai Xue <xueshuai@linux.alibaba.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "tanxiaofei@huawei.com" <tanxiaofei@huawei.com>,
+        "wangkefeng.wang@huawei.com" <wangkefeng.wang@huawei.com>,
+        Miaohe Lin <linmiaohe@huawei.com>, gregkh@linuxfoundation.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        mahesh@linux.ibm.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Linux PCI <linux-pci@vger.kernel.org>, bhelgaas@google.com,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "lenb@kernel.org" <lenb@kernel.org>
+Subject: Re: Questions: Should kernel panic when PCIe fatal error occurs?
+Message-ID: <20230926230247.GA429368@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230926051932.193239-1-suma.hegde@amd.com>
+In-Reply-To: <fdc7a4ee-250f-7ec8-ca15-32cbd480bd3e@linux.alibaba.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -49,90 +59,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 05:19:32AM +0000, Suma Hegde wrote:
-> From: Muralidhara M K <muralidhara.mk@amd.com>
-> 
-> Add new Root, Device 18h Function 3, and Function 4 PCI IDS
-> for AMD F19h Model 90h-9fh (MI300A).
-> 
-> Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
-> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+On Fri, Sep 22, 2023 at 10:46:36AM +0800, Shuai Xue wrote:
+> ...
 
-As long as the pci_ids.h addition meets the criteria at the top of the
-file, which I assume it does because you add other IDs to amd_nb.c:
-
- *      Do not add new entries to this file unless the definitions
- *      are shared between multiple drivers.
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# for pci_ids.h
-
-> ---
-> v1 of this patch was submitted as part of
-> https://lore.kernel.org/linux-edac/20230720125425.3735538-1-muralimk@amd.com/T/#m577beb44c3eceb0371cb0306c9ea0cb51f16b16d
-> Submitting this patch separately because this change is needed for HSMP
-> driver submitted at
-> https://lore.kernel.org/platform-driver-x86/166b4e9d-71e7-a95d-e11a-895f2c5dd2f8@linux.intel.com/T/#u to work on mi300 platform.
+> Actually, this is a question from my colleague from firmware team.
+> The original question is that:
 > 
->  arch/x86/kernel/amd_nb.c | 5 +++++
->  include/linux/pci_ids.h  | 1 +
->  2 files changed, 6 insertions(+)
+>     "Should I set CPER_SEV_FATAL for Generic Error Status Block when a
+>     PCIe fatal error is detected? If set, kernel will always panic.
+>     Otherwise, kernel will always not panic."
 > 
-> diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-> index 356de955e78d..10c2a3c9114e 100644
-> --- a/arch/x86/kernel/amd_nb.c
-> +++ b/arch/x86/kernel/amd_nb.c
-> @@ -27,6 +27,7 @@
->  #define PCI_DEVICE_ID_AMD_1AH_M00H_ROOT		0x153a
->  #define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT		0x1507
->  #define PCI_DEVICE_ID_AMD_MI200_ROOT		0x14bb
-> +#define PCI_DEVICE_ID_AMD_MI300_ROOT		0x14f8
->  
->  #define PCI_DEVICE_ID_AMD_17H_DF_F4		0x1464
->  #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4	0x15ec
-> @@ -43,6 +44,7 @@
->  #define PCI_DEVICE_ID_AMD_19H_M78H_DF_F4	0x12fc
->  #define PCI_DEVICE_ID_AMD_1AH_M00H_DF_F4	0x12c4
->  #define PCI_DEVICE_ID_AMD_MI200_DF_F4		0x14d4
-> +#define PCI_DEVICE_ID_AMD_MI300_DF_F4		0x152c
->  
->  /* Protect the PCI config register pairs used for SMN. */
->  static DEFINE_MUTEX(smn_mutex);
-> @@ -62,6 +64,7 @@ static const struct pci_device_id amd_root_ids[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M00H_ROOT) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M20H_ROOT) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI200_ROOT) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI300_ROOT) },
->  	{}
->  };
->  
-> @@ -93,6 +96,7 @@ static const struct pci_device_id amd_nb_misc_ids[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M00H_DF_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M20H_DF_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI200_DF_F3) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI300_DF_F3) },
->  	{}
->  };
->  
-> @@ -115,6 +119,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M00H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI200_DF_F4) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_MI300_DF_F4) },
->  	{}
->  };
->  
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 5fb3d4c393a9..91b457de262e 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -579,6 +579,7 @@
->  #define PCI_DEVICE_ID_AMD_1AH_M00H_DF_F3 0x12c3
->  #define PCI_DEVICE_ID_AMD_1AH_M20H_DF_F3 0x16fb
->  #define PCI_DEVICE_ID_AMD_MI200_DF_F3	0x14d3
-> +#define PCI_DEVICE_ID_AMD_MI300_DF_F3	0x152b
->  #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
->  #define PCI_DEVICE_ID_AMD_LANCE		0x2000
->  #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
-> -- 
-> 2.25.1
-> 
+> So I pull a question about desired behavior of Linux kernel first :)
+> From the perspective of the kernel, CPER_SEV_FATAL for Generic Error
+> Status Block is not reasonable. The kernel will attempt to recover
+> Fatal errors, although recovery may fail.
+
+I don't know the semantics of CPER_SEV_FATAL or why it's there.
+With CPER, we have *two* error severities: a "native" one defined by
+the PCIe spec and another defined by the platform via CPER.
+
+I speculate that the reason for the CPER severity could be to provide
+a severity for error sources that don't have a "native" severity like
+AER does, or for the vendor to force the OS to restart (for
+CPER_SEV_FATAL, anyway) in cases where it might not otherwise.
+
+In the native case, we only have the PCIe severity and don't have the
+CPER severity at all, and I suspect that unless there's uncontained
+data corruption, we would rather handle even the most severe PCIe
+fatal error by disabling the specific device(s) instead of panicking
+and restarting the whole machine.
+
+So for PCIe errors, I'm not sure setting CPER_SEV_FATAL is beneficial
+unless the platform wants to force the OS to panic, e.g., maybe the
+platform knows about data corruption and/or the vendor wants the OS to
+panic as part of a reliability story.
+
+Presumably the platform has already logged the error, and I assume the
+platform *could* restart without even returning to the OS, but maybe
+it wants the OS to do a crashdump or shutdown in a more orderly way.
+
+Bjorn
