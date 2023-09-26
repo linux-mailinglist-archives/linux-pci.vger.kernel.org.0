@@ -2,196 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6C967AED06
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Sep 2023 14:41:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AB6A7AEEC7
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Sep 2023 16:58:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234637AbjIZMlL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Sep 2023 08:41:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49962 "EHLO
+        id S230125AbjIZOAm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Sep 2023 10:00:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234563AbjIZMlK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Sep 2023 08:41:10 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A825EB;
-        Tue, 26 Sep 2023 05:41:02 -0700 (PDT)
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 38QCef8S047203;
-        Tue, 26 Sep 2023 07:40:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1695732041;
-        bh=9v9rGczE3/my015hhEIWMVdENgwZpCtEfNna3/6DrGw=;
-        h=Date:Subject:To:CC:References:From:In-Reply-To;
-        b=fJFgIat4cGFp8y4f4/QvQPzyco6mC07mSv2D8PTpIlNUuo7teQH41KET9ukCIAR5P
-         3L8m+n77d2QnoeHBhvMQIxZHRULqzAy/iMJYBP50hT6m8howpaY2VCcHm6nDDszCwZ
-         KyPr4DciJrgueN9BjEZ9ubuIIkMX+9WakHqLcuFg=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 38QCefnf025963
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 Sep 2023 07:40:41 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 26
- Sep 2023 07:40:41 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 26 Sep 2023 07:40:41 -0500
-Received: from [10.24.69.141] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 38QCeaY9059407;
-        Tue, 26 Sep 2023 07:40:37 -0500
-Message-ID: <1269bf62-d67f-9f61-0139-dc20d23a9b5e@ti.com>
-Date:   Tue, 26 Sep 2023 18:10:36 +0530
+        with ESMTP id S229519AbjIZOAl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Sep 2023 10:00:41 -0400
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2043.outbound.protection.outlook.com [40.107.13.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02162E9;
+        Tue, 26 Sep 2023 07:00:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AWb8qQneDuuqSDxsgUo3+RopZrDM9r4QKsKyITXvR2XmEJ/az03eaylRcmyeQYAW5IU8Bza2hE4wr0+g+kcs7Za0VUKfICnusGQvM6qet6Zk6G4WDDXOX0xxwfo35naebMomxwqSMvZpCwTjK0+dudxV8HsHSSATbtczh/vgCpyl0oZLVSZnXFi/u6bFfkFUL9BckMuQdbAbicdHRLZ6b+YUTfkRgArZ6tOx8xYsmJqc8oVNoWVK3l7dS0MkJkJoz/YODPIB/w2Gm9Oz5PEt78X+LMd4AC390ptmfPU1NTSRlgxTtJCMIrTgyzkdUg6YundGf8E5SnB+6jc/zyKGhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yn43rfHET6DXaSDlUmpGZixca78ritdYAzW44QgFm4c=;
+ b=crhMdKwZX6nrCQ6jOk1PTzSaFvBsO7YWr7aTRS1wiRChiHPRStkGmrNCiVJGqWIOGxSxQq/mu4URIifmQR+6dR7diieLX3lzef9bEw19Fj3JYNojX754irAUHslDQohde4q9Cu7eJCD3u0CZtbGquL6YEzwOHF6q6C005YwnI11sAWWiB56zlLWEQsghQz3Ew+/Dgiek6he/de5aqqWLf6iDm8iPcZpJK7k+rnKG0wzvIy/Yz1rjJTzmUwTlBIa8hQQoeS7qPLrIe+phlk8s5r3qF6UwtdOwja5wDVqk9fOxvNXCDBA/avZlzWVzfX9lb5XGIlk91WNdeCjjRCXWsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yn43rfHET6DXaSDlUmpGZixca78ritdYAzW44QgFm4c=;
+ b=YpNPVnNQHv2Q0NlZwTW0b5/59+ApnPi24ZquYyHtdTytJ6KfTtYgAWy8rOBcuUDHw4CipVDDiT4nWT/qQXCJKofKSJ6F1TrwvxgxouHqOzeEFxVh292KreudWvA7q0HC4FRx212wM94MpSWmgldbVF9IGMgXkuC1VD+u9sGapDA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by AM9PR04MB8923.eurprd04.prod.outlook.com (2603:10a6:20b:40a::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.28; Tue, 26 Sep
+ 2023 14:00:29 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::1774:e25f:f99:aca2]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::1774:e25f:f99:aca2%4]) with mapi id 15.20.6813.027; Tue, 26 Sep 2023
+ 14:00:29 +0000
+Date:   Tue, 26 Sep 2023 10:00:18 -0400
+From:   Frank Li <Frank.li@nxp.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     christophe.jaillet@wanadoo.fr, bhelgaas@google.com,
+        imx@lists.linux.dev, kw@linux.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        lpieralisi@kernel.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
+        robh@kernel.org, roy.zang@nxp.com
+Subject: Re: [PATCH v2 1/1] PCI: layerscape-ep: set 64-bit DMA mask
+Message-ID: <ZRLj8nHJrXB1DkkO@lizhi-Precision-Tower-5810>
+References: <20230922042836.3311689-1-Frank.Li@nxp.com>
+ <ZRKH5CTucrT5BFwC@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZRKH5CTucrT5BFwC@infradead.org>
+X-ClientProxiedBy: BY5PR13CA0008.namprd13.prod.outlook.com
+ (2603:10b6:a03:180::21) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [RFC] Proposal of QEMU PCI Endpoint test environment
-To:     Shunsuke Mie <mie@igel.co.jp>,
-        Kishon Vijay Abraham I <kvijayab@amd.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-CC:     Paolo Bonzini <pbonzini@redhat.com>,
-        Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
-        <qemu-devel@nongnu.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>
-References: <CANXvt5oKt=AKdqv24LT079e+6URnfqJcfTJh0ajGA17paJUEKw@mail.gmail.com>
- <d096e88e-aec5-9920-8d5a-bd8200560c2c@amd.com>
- <fe309259-01f0-871f-4620-3a4bdc56a186@igel.co.jp>
-Content-Language: en-US
-From:   Vaishnav Achath <vaishnav.a@ti.com>
-In-Reply-To: <fe309259-01f0-871f-4620-3a4bdc56a186@igel.co.jp>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|AM9PR04MB8923:EE_
+X-MS-Office365-Filtering-Correlation-Id: bdd9632a-704a-4d9e-aba3-08dbbe98f0ca
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: IGUgPTBSj5bANXhEicKQTcoC9JliBJ3CUQLEdxlFEewT64dD/TRgXV9jlWpOnQpyr84D/o5Z2gZ1ZwY9IknZQfJRvPxZHM1nk6S3IeanOc0uozPgDig9Bl65GVt+JV6aDK46n2AoTx8ha/ZbCLUYTEXPFe6/KoweqmVOovqM7hHZUGA6PFqelxCd+6CjIlIdftfeoMwE9pk73N5t7PCSyhY1rfoOpSnNkVCQ6M+HoXZNPDReXeNCH3FirN6RjOUzMKDOTFpjAdvXYRa1gEk/NLdRljxwn7gbWDhatp8+mWyAadursJH3Dvi8QfDjjKgI+9n8x/94KFWeCFAQpEUq1x7HHk9jyfxKhM+04dmEASbzh7KtUaz5088MFWiLyDsHh+tzoBrR5hNcBlu9uoyldATkmVsPyQDloVm/MKA7tG8Smu9/uh4H9YQ4/i7FkvY4YFylxvLOJVxbv8aiBoU4du0dGEFuAIV/xe7vr6b9yTa9Z71wSZI1QqrWemnVPJ+45z+FxMw/iuHPQV0vnB86+Rb7pQ1GJElaO/BVff1SJFZmckxYrdv38QmtCBmAnKX8rALmmsEu+gLEjcsbu6wvo9hymHSA02ZZz2zqYp/qZYIRo4Rl3FSR5BOCPqHkEURK
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(366004)(39860400002)(396003)(376002)(136003)(346002)(230922051799003)(1800799009)(451199024)(186009)(7416002)(4326008)(4744005)(2906002)(5660300002)(316002)(41300700001)(6916009)(8676002)(8936002)(66946007)(66476007)(86362001)(66556008)(6666004)(52116002)(6506007)(9686003)(6486002)(6512007)(26005)(38100700002)(38350700002)(33716001)(478600001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?M49ymGOOQwP2cwMW1GZV8o29L3yoIPXUdCmVM+i4ngvNVkI/fzRPLunZUi+o?=
+ =?us-ascii?Q?1vKRD/0yeWd0Gi31Szi1a8ixbrrUgFRikiKJ9Q3ocXCC2AyeDvkfAlHjiOw+?=
+ =?us-ascii?Q?udop1Svj0tSzoqCypvHniEdyMymkQ6ct44Lp2c3h3ljBzf4rJtTjUTy3QAoa?=
+ =?us-ascii?Q?02U5scc1SzneMnL6Kn6NLQ1pJmtiUSiw6bgls2I4sASTnYuvrNnqsn5oxU+J?=
+ =?us-ascii?Q?1H+jId4brTRKu8OB3aUAogcpZuVHTfhmsbRkutE3ju/whzmOk8xn5O10wfyF?=
+ =?us-ascii?Q?/A5wQosKjwSnd/2CM0Tk7uMk1RHBe6x0cwEBXtHiD9Gccm2c75g4a2MVDCrC?=
+ =?us-ascii?Q?3nXeoCvsyWuHnuHO7/gWMNaSC6mp0uno+w2H4dlqr4s7M4+T6H2bZF+yYDJP?=
+ =?us-ascii?Q?fzrT6HqXxGCwoExfMnn2ItN53cuAE7l1TdpmtHuHRIMFlCazRdvy/tJg3UMu?=
+ =?us-ascii?Q?IWwG1ATrwEif2IXC9hj0GCeCLNszLon8DtOKKdeyAzqoAodnF2hKEe1UEnj7?=
+ =?us-ascii?Q?NIjlHo0ExsaVpkunKnNk5vNZ9GGGowU54+ROPmcXLTwvvABdnNrUBJ/oaeQM?=
+ =?us-ascii?Q?2Zna8PJRyD6V5e4LcwHwCm5fxeO0GhBXIr/eBVLqvAOmBG7hs+WXwz+l0xpH?=
+ =?us-ascii?Q?i4hDwQ1UcEeVdfL039TLbhGLNs8Gly+Mq7v+9T5vHa6upEM0E727iF2aWa+B?=
+ =?us-ascii?Q?gD0EmsNz7GaZfAXVd2NoKF6YJrdOWcfOdQq2mQOvOvsAsiu1Y+i1yqJwqXMq?=
+ =?us-ascii?Q?oioxP+p6PkJGCAV1iDu7gCwEzSYcXrdNSbQUjUD1v+NV5Vu2EaeZKu8cZ3OX?=
+ =?us-ascii?Q?tFK9WEqNcRu7U57L1VaLs3V/JA+4Au3pj7G1Sg11pGaIddXJsKeGpX1xkMl8?=
+ =?us-ascii?Q?JGIQweMCYM8w802zCUv+3OvfOubUhC1jDay9jpJfVXJjY83OQ2omJvJni1T1?=
+ =?us-ascii?Q?IMlDffpLak022oIVPP8W3+OY+X5vXzmGZpPRKoQLvEIy7lA4AgHFN8QIhxu8?=
+ =?us-ascii?Q?hCz0+tRfKUyBB9S1/55PfNDhEMIb36MdET/DnAWHqYW1WkJ2hozf8YmGRZSv?=
+ =?us-ascii?Q?huR7l2X388Vb2DYvkn4tV/lDThtAx75AoseyNYjcY9HnbLlfA9xi6E/WoBLC?=
+ =?us-ascii?Q?At4NXYViVx18KDwHEzbsNVSUaSVnEAVr6mbeKthdzUwNJsDARSylyC6so4Mq?=
+ =?us-ascii?Q?5s3UYZJRahPUJMFDbx3albJhLDAg6/msrzQlecNbHpQTMaT+YuyeBlriR3rr?=
+ =?us-ascii?Q?tcbcAnJK2CXysV06hRN3jw+nSGhCX9bziLshwcvIWXRoQxEz1nHdUrZ7zVSh?=
+ =?us-ascii?Q?r3OIDHdKE2s6wcAZfLWBlJojlrxuSD5M2VquQIINvLq3aFGracoHVNE/tuBC?=
+ =?us-ascii?Q?sB4C31ET76m8RjKs+mT1YvINE7aINohctYsPzmD3/j4MdMEzYRWWixgZHHiy?=
+ =?us-ascii?Q?HZMZVwmG5mCaewjm7cqOkKAKKLE97zgCwZGyCL6eJOvrAWyJbOFOU9Zqbb65?=
+ =?us-ascii?Q?HQfKAEuub6WuSE9rlJKPGphd7aaqRnYg223ScMn60IVIPWIKLITl2gkXm539?=
+ =?us-ascii?Q?V82p2/HrBRyHai3Ivmg=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bdd9632a-704a-4d9e-aba3-08dbbe98f0ca
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2023 14:00:28.8704
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CNYGWIaWW8PwVJbOmNBlRL5i3oo9uWkGearFF2JLuNg/75Hdp5rRH8SR36EEpoq6hUL3r5ZXz7DzpIwXweZ0Gw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8923
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Kishon, all,
+On Tue, Sep 26, 2023 at 12:27:32AM -0700, Christoph Hellwig wrote:
+> > +	/* set 64-bit DMA mask and coherent DMA mask */
+> > +	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+> 
+> The comment is a bit silly :)
+> 
+> > +	if (ret)
+> > +		return ret;
+> 
+> Also no need to check the return value when setting a 64-bit mask,
+> but I guess it desn't hurt here.
+> 
 
-On 26/09/23 15:17, Shunsuke Mie wrote:
-> 
-> On 2023/09/21 18:11, Kishon Vijay Abraham I wrote:
->> +Vaishnav
->>
->> Hi Shunsuke,
->>
->> On 8/18/2023 7:16 PM, Shunsuke Mie wrote:
->>> Hi all,
->>>
->>> We are proposing to add a new test syste to Linux for PCIe Endpoint. That
->>> can be run on QEMU without real hardware. At present, partially we have
->>> confirmed that pci-epf-test is working, but it is not yet complete.
->>> However, we would appreciate your comments on the architecture design.
->>>
->>> # Background
->>> The background is as follows.
->>>
->>> PCI Endpoint function driver is implemented using the PCIe Endpoint
->>> framework, but it requires physical boards for testing, and it is difficult
->>> to test sufficiently. In order to find bugs and hardware-dependent
->>> implementations early, continuous testing is required. Since it is
->>> difficult to automate tests that require hardware, this RFC proposes a
->>> virtual environment for testing PCI endpoint function drivers.
->>
->> This would be quite useful and thank you for attempting it! I would like to
->> compare other mechanisms available in-addition to QEMU before going with the
->> QEMU approach.
-> 
-> I got it. I'll make a table to compare some methods that includes greybus to
-> realize this emulation environment.
-> 
-> 
-> Best,
-> 
-> Shunsuke
-> 
->> Though I don't understand this fully, Looking at
->> https://osseu2023.sched.com/event/1OGk8/emulating-devices-in-linux-using-greybus-subsystem-vaishnav-mohandas-achath-texas-instruments, Vaishnav seems to solve the same problem using greybus for multiple type s of devices.
->>
->> Vaishnav, we'd wait for your OSS presentation but do you have any initial
->> thoughts on how greybus could be used to test PCIe endpoint drivers?
->>
-
-Apologies for the delay, I don't think greybus can be used for PCIe testing as
-there is no greybus equivalent for PCIe[1], it can only be used for relatively
-simpler devices today, I guess roadtest(UML based)[2] could be an alternative in
-this case.
-
-1 -
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/staging/greybus
-2 - https://lore.kernel.org/lkml/YjN1ksNGujV611Ka@sirena.org.uk/
-
-Thanks and Regards,
-Vaishnav
-
->> Thanks,
->> Kishon
->>
->>>
->>> # Architecture
->>> The overview of the architecture is as follows.
->>>
->>>    Guest 1                        Guest 2
->>> +-------------------------+    +----------------------------+
->>> | Linux kernel            |    | Linux kernel               |
->>> |                         |    |                            |
->>> | PCI EP function driver  |    |                            |
->>> | (e.g. pci-epf-test)     |    |                            |
->>> |-------------------------|    | PCI Device Driver          |
->>> | (2) QEMU EPC Driver     |    | (e.g. pci_endpoint_test)   |
->>> +-------------------------+    +----------------------------+
->>> +-------------------------+    +----------------------------+
->>> | QEMU                    |    | QEMU                       |
->>> |-------------------------|    |----------------------------|
->>> | (1) QEMU PCI EPC Device *----* (3) QEMU EPF Bridge Device |
->>> +-------------------------+    +----------------------------+
->>>
->>> At present, it is designed to work guests only on the same host, and
->>> communication is done through Unix domain sockets.
->>>
->>> The three parts shown in the figure were introduced this time.
->>>
->>> (1) QEMU PCI Endpoint Controller(EPC) Device
->>> PCI Endpoint Controller implemented as QEMU PCI device.
->>> (2) QEMU PCI Endpoint Controller(EPC) Driver
->>> Linux kernel driver that drives the device (1). It registers a epc device
->>> to linux kernel and handling each operations for the epc device.
->>> (3) QEMU PCI Endpoint function(EPF) Bridge Device
->>> QEMU PCI device that cooperates with (1) and performs accesses to pci
->>> configuration space, BAR and memory space to communicate each guests, and
->>> generates interruptions to the guest 1.
->>>
->>> Each projects are:
->>> (1), (3) https://github.com/ShunsukeMie/qemu/tree/epf-bridge/v1
->>> <https://github.com/ShunsukeMie/qemu/tree/epf-bridge/v1>
->>> files: hw/misc/{qemu-epc.{c,h}, epf-bridge.c}
->>> (2) https://github.com/ShunsukeMie/linux-virtio-rdma/tree/qemu-epc
->>> <https://github.com/ShunsukeMie/linux-virtio-rdma/tree/qemu-epc>
->>> files: drivers/pci/controller/pcie-qemu-ep.c
->>>
->>> # Protocol
->>>
->>> PCI, PCIe has a layer structure that includes Physical, Data Lane and
->>> Transaction. The communicates between the bridge(3) and controller (1)
->>> mimic the Transaction. Specifically, a protocol is implemented for
->>> exchanging fd for communication protocol version check and communication,
->>> in addition to the interaction equivalent to PCIe Transaction Layer Packet
->>> (Read and Write of I/O, Memory, Configuration space and Message). In my
->>> mind, we need to discuss the communication mor.
->>>
->>> We also are planning to post the patch set after the code is organized and
->>> the protocol discussion is matured.
->>>
->>> Best regards,
->>> Shunsuke
+You are right, let me remove check.
