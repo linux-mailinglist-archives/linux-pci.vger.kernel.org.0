@@ -2,150 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC0F67B04A4
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Sep 2023 14:48:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CDB87B04D2
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Sep 2023 14:59:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231378AbjI0Msk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Sep 2023 08:48:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60952 "EHLO
+        id S231773AbjI0M66 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Sep 2023 08:58:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231689AbjI0Msj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Sep 2023 08:48:39 -0400
-X-Greylist: delayed 62 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 27 Sep 2023 05:48:38 PDT
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F81EC0
-        for <linux-pci@vger.kernel.org>; Wed, 27 Sep 2023 05:48:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695818918; x=1727354918;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=j/UCa+XWknrbavQHm577Zgs4yC9pEsv4Gt8Ci9kyH7M=;
-  b=ZOTx4z1kogoXq1VDc/ZX6dBE71O0ltFaUVO9wrqL1SGr7FcuF4WOOMsY
-   UzC03k8ZPpZIwWbDptXL767du+yQmoETCiOQ/zRMk6J8ZlZAJqa0zrulv
-   3gMm7rVYUzXCQE2wYLadhfp2RxxQYq+1EDs+RAvSwoagJWeC3TfP3GA0r
-   GBzXhZOI2IWdyXjk2XVT05v659woggV3wXm4CgAsDdJL/vyYyuv8aGPr5
-   sYe0X0MZ6ntbeT3lXpipdFJqZVHx94salvCrP5p540ToSyNxnkn1pIB8G
-   O94bPcC5qjfsjs3On9a9btwogvtrkySHhxhdEPgsraAm6Vp+E3crXHNPG
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="411951"
-X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
-   d="scan'208";a="411951"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 05:47:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="922752971"
-X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
-   d="scan'208";a="922752971"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 27 Sep 2023 05:47:33 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 5756D13AB; Wed, 27 Sep 2023 15:47:32 +0300 (EEST)
-Date:   Wed, 27 Sep 2023 15:47:32 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lukas Wunner <lukas@wunner.de>, Kamil Paral <kparal@redhat.com>,
-        linux-pci@vger.kernel.org, regressions@lists.linux.dev,
-        bhelgaas@google.com, chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20230927124732.GI3208943@black.fi.intel.com>
-References: <20230927051602.GX3208943@black.fi.intel.com>
- <20230927115703.GA445616@bhelgaas>
+        with ESMTP id S231760AbjI0M65 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Sep 2023 08:58:57 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E258136
+        for <linux-pci@vger.kernel.org>; Wed, 27 Sep 2023 05:58:55 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-405e48d8cfdso48797755e9.2
+        for <linux-pci@vger.kernel.org>; Wed, 27 Sep 2023 05:58:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1695819533; x=1696424333; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XDBxB4K/Dc2f6E7RfsykVyDhFDN+EKOunIZYRlh5xQ4=;
+        b=de8DF/OYG/1kvRnNXKqBqgdjpYtV581zHYAUezl+J0O/u3/ejABPRiEssgkB11Zxn8
+         F6rT4/OkLTevQsjVAI1hSziWqenB843K0P0/+RcES1c2AAhAcSf5rDtlVp5oE7ji9WA7
+         /VuPYKu6KFQLWCOL5FnfX9qSgaBtyHvXa8uXGHNrQukQ0vSmRqIakdgRBODAHCqV5c3W
+         ni5c2q+5M8nQq00xz1xUqC5fst5TH5Y6h8zYa1bpLICpaxrrywzA0USF33ivfhv5Y9SK
+         pV6Q23bcnPK3ep9ZKFc9J8B+SZ/7CrfEQJ32uT9SXfKE+BvQxRFe0Qov9lxxRu/rgUkI
+         UX4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695819533; x=1696424333;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XDBxB4K/Dc2f6E7RfsykVyDhFDN+EKOunIZYRlh5xQ4=;
+        b=Ml6GggYGsSTwm8zebVZsiDlvWQ7XGqx7fMlCidxCU/gGeHf/2OlMXTD+3yWJ/gjMZi
+         m97TKq0f5HopArXsi+l7X4QyuVGjcU4/GI4wM7aak1Xo6zwjOzgaZ7qJtHDmtkEKku+0
+         qjyBxpf895X0EOJRucyWaC0t8p85bhVxs99MBOobRer8+LoKZoK/vRle5OmP+Lr7z9eE
+         mh9Tx+Jb5hHkf5fk0cLq5E2iFLyEDuj3LYMELgayngXXwERURcpbe07FURhmdJBMsWSK
+         gXhZIZMYLHmJ1skht/xqJ4U3tx9dOPt3jlyN1Gu/+ATGc8Pd8gRFk0HkK0+RszAiNZs+
+         ND9Q==
+X-Gm-Message-State: AOJu0Yywyh9TG/cfk76Y1mLn5cLKTkjQYtHeSclSjguZ3voO6OcIWpt/
+        bjxPCDRpewpDKXZKho/Qe0Z3f+Q3nNirsQGeSw6r
+X-Google-Smtp-Source: AGHT+IEDKHA7Ugd7ZSlR7GfH1BkKpWJKecatYW9bH9VwobJzVpJZUVAEALaG7FH/tUYkaetWvZnMow==
+X-Received: by 2002:a1c:7917:0:b0:401:b53e:6c3b with SMTP id l23-20020a1c7917000000b00401b53e6c3bmr1803043wme.6.1695819533523;
+        Wed, 27 Sep 2023 05:58:53 -0700 (PDT)
+Received: from thinkpad ([2a02:2454:9d09:3f00:b024:394e:56d7:d8b4])
+        by smtp.gmail.com with ESMTPSA id 12-20020a05600c240c00b003fc02e8ea68sm20417720wmp.13.2023.09.27.05.58.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Sep 2023 05:58:52 -0700 (PDT)
+Date:   Wed, 27 Sep 2023 14:58:50 +0200
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc:     Abel Vesa <abel.vesa@linaro.org>, lpieralisi@kernel.org,
+        kw@linux.com, andersson@kernel.org, bhelgaas@google.com,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom: Add interconnect bandwidth for PCIe Gen4
+Message-ID: <20230927125850.GA19623@thinkpad>
+References: <20230924160713.217086-1-manivannan.sadhasivam@linaro.org>
+ <f49d0543-17bb-4105-9cdf-3df8c116481a@linaro.org>
+ <ZRFiD3EXwZI/B8JB@linaro.org>
+ <18635bed-b7e3-4acb-b176-cd9f87a35c7f@linaro.org>
+ <ZRFjAIYQQZnbNIdt@linaro.org>
+ <09058de7-e207-414b-ab4c-88f0cbde9c22@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230927115703.GA445616@bhelgaas>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <09058de7-e207-414b-ab4c-88f0cbde9c22@linaro.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 27, 2023 at 06:57:03AM -0500, Bjorn Helgaas wrote:
-> On Wed, Sep 27, 2023 at 08:16:02AM +0300, Mika Westerberg wrote:
-> > On Tue, Sep 26, 2023 at 12:55:30PM -0500, Bjorn Helgaas wrote:
-> > > On Mon, Sep 25, 2023 at 04:19:30PM +0200, Lukas Wunner wrote:
-> > > > On Mon, Sep 25, 2023 at 08:48:41AM -0500, Bjorn Helgaas wrote:
-> > > > > Now pciehp thinks the slot is occupied and the link is up, so we
-> > > > > re-enumerate the hierarchy.  Is this because thunderbolt did something
-> > > > > to 06:00.0 that made the link from 05:01.0 come up?
-> > > > 
-> > > > PCIe TLPs are encapsulated into Thunderbolt packets and transmitted
-> > > > alongside DisplayPort and other data over the same physical link.
-> > > > 
-> > > > For this to work, PCIe tunnels need to be set up between the Thunderbolt
-> > > > host controller and attached devices.  Once a tunnel is established,
-> > > > the PCIe link magically goes up and TLPs can be transmitted.
-> > > > 
-> > > > There are two ways to establish those tunnels:
-> > > > 
-> > > > 1/ By a firmware in the Thunderbolt host controller.
-> > > >    (firmware or "internal" connection manager, drivers/thunderbolt/icm.c)
-> > > > 
-> > > > 2/ Natively by the kernel.
-> > > >    (software connection manager)
-> > > > 
-> > > > I'm assuming that the laptop in question exclusively uses the firmware
-> > > > connection manager, hence the kernel is reliant on that firmware to
-> > > > establish tunnels and can't really do anything if it fails to do so.
-> > > 
-> > > Thanks for the background; that improves my meager understanding a
-> > > lot.
-> > > 
-> > > Since this seems to be a firmware issue, it does sound like this
-> > > laptop uses a firmware connection manager.  But there still seems to
-> > > be some kernel connection because pre-e8b908146d44, the link came up
-> > > in <5 seconds, and after the minor e8b908146d44 change, it takes >60
-> > > seconds.
+On Mon, Sep 25, 2023 at 12:40:34PM +0200, Konrad Dybcio wrote:
+> On 25.09.2023 12:37, Abel Vesa wrote:
+> > On 23-09-25 12:34:53, Konrad Dybcio wrote:
+> >> On 25.09.2023 12:33, Abel Vesa wrote:
+> >>> On 23-09-25 10:57:47, Konrad Dybcio wrote:
+> >>>> On 24.09.2023 18:07, Manivannan Sadhasivam wrote:
+> >>>>> PCIe Gen4 supports the interconnect bandwidth of 1969 MBps. So let's add
+> >>>>> the bandwidth support in the driver. Otherwise, the default bandwidth of
+> >>>>> 985 MBps will be used.
+> >>>>>
+> >>>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >>>>> ---
+> >>>>>  drivers/pci/controller/dwc/pcie-qcom.c | 7 +++++--
+> >>>>>  1 file changed, 5 insertions(+), 2 deletions(-)
+> >>>>>
+> >>>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> >>>>> index 297442c969b6..6853123f92c1 100644
+> >>>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> >>>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> >>>>> @@ -1384,11 +1384,14 @@ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
+> >>>>>  	case 2:
+> >>>>>  		bw = MBps_to_icc(500);
+> >>>>>  		break;
+> >>>>> +	case 3:
+> >>>>> +		bw = MBps_to_icc(985);
+> >>>>> +		break;
+> >>>>>  	default:
+> >>>>>  		WARN_ON_ONCE(1);
+> >>>>>  		fallthrough;
+> >>>>> -	case 3:
+> >>>>> -		bw = MBps_to_icc(985);
+> >>>>> +	case 4:
+> >>>>> +		bw = MBps_to_icc(1969);
+> >>>>>  		break;
+> >>>> Are you adding case 4 under `default`? That looks.. bizzare..
+> >>>
+> >>> That's intentional. You want it to use 1969MBps if there is a different
+> >>> gen value. AFAIU.
+> >> Gah right, then the commit message is wrong.
 > > 
-> > In both cases (with or without) the commit what happens is that after
-> > resume is finished the firmware connection manager notices the
-> > connection, announces it to the Thunderbolt driver that exposes it to
-> > the userspace where boltd re-authorizes the device. This brings up the
-> > PCIe tunnel again and things get working.
+> > Yep, should be: "Otherwise, the default bandwidth of 1969 MBps will be
+> > used."
 > > 
-> > (What is expected to happen is that during the resume the firmware
-> >  connection manager re-connects the PCIe tunnel.)
-> > 
-> > This took previously the ~5s before resume is complete so that the above
-> > steps can happen where as after the commit it got delayed more up to the
-> > arbitrary ~60s because we started to use that with the commit
-> > e8b908146d44 (PCIE_RESET_READY_POLL_MS).
+> > But maybe we should not default to that. Maybe we should still default
+> > to 985 MBps.
+> Perhaps we shouldn't have a default at all..
 > 
-> Why does the kernel delay affect the timing of when the firmware
-> connection manager notices the connection?  It seems like Linux waits
-> for the timeout, then Linux does something that kicks the firmware
-> connection manager.  That's why I asked about this sequence:
+> E.g. if the gen5 bus may get clogged if we exceed gen4
+> limits
 > 
->   [  118.985530] pcieport 0000:05:01.0: Data Link Layer Link Active not set in 1000 msec
->   [  190.090902] pcieport 0000:05:01.0: pciehp: Slot(1): Card not present
->   [  191.754347] thunderbolt 0000:06:00.0: 1: DROM version: 1
->   [  191.762638] thunderbolt 0-1: new device found, vendor=0x108 device=0x1630
->   [  191.762641] thunderbolt 0-1: Lenovo ThinkPad Thunderbolt 3 Dock
->   [  191.943506] pcieport 0000:05:01.0: pciehp: Slot(1): Card present
-> 
-> where we wait for the timeout, decide the device is gone, remove
-> everything, and then the thunderbolt driver does something, and we
-> notice the device is magically back.
 
-Well the delay delays the whole resume and this includes Thunderbolt
-driver resume too, and userspace (where the bolt daemon authorizes the
-device again).
+So the idea here is that if we happen to run this driver on a new Gen supported
+SoC, we have to let the user know that the interconnects are running at a lower
+gen speed and it needs attention.
 
-> > I would also try to change all the BIOS settings back to defaults, see
-> > that it works (it is probably in "user" security level then), then
-> > switch back to "secure" (only change this one option) and try if it now
-> > works. It could be that some setting just did not get commited properly.
-> 
-> If this might lead to fixing a Linux defect, I'm all for this kind of
-> experimentation.  But if it only leads to understanding a firmware
-> defect better or figuring out better advice to users, I'm not, because
-> I don't want to address this with a release note.
+But I think we can simplify it by fixing a default bandwidth, say Gen3 and get
+rid of the fallthrough. And yeah, the same needs to be done for the pcie-qcom-ep
+driver as well.
 
-This is not a Linux defect. The firmware is expected to create that
-tunnel so regardless of the "delay" the devices are already back. This
-is not happening.
+- Mani
+
+> Konrad
+
+-- 
+மணிவண்ணன் சதாசிவம்
