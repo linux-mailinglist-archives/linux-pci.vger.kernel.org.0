@@ -2,216 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C53B7B0941
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Sep 2023 17:48:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 962DB7B0918
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Sep 2023 17:46:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232798AbjI0Pss (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Sep 2023 11:48:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38962 "EHLO
+        id S232005AbjI0PqJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Sep 2023 11:46:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232893AbjI0Psg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Sep 2023 11:48:36 -0400
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2077.outbound.protection.outlook.com [40.107.95.77])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 893822CB84;
-        Wed, 27 Sep 2023 08:47:50 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cz7WSDXgFHpcq1MxQ+GLFP70rU+f4zJIlB7fdl8kya8QY1+wDKgou3kHucBp+KcStcIv/7qCjzwP+0/lx888cpBHISa8/CSW0WpadX7E6rOTpsOsPjwfgl6EWe9kN3GApXSxcWGCnClCpZnAZX4IK8W97Y53ywr9xXbCXGAIJ7FNxYxN3172UmlrhkBLWWzylpVBmXhn9B7mj9TGkCzckPBWaMWnGCAK80uRjg/SPFC8uzdbI76ThoC9lstRUvVcr08lVik3dcGkm3V5Sphy61/6uX4mwkHYjbAPF8lQ1kjyqGHgVNlF3iN46U6jgx5N57AvEc6kjMTgpn8sPe6ghA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HgmxzE91/Y8CVse7GAXkYVZqkj2HZN+TVXdLm/OLf4w=;
- b=eLyuWcr67KKXjeW/CSCYQhnFg85b2dV2x/LEXS+7BwpVkLImX8qhPc3e3f6BwdczTBuq0Jd/C8SCLMWv8AY3mGJzPTnivOrnUYBX3BIQL43vTxAiR4Au1PnZOoiBxM1cVpOCI1mWeJG/G3hD4JrDhRGMjMDKmKyH0E17v0u7rvB3h1wSicLoGtmAuOej03C5JkAEXXe5+gErOm8GhcqVHcdgWyaH4XK4+uyviEdfte9rpkjLmz+GaYxNPLMXHMzT6aFdyF5xkXxrMlnT90JxV7fN59KtbLN/w2JuKO9VMciWbNy3wYtX/036UVjzwqunh+NSn4CSu5bMk1U5FSPeaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HgmxzE91/Y8CVse7GAXkYVZqkj2HZN+TVXdLm/OLf4w=;
- b=5Pg/1dUyfStEMO+izPuvmkKYPacwI2hmkYWyCdTF7SIKnJP3VI9lbYS60TNjqJOk71m4mnscURWFqUjTlZkHpsRGfopHB7HWJ4J/94SnyoZOjaTRt3fqIT3tP939UGub25P5+oSGp5RRlPWAtJ304NoQaOt3LXyufkBKdtwGk6w=
-Received: from BL1P221CA0018.NAMP221.PROD.OUTLOOK.COM (2603:10b6:208:2c5::30)
- by DM6PR12MB4154.namprd12.prod.outlook.com (2603:10b6:5:21d::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.28; Wed, 27 Sep
- 2023 15:47:45 +0000
-Received: from BL02EPF0001A104.namprd05.prod.outlook.com
- (2603:10b6:208:2c5:cafe::ba) by BL1P221CA0018.outlook.office365.com
- (2603:10b6:208:2c5::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.22 via Frontend
- Transport; Wed, 27 Sep 2023 15:47:45 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF0001A104.mail.protection.outlook.com (10.167.241.135) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6838.14 via Frontend Transport; Wed, 27 Sep 2023 15:47:45 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 27 Sep
- 2023 10:47:35 -0500
-From:   Robert Richter <rrichter@amd.com>
-To:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Mahesh J Salgaonkar" <mahesh@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Robert Richter <rrichter@amd.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>
-Subject: [PATCH v11 18/20] PCI/AER: Unmask RCEC internal errors to enable RCH downstream port error handling
-Date:   Wed, 27 Sep 2023 17:43:37 +0200
-Message-ID: <20230927154339.1600738-19-rrichter@amd.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230927154339.1600738-1-rrichter@amd.com>
-References: <20230927154339.1600738-1-rrichter@amd.com>
+        with ESMTP id S231752AbjI0PqI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Sep 2023 11:46:08 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC8C0272AB
+        for <linux-pci@vger.kernel.org>; Wed, 27 Sep 2023 08:46:06 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-3231d6504e1so7605717f8f.2
+        for <linux-pci@vger.kernel.org>; Wed, 27 Sep 2023 08:46:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1695829565; x=1696434365; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AnVyIhUQftvj++Ho5Yy6rcq1eYnc1pWWiufohODrEFE=;
+        b=yMMij82nkhn4Th830NPLjXLNPcSSoWWVBozahIduJCUCr97mo97OVUDEnaUSIqHIn8
+         mB2+bKQFfdICXcxkcifGdTUhUFG0s7cTcx2viflW6pMBn2s01RlHhAGUyz8aYaQMdrXk
+         Dwp3G9SRV+fm2cvq4NPT7yYTJaDodrhOfSBlbG95/og1E4w1Jjd48WhTGKQtgtbJ4lDF
+         IWtElAfog+Wbm6L5MXKfCew5VKxWgJFJjm536l7oYh8Z0psCzMqJNVPCf4kcxmd/g0Q2
+         w55c+P+jV1i/xJOWuplzClh91O7xjX8qGtI8Fe6ugc5aFbIPicSPFQKdbU8Ja6n8+k9O
+         T86w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695829565; x=1696434365;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AnVyIhUQftvj++Ho5Yy6rcq1eYnc1pWWiufohODrEFE=;
+        b=fIeDk/9+zPMBY8txlMBETfhV9p3kb3oqbovkSTBNxh1vo0ZTw3yFgInHx3WyR6J8fL
+         JnLY8ru1X8/qvfNqIIb2jgT98BpWgBwRV9+8Z+kI4C6STUMEHlgTnDWkPkuYCnDzz5OJ
+         KUUHMuIQarQnqRNVDVbySgz2wX9JfPq0jD48sXlFI/yycLLqODcZN/kl64OC8ZQxYe3L
+         I66MCl67HxlzomB9u2ZBmiGP4RtcDWH1VV7KFCoN51QQxYGMi2phNoM/GN07IH4ibfQK
+         5YtZ+sLdCCxX+Y/2nXrDrV3E/8lmDq5XkyOyoZNhO8XQNL3zxXjM0N60FAHswiFzVscf
+         wrVA==
+X-Gm-Message-State: AOJu0YwsQ6CJFQwf781XoFRVyDfa/lS079eGG3IHWnaWM56aXN6kQCnT
+        QpnnaP+EbJld0XwevOdC+leO
+X-Google-Smtp-Source: AGHT+IHPVlFHZSR7dS0CVY+TjYfy0oJ3z2n7yBnN6VGdCusCelDVK4SOfVJbaXNnh5OXlhTYFnYG6A==
+X-Received: by 2002:a05:6000:4cd:b0:321:4df5:b85e with SMTP id h13-20020a05600004cd00b003214df5b85emr2167996wri.26.1695829565184;
+        Wed, 27 Sep 2023 08:46:05 -0700 (PDT)
+Received: from thinkpad.fritz.box ([2a02:2454:9d09:3f00:b024:394e:56d7:d8b4])
+        by smtp.gmail.com with ESMTPSA id s28-20020adfa29c000000b003232f167df5sm6925852wra.108.2023.09.27.08.46.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Sep 2023 08:46:04 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     lpieralisi@kernel.org, kw@linux.com
+Cc:     andersson@kernel.org, konrad.dybcio@linaro.org,
+        bhelgaas@google.com, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        abel.vesa@linaro.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 1/3] PCI: qcom: Make use of PCIE_SPEED2MBS_ENC() macro for encoding link speed
+Date:   Wed, 27 Sep 2023 17:46:01 +0200
+Message-Id: <20230927154603.172049-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A104:EE_|DM6PR12MB4154:EE_
-X-MS-Office365-Filtering-Correlation-Id: 11afa12b-e572-48cb-e95f-08dbbf7117cf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Z55Ao5BMt3B63wpzpWWmxiwBTckF5BjFWD6Yef3rqAsRyQx2uOK2CJVQK31z0+TeQtoKd+Dy6WMzvMCuz6QaMhFtFkiG86YGi+HCDgM64pe9fRF0l8fDdWAnDb9Zi1M2JnO8XXzcnk0jbxdz6wZ7mxn1u9ScX61JAvVrM8fo3SHlUWA0kYJmmTEyiom5I2XObvaK91vh+okRK62/MLDKFMXTlUNUCKy7iqCUxkFiFq8nFrEDvFy2I69oi1rG10fM2r+rDAlcxH5epWqJkfTs177OqpZvefzyqfhd3uNwOnEs4kR5pOkqyPxCMKN0hhIauohzpG2yLr19LcM53ax+Jw1IE8DfQbLrlf03oOYvuXsFMkt5cgWfdDqDzECujXv2G1cm84FTaZRV1fhq9M5E8dMJ11WdJEUXtBvEN+YXTvvA+hbOm2quiiqdZ5EsPeYRan9RdMqLZvUF4w0ubKtle12sTq5bqOEcr9MRQkKKPc0lu5oeqEHEQcr88yuUgnsft/qaxf8NzbjBh9dw6b3OYy9bypW6hbggn2srGDbFK+U0V+nRp7wumIxdTkg9ufEPlCOzePMrtwGbaQMuElqry0pQpDoJZ2vowfVNinjAvNA1PMJYdWHRwmdyoVgZSWudthTudK2zzRopI4WugQp07+hU8TAswlC+2CUE5VHSp1IHVg6MGHjQ8lHljtcUxvvDmA4RRNkt5JOU3RT/bBkNQUsQIf48PrcAnHl491RIucD9JFZxwConnhAF89nlRIgRZqwVjY+LzwouIlAX836D0Q==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(346002)(39860400002)(396003)(136003)(230922051799003)(82310400011)(451199024)(186009)(1800799009)(40470700004)(36840700001)(46966006)(1076003)(40460700003)(478600001)(36756003)(2616005)(26005)(356005)(336012)(426003)(83380400001)(82740400003)(16526019)(81166007)(47076005)(36860700001)(5660300002)(40480700001)(54906003)(70206006)(110136005)(7416002)(2906002)(316002)(70586007)(4326008)(41300700001)(8676002)(8936002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Sep 2023 15:47:45.4299
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11afa12b-e572-48cb-e95f-08dbbf7117cf
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BL02EPF0001A104.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4154
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-AER corrected and uncorrectable internal errors (CIE/UIE) are masked
-in their corresponding mask registers per default once in power-up
-state. [1][2] Enable internal errors for RCECs to receive CXL
-downstream port errors of Restricted CXL Hosts (RCHs).
+Instead of hardcoding the link speed in MBps, let's make use of the
+existing PCIE_SPEED2MBS_ENC() macro that does the encoding of the
+link speed for us. Also, let's Wrap it with QCOM_PCIE_LINK_SPEED_TO_BW()
+macro to do the conversion to ICC speed.
 
-[1] CXL 3.0 Spec, 12.2.1.1 - RCH Downstream Port Detected Errors
-[2] PCIe Base Spec r6.0, 7.8.4.3 Uncorrectable Error Mask Register,
-    7.8.4.6 Correctable Error Mask Register
+This eliminates the need for a switch case in qcom_pcie_icc_update() and
+also works for future Gen speeds without any code modifications.
 
-Co-developed-by: Terry Bowman <terry.bowman@amd.com>
-Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-Signed-off-by: Robert Richter <rrichter@amd.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/pcie/aer.c | 57 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 9f420733996b..de63cda8f453 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -936,6 +936,30 @@ static bool find_source_device(struct pci_dev *parent,
+Changes in v3:
+
+- Used Mbps_to_icc() macro and changed the commit message a bit
+
+Changes in v2:
+
+- Switched to QCOM_PCIE_LINK_SPEED_TO_BW() macro as per Bjorn's suggestion
+  https://lore.kernel.org/linux-pci/20230924160713.217086-1-manivannan.sadhasivam@linaro.org/
+
+ drivers/pci/controller/dwc/pcie-qcom.c | 24 ++++++------------------
+ 1 file changed, 6 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index e2f29404c84e..367acb419a2b 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -148,6 +148,9 @@
  
- #ifdef CONFIG_PCIEAER_CXL
+ #define QCOM_PCIE_CRC8_POLYNOMIAL		(BIT(2) | BIT(1) | BIT(0))
  
-+/**
-+ * pci_aer_unmask_internal_errors - unmask internal errors
-+ * @dev: pointer to the pcie_dev data structure
-+ *
-+ * Unmasks internal errors in the Uncorrectable and Correctable Error
-+ * Mask registers.
-+ *
-+ * Note: AER must be enabled and supported by the device which must be
-+ * checked in advance, e.g. with pcie_aer_is_native().
-+ */
-+static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
-+{
-+	int aer = dev->aer_cap;
-+	u32 mask;
++#define QCOM_PCIE_LINK_SPEED_TO_BW(speed) \
++		Mbps_to_icc(PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]))
 +
-+	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &mask);
-+	mask &= ~PCI_ERR_UNC_INTN;
-+	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, mask);
-+
-+	pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, &mask);
-+	mask &= ~PCI_ERR_COR_INTERNAL;
-+	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
-+}
-+
- static bool is_cxl_mem_dev(struct pci_dev *dev)
+ #define QCOM_PCIE_1_0_0_MAX_CLOCKS		4
+ struct qcom_pcie_resources_1_0_0 {
+ 	struct clk_bulk_data clks[QCOM_PCIE_1_0_0_MAX_CLOCKS];
+@@ -1347,7 +1350,7 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+ 	 * Set an initial peak bandwidth corresponding to single-lane Gen 1
+ 	 * for the pcie-mem path.
+ 	 */
+-	ret = icc_set_bw(pcie->icc_mem, 0, MBps_to_icc(250));
++	ret = icc_set_bw(pcie->icc_mem, 0, QCOM_PCIE_LINK_SPEED_TO_BW(1));
+ 	if (ret) {
+ 		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
+ 			ret);
+@@ -1360,7 +1363,7 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
  {
- 	/*
-@@ -1015,7 +1039,39 @@ static void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
- 		pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
- }
+ 	struct dw_pcie *pci = pcie->pci;
+-	u32 offset, status, bw;
++	u32 offset, status;
+ 	int speed, width;
+ 	int ret;
  
-+static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
-+{
-+	bool *handles_cxl = data;
-+
-+	if (!*handles_cxl)
-+		*handles_cxl = is_cxl_mem_dev(dev) && cxl_error_is_native(dev);
-+
-+	/* Non-zero terminates iteration */
-+	return *handles_cxl;
-+}
-+
-+static bool handles_cxl_errors(struct pci_dev *rcec)
-+{
-+	bool handles_cxl = false;
-+
-+	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC &&
-+	    pcie_aer_is_native(rcec))
-+		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
-+
-+	return handles_cxl;
-+}
-+
-+static void cxl_rch_enable_rcec(struct pci_dev *rcec)
-+{
-+	if (!handles_cxl_errors(rcec))
-+		return;
-+
-+	pci_aer_unmask_internal_errors(rcec);
-+	pci_info(rcec, "CXL: Internal errors unmasked");
-+}
-+
- #else
-+static inline void cxl_rch_enable_rcec(struct pci_dev *dev) { }
- static inline void cxl_rch_handle_error(struct pci_dev *dev,
- 					struct aer_err_info *info) { }
- #endif
-@@ -1415,6 +1471,7 @@ static int aer_probe(struct pcie_device *dev)
- 		return status;
- 	}
+@@ -1377,22 +1380,7 @@ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
+ 	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
+ 	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, status);
  
-+	cxl_rch_enable_rcec(port);
- 	aer_enable_rootport(rpc);
- 	pci_info(port, "enabled with IRQ %d\n", dev->irq);
- 	return 0;
+-	switch (speed) {
+-	case 1:
+-		bw = MBps_to_icc(250);
+-		break;
+-	case 2:
+-		bw = MBps_to_icc(500);
+-		break;
+-	default:
+-		WARN_ON_ONCE(1);
+-		fallthrough;
+-	case 3:
+-		bw = MBps_to_icc(985);
+-		break;
+-	}
+-
+-	ret = icc_set_bw(pcie->icc_mem, 0, width * bw);
++	ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
+ 	if (ret) {
+ 		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
+ 			ret);
 -- 
-2.30.2
+2.25.1
 
