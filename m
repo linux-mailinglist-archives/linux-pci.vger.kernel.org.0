@@ -2,255 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AD867B0179
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Sep 2023 12:08:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0134D7B0360
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Sep 2023 13:57:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230000AbjI0KIh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Sep 2023 06:08:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60382 "EHLO
+        id S230143AbjI0L5H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Sep 2023 07:57:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231241AbjI0KI1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Sep 2023 06:08:27 -0400
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FDC6F3;
-        Wed, 27 Sep 2023 03:08:24 -0700 (PDT)
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-        by fd01.gateway.ufhost.com (Postfix) with ESMTP id 12D1124E1BB;
-        Wed, 27 Sep 2023 18:08:23 +0800 (CST)
-Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 27 Sep
- 2023 18:08:22 +0800
-Received: from ubuntu.localdomain (113.72.144.128) by EXMBX171.cuchost.com
- (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 27 Sep
- 2023 18:08:21 +0800
-From:   Minda Chen <minda.chen@starfivetech.com>
-To:     Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        Kevin Xie <kevin.xie@starfivetech.com>,
-        Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v7 19/19] riscv: dts: starfive: add PCIe dts configuration for JH7110
-Date:   Wed, 27 Sep 2023 18:08:02 +0800
-Message-ID: <20230927100802.46620-20-minda.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230927100802.46620-1-minda.chen@starfivetech.com>
-References: <20230927100802.46620-1-minda.chen@starfivetech.com>
+        with ESMTP id S229901AbjI0L5H (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Sep 2023 07:57:07 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9407BE
+        for <linux-pci@vger.kernel.org>; Wed, 27 Sep 2023 04:57:05 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 270D3C433C7;
+        Wed, 27 Sep 2023 11:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695815825;
+        bh=XmLCWHtkeqOe/dkpGs1V/n51u/PXtXb7fnZHBANYjoU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=riOc55ag7rWjtJnzNVG8BmU0ILQd8Ff2BnNTPARzh3o3HqoN0iirKxhkIOASEMsm1
+         PlErbMEbf3a/qSOHMHiI4dTWWQZ6W7dRUReAYTdHsS35qzrvddjnLvI2Bdl30m1V9g
+         n3USxOKDDVruJPZkyVAXIhTEd787UNuw4lFT3f3EBH31SzyyYOjQQHXhqvFFc144Kf
+         3SPprK4LKVm8O4e8jB3xitFcJsBh+qrx9f4y34L6zSz9V0StiMDPdDkcwtJSOPbTqa
+         lpr8MzjoWiu3vGumKtkavAOCLnhAOSsj1evF1KMsbp/wZj2/VOU2bAUpkpuG0wg8vb
+         klA2d4Yu9I0hw==
+Date:   Wed, 27 Sep 2023 06:57:03 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Lukas Wunner <lukas@wunner.de>, Kamil Paral <kparal@redhat.com>,
+        linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+        bhelgaas@google.com, chris.chiu@canonical.com
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+Message-ID: <20230927115703.GA445616@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [113.72.144.128]
-X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX171.cuchost.com
- (172.16.6.91)
-X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230927051602.GX3208943@black.fi.intel.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add PCIe dts configuraion for JH7110 SoC platform.
+On Wed, Sep 27, 2023 at 08:16:02AM +0300, Mika Westerberg wrote:
+> On Tue, Sep 26, 2023 at 12:55:30PM -0500, Bjorn Helgaas wrote:
+> > On Mon, Sep 25, 2023 at 04:19:30PM +0200, Lukas Wunner wrote:
+> > > On Mon, Sep 25, 2023 at 08:48:41AM -0500, Bjorn Helgaas wrote:
+> > > > Now pciehp thinks the slot is occupied and the link is up, so we
+> > > > re-enumerate the hierarchy.  Is this because thunderbolt did something
+> > > > to 06:00.0 that made the link from 05:01.0 come up?
+> > > 
+> > > PCIe TLPs are encapsulated into Thunderbolt packets and transmitted
+> > > alongside DisplayPort and other data over the same physical link.
+> > > 
+> > > For this to work, PCIe tunnels need to be set up between the Thunderbolt
+> > > host controller and attached devices.  Once a tunnel is established,
+> > > the PCIe link magically goes up and TLPs can be transmitted.
+> > > 
+> > > There are two ways to establish those tunnels:
+> > > 
+> > > 1/ By a firmware in the Thunderbolt host controller.
+> > >    (firmware or "internal" connection manager, drivers/thunderbolt/icm.c)
+> > > 
+> > > 2/ Natively by the kernel.
+> > >    (software connection manager)
+> > > 
+> > > I'm assuming that the laptop in question exclusively uses the firmware
+> > > connection manager, hence the kernel is reliant on that firmware to
+> > > establish tunnels and can't really do anything if it fails to do so.
+> > 
+> > Thanks for the background; that improves my meager understanding a
+> > lot.
+> > 
+> > Since this seems to be a firmware issue, it does sound like this
+> > laptop uses a firmware connection manager.  But there still seems to
+> > be some kernel connection because pre-e8b908146d44, the link came up
+> > in <5 seconds, and after the minor e8b908146d44 change, it takes >60
+> > seconds.
+> 
+> In both cases (with or without) the commit what happens is that after
+> resume is finished the firmware connection manager notices the
+> connection, announces it to the Thunderbolt driver that exposes it to
+> the userspace where boltd re-authorizes the device. This brings up the
+> PCIe tunnel again and things get working.
+> 
+> (What is expected to happen is that during the resume the firmware
+>  connection manager re-connects the PCIe tunnel.)
+> 
+> This took previously the ~5s before resume is complete so that the above
+> steps can happen where as after the commit it got delayed more up to the
+> arbitrary ~60s because we started to use that with the commit
+> e8b908146d44 (PCIE_RESET_READY_POLL_MS).
 
-Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
----
- .../jh7110-starfive-visionfive-2.dtsi         | 64 ++++++++++++++
- arch/riscv/boot/dts/starfive/jh7110.dtsi      | 86 +++++++++++++++++++
- 2 files changed, 150 insertions(+)
+Why does the kernel delay affect the timing of when the firmware
+connection manager notices the connection?  It seems like Linux waits
+for the timeout, then Linux does something that kicks the firmware
+connection manager.  That's why I asked about this sequence:
 
-diff --git a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-index d79f94432b27..7c168246cf2e 100644
---- a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-@@ -232,6 +232,22 @@
- 	status = "okay";
- };
- 
-+&pcie0 {
-+	perst-gpios = <&sysgpio 26 GPIO_ACTIVE_LOW>;
-+	phys = <&pciephy0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie0_pins>;
-+	status = "okay";
-+};
-+
-+&pcie1 {
-+	perst-gpios = <&sysgpio 28 GPIO_ACTIVE_LOW>;
-+	phys = <&pciephy1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie1_pins>;
-+	status = "okay";
-+};
-+
- &qspi {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
-@@ -402,6 +418,54 @@
- 		};
- 	};
- 
-+	pcie0_pins: pcie0-0 {
-+		clkreq-pins {
-+			pinmux = <GPIOMUX(27, GPOUT_LOW,
-+					      GPOEN_DISABLE,
-+					      GPI_NONE)>;
-+			bias-pull-down;
-+			drive-strength = <2>;
-+			input-enable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+
-+		wake-pins {
-+			pinmux = <GPIOMUX(32, GPOUT_LOW,
-+					      GPOEN_DISABLE,
-+					      GPI_NONE)>;
-+			bias-pull-up;
-+			drive-strength = <2>;
-+			input-enable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+	};
-+
-+	pcie1_pins: pcie1-0 {
-+		clkreq-pins {
-+			pinmux = <GPIOMUX(29, GPOUT_LOW,
-+					      GPOEN_DISABLE,
-+					      GPI_NONE)>;
-+			bias-pull-down;
-+			drive-strength = <2>;
-+			input-enable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+
-+		wake-pins {
-+			pinmux = <GPIOMUX(21, GPOUT_LOW,
-+					      GPOEN_DISABLE,
-+					      GPI_NONE)>;
-+			bias-pull-up;
-+			drive-strength = <2>;
-+			input-enable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+	};
-+
- 	spi0_pins: spi0-0 {
- 		mosi-pins {
- 			pinmux = <GPIOMUX(52, GPOUT_SYS_SPI0_TXD,
-diff --git a/arch/riscv/boot/dts/starfive/jh7110.dtsi b/arch/riscv/boot/dts/starfive/jh7110.dtsi
-index e85464c328d0..1a1e97287c5e 100644
---- a/arch/riscv/boot/dts/starfive/jh7110.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7110.dtsi
-@@ -1045,5 +1045,91 @@
- 			#reset-cells = <1>;
- 			power-domains = <&pwrc JH7110_PD_VOUT>;
- 		};
-+
-+		pcie0: pcie@940000000 {
-+			compatible = "starfive,jh7110-pcie";
-+			reg = <0x9 0x40000000 0x0 0x1000000>,
-+			      <0x0 0x2b000000 0x0 0x100000>;
-+			reg-names = "cfg", "apb";
-+			linux,pci-domain = <0>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			ranges = <0x82000000  0x0 0x30000000  0x0 0x30000000 0x0 0x08000000>,
-+				 <0xc3000000  0x9 0x00000000  0x9 0x00000000 0x0 0x40000000>;
-+			interrupts = <56>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc0 0x1>,
-+					<0x0 0x0 0x0 0x2 &pcie_intc0 0x2>,
-+					<0x0 0x0 0x0 0x3 &pcie_intc0 0x3>,
-+					<0x0 0x0 0x0 0x4 &pcie_intc0 0x4>;
-+			msi-controller;
-+			device_type = "pci";
-+			starfive,stg-syscon = <&stg_syscon>;
-+			bus-range = <0x0 0xff>;
-+			clocks = <&syscrg JH7110_SYSCLK_NOC_BUS_STG_AXI>,
-+				 <&stgcrg JH7110_STGCLK_PCIE0_TL>,
-+				 <&stgcrg JH7110_STGCLK_PCIE0_AXI_MST0>,
-+				 <&stgcrg JH7110_STGCLK_PCIE0_APB>;
-+			clock-names = "noc", "tl", "axi_mst0", "apb";
-+			resets = <&stgcrg JH7110_STGRST_PCIE0_AXI_MST0>,
-+				 <&stgcrg JH7110_STGRST_PCIE0_AXI_SLV0>,
-+				 <&stgcrg JH7110_STGRST_PCIE0_AXI_SLV>,
-+				 <&stgcrg JH7110_STGRST_PCIE0_BRG>,
-+				 <&stgcrg JH7110_STGRST_PCIE0_CORE>,
-+				 <&stgcrg JH7110_STGRST_PCIE0_APB>;
-+			reset-names = "mst0", "slv0", "slv", "brg",
-+				      "core", "apb";
-+			status = "disabled";
-+
-+			pcie_intc0: interrupt-controller {
-+				#address-cells = <0>;
-+				#interrupt-cells = <1>;
-+				interrupt-controller;
-+			};
-+		};
-+
-+		pcie1: pcie@9c0000000 {
-+			compatible = "starfive,jh7110-pcie";
-+			reg = <0x9 0xc0000000 0x0 0x1000000>,
-+			      <0x0 0x2c000000 0x0 0x100000>;
-+			reg-names = "cfg", "apb";
-+			linux,pci-domain = <1>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			ranges = <0x82000000  0x0 0x38000000  0x0 0x38000000 0x0 0x08000000>,
-+				 <0xc3000000  0x9 0x80000000  0x9 0x80000000 0x0 0x40000000>;
-+			interrupts = <57>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc1 0x1>,
-+					<0x0 0x0 0x0 0x2 &pcie_intc1 0x2>,
-+					<0x0 0x0 0x0 0x3 &pcie_intc1 0x3>,
-+					<0x0 0x0 0x0 0x4 &pcie_intc1 0x4>;
-+			msi-controller;
-+			device_type = "pci";
-+			starfive,stg-syscon = <&stg_syscon>;
-+			bus-range = <0x0 0xff>;
-+			clocks = <&syscrg JH7110_SYSCLK_NOC_BUS_STG_AXI>,
-+				 <&stgcrg JH7110_STGCLK_PCIE1_TL>,
-+				 <&stgcrg JH7110_STGCLK_PCIE1_AXI_MST0>,
-+				 <&stgcrg JH7110_STGCLK_PCIE1_APB>;
-+			clock-names = "noc", "tl", "axi_mst0", "apb";
-+			resets = <&stgcrg JH7110_STGRST_PCIE1_AXI_MST0>,
-+				 <&stgcrg JH7110_STGRST_PCIE1_AXI_SLV0>,
-+				 <&stgcrg JH7110_STGRST_PCIE1_AXI_SLV>,
-+				 <&stgcrg JH7110_STGRST_PCIE1_BRG>,
-+				 <&stgcrg JH7110_STGRST_PCIE1_CORE>,
-+				 <&stgcrg JH7110_STGRST_PCIE1_APB>;
-+			reset-names = "mst0", "slv0", "slv", "brg",
-+				      "core", "apb";
-+			status = "disabled";
-+
-+			pcie_intc1: interrupt-controller {
-+				#address-cells = <0>;
-+				#interrupt-cells = <1>;
-+				interrupt-controller;
-+			};
-+		};
- 	};
- };
--- 
-2.17.1
+  [  118.985530] pcieport 0000:05:01.0: Data Link Layer Link Active not set in 1000 msec
+  [  190.090902] pcieport 0000:05:01.0: pciehp: Slot(1): Card not present
+  [  191.754347] thunderbolt 0000:06:00.0: 1: DROM version: 1
+  [  191.762638] thunderbolt 0-1: new device found, vendor=0x108 device=0x1630
+  [  191.762641] thunderbolt 0-1: Lenovo ThinkPad Thunderbolt 3 Dock
+  [  191.943506] pcieport 0000:05:01.0: pciehp: Slot(1): Card present
 
+where we wait for the timeout, decide the device is gone, remove
+everything, and then the thunderbolt driver does something, and we
+notice the device is magically back.
+
+> I would also try to change all the BIOS settings back to defaults, see
+> that it works (it is probably in "user" security level then), then
+> switch back to "secure" (only change this one option) and try if it now
+> works. It could be that some setting just did not get commited properly.
+
+If this might lead to fixing a Linux defect, I'm all for this kind of
+experimentation.  But if it only leads to understanding a firmware
+defect better or figuring out better advice to users, I'm not, because
+I don't want to address this with a release note.
+
+Bjorn
