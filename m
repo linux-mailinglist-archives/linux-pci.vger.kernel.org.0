@@ -2,180 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 00E627B113A
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Sep 2023 05:35:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 849887B11A6
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Sep 2023 06:42:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230083AbjI1Dfi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Sep 2023 23:35:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54266 "EHLO
+        id S229547AbjI1Emk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Sep 2023 00:42:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229920AbjI1Dfg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Sep 2023 23:35:36 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1BAD94;
-        Wed, 27 Sep 2023 20:35:35 -0700 (PDT)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38S2Hdmo017390;
-        Thu, 28 Sep 2023 03:35:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=zjsWLhBbxghFcZQJvI05NQSxSkxktlTftSOowIaiCrE=;
- b=WEkZ7qzL7DOzI+6bdGiGNKvoeFfdwwz34zV84vtNISzesUlxcE97dXFCsNjItFMNwZzF
- bFPO0Rzv/cjY8r3OTtO1pTRuPWzuxBYkN8Adg4wcAKvL6USB0njlD8NtMcfD0YlW4mj9
- jiaqLafog94Nn0K5fhu8YPR9TkEd0WExY2j4hQiAWQR08hyz72ttOb4PHGwVAbs4INjo
- aUo97gZ0o2MqAYFGNymuIh1NegSUY4Oj2EcwiPgcj+C+3q+ec0/JV/c5z70/gbZb7FzU
- S6d7CZdstIZbm1n5AyfKsXUAOsdnzk3VXZYpyys4v9P5dvh627MA6OHPnACWR7zGYAIf 3Q== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tcvg98mh3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Sep 2023 03:35:27 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38S3ZP25014967
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Sep 2023 03:35:25 GMT
-Received: from [10.216.41.51] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Wed, 27 Sep
- 2023 20:35:16 -0700
-Message-ID: <7d5426cc-01db-e3c5-c968-d57122d0d0f6@quicinc.com>
-Date:   Thu, 28 Sep 2023 09:05:11 +0530
+        with ESMTP id S229445AbjI1Emj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Sep 2023 00:42:39 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E9B7121
+        for <linux-pci@vger.kernel.org>; Wed, 27 Sep 2023 21:42:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695876157; x=1727412157;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=97XV/CRP5aIuqNvyzML6MfTx6/d7HwiUMaxjQQhuLrA=;
+  b=ZMLENvQjMx/tgWsVnX5BdGvaT/G0Xoz1OVRA4Wrs1+2c5iUXHtKhF5uV
+   KyuV0WzwJ12TcNWd4uBc4f0YlS3iL92Qqxg59syReA17nJ1HhVRmN4a1t
+   e35H1kL+0Pe0cFuWlA8Xj3lBqhOYrPrBKm/yZEvSotKT35bC1ckBclgMc
+   DJCeU81vPz9P7klPA2r/EbIVr8A4cjGbHh8kYF492NPiqyQXvuyZvVVeb
+   bVKAfMoKWuaSLHDG1EcgH6QW79XZP7QlkhAGcBqVj+dvfbKueVt4KhZ4K
+   GJUoHRTsTVsURXUINu74RL8mcBVUuXjkwna6sC2vf4C/RIynNoCRwHwoI
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="380863998"
+X-IronPort-AV: E=Sophos;i="6.03,182,1694761200"; 
+   d="scan'208";a="380863998"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 21:42:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="815106641"
+X-IronPort-AV: E=Sophos;i="6.03,182,1694761200"; 
+   d="scan'208";a="815106641"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga008.fm.intel.com with ESMTP; 27 Sep 2023 21:42:34 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 70046192; Thu, 28 Sep 2023 07:42:33 +0300 (EEST)
+Date:   Thu, 28 Sep 2023 07:42:33 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lukas Wunner <lukas@wunner.de>, Kamil Paral <kparal@redhat.com>,
+        linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+        bhelgaas@google.com, chris.chiu@canonical.com
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+Message-ID: <20230928044233.GR3208943@black.fi.intel.com>
+References: <20230927180200.GQ3208943@black.fi.intel.com>
+ <20230927194145.GA458987@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v5 3/5] opp: Add dev_pm_opp_find_level_floor()
-Content-Language: en-US
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <vireshk@kernel.org>, <nm@ti.com>,
-        <sboyd@kernel.org>, <mani@kernel.org>, <lpieralisi@kernel.org>,
-        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
-        <rafael@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <quic_vbadigan@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_ramkri@quicinc.com>,
-        <quic_parass@quicinc.com>
-References: <1694066433-8677-1-git-send-email-quic_krichai@quicinc.com>
- <1694066433-8677-4-git-send-email-quic_krichai@quicinc.com>
- <20230927071458.busudwwj26kmia4u@vireshk-i7>
-From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20230927071458.busudwwj26kmia4u@vireshk-i7>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: tSZjtMznI6EeQ1NvReX8kI2cEAfR29Jt
-X-Proofpoint-GUID: tSZjtMznI6EeQ1NvReX8kI2cEAfR29Jt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-09-27_17,2023-09-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- priorityscore=1501 lowpriorityscore=0 phishscore=0 adultscore=0
- bulkscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2309280030
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230927194145.GA458987@bhelgaas>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Sep 27, 2023 at 02:41:45PM -0500, Bjorn Helgaas wrote:
+> On Wed, Sep 27, 2023 at 09:02:00PM +0300, Mika Westerberg wrote:
+> > On Wed, Sep 27, 2023 at 12:24:55PM -0500, Bjorn Helgaas wrote:
+> > > On Wed, Sep 27, 2023 at 08:01:14PM +0300, Mika Westerberg wrote:
+> > > > On Wed, Sep 27, 2023 at 11:50:36AM -0500, Bjorn Helgaas wrote:
+> > > > ...
+> 
+> > > > > The hierarchy:
+> > > > > 
+> > > > >   pci 0000:00:1c.4: PCI bridge to [bus 04-3c]
+> > > > >   pci 0000:04:00.0: PCI bridge to [bus 05-3c]
+> > > > >   pci 0000:05:00.0: PCI bridge to [bus 06]
+> > > > >   pci 0000:05:01.0: PCI bridge to [bus 07-3b]
+> > > > > 
+> > > > > It looks like we start the 06:00.0 resume first (118.9), but it
+> > > > > doesn't complete until after the timeout (191.7):
+> > > > > 
+> > > > >   [  118.915870] thunderbolt 0000:06:00.0: control channel starting...
+> > > > >   [  118.985530] pcieport 0000:05:01.0: Data Link Layer Link Active not set in 1000 msec
+> > > > >   [  190.090902] pcieport 0000:05:01.0: pciehp: Slot(1): Card not present
+> > > > >   [  191.754347] thunderbolt 0000:06:00.0: 1: DROM version: 1
+> > > > >   [  191.762638] thunderbolt 0-1: new device found, vendor=0x108 device=0x1630
+> > > > >   [  191.762641] thunderbolt 0-1: Lenovo ThinkPad Thunderbolt 3 Dock
+> > > > >   [  191.943506] pcieport 0000:05:01.0: pciehp: Slot(1): Card present
+> > > > > 
+> > > > > Did the Thunderbolt driver do something to 06:00.0 that caused the
+> > > > > 05:01.0 link to come up, or is the timing just coincidental?
+> > > > 
+> > > > Yes it sent the firmware a command telling that the driver is ready
+> > > > again, then the firmware sends back notification that there is a new
+> > > > device:
+> > > > 
+> > > > [  191.754347] thunderbolt 0000:06:00.0: 1: DROM version: 1
+> > > > [  191.762638] thunderbolt 0-1: new device found, vendor=0x108 device=0x1630
+> > > > [  191.762641] thunderbolt 0-1: Lenovo ThinkPad Thunderbolt 3 Dock
+> > > > 
+> > > > this then is send to the userspace via uevent where bolt goes and
+> > > > authorizes it and this results the tunnel to be created which show in
+> > > > the log as:
+> > > > 
+> > > > [  191.943506] pcieport 0000:05:01.0: pciehp: Slot(1): Card present
+> > > 
+> > > So the obvious next question is why we have to wait for the 05:01.0
+> > > link timeout before sending the command to the 06:00.0 firmware, since
+> > > there's no PCI connection between them.
+> > 
+> > No there is not - it is a PCIe tunnel.
+> 
+> You confirmed my assertion that in terms of the PCI topology, there is
+> no connection between 05:01.0 and 06:00.0.
+> 
+> So the question remains: do we need to wait for the 05:01.0 link
+> timeout before the 06:00.0 driver does something that leads to
+> firmware starting the process of bringing up the tunnel and the link?
 
-On 9/27/2023 12:44 PM, Viresh Kumar wrote:
-> On 07-09-23, 11:30, Krishna chaitanya chundru wrote:
->
-> $Subject should have OPP instead of opp. Past history of framework can be seen
-> for this.
->
->> During initialization of some drivers, need to vote for max level.
->>
->> Adding dev_pm_opp_find_level_floor() for searching a lesser match or
->> operating on OPP in the order of decreasing level.
->>
->> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
->> ---
->>   drivers/opp/core.c     | 25 +++++++++++++++++++++++++
->>   include/linux/pm_opp.h |  9 +++++++++
->>   2 files changed, 34 insertions(+)
->>
->> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
->> index 919cc53..6d4d226 100644
->> --- a/drivers/opp/core.c
->> +++ b/drivers/opp/core.c
->> @@ -814,6 +814,31 @@ struct dev_pm_opp *dev_pm_opp_find_level_ceil(struct device *dev,
->>   EXPORT_SYMBOL_GPL(dev_pm_opp_find_level_ceil);
->>   
->>   /**
->> + * dev_pm_opp_find_level_floor() - Search for a rounded floor freq
-> freq ?
->
->> + * @dev:	device for which we do this operation
->> + * @level:	Start level
->> + *
->> + * Search for the matching floor *available* OPP from a starting level
->> + * for a device.
->> + *
->> + * Return: matching *opp and refreshes *level accordingly, else returns
->> + * ERR_PTR in case of error and should be handled using IS_ERR. Error return
->> + * values can be:
->> + * EINVAL:	for bad pointer
->> + * ERANGE:	no match found for search
->> + * ENODEV:	if device not found in list of registered devices
->> + *
->> + * The callers are required to call dev_pm_opp_put() for the returned OPP after
->> + * use.
->> + */
->> +struct dev_pm_opp *dev_pm_opp_find_level_floor(struct device *dev,
->> +					       unsigned long *level)
->> +{
->> +	return _find_key_floor(dev, level, 0, true, _read_level, NULL);
->> +}
->> +EXPORT_SYMBOL_GPL(dev_pm_opp_find_level_floor);
->> +
->> +/**
->>    * dev_pm_opp_find_bw_ceil() - Search for a rounded ceil bandwidth
->>    * @dev:	device for which we do this operation
->>    * @bw:	start bandwidth
->> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
->> index 91f87d7..baea92f 100644
->> --- a/include/linux/pm_opp.h
->> +++ b/include/linux/pm_opp.h
->> @@ -144,6 +144,9 @@ struct dev_pm_opp *dev_pm_opp_find_level_exact(struct device *dev,
->>   struct dev_pm_opp *dev_pm_opp_find_level_ceil(struct device *dev,
->>   					      unsigned int *level);
->>   
->> +struct dev_pm_opp *dev_pm_opp_find_level_floor(struct device *dev,
->> +					       unsigned long *level);
->> +
->>   struct dev_pm_opp *dev_pm_opp_find_bw_ceil(struct device *dev,
->>   					   unsigned int *bw, int index);
->>   
->> @@ -314,6 +317,12 @@ static inline struct dev_pm_opp *dev_pm_opp_find_bw_ceil(struct device *dev,
->>   	return ERR_PTR(-EOPNOTSUPP);
->>   }
->>   
->> +static inline struct dev_pm_opp *dev_pm_opp_find_level_floor(struct device *dev,
-> Why add between two bw related functions ?
->
->> +							     unsigned long *level)
->> +{
->> +	return ERR_PTR(-EOPNOTSUPP);
->> +}
->> +
->>   static inline struct dev_pm_opp *dev_pm_opp_find_bw_floor(struct device *dev,
->>   					unsigned int *bw, int index)
->>   {
-> Fixed all this and applied. Thanks.
->
-I didn't notice this before, thanks for fixing and applying .
+In the expected case this should not matter. It is the ACPI _PR0
+resource that when turned on starts bringing up all the links.
 
-- KC
+It is enough for the firmware that we follow the delays in the PCIe spec.
 
+In this case I think we don't need to wait for the link timeout.
+
+> > > But there must be *some* connection between the 05:01.0 link coming up
+> > > and the 06:00.0 behavior.  Maybe this is related to the
+> > > nhi_resume_noirq() comment about "The tunneled pci bridges are
+> > > siblings of us. Use resume_noirq to reenable the tunnels asap. A
+> > > corresponding pci quirk blocks the downstream bridges resume_noirq
+> > > until we are done." Unfortunately the comment doesn't mention the NAME
+> > > of the quirk, so I lost the trail there.
+> > > 
+> > > Maybe there's an opportunity for a quirk that says "this Thunderbolt
+> > > device should never need a whole second for the link to come up", for
+> > > example.
+> > 
+> > The PCIe stack needs to follow PCIe spec (regardless of what is the
+> > actual medium the packets go through). And regadless what we do here the
+> > PCIe link goes down and that breaks the usage of any devices behind that
+> > link such as mounted disks so the delay is definitely not the worst
+> > thing that can happen.
+> 
+> Sure.  But if we resume in a reasonable time, we at least have the
+> opportunity to notice what happened and warn about why the mounted
+> disk broke.  That's way better than getting bug reports that say
+> "resume is broken."
+
+Well "resume is broken" is much better than "your precious eata just got
+lost, have fun."
+
+> > Now, If you read anything that Kamil said, this actually works now with
+> > the "secure" mode when he turned the "Wake from Thunderbolt" option back
+> > to the default. So now it works as expected but upon unplug there is the
+> > issue that we fixed with the commit that marks the devices disconnected.
+> > He will test that next week so we can be sure.
+> 
+> I did see that.  You may have also seen my sentiment that it's painful
+> for users to diagnose an apparent resume failure and find a BIOS
+> option to fix it.
+
+Unfortunately todays systems are such that if you go and change BIOS
+options from the defaults you may accidentally enter untested
+territories. Changing things back to defaults is a reasonable ask IMHO.
+
+> If we can't make resume work in a reasonable time, can we at least
+> detect the case where it's going to take too long?  If so, maybe we
+> can warn about it, avoid suspend, or change the way we do it.
+
+Only thing we are missing now is the result of Kamil's testing to see if
+the real uplug case is working. I would expect so, this is the issue we
+fixed with:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=pm&id=6786c2941fe1788035f99c98c932672138b3fbc5
+
+If that's true then there is nothing more to be fixed, no hacks need to
+be put anywhere, and this discussion can be ended too.
