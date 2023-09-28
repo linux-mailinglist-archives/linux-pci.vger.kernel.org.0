@@ -2,43 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 95D4D7B27C3
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Sep 2023 23:56:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59B7B7B2881
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Sep 2023 00:36:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231542AbjI1V4r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Sep 2023 17:56:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51302 "EHLO
+        id S232171AbjI1Wgg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Sep 2023 18:36:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232521AbjI1V4r (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Sep 2023 17:56:47 -0400
+        with ESMTP id S232123AbjI1Wgf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Sep 2023 18:36:35 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F33031AD;
-        Thu, 28 Sep 2023 14:56:45 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61D58C433C7;
-        Thu, 28 Sep 2023 21:56:45 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E291A4
+        for <linux-pci@vger.kernel.org>; Thu, 28 Sep 2023 15:36:32 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43F6AC433C8;
+        Thu, 28 Sep 2023 22:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695938205;
-        bh=CCOmPtaIPAksl9FwVME2X9kGTjH7x0T2LVT+vz1R4gI=;
+        s=k20201202; t=1695940592;
+        bh=m6FirDPaq4GOJZVG2QDbio8VPlYSf/V7MMCjFBho74o=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=s4LDK5ARohl7qAnovUvynqNIvU0/b3bTTmaLsUmuJtrcWtxe92gX+eqwyvILh6IHq
-         uDpLdB+qdEj1x/WA1mYpzeaCdaYK5cvYmK4HX1T5kemXL2PcdefesTsa+WhXnqesjE
-         WMjak6vKupls/2afH4o7RKu3w8LANEbobTxzY9l6fo6iK+op3M/5KYbo0c8KyxZH0O
-         719btZeOdZf4US21Wm0jATfP1Sh3NI8phBKTfiTYSgm1yEyEojpkG+T9oWSV8CXvuz
-         bQHoyPhW2ITiU9HDQNup/JW99w6piiXTnTMEwLWomQAwUzRwdkvdOxMPrZ3BV1Sj/y
-         XgYHOwGXxa/8Q==
-Date:   Thu, 28 Sep 2023 16:56:43 -0500
+        b=syYisFGBk5IfE5NsFFWUJzdSZoRWz3su8CMuLwgZAVFYR35+2ju6qcBap21VuTN5w
+         HkylG/MqZipbnFRi3FenZm9pZr6thvdAVPS0HvvsGlFoJMx8UVuFw97uEhqLhpoKMy
+         +2PXn60IilZlkziz7vQb7et4dElrcu5og2Hg1jNa7ujX2qXyTKCy6Xbyri4deMBVFk
+         i6AdQVsE6wljOmyxHmkQa9tdlGH44Qk52i27l7v9y9X43+Sp9QMGeH4GI1J/9bxTtU
+         6O2SHEZfRY548GXBsxtYOb/5AcUEqfBB2Z3q6PYYRVUv2H2jlJwdqfAnM+tMKwGwaT
+         edGt0WMkBaNMw==
+Date:   Thu, 28 Sep 2023 17:36:30 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sui Jingfeng <sui.jingfeng@linux.dev>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org,
-        alsa-devel@alsa-project.org, Sui Jingfeng <suijingfeng@loongson.cn>
-Subject: Re: [PATCH 0/5] Add the pci_get_base_class() helper and use it
-Message-ID: <20230928215643.GA506151@bhelgaas>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        linux-pci@vger.kernel.org,
+        Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH] PCI/sysfs: Protect driver's D3cold preference from user
+ space
+Message-ID: <20230928223630.GA507660@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230825062714.6325-1-sui.jingfeng@linux.dev>
+In-Reply-To: <b8a7f4af2b73f6b506ad8ddee59d747cbf834606.1695025365.git.lukas@wunner.de>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -48,40 +49,95 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 25, 2023 at 02:27:09PM +0800, Sui Jingfeng wrote:
-> From: Sui Jingfeng <suijingfeng@loongson.cn>
+On Mon, Sep 18, 2023 at 02:48:01PM +0200, Lukas Wunner wrote:
+> struct pci_dev contains two flags which govern whether the device may
+> suspend to D3cold:
 > 
-> There is no function that can be used to get all PCI(e) devices in a
-> system by matching against its the PCI base class code only, while keep
-> the sub-class code and the programming interface ignored. Therefore, add
-> the pci_get_base_class() function to suit the need.
+> * no_d3cold provides an opt-out for drivers (e.g. if a device is known
+>   to not wake from D3cold)
 > 
-> For example, if an application want to process all PCI(e) display devices
-> in a system, it can achieve such goal by writing the code as following:
+> * d3cold_allowed provides an opt-out for user space (default is true,
+>   user space may set to false)
 > 
->     pdev = NULL;
->     do {
->         pdev = pci_get_base_class(PCI_BASE_CLASS_DISPLAY, pdev);
->         if (!pdev)
->             break;
+> Since commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend"),
+> the user space setting overwrites the driver setting.  Essentially user
+> space is trusted to know better than the driver whether D3cold is
+> working.
 > 
->         do_something_for_pci_display_device(pdev);
->     } while (1);
+> That feels unsafe and wrong.  Assume that the change was introduced
+> inadvertently and do not overwrite no_d3cold when d3cold_allowed is
+> modified.  Instead, consider d3cold_allowed in addition to no_d3cold
+> when choosing a suspend state for the device.
 > 
-> Sui Jingfeng (5):
->   PCI: Add the pci_get_base_class() helper
->   ALSA: hda/intel: Use pci_get_base_class() to reduce duplicated code
->   drm/nouveau: Use pci_get_base_class() to reduce duplicated code
->   drm/amdgpu: Use pci_get_base_class() to reduce duplicated code
->   drm/radeon: Use pci_get_base_class() to reduce duplicated code
+> That way, user space may opt out of D3cold if the driver hasn't, but it
+> may no longer force an opt in if the driver has opted out.
 > 
->  drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c | 11 +++------
->  drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c | 20 ++++-----------
->  drivers/gpu/drm/nouveau/nouveau_acpi.c   | 11 +++------
->  drivers/gpu/drm/radeon/radeon_bios.c     | 20 ++++-----------
->  drivers/pci/search.c                     | 31 ++++++++++++++++++++++++
->  include/linux/pci.h                      |  5 ++++
->  sound/pci/hda/hda_intel.c                | 16 ++++--------
->  7 files changed, 59 insertions(+), 55 deletions(-)
+> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Cc: stable@vger.kernel.org # v4.8+
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Applied to pci/enumeration for v6.7, thanks.
+Mika and Mario, you both commented on this, but I *think* you were
+both OK with it as-is for now?  If so, can you give a Reviewed-by?
+I don't want to go ahead if you have any concerns.
+
+Since we're touching this area, is there anything we can do to clarify
+the comments?
+
+        unsigned int    no_d3cold:1;    /* D3cold is forbidden */
+        unsigned int    bridge_d3:1;    /* Allow D3 for bridge */
+        unsigned int    d3cold_allowed:1;       /* D3cold is allowed by user */
+
+These all have to do with D3, but:
+
+  - For no_d3cold, "D3cold is forbidden" doesn't capture the notion
+    that "driver knows the device doesn't wake from D3cold"
+
+  - It's not clear whether "bridge_d3" applies to D3hot, D3cold, or
+    both.
+
+  - The computation of "bridge_d3" is ... complicated.  It depends on
+    all the device/platform behavior assumptions in
+    pci_bridge_d3_possible().  And *also* (I think) the user-space
+    "d3cold_allowed" knob, via pci_dev_check_d3cold() in
+    pci_bridge_d3_update().
+
+    So it's kind of a mix of hardware characteristics and
+    administrative controls.
+
+Any comment updates could be a separate patch so as not to complicate
+this one.
+
+> @@ -911,7 +911,7 @@ pci_power_t acpi_pci_choose_state(struct pci_dev *pdev)
+>  {
+>  	int acpi_state, d_max;
+>  
+> -	if (pdev->no_d3cold)
+> +	if (pdev->no_d3cold || !pdev->d3cold_allowed)
+
+Haha, looks good.  Too bad the senses are opposite ("no_d3cold" and
+"!d3cold_allowed"), but that's for another day.
+
+>  		d_max = ACPI_STATE_D3_HOT;
+>  	else
+>  		d_max = ACPI_STATE_D3_COLD;
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index ba38fc4..e18ccd2 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -530,10 +530,7 @@ static ssize_t d3cold_allowed_store(struct device *dev,
+>  		return -EINVAL;
+>  
+>  	pdev->d3cold_allowed = !!val;
+> -	if (pdev->d3cold_allowed)
+> -		pci_d3cold_enable(pdev);
+> -	else
+> -		pci_d3cold_disable(pdev);
+> +	pci_bridge_d3_update(pdev);
+
+This is great.  D3 is still a tangle, but this is a significant
+improvement.
+
+>  	pm_runtime_resume(dev);
+
+Bjorn
