@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF9DD7B2472
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Sep 2023 19:55:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 763857B2477
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Sep 2023 19:57:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230503AbjI1Rzk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Sep 2023 13:55:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52172 "EHLO
+        id S230139AbjI1R47 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Sep 2023 13:56:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbjI1Rzj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Sep 2023 13:55:39 -0400
-X-Greylist: delayed 418 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 28 Sep 2023 10:55:37 PDT
-Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D5CDD;
-        Thu, 28 Sep 2023 10:55:37 -0700 (PDT)
+        with ESMTP id S229870AbjI1R47 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Sep 2023 13:56:59 -0400
+Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f236:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E913519D;
+        Thu, 28 Sep 2023 10:56:56 -0700 (PDT)
 Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
          client-signature RSA-PSS (4096 bits) client-digest SHA256)
         (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by mailout2.hostsharing.net (Postfix) with ESMTPS id E7CA51018978B;
-        Thu, 28 Sep 2023 19:48:34 +0200 (CEST)
+        by mailout3.hostsharing.net (Postfix) with ESMTPS id B2E8710029AE0;
+        Thu, 28 Sep 2023 19:56:54 +0200 (CEST)
 Received: from localhost (unknown [89.246.108.87])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id C05E860E0037;
-        Thu, 28 Sep 2023 19:48:34 +0200 (CEST)
-X-Mailbox-Line: From 3db7a8856833dfcbc4b122301f233828379d67db Mon Sep 17 00:00:00 2001
-Message-Id: <3db7a8856833dfcbc4b122301f233828379d67db.1695921657.git.lukas@wunner.de>
+        by h08.hostsharing.net (Postfix) with ESMTPSA id 66DAD60D850C;
+        Thu, 28 Sep 2023 19:56:54 +0200 (CEST)
+X-Mailbox-Line: From f4a63091203d09e275c3df983692b630ffca4bca Mon Sep 17 00:00:00 2001
+Message-Id: <f4a63091203d09e275c3df983692b630ffca4bca.1695921657.git.lukas@wunner.de>
 In-Reply-To: <cover.1695921656.git.lukas@wunner.de>
 References: <cover.1695921656.git.lukas@wunner.de>
 From:   Lukas Wunner <lukas@wunner.de>
-Date:   Thu, 28 Sep 2023 19:32:32 +0200
-Subject: [PATCH 04/12] certs: Create blacklist keyring earlier
+Date:   Thu, 28 Sep 2023 19:32:35 +0200
+Subject: [PATCH 05/12] crypto: akcipher - Support more than one signature
+ encoding
 To:     Bjorn Helgaas <helgaas@kernel.org>,
         David Howells <dhowells@redhat.com>,
         David Woodhouse <dwmw2@infradead.org>,
@@ -56,7 +56,7 @@ Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sean Christopherson <seanjc@google.com>,
         Alexander Graf <graf@amazon.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,48 +64,281 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The upcoming support for PCI device authentication with CMA-SPDM
-(PCIe r6.1 sec 6.31) requires parsing X.509 certificates upon
-device enumeration, which happens in a subsys_initcall().
+Currently only a single default signature encoding is supported per
+akcipher.
 
-Parsing X.509 certificates accesses the blacklist keyring:
-x509_cert_parse()
-  x509_get_sig_params()
-    is_hash_blacklisted()
-      keyring_search()
+A subsequent commit will allow a second encoding for ecdsa, namely P1363
+alternatively to X9.62.
 
-So far the keyring is created much later in a device_initcall().  Avoid
-a NULL pointer dereference on access to the keyring by creating it one
-initcall level earlier than PCI device enumeration, i.e. in an
-arch_initcall().
+To accommodate for that, amend struct akcipher_request and struct
+crypto_akcipher_sync_data to store the desired signature encoding for
+verify and sign ops.
+
+Amend akcipher_request_set_crypt(), crypto_sig_verify() and
+crypto_sig_sign() with an additional parameter which specifies the
+desired signature encoding.  Adjust all callers.
 
 Signed-off-by: Lukas Wunner <lukas@wunner.de>
 ---
- certs/blacklist.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ crypto/akcipher.c                   |  2 +-
+ crypto/asymmetric_keys/public_key.c |  4 ++--
+ crypto/internal.h                   |  1 +
+ crypto/rsa-pkcs1pad.c               | 11 +++++++----
+ crypto/sig.c                        |  6 ++++--
+ crypto/testmgr.c                    |  8 +++++---
+ crypto/testmgr.h                    |  1 +
+ include/crypto/akcipher.h           | 10 +++++++++-
+ include/crypto/sig.h                |  6 ++++--
+ 9 files changed, 34 insertions(+), 15 deletions(-)
 
-diff --git a/certs/blacklist.c b/certs/blacklist.c
-index 675dd7a8f07a..34185415d451 100644
---- a/certs/blacklist.c
-+++ b/certs/blacklist.c
-@@ -311,7 +311,7 @@ static int restrict_link_for_blacklist(struct key *dest_keyring,
-  * Initialise the blacklist
-  *
-  * The blacklist_init() function is registered as an initcall via
-- * device_initcall().  As a result if the blacklist_init() function fails for
-+ * arch_initcall().  As a result if the blacklist_init() function fails for
-  * any reason the kernel continues to execute.  While cleanly returning -ENODEV
-  * could be acceptable for some non-critical kernel parts, if the blacklist
-  * keyring fails to load it defeats the certificate/key based deny list for
-@@ -356,7 +356,7 @@ static int __init blacklist_init(void)
- /*
-  * Must be initialised before we try and load the keys into the keyring.
-  */
--device_initcall(blacklist_init);
-+arch_initcall(blacklist_init);
+diff --git a/crypto/akcipher.c b/crypto/akcipher.c
+index 52813f0b19e4..88501c0886d2 100644
+--- a/crypto/akcipher.c
++++ b/crypto/akcipher.c
+@@ -221,7 +221,7 @@ int crypto_akcipher_sync_prep(struct crypto_akcipher_sync_data *data)
+ 	sg = &data->sg;
+ 	sg_init_one(sg, buf, mlen);
+ 	akcipher_request_set_crypt(req, sg, data->dst ? sg : NULL,
+-				   data->slen, data->dlen);
++				   data->slen, data->dlen, data->enc);
  
- #ifdef CONFIG_SYSTEM_REVOCATION_LIST
- /*
+ 	crypto_init_wait(&data->cwait);
+ 	akcipher_request_set_callback(req, CRYPTO_TFM_REQ_MAY_SLEEP,
+diff --git a/crypto/asymmetric_keys/public_key.c b/crypto/asymmetric_keys/public_key.c
+index abeecb8329b3..7f96e8e501db 100644
+--- a/crypto/asymmetric_keys/public_key.c
++++ b/crypto/asymmetric_keys/public_key.c
+@@ -354,7 +354,7 @@ static int software_key_eds_op(struct kernel_pkey_params *params,
+ 		if (!issig)
+ 			break;
+ 		ret = crypto_sig_sign(sig, in, params->in_len,
+-				      out, params->out_len);
++				      out, params->out_len, params->encoding);
+ 		break;
+ 	default:
+ 		BUG();
+@@ -438,7 +438,7 @@ int public_key_verify_signature(const struct public_key *pkey,
+ 		goto error_free_key;
+ 
+ 	ret = crypto_sig_verify(tfm, sig->s, sig->s_size,
+-				sig->digest, sig->digest_size);
++				sig->digest, sig->digest_size, sig->encoding);
+ 
+ error_free_key:
+ 	kfree_sensitive(key);
+diff --git a/crypto/internal.h b/crypto/internal.h
+index 63e59240d5fb..268315b13ccd 100644
+--- a/crypto/internal.h
++++ b/crypto/internal.h
+@@ -41,6 +41,7 @@ struct crypto_akcipher_sync_data {
+ 	void *dst;
+ 	unsigned int slen;
+ 	unsigned int dlen;
++	const char *enc;
+ 
+ 	struct akcipher_request *req;
+ 	struct crypto_wait cwait;
+diff --git a/crypto/rsa-pkcs1pad.c b/crypto/rsa-pkcs1pad.c
+index d2e5e104f8cf..5f9313a3b01e 100644
+--- a/crypto/rsa-pkcs1pad.c
++++ b/crypto/rsa-pkcs1pad.c
+@@ -262,7 +262,8 @@ static int pkcs1pad_encrypt(struct akcipher_request *req)
+ 
+ 	/* Reuse output buffer */
+ 	akcipher_request_set_crypt(&req_ctx->child_req, req_ctx->in_sg,
+-				   req->dst, ctx->key_size - 1, req->dst_len);
++				   req->dst, ctx->key_size - 1, req->dst_len,
++				   NULL);
+ 
+ 	err = crypto_akcipher_encrypt(&req_ctx->child_req);
+ 	if (err != -EINPROGRESS && err != -EBUSY)
+@@ -362,7 +363,7 @@ static int pkcs1pad_decrypt(struct akcipher_request *req)
+ 	/* Reuse input buffer, output to a new buffer */
+ 	akcipher_request_set_crypt(&req_ctx->child_req, req->src,
+ 				   req_ctx->out_sg, req->src_len,
+-				   ctx->key_size);
++				   ctx->key_size, NULL);
+ 
+ 	err = crypto_akcipher_decrypt(&req_ctx->child_req);
+ 	if (err != -EINPROGRESS && err != -EBUSY)
+@@ -419,7 +420,8 @@ static int pkcs1pad_sign(struct akcipher_request *req)
+ 
+ 	/* Reuse output buffer */
+ 	akcipher_request_set_crypt(&req_ctx->child_req, req_ctx->in_sg,
+-				   req->dst, ctx->key_size - 1, req->dst_len);
++				   req->dst, ctx->key_size - 1, req->dst_len,
++				   req->enc);
+ 
+ 	err = crypto_akcipher_decrypt(&req_ctx->child_req);
+ 	if (err != -EINPROGRESS && err != -EBUSY)
+@@ -551,7 +553,8 @@ static int pkcs1pad_verify(struct akcipher_request *req)
+ 
+ 	/* Reuse input buffer, output to a new buffer */
+ 	akcipher_request_set_crypt(&req_ctx->child_req, req->src,
+-				   req_ctx->out_sg, sig_size, ctx->key_size);
++				   req_ctx->out_sg, sig_size, ctx->key_size,
++				   req->enc);
+ 
+ 	err = crypto_akcipher_encrypt(&req_ctx->child_req);
+ 	if (err != -EINPROGRESS && err != -EBUSY)
+diff --git a/crypto/sig.c b/crypto/sig.c
+index 224c47019297..4fc1a8f865e4 100644
+--- a/crypto/sig.c
++++ b/crypto/sig.c
+@@ -89,7 +89,7 @@ EXPORT_SYMBOL_GPL(crypto_sig_maxsize);
+ 
+ int crypto_sig_sign(struct crypto_sig *tfm,
+ 		    const void *src, unsigned int slen,
+-		    void *dst, unsigned int dlen)
++		    void *dst, unsigned int dlen, const char *enc)
+ {
+ 	struct crypto_akcipher **ctx = crypto_sig_ctx(tfm);
+ 	struct crypto_akcipher_sync_data data = {
+@@ -98,6 +98,7 @@ int crypto_sig_sign(struct crypto_sig *tfm,
+ 		.dst = dst,
+ 		.slen = slen,
+ 		.dlen = dlen,
++		.enc = enc,
+ 	};
+ 
+ 	return crypto_akcipher_sync_prep(&data) ?:
+@@ -108,7 +109,7 @@ EXPORT_SYMBOL_GPL(crypto_sig_sign);
+ 
+ int crypto_sig_verify(struct crypto_sig *tfm,
+ 		      const void *src, unsigned int slen,
+-		      const void *digest, unsigned int dlen)
++		      const void *digest, unsigned int dlen, const char *enc)
+ {
+ 	struct crypto_akcipher **ctx = crypto_sig_ctx(tfm);
+ 	struct crypto_akcipher_sync_data data = {
+@@ -116,6 +117,7 @@ int crypto_sig_verify(struct crypto_sig *tfm,
+ 		.src = src,
+ 		.slen = slen,
+ 		.dlen = dlen,
++		.enc = enc,
+ 	};
+ 	int err;
+ 
+diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+index 216878c8bc3d..d5dd715673dd 100644
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -4154,11 +4154,12 @@ static int test_akcipher_one(struct crypto_akcipher *tfm,
+ 			goto free_all;
+ 		memcpy(xbuf[1], c, c_size);
+ 		sg_set_buf(&src_tab[2], xbuf[1], c_size);
+-		akcipher_request_set_crypt(req, src_tab, NULL, m_size, c_size);
++		akcipher_request_set_crypt(req, src_tab, NULL, m_size, c_size,
++					   vecs->enc);
+ 	} else {
+ 		sg_init_one(&dst, outbuf_enc, out_len_max);
+ 		akcipher_request_set_crypt(req, src_tab, &dst, m_size,
+-					   out_len_max);
++					   out_len_max, NULL);
+ 	}
+ 	akcipher_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
+ 				      crypto_req_done, &wait);
+@@ -4217,7 +4218,8 @@ static int test_akcipher_one(struct crypto_akcipher *tfm,
+ 	sg_init_one(&src, xbuf[0], c_size);
+ 	sg_init_one(&dst, outbuf_dec, out_len_max);
+ 	crypto_init_wait(&wait);
+-	akcipher_request_set_crypt(req, &src, &dst, c_size, out_len_max);
++	akcipher_request_set_crypt(req, &src, &dst, c_size, out_len_max,
++				   vecs->enc);
+ 
+ 	err = crypto_wait_req(vecs->siggen_sigver_test ?
+ 			      /* Run asymmetric signature generation */
+diff --git a/crypto/testmgr.h b/crypto/testmgr.h
+index 5ca7a412508f..ad57e7af2e14 100644
+--- a/crypto/testmgr.h
++++ b/crypto/testmgr.h
+@@ -153,6 +153,7 @@ struct akcipher_testvec {
+ 	const unsigned char *params;
+ 	const unsigned char *m;
+ 	const unsigned char *c;
++	const char *enc;
+ 	unsigned int key_len;
+ 	unsigned int param_len;
+ 	unsigned int m_size;
+diff --git a/include/crypto/akcipher.h b/include/crypto/akcipher.h
+index 670508f1dca1..00bbec69af3b 100644
+--- a/include/crypto/akcipher.h
++++ b/include/crypto/akcipher.h
+@@ -30,6 +30,8 @@
+  *		In case of error where the dst sgl size was insufficient,
+  *		it will be updated to the size required for the operation.
+  *		For verify op this is size of digest part in @src.
++ * @enc:	For verify op it's the encoding of the signature part of @src.
++ *		For sign op it's the encoding of the signature in @dst.
+  * @__ctx:	Start of private context data
+  */
+ struct akcipher_request {
+@@ -38,6 +40,7 @@ struct akcipher_request {
+ 	struct scatterlist *dst;
+ 	unsigned int src_len;
+ 	unsigned int dst_len;
++	const char *enc;
+ 	void *__ctx[] CRYPTO_MINALIGN_ATTR;
+ };
+ 
+@@ -272,17 +275,22 @@ static inline void akcipher_request_set_callback(struct akcipher_request *req,
+  * @src_len:	size of the src input scatter list to be processed
+  * @dst_len:	size of the dst output scatter list or size of signature
+  *		portion in @src for verify op
++ * @enc:	encoding of signature portion in @src for verify op,
++ *		encoding of signature in @dst for sign op,
++ *		NULL for encrypt and decrypt op
+  */
+ static inline void akcipher_request_set_crypt(struct akcipher_request *req,
+ 					      struct scatterlist *src,
+ 					      struct scatterlist *dst,
+ 					      unsigned int src_len,
+-					      unsigned int dst_len)
++					      unsigned int dst_len,
++					      const char *enc)
+ {
+ 	req->src = src;
+ 	req->dst = dst;
+ 	req->src_len = src_len;
+ 	req->dst_len = dst_len;
++	req->enc = enc;
+ }
+ 
+ /**
+diff --git a/include/crypto/sig.h b/include/crypto/sig.h
+index 641b4714c448..1df18005c854 100644
+--- a/include/crypto/sig.h
++++ b/include/crypto/sig.h
+@@ -81,12 +81,13 @@ int crypto_sig_maxsize(struct crypto_sig *tfm);
+  * @slen:	source length
+  * @dst:	destinatino obuffer
+  * @dlen:	destination length
++ * @enc:	signature encoding
+  *
+  * Return: zero on success; error code in case of error
+  */
+ int crypto_sig_sign(struct crypto_sig *tfm,
+ 		    const void *src, unsigned int slen,
+-		    void *dst, unsigned int dlen);
++		    void *dst, unsigned int dlen, const char *enc);
+ 
+ /**
+  * crypto_sig_verify() - Invoke signature verification
+@@ -99,12 +100,13 @@ int crypto_sig_sign(struct crypto_sig *tfm,
+  * @slen:	source length
+  * @digest:	digest
+  * @dlen:	digest length
++ * @enc:	signature encoding
+  *
+  * Return: zero on verification success; error code in case of error.
+  */
+ int crypto_sig_verify(struct crypto_sig *tfm,
+ 		      const void *src, unsigned int slen,
+-		      const void *digest, unsigned int dlen);
++		      const void *digest, unsigned int dlen, const char *enc);
+ 
+ /**
+  * crypto_sig_set_pubkey() - Invoke set public key operation
 -- 
 2.40.1
 
