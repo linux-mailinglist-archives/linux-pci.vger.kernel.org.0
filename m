@@ -2,44 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D17207B3CBB
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Sep 2023 00:48:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9026B7B3CD1
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Sep 2023 00:57:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232748AbjI2Wsb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Sep 2023 18:48:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42492 "EHLO
+        id S229508AbjI2W54 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Sep 2023 18:57:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbjI2Wsa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Sep 2023 18:48:30 -0400
+        with ESMTP id S233820AbjI2W54 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Sep 2023 18:57:56 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 388261B4
-        for <linux-pci@vger.kernel.org>; Fri, 29 Sep 2023 15:48:28 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A04A5C433C8;
-        Fri, 29 Sep 2023 22:48:27 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E87CDD;
+        Fri, 29 Sep 2023 15:57:54 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9DBEC433CA;
+        Fri, 29 Sep 2023 22:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696027707;
-        bh=LTdeKaEfByvbWI/bXUM/E65QTLw+Od1Li/G8s5MJgBs=;
+        s=k20201202; t=1696028274;
+        bh=meAmfIZh4pVZAbrgCrY8UlN/iLhYwcGcAVNrSFyN0tI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=u21Z2Uiv0CTbVaqtVLJ9LgzGnVVQL09szyqbQqxrMUhkYEzYhFa3l3UCuWZbplSXL
-         xV5m/OPSd550s0TY2jkjBtNWFLSTyy7XmcgXOhKmEsrg+3ElvprnXj80YuRmpRsMxB
-         MRQ87dzxWX7h0HVAo6LlAA2t8jALF4Adj3JRoqSFpKZqen7K5ZZci7iilCe9CLixws
-         LfEe/sW2hGXwNd1xdy3vP4ghdr12VOX+JPpjUPJqFl4sBfFnpE4v1TSV0jWdGYpJ04
-         xMUOGNnEZytnSBZggF7Da6gTXJ/u4JxCIAyH3ItboF273MlMZtTWxYPakEyv+f3xdV
-         Uczk/UKjDw00g==
-Date:   Fri, 29 Sep 2023 17:48:25 -0500
+        b=lBHegamYcFx4guTEnL7zSfBO1bzwJlewb3dkCPWmn9NyHE9HWn4+/U3LR4pyG4ULg
+         pfqlGJ9G6rXR5o356YpxUps3XhcZEXmIPa7S6CSxjjLZH2ReMkJ8Thl0hNSYOvhWvo
+         +/dqUj8TWsA09Ou2VvzgYbDtMr0ziHmr/i6yE41bq0PXi+ZegLJ9AFT8dMjwI8CwPC
+         y8gKrLLWqqNKmwVf7YAGwkxCj9QkHKn+MXZtvxD/8xIGX4Nkts1PthtL3NYD05HtnS
+         leh9/PqSHSfGzwqEhIIW0dtS3/5ebrld8oRo/R60u5EfffS+hjIC0bGKpmsKPH6g/I
+         j53VShVxGGwiw==
+Date:   Fri, 29 Sep 2023 17:57:52 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        linux-pci@vger.kernel.org,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH] PCI/sysfs: Protect driver's D3cold preference from user
- space
-Message-ID: <20230929224825.GA559886@bhelgaas>
+To:     Ingo Rohloff <lundril@gmx.de>
+Cc:     Felix Fietkau <nbd@nbd.name>, Ryder Lee <ryder.lee@mediatek.com>,
+        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] wifi: mt76: mt7921e: Support MT7992 IP in Xiaomi
+ Redmibook 15 Pro (2023)
+Message-ID: <20230929225752.GA560382@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b8a7f4af2b73f6b506ad8ddee59d747cbf834606.1695025365.git.lukas@wunner.de>
+In-Reply-To: <20230826200241.5077-1-lundril@gmx.de>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -49,71 +48,57 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 18, 2023 at 02:48:01PM +0200, Lukas Wunner wrote:
-> struct pci_dev contains two flags which govern whether the device may
-> suspend to D3cold:
+On Sat, Aug 26, 2023 at 10:02:41PM +0200, Ingo Rohloff wrote:
+> In the Xiaomi Redmibook 15 Pro (2023) laptop I have got, a wifi chip is
+> used, which according to its PCI Vendor ID is from "ITTIM Technology".
 > 
-> * no_d3cold provides an opt-out for drivers (e.g. if a device is known
->   to not wake from D3cold)
+> This chip works flawlessly with the mt7921e module.  The driver doesn't
+> bind to this PCI device, because the Vendor ID from "ITTIM Technology" is
+> not recognized.
 > 
-> * d3cold_allowed provides an opt-out for user space (default is true,
->   user space may set to false)
+> This patch adds the PCI Vendor ID from "ITTIM Technology" to the list of
+> PCI Vendor IDs and lets the mt7921e driver bind to the mentioned wifi
+> chip.
 > 
-> Since commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend"),
-> the user space setting overwrites the driver setting.  Essentially user
-> space is trusted to know better than the driver whether D3cold is
-> working.
-> 
-> That feels unsafe and wrong.  Assume that the change was introduced
-> inadvertently and do not overwrite no_d3cold when d3cold_allowed is
-> modified.  Instead, consider d3cold_allowed in addition to no_d3cold
-> when choosing a suspend state for the device.
-> 
-> That way, user space may opt out of D3cold if the driver hasn't, but it
-> may no longer force an opt in if the driver has opted out.
-> 
-> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: stable@vger.kernel.org # v4.8+
-> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Ingo Rohloff <lundril@gmx.de>
 
-Applied with Reviewed-by from Mika and Mario to pci/pm for v6.7,
-thanks!
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci_ids.h
 
 > ---
->  drivers/pci/pci-acpi.c  | 2 +-
->  drivers/pci/pci-sysfs.c | 5 +----
->  2 files changed, 2 insertions(+), 5 deletions(-)
+> Changes in v2:
+> As requested, move the definition of the PCI Vendor ID for
+> ITTIM Technology to the (hopefully) right place in pci_ids.h
+> ---
+>  drivers/net/wireless/mediatek/mt76/mt7921/pci.c | 2 ++
+>  include/linux/pci_ids.h                         | 2 ++
+>  2 files changed, 4 insertions(+)
 > 
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 7aa1c20..2f5eddf 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -911,7 +911,7 @@ pci_power_t acpi_pci_choose_state(struct pci_dev *pdev)
->  {
->  	int acpi_state, d_max;
->  
-> -	if (pdev->no_d3cold)
-> +	if (pdev->no_d3cold || !pdev->d3cold_allowed)
->  		d_max = ACPI_STATE_D3_HOT;
->  	else
->  		d_max = ACPI_STATE_D3_COLD;
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index ba38fc4..e18ccd2 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -530,10 +530,7 @@ static ssize_t d3cold_allowed_store(struct device *dev,
->  		return -EINVAL;
->  
->  	pdev->d3cold_allowed = !!val;
-> -	if (pdev->d3cold_allowed)
-> -		pci_d3cold_enable(pdev);
-> -	else
-> -		pci_d3cold_disable(pdev);
-> +	pci_bridge_d3_update(pdev);
->  
->  	pm_runtime_resume(dev);
->  
-> -- 
-> 2.39.2
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/pci.c b/drivers/net/wireless/mediatek/mt76/mt7921/pci.c
+> index 95610a117d2f..ed5a220763ce 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt7921/pci.c
+> +++ b/drivers/net/wireless/mediatek/mt76/mt7921/pci.c
+> @@ -17,6 +17,8 @@ static const struct pci_device_id mt7921_pci_device_table[] = {
+>  		.driver_data = (kernel_ulong_t)MT7921_FIRMWARE_WM },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x7922),
+>  		.driver_data = (kernel_ulong_t)MT7922_FIRMWARE_WM },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_ITTIM, 0x7922),
+> +		.driver_data = (kernel_ulong_t)MT7922_FIRMWARE_WM },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x0608),
+>  		.driver_data = (kernel_ulong_t)MT7921_FIRMWARE_WM },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x0616),
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 2dc75df1437f..6ae1803bcd2f 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -180,6 +180,8 @@
+>  #define PCI_DEVICE_ID_BERKOM_A4T		0xffa4
+>  #define PCI_DEVICE_ID_BERKOM_SCITEL_QUADRO	0xffa8
+> 
+> +#define PCI_VENDOR_ID_ITTIM		0x0b48
+> +
+>  #define PCI_VENDOR_ID_COMPAQ		0x0e11
+>  #define PCI_DEVICE_ID_COMPAQ_TOKENRING	0x0508
+>  #define PCI_DEVICE_ID_COMPAQ_TACHYON	0xa0fc
+> --
+> 2.30.2
 > 
