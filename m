@@ -2,103 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF10A7B3B91
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Sep 2023 22:48:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 697097B3CA3
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Sep 2023 00:37:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233836AbjI2UsR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Sep 2023 16:48:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37450 "EHLO
+        id S233634AbjI2Wg7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Sep 2023 18:36:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232748AbjI2UsQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Sep 2023 16:48:16 -0400
+        with ESMTP id S229508AbjI2Wg6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Sep 2023 18:36:58 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCCAA1A7;
-        Fri, 29 Sep 2023 13:48:14 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BF49C433C9;
-        Fri, 29 Sep 2023 20:48:14 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 332E71A5;
+        Fri, 29 Sep 2023 15:36:56 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72C74C433C7;
+        Fri, 29 Sep 2023 22:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696020494;
-        bh=8Oeq2oyvclFb8e5vneLF5O4C3f3cxRlcpro2BcWHes4=;
+        s=k20201202; t=1696027015;
+        bh=yBXOI57T2QqpCcsEjko2gn/7Hd9X43YQwa23OuNuYNw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=tdCCKVkwLs8N/mkl3LWPdO47xAroH163igwOK4121omnkF3zit2PjnHPyFyuQa3JJ
-         PXsc9FWOpRPA7HOdlwRviTYwenh/GaL1KGo187fLHcYs+ODFlYqgQy6DyDwA8ArVMG
-         RN03+3cjx2oII8/ai9bkeIUhqWiXxUiL0YQxGh2IrY1uXvWHNzSETDA1/+sWc+eQko
-         sHHJe1IdhYjKAuH/4c3WcsD4sixUmFxxxvqd+8ACcu6FykHqZJvjHzjnhnzijXhgqW
-         Jw4b5m9tjYtk+qVKdBM8IpY9Ao/h7xDouDu3E4E+ivoM7K3HbTEGV089tvuOI7ttJm
-         7IZEd8jF9V97A==
-Date:   Fri, 29 Sep 2023 15:48:12 -0500
+        b=RlBKb1CZ+AVisia/JOb+8xQ9EQHWWD4A2gjiHDS5hwF14sc3xMsMjUV8o3POB00uS
+         lRHK65xuGMPVRt2PAqWRMrLF8aZMptYiL/wjRgkeaMU9rN9UT3SVFFr1DTrXt2HI8B
+         FcL03wY6+OCDjZcesEKhN71q3hXe+R+yH7KQ7C5EwCahmqLxtgLqfKOEnupZQUpfzU
+         PwiBlTWFAuhklDQeHjqTKaGsIqg8l86XoG5Vy3KKVylud59N8dT7PWQ0gHyJhgwy1U
+         EY0b65y6x147Ht8VuQLm2Ywf9isGofyfbPwGpRz5LS7ZGwtYVI+T9TLFHNETbfGvxn
+         mqr4VdNGVkHCQ==
+Date:   Fri, 29 Sep 2023 17:36:53 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh@kernel.org, mani@kernel.org, lpieralisi@kernel.org,
-        bhelgaas@google.com, kw@linux.com, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        gregkh@linuxfoundation.org, dmitry.baryshkov@linaro.org,
-        stable@vger.kernel.org, robimarko@gmail.com
-Subject: Re: [PATCH V6] PCI: qcom: Fix broken pcie enumeration for 2_3_3
- configs ops
-Message-ID: <20230929204812.GA553836@bhelgaas>
+To:     Lizhi Hou <lizhi.hou@amd.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, herve.codina@bootlin.com,
+        Jonathan.Cameron@huawei.com, bhelgaas@google.com, robh@kernel.org
+Subject: Re: [PATCH v3] PCI: of_property: Fix uninitialized variable when
+ of_irq_parse_raw() failed
+Message-ID: <20230929223653.GA558638@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230919102948.1844909-1-quic_srichara@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <1696007448-42127-1-git-send-email-lizhi.hou@amd.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 19, 2023 at 03:59:48PM +0530, Sricharan Ramabadhran wrote:
-> PARF_SLV_ADDR_SPACE_SIZE_2_3_3 macro is used for qcom_pcie_post_init_2_3_3.
-> PCIe slave address space size register offset is 0x358, but was wrongly
-> changed to 0x16c as a part of commit 39171b33f652 ("PCI: qcom: Remove
-> PCIE20_ prefix from register definitions"). Fixing it, by using the right
-> macro and remove the unused PARF_SLV_ADDR_SPACE_SIZE_2_3_3.
+On Fri, Sep 29, 2023 at 10:10:48AM -0700, Lizhi Hou wrote:
+> In function of_pci_prop_intr_map(), addr_sz[i] will be uninitialized if
+> of_irq_parse_raw() returns failure. Add addr_sz array initialization. And
+> when parsing irq failed, skip generating interrupt-map pair for the pin.
 > 
-> Without this access to the registers of slave addr space like iATU etc
-> are broken leading to PCIe enumeration failure on IPQ8074.
-> 
-> Fixes: 39171b33f652 ("PCI: qcom: Remove PCIE20_ prefix from register definitions")
-> Cc: <Stable@vger.kernel.org>
-> Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> Tested-by: Robert Marko <robimarko@gmail.com>
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+> Reported-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+> Closes: https://lore.kernel.org/all/20230911154856.000076c3@Huawei.com/
+> Reviewed-by: Herve Codina <herve.codina@bootlin.com>
+> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
 
-Applied to for-linus for v6.6, thanks!
+Applied to for-linus for v6.6, since 407d1a51921e appeared in
+v6.6-rc1.
+
+I added Herve's Reported-by since he reported this as well as the cset
+leak at https://lore.kernel.org/all/20230911171319.495bb837@bootlin.com/
 
 > ---
->  [V6] Fixed subject and commit text as per Bjorn Helgaas
+>  drivers/pci/of_property.c | 25 ++++++++++++++++++-------
+>  1 file changed, 18 insertions(+), 7 deletions(-)
 > 
->  drivers/pci/controller/dwc/pcie-qcom.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index e2f29404c84e..64420ecc24d1 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -43,7 +43,6 @@
->  #define PARF_PHY_REFCLK				0x4c
->  #define PARF_CONFIG_BITS			0x50
->  #define PARF_DBI_BASE_ADDR			0x168
-> -#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x16c /* Register offset specific to IP ver 2.3.3 */
->  #define PARF_MHI_CLOCK_RESET_CTRL		0x174
->  #define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
->  #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
-> @@ -797,8 +796,7 @@ static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
->  	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->  	u32 val;
+> diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
+> index 710ec35ba4a1..c2c7334152bc 100644
+> --- a/drivers/pci/of_property.c
+> +++ b/drivers/pci/of_property.c
+> @@ -186,8 +186,8 @@ static int of_pci_prop_interrupts(struct pci_dev *pdev,
+>  static int of_pci_prop_intr_map(struct pci_dev *pdev, struct of_changeset *ocs,
+>  				struct device_node *np)
+>  {
+> +	u32 i, addr_sz[OF_PCI_MAX_INT_PIN] = { 0 }, map_sz = 0;
+>  	struct of_phandle_args out_irq[OF_PCI_MAX_INT_PIN];
+> -	u32 i, addr_sz[OF_PCI_MAX_INT_PIN], map_sz = 0;
+>  	__be32 laddr[OF_PCI_ADDRESS_CELLS] = { 0 };
+>  	u32 int_map_mask[] = { 0xffff00, 0, 0, 7 };
+>  	struct device_node *pnode;
+> @@ -213,33 +213,44 @@ static int of_pci_prop_intr_map(struct pci_dev *pdev, struct of_changeset *ocs,
+>  		out_irq[i].args[0] = pin;
+>  		ret = of_irq_parse_raw(laddr, &out_irq[i]);
+>  		if (ret) {
+> -			pci_err(pdev, "parse irq %d failed, ret %d", pin, ret);
+> +			out_irq[i].np = NULL;
+> +			pci_dbg(pdev, "parse irq %d failed, ret %d", pin, ret);
+>  			continue;
+>  		}
+> -		ret = of_property_read_u32(out_irq[i].np, "#address-cells",
+> -					   &addr_sz[i]);
+> -		if (ret)
+> -			addr_sz[i] = 0;
+> +		of_property_read_u32(out_irq[i].np, "#address-cells",
+> +				     &addr_sz[i]);
+>  	}
 >  
-> -	writel(SLV_ADDR_SPACE_SZ,
-> -		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_2_3_3);
-> +	writel(SLV_ADDR_SPACE_SZ, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+>  	list_for_each_entry(child, &pdev->subordinate->devices, bus_list) {
+>  		for (pin = 1; pin <= OF_PCI_MAX_INT_PIN; pin++) {
+>  			i = pci_swizzle_interrupt_pin(child, pin) - 1;
+> +			if (!out_irq[i].np)
+> +				continue;
+>  			map_sz += 5 + addr_sz[i] + out_irq[i].args_count;
+>  		}
+>  	}
 >  
->  	val = readl(pcie->parf + PARF_PHY_CTRL);
->  	val &= ~PHY_TEST_PWR_DOWN;
+> +	/*
+> +	 * Parsing interrupt failed for all pins. In this case, it does not
+> +	 * need to generate interrupt-map property.
+> +	 */
+> +	if (!map_sz)
+> +		return 0;
+> +
+>  	int_map = kcalloc(map_sz, sizeof(u32), GFP_KERNEL);
+>  	mapp = int_map;
+>  
+>  	list_for_each_entry(child, &pdev->subordinate->devices, bus_list) {
+>  		for (pin = 1; pin <= OF_PCI_MAX_INT_PIN; pin++) {
+> +			i = pci_swizzle_interrupt_pin(child, pin) - 1;
+> +			if (!out_irq[i].np)
+> +				continue;
+> +
+>  			*mapp = (child->bus->number << 16) |
+>  				(child->devfn << 8);
+>  			mapp += OF_PCI_ADDRESS_CELLS;
+>  			*mapp = pin;
+>  			mapp++;
+> -			i = pci_swizzle_interrupt_pin(child, pin) - 1;
+>  			*mapp = out_irq[i].np->phandle;
+>  			mapp++;
+>  			if (addr_sz[i]) {
 > -- 
 > 2.34.1
 > 
