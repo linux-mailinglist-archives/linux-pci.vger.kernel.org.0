@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 049517B31EC
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Sep 2023 13:59:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 810247B31F1
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Sep 2023 14:00:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233115AbjI2L7u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Sep 2023 07:59:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52816 "EHLO
+        id S233207AbjI2MAN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Sep 2023 08:00:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233183AbjI2L7t (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Sep 2023 07:59:49 -0400
+        with ESMTP id S233120AbjI2MAM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Sep 2023 08:00:12 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E6FCCC2;
-        Fri, 29 Sep 2023 04:59:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A1E81B7;
+        Fri, 29 Sep 2023 05:00:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695988786; x=1727524786;
+  t=1695988809; x=1727524809;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=rGuE3CkPc0eihHiwE2qdIBuitw+G9hzqeEGVhNmEpls=;
-  b=dNBUkvuRmePcs/cIVkC/3KsyZ4qFW6fXUaIoRnne+ilMkWP1IDV3qSas
-   MhiPnREmPvTj52XtT0PQLDLBptm0SehFGpXvTT5gdxLKma2AfZ0cFViBL
-   NljZ6OVbRZlFNf6sHie2BOimH+HcVLwMMzdOjxIDyD/wb4f0gipZJJi6p
-   ZGta9sR9ur3cMIvUnOJj+gARuBNxiJqSO0xMuBJdq6zY+RyukgC1jJd5t
-   jW1ac1t3jlGAk1K5gLfUgx99dtZbf0uIagka2ycLdJAZED0251TQ6pDc2
-   +a7w53bG4C4bh285dr/XbOmXwwWRAqvKX50APzsZMLBLj8+EUdqtyUlAw
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10847"; a="362528205"
+  bh=vqMu1eaMKLT320FeSo+Mfd/dosITNJtghbKV2Sdwp5A=;
+  b=lWdaErhmgUZsH/AZdgh+9wQtglvgutIPNO1PlQVAui0Md6+K9NFxCkrB
+   t3NxAJ5uLSrlr+69/wqv4Fbi4/VFUZeIw3DMCUCebbMCgnOPHT3RZ9Mey
+   0s0hYJjFqOjXrSv3NzLuEFfv1C5hXyhozyFhOi9Nyh7mB/L6We3mL4tRA
+   CMU50N5Yj0Um2xk8rIR36eSg5aGQzr1Vl6oBpHEUP9W+yW13s7w//xHcr
+   k2QJgDk+3YEOiHtITgtOeA0gZkcYluLokWwn9tXXBkQu979wa+TC5L2Dh
+   6oZEa08Q5itGEi+rZM/fkGgiNg/Rm2/0zFM37hQglGORxILRMjRQ9Jdkk
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10847"; a="362528251"
 X-IronPort-AV: E=Sophos;i="6.03,187,1694761200"; 
-   d="scan'208";a="362528205"
+   d="scan'208";a="362528251"
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 04:59:45 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 04:59:58 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10847"; a="840254444"
+X-IronPort-AV: E=McAfee;i="6600,9927,10847"; a="840254567"
 X-IronPort-AV: E=Sophos;i="6.03,187,1694761200"; 
-   d="scan'208";a="840254444"
+   d="scan'208";a="840254567"
 Received: from valeks2x-mobl.ger.corp.intel.com (HELO localhost) ([10.252.53.242])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 04:59:39 -0700
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 04:59:51 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -48,15 +48,16 @@ To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
         Krishna chaitanya chundru <quic_krichai@quicinc.com>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         "Rafael J . Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>,
         =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org
-Cc:     Alex Deucher <alexdeucher@gmail.com>
-Subject: [PATCH v3 09/10] thermal: Add PCIe cooling driver
-Date:   Fri, 29 Sep 2023 14:57:22 +0300
-Message-Id: <20230929115723.7864-10-ilpo.jarvinen@linux.intel.com>
+        Zhang Rui <rui.zhang@intel.com>
+Subject: [PATCH v3 10/10] selftests/pcie_bwctrl: Create selftests
+Date:   Fri, 29 Sep 2023 14:57:23 +0300
+Message-Id: <20230929115723.7864-11-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230929115723.7864-1-ilpo.jarvinen@linux.intel.com>
 References: <20230929115723.7864-1-ilpo.jarvinen@linux.intel.com>
@@ -72,255 +73,263 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add a thermal cooling driver to provide path to access PCIe bandwidth
-controller using the usual thermal interfaces.
+Create selftests for PCIe BW control through the PCIe cooling device
+sysfs interface.
 
-A cooling device is instantiated for controllable PCIe ports from the
-bwctrl service driver.
+First, the BW control selftest finds the PCIe port to test with. By
+default, the PCIe port with the highest bus speed is selected but
+another PCIe port can be provided with -d parameter.
 
-The thermal side state 0 means no throttling, i.e., maximum supported
-PCIe speed.
+The actual test steps the cur_state of the cooling device one-by-one
+from max_state to what the cur_state was initially. The speed change
+is confirmed by observing the current_link_speed for the corresponding
+PCIe port.
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Acked-by: Rafael J. Wysocki <rafael@kernel.org> # From the cooling device interface perspective
 ---
- MAINTAINERS                    |   1 +
- drivers/pci/pcie/bwctrl.c      |  11 ++++
- drivers/thermal/Kconfig        |  10 +++
- drivers/thermal/Makefile       |   2 +
- drivers/thermal/pcie_cooling.c | 107 +++++++++++++++++++++++++++++++++
- include/linux/pci-bwctrl.h     |  16 +++++
- 6 files changed, 147 insertions(+)
- create mode 100644 drivers/thermal/pcie_cooling.c
+ MAINTAINERS                                   |   1 +
+ tools/testing/selftests/Makefile              |   1 +
+ tools/testing/selftests/pcie_bwctrl/Makefile  |   2 +
+ .../pcie_bwctrl/set_pcie_cooling_state.sh     | 122 ++++++++++++++++++
+ .../selftests/pcie_bwctrl/set_pcie_speed.sh   |  67 ++++++++++
+ 5 files changed, 193 insertions(+)
+ create mode 100644 tools/testing/selftests/pcie_bwctrl/Makefile
+ create mode 100755 tools/testing/selftests/pcie_bwctrl/set_pcie_cooling_state.sh
+ create mode 100755 tools/testing/selftests/pcie_bwctrl/set_pcie_speed.sh
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 2e4ad074eaf3..40dd7c0b154d 100644
+index 40dd7c0b154d..1a35f75323fd 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -16574,6 +16574,7 @@ M:	Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
- L:	linux-pci@vger.kernel.org
- S:	Supported
+@@ -16576,6 +16576,7 @@ S:	Supported
  F:	drivers/pci/pcie/bwctrl.c
-+F:	drivers/thermal/pcie_cooling.c
+ F:	drivers/thermal/pcie_cooling.c
  F:	include/linux/pci-bwctrl.h
++F:	tools/testing/selftests/pcie_bwctrl/
  
  PCIE DRIVER FOR AMAZON ANNAPURNA LABS
-diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
-index e3172d69476f..13c73546244e 100644
---- a/drivers/pci/pcie/bwctrl.c
-+++ b/drivers/pci/pcie/bwctrl.c
-@@ -34,9 +34,11 @@
- /**
-  * struct bwctrl_service_data - PCIe Port Bandwidth Controller
-  * @set_speed_mutex: serializes link speed changes
-+ * @cdev: thermal cooling device associated with the port
-  */
- struct bwctrl_service_data {
- 	struct mutex set_speed_mutex;
-+	struct thermal_cooling_device *cdev;
- };
- 
- static bool bwctrl_valid_pcie_speed(enum pci_bus_speed speed)
-@@ -253,8 +255,16 @@ static int pcie_bandwidth_notification_probe(struct pcie_device *srv)
- 	pcie_enable_link_bandwidth_notification(port);
- 	pci_info(port, "enabled with IRQ %d\n", srv->irq);
- 
-+	data->cdev = pcie_cooling_device_register(port, srv);
-+	if (IS_ERR(data->cdev)) {
-+		ret = PTR_ERR(data->cdev);
-+		goto disable_notifications;
-+	}
- 	return 0;
- 
-+disable_notifications:
-+	pcie_disable_link_bandwidth_notification(srv->port);
-+	kfree(data);
- free_irq:
- 	free_irq(srv->irq, srv);
- 	return ret;
-@@ -264,6 +274,7 @@ static void pcie_bandwidth_notification_remove(struct pcie_device *srv)
- {
- 	struct bwctrl_service_data *data = get_service_data(srv);
- 
-+	pcie_cooling_device_unregister(data->cdev);
- 	pcie_disable_link_bandwidth_notification(srv->port);
- 	free_irq(srv->irq, srv);
- 	mutex_destroy(&data->set_speed_mutex);
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index c81a00fbca7d..3a071396f1c6 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -219,6 +219,16 @@ config DEVFREQ_THERMAL
- 
- 	  If you want this support, you should say Y here.
- 
-+config PCIE_THERMAL
-+	bool "PCIe cooling support"
-+	depends on PCIEPORTBUS
-+	select PCIE_BW
-+	help
-+	  This implements PCIe cooling mechanism through bandwidth reduction
-+	  for PCIe devices.
-+
-+	  If you want this support, you should say Y here.
-+
- config THERMAL_EMULATION
- 	bool "Thermal emulation mode support"
- 	help
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index c934cab309ae..a0b25a2742b7 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -30,6 +30,8 @@ thermal_sys-$(CONFIG_CPU_IDLE_THERMAL)	+= cpuidle_cooling.o
- # devfreq cooling
- thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
- 
-+thermal_sys-$(CONFIG_PCIE_THERMAL) += pcie_cooling.o
-+
- obj-$(CONFIG_K3_THERMAL)	+= k3_bandgap.o k3_j72xx_bandgap.o
- # platform thermal drivers
- obj-y				+= broadcom/
-diff --git a/drivers/thermal/pcie_cooling.c b/drivers/thermal/pcie_cooling.c
+ M:	Jonathan Chocron <jonnyc@amazon.com>
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 42806add0114..18ad9acd440a 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -59,6 +59,7 @@ TARGETS += net/mptcp
+ TARGETS += net/openvswitch
+ TARGETS += netfilter
+ TARGETS += nsfs
++TARGETS += pcie_bwctrl
+ TARGETS += perf_events
+ TARGETS += pidfd
+ TARGETS += pid_namespace
+diff --git a/tools/testing/selftests/pcie_bwctrl/Makefile b/tools/testing/selftests/pcie_bwctrl/Makefile
 new file mode 100644
-index 000000000000..c23b59dd0331
+index 000000000000..3e84e26341d1
 --- /dev/null
-+++ b/drivers/thermal/pcie_cooling.c
-@@ -0,0 +1,107 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * PCIe cooling device
-+ *
-+ * Copyright (C) 2023 Intel Corporation.
-+ */
++++ b/tools/testing/selftests/pcie_bwctrl/Makefile
+@@ -0,0 +1,2 @@
++TEST_PROGS = set_pcie_cooling_state.sh
++include ../lib.mk
+diff --git a/tools/testing/selftests/pcie_bwctrl/set_pcie_cooling_state.sh b/tools/testing/selftests/pcie_bwctrl/set_pcie_cooling_state.sh
+new file mode 100755
+index 000000000000..3a8f91f0309e
+--- /dev/null
++++ b/tools/testing/selftests/pcie_bwctrl/set_pcie_cooling_state.sh
+@@ -0,0 +1,122 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
 +
-+#include <linux/build_bug.h>
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/pci.h>
-+#include <linux/pci-bwctrl.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+#include <linux/thermal.h>
++SYSFS=
++# Kselftest framework requirement - SKIP code is 4.
++ksft_skip=4
++retval=0
++skipmsg="skip all tests:"
 +
-+#define COOLING_DEV_TYPE_PREFIX		"PCIe_Port_Link_Speed_"
++PCIEPORTTYPE="PCIe_Port_Link_Speed"
 +
-+struct pcie_cooling_device {
-+	struct pci_dev *port;
-+	struct pcie_device *pdev;
-+};
-+
-+static int pcie_cooling_get_max_level(struct thermal_cooling_device *cdev, unsigned long *state)
++prerequisite()
 +{
-+	struct pcie_cooling_device *pcie_cdev = cdev->devdata;
++	local ports
 +
-+	/* cooling state 0 is same as the maximum PCIe speed */
-+	*state = pcie_cdev->port->subordinate->max_bus_speed - PCIE_SPEED_2_5GT;
++	if [ $UID != 0 ]; then
++		echo $skipmsg must be run as root >&2
++		exit $ksft_skip
++	fi
 +
-+	return 0;
++	SYSFS=`mount -t sysfs | head -1 | awk '{ print $3 }'`
++
++	if [ ! -d "$SYSFS" ]; then
++		echo $skipmsg sysfs is not mounted >&2
++		exit $ksft_skip
++	fi
++
++	if ! ls $SYSFS/class/thermal/cooling_device* > /dev/null 2>&1; then
++		echo $skipmsg thermal cooling devices missing >&2
++		exit $ksft_skip
++        fi
++
++	ports=`grep -e "^$PCIEPORTTYPE" $SYSFS/class/thermal/cooling_device*/type | wc -l`
++	if [ $ports -eq 0 ]; then
++		echo $skipmsg pcie cooling devices missing >&2
++		exit $ksft_skip
++	fi
 +}
 +
-+static int pcie_cooling_get_cur_level(struct thermal_cooling_device *cdev, unsigned long *state)
++testport=
++find_pcie_port()
 +{
-+	struct pcie_cooling_device *pcie_cdev = cdev->devdata;
++	local patt="$1"
++	local pcieports
++	local max
++	local cur
++	local delta
++	local bestdelta=-1
 +
-+	/* cooling state 0 is same as the maximum PCIe speed */
-+	*state = cdev->max_state -
-+		 (pcie_cdev->port->subordinate->cur_bus_speed - PCIE_SPEED_2_5GT);
-+
-+	return 0;
++	pcieports=`grep -l -F -e "$patt" /sys/class/thermal/cooling_device*/type`
++	if [ -z "$pcieports" ]; then
++		return
++	fi
++	pcieports=${pcieports//\/type/}
++	# Find the port with the highest PCIe Link Speed
++	for port in $pcieports; do
++		max=`cat $port/max_state`
++		cur=`cat $port/cur_state`
++		delta=$((max-cur))
++		if [ $delta -gt $bestdelta ]; then
++			testport="$port"
++			bestdelta=$delta
++		fi
++	done
 +}
 +
-+static int pcie_cooling_set_cur_level(struct thermal_cooling_device *cdev, unsigned long state)
++sysfspcidev=
++find_sysfs_pci_dev()
 +{
-+	struct pcie_cooling_device *pcie_cdev = cdev->devdata;
-+	enum pci_bus_speed speed;
++	local typefile="$1/type"
++	local pcidir
 +
-+	/* cooling state 0 is same as the maximum PCIe speed */
-+	speed = (cdev->max_state - state) + PCIE_SPEED_2_5GT;
++	pcidir="$SYSFS/bus/pci/devices/`sed -e "s|^${PCIEPORTTYPE}_||g" $typefile`"
 +
-+	return bwctrl_set_current_speed(pcie_cdev->pdev, speed);
++	if [ -r "$pcidir/current_link_speed" ]; then
++		sysfspcidev="$pcidir/current_link_speed"
++	fi
 +}
 +
-+static struct thermal_cooling_device_ops pcie_cooling_ops = {
-+	.get_max_state = pcie_cooling_get_max_level,
-+	.get_cur_state = pcie_cooling_get_cur_level,
-+	.set_cur_state = pcie_cooling_set_cur_level,
-+};
-+
-+struct thermal_cooling_device *pcie_cooling_device_register(struct pci_dev *port,
-+							    struct pcie_device *pdev)
++usage()
 +{
-+	struct pcie_cooling_device *pcie_cdev;
-+	struct thermal_cooling_device *cdev;
-+	size_t name_len;
-+	char *name;
-+
-+	pcie_cdev = kzalloc(sizeof(*pcie_cdev), GFP_KERNEL);
-+	if (!pcie_cdev)
-+		return ERR_PTR(-ENOMEM);
-+
-+	pcie_cdev->port = port;
-+	pcie_cdev->pdev = pdev;
-+
-+	name_len = strlen(COOLING_DEV_TYPE_PREFIX) + strlen(pci_name(port)) + 1;
-+	name = kzalloc(name_len, GFP_KERNEL);
-+	if (!name) {
-+		kfree(pcie_cdev);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	snprintf(name, name_len, COOLING_DEV_TYPE_PREFIX "%s", pci_name(port));
-+	cdev = thermal_cooling_device_register(name, pcie_cdev, &pcie_cooling_ops);
-+	kfree(name);
-+
-+	return cdev;
++	echo "Usage $0 [ -d dev ]"
++	echo -e "\t-d: PCIe port BDF string (e.g., 0000:00:04.0)"
 +}
 +
-+void pcie_cooling_device_unregister(struct thermal_cooling_device *cdev)
++pattern="$PCIEPORTTYPE"
++parse_arguments()
 +{
-+	struct pcie_cooling_device *pcie_cdev = cdev->devdata;
-+
-+	thermal_cooling_device_unregister(cdev);
-+	kfree(pcie_cdev);
++	while getopts d:h opt; do
++		case $opt in
++			h)
++				usage "$0"
++				exit 0
++				;;
++			d)
++				pattern="$PCIEPORTTYPE_$OPTARG"
++				;;
++			*)
++				usage "$0"
++				exit 0
++				;;
++		esac
++	done
 +}
 +
-+/* For bus_speed <-> state arithmetic */
-+static_assert(PCIE_SPEED_2_5GT + 1 == PCIE_SPEED_5_0GT);
-+static_assert(PCIE_SPEED_5_0GT + 1 == PCIE_SPEED_8_0GT);
-+static_assert(PCIE_SPEED_8_0GT + 1 == PCIE_SPEED_16_0GT);
-+static_assert(PCIE_SPEED_16_0GT + 1 == PCIE_SPEED_32_0GT);
-+static_assert(PCIE_SPEED_32_0GT + 1 == PCIE_SPEED_64_0GT);
++parse_arguments "$@"
++prerequisite
++find_pcie_port "$pattern"
++if [ -z "$testport" ]; then
++	echo $skipmsg "pcie cooling device not found from sysfs" >&2
++	exit $ksft_skip
++fi
++find_sysfs_pci_dev "$testport"
++if [ -z "$sysfspcidev" ]; then
++	echo $skipmsg "PCIe port device not found from sysfs" >&2
++	exit $ksft_skip
++fi
 +
-+MODULE_AUTHOR("Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>");
-+MODULE_DESCRIPTION("PCIe cooling driver");
-diff --git a/include/linux/pci-bwctrl.h b/include/linux/pci-bwctrl.h
-index 8eae09bd03b5..366445517b72 100644
---- a/include/linux/pci-bwctrl.h
-+++ b/include/linux/pci-bwctrl.h
-@@ -11,7 +11,23 @@
- #include <linux/pci.h>
- 
- struct pcie_device;
-+struct thermal_cooling_device;
- 
- int bwctrl_set_current_speed(struct pcie_device *srv, enum pci_bus_speed speed);
- 
-+#ifdef CONFIG_PCIE_THERMAL
-+struct thermal_cooling_device *pcie_cooling_device_register(struct pci_dev *port,
-+							    struct pcie_device *pdev);
-+void pcie_cooling_device_unregister(struct thermal_cooling_device *cdev);
-+#else
-+static inline struct thermal_cooling_device *pcie_cooling_device_register(struct pci_dev *port,
-+									  struct pcie_device *pdev)
-+{
-+	return NULL;
-+}
-+static inline void pcie_cooling_device_unregister(struct thermal_cooling_device *cdev)
-+{
-+}
-+#endif
++./set_pcie_speed.sh "$testport" "$sysfspcidev"
++retval=$?
 +
- #endif
++exit $retval
+diff --git a/tools/testing/selftests/pcie_bwctrl/set_pcie_speed.sh b/tools/testing/selftests/pcie_bwctrl/set_pcie_speed.sh
+new file mode 100755
+index 000000000000..584596949312
+--- /dev/null
++++ b/tools/testing/selftests/pcie_bwctrl/set_pcie_speed.sh
+@@ -0,0 +1,67 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++
++set -e
++
++TESTNAME=set_pcie_speed
++
++declare -a PCIELINKSPEED=(
++	"2.5 GT/s PCIe"
++	"5.0 GT/s PCIe"
++	"8.0 GT/s PCIe"
++	"16.0 GT/s PCIe"
++	"32.0 GT/s PCIe"
++	"64.0 GT/s PCIe"
++)
++
++# Kselftest framework requirement - SKIP code is 4.
++ksft_skip=4
++retval=0
++
++coolingdev="$1"
++statefile="$coolingdev/cur_state"
++maxfile="$coolingdev/max_state"
++linkspeedfile="$2"
++
++oldstate=`cat $statefile`
++maxstate=`cat $maxfile`
++
++set_state()
++{
++	local state=$1
++	local linkspeed
++	local expected_linkspeed
++
++	echo $state > $statefile
++
++	sleep 1
++
++	linkspeed="`cat $linkspeedfile`"
++	expected_linkspeed=$((maxstate-state))
++	expected_str="${PCIELINKSPEED[$expected_linkspeed]}"
++	if [ ! "${expected_str}" = "${linkspeed}" ]; then
++		echo "$TESTNAME failed: expected: ${expected_str}; got ${linkspeed}"
++		retval=1
++	fi
++}
++
++cleanup_skip ()
++{
++	set_state $oldstate
++	exit $ksft_skip
++}
++
++trap cleanup_skip EXIT
++
++echo "$TESTNAME: testing states $maxstate .. $oldstate with $coolingdev"
++for i in $(seq $maxstate -1 $oldstate); do
++	set_state "$i"
++done
++
++trap EXIT
++if [ $retval -eq 0 ]; then
++	echo "$TESTNAME [PASS]"
++else
++	echo "$TESTNAME [FAIL]"
++fi
++exit $retval
 -- 
 2.30.2
 
