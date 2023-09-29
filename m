@@ -2,47 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 051627B3B42
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Sep 2023 22:32:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF10A7B3B91
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Sep 2023 22:48:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229545AbjI2Ucj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Sep 2023 16:32:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60524 "EHLO
+        id S233836AbjI2UsR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Sep 2023 16:48:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232748AbjI2Ucj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Sep 2023 16:32:39 -0400
+        with ESMTP id S232748AbjI2UsQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Sep 2023 16:48:16 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 295D91A7;
-        Fri, 29 Sep 2023 13:32:37 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A629C433C7;
-        Fri, 29 Sep 2023 20:32:36 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCCAA1A7;
+        Fri, 29 Sep 2023 13:48:14 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BF49C433C9;
+        Fri, 29 Sep 2023 20:48:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696019556;
-        bh=4Y7NSZZJOmT/eG+oxY8xXIFK57w1o2IOQip+sUAH/DU=;
+        s=k20201202; t=1696020494;
+        bh=8Oeq2oyvclFb8e5vneLF5O4C3f3cxRlcpro2BcWHes4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=l34TBrW2MrrwJcVoPI1pUTZfB1TH4C5SQMIgIOIk4QK4dBOLXKObws4rfJ8aVMJhf
-         NdFRUkZM9NzIcfLSywBOLIBkgVadAd6VOoAcdq+fC8mPPoxnY5vSO9FBPu2o2PQei2
-         Yc9Lia4ss7tXxwZ2z0K+GZjVYI+R/F1cNAOpcdk2u7zpjlbe/ms4ZxukwOjDhK2fpP
-         xB/LmaI3iUPMXwR5WxudA2wA64UN6ik6RxCtMLEKs5882z/kYFMhM9w5MG4ZMLmp+0
-         OQR1FsLod1Vqbbrmo/YU/+GlUpYm8j5Zy6Gu716ko2PhSmamJxEo/eO6zTJIJ3bMMO
-         somZ7DZyLOtkw==
-Date:   Fri, 29 Sep 2023 15:32:34 -0500
+        b=tdCCKVkwLs8N/mkl3LWPdO47xAroH163igwOK4121omnkF3zit2PjnHPyFyuQa3JJ
+         PXsc9FWOpRPA7HOdlwRviTYwenh/GaL1KGo187fLHcYs+ODFlYqgQy6DyDwA8ArVMG
+         RN03+3cjx2oII8/ai9bkeIUhqWiXxUiL0YQxGh2IrY1uXvWHNzSETDA1/+sWc+eQko
+         sHHJe1IdhYjKAuH/4c3WcsD4sixUmFxxxvqd+8ACcu6FykHqZJvjHzjnhnzijXhgqW
+         Jw4b5m9tjYtk+qVKdBM8IpY9Ao/h7xDouDu3E4E+ivoM7K3HbTEGV089tvuOI7ttJm
+         7IZEd8jF9V97A==
+Date:   Fri, 29 Sep 2023 15:48:12 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     D Scott Phillips <scott@os.amperecomputing.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org,
-        Darren Hart <darren@os.amperecomputing.com>,
-        patches@amperecomputing.com
-Subject: Re: [PATCH] PCI: hotplug: Add extension driver for Ampere Altra
- hotplug LED control
-Message-ID: <20230929203234.GA552475@bhelgaas>
+To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh@kernel.org, mani@kernel.org, lpieralisi@kernel.org,
+        bhelgaas@google.com, kw@linux.com, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        gregkh@linuxfoundation.org, dmitry.baryshkov@linaro.org,
+        stable@vger.kernel.org, robimarko@gmail.com
+Subject: Re: [PATCH V6] PCI: qcom: Fix broken pcie enumeration for 2_3_3
+ configs ops
+Message-ID: <20230929204812.GA553836@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0j9hvhboyfmgs1CXkUqpmrMryNjwWGV+kJB-FCMfXaM_g@mail.gmail.com>
+In-Reply-To: <20230919102948.1844909-1-quic_srichara@quicinc.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -53,72 +52,53 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 29, 2023 at 09:06:02PM +0200, Rafael J. Wysocki wrote:
-> On Thu, Sep 28, 2023 at 5:47 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Wed, Sep 27, 2023 at 01:23:47PM -0700, D Scott Phillips wrote:
-> > > On Ampere Altra, PCIe hotplug is handled through ACPI. A side interface is
-> > > also present to request system firmware control of attention LEDs. Add an
-> > > ACPI PCI Hotplug companion driver to support attention LED control.
-
-> > > +static int __init acpiphp_ampere_altra_init(void)
-> > > +{
-> > > +     struct fwnode_handle *fwnode;
-> > > +     acpi_handle leds_handle = NULL;
-> > > +     struct acpi_device *leds;
-> > > +     acpi_status status;
-> > > +     int ret;
-> > > +
-> > > +     status = acpi_get_devices("AMPC0008", get_acpi_handle, NULL,
-> > > +                               &leds_handle);
-> >
-> > Rafael, can you comment on whether we should use acpi_get_devices(),
-> > acpi_bus_register_driver(), acpi_acpi_scan_add_handler(), or something
-> > else here?
+On Tue, Sep 19, 2023 at 03:59:48PM +0530, Sricharan Ramabadhran wrote:
+> PARF_SLV_ADDR_SPACE_SIZE_2_3_3 macro is used for qcom_pcie_post_init_2_3_3.
+> PCIe slave address space size register offset is 0x358, but was wrongly
+> changed to 0x16c as a part of commit 39171b33f652 ("PCI: qcom: Remove
+> PCIE20_ prefix from register definitions"). Fixing it, by using the right
+> macro and remove the unused PARF_SLV_ADDR_SPACE_SIZE_2_3_3.
 > 
-> Personally, I would go for a platform driver, because the ACPI core
-> should create a platform device for this object.
+> Without this access to the registers of slave addr space like iATU etc
+> are broken leading to PCIe enumeration failure on IPQ8074.
 > 
-> acpi_get_devices() carries out a namespace walk that is costly and
-> entirely avoidable.
+> Fixes: 39171b33f652 ("PCI: qcom: Remove PCIE20_ prefix from register definitions")
+> Cc: <Stable@vger.kernel.org>
+> Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Tested-by: Robert Marko <robimarko@gmail.com>
+> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+
+Applied to for-linus for v6.6, thanks!
+
+> ---
+>  [V6] Fixed subject and commit text as per Bjorn Helgaas
 > 
-> >  I try to avoid pci_get_device() because it subverts the
-> > driver model (no hotplug support, no driver/device binding).
-> >
-> > I see Documentation/driver-api/acpi/scan_handlers.rst, but I'm not
-> > clear on when to use acpi_bus_register_driver() vs
+>  drivers/pci/controller/dwc/pcie-qcom.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> Never.
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index e2f29404c84e..64420ecc24d1 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -43,7 +43,6 @@
+>  #define PARF_PHY_REFCLK				0x4c
+>  #define PARF_CONFIG_BITS			0x50
+>  #define PARF_DBI_BASE_ADDR			0x168
+> -#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x16c /* Register offset specific to IP ver 2.3.3 */
+>  #define PARF_MHI_CLOCK_RESET_CTRL		0x174
+>  #define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
+>  #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
+> @@ -797,8 +796,7 @@ static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
+>  	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>  	u32 val;
+>  
+> -	writel(SLV_ADDR_SPACE_SZ,
+> -		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_2_3_3);
+> +	writel(SLV_ADDR_SPACE_SZ, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+>  
+>  	val = readl(pcie->parf + PARF_PHY_CTRL);
+>  	val &= ~PHY_TEST_PWR_DOWN;
+> -- 
+> 2.34.1
 > 
-> > acpi_acpi_scan_add_handler().
-> 
-> When you don't want the ACPI core to create a platform device for your
-> ACPI device object.  There are cases like that, but they are rare.
-
-Ah, so none of the above (not acpi_get_devices(),
-acpi_bus_register_driver(), OR acpi_acpi_scan_add_handler()).
-
-IIUC, what you propose would look something like this:
-
-  static u32 led_service_id[4];
-
-  static int altra_led_probe(struct platform_device *pdev)
-  {
-    struct fwnode_handle *fwnode = dev_fwnode(&pdev->dev);
-
-    fwnode_property_read_u32_array(fwnode, "uuid", led_service_id, 4);
-  }
-
-  static const struct acpi_device_id altra_led_ids[] = {
-    {"AMPC0008", 0}, {}
-  };
-  MODULE_DEVICE_TABLE(acpi, altra_led_ids);
-
-  static struct platform_driver altra_led_driver = {
-    .driver = {
-      .acpi_match_table = altra_led_ids,
-    },
-    .probe = altra_led_probe,
-  };
-  module_platform_driver(altra_led_driver);
-
-Bjorn
