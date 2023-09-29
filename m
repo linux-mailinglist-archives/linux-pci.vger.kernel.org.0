@@ -2,102 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D3907B2AFD
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Sep 2023 06:44:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D52B7B2F00
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Sep 2023 11:14:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229577AbjI2EoU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Sep 2023 00:44:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41504 "EHLO
+        id S232887AbjI2JOc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Sep 2023 05:14:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229541AbjI2EoT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Sep 2023 00:44:19 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBECB199
-        for <linux-pci@vger.kernel.org>; Thu, 28 Sep 2023 21:44:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695962657; x=1727498657;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=o4//K+NNGF4DkVXww/XwFWfynUHOAXh5Omf3XP9MB5o=;
-  b=lHMN1Hz78iPXdXeffuZYAM96hA6f4m+I1hocOrrAgwpyv8ZOzVS8iqBQ
-   pjF2aYZjR/2eubMRrNSyr3ZsTJL4/9YHltECewUy8ew+k+/1wD38BiYl9
-   p3d0WLt/b5pz/Ps8ekUb3eqZcDSLLa0dlW673aXV65NBexw23S/T6Q9qw
-   eaYH2Loe2M9M1QaNnIxGyplBEJZrCBp5Ur6nU9wtaS/67c+G+2slU1pjg
-   rr99UBctD/P1EIF2ofcmCjBiQVTLGJ2ZCuPZFA2lMnJ1Zk6Yczd6JYX/q
-   AHQMW3YuEhYVUXmKa7Q1pXZDFwtT4mdJfmN5q6meBUTt1/S1yc3PW5rRW
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10847"; a="367294379"
-X-IronPort-AV: E=Sophos;i="6.03,186,1694761200"; 
-   d="scan'208";a="367294379"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2023 21:44:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10847"; a="743334884"
-X-IronPort-AV: E=Sophos;i="6.03,186,1694761200"; 
-   d="scan'208";a="743334884"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 28 Sep 2023 21:44:14 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 8003F12B; Fri, 29 Sep 2023 07:44:13 +0300 (EEST)
-Date:   Fri, 29 Sep 2023 07:44:13 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lukas Wunner <lukas@wunner.de>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        linux-pci@vger.kernel.org,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH] PCI/sysfs: Protect driver's D3cold preference from user
- space
-Message-ID: <20230929044413.GY3208943@black.fi.intel.com>
-References: <b8a7f4af2b73f6b506ad8ddee59d747cbf834606.1695025365.git.lukas@wunner.de>
- <20230928223630.GA507660@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230928223630.GA507660@bhelgaas>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S232732AbjI2JOb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Sep 2023 05:14:31 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41B961A5;
+        Fri, 29 Sep 2023 02:14:28 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D00F0C433C9;
+        Fri, 29 Sep 2023 09:14:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695978867;
+        bh=NTN/RQYG6P0QoAel8GV/8O73av4VLPmH4PrU0s1SWGM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=D4kHiYLlhSwU2skHyR+SodGJrSbjPJPESqifyCsymu2WrqHtQeO+mHQmji92js/Ow
+         WxNe1LGlaO2U5TBs2DpxfDMsAuFoHCfsOlQ0D1iCUSh/4dUUXHWMnTbJ+PprHVXvUp
+         utDwsNKaEoTrX23X7YG67Gs14Sk8UmUNg3/GyRncnWpEzsRcY0qkDzXAbNekFqqRFG
+         JUo13LiRpIPYo4u31MMC2BfoqcAvan9Shd2Y/Uuc9Ub8lmYtjk/CSOkfBMoU8idDws
+         a4NTBPar99BLErcQxEzK1du61fjut8Ep2ZbD+e9hmD46P6ssYn0OH3CPKKRUw/+D36
+         FnIicUOcduO6Q==
+Received: from [85.255.233.37] (helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1qm9Zk-00HCUP-52;
+        Fri, 29 Sep 2023 10:14:20 +0100
+Date:   Fri, 29 Sep 2023 10:14:18 +0100
+Message-ID: <87jzs9mjdh.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     Toan Le <toan@os.amperecomputing.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, Duc Dang <dhdang@apm.com>,
+        Tanmay Inamdar <tinamdar@apm.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: xgene-msi: Fix a potential UAF in xgene_msi_probe
+In-Reply-To: <20230926025936.7115-1-dinghao.liu@zju.edu.cn>
+References: <20230926025936.7115-1-dinghao.liu@zju.edu.cn>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 85.255.233.37
+X-SA-Exim-Rcpt-To: dinghao.liu@zju.edu.cn, toan@os.amperecomputing.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com, dhdang@apm.com, tinamdar@apm.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 28, 2023 at 05:36:30PM -0500, Bjorn Helgaas wrote:
-> On Mon, Sep 18, 2023 at 02:48:01PM +0200, Lukas Wunner wrote:
-> > struct pci_dev contains two flags which govern whether the device may
-> > suspend to D3cold:
-> > 
-> > * no_d3cold provides an opt-out for drivers (e.g. if a device is known
-> >   to not wake from D3cold)
-> > 
-> > * d3cold_allowed provides an opt-out for user space (default is true,
-> >   user space may set to false)
-> > 
-> > Since commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend"),
-> > the user space setting overwrites the driver setting.  Essentially user
-> > space is trusted to know better than the driver whether D3cold is
-> > working.
-> > 
-> > That feels unsafe and wrong.  Assume that the change was introduced
-> > inadvertently and do not overwrite no_d3cold when d3cold_allowed is
-> > modified.  Instead, consider d3cold_allowed in addition to no_d3cold
-> > when choosing a suspend state for the device.
-> > 
-> > That way, user space may opt out of D3cold if the driver hasn't, but it
-> > may no longer force an opt in if the driver has opted out.
-> > 
-> > Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-> > Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> > Cc: stable@vger.kernel.org # v4.8+
-> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+On Tue, 26 Sep 2023 03:59:36 +0100,
+Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
 > 
-> Mika and Mario, you both commented on this, but I *think* you were
-> both OK with it as-is for now?  If so, can you give a Reviewed-by?
-> I don't want to go ahead if you have any concerns.
+> xgene_allocate_domains() will call irq_domain_remove() to free
+> msi->inner_domain on failure. However, its caller, xgene_msi_probe(),
+> will also call irq_domain_remove() through xgene_msi_remove() on the
+> same failure, which may lead to a use-after-free. Remove the first
+> irq_domain_remove() and let xgene_free_domains() cleanup domains.
+> 
+> Fixes: dcd19de36775 ("PCI: xgene: Add APM X-Gene v1 PCIe MSI/MSIX termination driver")
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+> 
+> Changelog:
+> 
+> v2: -Remove irq_domain_remove() instead of nulling msi_domain.
 
-No concerns from me,
+Unfortunately, your email doesn't indicate this is v2.
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
