@@ -2,56 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D6077B44B7
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Oct 2023 01:52:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13E987B451D
+	for <lists+linux-pci@lfdr.de>; Sun,  1 Oct 2023 05:55:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229928AbjI3XwI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 30 Sep 2023 19:52:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33736 "EHLO
+        id S229481AbjJADzP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 30 Sep 2023 23:55:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234080AbjI3XwI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 30 Sep 2023 19:52:08 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2221AC
-        for <linux-pci@vger.kernel.org>; Sat, 30 Sep 2023 16:52:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696117926; x=1727653926;
-  h=date:from:to:cc:subject:message-id;
-  bh=lgcnJhNDme4GNvPXX9AUvZLkbMLv+ULa2UTxExx9aAs=;
-  b=GYRv3RHmZEad/VVsXOHHwltA1wsrAAiPTXneuleDYOVyxv2/o1OIRql8
-   2q+aLNHvH8aPmbI8ontCWHE+hu5S7BmTZRyMS25r1fY51/8L1QAw//VcF
-   kTQc4B67o/9EdUlbHJUIbyxndVJ8vDdxDFGUXqN05xUis7OLgC6v6yAou
-   vxDFEIIu5Korug84kzQyZOtvM6qJA1GyKqGfmkiCtV0f7OVc04uVOxbze
-   Ayx5OhhwJeEgUmubgglhg91PeOpdR+ND2K7USwRc5UjTCJbO5rXYXOzm8
-   YFB9yNxQxEUdgHQor3ngpb+kaRJ+C3+DIOP5091K64LBdqWLx4jPJErUL
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10849"; a="1070651"
-X-IronPort-AV: E=Sophos;i="6.03,191,1694761200"; 
-   d="scan'208";a="1070651"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2023 16:52:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10849"; a="750243135"
-X-IronPort-AV: E=Sophos;i="6.03,191,1694761200"; 
-   d="scan'208";a="750243135"
-Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 30 Sep 2023 16:52:01 -0700
-Received: from kbuild by c3b01524d57c with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qmjkd-0004Zz-0i;
-        Sat, 30 Sep 2023 23:51:59 +0000
-Date:   Sun, 01 Oct 2023 07:51:44 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pm] BUILD SUCCESS
- 70b70a4307cccebe91388337b1c85735ce4de6ff
-Message-ID: <202310010741.TbN8Epix-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        with ESMTP id S229461AbjJADzO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 30 Sep 2023 23:55:14 -0400
+Received: from zju.edu.cn (mail.zju.edu.cn [61.164.42.155])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ED4CADD;
+        Sat, 30 Sep 2023 20:55:09 -0700 (PDT)
+Received: from localhost.localdomain (unknown [10.192.195.11])
+        by mail-app3 (Coremail) with SMTP id cC_KCgBXPcCC7RhlwbwsAQ--.29716S4;
+        Sun, 01 Oct 2023 11:54:48 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn
+Cc:     Toan Le <toan@os.amperecomputing.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Tanmay Inamdar <tinamdar@apm.com>,
+        Marc Zyngier <maz@kernel.org>, Duc Dang <dhdang@apm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [v3] PCI: xgene-msi: Fix a potential UAF in xgene_msi_probe
+Date:   Sun,  1 Oct 2023 11:54:40 +0800
+Message-Id: <20231001035441.30408-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgBXPcCC7RhlwbwsAQ--.29716S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7JF13Cr4xXr15WF13Gr18uFg_yoW8JrWDpF
+        WxCw13WFWft3yUXa1Igw18Wa4aya9rt3yDtwsxWrnrZrnxC34DuryjqFy5C34akFWrXr4j
+        y3WxJF15uFs5JFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvm1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IY
+        c2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r
+        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+        67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+        x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+        z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+        UI43ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgwPBmUYLyEI2AAAsk
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,184 +59,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pm
-branch HEAD: 70b70a4307cccebe91388337b1c85735ce4de6ff  PCI/sysfs: Protect driver's D3cold preference from user space
+xgene_allocate_domains() will call irq_domain_remove() to free
+msi->inner_domain on failure. However, its caller, xgene_msi_probe(),
+will also call irq_domain_remove() through xgene_msi_remove() on the
+same failure, which may lead to a use-after-free. Remove the first
+irq_domain_remove() and let xgene_free_domains() cleanup domains.
 
-elapsed time: 1451m
+Fixes: dcd19de36775 ("PCI: xgene: Add APM X-Gene v1 PCIe MSI/MSIX termination driver")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
 
-configs tested: 165
-configs skipped: 2
+Changelog:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+v2: -Remove irq_domain_remove() instead of nulling msi_domain.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20230930   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                         at91_dt_defconfig   gcc  
-arm                                 defconfig   gcc  
-arm                   milbeaut_m10v_defconfig   clang
-arm                          moxart_defconfig   clang
-arm                        neponset_defconfig   clang
-arm                             pxa_defconfig   gcc  
-arm                   randconfig-001-20230930   gcc  
-arm                   randconfig-001-20231001   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20230930   gcc  
-i386         buildonly-randconfig-001-20231001   gcc  
-i386         buildonly-randconfig-002-20230930   gcc  
-i386         buildonly-randconfig-002-20231001   gcc  
-i386         buildonly-randconfig-003-20230930   gcc  
-i386         buildonly-randconfig-003-20231001   gcc  
-i386         buildonly-randconfig-004-20230930   gcc  
-i386         buildonly-randconfig-004-20231001   gcc  
-i386         buildonly-randconfig-005-20230930   gcc  
-i386         buildonly-randconfig-005-20231001   gcc  
-i386         buildonly-randconfig-006-20230930   gcc  
-i386         buildonly-randconfig-006-20231001   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20230930   gcc  
-i386                  randconfig-001-20231001   gcc  
-i386                  randconfig-002-20230930   gcc  
-i386                  randconfig-002-20231001   gcc  
-i386                  randconfig-003-20230930   gcc  
-i386                  randconfig-003-20231001   gcc  
-i386                  randconfig-004-20230930   gcc  
-i386                  randconfig-004-20231001   gcc  
-i386                  randconfig-005-20230930   gcc  
-i386                  randconfig-005-20231001   gcc  
-i386                  randconfig-006-20230930   gcc  
-i386                  randconfig-006-20231001   gcc  
-i386                  randconfig-011-20230930   gcc  
-i386                  randconfig-012-20230930   gcc  
-i386                  randconfig-013-20230930   gcc  
-i386                  randconfig-014-20230930   gcc  
-i386                  randconfig-015-20230930   gcc  
-i386                  randconfig-016-20230930   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20230930   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                          amiga_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        m5307c3_defconfig   gcc  
-m68k                          sun3x_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                  decstation_64_defconfig   gcc  
-mips                           ip22_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                    adder875_defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc                      ep88xc_defconfig   gcc  
-powerpc                 mpc8315_rdb_defconfig   clang
-powerpc                  storcenter_defconfig   gcc  
-powerpc                     tqm8560_defconfig   clang
-powerpc                 xes_mpc85xx_defconfig   clang
-powerpc64                           defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20230930   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20230930   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                         ecovec24_defconfig   gcc  
-sh                        edosk7760_defconfig   gcc  
-sh                          rsk7201_defconfig   gcc  
-sh                          rsk7269_defconfig   gcc  
-sh                           se7343_defconfig   gcc  
-sh                           se7750_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20230930   gcc  
-x86_64       buildonly-randconfig-002-20230930   gcc  
-x86_64       buildonly-randconfig-003-20230930   gcc  
-x86_64       buildonly-randconfig-004-20230930   gcc  
-x86_64       buildonly-randconfig-005-20230930   gcc  
-x86_64       buildonly-randconfig-006-20230930   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20230930   gcc  
-x86_64                randconfig-001-20231001   gcc  
-x86_64                randconfig-002-20230930   gcc  
-x86_64                randconfig-002-20231001   gcc  
-x86_64                randconfig-003-20230930   gcc  
-x86_64                randconfig-003-20231001   gcc  
-x86_64                randconfig-004-20230930   gcc  
-x86_64                randconfig-004-20231001   gcc  
-x86_64                randconfig-005-20231001   gcc  
-x86_64                randconfig-006-20230930   gcc  
-x86_64                randconfig-006-20231001   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                          iss_defconfig   gcc  
+v3: -Add 'v3' tag in the title.
+---
+ drivers/pci/controller/pci-xgene-msi.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/drivers/pci/controller/pci-xgene-msi.c b/drivers/pci/controller/pci-xgene-msi.c
+index 3ce38dfd0d29..0f9b9394399d 100644
+--- a/drivers/pci/controller/pci-xgene-msi.c
++++ b/drivers/pci/controller/pci-xgene-msi.c
+@@ -251,10 +251,8 @@ static int xgene_allocate_domains(struct xgene_msi *msi)
+ 						    &xgene_msi_domain_info,
+ 						    msi->inner_domain);
+ 
+-	if (!msi->msi_domain) {
+-		irq_domain_remove(msi->inner_domain);
++	if (!msi->msi_domain)
+ 		return -ENOMEM;
+-	}
+ 
+ 	return 0;
+ }
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.17.1
+
