@@ -2,155 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7688A7B48FA
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Oct 2023 19:53:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2A097B49A7
+	for <lists+linux-pci@lfdr.de>; Sun,  1 Oct 2023 23:09:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235251AbjJARxh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 1 Oct 2023 13:53:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35680 "EHLO
+        id S235229AbjJAVJJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 1 Oct 2023 17:09:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233932AbjJARxh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 1 Oct 2023 13:53:37 -0400
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7772D9;
-        Sun,  1 Oct 2023 10:53:33 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id C0877300000BE;
-        Sun,  1 Oct 2023 19:53:31 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id B40DE17C3E; Sun,  1 Oct 2023 19:53:31 +0200 (CEST)
-Date:   Sun, 1 Oct 2023 19:53:31 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Alistair Francis <alistair23@gmail.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        Jonathan.Cameron@huawei.com, alex.williamson@redhat.com,
-        christian.koenig@amd.com, kch@nvidia.com,
-        gregkh@linuxfoundation.org, logang@deltatee.com,
-        linux-kernel@vger.kernel.org, chaitanyak@nvidia.com,
-        rdunlap@infradead.org, Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [PATCH v8 2/3] PCI/DOE: Expose the DOE features via sysfs
-Message-ID: <20231001175331.GA13453@wunner.de>
-References: <20230921055531.2028834-1-alistair.francis@wdc.com>
- <20230921055531.2028834-2-alistair.francis@wdc.com>
+        with ESMTP id S235161AbjJAVJJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 1 Oct 2023 17:09:09 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B54CBF;
+        Sun,  1 Oct 2023 14:09:06 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9F79C433C7;
+        Sun,  1 Oct 2023 21:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696194546;
+        bh=KlpsTUbvJ/T3JQMeSxp6/dgvFP7eP+U9AV1bcVV6PP0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=IkTJexmQrS6lFMoEvE68sJw8EwkmmMhbHx0qcxU8M9m3i6FnVbp5hSSh3YNxhwG7s
+         VJ0NroEzoyK+n+dKuNwwvnruRe0hioND27AReoy80kzCUM9Tqwmop46j1H1G5qUzb2
+         mWiTPlTEgfq6Tz8ZqRnNrxJKmDbMs4PexTD3XY3aJ3Zaig4Rqa3JHDpS7pRuvvpMBC
+         AG/T3jo+VqFuPR/Tm9bwNeGH+jh3a0b20qVGjfDdDg8i5UmfJIWLB9QPpXJW8rO0Gl
+         Qc7ODBciOQHZz+ziLfmv91qrXKdXgjBrloxAGWo/H8HWFnFM9t0vmWEny/zXiCw6zz
+         oHGNIqbElVGJA==
+Date:   Sun, 1 Oct 2023 23:08:59 +0200
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] PCI/P2PDMA: Fix undefined behavior bug in struct
+ pci_p2pdma_pagemap
+Message-ID: <ZRnf6wVOu0IJQ2Ok@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230921055531.2028834-2-alistair.francis@wdc.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 21, 2023 at 03:55:30PM +1000, Alistair Francis wrote:
-> The PCIe 6 specification added support for the Data Object Exchange (DOE).
-> When DOE is supported the Discovery Data Object Protocol must be
+`struct dev_pagemap` is a flexible structure, which means that it
+contains a flexible-array member at the bottom. This could potentially
+lead to an overwrite of the objects following `pgmap` in `struct
+pci_p2pdma_pagemap`, when `nr_range > 1`.
 
-"... the DOE Discovery *Feature* must be implemented per PCIe r6.1
-sec 6.30.1.1"
+Fix this by placing the declaration of object `pgmap` at the end of
+`struct pci_p2pdma_pagemap`.
 
+-Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+ready to enable it globally.
 
-> implemented. The protocol allows a requester to obtain information about
-> the other DOE features supported by the device.
-> 
-> The kernel is already querying the DOE features supported and cacheing
-> the values. This patch exposes the values via sysfs. This will allow
+Fixes: 0afea3814358 ("PCI/P2PDMA: Add provider's pci_dev to pci_p2pdma_pagemap struct")
+Fixes: a6e6fe6549f6 ("PCI/P2PDMA: Introduce private pagemap structure")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/pci/p2pdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Instead of "This patch ...", prefer imperative mood, i.e.:
-"Expose the values in sysfs to allow user space to ..."
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index fa7370f9561a..ab34d3d36a64 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -28,9 +28,9 @@ struct pci_p2pdma {
+ };
+ 
+ struct pci_p2pdma_pagemap {
+-	struct dev_pagemap pgmap;
+ 	struct pci_dev *provider;
+ 	u64 bus_offset;
++	struct dev_pagemap pgmap;
+ };
+ 
+ static struct pci_p2pdma_pagemap *to_p2p_pgmap(struct dev_pagemap *pgmap)
+-- 
+2.34.1
 
-
-> --- a/Documentation/ABI/testing/sysfs-bus-pci
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> @@ -500,3 +500,26 @@ Description:
->  		console drivers from the device.  Raw users of pci-sysfs
->  		resourceN attributes must be terminated prior to resizing.
->  		Success of the resizing operation is not guaranteed.
-> +
-> +What:		/sys/bus/pci/devices/.../doe_features
-> +Date:		August 2023
-
-Date says August but patch submission is from September.
-
-
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-> @@ -47,6 +47,7 @@
->   * @wq: Wait queue for work item
->   * @work_queue: Queue of pci_doe_work items
->   * @flags: Bit array of PCI_DOE_FLAG_* flags
-> + * @sysfs_attrs: Array of sysfs device attributes
-
-What's the purpose of this pointer?  It's set in
-pci_doe_sysfs_feature_supports() but never used for anything.
-
-I'm guessing that you meant to use it to tear down the added attributes
-on device removal, but that's missing in the patch.
-
-The attributes are added with sysfs_add_file_to_group(), but it seems
-to me they're not automatically removed by sysfs_remove_groups() on
-device teardown.  Am I missing something?
-
-
-> +static int pci_doe_sysfs_feature_supports(struct pci_dev *pdev,
-> +					  struct pci_doe_mb *doe_mb)
-
-I don't quite understand the meaning of the function name:
-It sounds as if its purpose is to determine whether a feature
-is supported.  Maybe something like pci_doe_sysfs_add_features()
-instead?
-
-
-> +	doe_mb->sysfs_attrs = attrs;
-
-Set this after the xa_for_each() loop to avoid having to reset it
-to NULL on error.
-
-
-> +		attrs[i].show = pci_doe_sysfs_feature_show;
-> +
-> +		ret = sysfs_add_file_to_group(&dev->kobj, &attrs[i].attr,
-> +					      pci_dev_doe_feature_group.name);
-> +		if (ret) {
-> +			attrs[i].show = NULL;
-> +			goto fail;
-> +		}
-
-The purpose of resetting attrs[i].show to NULL in the error path
-seems to be that you want to skip over features which haven't
-been created as attributes yet.
-
-It seems more straightforward to just iterate over the elements
-in attrs[] until you reach one whose mode is 0.
-
-Alternatively, use xa_for_each_range(&doe_mb->feats, i, entry, 0, i - 1).
-
-
-> +int doe_sysfs_init(struct pci_dev *pdev)
-
-Rename to pci_doe_sysfs_init() for consistency.
-
-
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -186,6 +186,9 @@ extern const struct attribute_group *pci_dev_groups[];
->  extern const struct attribute_group *pcibus_groups[];
->  extern const struct device_type pci_dev_type;
->  extern const struct attribute_group *pci_bus_groups[];
-> +#ifdef CONFIG_SYSFS
-> +extern const struct attribute_group pci_dev_doe_feature_group;
-> +#endif
-
-No #ifdef necessary.
-
-Thanks,
-
-Lukas
