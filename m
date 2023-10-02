@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AE0F7B5866
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Oct 2023 18:57:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 726357B5904
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Oct 2023 19:42:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238194AbjJBQpF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Oct 2023 12:45:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55128 "EHLO
+        id S238628AbjJBQ6O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Oct 2023 12:58:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237844AbjJBQpD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Oct 2023 12:45:03 -0400
+        with ESMTP id S238576AbjJBQ6I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Oct 2023 12:58:08 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22A2A9B;
-        Mon,  2 Oct 2023 09:44:59 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RzmyS5506z6K6gc;
-        Tue,  3 Oct 2023 00:44:48 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77451C4;
+        Mon,  2 Oct 2023 09:58:04 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RznFY4SKmz6K7FC;
+        Tue,  3 Oct 2023 00:57:53 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 2 Oct
- 2023 17:44:55 +0100
-Date:   Mon, 2 Oct 2023 17:44:54 +0100
+ 2023 17:58:00 +0100
+Date:   Mon, 2 Oct 2023 17:57:59 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Lukas Wunner <lukas@wunner.de>
 CC:     Bjorn Helgaas <helgaas@kernel.org>,
@@ -43,19 +43,18 @@ CC:     Bjorn Helgaas <helgaas@kernel.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Sean Christopherson <seanjc@google.com>,
         Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 03/12] X.509: Move certificate length retrieval into new
- helper
-Message-ID: <20231002174454.000025c5@Huawei.com>
-In-Reply-To: <16c06528d13b2c0081229a45cacd4b1b9cdff738.1695921657.git.lukas@wunner.de>
+Subject: Re: [PATCH 06/12] crypto: ecdsa - Support P1363 signature encoding
+Message-ID: <20231002175759.00000e93@Huawei.com>
+In-Reply-To: <4f98bb7ee2e660a8b4513a94ed79f4f29d1ff379.1695921657.git.lukas@wunner.de>
 References: <cover.1695921656.git.lukas@wunner.de>
-        <16c06528d13b2c0081229a45cacd4b1b9cdff738.1695921657.git.lukas@wunner.de>
+        <4f98bb7ee2e660a8b4513a94ed79f4f29d1ff379.1695921657.git.lukas@wunner.de>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
@@ -67,101 +66,228 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 28 Sep 2023 19:32:32 +0200
+On Thu, 28 Sep 2023 19:32:36 +0200
 Lukas Wunner <lukas@wunner.de> wrote:
 
-> The upcoming in-kernel SPDM library (Security Protocol and Data Model,
-> https://www.dmtf.org/dsp/DSP0274) needs to retrieve the length from
-> ASN.1 DER-encoded X.509 certificates.
+> Alternatively to the X9.62 encoding of ecdsa signatures, which uses
+> ASN.1 and is already supported by the kernel, there's another common
+> encoding called P1363.  It stores r and s as the concatenation of two
+> big endian, unsigned integers.  The name originates from IEEE P1363.
 > 
-> Such code already exists in x509_load_certificate_list(), so move it
-> into a new helper for reuse by SPDM.
+> The Security Protocol and Data Model (SPDM) specification prescribes
+> that ecdsa signatures are encoded according to P1363:
 > 
-> No functional change intended.
+>    "For ECDSA signatures, excluding SM2, in SPDM, the signature shall be
+>     the concatenation of r and s.  The size of r shall be the size of
+>     the selected curve.  Likewise, the size of s shall be the size of
+>     the selected curve.  See BaseAsymAlgo in NEGOTIATE_ALGORITHMS for
+>     the size of r and s.  The byte order for r and s shall be in big
+>     endian order.  When placing ECDSA signatures into an SPDM signature
+>     field, r shall come first followed by s."
+> 
+>     (SPDM 1.2.1 margin no 44,
+>     https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.2.1.pdf)
+> 
+> A subsequent commit introduces an SPDM library to enable PCI device
+> authentication, so add support for P1363 ecdsa signature verification.
+
+Ah good. The spec got updated. I remember playing guess with the format
+against libspdm which wasn't fun :)
+
+One trivial formatting note inline.
+
 > 
 > Signed-off-by: Lukas Wunner <lukas@wunner.de>
-
-Good find :)  I vaguely remember carrying a hack for this so
-good to do something more general + save on the duplication.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 
 > ---
->  crypto/asymmetric_keys/x509_loader.c | 38 +++++++++++++++++++---------
->  include/keys/asymmetric-type.h       |  2 ++
->  2 files changed, 28 insertions(+), 12 deletions(-)
+>  crypto/asymmetric_keys/public_key.c |  8 ++++++--
+>  crypto/ecdsa.c                      | 16 +++++++++++++---
+>  crypto/testmgr.h                    | 15 +++++++++++++++
+>  3 files changed, 34 insertions(+), 5 deletions(-)
 > 
-> diff --git a/crypto/asymmetric_keys/x509_loader.c b/crypto/asymmetric_keys/x509_loader.c
-> index a41741326998..121460a0de46 100644
-> --- a/crypto/asymmetric_keys/x509_loader.c
-> +++ b/crypto/asymmetric_keys/x509_loader.c
-> @@ -4,28 +4,42 @@
->  #include <linux/key.h>
->  #include <keys/asymmetric-type.h>
+> diff --git a/crypto/asymmetric_keys/public_key.c b/crypto/asymmetric_keys/public_key.c
+> index 7f96e8e501db..84c4ed02a270 100644
+> --- a/crypto/asymmetric_keys/public_key.c
+> +++ b/crypto/asymmetric_keys/public_key.c
+> @@ -105,7 +105,8 @@ software_key_determine_akcipher(const struct public_key *pkey,
+>  			return -EINVAL;
+>  		*sig = false;
+>  	} else if (strncmp(pkey->pkey_algo, "ecdsa", 5) == 0) {
+> -		if (strcmp(encoding, "x962") != 0)
+> +		if (strcmp(encoding, "x962") != 0 &&
+> +		    strcmp(encoding, "p1363") != 0)
+>  			return -EINVAL;
+>  		/*
+>  		 * ECDSA signatures are taken over a raw hash, so they don't
+> @@ -246,7 +247,10 @@ static int software_key_query(const struct kernel_pkey_params *params,
+>  		 * which is actually 2 'key_size'-bit integers encoded in
+>  		 * ASN.1.  Account for the ASN.1 encoding overhead here.
+>  		 */
+> -		info->max_sig_size = 2 * (len + 3) + 2;
+> +		if (strcmp(params->encoding, "x962") == 0)
+> +			info->max_sig_size = 2 * (len + 3) + 2;
+> +		else if (strcmp(params->encoding, "p1363") == 0)
+> +			info->max_sig_size = 2 * len;
+>  	} else {
+>  		info->max_data_size = len;
+>  		info->max_sig_size = len;
+> diff --git a/crypto/ecdsa.c b/crypto/ecdsa.c
+> index fbd76498aba8..cc3082c6f67d 100644
+> --- a/crypto/ecdsa.c
+> +++ b/crypto/ecdsa.c
+> @@ -159,10 +159,20 @@ static int ecdsa_verify(struct akcipher_request *req)
+>  		sg_nents_for_len(req->src, req->src_len + req->dst_len),
+>  		buffer, req->src_len + req->dst_len, 0);
 >  
-> +int x509_get_certificate_length(const u8 *p, unsigned long buflen)
-> +{
-> +	int plen;
-> +
-> +	/* Each cert begins with an ASN.1 SEQUENCE tag and must be more
-> +	 * than 256 bytes in size.
-> +	 */
-> +	if (buflen < 4)
-> +		return -EINVAL;
-> +
-> +	if (p[0] != 0x30 &&
-> +	    p[1] != 0x82)
-> +		return -EINVAL;
-> +
-> +	plen = (p[2] << 8) | p[3];
-> +	plen += 4;
-> +	if (plen > buflen)
-> +		return -EINVAL;
-> +
-> +	return plen;
-> +}
-> +EXPORT_SYMBOL_GPL(x509_get_certificate_length);
-> +
->  int x509_load_certificate_list(const u8 cert_list[],
->  			       const unsigned long list_size,
->  			       const struct key *keyring)
->  {
->  	key_ref_t key;
->  	const u8 *p, *end;
-> -	size_t plen;
-> +	int plen;
+> -	ret = asn1_ber_decoder(&ecdsasignature_decoder, &sig_ctx,
+> -			       buffer, req->src_len);
+> -	if (ret < 0)
+> +	if (strcmp(req->enc, "x962") == 0) {
+> +		ret = asn1_ber_decoder(&ecdsasignature_decoder, &sig_ctx,
+> +				       buffer, req->src_len);
+> +		if (ret < 0)
+> +			goto error;
+> +	} else if (strcmp(req->enc, "p1363") == 0 &&
+> +		   req->src_len == 2 * keylen) {
+> +		ecc_swap_digits(buffer, sig_ctx.r, ctx->curve->g.ndigits);
+> +		ecc_swap_digits(buffer + keylen,
+> +					sig_ctx.s, ctx->curve->g.ndigits);
+
+Indent looks a little odd.
+
+
+> +	} else {
+> +		ret = -EINVAL;
+>  		goto error;
+> +	}
 >  
->  	p = cert_list;
->  	end = p + list_size;
->  	while (p < end) {
-> -		/* Each cert begins with an ASN.1 SEQUENCE tag and must be more
-> -		 * than 256 bytes in size.
-> -		 */
-> -		if (end - p < 4)
-> -			goto dodgy_cert;
-> -		if (p[0] != 0x30 &&
-> -		    p[1] != 0x82)
-> -			goto dodgy_cert;
-> -		plen = (p[2] << 8) | p[3];
-> -		plen += 4;
-> -		if (plen > end - p)
-> +		plen = x509_get_certificate_length(p, end - p);
-> +		if (plen < 0)
->  			goto dodgy_cert;
->  
->  		key = key_create_or_update(make_key_ref(keyring, 1),
-> diff --git a/include/keys/asymmetric-type.h b/include/keys/asymmetric-type.h
-> index 69a13e1e5b2e..6705cfde25b9 100644
-> --- a/include/keys/asymmetric-type.h
-> +++ b/include/keys/asymmetric-type.h
-> @@ -84,6 +84,8 @@ extern struct key *find_asymmetric_key(struct key *keyring,
->  				       const struct asymmetric_key_id *id_2,
->  				       bool partial);
->  
-> +int x509_get_certificate_length(const u8 *p, unsigned long buflen);
-> +
->  int x509_load_certificate_list(const u8 cert_list[], const unsigned long list_size,
->  			       const struct key *keyring);
->  
+>  	/* if the hash is shorter then we will add leading zeros to fit to ndigits */
+>  	diff = keylen - req->dst_len;
+> diff --git a/crypto/testmgr.h b/crypto/testmgr.h
+> index ad57e7af2e14..f12f70818147 100644
+> --- a/crypto/testmgr.h
+> +++ b/crypto/testmgr.h
+> @@ -674,6 +674,7 @@ static const struct akcipher_testvec ecdsa_nist_p192_tv_template[] = {
+>  	"\x68\x01\x9d\xba\xce\x83\x08\xef\x95\x52\x7b\xa0\x0f\xe4\x18\x86"
+>  	"\x80\x6f\xa5\x79\x77\xda\xd0",
+>  	.c_size = 55,
+> +	.enc = "x962",
+>  	.public_key_vec = true,
+>  	.siggen_sigver_test = true,
+>  	}, {
+> @@ -698,6 +699,7 @@ static const struct akcipher_testvec ecdsa_nist_p192_tv_template[] = {
+>  	"\x4f\x53\x75\xc8\x02\x48\xeb\xc3\x92\x0f\x1e\x72\xee\xc4\xa3\xe3"
+>  	"\x5c\x99\xdb\x92\x5b\x36",
+>  	.c_size = 54,
+> +	.enc = "x962",
+>  	.public_key_vec = true,
+>  	.siggen_sigver_test = true,
+>  	}, {
+> @@ -722,6 +724,7 @@ static const struct akcipher_testvec ecdsa_nist_p192_tv_template[] = {
+>  	"\x69\x43\xfd\x48\x19\x86\xcf\x32\xdd\x41\x74\x6a\x51\xc7\xd9\x7d"
+>  	"\x3a\x97\xd9\xcd\x1a\x6a\x49",
+>  	.c_size = 55,
+> +	.enc = "x962",
+>  	.public_key_vec = true,
+>  	.siggen_sigver_test = true,
+>  	}, {
+> @@ -747,6 +750,7 @@ static const struct akcipher_testvec ecdsa_nist_p192_tv_template[] = {
+>  	"\xbc\x5a\x1f\x82\x96\x61\xd7\xd1\x01\x77\x44\x5d\x53\xa4\x7c\x93"
+>  	"\x12\x3b\x3b\x28\xfb\x6d\xe1",
+>  	.c_size = 55,
+> +	.enc = "x962",
+>  	.public_key_vec = true,
+>  	.siggen_sigver_test = true,
+>  	}, {
+> @@ -773,6 +777,7 @@ static const struct akcipher_testvec ecdsa_nist_p192_tv_template[] = {
+>  	"\xb4\x22\x9a\x98\x73\x3c\x83\xa9\x14\x2a\x5e\xf5\xe5\xfb\x72\x28"
+>  	"\x6a\xdf\x97\xfd\x82\x76\x24",
+>  	.c_size = 55,
+> +	.enc = "x962",
+>  	.public_key_vec = true,
+>  	.siggen_sigver_test = true,
+>  	},
+> @@ -803,6 +808,7 @@ static const struct akcipher_testvec ecdsa_nist_p256_tv_template[] = {
+>  	"\x8a\xfa\x54\x93\x29\xa7\x70\x86\xf1\x03\x03\xf3\x3b\xe2\x73\xf7"
+>  	"\xfb\x9d\x8b\xde\xd4\x8d\x6f\xad",
+>  	.c_size = 72,
+> +	.enc = "x962",
+>  	.public_key_vec = true,
+>  	.siggen_sigver_test = true,
+>  	}, {
+> @@ -829,6 +835,7 @@ static const struct akcipher_testvec ecdsa_nist_p256_tv_template[] = {
+>  	"\x4a\x77\x22\xec\xc8\x66\xbf\x50\x05\x58\x39\x0e\x26\x92\xce\xd5"
+>  	"\x2e\x8b\xde\x5a\x04\x0e",
+>  	.c_size = 70,
+> +	.enc = "x962",
+>  	.public_key_vec = true,
+>  	.siggen_sigver_test = true,
+>  	}, {
+> @@ -855,6 +862,7 @@ static const struct akcipher_testvec ecdsa_nist_p256_tv_template[] = {
+>  	"\xa9\x81\xac\x4a\x50\xd0\x91\x0a\x6e\x1b\xc4\xaf\xe1\x83\xc3\x4f"
+>  	"\x2a\x65\x35\x23\xe3\x1d\xfa",
+>  	.c_size = 71,
+> +	.enc = "x962",
+>  	.public_key_vec = true,
+>  	.siggen_sigver_test = true,
+>  	}, {
+> @@ -882,6 +890,7 @@ static const struct akcipher_testvec ecdsa_nist_p256_tv_template[] = {
+>  	"\x19\xfb\x5f\x92\xf4\xc9\x23\x37\x69\xf4\x3b\x4f\x47\xcf\x9b\x16"
+>  	"\xc0\x60\x11\x92\xdc\x17\x89\x12",
+>  	.c_size = 72,
+> +	.enc = "x962",
+>  	.public_key_vec = true,
+>  	.siggen_sigver_test = true,
+>  	}, {
+> @@ -910,6 +919,7 @@ static const struct akcipher_testvec ecdsa_nist_p256_tv_template[] = {
+>  	"\x00\xdd\xab\xd4\xc0\x2b\xe6\x5c\xad\xc3\x78\x1c\xc2\xc1\x19\x76"
+>  	"\x31\x79\x4a\xe9\x81\x6a\xee",
+>  	.c_size = 71,
+> +	.enc = "x962",
+>  	.public_key_vec = true,
+>  	.siggen_sigver_test = true,
+>  	},
+> @@ -944,6 +954,7 @@ static const struct akcipher_testvec ecdsa_nist_p384_tv_template[] = {
+>  	"\x74\xa0\x0f\xbf\xaf\xc3\x36\x76\x4a\xa1\x59\xf1\x1c\xa4\x58\x26"
+>  	"\x79\x12\x2a\xb7\xc5\x15\x92\xc5",
+>  	.c_size = 104,
+> +	.enc = "x962",
+>  	.public_key_vec = true,
+>  	.siggen_sigver_test = true,
+>  	}, {
+> @@ -974,6 +985,7 @@ static const struct akcipher_testvec ecdsa_nist_p384_tv_template[] = {
+>  	"\x4d\xd0\xc6\x6e\xb0\xe9\xfc\x14\x9f\x19\xd0\x42\x8b\x93\xc2\x11"
+>  	"\x88\x2b\x82\x26\x5e\x1c\xda\xfb",
+>  	.c_size = 104,
+> +	.enc = "x962",
+>  	.public_key_vec = true,
+>  	.siggen_sigver_test = true,
+>  	}, {
+> @@ -1004,6 +1016,7 @@ static const struct akcipher_testvec ecdsa_nist_p384_tv_template[] = {
+>  	"\xc0\x75\x3e\x23\x5e\x36\x4f\x8d\xde\x1e\x93\x8d\x95\xbb\x10\x0e"
+>  	"\xf4\x1f\x39\xca\x4d\x43",
+>  	.c_size = 102,
+> +	.enc = "x962",
+>  	.public_key_vec = true,
+>  	.siggen_sigver_test = true,
+>  	}, {
+> @@ -1035,6 +1048,7 @@ static const struct akcipher_testvec ecdsa_nist_p384_tv_template[] = {
+>  	"\x44\x92\x8c\x86\x99\x65\xb3\x97\x96\x17\x04\xc9\x05\x77\xf1\x8e"
+>  	"\xab\x8d\x4e\xde\xe6\x6d\x9b\x66",
+>  	.c_size = 104,
+> +	.enc = "x962",
+>  	.public_key_vec = true,
+>  	.siggen_sigver_test = true,
+>  	}, {
+> @@ -1067,6 +1081,7 @@ static const struct akcipher_testvec ecdsa_nist_p384_tv_template[] = {
+>  	"\x5f\x8d\x7a\xf9\xfb\x34\xe4\x8b\x80\xa5\xb6\xda\x2c\x4e\x45\xcf"
+>  	"\x3c\x93\xff\x50\x5d",
+>  	.c_size = 101,
+> +	.enc = "x962",
+>  	.public_key_vec = true,
+>  	.siggen_sigver_test = true,
+>  	},
 
