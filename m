@@ -2,106 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DDCF7B5B02
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Oct 2023 21:14:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B2C97B5BB0
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Oct 2023 22:04:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229482AbjJBTGb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Oct 2023 15:06:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46998 "EHLO
+        id S229497AbjJBUCp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Oct 2023 16:02:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238737AbjJBTG2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Oct 2023 15:06:28 -0400
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BE0DE3
-        for <linux-pci@vger.kernel.org>; Mon,  2 Oct 2023 12:06:25 -0700 (PDT)
-Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
-        by cmsmtp with ESMTP
-        id nMWHqi8ZsytxcnOFMq6oMW; Mon, 02 Oct 2023 19:06:24 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id nOFLqdaDkl3uanOFLqzIsw; Mon, 02 Oct 2023 19:06:24 +0000
-X-Authority-Analysis: v=2.4 cv=B4yqbchM c=1 sm=1 tr=0 ts=651b14b0
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=Dx1Zrv+1i3YEdDUMOX3koA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=nVEl-0sjCtjp5Y-AIcoA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=X4e+5MdOuAxyi1+BhwS40SNlhSsKv6QuIxy7lXc9Mlk=; b=BADl0hdVjaox9SM9t9ZEc0DN0f
-        AR6YR/t/fvSb31WnWzZ0o0X+I9lzg0+7knj1LAuFD1Rn2RC96A0fFIrkAVrYgSe3jhirvy5F9fEQP
-        MkSfhLaUoDM+6dtjdQvf5WeVRefXeDDU2muukX3ikalynfFHfbCRVcbcOS99/P0OUGHHAlRnPe+FW
-        gG665kE1edNnxrVqUhpVIzFTguU0GbAe35a1aBlFkHbTLBTYNYErhyMoXf0mltKJoh2Isi7/sDXfR
-        66TY9IhSdySSUMrzwx+RzY+vsKoCWhoOXrIzuikuG0unyXaW6Lg2AQbgZkjStWx2fPXLLt6oAtN2N
-        NSm/waDQ==;
-Received: from 94-238-9-39.abo.bbox.fr ([94.238.9.39]:54352 helo=[192.168.1.98])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.96)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1qnOFL-003sIs-0L;
-        Mon, 02 Oct 2023 14:06:23 -0500
-Message-ID: <446f6c02-a914-cc00-2dea-478fbed898c6@embeddedor.com>
-Date:   Mon, 2 Oct 2023 21:06:20 +0200
+        with ESMTP id S229496AbjJBUCo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Oct 2023 16:02:44 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 892DFAC;
+        Mon,  2 Oct 2023 13:02:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696276960; x=1727812960;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=QSUega9DohiHtZANJ0msxTsPiln6mFa8NddCKUeRwmk=;
+  b=cWOurX7uuPDEM0rR+rcFSZrmVclMM8BJM5ICrIUveApmSjmvmri66iEg
+   Vok1uTsjGSPtcc1Yc0YOzM9Ka4B9KY0D0L0covR0Yl4VFIkT5rODjwNIm
+   wFXJcqwO0h8Mw5QWb1yiNZfuBlRq6zK6rckiMXxZdfOi7K9i5bJbjvUPX
+   89QAQpEy4fV/j4GPAfnpninNzTfDCHWj6/pB4AL0CjKIO8GY4zg25mt12
+   csJk/6n49EtZvNuPDm4cEKwQMyt2EfoM1de4MXrwvuyyEW5ken0auiG2Z
+   1xzzCildQBH0H1DrF/NanQhKb8VBI9hgmdau6ezPUbUWAssUP1zU1/SJ6
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="1318509"
+X-IronPort-AV: E=Sophos;i="6.03,194,1694761200"; 
+   d="scan'208";a="1318509"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2023 13:02:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="750696427"
+X-IronPort-AV: E=Sophos;i="6.03,194,1694761200"; 
+   d="scan'208";a="750696427"
+Received: from jbrandeb-spr1.jf.intel.com ([10.166.28.233])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2023 13:02:38 -0700
+From:   Jesse Brandeburg <jesse.brandeburg@intel.com>
+To:     intel-wired-lan@lists.osuosl.org
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        linux-pci@vger.kernel.org, pmenzel@molgen.mpg.de,
+        netdev@vger.kernel.org, jkc@redhat.com,
+        Vishal Agrawal <vagrawal@redhat.com>,
+        Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Subject: [PATCH iwl-net v2] ice: reset first in crash dump kernels
+Date:   Mon,  2 Oct 2023 13:02:32 -0700
+Message-Id: <20231002200232.3682771-1-jesse.brandeburg@intel.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH][next] PCI/P2PDMA: Fix undefined behavior bug in struct
- pci_p2pdma_pagemap
-Content-Language: en-US
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <ZRnf6wVOu0IJQ2Ok@work>
- <29da763d-1570-7197-2d5a-03c5659b8b52@deltatee.com>
- <734c7fdf-4c41-2890-dbe7-ddb23fd6bcc7@embeddedor.com>
- <e76ff7de-8c42-4393-36e2-b37ffcb58149@deltatee.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <e76ff7de-8c42-4393-36e2-b37ffcb58149@deltatee.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 94.238.9.39
-X-Source-L: No
-X-Exim-ID: 1qnOFL-003sIs-0L
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 94-238-9-39.abo.bbox.fr ([192.168.1.98]) [94.238.9.39]:54352
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCSXwD8Bs5q+GGpoiqH5LrpHNIge5ttHRUkc1fNGBvJYGX8GS/sQ257cEnEUvOoOrh3twtJA7aOeQiFOKpJQzOG6zqiqf32AZZwRtJY4EMPhX6hbPFrd
- WUGy5ho9z2gXXOZrc50fcHoi1ZHWoZwRUXkoFWqr3jZ7I+zMzwGyoRTlUAmXkGo6Kqi5q+uigzXQr2RGc+O9V4bCtTvKScGgKio=
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+When the system boots into the crash dump kernel after a panic, the ice
+networking device may still have pending transactions that can cause errors
+or machine checks when the device is re-enabled. This can prevent the crash
+dump kernel from loading the driver or collecting the crash data.
 
-> 
-> Yes, but the commit message is not clear that nr_range can never be >1
-> in the code as it currently is.
+To avoid this issue, perform a function level reset (FLR) on the ice device
+via PCIe config space before enabling it on the crash kernel. This will
+clear any outstanding transactions and stop all queues and interrupts.
+Restore the config space after the FLR, otherwise it was found in testing
+that the driver wouldn't load successfully.
 
-Done:
-	https://lore.kernel.org/linux-hardening/ZRsUL%2FhATNruwtla@work/
+The following sequence causes the original issue:
+- Load the ice driver with modprobe ice
+- Enable SR-IOV with 2 VFs: echo 2 > /sys/class/net/eth0/device/sriov_num_vfs
+- Trigger a crash with echo c > /proc/sysrq-trigger
+- Load the ice driver again (or let it load automatically) with modprobe ice
+- The system crashes again during pcim_enable_device()
 
-Thanks!
---
-Gustavo
+Reported-by: Vishal Agrawal <vagrawal@redhat.com>
+Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
+---
+v2: respond to list comments and update commit message
+v1: initial version
+---
+ drivers/net/ethernet/intel/ice/ice_main.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index c8286adae946..6550c46e4e36 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -6,6 +6,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <generated/utsrelease.h>
++#include <linux/crash_dump.h>
+ #include "ice.h"
+ #include "ice_base.h"
+ #include "ice_lib.h"
+@@ -5014,6 +5015,20 @@ ice_probe(struct pci_dev *pdev, const struct pci_device_id __always_unused *ent)
+ 		return -EINVAL;
+ 	}
+ 
++	/* when under a kdump kernel initiate a reset before enabling the
++	 * device in order to clear out any pending DMA transactions. These
++	 * transactions can cause some systems to machine check when doing
++	 * the pcim_enable_device() below.
++	 */
++	if (is_kdump_kernel()) {
++		pci_save_state(pdev);
++		pci_clear_master(pdev);
++		err = pcie_flr(pdev);
++		if (err)
++			return err;
++		pci_restore_state(pdev);
++	}
++
+ 	/* this driver uses devres, see
+ 	 * Documentation/driver-api/driver-model/devres.rst
+ 	 */
+
+base-commit: 6a70e5cbedaf8ad10528ac9ac114f3ec20f422df
+-- 
+2.39.3
+
