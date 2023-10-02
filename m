@@ -2,181 +2,410 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61A5A7B4A90
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Oct 2023 03:38:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C362C7B4C00
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Oct 2023 09:01:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234878AbjJBBiR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 1 Oct 2023 21:38:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56360 "EHLO
+        id S235623AbjJBHBC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Oct 2023 03:01:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229790AbjJBBiQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 1 Oct 2023 21:38:16 -0400
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9249C4
-        for <linux-pci@vger.kernel.org>; Sun,  1 Oct 2023 18:38:11 -0700 (PDT)
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20231002013808epoutp02af754c5b32c3ccf4ab3b138838337d13~KJqJDbkM-0383103831epoutp02T
-        for <linux-pci@vger.kernel.org>; Mon,  2 Oct 2023 01:38:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20231002013808epoutp02af754c5b32c3ccf4ab3b138838337d13~KJqJDbkM-0383103831epoutp02T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1696210688;
-        bh=kgh7GxZ2Bu/dvKtchhHvKfgopP2ArLE1uP8jxWXlhVY=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=gW+4L3xj0z/BxjYKK6cMvaYb16SSAT4fs4JfImjRKxfn+hBLSPOp2+VU+2QF+vFO/
-         yhIhOn+cx2PSNWwPUw5KS5os4HGQfJFXnRRD5+M9u4fHAzSUazzufj5K/J+rPrpXF7
-         D89ZQTbrGk8RdrFRLzSqLp+bDS42GI6EY2x7ssQg=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20231002013807epcas5p3784a3a496efd1a82190980cbd4b54ab2~KJqIoDaCW2966929669epcas5p3P;
-        Mon,  2 Oct 2023 01:38:07 +0000 (GMT)
-Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.182]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4RzNrG2tv2z4x9Pt; Mon,  2 Oct
-        2023 01:38:06 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        04.FB.19094.EFE1A156; Mon,  2 Oct 2023 10:38:06 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20231002013805epcas5p4bd050e0163c8baca6e195caddede664e~KJqGtd79K2612526125epcas5p4B;
-        Mon,  2 Oct 2023 01:38:05 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20231002013805epsmtrp1c780a02dbb5469aeb828e6ce7300a6a8~KJqGsf3VL0119501195epsmtrp1O;
-        Mon,  2 Oct 2023 01:38:05 +0000 (GMT)
-X-AuditID: b6c32a50-64fff70000004a96-17-651a1efe95a8
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7B.26.08649.DFE1A156; Mon,  2 Oct 2023 10:38:05 +0900 (KST)
-Received: from INBRO000447 (unknown [107.122.12.5]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20231002013803epsmtip2880c69c0123cb6c0bbc92f94574bdce5~KJqEwDo7R0272902729epsmtip2Q;
-        Mon,  2 Oct 2023 01:38:03 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     =?utf-8?Q?'Uwe_Kleine-K=C3=B6nig'?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "'Jingoo Han'" <jingoohan1@gmail.com>,
-        "'Lorenzo Pieralisi'" <lpieralisi@kernel.org>,
-        =?utf-8?Q?'Krzysztof_Wilczy=C5=84ski'?= <kw@linux.com>,
-        "'Bjorn Helgaas'" <bhelgaas@google.com>,
-        "'Krzysztof Kozlowski'" <krzysztof.kozlowski@linaro.org>,
-        "'Kukjin Kim'" <kgene.kim@samsung.com>,
-        "'Siva Reddy Kallam'" <siva.kallam@samsung.com>,
-        "'Surendranath Gurivireddy Balla'" <suren.reddy@samsung.com>
-Cc:     "'Rob Herring'" <robh@kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kernel@pengutronix.de>
-In-Reply-To: <20231001170254.2506508-2-u.kleine-koenig@pengutronix.de>
-Subject: RE: [PATCH 1/4] PCI: exynos: Don't put .remove callback in
- .exit.text section
-Date:   Mon, 2 Oct 2023 07:08:01 +0530
-Message-ID: <000001d9f4d1$16b652d0$4422f870$@samsung.com>
+        with ESMTP id S235638AbjJBHBA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Oct 2023 03:01:00 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B174BD
+        for <linux-pci@vger.kernel.org>; Mon,  2 Oct 2023 00:00:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696230057; x=1727766057;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=p6lAKcC6Li0hEZKOKKSYDI1ZaOChCcSMJV0P94UHQJM=;
+  b=Noy3+OcnPQcrR+06sxKbnnTIeyl0bMPRoxkRzWfeRlSTruBxQ2BjTXvx
+   Z2nNM/RGecc1eDYw+b7N+Wu3W1ZhM445EPbTJ9cGHCiRT8QXpdk1GL+yo
+   estJlTrXDokJ/QwxNpOhwcY8vqJLdwUF7H6gdOpX3vl0b8QFfx8ipaWZT
+   YsRrp/359rkQ0ujZE18xEs6NX+LaPHFAwUhD3Z+5/nIRiEb2kzM3QINSq
+   9wpYKmBuiEB9wTR3hyIKMpiZ1fAZPfgtgwjlRHl+P8OT2m49FIYwOfZ+6
+   Q/lpPH0een2ZHUWFguXahxI65ry7r3qc/G7w2CifdYiS3qbCzjCK0CyXr
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10850"; a="367652481"
+X-IronPort-AV: E=Sophos;i="6.03,193,1694761200"; 
+   d="scan'208";a="367652481"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2023 00:00:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10850"; a="866414057"
+X-IronPort-AV: E=Sophos;i="6.03,193,1694761200"; 
+   d="scan'208";a="866414057"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 02 Oct 2023 00:00:46 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 0F3371A7; Mon,  2 Oct 2023 10:00:45 +0300 (EEST)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Tasev Nikola <tasev.stefanoska@skynet.be>,
+        Mark Enriquez <enriquezmark36@gmail.com>,
+        Thomas Witt <kernel@witt.link>,
+        Koba Ko <koba.ko@canonical.com>,
+        Werner Sembach <wse@tuxedocomputers.com>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        =?UTF-8?q?=E5=90=B3=E6=98=8A=E6=BE=84=20Ricky?= 
+        <ricky_wu@realtek.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v4] PCI/ASPM: Add back L1 PM Substate save and restore
+Date:   Mon,  2 Oct 2023 10:00:44 +0300
+Message-Id: <20231002070044.2299644-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQNL/kGc24c2Ajts//TB+Z/BbdbirgICKpxwAtGBLRqtKwf3wA==
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGJsWRmVeSWpSXmKPExsWy7bCmuu4/OalUg12fhC2WNGVYrPgyk91i
-        1dSdLBa9C66yWex9vZXdoqHnN6vFpsfXWC3OzjvOZjHj/D4mi5Y/LSwW//fsYLe4PXEyowOP
-        x85Zd9k9Fmwq9di0qpPN4861PWweT65MZ/LYvKTeo/+vgUffllWMHp83yQVwRmXbZKQmpqQW
-        KaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoqufgE6Lpl5gDdq6RQlphTChQKSCwu
-        VtK3synKLy1JVcjILy6xVUotSMkpMCnQK07MLS7NS9fLSy2xMjQwMDIFKkzIzmibfpmlYK5s
-        xdV319gbGLfJdDFyckgImEjsWtXO0sXIxSEksIdR4unT7VDOJ0aJX0/2sUM43xgluk8uZodp
-        ebH1ESNEYi+jxLf2R2wQzgtGiXNN68Cq2AR0JXYsbgNLiAjcYZZYuaCfGcRhFljDKHF12Qkm
-        kCpOATeJjcvnMYPYwgIRErsmvmQDsVkEVCRWHdwNZvMKWEpcOPcVyhaUODnzCQuIzSygLbFs
-        4WtmiJsUJH4+XcYKYosIOEk8O7gYqkZc4uXRI2BPSAhc4ZBo+fcAqsFFYtGS2VAPCUu8Or4F
-        ypaSeNnfBmRzANkeEov+SEGEMyTeLl/PCGHbSxy4MocFpIRZQFNi/S59iFV8Er2/nzBBdPJK
-        dLQJQVSrSjS/u8oCYUtLTOzuZoWwPSQO3b/MOoFRcRaSx2YheWwWkgdmISxbwMiyilEqtaA4
-        Nz012bTAUDcvtRwe5cn5uZsYwQlaK2AH4+oNf/UOMTJxMB5ilOBgVhLhbbsglirEm5JYWZVa
-        lB9fVJqTWnyI0RQY3BOZpUST84E5Iq8k3tDE0sDEzMzMxNLYzFBJnPd169wUIYH0xJLU7NTU
-        gtQimD4mDk6pBiYBnYK1fyQalh213qN50yPHwqVWn2/ihaBNxwxf/Pay3x1c9PHMkS6T+h/+
-        d4u4PKsE9sTb7Iuf9s3RhyvxOt9OwegwhYRggZi3Br3RU1u2PEh9xmd0N7h/r5nGvpAnVZpq
-        4nvVVr5o3BYXrehhYzfd9pDjr0W3Dgb9uSjF/8nwx6rJ2/mSf877fy60zv8AU3FOeudD6R/R
-        Ut3d8yQnS3SX+tsYX81rOfxm9fK1P+far0l/zbS1cl3ymoU8Edn3i9e5TXbqyLpwY8u3qfy3
-        qjNvmL25anLqS7aT77+Ls8w8HVf1Pn518v66g38bdfYdYbhfLKPrfM6IJfPj3Qc7OQT37S+z
-        6XfLvNTerrxoQogSS3FGoqEWc1FxIgBfb57nWQQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDIsWRmVeSWpSXmKPExsWy7bCSvO5fOalUgyPPRC2WNGVYrPgyk91i
-        1dSdLBa9C66yWex9vZXdoqHnN6vFpsfXWC3OzjvOZjHj/D4mi5Y/LSwW//fsYLe4PXEyowOP
-        x85Zd9k9Fmwq9di0qpPN4861PWweT65MZ/LYvKTeo/+vgUffllWMHp83yQVwRnHZpKTmZJal
-        FunbJXBl/O58x1SwU7Ti9+z9jA2ME4S6GDk5JARMJF5sfcQIYgsJ7GaU2LM1GyIuLXF94wR2
-        CFtYYuW/50A2F1DNM0aJ/nXzWUESbAK6EjsWt7GBJEQEHjBLdCzaCFbFLLCBUWLvtsdsEGMv
-        MkocbnUCsTkF3CQ2Lp/H3MXIwSEsECYx6XkMSJhFQEVi1cHdYOW8ApYSF859hbIFJU7OfMIC
-        YjMLaEs8vfkUzl628DUzxHUKEj+fLgM7SETASeLZwcVQNeISL48eYZ/AKDwLyahZSEbNQjJq
-        FpKWBYwsqxglUwuKc9Nzkw0LDPNSy/WKE3OLS/PS9ZLzczcxgiNUS2MH4735//QOMTJxMB5i
-        lOBgVhLhbbsglirEm5JYWZValB9fVJqTWnyIUZqDRUmc13DG7BQhgfTEktTs1NSC1CKYLBMH
-        p1QD04NzRV1vViTsP/MvNvOT3aqPz6svbU/iEl/eeHcaW5/Pwnwj3SVX78wxvaZ70d3QR2tu
-        W+rX0hpVTkfWmVlF4avFJunlNrb5T9nIcSHuSmK2z1uH2cxJYiIrn3obiPhsudUy9aP9Co2z
-        Bst8EoOWrDu4du4qvYojO/+tqdrdnpCk9kJBLuROmJD2gyymqKg9rz/9tOPmVLw2SSvx/eUU
-        l4wlKqd+LioPY5MU+nR7O0fBykW2tj8eLN984HxwaU3qPx+fpWtP7Nobq7PrC+9C+8iFiXPv
-        xn+ccNLg8A/RbQUz+I+9nrXizra9m1+/UU1bnuryTuZB5uuovqZH+Y2GZcYOudmVj1fqdX/9
-        ZOt9xkGJpTgj0VCLuag4EQCAauIIPwMAAA==
-X-CMS-MailID: 20231002013805epcas5p4bd050e0163c8baca6e195caddede664e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231001170325epcas5p341bc2ba7dcbd3fd37ee1c75e1fc51bd8
-References: <20231001170254.2506508-1-u.kleine-koenig@pengutronix.de>
-        <CGME20231001170325epcas5p341bc2ba7dcbd3fd37ee1c75e1fc51bd8@epcas5p3.samsung.com>
-        <20231001170254.2506508-2-u.kleine-koenig@pengutronix.de>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Commit a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability
+for suspend/resume"") reverted saving and restoring of ASPM L1 Substates
+due to a regression that caused resume from suspend to fail on certain
+systems. However, we never added this capability back and this is now
+causing systems fail to enter low power CPU states, drawing more power
+from the battery.
 
+The original revert mentioned that we restore L1 PM substate configuration
+even though ASPM L1 may already be enabled. This is due the fact that
+the pci_restore_aspm_l1ss_state() was called before pci_restore_pcie_state().
 
-> -----Original Message-----
-> From: Uwe Kleine-K=C3=B6nig=20<u.kleine-koenig=40pengutronix.de>=0D=0A>=
-=20Sent:=20Sunday,=20October=201,=202023=2010:33=20PM=0D=0A>=20To:=20Jingoo=
-=20Han=20<jingoohan1=40gmail.com>;=20Lorenzo=20Pieralisi=0D=0A>=20<lpierali=
-si=40kernel.org>;=20Krzysztof=20Wilczy=C5=84ski=20<kw=40linux.com>;=20Bjorn=
-=20Helgaas=0D=0A>=20<bhelgaas=40google.com>;=20Krzysztof=20Kozlowski=0D=0A>=
-=20<krzysztof.kozlowski=40linaro.org>;=20Kukjin=20Kim=20<kgene.kim=40samsun=
-g.com>;=20Siva=0D=0A>=20Reddy=20Kallam=20<siva.kallam=40samsung.com>;=20Sur=
-endranath=20Gurivireddy=20Balla=0D=0A>=20<suren.reddy=40samsung.com>=0D=0A>=
-=20Cc:=20Rob=20Herring=20<robh=40kernel.org>;=20Alim=20Akhtar=20<alim.akhta=
-r=40samsung.com>;=0D=0A>=20linux-pci=40vger.kernel.org;=20linux-arm-kernel=
-=40lists.infradead.org;=20linux-samsung-=0D=0A>=20soc=40vger.kernel.org;=20=
-kernel=40pengutronix.de=0D=0A>=20Subject:=20=5BPATCH=201/4=5D=20PCI:=20exyn=
-os:=20Don't=20put=20.remove=20callback=20in=20.exit.text=0D=0A>=20section=
-=0D=0A>=20=0D=0A>=20With=20CONFIG_PCI_EXYNOS=3Dy=20and=20exynos_pcie_remove=
-()=20marked=20with=20__exit,=0D=0A>=20the=20function=20is=20discarded=20fro=
-m=20the=20driver.=20In=20this=20case=20a=20bound=20device=20can=20still=20g=
-et=0D=0A>=20unbound,=20e.g=20via=20sysfs.=20Then=20no=20cleanup=20code=20is=
-=20run=20resulting=20in=20resource=20leaks=20or=0D=0A>=20worse.=0D=0A>=20=
-=0D=0A>=20The=20right=20thing=20to=20do=20is=20do=20always=20have=20the=20r=
-emove=20callback=20available.=0D=0A>=20This=20fixes=20the=20following=20war=
-ning=20by=20modpost:=0D=0A>=20=0D=0A>=20=09WARNING:=20modpost:=20drivers/pc=
-i/controller/dwc/pci-exynos:=20section=0D=0A>=20mismatch=20in=20reference:=
-=20exynos_pcie_driver+0x8=20(section:=20.data)=20->=0D=0A>=20exynos_pcie_re=
-move=20(section:=20.exit.text)=0D=0A>=20=0D=0A>=20(with=20ARCH=3Dx86_64=20W=
-=3D1=20allmodconfig).=0D=0A>=20=0D=0A>=20Fixes:=20340cba6092c2=20(=22pci:=
-=20Add=20PCIe=20driver=20for=20Samsung=20Exynos=22)=0D=0A>=20Signed-off-by:=
-=20Uwe=20Kleine-K=C3=B6nig=20<u.kleine-koenig=40pengutronix.de>=0D=0A>=20--=
--=0D=0AThanks=21=0D=0A=0D=0AReviewed-by:=20Alim=20Akhtar=20<alim.akhtar=40s=
-amsung.com>=0D=0A=0D=0A>=20=20drivers/pci/controller/dwc/pci-exynos.c=20=7C=
-=204=20++--=0D=0A>=20=201=20file=20changed,=202=20insertions(+),=202=20dele=
-tions(-)=0D=0A>=20=0D=0A>=20diff=20--git=20a/drivers/pci/controller/dwc/pci=
--exynos.c=0D=0A>=20b/drivers/pci/controller/dwc/pci-exynos.c=0D=0A>=20index=
-=206319082301d6..c6bede346932=20100644=0D=0A>=20---=20a/drivers/pci/control=
-ler/dwc/pci-exynos.c=0D=0A>=20+++=20b/drivers/pci/controller/dwc/pci-exynos=
-.c=0D=0A>=20=40=40=20-375,7=20+375,7=20=40=40=20static=20int=20exynos_pcie_=
-probe(struct=20platform_device=0D=0A>=20*pdev)=0D=0A>=20=20=09return=20ret;=
-=0D=0A>=20=20=7D=0D=0A>=20=0D=0A>=20-static=20int=20__exit=20exynos_pcie_re=
-move(struct=20platform_device=20*pdev)=0D=0A>=20+static=20int=20exynos_pcie=
-_remove(struct=20platform_device=20*pdev)=0D=0A>=20=20=7B=0D=0A>=20=20=09st=
-ruct=20exynos_pcie=20*ep=20=3D=20platform_get_drvdata(pdev);=0D=0A>=20=0D=
-=0A>=20=40=40=20-431,7=20+431,7=20=40=40=20static=20const=20struct=20of_dev=
-ice_id=0D=0A>=20exynos_pcie_of_match=5B=5D=20=3D=20=7B=0D=0A>=20=0D=0A>=20=
-=20static=20struct=20platform_driver=20exynos_pcie_driver=20=3D=20=7B=0D=0A=
->=20=20=09.probe=09=09=3D=20exynos_pcie_probe,=0D=0A>=20-=09.remove=09=09=
-=3D=20__exit_p(exynos_pcie_remove),=0D=0A>=20+=09.remove=09=09=3D=20exynos_=
-pcie_remove,=0D=0A>=20=20=09.driver=20=3D=20=7B=0D=0A>=20=20=09=09.name=09=
-=3D=20=22exynos-pcie=22,=0D=0A>=20=20=09=09.of_match_table=20=3D=20exynos_p=
-cie_of_match,=0D=0A>=20--=0D=0A>=202.40.1=0D=0A=0D=0A=0D=0A
+Try to enable this functionality again following PCIe r6.0.1, sec 5.5.4
+more closely by:
+
+  1) Do not restore ASPM configuration in pci_restore_pcie_state() but
+     do that after PCIe capability is restored in pci_restore_aspm_state()
+     following PCIe r6.0, sec 5.5.4.
+
+  2) ASPM is first enabled on the upstream component and then downstream
+     (this is already forced by the parent-child ordering of Linux
+     Device Power Management framework).
+
+  3) Program ASPM L1 PM substate configuration before L1 enables.
+
+  4) Program ASPM L1 PM substate enables last after rest of the fields
+     in the capability are programmed.
+
+  5) Add denylist that skips restoring on the ASUS and TUXEDO systems
+     where these regressions happened, just in case. For the TUXEDO case
+     we only skip restore if the BIOS is involved in system suspend
+     (that's forcing "mem_sleep=deep" in the command line). This is to
+     avoid possible power regression when the default suspend to idle is
+     used, and at the same time make sure the devices continue working
+     after resume when the BIOS is involved.
+
+Reported-by: Koba Ko <koba.ko@canonical.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217321
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=216782
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=216877
+Cc: Tasev Nikola <tasev.stefanoska@skynet.be>
+Cc: Mark Enriquez <enriquezmark36@gmail.com>
+Cc: Thomas Witt <kernel@witt.link>
+Cc: Werner Sembach <wse@tuxedocomputers.com>
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+Hi all,
+
+Previous versions of the patch can be found:
+
+v3: https://lore.kernel.org/linux-pci/20230925074636.2893747-1-mika.westerberg@linux.intel.com/
+v2: https://lore.kernel.org/linux-pci/20230911073352.3472918-1-mika.westerberg@linux.intel.com/
+v1: https://lore.kernel.org/linux-pci/20230627062442.54008-1-mika.westerberg@linux.intel.com/ 
+
+Changes from v3:
+
+  - Use pcie_capability_set_word() instead.
+
+  - Add tag from Ilpo.
+
+Changes from v2:
+
+  - Added tested by tag from Kai-Heng Feng.
+
+  - Dropped the two unneeded (u32 *) casts.
+
+  - Dropped unnecessary comment.
+
+Changes from v1:
+
+  - We move ASPM enables from pci_restore_pcie_state() into
+    pci_restore_aspm_state() to make sure they are clear when L1SS bits
+    are programmed (as per PCIe spec).
+
+  - The denylist includes the TUXEDO system as well but only if suspend
+    is done via BIOS (e.g mem_sleep=deep is forced by user). This way
+    the PCIe devices should continue working after S3 resume, and at the
+    same time allow better power savings. If the default s2idle is used
+    then we restore L1SS to allow the CPU enter lower power states. This
+    is the best I was able to come up to make everyone happy.
+
+ drivers/pci/pci.c       |  18 ++++-
+ drivers/pci/pci.h       |   4 ++
+ drivers/pci/pcie/aspm.c | 144 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 164 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 59c01d68c6d5..7c72d40ec0ff 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1576,7 +1576,7 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
+ {
+ 	int i = 0;
+ 	struct pci_cap_saved_state *save_state;
+-	u16 *cap;
++	u16 *cap, val;
+ 
+ 	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_EXP);
+ 	if (!save_state)
+@@ -1591,7 +1591,14 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
+ 
+ 	cap = (u16 *)&save_state->cap.data[0];
+ 	pcie_capability_write_word(dev, PCI_EXP_DEVCTL, cap[i++]);
+-	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, cap[i++]);
++	/*
++	 * Restoring ASPM L1 substates has special requirements
++	 * according to the PCIe spec 6.0. So we restore here only the
++	 * LNKCTL register with the ASPM control field clear. ASPM will
++	 * be restored in pci_restore_aspm_state().
++	 */
++	val = cap[i++] & ~PCI_EXP_LNKCTL_ASPMC;
++	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, val);
+ 	pcie_capability_write_word(dev, PCI_EXP_SLTCTL, cap[i++]);
+ 	pcie_capability_write_word(dev, PCI_EXP_RTCTL, cap[i++]);
+ 	pcie_capability_write_word(dev, PCI_EXP_DEVCTL2, cap[i++]);
+@@ -1702,6 +1709,7 @@ int pci_save_state(struct pci_dev *dev)
+ 	pci_save_ltr_state(dev);
+ 	pci_save_dpc_state(dev);
+ 	pci_save_aer_state(dev);
++	pci_save_aspm_state(dev);
+ 	pci_save_ptm_state(dev);
+ 	return pci_save_vc_state(dev);
+ }
+@@ -1815,6 +1823,7 @@ void pci_restore_state(struct pci_dev *dev)
+ 	pci_restore_rebar_state(dev);
+ 	pci_restore_dpc_state(dev);
+ 	pci_restore_ptm_state(dev);
++	pci_restore_aspm_state(dev);
+ 
+ 	pci_aer_clear_status(dev);
+ 	pci_restore_aer_state(dev);
+@@ -3507,6 +3516,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
+ 	if (error)
+ 		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
+ 
++	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_L1SS,
++					    2 * sizeof(u32));
++	if (error)
++		pci_err(dev, "unable to allocate suspend buffer for ASPM-L1SS\n");
++
+ 	pci_allocate_vc_save_buffers(dev);
+ }
+ 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 39a8932dc340..11cec757a624 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -567,10 +567,14 @@ int pcie_retrain_link(struct pci_dev *pdev, bool use_lt);
+ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+ void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+ void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
++void pci_save_aspm_state(struct pci_dev *pdev);
++void pci_restore_aspm_state(struct pci_dev *pdev);
+ #else
+ static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
++static inline void pci_save_aspm_state(struct pci_dev *pdev) { }
++static inline void pci_restore_aspm_state(struct pci_dev *pdev) { }
+ #endif
+ 
+ #ifdef CONFIG_PCIE_ECRC
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 1bf630059264..dd0ba59c44b8 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -7,6 +7,7 @@
+  * Copyright (C) Shaohua Li (shaohua.li@intel.com)
+  */
+ 
++#include <linux/dmi.h>
+ #include <linux/kernel.h>
+ #include <linux/math.h>
+ #include <linux/module.h>
+@@ -17,6 +18,7 @@
+ #include <linux/pm.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
++#include <linux/suspend.h>
+ #include <linux/jiffies.h>
+ #include <linux/delay.h>
+ #include "../pci.h"
+@@ -712,6 +714,148 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ 				PCI_L1SS_CTL1_L1SS_MASK, val);
+ }
+ 
++void pci_save_aspm_state(struct pci_dev *pdev)
++{
++	struct pci_cap_saved_state *save_state;
++	u16 l1ss = pdev->l1ss;
++	u32 *cap;
++
++	/*
++	 * Save L1 substate configuration. The ASPM L0s/L1 configuration
++	 * is already saved in pci_save_pcie_state().
++	 */
++	if (!l1ss)
++		return;
++
++	save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_L1SS);
++	if (!save_state)
++		return;
++
++	cap = &save_state->cap.data[0];
++	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL2, cap++);
++	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, cap++);
++}
++
++static int aspm_l1ss_suspend_via_firmware(const struct dmi_system_id *not_used)
++{
++	return pm_suspend_via_firmware();
++}
++
++/*
++ * Do not restore L1 substates for the below systems even if BIOS has enabled
++ * it initially. This breaks resume from suspend otherwise on these.
++ */
++static const struct dmi_system_id aspm_l1ss_denylist[] = {
++	{
++		/* https://bugzilla.kernel.org/show_bug.cgi?id=216782 */
++		.ident = "ASUS UX305FA",
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_BOARD_NAME, "UX305FA"),
++		},
++	},
++	{
++		/*
++		 * https://bugzilla.kernel.org/show_bug.cgi?id=216877
++		 *
++		 * This system needs to use suspend to mem instead of its
++		 * default (suspend to idle) to avoid draining the battery.
++		 * However, the BIOS gets confused if we try to restore the
++		 * L1SS registers so avoid doing that if the user forced
++		 * suspend to mem. The default suspend to idle on the other
++		 * hand needs restoring L1SS to allow the CPU to enter low
++		 * power states. This entry should handle both.
++		 */
++		.callback = aspm_l1ss_suspend_via_firmware,
++		.ident = "TUXEDO InfinityBook S 14 v5",
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "TUXEDO"),
++			DMI_MATCH(DMI_BOARD_NAME, "L140CU"),
++		},
++	},
++	{ }
++};
++
++static bool aspm_l1ss_skip_restore(const struct pci_dev *pdev)
++{
++	const struct dmi_system_id *dmi;
++
++	dmi = dmi_first_match(aspm_l1ss_denylist);
++	if (dmi) {
++		/* If the callback returns zero we can restore L1SS */
++		if (dmi->callback && !dmi->callback(dmi))
++			return false;
++
++		pci_dbg(pdev, "skipping restoring L1 substates on this system\n");
++		return true;
++	}
++
++	return false;
++}
++
++static void pcie_restore_aspm_l1ss(struct pci_dev *pdev)
++{
++	struct pci_cap_saved_state *save_state;
++	u32 *cap, ctl1, ctl2, l1_2_enable;
++	u16 l1ss = pdev->l1ss;
++
++	if (!l1ss)
++		return;
++
++	if (aspm_l1ss_skip_restore(pdev))
++		return;
++
++	save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_L1SS);
++	if (!save_state)
++		return;
++
++	cap = &save_state->cap.data[0];
++	ctl2 = *cap++;
++	ctl1 = *cap;
++
++	/*
++	 * In addition, Common_Mode_Restore_Time and LTR_L1.2_THRESHOLD
++	 * in PCI_L1SS_CTL1 must be programmed *before* setting the L1.2
++	 * enable bits, even though they're all in PCI_L1SS_CTL1.
++	 */
++	l1_2_enable = ctl1 & PCI_L1SS_CTL1_L1_2_MASK;
++	ctl1 &= ~PCI_L1SS_CTL1_L1_2_MASK;
++
++	/* Write back without enables first (above we cleared them in ctl1) */
++	pci_write_config_dword(pdev, l1ss + PCI_L1SS_CTL1, ctl1);
++	pci_write_config_dword(pdev, l1ss + PCI_L1SS_CTL2, ctl2);
++
++	/* Then write back the enables */
++	if (l1_2_enable)
++		pci_write_config_dword(pdev, l1ss + PCI_L1SS_CTL1,
++				       ctl1 | l1_2_enable);
++}
++
++void pci_restore_aspm_state(struct pci_dev *pdev)
++{
++	struct pci_cap_saved_state *save_state;
++	u16 *cap, val;
++
++	save_state = pci_find_saved_cap(pdev, PCI_CAP_ID_EXP);
++	if (!save_state)
++		return;
++
++	cap = (u16 *)&save_state->cap.data[0];
++	/* Must match the ordering in pci_save/restore_pcie_state() */
++	val = cap[1] & PCI_EXP_LNKCTL_ASPMC;
++	if (!val)
++		return;
++
++	/*
++	 * We restore L1 substate configuration first before enabling L1
++	 * as the PCIe spec 6.0 sec 5.5.4 suggests.
++	 */
++	pcie_restore_aspm_l1ss(pdev);
++
++	/* Re-enable L0s/L1 */
++	pcie_capability_set_word(pdev, PCI_EXP_LNKCTL, val);
++}
++
+ static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+ {
+ 	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
+-- 
+2.40.1
+
