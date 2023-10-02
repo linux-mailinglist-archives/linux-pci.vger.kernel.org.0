@@ -2,124 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C1CDF7B567E
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Oct 2023 17:38:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C06F87B585B
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Oct 2023 18:57:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237981AbjJBPPA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Oct 2023 11:15:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36830 "EHLO
+        id S231587AbjJBQkt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Oct 2023 12:40:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238009AbjJBPO6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Oct 2023 11:14:58 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7405B8
-        for <linux-pci@vger.kernel.org>; Mon,  2 Oct 2023 08:14:54 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56E0FC433C7;
-        Mon,  2 Oct 2023 15:14:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696259694;
-        bh=1VTrfh1MNmbJgYqDDXWkOX/7atAp/neVph6B2W03f9I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MGCXcpuONjwqKCAQvsLqn9qibThhBeGTIo6IlK1SGG/fiFZR3blbeCJw+Q0/UUkJ6
-         IDF2UcLaiJx+qzkG86fc6urzFLfdJ976kAF/chaNOu7wpNQuuSzteEcStsDXBzipuW
-         eg22/avZRl2NZ078Hy2M6TgDbveKaRdmd/RzmqMQYtqLjJmVT6EYhJUKXukMgLeOEZ
-         1vTmHcfSkpkIIR8tD7dSaaClNbKAMbdUW0PRRJ6n/8vDFpLN2la7oqXdk9PxfncI+4
-         +EZWBVNzwi9zemAF+o0gp7MBe1xSa8AkkzokGJVj5utw85WF3GEAZOdpSSHy1YtzlD
-         jgw6wGBERYLZA==
-Date:   Mon, 2 Oct 2023 10:14:52 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Ajay Agarwal <ajayagarwal@google.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH] PCI/ASPM: fix unexpected behavior when re-enabling L1
-Message-ID: <20231002151452.GA560499@bhelgaas>
+        with ESMTP id S230107AbjJBQkt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Oct 2023 12:40:49 -0400
+X-Greylist: delayed 1991 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 02 Oct 2023 09:40:44 PDT
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD7A9B;
+        Mon,  2 Oct 2023 09:40:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=XGVVjLtCy/b7XBDMrd+l3TWnpYYLvXFcVZSGnHlFQ0I=; b=mJQqcPDwO7ipsx68RKWvm0jKtr
+        FhyNNxdJSAYCuqGp617XQ+BSogb8Pfn7INKEXNbGv1t8ftDBmR86NY0yWTghteijc+FPWNLX5LowD
+        vZdlqta/hTH0lChornsXgF/i4XXA/64c7kmp5LvFJaiq4XXQdR46f+y4m7m1TOlbzkpDnyQQT2f+y
+        W4eZXQvVqtVFivZr4qskUjmy48juNz3iDo3x1PmuwRFaNkQR0PqRbkA9eC64D+/mILIafBxGaXdRf
+        S2JyxGWZLtDxNFClQvZdZMQfK9qxxn3Rf2/p8Du7URV62I8opHx9O1l4KRAYBOg5/9CR0i4KvXJuu
+        MyYHwAOQ==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1qnLS5-002kN1-J5; Mon, 02 Oct 2023 10:07:23 -0600
+Message-ID: <29da763d-1570-7197-2d5a-03c5659b8b52@deltatee.com>
+Date:   Mon, 2 Oct 2023 10:07:21 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <99e1891d-cd15-5e7b-6ac8-8c6dc5d138ec@gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Content-Language: en-CA
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <ZRnf6wVOu0IJQ2Ok@work>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <ZRnf6wVOu0IJQ2Ok@work>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: gustavoars@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH][next] PCI/P2PDMA: Fix undefined behavior bug in struct
+ pci_p2pdma_pagemap
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Sathy, Lukas]
 
-On Sat, Aug 26, 2023 at 01:10:35PM +0200, Heiner Kallweit wrote:
-> After the referenced commit we may see L1 sub-states being active
-> unexpectedly. Following scenario as an example:
-> r8169 disables L1 because of known hardware issues on a number of
-> systems. Implicitly L1.1 and L1.2 are disabled too.
-> On my system L1 and L1.1 work fine, but L1.2 causes missed
-> rx packets. Therefore I write 1 to aspm_l1_1.
-> This removes ASPM_STATE_L1 from the disabled modes and therefore
-> unexpectedly enables also L1.2. So return to the old behavior.
+
+On 2023-10-01 15:08, Gustavo A. R. Silva wrote:
+> `struct dev_pagemap` is a flexible structure, which means that it
+> contains a flexible-array member at the bottom. This could potentially
+> lead to an overwrite of the objects following `pgmap` in `struct
+> pci_p2pdma_pagemap`, when `nr_range > 1`.
 > 
-> A comment in the commit message of the referenced change correctly points
-> out that this behavior is inconsistent with aspm_attr_store_common().
-> So change aspm_attr_store_common() accordingly.
-
-I think we should split this into a pure revert of fb097dcd5a28 with
-the description of the unintended consequence, followed by another
-patch to change aspm_attr_store_common().
-
-I guess the existing aspm_attr_store_common() behavior allows a
-similar unexpected behavior?  For example, in this sequence:
-
-  - Write 0 to "l1_aspm" to disable L1
-  - Write 1 to "l1_1_aspm" to enable L1.1
-
-does L1.2 get implicitly enabled as well even though that's clearly
-not what the user intended?
-
-There's also the separate question of how the sysfs file and the
-pci_disable_link_state() API should interact.  Drivers use that API
-when they know about a defect in their device, but the user can
-override that via syfs.
-
-In [1], we have a similar situation with D3cold support, where we're
-thinking that we should not allow a user to use sysfs to override that
-driver knowledge.
-
-Bjorn
-
-[1] https://lore.kernel.org/r/b8a7f4af2b73f6b506ad8ddee59d747cbf834606.1695025365.git.lukas@wunner.de
-
-> Fixes: fb097dcd5a28 ("PCI/ASPM: Disable only ASPM_STATE_L1 when driver disables L1")
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
->  drivers/pci/pcie/aspm.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> Fix this by placing the declaration of object `pgmap` at the end of
+> `struct pci_p2pdma_pagemap`.
 > 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 3dafba0b5..6d3788257 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -1063,7 +1063,7 @@ static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
->  	if (state & PCIE_LINK_STATE_L0S)
->  		link->aspm_disable |= ASPM_STATE_L0S;
->  	if (state & PCIE_LINK_STATE_L1)
-> -		link->aspm_disable |= ASPM_STATE_L1;
-> +		link->aspm_disable |= ASPM_STATE_L1 | ASPM_STATE_L1SS;
->  	if (state & PCIE_LINK_STATE_L1_1)
->  		link->aspm_disable |= ASPM_STATE_L1_1;
->  	if (state & PCIE_LINK_STATE_L1_2)
-> @@ -1251,6 +1251,8 @@ static ssize_t aspm_attr_store_common(struct device *dev,
->  			link->aspm_disable &= ~ASPM_STATE_L1;
->  	} else {
->  		link->aspm_disable |= state;
-> +		if (state & ASPM_STATE_L1)
-> +			link->aspm_disable |= ASPM_STATE_L1SS;
->  	}
->  
->  	pcie_config_aspm_link(link, policy_to_aspm_state(link));
-> -- 
-> 2.42.0
+> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+> ready to enable it globally.
 > 
+> Fixes: 0afea3814358 ("PCI/P2PDMA: Add provider's pci_dev to pci_p2pdma_pagemap struct")
+> Fixes: a6e6fe6549f6 ("PCI/P2PDMA: Introduce private pagemap structure")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+
+Makes sense to me, thanks.
+
+Although, I'm not sure the fixes tags are appropriate. The
+flexible-array member was introduced in 5.10 (b7b3c01b19) and both the
+"fixed" commits predate that change by a number of releases.
+
+Also, it's probably worth noting in the commit message that the p2pdma
+code hardcodes nr_ranges to 1 (in pci_p2pdma_add_resource); so there is
+no way to actually hit any bug with the current code.
+
+I totally agree that the patch should be applied to prevent possible
+bugs being introduced in the future:
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+Logan
