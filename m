@@ -2,350 +2,192 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2FA87B5931
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Oct 2023 19:42:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F6C77B59A6
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Oct 2023 20:11:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238554AbjJBQ76 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Oct 2023 12:59:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45902 "EHLO
+        id S237458AbjJBRsH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Oct 2023 13:48:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238453AbjJBQ76 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Oct 2023 12:59:58 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88681D7;
-        Mon,  2 Oct 2023 09:59:53 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RznDn3tWYz67V3m;
-        Tue,  3 Oct 2023 00:57:13 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 2 Oct
- 2023 17:59:50 +0100
-Date:   Mon, 2 Oct 2023 17:59:50 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Lukas Wunner <lukas@wunner.de>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linuxarm@huawei.com>, David Box <david.e.box@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-        Alexey Kardashevskiy <aik@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 05/12] crypto: akcipher - Support more than one
- signature encoding
-Message-ID: <20231002175950.0000541d@Huawei.com>
-In-Reply-To: <f4a63091203d09e275c3df983692b630ffca4bca.1695921657.git.lukas@wunner.de>
-References: <cover.1695921656.git.lukas@wunner.de>
-        <f4a63091203d09e275c3df983692b630ffca4bca.1695921657.git.lukas@wunner.de>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S237106AbjJBRsG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Oct 2023 13:48:06 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2047.outbound.protection.outlook.com [40.107.94.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6F26CE;
+        Mon,  2 Oct 2023 10:47:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Pr76gXLahXsyHRng6QSTDCMmHMWU7E/T8ZlQ44iggB3pHIe4qciQWjtkY/VFTzA9lFwwHr/n+G69mrckMOiQHNXk8sfto9uxIst6iMam5yrdAs48vq6ygMwJcz2aeIGZOFcKSFiVP8vuKiMGgmSZ1Ham2+QosSKZwByWC0C2pnglcxaJKN21r2NgMVk1OxLyPUa1J5An0cVEoF2rNfaPBz+35S8NtXcyMUw9kpiF1A5lVzsaHeNPYuvulOt8BTwpyyALFfYcUsq/OwzrUhVFpvGo0C4T7SwcKevhhYzhGcJ4r0lhKKoVVbOYsULi6O7lqyLUn5uQkEbsamXtLnYVPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=d7K2RTXbP3KUHZ+rjqHKRn8tdUYw6cspuKgzcyM+ET8=;
+ b=lnz04N9eWNtCa3Yxym2h4gpLxZSyCU2H1+iVxbiLCPAP4zyFNVpVApPEhRo3AXiKqkZq+x4oIHrgv8ORZ8oW/+b65InZyP/Bkg/CTBbXL/sMV7Xb5+Y/omj2xz2OaEZTmWsPfVE2FaVdq5lAf/syfJfZXTT4M2ahuR1Wna374QY2/M31knzQun40dMGMioqGsnlS8ogd8nXuazAXoQxRNODT1U3k4fsuxTjj/PnT3g4NQ4YhL7++I196VBH9Pcs6p579TMwR5ByXZ7zjM0HrO/fEeY/p8gN6Od0cLSjUXvXVcS7YEpgME7mb7zj1X7rl8dSDOfrmVBGIEpoC/zd/ew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d7K2RTXbP3KUHZ+rjqHKRn8tdUYw6cspuKgzcyM+ET8=;
+ b=x22pbL75gGHMdeE+W4U8m3lGKmuc/6XYcNI3VjDnQYP4jS/TBSLiJFQpAOLH32g3K4njP9xLZaSb93plE9ThhFTR2XMhjH6ct+U6DKD2dVPR3FAa1KRgQ8xLRY9MceCQIe8k33SAHxArFOPRrtARAQzXNfk5pLmDJ3RC2iz1hTE=
+Received: from MW4PR03CA0018.namprd03.prod.outlook.com (2603:10b6:303:8f::23)
+ by BL0PR12MB4916.namprd12.prod.outlook.com (2603:10b6:208:1ce::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.31; Mon, 2 Oct
+ 2023 17:47:56 +0000
+Received: from CO1PEPF000044FD.namprd21.prod.outlook.com
+ (2603:10b6:303:8f:cafe::9d) by MW4PR03CA0018.outlook.office365.com
+ (2603:10b6:303:8f::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.31 via Frontend
+ Transport; Mon, 2 Oct 2023 17:47:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000044FD.mail.protection.outlook.com (10.167.241.203) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6863.9 via Frontend Transport; Mon, 2 Oct 2023 17:47:56 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 2 Oct
+ 2023 12:47:55 -0500
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        <iain@orangesquash.org.uk>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "Mario Limonciello" <mario.limonciello@amd.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH v21] PCI: Avoid D3 at suspend for AMD PCIe root ports w/ USB4 controllers
+Date:   Mon, 2 Oct 2023 13:09:06 -0500
+Message-ID: <20231002180906.82089-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044FD:EE_|BL0PR12MB4916:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9a314c55-97ac-45b9-5beb-08dbc36fb623
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 702oNlwW6Nn3DC5XXe4XIqGRGfbOC30idgyI1PPbGAEQZNqKaKelMozGjC6xPBfYTDNuPbhuNRM9QBY5px5KwNo8e4YQEMVwaRqvLZKe6nL9eMUEOo9h7jQRkCmVJ+D72Jg9n8lZUebTI3tUSD5HmMzIAFV15dW+jI7mMhWq87KFDNPP3RxqVk6umRGm+il8yJT7nwgX7yawh/mGeboGEY956JeLjDsX72Ua9tdqHNs4ZB01PVv7vN9rDWiHsJTbKrgT6/xfJG4/cfxlhXIiHYNp9iywHpyy6bAzemosuGO4ekUJ+PDgrUM9Cj5xQabtm69fD1vCnlZyY8X1HjBQXKIcpG1hYuPGfLwk8eNn9iTEDbziKvDwc56hN3h/yMxNYujznW7EP5/LVl9/X+agoP8lWRkXzn8sqHlw/AKCSSl63wQOVC7aFZeYAX7ROx9Rk3clVIiccs8i4wEIhuU/qAJFqhn4h3jJOwcOsYorkbGfGYQrsySCVScSC3y53hx6GgnXe2jw6zC7uQnI75ZopRz6RNf7ZM27bSPd5RP2vevgyJkFxoL7HanoORRvXiUfC95eZaaFbIJ3Q86yk3bjN3a9IluHMhTmjGGfcLWHWKNbQ7morfXRQ6xXurAGF9+qi/fLv3MhX6w/5/Ko0TrHoYZRGJo9O6SwO29cpuzWHb730LcWfNdM3uhcPOAxCltzAf5dUomXqWO7kp6+dLCfpbrHpl4c8eR4PLuRwA94dgN4v4EX9crPpCLOTu/ghrzDGSb3QL5rqEuJgxm5VRyyzg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(136003)(396003)(346002)(376002)(230922051799003)(186009)(1800799009)(82310400011)(451199024)(64100799003)(46966006)(36840700001)(40470700004)(7696005)(478600001)(966005)(6666004)(426003)(66574015)(15650500001)(336012)(26005)(16526019)(2616005)(1076003)(83380400001)(110136005)(316002)(70206006)(70586007)(5660300002)(41300700001)(4326008)(8936002)(8676002)(44832011)(54906003)(36756003)(2906002)(36860700001)(47076005)(86362001)(82740400003)(356005)(81166007)(40480700001)(40460700003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2023 17:47:56.6051
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a314c55-97ac-45b9-5beb-08dbc36fb623
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000044FD.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB4916
+X-Spam-Status: No, score=0.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        URI_TRY_3LD autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 28 Sep 2023 19:32:35 +0200
-Lukas Wunner <lukas@wunner.de> wrote:
+Iain reports that USB devices can't be used to wake a Lenovo Z13 from
+suspend.  This occurs because on some AMD platforms, even though the Root
+Ports advertise PME_Support for D3hot and D3cold, they don't handle PME
+messages and generate wakeup interrupts from those states when amd-pmc has
+put the platform in a hardware sleep state.
 
-> Currently only a single default signature encoding is supported per
-> akcipher.
-> 
-> A subsequent commit will allow a second encoding for ecdsa, namely P1363
-> alternatively to X9.62.
-> 
-> To accommodate for that, amend struct akcipher_request and struct
-> crypto_akcipher_sync_data to store the desired signature encoding for
-> verify and sign ops.
-> 
-> Amend akcipher_request_set_crypt(), crypto_sig_verify() and
-> crypto_sig_sign() with an additional parameter which specifies the
-> desired signature encoding.  Adjust all callers.
-> 
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Iain reported this on an AMD Rembrandt platform, but it also affects
+Phoenix SoCs.  On Iain's system, a USB4 router below the affected Root Port
+generates the PME. To avoid this issue, disable D3 for the root port
+associated with USB4 controllers at suspend time.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Restore D3 support at resume so that it can be used by runtime suspend.
+The amd-pmc driver doesn't put the platform in a hardware sleep state for
+runtime suspend, so PMEs work as advertised.
 
-> ---
->  crypto/akcipher.c                   |  2 +-
->  crypto/asymmetric_keys/public_key.c |  4 ++--
->  crypto/internal.h                   |  1 +
->  crypto/rsa-pkcs1pad.c               | 11 +++++++----
->  crypto/sig.c                        |  6 ++++--
->  crypto/testmgr.c                    |  8 +++++---
->  crypto/testmgr.h                    |  1 +
->  include/crypto/akcipher.h           | 10 +++++++++-
->  include/crypto/sig.h                |  6 ++++--
->  9 files changed, 34 insertions(+), 15 deletions(-)
-> 
-> diff --git a/crypto/akcipher.c b/crypto/akcipher.c
-> index 52813f0b19e4..88501c0886d2 100644
-> --- a/crypto/akcipher.c
-> +++ b/crypto/akcipher.c
-> @@ -221,7 +221,7 @@ int crypto_akcipher_sync_prep(struct crypto_akcipher_sync_data *data)
->  	sg = &data->sg;
->  	sg_init_one(sg, buf, mlen);
->  	akcipher_request_set_crypt(req, sg, data->dst ? sg : NULL,
-> -				   data->slen, data->dlen);
-> +				   data->slen, data->dlen, data->enc);
->  
->  	crypto_init_wait(&data->cwait);
->  	akcipher_request_set_callback(req, CRYPTO_TFM_REQ_MAY_SLEEP,
-> diff --git a/crypto/asymmetric_keys/public_key.c b/crypto/asymmetric_keys/public_key.c
-> index abeecb8329b3..7f96e8e501db 100644
-> --- a/crypto/asymmetric_keys/public_key.c
-> +++ b/crypto/asymmetric_keys/public_key.c
-> @@ -354,7 +354,7 @@ static int software_key_eds_op(struct kernel_pkey_params *params,
->  		if (!issig)
->  			break;
->  		ret = crypto_sig_sign(sig, in, params->in_len,
-> -				      out, params->out_len);
-> +				      out, params->out_len, params->encoding);
->  		break;
->  	default:
->  		BUG();
-> @@ -438,7 +438,7 @@ int public_key_verify_signature(const struct public_key *pkey,
->  		goto error_free_key;
->  
->  	ret = crypto_sig_verify(tfm, sig->s, sig->s_size,
-> -				sig->digest, sig->digest_size);
-> +				sig->digest, sig->digest_size, sig->encoding);
->  
->  error_free_key:
->  	kfree_sensitive(key);
-> diff --git a/crypto/internal.h b/crypto/internal.h
-> index 63e59240d5fb..268315b13ccd 100644
-> --- a/crypto/internal.h
-> +++ b/crypto/internal.h
-> @@ -41,6 +41,7 @@ struct crypto_akcipher_sync_data {
->  	void *dst;
->  	unsigned int slen;
->  	unsigned int dlen;
-> +	const char *enc;
->  
->  	struct akcipher_request *req;
->  	struct crypto_wait cwait;
-> diff --git a/crypto/rsa-pkcs1pad.c b/crypto/rsa-pkcs1pad.c
-> index d2e5e104f8cf..5f9313a3b01e 100644
-> --- a/crypto/rsa-pkcs1pad.c
-> +++ b/crypto/rsa-pkcs1pad.c
-> @@ -262,7 +262,8 @@ static int pkcs1pad_encrypt(struct akcipher_request *req)
->  
->  	/* Reuse output buffer */
->  	akcipher_request_set_crypt(&req_ctx->child_req, req_ctx->in_sg,
-> -				   req->dst, ctx->key_size - 1, req->dst_len);
-> +				   req->dst, ctx->key_size - 1, req->dst_len,
-> +				   NULL);
->  
->  	err = crypto_akcipher_encrypt(&req_ctx->child_req);
->  	if (err != -EINPROGRESS && err != -EBUSY)
-> @@ -362,7 +363,7 @@ static int pkcs1pad_decrypt(struct akcipher_request *req)
->  	/* Reuse input buffer, output to a new buffer */
->  	akcipher_request_set_crypt(&req_ctx->child_req, req->src,
->  				   req_ctx->out_sg, req->src_len,
-> -				   ctx->key_size);
-> +				   ctx->key_size, NULL);
->  
->  	err = crypto_akcipher_decrypt(&req_ctx->child_req);
->  	if (err != -EINPROGRESS && err != -EBUSY)
-> @@ -419,7 +420,8 @@ static int pkcs1pad_sign(struct akcipher_request *req)
->  
->  	/* Reuse output buffer */
->  	akcipher_request_set_crypt(&req_ctx->child_req, req_ctx->in_sg,
-> -				   req->dst, ctx->key_size - 1, req->dst_len);
-> +				   req->dst, ctx->key_size - 1, req->dst_len,
-> +				   req->enc);
->  
->  	err = crypto_akcipher_decrypt(&req_ctx->child_req);
->  	if (err != -EINPROGRESS && err != -EBUSY)
-> @@ -551,7 +553,8 @@ static int pkcs1pad_verify(struct akcipher_request *req)
->  
->  	/* Reuse input buffer, output to a new buffer */
->  	akcipher_request_set_crypt(&req_ctx->child_req, req->src,
-> -				   req_ctx->out_sg, sig_size, ctx->key_size);
-> +				   req_ctx->out_sg, sig_size, ctx->key_size,
-> +				   req->enc);
->  
->  	err = crypto_akcipher_encrypt(&req_ctx->child_req);
->  	if (err != -EINPROGRESS && err != -EBUSY)
-> diff --git a/crypto/sig.c b/crypto/sig.c
-> index 224c47019297..4fc1a8f865e4 100644
-> --- a/crypto/sig.c
-> +++ b/crypto/sig.c
-> @@ -89,7 +89,7 @@ EXPORT_SYMBOL_GPL(crypto_sig_maxsize);
->  
->  int crypto_sig_sign(struct crypto_sig *tfm,
->  		    const void *src, unsigned int slen,
-> -		    void *dst, unsigned int dlen)
-> +		    void *dst, unsigned int dlen, const char *enc)
->  {
->  	struct crypto_akcipher **ctx = crypto_sig_ctx(tfm);
->  	struct crypto_akcipher_sync_data data = {
-> @@ -98,6 +98,7 @@ int crypto_sig_sign(struct crypto_sig *tfm,
->  		.dst = dst,
->  		.slen = slen,
->  		.dlen = dlen,
-> +		.enc = enc,
->  	};
->  
->  	return crypto_akcipher_sync_prep(&data) ?:
-> @@ -108,7 +109,7 @@ EXPORT_SYMBOL_GPL(crypto_sig_sign);
->  
->  int crypto_sig_verify(struct crypto_sig *tfm,
->  		      const void *src, unsigned int slen,
-> -		      const void *digest, unsigned int dlen)
-> +		      const void *digest, unsigned int dlen, const char *enc)
->  {
->  	struct crypto_akcipher **ctx = crypto_sig_ctx(tfm);
->  	struct crypto_akcipher_sync_data data = {
-> @@ -116,6 +117,7 @@ int crypto_sig_verify(struct crypto_sig *tfm,
->  		.src = src,
->  		.slen = slen,
->  		.dlen = dlen,
-> +		.enc = enc,
->  	};
->  	int err;
->  
-> diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-> index 216878c8bc3d..d5dd715673dd 100644
-> --- a/crypto/testmgr.c
-> +++ b/crypto/testmgr.c
-> @@ -4154,11 +4154,12 @@ static int test_akcipher_one(struct crypto_akcipher *tfm,
->  			goto free_all;
->  		memcpy(xbuf[1], c, c_size);
->  		sg_set_buf(&src_tab[2], xbuf[1], c_size);
-> -		akcipher_request_set_crypt(req, src_tab, NULL, m_size, c_size);
-> +		akcipher_request_set_crypt(req, src_tab, NULL, m_size, c_size,
-> +					   vecs->enc);
->  	} else {
->  		sg_init_one(&dst, outbuf_enc, out_len_max);
->  		akcipher_request_set_crypt(req, src_tab, &dst, m_size,
-> -					   out_len_max);
-> +					   out_len_max, NULL);
->  	}
->  	akcipher_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
->  				      crypto_req_done, &wait);
-> @@ -4217,7 +4218,8 @@ static int test_akcipher_one(struct crypto_akcipher *tfm,
->  	sg_init_one(&src, xbuf[0], c_size);
->  	sg_init_one(&dst, outbuf_dec, out_len_max);
->  	crypto_init_wait(&wait);
-> -	akcipher_request_set_crypt(req, &src, &dst, c_size, out_len_max);
-> +	akcipher_request_set_crypt(req, &src, &dst, c_size, out_len_max,
-> +				   vecs->enc);
->  
->  	err = crypto_wait_req(vecs->siggen_sigver_test ?
->  			      /* Run asymmetric signature generation */
-> diff --git a/crypto/testmgr.h b/crypto/testmgr.h
-> index 5ca7a412508f..ad57e7af2e14 100644
-> --- a/crypto/testmgr.h
-> +++ b/crypto/testmgr.h
-> @@ -153,6 +153,7 @@ struct akcipher_testvec {
->  	const unsigned char *params;
->  	const unsigned char *m;
->  	const unsigned char *c;
-> +	const char *enc;
->  	unsigned int key_len;
->  	unsigned int param_len;
->  	unsigned int m_size;
-> diff --git a/include/crypto/akcipher.h b/include/crypto/akcipher.h
-> index 670508f1dca1..00bbec69af3b 100644
-> --- a/include/crypto/akcipher.h
-> +++ b/include/crypto/akcipher.h
-> @@ -30,6 +30,8 @@
->   *		In case of error where the dst sgl size was insufficient,
->   *		it will be updated to the size required for the operation.
->   *		For verify op this is size of digest part in @src.
-> + * @enc:	For verify op it's the encoding of the signature part of @src.
-> + *		For sign op it's the encoding of the signature in @dst.
->   * @__ctx:	Start of private context data
->   */
->  struct akcipher_request {
-> @@ -38,6 +40,7 @@ struct akcipher_request {
->  	struct scatterlist *dst;
->  	unsigned int src_len;
->  	unsigned int dst_len;
-> +	const char *enc;
->  	void *__ctx[] CRYPTO_MINALIGN_ATTR;
->  };
->  
-> @@ -272,17 +275,22 @@ static inline void akcipher_request_set_callback(struct akcipher_request *req,
->   * @src_len:	size of the src input scatter list to be processed
->   * @dst_len:	size of the dst output scatter list or size of signature
->   *		portion in @src for verify op
-> + * @enc:	encoding of signature portion in @src for verify op,
-> + *		encoding of signature in @dst for sign op,
-> + *		NULL for encrypt and decrypt op
->   */
->  static inline void akcipher_request_set_crypt(struct akcipher_request *req,
->  					      struct scatterlist *src,
->  					      struct scatterlist *dst,
->  					      unsigned int src_len,
-> -					      unsigned int dst_len)
-> +					      unsigned int dst_len,
-> +					      const char *enc)
->  {
->  	req->src = src;
->  	req->dst = dst;
->  	req->src_len = src_len;
->  	req->dst_len = dst_len;
-> +	req->enc = enc;
->  }
->  
->  /**
-> diff --git a/include/crypto/sig.h b/include/crypto/sig.h
-> index 641b4714c448..1df18005c854 100644
-> --- a/include/crypto/sig.h
-> +++ b/include/crypto/sig.h
-> @@ -81,12 +81,13 @@ int crypto_sig_maxsize(struct crypto_sig *tfm);
->   * @slen:	source length
->   * @dst:	destinatino obuffer
->   * @dlen:	destination length
-> + * @enc:	signature encoding
->   *
->   * Return: zero on success; error code in case of error
->   */
->  int crypto_sig_sign(struct crypto_sig *tfm,
->  		    const void *src, unsigned int slen,
-> -		    void *dst, unsigned int dlen);
-> +		    void *dst, unsigned int dlen, const char *enc);
->  
->  /**
->   * crypto_sig_verify() - Invoke signature verification
-> @@ -99,12 +100,13 @@ int crypto_sig_sign(struct crypto_sig *tfm,
->   * @slen:	source length
->   * @digest:	digest
->   * @dlen:	digest length
-> + * @enc:	signature encoding
->   *
->   * Return: zero on verification success; error code in case of error.
->   */
->  int crypto_sig_verify(struct crypto_sig *tfm,
->  		      const void *src, unsigned int slen,
-> -		      const void *digest, unsigned int dlen);
-> +		      const void *digest, unsigned int dlen, const char *enc);
->  
->  /**
->   * crypto_sig_set_pubkey() - Invoke set public key operation
+Cc: stable@vger.kernel.org # 6.1.y: 70b70a4: PCI/sysfs: Protect driver's D3cold preference from user space
+Cc: stable@vger.kernel.org # 6.5.y: 70b70a4: PCI/sysfs: Protect driver's D3cold preference from user space
+Cc: stable@vger.kernel.org # 6.6.y: 70b70a4: PCI/sysfs: Protect driver's D3cold preference from user space
+Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/platform-design-for-modern-standby#low-power-core-silicon-cpu-soc-dram [1]
+Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
+Reported-by: Iain Lane <iain@orangesquash.org.uk>
+Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+v20-v21:
+ * Rewrite commit message, lifting most of what Bjorn clipped down to on v20.
+ * Use pci_d3cold_disable()/pci_d3cold_enable() instead
+ * Do the quirk on the USB4 controller instead of RP->USB->RP
+---
+ drivers/pci/quirks.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index eeec1d6f9023..5674065011e7 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -6188,3 +6188,47 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
++
++#ifdef CONFIG_SUSPEND
++/*
++ * Root Ports on some AMD SoCs advertise PME_Support for D3hot and D3cold, but
++ * if the SoC is put into a hardware sleep state by the amd-pmc driver, the
++ * Root Ports don't generate wakeup interrupts for USB devices.
++ *
++ * When suspending, disable D3 support for the Root Port so we don't use it.
++ * Restore D3 support when resuming.
++ */
++static void quirk_enable_rp_d3cold(struct pci_dev *dev)
++{
++	pci_d3cold_enable(pcie_find_root_port(dev));
++}
++
++static void quirk_disable_rp_d3cold_suspend(struct pci_dev *dev)
++{
++	struct pci_dev *rp;
++
++	/*
++	 * PM_SUSPEND_ON means we're doing runtime suspend, which means
++	 * amd-pmc will not be involved so PMEs during D3 work as advertised.
++	 *
++	 * The PMEs *do* work if amd-pmc doesn't put the SoC in the hardware
++	 * sleep state, but we assume amd-pmc is always present.
++	 */
++	if (pm_suspend_target_state == PM_SUSPEND_ON)
++		return;
++
++	rp = pcie_find_root_port(dev);
++	pci_d3cold_disable(rp);
++	dev_info_once(&rp->dev, "quirk: disabling D3cold for suspend\n");
++}
++/* Rembrandt (yellow_carp) */
++DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x162e, quirk_disable_rp_d3cold_suspend);
++DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x162e, quirk_enable_rp_d3cold);
++DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x162f, quirk_disable_rp_d3cold_suspend);
++DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x162f, quirk_enable_rp_d3cold);
++/* Phoenix (pink_sardine) */
++DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x1668, quirk_disable_rp_d3cold_suspend);
++DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x1668, quirk_enable_rp_d3cold);
++DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x1669, quirk_disable_rp_d3cold_suspend);
++DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x1669, quirk_enable_rp_d3cold);
++#endif /* CONFIG_SUSPEND */
+-- 
+2.34.1
 
