@@ -2,145 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 127157B5217
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Oct 2023 14:05:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C49B7B54A6
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Oct 2023 16:10:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236847AbjJBMFT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Oct 2023 08:05:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50754 "EHLO
+        id S237575AbjJBNyC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Oct 2023 09:54:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236710AbjJBMFT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Oct 2023 08:05:19 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 51C9EDA;
-        Mon,  2 Oct 2023 05:05:13 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.43])
-        by gateway (Coremail) with SMTP id _____8DxFej4sRplzpMuAA--.30323S3;
-        Mon, 02 Oct 2023 20:05:12 +0800 (CST)
-Received: from openarena.loongson.cn (unknown [10.20.42.43])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxK9z3sRplVSEXAA--.47905S4;
-        Mon, 02 Oct 2023 20:05:12 +0800 (CST)
-From:   Sui Jingfeng <suijingfeng@loongson.cn>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH pci-next v6 2/2] PCI/VGA: Remove vga_is_firmware_default() function
-Date:   Mon,  2 Oct 2023 20:05:11 +0800
-Message-Id: <20231002120511.594737-3-suijingfeng@loongson.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231002120511.594737-1-suijingfeng@loongson.cn>
-References: <20231002120511.594737-1-suijingfeng@loongson.cn>
+        with ESMTP id S237585AbjJBNyB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Oct 2023 09:54:01 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05431E6;
+        Mon,  2 Oct 2023 06:53:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696254839; x=1727790839;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0iczxjgf4Ie892NJSryS5MvdoCgiYH0AtCxc5GWpQHs=;
+  b=R2CalH1N4wekZtdc7/m2n/6bPAhpPbN6oOCXpoL+YLhy7HSXrLuurYOO
+   6sykNadUIV4uDKhyF4x13GnmfbPqkVr4natcFkdct3RmVtoWFRotPkSRM
+   HfZ7vuo8vxMW1IMqS53vqJhyCt9WV9z6WCIsEwsjz6ExwuRmvzjkcU/rF
+   Oehnrl4YzwGDq1I6WXSGskt3L4Oekr97pxC5TLnkK1maSn2FhT5yJP+k1
+   8Y2rrfOmsrIsbphsNumdSTdjD/24izlovGfVsfsxb6SXuPLOLaFENsF8J
+   A+M0frRjZz2NFb7axSzqPrEEwuL30oBfy1YLFqjkP7K9ZfU21MgvTpCZs
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="372995203"
+X-IronPort-AV: E=Sophos;i="6.03,194,1694761200"; 
+   d="scan'208";a="372995203"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2023 06:53:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="840990880"
+X-IronPort-AV: E=Sophos;i="6.03,194,1694761200"; 
+   d="scan'208";a="840990880"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by FMSMGA003.fm.intel.com with ESMTP; 02 Oct 2023 06:53:55 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id DCF131A7; Mon,  2 Oct 2023 16:53:53 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] PCI: ACPI: Switch to use acpi_evaluate_dsm_typed()
+Date:   Mon,  2 Oct 2023 16:53:52 +0300
+Message-Id: <20231002135352.2603096-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8BxK9z3sRplVSEXAA--.47905S4
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWr1UKry5tw43Cry3KryxtFc_yoW5GFW8pr
-        4ftFWxJrW8Wr45G34jyF48ZF15ZwnY9ayxKFWq93s3Ga45Arn7XrWxCrZYyryxJrZ2q3W3
-        ZF13Jr10qFyDJagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-        6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-        02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
-        wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
-        AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-        r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6x
-        IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
-        w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x
-        0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8vApUUUUUU==
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The new implemented pci_boot_vga_capturer() function is also effective on
-X86 and IA64, it can determine the default boot VGA device before VRAM BAR
-relocations done by the PCI core. Since the fixup handler has already
-identified the firmware framebuffer, there no need to look again later. So,
-switch to using the pci_boot_vga_capturer() on X86 and IA64 also, remove
-vga_is_firmware_default() and its relevant codes.
+The acpi_evaluate_dsm_typed() provides a way to check the type of the
+object evaluated by _DSM call. Use it instead of open coded variant.
 
-Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pci/vgaarb.c | 46 +++-----------------------------------------
- 1 file changed, 3 insertions(+), 43 deletions(-)
+ drivers/pci/pci-acpi.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-index 02821c0f4cd0..a3f53982b131 100644
---- a/drivers/pci/vgaarb.c
-+++ b/drivers/pci/vgaarb.c
-@@ -50,7 +50,6 @@ struct vga_device {
- 	unsigned int io_norm_cnt;	/* normal IO count */
- 	unsigned int mem_norm_cnt;	/* normal MEM count */
- 	bool bridge_has_one_vga;
--	bool is_firmware_default;	/* device selected by firmware */
- 	unsigned int (*set_decode)(struct pci_dev *pdev, bool decode);
- };
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index a05350a4e49c..cf108259aef6 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -1215,12 +1215,12 @@ void acpi_pci_add_bus(struct pci_bus *bus)
+ 	if (!pci_is_root_bus(bus))
+ 		return;
  
-@@ -557,41 +556,6 @@ void vga_put(struct pci_dev *pdev, unsigned int rsrc)
- }
- EXPORT_SYMBOL(vga_put);
+-	obj = acpi_evaluate_dsm(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 3,
+-				DSM_PCI_POWER_ON_RESET_DELAY, NULL);
++	obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 3,
++				      DSM_PCI_POWER_ON_RESET_DELAY, NULL, ACPI_TYPE_INTEGER);
+ 	if (!obj)
+ 		return;
  
--static bool vga_is_firmware_default(struct pci_dev *pdev)
--{
--#if defined(CONFIG_X86) || defined(CONFIG_IA64)
--	u64 base = screen_info.lfb_base;
--	u64 size = screen_info.lfb_size;
--	struct resource *r;
--	u64 limit;
--
--	/* Select the device owning the boot framebuffer if there is one */
--
--	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
--		base |= (u64)screen_info.ext_lfb_base << 32;
--
--	limit = base + size;
--
--	/* Does firmware framebuffer belong to us? */
--	pci_dev_for_each_resource(pdev, r) {
--		if (resource_type(r) != IORESOURCE_MEM)
--			continue;
--
--		if (!r->start || !r->end)
--			continue;
--
--		if (base < r->start || limit >= r->end)
--			continue;
--
--		return true;
--	}
--#else
--	if (pdev_boot_vga && pdev_boot_vga == pdev)
--		return true;
--#endif
--	return false;
--}
--
- static bool vga_arb_integrated_gpu(struct device *dev)
- {
- #if defined(CONFIG_ACPI)
-@@ -623,14 +587,10 @@ static bool vga_is_boot_device(struct vga_device *vgadev)
- 	 */
- 
- 	/*
--	 * We always prefer a firmware default device, so if we've already
--	 * found one, there's no need to consider vgadev.
-+	 * We always prefer a firmware default device.
- 	 */
--	if (boot_vga && boot_vga->is_firmware_default)
--		return false;
--
--	if (vga_is_firmware_default(pdev)) {
--		vgadev->is_firmware_default = true;
-+	if (pdev == pdev_boot_vga) {
-+		vgaarb_dbg(&pdev->dev, "Boot VGA selected by firmware\n");
- 		return true;
+-	if (obj->type == ACPI_TYPE_INTEGER && obj->integer.value == 1) {
++	if (obj->integer.value == 1) {
+ 		bridge = pci_find_host_bridge(bus);
+ 		bridge->ignore_reset_delay = 1;
  	}
+@@ -1376,12 +1376,13 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
+ 	if (bridge->ignore_reset_delay)
+ 		pdev->d3cold_delay = 0;
  
+-	obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 3,
+-				DSM_PCI_DEVICE_READINESS_DURATIONS, NULL);
++	obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 3,
++				      DSM_PCI_DEVICE_READINESS_DURATIONS, NULL,
++				      ACPI_TYPE_PACKAGE);
+ 	if (!obj)
+ 		return;
+ 
+-	if (obj->type == ACPI_TYPE_PACKAGE && obj->package.count == 5) {
++	if (obj->package.count == 5) {
+ 		elements = obj->package.elements;
+ 		if (elements[0].type == ACPI_TYPE_INTEGER) {
+ 			value = (int)elements[0].integer.value / 1000;
 -- 
-2.34.1
+2.40.0.1.gaa8946217a0b
 
