@@ -2,410 +2,209 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C362C7B4C00
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Oct 2023 09:01:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6153F7B5219
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Oct 2023 14:05:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235623AbjJBHBC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Oct 2023 03:01:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51900 "EHLO
+        id S236885AbjJBMFV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Oct 2023 08:05:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235638AbjJBHBA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Oct 2023 03:01:00 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B174BD
-        for <linux-pci@vger.kernel.org>; Mon,  2 Oct 2023 00:00:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696230057; x=1727766057;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=p6lAKcC6Li0hEZKOKKSYDI1ZaOChCcSMJV0P94UHQJM=;
-  b=Noy3+OcnPQcrR+06sxKbnnTIeyl0bMPRoxkRzWfeRlSTruBxQ2BjTXvx
-   Z2nNM/RGecc1eDYw+b7N+Wu3W1ZhM445EPbTJ9cGHCiRT8QXpdk1GL+yo
-   estJlTrXDokJ/QwxNpOhwcY8vqJLdwUF7H6gdOpX3vl0b8QFfx8ipaWZT
-   YsRrp/359rkQ0ujZE18xEs6NX+LaPHFAwUhD3Z+5/nIRiEb2kzM3QINSq
-   9wpYKmBuiEB9wTR3hyIKMpiZ1fAZPfgtgwjlRHl+P8OT2m49FIYwOfZ+6
-   Q/lpPH0een2ZHUWFguXahxI65ry7r3qc/G7w2CifdYiS3qbCzjCK0CyXr
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10850"; a="367652481"
-X-IronPort-AV: E=Sophos;i="6.03,193,1694761200"; 
-   d="scan'208";a="367652481"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2023 00:00:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10850"; a="866414057"
-X-IronPort-AV: E=Sophos;i="6.03,193,1694761200"; 
-   d="scan'208";a="866414057"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 02 Oct 2023 00:00:46 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 0F3371A7; Mon,  2 Oct 2023 10:00:45 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+        with ESMTP id S236869AbjJBMFT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Oct 2023 08:05:19 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6872394;
+        Mon,  2 Oct 2023 05:05:15 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8BxNuj5sRplz5MuAA--.35409S3;
+        Mon, 02 Oct 2023 20:05:13 +0800 (CST)
+Received: from openarena.loongson.cn (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxK9z3sRplVSEXAA--.47905S2;
+        Mon, 02 Oct 2023 20:05:11 +0800 (CST)
+From:   Sui Jingfeng <suijingfeng@loongson.cn>
 To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Tasev Nikola <tasev.stefanoska@skynet.be>,
-        Mark Enriquez <enriquezmark36@gmail.com>,
-        Thomas Witt <kernel@witt.link>,
-        Koba Ko <koba.ko@canonical.com>,
-        Werner Sembach <wse@tuxedocomputers.com>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        =?UTF-8?q?=E5=90=B3=E6=98=8A=E6=BE=84=20Ricky?= 
-        <ricky_wu@realtek.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v4] PCI/ASPM: Add back L1 PM Substate save and restore
-Date:   Mon,  2 Oct 2023 10:00:44 +0300
-Message-Id: <20231002070044.2299644-1-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.40.1
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH pci-next v6 0/2] PCI/VGA: Make the vga_is_firmware_default() less arch-dependent
+Date:   Mon,  2 Oct 2023 20:05:09 +0800
+Message-Id: <20231002120511.594737-1-suijingfeng@loongson.cn>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-CM-TRANSID: AQAAf8BxK9z3sRplVSEXAA--.47905S2
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Ww45XryUWw4kGw43CFWDWrX_yoW3Ww43pr
+        18Wa13Ww4kG3WrKrW7XF15CF15WrW8Ca97Jr1Igr48Cw4xKw18CF9IqF4jg347ArsFqw17
+        X3Z7Aa4rtw17JagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+        6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+        02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAF
+        wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+        AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+        r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6x
+        IIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+        w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x
+        0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8w0eJUUUUU==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Commit a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability
-for suspend/resume"") reverted saving and restoring of ASPM L1 Substates
-due to a regression that caused resume from suspend to fail on certain
-systems. However, we never added this capability back and this is now
-causing systems fail to enter low power CPU states, drawing more power
-from the battery.
+The vga_is_firmware_default() only works on x86 and ia64 currently, it is
+a no-op on the rest of the architectures. This patch completes the
+implementation for it, the added code tries to capture the PCI (e) VGA
+device that owns the firmware framebuffer before the PCI resource
+relocation. Since only one GPU could owns the firmware fb in normal case,
+things are almost done once we have determined the boot VGA device
+successfully.
 
-The original revert mentioned that we restore L1 PM substate configuration
-even though ASPM L1 may already be enabled. This is due the fact that
-the pci_restore_aspm_l1ss_state() was called before pci_restore_pcie_state().
+Note that this patch requires the target platform has a way to set up the
+kernel's screen_info. On machines with muiltiple GPU co-exist and On UEFI
+environment, the firmware framebuffer should be put into the VRAM BAR of
+the primary GPU. For the arbitration purpose itself, changing PCI class
+code of the GPU to be non-primary is not required.
 
-Try to enable this functionality again following PCIe r6.0.1, sec 5.5.4
-more closely by:
+The provided method is tested on x86, arm64 and loongarch, all of the
+machine with UEFI firmware shipped.  See below for more information.
 
-  1) Do not restore ASPM configuration in pci_restore_pcie_state() but
-     do that after PCIe capability is restored in pci_restore_aspm_state()
-     following PCIe r6.0, sec 5.5.4.
+1) LS3A5000+LS7A1000 platform with three video cards:
 
-  2) ASPM is first enabled on the upstream component and then downstream
-     (this is already forced by the parent-child ordering of Linux
-     Device Power Management framework).
+$ lspci | grep VGA
 
-  3) Program ASPM L1 PM substate configuration before L1 enables.
+00:06.1 VGA compatible controller: Loongson Technology LLC DC (Display Controller) (rev 01)
+03:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Caicos XT [Radeon HD 7470/8470 / R5 235/310 OEM]
+07:00.0 VGA compatible controller: S3 Graphics Ltd. Device 9070 (rev 01)
+08:00.0 VGA compatible controller: S3 Graphics Ltd. Device 9070 (rev 01)
 
-  4) Program ASPM L1 PM substate enables last after rest of the fields
-     in the capability are programmed.
+Before apply this series:
 
-  5) Add denylist that skips restoring on the ASUS and TUXEDO systems
-     where these regressions happened, just in case. For the TUXEDO case
-     we only skip restore if the BIOS is involved in system suspend
-     (that's forcing "mem_sleep=deep" in the command line). This is to
-     avoid possible power regression when the default suspend to idle is
-     used, and at the same time make sure the devices continue working
-     after resume when the BIOS is involved.
+ pci 0000:00:06.1: vgaarb: setting as boot VGA device
+ pci 0000:00:06.1: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+ pci 0000:03:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:07:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:08:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ vgaarb: loaded
 
-Reported-by: Koba Ko <koba.ko@canonical.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217321
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=216782
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=216877
-Cc: Tasev Nikola <tasev.stefanoska@skynet.be>
-Cc: Mark Enriquez <enriquezmark36@gmail.com>
-Cc: Thomas Witt <kernel@witt.link>
-Cc: Werner Sembach <wse@tuxedocomputers.com>
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
-Hi all,
+After apply this series:
 
-Previous versions of the patch can be found:
+ pci 0000:03:00.0: vgaarb: BAR 0: [mem 0xe0050000000-0xe005fffffff 64bit pref] contains firmware FB [0xe0050000000-0xe00500ea5ff]
+ pci 0000:00:06.1: vgaarb: setting as boot VGA device
+ pci 0000:03:00.0: vgaarb: setting as boot VGA device (overriding previous)
+ pci 0000:03:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:07:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:08:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ vgaarb: loaded
 
-v3: https://lore.kernel.org/linux-pci/20230925074636.2893747-1-mika.westerberg@linux.intel.com/
-v2: https://lore.kernel.org/linux-pci/20230911073352.3472918-1-mika.westerberg@linux.intel.com/
-v1: https://lore.kernel.org/linux-pci/20230627062442.54008-1-mika.westerberg@linux.intel.com/ 
+$ dmesg | grep 0000:03:00.0
 
-Changes from v3:
+ pci 0000:03:00.0: [1002:6778] type 00 class 0x030000
+ pci 0000:03:00.0: reg 0x10: [mem 0xe0050000000-0xe005fffffff 64bit pref]
+ pci 0000:03:00.0: reg 0x18: [mem 0xe0065300000-0xe006531ffff 64bit]
+ pci 0000:03:00.0: reg 0x20: [io  0x20000-0x200ff]
+ pci 0000:03:00.0: reg 0x30: [mem 0xfffe0000-0xffffffff pref]
+ pci 0000:03:00.0: vgaarb: BAR 0: [mem 0xe0050000000-0xe005fffffff 64bit pref] contains firmware FB [0xe0050000000-0xe00500ea5ff]
+ pci 0000:03:00.0: BAR 0: assigned [mem 0xe0030000000-0xe003fffffff 64bit pref]
+ pci 0000:03:00.0: BAR 2: assigned [mem 0xe0065200000-0xe006521ffff 64bit]
+ pci 0000:03:00.0: BAR 6: assigned [mem 0xe0065220000-0xe006523ffff pref]
+ pci 0000:03:00.0: BAR 4: assigned [io  0x5000-0x50ff]
+ pci 0000:03:00.0: vgaarb: setting as boot VGA device (overriding previous)
+ pci 0000:03:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
 
-  - Use pcie_capability_set_word() instead.
+Loongson UEFI firmware does not support specify which GPU to be the primary,
+the firmware set the ATI GPU(03:00.0) as the primary GPU with this hardware
+configuration by hardcode. The problem is that VGAARB can not override the
+platform integrated one(00:06.1) before apply this series.
 
-  - Add tag from Ilpo.
+Please note that BAR 0 of the ATI GPU moved by PCI core from
+[0xe0050000000-0xe005fffffff] to [0xe0030000000-0xe003fffffff], the
+vga_is_firmware_default() function will return wrong results by simply
+remove #ifdefs while without take relocation into account.
 
-Changes from v2:
 
-  - Added tested by tag from Kai-Heng Feng.
+2) ARM64 (Kunpeng 920) with three video card:
 
-  - Dropped the two unneeded (u32 *) casts.
+Before apply this series:
 
-  - Dropped unnecessary comment.
+ pci 0000:02:00.0: vgaarb: setting as boot VGA device
+ pci 0000:02:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:05:00.0: vgaarb: setting as boot VGA device (overriding previous) <--- (Because it has IO or MEM enabled)
+ pci 0000:05:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:06:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ vgaarb: loaded
 
-Changes from v1:
+After apply this series:
 
-  - We move ASPM enables from pci_restore_pcie_state() into
-    pci_restore_aspm_state() to make sure they are clear when L1SS bits
-    are programmed (as per PCIe spec).
+ pci 0000:05:00.0: vgaarb: BAR 0: [mem 0x80010000000-0x8001fffffff 64bit pref] contains firmware FB [0x80010000000-0x800101e77ff]
+ pci 0000:02:00.0: vgaarb: setting as boot VGA device
+ pci 0000:02:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:05:00.0: vgaarb: Boot VGA selected by firmware
+ pci 0000:05:00.0: vgaarb: setting as boot VGA device (overriding previous) <--- (Because it owns firmware framebuffer)
+ pci 0000:05:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:06:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ vgaarb: loaded
 
-  - The denylist includes the TUXEDO system as well but only if suspend
-    is done via BIOS (e.g mem_sleep=deep is forced by user). This way
-    the PCIe devices should continue working after S3 resume, and at the
-    same time allow better power savings. If the default s2idle is used
-    then we restore L1SS to allow the CPU enter lower power states. This
-    is the best I was able to come up to make everyone happy.
+3) x86 with three video card
 
- drivers/pci/pci.c       |  18 ++++-
- drivers/pci/pci.h       |   4 ++
- drivers/pci/pcie/aspm.c | 144 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 164 insertions(+), 2 deletions(-)
+lspci | grep VGA
+05:00.0 VGA compatible controller: Silicon Motion, Inc. SM750 (rev a1)
+0c:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Navi 10 [Radeon RX 5600 OEM/5600 XT / 5700/5700 XT] (rev c1)
+0d:00.0 VGA compatible controller: Jingjia Microelectronics Co Ltd Device 9100 (rev 01)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 59c01d68c6d5..7c72d40ec0ff 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1576,7 +1576,7 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
- {
- 	int i = 0;
- 	struct pci_cap_saved_state *save_state;
--	u16 *cap;
-+	u16 *cap, val;
- 
- 	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_EXP);
- 	if (!save_state)
-@@ -1591,7 +1591,14 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
- 
- 	cap = (u16 *)&save_state->cap.data[0];
- 	pcie_capability_write_word(dev, PCI_EXP_DEVCTL, cap[i++]);
--	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, cap[i++]);
-+	/*
-+	 * Restoring ASPM L1 substates has special requirements
-+	 * according to the PCIe spec 6.0. So we restore here only the
-+	 * LNKCTL register with the ASPM control field clear. ASPM will
-+	 * be restored in pci_restore_aspm_state().
-+	 */
-+	val = cap[i++] & ~PCI_EXP_LNKCTL_ASPMC;
-+	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, val);
- 	pcie_capability_write_word(dev, PCI_EXP_SLTCTL, cap[i++]);
- 	pcie_capability_write_word(dev, PCI_EXP_RTCTL, cap[i++]);
- 	pcie_capability_write_word(dev, PCI_EXP_DEVCTL2, cap[i++]);
-@@ -1702,6 +1709,7 @@ int pci_save_state(struct pci_dev *dev)
- 	pci_save_ltr_state(dev);
- 	pci_save_dpc_state(dev);
- 	pci_save_aer_state(dev);
-+	pci_save_aspm_state(dev);
- 	pci_save_ptm_state(dev);
- 	return pci_save_vc_state(dev);
- }
-@@ -1815,6 +1823,7 @@ void pci_restore_state(struct pci_dev *dev)
- 	pci_restore_rebar_state(dev);
- 	pci_restore_dpc_state(dev);
- 	pci_restore_ptm_state(dev);
-+	pci_restore_aspm_state(dev);
- 
- 	pci_aer_clear_status(dev);
- 	pci_restore_aer_state(dev);
-@@ -3507,6 +3516,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
- 	if (error)
- 		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
- 
-+	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_L1SS,
-+					    2 * sizeof(u32));
-+	if (error)
-+		pci_err(dev, "unable to allocate suspend buffer for ASPM-L1SS\n");
-+
- 	pci_allocate_vc_save_buffers(dev);
- }
- 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 39a8932dc340..11cec757a624 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -567,10 +567,14 @@ int pcie_retrain_link(struct pci_dev *pdev, bool use_lt);
- void pcie_aspm_init_link_state(struct pci_dev *pdev);
- void pcie_aspm_exit_link_state(struct pci_dev *pdev);
- void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
-+void pci_save_aspm_state(struct pci_dev *pdev);
-+void pci_restore_aspm_state(struct pci_dev *pdev);
- #else
- static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
- static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
- static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
-+static inline void pci_save_aspm_state(struct pci_dev *pdev) { }
-+static inline void pci_restore_aspm_state(struct pci_dev *pdev) { }
- #endif
- 
- #ifdef CONFIG_PCIE_ECRC
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 1bf630059264..dd0ba59c44b8 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -7,6 +7,7 @@
-  * Copyright (C) Shaohua Li (shaohua.li@intel.com)
-  */
- 
-+#include <linux/dmi.h>
- #include <linux/kernel.h>
- #include <linux/math.h>
- #include <linux/module.h>
-@@ -17,6 +18,7 @@
- #include <linux/pm.h>
- #include <linux/init.h>
- #include <linux/slab.h>
-+#include <linux/suspend.h>
- #include <linux/jiffies.h>
- #include <linux/delay.h>
- #include "../pci.h"
-@@ -712,6 +714,148 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
- 				PCI_L1SS_CTL1_L1SS_MASK, val);
- }
- 
-+void pci_save_aspm_state(struct pci_dev *pdev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+	u16 l1ss = pdev->l1ss;
-+	u32 *cap;
-+
-+	/*
-+	 * Save L1 substate configuration. The ASPM L0s/L1 configuration
-+	 * is already saved in pci_save_pcie_state().
-+	 */
-+	if (!l1ss)
-+		return;
-+
-+	save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_L1SS);
-+	if (!save_state)
-+		return;
-+
-+	cap = &save_state->cap.data[0];
-+	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL2, cap++);
-+	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, cap++);
-+}
-+
-+static int aspm_l1ss_suspend_via_firmware(const struct dmi_system_id *not_used)
-+{
-+	return pm_suspend_via_firmware();
-+}
-+
-+/*
-+ * Do not restore L1 substates for the below systems even if BIOS has enabled
-+ * it initially. This breaks resume from suspend otherwise on these.
-+ */
-+static const struct dmi_system_id aspm_l1ss_denylist[] = {
-+	{
-+		/* https://bugzilla.kernel.org/show_bug.cgi?id=216782 */
-+		.ident = "ASUS UX305FA",
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_BOARD_NAME, "UX305FA"),
-+		},
-+	},
-+	{
-+		/*
-+		 * https://bugzilla.kernel.org/show_bug.cgi?id=216877
-+		 *
-+		 * This system needs to use suspend to mem instead of its
-+		 * default (suspend to idle) to avoid draining the battery.
-+		 * However, the BIOS gets confused if we try to restore the
-+		 * L1SS registers so avoid doing that if the user forced
-+		 * suspend to mem. The default suspend to idle on the other
-+		 * hand needs restoring L1SS to allow the CPU to enter low
-+		 * power states. This entry should handle both.
-+		 */
-+		.callback = aspm_l1ss_suspend_via_firmware,
-+		.ident = "TUXEDO InfinityBook S 14 v5",
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "TUXEDO"),
-+			DMI_MATCH(DMI_BOARD_NAME, "L140CU"),
-+		},
-+	},
-+	{ }
-+};
-+
-+static bool aspm_l1ss_skip_restore(const struct pci_dev *pdev)
-+{
-+	const struct dmi_system_id *dmi;
-+
-+	dmi = dmi_first_match(aspm_l1ss_denylist);
-+	if (dmi) {
-+		/* If the callback returns zero we can restore L1SS */
-+		if (dmi->callback && !dmi->callback(dmi))
-+			return false;
-+
-+		pci_dbg(pdev, "skipping restoring L1 substates on this system\n");
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+static void pcie_restore_aspm_l1ss(struct pci_dev *pdev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+	u32 *cap, ctl1, ctl2, l1_2_enable;
-+	u16 l1ss = pdev->l1ss;
-+
-+	if (!l1ss)
-+		return;
-+
-+	if (aspm_l1ss_skip_restore(pdev))
-+		return;
-+
-+	save_state = pci_find_saved_ext_cap(pdev, PCI_EXT_CAP_ID_L1SS);
-+	if (!save_state)
-+		return;
-+
-+	cap = &save_state->cap.data[0];
-+	ctl2 = *cap++;
-+	ctl1 = *cap;
-+
-+	/*
-+	 * In addition, Common_Mode_Restore_Time and LTR_L1.2_THRESHOLD
-+	 * in PCI_L1SS_CTL1 must be programmed *before* setting the L1.2
-+	 * enable bits, even though they're all in PCI_L1SS_CTL1.
-+	 */
-+	l1_2_enable = ctl1 & PCI_L1SS_CTL1_L1_2_MASK;
-+	ctl1 &= ~PCI_L1SS_CTL1_L1_2_MASK;
-+
-+	/* Write back without enables first (above we cleared them in ctl1) */
-+	pci_write_config_dword(pdev, l1ss + PCI_L1SS_CTL1, ctl1);
-+	pci_write_config_dword(pdev, l1ss + PCI_L1SS_CTL2, ctl2);
-+
-+	/* Then write back the enables */
-+	if (l1_2_enable)
-+		pci_write_config_dword(pdev, l1ss + PCI_L1SS_CTL1,
-+				       ctl1 | l1_2_enable);
-+}
-+
-+void pci_restore_aspm_state(struct pci_dev *pdev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+	u16 *cap, val;
-+
-+	save_state = pci_find_saved_cap(pdev, PCI_CAP_ID_EXP);
-+	if (!save_state)
-+		return;
-+
-+	cap = (u16 *)&save_state->cap.data[0];
-+	/* Must match the ordering in pci_save/restore_pcie_state() */
-+	val = cap[1] & PCI_EXP_LNKCTL_ASPMC;
-+	if (!val)
-+		return;
-+
-+	/*
-+	 * We restore L1 substate configuration first before enabling L1
-+	 * as the PCIe spec 6.0 sec 5.5.4 suggests.
-+	 */
-+	pcie_restore_aspm_l1ss(pdev);
-+
-+	/* Re-enable L0s/L1 */
-+	pcie_capability_set_word(pdev, PCI_EXP_LNKCTL, val);
-+}
-+
- static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
- {
- 	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
+Before apply this series:
+
+ pci 0000:05:00.0: vgaarb: setting as boot VGA device
+ pci 0000:05:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:0c:00.0: vgaarb: setting as boot VGA device (overriding previous)
+ pci 0000:0c:00.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+ pci 0000:0d:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ vgaarb: loaded
+ amdgpu 0000:0c:00.0: vgaarb: deactivate vga console
+ amdgpu 0000:0c:00.0: vgaarb: changed VGA decodes: olddecodes=io+mem,decodes=none:owns=io+me
+
+After apply this series:
+
+ pci 0000:0c:00.0: vgaarb: BAR 0: [mem 0xa0000000-0xafffffff 64bit pref] contains firmware FB [0xa0000000-0xa1fa3fff]
+ pci 0000:05:00.0: vgaarb: setting as boot VGA device
+ pci 0000:05:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ pci 0000:0c:00.0: vgaarb: Boot VGA selected by firmware
+ pci 0000:0c:00.0: vgaarb: setting as boot VGA device (overriding previous)
+ pci 0000:0c:00.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+ pci 0000:0d:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+ vgaarb: loaded
+ amdgpu 0000:0c:00.0: vgaarb: deactivate vga console
+ amdgpu 0000:0c:00.0: vgaarb: changed VGA decodes: olddecodes=io+mem,decodes=none:owns=io+mem
+
+
+v2:
+	* Fix test robot warnnings and fix typos
+v3:
+	* Fix linkage problems if the global screen_info is not exported
+v4:
+	* Handle linkage problems by hiding behind of CONFIG_SYSFB,
+	* Drop side-effects and simplify.
+v5:
+	* Print the BAR and the framebuffer region (Bjorn)
+	* Use pci_dev_for_each_resource() (Bjorn)
+	* Cleanup the old mechanisms (Bjorn)
+	* Make the commit log simple by moving the extraneous details to cover letter (Bjorn)
+	* Carry on test on arm64
+v6:
+	* Resolve merge conflect on pci-next branch.
+
+Sui Jingfeng (2):
+  PCI/VGA: Make the vga_is_firmware_default() less arch-dependent
+  PCI/VGA: Remove vga_is_firmware_default() function
+
+ drivers/pci/vgaarb.c | 116 ++++++++++++++++++++++++++++---------------
+ 1 file changed, 76 insertions(+), 40 deletions(-)
+
+
+base-commit: 87ab156b7bb2a117a79692a96239c667f5b4f08e
 -- 
-2.40.1
+2.34.1
 
