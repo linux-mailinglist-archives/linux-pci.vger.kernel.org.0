@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 517F67B62EA
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Oct 2023 09:57:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 543857B642E
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Oct 2023 10:31:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231297AbjJCH5d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Oct 2023 03:57:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44430 "EHLO
+        id S231217AbjJCIbl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Oct 2023 04:31:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231274AbjJCH5c (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Oct 2023 03:57:32 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D504EA1;
-        Tue,  3 Oct 2023 00:57:28 -0700 (PDT)
+        with ESMTP id S239298AbjJCIbj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Oct 2023 04:31:39 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77CB6AD;
+        Tue,  3 Oct 2023 01:31:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696319848; x=1727855848;
+  t=1696321891; x=1727857891;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=Jaw97fwQTJRMgjyL+30NMvRWupub7HmLVrt/CGiEHHM=;
-  b=ELtAYsqvFnsET2tin/9Bn7vJ3urxNmyQwhLCDXtDZsgTZIviOdrm5Knu
-   pQr2lExssC5gQ326YNgM3NQdutu+fSMdHZMjYm/rQE4oPgJ977fdaFYTJ
-   UbPAzjWD+z8WPQdJqvskKGFxFZZ3XcJ7diWzxKug/Bikr+oxjfgi1u36g
-   RuhQb3inrsObFTy4O7qUeJ8KLGzVfqUXEeS0rc2EoXZOXx0DpPq5ASLuZ
-   s9Gl9v8ShdGYckEhEISl+QflYDQfYEcAOIrzrYcrSm6/ld2alShGKDAPh
-   61dx2tcxDQCjR4yL3VESHxHRjsDGPsn36sOQjzw8cl7AOj4akbjCMZ1dt
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="446977348"
+  bh=xvRTEJgiLM4R8J7f3Dw6MhEmiMJyQfp7liKkGIGPBHQ=;
+  b=T6uvfCTCZvES4Eaz0/0jVBpbBZaJ/m8GAvwFHXlZ+TWNPCo1PI0D9Rw0
+   2vzKUfccromOazCcTIHb1c1JswynfKwYP6yozSiDWYvbOeJCiIJr91IPm
+   oOoacJaSmsZY9+r1CBp+3xbUYKkGLzy10BZT0CmzInWnMthVDzUxqRrTJ
+   /XPpnFb9TNRe7n6Db/KgAyDvA6fzIpL2jjYTlFMQvMb18YNcbmGlvLN9c
+   SY6YNqdLKLYR51p7dLWMYs87QMnTjimDLRz14x9yhGA4f0zRQVGBdnRtq
+   c1W2YoNZZZccixaOvPlBWkfugDR8L3QFOKE9L63NAgPjVt6MUEWuWLAtm
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="1413573"
 X-IronPort-AV: E=Sophos;i="6.03,196,1694761200"; 
-   d="scan'208";a="446977348"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 00:57:27 -0700
+   d="scan'208";a="1413573"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 01:31:29 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="821142123"
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="874639937"
 X-IronPort-AV: E=Sophos;i="6.03,196,1694761200"; 
-   d="scan'208";a="821142123"
-Received: from tciutacu-mobl.ger.corp.intel.com ([10.252.40.114])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 00:57:15 -0700
-Date:   Tue, 3 Oct 2023 10:57:10 +0300 (EEST)
+   d="scan'208";a="874639937"
+Received: from tciutacu-mobl.ger.corp.intel.com (HELO rrabie-mobl.amr.corp.intel.com) ([10.252.40.114])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 01:31:22 -0700
+Date:   Tue, 3 Oct 2023 11:31:20 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Lukas Wunner <lukas@wunner.de>
 cc:     Bjorn Helgaas <helgaas@kernel.org>,
@@ -61,173 +61,124 @@ cc:     Bjorn Helgaas <helgaas@kernel.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Sean Christopherson <seanjc@google.com>,
         Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 01/12] X.509: Make certificate parser public
-In-Reply-To: <e3d7c94d89e09a6985ac2bf0a6d192b007f454bf.1695921657.git.lukas@wunner.de>
-Message-ID: <cdabed9d-72f5-c125-fdf2-b9a3cd6030cc@linux.intel.com>
-References: <cover.1695921656.git.lukas@wunner.de> <e3d7c94d89e09a6985ac2bf0a6d192b007f454bf.1695921657.git.lukas@wunner.de>
+Subject: Re: [PATCH 03/12] X.509: Move certificate length retrieval into new
+ helper
+In-Reply-To: <16c06528d13b2c0081229a45cacd4b1b9cdff738.1695921657.git.lukas@wunner.de>
+Message-ID: <76259143-d07e-e042-73a1-677094211361@linux.intel.com>
+References: <cover.1695921656.git.lukas@wunner.de> <16c06528d13b2c0081229a45cacd4b1b9cdff738.1695921657.git.lukas@wunner.de>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1636035145-1696319842=:2030"
+Content-Type: text/plain; charset=US-ASCII
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1636035145-1696319842=:2030
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-
 On Thu, 28 Sep 2023, Lukas Wunner wrote:
 
-> The upcoming support for PCI device authentication with CMA-SPDM
-> (PCIe r6.1 sec 6.31) requires validating the Subject Alternative Name
-> in X.509 certificates.
+> The upcoming in-kernel SPDM library (Security Protocol and Data Model,
+> https://www.dmtf.org/dsp/DSP0274) needs to retrieve the length from
+> ASN.1 DER-encoded X.509 certificates.
 > 
-> High-level functions for X.509 parsing such as key_create_or_update()
-> throw away the internal, low-level struct x509_certificate after
-> extracting the struct public_key and public_key_signature from it.
-> The Subject Alternative Name is thus inaccessible when using those
-> functions.
-> 
-> Afford CMA-SPDM access to the Subject Alternative Name by making struct
-> x509_certificate public, together with the functions for parsing an
-> X.509 certificate into such a struct and freeing such a struct.
-> 
-> The private header file x509_parser.h previously included <linux/time.h>
-> for the definition of time64_t.  That definition was since moved to
-> <linux/time64.h> by commit 361a3bf00582 ("time64: Add time64.h header
-> and define struct timespec64"), so adjust the #include directive as part
-> of the move to the new public header file <keys/x509-parser.h>.
+> Such code already exists in x509_load_certificate_list(), so move it
+> into a new helper for reuse by SPDM.
 > 
 > No functional change intended.
 > 
 > Signed-off-by: Lukas Wunner <lukas@wunner.de>
 > ---
->  crypto/asymmetric_keys/x509_parser.h | 37 +----------------------
->  include/keys/x509-parser.h           | 44 ++++++++++++++++++++++++++++
->  2 files changed, 45 insertions(+), 36 deletions(-)
->  create mode 100644 include/keys/x509-parser.h
+>  crypto/asymmetric_keys/x509_loader.c | 38 +++++++++++++++++++---------
+>  include/keys/asymmetric-type.h       |  2 ++
+>  2 files changed, 28 insertions(+), 12 deletions(-)
 > 
-> diff --git a/crypto/asymmetric_keys/x509_parser.h b/crypto/asymmetric_keys/x509_parser.h
-> index a299c9c56f40..a7ef43c39002 100644
-> --- a/crypto/asymmetric_keys/x509_parser.h
-> +++ b/crypto/asymmetric_keys/x509_parser.h
-> @@ -5,40 +5,7 @@
->   * Written by David Howells (dhowells@redhat.com)
->   */
+> diff --git a/crypto/asymmetric_keys/x509_loader.c b/crypto/asymmetric_keys/x509_loader.c
+> index a41741326998..121460a0de46 100644
+> --- a/crypto/asymmetric_keys/x509_loader.c
+> +++ b/crypto/asymmetric_keys/x509_loader.c
+> @@ -4,28 +4,42 @@
+>  #include <linux/key.h>
+>  #include <keys/asymmetric-type.h>
 >  
-> -#include <linux/time.h>
-> -#include <crypto/public_key.h>
-> -#include <keys/asymmetric-type.h>
-> -
-> -struct x509_certificate {
-> -	struct x509_certificate *next;
-> -	struct x509_certificate *signer;	/* Certificate that signed this one */
-> -	struct public_key *pub;			/* Public key details */
-> -	struct public_key_signature *sig;	/* Signature parameters */
-> -	char		*issuer;		/* Name of certificate issuer */
-> -	char		*subject;		/* Name of certificate subject */
-> -	struct asymmetric_key_id *id;		/* Issuer + Serial number */
-> -	struct asymmetric_key_id *skid;		/* Subject + subjectKeyId (optional) */
-> -	time64_t	valid_from;
-> -	time64_t	valid_to;
-> -	const void	*tbs;			/* Signed data */
-> -	unsigned	tbs_size;		/* Size of signed data */
-> -	unsigned	raw_sig_size;		/* Size of signature */
-> -	const void	*raw_sig;		/* Signature data */
-> -	const void	*raw_serial;		/* Raw serial number in ASN.1 */
-> -	unsigned	raw_serial_size;
-> -	unsigned	raw_issuer_size;
-> -	const void	*raw_issuer;		/* Raw issuer name in ASN.1 */
-> -	const void	*raw_subject;		/* Raw subject name in ASN.1 */
-> -	unsigned	raw_subject_size;
-> -	unsigned	raw_skid_size;
-> -	const void	*raw_skid;		/* Raw subjectKeyId in ASN.1 */
-> -	unsigned	index;
-> -	bool		seen;			/* Infinite recursion prevention */
-> -	bool		verified;
-> -	bool		self_signed;		/* T if self-signed (check unsupported_sig too) */
-> -	bool		unsupported_sig;	/* T if signature uses unsupported crypto */
-> -	bool		blacklisted;
-> -};
-> +#include <keys/x509-parser.h>
->  
->  /*
->   * selftest.c
-> @@ -52,8 +19,6 @@ static inline int fips_signature_selftest(void) { return 0; }
->  /*
->   * x509_cert_parser.c
->   */
-> -extern void x509_free_certificate(struct x509_certificate *cert);
-> -extern struct x509_certificate *x509_cert_parse(const void *data, size_t datalen);
->  extern int x509_decode_time(time64_t *_t,  size_t hdrlen,
->  			    unsigned char tag,
->  			    const unsigned char *value, size_t vlen);
-> diff --git a/include/keys/x509-parser.h b/include/keys/x509-parser.h
-> new file mode 100644
-> index 000000000000..7c2ebc84791f
-> --- /dev/null
-> +++ b/include/keys/x509-parser.h
-> @@ -0,0 +1,44 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/* X.509 certificate parser
-> + *
-> + * Copyright (C) 2012 Red Hat, Inc. All Rights Reserved.
-> + * Written by David Howells (dhowells@redhat.com)
-> + */
+> +int x509_get_certificate_length(const u8 *p, unsigned long buflen)
 
-Please add the include guard #ifndef + #define.
+Make the return type ssize_t.
 
-Other than that, this looks okay,
+unsigned long -> size_t buflen (or perhaps ssize_t if you want to compare 
+below to have the same signedness).
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> +{
+> +	int plen;
+
+ssize_t
+
+> +
+> +	/* Each cert begins with an ASN.1 SEQUENCE tag and must be more
+> +	 * than 256 bytes in size.
+> +	 */
+> +	if (buflen < 4)
+> +		return -EINVAL;
+> +
+> +	if (p[0] != 0x30 &&
+> +	    p[1] != 0x82)
+> +		return -EINVAL;
+> +
+> +	plen = (p[2] << 8) | p[3];
+> +	plen += 4;
+> +	if (plen > buflen)
+> +		return -EINVAL;
+> +
+> +	return plen;
+> +}
+> +EXPORT_SYMBOL_GPL(x509_get_certificate_length);
+> +
+>  int x509_load_certificate_list(const u8 cert_list[],
+>  			       const unsigned long list_size,
+>  			       const struct key *keyring)
+>  {
+>  	key_ref_t key;
+>  	const u8 *p, *end;
+> -	size_t plen;
+> +	int plen;
+
+ssize_t plen.
 
 -- 
  i.
 
-
+>  
+>  	p = cert_list;
+>  	end = p + list_size;
+>  	while (p < end) {
+> -		/* Each cert begins with an ASN.1 SEQUENCE tag and must be more
+> -		 * than 256 bytes in size.
+> -		 */
+> -		if (end - p < 4)
+> -			goto dodgy_cert;
+> -		if (p[0] != 0x30 &&
+> -		    p[1] != 0x82)
+> -			goto dodgy_cert;
+> -		plen = (p[2] << 8) | p[3];
+> -		plen += 4;
+> -		if (plen > end - p)
+> +		plen = x509_get_certificate_length(p, end - p);
+> +		if (plen < 0)
+>  			goto dodgy_cert;
+>  
+>  		key = key_create_or_update(make_key_ref(keyring, 1),
+> diff --git a/include/keys/asymmetric-type.h b/include/keys/asymmetric-type.h
+> index 69a13e1e5b2e..6705cfde25b9 100644
+> --- a/include/keys/asymmetric-type.h
+> +++ b/include/keys/asymmetric-type.h
+> @@ -84,6 +84,8 @@ extern struct key *find_asymmetric_key(struct key *keyring,
+>  				       const struct asymmetric_key_id *id_2,
+>  				       bool partial);
+>  
+> +int x509_get_certificate_length(const u8 *p, unsigned long buflen);
 > +
-> +#include <crypto/public_key.h>
-> +#include <keys/asymmetric-type.h>
-> +#include <linux/time64.h>
-> +
-> +struct x509_certificate {
-> +	struct x509_certificate *next;
-> +	struct x509_certificate *signer;	/* Certificate that signed this one */
-> +	struct public_key *pub;			/* Public key details */
-> +	struct public_key_signature *sig;	/* Signature parameters */
-> +	char		*issuer;		/* Name of certificate issuer */
-> +	char		*subject;		/* Name of certificate subject */
-> +	struct asymmetric_key_id *id;		/* Issuer + Serial number */
-> +	struct asymmetric_key_id *skid;		/* Subject + subjectKeyId (optional) */
-> +	time64_t	valid_from;
-> +	time64_t	valid_to;
-> +	const void	*tbs;			/* Signed data */
-> +	unsigned	tbs_size;		/* Size of signed data */
-> +	unsigned	raw_sig_size;		/* Size of signature */
-> +	const void	*raw_sig;		/* Signature data */
-> +	const void	*raw_serial;		/* Raw serial number in ASN.1 */
-> +	unsigned	raw_serial_size;
-> +	unsigned	raw_issuer_size;
-> +	const void	*raw_issuer;		/* Raw issuer name in ASN.1 */
-> +	const void	*raw_subject;		/* Raw subject name in ASN.1 */
-> +	unsigned	raw_subject_size;
-> +	unsigned	raw_skid_size;
-> +	const void	*raw_skid;		/* Raw subjectKeyId in ASN.1 */
-> +	unsigned	index;
-> +	bool		seen;			/* Infinite recursion prevention */
-> +	bool		verified;
-> +	bool		self_signed;		/* T if self-signed (check unsupported_sig too) */
-> +	bool		unsupported_sig;	/* T if signature uses unsupported crypto */
-> +	bool		blacklisted;
-> +};
-> +
-> +struct x509_certificate *x509_cert_parse(const void *data, size_t datalen);
-> +void x509_free_certificate(struct x509_certificate *cert);
---8323329-1636035145-1696319842=:2030--
+>  int x509_load_certificate_list(const u8 cert_list[], const unsigned long list_size,
+>  			       const struct key *keyring);
+>  
+> 
