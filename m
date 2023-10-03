@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9CFB7B6978
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Oct 2023 14:53:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE7777B697C
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Oct 2023 14:53:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231232AbjJCMxU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Oct 2023 08:53:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59856 "EHLO
+        id S231501AbjJCMxe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Oct 2023 08:53:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229689AbjJCMxU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Oct 2023 08:53:20 -0400
+        with ESMTP id S231266AbjJCMxd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Oct 2023 08:53:33 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D0B393;
-        Tue,  3 Oct 2023 05:53:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A675BF;
+        Tue,  3 Oct 2023 05:53:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696337597; x=1727873597;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=702HqFQNmxV7YgGeTBn23DHTxJX9WZ3IGA7eOFHSmOU=;
-  b=e0Yh7WBJccq8BOxpZEoWmfK1Vss/q3LeWjmDTWkOqdafmJZgbRQ+5q7U
-   JzKhvc2hTeXyy1OC7icU4LUn8S7ufr7kAA5OLeOLeBn7oWzXi50qxscYO
-   h7azswMnSdiB/sqsa+maVH1Ju29VjtjaCAxTVQ7KMewZr+QJggHeSVqp8
-   zmtQTuk6gCtrgLRHIWmDEFzTIqkomgCS6tYReC6KYU+jZ05Gqx+uqdhNx
-   GfpHrkONq3QwLfkQcybIGzWwMorUDygSGwY1Bv6Z7aNR755VC49aZ+aCU
-   MAEYOSnga0oUJ1a5sVJBl0olDaBKAIVx8GSXWNu6jr/l/sOGGuZWTrIo6
+  t=1696337611; x=1727873611;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ColEi8Bgy84f92KFXrjvKWg7/PjGY+5N1fWbadVJ1hM=;
+  b=NZU5PvXIqaUSGd5JFftfypJjvWLxU8ykj9ufeWIirf+zh/FRbPpPiopF
+   9QwLXEKwZAxKpJ2pyfiOnUK5BlLAhYKaSFdgn1ShZaIBSWU5u51bKNOcu
+   C+xQW4Xv7cRH5SWCElgrMe+OpQDaNF7w1h0RB0cOwpewFfP1VK8Mquoed
+   zxMgwIZBkhu/CMN4r0myEA2z2GiokcP5xtLUlQ+bW1UpE23SP9+triAaQ
+   Ke0m7EG1SFZR3hS5L6mQRK0C4QgdSXogwdLB2QxQmYA2bf0HzwRuaKJfv
+   IOtrI110Ecq8YBtdrX1M8e7P7/i9gyHMCuZnFJcvl4qAnJHvSQ4d0qU4k
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="447022284"
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="447022379"
 X-IronPort-AV: E=Sophos;i="6.03,197,1694761200"; 
-   d="scan'208";a="447022284"
+   d="scan'208";a="447022379"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 05:53:16 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 05:53:30 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="998005890"
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="998006040"
 X-IronPort-AV: E=Sophos;i="6.03,197,1694761200"; 
-   d="scan'208";a="998005890"
+   d="scan'208";a="998006040"
 Received: from bmihaile-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.222.64])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 05:53:08 -0700
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 05:53:22 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         bcm-kernel-feedback-list@broadcom.com, jonathan.derrick@linux.dev,
@@ -48,13 +48,14 @@ To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         m.karthikeyan@mobiveil.co.in, nirmal.patel@linux.intel.com,
         rjui@broadcom.com, robh@kernel.org, roy.zang@nxp.com,
         sbranden@broadcom.com, yoshihiro.shimoda.uh@renesas.com,
-        Zhiqiang.Hou@nxp.com
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 0/3] PCI: PCI_HEADER_TYPE bugfix & cleanups
-Date:   Tue,  3 Oct 2023 15:52:57 +0300
-Message-Id: <20231003125300.5541-1-ilpo.jarvinen@linux.intel.com>
+        Zhiqiang.Hou@nxp.com, linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 1/3] PCI: vmd: Correct PCI Header Type Register's MFD bit check
+Date:   Tue,  3 Oct 2023 15:52:58 +0300
+Message-Id: <20231003125300.5541-2-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20231003125300.5541-1-ilpo.jarvinen@linux.intel.com>
+References: <20231003125300.5541-1-ilpo.jarvinen@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -67,34 +68,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-One bugfix and cleanups for PCI_HEADER_TYPE_* literals.
+vmd_domain_reset() attempts to find whether the device may contain
+multiple functions by checking 0x80 (Multi-Function Device), however,
+the hdr_type variable has already been masked with PCI_HEADER_TYPE_MASK
+so the check can never true.
 
-This series only covers what's within drivers/pci/. I'd have patches
-for other subsystems too but I decided to wait with them until
-PCI_HEADER_TYPE_MFD is in Linus' tree (to keep the series receipient
-count reasonable, the rest can IMO go through the subsystem specific
-trees once the define is there).
+To fix the issue, don't mask the read with PCI_HEADER_TYPE_MASK.
 
-Ilpo Järvinen (3):
-  PCI: vmd: Correct PCI Header Type Register's MFD bit check
-  PCI: Add PCI_HEADER_TYPE_MFD pci_regs.h
-  PCI: Use PCI_HEADER_TYPE_* instead of literals
+Fixes: 6aab5622296b ("PCI: vmd: Clean up domain before enumeration")
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Nirmal Patel <nirmal.patel@linux.intel.com>
+---
+ drivers/pci/controller/vmd.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
- drivers/pci/controller/dwc/pci-layerscape.c   |  2 +-
- .../controller/mobiveil/pcie-mobiveil-host.c  |  2 +-
- drivers/pci/controller/pcie-iproc.c           |  2 +-
- drivers/pci/controller/pcie-rcar-ep.c         |  2 +-
- drivers/pci/controller/pcie-rcar-host.c       |  2 +-
- drivers/pci/controller/vmd.c                  |  5 ++---
- drivers/pci/hotplug/cpqphp_ctrl.c             |  6 ++---
- drivers/pci/hotplug/cpqphp_pci.c              | 22 +++++++++----------
- drivers/pci/hotplug/ibmphp.h                  |  5 +++--
- drivers/pci/hotplug/ibmphp_pci.c              |  2 +-
- drivers/pci/pci.c                             |  2 +-
- drivers/pci/quirks.c                          |  6 ++---
- include/uapi/linux/pci_regs.h                 |  1 +
- 13 files changed, 30 insertions(+), 29 deletions(-)
-
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index e718a816d481..d5b97a6aae56 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -525,8 +525,7 @@ static void vmd_domain_reset(struct vmd_dev *vmd)
+ 			base = vmd->cfgbar + PCIE_ECAM_OFFSET(bus,
+ 						PCI_DEVFN(dev, 0), 0);
+ 
+-			hdr_type = readb(base + PCI_HEADER_TYPE) &
+-					 PCI_HEADER_TYPE_MASK;
++			hdr_type = readb(base + PCI_HEADER_TYPE);
+ 
+ 			functions = (hdr_type & 0x80) ? 8 : 1;
+ 			for (fn = 0; fn < functions; fn++) {
 -- 
 2.30.2
 
