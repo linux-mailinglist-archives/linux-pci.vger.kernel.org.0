@@ -2,109 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B15D7B69D5
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Oct 2023 15:07:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A2F37B6AD8
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Oct 2023 15:47:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232177AbjJCNHb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Oct 2023 09:07:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56370 "EHLO
+        id S232284AbjJCNsA convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 3 Oct 2023 09:48:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231266AbjJCNHa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Oct 2023 09:07:30 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00DA993;
-        Tue,  3 Oct 2023 06:07:27 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1115CC433C8;
-        Tue,  3 Oct 2023 13:07:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696338447;
-        bh=ArFpsG+rmsCSYEIB4kkM8QPGFJQJDJOHz7UBLDI+9zE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gVPVFPEs1/OCC8qjCciwFIU3setxljjE5Q0Nh12gpiXrCBm9YrwGGTLL2Sll2nnhE
-         xAMKRJ6B6fsIaABPHnnbZfVRbUrFGePnVkrdlppa8RyN1Z4gEMfLbKOjI5oywxUJBk
-         Cq5NltCK3+O6rDxH0Qpy0Uq9bln0sPMiJiPZnhxZS6po30gpPOzFnzsrxDa4O90TQL
-         zNm9yd8tHbjBhEOdayrG3eI3/Hz2QNqwcmgHbutDi8Yy2c9d7PDirN6x0uRw4BMT4b
-         b6hXS+0+aMwKD3xgJeEk33u1xRYcX7JUtwSp31Xa/b8I1bY9AYdRqUr/QcyxEIRmL5
-         +0NjjPeTuc8/g==
-Date:   Tue, 3 Oct 2023 15:07:24 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        bcm-kernel-feedback-list@broadcom.com, jonathan.derrick@linux.dev,
-        kw@linux.com, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-renesas-soc@vger.kernel.org,
-        lpieralisi@kernel.org, marek.vasut+renesas@gmail.com,
-        minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
-        m.karthikeyan@mobiveil.co.in, nirmal.patel@linux.intel.com,
-        rjui@broadcom.com, robh@kernel.org, roy.zang@nxp.com,
-        sbranden@broadcom.com, yoshihiro.shimoda.uh@renesas.com,
-        Zhiqiang.Hou@nxp.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] PCI: Use PCI_HEADER_TYPE_* instead of literals
-Message-ID: <ZRwSDNOlZwUu+vqE@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        bcm-kernel-feedback-list@broadcom.com, jonathan.derrick@linux.dev,
-        kw@linux.com, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-renesas-soc@vger.kernel.org,
-        lpieralisi@kernel.org, marek.vasut+renesas@gmail.com,
-        minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
-        m.karthikeyan@mobiveil.co.in, nirmal.patel@linux.intel.com,
-        rjui@broadcom.com, robh@kernel.org, roy.zang@nxp.com,
-        sbranden@broadcom.com, yoshihiro.shimoda.uh@renesas.com,
-        Zhiqiang.Hou@nxp.com, linux-kernel@vger.kernel.org
-References: <20231003125300.5541-1-ilpo.jarvinen@linux.intel.com>
- <20231003125300.5541-4-ilpo.jarvinen@linux.intel.com>
+        with ESMTP id S231852AbjJCNr7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Oct 2023 09:47:59 -0400
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA22CAB;
+        Tue,  3 Oct 2023 06:47:53 -0700 (PDT)
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3af59a017a5so148830b6e.1;
+        Tue, 03 Oct 2023 06:47:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696340873; x=1696945673;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=myp4tnblzv3PfnS2aDkMaapac9MMwIlElDTi3Va90BQ=;
+        b=oh+c9O+XNLTpZzHu/OesPwxsgZL/nb1slM3l1jBRWQf5NCZEB4gLl6DLrffacaO49Y
+         Dl5DDRskGSz1HaALyflJNwHonkzzXa3kmIqUzFjSNIJN+00/Aut0eihlqYwUvug1RSGv
+         0Stlosm4mQ1YOqNxQOZf1kacn2Zbfjo8/yBD2MI+GGYJ5+0DwbKDuYp0LXFkFduOkFk1
+         KnhJ5Y7bPgKf9nvNPRSBhTuz0VDvr8pxplWze0Hid647Vft9Ro4bI5X1GbZ0QeyxtRtm
+         GCV6rv77YGrgzbQ09JDZdbSEUmXt1ODqKKDJ+TpUTGQ8I0P+2YcuKV1s1wrPD42uDffw
+         Hzww==
+X-Gm-Message-State: AOJu0YxnAVqxeEBM+nB4K34aLR+m56P65IgrIvIJ2wMcfa5u37exqQK1
+        tb6/f0atAUpclqq42VikNn0okua7UdEormP9BVKVR2qZ
+X-Google-Smtp-Source: AGHT+IEuaILjXXU0kpwejivoSEIVhcAXYh06/0XVX9DF7k7llkENmAe8xUBUeXoUql/5xKB5wz6ZvdahVeOjn6Qf2b8=
+X-Received: by 2002:a05:6808:212a:b0:3ae:b06:2140 with SMTP id
+ r42-20020a056808212a00b003ae0b062140mr17361563oiw.4.1696340873087; Tue, 03
+ Oct 2023 06:47:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="8/zJ+jH2FaDITq/3"
-Content-Disposition: inline
-In-Reply-To: <20231003125300.5541-4-ilpo.jarvinen@linux.intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20231002135424.2603191-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20231002135424.2603191-1-andriy.shevchenko@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 3 Oct 2023 15:47:42 +0200
+Message-ID: <CAJZ5v0h25-y32LVbYTtGaNFPWgTafvQZJP4VupBYuqXptY0maA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] ACPI: PCI: Switch to use acpi_evaluate_dsm_typed()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, Oct 2, 2023 at 4:04 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> The acpi_evaluate_dsm_typed() provides a way to check the type of the
+> object evaluated by _DSM call. Use it instead of open coded variant.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/acpi/pci_root.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index 84030804a763..58b89b8d950e 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -1055,9 +1055,9 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+>          * exists and returns 0, we must preserve any PCI resource
+>          * assignments made by firmware for this host bridge.
+>          */
+> -       obj = acpi_evaluate_dsm(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 1,
+> -                               DSM_PCI_PRESERVE_BOOT_CONFIG, NULL);
+> -       if (obj && obj->type == ACPI_TYPE_INTEGER && obj->integer.value == 0)
+> +       obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 1,
+> +                                     DSM_PCI_PRESERVE_BOOT_CONFIG, NULL, ACPI_TYPE_INTEGER);
+> +       if (obj && obj->integer.value == 0)
+>                 host_bridge->preserve_config = 1;
+>         ACPI_FREE(obj);
+>
+> --
 
---8/zJ+jH2FaDITq/3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Oct 03, 2023 at 03:53:00PM +0300, Ilpo J=C3=A4rvinen wrote:
-> Replace literals under drivers/pci/ with PCI_HEADER_TYPE_MASK,
-> PCI_HEADER_TYPE_NORMAL, and PCI_HEADER_TYPE_MFD.
->=20
-> While at it, replace !! boolean conversion with FIELD_GET().
->=20
-> Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com> # for Renesas =
-R-Car
-
-
---8/zJ+jH2FaDITq/3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmUcEgwACgkQFA3kzBSg
-KbbwZQ/+OWN+pr0W3mgNuEkqIJy1gENxgZSQwTuDfc50jkQ+QvaDabXZyduk5uDf
-QDqFHQCwuodVcB2FkK+WUddSmLHChpSSX4imzxhhd21YAAd2mZMwKxvW1T0theCe
-ZdRnxE1S0H/B4OsULDMppn+3DZVW2aGre32u7lq7hIpmj2dRbpH4TBbTLchXoMQY
-RCOUJ0baTYSXiDjgbmq+urT98IqO4gMxuEmzuoICqZCsb1gFUOz+aM3Jfxc/9BJw
-su9LoOCg/Ud447vnOkzs6BlkBgocWXFJPb/dIPPiaMkDIPyxrljWU9S8MVpcC2/7
-Fhd0phffcjTn1W0cSRwTJPpS9fagWYduMrLjFimhR1a9ERmTzzI8QAOH5/Dk9zoO
-b4AQ4dysH08lHur+o+tMnlhtGS3xbcvymorR4uqA35gzCTVDSdNbnmIi+K/WutuR
-8N1DsSwyvMpwAMLvoFeQZGY2zNAP83/CGbITi6Gj3RUmEMP9jCkEl1r+YKOC5bjQ
-rkv1pRvPgG/am6hzVx3RyIdOUddcKCsgQt+3nBfby6HG+PbuxxKtrthxXUHmunDX
-p/zlkUzjNKryvwL09lzLs3Ys13EBazLZAbPWN0lZYuekcbKrL//m0N7qvNmLo8oy
-ZcMD9javfLimKe1u3MffJ7RMnEjwcPViS/7Ym54dm5YjNmLMTrI=
-=KypN
------END PGP SIGNATURE-----
-
---8/zJ+jH2FaDITq/3--
+Applied as 6.7 material, thanks!
