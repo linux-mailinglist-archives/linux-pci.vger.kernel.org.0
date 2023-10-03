@@ -2,50 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AD9A7B6F1E
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Oct 2023 18:58:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7939E7B6F38
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Oct 2023 19:04:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240455AbjJCQ6T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Oct 2023 12:58:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46456 "EHLO
+        id S231150AbjJCREn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Oct 2023 13:04:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240545AbjJCQ6S (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Oct 2023 12:58:18 -0400
+        with ESMTP id S230119AbjJCREn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Oct 2023 13:04:43 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35CE4BD;
-        Tue,  3 Oct 2023 09:58:11 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55E52C433C7;
-        Tue,  3 Oct 2023 16:58:10 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49E8EB0;
+        Tue,  3 Oct 2023 10:04:39 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9DBEC433C7;
+        Tue,  3 Oct 2023 17:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696352290;
-        bh=CW7Wcm7sPLaG8k7fCB3cJgGleAH6htQf+NLDbGd1ww0=;
+        s=k20201202; t=1696352679;
+        bh=ojhTT5gbz7npnJ9U/90ySd8WkHi5+4JKHxAn4AYgke8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Mp8GhnsxJ7b8N3UyCEW0vldhx95rABa2K9SUw5GLOM6lphh+vhaFl3Q8pIztBNplq
-         w3ebVYu9/QWtciSFaSoQur/H303AyR/dikGOohNpVsr/8vGN0yJtlDBUk/kIxw2g/f
-         mfCvfsZHVj2Vs1mqXFNoJZcvHXAogBFoejJ3gIv5RfgVnpp8kOk7yWmo9c2TFk63jb
-         +uFRj+o1laiDlaA1EKLAaeFuVDNXaASkuUyw8+wAUYm5zEi5JpJRbvgGfuh0m+IINp
-         mk66GITkXha7HVVMkK2AD8UXDXVvsJxFfpiQ/R1vWwcKJ1ACApugY3t2SjAQe2Q7W3
-         aoc6uBoOp2/zA==
-Date:   Tue, 3 Oct 2023 11:58:08 -0500
+        b=PXhoVkKbpNQi/DK3FrmfqY+MwrwilW7pkXKe7+HQap+P4a7QAfZ3eBo+KJNWliyrL
+         v3KFw7bu5Y/oVJE6JWR4pH4n1okAU2KBWvJ2tU7YIv96FEbWQdT5LUWWgXLDzrGHiZ
+         YBrZ8qP/ZwZd7sSZ25jEvN8hbpnpm1N2woKVY8YHd9Lkuc1d9pa4f/gFmnaVOEf2bT
+         45UPBF87Mej4mPiZPIJVW5/QLLICqVhbeBpYZd1QfDLD793FGuRxO2g0WnpSzlV357
+         3r2rDBYNM29LdyTR2B9JCpOak+KEbCHxumzCxRpvmf94WNRSGGG0/5/hXvuZg8ZbiL
+         xykSOt2a65VAA==
+Date:   Tue, 3 Oct 2023 12:04:36 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        bcm-kernel-feedback-list@broadcom.com, jonathan.derrick@linux.dev,
-        kw@linux.com, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-renesas-soc@vger.kernel.org,
-        lpieralisi@kernel.org, marek.vasut+renesas@gmail.com,
-        minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
-        m.karthikeyan@mobiveil.co.in, nirmal.patel@linux.intel.com,
-        rjui@broadcom.com, robh@kernel.org, roy.zang@nxp.com,
-        sbranden@broadcom.com, yoshihiro.shimoda.uh@renesas.com,
-        Zhiqiang.Hou@nxp.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] PCI: PCI_HEADER_TYPE bugfix & cleanups
-Message-ID: <20231003165808.GA677787@bhelgaas>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH v1 1/1] PCI: ACPI: Switch to use acpi_evaluate_dsm_typed()
+Message-ID: <20231003170436.GA678206@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231003125300.5541-1-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20231002135352.2603096-1-andriy.shevchenko@linux.intel.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -56,33 +49,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 03, 2023 at 03:52:57PM +0300, Ilpo Järvinen wrote:
-> One bugfix and cleanups for PCI_HEADER_TYPE_* literals.
+On Mon, Oct 02, 2023 at 04:53:52PM +0300, Andy Shevchenko wrote:
+> The acpi_evaluate_dsm_typed() provides a way to check the type of the
+> object evaluated by _DSM call. Use it instead of open coded variant.
 > 
-> This series only covers what's within drivers/pci/. I'd have patches
-> for other subsystems too but I decided to wait with them until
-> PCI_HEADER_TYPE_MFD is in Linus' tree (to keep the series receipient
-> count reasonable, the rest can IMO go through the subsystem specific
-> trees once the define is there).
-> 
-> Ilpo Järvinen (3):
->   PCI: vmd: Correct PCI Header Type Register's MFD bit check
->   PCI: Add PCI_HEADER_TYPE_MFD pci_regs.h
->   PCI: Use PCI_HEADER_TYPE_* instead of literals
-> 
->  drivers/pci/controller/dwc/pci-layerscape.c   |  2 +-
->  .../controller/mobiveil/pcie-mobiveil-host.c  |  2 +-
->  drivers/pci/controller/pcie-iproc.c           |  2 +-
->  drivers/pci/controller/pcie-rcar-ep.c         |  2 +-
->  drivers/pci/controller/pcie-rcar-host.c       |  2 +-
->  drivers/pci/controller/vmd.c                  |  5 ++---
->  drivers/pci/hotplug/cpqphp_ctrl.c             |  6 ++---
->  drivers/pci/hotplug/cpqphp_pci.c              | 22 +++++++++----------
->  drivers/pci/hotplug/ibmphp.h                  |  5 +++--
->  drivers/pci/hotplug/ibmphp_pci.c              |  2 +-
->  drivers/pci/pci.c                             |  2 +-
->  drivers/pci/quirks.c                          |  6 ++---
->  include/uapi/linux/pci_regs.h                 |  1 +
->  13 files changed, 30 insertions(+), 29 deletions(-)
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Applied to pci/enumeration for v6.7, thanks!
+Applied with Rafael's ack to pci/enumeration for v6.7, thanks!
+
+> ---
+>  drivers/pci/pci-acpi.c | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index a05350a4e49c..cf108259aef6 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -1215,12 +1215,12 @@ void acpi_pci_add_bus(struct pci_bus *bus)
+>  	if (!pci_is_root_bus(bus))
+>  		return;
+>  
+> -	obj = acpi_evaluate_dsm(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 3,
+> -				DSM_PCI_POWER_ON_RESET_DELAY, NULL);
+> +	obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 3,
+> +				      DSM_PCI_POWER_ON_RESET_DELAY, NULL, ACPI_TYPE_INTEGER);
+>  	if (!obj)
+>  		return;
+>  
+> -	if (obj->type == ACPI_TYPE_INTEGER && obj->integer.value == 1) {
+> +	if (obj->integer.value == 1) {
+>  		bridge = pci_find_host_bridge(bus);
+>  		bridge->ignore_reset_delay = 1;
+>  	}
+> @@ -1376,12 +1376,13 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
+>  	if (bridge->ignore_reset_delay)
+>  		pdev->d3cold_delay = 0;
+>  
+> -	obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 3,
+> -				DSM_PCI_DEVICE_READINESS_DURATIONS, NULL);
+> +	obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 3,
+> +				      DSM_PCI_DEVICE_READINESS_DURATIONS, NULL,
+> +				      ACPI_TYPE_PACKAGE);
+>  	if (!obj)
+>  		return;
+>  
+> -	if (obj->type == ACPI_TYPE_PACKAGE && obj->package.count == 5) {
+> +	if (obj->package.count == 5) {
+>  		elements = obj->package.elements;
+>  		if (elements[0].type == ACPI_TYPE_INTEGER) {
+>  			value = (int)elements[0].integer.value / 1000;
+> -- 
+> 2.40.0.1.gaa8946217a0b
+> 
