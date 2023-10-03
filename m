@@ -2,157 +2,187 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A57F7B6FA9
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Oct 2023 19:24:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41F747B6FC0
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Oct 2023 19:30:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240045AbjJCRYx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Oct 2023 13:24:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40490 "EHLO
+        id S231167AbjJCRac (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Oct 2023 13:30:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231791AbjJCRYw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Oct 2023 13:24:52 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D35795;
-        Tue,  3 Oct 2023 10:24:49 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5F53C433C8;
-        Tue,  3 Oct 2023 17:24:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696353889;
-        bh=t5TcwtsV75eUu3K2UjTEvRlUunCyPNKs2VnPat85+zQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=P1JZ8MamuBpf8X+5XKHGBmCngnqcmcmRz/Gt+QzvIDAB7iZyRJYDMKOpzNMcHcjRH
-         /0zdnzFrs2qrYHOH5ocvnp3hmRuAOelgG2C7n9vWhCtXwrHysn+t7mTkCskBiW9UWt
-         ZPavDslsiqztB0CzRT09uYPNLVrS482xFGB4IesY4jYj1VIMKhjgBGXx4tJgNnpIXX
-         J5Pz+6o/A5AezKOrt+yya55Owihn6Vp9QwNgNkxevvg4aq0ALCSk/kgWAFb0xeXKGb
-         VhD88mesrKvJh6dRDl0mN4xM0yO5n+7lmaW6UvMlLVNXP/+xouv0g/Gfip16X0DMPm
-         Af1yGX2kg044A==
-Date:   Tue, 3 Oct 2023 12:24:47 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        iain@orangesquash.org.uk,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>, stable@vger.kernel.org
-Subject: Re: [PATCH v21] PCI: Avoid D3 at suspend for AMD PCIe root ports w/
- USB4 controllers
-Message-ID: <20231003172447.GA679295@bhelgaas>
+        with ESMTP id S240712AbjJCRa1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Oct 2023 13:30:27 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9323AB7;
+        Tue,  3 Oct 2023 10:30:24 -0700 (PDT)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 393H72aO017586;
+        Tue, 3 Oct 2023 17:29:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=jgeKjkDTDlV1euYjkhGRGv0noKADub9qxWJVNSkF6LE=;
+ b=PWUdW3Yeeiv8PiZRCpayjO/HF9ZQk3pLo6QZTFLfVuabcT9dla8soq/pTnELMRa7lUJW
+ pQv3/sjAg64fIKfj155R+7QjaLIg1bNM7iemZQVm9lcKxbRXXHKNDDJIzl/PvY7/tuO8
+ UoXujhOphkyrVh1aVGphQAQgv4zaIihxml/+3eqx95tvH25Jyv/WcXNxxG2IhJl5jPVU
+ aKtuMx4NqeYUt5QnbFsYwpiLOHCvQ2kCPBVdvPxjmzGbv5T54hjDlvw5K3Sseeg7oqTm
+ RZOGgtuLUS2ZZRTpICcLGPoxopvYOSzNiiIhWZ4+ADDdAIVI7x1Lpj7BwvqY/SfjLIaa WQ== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tg1v3b10m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Oct 2023 17:29:59 +0000
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 393HTwOo003057
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 3 Oct 2023 17:29:58 GMT
+Received: from [10.50.44.150] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Tue, 3 Oct
+ 2023 10:29:51 -0700
+Message-ID: <da76b7ad-3157-4dbe-8987-5a7796dd71dc@quicinc.com>
+Date:   Tue, 3 Oct 2023 22:59:47 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231002180906.82089-1-mario.limonciello@amd.com>
-X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URI_TRY_3LD autolearn=no
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/6] arm64: dts: qcom: ipq5018: Add PCIe related nodes
+Content-Language: en-US
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <vkoul@kernel.org>, <kishon@kernel.org>, <mani@kernel.org>,
+        <p.zabel@pengutronix.de>, <quic_srichara@quicinc.com>,
+        <quic_varada@quicinc.com>, <quic_ipkumar@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>
+References: <20231003120846.28626-1-quic_nsekar@quicinc.com>
+ <20231003120846.28626-6-quic_nsekar@quicinc.com>
+ <CAA8EJpoKq4TVzNHKLjgezTk9je-3OPv4g852anr7SnECJNw2xQ@mail.gmail.com>
+From:   Nitheesh Sekar <quic_nsekar@quicinc.com>
+In-Reply-To: <CAA8EJpoKq4TVzNHKLjgezTk9je-3OPv4g852anr7SnECJNw2xQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ujHLPWB4OACxx4f6zdep-vdRGxssbWVR
+X-Proofpoint-ORIG-GUID: ujHLPWB4OACxx4f6zdep-vdRGxssbWVR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-03_15,2023-10-02_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 mlxscore=0 mlxlogscore=922 suspectscore=0 bulkscore=0
+ clxscore=1011 spamscore=0 impostorscore=0 priorityscore=1501 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310030133
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 02, 2023 at 01:09:06PM -0500, Mario Limonciello wrote:
-> Iain reports that USB devices can't be used to wake a Lenovo Z13 from
-> suspend.  This occurs because on some AMD platforms, even though the Root
-> Ports advertise PME_Support for D3hot and D3cold, they don't handle PME
-> messages and generate wakeup interrupts from those states when amd-pmc has
-> put the platform in a hardware sleep state.
-> 
-> Iain reported this on an AMD Rembrandt platform, but it also affects
-> Phoenix SoCs.  On Iain's system, a USB4 router below the affected Root Port
-> generates the PME. To avoid this issue, disable D3 for the root port
-> associated with USB4 controllers at suspend time.
-> 
-> Restore D3 support at resume so that it can be used by runtime suspend.
-> The amd-pmc driver doesn't put the platform in a hardware sleep state for
-> runtime suspend, so PMEs work as advertised.
-> 
-> Cc: stable@vger.kernel.org # 6.1.y: 70b70a4: PCI/sysfs: Protect driver's D3cold preference from user space
-> Cc: stable@vger.kernel.org # 6.5.y: 70b70a4: PCI/sysfs: Protect driver's D3cold preference from user space
-> Cc: stable@vger.kernel.org # 6.6.y: 70b70a4: PCI/sysfs: Protect driver's D3cold preference from user space
-> Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/platform-design-for-modern-standby#low-power-core-silicon-cpu-soc-dram [1]
-> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-> Reported-by: Iain Lane <iain@orangesquash.org.uk>
-> Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
-> v20-v21:
->  * Rewrite commit message, lifting most of what Bjorn clipped down to on v20.
->  * Use pci_d3cold_disable()/pci_d3cold_enable() instead
->  * Do the quirk on the USB4 controller instead of RP->USB->RP
-> ---
->  drivers/pci/quirks.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index eeec1d6f9023..5674065011e7 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -6188,3 +6188,47 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
-> +
-> +#ifdef CONFIG_SUSPEND
-> +/*
-> + * Root Ports on some AMD SoCs advertise PME_Support for D3hot and D3cold, but
-> + * if the SoC is put into a hardware sleep state by the amd-pmc driver, the
-> + * Root Ports don't generate wakeup interrupts for USB devices.
-> + *
-> + * When suspending, disable D3 support for the Root Port so we don't use it.
-> + * Restore D3 support when resuming.
-> + */
-> +static void quirk_enable_rp_d3cold(struct pci_dev *dev)
-> +{
-> +	pci_d3cold_enable(pcie_find_root_port(dev));
-> +}
-> +
-> +static void quirk_disable_rp_d3cold_suspend(struct pci_dev *dev)
-> +{
-> +	struct pci_dev *rp;
-> +
-> +	/*
-> +	 * PM_SUSPEND_ON means we're doing runtime suspend, which means
-> +	 * amd-pmc will not be involved so PMEs during D3 work as advertised.
-> +	 *
-> +	 * The PMEs *do* work if amd-pmc doesn't put the SoC in the hardware
-> +	 * sleep state, but we assume amd-pmc is always present.
-> +	 */
-> +	if (pm_suspend_target_state == PM_SUSPEND_ON)
-> +		return;
-> +
-> +	rp = pcie_find_root_port(dev);
-> +	pci_d3cold_disable(rp);
 
-I think this prevents D3cold from being used at all, right?
+On 10/3/2023 8:53 PM, Dmitry Baryshkov wrote:
+> On Tue, 3 Oct 2023 at 15:10, Nitheesh Sekar <quic_nsekar@quicinc.com> wrote:
+>> Add phy and controller nodes for PCIe_x2 and PCIe_x1.
+>> PCIe_x2 is 2-lane Gen2 and PCIe_x1 is 1-lane Gen2.
+>>
+>> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+>> ---
+>>   arch/arm64/boot/dts/qcom/ipq5018.dtsi | 186 +++++++++++++++++++++++++-
+>>   1 file changed, 184 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+>> index 38ffdc3cbdcd..0818fdd1e693 100644
+>> --- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+>> @@ -8,6 +8,7 @@
+>>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>   #include <dt-bindings/clock/qcom,gcc-ipq5018.h>
+>>   #include <dt-bindings/reset/qcom,gcc-ipq5018.h>
+>> +#include <dt-bindings/gpio/gpio.h>
+>>
+>>   / {
+>>          interrupt-parent = <&intc>;
+>> @@ -94,6 +95,38 @@
+>>                  #size-cells = <1>;
+>>                  ranges = <0 0 0 0xffffffff>;
+>>
+>> +               pcie_x1phy: phy@7e000{
+>> +                       compatible = "qcom,ipq5018-uniphy-pcie-gen2x1";
+>> +                       reg = <0x0007e000 0x800>;
+>> +                       #phy-cells = <0>;
+>> +                       #clock-cells = <0>;
+>> +                       clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
+>> +                       clock-names = "pipe_clk";
+>> +                       clock-output-names = "pcie1_pipe_clk";
+>> +                       assigned-clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
+>> +                       assigned-clock-rates = <125000000>;
+>> +                       resets = <&gcc GCC_PCIE1_PHY_BCR>,
+>> +                                <&gcc GCC_PCIE1PHY_PHY_BCR>;
+>> +                       reset-names = "phy", "phy_phy";
+>> +                       status = "disabled";
+>> +               };
+>> +
+>> +               pcie_x2phy: phy@86000{
+>> +                       compatible = "qcom,ipq5018-uniphy-pcie-gen2x2";
+>> +                       reg = <0x00086000 0x800>;
+>> +                       #phy-cells = <0>;
+>> +                       #clock-cells = <0>;
+>> +                       clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
+>> +                       clock-names = "pipe_clk";
+>> +                       clock-output-names = "pcie0_pipe_clk";
+>> +                       assigned-clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
+>> +                       assigned-clock-rates = <125000000>;
+> Can this go into the PHY driver?
+Sure. Will check and update.
+>
+>> +                       resets = <&gcc GCC_PCIE0_PHY_BCR>,
+>> +                                <&gcc GCC_PCIE0PHY_PHY_BCR>;
+>> +                       reset-names = "phy", "phy_phy";
+>> +                       status = "disabled";
+>> +               };
+>> +
+>>                  tlmm: pinctrl@1000000 {
+>>                          compatible = "qcom,ipq5018-tlmm";
+>>                          reg = <0x01000000 0x300000>;
+>> @@ -117,8 +150,8 @@
+>>                          reg = <0x01800000 0x80000>;
+>>                          clocks = <&xo_board_clk>,
+>>                                   <&sleep_clk>,
+>> -                                <0>,
+>> -                                <0>,
+>> +                                <&pcie_x2phy>,
+>> +                                <&pcie_x1phy>,
+>>                                   <0>,
+>>                                   <0>,
+>>                                   <0>,
+>> @@ -246,6 +279,155 @@
+>>                                  status = "disabled";
+>>                          };
+>>                  };
+>> +
+>> +               pcie_x1: pci@80000000 {
+>> +                       compatible = "qcom,pcie-ipq5018";
+>> +                       reg =  <0x80000000 0xf1d
+> Each address/size tuple should be a separate <> entry.
+Sure. will update it.
+>
+>> +                               0x80000F20 0xa8
+> lowercase
+Sure. Will update.
+>
+>> +                               0x80001000 0x1000
+>> +                               0x78000 0x3000
+> Would you notice why this line stands away from the rest of entries here?
 
-Two questions:
+Sure. Will pad it Zeros.
 
-  - PME also doesn't work in D3hot, right?
+Thanks,
+Nitheesh
 
-  - Is it OK to use D3hot and D3cold if we don't have a wakeup device
-    below the Root Port?  I assume that scenario is possible?
-
-I like the fact that we don't have to walk the hierarchy with
-pci_walk_bus().
-
-> +	dev_info_once(&rp->dev, "quirk: disabling D3cold for suspend\n");
-> +}
-> +/* Rembrandt (yellow_carp) */
-> +DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x162e, quirk_disable_rp_d3cold_suspend);
-> +DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x162e, quirk_enable_rp_d3cold);
-> +DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x162f, quirk_disable_rp_d3cold_suspend);
-> +DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x162f, quirk_enable_rp_d3cold);
-> +/* Phoenix (pink_sardine) */
-> +DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x1668, quirk_disable_rp_d3cold_suspend);
-> +DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x1668, quirk_enable_rp_d3cold);
-> +DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x1669, quirk_disable_rp_d3cold_suspend);
-> +DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x1669, quirk_enable_rp_d3cold);
-> +#endif /* CONFIG_SUSPEND */
-> -- 
-> 2.34.1
-> 
