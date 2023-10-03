@@ -2,322 +2,269 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 934F87B6CFA
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Oct 2023 17:23:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 959A37B6D12
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Oct 2023 17:28:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231544AbjJCPXR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Oct 2023 11:23:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44256 "EHLO
+        id S230338AbjJCP2k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Oct 2023 11:28:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230511AbjJCPXQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Oct 2023 11:23:16 -0400
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83673A6
-        for <linux-pci@vger.kernel.org>; Tue,  3 Oct 2023 08:23:12 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-59f4f80d084so11953757b3.1
-        for <linux-pci@vger.kernel.org>; Tue, 03 Oct 2023 08:23:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696346592; x=1696951392; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=AyCUhxsC/xRzFI1DSiEJgfkyYQMNQ9zjzH0+8vXmLBg=;
-        b=vDs50P2nsjzvRMdii22wtsHAny6LxuXErabfpZcvVy3ulKFG9HQxTIpxKzFiTOoVGQ
-         2B5HP4IC+NQi3sfM95mbyxUZjY8thjVj3Woqw0tBLC9a4vCrVmBO2hQz7aQVXfZhHrMA
-         iii/tpApGPjveenFABCmnEZRRonKpWCG7WM++Fzi3xhzKzlVOUxyl8NoRu7HCSgzYIAv
-         ePCDDfD0kZH8/99++BnlBUTXO64plmTeBBmUMjkaLuNJbK+gPr6hs1G+EkRwG1bq3YJ/
-         RKshPY6VRvQaBRoZK69NhpGjYBE9LVMQpNbKpwMmfbegeiTzcAfrCdOxt4kgAmIkfWMj
-         wfbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696346592; x=1696951392;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AyCUhxsC/xRzFI1DSiEJgfkyYQMNQ9zjzH0+8vXmLBg=;
-        b=J02NhzUGNcNBF/QguagWE09lA+QQlGVCjYnYH1/J4sctN8kye6q4eQUoFhhUgAr7IX
-         SuddF6VQCBnMAl5R0prbNXTJS4mrkrCYeYZ2Zjc6m13uPcj5uqsRsd1tqVC0mK+ohpti
-         d46UgwzfyiG34rV6/OS3GPHnGZQZgg5HZiJAWDtiDk2MNaIrbIGuCYiYKKEpu9g2kDKt
-         1qEOkoR05FN57sLR3/Ha2kYKERZxvBYjaTd+gO2NgPWee8SxoQaCsEkTe9O2ghKrosRu
-         5hqscOQ/Akq0X2ObJSTTqQY5+CGdLTAj9auukM96dH2WrwgbqAONo25jso8Jx6Hhe+dB
-         x8JQ==
-X-Gm-Message-State: AOJu0YyImWNqJ+mV0hRP/0PIrw5YSNz0+iLfqESBjjfu/Y3c99VrZAW7
-        5Z1J2i/eCDdnvJydtmCKIs7y7zDMsHCNSqJqqmKqVw==
-X-Google-Smtp-Source: AGHT+IH+PZ35FemJUWRj0WSQP7VIqgEZCKVT1MRfpltpmQOh6qjNq2qjOeZ0AIBw73huKepSXzObXMFSiH+lvZk+70A=
-X-Received: by 2002:a0d:d587:0:b0:59f:4c52:2f5d with SMTP id
- x129-20020a0dd587000000b0059f4c522f5dmr14784646ywd.2.1696346591660; Tue, 03
- Oct 2023 08:23:11 -0700 (PDT)
+        with ESMTP id S231559AbjJCP2k (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Oct 2023 11:28:40 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88DF6AB;
+        Tue,  3 Oct 2023 08:28:36 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S0MCr5zS7z67Nc8;
+        Tue,  3 Oct 2023 23:28:24 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 3 Oct
+ 2023 16:28:33 +0100
+Date:   Tue, 3 Oct 2023 16:28:32 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Lukas Wunner <lukas@wunner.de>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
+        <linux-crypto@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linuxarm@huawei.com>, David Box <david.e.box@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+        Alexey Kardashevskiy <aik@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH 11/12] PCI/CMA: Expose in sysfs whether devices are
+ authenticated
+Message-ID: <20231003162832.0000317c@Huawei.com>
+In-Reply-To: <821682573e57e0384162f365652171e5ee1e6611.1695921657.git.lukas@wunner.de>
+References: <cover.1695921656.git.lukas@wunner.de>
+        <821682573e57e0384162f365652171e5ee1e6611.1695921657.git.lukas@wunner.de>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-References: <20231003120846.28626-1-quic_nsekar@quicinc.com> <20231003120846.28626-6-quic_nsekar@quicinc.com>
-In-Reply-To: <20231003120846.28626-6-quic_nsekar@quicinc.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Tue, 3 Oct 2023 18:23:00 +0300
-Message-ID: <CAA8EJpoKq4TVzNHKLjgezTk9je-3OPv4g852anr7SnECJNw2xQ@mail.gmail.com>
-Subject: Re: [PATCH 5/6] arm64: dts: qcom: ipq5018: Add PCIe related nodes
-To:     Nitheesh Sekar <quic_nsekar@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
-        mani@kernel.org, p.zabel@pengutronix.de, quic_srichara@quicinc.com,
-        quic_varada@quicinc.com, quic_ipkumar@quicinc.com,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-phy@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 3 Oct 2023 at 15:10, Nitheesh Sekar <quic_nsekar@quicinc.com> wrote:
->
-> Add phy and controller nodes for PCIe_x2 and PCIe_x1.
-> PCIe_x2 is 2-lane Gen2 and PCIe_x1 is 1-lane Gen2.
->
-> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+On Thu, 28 Sep 2023 19:32:41 +0200
+Lukas Wunner <lukas@wunner.de> wrote:
+
+> The PCI core has just been amended to authenticate CMA-capable devices
+> on enumeration and store the result in an "authenticated" bit in struct
+> pci_dev->spdm_state.
+> 
+> Expose the bit to user space through an eponymous sysfs attribute.
+> 
+> Allow user space to trigger reauthentication (e.g. after it has updated
+> the CMA keyring) by writing to the sysfs attribute.
+
+Ah.  That answers the question I asked in previous patch review ;)
+Maybe add a comment to the cma_init code to say that's why it fails with
+side effects (leaves the spdm_state around).
+
+> 
+> Subject to further discussion, a future commit might add a user-defined
+> policy to forbid driver binding to devices which failed authentication,
+> similar to the "authorized" attribute for USB.
+> 
+> Alternatively, authentication success might be signaled to user space
+> through a uevent, whereupon it may bind a (blacklisted) driver.
+> A uevent signaling authentication failure might similarly cause user
+> space to unbind or outright remove the potentially malicious device.
+> 
+> Traffic from devices which failed authentication could also be filtered
+> through ACS I/O Request Blocking Enable (PCIe r6.1 sec 7.7.11.3) or
+> through Link Disable (PCIe r6.1 sec 7.5.3.7).  Unlike an IOMMU, that
+> will not only protect the host, but also prevent malicious peer-to-peer
+> traffic to other devices.
+> 
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Seems good to me, though I agree with Ilpo that it would be good to mention
+the DOE init fail in the patch description as that's a bit subtle.
+
+One trivial comment inline.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+ 
 > ---
->  arch/arm64/boot/dts/qcom/ipq5018.dtsi | 186 +++++++++++++++++++++++++-
->  1 file changed, 184 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-> index 38ffdc3cbdcd..0818fdd1e693 100644
-> --- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-> @@ -8,6 +8,7 @@
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/clock/qcom,gcc-ipq5018.h>
->  #include <dt-bindings/reset/qcom,gcc-ipq5018.h>
-> +#include <dt-bindings/gpio/gpio.h>
->
->  / {
->         interrupt-parent = <&intc>;
-> @@ -94,6 +95,38 @@
->                 #size-cells = <1>;
->                 ranges = <0 0 0 0xffffffff>;
->
-> +               pcie_x1phy: phy@7e000{
-> +                       compatible = "qcom,ipq5018-uniphy-pcie-gen2x1";
-> +                       reg = <0x0007e000 0x800>;
-> +                       #phy-cells = <0>;
-> +                       #clock-cells = <0>;
-> +                       clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
-> +                       clock-names = "pipe_clk";
-> +                       clock-output-names = "pcie1_pipe_clk";
-> +                       assigned-clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
-> +                       assigned-clock-rates = <125000000>;
-> +                       resets = <&gcc GCC_PCIE1_PHY_BCR>,
-> +                                <&gcc GCC_PCIE1PHY_PHY_BCR>;
-> +                       reset-names = "phy", "phy_phy";
-> +                       status = "disabled";
-> +               };
+>  Documentation/ABI/testing/sysfs-bus-pci | 27 +++++++++
+>  drivers/pci/Kconfig                     |  3 +
+>  drivers/pci/Makefile                    |  1 +
+>  drivers/pci/cma-sysfs.c                 | 73 +++++++++++++++++++++++++
+>  drivers/pci/cma.c                       |  2 +
+>  drivers/pci/doe.c                       |  2 +
+>  drivers/pci/pci-sysfs.c                 |  3 +
+>  drivers/pci/pci.h                       |  1 +
+>  include/linux/pci.h                     |  2 +
+>  9 files changed, 114 insertions(+)
+>  create mode 100644 drivers/pci/cma-sysfs.c
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> index ecf47559f495..2ea9b8deffcc 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> @@ -500,3 +500,30 @@ Description:
+>  		console drivers from the device.  Raw users of pci-sysfs
+>  		resourceN attributes must be terminated prior to resizing.
+>  		Success of the resizing operation is not guaranteed.
 > +
-> +               pcie_x2phy: phy@86000{
-> +                       compatible = "qcom,ipq5018-uniphy-pcie-gen2x2";
-> +                       reg = <0x00086000 0x800>;
-> +                       #phy-cells = <0>;
-> +                       #clock-cells = <0>;
-> +                       clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
-> +                       clock-names = "pipe_clk";
-> +                       clock-output-names = "pcie0_pipe_clk";
-> +                       assigned-clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
-> +                       assigned-clock-rates = <125000000>;
+> +What:		/sys/bus/pci/devices/.../authenticated
+> +Date:		September 2023
+> +Contact:	Lukas Wunner <lukas@wunner.de>
+> +Description:
+> +		This file contains 1 if the device authenticated successfully
+> +		with CMA-SPDM (PCIe r6.1 sec 6.31).  It contains 0 if the
+> +		device failed authentication (and may thus be malicious).
+> +
+> +		Writing anything to this file causes reauthentication.
+> +		That may be opportune after updating the .cma keyring.
+> +
+> +		The file is not visible if authentication is unsupported
+> +		by the device.
+> +
+> +		If the kernel could not determine whether authentication is
+> +		supported because memory was low or DOE communication with
+> +		the device was not working, the file is visible but accessing
+> +		it fails with error code ENOTTY.
+> +
+> +		This prevents downgrade attacks where an attacker consumes
+> +		memory or disturbs DOE communication in order to create the
+> +		appearance that a device does not support authentication.
+> +
+> +		The reason why authentication support could not be determined
+> +		is apparent from "dmesg".  To probe for authentication support
+> +		again, exercise the "remove" and "rescan" attributes.
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index c9aa5253ac1f..51df3be3438e 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -129,6 +129,9 @@ config PCI_CMA
+>  	  A PCI DOE mailbox is used as transport for DMTF SPDM based
+>  	  attestation, measurement and secure channel establishment.
+>  
+> +config PCI_CMA_SYSFS
+> +	def_bool PCI_CMA && SYSFS
+> +
+>  config PCI_DOE
+>  	bool
+>  
+> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> index a18812b8832b..612ae724cd2d 100644
+> --- a/drivers/pci/Makefile
+> +++ b/drivers/pci/Makefile
+> @@ -35,6 +35,7 @@ obj-$(CONFIG_PCI_DOE)		+= doe.o
+>  obj-$(CONFIG_PCI_DYNAMIC_OF_NODES) += of_property.o
+>  
+>  obj-$(CONFIG_PCI_CMA)		+= cma.o cma-x509.o cma.asn1.o
+> +obj-$(CONFIG_PCI_CMA_SYSFS)	+= cma-sysfs.o
+>  $(obj)/cma-x509.o:		$(obj)/cma.asn1.h
+>  $(obj)/cma.asn1.o:		$(obj)/cma.asn1.c $(obj)/cma.asn1.h
+>  
+> diff --git a/drivers/pci/cma-sysfs.c b/drivers/pci/cma-sysfs.c
+> new file mode 100644
+> index 000000000000..b2d45f96601a
+> --- /dev/null
+> +++ b/drivers/pci/cma-sysfs.c
+> @@ -0,0 +1,73 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Component Measurement and Authentication (CMA-SPDM, PCIe r6.1 sec 6.31)
+> + *
+> + * Copyright (C) 2023 Intel Corporation
+> + */
+> +
+> +#include <linux/pci.h>
+> +#include <linux/spdm.h>
+> +#include <linux/sysfs.h>
+> +
+> +#include "pci.h"
+> +
+> +static ssize_t authenticated_store(struct device *dev,
+> +				   struct device_attribute *attr,
+> +				   const char *buf, size_t count)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	ssize_t rc;
+> +
+> +	if (!pdev->cma_capable &&
+> +	    (pdev->cma_init_failed || pdev->doe_init_failed))
+> +		return -ENOTTY;
+> +
+> +	rc = pci_cma_reauthenticate(pdev);
+> +	if (rc)
+> +		return rc;
 
-Can this go into the PHY driver?
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t authenticated_show(struct device *dev,
+> +				  struct device_attribute *attr, char *buf)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +
+> +	if (!pdev->cma_capable &&
+> +	    (pdev->cma_init_failed || pdev->doe_init_failed))
+> +		return -ENOTTY;
+> +
+> +	return sysfs_emit(buf, "%u\n", spdm_authenticated(pdev->spdm_state));
+> +}
+> +static DEVICE_ATTR_RW(authenticated);
+> +
+> +static struct attribute *pci_cma_attrs[] = {
+> +	&dev_attr_authenticated.attr,
+> +	NULL
+> +};
+> +
+> +static umode_t pci_cma_attrs_are_visible(struct kobject *kobj,
+> +					 struct attribute *a, int n)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +
+> +	/*
+> +	 * If CMA or DOE initialization failed, CMA attributes must be visible
+> +	 * and return an error on access.  This prevents downgrade attacks
+> +	 * where an attacker disturbs memory allocation or DOE communication
+> +	 * in order to create the appearance that CMA is unsupported.
+> +	 * The attacker may achieve that by simply hogging memory.
+> +	 */
+> +	if (!pdev->cma_capable &&
+> +	    !pdev->cma_init_failed && !pdev->doe_init_failed)
+> +		return 0;
+> +
+> +	return a->mode;
+> +}
+> +
+> +const struct attribute_group pci_cma_attr_group = {
+> +	.attrs  = pci_cma_attrs,
 
-> +                       resets = <&gcc GCC_PCIE0_PHY_BCR>,
-> +                                <&gcc GCC_PCIE0PHY_PHY_BCR>;
-> +                       reset-names = "phy", "phy_phy";
-> +                       status = "disabled";
-> +               };
-> +
->                 tlmm: pinctrl@1000000 {
->                         compatible = "qcom,ipq5018-tlmm";
->                         reg = <0x01000000 0x300000>;
-> @@ -117,8 +150,8 @@
->                         reg = <0x01800000 0x80000>;
->                         clocks = <&xo_board_clk>,
->                                  <&sleep_clk>,
-> -                                <0>,
-> -                                <0>,
-> +                                <&pcie_x2phy>,
-> +                                <&pcie_x1phy>,
->                                  <0>,
->                                  <0>,
->                                  <0>,
-> @@ -246,6 +279,155 @@
->                                 status = "disabled";
->                         };
->                 };
-> +
-> +               pcie_x1: pci@80000000 {
-> +                       compatible = "qcom,pcie-ipq5018";
-> +                       reg =  <0x80000000 0xf1d
-
-Each address/size tuple should be a separate <> entry.
-
-> +                               0x80000F20 0xa8
-
-lowercase
-
-> +                               0x80001000 0x1000
-> +                               0x78000 0x3000
-
-Would you notice why this line stands away from the rest of entries here?
-
-> +                               0x80100000 0x1000>;
-> +                       reg-names = "dbi", "elbi", "atu", "parf", "config";
-> +                       device_type = "pci";
-> +                       linux,pci-domain = <0>;
-> +                       bus-range = <0x00 0xff>;
-> +                       num-lanes = <1>;
-> +                       max-link-speed = <2>;
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +
-> +                       phys = <&pcie_x1phy>;
-> +                       phy-names ="pciephy";
-> +
-> +                       ranges = <0x81000000 0 0x80200000 0x80200000
-> +                                 0 0x00100000   /* downstream I/O */
-> +                                 0x82000000 0 0x80300000 0x80300000
-> +                                 0 0x10000000>; /* non-prefetchable memory */
-> +
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-map-mask = <0 0 0 0x7>;
-> +                       interrupt-map = <0 0 0 1 &intc 0 142
-> +                                        IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-> +                                       <0 0 0 2 &intc 0 143
-> +                                        IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-> +                                       <0 0 0 3 &intc 0 144
-> +                                        IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-> +                                       <0 0 0 4 &intc 0 145
-> +                                        IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-> +
-> +                       interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "global_irq";
-> +
-> +                       clocks = <&gcc GCC_SYS_NOC_PCIE1_AXI_CLK>,
-> +                                <&gcc GCC_PCIE1_AXI_M_CLK>,
-> +                                <&gcc GCC_PCIE1_AXI_S_CLK>,
-> +                                <&gcc GCC_PCIE1_AHB_CLK>,
-> +                                <&gcc GCC_PCIE1_AUX_CLK>,
-> +                                <&gcc GCC_PCIE1_AXI_S_BRIDGE_CLK>;
-> +
-> +                       clock-names = "iface",
-> +                                     "axi_m",
-> +                                     "axi_s",
-> +                                     "ahb",
-> +                                     "aux",
-> +                                     "axi_bridge";
-> +
-> +                       resets = <&gcc GCC_PCIE1_PIPE_ARES>,
-> +                                <&gcc GCC_PCIE1_SLEEP_ARES>,
-> +                                <&gcc GCC_PCIE1_CORE_STICKY_ARES>,
-> +                                <&gcc GCC_PCIE1_AXI_MASTER_ARES>,
-> +                                <&gcc GCC_PCIE1_AXI_SLAVE_ARES>,
-> +                                <&gcc GCC_PCIE1_AHB_ARES>,
-> +                                <&gcc GCC_PCIE1_AXI_MASTER_STICKY_ARES>,
-> +                                <&gcc GCC_PCIE1_AXI_SLAVE_STICKY_ARES>;
-> +
-> +                       reset-names = "pipe",
-> +                                     "sleep",
-> +                                     "sticky",
-> +                                     "axi_m",
-> +                                     "axi_s",
-> +                                     "ahb",
-> +                                     "axi_m_sticky",
-> +                                     "axi_s_sticky";
-> +
-> +                       msi-map = <0x0 &v2m0 0x0 0xff8>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               pcie_x2: pci@a0000000 {
-> +                       compatible = "qcom,pcie-ipq5018";
-> +                       reg =  <0xa0000000 0xf1d
-> +                               0xa0000F20 0xa8
-> +                               0xa0001000 0x1000
-> +                               0x80000 0x3000
-> +                               0xa0100000 0x1000>;
-> +                       reg-names = "dbi", "elbi", "atu", "parf", "config";
-> +                       device_type = "pci";
-> +                       linux,pci-domain = <1>;
-> +                       bus-range = <0x00 0xff>;
-> +                       num-lanes = <2>;
-> +                       max-link-speed = <2>;
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +
-> +                       phys = <&pcie_x2phy>;
-> +                       phy-names ="pciephy";
-> +
-> +                       ranges = <0x81000000 0 0xa0200000 0xa0200000
-> +                                 0 0x00100000   /* downstream I/O */
-> +                                 0x82000000 0 0xa0300000 0xa0300000
-> +                                 0 0x10000000>; /* non-prefetchable memory */
-> +
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-map-mask = <0 0 0 0x7>;
-> +                       interrupt-map = <0 0 0 1 &intc 0 75
-> +                                        IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-> +                                       <0 0 0 2 &intc 0 78
-> +                                        IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-> +                                       <0 0 0 3 &intc 0 79
-> +                                        IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-> +                                       <0 0 0 4 &intc 0 83
-> +                                        IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-> +
-> +                       interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "global_irq";
-> +
-> +                       clocks = <&gcc GCC_SYS_NOC_PCIE0_AXI_CLK>,
-> +                                <&gcc GCC_PCIE0_AXI_M_CLK>,
-> +                                <&gcc GCC_PCIE0_AXI_S_CLK>,
-> +                                <&gcc GCC_PCIE0_AHB_CLK>,
-> +                                <&gcc GCC_PCIE0_AUX_CLK>,
-> +                                <&gcc GCC_PCIE0_AXI_S_BRIDGE_CLK>;
-> +
-> +                       clock-names = "iface",
-> +                                     "axi_m",
-> +                                     "axi_s",
-> +                                     "ahb",
-> +                                     "aux",
-> +                                     "axi_bridge";
-> +
-> +                       resets = <&gcc GCC_PCIE0_PIPE_ARES>,
-> +                                <&gcc GCC_PCIE0_SLEEP_ARES>,
-> +                                <&gcc GCC_PCIE0_CORE_STICKY_ARES>,
-> +                                <&gcc GCC_PCIE0_AXI_MASTER_ARES>,
-> +                                <&gcc GCC_PCIE0_AXI_SLAVE_ARES>,
-> +                                <&gcc GCC_PCIE0_AHB_ARES>,
-> +                                <&gcc GCC_PCIE0_AXI_MASTER_STICKY_ARES>,
-> +                                <&gcc GCC_PCIE0_AXI_SLAVE_STICKY_ARES>;
-> +
-> +                       reset-names = "pipe",
-> +                                     "sleep",
-> +                                     "sticky",
-> +                                     "axi_m",
-> +                                     "axi_s",
-> +                                     "ahb",
-> +                                     "axi_m_sticky",
-> +                                     "axi_s_sticky";
-> +
-> +                       msi-map = <0x0 &v2m0 0x0 0xff8>;
-> +                       status = "disabled";
-> +               };
-> +
->         };
->
->         timer {
-> --
-> 2.17.1
->
+I'd go with a single space here as the double doesn't make
+it any more readable.
 
 
--- 
-With best wishes
-Dmitry
+> +	.is_visible = pci_cma_attrs_are_visible,
+> +};
+
+
