@@ -2,58 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4894C7B79E0
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Oct 2023 10:16:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 068B07B7D8D
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Oct 2023 12:51:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230483AbjJDIQs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Oct 2023 04:16:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35884 "EHLO
+        id S233016AbjJDKv4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Oct 2023 06:51:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229712AbjJDIQs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Oct 2023 04:16:48 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD1D283
-        for <linux-pci@vger.kernel.org>; Wed,  4 Oct 2023 01:16:44 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qnx3j-0002mw-6L; Wed, 04 Oct 2023 10:16:43 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qnx3e-00Ayys-Vp; Wed, 04 Oct 2023 10:16:38 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qnx3e-008s3A-MV; Wed, 04 Oct 2023 10:16:38 +0200
-Date:   Wed, 4 Oct 2023 10:16:38 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S232814AbjJDKvz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Oct 2023 06:51:55 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5CDA6
+        for <linux-pci@vger.kernel.org>; Wed,  4 Oct 2023 03:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696416713; x=1727952713;
+  h=date:from:to:cc:subject:message-id;
+  bh=TgPLkVZS8Umv/AoUPclTfpKy1L7tPYZFd7fOu8M8hSg=;
+  b=T0lTJHo6aftqykMFbdupsBTDV6bQGPTx7eZb7HufUndMmF7LpN0JU9ow
+   NV/EjlA/NmPsqeHiFv8kpg9ajvpqXZtGUfJzFN6iqJE7EDwCiikAFxO9l
+   HVXq2SGGAVYd7haxAnMpAB8O7Gli4VKdISyeohZJ2zkSRs6FjBH/NSQfB
+   rNAJLXiWXc5Q55EbM12MYrLoqIFk06Bcs9Ve9jh4LpuePG9+0Qa7NOV3Z
+   p+ZqCGsGMjGbycBVU6EPcPaZ97kkoH6htV1uYjZUi/wKxFPZ/AA86X00h
+   kJ/908FLwKKlWRSDyjqn8yIWmDGAwGXOHKJvzZzkg3NpHQx5OeWE+5teZ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="1732339"
+X-IronPort-AV: E=Sophos;i="6.03,199,1694761200"; 
+   d="scan'208";a="1732339"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 03:51:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="786465812"
+X-IronPort-AV: E=Sophos;i="6.03,199,1694761200"; 
+   d="scan'208";a="786465812"
+Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
+  by orsmga001.jf.intel.com with ESMTP; 04 Oct 2023 03:51:51 -0700
+Received: from kbuild by c3b01524d57c with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qnzTo-000HXD-2q;
+        Wed, 04 Oct 2023 10:51:48 +0000
+Date:   Wed, 04 Oct 2023 18:51:05 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        kernel@pengutronix.de, Xiaowei Song <songxiaowei@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 2/4] PCI: kirin: Don't put .remove callback in .exit.text
- section
-Message-ID: <20231004081638.uirgtb2z2wgcwito@pengutronix.de>
-References: <20231003202330.zsmqckgbk2wbhvos@pengutronix.de>
- <20231003204056.GA687507@bhelgaas>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="l3alnz67jfv6mrxi"
-Content-Disposition: inline
-In-Reply-To: <20231003204056.GA687507@bhelgaas>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:for-linus] BUILD SUCCESS
+ c82458101d5490230d735caecce14c9c27b1010c
+Message-ID: <202310041802.cRatRsgI-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,105 +59,119 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+branch HEAD: c82458101d5490230d735caecce14c9c27b1010c  PCI/PM: Mark devices disconnected if upstream PCIe link is down on resume
 
---l3alnz67jfv6mrxi
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 723m
 
-Hello Bjorn,
+configs tested: 100
+configs skipped: 2
 
-On Tue, Oct 03, 2023 at 03:40:56PM -0500, Bjorn Helgaas wrote:
-> On Tue, Oct 03, 2023 at 10:23:30PM +0200, Uwe Kleine-K=F6nig wrote:
-> > On Tue, Oct 03, 2023 at 12:15:24PM +0200, Uwe Kleine-K=F6nig wrote:
-> > > On Mon, Oct 02, 2023 at 05:12:18PM -0500, Bjorn Helgaas wrote:
-> > > > On Sun, Oct 01, 2023 at 07:02:52PM +0200, Uwe Kleine-K=F6nig wrote:
-> > > > > With CONFIG_PCIE_KIRIN=3Dy and kirin_pcie_remove() marked with __=
-exit, the
-> > > > > function is discarded from the driver. In this case a bound devic=
-e can
-> > > > > still get unbound, e.g via sysfs. Then no cleanup code is run res=
-ulting
-> > > > > in resource leaks or worse.
-> > > >=20
-> > > > kirin_pcie_driver sets .suppress_bind_attrs =3D true.
-> > > >=20
-> > > > Doesn't that mean that we can't unbind a device via sysfs in this
-> > > > case?
-> > >=20
-> > > Oh indeed, that's something I missed.
-> > > =20
-> > > > I don't expect modpost to know about .suppress_bind_attrs, so maybe=
- we
-> > > > should remove the __exit annotation even if it would be safe to keep
-> > > > it in this case.  It's a tiny function anyway.
-> > >=20
-> > > the right thing to do then is something like:
-> > > https://lore.kernel.org/linux-rtc/20231002080529.2535610-7-u.kleine-k=
-oenig@pengutronix.de
-> > >=20
-> > > And then it would be consequent to also switch to
-> > > module_platform_driver_probe and move .probe to __init. Or drop
-> > > .suppress_bind_attrs and keep/put .probe() and .remove() in .text.
-> >=20
-> > The other three patches in this series don't suffer from this oversight
-> > and so are (from my POV) ready to go in.
->=20
-> Agreed.  My first impression was that this would be v6.7 material, but
-> based on
-> https://lore.kernel.org/linux-kbuild/CAK7LNATyRg6Hc-fnTETERj-tdMFGaBDt0Fy=
-hy9+jKCzAvzQ6Pg@mail.gmail.com/,
-> I guess that modpost change must be headed for v6.6?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-No, the modpost change was softend and only triggers (for now) on W=3D1
-builds. There is no urge.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                   randconfig-001-20231004   gcc  
+arm64                            allmodconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20231004   gcc  
+i386         buildonly-randconfig-002-20231004   gcc  
+i386         buildonly-randconfig-003-20231004   gcc  
+i386         buildonly-randconfig-004-20231004   gcc  
+i386         buildonly-randconfig-005-20231004   gcc  
+i386         buildonly-randconfig-006-20231004   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20231004   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20231004   gcc  
+x86_64                randconfig-002-20231004   gcc  
+x86_64                randconfig-003-20231004   gcc  
+x86_64                randconfig-004-20231004   gcc  
+x86_64                randconfig-005-20231004   gcc  
+x86_64                randconfig-006-20231004   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
 
-> And while I haven't seen problem reports, branching into the weeds
-> because of a sysfs "remove" would be a pretty bad outcome, so I can
-> see a case for v6.6 and stable tags as well.  Is that your thought
-> process, too?
-
-The change is obviously a fix and a crash after sysfs interaction is
-bad. It depends on the usecase if this is urgent. I'd say it's not a big
-deal if it doesn't make it into v6.6, the problem (in this driver)
-exists since 5.19-rc1 and there are still quite a few similar issues.
-I'd go for marking for stable and applying for v6.6 if it's convenient.
-
-> > If you tell me, which option you prefer for the kirin driver, I'll
-> > follow up with a matching patch. (If you don't know, my preference would
-> > be to drop .suppress_bind_attrs and move .probe() and .remove() to
-> > .text.)
->=20
-> I agree, dropping .suppress_bind_attrs would be desirable, although I
-> would hope for some kind of assurance that it's not there because of
-> an issue with removal or something.
-
-If there is a problem with removal, it's relevant for modular drivers at
-rmmod time already now. I didn't check if there is a problem (and maybe
-I cannot judge this objectively) but for sure such a problem would be
-relevant already now. So I'd say this isn't an argument that should stop
-us.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---l3alnz67jfv6mrxi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUdH2UACgkQj4D7WH0S
-/k7MkwgAg5esLI8+uwUgwy1Ljf8s/G8JkGaU3vZepoggpoz1GoqLtVl4CQ/lEWUj
-/qa3gBIINlXl2kOBQ7vHEGESsHMRBWuk14DGJme9OpZ3FlS/O6VUGgV9Ejpor5Xi
-/8kBh62dxh1LkcMCLi3uqG4CWqn0j6YNnXpNfLJdrDZI6HN4mAv0IWHCUWCnjfGm
-SfPtGm7e7c6LwwymYHG1FyrGMjTWJt0gD0CfIeDUz2gic/5ayZOhGx7S77bPD0Jp
-MJwwegTzZI71KoN4IGV+///0TCqTeiUMAibkyL2e7e2s577k1DjFYa/dy4LYQsRu
-n33rwO4+uWnbHnqmY334+lc0LQSp2Q==
-=MmJ7
------END PGP SIGNATURE-----
-
---l3alnz67jfv6mrxi--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
