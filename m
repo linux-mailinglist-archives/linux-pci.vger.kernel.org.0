@@ -2,122 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC1FF7B80ED
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Oct 2023 15:31:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28DCB7B811A
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Oct 2023 15:38:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242624AbjJDNbw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Oct 2023 09:31:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35686 "EHLO
+        id S233062AbjJDNiM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Oct 2023 09:38:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242594AbjJDNbw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Oct 2023 09:31:52 -0400
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B111A1;
-        Wed,  4 Oct 2023 06:31:48 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:281:8300:73::646])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 1252D381;
-        Wed,  4 Oct 2023 13:31:47 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 1252D381
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-        t=1696426307; bh=sC0LHUI2i/VOkBSihVVbnuIN3LRhiyHfuQI+/ge6LnQ=;
-        h=From:To:Subject:In-Reply-To:References:Date:From;
-        b=gPerOzCb2TxaxqtLNVmpTmHrfVXfZPgs4plx0KBo4VM5iu9HsCU/GD+XeDa1ZwifI
-         cMK/+tF5afJWcVsp30wR/qQ4S+xX4JUdwBZEHXTX+bTSAmZndhyaEYGuqTt6NKd1u/
-         gLDhgdTdcUToRJLrwQipPLu3/zmDx3FwRYpbVhA4/LGnAM45fkjbmJTTope5LetHfj
-         EbBIU+VJMyITt9JR9pw5Fl+JgY1D8p31zWpzocL4TyyHK1REr2cb6yKKRsOXkWq1AH
-         u3P4l6AiXH4xZpcFcyMArEqQP4U6aHLkUPXrWfAetx/VQ4AAcuQt0hzDfyFsAUlS+w
-         bgsKJhbxbWONQ==
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Michael Ellerman <michael@ellerman.id.au>,
-        Costa Shulyupin <costa.shul@redhat.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Linas Vepstas <linasvepstas@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        "Manoj N. Kumar" <manoj@linux.ibm.com>,
-        "Matthew R. Ochs" <mrochs@linux.ibm.com>,
-        Uma Krishnan <ukrishn@linux.ibm.com>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Yanteng Si <siyanteng@loongson.cn>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-        Nicholas Miehlbradt <nicholas@linux.ibm.com>,
-        Benjamin Gray <bgray@linux.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Rohan McLure <rmclure@linux.ibm.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Sathvika Vasireddy <sv@linux.ibm.com>,
-        Laurent Dufour <laurent.dufour@fr.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, kvm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH] docs: move powerpc under arch
-In-Reply-To: <46705070-17B2-4BDA-9524-1BB2F7BDBACA@ellerman.id.au>
-References: <169052340516.4355.10339828466636149348@legolas.ozlabs.org>
- <20230826165737.2101199-1-costa.shul@redhat.com>
- <87cyxvelnn.fsf@meer.lwn.net>
- <46705070-17B2-4BDA-9524-1BB2F7BDBACA@ellerman.id.au>
-Date:   Wed, 04 Oct 2023 07:31:46 -0600
-Message-ID: <878r8i4ipp.fsf@meer.lwn.net>
+        with ESMTP id S232786AbjJDNiM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Oct 2023 09:38:12 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7BE76AB;
+        Wed,  4 Oct 2023 06:38:05 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8Axjuu7ah1lXRgvAA--.21847S3;
+        Wed, 04 Oct 2023 21:38:03 +0800 (CST)
+Received: from [10.20.42.43] (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxXNy5ah1lzTEYAA--.50898S3;
+        Wed, 04 Oct 2023 21:38:03 +0800 (CST)
+Message-ID: <59d609eb-e52c-7e81-073c-3e2f61e04583@loongson.cn>
+Date:   Wed, 4 Oct 2023 21:38:01 +0800
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH pci-next v6 1/2] PCI/VGA: Make the
+ vga_is_firmware_default() less arch-dependent
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20231003155420.GA674372@bhelgaas>
+From:   Sui Jingfeng <suijingfeng@loongson.cn>
+In-Reply-To: <20231003155420.GA674372@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf8AxXNy5ah1lzTEYAA--.50898S3
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCry5ZFWDur4xXFyxKr4rWFX_yoW5XFyUpF
+        4rtFWaya1DGr1fCr9Fvr4jqrWrZ3WkWFWYk3sYkr1kAr15Cr92qFyF9w4q9347Jrs7X3WY
+        9F47G3WxJFWDGagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+        6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+        02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+        wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+        CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAF
+        wI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
+        AF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
+        IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
+        CI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVF
+        xhVjvjDU0xZFpf9x07j8yCJUUUUU=
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Michael Ellerman <michael@ellerman.id.au> writes:
+Hi,
 
-> On October 4, 2023 3:05:48 AM GMT+11:00, Jonathan Corbet <corbet@lwn.net> wrote:
->>Costa Shulyupin <costa.shul@redhat.com> writes:
->>
->>> and fix all in-tree references.
->>>
->>> Architecture-specific documentation is being moved into Documentation/arch/
->>> as a way of cleaning up the top-level documentation directory and making
->>> the docs hierarchy more closely match the source hierarchy.
->>>
->>> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
->>
->>So this patch appears to have not been picked up, and to have received
->>no comments.  I'll happily carry it in docs-next, but it would be nice
->>to have an ack from the powerpc folks...?
->
-> I acked it a few months back, and said I assumed you were merging it:
->
-> https://lore.kernel.org/linuxppc-dev/87bkfwem93.fsf@mail.lhotse/
->
-> I don't mind who merges it, I figured you merging it would generate fewer conflicts, but I'm happy to take it if you think that would be better.
->
-> Anyway here's another:
->
-> Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-OK, sorry, somehow I missed that.  I'll apply it shortly.
+On 2023/10/3 23:54, Bjorn Helgaas wrote:
+> PCI/VGA: Match firmware framebuffer before BAR reassignment
+>
+> vga_is_firmware_default() decides a device is the firmware default VGA
+> device if it has a BAR that contains the framebuffer described by
+> screen_info.
+>
+> Previously this was unreliable because the screen_info framebuffer address
+> comes from firmware, and the Linux PCI core may reassign device BARs before
+> vga_is_firmware_default() runs.  This reassignment means the BAR may not
+> match the screen_info values, but we still want to select the device as the
+> firmware default.
+>
+> Make vga_is_firmware_default() more reliable by running it as a quirk so it
+> happens before any BAR reassignment.
 
-Thanks,
 
-jon
+On a specific architecture, the kernel have its own copy of screen_info.
+We may choose to rely on the global screen_info, but I don't hope vgaarb
+should completely depend on the firmware which without any flexibility.
+After all, there are always have the old BIOS with the newer Kernel or
+new graphics card combinations. That is to say that the BIOS(firmware)
+is released first, then the new graphics comes after. So, we can't rely
+on the BIOS know all of the graphics card in the world at the time of
+BIOS release. If a BIOS don't know a specific video card, then then BIOS
+is unlikely initialize a firmware framebuffer(UEFI GOP or something like
+that) on it successfully.
+
+I hope vgaarb can work without fully rely on the firmware, don't mention
+the word 'firmware' as less as possible. Because, we can even modify the
+kernel's screen_info by hardcode or fill it by parsing DT. We are only
+rely on the global screen_info here. while how does the global screen_info
+being filled is a kernel side and arch specific thing. The global screen_info
+may rely on the BIOS, but this is a thing of the kernel side, vgaarb belong
+to drivers directory.
+
+Beside, the word 'firmware' have multiple meanings, for the patch at here,
+it refer to the UEFI or uboot or something similar. But for the GPU domain,
+it may refer to any binary executable on the macro-controller embedded in
+the GPU IP. So I think the names 'is_firmware_default' and 'vga_is_firmware_default'
+are putting *too much emphasis* the firmware. So I want to remove it.
+
+vgaarb already have been exposed to userspace via sysfs interface (/sys/class/misc/vga_arbiter).
+So the original spirit is actually allow user to tune or control. I hope vgaarb become more
+standalone and more flexible so that there are some ways to rescue even in the worse case.
+If someone (who have a better background or have better understanding toward a specific case only)
+don't see this as a problem, then it is not my problem. I'm not good at debating with English.
+
+
+  
+
