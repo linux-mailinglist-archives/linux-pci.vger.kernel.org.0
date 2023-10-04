@@ -2,45 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D01AC7B8193
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Oct 2023 16:01:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAE0C7B8230
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Oct 2023 16:24:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242731AbjJDOBK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Oct 2023 10:01:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60656 "EHLO
+        id S233270AbjJDOYL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Oct 2023 10:24:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242747AbjJDOBJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Oct 2023 10:01:09 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D1AD8;
-        Wed,  4 Oct 2023 07:01:05 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76ADAC433C8;
-        Wed,  4 Oct 2023 14:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696428064;
-        bh=ZXfdVsNac93kNUS4gIvDRTAkfJjEGoRUuo+eHBQdlrk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Q2Kyno5RZ4oCSaQTGQLDY+x4/1Ucb0kiGgSJiAP00lVdDiNXqDfgBnPja1ASnP0c8
-         SI09gqkq6yQ2RnvxXkIOVZ2pl7xB1phV01hclnTT8E0fXbz3Vtf7J91b1lE0tNE2Zb
-         vb0FX5r9s8DvYC2CDCHJnpy3dNKZ+5DTCMdGHWcoP7sawxk5mzJgI02x1GvusiDQon
-         Os8fkceU1jck+ycS+U9pMj1S4WJ7bb3IQ0+yNT2ivUnquaZzXQI7Ym+QwDzbq/6hMU
-         Addw4/HhUGz3DwpJSWfUl03cj051xDzfqd5q0HhQ2Ltqq6MBLocqrZ8J8cImbwaWRn
-         LFM0bTS0UrMaQ==
-Date:   Wed, 4 Oct 2023 09:01:02 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sui Jingfeng <suijingfeng@loongson.cn>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH pci-next v6 1/2] PCI/VGA: Make the
- vga_is_firmware_default() less arch-dependent
-Message-ID: <20231004140102.GA709356@bhelgaas>
-MIME-Version: 1.0
+        with ESMTP id S233311AbjJDOYK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Oct 2023 10:24:10 -0400
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2074.outbound.protection.outlook.com [40.107.22.74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2C02AB;
+        Wed,  4 Oct 2023 07:24:06 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oRZMpaw/kuK1k+D4VE/ERX9mhfK1sVm50ErwUg5G+xkCNU6kktM7yw/SBXDVtiRCzbgANtcbiiLSqxVcyEqUD2KAP0Z5WSA+ANVhrtgBGpZsvdCRGhPwrtZ6PNneSJtTdy6a7JbZOy7IRWE4AX+hAhAEpv0CeeSKl2LnBgxlosvU2BXxUp3n1HPXbaTvXmvYUWCnmQ1C99eWQKrsWWK8Q2b9yEBEIYIm+D8QEZDUxwfp4PSzkMO9lHRZl07G2TbaX2lJUr1tHXxqxo0pnSuU8pwee4fuODPW+RVknmBdePX6PLN2n4PI3Fqh0NUlyPPBo6uNYdwGperwtCNbh2l+tA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JYtu2oeC9KXNKCx3UoYi6l/fMlPWlLTDGlkVBfmcCi8=;
+ b=hBWOwudo08hUooZEeh8FlYgWVppDYJq5+5jKars/YzkwgaoBQgBMXp2NTlvNcrLgDGa1tIsyhDZC9yAjVpuLlk3KaAVvCEONeCXB+aPatR959ACA8sZf1RruCM4iEE4YKcwpCTTfSOuLnCWzN983e8fa6jrxT5ulp74we26EFBbAsXIHofolDmfw7DGVNMYy4vVz5UWmsmzg3n/1Z0UhalStSKaVvAaBJjKcANtnLnD83D1htI+JvHZx8mpdHhFn5MdKwuese6u39w+anpkQFLOHzGjHUqlMIccC8Mdhix2Jok48hLA80gct5ZL9xC1xOM19mIjX4FkTPz63Mdge2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JYtu2oeC9KXNKCx3UoYi6l/fMlPWlLTDGlkVBfmcCi8=;
+ b=P5ZJWILLR8PHD9cIMsZwK8LduWLE6O+s6NQoT4fVGHanxYnDhv8eAwRGMKF8b4h2M9wIr12rLkdwkxNddFAPTDe3jbWzxnwhox/WpTmSRemnn0toSrRT+1BW2/Sar44nBi3rSubNalwTGFLoHUQWpxiOgjOR/ggkq2LeD5XmF28=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by PR3PR04MB7483.eurprd04.prod.outlook.com (2603:10a6:102:86::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.33; Wed, 4 Oct
+ 2023 14:24:04 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::1774:e25f:f99:aca2]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::1774:e25f:f99:aca2%4]) with mapi id 15.20.6813.027; Wed, 4 Oct 2023
+ 14:24:04 +0000
+Date:   Wed, 4 Oct 2023 10:23:51 -0400
+From:   Frank Li <Frank.li@nxp.com>
+To:     Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linux-pci@vger.kernel.org>,
+        "moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Cc:     imx@lists.linux.dev
+Subject: Re: [PATCH 2/3] PCI: layerscape: add suspend/resume for ls1021a
+Message-ID: <ZR10SVVBYvfMJPv1@lizhi-Precision-Tower-5810>
+References: <20230915184306.2374670-1-Frank.Li@nxp.com>
+ <20230915184306.2374670-2-Frank.Li@nxp.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f2209054-4e66-a084-c0bc-d35a7fd2fdad@loongson.cn>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+In-Reply-To: <20230915184306.2374670-2-Frank.Li@nxp.com>
+X-ClientProxiedBy: BY3PR05CA0054.namprd05.prod.outlook.com
+ (2603:10b6:a03:39b::29) To AM6PR04MB4839.eurprd04.prod.outlook.com
+ (2603:10a6:20b:10::17)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|PR3PR04MB7483:EE_
+X-MS-Office365-Filtering-Correlation-Id: 52641c2f-17eb-458e-f17d-08dbc4e58f09
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: PB9uNBKGObXc1WVWCKN30PEYP/UPu/6CrEaIMt/OtgnIVM33EftaqoQvgcDTjVWitrwWnySSf9KuFiWGciDnn4JxGWSlX86mu8TvhQk1LIAr+xX6R/5JmNU98RN5q6SSmtGRR41WfzoU7lMCekC+ARgKozJa5+gi1Rphe7R4f3WcFetknU0810O0LqMxjrhp9HVsp0o/RP/Ht85cBmUA3svEtceCA0aBBFkpQHWQxZCIR5smWoZ2IWG1j1hsqLANVnwX8D/YY9AAEh4gvWpim+FZwOFV3Ous1rxsGtnJkMvrvRa4Fk4Ismkay8ipGAygmoph5IixJtXRiraIK/gt4u4IIrTWYQ1SsVe/relOTpaxJXCwFSfP09Xb3lIkn9Q+/uuKHYjxuVlV8HiE36X3ffOsLK5MZGMbw1AK7Vy+n1letwC4FOxb+8jLiWUbSTK6iyaCiSKbmYroLvHLwEbUCF1xHFZfAogenmMM4af7U4HG0+PddqhHtMStxMcIsevqIBcs5rKEOk1Ml+UFd72THhbssgQQngPiazY1hqDtSRAxr18vyh1u9pGp0wTSRNz0dsqRUIvJTYfxbakv2k476sPFnY4J61elh3N/Mcvl7Laq0IiSYM80RKqmEL4D/5aYEvGWlaFjLZWvrTN+fLnK0w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(376002)(136003)(366004)(396003)(39860400002)(346002)(230922051799003)(64100799003)(451199024)(1800799009)(186009)(921005)(83380400001)(26005)(38350700002)(86362001)(38100700002)(9686003)(66946007)(110136005)(6512007)(52116002)(66556008)(6666004)(6486002)(6506007)(2906002)(41300700001)(5660300002)(8676002)(4326008)(8936002)(15650500001)(478600001)(33716001)(66476007)(316002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?rNvXiN6wplQsfWqS1E02Hd8gLapLEBrfzkN3S+u2bZJ+amKrP81bn+mc0LKB?=
+ =?us-ascii?Q?fZnzrZbSuYVBsfLnMmNPVpyG435yaXV9ttaeJLIgMfyQ8tweJ/zpmwXk5MDv?=
+ =?us-ascii?Q?cOt8lL5hUTvdq58gKGQiOHAvr4/t86+kubgWAdDqd0VtgKVEIiGMECDcDj30?=
+ =?us-ascii?Q?9NYGjO3Xo1VVDM07DK56PePA4p5tiHqp3WZH9gnIbSH6UUuJJPX1bYopv9fa?=
+ =?us-ascii?Q?Cc0w6d/yACLgclLSLmYSyykoFcii8SyO3Nh4QyJiYm6MrzTL21yBrnFEHnTL?=
+ =?us-ascii?Q?2HE0c4WdMAca74xebjrnTbImBmbaLH7smGISO5g/0LJAXkp0tkbEIAruKI+j?=
+ =?us-ascii?Q?co+IuDHMaL1aM/5faO6kLrNUOTkKTWZt/SFh1r3arccszAFDMS2zTba8tsNH?=
+ =?us-ascii?Q?80mxbDlGN1pPVhe4ulTM7hzQu2qqdpNmF3116v0/qqzZHfAwv0nCpo8GMZSe?=
+ =?us-ascii?Q?8XilVoPdxZpYhXs77oVolohYlcMYPZvVGJ45H6lroseMPapneYl9Gq1VW4SQ?=
+ =?us-ascii?Q?Mhx9g+qp6C+kqxYJn7YuET8WfivGp0bkOLrQGUKFHQER1n2aC9eZhl1Ix1ym?=
+ =?us-ascii?Q?J5TBs1saa5FCdlr+gKsfyZyJzZpnhR7AI1v4oxTCY+dGrkm0HPrI7VwNO6pj?=
+ =?us-ascii?Q?12pAanlQA8UI36O8oD0iO8SNcr1naEfGeH3/QJWgIqYlnBx4M8amaH3e7stT?=
+ =?us-ascii?Q?EGV7ZXUn/N1EKjg2GDLx4AXhvxqxcSTCS9s0AmVwesn5acgfdE7F22x6jz/0?=
+ =?us-ascii?Q?qIyCZtpVzYKlkw39u3NIH5p5i6m2z606iBy5cdmEIF1cOQ9M5ubZ5OBNH19x?=
+ =?us-ascii?Q?z9wxSgPZRKDoQQxS8YmbcRtuNe2E8vXAhXFhCUz621y/xApbsx56WtSK+0oc?=
+ =?us-ascii?Q?IUIfnDnV4hZVSNnap1P3o9StvFb3JG898ox+jDWaM3O5gZNCbUMV3VibSZ6N?=
+ =?us-ascii?Q?lmyCwVecrYKURBly3RbttubDoJR1huvdwq70vIAjQCt1FzKhWPEXdlqD3yDi?=
+ =?us-ascii?Q?KfffMIa5PHcD9h2hVkVkrXUu52hhjLWUpHgZcoARJLsLdIyMiZlSweXzWfq8?=
+ =?us-ascii?Q?SeMUkB15zpA0rAac31hmJaOOsC6qjpixCooVURkGKCcwSoGlnLasUDuiX3Ae?=
+ =?us-ascii?Q?eY3x+ckvOXP3GXoOFVupwZx59SX9Wa4jmpBrNi3o0E82sqnQyjiAdAC6EAko?=
+ =?us-ascii?Q?xJZ7t3Zh7p0kyY76dQtxszOcJdRqSG9FTrm2y+ysrrSuFd8vu6liAivBN1aE?=
+ =?us-ascii?Q?slumjkq9tjnI5FF4WPIAshdPaBHNKQPtDDtp9op5AYIooc6taN48HgBz6H4/?=
+ =?us-ascii?Q?J2WYOEwd2+BjY70rrJJGLqyYSfMQ9jspT1Mmh2djHYvDmfQS2q4Sj80Vb3nh?=
+ =?us-ascii?Q?bs0q9yuewqPrEeabQEvPFGlc/No+g8TYC3RAp7IOYStCViYyLvxIRBkhleVj?=
+ =?us-ascii?Q?mUJN8fwWbwX4auEh9dbt35tQ/Gf2XP3So3WjXLQzIpx6A4ZNmuiMHwoWPgvd?=
+ =?us-ascii?Q?pXLfa5nSD73fi+FKjiJX6xZMSFUTxA9FRWACdeWQts1yj1hfAo49vpifHtjI?=
+ =?us-ascii?Q?YDcT9M9lUYH4Ymxp8/GBtDphT5ZmHigujIM09BiA?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52641c2f-17eb-458e-f17d-08dbc4e58f09
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4839.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Oct 2023 14:24:03.7995
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: D1w8ekDqpzt0/MveuGgwH6oOd40ghieNZHnhEvcdSDuKLpNZjVy+ZXZu5fAXhe6EVIL3MwuTZ33Wn7ex6RdoDA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7483
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -48,216 +123,138 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 04, 2023 at 08:55:04PM +0800, Sui Jingfeng wrote:
-> On 2023/10/3 23:54, Bjorn Helgaas wrote:
-> > On Mon, Oct 02, 2023 at 08:05:10PM +0800, Sui Jingfeng wrote:
-> > > Currently, the vga_is_firmware_default() function only works on x86 and
-> > > ia64, it is a no-op on the rest of the architectures. This patch completes
-> > > the implementation for it, the added code tries to capture the PCI (e) VGA
-> > > device that owns the firmware framebuffer, since only one GPU could own
-> > > the firmware fb, things are almost done once we have determined the boot
-> > > VGA device. As the PCI resource relocation do have a influence on the
-> > > results of identification, we make it available on architectures where PCI
-> > > resource relocation does happen at first. Because this patch is more
-> > > important for those architectures(such as arm, arm64, loongarch, mips and
-> > > risc-v etc).
-> >
-> > There's a little too much going on this this patch.  The problem is
-> > very simple: currently we compare firmware BAR assignments with BARs
-> > that may have been reassigned by Linux.
-> > 
-> > What if we did something like the patch below?  I think it will be
-> > less confusing if we only have one copy of the code related to
-> > screen_info.
-> > 
-> > > Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
-> > > ---
-> > >   drivers/pci/vgaarb.c | 76 ++++++++++++++++++++++++++++++++++++++++++++
-> > >   1 file changed, 76 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-> > > index 5e6b1eb54c64..02821c0f4cd0 100644
-> > > --- a/drivers/pci/vgaarb.c
-> > > +++ b/drivers/pci/vgaarb.c
-> > > @@ -60,6 +60,9 @@ static bool vga_arbiter_used;
-> > >   static DEFINE_SPINLOCK(vga_lock);
-> > >   static DECLARE_WAIT_QUEUE_HEAD(vga_wait_queue);
-> > > +/* The PCI(e) VGA device which owns the firmware framebuffer */
-> > > +static struct pci_dev *pdev_boot_vga;
-> > > +
-> > >   static const char *vga_iostate_to_str(unsigned int iostate)
-> > >   {
-> > >   	/* Ignore VGA_RSRC_IO and VGA_RSRC_MEM */
-> > > @@ -582,6 +585,9 @@ static bool vga_is_firmware_default(struct pci_dev *pdev)
-> > >   		return true;
-> > >   	}
-> > > +#else
-> > > +	if (pdev_boot_vga && pdev_boot_vga == pdev)
-> > > +		return true;
-> > >   #endif
-> > >   	return false;
-> > >   }
-> > > @@ -1557,3 +1563,73 @@ static int __init vga_arb_device_init(void)
-> > >   	return rc;
-> > >   }
-> > >   subsys_initcall_sync(vga_arb_device_init);
-> > > +
-> > > +/*
-> > > + * Get the physical address range that the firmware framebuffer occupies.
-> > > + *
-> > > + * Note that the global screen_info is arch-specific, thus CONFIG_SYSFB is
-> > > + * chosen as compile-time conditional to suppress linkage problems on non-x86
-> > > + * architectures.
-> > > + *
-> > > + * Returns true on success, otherwise return false.
-> > > + */
-> > > +static bool vga_arb_get_firmware_fb_range(u64 *start, u64 *end)
-> > > +{
-> > > +	u64 fb_start = 0;
-> > > +	u64 fb_size = 0;
-> > > +	u64 fb_end;
-> > > +
-> > > +#if defined(CONFIG_X86) || defined(CONFIG_IA64) || defined(CONFIG_SYSFB)
-> > > +	fb_start = screen_info.lfb_base;
-> > > +	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
-> > > +		fb_start |= (u64)screen_info.ext_lfb_base << 32;
-> > > +
-> > > +	fb_size = screen_info.lfb_size;
-> > > +#endif
-> > > +
-> > > +	/* No firmware framebuffer support */
-> > > +	if (!fb_start || !fb_size)
-> > > +		return false;
-> > > +
-> > > +	fb_end = fb_start + fb_size - 1;
-> > > +
-> > > +	*start = fb_start;
-> > > +	*end = fb_end;
-> > > +
-> > > +	return true;
-> > > +}
-> > > +
-> > > +/*
-> > > + * Identify the PCI VGA device that contains the firmware framebuffer
-> > > + */
-> > > +static void pci_boot_vga_capturer(struct pci_dev *pdev)
-> > > +{
-> > > +	u64 fb_start, fb_end;
-> > > +	struct resource *res;
-> > > +	unsigned int i;
-> > > +
-> > > +	if (pdev_boot_vga)
-> > > +		return;
-> > > +
-> > > +	if (!vga_arb_get_firmware_fb_range(&fb_start, &fb_end))
-> > > +		return;
-> > > +
-> > > +	pci_dev_for_each_resource(pdev, res, i) {
-> > > +		if (resource_type(res) != IORESOURCE_MEM)
-> > > +			continue;
-> > > +
-> > > +		if (!res->start || !res->end)
-> > > +			continue;
-> > > +
-> > > +		if (res->start <= fb_start && fb_end <= res->end) {
-> > > +			pdev_boot_vga = pdev;
-> > > +
-> > > +			vgaarb_info(&pdev->dev,
-> > > +				    "BAR %u: %pR contains firmware FB [0x%llx-0x%llx]\n",
-> > > +				    i, res, fb_start, fb_end);
-> > > +			break;
-> > > +		}
-> > > +	}
-> > > +}
-> > > +DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID, PCI_CLASS_DISPLAY_VGA,
-> > > +			       8, pci_boot_vga_capturer);
-> > 
-> > PCI/VGA: Match firmware framebuffer before BAR reassignment
-> > 
-> > vga_is_firmware_default() decides a device is the firmware default VGA
-> > device if it has a BAR that contains the framebuffer described by
-> > screen_info.
-> > 
-> > Previously this was unreliable because the screen_info framebuffer address
-> > comes from firmware, and the Linux PCI core may reassign device BARs before
-> > vga_is_firmware_default() runs.  This reassignment means the BAR may not
-> > match the screen_info values, but we still want to select the device as the
-> > firmware default.
-> > 
-> > Make vga_is_firmware_default() more reliable by running it as a quirk so it
-> > happens before any BAR reassignment.
-> > 
-> > diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-> > index 5e6b1eb54c64..4a53e76caddd 100644
-> > --- a/drivers/pci/vgaarb.c
-> > +++ b/drivers/pci/vgaarb.c
-> > @@ -60,6 +60,8 @@ static bool vga_arbiter_used;
-> >   static DEFINE_SPINLOCK(vga_lock);
-> >   static DECLARE_WAIT_QUEUE_HEAD(vga_wait_queue);
-> > +static struct pci_dev *vga_firmware_device;
-> > +
-> >   static const char *vga_iostate_to_str(unsigned int iostate)
-> >   {
-> >   	/* Ignore VGA_RSRC_IO and VGA_RSRC_MEM */
-> > @@ -560,6 +562,7 @@ static bool vga_is_firmware_default(struct pci_dev *pdev)
-> >   	u64 base = screen_info.lfb_base;
-> >   	u64 size = screen_info.lfb_size;
-> >   	struct resource *r;
-> > +	unsigned int i;
-> >   	u64 limit;
-> >   	/* Select the device owning the boot framebuffer if there is one */
-> > @@ -570,7 +573,7 @@ static bool vga_is_firmware_default(struct pci_dev *pdev)
-> >   	limit = base + size;
-> >   	/* Does firmware framebuffer belong to us? */
-> > -	pci_dev_for_each_resource(pdev, r) {
-> > +	pci_dev_for_each_resource(pdev, r, i) {
-> >   		if (resource_type(r) != IORESOURCE_MEM)
-> >   			continue;
-> > @@ -580,6 +583,8 @@ static bool vga_is_firmware_default(struct pci_dev *pdev)
-> >   		if (base < r->start || limit >= r->end)
-> >   			continue;
-> > +		vgaarb_info(&pdev->dev, "BAR %u: %pR contains firmware framebuffer [%#010llx-%#010llx]\n",
-> > +			    i, r, base, limit - 1);
-> >   		return true;
-> >   	}
-> >   #endif
-> > @@ -623,7 +628,7 @@ static bool vga_is_boot_device(struct vga_device *vgadev)
-> >   	if (boot_vga && boot_vga->is_firmware_default)
-> >   		return false;
-> > -	if (vga_is_firmware_default(pdev)) {
-> > +	if (pdev == vga_firmware_device) {
-> >   		vgadev->is_firmware_default = true;
-> >   		return true;
-> >   	}
-> > @@ -1557,3 +1562,14 @@ static int __init vga_arb_device_init(void)
-> >   	return rc;
-> >   }
-> >   subsys_initcall_sync(vga_arb_device_init);
-> > +
-> > +static void vga_match_firmware_framebuffer(struct pci_dev *pdev)
-> > +{
-> > +	if (vga_firmware_device)
-> > +		return;
-> > +
-> > +	if (vga_is_firmware_default(pdev))
-> > +		vga_firmware_device = pdev;
-> > +}
-> > +DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID, PCI_CLASS_DISPLAY_VGA,
-> > +			       8, vga_match_firmware_framebuffer);
+On Fri, Sep 15, 2023 at 02:43:05PM -0400, Frank Li wrote:
+> ls1021a add suspend/resume support.
 > 
-> 
-> Q: What if we did something like the patch below?
-> 
-> A:
-> 
-> But the vga_is_firmware_default() function only works on X86 and IA64,
-> you patch doesn't solve the problems on ARM64 and LoongArch.
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
 
-Yes, that's true.  Ideally a patch solves a single problem.  This one
-solves an issue for x86 and ia64.  A subsequent patch can solve the
-problems on ARM64 and LoongArch.  Doing them separately means that
-each patch is easier to understand and if we accidentally break
-something, a bisection can give more specific information about what
-broke.
+ping
 
-Bjorn
+Frank
+
+>  drivers/pci/controller/dwc/pci-layerscape.c | 88 ++++++++++++++++++++-
+>  1 file changed, 87 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+> index 20c48c06e2248..bc5a8ff1a26ce 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> @@ -35,6 +35,12 @@
+>  #define PF_MCR_PTOMR		BIT(0)
+>  #define PF_MCR_EXL2S		BIT(1)
+>  
+> +/* LS1021A PEXn PM Write Control Register */
+> +#define SCFG_PEXPMWRCR(idx)	(0x5c + (idx) * 0x64)
+> +#define PMXMTTURNOFF		BIT(31)
+> +#define SCFG_PEXSFTRSTCR	0x190
+> +#define PEXSR(idx)		BIT(idx)
+> +
+>  #define PCIE_IATU_NUM		6
+>  
+>  struct ls_pcie_drvdata {
+> @@ -48,6 +54,8 @@ struct ls_pcie {
+>  	struct dw_pcie *pci;
+>  	const struct ls_pcie_drvdata *drvdata;
+>  	void __iomem *pf_base;
+> +	struct regmap *scfg;
+> +	int index;
+>  	bool big_endian;
+>  };
+>  
+> @@ -170,13 +178,91 @@ static int ls_pcie_host_init(struct dw_pcie_rp *pp)
+>  	return 0;
+>  }
+>  
+> +static void ls1021a_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct ls_pcie *pcie = to_ls_pcie(pci);
+> +	u32 val;
+> +
+> +	if (!pcie->scfg) {
+> +		dev_dbg(pcie->pci->dev, "SYSCFG is NULL\n");
+> +		return;
+> +	}
+> +
+> +	/* Send Turn_off message */
+> +	regmap_read(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), &val);
+> +	val |= PMXMTTURNOFF;
+> +	regmap_write(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), val);
+> +
+> +	/* There are not register to check ACK, so wait PCIE_PME_TO_L2_TIMEOUT_US */
+> +	mdelay(PCIE_PME_TO_L2_TIMEOUT_US/1000);
+> +
+> +	/* Clear Turn_off message */
+> +	regmap_read(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), &val);
+> +	val &= ~PMXMTTURNOFF;
+> +	regmap_write(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), val);
+> +}
+> +
+> +static void ls1021a_pcie_exit_from_l2(struct dw_pcie_rp *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct ls_pcie *pcie = to_ls_pcie(pci);
+> +	u32 val;
+> +
+> +	regmap_read(pcie->scfg, SCFG_PEXSFTRSTCR, &val);
+> +	val |= PEXSR(pcie->index);
+> +	regmap_write(pcie->scfg, SCFG_PEXSFTRSTCR, val);
+> +
+> +	regmap_read(pcie->scfg, SCFG_PEXSFTRSTCR, &val);
+> +	val &= ~PEXSR(pcie->index);
+> +	regmap_write(pcie->scfg, SCFG_PEXSFTRSTCR, val);
+> +}
+> +
+> +static int ls1021a_pcie_host_init(struct dw_pcie_rp *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct ls_pcie *pcie = to_ls_pcie(pci);
+> +	struct device *dev = pcie->pci->dev;
+> +	u32 index[2];
+> +	int ret;
+> +
+> +	ret = ls_pcie_host_init(pp);
+> +	if (ret)
+> +		return ret;
+> +
+> +	pcie->scfg = syscon_regmap_lookup_by_phandle(dev->of_node, "fsl,pcie-scfg");
+> +	if (IS_ERR(pcie->scfg)) {
+> +		ret = PTR_ERR(pcie->scfg);
+> +		dev_err(dev, "No syscfg phandle specified\n");
+> +		pcie->scfg = NULL;
+> +		return ret;
+> +	}
+> +
+> +	ret = of_property_read_u32_array(dev->of_node, "fsl,pcie-scfg", index, 2);
+> +	if (ret) {
+> +		pcie->scfg = NULL;
+> +		return ret;
+> +	}
+> +
+> +	pcie->index = index[1];
+> +
+> +	return ret;
+> +}
+> +
+>  static const struct dw_pcie_host_ops ls_pcie_host_ops = {
+>  	.host_init = ls_pcie_host_init,
+>  	.pme_turn_off = ls_pcie_send_turnoff_msg,
+>  };
+>  
+> +static const struct dw_pcie_host_ops ls1021a_pcie_host_ops = {
+> +	.host_init = ls1021a_pcie_host_init,
+> +	.pme_turn_off = ls1021a_pcie_send_turnoff_msg,
+> +};
+> +
+>  static const struct ls_pcie_drvdata ls1021a_drvdata = {
+> -	.pm_support = false,
+> +	.pm_support = true,
+> +	.ops = &ls1021a_pcie_host_ops,
+> +	.exit_from_l2 = ls1021a_pcie_exit_from_l2,
+>  };
+>  
+>  static const struct ls_pcie_drvdata layerscape_drvdata = {
+> -- 
+> 2.34.1
+> 
