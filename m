@@ -2,114 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E4F417B859C
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Oct 2023 18:44:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 326AE7B860B
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Oct 2023 19:02:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243475AbjJDQov (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Oct 2023 12:44:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45812 "EHLO
+        id S233437AbjJDRCX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Oct 2023 13:02:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243472AbjJDQou (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Oct 2023 12:44:50 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA94495
-        for <linux-pci@vger.kernel.org>; Wed,  4 Oct 2023 09:44:47 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-69335ddbe16so1843141b3a.1
-        for <linux-pci@vger.kernel.org>; Wed, 04 Oct 2023 09:44:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696437887; x=1697042687; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H81jI+2UrQq9I60V53NOI8YjscFjeeEaTqsqQZKREJU=;
-        b=j+oTcgK7nk3nU3ntGpQPyk/PDT1aRQ4IPNX+F1o8DFB8hNzI109yf2tWAQbpfPx/+5
-         tXRDSsrbmKw7W85VNbyNoJN+L880i/9Z2sIocNy1ULBmc7s8pUBqta0L24bAY/ijAbts
-         LQ8kaLK+dz25QLZF4Raw239ngqFLbBjy6I0XovxQQU+DlynE5h5R4oWDTK9bzQi+0kpZ
-         wjhLScl2XwT5UyaQknjzjmNkQzBzDCLGHTCyA1/ubNBlBU0p1HimFNrss2MO8Qjk05JM
-         zuXYgZtMJ7n2IbzGERaz1+buxXvVELeg4wKBPMoCVjNJG2WbkWQftSBmOuPOGHRo8aJg
-         z76A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696437887; x=1697042687;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H81jI+2UrQq9I60V53NOI8YjscFjeeEaTqsqQZKREJU=;
-        b=rHj/pgU2d3qwVfCDtl+ItCtB0MPUP3HsTD2uZ7uBKdzniTVTw+urJjizj13O1S9oT4
-         atvCdC8MqVcRmtYnt6T4Gyjz/L60zmWB0ZNEHo8Vboa8wIhui8XbuMz8DwOboMK9OiXN
-         EK+jxqW6zrc5+bttYOaJKouQHautXc38cMa/BUmWn7oOmibvnPYDciLt3OZ02F3xrBab
-         ilreqpH5sXGcUfH/gWAM7UIabKlPqcN2dSU1nmnJ2+QdCIUOTN12A4UODrYLOHd3Aur+
-         LexXCuaa3bXLtfSL+XmFdMmqc7oHJDHWYbrJ+V9AIxpu7iMkgCZfZxTo40CpA8r81E20
-         WWkg==
-X-Gm-Message-State: AOJu0YyBg6PG10W2tslYnyz/0Rv156CCySO1a2iT6BdSpZ8nJQ52vCVS
-        9WmARtwtgzayPVQqFMzVg7IZ
-X-Google-Smtp-Source: AGHT+IG5naMTjhE0XIZMckM1eR3qflLys7JqfIzDKkq+M+AenCFb0iLpIfwbxwr0a0DexEPZR590zA==
-X-Received: by 2002:a05:6a00:2293:b0:690:449f:5e96 with SMTP id f19-20020a056a00229300b00690449f5e96mr3168001pfe.33.1696437887232;
-        Wed, 04 Oct 2023 09:44:47 -0700 (PDT)
-Received: from localhost.localdomain ([117.217.185.220])
-        by smtp.gmail.com with ESMTPSA id k14-20020aa792ce000000b0066a31111cc5sm3434628pfa.152.2023.10.04.09.44.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Oct 2023 09:44:46 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     lpieralisi@kernel.org, kw@linux.com
-Cc:     andersson@kernel.org, konrad.dybcio@linaro.org,
-        bhelgaas@google.com, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        abel.vesa@linaro.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Vidya Sagar <vidyas@nvidia.com>
-Subject: [PATCH v4 3/3] PCI: tegra194: Use Mbps_to_icc() macro for setting icc speed
-Date:   Wed,  4 Oct 2023 22:14:30 +0530
-Message-Id: <20231004164430.39662-3-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231004164430.39662-1-manivannan.sadhasivam@linaro.org>
-References: <20231004164430.39662-1-manivannan.sadhasivam@linaro.org>
+        with ESMTP id S243543AbjJDRCW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Oct 2023 13:02:22 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB3B7AD;
+        Wed,  4 Oct 2023 10:02:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696438939; x=1727974939;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=88we1DSu8Bs6O8JdeNsZBSGueiNIhCurw3oB1CXvjPA=;
+  b=X/Tt+JH0i9W5exi3UiF/0XgNUubfABjhsNG9199Ry685otuL7QmSYQj3
+   xpycX+N+G37MNy7DOtPUngal0OQcKFrImzT5x3uN5U97+Kb4ucn0zYfLd
+   slwbGWAAZLuDSStwH4LtNMT8wt3yWZIWqF6PYHq/GgckrKSJv4+cz+Bgz
+   QGaPTjc4gsejq149fweXtGFML2PAOUQuZGB1ZHWLuyqg5hbra9V69qtbn
+   nR/Y5dN5wxOpQaDn+GrYplVBiViUd441Jxb1KvRScpFcDtRRQvvA0bGsK
+   LnFPWfq2AJdUTK5quyiM8gG/tnVyPSfMFiv31pZdWqAC0Eer39zymvgvw
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="362589465"
+X-IronPort-AV: E=Sophos;i="6.03,200,1694761200"; 
+   d="scan'208";a="362589465"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 10:02:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="821765087"
+X-IronPort-AV: E=Sophos;i="6.03,200,1694761200"; 
+   d="scan'208";a="821765087"
+Received: from jbrandeb-spr1.jf.intel.com ([10.166.28.233])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 10:02:17 -0700
+From:   Jesse Brandeburg <jesse.brandeburg@intel.com>
+To:     intel-wired-lan@lists.osuosl.org
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        linux-pci@vger.kernel.org, pmenzel@molgen.mpg.de,
+        netdev@vger.kernel.org, jkc@redhat.com, jay.vosburgh@canonical.com,
+        Vishal Agrawal <vagrawal@redhat.com>,
+        Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Subject: [PATCH iwl-net v3] ice: reset first in crash dump kernels
+Date:   Wed,  4 Oct 2023 10:02:14 -0700
+Message-Id: <20231004170214.474792-1-jesse.brandeburg@intel.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCIe speed returned by the PCIE_SPEED2MBS_ENC() macro is in Mbps. So
-instead of converting it to MBps explicitly and using the MBps_to_icc()
-macro, let's use the Mbps_to_icc() macro to pass the value directly.
+When the system boots into the crash dump kernel after a panic, the ice
+networking device may still have pending transactions that can cause errors
+or machine checks when the device is re-enabled. This can prevent the crash
+dump kernel from loading the driver or collecting the crash data.
 
-Cc: Vidya Sagar <vidyas@nvidia.com>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To avoid this issue, perform a function level reset (FLR) on the ice device
+via PCIe config space before enabling it on the crash kernel. This will
+clear any outstanding transactions and stop all queues and interrupts.
+Restore the config space after the FLR, otherwise it was found in testing
+that the driver wouldn't load successfully.
+
+The following sequence causes the original issue:
+- Load the ice driver with modprobe ice
+- Enable SR-IOV with 2 VFs: echo 2 > /sys/class/net/eth0/device/sriov_num_vfs
+- Trigger a crash with echo c > /proc/sysrq-trigger
+- Load the ice driver again (or let it load automatically) with modprobe ice
+- The system crashes again during pcim_enable_device()
+
+Fixes: 837f08fdecbe ("ice: Add basic driver framework for Intel(R) E800 Series")
+
+Reported-by: Vishal Agrawal <vagrawal@redhat.com>
+Reviewed-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
 ---
+v3: add Fixes tag as approximate, added Jay's RB tag
+v2: respond to list comments and update commit message
+v1: initial version
+---
+ drivers/net/ethernet/intel/ice/ice_main.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Changes in v4:
-
-* No change
-
-Changes in v3:
-
-- New patch
-
- drivers/pci/controller/dwc/pcie-tegra194.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 4bba31502ce1..5feac690e127 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -321,9 +321,9 @@ static void tegra_pcie_icc_set(struct tegra_pcie_dw *pcie)
- 	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, val);
- 	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, val);
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index c8286adae946..6550c46e4e36 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -6,6 +6,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
--	val = width * (PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]) / BITS_PER_BYTE);
-+	val = width * PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]);
+ #include <generated/utsrelease.h>
++#include <linux/crash_dump.h>
+ #include "ice.h"
+ #include "ice_base.h"
+ #include "ice_lib.h"
+@@ -5014,6 +5015,20 @@ ice_probe(struct pci_dev *pdev, const struct pci_device_id __always_unused *ent)
+ 		return -EINVAL;
+ 	}
  
--	if (icc_set_bw(pcie->icc_path, MBps_to_icc(val), 0))
-+	if (icc_set_bw(pcie->icc_path, Mbps_to_icc(val), 0))
- 		dev_err(pcie->dev, "can't set bw[%u]\n", val);
- 
- 	if (speed >= ARRAY_SIZE(pcie_gen_freq))
++	/* when under a kdump kernel initiate a reset before enabling the
++	 * device in order to clear out any pending DMA transactions. These
++	 * transactions can cause some systems to machine check when doing
++	 * the pcim_enable_device() below.
++	 */
++	if (is_kdump_kernel()) {
++		pci_save_state(pdev);
++		pci_clear_master(pdev);
++		err = pcie_flr(pdev);
++		if (err)
++			return err;
++		pci_restore_state(pdev);
++	}
++
+ 	/* this driver uses devres, see
+ 	 * Documentation/driver-api/driver-model/devres.rst
+ 	 */
+
+base-commit: 6a70e5cbedaf8ad10528ac9ac114f3ec20f422df
 -- 
-2.25.1
+2.39.3
 
