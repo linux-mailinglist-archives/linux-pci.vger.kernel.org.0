@@ -2,165 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C6C07BA5DF
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Oct 2023 18:21:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 030FE7BA635
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Oct 2023 18:32:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240861AbjJEQUo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Oct 2023 12:20:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36036 "EHLO
+        id S229970AbjJEQcc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Oct 2023 12:32:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240928AbjJEQRe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Oct 2023 12:17:34 -0400
-X-Greylist: delayed 479 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 05 Oct 2023 09:05:57 PDT
-Received: from witt.link (witt.link [185.233.105.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3036938A0E
-        for <linux-pci@vger.kernel.org>; Thu,  5 Oct 2023 09:05:56 -0700 (PDT)
-Received: from [10.0.0.60] (p5489d568.dip0.t-ipconnect.de [84.137.213.104])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
-        (No client certificate requested)
-        by witt.link (Postfix) with ESMTPSA id 3CF9C2BE94A;
-        Thu,  5 Oct 2023 17:57:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=witt.link; s=dkim;
-        t=1696521474;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OKIQ+5WRqMEmkeBfewWnr0AprEXOBYnCrEWLjTPEBvA=;
-        b=TwUHa0GomZpauHLZMcjznoHkGmWlzvpaqRgWO6fvHGWxV7GTtBGDI5Ny3eFfMCQtz8tKpp
-        J3KZbS2rvF6axIHMEEdbxHb+idagO80SYBL7+MH8138h+mRJFOtPVnESKeU0Bpw4EnNiyH
-        m0rP4DodF4Oa+bIpSsO2s+XeD3GvbSiXDxpDcEfMttIChsm3Ga5amngiTQJY8NYe2os5X0
-        iab1oAzAguJP1IrOIU3JSN8/wgZ/TBDmO5FNQ3vzphF8H5uzVIY07qb/S2GO/Qjc7/Y/wc
-        FAobVGazWnseNPldntHsP5a9rE/i7qQ14r6a7JAG9YFjXpHvL2p8BZeC+SkrFg==
-Message-ID: <923d8df0-1112-aca9-8289-c6e2457298cd@witt.link>
-Date:   Thu, 5 Oct 2023 17:57:52 +0200
+        with ESMTP id S232464AbjJEQcR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Oct 2023 12:32:17 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 503EE387D
+        for <linux-pci@vger.kernel.org>; Thu,  5 Oct 2023 09:12:37 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BEB7C433C8;
+        Thu,  5 Oct 2023 16:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696522356;
+        bh=D7Vt27Y4FY6ztu0xjYaxDq9QzXN3/W7FSOaeGGwzdo0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=YiXBiTF2lg2+9oRN20X8WNIB7IsG4XqAPQvGdVwpNLCW28sEJ5GDpGccG9MZO7uc9
+         75f1MBNvmkLHKo77D2AREUFc9AKcbbL7r9HkYkosuLkRYRWCPQi00poUMpORFqtwLc
+         j9wT7PqjpS/1Iu20hnmegCm+ELJnDJ5K2da/4SZ4SQqbNxI/mMjNwLAxBy2Ze1RAKE
+         KkSb5noFf8qjcvH2vnJBPs8h0uxmlEsIbm+V9xrRdPyiFd2+PCIuMppqr5PkYIBKgo
+         WasmzcbVoH8XnH9KQvzqclam3SwOJXWzmn+mKtfud48k/BBcWyuMmvYveZya2a1QLX
+         IqKqt0JShldwQ==
+Date:   Thu, 5 Oct 2023 11:12:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vicki Pfau <vi@endrift.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Prevent xHCI driver from claiming AMD VanGogh USB3
+ DRD device
+Message-ID: <20231005161234.GA750144@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v4] PCI/ASPM: Add back L1 PM Substate save and restore
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Tasev Nikola <tasev.stefanoska@skynet.be>,
-        Mark Enriquez <enriquezmark36@gmail.com>,
-        Thomas Witt <kernel@witt.link>,
-        Koba Ko <koba.ko@canonical.com>,
-        Werner Sembach <wse@tuxedocomputers.com>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        =?UTF-8?B?5ZCz5piK5r6EIFJpY2t5?= <ricky_wu@realtek.com>,
-        linux-pci@vger.kernel.org
-References: <20231005153043.GA746943@bhelgaas>
-From:   Thomas Witt <kernel@witt.link>
-In-Reply-To: <20231005153043.GA746943@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230928171738.GA489583@bhelgaas>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 05/10/2023 17:30, Bjorn Helgaas wrote:
-> On Thu, Oct 05, 2023 at 12:02:58PM +0300, Mika Westerberg wrote:
->> On Wed, Oct 04, 2023 at 05:23:24PM -0500, Bjorn Helgaas wrote:
->> ...
+On Thu, Sep 28, 2023 at 12:17:38PM -0500, Bjorn Helgaas wrote:
+> On Wed, Sep 27, 2023 at 01:22:12PM -0700, Vicki Pfau wrote:
+> > The AMD VanGogh SoC contains a DesignWare USB3 Dual-Role Device that can be
+> > operated as either a USB Host or a USB Device, similar to on the AMD Nolan
+> > platform. A quirk was previously added to let the dwc3 driver claim the device
+> > since it provides more specific support. This commit extends that quirk to
+> > include the equivalent PID for the VanGogh SoC.
+> > 
+> > Signed-off-by: Vicki Pfau <vi@endrift.com>
 > 
->> The thing with TUXEDO is that on Thomas's system with mem_sleep=deep
->> this patch (without denylist) breaks the resume as he describes here:
->>
->> https://bugzilla.kernel.org/show_bug.cgi?id=216877
->>
->> However, on exact same TUXEDO system with the same firmwares Werner is
->> not able to reproduce the issue with or without the patch. So I'm not
->> sure what to do and that's why I added denylist that should take effect
->> on Thomas' system when mem_sleep=deep is set but also work on the same
->> system without it.
->>
->> And since we have the denylist, I decided to add the ASUS there to avoid
->> accidentally breaking those too.
->> ...
-> 
->>> I think there's still something we're missing.
->>>
->>> We restore the LTR config before restoring DEVCTL2 (including the LTR
->>> enable bit) and L1SS state.  I don't think we know the state of ASPM
->>> and L1SS at that point, do we?  Do you think there could be an issue
->>> there, too?
->>
->> AFAICT LTR does not affect until it is explicitly enabled and I don't
->> think many drivers actually program it (although we have some sort of
->> API for it at least for Intel LPSS devices).
-> 
-> I couldn't find anything in the spec that suggests LTR should be an
-> issue.  I'm just grasping at straws here.
-> 
-> There's obviously *something* we're doing wrong because ASPM worked
-> before suspend, so we should be able to get it to work after resume.
-> 
-> Could we learn anything by dumping config space of the problem devices
-> before/after the suspend/resume and comparing them?
-> 
-> If we could figure out a difference between Werner's working TUXEDO
-> and Thomas' non-working TUXEDO, that might be a hint, too.
-> 
->> If you have suggestions, I'm all open. If I understand you would like
->> this to be done like:
->>
->>    - Drop the denylist
->>    - Add back the suspend/restore of L1SS
->>    - Ask everyone in this thread to try it out
->>
->> I can do that no problem but I guess that for the TUXEDO one (Thomas')
->> it probably is going to fail still.
-> 
-> Right, without the denylist, I expect Thomas' TUXEDO to fail, but I
-> still hope we can figure out why.  If we just keep it on the denylist,
-> that system will suffer from more power consumption than necessary,
-> but only after suspend/resume.
-> 
-> A denylist seems like the absolute last resort.  In this case we don't
-> know about anything *wrong* with those platforms; all we know is that
-> our resume path doesn't work.  It's likely that it fails on other
-> platforms we haven't heard about, too.
-> 
-> Bjorn
+> Applied to misc for v6.7, thanks!
 
-The best guess from Mika and David was a firmware issue, but I run the 
-same Firmware revision as Werner. I even reflashed the Firmware, but 
-that did not change anything:
+This seems like stable material, so I added a stable tag for v3.19+
+since be6646bfbaec ("PCI: Prevent xHCI driver from claiming AMD Nolan
+USB3 DRD device") appeared in v3.19.
 
-Quoting David Box:
- > I agree that we should pursue an exception for your system. This is
- > looking like a firmware bug. One thing we did notice in the turbostat
- > results is your IRTL (Interrupt Response Time Limit) values are bogus:
- >
- > cpu6: MSR_PKGC3_IRTL: 0x0000884e (valid, 79872 ns)
- > cpu6: MSR_PKGC6_IRTL: 0x00008000 (valid, 0 ns)
- > cpu6: MSR_PKGC7_IRTL: 0x00008000 (valid, 0 ns)
- > cpu6: MSR_PKGC8_IRTL: 0x00008000 (valid, 0 ns)
- > cpu6: MSR_PKGC9_IRTL: 0x00008000 (valid, 0 ns)
- > cpu6: MSR_PKGC10_IRTL: 0x00008000 (valid, 0 ns)
- >
- > This is despite the PKGC configuration register showing that all
- > states are enabled:
- >
- > cpu6: MSR_PKG_CST_CONFIG_CONTROL: 0x1e008008 (UNdemote-C3, 
-UNdemote-C1, demote-
-C3, demote-C1, locked, pkg-cstate-limit=8 (unlimited))
- >
- > Firmware sets this.
-
-Since I can't currently flash modified firmware on this computer, can 
-those values be overridden from userspace?
-
+> > ---
+> >  drivers/pci/quirks.c    | 8 +++++---
+> >  include/linux/pci_ids.h | 1 +
+> >  2 files changed, 6 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index eeec1d6f9023..e3e915329510 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -690,7 +690,7 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI,	PCI_DEVICE_ID_ATI_RS100,   quirk_ati_
+> >  /*
+> >   * In the AMD NL platform, this device ([1022:7912]) has a class code of
+> >   * PCI_CLASS_SERIAL_USB_XHCI (0x0c0330), which means the xhci driver will
+> > - * claim it.
+> > + * claim it. The same applies on the VanGogh platform device ([1022:163a]).
+> >   *
+> >   * But the dwc3 driver is a more specific driver for this device, and we'd
+> >   * prefer to use it instead of xhci. To prevent xhci from claiming the
+> > @@ -698,7 +698,7 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI,	PCI_DEVICE_ID_ATI_RS100,   quirk_ati_
+> >   * defines as "USB device (not host controller)". The dwc3 driver can then
+> >   * claim it based on its Vendor and Device ID.
+> >   */
+> > -static void quirk_amd_nl_class(struct pci_dev *pdev)
+> > +static void quirk_amd_dwc_class(struct pci_dev *pdev)
+> >  {
+> >  	u32 class = pdev->class;
+> >  
+> > @@ -708,7 +708,9 @@ static void quirk_amd_nl_class(struct pci_dev *pdev)
+> >  		 class, pdev->class);
+> >  }
+> >  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_NL_USB,
+> > -		quirk_amd_nl_class);
+> > +		quirk_amd_dwc_class);
+> > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_VANGOGH_USB,
+> > +		quirk_amd_dwc_class);
+> >  
+> >  /*
+> >   * Synopsys USB 3.x host HAPS platform has a class code of
+> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > index 5fb3d4c393a9..3a8e24e9a93f 100644
+> > --- a/include/linux/pci_ids.h
+> > +++ b/include/linux/pci_ids.h
+> > @@ -579,6 +579,7 @@
+> >  #define PCI_DEVICE_ID_AMD_1AH_M00H_DF_F3 0x12c3
+> >  #define PCI_DEVICE_ID_AMD_1AH_M20H_DF_F3 0x16fb
+> >  #define PCI_DEVICE_ID_AMD_MI200_DF_F3	0x14d3
+> > +#define PCI_DEVICE_ID_AMD_VANGOGH_USB	0x163a
+> >  #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
+> >  #define PCI_DEVICE_ID_AMD_LANCE		0x2000
+> >  #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
+> > -- 
+> > 2.42.0
+> > 
