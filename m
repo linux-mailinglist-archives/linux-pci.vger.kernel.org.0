@@ -2,49 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A8677BBB22
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Oct 2023 17:02:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 878DA7BBC18
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Oct 2023 17:48:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232711AbjJFPCZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Oct 2023 11:02:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44534 "EHLO
+        id S232757AbjJFPsH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Oct 2023 11:48:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232622AbjJFPCW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Oct 2023 11:02:22 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 048848F
-        for <linux-pci@vger.kernel.org>; Fri,  6 Oct 2023 08:02:20 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qomLK-0004VY-Gz; Fri, 06 Oct 2023 17:02:18 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qomLK-00BXcf-1B; Fri, 06 Oct 2023 17:02:18 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qomLJ-00AK0f-OB; Fri, 06 Oct 2023 17:02:17 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH trivial] pci: Replace a strange letter by a normal one
-Date:   Fri,  6 Oct 2023 17:02:09 +0200
-Message-Id: <20231006150209.87666-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.40.1
+        with ESMTP id S232799AbjJFPsG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Oct 2023 11:48:06 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 761E2B6;
+        Fri,  6 Oct 2023 08:48:05 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC393C433C8;
+        Fri,  6 Oct 2023 15:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696607285;
+        bh=I2BM2DEbQztPGY6Z+gBWH7WL0buSYdKKMp7SYvdgqK8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=cVtSAYayyWljBlLwYRuSVkz1P9ShxM/Oe47rN2I2Bm7yptef1gyGUci4g9dUCrdld
+         VBgR7ciCTxa5n94bG/8Vn6hw1O+x1/gwEDzZGF3gzF7DjWc7Sbx0irEMRzQYzVuxIc
+         U0Q4ZcnbWML/s6WFGB6P3YbHLpq30Loc/NHMbWtVx1E9PeCi5T77RxMHIku8PJcIvg
+         j/Wogeh2uTpMP9fevi3BCGAnAc08M08FVpA0sRh+3fo69MB3f7UQ1PjuBV5mfj+4wa
+         txEMoweYDTAwOviBYkDWbHuB/9sHGbJo6rjd+MGYeRm/OKmM4HTwH6tts0MXfn6GpG
+         g17mf6W/jOAgg==
+Date:   Fri, 6 Oct 2023 10:48:02 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mark Blakeney <mark.blakeney@bullet-systems.net>,
+        Lizhi Hou <lizhi.hou@amd.com>,
+        Herve Codina <herve.codina@bootlin.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Subject: [GIT PULL] PCI fixes for v6.6
+Message-ID: <20231006154802.GA855916@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=841; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=mroQWcQsxUtin1DNdma+Dad2UrvwsKB5w/nrFuMoEpo=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlICFviW+97Buio9C+IbunVH02mf5eQbTAyHff3 efxPnOVBZSJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZSAhbwAKCRCPgPtYfRL+ TtRbB/9WmFA+NQt956rehZ8r10FsMliJBUoRG/Qz1YVdSf84BvCmKrepEnms3Bw33dA3tRD+3UD HxarSA4iqgegugXJPC6yaPNoqizz75gQeV6+fZc54TmYZrfrNnuLJbjFuPAwHzjJPmBCsY6pZdx AVA2VR/AIaD7edey8FRpM2Q3KKiCuSzcNcz7Du4jYOXsgdndNk8jMMBB7o3SS5XBn4AIO18Hjlw ZjGle3eVGKKBegE/KC/xkSO4H8r2Dbm8yxkepJrkyifbDcoXBVNQJV017X3zEEuCswCf46dmQYy NK6no33wJ5yyJ4t5R3XWbhs0yuCBpyePnPqmXhFzQEHAJIyx
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -52,27 +53,44 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The help text contains a cyrillic small "dse" (ѕ). Replace it by a plain
-"s".
+The following changes since commit 0bb80ecc33a8fb5a682236443c1e740d5c917d1d:
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pci/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  Linux 6.6-rc1 (2023-09-10 16:28:41 -0700)
 
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index e9ae66cc4189..74147262625b 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -170,7 +170,7 @@ config PCI_P2PDMA
- 	select GENERIC_ALLOCATOR
- 	select NEED_SG_DMA_FLAGS
- 	help
--	  Enableѕ drivers to do PCI peer-to-peer transactions to and from
-+	  Enables drivers to do PCI peer-to-peer transactions to and from
- 	  BARs that are exposed in other devices that are the part of
- 	  the hierarchy where peer-to-peer DMA is guaranteed by the PCI
- 	  specification to work (ie. anything below a single PCI bridge).
--- 
-2.40.1
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.6-fixes-2
+
+for you to fetch changes up to c82458101d5490230d735caecce14c9c27b1010c:
+
+  PCI/PM: Mark devices disconnected if upstream PCIe link is down on resume (2023-09-29 17:42:00 -0500)
+
+----------------------------------------------------------------
+- Fix a qcom register offset that broke IPQ8074 PCIe controller enumeration
+  (Sricharan Ramabadhran)
+
+- Handle interrupt parsing failures when creating a device tree node to
+  avoid using uninitialized data (Lizhi Hou)
+
+- Clean up if adding PCI device node fails when creating a device tree node
+  to avoid a memory leak (Lizhi Hou)
+
+- If a link is down, mark all downstream devices as "disconnected" so we
+  don't wait for them on resume (Mika Westerberg)
+
+----------------------------------------------------------------
+Lizhi Hou (2):
+      PCI: of_property: Handle interrupt parsing failures
+      PCI: of: Destroy changeset when adding PCI device node fails
+
+Mika Westerberg (1):
+      PCI/PM: Mark devices disconnected if upstream PCIe link is down on resume
+
+Sricharan Ramabadhran (1):
+      PCI: qcom: Fix IPQ8074 enumeration
+
+ drivers/pci/controller/dwc/pcie-qcom.c |  4 +---
+ drivers/pci/of.c                       | 19 +++++++++++--------
+ drivers/pci/of_property.c              | 25 ++++++++++++++++++-------
+ drivers/pci/pci-driver.c               | 14 +++++++++++++-
+ 4 files changed, 43 insertions(+), 19 deletions(-)
