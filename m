@@ -2,58 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4234B7BC108
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Oct 2023 23:17:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86A5A7BC10C
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Oct 2023 23:17:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233657AbjJFVRY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Oct 2023 17:17:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54514 "EHLO
+        id S233651AbjJFVRn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Oct 2023 17:17:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233625AbjJFVRY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Oct 2023 17:17:24 -0400
+        with ESMTP id S233668AbjJFVRm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Oct 2023 17:17:42 -0400
 Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C86CBE
-        for <linux-pci@vger.kernel.org>; Fri,  6 Oct 2023 14:17:22 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-9b974955474so462949866b.1
-        for <linux-pci@vger.kernel.org>; Fri, 06 Oct 2023 14:17:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8693BE
+        for <linux-pci@vger.kernel.org>; Fri,  6 Oct 2023 14:17:40 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-9a645e54806so464364266b.0
+        for <linux-pci@vger.kernel.org>; Fri, 06 Oct 2023 14:17:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696627041; x=1697231841; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1696627059; x=1697231859; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
         bh=Wfo4YqiJevFxT2ANmYz9EDuFHXzL9pI4Z9ll56yG/84=;
-        b=FbGoBOTLgCodvlX9rJMGaVOF9zvtIJcApEkWtVpyjh4fXWM4tT1x9DsrqhnbrEOChl
-         +6u1jONlYpBjxv8FJ3jO+PP4Fn9r2GJutoLTadtjvntD6JWilT1bEZjWvW6PE0SeDKln
-         pT04Fn/W8vhR+WNoHZndM81BFN7wkaJwtBd+Ar0GNmAJ2MjbunZusTprUaQd3PFzxfO+
-         yokD8Ll5qCM6sxXLH2mpi3b2rRFrGZ4r25EE2OuCx+KkbHg+1juv+OYN5fZVJuqDEhWO
-         mkA5br80agm4nRWrsk7HbYue0lC3kVg1lGNqlFsD3DIIPeCK9tCrPhh6dlwlhDkxfrYB
-         P1TA==
+        b=rFilQbMRyrI11jXv3rew07tbsSWJ5EwTvWkbAYUGP3SyF1YSmhHFeTFWNjz/W44b6M
+         8UPzWUdK56Ti6q3qtVqsCAwe2ntLoQVTw7VrdaxCtUZLGlHNrwaNCev3ko1/Q0iRXQ4l
+         FiERf49JsIQYjODGO7NXDgbFH5VX+KFkWksGOz0Zgm3loWO61stXMI9Ym7GCIfKCbIvB
+         Igc4vGKwxzzHfaMNfsWCEupTee5unKR1iilgqhElciLMurdtyJUT06gSDoFNU7H/fSCt
+         xYAHFWINmyEPQumhHhhj68mpUWIzeGJMAVzkiRt3huBWD9agejqjKwXgWwfzjcySH4/B
+         kQjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696627041; x=1697231841;
+        d=1e100.net; s=20230601; t=1696627059; x=1697231859;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
         bh=Wfo4YqiJevFxT2ANmYz9EDuFHXzL9pI4Z9ll56yG/84=;
-        b=n+KlHhgGaeNGpc0FG/8HypVI5X5ndg2pRt9/jOSizL0ln0K9IgEBEZuu+xXZm1h7jM
-         F8oUPpYh6U0q8msvwB3Ji0ojMMaNWaTgqo+Vp+ruE5UKNz2g/JiKhIM5PCfdJ8xRyHUk
-         P7xrv8TWFwPkehflaKlqRgeyn5gjRIFeuyj+wwUt8MebvOhpIhNKMJiUxvTPGuIvHJZT
-         7Dg3L15+Ln3J6LM1540MqEhEsrW6qMFX5Vtjr1h9jEcPUEbAwIWEc8xHB8a89XUw563O
-         B5OWz0LIhDduEBJyb3UyBbP7igfuJQWtR5qsCaDnekxLMvuM/GIWpM1DyRXXl4jUb6PM
-         8BTA==
-X-Gm-Message-State: AOJu0YzZA5ltSYeayb5WM1N4JeBzJwd7OIH0fi4ZMRWVDl9AfHJ+cRSc
-        aoU24cRXRI850prOCg9sZJog1A==
-X-Google-Smtp-Source: AGHT+IFz7Exggb0Hk5ZqcIG41am7jZ1Zh8hXBRSO86I47AJeQN9uZz7BLF/6xZNFBNRzUhW+/WrjIg==
-X-Received: by 2002:a17:906:ef90:b0:9b8:8f9e:1827 with SMTP id ze16-20020a170906ef9000b009b88f9e1827mr7268312ejb.74.1696627040881;
-        Fri, 06 Oct 2023 14:17:20 -0700 (PDT)
+        b=natGifD1oiR1E77ZeetNDABm+UFkNSDLnbjjfjk4QfWEtWDHo7T03rLuTgDh+3K12D
+         wQYr09f8KHhs1H11hi7PlWNr4Fwhma4rI9xiecuSnyAVpSAOIIKChIXwXK0mQ3uZxZxi
+         s76XNGBzhOT2/zlO16xZE++2EZbiii5YQYHtqi/Z0f9QPDycgXHtRng6eGWgiijD02gB
+         e5bE2wkKQjUGQaFpqsva8yW51M330o1612alxjXpIpFQA2yQNhNZs2ZRBd1DVsULt6FY
+         FFL9XNwvjDT5ge6nKAfw9GIVD2wGXWWVPB0ZnYYTw+1OQYH5kL787roLpqR4omhKpRjb
+         Fnog==
+X-Gm-Message-State: AOJu0Yzhoqd1G/a3oHGapPEvozYh6CDADfxVpMursSx+0ULoOIwGnuZm
+        xPItY5Fqeej8M4OMTFy+sNk9iA==
+X-Google-Smtp-Source: AGHT+IGCssLhLFlyLUXl5vGJFCLvugJzS7TwfdmRX4XSQziRf6ZVaMH/vnjl1cwgh21QaBqKk4Z4MA==
+X-Received: by 2002:a17:906:51ca:b0:9b8:9838:1df9 with SMTP id v10-20020a17090651ca00b009b898381df9mr8532029ejk.59.1696627059244;
+        Fri, 06 Oct 2023 14:17:39 -0700 (PDT)
 Received: from [192.168.200.140] (178235177147.dynamic-4-waw-k-1-1-0.vectranet.pl. [178.235.177.147])
-        by smtp.gmail.com with ESMTPSA id ca9-20020a170906a3c900b009ae587ce128sm3414983ejb.216.2023.10.06.14.17.19
+        by smtp.gmail.com with ESMTPSA id ca9-20020a170906a3c900b009ae587ce128sm3414983ejb.216.2023.10.06.14.17.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Oct 2023 14:17:20 -0700 (PDT)
-Message-ID: <45982c83-07d5-4ffa-8f29-5e6a379b222c@linaro.org>
-Date:   Fri, 6 Oct 2023 23:17:19 +0200
+        Fri, 06 Oct 2023 14:17:38 -0700 (PDT)
+Message-ID: <8f243944-f836-4f80-9ff4-cc936ef57bed@linaro.org>
+Date:   Fri, 6 Oct 2023 23:17:38 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/3] PCI: qcom: Use PCIE_SPEED2MBS_ENC() macro for
+Subject: Re: [PATCH v4 2/3] PCI: qcom-ep: Use PCIE_SPEED2MBS_ENC() macro for
  encoding link speed
 Content-Language: en-US
 To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
@@ -62,6 +62,7 @@ Cc:     andersson@kernel.org, bhelgaas@google.com,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, abel.vesa@linaro.org
 References: <20231004164430.39662-1-manivannan.sadhasivam@linaro.org>
+ <20231004164430.39662-2-manivannan.sadhasivam@linaro.org>
 From:   Konrad Dybcio <konrad.dybcio@linaro.org>
 Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
@@ -98,7 +99,7 @@ Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
  nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
  izWDgYvmBE8=
-In-Reply-To: <20231004164430.39662-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20231004164430.39662-2-manivannan.sadhasivam@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
