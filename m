@@ -2,138 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3646F7BB43E
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Oct 2023 11:30:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7D7C7BB551
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Oct 2023 12:33:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231453AbjJFJa3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Oct 2023 05:30:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54214 "EHLO
+        id S231610AbjJFKdZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Oct 2023 06:33:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231373AbjJFJa1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Oct 2023 05:30:27 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 614CDC6;
-        Fri,  6 Oct 2023 02:30:25 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S23462Dsgz6HJbf;
-        Fri,  6 Oct 2023 17:27:34 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 6 Oct
- 2023 10:30:22 +0100
-Date:   Fri, 6 Oct 2023 10:30:20 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Lukas Wunner <lukas@wunner.de>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linuxarm@huawei.com>, David Box <david.e.box@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-        Alexey Kardashevskiy <aik@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 12/12] PCI/CMA: Grant guests exclusive control of
- authentication
-Message-ID: <20231006103020.0000174f@Huawei.com>
-In-Reply-To: <20231003193058.GA16417@wunner.de>
-References: <cover.1695921656.git.lukas@wunner.de>
-        <467bff0c4bab93067b1e353e5b8a92f1de353a3f.1695921657.git.lukas@wunner.de>
-        <20231003164048.0000148c@Huawei.com>
-        <20231003193058.GA16417@wunner.de>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S231497AbjJFKdY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Oct 2023 06:33:24 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C7F09F
+        for <linux-pci@vger.kernel.org>; Fri,  6 Oct 2023 03:33:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696588403; x=1728124403;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=if2DbiSbXczOLktQKNmjPWjll0iHKhW6IGipZHwsYkw=;
+  b=SLjVlY+RtGY+xEgy5dZtLT6zXbtJI31TvxlB8kiWgsmtMXX5sWcl3Ink
+   wML5q9OVKZTeZCZj7/ZZVYGwDP2ihUsI3qr3qLOXYTc7t8Mk8AV7AXcVl
+   E2byTQ+0GpEHcsCwSeQkChKxi+Zoq+HiCSM8Cq97WCi0FDKRNF1eAL918
+   MnxKoFrkxcTizQeQ1kA7H/dtSQFCSEM/TCR3Dl5dsTn9G6zWs2UmO5H23
+   6pJprhku4Cg84kdJ9agdSiWHLE9ly7m55tdYspOufTWidWZn6NWIXQpkk
+   GdivIm25d+EtQ6+OFRcKIKsKX+0LtEy9tnA3Q7vedpZRsVjR89EPpvQdj
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="2328240"
+X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
+   d="scan'208";a="2328240"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 03:33:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="895836965"
+X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
+   d="scan'208";a="895836965"
+Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
+  by fmsmga001.fm.intel.com with ESMTP; 06 Oct 2023 03:31:49 -0700
+Received: from kbuild by c3b01524d57c with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qoi91-000MVi-0g;
+        Fri, 06 Oct 2023 10:33:19 +0000
+Date:   Fri, 6 Oct 2023 18:32:45 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
+Subject: [pci:pm 2/2] arch/x86/pci/fixup.c:929:6: error: use of undeclared
+ identifier 'pm_suspend_target_state'
+Message-ID: <202310061830.A7jaXxeG-lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 3 Oct 2023 21:30:58 +0200
-Lukas Wunner <lukas@wunner.de> wrote:
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pm
+head:   624306d2c241c274e498619cabc2ae1dc7112ad1
+commit: 624306d2c241c274e498619cabc2ae1dc7112ad1 [2/2] x86/PCI: Avoid PME from D3hot/D3cold for AMD Rembrandt and Phoenix USB4
+config: x86_64-rhel-8.3-rust (https://download.01.org/0day-ci/archive/20231006/202310061830.A7jaXxeG-lkp@intel.com/config)
+compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231006/202310061830.A7jaXxeG-lkp@intel.com/reproduce)
 
-> On Tue, Oct 03, 2023 at 04:40:48PM +0100, Jonathan Cameron wrote:
-> > On Thu, 28 Sep 2023 19:32:42 +0200 Lukas Wunner <lukas@wunner.de> wrote:  
-> > > At any given time, only a single entity in a physical system may have
-> > > an SPDM connection to a device.  That's because the GET_VERSION request
-> > > (which begins an authentication sequence) resets "the connection and all
-> > > context associated with that connection" (SPDM 1.3.0 margin no 158).
-> > > 
-> > > Thus, when a device is passed through to a guest and the guest has
-> > > authenticated it, a subsequent authentication by the host would reset
-> > > the device's CMA-SPDM session behind the guest's back.
-> > > 
-> > > Prevent by letting the guest claim exclusive CMA ownership of the device
-> > > during passthrough.  Refuse CMA reauthentication on the host as long.
-> > > After passthrough has concluded, reauthenticate the device on the host.  
-> > 
-> > Is there anything stopping a PF presenting multiple CMA capable DOE
-> > instances?  I'd expect them to have their own contexts if they do..  
-> 
-> The spec does not seem to *explicitly* forbid a PF having multiple
-> CMA-capable DOE instances, but PCIe r6.1 sec 6.31.3 says:
-> "The instance of DOE used for CMA-SPDM must support ..."
-> 
-> Note the singular ("The instance").  It seems to suggest that the
-> spec authors assumed there's only a single DOE instance for CMA-SPDM.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310061830.A7jaXxeG-lkp@intel.com/
 
-It's a little messy and a bit of American vs British English I think.
-If it said
-"The instance of DOE used for a specific CMA-SPDM must support..." 
-then it would clearly allow multiple instances.  However, conversely,
-I don't read that sentence as blocking multiple instances (even though
-I suspect you are right and the author was thinking of there being one).
+All errors (new ones prefixed by >>):
 
-> 
-> Could you (as an English native speaker) comment on the clarity of the
-> two sentences "Prevent ... as long." above, as Ilpo objected to them?
-> 
-> The antecedent of "Prevent" is the undesirable behaviour in the preceding
-> sentence (host resets guest's SPDM connection).
-> 
-> The antecedent of "as long" is "during passthrough" in the preceding
-> sentence.
-> 
-> Is that clear and understandable for an English native speaker or
-> should I rephrase?
+>> arch/x86/pci/fixup.c:929:6: error: use of undeclared identifier 'pm_suspend_target_state'
+           if (pm_suspend_target_state == PM_SUSPEND_ON)
+               ^
+>> arch/x86/pci/fixup.c:929:33: error: use of undeclared identifier 'PM_SUSPEND_ON'
+           if (pm_suspend_target_state == PM_SUSPEND_ON)
+                                          ^
+>> arch/x86/pci/fixup.c:951:20: error: call to undeclared function 'FIELD_GET'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+           rp->pme_support = FIELD_GET(PCI_PM_CAP_PME_MASK, pmc);
+                             ^
+   3 errors generated.
 
-Not clear enough to me as it stands.  That "as long" definitely feels
-like there is more to follow it as Ilpo noted.
 
-Maybe reword as something like 
+vim +/pm_suspend_target_state +929 arch/x86/pci/fixup.c
 
-Prevent this by letting the guest claim exclusive ownership of the device
-during passthrough ensuring problematic CMA reauthentication by the host
-is blocked.
+   907	
+   908	#ifdef CONFIG_SUSPEND
+   909	/*
+   910	 * Root Ports on some AMD SoCs advertise PME_Support for D3hot and D3cold, but
+   911	 * if the SoC is put into a hardware sleep state by the amd-pmc driver, the
+   912	 * Root Ports don't generate wakeup interrupts for USB devices.
+   913	 *
+   914	 * When suspending, remove D3hot and D3cold from the PME_Support advertised
+   915	 * by the Root Port so we don't use those states if we're expecting wakeup
+   916	 * interrupts.  Restore the advertised PME_Support when resuming.
+   917	 */
+   918	static void amd_rp_pme_suspend(struct pci_dev *dev)
+   919	{
+   920		struct pci_dev *rp;
+   921	
+   922		/*
+   923		 * PM_SUSPEND_ON means we're doing runtime suspend, which means
+   924		 * amd-pmc will not be involved so PMEs during D3 work as advertised.
+   925		 *
+   926		 * The PMEs *do* work if amd-pmc doesn't put the SoC in the hardware
+   927		 * sleep state, but we assume amd-pmc is always present.
+   928		 */
+ > 929		if (pm_suspend_target_state == PM_SUSPEND_ON)
+   930			return;
+   931	
+   932		rp = pcie_find_root_port(dev);
+   933		if (!rp->pm_cap)
+   934			return;
+   935	
+   936		rp->pme_support &= ~((PCI_PM_CAP_PME_D3hot|PCI_PM_CAP_PME_D3cold) >>
+   937					    PCI_PM_CAP_PME_SHIFT);
+   938		dev_info_once(&rp->dev, "quirk: disabling D3cold for suspend\n");
+   939	}
+   940	
+   941	static void amd_rp_pme_resume(struct pci_dev *dev)
+   942	{
+   943		struct pci_dev *rp;
+   944		u16 pmc;
+   945	
+   946		rp = pcie_find_root_port(dev);
+   947		if (!rp->pm_cap)
+   948			return;
+   949	
+   950		pci_read_config_word(rp, rp->pm_cap + PCI_PM_PMC, &pmc);
+ > 951		rp->pme_support = FIELD_GET(PCI_PM_CAP_PME_MASK, pmc);
 
-Also combine this with previous paragraph to make the 'this' more obvious
-refer to the problem described in that paragraph.
-
-Jonathan
-
-> 
-> Thanks,
-> 
-> Lukas
-> 
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
