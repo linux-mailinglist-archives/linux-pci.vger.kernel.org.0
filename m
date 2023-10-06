@@ -2,237 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5A877BB60F
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Oct 2023 13:12:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D6DD7BB660
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Oct 2023 13:23:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231915AbjJFLMj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Oct 2023 07:12:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49604 "EHLO
+        id S232006AbjJFLXN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Oct 2023 07:23:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232006AbjJFLMg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Oct 2023 07:12:36 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C86DDEB
-        for <linux-pci@vger.kernel.org>; Fri,  6 Oct 2023 04:12:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696590754; x=1728126754;
-  h=date:from:to:cc:subject:message-id;
-  bh=AvjWjlFJfCRs7RCnm8xnQP+3nN7OaeIhBfA+QLWx1/Y=;
-  b=SPiJDvo3zGmSpRbyeDx7M6gcBc1eby73qLGf8syjvrfUVlterTzGigWf
-   u5CplxMBSenUz3cL1eXiwjKja+AqRx7FcS8CXnrzHzT3ZjmcJcSJsSQJv
-   NHTRLsc6VvXo4xCGnB8+kUvTThprzBtMAAblPzVpCyKD5s+xZ3azi2miU
-   xMx4L+rn6h82EXie3KtnZjP+Sfb8vn7WjvXHiL8Je5ytidCe5MMnxvqsH
-   JvR1o2xLYq7qmN1tJgl+s46sc6OYrimbghdHY4hvU2j/yuhZ8QJtiGC4G
-   z4Wg3aDpcE1v0MrMrD+V0Cj98xCSKbZ0NzNwwh0HQtaxWIhmJzd/qt+sV
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="383620200"
-X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="383620200"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 04:12:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="781625082"
-X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="781625082"
-Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 06 Oct 2023 04:12:23 -0700
-Received: from kbuild by c3b01524d57c with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qoikn-000MXK-0g;
-        Fri, 06 Oct 2023 11:12:21 +0000
-Date:   Fri, 06 Oct 2023 19:11:23 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pm] BUILD REGRESSION
- 624306d2c241c274e498619cabc2ae1dc7112ad1
-Message-ID: <202310061917.KevbIwy3-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231911AbjJFLXM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Oct 2023 07:23:12 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 313C583;
+        Fri,  6 Oct 2023 04:23:09 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8CxyOgb7h9li4IvAA--.55266S3;
+        Fri, 06 Oct 2023 19:23:07 +0800 (CST)
+Received: from [10.20.42.43] (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxri8C7h9lgVIZAA--.53378S3;
+        Fri, 06 Oct 2023 19:23:02 +0800 (CST)
+Message-ID: <f903cf7c-4b9d-a6e6-5047-9d4ee0df283f@loongson.cn>
+Date:   Fri, 6 Oct 2023 19:22:42 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [-next 4/5] drm/virgpu: Switch to pci_is_vga()
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Sui Jingfeng <sui.jingfeng@linux.dev>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Gurchetan Singh <gurchetansingh@chromium.org>,
+        Chia-I Wu <olvaffe@gmail.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        David Airlie <airlied@redhat.com>
+References: <20231005215714.GA792609@bhelgaas>
+Content-Language: en-US
+From:   Sui Jingfeng <suijingfeng@loongson.cn>
+In-Reply-To: <20231005215714.GA792609@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf8Cxri8C7h9lgVIZAA--.53378S3
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WF4Uur1xJr4kWr13JryDCFX_yoW8tw1rpF
+        WrGFyFkryftFW7K392qF1fuFyYva9aqFyfCFsY93sI9r98tw15Zry0kr13WrW7Zrs7CF4S
+        yw4v9F1Ig3ZF9rXCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+        6r4j6r4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+        Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+        Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+        CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
+        MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
+        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+        IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUUUUU
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pm
-branch HEAD: 624306d2c241c274e498619cabc2ae1dc7112ad1  x86/PCI: Avoid PME from D3hot/D3cold for AMD Rembrandt and Phoenix USB4
+Hi,
 
-Error/Warning reports:
 
-https://lore.kernel.org/oe-kbuild-all/202310060800.WKT8C7A4-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202310061830.A7jaXxeG-lkp@intel.com
+On 2023/10/6 05:57, Bjorn Helgaas wrote:
+> In subject: "drm/virtio" to match previous history.
+>
+> On Wed, Aug 30, 2023 at 07:15:31PM +0800, Sui Jingfeng wrote:
+>> From: Sui Jingfeng <suijingfeng@loongson.cn>
+>>
+>> Should be no functional change, just for cleanup purpose.
+>>
+>> Cc: David Airlie <airlied@redhat.com>
+>> Cc: Gerd Hoffmann <kraxel@redhat.com>
+>> Cc: Gurchetan Singh <gurchetansingh@chromium.org>
+>> Cc: Chia-I Wu <olvaffe@gmail.com>
+>> Cc: Daniel Vetter <daniel@ffwll.ch>
+>> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
+>> ---
+>>   drivers/gpu/drm/virtio/virtgpu_drv.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
+>> index add075681e18..3a368304475a 100644
+>> --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
+>> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+>> @@ -51,7 +51,7 @@ static int virtio_gpu_pci_quirk(struct drm_device *dev)
+>>   {
+>>   	struct pci_dev *pdev = to_pci_dev(dev->dev);
+>>   	const char *pname = dev_name(&pdev->dev);
+>> -	bool vga = (pdev->class >> 8) == PCI_CLASS_DISPLAY_VGA;
+>> +	bool vga = pci_is_vga(pdev);
+> This *is* a functional change: Previously "vga" was only true for
+> PCI_CLASS_DISPLAY_VGA (0x0300).  Now it will be true for both
+> PCI_CLASS_DISPLAY_VGA (0x0300) and PCI_CLASS_DISPLAY_OTHER (0x0380).
+>
+> Is that desirable?  I can't tell.  Maybe the GPU folks will chime in.
+>
 
-Error/Warning: (recently discovered and may have been fixed)
+Yes, the vga variable still will be "true" for the PCI_CLASS_DISPLAY_VGA (0x0300) class code,
+and this is the major case. But the devices with PCI_CLASS_NOT_DEFINED_VGA class code are quite
+uncommon, and virtio gpu is virtual GPU driver, It is unlikely that the QEMU to emulate a
+old device with PCI_CLASS_NOT_DEFINED_VGA class code. I means that there no reason to do so.
+Am I correct? Is there anyone know more?
 
-arch/x86/pci/fixup.c:929:13: error: 'pm_suspend_target_state' undeclared (first use in this function)
-arch/x86/pci/fixup.c:929:33: error: 'PM_SUSPEND_ON' undeclared (first use in this function); did you mean 'RPM_SUSPENDING'?
-arch/x86/pci/fixup.c:929:33: error: use of undeclared identifier 'PM_SUSPEND_ON'
-arch/x86/pci/fixup.c:929:40: error: 'PM_SUSPEND_ON' undeclared (first use in this function); did you mean 'RPM_SUSPENDING'?
-arch/x86/pci/fixup.c:929:6: error: 'pm_suspend_target_state' undeclared (first use in this function); did you mean 'dpm_suspend_late'?
-arch/x86/pci/fixup.c:929:6: error: use of undeclared identifier 'pm_suspend_target_state'
-arch/x86/pci/fixup.c:951:20: error: call to undeclared function 'FIELD_GET'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-arch/x86/pci/fixup.c:951:20: error: implicit declaration of function 'FIELD_GET' [-Werror=implicit-function-declaration]
-arch/x86/pci/fixup.c:951:27: error: implicit declaration of function 'FIELD_GET' [-Werror=implicit-function-declaration]
+For virtio virtual GPU driver, I would like to drop this patch, if no one response.
 
-Error/Warning ids grouped by kconfigs:
+We probably only need to consider PCI_CLASS_NOT_DEFINED_VGA case for the real (probably old) hardware device.
+It do exists, as Maciej mention at [1].
 
-gcc_recent_errors
-|-- i386-allmodconfig
-|   |-- arch-x86-pci-fixup.c:error:PM_SUSPEND_ON-undeclared-(first-use-in-this-function)
-|   |-- arch-x86-pci-fixup.c:error:implicit-declaration-of-function-FIELD_GET
-|   `-- arch-x86-pci-fixup.c:error:pm_suspend_target_state-undeclared-(first-use-in-this-function)
-|-- i386-allyesconfig
-|   |-- arch-x86-pci-fixup.c:error:PM_SUSPEND_ON-undeclared-(first-use-in-this-function)
-|   |-- arch-x86-pci-fixup.c:error:implicit-declaration-of-function-FIELD_GET
-|   `-- arch-x86-pci-fixup.c:error:pm_suspend_target_state-undeclared-(first-use-in-this-function)
-|-- i386-buildonly-randconfig-004-20231006
-|   |-- arch-x86-pci-fixup.c:error:PM_SUSPEND_ON-undeclared-(first-use-in-this-function)
-|   |-- arch-x86-pci-fixup.c:error:implicit-declaration-of-function-FIELD_GET
-|   `-- arch-x86-pci-fixup.c:error:pm_suspend_target_state-undeclared-(first-use-in-this-function)
-|-- i386-debian-10.3
-|   |-- arch-x86-pci-fixup.c:error:PM_SUSPEND_ON-undeclared-(first-use-in-this-function)
-|   |-- arch-x86-pci-fixup.c:error:implicit-declaration-of-function-FIELD_GET
-|   `-- arch-x86-pci-fixup.c:error:pm_suspend_target_state-undeclared-(first-use-in-this-function)
-|-- i386-defconfig
-|   |-- arch-x86-pci-fixup.c:error:PM_SUSPEND_ON-undeclared-(first-use-in-this-function)
-|   |-- arch-x86-pci-fixup.c:error:implicit-declaration-of-function-FIELD_GET
-|   `-- arch-x86-pci-fixup.c:error:pm_suspend_target_state-undeclared-(first-use-in-this-function)
-|-- x86_64-allyesconfig
-|   |-- arch-x86-pci-fixup.c:error:PM_SUSPEND_ON-undeclared-(first-use-in-this-function)
-|   |-- arch-x86-pci-fixup.c:error:implicit-declaration-of-function-FIELD_GET
-|   `-- arch-x86-pci-fixup.c:error:pm_suspend_target_state-undeclared-(first-use-in-this-function)
-|-- x86_64-defconfig
-|   |-- arch-x86-pci-fixup.c:error:PM_SUSPEND_ON-undeclared-(first-use-in-this-function)
-|   |-- arch-x86-pci-fixup.c:error:implicit-declaration-of-function-FIELD_GET
-|   `-- arch-x86-pci-fixup.c:error:pm_suspend_target_state-undeclared-(first-use-in-this-function)
-`-- x86_64-rhel-8.3
-    |-- arch-x86-pci-fixup.c:error:PM_SUSPEND_ON-undeclared-(first-use-in-this-function)
-    |-- arch-x86-pci-fixup.c:error:implicit-declaration-of-function-FIELD_GET
-    `-- arch-x86-pci-fixup.c:error:pm_suspend_target_state-undeclared-(first-use-in-this-function)
-clang_recent_errors
-`-- x86_64-rhel-8.3-rust
-    |-- arch-x86-pci-fixup.c:error:call-to-undeclared-function-FIELD_GET-ISO-C99-and-later-do-not-support-implicit-function-declarations
-    |-- arch-x86-pci-fixup.c:error:use-of-undeclared-identifier-PM_SUSPEND_ON
-    `-- arch-x86-pci-fixup.c:error:use-of-undeclared-identifier-pm_suspend_target_state
+[1] https://lkml.org/lkml/2023/6/18/315
 
-elapsed time: 924m
 
-configs tested: 107
-configs skipped: 2
+>>   	int ret;
+>>   
+>>   	DRM_INFO("pci: %s detected at %s\n",
+>> -- 
+>> 2.34.1
+>>
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20231006   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                   randconfig-001-20231006   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20231006   gcc  
-i386         buildonly-randconfig-002-20231006   gcc  
-i386         buildonly-randconfig-003-20231006   gcc  
-i386         buildonly-randconfig-004-20231006   gcc  
-i386         buildonly-randconfig-005-20231006   gcc  
-i386         buildonly-randconfig-006-20231006   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231006   gcc  
-i386                  randconfig-002-20231006   gcc  
-i386                  randconfig-003-20231006   gcc  
-i386                  randconfig-004-20231006   gcc  
-i386                  randconfig-005-20231006   gcc  
-i386                  randconfig-006-20231006   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20231006   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20231006   gcc  
-x86_64                randconfig-002-20231006   gcc  
-x86_64                randconfig-003-20231006   gcc  
-x86_64                randconfig-004-20231006   gcc  
-x86_64                randconfig-005-20231006   gcc  
-x86_64                randconfig-006-20231006   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
