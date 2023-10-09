@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 723B37BE1A4
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Oct 2023 15:52:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7EC47BE1E5
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Oct 2023 15:55:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377453AbjJINw2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Oct 2023 09:52:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48340 "EHLO
+        id S1377589AbjJINzU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Oct 2023 09:55:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377457AbjJINw1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Oct 2023 09:52:27 -0400
+        with ESMTP id S1377599AbjJINzS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Oct 2023 09:55:18 -0400
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51E5BA3;
-        Mon,  9 Oct 2023 06:52:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 098B9B9;
+        Mon,  9 Oct 2023 06:55:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1696859543; x=1728395543;
+  t=1696859715; x=1728395715;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=woWLvA+OZiwBOAnGAJHDSkgAYlJa502T4z/q/Xqpl9M=;
-  b=wNGl/KR7BoYCjqevRPbNLuuCiTPZsrJSWyqQoRlYrOi6I3gzxGteIF/c
-   kX88F6ZKXxXv0EKQscIxQSQ+FTsEOcta+rKsOfS6mH8e+SyrXEUyJar5H
-   JDZwdznL2VAqSj8E9xpI1ukJXnv7JBI4QyDf25pgyJyoVm4dnD30XyN+S
-   sWDQq6R9fSeOXa3UzGdKzhNOkZAkQLGg9qmsObYw5iDV3IoOWaRSn2fI9
-   FsY9l8x5EM9aezwdDVGzxSx0XzRG8QJIxvGifbsRqyUHVP63J0tuCb1Fk
-   5EzknoCYxzjA62fN5glNP0b5BDGleCmypYQgm7C6d/ntqrvzEnEOx/4Qy
-   g==;
-X-CSE-ConnectionGUID: M2UGz3wCSraKDoNm0f0NgQ==
-X-CSE-MsgGUID: kDZEEEfbRYGInoeHmZQt0Q==
+  bh=gyAyyVVpeXrkP6kYXa6+1hGK7jwZaqHDO7BPBGN0kt4=;
+  b=b00qfY6XO5TgKGsHWnQjxlc/FdjKG7r6j8KR8V7ousu2w38b41zUN7bF
+   7SjyVFv+xN73AHxxRwIpVlphux0p0oWgGtHXBVoBKz+8ngDOHZfJdDUTY
+   8PXn1zpY/2K1bswPCARyKsRyK7jmw0NuLaAnreRKll3QSo/YqfotTEIeB
+   AMNWgWxJXDiRP51Ob52NIsbanE7SPLRW6mDGjOrKuSG3k6xUXWvGlupzm
+   OBNhujXilGGyPo3BHa9ZuKZ+SYeF5BarLhhq45/WvJT0oDB/vQ7WWVK9s
+   HrmkIFtKw0VJT+edZHY2MW9SfI8ueFJwbBhRRpEwDnJ1PEYQLonwckcnD
+   Q==;
+X-CSE-ConnectionGUID: BCeMba0SR+ms7gMS9QQd6g==
+X-CSE-MsgGUID: BpGGr/ejTDuwg8VyZ1RHXw==
 X-ThreatScanner-Verdict: Negative
 X-IronPort-AV: E=Sophos;i="6.03,210,1694761200"; 
-   d="asc'?scan'208";a="176451529"
+   d="asc'?scan'208";a="9287955"
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Oct 2023 06:52:17 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Oct 2023 06:55:11 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Mon, 9 Oct 2023 06:52:17 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
+ 15.1.2507.21; Mon, 9 Oct 2023 06:55:11 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
- Transport; Mon, 9 Oct 2023 06:52:13 -0700
-Date:   Mon, 9 Oct 2023 14:51:52 +0100
+ Transport; Mon, 9 Oct 2023 06:55:08 -0700
+Date:   Mon, 9 Oct 2023 14:54:47 +0100
 From:   Conor Dooley <conor.dooley@microchip.com>
 To:     Minda Chen <minda.chen@starfivetech.com>
 CC:     Daire McNamara <daire.mcnamara@microchip.com>,
@@ -64,16 +64,16 @@ CC:     Daire McNamara <daire.mcnamara@microchip.com>,
         Mason Huo <mason.huo@starfivetech.com>,
         Leyfoon Tan <leyfoon.tan@starfivetech.com>,
         Kevin Xie <kevin.xie@starfivetech.com>
-Subject: Re: [PATCH v7 13/19] PCI: microchip: Add get_events() callback
- function
-Message-ID: <20231009-ecologist-postage-f4e6d96d77cd@wendy>
+Subject: Re: [PATCH v7 14/19] PCI: microchip: Add event IRQ domain ops to
+ struct plda_event
+Message-ID: <20231009-walk-tranquil-915f1a35f58c@wendy>
 References: <20230927100802.46620-1-minda.chen@starfivetech.com>
- <20230927100802.46620-14-minda.chen@starfivetech.com>
+ <20230927100802.46620-15-minda.chen@starfivetech.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="GRp9b0oKyCUZcQwq"
+        protocol="application/pgp-signature"; boundary="m6KZbs29qDbK8z+n"
 Content-Disposition: inline
-In-Reply-To: <20230927100802.46620-14-minda.chen@starfivetech.com>
+In-Reply-To: <20230927100802.46620-15-minda.chen@starfivetech.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
@@ -84,116 +84,111 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---GRp9b0oKyCUZcQwq
+--m6KZbs29qDbK8z+n
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hey,
 
-On Wed, Sep 27, 2023 at 06:07:56PM +0800, Minda Chen wrote:
-> For different interrupts to event num mapping function,
-> add get_events() function pointer.
->=20
-> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-> ---
->  drivers/pci/controller/plda/pcie-microchip-host.c | 14 +++++++++++++-
->  drivers/pci/controller/plda/pcie-plda.h           |  2 ++
->  2 files changed, 15 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/=
-pci/controller/plda/pcie-microchip-host.c
-> index fb09b6c34e01..875bdb03ce22 100644
-> --- a/drivers/pci/controller/plda/pcie-microchip-host.c
-> +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-> @@ -646,7 +646,7 @@ static void plda_handle_event(struct irq_desc *desc)
-> =20
->  	chained_irq_enter(chip, desc);
-> =20
-> -	events =3D mc_get_events(port);
-> +	events =3D port->event_ops->get_events(port);
-> =20
->  	for_each_set_bit(bit, &events, port->num_events)
->  		generic_handle_domain_irq(port->event_domain, bit);
-> @@ -805,7 +805,12 @@ static int mc_request_event_irq(struct plda_pcie_rp =
-*plda, int event_irq,
->  				0, event_cause[event].sym, plda);
->  }
-> =20
-> +static const struct plda_event_ops mc_event_ops =3D {
-> +	.get_events =3D mc_get_events,
-> +};
-> +
->  static const struct plda_event mc_event =3D {
-> +	.event_ops              =3D &mc_event_ops,
->  	.request_event_irq      =3D mc_request_event_irq,
->  	.intx_event             =3D EVENT_LOCAL_PM_MSI_INT_INTX,
->  	.msi_event              =3D EVENT_LOCAL_PM_MSI_INT_MSI,
-> @@ -919,6 +924,11 @@ static int plda_init_interrupts(struct platform_devi=
-ce *pdev,
->  	int i, intx_irq, msi_irq, event_irq;
->  	int ret;
-> =20
-> +	if (!event->event_ops || !event->event_ops->get_events) {
-> +		dev_err(dev, "no get events ops\n");
-> +		return -EINVAL;
-> +	}
+On Wed, Sep 27, 2023 at 06:07:57PM +0800, Minda Chen wrote:
+> For register different event domain ops, Add domain_ops
+> pointer to struct plda_event.
 
-Dumb question maybe, but is this actually possible to trigger?
-This code is in the Microchip driver, so I assume there's a future patch
-moving this code that could actually trigger the problem? If so, the
-motivation for making this generic should be mentioned in the commit
-message IMO.
+Again, the motivation for making this change should, IMO, be mentioned
+in the commit message. The code change itself seems fine to me.
 
 Thanks,
 Conor.
 
+>=20
+> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+> ---
+>  drivers/pci/controller/plda/pcie-microchip-host.c | 12 +++++++++---
+>  drivers/pci/controller/plda/pcie-plda.h           |  1 +
+>  2 files changed, 10 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/=
+pci/controller/plda/pcie-microchip-host.c
+> index 875bdb03ce22..49e09d24eb8f 100644
+> --- a/drivers/pci/controller/plda/pcie-microchip-host.c
+> +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
+> @@ -810,13 +810,15 @@ static const struct plda_event_ops mc_event_ops =3D=
+ {
+>  };
+> =20
+>  static const struct plda_event mc_event =3D {
+> +	.domain_ops             =3D &mc_event_domain_ops,
+>  	.event_ops              =3D &mc_event_ops,
+>  	.request_event_irq      =3D mc_request_event_irq,
+>  	.intx_event             =3D EVENT_LOCAL_PM_MSI_INT_INTX,
+>  	.msi_event              =3D EVENT_LOCAL_PM_MSI_INT_MSI,
+>  };
+> =20
+> -static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port)
+> +static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port,
+> +				      const struct irq_domain_ops *ops)
+>  {
+>  	struct device *dev =3D port->dev;
+>  	struct device_node *node =3D dev->of_node;
+> @@ -830,7 +832,8 @@ static int plda_pcie_init_irq_domains(struct plda_pci=
+e_rp *port)
+>  	}
+> =20
+>  	port->event_domain =3D irq_domain_add_linear(pcie_intc_node, port->num_=
+events,
+> -						   &mc_event_domain_ops, port);
+> +						   ops, port);
 > +
->  	ret =3D plda_pcie_init_irq_domains(port);
+>  	if (!port->event_domain) {
+>  		dev_err(dev, "failed to get event domain\n");
+>  		of_node_put(pcie_intc_node);
+> @@ -923,13 +926,16 @@ static int plda_init_interrupts(struct platform_dev=
+ice *pdev,
+>  	int irq;
+>  	int i, intx_irq, msi_irq, event_irq;
+>  	int ret;
+> +	const struct irq_domain_ops *irq_dom_ops;
+> =20
+>  	if (!event->event_ops || !event->event_ops->get_events) {
+>  		dev_err(dev, "no get events ops\n");
+>  		return -EINVAL;
+>  	}
+> =20
+> -	ret =3D plda_pcie_init_irq_domains(port);
+> +	irq_dom_ops =3D event->domain_ops ? event->domain_ops : &mc_event_domai=
+n_ops;
+> +
+> +	ret =3D plda_pcie_init_irq_domains(port, irq_dom_ops);
 >  	if (ret) {
 >  		dev_err(dev, "failed creating IRQ domains\n");
-> @@ -929,6 +939,8 @@ static int plda_init_interrupts(struct platform_devic=
-e *pdev,
->  	if (irq < 0)
->  		return -ENODEV;
-> =20
-> +	port->event_ops =3D event->event_ops;
-> +
->  	for (i =3D 0; i < port->num_events; i++) {
->  		event_irq =3D irq_create_mapping(port->event_domain, i);
->  		if (!event_irq) {
+>  		return ret;
 > diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/contro=
 ller/plda/pcie-plda.h
-> index af5e69718342..48d7bc471137 100644
+> index 48d7bc471137..122084a3318a 100644
 > --- a/drivers/pci/controller/plda/pcie-plda.h
 > +++ b/drivers/pci/controller/plda/pcie-plda.h
-> @@ -149,11 +149,13 @@ struct plda_pcie_rp {
->  	struct irq_domain *event_domain;
->  	raw_spinlock_t lock;
->  	struct plda_msi msi;
-> +	const struct plda_event_ops *event_ops;
->  	void __iomem *bridge_addr;
->  	int num_events;
+> @@ -155,6 +155,7 @@ struct plda_pcie_rp {
 >  };
 > =20
 >  struct plda_event {
-> +	const struct plda_event_ops *event_ops;
+> +	const struct irq_domain_ops *domain_ops;
+>  	const struct plda_event_ops *event_ops;
 >  	int (*request_event_irq)(struct plda_pcie_rp *pcie,
 >  				 int event_irq, int event);
->  	int intx_event;
 > --=20
 > 2.17.1
 >=20
 
---GRp9b0oKyCUZcQwq
+--m6KZbs29qDbK8z+n
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZSQFeAAKCRB4tDGHoIJi
-0sQDAQCmZ0rXA250TxGxywJjsr6LKhJtGnFd+6HHyhxRHgHgZgD/cXM805IrCm9N
-65OncJLg0lDUUeiQLhzDEErT/hwwjgk=
-=9ZA0
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZSQGJwAKCRB4tDGHoIJi
+0gYuAP9YmN8fqrCvIcDZ84hExyo6Vu/F1CIxaPdG74xU36uKvQEAqgc/XKWQMzpn
+ynbUEg/q3dgQSY95wyw26lrTyWvOrAg=
+=jw9K
 -----END PGP SIGNATURE-----
 
---GRp9b0oKyCUZcQwq--
+--m6KZbs29qDbK8z+n--
