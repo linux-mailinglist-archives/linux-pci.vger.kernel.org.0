@@ -2,61 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 812B37BEB38
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Oct 2023 22:06:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 461DD7BEB81
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Oct 2023 22:20:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378522AbjJIUGN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Oct 2023 16:06:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59914 "EHLO
+        id S1378627AbjJIUUb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Oct 2023 16:20:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234599AbjJIUGL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Oct 2023 16:06:11 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92FF3CC
-        for <linux-pci@vger.kernel.org>; Mon,  9 Oct 2023 13:06:08 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2c1807f3400so60244911fa.1
-        for <linux-pci@vger.kernel.org>; Mon, 09 Oct 2023 13:06:08 -0700 (PDT)
+        with ESMTP id S1378610AbjJIUU2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Oct 2023 16:20:28 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 883CADB
+        for <linux-pci@vger.kernel.org>; Mon,  9 Oct 2023 13:20:26 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2c00df105f8so62210101fa.2
+        for <linux-pci@vger.kernel.org>; Mon, 09 Oct 2023 13:20:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1696881966; x=1697486766; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1696882824; x=1697487624; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vntWR/EJpWFamZ/9NMXVbCLlV4xDhJbERcnlqbMN6Xk=;
-        b=BFuMz3FMbhLgkIJi/HkkmJ1VkLf2I7vqp4svyIwG2+yDE+U4S96EGEikgUcb8O02Uo
-         8j8iLlfo7vmxsfcwVcs/qIKkl99xa5dmEeJRo1cSF6V+ygbEal7iO3+v912NQA+dawBz
-         Soy5yco9XA4Rbc4rDCwVGkioAfXZalXRitmVvyF0C2rWZ0Ewe2//XA3FBEsbn52apGZL
-         aRFt/c7Wzbg6QpYPQ0dm8EJR8fe2x3S+duZuFSIP/H5VlRW/FVRYn5HxOETlTJKz3xcb
-         BMDmJLPjWEXQ8IaDm9bc5q/71Ibv+h4ffhs1BXiaAk1KUwUk/S2rUW6zLyroy1Lm1kJC
-         OAGg==
+        bh=Y+Vz1bOKclq9QVOuzcbH1aPgn89tmrsRZHycaiZatEw=;
+        b=ZXApSf+xs3DWZi9glvHF1ftND6nJHcuKyZNMhSXqRfpzyjpe56h3jtGPbf0ReTYeIR
+         RoqIRMnNlo5c4iYjSTI3QLMoSrSL3Rs4N1wpJYkT7wNvk55NM8Kj09YWfoihk3uwDV0N
+         j3DLQGPgNtVUZ1Xe3iQddIydsZZGVwfsNomkvREBIGMDV5eJ9Swc92sSWIp/4FFJLqSW
+         cxpBEqBDyMXZseJ7uDuknWrKTq/l6vorjNDBaNeMsX/00U5lU9RwVZ4B+UfgR9Phi2Nn
+         Kmrm7CQdyUv/4Oz1E2zyTUl+ziSyCKtPfjZ+tJ8buhGvk4n7GbHom+dqb86i8kTuCv48
+         ctcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696881966; x=1697486766;
+        d=1e100.net; s=20230601; t=1696882824; x=1697487624;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vntWR/EJpWFamZ/9NMXVbCLlV4xDhJbERcnlqbMN6Xk=;
-        b=Z+z0Ns92nZJeYha0riAskZEL1lKpICDLWkxSMaZAx6+zkHiwkSHudNZZNqfJlXwDEu
-         ARxkJus4sHTjdSJcthBLnqqH0Xefk9IxCx57e80D8V4I5RgMA7wxWZZAak9Bs2eYcOKa
-         dsrskr0+frtO9vIrivKg/kZYM5dPUbFGsFLyZys6KWqeuQzLtvOVymj2uv2eLtOyfZj7
-         qwozBdja8lvkZERzWQEnN69SA3w968JNLt2ituy2WaeoqgruzK53Ng28qtQffz5iaQ7N
-         cQZi7m9Avu0av7WnrIgSVK0oPrnvtfLCtx2EimxyG1FAGdyVeuBNJORR4pyEu5UKMylj
-         SKKA==
-X-Gm-Message-State: AOJu0YyKQxDLWBF3KHx090ofByBor8GVWrJFYU4EW0O+Y7Elg6pxrOKY
-        Ry6nh2sZwFyNBbGZ9hKxDbjfL/qu41Kj8k+2pdc/cA==
-X-Google-Smtp-Source: AGHT+IFghqg7b3VfDVvZ+soPEwEaIfxhrwarlOcz2b03PC3KagC0O9BH1UGRNCP79pJ8yT5JMzxC/VoYSKvtKG/y1ws=
-X-Received: by 2002:a2e:870c:0:b0:2b6:cbdb:790c with SMTP id
- m12-20020a2e870c000000b002b6cbdb790cmr11535962lji.1.1696881966432; Mon, 09
- Oct 2023 13:06:06 -0700 (PDT)
+        bh=Y+Vz1bOKclq9QVOuzcbH1aPgn89tmrsRZHycaiZatEw=;
+        b=ISb4PwqVcB3On4nq7Ai8N6mZh1lQuHco4uPBUtAlNh/b1ulY+suVDLxMUUi9JETv1d
+         5Dpj1EWqUDa99JatHRTEo9o5Pc13HmYSniatpxb/jcuQodjEL2G6AGNpAarb+iSnkem0
+         7/yh8v89NIuPFOBVsy5n01kzJ3ja3rZj0F8vzRD3xH6/9q9QiI2syi3Q9eWjtJP/ORdT
+         twUseRtLLR1M1Zmr9iRxzo4cZTjzp5H3DwHg+9Rha8sVsQz4V0r+WftkGiHJZrEJZWEE
+         WFN99sHHmt6QZMKsXX94ZcJ5aYnILulceARcM2ZSlWPRhSBX3cCRzenxGl96HMjdKLRe
+         bQCA==
+X-Gm-Message-State: AOJu0YzWVQQkufvVUT9BYXmHQFdUM0rjn8dZ/NC0sij/LqzNssCh6v+O
+        idmj1f57L0LHGLQ7WQHr39rEjR6gaBa66TLAzbRtBg==
+X-Google-Smtp-Source: AGHT+IEX6TNoPqier59OSFRvkXjcha7x9rPtvBMuDMX6o39QQshLcsk0zSX1nZ378MTMsNUvnOr8e/pohr3AIc4q14M=
+X-Received: by 2002:a05:651c:120e:b0:2bf:fbe7:67dd with SMTP id
+ i14-20020a05651c120e00b002bffbe767ddmr14845991lja.28.1696882824611; Mon, 09
+ Oct 2023 13:20:24 -0700 (PDT)
 MIME-Version: 1.0
 References: <20231009165741.746184-1-max.kellermann@ionos.com>
- <20231009165741.746184-6-max.kellermann@ionos.com> <264fa39d-aed6-4a54-a085-107997078f8d@roeck-us.net>
-In-Reply-To: <264fa39d-aed6-4a54-a085-107997078f8d@roeck-us.net>
+ <20231009165741.746184-6-max.kellermann@ionos.com> <2023100921-that-jasmine-2240@gregkh>
+In-Reply-To: <2023100921-that-jasmine-2240@gregkh>
 From:   Max Kellermann <max.kellermann@ionos.com>
-Date:   Mon, 9 Oct 2023 22:05:55 +0200
-Message-ID: <CAKPOu+8k2x1CucWSzoouts0AfMJk+srJXWWf3iWVOeY+fWkOpQ@mail.gmail.com>
+Date:   Mon, 9 Oct 2023 22:20:13 +0200
+Message-ID: <CAKPOu+9=WBabTBExH1GQxhXrNH9xWciceavi6QF1nbfn9cXcig@mail.gmail.com>
 Subject: Re: [PATCH 6/7] fs/sysfs/group: make attribute_group pointers const
-To:     Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Borislav Petkov <bp@alien8.de>,
         Tony Luck <tony.luck@intel.com>,
@@ -64,6 +63,7 @@ Cc:     Jens Axboe <axboe@kernel.dk>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Robert Richter <rric@kernel.org>,
         Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Jason Gunthorpe <jgg@ziepe.ca>,
         Leon Romanovsky <leon@kernel.org>,
         Bart Van Assche <bvanassche@acm.org>,
@@ -123,24 +123,11 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 9, 2023 at 7:24=E2=80=AFPM Guenter Roeck <linux@roeck-us.net> w=
-rote:
-> Also, I don't know why checkpatch is happy with all the
->
->         const struct attribute_group *const*groups;
->
-> instead of
->
->         const struct attribute_group *const *groups;
+On Mon, Oct 9, 2023 at 7:26=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> "*const*groups"?   That's a parsing nightmare, really hard for humans to
+> read and understand.  Doesn't checkpatch complain about this?
 
-I found out that checkpatch has no check for this at all; it does
-complain about such lines, but only for local variables. But that
-warning is actually a bug, because this is a check for unary
-operators: it thinks the asterisk is a dereference operator, not a
-pointer declaration, and complains that the unary operator must be
-preceded by a space. Thus warnings on local variable are only correct
-by coincidence, not by design.
-
-Inside structs or parameters (where my coding style violations can be
-found), it's a different context and thus checkpatch doesn't apply the
-rules for unary operators.
+No, checkpatch does not implement a check/warning for this style (see
+my other email). There's no rule for this in coding-style.rst. Should
+there be one?
