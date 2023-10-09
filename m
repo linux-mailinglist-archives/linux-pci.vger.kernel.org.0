@@ -2,231 +2,253 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A02257BEEA2
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Oct 2023 00:57:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DB3E7BEEA3
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Oct 2023 00:57:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378939AbjJIW5e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Oct 2023 18:57:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57424 "EHLO
+        id S1378968AbjJIW5q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Oct 2023 18:57:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378969AbjJIW5c (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Oct 2023 18:57:32 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2071.outbound.protection.outlook.com [40.107.244.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01CDFA4
-        for <linux-pci@vger.kernel.org>; Mon,  9 Oct 2023 15:57:31 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zl5B+LlPlFtvzqh5LMT20Clk2SwkvXFzDkaXDAGfSusSAPgSeMzsZ50cU0Qx6yn2XmeFq1n46CVuWKKeop8Xt2euDBz0RsmjE8ShPUF1goDAE2f+e3a2DifQMuQtPh6f1jhdiy+YBQ6ldIODvtG/kvTfDNn1luGoXJC707ps/WHt/wrVLOWGB9I1t3qVHP/Wka7blvpR3p9zSMH3NNO5k7XZnIw3QKhLth88uNywK9UKUBAa+a2+RCCn3C0lzCHQQZXffF+ogrwPJ4/IuGCyNSWIABQxvJv7nBJhkG1gMTxZ9kMavicshROSO/UDJcGL35i2nAW7wqTcp0FdqiMrYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8eUOlWTBTZZ1yFaKhYhblqOSQt2cmKckGswEOxIwRR0=;
- b=QwGkopXZezZsTWdtVOGkew0oK3PWdrxdtZxM/9XvBD1H5vvdLDrM6TI0Wona0flqRZn2CO6rPJaQKdVOUp8oyaPqPQNcbFFxMmntwT699BbsrdIlDlqscbqxn06wh+dIfGoR7euligmhbC1ZpKWSgdU+gkekEpNcewa5QVHD5UbC+yOxpyO7UQyrVYJynXEotG49iRpU2eKgE8o7hOpWqLF8hLZ8KfQV1NA4irKhMhzAiZOi5k9XQXtlWSRCyNKkBfOwY+4IEkrJiuav7t/XLEX160xmJ95stIBYuf0i5f9y3O5EfBnT41pD6W1xZLuxgUcGIrBpFdePakUtyCaNhQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8eUOlWTBTZZ1yFaKhYhblqOSQt2cmKckGswEOxIwRR0=;
- b=p2NctkrHFEhn6ePAcnrjXBJh3zABxoUq+l77KwlmEX6vqYb8oDV79mo814PAT66nJ8/Hyad+KP2WG4VrD8S62Kao6V0JU99UKWg5CmKA2xLvRyzzV3IiiROrZpB6Zr0I1nyNg9kToEq2Qo2jvR+8weAOhTxtn1nIaCnrjcxv0aI=
-Received: from CYZPR05CA0043.namprd05.prod.outlook.com (2603:10b6:930:a3::25)
- by DM6PR12MB5024.namprd12.prod.outlook.com (2603:10b6:5:20a::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.37; Mon, 9 Oct
- 2023 22:57:28 +0000
-Received: from CY4PEPF0000EE33.namprd05.prod.outlook.com
- (2603:10b6:930:a3:cafe::4d) by CYZPR05CA0043.outlook.office365.com
- (2603:10b6:930:a3::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.21 via Frontend
- Transport; Mon, 9 Oct 2023 22:57:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EE33.mail.protection.outlook.com (10.167.242.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6838.19 via Frontend Transport; Mon, 9 Oct 2023 22:57:22 +0000
-Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 9 Oct
- 2023 17:57:21 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
+        with ESMTP id S1378961AbjJIW5p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Oct 2023 18:57:45 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03C8BBA
+        for <linux-pci@vger.kernel.org>; Mon,  9 Oct 2023 15:57:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696892263; x=1728428263;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=JsGgaGP5zLiEkv5RpgRszbBppYOocHpm5r4aevWxWZU=;
+  b=GrFVzUysqhrL0xFlTZL5pPeR1Qx6clOvvl0tf9meuX2sa1eZ/zvvIzlX
+   B4C5E2065svrcMsjrlCh5zpuPhfd9acpLm/5GJm0LCmYFt+YA0rBP5CSR
+   yA0bwfbbebF9H/ANrt5KRzTvLd/5km9/MpZjd/c5EMfmJDvpNCly2quK4
+   gl4Nw3szZcdKJV8wQtJq9Ad3KunBSvckUrmzVHJUP6GWLw13XNdzXOVPI
+   4gZ2Tz16Q22mJ+azzl2wEnV5+aOmxMkX+Ey+RgrLGjGUwx5+7UOxW4Gsf
+   uQd9GqkXvGFdFn1ILGXWJ/3ZHO/Cy+p708IFCuoQV/AYbx+A+2xMSlpRX
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="448460452"
+X-IronPort-AV: E=Sophos;i="6.03,211,1694761200"; 
+   d="scan'208";a="448460452"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 15:57:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="753185712"
+X-IronPort-AV: E=Sophos;i="6.03,211,1694761200"; 
+   d="scan'208";a="753185712"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 15:57:39 -0700
+Received: from gwu-mobl.amr.corp.intel.com (unknown [10.209.25.71])
+        by linux.intel.com (Postfix) with ESMTP id 2BC345807E2;
+        Mon,  9 Oct 2023 15:57:40 -0700 (PDT)
+Message-ID: <03af547bb8abad1afc5fde396a9a6fa73c54e890.camel@linux.intel.com>
+Subject: Re: [PATCH v4] PCI/ASPM: Add back L1 PM Substate save and restore
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Thomas Witt <kernel@witt.link>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: [RFC v1 4/4] platform/x86/amd: pmc: Add support for using constraints to decide D3 policy
-Date:   Mon, 9 Oct 2023 17:56:53 -0500
-Message-ID: <20231009225653.36030-5-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231009225653.36030-1-mario.limonciello@amd.com>
-References: <20231009225653.36030-1-mario.limonciello@amd.com>
+        Tasev Nikola <tasev.stefanoska@skynet.be>,
+        Mark Enriquez <enriquezmark36@gmail.com>,
+        Koba Ko <koba.ko@canonical.com>,
+        Werner Sembach <wse@tuxedocomputers.com>,
+        Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        =?UTF-8?Q?=E5=90=B3=E6=98=8A=E6=BE=84?= Ricky 
+        <ricky_wu@realtek.com>, linux-pci@vger.kernel.org
+Date:   Mon, 09 Oct 2023 15:57:40 -0700
+In-Reply-To: <20231009163421.GA938492@bhelgaas>
+References: <20231009163421.GA938492@bhelgaas>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE33:EE_|DM6PR12MB5024:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0860477b-cb3b-4c74-1e62-08dbc91b195c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +psbvEoq+U/oNfc1MWeRR7/KrsWGJPW8VgiFRdbQWmtSryY9KKXMxxH02TnUuB/W20B3GJ1YN3GOpK4kDarNjLPmiZNig2Yw7ZwAq1ajuPUnET5ETr65KYVpSB9M7UEQ9QYcjG8iVxPfHh3LBWaZ9igcXLQJgftNwa396TVl13sIhcx1l9V404FyZIrn66fGK/mWklQn50+OlLBOScGtuhKHQCDdGBgW9QyWHIMm6p+DLd0F6iw64LDbGZSgJuQ0wZIgGfMPfzsdIhm/J2tnf/5ysdH4ks19Shof4LpUfFcSl6LET5ZuP/inc+BfRjX4wPHEW+JoQ+5/rJTWul6KHbq8o4ecghtHpjKD0z0S8znyApvtdwqH6pcJYT4JNha3wD6zwjoAVDEsvWjUC4K/LBe/CzmEJyinvRRvDkPdWb/OO0ve/57iesI4JjtnShBs76HhxNbeb6/4fSdKvizlC4gE4h+93k5E+ReBNLFAAHzWbFEr1nk7XsX/oYRuzd1xNifDV8QjZ4DmfOCCEVwgmyAXKrwOrrW2dvM0eSHQgeTMArdPuNXUyZvqjxfb7AoX/ty4dn07xz2/YQ2ju2nhiPakVOzJza78+/BztBiaVAlNX41LCWClN6Cfg38uRC+JcfS86lya0JRxXOzrOKwhHM90IV31egQWFK3T/Vr8QDRrHO3e6kq2Tr5RbaU5AMMf3lnNTAOwGfI8AOwlIO/YOnuimhxVQYdIu54wf9pJoLMaesygU2ZmWu+LhcS/LHWl
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(376002)(136003)(346002)(396003)(230922051799003)(82310400011)(186009)(451199024)(1800799009)(64100799003)(40470700004)(36840700001)(46966006)(82740400003)(2616005)(7696005)(1076003)(478600001)(41300700001)(316002)(336012)(83380400001)(966005)(47076005)(426003)(2906002)(70586007)(70206006)(54906003)(110136005)(5660300002)(4326008)(8676002)(8936002)(16526019)(26005)(40460700003)(36860700001)(44832011)(356005)(36756003)(40480700001)(81166007)(86362001)(6666004)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2023 22:57:22.8887
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0860477b-cb3b-4c74-1e62-08dbc91b195c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000EE33.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB5024
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The default kernel policy will allow modern machines to effectively put
-all PCIe bridges into PCI D3. This policy doesn't match what Windows uses.
+On Mon, 2023-10-09 at 11:34 -0500, Bjorn Helgaas wrote:
+> On Mon, Oct 09, 2023 at 11:34:34AM +0300, Mika Westerberg wrote:
+> > On Thu, Oct 05, 2023 at 12:22:26PM -0500, Bjorn Helgaas wrote:
+> > > On Thu, Oct 05, 2023 at 05:57:52PM +0200, Thomas Witt wrote:
+> > > > On 05/10/2023 17:30, Bjorn Helgaas wrote:
+> > > > ...
+> > >=20
+> > > > > Right, without the denylist, I expect Thomas' TUXEDO to fail,
+> > > > > but I still hope we can figure out why.=C2=A0 If we just keep it =
+on
+> > > > > the denylist, that system will suffer from more power
+> > > > > consumption than necessary, but only after suspend/resume.
+> > > > >=20
+> > > > > A denylist seems like the absolute last resort.=C2=A0 In this cas=
+e
+> > > > > we don't know about anything *wrong* with those platforms; all
+> > > > > we know is that our resume path doesn't work.=C2=A0 It's likely
+> > > > > that it fails on other platforms we haven't heard about, too.
+> > > >=20
+> > > > The best guess from Mika and David was a firmware issue, but I
+> > > > run the same Firmware revision as Werner. I even reflashed the
+> > > > Firmware, but that did not change anything:
+> > >=20
+> > > Possibly a BIOS settings difference?
+> > >=20
+> > > > Quoting David Box:
+> > > > > I agree that we should pursue an exception for your system.
+> > > > > This is looking like a firmware bug. One thing we did notice
+> > > > > in the turbostat results is your IRTL (Interrupt Response Time
+> > > > > Limit) values are bogus:
+> > > > >=20
+> > > > > cpu6: MSR_PKGC3_IRTL: 0x0000884e (valid, 79872 ns)
+> > > > > cpu6: MSR_PKGC6_IRTL: 0x00008000 (valid, 0 ns)
+> > > > > cpu6: MSR_PKGC7_IRTL: 0x00008000 (valid, 0 ns)
+> > > > > cpu6: MSR_PKGC8_IRTL: 0x00008000 (valid, 0 ns)
+> > > > > cpu6: MSR_PKGC9_IRTL: 0x00008000 (valid, 0 ns)
+> > > > > cpu6: MSR_PKGC10_IRTL: 0x00008000 (valid, 0 ns)
+> > > > >=20
+> > > > > This is despite the PKGC configuration register showing that all
+> > > > > states are enabled:
+> > > > >=20
+> > > > > cpu6: MSR_PKG_CST_CONFIG_CONTROL: 0x1e008008 (UNdemote-C3, UNdemo=
+te-
+> > > > > C1,
+> > > > demote-
+> > > > C3, demote-C1, locked, pkg-cstate-limit=3D8 (unlimited))
+> > > > >=20
+> > > > > Firmware sets this.
+> > >=20
+> > > I can't find this discussion, but if there's a firmware issue related
+> > > to IRTL MSRs, I would want the workaround in intel-idle.c or whatever
+> > > code deals with the MSRs, not in the ASPM code.
+> >=20
+> > Unfortunately that discussion never ended up on the mailing list. But i=
+n
+> > summary that particular system seems to run pretty hot (if I understand
+> > correctly what David concluded). This is the reason Thomas has the
+> > pm_sleep=3Ddeep in the command line and this is why the L1 SS restore t=
+hen
+> > causes the failure on resume. Without this it works fine but consumes
+> > lot of energy in s2idle.
+> >=20
+> > Can you suggest what we should do with this now?
+> >=20
+> > We got report from Tasev Nikola on
+> > https://bugzilla.kernel.org/show_bug.cgi?id=3D216782=C2=A0that even if =
+the Asus
+> > system is removed from the denylist it works so that we can do. However=
+,
+> > with the Thomas' system I'm not sure. If we leave it like this:
+> >=20
+> > static int aspm_l1ss_suspend_via_firmware(const struct dmi_system_id
+> > *not_used)
+> > {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return pm_suspend_via_firmwa=
+re();
+> > }
+> >=20
+> > static const struct dmi_system_id aspm_l1ss_denylist[] =3D {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 /*
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 * https://bugzilla.kernel.org/show_bug.cgi?id=
+=3D216877
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 *
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 * This system needs to use suspend to mem inste=
+ad of its=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 * default (suspend to idle) to avoid draining t=
+he battery.=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 * However, the BIOS gets confused if we try to =
+restore the
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 * L1SS registers so avoid doing that if the use=
+r forced
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 * suspend to mem. The default suspend to idle o=
+n the other
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 * hand needs restoring L1SS to allow the CPU to=
+ enter low
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 * power states. This entry should handle both.
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 .callback =3D aspm_l1ss_suspend_via_firmware,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 .ident =3D "TUXEDO InfinityBook S 14 v5",
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 .matches =3D {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 DMI_M=
+ATCH(DMI_BOARD_VENDOR, "TUXEDO"),
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 DMI_M=
+ATCH(DMI_BOARD_NAME, "L140CU"),
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 },
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 },
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { }
+> > };
+> >=20
+> > Then it should work with Thomas' system (defaults to deep), and TUXEDO
+> > with default settings (defaults to s2idle), and with the rest of the
+> > world (I hope at least, fingers crossed). Or you want to pursue a
+> > solution without the denylist still? I'm out of ideas what could be
+> > wrong except that when the pm_sleep=3Ddeep it means the BIOS is involve=
+d
+> > in the suspend/restore of the devices and it may not expect the OS to
+> > touch these registers or something along those lines.
+>=20
+> [I think this refers to "mem_sleep_default=3Ddeep" (not pm_sleep)]
+>=20
+> I assume everything was fine before suspend, and it only runs hot
+> after resume.
 
-In Windows the driver stack includes a "Power Engine Plugin" (uPEP driver)
-to decide the policy for integrated devices using PEP device constraints.
+The system was running hot even before suspend. After boot it could not exi=
+t
+Package C0. At that level it's usually some compute element that is blockin=
+g,
+and not caused by a device's LTR. A cause for this was not found, only sign=
+s
+that BIOS did not configure the system correctly (bogus IRTL values).
 
-Device constraints are expressed as a number in the _DSM of the PNP0D80
-device and exported by the kernel in acpi_get_lps0_constraint().
+That issue does appear to be why Thomas needs to use deep since his system
+cannot use s2idle since it cannot even idle while running. There's no relat=
+ion I
+can see between that issue and the PCI device failure after L1 substate
+restore.=C2=A0
 
-Add support for SoCs to use constraints on Linux as well for deciding
-target state for integrated PCI bridges.
+But to your point, those PCI devices were working upon boot, with L1 config=
+ured,
+and not working after resume when restored on that system.
 
-No SoCs are introduced by default with this change, they will be added
-later on a case by case basis.
+> =C2=A0 And the platform granted control of the PCIe Capability
+> and the LTR Capability to OSPM via _OSC?
 
-Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/platform-design-for-modern-standby#low-power-core-silicon-cpu-soc-dram
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/platform/x86/amd/pmc/pmc.c | 59 ++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+Need to confirm this.
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index c1e788b67a74..34e76c6b3fb2 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -570,6 +570,14 @@ static void amd_pmc_dbgfs_unregister(struct amd_pmc_dev *dev)
- 	debugfs_remove_recursive(dev->dbgfs_dir);
- }
- 
-+static bool amd_pmc_use_acpi_constraints(struct amd_pmc_dev *dev)
-+{
-+	switch (dev->cpu_id) {
-+	default:
-+		return false;
-+	}
-+}
-+
- static bool amd_pmc_is_stb_supported(struct amd_pmc_dev *dev)
- {
- 	switch (dev->cpu_id) {
-@@ -741,6 +749,41 @@ static int amd_pmc_czn_wa_irq1(struct amd_pmc_dev *pdev)
- 	return 0;
- }
- 
-+/*
-+ * Constraints are specified in the ACPI LPS0 device and specify what the
-+ * platform intended for the device.
-+ *
-+ * If a constraint is present and >= to ACPI_STATE_S3, then enable D3 for the
-+ * device.
-+ * If a constraint is not present or < ACPI_STATE_S3, then disable D3 for the
-+ * device.
-+ */
-+static enum bridge_d3_pref amd_pmc_d3_check(struct pci_dev *pci_dev)
-+{
-+	struct acpi_device *adev = ACPI_COMPANION(&pci_dev->dev);
-+	int constraint;
-+
-+	if (!adev)
-+		return BRIDGE_PREF_UNSET;
-+
-+	constraint = acpi_get_lps0_constraint(adev);
-+	dev_dbg(&pci_dev->dev, "constraint is %d\n", constraint);
-+
-+	switch (constraint) {
-+	case ACPI_STATE_UNKNOWN:
-+	case ACPI_STATE_S0:
-+	case ACPI_STATE_S1:
-+	case ACPI_STATE_S2:
-+		return BRIDGE_PREF_DRIVER_D0;
-+	case ACPI_STATE_S3:
-+		return BRIDGE_PREF_DRIVER_D3;
-+	default:
-+		break;
-+	}
-+
-+	return BRIDGE_PREF_UNSET;
-+}
-+
- static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
- {
- 	struct rtc_device *rtc_device;
-@@ -881,6 +924,11 @@ static struct acpi_s2idle_dev_ops amd_pmc_s2idle_dev_ops = {
- 	.restore = amd_pmc_s2idle_restore,
- };
- 
-+static struct pci_d3_driver_ops amd_pmc_d3_ops = {
-+	.check = amd_pmc_d3_check,
-+	.priority = 50,
-+};
-+
- static int amd_pmc_suspend_handler(struct device *dev)
- {
- 	struct amd_pmc_dev *pdev = dev_get_drvdata(dev);
-@@ -1074,10 +1122,19 @@ static int amd_pmc_probe(struct platform_device *pdev)
- 			amd_pmc_quirks_init(dev);
- 	}
- 
-+	if (amd_pmc_use_acpi_constraints(dev)) {
-+		err = pci_register_driver_d3_policy_cb(&amd_pmc_d3_ops);
-+		if (err)
-+			goto err_register_lps0;
-+	}
-+
- 	amd_pmc_dbgfs_register(dev);
- 	pm_report_max_hw_sleep(U64_MAX);
- 	return 0;
- 
-+err_register_lps0:
-+	if (IS_ENABLED(CONFIG_SUSPEND))
-+		acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
- err_pci_dev_put:
- 	pci_dev_put(rdev);
- 	return err;
-@@ -1089,6 +1146,8 @@ static void amd_pmc_remove(struct platform_device *pdev)
- 
- 	if (IS_ENABLED(CONFIG_SUSPEND))
- 		acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
-+	if (amd_pmc_use_acpi_constraints(dev))
-+		pci_unregister_driver_d3_policy_cb(&amd_pmc_d3_ops);
- 	amd_pmc_dbgfs_unregister(dev);
- 	pci_dev_put(dev->rdev);
- 	mutex_destroy(&dev->lock);
--- 
-2.34.1
+>=20
+> If so, I think we should try to find out what the difference is, e.g.,
+> compare config space before/after the suspend/resume.=C2=A0 Maybe that's
+> already been tried?=C2=A0 (I did check the archives but couldn't find
+> details.)
 
+I'll take a look again at the information we got from Thomas and check for
+config space differences.
+
+David
