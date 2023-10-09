@@ -2,82 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D00F37BE7F9
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Oct 2023 19:30:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31C507BE80A
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Oct 2023 19:30:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377911AbjJIRaT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Oct 2023 13:30:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35582 "EHLO
+        id S1378007AbjJIRas (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Oct 2023 13:30:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377407AbjJIRaR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Oct 2023 13:30:17 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C31A9D;
-        Mon,  9 Oct 2023 10:30:16 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2A51C433C7;
-        Mon,  9 Oct 2023 17:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1696872615;
-        bh=EACK2tmq5+41Js6GZfBr/J8+BuSNLbbDDNpHvCryNec=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=INX4ASZNRg/lD8oCQEsXmK56PSVK/sEm9Mkl83Lf+wu6Pq6XbuVOt8fQHRF/LILAS
-         fvBuviO4505VLsdbEbjKHnZpR9i3YN6+G42buKLgOzK30gks9PtUCHIIpMAGmvnre5
-         RidVSyLf/g5j7I1uMYVsSeIjpRqPCTh62O5WpvbM=
-Date:   Mon, 9 Oct 2023 19:30:12 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Max Kellermann <max.kellermann@ionos.com>
+        with ESMTP id S1378018AbjJIRam (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Oct 2023 13:30:42 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E3BDAF
+        for <linux-pci@vger.kernel.org>; Mon,  9 Oct 2023 10:30:38 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2bff776fe0bso61048521fa.0
+        for <linux-pci@vger.kernel.org>; Mon, 09 Oct 2023 10:30:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1696872635; x=1697477435; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HHSd56ONGtiYc/4iRkmyqmxuAngFJzU7FR00LimB0+s=;
+        b=grFtVCa9AE5vZnIqHY2K2bNP8Z6TwHUlqSnlQynYLfm5yY9bfW+Udn2tegWIbDpqZV
+         eIy68gqJd/Ry9v9XmIvfaKaBKzf/fJAMUDootzAKML2FCQG9tgQHF0skd2fI8KSZj4Zj
+         5laR0MFZ2upzjp7XVdBB/uX+wUaNSql2ew7bKicL1rvMh4AiP1yQa7jS/aHH4SPCv+h7
+         mJmiRaOLnWW7Fevap8tTGkZJxbnV/PQaBzkPAQA5vis85tB6Wt4vnGuO2FY3G3WXWPPQ
+         5TGZ66RGIVBojnHk2wmoPN+YgNuIJfFDQYYSHN5NHspuLbK0Eb2LJ9kod7O3tg0yOsLb
+         o0Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696872635; x=1697477435;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HHSd56ONGtiYc/4iRkmyqmxuAngFJzU7FR00LimB0+s=;
+        b=AYZJg5UhwmXp4iLoZn4mnZsCAhVo4AzPA3C8rO7E+YsACbFjnqRK/+an0BJD3m/gPR
+         QhNaXQVb6PJdfg/qpniIluooaLtohQsuTdx8vNWYDftjnXlQKhwdMgfiEWkJCY0LcdNv
+         IQ5YZqMAO2+loFF14I+YdFn/9Hh//lb7hnpMDGDuDOubiOz49OON/p1blkNcMefaZKHE
+         mmlPqnG8Y99/J66+cT+32Y4wS6kVX3mjKM+87JVZ3uNQ5DXg81flQfDGh9X0xJEvrGVa
+         8lQdAdcOPHcRImCVZ4WY/qyL6NQsm+VVXJOFGUsQftTD1M+qeCMMWPZOPD5jKHjI9N6E
+         Uz+Q==
+X-Gm-Message-State: AOJu0Yz1ylVZu6lLxwrVoXH9+TlaMHZx9BxvlLhSKAdBBRPqIzV0AoLz
+        Xt3z4VfCxbO/36pUgMM+C1oASgQaiDSGxJLL1Ifp/Q==
+X-Google-Smtp-Source: AGHT+IHBRA959tJKQ7jnBDww7hLjflOoCbxbxU4OC4L9uyovk7KidWNus9mZc9b5/3C/KVDAr0hL4Kjy/lMZJqv9EF4=
+X-Received: by 2002:a2e:86d6:0:b0:2c2:9e5c:2c82 with SMTP id
+ n22-20020a2e86d6000000b002c29e5c2c82mr13644840ljj.46.1696872635192; Mon, 09
+ Oct 2023 10:30:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <20231009165741.746184-1-max.kellermann@ionos.com>
+ <20231009165741.746184-6-max.kellermann@ionos.com> <2023100921-that-jasmine-2240@gregkh>
+In-Reply-To: <2023100921-that-jasmine-2240@gregkh>
+From:   Max Kellermann <max.kellermann@ionos.com>
+Date:   Mon, 9 Oct 2023 19:30:24 +0200
+Message-ID: <CAKPOu+8Tb2CopWgBN29hmJrmU9mjG63PyVoaewuY0FYj=aGTZA@mail.gmail.com>
+Subject: Re: [PATCH 6/7] fs/sysfs/group: make attribute_group pointers const
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Jens Axboe <axboe@kernel.dk>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rodolfo Giometti <giometti@enneenne.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
         Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Jiri Slaby <jirislaby@kernel.org>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        James Clark <james.clark@arm.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ceph-devel@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org, ocfs2-devel@lists.linux.dev,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 7/7] block, drivers: make lots of attribute_group globals
- const
-Message-ID: <2023100944-sandpit-bronco-3db4@gregkh>
-References: <20231009165741.746184-1-max.kellermann@ionos.com>
- <20231009165741.746184-7-max.kellermann@ionos.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231009165741.746184-7-max.kellermann@ionos.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+        nvdimm@lists.linux.dev, linux-nvme@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-leds@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 09, 2023 at 06:57:40PM +0200, Max Kellermann wrote:
-> This moves those variables to the ".rodata" section which reduces the
-> kernel size a bit and protects the variables by putting them on
-> read-only pages at runtime.
+On Mon, Oct 9, 2023 at 7:26=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> I'm all for doing this type of work, but this is going to be rough.  You
+> sent patch 6/7 that hit almost all subsystems at once :(
 
-The kernel size should still be the same overall, you are just moving
-pointers from one section to another, right?
+I wasn't sure whether splitting patches was desired. In the past, I
+was often asked to fold multiple patches into one. There are so many
+opinions :-) but I'll gladly change to whatever is asked.
 
-If not, what are the numbers, show them please.
+> "*const*groups"?   That's a parsing nightmare, really hard for humans to
+> read and understand.  Doesn't checkpatch complain about this?
 
-But step back, are you SURE you can make these attribute group pointers
-const?  They are modified by some subsystems by adding or removing items
-from the lists, so why does the core need to change for that?
-
-thanks,
-
-greg k-h
+No. I'll change the coding style (and maybe take some time to fix checkpatc=
+h?)
