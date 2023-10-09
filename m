@@ -2,55 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1ECF77BD485
+	by mail.lfdr.de (Postfix) with ESMTP id E956E7BD486
 	for <lists+linux-pci@lfdr.de>; Mon,  9 Oct 2023 09:42:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345433AbjJIHmB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Oct 2023 03:42:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37926 "EHLO
+        id S1345439AbjJIHmD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Oct 2023 03:42:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234360AbjJIHmA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Oct 2023 03:42:00 -0400
+        with ESMTP id S1345405AbjJIHmB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Oct 2023 03:42:01 -0400
 Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D830FB6
-        for <linux-pci@vger.kernel.org>; Mon,  9 Oct 2023 00:41:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F22FA2
+        for <linux-pci@vger.kernel.org>; Mon,  9 Oct 2023 00:41:58 -0700 (PDT)
 Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20231009074151epoutp04adfbf2641b36f949736cebefcd426095~MYIuBilUU1220712207epoutp044
-        for <linux-pci@vger.kernel.org>; Mon,  9 Oct 2023 07:41:51 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20231009074151epoutp04adfbf2641b36f949736cebefcd426095~MYIuBilUU1220712207epoutp044
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20231009074156epoutp044c13134b51ea1eaa927fc3af1a687501~MYIyemi3U1254512545epoutp04v
+        for <linux-pci@vger.kernel.org>; Mon,  9 Oct 2023 07:41:56 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20231009074156epoutp044c13134b51ea1eaa927fc3af1a687501~MYIyemi3U1254512545epoutp04v
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1696837311;
-        bh=XmObJIzD9Lt8nPGtTzTK9vhVCGY5IyKpZEinmv8bYkM=;
+        s=mail20170921; t=1696837316;
+        bh=Z1lE8fryZmkR3mmtV7AFUEPTESrVqtxc5YfCf5YoK9o=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=hYxxaw2KxAzZWBPxG/WeZA0fO8t0LL0M6zV6rWNe4y42mjUt7hiLartAdrMq5zE5X
-         vvWJf734o3lHVpOtqxaQEik83MZn/7BeIqKNzW4fM30pC8A5SkkhMh7zCNhc/bWKdU
-         al1HtbCkEK8uqlR2f4hq32AOYVIKT++d/pYdqb9Y=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20231009074151epcas5p241b8b117fc21d25da7f825452861dc39~MYItj38eO1609616096epcas5p20;
-        Mon,  9 Oct 2023 07:41:51 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.174]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4S3rZk2Jyxz4x9Pp; Mon,  9 Oct
-        2023 07:41:50 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        70.D8.09635.EBEA3256; Mon,  9 Oct 2023 16:41:50 +0900 (KST)
+        b=STNuPAucQPilSsy92OF8lQiSrOhLJVva0DDp8RjTahoWMA13FNnttfmgUwKjoWnFJ
+         5QJyeF3OBK3lL8i0oH4WZZnF0IfZC9ckKK0MRlpQZY2dGPqsOCJXhdFHPrQiVissCh
+         UzyW6qLUo+WeCZOgQWwt32eUkcntZFsaWXt/bOEg=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20231009074156epcas5p38645bf6a5c9b1b84de0c39a418eed7f0~MYIyLpLPw1878118781epcas5p3V;
+        Mon,  9 Oct 2023 07:41:56 +0000 (GMT)
+Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.175]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4S3rZp4mtzz4x9Pt; Mon,  9 Oct
+        2023 07:41:54 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DA.24.19094.2CEA3256; Mon,  9 Oct 2023 16:41:54 +0900 (KST)
 Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20231009062058epcas5p4dc1fb50210c920137ac906b0bdf99e1b~MXCGIVq_r1984419844epcas5p4F;
-        Mon,  9 Oct 2023 06:20:58 +0000 (GMT)
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20231009062222epcas5p36768b75c13c7c79965b5863521361a64~MXDT-lojM2882228822epcas5p3D;
+        Mon,  9 Oct 2023 06:22:22 +0000 (GMT)
 Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
         epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20231009062058epsmtrp191995e55d1a8e06d3ed464479eeded0b~MXCGHf0WT0451604516epsmtrp1A;
-        Mon,  9 Oct 2023 06:20:58 +0000 (GMT)
-X-AuditID: b6c32a4b-2f5ff700000025a3-5b-6523aebe5b16
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        20231009062222epsmtrp1cd58852a31e0c088ffd6b9575fd855dc~MXDT_umCA0557305573epsmtrp1o;
+        Mon,  9 Oct 2023 06:22:22 +0000 (GMT)
+X-AuditID: b6c32a50-39fff70000004a96-27-6523aec2d398
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
         epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F5.55.08649.ACB93256; Mon,  9 Oct 2023 15:20:58 +0900 (KST)
+        69.65.08649.E1C93256; Mon,  9 Oct 2023 15:22:22 +0900 (KST)
 Received: from cheetah.sa.corp.samsungelectronics.net (unknown
-        [107.109.115.53]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20231009062056epsmtip122312ff2d5fa6c15409a4eb6a370e6e8~MXCD6DbBE0717507175epsmtip1D;
-        Mon,  9 Oct 2023 06:20:56 +0000 (GMT)
+        [107.109.115.53]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20231009062219epsmtip248fdd10ff69b815f6d1da7ff34c70b6e~MXDRz_rJ30406904069epsmtip2-;
+        Mon,  9 Oct 2023 06:22:19 +0000 (GMT)
 From:   Shradha Todi <shradha.t@samsung.com>
 To:     jingoohan1@gmail.com, lpieralisi@kernel.org, kw@linux.com,
         robh@kernel.org, bhelgaas@google.com,
@@ -58,258 +58,166 @@ To:     jingoohan1@gmail.com, lpieralisi@kernel.org, kw@linux.com,
 Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
         pankaj.dubey@samsung.com, Shradha Todi <shradha.t@samsung.com>
-Subject: [PATCH] PCI: exynos: Change macro names to exynos specific
-Date:   Mon,  9 Oct 2023 11:50:52 +0530
-Message-Id: <20231009062052.5407-1-shradha.t@samsung.com>
+Subject: [PATCH] PCI: exynos: Adapt to clk_bulk_* APIs
+Date:   Mon,  9 Oct 2023 11:52:16 +0530
+Message-Id: <20231009062216.6729-1-shradha.t@samsung.com>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNKsWRmVeSWpSXmKPExsWy7bCmlu6+dcqpBvv+cVs8mLeNzWJJU4bF
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPKsWRmVeSWpSXmKPExsWy7bCmpu6hdcqpBhM+y1s8mLeNzWJJU4bF
         ii8z2S32vt7KbtHQ85vVYtPja6wWl3fNYbM4O+84m8WM8/uYLFr+tLBYLNr6hd3i/54d7Ba9
         h2sdeD12zrrL7rFgU6nHplWdbB53ru1h83hyZTqTx+Yl9R59W1YxenzeJBfAEZVtk5GamJJa
         pJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuWmQN0r5JCWWJOKVAoILG4
-        WEnfzqYov7QkVSEjv7jEVim1ICWnwKRArzgxt7g0L10vL7XEytDAwMgUqDAhO+Py/+NMBets
-        K2ZsZG9gnGvaxcjBISFgIvH2sVEXIxeHkMBuRokTJ94xQjifGCWefF8L5XxjlHjQ0MjaxcgJ
-        1tF3bRIbRGIvo8TbmdOgnFYmiV/zp7CBVLEJaEk0fu1iBkmICCxglFjWd4AJxGEWOMEo0Xp+
-        IQtIlbCAs0T7q/vMIDaLgKpE04unYDavgKXE+SsrWCD2yUus3nAAbJKEwFt2iTez/jFCnO4i
-        sW1CLUSNsMSr41vYIWwpiZf9bVB2usTKzTOYIewciW+blzBB2PYSB67MYQEZwyygKbF+lz5E
-        WFZi6ql1YCXMAnwSvb+fQJXzSuyYB2MrS3z5uwfqNEmJeccus0Jc4yFx9hUPSFhIIFbi/rul
-        LBMYZWchLFjAyLiKUTK1oDg3PbXYtMA4L7UcHk/J+bmbGMGpUMt7B+OjBx/0DjEycTAeYpTg
-        YFYS4dUtVUgV4k1JrKxKLcqPLyrNSS0+xGgKDLGJzFKiyfnAZJxXEm9oYmlgYmZmZmJpbGao
-        JM77unVuipBAemJJanZqakFqEUwfEwenVANTUdvO/Z51lbf7n5UzFs88d7p16/UrzzfXm079
-        ovn4Xte9bL88f//nc9R/7NN2jo6PS52y8b9gjuLMnIolVUKyxnO2fbg//6XqxYkHVhtOc14W
-        nX0/8Wca25TA+2/eWbn0XN+fznzr5gwnYw+OSTL+7QVi31IPnfD4f+LarVoeq9c9TInmGjN0
-        JumU5ZtoL5Zn6fv2NUf49r3186c6Com5HdFiPpO3w03hyOzLOw5feh2ibZXg91DKruH6uule
-        TWXGl5Z9mPVBqVrBX1jTvUS2RPl2R7/P9DCvI8Kzju+p11w3aQq/5NHYKC2WtmtrVnHz6Xmw
-        LD8953jPbQsJ4ZTErZfet6YUzlZQ29opLJirxFKckWioxVxUnAgA7tqNxw4EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJLMWRmVeSWpSXmKPExsWy7bCSnO6p2cqpBksPKFk8mLeNzWJJU4bF
-        ii8z2S32vt7KbtHQ85vVYtPja6wWl3fNYbM4O+84m8WM8/uYLFr+tLBYLNr6hd3i/54d7Ba9
-        h2sdeD12zrrL7rFgU6nHplWdbB53ru1h83hyZTqTx+Yl9R59W1YxenzeJBfAEcVlk5Kak1mW
-        WqRvl8CVcfn/caaCdbYVMzayNzDONe1i5OSQEDCR6Ls2ia2LkYtDSGA3o8SfhTPYIRKSEp8v
-        rmOCsIUlVv57zg5R1Mwk0fLsNxtIgk1AS6LxaxczSEJEYAWjxKojN8AcZoFzjBKT/35nBqkS
-        FnCWaH91H8xmEVCVaHrxFMzmFbCUOH9lBQvECnmJ1RsOME9g5FnAyLCKUTK1oDg3PTfZsMAw
-        L7Vcrzgxt7g0L10vOT93EyM4NLU0djDem/9P7xAjEwfjIUYJDmYlEV7dUoVUId6UxMqq1KL8
-        +KLSnNTiQ4zSHCxK4ryGM2anCAmkJ5akZqemFqQWwWSZODilGpg07E6XLJy/qKZ/2p6vpqzv
-        b99ad3EWt/pXDQk7CaWFCp/XeN41eDpXQO5+KXfcc9adQftfPfCbelt7bqCo4vdyR/WILak2
-        7U8W7W8XNI3hqov/qu26Y5JlU9CkJaUiUs7M7sETT/387fD7yQ3OJeeMtHbJWD7/LzAjhSva
-        LCHK4t8G4RNvsnm7Dm/57TJffUZIRJrEA8HicDGdv4+S3CZ1V4jI2T7nSBfYLyheK7Uxy2hO
-        g6rta1nlDTfUsti3fj0YeP/Vrs5562w2Gp21envpeve1BC2F6Oam4J1rV7ZH54gKZT3n6KrX
-        X5yzvXYV56aWpd9SmPceTFgRIe4dGGOrN23ZMYH4H4kvk7Re+CqxFGckGmoxFxUnAgAO/XZB
-        vAIAAA==
-X-CMS-MailID: 20231009062058epcas5p4dc1fb50210c920137ac906b0bdf99e1b
+        WEnfzqYov7QkVSEjv7jEVim1ICWnwKRArzgxt7g0L10vL7XEytDAwMgUqDAhO2PN0xVsBb8k
+        Kn58WsfcwLhPpIuRk0NCwETi/M9vLF2MXBxCAnsYJZa0/WeDcD4xSjz9+YYRwvnGKLHl8XMW
+        mJZ1+yazQyT2MkrMPb4MqqWVSWL7gvVMIFVsAloSjV+7mEESIgILGCWW9R1gAnGYBU4wSrSe
+        Xwg2S1jATOLHp81ANgcHi4CqxJP9PCBhXgFLiSvvF7BCrJOXWL3hANggCYGP7BIrV/1kh0i4
+        SPyZ1sMIYQtLvDq+BSouJfGyvw3KTpdYuXkGM4SdI/Ft8xImCNte4sCVOWB7mQU0Jdbv0ocI
+        y0pMPbUOrIRZgE+i9/cTqHJeiR3zYGxliS9/90CDQlJi3rHLUHd6SDyadQ/sHCGBWInV7Z+Z
+        JjDKzkLYsICRcRWjVGpBcW56arJpgaFuXmo5PK6S83M3MYJTolbADsbVG/7qHWJk4mA8xCjB
+        wawkwqtbqpAqxJuSWFmVWpQfX1Sak1p8iNEUGGYTmaVEk/OBSTmvJN7QxNLAxMzMzMTS2MxQ
+        SZz3devcFCGB9MSS1OzU1ILUIpg+Jg5OqQYmLsX9wmGZWatNRNwvGEyuzLhXI9Zkqfbt7Cfv
+        Lv0GrjfFwv1v3n6Ua1lfpLJ3QztDVnZ8drPe2yItPbm7CibrL/iuuXWi9pgO14y2FbOlQg3j
+        5fx5pnqnBD7el/f78EmVL4qHT4SsUBT/f0I2cefFXayLfp+IlbpRFhi+9j1PpGlh7NugVIup
+        /Fc+9FR5nliwiFFJL/SOYLjonFqB5QKR00V/Wx39O11DduIHR7Xv/E+TvIuPxNxOXPnu2tlf
+        LnaeO6y5zt63+m67y+fQRxfpC5mH1vzY1PbUfXnm3q/8SbYOFotlIp9vEK3lrrxeMW39XjZv
+        f90f5U++zTwVJv7vS8/uXwGdzJZCmV9yeE2VWIozEg21mIuKEwFGRmtvEgQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJLMWRmVeSWpSXmKPExsWy7bCSvK7cHOVUgwNzeS0ezNvGZrGkKcNi
+        xZeZ7BZ7X29lt2jo+c1qsenxNVaLy7vmsFmcnXeczWLG+X1MFi1/WlgsFm39wm7xf88Odove
+        w7UOvB47Z91l91iwqdRj06pONo871/aweTy5Mp3JY/OSeo++LasYPT5vkgvgiOKySUnNySxL
+        LdK3S+DKWPN0BVvBL4mKH5/WMTcw7hPpYuTkkBAwkVi3bzJ7FyMXh5DAbkaJjs/X2SASkhKf
+        L65jgrCFJVb+ew5V1Mwk8WzuNrAiNgEticavXcwgCRGBFYwSq47cAHOYBc4xSkz++50ZpEpY
+        wEzix6fNLF2MHBwsAqoST/bzgIR5BSwlrrxfwAqxQV5i9YYDzBMYeRYwMqxilEwtKM5Nz002
+        LDDMSy3XK07MLS7NS9dLzs/dxAgOTS2NHYz35v/TO8TIxMF4iFGCg1lJhFe3VCFViDclsbIq
+        tSg/vqg0J7X4EKM0B4uSOK/hjNkpQgLpiSWp2ampBalFMFkmDk6pBibdyVrVjY9SmFhDDx+b
+        mCe6WSrsI3u0zYGbIvya2/mbxNwCgw5OuMG3UpTp1sd7lq63F614vqRbR7L1/+n5Rb2vL/tc
+        7N5Rxj2hK8V039PUpYpPm12nemnwP7H1T7754XzemmP/J3st71zRXtgx2eNXqNjRKPmb7SGM
+        CUcr57HdrWoJOltTeXPJi1+rTCffrqxNNGcSEjHplfd6yLHs+90v80rlhdpP3/pifO1tyLUD
+        MdPMDk41YhWZlnxE3nfHk4eF/braTE+idGptq78lfbmdM1NjRfgSCcHCuZkXfn7wZn7Tljf3
+        U5rzzEvuh83Ttdcdj08JD2NymsGtIqvXp2l/UJ97oVn2rnt/1K8pBSmxFGckGmoxFxUnAgAp
+        P9fcvAIAAA==
+X-CMS-MailID: 20231009062222epcas5p36768b75c13c7c79965b5863521361a64
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231009062058epcas5p4dc1fb50210c920137ac906b0bdf99e1b
-References: <CGME20231009062058epcas5p4dc1fb50210c920137ac906b0bdf99e1b@epcas5p4.samsung.com>
+X-CMS-RootMailID: 20231009062222epcas5p36768b75c13c7c79965b5863521361a64
+References: <CGME20231009062222epcas5p36768b75c13c7c79965b5863521361a64@epcas5p3.samsung.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_PASS,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Prefix macro names in exynos file with the term "EXYNOS" as the current
-macro names seem to be generic to PCIe.
+There is no need to hardcode the clock info in the driver as driver can
+rely on the devicetree to supply the clocks required for the functioning
+of the peripheral. Get rid of the static clock info and obtain the
+platform supplied clocks. The total number of clocks supplied is
+obtained using the devm_clk_bulk_get_all() API and used for the rest of
+the clk_bulk_* APIs.
 
 Signed-off-by: Shradha Todi <shradha.t@samsung.com>
 ---
- drivers/pci/controller/dwc/pci-exynos.c | 116 ++++++++++++------------
- 1 file changed, 58 insertions(+), 58 deletions(-)
+ drivers/pci/controller/dwc/pci-exynos.c | 46 ++++++-------------------
+ 1 file changed, 11 insertions(+), 35 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-index 6319082301d6..9e42cfcd99cc 100644
+index 9e42cfcd99cc..023cf41fccd7 100644
 --- a/drivers/pci/controller/dwc/pci-exynos.c
 +++ b/drivers/pci/controller/dwc/pci-exynos.c
-@@ -26,30 +26,30 @@
- #define to_exynos_pcie(x)	dev_get_drvdata((x)->dev)
- 
- /* PCIe ELBI registers */
--#define PCIE_IRQ_PULSE			0x000
--#define IRQ_INTA_ASSERT			BIT(0)
--#define IRQ_INTB_ASSERT			BIT(2)
--#define IRQ_INTC_ASSERT			BIT(4)
--#define IRQ_INTD_ASSERT			BIT(6)
--#define PCIE_IRQ_LEVEL			0x004
--#define PCIE_IRQ_SPECIAL		0x008
--#define PCIE_IRQ_EN_PULSE		0x00c
--#define PCIE_IRQ_EN_LEVEL		0x010
--#define PCIE_IRQ_EN_SPECIAL		0x014
--#define PCIE_SW_WAKE			0x018
--#define PCIE_BUS_EN			BIT(1)
--#define PCIE_CORE_RESET			0x01c
--#define PCIE_CORE_RESET_ENABLE		BIT(0)
--#define PCIE_STICKY_RESET		0x020
--#define PCIE_NONSTICKY_RESET		0x024
--#define PCIE_APP_INIT_RESET		0x028
--#define PCIE_APP_LTSSM_ENABLE		0x02c
--#define PCIE_ELBI_RDLH_LINKUP		0x074
--#define PCIE_ELBI_XMLH_LINKUP		BIT(4)
--#define PCIE_ELBI_LTSSM_ENABLE		0x1
--#define PCIE_ELBI_SLV_AWMISC		0x11c
--#define PCIE_ELBI_SLV_ARMISC		0x120
--#define PCIE_ELBI_SLV_DBI_ENABLE	BIT(21)
-+#define EXYNOS_PCIE_IRQ_PULSE			0x000
-+#define EXYNOS_IRQ_INTA_ASSERT			BIT(0)
-+#define EXYNOS_IRQ_INTB_ASSERT			BIT(2)
-+#define EXYNOS_IRQ_INTC_ASSERT			BIT(4)
-+#define EXYNOS_IRQ_INTD_ASSERT			BIT(6)
-+#define EXYNOS_PCIE_IRQ_LEVEL			0x004
-+#define EXYNOS_PCIE_IRQ_SPECIAL		0x008
-+#define EXYNOS_PCIE_IRQ_EN_PULSE		0x00c
-+#define EXYNOS_PCIE_IRQ_EN_LEVEL		0x010
-+#define EXYNOS_PCIE_IRQ_EN_SPECIAL		0x014
-+#define EXYNOS_PCIE_SW_WAKE			0x018
-+#define EXYNOS_PCIE_BUS_EN			BIT(1)
-+#define EXYNOS_PCIE_CORE_RESET			0x01c
-+#define EXYNOS_PCIE_CORE_RESET_ENABLE		BIT(0)
-+#define EXYNOS_PCIE_STICKY_RESET		0x020
-+#define EXYNOS_PCIE_NONSTICKY_RESET		0x024
-+#define EXYNOS_PCIE_APP_INIT_RESET		0x028
-+#define EXYNOS_PCIE_APP_LTSSM_ENABLE		0x02c
-+#define EXYNOS_PCIE_ELBI_RDLH_LINKUP		0x074
-+#define EXYNOS_PCIE_ELBI_XMLH_LINKUP		BIT(4)
-+#define EXYNOS_PCIE_ELBI_LTSSM_ENABLE		0x1
-+#define EXYNOS_PCIE_ELBI_SLV_AWMISC		0x11c
-+#define EXYNOS_PCIE_ELBI_SLV_ARMISC		0x120
-+#define EXYNOS_PCIE_ELBI_SLV_DBI_ENABLE	BIT(21)
- 
+@@ -54,8 +54,8 @@
  struct exynos_pcie {
  	struct dw_pcie			pci;
-@@ -105,49 +105,49 @@ static void exynos_pcie_sideband_dbi_w_mode(struct exynos_pcie *ep, bool on)
+ 	void __iomem			*elbi_base;
+-	struct clk			*clk;
+-	struct clk			*bus_clk;
++	struct clk_bulk_data		*clks;
++	int				clk_cnt;
+ 	struct phy			*phy;
+ 	struct regulator_bulk_data	supplies[2];
+ };
+@@ -65,30 +65,18 @@ static int exynos_pcie_init_clk_resources(struct exynos_pcie *ep)
+ 	struct device *dev = ep->pci.dev;
+ 	int ret;
+ 
+-	ret = clk_prepare_enable(ep->clk);
+-	if (ret) {
+-		dev_err(dev, "cannot enable pcie rc clock");
++	ret = devm_clk_bulk_get_all(dev, &ep->clks);
++	if (ret < 0)
+ 		return ret;
+-	}
+ 
+-	ret = clk_prepare_enable(ep->bus_clk);
+-	if (ret) {
+-		dev_err(dev, "cannot enable pcie bus clock");
+-		goto err_bus_clk;
+-	}
++	ep->clk_cnt = ret;
+ 
+-	return 0;
+-
+-err_bus_clk:
+-	clk_disable_unprepare(ep->clk);
+-
+-	return ret;
++	return clk_bulk_prepare_enable(ep->clk_cnt, ep->clks);
+ }
+ 
+ static void exynos_pcie_deinit_clk_resources(struct exynos_pcie *ep)
  {
- 	u32 val;
- 
--	val = exynos_pcie_readl(ep->elbi_base, PCIE_ELBI_SLV_AWMISC);
-+	val = exynos_pcie_readl(ep->elbi_base, EXYNOS_PCIE_ELBI_SLV_AWMISC);
- 	if (on)
--		val |= PCIE_ELBI_SLV_DBI_ENABLE;
-+		val |= EXYNOS_PCIE_ELBI_SLV_DBI_ENABLE;
- 	else
--		val &= ~PCIE_ELBI_SLV_DBI_ENABLE;
--	exynos_pcie_writel(ep->elbi_base, val, PCIE_ELBI_SLV_AWMISC);
-+		val &= ~EXYNOS_PCIE_ELBI_SLV_DBI_ENABLE;
-+	exynos_pcie_writel(ep->elbi_base, val, EXYNOS_PCIE_ELBI_SLV_AWMISC);
+-	clk_disable_unprepare(ep->bus_clk);
+-	clk_disable_unprepare(ep->clk);
++	clk_bulk_disable_unprepare(ep->clk_cnt, ep->clks);
  }
  
- static void exynos_pcie_sideband_dbi_r_mode(struct exynos_pcie *ep, bool on)
- {
- 	u32 val;
+ static void exynos_pcie_writel(void __iomem *base, u32 val, u32 reg)
+@@ -332,17 +320,9 @@ static int exynos_pcie_probe(struct platform_device *pdev)
+ 	if (IS_ERR(ep->elbi_base))
+ 		return PTR_ERR(ep->elbi_base);
  
--	val = exynos_pcie_readl(ep->elbi_base, PCIE_ELBI_SLV_ARMISC);
-+	val = exynos_pcie_readl(ep->elbi_base, EXYNOS_PCIE_ELBI_SLV_ARMISC);
- 	if (on)
--		val |= PCIE_ELBI_SLV_DBI_ENABLE;
-+		val |= EXYNOS_PCIE_ELBI_SLV_DBI_ENABLE;
- 	else
--		val &= ~PCIE_ELBI_SLV_DBI_ENABLE;
--	exynos_pcie_writel(ep->elbi_base, val, PCIE_ELBI_SLV_ARMISC);
-+		val &= ~EXYNOS_PCIE_ELBI_SLV_DBI_ENABLE;
-+	exynos_pcie_writel(ep->elbi_base, val, EXYNOS_PCIE_ELBI_SLV_ARMISC);
+-	ep->clk = devm_clk_get(dev, "pcie");
+-	if (IS_ERR(ep->clk)) {
+-		dev_err(dev, "Failed to get pcie rc clock\n");
+-		return PTR_ERR(ep->clk);
+-	}
+-
+-	ep->bus_clk = devm_clk_get(dev, "pcie_bus");
+-	if (IS_ERR(ep->bus_clk)) {
+-		dev_err(dev, "Failed to get pcie bus clock\n");
+-		return PTR_ERR(ep->bus_clk);
+-	}
++	ret = exynos_pcie_init_clk_resources(ep);
++	if (ret < 0)
++		return ret;
+ 
+ 	ep->supplies[0].supply = "vdd18";
+ 	ep->supplies[1].supply = "vdd10";
+@@ -351,10 +331,6 @@ static int exynos_pcie_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = exynos_pcie_init_clk_resources(ep);
+-	if (ret)
+-		return ret;
+-
+ 	ret = regulator_bulk_enable(ARRAY_SIZE(ep->supplies), ep->supplies);
+ 	if (ret)
+ 		return ret;
+@@ -369,8 +345,8 @@ static int exynos_pcie_probe(struct platform_device *pdev)
+ 
+ fail_probe:
+ 	phy_exit(ep->phy);
+-	exynos_pcie_deinit_clk_resources(ep);
+ 	regulator_bulk_disable(ARRAY_SIZE(ep->supplies), ep->supplies);
++	exynos_pcie_deinit_clk_resources(ep);
+ 
+ 	return ret;
  }
- 
- static void exynos_pcie_assert_core_reset(struct exynos_pcie *ep)
- {
- 	u32 val;
- 
--	val = exynos_pcie_readl(ep->elbi_base, PCIE_CORE_RESET);
--	val &= ~PCIE_CORE_RESET_ENABLE;
--	exynos_pcie_writel(ep->elbi_base, val, PCIE_CORE_RESET);
--	exynos_pcie_writel(ep->elbi_base, 0, PCIE_STICKY_RESET);
--	exynos_pcie_writel(ep->elbi_base, 0, PCIE_NONSTICKY_RESET);
-+	val = exynos_pcie_readl(ep->elbi_base, EXYNOS_PCIE_CORE_RESET);
-+	val &= ~EXYNOS_PCIE_CORE_RESET_ENABLE;
-+	exynos_pcie_writel(ep->elbi_base, val, EXYNOS_PCIE_CORE_RESET);
-+	exynos_pcie_writel(ep->elbi_base, 0, EXYNOS_PCIE_STICKY_RESET);
-+	exynos_pcie_writel(ep->elbi_base, 0, EXYNOS_PCIE_NONSTICKY_RESET);
- }
- 
- static void exynos_pcie_deassert_core_reset(struct exynos_pcie *ep)
- {
- 	u32 val;
- 
--	val = exynos_pcie_readl(ep->elbi_base, PCIE_CORE_RESET);
--	val |= PCIE_CORE_RESET_ENABLE;
-+	val = exynos_pcie_readl(ep->elbi_base, EXYNOS_PCIE_CORE_RESET);
-+	val |= EXYNOS_PCIE_CORE_RESET_ENABLE;
- 
--	exynos_pcie_writel(ep->elbi_base, val, PCIE_CORE_RESET);
--	exynos_pcie_writel(ep->elbi_base, 1, PCIE_STICKY_RESET);
--	exynos_pcie_writel(ep->elbi_base, 1, PCIE_NONSTICKY_RESET);
--	exynos_pcie_writel(ep->elbi_base, 1, PCIE_APP_INIT_RESET);
--	exynos_pcie_writel(ep->elbi_base, 0, PCIE_APP_INIT_RESET);
-+	exynos_pcie_writel(ep->elbi_base, val, EXYNOS_PCIE_CORE_RESET);
-+	exynos_pcie_writel(ep->elbi_base, 1, EXYNOS_PCIE_STICKY_RESET);
-+	exynos_pcie_writel(ep->elbi_base, 1, EXYNOS_PCIE_NONSTICKY_RESET);
-+	exynos_pcie_writel(ep->elbi_base, 1, EXYNOS_PCIE_APP_INIT_RESET);
-+	exynos_pcie_writel(ep->elbi_base, 0, EXYNOS_PCIE_APP_INIT_RESET);
- }
- 
- static int exynos_pcie_start_link(struct dw_pcie *pci)
-@@ -155,21 +155,21 @@ static int exynos_pcie_start_link(struct dw_pcie *pci)
- 	struct exynos_pcie *ep = to_exynos_pcie(pci);
- 	u32 val;
- 
--	val = exynos_pcie_readl(ep->elbi_base, PCIE_SW_WAKE);
--	val &= ~PCIE_BUS_EN;
--	exynos_pcie_writel(ep->elbi_base, val, PCIE_SW_WAKE);
-+	val = exynos_pcie_readl(ep->elbi_base, EXYNOS_PCIE_SW_WAKE);
-+	val &= ~EXYNOS_PCIE_BUS_EN;
-+	exynos_pcie_writel(ep->elbi_base, val, EXYNOS_PCIE_SW_WAKE);
- 
- 	/* assert LTSSM enable */
--	exynos_pcie_writel(ep->elbi_base, PCIE_ELBI_LTSSM_ENABLE,
--			  PCIE_APP_LTSSM_ENABLE);
-+	exynos_pcie_writel(ep->elbi_base, EXYNOS_PCIE_ELBI_LTSSM_ENABLE,
-+			  EXYNOS_PCIE_APP_LTSSM_ENABLE);
- 	return 0;
- }
- 
- static void exynos_pcie_clear_irq_pulse(struct exynos_pcie *ep)
- {
--	u32 val = exynos_pcie_readl(ep->elbi_base, PCIE_IRQ_PULSE);
-+	u32 val = exynos_pcie_readl(ep->elbi_base, EXYNOS_PCIE_IRQ_PULSE);
- 
--	exynos_pcie_writel(ep->elbi_base, val, PCIE_IRQ_PULSE);
-+	exynos_pcie_writel(ep->elbi_base, val, EXYNOS_PCIE_IRQ_PULSE);
- }
- 
- static irqreturn_t exynos_pcie_irq_handler(int irq, void *arg)
-@@ -182,12 +182,12 @@ static irqreturn_t exynos_pcie_irq_handler(int irq, void *arg)
- 
- static void exynos_pcie_enable_irq_pulse(struct exynos_pcie *ep)
- {
--	u32 val = IRQ_INTA_ASSERT | IRQ_INTB_ASSERT |
--		  IRQ_INTC_ASSERT | IRQ_INTD_ASSERT;
-+	u32 val = EXYNOS_IRQ_INTA_ASSERT | EXYNOS_IRQ_INTB_ASSERT |
-+		  EXYNOS_IRQ_INTC_ASSERT | EXYNOS_IRQ_INTD_ASSERT;
- 
--	exynos_pcie_writel(ep->elbi_base, val, PCIE_IRQ_EN_PULSE);
--	exynos_pcie_writel(ep->elbi_base, 0, PCIE_IRQ_EN_LEVEL);
--	exynos_pcie_writel(ep->elbi_base, 0, PCIE_IRQ_EN_SPECIAL);
-+	exynos_pcie_writel(ep->elbi_base, val, EXYNOS_PCIE_IRQ_EN_PULSE);
-+	exynos_pcie_writel(ep->elbi_base, 0, EXYNOS_PCIE_IRQ_EN_LEVEL);
-+	exynos_pcie_writel(ep->elbi_base, 0, EXYNOS_PCIE_IRQ_EN_SPECIAL);
- }
- 
- static u32 exynos_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
-@@ -244,9 +244,9 @@ static struct pci_ops exynos_pci_ops = {
- static int exynos_pcie_link_up(struct dw_pcie *pci)
- {
- 	struct exynos_pcie *ep = to_exynos_pcie(pci);
--	u32 val = exynos_pcie_readl(ep->elbi_base, PCIE_ELBI_RDLH_LINKUP);
-+	u32 val = exynos_pcie_readl(ep->elbi_base, EXYNOS_PCIE_ELBI_RDLH_LINKUP);
- 
--	return (val & PCIE_ELBI_XMLH_LINKUP);
-+	return (val & EXYNOS_PCIE_ELBI_XMLH_LINKUP);
- }
- 
- static int exynos_pcie_host_init(struct dw_pcie_rp *pp)
 -- 
 2.17.1
 
