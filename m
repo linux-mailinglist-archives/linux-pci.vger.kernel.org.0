@@ -2,222 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E956E7BD486
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Oct 2023 09:42:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F361D7BD546
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Oct 2023 10:34:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345439AbjJIHmD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Oct 2023 03:42:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37946 "EHLO
+        id S234379AbjJIIem (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Oct 2023 04:34:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345405AbjJIHmB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Oct 2023 03:42:01 -0400
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F22FA2
-        for <linux-pci@vger.kernel.org>; Mon,  9 Oct 2023 00:41:58 -0700 (PDT)
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20231009074156epoutp044c13134b51ea1eaa927fc3af1a687501~MYIyemi3U1254512545epoutp04v
-        for <linux-pci@vger.kernel.org>; Mon,  9 Oct 2023 07:41:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20231009074156epoutp044c13134b51ea1eaa927fc3af1a687501~MYIyemi3U1254512545epoutp04v
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1696837316;
-        bh=Z1lE8fryZmkR3mmtV7AFUEPTESrVqtxc5YfCf5YoK9o=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=STNuPAucQPilSsy92OF8lQiSrOhLJVva0DDp8RjTahoWMA13FNnttfmgUwKjoWnFJ
-         5QJyeF3OBK3lL8i0oH4WZZnF0IfZC9ckKK0MRlpQZY2dGPqsOCJXhdFHPrQiVissCh
-         UzyW6qLUo+WeCZOgQWwt32eUkcntZFsaWXt/bOEg=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20231009074156epcas5p38645bf6a5c9b1b84de0c39a418eed7f0~MYIyLpLPw1878118781epcas5p3V;
-        Mon,  9 Oct 2023 07:41:56 +0000 (GMT)
-Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.175]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4S3rZp4mtzz4x9Pt; Mon,  9 Oct
-        2023 07:41:54 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DA.24.19094.2CEA3256; Mon,  9 Oct 2023 16:41:54 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20231009062222epcas5p36768b75c13c7c79965b5863521361a64~MXDT-lojM2882228822epcas5p3D;
-        Mon,  9 Oct 2023 06:22:22 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20231009062222epsmtrp1cd58852a31e0c088ffd6b9575fd855dc~MXDT_umCA0557305573epsmtrp1o;
-        Mon,  9 Oct 2023 06:22:22 +0000 (GMT)
-X-AuditID: b6c32a50-39fff70000004a96-27-6523aec2d398
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        69.65.08649.E1C93256; Mon,  9 Oct 2023 15:22:22 +0900 (KST)
-Received: from cheetah.sa.corp.samsungelectronics.net (unknown
-        [107.109.115.53]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20231009062219epsmtip248fdd10ff69b815f6d1da7ff34c70b6e~MXDRz_rJ30406904069epsmtip2-;
-        Mon,  9 Oct 2023 06:22:19 +0000 (GMT)
-From:   Shradha Todi <shradha.t@samsung.com>
-To:     jingoohan1@gmail.com, lpieralisi@kernel.org, kw@linux.com,
-        robh@kernel.org, bhelgaas@google.com,
-        krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pankaj.dubey@samsung.com, Shradha Todi <shradha.t@samsung.com>
-Subject: [PATCH] PCI: exynos: Adapt to clk_bulk_* APIs
-Date:   Mon,  9 Oct 2023 11:52:16 +0530
-Message-Id: <20231009062216.6729-1-shradha.t@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPKsWRmVeSWpSXmKPExsWy7bCmpu6hdcqpBhM+y1s8mLeNzWJJU4bF
-        ii8z2S32vt7KbtHQ85vVYtPja6wWl3fNYbM4O+84m8WM8/uYLFr+tLBYLNr6hd3i/54d7Ba9
-        h2sdeD12zrrL7rFgU6nHplWdbB53ru1h83hyZTqTx+Yl9R59W1YxenzeJBfAEZVtk5GamJJa
-        pJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuWmQN0r5JCWWJOKVAoILG4
-        WEnfzqYov7QkVSEjv7jEVim1ICWnwKRArzgxt7g0L10vL7XEytDAwMgUqDAhO2PN0xVsBb8k
-        Kn58WsfcwLhPpIuRk0NCwETi/M9vLF2MXBxCAnsYJZa0/WeDcD4xSjz9+YYRwvnGKLHl8XMW
-        mJZ1+yazQyT2MkrMPb4MqqWVSWL7gvVMIFVsAloSjV+7mEESIgILGCWW9R1gAnGYBU4wSrSe
-        Xwg2S1jATOLHp81ANgcHi4CqxJP9PCBhXgFLiSvvF7BCrJOXWL3hANggCYGP7BIrV/1kh0i4
-        SPyZ1sMIYQtLvDq+BSouJfGyvw3KTpdYuXkGM4SdI/Ft8xImCNte4sCVOWB7mQU0Jdbv0ocI
-        y0pMPbUOrIRZgE+i9/cTqHJeiR3zYGxliS9/90CDQlJi3rHLUHd6SDyadQ/sHCGBWInV7Z+Z
-        JjDKzkLYsICRcRWjVGpBcW56arJpgaFuXmo5PK6S83M3MYJTolbADsbVG/7qHWJk4mA8xCjB
-        wawkwqtbqpAqxJuSWFmVWpQfX1Sak1p8iNEUGGYTmaVEk/OBSTmvJN7QxNLAxMzMzMTS2MxQ
-        SZz3devcFCGB9MSS1OzU1ILUIpg+Jg5OqQYmLsX9wmGZWatNRNwvGEyuzLhXI9Zkqfbt7Cfv
-        Lv0GrjfFwv1v3n6Ua1lfpLJ3QztDVnZ8drPe2yItPbm7CibrL/iuuXWi9pgO14y2FbOlQg3j
-        5fx5pnqnBD7el/f78EmVL4qHT4SsUBT/f0I2cefFXayLfp+IlbpRFhi+9j1PpGlh7NugVIup
-        /Fc+9FR5nliwiFFJL/SOYLjonFqB5QKR00V/Wx39O11DduIHR7Xv/E+TvIuPxNxOXPnu2tlf
-        LnaeO6y5zt63+m67y+fQRxfpC5mH1vzY1PbUfXnm3q/8SbYOFotlIp9vEK3lrrxeMW39XjZv
-        f90f5U++zTwVJv7vS8/uXwGdzJZCmV9yeE2VWIozEg21mIuKEwFGRmtvEgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJLMWRmVeSWpSXmKPExsWy7bCSvK7cHOVUgwNzeS0ezNvGZrGkKcNi
-        xZeZ7BZ7X29lt2jo+c1qsenxNVaLy7vmsFmcnXeczWLG+X1MFi1/WlgsFm39wm7xf88Odove
-        w7UOvB47Z91l91iwqdRj06pONo871/aweTy5Mp3JY/OSeo++LasYPT5vkgvgiOKySUnNySxL
-        LdK3S+DKWPN0BVvBL4mKH5/WMTcw7hPpYuTkkBAwkVi3bzJ7FyMXh5DAbkaJjs/X2SASkhKf
-        L65jgrCFJVb+ew5V1Mwk8WzuNrAiNgEticavXcwgCRGBFYwSq47cAHOYBc4xSkz++50ZpEpY
-        wEzix6fNLF2MHBwsAqoST/bzgIR5BSwlrrxfwAqxQV5i9YYDzBMYeRYwMqxilEwtKM5Nz002
-        LDDMSy3XK07MLS7NS9dLzs/dxAgOTS2NHYz35v/TO8TIxMF4iFGCg1lJhFe3VCFViDclsbIq
-        tSg/vqg0J7X4EKM0B4uSOK/hjNkpQgLpiSWp2ampBalFMFkmDk6pBibdyVrVjY9SmFhDDx+b
-        mCe6WSrsI3u0zYGbIvya2/mbxNwCgw5OuMG3UpTp1sd7lq63F614vqRbR7L1/+n5Rb2vL/tc
-        7N5Rxj2hK8V039PUpYpPm12nemnwP7H1T7754XzemmP/J3st71zRXtgx2eNXqNjRKPmb7SGM
-        CUcr57HdrWoJOltTeXPJi1+rTCffrqxNNGcSEjHplfd6yLHs+90v80rlhdpP3/pifO1tyLUD
-        MdPMDk41YhWZlnxE3nfHk4eF/braTE+idGptq78lfbmdM1NjRfgSCcHCuZkXfn7wZn7Tljf3
-        U5rzzEvuh83Ttdcdj08JD2NymsGtIqvXp2l/UJ97oVn2rnt/1K8pBSmxFGckGmoxFxUnAgAp
-        P9fcvAIAAA==
-X-CMS-MailID: 20231009062222epcas5p36768b75c13c7c79965b5863521361a64
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231009062222epcas5p36768b75c13c7c79965b5863521361a64
-References: <CGME20231009062222epcas5p36768b75c13c7c79965b5863521361a64@epcas5p3.samsung.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S234378AbjJIIel (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Oct 2023 04:34:41 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 762E59F
+        for <linux-pci@vger.kernel.org>; Mon,  9 Oct 2023 01:34:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696840480; x=1728376480;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xGc7STdk59IfYoddPPakvZbFrTK80Y7SgAgQNjEAZMQ=;
+  b=L7ajvM0ewB8kbufU35ripk29n6K1wP6N+Y4Q7lUc7cP0QcsOGJA2kUoc
+   9dICK+Jl8gLdGjQyDiBMFTLdJQxlIzZy5nqXgPdOvqQtzA5TB7TsfAlOw
+   BNjVcyLHjnlfEM+ImniNSXe9aHF8W6fcO3nlY5Vwd4N5oc9TmHSjeUv27
+   zwz4bc7vEqVO4/avVOyuAOciUWKf2VBKmSTTSk6JFU4uQrjMWhW8Yo9N2
+   5k445nPyKzgSN1vt+le50+guMuYNJ6XibN1atV60WOWR2HCWIbVivXjFI
+   5eTOI+nU9uFwXN2aislCMqxfWyEAvn6g4ErK8aP/d679Uacusp9i49/HN
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10857"; a="386941496"
+X-IronPort-AV: E=Sophos;i="6.03,209,1694761200"; 
+   d="scan'208";a="386941496"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 01:34:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10857"; a="702810640"
+X-IronPort-AV: E=Sophos;i="6.03,209,1694761200"; 
+   d="scan'208";a="702810640"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 09 Oct 2023 01:34:35 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 5793D133; Mon,  9 Oct 2023 11:34:34 +0300 (EEST)
+Date:   Mon, 9 Oct 2023 11:34:34 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Witt <kernel@witt.link>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Tasev Nikola <tasev.stefanoska@skynet.be>,
+        Mark Enriquez <enriquezmark36@gmail.com>,
+        Koba Ko <koba.ko@canonical.com>,
+        Werner Sembach <wse@tuxedocomputers.com>,
+        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+        =?utf-8?B?5ZCz5piK5r6E?= Ricky <ricky_wu@realtek.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4] PCI/ASPM: Add back L1 PM Substate save and restore
+Message-ID: <20231009083434.GD3208943@black.fi.intel.com>
+References: <923d8df0-1112-aca9-8289-c6e2457298cd@witt.link>
+ <20231005172226.GA781644@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20231005172226.GA781644@bhelgaas>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There is no need to hardcode the clock info in the driver as driver can
-rely on the devicetree to supply the clocks required for the functioning
-of the peripheral. Get rid of the static clock info and obtain the
-platform supplied clocks. The total number of clocks supplied is
-obtained using the devm_clk_bulk_get_all() API and used for the rest of
-the clk_bulk_* APIs.
+Hi,
 
-Signed-off-by: Shradha Todi <shradha.t@samsung.com>
----
- drivers/pci/controller/dwc/pci-exynos.c | 46 ++++++-------------------
- 1 file changed, 11 insertions(+), 35 deletions(-)
+On Thu, Oct 05, 2023 at 12:22:26PM -0500, Bjorn Helgaas wrote:
+> On Thu, Oct 05, 2023 at 05:57:52PM +0200, Thomas Witt wrote:
+> > On 05/10/2023 17:30, Bjorn Helgaas wrote:
+> > ...
+> 
+> > > Right, without the denylist, I expect Thomas' TUXEDO to fail, but I
+> > > still hope we can figure out why.  If we just keep it on the denylist,
+> > > that system will suffer from more power consumption than necessary,
+> > > but only after suspend/resume.
+> > > 
+> > > A denylist seems like the absolute last resort.  In this case we don't
+> > > know about anything *wrong* with those platforms; all we know is that
+> > > our resume path doesn't work.  It's likely that it fails on other
+> > > platforms we haven't heard about, too.
+> > 
+> > The best guess from Mika and David was a firmware issue, but I run the same
+> > Firmware revision as Werner. I even reflashed the Firmware, but that did not
+> > change anything:
+> 
+> Possibly a BIOS settings difference?
+> 
+> > Quoting David Box:
+> > > I agree that we should pursue an exception for your system. This is
+> > > looking like a firmware bug. One thing we did notice in the turbostat
+> > > results is your IRTL (Interrupt Response Time Limit) values are bogus:
+> > >
+> > > cpu6: MSR_PKGC3_IRTL: 0x0000884e (valid, 79872 ns)
+> > > cpu6: MSR_PKGC6_IRTL: 0x00008000 (valid, 0 ns)
+> > > cpu6: MSR_PKGC7_IRTL: 0x00008000 (valid, 0 ns)
+> > > cpu6: MSR_PKGC8_IRTL: 0x00008000 (valid, 0 ns)
+> > > cpu6: MSR_PKGC9_IRTL: 0x00008000 (valid, 0 ns)
+> > > cpu6: MSR_PKGC10_IRTL: 0x00008000 (valid, 0 ns)
+> > >
+> > > This is despite the PKGC configuration register showing that all
+> > > states are enabled:
+> > >
+> > > cpu6: MSR_PKG_CST_CONFIG_CONTROL: 0x1e008008 (UNdemote-C3, UNdemote-C1,
+> > demote-
+> > C3, demote-C1, locked, pkg-cstate-limit=8 (unlimited))
+> > >
+> > > Firmware sets this.
+> 
+> I can't find this discussion, but if there's a firmware issue related
+> to IRTL MSRs, I would want the workaround in intel-idle.c or whatever
+> code deals with the MSRs, not in the ASPM code.
 
-diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-index 9e42cfcd99cc..023cf41fccd7 100644
---- a/drivers/pci/controller/dwc/pci-exynos.c
-+++ b/drivers/pci/controller/dwc/pci-exynos.c
-@@ -54,8 +54,8 @@
- struct exynos_pcie {
- 	struct dw_pcie			pci;
- 	void __iomem			*elbi_base;
--	struct clk			*clk;
--	struct clk			*bus_clk;
-+	struct clk_bulk_data		*clks;
-+	int				clk_cnt;
- 	struct phy			*phy;
- 	struct regulator_bulk_data	supplies[2];
- };
-@@ -65,30 +65,18 @@ static int exynos_pcie_init_clk_resources(struct exynos_pcie *ep)
- 	struct device *dev = ep->pci.dev;
- 	int ret;
- 
--	ret = clk_prepare_enable(ep->clk);
--	if (ret) {
--		dev_err(dev, "cannot enable pcie rc clock");
-+	ret = devm_clk_bulk_get_all(dev, &ep->clks);
-+	if (ret < 0)
- 		return ret;
--	}
- 
--	ret = clk_prepare_enable(ep->bus_clk);
--	if (ret) {
--		dev_err(dev, "cannot enable pcie bus clock");
--		goto err_bus_clk;
--	}
-+	ep->clk_cnt = ret;
- 
--	return 0;
--
--err_bus_clk:
--	clk_disable_unprepare(ep->clk);
--
--	return ret;
-+	return clk_bulk_prepare_enable(ep->clk_cnt, ep->clks);
- }
- 
- static void exynos_pcie_deinit_clk_resources(struct exynos_pcie *ep)
- {
--	clk_disable_unprepare(ep->bus_clk);
--	clk_disable_unprepare(ep->clk);
-+	clk_bulk_disable_unprepare(ep->clk_cnt, ep->clks);
- }
- 
- static void exynos_pcie_writel(void __iomem *base, u32 val, u32 reg)
-@@ -332,17 +320,9 @@ static int exynos_pcie_probe(struct platform_device *pdev)
- 	if (IS_ERR(ep->elbi_base))
- 		return PTR_ERR(ep->elbi_base);
- 
--	ep->clk = devm_clk_get(dev, "pcie");
--	if (IS_ERR(ep->clk)) {
--		dev_err(dev, "Failed to get pcie rc clock\n");
--		return PTR_ERR(ep->clk);
--	}
--
--	ep->bus_clk = devm_clk_get(dev, "pcie_bus");
--	if (IS_ERR(ep->bus_clk)) {
--		dev_err(dev, "Failed to get pcie bus clock\n");
--		return PTR_ERR(ep->bus_clk);
--	}
-+	ret = exynos_pcie_init_clk_resources(ep);
-+	if (ret < 0)
-+		return ret;
- 
- 	ep->supplies[0].supply = "vdd18";
- 	ep->supplies[1].supply = "vdd10";
-@@ -351,10 +331,6 @@ static int exynos_pcie_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	ret = exynos_pcie_init_clk_resources(ep);
--	if (ret)
--		return ret;
--
- 	ret = regulator_bulk_enable(ARRAY_SIZE(ep->supplies), ep->supplies);
- 	if (ret)
- 		return ret;
-@@ -369,8 +345,8 @@ static int exynos_pcie_probe(struct platform_device *pdev)
- 
- fail_probe:
- 	phy_exit(ep->phy);
--	exynos_pcie_deinit_clk_resources(ep);
- 	regulator_bulk_disable(ARRAY_SIZE(ep->supplies), ep->supplies);
-+	exynos_pcie_deinit_clk_resources(ep);
- 
- 	return ret;
- }
--- 
-2.17.1
+Unfortunately that discussion never ended up on the mailing list. But in
+summary that particular system seems to run pretty hot (if I understand
+correctly what David concluded). This is the reason Thomas has the
+pm_sleep=deep in the command line and this is why the L1 SS restore then
+causes the failure on resume. Without this it works fine but consumes
+lot of energy in s2idle.
 
+Can you suggest what we should do with this now?
+
+We got report from Tasev Nikola on
+https://bugzilla.kernel.org/show_bug.cgi?id=216782 that even if the Asus
+system is removed from the denylist it works so that we can do. However,
+with the Thomas' system I'm not sure. If we leave it like this:
+
+static int aspm_l1ss_suspend_via_firmware(const struct dmi_system_id *not_used)
+{
+        return pm_suspend_via_firmware();
+}
+
+static const struct dmi_system_id aspm_l1ss_denylist[] = {
+        {
+                /*
+                 * https://bugzilla.kernel.org/show_bug.cgi?id=216877
+                 *
+                 * This system needs to use suspend to mem instead of its 
+                 * default (suspend to idle) to avoid draining the battery. 
+                 * However, the BIOS gets confused if we try to restore the
+                 * L1SS registers so avoid doing that if the user forced
+                 * suspend to mem. The default suspend to idle on the other
+                 * hand needs restoring L1SS to allow the CPU to enter low
+                 * power states. This entry should handle both.
+                 */
+                .callback = aspm_l1ss_suspend_via_firmware,
+                .ident = "TUXEDO InfinityBook S 14 v5",
+                .matches = {
+                        DMI_MATCH(DMI_BOARD_VENDOR, "TUXEDO"),
+                        DMI_MATCH(DMI_BOARD_NAME, "L140CU"),
+                },
+        },
+        { }
+};
+
+Then it should work with Thomas' system (defaults to deep), and TUXEDO
+with default settings (defaults to s2idle), and with the rest of the
+world (I hope at least, fingers crossed). Or you want to pursue a
+solution without the denylist still? I'm out of ideas what could be
+wrong except that when the pm_sleep=deep it means the BIOS is involved
+in the suspend/restore of the devices and it may not expect the OS to
+touch these registers or something along those lines.
