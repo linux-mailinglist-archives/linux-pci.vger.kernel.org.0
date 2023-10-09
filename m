@@ -2,174 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F361D7BD546
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Oct 2023 10:34:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D74EC7BD5A1
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Oct 2023 10:50:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234379AbjJIIem (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Oct 2023 04:34:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41184 "EHLO
+        id S1345558AbjJIIuY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Oct 2023 04:50:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234378AbjJIIel (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Oct 2023 04:34:41 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 762E59F
-        for <linux-pci@vger.kernel.org>; Mon,  9 Oct 2023 01:34:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696840480; x=1728376480;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xGc7STdk59IfYoddPPakvZbFrTK80Y7SgAgQNjEAZMQ=;
-  b=L7ajvM0ewB8kbufU35ripk29n6K1wP6N+Y4Q7lUc7cP0QcsOGJA2kUoc
-   9dICK+Jl8gLdGjQyDiBMFTLdJQxlIzZy5nqXgPdOvqQtzA5TB7TsfAlOw
-   BNjVcyLHjnlfEM+ImniNSXe9aHF8W6fcO3nlY5Vwd4N5oc9TmHSjeUv27
-   zwz4bc7vEqVO4/avVOyuAOciUWKf2VBKmSTTSk6JFU4uQrjMWhW8Yo9N2
-   5k445nPyKzgSN1vt+le50+guMuYNJ6XibN1atV60WOWR2HCWIbVivXjFI
-   5eTOI+nU9uFwXN2aislCMqxfWyEAvn6g4ErK8aP/d679Uacusp9i49/HN
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10857"; a="386941496"
-X-IronPort-AV: E=Sophos;i="6.03,209,1694761200"; 
-   d="scan'208";a="386941496"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 01:34:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10857"; a="702810640"
-X-IronPort-AV: E=Sophos;i="6.03,209,1694761200"; 
-   d="scan'208";a="702810640"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 09 Oct 2023 01:34:35 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 5793D133; Mon,  9 Oct 2023 11:34:34 +0300 (EEST)
-Date:   Mon, 9 Oct 2023 11:34:34 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Witt <kernel@witt.link>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Tasev Nikola <tasev.stefanoska@skynet.be>,
-        Mark Enriquez <enriquezmark36@gmail.com>,
-        Koba Ko <koba.ko@canonical.com>,
-        Werner Sembach <wse@tuxedocomputers.com>,
-        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-        =?utf-8?B?5ZCz5piK5r6E?= Ricky <ricky_wu@realtek.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4] PCI/ASPM: Add back L1 PM Substate save and restore
-Message-ID: <20231009083434.GD3208943@black.fi.intel.com>
-References: <923d8df0-1112-aca9-8289-c6e2457298cd@witt.link>
- <20231005172226.GA781644@bhelgaas>
+        with ESMTP id S1345556AbjJIIuX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Oct 2023 04:50:23 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35D62D6;
+        Mon,  9 Oct 2023 01:50:14 -0700 (PDT)
+X-UUID: d896a2b2668011ee8051498923ad61e6-20231009
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=bJZxl78ZqXmSUYxnyLRImXGHwI5TulrkBQ1P6QH/uDg=;
+        b=b6s5B6Zb2AdXOnxJeuVJIytZB6T+pqRcpD2IR3aqMI8j+i3HGz2bkwjHzZMzOYiZS1xOLOs1pfX6kyHV3XExkZz/btRhf7384dAl1uszWCAwoq8tkOtlZhnPn9LUBuMKt7R4frBEeYP0X4A4kz3snbct+MtyTbLq5y5umQImQNg=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.32,REQID:bc4361a5-3adf-4edc-ad27-e392b3a6f04a,IP:0,U
+        RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+        release,TS:0
+X-CID-META: VersionHash:5f78ec9,CLOUDID:fdefebc3-1e57-4345-9d31-31ad9818b39f,B
+        ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+        RL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,
+        DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: d896a2b2668011ee8051498923ad61e6-20231009
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
+        (envelope-from <jian.yang@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 1424527330; Mon, 09 Oct 2023 16:50:07 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Mon, 9 Oct 2023 16:50:05 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Mon, 9 Oct 2023 16:50:04 +0800
+From:   Jian Yang <jian.yang@mediatek.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Rob Herring <robh@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+        <Chuanjia.Liu@mediatek.com>, <Jieyy.Yang@mediatek.com>,
+        <Qizhong.Cheng@mediatek.com>, Jian Yang <jian.yang@mediatek.com>
+Subject: [PATCH v3 0/2] PCI: mediatek-gen3: Support controlling power supplies
+Date:   Mon, 9 Oct 2023 16:49:55 +0800
+Message-ID: <20231009084957.18536-1-jian.yang@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231005172226.GA781644@bhelgaas>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,RDNS_NONE,SPF_HELO_PASS,
+        T_SPF_TEMPERROR,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+These series patches is based on linux-next, tag: next-20231009.
+Add support for controlling power supplies and reset GPIO of a downstream
+component in Mediatek's PCIe GEN3 controller driver.
 
-On Thu, Oct 05, 2023 at 12:22:26PM -0500, Bjorn Helgaas wrote:
-> On Thu, Oct 05, 2023 at 05:57:52PM +0200, Thomas Witt wrote:
-> > On 05/10/2023 17:30, Bjorn Helgaas wrote:
-> > ...
-> 
-> > > Right, without the denylist, I expect Thomas' TUXEDO to fail, but I
-> > > still hope we can figure out why.  If we just keep it on the denylist,
-> > > that system will suffer from more power consumption than necessary,
-> > > but only after suspend/resume.
-> > > 
-> > > A denylist seems like the absolute last resort.  In this case we don't
-> > > know about anything *wrong* with those platforms; all we know is that
-> > > our resume path doesn't work.  It's likely that it fails on other
-> > > platforms we haven't heard about, too.
-> > 
-> > The best guess from Mika and David was a firmware issue, but I run the same
-> > Firmware revision as Werner. I even reflashed the Firmware, but that did not
-> > change anything:
-> 
-> Possibly a BIOS settings difference?
-> 
-> > Quoting David Box:
-> > > I agree that we should pursue an exception for your system. This is
-> > > looking like a firmware bug. One thing we did notice in the turbostat
-> > > results is your IRTL (Interrupt Response Time Limit) values are bogus:
-> > >
-> > > cpu6: MSR_PKGC3_IRTL: 0x0000884e (valid, 79872 ns)
-> > > cpu6: MSR_PKGC6_IRTL: 0x00008000 (valid, 0 ns)
-> > > cpu6: MSR_PKGC7_IRTL: 0x00008000 (valid, 0 ns)
-> > > cpu6: MSR_PKGC8_IRTL: 0x00008000 (valid, 0 ns)
-> > > cpu6: MSR_PKGC9_IRTL: 0x00008000 (valid, 0 ns)
-> > > cpu6: MSR_PKGC10_IRTL: 0x00008000 (valid, 0 ns)
-> > >
-> > > This is despite the PKGC configuration register showing that all
-> > > states are enabled:
-> > >
-> > > cpu6: MSR_PKG_CST_CONFIG_CONTROL: 0x1e008008 (UNdemote-C3, UNdemote-C1,
-> > demote-
-> > C3, demote-C1, locked, pkg-cstate-limit=8 (unlimited))
-> > >
-> > > Firmware sets this.
-> 
-> I can't find this discussion, but if there's a firmware issue related
-> to IRTL MSRs, I would want the workaround in intel-idle.c or whatever
-> code deals with the MSRs, not in the ASPM code.
+Changes in v3:
+1. Modify description of power supply properties in DT binding.
+2. Remove unused header files.
+3. Use 'device_wakeup_path' to determine whether the downstream component
+needs to skip the reset process in system suspend scenarios.
 
-Unfortunately that discussion never ended up on the mailing list. But in
-summary that particular system seems to run pretty hot (if I understand
-correctly what David concluded). This is the reason Thomas has the
-pm_sleep=deep in the command line and this is why the L1 SS restore then
-causes the failure on resume. Without this it works fine but consumes
-lot of energy in s2idle.
+jian.yang (2):
+  dt-bindings: PCI: mediatek-gen3: Add support for controlling power and
+    reset
+  PCI: mediatek-gen3: Add power and reset control feature for downstream
+    component
 
-Can you suggest what we should do with this now?
+ .../bindings/pci/mediatek-pcie-gen3.yaml      | 30 ++++++
+ drivers/pci/controller/pcie-mediatek-gen3.c   | 93 ++++++++++++++++++-
+ 2 files changed, 122 insertions(+), 1 deletion(-)
 
-We got report from Tasev Nikola on
-https://bugzilla.kernel.org/show_bug.cgi?id=216782 that even if the Asus
-system is removed from the denylist it works so that we can do. However,
-with the Thomas' system I'm not sure. If we leave it like this:
+-- 
+2.18.0
 
-static int aspm_l1ss_suspend_via_firmware(const struct dmi_system_id *not_used)
-{
-        return pm_suspend_via_firmware();
-}
-
-static const struct dmi_system_id aspm_l1ss_denylist[] = {
-        {
-                /*
-                 * https://bugzilla.kernel.org/show_bug.cgi?id=216877
-                 *
-                 * This system needs to use suspend to mem instead of its 
-                 * default (suspend to idle) to avoid draining the battery. 
-                 * However, the BIOS gets confused if we try to restore the
-                 * L1SS registers so avoid doing that if the user forced
-                 * suspend to mem. The default suspend to idle on the other
-                 * hand needs restoring L1SS to allow the CPU to enter low
-                 * power states. This entry should handle both.
-                 */
-                .callback = aspm_l1ss_suspend_via_firmware,
-                .ident = "TUXEDO InfinityBook S 14 v5",
-                .matches = {
-                        DMI_MATCH(DMI_BOARD_VENDOR, "TUXEDO"),
-                        DMI_MATCH(DMI_BOARD_NAME, "L140CU"),
-                },
-        },
-        { }
-};
-
-Then it should work with Thomas' system (defaults to deep), and TUXEDO
-with default settings (defaults to s2idle), and with the rest of the
-world (I hope at least, fingers crossed). Or you want to pursue a
-solution without the denylist still? I'm out of ideas what could be
-wrong except that when the pm_sleep=deep it means the BIOS is involved
-in the suspend/restore of the devices and it may not expect the OS to
-touch these registers or something along those lines.
