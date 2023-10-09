@@ -2,95 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBAFD7BE822
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Oct 2023 19:32:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E5EA7BE841
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Oct 2023 19:33:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377966AbjJIRcD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Oct 2023 13:32:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37684 "EHLO
+        id S1378098AbjJIRdn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Oct 2023 13:33:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376824AbjJIRcC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Oct 2023 13:32:02 -0400
+        with ESMTP id S1378105AbjJIRdb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Oct 2023 13:33:31 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9869F94;
-        Mon,  9 Oct 2023 10:32:00 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E99C5C433C7;
-        Mon,  9 Oct 2023 17:31:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1696872720;
-        bh=XDeMdfLHaRv+b+MlRUUeKv/nia38YeOU/WDZx5uPdgo=;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F219196;
+        Mon,  9 Oct 2023 10:33:18 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08B3CC433CA;
+        Mon,  9 Oct 2023 17:33:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696872797;
+        bh=1Xy85/xXimMqCtgvlZEslnktYuoZiVcVI5H+ZlnTwFw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=n7htfkkYUR12EIz1FfiE1jX2eFvUEHVFPryxLjmFbPuCO63JBXFgzZFBrFSr8POoM
-         nOqBt8Ex9K985cGV6+qhK/D41SCIeSdiXbcUvI9IgH95SuKRTpkX2tFZxU1fggV/Co
-         h4FDmqr5W2gDoU8y1iBRT+VGpOLpUw9MzF+NINbA=
-Date:   Mon, 9 Oct 2023 19:31:56 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Max Kellermann <max.kellermann@ionos.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        James Clark <james.clark@arm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-        nvdimm@lists.linux.dev, linux-nvme@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-leds@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 6/7] fs/sysfs/group: make attribute_group pointers const
-Message-ID: <2023100944-fancied-garter-f09b@gregkh>
-References: <20231009165741.746184-1-max.kellermann@ionos.com>
- <20231009165741.746184-6-max.kellermann@ionos.com>
- <2023100921-that-jasmine-2240@gregkh>
+        b=pE/Dt50KFxYzY2M4D8PTeTLL8C9HZhH4LuIDFsGzo+KG4Ao6kQpTH/zN87uDOUGLN
+         kIZ2K/iD8wLc4BHX0noAgRJdS3oJ/Eqth5Da6Aww6yufEhiyWqWJM5yOzjDVfhdF7X
+         TATNsb92bYdrvFs37C+96SkjCC4N+kKWOZFeChpU+lfetgfwGrUnHAfkIjUuy8AVzQ
+         4RZwLX4TqH/5YsvFjm6xnwdpI9u72yf8v15ZTP2/+DJdvf7nJTe+0mMWJpNavHv1v8
+         eqo715BofvZAZh7DIZVvhfXcSpQfD40fCKSYrm1h3iO4hUPacU3VcK3SY50FQcZdSw
+         6zlCa5dLYch0g==
+Date:   Mon, 9 Oct 2023 23:02:59 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Nitheesh Sekar <quic_nsekar@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
+        p.zabel@pengutronix.de, quic_srichara@quicinc.com,
+        quic_varada@quicinc.com, quic_ipkumar@quicinc.com,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-phy@lists.infradead.org,
+        Anusha Rao <quic_anusha@quicinc.com>,
+        Devi Priya <quic_devipriy@quicinc.com>
+Subject: Re: [PATCH 4/6] PCI: qcom: Add support for IPQ5018
+Message-ID: <20231009173259.GC31623@thinkpad>
+References: <20231003120846.28626-1-quic_nsekar@quicinc.com>
+ <20231003120846.28626-5-quic_nsekar@quicinc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2023100921-that-jasmine-2240@gregkh>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231003120846.28626-5-quic_nsekar@quicinc.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -101,21 +59,102 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 09, 2023 at 07:25:57PM +0200, Greg Kroah-Hartman wrote:
-> On Mon, Oct 09, 2023 at 06:57:39PM +0200, Max Kellermann wrote:
-> > This allows passing arrays of const pointers.  The goal is to make
-> > lots of global variables "const" to allow them to live in the
-> > ".rodata" section.
+On Tue, Oct 03, 2023 at 05:38:44PM +0530, Nitheesh Sekar wrote:
+> Added a new compatible 'qcom,pcie-ipq5018' and modified
+> get_resources of 'ops 2_9_0' to get the clocks from the
+> device-tree.
 > 
-> I'm all for doing this type of work, but this is going to be rough.  You
-> sent patch 6/7 that hit almost all subsystems at once :(
 
-The way to do this right is one-subsystem-at-a-time, right?  Why not
-start there, doing it cleanly, and then at the end, change the driver
-core and then just the subsystem pointers?  That should be much simpler,
-easier to review and verify, and many more changes (and probably take a
-kernel release or two to get through.)
+As per Documentation/process/submitting-patches.rst:
 
-thanks,
+Describe your changes in imperative mood, e.g. "make xyzzy do frotz"
+instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy
+to do frotz", as if you are giving orders to the codebase to change
+its behaviour.
 
-greg k-h
+Also, please elaborate your change in a detailed manner. For instance, saying
+that you modified "get_resources of 'ops 2_9_0' to get the clocks from the
+devicetree" is not sufficient since all clocks are being parsed based on the
+devicetree info only.
+
+- Mani
+
+> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
+> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
+> Co-developed-by: Devi Priya <quic_devipriy@quicinc.com>
+> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 22 ++++++++--------------
+>  1 file changed, 8 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index e2f29404c84e..bb0717190920 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -197,10 +197,10 @@ struct qcom_pcie_resources_2_7_0 {
+>  	struct reset_control *rst;
+>  };
+>  
+> -#define QCOM_PCIE_2_9_0_MAX_CLOCKS		5
+>  struct qcom_pcie_resources_2_9_0 {
+> -	struct clk_bulk_data clks[QCOM_PCIE_2_9_0_MAX_CLOCKS];
+> +	struct clk_bulk_data *clks;
+>  	struct reset_control *rst;
+> +	int num_clks;
+>  };
+>  
+>  union qcom_pcie_resources {
+> @@ -1048,17 +1048,10 @@ static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
+>  	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
+>  	struct dw_pcie *pci = pcie->pci;
+>  	struct device *dev = pci->dev;
+> -	int ret;
+>  
+> -	res->clks[0].id = "iface";
+> -	res->clks[1].id = "axi_m";
+> -	res->clks[2].id = "axi_s";
+> -	res->clks[3].id = "axi_bridge";
+> -	res->clks[4].id = "rchng";
+> -
+> -	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
+> -	if (ret < 0)
+> -		return ret;
+> +	res->num_clks = devm_clk_bulk_get_all(dev, &res->clks);
+> +	if (res->num_clks < 0)
+> +		return res->num_clks;
+>  
+>  	res->rst = devm_reset_control_array_get_exclusive(dev);
+>  	if (IS_ERR(res->rst))
+> @@ -1071,7 +1064,7 @@ static void qcom_pcie_deinit_2_9_0(struct qcom_pcie *pcie)
+>  {
+>  	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
+>  
+> -	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
+> +	clk_bulk_disable_unprepare(res->num_clks, res->clks);
+>  }
+>  
+>  static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
+> @@ -1100,7 +1093,7 @@ static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
+>  
+>  	usleep_range(2000, 2500);
+>  
+> -	return clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
+> +	return clk_bulk_prepare_enable(res->num_clks, res->clks);
+>  }
+>  
+>  static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
+> @@ -1605,6 +1598,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+>  	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
+>  	{ .compatible = "qcom,pcie-ipq4019", .data = &cfg_2_4_0 },
+> +	{ .compatible = "qcom,pcie-ipq5018", .data = &cfg_2_9_0 },
+>  	{ .compatible = "qcom,pcie-ipq6018", .data = &cfg_2_9_0 },
+>  	{ .compatible = "qcom,pcie-ipq8064", .data = &cfg_2_1_0 },
+>  	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
+> -- 
+> 2.17.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
