@@ -2,134 +2,231 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A9447BF379
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Oct 2023 08:58:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89C1B7BF45F
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Oct 2023 09:35:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1442394AbjJJG6D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Oct 2023 02:58:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36172 "EHLO
+        id S1442446AbjJJHfT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Oct 2023 03:35:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1442363AbjJJG6B (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Oct 2023 02:58:01 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 697D59F;
-        Mon,  9 Oct 2023 23:57:59 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C42CCC433C8;
-        Tue, 10 Oct 2023 06:57:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1696921079;
-        bh=EYuUNIt6jJRwYBy0E3p0Vk5Y1cHFfh6ehg6kHTfAyUU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zzQU1pwcQ/CneY+FW5FxMonJkZiI86OeSlFhEhdRj/hvvySkkTG2K8Sk51p8M1RuX
-         NA8xXufVqn3K4h0T1GP7rVOn7ryC3K4n6YeVOhjVhWQYEIJa6ayQXO2ZChu8j2BCF+
-         i7dawBqEH7KL0R9NbBls/UV6Yg3YejnrOELbQ5Mk=
-Date:   Tue, 10 Oct 2023 08:57:55 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Max Kellermann <max.kellermann@ionos.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        James Clark <james.clark@arm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-        nvdimm@lists.linux.dev, linux-nvme@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-leds@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 6/7] fs/sysfs/group: make attribute_group pointers const
-Message-ID: <2023101041-giggle-refried-5b8c@gregkh>
-References: <20231009165741.746184-1-max.kellermann@ionos.com>
- <20231009165741.746184-6-max.kellermann@ionos.com>
- <264fa39d-aed6-4a54-a085-107997078f8d@roeck-us.net>
- <CAKPOu+8k2x1CucWSzoouts0AfMJk+srJXWWf3iWVOeY+fWkOpQ@mail.gmail.com>
- <f511170fe61d7e7214a3a062661cf4103980dad6.camel@perches.com>
+        with ESMTP id S1442324AbjJJHfS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Oct 2023 03:35:18 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A867C92;
+        Tue, 10 Oct 2023 00:35:15 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4S4SHK5Vn0ztSwY;
+        Tue, 10 Oct 2023 15:30:37 +0800 (CST)
+Received: from [10.67.121.177] (10.67.121.177) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Tue, 10 Oct 2023 15:35:13 +0800
+CC:     <yangyicong@hisilicon.com>, <chengyou@linux.alibaba.com>,
+        <kaishen@linux.alibaba.com>, <helgaas@kernel.org>,
+        <will@kernel.org>, <baolin.wang@linux.alibaba.com>,
+        <robin.murphy@arm.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <rdunlap@infradead.org>,
+        <mark.rutland@arm.com>, <zhuo.song@linux.alibaba.com>
+Subject: Re: [PATCH v6 3/4] drivers/perf: add DesignWare PCIe PMU driver
+To:     Shuai Xue <xueshuai@linux.alibaba.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+References: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
+ <20230606074938.97724-4-xueshuai@linux.alibaba.com>
+ <31e2b012-3a29-d063-842d-e3f7736816e7@huawei.com>
+ <20230727103929.00000544@Huawei.com>
+ <12958abe-4bdb-8532-bf67-8e772ed2a9dd@linux.alibaba.com>
+ <edc056aa-1c53-a31e-087f-6076b795d5cc@huawei.com>
+ <10176239-78c1-e276-e74f-a6e79b9c0751@linux.alibaba.com>
+ <f14c9acd-1549-1a65-4e57-a5e434cbe18d@huawei.com>
+ <1ebf5862-441f-729a-32c1-8e59ac452168@linux.alibaba.com>
+ <262abac1-39ea-7612-e198-6bc08c76dd39@linux.alibaba.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <0e4f5e36-57bb-8c3e-4757-b1b8ff76c09d@huawei.com>
+Date:   Tue, 10 Oct 2023 15:35:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f511170fe61d7e7214a3a062661cf4103980dad6.camel@perches.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <262abac1-39ea-7612-e198-6bc08c76dd39@linux.alibaba.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.121.177]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 09, 2023 at 11:48:10PM -0700, Joe Perches wrote:
-> On Mon, 2023-10-09 at 22:05 +0200, Max Kellermann wrote:
-> > On Mon, Oct 9, 2023 at 7:24 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> > > Also, I don't know why checkpatch is happy with all the
-> > > 
-> > >         const struct attribute_group *const*groups;
-> > > 
-> > > instead of
-> > > 
-> > >         const struct attribute_group *const *groups;
-> > 
-> > I found out that checkpatch has no check for this at all; it does
-> > complain about such lines, but only for local variables. But that
-> > warning is actually a bug, because this is a check for unary
-> > operators: it thinks the asterisk is a dereference operator, not a
-> > pointer declaration, and complains that the unary operator must be
-> > preceded by a space. Thus warnings on local variable are only correct
-> > by coincidence, not by design.
-> > 
-> > Inside structs or parameters (where my coding style violations can be
-> > found), it's a different context and thus checkpatch doesn't apply the
-> > rules for unary operators.
+On 2023/10/9 21:08, Shuai Xue wrote:
 > 
-> My opinion is that const use in the kernel should almost
-> always have whitespace before and after it except when
-> preceded by a open parenthesis or a newline.
+> 
+> On 2023/8/4 11:09, Shuai Xue wrote:
+>>
+>>
+>> On 2023/8/4 10:28, Yicong Yang wrote:
+>>> On 2023/8/4 9:39, Shuai Xue wrote:
+>>>>
+>>>>
+>>>> On 2023/8/1 19:46, Yicong Yang wrote:
+>>>>> On 2023/7/28 20:41, Shuai Xue wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 2023/7/27 17:39, Jonathan Cameron wrote:
+>>>>>>> On Tue, 6 Jun 2023 23:14:07 +0800
+>>>>>>> Yicong Yang <yangyicong@huawei.com> wrote:
+>>>>>>>
+>>>>>>>> On 2023/6/6 15:49, Shuai Xue wrote:
+>>>>>>>>> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
+>>>>>>>>> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
+>>>>>>>>> Core controller IP which provides statistics feature. The PMU is not a PCIe
+>>>>>>>>> Root Complex integrated End Point(RCiEP) device but only register counters
+>>>>>>>>> provided by each PCIe Root Port.
+>>>>>>>>>
+>>>>>>>>> To facilitate collection of statistics the controller provides the
+>>>>>>>>> following two features for each Root Port:
+>>>>>>>>>
+>>>>>>>>> - Time Based Analysis (RX/TX data throughput and time spent in each
+>>>>>>>>>   low-power LTSSM state)
+>>>>>>>>> - Event counters (Error and Non-Error for lanes)
+>>>>>>>>>
+>>>>>>>>> Note, only one counter for each type and does not overflow interrupt.
+>>>>>>>>>
+>>>>>>>>> This driver adds PMU devices for each PCIe Root Port. And the PMU device is
+>>>>>>>>> named based the BDF of Root Port. For example,
+>>>>>>>>>
+>>>>>>>>>     30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
+>>>>>>>>>
+>>>>>>>>> the PMU device name for this Root Port is dwc_rootport_3018.
+>>>>>>>>>
+>>>>>>>>> Example usage of counting PCIe RX TLP data payload (Units of 16 bytes)::
+>>>>>>>>>
+>>>>>>>>>     $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
+>>>>>>>>>
+>>>>>>>>> average RX bandwidth can be calculated like this:
+>>>>>>>>>
+>>>>>>>>>     PCIe TX Bandwidth = PCIE_TX_DATA * 16B / Measure_Time_Window
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>>>>>>>>> Reported-by: kernel test robot <lkp@intel.com>
+>>>>>>>>> Link: https://lore.kernel.org/oe-kbuild-all/202305170639.XU3djFZX-lkp@intel.com/
+>>>>>>>>> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>>>>>>
+>>>>>>> I'll review on top to avoid any duplication with Yicong.
+>>>>>>
+>>>>>> Thank you! It also served as a reminder that I missed Yicong's email. It appears
+>>>>>> that Thunderbird mistakenly moved his email to the junk folder, resulting in me
+>>>>>> overlooking it.
+>>>>>>
+>>>>>>>
+>>>>>>> Note I've cropped the stuff neither of us commented on so it's
+>>>>>>> easier to spot the feedback.
+>>>>>>
+>>>>>> Thank you for noting that. My feedback is replied inline.
+>>>>>>
+>>>>>>>
+>>>>>>> Jonathan
+>>>>>>>
+>>>>>>>>> ---
+>>>>>>>>>  drivers/perf/Kconfig        |   7 +
+>>>>>>>>>  drivers/perf/Makefile       |   1 +
+>>>>>>>>>  drivers/perf/dwc_pcie_pmu.c | 706 ++++++++++++++++++++++++++++++++++++
+>>>>>>>>>  3 files changed, 714 insertions(+)
+>>>>>>>>>  create mode 100644 drivers/perf/dwc_pcie_pmu.c
+>>>>>>>>>
+>>>>>>>>> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+>>>>>>>>> index 711f82400086..6ff3921d7a62 100644
+>>>>>>>>> --- a/drivers/perf/Kconfig
+>>>>>>>>> +++ b/drivers/perf/Kconfig
+>>>>>>>>> @@ -209,6 +209,13 @@ config MARVELL_CN10K_DDR_PMU
+>>>>>>>>>  	  Enable perf support for Marvell DDR Performance monitoring
+>>>>>>>>>  	  event on CN10K platform.
+>>>>>>>>>  
+>>>>>>>>> +config DWC_PCIE_PMU
+>>>>>>>>> +	tristate "Enable Synopsys DesignWare PCIe PMU Support"
+>>>>>>>>> +	depends on (ARM64 && PCI)
+>>>>>>>>> +	help
+>>>>>>>>> +	  Enable perf support for Synopsys DesignWare PCIe PMU Performance
+>>>>>>>>> +	  monitoring event on Yitian 710 platform.
+>>>>>>>
+>>>>>>> The documentation kind of implies this isn't platform specific.
+>>>>>>> If some parts are (such as which events exist) then you may want to push
+>>>>>>> that to userspace / perftool with appropriate matching against specific SoC.
+>>>>>>>
+>>>>>>> If it is generic, then change this text to "event on platform including the Yitian 710."
+>>>>>>
+>>>>>> It is generic without any platform specific, so I will change it as you expected.
+>>>>>>
+>>>>>>>
+>>>>>>>>> +
+>>>>>>>>>  source "drivers/perf/arm_cspmu/Kconfig"
+>>>>>>>>>  
+>>>>>>>>>  source "drivers/perf/amlogic/Kconfig"
+>>>>>>>
+>>>>>>>>> new file mode 100644
+>>>>>>>>> index 000000000000..8bfcf6e0662d
+>>>>>>>>> --- /dev/null
+>>>>>>>>> +++ b/drivers/perf/dwc_pcie_pmu.c
+>>>>>>>>> @@ -0,0 +1,706 @@
+>>>>>>>
+>>>>>>> ...
+>>>>>>>
+>>>>>>>>> +
+>>>>>>>>> +struct dwc_pcie_pmu {
+>>>>>>>>> +	struct pci_dev		*pdev;		/* Root Port device */  
+>>>>>>>>
+>>>>>>>> If the root port removed after the probe of this PCIe PMU driver, we'll access the NULL
+>>>>>>>> pointer. I didn't see you hold the root port to avoid the removal.
+>>>>>>
+>>>>>> Do you mean that I should have a reference count of rootport by pci_dev_get() when allocating
+>>>>>> pcie_pmu?
+>>>>>>
+>>>>>>      pcie_pmu->pdev = pci_dev_get();
+>>>>>
+>>>>> It could be one option, but will block the removal of device from userspace. Another option
+>>>>> is to register a PCI bus notifier then on removal/added the driver can get notified and handle
+>>>>> it, for example, remove the related PMU on the removal of the root ports.
+>>>>
+>>>> I see, but can root port be removed from userspace? I check the hotplug slot interface, no root
+>>>> port is available to power off.
+>>>>
+>>>
+>>> For hotplug maybe not, but user can remove certian device through sysfs:
+>>>
+>>> echo 1 > /sys/bus/pci/devices/<root port>/remove
+>>>
+>>
+>> Thank you, I will add a notifier for removal/added action.
+>>
+>> Best Regards,
+>> Shuai
+> 
+> Hi, Yicong,
+> 
+> I am confused when adding a notifier by bus_register_notifier(). If I have added a action to
+> pdev->dev to unregister pmu:
+> 
+> 		ret = perf_pmu_register(&pcie_pmu->pmu, name, -1);
+> 		if (ret) {
+> 			pci_err(pcie_pmu->pdev,
+> 				"Error %d registering PMU @%x\n", ret, bdf);
+> 			goto out;
+> 		}
+> 		ret = devm_add_action_or_reset(
+> 			&pdev->dev, dwc_pcie_pmu_unregister_pmu, &pcie_pmu->pmu);
+> 
+> the pmu will be unregister when the port removes, so accessing the NULL pointer will never happen,
+> right? Do we still need the bus_register_notifier()?
+> 
 
-I totally agree.
+Not necessary, a notifier is used to notice the device removal and avoid dereferencing the
+NULL pointer. If you find another way like above to avoid the issue it will be ok. Since
+your pmu is 1:1 related to the root port, add a devm action to unregister the PMU on root
+port removal looks better.
+
+Thanks.
