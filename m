@@ -2,116 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37AF57C0129
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Oct 2023 18:05:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0ED97C018C
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Oct 2023 18:25:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234002AbjJJQFQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Oct 2023 12:05:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52658 "EHLO
+        id S232476AbjJJQZp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Oct 2023 12:25:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234005AbjJJQE5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Oct 2023 12:04:57 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B16910C4;
-        Tue, 10 Oct 2023 09:04:26 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66636C433C9;
-        Tue, 10 Oct 2023 16:04:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696953865;
-        bh=CPjakDH/b/NnLZYhG6qAlFTOBENXy2ZPobzsoGHhlUE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=oKoB9O5WH9REfKO57RoBNap5FlOCwlHa5tWCMjXkqpZGOdyHCWTAd/nvxQGrRbScf
-         RmwSZew+Hu9gAxh/XrnU6Gya5EylyR2BhX5LJfw9MiSoYPYbFPfmQJRa4vmK1LIcK4
-         fxKkbPA6DLOwewexCElKjkUTlw9mGdpspzauxvuSpU6QPr1TyBnR/bahgwJ5YaHJ1j
-         hNeS5F5I498tCazwxNI4y89y8FYggplvKSaAf7OHXnl3X7QF1pUA7Bd+o2pXlPMrZr
-         fXQlXzmmPEzoenCDb3Mtcx8FCJTO8Ouz8pa8WSGpx3WZqQ7uI1YNZfUMsnC82m26/x
-         +zK+IfiHqRekg==
-Date:   Tue, 10 Oct 2023 11:04:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Daniel Golle <daniel@makrotopia.org>
-Cc:     linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Christian Marangi <ansuelsmth@gmail.com>,
-        Frank Wunderlich <linux@fw-web.de>,
-        John Crispin <john@phrozen.org>
-Subject: Re: [PATCH] PCI: mediatek-gen3: fix PCIe #PERST being de-asserted
- too early
-Message-ID: <20231010160423.GA977719@bhelgaas>
+        with ESMTP id S231246AbjJJQZl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Oct 2023 12:25:41 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35FC893
+        for <linux-pci@vger.kernel.org>; Tue, 10 Oct 2023 09:25:39 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id 38308e7fff4ca-2c27d653856so94841fa.0
+        for <linux-pci@vger.kernel.org>; Tue, 10 Oct 2023 09:25:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1696955137; x=1697559937; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZYpu7WmJTYMPsrwJtEmCK7st+BFZo4gJs4bCDxTrOlY=;
+        b=sHBSEejk4bRr6YlRnhtf6G03QbAVqCQ5Ne10Q+fcQhInSp84t4nEaksw1p9AsxOZ+2
+         OoJsl2K/8KZdh1tNpPEu4a2QdRyCXPwITqfpVSljtdIMtKYFZoD8m9nixUyuXSOluMDg
+         cb7LfFLYg3CPxqxiBLeBgSXx5KbjIhhmB5Cs2ELz/fHsGx1eiIdYcZSbylZfr8kkypTv
+         XmzQ7Nmh/ierCgT2wcd1gI0UiUeH0rfE9XFzhABqsq/vLhR7r0D1tMrFjihxBckbRhO9
+         rE6PD408yKX+mJuB/A93ONUZyKw+2IgtLEqLj9/JvAboz17TdcgqKOodzZWSp0q1LRpP
+         CA+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696955137; x=1697559937;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZYpu7WmJTYMPsrwJtEmCK7st+BFZo4gJs4bCDxTrOlY=;
+        b=rpYSl0EqXj3vYKEaespCi1Ic754RkonohaA1G5OdwwtJprrDoBCs62A5oeFC+goI8a
+         5Ib+AMP9AGEbUnPdqvjf6vv6ItrZF65jVUiANp7mFxSa/bHM+Mbz4XNAvt2TR7lIqYf6
+         8J6IRjLgvW+vV00ySM7h9ip1sRywUhUYnAv88ES0sTtOlQJsmMsbUXB2bQBNQ85RlmE1
+         v0MIDeXwNevSxkgJDHW4512ZUFTATc5sdRU95jHzI7RAVA8pvTSTWmscnXyDvodH8o+J
+         +4bC3jh8lOHSse58w6nFOlZN7LWhottzczC5kyyOS/P8+Ww4JPYkHmbSx7gU9YhmQBL6
+         Io+g==
+X-Gm-Message-State: AOJu0YzX9HEQ2Elenlk6efSVUcibq8vXSYIXqAy6xGz9FQjec2GR1W1Q
+        Jhk5y4qRXMzkqjIz+jx20dWbYg==
+X-Google-Smtp-Source: AGHT+IGILstfH1n9xtnahht/Q4quKgIwuDkjpk3L8fbHv4Am3weXHJDhvA19iKb5tpe5uWAv9X0r5Q==
+X-Received: by 2002:ac2:4da3:0:b0:4ff:9a91:6b73 with SMTP id h3-20020ac24da3000000b004ff9a916b73mr11251453lfe.17.1696955137376;
+        Tue, 10 Oct 2023 09:25:37 -0700 (PDT)
+Received: from [172.30.204.182] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id v19-20020ac25593000000b005032907710asm1877533lfg.237.2023.10.10.09.25.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Oct 2023 09:25:36 -0700 (PDT)
+Message-ID: <5fab045d-3b09-496d-af30-b7355495694b@linaro.org>
+Date:   Tue, 10 Oct 2023 18:25:35 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZR-7Nm2c5s4kuOp0@pidgin.makrotopia.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] PCI: qcom: Enable ASPM on host bridge and devices
+Content-Language: en-US
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com
+Cc:     robh@kernel.org, gustavo.pimentel@synopsys.com,
+        jingoohan1@gmail.com, andersson@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20231010155914.9516-1-manivannan.sadhasivam@linaro.org>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20231010155914.9516-1-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 06, 2023 at 09:45:58AM +0200, Daniel Golle wrote:
-> The driver for MediaTek gen3 PCIe hosts de-asserts all reset
-> signals at the same time using a single register write operation.
-> Delay the de-assertion of the #PERST signal by 100ms as required by
-> PCIe CEM clause 2.2, some PCIe devices fail to come up otherwise.
+
+
+On 10/10/23 17:59, Manivannan Sadhasivam wrote:
+> Hi,
 > 
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> ---
->  drivers/pci/controller/pcie-mediatek-gen3.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+> This series enables ASPM by default on the host bridge and devices of selected
+> Qcom platforms.
 > 
-> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-> index e0e27645fdf4..ba8cfce03aad 100644
-> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> @@ -350,7 +350,13 @@ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
-
-I feel like I'm missing something because this patch seems to be
-adding a delay for T_PVPERL, but the comment before the existing
-msleep() claims *it* is the T_PVPERL delay:
-
-         * Described in PCIe CEM specification sections 2.2 (PERST# Signal)
-         * and 2.2.1 (Initial Power-Up (G3 to S0)).
-         * The deassertion of PERST# should be delayed 100ms (TPVPERL)
-         * for the power and clock to become stable.
-
->  	msleep(100);
->  
->  	/* De-assert reset signals */
-> -	val &= ~(PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB);
-> +	val &= ~(PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB);
-> +	writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
-> +
-> +	msleep(100);
-
-So I'm confused about these two sleeps.  Are they for different
-parameters?
-
-T_PVPERL is defined from "Power stable to PERST# inactive".  Do we
-have any actual indication of when to start that delay, i.e., do we
-have a clue about when power became stable?
-
-> +	/* De-assert PERST# signals */
-> +	val &= ~(PCIE_PE_RSTB);
->  	writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
->  
->  	/* Check if the link is up or not */
-> -- 
-> 2.42.0
+> The motivation behind enabling ASPM in the controller driver is provided in the
+> commit message of patch 2/2.
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> This series has been tested on SC8280-CRD and Lenovo Thinkpad X13s laptop
+> and it helped save ~0.6W of power during runtime.
+That's a lot of power, thanks for looking into this!
+
+Konrad
