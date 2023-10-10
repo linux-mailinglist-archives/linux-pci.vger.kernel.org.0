@@ -2,168 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 149587C01BE
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Oct 2023 18:34:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C31E7C01F1
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Oct 2023 18:49:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232821AbjJJQer (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Oct 2023 12:34:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36434 "EHLO
+        id S233867AbjJJQtR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Oct 2023 12:49:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232667AbjJJQeq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Oct 2023 12:34:46 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8B397;
-        Tue, 10 Oct 2023 09:34:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lsdt17dgz4UT65o7g7uJjNaxJDRtthQOsn45HjuvnNwNTleS77s6NcC05OsPf4fDzVJ6GVX1RjhgzgiMvndZvNT5Qiy2TAOmwLTTK/9n9g+DwaHtoHgBkQ6z2fI8av0cFQthb2yGUzxjJjxwwv45yvivtetnJjEP8RwP8kqySxFgqlkzWuI8Lq5ADRmvPpu8y2R1FJnDMnoGGeIw1LcHfX8p/RrSbTv/+VSReHOANKw3sWvJM0X+zLULCIaLRi8FhP7I7Vi4Rk6yj4ErbQNiXmwKxMnXFYMpQf+eTVG0i96R7BAjl5uPKRQtD+nAMzDRgPLPxzIcshUfgz2UCtU0xw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OstRbsQvgJS+ZbfpTllTDvpfvlMXtMMJIussT/krCN4=;
- b=BnDpe3RXPCedhYIvw3ZxqiQarFAujUlwXJab3nT5ic2FM2ueeni+6L1VT1q3ssWI+2fFwRt3mYLElGXJFmByqhzeayVpY9Yv+DMfMV3gtGcYy8cCpfTBnz1GrWheco0sIEFN440AWLEp8JVNyICRCKVb5SpZsz42QAOlEJDdtzNLfuhJZwg1qBkaHjk2HDx7T8CsCVA7v1H6CagHpLYzlraj6TwEHq0UU+Xu4hWOlFFwZLG4BlAiXfh6JP0UByApiNFWp9BjseVKVB0qSLlHpG9OsPApA8g2aCJkE73+g7yeERjDDj8ZihRthOPFekKKTIEjSnenVz897zaPKHKnRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OstRbsQvgJS+ZbfpTllTDvpfvlMXtMMJIussT/krCN4=;
- b=zeizVPrQJZVCatxpyEc+wEfQngMPeB9sgOHz9dMKyNIaHnMQGNq/f0PNNVqnHD7ZTjRrn6Ni4IuhQQ5bAG5kLg0Hz/LPAEPLnejSI1rM7FA+n9ShMV4BJoHDcPCun7qKChMFq4wXO3KqkZW5FkQFmwxeVa//um9HPKrn54W73Hc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CYXPR12MB9443.namprd12.prod.outlook.com (2603:10b6:930:db::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.36; Tue, 10 Oct
- 2023 16:34:42 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::3e65:d396:58fb:27d4]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::3e65:d396:58fb:27d4%3]) with mapi id 15.20.6863.032; Tue, 10 Oct 2023
- 16:34:42 +0000
-Message-ID: <87bca301-f50b-4164-9b3c-c597dc26288d@amd.com>
-Date:   Tue, 10 Oct 2023 11:34:39 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: Make d3cold_allowed sysfs attribute read only
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, lukas@wunner.de, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, mika.westerberg@linux.intel.com
-References: <20231010163325.GA978803@bhelgaas>
-From:   Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20231010163325.GA978803@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1PR02CA0016.namprd02.prod.outlook.com
- (2603:10b6:806:2cf::22) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+        with ESMTP id S233837AbjJJQtQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Oct 2023 12:49:16 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26EF98E;
+        Tue, 10 Oct 2023 09:49:12 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-3248ac76acbso5246599f8f.1;
+        Tue, 10 Oct 2023 09:49:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696956550; x=1697561350; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=kRoUi3Xaj9/vW3JOic0lJo9yZRKzDYlftz3mCeomBqs=;
+        b=bDM4fMv7ppte/XSybaEPCimlr+eajN+9Sv4DpZdrMFTXUwu3yJ8qlZz7ZCZJYw/L3O
+         NBuZnaHWe2PwxXljDE8txvc6Ynd4WRMzZ285di8+P/vqFNKwjhRyWSwcrNkRWXrthqHj
+         SR/PI02iTJizfXXCymI02MFGC8puVr4dsadbQM67jFl/y7uXkrW7p9VpjZhod9SuWIOT
+         TMTTLiq5hIxTN+AGhhhZ1Fqm/NDu+951gU+FDf2Aq6gt9d3KoSV2+5nTQgr+RFM5f8C5
+         QsnlKRE8WITlR7Jdm33ynW7evr7aWkvL22ipnRGMT+pTqjUFm/ZMWXksx1+dU0moRXCp
+         Vxkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696956550; x=1697561350;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kRoUi3Xaj9/vW3JOic0lJo9yZRKzDYlftz3mCeomBqs=;
+        b=g8+CfYa95KRiu3ZklH9CyRRNRqt+K/xarUg/CEK9vXbgby39w3cQdqFd8d8sEivCMu
+         RiS9/ApgqixS52r9IfqJv71ZUktO7m/OL6uVrVDb+PTSSzfKoDXtLtlhT70St7FS3ysQ
+         3nNcH4RdfQDRQbahUvVmBVjlgm53xEx26P2tLmeQErCW3yAjZbxGKO+LI/WgG4+/U4Y6
+         fLFq5L98d7kW0VMeinjacMSkpEyzn0qn3I+eaUKXcyndxKMWmlFuwtVtDDLFkkdmqBgP
+         0UbqIaGWn04O7Wd0q3g2GIYEBIAQt7i+0eYiSJCasNDiWerbPmwZVieMRWNaM2K9F+jQ
+         9hVw==
+X-Gm-Message-State: AOJu0Yy535Ja41Dz530TYT2pn4koIAPNYWBKrokrgSJVRKnPQZn8eGRW
+        S6zDb/jyW4IXhovlbx0O8v4=
+X-Google-Smtp-Source: AGHT+IH+JUkcLf/ecz4OOARVhnPjr2KCLrmDW4cCzSkY9RxtXFVqBpwDpNO/TOhJBJQT5jok2aD36g==
+X-Received: by 2002:a5d:674a:0:b0:317:e68f:e1b2 with SMTP id l10-20020a5d674a000000b00317e68fe1b2mr15338549wrw.28.1696956550228;
+        Tue, 10 Oct 2023 09:49:10 -0700 (PDT)
+Received: from Ansuel-xps. (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
+        by smtp.gmail.com with ESMTPSA id t4-20020a0560001a4400b0032763287473sm13276997wry.75.2023.10.10.09.49.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Oct 2023 09:49:09 -0700 (PDT)
+Message-ID: <65258085.050a0220.dfda3.2518@mx.google.com>
+X-Google-Original-Message-ID: <ZSWAhEDlKhBIbZxk@Ansuel-xps.>
+Date:   Tue, 10 Oct 2023 18:49:08 +0200
+From:   Christian Marangi <ansuelsmth@gmail.com>
+To:     Frank Wunderlich <linux@fw-web.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Daniel Golle <daniel@makrotopia.org>,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>
+Subject: Re: [PATCH] PCI: mediatek-gen3: fix PCIe #PERST being de-asserted
+ too early
+References: <20231010160423.GA977719@bhelgaas>
+ <1E611A63-AD66-4E61-90F9-F1DB41BD6466@fw-web.de>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CYXPR12MB9443:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9675d51b-fa44-45fa-dffd-08dbc9aecdff
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XZkW3HhxVfTDmefhIYbhvkkRWfk7423TyW2aB2oXz2I9mPbdU8tbVqqYd0IG/azzMt0oO8osXP5LJ28q8ix06N0YsJJYl1xVYKIiyylAQsXRrRqC9pkwi1BB7vJPfCOFCPr+bEDKJKxFDs07MRwuiDgfC5zbrn5wno+DXfoYkjkEz2zGV7VusDsJwMiqGmf4NFRANiioUwZAssXtcp8d1r1+FaazEH9O1PT2mqbxW0V6sFlwyYcq11ChILWZvX1ObI4AR+ROnieLscKwrl4S4wW3UL/0Qy3TnnOh3+SzzYFRMJEK+i14KEwUwCSEa74JM1e6tXnCG9EEZ9uFTghoe2BuNFEsgMqiRrGuTjJt+2RHBwheE9O6s59LayqUzCTCvb31szzMs6BkGmj2JMxEmw2VhEkgUIuVjWgGSiH46g1lLehf3TTGqWCpVsgMPmWvuLIelCyYqjcvtq3LkbXLrhxevv8AtREodzquEdBaK58yh3ctBfHZjKXSnVSr+IpW/X3JxAKbGPKndK01KGR5sqcW4VmtpQxxkd6LKu/34R+BXJTmSykPQa8YIrQ13wf/UcRyElLGVnu9vuEzboW9aU7PgwJ7BYKmL0oUFXONJ3wuNfgv9hJq0spN/mw8eqj8v19t1DalQYfEYQW9GH9KbA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(39860400002)(346002)(396003)(376002)(230922051799003)(64100799003)(186009)(451199024)(1800799009)(83380400001)(31686004)(26005)(53546011)(2616005)(31696002)(38100700002)(86362001)(36756003)(478600001)(4326008)(44832011)(6506007)(2906002)(6512007)(8676002)(6666004)(8936002)(5660300002)(6486002)(6916009)(316002)(41300700001)(66476007)(66556008)(66946007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VnFtVnFXV1QzOEsvN2t2c2I2UnVsZklrZXJlcUlERnhxQ3lMVFVMc2diQi9a?=
- =?utf-8?B?YkJ6VlhEYnozSjJHUEJyNXk4Ty9PVzZPWkRkbU8yK0JCMWRvZG1nMUdqbXdz?=
- =?utf-8?B?eE9DMTlDeElyaUk2UHlWN3p5U05ZRm5mbi9nTUUxSXJVK1VOZk51TUxkSzJM?=
- =?utf-8?B?aHpwR0ZybStNWjQ0Z08xb0VZOG4vazRkT253eU1Yb2M5OHdWQTByQUdZemFM?=
- =?utf-8?B?enBpait3M1UzcUtkUy9BSXJlcGpaSlE5bC8vamtlWitTdFZURzluUzdPcnVy?=
- =?utf-8?B?NUdENTk0Qy9XcFd0dzZHUGF3S01DZGZtNkEySnR6KzRNemo3b2JZNkZnYk1I?=
- =?utf-8?B?QkNjY01ZTEhQTkJPb3d2dEs3SVFlUGMvQ0dRZnhBenBkMzlHdGFUZmxFaWo1?=
- =?utf-8?B?WnNBTm90c09WNFFwVlM1aEhLMEVNRW1jU3JPTjRQRi9heVQrL1VnRWVTU3px?=
- =?utf-8?B?R1JvczRPbmF3RXFNUFpwK0RSSk5TbkF0K1dBQ1BWZWhIaHpORzd6akxxMjZz?=
- =?utf-8?B?eVhRY1JHVkdWYWhTQVRUM2JuTlBRSFoyTGlqTVc5RXcxb0tCUHNuNVBYRTUw?=
- =?utf-8?B?Q2I4amxnNEpYL0R3ZmZncHdzK2tsekcwc0hsd2daTjZCVUFwdklIMUxpdklz?=
- =?utf-8?B?NUR1L2d5UTBQRWlrdmpwMVBsZlBUbzJxTE1Xay9WRVVqdnlnK3dpeExWbmRR?=
- =?utf-8?B?ekM1VnFJNTlZUkY2WWFzbEFsRUU5MDlCQy85YnRoWmFsRVZzbE5IVkJFT3pl?=
- =?utf-8?B?Z2VRNTFEWDFMMnNwZi9lT2RTSXloN2Q5MVBNVlo0Zk1VZEpJL1hnWkJKSllS?=
- =?utf-8?B?L0swRk1NMG95ams5SmFHZHVMY1NiaGVIZ1djbmdYYUNsWDB1eWNRS0NROXRV?=
- =?utf-8?B?azVPcWhiTWUrU0QxSnJFTUxtL2Frck5GbFlkaHBlZzRuR1ErYUY2K3BsbFJS?=
- =?utf-8?B?SkdMbUhXOWh0UUhERm9JZ2p5MW53VGZxdUVtbGZKWXRZR1Qrajg0cXBHN3VJ?=
- =?utf-8?B?UHJhKzNMS0ZoUTRpUTF4bHRzV2VDcVloQW9xVjRiK3kvMWhJOU1WNS9hLzM3?=
- =?utf-8?B?RWpwSVh5SkNNL0dBK0lTV2QxQ1g2MStUUUpYSnRvMEYzU1FrbG5GcmUyeHpX?=
- =?utf-8?B?NUs0bzZPZDY3Z2ZnL21idGNqMTJwZS93SEtjSk54S2cxWjFCd0hXZDhNcERx?=
- =?utf-8?B?NFk3cGlaeG9GZnZlY3ZoSUsreTJ2VVZnVGhKMXlxUWZ1dVpyc2ZvVm02MW0v?=
- =?utf-8?B?QmZOSzIraXQvQUg3NFNXNDkvUTBvV0dYVWNFS0xNV0NTdkpxQ2YzeHU1Z2xu?=
- =?utf-8?B?Nyt2SjZHNkI0SXVIN0oxbkRtZnEwUXBhWDk0RlVwcmFUaFZzeWtBRlRWbkFX?=
- =?utf-8?B?NmE4NXlxK3ZleEdKbmM3eXBrclBmekc4U2FJcnpReFVOcGticUpRVFVHZ09q?=
- =?utf-8?B?Sjk2UWhCUHhhcEpFOXZKSXByZ0VBU0JkWFppYmxBOFptNndvMVNqbklGUi9D?=
- =?utf-8?B?czc4eUM2cUdveDRFNlBwYVRiK3cxa2wxcGpYRnZ6b0Nub1dtNlo4Vy80bERM?=
- =?utf-8?B?SDNlR1I0UFkvbjJzZ2FhUC9qRlNqd0ZqdGR4RGNKUVA2QWt0RkN6eGEvVHhk?=
- =?utf-8?B?dWtRZnpTOWFqWkVueGp4OVB2YnRrSkt4TGVNUjUyTGxJNUtpc2NqUFhvWUtJ?=
- =?utf-8?B?VUFIa2lBZ0QxQitvOFpKNkZCWEltMmJTUXdpcmpVVjNOZzh1cXpoUnY4QkhW?=
- =?utf-8?B?UFNlVytiQmtGK0lwVDBIUlFlV1k0ZTcxZDY1NFl5RVp5ZUZvRUk5VGJ5cUlo?=
- =?utf-8?B?T0cvb3EyVjBEVWU3UndwaXJFRW95bStKNWQ5YS9aVzR3ZTRXdElIN1BXOUla?=
- =?utf-8?B?dmFDZWZCNXFZN2QzSEhUWThaTUd6NDNmLzBBeGNiL1FQcGlSbXY3dkZRVEx6?=
- =?utf-8?B?TURXL1lpWE12a1dhTVVNRDJKb2VPbUwwSHRMbTRtdEF2ZHB4eWNkdHJNdkQz?=
- =?utf-8?B?a1RlOXdNUUtXbVdqL0dyMWs3OEZlak1tSmc2OFhCbXNRTllnOTdoWDhFS1dl?=
- =?utf-8?B?bVgyR01iNUpLampkKzhwdjNZTmtJcTJDVzRiQmRSa2FNUjlXK3crRGNuR0Z2?=
- =?utf-8?Q?RfLytnaPYH1oL66QsvQQRELpE?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9675d51b-fa44-45fa-dffd-08dbc9aecdff
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2023 16:34:42.1965
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lpL/0WhW8ebRMKBp3PApdIrKqvPCQT/23BpKr1wxKgF6zUPP+/limbPt8htyXTwwbvUJea0EcEDlQnFN3NYZug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9443
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1E611A63-AD66-4E61-90F9-F1DB41BD6466@fw-web.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/10/2023 11:33, Bjorn Helgaas wrote:
-> On Thu, Oct 05, 2023 at 01:56:27PM -0500, Mario Limonciello wrote:
->> On 10/5/2023 13:53, Bjorn Helgaas wrote:
->>> On Wed, Oct 04, 2023 at 09:47:31AM -0500, Mario Limonciello wrote:
->>>> Before d3cold was stable userspace was allowed to influence the kernel's
->>>> decision of whether to enable d3cold for a device by a sysfs file
->>>> `d3cold_allowed`.  This potentially allows userspace to break the suspend
->>>> for the system.
->>>
->>> Is "Before d3cold was stable" referring to a "d3cold" read-only
->>> variable, or to Linux functionality of using D3cold, or ...?
->>
->> I was referring to the previous thread's comments when I asked about the
->> history on it.
->>
->>> In what sense does the `d3cold_allowed` sysfs file break suspend?
->>
->> SoCs might not be able to get into their deepest sleep state if userspace
->> messes with it.
->>
->>>> For debugging purposes `pci_port_pm=` can be used to control whether
->>>> a PCI port will go into D3cold and runtime PM can be turned off by
->>>> sysfs on PCI end points.
->>>
->>> I guess this should be "pcie_port_pm=", which affects *all* PCIe
->>> ports?
->>
->> Yes.
->>
->>> Which sysfs file turns off runtime PM for endpoints?
->>
->> /sys/bus/pci/devices/*/power/control
+On Tue, Oct 10, 2023 at 06:42:07PM +0200, Frank Wunderlich wrote:
+> Am 10. Oktober 2023 18:04:23 MESZ schrieb Bjorn Helgaas <helgaas@kernel.org>:
+> >On Fri, Oct 06, 2023 at 09:45:58AM +0200, Daniel Golle wrote:
+> >> The driver for MediaTek gen3 PCIe hosts de-asserts all reset
+> >> signals at the same time using a single register write operation.
+> >> Delay the de-assertion of the #PERST signal by 100ms as required by
+> >> PCIe CEM clause 2.2, some PCIe devices fail to come up otherwise.
+> >> 
+> >> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> >> ---
+> >>  drivers/pci/controller/pcie-mediatek-gen3.c | 8 +++++++-
+> >>  1 file changed, 7 insertions(+), 1 deletion(-)
+> >> 
+> >> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+> >> index e0e27645fdf4..ba8cfce03aad 100644
+> >> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> >> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> >> @@ -350,7 +350,13 @@ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
+> >
+> >I feel like I'm missing something because this patch seems to be
+> >adding a delay for T_PVPERL, but the comment before the existing
+> >msleep() claims *it* is the T_PVPERL delay:
+> >
+> >         * Described in PCIe CEM specification sections 2.2 (PERST# Signal)
+> >         * and 2.2.1 (Initial Power-Up (G3 to S0)).
+> >         * The deassertion of PERST# should be delayed 100ms (TPVPERL)
+> >         * for the power and clock to become stable.
+> >
+> >>  	msleep(100);
+> >>  
+> >>  	/* De-assert reset signals */
+> >> -	val &= ~(PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB | PCIE_PE_RSTB);
+> >> +	val &= ~(PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB);
+> >> +	writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
+> >> +
+> >> +	msleep(100);
+> >
+> >So I'm confused about these two sleeps.  Are they for different
+> >parameters?
+> >
+> >T_PVPERL is defined from "Power stable to PERST# inactive".  Do we
+> >have any actual indication of when to start that delay, i.e., do we
+> >have a clue about when power became stable?
+> >
+> >> +	/* De-assert PERST# signals */
+> >> +	val &= ~(PCIE_PE_RSTB);
+> >>  	writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
+> >>  
+> >>  	/* Check if the link is up or not */
+> >> -- 
+> >> 2.42.0
+> >> 
+> >> 
+> >> _______________________________________________
+> >> linux-arm-kernel mailing list
+> >> linux-arm-kernel@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
-> To close the loop on this, I think these are questions that should be
-> answered in the commit log (actually, that's usually the case when I
-> have questions, because future readers of the git history may have the
-> same questions, and it's not practical to dig the answers out of the
-> lore archive).
+> Hi
 > 
-> Bjorn
+> Seems it is same as the patch i've sent some time ago and which was rejected because of the additional delay...
+> 
+> https://patchwork.kernel.org/project/linux-mediatek/patch/20230402131347.99268-1-linux@fw-web.de/
+> 
+> Or am i wrong?
+> regards Frank
 
-OK thanks, sometimes it's unclear if you just want to know more or want 
-it in the commit message.
+Reading the other series, I smell this can only be handled by a quirk...
+This might be a defect or the board not following PCIE hw specs.
 
-I'll respin a v2 with the commit message adjusted.
+Thing is that the bug/limitation is there and we have enough info to
+find way to fix this and lots of tester.
+
+Eventually even a fixup based on a specific compatible.
+
+-- 
+	Ansuel
