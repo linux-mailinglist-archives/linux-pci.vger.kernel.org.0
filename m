@@ -2,86 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E8037C01B3
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Oct 2023 18:33:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC6AF7C01BC
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Oct 2023 18:34:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232892AbjJJQd3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Oct 2023 12:33:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34896 "EHLO
+        id S233673AbjJJQeG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Oct 2023 12:34:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232825AbjJJQd2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Oct 2023 12:33:28 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC80B8E;
-        Tue, 10 Oct 2023 09:33:27 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EB13C433C8;
-        Tue, 10 Oct 2023 16:33:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696955607;
-        bh=pUHfRDYSoPK3j7m9jdHCMaY5gkPeGw8CTojkINPhAeE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=iwuDy2bsxp1GBOVc6hQUNqRfX3dMbtt6NS/e01EPkN8cA9REXRNxbd6YyvodLKHCh
-         9EFJzGCtd9kE5lUYRxuqwT9HLtBOiseBp4GlSabD2CsA1odwbzT3EGeq5reg+5cpC+
-         Gw/pKKM8oWTFSR9tlAYz+XvgI+ghTaZASPsJSkHIkGwVn8oErhZUBPko0r4JfwqmdT
-         UYpisRgeOLPg5ZAvo2El+r4bG7u1UIKhkHP6Ch5Os+jR5Y5o4TgC4u+OTEsXVfa88A
-         EquArwLnhHmb0Hvb5+jTEjdDBKQwTwJGpmSg+9mqcFZ4ptCp2s4DTgkalsGpN6Fnts
-         9IpqNwRyXPThw==
-Date:   Tue, 10 Oct 2023 11:33:25 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     bhelgaas@google.com, lukas@wunner.de, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, mika.westerberg@linux.intel.com
-Subject: Re: [PATCH v2] PCI: Make d3cold_allowed sysfs attribute read only
-Message-ID: <20231010163325.GA978803@bhelgaas>
+        with ESMTP id S233608AbjJJQeD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Oct 2023 12:34:03 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A103094
+        for <linux-pci@vger.kernel.org>; Tue, 10 Oct 2023 09:33:57 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-503f39d3236so7059481e87.0
+        for <linux-pci@vger.kernel.org>; Tue, 10 Oct 2023 09:33:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1696955636; x=1697560436; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rXgMbtQ30IMvVzvJ3cAQCAXyb8GEmNBTLVRPEsln6kw=;
+        b=Nd5RPLV5ptrXnsWQP+VThclwRYQ1puUYCEK2wlz8Q2SaYbrnYM6h2RgFQC19DKwC8D
+         6poYCG4XgLMFSi6ZITU5mGFv/sJ4Sr07BpLzPn9b6roHCaM+YYxKuQ5XdOh3xo5xt5GM
+         SdUwKt6mJcnWm8XY4DNfPTr9mEqRy3PFUirYCKvmnbSNYzhXeOQvu4o/demCTjMyzOWK
+         JoFm1bthGBbriLfhOrD191FpQi/z8ID39UkoqfmMRD1lfAhBfDIJH7Nuisa5uOXkF07n
+         oVSFIU1e5zK5OICvvh/CFa8uC5vixFEngjVhra2DsiOoyTrgKsUZ0aje+E00DCe2/y+y
+         vm/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696955636; x=1697560436;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rXgMbtQ30IMvVzvJ3cAQCAXyb8GEmNBTLVRPEsln6kw=;
+        b=oZ046xLg/62bB5JOrdt2lcfwFgdycU/b2uQzByEYLJb5Ss/xIha2pl9QPaEqaIivkY
+         Vy494W1WvCY5jyspogTseJ/1IpQvNEnV8D9l6c9z+rd6LG2h1M21botoIV6vQoNL6Znq
+         jnWd01vD3rRWMRaA+cRnN+K940hLibFdoMrIwla4dzN+uqtZPvxUm95jhjoeStL/BCmt
+         Swb4dGKe/kZCoVoJ2UwqK1DeaWQ3mt/tG26FOOm6R2kT+SeVDXEoBJy5IQgR14E8tI8T
+         hHpcVb8q+AznRdjS7nLL0a+fCg6SZnHySfMcU/6dA6+SthoivlE/L8cxC4QmPUgHEJIx
+         zc1Q==
+X-Gm-Message-State: AOJu0YzgOCGfLzT+nZdm6yk8sO7barX/Hc5Oxws5bPG1a2rB0jY7Nt/O
+        dhToMAX5Op3KVmUUI2EjtjIafg==
+X-Google-Smtp-Source: AGHT+IESpyT1izX4PfA0LwaqoijzKYBsw71W/205De2O5PI8KaLqN4jdxF7iKF2LBA+HTl5dZmIgPw==
+X-Received: by 2002:a05:6512:ac5:b0:503:2eaf:1659 with SMTP id n5-20020a0565120ac500b005032eaf1659mr20896855lfu.41.1696955634875;
+        Tue, 10 Oct 2023 09:33:54 -0700 (PDT)
+Received: from [172.30.204.182] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id b10-20020ac2410a000000b004fe432108absm1877755lfi.182.2023.10.10.09.33.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Oct 2023 09:33:54 -0700 (PDT)
+Message-ID: <e6d22992-e3aa-480c-8def-00a447951a02@linaro.org>
+Date:   Tue, 10 Oct 2023 18:33:52 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6a7b4b03-0bb4-492f-bcac-d4e9fd1a81ac@amd.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] PCI: qcom: Enable ASPM for platforms supporting
+ 1.9.0 ops
+Content-Language: en-US
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com
+Cc:     robh@kernel.org, gustavo.pimentel@synopsys.com,
+        jingoohan1@gmail.com, andersson@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20231010155914.9516-1-manivannan.sadhasivam@linaro.org>
+ <20231010155914.9516-3-manivannan.sadhasivam@linaro.org>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20231010155914.9516-3-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 05, 2023 at 01:56:27PM -0500, Mario Limonciello wrote:
-> On 10/5/2023 13:53, Bjorn Helgaas wrote:
-> > On Wed, Oct 04, 2023 at 09:47:31AM -0500, Mario Limonciello wrote:
-> > > Before d3cold was stable userspace was allowed to influence the kernel's
-> > > decision of whether to enable d3cold for a device by a sysfs file
-> > > `d3cold_allowed`.  This potentially allows userspace to break the suspend
-> > > for the system.
-> > 
-> > Is "Before d3cold was stable" referring to a "d3cold" read-only
-> > variable, or to Linux functionality of using D3cold, or ...?
-> 
-> I was referring to the previous thread's comments when I asked about the
-> history on it.
-> 
-> > In what sense does the `d3cold_allowed` sysfs file break suspend?
-> 
-> SoCs might not be able to get into their deepest sleep state if userspace
-> messes with it.
-> 
-> > > For debugging purposes `pci_port_pm=` can be used to control whether
-> > > a PCI port will go into D3cold and runtime PM can be turned off by
-> > > sysfs on PCI end points.
-> > 
-> > I guess this should be "pcie_port_pm=", which affects *all* PCIe
-> > ports?
-> 
-> Yes.
-> 
-> > Which sysfs file turns off runtime PM for endpoints?
-> 
-> /sys/bus/pci/devices/*/power/control
 
-To close the loop on this, I think these are questions that should be
-answered in the commit log (actually, that's usually the case when I
-have questions, because future readers of the git history may have the
-same questions, and it's not practical to dig the answers out of the
-lore archive).
 
-Bjorn
+On 10/10/23 17:59, Manivannan Sadhasivam wrote:
+> ASPM is supported by Qcom host controllers/bridges on most of the recent
+> platforms and so the devices tested so far. But for enabling ASPM by
+> default (without Kconfig/cmdline/sysfs), BIOS has to enable ASPM on both
+> host bridge and downstream devices during boot. Unfortunately, none of the
+> BIOS available on Qcom platforms enables ASPM. Due to this, the platforms
+> making use of Qcom SoCs draw high power during runtime.
+> 
+> To fix this power issue, users/distros have to enable ASPM using configs
+> such as (Kconfig/cmdline/sysfs) or the BIOS has to start enabling ASPM.
+> The latter may happen in the future, but that won't address the issue on
+> current platforms. Also, asking users/distros to enable a feature to get
+> the power management right would provide an unpleasant out-of-the-box
+> experience.
+> 
+> So the apt solution is to enable ASPM in the controller driver itself. And
+> this is being accomplished by calling pci_enable_link_state() in the newly
+> introduced host_post_init() callback for all the devices connected to the
+> bus. This function enables all supported link low power states for both
+> host bridge and the downstream devices.
+> 
+> Due to limited testing, ASPM is only enabled for platforms making use of
+> ops_1_9_0 callbacks.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+[...]
+
+> +static int qcom_pcie_enable_aspm(struct pci_dev *pdev, void *userdata)
+> +{
+> +	/* Downstream devices need to be in D0 state before enabling PCI PM substates */
+> +	pci_set_power_state(pdev, PCI_D0);
+> +	pci_enable_link_state(pdev, PCIE_LINK_STATE_ALL);
+Do we not care about retval here?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void qcom_pcie_host_post_init_2_7_0(struct qcom_pcie *pcie)
+post_init_enable_aspm?
+
+Konrad
