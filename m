@@ -2,255 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9BAC7BF7DD
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Oct 2023 11:51:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D87197BF963
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Oct 2023 13:12:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230006AbjJJJvI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Oct 2023 05:51:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49748 "EHLO
+        id S231325AbjJJLM3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Oct 2023 07:12:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbjJJJvH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Oct 2023 05:51:07 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1450993;
-        Tue, 10 Oct 2023 02:51:05 -0700 (PDT)
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id EC1316607243;
-        Tue, 10 Oct 2023 10:51:02 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1696931463;
-        bh=3kyKoSt/INO+3feEd+AMhyEu/RdjqOkiz8cSA/8F6hc=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=kmo+WQ8nLvz5RtPRaQLIMNNNPvgFahhYIVm3S1JSj2+XwdkDnZkxu/APhr/napL7h
-         aQYQ4XJcmOfepkznGnNlrk81hPqt2oHkfwmW9gMKZcxK73Uw9zGQQHbUkw9CrmnmhD
-         osQRGm4GOduNvbzZfcbi1lhj9U7Qb4WovhM7AnSoe1UHozQ5UxUqmaRtS7Q/ACX5ny
-         iPBFj76/BWM4MvZ8z2B/zeYNsE684sLDxgtIAPwsn8OVSMxfVHAyknJjcFVQhdeWBy
-         GqJgBnJehpSz4p3o3jYaFm0zengwhnWByyPoyTwDU86bZ1ViludAOCKL3vgtotiNkW
-         zMUx2o4ZaiPLw==
-Message-ID: <b90c6bf7-d604-ec88-c7da-84726bba3af4@collabora.com>
-Date:   Tue, 10 Oct 2023 11:51:00 +0200
+        with ESMTP id S231315AbjJJLM1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Oct 2023 07:12:27 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F86FB6;
+        Tue, 10 Oct 2023 04:12:25 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90D91C433C9;
+        Tue, 10 Oct 2023 11:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696936345;
+        bh=nRLR7fnt3ED4eUmYaB6FkjbQ6pAUD6/4JWgUld8rUGw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QQkJUWzp0lnc046Kg3UE+dGpuhyexg7I4qLnpnD9GyzgjI/B9iFfVjBA5k49NEiRG
+         ZXl6m3xG/bLvpHlmuUw3c0LdblgJaAg+Yp94BLGq4s6X0L0eydQak4VtY49W/ncV57
+         QMI8H1Df4l6qoKvvGihpw+XIcq+9qrKvmHPQ8nwW7Yzuxpned4RT33z0TZRwuzruvR
+         2Ap1wceWPRbOKXgAIskglxH5jXtzu4FoE1l8TpKGTWFuBzQu0V6oFuJl+HYkFUbAnD
+         tAF2+M5cUj7duMfhjcnu5kFrFuEIpsZkXfWLlSksVBuFFYBRodBfK6HIIg6liiWFHw
+         Nk+Wi8Ue5TXsA==
+Date:   Tue, 10 Oct 2023 16:42:10 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mani@kernel.org,
+        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v21 01/16] PCI: dwc: endpoint: Add multiple PFs support
+ for dbi2
+Message-ID: <20231010111210.GA4884@thinkpad>
+References: <20230922065331.3806925-1-yoshihiro.shimoda.uh@renesas.com>
+ <20230922065331.3806925-2-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH v3 2/2] PCI: mediatek-gen3: Add power and reset control
- feature for downstream component
-Content-Language: en-US
-To:     Jian Yang <jian.yang@mediatek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Rob Herring <robh@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com,
-        Chuanjia.Liu@mediatek.com, Jieyy.Yang@mediatek.com,
-        Qizhong.Cheng@mediatek.com
-References: <20231009084957.18536-1-jian.yang@mediatek.com>
- <20231009084957.18536-3-jian.yang@mediatek.com>
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20231009084957.18536-3-jian.yang@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230922065331.3806925-2-yoshihiro.shimoda.uh@renesas.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Il 09/10/23 10:49, Jian Yang ha scritto:
-> From: "jian.yang" <jian.yang@mediatek.com>
+On Fri, Sep 22, 2023 at 03:53:16PM +0900, Yoshihiro Shimoda wrote:
+> The commit 24ede430fa49 ("PCI: designware-ep: Add multiple PFs support
+> for DWC") added .func_conf_select() to get the configuration space of
+> different PFs and assumed that the offsets between dbi and dbi2 would
+> be the same.
 > 
-> Make MediaTek's controller driver capable of controlling power
-> supplies and reset pin of a downstream component in power-on and
-> power-off flow.
+> However, Renesas R-Car Gen4 PCIe controllers have different offsets of
+> function 1: dbi (+0x1000) and dbi2 (+0x800). To get the offset for dbi2,
+> add .get_dbi2_offset() and dw_pcie_ep_get_dbi2_offset().
 > 
-> Some downstream components (e.g., a WIFI chip) may need an extra
-> reset other than PERST# and their power supplies, depending on
-> the requirements of platform, may need to controlled by their
-> parent's driver. To meet the requirements described above, I add this
-> feature to MediaTek's PCIe controller driver as a optional feature.
+> Note:
+>  - .func_conf_select() should be renamed later.
+>  - dw_pcie_ep_get_dbi2_offset() will call .func_conf_select()
+>    if .get_dbi2_offset() doesn't exist for backward compatibility.
+>  - dw_pcie_writeX_{dbi/dbi2} APIs accepted the func_no argument,
+>    so that these offset calculations are contained in the API
+>    definitions itself as it should.
 > 
-> Signed-off-by: jian.yang <jian.yang@mediatek.com>
+> [kwilczynski: commit log]
+> Link: https://lore.kernel.org/linux-pci/20230825093219.2685912-6-yoshihiro.shimoda.uh@renesas.com
+
+No need of the "Link". It will be added by the maintainer while applying this
+patch.
+
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+Your s-o-b tag should come last indicating that you are sending the patch.
+
+- Mani
+
+> Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 > ---
->   drivers/pci/controller/pcie-mediatek-gen3.c | 93 ++++++++++++++++++++-
->   1 file changed, 92 insertions(+), 1 deletion(-)
+>  .../pci/controller/dwc/pcie-designware-ep.c   | 32 ++++++++++++++-----
+>  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
+>  2 files changed, 25 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-> index e0e27645fdf4..ad4b25c34f5d 100644
-> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> @@ -8,6 +8,7 @@
->   
->   #include <linux/clk.h>
->   #include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
->   #include <linux/iopoll.h>
->   #include <linux/irq.h>
->   #include <linux/irqchip/chained_irq.h>
-> @@ -20,6 +21,8 @@
->   #include <linux/platform_device.h>
->   #include <linux/pm_domain.h>
->   #include <linux/pm_runtime.h>
-> +#include <linux/pm_wakeup.h>
-> +#include <linux/regulator/consumer.h>
->   #include <linux/reset.h>
->   
->   #include "../pci.h"
-> @@ -100,6 +103,13 @@
->   #define PCIE_ATR_TLP_TYPE_MEM		PCIE_ATR_TLP_TYPE(0)
->   #define PCIE_ATR_TLP_TYPE_IO		PCIE_ATR_TLP_TYPE(2)
->   
-> +/* Downstream Component power supplies used by MediaTek PCIe */
-> +static const char *const dsc_power_supplies[] = {
-> +	"pcie1v8",
-> +	"pcie3v3",
-> +	"pcie12v",
-> +};
-
-Please....
-
-static const char *const dsc_power_supplies[] = {
-	"vpcie1v8",
-	"vpcie3v3",
-	"vpcie12v",
-};
-
-> +
->   /**
->    * struct mtk_msi_set - MSI information for each set
->    * @base: IO mapped register base
-> @@ -122,6 +132,9 @@ struct mtk_msi_set {
->    * @phy: PHY controller block
->    * @clks: PCIe clocks
->    * @num_clks: PCIe clocks count for this port
-> + * @supplies: Downstream Component power supplies
-> + * @num_supplies: Downstream Component power supplies count
-> + * @dsc_reset: The GPIO pin to reset Downstream component
->    * @irq: PCIe controller interrupt number
->    * @saved_irq_state: IRQ enable state saved at suspend time
->    * @irq_lock: lock protecting IRQ register access
-> @@ -141,6 +154,9 @@ struct mtk_gen3_pcie {
->   	struct phy *phy;
->   	struct clk_bulk_data *clks;
->   	int num_clks;
-> +	struct regulator_bulk_data *supplies;
-> +	int num_supplies;
-> +	struct gpio_desc *dsc_reset;
->   
->   	int irq;
->   	u32 saved_irq_state;
-> @@ -763,7 +779,7 @@ static int mtk_pcie_parse_port(struct mtk_gen3_pcie *pcie)
->   	struct device *dev = pcie->dev;
->   	struct platform_device *pdev = to_platform_device(dev);
->   	struct resource *regs;
-> -	int ret;
-> +	int ret, i;
-
-Since you anyway have to send a v4, can you please also order these by name?
-
-int i, ret;
-
->   
->   	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "pcie-mac");
->   	if (!regs)
-> @@ -809,14 +825,86 @@ static int mtk_pcie_parse_port(struct mtk_gen3_pcie *pcie)
->   		return pcie->num_clks;
->   	}
->   
-> +	pcie->num_supplies = ARRAY_SIZE(dsc_power_supplies);
-> +	pcie->supplies = devm_kcalloc(dev, pcie->num_supplies,
-> +				      sizeof(*pcie->supplies),
-> +				      GFP_KERNEL);
-> +	if (!pcie->supplies)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < pcie->num_supplies; i++)
-> +		pcie->supplies[i].supply = dsc_power_supplies[i];
-> +
-> +	ret = devm_regulator_bulk_get(dev, pcie->num_supplies, pcie->supplies);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pcie->dsc_reset = devm_gpiod_get_optional(dev, "dsc-reset",
-> +						  GPIOD_OUT_LOW);
-> +	if (IS_ERR(pcie->dsc_reset)) {
-> +		ret = PTR_ERR(pcie->dsc_reset);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to request DSC reset gpio\n");
-
-dev_err_probe() does exactly what you're doing here, but it's shorter :-)
-
-> +
-> +		return ret;
-> +	}
-> +
->   	return 0;
->   }
->   
-> +static int mtk_pcie_dsc_power_up(struct mtk_gen3_pcie *pcie)
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index f9182f8d552f..851538ddec0a 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -52,21 +52,35 @@ static unsigned int dw_pcie_ep_func_select(struct dw_pcie_ep *ep, u8 func_no)
+>  	return func_offset;
+>  }
+>  
+> +static unsigned int dw_pcie_ep_get_dbi2_offset(struct dw_pcie_ep *ep, u8 func_no)
 > +{
-> +	struct device *dev = pcie->dev;
-> +	int ret;
+> +	unsigned int dbi2_offset = 0;
 > +
-> +	/*
-> +	 * Skip downstream component's power-up flow if it was kept power-on
-
-* Skip powering up the downstream component if it was kept powered on
-
-
-> +	 * while system entered suspend state
-> +	 */
-> +	if (device_wakeup_path(dev))
-> +		return 0;
+> +	if (ep->ops->get_dbi2_offset)
+> +		dbi2_offset = ep->ops->get_dbi2_offset(ep, func_no);
+> +	else if (ep->ops->func_conf_select)     /* for backward compatibility */
+> +		dbi2_offset = ep->ops->func_conf_select(ep, func_no);
 > +
-> +	/* Assert Downstream Component reset */
-> +	if (pcie->dsc_reset)
-> +		gpiod_set_value_cansleep(pcie->dsc_reset, 1);
-> +
-> +	ret = regulator_bulk_enable(pcie->num_supplies, pcie->supplies);
-> +	if (ret)
-> +		dev_err(dev, "failed to enable DSC power supplies: %d\n", ret);
-> +
-> +	/* De-assert Downstream Component reset */
-> +	if (pcie->dsc_reset)
-> +		gpiod_set_value_cansleep(pcie->dsc_reset, 0);
-> +
-> +	return ret;
+> +	return dbi2_offset;
 > +}
 > +
-> +static void mtk_pcie_dsc_power_down(struct mtk_gen3_pcie *pcie)
-> +{
-> +	/*
-> +	 * Keep downstream component power-on if it need to wake up the
+>  static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, u8 func_no,
+>  				   enum pci_barno bar, int flags)
+>  {
+> -	u32 reg;
+> -	unsigned int func_offset = 0;
+> +	unsigned int func_offset, dbi2_offset;
+>  	struct dw_pcie_ep *ep = &pci->ep;
+> +	u32 reg, reg_dbi2;
+>  
+>  	func_offset = dw_pcie_ep_func_select(ep, func_no);
+> +	dbi2_offset = dw_pcie_ep_get_dbi2_offset(ep, func_no);
+>  
+>  	reg = func_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
+> +	reg_dbi2 = dbi2_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
+>  	dw_pcie_dbi_ro_wr_en(pci);
+> -	dw_pcie_writel_dbi2(pci, reg, 0x0);
+> +	dw_pcie_writel_dbi2(pci, reg_dbi2, 0x0);
+>  	dw_pcie_writel_dbi(pci, reg, 0x0);
+>  	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
+> -		dw_pcie_writel_dbi2(pci, reg + 4, 0x0);
+> +		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, 0x0);
+>  		dw_pcie_writel_dbi(pci, reg + 4, 0x0);
+>  	}
+>  	dw_pcie_dbi_ro_wr_dis(pci);
+> @@ -228,16 +242,18 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  {
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	unsigned int func_offset, dbi2_offset;
+>  	enum pci_barno bar = epf_bar->barno;
+>  	size_t size = epf_bar->size;
+>  	int flags = epf_bar->flags;
+> -	unsigned int func_offset = 0;
+> +	u32 reg, reg_dbi2;
+>  	int ret, type;
+> -	u32 reg;
+>  
+>  	func_offset = dw_pcie_ep_func_select(ep, func_no);
+> +	dbi2_offset = dw_pcie_ep_get_dbi2_offset(ep, func_no);
+>  
+>  	reg = PCI_BASE_ADDRESS_0 + (4 * bar) + func_offset;
+> +	reg_dbi2 = PCI_BASE_ADDRESS_0 + (4 * bar) + dbi2_offset;
+>  
+>  	if (!(flags & PCI_BASE_ADDRESS_SPACE))
+>  		type = PCIE_ATU_TYPE_MEM;
+> @@ -253,11 +269,11 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  
+>  	dw_pcie_dbi_ro_wr_en(pci);
+>  
+> -	dw_pcie_writel_dbi2(pci, reg, lower_32_bits(size - 1));
+> +	dw_pcie_writel_dbi2(pci, reg_dbi2, lower_32_bits(size - 1));
+>  	dw_pcie_writel_dbi(pci, reg, flags);
+>  
+>  	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
+> -		dw_pcie_writel_dbi2(pci, reg + 4, upper_32_bits(size - 1));
+> +		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, upper_32_bits(size - 1));
+>  		dw_pcie_writel_dbi(pci, reg + 4, 0);
+>  	}
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index ef0b2efa9f93..6189884b4efa 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -341,6 +341,7 @@ struct dw_pcie_ep_ops {
+>  	 * driver.
+>  	 */
+>  	unsigned int (*func_conf_select)(struct dw_pcie_ep *ep, u8 func_no);
+> +	unsigned int (*get_dbi2_offset)(struct dw_pcie_ep *ep, u8 func_no);
+>  };
+>  
+>  struct dw_pcie_ep_func {
+> -- 
+> 2.25.1
+> 
 
-* Keep downstream component powered on if it is capable of waking up
-* the system from suspend
-
-> +	 * system in suspend state
-> +	 */
-> +	if (device_wakeup_path(pcie->dev))
-> +		return;
-> +
-> +	/* Assert Downstream Component reset */
-> +	if (pcie->dsc_reset)
-> +		gpiod_set_value_cansleep(pcie->dsc_reset, 1);
-> +
-> +	regulator_bulk_disable(pcie->num_supplies, pcie->supplies);
-> +}
-> +
-
-Regards,
-Angelo
-
+-- 
+மணிவண்ணன் சதாசிவம்
