@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C834C7C41C7
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Oct 2023 22:45:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5BE97C41C9
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Oct 2023 22:45:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343879AbjJJUox (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Oct 2023 16:44:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49204 "EHLO
+        id S1343973AbjJJUpA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Oct 2023 16:45:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343975AbjJJUov (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Oct 2023 16:44:51 -0400
+        with ESMTP id S1343997AbjJJUoz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Oct 2023 16:44:55 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B075A7;
-        Tue, 10 Oct 2023 13:44:50 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78F7EC433CA;
-        Tue, 10 Oct 2023 20:44:49 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D0A8B9;
+        Tue, 10 Oct 2023 13:44:52 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C72BC43397;
+        Tue, 10 Oct 2023 20:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696970689;
-        bh=NrMDXaeQR98E6Ubw4ieg4ii/aUeCyXW8gwNQ1Gvx2NQ=;
+        s=k20201202; t=1696970691;
+        bh=WdPz6d8tv1u5/JHFuBigckTTNr5z1gq7AjsRKY5KDp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ac/Bhj4h1bZ7zbplnlz/rL7kzcfZVGbjnhdZP0X/Ngws02Y5w2uY7VQTo316/susZ
-         n16TuDvf5x7dj3kQ7Q41nbE6znR6eO9VYPslfaNfw8eX7AgYUbSS4CcAcgNRwWLmZM
-         eduPBhP5vSWtvi9o5so9I8LHm+JBI2hD7giJL+vqgGQs6Bjd5igDjGpdrgZeYNR5kg
-         8zbVtcXCuw+k1rTPGLllo7zSRtjxJHIUEpMB2mbV176h/vuPLEQlR05irLvtO8R1rs
-         bTz7KMr0/Nf66UjH3//HLUE4+aV6bVEuqwnk3rl/86Gl9j3cM+wZrOisgHPoaLlPNp
-         PJ7b9U9uPOK6Q==
+        b=uQ9Mws9B8+8AJ5quBuIe1U6uRRvbJPuvXTTez7/YqK5f9W0I6JttEkuukAKteW2zK
+         Ob9J2/9KNJKm4XwNSxq1eOQD8AGZ1iuTQhX0xLRSGzqVDHMGgtrNnXL1EJPD5xt30G
+         b2qN7NTWFno3uMTBta8k5GUNzRk8ITfQeLXGS43mqIBOrCfmfszK0MRUbBjFdDSYpj
+         tvm/GUVN7kZNbrSJmujEeAsRgqFIPpKfuATI7lB9+OKc1WNgYDMSjVFqzD2xiT5zZ3
+         dJsKXg/jJbbbINxyBwd5zZ7WOhzjkF/0IJgEBiSCVunO/7KWKU6nzNOKR7hrkQxenP
+         DnK4YT0uxwyyw==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org
 Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -33,9 +33,9 @@ Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 03/10] PCI/ASPM: Use FIELD_GET()
-Date:   Tue, 10 Oct 2023 15:44:29 -0500
-Message-Id: <20231010204436.1000644-4-helgaas@kernel.org>
+Subject: [PATCH 04/10] PCI/ATS: Show PASID Capability register width in bitmasks
+Date:   Tue, 10 Oct 2023 15:44:30 -0500
+Message-Id: <20231010204436.1000644-5-helgaas@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231010204436.1000644-1-helgaas@kernel.org>
 References: <20231010204436.1000644-1-helgaas@kernel.org>
@@ -53,117 +53,37 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-Add #defines for T_POWER_ON in the L1 PM Substates Capability and use
-FIELD_PREP() and FIELD_GET() when possible.  These remove the need for
-explicit shifts.  No functional change intended.
+The PASID Capability and Control registers are both 16 bits wide.  Use
+16-bit wide constants in field names to match the register width.  No
+functional change intended.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/pcie/aspm.c       | 31 ++++++++++++++++++-------------
- include/uapi/linux/pci_regs.h |  2 ++
- 2 files changed, 20 insertions(+), 13 deletions(-)
+ include/uapi/linux/pci_regs.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 1bf630059264..06f175d8dee5 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -7,6 +7,7 @@
-  * Copyright (C) Shaohua Li (shaohua.li@intel.com)
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/kernel.h>
- #include <linux/math.h>
- #include <linux/module.h>
-@@ -267,7 +268,7 @@ static void pcie_aspm_configure_common_clock(struct pcie_link_state *link)
- /* Convert L0s latency encoding to ns */
- static u32 calc_l0s_latency(u32 lnkcap)
- {
--	u32 encoding = (lnkcap & PCI_EXP_LNKCAP_L0SEL) >> 12;
-+	u32 encoding = FIELD_GET(PCI_EXP_LNKCAP_L0SEL, lnkcap);
- 
- 	if (encoding == 0x7)
- 		return (5 * 1000);	/* > 4us */
-@@ -285,7 +286,7 @@ static u32 calc_l0s_acceptable(u32 encoding)
- /* Convert L1 latency encoding to ns */
- static u32 calc_l1_latency(u32 lnkcap)
- {
--	u32 encoding = (lnkcap & PCI_EXP_LNKCAP_L1EL) >> 15;
-+	u32 encoding = FIELD_GET(PCI_EXP_LNKCAP_L1EL, lnkcap);
- 
- 	if (encoding == 0x7)
- 		return (65 * 1000);	/* > 64us */
-@@ -371,11 +372,11 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
- 	link = endpoint->bus->self->link_state;
- 
- 	/* Calculate endpoint L0s acceptable latency */
--	encoding = (endpoint->devcap & PCI_EXP_DEVCAP_L0S) >> 6;
-+	encoding = FIELD_GET(PCI_EXP_DEVCAP_L0S, endpoint->devcap);
- 	acceptable_l0s = calc_l0s_acceptable(encoding);
- 
- 	/* Calculate endpoint L1 acceptable latency */
--	encoding = (endpoint->devcap & PCI_EXP_DEVCAP_L1) >> 9;
-+	encoding = FIELD_GET(PCI_EXP_DEVCAP_L1, endpoint->devcap);
- 	acceptable_l1 = calc_l1_acceptable(encoding);
- 
- 	while (link) {
-@@ -446,22 +447,24 @@ static void aspm_calc_l12_info(struct pcie_link_state *link,
- 	u32 pl1_2_enables, cl1_2_enables;
- 
- 	/* Choose the greater of the two Port Common_Mode_Restore_Times */
--	val1 = (parent_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
--	val2 = (child_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
-+	val1 = FIELD_GET(PCI_L1SS_CAP_CM_RESTORE_TIME, parent_l1ss_cap);
-+	val2 = FIELD_GET(PCI_L1SS_CAP_CM_RESTORE_TIME, child_l1ss_cap);
- 	t_common_mode = max(val1, val2);
- 
- 	/* Choose the greater of the two Port T_POWER_ON times */
--	val1   = (parent_l1ss_cap & PCI_L1SS_CAP_P_PWR_ON_VALUE) >> 19;
--	scale1 = (parent_l1ss_cap & PCI_L1SS_CAP_P_PWR_ON_SCALE) >> 16;
--	val2   = (child_l1ss_cap & PCI_L1SS_CAP_P_PWR_ON_VALUE) >> 19;
--	scale2 = (child_l1ss_cap & PCI_L1SS_CAP_P_PWR_ON_SCALE) >> 16;
-+	val1   = FIELD_GET(PCI_L1SS_CAP_P_PWR_ON_VALUE, parent_l1ss_cap);
-+	scale1 = FIELD_GET(PCI_L1SS_CAP_P_PWR_ON_SCALE, parent_l1ss_cap);
-+	val2   = FIELD_GET(PCI_L1SS_CAP_P_PWR_ON_VALUE, child_l1ss_cap);
-+	scale2 = FIELD_GET(PCI_L1SS_CAP_P_PWR_ON_SCALE, child_l1ss_cap);
- 
- 	if (calc_l12_pwron(parent, scale1, val1) >
- 	    calc_l12_pwron(child, scale2, val2)) {
--		ctl2 |= scale1 | (val1 << 3);
-+		ctl2 |= FIELD_PREP(PCI_L1SS_CTL2_T_PWR_ON_SCALE, scale1) |
-+			FIELD_PREP(PCI_L1SS_CTL2_T_PWR_ON_VALUE, val1);
- 		t_power_on = calc_l12_pwron(parent, scale1, val1);
- 	} else {
--		ctl2 |= scale2 | (val2 << 3);
-+		ctl2 |= FIELD_PREP(PCI_L1SS_CTL2_T_PWR_ON_SCALE, scale2) |
-+			FIELD_PREP(PCI_L1SS_CTL2_T_PWR_ON_VALUE, val2);
- 		t_power_on = calc_l12_pwron(child, scale2, val2);
- 	}
- 
-@@ -477,7 +480,9 @@ static void aspm_calc_l12_info(struct pcie_link_state *link,
- 	 */
- 	l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
- 	encode_l12_threshold(l1_2_threshold, &scale, &value);
--	ctl1 |= t_common_mode << 8 | scale << 29 | value << 16;
-+	ctl1 |= FIELD_PREP(PCI_L1SS_CTL1_CM_RESTORE_TIME, t_common_mode) |
-+		FIELD_PREP(PCI_L1SS_CTL1_LTR_L12_TH_VALUE, value) |
-+		FIELD_PREP(PCI_L1SS_CTL1_LTR_L12_TH_SCALE, scale);
- 
- 	/* Some broken devices only support dword access to L1 SS */
- 	pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1, &pctl1);
 diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index e5f558d96493..34bf037993f3 100644
+index 34bf037993f3..6af1f8d53e97 100644
 --- a/include/uapi/linux/pci_regs.h
 +++ b/include/uapi/linux/pci_regs.h
-@@ -1088,6 +1088,8 @@
- #define  PCI_L1SS_CTL1_LTR_L12_TH_VALUE	0x03ff0000  /* LTR_L1.2_THRESHOLD_Value */
- #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
- #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
-+#define  PCI_L1SS_CTL2_T_PWR_ON_SCALE   0x00000003  /* T_POWER_ON Scale */
-+#define  PCI_L1SS_CTL2_T_PWR_ON_VALUE   0x000000f8  /* T_POWER_ON Value */
+@@ -930,12 +930,12 @@
  
- /* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
- #define PCI_DVSEC_HEADER1		0x4 /* Designated Vendor-Specific Header1 */
+ /* Process Address Space ID */
+ #define PCI_PASID_CAP		0x04    /* PASID feature register */
+-#define  PCI_PASID_CAP_EXEC	0x02	/* Exec permissions Supported */
+-#define  PCI_PASID_CAP_PRIV	0x04	/* Privilege Mode Supported */
++#define  PCI_PASID_CAP_EXEC	0x0002	/* Exec permissions Supported */
++#define  PCI_PASID_CAP_PRIV	0x0004	/* Privilege Mode Supported */
+ #define PCI_PASID_CTRL		0x06    /* PASID control register */
+-#define  PCI_PASID_CTRL_ENABLE	0x01	/* Enable bit */
+-#define  PCI_PASID_CTRL_EXEC	0x02	/* Exec permissions Enable */
+-#define  PCI_PASID_CTRL_PRIV	0x04	/* Privilege Mode Enable */
++#define  PCI_PASID_CTRL_ENABLE	0x0001	/* Enable bit */
++#define  PCI_PASID_CTRL_EXEC	0x0002	/* Exec permissions Enable */
++#define  PCI_PASID_CTRL_PRIV	0x0004	/* Privilege Mode Enable */
+ #define PCI_EXT_CAP_PASID_SIZEOF	8
+ 
+ /* Single Root I/O Virtualization */
 -- 
 2.34.1
 
