@@ -2,169 +2,206 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B9317C00EF
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Oct 2023 17:59:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F8B07C0103
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Oct 2023 18:02:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233673AbjJJP7l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Oct 2023 11:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59234 "EHLO
+        id S233391AbjJJQCr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Oct 2023 12:02:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233684AbjJJP7k (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Oct 2023 11:59:40 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65C3DCF
-        for <linux-pci@vger.kernel.org>; Tue, 10 Oct 2023 08:59:38 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-694f3444f94so4788638b3a.2
-        for <linux-pci@vger.kernel.org>; Tue, 10 Oct 2023 08:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696953578; x=1697558378; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mr4EIMH8RidVLiQCjZesTsiyIho+EqgKqP+n2ghexZ0=;
-        b=V/tno/VmWysmqS8GOvQPddbaRMCx+TH7RqH5h3STf1QZxqf7isva4RjLNMYD2J07yI
-         sLGXZQ7KpjRPEfVhTyV2uYeQs2H1l5Gv25OJG1LedvHNasURibT+DuICyaCBqDrBQ2B9
-         XXngnFQL76rNf7VBqF3BFm50V+ZkDN85yrvbkeJxJcWFPrjo2cK7EeDy6IcTl3Up+8EQ
-         bUpDYxEXZhrqpv7SX7fCKQ7CZihQrFN0D491wHwK1fwGSy0GHICrQe85jbfSq2tpDgr1
-         HpCPODOQypOKnnj2g9/ltLiToBqLCDjPCn1oSRtA5aU0T1b4YtPMlziGqJ6JZ4jmICY6
-         tq3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696953578; x=1697558378;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mr4EIMH8RidVLiQCjZesTsiyIho+EqgKqP+n2ghexZ0=;
-        b=huM0zxp8ILTQIY3VSeTJ21XU99+mKa05AmWCOnQWmaTetocT5T3wB/9ztfwZTBrQvD
-         PfoCfhk/c5UmDEsh6YxA1SSa0uZvje2jjkkZ888Aaz5RzbTV6wIDWZvWWF4Vuacpa5HQ
-         Io7paUcqM6V1idGnF3iCh8hCVBzmk439sH8/6+WYqxVhbO5OSkTLSBjPvbj28G6rarrT
-         w/xBD8IJHG0heFTMdOw5Dh4g0y/oTN/PX5LTFokv4i4YTeM2f/HTObOp1Xv2vaQYXOHa
-         i88o+ierAUOGDQvR/qQtCtvCNVrQOqTdDuvJ2cktTmTTxxvOx/T5ZlJ1KG/op/3zZWWp
-         PP+w==
-X-Gm-Message-State: AOJu0Yzg2mL9dCBsBG9dtnNF44rp5k89kK52pG5QVk+Lfbw3o6r/+t43
-        R+QuF4EhYBHiHg7LP4vOjjbk
-X-Google-Smtp-Source: AGHT+IGZsh/8Q0P3Q/53kwfHSFlOV+p4RTFFqq7TsSk24jv7/qLF1y3Fthhkiyz3Aep4/SuzlKbqbQ==
-X-Received: by 2002:a05:6a20:258f:b0:14d:d9f8:83f8 with SMTP id k15-20020a056a20258f00b0014dd9f883f8mr22767237pzd.1.1696953577720;
-        Tue, 10 Oct 2023 08:59:37 -0700 (PDT)
-Received: from localhost.localdomain ([117.217.182.234])
-        by smtp.gmail.com with ESMTPSA id c24-20020a637258000000b0055c178a8df1sm6537023pgn.94.2023.10.10.08.59.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Oct 2023 08:59:37 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com
-Cc:     robh@kernel.org, gustavo.pimentel@synopsys.com,
-        jingoohan1@gmail.com, andersson@kernel.org,
-        konrad.dybcio@linaro.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 2/2] PCI: qcom: Enable ASPM for platforms supporting 1.9.0 ops
-Date:   Tue, 10 Oct 2023 21:29:14 +0530
-Message-Id: <20231010155914.9516-3-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231010155914.9516-1-manivannan.sadhasivam@linaro.org>
-References: <20231010155914.9516-1-manivannan.sadhasivam@linaro.org>
+        with ESMTP id S232966AbjJJQCq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Oct 2023 12:02:46 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15E58A7;
+        Tue, 10 Oct 2023 09:02:43 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84E2FC433C7;
+        Tue, 10 Oct 2023 16:02:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696953762;
+        bh=8zTGRYTY1WUSPexJBZKSYXIXebpfzjhtEAwIpwHKrgk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DPfnQ4Mqq/LwUfreTwFh2h7CpeWm1aEetozjYfx9hep8O3FN5ECtreNqLxdO38h4D
+         y2M4N0vbTDKEqB0hqR5Gj4wp//6BhUIyeyzarNel8VnlHeGz7zSnawtIJZYoXg0mIB
+         X1kxcEPxUxbVc6CJN4yLmqP9IsVviwIgAl3dk/XdYU2p2AP1HyHTYct6nl7aJAI1Na
+         y1Q73d4THK7/xQV198rpNqDqOIYAxFwUmCYguOeBkMJGCQlLvwH+lSoSSrDxHObl5o
+         FWQmFW0v8FHC/s0zHtU7iOk7N1XpVaO97nOxNcG2mDEAW1GtvKhWjB6l63p7vX3J8t
+         tOM7bgskk4kmA==
+Date:   Tue, 10 Oct 2023 18:02:36 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Frank Li <Frank.li@nxp.com>
+Cc:     Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linux-pci@vger.kernel.org>,
+        "moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH 2/3] PCI: layerscape: add suspend/resume for ls1021a
+Message-ID: <ZSV1nJUAbUdLXkt4@lpieralisi>
+References: <20230915184306.2374670-1-Frank.Li@nxp.com>
+ <20230915184306.2374670-2-Frank.Li@nxp.com>
+ <ZR10SVVBYvfMJPv1@lizhi-Precision-Tower-5810>
+ <ZSVdnAsRQA2zHsF7@lizhi-Precision-Tower-5810>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZSVdnAsRQA2zHsF7@lizhi-Precision-Tower-5810>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-ASPM is supported by Qcom host controllers/bridges on most of the recent
-platforms and so the devices tested so far. But for enabling ASPM by
-default (without Kconfig/cmdline/sysfs), BIOS has to enable ASPM on both
-host bridge and downstream devices during boot. Unfortunately, none of the
-BIOS available on Qcom platforms enables ASPM. Due to this, the platforms
-making use of Qcom SoCs draw high power during runtime.
+On Tue, Oct 10, 2023 at 10:20:12AM -0400, Frank Li wrote:
+> On Wed, Oct 04, 2023 at 10:23:51AM -0400, Frank Li wrote:
+> > On Fri, Sep 15, 2023 at 02:43:05PM -0400, Frank Li wrote:
+> > > ls1021a add suspend/resume support.
+> > > 
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > 
+> > ping
+> > 
+> > Frank
+> 
+> Ping
 
-To fix this power issue, users/distros have to enable ASPM using configs
-such as (Kconfig/cmdline/sysfs) or the BIOS has to start enabling ASPM.
-The latter may happen in the future, but that won't address the issue on
-current platforms. Also, asking users/distros to enable a feature to get
-the power management right would provide an unpleasant out-of-the-box
-experience.
+Read and follow please (and then ping us):
+https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com
 
-So the apt solution is to enable ASPM in the controller driver itself. And
-this is being accomplished by calling pci_enable_link_state() in the newly
-introduced host_post_init() callback for all the devices connected to the
-bus. This function enables all supported link low power states for both
-host bridge and the downstream devices.
-
-Due to limited testing, ASPM is only enabled for platforms making use of
-ops_1_9_0 callbacks.
-
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 28 ++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 367acb419a2b..c324c3daaa5a 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -222,6 +222,7 @@ struct qcom_pcie_ops {
- 	int (*get_resources)(struct qcom_pcie *pcie);
- 	int (*init)(struct qcom_pcie *pcie);
- 	int (*post_init)(struct qcom_pcie *pcie);
-+	void (*host_post_init)(struct qcom_pcie *pcie);
- 	void (*deinit)(struct qcom_pcie *pcie);
- 	void (*ltssm_enable)(struct qcom_pcie *pcie);
- 	int (*config_sid)(struct qcom_pcie *pcie);
-@@ -967,6 +968,22 @@ static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
- 	return 0;
- }
- 
-+static int qcom_pcie_enable_aspm(struct pci_dev *pdev, void *userdata)
-+{
-+	/* Downstream devices need to be in D0 state before enabling PCI PM substates */
-+	pci_set_power_state(pdev, PCI_D0);
-+	pci_enable_link_state(pdev, PCIE_LINK_STATE_ALL);
-+
-+	return 0;
-+}
-+
-+static void qcom_pcie_host_post_init_2_7_0(struct qcom_pcie *pcie)
-+{
-+	struct dw_pcie_rp *pp = &pcie->pci->pp;
-+
-+	pci_walk_bus(pp->bridge->bus, qcom_pcie_enable_aspm, NULL);
-+}
-+
- static void qcom_pcie_deinit_2_7_0(struct qcom_pcie *pcie)
- {
- 	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-@@ -1219,9 +1236,19 @@ static void qcom_pcie_host_deinit(struct dw_pcie_rp *pp)
- 	pcie->cfg->ops->deinit(pcie);
- }
- 
-+static void qcom_pcie_host_post_init(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-+
-+	if (pcie->cfg->ops->host_post_init)
-+		pcie->cfg->ops->host_post_init(pcie);
-+}
-+
- static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
- 	.host_init	= qcom_pcie_host_init,
- 	.host_deinit	= qcom_pcie_host_deinit,
-+	.host_post_init	= qcom_pcie_host_post_init,
- };
- 
- /* Qcom IP rev.: 2.1.0	Synopsys IP rev.: 4.01a */
-@@ -1283,6 +1310,7 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
- 	.get_resources = qcom_pcie_get_resources_2_7_0,
- 	.init = qcom_pcie_init_2_7_0,
- 	.post_init = qcom_pcie_post_init_2_7_0,
-+	.host_post_init = qcom_pcie_host_post_init_2_7_0,
- 	.deinit = qcom_pcie_deinit_2_7_0,
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
- 	.config_sid = qcom_pcie_config_sid_1_9_0,
--- 
-2.25.1
-
+> Frank
+> 
+> > 
+> > >  drivers/pci/controller/dwc/pci-layerscape.c | 88 ++++++++++++++++++++-
+> > >  1 file changed, 87 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+> > > index 20c48c06e2248..bc5a8ff1a26ce 100644
+> > > --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> > > +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> > > @@ -35,6 +35,12 @@
+> > >  #define PF_MCR_PTOMR		BIT(0)
+> > >  #define PF_MCR_EXL2S		BIT(1)
+> > >  
+> > > +/* LS1021A PEXn PM Write Control Register */
+> > > +#define SCFG_PEXPMWRCR(idx)	(0x5c + (idx) * 0x64)
+> > > +#define PMXMTTURNOFF		BIT(31)
+> > > +#define SCFG_PEXSFTRSTCR	0x190
+> > > +#define PEXSR(idx)		BIT(idx)
+> > > +
+> > >  #define PCIE_IATU_NUM		6
+> > >  
+> > >  struct ls_pcie_drvdata {
+> > > @@ -48,6 +54,8 @@ struct ls_pcie {
+> > >  	struct dw_pcie *pci;
+> > >  	const struct ls_pcie_drvdata *drvdata;
+> > >  	void __iomem *pf_base;
+> > > +	struct regmap *scfg;
+> > > +	int index;
+> > >  	bool big_endian;
+> > >  };
+> > >  
+> > > @@ -170,13 +178,91 @@ static int ls_pcie_host_init(struct dw_pcie_rp *pp)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +static void ls1021a_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
+> > > +{
+> > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > > +	struct ls_pcie *pcie = to_ls_pcie(pci);
+> > > +	u32 val;
+> > > +
+> > > +	if (!pcie->scfg) {
+> > > +		dev_dbg(pcie->pci->dev, "SYSCFG is NULL\n");
+> > > +		return;
+> > > +	}
+> > > +
+> > > +	/* Send Turn_off message */
+> > > +	regmap_read(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), &val);
+> > > +	val |= PMXMTTURNOFF;
+> > > +	regmap_write(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), val);
+> > > +
+> > > +	/* There are not register to check ACK, so wait PCIE_PME_TO_L2_TIMEOUT_US */
+> > > +	mdelay(PCIE_PME_TO_L2_TIMEOUT_US/1000);
+> > > +
+> > > +	/* Clear Turn_off message */
+> > > +	regmap_read(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), &val);
+> > > +	val &= ~PMXMTTURNOFF;
+> > > +	regmap_write(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), val);
+> > > +}
+> > > +
+> > > +static void ls1021a_pcie_exit_from_l2(struct dw_pcie_rp *pp)
+> > > +{
+> > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > > +	struct ls_pcie *pcie = to_ls_pcie(pci);
+> > > +	u32 val;
+> > > +
+> > > +	regmap_read(pcie->scfg, SCFG_PEXSFTRSTCR, &val);
+> > > +	val |= PEXSR(pcie->index);
+> > > +	regmap_write(pcie->scfg, SCFG_PEXSFTRSTCR, val);
+> > > +
+> > > +	regmap_read(pcie->scfg, SCFG_PEXSFTRSTCR, &val);
+> > > +	val &= ~PEXSR(pcie->index);
+> > > +	regmap_write(pcie->scfg, SCFG_PEXSFTRSTCR, val);
+> > > +}
+> > > +
+> > > +static int ls1021a_pcie_host_init(struct dw_pcie_rp *pp)
+> > > +{
+> > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > > +	struct ls_pcie *pcie = to_ls_pcie(pci);
+> > > +	struct device *dev = pcie->pci->dev;
+> > > +	u32 index[2];
+> > > +	int ret;
+> > > +
+> > > +	ret = ls_pcie_host_init(pp);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	pcie->scfg = syscon_regmap_lookup_by_phandle(dev->of_node, "fsl,pcie-scfg");
+> > > +	if (IS_ERR(pcie->scfg)) {
+> > > +		ret = PTR_ERR(pcie->scfg);
+> > > +		dev_err(dev, "No syscfg phandle specified\n");
+> > > +		pcie->scfg = NULL;
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	ret = of_property_read_u32_array(dev->of_node, "fsl,pcie-scfg", index, 2);
+> > > +	if (ret) {
+> > > +		pcie->scfg = NULL;
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	pcie->index = index[1];
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > >  static const struct dw_pcie_host_ops ls_pcie_host_ops = {
+> > >  	.host_init = ls_pcie_host_init,
+> > >  	.pme_turn_off = ls_pcie_send_turnoff_msg,
+> > >  };
+> > >  
+> > > +static const struct dw_pcie_host_ops ls1021a_pcie_host_ops = {
+> > > +	.host_init = ls1021a_pcie_host_init,
+> > > +	.pme_turn_off = ls1021a_pcie_send_turnoff_msg,
+> > > +};
+> > > +
+> > >  static const struct ls_pcie_drvdata ls1021a_drvdata = {
+> > > -	.pm_support = false,
+> > > +	.pm_support = true,
+> > > +	.ops = &ls1021a_pcie_host_ops,
+> > > +	.exit_from_l2 = ls1021a_pcie_exit_from_l2,
+> > >  };
+> > >  
+> > >  static const struct ls_pcie_drvdata layerscape_drvdata = {
+> > > -- 
+> > > 2.34.1
+> > > 
