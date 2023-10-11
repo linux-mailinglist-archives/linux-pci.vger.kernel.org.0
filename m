@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59C4E7C4B5B
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 09:14:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C75BE7C4B5F
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 09:14:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229656AbjJKHOc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Oct 2023 03:14:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47492 "EHLO
+        id S229643AbjJKHOe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Oct 2023 03:14:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbjJKHOc (ORCPT
+        with ESMTP id S229650AbjJKHOc (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 03:14:32 -0400
 Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3D2DD9B;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E07EA9D;
         Wed, 11 Oct 2023 00:14:30 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="6.03,214,1694703600"; 
-   d="scan'208";a="178877306"
+   d="scan'208";a="178877309"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 11 Oct 2023 16:14:28 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 11 Oct 2023 16:14:29 +0900
 Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id CEC6441B2645;
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id F2F5B41B2645;
         Wed, 11 Oct 2023 16:14:28 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
@@ -30,10 +30,12 @@ Cc:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Serge Semin <fancer.lancer@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v24 03/16] PCI: dwc: Add missing PCI_EXP_LNKCAP_MLW handling
-Date:   Wed, 11 Oct 2023 16:14:10 +0900
-Message-Id: <20231011071423.249458-4-yoshihiro.shimoda.uh@renesas.com>
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Subject: [PATCH v24 04/16] PCI: tegra194: Drop PCI_EXP_LNKSTA_NLW setting
+Date:   Wed, 11 Oct 2023 16:14:11 +0900
+Message-Id: <20231011071423.249458-5-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20231011071423.249458-1-yoshihiro.shimoda.uh@renesas.com>
 References: <20231011071423.249458-1-yoshihiro.shimoda.uh@renesas.com>
@@ -47,63 +49,37 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Update dw_pcie_link_set_max_link_width() to set PCI_EXP_LNKCAP_MLW.
+dw_pcie_setup() is already setting PCI_EXP_LNKCAP_MLW to pcie->num_lanes
+in the PCI_EXP_LNKCAP register for programming maximum link width.
 
-In accordance with the DW PCIe RC/EP HW manuals [1,2,3,...] aside with
-the PORT_LINK_CTRL_OFF.LINK_CAPABLE and GEN2_CTRL_OFF.NUM_OF_LANES[8:0]
-field there is another one which needs to be updated.
+Hence, remove the redundant setting here.
 
-It's LINK_CAPABILITIES_REG.PCIE_CAP_MAX_LINK_WIDTH. If it isn't done at
-the very least the maximum link-width capability CSR won't expose the
-actual maximum capability.
-
-[1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-    Version 4.60a, March 2015, p.1032
-[2] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-    Version 4.70a, March 2016, p.1065
-[3] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-    Version 4.90a, March 2016, p.1057
-...
-[X] DesignWare Cores PCI Express Controller Databook - DWC PCIe Endpoint,
-      Version 5.40a, March 2019, p.1396
-[X+1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-      Version 5.40a, March 2019, p.1266
-
-Suggested-by: Serge Semin <fancer.lancer@gmail.com>
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>
 ---
- drivers/pci/controller/dwc/pcie-designware.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-tegra194.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index da4aba4aee62..2b60d20dfdf5 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -734,7 +734,8 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 4bba31502ce1..2debdf1a0b52 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -917,12 +917,6 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
+ 		AMBA_ERROR_RESPONSE_CRS_SHIFT);
+ 	dw_pcie_writel_dbi(pci, PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT, val);
  
- static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
- {
--	u32 lwsc, plc;
-+	u32 lnkcap, lwsc, plc;
-+	u8 cap;
- 
- 	if (!num_lanes)
- 		return;
-@@ -770,6 +771,12 @@ static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
- 	}
- 	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, plc);
- 	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, lwsc);
-+
-+	cap = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-+	lnkcap = dw_pcie_readl_dbi(pci, cap + PCI_EXP_LNKCAP);
-+	lnkcap &= ~PCI_EXP_LNKCAP_MLW;
-+	lnkcap |= FIELD_PREP(PCI_EXP_LNKCAP_MLW, num_lanes);
-+	dw_pcie_writel_dbi(pci, cap + PCI_EXP_LNKCAP, lnkcap);
- }
- 
- void dw_pcie_iatu_detect(struct dw_pcie *pci)
+-	/* Configure Max lane width from DT */
+-	val = dw_pcie_readl_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKCAP);
+-	val &= ~PCI_EXP_LNKCAP_MLW;
+-	val |= (pcie->num_lanes << PCI_EXP_LNKSTA_NLW_SHIFT);
+-	dw_pcie_writel_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKCAP, val);
+-
+ 	/* Clear Slot Clock Configuration bit if SRNS configuration */
+ 	if (pcie->enable_srns) {
+ 		val_16 = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base +
 -- 
 2.25.1
 
