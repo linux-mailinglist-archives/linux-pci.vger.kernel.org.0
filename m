@@ -2,148 +2,204 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88B5B7C5261
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 13:45:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 647927C529D
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 13:56:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344784AbjJKLpp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Oct 2023 07:45:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47738 "EHLO
+        id S231678AbjJKL4n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Oct 2023 07:56:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234715AbjJKLpp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 07:45:45 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D13FC8F;
-        Wed, 11 Oct 2023 04:45:42 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-5046bf37daeso8819051e87.1;
-        Wed, 11 Oct 2023 04:45:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697024741; x=1697629541; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RNeBmhkMd48MHynaoqC7PRDCkcniAcL1N1Iilx40N2M=;
-        b=aI04VlEE+0B8rugPCofaKWoSc7eUevxRiKI2jzmTY/XzvGGE9YjsE/lG5CNCNSnBlF
-         YfE04gqP8ijECBmfFzE5PHcAmf1mnoHret8AnIummR8G0myJY4vEgE4vCn51HyLDLPfo
-         oWoArl0F7fTBhbD1ZAf+L3RJ/2kcLlL1wSoDLMpnRBQFpRrwQ9fWmYzZVZMHg40zB9Zm
-         hVcE1DX0+jM+HiBgIduR4NfHSREZWZ8Ibpq3Lc+FJi83hgZ2yMW/9ddAmwzSuV1L15gG
-         DR8t47WrvKn3+MANT4bj5cIgtBlu5ouQdvle1fwIs3A6pyUZFTo3+2HXYPRVgt8hqKWx
-         gJBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697024741; x=1697629541;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RNeBmhkMd48MHynaoqC7PRDCkcniAcL1N1Iilx40N2M=;
-        b=T41ZUDpfo/3fzvsw3gTIjwMEQnTleMDndVaD80Wc1EawyyIZ1bRTUgzHsJSyExajlY
-         U8szLUm/G45nuRmO3AC+xgUbE8lZBPv6lGMw+Ysy0aC6b2bLnL3J+u6L2hclokCgFyHN
-         0szyELPS/nidFDz3d79bXjUeZyDg/Yi5wKUR1Fuh0LOIU03eTmsysbkVmLtqgiO/t+uT
-         aPcexHairkJGFn3nbQ1Iy5oFjCR2cRYBOYOzjgyWPgX0NOV22SQlGPJhlGlNdEO34rvO
-         hjRLpEyxkIPjmoQJhMRpVOcMxqukqc6FWGcG4aa39s308dMAYkQO7nbQPj8vb+mjkzzN
-         dDIA==
-X-Gm-Message-State: AOJu0YzmM39aeFa7YwnKtRnkUKy2yuvi2u2jtB8MKvb/6Cb6bwESuCe/
-        LnH0aQf0noziTPaHgb5l3IM=
-X-Google-Smtp-Source: AGHT+IHcZyJQ1BwYvbpjnjX3CDDrNLGCshiQ05ZPXZPM9SIGBuOnCgCFwuVwUqqtE8OZS66an5zxpQ==
-X-Received: by 2002:ac2:4c46:0:b0:500:b56d:e11a with SMTP id o6-20020ac24c46000000b00500b56de11amr19873959lfk.43.1697024740738;
-        Wed, 11 Oct 2023 04:45:40 -0700 (PDT)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id f18-20020ac24e52000000b00502d9af34aesm2245325lfr.120.2023.10.11.04.45.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Oct 2023 04:45:40 -0700 (PDT)
-Date:   Wed, 11 Oct 2023 14:45:37 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mani@kernel.org,
-        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v24 08/16] PCI: dwc: Disable two BARs to avoid
- unnecessary memory assignment
-Message-ID: <abf65z7xxsnd7adkg523mneccudwenvdzcw7jpblafqzvhca5n@lbpsch7ztxsn>
-References: <20231011071423.249458-1-yoshihiro.shimoda.uh@renesas.com>
- <20231011071423.249458-9-yoshihiro.shimoda.uh@renesas.com>
+        with ESMTP id S230138AbjJKL4m (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 07:56:42 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B9EF93;
+        Wed, 11 Oct 2023 04:56:39 -0700 (PDT)
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39B8XXaR025256;
+        Wed, 11 Oct 2023 11:56:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=yWDYgFmR3DLE3mMSw9m4g0WmA/jghMlKyUvasAzQv5Y=;
+ b=DlaG+xwpNJQFvmVHQvRcB642pvbeJtCyliiGr+V4JJuEHq5cEk6UaLM2j8OLCxw7l+yF
+ cocAif6EIJKV2XVlfUchYUXYcGpSNR9ibtQo02MbR5Ap0vViFQryHD3uSfqJ0buQzEBq
+ +hC0RApBnvfJzAYHvmYNxkaYl1l3dj2ajUWhaHFYonssAXmUhfozz6YXs/746Ve6Opi3
+ V6oZlVSXsEhfJ6oOCIKdQ0VRdM//pv9fX1SUopFYkWBfn7dUGi02MpIekhCKKbJCUINS
+ r+5O2gl4SAhf8CAnw2oNisQDqn4nkJMt9rPPpp40eB3bw+FM8neyZO+rYrFqkBd+wg7q qA== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tnnvw8rrb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Oct 2023 11:56:24 +0000
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39BBu4IR032535
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Oct 2023 11:56:04 GMT
+Received: from [10.216.52.55] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Wed, 11 Oct
+ 2023 04:55:56 -0700
+Message-ID: <6531b333-b978-6b97-5cb4-59562d775ac3@quicinc.com>
+Date:   Wed, 11 Oct 2023 17:25:53 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231011071423.249458-9-yoshihiro.shimoda.uh@renesas.com>
-X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: *
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v2 2/4] phy: qcom-qmp-pcie: add endpoint support for
+ sa8775p
+Content-Language: en-US
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC:     <agross@kernel.org>, <andersson@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <konrad.dybcio@linaro.org>, <mani@kernel.org>,
+        <quic_shazhuss@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_ramkri@quicinc.com>, <quic_nayiluri@quicinc.com>,
+        <robh@kernel.org>, <quic_krichai@quicinc.com>,
+        <quic_vbadigan@quicinc.com>, <quic_parass@quicinc.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mhi@lists.linux.dev>,
+        <linux-phy@lists.infradead.org>
+References: <1697023109-23671-1-git-send-email-quic_msarkar@quicinc.com>
+ <1697023109-23671-3-git-send-email-quic_msarkar@quicinc.com>
+ <CAA8EJpoLxeSvxjcyq1BMR9XuAffrxLmO-eaBYJ+Fhnb4zYmxUQ@mail.gmail.com>
+From:   Mrinmay Sarkar <quic_msarkar@quicinc.com>
+In-Reply-To: <CAA8EJpoLxeSvxjcyq1BMR9XuAffrxLmO-eaBYJ+Fhnb4zYmxUQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: ZEzDn50P4KEQEOAKHA4Ysiu6xzJT-5a3
+X-Proofpoint-GUID: ZEzDn50P4KEQEOAKHA4Ysiu6xzJT-5a3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-11_09,2023-10-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ impostorscore=0 mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0
+ clxscore=1015 spamscore=0 priorityscore=1501 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310110105
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 11, 2023 at 04:14:15PM +0900, Yoshihiro Shimoda wrote:
-> According to the section 3.5.7.2 "RC Mode" in DWC PCIe Dual Mode
-> Rev.5.20a, we should disable two BARs to avoid unnecessary memory
-> assignment during device enumeration. Otherwise, Renesas R-Car Gen4
-> PCIe controllers cannot work correctly in host mode.
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index a7170fd0e847..56cc7ff6d508 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -737,6 +737,14 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
->  	u32 val, ctrl, num_ctrls;
->  	int ret;
->  
-> +	/*
-> +	 * According to the section 3.5.7.2 "RC Mode" in DWC PCIe Dual Mode
-> +	 * Rev.5.20a,
 
-and 3.5.6.1 "RC mode" in DWC PCIe RC databook v5.20a.
+On 10/11/2023 5:06 PM, Dmitry Baryshkov wrote:
+> On Wed, 11 Oct 2023 at 14:19, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
+>> Add support for dual lane end point mode PHY found on sa8755p platform.
+>>
+>> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+>> ---
+>>   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c   | 41 ++++++++++++++++++++++++++++++
+>>   drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5.h |  2 ++
+>>   2 files changed, 43 insertions(+)
+> Two minor questions.
+>
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+>> index a63ca74..962b4a1 100644
+>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+>> @@ -2147,6 +2147,38 @@ static const struct qmp_phy_init_tbl sa8775p_qmp_gen4x4_pcie_rc_serdes_alt_tbl[]
+>>          QMP_PHY_INIT_CFG(QSERDES_V5_COM_CLK_SELECT, 0x34),
+>>   };
+>>
+>> +static const struct qmp_phy_init_tbl sa8775p_qmp_gen4x2_pcie_ep_serdes_alt_tbl[] = {
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_BG_TIMER, 0x02),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_SYS_CLK_CTRL, 0x07),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_CP_CTRL_MODE0, 0x27),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_CP_CTRL_MODE1, 0x0a),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_RCTRL_MODE0, 0x17),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_RCTRL_MODE1, 0x19),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_CCTRL_MODE0, 0x00),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_CCTRL_MODE1, 0x03),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_SYSCLK_EN_SEL, 0x00),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_INTEGLOOP_GAIN0_MODE0, 0xfb),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_INTEGLOOP_GAIN1_MODE0, 0x01),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_INTEGLOOP_GAIN0_MODE1, 0xfb),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_INTEGLOOP_GAIN1_MODE1, 0x01),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_CMN_MODE, 0x14),
+> I should check whether we miss QSERDES_V5_COM_CMN_MODE in
+> sm8450_qmp_gen4x2_pcie_ep_serdes_tbl, which is otherwise nearly
+> identical.
+> Also do you need to set QSERDES_V5_COM_CORE_CLK_EN here?
+QSERDES_V5_COM_CORE_CLK_EN is common for both RC and EP
+so we are using it in sa8775p_qmp_gen4x2_pcie_serdes_alt_tbl
 
-> +      ... we should disable two BARs to avoid unnecessary memory
-> +	 * assignment during device enumeration.
-> +	 */
-> +	dw_pcie_writel_dbi2(pci, PCI_BASE_ADDRESS_0, 0x0);
-> +	dw_pcie_writel_dbi2(pci, PCI_BASE_ADDRESS_1, 0x0);
-> +
+-Mrinmay
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP1_MODE0, 0xff),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP2_MODE0, 0x04),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP1_MODE1, 0xff),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP2_MODE1, 0x09),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_DEC_START_MODE0, 0x19),
+>> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_DEC_START_MODE1, 0x28),
+>> +};
+>> +
+>> +static const struct qmp_phy_init_tbl sa8775p_qmp_gen4_pcie_ep_pcs_misc_tbl[] = {
+>> +       QMP_PHY_INIT_CFG(QPHY_V5_20_PCS_PCIE_OSC_DTCT_MODE2_CONFIG5, 0x08),
+>> +};
+> This is the same as sm8450_qmp_gen4x2_pcie_ep_pcs_misc_tbl
 
-What's the point in doing this
-	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0x00000004);
-	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
-        ...
-        dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0);
-afterward?
+so you want me to use sm8450_qmp_gen4x2_pcie_ep_pcs_misc_tbl
+instead of creating new one for sa8775?
 
-I guess if the BARs are disabled there is no need in having them
-touched. Am I wrong?
+-Mrinmay
 
-BTW I failed to understand why the BARs inits was originally needed:
-first merging the BAR0 and BAR1 into a single 64-bit BAR, then
-switching it back to two 32-bit BARs. Moreover here is what prior DW
-PCIe RC v5.x databooks say about the BARs:
+>> +
+>> +static const struct qmp_phy_init_tbl sa8775p_qmp_gen4x2_pcie_ep_pcs_alt_tbl[] = {
+>> +       QMP_PHY_INIT_CFG(QPHY_V5_PCS_INSIG_MX_CTRL7, 0x00),
+>> +       QMP_PHY_INIT_CFG(QPHY_V5_PCS_INSIG_SW_CTRL7, 0x00),
+>> +};
+> Could you please confirm that these registers belong to the V5
+> namespace rather than V5_20 one?
+may I know difference between V5 and V5_20 namespace
+can't we use V5 namespace here?
 
-"3.5.6 BAR Details
-Base Address Registers (Offset: 0x10-x14)
-The Synopsys core does not implement the optional BARs for the RC
-product. This is based on the assumption that the RC host probably has
-registers on some other internal bus and has knowledge and setup
-access to these registers already."
-
-I am not sure I fully understand what it means, but it seems as DW
-PCIe cores didn't have anything behind the RC BARs even back then. So
-it seems to me that the BARs manipulation was the Exinos PCIe host
-specific, from which driver they are originating - commit 340cba6092c2
-("pci: Add PCIe driver for Samsung Exynos").
-
-* BTW Yoshihiro, I am sorry to see your patchset is still under review...(
-
--Serge(y)
-
->  	/*
->  	 * Enable DBI read-only registers for writing/updating configuration.
->  	 * Write permission gets disabled towards the end of this function.
-> -- 
-> 2.25.1
-> 
+-Mrinmay
+>> +
+>>   struct qmp_pcie_offsets {
+>>          u16 serdes;
+>>          u16 pcs;
+>> @@ -3043,6 +3075,15 @@ static const struct qmp_phy_cfg sa8775p_qmp_gen4x2_pciephy_cfg = {
+>>                  .pcs_misc_num   = ARRAY_SIZE(sa8775p_qmp_gen4_pcie_rc_pcs_misc_tbl),
+>>          },
+>>
+>> +       .tbls_ep = &(const struct qmp_phy_cfg_tbls) {
+>> +               .serdes         = sa8775p_qmp_gen4x2_pcie_ep_serdes_alt_tbl,
+>> +               .serdes_num     = ARRAY_SIZE(sa8775p_qmp_gen4x2_pcie_ep_serdes_alt_tbl),
+>> +               .pcs_misc       = sa8775p_qmp_gen4_pcie_ep_pcs_misc_tbl,
+>> +               .pcs_misc_num   = ARRAY_SIZE(sa8775p_qmp_gen4_pcie_ep_pcs_misc_tbl),
+>> +               .pcs            = sa8775p_qmp_gen4x2_pcie_ep_pcs_alt_tbl,
+>> +               .pcs_num        = ARRAY_SIZE(sa8775p_qmp_gen4x2_pcie_ep_pcs_alt_tbl),
+>> +       },
+>> +
+>>          .reset_list             = sdm845_pciephy_reset_l,
+>>          .num_resets             = ARRAY_SIZE(sdm845_pciephy_reset_l),
+>>          .vreg_list              = qmp_phy_vreg_l,
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5.h b/drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5.h
+>> index 36cc80b..6ee1c33 100644
+>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5.h
+>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5.h
+>> @@ -11,6 +11,8 @@
+>>   #define QPHY_V5_PCS_PCS_STATUS1                                0x014
+>>   #define QPHY_V5_PCS_POWER_DOWN_CONTROL                 0x040
+>>   #define QPHY_V5_PCS_START_CONTROL                      0x044
+>> +#define QPHY_V5_PCS_INSIG_SW_CTRL7                     0x060
+>> +#define QPHY_V5_PCS_INSIG_MX_CTRL7                     0x07c
+>>   #define QPHY_V5_PCS_LOCK_DETECT_CONFIG1                        0x0c4
+>>   #define QPHY_V5_PCS_LOCK_DETECT_CONFIG2                        0x0c8
+>>   #define QPHY_V5_PCS_LOCK_DETECT_CONFIG3                        0x0cc
+>> --
+>> 2.7.4
+>>
+>
