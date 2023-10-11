@@ -2,238 +2,625 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8B357C4901
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 07:06:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AAC77C4909
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 07:11:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229656AbjJKFGw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Oct 2023 01:06:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35572 "EHLO
+        id S229692AbjJKFLP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Oct 2023 01:11:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbjJKFGv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 01:06:51 -0400
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2137.outbound.protection.outlook.com [40.107.114.137])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACC95B7;
-        Tue, 10 Oct 2023 22:06:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VtSepLtDxYUXLO3YGxtoNtxG++q7HJW6+lmw7hGZoGwJHXYUrgOUNrAJKzMDHvQxaO4wDNp5NIzjwoy6kWLaokKjDjORtCpngDYZ6r7s4cFyZBAS4DVr+P+Y3pW5sCY+yf3t3NraoRbhMmcYisNxDz80h7FlbCr0hkEDwSPrCRMNSOuEOfmM0qzrrKBdgoiZSs/uEG53jvli3pQpK3OqDC4ItDOl+UCVV3/EA4Cd0zp1lb+HAY+a8L5RJxbTwfGp6OGvYTtcSvOHW29tF0bfZNPgOpgSRD0j3BJ+qZnKI16lAQl3AIXLM84//QOYogQM+fptoWSVJsD2iQOCQxpFRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sjtFzHRZTT1X3yw9r55mO9TM8EFw45oGsUpXUqneRxY=;
- b=mpwv8XhJJUe15440gkcL8bZ0HNl/UasOESi88NNuCxfGqKIthpifzDsYW1lEVMxt7y12sXZNvsk95Hdw6enkk2oQqPVfSjUbqHCGxtkiSZe6ZBlVUKVgnerlmJ6/1jiof8wLsH5p560e4Sz3oiFFz/8qlKL7Ym3xodT9MDV8YlwCQ76vYgjO5SFmXbm4n3KLxaYVdHjO9+GgZUyPsxXYMnJeuSXjZ34R6Y6tu1tVWyOrbd2w0xVaDwWN9IFYukHCAu66r5kA0d5uUGczdpqNbnw2qRefPKF8xBBMYEOnu6Ra2Ym5Ott6eHi0Ycu8PdTb7Wpi8bAid7JSNzd8z5fIqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sjtFzHRZTT1X3yw9r55mO9TM8EFw45oGsUpXUqneRxY=;
- b=G3bGeDIG2BWMZZE/Wy21En04BzX3hQca8i2c+tPr3s2kmu3rrlytb3FZcaemCirI7z9kzMY9xmYTPfpngtV8ObX6ykwGBv1hr7lKUaRIa5L5791KQt8mYzBmWlnV1XTa4kbTAoPEswLroTZNBBdooSMTiDIHGwhaMbxrrAROmIM=
-Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
- (2603:1096:404:8028::13) by TY3PR01MB11220.jpnprd01.prod.outlook.com
- (2603:1096:400:3d2::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.38; Wed, 11 Oct
- 2023 05:06:43 +0000
-Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
- ([fe80::1dc4:e923:9916:c0f7]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
- ([fe80::1dc4:e923:9916:c0f7%7]) with mapi id 15.20.6863.040; Wed, 11 Oct 2023
- 05:06:43 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Manivannan Sadhasivam <mani@kernel.org>
-CC:     "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "conor+dt@kernel.org" <conor+dt@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>
-Subject: RE: [PATCH v21 13/16] PCI: dwc: rcar-gen4: Add R-Car Gen4 PCIe
- controller support
-Thread-Topic: [PATCH v21 13/16] PCI: dwc: rcar-gen4: Add R-Car Gen4 PCIe
- controller support
-Thread-Index: AQHZ7SGG731ZoKcWlUmOj881Ilc+nrBDCYuAgADXsZCAAD75AIAABixQ
-Date:   Wed, 11 Oct 2023 05:06:43 +0000
-Message-ID: <TYBPR01MB53410004963526A6FB68722BD8CCA@TYBPR01MB5341.jpnprd01.prod.outlook.com>
-References: <20230922065331.3806925-1-yoshihiro.shimoda.uh@renesas.com>
- <20230922065331.3806925-14-yoshihiro.shimoda.uh@renesas.com>
- <20231010120421.GG4884@thinkpad>
- <TYBPR01MB5341F9721774B5993EB4B912D8CCA@TYBPR01MB5341.jpnprd01.prod.outlook.com>
- <20231011044144.GA3508@thinkpad>
-In-Reply-To: <20231011044144.GA3508@thinkpad>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|TY3PR01MB11220:EE_
-x-ms-office365-filtering-correlation-id: 008a0884-7397-43aa-95fb-08dbca17dc88
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Nw2sEG7VsdT750vM81mBhBCef3Atw5Bmb3FMSXPcc022sCecpRm1bdjQ1wt7aEfPHAE0gqNAeKIlucgtxpooDQkD8dIjjsNwnssi40OIcDiTjiuXWe83ufpLIm6X8sK06hxJb3dozs4Iw5ic2rVRg0dHxTlaKXt1npkslGGsWQaY/kvdOa6LnfFzA+t9FPJ+wK2YQMzui+nI73n9UU7ZY/dkyoWBNcmSS8qNfqZTVR4/ymSiwA+bBTPzynHlP4hkDYI3yb99An/vJNgUrboFDmHEruwYUFyDRiL85yd44kdHLApfUFida02WNpNl0UYqFuqDlZVOg8eBwUkRz/lT52G5bmZ+1qUHinKWGCPBNiUfwAtX9vDNPQ5J9KHhf8byeCIojVR94FLUYcK811NpvS98qKKi/oiSWDYS11jQyZgqE8sLROGkaU8oDmEo3s3Duc7d86LZIO3x0shwh6VBpbglh72xMTc9VHmwGg13SdSI9+TZEAVJSHjP8ORWEQevRHPH0ZxuKRjT5X8T4tkulZIDf4drQu96/Dk3W2EC3c0QuFa2+4q/wLlNA53wN60RQ15ld//Yvw0QFqDZ35rsILh+4NULTJwMbEmwZwfAvMI=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(346002)(376002)(39860400002)(396003)(230922051799003)(64100799003)(451199024)(186009)(1800799009)(66899024)(2906002)(33656002)(86362001)(55016003)(38100700002)(38070700005)(122000001)(4326008)(8936002)(8676002)(66574015)(71200400001)(966005)(9686003)(6506007)(7696005)(6916009)(41300700001)(316002)(7416002)(66446008)(76116006)(66476007)(54906003)(66946007)(64756008)(5660300002)(83380400001)(478600001)(66556008)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?TUJjV2RMa1ZFbGJOYllrUTM5NHRKVDhKWWpQS0NnRURoQjFkSnd4WWJVek1E?=
- =?utf-8?B?YVJHazRQOG9XZzVrVjlYZFVTYkNXdlNnZDVsU2tqYTh1b0pOamZLVXZuNzBu?=
- =?utf-8?B?L0xUNHNVYjI1WFdmMTdSMlRxN3pyRGxvei9hWStzUUxDOU94cEZsb1gxTXcw?=
- =?utf-8?B?bHM4MjJNVzhXNCt4Z2ZJREpuenJjeXA0Mmp3OXJmd2g5ZnpidGtzWW5YSHJN?=
- =?utf-8?B?b0JVSkg3UUNtODlLZGN3ZGcxakU2SVZpaWtCemZsOElFUVNzNVZBcEg4cVJK?=
- =?utf-8?B?UkhEOS95WkxCUWE2Ky92cGMzS1RDV05rTjNBbEZXMnBQVUg1c05kUU4xWkN4?=
- =?utf-8?B?VTFTK1k4RGloWmRBMWZ3ZkNTcExPaWVFUW5FUWxWbmQzNzlWRk1DalVFTlBW?=
- =?utf-8?B?ZWhqM3FRWDJkZExEYndMVHBDRU8yMmE3aVhGY1M5UlNWNmdMOFRrMGdyR1Iz?=
- =?utf-8?B?b0FXeHNXWklaSzdJYzZhaUhMTFA1TnlmWjAybi81ZmJhSzVodjlNUlV6U1d6?=
- =?utf-8?B?VjMrZ1FTZFFqSGUyb1Q2eFk3cnZYd0JnLzJub1dhbUg3dGMwaXNFMEh2VnMy?=
- =?utf-8?B?cUdOMkVSUGx5cEI5UmhmRHBsMUtXRUtEYktiMlY1TGVkK0VwOEZGaXpqZFhi?=
- =?utf-8?B?NUdRK3BzcmtUOFBaZGdLTmRCZ1J3dlk2cU9JU3ZSSXlmUlh2UEkvMkNmZDQ0?=
- =?utf-8?B?ckxsRlBwUkk3emxDQ0kvY3ByWXZKd1k0R1dBS1pnT0dpVFRUTVJhZ0JYM083?=
- =?utf-8?B?R0ZyQ2pnbTk3SkIwODBoZVg1UzVoSTgrK20wV05vK0N5REl3c3l2SFNHYnlH?=
- =?utf-8?B?WlZMOGZEUktVSnVsUlc3dGUrUzB3QjVqbEg1eDd0ZlNzRXloTVRvRUxZZ3Zz?=
- =?utf-8?B?UWxjTXRUT3QvWjdYUHhXaEZKekdCQlh4cGgwdlhEQmVZNElJRWZHMERIUmN6?=
- =?utf-8?B?SmRuSXNBeG0vZktDTU9nVnlwa0xSWG5EYW82V3JWQUJUOE5nd1RndUxkNldL?=
- =?utf-8?B?ZzM3amEvNmtoOGlPS0pVdGM0NnRYZnhwNDh4N2NWakRoNHYzMDBIUDc5WnNF?=
- =?utf-8?B?ZUVOQityMUE4U09tajAweHhXcmZ4ODgvUEswRTNESlJCd1F3WVRyOWtXbW0r?=
- =?utf-8?B?NDRPaXl1RkdoUmtCaEU5elA3b0c5TVpkNVYxUHdITjU4MXdNQzZNcnRJNksr?=
- =?utf-8?B?RXhXN1NVZk0rZmhKaTV1ZUF4aDFGVStTQ0xNZ2FhNVdIQTljR0IxMlBJcXdM?=
- =?utf-8?B?SlFpcWFuZFdRUGdFZVBuNFFtNHVFR3lZSmcySmFPYkh1d0l4WUtrWG1FR0cx?=
- =?utf-8?B?NXlnTGZpZGZ5bG1uT0oxOGtxVlhiZFZsR0JzSjRtQUgyenRLc3dWZTE5Mldl?=
- =?utf-8?B?ZmVCaTZ5d3FZNWZuaWRNemJFQjBZRnllUmJLVnRTcWdoZTJWdXlyaUJLdngz?=
- =?utf-8?B?QjVnVlRhTzJDZTZEZ3g1YVUvRjNSRmp3WWlXRjk4U21YVVcrZnVNNVdqdHJ2?=
- =?utf-8?B?RlRzSWMvTEZOR243cUkwYXdDcnFBMWtQaE5kdTMwMmhySStRZUpQNmJEdnlS?=
- =?utf-8?B?Ty9kaGtPVXlKTnNQdmdZK1Z4WTdMRE03amE0bHdSZmF1NXdIcUx2MVNBUUpQ?=
- =?utf-8?B?SnBiZHY4TlJEK0ptSVRDcE1ibm1EUDRTSEF1ZTB3V3kvQmdZMTU3NWMxbnlN?=
- =?utf-8?B?aU9qNGtWbG9PVGxSellOakRlUWV5N3hGT1JWalVvUXpKUlBLUlBTanFZZmtD?=
- =?utf-8?B?c2hidDI1b1VRZXJnZERpVjBpY21aR1NHVGNJVTJaNWtGTWlIbEh6WjA2NUl3?=
- =?utf-8?B?TGhrRFhzbmFyVGdTM2tTUUxqenI3RlkzWjFjOXJUK2RHZHdLWDBLZUpFWlZZ?=
- =?utf-8?B?S1FUK3pKOUdVM2s4K2YwanJCNGdDaGdFZ2E5TjRQK0JSSWRBTkpnd2dpbFpZ?=
- =?utf-8?B?UDM5bmg5YStjaTlpUVN6blAzQStuUlk5K3ZlYkVGRDlDTUtOSkEzaTNrTkVH?=
- =?utf-8?B?QWlLbUdKdXdxa2tMSGxKTHhLZXphVmtjaVRLOHM2Z3FHRjB6VjVDNDJNczJG?=
- =?utf-8?B?a3VuN3JnWG40VTN6WGpNNWYzajNYT1hOZGFQckJpUllRanlLWHltRkFJb0FV?=
- =?utf-8?B?R1FkSnd2SXZoS3BjQk1XcVRFbHd5bFBsQkEvcWI4M0tyZTZmMHFVaVE1YTZU?=
- =?utf-8?B?djZiWjZ4WDFlenBGOFNNcHJQcUJGRWJ2cFJjZzlvNkFwQStodUt0eWhlNjBX?=
- =?utf-8?B?SVlGY3NnRG8vREp5VlROeDhBcTFnPT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        with ESMTP id S229683AbjJKFLN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 01:11:13 -0400
+Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 818CF9D;
+        Tue, 10 Oct 2023 22:11:07 -0700 (PDT)
+Received: by mail-vs1-xe2b.google.com with SMTP id ada2fe7eead31-457584c824dso1683957137.0;
+        Tue, 10 Oct 2023 22:11:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697001066; x=1697605866; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aW1Hz0Z+3/smmQhOE3f0Qiy+qN8uHKaVmirfLTm8Gb8=;
+        b=K0zvsfcinTGhcsjh8T7fsrFbawG2fP3U86vdSLPqS+Yw4cU+vfajOr+bc3wxIL6dZ6
+         Nfq4q2zh0jyIvIHQ8Kfyjpz9ZZ6u86M/01eyUl+OOo1kA8w1g5YSZ/HE5LV7PTR89cVS
+         9XGzdNZTiygTFMxpl+3orAxr7KfaS8Mc0+2ZADthtpY9/lwrxajuV7k/x6ei68DlfRTW
+         ZbyHnOpCSe9XVnh5tIsWjHEzT4ZmhHWuR7VnY9q99FEVC+k3tPzE3yS1bxSjQTjf+F7J
+         uL5kbHqBgsz8usIvW0CDkppnVdwK+yiAjasRKbWjruISQrvFnZiPKuF6YUDDETJUeOKC
+         Qerg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697001066; x=1697605866;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aW1Hz0Z+3/smmQhOE3f0Qiy+qN8uHKaVmirfLTm8Gb8=;
+        b=vOJDIfylohXAkvjBGPg91tY+1+c3fQ+cgOzAGnwx2b3y/xCxyDnPmQSoIYCTjUXjOk
+         mSDQViymwJTzqvrPQ9+nWUpzPgMG+Wr6cAPAdiV+mxcWBwXwLrUX1l3p80VtxMaqeyNu
+         GPQGOkPmk0JagQx9kUdyx32Gnk5CDgLyepxgfpy7Z8G6dtnWDQ7khMzXnZ1kHq1JRBRK
+         sG24QNUim2+oXnd9WDA4OlW839Js6ORR0P0XSyYwLUscMjapgDWb8bR7EFmoc3GDw9TG
+         mvbzx0yfwZmjl1skv1SlCOdHI8fNZ5PnWwsGuPcaNBjbIr5dd2re4JCpTVYF95ruhMnU
+         J+EQ==
+X-Gm-Message-State: AOJu0YwwOtXhw/84mAUd3sCK+sUQ1TcIiRYYdZeEkhUE9CKfGPnLM1H5
+        HDFSroHghJQ5L+ruXnmCx469q8R/92Vb8J7xIds=
+X-Google-Smtp-Source: AGHT+IFM5+OHy0nAyrzW75uzlf8nIEhVIlmY1u9rI3HHxJNuMzDqCX6Mwhfp1A9RyrJM0iqK3THm04kyI1lp4qs9EIQ=
+X-Received: by 2002:a67:fd4b:0:b0:452:8452:8a90 with SMTP id
+ g11-20020a67fd4b000000b0045284528a90mr19123735vsr.0.1697001066492; Tue, 10
+ Oct 2023 22:11:06 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 008a0884-7397-43aa-95fb-08dbca17dc88
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2023 05:06:43.5607
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tFwwByjtwEuX4Zc/t3iLeaRaPdza/5halNz6c4PMlOi5J1UygAvgYAVeAe339/PGoacq2ypbcdE/lUJ5ImLGaA/T2LKnrsqyK6dlb5GUjQAFbx9R4nEeHwPS+us+CpCH
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3PR01MB11220
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230817235810.596458-1-alistair.francis@wdc.com>
+ <20230817235810.596458-2-alistair.francis@wdc.com> <2023081959-spinach-cherisher-b025@gregkh>
+ <CAKmqyKM+DNTF1f0FvDEda_db792Ta4w_uAKNTZ6E3NkYoVcPFQ@mail.gmail.com>
+ <2023082325-cognitive-dispose-1180@gregkh> <CAKmqyKMMKJN7HU_achBc8S6-Jx16owrthwDDRWysMZe=jymnMA@mail.gmail.com>
+ <2023083111-impulsive-majestic-24ee@gregkh> <2023083139-underling-amuser-772e@gregkh>
+ <2023090142-circling-probably-7828@gregkh> <2023100539-playgroup-stoppable-d5d4@gregkh>
+In-Reply-To: <2023100539-playgroup-stoppable-d5d4@gregkh>
+From:   Alistair Francis <alistair23@gmail.com>
+Date:   Wed, 11 Oct 2023 15:10:39 +1000
+Message-ID: <CAKmqyKOgej1jiiHsoLuDKXwdLDGa4njrndu6c1=bxnqk2NM58Q@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] sysfs: Add a attr_is_visible function to attribute_group
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        Jonathan.Cameron@huawei.com, lukas@wunner.de,
+        alex.williamson@redhat.com, christian.koenig@amd.com,
+        kch@nvidia.com, logang@deltatee.com, linux-kernel@vger.kernel.org,
+        chaitanyak@nvidia.com, rdunlap@infradead.org,
+        Alistair Francis <alistair.francis@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGVsbG8gTWFuaXZhbm5hbiwNCg0KPiBGcm9tOiBNYW5pdmFubmFuIFNhZGhhc2l2YW0sIFNlbnQ6
-IFdlZG5lc2RheSwgT2N0b2JlciAxMSwgMjAyMyAxOjQyIFBNDQo+IE9uIFdlZCwgT2N0IDExLCAy
-MDIzIGF0IDAxOjE4OjExQU0gKzAwMDAsIFlvc2hpaGlybyBTaGltb2RhIHdyb3RlOg0KPiA+IEhl
-bGxvIE1hbml2YW5uYW4sDQo+ID4NCj4gPiA+IEZyb206IE1hbml2YW5uYW4gU2FkaGFzaXZhbSwg
-U2VudDogVHVlc2RheSwgT2N0b2JlciAxMCwgMjAyMyA5OjA0IFBNDQo+ID4gPg0KPiA+ID4gT24g
-RnJpLCBTZXAgMjIsIDIwMjMgYXQgMDM6NTM6MjhQTSArMDkwMCwgWW9zaGloaXJvIFNoaW1vZGEg
-d3JvdGU6DQo+ID4gPiA+IEFkZCBSLUNhciBHZW40IFBDSWUgY29udHJvbGxlciBzdXBwb3J0IGZv
-ciBob3N0IG1vZGUuDQo+ID4gPiA+DQo+ID4gPiA+IFRoaXMgY29udHJvbGxlciBpcyBiYXNlZCBv
-biBTeW5vcHN5cyBEZXNpZ25XYXJlIFBDSWUuIEhvd2V2ZXIsIHRoaXMNCj4gPiA+ID4gcGFydGlj
-dWxhciBjb250cm9sbGVyIGhhcyBhIG51bWJlciBvZiB2ZW5kb3Itc3BlY2lmaWMgcmVnaXN0ZXJz
-LCBhbmQgYXMNCj4gPiA+ID4gc3VjaCwgcmVxdWlyZXMgaW5pdGlhbGl6YXRpb24gY29kZSBsaWtl
-IG1vZGUgc2V0dGluZyBhbmQgcmV0cmFpbmluZyBhbmQNCj4gPiA+ID4gc28gb24uDQo+ID4gPiA+
-DQo+ID4gPiA+IFtrd2lsY3p5bnNraTogY29tbWl0IGxvZ10NCj4gPiA+ID4gTGluazoNCj4gPiA8
-c25pcCBVUkw+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFlvc2hpaGlybyBTaGltb2RhIDx5b3No
-aWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogS3J6
-eXN6dG9mIFdpbGN6ecWEc2tpIDxrd2lsY3p5bnNraUBrZXJuZWwub3JnPg0KPiA+ID4gPiBSZXZp
-ZXdlZC1ieTogU2VyZ2UgU2VtaW4gPGZhbmNlci5sYW5jZXJAZ21haWwuY29tPg0KPiA+ID4gPiAt
-LS0NCj4gPiA+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL0tjb25maWcgICAgICAgICAg
-fCAgMTQgKw0KPiA+ID4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvTWFrZWZpbGUgICAg
-ICAgICB8ICAgMSArDQo+ID4gPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLXJj
-YXItZ2VuNC5jIHwgMzgwICsrKysrKysrKysrKysrKysrKysrDQo+ID4gPiA+ICAzIGZpbGVzIGNo
-YW5nZWQsIDM5NSBpbnNlcnRpb25zKCspDQo+ID4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1yY2FyLWdlbjQuYw0KPiA+ID4gPg0KPiA+ID4g
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvS2NvbmZpZyBiL2RyaXZl
-cnMvcGNpL2NvbnRyb2xsZXIvZHdjL0tjb25maWcNCj4gPiA+ID4gaW5kZXggYWI5NmRhNDNlMGMy
-Li5iYzY5ZmNhYjJlMmEgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xs
-ZXIvZHdjL0tjb25maWcNCj4gPiA+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2Mv
-S2NvbmZpZw0KPiA+ID4gPiBAQCAtNDE1LDQgKzQxNSwxOCBAQCBjb25maWcgUENJRV9WSVNDT05U
-SV9IT1NUDQo+ID4gPiA+ICAJICBTYXkgWSBoZXJlIGlmIHlvdSB3YW50IFBDSWUgY29udHJvbGxl
-ciBzdXBwb3J0IG9uIFRvc2hpYmEgVmlzY29udGkgU29DLg0KPiA+ID4gPiAgCSAgVGhpcyBkcml2
-ZXIgc3VwcG9ydHMgVE1QVjc3MDggU29DLg0KPiA+ID4gPg0KPiA+ID4gPiArY29uZmlnIFBDSUVf
-UkNBUl9HRU40DQo+ID4gPiA+ICsJdHJpc3RhdGUNCj4gPiA+ID4gKw0KPiA+ID4gPiArY29uZmln
-IFBDSUVfUkNBUl9HRU40X0hPU1QNCj4gPiA+ID4gKwl0cmlzdGF0ZSAiUmVuZXNhcyBSLUNhciBH
-ZW40IFBDSWUgY29udHJvbGxlciAoaG9zdCBtb2RlKSINCj4gPiA+ID4gKwlkZXBlbmRzIG9uIEFS
-Q0hfUkVORVNBUyB8fCBDT01QSUxFX1RFU1QNCj4gPiA+ID4gKwlkZXBlbmRzIG9uIFBDSV9NU0kN
-Cj4gPiA+ID4gKwlzZWxlY3QgUENJRV9EV19IT1NUDQo+ID4gPiA+ICsJc2VsZWN0IFBDSUVfUkNB
-Ul9HRU40DQo+ID4gPiA+ICsJaGVscA0KPiA+ID4gPiArCSAgU2F5IFkgaGVyZSBpZiB5b3Ugd2Fu
-dCBQQ0llIGNvbnRyb2xsZXIgKGhvc3QgbW9kZSkgb24gUi1DYXIgR2VuNCBTb0NzLg0KPiA+ID4g
-PiArCSAgVG8gY29tcGlsZSB0aGlzIGRyaXZlciBhcyBhIG1vZHVsZSwgY2hvb3NlIE0gaGVyZTog
-dGhlIG1vZHVsZSB3aWxsIGJlDQo+ID4gPiA+ICsJICBjYWxsZWQgcGNpZS1yY2FyLWdlbjQua28u
-IFRoaXMgdXNlcyB0aGUgRGVzaWduV2FyZSBjb3JlLg0KPiA+ID4gPiArDQo+ID4gPiA+ICBlbmRt
-ZW51DQo+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9NYWtl
-ZmlsZSBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL01ha2VmaWxlDQo+ID4gPiA+IGluZGV4
-IGJmNWMzMTE4NzVhMS4uYmFjMTAzZmFhNTIzIDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9kcml2ZXJz
-L3BjaS9jb250cm9sbGVyL2R3Yy9NYWtlZmlsZQ0KPiA+ID4gPiArKysgYi9kcml2ZXJzL3BjaS9j
-b250cm9sbGVyL2R3Yy9NYWtlZmlsZQ0KPiA+ID4gPiBAQCAtMjYsNiArMjYsNyBAQCBvYmotJChD
-T05GSUdfUENJRV9URUdSQTE5NCkgKz0gcGNpZS10ZWdyYTE5NC5vDQo+ID4gPiA+ICBvYmotJChD
-T05GSUdfUENJRV9VTklQSElFUikgKz0gcGNpZS11bmlwaGllci5vDQo+ID4gPiA+ICBvYmotJChD
-T05GSUdfUENJRV9VTklQSElFUl9FUCkgKz0gcGNpZS11bmlwaGllci1lcC5vDQo+ID4gPiA+ICBv
-YmotJChDT05GSUdfUENJRV9WSVNDT05USV9IT1NUKSArPSBwY2llLXZpc2NvbnRpLm8NCj4gPiA+
-ID4gK29iai0kKENPTkZJR19QQ0lFX1JDQVJfR0VONCkgKz0gcGNpZS1yY2FyLWdlbjQubw0KPiA+
-ID4gPg0KPiA+ID4gPiAgIyBUaGUgZm9sbG93aW5nIGRyaXZlcnMgYXJlIGZvciBkZXZpY2VzIHRo
-YXQgdXNlIHRoZSBnZW5lcmljIEFDUEkNCj4gPiA+ID4gICMgcGNpX3Jvb3QuYyBkcml2ZXIgYnV0
-IGRvbid0IHN1cHBvcnQgc3RhbmRhcmQgRUNBTSBjb25maWcgYWNjZXNzLg0KPiA+ID4gPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1yY2FyLWdlbjQuYyBiL2Ry
-aXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtcmNhci1nZW40LmMNCj4gPiA+ID4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQNCj4gPiA+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5kZmZmNmJiMTg5MzIN
-Cj4gPiA+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ID4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9s
-bGVyL2R3Yy9wY2llLXJjYXItZ2VuNC5jDQo+IA0KPiBbLi4uXQ0KPiANCj4gPiA+ID4gKy8qIEhv
-c3QgbW9kZSAqLw0KPiA+ID4gPiArc3RhdGljIGludCByY2FyX2dlbjRfcGNpZV9ob3N0X2luaXQo
-c3RydWN0IGR3X3BjaWVfcnAgKnBwKQ0KPiA+ID4gPiArew0KPiA+ID4gPiArCXN0cnVjdCBkd19w
-Y2llICpkdyA9IHRvX2R3X3BjaWVfZnJvbV9wcChwcCk7DQo+ID4gPiA+ICsJc3RydWN0IHJjYXJf
-Z2VuNF9wY2llICpyY2FyID0gdG9fcmNhcl9nZW40X3BjaWUoZHcpOw0KPiA+ID4gPiArCWludCBy
-ZXQ7DQo+ID4gPiA+ICsJdTMyIHZhbDsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCWdwaW9kX3NldF92
-YWx1ZV9jYW5zbGVlcChkdy0+cGVfcnN0LCAxKTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCXJldCA9
-IHJjYXJfZ2VuNF9wY2llX2NvbW1vbl9pbml0KHJjYXIpOw0KPiA+ID4gPiArCWlmIChyZXQpDQo+
-ID4gPiA+ICsJCXJldHVybiByZXQ7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwkvKg0KPiA+ID4gPiAr
-CSAqIEFjY29yZGluZyB0byB0aGUgc2VjdGlvbiAzLjUuNy4yICJSQyBNb2RlIiBpbiBEV0MgUENJ
-ZSBEdWFsIE1vZGUNCj4gPiA+ID4gKwkgKiBSZXYuNS4yMGEsIHdlIHNob3VsZCBkaXNhYmxlIHR3
-byBCQVJzIHRvIGF2b2lkIHVubmVjZXNzYXJ5IG1lbW9yeQ0KPiA+ID4gPiArCSAqIGFzc2lnbm1l
-bnQgZHVyaW5nIGRldmljZSBlbnVtZXJhdGlvbi4NCj4gPiA+ID4gKwkgKi8NCj4gPiA+ID4gKwlk
-d19wY2llX3dyaXRlbF9kYmkyKGR3LCBQQ0lfQkFTRV9BRERSRVNTXzAsIDB4MCk7DQo+ID4gPiA+
-ICsJZHdfcGNpZV93cml0ZWxfZGJpMihkdywgUENJX0JBU0VfQUREUkVTU18xLCAweDApOw0KPiA+
-ID4NCj4gPiA+IElmIHRoaXMgaXMgRFdDIHNwZWNpZmljLCBjYW4gd2UgbW92ZSBpdCB0byB0aGUg
-Y29tbW9uIGNvZGU/DQo+ID4NCj4gPiBIbW0sIGl0IHNlZW1zIHNvLiBIb3dldmVyLCBJIGRpZG4n
-dCBmaW5kIGFueSBzaW1pbGFyIGNvZGUgb24gb3RoZXIgRFdDIGRyaXZlcnMuDQo+ID4gU28sIGZv
-ciBub3csIG1vdmluZyBpdCB0byB0aGUgY29tbW9uIGNvZGUgaXMgbm90IG5lZWRlZCwgSSB0aGlu
-ay4NCj4gPg0KPiANCj4gTm8uIElmIHRoaXMgaXMgYXMgcGVyIHRoZSBEV0Mgc3BlYywgdGhlbiBp
-dCBzaG91bGQgYmUgcGFydCBvZiB0aGUgY29tbW9uIGNvZGUuDQoNCkkgZ290IGl0LiBJJ2xsIGFk
-ZCBzdWNoIGEgY29kZSBieSBhIHNlcGFyYXRlIHBhdGNoLg0KDQo+ID4gPiA+ICsNCj4gPiA+ID4g
-KwkvKiBFbmFibGUgTVNJIGludGVycnVwdCBzaWduYWwgKi8NCj4gPiA+ID4gKwl2YWwgPSByZWFk
-bChyY2FyLT5iYXNlICsgUENJRUlOVFNUUzBFTik7DQo+ID4gPiA+ICsJdmFsIHw9IE1TSV9DVFJM
-X0lOVDsNCj4gPiA+ID4gKwl3cml0ZWwodmFsLCByY2FyLT5iYXNlICsgUENJRUlOVFNUUzBFTik7
-DQo+ID4gPiA+ICsNCj4gPiA+DQo+ID4gPiBBYm92ZSBzaG91bGQgYmUgZ3VhcmRlZCB3aXRoOg0K
-PiA+ID4NCj4gPiA+IAlpZiAoSVNfRU5BQkxFRChDT05GSUdfUENJX01TSSkpIHsNCj4gPiA+IAku
-Li4NCj4gPiA+IAl9DQo+ID4NCj4gPiBTaW5jZSB0aGlzIGRyaXZlciBkZXBlbmRzIG9uIFBDSV9N
-U0kgYnkgS2NvbmZpZywgc3VjaCBhIElTX0VOQUJMRUQgaXMgbm90DQo+ID4gbmVlZGVkLiBUaGlz
-IGlzIGZyb20geW91ciBzdWdnZXN0aW9uIDspIFsyXQ0KPiA+DQo+ID4gWzJdIGh0dHBzOi8vbG9y
-ZS5rZXJuZWwub3JnL2xpbnV4LWRldmljZXRyZWUvMjAyMzA3MjQxMjI4MjAuR002MjkxQHRoaW5r
-cGFkLw0KPiANCj4gaGVoLi4uIHRoYW5rcyBmb3IgcmVtaW5kaW5nIG1lIDspDQoNCllvdSdyZSB3
-ZWxjb21lIDopDQpUaGFuayB5b3UgdmVyeSBtdWNoIGZvciB5b3VyIHN1cHBvcnQhDQoNCkJlc3Qg
-cmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCj4gLSBNYW5pDQo+IA0KPiAtLQ0KPiDgrq7g
-rqPgrr/grrXgrqPgr43grqPgrqngr40g4K6a4K6k4K6+4K6a4K6/4K614K6u4K+NDQo=
+On Thu, Oct 5, 2023 at 11:05=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+>
+> On Fri, Sep 01, 2023 at 11:00:59PM +0200, Greg KH wrote:
+> > On Thu, Aug 31, 2023 at 04:36:13PM +0200, Greg KH wrote:
+> > > On Thu, Aug 31, 2023 at 10:31:07AM +0200, Greg KH wrote:
+> > > > On Mon, Aug 28, 2023 at 03:05:41PM +1000, Alistair Francis wrote:
+> > > > > On Wed, Aug 23, 2023 at 5:02=E2=80=AFPM Greg KH <gregkh@linuxfoun=
+dation.org> wrote:
+> > > > > >
+> > > > > > On Tue, Aug 22, 2023 at 04:20:06PM -0400, Alistair Francis wrot=
+e:
+> > > > > > > On Sat, Aug 19, 2023 at 6:57=E2=80=AFAM Greg KH <gregkh@linux=
+foundation.org> wrote:
+> > > > > > > >
+> > > > > > > > On Thu, Aug 17, 2023 at 07:58:09PM -0400, Alistair Francis =
+wrote:
+> > > > > > > > > The documentation for sysfs_merge_group() specifically sa=
+ys
+> > > > > > > > >
+> > > > > > > > >     This function returns an error if the group doesn't e=
+xist or any of the
+> > > > > > > > >     files already exist in that group, in which case none=
+ of the new files
+> > > > > > > > >     are created.
+> > > > > > > > >
+> > > > > > > > > So just not adding the group if it's empty doesn't work, =
+at least not
+> > > > > > > > > with the code we currently have. The code can be changed =
+to support
+> > > > > > > > > this, but it is difficult to determine how this will affe=
+ct existing use
+> > > > > > > > > cases.
+> > > > > > > >
+> > > > > > > > Did you try?  I'd really really really prefer we do it this=
+ way as it's
+> > > > > > > > much simpler overall to have the sysfs core "do the right t=
+hing
+> > > > > > > > automatically" than to force each and every bus/subsystem t=
+o have to
+> > > > > > > > manually add this type of attribute.
+> > > > > > > >
+> > > > > > > > Also, on a personal level, I want this function to work as =
+it will allow
+> > > > > > > > us to remove some code in some busses that don't really nee=
+d to be there
+> > > > > > > > (dynamic creation of some device attributes), which will th=
+en also allow
+> > > > > > > > me to remove some apis in the driver core that should not b=
+e used at all
+> > > > > > > > anymore (but keep creeping back in as there is still a few =
+users.)
+> > > > > > > >
+> > > > > > > > So I'll be selfish here and say "please try to get my propo=
+sed change to
+> > > > > > > > work, it's really the correct thing to do here."
+> > > > > > >
+> > > > > > > I did try!
+> > > > > > >
+> > > > > > > This is an attempt:
+> > > > > > > https://github.com/alistair23/linux/commit/56b55756a2d7a66f7b=
+6eb8a5692b1b5e2f81a9a9
+> > > > > > >
+> > > > > > > It is based on your original patch with a bunch of:
+> > > > > > >
+> > > > > > > if (!parent) {
+> > > > > > >     parent =3D kernfs_create_dir_ns(kobj->sd, grp->name,
+> > > > > > >                   S_IRWXU | S_IRUGO | S_IXUGO,
+> > > > > > >                   uid, gid, kobj, NULL);
+> > > > > > >     ...
+> > > > > > >     }
+> > > > > > >
+> > > > > > >
+> > > > > > > added throughout the code base.
+> > > > > > >
+> > > > > > > Very basic testing shows that it does what I need it to do an=
+d I don't
+> > > > > > > see any kernel oops on boot.
+> > > > > >
+> > > > > > Nice!
+> > > > > >
+> > > > > > Mind if I take it and clean it up a bit and test with it here? =
+ Again, I
+> > > > > > need this functionality for other stuff as well, so getting it =
+merged
+> > > > > > for your feature is fine with me.
+> > > > >
+> > > > > Sure! Go ahead. Sorry I was travelling last week.
+> > > > >
+> > > > > >
+> > > > > > > I prefer the approach I have in this mailing list patch. But =
+if you
+> > > > > > > like the commit mentioned above I can tidy and clean it up an=
+d then
+> > > > > > > use that instead
+> > > > > >
+> > > > > > I would rather do it this way.  I can work on this on Friday if=
+ you want
+> > > > > > me to.
+> > > > >
+> > > > > Yeah, that's fine with me. If you aren't able to let me know and =
+I can
+> > > > > finish up the patch and send it with this series
+> > > >
+> > > > Great, and for the email record, as github links are not stable, he=
+re's
+> > > > the patch that you have above attached below.  I'll test this out a=
+nd
+> > > > clean it up a bit more and see how it goes...
+> > > >
+> > > > thanks,
+> > > >
+> > > > greg k-h
+> > > >
+> > > >
+> > > > From 2929d17b58d02dcf52d0345fa966c616e09a5afa Mon Sep 17 00:00:00 2=
+001
+> > > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > Date: Wed, 24 Aug 2022 15:45:36 +0200
+> > > > Subject: [PATCH] sysfs: do not create empty directories if no attri=
+butes are
+> > > >  present
+> > > >
+> > > > When creating an attribute group, if it is named a subdirectory is
+> > > > created and the sysfs files are placed into that subdirectory.  If =
+no
+> > > > files are created, normally the directory would still be present, b=
+ut it
+> > > > would be empty.  Clean this up by removing the directory if no file=
+s
+> > > > were successfully created in the group at all.
+> > > >
+> > > > Co-developed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > Co-developed-by: Alistair Francis <alistair.francis@wdc.com>
+> > > > Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> > > > ---
+> > > >  fs/sysfs/file.c  | 14 ++++++++++--
+> > > >  fs/sysfs/group.c | 56 ++++++++++++++++++++++++++++++++++++--------=
+----
+> > > >  2 files changed, 54 insertions(+), 16 deletions(-)
+> > > >
+> > > > diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+> > > > index a12ac0356c69..7aab6c09662c 100644
+> > > > --- a/fs/sysfs/file.c
+> > > > +++ b/fs/sysfs/file.c
+> > > > @@ -391,8 +391,18 @@ int sysfs_add_file_to_group(struct kobject *ko=
+bj,
+> > > >           kernfs_get(parent);
+> > > >   }
+> > > >
+> > > > - if (!parent)
+> > > > -         return -ENOENT;
+> > > > + if (!parent) {
+> > > > +         parent =3D kernfs_create_dir_ns(kobj->sd, group,
+> > > > +                                   S_IRWXU | S_IRUGO | S_IXUGO,
+> > > > +                                   uid, gid, kobj, NULL);
+> > > > +         if (IS_ERR(parent)) {
+> > > > +                 if (PTR_ERR(parent) =3D=3D -EEXIST)
+> > > > +                         sysfs_warn_dup(kobj->sd, group);
+> > > > +                 return PTR_ERR(parent);
+> > > > +         }
+> > > > +
+> > > > +         kernfs_get(parent);
+> > > > + }
+> > > >
+> > > >   kobject_get_ownership(kobj, &uid, &gid);
+> > > >   error =3D sysfs_add_file_mode_ns(parent, attr, attr->mode, uid, g=
+id,
+> > > > diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
+> > > > index 138676463336..013fa333cd3c 100644
+> > > > --- a/fs/sysfs/group.c
+> > > > +++ b/fs/sysfs/group.c
+> > > > @@ -31,12 +31,14 @@ static void remove_files(struct kernfs_node *pa=
+rent,
+> > > >                   kernfs_remove_by_name(parent, (*bin_attr)->attr.n=
+ame);
+> > > >  }
+> > > >
+> > > > +/* returns -ERROR if error, or >=3D 0 for number of files actually=
+ created */
+> > > >  static int create_files(struct kernfs_node *parent, struct kobject=
+ *kobj,
+> > > >                   kuid_t uid, kgid_t gid,
+> > > >                   const struct attribute_group *grp, int update)
+> > > >  {
+> > > >   struct attribute *const *attr;
+> > > >   struct bin_attribute *const *bin_attr;
+> > > > + int files_created =3D 0;
+> > > >   int error =3D 0, i;
+> > > >
+> > > >   if (grp->attrs) {
+> > > > @@ -65,6 +67,8 @@ static int create_files(struct kernfs_node *paren=
+t, struct kobject *kobj,
+> > > >                                                  gid, NULL);
+> > > >                   if (unlikely(error))
+> > > >                           break;
+> > > > +
+> > > > +                 files_created++;
+> > > >           }
+> > > >           if (error) {
+> > > >                   remove_files(parent, grp);
+> > > > @@ -95,12 +99,15 @@ static int create_files(struct kernfs_node *par=
+ent, struct kobject *kobj,
+> > > >                                                      NULL);
+> > > >                   if (error)
+> > > >                           break;
+> > > > +                 files_created++;
+> > > >           }
+> > > >           if (error)
+> > > >                   remove_files(parent, grp);
+> > > >   }
+> > > >  exit:
+> > > > - return error;
+> > > > + if (error)
+> > > > +         return error;
+> > > > + return files_created;
+> > > >  }
+> > > >
+> > > >
+> > > > @@ -130,9 +137,14 @@ static int internal_create_group(struct kobjec=
+t *kobj, int update,
+> > > >           if (update) {
+> > > >                   kn =3D kernfs_find_and_get(kobj->sd, grp->name);
+> > > >                   if (!kn) {
+> > > > -                         pr_warn("Can't update unknown attr grp na=
+me: %s/%s\n",
+> > > > -                                 kobj->name, grp->name);
+> > > > -                         return -EINVAL;
+> > > > +                         kn =3D kernfs_create_dir_ns(kobj->sd, grp=
+->name,
+> > > > +                                                   S_IRWXU | S_IRU=
+GO | S_IXUGO,
+> > > > +                                                   uid, gid, kobj,=
+ NULL);
+> > > > +                         if (IS_ERR(kn)) {
+> > > > +                                 if (PTR_ERR(kn) =3D=3D -EEXIST)
+> > > > +                                         sysfs_warn_dup(kobj->sd, =
+grp->name);
+> > > > +                                 return PTR_ERR(kn);
+> > > > +                         }
+> > > >                   }
+> > > >           } else {
+> > > >                   kn =3D kernfs_create_dir_ns(kobj->sd, grp->name,
+> > > > @@ -150,11 +162,18 @@ static int internal_create_group(struct kobje=
+ct *kobj, int update,
+> > > >
+> > > >   kernfs_get(kn);
+> > > >   error =3D create_files(kn, kobj, uid, gid, grp, update);
+> > > > - if (error) {
+> > > > + if (error <=3D 0) {
+> > > > +         /*
+> > > > +          * If an error happened _OR_ if no files were created in =
+the
+> > > > +          * attribute group, and we have a name for this group, de=
+lete
+> > > > +          * the name so there's not an empty directory.
+> > > > +          */
+> > > >           if (grp->name)
+> > > >                   kernfs_remove(kn);
+> > > > + } else {
+> > > > +         error =3D 0;
+> > > > +         kernfs_put(kn);
+> > > >   }
+> > > > - kernfs_put(kn);
+> > > >
+> > > >   if (grp->name && update)
+> > > >           kernfs_put(kn);
+> > > > @@ -318,13 +337,12 @@ void sysfs_remove_groups(struct kobject *kobj=
+,
+> > > >  EXPORT_SYMBOL_GPL(sysfs_remove_groups);
+> > > >
+> > > >  /**
+> > > > - * sysfs_merge_group - merge files into a pre-existing attribute g=
+roup.
+> > > > + * sysfs_merge_group - merge files into a attribute group.
+> > > >   * @kobj:        The kobject containing the group.
+> > > >   * @grp: The files to create and the attribute group they belong t=
+o.
+> > > >   *
+> > > > - * This function returns an error if the group doesn't exist or an=
+y of the
+> > > > - * files already exist in that group, in which case none of the ne=
+w files
+> > > > - * are created.
+> > > > + * This function returns an error if any of the files already exis=
+t in
+> > > > + * that group, in which case none of the new files are created.
+> > > >   */
+> > > >  int sysfs_merge_group(struct kobject *kobj,
+> > > >                  const struct attribute_group *grp)
+> > > > @@ -336,12 +354,22 @@ int sysfs_merge_group(struct kobject *kobj,
+> > > >   struct attribute *const *attr;
+> > > >   int i;
+> > > >
+> > > > - parent =3D kernfs_find_and_get(kobj->sd, grp->name);
+> > > > - if (!parent)
+> > > > -         return -ENOENT;
+> > > > -
+> > > >   kobject_get_ownership(kobj, &uid, &gid);
+> > > >
+> > > > + parent =3D kernfs_find_and_get(kobj->sd, grp->name);
+> > > > + if (!parent) {
+> > > > +         parent =3D kernfs_create_dir_ns(kobj->sd, grp->name,
+> > > > +                                   S_IRWXU | S_IRUGO | S_IXUGO,
+> > > > +                                   uid, gid, kobj, NULL);
+> > > > +         if (IS_ERR(parent)) {
+> > > > +                 if (PTR_ERR(parent) =3D=3D -EEXIST)
+> > > > +                         sysfs_warn_dup(kobj->sd, grp->name);
+> > > > +                 return PTR_ERR(parent);
+> > > > +         }
+> > > > +
+> > > > +         kernfs_get(parent);
+> > > > + }
+> > > > +
+> > > >   for ((i =3D 0, attr =3D grp->attrs); *attr && !error; (++i, ++att=
+r))
+> > > >           error =3D sysfs_add_file_mode_ns(parent, *attr, (*attr)->=
+mode,
+> > > >                                          uid, gid, NULL);
+> > > > --
+> > > > 2.42.0
+> > > >
+> > >
+> > > And as the 0-day bot just showed, this patch isn't going to work
+> > > properly, the uid/gid stuff isn't all hooked up properly, I'll work o=
+n
+> > > fixing that up when I get some cycles...
+> >
+> > Oops, nope, that was my fault in applying this to my tree, sorry for th=
+e
+> > noise...
+>
+> And I just got around to testing this, and it does not boot at all.
+> Below is the patch I am using, are you sure you got this to boot for
+> you?
+
+I just checked again and it boots for me. What failure are you seeing?
+
+Alistair
+
+>
+> thanks,
+>
+> greg k-h
+>
+> From db537de5a5af649b594604e2de177527f890878d Mon Sep 17 00:00:00 2001
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Date: Wed, 24 Aug 2022 15:45:36 +0200
+> Subject: [PATCH] sysfs: do not create empty directories if no attributes =
+are
+>  present
+>
+> When creating an attribute group, if it is named a subdirectory is
+> created and the sysfs files are placed into that subdirectory.  If no
+> files are created, normally the directory would still be present, but it
+> would be empty.  Clean this up by removing the directory if no files
+> were successfully created in the group at all.
+>
+> Co-developed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Co-developed-by: Alistair Francis <alistair.francis@wdc.com>
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> ---
+>  fs/sysfs/file.c  | 16 +++++++++++---
+>  fs/sysfs/group.c | 56 ++++++++++++++++++++++++++++++++++++------------
+>  2 files changed, 55 insertions(+), 17 deletions(-)
+>
+> diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+> index a12ac0356c69..9f79ec193ffe 100644
+> --- a/fs/sysfs/file.c
+> +++ b/fs/sysfs/file.c
+> @@ -391,10 +391,20 @@ int sysfs_add_file_to_group(struct kobject *kobj,
+>                 kernfs_get(parent);
+>         }
+>
+> -       if (!parent)
+> -               return -ENOENT;
+> -
+>         kobject_get_ownership(kobj, &uid, &gid);
+> +       if (!parent) {
+> +               parent =3D kernfs_create_dir_ns(kobj->sd, group,
+> +                                         S_IRWXU | S_IRUGO | S_IXUGO,
+> +                                         uid, gid, kobj, NULL);
+> +               if (IS_ERR(parent)) {
+> +                       if (PTR_ERR(parent) =3D=3D -EEXIST)
+> +                               sysfs_warn_dup(kobj->sd, group);
+> +                       return PTR_ERR(parent);
+> +               }
+> +
+> +               kernfs_get(parent);
+> +       }
+> +
+>         error =3D sysfs_add_file_mode_ns(parent, attr, attr->mode, uid, g=
+id,
+>                                        NULL);
+>         kernfs_put(parent);
+> diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
+> index 138676463336..013fa333cd3c 100644
+> --- a/fs/sysfs/group.c
+> +++ b/fs/sysfs/group.c
+> @@ -31,12 +31,14 @@ static void remove_files(struct kernfs_node *parent,
+>                         kernfs_remove_by_name(parent, (*bin_attr)->attr.n=
+ame);
+>  }
+>
+> +/* returns -ERROR if error, or >=3D 0 for number of files actually creat=
+ed */
+>  static int create_files(struct kernfs_node *parent, struct kobject *kobj=
+,
+>                         kuid_t uid, kgid_t gid,
+>                         const struct attribute_group *grp, int update)
+>  {
+>         struct attribute *const *attr;
+>         struct bin_attribute *const *bin_attr;
+> +       int files_created =3D 0;
+>         int error =3D 0, i;
+>
+>         if (grp->attrs) {
+> @@ -65,6 +67,8 @@ static int create_files(struct kernfs_node *parent, str=
+uct kobject *kobj,
+>                                                        gid, NULL);
+>                         if (unlikely(error))
+>                                 break;
+> +
+> +                       files_created++;
+>                 }
+>                 if (error) {
+>                         remove_files(parent, grp);
+> @@ -95,12 +99,15 @@ static int create_files(struct kernfs_node *parent, s=
+truct kobject *kobj,
+>                                                            NULL);
+>                         if (error)
+>                                 break;
+> +                       files_created++;
+>                 }
+>                 if (error)
+>                         remove_files(parent, grp);
+>         }
+>  exit:
+> -       return error;
+> +       if (error)
+> +               return error;
+> +       return files_created;
+>  }
+>
+>
+> @@ -130,9 +137,14 @@ static int internal_create_group(struct kobject *kob=
+j, int update,
+>                 if (update) {
+>                         kn =3D kernfs_find_and_get(kobj->sd, grp->name);
+>                         if (!kn) {
+> -                               pr_warn("Can't update unknown attr grp na=
+me: %s/%s\n",
+> -                                       kobj->name, grp->name);
+> -                               return -EINVAL;
+> +                               kn =3D kernfs_create_dir_ns(kobj->sd, grp=
+->name,
+> +                                                         S_IRWXU | S_IRU=
+GO | S_IXUGO,
+> +                                                         uid, gid, kobj,=
+ NULL);
+> +                               if (IS_ERR(kn)) {
+> +                                       if (PTR_ERR(kn) =3D=3D -EEXIST)
+> +                                               sysfs_warn_dup(kobj->sd, =
+grp->name);
+> +                                       return PTR_ERR(kn);
+> +                               }
+>                         }
+>                 } else {
+>                         kn =3D kernfs_create_dir_ns(kobj->sd, grp->name,
+> @@ -150,11 +162,18 @@ static int internal_create_group(struct kobject *ko=
+bj, int update,
+>
+>         kernfs_get(kn);
+>         error =3D create_files(kn, kobj, uid, gid, grp, update);
+> -       if (error) {
+> +       if (error <=3D 0) {
+> +               /*
+> +                * If an error happened _OR_ if no files were created in =
+the
+> +                * attribute group, and we have a name for this group, de=
+lete
+> +                * the name so there's not an empty directory.
+> +                */
+>                 if (grp->name)
+>                         kernfs_remove(kn);
+> +       } else {
+> +               error =3D 0;
+> +               kernfs_put(kn);
+>         }
+> -       kernfs_put(kn);
+>
+>         if (grp->name && update)
+>                 kernfs_put(kn);
+> @@ -318,13 +337,12 @@ void sysfs_remove_groups(struct kobject *kobj,
+>  EXPORT_SYMBOL_GPL(sysfs_remove_groups);
+>
+>  /**
+> - * sysfs_merge_group - merge files into a pre-existing attribute group.
+> + * sysfs_merge_group - merge files into a attribute group.
+>   * @kobj:      The kobject containing the group.
+>   * @grp:       The files to create and the attribute group they belong t=
+o.
+>   *
+> - * This function returns an error if the group doesn't exist or any of t=
+he
+> - * files already exist in that group, in which case none of the new file=
+s
+> - * are created.
+> + * This function returns an error if any of the files already exist in
+> + * that group, in which case none of the new files are created.
+>   */
+>  int sysfs_merge_group(struct kobject *kobj,
+>                        const struct attribute_group *grp)
+> @@ -336,12 +354,22 @@ int sysfs_merge_group(struct kobject *kobj,
+>         struct attribute *const *attr;
+>         int i;
+>
+> -       parent =3D kernfs_find_and_get(kobj->sd, grp->name);
+> -       if (!parent)
+> -               return -ENOENT;
+> -
+>         kobject_get_ownership(kobj, &uid, &gid);
+>
+> +       parent =3D kernfs_find_and_get(kobj->sd, grp->name);
+> +       if (!parent) {
+> +               parent =3D kernfs_create_dir_ns(kobj->sd, grp->name,
+> +                                         S_IRWXU | S_IRUGO | S_IXUGO,
+> +                                         uid, gid, kobj, NULL);
+> +               if (IS_ERR(parent)) {
+> +                       if (PTR_ERR(parent) =3D=3D -EEXIST)
+> +                               sysfs_warn_dup(kobj->sd, grp->name);
+> +                       return PTR_ERR(parent);
+> +               }
+> +
+> +               kernfs_get(parent);
+> +       }
+> +
+>         for ((i =3D 0, attr =3D grp->attrs); *attr && !error; (++i, ++att=
+r))
+>                 error =3D sysfs_add_file_mode_ns(parent, *attr, (*attr)->=
+mode,
+>                                                uid, gid, NULL);
+> --
+> 2.42.0
+>
