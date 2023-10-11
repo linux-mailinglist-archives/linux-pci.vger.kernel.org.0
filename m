@@ -2,113 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 986087C5834
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 17:38:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DAF97C5961
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 18:42:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235095AbjJKPid (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Oct 2023 11:38:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45104 "EHLO
+        id S232864AbjJKQmr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Oct 2023 12:42:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235070AbjJKPi1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 11:38:27 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B39D3A7
-        for <linux-pci@vger.kernel.org>; Wed, 11 Oct 2023 08:38:24 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-32d834ec222so990513f8f.0
-        for <linux-pci@vger.kernel.org>; Wed, 11 Oct 2023 08:38:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1697038703; x=1697643503; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RCvxB/+dBXFv2rNSKeHbra6jgSQPb7w0QpnaCjhqlhw=;
-        b=SR2V185aaJaMUCcJ3dmpm0p8m+apUfcn4Z0k/elor0IvVoX6/d+e5NbulscrbJLlLF
-         pNGgq5XIb/2Ukpnv2kUGdLRBzrHGEA3OdWwxKSRwAc+P2lCDHkoQrCaRwHshzIkO1XjU
-         45s/W+xrjw0WAF883BPAnXUFtQyyCDWvUY2Dnafp6Jf3hjfkXaIewUfXp0DU85tQQUgC
-         xnuHrMEnmbdlVOXFZdSbKe8wPqQy7n+Gzd0l1cCiqXcTNtuI0rMynt0fyOFqHxMjLEwI
-         xWGVBFC/g9n3BIbORoeS7KU6QzHx2T+J7m8B3JmEo4M09+bBYHm2ccJw7+XPJU7pdyWq
-         Q/lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697038703; x=1697643503;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RCvxB/+dBXFv2rNSKeHbra6jgSQPb7w0QpnaCjhqlhw=;
-        b=ejgLkEanLdfFEpZv/DK/knjdd7mncf9wr6pvIth7PJCCSWhldCGa0B7jgdvJhfv61f
-         0PuJqMFt23sFGYcy0+FFNUPhcWem/MDlqVoSzY7N1V8r2IXuRF5m9Ak8aij2Am8VSzfi
-         fc8YBpJ8E4LDdazSjWgZtZ2+TWVzzYXX4U84TnG2fy4ctPiEE2xwnXKY/FFu79Hr/Ofc
-         PnH+20axXPS+eXmtoKKjV3MCU3F+37BfByG5qjlTsY1KecxZO7J6pJyVTz4aX/0H2z6L
-         M8pcaEoqzbEdARP1wL7ennuWe0aNVxw1Bh/bqFdyDKj9QMysVSy8zF3KZuhQ1HpejqbT
-         kV+Q==
-X-Gm-Message-State: AOJu0YxTuJsmkSdgkQVfsQ3vNlALc3VNdHohlA9n/+GBU/Tzo3AV1htF
-        DHZBTQMulDf5INaa2tHFEdBaOQ==
-X-Google-Smtp-Source: AGHT+IFJ8WJKE7vEKFkfOXPL6F+ZSOLBJaxUlC5THEtjVgUXbUPSwzbmht5i3Ga90Fbbmkh/IFB1BA==
-X-Received: by 2002:a5d:500b:0:b0:319:8a66:f695 with SMTP id e11-20020a5d500b000000b003198a66f695mr16591567wrt.55.1697038703102;
-        Wed, 11 Oct 2023 08:38:23 -0700 (PDT)
-Received: from [192.168.1.172] ([93.5.22.158])
-        by smtp.gmail.com with ESMTPSA id 4-20020a05600c248400b004060f0a0fd5sm17104653wms.13.2023.10.11.08.38.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Oct 2023 08:38:15 -0700 (PDT)
-Message-ID: <899c7275-ccca-43bb-b1ae-a3403dd18622@baylibre.com>
-Date:   Wed, 11 Oct 2023 17:38:11 +0200
+        with ESMTP id S232777AbjJKQmq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 12:42:46 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ADA994;
+        Wed, 11 Oct 2023 09:42:44 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S5JQL37Nlz6JB49;
+        Thu, 12 Oct 2023 00:39:38 +0800 (CST)
+Received: from localhost (10.126.175.8) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Wed, 11 Oct
+ 2023 17:42:41 +0100
+Date:   Wed, 11 Oct 2023 17:42:40 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Alexey Kardashevskiy <aik@amd.com>
+CC:     Lukas Wunner <lukas@wunner.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
+        <linux-crypto@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linuxarm@huawei.com>, David Box <david.e.box@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+        "Tom Lendacky" <thomas.lendacky@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH 00/12] PCI device authentication
+Message-ID: <20231011174240.00006c22@Huawei.com>
+In-Reply-To: <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
+References: <cover.1695921656.git.lukas@wunner.de>
+        <652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
+        <20231007100433.GA7596@wunner.de>
+        <20231009123335.00006d3d@Huawei.com>
+        <20231009134950.GA7097@wunner.de>
+        <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: mediatek-gen3: Fix translation window
-Content-Language: en-US
-To:     Jianjun Wang <jianjun.wang@mediatek.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Cc:     linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Ryder Lee <ryder.lee@mediatek.com>, jieyy.yang@mediatek.com,
-        chuanjia.liu@mediatek.com, qizhong.cheng@mediatek.com,
-        jian.yang@mediatek.com
-References: <20231011122633.31559-1-jianjun.wang@mediatek.com>
-From:   Alexandre Mergnat <amergnat@baylibre.com>
-In-Reply-To: <20231011122633.31559-1-jianjun.wang@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Originating-IP: [10.126.175.8]
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, 10 Oct 2023 15:07:41 +1100
+Alexey Kardashevskiy <aik@amd.com> wrote:
 
+> On 10/10/23 00:49, Lukas Wunner wrote:
+> > On Mon, Oct 09, 2023 at 12:33:35PM +0100, Jonathan Cameron wrote:  
+> >> On Sat, 7 Oct 2023 12:04:33 +0200 Lukas Wunner <lukas@wunner.de> wrote:  
+> >>> On Fri, Oct 06, 2023 at 09:06:13AM -0700, Dan Williams wrote:  
+> >>>> Linux also has an interest in accommodating opt-in to using platform
+> >>>> managed keys, so the design requires that key management and session
+> >>>> ownership is a system owner policy choice.  
+> >>>
+> >>> You're pointing out a gap in the specification:
+> >>>
+> >>> There's an existing mechanism to negotiate which PCI features are
+> >>> handled natively by the OS and which by platform firmware and that's
+> >>> the _OSC Control Field (PCI Firmware Spec r3.3 table 4-5 and 4-6).
+> >>>
+> >>> There are currently 10 features whose ownership is negotiated with _OSC,
+> >>> examples are Hotplug control and DPC configuration control.
+> >>>
+> >>> I propose adding an 11th bit to negotiate ownership of the CMA-SPDM
+> >>> session.
+> >>>
+> >>> Once that's added to the PCI Firmware Spec, amending the implementation
+> >>> to honor it is trivial:  Just check for platform ownership at the top
+> >>> of pci_cma_init() and return.  
+> >>
+> >> This might want to be a control over the specific DOE instance instead
+> >> of a general purpose CMA control (or maybe we want both).
+> >>
+> >> There is no safe way to access a DOE to find out if it supports CMA
+> >> that doesn't potentially break another entity using the mailbox.
+> >> Given the DOE instances might be for something entirely different we
+> >> can't just decide not to use them at all based on a global control.  
+> > 
+> > Per PCIe r6.1 sec 6.31.3, the DOE instance used for CMA-SPDM must support
+> > "no other data object protocol(s)" besides DOE discovery, CMA-SPDM and
+> > Secured CMA-SPDM.
+> > 
+> > So if the platform doesn't grant the OS control over that DOE instance,
+> > unrelated DOE instances and protocols (such as CDAT retrieval) are not
+> > affected.
+> > 
+> > E.g. PCI Firmware Spec r3.3 table 4-5 could be amended with something
+> > along the lines of:
+> > 
+> >    Control Field Bit Offset: 11
+> > 
+> >    Interpretation: PCI Express Component Measurement and Authentication control
+> > 
+> >    The operating system sets this bit to 1 to request control over the
+> >    DOE instance supporting the CMA-SPDM feature.
+> > 
+> > You're right that to discover the DOE instance for CMA-SPDM in the
+> > first place, it needs to be accessed, which might interfere with the
+> > firmware using it.  Perhaps this can be solved with the DOE Busy bit.
+> > 
+> >   
+> >> Any such control becomes messy when hotplug is taken into account.
+> >> I suppose we could do a _DSM based on BDF / path to device (to remain
+> >> stable across reenumeration) and config space offset to allow the OS
+> >> to say 'Hi other entity / firmware are you using this DOE instance?"
+> >> Kind of an OSC with parameters.  Also includes the other way around that
+> >> the question tells the firmware that if it says "no you can't" the OS
+> >> will leave it alone until a reboot or similar - that potentially avoids
+> >> the problem that we access DOE instances already without taking care
+> >> about this  
+> > 
+> > PCI Firmware Spec r3.3 table 4-7 lists a number of _DSM Definitions for
+> > PCI.  Indeed that could be another solution.  E.g. a newly defined _DSM
+> > might return the offset in config space of DOE instance(s) which the OS
+> > is not permitted to use.
+> > 
+> >   
+> >> (I dropped ball on this having raised it way back near start
+> >> of us adding DOE support.)  
+> > 
+> > Not your fault.  I think the industry got a bit ahead of itself in
+> > its "confidential computing" frenzy and forgot to specify these very
+> > basic things.
+> > 
+> >   
+> >> If we do want to do any of these, which spec is appropriate?  Link it to PCI
+> >> and propose a PCI firmware spec update? (not sure they have a code
+> >> first process available) or make it somewhat generic and propose an
+> >> ACPI Code first change?  
+> > 
+> > PCI Firmware Spec would seem to be appropriate.  However this can't
+> > be solved by the kernel community.  
+> 
+> How so? It is up to the user to decide whether it is SPDM/CMA in the 
+> kernel   or   the firmware + coco, both are quite possible (it is IDE 
+> which is not possible without the firmware on AMD but we are not there yet).
+> 
+> But the way SPDM is done now is that if the user (as myself) wants to 
+> let the firmware run SPDM - the only choice is disabling CONFIG_CMA 
+> completely as CMA is not a (un)loadable module or built-in (with some 
+> "blacklist" parameters), and does not provide a sysfs knob to control 
+> its tentacles. Kinda harsh.
 
-On 11/10/2023 14:26, Jianjun Wang wrote:
-> The size of translation table should be a power of 2, using fls() cannot 
-> get the proper value when the size is not a power of 2. For example, 
-> fls(0x3e00000) - 1 = 25, hence the PCIe translation window size will be 
-> set to 0x2000000 instead of the expected size 0x3e00000. Fix translation 
-> window by splitting the MMIO space to multiple tables if its size is not 
-> a power of 2.
+Not necessarily sufficient unfortunately - if you have a CXL type3 device,
+we will run the discovery protocol on the DOE to find out what it supports
+(looking for table access protocol used for CDAT). If that hits at wrong point it
+will likely break your CMA usage unless you have some hardware lockout of
+the relevant PCI config space (in which case that will work with CONFIG_CMA
+enabled).
 
-Hi Jianjun,
+Now you might not care about CXL type 3 devices today, but pretty sure someone
+will at somepoint.  Or one of the other uses of DOEs will be relevant.
+You might be fine assuming only drivers you've bound ever access the devices
+config space, but much nicer to have something standard to ensure that if
+we can (and driver specific stuff will deal with it in the short term).
 
-I've no knowledge in PCIE, so maybe what my suggestion is stupid:
+Jonathan
 
-Is it mandatory to fit the translation table size with 0x3e00000 (in 
-this example) ?
-I'm asking because you can have an issue by reaching the maximum 
-translation table number.
+> 
+> Note, this PSP firmware is not BIOS (which runs on the same core and has 
+> same access to PCI as the host OS), it is a separate platform processor 
+> which only programs IDE keys to the PCI RC (via some some internal bus 
+> mechanism) but does not do anything on the bus itself and relies on the 
+> host OS proxying DOE, and there is no APCI between the core and the psp.
+> 
+> 
+> >  We need to talk to our confidential
+> > computing architects and our representatives at the PCISIG to get the
+> > spec amended.
+> > 
+> > Thanks,
+> > 
+> > Lukas  
+> 
 
-Is it possible to just use only one table with the power of 2 size above 
-0x3e00000 => 0x4000000 ( fls(0x3e00000) = 26 = 0x4000000). The downside 
-of this method is wasting allocation space. AFAIK I already see this 
-kind of method for memory protection/allocation in embedded systems, so 
-I'm wondering if this method is safer than using multiple table for only 
-one size which isn't a power of 2.
-
-
--- 
-Regards,
-Alexandre
