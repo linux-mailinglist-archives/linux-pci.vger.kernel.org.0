@@ -2,206 +2,241 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB4707C52CF
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 14:00:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 192727C53F0
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 14:27:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234867AbjJKMAx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Oct 2023 08:00:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54662 "EHLO
+        id S235083AbjJKM1c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Oct 2023 08:27:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346206AbjJKMAs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 08:00:48 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33C6B94
-        for <linux-pci@vger.kernel.org>; Wed, 11 Oct 2023 05:00:44 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-53b8f8c6b1fso6787875a12.0
-        for <linux-pci@vger.kernel.org>; Wed, 11 Oct 2023 05:00:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697025642; x=1697630442; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=aVTN0BqqtO5MKlfxI7sXoH95j77MBJ0QiNgQ07twsNg=;
-        b=juCqbqQItQ0Mvjrv5Ps0hBNTLHa6owH9cKZzz8o5R7WO8hLuj2aLKWr5zCepXUxi2h
-         eMBi47RNxYZq+FeZ38rVJHtBBJ/RDVRdZIV5qXHJU4n1CDdyUpNnYQaRhzUf5ShJ+VlR
-         tJL0G7iYlsC2dzQyA27+8FGO/4mUV+iQGgSn0GHjmYoQpkuT/Gz3ccgDwGpm6C3+bz02
-         shrR5+FuqsSc7L123q0ucyPxZ9v5m/du25OeG8PbFwsW/VkbUq6pJFbQ7Sq7ilhfgv8D
-         /ho8iV8NMQARmP/wxwOEEmFKQDO3GAV+yV+JcmP4OUwzFwwYpqmfj91wpXhKvdBYT3Qh
-         1tWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697025642; x=1697630442;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aVTN0BqqtO5MKlfxI7sXoH95j77MBJ0QiNgQ07twsNg=;
-        b=jCyyUFHP9QblwDrRjZ2IUgPmfhOaQiF1D0BAPvMSAtRNDcAbnUoDazSC6h7/auqEN/
-         XanYbJRt0eAGT+Wj/v1IWYqd6FoSNciFKgwjiJdlWXbAST/ietSuJtIh1CBo5CiVEaFg
-         BZwoZ4dvmreipzwL9r0w5wGL4FgWtpAIU+u7qC+BKX4lYRtL6HJ74/4fqIoirkdqe/uC
-         zz4s5GM2Fsx15j9RaBSMS13UZ9HfAR44+cc7PXTK+/PQBqODxCMnMVQ3yxat0lZUL9yM
-         NiVXuqwCeUoMRio3UNifvljqIsY0BF3Dm3BY/A8iXMGak0N65eUbCcveYv8811GQOebL
-         1Oxg==
-X-Gm-Message-State: AOJu0YzN0haosZoMTiTkPyAC4YgmOR4nceKTkJbLIOBlP3xEs+WhymZk
-        Scw9ZYDPDAn08YJmMVFjPAf9qoJKP6LqNLvdPJKbGQ==
-X-Google-Smtp-Source: AGHT+IFKnbdS+liyq5BOO9m8ERjMSQL8biVjydd35Z2zaMUPssKf5QQkaQtgJ+ughRnn6bk/oM/oer9yveoYwYchCJs=
-X-Received: by 2002:a17:906:19b:b0:9b6:e6ff:b20b with SMTP id
- 27-20020a170906019b00b009b6e6ffb20bmr17472854ejb.8.1697025642572; Wed, 11 Oct
- 2023 05:00:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <1697023109-23671-1-git-send-email-quic_msarkar@quicinc.com>
- <1697023109-23671-3-git-send-email-quic_msarkar@quicinc.com>
- <CAA8EJpoLxeSvxjcyq1BMR9XuAffrxLmO-eaBYJ+Fhnb4zYmxUQ@mail.gmail.com> <6531b333-b978-6b97-5cb4-59562d775ac3@quicinc.com>
-In-Reply-To: <6531b333-b978-6b97-5cb4-59562d775ac3@quicinc.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Wed, 11 Oct 2023 15:00:29 +0300
-Message-ID: <CAA8EJpoidaW8x3CAwNLWGcq2fz+x49kQWan2GXkgODUUypzKOQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] phy: qcom-qmp-pcie: add endpoint support for sa8775p
-To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        konrad.dybcio@linaro.org, mani@kernel.org,
-        quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
-        robh@kernel.org, quic_krichai@quicinc.com,
-        quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
+        with ESMTP id S1346994AbjJKM1T (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 08:27:19 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1326129;
+        Wed, 11 Oct 2023 05:27:11 -0700 (PDT)
+X-UUID: 799385de683111ee8051498923ad61e6-20231011
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=tjQ7E6Wp7xtRDuxyM0IzhGgHnDmusITOkaUsg2pucuI=;
+        b=uZZ+X3ca/d4K8RayxRmlPMJoikpMBRo00UOYiPMT5nSfIT/Ww356mG4Z1MuVG1QDFOpTWrSUn+30Yq0Js9i+HJ4ObzDPjk2ySF2afJl+kYRk199qNl2EtRps5R3NN7fnk8dK7R2aYXWmoQI1G53C4T4e2vHcl57fJrz3YYM7FtQ=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.32,REQID:ec485785-e832-468d-8208-758c8f7f0029,IP:0,U
+        RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+        N:release,TS:-25
+X-CID-META: VersionHash:5f78ec9,CLOUDID:fdcdabf0-9a6e-4c39-b73e-f2bc08ca3dc5,B
+        ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+        RL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:
+        NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 799385de683111ee8051498923ad61e6-20231011
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 1890463482; Wed, 11 Oct 2023 20:26:59 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Wed, 11 Oct 2023 20:26:58 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Wed, 11 Oct 2023 20:26:57 +0800
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
-        linux-phy@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        <jieyy.yang@mediatek.com>, <chuanjia.liu@mediatek.com>,
+        <qizhong.cheng@mediatek.com>, <jian.yang@mediatek.com>
+Subject: [PATCH] PCI: mediatek-gen3: Fix translation window
+Date:   Wed, 11 Oct 2023 20:26:33 +0800
+Message-ID: <20231011122633.31559-1-jianjun.wang@mediatek.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RDNS_NONE,
+        SPF_HELO_PASS,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 11 Oct 2023 at 14:56, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
->
->
-> On 10/11/2023 5:06 PM, Dmitry Baryshkov wrote:
-> > On Wed, 11 Oct 2023 at 14:19, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
-> >> Add support for dual lane end point mode PHY found on sa8755p platform.
-> >>
-> >> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> >> ---
-> >>   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c   | 41 ++++++++++++++++++++++++++++++
-> >>   drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5.h |  2 ++
-> >>   2 files changed, 43 insertions(+)
-> > Two minor questions.
-> >
-> >> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-> >> index a63ca74..962b4a1 100644
-> >> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-> >> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-> >> @@ -2147,6 +2147,38 @@ static const struct qmp_phy_init_tbl sa8775p_qmp_gen4x4_pcie_rc_serdes_alt_tbl[]
-> >>          QMP_PHY_INIT_CFG(QSERDES_V5_COM_CLK_SELECT, 0x34),
-> >>   };
-> >>
-> >> +static const struct qmp_phy_init_tbl sa8775p_qmp_gen4x2_pcie_ep_serdes_alt_tbl[] = {
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_BG_TIMER, 0x02),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_SYS_CLK_CTRL, 0x07),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_CP_CTRL_MODE0, 0x27),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_CP_CTRL_MODE1, 0x0a),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_RCTRL_MODE0, 0x17),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_RCTRL_MODE1, 0x19),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_CCTRL_MODE0, 0x00),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_CCTRL_MODE1, 0x03),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_SYSCLK_EN_SEL, 0x00),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_INTEGLOOP_GAIN0_MODE0, 0xfb),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_INTEGLOOP_GAIN1_MODE0, 0x01),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_INTEGLOOP_GAIN0_MODE1, 0xfb),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_INTEGLOOP_GAIN1_MODE1, 0x01),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_CMN_MODE, 0x14),
-> > I should check whether we miss QSERDES_V5_COM_CMN_MODE in
-> > sm8450_qmp_gen4x2_pcie_ep_serdes_tbl, which is otherwise nearly
-> > identical.
-> > Also do you need to set QSERDES_V5_COM_CORE_CLK_EN here?
-> QSERDES_V5_COM_CORE_CLK_EN is common for both RC and EP
-> so we are using it in sa8775p_qmp_gen4x2_pcie_serdes_alt_tbl
->
-> -Mrinmay
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP1_MODE0, 0xff),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP2_MODE0, 0x04),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP1_MODE1, 0xff),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP2_MODE1, 0x09),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_DEC_START_MODE0, 0x19),
-> >> +       QMP_PHY_INIT_CFG(QSERDES_V5_COM_DEC_START_MODE1, 0x28),
-> >> +};
-> >> +
-> >> +static const struct qmp_phy_init_tbl sa8775p_qmp_gen4_pcie_ep_pcs_misc_tbl[] = {
-> >> +       QMP_PHY_INIT_CFG(QPHY_V5_20_PCS_PCIE_OSC_DTCT_MODE2_CONFIG5, 0x08),
-> >> +};
-> > This is the same as sm8450_qmp_gen4x2_pcie_ep_pcs_misc_tbl
->
-> so you want me to use sm8450_qmp_gen4x2_pcie_ep_pcs_misc_tbl
-> instead of creating new one for sa8775?
+The size of translation table should be a power of 2, using fls()
+cannot get the proper value when the size is not a power of 2. For
+example, fls(0x3e00000) - 1 = 25, hence the PCIe translation window
+size will be set to 0x2000000 instead of the expected size 0x3e00000.
 
-If you don't see a problem with that, yes.
+Fix translation window by splitting the MMIO space to multiple tables if
+its size is not a power of 2.
 
->
-> -Mrinmay
->
-> >> +
-> >> +static const struct qmp_phy_init_tbl sa8775p_qmp_gen4x2_pcie_ep_pcs_alt_tbl[] = {
-> >> +       QMP_PHY_INIT_CFG(QPHY_V5_PCS_INSIG_MX_CTRL7, 0x00),
-> >> +       QMP_PHY_INIT_CFG(QPHY_V5_PCS_INSIG_SW_CTRL7, 0x00),
-> >> +};
-> > Could you please confirm that these registers belong to the V5
-> > namespace rather than V5_20 one?
-> may I know difference between V5 and V5_20 namespace
-> can't we use V5 namespace here?
+Fixes: d3bf75b579b9 ("PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192")
+Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
 
-Register names are different, see existing v5 vs v5.20 and v4 vs v4.20
-headers. So, I'd kindly ask to use the appropriate namespace.
+---
+Bootup logs on MT8195 Platform:
 
->
-> -Mrinmay
-> >> +
-> >>   struct qmp_pcie_offsets {
-> >>          u16 serdes;
-> >>          u16 pcs;
-> >> @@ -3043,6 +3075,15 @@ static const struct qmp_phy_cfg sa8775p_qmp_gen4x2_pciephy_cfg = {
-> >>                  .pcs_misc_num   = ARRAY_SIZE(sa8775p_qmp_gen4_pcie_rc_pcs_misc_tbl),
-> >>          },
-> >>
-> >> +       .tbls_ep = &(const struct qmp_phy_cfg_tbls) {
-> >> +               .serdes         = sa8775p_qmp_gen4x2_pcie_ep_serdes_alt_tbl,
-> >> +               .serdes_num     = ARRAY_SIZE(sa8775p_qmp_gen4x2_pcie_ep_serdes_alt_tbl),
-> >> +               .pcs_misc       = sa8775p_qmp_gen4_pcie_ep_pcs_misc_tbl,
-> >> +               .pcs_misc_num   = ARRAY_SIZE(sa8775p_qmp_gen4_pcie_ep_pcs_misc_tbl),
-> >> +               .pcs            = sa8775p_qmp_gen4x2_pcie_ep_pcs_alt_tbl,
-> >> +               .pcs_num        = ARRAY_SIZE(sa8775p_qmp_gen4x2_pcie_ep_pcs_alt_tbl),
-> >> +       },
-> >> +
-> >>          .reset_list             = sdm845_pciephy_reset_l,
-> >>          .num_resets             = ARRAY_SIZE(sdm845_pciephy_reset_l),
-> >>          .vreg_list              = qmp_phy_vreg_l,
-> >> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5.h b/drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5.h
-> >> index 36cc80b..6ee1c33 100644
-> >> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5.h
-> >> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5.h
-> >> @@ -11,6 +11,8 @@
-> >>   #define QPHY_V5_PCS_PCS_STATUS1                                0x014
-> >>   #define QPHY_V5_PCS_POWER_DOWN_CONTROL                 0x040
-> >>   #define QPHY_V5_PCS_START_CONTROL                      0x044
-> >> +#define QPHY_V5_PCS_INSIG_SW_CTRL7                     0x060
-> >> +#define QPHY_V5_PCS_INSIG_MX_CTRL7                     0x07c
-> >>   #define QPHY_V5_PCS_LOCK_DETECT_CONFIG1                        0x0c4
-> >>   #define QPHY_V5_PCS_LOCK_DETECT_CONFIG2                        0x0c8
-> >>   #define QPHY_V5_PCS_LOCK_DETECT_CONFIG3                        0x0cc
-> >> --
-> >> 2.7.4
-> >>
-> >
+> Before this patch:
+mtk-pcie-gen3 112f0000.pcie: Parsing ranges property...
+mtk-pcie-gen3 112f0000.pcie:       IO 0x0020000000..0x00201fffff -> 0x0020000000
+mtk-pcie-gen3 112f0000.pcie:      MEM 0x0020200000..0x0023ffffff -> 0x0020200000
+mtk-pcie-gen3 112f0000.pcie: set IO trans window[0]: cpu_addr = 0x20000000, pci_addr = 0x20000000, size = 0x200000
+mtk-pcie-gen3 112f0000.pcie: set MEM trans window[1]: cpu_addr = 0x20200000, pci_addr = 0x20200000, size = 0x3e00000
 
+> We expect the MEM trans window size to be 0x3e00000, but its actual available size is 0x2000000.
 
+> After applying this patch:
+mtk-pcie-gen3 112f0000.pcie: Parsing ranges property...
+mtk-pcie-gen3 112f0000.pcie:       IO 0x0020000000..0x00201fffff -> 0x0020000000
+mtk-pcie-gen3 112f0000.pcie:      MEM 0x0020200000..0x0023ffffff -> 0x0020200000
+mtk-pcie-gen3 112f0000.pcie: set IO trans window[0]: cpu_addr = 0x20000000, pci_addr = 0x20000000, size = 0x200000
+mtk-pcie-gen3 112f0000.pcie: set MEM trans window[1]: cpu_addr = 0x20200000, pci_addr = 0x20200000, size = 0x200000
+mtk-pcie-gen3 112f0000.pcie: set MEM trans window[2]: cpu_addr = 0x20400000, pci_addr = 0x20400000, size = 0x400000
+mtk-pcie-gen3 112f0000.pcie: set MEM trans window[3]: cpu_addr = 0x20800000, pci_addr = 0x20800000, size = 0x800000
+mtk-pcie-gen3 112f0000.pcie: set MEM trans window[4]: cpu_addr = 0x21000000, pci_addr = 0x21000000, size = 0x1000000
+mtk-pcie-gen3 112f0000.pcie: set MEM trans window[5]: cpu_addr = 0x22000000, pci_addr = 0x22000000, size = 0x2000000
 
+> Total available size for MEM trans window is 0x3e00000.
+---
+---
+ drivers/pci/controller/pcie-mediatek-gen3.c | 87 ++++++++++++---------
+ 1 file changed, 52 insertions(+), 35 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+index e0e27645fdf4..3f2496b135ae 100644
+--- a/drivers/pci/controller/pcie-mediatek-gen3.c
++++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+@@ -245,35 +245,62 @@ static int mtk_pcie_set_trans_table(struct mtk_gen3_pcie *pcie,
+ 				    resource_size_t cpu_addr,
+ 				    resource_size_t pci_addr,
+ 				    resource_size_t size,
+-				    unsigned long type, int num)
++				    unsigned long type, int *num)
+ {
++	resource_size_t remaining = size;
++	resource_size_t table_size;
++	resource_size_t addr_align;
++	const char *range_type;
+ 	void __iomem *table;
+ 	u32 val;
+ 
+-	if (num >= PCIE_MAX_TRANS_TABLES) {
+-		dev_err(pcie->dev, "not enough translate table for addr: %#llx, limited to [%d]\n",
+-			(unsigned long long)cpu_addr, PCIE_MAX_TRANS_TABLES);
+-		return -ENODEV;
+-	}
++	while (remaining && (*num < PCIE_MAX_TRANS_TABLES)) {
++		/* Table size needs to be a power of 2 */
++		table_size = BIT(fls(remaining) - 1);
+ 
+-	table = pcie->base + PCIE_TRANS_TABLE_BASE_REG +
+-		num * PCIE_ATR_TLB_SET_OFFSET;
++		if (cpu_addr > 0) {
++			addr_align = BIT(ffs(cpu_addr) - 1);
++			table_size = min(table_size, addr_align);
++		}
+ 
+-	writel_relaxed(lower_32_bits(cpu_addr) | PCIE_ATR_SIZE(fls(size) - 1),
+-		       table);
+-	writel_relaxed(upper_32_bits(cpu_addr),
+-		       table + PCIE_ATR_SRC_ADDR_MSB_OFFSET);
+-	writel_relaxed(lower_32_bits(pci_addr),
+-		       table + PCIE_ATR_TRSL_ADDR_LSB_OFFSET);
+-	writel_relaxed(upper_32_bits(pci_addr),
+-		       table + PCIE_ATR_TRSL_ADDR_MSB_OFFSET);
++		/* Minimum size of translate table is 4KiB */
++		if (table_size < 0x1000) {
++			dev_err(pcie->dev, "illegal table size %#llx\n",
++				(unsigned long long)table_size);
++			return -EINVAL;
++		}
+ 
+-	if (type == IORESOURCE_IO)
+-		val = PCIE_ATR_TYPE_IO | PCIE_ATR_TLP_TYPE_IO;
+-	else
+-		val = PCIE_ATR_TYPE_MEM | PCIE_ATR_TLP_TYPE_MEM;
++		table = pcie->base + PCIE_TRANS_TABLE_BASE_REG + *num * PCIE_ATR_TLB_SET_OFFSET;
++		writel_relaxed(lower_32_bits(cpu_addr) | PCIE_ATR_SIZE(fls(table_size) - 1), table);
++		writel_relaxed(upper_32_bits(cpu_addr), table + PCIE_ATR_SRC_ADDR_MSB_OFFSET);
++		writel_relaxed(lower_32_bits(pci_addr), table + PCIE_ATR_TRSL_ADDR_LSB_OFFSET);
++		writel_relaxed(upper_32_bits(pci_addr), table + PCIE_ATR_TRSL_ADDR_MSB_OFFSET);
+ 
+-	writel_relaxed(val, table + PCIE_ATR_TRSL_PARAM_OFFSET);
++		if (type == IORESOURCE_IO) {
++			val = PCIE_ATR_TYPE_IO | PCIE_ATR_TLP_TYPE_IO;
++			range_type = "IO";
++		} else {
++			val = PCIE_ATR_TYPE_MEM | PCIE_ATR_TLP_TYPE_MEM;
++			range_type = "MEM";
++		}
++
++		writel_relaxed(val, table + PCIE_ATR_TRSL_PARAM_OFFSET);
++
++		dev_dbg(pcie->dev, "set %s trans window[%d]: cpu_addr = %#llx, pci_addr = %#llx, size = %#llx\n",
++			range_type, *num, (unsigned long long)cpu_addr,
++			(unsigned long long)pci_addr, (unsigned long long)table_size);
++
++		cpu_addr += table_size;
++		pci_addr += table_size;
++		remaining -= table_size;
++		(*num)++;
++	}
++
++	if (remaining) {
++		dev_err(pcie->dev, "not enough translate table for addr: %#llx, limited to [%d]\n",
++			(unsigned long long)cpu_addr, PCIE_MAX_TRANS_TABLES);
++		return -ENODEV;
++	}
+ 
+ 	return 0;
+ }
+@@ -380,30 +407,20 @@ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
+ 		resource_size_t cpu_addr;
+ 		resource_size_t pci_addr;
+ 		resource_size_t size;
+-		const char *range_type;
+ 
+-		if (type == IORESOURCE_IO) {
++		if (type == IORESOURCE_IO)
+ 			cpu_addr = pci_pio_to_address(res->start);
+-			range_type = "IO";
+-		} else if (type == IORESOURCE_MEM) {
++		else if (type == IORESOURCE_MEM)
+ 			cpu_addr = res->start;
+-			range_type = "MEM";
+-		} else {
++		else
+ 			continue;
+-		}
+ 
+ 		pci_addr = res->start - entry->offset;
+ 		size = resource_size(res);
+ 		err = mtk_pcie_set_trans_table(pcie, cpu_addr, pci_addr, size,
+-					       type, table_index);
++					       type, &table_index);
+ 		if (err)
+ 			return err;
+-
+-		dev_dbg(pcie->dev, "set %s trans window[%d]: cpu_addr = %#llx, pci_addr = %#llx, size = %#llx\n",
+-			range_type, table_index, (unsigned long long)cpu_addr,
+-			(unsigned long long)pci_addr, (unsigned long long)size);
+-
+-		table_index++;
+ 	}
+ 
+ 	return 0;
 -- 
-With best wishes
-Dmitry
+2.18.0
+
