@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1AEF7C4B59
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 09:14:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AF457C4B5D
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 09:14:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbjJKHOc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Oct 2023 03:14:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47482 "EHLO
+        id S229708AbjJKHOd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Oct 2023 03:14:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229628AbjJKHOb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 03:14:31 -0400
+        with ESMTP id S229643AbjJKHOc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 03:14:32 -0400
 Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 35A2598;
-        Wed, 11 Oct 2023 00:14:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 62B4C9C;
+        Wed, 11 Oct 2023 00:14:30 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="6.03,214,1694703600"; 
-   d="scan'208";a="182667741"
+   d="scan'208";a="182667744"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
   by relmlie6.idc.renesas.com with ESMTP; 11 Oct 2023 16:14:28 +0900
 Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 885D341B2644;
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id AA95D41B264F;
         Wed, 11 Oct 2023 16:14:28 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
@@ -29,10 +29,10 @@ To:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
 Cc:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v24 01/16] PCI: dwc: endpoint: Add multiple PFs support for dbi2
-Date:   Wed, 11 Oct 2023 16:14:08 +0900
-Message-Id: <20231011071423.249458-2-yoshihiro.shimoda.uh@renesas.com>
+        Serge Semin <fancer.lancer@gmail.com>
+Subject: [PATCH v24 02/16] PCI: dwc: Add dw_pcie_link_set_max_link_width()
+Date:   Wed, 11 Oct 2023 16:14:09 +0900
+Message-Id: <20231011071423.249458-3-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20231011071423.249458-1-yoshihiro.shimoda.uh@renesas.com>
 References: <20231011071423.249458-1-yoshihiro.shimoda.uh@renesas.com>
@@ -47,121 +47,126 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The commit 24ede430fa49 ("PCI: designware-ep: Add multiple PFs support
-for DWC") added .func_conf_select() to get the configuration space of
-different PFs and assumed that the offsets between dbi and dbi2 would
-be the same.
+This is a preparation before adding the Max-Link-width capability
+setup which would in its turn complete the max-link-width setup
+procedure defined by Synopsys in the HW-manual.
 
-However, Renesas R-Car Gen4 PCIe controllers have different offsets of
-function 1: dbi (+0x1000) and dbi2 (+0x800). To get the offset for dbi2,
-add .get_dbi2_offset() and dw_pcie_ep_get_dbi2_offset().
+Seeing there is a max-link-speed setup method defined in the DW PCIe
+core driver it would be good to have a similar function for the link
+width setup.
 
-Note:
- - .func_conf_select() should be renamed later.
- - dw_pcie_ep_get_dbi2_offset() will call .func_conf_select()
-   if .get_dbi2_offset() doesn't exist for backward compatibility.
- - dw_pcie_writeX_{dbi/dbi2} APIs accepted the func_no argument,
-   so that these offset calculations are contained in the API
-   definitions itself as it should.
+That's why we need to define a dedicated function first from already
+implemented but incomplete link-width setting up code.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- .../pci/controller/dwc/pcie-designware-ep.c   | 32 ++++++++++++++-----
- drivers/pci/controller/dwc/pcie-designware.h  |  1 +
- 2 files changed, 25 insertions(+), 8 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware.c | 86 ++++++++++----------
+ 1 file changed, 41 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index f9182f8d552f..851538ddec0a 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -52,21 +52,35 @@ static unsigned int dw_pcie_ep_func_select(struct dw_pcie_ep *ep, u8 func_no)
- 	return func_offset;
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 1c1c7348972b..da4aba4aee62 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -732,6 +732,46 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
+ 
  }
  
-+static unsigned int dw_pcie_ep_get_dbi2_offset(struct dw_pcie_ep *ep, u8 func_no)
++static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
 +{
-+	unsigned int dbi2_offset = 0;
++	u32 lwsc, plc;
 +
-+	if (ep->ops->get_dbi2_offset)
-+		dbi2_offset = ep->ops->get_dbi2_offset(ep, func_no);
-+	else if (ep->ops->func_conf_select)     /* for backward compatibility */
-+		dbi2_offset = ep->ops->func_conf_select(ep, func_no);
++	if (!num_lanes)
++		return;
 +
-+	return dbi2_offset;
++	/* Set the number of lanes */
++	plc = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
++	plc &= ~PORT_LINK_FAST_LINK_MODE;
++	plc &= ~PORT_LINK_MODE_MASK;
++
++	/* Set link width speed control register */
++	lwsc = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
++	lwsc &= ~PORT_LOGIC_LINK_WIDTH_MASK;
++	switch (num_lanes) {
++	case 1:
++		plc |= PORT_LINK_MODE_1_LANES;
++		lwsc |= PORT_LOGIC_LINK_WIDTH_1_LANES;
++		break;
++	case 2:
++		plc |= PORT_LINK_MODE_2_LANES;
++		lwsc |= PORT_LOGIC_LINK_WIDTH_2_LANES;
++		break;
++	case 4:
++		plc |= PORT_LINK_MODE_4_LANES;
++		lwsc |= PORT_LOGIC_LINK_WIDTH_4_LANES;
++		break;
++	case 8:
++		plc |= PORT_LINK_MODE_8_LANES;
++		lwsc |= PORT_LOGIC_LINK_WIDTH_8_LANES;
++		break;
++	default:
++		dev_err(pci->dev, "num-lanes %u: invalid value\n", num_lanes);
++		return;
++	}
++	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, plc);
++	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, lwsc);
 +}
 +
- static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, u8 func_no,
- 				   enum pci_barno bar, int flags)
+ void dw_pcie_iatu_detect(struct dw_pcie *pci)
  {
--	u32 reg;
--	unsigned int func_offset = 0;
-+	unsigned int func_offset, dbi2_offset;
- 	struct dw_pcie_ep *ep = &pci->ep;
-+	u32 reg, reg_dbi2;
+ 	int max_region, ob, ib;
+@@ -1013,49 +1053,5 @@ void dw_pcie_setup(struct dw_pcie *pci)
+ 	val |= PORT_LINK_DLL_LINK_EN;
+ 	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
  
- 	func_offset = dw_pcie_ep_func_select(ep, func_no);
-+	dbi2_offset = dw_pcie_ep_get_dbi2_offset(ep, func_no);
- 
- 	reg = func_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
-+	reg_dbi2 = dbi2_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
- 	dw_pcie_dbi_ro_wr_en(pci);
--	dw_pcie_writel_dbi2(pci, reg, 0x0);
-+	dw_pcie_writel_dbi2(pci, reg_dbi2, 0x0);
- 	dw_pcie_writel_dbi(pci, reg, 0x0);
- 	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
--		dw_pcie_writel_dbi2(pci, reg + 4, 0x0);
-+		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, 0x0);
- 		dw_pcie_writel_dbi(pci, reg + 4, 0x0);
- 	}
- 	dw_pcie_dbi_ro_wr_dis(pci);
-@@ -228,16 +242,18 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- {
- 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	unsigned int func_offset, dbi2_offset;
- 	enum pci_barno bar = epf_bar->barno;
- 	size_t size = epf_bar->size;
- 	int flags = epf_bar->flags;
--	unsigned int func_offset = 0;
-+	u32 reg, reg_dbi2;
- 	int ret, type;
--	u32 reg;
- 
- 	func_offset = dw_pcie_ep_func_select(ep, func_no);
-+	dbi2_offset = dw_pcie_ep_get_dbi2_offset(ep, func_no);
- 
- 	reg = PCI_BASE_ADDRESS_0 + (4 * bar) + func_offset;
-+	reg_dbi2 = PCI_BASE_ADDRESS_0 + (4 * bar) + dbi2_offset;
- 
- 	if (!(flags & PCI_BASE_ADDRESS_SPACE))
- 		type = PCIE_ATU_TYPE_MEM;
-@@ -253,11 +269,11 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 
- 	dw_pcie_dbi_ro_wr_en(pci);
- 
--	dw_pcie_writel_dbi2(pci, reg, lower_32_bits(size - 1));
-+	dw_pcie_writel_dbi2(pci, reg_dbi2, lower_32_bits(size - 1));
- 	dw_pcie_writel_dbi(pci, reg, flags);
- 
- 	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
--		dw_pcie_writel_dbi2(pci, reg + 4, upper_32_bits(size - 1));
-+		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, upper_32_bits(size - 1));
- 		dw_pcie_writel_dbi(pci, reg + 4, 0);
- 	}
- 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index ef0b2efa9f93..6189884b4efa 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -341,6 +341,7 @@ struct dw_pcie_ep_ops {
- 	 * driver.
- 	 */
- 	unsigned int (*func_conf_select)(struct dw_pcie_ep *ep, u8 func_no);
-+	unsigned int (*get_dbi2_offset)(struct dw_pcie_ep *ep, u8 func_no);
- };
- 
- struct dw_pcie_ep_func {
+-	if (!pci->num_lanes) {
+-		dev_dbg(pci->dev, "Using h/w default number of lanes\n");
+-		return;
+-	}
+-
+-	/* Set the number of lanes */
+-	val &= ~PORT_LINK_FAST_LINK_MODE;
+-	val &= ~PORT_LINK_MODE_MASK;
+-	switch (pci->num_lanes) {
+-	case 1:
+-		val |= PORT_LINK_MODE_1_LANES;
+-		break;
+-	case 2:
+-		val |= PORT_LINK_MODE_2_LANES;
+-		break;
+-	case 4:
+-		val |= PORT_LINK_MODE_4_LANES;
+-		break;
+-	case 8:
+-		val |= PORT_LINK_MODE_8_LANES;
+-		break;
+-	default:
+-		dev_err(pci->dev, "num-lanes %u: invalid value\n", pci->num_lanes);
+-		return;
+-	}
+-	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
+-
+-	/* Set link width speed control register */
+-	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+-	val &= ~PORT_LOGIC_LINK_WIDTH_MASK;
+-	switch (pci->num_lanes) {
+-	case 1:
+-		val |= PORT_LOGIC_LINK_WIDTH_1_LANES;
+-		break;
+-	case 2:
+-		val |= PORT_LOGIC_LINK_WIDTH_2_LANES;
+-		break;
+-	case 4:
+-		val |= PORT_LOGIC_LINK_WIDTH_4_LANES;
+-		break;
+-	case 8:
+-		val |= PORT_LOGIC_LINK_WIDTH_8_LANES;
+-		break;
+-	}
+-	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
++	dw_pcie_link_set_max_link_width(pci, pci->num_lanes);
+ }
 -- 
 2.25.1
 
