@@ -2,126 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 847847C524B
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 13:41:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C8B47C5251
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 13:43:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231758AbjJKLlC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Oct 2023 07:41:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50942 "EHLO
+        id S231758AbjJKLnW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Oct 2023 07:43:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231601AbjJKLlB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 07:41:01 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68B118F;
-        Wed, 11 Oct 2023 04:40:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697024459; x=1728560459;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=xolNbnSR41bT5Gxm2xO/m9osxdxJ0UMd2pRcScUs0VU=;
-  b=GlKDfUVXL9c0ENzeDHwrd2e4M/43uzmZGXa60BXYZCM3sApO6vNGMrRJ
-   Kw6VzUnTI0buVhQmjb4Z5Vwee8EWELFWVdZEz0n9tG6l1RqFsDMmOG3L4
-   EbLA4S7mPJtKGiV7NWAoou5/Nu+rdh3gtiGFx2TA5BcAkwB/QUb35Mc4J
-   Cqh3Ek2lx6AqbGSbRB7gb6oM+7ZeR1oTs0jwm+hCsnK2uzeWlZor/OmBt
-   UCJazW9TQAaks/WmbB5Bvtr9eXEA8Il+IhRFQYVqcDjPCSv6yBdHPpBad
-   x/W6pHyerf+GtiPWy9m08p8gP0WvcTBIp1L+xzGv0/MpN9yM195n5Eqoj
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="448838245"
-X-IronPort-AV: E=Sophos;i="6.03,214,1694761200"; 
-   d="scan'208";a="448838245"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 04:40:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="730467408"
-X-IronPort-AV: E=Sophos;i="6.03,214,1694761200"; 
-   d="scan'208";a="730467408"
-Received: from opipikin-mobl2.ger.corp.intel.com (HELO sdodaev-mobl.ger.corp.intel.com) ([10.252.57.154])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 04:40:50 -0700
-Date:   Wed, 11 Oct 2023 14:40:48 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-cc:     linux-pci@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 10/10] PCI/portdrv: Use FIELD_GET()
-In-Reply-To: <20231010204436.1000644-11-helgaas@kernel.org>
-Message-ID: <e4c240f1-2f8f-6617-ea5b-4d74f2185eb9@linux.intel.com>
-References: <20231010204436.1000644-1-helgaas@kernel.org> <20231010204436.1000644-11-helgaas@kernel.org>
+        with ESMTP id S231235AbjJKLnV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 07:43:21 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07C7293
+        for <linux-pci@vger.kernel.org>; Wed, 11 Oct 2023 04:43:20 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-9a9f139cd94so1126179466b.2
+        for <linux-pci@vger.kernel.org>; Wed, 11 Oct 2023 04:43:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1697024598; x=1697629398; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZgxFWFlqtNB9y2KoDFsWngJ4vKWBFSBMlRLjDq6FqUA=;
+        b=qj4xVyVPsrXDBZxWVxip23NHfdQHvXuxYt9nKvGyQ+yuJIkIQbASDZNqQJOZSCFvEh
+         C6JLIOZnEROUtpR0NEGaBAgHVSSTh5oa1uhSMvWNIPB8XEV8hrfO7uMKtBlBideuuzcu
+         aoMS5+7Z0o3l88oMzWqyTulh0NeN5Qv0lltLf+MwwDKtjhAvLyQWQU3RPu6fwVilZchX
+         6DVtTWwJD+JUnA2Rxfyu32lAWdNo8z8mcO5GDyYpTZjafGGMbqflEqRom6Wfx5qRHjFc
+         w/wesujSH43WkuisdlHeTDQkCNaQq61hpKp7H1/0nNhAEUtUF2XgGtO6KvmTLOKBYZX8
+         dAeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697024598; x=1697629398;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZgxFWFlqtNB9y2KoDFsWngJ4vKWBFSBMlRLjDq6FqUA=;
+        b=HyX2QT78summyGIDS1JGHN1rQnzm2FAvjEQcgL4TKi2bbcfTYHI9b8GszLRYQ+Cqq2
+         GkU/jmm4TkgzgV3j8DvfS8HxTnN9k8sZk8zKlhCeVqgFGD1Jx5LaYLdA4Y3fEV+Yz4ku
+         mPq6wf12KlYYFYjGVkkiSjQZsYGnrbEIIqPcvFgZLqOXd9WIIB0XWxrYDJWYO+LorVwk
+         CzN963zULLGDYK3wPzkwi4GQqGCOgr3Qm4sQkynJEcpgXkFYDbWW08EBE6WjCchVMzF2
+         ulYUy5Nyd7ukq4wRSAJH4siPTpsEG1TMqCXrH5/hkKT183sVa6LLXyobw+hK/5XRp9Zp
+         HInA==
+X-Gm-Message-State: AOJu0YydtwHZLc/0IYD0HaYp9o+p96pjSe+KxmQhdewq3fqEB3t0oXGh
+        GRetPdOvKKaMUShSEcRWRL+3OJJZBB8gGrJYZdI5Rw==
+X-Google-Smtp-Source: AGHT+IF+0sYBl6h4x+B0Hh3LisaV7RDJ/W7t5rpHpMiyWZMWhMOJ9yAdGZnDXCwDAWqrX82dofTUxKy7oUeA7d1TUFg=
+X-Received: by 2002:a17:906:8a73:b0:9a1:e758:fc73 with SMTP id
+ hy19-20020a1709068a7300b009a1e758fc73mr17381841ejc.67.1697024598423; Wed, 11
+ Oct 2023 04:43:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-616638726-1697024453=:1977"
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+References: <1695218113-31198-1-git-send-email-quic_msarkar@quicinc.com>
+ <1695218113-31198-2-git-send-email-quic_msarkar@quicinc.com>
+ <20230921183850.GA762694-robh@kernel.org> <28bf111f-b965-4d38-884b-bc3a0b68a6cc@quicinc.com>
+ <8effa7e5-a223-081b-75b8-7b94400d42e6@quicinc.com>
+In-Reply-To: <8effa7e5-a223-081b-75b8-7b94400d42e6@quicinc.com>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Wed, 11 Oct 2023 14:43:05 +0300
+Message-ID: <CAA8EJpp+3_A-9YXF1yOKdFweVKqrpTxvxKoJcUH6qiDHfCQ-dQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] dt-bindings: PCI: qcom-ep: Add support for SA8775P SoC
+To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc:     Shazad Hussain <quic_shazhuss@quicinc.com>,
+        Rob Herring <robh@kernel.org>, agross@kernel.org,
+        andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, konrad.dybcio@linaro.org, mani@kernel.org,
+        quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
+        quic_nayiluri@quicinc.com, quic_krichai@quicinc.com,
+        quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+        linux-phy@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, 11 Oct 2023 at 14:14, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
+>
+>
+> On 10/6/2023 4:24 PM, Shazad Hussain wrote:
+> >
+> >
+> > On 9/22/2023 12:08 AM, Rob Herring wrote:
+> >> On Wed, Sep 20, 2023 at 07:25:08PM +0530, Mrinmay Sarkar wrote:
+> >>> Add devicetree bindings support for SA8775P SoC.
+> >>> Define reg and interrupt per platform.
+> >>>
+> >>> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+> >>> ---
+> >>>   .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 130
+> >>> +++++++++++++++++----
+> >>>   1 file changed, 108 insertions(+), 22 deletions(-)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> >>> b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> >>> index a223ce0..e860e8f 100644
+> >>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> >>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> >>> @@ -13,6 +13,7 @@ properties:
+> >>>     compatible:
+> >>>       oneOf:
+> >>>         - enum:
+> >>> +          - qcom,sa8775p-pcie-ep
+> >>>             - qcom,sdx55-pcie-ep
+> >>>             - qcom,sm8450-pcie-ep
+> >>>         - items:
+> >>> @@ -20,29 +21,19 @@ properties:
+> >>>             - const: qcom,sdx55-pcie-ep
+> >>>       reg:
+> >>> -    items:
+> >>> -      - description: Qualcomm-specific PARF configuration registers
+> >>> -      - description: DesignWare PCIe registers
+> >>> -      - description: External local bus interface registers
+> >>> -      - description: Address Translation Unit (ATU) registers
+> >>> -      - description: Memory region used to map remote RC address space
+> >>> -      - description: BAR memory region
+> >>> +    minItems: 6
+> >>> +    maxItems: 7
+> >>>       reg-names:
+> >>> -    items:
+> >>> -      - const: parf
+> >>> -      - const: dbi
+> >>> -      - const: elbi
+> >>> -      - const: atu
+> >>> -      - const: addr_space
+> >>> -      - const: mmio
+> >>> +    minItems: 6
+> >>> +    maxItems: 7
+> >>
+> >> Don't move these into if/then schemas. Then we are duplicating the
+> >> names, and there is no reason to keep them aligned for new compatibles.
+> >>
+> >> Rob
+> >
+> > Hi Rob,
+> > As we have one extra reg property (dma) required for sa8775p-pcie-ep,
+> > isn't it expected to be moved in if/then as per number of regs
+> > required. Anyways we would have duplication of some properties for new
+> > compatibles where the member numbers differs for a property.
+> >
+> > Are you suggesting to add the extra reg property (dma) in the existing
+> > reg and reg-names list, and add minItems/maxItems for all compatibles
+> > present in this file ?
 
---8323329-616638726-1697024453=:1977
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
+This is what we have been doing in other cases: if the list is an
+extension of the current list, there is no need to duplicate it. One
+can use min/maxItems instead.
 
-On Tue, 10 Oct 2023, Bjorn Helgaas wrote:
+> >
+> > -Shazad
+>
+> Here we have defined reg and interrupt per platform as clocks is defined.
+>
+> -Mrinmay
+>
 
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Use FIELD_GET() to remove dependences on the field position, i.e., the
-> shift value.  No functional change intended.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  drivers/pci/pcie/portdrv.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> index 46fad0d813b2..14a4b89a3b83 100644
-> --- a/drivers/pci/pcie/portdrv.c
-> +++ b/drivers/pci/pcie/portdrv.c
-> @@ -6,6 +6,7 @@
->   * Copyright (C) Tom Long Nguyen (tom.l.nguyen@intel.com)
->   */
->  
-> +#include <linux/bitfield.h>
->  #include <linux/dmi.h>
->  #include <linux/init.h>
->  #include <linux/module.h>
-> @@ -69,7 +70,7 @@ static int pcie_message_numbers(struct pci_dev *dev, int mask,
->  	if (mask & (PCIE_PORT_SERVICE_PME | PCIE_PORT_SERVICE_HP |
->  		    PCIE_PORT_SERVICE_BWNOTIF)) {
->  		pcie_capability_read_word(dev, PCI_EXP_FLAGS, &reg16);
-> -		*pme = (reg16 & PCI_EXP_FLAGS_IRQ) >> 9;
-> +		*pme = FIELD_GET(PCI_EXP_FLAGS_IRQ, reg16);
->  		nvec = *pme + 1;
->  	}
->  
-> @@ -81,7 +82,7 @@ static int pcie_message_numbers(struct pci_dev *dev, int mask,
->  		if (pos) {
->  			pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS,
->  					      &reg32);
-> -			*aer = (reg32 & PCI_ERR_ROOT_AER_IRQ) >> 27;
-> +			*aer = FIELD_GET(PCI_ERR_ROOT_AER_IRQ, reg32);
->  			nvec = max(nvec, *aer + 1);
->  		}
->  	}
-> @@ -92,7 +93,7 @@ static int pcie_message_numbers(struct pci_dev *dev, int mask,
->  		if (pos) {
->  			pci_read_config_word(dev, pos + PCI_EXP_DPC_CAP,
->  					     &reg16);
-> -			*dpc = reg16 & PCI_EXP_DPC_IRQ;
-> +			*dpc = FIELD_GET(PCI_EXP_DPC_IRQ, reg16);
->  			nvec = max(nvec, *dpc + 1);
-
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
 -- 
- i.
-
---8323329-616638726-1697024453=:1977--
+With best wishes
+Dmitry
