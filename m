@@ -2,64 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 648CE7C4C05
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 09:37:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A5B37C4C3F
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 09:47:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229698AbjJKHg5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Oct 2023 03:36:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38748 "EHLO
+        id S1345391AbjJKHqz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Oct 2023 03:46:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbjJKHg5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 03:36:57 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A9B698
-        for <linux-pci@vger.kernel.org>; Wed, 11 Oct 2023 00:36:55 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-3226cc3e324so6339231f8f.3
-        for <linux-pci@vger.kernel.org>; Wed, 11 Oct 2023 00:36:55 -0700 (PDT)
+        with ESMTP id S1345349AbjJKHqv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 03:46:51 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADC9A98
+        for <linux-pci@vger.kernel.org>; Wed, 11 Oct 2023 00:46:49 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-40572aeb6d0so61227225e9.1
+        for <linux-pci@vger.kernel.org>; Wed, 11 Oct 2023 00:46:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697009813; x=1697614613; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1697010408; x=1697615208; darn=vger.kernel.org;
         h=content-transfer-encoding:autocrypt:subject:from:cc:to
          :content-language:user-agent:mime-version:date:message-id:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VDjaX0sg9ebhJ0I27uKWg4fBYgPHYXROy1G6UFjbhT0=;
-        b=TV+lQCw6ofL58OWtttSt0g079beIjGeawLU3ulHaNdyscY6SDW9KB0EZxj0c6w9KW7
-         O7cmJKL7vkRTHpW47pjOrdTUilUxVyhGzVNpQSv6nukv+njl0XxD+zCHAd2k6HXW9fL5
-         XaGlwuq+7LXdRCK47XZP6wzHemUcz40q2bsiqJbW1Hu5R4x59AGTNKwCdr9DVhvxDUoG
-         fQtjdh5JYvTrVqcMWh/1JxLdrGDGlF0d/ZDtSLR0fHVtJHFRx9YRgyUevCkBnYAxeb+B
-         kA72Q3V6CVQh46eg8Qvbzk6Y1MHg7WUbnRQ+3bI4NHgR58XFEFwmVJcmZ0F5JU6BHHu5
-         Ta7A==
+        bh=7WlPcSfywVyLuip9QAYNFsvHeSv5ZBbcF5VfSu30Twc=;
+        b=dVAW2j+0dK9nH/ZiJINB+6VFdHxjlrfu0gh3fpVI4jBq2xWOlcaU9UGLExWyLIEtjn
+         gfRB3xP8U5Yvv4hBIg/47k3Q/T/Qvn+QIHMbiGyYCk8XRktU6xHNFWBYiksRD5XK4qKl
+         PxAqLiZx5PKL2DOUnHln3inozShF9od9PSJ4CW/OUlAGteODp18fgNt4l86eJ4eebRO0
+         x/8noQEH1V9zs1CxMfFQ6xopKZ7SRo+AwVmTIckZvP6G5oZkn3dLSzPTYWMMdzqbuOjp
+         ZLwVLMpbVF3yHzQU6z5T8ISMfKtDpwx0kzrnGEaCEAxIbv9ZrDWweXNXFA+D/+oCcVr/
+         w7rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697009813; x=1697614613;
+        d=1e100.net; s=20230601; t=1697010408; x=1697615208;
         h=content-transfer-encoding:autocrypt:subject:from:cc:to
          :content-language:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VDjaX0sg9ebhJ0I27uKWg4fBYgPHYXROy1G6UFjbhT0=;
-        b=hbR7+UGl+pp+10roGm6Y21Hr8gWz8/Eudvf02GuYj4aQmBSUVh63KT83n1FxvSupEz
-         /HETlQw663scnBJoyjc/dpv8tj9C3mzZYF2Uvnchja9talMOnm7Zvl1vVtzkeTi/hDsT
-         SvhadARdPeoDzRTNiMzgNtQMzT28DchLPOsk8cVkarHjBqVf5QzZECdWfFBnaLyikMH8
-         xD69jue0B7JkRx0cZencdoAMxKAt4junzgjmnP7R59Pj/gudzW6mi3mwtwrocGMBYCHw
-         iyffSqRw/5TJJEEi1C9MzqgFCAIMZQj+BMnK+Cipx1yO7urJRbg6RCbHmlsY7+yh1Mzh
-         /d9g==
-X-Gm-Message-State: AOJu0YyL+2LCqtMJZrHKP0X4Ebgiuu8d1xPtrua9ntG3L8Sq9tnmF8RB
-        l3GWAuXzyM6AmB5wlnDnvlo=
-X-Google-Smtp-Source: AGHT+IHI+ZH74jEpouy7hl2oT8ypw01ow8xGAFob/24Dyy/gE6UWZUCAkf2VWF2Og/PxIC6lfRaTcg==
-X-Received: by 2002:adf:a1d0:0:b0:32d:854d:c4a4 with SMTP id v16-20020adfa1d0000000b0032d854dc4a4mr637282wrv.5.1697009813212;
-        Wed, 11 Oct 2023 00:36:53 -0700 (PDT)
+        bh=7WlPcSfywVyLuip9QAYNFsvHeSv5ZBbcF5VfSu30Twc=;
+        b=WhT0CN850uREEOmnceljsbOx8wQJeMg5IByNZD8vd/llYFj7sHeVsrc0+b0LJ6s73u
+         Kixs2RMeWg5lWlQ0+0D8rr9T2mS2OPgLe9jv0twrE6M3K/ri5RrC5XCqQ5lJ6x95vg3X
+         8aYHYffYHR193vbCQXySJQbB/8EmoxuT3fXh/duwSUSiRlYrSE9Ww7F13m6T/kSpBS5/
+         g5cQPgAiYU31S1Wq7tomZzZeM6ZcCbVhtjnZQB71ISug8dYrzUoqWTabQ2iyqi1o+jEw
+         Q93XdaxnLRKAEq0k2jExEsRJMFAiNIjhvCCBUJHzpRyelkyxwDKD038xTYE+GwaCb6QY
+         eY9w==
+X-Gm-Message-State: AOJu0YwGsWpfuv8zaoxToKN5T5krNtTJlM+J4sm0jDmxBcj/PSNkd616
+        UmGkJQ14uyQfjvuXZvLZo1yLf42B8Yc=
+X-Google-Smtp-Source: AGHT+IF1f+V42AVrW3ktidsHr78Nq/UuFM4ozE6g81mfkE3d9fyAIrdvePoiwGLsqR9Z8eaLW2opmw==
+X-Received: by 2002:a05:600c:b59:b0:401:b1c6:97dc with SMTP id k25-20020a05600c0b5900b00401b1c697dcmr17991218wmr.23.1697010407529;
+        Wed, 11 Oct 2023 00:46:47 -0700 (PDT)
 Received: from ?IPV6:2a01:c22:7237:2c00:c502:a3a3:9e5b:9a02? (dynamic-2a01-0c22-7237-2c00-c502-a3a3-9e5b-9a02.c22.pool.telefonica.de. [2a01:c22:7237:2c00:c502:a3a3:9e5b:9a02])
-        by smtp.googlemail.com with ESMTPSA id s4-20020a5d6a84000000b00327bf4f2f14sm14627496wru.88.2023.10.11.00.36.52
+        by smtp.googlemail.com with ESMTPSA id bd5-20020a05600c1f0500b004030e8ff964sm18481364wmb.34.2023.10.11.00.46.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Oct 2023 00:36:52 -0700 (PDT)
-Message-ID: <c75931ac-7208-4200-9ca1-821629cf5e28@gmail.com>
-Date:   Wed, 11 Oct 2023 09:36:40 +0200
+        Wed, 11 Oct 2023 00:46:47 -0700 (PDT)
+Message-ID: <6ba7dd79-9cfe-4ed0-a002-d99cb842f361@gmail.com>
+Date:   Wed, 11 Oct 2023 09:46:45 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Content-Language: en-US
 To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Ajay Agarwal <ajayagarwal@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH] Revert "PCI/ASPM: Disable only ASPM_STATE_L1 when driver,
- disables L1"
+Subject: [PATCH] PCI/ASPM: Fix L1 sub-state handling in aspm_attr_store_common
 Autocrypt: addr=hkallweit1@gmail.com; keydata=
  xsFNBF/0ZFUBEAC0eZyktSE7ZNO1SFXL6cQ4i4g6Ah3mOUIXSB4pCY5kQ6OLKHh0FlOD5/5/
  sY7IoIouzOjyFdFPnz4Bl3927ClT567hUJJ+SNaFEiJ9vadI6vZm2gcY4ExdIevYHWe1msJF
@@ -115,40 +113,40 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This reverts commit fb097dcd5a28c0a2325632405c76a66777a6bed9.
+So far we may see an unexpected behavior regard L1 sub-states.
+Following scenario:
 
-After the referenced commit we may see L1 sub-states being active
-unexpectedly. Following scenario as an example:
-r8169 disables L1 because of known hardware issues on a number of
-systems. Implicitly L1.1 and L1.2 are disabled too.
-On my system L1 and L1.1 work fine, but L1.2 causes missed
-rx packets. Therefore I write 1 to aspm_l1_1.
-This removes ASPM_STATE_L1 from the disabled modes and therefore
-unexpectedly enables also L1.2. So return to the old behavior.
+Write 0 to "l1_aspm" to disable L1
+Write 1 to "l1_1_aspm" to enable L1.1
 
+Intention of step 1 is to implicitly disable also L1.1 and L1.2.
+However after step 2 L1.2 is unexpectedly enabled.
+
+Fix this by explicitly disabling L1 sub-states when disabling L1.
+
+Fixes: 72ea91afbfb0 ("PCI/ASPM: Add sysfs attributes for controlling ASPM link states")
 Link: https://lore.kernel.org/linux-pci/20231002151452.GA560499@bhelgaas/
 Cc: stable@vger.kernel.org
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
-Splitted the first version of the patch according to the linked discussion.
+Splitted-out part of original patch according to linked discussion.
 ---
- drivers/pci/pcie/aspm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/pcie/aspm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 1bf630059264..530c3bb5708c 100644
+index 530c3bb5708c..fc18e42f0a6e 100644
 --- a/drivers/pci/pcie/aspm.c
 +++ b/drivers/pci/pcie/aspm.c
-@@ -1059,7 +1059,8 @@ static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
- 	if (state & PCIE_LINK_STATE_L0S)
- 		link->aspm_disable |= ASPM_STATE_L0S;
- 	if (state & PCIE_LINK_STATE_L1)
--		link->aspm_disable |= ASPM_STATE_L1;
-+		/* L1 PM substates require L1 */
-+		link->aspm_disable |= ASPM_STATE_L1 | ASPM_STATE_L1SS;
- 	if (state & PCIE_LINK_STATE_L1_1)
- 		link->aspm_disable |= ASPM_STATE_L1_1;
- 	if (state & PCIE_LINK_STATE_L1_2)
+@@ -1248,6 +1248,8 @@ static ssize_t aspm_attr_store_common(struct device *dev,
+ 			link->aspm_disable &= ~ASPM_STATE_L1;
+ 	} else {
+ 		link->aspm_disable |= state;
++		if (state & ASPM_STATE_L1)
++			link->aspm_disable |= ASPM_STATE_L1SS;
+ 	}
+ 
+ 	pcie_config_aspm_link(link, policy_to_aspm_state(link));
 -- 
 2.42.0
 
