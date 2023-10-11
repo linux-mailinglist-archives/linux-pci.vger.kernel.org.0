@@ -2,211 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07FE87C5760
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 16:50:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 986087C5834
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 17:38:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235084AbjJKOuW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Oct 2023 10:50:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43964 "EHLO
+        id S235095AbjJKPid (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Oct 2023 11:38:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234838AbjJKOuV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 10:50:21 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B595F94;
-        Wed, 11 Oct 2023 07:50:18 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2c296e6543fso86417941fa.3;
-        Wed, 11 Oct 2023 07:50:18 -0700 (PDT)
+        with ESMTP id S235070AbjJKPi1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 11:38:27 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B39D3A7
+        for <linux-pci@vger.kernel.org>; Wed, 11 Oct 2023 08:38:24 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-32d834ec222so990513f8f.0
+        for <linux-pci@vger.kernel.org>; Wed, 11 Oct 2023 08:38:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697035817; x=1697640617; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4hEdoIV9Vrx35zLcKUifZjIytGzkt3j9YZqzs49YGsE=;
-        b=EX+S8t0ybFR+NcNM9xwez61DJb3CVTvTyv714ELSy6nVC6qCF7oiU/T0VyB+oe7I+h
-         bXtvQ8C6Cnvq3TRCfGzrbxdi935QOPfwQsUMaujUZnKP+Jm5LiahFeMwRbKgyXzE7vOT
-         LdrimdTHSwk8NWFFMtTzDCE9MoWV3/k7mFbmQKGToG0Jk+FVTk6t6XVnqNGtKkWRexK8
-         ZtnoEoPe1qO6HhWyNb2O5oAkEHhh2uRrdpCnbW8CoVY/rkejKOTCeADjTxMEHD+xaAG8
-         1jPkE0hlFBR8p2TIdkm+klb5cXHj1ZK6YIDfqMbhDA5tjGDAvx/JCGsOMDVpOplGYOkl
-         jFkw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1697038703; x=1697643503; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RCvxB/+dBXFv2rNSKeHbra6jgSQPb7w0QpnaCjhqlhw=;
+        b=SR2V185aaJaMUCcJ3dmpm0p8m+apUfcn4Z0k/elor0IvVoX6/d+e5NbulscrbJLlLF
+         pNGgq5XIb/2Ukpnv2kUGdLRBzrHGEA3OdWwxKSRwAc+P2lCDHkoQrCaRwHshzIkO1XjU
+         45s/W+xrjw0WAF883BPAnXUFtQyyCDWvUY2Dnafp6Jf3hjfkXaIewUfXp0DU85tQQUgC
+         xnuHrMEnmbdlVOXFZdSbKe8wPqQy7n+Gzd0l1cCiqXcTNtuI0rMynt0fyOFqHxMjLEwI
+         xWGVBFC/g9n3BIbORoeS7KU6QzHx2T+J7m8B3JmEo4M09+bBYHm2ccJw7+XPJU7pdyWq
+         Q/lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697035817; x=1697640617;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1697038703; x=1697643503;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4hEdoIV9Vrx35zLcKUifZjIytGzkt3j9YZqzs49YGsE=;
-        b=BPk7FI9GOL/OXVWETNwBwnS/u10VEkWrBTdcDln1JgY5Ldtp6hTJjqLYH0G1Crf71C
-         4zckhQAV39MbFBnFGdGhJsTCfw/r6O2oWsxjt36/X3rgSV+BObuMfjmEflXs7L2X/vaP
-         x8ebqil3x/BCNBh5y/5Y4Uif9wMDzowm77hzqSVzFekfD/AEop6gJZjoFqMWjMS1fI+a
-         WhrySo/H7DuFvK0ShQMprYcdSB4ukZgckQlO2hXnYCvEtMSejrvkcl+QZ+yGeoa0kc/p
-         0tRIGvwOO2GPWYGap6fhIIwh6pWQM05rcROew56Y4kAvGQwQHJHoWTO0iY7uRzOOlG1D
-         Zawg==
-X-Gm-Message-State: AOJu0YyBpF9CgJBE+KINhic5DgOkYUaxz7GIvqadyLx59FdeAMQYIA8M
-        qpafb3F8AchrvFcXwg4nyN4=
-X-Google-Smtp-Source: AGHT+IHImYkyI7ecSdkkIRLaVm8LFs3qxGXVtxdYLnIxKCUF6zOr3h8anAZaQaCDWk26XlVucQOOqA==
-X-Received: by 2002:a2e:8895:0:b0:2c2:bdc2:af77 with SMTP id k21-20020a2e8895000000b002c2bdc2af77mr18225719lji.33.1697035816636;
-        Wed, 11 Oct 2023 07:50:16 -0700 (PDT)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id w11-20020a2e998b000000b002bffbe767cbsm3012515lji.85.2023.10.11.07.50.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Oct 2023 07:50:16 -0700 (PDT)
-Date:   Wed, 11 Oct 2023 17:50:12 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Manivannan Sadhasivam <mani@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        krzysztof.kozlowski+dt@linaro.org, lpieralisi@kernel.org,
-        robh@kernel.org, bhelgaas@google.com, conor+dt@kernel.org,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v24 08/16] PCI: dwc: Disable two BARs to avoid
- unnecessary memory assignment
-Message-ID: <yaogf4d672yb76lbx7e7gu2ykm7shujfwgqiztfydbsodwuymr@rkffjewg6hnp>
-References: <20231011071423.249458-1-yoshihiro.shimoda.uh@renesas.com>
- <20231011071423.249458-9-yoshihiro.shimoda.uh@renesas.com>
- <abf65z7xxsnd7adkg523mneccudwenvdzcw7jpblafqzvhca5n@lbpsch7ztxsn>
- <20231011130727.GA3722793@rocinante>
- <20231011131840.GB5952@thinkpad>
+        bh=RCvxB/+dBXFv2rNSKeHbra6jgSQPb7w0QpnaCjhqlhw=;
+        b=ejgLkEanLdfFEpZv/DK/knjdd7mncf9wr6pvIth7PJCCSWhldCGa0B7jgdvJhfv61f
+         0PuJqMFt23sFGYcy0+FFNUPhcWem/MDlqVoSzY7N1V8r2IXuRF5m9Ak8aij2Am8VSzfi
+         fc8YBpJ8E4LDdazSjWgZtZ2+TWVzzYXX4U84TnG2fy4ctPiEE2xwnXKY/FFu79Hr/Ofc
+         PnH+20axXPS+eXmtoKKjV3MCU3F+37BfByG5qjlTsY1KecxZO7J6pJyVTz4aX/0H2z6L
+         M8pcaEoqzbEdARP1wL7ennuWe0aNVxw1Bh/bqFdyDKj9QMysVSy8zF3KZuhQ1HpejqbT
+         kV+Q==
+X-Gm-Message-State: AOJu0YxTuJsmkSdgkQVfsQ3vNlALc3VNdHohlA9n/+GBU/Tzo3AV1htF
+        DHZBTQMulDf5INaa2tHFEdBaOQ==
+X-Google-Smtp-Source: AGHT+IFJ8WJKE7vEKFkfOXPL6F+ZSOLBJaxUlC5THEtjVgUXbUPSwzbmht5i3Ga90Fbbmkh/IFB1BA==
+X-Received: by 2002:a5d:500b:0:b0:319:8a66:f695 with SMTP id e11-20020a5d500b000000b003198a66f695mr16591567wrt.55.1697038703102;
+        Wed, 11 Oct 2023 08:38:23 -0700 (PDT)
+Received: from [192.168.1.172] ([93.5.22.158])
+        by smtp.gmail.com with ESMTPSA id 4-20020a05600c248400b004060f0a0fd5sm17104653wms.13.2023.10.11.08.38.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Oct 2023 08:38:15 -0700 (PDT)
+Message-ID: <899c7275-ccca-43bb-b1ae-a3403dd18622@baylibre.com>
+Date:   Wed, 11 Oct 2023 17:38:11 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231011131840.GB5952@thinkpad>
-X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: mediatek-gen3: Fix translation window
+Content-Language: en-US
+To:     Jianjun Wang <jianjun.wang@mediatek.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Ryder Lee <ryder.lee@mediatek.com>, jieyy.yang@mediatek.com,
+        chuanjia.liu@mediatek.com, qizhong.cheng@mediatek.com,
+        jian.yang@mediatek.com
+References: <20231011122633.31559-1-jianjun.wang@mediatek.com>
+From:   Alexandre Mergnat <amergnat@baylibre.com>
+In-Reply-To: <20231011122633.31559-1-jianjun.wang@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Krzysztof, Mani
 
-On Wed, Oct 11, 2023 at 06:48:40PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Oct 11, 2023 at 10:07:27PM +0900, Krzysztof Wilczyński wrote:
-> > Hello,
-> > 
-> > [...]
-> > > > +	/*
-> > > > +	 * According to the section 3.5.7.2 "RC Mode" in DWC PCIe Dual Mode
-> > > > +	 * Rev.5.20a,
-> > > 
-> > > and 3.5.6.1 "RC mode" in DWC PCIe RC databook v5.20a.
-> > 
-> > OK.  I can fix this citation later.
-> > 
-> > > > +      ... we should disable two BARs to avoid unnecessary memory
-> > > > +	 * assignment during device enumeration.
-> > > > +	 */
-> > > > +	dw_pcie_writel_dbi2(pci, PCI_BASE_ADDRESS_0, 0x0);
-> > > > +	dw_pcie_writel_dbi2(pci, PCI_BASE_ADDRESS_1, 0x0);
-> > > > +
-> > > 
-> > > What's the point in doing this
-> > > 	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0x00000004);
-> > > 	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
-> > >         ...
-> > >         dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0);
-> > > afterward?
-> > > 
-> > > I guess if the BARs are disabled there is no need in having them
-> > > touched. Am I wrong?
-> > > 
-> > > BTW I failed to understand why the BARs inits was originally needed:
-> > > first merging the BAR0 and BAR1 into a single 64-bit BAR, then
-> > > switching it back to two 32-bit BARs. Moreover here is what prior DW
-> > > PCIe RC v5.x databooks say about the BARs:
-> > > 
-> > > "3.5.6 BAR Details
-> > > Base Address Registers (Offset: 0x10-x14)
-> > > The Synopsys core does not implement the optional BARs for the RC
-> > > product. This is based on the assumption that the RC host probably has
-> > > registers on some other internal bus and has knowledge and setup
-> > > access to these registers already."
-> > > 
-> > > I am not sure I fully understand what it means, but it seems as DW
-> > > PCIe cores didn't have anything behind the RC BARs even back then. So
-> > > it seems to me that the BARs manipulation was the Exinos PCIe host
-> > > specific, from which driver they are originating - commit 340cba6092c2
-> > > ("pci: Add PCIe driver for Samsung Exynos").
-> > 
 
-> > Would any of the above be something we need to address before this series
-> > can be successfully merged?  I am asking if this is a show stopper,
-> > something we can fix later, or even something I could address once I take
-> > this series again.
-> > 
-> > Thoughts?
-> >
+On 11/10/2023 14:26, Jianjun Wang wrote:
+> The size of translation table should be a power of 2, using fls() cannot 
+> get the proper value when the size is not a power of 2. For example, 
+> fls(0x3e00000) - 1 = 25, hence the PCIe translation window size will be 
+> set to 0x2000000 instead of the expected size 0x3e00000. Fix translation 
+> window by splitting the MMIO space to multiple tables if its size is not 
+> a power of 2.
 
-I can't confirm for sure that the BARs manipulations in this patch
-will work on the older IP-cores (prior 5.10a) or will be required for
-all new controllers (5.10a and newer). Based on the BARs description
-posted in the IP-core HW manuals, the CSRs semantic has changed
-between the major releases. Old DW PCIe RC IP-core HW-manuals
-explicitly state that the BARs are unavailable:
+Hi Jianjun,
 
-"The Synopsys core does not implement the optional BARs for the RC
-product"
+I've no knowledge in PCIE, so maybe what my suggestion is stupid:
 
-New DW PCIe RC IP-cores manual say that the BARs exist, but are
-normally unused:
+Is it mandatory to fit the translation table size with 0x3e00000 (in 
+this example) ?
+I'm asking because you can have an issue by reaching the maximum 
+translation table number.
 
-"Two BARs are present but are not expected to be used. You should
-disable them to avoid unnecessary memory assignment during device
-enumeration. If you do use a BAR, then you should program it to
-capture TLPs that are targeted to your local non-application memory
-space.... The BAR range must be outside of the three Base/Limit
-regions..."
+Is it possible to just use only one table with the power of 2 size above 
+0x3e00000 => 0x4000000 ( fls(0x3e00000) = 26 = 0x4000000). The downside 
+of this method is wasting allocation space. AFAIK I already see this 
+kind of method for memory protection/allocation in embedded systems, so 
+I'm wondering if this method is safer than using multiple table for only 
+one size which isn't a power of 2.
 
-So in theory it's possible to have platforms with the BARs somehow
-utilized even in the Root Ports. Though currently AFAICS we don't
-have such devices supported in kernel.
 
-> 
-> If Yoshihiro can confirm that his controller can work without this patch, then
-> I'd vote for dropping this patch and applying the rest.
-
-AFAIR Yoshihiro insisted to have the BARs reset because without
-it something didn't work, so he added some comment to justify it:
-https://lore.kernel.org/linux-pci/TYBPR01MB534104389952D87385E8745ED8879@TYBPR01MB5341.jpnprd01.prod.outlook.com/
-Though based on the comment the BARs reset still seems optional.
-
-One more low-level driver which already does what is implemented in
-this patch is the Keystone PCI host-controller driver (see,
-pci-keystone.c also activates dbi_cs2 and zeros out the
-PCI_TYPE0_BAR0_ENABLED flag). Moreover something similar is done in
-the generic DW PCIe EP driver in the framework of the
-__dw_pcie_ep_reset_bar() method including the direct BARs zeroing out
-(which I questioned in my initial message in this thread). So seeing
-this patch would re-do what is already done for the Keystone device
-and would add a partly duplicated code it would be reasonable to drop
-the patch for now and get the BARs reset back to the Rcar host
-low-level driver as it was in v23. We can get back to the topic
-afterward and see whether the BARs reset could be done generically for
-the RPs. If we figure out that it's required at least for the new
-controllers then we'll be able to implement a generic RP/EP BARs reset
-method, have it utilized in both DW PCIe core drivers and drop the
-respective code from both Rcar and Keystone LLDDs.
-
--Serge(y)
-
-> 
-> This can be submitted later if required.
-> 
-> - Mani
-> 
-> > > * BTW Yoshihiro, I am sorry to see your patchset is still under review...(
-> > 
-> > Yes, we need to draw a line somewhere. :)  I am happy to take this series
-> > so we don't miss another merge window.  We can always fix other bits and
-> > pieces later and iron out any kinks that might have fallen through the
-> > cracks, so to speak.
-> > 
-> > 	Krzysztof
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+-- 
+Regards,
+Alexandre
