@@ -2,180 +2,215 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56A477C59B3
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 18:57:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 158AB7C5B2A
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 20:20:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232406AbjJKQ5x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Oct 2023 12:57:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33182 "EHLO
+        id S233215AbjJKSUm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Oct 2023 14:20:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230158AbjJKQ5x (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 12:57:53 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 042D28F;
-        Wed, 11 Oct 2023 09:57:51 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S5Jpv2CChz6K7GN;
-        Thu, 12 Oct 2023 00:57:27 +0800 (CST)
-Received: from localhost (10.126.175.8) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Wed, 11 Oct
- 2023 17:57:47 +0100
-Date:   Wed, 11 Oct 2023 17:57:46 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Alexey Kardashevskiy <aik@amd.com>
-CC:     Lukas Wunner <lukas@wunner.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linuxarm@huawei.com>, David Box <david.e.box@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 00/12] PCI device authentication
-Message-ID: <20231011175746.00003d57@Huawei.com>
-In-Reply-To: <2a21b730-9ad4-4585-b636-9aa139266f94@amd.com>
-References: <cover.1695921656.git.lukas@wunner.de>
-        <652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
-        <20231007100433.GA7596@wunner.de>
-        <20231009123335.00006d3d@Huawei.com>
-        <20231009134950.GA7097@wunner.de>
-        <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
-        <20231010081913.GA24050@wunner.de>
-        <2a21b730-9ad4-4585-b636-9aa139266f94@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.126.175.8]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S233213AbjJKSUm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 14:20:42 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF4F494
+        for <linux-pci@vger.kernel.org>; Wed, 11 Oct 2023 11:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697048440; x=1728584440;
+  h=date:from:to:cc:subject:message-id;
+  bh=TzYm9xtkQFNP7oOdnE1T0XdAT0tBWmsav1KKW3JqL4Y=;
+  b=BIHKqXOv/WgUQHaXKy+PIAtcGSsVXEg+JyUbkgHtr+1PTaayp6rXhtxb
+   x24IR9aJRrP1x2qJYspdfL95H0LylutK0e9tMunQbyltuUsD+CqUgNItn
+   Tqtm9PnOEUtDGaka5SyNjOdiLynRSf+IjWzXk9MBrC68vkI5808k4+yH4
+   rx6VJOVzqI3JE0McbwSKTE4u/EOwCRos2NkIOySC4Wig5wG0S+IY2NUuC
+   ETRmqYN9U7JeXrItRfP6IEu9N1BDnWwr8ITS5BXyTEs7OEj7l0wfLFXt4
+   d7bHex2rml/BJJ0ANM5IN+YDdt+lj1MeHYg7zRSZz+ynvhcoZHr+ArxB0
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="364099699"
+X-IronPort-AV: E=Sophos;i="6.03,216,1694761200"; 
+   d="scan'208";a="364099699"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 11:20:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="789078802"
+X-IronPort-AV: E=Sophos;i="6.03,216,1694761200"; 
+   d="scan'208";a="789078802"
+Received: from lkp-server02.sh.intel.com (HELO f64821696465) ([10.239.97.151])
+  by orsmga001.jf.intel.com with ESMTP; 11 Oct 2023 11:20:39 -0700
+Received: from kbuild by f64821696465 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qqdox-0002ZO-2J;
+        Wed, 11 Oct 2023 18:20:35 +0000
+Date:   Thu, 12 Oct 2023 02:20:00 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:controller/layerscape] BUILD SUCCESS
+ 81ef01bc5934f46204a199cd0e37d3fb2b10f342
+Message-ID: <202310120257.Y6S462PC-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 10 Oct 2023 23:53:16 +1100
-Alexey Kardashevskiy <aik@amd.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/layerscape
+branch HEAD: 81ef01bc5934f46204a199cd0e37d3fb2b10f342  PCI: layerscape-ep: Set 64-bit DMA mask
 
-> On 10/10/23 19:19, Lukas Wunner wrote:
-> > On Tue, Oct 10, 2023 at 03:07:41PM +1100, Alexey Kardashevskiy wrote:  
-> >> On 10/10/23 00:49, Lukas Wunner wrote:  
-> >>> PCI Firmware Spec would seem to be appropriate.  However this can't
-> >>> be solved by the kernel community.  
-> >>
-> >> How so? It is up to the user to decide whether it is SPDM/CMA in the kernel
-> >> or   the firmware + coco, both are quite possible (it is IDE which is not
-> >> possible without the firmware on AMD but we are not there yet).  
-> > 
-> > The user can control ownership of CMA-SPDM e.g. through a BIOS knob.
-> > And that BIOS knob then influences the outcome of the _OSC negotiation
-> > between platform and OS.
-> > 
-> >   
-> >> But the way SPDM is done now is that if the user (as myself) wants to let
-> >> the firmware run SPDM - the only choice is disabling CONFIG_CMA completely
-> >> as CMA is not a (un)loadable module or built-in (with some "blacklist"
-> >> parameters), and does not provide a sysfs knob to control its tentacles.  
-> > 
-> > The problem is every single vendor thinks they can come up with
-> > their own idea of who owns the SPDM session:
-> > 
-> > I've looked at the Nvidia driver and they've hacked libspdm into it,
-> > so their idea is that the device driver owns the SPDM session.
->  >
-> > AMD wants the host to proxy DOE but not own the SPDM session.
->  >
-> > We have *standards* for a reason.  So that products are interoperable.  
-> 
-> There is no "standard PCI ethernet device", somehow we survive ;)
-> 
-> > If the kernel tries to accommodate to every vendor's idea of SPDM ownership
-> > we'll end up with an unmaintainable mess of quirks, plus sysfs knobs
-> > which were once intended as a stopgap but can never be removed because
-> > they're userspace ABI.  
-> 
-> The host kernel needs to accommodate the idea that it is not trusted, 
-> and neither is the BIOS.
-> 
-> > This needs to be solved in the *specification*.
->  >
-> > And the existing solution for who owns a particular PCI feature is _OSC.
-> > Hence this needs to be taken up with the Firmware Working Group at the
-> > PCISIG.  
-> 
-> I do like the general idea of specifying things, etc but this place does 
-> not sound right. The firmware you are talking about has full access to 
-> PCI, the PSP firmware does not have any (besides the IDE keys 
-> programming), is there any example of such firmware in the PCI Firmware 
-> spec? From the BIOS standpoint, the host OS owns DOE and whatever is 
-> sent over it (on AMD SEV TIO). The host OS chooses not to compose these 
-> SPDM packets itself (while it could) in order to be able to run guests 
-> without having them to trust the host OS.
+elapsed time: 1571m
 
-As a minimum I'd like to see something saying - "keep away from discovery
-protocol on this DOE instance".  An ACPI _OSC or _DSM or similar could do that.
-It won't be needed for every approach, but it might for some.
+configs tested: 139
+configs skipped: 2
 
-Then either firmwware knows what to do, or a specific driver does.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-If your proxy comes up late enough that we've already done (and cached) discovery
-protocols results then this might not be a problem for this particular
-approach as we have no reason to rerun discovery (other than hotplug in which
-case there is lots of other stuff to do anyway).
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20231011   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                   randconfig-001-20231011   gcc  
+arm64                            allmodconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20231011   gcc  
+i386         buildonly-randconfig-002-20231011   gcc  
+i386         buildonly-randconfig-003-20231011   gcc  
+i386         buildonly-randconfig-004-20231011   gcc  
+i386         buildonly-randconfig-005-20231011   gcc  
+i386         buildonly-randconfig-006-20231011   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20231011   gcc  
+i386                  randconfig-002-20231011   gcc  
+i386                  randconfig-003-20231011   gcc  
+i386                  randconfig-004-20231011   gcc  
+i386                  randconfig-005-20231011   gcc  
+i386                  randconfig-006-20231011   gcc  
+i386                  randconfig-011-20231011   gcc  
+i386                  randconfig-012-20231011   gcc  
+i386                  randconfig-013-20231011   gcc  
+i386                  randconfig-014-20231011   gcc  
+i386                  randconfig-015-20231011   gcc  
+i386                  randconfig-016-20231011   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20231011   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   gcc  
+powerpc                 mpc834x_itx_defconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                 randconfig-001-20231011   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20231011   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                         microdev_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                 randconfig-001-20231011   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-001-20231011   gcc  
+x86_64       buildonly-randconfig-002-20231011   gcc  
+x86_64       buildonly-randconfig-003-20231011   gcc  
+x86_64       buildonly-randconfig-004-20231011   gcc  
+x86_64       buildonly-randconfig-005-20231011   gcc  
+x86_64       buildonly-randconfig-006-20231011   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20231011   gcc  
+x86_64                randconfig-002-20231011   gcc  
+x86_64                randconfig-003-20231011   gcc  
+x86_64                randconfig-004-20231011   gcc  
+x86_64                randconfig-005-20231011   gcc  
+x86_64                randconfig-006-20231011   gcc  
+x86_64                randconfig-011-20231011   gcc  
+x86_64                randconfig-012-20231011   gcc  
+x86_64                randconfig-013-20231011   gcc  
+x86_64                randconfig-014-20231011   gcc  
+x86_64                randconfig-015-20231011   gcc  
+x86_64                randconfig-016-20231011   gcc  
+x86_64                randconfig-071-20231011   gcc  
+x86_64                randconfig-072-20231011   gcc  
+x86_64                randconfig-073-20231011   gcc  
+x86_64                randconfig-074-20231011   gcc  
+x86_64                randconfig-075-20231011   gcc  
+x86_64                randconfig-076-20231011   gcc  
+x86_64                          rhel-8.3-func   gcc  
+x86_64                    rhel-8.3-kselftests   gcc  
+x86_64                           rhel-8.3-ltp   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
 
-For your case we need some hooks for the PSP to be able to drive the SPDM session
-but that should be easy to allow. I don't think precludes the hypervisor also
-verifying the hardware is trusted by it along the way (though not used for IDE).
-So if you are relying on a host OS proxy I don't thing you need to disable CONFIG_CMA
-(maybe something around resets?)
-
-Potentially the host OS tries first (maybe succeeds - that doesn't matter though
-nothing wrong with defense in depth) and then the PSP via a proxy does it all over
-again which is fine.  All we need to do is guarantee ordering and I think we are
-fine for that.
-
-Far too many possible models here but such is life I guess.
-
-> 
-> >> Note, this PSP firmware is not BIOS (which runs on the same core and has
-> >> same access to PCI as the host OS), it is a separate platform processor
-> >> which only programs IDE keys to the PCI RC (via some some internal bus
-> >> mechanism) but does not do anything on the bus itself and relies on the host
-> >> OS proxying DOE, and there is no APCI between the core and the psp.  
-> > 
-> > Somewhat tangentially, would it be possible in your architecture
-> > that the host or guest asks PSP to program IDE keys into the Root Port?  
-> 
-> Sure it is possible to implement. But this does not help our primary use 
-> case which is confidential VMs where the host OS is not trusted with the 
-> keys.
-> 
-> > Or alternatively, access the key registers directly without PSP involvement?  
-> 
-> No afaik, for the reason above.
-> 
-> 
-> > 
-> > Thanks,
-> > 
-> > Lukas  
-> 
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
