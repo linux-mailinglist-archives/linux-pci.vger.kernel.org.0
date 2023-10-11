@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 343457C50F0
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 13:05:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C46D97C50EF
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 13:05:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231834AbjJKLFn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Oct 2023 07:05:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54248 "EHLO
+        id S234873AbjJKLFl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Oct 2023 07:05:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234877AbjJKLFb (ORCPT
+        with ESMTP id S234881AbjJKLFb (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 07:05:31 -0400
 Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52B5798;
-        Wed, 11 Oct 2023 04:05:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DC7E93;
+        Wed, 11 Oct 2023 04:05:29 -0700 (PDT)
 Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
         (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
         (Client did not present a certificate)
-        by ex01.ufhost.com (Postfix) with ESMTP id 1661C24E379;
+        by ex01.ufhost.com (Postfix) with ESMTP id D49AE24E37B;
         Wed, 11 Oct 2023 19:05:27 +0800 (CST)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
         (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-        by fd01.gateway.ufhost.com (Postfix) with ESMTP id E85B624DEED;
-        Wed, 11 Oct 2023 19:05:26 +0800 (CST)
-Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 11 Oct
- 2023 19:05:26 +0800
+        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+        by fd01.gateway.ufhost.com (Postfix) with ESMTP id B7BEB24DFCE;
+        Wed, 11 Oct 2023 19:05:27 +0800 (CST)
+Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 11 Oct
+ 2023 19:05:27 +0800
 Received: from ubuntu.localdomain (183.27.96.95) by EXMBX171.cuchost.com
  (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 11 Oct
- 2023 19:05:25 +0800
+ 2023 19:05:26 +0800
 From:   Minda Chen <minda.chen@starfivetech.com>
 To:     Conor Dooley <conor@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
@@ -49,9 +49,9 @@ CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Leyfoon Tan <leyfoon.tan@starfivetech.com>,
         Kevin Xie <kevin.xie@starfivetech.com>,
         Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v8 12/22] PCI: microchip: Add num_events field to struct plda_pcie_rp
-Date:   Wed, 11 Oct 2023 19:05:04 +0800
-Message-ID: <20231011110514.107528-13-minda.chen@starfivetech.com>
+Subject: [PATCH v8 13/22] PCI: microchip: Add request_event_irq() callback function
+Date:   Wed, 11 Oct 2023 19:05:05 +0800
+Message-ID: <20231011110514.107528-14-minda.chen@starfivetech.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20231011110514.107528-1-minda.chen@starfivetech.com>
 References: <20231011110514.107528-1-minda.chen@starfivetech.com>
@@ -70,67 +70,92 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The event num is different in other platform. For re-use
-interrupt process codes, replace with variable.
+PolarFire implements specific interrupts besides PLDA local
+interrupt and register their interrupt symbol name. (Total 28
+interrupts while PLDA contain 13 local interrupts). and
+interrupt to event mapping is different.
+So add a callback function to support different IRQ register
+function.
 
 Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- drivers/pci/controller/plda/pcie-microchip-host.c | 7 ++++---
- drivers/pci/controller/plda/pcie-plda.h           | 1 +
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ .../pci/controller/plda/pcie-microchip-host.c | 25 ++++++++++++++++---
+ drivers/pci/controller/plda/pcie-plda.h       |  5 ++++
+ 2 files changed, 26 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
-index 5a20d5a03d36..1799455989ac 100644
+index 1799455989ac..104332603e25 100644
 --- a/drivers/pci/controller/plda/pcie-microchip-host.c
 +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-@@ -649,7 +649,7 @@ static void plda_handle_event(struct irq_desc *desc)
+@@ -799,6 +799,17 @@ static int mc_pcie_init_clks(struct device *dev)
+ 	return 0;
+ }
  
- 	events = mc_get_events(port);
++static int mc_request_event_irq(struct plda_pcie_rp *plda, int event_irq,
++				int event)
++{
++	return devm_request_irq(plda->dev, event_irq, mc_event_handler,
++				0, event_cause[event].sym, plda);
++}
++
++static const struct plda_event mc_event = {
++	.request_event_irq      = mc_request_event_irq,
++};
++
+ static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port)
+ {
+ 	struct device *dev = port->dev;
+@@ -898,7 +909,9 @@ static void mc_disable_interrupts(struct mc_pcie *port)
+ 	writel_relaxed(GENMASK(31, 0), bridge_base_addr + ISTATUS_HOST);
+ }
  
--	for_each_set_bit(bit, &events, NUM_EVENTS)
-+	for_each_set_bit(bit, &events, port->num_events)
- 		generic_handle_domain_irq(port->event_domain, bit);
+-static int plda_init_interrupts(struct platform_device *pdev, struct plda_pcie_rp *port)
++static int plda_init_interrupts(struct platform_device *pdev,
++				struct plda_pcie_rp *port,
++				const struct plda_event *event)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	int irq;
+@@ -922,8 +935,12 @@ static int plda_init_interrupts(struct platform_device *pdev, struct plda_pcie_r
+ 			return -ENXIO;
+ 		}
  
- 	chained_irq_exit(chip, desc);
-@@ -812,7 +812,7 @@ static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port)
- 		return -EINVAL;
- 	}
+-		ret = devm_request_irq(dev, event_irq, mc_event_handler,
+-				       0, event_cause[i].sym, port);
++		if (event->request_event_irq)
++			ret = event->request_event_irq(port, event_irq, i);
++		else
++			ret = devm_request_irq(dev, event_irq, plda_event_handler,
++					       0, NULL, port);
++
+ 		if (ret) {
+ 			dev_err(dev, "failed to request IRQ %d\n", event_irq);
+ 			return ret;
+@@ -977,7 +994,7 @@ static int mc_platform_init(struct pci_config_window *cfg)
+ 		return ret;
  
--	port->event_domain = irq_domain_add_linear(pcie_intc_node, NUM_EVENTS,
-+	port->event_domain = irq_domain_add_linear(pcie_intc_node, port->num_events,
- 						   &mc_event_domain_ops, port);
- 	if (!port->event_domain) {
- 		dev_err(dev, "failed to get event domain\n");
-@@ -915,7 +915,7 @@ static int plda_init_interrupts(struct platform_device *pdev, struct plda_pcie_r
- 	if (irq < 0)
- 		return -ENODEV;
+ 	/* Address translation is up; safe to enable interrupts */
+-	ret = plda_init_interrupts(pdev, &port->plda);
++	ret = plda_init_interrupts(pdev, &port->plda, &mc_event);
+ 	if (ret)
+ 		return ret;
  
--	for (i = 0; i < NUM_EVENTS; i++) {
-+	for (i = 0; i < port->num_events; i++) {
- 		event_irq = irq_create_mapping(port->event_domain, i);
- 		if (!event_irq) {
- 			dev_err(dev, "failed to map hwirq %d\n", i);
-@@ -1007,6 +1007,7 @@ static int mc_host_probe(struct platform_device *pdev)
- 
- 	bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
- 	plda->bridge_addr = bridge_base_addr;
-+	plda->num_events = NUM_EVENTS;
- 
- 	/* Allow enabling MSI by disabling MSI-X */
- 	val = readl(bridge_base_addr + PCIE_PCI_IRQ_DW0);
 diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
-index 7ff7ff44c980..b439160448b1 100644
+index b439160448b1..907ad40f3188 100644
 --- a/drivers/pci/controller/plda/pcie-plda.h
 +++ b/drivers/pci/controller/plda/pcie-plda.h
-@@ -118,6 +118,7 @@ struct plda_pcie_rp {
- 	raw_spinlock_t lock;
- 	struct plda_msi msi;
- 	void __iomem *bridge_addr;
-+	int num_events;
+@@ -121,6 +121,11 @@ struct plda_pcie_rp {
+ 	int num_events;
  };
  
++struct plda_event {
++	int (*request_event_irq)(struct plda_pcie_rp *pcie,
++				 int event_irq, int event);
++};
++
  irqreturn_t plda_event_handler(int irq, void *dev_id);
+ void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
+ 			    phys_addr_t axi_addr, phys_addr_t pci_addr,
 -- 
 2.17.1
 
