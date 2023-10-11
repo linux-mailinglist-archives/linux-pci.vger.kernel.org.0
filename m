@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF8E17C4B57
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 09:14:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1AEF7C4B59
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 09:14:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229587AbjJKHOb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Oct 2023 03:14:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47468 "EHLO
+        id S229629AbjJKHOc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Oct 2023 03:14:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbjJKHOb (ORCPT
+        with ESMTP id S229628AbjJKHOb (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 03:14:31 -0400
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 10A7090;
-        Wed, 11 Oct 2023 00:14:28 -0700 (PDT)
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 35A2598;
+        Wed, 11 Oct 2023 00:14:29 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="6.03,214,1694703600"; 
-   d="scan'208";a="178877302"
+   d="scan'208";a="182667741"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 11 Oct 2023 16:14:28 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 11 Oct 2023 16:14:28 +0900
 Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 67ECF41B264F;
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 885D341B2644;
         Wed, 11 Oct 2023 16:14:28 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
@@ -28,91 +28,140 @@ To:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
         gustavo.pimentel@synopsys.com, mani@kernel.org
 Cc:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v24 00/16] PCI: dwc: rcar-gen4: Add R-Car Gen4 PCIe support
-Date:   Wed, 11 Oct 2023 16:14:07 +0900
-Message-Id: <20231011071423.249458-1-yoshihiro.shimoda.uh@renesas.com>
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v24 01/16] PCI: dwc: endpoint: Add multiple PFs support for dbi2
+Date:   Wed, 11 Oct 2023 16:14:08 +0900
+Message-Id: <20231011071423.249458-2-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20231011071423.249458-1-yoshihiro.shimoda.uh@renesas.com>
+References: <20231011071423.249458-1-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=1.1 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add R-Car S4-8 (R-Car Gen4) PCIe controller for both host and endpoint modes.
-To support them, modify PCIe DesignWare common codes.
+The commit 24ede430fa49 ("PCI: designware-ep: Add multiple PFs support
+for DWC") added .func_conf_select() to get the configuration space of
+different PFs and assumed that the offsets between dbi and dbi2 would
+be the same.
 
-Changes from v23:
-https://lore.kernel.org/linux-pci/20230926122431.3974714-1-yoshihiro.shimoda.uh@renesas.com/
- - Based on the latest pci.git / next branch.
- - Remove Link tag and Krzysztof's s-o-b tags from all patches.
- - Drop "PCI: dwc: Expose dw_pcie_write_dbi2() to module".
- - Add "PCI: dwc: Disable two BARs to avoid unnecessary memory assignment".
- - Add Reviewed-by in the patch 0[137]/16 and the patch 1[24]/16.
- - Fix typo in the patch 14/16.
- - Fix error messages and commit descriptions in the patch 1[234]/16.
- - Change the subjects in the patch 1[34]/16.
- - Use aplhabetical order on Kconfig in the patch 1[34]/16.
- - Drop DWC spec code in the patch 13/16. 
+However, Renesas R-Car Gen4 PCIe controllers have different offsets of
+function 1: dbi (+0x1000) and dbi2 (+0x800). To get the offset for dbi2,
+add .get_dbi2_offset() and dw_pcie_ep_get_dbi2_offset().
 
-Changes from v22:
-https://lore.kernel.org/linux-pci/20230925072130.3901087-1-yoshihiro.shimoda.uh@renesas.com/
- - Based on the latest pci.git / next branch.
- - Add Reviewed-by in the patch 12/16.
- - Move a few endpoint related code from the patch 13/16 to 14/16.
- - Change subjects in the patch 1[34]/16.
- - Modify the code for readability in the patch 14/16.
+Note:
+ - .func_conf_select() should be renamed later.
+ - dw_pcie_ep_get_dbi2_offset() will call .func_conf_select()
+   if .get_dbi2_offset() doesn't exist for backward compatibility.
+ - dw_pcie_writeX_{dbi/dbi2} APIs accepted the func_no argument,
+   so that these offset calculations are contained in the API
+   definitions itself as it should.
 
-Changes from v21:
-https://lore.kernel.org/linux-pci/20230922065331.3806925-1-yoshihiro.shimoda.uh@renesas.com/
- - Based on the latest pci.git / next branch.
- - Fix -Wmissing-prototypes warnings that was reported by kernel test robot:
-   https://lore.kernel.org/linux-pci/202309222125.KiN4nFhD-lkp@intel.com/
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ .../pci/controller/dwc/pcie-designware-ep.c   | 32 ++++++++++++++-----
+ drivers/pci/controller/dwc/pcie-designware.h  |  1 +
+ 2 files changed, 25 insertions(+), 8 deletions(-)
 
-Yoshihiro Shimoda (16):
-  PCI: dwc: endpoint: Add multiple PFs support for dbi2
-  PCI: dwc: Add dw_pcie_link_set_max_link_width()
-  PCI: dwc: Add missing PCI_EXP_LNKCAP_MLW handling
-  PCI: tegra194: Drop PCI_EXP_LNKSTA_NLW setting
-  PCI: dwc: Add EDMA_UNROLL capability flag
-  PCI: dwc: Expose dw_pcie_ep_exit() to module
-  PCI: dwc: endpoint: Introduce .pre_init() and .deinit()
-  PCI: dwc: Disable two BARs to avoid unnecessary memory assignment
-  dt-bindings: PCI: dwc: Update maxItems of reg and reg-names
-  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Host
-  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Endpoint
-  PCI: Add T_PVPERL macro
-  PCI: rcar-gen4: Add R-Car Gen4 PCIe controller support for host mode
-  PCI: rcar-gen4: Add endpoint mode support
-  MAINTAINERS: Update PCI DRIVER FOR RENESAS R-CAR for R-Car Gen4
-  misc: pci_endpoint_test: Add Device ID for R-Car S4-8 PCIe controller
-
- .../bindings/pci/rcar-gen4-pci-ep.yaml        | 115 ++++
- .../bindings/pci/rcar-gen4-pci-host.yaml      | 127 +++++
- .../bindings/pci/snps,dw-pcie-common.yaml     |   4 +-
- .../bindings/pci/snps,dw-pcie-ep.yaml         |   4 +-
- .../devicetree/bindings/pci/snps,dw-pcie.yaml |   4 +-
- MAINTAINERS                                   |   1 +
- drivers/misc/pci_endpoint_test.c              |   4 +
- drivers/pci/controller/dwc/Kconfig            |  25 +
- drivers/pci/controller/dwc/Makefile           |   1 +
- .../pci/controller/dwc/pcie-designware-ep.c   |  45 +-
- .../pci/controller/dwc/pcie-designware-host.c |   8 +
- drivers/pci/controller/dwc/pcie-designware.c  | 101 ++--
- drivers/pci/controller/dwc/pcie-designware.h  |   8 +-
- drivers/pci/controller/dwc/pcie-rcar-gen4.c   | 517 ++++++++++++++++++
- drivers/pci/controller/dwc/pcie-tegra194.c    |   6 -
- drivers/pci/pci.h                             |   3 +
- 16 files changed, 904 insertions(+), 69 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
- create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
- create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.c
-
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index f9182f8d552f..851538ddec0a 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -52,21 +52,35 @@ static unsigned int dw_pcie_ep_func_select(struct dw_pcie_ep *ep, u8 func_no)
+ 	return func_offset;
+ }
+ 
++static unsigned int dw_pcie_ep_get_dbi2_offset(struct dw_pcie_ep *ep, u8 func_no)
++{
++	unsigned int dbi2_offset = 0;
++
++	if (ep->ops->get_dbi2_offset)
++		dbi2_offset = ep->ops->get_dbi2_offset(ep, func_no);
++	else if (ep->ops->func_conf_select)     /* for backward compatibility */
++		dbi2_offset = ep->ops->func_conf_select(ep, func_no);
++
++	return dbi2_offset;
++}
++
+ static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, u8 func_no,
+ 				   enum pci_barno bar, int flags)
+ {
+-	u32 reg;
+-	unsigned int func_offset = 0;
++	unsigned int func_offset, dbi2_offset;
+ 	struct dw_pcie_ep *ep = &pci->ep;
++	u32 reg, reg_dbi2;
+ 
+ 	func_offset = dw_pcie_ep_func_select(ep, func_no);
++	dbi2_offset = dw_pcie_ep_get_dbi2_offset(ep, func_no);
+ 
+ 	reg = func_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
++	reg_dbi2 = dbi2_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
+ 	dw_pcie_dbi_ro_wr_en(pci);
+-	dw_pcie_writel_dbi2(pci, reg, 0x0);
++	dw_pcie_writel_dbi2(pci, reg_dbi2, 0x0);
+ 	dw_pcie_writel_dbi(pci, reg, 0x0);
+ 	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
+-		dw_pcie_writel_dbi2(pci, reg + 4, 0x0);
++		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, 0x0);
+ 		dw_pcie_writel_dbi(pci, reg + 4, 0x0);
+ 	}
+ 	dw_pcie_dbi_ro_wr_dis(pci);
+@@ -228,16 +242,18 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ {
+ 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
++	unsigned int func_offset, dbi2_offset;
+ 	enum pci_barno bar = epf_bar->barno;
+ 	size_t size = epf_bar->size;
+ 	int flags = epf_bar->flags;
+-	unsigned int func_offset = 0;
++	u32 reg, reg_dbi2;
+ 	int ret, type;
+-	u32 reg;
+ 
+ 	func_offset = dw_pcie_ep_func_select(ep, func_no);
++	dbi2_offset = dw_pcie_ep_get_dbi2_offset(ep, func_no);
+ 
+ 	reg = PCI_BASE_ADDRESS_0 + (4 * bar) + func_offset;
++	reg_dbi2 = PCI_BASE_ADDRESS_0 + (4 * bar) + dbi2_offset;
+ 
+ 	if (!(flags & PCI_BASE_ADDRESS_SPACE))
+ 		type = PCIE_ATU_TYPE_MEM;
+@@ -253,11 +269,11 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 
+ 	dw_pcie_dbi_ro_wr_en(pci);
+ 
+-	dw_pcie_writel_dbi2(pci, reg, lower_32_bits(size - 1));
++	dw_pcie_writel_dbi2(pci, reg_dbi2, lower_32_bits(size - 1));
+ 	dw_pcie_writel_dbi(pci, reg, flags);
+ 
+ 	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
+-		dw_pcie_writel_dbi2(pci, reg + 4, upper_32_bits(size - 1));
++		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, upper_32_bits(size - 1));
+ 		dw_pcie_writel_dbi(pci, reg + 4, 0);
+ 	}
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index ef0b2efa9f93..6189884b4efa 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -341,6 +341,7 @@ struct dw_pcie_ep_ops {
+ 	 * driver.
+ 	 */
+ 	unsigned int (*func_conf_select)(struct dw_pcie_ep *ep, u8 func_no);
++	unsigned int (*get_dbi2_offset)(struct dw_pcie_ep *ep, u8 func_no);
+ };
+ 
+ struct dw_pcie_ep_func {
 -- 
 2.25.1
 
