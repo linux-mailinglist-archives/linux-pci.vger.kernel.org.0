@@ -2,199 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD4537C4768
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 03:47:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4061D7C48DD
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 06:42:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344487AbjJKBru (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Oct 2023 21:47:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48432 "EHLO
+        id S1345106AbjJKEmA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Oct 2023 00:42:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344618AbjJKBru (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Oct 2023 21:47:50 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B943A4
-        for <linux-pci@vger.kernel.org>; Tue, 10 Oct 2023 18:47:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696988867; x=1728524867;
-  h=date:from:to:cc:subject:message-id;
-  bh=n+557d4PCsxugBcFp07660O/rRcvRAM5pPstExNdrXk=;
-  b=ly639z1lYh/wbXG8U4fJmfdyuKqVmNduv06f1gXZLHDQehE5hf44cy8M
-   HjsxmSHWmC+3KQLBRhA+lGL4+qKuKqoBGUik4cSNtCTQVUaAWCovC7mW5
-   Ignv9Uu7VncyR0ytHfEDBHn+7efYN7Bx3BJt24Yf3DtRjLaovbg33Bqik
-   k23F2gX4EVCvdUzEe6nliJ6MfeZBmOBI8TQ0R2vDJCI96jUtPszpTkGLp
-   oJWP5ZiXqgQR9Xc2kq3WOwYoHOz1tFoFEE131jlnaq7fd3mxn5E+4OcRZ
-   lzjp8ufcGCWjXbcCEQTb1APbvyaCyADAeqMpckZGKCB94UPNAkCHI8jfg
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="381807855"
-X-IronPort-AV: E=Sophos;i="6.03,214,1694761200"; 
-   d="scan'208";a="381807855"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 18:47:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="897445504"
-X-IronPort-AV: E=Sophos;i="6.03,214,1694761200"; 
-   d="scan'208";a="897445504"
-Received: from lkp-server02.sh.intel.com (HELO f64821696465) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 10 Oct 2023 18:46:02 -0700
-Received: from kbuild by f64821696465 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qqOK7-0001Wb-2F;
-        Wed, 11 Oct 2023 01:47:43 +0000
-Date:   Wed, 11 Oct 2023 09:46:50 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- 87a836d6fc7a82d13cef77cfa1c7bd6ab8f7304c
-Message-ID: <202310110947.MjkAgkH4-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S1344777AbjJKEmA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 00:42:00 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B122294;
+        Tue, 10 Oct 2023 21:41:58 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F3DDC433C8;
+        Wed, 11 Oct 2023 04:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696999318;
+        bh=JL4ChIEdKZP41vjS+bFsFNqnMVKcQv+to5EkADuDlAU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=neFxUsmZsIGHeziDj063IOiTkgCy1ymeDRViSB60SUpjenpT4lrFe2N2v7J9P1hEb
+         MeUe3XmRQ5ePPpnRF1OLIN7diU4qLyCYqqcIYPWKpQLMQVcc08QpB6nK3uRUcj5H+I
+         pdh0DRHNR9V84XET2FeCnLFk1gSg7FwRiNVoZNfxJ38s6fQlweVvp16qRdaE33MpFz
+         MCXToxJwoAqv40zTiO5H6ZeGrSd5a6Lz9POuxxAzuf+sR0msBfciR8oQF3c2X2ocGt
+         5mlH4KKvcE1QGfQxIJsalfpcOIodteZFwPH14fb5UWyE5J5NT4P3VL1GWOa7gV3YRB
+         fFceHOL+KWyjg==
+Date:   Wed, 11 Oct 2023 10:11:44 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Manivannan Sadhasivam <mani@kernel.org>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "conor+dt@kernel.org" <conor+dt@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>
+Subject: Re: [PATCH v21 13/16] PCI: dwc: rcar-gen4: Add R-Car Gen4 PCIe
+ controller support
+Message-ID: <20231011044144.GA3508@thinkpad>
+References: <20230922065331.3806925-1-yoshihiro.shimoda.uh@renesas.com>
+ <20230922065331.3806925-14-yoshihiro.shimoda.uh@renesas.com>
+ <20231010120421.GG4884@thinkpad>
+ <TYBPR01MB5341F9721774B5993EB4B912D8CCA@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <TYBPR01MB5341F9721774B5993EB4B912D8CCA@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: 87a836d6fc7a82d13cef77cfa1c7bd6ab8f7304c  Merge branch 'pci/misc'
+On Wed, Oct 11, 2023 at 01:18:11AM +0000, Yoshihiro Shimoda wrote:
+> Hello Manivannan,
+> 
+> > From: Manivannan Sadhasivam, Sent: Tuesday, October 10, 2023 9:04 PM
+> > 
+> > On Fri, Sep 22, 2023 at 03:53:28PM +0900, Yoshihiro Shimoda wrote:
+> > > Add R-Car Gen4 PCIe controller support for host mode.
+> > >
+> > > This controller is based on Synopsys DesignWare PCIe. However, this
+> > > particular controller has a number of vendor-specific registers, and as
+> > > such, requires initialization code like mode setting and retraining and
+> > > so on.
+> > >
+> > > [kwilczynski: commit log]
+> > > Link:
+> <snip URL>
+> > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+> > > Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/Kconfig          |  14 +
+> > >  drivers/pci/controller/dwc/Makefile         |   1 +
+> > >  drivers/pci/controller/dwc/pcie-rcar-gen4.c | 380 ++++++++++++++++++++
+> > >  3 files changed, 395 insertions(+)
+> > >  create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> > > index ab96da43e0c2..bc69fcab2e2a 100644
+> > > --- a/drivers/pci/controller/dwc/Kconfig
+> > > +++ b/drivers/pci/controller/dwc/Kconfig
+> > > @@ -415,4 +415,18 @@ config PCIE_VISCONTI_HOST
+> > >  	  Say Y here if you want PCIe controller support on Toshiba Visconti SoC.
+> > >  	  This driver supports TMPV7708 SoC.
+> > >
+> > > +config PCIE_RCAR_GEN4
+> > > +	tristate
+> > > +
+> > > +config PCIE_RCAR_GEN4_HOST
+> > > +	tristate "Renesas R-Car Gen4 PCIe controller (host mode)"
+> > > +	depends on ARCH_RENESAS || COMPILE_TEST
+> > > +	depends on PCI_MSI
+> > > +	select PCIE_DW_HOST
+> > > +	select PCIE_RCAR_GEN4
+> > > +	help
+> > > +	  Say Y here if you want PCIe controller (host mode) on R-Car Gen4 SoCs.
+> > > +	  To compile this driver as a module, choose M here: the module will be
+> > > +	  called pcie-rcar-gen4.ko. This uses the DesignWare core.
+> > > +
+> > >  endmenu
+> > > diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> > > index bf5c311875a1..bac103faa523 100644
+> > > --- a/drivers/pci/controller/dwc/Makefile
+> > > +++ b/drivers/pci/controller/dwc/Makefile
+> > > @@ -26,6 +26,7 @@ obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
+> > >  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+> > >  obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
+> > >  obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
+> > > +obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4.o
+> > >
+> > >  # The following drivers are for devices that use the generic ACPI
+> > >  # pci_root.c driver but don't support standard ECAM config access.
+> > > diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> > > new file mode 100644
+> > > index 000000000000..dfff6bb18932
+> > > --- /dev/null
+> > > +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
 
-elapsed time: 1632m
+[...]
 
-configs tested: 123
-configs skipped: 2
+> > > +/* Host mode */
+> > > +static int rcar_gen4_pcie_host_init(struct dw_pcie_rp *pp)
+> > > +{
+> > > +	struct dw_pcie *dw = to_dw_pcie_from_pp(pp);
+> > > +	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
+> > > +	int ret;
+> > > +	u32 val;
+> > > +
+> > > +	gpiod_set_value_cansleep(dw->pe_rst, 1);
+> > > +
+> > > +	ret = rcar_gen4_pcie_common_init(rcar);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	/*
+> > > +	 * According to the section 3.5.7.2 "RC Mode" in DWC PCIe Dual Mode
+> > > +	 * Rev.5.20a, we should disable two BARs to avoid unnecessary memory
+> > > +	 * assignment during device enumeration.
+> > > +	 */
+> > > +	dw_pcie_writel_dbi2(dw, PCI_BASE_ADDRESS_0, 0x0);
+> > > +	dw_pcie_writel_dbi2(dw, PCI_BASE_ADDRESS_1, 0x0);
+> > 
+> > If this is DWC specific, can we move it to the common code?
+> 
+> Hmm, it seems so. However, I didn't find any similar code on other DWC drivers.
+> So, for now, moving it to the common code is not needed, I think.
+> 
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+No. If this is as per the DWC spec, then it should be part of the common code.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20231010   gcc  
-arc                   randconfig-001-20231011   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                        neponset_defconfig   clang
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-003-20231010   gcc  
-i386         buildonly-randconfig-004-20231010   gcc  
-i386         buildonly-randconfig-004-20231011   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-002-20231010   gcc  
-i386                  randconfig-003-20231010   gcc  
-i386                  randconfig-004-20231010   gcc  
-i386                  randconfig-011-20231010   gcc  
-i386                  randconfig-012-20231010   gcc  
-i386                  randconfig-013-20231010   gcc  
-i386                  randconfig-014-20231010   gcc  
-i386                  randconfig-015-20231010   gcc  
-i386                  randconfig-016-20231010   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20231010   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-nios2                            alldefconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20231010   gcc  
-riscv                 randconfig-001-20231011   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20231010   gcc  
-s390                  randconfig-001-20231011   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                           se7343_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                 randconfig-001-20231010   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64       buildonly-randconfig-001-20231010   gcc  
-x86_64       buildonly-randconfig-002-20231010   gcc  
-x86_64       buildonly-randconfig-003-20231010   gcc  
-x86_64       buildonly-randconfig-004-20231010   gcc  
-x86_64       buildonly-randconfig-005-20231010   gcc  
-x86_64       buildonly-randconfig-006-20231010   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20231010   gcc  
-x86_64                randconfig-002-20231010   gcc  
-x86_64                randconfig-003-20231010   gcc  
-x86_64                randconfig-004-20231010   gcc  
-x86_64                randconfig-005-20231010   gcc  
-x86_64                randconfig-006-20231010   gcc  
-x86_64                randconfig-011-20231010   gcc  
-x86_64                randconfig-012-20231010   gcc  
-x86_64                randconfig-013-20231010   gcc  
-x86_64                randconfig-014-20231010   gcc  
-x86_64                randconfig-015-20231010   gcc  
-x86_64                randconfig-016-20231010   gcc  
-x86_64                randconfig-072-20231010   gcc  
-x86_64                randconfig-074-20231010   gcc  
-x86_64                randconfig-075-20231010   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
+> > > +
+> > > +	/* Enable MSI interrupt signal */
+> > > +	val = readl(rcar->base + PCIEINTSTS0EN);
+> > > +	val |= MSI_CTRL_INT;
+> > > +	writel(val, rcar->base + PCIEINTSTS0EN);
+> > > +
+> > 
+> > Above should be guarded with:
+> > 
+> > 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> > 	...
+> > 	}
+> 
+> Since this driver depends on PCI_MSI by Kconfig, such a IS_ENABLED is not
+> needed. This is from your suggestion ;) [2]
+> 
+> [2] https://lore.kernel.org/linux-devicetree/20230724122820.GM6291@thinkpad/
+> 
+
+heh... thanks for reminding me ;)
+
+- Mani
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+மணிவண்ணன் சதாசிவம்
