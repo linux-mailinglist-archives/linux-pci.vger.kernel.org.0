@@ -2,128 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE4257C55CB
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 15:46:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5512F7C5753
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Oct 2023 16:50:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232355AbjJKNqe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Oct 2023 09:46:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49000 "EHLO
+        id S232323AbjJKOuI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Oct 2023 10:50:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232091AbjJKNqd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 09:46:33 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B114B92;
-        Wed, 11 Oct 2023 06:46:31 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 115F4C433C7;
-        Wed, 11 Oct 2023 13:46:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697031991;
-        bh=7TPQv7Nq7BiCQCWrWeJZjtLq0BIDRCBxXyV8qe3CLuU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=t2l+ViGLRCilD6w6vcRKjFTOxbUav8k077I/X7wqFKzvPpcA3cvPsgoCWNYZbigIs
-         npvwgPSxPyAl2ycCusodrfO0KiiFNRpQiOOqWeEXKkbeoZ9iq0HWJoytI5Xvw1zc8M
-         i2r/AewloDrcSGip/DSaC9JV9rzO7fgT4e94PSrLIrqHAdYmeFyXyiUe3xMvINCA9Z
-         OIVzVXMWccyxSLHkDcEiuPKaxO6BJ6wEdatNMIKQk+w9QMWFvwywPPP8FXGNYkGgT6
-         bZj1Sz46Agf5nKPERldj8Fw30VthHD9Lx+SF8ej3mwZtTblpV8PNq3zcDQdG3i/uBV
-         /38MnoKPThPng==
-Date:   Wed, 11 Oct 2023 08:46:29 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc:     lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        r-gunasekaran@ti.com, srk@ti.com
-Subject: Re: [PATCH] PCI: keystone: Don't enable BAR0 if link is not detected
-Message-ID: <20231011134629.GA1029324@bhelgaas>
+        with ESMTP id S232256AbjJKOuH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Oct 2023 10:50:07 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 168A094;
+        Wed, 11 Oct 2023 07:50:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697035806; x=1728571806;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MtsQbyKwcjRJIzA/Fgz2m2QCnrrr+NVDrlseLOUGxUI=;
+  b=RQkotTUgWgdNdb7xLrxYd5jQkZgnUoykrXIGXnWBNFc023vKS64mbDOd
+   G9a7PVaPbbcI6b23MpoZDixnFezmMQTFHNCAXj+NIVjd+cm4M+nhPzi9k
+   q4bFTO1v/nr59ORJaVqvtLKlDyb9BpkZ++LgEYesQVlvBY45xgAOgCtY8
+   kKqx5IMFT/PxPs3T3l2w+kGXgdFhUZ7g2+2MqU0TeT8GIO+inD4KHzPmJ
+   rLj3vssf7UOCOSAXyRN4iLjl0iugMBiPfk/Bk0xqCfy6ono+UYJmV+FL2
+   ZIgQX5BCutRKQJozm3fzPooRt0D3wdzsqTafyyII866l/UZMNKuesHJ+c
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="6245382"
+X-IronPort-AV: E=Sophos;i="6.03,216,1694761200"; 
+   d="scan'208";a="6245382"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 07:50:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="783259405"
+X-IronPort-AV: E=Sophos;i="6.03,216,1694761200"; 
+   d="scan'208";a="783259405"
+Received: from gears-pc1.amr.corp.intel.com (HELO [10.251.3.56]) ([10.251.3.56])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 07:50:05 -0700
+Message-ID: <078c247a-ce72-49d4-88a5-b22e814843dd@linux.intel.com>
+Date:   Wed, 11 Oct 2023 07:50:05 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231011123451.34827-1-s-vadapalli@ti.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/10] PCI: Use FIELD_GET() and FIELD_PREP()
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+References: <20231010204436.1000644-1-helgaas@kernel.org>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20231010204436.1000644-1-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Siddharth,
 
-On Wed, Oct 11, 2023 at 06:04:51PM +0530, Siddharth Vadapalli wrote:
-> Since the function dw_pcie_host_init() ignores the absence of link under
-> the assumption that link can come up later, it is possible that the
-> pci_host_probe(bridge) function is invoked even when no endpoint device
-> is connected. In such a situation, the ks_pcie_v3_65_add_bus() function
-> configures BAR0 when the link is not up, resulting in Completion Timeouts
-> during the MSI configuration performed later by the PCI Express Port driver
-> to setup AER, PME and other services. Thus, leave BAR0 disabled if link is
-> not yet detected when the ks_pcie_v3_65_add_bus() function is invoked.
 
-I'm trying to make sense of this.  In this path:
-
-  pci_host_probe
-    pci_scan_root_bus_bridge
-      pci_register_host_bridge
-	bus = pci_alloc_bus(NULL)    # root bus
-	bus->ops->add_bus(bus)
-	  ks_pcie_v3_65_add_bus
-
-The BAR0 in question must belong to a Root Port.  And it sounds like
-the issue must be related to MSI-X, since the original MSI doesn't
-involve any BARs.
-
-I don't understand why the Root Port's BAR0 is related to the link
-being up.  MSI-X configuration of the Root Port (presumably using
-BAR0) shouldn't involve any transactions to devices *below* the Root
-Port, and I would expect that BAR to be available (readable and
-writable) regardless of whether the link is up.
-
-If we skip the BAR0 configuration because the link is down at the time
-of pci_host_probe(), when *do* we do that configuration?  I don't see
-another path to ks_pcie_v3_65_add_bus() for the root bus later.
-
-Do you know what exactly causes the Completion Timeout?  Is this a
-read to BAR0, or some attempted access to a downstream device, or
-something else?
-
-Keystone is the only driver that uses .add_bus() for this, so it seems
-a little weird, but maybe this is related to some Keystone-specific
-hardware design.
-
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> ---
+On 10/10/2023 1:44 PM, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Hello,
+> Use FIELD_GET() and FIELD_PREP() to avoid the need for shifting.
 > 
-> This patch is based on linux-next tagged next-20231011.
+> These apply on top of the PCI patches from Ilpo's series:
+>   https://lore.kernel.org/r/20230919125648.1920-1-ilpo.jarvinen@linux.intel.com
 > 
-> Regards,
-> Siddharth.
+
+Looks good to me.
+
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+
+> Bjorn Helgaas (10):
+>   PCI: Use FIELD_GET()
+>   PCI: Use FIELD_GET() in Sapphire RX 5600 XT Pulse quirk
+>   PCI/ASPM: Use FIELD_GET()
+>   PCI/ATS: Show PASID Capability register width in bitmasks
+>   PCI/ATS: Use FIELD_GET()
+>   PCI/DPC: Use FIELD_GET()
+>   PCI/PME: Use FIELD_GET()
+>   PCI/PTM: Use FIELD_GET()
+>   PCI/VC: Use FIELD_GET()
+>   PCI/portdrv: Use FIELD_GET()
 > 
->  drivers/pci/controller/dwc/pci-keystone.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/pci/ats.c             |  7 ++---
+>  drivers/pci/pci.c             | 53 +++++++++++++++++------------------
+>  drivers/pci/pcie/aspm.c       | 31 +++++++++++---------
+>  drivers/pci/pcie/dpc.c        |  9 +++---
+>  drivers/pci/pcie/pme.c        |  4 ++-
+>  drivers/pci/pcie/portdrv.c    |  7 +++--
+>  drivers/pci/pcie/ptm.c        |  5 ++--
+>  drivers/pci/probe.c           |  8 +++---
+>  drivers/pci/quirks.c          |  2 +-
+>  drivers/pci/vc.c              |  9 +++---
+>  include/uapi/linux/pci_regs.h | 15 ++++++----
+>  11 files changed, 81 insertions(+), 69 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index 49aea6ce3e87..ac2ad112d616 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -459,7 +459,8 @@ static int ks_pcie_v3_65_add_bus(struct pci_bus *bus)
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
->  
-> -	if (!pci_is_root_bus(bus))
-> +	/* Don't enable BAR0 if link is not yet up at this point */
-> +	if (!pci_is_root_bus(bus) || !dw_pcie_link_up(pci))
->  		return 0;
->  
->  	/* Configure and set up BAR0 */
-> -- 
-> 2.34.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
