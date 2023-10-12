@@ -2,190 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3FD57C6F2B
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 15:30:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D93427C70D6
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 16:59:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378899AbjJLNaT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Oct 2023 09:30:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52488 "EHLO
+        id S1343993AbjJLO7o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Oct 2023 10:59:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378871AbjJLNaS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 09:30:18 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85F40D3
-        for <linux-pci@vger.kernel.org>; Thu, 12 Oct 2023 06:30:15 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-31c5cac3ae2so867274f8f.3
-        for <linux-pci@vger.kernel.org>; Thu, 12 Oct 2023 06:30:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1697117414; x=1697722214; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4EwAhxT4YGeUjPFFndZrOLQbhs4tGDZqtUU/Z9A6IQ4=;
-        b=Jt+KZkIY8yhUNOXY74CorUnyQjb49kmt6FgiomNv9rN+tMQdFQPrFyrD4NWsV9qcji
-         6gmUwZ533V7xfvZzaCRLJMQE0PimiX4LuY1lje7El17E8tuUsmqOjTKX4bOBsgciFx7p
-         w8L9lagT46UbRENdfTkWHkpQxkL26innJS//8KXBlwUbC9dK34/1GkhO+HiW5hiA0gsg
-         PDltZMivO9gVsEBXkGJ1G8Kbz0Jc8j3xiv9IBf2LthtGFWIa7Mm/U6+4iDN/fLX+K04o
-         a8veYGynYpP5D/4Jyx7Q+LWzuZ2MmkTj1td0PZbbyxdinmVOiemadbygATlMClwo4qt1
-         8xIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697117414; x=1697722214;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4EwAhxT4YGeUjPFFndZrOLQbhs4tGDZqtUU/Z9A6IQ4=;
-        b=Rapg/XbrGZGjuy7gE45pY2XUxjpR0BX+LbLbTN+LQR6KpV2p9+tsWsj3DPZgiE5i8g
-         w0UWqT8F8sX14mSq+pBLWNz8Wl9UdDLhW7NGSX80ysHe4dRugjQNyUukmb4oaFXzrcrI
-         knE3Bv9oKrtTws2Fgih5ZQGz3P5yAUJ/LWqjD3Ljh091Cql2GRX3vPjLNwcM8PMCrlAq
-         2B+vMpAj0cy0KGgOQO72ptW1R+R6+b8bGcvQFfLCNDWK1DaAIEsSsrq9ZMHmU3o0nYLK
-         QWN0PYR6ydjQH0UdzYrpHKy2pdIR5xlJbfB18GfJFzDC4wcKOa9Aj8xbwM0HTagOgsqs
-         ejIQ==
-X-Gm-Message-State: AOJu0YwzYwnbS8gHv+V6DDl8yGljz2SUW6UqX+Mejq2EEsJqMqTtkHM2
-        CQ9LPwamW8Kbnp7P+pURL9leAA==
-X-Google-Smtp-Source: AGHT+IFHQ7HxXxsqXfAzOkIVktufvVAO6I0nfPVfdVYLFENpEEGacyyf0/x61sNni9aSspa4HfOOmg==
-X-Received: by 2002:adf:f7c4:0:b0:32d:9740:5a27 with SMTP id a4-20020adff7c4000000b0032d97405a27mr295406wrq.9.1697117413894;
-        Thu, 12 Oct 2023 06:30:13 -0700 (PDT)
-Received: from [192.168.1.172] ([93.5.22.158])
-        by smtp.gmail.com with ESMTPSA id hn32-20020a05600ca3a000b004053e9276easm21902592wmb.32.2023.10.12.06.30.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Oct 2023 06:30:13 -0700 (PDT)
-Message-ID: <2e9766db-da12-42e6-80a8-b9ef6f2de724@baylibre.com>
-Date:   Thu, 12 Oct 2023 15:30:12 +0200
+        with ESMTP id S1344035AbjJLO7o (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 10:59:44 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3417FA9;
+        Thu, 12 Oct 2023 07:59:43 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79C14C433C7;
+        Thu, 12 Oct 2023 14:59:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697122782;
+        bh=GQeXXBOT5+9Wm9T+8WfRc/p3162rhG1tPcrD0H1gcIw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ELBpi3dmxObG8Q2FmZnl7AuclPUqcM4zxNUlntvkl2d1YJZMcAJYa0EkhwixhD2mh
+         ZVqtsbLGDuwrs+39a+2N44FTSAJOtrvBrzOASdoy8pY8M25GGtk3E+E5Xac8rEHU2k
+         6Zo3qFZYoXC4eXXiO+vslFxYcZVGVIMEaGxM8dttiMIGf+hKBuL/sqQJpT8sMt3IQp
+         Aj8AzUCjWa1T/kYSJrvLSbbwXPpPvRgNee5Gz0Y+D/Lh6cA00KW2lTdJJzYPRX30ma
+         AEPskvE0PMfcigAJLolZIOzNqZkoMKe2YwU8o4dEgYnO6qtpBQxVZX1J4IxwEDJpTP
+         5uOLzEBvmpd8Q==
+Date:   Thu, 12 Oct 2023 09:59:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shuai Xue <xueshuai@linux.alibaba.com>
+Cc:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
+        yangyicong@huawei.com, will@kernel.org,
+        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
+        robin.murphy@arm.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        rdunlap@infradead.org, mark.rutland@arm.com,
+        zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
+Subject: Re: [PATCH v7 2/4] PCI: Add Alibaba Vendor ID to linux/pci_ids.h
+Message-ID: <20231012145940.GA1069329@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: mediatek-gen3: Fix translation window
-Content-Language: en-US
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        =?UTF-8?B?Smlhbmp1biBXYW5nICjnjovlu7rlhpsp?= 
-        <Jianjun.Wang@mediatek.com>, "robh@kernel.org" <robh@kernel.org>,
-        "kw@linux.com" <kw@linux.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        =?UTF-8?B?SmlleXkgWWFuZyAo5p2o5rSBKQ==?= <Jieyy.Yang@mediatek.com>,
-        =?UTF-8?B?Q2h1YW5qaWEgTGl1ICjmn7PkvKDlmIkp?= 
-        <Chuanjia.Liu@mediatek.com>,
-        =?UTF-8?B?SmlhbiBZYW5nICjmnajmiKwp?= <Jian.Yang@mediatek.com>,
-        =?UTF-8?B?UWl6aG9uZyBDaGVuZyAo56iL5ZWf5b+gKQ==?= 
-        <Qizhong.Cheng@mediatek.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Ryder Lee <Ryder.Lee@mediatek.com>
-References: <20231011122633.31559-1-jianjun.wang@mediatek.com>
- <899c7275-ccca-43bb-b1ae-a3403dd18622@baylibre.com>
- <088559162e5ec4e2d6d38d8a5707c6e0e12f5ac6.camel@mediatek.com>
- <54ed1269-8699-4531-abc6-09b602adece9@baylibre.com>
- <930f6df4-3267-59df-ad75-244f5b9cee84@collabora.com>
-From:   Alexandre Mergnat <amergnat@baylibre.com>
-In-Reply-To: <930f6df4-3267-59df-ad75-244f5b9cee84@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231012032856.2640-3-xueshuai@linux.alibaba.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 12/10/2023 14:52, AngeloGioacchino Del Regno wrote:
-> Il 12/10/23 12:27, Alexandre Mergnat ha scritto:
->>
->>
->> On 12/10/2023 08:17, Jianjun Wang (王建军) wrote:
->>> On Wed, 2023-10-11 at 17:38 +0200, Alexandre Mergnat wrote:
->>>> External email : Please do not click links or open attachments until
->>>> you have verified the sender or the content.
->>>>
->>>>
->>>> On 11/10/2023 14:26, Jianjun Wang wrote:
->>>> > The size of translation table should be a power of 2, using fls()
->>>> cannot > get the proper value when the size is not a power of 2. For
->>>> example, > fls(0x3e00000) - 1 = 25, hence the PCIe translation 
->>>> window size
->>>> will be > set to 0x2000000 instead of the expected size 0x3e00000. Fix
->>>> translation > window by splitting the MMIO space to multiple tables 
->>>> if its size
->>>> is not > a power of 2.
->>>>
->>>> Hi Jianjun,
->>>>
->>>> I've no knowledge in PCIE, so maybe what my suggestion is stupid:
->>>>
->>>> Is it mandatory to fit the translation table size with 0x3e00000 (in 
->>>> this example) ?
->>>> I'm asking because you can have an issue by reaching the maximum 
->>>> translation table number.
->>>>
->>>> Is it possible to just use only one table with the power of 2 size
->>>> above 0x3e00000 => 0x4000000 ( fls(0x3e00000) = 26 = 0x4000000). The
->>>> downside of this method is wasting allocation space. AFAIK I already 
->>>> see this kind of method for memory protection/allocation in embedded 
->>>> systems,
->>>> so I'm wondering if this method is safer than using multiple table for
->>>> only one size which isn't a power of 2.
->>>
->>> Hi Alexandre,
->>>
->>> It's not mandatory to fit the translation table size with 0x3e00000,
->>> and yes we can use only one table with the power of 2 size to prevent
->>> this.
->>>
->>> For MediaTek's SoCs, the MMIO space range for each PCIe port is fixed,
->>> and it will always be a power of 2, most of them will be 64MB. The
->>> reason we have the size which isn't a power of 2 is that we reserve an
->>> IO space for compatible purpose, some older devices may still use IO
->>> space.
->>>
->>> Take MT8195 as an example, its MMIO size is 64MB, and the declaration
->>> in the DT is like:
->>> ranges = <0x81000000 0 0x20000000 0x0 0x20000000 0 0x200000>,
->>>           <0x82000000 0 0x20200000 0x0 0x20200000 0 0x3e00000>;
->>>
->>> The MMIO space is splited to 2MB IO space and 62MB MEM space, that's
->>> cause the current risk of the MEM space range, its actual available MEM
->>> space is 32MB. But it still works for now because most of the devices
->>> only require a very small amount of MEM space and will not reach ranges
->>> higher than 32MB.
->>>
->>> So for the concern of reaching the maximum translation table number, I
->>> think maybe we can just print the warning message instead of return
->>> error code, since it still works but have some limitations(MEM space
->>> not set as DT expected).
->>>
->>
->> Ok understood, thanks for your explanation.
->> Then, IMHO, you should use only one table with the power of 2 size 
->> above to make the code simpler, efficient, robust, more readable and 
->> avoid confusion about the warning.
->>
->> This is what is done for pci-mvebu.c AFAII.
->>
->> If you prefer waiting another reviewer with a better PCIE expertise 
->> than me, it's ok for me. With the information I have currently, I 
->> prefer to not approve the current implementation because, from my PoV, 
->> it introduce unnecessary complexity.
->>
+On Thu, Oct 12, 2023 at 11:28:54AM +0800, Shuai Xue wrote:
+> The Alibaba Vendor ID (0x1ded) is now used by Alibaba elasticRDMA ("erdma")
+> and will be shared with the upcoming PCIe PMU ("dwc_pcie_pmu"). Move the
+> Vendor ID to linux/pci_ids.h so that it can shared by several drivers
+> later.
 > 
->  From what I understand, using only one table with a size that is a 
-> power of two
-> won't let us use the entire MMIO space, hence the only solution to allow 
-> using
-> the entire range is to split to more than one table.
+> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 
-You can take the power of 2 above, which is directly returned by fls().
-That let us use the entire MMIO space.
-In this example, if your size is 0x3e00000, the you will allow 0x4000000.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci_ids.h
 
-
--- 
-Regards,
-Alexandre
+> ---
+>  drivers/infiniband/hw/erdma/erdma_hw.h | 2 --
+>  include/linux/pci_ids.h                | 2 ++
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/infiniband/hw/erdma/erdma_hw.h b/drivers/infiniband/hw/erdma/erdma_hw.h
+> index 9d316fdc6f9a..a155519a862f 100644
+> --- a/drivers/infiniband/hw/erdma/erdma_hw.h
+> +++ b/drivers/infiniband/hw/erdma/erdma_hw.h
+> @@ -11,8 +11,6 @@
+>  #include <linux/types.h>
+>  
+>  /* PCIe device related definition. */
+> -#define PCI_VENDOR_ID_ALIBABA 0x1ded
+> -
+>  #define ERDMA_PCI_WIDTH 64
+>  #define ERDMA_FUNC_BAR 0
+>  #define ERDMA_MISX_BAR 2
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 5fb3d4c393a9..d8760daf9e5a 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2601,6 +2601,8 @@
+>  #define PCI_VENDOR_ID_TEKRAM		0x1de1
+>  #define PCI_DEVICE_ID_TEKRAM_DC290	0xdc29
+>  
+> +#define PCI_VENDOR_ID_ALIBABA		0x1ded
+> +
+>  #define PCI_VENDOR_ID_TEHUTI		0x1fc9
+>  #define PCI_DEVICE_ID_TEHUTI_3009	0x3009
+>  #define PCI_DEVICE_ID_TEHUTI_3010	0x3010
+> -- 
+> 2.39.3
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
