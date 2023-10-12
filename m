@@ -2,138 +2,190 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC1617C6EE3
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 15:13:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3FD57C6F2B
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 15:30:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343965AbjJLNNi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Oct 2023 09:13:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35716 "EHLO
+        id S1378899AbjJLNaT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Oct 2023 09:30:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343765AbjJLNNh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 09:13:37 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2744894
-        for <linux-pci@vger.kernel.org>; Thu, 12 Oct 2023 06:13:36 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-40684f53bfcso9690125e9.0
-        for <linux-pci@vger.kernel.org>; Thu, 12 Oct 2023 06:13:36 -0700 (PDT)
+        with ESMTP id S1378871AbjJLNaS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 09:30:18 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85F40D3
+        for <linux-pci@vger.kernel.org>; Thu, 12 Oct 2023 06:30:15 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-31c5cac3ae2so867274f8f.3
+        for <linux-pci@vger.kernel.org>; Thu, 12 Oct 2023 06:30:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1697116414; x=1697721214; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IvfsuqeXvTAiiT0A6Kg2dLp8waVJkGZPJh+mIn+Z3lc=;
-        b=asheKMbhbemLGughzEIK2P1pRezyMpbJ+eXyNW7ikkxvQl/0OOMsDeizR69PbNPKoD
-         gA+pFBIUZqts/JPS+Bws5bzT9t68yxmfL63rSagkjjRCZoMEA2uj1HRBrXqiU4uNTNHE
-         k02PUV5/zUrXuscDmzgYTKJmjl1BcTUn0NYKifoCEWg+LfhkfrVSsITk32iXpGHROFVR
-         fZRq+t1KWjkfRssUBOu0ZWlBOqZ7H7OVCAgvSKP9H8+k/SWoiptYMnuoAvE1ENe5Il7f
-         TxWXCbu738HD7oeLjreqERgr7eyw/nEwHaLBR//Ru6vA4N5KTDrkAUfom4og2uVqVUNm
-         26uw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1697117414; x=1697722214; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4EwAhxT4YGeUjPFFndZrOLQbhs4tGDZqtUU/Z9A6IQ4=;
+        b=Jt+KZkIY8yhUNOXY74CorUnyQjb49kmt6FgiomNv9rN+tMQdFQPrFyrD4NWsV9qcji
+         6gmUwZ533V7xfvZzaCRLJMQE0PimiX4LuY1lje7El17E8tuUsmqOjTKX4bOBsgciFx7p
+         w8L9lagT46UbRENdfTkWHkpQxkL26innJS//8KXBlwUbC9dK34/1GkhO+HiW5hiA0gsg
+         PDltZMivO9gVsEBXkGJ1G8Kbz0Jc8j3xiv9IBf2LthtGFWIa7Mm/U6+4iDN/fLX+K04o
+         a8veYGynYpP5D/4Jyx7Q+LWzuZ2MmkTj1td0PZbbyxdinmVOiemadbygATlMClwo4qt1
+         8xIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697116414; x=1697721214;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IvfsuqeXvTAiiT0A6Kg2dLp8waVJkGZPJh+mIn+Z3lc=;
-        b=ZUOXF81XXAXxKKwfibtaZrOa/rELEK+Rv8HTplMPnpCMYRCIWHj7nPuASmKh0HyIRT
-         8PJ1fZRnYZNXlrZ43ZWoU5vK/YStHSF4YQeK/wmxHMxjSc8du3eCFhaAouH2DoxgrMEn
-         nh+qDUlRr9tp0bQXtkHdYSpkTSyvFDvQKyVDxjIZZTcpXHT8lU3hjpxtRcd3GQPTSTZ7
-         xpohL/hS5FgN7VUgU+enhfYU4xOOQeB215tdm/ZML0jBI+57gufYDPgBJFmaiCYOsAmQ
-         GYxzSEEaLS9N+1kqJ+mmPR7f9Ia98g7PfA7SyEPYl4w1OJgK8RAQaR2QEpc/AYBahKqL
-         yYZg==
-X-Gm-Message-State: AOJu0YwzmeR8jLm/wb/dAjr6BzqKzFTyM7wEtGQF2ks2x76z276ZcNii
-        mW31JXaWF4dXTu9bmVy2cGq1YA==
-X-Google-Smtp-Source: AGHT+IFDkAeW7u7CFaRSTjjZPVGdE97IuC3OvNH39GloKvqqSstnsBhwBW7Tc7zhg48/jzIDrvVQig==
-X-Received: by 2002:a05:600c:255:b0:405:3d83:2b76 with SMTP id 21-20020a05600c025500b004053d832b76mr20973611wmj.13.1697116414527;
-        Thu, 12 Oct 2023 06:13:34 -0700 (PDT)
-Received: from vermeer ([2a01:cb1d:81a9:dd00:b570:b34c:ffd4:c805])
-        by smtp.gmail.com with ESMTPSA id l17-20020a1ced11000000b0040588d85b3asm21637965wmh.15.2023.10.12.06.13.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Oct 2023 06:13:34 -0700 (PDT)
-Date:   Thu, 12 Oct 2023 15:13:31 +0200
-From:   Samuel Ortiz <sameo@rivosinc.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Alexey Kardashevskiy <aik@amd.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
-        linuxarm@huawei.com, David Box <david.e.box@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 00/12] PCI device authentication
-Message-ID: <ZSfw+xswgOSaYxgW@vermeer>
-References: <cover.1695921656.git.lukas@wunner.de>
- <652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
- <20231007100433.GA7596@wunner.de>
- <20231009123335.00006d3d@Huawei.com>
- <20231009134950.GA7097@wunner.de>
- <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
- <20231012091542.GA22596@wunner.de>
+        d=1e100.net; s=20230601; t=1697117414; x=1697722214;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4EwAhxT4YGeUjPFFndZrOLQbhs4tGDZqtUU/Z9A6IQ4=;
+        b=Rapg/XbrGZGjuy7gE45pY2XUxjpR0BX+LbLbTN+LQR6KpV2p9+tsWsj3DPZgiE5i8g
+         w0UWqT8F8sX14mSq+pBLWNz8Wl9UdDLhW7NGSX80ysHe4dRugjQNyUukmb4oaFXzrcrI
+         knE3Bv9oKrtTws2Fgih5ZQGz3P5yAUJ/LWqjD3Ljh091Cql2GRX3vPjLNwcM8PMCrlAq
+         2B+vMpAj0cy0KGgOQO72ptW1R+R6+b8bGcvQFfLCNDWK1DaAIEsSsrq9ZMHmU3o0nYLK
+         QWN0PYR6ydjQH0UdzYrpHKy2pdIR5xlJbfB18GfJFzDC4wcKOa9Aj8xbwM0HTagOgsqs
+         ejIQ==
+X-Gm-Message-State: AOJu0YwzYwnbS8gHv+V6DDl8yGljz2SUW6UqX+Mejq2EEsJqMqTtkHM2
+        CQ9LPwamW8Kbnp7P+pURL9leAA==
+X-Google-Smtp-Source: AGHT+IFHQ7HxXxsqXfAzOkIVktufvVAO6I0nfPVfdVYLFENpEEGacyyf0/x61sNni9aSspa4HfOOmg==
+X-Received: by 2002:adf:f7c4:0:b0:32d:9740:5a27 with SMTP id a4-20020adff7c4000000b0032d97405a27mr295406wrq.9.1697117413894;
+        Thu, 12 Oct 2023 06:30:13 -0700 (PDT)
+Received: from [192.168.1.172] ([93.5.22.158])
+        by smtp.gmail.com with ESMTPSA id hn32-20020a05600ca3a000b004053e9276easm21902592wmb.32.2023.10.12.06.30.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Oct 2023 06:30:13 -0700 (PDT)
+Message-ID: <2e9766db-da12-42e6-80a8-b9ef6f2de724@baylibre.com>
+Date:   Thu, 12 Oct 2023 15:30:12 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231012091542.GA22596@wunner.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: mediatek-gen3: Fix translation window
+Content-Language: en-US
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        =?UTF-8?B?Smlhbmp1biBXYW5nICjnjovlu7rlhpsp?= 
+        <Jianjun.Wang@mediatek.com>, "robh@kernel.org" <robh@kernel.org>,
+        "kw@linux.com" <kw@linux.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        =?UTF-8?B?SmlleXkgWWFuZyAo5p2o5rSBKQ==?= <Jieyy.Yang@mediatek.com>,
+        =?UTF-8?B?Q2h1YW5qaWEgTGl1ICjmn7PkvKDlmIkp?= 
+        <Chuanjia.Liu@mediatek.com>,
+        =?UTF-8?B?SmlhbiBZYW5nICjmnajmiKwp?= <Jian.Yang@mediatek.com>,
+        =?UTF-8?B?UWl6aG9uZyBDaGVuZyAo56iL5ZWf5b+gKQ==?= 
+        <Qizhong.Cheng@mediatek.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Ryder Lee <Ryder.Lee@mediatek.com>
+References: <20231011122633.31559-1-jianjun.wang@mediatek.com>
+ <899c7275-ccca-43bb-b1ae-a3403dd18622@baylibre.com>
+ <088559162e5ec4e2d6d38d8a5707c6e0e12f5ac6.camel@mediatek.com>
+ <54ed1269-8699-4531-abc6-09b602adece9@baylibre.com>
+ <930f6df4-3267-59df-ad75-244f5b9cee84@collabora.com>
+From:   Alexandre Mergnat <amergnat@baylibre.com>
+In-Reply-To: <930f6df4-3267-59df-ad75-244f5b9cee84@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 12, 2023 at 11:15:42AM +0200, Lukas Wunner wrote:
-> On Tue, Oct 10, 2023 at 03:07:41PM +1100, Alexey Kardashevskiy wrote:
-> > But the way SPDM is done now is that if the user (as myself) wants to let
-> > the firmware run SPDM - the only choice is disabling CONFIG_CMA completely
-> > as CMA is not a (un)loadable module or built-in (with some "blacklist"
-> > parameters), and does not provide a sysfs knob to control its tentacles.
-> > Kinda harsh.
+
+
+On 12/10/2023 14:52, AngeloGioacchino Del Regno wrote:
+> Il 12/10/23 12:27, Alexandre Mergnat ha scritto:
+>>
+>>
+>> On 12/10/2023 08:17, Jianjun Wang (王建军) wrote:
+>>> On Wed, 2023-10-11 at 17:38 +0200, Alexandre Mergnat wrote:
+>>>> External email : Please do not click links or open attachments until
+>>>> you have verified the sender or the content.
+>>>>
+>>>>
+>>>> On 11/10/2023 14:26, Jianjun Wang wrote:
+>>>> > The size of translation table should be a power of 2, using fls()
+>>>> cannot > get the proper value when the size is not a power of 2. For
+>>>> example, > fls(0x3e00000) - 1 = 25, hence the PCIe translation 
+>>>> window size
+>>>> will be > set to 0x2000000 instead of the expected size 0x3e00000. Fix
+>>>> translation > window by splitting the MMIO space to multiple tables 
+>>>> if its size
+>>>> is not > a power of 2.
+>>>>
+>>>> Hi Jianjun,
+>>>>
+>>>> I've no knowledge in PCIE, so maybe what my suggestion is stupid:
+>>>>
+>>>> Is it mandatory to fit the translation table size with 0x3e00000 (in 
+>>>> this example) ?
+>>>> I'm asking because you can have an issue by reaching the maximum 
+>>>> translation table number.
+>>>>
+>>>> Is it possible to just use only one table with the power of 2 size
+>>>> above 0x3e00000 => 0x4000000 ( fls(0x3e00000) = 26 = 0x4000000). The
+>>>> downside of this method is wasting allocation space. AFAIK I already 
+>>>> see this kind of method for memory protection/allocation in embedded 
+>>>> systems,
+>>>> so I'm wondering if this method is safer than using multiple table for
+>>>> only one size which isn't a power of 2.
+>>>
+>>> Hi Alexandre,
+>>>
+>>> It's not mandatory to fit the translation table size with 0x3e00000,
+>>> and yes we can use only one table with the power of 2 size to prevent
+>>> this.
+>>>
+>>> For MediaTek's SoCs, the MMIO space range for each PCIe port is fixed,
+>>> and it will always be a power of 2, most of them will be 64MB. The
+>>> reason we have the size which isn't a power of 2 is that we reserve an
+>>> IO space for compatible purpose, some older devices may still use IO
+>>> space.
+>>>
+>>> Take MT8195 as an example, its MMIO size is 64MB, and the declaration
+>>> in the DT is like:
+>>> ranges = <0x81000000 0 0x20000000 0x0 0x20000000 0 0x200000>,
+>>>           <0x82000000 0 0x20200000 0x0 0x20200000 0 0x3e00000>;
+>>>
+>>> The MMIO space is splited to 2MB IO space and 62MB MEM space, that's
+>>> cause the current risk of the MEM space range, its actual available MEM
+>>> space is 32MB. But it still works for now because most of the devices
+>>> only require a very small amount of MEM space and will not reach ranges
+>>> higher than 32MB.
+>>>
+>>> So for the concern of reaching the maximum translation table number, I
+>>> think maybe we can just print the warning message instead of return
+>>> error code, since it still works but have some limitations(MEM space
+>>> not set as DT expected).
+>>>
+>>
+>> Ok understood, thanks for your explanation.
+>> Then, IMHO, you should use only one table with the power of 2 size 
+>> above to make the code simpler, efficient, robust, more readable and 
+>> avoid confusion about the warning.
+>>
+>> This is what is done for pci-mvebu.c AFAII.
+>>
+>> If you prefer waiting another reviewer with a better PCIE expertise 
+>> than me, it's ok for me. With the information I have currently, I 
+>> prefer to not approve the current implementation because, from my PoV, 
+>> it introduce unnecessary complexity.
+>>
 > 
-> On AMD SEV-TIO, does the PSP perform SPDM exchanges with a device
-> *before* it is passed through to a guest?  If so, why does it do that?
+>  From what I understand, using only one table with a size that is a 
+> power of two
+> won't let us use the entire MMIO space, hence the only solution to allow 
+> using
+> the entire range is to split to more than one table.
 
-SPDM exchanges would be done with the DSM, i.e. through the PF, which is
-typically *not* passed through to guests. VFs are.
+You can take the power of 2 above, which is directly returned by fls().
+That let us use the entire MMIO space.
+In this example, if your size is 0x3e00000, the you will allow 0x4000000.
 
-The RISC-V CoVE-IO [1] spec follows similar flows as SEV-TIO (and to
-some extend TDX-Connect) and expects the host to explicitly request the
-TSM to establish an SPDM connection with the DSM (PF) before passing one
-VF through a TSM managed guest. VFs would be vfio bound, not the PF, so
-I think patch #12 does not solve our problem here. 
 
-> Dan and I discussed this off-list and Dan is arguing for lazy attestation,
-> i.e. the TSM should only have the need to perform SPDM exchanges with
-> the device when it is passed through.
-> 
-> So the host enumerates the DOE protocols and authenticates the device.
-> When the device is passed through, patch 12/12 ensures that the host
-> keeps its hands off of the device, thus affording the TSM exclusive
-> SPDM control.
-
-Just to re-iterate: The TSM does not talk SPDM with the passed
-through device(s), but with the corresponding PF. If the host kernel
-owns the SPDM connection when the TSM initiates the SPDM connection with
-the DSM (For IDE key setup), the connection establishment will fail.
-Both CoVE-IO and SEV-TIO (Alexey, please correct me if I'm wrong)
-expect the host to explicitly ask the TSM to establish that SPDM
-connection. That request should somehow come from KVM, which then would
-have to destroy the existing CMA/SPDM connection in order to give the
-TSM a chance to successfully establish the SPDM link.
-
-Cheers,
-Samuel.
-
-[1] https://github.com/riscv-non-isa/riscv-ap-tee-io/blob/main/specification/07-theory_operations.adoc
-> 
+-- 
+Regards,
+Alexandre
