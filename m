@@ -2,114 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A76AD7C7167
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 17:27:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EE1A7C718B
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 17:32:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379459AbjJLP1Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Oct 2023 11:27:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47968 "EHLO
+        id S1347301AbjJLPc3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Oct 2023 11:32:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379476AbjJLP1L (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 11:27:11 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C04DCFD;
-        Thu, 12 Oct 2023 08:27:08 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11FEDC433C7;
-        Thu, 12 Oct 2023 15:27:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697124428;
-        bh=2H8uGr4Sh1OiavbH2JgHBR1t5d/J1kkWJxFqreXacg0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bhzWOIrpuMZoiq7IdctJDzTQtMCE8yHFiZ3kY8XAPqEyyLH81t/fU18359sKdvOIj
-         uoKgIWPcSAiWMo52UUFt5+2zHdgtd1SPKUbjpL/BhFXQjyzZFtwxaqjmNFao8AaT1H
-         +baVPnJQC/38rsOJZ+7CzRAcGSaR0qiDUUUnFL55Fy9YTBryvjb4b33iQln0RzFddT
-         MHK94ipJ+h2DC0EbZJ3eexQdfoxyN49BeG6fy5PUTeko7tdY/dwac67KiVCgh646ME
-         Ws6pCtpHgaYvqqpfiod96tjTbIGsQXT+XSs3BO26ndwnU/k1U8OpKajzeZDEBKeeSx
-         hRpq/cpqM12GQ==
-Date:   Thu, 12 Oct 2023 10:27:05 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
-        yangyicong@huawei.com, will@kernel.org,
-        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
-        robin.murphy@arm.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        rdunlap@infradead.org, mark.rutland@arm.com,
-        zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
-Subject: Re: [PATCH v7 2/4] PCI: Add Alibaba Vendor ID to linux/pci_ids.h
-Message-ID: <20231012152705.GA1070955@bhelgaas>
+        with ESMTP id S1347298AbjJLPc2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 11:32:28 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7769ED3;
+        Thu, 12 Oct 2023 08:32:25 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S5tqt2GDkz6K5yD;
+        Thu, 12 Oct 2023 23:30:18 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Thu, 12 Oct
+ 2023 16:32:22 +0100
+Date:   Thu, 12 Oct 2023 16:32:21 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Samuel Ortiz <sameo@rivosinc.com>
+CC:     Lukas Wunner <lukas@wunner.de>, Alexey Kardashevskiy <aik@amd.com>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
+        <linux-crypto@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linuxarm@huawei.com>, David Box <david.e.box@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
+        "Alistair Francis" <alistair.francis@wdc.com>,
+        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Sean Christopherson" <seanjc@google.com>,
+        Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH 00/12] PCI device authentication
+Message-ID: <20231012163221.000064af@Huawei.com>
+In-Reply-To: <ZSfw+xswgOSaYxgW@vermeer>
+References: <cover.1695921656.git.lukas@wunner.de>
+        <652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
+        <20231007100433.GA7596@wunner.de>
+        <20231009123335.00006d3d@Huawei.com>
+        <20231009134950.GA7097@wunner.de>
+        <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
+        <20231012091542.GA22596@wunner.de>
+        <ZSfw+xswgOSaYxgW@vermeer>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231012145940.GA1069329@bhelgaas>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 12, 2023 at 09:59:40AM -0500, Bjorn Helgaas wrote:
-> On Thu, Oct 12, 2023 at 11:28:54AM +0800, Shuai Xue wrote:
-> > The Alibaba Vendor ID (0x1ded) is now used by Alibaba elasticRDMA ("erdma")
-> > and will be shared with the upcoming PCIe PMU ("dwc_pcie_pmu"). Move the
-> > Vendor ID to linux/pci_ids.h so that it can shared by several drivers
-> > later.
+On Thu, 12 Oct 2023 15:13:31 +0200
+Samuel Ortiz <sameo@rivosinc.com> wrote:
+
+> On Thu, Oct 12, 2023 at 11:15:42AM +0200, Lukas Wunner wrote:
+> > On Tue, Oct 10, 2023 at 03:07:41PM +1100, Alexey Kardashevskiy wrote:  
+> > > But the way SPDM is done now is that if the user (as myself) wants to let
+> > > the firmware run SPDM - the only choice is disabling CONFIG_CMA completely
+> > > as CMA is not a (un)loadable module or built-in (with some "blacklist"
+> > > parameters), and does not provide a sysfs knob to control its tentacles.
+> > > Kinda harsh.  
 > > 
-> > Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> > On AMD SEV-TIO, does the PSP perform SPDM exchanges with a device
+> > *before* it is passed through to a guest?  If so, why does it do that?  
 > 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci_ids.h
-
-Hehe, just noticed that I acked this previously:
-https://lore.kernel.org/r/20230606153143.GA1124867@bhelgaas
-
-You can pick up acks like that and include them when you post future
-versions so people don't have to ack them again.  (Drop the acks if
-you make significant changes to the patch, of course.)
-
-> > ---
-> >  drivers/infiniband/hw/erdma/erdma_hw.h | 2 --
-> >  include/linux/pci_ids.h                | 2 ++
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/infiniband/hw/erdma/erdma_hw.h b/drivers/infiniband/hw/erdma/erdma_hw.h
-> > index 9d316fdc6f9a..a155519a862f 100644
-> > --- a/drivers/infiniband/hw/erdma/erdma_hw.h
-> > +++ b/drivers/infiniband/hw/erdma/erdma_hw.h
-> > @@ -11,8 +11,6 @@
-> >  #include <linux/types.h>
-> >  
-> >  /* PCIe device related definition. */
-> > -#define PCI_VENDOR_ID_ALIBABA 0x1ded
-> > -
-> >  #define ERDMA_PCI_WIDTH 64
-> >  #define ERDMA_FUNC_BAR 0
-> >  #define ERDMA_MISX_BAR 2
-> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> > index 5fb3d4c393a9..d8760daf9e5a 100644
-> > --- a/include/linux/pci_ids.h
-> > +++ b/include/linux/pci_ids.h
-> > @@ -2601,6 +2601,8 @@
-> >  #define PCI_VENDOR_ID_TEKRAM		0x1de1
-> >  #define PCI_DEVICE_ID_TEKRAM_DC290	0xdc29
-> >  
-> > +#define PCI_VENDOR_ID_ALIBABA		0x1ded
-> > +
-> >  #define PCI_VENDOR_ID_TEHUTI		0x1fc9
-> >  #define PCI_DEVICE_ID_TEHUTI_3009	0x3009
-> >  #define PCI_DEVICE_ID_TEHUTI_3010	0x3010
-> > -- 
-> > 2.39.3
-> > 
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> SPDM exchanges would be done with the DSM, i.e. through the PF, which is
+> typically *not* passed through to guests. VFs are.
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> The RISC-V CoVE-IO [1] spec follows similar flows as SEV-TIO (and to
+> some extend TDX-Connect) and expects the host to explicitly request the
+> TSM to establish an SPDM connection with the DSM (PF) before passing one
+> VF through a TSM managed guest. VFs would be vfio bound, not the PF, so
+> I think patch #12 does not solve our problem here. 
+> 
+> > Dan and I discussed this off-list and Dan is arguing for lazy attestation,
+> > i.e. the TSM should only have the need to perform SPDM exchanges with
+> > the device when it is passed through.
+> > 
+> > So the host enumerates the DOE protocols and authenticates the device.
+> > When the device is passed through, patch 12/12 ensures that the host
+> > keeps its hands off of the device, thus affording the TSM exclusive
+> > SPDM control.  
+> 
+> Just to re-iterate: The TSM does not talk SPDM with the passed
+> through device(s), but with the corresponding PF. If the host kernel
+> owns the SPDM connection when the TSM initiates the SPDM connection with
+> the DSM (For IDE key setup), the connection establishment will fail.
+> Both CoVE-IO and SEV-TIO (Alexey, please correct me if I'm wrong)
+> expect the host to explicitly ask the TSM to establish that SPDM
+> connection. That request should somehow come from KVM, which then would
+> have to destroy the existing CMA/SPDM connection in order to give the
+> TSM a chance to successfully establish the SPDM link.
+
+Agreed - I don't see a problem with throwing away the initial connection.
+In these cases you are passing that role on to another entity - the
+job of this patch set is done.
+
+I'm not clear yet if we need an explicit lock out similar to the VFIO
+one for PF pass through or if everything will happen in a 'safe' order
+anyway. I suspect a lockout on the ability to re attest is necessary
+if the PF driver is loaded.
+
+Perhaps just dropping the
++#if IS_ENABLED(CONFIG_VFIO_PCI_CORE)
+and letting other PF drivers or another bit of core kernel code
+(I'm not sure where the proxy resides for the models being discussed)
+claim ownership is enough?
+
+Jonathan
+
+> 
+> Cheers,
+> Samuel.
+> 
+> [1] https://github.com/riscv-non-isa/riscv-ap-tee-io/blob/main/specification/07-theory_operations.adoc
+> >   
+> 
+
