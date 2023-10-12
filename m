@@ -2,140 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EE1A7C718B
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 17:32:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 489927C71FA
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 18:04:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347301AbjJLPc3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Oct 2023 11:32:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49116 "EHLO
+        id S234167AbjJLQEV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Oct 2023 12:04:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347298AbjJLPc2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 11:32:28 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7769ED3;
-        Thu, 12 Oct 2023 08:32:25 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S5tqt2GDkz6K5yD;
-        Thu, 12 Oct 2023 23:30:18 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Thu, 12 Oct
- 2023 16:32:22 +0100
-Date:   Thu, 12 Oct 2023 16:32:21 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Samuel Ortiz <sameo@rivosinc.com>
-CC:     Lukas Wunner <lukas@wunner.de>, Alexey Kardashevskiy <aik@amd.com>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linuxarm@huawei.com>, David Box <david.e.box@intel.com>,
+        with ESMTP id S233085AbjJLQEU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 12:04:20 -0400
+X-Greylist: delayed 1827 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 12 Oct 2023 09:04:18 PDT
+Received: from pepin.polanet.pl (pepin.polanet.pl [193.34.52.2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2116FBB;
+        Thu, 12 Oct 2023 09:04:17 -0700 (PDT)
+Date:   Thu, 12 Oct 2023 17:33:47 +0200
+From:   Tomasz Pala <gotar@polanet.pl>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Dan J Williams <dan.j.williams@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        David E Box <david.e.box@intel.com>,
+        Yunying Sun <yunying.sun@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
-        "Alistair Francis" <alistair.francis@wdc.com>,
-        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Sean Christopherson" <seanjc@google.com>,
-        Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 00/12] PCI device authentication
-Message-ID: <20231012163221.000064af@Huawei.com>
-In-Reply-To: <ZSfw+xswgOSaYxgW@vermeer>
-References: <cover.1695921656.git.lukas@wunner.de>
-        <652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
-        <20231007100433.GA7596@wunner.de>
-        <20231009123335.00006d3d@Huawei.com>
-        <20231009134950.GA7097@wunner.de>
-        <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
-        <20231012091542.GA22596@wunner.de>
-        <ZSfw+xswgOSaYxgW@vermeer>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Florent DELAHAYE <linuxkernelml@undead.fr>,
+        Konrad J Hambrick <kjhambrick@gmail.com>,
+        Matt Hansen <2lprbe78@duck.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Benoit =?iso-8859-2?Q?Gr=E9goire?= <benoitg@coeus.ca>,
+        Werner Sembach <wse@tuxedocomputers.com>,
+        mumblingdrunkard@protonmail.com, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 2/2] x86/pci: Treat EfiMemoryMappedIO as reservation of
+ ECAM space
+Message-ID: <20231012153347.GA26695@polanet.pl>
+References: <20230110180243.1590045-1-helgaas@kernel.org>
+ <20230110180243.1590045-3-helgaas@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+In-Reply-To: <20230110180243.1590045-3-helgaas@kernel.org>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 12 Oct 2023 15:13:31 +0200
-Samuel Ortiz <sameo@rivosinc.com> wrote:
+Hello,
 
-> On Thu, Oct 12, 2023 at 11:15:42AM +0200, Lukas Wunner wrote:
-> > On Tue, Oct 10, 2023 at 03:07:41PM +1100, Alexey Kardashevskiy wrote:  
-> > > But the way SPDM is done now is that if the user (as myself) wants to let
-> > > the firmware run SPDM - the only choice is disabling CONFIG_CMA completely
-> > > as CMA is not a (un)loadable module or built-in (with some "blacklist"
-> > > parameters), and does not provide a sysfs knob to control its tentacles.
-> > > Kinda harsh.  
-> > 
-> > On AMD SEV-TIO, does the PSP perform SPDM exchanges with a device
-> > *before* it is passed through to a guest?  If so, why does it do that?  
-> 
-> SPDM exchanges would be done with the DSM, i.e. through the PF, which is
-> typically *not* passed through to guests. VFs are.
-> 
-> The RISC-V CoVE-IO [1] spec follows similar flows as SEV-TIO (and to
-> some extend TDX-Connect) and expects the host to explicitly request the
-> TSM to establish an SPDM connection with the DSM (PF) before passing one
-> VF through a TSM managed guest. VFs would be vfio bound, not the PF, so
-> I think patch #12 does not solve our problem here. 
-> 
-> > Dan and I discussed this off-list and Dan is arguing for lazy attestation,
-> > i.e. the TSM should only have the need to perform SPDM exchanges with
-> > the device when it is passed through.
-> > 
-> > So the host enumerates the DOE protocols and authenticates the device.
-> > When the device is passed through, patch 12/12 ensures that the host
-> > keeps its hands off of the device, thus affording the TSM exclusive
-> > SPDM control.  
-> 
-> Just to re-iterate: The TSM does not talk SPDM with the passed
-> through device(s), but with the corresponding PF. If the host kernel
-> owns the SPDM connection when the TSM initiates the SPDM connection with
-> the DSM (For IDE key setup), the connection establishment will fail.
-> Both CoVE-IO and SEV-TIO (Alexey, please correct me if I'm wrong)
-> expect the host to explicitly ask the TSM to establish that SPDM
-> connection. That request should somehow come from KVM, which then would
-> have to destroy the existing CMA/SPDM connection in order to give the
-> TSM a chance to successfully establish the SPDM link.
+On Tue, Jan 10, 2023 at 12:02:43 -0600, Bjorn Helgaas wrote:
 
-Agreed - I don't see a problem with throwing away the initial connection.
-In these cases you are passing that role on to another entity - the
-job of this patch set is done.
-
-I'm not clear yet if we need an explicit lock out similar to the VFIO
-one for PF pass through or if everything will happen in a 'safe' order
-anyway. I suspect a lockout on the ability to re attest is necessary
-if the PF driver is loaded.
-
-Perhaps just dropping the
-+#if IS_ENABLED(CONFIG_VFIO_PCI_CORE)
-and letting other PF drivers or another bit of core kernel code
-(I'm not sure where the proxy resides for the models being discussed)
-claim ownership is enough?
-
-Jonathan
-
+> Normally we reject ECAM space unless it is reported as reserved in the E820
+> table or via a PNP0C02 _CRS method (PCI Firmware, r3.3, sec 4.1.2).  This
+> means PCI extended config space (offsets 0x100-0xfff) may not be accessible.
 > 
-> Cheers,
-> Samuel.
+> Some firmware doesn't report ECAM space via PNP0C02 _CRS methods, but does
+> mention it as an EfiMemoryMappedIO region via EFI GetMemoryMap(), which is
+> normally converted to an E820 entry by a bootloader or EFI stub.
 > 
-> [1] https://github.com/riscv-non-isa/riscv-ap-tee-io/blob/main/specification/07-theory_operations.adoc
-> >   
+> 07eab0901ede ("efi/x86: Remove EfiMemoryMappedIO from E820 map"), removes
+> E820 entries that correspond to EfiMemoryMappedIO regions because some
+> other firmware uses EfiMemoryMappedIO for PCI host bridge windows, and the
+> E820 entries prevent Linux from allocating BAR space for hot-added devices.
 > 
+> Allow use of ECAM for extended config space when the region is covered by
+> an EfiMemoryMappedIO region, even if it's not included in E820 or PNP0C02
+> _CRS.
 
+I'm still having a problem initializing ixgbe NICs with pristine 6.5.7 kernel.
+
+efi: Remove mem63: MMIO range=[0x80000000-0x8fffffff] (256MB) from e820 map
+[...]
+[mem 0x7f800000-0xfed1bfff] available for PCI devices
+[...]
+PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
+[Firmware Info]: PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] not reserved in ACPI motherboard resources
+PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] reserved as EfiMemoryMappedIO
+[...]
+ixgbe 0000:02:00.0: enabling device (0140 -> 0142)
+ixgbe 0000:02:00.0: BAR 0: can't reserve [mem 0x80000000-0x8007ffff 64bit]
+ixgbe 0000:02:00.0: pci_request_selected_regions failed 0xfffffff0
+ixgbe: probe of 0000:02:00.0 failed with error -16
+
+
+After disabling the code causing this (using always-false condition:
+		if (size >= 256*1024 && 0) {
+) in the chunk:
+
+https://lore.kernel.org/lkml/20221208190341.1560157-2-helgaas@kernel.org/
+
+the BAR starts at 0x90000000 (not 0x80000000):
+
+efi: Not removing mem63: MMIO range=[0x80000000-0x8fffffff] (262144KB) from e820 map
+[...]
+[mem 0x90000000-0xfed1bfff] available for PCI devices
+[...]
+PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
+PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] reserved as E820 entry
+
+and everything seems to work again.
+
+
+I've got full system bootup logs from the upstream and worked around,
+but I'm not sure if this is OK to attach them (the CC list is long).
+
+Also, this is my test machine so I can run some experiments.
+
+best regards,
+-- 
+Tomasz Pala <gotar@pld-linux.org>
