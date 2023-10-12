@@ -2,182 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F20907C6B14
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 12:27:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 107A47C6B35
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 12:34:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343796AbjJLK1g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Oct 2023 06:27:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51210 "EHLO
+        id S1377993AbjJLKeI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Oct 2023 06:34:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343654AbjJLK1f (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 06:27:35 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EFAEB7
-        for <linux-pci@vger.kernel.org>; Thu, 12 Oct 2023 03:27:33 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-3226b8de467so703950f8f.3
-        for <linux-pci@vger.kernel.org>; Thu, 12 Oct 2023 03:27:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1697106451; x=1697711251; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lmBkcHAkPFx5rOPRPDBllwN3fSbL73RuCNWurkhctsI=;
-        b=TUrVWWG6cj8ZcvlpltH25cb5xQCnlI5AwNjQkVaUfUj99Ox+OR8LJ+GAiDUQJoh/iU
-         K68C2Jm7QhZrO8LwSy5vWB4o1sXv8H7WNkTxegdu1jJmnEKybgt89ywQKBQnkpZdA3Yb
-         jAmk/ME8XcMRm2rQwBy1g/o0JvgiwnCqDTkeXrpzmf2X1VfVmUvojc7LgwAYFGE4trmv
-         AvR3sz8Yyu1B3nJvwCzatEO/erJ5HDzhXrtV9vRKIzsrvsDAX8ZA3QWSwc13v80vnDmM
-         /7N7atwjf+yCyKXf3PBHyBv0bscMbVFvjfSASQDsNsPotFuFvu5eqTga+k4gj/6NaiLz
-         Y7vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697106451; x=1697711251;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lmBkcHAkPFx5rOPRPDBllwN3fSbL73RuCNWurkhctsI=;
-        b=B+Mv0hwimuDpxl7NXeXuu4nyDrjMm9WMN++PgA0E5bBg+IWaCM+pIvDauwWDJS3PAF
-         85B2hH6/YXs/KXAigORqrL2RfMW+BHUb9Fhzp909jc69t+S6dHRXWTy0LcVY0WFrJxV5
-         U46OaknPu0zNj/VXI7arOQOnBwUnRnjg/N4+QBekUx0yc36TyZjvxaEOcBe/VIquzL60
-         XuzXv4dfM8exZm3jYRdZMV5fSglkzeCt5Wjb+p1Hrp5o8rDSG+UEhw8IZMPYcxljz5KN
-         AuCLA/DKeMTfxXO24RmCkWSuM8097vxTEDp/xWkTHZooyv9g0Q43EKc8/0Wlai2CHWuv
-         ge8Q==
-X-Gm-Message-State: AOJu0YyQ9NJzZMJT5v+p4AFVoxOkIRXUaGHNUsYFbx8AhgehJTklCiBQ
-        hWLQC/LWbwI2bqahkBVUke7W3w==
-X-Google-Smtp-Source: AGHT+IHI1GZ3O+8Vul/1ATMdkAYGJnPS9jhdVvjZ8iYcdUltF97CUA2PT7IYjpRMObjiWrOl4/DhyQ==
-X-Received: by 2002:a05:6000:91:b0:317:5f13:5c2f with SMTP id m17-20020a056000009100b003175f135c2fmr19207742wrx.0.1697106451193;
-        Thu, 12 Oct 2023 03:27:31 -0700 (PDT)
-Received: from [192.168.1.172] ([93.5.22.158])
-        by smtp.gmail.com with ESMTPSA id f16-20020adfdb50000000b0031ff89af0e4sm17968546wrj.99.2023.10.12.03.27.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Oct 2023 03:27:30 -0700 (PDT)
-Message-ID: <54ed1269-8699-4531-abc6-09b602adece9@baylibre.com>
-Date:   Thu, 12 Oct 2023 12:27:28 +0200
+        with ESMTP id S234170AbjJLKeI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 06:34:08 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 960AC90;
+        Thu, 12 Oct 2023 03:34:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697106846; x=1728642846;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ji8x2F8u0U0ggxefEbWPL9IJWQlQGGYyAuJIBploLj8=;
+  b=bN3f4Qk6kxsqtiPEdc7hozzc/lHyjyLmT9hB1THfw7cBEeXlPkp2ydv4
+   A5RWqQuNNWZM4AHxz7lFg/5vYZlLPnq3fbNSRje7q8fucWjt+5h6iHSUq
+   lV2n0tt63s27D4mcreO06tcglJUm++kPYTWNkmUiUTT9Su1BNqB0btepP
+   v2x/eCjoYn4Z/KmXkMXUfrnzCL0uqLlTPy7VYz2lRVcyCOX1YVtOgi8hz
+   PXk3wjIBqd57RZhJI714m3FQ9sIPDHK0wEz4wFbNmHdxX/NDdcpf5ZU/a
+   IrodtZrjUd3H3whvPsp1yjwKL187hu6QXV/0zKS3Pt5cD0Ws99XtR3TbB
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="388748393"
+X-IronPort-AV: E=Sophos;i="6.03,218,1694761200"; 
+   d="scan'208";a="388748393"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 03:34:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="870527710"
+X-IronPort-AV: E=Sophos;i="6.03,218,1694761200"; 
+   d="scan'208";a="870527710"
+Received: from asroczyn-mobl.ger.corp.intel.com ([10.249.36.107])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 03:34:00 -0700
+Date:   Thu, 12 Oct 2023 13:29:49 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        ath10k@lists.infradead.org, ath11k@lists.infradead.org,
+        ath12k@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-bluetooth@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-rdma@vger.kernel.org,
+        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 04/13] PCI/ASPM: Move L0S/L1/sub states mask calculation
+ into a helper
+In-Reply-To: <20231011193206.GA1039708@bhelgaas>
+Message-ID: <bcecb577-bf69-e854-6f59-f4cb26c4b354@linux.intel.com>
+References: <20231011193206.GA1039708@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: mediatek-gen3: Fix translation window
-Content-Language: en-US
-To:     =?UTF-8?B?Smlhbmp1biBXYW5nICjnjovlu7rlhpsp?= 
-        <Jianjun.Wang@mediatek.com>, "robh@kernel.org" <robh@kernel.org>,
-        "kw@linux.com" <kw@linux.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "angelogioacchino.delregno@collabora.com" 
-        <angelogioacchino.delregno@collabora.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        =?UTF-8?B?SmlleXkgWWFuZyAo5p2o5rSBKQ==?= <Jieyy.Yang@mediatek.com>,
-        =?UTF-8?B?Q2h1YW5qaWEgTGl1ICjmn7PkvKDlmIkp?= 
-        <Chuanjia.Liu@mediatek.com>,
-        =?UTF-8?B?SmlhbiBZYW5nICjmnajmiKwp?= <Jian.Yang@mediatek.com>,
-        =?UTF-8?B?UWl6aG9uZyBDaGVuZyAo56iL5ZWf5b+gKQ==?= 
-        <Qizhong.Cheng@mediatek.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Ryder Lee <Ryder.Lee@mediatek.com>
-References: <20231011122633.31559-1-jianjun.wang@mediatek.com>
- <899c7275-ccca-43bb-b1ae-a3403dd18622@baylibre.com>
- <088559162e5ec4e2d6d38d8a5707c6e0e12f5ac6.camel@mediatek.com>
-From:   Alexandre Mergnat <amergnat@baylibre.com>
-In-Reply-To: <088559162e5ec4e2d6d38d8a5707c6e0e12f5ac6.camel@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/mixed; boundary="8323329-1380828921-1697106845=:1692"
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323329-1380828921-1697106845=:1692
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-On 12/10/2023 08:17, Jianjun Wang (王建军) wrote:
-> On Wed, 2023-10-11 at 17:38 +0200, Alexandre Mergnat wrote:
->>   
->> External email : Please do not click links or open attachments until
->> you have verified the sender or the content.
->>  
->> 
->> On 11/10/2023 14:26, Jianjun Wang wrote:
->> > The size of translation table should be a power of 2, using fls()
->> cannot 
->> > get the proper value when the size is not a power of 2. For
->> example, 
->> > fls(0x3e00000) - 1 = 25, hence the PCIe translation window size
->> will be 
->> > set to 0x2000000 instead of the expected size 0x3e00000. Fix
->> translation 
->> > window by splitting the MMIO space to multiple tables if its size
->> is not 
->> > a power of 2.
->> 
->> Hi Jianjun,
->> 
->> I've no knowledge in PCIE, so maybe what my suggestion is stupid:
->> 
->> Is it mandatory to fit the translation table size with 0x3e00000 (in 
->> this example) ?
->> I'm asking because you can have an issue by reaching the maximum 
->> translation table number.
->> 
->> Is it possible to just use only one table with the power of 2 size
->> above 
->> 0x3e00000 => 0x4000000 ( fls(0x3e00000) = 26 = 0x4000000). The
->> downside 
->> of this method is wasting allocation space. AFAIK I already see this 
->> kind of method for memory protection/allocation in embedded systems,
->> so 
->> I'm wondering if this method is safer than using multiple table for
->> only 
->> one size which isn't a power of 2.
-> 
-> Hi Alexandre,
-> 
-> It's not mandatory to fit the translation table size with 0x3e00000,
-> and yes we can use only one table with the power of 2 size to prevent
-> this.
-> 
-> For MediaTek's SoCs, the MMIO space range for each PCIe port is fixed,
-> and it will always be a power of 2, most of them will be 64MB. The
-> reason we have the size which isn't a power of 2 is that we reserve an
-> IO space for compatible purpose, some older devices may still use IO
-> space.
-> 
-> Take MT8195 as an example, its MMIO size is 64MB, and the declaration
-> in the DT is like:
-> ranges = <0x81000000 0 0x20000000 0x0 0x20000000 0 0x200000>,
->           <0x82000000 0 0x20200000 0x0 0x20200000 0 0x3e00000>;
-> 
-> The MMIO space is splited to 2MB IO space and 62MB MEM space, that's
-> cause the current risk of the MEM space range, its actual available MEM
-> space is 32MB. But it still works for now because most of the devices
-> only require a very small amount of MEM space and will not reach ranges
-> higher than 32MB.
-> 
-> So for the concern of reaching the maximum translation table number, I
-> think maybe we can just print the warning message instead of return
-> error code, since it still works but have some limitations(MEM space
-> not set as DT expected).
-> 
+On Wed, 11 Oct 2023, Bjorn Helgaas wrote:
 
-Ok understood, thanks for your explanation.
-Then, IMHO, you should use only one table with the power of 2 size above 
-to make the code simpler, efficient, robust, more readable and avoid 
-confusion about the warning.
+> On Mon, Sep 18, 2023 at 04:10:54PM +0300, Ilpo Järvinen wrote:
+> > ASPM service driver does the same L0S / L1S / sub states allowed
+> > calculation in __pci_disable_link_state() and
+> > pci_set_default_link_state().
+> 
+> Is there a typo or something here?  This patch only adds a call to
+> __pci_disable_link_state(), not to pci_set_default_link_state().
 
-This is what is done for pci-mvebu.c AFAII.
-
-If you prefer waiting another reviewer with a better PCIE expertise than 
-me, it's ok for me. With the information I have currently, I prefer to 
-not approve the current implementation because, from my PoV, it 
-introduce unnecessary complexity.
-
-Thanks
-
+This was because one of the changes that got included in the meantime made 
+the state handling in those two functions to differ so I removed the call 
+from the code but forgot to update the changelog to match the code. I'll 
+fix the changelog.
 
 -- 
-Regards,
-Alexandre
+ i.
+
+
+> > Create a helper to calculate the mask for the allowed states.
+> > 
+> > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> > ---
+> >  drivers/pci/pcie/aspm.c | 33 +++++++++++++++++++++------------
+> >  1 file changed, 21 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > index ec6d7a092ac1..91dc95aca90f 100644
+> > --- a/drivers/pci/pcie/aspm.c
+> > +++ b/drivers/pci/pcie/aspm.c
+> > @@ -1034,6 +1034,26 @@ static struct pcie_link_state *pcie_aspm_get_link(struct pci_dev *pdev)
+> >  	return bridge->link_state;
+> >  }
+> >  
+> > +static u8 pci_link_state_mask(int state)
+> > +{
+> > +	u8 result = 0;
+> > +
+> > +	if (state & PCIE_LINK_STATE_L0S)
+> > +		result |= ASPM_STATE_L0S;
+> > +	if (state & PCIE_LINK_STATE_L1)
+> > +		result |= ASPM_STATE_L1;
+> > +	if (state & PCIE_LINK_STATE_L1_1)
+> > +		result |= ASPM_STATE_L1_1;
+> > +	if (state & PCIE_LINK_STATE_L1_2)
+> > +		result |= ASPM_STATE_L1_2;
+> > +	if (state & PCIE_LINK_STATE_L1_1_PCIPM)
+> > +		result |= ASPM_STATE_L1_1_PCIPM;
+> > +	if (state & PCIE_LINK_STATE_L1_2_PCIPM)
+> > +		result |= ASPM_STATE_L1_2_PCIPM;
+> > +
+> > +	return result;
+> > +}
+> > +
+> >  static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
+> >  {
+> >  	struct pcie_link_state *link = pcie_aspm_get_link(pdev);
+> > @@ -1063,18 +1083,7 @@ static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
+> >  	if (sem)
+> >  		down_read(&pci_bus_sem);
+> >  	mutex_lock(&aspm_lock);
+> > -	if (state & PCIE_LINK_STATE_L0S)
+> > -		link->aspm_disable |= ASPM_STATE_L0S;
+> > -	if (state & PCIE_LINK_STATE_L1)
+> > -		link->aspm_disable |= ASPM_STATE_L1;
+> > -	if (state & PCIE_LINK_STATE_L1_1)
+> > -		link->aspm_disable |= ASPM_STATE_L1_1;
+> > -	if (state & PCIE_LINK_STATE_L1_2)
+> > -		link->aspm_disable |= ASPM_STATE_L1_2;
+> > -	if (state & PCIE_LINK_STATE_L1_1_PCIPM)
+> > -		link->aspm_disable |= ASPM_STATE_L1_1_PCIPM;
+> > -	if (state & PCIE_LINK_STATE_L1_2_PCIPM)
+> > -		link->aspm_disable |= ASPM_STATE_L1_2_PCIPM;
+> > +	link->aspm_disable |= pci_link_state_mask(state);
+> >  	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+> >  
+> >  	if (state & PCIE_LINK_STATE_CLKPM)
+
+
+--8323329-1380828921-1697106845=:1692--
