@@ -2,164 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE3227C6E7D
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 14:52:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CF307C6E85
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 14:53:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343962AbjJLMwY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Oct 2023 08:52:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43034 "EHLO
+        id S1378434AbjJLMxt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Oct 2023 08:53:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343909AbjJLMwY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 08:52:24 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E69DBBB;
-        Thu, 12 Oct 2023 05:52:20 -0700 (PDT)
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 85202660733F;
-        Thu, 12 Oct 2023 13:52:18 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1697115139;
-        bh=IsbNRiCoYuF2r7zCtmm48fin6dOhQrk0w4mVm3Aehb4=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=EI6xHqdOve9l7tOpeJ5xPvrZznHbT7LdVqIdOabEgiffi5fSiEzMWI2cI843nCn5P
-         zqlBgBfW+2257HYlkqzGcEN8L0kbv0Dw95BtRRjMBxbm5Tr++/Io5AoZUX+GiUwhnL
-         Hg7tWcbKVnxwcYQ2vh1u5skXmnw9/f/65WRSMARylJnD3R6xWMn+/oUJeH3tQNTs4V
-         RYuZ7nzRMgsoU9FPF+pKHNO4tRbVT3M3g8/eA/QpkueQjIBXQn5LhNGHWbX7lpOPOd
-         kq6DUrTr9WTsGqD4LhTH+vuIc0YDFAfWlMQN/hxkgrZFsUpZ6DjVNtiuNDh3gkaSnJ
-         jT96NXtWo/MVg==
-Message-ID: <930f6df4-3267-59df-ad75-244f5b9cee84@collabora.com>
-Date:   Thu, 12 Oct 2023 14:52:16 +0200
+        with ESMTP id S1343867AbjJLMxs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 08:53:48 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BBA194;
+        Thu, 12 Oct 2023 05:53:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697115227; x=1728651227;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=gNLNaEec64/5yPf43OhzXjxJ+9f0AwPObPN0gw90rTk=;
+  b=XkJ9DZi5gy3NgX1d7rCxq+rNL5s/H7mbScg9qZtZuE0o2ovQ6o1aTPfT
+   RSkn6+wb8jlENZvCR1cjCzBDMsPR4EVEUqfMche/YjYjxViTWu4FfobjZ
+   CUIaoL0Vn88ucROtDhnXUx8cGrpkNZlqzvBTl+tEYjfJXXv5HwINStMMu
+   8zBmNOBuAp3ttOy2oERrV+cd3OPVAUXLpZtxRF48y1iThmGNEYQk/nnxp
+   M5gc4C0aQJrhAithjm3hwCNljAEN+5WvwJjIgaNcaMlWVEUrwTo4vvUHc
+   f6Aea66STp3AIMpiHaWybUqw4Q6mkcqqgbb1kzpYS7Qrk5evW4cL4CAl5
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="471169655"
+X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
+   d="scan'208";a="471169655"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 05:53:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="783688889"
+X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
+   d="scan'208";a="783688889"
+Received: from asroczyn-mobl.ger.corp.intel.com ([10.249.36.107])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 05:53:41 -0700
+Date:   Thu, 12 Oct 2023 15:53:39 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        ath10k@lists.infradead.org, ath11k@lists.infradead.org,
+        ath12k@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-bluetooth@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-rdma@vger.kernel.org,
+        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 05/13] PCI/ASPM: Add pci_enable_link_state()
+In-Reply-To: <20231011215327.GA1043654@bhelgaas>
+Message-ID: <afb4db5-5fe1-9f5d-a910-032adf195c@linux.intel.com>
+References: <20231011215327.GA1043654@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH] PCI: mediatek-gen3: Fix translation window
-Content-Language: en-US
-To:     Alexandre Mergnat <amergnat@baylibre.com>,
-        =?UTF-8?B?Smlhbmp1biBXYW5nICjnjovlu7rlhpsp?= 
-        <Jianjun.Wang@mediatek.com>, "robh@kernel.org" <robh@kernel.org>,
-        "kw@linux.com" <kw@linux.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        =?UTF-8?B?SmlleXkgWWFuZyAo5p2o5rSBKQ==?= <Jieyy.Yang@mediatek.com>,
-        =?UTF-8?B?Q2h1YW5qaWEgTGl1ICjmn7PkvKDlmIkp?= 
-        <Chuanjia.Liu@mediatek.com>,
-        =?UTF-8?B?SmlhbiBZYW5nICjmnajmiKwp?= <Jian.Yang@mediatek.com>,
-        =?UTF-8?B?UWl6aG9uZyBDaGVuZyAo56iL5ZWf5b+gKQ==?= 
-        <Qizhong.Cheng@mediatek.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Ryder Lee <Ryder.Lee@mediatek.com>
-References: <20231011122633.31559-1-jianjun.wang@mediatek.com>
- <899c7275-ccca-43bb-b1ae-a3403dd18622@baylibre.com>
- <088559162e5ec4e2d6d38d8a5707c6e0e12f5ac6.camel@mediatek.com>
- <54ed1269-8699-4531-abc6-09b602adece9@baylibre.com>
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <54ed1269-8699-4531-abc6-09b602adece9@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/mixed; boundary="8323329-1586418908-1697115226=:1692"
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Il 12/10/23 12:27, Alexandre Mergnat ha scritto:
-> 
-> 
-> On 12/10/2023 08:17, Jianjun Wang (王建军) wrote:
->> On Wed, 2023-10-11 at 17:38 +0200, Alexandre Mergnat wrote:
->>> External email : Please do not click links or open attachments until
->>> you have verified the sender or the content.
->>>
->>>
->>> On 11/10/2023 14:26, Jianjun Wang wrote:
->>> > The size of translation table should be a power of 2, using fls()
->>> cannot > get the proper value when the size is not a power of 2. For
->>> example, > fls(0x3e00000) - 1 = 25, hence the PCIe translation window size
->>> will be > set to 0x2000000 instead of the expected size 0x3e00000. Fix
->>> translation > window by splitting the MMIO space to multiple tables if its size
->>> is not > a power of 2.
->>>
->>> Hi Jianjun,
->>>
->>> I've no knowledge in PCIE, so maybe what my suggestion is stupid:
->>>
->>> Is it mandatory to fit the translation table size with 0x3e00000 (in this 
->>> example) ?
->>> I'm asking because you can have an issue by reaching the maximum translation 
->>> table number.
->>>
->>> Is it possible to just use only one table with the power of 2 size
->>> above 0x3e00000 => 0x4000000 ( fls(0x3e00000) = 26 = 0x4000000). The
->>> downside of this method is wasting allocation space. AFAIK I already see this 
->>> kind of method for memory protection/allocation in embedded systems,
->>> so I'm wondering if this method is safer than using multiple table for
->>> only one size which isn't a power of 2.
->>
->> Hi Alexandre,
->>
->> It's not mandatory to fit the translation table size with 0x3e00000,
->> and yes we can use only one table with the power of 2 size to prevent
->> this.
->>
->> For MediaTek's SoCs, the MMIO space range for each PCIe port is fixed,
->> and it will always be a power of 2, most of them will be 64MB. The
->> reason we have the size which isn't a power of 2 is that we reserve an
->> IO space for compatible purpose, some older devices may still use IO
->> space.
->>
->> Take MT8195 as an example, its MMIO size is 64MB, and the declaration
->> in the DT is like:
->> ranges = <0x81000000 0 0x20000000 0x0 0x20000000 0 0x200000>,
->>           <0x82000000 0 0x20200000 0x0 0x20200000 0 0x3e00000>;
->>
->> The MMIO space is splited to 2MB IO space and 62MB MEM space, that's
->> cause the current risk of the MEM space range, its actual available MEM
->> space is 32MB. But it still works for now because most of the devices
->> only require a very small amount of MEM space and will not reach ranges
->> higher than 32MB.
->>
->> So for the concern of reaching the maximum translation table number, I
->> think maybe we can just print the warning message instead of return
->> error code, since it still works but have some limitations(MEM space
->> not set as DT expected).
->>
-> 
-> Ok understood, thanks for your explanation.
-> Then, IMHO, you should use only one table with the power of 2 size above to make 
-> the code simpler, efficient, robust, more readable and avoid confusion about the 
-> warning.
-> 
-> This is what is done for pci-mvebu.c AFAII.
-> 
-> If you prefer waiting another reviewer with a better PCIE expertise than me, it's 
-> ok for me. With the information I have currently, I prefer to not approve the 
-> current implementation because, from my PoV, it introduce unnecessary complexity.
-> 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
- From what I understand, using only one table with a size that is a power of two
-won't let us use the entire MMIO space, hence the only solution to allow using
-the entire range is to split to more than one table.
+--8323329-1586418908-1697115226=:1692
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-I'm not sure, though, whether PCIe devices would be able to use a MEM space that
-is not power of two, or if those do even exist.
+On Wed, 11 Oct 2023, Bjorn Helgaas wrote:
 
-If there are devices that can use 32MB < mem <= 62MB, then I completely agree
-with Jianjun on this commit.... so please, can any PCI(/e) maintainer comment
-on this situation?
+> On Mon, Sep 18, 2023 at 04:10:55PM +0300, Ilpo Järvinen wrote:
+> > pci_disable_link_state() lacks a symmetric pair. Some drivers want to
+> > disable ASPM during certain phases of their operation but then
+> > re-enable it later on. If pci_disable_link_state() is made for the
+> > device, there is currently no way to re-enable the states that were
+> > disabled.
+> 
+> pci_disable_link_state() gives drivers a way to disable specified ASPM
+> states using a bitmask (PCIE_LINK_STATE_L0S, PCIE_LINK_STATE_L1,
+> PCIE_LINK_STATE_L1_1, etc), but IIUC the driver can't tell exactly
+> what changed and can't directly restore the original state, e.g.,
+> 
+>   - PCIE_LINK_STATE_L1 enabled initially
+>   - driver calls pci_disable_link_state(PCIE_LINK_STATE_L0S)
+>   - driver calls pci_enable_link_state(PCIE_LINK_STATE_L0S)
+>   - PCIE_LINK_STATE_L0S and PCIE_LINK_STATE_L1 are enabled now
+> 
+> Now PCIE_LINK_STATE_L0S is enabled even though it was not initially
+> enabled.  Maybe that's what we want; I dunno.
+> 
+> pci_disable_link_state() currently returns success/failure, but only
+> r8169 and mt76 even check, and only rtl_init_one() (r8169) has a
+> non-trivial reason, so it's conceivable that it could return a bitmask
+> instead.
 
-Regards,
-Angelo
+It's great that you suggested this since it's actually what also I've been 
+started to think should be done instead of this straightforward approach
+I used in V2. 
+
+That is, don't have the drivers to get anything directly from LNKCTL
+but they should get everything through the API provided by the 
+disable/enable calls which makes it easy for the driver to pass the same
+value back into the enable call.
+
+> > Add pci_enable_link_state() to remove ASPM states from the state
+> > disable mask.
+> > 
+> > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> > ---
+> >  drivers/pci/pcie/aspm.c | 42 +++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/pci.h     |  2 ++
+> >  2 files changed, 44 insertions(+)
+> > 
+> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > index 91dc95aca90f..f45d18d47c20 100644
+> > --- a/drivers/pci/pcie/aspm.c
+> > +++ b/drivers/pci/pcie/aspm.c
+> > @@ -1117,6 +1117,48 @@ int pci_disable_link_state(struct pci_dev *pdev, int state)
+> >  }
+> >  EXPORT_SYMBOL(pci_disable_link_state);
+> >  
+> > +/**
+> > + * pci_enable_link_state - Re-enable device's link state
+> > + * @pdev: PCI device
+> > + * @state: ASPM link states to re-enable
+> > + *
+> > + * Enable device's link state that were previously disable so the link is
+> 
+> "state[s] that were previously disable[d]" alludes to the use case you
+> have in mind, but I don't think it describes how this function
+> actually works.  This function just makes it possible to enable the
+> specified states.  The @state parameter may have nothing to do with
+> any previously disabled states.
+
+Yes, it's what I've been thinking between the lines. But I see your point 
+that this API didn't make it easy/obvious as is.
+
+Would you want me to enforce it too besides altering the API such that the 
+states are actually returned from disable call? (I don't personally find
+that necessary as long as the API pair itself makes it obvious what the 
+driver is expect to pass there.)
+
+
+-- 
+ i.
+
+--8323329-1586418908-1697115226=:1692--
