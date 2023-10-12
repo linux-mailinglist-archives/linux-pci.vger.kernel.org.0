@@ -2,101 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D93427C70D6
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 16:59:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65F137C7107
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 17:09:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343993AbjJLO7o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Oct 2023 10:59:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39052 "EHLO
+        id S1347171AbjJLPJk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Oct 2023 11:09:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344035AbjJLO7o (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 10:59:44 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3417FA9;
-        Thu, 12 Oct 2023 07:59:43 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79C14C433C7;
-        Thu, 12 Oct 2023 14:59:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697122782;
-        bh=GQeXXBOT5+9Wm9T+8WfRc/p3162rhG1tPcrD0H1gcIw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ELBpi3dmxObG8Q2FmZnl7AuclPUqcM4zxNUlntvkl2d1YJZMcAJYa0EkhwixhD2mh
-         ZVqtsbLGDuwrs+39a+2N44FTSAJOtrvBrzOASdoy8pY8M25GGtk3E+E5Xac8rEHU2k
-         6Zo3qFZYoXC4eXXiO+vslFxYcZVGVIMEaGxM8dttiMIGf+hKBuL/sqQJpT8sMt3IQp
-         Aj8AzUCjWa1T/kYSJrvLSbbwXPpPvRgNee5Gz0Y+D/Lh6cA00KW2lTdJJzYPRX30ma
-         AEPskvE0PMfcigAJLolZIOzNqZkoMKe2YwU8o4dEgYnO6qtpBQxVZX1J4IxwEDJpTP
-         5uOLzEBvmpd8Q==
-Date:   Thu, 12 Oct 2023 09:59:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
-        yangyicong@huawei.com, will@kernel.org,
-        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
-        robin.murphy@arm.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        rdunlap@infradead.org, mark.rutland@arm.com,
-        zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
-Subject: Re: [PATCH v7 2/4] PCI: Add Alibaba Vendor ID to linux/pci_ids.h
-Message-ID: <20231012145940.GA1069329@bhelgaas>
+        with ESMTP id S1346441AbjJLPJj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 11:09:39 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E150FC0;
+        Thu, 12 Oct 2023 08:09:36 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S5tMX1WhJz67n0t;
+        Thu, 12 Oct 2023 23:09:12 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Thu, 12 Oct
+ 2023 16:09:34 +0100
+Date:   Thu, 12 Oct 2023 16:09:33 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Lukas Wunner <lukas@wunner.de>
+CC:     Alistair Francis <Alistair.Francis@wdc.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+        "graf@amazon.com" <graf@amazon.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "ming4.li@intel.com" <ming4.li@intel.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "zhi.a.wang@intel.com" <zhi.a.wang@intel.com>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "dave.jiang@intel.com" <dave.jiang@intel.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "aik@amd.com" <aik@amd.com>,
+        "david.e.box@intel.com" <david.e.box@intel.com>,
+        "linuxarm@huawei.com" <linuxarm@huawei.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+Subject: Re: [PATCH 07/12] spdm: Introduce library to authenticate devices
+Message-ID: <20231012160933.00007c3d@Huawei.com>
+In-Reply-To: <20231012071629.GA6305@wunner.de>
+References: <cover.1695921656.git.lukas@wunner.de>
+        <89a83f42ae3c411f46efd968007e9b2afd839e74.1695921657.git.lukas@wunner.de>
+        <20231003153937.000034ca@Huawei.com>
+        <caf11c28d21382cc1a81d84a23cbca9e70805a87.camel@wdc.com>
+        <20231012071629.GA6305@wunner.de>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231012032856.2640-3-xueshuai@linux.alibaba.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 12, 2023 at 11:28:54AM +0800, Shuai Xue wrote:
-> The Alibaba Vendor ID (0x1ded) is now used by Alibaba elasticRDMA ("erdma")
-> and will be shared with the upcoming PCIe PMU ("dwc_pcie_pmu"). Move the
-> Vendor ID to linux/pci_ids.h so that it can shared by several drivers
-> later.
-> 
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+On Thu, 12 Oct 2023 09:16:29 +0200
+Lukas Wunner <lukas@wunner.de> wrote:
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci_ids.h
+> On Thu, Oct 12, 2023 at 03:26:44AM +0000, Alistair Francis wrote:
+> > On Tue, 2023-10-03 at 15:39 +0100, Jonathan Cameron wrote:  
+> > > On Thu, 28 Sep 2023 19:32:37 +0200 Lukas Wunner <lukas@wunner.de> wrote:  
+> > > > This implementation supports SPDM 1.0 through 1.3 (the latest
+> > > > version).  
+> > > 
+> > > I've no strong objection in allowing 1.0, but I think we do need
+> > > to control min version accepted somehow as I'm not that keen to get
+> > > security folk analyzing old version...  
+> > 
+> > Agreed. I'm not sure we even need to support 1.0  
+> 
+> According to PCIe r6.1 page 115 ("Reference Documents"):
+> 
+>    "CMA requires SPDM Version 1.0 or above.  IDE requires SPDM Version 1.1
+>     or above.  TDISP requires version 1.2 or above."
+> 
+> This could be interpreted as SPDM 1.0 support being mandatory to be
+> spec-compliant.  Even if we drop support for 1.0 from the initial
+> bringup patches, someone could later come along and propose a patch
+> to re-add it on the grounds of the above-quoted spec section.
+> So I think we can't avoid it.
 
-> ---
->  drivers/infiniband/hw/erdma/erdma_hw.h | 2 --
->  include/linux/pci_ids.h                | 2 ++
->  2 files changed, 2 insertions(+), 2 deletions(-)
+I checked with some of our security folk and they didn't provide a
+reason to avoid 1.0.  It's not feature complete, but for what it does
+it's fine.  So given the PCI spec line you quote keep it for now.
+We should be careful to require the newer versions for the additional
+features though. Can address that when it's relevant.
+
+Jonathan
 > 
-> diff --git a/drivers/infiniband/hw/erdma/erdma_hw.h b/drivers/infiniband/hw/erdma/erdma_hw.h
-> index 9d316fdc6f9a..a155519a862f 100644
-> --- a/drivers/infiniband/hw/erdma/erdma_hw.h
-> +++ b/drivers/infiniband/hw/erdma/erdma_hw.h
-> @@ -11,8 +11,6 @@
->  #include <linux/types.h>
->  
->  /* PCIe device related definition. */
-> -#define PCI_VENDOR_ID_ALIBABA 0x1ded
-> -
->  #define ERDMA_PCI_WIDTH 64
->  #define ERDMA_FUNC_BAR 0
->  #define ERDMA_MISX_BAR 2
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 5fb3d4c393a9..d8760daf9e5a 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2601,6 +2601,8 @@
->  #define PCI_VENDOR_ID_TEKRAM		0x1de1
->  #define PCI_DEVICE_ID_TEKRAM_DC290	0xdc29
->  
-> +#define PCI_VENDOR_ID_ALIBABA		0x1ded
-> +
->  #define PCI_VENDOR_ID_TEHUTI		0x1fc9
->  #define PCI_DEVICE_ID_TEHUTI_3009	0x3009
->  #define PCI_DEVICE_ID_TEHUTI_3010	0x3010
-> -- 
-> 2.39.3
+> Thanks,
 > 
+> Lukas
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
