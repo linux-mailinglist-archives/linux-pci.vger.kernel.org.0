@@ -2,159 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CF307C6E85
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 14:53:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC1617C6EE3
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 15:13:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378434AbjJLMxt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Oct 2023 08:53:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37498 "EHLO
+        id S1343965AbjJLNNi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Oct 2023 09:13:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343867AbjJLMxs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 08:53:48 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BBA194;
-        Thu, 12 Oct 2023 05:53:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697115227; x=1728651227;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=gNLNaEec64/5yPf43OhzXjxJ+9f0AwPObPN0gw90rTk=;
-  b=XkJ9DZi5gy3NgX1d7rCxq+rNL5s/H7mbScg9qZtZuE0o2ovQ6o1aTPfT
-   RSkn6+wb8jlENZvCR1cjCzBDMsPR4EVEUqfMche/YjYjxViTWu4FfobjZ
-   CUIaoL0Vn88ucROtDhnXUx8cGrpkNZlqzvBTl+tEYjfJXXv5HwINStMMu
-   8zBmNOBuAp3ttOy2oERrV+cd3OPVAUXLpZtxRF48y1iThmGNEYQk/nnxp
-   M5gc4C0aQJrhAithjm3hwCNljAEN+5WvwJjIgaNcaMlWVEUrwTo4vvUHc
-   f6Aea66STp3AIMpiHaWybUqw4Q6mkcqqgbb1kzpYS7Qrk5evW4cL4CAl5
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="471169655"
-X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="471169655"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 05:53:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="783688889"
-X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="783688889"
-Received: from asroczyn-mobl.ger.corp.intel.com ([10.249.36.107])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 05:53:41 -0700
-Date:   Thu, 12 Oct 2023 15:53:39 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-cc:     linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        ath10k@lists.infradead.org, ath11k@lists.infradead.org,
-        ath12k@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-bluetooth@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-rdma@vger.kernel.org,
-        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2 05/13] PCI/ASPM: Add pci_enable_link_state()
-In-Reply-To: <20231011215327.GA1043654@bhelgaas>
-Message-ID: <afb4db5-5fe1-9f5d-a910-032adf195c@linux.intel.com>
-References: <20231011215327.GA1043654@bhelgaas>
+        with ESMTP id S1343765AbjJLNNh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 09:13:37 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2744894
+        for <linux-pci@vger.kernel.org>; Thu, 12 Oct 2023 06:13:36 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-40684f53bfcso9690125e9.0
+        for <linux-pci@vger.kernel.org>; Thu, 12 Oct 2023 06:13:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1697116414; x=1697721214; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IvfsuqeXvTAiiT0A6Kg2dLp8waVJkGZPJh+mIn+Z3lc=;
+        b=asheKMbhbemLGughzEIK2P1pRezyMpbJ+eXyNW7ikkxvQl/0OOMsDeizR69PbNPKoD
+         gA+pFBIUZqts/JPS+Bws5bzT9t68yxmfL63rSagkjjRCZoMEA2uj1HRBrXqiU4uNTNHE
+         k02PUV5/zUrXuscDmzgYTKJmjl1BcTUn0NYKifoCEWg+LfhkfrVSsITk32iXpGHROFVR
+         fZRq+t1KWjkfRssUBOu0ZWlBOqZ7H7OVCAgvSKP9H8+k/SWoiptYMnuoAvE1ENe5Il7f
+         TxWXCbu738HD7oeLjreqERgr7eyw/nEwHaLBR//Ru6vA4N5KTDrkAUfom4og2uVqVUNm
+         26uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697116414; x=1697721214;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IvfsuqeXvTAiiT0A6Kg2dLp8waVJkGZPJh+mIn+Z3lc=;
+        b=ZUOXF81XXAXxKKwfibtaZrOa/rELEK+Rv8HTplMPnpCMYRCIWHj7nPuASmKh0HyIRT
+         8PJ1fZRnYZNXlrZ43ZWoU5vK/YStHSF4YQeK/wmxHMxjSc8du3eCFhaAouH2DoxgrMEn
+         nh+qDUlRr9tp0bQXtkHdYSpkTSyvFDvQKyVDxjIZZTcpXHT8lU3hjpxtRcd3GQPTSTZ7
+         xpohL/hS5FgN7VUgU+enhfYU4xOOQeB215tdm/ZML0jBI+57gufYDPgBJFmaiCYOsAmQ
+         GYxzSEEaLS9N+1kqJ+mmPR7f9Ia98g7PfA7SyEPYl4w1OJgK8RAQaR2QEpc/AYBahKqL
+         yYZg==
+X-Gm-Message-State: AOJu0YwzmeR8jLm/wb/dAjr6BzqKzFTyM7wEtGQF2ks2x76z276ZcNii
+        mW31JXaWF4dXTu9bmVy2cGq1YA==
+X-Google-Smtp-Source: AGHT+IFDkAeW7u7CFaRSTjjZPVGdE97IuC3OvNH39GloKvqqSstnsBhwBW7Tc7zhg48/jzIDrvVQig==
+X-Received: by 2002:a05:600c:255:b0:405:3d83:2b76 with SMTP id 21-20020a05600c025500b004053d832b76mr20973611wmj.13.1697116414527;
+        Thu, 12 Oct 2023 06:13:34 -0700 (PDT)
+Received: from vermeer ([2a01:cb1d:81a9:dd00:b570:b34c:ffd4:c805])
+        by smtp.gmail.com with ESMTPSA id l17-20020a1ced11000000b0040588d85b3asm21637965wmh.15.2023.10.12.06.13.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Oct 2023 06:13:34 -0700 (PDT)
+Date:   Thu, 12 Oct 2023 15:13:31 +0200
+From:   Samuel Ortiz <sameo@rivosinc.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Alexey Kardashevskiy <aik@amd.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
+        linuxarm@huawei.com, David Box <david.e.box@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH 00/12] PCI device authentication
+Message-ID: <ZSfw+xswgOSaYxgW@vermeer>
+References: <cover.1695921656.git.lukas@wunner.de>
+ <652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
+ <20231007100433.GA7596@wunner.de>
+ <20231009123335.00006d3d@Huawei.com>
+ <20231009134950.GA7097@wunner.de>
+ <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
+ <20231012091542.GA22596@wunner.de>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1586418908-1697115226=:1692"
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231012091542.GA22596@wunner.de>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1586418908-1697115226=:1692
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-On Wed, 11 Oct 2023, Bjorn Helgaas wrote:
-
-> On Mon, Sep 18, 2023 at 04:10:55PM +0300, Ilpo Järvinen wrote:
-> > pci_disable_link_state() lacks a symmetric pair. Some drivers want to
-> > disable ASPM during certain phases of their operation but then
-> > re-enable it later on. If pci_disable_link_state() is made for the
-> > device, there is currently no way to re-enable the states that were
-> > disabled.
+On Thu, Oct 12, 2023 at 11:15:42AM +0200, Lukas Wunner wrote:
+> On Tue, Oct 10, 2023 at 03:07:41PM +1100, Alexey Kardashevskiy wrote:
+> > But the way SPDM is done now is that if the user (as myself) wants to let
+> > the firmware run SPDM - the only choice is disabling CONFIG_CMA completely
+> > as CMA is not a (un)loadable module or built-in (with some "blacklist"
+> > parameters), and does not provide a sysfs knob to control its tentacles.
+> > Kinda harsh.
 > 
-> pci_disable_link_state() gives drivers a way to disable specified ASPM
-> states using a bitmask (PCIE_LINK_STATE_L0S, PCIE_LINK_STATE_L1,
-> PCIE_LINK_STATE_L1_1, etc), but IIUC the driver can't tell exactly
-> what changed and can't directly restore the original state, e.g.,
+> On AMD SEV-TIO, does the PSP perform SPDM exchanges with a device
+> *before* it is passed through to a guest?  If so, why does it do that?
+
+SPDM exchanges would be done with the DSM, i.e. through the PF, which is
+typically *not* passed through to guests. VFs are.
+
+The RISC-V CoVE-IO [1] spec follows similar flows as SEV-TIO (and to
+some extend TDX-Connect) and expects the host to explicitly request the
+TSM to establish an SPDM connection with the DSM (PF) before passing one
+VF through a TSM managed guest. VFs would be vfio bound, not the PF, so
+I think patch #12 does not solve our problem here. 
+
+> Dan and I discussed this off-list and Dan is arguing for lazy attestation,
+> i.e. the TSM should only have the need to perform SPDM exchanges with
+> the device when it is passed through.
 > 
->   - PCIE_LINK_STATE_L1 enabled initially
->   - driver calls pci_disable_link_state(PCIE_LINK_STATE_L0S)
->   - driver calls pci_enable_link_state(PCIE_LINK_STATE_L0S)
->   - PCIE_LINK_STATE_L0S and PCIE_LINK_STATE_L1 are enabled now
+> So the host enumerates the DOE protocols and authenticates the device.
+> When the device is passed through, patch 12/12 ensures that the host
+> keeps its hands off of the device, thus affording the TSM exclusive
+> SPDM control.
+
+Just to re-iterate: The TSM does not talk SPDM with the passed
+through device(s), but with the corresponding PF. If the host kernel
+owns the SPDM connection when the TSM initiates the SPDM connection with
+the DSM (For IDE key setup), the connection establishment will fail.
+Both CoVE-IO and SEV-TIO (Alexey, please correct me if I'm wrong)
+expect the host to explicitly ask the TSM to establish that SPDM
+connection. That request should somehow come from KVM, which then would
+have to destroy the existing CMA/SPDM connection in order to give the
+TSM a chance to successfully establish the SPDM link.
+
+Cheers,
+Samuel.
+
+[1] https://github.com/riscv-non-isa/riscv-ap-tee-io/blob/main/specification/07-theory_operations.adoc
 > 
-> Now PCIE_LINK_STATE_L0S is enabled even though it was not initially
-> enabled.  Maybe that's what we want; I dunno.
-> 
-> pci_disable_link_state() currently returns success/failure, but only
-> r8169 and mt76 even check, and only rtl_init_one() (r8169) has a
-> non-trivial reason, so it's conceivable that it could return a bitmask
-> instead.
-
-It's great that you suggested this since it's actually what also I've been 
-started to think should be done instead of this straightforward approach
-I used in V2. 
-
-That is, don't have the drivers to get anything directly from LNKCTL
-but they should get everything through the API provided by the 
-disable/enable calls which makes it easy for the driver to pass the same
-value back into the enable call.
-
-> > Add pci_enable_link_state() to remove ASPM states from the state
-> > disable mask.
-> > 
-> > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > ---
-> >  drivers/pci/pcie/aspm.c | 42 +++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/pci.h     |  2 ++
-> >  2 files changed, 44 insertions(+)
-> > 
-> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > index 91dc95aca90f..f45d18d47c20 100644
-> > --- a/drivers/pci/pcie/aspm.c
-> > +++ b/drivers/pci/pcie/aspm.c
-> > @@ -1117,6 +1117,48 @@ int pci_disable_link_state(struct pci_dev *pdev, int state)
-> >  }
-> >  EXPORT_SYMBOL(pci_disable_link_state);
-> >  
-> > +/**
-> > + * pci_enable_link_state - Re-enable device's link state
-> > + * @pdev: PCI device
-> > + * @state: ASPM link states to re-enable
-> > + *
-> > + * Enable device's link state that were previously disable so the link is
-> 
-> "state[s] that were previously disable[d]" alludes to the use case you
-> have in mind, but I don't think it describes how this function
-> actually works.  This function just makes it possible to enable the
-> specified states.  The @state parameter may have nothing to do with
-> any previously disabled states.
-
-Yes, it's what I've been thinking between the lines. But I see your point 
-that this API didn't make it easy/obvious as is.
-
-Would you want me to enforce it too besides altering the API such that the 
-states are actually returned from disable call? (I don't personally find
-that necessary as long as the API pair itself makes it obvious what the 
-driver is expect to pass there.)
-
-
--- 
- i.
-
---8323329-1586418908-1697115226=:1692--
