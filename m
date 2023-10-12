@@ -2,178 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E0CB7C715E
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 17:25:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A76AD7C7167
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 17:27:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379300AbjJLPZN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Oct 2023 11:25:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45128 "EHLO
+        id S1379459AbjJLP1Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Oct 2023 11:27:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347301AbjJLPZL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 11:25:11 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 909EEDC;
-        Thu, 12 Oct 2023 08:25:08 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S5tfJ0vH6z67mY4;
-        Thu, 12 Oct 2023 23:22:00 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Thu, 12 Oct
- 2023 16:25:05 +0100
-Date:   Thu, 12 Oct 2023 16:25:04 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Alexey Kardashevskiy <aik@amd.com>
-CC:     Lukas Wunner <lukas@wunner.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linuxarm@huawei.com>, David Box <david.e.box@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 00/12] PCI device authentication
-Message-ID: <20231012162504.00004bee@Huawei.com>
-In-Reply-To: <78322d17-1fe7-4bfd-8073-64a7f0a1b0a2@amd.com>
-References: <cover.1695921656.git.lukas@wunner.de>
-        <652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
-        <20231007100433.GA7596@wunner.de>
-        <20231009123335.00006d3d@Huawei.com>
-        <20231009134950.GA7097@wunner.de>
-        <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
-        <20231012091542.GA22596@wunner.de>
-        <78322d17-1fe7-4bfd-8073-64a7f0a1b0a2@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S1379476AbjJLP1L (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 11:27:11 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C04DCFD;
+        Thu, 12 Oct 2023 08:27:08 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11FEDC433C7;
+        Thu, 12 Oct 2023 15:27:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697124428;
+        bh=2H8uGr4Sh1OiavbH2JgHBR1t5d/J1kkWJxFqreXacg0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bhzWOIrpuMZoiq7IdctJDzTQtMCE8yHFiZ3kY8XAPqEyyLH81t/fU18359sKdvOIj
+         uoKgIWPcSAiWMo52UUFt5+2zHdgtd1SPKUbjpL/BhFXQjyzZFtwxaqjmNFao8AaT1H
+         +baVPnJQC/38rsOJZ+7CzRAcGSaR0qiDUUUnFL55Fy9YTBryvjb4b33iQln0RzFddT
+         MHK94ipJ+h2DC0EbZJ3eexQdfoxyN49BeG6fy5PUTeko7tdY/dwac67KiVCgh646ME
+         Ws6pCtpHgaYvqqpfiod96tjTbIGsQXT+XSs3BO26ndwnU/k1U8OpKajzeZDEBKeeSx
+         hRpq/cpqM12GQ==
+Date:   Thu, 12 Oct 2023 10:27:05 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shuai Xue <xueshuai@linux.alibaba.com>
+Cc:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
+        yangyicong@huawei.com, will@kernel.org,
+        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
+        robin.murphy@arm.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        rdunlap@infradead.org, mark.rutland@arm.com,
+        zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
+Subject: Re: [PATCH v7 2/4] PCI: Add Alibaba Vendor ID to linux/pci_ids.h
+Message-ID: <20231012152705.GA1070955@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231012145940.GA1069329@bhelgaas>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 12 Oct 2023 22:18:27 +1100
-Alexey Kardashevskiy <aik@amd.com> wrote:
-
-> On 12/10/23 20:15, Lukas Wunner wrote:
-> > On Tue, Oct 10, 2023 at 03:07:41PM +1100, Alexey Kardashevskiy wrote:  
-> >> But the way SPDM is done now is that if the user (as myself) wants to let
-> >> the firmware run SPDM - the only choice is disabling CONFIG_CMA completely
-> >> as CMA is not a (un)loadable module or built-in (with some "blacklist"
-> >> parameters), and does not provide a sysfs knob to control its tentacles.
-> >> Kinda harsh.  
+On Thu, Oct 12, 2023 at 09:59:40AM -0500, Bjorn Helgaas wrote:
+> On Thu, Oct 12, 2023 at 11:28:54AM +0800, Shuai Xue wrote:
+> > The Alibaba Vendor ID (0x1ded) is now used by Alibaba elasticRDMA ("erdma")
+> > and will be shared with the upcoming PCIe PMU ("dwc_pcie_pmu"). Move the
+> > Vendor ID to linux/pci_ids.h so that it can shared by several drivers
+> > later.
 > > 
-> > On AMD SEV-TIO, does the PSP perform SPDM exchanges with a device
-> > *before* it is passed through to a guest?  If so, why does it do that?  
+> > Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 > 
-> Yes, to set up IDE. SEV TIO is designed in a way that there is one 
-> stream == set of keys per the PF's traffic class.
-> 
-> It is like this - imagine a TDISP+SRIOV device with hundreds VFs passed 
-> through to hundreds VMs. The host still owns the PF, provides DOE for 
-> the PSP, the PSP owns a handful of keys (one will do really, I have not 
-> fully grasped the idea when one would want traffic classes but ok, up to 
-> 8), and hundreds VFs work using this few (or one) keys, and the PF works 
-> as well, just cannot know the IDE key (==cannot spy on VFs via something 
-> like PCI bridge/retimer or logic analyzer). It is different than what 
-> you are doing, DOE is the only common thing so far (or ever?).
-> 
-> btw the PSP is not able to initiate SPDM traffic by itself, when the 
-> host decides it wants to setup IDE (via a PSP in SEV TIO), it talks to 
-> the PSP which can return "I want to talk to the device, here are 
-> req/resp buffers", in a loop, until the PSP returns something else.
-> 
-> > Dan and I discussed this off-list and Dan is arguing for lazy attestation,
-> > i.e. the TSM should only have the need to perform SPDM exchanges with
-> > the device when it is passed through.  
-> 
-> Well, I'd expect that in most cases VF is going to be passed through and 
-> IDE setup is done via PF which won't be passed through in such cases as 
-> it has to manage VFs.
-> 
-> > So the host enumerates the DOE protocols  
-> 
-> Yes.
-> 
-> > and authenticates the device.  
-> 
-> No objection here. But PSP will need to rerun this, but still via the 
-> host's DOE.
-> 
-> > When the device is passed through, patch 12/12 ensures that the host
-> > keeps its hands off of the device, thus affording the TSM exclusive
-> > SPDM control.  
-> 
-> If a PF is passed through - I guess yes we could use that, but how is 
-> this going to work for a VF?
-> 
-> > I agree that the commit message of 12/12 is utterly misleading in that
-> > it says "the guest" is granted exclusive control.  It should say "the TSM"
-> > instead.  (There might be implementations where the guest itself has
-> > the role of the TSM and authenticates the device on its own behalf,
-> > but PCIe r6.1 sec 11 uses the term "TSM" so that's what the commit
-> > message needs to use.)  
-> 
-> This should work as long as DOE is still available (as of today).
-> 
-> > However apart from the necessary rewrite of the commit message and
-> > perhaps a rename of the PCI_CMA_OWNED_BY_GUEST flag, I think patch 12/12
-> > should already be doing exactly what you need -- provided that the
-> > PSP doesn't perform SPDM exchanges before passthrough.  If it already
-> > performs them, say, on boot, I'd like to understand the reason.  
-> 
-> In out design this does not have to happen on the host's boot. But I 
-> wonder if some PF host driver authenticated some device and then we 
-> create a bunch of VFs and pass the SPDM ownership of the PF to the PSP 
-> to reauthentificate it again - the already running PF host driver may 
-> become upset, may it? 12/12 assumes the host driver is VFIO-PCI but it 
-> won't be, VFs will be bound to VFIO-PCI. Hope this all makes sense. Thanks,
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci_ids.h
 
-Without some experiments with real drivers, will be hard to be sure, but
-I'd expect it to be fine as the host driver bound after attestation (or
-what's the point?)
-In this patch set attestation only happens again on a reset or kicking it
-because of new certs.  For reset, your PSP should be doing it all over again
-anyway so that can happen after the host driver has dealt with the reset.
-For the manual poking to retry attestation, if the model is we don't
-load the driver until the attestation succeeds then that should be fine
-(as driver not loaded).
+Hehe, just noticed that I acked this previously:
+https://lore.kernel.org/r/20230606153143.GA1124867@bhelgaas
 
-The lock out needed for PF pass through doesn't apply given we are poking
-it from the PSP via the host.
+You can pick up acks like that and include them when you post future
+versions so people don't have to ack them again.  (Drop the acks if
+you make significant changes to the patch, of course.)
 
-So I think patch 12 is irrelevant to your usecase rather than a problem.
-
-May well be dragons in the corner cases.  If we need a lockout for
-after the PSP gets involved, then fair enough.
-
-Jonathan
-
-> 
-> 
+> > ---
+> >  drivers/infiniband/hw/erdma/erdma_hw.h | 2 --
+> >  include/linux/pci_ids.h                | 2 ++
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
 > > 
-> > Thanks,
+> > diff --git a/drivers/infiniband/hw/erdma/erdma_hw.h b/drivers/infiniband/hw/erdma/erdma_hw.h
+> > index 9d316fdc6f9a..a155519a862f 100644
+> > --- a/drivers/infiniband/hw/erdma/erdma_hw.h
+> > +++ b/drivers/infiniband/hw/erdma/erdma_hw.h
+> > @@ -11,8 +11,6 @@
+> >  #include <linux/types.h>
+> >  
+> >  /* PCIe device related definition. */
+> > -#define PCI_VENDOR_ID_ALIBABA 0x1ded
+> > -
+> >  #define ERDMA_PCI_WIDTH 64
+> >  #define ERDMA_FUNC_BAR 0
+> >  #define ERDMA_MISX_BAR 2
+> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > index 5fb3d4c393a9..d8760daf9e5a 100644
+> > --- a/include/linux/pci_ids.h
+> > +++ b/include/linux/pci_ids.h
+> > @@ -2601,6 +2601,8 @@
+> >  #define PCI_VENDOR_ID_TEKRAM		0x1de1
+> >  #define PCI_DEVICE_ID_TEKRAM_DC290	0xdc29
+> >  
+> > +#define PCI_VENDOR_ID_ALIBABA		0x1ded
+> > +
+> >  #define PCI_VENDOR_ID_TEHUTI		0x1fc9
+> >  #define PCI_DEVICE_ID_TEHUTI_3009	0x3009
+> >  #define PCI_DEVICE_ID_TEHUTI_3010	0x3010
+> > -- 
+> > 2.39.3
 > > 
-> > Lukas  
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
-
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
