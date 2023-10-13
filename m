@@ -2,148 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 218617C8BC7
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Oct 2023 18:50:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B0787C8D52
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Oct 2023 20:50:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230006AbjJMQs6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Oct 2023 12:48:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41202 "EHLO
+        id S231465AbjJMSuE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Oct 2023 14:50:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230213AbjJMQsx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Oct 2023 12:48:53 -0400
+        with ESMTP id S229891AbjJMSuC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Oct 2023 14:50:02 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B7BCB7;
-        Fri, 13 Oct 2023 09:48:52 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A61FEC433C9;
-        Fri, 13 Oct 2023 16:48:51 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D23D783;
+        Fri, 13 Oct 2023 11:50:00 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30438C433C7;
+        Fri, 13 Oct 2023 18:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697215731;
-        bh=szP7x2S0GYdm6BcJLpTOMMqgkvX4QE9nsVO22TS5i8o=;
+        s=k20201202; t=1697223000;
+        bh=qbUhClXwCDstZ4eK3GIEiGy9pkTKB0h+E9ACoIDl4Yw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=iXecQ4KBb/XyryDRw48MJQ8eE5IZmTibbJWLMBT63ah7VMsNNhfRxsQRBnSxXVRz8
-         ptzcbqS9ofaJyIOri3ZALVgpwCe+Rwg/lONB4QUFij9MtoErSRw7/rE4HfqKMRp9Ol
-         1AuluwowvDK8NcbSOabPG4FxyRekhzTRLLTUCt9VlQsHG9fr69h7832PJfiQYCJtsC
-         xvTbFlvGOVHUu8F9jtsNeee3XWb5EfGiJLqK4gNafwswJDcPCPTqjBh2AHAtqM1Mvf
-         uNDeS2sjsSyZm50Zfb+V47XLjRkfe0MUfugLCniPVwGscnhdTvdZP2Opj4v6DC5oEv
-         fj+erZKZvWbGg==
-Date:   Fri, 13 Oct 2023 11:48:50 -0500
+        b=I/oWOCZGMWXmib/Yf+Ch+QmUNSmIjY2L/Yo61Z3IRTw0ok6+Z9Nklv9tkME6QVWR3
+         WTzhexm0DvNCSGG3b+O8nuQSNFRO35ZJorEPFBmr64BCusGm8M+IsQDvVWTWxvxo6B
+         DQZIA4b1BntNjSOpACuY3/Q2z9eXV5iqIcNxcAp4vDnal2eSvnrIhj/kIxzsJIFGUw
+         PmFM6IxYzf898PbRN8V0shlVfcHBPV+rbsMBdv4VsRhj+PYX59g9RjQa/tXI7/IC0N
+         7yiBWmb+/4fk5zJttNBjPNi+38CL1UnptnjzohRHbmhb9aa5kaS+PPhlMjaC8cDiyk
+         9/fGs5XEn+fMw==
+Date:   Fri, 13 Oct 2023 13:49:58 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        ath10k@lists.infradead.org, ath11k@lists.infradead.org,
-        ath12k@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-bluetooth@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-rdma@vger.kernel.org,
-        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2 05/13] PCI/ASPM: Add pci_enable_link_state()
-Message-ID: <20231013164850.GA1118214@bhelgaas>
+To:     Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc:     lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        r-gunasekaran@ti.com, srk@ti.com
+Subject: Re: [PATCH] PCI: keystone: Don't enable BAR0 if link is not detected
+Message-ID: <20231013184958.GA1118393@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <afb4db5-5fe1-9f5d-a910-032adf195c@linux.intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <98d5c497-c411-1909-3ea4-8eb7aa6e8b1a@ti.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 12, 2023 at 03:53:39PM +0300, Ilpo Järvinen wrote:
-> On Wed, 11 Oct 2023, Bjorn Helgaas wrote:
-> > On Mon, Sep 18, 2023 at 04:10:55PM +0300, Ilpo Järvinen wrote:
-> > > pci_disable_link_state() lacks a symmetric pair. Some drivers want to
-> > > disable ASPM during certain phases of their operation but then
-> > > re-enable it later on. If pci_disable_link_state() is made for the
-> > > device, there is currently no way to re-enable the states that were
-> > > disabled.
+On Fri, Oct 13, 2023 at 10:36:01AM +0530, Siddharth Vadapalli wrote:
+> On 13/10/23 10:33, Siddharth Vadapalli wrote:
+> > On 12/10/23 22:13, Bjorn Helgaas wrote:
+> >> On Thu, Oct 12, 2023 at 10:15:09AM +0530, Siddharth Vadapalli wrote:
+> >>> On 11/10/23 19:16, Bjorn Helgaas wrote:
+> > ...
+> >>>                                               msix_prepare_msi_desc
+> >>> In this function: msix_prepare_msi_desc, the following readl()
+> >>> causes completion timeout:
+> >>> 		desc->pci.msix_ctrl = readl(addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
+> >>> The completion timeout with the readl is only observed when the link
+> >>> is down (No Endpoint device is actually connected to the PCIe
+> >>> connector slot).
+> >>
+> >> Do you know the address ("addr")?  From pci_msix_desc_addr(), it looks
+> >> like it should be:
+> >>
+> >>   desc->pci.mask_base + desc->msi_index * PCI_MSIX_ENTRY_SIZE
+> >>
+> >> and desc->pci.mask_base should be dev->msix_base, which we got from
+> >> msix_map_region(), which ioremaps part of the BAR indicated by the
+> >> MSI-X Table Offset/Table BIR register.
+> >>
+> >> I wonder if this readl() is being handled as an MMIO access to a
+> >> downstream device instead of a Root Port BAR access because it's
+> >> inside the Root Port's MMIO window.
+> >>
+> >> Could you dump out these values just before the readl()?
+> >>
+> >>   phys_addr inside msix_map_region()
+> >>   dev->msix_base
+> >>   desc->pci.mask_base
+> >>   desc->msi_index
+> >>   addr
 > > 
-> > pci_disable_link_state() gives drivers a way to disable specified ASPM
-> > states using a bitmask (PCIE_LINK_STATE_L0S, PCIE_LINK_STATE_L1,
-> > PCIE_LINK_STATE_L1_1, etc), but IIUC the driver can't tell exactly
-> > what changed and can't directly restore the original state, e.g.,
+> > phys_addr: 0x10102000
+> > msix_base: 0xffff80000997a000
+> > mask_base: 0xffff80000997a000
+> > msi_index: 0
+> > addr: 0xffff80000997a000
 > > 
-> >   - PCIE_LINK_STATE_L1 enabled initially
-> >   - driver calls pci_disable_link_state(PCIE_LINK_STATE_L0S)
-> >   - driver calls pci_enable_link_state(PCIE_LINK_STATE_L0S)
-> >   - PCIE_LINK_STATE_L0S and PCIE_LINK_STATE_L1 are enabled now
+> > Also, the details of BAR allocation from the logs are:
+> > keystone-pcie 5500000.pcie: host bridge /bus@100000/pcie@5500000 ranges:
+> > keystone-pcie 5500000.pcie:       IO 0x0010020000..0x001002ffff -> 0x0000000000
+> > keystone-pcie 5500000.pcie:      MEM 0x0010030000..0x0017ffffff -> 0x0010030000
+> > keystone-pcie 5500000.pcie: iATU unroll: enabled
+> > keystone-pcie 5500000.pcie: iATU regions: 8 ob, 8 ib, align 64K, limit 4G
+> > keystone-pcie 5500000.pcie: Phy link never came up
+> > keystone-pcie 5500000.pcie: PCI host bridge to bus 0000:00
+> > pci_bus 0000:00: root bus resource [bus 00-ff]
+> > pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
+> > pci_bus 0000:00: root bus resource [mem 0x10030000-0x17ffffff]
+> > pci 0000:00:00.0: [104c:b00c] type 01 class 0x060400
+> > pci 0000:00:00.0: reg 0x10: [mem 0x05500000-0x055fffff]
+> > pci 0000:00:00.0: reg 0x38: [mem 0x00000000-0x0000ffff pref]
+> > pci 0000:00:00.0: supports D1
+> > pci 0000:00:00.0: PME# supported from D0 D1 D3hot
+> > pci 0000:00:00.0: BAR 0: assigned [mem 0x10100000-0x101fffff]
+> > pci 0000:00:00.0: BAR 6: assigned [mem 0x10030000-0x1003ffff pref]
+> > pci 0000:00:00.0: PCI bridge to [bus 01-ff]
 > > 
-> > Now PCIE_LINK_STATE_L0S is enabled even though it was not initially
-> > enabled.  Maybe that's what we want; I dunno.
+> > The value of phys_addr lies within the range allocated to BAR0.
 > > 
-> > pci_disable_link_state() currently returns success/failure, but only
-> > r8169 and mt76 even check, and only rtl_init_one() (r8169) has a
-> > non-trivial reason, so it's conceivable that it could return a bitmask
-> > instead.
-> 
-> It's great that you suggested this since it's actually what also I've been 
-> started to think should be done instead of this straightforward approach
-> I used in V2. 
-> 
-> That is, don't have the drivers to get anything directly from LNKCTL
-> but they should get everything through the API provided by the 
-> disable/enable calls which makes it easy for the driver to pass the same
-> value back into the enable call.
-> 
-> > > Add pci_enable_link_state() to remove ASPM states from the state
-> > > disable mask.
-> > > 
-> > > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > > ---
-> > >  drivers/pci/pcie/aspm.c | 42 +++++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/pci.h     |  2 ++
-> > >  2 files changed, 44 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > > index 91dc95aca90f..f45d18d47c20 100644
-> > > --- a/drivers/pci/pcie/aspm.c
-> > > +++ b/drivers/pci/pcie/aspm.c
-> > > @@ -1117,6 +1117,48 @@ int pci_disable_link_state(struct pci_dev *pdev, int state)
-> > >  }
-> > >  EXPORT_SYMBOL(pci_disable_link_state);
-> > >  
-> > > +/**
-> > > + * pci_enable_link_state - Re-enable device's link state
-> > > + * @pdev: PCI device
-> > > + * @state: ASPM link states to re-enable
-> > > + *
-> > > + * Enable device's link state that were previously disable so the link is
+> >>   call early_dump_pci_device() on the Root Port
 > > 
-> > "state[s] that were previously disable[d]" alludes to the use case you
-> > have in mind, but I don't think it describes how this function
-> > actually works.  This function just makes it possible to enable the
-> > specified states.  The @state parameter may have nothing to do with
-> > any previously disabled states.
-> 
-> Yes, it's what I've been thinking between the lines. But I see your point 
-> that this API didn't make it easy/obvious as is.
-> 
-> Would you want me to enforce it too besides altering the API such that the 
-> states are actually returned from disable call? (I don't personally find
-> that necessary as long as the API pair itself makes it obvious what the 
-> driver is expect to pass there.)
+> > I invoked early_dump_pci_device() within the pci_setup_device() function in
+> > drivers/pci/probe.c and the output is:
 
-This was just a comment about the doc not matching the function
-behavior.
+It'd be better to dump the config space immediately before the readl()
+since the PCI core did change some things in the interim.
 
-I think we have to support pci_enable_link_state() even if the driver
-hasn't previously called pci_disable_link_state(), so drivers have to
-be able to specify the pci_enable_link_state() @state from scratch.
+> > pci 0000:00:00.0: config space:
+> > 00000000: 4c 10 0c b0 07 01 10 00 01 00 04 06 00 00 01 00
 
-Does that answer the enforcement question?  I don't think we can
-really enforce anything other than that @state specifies valid ASPM
-states.
+  PCI_COMMAND = 0x0107
+    PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER | PCI_COMMAND_SERR
+
+> > 00000010: 00 00 50 05 00 00 00 00 00 01 ff 00 00 00 00 00
+> > 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+  PCI_IO_BASE            =       0x00 low 4 bits indicate 16-bit addressing
+  PCI_IO_LIMIT           =       0x00
+  PCI_MEMORY_BASE        =     0x0000
+  PCI_MEMORY_LIMIT       =     0x0000
+  PCI_PREF_MEMORY_BASE   =     0x0000 low 4 bits indicate 32-bit pref
+  PCI_PREF_MEMORY_LIMIT  =     0x0000
+  PCI_PREF_BASE_UPPER32  = 0x00000000
+  PCI_PREF_LIMIT_UPPER32 = 0x00000000
+
+We can't tell from this whether the prefetchable window is implemented
+(but I'm sure keystone *does* implement it).  If PCI_PREF_MEMORY_BASE
+and PCI_PREF_MEMORY_LIMIT are read-only zeros, it is not implemented.
+If they are writable, it is enabled at the same range as the
+non-prefetchable window.
+
+Similarly for the I/O window; we can't tell whether the base/limit are
+read-only zero or writable.
+
+So we have these windows that look like they're probably enabled:
+
+  io window   at [io  0x0000-0x0fff]
+  mem window  at [mem 0x00000000-0x000fffff]
+  pref window at [mem 0x00000000-0x000fffff pref]
+
+No idea whether it makes a difference, but these windows seem
+misconfigured.  The default should probably be to make them all
+disabled (as in f73eedc90bf7 ("PCI: vmd: Disable bridge window for
+domain reset")):
+
+  PCI_IO_BASE            = 0xf0
+  PCI_IO_LIMIT           = 0x00
+  PCI_MEMORY_BASE        = 0xfff0
+  PCI_MEMORY_LIMIT       = 0x0000
+  PCI_PREF_MEMORY_BASE   = 0xfff0
+  PCI_PREF_MEMORY_LIMIT  = 0x0000
+  PCI_PREF_BASE_UPPER32  = 0xffffffff
+  PCI_PREF_LIMIT_UPPER32 = 0x00000000
+
+The PCI core should reconfigure and enable them as needed by
+downstream devices.
+
+> I also noticed that the value of desc->pci.msix_ctrl obtained from
+> the readl is always 0xffffffff irrespective of whether or not an
+> endpoint device is connected. This isn't expected right? The only
+> difference between the cases where endpoint device is connected and
+> isn't connected is the completion timeout.
+
+Right, I wouldn't expect that.  PCI_MSIX_ENTRY_VECTOR_CTRL has a bunch
+of reserved bits that should be zero.
+
+I assume MSI-X actually does work for downstream endpoints?  I
+wouldn't think anybody would have bothered with
+ks_pcie_v3_65_add_bus() unless MSI-X works.
 
 Bjorn
