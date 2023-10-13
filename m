@@ -2,136 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EF947C7352
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Oct 2023 18:43:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B5E17C7B05
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Oct 2023 03:08:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379320AbjJLQnm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Oct 2023 12:43:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40368 "EHLO
+        id S229437AbjJMBIB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Oct 2023 21:08:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379499AbjJLQnk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 12:43:40 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDBE6CA;
-        Thu, 12 Oct 2023 09:43:38 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E58FC433C9;
-        Thu, 12 Oct 2023 16:43:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697129018;
-        bh=kfDTZe6bHsXYEX/cMTdKPK0HJuuqElf7yFpIZAfZdrk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gpYnHIXtG/AI/50xVzbgYh9ZokHe+LC/HTuonFQ8uuofa9ptBdl+zXb+0i/ZAyT7A
-         nnkuqvny8W8DYDl2GaQiS9Pmz1pjdOfpLilw2xnVdxn8waw8ZXkKiQN3vxRvjgZaEh
-         PisSURAbi4YwOzw7LaMT+326xWgzSPAE91WS6p77Q4B0QLnvr8K3eI2hRrweV7K3qk
-         r6d6B7wpgHFoqR6rdmmaqULxVKtPQ8tKxKzYud1GpmUvPlFYDJvIcNtnewv5Tr1oXp
-         Riv7CkBMw6pspHVdC9vDShg5cUBCmrNw30jZ4j/JGqyFW98zghqXY2ZVYtwvriiIcL
-         Pj3IZl871HUsg==
-Date:   Thu, 12 Oct 2023 11:43:36 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc:     lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        r-gunasekaran@ti.com, srk@ti.com
-Subject: Re: [PATCH] PCI: keystone: Don't enable BAR0 if link is not detected
-Message-ID: <20231012164336.GA1072823@bhelgaas>
+        with ESMTP id S229445AbjJMBIB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Oct 2023 21:08:01 -0400
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBB7483;
+        Thu, 12 Oct 2023 18:07:54 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0Vu08k72_1697159270;
+Received: from 30.240.114.194(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vu08k72_1697159270)
+          by smtp.aliyun-inc.com;
+          Fri, 13 Oct 2023 09:07:52 +0800
+Message-ID: <a9560727-0bd8-6e4f-2990-d24de5a80ac8@linux.alibaba.com>
+Date:   Fri, 13 Oct 2023 09:07:48 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e1f574c-6b36-c6e1-9153-90d599e2aaa7@ti.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.1
+Subject: Re: [PATCH v7 2/4] PCI: Add Alibaba Vendor ID to linux/pci_ids.h
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
+        yangyicong@huawei.com, will@kernel.org,
+        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
+        robin.murphy@arm.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        rdunlap@infradead.org, mark.rutland@arm.com,
+        zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
+References: <20231012152705.GA1070955@bhelgaas>
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20231012152705.GA1070955@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-13.2 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 12, 2023 at 10:15:09AM +0530, Siddharth Vadapalli wrote:
-> Hello Bjorn,
+
+
+On 2023/10/12 23:27, Bjorn Helgaas wrote:
+> On Thu, Oct 12, 2023 at 09:59:40AM -0500, Bjorn Helgaas wrote:
+>> On Thu, Oct 12, 2023 at 11:28:54AM +0800, Shuai Xue wrote:
+>>> The Alibaba Vendor ID (0x1ded) is now used by Alibaba elasticRDMA ("erdma")
+>>> and will be shared with the upcoming PCIe PMU ("dwc_pcie_pmu"). Move the
+>>> Vendor ID to linux/pci_ids.h so that it can shared by several drivers
+>>> later.
+>>>
+>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>>
+>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci_ids.h
 > 
-> Thank you for reviewing the patch.
+> Hehe, just noticed that I acked this previously:
+> https://lore.kernel.org/r/20230606153143.GA1124867@bhelgaas
 > 
-> On 11/10/23 19:16, Bjorn Helgaas wrote:
-> > Hi Siddharth,
-> > 
-> > On Wed, Oct 11, 2023 at 06:04:51PM +0530, Siddharth Vadapalli wrote:
-> >> Since the function dw_pcie_host_init() ignores the absence of link under
-> >> the assumption that link can come up later, it is possible that the
-> >> pci_host_probe(bridge) function is invoked even when no endpoint device
-> >> is connected. In such a situation, the ks_pcie_v3_65_add_bus() function
-> >> configures BAR0 when the link is not up, resulting in Completion Timeouts
-> >> during the MSI configuration performed later by the PCI Express Port driver
-> >> to setup AER, PME and other services. Thus, leave BAR0 disabled if link is
-> >> not yet detected when the ks_pcie_v3_65_add_bus() function is invoked.
-> > 
-> > I'm trying to make sense of this.  In this path:
-> > 
-> >   pci_host_probe
-> >     pci_scan_root_bus_bridge
-> >       pci_register_host_bridge
-> > 	bus = pci_alloc_bus(NULL)    # root bus
-> > 	bus->ops->add_bus(bus)
-> > 	  ks_pcie_v3_65_add_bus
-> > 
-> > The BAR0 in question must belong to a Root Port.  And it sounds like
-> > the issue must be related to MSI-X, since the original MSI doesn't
-> > involve any BARs.
+> You can pick up acks like that and include them when you post future
+> versions so people don't have to ack them again.  (Drop the acks if
+> you make significant changes to the patch, of course.)
 > 
-> Yes, the issue is related to MSI-X. I will list down the exact set of function
-> calls below as well as the place where the completion timeout first occurs:
-> ks_pcie_probe
->   dw_pcie_host_init
->     pci_host_probe
->       pci_bus_add_devices
->         pci_bus_add_device
->           device_attach
->             __device_attach
->               bus_for_each_drv
->                 __device_attach_driver (invoked using fn(drv, data))
->                   driver_probe_device
->                     __driver_probe_device
->                       really_probe
->                         pci_device_probe
->                           pcie_portdrv_probe
->                             pcie_port_device_register
->                               pcie_init_service_irqs
->                                 pcie_port_enable_irq_vec
->                                   pci_alloc_irq_vectors
->                                     pci_alloc_irq_vectors_affinity
->                                       __pci_enable_msix_range
->                                         msix_capability_init
->                                           msix_setup_interrupts
->                                             msix_setup_msi_descs
->                                               msix_prepare_msi_desc
-> In this function: msix_prepare_msi_desc, the following readl()
-> causes completion timeout:
-> 		desc->pci.msix_ctrl = readl(addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
-> The completion timeout with the readl is only observed when the link
-> is down (No Endpoint device is actually connected to the PCIe
-> connector slot).
 
-Do you know the address ("addr")?  From pci_msix_desc_addr(), it looks
-like it should be:
+Sorry, I forgot to pick up your acked-by tag. Will add it next version.
 
-  desc->pci.mask_base + desc->msi_index * PCI_MSIX_ENTRY_SIZE
+Thank you.
 
-and desc->pci.mask_base should be dev->msix_base, which we got from
-msix_map_region(), which ioremaps part of the BAR indicated by the
-MSI-X Table Offset/Table BIR register.
-
-I wonder if this readl() is being handled as an MMIO access to a
-downstream device instead of a Root Port BAR access because it's
-inside the Root Port's MMIO window.
-
-Could you dump out these values just before the readl()?
-
-  phys_addr inside msix_map_region()
-  dev->msix_base
-  desc->pci.mask_base
-  desc->msi_index
-  addr
-  call early_dump_pci_device() on the Root Port
-
-Bjorn
+Cheers,
+Shuai
