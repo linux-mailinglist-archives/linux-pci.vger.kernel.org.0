@@ -2,48 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54C227C8B15
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Oct 2023 18:35:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 159C67C8B9C
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Oct 2023 18:48:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231307AbjJMQbx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Oct 2023 12:31:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51708 "EHLO
+        id S230175AbjJMQi3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Oct 2023 12:38:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232312AbjJMQbh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Oct 2023 12:31:37 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE588126;
-        Fri, 13 Oct 2023 09:30:27 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 109A7C433C8;
-        Fri, 13 Oct 2023 16:30:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697214627;
-        bh=vh4TnsBJPXKkBZ4qGrkc49O31rDOcZhRMhVj+HGI4BY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gviA7DdGJ83WDBASoN7ICKgep7rh2loHKxb5ZbwFtgn7zllg0pzEIh6pMoj1tyMr3
-         4UUeA1TeUgH4Af1srPOkIn6Gnnxy8hxGKJE7T8wQ4XtvxgWp42Lc+dFdrSeFP71b2/
-         CUCF3yQJSy6yXXzelSQcbbM4sLtJrLiZWin8Hfjg7mngS8XRN4vXy8CxagAG27gAHH
-         0MDMHdtHU8YCb6qpeeLvrs/6OQkr8dt4a4Xkucdzh1wZiPqFEb/t2gIC+1OOYTvrlT
-         N/ZrRnhtMCsXpDS+KBAr4VSBqlt1QOchk8svklSkIJmUoiTwR3TKGJT0SQZLSp95u4
-         WUtS6hzwCy+4Q==
-Date:   Fri, 13 Oct 2023 11:30:25 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
-        yangyicong@huawei.com, will@kernel.org,
-        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
-        robin.murphy@arm.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        rdunlap@infradead.org, mark.rutland@arm.com,
-        zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
-Subject: Re: [PATCH v7 3/4] drivers/perf: add DesignWare PCIe PMU driver
-Message-ID: <20231013163025.GA1116248@bhelgaas>
+        with ESMTP id S229683AbjJMQi2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Oct 2023 12:38:28 -0400
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B59495
+        for <linux-pci@vger.kernel.org>; Fri, 13 Oct 2023 09:38:26 -0700 (PDT)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-5a7af20c488so27575267b3.1
+        for <linux-pci@vger.kernel.org>; Fri, 13 Oct 2023 09:38:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1697215105; x=1697819905; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=y62C42hqOldBla5nOPJaFzuEZ48dSgIXLJ1wjt3nmfg=;
+        b=hiX5qt8Om7aIOlXShaWA/uFgbGLsgrOrS0YgTXtH4uupp/JMUbRTFPlZsoc6uTeK9y
+         2SUp6Wh9R2OJB97TR7w34YO2q+FNUhJhoh9SQ4/hw9o2GyXY4WNtkZJrWlPdGgtTv4zG
+         mRiIJ2H5iA/3QSkifXk55KaHR4+6TjdXUQImyKnrIoO6psCfHR6k9O2V6uyE+erFydbs
+         t4ps4GnHjxwSlR2yJ0jRYpQ6QwtTIWG12VcTLmTdwzAOMuHMrSHNcYj3ywTPf1df4nJ3
+         QFraTwARMRfNTF6mo5jBeADVpuZJq5474UKhGwEJEsY3Zn+IabZIc+BvFCnKnBKKBOi2
+         2Kbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697215105; x=1697819905;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y62C42hqOldBla5nOPJaFzuEZ48dSgIXLJ1wjt3nmfg=;
+        b=mSoykmeS2nvbnua9kE/5hKrK1L1ire3EG9j2mkDGo13QStUjUfHIaeM45w74OfGhS+
+         UrHlHEp5J7dfEaFNnputjoU4Nv2eGP9Z5s3AU31TsRGGyTpS3XKu8++gaqFNsUTyJB18
+         noFpztnijz70IeH33tmCx05HCovSVNrx4sH5BI+MlqyPi01a7XPbiSBx9N10dppJyJLd
+         ePR1KPQvF7SePgbKSbktzqVwl2gsUAjyYcl3LbUnVs1946vdlixBXtQ8TyYJPQhmawFp
+         yo2tpmWUoBscTubgMTNL1sxAwwsT1A4rGKAX0rQKtF6aWJJB/F7JNq1dGW8FSa/+pVea
+         wjWA==
+X-Gm-Message-State: AOJu0YwizBu56gBwGDzns2dVPI7aBFMzipSxhQAu1qhGBz8TyhLpSgEj
+        WSRYwW7Nn1kj4eDH7cOGeljIRR6fJQ+5tywujTlgdA==
+X-Google-Smtp-Source: AGHT+IGNSo+78yX/NsWCFtkVnlt0MXoHA1iGSKh5UHymJ8V2IoNpgMBwBsPLUuvZ85t7hTyy9e6zlHX6+UtYGK0YhjI=
+X-Received: by 2002:a0d:eb0e:0:b0:5a8:1654:4b6f with SMTP id
+ u14-20020a0deb0e000000b005a816544b6fmr3585459ywe.17.1697215105287; Fri, 13
+ Oct 2023 09:38:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a2265967-5088-7f17-35e5-29bf1c85c15f@linux.alibaba.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+References: <1695218113-31198-1-git-send-email-quic_msarkar@quicinc.com>
+ <1695218113-31198-2-git-send-email-quic_msarkar@quicinc.com>
+ <20230921183850.GA762694-robh@kernel.org> <28bf111f-b965-4d38-884b-bc3a0b68a6cc@quicinc.com>
+ <8effa7e5-a223-081b-75b8-7b94400d42e6@quicinc.com> <CAA8EJpp+3_A-9YXF1yOKdFweVKqrpTxvxKoJcUH6qiDHfCQ-dQ@mail.gmail.com>
+ <31e6aab6-73f9-a421-9dfa-292d9d0e9649@quicinc.com>
+In-Reply-To: <31e6aab6-73f9-a421-9dfa-292d9d0e9649@quicinc.com>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Fri, 13 Oct 2023 19:38:13 +0300
+Message-ID: <CAA8EJprSxKXjZTH8tCHGvw4zBp_H-DunS9v9kvp=aFRNd55OhA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] dt-bindings: PCI: qcom-ep: Add support for SA8775P SoC
+To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc:     Shazad Hussain <quic_shazhuss@quicinc.com>,
+        Rob Herring <robh@kernel.org>, agross@kernel.org,
+        andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, konrad.dybcio@linaro.org, mani@kernel.org,
+        quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
+        quic_nayiluri@quicinc.com, quic_krichai@quicinc.com,
+        quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+        linux-phy@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,83 +82,122 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 13, 2023 at 11:46:44AM +0800, Shuai Xue wrote:
-> 
-> 
-> On 2023/10/13 00:25, Bjorn Helgaas wrote:
-> > On Thu, Oct 12, 2023 at 11:28:55AM +0800, Shuai Xue wrote:
-> >> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
-> >> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
-> >> Core controller IP which provides statistics feature. The PMU is not a PCIe
-> >> Root Complex integrated End Point(RCiEP) device but only register counters
-> >> provided by each PCIe Root Port.
-
-IIUC, the PMU is directly integrated into the Root Port: it's
-discovered and operated via the Root Port config space.  If so, I
-wouldn't bother mentioning RCiEP because there's no need to list all
-the things it's *not*.
-
-> >> To facilitate collection of statistics the controller provides the
-> >> following two features for each Root Port:
+On Fri, 13 Oct 2023 at 15:55, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
+>
+>
+> On 10/11/2023 5:13 PM, Dmitry Baryshkov wrote:
+> > On Wed, 11 Oct 2023 at 14:14, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
 > >>
-> >> - Time Based Analysis (RX/TX data throughput and time spent in each
-> >>   low-power LTSSM state)
-> >> - Event counters (Error and Non-Error for lanes)
+> >> On 10/6/2023 4:24 PM, Shazad Hussain wrote:
+> >>>
+> >>> On 9/22/2023 12:08 AM, Rob Herring wrote:
+> >>>> On Wed, Sep 20, 2023 at 07:25:08PM +0530, Mrinmay Sarkar wrote:
+> >>>>> Add devicetree bindings support for SA8775P SoC.
+> >>>>> Define reg and interrupt per platform.
+> >>>>>
+> >>>>> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+> >>>>> ---
+> >>>>>    .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 130
+> >>>>> +++++++++++++++++----
+> >>>>>    1 file changed, 108 insertions(+), 22 deletions(-)
+> >>>>>
+> >>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> >>>>> b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> >>>>> index a223ce0..e860e8f 100644
+> >>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> >>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> >>>>> @@ -13,6 +13,7 @@ properties:
+> >>>>>      compatible:
+> >>>>>        oneOf:
+> >>>>>          - enum:
+> >>>>> +          - qcom,sa8775p-pcie-ep
+> >>>>>              - qcom,sdx55-pcie-ep
+> >>>>>              - qcom,sm8450-pcie-ep
+> >>>>>          - items:
+> >>>>> @@ -20,29 +21,19 @@ properties:
+> >>>>>              - const: qcom,sdx55-pcie-ep
+> >>>>>        reg:
+> >>>>> -    items:
+> >>>>> -      - description: Qualcomm-specific PARF configuration registers
+> >>>>> -      - description: DesignWare PCIe registers
+> >>>>> -      - description: External local bus interface registers
+> >>>>> -      - description: Address Translation Unit (ATU) registers
+> >>>>> -      - description: Memory region used to map remote RC address space
+> >>>>> -      - description: BAR memory region
+> >>>>> +    minItems: 6
+> >>>>> +    maxItems: 7
+> >>>>>        reg-names:
+> >>>>> -    items:
+> >>>>> -      - const: parf
+> >>>>> -      - const: dbi
+> >>>>> -      - const: elbi
+> >>>>> -      - const: atu
+> >>>>> -      - const: addr_space
+> >>>>> -      - const: mmio
+> >>>>> +    minItems: 6
+> >>>>> +    maxItems: 7
+> >>>> Don't move these into if/then schemas. Then we are duplicating the
+> >>>> names, and there is no reason to keep them aligned for new compatibles.
+> >>>>
+> >>>> Rob
+> >>> Hi Rob,
+> >>> As we have one extra reg property (dma) required for sa8775p-pcie-ep,
+> >>> isn't it expected to be moved in if/then as per number of regs
+> >>> required. Anyways we would have duplication of some properties for new
+> >>> compatibles where the member numbers differs for a property.
+> >>>
+> >>> Are you suggesting to add the extra reg property (dma) in the existing
+> >>> reg and reg-names list, and add minItems/maxItems for all compatibles
+> >>> present in this file ?
+> > This is what we have been doing in other cases: if the list is an
+> > extension of the current list, there is no need to duplicate it. One
+> > can use min/maxItems instead.
+> Hi Dmitry
+>
+> we have tried using min/maxItems rather than duplicating but somehow
+> catch up with some warnings in dt_bindings check
+>
+> //local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
+> pcie-ep@1c00000: reg: [[29360128, 12288], [1073741824, 3869],
+> [1073745696, 200], [1073745920, 4096], [1073750016, 4096], [29372416,
+> 12288]] is too short//
+> //        from schema $id:
+> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
+> ///local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
+> pcie-ep@1c00000: reg-names: ['parf', 'dbi', 'elbi', 'atu', 'addr_space',
+> 'mmio'] is too short//
+> //        from schema $id:
+
+missing min/maxItems for reg and reg-names
+
+> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
+> ///local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
+> pcie-ep@1c00000: interrupts: [[0, 140, 4], [0, 145, 4]] is too short//
+> //        from schema $id:
+> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
+> ///local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
+> pcie-ep@1c00000: interrupt-names: ['global', 'doorbell'] is too short//
+> //        from schema $id:
+> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
+
+incorrect min/maxItems for interrupts.
+
+> //local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
+> pcie-ep@1c00000: interrupt-names: ['global', 'doorbell'] is too short/
+>
+> added the patch in attachment.
+>
+> --Mrinmay
+>
+> >>> -Shazad
+> >> Here we have defined reg and interrupt per platform as clocks is defined.
 > >>
-> >> Note, only one counter for each type and does not overflow interrupt.
-> > 
-> > Not sure what "does not overflow interrupt" means.  Does it mean
-> > there's no interrupt generated when the counter overflows?
-> 
-> Yes, exactly. The rootport does NOT generate interrupt when the
-> couter overflows.  I think the assumption hidden in this design is
-> 64-bit counter will not overflow within observable time.
-> 
-> PCIe 5.0 slots can now reach anywhere between ~4GB/sec for a x1 slot
-> up to ~64GB/sec for a x16 slot. The unit of counter is 16 byte.
-> 
-> 	2^64/(64/16*10^9)/60/60/24/365=146 years
-> 
-> so, the counter will not overflow within 146 years.
+> >> -Mrinmay
+> >>
+> >
 
-Certainly a reasonable assumption :)
 
-But I'm confused about how many counters there are.  Clearly there are
-two features ((1) time-based analysis and (2) event counters).
 
-"One counter for each type" suggests there's one counter for
-time-based analysis and a second counter for event counting, but from
-dwc_pcie_pmu_event_add(), it looks like each Root Port might have a
-single counter, and you can decide whether that counter is used for
-time-based analysis or event counting, but you can't do both at the
-same time?  And the event counting is for a single lane, not for the
-link as a whole?
-
-If so, I might word this as:
-
-  Each Root Port contains one counter that can be used for either:
-
-    - Time-Based Analysis (RX/TX data throughput and time spent in
-      each low-power LTSSM state) or
-
-    - Event counting (error and non-error events for a specified lane)
-
-  There is no interrupt for counter overflow.
-
-> >> +	  Enable perf support for Synopsys DesignWare PCIe PMU Performance
-> >> +	  monitoring event on platform including the Yitian 710.
-> > 
-> > Should this mention Alibaba or T-Head?  I don't know how
-> > Alibaba/T-Head/Yitian are all related.
-> 
-> The server chips, named Yitian 710, are custom-built by Alibaba Group's chip
-> development business, T-Head.
-> 
-> 	  Enable perf support for Synopsys DesignWare PCIe PMU Performance
-> 	  monitoring event on platform including the Alibaba Yitian 710.
-> 
-> Is this okay?
-
-Perfect :)
-
-Bjorn
+-- 
+With best wishes
+Dmitry
