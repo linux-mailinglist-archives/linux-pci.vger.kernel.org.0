@@ -2,165 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F6AA7C7CE1
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Oct 2023 07:03:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25FD87C7CE3
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Oct 2023 07:03:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbjJMFDK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Oct 2023 01:03:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47762 "EHLO
+        id S229508AbjJMFD0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Oct 2023 01:03:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbjJMFDJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Oct 2023 01:03:09 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96606CA
-        for <linux-pci@vger.kernel.org>; Thu, 12 Oct 2023 22:03:06 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id ffacd0b85a97d-32003aae100so1861913f8f.0
-        for <linux-pci@vger.kernel.org>; Thu, 12 Oct 2023 22:03:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1697173385; x=1697778185; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UVpd0E4GFx6H/SM7YV3uveoOWkdUC4wwz8FAahExBkA=;
-        b=RFbKBnHDCyktRRB57c8Fy81XmruDZuU0iBvedpxokaFQAg/X3OcvG7Z8qH5+8qmLJC
-         NKIzdQfKKUec13eemPEIPSAxBCFTLPosnixtOqHzXxx0OSCK3GclprQj6R71ZMT51Uo9
-         SDkcVohf7dPmjEHSdH0DBrTHAP2Vqdk4kBKgrlR/gki1HpX55HF4iI0r82uIG4rLPo+A
-         dqCv5GabtcL0w3yaxA4aFyJdXpR9WZpULD0eveJ7Z/57nvwq/jl3szm2ZwRm/quRAEin
-         To5XH2S4eCryqXdSALjPxPYTrBnlyIld+g35x4FRfaHl04/yYCBFwnlTFcQp8Ctram0D
-         hLbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697173385; x=1697778185;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UVpd0E4GFx6H/SM7YV3uveoOWkdUC4wwz8FAahExBkA=;
-        b=GchCGJ0IrTke4RM7QjCRPFuPJNlpf5FESblVZ8tExWxtNTs0dnU9VJtNPikvPwGq6U
-         3RZlUhb0avYfYjHdUmcruyBZLl3gtmHFnQdUHusgEg1/3WPeGMN8GmMDdoXyu6PSYpYs
-         7VOJ/lwuLTLuS+sySRgLyplgbuqEA1dgDnhqU8RBGVmSrHHi2Yn99SYr+k7XyRU5tRjl
-         UYp+pOVYMyIdyt8vlHcmFoOtTntltfaEJvvVqgDpS5+Bs2Lvhr19oQHVtjAAcFSWY1gX
-         AN6d2+ULkHjP9O6xq9QSHI2nPaGsSUZQKsMADBLGfBEM3ZwF+3qEGNDfyCdD1VpuNJnG
-         Pgog==
-X-Gm-Message-State: AOJu0YylQziFXgE51kPNOr6r4+Nc498uNOUoieZAOaoOSNLdNFr0dtjs
-        vXu6pOcM5Wb3zGM6lFVQOrddfg==
-X-Google-Smtp-Source: AGHT+IEvea4eYbGIhMcMt7pht9MZ6rkBFbtUuvgV/OJhcSTlZKOMEd1P7WHPPrbIAstniFTyYUMHUA==
-X-Received: by 2002:adf:fb47:0:b0:318:416:a56a with SMTP id c7-20020adffb47000000b003180416a56amr17734101wrs.13.1697173384872;
-        Thu, 12 Oct 2023 22:03:04 -0700 (PDT)
-Received: from vermeer ([2a01:cb1d:81a9:dd00:b570:b34c:ffd4:c805])
-        by smtp.gmail.com with ESMTPSA id u5-20020a05600c00c500b004063c9f68f2sm1455494wmm.26.2023.10.12.22.03.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Oct 2023 22:03:04 -0700 (PDT)
-Date:   Fri, 13 Oct 2023 07:03:01 +0200
-From:   Samuel Ortiz <sameo@rivosinc.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Lukas Wunner <lukas@wunner.de>, Alexey Kardashevskiy <aik@amd.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
-        linuxarm@huawei.com, David Box <david.e.box@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 00/12] PCI device authentication
-Message-ID: <ZSjPhTJ9N0EKH5+W@vermeer>
-References: <cover.1695921656.git.lukas@wunner.de>
- <652030759e42d_ae7e72946@dwillia2-xfh.jf.intel.com.notmuch>
- <20231007100433.GA7596@wunner.de>
- <20231009123335.00006d3d@Huawei.com>
- <20231009134950.GA7097@wunner.de>
- <b003c0ca-b5c7-4082-a391-aeb04ccc33ca@amd.com>
- <20231012091542.GA22596@wunner.de>
- <ZSfw+xswgOSaYxgW@vermeer>
- <20231012163221.000064af@Huawei.com>
+        with ESMTP id S229629AbjJMFDZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Oct 2023 01:03:25 -0400
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB0C9C9;
+        Thu, 12 Oct 2023 22:03:22 -0700 (PDT)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 39D53BxY127196;
+        Fri, 13 Oct 2023 00:03:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1697173391;
+        bh=lwW4nwJHn4M3/aZupB7mYnc/t55OrDG40S1UAJWJXH8=;
+        h=Date:CC:Subject:To:References:From:In-Reply-To;
+        b=dChlk3FwxB9if6OZ1lmrcszsKHm64ziRC9dqCp5MgtaBajVNZL64Mn1yHMZN7tkoP
+         vRwf3jmPkzx3HAxZNwAcCwAK9rmT5Yw1Cbm4Ms/2IIfs3JhRB/IQfbJkcCciDrjFAK
+         gUzDOlYeXy3dv5d5bgMK/54WaM6HAlC6/Kqs6XmQ=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 39D53BbO024064
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Oct 2023 00:03:11 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 13
+ Oct 2023 00:03:11 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 13 Oct 2023 00:03:11 -0500
+Received: from [172.24.227.9] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 39D537ad024571;
+        Fri, 13 Oct 2023 00:03:07 -0500
+Message-ID: <5613f8e1-9c73-18c3-8a19-9a164b09b577@ti.com>
+Date:   Fri, 13 Oct 2023 10:33:06 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231012163221.000064af@Huawei.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+CC:     <lpieralisi@kernel.org>, <robh@kernel.org>, <kw@linux.com>,
+        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <r-gunasekaran@ti.com>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: Re: [PATCH] PCI: keystone: Don't enable BAR0 if link is not detected
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <20231012164336.GA1072823@bhelgaas>
+From:   Siddharth Vadapalli <s-vadapalli@ti.com>
+In-Reply-To: <20231012164336.GA1072823@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 12, 2023 at 04:32:21PM +0100, Jonathan Cameron wrote:
-> On Thu, 12 Oct 2023 15:13:31 +0200
-> Samuel Ortiz <sameo@rivosinc.com> wrote:
+
+
+On 12/10/23 22:13, Bjorn Helgaas wrote:
+> On Thu, Oct 12, 2023 at 10:15:09AM +0530, Siddharth Vadapalli wrote:
+>> Hello Bjorn,
+>>
+>> Thank you for reviewing the patch.
+>>
+>> On 11/10/23 19:16, Bjorn Helgaas wrote:
+>>> Hi Siddharth,
+>>>
+
+...
+
+>>                                               msix_prepare_msi_desc
+>> In this function: msix_prepare_msi_desc, the following readl()
+>> causes completion timeout:
+>> 		desc->pci.msix_ctrl = readl(addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
+>> The completion timeout with the readl is only observed when the link
+>> is down (No Endpoint device is actually connected to the PCIe
+>> connector slot).
 > 
-> > On Thu, Oct 12, 2023 at 11:15:42AM +0200, Lukas Wunner wrote:
-> > > On Tue, Oct 10, 2023 at 03:07:41PM +1100, Alexey Kardashevskiy wrote:  
-> > > > But the way SPDM is done now is that if the user (as myself) wants to let
-> > > > the firmware run SPDM - the only choice is disabling CONFIG_CMA completely
-> > > > as CMA is not a (un)loadable module or built-in (with some "blacklist"
-> > > > parameters), and does not provide a sysfs knob to control its tentacles.
-> > > > Kinda harsh.  
-> > > 
-> > > On AMD SEV-TIO, does the PSP perform SPDM exchanges with a device
-> > > *before* it is passed through to a guest?  If so, why does it do that?  
-> > 
-> > SPDM exchanges would be done with the DSM, i.e. through the PF, which is
-> > typically *not* passed through to guests. VFs are.
-> > 
-> > The RISC-V CoVE-IO [1] spec follows similar flows as SEV-TIO (and to
-> > some extend TDX-Connect) and expects the host to explicitly request the
-> > TSM to establish an SPDM connection with the DSM (PF) before passing one
-> > VF through a TSM managed guest. VFs would be vfio bound, not the PF, so
-> > I think patch #12 does not solve our problem here. 
-> > 
-> > > Dan and I discussed this off-list and Dan is arguing for lazy attestation,
-> > > i.e. the TSM should only have the need to perform SPDM exchanges with
-> > > the device when it is passed through.
-> > > 
-> > > So the host enumerates the DOE protocols and authenticates the device.
-> > > When the device is passed through, patch 12/12 ensures that the host
-> > > keeps its hands off of the device, thus affording the TSM exclusive
-> > > SPDM control.  
-> > 
-> > Just to re-iterate: The TSM does not talk SPDM with the passed
-> > through device(s), but with the corresponding PF. If the host kernel
-> > owns the SPDM connection when the TSM initiates the SPDM connection with
-> > the DSM (For IDE key setup), the connection establishment will fail.
-> > Both CoVE-IO and SEV-TIO (Alexey, please correct me if I'm wrong)
-> > expect the host to explicitly ask the TSM to establish that SPDM
-> > connection. That request should somehow come from KVM, which then would
-> > have to destroy the existing CMA/SPDM connection in order to give the
-> > TSM a chance to successfully establish the SPDM link.
+> Do you know the address ("addr")?  From pci_msix_desc_addr(), it looks
+> like it should be:
 > 
-> Agreed - I don't see a problem with throwing away the initial connection.
-> In these cases you are passing that role on to another entity - the
-> job of this patch set is done.
+>   desc->pci.mask_base + desc->msi_index * PCI_MSIX_ENTRY_SIZE
+> 
+> and desc->pci.mask_base should be dev->msix_base, which we got from
+> msix_map_region(), which ioremaps part of the BAR indicated by the
+> MSI-X Table Offset/Table BIR register.
+> 
+> I wonder if this readl() is being handled as an MMIO access to a
+> downstream device instead of a Root Port BAR access because it's
+> inside the Root Port's MMIO window.
+> 
+> Could you dump out these values just before the readl()?
+> 
+>   phys_addr inside msix_map_region()
+>   dev->msix_base
+>   desc->pci.mask_base
+>   desc->msi_index
+>   addr
 
-Right. As long as there's a way for the kernel to explicitly drop that
-ownership before calling into the TSM for asking it to create a new SPDM
-connection, we should be fine. Alexey, would you agree with that
-statement?
+phys_addr: 0x10102000
+msix_base: 0xffff80000997a000
+mask_base: 0xffff80000997a000
+msi_index: 0
+addr: 0xffff80000997a000
 
-> I'm not clear yet if we need an explicit lock out similar to the VFIO
-> one for PF pass through or if everything will happen in a 'safe' order
-> anyway. I suspect a lockout on the ability to re attest is necessary
-> if the PF driver is loaded.
->
-> Perhaps just dropping the
-> +#if IS_ENABLED(CONFIG_VFIO_PCI_CORE)
-> and letting other PF drivers or another bit of core kernel code
-> (I'm not sure where the proxy resides for the models being discussed)
-> claim ownership is enough?
+Also, the details of BAR allocation from the logs are:
+keystone-pcie 5500000.pcie: host bridge /bus@100000/pcie@5500000 ranges:
+keystone-pcie 5500000.pcie:       IO 0x0010020000..0x001002ffff -> 0x0000000000
+keystone-pcie 5500000.pcie:      MEM 0x0010030000..0x0017ffffff -> 0x0010030000
+keystone-pcie 5500000.pcie: iATU unroll: enabled
+keystone-pcie 5500000.pcie: iATU regions: 8 ob, 8 ib, align 64K, limit 4G
+keystone-pcie 5500000.pcie: Phy link never came up
+keystone-pcie 5500000.pcie: PCI host bridge to bus 0000:00
+pci_bus 0000:00: root bus resource [bus 00-ff]
+pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
+pci_bus 0000:00: root bus resource [mem 0x10030000-0x17ffffff]
+pci 0000:00:00.0: [104c:b00c] type 01 class 0x060400
+pci 0000:00:00.0: reg 0x10: [mem 0x05500000-0x055fffff]
+pci 0000:00:00.0: reg 0x38: [mem 0x00000000-0x0000ffff pref]
+pci 0000:00:00.0: supports D1
+pci 0000:00:00.0: PME# supported from D0 D1 D3hot
+pci 0000:00:00.0: BAR 0: assigned [mem 0x10100000-0x101fffff]
+pci 0000:00:00.0: BAR 6: assigned [mem 0x10030000-0x1003ffff pref]
+pci 0000:00:00.0: PCI bridge to [bus 01-ff]
 
-If we agree that other parts of the kernel (I suspect KVM would do the
-"Connect to device" call to the TSM) should be able to tear the
-established SPDM connection, then yes, the claim/return_ownership() API
-should not be only available to VFIO.
+The value of phys_addr lies within the range allocated to BAR0.
 
-Cheers,
-Samuel.
+>   call early_dump_pci_device() on the Root Port
+
+I invoked early_dump_pci_device() within the pci_setup_device() function in
+drivers/pci/probe.c and the output is:
+
+pci 0000:00:00.0: config space:
+00000000: 4c 10 0c b0 07 01 10 00 01 00 04 06 00 00 01 00
+00000010: 00 00 50 05 00 00 00 00 00 01 ff 00 00 00 00 00
+00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00000030: 00 00 00 00 40 00 00 00 00 00 00 00 ff 01 00 00
+00000040: 01 50 c3 5b 08 00 00 00 00 00 00 00 00 00 00 00
+00000050: 05 70 80 01 00 00 00 00 00 00 00 00 00 00 00 00
+00000060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00000070: 10 b0 42 00 01 80 00 00 10 20 00 00 22 3c 73 00
+00000080: 00 00 11 10 00 00 00 00 c0 03 40 00 00 00 01 00
+00000090: 00 00 00 00 1f 04 00 00 00 00 00 00 06 00 00 00
+000000a0: 02 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+000000b0: 11 00 00 01 00 20 00 00 00 40 00 00 00 00 00 00
+000000c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+000000d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+000000e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+000000f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+
+> 
+> Bjorn
+
+-- 
+Regards,
+Siddharth.
