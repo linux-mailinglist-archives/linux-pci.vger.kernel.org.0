@@ -2,74 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CFAD67C8389
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Oct 2023 12:45:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C2467C8446
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Oct 2023 13:20:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230011AbjJMKpU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Oct 2023 06:45:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53768 "EHLO
+        id S230018AbjJMLUS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Oct 2023 07:20:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230349AbjJMKpT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Oct 2023 06:45:19 -0400
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49247C2;
-        Fri, 13 Oct 2023 03:45:13 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0Vu2-b8h_1697193908;
-Received: from 30.240.114.194(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vu2-b8h_1697193908)
-          by smtp.aliyun-inc.com;
-          Fri, 13 Oct 2023 18:45:09 +0800
-Message-ID: <8e373bfc-3fa4-6de3-4994-b93f78699e2f@linux.alibaba.com>
-Date:   Fri, 13 Oct 2023 18:45:07 +0800
+        with ESMTP id S230014AbjJMLUR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Oct 2023 07:20:17 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DA0CB7;
+        Fri, 13 Oct 2023 04:20:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697196016; x=1728732016;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=v35k94BNYjpR/g40oHphqcfXoVx02xvQQJ6kG01eG9k=;
+  b=a4PTrsrt8qn5KwHhqE/NikvJZMJU8y6t86fegZq13wNiG+/HeyWF5g5m
+   crmXkini5e7GDqpcxGw4k7+GcWAtX7JNWSPKdE+d30LlVhUgZAQx+2wr+
+   J5KBpVWWKd50k6YkRaKvnIrmSOl9gzbQnkpRJj6HI+nsUXKQBcjAr32Zq
+   2MS4/Zb+lBhLDoDktLqT01eHG31cv8uSmgXKhOgjvaRWaqNWYSz/O2cIj
+   afPF0JgJKGtV/gcPxaYN7mL1WVgo7LqsQr9E0RJpCQN3HKvCj9nH9Qxa8
+   B7/OHvs6AaZ7PHEZ7XWHSYUlD3h1X2tPw8eCfhu3Yfl4Kx626s25R6ttl
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="416213486"
+X-IronPort-AV: E=Sophos;i="6.03,222,1694761200"; 
+   d="scan'208";a="416213486"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 04:20:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="754672560"
+X-IronPort-AV: E=Sophos;i="6.03,222,1694761200"; 
+   d="scan'208";a="754672560"
+Received: from rhaeussl-mobl.ger.corp.intel.com (HELO localhost) ([10.252.58.47])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 04:20:12 -0700
+From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 0/2] PCI/DPC: Improve register field accessing
+Date:   Fri, 13 Oct 2023 14:20:02 +0300
+Message-Id: <20231013112004.4239-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.1
-Subject: Re: [PATCH v7 3/4] drivers/perf: add DesignWare PCIe PMU driver
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, chengyou@linux.alibaba.com,
-        kaishen@linux.alibaba.com, yangyicong@huawei.com, will@kernel.org,
-        baolin.wang@linux.alibaba.com, robin.murphy@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, rdunlap@infradead.org,
-        mark.rutland@arm.com, zhuo.song@linux.alibaba.com,
-        renyu.zj@linux.alibaba.com
-References: <20231012162512.GA1069387@bhelgaas>
- <a2265967-5088-7f17-35e5-29bf1c85c15f@linux.alibaba.com>
- <20231013094113.00003d72@Huawei.com>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20231013094113.00003d72@Huawei.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-13.2 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+This an alternative approach to the patch in:
+  https://lore.kernel.org/linux-pci/20231010204436.1000644-7-helgaas@kernel.org/
 
+It adds names to all the reason literals too (which makes it incompatible
+with FIELD_GET() for the reason and ext_reason). When the reasons are
+named instead of literals, it's very easy to understand the code just by
+reading it (no need to lookup the meaning of those numbers from spec or
+otherwise).
 
-On 2023/10/13 16:41, Jonathan Cameron wrote:
-> 
->>>   
->>>> +	depends on (ARM64 && PCI)  
->>>
->>> I don't see any actual ARM64 dependency in the code, so maybe omit
->>> ARM64 (as PCIE_DW_PLAT_HOST does) or add "|| COMPILE_TEST"?  
->>
->> I will remove the ARM64 dependency and add COMPILE_TEST.
-> don't do both.  That makes no sense. either
-> 
-> 	depends on PCI && (ARM64 || COMPILE_TEST)
-> or
-> 	depends on PCI
+Also 0xfff4 the other patch missed is converted here.
 
-Got it.
+Just let me know if I should, for example, base the additional changes
+on top of that other change.
 
-Thank you.
+Ilpo Järvinen (2):
+  PCI: Add PCI_EXP_DPC_* field details
+  PCI/DPC: Use defines with register fields
 
-Best Regards,
-Shuai
+ drivers/pci/pcie/dpc.c        | 39 +++++++++++++++++++++--------------
+ include/uapi/linux/pci_regs.h |  7 +++++++
+ 2 files changed, 31 insertions(+), 15 deletions(-)
+
+-- 
+2.30.2
+
