@@ -2,71 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 451F67C9AE5
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Oct 2023 21:03:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5856B7C9B61
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Oct 2023 22:22:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230156AbjJOTDH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Oct 2023 15:03:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56166 "EHLO
+        id S230243AbjJOUWp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Oct 2023 16:22:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229559AbjJOTDG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Oct 2023 15:03:06 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56BBCD6
-        for <linux-pci@vger.kernel.org>; Sun, 15 Oct 2023 12:03:04 -0700 (PDT)
+        with ESMTP id S230298AbjJOUWo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Oct 2023 16:22:44 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 499A8D6
+        for <linux-pci@vger.kernel.org>; Sun, 15 Oct 2023 13:22:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697396584; x=1728932584;
+  t=1697401362; x=1728937362;
   h=date:from:to:cc:subject:message-id:mime-version;
-  bh=etUaBUpSG/PXvU/Vk7k25dsMU4GvanXhPDxX1DQiO/k=;
-  b=cAGmr0neIpuXt+Nl6kXIyiqKi3tGMm8Po4RJS9BmRHwhCAWKLnzdgOQO
-   nldwUYVEVKFooIYwHpGtby49LO+pz6Vdsno4euS9l5feF2rU3fZymlwwT
-   h747+TMHDnROnrT7pWaNJE6JRj+LId987zN4foxANVOA/GlXvD8pFUi6Q
-   krGWz3I2/GPF+p5RYnyxOvP0if6Fp1lPs4udEq4Szyca2u4tVSu5pXWZL
-   y5TIeppONH452WshsE7Jsrfhum+Owpxy1zFOF9sI72ya1Fd/hXKOTU0nM
-   4SGV5Xq9BmZnzGSj0urh2WgOM3n7xKGqD5ZepS5q/E4c5EO890mZpxXbo
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="389272158"
+  bh=NVj2RFlbEpvjqyFkNcS1aRfxtDEomBZexw/jpUpzvg4=;
+  b=V1X9n5JyVNYdPEoEQDdQ0cFHVSV2jz+YhpQq4kerz/HM3U2VqN8YCAE1
+   lqphSbR0iAVwN+pCC9Q/mMPqE9uqac/Nb2euqRJYg8kZzZPM2nnYRxm/H
+   rplTEhNBsziRBUku4HXdYC7gr3otULu5H/z1lFOlPqoUtjA71JeN5Jw/f
+   jmMvBHzWsO9UqqPILOQ2h1Jc5fJbeXnZ2Oqd+lqxKtVkBsubmfcCjtMV6
+   DqxW5Ivq3kDHstZvP6Az1162DSf6Z3ml7Yx07q/Znkhf33rWeaTGrCLJ2
+   pCaQbI+KjOHN2sxs3s5TfK3Ew8dWBf8Q3RTphGybRUQS4tcOgFWS5A5FU
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="375783010"
 X-IronPort-AV: E=Sophos;i="6.03,226,1694761200"; 
-   d="scan'208";a="389272158"
+   d="scan'208";a="375783010"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2023 12:03:03 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2023 13:22:41 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="784836930"
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="784848635"
 X-IronPort-AV: E=Sophos;i="6.03,226,1694761200"; 
-   d="scan'208";a="784836930"
+   d="scan'208";a="784848635"
 Received: from lkp-server02.sh.intel.com (HELO f64821696465) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 15 Oct 2023 12:03:02 -0700
+  by orsmga008.jf.intel.com with ESMTP; 15 Oct 2023 13:22:40 -0700
 Received: from kbuild by f64821696465 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1qs6OC-0007hr-0t;
-        Sun, 15 Oct 2023 19:03:00 +0000
-Date:   Mon, 16 Oct 2023 03:02:55 +0800
+        id 1qs7dF-0007lh-1D;
+        Sun, 15 Oct 2023 20:22:37 +0000
+Date:   Mon, 16 Oct 2023 04:21:37 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "Krzysztof =?utf-8?Q?Wilczy=C5=84ski" ?= <kwilczynski@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:controller/aspm] BUILD SUCCESS
- 9f4f3dfad8cf08208fbb78b1b9cbf957c12618b9
-Message-ID: <202310160353.GlAkbrpI-lkp@intel.com>
+Subject: [pci:controller/rcar] BUILD SUCCESS
+ de45624e69e14ccd6b4b2886155578bb218925de
+Message-ID: <202310160434.jYvgZSSQ-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/aspm
-branch HEAD: 9f4f3dfad8cf08208fbb78b1b9cbf957c12618b9  PCI: qcom: Enable ASPM for platforms supporting 1.9.0 ops
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rcar
+branch HEAD: de45624e69e14ccd6b4b2886155578bb218925de  misc: pci_endpoint_test: Add Device ID for R-Car S4-8 PCIe controller
 
-elapsed time: 1365m
+elapsed time: 1369m
 
-configs tested: 104
+configs tested: 98
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -99,12 +99,6 @@ i386                              allnoconfig   gcc
 i386                             allyesconfig   gcc  
 i386                              debian-10.3   gcc  
 i386                                defconfig   gcc  
-i386                  randconfig-001-20231015   gcc  
-i386                  randconfig-002-20231015   gcc  
-i386                  randconfig-003-20231015   gcc  
-i386                  randconfig-004-20231015   gcc  
-i386                  randconfig-005-20231015   gcc  
-i386                  randconfig-006-20231015   gcc  
 loongarch                        allmodconfig   gcc  
 loongarch                         allnoconfig   gcc  
 loongarch                        allyesconfig   gcc  
