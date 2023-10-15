@@ -2,112 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3CC77C987C
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Oct 2023 11:37:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F4B77C9AD0
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Oct 2023 20:43:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229646AbjJOJh0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Oct 2023 05:37:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33872 "EHLO
+        id S230061AbjJOSnr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Oct 2023 14:43:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229559AbjJOJhZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Oct 2023 05:37:25 -0400
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0723BAD;
-        Sun, 15 Oct 2023 02:37:23 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 865442800A287;
-        Sun, 15 Oct 2023 11:37:22 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 790F219279; Sun, 15 Oct 2023 11:37:22 +0200 (CEST)
-Date:   Sun, 15 Oct 2023 11:37:22 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Marcel Hamer <marcel.hamer@windriver.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: pciehp lockdep possible circular locking dependency
-Message-ID: <20231015093722.GA11283@wunner.de>
-References: <ZSUdqxOZ9HUFR32S@windriver.com>
+        with ESMTP id S229522AbjJOSnr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Oct 2023 14:43:47 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A317EAB
+        for <linux-pci@vger.kernel.org>; Sun, 15 Oct 2023 11:43:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697395424; x=1728931424;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=IEtv707LxkO7/r/jJWmkUwNNTLqMAiT8eoy8MyqFOdY=;
+  b=H0DDD5Isvl5M5x3yOYHWKvSqqKN5ugoOYPymgQsVisvxGx+98cg8h/1u
+   +ilml//6GHtSQhFsuFycHiRZwnZPuVTkHBDZvrgoAXjwNrGrVM3eyKpzM
+   9v74E/AJpj3BEAXK0lYd8CRGGC5Qa5LlKJuwVcTcbC+9IOzWO3yi9Q5uA
+   5ZM2pw6virYWU4MgiQCsxZedyyLQ5Ggdo8zrqQ3VmyWf9B+GO8Fvyt21U
+   3hOUOiBjmrZyC4S4ZyVswjLDERlQAW7c3vqLyiBPC4wPTyeXyqPNOk8nV
+   Ct2OfgpzLs4XSXSHJRDoKa4vHMtFk3/wjSbCc8UUubbu+JYx7b644PIZ6
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="385247850"
+X-IronPort-AV: E=Sophos;i="6.03,226,1694761200"; 
+   d="scan'208";a="385247850"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2023 11:43:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="790559287"
+X-IronPort-AV: E=Sophos;i="6.03,226,1694761200"; 
+   d="scan'208";a="790559287"
+Received: from lkp-server02.sh.intel.com (HELO f64821696465) ([10.239.97.151])
+  by orsmga001.jf.intel.com with ESMTP; 15 Oct 2023 11:43:42 -0700
+Received: from kbuild by f64821696465 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qs65U-0007gv-1u;
+        Sun, 15 Oct 2023 18:43:40 +0000
+Date:   Mon, 16 Oct 2023 02:43:36 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Krzysztof =?utf-8?Q?Wilczy=C5=84ski" ?= <kwilczynski@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:controller/hyperv] BUILD SUCCESS
+ f741bcadfe52e424985926d4d1c1e3941bf8403e
+Message-ID: <202310160234.xb67vM3W-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZSUdqxOZ9HUFR32S@windriver.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 10, 2023 at 11:47:23AM +0200, Marcel Hamer wrote:
-> On kernel v6.6.0-rc5 we have discovered a lockdep warning when using PCIe
-> hotplug. The issue is reproducible using PCIe hotplug in a Qemu environment.
-> 
-> When reverting the following commit, the warning no longer exists:
-> 
-> commit f5eff5591b8f9c5effd25c92c758a127765f74c1
-> Author: Lukas Wunner <lukas@wunner.de>
-> Date:   Tue Apr 11 08:21:02 2023 +0200
-> 
->     PCI: pciehp: Fix AB-BA deadlock between reset_lock and device_lock
-> 
-> We have also experienced the issue on the v5.10-stable branch.
-> 
-> For now I have difficulty determining if this is a serious potential deadlock
-> candidate or if this is a false reporting. Any help here would be greatly
-> appreciated.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/hyperv
+branch HEAD: f741bcadfe52e424985926d4d1c1e3941bf8403e  PCI: hv: Annotate struct hv_dr_state with __counted_by
 
-Thanks a lot for the report.
+elapsed time: 1346m
 
-It's a false positive because the two stacktraces are identical
-but pciehp_ist() is single-threaded.  There is only ever a single
-instance of pciehp_ist() running per hotplug port, so two instances
-running on separate CPUs can't happen:
+configs tested: 102
+configs skipped: 2
 
-> [   19.885923] -> #1 (pci_rescan_remove_lock){+.+.}-{3:3}:
-> [   19.886623]        __mutex_lock+0x81/0xcb0
-> [   19.886889]        pciehp_configure_device+0x1f/0x100
-> [   19.887211]        pciehp_handle_presence_or_link_change+0x16e/0x4d0
-> [   19.887587]        pciehp_ist+0x157/0x190
-> [   19.887822]        irq_thread_fn+0x1f/0x60
-> [   19.888076]        irq_thread+0xe5/0x1b0
-> [   19.888306]        kthread+0xe4/0x120
-> [   19.888499]        ret_from_fork+0x2f/0x50
-> [   19.888728]        ret_from_fork_asm+0x1b/0x30
-> [   19.889018]
-> [   19.889018] -> #0 (&ctrl->reset_lock){.+.+}-{3:3}:
-> [   19.889382]        __lock_acquire+0x1509/0x25f0
-> [   19.889661]        lock_acquire+0xc1/0x2b0
-> [   19.889899]        down_read_nested+0x2f/0x160
-> [   19.890177]        pciehp_configure_device+0xb1/0x100
-> [   19.890492]        pciehp_handle_presence_or_link_change+0x16e/0x4d0
-> [   19.890876]        pciehp_ist+0x157/0x190
-> [   19.891085]        irq_thread_fn+0x1f/0x60
-> [   19.891301]        irq_thread+0xe5/0x1b0
-> [   19.891538]        kthread+0xe4/0x120
-> [   19.891764]        ret_from_fork+0x2f/0x50
-> [   19.891989]        ret_from_fork_asm+0x1b/0x30
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-lockdep doesn't appear to be smart enough to recognize that and
-we do not have an annotation which would tell lockdep that a
-particular function is always single-threaded.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                   randconfig-001-20231015   gcc  
+arm64                            allmodconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20231015   gcc  
+i386                  randconfig-002-20231015   gcc  
+i386                  randconfig-003-20231015   gcc  
+i386                  randconfig-004-20231015   gcc  
+i386                  randconfig-005-20231015   gcc  
+i386                  randconfig-006-20231015   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                 randconfig-001-20231015   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20231015   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                 randconfig-001-20231015   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20231015   gcc  
+x86_64                randconfig-002-20231015   gcc  
+x86_64                randconfig-003-20231015   gcc  
+x86_64                randconfig-004-20231015   gcc  
+x86_64                randconfig-005-20231015   gcc  
+x86_64                randconfig-006-20231015   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
 
-From a brief look, amending lockdep to cope with such situations
-seems non-trivial and I'm not sure if it happens frequently enough
-to justify the additional complexity.
-
-The only other option I see is to set lockdep_set_novalidate_class()
-for the reset_lock.  However that will prevent us from detecting
-*valid* issues with that lock.
-
-Hm, that's a difficult decision...
-
-Thanks,
-
-Lukas
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
