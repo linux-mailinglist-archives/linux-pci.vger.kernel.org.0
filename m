@@ -2,48 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82D357CA42F
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 11:32:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 955807CA88A
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 14:53:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230104AbjJPJcQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Oct 2023 05:32:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34794 "EHLO
+        id S233411AbjJPMx6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Oct 2023 08:53:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229666AbjJPJcP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 05:32:15 -0400
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33F5497;
-        Mon, 16 Oct 2023 02:32:13 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 8AC352800A290;
-        Mon, 16 Oct 2023 11:32:10 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 7C3D82ED8B5; Mon, 16 Oct 2023 11:32:10 +0200 (CEST)
-Date:   Mon, 16 Oct 2023 11:32:10 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     bhelgaas@google.com, linux-pm@vger.kernel.org,
-        linux-mmc@vger.kernel.org, Ricky Wu <ricky_wu@realtek.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] PCI: pciehp: Prevent child devices from doing RPM on
- PCIe Link Down
-Message-ID: <20231016093210.GA22952@wunner.de>
-References: <20231016040132.23824-1-kai.heng.feng@canonical.com>
+        with ESMTP id S233036AbjJPMx6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 08:53:58 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B118AD;
+        Mon, 16 Oct 2023 05:53:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697460836; x=1728996836;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=QizaqdkpLig82mRKUnOc6l/0i6LVA1cx3IhaJACbuvk=;
+  b=IDaUypHhU2lUoQjUClJ1H8u5jlfgOUMk8iTNSRFqXXZu7kOsXnUJlvYw
+   lgYsd+Z9Ajihe5NfnbpUeW3iGWHvgTVdYaWM62md6pLmMzMx4r+o0eZHA
+   7BV7k3DB3kBgrLoVW9O40FiSqUGINcmrPdFW1TyagpN9+hJ4Sxx6MwTP7
+   sU6cQciUEVGy6ae/c8RICi4MI4S0T02COxUSdC9fV2KSt0oqtZyfo3IDA
+   I6UGrvAq3q3iJFKILqT7HTvdWOE+OmmM98hsWsV6mkuZ13/UQhPJFeipy
+   M41oPX5swMjKOxzBGBMcnuUVa+HSBbGSn2T67Jw9yhAgqGwzC1YuDnCuk
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="370592181"
+X-IronPort-AV: E=Sophos;i="6.03,229,1694761200"; 
+   d="scan'208";a="370592181"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 05:53:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="821558186"
+X-IronPort-AV: E=Sophos;i="6.03,229,1694761200"; 
+   d="scan'208";a="821558186"
+Received: from rhaeussl-mobl.ger.corp.intel.com ([10.252.59.103])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 05:53:13 -0700
+Date:   Mon, 16 Oct 2023 15:53:11 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] PCI/DPC: Use defines with register fields
+In-Reply-To: <20231013201934.GA1124734@bhelgaas>
+Message-ID: <3883226-f376-86e0-7790-77b1642d129@linux.intel.com>
+References: <20231013201934.GA1124734@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231016040132.23824-1-kai.heng.feng@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+Content-Type: multipart/mixed; BOUNDARY="8323329-762852509-1697460567=:1986"
+Content-ID: <1cc4caad-ea5-e5f3-37b-e6ad91c62422@linux.intel.com>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,38 +62,67 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 16, 2023 at 12:01:31PM +0800, Kai-Heng Feng wrote:
-> When inserting an SD7.0 card to Realtek card reader, it can trigger PCI
-> slot Link down and causes the following error:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Why does *inserting* a card cause a Link Down?
+--8323329-762852509-1697460567=:1986
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+Content-ID: <cd9f38f-7062-ff94-829d-ac343d403659@linux.intel.com>
+
+On Fri, 13 Oct 2023, Bjorn Helgaas wrote:
+
+> On Fri, Oct 13, 2023 at 02:20:04PM +0300, Ilpo Järvinen wrote:
+> > Use defines instead of literals and replace custom masking and shifts
+> > with FIELD_GET() where it makes sense.
+> > ...
+> 
+> >  	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
+> > -	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
+> >  
+> > -	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+> > +	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
+> > +	ctl |= PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+> > +	ctl &= ~PCI_EXP_DPC_CTL_EN_NONFATAL;
+> 
+> This has been a little obtuse from the beginning.
+> 
+> The original clears bits 0, 1, 3, then sets bits 0 and 3.
+> The new code sets bits 0, 3, then clears bit 1.
+> 
+> These are equivalent, but it's definitely some work to verify it.
+>
+> I think the point is to enable DPC on ERR_FATAL (but not ERR_NONFATAL)
+> and to enable DPC interrupts.  What about something like this?
+>   #define PCI_EXP_DPC_CTL_EN_MASK  0x0003
+> 
+>   ctl &= ~PCI_EXP_DPC_CTL_EN_MASK;
+>   ctl |= PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+
+Thanks for the suggestion, it looks cleaner, yes. I realized the bit 
+changes weren't as obvious as they could be but I failed to see I could 
+add such a combined mask to make the intent dead obvious.
+
+With a small change replacing the 0x0003 literal with the combined defines 
+of the actual bits it seems very clear what's going on. I'll go for that. 
+
+I'll place my non-FIELD_GET() changes on DPC top of your 
+FIELD_GET/PREP()-only change so each patch can be smaller and more 
+focused.
+
+-- 
+ i.
 
 
-> [   63.898861] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> [   63.912118] BUG: unable to handle page fault for address: ffffb24d403e5010
-[...]
-> [   63.912198]  ? asm_exc_page_fault+0x27/0x30
-> [   63.912203]  ? ioread32+0x2e/0x70
-> [   63.912206]  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
-> [   63.912217]  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
-> [   63.912226]  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
-> [   63.912234]  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
-> [   63.912243]  ? __pfx_pci_pm_runtime_idle+0x10/0x10
-> [   63.912246]  pci_pm_runtime_idle+0x34/0x70
-> [   63.912248]  rpm_idle+0xc4/0x2b0
-> [   63.912251]  pm_runtime_work+0x93/0xc0
-> [   63.912254]  process_one_work+0x21a/0x430
-> [   63.912258]  worker_thread+0x4a/0x3c0
-
-This looks like pcr->remap_addr is accessed after it has been iounmap'ed
-in rtsx_pci_remove() or before it has been iomap'ed in rtsx_pci_probe().
-
-Is the card reader itself located below a hotplug port and unplugged here?
-Or is this about the card being removed from the card reader?
-
-Having full dmesg output and lspci -vvv output attached to a bugzilla
-would help to understand what is going on.
-
-Thanks,
-
-Lukas
+> >  	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
+> > -	pci_info(pdev, "enabled with IRQ %d\n", dev->irq);
+> >  
+> > +	pci_info(pdev, "enabled with IRQ %d\n", dev->irq);
+> >  	pci_info(pdev, "error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
+> >  		 cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
+> >  		 FLAG(cap, PCI_EXP_DPC_CAP_POISONED_TLP),
+> > -- 
+> > 2.30.2
+> > 
+> 
+--8323329-762852509-1697460567=:1986--
