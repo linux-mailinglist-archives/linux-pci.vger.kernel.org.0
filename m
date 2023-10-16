@@ -2,214 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69D8A7C9E99
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 07:19:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 765EB7C9F0F
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 07:44:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230418AbjJPFTZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Oct 2023 01:19:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60106 "EHLO
+        id S229841AbjJPFof (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Oct 2023 01:44:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229678AbjJPFTY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 01:19:24 -0400
-Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 672CFE6
-        for <linux-pci@vger.kernel.org>; Sun, 15 Oct 2023 22:19:20 -0700 (PDT)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-5a7ab31fb8bso48850977b3.1
-        for <linux-pci@vger.kernel.org>; Sun, 15 Oct 2023 22:19:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697433559; x=1698038359; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=84IjWES4NlZNq0zAo2UaGKzhd/8FqYzYRf4g+hayiP4=;
-        b=Le0FQsGO828GcvmeiBCAo4NiB3IxL4HAvgwlJFEFS23RKWoHPi6S5vpc95ZXix6vhS
-         gFtyeGgG8ZrHeC8mMDM5KsmoKywM2JKPtJOJXnmJYmCcFKBb7ZBNO31uMORtyBEF5R8u
-         7qGHHx1vM63ARvOgVfKEowt2JuMdIer2cLCp2ru0pml8Vhf79kSSGfBS6/yQA2m+dZw6
-         QtJ9TFlfe4uoUdwhW8e7xvmmCnzKR6z0W6oBdg6nGW740URiOa0Kn6pgfVZDah759n6J
-         x3tiG3s+Ayqx5KEKE+Mvl8bfC/Xedy+rBOAmHZUss20pER0AOeUftz4BRfpf7tQxPzxR
-         F9lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697433559; x=1698038359;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=84IjWES4NlZNq0zAo2UaGKzhd/8FqYzYRf4g+hayiP4=;
-        b=owIqrxIOJmu417JquqUuDfiBfAz78fpCHFFFdeVWcWMbumv0DgP8YfVY0PgdlIQVE+
-         1DnpIBko94m/ELzdKZcie8OXE+iZIePBBdM21Qpv6OX40VmffapDIe4IHnA7w7SJHYAC
-         atfAvAmdoeuEsROn/m4UcEZP239OrcO4nYlAuSJ10IMS9xenxgh6x0zhkPf5aa/bKMo2
-         VpAIqX8ZWo2kL14nANKHO+smcsPZg+4+auD6RpZtG0ldhOKozXXNObTw/MBq3PvHsg/5
-         vbf6y13VQyDoh8xa+Llpxz0ewscsyFMUo7N4Nmnjn2zZ2ox+1wvlxAbTLOq7MIbxMe4g
-         bYPQ==
-X-Gm-Message-State: AOJu0YwCwOkQdT0JvBPNYJfe4rPB1wyh7FArbjo2gzoOrR05HOBe3joF
-        zbzRMH9SPIdL6Dgo0tR0fLBJ9rmf0+PYl8iSdx6/AQ==
-X-Google-Smtp-Source: AGHT+IE/vXkOLFuRYYMBg7ZvJNs5bHOB4hTJjGiuXZPuuYtQOwt1lltozcDD7mfPmsfdbCeYL+gkZLo7kSBUF3zo/ac=
-X-Received: by 2002:a05:690c:ec8:b0:5a8:19b0:513f with SMTP id
- cs8-20020a05690c0ec800b005a819b0513fmr12200346ywb.14.1697433559519; Sun, 15
- Oct 2023 22:19:19 -0700 (PDT)
+        with ESMTP id S229888AbjJPFoe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 01:44:34 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2082.outbound.protection.outlook.com [40.107.237.82])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99603D9;
+        Sun, 15 Oct 2023 22:44:31 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BqkE5+Y0JUDWD3e5cPqGn8Vt+QvQWoXQbkX2S4jjOB5/976n5T/7BXD3bEkJIo1ARPIvfYBlvoh4fhdgYqpy9CO10spHgaSdJWormRCY3qM83gfZgydvzPerJSs59Xl/B39J5N7ppMnvLJomuGOE1FzjVltYDZTazITL1zXpr2EXEDqA47HxfASnM7r3IQKGcvgrC6AxSJERE/o16Lnp0k2Wsek4+SyOUVSfXyp7lZzIzkVFcZVjbww0/9GIZ4gzpFdd3ABbfq4VtXe4GGdS8Rbgb/E/3eS65NYb0/7AsUkdNxO1u4KEBA8Xn2MW1raxD4UlMl/+EUAjWvZ/m7sA+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ruqjokg/FFKI7YjJ66M+KjzP14+7ETZwDK3MLMFWgE0=;
+ b=gP/+qdaRAMIKTOQ04ocvQrkziWtGhfKRbgD7pm6ZftKBGXg08bb/eQhYPYJxJmRu3lJYJIrLnhLBqeXqz7WZSIwytAMgFYKOmVcUs6NgucJ5pgTx3hbnUKND7M22bUp6mWJEp7p1+22tXRjdiCXZ1qaJWa2gNk6pAngm5+72scwIUfHVUgJ5WuBjw/1eBFQeOyuC3eqRgRIS9w7NOouyJFCfbketMCvqkw4/wtbxhWePHKQxglHqf4ttdxJIDJDtWeppBJy+sk9y6i8RG2heRcBp0l9fdFamekDkamLmhCkjOd+aFu2NnRvcS6vMyj46Opzw0/ECvP7L3LKRFzQmkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ruqjokg/FFKI7YjJ66M+KjzP14+7ETZwDK3MLMFWgE0=;
+ b=25+pwCqC5bzledG69Kp4bfD2uF94qJoMYI25bto5dQWu8hfg5aXwkDXdtCqz8VX0s9eFDE9ZvsXam4gb7Xmp69lFV8HwFWIYwx/JYc334w7JABIHWJGX9ACs/o8wPvSGyVCjjD46vD6dEt50eJqEvBT7ZgAt299A4Ml10Mfg7pI=
+Received: from SN7PR12MB7201.namprd12.prod.outlook.com (2603:10b6:806:2a8::22)
+ by DM4PR12MB8558.namprd12.prod.outlook.com (2603:10b6:8:187::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.35; Mon, 16 Oct
+ 2023 05:44:28 +0000
+Received: from SN7PR12MB7201.namprd12.prod.outlook.com
+ ([fe80::167:7f5a:82a1:e2b9]) by SN7PR12MB7201.namprd12.prod.outlook.com
+ ([fe80::167:7f5a:82a1:e2b9%4]) with mapi id 15.20.6863.043; Mon, 16 Oct 2023
+ 05:44:27 +0000
+From:   "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
+To:     "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "conor+dt@kernel.org" <conor+dt@kernel.org>,
+        "Simek, Michal" <michal.simek@amd.com>,
+        "Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>
+Subject: RE: [PATCH v7 RESEND 0/3] Add support for Xilinx XDMA Soft IP as Root
+ Port.
+Thread-Topic: [PATCH v7 RESEND 0/3] Add support for Xilinx XDMA Soft IP as
+ Root Port.
+Thread-Index: AQHZ9iAav8GpnnhtikuLDTUsy/E9P7BL+v3A
+Date:   Mon, 16 Oct 2023 05:44:27 +0000
+Message-ID: <SN7PR12MB7201035D9E8F21AB4E2B52038BD7A@SN7PR12MB7201.namprd12.prod.outlook.com>
+References: <20231003173453.938190-1-thippeswamy.havalige@amd.com>
+In-Reply-To: <20231003173453.938190-1-thippeswamy.havalige@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN7PR12MB7201:EE_|DM4PR12MB8558:EE_
+x-ms-office365-filtering-correlation-id: 62987295-1e83-497f-fc80-08dbce0af60e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fiVi2BYUjECVHANivVTNO2B2oo6YpqwaWCFmbLMcxeGpxVWvmt0LjV8iMEHR8D+/og02uTuW8SONum1OBq6UZ907ecERh04yuOejZoUBkV9KdIK9aaRJmHCPsT14JFTLHAP2sGKguT3ky4do2muDwSnMeYrw9Rg7o5jPx+BsvCX/TkgQpFErd4Cs3a81i7oD7cXdjFLmQwDQhAogSlMfqcahprzT4HETXqdthM4uQqF51O4w6Roifk5plyIAtngRcwvsAmGF4I5VKLG7B2euZ3gMJEV+edwXpHMYgIsPzwGM9qFOJ1+SzMV5vkzPM8rHkWX5aeO8vUmS/DKsYQ2gqh2ZwH9qS+kDCRypdYCPuG8Jn+o9JqX5B0xhmegWAT3SFwHNj+jM84qLVnlF4gYerYn2u+LPR+ICLh7YGwMusjUVqHKwXmu37HphM1flRFuJDUT0fJzUedOSI9ROsL81HT7sJzWqajR02zqDgPcin/7LFU2SYq36T2ARo3hHBpiDrBEgr2q11w/lMYq11tizPpEeFB1UApNsPrXoacKvzOB13lXSPcLEDLQoQm/84teKHdXx/7V6PYTdRfBqed4HT3L0p+j6aqvOX0SLYShu3xoxhGtRHo/rGt/ZDO84DXlJ
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7201.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(136003)(376002)(346002)(39860400002)(230922051799003)(451199024)(64100799003)(1800799009)(186009)(55016003)(478600001)(76116006)(66946007)(110136005)(66556008)(66476007)(64756008)(54906003)(316002)(66446008)(71200400001)(83380400001)(86362001)(38100700002)(9686003)(26005)(53546011)(7696005)(6506007)(33656002)(41300700001)(5660300002)(38070700005)(122000001)(8936002)(8676002)(4326008)(52536014)(7416002)(2906002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?+M8dAuv8ka8Lba+oyGkZgHSAvmcNr1bTXlEt+8TlaBEO2ooRGCsndzvW4QKf?=
+ =?us-ascii?Q?KpgXYhaNvrli0BrRyWuYvp2vq9Swu1cpCWxrgg7ELKXPF5qmniPqnoH7JjEv?=
+ =?us-ascii?Q?vQZuYfZBljxoIz6QQmtOO4s+XRp7Si3AOpP8/nydzdlEaGar4APl4i5DAFFc?=
+ =?us-ascii?Q?hu4s36XnPtyhN8LvibmEggol7ZLgix32ZwD+UBQi41C30JEV2otZAIBc8IVX?=
+ =?us-ascii?Q?IH6fmPpOmwLcZn+O1Ux95pyL+hrLpKXSDrbRM4q3nf0od9oCe+QhR6GDn9b2?=
+ =?us-ascii?Q?4p5wmHRAfm9SJFFt0x68AkjwUU6lUsuVW4d6EbZTSZ5yC9Eo6JOumjzFyPYQ?=
+ =?us-ascii?Q?2Y6w62YZn6zDk9VUnxwFWbfAZBpHfO6am3fO449BM54bn0vT2WV3E9XfFIQe?=
+ =?us-ascii?Q?5GEGuDUEcKSwiNTYQaj463pl+wSNX4eSIpSh3oivqbmRg5QvEPmrAlpND1jG?=
+ =?us-ascii?Q?dvFrCUSXkZpjfq1NzcnPzoc12QLqQC19M0F3zYtt9F8qPHf5WsB0SV2VfLn3?=
+ =?us-ascii?Q?1cAPAJX21xsiUtOWOdU5szrN7LtXD0ELnBzidq7z9YP+YzTqxBf4uFtVr4jb?=
+ =?us-ascii?Q?/ScxvjNDVUnEcRhGI3M3aaQTdeA+zdm/aAkssx0Uz4iQcqpVWo5cGxjcVuUd?=
+ =?us-ascii?Q?WUZDVYt1zNnv30tebc2ZWdE860nYaasIJ3BIxEJX8djk8OtZFDMNUC66R4a8?=
+ =?us-ascii?Q?1L9JXiwo4nbymcNszYC1VDWwq0Kv2cX7xa9y3HyqDWpwM36YkfE0jmAXi7fN?=
+ =?us-ascii?Q?s25gG4kT6MlMbUICWxHKaE255jn8QjXLGMDN5JHYyy4RfomSVnKwUIsnxxkv?=
+ =?us-ascii?Q?K1hf1acGVyd9naHr8tOulqUPmwSvFHEHzjwrN9Kvc+KfpZSOFKotlLeb4A5s?=
+ =?us-ascii?Q?KKN091aNq/Jp6jWXtvgGmUrL/X5wJrcsb+dYVP+QajS2L4k1NY+ut0UAEjek?=
+ =?us-ascii?Q?y19qVxahYgCMISlTw66K5hmnmKihQb/JeGR1ZAH5l5PtnNklRSvgB+8WqmOC?=
+ =?us-ascii?Q?lFNuhAIAIBV5RdoVeLSjUhj7ggcHQwvHh+l0PyYzZWSHxbz9gSC3yIfg2CHY?=
+ =?us-ascii?Q?mCLtgXAVK9xR+7NmZQdBXKsGt1VU2PXLKG55dSG9QckX1lpgf1NLMYcm1Jai?=
+ =?us-ascii?Q?GT1CCfzNqQ+JHe5osWn184MECh82gSlHUxhPv+0CmpLb1sOd8gWBvDqysgd2?=
+ =?us-ascii?Q?pHendDneJe5fzRmX+rwUD2d0Ed+W3lfmi2LwzWI3IYVQtBNlGzbETbSODmls?=
+ =?us-ascii?Q?AKdDNDmcoEZT6mQ9AD35oVHlUBUCD7SJ1HK26rJktBCQBMSZF3iMbzUrP5dK?=
+ =?us-ascii?Q?CNvkQLF93MFVts02yg3Zq7d0MC83AbUDwBiiP1dSS/DYIcu6EQ+imiOXdmA9?=
+ =?us-ascii?Q?1cdvzLj6yb7Efa7TCKJSLzFP7t1/TCkC1CSSpPKXQ4pbl2dRH2MPhyU1FR8d?=
+ =?us-ascii?Q?njhSnam8aZ39Ngff1wSp2sebdEyVNy6wSQvVi7J7aokoWLHewe16xNDaslcx?=
+ =?us-ascii?Q?lFvYw1Z5K/poxjUgVst6+iSRKm/Misq4bOLEuGLH2KfDZ1NQ7aVI6tyoEILt?=
+ =?us-ascii?Q?F18q7kniolnV1D2XG78=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1695218113-31198-1-git-send-email-quic_msarkar@quicinc.com>
- <1695218113-31198-2-git-send-email-quic_msarkar@quicinc.com>
- <20230921183850.GA762694-robh@kernel.org> <28bf111f-b965-4d38-884b-bc3a0b68a6cc@quicinc.com>
- <8effa7e5-a223-081b-75b8-7b94400d42e6@quicinc.com> <CAA8EJpp+3_A-9YXF1yOKdFweVKqrpTxvxKoJcUH6qiDHfCQ-dQ@mail.gmail.com>
- <31e6aab6-73f9-a421-9dfa-292d9d0e9649@quicinc.com>
-In-Reply-To: <31e6aab6-73f9-a421-9dfa-292d9d0e9649@quicinc.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Mon, 16 Oct 2023 08:19:08 +0300
-Message-ID: <CAA8EJpoapMmeAxj0GyHnJixEeObpSa5gjQWfkxuZKnVoLg4Awg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/5] dt-bindings: PCI: qcom-ep: Add support for SA8775P SoC
-To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc:     Shazad Hussain <quic_shazhuss@quicinc.com>,
-        Rob Herring <robh@kernel.org>, agross@kernel.org,
-        andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, konrad.dybcio@linaro.org, mani@kernel.org,
-        quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
-        quic_nayiluri@quicinc.com, quic_krichai@quicinc.com,
-        quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
-        linux-phy@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7201.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62987295-1e83-497f-fc80-08dbce0af60e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2023 05:44:27.5979
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pUuc6wjLoRXN1LkTHUugs6Nh9xQVXQtoTcY41ZCRjWLbu9dELpScFNQOsxJLrBqliOn/t5qbIvaiUNjxMEw5gA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8558
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 13 Oct 2023 at 15:55, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
->
->
-> On 10/11/2023 5:13 PM, Dmitry Baryshkov wrote:
-> > On Wed, 11 Oct 2023 at 14:14, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
-> >>
-> >> On 10/6/2023 4:24 PM, Shazad Hussain wrote:
-> >>>
-> >>> On 9/22/2023 12:08 AM, Rob Herring wrote:
-> >>>> On Wed, Sep 20, 2023 at 07:25:08PM +0530, Mrinmay Sarkar wrote:
-> >>>>> Add devicetree bindings support for SA8775P SoC.
-> >>>>> Define reg and interrupt per platform.
-> >>>>>
-> >>>>> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> >>>>> ---
-> >>>>>    .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 130
-> >>>>> +++++++++++++++++----
-> >>>>>    1 file changed, 108 insertions(+), 22 deletions(-)
-> >>>>>
-> >>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> >>>>> b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> >>>>> index a223ce0..e860e8f 100644
-> >>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> >>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> >>>>> @@ -13,6 +13,7 @@ properties:
-> >>>>>      compatible:
-> >>>>>        oneOf:
-> >>>>>          - enum:
-> >>>>> +          - qcom,sa8775p-pcie-ep
-> >>>>>              - qcom,sdx55-pcie-ep
-> >>>>>              - qcom,sm8450-pcie-ep
-> >>>>>          - items:
-> >>>>> @@ -20,29 +21,19 @@ properties:
-> >>>>>              - const: qcom,sdx55-pcie-ep
-> >>>>>        reg:
-> >>>>> -    items:
-> >>>>> -      - description: Qualcomm-specific PARF configuration registers
-> >>>>> -      - description: DesignWare PCIe registers
-> >>>>> -      - description: External local bus interface registers
-> >>>>> -      - description: Address Translation Unit (ATU) registers
-> >>>>> -      - description: Memory region used to map remote RC address space
-> >>>>> -      - description: BAR memory region
-> >>>>> +    minItems: 6
-> >>>>> +    maxItems: 7
-> >>>>>        reg-names:
-> >>>>> -    items:
-> >>>>> -      - const: parf
-> >>>>> -      - const: dbi
-> >>>>> -      - const: elbi
-> >>>>> -      - const: atu
-> >>>>> -      - const: addr_space
-> >>>>> -      - const: mmio
-> >>>>> +    minItems: 6
-> >>>>> +    maxItems: 7
-> >>>> Don't move these into if/then schemas. Then we are duplicating the
-> >>>> names, and there is no reason to keep them aligned for new compatibles.
-> >>>>
-> >>>> Rob
-> >>> Hi Rob,
-> >>> As we have one extra reg property (dma) required for sa8775p-pcie-ep,
-> >>> isn't it expected to be moved in if/then as per number of regs
-> >>> required. Anyways we would have duplication of some properties for new
-> >>> compatibles where the member numbers differs for a property.
-> >>>
-> >>> Are you suggesting to add the extra reg property (dma) in the existing
-> >>> reg and reg-names list, and add minItems/maxItems for all compatibles
-> >>> present in this file ?
-> > This is what we have been doing in other cases: if the list is an
-> > extension of the current list, there is no need to duplicate it. One
-> > can use min/maxItems instead.
-> Hi Dmitry
->
-> we have tried using min/maxItems rather than duplicating but somehow
-> catch up with some warnings in dt_bindings check
->
-> //local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
-> pcie-ep@1c00000: reg: [[29360128, 12288], [1073741824, 3869],
-> [1073745696, 200], [1073745920, 4096], [1073750016, 4096], [29372416,
-> 12288]] is too short//
-> //        from schema $id:
-> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
-> ///local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
-> pcie-ep@1c00000: reg-names: ['parf', 'dbi', 'elbi', 'atu', 'addr_space',
-> 'mmio'] is too short//
-> //        from schema $id:
-> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
-> ///local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
-> pcie-ep@1c00000: interrupts: [[0, 140, 4], [0, 145, 4]] is too short//
-> //        from schema $id:
-> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
-> ///local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
-> pcie-ep@1c00000: interrupt-names: ['global', 'doorbell'] is too short//
-> //        from schema $id:
-> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
-> /
->
-> //local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
-> pcie-ep@1c00000: interrupt-names: ['global', 'doorbell'] is too short/
->
-> added the patch in attachment.
+Hi Bjorn/Lorenzo/ Krzysztof
 
-Please, don't send patches as attachments. It is impossible to comment on it.
+Can you please provide update on this series.
 
-So, few points I had to fix to make your patch to work:
+Regards,
+Thippeswamy H
 
-- Please, understand the difference between enum and items. You'd need
-to add your compat string to only one of them. Or to a new entry. But
-adding it to both entries is a definite mistake.
+> -----Original Message-----
+> From: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> Sent: Tuesday, October 3, 2023 11:05 PM
+> To: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+> Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
+> robh@kernel.org; krzysztof.kozlowski+dt@linaro.org; conor+dt@kernel.org;
+> Havalige, Thippeswamy <thippeswamy.havalige@amd.com>; Simek, Michal
+> <michal.simek@amd.com>; Gogada, Bharat Kumar
+> <bharat.kumar.gogada@amd.com>
+> Subject: [PATCH v7 RESEND 0/3] Add support for Xilinx XDMA Soft IP as Roo=
+t
+> Port.
+>=20
+> This series of patch add support for Xilinx XDMA Soft IP as Root Port.
+>=20
+> The Xilinx XDMA Soft IP support's 32 bit and 64bit BAR's.
+> As Root Port it supports MSI and legacy interrupts.
+>=20
+> For code reusability existing CPM4 error interrupt bits are moved to comm=
+on
+> header.
+>=20
+> Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>
+> ---
+> Thippeswamy Havalige (3):
+>   PCI: xilinx-cpm: Move interrupt bit definitions to common header
+>   dt-bindings: PCI: xilinx-xdma: Add YAML schemas for Xilinx XDMA PCIe
+>     Root Port Bridge
+>   PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver
+>=20
+>  .../bindings/pci/xlnx,xdma-host.yaml          | 114 +++
+>  drivers/pci/controller/Kconfig                |  11 +
+>  drivers/pci/controller/Makefile               |   1 +
+>  drivers/pci/controller/pcie-xilinx-common.h   |  31 +
+>  drivers/pci/controller/pcie-xilinx-cpm.c      |  38 +-
+>  drivers/pci/controller/pcie-xilinx-dma-pl.c   | 803 ++++++++++++++++++
+>  6 files changed, 967 insertions(+), 31 deletions(-)  create mode 100644
+> Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
+>  create mode 100644 drivers/pci/controller/pcie-xilinx-common.h
+>  create mode 100644 drivers/pci/controller/pcie-xilinx-dma-pl.c
+>=20
+> --
+> 2.25.1
 
-- You have extended items for existing platforms (reg, reg-names,
-interrupts, interrupt-names). However you failed to add corresponding
-minItems, allowing existing platforms to use the list with less items
-in it.
-
-- You do not need to have maxItems:N, minItems:N with the same value.
-Please drop these minItems, it is the default.
-
-- You haven't reviewed the patch on your own. You have erroneously
-nested 'properties' clauses in two places.
-
-$ git diff --stat
- Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml | 33
-+++++++++++----------------------
- 1 file changed, 11 insertions(+), 22 deletions(-)
-
-Hope this helps.
-
--- 
-With best wishes
-Dmitry
