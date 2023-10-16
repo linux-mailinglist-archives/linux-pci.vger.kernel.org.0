@@ -2,36 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6559D7CAF23
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 18:27:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3775A7CB049
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 18:50:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234053AbjJPQ1B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Oct 2023 12:27:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34700 "EHLO
+        id S234259AbjJPQur (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Oct 2023 12:50:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233772AbjJPQ0l (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 12:26:41 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1229E115;
-        Mon, 16 Oct 2023 09:26:05 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F83FC433C8;
-        Mon, 16 Oct 2023 16:26:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697473564;
-        bh=vHm90cKOkSetxJUdQaefCuS8V7G0nuWKrTxOWNKF9Z8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oGI3ch/HDtNcpizMAy6Bwh4RF7FGdU8zyd9ZK9yNWueL0wb1XG/3K1n1Sxot3ovM8
-         lXanfq6ZuvlavWJLDB6kxQ8kVYfK7r6085UD3Fo0rCPhuKm1ffRILuYnT9K/S1Kvpg
-         VunZ89D7sjOLZdvawnvjtuNaMntMECuhd1m3BbyDWEKYq7xLp50CU8cplQjsvt+5ue
-         sazFS5K5Qy7w5B0kKkiBfPiBzSsTRnP/OfZXruucC68x5+k0qBEb0zDRGJeyfRrigI
-         LOQcDHSyRmripo8yAREgDjp7JndIOLmqowu9RaVRsjVyg04wuR/aBFK6C/4zvzwo+0
-         NkE32kNkNZ3nA==
-Date:   Mon, 16 Oct 2023 18:25:58 +0200
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Frank Li <Frank.li@nxp.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Minghuan Lian <minghuan.Lian@nxp.com>,
+        with ESMTP id S232516AbjJPQua (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 12:50:30 -0400
+Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35CF446CE7
+        for <linux-pci@vger.kernel.org>; Mon, 16 Oct 2023 09:40:47 -0700 (PDT)
+Received: by mail-qv1-xf30.google.com with SMTP id 6a1803df08f44-66d01345d73so31934106d6.2
+        for <linux-pci@vger.kernel.org>; Mon, 16 Oct 2023 09:40:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1697474446; x=1698079246; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=QMErPVjbDQWKUZJi0yx3PHwgd44uCsmqExmEKyoGenQ=;
+        b=zWk9E7Ir6vxH76P5DZnzRjvYqmPfoyDwHBQv23F85KEgYCgx6VJHoVNxizddvlapxL
+         zEIt5kAkN1T8FVVHtzQzxo9O0JhXm52ZMQ0lxJ+b5e97huR2kGX6dQnmnszD91RcNK6d
+         x5/qVinEqtCVIhoiF4y9t1vHFnLzfagUdmL8AkIfNjSetz2OLcepJ4WINuKt8nK79Pyz
+         ipDZLfVbXpRwcQ+rXk6VEQP19HZG0YRLrBv7GP3zQJDnHctxmRKLuxnT46ReaUR6wRH7
+         k/BoCFfTPzYV7i9VPfd2xwzhwxsIj9h1qvZDcufx7GlPcaGuTqwk82Kw3JXA0n8omqID
+         vPhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697474446; x=1698079246;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QMErPVjbDQWKUZJi0yx3PHwgd44uCsmqExmEKyoGenQ=;
+        b=qGO88pXoInKxMergq/21pWRO7V1aUwNORKE8KzidgcbIob3/BTEY4Biu2E1zGe0SIf
+         1u+T9cS+h8/gy81Pg2EwzeTZH+OE+ugU3AasybDLTmB3lqaV41wb+OgB2BxDtq3Ch7Ak
+         grfEFVqvkpomDcdLvt5LWtPilezhwdOJT0CMrtSo/u5C65zWh4t3uNYT38cHEASEtdFE
+         KVlgVjWPMASr7fh2CC6uacWpCi0RdizrK2/XuIW/xgFtxhz4uqVa5VPvT2Sksllrdj/h
+         NbHlwc26bRXbZpuJhY+7bvYRmb9I6vizjdfoXnLYeLi+6Iq/ljU6ZYlzdunpZxpDdK68
+         L1oQ==
+X-Gm-Message-State: AOJu0YyVQ1JIRZ3d7sKFOR3jS+ckZGsdStImS0bP6If1jPrk9yHKDdYb
+        7ryh2A/SXi4AgR0JoUP6uQe5
+X-Google-Smtp-Source: AGHT+IEJrtLsab3W/titRBbEr+F6cON9aYDks19MkUWPWxcQNbAkkCh7gLRrSjOouWXUxCmZiVJgZQ==
+X-Received: by 2002:a05:6214:cae:b0:66d:28a5:d153 with SMTP id s14-20020a0562140cae00b0066d28a5d153mr11497866qvs.47.1697474445956;
+        Mon, 16 Oct 2023 09:40:45 -0700 (PDT)
+Received: from thinkpad ([117.207.31.199])
+        by smtp.gmail.com with ESMTPSA id dn8-20020a056214094800b0065b0e724f83sm3548177qvb.6.2023.10.16.09.40.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Oct 2023 09:40:45 -0700 (PDT)
+Date:   Mon, 16 Oct 2023 22:10:36 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     Minghuan Lian <minghuan.Lian@nxp.com>,
         Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -42,110 +65,97 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>,
         "moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
         <linux-arm-kernel@lists.infradead.org>,
         open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH 2/3] PCI: layerscape: add suspend/resume for ls1021a
-Message-ID: <ZS1kFjiA6F+cLrmc@lpieralisi>
-References: <ZS1Mhe9JOsY2JJER@lizhi-Precision-Tower-5810>
- <20231016152211.GA1209639@bhelgaas>
- <ZS1gmJiz8+PKIuwp@lizhi-Precision-Tower-5810>
+Subject: Re: [PATCH 1/3] PCI: layerscape: add function pointer for
+ exit_from_l2()
+Message-ID: <20231016164036.GE39962@thinkpad>
+References: <20230915184306.2374670-1-Frank.Li@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZS1gmJiz8+PKIuwp@lizhi-Precision-Tower-5810>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230915184306.2374670-1-Frank.Li@nxp.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 16, 2023 at 12:11:04PM -0400, Frank Li wrote:
-> On Mon, Oct 16, 2023 at 10:22:11AM -0500, Bjorn Helgaas wrote:
-> > On Mon, Oct 16, 2023 at 10:45:25AM -0400, Frank Li wrote:
-> > > On Tue, Oct 10, 2023 at 06:02:36PM +0200, Lorenzo Pieralisi wrote:
-> > > > On Tue, Oct 10, 2023 at 10:20:12AM -0400, Frank Li wrote:
-> > 
-> > > > > Ping
-> > > > 
-> > > > Read and follow please (and then ping us):
-> > > > https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com
-> > > 
-> > > Could you please help point which specic one was not follow aboved guide?
-> > > Then I can update my code. I think that's efficial communication method. I
-> > > think I have read it serial times. But not sure which one violate the
-> > > guide?
-> > > 
-> > > @Bjorn Helgaas. How do you think so? 
-> > 
-> > Since Lorenzo didn't point out anything specific in the patch itself,
-> > I think he was probably referring to the subject line and this advice:
-> > 
-> >   - Follow the existing convention, i.e., run "git log --oneline
-> >     <file>" and make yours match in format, capitalization, and
-> >     sentence structure.  For example, native host bridge driver patch
-> >     titles look like this:
-> > 
-> >       PCI: altera: Fix platform_get_irq() error handling
-> >       PCI: vmd: Remove IRQ affinity so we can allocate more IRQs
-> >       PCI: mediatek: Add MSI support for MT2712 and MT7622
-> >       PCI: rockchip: Remove IRQ domain if probe fails
-> > 
-> > In this case, your subject line was:
-> > 
-> >   PCI: layerscape: add suspend/resume for ls1021a
-> > 
-> > The advice was to run this:
-> > 
-> >   $ git log --oneline drivers/pci/controller/dwc/pci-layerscape.c
-> >   83c088148c8e PCI: Use PCI_HEADER_TYPE_* instead of literals
-> >   9fda4d09905d PCI: layerscape: Add power management support for ls1028a
-> >   277004d7a4a3 PCI: Remove unnecessary <linux/of_irq.h> includes
-> >   60b3c27fb9b9 PCI: dwc: Rename struct pcie_port to dw_pcie_rp
-> >   d23f0c11aca2 PCI: layerscape: Change to use the DWC common link-up check function
-> >   7007b745a508 PCI: layerscape: Convert to builtin_platform_driver()
-> >   60f5b73fa0f2 PCI: dwc: Remove unnecessary wrappers around dw_pcie_host_init()
-> >   b9ac0f9dc8ea PCI: dwc: Move dw_pcie_setup_rc() to DWC common code
-> >   f78f02638af5 PCI: dwc: Rework MSI initialization
-> > 
-> > Note that these summaries are all complete sentences that start with a
-> > capital letter:
-> > 
-> >   Use PCI_HEADER_TYPE_* instead of literals
-> >   Add power management support for ls1028a
-> >   Remove unnecessary <linux/of_irq.h> includes
-> >   ...
-> > 
-> > So yours could be this:
-> > 
-> >   PCI: layerscape: Add suspend/resume for ls1021a
-> >                    ^
-> > 
-> > This is trivial, obviously.  But the uppercase/lowercase distinction
-> > carries information, and it's an unnecessary distraction to notice
-> > that "oh, this is different from the rest; is the difference
-> > important or should I ignore it?"
+On Fri, Sep 15, 2023 at 02:43:04PM -0400, Frank Li wrote:
+> Difference layerscape chip have not difference exit_from_l2() method.
+> Using function pointer for ls1028. It prepare for other layerscape
+> suspend/resume support.
 > 
-> Thanks. Not everyone think it is trivial. Especially for the one, who
-> English are not native language.
+
+How about:
+
+Since difference SoCs require different sequence for exiting L2, let's add a
+separate "exit_from_l2()" callback. This callback can be used to execute SoC
+specific sequence.
+
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-layerscape.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> > 
-> > Obviously Lorenzo *could* edit all your subject lines on your behalf,
-> > but it makes everybody's life easier if people look at the existing
-> > code and follow the style when making changes.
-> 
-> Understand, but simple mark 'a' and 'A' to me. I will update patches and
-> take care for next time instead search whole docuemnt to guess which one
-> violated. I know I make some mistakes at here. But I am working on many
-> difference kernel subsystems, some require upper case, some require low
-> case, someone doesn't care.
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+> index b931d597656f6..20c48c06e2248 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> @@ -39,6 +39,8 @@
 >  
-> I respected all reviewer's and maintaner's time, but I hope respected
-> the contributor's time also.
+>  struct ls_pcie_drvdata {
+>  	const u32 pf_off;
+> +	const struct dw_pcie_host_ops *ops;
 
-I do respect your time, please respect ours by following the guidelines I
-provided you with multiple times already.
+Where is this ops used? If this is added as a preparatory for next patches, I'd
+suggest you to move it to the respective one instead to avoid confusion.
 
-Thank you for resending the series.
+> +	void (*exit_from_l2)(struct dw_pcie_rp *pp);
+>  	bool pm_support;
+>  };
+>  
+> @@ -180,6 +182,7 @@ static const struct ls_pcie_drvdata ls1021a_drvdata = {
+>  static const struct ls_pcie_drvdata layerscape_drvdata = {
+>  	.pf_off = 0xc0000,
+>  	.pm_support = true,
+> +	.exit_from_l2 = ls_pcie_exit_from_l2,
+>  };
+>  
+>  static const struct of_device_id ls_pcie_of_match[] = {
+> @@ -213,7 +216,7 @@ static int ls_pcie_probe(struct platform_device *pdev)
+>  	pcie->drvdata = of_device_get_match_data(dev);
+>  
+>  	pci->dev = dev;
+> -	pci->pp.ops = &ls_pcie_host_ops;
+> +	pci->pp.ops = pcie->drvdata->ops ? pcie->drvdata->ops : &ls_pcie_host_ops;
 
-Lorenzo
+This one also.
+
+>  
+>  	pcie->pci = pci;
+>  
+> @@ -251,7 +254,7 @@ static int ls_pcie_resume_noirq(struct device *dev)
+>  	if (!pcie->drvdata->pm_support)
+>  		return 0;
+>  
+> -	ls_pcie_exit_from_l2(&pcie->pci->pp);
+> +	pcie->drvdata->exit_from_l2(&pcie->pci->pp);
+
+You should always check for the existence of the callback first before invoking
+it.
+
+- Mani
+
+>  
+>  	return dw_pcie_resume_noirq(pcie->pci);
+>  }
+> -- 
+> 2.34.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
