@@ -2,136 +2,214 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA66B7C9E8A
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 07:13:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69D8A7C9E99
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 07:19:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231135AbjJPFMS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Oct 2023 01:12:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53858 "EHLO
+        id S230418AbjJPFTZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Oct 2023 01:19:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230442AbjJPFMQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 01:12:16 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2078.outbound.protection.outlook.com [40.107.92.78])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56FD4E7;
-        Sun, 15 Oct 2023 22:12:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kJRnc/PjM6rjJ88/lwg2NjZGXraxOFdbGANpYEZkdBD45CJQk3AWoK4jzok4UEisR6ReJ4y5sx9QY3nxn+JrLI14XhItJsWl2EKQx+It3kN2REuSXE+W7tKGEJJd13GWG7BUT+jdTykukOnFiIxNUrChbgTC3fgoDlUBNFuX4T+e1XsYljpBYa/S4gCJ8vYY2YSt+gVbVwQde4pAZRZN1mIkZpif08sl5aWm5lylVUWFA1B9IY52jFOGqVJA7f7WTlt7LTJcBqY11hlDqe6Apd12cN0vKTqwrV6h7IEOeC96T7azaLGGgdHTE1ufg53n61uzcnXVCdvozP+v+/6Jfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EBJZOK/3Sd/hkz9852w+GyNxaltQ9eMs0gDMLPobpgA=;
- b=Coqalt0WGyEIoZnn0mCsz2z2Kdh5hmtghoi2nG16CWlXslo/UWf6GKD/e3yL7I+xmdD3XBVZgYsjqUexNJXGk5ag9mkLMObgGwXDHCe+gl6mgkD6SBxM5TMH2Ke9vUK+N+kj7z0oneMQ8zJO+2rWs6Ilc0No31IzcUCvrQAQGfRqMwGCsxegG5VPWP/cUqyS/shZ/8ZgGJrKKE8yFJtxXvGiJ1eUFwR9JhTcOAPtcwkvr6VQdzC7B2KCKv3wG6DwK1gnZKzvdT35pLzv7yaMKSP047SUtdfUsXBSUYAEMv6QYM84TiEAWWNQNu/DZkv7drVHymkQX7XPEvnc2o16iw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EBJZOK/3Sd/hkz9852w+GyNxaltQ9eMs0gDMLPobpgA=;
- b=xiIEpa0Ut5AT/solBBZGZNlAz1LZbEoos7jT2XMt9ydIKoEWo33rz0lEHQfMmRFtUqonSCKOjUZg2dEbj3zIIoXOPsNU01pE3nvERbssBFXEorPWdJ9dmorrrp0z0e7hJzrLrKaNR69INZrWDjOgurdY7N3n5wtnn4ktkHYwL00=
-Received: from MW2PR16CA0019.namprd16.prod.outlook.com (2603:10b6:907::32) by
- PH8PR12MB7160.namprd12.prod.outlook.com (2603:10b6:510:228::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6886.34; Mon, 16 Oct 2023 05:12:00 +0000
-Received: from MWH0EPF000971E7.namprd02.prod.outlook.com
- (2603:10b6:907:0:cafe::c4) by MW2PR16CA0019.outlook.office365.com
- (2603:10b6:907::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.35 via Frontend
- Transport; Mon, 16 Oct 2023 05:12:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000971E7.mail.protection.outlook.com (10.167.243.75) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6838.22 via Frontend Transport; Mon, 16 Oct 2023 05:12:00 +0000
-Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 16 Oct
- 2023 00:11:56 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB08.amd.com
- (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Sun, 15 Oct
- 2023 22:11:46 -0700
-Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.27 via Frontend
- Transport; Mon, 16 Oct 2023 00:11:43 -0500
-From:   Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-To:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <colnor+dt@kernel.org>, <thippeswamy.havalige@amd.com>,
-        <michal.simek@amd.com>, <bharat.kumar.gogada@amd.com>
-Subject: [PATCH v5 RESEND 4/4] PCI: xilinx-nwl: Increase ECAM size to accommodate 256 buses
-Date:   Mon, 16 Oct 2023 10:41:02 +0530
-Message-ID: <20231016051102.1180432-5-thippeswamy.havalige@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231016051102.1180432-1-thippeswamy.havalige@amd.com>
-References: <20231016051102.1180432-1-thippeswamy.havalige@amd.com>
+        with ESMTP id S229678AbjJPFTY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 01:19:24 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 672CFE6
+        for <linux-pci@vger.kernel.org>; Sun, 15 Oct 2023 22:19:20 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-5a7ab31fb8bso48850977b3.1
+        for <linux-pci@vger.kernel.org>; Sun, 15 Oct 2023 22:19:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1697433559; x=1698038359; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=84IjWES4NlZNq0zAo2UaGKzhd/8FqYzYRf4g+hayiP4=;
+        b=Le0FQsGO828GcvmeiBCAo4NiB3IxL4HAvgwlJFEFS23RKWoHPi6S5vpc95ZXix6vhS
+         gFtyeGgG8ZrHeC8mMDM5KsmoKywM2JKPtJOJXnmJYmCcFKBb7ZBNO31uMORtyBEF5R8u
+         7qGHHx1vM63ARvOgVfKEowt2JuMdIer2cLCp2ru0pml8Vhf79kSSGfBS6/yQA2m+dZw6
+         QtJ9TFlfe4uoUdwhW8e7xvmmCnzKR6z0W6oBdg6nGW740URiOa0Kn6pgfVZDah759n6J
+         x3tiG3s+Ayqx5KEKE+Mvl8bfC/Xedy+rBOAmHZUss20pER0AOeUftz4BRfpf7tQxPzxR
+         F9lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697433559; x=1698038359;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=84IjWES4NlZNq0zAo2UaGKzhd/8FqYzYRf4g+hayiP4=;
+        b=owIqrxIOJmu417JquqUuDfiBfAz78fpCHFFFdeVWcWMbumv0DgP8YfVY0PgdlIQVE+
+         1DnpIBko94m/ELzdKZcie8OXE+iZIePBBdM21Qpv6OX40VmffapDIe4IHnA7w7SJHYAC
+         atfAvAmdoeuEsROn/m4UcEZP239OrcO4nYlAuSJ10IMS9xenxgh6x0zhkPf5aa/bKMo2
+         VpAIqX8ZWo2kL14nANKHO+smcsPZg+4+auD6RpZtG0ldhOKozXXNObTw/MBq3PvHsg/5
+         vbf6y13VQyDoh8xa+Llpxz0ewscsyFMUo7N4Nmnjn2zZ2ox+1wvlxAbTLOq7MIbxMe4g
+         bYPQ==
+X-Gm-Message-State: AOJu0YwCwOkQdT0JvBPNYJfe4rPB1wyh7FArbjo2gzoOrR05HOBe3joF
+        zbzRMH9SPIdL6Dgo0tR0fLBJ9rmf0+PYl8iSdx6/AQ==
+X-Google-Smtp-Source: AGHT+IE/vXkOLFuRYYMBg7ZvJNs5bHOB4hTJjGiuXZPuuYtQOwt1lltozcDD7mfPmsfdbCeYL+gkZLo7kSBUF3zo/ac=
+X-Received: by 2002:a05:690c:ec8:b0:5a8:19b0:513f with SMTP id
+ cs8-20020a05690c0ec800b005a819b0513fmr12200346ywb.14.1697433559519; Sun, 15
+ Oct 2023 22:19:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E7:EE_|PH8PR12MB7160:EE_
-X-MS-Office365-Filtering-Correlation-Id: d82b5e9c-eee9-4c55-b3fb-08dbce066d7d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: C1Jk/Tm8D19N4nctEK5SVxIhhSL3+vOFsbHK1pUb0XwNkxmex3/ahdk67jc+EcUL2TlySXV4L6C57UwobNjtnw2KCQ3HY/DPdZapAtcAoLIjxcC15/jPurUMEf693zFQZAovUAzfpEnajdvgXLB+DdQCZDXPWuWHBeLylU7NWXKX2fls0AKy6VNmxqDUyutWmtOGdRWbnXuw5GHLvjvjhVFT1ufNs+xJjgGJLQq46ccjBT2MWCsL+bjD3VtfwPB/yV3dB0RpdSxi29fQ+OR4YxSIpN+ozcYK+p0wUNWWA9EnEOIRxe766155pAC1lXRGtsaEt1ThBeSyYoiSpTtIo95y4TFlMUhJJz/fqz9pn0A4W9HiiEdYdzJGnMN82TKhTtBGQzv2OcS1Wp5wxcdIRfIXaN+Az1FT2xLPYuD7fHb8LSJ9sUUkjbMa6pVv5d1LvUCaPRTENSGwDnjVQy7f3/F8IjduqoOxRefqm8JG6BrK4g32J8tzmW3gIK2Ol8xsQVRbZs4h9JmT4sf7Ii86T2MmpYXP626A7F6gmQd76C8bBU+lpFKeqek2solodYkADypXG73Jqj3vMldtlJh2MHnfOuEkTgHsCEDo3daRiSYnPoJ7p5ywRjH5EJnqhlyvdlddc1R3P1i3IPWIsJvkI36QCM0YhSsHcYLm/rUXa/KhU+f3MNkmlLBbfGt65fubA9gktbLqmUWDmIyadb2aNAPUG0roGkI4mdw8O9mUetQEi3+frxdhztbfGCJXR5G8vPSOLcK2bkygnJN2giSSiGAAMraTYuJ0p4zzZ6M/8z0=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(136003)(376002)(396003)(39860400002)(230922051799003)(64100799003)(1800799009)(186009)(451199024)(82310400011)(40470700004)(46966006)(36840700001)(47076005)(6666004)(83380400001)(36860700001)(336012)(426003)(26005)(82740400003)(40460700003)(40480700001)(7416002)(86362001)(4744005)(2906002)(4326008)(5660300002)(44832011)(8936002)(8676002)(70206006)(316002)(70586007)(110136005)(54906003)(41300700001)(36756003)(1076003)(81166007)(2616005)(356005)(478600001)(36900700001)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2023 05:12:00.3418
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d82b5e9c-eee9-4c55-b3fb-08dbce066d7d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: MWH0EPF000971E7.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7160
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+References: <1695218113-31198-1-git-send-email-quic_msarkar@quicinc.com>
+ <1695218113-31198-2-git-send-email-quic_msarkar@quicinc.com>
+ <20230921183850.GA762694-robh@kernel.org> <28bf111f-b965-4d38-884b-bc3a0b68a6cc@quicinc.com>
+ <8effa7e5-a223-081b-75b8-7b94400d42e6@quicinc.com> <CAA8EJpp+3_A-9YXF1yOKdFweVKqrpTxvxKoJcUH6qiDHfCQ-dQ@mail.gmail.com>
+ <31e6aab6-73f9-a421-9dfa-292d9d0e9649@quicinc.com>
+In-Reply-To: <31e6aab6-73f9-a421-9dfa-292d9d0e9649@quicinc.com>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Mon, 16 Oct 2023 08:19:08 +0300
+Message-ID: <CAA8EJpoapMmeAxj0GyHnJixEeObpSa5gjQWfkxuZKnVoLg4Awg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] dt-bindings: PCI: qcom-ep: Add support for SA8775P SoC
+To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc:     Shazad Hussain <quic_shazhuss@quicinc.com>,
+        Rob Herring <robh@kernel.org>, agross@kernel.org,
+        andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, konrad.dybcio@linaro.org, mani@kernel.org,
+        quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
+        quic_nayiluri@quicinc.com, quic_krichai@quicinc.com,
+        quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+        linux-phy@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Our controller is expecting ECAM size to be programmed by software. By
-programming "NWL_ECAM_VALUE_DEFAULT  12" controller can access up to 16MB
-ECAM region which is used to detect 16 buses, so by updating
-"NWL_ECAM_VALUE_DEFAULT" to 16 so that controller can access up to 256MB
-ECAM region to detect 256 buses.
+On Fri, 13 Oct 2023 at 15:55, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
+>
+>
+> On 10/11/2023 5:13 PM, Dmitry Baryshkov wrote:
+> > On Wed, 11 Oct 2023 at 14:14, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
+> >>
+> >> On 10/6/2023 4:24 PM, Shazad Hussain wrote:
+> >>>
+> >>> On 9/22/2023 12:08 AM, Rob Herring wrote:
+> >>>> On Wed, Sep 20, 2023 at 07:25:08PM +0530, Mrinmay Sarkar wrote:
+> >>>>> Add devicetree bindings support for SA8775P SoC.
+> >>>>> Define reg and interrupt per platform.
+> >>>>>
+> >>>>> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+> >>>>> ---
+> >>>>>    .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 130
+> >>>>> +++++++++++++++++----
+> >>>>>    1 file changed, 108 insertions(+), 22 deletions(-)
+> >>>>>
+> >>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> >>>>> b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> >>>>> index a223ce0..e860e8f 100644
+> >>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> >>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> >>>>> @@ -13,6 +13,7 @@ properties:
+> >>>>>      compatible:
+> >>>>>        oneOf:
+> >>>>>          - enum:
+> >>>>> +          - qcom,sa8775p-pcie-ep
+> >>>>>              - qcom,sdx55-pcie-ep
+> >>>>>              - qcom,sm8450-pcie-ep
+> >>>>>          - items:
+> >>>>> @@ -20,29 +21,19 @@ properties:
+> >>>>>              - const: qcom,sdx55-pcie-ep
+> >>>>>        reg:
+> >>>>> -    items:
+> >>>>> -      - description: Qualcomm-specific PARF configuration registers
+> >>>>> -      - description: DesignWare PCIe registers
+> >>>>> -      - description: External local bus interface registers
+> >>>>> -      - description: Address Translation Unit (ATU) registers
+> >>>>> -      - description: Memory region used to map remote RC address space
+> >>>>> -      - description: BAR memory region
+> >>>>> +    minItems: 6
+> >>>>> +    maxItems: 7
+> >>>>>        reg-names:
+> >>>>> -    items:
+> >>>>> -      - const: parf
+> >>>>> -      - const: dbi
+> >>>>> -      - const: elbi
+> >>>>> -      - const: atu
+> >>>>> -      - const: addr_space
+> >>>>> -      - const: mmio
+> >>>>> +    minItems: 6
+> >>>>> +    maxItems: 7
+> >>>> Don't move these into if/then schemas. Then we are duplicating the
+> >>>> names, and there is no reason to keep them aligned for new compatibles.
+> >>>>
+> >>>> Rob
+> >>> Hi Rob,
+> >>> As we have one extra reg property (dma) required for sa8775p-pcie-ep,
+> >>> isn't it expected to be moved in if/then as per number of regs
+> >>> required. Anyways we would have duplication of some properties for new
+> >>> compatibles where the member numbers differs for a property.
+> >>>
+> >>> Are you suggesting to add the extra reg property (dma) in the existing
+> >>> reg and reg-names list, and add minItems/maxItems for all compatibles
+> >>> present in this file ?
+> > This is what we have been doing in other cases: if the list is an
+> > extension of the current list, there is no need to duplicate it. One
+> > can use min/maxItems instead.
+> Hi Dmitry
+>
+> we have tried using min/maxItems rather than duplicating but somehow
+> catch up with some warnings in dt_bindings check
+>
+> //local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
+> pcie-ep@1c00000: reg: [[29360128, 12288], [1073741824, 3869],
+> [1073745696, 200], [1073745920, 4096], [1073750016, 4096], [29372416,
+> 12288]] is too short//
+> //        from schema $id:
+> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
+> ///local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
+> pcie-ep@1c00000: reg-names: ['parf', 'dbi', 'elbi', 'atu', 'addr_space',
+> 'mmio'] is too short//
+> //        from schema $id:
+> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
+> ///local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
+> pcie-ep@1c00000: interrupts: [[0, 140, 4], [0, 145, 4]] is too short//
+> //        from schema $id:
+> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
+> ///local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
+> pcie-ep@1c00000: interrupt-names: ['global', 'doorbell'] is too short//
+> //        from schema $id:
+> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
+> /
+>
+> //local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
+> pcie-ep@1c00000: interrupt-names: ['global', 'doorbell'] is too short/
+>
+> added the patch in attachment.
 
-Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
----
-changes in v5:
-None.
----
- drivers/pci/controller/pcie-xilinx-nwl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please, don't send patches as attachments. It is impossible to comment on it.
 
-diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-index 8fe0e8a325b0..e307aceba5c9 100644
---- a/drivers/pci/controller/pcie-xilinx-nwl.c
-+++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-@@ -126,7 +126,7 @@
- #define E_ECAM_CR_ENABLE		BIT(0)
- #define E_ECAM_SIZE_LOC			GENMASK(20, 16)
- #define E_ECAM_SIZE_SHIFT		16
--#define NWL_ECAM_MAX_SIZE		12
-+#define NWL_ECAM_MAX_SIZE		16
- 
- #define CFG_DMA_REG_BAR			GENMASK(2, 0)
- #define CFG_PCIE_CACHE			GENMASK(7, 0)
+So, few points I had to fix to make your patch to work:
+
+- Please, understand the difference between enum and items. You'd need
+to add your compat string to only one of them. Or to a new entry. But
+adding it to both entries is a definite mistake.
+
+- You have extended items for existing platforms (reg, reg-names,
+interrupts, interrupt-names). However you failed to add corresponding
+minItems, allowing existing platforms to use the list with less items
+in it.
+
+- You do not need to have maxItems:N, minItems:N with the same value.
+Please drop these minItems, it is the default.
+
+- You haven't reviewed the patch on your own. You have erroneously
+nested 'properties' clauses in two places.
+
+$ git diff --stat
+ Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml | 33
++++++++++++----------------------
+ 1 file changed, 11 insertions(+), 22 deletions(-)
+
+Hope this helps.
+
 -- 
-2.25.1
-
+With best wishes
+Dmitry
