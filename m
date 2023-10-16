@@ -2,213 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D568B7C9E2F
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 06:25:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 806997C9E84
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 07:13:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231482AbjJPEZE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Oct 2023 00:25:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35738 "EHLO
+        id S230340AbjJPFLk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Oct 2023 01:11:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229600AbjJPEZC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 00:25:02 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56CB9D9;
-        Sun, 15 Oct 2023 21:24:57 -0700 (PDT)
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39G4CmPe022920;
-        Mon, 16 Oct 2023 04:24:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=zhMBRZQhgC83YjgI57bq83F+OxOjJ6pEhJ2qxA55s4w=;
- b=MeRQseu5pig90vGmK88mdTXasRRIj2iKuSLjnaqQgg4V/La3sDgZkkWq7H3CX/il+HB9
- qCl9+kNVkbesdZX1IKfFHjYmE6GAZIH4KiYrMdGtUrkhDBO8TotxqDrCOgr+x+tvoqPj
- 2peEqdZnZg5MRVYAC1i082ahwYdehL5s4MVk0uLHtFAtgm5LiQvExWD6qazhyImJtDB0
- dXBIgdt/CwfxlQ1o6txQyL+Lg9sFJyxradY3aDI9rlszCb7xH1yg+gOUZMrUd8jnsQs0
- u44U38w+8xF1ZRrbBvuPpTqysMo/LVm44eEwetMQaOLw/rcv3ItsptGmOX7hL1ngrK/d YA== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tqk2yu2p0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Oct 2023 04:24:34 +0000
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39G4OXj2025448
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Oct 2023 04:24:33 GMT
-Received: from [10.216.20.227] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Sun, 15 Oct
- 2023 21:24:26 -0700
-Message-ID: <5bf1a4c5-6902-690e-78da-648ca957c5cf@quicinc.com>
-Date:   Mon, 16 Oct 2023 09:54:23 +0530
+        with ESMTP id S229653AbjJPFLi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 01:11:38 -0400
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2077.outbound.protection.outlook.com [40.107.96.77])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF156E6;
+        Sun, 15 Oct 2023 22:11:36 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ME/jJKSD5ezp34DaANXEW4yL9g5d7BeJHHsHZm4bs27+v2d6iQ5ux7G9qfTZiivUvxoNGQ/jvcQC/tQaZNo6s4u3oS5mU6t9H69igCg1v/ozv2WLMwhed14kclMg7dLmZb88EWeMd4g+pInoQX5usVqh2vrABP5NU0NIjaGpplbMdWI895WZyQo+ngLBeKp8+NaXkbo3xnAdOCsStDL6Zvu3MHOwgfWxy7UqyNSjGVfOzWvAZ9OhWi1AAV9R8aVL6gXWo4ufxHkN2wiETZuvuUAE3q8EKGyopEyRdQnczJ8Dh3ZMgrTFKY0ct0yOkiqW4wOgkkx1u6J/ZIyxDWIHeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pDp1xSqJUy/X3KgfO2i7a/7rznbyqcW3efpc1pzhCAA=;
+ b=gGIm1OSn5VXVOPK42iiRCzOMf4DaMbvFyahIZSu2ZnFNUG3SHzz9N5BBuMHiNnIRyfv7mg/S47P6BGwx8UTTnYvH2jvhPZQmzQRU3/IazuSjbLWi3bqFsZDNQfgxNDlQkoEpYrsA5WXKCnYUZ0NumKX1YfiA+bJB0S07QaUipqNeyiLwVoMnCmAGuFEVxHTPx2aONgxqY1CM5oP5s812LgwRQ2XikIXH6cB01coKBHXMIyolfZHqF7/nXnFSkQ5Fly/BafktUe6V8U28qoHd20euiDc/n+Dl2ar4vpLlzs4OmwXsd2Dw9589bZmJrce3/t6n48eky+OmtreV0pv2PQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pDp1xSqJUy/X3KgfO2i7a/7rznbyqcW3efpc1pzhCAA=;
+ b=4ANPAq5iJA1lVyjnAIHK6eh77FTxUUM/0PHDeYTArWoaZHw/XjFgxSGNtVZ4VSpM7+oLczKLd+iNU9NSsWBiNN3uCCrktyw60n6iEgFAyQkbMQ3ugVLP6HOfmfif+aWLdLCjgDwSaQtsDDxxkLZwpZGBUEgj3xePd2qadMg2dIc=
+Received: from CH2PR17CA0029.namprd17.prod.outlook.com (2603:10b6:610:53::39)
+ by PH7PR12MB7331.namprd12.prod.outlook.com (2603:10b6:510:20e::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.34; Mon, 16 Oct
+ 2023 05:11:32 +0000
+Received: from MWH0EPF000971E4.namprd02.prod.outlook.com
+ (2603:10b6:610:53:cafe::ce) by CH2PR17CA0029.outlook.office365.com
+ (2603:10b6:610:53::39) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.35 via Frontend
+ Transport; Mon, 16 Oct 2023 05:11:32 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MWH0EPF000971E4.mail.protection.outlook.com (10.167.243.72) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6838.22 via Frontend Transport; Mon, 16 Oct 2023 05:11:32 +0000
+Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 16 Oct
+ 2023 00:11:31 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB08.amd.com
+ (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Sun, 15 Oct
+ 2023 22:11:30 -0700
+Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.27 via Frontend
+ Transport; Mon, 16 Oct 2023 00:11:27 -0500
+From:   Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+To:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <colnor+dt@kernel.org>, <thippeswamy.havalige@amd.com>,
+        <michal.simek@amd.com>, <bharat.kumar.gogada@amd.com>
+Subject: [PATCH v5 RESEND 0/4] increase ecam size value to discover 256 buses during
+Date:   Mon, 16 Oct 2023 10:40:58 +0530
+Message-ID: <20231016051102.1180432-1-thippeswamy.havalige@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v1 1/5] dt-bindings: PCI: qcom-ep: Add support for SA8775P
- SoC
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC:     Shazad Hussain <quic_shazhuss@quicinc.com>,
-        Rob Herring <robh@kernel.org>, <agross@kernel.org>,
-        <andersson@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <konrad.dybcio@linaro.org>,
-        <mani@kernel.org>, <quic_nitegupt@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <quic_nayiluri@quicinc.com>,
-        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>,
-        <quic_parass@quicinc.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <mhi@lists.linux.dev>,
-        <linux-phy@lists.infradead.org>
-References: <1695218113-31198-1-git-send-email-quic_msarkar@quicinc.com>
- <1695218113-31198-2-git-send-email-quic_msarkar@quicinc.com>
- <20230921183850.GA762694-robh@kernel.org>
- <28bf111f-b965-4d38-884b-bc3a0b68a6cc@quicinc.com>
- <8effa7e5-a223-081b-75b8-7b94400d42e6@quicinc.com>
- <CAA8EJpp+3_A-9YXF1yOKdFweVKqrpTxvxKoJcUH6qiDHfCQ-dQ@mail.gmail.com>
- <31e6aab6-73f9-a421-9dfa-292d9d0e9649@quicinc.com>
- <CAA8EJprSxKXjZTH8tCHGvw4zBp_H-DunS9v9kvp=aFRNd55OhA@mail.gmail.com>
-Content-Language: en-US
-From:   Mrinmay Sarkar <quic_msarkar@quicinc.com>
-In-Reply-To: <CAA8EJprSxKXjZTH8tCHGvw4zBp_H-DunS9v9kvp=aFRNd55OhA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: OwZgvf68Whj3ddHOjYGqAAzLq7KNoa59
-X-Proofpoint-ORIG-GUID: OwZgvf68Whj3ddHOjYGqAAzLq7KNoa59
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-15_09,2023-10-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 clxscore=1015 phishscore=0 bulkscore=0
- impostorscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2309180000 definitions=main-2310160038
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000971E4:EE_|PH7PR12MB7331:EE_
+X-MS-Office365-Filtering-Correlation-Id: e6126713-86a1-463a-2eb2-08dbce065cb0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +BGDVzSrgsP/6lx9qiCO0X043FE/RifTO7rTOxQ6NGw9KmlM12fADJSP6HVP8c6Y6atOLh82+eP/8fsu2pNIbghLgjLBTbJ7Dqsd1ykKJ51MepBjOK7qJ/19aa7cxptb0vLnHI4v0QT0h+vVlLgGU7ytTxjSPAwkarzlAhsefsHIkY9gzG5UTKSXqVonLkL4StpRMnwICj/9zNFM+URvN5r+ZTuU/onNEq+uExGnmIvLEyKga+x9Oniaak7fGEHSLqlW8ks08dTDjyczgHaxtZ5J+AO0iAue3qdxabd3fApnOOE8ajVvP+XKBPeuq/GKqOobCPMLRzW1gQTGqt6rpSHe6/ohgXdSRbhrt5QivQxPQM2TV3UAxWq6GaLJTKky0jbdak0ffhssdP9Q7lv/5+qss7cYVy/otzHD2OlgM88THxpwc6rcdZ62FUzyey4AkQX+OavSi2lVfFKLNJ/G1nnwjJ4yVSfj0LZcywbGdgJ7f16B66EmF276Fh7goOv4lXwjLsu9U8Hr3oBQyhch/2VeUAPlvDlpsa4wVlRNOMv7txIVLpVT0G/8CG0f67lJGVZqF05SH6zHg9U7YOFxi+JO8pO/HXlEZjeg4+vDR+l2mWxTzSHneb0G40iWeYNsAItzYvrseCKZLKp81rfS8NkVuuMhkwzYY4aR83aIFIe5UaguUr0dw0U/CNlQkpZTEQZIHd0giCCcTs3k4vAfkUmVAFhlY/X9fblCM/PwKDGfvFS+6TwS/kgamzwEv8mkMboQMlzbW9UVxmF1Z5CzKKsDdbizUKuhFfZX5L1H/mE=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(136003)(346002)(376002)(230922051799003)(64100799003)(186009)(1800799009)(82310400011)(451199024)(36840700001)(46966006)(40470700004)(40460700003)(1076003)(336012)(26005)(426003)(2616005)(6666004)(36860700001)(83380400001)(47076005)(4326008)(5660300002)(8676002)(44832011)(8936002)(2906002)(7416002)(4744005)(478600001)(316002)(41300700001)(54906003)(70206006)(70586007)(110136005)(81166007)(82740400003)(86362001)(356005)(36756003)(40480700001)(2101003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2023 05:11:32.1201
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6126713-86a1-463a-2eb2-08dbce065cb0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: MWH0EPF000971E4.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7331
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Current driver is supports up to 16 buses. The following code fixes 
+to support up to 256 buses.
 
-On 10/13/2023 10:08 PM, Dmitry Baryshkov wrote:
-> On Fri, 13 Oct 2023 at 15:55, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
->>
->> On 10/11/2023 5:13 PM, Dmitry Baryshkov wrote:
->>> On Wed, 11 Oct 2023 at 14:14, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
->>>> On 10/6/2023 4:24 PM, Shazad Hussain wrote:
->>>>> On 9/22/2023 12:08 AM, Rob Herring wrote:
->>>>>> On Wed, Sep 20, 2023 at 07:25:08PM +0530, Mrinmay Sarkar wrote:
->>>>>>> Add devicetree bindings support for SA8775P SoC.
->>>>>>> Define reg and interrupt per platform.
->>>>>>>
->>>>>>> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
->>>>>>> ---
->>>>>>>     .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 130
->>>>>>> +++++++++++++++++----
->>>>>>>     1 file changed, 108 insertions(+), 22 deletions(-)
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
->>>>>>> b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
->>>>>>> index a223ce0..e860e8f 100644
->>>>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
->>>>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
->>>>>>> @@ -13,6 +13,7 @@ properties:
->>>>>>>       compatible:
->>>>>>>         oneOf:
->>>>>>>           - enum:
->>>>>>> +          - qcom,sa8775p-pcie-ep
->>>>>>>               - qcom,sdx55-pcie-ep
->>>>>>>               - qcom,sm8450-pcie-ep
->>>>>>>           - items:
->>>>>>> @@ -20,29 +21,19 @@ properties:
->>>>>>>               - const: qcom,sdx55-pcie-ep
->>>>>>>         reg:
->>>>>>> -    items:
->>>>>>> -      - description: Qualcomm-specific PARF configuration registers
->>>>>>> -      - description: DesignWare PCIe registers
->>>>>>> -      - description: External local bus interface registers
->>>>>>> -      - description: Address Translation Unit (ATU) registers
->>>>>>> -      - description: Memory region used to map remote RC address space
->>>>>>> -      - description: BAR memory region
->>>>>>> +    minItems: 6
->>>>>>> +    maxItems: 7
->>>>>>>         reg-names:
->>>>>>> -    items:
->>>>>>> -      - const: parf
->>>>>>> -      - const: dbi
->>>>>>> -      - const: elbi
->>>>>>> -      - const: atu
->>>>>>> -      - const: addr_space
->>>>>>> -      - const: mmio
->>>>>>> +    minItems: 6
->>>>>>> +    maxItems: 7
->>>>>> Don't move these into if/then schemas. Then we are duplicating the
->>>>>> names, and there is no reason to keep them aligned for new compatibles.
->>>>>>
->>>>>> Rob
->>>>> Hi Rob,
->>>>> As we have one extra reg property (dma) required for sa8775p-pcie-ep,
->>>>> isn't it expected to be moved in if/then as per number of regs
->>>>> required. Anyways we would have duplication of some properties for new
->>>>> compatibles where the member numbers differs for a property.
->>>>>
->>>>> Are you suggesting to add the extra reg property (dma) in the existing
->>>>> reg and reg-names list, and add minItems/maxItems for all compatibles
->>>>> present in this file ?
->>> This is what we have been doing in other cases: if the list is an
->>> extension of the current list, there is no need to duplicate it. One
->>> can use min/maxItems instead.
->> Hi Dmitry
->>
->> we have tried using min/maxItems rather than duplicating but somehow
->> catch up with some warnings in dt_bindings check
->>
->> //local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
->> pcie-ep@1c00000: reg: [[29360128, 12288], [1073741824, 3869],
->> [1073745696, 200], [1073745920, 4096], [1073750016, 4096], [29372416,
->> 12288]] is too short//
->> //        from schema $id:
->> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
->> ///local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
->> pcie-ep@1c00000: reg-names: ['parf', 'dbi', 'elbi', 'atu', 'addr_space',
->> 'mmio'] is too short//
->> //        from schema $id:
-> missing min/maxItems for reg and reg-names
->
->> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
->> ///local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
->> pcie-ep@1c00000: interrupts: [[0, 140, 4], [0, 145, 4]] is too short//
->> //        from schema $id:
->> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
->> ///local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
->> pcie-ep@1c00000: interrupt-names: ['global', 'doorbell'] is too short//
->> //        from schema $id:
->> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
-> incorrect min/maxItems for interrupts.
-I am getting the same warnings even after correcting the min/maxItems 
-for interrupt.
-> -Mrinmay
->> //local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
->> pcie-ep@1c00000: interrupt-names: ['global', 'doorbell'] is too short/
->>
->> added the patch in attachment.
->>
->> --Mrinmay
->>
->>>>> -Shazad
->>>> Here we have defined reg and interrupt per platform as clocks is defined.
->>>>
->>>> -Mrinmay
->>>>
->
->
+update "NWL_ECAM_VALUE_DEFAULT " to 16  can access up to 256MB ECAM
+region to detect 256 buses.
+
+Update ecam size to 256MB in device tree binding example.
+
+Remove unwanted code.
+
+Thippeswamy Havalige (4):
+  PCI: xilinx-nwl: Remove unnecessary code which updates primary,
+    secondary and sub-ordinate bus numbers
+  dt-bindings: PCI: xilinx-nwl: Modify ECAM size in example
+  PCI: xilinx-nwl: Rename ECAM size default macro
+  PCI: xilinx-nwl: Increase ECAM size to accommodate 256 buses
+
+ .../devicetree/bindings/pci/xlnx,nwl-pcie.yaml |  2 +-
+ drivers/pci/controller/pcie-xilinx-nwl.c       | 18 +++---------------
+ 2 files changed, 4 insertions(+), 16 deletions(-)
+
+-- 
+2.25.1
+
