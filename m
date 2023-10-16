@@ -2,158 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F90C7CAD17
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 17:14:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B414B7CAD5F
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 17:22:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229848AbjJPPO0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Oct 2023 11:14:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60102 "EHLO
+        id S233732AbjJPPW0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Oct 2023 11:22:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232003AbjJPPOZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 11:14:25 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF071D9;
-        Mon, 16 Oct 2023 08:14:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697469264; x=1729005264;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=gs4N9ezRLhxjgM2cEbP+/lHkLMb/1pEd3Idtpkl5xQo=;
-  b=HG5SS6l1NHM/aycsBs+jqmZZXIBUM7Q+MftYMBU/IFIwZyRyTQzVtRci
-   gGa751C8AdSxels7f9VsfCMYJ89qIHTHisKfbFy+CUivtl0GmiNLo138j
-   MDJysWzEQoNIorSbFeIUDvbVT0aREpqtyC06GI2Mv954VsikHhbBbslCG
-   NysIrfR77HGiAqenIiARYWjIiaUSbaBwNy5nuAMmGzL7Cd1DQfQeRLby+
-   +TmqyjlqtyXv+kFZSl+EBum29311AJIue7RpGQa0rxHW4spCsssV1YBiF
-   3FsSRR7pkLgIHLExFHbfdaZRpv31ywgtxOVxC/13ToUYeno0yRAUZigRs
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="7117848"
-X-IronPort-AV: E=Sophos;i="6.03,229,1694761200"; 
-   d="scan'208";a="7117848"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 08:14:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="879460578"
-X-IronPort-AV: E=Sophos;i="6.03,229,1694761200"; 
-   d="scan'208";a="879460578"
-Received: from rhaeussl-mobl.ger.corp.intel.com ([10.252.59.103])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 08:14:15 -0700
-Date:   Mon, 16 Oct 2023 18:14:13 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-cc:     linux-pci@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 06/10] PCI/DPC: Use FIELD_GET()
-In-Reply-To: <524d1789-6b57-aae-17b7-bf7ae49719dc@linux.intel.com>
-Message-ID: <8ca2ad3-da7d-c82c-cbdf-b5363760444e@linux.intel.com>
-References: <20231013200249.GA1123559@bhelgaas> <3df6c8ea-888e-faa-5bae-e26b1f446ab3@linux.intel.com> <524d1789-6b57-aae-17b7-bf7ae49719dc@linux.intel.com>
+        with ESMTP id S233582AbjJPPWQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 11:22:16 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21D48B4;
+        Mon, 16 Oct 2023 08:22:14 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79232C433C9;
+        Mon, 16 Oct 2023 15:22:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697469733;
+        bh=DowPxR62zPnMI4kLLinoy26En/26UZyXsXLcIQU2wuc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=IT+fImRQPlOYJhujnsfj2sgXczN1y/eLhEkCdVka5yvLsmoLpXAFOeLZA323k82r4
+         LKjE7pUNRXRN3PNlWylJClZv6rdXLo2KKMyfWU20LEQW1Yz/KNNKKZyJFxNZJo5nnC
+         7OlqaVZbNAyEXsd7/p5NMe69Z+N2SJ4erubRNTz/gX9hBiO0QgQz0LQ6KHo6r0PbcS
+         F2nj1ESGbj+JNTDtgRGqQva8Dgnp46ZWHOzayojG4VvUslIxI735LUwwovy5nQdYJw
+         t2s79YhK/Z8o31cA1qEnKUvSnfx/LHRucRQFMQzxEUdk3RsMCFhbM/kVbtmITguiJD
+         TwAanPPal3P/g==
+Date:   Mon, 16 Oct 2023 10:22:11 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Frank Li <Frank.li@nxp.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linux-pci@vger.kernel.org>,
+        "moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH 2/3] PCI: layerscape: add suspend/resume for ls1021a
+Message-ID: <20231016152211.GA1209639@bhelgaas>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-2130236667-1697469257=:1986"
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZS1Mhe9JOsY2JJER@lizhi-Precision-Tower-5810>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, Oct 16, 2023 at 10:45:25AM -0400, Frank Li wrote:
+> On Tue, Oct 10, 2023 at 06:02:36PM +0200, Lorenzo Pieralisi wrote:
+> > On Tue, Oct 10, 2023 at 10:20:12AM -0400, Frank Li wrote:
 
---8323329-2130236667-1697469257=:1986
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-On Mon, 16 Oct 2023, Ilpo Järvinen wrote:
-
-> On Mon, 16 Oct 2023, Ilpo Järvinen wrote:
-> 
-> > On Fri, 13 Oct 2023, Bjorn Helgaas wrote:
+> > > Ping
 > > 
-> > > On Wed, Oct 11, 2023 at 02:01:13PM +0300, Ilpo Järvinen wrote:
-> > > > On Tue, 10 Oct 2023, Bjorn Helgaas wrote:
-> > > > > From: Bjorn Helgaas <bhelgaas@google.com>
-> > > > > 
-> > > > > Use FIELD_GET() to remove dependences on the field position, i.e., the
-> > > > > shift value.  No functional change intended.
-> > > > > 
-> > > > > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > > > ---
-> > > > >  drivers/pci/pcie/dpc.c        | 9 +++++----
-> > > > >  drivers/pci/quirks.c          | 2 +-
-> > > > >  include/uapi/linux/pci_regs.h | 1 +
-> > > > >  3 files changed, 7 insertions(+), 5 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> > > > > index 3ceed8e3de41..6e551f34ec63 100644
-> > > > > --- a/drivers/pci/pcie/dpc.c
-> > > > > +++ b/drivers/pci/pcie/dpc.c
-> > > > > @@ -8,6 +8,7 @@
-> > > > >  
-> > > > >  #define dev_fmt(fmt) "DPC: " fmt
-> > > > >  
-> > > > > +#include <linux/bitfield.h>
-> > > > >  #include <linux/aer.h>
-> > > > >  #include <linux/delay.h>
-> > > > >  #include <linux/interrupt.h>
-> > > > > @@ -202,7 +203,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
-> > > > >  
-> > > > >  	/* Get First Error Pointer */
-> > > > >  	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &dpc_status);
-> > > > > -	first_error = (dpc_status & 0x1f00) >> 8;
-> > > > > +	first_error = FIELD_GET(PCI_EXP_DPC_STATUS_FIRST_ERR, dpc_status);
-> > > > >  
-> > > > >  	for (i = 0; i < ARRAY_SIZE(rp_pio_error_string); i++) {
-> > > > >  		if ((status & ~mask) & (1 << i))
-> > > > > @@ -270,8 +271,8 @@ void dpc_process_error(struct pci_dev *pdev)
-> > > > >  	pci_info(pdev, "containment event, status:%#06x source:%#06x\n",
-> > > > >  		 status, source);
-> > > > >  
-> > > > > -	reason = (status & PCI_EXP_DPC_STATUS_TRIGGER_RSN) >> 1;
-> > > > > -	ext_reason = (status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT) >> 5;
-> > > > > +	reason = FIELD_GET(PCI_EXP_DPC_STATUS_TRIGGER_RSN, status);
-> > > > > +	ext_reason = FIELD_GET(PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT, status);
-> > > > >  	pci_warn(pdev, "%s detected\n",
-> > > > >  		 (reason == 0) ? "unmasked uncorrectable error" :
-> > > > >  		 (reason == 1) ? "ERR_NONFATAL" :
-> > > > 
-> > > > BTW, it seems we're doing overlapping work here with many of these 
-> > > > patches. It takes some time to think these through one by one, I don't 
-> > > > just autorun through them with coccinelle so I've not posted my changes
-> > > > yet.
-> > > >
-> > > > I went to a different direction here and named all the reasons too with 
-> > > > defines and used & to get the reason in order to be able to compare with 
-> > > > the named reasons.
-> > > > 
-> > > > You also missed convering one 0xfff4 to use define (although I suspect it 
-> > > > never was your goal to go beyond FIELD_GET() here).
-> > > 
-> > > Pure FIELD_GET() and FIELD_PREP() was my goal.
-> > > 
-> > > If you have patches you prefer, I'll drop mine.  I did these about a
-> > > year ago and it seemed like the time to do something with them since
-> > > you did the PCI_EXP_LNKSTA_NLW ones and to try to prevent overlapping
-> > > work.  Since we've started, I'd like to get as much of it done this
-> > > cycle as possible.
-> > 
-> > Okay, I suggest you keep your FIELD_GET/PREP() patch since mine is getting 
-> > more and more complicated. I can build a nice set of small changes about 
-> > what remains to do in DPC on top of your patch.
+> > Read and follow please (and then ping us):
+> > https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com
 > 
-> Err, actually, there's still the naming of the define, should _FEP be used 
-> for First Error Pointer for consistency? You should make that small change 
-> into your patch if you think _FEP is better because of consistency.
+> Could you please help point which specic one was not follow aboved guide?
+> Then I can update my code. I think that's efficial communication method. I
+> think I have read it serial times. But not sure which one violate the
+> guide?
+> 
+> @Bjorn Helgaas. How do you think so? 
 
-There's also #include order so it seems you should just drop the patch, I 
-can handle this along my series.
+Since Lorenzo didn't point out anything specific in the patch itself,
+I think he was probably referring to the subject line and this advice:
 
--- 
- i.
+  - Follow the existing convention, i.e., run "git log --oneline
+    <file>" and make yours match in format, capitalization, and
+    sentence structure.  For example, native host bridge driver patch
+    titles look like this:
 
---8323329-2130236667-1697469257=:1986--
+      PCI: altera: Fix platform_get_irq() error handling
+      PCI: vmd: Remove IRQ affinity so we can allocate more IRQs
+      PCI: mediatek: Add MSI support for MT2712 and MT7622
+      PCI: rockchip: Remove IRQ domain if probe fails
+
+In this case, your subject line was:
+
+  PCI: layerscape: add suspend/resume for ls1021a
+
+The advice was to run this:
+
+  $ git log --oneline drivers/pci/controller/dwc/pci-layerscape.c
+  83c088148c8e PCI: Use PCI_HEADER_TYPE_* instead of literals
+  9fda4d09905d PCI: layerscape: Add power management support for ls1028a
+  277004d7a4a3 PCI: Remove unnecessary <linux/of_irq.h> includes
+  60b3c27fb9b9 PCI: dwc: Rename struct pcie_port to dw_pcie_rp
+  d23f0c11aca2 PCI: layerscape: Change to use the DWC common link-up check function
+  7007b745a508 PCI: layerscape: Convert to builtin_platform_driver()
+  60f5b73fa0f2 PCI: dwc: Remove unnecessary wrappers around dw_pcie_host_init()
+  b9ac0f9dc8ea PCI: dwc: Move dw_pcie_setup_rc() to DWC common code
+  f78f02638af5 PCI: dwc: Rework MSI initialization
+
+Note that these summaries are all complete sentences that start with a
+capital letter:
+
+  Use PCI_HEADER_TYPE_* instead of literals
+  Add power management support for ls1028a
+  Remove unnecessary <linux/of_irq.h> includes
+  ...
+
+So yours could be this:
+
+  PCI: layerscape: Add suspend/resume for ls1021a
+                   ^
+
+This is trivial, obviously.  But the uppercase/lowercase distinction
+carries information, and it's an unnecessary distraction to notice
+that "oh, this is different from the rest; is the difference
+important or should I ignore it?"
+
+Obviously Lorenzo *could* edit all your subject lines on your behalf,
+but it makes everybody's life easier if people look at the existing
+code and follow the style when making changes.
+
+E.g., write subject lines that are similar in style to previous ones,
+name local variables similarly to other functions, use line lengths
+consistent with the rest of the file, etc.  After applying a change,
+the file should look like a coherent whole; we should not be able to
+tell that this hunk was added later by somebody else.  This all helps
+make the code (and the git history) more readable and maintainable.
+
+Bjorn
