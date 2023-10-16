@@ -2,265 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 351CE7CB126
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 19:16:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3D6D7CB12A
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 19:16:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232985AbjJPRQa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Oct 2023 13:16:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40346 "EHLO
+        id S231302AbjJPRQu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Oct 2023 13:16:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234172AbjJPRQT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 13:16:19 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2E534224
-        for <linux-pci@vger.kernel.org>; Mon, 16 Oct 2023 10:07:14 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1c8a1541233so28739445ad.1
-        for <linux-pci@vger.kernel.org>; Mon, 16 Oct 2023 10:07:14 -0700 (PDT)
+        with ESMTP id S232812AbjJPRQt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 13:16:49 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B827A7
+        for <linux-pci@vger.kernel.org>; Mon, 16 Oct 2023 10:16:47 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1c9b95943beso39930665ad.1
+        for <linux-pci@vger.kernel.org>; Mon, 16 Oct 2023 10:16:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697476034; x=1698080834; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1697476607; x=1698081407; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=zyQucnK7s5ttgFNMm+Jt6n3FLUfetMR9PYHn67Ou8ko=;
-        b=O/2lRc7eFQGoyFlNOu+H6VGJAcdQAUqPAO6jWYxjEgJYQc80NsRX0mr4+bazOqBPIX
-         aiYTwJfZA3mpnsAZVlUEZCeOvzTG/Jq6M9h6D6RitlC6wkM0OA12uIGFw5rDBU+6ia3E
-         RSTAOM0i2YTfD+nuYdKCJ2HI1zcAlx0ZHWgfoJ9/zdYuBkkHhWwvFLGsgujfa8DcBN1c
-         QMUPv7D9rxhH64TcsF2EeHGA0gvxJ+XEeZ5p/YAxEn4tJaKhkbksNN+g0q0UjQ2EScdy
-         TFJmN1ztWFDKo6hVEbvjDaWrDBNGRjK4DsXM5xTkEaqe3fjaGTMaYufiijfd9o+VOvnZ
-         MndA==
+        bh=oOnkKW9E33HHzsaH2XgU+G+2xfhOZYjGYZoXUL8UE40=;
+        b=NHse2qeSscYLnKCIUo3VpbyNi3s7KSQ1S8wxpCHq/Z2uQR/TaSeepBWB7j5seoGVEU
+         YwJiWfq/FRUaiLJugaefFL+kOhJQgZL1l23Nxcp7OIjy1h9F4NT/bS+w1DSOIMOOLlqL
+         yV58njO7nP5Ng1kHOaZgSu713puXjDNtug9gOB5QlTkEYBKuGYGWW1z7H2VMe9SQpj7N
+         k2HAGJqEgrlXHM72GbCcfodl0L/+BVdfj+zwIT7EbT+IuFxQvtlYaEWAZgjS6BPcyS2V
+         59tKaORNt0esW1vYBOXFToJ1P09lN4axQLUkNy/cRAqC427G9pb3OqAFWf0x1R7bYkxp
+         wbsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697476034; x=1698080834;
+        d=1e100.net; s=20230601; t=1697476607; x=1698081407;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zyQucnK7s5ttgFNMm+Jt6n3FLUfetMR9PYHn67Ou8ko=;
-        b=Y+eMsouzHDQi+Vm5ETwJYRyKOO1X7J7CaAr36PCHQ6u9oGk/WBit2ZfR1D/e/C5BR7
-         o3qvKmDhZ/yoZRL1bIf2uC4BwXx/Gaa/7t4uHTzMTtdTtHyiOZgNn0xcbzylw8zJOuXN
-         WHLDNTstHIYJ00QIGJUcg/wGT7ovNkyiUGWCYSMR+JehEe24Fq4KYlqYDGz4y4ARYZYX
-         b4X532kLfWPO1rc53mexu92f7CtP2DP3Rtx3mMRTKKO3VX1QxlfaZBWRs0ygVKeuKHth
-         vyzGwQNLjd4CSD5BQWDpGIaFQPks3xA/eHJ5bjqjVY0ypWP6OzcDAmQEvjJ+kr/SYJsN
-         jmDg==
-X-Gm-Message-State: AOJu0Yy6TwZz9yJGy4oLXwhbGvssk7+990Abr5IkO51zHliDOxyX6hHx
-        C4nj12CjRTS5IpXUxmVdkKsI
-X-Google-Smtp-Source: AGHT+IF9JRQL23rtz9sszlfrT6GvV3obz5CBiIfNeK8f9JVLVlO3+3h4C0jG/dQhhxL/uSkxz5ARFg==
-X-Received: by 2002:a17:903:22cb:b0:1c4:5e9e:7865 with SMTP id y11-20020a17090322cb00b001c45e9e7865mr34069186plg.0.1697476034169;
-        Mon, 16 Oct 2023 10:07:14 -0700 (PDT)
+        bh=oOnkKW9E33HHzsaH2XgU+G+2xfhOZYjGYZoXUL8UE40=;
+        b=jwplkE/3CBDvXZZ/5Cl2E6f0BmNsfemQXewNfbwhg6S/AdkngFFAS3v0TA1kKjODq0
+         /0UM5On9xBXpdNS0a3kRXfXsDfQ2VQspcsVw1We47FfSB6okEsSGSaRcPoXi/ynr+lHh
+         eOgpFNZSwLTkLuJaa45dz2shw6P3CAxDzk2Wor4+H7/Xlas49H/85/AFPwKz6zGg4lb4
+         ZFE6jNPrh/DBOf8OYDMhrzRL9FeVgZdPUaXu+fM0c8uxtojWwG7EuVPiOe3FJ7hridIP
+         eKchQPmaXuUyiIZSlPO/w7FKzei7ENfiQlXyhepMte7mZxmvDEbnxgFXPkdsh/Xe7DqE
+         paSA==
+X-Gm-Message-State: AOJu0Yxy38n7ZCI4jRL7c3q7Pl8RhCStzjmMUAoBOPoMjgCVA3Ak+CfO
+        3I2hYlnW3/D3rL2nE42bwDl3
+X-Google-Smtp-Source: AGHT+IFho1tjm5iK0/PdZpwOJVLlzh60B+Z1CzCZJ5QivVrZEGbF5FhDL6PPek4KbSf6TWQbtLGYZw==
+X-Received: by 2002:a17:903:22c9:b0:1ca:8b74:17ff with SMTP id y9-20020a17090322c900b001ca8b7417ffmr1919597plg.26.1697476606907;
+        Mon, 16 Oct 2023 10:16:46 -0700 (PDT)
 Received: from thinkpad ([117.207.31.199])
-        by smtp.gmail.com with ESMTPSA id s14-20020a170902ea0e00b001c9b5b63e36sm8718097plg.32.2023.10.16.10.07.10
+        by smtp.gmail.com with ESMTPSA id c15-20020a170903234f00b001c62b9a51c0sm8698818plh.103.2023.10.16.10.16.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Oct 2023 10:07:13 -0700 (PDT)
-Date:   Mon, 16 Oct 2023 22:37:06 +0530
+        Mon, 16 Oct 2023 10:16:46 -0700 (PDT)
+Date:   Mon, 16 Oct 2023 22:46:37 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linux-pci@vger.kernel.org>,
-        "moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH 3/3] PCI: layerscape: add suspend/resume for ls1043a
-Message-ID: <20231016170706.GG39962@thinkpad>
-References: <20230915184306.2374670-1-Frank.Li@nxp.com>
- <20230915184306.2374670-3-Frank.Li@nxp.com>
+To:     Frank Li <Frank.li@nxp.com>
+Cc:     aisheng.dong@nxp.com, bhelgaas@google.com,
+        devicetree@vger.kernel.org, festevam@gmail.com,
+        imx@lists.linux.dev, jdmason@kudzu.us, kernel@pengutronix.de,
+        kishon@kernel.org, kw@linux.com,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, lpieralisi@kernel.org, maz@kernel.org,
+        s.hauer@pengutronix.de, shawnguo@kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH v2 0/5] Add RC-to-EP doorbell with platform MSI controller
+Message-ID: <20231016171637.GJ39962@thinkpad>
+References: <20230911220920.1817033-1-Frank.Li@nxp.com>
+ <ZQtmpL2vCMgR+Upu@lizhi-Precision-Tower-5810>
+ <20230930090249.GB3564@thinkpad>
+ <ZSVd5GN7lJUfdF8L@lizhi-Precision-Tower-5810>
+ <ZS1N0jgGYfmMsgrJ@lizhi-Precision-Tower-5810>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230915184306.2374670-3-Frank.Li@nxp.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+In-Reply-To: <ZS1N0jgGYfmMsgrJ@lizhi-Precision-Tower-5810>
+X-Spam-Status: No, score=0.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 15, 2023 at 02:43:06PM -0400, Frank Li wrote:
-> ls1043a add suspend/resume support.
+On Mon, Oct 16, 2023 at 10:50:58AM -0400, Frank Li wrote:
+> On Tue, Oct 10, 2023 at 10:21:24AM -0400, Frank Li wrote:
+> > On Sat, Sep 30, 2023 at 11:02:49AM +0200, Manivannan Sadhasivam wrote:
+> > > On Wed, Sep 20, 2023 at 05:39:48PM -0400, Frank Li wrote:
+> > > > On Mon, Sep 11, 2023 at 06:09:15PM -0400, Frank Li wrote:
+> > > > > ┌────────────┐   ┌───────────────────────────────────┐   ┌────────────────┐
+> > > > > │            │   │                                   │   │                │
+> > > > > │            │   │ PCI Endpoint                      │   │ PCI Host       │
+> > > > > │            │   │                                   │   │                │
+> > > > > │            │◄──┤ 1.platform_msi_domain_alloc_irqs()│   │                │
+> > > > > │            │   │                                   │   │                │
+> > > > > │ MSI        ├──►│ 2.write_msi_msg()                 ├──►├─BAR<n>         │
+> > > > > │ Controller │   │   update doorbell register address│   │                │
+> > > > > │            │   │   for BAR                         │   │                │
+> > > > > │            │   │                                   │   │ 3. Write BAR<n>│
+> > > > > │            │◄──┼───────────────────────────────────┼───┤                │
+> > > > > │            │   │                                   │   │                │
+> > > > > │            ├──►│ 4.Irq Handle                      │   │                │
+> > > > > │            │   │                                   │   │                │
+> > > > > │            │   │                                   │   │                │
+> > > > > └────────────┘   └───────────────────────────────────┘   └────────────────┘
+> > > > 
+> > > > @mani:
+> > > > 	Do you have chance to review this patch again?
+> > > 
+> > > I was on vacation for past few weeks. Will take a look in the coming week.
+> > 
+> > Ping?
+> > 
+> > Frank
+> 
+> @mani: did you have chance to look at this?
 > 
 
-Same comment as previous patch for patch description.
-
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-layerscape.c | 91 ++++++++++++++++++++-
->  1 file changed, 90 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-> index bc5a8ff1a26ce..debabb9bb41f4 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
-> @@ -41,10 +41,20 @@
->  #define SCFG_PEXSFTRSTCR	0x190
->  #define PEXSR(idx)		BIT(idx)
->  
-> +/* LS1043A PEX PME control register */
-> +#define SCFG_PEXPMECR		0x144
-> +#define PEXPME(idx)		BIT(31 - (idx) * 4)
-> +
-> +/* LS1043A PEX LUT debug register */
-> +#define LS_PCIE_LDBG	0x7fc
-> +#define LDBG_SR		BIT(30)
-> +#define LDBG_WE		BIT(31)
-> +
->  #define PCIE_IATU_NUM		6
->  
->  struct ls_pcie_drvdata {
->  	const u32 pf_off;
-> +	const u32 lut_off;
->  	const struct dw_pcie_host_ops *ops;
->  	void (*exit_from_l2)(struct dw_pcie_rp *pp);
->  	bool pm_support;
-> @@ -54,6 +64,7 @@ struct ls_pcie {
->  	struct dw_pcie *pci;
->  	const struct ls_pcie_drvdata *drvdata;
->  	void __iomem *pf_base;
-> +	void __iomem *lut_base;
->  	struct regmap *scfg;
->  	int index;
->  	bool big_endian;
-> @@ -116,6 +127,23 @@ static void ls_pcie_pf_writel(struct ls_pcie *pcie, u32 off, u32 val)
->  		iowrite32(val, pcie->pf_base + off);
->  }
->  
-> +static u32 ls_pcie_lut_readl(struct ls_pcie *pcie, u32 off)
-> +{
-
-Looking at ls_pcie_pf_{readl/writel} you can use a common function that does the
-read/write and pass the relevant base/offset. This will avoid code duplication.
-
-> +	if (pcie->big_endian)
-> +		return ioread32be(pcie->lut_base + off);
-> +
-> +	return ioread32(pcie->lut_base + off);
-> +}
-> +
-> +static void ls_pcie_lut_writel(struct ls_pcie *pcie, u32 off, u32 val)
-> +{
-> +	if (pcie->big_endian)
-> +		iowrite32be(val, pcie->lut_base + off);
-> +	else
-> +		iowrite32(val, pcie->lut_base + off);
-> +}
-> +
-
-Remove extra newline
-
-> +
->  static void ls_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> @@ -249,6 +277,54 @@ static int ls1021a_pcie_host_init(struct dw_pcie_rp *pp)
->  	return ret;
->  }
->  
-> +static void ls1043a_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct ls_pcie *pcie = to_ls_pcie(pci);
-> +	u32 val;
-> +
-> +	if (!pcie->scfg) {
-> +		dev_dbg(pcie->pci->dev, "SYSCFG is NULL\n");
-> +		return;
-> +	}
-> +
-> +	/* Send Turn_off message */
-> +	regmap_read(pcie->scfg, SCFG_PEXPMECR, &val);
-
-If the register offset is the only difference, then you could pass the register
-offset via drvdata and use the same functions.
-
-> +	val |= PEXPME(pcie->index);
-> +	regmap_write(pcie->scfg, SCFG_PEXPMECR, val);
-> +
-> +	/* There are not register to check ACK, so wait PCIE_PME_TO_L2_TIMEOUT_US */
-> +	mdelay(PCIE_PME_TO_L2_TIMEOUT_US/1000);
-> +
-> +	/* Clear Turn_off message */
-> +	regmap_read(pcie->scfg, SCFG_PEXPMECR, &val);
-> +	val &= ~PEXPME(pcie->index);
-> +	regmap_write(pcie->scfg, SCFG_PEXPMECR, val);
-> +}
-> +
-> +static void ls1043a_pcie_exit_from_l2(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct ls_pcie *pcie = to_ls_pcie(pci);
-> +	u32 val;
-> +
-
-Again, a comment here would be useful.
+Sorry for the long delay. I will take a look tomorrow.
 
 - Mani
 
-> +	val = ls_pcie_lut_readl(pcie, LS_PCIE_LDBG);
-> +	val |= LDBG_WE;
-> +	ls_pcie_lut_writel(pcie, LS_PCIE_LDBG, val);
-> +
-> +	val = ls_pcie_lut_readl(pcie, LS_PCIE_LDBG);
-> +	val |= LDBG_SR;
-> +	ls_pcie_lut_writel(pcie, LS_PCIE_LDBG, val);
-> +
-> +	val = ls_pcie_lut_readl(pcie, LS_PCIE_LDBG);
-> +	val &= ~LDBG_SR;
-> +	ls_pcie_lut_writel(pcie, LS_PCIE_LDBG, val);
-> +
-> +	val = ls_pcie_lut_readl(pcie, LS_PCIE_LDBG);
-> +	val &= ~LDBG_WE;
-> +	ls_pcie_lut_writel(pcie, LS_PCIE_LDBG, val);
-> +}
-> +
->  static const struct dw_pcie_host_ops ls_pcie_host_ops = {
->  	.host_init = ls_pcie_host_init,
->  	.pme_turn_off = ls_pcie_send_turnoff_msg,
-> @@ -265,6 +341,18 @@ static const struct ls_pcie_drvdata ls1021a_drvdata = {
->  	.exit_from_l2 = ls1021a_pcie_exit_from_l2,
->  };
->  
-> +static const struct dw_pcie_host_ops ls1043a_pcie_host_ops = {
-> +	.host_init = ls1021a_pcie_host_init, /* the same as ls1021 */
-> +	.pme_turn_off = ls1043a_pcie_send_turnoff_msg,
-> +};
-> +
-> +static const struct ls_pcie_drvdata ls1043a_drvdata = {
-> +	.lut_off = 0x10000,
-> +	.pm_support = true,
-> +	.ops = &ls1043a_pcie_host_ops,
-> +	.exit_from_l2 = ls1043a_pcie_exit_from_l2,
-> +};
-> +
->  static const struct ls_pcie_drvdata layerscape_drvdata = {
->  	.pf_off = 0xc0000,
->  	.pm_support = true,
-> @@ -275,7 +363,7 @@ static const struct of_device_id ls_pcie_of_match[] = {
->  	{ .compatible = "fsl,ls1012a-pcie", .data = &layerscape_drvdata },
->  	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021a_drvdata },
->  	{ .compatible = "fsl,ls1028a-pcie", .data = &layerscape_drvdata },
-> -	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1021a_drvdata },
-> +	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043a_drvdata },
->  	{ .compatible = "fsl,ls1046a-pcie", .data = &layerscape_drvdata },
->  	{ .compatible = "fsl,ls2080a-pcie", .data = &layerscape_drvdata },
->  	{ .compatible = "fsl,ls2085a-pcie", .data = &layerscape_drvdata },
-> @@ -314,6 +402,7 @@ static int ls_pcie_probe(struct platform_device *pdev)
->  	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
->  
->  	pcie->pf_base = pci->dbi_base + pcie->drvdata->pf_off;
-> +	pcie->lut_base = pci->dbi_base + pcie->drvdata->lut_off;
->  
->  	if (!ls_pcie_is_bridge(pcie))
->  		return -ENODEV;
-> -- 
-> 2.34.1
-> 
+> > 
+> > > 
+> > > - Mani
+> > > 
+> > > > 
+> > > > Frank
+> > > > 
+> > > > > 
+> > > > > This patches based on old https://lore.kernel.org/imx/20221124055036.1630573-1-Frank.Li@nxp.com/
+> > > > > 
+> > > > > Original patch only target to vntb driver. But actually it is common
+> > > > > method.
+> > > > > 
+> > > > > This patches add new API to pci-epf-core, so any EP driver can use it.
+> > > > > 
+> > > > > The key point is comments from Thomas Gleixner, who suggest use new
+> > > > > PCI/IMS. But arm platform change still not be merged yet.
+> > > > > 
+> > > > > git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git devmsi-v2-arm
+> > > > > 
+> > > > > So I still use existed method implement RC to EP doorbell.
+> > > > > 
+> > > > > If Thomas Gleixner want to continue work on devmsi-v2-arm, I can help test
+> > > > > and update this patch.
+> > > > > 
+> > > > > Change from v1 to v2
+> > > > > - Add missed patch for endpont/pci-epf-test.c
+> > > > > - Move alloc and free to epc driver from epf.
+> > > > > - Provide general help function for EPC driver to alloc platform msi irq.
+> > > > > - Fixed manivannan's comments.
+> > > > > 
+> > > > > Frank Li (5):
+> > > > >   PCI: endpoint: Add RC-to-EP doorbell support using platform MSI
+> > > > >     controller
+> > > > >   PCI: dwc: add doorbell support by use MSI controller
+> > > > >   PCI: endpoint: pci-epf-test: add doorbell test
+> > > > >   misc: pci_endpoint_test: Add doorbell test case
+> > > > >   tools: PCI: Add 'B' option for test doorbell
+> > > > > 
+> > > > >  drivers/misc/pci_endpoint_test.c              |  48 +++++
+> > > > >  .../pci/controller/dwc/pcie-designware-ep.c   |   2 +
+> > > > >  drivers/pci/endpoint/functions/pci-epf-test.c |  59 +++++-
+> > > > >  drivers/pci/endpoint/pci-epc-core.c           | 192 ++++++++++++++++++
+> > > > >  drivers/pci/endpoint/pci-epf-core.c           |  44 ++++
+> > > > >  include/linux/pci-epc.h                       |   6 +
+> > > > >  include/linux/pci-epf.h                       |   7 +
+> > > > >  include/uapi/linux/pcitest.h                  |   1 +
+> > > > >  tools/pci/pcitest.c                           |  16 +-
+> > > > >  9 files changed, 373 insertions(+), 2 deletions(-)
+> > > > > 
+> > > > > -- 
+> > > > > 2.34.1
+> > > > > 
+> > > 
+> > > -- 
+> > > மணிவண்ணன் சதாசிவம்
 
 -- 
 மணிவண்ணன் சதாசிவம்
