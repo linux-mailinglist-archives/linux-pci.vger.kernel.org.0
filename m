@@ -2,180 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E3D6D7CB12A
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 19:16:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7BE87CB151
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 19:27:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231302AbjJPRQu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Oct 2023 13:16:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54670 "EHLO
+        id S232570AbjJPR1s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Oct 2023 13:27:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232812AbjJPRQt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 13:16:49 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B827A7
-        for <linux-pci@vger.kernel.org>; Mon, 16 Oct 2023 10:16:47 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1c9b95943beso39930665ad.1
-        for <linux-pci@vger.kernel.org>; Mon, 16 Oct 2023 10:16:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697476607; x=1698081407; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=oOnkKW9E33HHzsaH2XgU+G+2xfhOZYjGYZoXUL8UE40=;
-        b=NHse2qeSscYLnKCIUo3VpbyNi3s7KSQ1S8wxpCHq/Z2uQR/TaSeepBWB7j5seoGVEU
-         YwJiWfq/FRUaiLJugaefFL+kOhJQgZL1l23Nxcp7OIjy1h9F4NT/bS+w1DSOIMOOLlqL
-         yV58njO7nP5Ng1kHOaZgSu713puXjDNtug9gOB5QlTkEYBKuGYGWW1z7H2VMe9SQpj7N
-         k2HAGJqEgrlXHM72GbCcfodl0L/+BVdfj+zwIT7EbT+IuFxQvtlYaEWAZgjS6BPcyS2V
-         59tKaORNt0esW1vYBOXFToJ1P09lN4axQLUkNy/cRAqC427G9pb3OqAFWf0x1R7bYkxp
-         wbsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697476607; x=1698081407;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oOnkKW9E33HHzsaH2XgU+G+2xfhOZYjGYZoXUL8UE40=;
-        b=jwplkE/3CBDvXZZ/5Cl2E6f0BmNsfemQXewNfbwhg6S/AdkngFFAS3v0TA1kKjODq0
-         /0UM5On9xBXpdNS0a3kRXfXsDfQ2VQspcsVw1We47FfSB6okEsSGSaRcPoXi/ynr+lHh
-         eOgpFNZSwLTkLuJaa45dz2shw6P3CAxDzk2Wor4+H7/Xlas49H/85/AFPwKz6zGg4lb4
-         ZFE6jNPrh/DBOf8OYDMhrzRL9FeVgZdPUaXu+fM0c8uxtojWwG7EuVPiOe3FJ7hridIP
-         eKchQPmaXuUyiIZSlPO/w7FKzei7ENfiQlXyhepMte7mZxmvDEbnxgFXPkdsh/Xe7DqE
-         paSA==
-X-Gm-Message-State: AOJu0Yxy38n7ZCI4jRL7c3q7Pl8RhCStzjmMUAoBOPoMjgCVA3Ak+CfO
-        3I2hYlnW3/D3rL2nE42bwDl3
-X-Google-Smtp-Source: AGHT+IFho1tjm5iK0/PdZpwOJVLlzh60B+Z1CzCZJ5QivVrZEGbF5FhDL6PPek4KbSf6TWQbtLGYZw==
-X-Received: by 2002:a17:903:22c9:b0:1ca:8b74:17ff with SMTP id y9-20020a17090322c900b001ca8b7417ffmr1919597plg.26.1697476606907;
-        Mon, 16 Oct 2023 10:16:46 -0700 (PDT)
-Received: from thinkpad ([117.207.31.199])
-        by smtp.gmail.com with ESMTPSA id c15-20020a170903234f00b001c62b9a51c0sm8698818plh.103.2023.10.16.10.16.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Oct 2023 10:16:46 -0700 (PDT)
-Date:   Mon, 16 Oct 2023 22:46:37 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Frank Li <Frank.li@nxp.com>
-Cc:     aisheng.dong@nxp.com, bhelgaas@google.com,
-        devicetree@vger.kernel.org, festevam@gmail.com,
-        imx@lists.linux.dev, jdmason@kudzu.us, kernel@pengutronix.de,
-        kishon@kernel.org, kw@linux.com,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, lpieralisi@kernel.org, maz@kernel.org,
-        s.hauer@pengutronix.de, shawnguo@kernel.org, tglx@linutronix.de
-Subject: Re: [PATCH v2 0/5] Add RC-to-EP doorbell with platform MSI controller
-Message-ID: <20231016171637.GJ39962@thinkpad>
-References: <20230911220920.1817033-1-Frank.Li@nxp.com>
- <ZQtmpL2vCMgR+Upu@lizhi-Precision-Tower-5810>
- <20230930090249.GB3564@thinkpad>
- <ZSVd5GN7lJUfdF8L@lizhi-Precision-Tower-5810>
- <ZS1N0jgGYfmMsgrJ@lizhi-Precision-Tower-5810>
+        with ESMTP id S232295AbjJPR1s (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 13:27:48 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AC7683;
+        Mon, 16 Oct 2023 10:27:46 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95FDAC433C8;
+        Mon, 16 Oct 2023 17:27:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697477265;
+        bh=ajYCHCsrrMqPolcWYt4pT2whsLJVivuC6Ws89i9IQ0A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=DcYluMlIkpFkrE2BZIEpqOz0+cYiWYk3IIG8+Mbtbv0zGcOaPzADEWmvbIJIUmLVk
+         ajqJG6ahGFwgn9NS9whs6EXMKwoq/7+DVg9zdzjhBcRMqydjjOoR5YHWUVNTKzNCw3
+         MyOhbh63B37a/P/+KIztiqDXCGOxuo3KCwDH4jXCL5tKX5/osZ6plbRVAG6wW6nun7
+         uwcDewYxw9a+yi40K7mX27E4uhRGKdIvoOY/rMAoYhE7mmimCCQrXznP4evBIXKqev
+         wckow8UDDyqahwYXr2hF2PRN94IUZYA3Zy/LaPwGZKYfHBPwblSNtx11KRFLR0zh0q
+         dGRfP7Qgv5yuw==
+Date:   Mon, 16 Oct 2023 12:27:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc:     linux-sh@vger.kernel.org, glaubitz@physik.fu-berlin.de,
+        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [RFC PATCH v3 09/35] drivers/pci/controller: SH7751 PCI Host
+ bridge driver.
+Message-ID: <20231016172742.GA1215127@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZS1N0jgGYfmMsgrJ@lizhi-Precision-Tower-5810>
-X-Spam-Status: No, score=0.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-        version=3.4.6
+In-Reply-To: <f12aac0b3cf76ca42b2cacf7b5c149bb88228a6e.1697199949.git.ysato@users.sourceforge.jp>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 16, 2023 at 10:50:58AM -0400, Frank Li wrote:
-> On Tue, Oct 10, 2023 at 10:21:24AM -0400, Frank Li wrote:
-> > On Sat, Sep 30, 2023 at 11:02:49AM +0200, Manivannan Sadhasivam wrote:
-> > > On Wed, Sep 20, 2023 at 05:39:48PM -0400, Frank Li wrote:
-> > > > On Mon, Sep 11, 2023 at 06:09:15PM -0400, Frank Li wrote:
-> > > > > ┌────────────┐   ┌───────────────────────────────────┐   ┌────────────────┐
-> > > > > │            │   │                                   │   │                │
-> > > > > │            │   │ PCI Endpoint                      │   │ PCI Host       │
-> > > > > │            │   │                                   │   │                │
-> > > > > │            │◄──┤ 1.platform_msi_domain_alloc_irqs()│   │                │
-> > > > > │            │   │                                   │   │                │
-> > > > > │ MSI        ├──►│ 2.write_msi_msg()                 ├──►├─BAR<n>         │
-> > > > > │ Controller │   │   update doorbell register address│   │                │
-> > > > > │            │   │   for BAR                         │   │                │
-> > > > > │            │   │                                   │   │ 3. Write BAR<n>│
-> > > > > │            │◄──┼───────────────────────────────────┼───┤                │
-> > > > > │            │   │                                   │   │                │
-> > > > > │            ├──►│ 4.Irq Handle                      │   │                │
-> > > > > │            │   │                                   │   │                │
-> > > > > │            │   │                                   │   │                │
-> > > > > └────────────┘   └───────────────────────────────────┘   └────────────────┘
-> > > > 
-> > > > @mani:
-> > > > 	Do you have chance to review this patch again?
-> > > 
-> > > I was on vacation for past few weeks. Will take a look in the coming week.
-> > 
-> > Ping?
-> > 
-> > Frank
+"git am" complained about a couple whitespace errors elsewhere in this
+series:
+
+  Applying: arch/sh/boot/compressed/head_32.S: passing FDT address to initialize function.
+  .git/rebase-apply/patch:25: trailing whitespace.
+  Applying: drivers/irqchip: SH7751 IRL external encoder with enable gate.
+  .git/rebase-apply/patch:33: new blank line at EOF.
+
+On Sat, Oct 14, 2023 at 11:53:44PM +0900, Yoshinori Sato wrote:
+> pci-sh7751.h move from "arch/sh/drivers/pci/pci-sh7751.h"
+> pci-sh7751.c convert from "arch/sh/drivers/pci/pci-sh7751.c"
+
+Note the subject line conventions in drivers/pci (use "git log
+--oneline" to see them): use something like this:
+
+  PCI: sh7751: Add SH7751 PCI host bridge driver
+
+with no period at the end.
+
+arch/sh/drivers/pci/pci-sh7751.h and arch/sh/drivers/pci/pci-sh7751.c
+still exist after applying this series.  Better to have a single patch
+that moves the content from arch/sh/drivers/pci/ to
+drivers/pci/controller/.
+
+Neither file looks like a simple move; there's a lot of reorganization
+going on at the same time.  It's really difficult to review a patch
+like that because we can't compare the content from before and after.
+
+If you make a patch that does the cleanup/reorganization, and a
+separate patch that is just a simple move, and you use "git mv" for
+the move, git should notice that this is just a rename, and that diff
+will be tiny.
+
+One of the reorganization patches should be to incorporate the
+pci-sh7751.h content directly into pci-sh7751.c.  Since it's only used
+in pci-sh7751.c, there's really no advantage to having it in a
+separate file.
+
+Bjorn
+
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+> ---
+>  drivers/pci/controller/Kconfig      |   9 +
+>  drivers/pci/controller/Makefile     |   1 +
+>  drivers/pci/controller/pci-sh7751.c | 285 ++++++++++++++++++++++++++++
+>  drivers/pci/controller/pci-sh7751.h | 267 ++++++++++++++++++++++++++
+>  4 files changed, 562 insertions(+)
+>  create mode 100644 drivers/pci/controller/pci-sh7751.c
+>  create mode 100644 drivers/pci/controller/pci-sh7751.h
 > 
-> @mani: did you have chance to look at this?
-> 
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index c0c3f2824990..037ff44bd1e8 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -342,6 +342,15 @@ config PCIE_XILINX_CPM
+>  	  Say 'Y' here if you want kernel support for the
+>  	  Xilinx Versal CPM host bridge.
+>  
+> +config PCI_SH7751
+> +	bool "Renesas SH7751 PCI controller"
+> +	depends on OF
+> +	depends on CPU_SUBTYPE_SH7751 || CPU_SUBTYPE_SH7751R || COMPILE_TEST
+> +	select PCI_HOST_COMMON
+> +	help
+> +	  Say 'Y' here if you want kernel to support the Renesas SH7751 PCI
+> +	  Host Bridge driver.
 
-Sorry for the long delay. I will take a look tomorrow.
+Move this so the menu entries stay sorted by vendor name.
 
-- Mani
-
-> > 
-> > > 
-> > > - Mani
-> > > 
-> > > > 
-> > > > Frank
-> > > > 
-> > > > > 
-> > > > > This patches based on old https://lore.kernel.org/imx/20221124055036.1630573-1-Frank.Li@nxp.com/
-> > > > > 
-> > > > > Original patch only target to vntb driver. But actually it is common
-> > > > > method.
-> > > > > 
-> > > > > This patches add new API to pci-epf-core, so any EP driver can use it.
-> > > > > 
-> > > > > The key point is comments from Thomas Gleixner, who suggest use new
-> > > > > PCI/IMS. But arm platform change still not be merged yet.
-> > > > > 
-> > > > > git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git devmsi-v2-arm
-> > > > > 
-> > > > > So I still use existed method implement RC to EP doorbell.
-> > > > > 
-> > > > > If Thomas Gleixner want to continue work on devmsi-v2-arm, I can help test
-> > > > > and update this patch.
-> > > > > 
-> > > > > Change from v1 to v2
-> > > > > - Add missed patch for endpont/pci-epf-test.c
-> > > > > - Move alloc and free to epc driver from epf.
-> > > > > - Provide general help function for EPC driver to alloc platform msi irq.
-> > > > > - Fixed manivannan's comments.
-> > > > > 
-> > > > > Frank Li (5):
-> > > > >   PCI: endpoint: Add RC-to-EP doorbell support using platform MSI
-> > > > >     controller
-> > > > >   PCI: dwc: add doorbell support by use MSI controller
-> > > > >   PCI: endpoint: pci-epf-test: add doorbell test
-> > > > >   misc: pci_endpoint_test: Add doorbell test case
-> > > > >   tools: PCI: Add 'B' option for test doorbell
-> > > > > 
-> > > > >  drivers/misc/pci_endpoint_test.c              |  48 +++++
-> > > > >  .../pci/controller/dwc/pcie-designware-ep.c   |   2 +
-> > > > >  drivers/pci/endpoint/functions/pci-epf-test.c |  59 +++++-
-> > > > >  drivers/pci/endpoint/pci-epc-core.c           | 192 ++++++++++++++++++
-> > > > >  drivers/pci/endpoint/pci-epf-core.c           |  44 ++++
-> > > > >  include/linux/pci-epc.h                       |   6 +
-> > > > >  include/linux/pci-epf.h                       |   7 +
-> > > > >  include/uapi/linux/pcitest.h                  |   1 +
-> > > > >  tools/pci/pcitest.c                           |  16 +-
-> > > > >  9 files changed, 373 insertions(+), 2 deletions(-)
-> > > > > 
-> > > > > -- 
-> > > > > 2.34.1
-> > > > > 
-> > > 
-> > > -- 
-> > > மணிவண்ணன் சதாசிவம்
-
--- 
-மணிவண்ணன் சதாசிவம்
+Bjorn
