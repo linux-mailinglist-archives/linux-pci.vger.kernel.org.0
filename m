@@ -2,46 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A7BE87CB151
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 19:27:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05BF47CB15C
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 19:31:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232570AbjJPR1s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Oct 2023 13:27:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55976 "EHLO
+        id S231302AbjJPRb5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Oct 2023 13:31:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232295AbjJPR1s (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 13:27:48 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AC7683;
-        Mon, 16 Oct 2023 10:27:46 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95FDAC433C8;
-        Mon, 16 Oct 2023 17:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697477265;
-        bh=ajYCHCsrrMqPolcWYt4pT2whsLJVivuC6Ws89i9IQ0A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DcYluMlIkpFkrE2BZIEpqOz0+cYiWYk3IIG8+Mbtbv0zGcOaPzADEWmvbIJIUmLVk
-         ajqJG6ahGFwgn9NS9whs6EXMKwoq/7+DVg9zdzjhBcRMqydjjOoR5YHWUVNTKzNCw3
-         MyOhbh63B37a/P/+KIztiqDXCGOxuo3KCwDH4jXCL5tKX5/osZ6plbRVAG6wW6nun7
-         uwcDewYxw9a+yi40K7mX27E4uhRGKdIvoOY/rMAoYhE7mmimCCQrXznP4evBIXKqev
-         wckow8UDDyqahwYXr2hF2PRN94IUZYA3Zy/LaPwGZKYfHBPwblSNtx11KRFLR0zh0q
-         dGRfP7Qgv5yuw==
-Date:   Mon, 16 Oct 2023 12:27:42 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc:     linux-sh@vger.kernel.org, glaubitz@physik.fu-berlin.de,
-        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [RFC PATCH v3 09/35] drivers/pci/controller: SH7751 PCI Host
- bridge driver.
-Message-ID: <20231016172742.GA1215127@bhelgaas>
+        with ESMTP id S231221AbjJPRb4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 13:31:56 -0400
+Received: from pepin.polanet.pl (pepin.polanet.pl [193.34.52.2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A76383;
+        Mon, 16 Oct 2023 10:31:53 -0700 (PDT)
+Date:   Mon, 16 Oct 2023 19:31:50 +0200
+From:   Tomasz Pala <gotar@polanet.pl>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Dan J Williams <dan.j.williams@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        David E Box <david.e.box@intel.com>,
+        Yunying Sun <yunying.sun@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Florent DELAHAYE <linuxkernelml@undead.fr>,
+        Konrad J Hambrick <kjhambrick@gmail.com>,
+        Matt Hansen <2lprbe78@duck.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Benoit =?iso-8859-2?Q?Gr=E9goire?= <benoitg@coeus.ca>,
+        Werner Sembach <wse@tuxedocomputers.com>,
+        mumblingdrunkard@protonmail.com, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 2/2] x86/pci: Treat EfiMemoryMappedIO as reservation of
+ ECAM space
+Message-ID: <20231016173150.GA22012@polanet.pl>
+References: <20230110180243.1590045-1-helgaas@kernel.org>
+ <20230110180243.1590045-3-helgaas@kernel.org>
+ <20231012153347.GA26695@polanet.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-2
 Content-Disposition: inline
-In-Reply-To: <f12aac0b3cf76ca42b2cacf7b5c149bb88228a6e.1697199949.git.ysato@users.sourceforge.jp>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+In-Reply-To: <20231012153347.GA26695@polanet.pl>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -49,73 +56,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-"git am" complained about a couple whitespace errors elsewhere in this
-series:
+On Thu, Oct 12, 2023 at 17:33:47 +0200, Tomasz Pala wrote:
 
-  Applying: arch/sh/boot/compressed/head_32.S: passing FDT address to initialize function.
-  .git/rebase-apply/patch:25: trailing whitespace.
-  Applying: drivers/irqchip: SH7751 IRL external encoder with enable gate.
-  .git/rebase-apply/patch:33: new blank line at EOF.
-
-On Sat, Oct 14, 2023 at 11:53:44PM +0900, Yoshinori Sato wrote:
-> pci-sh7751.h move from "arch/sh/drivers/pci/pci-sh7751.h"
-> pci-sh7751.c convert from "arch/sh/drivers/pci/pci-sh7751.c"
-
-Note the subject line conventions in drivers/pci (use "git log
---oneline" to see them): use something like this:
-
-  PCI: sh7751: Add SH7751 PCI host bridge driver
-
-with no period at the end.
-
-arch/sh/drivers/pci/pci-sh7751.h and arch/sh/drivers/pci/pci-sh7751.c
-still exist after applying this series.  Better to have a single patch
-that moves the content from arch/sh/drivers/pci/ to
-drivers/pci/controller/.
-
-Neither file looks like a simple move; there's a lot of reorganization
-going on at the same time.  It's really difficult to review a patch
-like that because we can't compare the content from before and after.
-
-If you make a patch that does the cleanup/reorganization, and a
-separate patch that is just a simple move, and you use "git mv" for
-the move, git should notice that this is just a rename, and that diff
-will be tiny.
-
-One of the reorganization patches should be to incorporate the
-pci-sh7751.h content directly into pci-sh7751.c.  Since it's only used
-in pci-sh7751.c, there's really no advantage to having it in a
-separate file.
-
-Bjorn
-
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-> ---
->  drivers/pci/controller/Kconfig      |   9 +
->  drivers/pci/controller/Makefile     |   1 +
->  drivers/pci/controller/pci-sh7751.c | 285 ++++++++++++++++++++++++++++
->  drivers/pci/controller/pci-sh7751.h | 267 ++++++++++++++++++++++++++
->  4 files changed, 562 insertions(+)
->  create mode 100644 drivers/pci/controller/pci-sh7751.c
->  create mode 100644 drivers/pci/controller/pci-sh7751.h
+> I'm still having a problem initializing ixgbe NICs with pristine 6.5.7 kernel.
 > 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index c0c3f2824990..037ff44bd1e8 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -342,6 +342,15 @@ config PCIE_XILINX_CPM
->  	  Say 'Y' here if you want kernel support for the
->  	  Xilinx Versal CPM host bridge.
->  
-> +config PCI_SH7751
-> +	bool "Renesas SH7751 PCI controller"
-> +	depends on OF
-> +	depends on CPU_SUBTYPE_SH7751 || CPU_SUBTYPE_SH7751R || COMPILE_TEST
-> +	select PCI_HOST_COMMON
-> +	help
-> +	  Say 'Y' here if you want kernel to support the Renesas SH7751 PCI
-> +	  Host Bridge driver.
+> efi: Remove mem63: MMIO range=[0x80000000-0x8fffffff] (256MB) from e820 map
+> [...]
+> [mem 0x7f800000-0xfed1bfff] available for PCI devices
+> [...]
+> PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
+> [Firmware Info]: PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] not reserved in ACPI motherboard resources
+> PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] reserved as EfiMemoryMappedIO
+> [...]
+> ixgbe 0000:02:00.0: enabling device (0140 -> 0142)
+> ixgbe 0000:02:00.0: BAR 0: can't reserve [mem 0x80000000-0x8007ffff 64bit]
+> ixgbe 0000:02:00.0: pci_request_selected_regions failed 0xfffffff0
+> ixgbe: probe of 0000:02:00.0 failed with error -16
 
-Move this so the menu entries stay sorted by vendor name.
+FWIW, as I got no response - there were other people facing the issue as
+well:
 
-Bjorn
+https://forum.proxmox.com/threads/proxmox-8-kernel-6-2-16-4-pve-ixgbe-driver-fails-to-load-due-to-pci-device-probing-failure.131203/
+
+
+Apparently this might be some hardware quirk, therefore I'm not sure if
+the internal EfiMemoryMappedIO reservation logic should be reviewed, or
+some quirk handling to be added, or maybe some CONFIG_option introduced.
+
+Anyone please?
+
+-- 
+Tomasz Pala <gotar@pld-linux.org>
