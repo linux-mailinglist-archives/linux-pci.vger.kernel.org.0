@@ -2,193 +2,213 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B68FD7C9E15
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 06:02:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D568B7C9E2F
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 06:25:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229653AbjJPEC1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Oct 2023 00:02:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35914 "EHLO
+        id S231482AbjJPEZE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Oct 2023 00:25:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbjJPEC0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 00:02:26 -0400
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53D93AD;
-        Sun, 15 Oct 2023 21:02:24 -0700 (PDT)
-Received: from localhost.localdomain (unknown [10.101.196.174])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 43BAB3F0C6;
-        Mon, 16 Oct 2023 04:02:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1697428940;
-        bh=vkafOmpdBRmco3tsD/n12uXh8EE6SvdVyF3TIx5/KiY=;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-        b=LfIysylXk+F/ROUKC4Q2wqhQ4OOd9ajiuEdPBqVJGauGHJvWmlqKOeZmm65H1SF/j
-         vIMAB7Gy1QXMiqXzVw9WUTS+6YYX1LUkUvfsuTgXYaH9e5NhbCvLfifOw9lgfpw5r5
-         GtRNW0QyiXlngsXfBskskWvZ7zPGr+ftxfSKO9l75QBT7NR5opLaTvYqAWwkgfo/uO
-         bAU+ks79D38JYUaLBLfePH5ruoU5teDcpLHvebA8pX6XvqmbBmZNda7bMVOUOYNiWe
-         AaDVs0IUhO/k2VBEh3qpNdn+8jXX16DE4hOb8ozay72KmpyBM7+4fVosGKGRlqWt+H
-         CC8dVJiH3EWOw==
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     bhelgaas@google.com
-Cc:     linux-pm@vger.kernel.org, linux-mmc@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Ricky Wu <ricky_wu@realtek.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH] PCI: pciehp: Prevent child devices from doing RPM on PCIe Link Down
-Date:   Mon, 16 Oct 2023 12:01:31 +0800
-Message-Id: <20231016040132.23824-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229600AbjJPEZC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 00:25:02 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56CB9D9;
+        Sun, 15 Oct 2023 21:24:57 -0700 (PDT)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39G4CmPe022920;
+        Mon, 16 Oct 2023 04:24:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=zhMBRZQhgC83YjgI57bq83F+OxOjJ6pEhJ2qxA55s4w=;
+ b=MeRQseu5pig90vGmK88mdTXasRRIj2iKuSLjnaqQgg4V/La3sDgZkkWq7H3CX/il+HB9
+ qCl9+kNVkbesdZX1IKfFHjYmE6GAZIH4KiYrMdGtUrkhDBO8TotxqDrCOgr+x+tvoqPj
+ 2peEqdZnZg5MRVYAC1i082ahwYdehL5s4MVk0uLHtFAtgm5LiQvExWD6qazhyImJtDB0
+ dXBIgdt/CwfxlQ1o6txQyL+Lg9sFJyxradY3aDI9rlszCb7xH1yg+gOUZMrUd8jnsQs0
+ u44U38w+8xF1ZRrbBvuPpTqysMo/LVm44eEwetMQaOLw/rcv3ItsptGmOX7hL1ngrK/d YA== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tqk2yu2p0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Oct 2023 04:24:34 +0000
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39G4OXj2025448
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Oct 2023 04:24:33 GMT
+Received: from [10.216.20.227] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Sun, 15 Oct
+ 2023 21:24:26 -0700
+Message-ID: <5bf1a4c5-6902-690e-78da-648ca957c5cf@quicinc.com>
+Date:   Mon, 16 Oct 2023 09:54:23 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v1 1/5] dt-bindings: PCI: qcom-ep: Add support for SA8775P
+ SoC
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC:     Shazad Hussain <quic_shazhuss@quicinc.com>,
+        Rob Herring <robh@kernel.org>, <agross@kernel.org>,
+        <andersson@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <konrad.dybcio@linaro.org>,
+        <mani@kernel.org>, <quic_nitegupt@quicinc.com>,
+        <quic_ramkri@quicinc.com>, <quic_nayiluri@quicinc.com>,
+        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>,
+        <quic_parass@quicinc.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mhi@lists.linux.dev>,
+        <linux-phy@lists.infradead.org>
+References: <1695218113-31198-1-git-send-email-quic_msarkar@quicinc.com>
+ <1695218113-31198-2-git-send-email-quic_msarkar@quicinc.com>
+ <20230921183850.GA762694-robh@kernel.org>
+ <28bf111f-b965-4d38-884b-bc3a0b68a6cc@quicinc.com>
+ <8effa7e5-a223-081b-75b8-7b94400d42e6@quicinc.com>
+ <CAA8EJpp+3_A-9YXF1yOKdFweVKqrpTxvxKoJcUH6qiDHfCQ-dQ@mail.gmail.com>
+ <31e6aab6-73f9-a421-9dfa-292d9d0e9649@quicinc.com>
+ <CAA8EJprSxKXjZTH8tCHGvw4zBp_H-DunS9v9kvp=aFRNd55OhA@mail.gmail.com>
+Content-Language: en-US
+From:   Mrinmay Sarkar <quic_msarkar@quicinc.com>
+In-Reply-To: <CAA8EJprSxKXjZTH8tCHGvw4zBp_H-DunS9v9kvp=aFRNd55OhA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: OwZgvf68Whj3ddHOjYGqAAzLq7KNoa59
+X-Proofpoint-ORIG-GUID: OwZgvf68Whj3ddHOjYGqAAzLq7KNoa59
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-15_09,2023-10-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 mlxscore=0 clxscore=1015 phishscore=0 bulkscore=0
+ impostorscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2309180000 definitions=main-2310160038
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When inserting an SD7.0 card to Realtek card reader, it can trigger PCI
-slot Link down and causes the following error:
-[   63.898861] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-[   63.912118] BUG: unable to handle page fault for address: ffffb24d403e50=
-10
-[   63.912122] #PF: supervisor read access in kernel mode
-[   63.912125] #PF: error_code(0x0000) - not-present page
-[   63.912126] PGD 100000067 P4D 100000067 PUD 1001fe067 PMD 100d97067 PTE 0
-[   63.912131] Oops: 0000 [#1] PREEMPT SMP PTI
-[   63.912134] CPU: 3 PID: 534 Comm: kworker/3:10 Not tainted 6.4.0 #6
-[   63.912137] Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M.=
-/H370M Pro4, BIOS P3.40 10/25/2018
-[   63.912138] Workqueue: pm pm_runtime_work
-[   63.912144] RIP: 0010:ioread32+0x2e/0x70
-[   63.912148] Code: ff 03 00 77 25 48 81 ff 00 00 01 00 77 14 8b 15 08 d9 =
-54 01 b8 ff ff ff ff 85 d2 75 14 c3 cc cc cc cc 89 fa ed c3 cc cc cc cc <8b=
-> 07 c3 cc cc cc cc 55 83 ea 01 48 89 fe 48 c7 c7 98 6f 15 99 48
-[   63.912150] RSP: 0018:ffffb24d40a5bd78 EFLAGS: 00010296
-[   63.912152] RAX: ffffb24d403e5000 RBX: 0000000000000152 RCX: 00000000000=
-0007f
-[   63.912153] RDX: 000000000000ff00 RSI: ffffb24d403e5010 RDI: ffffb24d403=
-e5010
-[   63.912155] RBP: ffffb24d40a5bd98 R08: ffffb24d403e5010 R09: 00000000000=
-00000
-[   63.912156] R10: ffff9074cd95e7f4 R11: 0000000000000003 R12: 00000000000=
-0007f
-[   63.912158] R13: ffff9074e1a68c00 R14: ffff9074e1a68d00 R15: 00000000000=
-09003
-[   63.912159] FS:  0000000000000000(0000) GS:ffff90752a180000(0000) knlGS:=
-0000000000000000
-[   63.912161] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   63.912162] CR2: ffffb24d403e5010 CR3: 0000000152832006 CR4: 00000000003=
-706e0
-[   63.912164] Call Trace:
-[   63.912165]  <TASK>
-[   63.912167]  ? show_regs+0x68/0x70
-[   63.912171]  ? __die_body+0x20/0x70
-[   63.912173]  ? __die+0x2b/0x40
-[   63.912175]  ? page_fault_oops+0x160/0x480
-[   63.912177]  ? search_bpf_extables+0x63/0x90
-[   63.912180]  ? ioread32+0x2e/0x70
-[   63.912183]  ? search_exception_tables+0x5f/0x70
-[   63.912186]  ? kernelmode_fixup_or_oops+0xa2/0x120
-[   63.912189]  ? __bad_area_nosemaphore+0x179/0x230
-[   63.912191]  ? bad_area_nosemaphore+0x16/0x20
-[   63.912193]  ? do_kern_addr_fault+0x8b/0xa0
-[   63.912195]  ? exc_page_fault+0xe5/0x180
-[   63.912198]  ? asm_exc_page_fault+0x27/0x30
-[   63.912203]  ? ioread32+0x2e/0x70
-[   63.912206]  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
-[   63.912217]  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
-[   63.912226]  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
-[   63.912234]  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
-[   63.912243]  ? __pfx_pci_pm_runtime_idle+0x10/0x10
-[   63.912246]  pci_pm_runtime_idle+0x34/0x70
-[   63.912248]  rpm_idle+0xc4/0x2b0
-[   63.912251]  pm_runtime_work+0x93/0xc0
-[   63.912254]  process_one_work+0x21a/0x430
-[   63.912258]  worker_thread+0x4a/0x3c0
-[   63.912261]  ? __pfx_worker_thread+0x10/0x10
-[   63.912263]  kthread+0x106/0x140
-[   63.912266]  ? __pfx_kthread+0x10/0x10
-[   63.912268]  ret_from_fork+0x29/0x50
-[   63.912273]  </TASK>
-[   63.912274] Modules linked in: nvme nvme_core snd_hda_codec_hdmi snd_sof=
-_pci_intel_cnl snd_sof_intel_hda_common snd_hda_codec_realtek snd_hda_codec=
-_generic snd_soc_hdac_hda soundwire_intel ledtrig_audio nls_iso8859_1 sound=
-wire_generic_allocation soundwire_cadence snd_sof_intel_hda_mlink snd_sof_i=
-ntel_hda snd_sof_pci snd_sof_xtensa_dsp snd_sof snd_sof_utils snd_hda_ext_c=
-ore snd_soc_acpi_intel_match snd_soc_acpi soundwire_bus snd_soc_core snd_co=
-mpress ac97_bus snd_pcm_dmaengine snd_hda_intel i915 snd_intel_dspcfg snd_i=
-ntel_sdw_acpi intel_rapl_msr snd_hda_codec intel_rapl_common snd_hda_core x=
-86_pkg_temp_thermal intel_powerclamp snd_hwdep coretemp snd_pcm kvm_intel d=
-rm_buddy ttm mei_hdcp kvm drm_display_helper snd_seq_midi snd_seq_midi_even=
-t cec crct10dif_pclmul ghash_clmulni_intel sha512_ssse3 aesni_intel crypto_=
-simd rc_core cryptd rapl snd_rawmidi drm_kms_helper binfmt_misc intel_cstat=
-e i2c_algo_bit joydev snd_seq snd_seq_device syscopyarea wmi_bmof snd_timer=
- sysfillrect input_leds snd ee1004 sysimgblt mei_me soundcore
-[   63.912324]  mei intel_pch_thermal mac_hid acpi_tad acpi_pad sch_fq_code=
-l msr parport_pc ppdev lp ramoops drm parport reed_solomon efi_pstore ip_ta=
-bles x_tables autofs4 hid_generic usbhid hid rtsx_pci_sdmmc crc32_pclmul ah=
-ci e1000e i2c_i801 i2c_smbus rtsx_pci xhci_pci libahci xhci_pci_renesas vid=
-eo wmi
-[   63.912346] CR2: ffffb24d403e5010
-[   63.912348] ---[ end trace 0000000000000000 ]---
 
-This happens because scheduled pm_runtime_idle() is not cancelled.
-
-So use pm_runtime_barrier() to ensure all devices on the bus stops
-runtime power management actions.
-
-Link: https://lore.kernel.org/all/2ce258f371234b1f8a1a470d5488d00e@realtek.=
-com/
-Tested-by: Ricky Wu <ricky_wu@realtek.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/pci/hotplug/pciehp_pci.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_=
-pci.c
-index ad12515a4a12..9ae4fa95c8c1 100644
---- a/drivers/pci/hotplug/pciehp_pci.c
-+++ b/drivers/pci/hotplug/pciehp_pci.c
-@@ -18,9 +18,18 @@
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <linux/pci.h>
-+#include <linux/pm_runtime.h>
- #include "../pci.h"
- #include "pciehp.h"
-=20
-+int pci_dev_disconnect(struct pci_dev *pdev, void *unused)
-+{
-+	pm_runtime_barrier(&pdev->dev);
-+	pci_dev_set_disconnected(pdev, NULL);
-+
-+	return 0;
-+}
-+
- /**
-  * pciehp_configure_device() - enumerate PCI devices below a hotplug bridge
-  * @ctrl: PCIe hotplug controller
-@@ -98,7 +107,7 @@ void pciehp_unconfigure_device(struct controller *ctrl, =
-bool presence)
- 		 __func__, pci_domain_nr(parent), parent->number);
-=20
- 	if (!presence)
--		pci_walk_bus(parent, pci_dev_set_disconnected, NULL);
-+		pci_walk_bus(parent, pci_dev_disconnect, NULL);
-=20
- 	pci_lock_rescan_remove();
-=20
---=20
-2.34.1
-
+On 10/13/2023 10:08 PM, Dmitry Baryshkov wrote:
+> On Fri, 13 Oct 2023 at 15:55, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
+>>
+>> On 10/11/2023 5:13 PM, Dmitry Baryshkov wrote:
+>>> On Wed, 11 Oct 2023 at 14:14, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
+>>>> On 10/6/2023 4:24 PM, Shazad Hussain wrote:
+>>>>> On 9/22/2023 12:08 AM, Rob Herring wrote:
+>>>>>> On Wed, Sep 20, 2023 at 07:25:08PM +0530, Mrinmay Sarkar wrote:
+>>>>>>> Add devicetree bindings support for SA8775P SoC.
+>>>>>>> Define reg and interrupt per platform.
+>>>>>>>
+>>>>>>> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+>>>>>>> ---
+>>>>>>>     .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 130
+>>>>>>> +++++++++++++++++----
+>>>>>>>     1 file changed, 108 insertions(+), 22 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+>>>>>>> b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+>>>>>>> index a223ce0..e860e8f 100644
+>>>>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+>>>>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+>>>>>>> @@ -13,6 +13,7 @@ properties:
+>>>>>>>       compatible:
+>>>>>>>         oneOf:
+>>>>>>>           - enum:
+>>>>>>> +          - qcom,sa8775p-pcie-ep
+>>>>>>>               - qcom,sdx55-pcie-ep
+>>>>>>>               - qcom,sm8450-pcie-ep
+>>>>>>>           - items:
+>>>>>>> @@ -20,29 +21,19 @@ properties:
+>>>>>>>               - const: qcom,sdx55-pcie-ep
+>>>>>>>         reg:
+>>>>>>> -    items:
+>>>>>>> -      - description: Qualcomm-specific PARF configuration registers
+>>>>>>> -      - description: DesignWare PCIe registers
+>>>>>>> -      - description: External local bus interface registers
+>>>>>>> -      - description: Address Translation Unit (ATU) registers
+>>>>>>> -      - description: Memory region used to map remote RC address space
+>>>>>>> -      - description: BAR memory region
+>>>>>>> +    minItems: 6
+>>>>>>> +    maxItems: 7
+>>>>>>>         reg-names:
+>>>>>>> -    items:
+>>>>>>> -      - const: parf
+>>>>>>> -      - const: dbi
+>>>>>>> -      - const: elbi
+>>>>>>> -      - const: atu
+>>>>>>> -      - const: addr_space
+>>>>>>> -      - const: mmio
+>>>>>>> +    minItems: 6
+>>>>>>> +    maxItems: 7
+>>>>>> Don't move these into if/then schemas. Then we are duplicating the
+>>>>>> names, and there is no reason to keep them aligned for new compatibles.
+>>>>>>
+>>>>>> Rob
+>>>>> Hi Rob,
+>>>>> As we have one extra reg property (dma) required for sa8775p-pcie-ep,
+>>>>> isn't it expected to be moved in if/then as per number of regs
+>>>>> required. Anyways we would have duplication of some properties for new
+>>>>> compatibles where the member numbers differs for a property.
+>>>>>
+>>>>> Are you suggesting to add the extra reg property (dma) in the existing
+>>>>> reg and reg-names list, and add minItems/maxItems for all compatibles
+>>>>> present in this file ?
+>>> This is what we have been doing in other cases: if the list is an
+>>> extension of the current list, there is no need to duplicate it. One
+>>> can use min/maxItems instead.
+>> Hi Dmitry
+>>
+>> we have tried using min/maxItems rather than duplicating but somehow
+>> catch up with some warnings in dt_bindings check
+>>
+>> //local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
+>> pcie-ep@1c00000: reg: [[29360128, 12288], [1073741824, 3869],
+>> [1073745696, 200], [1073745920, 4096], [1073750016, 4096], [29372416,
+>> 12288]] is too short//
+>> //        from schema $id:
+>> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
+>> ///local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
+>> pcie-ep@1c00000: reg-names: ['parf', 'dbi', 'elbi', 'atu', 'addr_space',
+>> 'mmio'] is too short//
+>> //        from schema $id:
+> missing min/maxItems for reg and reg-names
+>
+>> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
+>> ///local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
+>> pcie-ep@1c00000: interrupts: [[0, 140, 4], [0, 145, 4]] is too short//
+>> //        from schema $id:
+>> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
+>> ///local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
+>> pcie-ep@1c00000: interrupt-names: ['global', 'doorbell'] is too short//
+>> //        from schema $id:
+>> http://devicetree.org/schemas/pci/qcom,pcie-ep.yaml#//
+> incorrect min/maxItems for interrupts.
+I am getting the same warnings even after correcting the min/maxItems 
+for interrupt.
+> -Mrinmay
+>> //local/mnt/workspace/Mrinmay/lemans/next-20230914/linux-next/out/Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dtb:
+>> pcie-ep@1c00000: interrupt-names: ['global', 'doorbell'] is too short/
+>>
+>> added the patch in attachment.
+>>
+>> --Mrinmay
+>>
+>>>>> -Shazad
+>>>> Here we have defined reg and interrupt per platform as clocks is defined.
+>>>>
+>>>> -Mrinmay
+>>>>
+>
+>
