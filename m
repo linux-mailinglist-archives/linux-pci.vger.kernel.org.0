@@ -2,163 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15DF37CAB72
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 16:27:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76E867CABA6
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 16:38:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233445AbjJPO1v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Oct 2023 10:27:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42206 "EHLO
+        id S230343AbjJPOiK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Oct 2023 10:38:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232381AbjJPO1v (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 10:27:51 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA8683;
-        Mon, 16 Oct 2023 07:27:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697466468; x=1729002468;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=WAHtEU+QRIIV0hjjctV4dFUOMA87lFSZZckv/e6FmbI=;
-  b=MLdYaMUrX5YccmQcg2hEP63YIkH+x1b3KeRgjLxsRYMcuSx99wFnnN6R
-   IzN66rHPFhvJKLQ5WOEcR5hT9yNZ5cybG6UUjUvmz6wtAPXVToW0V62OQ
-   KWIsNyrR/rnjiWcpfFHWYHYRzurXPtROJnnmoOY/gJUYmC/SAREcjIa8G
-   dr+7jGx5XGCIU974YKCV8goveF9t0DYWMxLia3zr31EIN2VMir1eVyQXc
-   ghvlcbrHLr8zwmKLE1HtgSvqd+Mc+eQ/s0YnbLieqOoVgsSWB/76qp6TV
-   AS10mjor5216OwX7Lpd9ZCG58YtCpoikRazXWSM0i+nYQqeeyZuCo2kwW
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="388396812"
-X-IronPort-AV: E=Sophos;i="6.03,229,1694761200"; 
-   d="scan'208";a="388396812"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 07:27:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="759416190"
-X-IronPort-AV: E=Sophos;i="6.03,229,1694761200"; 
-   d="scan'208";a="759416190"
-Received: from rhaeussl-mobl.ger.corp.intel.com ([10.252.59.103])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 07:27:40 -0700
-Date:   Mon, 16 Oct 2023 17:27:37 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-cc:     linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        ath10k@lists.infradead.org, ath11k@lists.infradead.org,
-        ath12k@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-bluetooth@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-rdma@vger.kernel.org,
-        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2 03/13] PCI/ASPM: Disable ASPM when driver requests
- it
-In-Reply-To: <20231013164228.GA1117889@bhelgaas>
-Message-ID: <a434d9f-48ec-cfe5-900-8923361798a9@linux.intel.com>
-References: <20231013164228.GA1117889@bhelgaas>
+        with ESMTP id S229459AbjJPOiJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 10:38:09 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12BCFB9;
+        Mon, 16 Oct 2023 07:38:08 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BCDEC433C7;
+        Mon, 16 Oct 2023 14:38:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697467087;
+        bh=I4NzxPNcEzkn00WTlYgKFrsJkje8b0dreIMdCi7RT94=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=DrEkikmhBQrIANHZg5CzSDNJQo082/3eXl1zS7Ed1phG6li8P/T0U2HVFv1djx8OL
+         6h2cfCZfU5QRuldC1yqNvO2JrHmd302/znP/Q9Mcn3oZxbICAAzo9dwSid26cyx5Vy
+         aJ1jOuBkbmBVbzOjzto2/yfigYQDMTX+8r03WYmPWL9PfjUUt0tHcLEHaX0s7Puepj
+         pRV4+BlOhhFaz1jia/15rIa4aSiIAtw//vbWu3NLe3tiv3cMmwRiAtOV9u3bJ2T9mO
+         d9h4Ih6E+5QTvQHvAemBmX0FxFvRfh6P6IrEDrALYOz524Jm/WjsKj8/Uotpxn9aQi
+         JhazDIoLA+a6g==
+Date:   Mon, 16 Oct 2023 09:38:05 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shuai Xue <xueshuai@linux.alibaba.com>
+Cc:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
+        yangyicong@huawei.com, will@kernel.org,
+        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
+        robin.murphy@arm.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        rdunlap@infradead.org, mark.rutland@arm.com,
+        zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
+Subject: Re: [PATCH v7 3/4] drivers/perf: add DesignWare PCIe PMU driver
+Message-ID: <20231016143805.GA1207929@bhelgaas>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-158890400-1697462044=:1986"
-Content-ID: <58c8d854-b57c-582-1ba0-efeb857febe@linux.intel.com>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4147832a-1f24-5993-dfb6-59f420a17481@linux.alibaba.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, Oct 16, 2023 at 11:00:13AM +0800, Shuai Xue wrote:
+> On 2023/10/14 00:30, Bjorn Helgaas wrote:
+> > On Fri, Oct 13, 2023 at 11:46:44AM +0800, Shuai Xue wrote:
+> >> On 2023/10/13 00:25, Bjorn Helgaas wrote:
+> >>> On Thu, Oct 12, 2023 at 11:28:55AM +0800, Shuai Xue wrote:
+> >>>> This commit adds the PCIe Performance Monitoring Unit (PMU)
+> >>>> driver support for T-Head Yitian SoC chip. Yitian is based on
+> >>>> the Synopsys PCI Express Core controller IP which provides
+> >>>> statistics feature. The PMU is not a PCIe Root Complex
+> >>>> integrated End Point(RCiEP) device but only register counters
+> >>>> provided by each PCIe Root Port.
 
---8323329-158890400-1697462044=:1986
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <a321263b-cac2-11d0-6cb1-43cc78d1c6d1@linux.intel.com>
-
-On Fri, 13 Oct 2023, Bjorn Helgaas wrote:
-> On Thu, Oct 12, 2023 at 01:56:16PM +0300, Ilpo Järvinen wrote:
-> > On Wed, 11 Oct 2023, Bjorn Helgaas wrote:
-> > > On Mon, Sep 18, 2023 at 04:10:53PM +0300, Ilpo Järvinen wrote:
-> > > > PCI core/ASPM service driver allows controlling ASPM state through
-> > > > pci_disable_link_state() and pci_enable_link_state() API. It was
-> > > > decided earlier (see the Link below), to not allow ASPM changes when OS
-> > > > does not have control over it but only log a warning about the problem
-> > > > (commit 2add0ec14c25 ("PCI/ASPM: Warn when driver asks to disable ASPM,
-> > > > but we can't do it")). Similarly, if ASPM is not enabled through
-> > > > config, ASPM cannot be disabled.
-> > ...
+> @@ -447,10 +447,10 @@ static int dwc_pcie_pmu_event_add(struct perf_event *event, int flags)
+>  	u32 ctrl;
 > 
-> > > This disables *all* ASPM states, unlike the version when
-> > > CONFIG_PCIEASPM is enabled.  I suppose there's a reason, and maybe a
-> > > comment could elaborate on it?
-> > >
-> > > When CONFIG_PCIEASPM is not enabled, I don't think we actively
-> > > *disable* ASPM in the hardware; we just leave it as-is, so firmware
-> > > might have left it enabled.
+>  	/* Only one counter and it is in use */
+> -	if (pcie_pmu->event)
+> +	if (pcie_pmu->event[type])
+>  		return -ENOSPC;
+> 
+> -	pcie_pmu->event = event;
+> +	pcie_pmu->event[type] = event;
+
+OK, makes good sense (probably update the comment also, e.g., "one
+counter of each type").
+
+>  }
+> > If so, I might word this as:
 > > 
-> > This whole trickery is intended for drivers that do not want to have ASPM 
-> > because the devices are broken with it. So leaving it as-is is not really 
-> > an option (as demonstrated by the custom workarounds).
-> 
-> Right.
-> 
-> > > Conceptually it seems like the LNKCTL updates here should be the same
-> > > whether CONFIG_PCIEASPM is enabled or not (subject to the question
-> > > above).
-> > > 
-> > > When CONFIG_PCIEASPM is enabled, we might need to do more stuff, but
-> > > it seems like the core should be the same.
+> >   Each Root Port contains one counter that can be used for either:
 > > 
-> > So you think it's safer to partially disable ASPM (as per driver's 
-> > request) rather than disable it completely? I got the impression that the 
-> > latter might be safer from what Rafael said earlier but I suppose I might 
-> > have misinterpreted him since he didn't exactly say that it might be safer 
-> > to _completely_ disable it.
+> >     - Time-Based Analysis (RX/TX data throughput and time spent in
+> >       each low-power LTSSM state) or
+> > 
+> >     - Event counting (error and non-error events for a specified lane)
+> > 
+> >   There is no interrupt for counter overflow.
 > 
-> My question is whether the state of the device should depend on
-> CONFIG_PCIEASPM.  If the driver does this:
+> Based on above, I change the word to:
 > 
->   pci_disable_link_state(PCIE_LINK_STATE_L0S)
+> 	To facilitate collection of statistics the controller provides the
+> 	following two features for each Root Port:
 > 
-> do we want to leave L1 enabled when CONFIG_PCIEASPM=y but disable L1
-> when CONFIG_PCIEASPM is unset?
+> 	- one 64-bit counter for Time Based Analysis (RX/TX data throughput and
+> 	  time spent in each low-power LTSSM state) and
+> 	- one 32-bit counter for Event counting (error and non-error events for
+> 	  a specified lane)
 > 
-> I can see arguments both ways.  My thought was that it would be nice
-> to end up with a single implementation of pci_disable_link_state()
-> with an #ifdef around the CONFIG_PCIEASPM-enabled stuff because it
-> makes the code easier to read.
+> 	Note: There is no interrupt for counter overflow.
 
-Hi Bjorn,
+Beautiful, that's very clear.
 
-Thanks a lot for all your feedback so far, it has been very helpful.
-
-I think there's still one important thing to discuss and none of the 
-comments have covered that area so far.
-
-The drivers that have workaround are not going to turn more dangerous than 
-they're already without this change, so we're mostly within charted waters 
-there even with what you propose. However, I think the bigger catch and 
-potential source of problems, with both this v2 and your alternative, are 
-the drivers that do not have the workarounds around CONFIG_PCIEASPM=n 
-and/or _OSC permissions. Those code paths just call 
-pci_disable_link_state() and do nothing else.
-
-Do you think it's okay to alter the behavior for those drivers too 
-(disable ASPM where it previously was a no-op)?
-
-I'm okay with going the direction you indicated but I just wanted to ask
-this in advance before reworking the behavior so I can take that detail 
-also into account.
-
-
--- 
- i.
---8323329-158890400-1697462044=:1986--
+Bjorn
