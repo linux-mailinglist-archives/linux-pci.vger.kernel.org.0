@@ -2,60 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 955807CA88A
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 14:53:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21BFD7CA898
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 14:56:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233411AbjJPMx6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Oct 2023 08:53:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34374 "EHLO
+        id S233411AbjJPM4L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Oct 2023 08:56:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233036AbjJPMx6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 08:53:58 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B118AD;
-        Mon, 16 Oct 2023 05:53:56 -0700 (PDT)
+        with ESMTP id S233501AbjJPM4E (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 08:56:04 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE43BAD;
+        Mon, 16 Oct 2023 05:56:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697460836; x=1728996836;
+  t=1697460962; x=1728996962;
   h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=QizaqdkpLig82mRKUnOc6l/0i6LVA1cx3IhaJACbuvk=;
-  b=IDaUypHhU2lUoQjUClJ1H8u5jlfgOUMk8iTNSRFqXXZu7kOsXnUJlvYw
-   lgYsd+Z9Ajihe5NfnbpUeW3iGWHvgTVdYaWM62md6pLmMzMx4r+o0eZHA
-   7BV7k3DB3kBgrLoVW9O40FiSqUGINcmrPdFW1TyagpN9+hJ4Sxx6MwTP7
-   sU6cQciUEVGy6ae/c8RICi4MI4S0T02COxUSdC9fV2KSt0oqtZyfo3IDA
-   I6UGrvAq3q3iJFKILqT7HTvdWOE+OmmM98hsWsV6mkuZ13/UQhPJFeipy
-   M41oPX5swMjKOxzBGBMcnuUVa+HSBbGSn2T67Jw9yhAgqGwzC1YuDnCuk
+   references:mime-version;
+  bh=L+WApuyahikeC/ONjZM0yJBCNYeGV+unFwJga+bJWwk=;
+  b=aargCBS+ovtYUVEd8iPLQT8acgziPO7elpg1a4QIXmMe4Raktip+3dJk
+   9AA0j0AZdXfPs0bBpj5XZLy8rJID7Wy9C66QV5tfbdrjXtu7++I/b6rBF
+   b7R36+EtzZZNs8OcELAGbVUu+WBJMkQXhmFjPMulaskHRQ5yjAQZzI93E
+   cFVALib9oeQNf9fl7F9JZv0dPvkUZmZ6ZtnQlNtv+RgbNWDQmf+wD1Z4y
+   NiH70tF6ZrJfZziLt//CYcJIz1ak3g1A9hQ35XopLgsw3p1tBO5MnxKT3
+   7HnR3Ob/mROzQrpkxMxdE0bIOZhT05r8HvQWIa3IgJCFbIwNE27h4B1tt
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="370592181"
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="471742466"
 X-IronPort-AV: E=Sophos;i="6.03,229,1694761200"; 
-   d="scan'208";a="370592181"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 05:53:30 -0700
+   d="scan'208";a="471742466"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 05:56:02 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="821558186"
 X-IronPort-AV: E=Sophos;i="6.03,229,1694761200"; 
-   d="scan'208";a="821558186"
-Received: from rhaeussl-mobl.ger.corp.intel.com ([10.252.59.103])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 05:53:13 -0700
-Date:   Mon, 16 Oct 2023 15:53:11 +0300 (EEST)
+   d="scan'208";a="3524820"
+Received: from rhaeussl-mobl.ger.corp.intel.com (HELO bhoerz-mobl1.ger.corp.intel.com) ([10.252.59.103])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 05:54:55 -0700
+Date:   Mon, 16 Oct 2023 15:55:57 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
+cc:     linux-pci@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] PCI/DPC: Use defines with register fields
-In-Reply-To: <20231013201934.GA1124734@bhelgaas>
-Message-ID: <3883226-f376-86e0-7790-77b1642d129@linux.intel.com>
-References: <20231013201934.GA1124734@bhelgaas>
+        =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 06/10] PCI/DPC: Use FIELD_GET()
+In-Reply-To: <20231013200249.GA1123559@bhelgaas>
+Message-ID: <3df6c8ea-888e-faa-5bae-e26b1f446ab3@linux.intel.com>
+References: <20231013200249.GA1123559@bhelgaas>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-762852509-1697460567=:1986"
-Content-ID: <1cc4caad-ea5-e5f3-37b-e6ad91c62422@linux.intel.com>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/mixed; boundary="8323329-1675609082-1697460962=:1986"
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -65,64 +64,84 @@ X-Mailing-List: linux-pci@vger.kernel.org
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-762852509-1697460567=:1986
-Content-Type: text/plain; CHARSET=ISO-8859-15
+--8323329-1675609082-1697460962=:1986
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
-Content-ID: <cd9f38f-7062-ff94-829d-ac343d403659@linux.intel.com>
 
 On Fri, 13 Oct 2023, Bjorn Helgaas wrote:
 
-> On Fri, Oct 13, 2023 at 02:20:04PM +0300, Ilpo Järvinen wrote:
-> > Use defines instead of literals and replace custom masking and shifts
-> > with FIELD_GET() where it makes sense.
-> > ...
+> On Wed, Oct 11, 2023 at 02:01:13PM +0300, Ilpo JÃ¤rvinen wrote:
+> > On Tue, 10 Oct 2023, Bjorn Helgaas wrote:
+> > > From: Bjorn Helgaas <bhelgaas@google.com>
+> > > 
+> > > Use FIELD_GET() to remove dependences on the field position, i.e., the
+> > > shift value.  No functional change intended.
+> > > 
+> > > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > ---
+> > >  drivers/pci/pcie/dpc.c        | 9 +++++----
+> > >  drivers/pci/quirks.c          | 2 +-
+> > >  include/uapi/linux/pci_regs.h | 1 +
+> > >  3 files changed, 7 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> > > index 3ceed8e3de41..6e551f34ec63 100644
+> > > --- a/drivers/pci/pcie/dpc.c
+> > > +++ b/drivers/pci/pcie/dpc.c
+> > > @@ -8,6 +8,7 @@
+> > >  
+> > >  #define dev_fmt(fmt) "DPC: " fmt
+> > >  
+> > > +#include <linux/bitfield.h>
+> > >  #include <linux/aer.h>
+> > >  #include <linux/delay.h>
+> > >  #include <linux/interrupt.h>
+> > > @@ -202,7 +203,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
+> > >  
+> > >  	/* Get First Error Pointer */
+> > >  	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &dpc_status);
+> > > -	first_error = (dpc_status & 0x1f00) >> 8;
+> > > +	first_error = FIELD_GET(PCI_EXP_DPC_STATUS_FIRST_ERR, dpc_status);
+> > >  
+> > >  	for (i = 0; i < ARRAY_SIZE(rp_pio_error_string); i++) {
+> > >  		if ((status & ~mask) & (1 << i))
+> > > @@ -270,8 +271,8 @@ void dpc_process_error(struct pci_dev *pdev)
+> > >  	pci_info(pdev, "containment event, status:%#06x source:%#06x\n",
+> > >  		 status, source);
+> > >  
+> > > -	reason = (status & PCI_EXP_DPC_STATUS_TRIGGER_RSN) >> 1;
+> > > -	ext_reason = (status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT) >> 5;
+> > > +	reason = FIELD_GET(PCI_EXP_DPC_STATUS_TRIGGER_RSN, status);
+> > > +	ext_reason = FIELD_GET(PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT, status);
+> > >  	pci_warn(pdev, "%s detected\n",
+> > >  		 (reason == 0) ? "unmasked uncorrectable error" :
+> > >  		 (reason == 1) ? "ERR_NONFATAL" :
+> > 
+> > BTW, it seems we're doing overlapping work here with many of these 
+> > patches. It takes some time to think these through one by one, I don't 
+> > just autorun through them with coccinelle so I've not posted my changes
+> > yet.
+> >
+> > I went to a different direction here and named all the reasons too with 
+> > defines and used & to get the reason in order to be able to compare with 
+> > the named reasons.
+> > 
+> > You also missed convering one 0xfff4 to use define (although I suspect it 
+> > never was your goal to go beyond FIELD_GET() here).
 > 
-> >  	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
-> > -	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
-> >  
-> > -	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
-> > +	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
-> > +	ctl |= PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
-> > +	ctl &= ~PCI_EXP_DPC_CTL_EN_NONFATAL;
+> Pure FIELD_GET() and FIELD_PREP() was my goal.
 > 
-> This has been a little obtuse from the beginning.
-> 
-> The original clears bits 0, 1, 3, then sets bits 0 and 3.
-> The new code sets bits 0, 3, then clears bit 1.
-> 
-> These are equivalent, but it's definitely some work to verify it.
->
-> I think the point is to enable DPC on ERR_FATAL (but not ERR_NONFATAL)
-> and to enable DPC interrupts.  What about something like this?
->   #define PCI_EXP_DPC_CTL_EN_MASK  0x0003
-> 
->   ctl &= ~PCI_EXP_DPC_CTL_EN_MASK;
->   ctl |= PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+> If you have patches you prefer, I'll drop mine.  I did these about a
+> year ago and it seemed like the time to do something with them since
+> you did the PCI_EXP_LNKSTA_NLW ones and to try to prevent overlapping
+> work.  Since we've started, I'd like to get as much of it done this
+> cycle as possible.
 
-Thanks for the suggestion, it looks cleaner, yes. I realized the bit 
-changes weren't as obvious as they could be but I failed to see I could 
-add such a combined mask to make the intent dead obvious.
-
-With a small change replacing the 0x0003 literal with the combined defines 
-of the actual bits it seems very clear what's going on. I'll go for that. 
-
-I'll place my non-FIELD_GET() changes on DPC top of your 
-FIELD_GET/PREP()-only change so each patch can be smaller and more 
-focused.
+Okay, I suggest you keep your FIELD_GET/PREP() patch since mine is getting 
+more and more complicated. I can build a nice set of small changes about 
+what remains to do in DPC on top of your patch.
 
 -- 
  i.
 
-
-> >  	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-> > -	pci_info(pdev, "enabled with IRQ %d\n", dev->irq);
-> >  
-> > +	pci_info(pdev, "enabled with IRQ %d\n", dev->irq);
-> >  	pci_info(pdev, "error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
-> >  		 cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
-> >  		 FLAG(cap, PCI_EXP_DPC_CAP_POISONED_TLP),
-> > -- 
-> > 2.30.2
-> > 
-> 
---8323329-762852509-1697460567=:1986--
+--8323329-1675609082-1697460962=:1986--
