@@ -2,56 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7924F7CB279
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 20:26:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F3587CB37D
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 21:52:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229943AbjJPS0n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Oct 2023 14:26:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42090 "EHLO
+        id S232996AbjJPTwO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Oct 2023 15:52:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231678AbjJPS0m (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 14:26:42 -0400
+        with ESMTP id S232365AbjJPTwN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 15:52:13 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D50695;
-        Mon, 16 Oct 2023 11:26:41 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 386FCC433C7;
-        Mon, 16 Oct 2023 18:26:39 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C278C8F;
+        Mon, 16 Oct 2023 12:52:11 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 324E4C433C7;
+        Mon, 16 Oct 2023 19:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697480801;
-        bh=sYde3Du+hMyzjINIU0GO0sOIiLkg2vzuKHXl0Ldl/Jk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Fh01ajxUZQBeYms+rkVQqnO1UDhLQ4+eKVrNHAU5tB68LoQkj71WkpvOtP2sWcAos
-         nzzCM7/jLzpIzpGHkSZUHQPxVfxhrQsI6dl4QZZ81UZXjMeKVauBacEd/qEAk9LEw4
-         +nQM3k017sPvYucr22REAEPbFwr6HeFthxB9fIBQ9lE93leWHrJ1yZKS96pPj4ae36
-         TWF+ne6sd5gM6WCsUMKEtaFzwnDE1xcQqJophO5xt/Kne1v2thj/j5mjenotp2XWV0
-         /AxuZ/p5h3Jb+/nunaBXCv7GSBtfCkxkX/ym3oADRc8X7UjEpQ8x11a3iWxdSM98/L
-         IxLFtblYVqs8g==
-Date:   Mon, 16 Oct 2023 11:30:27 -0700
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc:     agross@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, konrad.dybcio@linaro.org, mani@kernel.org,
-        quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
-        dmitry.baryshkov@linaro.org, robh@kernel.org,
-        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
-        quic_parass@quicinc.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
-        linux-phy@lists.infradead.org
-Subject: Re: [PATCH v2 4/4] arm64: dts: qcom: sa8775p: Add ep pcie0
- controller node
-Message-ID: <atvjq653nodb65i3u5m53ko4brdhlroqjqkixolyq3k5xtz3u4@ryhqlq3g6bu4>
-References: <1697023109-23671-1-git-send-email-quic_msarkar@quicinc.com>
- <1697023109-23671-5-git-send-email-quic_msarkar@quicinc.com>
+        s=k20201202; t=1697485931;
+        bh=tx/j32H7gkpo8rzCPx1RKels7ySsiXUrEVypuCZW+Rk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Ro72ZPfsanST3avObOZJpj6KOxt93TaskAnExlLoS8adtFfn86ub5H0aC0VQUXt7K
+         BMJb40xA72FR6I2b2eZj6pGeZBxLsdb/fY25gn6nx2Mx0b+zdTKV1FzkRDZbKPibhH
+         IPo4RZVvqYZ+jW0p3W+0VwTUY9i1BEiRlGjlbtCCDlvNTGXd/CaGGVAN/TD0jCNNLP
+         4H9FNfaIr5hXJW3ne5W9fVFCi9I2dA6ZnFFqNM/y2wSJqcNSfWEXAe3LZCe2AHnz5N
+         y3K8ZIBHJsXozp2cOu78rpIl2lzPZ+RigUfGnpqc5uPXhYKgyd25yo0KlQdtWK4Tzk
+         5bbBhSDPxhCKQ==
+Date:   Mon, 16 Oct 2023 14:52:09 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc:     linux-sh@vger.kernel.org, glaubitz@physik.fu-berlin.de,
+        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [RFC PATCH v3 09/35] drivers/pci/controller: SH7751 PCI Host
+ bridge driver.
+Message-ID: <20231016195209.GA1221606@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1697023109-23671-5-git-send-email-quic_msarkar@quicinc.com>
+In-Reply-To: <20231016172742.GA1215127@bhelgaas>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -61,28 +48,84 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 11, 2023 at 04:48:29PM +0530, Mrinmay Sarkar wrote:
-> Add ep pcie dtsi node for pcie0 controller found on sa8775p platform.
-> it supports x2 link width.
+On Mon, Oct 16, 2023 at 12:27:42PM -0500, Bjorn Helgaas wrote:
+> "git am" complained about a couple whitespace errors elsewhere in this
+> series:
 > 
-> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/sa8775p.dtsi | 48 +++++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> index b6a93b1..485f626 100644
-> --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> @@ -2608,4 +2608,52 @@
->  
->  		status = "disabled";
->  	};
-> +
-> +	pcie0_ep: pcie-ep@1c00000 {
+>   Applying: arch/sh/boot/compressed/head_32.S: passing FDT address to initialize function.
+>   .git/rebase-apply/patch:25: trailing whitespace.
+>   Applying: drivers/irqchip: SH7751 IRL external encoder with enable gate.
+>   .git/rebase-apply/patch:33: new blank line at EOF.
 
-Please move this node up, to keep the nodes sorted by address (then by
-name, and label).
+BTW, I mentioned all these things and more a month or so ago:
 
-Regards,
+  https://lore.kernel.org/r/20230918191602.GA201859@bhelgaas
+  https://lore.kernel.org/r/20230918193337.GA203483@bhelgaas
+  https://lore.kernel.org/r/20230918193036.GA203163@bhelgaas
+
+I *thought* this seemed familiar ;)
+
 Bjorn
+
+> On Sat, Oct 14, 2023 at 11:53:44PM +0900, Yoshinori Sato wrote:
+> > pci-sh7751.h move from "arch/sh/drivers/pci/pci-sh7751.h"
+> > pci-sh7751.c convert from "arch/sh/drivers/pci/pci-sh7751.c"
+> 
+> Note the subject line conventions in drivers/pci (use "git log
+> --oneline" to see them): use something like this:
+> 
+>   PCI: sh7751: Add SH7751 PCI host bridge driver
+> 
+> with no period at the end.
+> 
+> arch/sh/drivers/pci/pci-sh7751.h and arch/sh/drivers/pci/pci-sh7751.c
+> still exist after applying this series.  Better to have a single patch
+> that moves the content from arch/sh/drivers/pci/ to
+> drivers/pci/controller/.
+> 
+> Neither file looks like a simple move; there's a lot of reorganization
+> going on at the same time.  It's really difficult to review a patch
+> like that because we can't compare the content from before and after.
+> 
+> If you make a patch that does the cleanup/reorganization, and a
+> separate patch that is just a simple move, and you use "git mv" for
+> the move, git should notice that this is just a rename, and that diff
+> will be tiny.
+> 
+> One of the reorganization patches should be to incorporate the
+> pci-sh7751.h content directly into pci-sh7751.c.  Since it's only used
+> in pci-sh7751.c, there's really no advantage to having it in a
+> separate file.
+> 
+> Bjorn
+> 
+> > Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+> > ---
+> >  drivers/pci/controller/Kconfig      |   9 +
+> >  drivers/pci/controller/Makefile     |   1 +
+> >  drivers/pci/controller/pci-sh7751.c | 285 ++++++++++++++++++++++++++++
+> >  drivers/pci/controller/pci-sh7751.h | 267 ++++++++++++++++++++++++++
+> >  4 files changed, 562 insertions(+)
+> >  create mode 100644 drivers/pci/controller/pci-sh7751.c
+> >  create mode 100644 drivers/pci/controller/pci-sh7751.h
+> > 
+> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> > index c0c3f2824990..037ff44bd1e8 100644
+> > --- a/drivers/pci/controller/Kconfig
+> > +++ b/drivers/pci/controller/Kconfig
+> > @@ -342,6 +342,15 @@ config PCIE_XILINX_CPM
+> >  	  Say 'Y' here if you want kernel support for the
+> >  	  Xilinx Versal CPM host bridge.
+> >  
+> > +config PCI_SH7751
+> > +	bool "Renesas SH7751 PCI controller"
+> > +	depends on OF
+> > +	depends on CPU_SUBTYPE_SH7751 || CPU_SUBTYPE_SH7751R || COMPILE_TEST
+> > +	select PCI_HOST_COMMON
+> > +	help
+> > +	  Say 'Y' here if you want kernel to support the Renesas SH7751 PCI
+> > +	  Host Bridge driver.
+> 
+> Move this so the menu entries stay sorted by vendor name.
+> 
+> Bjorn
