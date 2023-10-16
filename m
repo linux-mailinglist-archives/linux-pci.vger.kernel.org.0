@@ -2,194 +2,193 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D30047C9D91
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 05:00:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B68FD7C9E15
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 06:02:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231253AbjJPDA0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Oct 2023 23:00:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39884 "EHLO
+        id S229653AbjJPEC1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Oct 2023 00:02:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231297AbjJPDAZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Oct 2023 23:00:25 -0400
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E3A2E5;
-        Sun, 15 Oct 2023 20:00:20 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R611e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0Vu9JM3x_1697425214;
-Received: from 30.240.113.74(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vu9JM3x_1697425214)
-          by smtp.aliyun-inc.com;
-          Mon, 16 Oct 2023 11:00:15 +0800
-Message-ID: <4147832a-1f24-5993-dfb6-59f420a17481@linux.alibaba.com>
-Date:   Mon, 16 Oct 2023 11:00:13 +0800
+        with ESMTP id S229503AbjJPEC0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 00:02:26 -0400
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53D93AD;
+        Sun, 15 Oct 2023 21:02:24 -0700 (PDT)
+Received: from localhost.localdomain (unknown [10.101.196.174])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 43BAB3F0C6;
+        Mon, 16 Oct 2023 04:02:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1697428940;
+        bh=vkafOmpdBRmco3tsD/n12uXh8EE6SvdVyF3TIx5/KiY=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+        b=LfIysylXk+F/ROUKC4Q2wqhQ4OOd9ajiuEdPBqVJGauGHJvWmlqKOeZmm65H1SF/j
+         vIMAB7Gy1QXMiqXzVw9WUTS+6YYX1LUkUvfsuTgXYaH9e5NhbCvLfifOw9lgfpw5r5
+         GtRNW0QyiXlngsXfBskskWvZ7zPGr+ftxfSKO9l75QBT7NR5opLaTvYqAWwkgfo/uO
+         bAU+ks79D38JYUaLBLfePH5ruoU5teDcpLHvebA8pX6XvqmbBmZNda7bMVOUOYNiWe
+         AaDVs0IUhO/k2VBEh3qpNdn+8jXX16DE4hOb8ozay72KmpyBM7+4fVosGKGRlqWt+H
+         CC8dVJiH3EWOw==
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com
+Cc:     linux-pm@vger.kernel.org, linux-mmc@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Ricky Wu <ricky_wu@realtek.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH] PCI: pciehp: Prevent child devices from doing RPM on PCIe Link Down
+Date:   Mon, 16 Oct 2023 12:01:31 +0800
+Message-Id: <20231016040132.23824-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.1
-Subject: Re: [PATCH v7 3/4] drivers/perf: add DesignWare PCIe PMU driver
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
-        yangyicong@huawei.com, will@kernel.org,
-        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
-        robin.murphy@arm.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        rdunlap@infradead.org, mark.rutland@arm.com,
-        zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
-References: <20231013163025.GA1116248@bhelgaas>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20231013163025.GA1116248@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-13.2 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+When inserting an SD7.0 card to Realtek card reader, it can trigger PCI
+slot Link down and causes the following error:
+[   63.898861] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
+[   63.912118] BUG: unable to handle page fault for address: ffffb24d403e50=
+10
+[   63.912122] #PF: supervisor read access in kernel mode
+[   63.912125] #PF: error_code(0x0000) - not-present page
+[   63.912126] PGD 100000067 P4D 100000067 PUD 1001fe067 PMD 100d97067 PTE 0
+[   63.912131] Oops: 0000 [#1] PREEMPT SMP PTI
+[   63.912134] CPU: 3 PID: 534 Comm: kworker/3:10 Not tainted 6.4.0 #6
+[   63.912137] Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M.=
+/H370M Pro4, BIOS P3.40 10/25/2018
+[   63.912138] Workqueue: pm pm_runtime_work
+[   63.912144] RIP: 0010:ioread32+0x2e/0x70
+[   63.912148] Code: ff 03 00 77 25 48 81 ff 00 00 01 00 77 14 8b 15 08 d9 =
+54 01 b8 ff ff ff ff 85 d2 75 14 c3 cc cc cc cc 89 fa ed c3 cc cc cc cc <8b=
+> 07 c3 cc cc cc cc 55 83 ea 01 48 89 fe 48 c7 c7 98 6f 15 99 48
+[   63.912150] RSP: 0018:ffffb24d40a5bd78 EFLAGS: 00010296
+[   63.912152] RAX: ffffb24d403e5000 RBX: 0000000000000152 RCX: 00000000000=
+0007f
+[   63.912153] RDX: 000000000000ff00 RSI: ffffb24d403e5010 RDI: ffffb24d403=
+e5010
+[   63.912155] RBP: ffffb24d40a5bd98 R08: ffffb24d403e5010 R09: 00000000000=
+00000
+[   63.912156] R10: ffff9074cd95e7f4 R11: 0000000000000003 R12: 00000000000=
+0007f
+[   63.912158] R13: ffff9074e1a68c00 R14: ffff9074e1a68d00 R15: 00000000000=
+09003
+[   63.912159] FS:  0000000000000000(0000) GS:ffff90752a180000(0000) knlGS:=
+0000000000000000
+[   63.912161] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   63.912162] CR2: ffffb24d403e5010 CR3: 0000000152832006 CR4: 00000000003=
+706e0
+[   63.912164] Call Trace:
+[   63.912165]  <TASK>
+[   63.912167]  ? show_regs+0x68/0x70
+[   63.912171]  ? __die_body+0x20/0x70
+[   63.912173]  ? __die+0x2b/0x40
+[   63.912175]  ? page_fault_oops+0x160/0x480
+[   63.912177]  ? search_bpf_extables+0x63/0x90
+[   63.912180]  ? ioread32+0x2e/0x70
+[   63.912183]  ? search_exception_tables+0x5f/0x70
+[   63.912186]  ? kernelmode_fixup_or_oops+0xa2/0x120
+[   63.912189]  ? __bad_area_nosemaphore+0x179/0x230
+[   63.912191]  ? bad_area_nosemaphore+0x16/0x20
+[   63.912193]  ? do_kern_addr_fault+0x8b/0xa0
+[   63.912195]  ? exc_page_fault+0xe5/0x180
+[   63.912198]  ? asm_exc_page_fault+0x27/0x30
+[   63.912203]  ? ioread32+0x2e/0x70
+[   63.912206]  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
+[   63.912217]  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
+[   63.912226]  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
+[   63.912234]  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
+[   63.912243]  ? __pfx_pci_pm_runtime_idle+0x10/0x10
+[   63.912246]  pci_pm_runtime_idle+0x34/0x70
+[   63.912248]  rpm_idle+0xc4/0x2b0
+[   63.912251]  pm_runtime_work+0x93/0xc0
+[   63.912254]  process_one_work+0x21a/0x430
+[   63.912258]  worker_thread+0x4a/0x3c0
+[   63.912261]  ? __pfx_worker_thread+0x10/0x10
+[   63.912263]  kthread+0x106/0x140
+[   63.912266]  ? __pfx_kthread+0x10/0x10
+[   63.912268]  ret_from_fork+0x29/0x50
+[   63.912273]  </TASK>
+[   63.912274] Modules linked in: nvme nvme_core snd_hda_codec_hdmi snd_sof=
+_pci_intel_cnl snd_sof_intel_hda_common snd_hda_codec_realtek snd_hda_codec=
+_generic snd_soc_hdac_hda soundwire_intel ledtrig_audio nls_iso8859_1 sound=
+wire_generic_allocation soundwire_cadence snd_sof_intel_hda_mlink snd_sof_i=
+ntel_hda snd_sof_pci snd_sof_xtensa_dsp snd_sof snd_sof_utils snd_hda_ext_c=
+ore snd_soc_acpi_intel_match snd_soc_acpi soundwire_bus snd_soc_core snd_co=
+mpress ac97_bus snd_pcm_dmaengine snd_hda_intel i915 snd_intel_dspcfg snd_i=
+ntel_sdw_acpi intel_rapl_msr snd_hda_codec intel_rapl_common snd_hda_core x=
+86_pkg_temp_thermal intel_powerclamp snd_hwdep coretemp snd_pcm kvm_intel d=
+rm_buddy ttm mei_hdcp kvm drm_display_helper snd_seq_midi snd_seq_midi_even=
+t cec crct10dif_pclmul ghash_clmulni_intel sha512_ssse3 aesni_intel crypto_=
+simd rc_core cryptd rapl snd_rawmidi drm_kms_helper binfmt_misc intel_cstat=
+e i2c_algo_bit joydev snd_seq snd_seq_device syscopyarea wmi_bmof snd_timer=
+ sysfillrect input_leds snd ee1004 sysimgblt mei_me soundcore
+[   63.912324]  mei intel_pch_thermal mac_hid acpi_tad acpi_pad sch_fq_code=
+l msr parport_pc ppdev lp ramoops drm parport reed_solomon efi_pstore ip_ta=
+bles x_tables autofs4 hid_generic usbhid hid rtsx_pci_sdmmc crc32_pclmul ah=
+ci e1000e i2c_i801 i2c_smbus rtsx_pci xhci_pci libahci xhci_pci_renesas vid=
+eo wmi
+[   63.912346] CR2: ffffb24d403e5010
+[   63.912348] ---[ end trace 0000000000000000 ]---
 
+This happens because scheduled pm_runtime_idle() is not cancelled.
 
-On 2023/10/14 00:30, Bjorn Helgaas wrote:
-> On Fri, Oct 13, 2023 at 11:46:44AM +0800, Shuai Xue wrote:
->>
->>
->> On 2023/10/13 00:25, Bjorn Helgaas wrote:
->>> On Thu, Oct 12, 2023 at 11:28:55AM +0800, Shuai Xue wrote:
->>>> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
->>>> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
->>>> Core controller IP which provides statistics feature. The PMU is not a PCIe
->>>> Root Complex integrated End Point(RCiEP) device but only register counters
->>>> provided by each PCIe Root Port.
-> 
-> IIUC, the PMU is directly integrated into the Root Port: it's
-> discovered and operated via the Root Port config space.  If so, I
-> wouldn't bother mentioning RCiEP because there's no need to list all
-> the things it's *not*.
+So use pm_runtime_barrier() to ensure all devices on the bus stops
+runtime power management actions.
 
-I see, will not mention RCiEP next version.
+Link: https://lore.kernel.org/all/2ce258f371234b1f8a1a470d5488d00e@realtek.=
+com/
+Tested-by: Ricky Wu <ricky_wu@realtek.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/pci/hotplug/pciehp_pci.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-> 
->>>> To facilitate collection of statistics the controller provides the
->>>> following two features for each Root Port:
->>>>
->>>> - Time Based Analysis (RX/TX data throughput and time spent in each
->>>>   low-power LTSSM state)
->>>> - Event counters (Error and Non-Error for lanes)
->>>>
->>>> Note, only one counter for each type and does not overflow interrupt.
->>>
->>> Not sure what "does not overflow interrupt" means.  Does it mean
->>> there's no interrupt generated when the counter overflows?
->>
->> Yes, exactly. The rootport does NOT generate interrupt when the
->> couter overflows.  I think the assumption hidden in this design is
->> 64-bit counter will not overflow within observable time.
->>
->> PCIe 5.0 slots can now reach anywhere between ~4GB/sec for a x1 slot
->> up to ~64GB/sec for a x16 slot. The unit of counter is 16 byte.
->>
->> 	2^64/(64/16*10^9)/60/60/24/365=146 years
->>
->> so, the counter will not overflow within 146 years.
-> 
-> Certainly a reasonable assumption :)
-> 
-> But I'm confused about how many counters there are.  Clearly there are
-> two features ((1) time-based analysis and (2) event counters).
-> 
-> "One counter for each type" suggests there's one counter for
-> time-based analysis and a second counter for event counting, 
+diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_=
+pci.c
+index ad12515a4a12..9ae4fa95c8c1 100644
+--- a/drivers/pci/hotplug/pciehp_pci.c
++++ b/drivers/pci/hotplug/pciehp_pci.c
+@@ -18,9 +18,18 @@
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+ #include <linux/pci.h>
++#include <linux/pm_runtime.h>
+ #include "../pci.h"
+ #include "pciehp.h"
+=20
++int pci_dev_disconnect(struct pci_dev *pdev, void *unused)
++{
++	pm_runtime_barrier(&pdev->dev);
++	pci_dev_set_disconnected(pdev, NULL);
++
++	return 0;
++}
++
+ /**
+  * pciehp_configure_device() - enumerate PCI devices below a hotplug bridge
+  * @ctrl: PCIe hotplug controller
+@@ -98,7 +107,7 @@ void pciehp_unconfigure_device(struct controller *ctrl, =
+bool presence)
+ 		 __func__, pci_domain_nr(parent), parent->number);
+=20
+ 	if (!presence)
+-		pci_walk_bus(parent, pci_dev_set_disconnected, NULL);
++		pci_walk_bus(parent, pci_dev_disconnect, NULL);
+=20
+ 	pci_lock_rescan_remove();
+=20
+--=20
+2.34.1
 
-You are right, two counters, TIME_BASED_ANAL_DATA_REG for time-based
-analysis and EVENT_COUNTER_DATA_REG for event counting. And both of them
-do not support generate interrupt when the counter overflows.
-
-> but from
-> dwc_pcie_pmu_event_add(), it looks like each Root Port might have a
-> single counter, and you can decide whether that counter is used for
-> time-based analysis or event counting, but you can't do both at the
-> same time? 
-
-dwc_pcie_pmu_event_add() now limit the PMU usage to stat event for either
-time-based analysis or event counting.
-
-I will extend to support stat them at the same time.
-
-@@ -447,10 +447,10 @@ static int dwc_pcie_pmu_event_add(struct perf_event *event, int flags)
- 	u32 ctrl;
-
- 	/* Only one counter and it is in use */
--	if (pcie_pmu->event)
-+	if (pcie_pmu->event[type])
- 		return -ENOSPC;
-
--	pcie_pmu->event = event;
-+	pcie_pmu->event[type] = event;
- 	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
-
- 	if (type == DWC_PCIE_LANE_EVENT) {
-@@ -486,10 +486,11 @@ static int dwc_pcie_pmu_event_add(struct perf_event *event, int flags)
- static void dwc_pcie_pmu_event_del(struct perf_event *event, int flags)
- {
- 	struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
-+	enum dwc_pcie_event_type type = DWC_PCIE_EVENT_TYPE(event);
-
- 	dwc_pcie_pmu_event_stop(event, flags | PERF_EF_UPDATE);
- 	perf_event_update_userpage(event);
--	pcie_pmu->event = NULL;
-+	pcie_pmu->event[type] = NULL;
- }
-
-> And the event counting is for a single lane, not for the
-> link as a whole?
-
-Yes.
-
-> 
-> If so, I might word this as:
-> 
->   Each Root Port contains one counter that can be used for either:
-> 
->     - Time-Based Analysis (RX/TX data throughput and time spent in
->       each low-power LTSSM state) or
-> 
->     - Event counting (error and non-error events for a specified lane)
-> 
->   There is no interrupt for counter overflow.
-
-Based on above, I change the word to:
-
-	To facilitate collection of statistics the controller provides the
-	following two features for each Root Port:
-
-	- one 64-bit counter for Time Based Analysis (RX/TX data throughput and
-	  time spent in each low-power LTSSM state) and
-	- one 32-bit counter for Event counting (error and non-error events for
-	  a specified lane)
-
-	Note: There is no interrupt for counter overflow.
-
-
-> 
->>>> +	  Enable perf support for Synopsys DesignWare PCIe PMU Performance
->>>> +	  monitoring event on platform including the Yitian 710.
->>>
->>> Should this mention Alibaba or T-Head?  I don't know how
->>> Alibaba/T-Head/Yitian are all related.
->>
->> The server chips, named Yitian 710, are custom-built by Alibaba Group's chip
->> development business, T-Head.
->>
->> 	  Enable perf support for Synopsys DesignWare PCIe PMU Performance
->> 	  monitoring event on platform including the Alibaba Yitian 710.
->>
->> Is this okay?
-> 
-> Perfect :)
-
-
-Thank you for valuable comments.
-
-Best Regards,
-Shuai
