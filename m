@@ -2,59 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21BFD7CA898
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 14:56:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 399F27CA8A2
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Oct 2023 14:57:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233411AbjJPM4L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Oct 2023 08:56:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47240 "EHLO
+        id S230493AbjJPM5R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Oct 2023 08:57:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233501AbjJPM4E (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 08:56:04 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE43BAD;
-        Mon, 16 Oct 2023 05:56:02 -0700 (PDT)
+        with ESMTP id S230017AbjJPM5Q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Oct 2023 08:57:16 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 674ABAD;
+        Mon, 16 Oct 2023 05:57:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697460962; x=1728996962;
+  t=1697461034; x=1728997034;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=L+WApuyahikeC/ONjZM0yJBCNYeGV+unFwJga+bJWwk=;
-  b=aargCBS+ovtYUVEd8iPLQT8acgziPO7elpg1a4QIXmMe4Raktip+3dJk
-   9AA0j0AZdXfPs0bBpj5XZLy8rJID7Wy9C66QV5tfbdrjXtu7++I/b6rBF
-   b7R36+EtzZZNs8OcELAGbVUu+WBJMkQXhmFjPMulaskHRQ5yjAQZzI93E
-   cFVALib9oeQNf9fl7F9JZv0dPvkUZmZ6ZtnQlNtv+RgbNWDQmf+wD1Z4y
-   NiH70tF6ZrJfZziLt//CYcJIz1ak3g1A9hQ35XopLgsw3p1tBO5MnxKT3
-   7HnR3Ob/mROzQrpkxMxdE0bIOZhT05r8HvQWIa3IgJCFbIwNE27h4B1tt
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="471742466"
+  bh=33VN831uWAKG7f4eIn44PpDJgWUV0McuEtJM+oSWIh4=;
+  b=Xf/12PbHv7oGM5zCun8OHZP2oOMZxmhEH6ZJ5/lUhqXfYAqUQEckGFxg
+   uhBxh6kGxA949FC6FN2zZBWyvKJUifUexGABTLbcEAf1OWjx7mkTVa8Th
+   xcjaHeb44AZsDmv4pcw7gCTgvOCLukytu2kdP8klIQpb52JMIVDCQIG4w
+   L1wXdn9S2w13DghDuKXdK3k7ITNbCmmBqcE7MLPz8phNpEUDr+k3GznJW
+   WWb2zBxOO8yfgVXUiNz7waOrIXsq+sVisX6XfG9x/jLpM0Arh3YOUHPEd
+   Uq4Y8ewK7wuy0L394EulosARaZq0Chiyy9OV9IB39oKpZLPVvwycCESLJ
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="4130579"
 X-IronPort-AV: E=Sophos;i="6.03,229,1694761200"; 
-   d="scan'208";a="471742466"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 05:56:02 -0700
+   d="scan'208";a="4130579"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 05:57:13 -0700
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="1087063948"
 X-IronPort-AV: E=Sophos;i="6.03,229,1694761200"; 
-   d="scan'208";a="3524820"
+   d="scan'208";a="1087063948"
 Received: from rhaeussl-mobl.ger.corp.intel.com (HELO bhoerz-mobl1.ger.corp.intel.com) ([10.252.59.103])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 05:54:55 -0700
-Date:   Mon, 16 Oct 2023 15:55:57 +0300 (EEST)
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 05:57:07 -0700
+Date:   Mon, 16 Oct 2023 15:57:05 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 cc:     linux-pci@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
         =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 06/10] PCI/DPC: Use FIELD_GET()
-In-Reply-To: <20231013200249.GA1123559@bhelgaas>
-Message-ID: <3df6c8ea-888e-faa-5bae-e26b1f446ab3@linux.intel.com>
-References: <20231013200249.GA1123559@bhelgaas>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        ath10k@lists.infradead.org, ath11k@lists.infradead.org,
+        ath12k@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-bluetooth@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-rdma@vger.kernel.org,
+        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 05/13] PCI/ASPM: Add pci_enable_link_state()
+In-Reply-To: <20231013164850.GA1118214@bhelgaas>
+Message-ID: <9da430a3-9336-8e75-7385-3d5ddcb6cb7@linux.intel.com>
+References: <20231013164850.GA1118214@bhelgaas>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1675609082-1697460962=:1986"
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/mixed; boundary="8323329-1750157713-1697461032=:1986"
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -64,84 +75,105 @@ X-Mailing-List: linux-pci@vger.kernel.org
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-1675609082-1697460962=:1986
+--8323329-1750157713-1697461032=:1986
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
 
 On Fri, 13 Oct 2023, Bjorn Helgaas wrote:
 
-> On Wed, Oct 11, 2023 at 02:01:13PM +0300, Ilpo Järvinen wrote:
-> > On Tue, 10 Oct 2023, Bjorn Helgaas wrote:
-> > > From: Bjorn Helgaas <bhelgaas@google.com>
+> On Thu, Oct 12, 2023 at 03:53:39PM +0300, Ilpo Järvinen wrote:
+> > On Wed, 11 Oct 2023, Bjorn Helgaas wrote:
+> > > On Mon, Sep 18, 2023 at 04:10:55PM +0300, Ilpo Järvinen wrote:
+> > > > pci_disable_link_state() lacks a symmetric pair. Some drivers want to
+> > > > disable ASPM during certain phases of their operation but then
+> > > > re-enable it later on. If pci_disable_link_state() is made for the
+> > > > device, there is currently no way to re-enable the states that were
+> > > > disabled.
 > > > 
-> > > Use FIELD_GET() to remove dependences on the field position, i.e., the
-> > > shift value.  No functional change intended.
+> > > pci_disable_link_state() gives drivers a way to disable specified ASPM
+> > > states using a bitmask (PCIE_LINK_STATE_L0S, PCIE_LINK_STATE_L1,
+> > > PCIE_LINK_STATE_L1_1, etc), but IIUC the driver can't tell exactly
+> > > what changed and can't directly restore the original state, e.g.,
 > > > 
-> > > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > ---
-> > >  drivers/pci/pcie/dpc.c        | 9 +++++----
-> > >  drivers/pci/quirks.c          | 2 +-
-> > >  include/uapi/linux/pci_regs.h | 1 +
-> > >  3 files changed, 7 insertions(+), 5 deletions(-)
+> > >   - PCIE_LINK_STATE_L1 enabled initially
+> > >   - driver calls pci_disable_link_state(PCIE_LINK_STATE_L0S)
+> > >   - driver calls pci_enable_link_state(PCIE_LINK_STATE_L0S)
+> > >   - PCIE_LINK_STATE_L0S and PCIE_LINK_STATE_L1 are enabled now
 > > > 
-> > > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> > > index 3ceed8e3de41..6e551f34ec63 100644
-> > > --- a/drivers/pci/pcie/dpc.c
-> > > +++ b/drivers/pci/pcie/dpc.c
-> > > @@ -8,6 +8,7 @@
-> > >  
-> > >  #define dev_fmt(fmt) "DPC: " fmt
-> > >  
-> > > +#include <linux/bitfield.h>
-> > >  #include <linux/aer.h>
-> > >  #include <linux/delay.h>
-> > >  #include <linux/interrupt.h>
-> > > @@ -202,7 +203,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
-> > >  
-> > >  	/* Get First Error Pointer */
-> > >  	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &dpc_status);
-> > > -	first_error = (dpc_status & 0x1f00) >> 8;
-> > > +	first_error = FIELD_GET(PCI_EXP_DPC_STATUS_FIRST_ERR, dpc_status);
-> > >  
-> > >  	for (i = 0; i < ARRAY_SIZE(rp_pio_error_string); i++) {
-> > >  		if ((status & ~mask) & (1 << i))
-> > > @@ -270,8 +271,8 @@ void dpc_process_error(struct pci_dev *pdev)
-> > >  	pci_info(pdev, "containment event, status:%#06x source:%#06x\n",
-> > >  		 status, source);
-> > >  
-> > > -	reason = (status & PCI_EXP_DPC_STATUS_TRIGGER_RSN) >> 1;
-> > > -	ext_reason = (status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT) >> 5;
-> > > +	reason = FIELD_GET(PCI_EXP_DPC_STATUS_TRIGGER_RSN, status);
-> > > +	ext_reason = FIELD_GET(PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT, status);
-> > >  	pci_warn(pdev, "%s detected\n",
-> > >  		 (reason == 0) ? "unmasked uncorrectable error" :
-> > >  		 (reason == 1) ? "ERR_NONFATAL" :
+> > > Now PCIE_LINK_STATE_L0S is enabled even though it was not initially
+> > > enabled.  Maybe that's what we want; I dunno.
+> > > 
+> > > pci_disable_link_state() currently returns success/failure, but only
+> > > r8169 and mt76 even check, and only rtl_init_one() (r8169) has a
+> > > non-trivial reason, so it's conceivable that it could return a bitmask
+> > > instead.
 > > 
-> > BTW, it seems we're doing overlapping work here with many of these 
-> > patches. It takes some time to think these through one by one, I don't 
-> > just autorun through them with coccinelle so I've not posted my changes
-> > yet.
-> >
-> > I went to a different direction here and named all the reasons too with 
-> > defines and used & to get the reason in order to be able to compare with 
-> > the named reasons.
+> > It's great that you suggested this since it's actually what also I've been 
+> > started to think should be done instead of this straightforward approach
+> > I used in V2. 
 > > 
-> > You also missed convering one 0xfff4 to use define (although I suspect it 
-> > never was your goal to go beyond FIELD_GET() here).
+> > That is, don't have the drivers to get anything directly from LNKCTL
+> > but they should get everything through the API provided by the 
+> > disable/enable calls which makes it easy for the driver to pass the same
+> > value back into the enable call.
+> > 
+> > > > Add pci_enable_link_state() to remove ASPM states from the state
+> > > > disable mask.
+> > > > 
+> > > > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> > > > ---
+> > > >  drivers/pci/pcie/aspm.c | 42 +++++++++++++++++++++++++++++++++++++++++
+> > > >  include/linux/pci.h     |  2 ++
+> > > >  2 files changed, 44 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > > > index 91dc95aca90f..f45d18d47c20 100644
+> > > > --- a/drivers/pci/pcie/aspm.c
+> > > > +++ b/drivers/pci/pcie/aspm.c
+> > > > @@ -1117,6 +1117,48 @@ int pci_disable_link_state(struct pci_dev *pdev, int state)
+> > > >  }
+> > > >  EXPORT_SYMBOL(pci_disable_link_state);
+> > > >  
+> > > > +/**
+> > > > + * pci_enable_link_state - Re-enable device's link state
+> > > > + * @pdev: PCI device
+> > > > + * @state: ASPM link states to re-enable
+> > > > + *
+> > > > + * Enable device's link state that were previously disable so the link is
+> > > 
+> > > "state[s] that were previously disable[d]" alludes to the use case you
+> > > have in mind, but I don't think it describes how this function
+> > > actually works.  This function just makes it possible to enable the
+> > > specified states.  The @state parameter may have nothing to do with
+> > > any previously disabled states.
+> > 
+> > Yes, it's what I've been thinking between the lines. But I see your point 
+> > that this API didn't make it easy/obvious as is.
+> > 
+> > Would you want me to enforce it too besides altering the API such that the 
+> > states are actually returned from disable call? (I don't personally find
+> > that necessary as long as the API pair itself makes it obvious what the 
+> > driver is expect to pass there.)
 > 
-> Pure FIELD_GET() and FIELD_PREP() was my goal.
+> This was just a comment about the doc not matching the function
+> behavior.
 > 
-> If you have patches you prefer, I'll drop mine.  I did these about a
-> year ago and it seemed like the time to do something with them since
-> you did the PCI_EXP_LNKSTA_NLW ones and to try to prevent overlapping
-> work.  Since we've started, I'd like to get as much of it done this
-> cycle as possible.
+> I think we have to support pci_enable_link_state() even if the driver
+> hasn't previously called pci_disable_link_state(), so drivers have to
+> be able to specify the pci_enable_link_state() @state from scratch.
+> 
+> Does that answer the enforcement question?
 
-Okay, I suggest you keep your FIELD_GET/PREP() patch since mine is getting 
-more and more complicated. I can build a nice set of small changes about 
-what remains to do in DPC on top of your patch.
+Yes.
 
 -- 
  i.
 
---8323329-1675609082-1697460962=:1986--
+> I don't think we can
+> really enforce anything other than that @state specifies valid ASPM
+> states.
+> 
+> Bjorn
+> 
+
+--8323329-1750157713-1697461032=:1986--
