@@ -2,375 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 312957CCAD4
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Oct 2023 20:37:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C67C27CCAE6
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Oct 2023 20:42:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232198AbjJQShd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Oct 2023 14:37:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56050 "EHLO
+        id S232763AbjJQSmK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Oct 2023 14:42:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232025AbjJQShc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Oct 2023 14:37:32 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC1F9E
-        for <linux-pci@vger.kernel.org>; Tue, 17 Oct 2023 11:37:30 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-5a9bf4fbd3fso3557851a12.1
-        for <linux-pci@vger.kernel.org>; Tue, 17 Oct 2023 11:37:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697567850; x=1698172650; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fDIMPqihTJidR00sawm2Nr6O1yAKRnZhnAyaqVDW0po=;
-        b=gw9SYMTx1VjeyOO2N2mVtknygAUZAH94dmQ5kTMONKDKD51x/W/ElnL6uJbniDBpuD
-         ZgnXRcnEdd1t7d/QC8S5AGkEI2bSjdD56bGAyDTB/MbhVdCQYbug66KLD5WP0zw94krE
-         x+WwCBqo6/ozpRYSFOXUyqHnXxSMYHwW86EwZ2jOC/NSWCj/GYUbboj7aNHRQw1NvyX1
-         PYe3tgH6BcJR8a97F2dPY+1wD6f965Zq05WGJ3ZP3b+0WT2aAVkjGgu6DmEo9UYHE0m3
-         8IHDJ4HlKBunB4YjaAP3FsvAtwU+RAc2Oazb2hQeTNBRVrzuuQ42mp6TjvyhPfaNQfy/
-         6KKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697567850; x=1698172650;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fDIMPqihTJidR00sawm2Nr6O1yAKRnZhnAyaqVDW0po=;
-        b=uXsJmIl8V1L0HOPoK275YWy9haoH20JHTwwxUh4uALnJH2G7cE2XATipAgpkZFrOsn
-         Nh9rZoP5uJabCOFVAy9PLopq2fmnH5R3yukfkXNnFDrLk4XwHIwI0AjopKBYdNehUzcD
-         TdipYEYZ+61urvfy+JwDMzdzom9JZprh1DFOTqPlalx05+ZZpGLRgcDzdEMjiDX0ZmxZ
-         aymudlHJi/4DUrez35AunmwRoLk0ovN0otQ5o7Uq6/GIrufS/cJuA2YpH4xQ2OaIInnT
-         XiMtFPvuBEi6i+U7zLixQWBSi3vjl6qL0v6RLUeelVTIu/4uxXTOPwRWFcKIsxTKn84J
-         Akug==
-X-Gm-Message-State: AOJu0YwMkxfNcmy9CPXTIpucuVvUFiXoOZprdkkSdw6RU7Z6MyXVvqym
-        U3G+r3txmiBPQj75QSYI1Xs5
-X-Google-Smtp-Source: AGHT+IGZc+AgmoxdQbyFgHaq0HpMKMawgaGe+zQRacb1kYCqnv0STvUbAj7qgu4yUBj9NSvPcrfVDw==
-X-Received: by 2002:a05:6a20:1608:b0:14d:d9f8:83f8 with SMTP id l8-20020a056a20160800b0014dd9f883f8mr3663772pzj.1.1697567849901;
-        Tue, 17 Oct 2023 11:37:29 -0700 (PDT)
-Received: from thinkpad ([117.202.186.25])
-        by smtp.gmail.com with ESMTPSA id i2-20020a63e442000000b00577d53c50f7sm211772pgk.75.2023.10.17.11.37.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Oct 2023 11:37:29 -0700 (PDT)
-Date:   Wed, 18 Oct 2023 00:07:22 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     aisheng.dong@nxp.com, bhelgaas@google.com,
-        devicetree@vger.kernel.org, festevam@gmail.com,
-        imx@lists.linux.dev, jdmason@kudzu.us, kernel@pengutronix.de,
-        kishon@kernel.org, kw@linux.com,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, lpieralisi@kernel.org, maz@kernel.org,
-        s.hauer@pengutronix.de, shawnguo@kernel.org, tglx@linutronix.de
-Subject: Re: [PATCH v2 1/5] PCI: endpoint: Add RC-to-EP doorbell support
- using platform MSI controller
-Message-ID: <20231017183722.GB137137@thinkpad>
-References: <20230911220920.1817033-1-Frank.Li@nxp.com>
- <20230911220920.1817033-2-Frank.Li@nxp.com>
+        with ESMTP id S232198AbjJQSmJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Oct 2023 14:42:09 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0019790;
+        Tue, 17 Oct 2023 11:42:07 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D623CC433C7;
+        Tue, 17 Oct 2023 18:42:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697568127;
+        bh=lGFXEWFnum9tD8Qq7965lPiDiK5TjJr0YSfkEVSWvV4=;
+        h=From:Date:Subject:To:Cc:From;
+        b=E0OMPh1bZEzpKFMSF2r+o5Do6gdJ2zoZV3pv8cqFm9FPDHMy5+6PEb7kknuVvURHY
+         iet7AjRkxuZ/2As/yWkKgNljaOLrClxg4dNFjcPRCh74G0dMyG5eiG/5Zq8pvV3MUe
+         uMczM3Vmjtq06rYJNwFg6cSKm6wTg+CMOWKDpppMdH8EBBgxgiboUFSBJ0QjxzJNlz
+         wRjLxiU6/Q09rkPL0l8N5YPzr/BYwPAAOVgEUZljoKGJkcAig/bAwmO4FPw/fON8h+
+         A3Jj69s1IHpuXNGFUOM1802tSnsixRp6UQAq78YIBB9S37D0LkLfKE7kXykpPENVyO
+         Ajt8MLBbg7xBA==
+From:   Nathan Chancellor <nathan@kernel.org>
+Date:   Tue, 17 Oct 2023 11:41:58 -0700
+Subject: [PATCH] PCI: rcar-gen4: Fix type of type parameter in
+ rcar_gen4_pcie_ep_raise_irq()
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230911220920.1817033-2-Frank.Li@nxp.com>
-X-Spam-Status: No, score=1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_SORBS_WEB,SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: *
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20231017-pcie-rcar-wifpts-v1-1-ab1f42bf9386@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAHXVLmUC/x3MQQ5AMBBA0avIrE3SEiWuIhZMp8yGZipIxN01l
+ m/x/wOJVThBXzygfEqSfcuwZQG0TtvCKD4bKlPV1tgWIwmj0qR4SYhHQkeu8cGFjroZchaVg9z
+ /chjf9wNTBEnZYgAAAA==
+To:     marek.vasut+renesas@gmail.com, yoshihiro.shimoda.uh@renesas.com,
+        lpieralisi@kernel.org, kw@linux.com
+Cc:     robh@kernel.org, bhelgaas@google.com, ndesaulniers@google.com,
+        trix@redhat.com, fancer.lancer@gmail.com, mani@kernel.org,
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        llvm@lists.linux.dev, patches@lists.linux.dev,
+        Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.13-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2708; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=lGFXEWFnum9tD8Qq7965lPiDiK5TjJr0YSfkEVSWvV4=;
+ b=owGbwMvMwCEmm602sfCA1DTG02pJDKl6V+tMfm849+t5ybYrynFuydfNOJ4pf/9out3wjJB40
+ TxhI8nYjlIWBjEOBlkxRZbqx6rHDQ3nnGW8cWoSzBxWJpAhDFycAjCRxJcM/xPLP0veNtjB8pOz
+ Js9px7+UVKNoHo//3WvvRew5NvtbvyPD/4hFW/6v7pAJCQqym/o5JWDKoZV/nW7eOFKUl+2lYrH
+ /ORsA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 06:09:16PM -0400, Frank Li wrote:
-> This commit introduces a common method for sending messages from the Root
-> Complex (RC) to the Endpoint (EP) by utilizing the platform MSI interrupt
-> controller, such as ARM GIC, as an EP doorbell. Maps the memory assigned
-> for the BAR region by the PCI host to the message address of the platform
-> MSI interrupt controller in the PCI EP. As a result, when the PCI RC writes
+With clang's kernel control flow integrity (kCFI, CONFIG_CFI_CLANG),
+indirect call targets are validated against the expected function
+pointer prototype to make sure the call target is valid to help mitigate
+ROP attacks. If they are not identical, there is a failure at run time,
+which manifests as either a kernel panic or thread getting killed. A
+warning in clang aims to catch these at compile time, which reveals:
 
-"Doorbell feature is implemented by mapping the EP's MSI interrupt controller
-message address to a dedicated BAR in the EPC core. It is the responsibility
-of the EPF driver to pass the actual message data to be written by the host to
-the doorbell BAR region through its own logic."
+  drivers/pci/controller/dwc/pcie-rcar-gen4.c:403:15: error: incompatible function pointer types initializing 'int (*)(struct dw_pcie_ep *, u8, enum pci_epc_irq_type, u16)' (aka 'int (*)(struct dw_pcie_ep *, unsigned char, enum pci_epc_irq_type, unsigned sort)') with an expression of type 'int (struct dw_pcie_ep *, u8, unsigned int, u16)' (aka 'int (struct dw_pcie_ep *, unsigned char, unsigned int, unsigned short)') [-Werror,-Wincompatible-function-pointer-types-strict]
+    403 |         .raise_irq = rcar_gen4_pcie_ep_raise_irq,
+        |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+  1 error generated.
 
-> to the BAR region, it triggers an IRQ at the EP. This implementation serves
-> as a common method for all endpoint function drivers.
-> 
-> However, it currently supports only one EP physical function due to
-> limitations in ARM MSI/IMS readiness.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/endpoint/pci-epc-core.c | 192 ++++++++++++++++++++++++++++
->  drivers/pci/endpoint/pci-epf-core.c |  44 +++++++
->  include/linux/pci-epc.h             |   6 +
->  include/linux/pci-epf.h             |   7 +
->  4 files changed, 249 insertions(+)
-> 
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index 5a4a8b0be6262..d336a99c6a94f 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -10,6 +10,7 @@
->  #include <linux/slab.h>
->  #include <linux/module.h>
->  
-> +#include <linux/msi.h>
->  #include <linux/pci-epc.h>
->  #include <linux/pci-epf.h>
->  #include <linux/pci-ep-cfs.h>
-> @@ -783,6 +784,197 @@ void pci_epc_bme_notify(struct pci_epc *epc)
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_bme_notify);
->  
-> +/**
-> + * pci_epc_alloc_doorbell() - alloc an address space to let RC trigger EP side IRQ by write data to
-> + *			      the space.
+'->raise_irq()' in 'struct dw_pcie_ep_ops' expects a type parameter of
+type 'enum pci_epc_irq_type', not 'unsigned int'. Adjust the type to
+match and use the proper enum values in the switch. The underlying value
+of both the enum and the macro is the same, so there is no functional
+change while clearing up the warning and avoiding a CFI failure at run
+time.
 
-"Allocate platform specific doorbell IRQs to be used by the host to trigger
-doorbells on EP."
+Fixes: 32b83c68d634 ("PCI: rcar-gen4: Add endpoint mode support")
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-> + *
-> + * @epc: the EPC device that need doorbell address and data from RC.
+diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+index 619262d32f4e..0c0f5c257b14 100644
+--- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
++++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+@@ -353,14 +353,15 @@ static void rcar_gen4_pcie_ep_deinit(struct dw_pcie_ep *ep)
+ }
+ 
+ static int rcar_gen4_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+-				       unsigned int type, u16 interrupt_num)
++				       enum pci_epc_irq_type type,
++				       u16 interrupt_num)
+ {
+ 	struct dw_pcie *dw = to_dw_pcie_from_ep(ep);
+ 
+ 	switch (type) {
+-	case PCI_IRQ_LEGACY:
++	case PCI_EPC_IRQ_LEGACY:
+ 		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
+-	case PCI_IRQ_MSI:
++	case PCI_EPC_IRQ_MSI:
+ 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
+ 	default:
+ 		dev_err(dw->dev, "Unknown IRQ type\n");
 
-EPC device for which the doorbell needs to be allocated
+---
+base-commit: de45624e69e14ccd6b4b2886155578bb218925de
+change-id: 20231017-pcie-rcar-wifpts-6c65df6f8c8b
 
-> + * @func_no: the physical endpoint function number in the EPC device.
-> + * @vfunc_no: the virtual endpoint function number in the physical function.
-> + * @num_msgs: the total number of doorbell messages
-
-s/num_msgs/num_db
-
-> + *
-> + * Return: 0 success, other is failure
-> + */
-> +int pci_epc_alloc_doorbell(struct pci_epc *epc, u8 func_no, u8 vfunc_no, int num_msgs)
-> +{
-> +	int ret;
-> +
-> +	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
-> +		return -EINVAL;
-> +
-> +	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-> +		return -EINVAL;
-> +
-> +	if (!epc->ops->alloc_doorbell)
-> +		return 0;
-
-You mentioned 0 is a success. So if there is no callback, you want to return
-success?
-
-> +
-> +	mutex_lock(&epc->lock);
-> +	ret = epc->ops->alloc_doorbell(epc, func_no, vfunc_no, num_msgs);
-
-Why can't you just call the generic function here and in other places instead of
-implementing callbacks? I do not see a necessity for EPC specific callbacks. If
-there is one, please specify.
-
-> +	mutex_unlock(&epc->lock);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_epc_alloc_doorbell);
-> +
-> +/**
-> + * pci_epc_free_doorbell() - free resource allocated by pci_epc_alloc_doorbell()
-> + *
-> + * @epc: the EPC device that need doorbell address and data from RC.
-
-Same as above.
-
-> + * @func_no: the physical endpoint function number in the EPC device.
-> + * @vfunc_no: the virtual endpoint function number in the physical function.
-> + *
-> + * Return: 0 success, other is failure
-> + */
-> +void pci_epc_free_doorbell(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
-> +{
-> +	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
-> +		return;
-> +
-> +	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-> +		return;
-> +
-> +	if (!epc->ops->free_doorbell)
-> +		return;
-> +
-> +	mutex_lock(&epc->lock);
-> +	epc->ops->free_doorbell(epc, func_no, vfunc_no);
-
-Same as suggested above.
-
-> +	mutex_unlock(&epc->lock);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_epc_free_doorbell);
-> +
-> +static irqreturn_t pci_epf_generic_doorbell_handler(int irq, void *data)
-> +{
-> +	struct pci_epf *epf = data;
-> +
-> +	if (epf->event_ops && epf->event_ops->doorbell)
-> +		epf->event_ops->doorbell(epf, irq - epf->virq_base);
-
-Same as suggested above.
-
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static void pci_epc_generic_write_msi_msg(struct msi_desc *desc, struct msi_msg *msg)
-> +{
-> +	struct pci_epc *epc = NULL;
-> +	struct class_dev_iter iter;
-> +	struct pci_epf *epf;
-> +	struct device *dev;
-> +
-> +	class_dev_iter_init(&iter, pci_epc_class, NULL, NULL);
-> +	while ((dev = class_dev_iter_next(&iter))) {
-> +		if (dev->parent != desc->dev)
-> +			continue;
-> +
-> +		epc = to_pci_epc(dev);
-> +
-> +		class_dev_iter_exit(&iter);
-> +		break;
-> +	}
-> +
-> +	if (!epc)
-> +		return;
-> +
-> +	/* Only support one EPF for doorbell */
-> +	epf = list_first_entry_or_null(&epc->pci_epf, struct pci_epf, list);
-> +
-
-No need of this newline
-
-> +	if (!epf)
-> +		return;
-> +
-> +	if (epf->msg && desc->msi_index < epf->num_msgs)
-> +		epf->msg[desc->msi_index] = *msg;
-> +}
-> +
-> +
-
-Remove extra newline
-
-> +/**
-> + * pci_epc_generic_alloc_doorbell() - Common help function. Allocate address space from MSI
-> + *                                    controller
-> + *
-> + * @epc: the EPC device that need doorbell address and data from RC.
-> + * @func_no: the physical endpoint function number in the EPC device.
-> + * @vfunc_no: the virtual endpoint function number in the physical function.
-> + * @num_msgs: the total number of doorbell messages
-> + *
-
-Same comment as for pci_epc_alloc_doorbell()
-
-> + * Remark: use this function only if EPC driver just register one EPC device.
-> + *
-> + * Return: 0 success, other is failure
-> + */
-> +int pci_epc_generic_alloc_doorbell(struct pci_epc *epc, u8 func_no, u8 vfunc_no, int num_msgs)
-> +{
-> +	struct pci_epf *epf;
-> +	struct device *dev;
-> +	int virq, last;
-> +	int ret;
-> +	int i;
-> +
-> +	if (IS_ERR_OR_NULL(epc))
-> +		return -EINVAL;
-> +
-> +	/* Currently only support one func and one vfunc for doorbell */
-> +	if (func_no || vfunc_no)
-> +		return -EINVAL;
-> +
-> +	epf = list_first_entry_or_null(&epc->pci_epf, struct pci_epf, list);
-> +	if (!epf)
-> +		return -EINVAL;
-> +
-> +	dev = epc->dev.parent;
-> +	ret = platform_msi_domain_alloc_irqs(dev, num_msgs, pci_epc_generic_write_msi_msg);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to allocate MSI\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	last = -1;
-> +	for (i = 0; i < num_msgs; i++) {
-
-You should iterate over msi_desc as below:
-
-        msi_lock_descs(dev);
-        msi_for_each_desc(desc, dev, MSI_DESC_ALL) {
-		...
-	}
-	msi_unlock_descs(dev);
-
-> +		virq = msi_get_virq(dev, i);
-> +		if (i == 0)
-> +			epf->virq_base = virq;
-> +
-> +		ret = request_irq(virq, pci_epf_generic_doorbell_handler, 0,
-
-	request_irq(desc->irq, ...)
-
-> +				  kasprintf(GFP_KERNEL, "pci-epc-doorbell%d", i), epf);
-> +
-> +		if (ret) {
-> +			dev_err(dev, "Failed to request doorbell\n");
-> +			goto err_free_irq;
-> +		}
-> +		last = i;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_free_irq:
-> +	for (i = 0; i < last; i++)
-> +		kfree(free_irq(epf->virq_base + i, epf));
-> +	platform_msi_domain_free_irqs(dev);
-> +
-> +	return -EINVAL;
-
-	return ret;
-
-> +}
-> +EXPORT_SYMBOL_GPL(pci_epc_generic_alloc_doorbell);
-> +
-
-[...]
-
-> diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
-> index 3f44b6aec4770..485c146a5efe2 100644
-> --- a/include/linux/pci-epf.h
-> +++ b/include/linux/pci-epf.h
-> @@ -79,6 +79,7 @@ struct pci_epc_event_ops {
->  	int (*link_up)(struct pci_epf *epf);
->  	int (*link_down)(struct pci_epf *epf);
->  	int (*bme)(struct pci_epf *epf);
-> +	int (*doorbell)(struct pci_epf *epf, int index);
-
-kdoc missing.
-
->  };
->  
->  /**
-> @@ -180,6 +181,9 @@ struct pci_epf {
->  	unsigned long		vfunction_num_map;
->  	struct list_head	pci_vepf;
->  	const struct pci_epc_event_ops *event_ops;
-> +	struct msi_msg *msg;
-> +	u16 num_msgs;
-
-num_db
-
-You also need to add kdoc for each new member.
-
-- Mani
-
+Best regards,
 -- 
-மணிவண்ணன் சதாசிவம்
+Nathan Chancellor <nathan@kernel.org>
+
