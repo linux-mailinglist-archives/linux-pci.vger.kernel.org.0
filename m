@@ -2,353 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 227F87CBD0A
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Oct 2023 10:04:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70D407CBD1F
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Oct 2023 10:11:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234698AbjJQIE4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Oct 2023 04:04:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53066 "EHLO
+        id S234620AbjJQILm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Oct 2023 04:11:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232300AbjJQIEz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Oct 2023 04:04:55 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F0A4AB
-        for <linux-pci@vger.kernel.org>; Tue, 17 Oct 2023 01:04:53 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-53e751aeb3cso4833584a12.2
-        for <linux-pci@vger.kernel.org>; Tue, 17 Oct 2023 01:04:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1697529891; x=1698134691; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BPJyoJIwpE+82CHC/pcghGRE1m5gWRE3gtJYmta+U40=;
-        b=shfqLy4vyT/qV+TnHg6rYvooIEDRSkRpHhn0rxr/D6YQ3iDPAXW703UGxDA/CjMarE
-         vdZS2mq+QGodz2eMMcup+alUPeRPXc0qtIZ1Rh2wnYGEiIc37S7XoNR6pXLy4zG0TqoZ
-         SLASsE7WAigBdJfSfeSLWdL/8fIgU2LhV9JSwH5eycZW9t0TtprClIuhCo0CSZ9BTywo
-         UR3dHR6BOPB2Mv6DzIafcQ92ZecFSPEZFxZQ8oAnjr4O7W9wLQJdV8E0QLwGm5sgKjlT
-         d3ojqNvhO6OYqYYriLBa5Z9smOOi8uzwCMQVPH7jpwrqUsQd9CXQYv5H+8eXo7r9U90/
-         UE+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697529891; x=1698134691;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BPJyoJIwpE+82CHC/pcghGRE1m5gWRE3gtJYmta+U40=;
-        b=irfP8xXKtQpsrTHZNrUKK/lVtEtSV+KV19zcCo/kEXccuDTjMWLPqg+2H/H2TBa74o
-         aIG+RwVrnEHhzE0oQQqIneFlSDx/yAfDyoHciN5kYZululGv8cdwAqnd/dHHIW1ua79g
-         00kuUpM9sVK67UsEFKZ80WKvHTtUFlrbdAwCJi92x3RJ5hiAF/STMyUGhkxOJtxrFDtg
-         xSPOgxQB1lxRfTucXYtXviVsjnrKI2JJjbZWWvk+KyFx2kGI9lW1hTQrOQzjUrIl4oOI
-         AeSi49b0ijetIde9/hGCyOFeuhSj/TKIbbr1eDxWjwS+1ikU3aQJSL8joFTpxlXcBJO/
-         +Agw==
-X-Gm-Message-State: AOJu0YykaBj33CMMDgSH3GCdhaSJIhre2c1vIGdWN1NFFpoC4PVb2SOf
-        kSaIFHtvWJkxIYasSY2BPrZEPw==
-X-Google-Smtp-Source: AGHT+IH8uXVPlRbctlNzEuAo93MBn/Rg20BKZZWNK28RCp9tVq9jqn+j050BW1N4iwtuIe8VS8IF7g==
-X-Received: by 2002:a17:907:3da9:b0:9c4:d641:aff9 with SMTP id he41-20020a1709073da900b009c4d641aff9mr1179249ejc.67.1697529887914;
-        Tue, 17 Oct 2023 01:04:47 -0700 (PDT)
-Received: from localhost (host-213-179-129-39.customer.m-online.net. [213.179.129.39])
-        by smtp.gmail.com with ESMTPSA id d1-20020a170906544100b009adc81bb544sm743302ejp.106.2023.10.17.01.04.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Oct 2023 01:04:47 -0700 (PDT)
-Date:   Tue, 17 Oct 2023 10:04:46 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Ido Schimmel <idosch@nvidia.com>
+        with ESMTP id S234631AbjJQILi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Oct 2023 04:11:38 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2072.outbound.protection.outlook.com [40.107.223.72])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16FA993;
+        Tue, 17 Oct 2023 01:11:37 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QxtqxnwGAxuRo/DFLC4U0yMv8aaeg5I6erqr/OqQDGSTHo4t5Cry7olkhie3cF0s9ZAlZ5VDCrSRQsfp7FX4e2q6VrBN4fWu5KPFGpuw3o1vC/h+bEl4fw1kOX3YyqIjrKF1Kq8bbxDvrSQtVVEeaixhiLylYggOgpbF7zxR4Yh3Zkgrt47nlnKvRWxy2Wr3bEBykoBP5t/+qcb5CIeXdXNVaBqoNr/bpmHREjrKdbY14wN2IP1pJeJhCFI27DP6TPqvj1JRnR2hy6TvWG2MNxQJPUZCQzIQx07eJPQKdn8rCzwqcI/NjqjHSPUUF7EzeeWt6pPDiMx5QS53PBzEkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j4T+JoLj2ZzuDj3d75na6qY4knZE3cPRlR/JKGD+th4=;
+ b=F7tn1vn4qWdlUxpoxjjqnI2eU7KW3OdLtMXmp/aRnNI0tksewy5HKN3E3zH2MueXUNcMcu6fHLCZd8VDPcqsSVrKBYBHrwZvCYNJs2VIoxZUBA+uoVgfajiRfUfoQTiguLxRs2NUCIuE09GAnZK8iKhG5UtPCmofzPQ9GGgltTcjbKneYd6wosfjdd8MPiSa8w25BqII/Jpyk5OivCTHSjKdbLZ/I6TWjCdkF1Zxty9yEsHK3aKpe5aYf45jln8jR/nyq+mzzvogZvGSh35P7mTv0gqck7nl8xDYQKCFf5ImdM9Dg5Mj0itN3Oo91dMQnX1dHSXCFSreqaz9FYR8uA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j4T+JoLj2ZzuDj3d75na6qY4knZE3cPRlR/JKGD+th4=;
+ b=YxQei0w0r57E4U8fwsjPSEm+u8IzoLcwNVTlffEae0+0XmfL5io4pZc+oDNaBcU3WLBKFuoGBabbGb7AQYRJDifgA0fFB76lh+SnAMoEAsLSr0oF0xcquqWqS8OGZuyb9AK4Y2uj9FOgi8w8JGdCUxFAFlkWx+Q3Dq8eWQtvUgG9ezkf77ggZNIxLiO/f3YftFf3D6jS0WXEYXoReqNmKbgqz2u8J/tSqow/kOyalEoDFl8FYjLmaVkYKPQMYSWWHbGCOqCZX3Gj6CxEtWNeDEdBaZvAjcviC59L2nms0wQHInVV6YX/RMDPUtHkijjaGRVPX09QAl+J588nMbkIPQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY5PR12MB6179.namprd12.prod.outlook.com (2603:10b6:930:24::22)
+ by LV2PR12MB6014.namprd12.prod.outlook.com (2603:10b6:408:170::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.38; Tue, 17 Oct
+ 2023 08:11:34 +0000
+Received: from CY5PR12MB6179.namprd12.prod.outlook.com
+ ([fe80::628c:5cf4:ebb2:77f]) by CY5PR12MB6179.namprd12.prod.outlook.com
+ ([fe80::628c:5cf4:ebb2:77f%6]) with mapi id 15.20.6886.034; Tue, 17 Oct 2023
+ 08:11:34 +0000
+Date:   Tue, 17 Oct 2023 11:11:24 +0300
+From:   Ido Schimmel <idosch@nvidia.com>
+To:     Jiri Pirko <jiri@resnulli.us>
 Cc:     netdev@vger.kernel.org, linux-pci@vger.kernel.org,
         davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
         edumazet@google.com, bhelgaas@google.com,
         alex.williamson@redhat.com, lukas@wunner.de, petrm@nvidia.com,
         jiri@nvidia.com, mlxsw@nvidia.com
-Subject: Re: [RFC PATCH net-next 03/12] devlink: Acquire device lock during
- reload
-Message-ID: <ZS5AHnlJp6orqdLb@nanopsycho>
+Subject: Re: [RFC PATCH net-next 02/12] devlink: Hold a reference on parent
+ device
+Message-ID: <ZS5BrH1AOVJyt6ac@shredder>
 References: <20231017074257.3389177-1-idosch@nvidia.com>
- <20231017074257.3389177-4-idosch@nvidia.com>
-MIME-Version: 1.0
+ <20231017074257.3389177-3-idosch@nvidia.com>
+ <ZS4+InoncFqPVW72@nanopsycho>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231017074257.3389177-4-idosch@nvidia.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <ZS4+InoncFqPVW72@nanopsycho>
+X-ClientProxiedBy: TLZP290CA0011.ISRP290.PROD.OUTLOOK.COM
+ (2603:1096:950:9::19) To CY5PR12MB6179.namprd12.prod.outlook.com
+ (2603:10b6:930:24::22)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6179:EE_|LV2PR12MB6014:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1835f0e5-8902-4975-8bbd-08dbcee8ad9b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CgfE173nmDOeze4pg8k0f4h2JN/khMTVUJklJnmr5kni1XjJYRvr/P55mR1EKk1berTOSOs4B5MDnTIuabY3YXHRQxwcrtu11TQ/2mqOEPdmFu8O3NO/Cy8bwDr2hEFXlrEQ8AleGU7QHQN7ANapcuDImv1AmBrxhdb3oRNOhxZHYkgUD14sxGI7vAlnjgV5617LM2h+DWd4Ri7TMEoHcnXAk+Pt4C3tYOpPBx2G0bZ+r6ZGezkBQC+KXFMczPHFkIQHoN5BrZCu3SaFKIryZQ5bA/0WQTrecjaqeJLUID5ixNibLIZM0beaU1LV6AgXbhjtFac2G+IwAL0PZ4HhDtkgKFMdPeQjhLQCiJmRuniRVPlJnSZf1GuuCu2b5FoINSqutbk+KI6JY1Z+V4LdnkB71qm8O45GYWlhQXIOXK50DoASoaLs4pQoBX0wtJOmYVqYliFLhPsON8+IcqEXj49mo/UTIESuskndN23GPPZyYQsRNFDINOtVOpIBEeqOcWN+Md0OE+6CK8DqatUFJEU3NjpgcMQ7vOu8Y1735QmGHr0nLEmbYWDeZoCmEcupT2D9S1orF6N5zQWbaOayubh3hCKRY3SXt5z3iLqK9Qfc1XuUW53w2ti3ztofKfPhTwO+IU6eRn9S67RFvlHCOQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6179.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(39860400002)(376002)(346002)(396003)(136003)(366004)(230922051799003)(1800799009)(64100799003)(186009)(451199024)(6486002)(7416002)(66556008)(2906002)(66476007)(9686003)(6666004)(38100700002)(26005)(83380400001)(107886003)(4326008)(8936002)(8676002)(5660300002)(41300700001)(6512007)(478600001)(966005)(6916009)(6506007)(66946007)(33716001)(86362001)(316002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2W44znea0tuJGL/3pr9RSGoda8+gjMEi3v8CvGwDz+uZJdSts0s+vpvKafS1?=
+ =?us-ascii?Q?LxuQBknNbbyuhJKUgmxKIsMwp8veMe6D6FtV4nzyK59W33zdgmHu4l/C2+E8?=
+ =?us-ascii?Q?dFbUc0wkloJj+/w6mJG9vb4pfWTnWUMiGcw6UuG/+wQaaN58Q52W27igT/QQ?=
+ =?us-ascii?Q?VaiQgVgrSC2/LSZLpD6Nj/TRx0h/4GvNdNv9aC5XSYi5L0SAzr7sX1KLeZmk?=
+ =?us-ascii?Q?TD6tnskBWbgAQSgDI3OK3nFH+JjbLoiDGZhmM2xyKwVIYUefkS52PSGRPrJH?=
+ =?us-ascii?Q?K47O3e1o0Qh7uZwrTxidvffzk+m697vBxGjDwKb59TcOuR8gH01LGGg+MGx1?=
+ =?us-ascii?Q?J6USPTGX9QwtZYvEiFU6FroV6vCS5Yj2jMFMzg1zHUVuL3PnwJqwgMRlLYXy?=
+ =?us-ascii?Q?0gFc7Rt+vxH6zULWbOzsRp7VmNrV7XRGtialuwh3BJa+TT7wqsz/ZjEGzrK8?=
+ =?us-ascii?Q?rETSrKtZyP5hqMODdDs0COWL4b3yy2JVqgZYPc8jKBDz31d1TfMfRkpR6XC6?=
+ =?us-ascii?Q?IeZJYrVYKHMZjs3uS/pKa163ltcemiphja0cgR8P1wTCb6Mi0IBhiB7GICMH?=
+ =?us-ascii?Q?0ODMCIwl1iTPIpygvJPnPVEKLkw0KeCEAXg67q+RXuV3uFCA6UPEy6z6NC83?=
+ =?us-ascii?Q?w/A5YJQPcDtjsu6u1omBITsULEIwKYPlcx1ENBsJ/Kid4voDplCSHEBZt2RP?=
+ =?us-ascii?Q?CQntZVfAEZt4feHiG3JUJiawfdj7vRg8dD+y+k6I87GwY3Tc5VNhHmNr8tpk?=
+ =?us-ascii?Q?w3N9ZZijru7bS+FrEGHaMi9kujebjXQyrpNww7N3EYeM9HdbPAYWtO06iitz?=
+ =?us-ascii?Q?jsTArEQl7qOdP9b6vrEHREjL67nz33kdI7TtB3MABCxhk2z20elsqiw+hIUj?=
+ =?us-ascii?Q?8LuIikI94bZPPbaxJRzJV5EcmXpxjk80bNR4HSCaTlZitE5CyDHZ81LaAqPB?=
+ =?us-ascii?Q?ELG9RmWMEkMgweMhUMgFxRmaSACAIK6Gpr8MHi7xGZgX7AuTwbkuepGRewLz?=
+ =?us-ascii?Q?YJEtePERQRQfQP6bW78AtFPErP3GDC4aQqyZSOs35tQt5jsiMcKZv7B76FM4?=
+ =?us-ascii?Q?0wO5tf5J6derf77FwV/IJv9UUdAOEsWetA1mxSZWV5o0lTz/DqwplyR3rEyW?=
+ =?us-ascii?Q?AbF+AvNHaNjltVjU+JGqPBsIYO84PUaoSmr1CUP1FMFCwBFn5QjXQuhCmNzp?=
+ =?us-ascii?Q?zh2d9kKdMV6oeyolQ383x3GAIuXPEFEuy9oicXyrJyaRz7VYxs+sNWL+1lMs?=
+ =?us-ascii?Q?AOBuer0MtlLGODkp7RCSLe5yPUs+I+/MCNc6h4ekZGsnrx/H52c57Cr+2UEM?=
+ =?us-ascii?Q?FZrSGPVtoap1zpoiYGlGDrNo4+qOKAq9fTXINKS/7Liyt8rb7BfehMAuzbN0?=
+ =?us-ascii?Q?ZfOm9xur2T7UWRFmH8+yz1Cre55bSdE19WRxc/DWk7idk3w9jewNXsBobX3W?=
+ =?us-ascii?Q?UH8GiN+oKZd+ZC7gCXU4Ch51V6DPR7Sj3/9uMZO8Fo1uLymTeVC96/iH3eqL?=
+ =?us-ascii?Q?6ybv6TYzfC+R7KM6sHwG+qJmcUMo0xRJ7S72erFilmbxslLj/V4wzebOIFZZ?=
+ =?us-ascii?Q?pqD9uDl8qm34YN9Cymw/wDmdD93AglLcjozEGiWa?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1835f0e5-8902-4975-8bbd-08dbcee8ad9b
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6179.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2023 08:11:34.4451
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nv6ayOI8R/m/YuAMyYuUu1B6YdoU+XCPu5TXSG54iW/7Mdf6mwh3BIOEWJO9SLOoVxPnFdlV6/khCTub2/2e7A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB6014
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Tue, Oct 17, 2023 at 09:42:48AM CEST, idosch@nvidia.com wrote:
->Device drivers register with devlink from their probe routines (under
->the device lock) by acquiring the devlink instance lock and calling
->devl_register().
->
->Drivers that support a devlink reload usually implement the
->reload_{down, up}() operations in a similar fashion to their remove and
->probe routines, respectively.
->
->However, while the remove and probe routines are invoked with the device
->lock held, the reload operations are only invoked with the devlink
->instance lock held. It is therefore impossible for drivers to acquire
->the device lock from their reload operations, as this would result in
->lock inversion.
->
->The motivating use case for invoking the reload operations with the
->device lock held is in mlxsw which needs to trigger a PCI reset as part
->of the reload. The driver cannot call pci_reset_function() as this
->function acquires the device lock. Instead, it needs to call
->__pci_reset_function_locked which expects the device lock to be held.
->
->To that end, adjust devlink to always acquire the device lock before the
->devlink instance lock when performing a reload. Do that both when reload
->is triggered explicitly by user space and when it is triggered as part
->of netns dismantle.
->
->Tested the following flows with netdevsim and mlxsw while lockdep is
->enabled:
->
->netdevsim:
->
-> # echo "10 1" > /sys/bus/netdevsim/new_device
-> # devlink dev reload netdevsim/netdevsim10
-> # ip netns add bla
-> # devlink dev reload netdevsim/netdevsim10 netns bla
-> # ip netns del bla
-> # echo 10 > /sys/bus/netdevsim/del_device
->
->mlxsw:
->
-> # devlink dev reload pci/0000:01:00.0
-> # ip netns add bla
-> # devlink dev reload pci/0000:01:00.0 netns bla
-> # ip netns del bla
-> # echo 1 > /sys/bus/pci/devices/0000\:01\:00.0/remove
-> # echo 1 > /sys/bus/pci/rescan
->
->Signed-off-by: Ido Schimmel <idosch@nvidia.com>
->---
-> net/devlink/core.c          |  4 ++--
-> net/devlink/dev.c           |  8 ++++++++
-> net/devlink/devl_internal.h | 19 ++++++++++++++++++-
-> net/devlink/health.c        |  3 ++-
-> net/devlink/netlink.c       | 21 ++++++++++++++-------
-> net/devlink/region.c        |  3 ++-
-> 6 files changed, 46 insertions(+), 12 deletions(-)
->
->diff --git a/net/devlink/core.c b/net/devlink/core.c
->index 5b8b692b8c76..0f866f2cbaf6 100644
->--- a/net/devlink/core.c
->+++ b/net/devlink/core.c
->@@ -502,14 +502,14 @@ static void __net_exit devlink_pernet_pre_exit(struct net *net)
-> 	 * all devlink instances from this namespace into init_net.
-> 	 */
-> 	devlinks_xa_for_each_registered_get(net, index, devlink) {
->-		devl_lock(devlink);
->+		devl_dev_lock(devlink, true);
-> 		err = 0;
-> 		if (devl_is_registered(devlink))
-> 			err = devlink_reload(devlink, &init_net,
-> 					     DEVLINK_RELOAD_ACTION_DRIVER_REINIT,
-> 					     DEVLINK_RELOAD_LIMIT_UNSPEC,
-> 					     &actions_performed, NULL);
->-		devl_unlock(devlink);
->+		devl_dev_unlock(devlink, true);
-> 		devlink_put(devlink);
-> 		if (err && err != -EOPNOTSUPP)
-> 			pr_warn("Failed to reload devlink instance into init_net\n");
->diff --git a/net/devlink/dev.c b/net/devlink/dev.c
->index dc8039ca2b38..70cebe716187 100644
->--- a/net/devlink/dev.c
->+++ b/net/devlink/dev.c
->@@ -4,6 +4,7 @@
->  * Copyright (c) 2016 Jiri Pirko <jiri@mellanox.com>
->  */
+On Tue, Oct 17, 2023 at 09:56:18AM +0200, Jiri Pirko wrote:
+> Tue, Oct 17, 2023 at 09:42:47AM CEST, idosch@nvidia.com wrote:
+> >Each devlink instance is associated with a parent device and a pointer
+> >to this device is stored in the devlink structure, but devlink does not
+> >hold a reference on this device.
+> >
+> >This is going to be a problem in the next patch where - among other
+> >things - devlink will acquire the device lock during netns dismantle,
+> >before the reload operation. Since netns dismantle is performed
+> >asynchronously and since a reference is not held on the parent device,
+> >it will be possible to hit a use-after-free.
+> >
+> >Prepare for the upcoming change by holding a reference on the parent
+> >device.
+> >
 > 
->+#include <linux/device.h>
-> #include <net/genetlink.h>
-> #include <net/sock.h>
-> #include "devl_internal.h"
->@@ -433,6 +434,13 @@ int devlink_reload(struct devlink *devlink, struct net *dest_net,
-> 	struct net *curr_net;
-> 	int err;
-> 
->+	/* Make sure the reload operations are invoked with the device lock
->+	 * held to allow drivers to trigger functionality that expects it
->+	 * (e.g., PCI reset) and to close possible races between these
->+	 * operations and probe/remove.
->+	 */
->+	device_lock_assert(devlink->dev);
->+
-> 	memcpy(remote_reload_stats, devlink->stats.remote_reload_stats,
-> 	       sizeof(remote_reload_stats));
-> 
->diff --git a/net/devlink/devl_internal.h b/net/devlink/devl_internal.h
->index 741d1bf1bec8..a9c5e52c40a7 100644
->--- a/net/devlink/devl_internal.h
->+++ b/net/devlink/devl_internal.h
->@@ -3,6 +3,7 @@
->  * Copyright (c) 2016 Jiri Pirko <jiri@mellanox.com>
->  */
-> 
->+#include <linux/device.h>
-> #include <linux/etherdevice.h>
-> #include <linux/mutex.h>
-> #include <linux/netdevice.h>
->@@ -96,6 +97,20 @@ static inline bool devl_is_registered(struct devlink *devlink)
-> 	return xa_get_mark(&devlinks, devlink->index, DEVLINK_REGISTERED);
-> }
-> 
->+static inline void devl_dev_lock(struct devlink *devlink, bool dev_lock)
->+{
->+	if (dev_lock)
->+		device_lock(devlink->dev);
->+	devl_lock(devlink);
->+}
->+
->+static inline void devl_dev_unlock(struct devlink *devlink, bool dev_lock)
->+{
->+	devl_unlock(devlink);
->+	if (dev_lock)
->+		device_unlock(devlink->dev);
->+}
->+
-> typedef void devlink_rel_notify_cb_t(struct devlink *devlink, u32 obj_index);
-> typedef void devlink_rel_cleanup_cb_t(struct devlink *devlink, u32 obj_index,
-> 				      u32 rel_index);
->@@ -113,6 +128,7 @@ int devlink_rel_devlink_handle_put(struct sk_buff *msg, struct devlink *devlink,
-> /* Netlink */
-> #define DEVLINK_NL_FLAG_NEED_PORT		BIT(0)
-> #define DEVLINK_NL_FLAG_NEED_DEVLINK_OR_PORT	BIT(1)
->+#define DEVLINK_NL_FLAG_NEED_DEV_LOCK		BIT(2)
-> 
-> enum devlink_multicast_groups {
-> 	DEVLINK_MCGRP_CONFIG,
->@@ -140,7 +156,8 @@ typedef int devlink_nl_dump_one_func_t(struct sk_buff *msg,
-> 				       int flags);
-> 
-> struct devlink *
->-devlink_get_from_attrs_lock(struct net *net, struct nlattr **attrs);
->+devlink_get_from_attrs_lock(struct net *net, struct nlattr **attrs,
->+			    bool dev_lock);
-> 
-> int devlink_nl_dumpit(struct sk_buff *msg, struct netlink_callback *cb,
-> 		      devlink_nl_dump_one_func_t *dump_one);
->diff --git a/net/devlink/health.c b/net/devlink/health.c
->index 51e6e81e31bb..3c4c049c3636 100644
->--- a/net/devlink/health.c
->+++ b/net/devlink/health.c
->@@ -1266,7 +1266,8 @@ devlink_health_reporter_get_from_cb_lock(struct netlink_callback *cb)
-> 	struct nlattr **attrs = info->attrs;
-> 	struct devlink *devlink;
-> 
->-	devlink = devlink_get_from_attrs_lock(sock_net(cb->skb->sk), attrs);
->+	devlink = devlink_get_from_attrs_lock(sock_net(cb->skb->sk), attrs,
->+					      false);
-> 	if (IS_ERR(devlink))
-> 		return NULL;
-> 
->diff --git a/net/devlink/netlink.c b/net/devlink/netlink.c
->index 499304d9de49..14d598000d72 100644
->--- a/net/devlink/netlink.c
->+++ b/net/devlink/netlink.c
->@@ -124,7 +124,8 @@ int devlink_nl_msg_reply_and_new(struct sk_buff **msg, struct genl_info *info)
-> }
-> 
-> struct devlink *
->-devlink_get_from_attrs_lock(struct net *net, struct nlattr **attrs)
->+devlink_get_from_attrs_lock(struct net *net, struct nlattr **attrs,
->+			    bool dev_lock)
-> {
-> 	struct devlink *devlink;
-> 	unsigned long index;
->@@ -138,12 +139,12 @@ devlink_get_from_attrs_lock(struct net *net, struct nlattr **attrs)
-> 	devname = nla_data(attrs[DEVLINK_ATTR_DEV_NAME]);
-> 
-> 	devlinks_xa_for_each_registered_get(net, index, devlink) {
->-		devl_lock(devlink);
->+		devl_dev_lock(devlink, dev_lock);
-> 		if (devl_is_registered(devlink) &&
-> 		    strcmp(devlink->dev->bus->name, busname) == 0 &&
-> 		    strcmp(dev_name(devlink->dev), devname) == 0)
-> 			return devlink;
->-		devl_unlock(devlink);
->+		devl_dev_unlock(devlink, dev_lock);
-> 		devlink_put(devlink);
-> 	}
-> 
->@@ -155,9 +156,12 @@ static int __devlink_nl_pre_doit(struct sk_buff *skb, struct genl_info *info,
-> {
-> 	struct devlink_port *devlink_port;
-> 	struct devlink *devlink;
->+	bool dev_lock;
-> 	int err;
-> 
->-	devlink = devlink_get_from_attrs_lock(genl_info_net(info), info->attrs);
->+	dev_lock = !!(flags & DEVLINK_NL_FLAG_NEED_DEV_LOCK);
+> Just a note, I'm currently pushing the same patch as a part
+> of my patchset:
+> https://lore.kernel.org/all/20231013121029.353351-4-jiri@resnulli.us/
 
-I know you are aware, but just for the record: This conflicts
-with my patchset "devlink: finish conversion to generated split_ops"
-where I'm removing use of internal_flags. Ops that need this (should
-be only reload) would need separate devlink_nl_pre/post_doit() helpers.
+Then you probably need patch #1 as well:
 
-Otherwise the patch looks fine to me.
-
-
->+	devlink = devlink_get_from_attrs_lock(genl_info_net(info), info->attrs,
->+					      dev_lock);
-> 	if (IS_ERR(devlink))
-> 		return PTR_ERR(devlink);
-> 
->@@ -177,7 +181,7 @@ static int __devlink_nl_pre_doit(struct sk_buff *skb, struct genl_info *info,
-> 	return 0;
-> 
-> unlock:
->-	devl_unlock(devlink);
->+	devl_dev_unlock(devlink, dev_lock);
-> 	devlink_put(devlink);
-> 	return err;
-> }
->@@ -205,9 +209,11 @@ void devlink_nl_post_doit(const struct genl_split_ops *ops,
-> 			  struct sk_buff *skb, struct genl_info *info)
-> {
-> 	struct devlink *devlink;
->+	bool dev_lock;
-> 
->+	dev_lock = !!(ops->internal_flags & DEVLINK_NL_FLAG_NEED_DEV_LOCK);
-> 	devlink = info->user_ptr[0];
->-	devl_unlock(devlink);
->+	devl_dev_unlock(devlink, dev_lock);
-> 	devlink_put(devlink);
-> }
-> 
->@@ -219,7 +225,7 @@ static int devlink_nl_inst_single_dumpit(struct sk_buff *msg,
-> 	struct devlink *devlink;
-> 	int err;
-> 
->-	devlink = devlink_get_from_attrs_lock(sock_net(msg->sk), attrs);
->+	devlink = devlink_get_from_attrs_lock(sock_net(msg->sk), attrs, false);
-> 	if (IS_ERR(devlink))
-> 		return PTR_ERR(devlink);
-> 	err = dump_one(msg, devlink, cb, flags | NLM_F_DUMP_FILTERED);
->@@ -420,6 +426,7 @@ static const struct genl_small_ops devlink_nl_small_ops[40] = {
-> 		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
-> 		.doit = devlink_nl_cmd_reload,
-> 		.flags = GENL_ADMIN_PERM,
->+		.internal_flags = DEVLINK_NL_FLAG_NEED_DEV_LOCK,
-> 	},
-> 	{
-> 		.cmd = DEVLINK_CMD_PARAM_SET,
->diff --git a/net/devlink/region.c b/net/devlink/region.c
->index d197cdb662db..30c6c49ec10b 100644
->--- a/net/devlink/region.c
->+++ b/net/devlink/region.c
->@@ -883,7 +883,8 @@ int devlink_nl_cmd_region_read_dumpit(struct sk_buff *skb,
-> 
-> 	start_offset = state->start_offset;
-> 
->-	devlink = devlink_get_from_attrs_lock(sock_net(cb->skb->sk), attrs);
->+	devlink = devlink_get_from_attrs_lock(sock_net(cb->skb->sk), attrs,
->+					      false);
-> 	if (IS_ERR(devlink))
-> 		return PTR_ERR(devlink);
-> 
->-- 
->2.40.1
->
->
+https://lore.kernel.org/netdev/20231017074257.3389177-2-idosch@nvidia.com/
