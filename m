@@ -2,62 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A6E77CBACF
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Oct 2023 08:18:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 821C47CBAD4
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Oct 2023 08:18:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234446AbjJQGSV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Oct 2023 02:18:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36120 "EHLO
+        id S234539AbjJQGS1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Oct 2023 02:18:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233862AbjJQGSV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Oct 2023 02:18:21 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9DF7B6
-        for <linux-pci@vger.kernel.org>; Mon, 16 Oct 2023 23:18:19 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-419b232fc99so25351731cf.1
-        for <linux-pci@vger.kernel.org>; Mon, 16 Oct 2023 23:18:19 -0700 (PDT)
+        with ESMTP id S233862AbjJQGS0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Oct 2023 02:18:26 -0400
+Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24CB8E8
+        for <linux-pci@vger.kernel.org>; Mon, 16 Oct 2023 23:18:24 -0700 (PDT)
+Received: by mail-qk1-x72f.google.com with SMTP id af79cd13be357-7743448d88eso382532985a.2
+        for <linux-pci@vger.kernel.org>; Mon, 16 Oct 2023 23:18:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697523499; x=1698128299; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ceHtW9H2siBIBWG0gigB6B/LkLmcRGMR+a2ck1IcBwg=;
-        b=itGyNKLh5nD1XdD2ScLb24lq0uYk/PmlTQWibS/0cfoFatDws3i48nHE/4rwZpBvik
-         +LyFalHUyQOTCwEpSYYZqKhD0u7pUOOqltZQHRrRtSOnmpBO7Fvn7s/sdpHFf77ogGyF
-         1PTsEFlGqsY81FU6pKCCdpd/H1Efpb69Uvbzm0Z4sm9vlbTTgJ7YfArMyvv/OOJqCrp7
-         RS/roOxog5kT2rkvRfXgebzko0STCiL9Dh0Ktk+g3q7CWirIXhyaWXsdrcUAd6exEVYN
-         0nBMrbcIto55JCDQyluk4RWRLfPMsWYZ9BDaF+3SaI25IwOwlX4BTXMCB1LTrdMH+rpB
-         l4Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697523499; x=1698128299;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1697523503; x=1698128303; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ceHtW9H2siBIBWG0gigB6B/LkLmcRGMR+a2ck1IcBwg=;
-        b=updR8pP3rL5dEOIJsGBJFvX9lwkijBxj3nB3l5mcCDY51rqPdji+db/+JYR2YR5UrN
-         CYAeydo78ldFTvd6HJTUo24bk6XoK3rDovz//MfFLwh8x18QR2w9h2kec6Wleem4hdkR
-         QjA7MwyduSoJTgxXTULiBMa/IVbclRitxE4fCLuDnEhi3pN9sWxmfUmxVg2Lf4y1CmoH
-         7XBI3s6fBBymi59OAIFwk/6CCQOjvebtC4jsmnwMXPbraMR0JHtTalXjX7t9qsfuNbjm
-         Kw9J9OCz9wcH0k2p6GZ6vetsXvKr9dcQFHV9ZeegB8m4NnaD62IJjpy2AZpy6QlbE9Km
-         J+vw==
-X-Gm-Message-State: AOJu0YyoxOytSHBWyhkFoJRizRH5tSrdgnU5wIYMleQMhNmH9obOvuCd
-        ksESucbvGRiiOsFOphALb7YG
-X-Google-Smtp-Source: AGHT+IH6onFgtojbAPtwq1nUfbLTYNwEUGI4rAghxeeUTFIt3K42uOklPDt+jOdwnKGTSf3yCD3soA==
-X-Received: by 2002:a05:6214:1d2d:b0:66d:5ee5:8158 with SMTP id f13-20020a0562141d2d00b0066d5ee58158mr1444238qvd.55.1697523498769;
-        Mon, 16 Oct 2023 23:18:18 -0700 (PDT)
+        bh=2lhtaXzzZVdki7ialq2pIqDq/s9Xa0PvlTZMBvawHvU=;
+        b=K4764VyMiI+1yKiv0/tGgAuUPYkwm9vC6P0v/GvfqF2b+sgzkGszp7YPfzXVlThges
+         CLzLyf6Kx0kGspEXzjltJmnpj8+LF62tnQFHw19amHzQBp7JgTZt9hagR5FwUY7PmzII
+         ODDqb7WsLTan1tl4CzJmH4yGZkeZajC7vKopbN/pa2yRBcp4VzqkyVPVEDvp2vN2wc9n
+         OsK1wcj3za3mIeMkI2CB/imkittcSj9esQiPlQIOoWVmaRTGLZwfbCWdKJblVaF2GEPA
+         NzlJ7V9RO8BQ8NBVr20r9JcgbhAKrng1xxLozFhPLZnMe5BE1EnjVxaDHQxzdHNtSUhL
+         8g1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697523503; x=1698128303;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2lhtaXzzZVdki7ialq2pIqDq/s9Xa0PvlTZMBvawHvU=;
+        b=o3QuwRLJ6BUlb1MOUXGum3qlIM3zhocTfTcFH+chkVszNBwtpXKK3rGurFlXdSIxVr
+         1Kjc+YOoQUYyTNR2z3qjxyfxF6iua1lW4FZ8OZ9RQAV0puESRoE7hCjjUL2DWRNSbfUZ
+         8FPJ0Q9AP6FsFuISVyYjNisjcFTJlpVSpGYNg/ysAIVYxPh5M+7ofyylfDe/1c8aDb3P
+         uHG3Fvw+N9I8z/QWBnO3y4SY81TL9JuC1vrdCCbs1oX8XyCh4f40eA+yDxvw7bYtj2mx
+         XDxDx2sWR1MDhGpuLR5hcnXx37PnX4S1M6xetwP/JKiLOlQUIqhNRTb66dct7laEPZ7G
+         Xhuw==
+X-Gm-Message-State: AOJu0YwfeIIQrKv9bZgWCjBIbBepQzi7JhPF9M61dUhbONEL8kfe5NQF
+        XLGGVdJpY09cloWrJwmPI7DeuSgK+MwxfFJ5oA==
+X-Google-Smtp-Source: AGHT+IFMHnn7z9hd+i8JZG0ZGEEVpik1Rf7d/Lu9VUoVHUgImk0zu0NndUlG1arkkyNIg58tYFDnEQ==
+X-Received: by 2002:a05:620a:4050:b0:775:9036:60f3 with SMTP id i16-20020a05620a405000b00775903660f3mr1621244qko.16.1697523503221;
+        Mon, 16 Oct 2023 23:18:23 -0700 (PDT)
 Received: from [127.0.1.1] ([117.207.31.199])
-        by smtp.gmail.com with ESMTPSA id f22-20020a05620a12f600b00765aa3ffa07sm390304qkl.98.2023.10.16.23.18.15
+        by smtp.gmail.com with ESMTPSA id f22-20020a05620a12f600b00765aa3ffa07sm390304qkl.98.2023.10.16.23.18.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Oct 2023 23:18:18 -0700 (PDT)
+        Mon, 16 Oct 2023 23:18:22 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 0/2] PCI: dwc: Fix the BAR size programming
-Date:   Tue, 17 Oct 2023 11:47:53 +0530
-Message-Id: <20231017-pcie-qcom-bar-v1-0-3e26de07bec0@linaro.org>
+Date:   Tue, 17 Oct 2023 11:47:54 +0530
+Subject: [PATCH 1/2] PCI: dwc: Add new accessors to enable/disable DBI CS2
+ while setting the BAR size
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABEnLmUC/x3MQQqAIBBA0avErBvQlIquEi1smmoWpSlEEN49a
- fkW/7+QOAonGKoXIt+SxJ8Fuq6AdndujLIUQ6Mao5XuMJAwXuQPnF1Esn1ryBhSbKE0IfIqz/8
- bp5w/w+Gnn18AAAA=
+Message-Id: <20231017-pcie-qcom-bar-v1-1-3e26de07bec0@linaro.org>
+References: <20231017-pcie-qcom-bar-v1-0-3e26de07bec0@linaro.org>
+In-Reply-To: <20231017-pcie-qcom-bar-v1-0-3e26de07bec0@linaro.org>
 To:     Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Manivannan Sadhasivam <mani@kernel.org>,
@@ -69,62 +70,99 @@ Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org,
         Manivannan Sadhasivam <mani@kernel.org>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1599;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2745;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=Gcs3HOsPBfF3cIkTmKhbvwJROzoVyq0co8h182wgdmE=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBlLicmF9zGtxWxnm6EWnPLFh5TL2I/hR68hJ1zH
- Tam/uqLLgGJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZS4nJgAKCRBVnxHm/pHO
- 9dfhB/9woGeMPND3WMkroRyWsqHjVp1whwd/ogF3rdrot3nWX4fUaqcueDpak9RrFwEDZgbrFb9
- O/qOPzSYtzKqFXb3qHDuZA2PBcnqjn1qjkt3wCP4YXdgmjc96pLNqceOJbVh81CoWTVqoFiamHo
- C9BzkENnesEWp4imFCwGHA69LMob07hExBKMIvVZO8GHK0qnJSaaJrn0ir47nYzzODaNh2yvKcI
- lAr8fdn3yHK89loUJbefFNqrlDus4Y9PYnn/kfLRqRHirG21jUJp8GM+hXc91iq0WLAgmRO7yFC
- JtO+wTjsnHqQHvegM8vG3TBej2R2dzmTFcinDNsCcC1/zDHj
+ bh=OP4W5AEhgUSDaHDy2B4OZk3Grr6XP1yl9oNf0R8rWUQ=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBlLicmILNyHAyc5XZnCRhkGM2ygXAYYTDPEUJfF
+ otuvUxk3HuJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZS4nJgAKCRBVnxHm/pHO
+ 9VDZCACPrTqVHF2758C661bi9dz+Xl3g3KKSa/tO6cUWWRo87iggp2VrgX4Ph9hdg7fGjHoY5O/
+ 7g0tAocoLXawOXjvADKmqAljh0tuTaQO9ks9Ers8xrSfa26mmgWxojG1c9jPHS0ac3uaG+YJdm+
+ /Bd0UVcVlrp60NpTBwDklAbuSU/KeAXPwYElDVe0JwwQ8tcYy6/3fgE7c0mbcSugF6V1fDIZ6Ei
+ eJQRYvXUdY4czYybme0NxNol/uz5ZxMZf63BQ7cbv9i2PK5UqrRCI7k+cxMriTDLDP5zRP7fA8z
+ WH/0kI7KuwagZa8T+f5beHAqmtoE8kWClmpJnrZwX6DdJ9NW
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
+From: Manivannan Sadhasivam <mani@kernel.org>
 
-This series fixes the issue seen on Qcom EP platforms implementing the DWC
-core while setting the BAR size. Currently, whatever the BAR size getting
-programmed through pci_epc_set_bar() is not reflected on the host side
-during enumeration.
+As per the DWC databook v4.21a, section M.4.1, in order to write some read
+only and shadow registers through application DBI, the device driver should
+assert DBI Chip Select 2 (CS2) in addition to DBI Chip Select (CS).
 
-Debugging that issue revealed that the DWC Spec mandates asserting the DBI
-CS2 register in addition to DBI CS while programming some read only and
-shadow registers. On the Qcom EP platforms, the BAR mask register used to
-program the BAR size is marked as read only (RO). So the driver needs to
-assert DBI CS2 before programming and deassert it once done.
+This is a requirement at least on the Qcom platforms while programming the
+BAR size, as the BAR mask registers are marked RO. So let's add two new
+accessors dw_pcie_dbi_cs2_{en/dis} to enable/disable CS2 access in a vendor
+specific way while programming the BAR size.
 
-Hence, this series adds two new macros for asserting/deasserting the DBI
-CS2 while programming BAR size and also introduces a new host callback,
-dbi_cs2_access() that the vendor drivers can implement.
-
-For platforms not requiring the DBI CS2 access, this is a no-op.
-
-This series has been tested on Qcom SM8450 based development platform.
-
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
-Manivannan Sadhasivam (2):
-      PCI: dwc: Add new accessors to enable/disable DBI CS2 while setting the BAR size
-      PCI: qcom-ep: Implement dbi_cs2_access() function callback for DBI CS2 access
-
  drivers/pci/controller/dwc/pcie-designware-ep.c |  6 ++++++
  drivers/pci/controller/dwc/pcie-designware.h    | 13 +++++++++++++
- drivers/pci/controller/dwc/pcie-qcom-ep.c       | 14 ++++++++++++++
- 3 files changed, 33 insertions(+)
----
-base-commit: a286439bbc71e8c9bb1660b7d4775efcab6011fa
-change-id: 20231017-pcie-qcom-bar-c4863c33c0e4
+ 2 files changed, 19 insertions(+)
 
-Best regards,
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index d34a5e87ad18..1874fb3d8df4 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -269,11 +269,17 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 
+ 	dw_pcie_dbi_ro_wr_en(pci);
+ 
++	dw_pcie_dbi_cs2_en(pci);
+ 	dw_pcie_writel_dbi2(pci, reg_dbi2, lower_32_bits(size - 1));
++	dw_pcie_dbi_cs2_dis(pci);
++
+ 	dw_pcie_writel_dbi(pci, reg, flags);
+ 
+ 	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
++		dw_pcie_dbi_cs2_en(pci);
+ 		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, upper_32_bits(size - 1));
++		dw_pcie_dbi_cs2_dis(pci);
++
+ 		dw_pcie_writel_dbi(pci, reg + 4, 0);
+ 	}
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 55ff76e3d384..3cba27b5bbe5 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -379,6 +379,7 @@ struct dw_pcie_ops {
+ 			     size_t size, u32 val);
+ 	void    (*write_dbi2)(struct dw_pcie *pcie, void __iomem *base, u32 reg,
+ 			      size_t size, u32 val);
++	void	(*dbi_cs2_access)(struct dw_pcie *pcie, bool enable);
+ 	int	(*link_up)(struct dw_pcie *pcie);
+ 	enum dw_pcie_ltssm (*get_ltssm)(struct dw_pcie *pcie);
+ 	int	(*start_link)(struct dw_pcie *pcie);
+@@ -508,6 +509,18 @@ static inline void dw_pcie_dbi_ro_wr_dis(struct dw_pcie *pci)
+ 	dw_pcie_writel_dbi(pci, reg, val);
+ }
+ 
++static inline void dw_pcie_dbi_cs2_en(struct dw_pcie *pci)
++{
++	if (pci->ops && pci->ops->dbi_cs2_access)
++		pci->ops->dbi_cs2_access(pci, true);
++}
++
++static inline void dw_pcie_dbi_cs2_dis(struct dw_pcie *pci)
++{
++	if (pci->ops && pci->ops->dbi_cs2_access)
++		pci->ops->dbi_cs2_access(pci, false);
++}
++
+ static inline int dw_pcie_start_link(struct dw_pcie *pci)
+ {
+ 	if (pci->ops && pci->ops->start_link)
+
 -- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+2.25.1
 
