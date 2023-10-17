@@ -2,48 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DD4E7CC30D
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Oct 2023 14:24:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5829D7CC5DC
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Oct 2023 16:24:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343752AbjJQMYM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Oct 2023 08:24:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48976 "EHLO
+        id S1344098AbjJQOYp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Oct 2023 10:24:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343954AbjJQMYD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Oct 2023 08:24:03 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C4CF213A;
-        Tue, 17 Oct 2023 05:21:19 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4S8tJ01hxfzvQDd;
-        Tue, 17 Oct 2023 20:16:32 +0800 (CST)
-Received: from [10.67.121.177] (10.67.121.177) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Tue, 17 Oct 2023 20:21:15 +0800
-CC:     <mathieu.poirier@linaro.org>, <jonathan.cameron@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <yangyicong@hisilicon.com>,
-        <alexander.shishkin@linux.intel.com>, <helgaas@kernel.org>,
-        <linux-pci@vger.kernel.org>, <prime.zeng@hisilicon.com>,
-        <linuxarm@huawei.com>, <hejunhao3@huawei.com>
-Subject: Re: [PATCH v3 0/5] Several updates for PTT driver
-To:     <suzuki.poulose@arm.com>
-References: <20231010084731.30450-1-yangyicong@huawei.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <fc5ef77c-f4c6-adac-38ab-37e1a23270ef@huawei.com>
-Date:   Tue, 17 Oct 2023 20:21:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        with ESMTP id S1343820AbjJQOYo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Oct 2023 10:24:44 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24BB2F0;
+        Tue, 17 Oct 2023 07:24:42 -0700 (PDT)
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39HDe2WB030531;
+        Tue, 17 Oct 2023 14:24:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
+ cc : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=qcppdkim1; bh=Z1BbkLfJM1dZsoZ8hAA5FBScRtYnqgna6SeRcoxVwi4=;
+ b=MlalrgBDnO/UN61jsGkKwPMBQ9o5BgzREIGtVrTtqdd6d8kAt126rdrB1RmrSzQPoOQK
+ 3+oJPynhiWPBOz1R+iYdkL886LhQSE92J1Yj7voJKYr9qFrQ7dcoJqMEjs4ECCTPUeNR
+ 0LGOPKB3Kf8HherLvxHq4ukS5PmQZ4MKsLTTDe2DJXN3t77GT2k22Z0hiaLqVwr+QlzD
+ pNIQ3uaxvErGwKQJzqKhV5xAeB8L3FM1kRISsRTdx6yD5KJ3sk40oaZAzCVYZja+QgLc
+ ZzhuMhIZwoRw2rXsNEWARbL+gVbP0MwAjdaHE2w1vkTSdJ9mFOC3BXbSPzURhKup/8xy 9g== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tsd1rsumn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Oct 2023 14:24:33 +0000
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39HEOXT7028004
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Oct 2023 14:24:33 GMT
+Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.39; Tue, 17 Oct 2023 07:24:32 -0700
+Date:   Tue, 17 Oct 2023 07:24:31 -0700
+From:   Bjorn Andersson <quic_bjorande@quicinc.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH 2/2] PCI: qcom-ep: Implement dbi_cs2_access() function
+ callback for DBI CS2 access
+Message-ID: <20231017142431.GR3553829@hu-bjorande-lv.qualcomm.com>
+References: <20231017-pcie-qcom-bar-v1-0-3e26de07bec0@linaro.org>
+ <20231017-pcie-qcom-bar-v1-2-3e26de07bec0@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20231010084731.30450-1-yangyicong@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.121.177]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20231017-pcie-qcom-bar-v1-2-3e26de07bec0@linaro.org>
+X-Originating-IP: [10.49.16.6]
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: M27n39Tcjrvr17biD81g-GEg8TMVBnYF
+X-Proofpoint-ORIG-GUID: M27n39Tcjrvr17biD81g-GEg8TMVBnYF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-17_03,2023-10-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
+ bulkscore=0 adultscore=0 clxscore=1011 mlxlogscore=708 spamscore=0
+ lowpriorityscore=0 suspectscore=0 phishscore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310170122
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,44 +82,72 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Suzuki,
+On Tue, Oct 17, 2023 at 11:47:55AM +0530, Manivannan Sadhasivam wrote:
+> From: Manivannan Sadhasivam <mani@kernel.org>
 
-a gentle ping..
+Your S-o-b should match this.
 
-Hope all previous comments are addressed/clarified. Any further comment on this?
+> 
+> Qcom EP platforms require enabling/disabling the DBI CS2 access while
+> programming some read only and shadow registers through DBI. So let's
+> implement the dbi_cs2_access() callback that will be called by the DWC core
+> while programming such registers like BAR mask register.
+> 
+> Without DBI CS2 access, writes to those registers will not be reflected.
+> 
+> Fixes: f55fee56a631 ("PCI: qcom-ep: Add Qualcomm PCIe Endpoint controller driver")
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> index 32c8d9e37876..4653cbf7f9ed 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> @@ -124,6 +124,7 @@
+>  
+>  /* ELBI registers */
+>  #define ELBI_SYS_STTS				0x08
+> +#define ELBI_CS2_ENABLE				0xa4
+>  
+>  /* DBI registers */
+>  #define DBI_CON_STATUS				0x44
+> @@ -262,6 +263,18 @@ static void qcom_pcie_dw_stop_link(struct dw_pcie *pci)
+>  	disable_irq(pcie_ep->perst_irq);
+>  }
+>  
+> +static void qcom_pcie_dbi_cs2_access(struct dw_pcie *pci, bool enable)
+> +{
+> +	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
+> +
+> +	writel_relaxed(enable, pcie_ep->elbi + ELBI_CS2_ENABLE);
 
-Thanks.
+Don't you want to maintain the ordering of whatever write came before
+this?
 
-On 2023/10/10 16:47, Yicong Yang wrote:
-> From: Yicong Yang <yangyicong@hisilicon.com>
+Regards,
+Bjorn
+
+> +	/*
+> +	 * Do a dummy read to make sure that the previous write has reached the
+> +	 * memory before returning.
+> +	 */
+> +	readl_relaxed(pcie_ep->elbi + ELBI_CS2_ENABLE);
+> +}
+> +
+>  static void qcom_pcie_ep_icc_update(struct qcom_pcie_ep *pcie_ep)
+>  {
+>  	struct dw_pcie *pci = &pcie_ep->pci;
+> @@ -500,6 +513,7 @@ static const struct dw_pcie_ops pci_ops = {
+>  	.link_up = qcom_pcie_dw_link_up,
+>  	.start_link = qcom_pcie_dw_start_link,
+>  	.stop_link = qcom_pcie_dw_stop_link,
+> +	.dbi_cs2_access = qcom_pcie_dbi_cs2_access,
+>  };
+>  
+>  static int qcom_pcie_ep_get_io_resources(struct platform_device *pdev,
 > 
-> This series contains several updates for PTT driver:
-> - Disable interrupt when trace stops, reverse to what we do in trace start
-> - Always handle the interrupt in hardirq context
-> - Optimize the AUX buffer handling to make consumer have more time to process
->   the data
-> - Since we're a uncore PMU so block any task attach operation
-> - Add a dummy pmu::read() callback since the perf core may use
-> 
-> Change since v2:
-> - Add fix tag for Patch 5/5
-> - refine the commit in Patch 3/5, trying to make it more clear
-> Link: https://lore.kernel.org/all/20230914112223.27165-1-yangyicong@huawei.com/
-> 
-> Change since v1:
-> - Add Jonathan's tag, thanks
-> Link: https://lore.kernel.org/all/20230809081825.11518-1-yangyicong@huawei.com/
-> 
-> Junhao He (1):
->   hwtracing: hisi_ptt: Add dummy callback pmu::read()
-> 
-> Yicong Yang (4):
->   hwtracing: hisi_ptt: Disable interrupt after trace end
->   hwtracing: hisi_ptt: Handle the interrupt in hardirq context
->   hwtracing: hisi_ptt: Optimize the trace data committing
->   hwtracing: hisi_ptt: Don't try to attach a task
-> 
->  drivers/hwtracing/ptt/hisi_ptt.c | 33 +++++++++++++++++++++-----------
->  drivers/hwtracing/ptt/hisi_ptt.h |  1 +
->  2 files changed, 23 insertions(+), 11 deletions(-)
+> -- 
+> 2.25.1
 > 
