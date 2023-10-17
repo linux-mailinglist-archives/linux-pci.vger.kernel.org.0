@@ -2,243 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 968447CCE79
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Oct 2023 22:45:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 337697CCFF6
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Oct 2023 00:18:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235030AbjJQUpx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Oct 2023 16:45:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37508 "EHLO
+        id S232068AbjJQWSX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Oct 2023 18:18:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344309AbjJQTcW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Oct 2023 15:32:22 -0400
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2041.outbound.protection.outlook.com [40.107.13.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 418D8ED;
-        Tue, 17 Oct 2023 12:32:20 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=guFgFzPAa+UGrPoWx/Lnk4pJkpH0T4yu451c9U1NuJjbfbONfeKIOk5sCIeBXzuVenmRy4d0EE6XwKiayepv/+jamQjGwKZQ3POk9iyAgqNO/c850Xw7FgU8zu7BKkMKhGZr5DWSypG5di9ahe/x6OCLY/O1lbrWjnsD6AG8rwlUuGbRq0Qiuft20KmCYVDZceOmYUgsKfV607+TD7EULXbx2GZ4UmhwJFRtKABjwLO1PsPSSqYg8NYkZ4BxsvBB+wjlc8RWT59iFBiVMCCCjsD5JcP67JuFIqQUmQ4qXr6K7wJHWhc23xS2ELPVYsVeaHfEq1wOoYgaepI5/qNh7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QxkdJECaH4y9A07SriLtqtwi2hunRS2N34XPnJlu8bM=;
- b=T1XoinbFkOfB2EK2+4Kk5wut1HDsE4A3Li8aSLpkypI3TKtzt2yg4SuWctIsc2jr2hlWVL40ks/T5rzM+CiWjRD+CdYIc6Ib7y+fNeqMdM2xY0r/Fc8W7oG5D8DG6sS8UoxU5jsqARPzChW534dZVd+OQfBKDfbw09zAv1LHCj0Spmq8tLszizv5/Fk+GHcumCnMPxqYaJLnZFyirtMPA6lULPL87xMtETBG3kyCJQbPEQ1aNGBfSPQzLMg/nyytY9ZHY61c9OOVg0ejtV39mDbbRjAyrdryIDq8uwSoHB/FTKtd2KYmx1eI+BfA06y+5wR0lWSvJ62844M+zdAHIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QxkdJECaH4y9A07SriLtqtwi2hunRS2N34XPnJlu8bM=;
- b=KL8Gy7byj8uDnppS4qvStgU/TW95uovlkwk8Mq90FGgCWBxq9af/2l+HbLDw07VZLZhM683tnIPF5EL9dRTEpDtO0UkMBueN9zDhzQghoJOhBqsb/uRRjzVmzBGypuGqpVzsdxEa8lc2d7PCMNuqJg0n2MZ8Sn0aRZ22j3+03Qk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
- by AS8PR04MB8948.eurprd04.prod.outlook.com (2603:10a6:20b:42f::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.34; Tue, 17 Oct
- 2023 19:32:18 +0000
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::1774:e25f:f99:aca2]) by AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::1774:e25f:f99:aca2%4]) with mapi id 15.20.6907.021; Tue, 17 Oct 2023
- 19:32:17 +0000
-From:   Frank Li <Frank.Li@nxp.com>
-To:     manivannan.sadhasivam@linaro.org
-Cc:     Frank.Li@nxp.com, bhelgaas@google.com, imx@lists.linux.dev,
-        kw@linux.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, lpieralisi@kernel.org,
-        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, robh@kernel.org,
-        roy.zang@nxp.com
-Subject: [PATCH v3 3/4] PCI: layerscape: Rename pf_* as pf_lut_*
-Date:   Tue, 17 Oct 2023 15:31:44 -0400
-Message-Id: <20231017193145.3198380-4-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231017193145.3198380-1-Frank.Li@nxp.com>
-References: <20231017193145.3198380-1-Frank.Li@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR06CA0013.namprd06.prod.outlook.com
- (2603:10b6:a03:d4::26) To AM6PR04MB4838.eurprd04.prod.outlook.com
- (2603:10a6:20b:4::16)
+        with ESMTP id S230219AbjJQWSX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Oct 2023 18:18:23 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87C6E95;
+        Tue, 17 Oct 2023 15:18:21 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39HMIEBn028433;
+        Tue, 17 Oct 2023 22:18:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
+ cc : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=qcppdkim1; bh=yod7tKTiyenpKi21EI2xG36/BjlhaK3nnueHtQLNxnE=;
+ b=Q86VsmBJbl9UNZYZgUuhbH32T9rO/sTNx3jYWtCEL4MISbP52a4mijaajZp9DgQQFkG3
+ eAQvmJxeFNYpN2vI62riEkFUarZdMLHGG4bVxFRCRr21J1Bw82joCT//YRIhCt42GWOV
+ PMRYET5Hg8d1sUjWTcu6O2KSTYKRqVT9xp8BDCpxTn0PJncEQzP3fQtLSr0WFBAJSajx
+ V0/QIrp/RaLBy30FyaT+owzngzl19XL96nsBhPML0yFQYxjk9HO87c1oviPca6hxNGE7
+ Cq3I9Nf1gp2c64cpApD9i9kLP+v/6FcwH2MZRUtEmQAT1fCehcgYiEGx3aTn9d7fyNmz ew== 
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tsv0v143c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Oct 2023 22:18:13 +0000
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39HMICf4020266
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Oct 2023 22:18:12 GMT
+Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.39; Tue, 17 Oct 2023 15:18:12 -0700
+Date:   Tue, 17 Oct 2023 15:18:11 -0700
+From:   Bjorn Andersson <quic_bjorande@quicinc.com>
+To:     Manivannan Sadhasivam <mani@kernel.org>
+CC:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH 2/2] PCI: qcom-ep: Implement dbi_cs2_access() function
+ callback for DBI CS2 access
+Message-ID: <20231017221811.GV3553829@hu-bjorande-lv.qualcomm.com>
+References: <20231017-pcie-qcom-bar-v1-0-3e26de07bec0@linaro.org>
+ <20231017-pcie-qcom-bar-v1-2-3e26de07bec0@linaro.org>
+ <20231017142431.GR3553829@hu-bjorande-lv.qualcomm.com>
+ <20231017162129.GF5274@thinkpad>
+ <20231017165609.GT3553829@hu-bjorande-lv.qualcomm.com>
+ <20231017174100.GA137137@thinkpad>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|AS8PR04MB8948:EE_
-X-MS-Office365-Filtering-Correlation-Id: f1183563-d7f1-44a0-08cf-08dbcf47c633
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AyBtbEOrjvIVYNixKRh/G5C1XcLpiqW5H8imVVA9Pkpw02P2iUb2ZzbCBitmZfE28LUW+tlrpV+CSq2GmJDYPiHdWFjBgYFbSgM0/ZIIl2WYTkAGJPZNMo516ha24tQf9g/j8Ehfx2SoNxUnq4rj/qWkQ6PFEbYkdk5UcEnli2RG3mIJqeRouhCxABAePJMYcVJ8gm6skmzEf3FERbee2P66A2GBgs/QpVdGejkXqAwMm/CBDbVfhElWOcr0I1jYT4O3unZjfxxrmvZoiAa/gfNsh21w7aLthe3gQLUqp7crV5q7jTcZM8dmEdqlQPKiCiYKHCsXVQEmfWss/8BnnVqQg/pbGUnLBI2Oz9Jelmwop7x6SjGI471NIwX6hnvApWEjNXdP67BimFbc3XwwOGAyqHJPGqZpzZ01GQYBK8JMh6iRwEH0eUq0g6PQnKi+KqLwc7cnDFvgy9Lp9OOZ4/jOCdyMT39o+OePKT1SAwxxIshtuQXUl6y/c99qdfYK2kP3BdxHiIrdYw3H9TM619L13+z4+kSXimbaI4AffOiGUJmtuJ/G8laPMi6S3hFxSOho/E4PlNS5wS55YUn/cDv0K9wQb+MJuFWj2mH1qCBp7/n29fxun6Z8mcz3B5UF
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(366004)(346002)(136003)(39860400002)(230922051799003)(186009)(451199024)(1800799009)(64100799003)(6506007)(52116002)(6666004)(83380400001)(38350700005)(26005)(6512007)(2616005)(38100700002)(2906002)(86362001)(4326008)(6486002)(5660300002)(8676002)(36756003)(8936002)(41300700001)(66556008)(66946007)(316002)(66476007)(6916009)(7416002)(1076003)(478600001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2m3/5UJb9z40PQRoSpoLnPlP3AJPcMOu4hspvenvXQvsSIiz1Fx9k1aVUB3u?=
- =?us-ascii?Q?a1opBpDMAd54ilAoMG+BDU2alk5vjw9sGDohEnaCHN4uNZB9uarHOfq+3f1b?=
- =?us-ascii?Q?Vc4jvKQeJkJvFUR75YEGIgYsgefvX04Zgwc9tMaOdOT++s1AxyB/y3OBzOs6?=
- =?us-ascii?Q?eP8lurKXEKzNnTog3XHIdpLGFsKpzZZiv4XeSQezN+lBAdQYUHumRm69dFdO?=
- =?us-ascii?Q?u5ArTJ5X/rgo/TCCsJhoqrdAMwqoHs//p2+IKxQ2kezGYciDffKnMmyGVlS6?=
- =?us-ascii?Q?L1jCHX/ABAC8/WUqzL41cO2T01WmK4EitGcFz89iTLb51FHuHU+itqb235wZ?=
- =?us-ascii?Q?oP+s4TTnzqJvGhkhyPczvLW1MHz52aEpFNFFynwmJIdoCmgmIPv9q+Yg3PRf?=
- =?us-ascii?Q?goUgrqGqiTiIggL304FTsWIovVJosp0xv/jE1Tl77P/5OB0V+kFhVKdRwkcN?=
- =?us-ascii?Q?Xkx1qgWc6d+hF0bPEST89Hur6TufVHcvHry+Ln/eJJ/XXecKuBgJ8IngE/BQ?=
- =?us-ascii?Q?t+uen9/8LNJ9rHQAI5vHtk5AU87ZSRG/mIIk0RUmHff9ixEiqmrnTFg3QEZH?=
- =?us-ascii?Q?fai5Svti6x+WnBZtUhy2T38ZL4jFM20FI217LX1EKYTm4pKANeCDfQ8X9sWV?=
- =?us-ascii?Q?cP+PywEdw0neDTAcokdlQba4+e0quPCeafSta6aMJWXHjno4wczEGilvRDq+?=
- =?us-ascii?Q?xJ1tf57bRcCuDKoER/n1p5Pm2OZnzMrVKpjI+v9fSMiflMhWA05n27Cqd8+Q?=
- =?us-ascii?Q?pzz81iChrjnWEUF+G39ZatALKMnLasBbeoX13cowS85a3LQrj8I5/QvDB72+?=
- =?us-ascii?Q?wB0XdezPjCNM3tDn5Odu8gV6kzKWIDtuDmythY12wSj8A41ss6AhFdMk1YWZ?=
- =?us-ascii?Q?dbdV1+TLIHWwQ+MmylhwLPjnXrKk/UAhGgH8kWPZygouZVDjePFAPZbJTkBn?=
- =?us-ascii?Q?mhmoj+rTFhMw5otcCWW+U8qtOikmxn6TKROqtGZYHiS1/krmlN1EjE/83oAf?=
- =?us-ascii?Q?98abDqGVybWImgCNRcJbB0FJCLmdg2RryhzA4nqWIXO/8cnHE0ZyX+cJ3bnW?=
- =?us-ascii?Q?Wq6C12TqNSCF2U9eLfqdEvTIho1EytA6ebWjSGQxVX3jDy3wFj5JDfGTw5Vb?=
- =?us-ascii?Q?pHLf2+drX2QWOmL/qyJrXjvUVRy8eJooD7gPqFCcGyfPlhuOfcBsWQVbONRK?=
- =?us-ascii?Q?vNm/Bl+w3YWvgQztBmJMqIm4i0HhMefhmifEM1WOLwGl4PDMUflb/tfHwfn/?=
- =?us-ascii?Q?ytkMzYdvswK1J5idJ++UG9UFtn/X2RDOP+1X7A9rvjR62+Mja7/iGo92K9FT?=
- =?us-ascii?Q?iUBScEQKJ9tVTYksg+erD6Gss6vn4QCO5Mt93x/tcwb1iEqWzPGM8XfpoVUT?=
- =?us-ascii?Q?E3m0PR6o977xcG76Izs/G18NyPK2XChYi0C1+hozkTKE7Rp335/dLCaztQBu?=
- =?us-ascii?Q?5DborzanhA7iBapp3lXv+4KsAzpLNdGhPI0au5vlOaRmjktamhSEAMFgh1Ys?=
- =?us-ascii?Q?F2iRceDp569mL32tkUKL//LQ6VlhcwiDhNE2NFznC1+VsDNl70IynI6BckDv?=
- =?us-ascii?Q?GDXAMG332aNCAYxHY4fGzt4994buT13QDfIfVEwB?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1183563-d7f1-44a0-08cf-08dbcf47c633
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2023 19:32:17.9413
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iIkFmdTa8cFVaPNvUY7SSl/wmVmPmS9vgZhc4Z0aonPWyBxi00eNDuTq7fE2W7YftMI99FFDrJhrCqd388ztdA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8948
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20231017174100.GA137137@thinkpad>
+X-Originating-IP: [10.49.16.6]
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: AQEoIHNDHRf6LYsZYb5W1aCSSblSTH7a
+X-Proofpoint-GUID: AQEoIHNDHRf6LYsZYb5W1aCSSblSTH7a
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-17_06,2023-10-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 malwarescore=0 phishscore=0 mlxscore=0 mlxlogscore=881
+ impostorscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310170188
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-'pf' and 'lut' is just difference name in difference chips, but basic it is
-a MMIO base address plus an offset.
+On Tue, Oct 17, 2023 at 11:11:00PM +0530, Manivannan Sadhasivam wrote:
+> On Tue, Oct 17, 2023 at 09:56:09AM -0700, Bjorn Andersson wrote:
+> > On Tue, Oct 17, 2023 at 09:51:29PM +0530, Manivannan Sadhasivam wrote:
+> > > On Tue, Oct 17, 2023 at 07:24:31AM -0700, Bjorn Andersson wrote:
+> > > > On Tue, Oct 17, 2023 at 11:47:55AM +0530, Manivannan Sadhasivam wrote:
+> > > > > From: Manivannan Sadhasivam <mani@kernel.org>
+> > > > 
+> > > > Your S-o-b should match this.
+> > > > 
+> > > 
+> > > I gave b4 a shot for sending the patches and missed this. Will fix it in next
+> > > version.
+> > > 
+> > > > > 
+> > > > > Qcom EP platforms require enabling/disabling the DBI CS2 access while
+> > > > > programming some read only and shadow registers through DBI. So let's
+> > > > > implement the dbi_cs2_access() callback that will be called by the DWC core
+> > > > > while programming such registers like BAR mask register.
+> > > > > 
+> > > > > Without DBI CS2 access, writes to those registers will not be reflected.
+> > > > > 
+> > > > > Fixes: f55fee56a631 ("PCI: qcom-ep: Add Qualcomm PCIe Endpoint controller driver")
+> > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > > ---
+> > > > >  drivers/pci/controller/dwc/pcie-qcom-ep.c | 14 ++++++++++++++
+> > > > >  1 file changed, 14 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> > > > > index 32c8d9e37876..4653cbf7f9ed 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> > > > > @@ -124,6 +124,7 @@
+> > > > >  
+> > > > >  /* ELBI registers */
+> > > > >  #define ELBI_SYS_STTS				0x08
+> > > > > +#define ELBI_CS2_ENABLE				0xa4
+> > > > >  
+> > > > >  /* DBI registers */
+> > > > >  #define DBI_CON_STATUS				0x44
+> > > > > @@ -262,6 +263,18 @@ static void qcom_pcie_dw_stop_link(struct dw_pcie *pci)
+> > > > >  	disable_irq(pcie_ep->perst_irq);
+> > > > >  }
+> > > > >  
+> > > > > +static void qcom_pcie_dbi_cs2_access(struct dw_pcie *pci, bool enable)
+> > > > > +{
+> > > > > +	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
+> > > > > +
+> > > > > +	writel_relaxed(enable, pcie_ep->elbi + ELBI_CS2_ENABLE);
+> > > > 
+> > > > Don't you want to maintain the ordering of whatever write came before
+> > > > this?
+> > > > 
+> > > 
+> > > Since this in a dedicated function, I did not care about the ordering w.r.t
+> > > previous writes. Even if it gets inlined, the order should not matter since it
+> > > only enables/disables the CS2 access for the forthcoming writes.
+> > > 
+> > 
+> > The wmb() - in a non-relaxed writel -  would ensure that no earlier
+> > writes are reordered and end up in your expected set of "forthcoming
+> > writes".
+> > 
+> 
+> I was under the impression that the readl_relaxed() here serves as an implicit
+> barrier. But reading the holy memory-barriers documentation doesn't explicitly
+> say so. So I'm going to add wmb() to be on the safe side as you suggested.
+> 
 
-Rename it to avoid duplicate pf_* and lut_* in driver.
+I'm talking about writes prior to this function is being called.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
+In other words, if you write:
 
-Notes:
-    change from v1 to v3
-    - new patch at v3
+writel_relaxed(A, ptr); (or writel, it doesn't matter)
+writel_relaxed(X, ELBI_CS2_ENABLE);
+readl_relaxed(ELBI_CS2_ENABLE);
 
- drivers/pci/controller/dwc/pci-layerscape.c | 34 ++++++++++-----------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+Then there are circumstances where the write to ptr might be performed
+after ELBI_CS2_ENABLE.
 
-diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-index 6f47cfe146c44..4b663b20d8612 100644
---- a/drivers/pci/controller/dwc/pci-layerscape.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape.c
-@@ -46,7 +46,7 @@
- #define LS_PCIE_DRV_SCFG	BIT(0)
- 
- struct ls_pcie_drvdata {
--	const u32 pf_off;
-+	const u32 pf_lut_off;
- 	const struct dw_pcie_host_ops *ops;
- 	int (*exit_from_l2)(struct dw_pcie_rp *pp);
- 	int flags;
-@@ -56,13 +56,13 @@ struct ls_pcie_drvdata {
- struct ls_pcie {
- 	struct dw_pcie *pci;
- 	const struct ls_pcie_drvdata *drvdata;
--	void __iomem *pf_base;
-+	void __iomem *pf_lut_base;
- 	struct regmap *scfg;
- 	int index;
- 	bool big_endian;
- };
- 
--#define ls_pcie_pf_readl_addr(addr)	ls_pcie_pf_readl(pcie, addr)
-+#define ls_pcie_pf_lut_readl_addr(addr)	ls_pcie_pf_lut_readl(pcie, addr)
- #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
- 
- static bool ls_pcie_is_bridge(struct ls_pcie *pcie)
-@@ -103,20 +103,20 @@ static void ls_pcie_fix_error_response(struct ls_pcie *pcie)
- 	iowrite32(PCIE_ABSERR_SETTING, pci->dbi_base + PCIE_ABSERR);
- }
- 
--static u32 ls_pcie_pf_readl(struct ls_pcie *pcie, u32 off)
-+static u32 ls_pcie_pf_lut_readl(struct ls_pcie *pcie, u32 off)
- {
- 	if (pcie->big_endian)
--		return ioread32be(pcie->pf_base + off);
-+		return ioread32be(pcie->pf_lut_base + off);
- 
--	return ioread32(pcie->pf_base + off);
-+	return ioread32(pcie->pf_lut_base + off);
- }
- 
--static void ls_pcie_pf_writel(struct ls_pcie *pcie, u32 off, u32 val)
-+static void ls_pcie_pf_lut_writel(struct ls_pcie *pcie, u32 off, u32 val)
- {
- 	if (pcie->big_endian)
--		iowrite32be(val, pcie->pf_base + off);
-+		iowrite32be(val, pcie->pf_lut_base + off);
- 	else
--		iowrite32(val, pcie->pf_base + off);
-+		iowrite32(val, pcie->pf_lut_base + off);
- }
- 
- static void ls_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
-@@ -126,11 +126,11 @@ static void ls_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
- 	u32 val;
- 	int ret;
- 
--	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
-+	val = ls_pcie_pf_lut_readl(pcie, LS_PCIE_PF_MCR);
- 	val |= PF_MCR_PTOMR;
--	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
-+	ls_pcie_pf_lut_writel(pcie, LS_PCIE_PF_MCR, val);
- 
--	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
-+	ret = readx_poll_timeout(ls_pcie_pf_lut_readl_addr, LS_PCIE_PF_MCR,
- 				 val, !(val & PF_MCR_PTOMR),
- 				 PCIE_PME_TO_L2_TIMEOUT_US/10,
- 				 PCIE_PME_TO_L2_TIMEOUT_US);
-@@ -149,15 +149,15 @@ static int ls_pcie_exit_from_l2(struct dw_pcie_rp *pp)
- 	 * Set PF_MCR_EXL2S bit in LS_PCIE_PF_MCR register for the link
- 	 * to exit L2 state.
- 	 */
--	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
-+	val = ls_pcie_pf_lut_readl(pcie, LS_PCIE_PF_MCR);
- 	val |= PF_MCR_EXL2S;
--	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
-+	ls_pcie_pf_lut_writel(pcie, LS_PCIE_PF_MCR, val);
- 
- 	/*
- 	 * L2 exit timeout of 10ms is not defined in the specifications,
- 	 * it was chosen based on empirical observations.
- 	 */
--	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
-+	ret = readx_poll_timeout(ls_pcie_pf_lut_readl_addr, LS_PCIE_PF_MCR,
- 				 val, !(val & PF_MCR_EXL2S),
- 				 1000,
- 				 10000);
-@@ -245,7 +245,7 @@ static const struct ls_pcie_drvdata ls1021a_drvdata = {
- };
- 
- static const struct ls_pcie_drvdata layerscape_drvdata = {
--	.pf_off = 0xc0000,
-+	.pf_lut_off = 0xc0000,
- 	.pm_support = true,
- 	.exit_from_l2 = ls_pcie_exit_from_l2,
- };
-@@ -295,7 +295,7 @@ static int ls_pcie_probe(struct platform_device *pdev)
- 
- 	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
- 
--	pcie->pf_base = pci->dbi_base + pcie->drvdata->pf_off;
-+	pcie->pf_lut_base = pci->dbi_base + pcie->drvdata->pf_lut_off;
- 
- 	if (pcie->drvdata->flags & LS_PCIE_DRV_SCFG) {
- 
--- 
-2.34.1
+Iiuc, the way to avoid that is to either be certain that none of those
+circumstances applies, or to add a wmb(), like:
 
+writel_relaxed(A, ptr); (or writel, it doesn't matter)
+wmb();
+writel_relaxed(X, ELBI_CS2_ENABLE);
+readl_relaxed(ELBI_CS2_ENABLE);
+
+or short hand:
+
+writel_relaxed(A, ptr); (or writel, it doesn't matter)
+writel(X, ELBI_CS2_ENABLE);
+readl_relaxed(ELBI_CS2_ENABLE);
+
+Where the wmb() will ensure the two writes happen in order.
+
+The read in your code will ensure that execution won't proceed until the
+write has hit the hardware, so that's good. But writing this makes me
+uncertain if there's sufficient guarantees for the CPU not reordering
+later operations.
+
+Regards,
+Bjorn
