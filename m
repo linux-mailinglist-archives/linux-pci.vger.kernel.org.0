@@ -2,126 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22FBB7CD87A
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Oct 2023 11:44:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEB967CD966
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Oct 2023 12:39:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229750AbjJRJol (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Oct 2023 05:44:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46326 "EHLO
+        id S230258AbjJRKj5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Oct 2023 06:39:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229510AbjJRJol (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Oct 2023 05:44:41 -0400
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04B4EB0;
-        Wed, 18 Oct 2023 02:44:38 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 349ED100AF921;
-        Wed, 18 Oct 2023 11:44:36 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 0525E30EFD; Wed, 18 Oct 2023 11:44:36 +0200 (CEST)
-Date:   Wed, 18 Oct 2023 11:44:35 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Ricky WU <ricky_wu@realtek.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: pciehp: Prevent child devices from doing RPM on
- PCIe Link Down
-Message-ID: <20231018094435.GA21090@wunner.de>
-References: <20231016040132.23824-1-kai.heng.feng@canonical.com>
- <20231016093210.GA22952@wunner.de>
- <263982e90fc046cf977ecb8727003690@realtek.com>
+        with ESMTP id S229717AbjJRKj5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Oct 2023 06:39:57 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 917E2B0;
+        Wed, 18 Oct 2023 03:39:55 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8849EC433C7;
+        Wed, 18 Oct 2023 10:39:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697625595;
+        bh=j11DdRa2L1dUqtW3EelcXbCkjO9B0hcjr/Wwlj3hR5Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=B9tV+RiXbptKtQxPEmVdAhDVccVnZYa61THs9AEXN5z7ObVtzEwWBniJCqpCJElFp
+         D05IfxoqWDDgya2gv9o7kMwqx9BnhtMtUH4fzoczgdiXKlPFkEubBcLC45RW1C+76X
+         vB+NgZqBrkOozxfhKQZz7HG8wNNxQJ1TXY8xloY+jhWGFFPs1FVF26QzDPfbvNhfiT
+         +NQ51muc0kiWZN7F7dJ3HN1by7U/o47onOc99xqQ8YBNyEo1XlB8vye6TEcKF3/E76
+         Vl+2ne0+DNTf+bhvWtOD9Dgp3iPG0wURSTyXbdsOKBzOkvMHhQjovB0NeMtz9Z7gGA
+         YMJMHV3IBgCRw==
+Date:   Wed, 18 Oct 2023 11:39:49 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Minda Chen <minda.chen@starfivetech.com>
+Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Kevin Xie <kevin.xie@starfivetech.com>
+Subject: Re: [PATCH v8 04/22] PCI: microchip: Add bridge_addr field to struct
+ mc_pcie
+Message-ID: <20231018-prefix-algebra-972f3e33b165@spud>
+References: <20231011110514.107528-1-minda.chen@starfivetech.com>
+ <20231011110514.107528-5-minda.chen@starfivetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qCrH5eub/BoEPs+2"
 Content-Disposition: inline
-In-Reply-To: <263982e90fc046cf977ecb8727003690@realtek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <20231011110514.107528-5-minda.chen@starfivetech.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[cc -= unrelated mailing lists bpf, kernel-hardening]
 
-On Tue, Oct 17, 2023 at 10:25:39AM +0000, Ricky WU wrote:
-> > On Mon, Oct 16, 2023 at 12:01:31PM +0800, Kai-Heng Feng wrote:
-> > > When inserting an SD7.0 card to Realtek card reader, it can trigger
-> > > PCI slot Link down and causes the following error:
-> > 
-> > Why does *inserting* a card cause a Link Down?
-> > 
-> > 
-> > > [   63.898861] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> > > [   63.912118] BUG: unable to handle page fault for address:
-> > ffffb24d403e5010
-> > [...]
-> > > [   63.912198]  ? asm_exc_page_fault+0x27/0x30
-> > > [   63.912203]  ? ioread32+0x2e/0x70
-> > > [   63.912206]  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
-> > > [   63.912217]  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
-> > > [   63.912226]  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
-> > > [   63.912234]  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
-> > > [   63.912243]  ? __pfx_pci_pm_runtime_idle+0x10/0x10
-> > > [   63.912246]  pci_pm_runtime_idle+0x34/0x70
-> > > [   63.912248]  rpm_idle+0xc4/0x2b0
-> > > [   63.912251]  pm_runtime_work+0x93/0xc0
-> > > [   63.912254]  process_one_work+0x21a/0x430
-> > > [   63.912258]  worker_thread+0x4a/0x3c0
-> > 
-> > This looks like pcr->remap_addr is accessed after it has been iounmap'ed in
-> > rtsx_pci_remove() or before it has been iomap'ed in rtsx_pci_probe().
-> > 
-> > Is the card reader itself located below a hotplug port and unplugged here?
-> 
-> Yes it is card reader unplug itself, because sd7.0 card is not used
-> rtsx_pcr, it use nvme driver
+--qCrH5eub/BoEPs+2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I can only guess here as the dmesg and lspci output I requested
-hasn't been provided:
+On Wed, Oct 11, 2023 at 07:04:56PM +0800, Minda Chen wrote:
+> For bridge address base is common PLDA field, Add this
+> to struct mc_pcie first.
+>=20
+> INTx and MSI codes interrupts codes will get the bridge base
+> address from port->bridge_addr. For these codes will be
+> changed to common codes. axi_base_addr is Microchip its own
+> data.
+>=20
+> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
 
-I assume that this card reader may contain a PCIe switch with a
-regular SD card reader below a first Downstream Port (which is
-hotplug-capable).  If an SD express card is inserted, the regular
-SD card reader disappears from the Downstream Port and the
-inserted card appears as an NVMe drive (possibly below a
-second Downstream Port, or below the first Downstream Port).
-
-The commit message is somewhat misleading in that it links the
-unhandled page fault to card insertion.  That may be the trigger,
-but the root cause appears to be that a runtime PM request is
-performed asynchronously after the SD card reader has iounmap'ed
-pcr->remap_addr.
-
-If that is indeed the root cause (as I suspect), the fix needs to
-be placed somewhere else.
-
-pciehp is only one of several hotplug drivers and fixing this only
-in pciehp may leave the other hotplug drivers vulnerable to the same
-issue.
-
-Unfortunately the information provided so far is insufficient to
-recommend a better fix.  It would be necessary to debug why the
-asynchronous RPM request is not canceled even though rtsx_pci_remove()
-runtime resumes the device before iounmap'ing pcr->remap_addr.
-Perhaps there's a bug in runtime PM code that causes asynchronous
-requests to not be canceled upon a pm_runtime_get_sync()?
-Or perhaps a wmb() is necessary in pci_device_remove() after setting
-pci_dev->driver = NULL?
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
 Thanks,
+Conor.
 
-Lukas
+> ---
+>  .../pci/controller/plda/pcie-microchip-host.c | 23 ++++++++-----------
+>  1 file changed, 9 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/=
+pci/controller/plda/pcie-microchip-host.c
+> index a34ec6aad4be..60870ee1f1c9 100644
+> --- a/drivers/pci/controller/plda/pcie-microchip-host.c
+> +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
+> @@ -195,6 +195,7 @@ struct mc_pcie {
+>  	struct irq_domain *event_domain;
+>  	raw_spinlock_t lock;
+>  	struct mc_msi msi;
+> +	void __iomem *bridge_addr;
+>  };
+> =20
+>  struct cause {
+> @@ -339,8 +340,7 @@ static void mc_handle_msi(struct irq_desc *desc)
+>  	struct irq_chip *chip =3D irq_desc_get_chip(desc);
+>  	struct device *dev =3D port->dev;
+>  	struct mc_msi *msi =3D &port->msi;
+> -	void __iomem *bridge_base_addr =3D
+> -		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
+> +	void __iomem *bridge_base_addr =3D port->bridge_addr;
+>  	unsigned long status;
+>  	u32 bit;
+>  	int ret;
+> @@ -365,8 +365,7 @@ static void mc_handle_msi(struct irq_desc *desc)
+>  static void mc_msi_bottom_irq_ack(struct irq_data *data)
+>  {
+>  	struct mc_pcie *port =3D irq_data_get_irq_chip_data(data);
+> -	void __iomem *bridge_base_addr =3D
+> -		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
+> +	void __iomem *bridge_base_addr =3D port->bridge_addr;
+>  	u32 bitpos =3D data->hwirq;
+> =20
+>  	writel_relaxed(BIT(bitpos), bridge_base_addr + ISTATUS_MSI);
+> @@ -488,8 +487,7 @@ static void mc_handle_intx(struct irq_desc *desc)
+>  	struct mc_pcie *port =3D irq_desc_get_handler_data(desc);
+>  	struct irq_chip *chip =3D irq_desc_get_chip(desc);
+>  	struct device *dev =3D port->dev;
+> -	void __iomem *bridge_base_addr =3D
+> -		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
+> +	void __iomem *bridge_base_addr =3D port->bridge_addr;
+>  	unsigned long status;
+>  	u32 bit;
+>  	int ret;
+> @@ -514,8 +512,7 @@ static void mc_handle_intx(struct irq_desc *desc)
+>  static void mc_ack_intx_irq(struct irq_data *data)
+>  {
+>  	struct mc_pcie *port =3D irq_data_get_irq_chip_data(data);
+> -	void __iomem *bridge_base_addr =3D
+> -		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
+> +	void __iomem *bridge_base_addr =3D port->bridge_addr;
+>  	u32 mask =3D BIT(data->hwirq + PM_MSI_INT_INTX_SHIFT);
+> =20
+>  	writel_relaxed(mask, bridge_base_addr + ISTATUS_LOCAL);
+> @@ -524,8 +521,7 @@ static void mc_ack_intx_irq(struct irq_data *data)
+>  static void mc_mask_intx_irq(struct irq_data *data)
+>  {
+>  	struct mc_pcie *port =3D irq_data_get_irq_chip_data(data);
+> -	void __iomem *bridge_base_addr =3D
+> -		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
+> +	void __iomem *bridge_base_addr =3D port->bridge_addr;
+>  	unsigned long flags;
+>  	u32 mask =3D BIT(data->hwirq + PM_MSI_INT_INTX_SHIFT);
+>  	u32 val;
+> @@ -540,8 +536,7 @@ static void mc_mask_intx_irq(struct irq_data *data)
+>  static void mc_unmask_intx_irq(struct irq_data *data)
+>  {
+>  	struct mc_pcie *port =3D irq_data_get_irq_chip_data(data);
+> -	void __iomem *bridge_base_addr =3D
+> -		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
+> +	void __iomem *bridge_base_addr =3D port->bridge_addr;
+>  	unsigned long flags;
+>  	u32 mask =3D BIT(data->hwirq + PM_MSI_INT_INTX_SHIFT);
+>  	u32 val;
+> @@ -896,8 +891,7 @@ static void mc_pcie_setup_window(void __iomem *bridge=
+_base_addr, u32 index,
+>  static int mc_pcie_setup_windows(struct platform_device *pdev,
+>  				 struct mc_pcie *port)
+>  {
+> -	void __iomem *bridge_base_addr =3D
+> -		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
+> +	void __iomem *bridge_base_addr =3D port->bridge_addr;
+>  	struct pci_host_bridge *bridge =3D platform_get_drvdata(pdev);
+>  	struct resource_entry *entry;
+>  	u64 pci_addr;
+> @@ -1081,6 +1075,7 @@ static int mc_host_probe(struct platform_device *pd=
+ev)
+>  	mc_disable_interrupts(port);
+> =20
+>  	bridge_base_addr =3D port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
+> +	port->bridge_addr =3D bridge_base_addr;
+> =20
+>  	/* Allow enabling MSI by disabling MSI-X */
+>  	val =3D readl(bridge_base_addr + PCIE_PCI_IRQ_DW0);
+> --=20
+> 2.17.1
+>=20
+>=20
+
+--qCrH5eub/BoEPs+2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZS+13wAKCRB4tDGHoIJi
+0scjAQDhrkZUunucMZI0RXCT/PVHRPxjeaEj5Btpn50y+TDCHAD9EkOlHuKnIDOA
+jsXGsg7DnuvYG5LslZ9g0LO1/2MAXwc=
+=VpnB
+-----END PGP SIGNATURE-----
+
+--qCrH5eub/BoEPs+2--
