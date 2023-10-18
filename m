@@ -2,140 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A305B7CDA8E
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Oct 2023 13:34:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA3DA7CDA91
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Oct 2023 13:35:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230483AbjJRLe4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Oct 2023 07:34:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59694 "EHLO
+        id S231446AbjJRLfH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Oct 2023 07:35:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231446AbjJRLev (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Oct 2023 07:34:51 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 332391B4;
-        Wed, 18 Oct 2023 04:34:44 -0700 (PDT)
+        with ESMTP id S234836AbjJRLfB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Oct 2023 07:35:01 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CAD612F;
+        Wed, 18 Oct 2023 04:34:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697628885; x=1729164885;
+  t=1697628895; x=1729164895;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=k/22Q3ibxWUMJOAz8W7Fp9YO2SyS1HtQWBwVBnojOT4=;
-  b=CTnHRV8NoMBY8MYyls08/2zYM1RQMFDsBOBIpJanJCNCn6i5msM+Gai7
-   3utdZeHaHrEP5xkMw119tW+lZzNxrLZPyrLo0MksHn/LT2feeF9Da5Jbo
-   KTLzRByzpVK/b1ITbM1xqyvinZar1y2IoMAH2y5+BGYT3eE/uRQ8yAa3c
-   ZLpiSfvyoYFksty3qngKTuwbZGO6+SuYGjJe1+ehdPt093baAeA24uwgz
-   uoJVQ3LkSDu59Q6a9DypQVvtwecKv1Zhq+ePeg/v8K7W9XizAgLYzqTZM
-   kkuJEVnciin8zkhzEa5aP2WAsYCxZTbnJ6kX4+SmcSe7YhRtAdIhNpOdx
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="383216002"
+  bh=NRJlQShSFWurHaKOv7QhLLMxfjt9JndN5eDKi4TZy98=;
+  b=aGbYegRUtj56RBdWDPRzO9F0UnjGtoWATtUqMrSJdZjhGYMQ2A6ivG4d
+   6pVdPGZDrHNJw3PzKnMNjDxsDxINogltPm/9AIegeJsjnG2nhApe4a3FP
+   Kbkd/js6XQVoJwiqrb+NGYeu3Se3MhMV73t52u4PH8gLgZPtY01u8TS6p
+   oHSFuxXJwF7XFJwp7YkFMS3hFHW167AeXArQkgnWhIvOdznIfeBSo503b
+   /8hS6qXYv4iFhgM0hZwCv1NFG45oiZFRX8q0WLUB1b45O8JQvpTnEZiST
+   oSbpvY0P3CxKt/rzUfUHYaW4OLTHrpITf658DpasvOLG1+E/FcvfspS9d
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="376365782"
 X-IronPort-AV: E=Sophos;i="6.03,234,1694761200"; 
-   d="scan'208";a="383216002"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 04:34:43 -0700
+   d="scan'208";a="376365782"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 04:34:50 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="826855333"
+X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="733145191"
 X-IronPort-AV: E=Sophos;i="6.03,234,1694761200"; 
-   d="scan'208";a="826855333"
+   d="scan'208";a="733145191"
 Received: from suguccin-mobl1.amr.corp.intel.com (HELO localhost) ([10.252.44.63])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 04:34:35 -0700
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 04:34:47 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+        linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 6/7] PCI/DPC: Use defines with DPC reason fields
-Date:   Wed, 18 Oct 2023 14:32:53 +0300
-Message-Id: <20231018113254.17616-7-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 7/7] PCI/MSI: Use FIELD_GET/PREP()
+Date:   Wed, 18 Oct 2023 14:32:54 +0300
+Message-Id: <20231018113254.17616-8-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20231018113254.17616-1-ilpo.jarvinen@linux.intel.com>
 References: <20231018113254.17616-1-ilpo.jarvinen@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add new defines for DPC reason fields and use them instead of literals.
+Instead of custom masking and shifting, use FIELD_GET/PREP() with
+register fields.
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/pcie/dpc.c        | 27 +++++++++++++++++----------
- include/uapi/linux/pci_regs.h |  6 ++++++
- 2 files changed, 23 insertions(+), 10 deletions(-)
+ drivers/pci/msi/msi.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 0048a11bd119..94111e438241 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -274,20 +274,27 @@ void dpc_process_error(struct pci_dev *pdev)
- 	pci_info(pdev, "containment event, status:%#06x source:%#06x\n",
- 		 status, source);
+diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+index ef1d8857a51b..682fa877478f 100644
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -6,6 +6,7 @@
+  * Copyright (C) Tom Long Nguyen (tom.l.nguyen@intel.com)
+  * Copyright (C) 2016 Christoph Hellwig.
+  */
++#include <linux/bitfield.h>
+ #include <linux/err.h>
+ #include <linux/export.h>
+ #include <linux/irq.h>
+@@ -188,7 +189,7 @@ static inline void pci_write_msg_msi(struct pci_dev *dev, struct msi_desc *desc,
  
--	reason = (status & PCI_EXP_DPC_STATUS_TRIGGER_RSN) >> 1;
--	ext_reason = (status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT) >> 5;
-+	reason = status & PCI_EXP_DPC_STATUS_TRIGGER_RSN;
-+	ext_reason = status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT;
- 	pci_warn(pdev, "%s detected\n",
--		 (reason == 0) ? "unmasked uncorrectable error" :
--		 (reason == 1) ? "ERR_NONFATAL" :
--		 (reason == 2) ? "ERR_FATAL" :
--		 (ext_reason == 0) ? "RP PIO error" :
--		 (ext_reason == 1) ? "software trigger" :
--				     "reserved error");
-+		 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR) ?
-+		 "unmasked uncorrectable error" :
-+		 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE) ?
-+		 "ERR_NONFATAL" :
-+		 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) ?
-+		 "ERR_FATAL" :
-+		 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO) ?
-+		 "RP PIO error" :
-+		 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_SW_TRIGGER) ?
-+		 "software trigger" :
-+		 "reserved error");
+ 	pci_read_config_word(dev, pos + PCI_MSI_FLAGS, &msgctl);
+ 	msgctl &= ~PCI_MSI_FLAGS_QSIZE;
+-	msgctl |= desc->pci.msi_attrib.multiple << 4;
++	msgctl |= FIELD_PREP(PCI_MSI_FLAGS_QSIZE, desc->pci.msi_attrib.multiple);
+ 	pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
  
- 	/* show RP PIO error detail information */
--	if (pdev->dpc_rp_extensions && reason == 3 && ext_reason == 0)
-+	if (pdev->dpc_rp_extensions &&
-+	    reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_IN_EXT &&
-+	    ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO)
- 		dpc_process_rp_pio_error(pdev);
--	else if (reason == 0 &&
-+	else if (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR &&
- 		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
- 		 aer_get_device_error_info(pdev, &info)) {
- 		aer_print_error(pdev, &info);
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 2d6df02a4b93..c4d67ceae20d 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -1044,9 +1044,15 @@
- #define PCI_EXP_DPC_STATUS		0x08	/* DPC Status */
- #define  PCI_EXP_DPC_STATUS_TRIGGER	    0x0001 /* Trigger Status */
- #define  PCI_EXP_DPC_STATUS_TRIGGER_RSN	    0x0006 /* Trigger Reason */
-+#define  PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR  0x0000 /* DPC due to unmasked uncorrectable error */
-+#define  PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE    0x0002 /* DPC due to receiving ERR_NONFATAL */
-+#define  PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE     0x0004 /* DPC due to receiving ERR_FATAL */
-+#define  PCI_EXP_DPC_STATUS_TRIGGER_RSN_IN_EXT 0x0006 /* Reason in Trig Reason Extension field */
- #define  PCI_EXP_DPC_STATUS_INTERRUPT	    0x0008 /* Interrupt Status */
- #define  PCI_EXP_DPC_RP_BUSY		    0x0010 /* Root Port Busy */
- #define  PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT 0x0060 /* Trig Reason Extension */
-+#define  PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO		0x0000	/* DPC due to RP PIO error */
-+#define  PCI_EXP_DPC_STATUS_TRIGGER_RSN_SW_TRIGGER	0x0020	/* DPC due to DPC SW Trigger bit */
- #define  PCI_EXP_DPC_RP_PIO_FEP		    0x1f00 /* Root Port PIO First Error Pointer */
+ 	pci_write_config_dword(dev, pos + PCI_MSI_ADDRESS_LO, msg->address_lo);
+@@ -299,7 +300,7 @@ static int msi_setup_msi_desc(struct pci_dev *dev, int nvec,
+ 	desc.pci.msi_attrib.is_64	= !!(control & PCI_MSI_FLAGS_64BIT);
+ 	desc.pci.msi_attrib.can_mask	= !!(control & PCI_MSI_FLAGS_MASKBIT);
+ 	desc.pci.msi_attrib.default_irq	= dev->irq;
+-	desc.pci.msi_attrib.multi_cap	= (control & PCI_MSI_FLAGS_QMASK) >> 1;
++	desc.pci.msi_attrib.multi_cap	= FIELD_GET(PCI_MSI_FLAGS_QMASK, control);
+ 	desc.pci.msi_attrib.multiple	= ilog2(__roundup_pow_of_two(nvec));
+ 	desc.affinity			= masks;
  
- #define PCI_EXP_DPC_SOURCE_ID		 0x0A	/* DPC Source Identifier */
+@@ -478,7 +479,7 @@ int pci_msi_vec_count(struct pci_dev *dev)
+ 		return -EINVAL;
+ 
+ 	pci_read_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, &msgctl);
+-	ret = 1 << ((msgctl & PCI_MSI_FLAGS_QMASK) >> 1);
++	ret = 1 << FIELD_GET(PCI_MSI_FLAGS_QMASK, msgctl);
+ 
+ 	return ret;
+ }
+@@ -511,7 +512,8 @@ void __pci_restore_msi_state(struct pci_dev *dev)
+ 	pci_read_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, &control);
+ 	pci_msi_update_mask(entry, 0, 0);
+ 	control &= ~PCI_MSI_FLAGS_QSIZE;
+-	control |= (entry->pci.msi_attrib.multiple << 4) | PCI_MSI_FLAGS_ENABLE;
++	control |= PCI_MSI_FLAGS_ENABLE |
++		   FIELD_PREP(PCI_MSI_FLAGS_QSIZE, entry->pci.msi_attrib.multiple);
+ 	pci_write_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, control);
+ }
+ 
 -- 
 2.30.2
 
