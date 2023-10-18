@@ -2,152 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E17677CDA87
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Oct 2023 13:34:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00F9D7CDA88
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Oct 2023 13:34:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231193AbjJRLe0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Oct 2023 07:34:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53648 "EHLO
+        id S230492AbjJRLe2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Oct 2023 07:34:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230265AbjJRLeX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Oct 2023 07:34:23 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BABE110F;
-        Wed, 18 Oct 2023 04:34:21 -0700 (PDT)
+        with ESMTP id S231176AbjJRLeZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Oct 2023 07:34:25 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85F7B11A;
+        Wed, 18 Oct 2023 04:34:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697628861; x=1729164861;
+  t=1697628863; x=1729164863;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=MqRibY96VGUvi4t4Y8OdfajrD7rQssLGYBUaujkdMxs=;
-  b=fphr2OIXahRYqsnweJgi7pKz8g0bpB5qr+uH3MXpZwhAqJs1ypwgZpKj
-   ASH3xl5Kv3uWQCkQs6bUkokLRjpRmHqCqb5WzmGTcdsqgW/GWugaTJNgv
-   Vy/Lnq5ugCgXf6J3v4FwhVANLb8fjfYWeT6EUZeMfY5Q+SvSr4LqFy/XC
-   v8X0UCFlgjkE4bsFVXpuiKYUvA6jUxFaUiZdsGaWgfPSj3YoviRRNvZ5U
-   KUILqUK+sa1Ws2Zy/P0rPGzSL/7BF0IZ3myge+mE8KruVUinTyOcKSbNV
-   ty9z15VeZ60CDF03sOxIoF3JGB0oGRx/zNGcuCx0tqMnr3ofBq9T9otf4
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="371056786"
+  bh=VjreTDi7jjJH97Z5MyoUOCUozCMclaID/DbiusXdx6k=;
+  b=n+mNjmKR7c2Bqus+QmqeZqy4DnKw0j/iAXSscaw8HOCvNFgrducuxp7G
+   067EiZeIxAzLh3+EPBf7NSPitb4GBmSUFgV0d7pkpCziTU5T4ZOcLGNA6
+   2Zncv6woiUzgt6QK0KC/84blXuPu9Sg0Eat5zva/JhXWhPAc79hIHwxW7
+   IWw1chKq9p0WO+FODIthqXp8KytqIPmfEGRaqWUwD4hTAq2ogWjeTT1Et
+   QJAbjH2AMKK9vYI04le1Rgu6vmFOIMRlBwCDKZ1j/YkBMt4wYnNjKw+ot
+   oI1+0twJOoYYDJ4cK/eytJEs1wRmWMY9+jQkBzEurxJw1Ncjro/PFUHiM
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="383215893"
 X-IronPort-AV: E=Sophos;i="6.03,234,1694761200"; 
-   d="scan'208";a="371056786"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 04:34:06 -0700
+   d="scan'208";a="383215893"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 04:34:23 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="930150816"
+X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="826855199"
 X-IronPort-AV: E=Sophos;i="6.03,234,1694761200"; 
-   d="scan'208";a="930150816"
+   d="scan'208";a="826855199"
 Received: from suguccin-mobl1.amr.corp.intel.com (HELO localhost) ([10.252.44.63])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 04:34:02 -0700
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 04:34:13 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 3/7] PCI: hotplug: Use FIELD_GET/PREP()
-Date:   Wed, 18 Oct 2023 14:32:50 +0300
-Message-Id: <20231018113254.17616-4-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 4/7] PCI/DPC: Use FIELD_GET()
+Date:   Wed, 18 Oct 2023 14:32:51 +0300
+Message-Id: <20231018113254.17616-5-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20231018113254.17616-1-ilpo.jarvinen@linux.intel.com>
 References: <20231018113254.17616-1-ilpo.jarvinen@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Instead of handcrafted shifts to handle register fields, use
-FIELD_GET/FIELD_PREP().
+From: Bjorn Helgaas <bhelgaas@google.com>
+
+Use FIELD_GET() to remove dependencies on the field position, i.e., the
+shift value. No functional change intended.
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/hotplug/pciehp_core.c | 3 ++-
- drivers/pci/hotplug/pciehp_hpc.c  | 5 +++--
- drivers/pci/hotplug/pnv_php.c     | 3 ++-
- 3 files changed, 7 insertions(+), 4 deletions(-)
+ drivers/pci/pcie/dpc.c        | 5 +++--
+ drivers/pci/quirks.c          | 2 +-
+ include/uapi/linux/pci_regs.h | 1 +
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-index 4042d87d539d..ddd55ad97a58 100644
---- a/drivers/pci/hotplug/pciehp_core.c
-+++ b/drivers/pci/hotplug/pciehp_core.c
-@@ -20,6 +20,7 @@
- #define pr_fmt(fmt) "pciehp: " fmt
- #define dev_fmt pr_fmt
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index 3ceed8e3de41..a5c259ada9ea 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -9,6 +9,7 @@
+ #define dev_fmt(fmt) "DPC: " fmt
  
+ #include <linux/aer.h>
 +#include <linux/bitfield.h>
- #include <linux/moduleparam.h>
- #include <linux/kernel.h>
- #include <linux/slab.h>
-@@ -103,7 +104,7 @@ static int set_attention_status(struct hotplug_slot *hotplug_slot, u8 status)
- 	struct pci_dev *pdev = ctrl->pcie->port;
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+ #include <linux/init.h>
+@@ -202,7 +203,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
  
- 	if (status)
--		status <<= PCI_EXP_SLTCTL_ATTN_IND_SHIFT;
-+		status = FIELD_PREP(PCI_EXP_SLTCTL_AIC, status);
- 	else
- 		status = PCI_EXP_SLTCTL_ATTN_IND_OFF;
+ 	/* Get First Error Pointer */
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &dpc_status);
+-	first_error = (dpc_status & 0x1f00) >> 8;
++	first_error = FIELD_GET(PCI_EXP_DPC_RP_PIO_FEP, dpc_status);
  
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index fd713abdfb9f..b1d0a1b3917d 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -14,6 +14,7 @@
+ 	for (i = 0; i < ARRAY_SIZE(rp_pio_error_string); i++) {
+ 		if ((status & ~mask) & (1 << i))
+@@ -338,7 +339,7 @@ void pci_dpc_init(struct pci_dev *pdev)
+ 	/* Quirks may set dpc_rp_log_size if device or firmware is buggy */
+ 	if (!pdev->dpc_rp_log_size) {
+ 		pdev->dpc_rp_log_size =
+-			(cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
++				FIELD_GET(PCI_EXP_DPC_RP_PIO_LOG_SIZE, cap);
+ 		if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
+ 			pci_err(pdev, "RP PIO log size %u is invalid\n",
+ 				pdev->dpc_rp_log_size);
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index eeec1d6f9023..a9fdc2e3f110 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -6154,7 +6154,7 @@ static void dpc_log_size(struct pci_dev *dev)
+ 	if (!(val & PCI_EXP_DPC_CAP_RP_EXT))
+ 		return;
  
- #define dev_fmt(fmt) "pciehp: " fmt
+-	if (!((val & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8)) {
++	if (FIELD_GET(PCI_EXP_DPC_RP_PIO_LOG_SIZE, val) == 0) {
+ 		pci_info(dev, "Overriding RP PIO Log Size to 4\n");
+ 		dev->dpc_rp_log_size = 4;
+ 	}
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 495f0ae4ecd5..2d6df02a4b93 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -1047,6 +1047,7 @@
+ #define  PCI_EXP_DPC_STATUS_INTERRUPT	    0x0008 /* Interrupt Status */
+ #define  PCI_EXP_DPC_RP_BUSY		    0x0010 /* Root Port Busy */
+ #define  PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT 0x0060 /* Trig Reason Extension */
++#define  PCI_EXP_DPC_RP_PIO_FEP		    0x1f00 /* Root Port PIO First Error Pointer */
  
-+#include <linux/bitfield.h>
- #include <linux/dmi.h>
- #include <linux/kernel.h>
- #include <linux/types.h>
-@@ -484,7 +485,7 @@ int pciehp_set_raw_indicator_status(struct hotplug_slot *hotplug_slot,
- 	struct pci_dev *pdev = ctrl_dev(ctrl);
- 
- 	pci_config_pm_runtime_get(pdev);
--	pcie_write_cmd_nowait(ctrl, status << 6,
-+	pcie_write_cmd_nowait(ctrl, FIELD_PREP(PCI_EXP_SLTCTL_AIC, status),
- 			      PCI_EXP_SLTCTL_AIC | PCI_EXP_SLTCTL_PIC);
- 	pci_config_pm_runtime_put(pdev);
- 	return 0;
-@@ -1028,7 +1029,7 @@ struct controller *pcie_init(struct pcie_device *dev)
- 		PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC);
- 
- 	ctrl_info(ctrl, "Slot #%d AttnBtn%c PwrCtrl%c MRL%c AttnInd%c PwrInd%c HotPlug%c Surprise%c Interlock%c NoCompl%c IbPresDis%c LLActRep%c%s\n",
--		(slot_cap & PCI_EXP_SLTCAP_PSN) >> 19,
-+		FIELD_GET(PCI_EXP_SLTCAP_PSN, slot_cap),
- 		FLAG(slot_cap, PCI_EXP_SLTCAP_ABP),
- 		FLAG(slot_cap, PCI_EXP_SLTCAP_PCP),
- 		FLAG(slot_cap, PCI_EXP_SLTCAP_MRLSP),
-diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
-index 881d420637bf..694349be9d0a 100644
---- a/drivers/pci/hotplug/pnv_php.c
-+++ b/drivers/pci/hotplug/pnv_php.c
-@@ -5,6 +5,7 @@
-  * Copyright Gavin Shan, IBM Corporation 2016.
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/libfdt.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-@@ -731,7 +732,7 @@ static int pnv_php_enable_msix(struct pnv_php_slot *php_slot)
- 
- 	/* Check hotplug MSIx entry is in range */
- 	pcie_capability_read_word(pdev, PCI_EXP_FLAGS, &pcie_flag);
--	entry.entry = (pcie_flag & PCI_EXP_FLAGS_IRQ) >> 9;
-+	entry.entry = FIELD_GET(PCI_EXP_FLAGS_IRQ, pcie_flag);
- 	if (entry.entry >= nr_entries)
- 		return -ERANGE;
+ #define PCI_EXP_DPC_SOURCE_ID		 0x0A	/* DPC Source Identifier */
  
 -- 
 2.30.2
