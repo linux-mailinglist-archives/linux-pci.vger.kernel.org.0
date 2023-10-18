@@ -2,46 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0DE77CE2A5
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Oct 2023 18:23:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90CD87CE2E2
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Oct 2023 18:36:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229965AbjJRQXe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Oct 2023 12:23:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39252 "EHLO
+        id S229810AbjJRQgh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Oct 2023 12:36:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229702AbjJRQXd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Oct 2023 12:23:33 -0400
+        with ESMTP id S229537AbjJRQgg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Oct 2023 12:36:36 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88A1798;
-        Wed, 18 Oct 2023 09:23:32 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CBC4C433C7;
-        Wed, 18 Oct 2023 16:23:31 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3953A113;
+        Wed, 18 Oct 2023 09:36:34 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A14D7C433C7;
+        Wed, 18 Oct 2023 16:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697646212;
-        bh=EU9od74l7DczH5yRKH/azRD3pECNA7YaypodW+1xz+c=;
+        s=k20201202; t=1697646993;
+        bh=uN4FTt1WJfID/Mn+71JQqnF+ueyE2WBjOZDWcTg9Tt8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=duKsn24TPHawugE8wRyIQxNsZfEzs+EPZd51XKtAYOKrx0kZToSxvafLOXEYWsW6x
-         +c9FmuxdeePzGYaxUQTEOzYW9KpVZ0dJiJ7lnoqydkhixwZLcAvhXC6ztXfR2RLnT7
-         gnB7C2r+iPFt0d4VuvSTLMQ/Gy0R532dOjJP02lHYHfhaORL7qVX8NzKlSNNmI6K/H
-         D7SeRKbWHfcUcwRaV1m7SMEt4IFx2FN0toIMghEZuHo4iltM5jLGimkTwDwhWdupNe
-         7f+ZULnhF97X1/uFvhE5Pk1myrBw3vQoS2jbfgvUypYF/FAnyqiK2X4psIDo1gTa/g
-         wpsCeBXqDn6vw==
-Date:   Wed, 18 Oct 2023 11:23:28 -0500
+        b=dTDtv7a+6jAyDRbZJ7t4ZZEJmkadDCEdEF3hYZtwVRGW+h3m48nUYLh0r5cCTkiLu
+         ep0o48YxHgLr85xuKCozOBVkzxOffLao5QQon8j10wlUGT53uzZY4NeZSbwfviiVig
+         TboNmRsdZRX2Vd16I77OC9tW/7Z9t2/yIRFlZR7JV2x7pSsM7PyfssILKI/5ONYYeI
+         YgO71HUb03rz2fS/3Bt0wAo+rG/uGIV/4WfvhHipzFjOd7fydVFRLUNzEDTcIcPt1v
+         OoiHhAOX5ulw82X9vKHeIJHeJz+J1AEXZQPKU4G5GUkB1LEV6hTMExT1qiZj/O6Eom
+         4lwYlCHYPWdqA==
+Date:   Wed, 18 Oct 2023 11:36:32 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] PCI: Use FIELD_GET/PREP() & other reg field cleanups
-Message-ID: <20231018162328.GA1363813@bhelgaas>
+To:     Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc:     lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        r-gunasekaran@ti.com, srk@ti.com,
+        Serge Semin <fancer.lancer@gmail.com>
+Subject: Re: [PATCH v2] PCI: keystone: Fix ks_pcie_v3_65_add_bus() for AM654x
+ SoC
+Message-ID: <20231018163632.GA1364574@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231018113254.17616-1-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20231018075038.2740534-1-s-vadapalli@ti.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -51,40 +50,76 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 18, 2023 at 02:32:47PM +0300, Ilpo Järvinen wrote:
-> Hi,
-> 
-> Here's what I think should cover most of the remaining FIELD_GET/PREP()
-> conversions under drivers/pci/.
-> 
-> The patch from Bjorn is from
->   https://lore.kernel.org/linux-pci/20231010204436.1000644-7-helgaas@kernel.org/
-> But has been adjusted to better blend in with the other DPC changes.
-> I've preserved Bjorn as the main From/SoB, and added myself before his
-> name instead (since I modified it but my main contribution was to
-> remove stuff he had made to it).
-> 
-> Bjorn Helgaas (1):
->   PCI/DPC: Use FIELD_GET()
-> 
-> Ilpo Järvinen (6):
->   PCI: cadence: Use FIELD_GET()
->   PCI: dwc: Use FIELD_GET/PREP()
->   PCI: hotplug: Use FIELD_GET/PREP()
->   PCI/DPC: Use defined fields with DPC_CTL register
->   PCI/DPC: Use defines with DPC reason fields
->   PCI/MSI: Use FIELD_GET/PREP()
-> 
->  .../pci/controller/cadence/pcie-cadence-ep.c  |  9 ++--
->  .../pci/controller/dwc/pcie-designware-ep.c   |  7 ++--
->  drivers/pci/controller/dwc/pcie-tegra194.c    |  5 +--
->  drivers/pci/hotplug/pciehp_core.c             |  3 +-
->  drivers/pci/hotplug/pciehp_hpc.c              |  5 ++-
->  drivers/pci/hotplug/pnv_php.c                 |  3 +-
->  drivers/pci/msi/msi.c                         | 10 +++--
->  drivers/pci/pcie/dpc.c                        | 42 ++++++++++++-------
->  drivers/pci/quirks.c                          |  2 +-
->  include/uapi/linux/pci_regs.h                 |  9 ++++
->  10 files changed, 61 insertions(+), 34 deletions(-)
+[+cc Serge (please cc people who have commented on previous revisions)]
 
-Applied to pci/field-get for v6.7, thanks, Ilpo!
+On Wed, Oct 18, 2023 at 01:20:38PM +0530, Siddharth Vadapalli wrote:
+> The ks_pcie_v3_65_add_bus() member of "ks_pcie_ops" was added for
+> platforms using DW PCIe IP-core version 3.65a. The AM654x SoC uses
+> DW PCIe IP-core version 4.90a and ks_pcie_v3_65_add_bus() is not
+> applicable to it.
+> 
+> The commit which added support for the AM654x SoC has reused majority
+> of the functions with the help of the "is_am6" flag to handle AM654x
+> separately where applicable. Thus, make use of the "is_am6" flag and
+> change ks_pcie_v3_65_add_bus() to no-op for AM654x SoC.
+> 
+> Fixes: 18b0415bc802 ("PCI: keystone: Add support for PCIe RC in AM654x Platforms")
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
+> Hello,
+> 
+> This patch is based on linux-next tagged next-20231018.
+> 
+> The v1 of this patch is at:
+> https://lore.kernel.org/r/20231011123451.34827-1-s-vadapalli@ti.com/
+> 
+> While there are a lot of changes since v1 and this patch could have been
+> posted as a v1 patch itself, I decided to post it as the v2 of the patch
+> mentioned above since it aims to address the issue described by the v1
+> patch and is similar in that sense. However, the solution to the issue
+> described in the v1 patch appears to be completely different from what
+> was implemented in the v1 patch. Thus, the commit message and subject of
+> this patch have been modified accordingly.
+> 
+> Changes since v1:
+> - Updated patch subject and commit message.
+> - Determined that issue is not with the absence of Link as mentioned in
+>   v1 patch. Even with Link up and endpoint device connected, if
+>   ks_pcie_v3_65_add_bus() is invoked and executed, all reads to the
+>   MSI-X offsets return 0xffffffff when pcieport driver attempts to setup
+>   AER and PME services. The all Fs return value indicates that the MSI-X
+>   configuration is failing even if Endpoint device is connected. This is
+>   because the ks_pcie_v3_65_add_bus() function is not applicable to the
+>   AM654x SoC which uses DW PCIe IP-core version 4.90a.
+
+Thanks for verifying that this doesn't actually depend on whether the
+link is up.
+
+I think that means we should be able to get rid of the
+ks_pcie_v3_65_add_bus() callback altogether and instead do this along
+with the rest of the Root Port init.
+
+>  drivers/pci/controller/dwc/pci-keystone.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> index 0def919f89fa..3abd59335574 100644
+> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> @@ -459,7 +459,7 @@ static int ks_pcie_v3_65_add_bus(struct pci_bus *bus)
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>  	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
+>  
+> -	if (!pci_is_root_bus(bus))
+> +	if (!pci_is_root_bus(bus) || ks_pcie->is_am6)
+>  		return 0;
+>  
+>  	/* Configure and set up BAR0 */
+> -- 
+> 2.34.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
