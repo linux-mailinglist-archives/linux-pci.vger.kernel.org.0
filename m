@@ -2,184 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F00B7CDD3C
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Oct 2023 15:28:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 207387CDF09
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Oct 2023 16:16:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231637AbjJRN2M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Oct 2023 09:28:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39940 "EHLO
+        id S232019AbjJROQN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Oct 2023 10:16:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231748AbjJRN2K (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Oct 2023 09:28:10 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50B27115;
-        Wed, 18 Oct 2023 06:28:07 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFF23C433C9;
-        Wed, 18 Oct 2023 13:28:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697635686;
-        bh=iLmiQsrFLaoTQBSf63WblBjFMj7qtawoLyyCTo0IaaA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZobnOmL8WENcMI6dMg0IuPhAas+ySO5bqbZpQP2XvCXd+u3MRzwxPYQdNHcGjd8tO
-         eP/A5jnXYfQ0tVhPCyHbmy1V1j349j87eMwhWxzQfnO4x3PIcbqrJHdMnzkN3Cce1e
-         cnK4qVmE8L/YUQypxniYUOjvtD6+ryZYCElTJ9HzxE+meGIcFspAfZsKZ9WuWn1jlG
-         TdTOy9HlVouc6lF5KwsmZOk0v2dlzyB69+NYN5cCMnEwdaV1fzGI/QxfZhxljbStyq
-         rxlpQVz8fv2LlQ7+7XpVHMWHQY+kruzpjPo9pXpvABB+icrPUC6VsjEfwjBQFZ4UYl
-         Wx4dqw943zNYw==
-Date:   Wed, 18 Oct 2023 18:57:58 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Bjorn Andersson <quic_bjorande@quicinc.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
+        with ESMTP id S1345102AbjJROPb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Oct 2023 10:15:31 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33390D61;
+        Wed, 18 Oct 2023 07:13:48 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-5079f9675c6so7255130e87.2;
+        Wed, 18 Oct 2023 07:13:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697638426; x=1698243226; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PhyxmUtG7ajyW2SjJyU5m+NzLdFKfkutpPsZw1ffkps=;
+        b=eHO5mQcHxbbVmVyUsdm3qfVjWzY+w9bQtxkJI0c35p3h7lQuNTeztpOG0cCewLmQuG
+         iyppswWFa3ckyNVz0D8+6kc0j8xcKXiTQQbMURHfXFsDOwHYfaE7BpgLwPlNYk9+tPw8
+         cNaKtQLzF297Fz9NAEOSXHPETpsOBD0gY71efeG7QWATTM8vdNEfn1pmlpRpSKevgBTJ
+         WWmzeGmKu2bGtHxDAGw2A+eJBzqTfT06YOI/qf+kexkieSvNvJl58D/a+ArLKW1H7J+2
+         zyQWK3zyMhZg8GjkI//OR4U+hFyzBezK2KBL8iCMH9A+IHvLayLasYc4PBA7G+eQIR7r
+         kVvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697638426; x=1698243226;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PhyxmUtG7ajyW2SjJyU5m+NzLdFKfkutpPsZw1ffkps=;
+        b=VeY2PyfFfoU8cpkNx+Gr+tOKc40DRQ7Zp2cI45eMqkoFLHzDhGwmosRzx9cb1D71Ri
+         v6ZN4gf2S4SNYBFjPujRv5WTkxabvnpK6B9CurGZIjsgaX4raoBepcbgYYHAEDkhYi61
+         14CTVkFZD1SNcof0XIhSZ9M2K3tZFO5EKBtOgf2sSPMNlXLiN4MSyYJ0REPBOW+476cf
+         jkOJAaDCDX+3zxUK2/5Si0r2WNIinLimPc7iPvYjheuzpMIJK8mO7Ik7WGSor2zB5C0Q
+         Sq+obrz93GdkL+tnCH1agg5RHde/aqfcpl4X+bK+dIqqmHdSegYCfBExA6k/DNgKvLQa
+         qIkQ==
+X-Gm-Message-State: AOJu0Yzhm967Z1byeowY5wuOn3VIg7CHIPeWbOCr6b7cRLzan+cx1fsy
+        QeKkmVCVbQrIEN3yJpGxOGs=
+X-Google-Smtp-Source: AGHT+IFXuSn1gbUFD88OFr29Di5DE0IEbBaKZ3/Kw7Gmui5oNJaleutG9zWrKFBSC2OhiZQESHKcTw==
+X-Received: by 2002:ac2:548e:0:b0:507:9fa0:e244 with SMTP id t14-20020ac2548e000000b005079fa0e244mr3912595lfk.65.1697638425660;
+        Wed, 18 Oct 2023 07:13:45 -0700 (PDT)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id k10-20020ac257ca000000b00500a4679148sm714150lfo.20.2023.10.18.07.13.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Oct 2023 07:13:45 -0700 (PDT)
+Date:   Wed, 18 Oct 2023 17:13:41 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI: qcom-ep: Implement dbi_cs2_access() function
- callback for DBI CS2 access
-Message-ID: <20231018132758.GD47321@thinkpad>
+Subject: Re: [PATCH 1/2] PCI: dwc: Add new accessors to enable/disable DBI
+ CS2 while setting the BAR size
+Message-ID: <rsv5vgle2d36skx75ds4hqzmlqwldmj4g4ghrlyfuu3ideb3rh@74mnro7qnp4v>
 References: <20231017-pcie-qcom-bar-v1-0-3e26de07bec0@linaro.org>
- <20231017-pcie-qcom-bar-v1-2-3e26de07bec0@linaro.org>
- <20231017142431.GR3553829@hu-bjorande-lv.qualcomm.com>
- <20231017162129.GF5274@thinkpad>
- <20231017165609.GT3553829@hu-bjorande-lv.qualcomm.com>
- <20231017174100.GA137137@thinkpad>
- <20231017221811.GV3553829@hu-bjorande-lv.qualcomm.com>
+ <20231017-pcie-qcom-bar-v1-1-3e26de07bec0@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231017221811.GV3553829@hu-bjorande-lv.qualcomm.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20231017-pcie-qcom-bar-v1-1-3e26de07bec0@linaro.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 17, 2023 at 03:18:11PM -0700, Bjorn Andersson wrote:
-> On Tue, Oct 17, 2023 at 11:11:00PM +0530, Manivannan Sadhasivam wrote:
-> > On Tue, Oct 17, 2023 at 09:56:09AM -0700, Bjorn Andersson wrote:
-> > > On Tue, Oct 17, 2023 at 09:51:29PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Tue, Oct 17, 2023 at 07:24:31AM -0700, Bjorn Andersson wrote:
-> > > > > On Tue, Oct 17, 2023 at 11:47:55AM +0530, Manivannan Sadhasivam wrote:
-> > > > > > From: Manivannan Sadhasivam <mani@kernel.org>
-> > > > > 
-> > > > > Your S-o-b should match this.
-> > > > > 
-> > > > 
-> > > > I gave b4 a shot for sending the patches and missed this. Will fix it in next
-> > > > version.
-> > > > 
-> > > > > > 
-> > > > > > Qcom EP platforms require enabling/disabling the DBI CS2 access while
-> > > > > > programming some read only and shadow registers through DBI. So let's
-> > > > > > implement the dbi_cs2_access() callback that will be called by the DWC core
-> > > > > > while programming such registers like BAR mask register.
-> > > > > > 
-> > > > > > Without DBI CS2 access, writes to those registers will not be reflected.
-> > > > > > 
-> > > > > > Fixes: f55fee56a631 ("PCI: qcom-ep: Add Qualcomm PCIe Endpoint controller driver")
-> > > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > > ---
-> > > > > >  drivers/pci/controller/dwc/pcie-qcom-ep.c | 14 ++++++++++++++
-> > > > > >  1 file changed, 14 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> > > > > > index 32c8d9e37876..4653cbf7f9ed 100644
-> > > > > > --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> > > > > > +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> > > > > > @@ -124,6 +124,7 @@
-> > > > > >  
-> > > > > >  /* ELBI registers */
-> > > > > >  #define ELBI_SYS_STTS				0x08
-> > > > > > +#define ELBI_CS2_ENABLE				0xa4
-> > > > > >  
-> > > > > >  /* DBI registers */
-> > > > > >  #define DBI_CON_STATUS				0x44
-> > > > > > @@ -262,6 +263,18 @@ static void qcom_pcie_dw_stop_link(struct dw_pcie *pci)
-> > > > > >  	disable_irq(pcie_ep->perst_irq);
-> > > > > >  }
-> > > > > >  
-> > > > > > +static void qcom_pcie_dbi_cs2_access(struct dw_pcie *pci, bool enable)
-> > > > > > +{
-> > > > > > +	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
-> > > > > > +
-> > > > > > +	writel_relaxed(enable, pcie_ep->elbi + ELBI_CS2_ENABLE);
-> > > > > 
-> > > > > Don't you want to maintain the ordering of whatever write came before
-> > > > > this?
-> > > > > 
-> > > > 
-> > > > Since this in a dedicated function, I did not care about the ordering w.r.t
-> > > > previous writes. Even if it gets inlined, the order should not matter since it
-> > > > only enables/disables the CS2 access for the forthcoming writes.
-> > > > 
-> > > 
-> > > The wmb() - in a non-relaxed writel -  would ensure that no earlier
-> > > writes are reordered and end up in your expected set of "forthcoming
-> > > writes".
-> > > 
-> > 
-> > I was under the impression that the readl_relaxed() here serves as an implicit
-> > barrier. But reading the holy memory-barriers documentation doesn't explicitly
-> > say so. So I'm going to add wmb() to be on the safe side as you suggested.
-> > 
+On Tue, Oct 17, 2023 at 11:47:54AM +0530, Manivannan Sadhasivam wrote:
+> From: Manivannan Sadhasivam <mani@kernel.org>
 > 
-> I'm talking about writes prior to this function is being called.
+> As per the DWC databook v4.21a, section M.4.1, in order to write some read
+> only and shadow registers through application DBI, the device driver should
+> assert DBI Chip Select 2 (CS2) in addition to DBI Chip Select (CS).
 > 
-> In other words, if you write:
-> 
-> writel_relaxed(A, ptr); (or writel, it doesn't matter)
-> writel_relaxed(X, ELBI_CS2_ENABLE);
-> readl_relaxed(ELBI_CS2_ENABLE);
-> 
-> Then there are circumstances where the write to ptr might be performed
-> after ELBI_CS2_ENABLE.
-> 
+> This is a requirement at least on the Qcom platforms while programming the
+> BAR size, as the BAR mask registers are marked RO. So let's add two new
+> accessors dw_pcie_dbi_cs2_{en/dis} to enable/disable CS2 access in a vendor
+> specific way while programming the BAR size.
 
-That shouldn't cause any issues as CS2_ENABLE just opens up the write access to
-read only registers. It will cause issues if CPU/compiler reorders this write
-with the following writes where we actually write to the read only registers.
+Emm, it's a known thing for all IP-core versions: dbi_cs2 must be
+asserted to access the shadow DW PCIe CSRs space for both RC and
+EP including the BARs mask and their enabling/disabling flag (there
+are many more shadow CSRs available on DW PCIe EPs, and a few in DW
+PCIe RCs). That's why the dw_pcie_ops->writel_dbi2 pointer has been
+defined in the first place (dbi2 suffix means dbi_cs2). You should use
+it to create the platform-specific dbi_cs2 write accessors like it's
+done in pci-keystone.c and pcie-bt1.c. For instance like this:
 
-For that I initially thought the readl_relaxed() would be sufficient. But
-looking more, it may not be enough since CS2_ENABLE register lies in ELBI space
-and the read only registers are in DBI space. So the CPU may reorder writes if
-this function gets inlined by the compiler since both are in different hardware
-space (not sure if CPU considers both regions as one since they are in PCI
-domain, in that case the barrier is not required, but I'm not sure).
+static void qcom_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 val)
+{
+	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
+	int ret;
 
-So to be on the safe side, I should add wmb() after the CS2_ENABLE write.
+	writel(1, pcie_ep->elbi + ELBI_CS2_ENABLE);
 
-- Mani
+	ret = dw_pcie_write(pci->dbi_base2 + reg, size, val);
+	if (ret)
+		dev_err(pci->dev, "write DBI address failed\n");
 
-> Iiuc, the way to avoid that is to either be certain that none of those
-> circumstances applies, or to add a wmb(), like:
-> 
-> writel_relaxed(A, ptr); (or writel, it doesn't matter)
-> wmb();
-> writel_relaxed(X, ELBI_CS2_ENABLE);
-> readl_relaxed(ELBI_CS2_ENABLE);
-> 
-> or short hand:
-> 
-> writel_relaxed(A, ptr); (or writel, it doesn't matter)
-> writel(X, ELBI_CS2_ENABLE);
-> readl_relaxed(ELBI_CS2_ENABLE);
-> 
-> Where the wmb() will ensure the two writes happen in order.
-> 
-> The read in your code will ensure that execution won't proceed until the
-> write has hit the hardware, so that's good. But writing this makes me
-> uncertain if there's sufficient guarantees for the CPU not reordering
-> later operations.
-> 
-> Regards,
-> Bjorn
+	writel(0, pcie_ep->elbi + ELBI_CS2_ENABLE);
+}
 
--- 
-மணிவண்ணன் சதாசிவம்
+/* Common DWC controller ops */
+static const struct dw_pcie_ops pci_ops = {
+	.link_up = qcom_pcie_dw_link_up,
+	.start_link = qcom_pcie_dw_start_link,
+	.stop_link = qcom_pcie_dw_stop_link,
+	.write_dbi2 = qcom_pcie_write_dbi2,
+};
+
+For that reason there is absolutely no need in adding the new
+callbacks.
+
+-Serge(y)
+
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-ep.c |  6 ++++++
+>  drivers/pci/controller/dwc/pcie-designware.h    | 13 +++++++++++++
+>  2 files changed, 19 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index d34a5e87ad18..1874fb3d8df4 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -269,11 +269,17 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  
+>  	dw_pcie_dbi_ro_wr_en(pci);
+>  
+> +	dw_pcie_dbi_cs2_en(pci);
+>  	dw_pcie_writel_dbi2(pci, reg_dbi2, lower_32_bits(size - 1));
+> +	dw_pcie_dbi_cs2_dis(pci);
+> +
+>  	dw_pcie_writel_dbi(pci, reg, flags);
+>  
+>  	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
+> +		dw_pcie_dbi_cs2_en(pci);
+>  		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, upper_32_bits(size - 1));
+> +		dw_pcie_dbi_cs2_dis(pci);
+> +
+>  		dw_pcie_writel_dbi(pci, reg + 4, 0);
+>  	}
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 55ff76e3d384..3cba27b5bbe5 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -379,6 +379,7 @@ struct dw_pcie_ops {
+>  			     size_t size, u32 val);
+>  	void    (*write_dbi2)(struct dw_pcie *pcie, void __iomem *base, u32 reg,
+>  			      size_t size, u32 val);
+> +	void	(*dbi_cs2_access)(struct dw_pcie *pcie, bool enable);
+>  	int	(*link_up)(struct dw_pcie *pcie);
+>  	enum dw_pcie_ltssm (*get_ltssm)(struct dw_pcie *pcie);
+>  	int	(*start_link)(struct dw_pcie *pcie);
+> @@ -508,6 +509,18 @@ static inline void dw_pcie_dbi_ro_wr_dis(struct dw_pcie *pci)
+>  	dw_pcie_writel_dbi(pci, reg, val);
+>  }
+>  
+> +static inline void dw_pcie_dbi_cs2_en(struct dw_pcie *pci)
+> +{
+> +	if (pci->ops && pci->ops->dbi_cs2_access)
+> +		pci->ops->dbi_cs2_access(pci, true);
+> +}
+> +
+> +static inline void dw_pcie_dbi_cs2_dis(struct dw_pcie *pci)
+> +{
+> +	if (pci->ops && pci->ops->dbi_cs2_access)
+> +		pci->ops->dbi_cs2_access(pci, false);
+> +}
+> +
+>  static inline int dw_pcie_start_link(struct dw_pcie *pci)
+>  {
+>  	if (pci->ops && pci->ops->start_link)
+> 
+> -- 
+> 2.25.1
+> 
