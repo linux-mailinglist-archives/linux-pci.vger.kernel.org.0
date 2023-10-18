@@ -2,306 +2,505 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CAD977CDB63
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Oct 2023 14:15:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D5C47CDCFC
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Oct 2023 15:16:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229529AbjJRMPr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Oct 2023 08:15:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53402 "EHLO
+        id S231213AbjJRNQP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Oct 2023 09:16:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235013AbjJRMPp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Oct 2023 08:15:45 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DFBB11D;
-        Wed, 18 Oct 2023 05:15:42 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-507c50b7c36so1668631e87.3;
-        Wed, 18 Oct 2023 05:15:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697631340; x=1698236140; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KXfWPnvyYyEdw9XP4045dFhjhZGSgOa2FC+PwC10OoU=;
-        b=BcjEIrG41qXVp1pJDbzXLr5mNTAo9K1G9ymQmQQTXTx69RxT0fwZyP1L5GdEPUGda+
-         FQYy+PiOps6pe6nFijnPgaj1MmAGD5WZ8Tt3bwybiVUbTPUpQ95WfrteJcKy47qg79RU
-         ufwwr2LXGsiV/CT+pS7eh2zE0KLMj4UJGRBonBioOAUT7+vi6MKMps+uU7YE3x0Ib4g9
-         En9/pEzZmW0poDObNcEuSCueod6LvqCkOzOK+COEgL/tas+F4iaishaTTQ9lI/St5jFV
-         Khvn8UZ8d9og4D1sekoVhMJY04BejLfDAzYWyPvPO4K8DBgwJLehrIS44HkV3h36PenZ
-         dOhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697631340; x=1698236140;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KXfWPnvyYyEdw9XP4045dFhjhZGSgOa2FC+PwC10OoU=;
-        b=VrV+JVFwfy4lxA3w9si3MM73+qPSN0yzOl2hJPR88YrTbOjjH6jpIQ4fF0Dc+rvfKE
-         79xuEnCQ/eHr7l0mceNdipN13E/o9nHZxXH2PdgVseVdKglL+sb0auaF4Ea7MBAgPgB2
-         33EhPC4gul2iktHI8qlITgPmMH7pAOHcloNUCJDVh4/3h/1E44iX/MuSA8rfb1RJbz0K
-         O0izM/zk5HSH3E4zxheibHzrDnjiUJh6B+PiuPdtzQGSBERz9UytkzGIcLEabWVDRzhj
-         MeoPtYZUP589Dic+y8Imi8H8Dyh2o/3OhHY8ssb3SQFTkhvNY01IAPSIeRE0K+8Ip15P
-         FleA==
-X-Gm-Message-State: AOJu0Yxr9epbS23yDx2LVzMwJSMwxH5+K3ogBYutKbwdyhXTn2sU+KMR
-        JSrs9QSrKyxBg8sHJX133P4=
-X-Google-Smtp-Source: AGHT+IFX/ugXGrNsrcRQKJdr2EBK1pzY+w3+VcOPNocw5pvAWIgHNsZOCK1dn+4gLkiDBSXLVenNMg==
-X-Received: by 2002:ac2:5df5:0:b0:507:b17a:709e with SMTP id z21-20020ac25df5000000b00507b17a709emr3836704lfq.1.1697631340201;
-        Wed, 18 Oct 2023 05:15:40 -0700 (PDT)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id h9-20020ac24da9000000b0050331960776sm679964lfe.34.2023.10.18.05.15.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Oct 2023 05:15:39 -0700 (PDT)
-Date:   Wed, 18 Oct 2023 15:15:37 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc:     bhelgaas@google.com, lpieralisi@kernel.org, robh@kernel.org,
-        kw@linux.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        r-gunasekaran@ti.com, srk@ti.com
-Subject: Re: [PATCH v2] PCI: keystone: Fix ks_pcie_v3_65_add_bus() for AM654x
- SoC
-Message-ID: <bdsnykgehrgc75cw6rlaog25tuyivj57nwpjh5727fb4yjdrj5@ad3zoftu37bt>
-References: <20231018075038.2740534-1-s-vadapalli@ti.com>
- <zje5t7zbaisyzwgvkdxnqwlcadsyegipxbhsxxpbqlnuu45ria@4sqxpgieoig2>
- <6b74d547-bdaf-41e3-8046-ce295a0ecf03@ti.com>
+        with ESMTP id S231398AbjJRNQO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Oct 2023 09:16:14 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFCCD83;
+        Wed, 18 Oct 2023 06:16:11 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00176C433C8;
+        Wed, 18 Oct 2023 13:16:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697634971;
+        bh=EV5d9GaBfF1fZbeOPDv3N401FFsTzriGwYNW/AYGa3k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D5rWL3NDNp7b/CefNIDLvQmOttmwBoYjtPRuhYPfkBxeKo+6dvyYIPnSq8fs7BfZZ
+         9qQHo+2YvbKUUfGKul6eU5N5ytwV8cPwAyod+Hv07wA61GEgwjeEN4Cd/7RR8yT1J0
+         0OrnNzVVLxwySVfa94sI4KxUgS79Vt5nIYlgl0+yldbfnigU398qa8c8+w/XWdB7DN
+         uGjxgHsp6/naZKkci78izPxauYxIa3+pZWVXqy+QNgOC/rMyUSpAFY7BPjpS1DfZjp
+         QJ2mWeeVirIEWaSedl/KCTxp3wpmR1OyCzWkZ9rN4gKFFY+EK/++NxgpjAp0R1mxxq
+         jPSbaSlCSL5Nw==
+Date:   Wed, 18 Oct 2023 18:46:02 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, marek.vasut+renesas@gmail.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Serge Semin <fancer.lancer@gmail.com>
+Subject: Re: [PATCH v25 12/15] PCI: rcar-gen4: Add R-Car Gen4 PCIe controller
+ support for host mode
+Message-ID: <20231018131602.GC47321@thinkpad>
+References: <20231018085631.1121289-1-yoshihiro.shimoda.uh@renesas.com>
+ <20231018085631.1121289-13-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6b74d547-bdaf-41e3-8046-ce295a0ecf03@ti.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231018085631.1121289-13-yoshihiro.shimoda.uh@renesas.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 18, 2023 at 05:26:53PM +0530, Siddharth Vadapalli wrote:
+On Wed, Oct 18, 2023 at 05:56:28PM +0900, Yoshihiro Shimoda wrote:
+> Add R-Car Gen4 PCIe controller support for host mode.
 > 
+> This controller is based on Synopsys DesignWare PCIe. However, this
+> particular controller has a number of vendor-specific registers, and as
+> such, requires initialization code like mode setting and retraining and
+> so on.
 > 
-> On 18/10/23 16:41, Serge Semin wrote:
-> > On Wed, Oct 18, 2023 at 01:20:38PM +0530, Siddharth Vadapalli wrote:
-> >> The ks_pcie_v3_65_add_bus() member of "ks_pcie_ops" was added for
-> >> platforms using DW PCIe IP-core version 3.65a. The AM654x SoC uses
-> >> DW PCIe IP-core version 4.90a and ks_pcie_v3_65_add_bus() is not
-> >> applicable to it.
-> > 
-> > I'll copy my message from v1 regarding the IP-core version. Are you
-> > really sure that it's 4.90a? Here is what my DW PCIe RC
-> 
-> The HW databook I have is named:
-> "PCI Express DM Controller Databook"
-> and has the following footnote on every page of the databook:
-> 4.90a
-> December 2016
-> 
-> > _v4.90_ HW databook says about the BARs:
-> > 
-> > "Base Address Registers (Offset: 0x10-x14) The Synopsys core does not
-> > implement the optional BARs for the RC product. This is based on the
-> > assumption that the RC host probably has registers on some other
-> > internal bus and has knowledge and setup access to these registers
-> > already."
-> > 
-> > You cited the next text:
-> > 
-> > "3.5.7.2 RC Mode. Two BARs are present but are not expected to be
-> > used. You should disable them or else they will be unnecessarily
-> > assigned memory during device enumeration. If you do use a BAR, then
-> > you should program it to capture TLPs that are targeted to your local
-> > non-application memory space residing on TRGT1, and not for the
-> > application on TRGT1. The BAR range must be outside of the three
-> > Base/Limit regions."
-> 
-> The above text is present in the "PCI Express DM Controller Databook" I
-> mentioned above that I have with me which I have cited as-is. I am certain that
-> the Databook version I have with me is v4.90a. Additionally, please refer to the
-> commit which added support to the PCI Keystone driver for AM654x Platform:
-> https://github.com/torvalds/linux/commit/18b0415bc802#diff-1a6482b4ef0eddbe6238232ad346930283832b99270ebabd67385571a619c267R977
-> On line 977 in the diff:
-> .version = 0x490A,
-> 
-> > 
-> > AFAICS from the v5.20a, v5.30a, v5.40a databooks, it resides in the
-> > _v5.x_ databooks only meanwhile the older ones (v4.21, v4.60a, v4.70a
-> > and _v4.90a_) describe the BARs as I cited earlier. It makes my
-> > thinking that in your case the IP-core isn't of 4.90a version. Could
-> > you please clarify how did you detect the version? Did you use the
-> > PCIE_VERSION_NUMBER_OFF register available in the PORT_LOGIC CSRs
-> 
-> The value of the register PCIE_RC_PCIE_VERSION_NUMBER_OFF is:
-> 3439302a
-> which in ASCII is 490*
-> The value of the register PCIE_RC_PCIE_VERSION_TYPE_OFF is:
-> 6c703039
-> which in ASCII is lp09.
-> 
-> So I am certain that the Controller is actually version 4.90.
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Ok. Thanks for clarification. Then the semantic of the BARs in DW PCIe
-RCs only has been changed since v5.10a. Dial-mode controllers had the
-BARs available even in the older IP-cores. Good to know discovery
-actually.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-> 
-> 
-> > space? If your judgment was based on the Keyston PCIe driver code,
-> > then the driver might get to be wrong in that matter.
-> > 
-> >>
-> >> The commit which added support for the AM654x SoC has reused majority
-> >> of the functions with the help of the "is_am6" flag to handle AM654x
-> >> separately where applicable. Thus, make use of the "is_am6" flag and
-> >> change ks_pcie_v3_65_add_bus() to no-op for AM654x SoC.
-> >>
-> >> Fixes: 18b0415bc802 ("PCI: keystone: Add support for PCIe RC in AM654x Platforms")
-> >> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> >> ---
-> >> Hello,
-> >>
-> >> This patch is based on linux-next tagged next-20231018.
-> >>
-> >> The v1 of this patch is at:
-> >> https://lore.kernel.org/r/20231011123451.34827-1-s-vadapalli@ti.com/
-> >>
-> >> While there are a lot of changes since v1 and this patch could have been
-> >> posted as a v1 patch itself, I decided to post it as the v2 of the patch
-> >> mentioned above since it aims to address the issue described by the v1
-> >> patch and is similar in that sense. However, the solution to the issue
-> >> described in the v1 patch appears to be completely different from what
-> >> was implemented in the v1 patch. Thus, the commit message and subject of
-> >> this patch have been modified accordingly.
-> >>
-> >> Changes since v1:
-> >> - Updated patch subject and commit message.
-> >> - Determined that issue is not with the absence of Link as mentioned in
-> >>   v1 patch. Even with Link up and endpoint device connected, if
-> >>   ks_pcie_v3_65_add_bus() is invoked and executed, all reads to the
-> >>   MSI-X offsets return 0xffffffff when pcieport driver attempts to setup
-> >>   AER and PME services. The all Fs return value indicates that the MSI-X
-> >>   configuration is failing even if Endpoint device is connected. This is
-> >>   because the ks_pcie_v3_65_add_bus() function is not applicable to the
-> >>   AM654x SoC which uses DW PCIe IP-core version 4.90a.
-> >>
-> >> Regards,
-> >> Siddharth.
-> >>
-> >>  drivers/pci/controller/dwc/pci-keystone.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> >> index 0def919f89fa..3abd59335574 100644
-> >> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> >> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> >> @@ -459,7 +459,7 @@ static int ks_pcie_v3_65_add_bus(struct pci_bus *bus)
-> >>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> >>  	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
-> >>  
-> > 
-> >> -	if (!pci_is_root_bus(bus))
-> >> +	if (!pci_is_root_bus(bus) || ks_pcie->is_am6)
-> > 
-> > 1. IMO defining two versions of the pci_ops struct instances would look
-> > more readable:
-> > static struct pci_ops ks_pcie_v3_65_ops = {
-> >         .map_bus = dw_pcie_own_conf_map_bus,
-> >         .read = pci_generic_config_read,
-> >         .write = pci_generic_config_write,
-> >         .add_bus = ks_pcie_v3_65_add_bus,
-> > };
-> > 
-> > static struct pci_ops ks_pcie_ops = {
-> >         .map_bus = dw_pcie_own_conf_map_bus,
-> >         .read = pci_generic_config_read,
-> >         .write = pci_generic_config_write,
-> > };
-> > 
-> > 2. In case of 1. implemented, ks_pcie_ops will look the same as
-> > ks_child_pcie_ops, so the later could be dropped.
-> > 
-> > 3. I'm not that fluent in the PCIe core details, but based on the
-> > pci_host_bridge.child_ops and pci_host_bridge.ops names, the first
-> > ones will be utilized for the child PCIe buses, meanwhile the later
-> > ones - for the root bus only (see pci_alloc_child_bus()). Bjorn?
-> > If so then the pci_is_root_bus() check can be dropped from the
-> > ks_pcie_v3_65_add_bus() method. After doing that I would have also
-> > changed the name to ks_pcie_v3_65_add_root_bus(). In anyway I would
-> > double-check the suggestion first.
-> 
-> Please note that irrespective of anything else, with no dependence on any prior
-> discussions, what remains true is that commit 6ab15b5e7057:
-> PCI: dwc: keystone: Convert .scan_bus() callback to use add_bus
-> introduced a bug. Therefore, I believe that the fix will be to attempt to
-> restore the driver's state back to what it was prior to commit 6ab15b5e7057, as
-> gracefully as possible, without having to revert commit 6ab15b5e7057.
-> 
-> In the process of converting .scan_bus() callbacks to .add_bus(),
-> .scan_bus method was removed from:
-> static const struct dw_pcie_host_ops ks_pcie_host_ops = {
-> 	.host_init = ks_pcie_host_init,
-> 	.msi_host_init = ks_pcie_msi_host_init,
-> 	.scan_bus = ks_pcie_v3_65_scan_bus,
-> };
-> 
-> and added as a .add_bus method to:
-> static struct pci_ops ks_pcie_ops = {
-> 	.map_bus = dw_pcie_own_conf_map_bus,
-> 	.read = pci_generic_config_read,
-> 	.write = pci_generic_config_write,
-> 	.add_bus = ks_pcie_v3_65_add_bus,
-> };
-> in addition to renaming the method.
-> 
-> Even before commit 6ab15b5e7057, with support for AM654x (using version 4.90a
-> DWC PCIe IP-core) already present, ks_pcie_ops was being used for AM654x. This
-> indicates that prior to commit 6ab15b5e7057, the ks_pcie_ops was applicable to
-> AM654x and there's no problem. However, when commit 6ab15b5e7057 converted the
-> .scan_bus() method in ks_pcie_host_ops (which wasn't used for AM654x) to
-> .add_bus(), it added the method within the shared ks_pcie_ops structure which
-> implicitly, *mistakenly*, assumes that a function named "ks_pcie_v3_65_add_bus"
-> is also applicable to other controller versions (4.90a in this case). Paying
-> attention to the name of the function, it becomes clear that it was added for
-> controller version "3.65", hence the name "...v3_65...". The assumption that the
-> function/method is applicable to other controller versions as well, was
-> incorrect which led to the current issue that can be observed. The commit
-> 6ab15b5e7057 ended up adding a new method for a controller version which *never*
-> used the method. This therefore is a bug.
-> 
+- Mani
 
-> The simplest fix I see is that of exiting ks_pcie_v3_65_add_bus() if:
-> ks_pcie->is_am6 is set, since such checks have been scattered throughout the
-> same driver prior to the addition of commit 6ab15b5e7057 as well.
+> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/Kconfig          |  14 +
+>  drivers/pci/controller/dwc/Makefile         |   1 +
+>  drivers/pci/controller/dwc/pcie-rcar-gen4.c | 378 ++++++++++++++++++++
+>  3 files changed, 393 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.c
 > 
-> I am open to other implementations of fixing this issue as well. Kindly let me
-> know in case of any suggestions.
-
-A simplest fix isn't always the best one. As you said yourself the
-ks_pcie_v3_65_add_bus() implies having it called for v3.65. Calling it
-for the newer controllers was a mistake causing the bug. Thus having
-the ks_pcie_ops utilized for both old and new controllers was also a
-mistake. Therefor my suggestion to fix the problem by defining the two
-pci_ops structure instances would be more correct at least from the
-code readability point of view. It would make the
-ks_pcie_v3_65_add_bus() function body and name coherent.
-
-Meanwhile your fix look more like a workaround. The
-ks_pcie_v3_65_add_bus() function will be still called for the AM6x
-v4.90 controllers, which based on its semantic would be and will be
-wrong in any case. So instead of noop-ing the function it would be
-better to just drop it being called for the new controllers.
-
--Serge(y)
-
-> 
-> > 
-> > -Serge(y)
-> > 
-> >>  		return 0;
-> >>  
-> >>  	/* Configure and set up BAR0 */
-> >> -- 
-> >> 2.34.1
-> >>
-> 
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index ab96da43e0c2..306fc71493fc 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -286,6 +286,20 @@ config PCIE_QCOM_EP
+>  	  to work in endpoint mode. The PCIe controller uses the DesignWare core
+>  	  plus Qualcomm-specific hardware wrappers.
+>  
+> +config PCIE_RCAR_GEN4
+> +	tristate
+> +
+> +config PCIE_RCAR_GEN4_HOST
+> +	tristate "Renesas R-Car Gen4 PCIe controller (host mode)"
+> +	depends on ARCH_RENESAS || COMPILE_TEST
+> +	depends on PCI_MSI
+> +	select PCIE_DW_HOST
+> +	select PCIE_RCAR_GEN4
+> +	help
+> +	  Say Y here if you want PCIe controller (host mode) on R-Car Gen4 SoCs.
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called pcie-rcar-gen4.ko. This uses the DesignWare core.
+> +
+>  config PCIE_ROCKCHIP_DW_HOST
+>  	bool "Rockchip DesignWare PCIe controller"
+>  	select PCIE_DW
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> index bf5c311875a1..bac103faa523 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -26,6 +26,7 @@ obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
+>  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+>  obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
+>  obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
+> +obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4.o
+>  
+>  # The following drivers are for devices that use the generic ACPI
+>  # pci_root.c driver but don't support standard ECAM config access.
+> diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> new file mode 100644
+> index 000000000000..fe727abd53a1
+> --- /dev/null
+> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> @@ -0,0 +1,378 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * PCIe controller driver for Renesas R-Car Gen4 Series SoCs
+> + * Copyright (C) 2022-2023 Renesas Electronics Corporation
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/reset.h>
+> +
+> +#include "../../pci.h"
+> +#include "pcie-designware.h"
+> +
+> +/* Renesas-specific */
+> +/* PCIe Mode Setting Register 0 */
+> +#define PCIEMSR0		0x0000
+> +#define BIFUR_MOD_SET_ON	BIT(0)
+> +#define DEVICE_TYPE_RC		BIT(4)
+> +
+> +/* PCIe Interrupt Status 0 */
+> +#define PCIEINTSTS0		0x0084
+> +
+> +/* PCIe Interrupt Status 0 Enable */
+> +#define PCIEINTSTS0EN		0x0310
+> +#define MSI_CTRL_INT		BIT(26)
+> +#define SMLH_LINK_UP		BIT(7)
+> +#define RDLH_LINK_UP		BIT(6)
+> +
+> +/* PCIe DMA Interrupt Status Enable */
+> +#define PCIEDMAINTSTSEN		0x0314
+> +#define PCIEDMAINTSTSEN_INIT	GENMASK(15, 0)
+> +
+> +/* PCIe Reset Control Register 1 */
+> +#define PCIERSTCTRL1		0x0014
+> +#define APP_HOLD_PHY_RST	BIT(16)
+> +#define APP_LTSSM_ENABLE	BIT(0)
+> +
+> +#define RCAR_NUM_SPEED_CHANGE_RETRIES	10
+> +#define RCAR_MAX_LINK_SPEED		4
+> +
+> +struct rcar_gen4_pcie {
+> +	struct dw_pcie dw;
+> +	void __iomem *base;
+> +	struct platform_device *pdev;
+> +	enum dw_pcie_device_mode mode;
+> +};
+> +#define to_rcar_gen4_pcie(_dw)	container_of(_dw, struct rcar_gen4_pcie, dw)
+> +
+> +static void rcar_gen4_pcie_ltssm_enable(struct rcar_gen4_pcie *rcar,
+> +					bool enable)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(rcar->base + PCIERSTCTRL1);
+> +	if (enable) {
+> +		val |= APP_LTSSM_ENABLE;
+> +		val &= ~APP_HOLD_PHY_RST;
+> +	} else {
+> +		/*
+> +		 * Since the datasheet of R-Car doesn't mention how to assert
+> +		 * the APP_HOLD_PHY_RST, don't assert it again. Otherwise,
+> +		 * hang-up issue happened in the dw_edma_core_off() when
+> +		 * the controller didn't detect a PCI device.
+> +		 */
+> +		val &= ~APP_LTSSM_ENABLE;
+> +	}
+> +	writel(val, rcar->base + PCIERSTCTRL1);
+> +}
+> +
+> +static int rcar_gen4_pcie_link_up(struct dw_pcie *dw)
+> +{
+> +	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
+> +	u32 val, mask;
+> +
+> +	val = readl(rcar->base + PCIEINTSTS0);
+> +	mask = RDLH_LINK_UP | SMLH_LINK_UP;
+> +
+> +	return (val & mask) == mask;
+> +}
+> +
+> +/*
+> + * Manually initiate the speed change. Return 0 if change succeeded; otherwise
+> + * -ETIMEDOUT.
+> + */
+> +static int rcar_gen4_pcie_speed_change(struct dw_pcie *dw)
+> +{
+> +	u32 val;
+> +	int i;
+> +
+> +	val = dw_pcie_readl_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL);
+> +	val &= ~PORT_LOGIC_SPEED_CHANGE;
+> +	dw_pcie_writel_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+> +
+> +	val = dw_pcie_readl_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL);
+> +	val |= PORT_LOGIC_SPEED_CHANGE;
+> +	dw_pcie_writel_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+> +
+> +	for (i = 0; i < RCAR_NUM_SPEED_CHANGE_RETRIES; i++) {
+> +		val = dw_pcie_readl_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL);
+> +		if (!(val & PORT_LOGIC_SPEED_CHANGE))
+> +			return 0;
+> +		usleep_range(10000, 11000);
+> +	}
+> +
+> +	return -ETIMEDOUT;
+> +}
+> +
+> +/*
+> + * Enable LTSSM of this controller and manually initiate the speed change.
+> + * Always return 0.
+> + */
+> +static int rcar_gen4_pcie_start_link(struct dw_pcie *dw)
+> +{
+> +	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
+> +	int i, changes;
+> +
+> +	rcar_gen4_pcie_ltssm_enable(rcar, true);
+> +
+> +	/*
+> +	 * Require direct speed change with retrying here if the link_gen is
+> +	 * PCIe Gen2 or higher.
+> +	 */
+> +	changes = min_not_zero(dw->link_gen, RCAR_MAX_LINK_SPEED) - 1;
+> +
+> +	/*
+> +	 * Since dw_pcie_setup_rc() sets it once, PCIe Gen2 will be trained.
+> +	 * So, this needs remaining times for up to PCIe Gen4 if RC mode.
+> +	 */
+> +	if (changes && rcar->mode == DW_PCIE_RC_TYPE)
+> +		changes--;
+> +
+> +	for (i = 0; i < changes; i++) {
+> +		/* It may not be connected in EP mode yet. So, break the loop */
+> +		if (rcar_gen4_pcie_speed_change(dw))
+> +			break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void rcar_gen4_pcie_stop_link(struct dw_pcie *dw)
+> +{
+> +	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
+> +
+> +	rcar_gen4_pcie_ltssm_enable(rcar, false);
+> +}
+> +
+> +static int rcar_gen4_pcie_common_init(struct rcar_gen4_pcie *rcar)
+> +{
+> +	struct dw_pcie *dw = &rcar->dw;
+> +	u32 val;
+> +	int ret;
+> +
+> +	ret = clk_bulk_prepare_enable(DW_PCIE_NUM_CORE_CLKS, dw->core_clks);
+> +	if (ret) {
+> +		dev_err(dw->dev, "Enabling core clocks failed\n");
+> +		return ret;
+> +	}
+> +
+> +	if (!reset_control_status(dw->core_rsts[DW_PCIE_PWR_RST].rstc))
+> +		reset_control_assert(dw->core_rsts[DW_PCIE_PWR_RST].rstc);
+> +
+> +	val = readl(rcar->base + PCIEMSR0);
+> +	if (rcar->mode == DW_PCIE_RC_TYPE) {
+> +		val |= DEVICE_TYPE_RC;
+> +	} else {
+> +		ret = -EINVAL;
+> +		goto err_unprepare;
+> +	}
+> +
+> +	if (dw->num_lanes < 4)
+> +		val |= BIFUR_MOD_SET_ON;
+> +
+> +	writel(val, rcar->base + PCIEMSR0);
+> +
+> +	ret = reset_control_deassert(dw->core_rsts[DW_PCIE_PWR_RST].rstc);
+> +	if (ret)
+> +		goto err_unprepare;
+> +
+> +	return 0;
+> +
+> +err_unprepare:
+> +	clk_bulk_disable_unprepare(DW_PCIE_NUM_CORE_CLKS, dw->core_clks);
+> +
+> +	return ret;
+> +}
+> +
+> +static void rcar_gen4_pcie_common_deinit(struct rcar_gen4_pcie *rcar)
+> +{
+> +	struct dw_pcie *dw = &rcar->dw;
+> +
+> +	reset_control_assert(dw->core_rsts[DW_PCIE_PWR_RST].rstc);
+> +	clk_bulk_disable_unprepare(DW_PCIE_NUM_CORE_CLKS, dw->core_clks);
+> +}
+> +
+> +static int rcar_gen4_pcie_prepare(struct rcar_gen4_pcie *rcar)
+> +{
+> +	struct device *dev = rcar->dw.dev;
+> +	int err;
+> +
+> +	pm_runtime_enable(dev);
+> +	err = pm_runtime_resume_and_get(dev);
+> +	if (err < 0) {
+> +		dev_err(dev, "Runtime resume failed\n");
+> +		pm_runtime_disable(dev);
+> +	}
+> +
+> +	return err;
+> +}
+> +
+> +static void rcar_gen4_pcie_unprepare(struct rcar_gen4_pcie *rcar)
+> +{
+> +	struct device *dev = rcar->dw.dev;
+> +
+> +	pm_runtime_put(dev);
+> +	pm_runtime_disable(dev);
+> +}
+> +
+> +static int rcar_gen4_pcie_get_resources(struct rcar_gen4_pcie *rcar)
+> +{
+> +	/* Renesas-specific registers */
+> +	rcar->base = devm_platform_ioremap_resource_byname(rcar->pdev, "app");
+> +
+> +	return PTR_ERR_OR_ZERO(rcar->base);
+> +}
+> +
+> +static const struct dw_pcie_ops dw_pcie_ops = {
+> +	.start_link = rcar_gen4_pcie_start_link,
+> +	.stop_link = rcar_gen4_pcie_stop_link,
+> +	.link_up = rcar_gen4_pcie_link_up,
+> +};
+> +
+> +static struct rcar_gen4_pcie *rcar_gen4_pcie_alloc(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct rcar_gen4_pcie *rcar;
+> +
+> +	rcar = devm_kzalloc(dev, sizeof(*rcar), GFP_KERNEL);
+> +	if (!rcar)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	rcar->dw.ops = &dw_pcie_ops;
+> +	rcar->dw.dev = dev;
+> +	rcar->pdev = pdev;
+> +	dw_pcie_cap_set(&rcar->dw, EDMA_UNROLL);
+> +	dw_pcie_cap_set(&rcar->dw, REQ_RES);
+> +	platform_set_drvdata(pdev, rcar);
+> +
+> +	return rcar;
+> +}
+> +
+> +/* Host mode */
+> +static int rcar_gen4_pcie_host_init(struct dw_pcie_rp *pp)
+> +{
+> +	struct dw_pcie *dw = to_dw_pcie_from_pp(pp);
+> +	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
+> +	int ret;
+> +	u32 val;
+> +
+> +	gpiod_set_value_cansleep(dw->pe_rst, 1);
+> +
+> +	ret = rcar_gen4_pcie_common_init(rcar);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * According to the section 3.5.7.2 "RC Mode" in DWC PCIe Dual Mode
+> +	 * Rev.5.20a and 3.5.6.1 "RC mode" in DWC PCIe RC databook v5.20a, we
+> +	 * should disable two BARs to avoid unnecessary memory assignment
+> +	 * during device enumeration.
+> +	 */
+> +	dw_pcie_writel_dbi2(dw, PCI_BASE_ADDRESS_0, 0x0);
+> +	dw_pcie_writel_dbi2(dw, PCI_BASE_ADDRESS_1, 0x0);
+> +
+> +	/* Enable MSI interrupt signal */
+> +	val = readl(rcar->base + PCIEINTSTS0EN);
+> +	val |= MSI_CTRL_INT;
+> +	writel(val, rcar->base + PCIEINTSTS0EN);
+> +
+> +	msleep(PCIE_T_PVPERL_MS);	/* pe_rst requires 100msec delay */
+> +
+> +	gpiod_set_value_cansleep(dw->pe_rst, 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static void rcar_gen4_pcie_host_deinit(struct dw_pcie_rp *pp)
+> +{
+> +	struct dw_pcie *dw = to_dw_pcie_from_pp(pp);
+> +	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
+> +
+> +	gpiod_set_value_cansleep(dw->pe_rst, 1);
+> +	rcar_gen4_pcie_common_deinit(rcar);
+> +}
+> +
+> +static const struct dw_pcie_host_ops rcar_gen4_pcie_host_ops = {
+> +	.host_init = rcar_gen4_pcie_host_init,
+> +	.host_deinit = rcar_gen4_pcie_host_deinit,
+> +};
+> +
+> +static int rcar_gen4_add_dw_pcie_rp(struct rcar_gen4_pcie *rcar)
+> +{
+> +	struct dw_pcie_rp *pp = &rcar->dw.pp;
+> +
+> +	pp->num_vectors = MAX_MSI_IRQS;
+> +	pp->ops = &rcar_gen4_pcie_host_ops;
+> +	rcar->mode = DW_PCIE_RC_TYPE;
+> +
+> +	return dw_pcie_host_init(pp);
+> +}
+> +
+> +static void rcar_gen4_remove_dw_pcie_rp(struct rcar_gen4_pcie *rcar)
+> +{
+> +	dw_pcie_host_deinit(&rcar->dw.pp);
+> +}
+> +
+> +static int rcar_gen4_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct rcar_gen4_pcie *rcar;
+> +	int err;
+> +
+> +	rcar = rcar_gen4_pcie_alloc(pdev);
+> +	if (IS_ERR(rcar))
+> +		return PTR_ERR(rcar);
+> +
+> +	err = rcar_gen4_pcie_get_resources(rcar);
+> +	if (err)
+> +		return err;
+> +
+> +	err = rcar_gen4_pcie_prepare(rcar);
+> +	if (err)
+> +		return err;
+> +
+> +	err = rcar_gen4_add_dw_pcie_rp(rcar);
+> +	if (err)
+> +		goto err_unprepare;
+> +
+> +	return 0;
+> +
+> +err_unprepare:
+> +	rcar_gen4_pcie_unprepare(rcar);
+> +
+> +	return err;
+> +}
+> +
+> +static void rcar_gen4_pcie_remove(struct platform_device *pdev)
+> +{
+> +	struct rcar_gen4_pcie *rcar = platform_get_drvdata(pdev);
+> +
+> +	rcar_gen4_remove_dw_pcie_rp(rcar);
+> +	rcar_gen4_pcie_unprepare(rcar);
+> +}
+> +
+> +static const struct of_device_id rcar_gen4_pcie_of_match[] = {
+> +	{ .compatible = "renesas,rcar-gen4-pcie", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, rcar_gen4_pcie_of_match);
+> +
+> +static struct platform_driver rcar_gen4_pcie_driver = {
+> +	.driver = {
+> +		.name = "pcie-rcar-gen4",
+> +		.of_match_table = rcar_gen4_pcie_of_match,
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.probe = rcar_gen4_pcie_probe,
+> +	.remove_new = rcar_gen4_pcie_remove,
+> +};
+> +module_platform_driver(rcar_gen4_pcie_driver);
+> +
+> +MODULE_DESCRIPTION("Renesas R-Car Gen4 PCIe controller driver");
+> +MODULE_LICENSE("GPL");
 > -- 
-> Regards,
-> Siddharth.
+> 2.25.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
