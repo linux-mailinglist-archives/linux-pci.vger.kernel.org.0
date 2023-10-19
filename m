@@ -2,63 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C8D17CF246
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Oct 2023 10:18:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCB937CF26C
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Oct 2023 10:23:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232870AbjJSISW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Oct 2023 04:18:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37704 "EHLO
+        id S235296AbjJSIXR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Oct 2023 04:23:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232850AbjJSISV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Oct 2023 04:18:21 -0400
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B85912D;
-        Thu, 19 Oct 2023 01:18:20 -0700 (PDT)
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 39J8Hh66099414;
-        Thu, 19 Oct 2023 03:17:43 -0500
+        with ESMTP id S235346AbjJSIW7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Oct 2023 04:22:59 -0400
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A7AA196;
+        Thu, 19 Oct 2023 01:22:53 -0700 (PDT)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 39J8MWlQ103364;
+        Thu, 19 Oct 2023 03:22:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1697703463;
-        bh=Wa8s9G9TX8ZZJjeLXajpX2z+m7oQdM2kGBrLbOxOhTw=;
+        s=ti-com-17Q1; t=1697703752;
+        bh=MCTqsq0Y67FnukRcKpRTfcfnyz+Nx3GotxxH4JuMZ5o=;
         h=Date:CC:Subject:To:References:From:In-Reply-To;
-        b=Tkz+6AUQhgQbQ/hnXyO4Wkp3GG9ldhyXBYB4/mA6tr8qomMwbGNLUUWMiXzySNYwi
-         IYpBqDdkGOAZF7i5l9for5+ZZ9gJPo3VosbMFOH+KOIqGnJnkW/Nj/JtUfeuCJZjh1
-         FFoTAujZsa0UAehJ3NLOdyrobqp773m0KRobTY30=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 39J8Hhdm067675
+        b=WqMe0h+uqKXSh2kkLy+uFlJfj4GG7iRUGbMi3P8fHmRj7oOtoO1W+a+K0ltZbPvMJ
+         Ls4mgkKNdwXBxUslFY/7P92Q3FOQ5FWq571nW0Wrtifg61cIelPpQvQJKqDExI/8te
+         XAyov9dVCfIoHIpMgk0Y+w2xscU4POiyIgVPCFv0=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 39J8MWsx087196
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Oct 2023 03:17:43 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 19 Oct 2023 03:22:32 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 19
- Oct 2023 03:17:43 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2023 03:22:32 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 19 Oct 2023 03:17:43 -0500
-Received: from [172.24.227.9] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 39J8Hc0u107836;
-        Thu, 19 Oct 2023 03:17:39 -0500
-Message-ID: <08cb761b-e6ca-446a-9594-bc5a9733b470@ti.com>
-Date:   Thu, 19 Oct 2023 13:47:38 +0530
+ Frontend Transport; Thu, 19 Oct 2023 03:22:32 -0500
+Received: from [172.24.227.9] (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 39J8MS05025990;
+        Thu, 19 Oct 2023 03:22:28 -0500
+Message-ID: <bd9f3512-3db2-47a7-ba88-b8b935ae6af7@ti.com>
+Date:   Thu, 19 Oct 2023 13:52:27 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-CC:     <bhelgaas@google.com>, <lpieralisi@kernel.org>, <robh@kernel.org>,
-        <kw@linux.com>, <linux-pci@vger.kernel.org>,
+CC:     <lpieralisi@kernel.org>, <robh@kernel.org>, <kw@linux.com>,
+        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <r-gunasekaran@ti.com>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
+        <srk@ti.com>, Serge Semin <fancer.lancer@gmail.com>,
+        <s-vadapalli@ti.com>
 Subject: Re: [PATCH v2] PCI: keystone: Fix ks_pcie_v3_65_add_bus() for AM654x
  SoC
 Content-Language: en-US
-To:     Serge Semin <fancer.lancer@gmail.com>
-References: <20231018075038.2740534-1-s-vadapalli@ti.com>
- <zje5t7zbaisyzwgvkdxnqwlcadsyegipxbhsxxpbqlnuu45ria@4sqxpgieoig2>
- <6b74d547-bdaf-41e3-8046-ce295a0ecf03@ti.com>
- <bdsnykgehrgc75cw6rlaog25tuyivj57nwpjh5727fb4yjdrj5@ad3zoftu37bt>
- <ba217723-1501-4e72-b143-e0047266ea9a@ti.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <20231018163632.GA1364574@bhelgaas>
+ <6842cdf9-d73b-4895-891f-993eaf5bee6e@ti.com>
 From:   Siddharth Vadapalli <s-vadapalli@ti.com>
-In-Reply-To: <ba217723-1501-4e72-b143-e0047266ea9a@ti.com>
+In-Reply-To: <6842cdf9-d73b-4895-891f-993eaf5bee6e@ti.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -72,52 +70,49 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Serge,
 
-On 19/10/23 10:07, Siddharth Vadapalli wrote:
+
+On 19/10/23 10:14, Siddharth Vadapalli wrote:
+> Hello Bjorn,
 > 
+> On 18/10/23 22:06, Bjorn Helgaas wrote:
+>> [+cc Serge (please cc people who have commented on previous revisions)]
 > 
-> On 18/10/23 17:45, Serge Semin wrote:
->> On Wed, Oct 18, 2023 at 05:26:53PM +0530, Siddharth Vadapalli wrote:
+> Sure, I will do so.
+> 
 
 ...
 
 > 
-> Sure. Thank you for the suggestion. I will leave ks_pcie_ops as-is for the older
-> 3.65 controller while adding the ks_pcie_am6_ops without the .add_bus method for
-> the newer 4.90 controller. I assume this should be acceptable since the
-> pci-keystone.c driver only has two controller versions, namely 3.65a and 4.90a,
-> with the new 4.90a controller only applicable to AM654x SoC which is already
-> being distinguished in the driver using the is_am6 flag.
+> Yes, I will follow Serge's suggestion of adding a new pci_ops structure for the
+> AM654x SoC which uses the new 4.90a controller. I have described it at:
+> https://lore.kernel.org/r/ba217723-1501-4e72-b143-e0047266ea9a@ti.com/
+> and am summarizing it below:
 > 
-> In the v3 patch, I will add the following:
-> 
+> I will add the following:
 > static struct pci_ops ks_pcie_am6_ops = {
 > 	.map_bus = dw_pcie_own_conf_map_bus,
 > 	.read = pci_generic_config_read,
 > 	.write = pci_generic_config_write,
 > };
+> which shall be used for AM654x SoC
 > 
-> and also update ks_pcie_host_init() to the following:
+> I will also modify the contents of ks_pcie_host_init() as follows:
 > if(ks_pcie->is_am6)
 > 	pp->bridge->ops = &ks_pcie_am6_ops;
 > else
 > 	pp->bridge->ops = &ks_pcie_ops;
 > 
->>
->> Meanwhile your fix look more like a workaround. The
->> ks_pcie_v3_65_add_bus() function will be still called for the AM6x
->> v4.90 controllers, which based on its semantic would be and will be
->> wrong in any case. So instead of noop-ing the function it would be
->> better to just drop it being called for the new controllers.
+> which will ensure that the .add_bus() method is no longer applicable to the
+> AM654x SoC, which was the case prior to commit 6ab15b5e7057.
 > 
-> Yes, I will drop it for the new 4.90a controller rather than making it a no-op.
+> I shall post the v3 patch with the above changes and also Cc Serge.
 
 I have posted the v3 patch at:
 https://lore.kernel.org/r/20231019081330.2975470-1-s-vadapalli@ti.com/
-implementing your suggestion of adding a new pci_ops structure.
+and have copied Serge in the mail.
 
-Please review it and let me know in case of any feedback.
+> 
 
 -- 
 Regards,
