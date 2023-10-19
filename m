@@ -2,194 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B3627CF164
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Oct 2023 09:36:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C1697CF176
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Oct 2023 09:39:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235348AbjJSHga (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Oct 2023 03:36:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34240 "EHLO
+        id S233115AbjJSHjz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Oct 2023 03:39:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235065AbjJSHgQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Oct 2023 03:36:16 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94AFD19E;
-        Thu, 19 Oct 2023 00:35:58 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4S9zw80xWbz15NVB;
-        Thu, 19 Oct 2023 15:33:12 +0800 (CST)
-Received: from [10.67.121.177] (10.67.121.177) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Thu, 19 Oct 2023 15:35:55 +0800
-CC:     <robin.murphy@arm.com>, <baolin.wang@linux.alibaba.com>,
-        <Jonathan.Cameron@huawei.com>, <will@kernel.org>,
-        <helgaas@kernel.org>, <kaishen@linux.alibaba.com>,
-        <chengyou@linux.alibaba.com>, <yangyicong@hisilicon.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <rdunlap@infradead.org>,
-        <mark.rutland@arm.com>, <zhuo.song@linux.alibaba.com>,
-        <renyu.zj@linux.alibaba.com>
-Subject: Re: [PATCH v8 1/4] docs: perf: Add description for Synopsys
- DesignWare PCIe PMU driver
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-References: <20231017013235.27831-1-xueshuai@linux.alibaba.com>
- <20231017013235.27831-2-xueshuai@linux.alibaba.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <f4b1515c-2135-61d6-0d4b-2be24fdb1cf6@huawei.com>
-Date:   Thu, 19 Oct 2023 15:35:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        with ESMTP id S235109AbjJSHjt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Oct 2023 03:39:49 -0400
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D28B513A;
+        Thu, 19 Oct 2023 00:39:45 -0700 (PDT)
+Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
+        by ex01.ufhost.com (Postfix) with ESMTP id BFBBE24E2A5;
+        Thu, 19 Oct 2023 15:39:42 +0800 (CST)
+Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX165.cuchost.com
+ (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 19 Oct
+ 2023 15:39:41 +0800
+Received: from [192.168.125.85] (183.27.99.123) by EXMBX171.cuchost.com
+ (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 19 Oct
+ 2023 15:39:40 +0800
+Message-ID: <f80c685e-4513-4962-9b47-d6c85d632dd2@starfivetech.com>
+Date:   Thu, 19 Oct 2023 15:39:40 +0800
 MIME-Version: 1.0
-In-Reply-To: <20231017013235.27831-2-xueshuai@linux.alibaba.com>
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 16/22] PCI: microchip: Add event IRQ domain ops to
+ struct plda_event
+Content-Language: en-US
+To:     Conor Dooley <conor@kernel.org>
+CC:     =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        "Emil Renner Berthing" <emil.renner.berthing@canonical.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Kevin Xie <kevin.xie@starfivetech.com>
+References: <20231011110514.107528-1-minda.chen@starfivetech.com>
+ <20231011110514.107528-17-minda.chen@starfivetech.com>
+ <20231018-worrier-sizably-b13023f54b36@spud>
+From:   Minda Chen <minda.chen@starfivetech.com>
+In-Reply-To: <20231018-worrier-sizably-b13023f54b36@spud>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.121.177]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Originating-IP: [183.27.99.123]
+X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX171.cuchost.com
+ (172.16.6.91)
+X-YovoleRuleAgent: yovoleflag
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2023/10/17 9:32, Shuai Xue wrote:
-> Alibaba's T-Head Yitan 710 SoC includes Synopsys' DesignWare Core PCIe
-> controller which implements which implements PMU for performance and
-> functional debugging to facilitate system maintenance.
 
-Double "which implements"?
 
+On 2023/10/18 19:30, Conor Dooley wrote:
+> On Wed, Oct 11, 2023 at 07:05:08PM +0800, Minda Chen wrote:
+>> PolarFire Implements none-PLDA event interrupts. So the whole event
+>> domain ops can not be re-used.
 > 
-> Document it to provide guidance on how to use it.
+> IIRC, the reason things are like this is to work around the lack of an
+> msi controller and are not as a result of changes made to the PLDA IP
+> by us.
 > 
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Oh.  For this reason that new added interrupts have to add to 
+global events field, not the MSI. I will add this to commit messages.
+Thanks
 
-Others look good to me.
-
-Reviewed-by: Yicong Yang <yangyicong@hisilicon.com>
-
-> ---
->  .../admin-guide/perf/dwc_pcie_pmu.rst         | 94 +++++++++++++++++++
->  Documentation/admin-guide/perf/index.rst      |  1 +
->  2 files changed, 95 insertions(+)
->  create mode 100644 Documentation/admin-guide/perf/dwc_pcie_pmu.rst
+>> PLDA event domain ops instances will be implemented
+>> in later patch.
 > 
-> diff --git a/Documentation/admin-guide/perf/dwc_pcie_pmu.rst b/Documentation/admin-guide/perf/dwc_pcie_pmu.rst
-> new file mode 100644
-> index 000000000000..eac1b6f36450
-> --- /dev/null
-> +++ b/Documentation/admin-guide/perf/dwc_pcie_pmu.rst
-> @@ -0,0 +1,94 @@
-> +======================================================================
-> +Synopsys DesignWare Cores (DWC) PCIe Performance Monitoring Unit (PMU)
-> +======================================================================
-> +
-> +DesignWare Cores (DWC) PCIe PMU
-> +===============================
-> +
-> +The PMU is a PCIe configuration space register block provided by each PCIe Root
-> +Port in a Vendor-Specific Extended Capability named RAS D.E.S (Debug, Error
-> +injection, and Statistics).
-> +
-> +As the name indicates, the RAS DES capability supports system level
-> +debugging, AER error injection, and collection of statistics. To facilitate
-> +collection of statistics, Synopsys DesignWare Cores PCIe controller
-> +provides the following two features:
-> +
-> +- one 64-bit counter for Time Based Analysis (RX/TX data throughput and
-> +  time spent in each low-power LTSSM state) and
-> +- one 32-bit counter for Event Counting (error and non-error events for
-> +  a specified lane)
-> +
-> +Note: There is no interrupt for counter overflow.
-> +
-> +Time Based Analysis
-> +-------------------
-> +
-> +Using this feature you can obtain information regarding RX/TX data
-> +throughput and time spent in each low-power LTSSM state by the controller.
-> +The PMU measures data in two categories:
-> +
-> +- Group#0: Percentage of time the controller stays in LTSSM states.
-> +- Group#1: Amount of data processed (Units of 16 bytes).
-> +
-> +Lane Event counters
-> +-------------------
-> +
-> +Using this feature you can obtain Error and Non-Error information in
-> +specific lane by the controller. The PMU event is select by:
-> +
-> +- Group i
-> +- Event j within the Group i
-> +- and Lane k
-> +
-> +Some of the event only exist for specific configurations.
-> +
-> +DesignWare Cores (DWC) PCIe PMU Driver
-> +=======================================
-> +
-> +This driver adds PMU devices for each PCIe Root Port named based on the BDF of
-> +the Root Port. For example,
-> +
-> +    30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
-> +
-> +the PMU device name for this Root Port is dwc_rootport_3018.
-> +
-> +The DWC PCIe PMU driver registers a perf PMU driver, which provides
-> +description of available events and configuration options in sysfs, see
-> +/sys/bus/event_source/devices/dwc_rootport_{bdf}.
-> +
-> +The "format" directory describes format of the config fields of the
-> +perf_event_attr structure. The "events" directory provides configuration
-> +templates for all documented events.  For example,
-> +"Rx_PCIe_TLP_Data_Payload" is an equivalent of "eventid=0x22,type=0x1".
-> +
-> +The "perf list" command shall list the available events from sysfs, e.g.::
-> +
-> +    $# perf list | grep dwc_rootport
-> +    <...>
-> +    dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/        [Kernel PMU event]
-> +    <...>
-> +    dwc_rootport_3018/rx_memory_read,lane=?/               [Kernel PMU event]
-> +
-> +Time Based Analysis Event Usage
-> +-------------------------------
-> +
-> +Example usage of counting PCIe RX TLP data payload (Units of 16 bytes)::
-> +
-> +    $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
-> +
-> +The average RX/TX bandwidth can be calculated using the following formula:
-> +
-> +    PCIe RX Bandwidth = PCIE_RX_DATA * 16B / Measure_Time_Window
-> +    PCIe TX Bandwidth = PCIE_TX_DATA * 16B / Measure_Time_Window
-> +
-> +Lane Event Usage
-> +-------------------------------
-> +
-> +Each lane has the same event set and to avoid generating a list of hundreds
-> +of events, the user need to specify the lane ID explicitly, e.g.::
-> +
-> +    $# perf stat -a -e dwc_rootport_3018/rx_memory_read,lane=4/
-> +
-> +The driver does not support sampling, therefore "perf record" will not
-> +work. Per-task (without "-a") perf sessions are not supported.
-> diff --git a/Documentation/admin-guide/perf/index.rst b/Documentation/admin-guide/perf/index.rst
-> index f60be04e4e33..6bc7739fddb5 100644
-> --- a/Documentation/admin-guide/perf/index.rst
-> +++ b/Documentation/admin-guide/perf/index.rst
-> @@ -19,6 +19,7 @@ Performance monitor support
->     arm_dsu_pmu
->     thunderx2-pmu
->     alibaba_pmu
-> +   dwc_pcie_pmu
->     nvidia-pmu
->     meson-ddr-pmu
->     cxl
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
 > 
+> Thanks,
+> Conor.
+> 
+>> 
+>> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+>> ---
+>>  drivers/pci/controller/plda/pcie-microchip-host.c | 9 ++++++---
+>>  drivers/pci/controller/plda/pcie-plda.h           | 1 +
+>>  2 files changed, 7 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
+>> index fca1520d56c9..2825c1f5563d 100644
+>> --- a/drivers/pci/controller/plda/pcie-microchip-host.c
+>> +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
+>> @@ -811,13 +811,15 @@ static const struct plda_event_ops mc_event_ops = {
+>>  };
+>>  
+>>  static const struct plda_event mc_event = {
+>> +	.domain_ops             = &mc_event_domain_ops,
+>>  	.event_ops              = &mc_event_ops,
+>>  	.request_event_irq      = mc_request_event_irq,
+>>  	.intx_event             = EVENT_LOCAL_PM_MSI_INT_INTX,
+>>  	.msi_event              = EVENT_LOCAL_PM_MSI_INT_MSI,
+>>  };
+>>  
+>> -static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port)
+>> +static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port,
+>> +				      const struct irq_domain_ops *ops)
+>>  {
+>>  	struct device *dev = port->dev;
+>>  	struct device_node *node = dev->of_node;
+>> @@ -831,7 +833,8 @@ static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port)
+>>  	}
+>>  
+>>  	port->event_domain = irq_domain_add_linear(pcie_intc_node, port->num_events,
+>> -						   &mc_event_domain_ops, port);
+>> +						   ops, port);
+>> +
+>>  	if (!port->event_domain) {
+>>  		dev_err(dev, "failed to get event domain\n");
+>>  		of_node_put(pcie_intc_node);
+>> @@ -930,7 +933,7 @@ static int plda_init_interrupts(struct platform_device *pdev,
+>>  		return -EINVAL;
+>>  	}
+>>  
+>> -	ret = plda_pcie_init_irq_domains(port);
+>> +	ret = plda_pcie_init_irq_domains(port, event->domain_ops);
+>>  	if (ret) {
+>>  		dev_err(dev, "failed creating IRQ domains\n");
+>>  		return ret;
+>> diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
+>> index 6571a4befac9..080932cbe8c4 100644
+>> --- a/drivers/pci/controller/plda/pcie-plda.h
+>> +++ b/drivers/pci/controller/plda/pcie-plda.h
+>> @@ -129,6 +129,7 @@ struct plda_pcie_rp {
+>>  };
+>>  
+>>  struct plda_event {
+>> +	const struct irq_domain_ops *domain_ops;
+>>  	const struct plda_event_ops *event_ops;
+>>  	int (*request_event_irq)(struct plda_pcie_rp *pcie,
+>>  				 int event_irq, int event);
+>> -- 
+>> 2.17.1
+>> 
