@@ -2,202 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E1B9C7CEE8C
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Oct 2023 06:09:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 115AA7CEEAF
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Oct 2023 06:38:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232076AbjJSEI7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Oct 2023 00:08:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59398 "EHLO
+        id S230297AbjJSEiS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Oct 2023 00:38:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230051AbjJSEI6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Oct 2023 00:08:58 -0400
-Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2090.outbound.protection.outlook.com [40.107.113.90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 742A3119;
-        Wed, 18 Oct 2023 21:08:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ggjRLGsBKZUiuguWQyjskoimYU55mw7NTB+OeqxfOlCG58DMQRQuPoA61Eb28SPIP26fP1OzMx/TURQv7Ri/Rfut2Ok8oWonCge3eDF5/9+QudwHhxMiIysikzPQw6zijtHYLi6pboBMo3+Xata9ZqxsSOwK3vIAap4oX88ZVrP0DLtXOkt6Ahunzds02+msBC+aJz1K2s3T4+4c7wc97WaYWIMbsj1GmZ4D9M5V1TAKhMIqhDdwga0Aldz0IXz7SWIEpgXgdizbtk22tCBZcr2Jl+2azArh22gZZ2ZNfzr8KESW5QsiHTxCwTHoGFoUYQlT+bF90sWeipmzrh6NZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tkH5jfdaYT8PT8wen0pmv+5IAsCE/sUArv5M1/KjPjk=;
- b=HvORF7/V6LbKCl6Dce1pjgzXdWCH+Y9/dZ9hfuQzFaIF+kOAu377AJck64U2cAVZebJNL2KQvHM5UsFCyP6r32i4Y80h4BQPCDsVRnoRev2w3PApVF+5+s2+pQiCd1IG0acJJEqkKjWSDfGVcDlrIKsfTaKD/dn6wIHUihYYv4tjMsiMMlR2yYYrkwuyDQdv5aTrjNj3S7Jm7aYw5xbVD6agOcCHTa9qrKXjtBB57wLHJfZbcp8N4MY7jSufwvCiEkUdJsf3aTknczQv4bgSWM4mcvAPPk9HIQw/ok5s54JBkHxqGtU/P9/NOUNSevNVpRwkKJE97MXWmOFgCnpA2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tkH5jfdaYT8PT8wen0pmv+5IAsCE/sUArv5M1/KjPjk=;
- b=mUWOexu2MhuNBO7MFxDrvzQbV/zy2ZWHIxxQRIDjeSmu7F8lTvM+Zi43tgQz7jZh2qYsmAeYoSbZUw99ATFH8kMDhrFRFmxZppkkOGOSOPsLL3xvR7Lf4iDTzz0M2XgNnDBV5OPD6Wf8b8WlDMYAs49cUIzRL+gI8jQgpNK/ib4=
-Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
- (2603:1096:404:8028::13) by TYAPR01MB5881.jpnprd01.prod.outlook.com
- (2603:1096:404:8055::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.25; Thu, 19 Oct
- 2023 04:08:52 +0000
-Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
- ([fe80::a188:9424:be62:e5fb]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
- ([fe80::a188:9424:be62:e5fb%6]) with mapi id 15.20.6907.022; Thu, 19 Oct 2023
- 04:08:52 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "conor+dt@kernel.org" <conor+dt@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "mani@kernel.org" <mani@kernel.org>,
-        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v25 00/15] PCI: dwc: rcar-gen4: Add R-Car Gen4 PCIe
- support
-Thread-Topic: [PATCH v25 00/15] PCI: dwc: rcar-gen4: Add R-Car Gen4 PCIe
- support
-Thread-Index: AQHaAaEPwnq5Mag780e6hMOhN4NTKrBQcG0AgAANx7A=
-Date:   Thu, 19 Oct 2023 04:08:52 +0000
-Message-ID: <TYBPR01MB5341B3E0062E61EE5F2C84D8D8D4A@TYBPR01MB5341.jpnprd01.prod.outlook.com>
-References: <20231018085631.1121289-1-yoshihiro.shimoda.uh@renesas.com>
- <20231019031042.GA1385745@bhelgaas>
-In-Reply-To: <20231019031042.GA1385745@bhelgaas>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|TYAPR01MB5881:EE_
-x-ms-office365-filtering-correlation-id: 0ecfcf7a-fa79-41e2-acc9-08dbd0591ab7
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aj35jEZcbd/ahTz1Kr8dq6e6CMheioxaoWNBGc37YlNWZ1/Ed3tlEfYsiNlgjvzIZuAouSNZliPX5PvrkmS+HhvUp3VT0XFmk0CfL1syFNlBnHCWhgzpgcJY3sJh2Z8GMzQuHPmr4rrAyUKhUvUVwss2c8vgadccvnLadbdgBGjGxfhnJw7Uma8QZmid0F3CPrW/kIbxVU8FJmMgtecx/o50xvRUzXfyZTwI7vSqDmhuDjGsKawXpUT90Dq7gRVLZODAbsTwPobvMSWByhFtokcsOZ5yqqnvFTRmL/PxpKi+bZWZcbbN6+Alt4ghuF4486TVz8OFog5gRw7CAETJrTjia05ePWFInvp+DCZ2qWyWCG1Uo/0LsOfgfsYVubPvAIa4d2BUClEJeohQc5STxoczmKps+MZTLWANkCgkuNYNgqVvid0VIN5slEy+JpxbDU21Uajb61dXaei+yGNHdedxCTKuhqg0Px6a2Wc3fpdK4edZuAIPAE8KXPQIVN7T+1LAbxXBA2Cz5nIFgvkSgQ0sp2+pyBJY6p5Hrsvlv23jzOxH/1B8byKZAs0NN4MVCGUD+Hwj9+BoEyWpmKucQ4ihdZP601ec26M35NJpfeg=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(136003)(376002)(39860400002)(346002)(230922051799003)(64100799003)(186009)(1800799009)(451199024)(122000001)(38100700002)(41300700001)(6506007)(38070700005)(7696005)(9686003)(83380400001)(966005)(478600001)(6916009)(55016003)(71200400001)(316002)(66476007)(64756008)(66446008)(66946007)(66556008)(54906003)(76116006)(2906002)(86362001)(33656002)(5660300002)(52536014)(8676002)(4326008)(8936002)(7416002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?UTXR5ErAca4Uq70e5d/fMbdVxbm0QlDRK97MMr9rdMaVBlpB3w11TDPr1nKC?=
- =?us-ascii?Q?kjtsZeu8q0QnsqKsL/zz1LwJTjHGHqheOyiRbdn/i149V7wk2AXPpo0wTNtN?=
- =?us-ascii?Q?QJ+q3LNdpB9Qsr/EEBznGc1AqCVWUzBFqn6iksHG7duTQ7ifeTpgS845uC60?=
- =?us-ascii?Q?gaCX6rUvqfVgGOO3Mcmy68N2QoW40zRdYb972Tbljg22h9WzsId7qZV4Vms/?=
- =?us-ascii?Q?g62cVcy24BPZrW7Okp18qUDI7kOJGqzYl5x00gqjxZvhruN/60NycH8UrwFm?=
- =?us-ascii?Q?DO4LWGNuzXwTAGtOURJ8PLK6TGFTu/eEro4qK5gP6aSItMsQ5GCoJXpkk0he?=
- =?us-ascii?Q?k+VNHrQ9j3Ha7F4bdDSompoZYVHS1DaRenDIx7g5nkzCxEShVIZMzfpv98Dh?=
- =?us-ascii?Q?OuGaFyuYAPvMSad4ygYYX62Sgiba7aWybGIzpoyCJjHRNbZ0h3NGeQGrH8EQ?=
- =?us-ascii?Q?Bvs7pCGpYgF5D/0WQyV2ABee0r/FBsx0vahLuUJjYoy8ilU48ntdwZ2P6G2w?=
- =?us-ascii?Q?DMhBqveab5kW0qFDLWOtmo6tVnkZeGfsQIZU2MX4nqFDHfXExazSKCc2sn9G?=
- =?us-ascii?Q?elFHO3mqn8trrOI5zyvRsAneo5VPNY/Lm4KGBYFS27L7zQhqN1odMSh0FuOE?=
- =?us-ascii?Q?f72qb2/Nlq5zHmTs6/4J4Lyi55v/E3au6qIaq/MIMvgq8pBXBEOkDU3avYuI?=
- =?us-ascii?Q?oX3y7yHvi9J+jYap1qjirtvngclUzZrfcjhPnm9a8fRhf/XNjlPfLSZsTOo/?=
- =?us-ascii?Q?nYi71QWGhCWJ2wqdUxcGHtl5tLqS+yUQtV2DiRgmO/FLRavkPmi+aWT0F5AS?=
- =?us-ascii?Q?OnmvG72qrql8KHJ5pOXKKYOxdlYVR/JjvTG+Ed7YTUHfMQZQcmVqfwH4PO7w?=
- =?us-ascii?Q?QvQdf15xoX4s7tihpSzN2JBNZYCt77DVjXtdMOTDPwlY8G6xe8rGdJclz/wt?=
- =?us-ascii?Q?ez2KVQxmzZET34vHOZt1tSEV77Pig+id40l0Yk1AS5nYcJxOvTSIjbd7ao79?=
- =?us-ascii?Q?Q07i5Zn3gwbg+EHyP6EMtZ7aben59eB6JqWLVdJaGn7UksAVFG554fDjXHuJ?=
- =?us-ascii?Q?rCvpTeMLse3tNjJFC7Sftmu6Wc0pwU2+dMnIOPhl6Ix7gQNy58polu/WXAn4?=
- =?us-ascii?Q?R3nuEUFVoxF8Sot4N6G5KIv1OfFezFjVEZCN59HC0aXq9DrqXR9YQuiz3VXq?=
- =?us-ascii?Q?uH1Zm7nJ0m++NorWZUJV//Tet6jr3cMPv7EasM2N5QV+4hyTLY9bH/51vVn2?=
- =?us-ascii?Q?6LlXsqplolgWxnF2T2+RLazchFzEIi5MCOMgsNBKSmh6WW71rcNp749Msa+K?=
- =?us-ascii?Q?AVScEcDP0cp4OMhgZMTa0UpxP1KzqO+e1BcbiCKcN4yDjYyOT4H3SEG30QkE?=
- =?us-ascii?Q?XVEHmg9CEg4uf2J83iFKrRKkl/Ev+tpbUqPgh+WKFG5nZ1IQaxMp4TPLIUkK?=
- =?us-ascii?Q?YPqYt9JsQCmu02IiFD7yAWsikQknXyDOfRfwnXc0lthsLgGzFVZxy0fWqz+J?=
- =?us-ascii?Q?3S7H3HkIv5VdN66VzjtYRmpoj7juh09gz9fA2YbnDHEK/vrkB75VF/xErpb3?=
- =?us-ascii?Q?hX+I3QSDJW/iIgbnngy7QaoB+vI46C5nanpsnog0VlE8mR5mTG5RA2MGZsgK?=
- =?us-ascii?Q?PsBaaSS7Z/avUAFeU9mAQ8nARqlPFJHk/XcyIgQFvdAiZri8V7hWIjkSlLaQ?=
- =?us-ascii?Q?4vMjTw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229894AbjJSEiR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Oct 2023 00:38:17 -0400
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA86B11F;
+        Wed, 18 Oct 2023 21:38:14 -0700 (PDT)
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 39J4bsb7034905;
+        Wed, 18 Oct 2023 23:37:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1697690274;
+        bh=2ee5WpctjPUgoDFDBIHdnJ/ADkHfyWTnAoSZDMH6IJk=;
+        h=Date:CC:Subject:To:References:From:In-Reply-To;
+        b=gJJtgYvz4blRqhUT7S6ylzuJTNZs8gOG31vhzBY1BE0MAdcPubIc61sVSZM/j7Op4
+         fJnPJ3xLgdngp9p1o01xKV8LuLOz/WDCWNgBFfv+P037LNDvOt/TOUuuyx9+kJ7BCv
+         bNUFhLdF0H4aA4JbziE8kNSQMh4O7EeDTxsa59hY=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 39J4bsXP066872
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 18 Oct 2023 23:37:54 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 18
+ Oct 2023 23:37:53 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 18 Oct 2023 23:37:53 -0500
+Received: from [172.24.227.9] (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 39J4bn51111409;
+        Wed, 18 Oct 2023 23:37:50 -0500
+Message-ID: <ba217723-1501-4e72-b143-e0047266ea9a@ti.com>
+Date:   Thu, 19 Oct 2023 10:07:49 +0530
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ecfcf7a-fa79-41e2-acc9-08dbd0591ab7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Oct 2023 04:08:52.1640
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: c2U95QuRp9ohstxX3eObbp2yfWnGTb6uP8SKxb5tBVwh232hlK0Er5clOxicE+DBq5tUF15+saCt9ZcS+rvHdFSLFP5rrEFX5nrENzwZYkwIfo+fKLXQZ9KQtkJ1aubT
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5881
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+CC:     <bhelgaas@google.com>, <lpieralisi@kernel.org>, <robh@kernel.org>,
+        <kw@linux.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <r-gunasekaran@ti.com>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: Re: [PATCH v2] PCI: keystone: Fix ks_pcie_v3_65_add_bus() for AM654x
+ SoC
+To:     Serge Semin <fancer.lancer@gmail.com>
+References: <20231018075038.2740534-1-s-vadapalli@ti.com>
+ <zje5t7zbaisyzwgvkdxnqwlcadsyegipxbhsxxpbqlnuu45ria@4sqxpgieoig2>
+ <6b74d547-bdaf-41e3-8046-ce295a0ecf03@ti.com>
+ <bdsnykgehrgc75cw6rlaog25tuyivj57nwpjh5727fb4yjdrj5@ad3zoftu37bt>
+Content-Language: en-US
+From:   Siddharth Vadapalli <s-vadapalli@ti.com>
+In-Reply-To: <bdsnykgehrgc75cw6rlaog25tuyivj57nwpjh5727fb4yjdrj5@ad3zoftu37bt>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Bjorn,
 
-> From: Bjorn Helgaas, Sent: Thursday, October 19, 2023 12:11 PM
->=20
-> On Wed, Oct 18, 2023 at 05:56:16PM +0900, Yoshihiro Shimoda wrote:
-> > Add R-Car S4-8 (R-Car Gen4) PCIe controller for both host and endpoint =
-modes.
-> > To support them, modify PCIe DesignWare common codes.
-> >
-> > Changes from v24:
-> >
-<snip URL>
-> >  - Based on the latest pci.git / next branch.
-> >  - Reordering the patches. (This is suggested by Bjorn.)
-> >  - Drop "PCI: dwc: Disable two BARs to avoid unnecessary memory assignm=
-ent"
-> >    because break other platforms.
->=20
-> Does R-Car Gen4 still work without this patch?
 
-Yes, R-Car Gen4 still work without this patch because I added this code int=
-o
-the patch 12/15 again:
+On 18/10/23 17:45, Serge Semin wrote:
+> On Wed, Oct 18, 2023 at 05:26:53PM +0530, Siddharth Vadapalli wrote:
+>>
+>>
 
----
-+static int rcar_gen4_pcie_host_init(struct dw_pcie_rp *pp)
-+{
 ...
-+	/*
-+	 * According to the section 3.5.7.2 "RC Mode" in DWC PCIe Dual Mode
-+	 * Rev.5.20a and 3.5.6.1 "RC mode" in DWC PCIe RC databook v5.20a, we
-+	 * should disable two BARs to avoid unnecessary memory assignment
-+	 * during device enumeration.
-+	 */
-+	dw_pcie_writel_dbi2(dw, PCI_BASE_ADDRESS_0, 0x0);
-+	dw_pcie_writel_dbi2(dw, PCI_BASE_ADDRESS_1, 0x0);
----
 
-I also mentioned about this on the cover-letter like below, but it may be d=
-ifficult
-to understand. I'm sorry about lack explanation... I should have explained =
-one sentence
-about that...
+>>
+>> Even before commit 6ab15b5e7057, with support for AM654x (using version 4.90a
+>> DWC PCIe IP-core) already present, ks_pcie_ops was being used for AM654x. This
+>> indicates that prior to commit 6ab15b5e7057, the ks_pcie_ops was applicable to
+>> AM654x and there's no problem. However, when commit 6ab15b5e7057 converted the
+>> .scan_bus() method in ks_pcie_host_ops (which wasn't used for AM654x) to
+>> .add_bus(), it added the method within the shared ks_pcie_ops structure which
+>> implicitly, *mistakenly*, assumes that a function named "ks_pcie_v3_65_add_bus"
+>> is also applicable to other controller versions (4.90a in this case). Paying
+>> attention to the name of the function, it becomes clear that it was added for
+>> controller version "3.65", hence the name "...v3_65...". The assumption that the
+>> function/method is applicable to other controller versions as well, was
+>> incorrect which led to the current issue that can be observed. The commit
+>> 6ab15b5e7057 ended up adding a new method for a controller version which *never*
+>> used the method. This therefore is a bug.
+>>
+> 
+>> The simplest fix I see is that of exiting ks_pcie_v3_65_add_bus() if:
+>> ks_pcie->is_am6 is set, since such checks have been scattered throughout the
+>> same driver prior to the addition of commit 6ab15b5e7057 as well.
+>>
+>> I am open to other implementations of fixing this issue as well. Kindly let me
+>> know in case of any suggestions.
+> 
+> A simplest fix isn't always the best one. As you said yourself the
+> ks_pcie_v3_65_add_bus() implies having it called for v3.65. Calling it
+> for the newer controllers was a mistake causing the bug. Thus having
+> the ks_pcie_ops utilized for both old and new controllers was also a
 
->> - Add specific-setting by using dbi2 again in the patch 12/15.
->> - Modify commend of the specific-setting in the patch 12/15. Serge sugge=
-sted
->>   this on v23 but I missed to modify this on v24.
+At the point in time when support for the new controller was added, ks_pcie_ops
+was defined as:
+static struct pci_ops ks_pcie_ops = {
+	.map_bus = dw_pcie_own_conf_map_bus,
+	.read = pci_generic_config_read,
+	.write = pci_generic_config_write,
+};
+which did not have anything version specific.
 
-> The previous commit log said host mode didn't work:
->=20
->   PCI: dwc: Disable two BARs to avoid unnecessary memory assignment
->=20
->   According to the section 3.5.7.2 "RC Mode" in DWC PCIe Dual Mode
->   Rev.5.20a, we should disable two BARs to avoid unnecessary memory
->   assignment during device enumeration. Otherwise, Renesas R-Car Gen4
->   PCIe controllers cannot work correctly in host mode.
->=20
-> (from https://lore.kernel.org/all/20231011071423.249458-9-yoshihiro.shimo=
-da.uh@renesas.com/)
->=20
-> I don't think we want to merge the driver unless it actually works.
+It is only after commit 6ab15b5e7057 that a version specific .add_bus method was
+added to ks_pcie_ops, making ks_pcie_ops version-specific since then.
 
-I understood it.
+> mistake. Therefor my suggestion to fix the problem by defining the two
+> pci_ops structure instances would be more correct at least from the
+> code readability point of view. It would make the
+> ks_pcie_v3_65_add_bus() function body and name coherent.
 
-Best regards,
-Yoshihiro Shimoda
+Sure. Thank you for the suggestion. I will leave ks_pcie_ops as-is for the older
+3.65 controller while adding the ks_pcie_am6_ops without the .add_bus method for
+the newer 4.90 controller. I assume this should be acceptable since the
+pci-keystone.c driver only has two controller versions, namely 3.65a and 4.90a,
+with the new 4.90a controller only applicable to AM654x SoC which is already
+being distinguished in the driver using the is_am6 flag.
 
-> Bjorn
+In the v3 patch, I will add the following:
+
+static struct pci_ops ks_pcie_am6_ops = {
+	.map_bus = dw_pcie_own_conf_map_bus,
+	.read = pci_generic_config_read,
+	.write = pci_generic_config_write,
+};
+
+and also update ks_pcie_host_init() to the following:
+if(ks_pcie->is_am6)
+	pp->bridge->ops = &ks_pcie_am6_ops;
+else
+	pp->bridge->ops = &ks_pcie_ops;
+
+> 
+> Meanwhile your fix look more like a workaround. The
+> ks_pcie_v3_65_add_bus() function will be still called for the AM6x
+> v4.90 controllers, which based on its semantic would be and will be
+> wrong in any case. So instead of noop-ing the function it would be
+> better to just drop it being called for the new controllers.
+
+Yes, I will drop it for the new 4.90a controller rather than making it a no-op.
+
+> 
+> -Serge(y)
+> 
+>>
+>>>
+>>> -Serge(y)
+>>>
+>>>>  		return 0;
+>>>>  
+>>>>  	/* Configure and set up BAR0 */
+>>>> -- 
+>>>> 2.34.1
+>>>>
+>>
+>> -- 
+>> Regards,
+>> Siddharth.
+
+-- 
+Regards,
+Siddharth.
