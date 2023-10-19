@@ -2,254 +2,445 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D59E67CF1D6
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Oct 2023 09:59:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D2057CF1F7
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Oct 2023 10:05:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232779AbjJSH7U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Oct 2023 03:59:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52214 "EHLO
+        id S232870AbjJSIFV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Oct 2023 04:05:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230297AbjJSH7T (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Oct 2023 03:59:19 -0400
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2082.outbound.protection.outlook.com [40.107.212.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 394CD115;
-        Thu, 19 Oct 2023 00:59:17 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eXK4VG1dFhjDYtUX/cgnnSXItiLJ2tKiE6f/7IzXAQzb8Df6a8Jkz2FkZayBa6RlhIqqLMr77qM95sumVfqJ127ApLgSvcCvkF603AvsHcflOWxE3JA6TBDGJJuS/sGEsCD8u66K48l+K9jZtZJJpCJrDRT8rmiK4mbxZOMRCQBWe9GChqQtia81txkfMgVwreHc5huwaZgbO69FNVlj8SGGOywvpBZpiUdh2qVxWNb6+nzYqo46GGfwhqm3dijw1jb47AUjVp1rUnjpaNYFFpNq+y08k2SK/BzJPDXU2dOq3rovPUXcE4B9p03nYD2dS+sg69KLEVzJDATXF3GmTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QHAmxlFJLIR2mo7V348R9DtlGxEENwP09jhhvhi6GNI=;
- b=TkIGb/mySE5+DLQRHsPYOXMp+JI3jpL9kQSA/LRSI1BA3A33HqYrkLqMHZr33g26JcmiuFn86WZEiV3Zsrz8LvOhu+wezAtzXquGf494xxFEMf+l1K7cayNocTLrxI05U7jAMbYumkU0elkap5otQQLHnIS5MwTWOYRfK8IsYH2wRfUlxUe2edeghPVkLhXwjicEM+9LpAehJa9bvBmDJ37ZUQfJSW/K+SaN4a4rhC7TkHSukcKZb17v8+9wFZEHM9YxEa5hlK0YqoE5b8dLOMbkhd2+gkPg6PckkoGAIsXkvJGQotIS/yoVish6ziG6QuAX6t3C+haqa1Mh/jnytg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QHAmxlFJLIR2mo7V348R9DtlGxEENwP09jhhvhi6GNI=;
- b=KPNSk+w/PKal9tKbC6xYfOulZ/QLIIlSJj7iPx2/pSiP20bspkP/rbtNngvfFMYzsvcsqrNCWa9MefGpP4Vn0zHKQaDCvEL3g1CtBQTXr0AzpAyZ564Kziw86ruXVY7+Ojblxka0KTikTsgZGggjrJ/SBzV/lho62gVDX2DmruY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by DS0PR12MB7630.namprd12.prod.outlook.com (2603:10b6:8:11d::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.21; Thu, 19 Oct
- 2023 07:59:13 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::16da:8b28:d454:ad5a]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::16da:8b28:d454:ad5a%3]) with mapi id 15.20.6863.043; Thu, 19 Oct 2023
- 07:59:13 +0000
-Message-ID: <38d0c5ce-7de2-47fb-bfaf-50f900b7f747@amd.com>
-Date:   Thu, 19 Oct 2023 18:58:51 +1100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 12/12] PCI/CMA: Grant guests exclusive control of
- authentication
-Content-Language: en-US
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
-        linuxarm@huawei.com, David Box <david.e.box@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Alexander Graf <graf@amazon.com>
-References: <cover.1695921656.git.lukas@wunner.de>
- <467bff0c4bab93067b1e353e5b8a92f1de353a3f.1695921657.git.lukas@wunner.de>
- <20231003164048.0000148c@Huawei.com> <20231003193058.GA16417@wunner.de>
- <20231006103020.0000174f@Huawei.com>
- <653038c93a054_780ef294e9@dwillia2-xfh.jf.intel.com.notmuch>
-From:   Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <653038c93a054_780ef294e9@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SY4P282CA0013.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:a0::23) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+        with ESMTP id S232383AbjJSIFU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Oct 2023 04:05:20 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B711A11F;
+        Thu, 19 Oct 2023 01:05:17 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4SB0Yw0vT9zrTbq;
+        Thu, 19 Oct 2023 16:02:28 +0800 (CST)
+Received: from [10.67.121.177] (10.67.121.177) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Thu, 19 Oct 2023 16:05:12 +0800
+CC:     <yangyicong@hisilicon.com>, <chengyou@linux.alibaba.com>,
+        <kaishen@linux.alibaba.com>, <helgaas@kernel.org>,
+        <will@kernel.org>, <baolin.wang@linux.alibaba.com>,
+        <robin.murphy@arm.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <rdunlap@infradead.org>,
+        <mark.rutland@arm.com>, <zhuo.song@linux.alibaba.com>,
+        <renyu.zj@linux.alibaba.com>
+Subject: Re: [PATCH v8 3/4] drivers/perf: add DesignWare PCIe PMU driver
+To:     Shuai Xue <xueshuai@linux.alibaba.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+References: <20231017013235.27831-1-xueshuai@linux.alibaba.com>
+ <20231017013235.27831-4-xueshuai@linux.alibaba.com>
+ <20231017103959.00006ec3@Huawei.com>
+ <0704f9f6-1e9a-4587-b92f-c799b932b755@linux.alibaba.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <a14fc5c1-522b-ba7b-fabd-55ef8871a3b0@huawei.com>
+Date:   Thu, 19 Oct 2023 16:05:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|DS0PR12MB7630:EE_
-X-MS-Office365-Filtering-Correlation-Id: 91ab2573-c898-4ec6-a03c-08dbd07948a0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IDUqrjQ1313Kb0j3POvF3LrFYK8vdz9GNEGXQuW/qHz++bBeNLrFckor3a+t0t1tt/5UChUtE5Y1zWVHLJfVl0gfM5jF3DjHryGF8eicRZy91FLpDU020D8pufhSyrwfE+B8qFkyRyqMexkS2vXsIlZOudJixsns19K5vUDR7yI+V1mE9WsKbhJNZ7f2gOFPFi9UFcXkVNZXDNDLtMKtRUfN8FVW9GsAJwrVHxYcasqqhtKFQTA4SXIolnp3lQ/UWmwIL9hRPqK0wxkJ2GVe8MwDpVyTujBSchklCPbASVns47zsBNIpsktgcYv8Y+xiMlEJfSdC9tDa2jZEtNbouCc8gWSqNnhfWOEaOPelJOLz3M0/br9/7XcLdAp2PpnAx/XwkzutapGN9PCpf7Jk71ptViECtUyQVo8zRbKThSrL/M78rWMXPGKwYfsWs/awBqCfyNbbLbob4TckxjjGKxhDaCRDrW0eDVX0YSd7bmNhqP1JmAa2lESYSPRXmawgrYngembkJKvMPl+CkF7QpUKdQGcWV62VJOL8zLZAp/X3NpXdArhH2VkK32gQiiOq5VJImuNTYqqLOF2a6uMhYEDGiIb9yY1EIFgcQr3ObJ0jz9EegQSsMJrZGOvv0iJSc8V81QZAECzvaynfbXH/TQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(396003)(136003)(346002)(39860400002)(230922051799003)(451199024)(186009)(64100799003)(1800799009)(41300700001)(7416002)(53546011)(5660300002)(8936002)(8676002)(4326008)(38100700002)(36756003)(31686004)(2906002)(83380400001)(31696002)(66946007)(54906003)(66556008)(66476007)(316002)(26005)(2616005)(6512007)(6666004)(110136005)(6506007)(6486002)(478600001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Sm9GNUVJczhLUUhXd1k2QzhNNStHbHpMT1J0dk1PWWNFM29OazgraEZyVlBE?=
- =?utf-8?B?VTJjNzBhMHJYWDE5Tnc4TUhxZHNneVdma3dHdm9zN0xWdENwSGlLanNIMDVF?=
- =?utf-8?B?MnA2Ynl5cm14b0FhU0tFcWJJS3hxdW5BVW5oTmZocTFRcm5YbDErdVRkcllF?=
- =?utf-8?B?VDNObVl1RjY0SjZIeml5TnR3Y3N3UVBHSktrSE5KbmJpV1RibXg0SFpGR2h5?=
- =?utf-8?B?M0piaDQ2MTlnWE85OVpEcElZeGxUcHRtR3N1UHZoQ0VyNkd2cmxjcWZRMFhM?=
- =?utf-8?B?aGpiWFRPWmx0cml3aFhqQnZTR2pzRURBTVVjeGNHbVB2RDA4UzVyNnFSWE50?=
- =?utf-8?B?NVFMQitIWnNvQmZvTVF0MThxem5xbU0rWUl3UnYrVmd3MEIxT3JaQ1ltWG9Z?=
- =?utf-8?B?eC9CNUNnREZkY0VzczhFeDZKa0l3aUlPc29iNVNzUFpvQUNEUWg3eWtEdHFn?=
- =?utf-8?B?VHR5MDhyUTAyRkYwUWR1anBFcUd1eE9oKzJwTjRJbTk1WWtKTFdmcS92eWVL?=
- =?utf-8?B?Vzl0Q3VXZWtvNnZXU250eWlaa1NhU2x4aUVuVjVZWDZDMkNKUWV1c3ZaV0pL?=
- =?utf-8?B?ZDRYTTduN1BndGJ4SFpXRmZLNjBxU2pZU3NWZXdPTDBTcThrYXVCNVdUN0oz?=
- =?utf-8?B?Q1BxMnk3aDhieDhZN0cybHVFNHBhakVKaEdNcGU0UzBvcGJRZFJ3TXFlSElS?=
- =?utf-8?B?Ujh3K2NWWHhFVGx3SDEwbmROM2tIVG43U1RxYjBldjIra0YycmsrWkJBaGFK?=
- =?utf-8?B?Z3dnRHZpWkVPZmJNdnRCWlRsWHF5MUlvbUxZbE12T3FoRzB3eDBrazlnR0tq?=
- =?utf-8?B?NDd2UDVqTzRCK3NyNUltUWxlVEc4Q1RvakhGdXlNbzgrZHBMNmxWMjM4cmM2?=
- =?utf-8?B?OWMrZ3E3OGllZldldGpoQkxXLzYxOUtFZU1SMXJEbHgxSmtxc2J4YUR3ajdC?=
- =?utf-8?B?ZGxyMGdoTWljdnlhMjVkdnU1dCtNeGo1dmVMWXd5RnBtb1dVY2pOSUVLY2J6?=
- =?utf-8?B?ZEpNbG9LOHozUzllbFJPR3dMR2QzRGdobnEraUs1KzNjWjB2NkNoSWtMeCs0?=
- =?utf-8?B?M3pMRTV6Rkw1TlRFWDhiVUozaThFKzdFSm1PMk5pZ3JEOEpDSGRuT1lwMVBO?=
- =?utf-8?B?TkxJcHZxNzNmZDdXaW52b05wSXNwalcrSGtQVDRnUGpIVTFhMjRRV2dkd3lq?=
- =?utf-8?B?L003TzJVelVIcjkwUWJMcEcxb25vUUp0TUNhekkzNEE5QjdiOUpYWkNTS2dG?=
- =?utf-8?B?cmVIN3ZrMndqU2ZTZmpUUk9lYldZeWxlVUF2RnIzcm9jZGZ3SWFWNnl5SHI4?=
- =?utf-8?B?R1ZkVDJzN21SMEVBV09Sc0daUHRYRmpEeDJ1NnU3cFZSckZoSndXNVpMTDFa?=
- =?utf-8?B?cDJaZmtsc2xQb2djZ3A3ZWcxd29DalppSUM3R2dzckhWTm93VVI1YnFSOFI4?=
- =?utf-8?B?dlBLNEhpUkpvKzJSbytMcFBodVFFTVQwaXFIaDF0UkxuMVJHNUZpVkgwRUdX?=
- =?utf-8?B?enhSK0dFZVRTZmVqTUN3WjhOclNyR3d6WmI0bTNJOGd1cWpUVmltRVBkcnFF?=
- =?utf-8?B?eDdNMEtUYWRQUjgySkMvM0ZjWmlNd2ZJYit0SjducVdiQ081ZGlYRm1UV0Na?=
- =?utf-8?B?ZFRQc1lGY2NKOWFGUFdLcFl5WXlTVFZEYWxUT1pBSjYwUkJKczRyTldVK1lR?=
- =?utf-8?B?N0FLRGZ5NldkYVRvV05GRGxSZ2dNR3RYTW1zS25obkk5eWZZQUt1cWRiTmdI?=
- =?utf-8?B?dGFnelJZeEJ1bFMrQUJ6c0hkYnBDb01mdkluQ1NqZ29GaXRSYXNiQlZockFu?=
- =?utf-8?B?Z05FeDBPZDVDYSttSE4xOUhGWkhKaThJbWJpMytQUjM5K3dsWnN2ei9CUDNU?=
- =?utf-8?B?dTY1UnUvN0ZZcXpQdXBjaWx0TkNyYVB3QW00T2NhWUNkUlZ2RlVWeWplMXhy?=
- =?utf-8?B?cWNTZ2VPd0QwL083YkpsVjlDMFY5blJLaXZsQVdyQkczU05zV295RDdaU0Ir?=
- =?utf-8?B?Q1RCTlFOVWIyQjBHcHN4QXdGUG5MSGZadjd3N3RjYUx1TG5MRGorT3ZGQ1JL?=
- =?utf-8?B?SWZYSzc2Q1VMZmZ1ZzJJVDFlYlFYRHFDZW9mK0NTcHNhRitocWhxWnFCbDVp?=
- =?utf-8?Q?aceT1WWKd87kuq2vabtINvBzw?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91ab2573-c898-4ec6-a03c-08dbd07948a0
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Oct 2023 07:59:13.4263
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: W2ZoLnxvGDDJWF1YRbLxzGMLKxGIyOQ0HZ5l6rsIz74kGLNY+T/FTwaixa+VbbXUrvwvOTjvOEWKoIni2GBe6Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7630
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <0704f9f6-1e9a-4587-b92f-c799b932b755@linux.alibaba.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.121.177]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-On 19/10/23 06:58, Dan Williams wrote:
-> Jonathan Cameron wrote:
->> On Tue, 3 Oct 2023 21:30:58 +0200
->> Lukas Wunner <lukas@wunner.de> wrote:
->>
->>> On Tue, Oct 03, 2023 at 04:40:48PM +0100, Jonathan Cameron wrote:
->>>> On Thu, 28 Sep 2023 19:32:42 +0200 Lukas Wunner <lukas@wunner.de> wrote:
->>>>> At any given time, only a single entity in a physical system may have
->>>>> an SPDM connection to a device.  That's because the GET_VERSION request
->>>>> (which begins an authentication sequence) resets "the connection and all
->>>>> context associated with that connection" (SPDM 1.3.0 margin no 158).
->>>>>
->>>>> Thus, when a device is passed through to a guest and the guest has
->>>>> authenticated it, a subsequent authentication by the host would reset
->>>>> the device's CMA-SPDM session behind the guest's back.
->>>>>
->>>>> Prevent by letting the guest claim exclusive CMA ownership of the device
->>>>> during passthrough.  Refuse CMA reauthentication on the host as long.
->>>>> After passthrough has concluded, reauthenticate the device on the host.
->>>>
->>>> Is there anything stopping a PF presenting multiple CMA capable DOE
->>>> instances?  I'd expect them to have their own contexts if they do..
->>>
->>> The spec does not seem to *explicitly* forbid a PF having multiple
->>> CMA-capable DOE instances, but PCIe r6.1 sec 6.31.3 says:
->>> "The instance of DOE used for CMA-SPDM must support ..."
->>>
->>> Note the singular ("The instance").  It seems to suggest that the
->>> spec authors assumed there's only a single DOE instance for CMA-SPDM.
->>
->> It's a little messy and a bit of American vs British English I think.
->> If it said
->> "The instance of DOE used for a specific CMA-SPDM must support..."
->> then it would clearly allow multiple instances.  However, conversely,
->> I don't read that sentence as blocking multiple instances (even though
->> I suspect you are right and the author was thinking of there being one).
->>
->>>
->>> Could you (as an English native speaker) comment on the clarity of the
->>> two sentences "Prevent ... as long." above, as Ilpo objected to them?
->>>
->>> The antecedent of "Prevent" is the undesirable behaviour in the preceding
->>> sentence (host resets guest's SPDM connection).
->>>
->>> The antecedent of "as long" is "during passthrough" in the preceding
->>> sentence.
->>>
->>> Is that clear and understandable for an English native speaker or
->>> should I rephrase?
->>
->> Not clear enough to me as it stands.  That "as long" definitely feels
->> like there is more to follow it as Ilpo noted.
->>
->> Maybe reword as something like
->>
->> Prevent this by letting the guest claim exclusive ownership of the device
->> during passthrough ensuring problematic CMA reauthentication by the host
->> is blocked.
+On 2023/10/18 11:33, Shuai Xue wrote:
 > 
-> My contribution to the prose here is to clarify that this mechanism is
-> less about "appoint the guest as the exslusive owner" and more about
-> "revoke the bare-metal host as the authentication owner".
 > 
-> In fact I don't see how the guest can ever claim to "own" CMA since
-> config-space is always emulated to the guest.
-
-No difference to the PSP and the baremetal linux for this matter as the 
-PSP does not have direct access to the config space either.
-
-> So the guest will always
-> be in a situation where it needs to proxy SPDM related operations. The
-> proxy is either terminated in the host as native SPDM on behalf of the
-> guest, or further proxied to the platform-TSM.
+> On 2023/10/17 17:39, Jonathan Cameron wrote:
+>> On Tue, 17 Oct 2023 09:32:34 +0800
+>> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+>>
+>>> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
+>>> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
+>>> Core controller IP which provides statistics feature. The PMU is a PCIe
+>>> configuration space register block provided by each PCIe Root Port in a
+>>> Vendor-Specific Extended Capability named RAS D.E.S (Debug, Error
+>>> injection, and Statistics).
+>>>
+>>> To facilitate collection of statistics the controller provides the
+>>> following two features for each Root Port:
+>>>
+>>> - one 64-bit counter for Time Based Analysis (RX/TX data throughput and
+>>>   time spent in each low-power LTSSM state) and
+>>> - one 32-bit counter for Event Counting (error and non-error events for
+>>>   a specified lane)
+>>>
+>>> Note: There is no interrupt for counter overflow.
+>>>
+>>> This driver adds PMU devices for each PCIe Root Port. And the PMU device is
+>>> named based the BDF of Root Port. For example,
+>>>
+>>>     30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
+>>>
+>>> the PMU device name for this Root Port is dwc_rootport_3018.
+>>>
+>>> Example usage of counting PCIe RX TLP data payload (Units of 16 bytes)::
+>>
+>> Question follow through from previous patch comment, why not just
+>> multiply it by 16 when you read it?  Is something in perf going to
+>> overflow?
 > 
-> So let's just clarify that at assignment, host control is revoked, and
-> the guest is afforded the opportunity to re-establish authentication
-> either by asking the host re-authenticate on the guest's behalf, or
-> asking the platform-tsm to authenticate the device on the guest's
-> behalf.
-> ...and even there the guest does not know if it is accessing a 1:1 VF:PF
-> device representation, or one VF instance of PF where the PF
-> authentication answer only occurs once for all potential VFs.
+> As we discussed in Path 1/4, the unit 16 is not general for all groups of
+> Time Based Analysis, I prefer to leave unit part to end perf users.
 > 
-> Actually, that brings up a question about when to revoke host
-> authentication in the VF assignment case? That seems to be a policy
-> decision that the host needs to make globally for all VFs of a PF. If
-> the guest is going to opt-in to relying on the host's authentication
-> decision then the revoking early may not make sense.
+>>
+>>>
+>>>     $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
+>>>
+>>> average RX bandwidth can be calculated like this:
+>>>
+>>>     PCIe TX Bandwidth = PCIE_TX_DATA * 16B / Measure_Time_Window
+>>>
+>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>>
+>> Most of the comments inline aren't perf driver specific.  To me that
+>> part of it looks fine but I'm only an intermittent reviewer of perf
+>> drivers, so that needs more eyes!
+>>
+>> Anyhow, to my eyes this is coming together well but there are a few things
+>> that don't look quite right yet.
+> 
+> Thank you for valuable comments, I will try my best to address them :)
+> 
+>>
+>> ...
+>>
+>>> +#define DWC_PCIE_LANE_EVENT_MAX_PERIOD		GENMASK_ULL(31, 0)
+>>> +#define DWC_PCIE_TIME_BASED_EVENT_MAX_PERIOD	GENMASK_ULL(63, 0)
+>>> +
+>>> +struct dwc_pcie_pmu {
+>>> +	struct pmu		pmu;
+>>> +	struct pci_dev		*pdev;		/* Root Port device */
+>>> +	u16			ras_des;	/* RAS DES capability offset */
+>>
+>> Could call it ras_des_offset as then the comment wouldn't be needed...
+> 
+> Agreed, will fix it.
+> 
+>>
+>>> +	u32			nr_lanes;
+>>> +
+>>> +	struct list_head	pmu_node;
+>>> +	struct hlist_node	cpuhp_node;
+>>> +	struct perf_event	*event[DWC_PCIE_EVENT_TYPE_MAX];
+>>> +	int			on_cpu;
+>>> +	bool			registered;
+>>> +};
+>>>
+>>
+>>
+>>> +static void dwc_pcie_pmu_unregister_pmu(void *data)
+>>> +{
+>>> +	struct dwc_pcie_pmu *pcie_pmu = data;
+>>> +
+>>> +	if (!pcie_pmu->registered)
+>>> +		return;
+>>> +
+>>> +	perf_pmu_unregister(&pcie_pmu->pmu);
+>>> +	pcie_pmu->registered = false;
+>>> +	list_del(&pcie_pmu->pmu_node);
+>> For simplicity or reviewing I'd expect either:
+>> a) Exact reverse order of what happened in probe.
+>> b) A comment on why not.
+>>
+>> That probably jus means that the perf_pmu_unregister
+>> should be first.
+> 
+> I guess you mean perf_pmu_unregister should be last?
+> Bellow is the exact reverse order of what happened in probe.
+> 
+> 	pcie_pmu->registered = false;
+> 	list_del(&pcie_pmu->pmu_node);
+> 	perf_pmu_unregister(&pcie_pmu->pmu);
+> 
+>>
+>>> +}
+>>
+>>
+>> ...
+>>
+>>> +static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
+>>> +{
+>>> +	struct pci_dev *pdev = NULL;
+>>> +	struct dwc_pcie_pmu *pcie_pmu;
+>>> +	bool notify = false;
+>>> +	char *name;
+>>> +	u32 bdf;
+>>> +	int ret;
+>>> +
+>>> +	/* Match the rootport with VSEC_RAS_DES_ID, and register a PMU for it */
+>>> +	for_each_pci_dev(pdev) {
+>>> +		u16 vsec;
+>>> +		u32 val;
+>>> +
+>>> +		if (!(pci_is_pcie(pdev) &&
+>>> +		      pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT))
+>>> +			continue;
+>>> +
+>>> +		vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_ALIBABA,
+>>> +						DWC_PCIE_VSEC_RAS_DES_ID);
+>>> +		if (!vsec)
+>>> +			continue;
+>>> +
+>>> +		pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
+>>> +		if (PCI_VNDR_HEADER_REV(val) != 0x04 ||
+>>> +		    PCI_VNDR_HEADER_LEN(val) != 0x100)
+>>
+>> I'm curious - why check the header length?  Paranoia / defensive coding or does it vary?
+>> I'd expect it to be fixed for a given revision. Ideally it should be backwards compatible
+>> so that revs above 4 will always work (possibly with missing features) with rev 4 targeting
+>> software but I guess we can't guaranteed that...
+> 
+> Kind of defensive coding. Agreed, I will remove the hender length check to make the driver more
+> compatible.
+>>
+>>> +			continue;
+>>> +		pci_dbg(pdev,
+>>> +			"Detected PCIe Vendor-Specific Extended Capability RAS DES\n");
+>>> +
+>>> +		bdf = PCI_DEVID(pdev->bus->number, pdev->devfn);
+>>> +		name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%x",
+>>> +				      bdf);
+>>> +		if (!name) {
+>>> +			ret = -ENOMEM;
+>>> +			goto out;
+>>> +		}
+>>> +
+>>> +		/* All checks passed, go go go */
+>>> +		pcie_pmu = devm_kzalloc(&plat_dev->dev, sizeof(*pcie_pmu), GFP_KERNEL);
+>>> +		if (!pcie_pmu) {
+>>> +			ret = -ENOMEM;
+>>> +			goto out;
+>>> +		}
+>>> +
+>>> +		pcie_pmu->pdev = pdev;
+>>> +		pcie_pmu->ras_des = vsec;
+>>> +		pcie_pmu->nr_lanes = pcie_get_width_cap(pdev);
+>>> +		pcie_pmu->on_cpu = -1;
+>>> +		pcie_pmu->pmu = (struct pmu){
+>>> +			.module		= THIS_MODULE,
+>>> +			.attr_groups	= dwc_pcie_attr_groups,
+>>> +			.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
+>>> +			.task_ctx_nr	= perf_invalid_context,
+>>> +			.event_init	= dwc_pcie_pmu_event_init,
+>>> +			.add		= dwc_pcie_pmu_event_add,
+>>> +			.del		= dwc_pcie_pmu_event_del,
+>>> +			.start		= dwc_pcie_pmu_event_start,
+>>> +			.stop		= dwc_pcie_pmu_event_stop,
+>>> +			.read		= dwc_pcie_pmu_event_update,
+>>> +		};
+>>> +
+>>> +		/* Add this instance to the list used by the offline callback */
+>>> +		ret = cpuhp_state_add_instance(dwc_pcie_pmu_hp_state,
+>>> +					       &pcie_pmu->cpuhp_node);
+>>> +		if (ret) {
+>>> +			pci_err(pcie_pmu->pdev,
+>>> +				"Error %d registering hotplug @%x\n", ret, bdf);
+>>> +			goto out;
+>>> +		}
+>>> +
+>>> +		/* Unwind when platform driver removes */
+>>> +		ret = devm_add_action_or_reset(
+>>> +			&plat_dev->dev, dwc_pcie_pmu_remove_cpuhp_instance,
+>>> +			&pcie_pmu->cpuhp_node);
+>>> +		if (ret)
+>>> +			goto out;
+>>> +
+>>> +		ret = perf_pmu_register(&pcie_pmu->pmu, name, -1);
+>>> +		if (ret) {
+>>> +			pci_err(pcie_pmu->pdev,
+>>> +				"Error %d registering PMU @%x\n", ret, bdf);
+>>> +			goto out;
+>>> +		}
+>>> +		ret = devm_add_action_or_reset(
+>>> +			&plat_dev->dev, dwc_pcie_pmu_unregister_pmu, pcie_pmu);
+>>> +		if (ret)
+>>> +			goto out;
+>> This is messy because your devm callback also deals with the bit below.
+>> So if the _or_reset here happens because this call fails, the list_del will
+>> happen on something that was never added.  Simple fix is move this down to after
+>> pcie_pmu->registered given none of the next few line of code can fail anyway.
+> 
+> Goot point. I missed the fact that if devm_add_action_or_reset() fails, the action
+> dwc_pcie_pmu_unregister_pmu() will be called right away.
+> 
+> Will fix it in next version.
+> 
+> 
+>>
+>>> +
+>>> +		/* Cache PMU to handle pci device hotplug */
+>>> +		list_add(&pcie_pmu->pmu_node, &dwc_pcie_pmu_head);
+>>> +		pcie_pmu->registered = true;
+>>> +		notify = true;
+>>> +	}
+>>> +
+>>> +	if (notify && bus_register_notifier(&pci_bus_type, &dwc_pcie_pmu_nb))
+>>> +		notify = false;
+>> As mentioned below, I'd expect the bus_unregister_notifier to be in a remove()
+>> callback, or you could use a devm_add_action_or_reset() an a simple callback.
+>> You can register that as
+>>
+>> 	if (notify) {
+>> 		if (bus_register_notifier() == 0)
+>> 			ret = devm_add_action_or_reset(unreg_notifier,
+>> 						       &dwc_pcie_pmu_nb);
+>> 	}
+>> and then you don't need to track if it was registered or not as the
+>> cleanup only happens if it was.
+> 
+> Good suggestion. Will also use devm_add_action_or_reset() to unwind.
+> 
+>>
+>>
+>>> +
+>>> +	if (notify)
+>>> +		dwc_pcie_pmu_notify = true;
+>>> +
+>>> +	return 0;
+>>> +
+>>> +out:
+>>> +	pci_dev_put(pdev);
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +
+>>
+>>
+>> ...
+>>
+>>> +
+>>> +static int dwc_pcie_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
+>>> +{
+>>> +	struct dwc_pcie_pmu *pcie_pmu;
+>>> +	struct pci_dev *pdev;
+>>> +	int node;
+>>> +	cpumask_t mask;
+>>> +	unsigned int target;
+>>> +
+>>> +	pcie_pmu = hlist_entry_safe(cpuhp_node, struct dwc_pcie_pmu, cpuhp_node);
+>>> +	/* Nothing to do if this CPU doesn't own the PMU */
+>>> +	if (cpu != pcie_pmu->on_cpu)
+>>> +		return 0;
+>>> +
+>>> +	pcie_pmu->on_cpu = -1;
+>>> +	pdev = pcie_pmu->pdev;
+>>> +	node = dev_to_node(&pdev->dev);
+>>> +	if (cpumask_and(&mask, cpumask_of_node(node), cpu_online_mask) &&
+>>> +	    cpumask_andnot(&mask, &mask, cpumask_of(cpu)))
+>>> +		target = cpumask_any(&mask);
+>>> +	else
+>>> +		target = cpumask_any_but(cpu_online_mask, cpu);
+>>> +
+>>> +	if (target >= nr_cpu_ids) {
+>>> +		pci_err(pcie_pmu->pdev, "There is no CPU to set\n");
+>>
+>> You have a local variable for pdev, use it here as well.
+> 
+> Will use local pdev directly.
+> 
+>>
+>>> +		return 0;
+>>> +	}
+>>> +
+>>> +	/* This PMU does NOT support interrupt, just migrate context. */
+>>> +	perf_pmu_migrate_context(&pcie_pmu->pmu, cpu, target);
+>>> +	pcie_pmu->on_cpu = target;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static struct platform_driver dwc_pcie_pmu_driver = {
+>>> +	.probe = dwc_pcie_pmu_probe,
+>>> +	.driver = {.name = "dwc_pcie_pmu",},
+>>> +};
+>>> +
+>>> +static int __init dwc_pcie_pmu_init(void)
+>>> +{
+>>> +	int ret;
+>>> +
+>>> +	ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
+>>> +				      "perf/dwc_pcie_pmu:online",
+>>> +				      dwc_pcie_pmu_online_cpu,
+>>> +				      dwc_pcie_pmu_offline_cpu);
+>>> +	if (ret < 0)
+>>> +		return ret;
+>>> +
+>>> +	dwc_pcie_pmu_hp_state = ret;
+>>> +
+>>> +	ret = platform_driver_register(&dwc_pcie_pmu_driver);
+>>> +	if (ret) {
+>>> +		cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	dwc_pcie_pmu_dev = platform_device_register_simple(
+>>> +				"dwc_pcie_pmu", PLATFORM_DEVID_NONE, NULL, 0);
+>>> +	if (IS_ERR(dwc_pcie_pmu_dev)) {
+>>> +		platform_driver_unregister(&dwc_pcie_pmu_driver);
+>>
+>> Why no cpuhp_remove_multi_state() in this error path?
+>>
+>> I'd move to the approach of a gotos and a single error handling block as
+>> that makes this sort of thing easier to spot.
+> 
+> Agreed, will use the approach of a gotos to handle errors.
+> 
+>>
+>>> +		return PTR_ERR(dwc_pcie_pmu_dev);
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void __exit dwc_pcie_pmu_exit(void)
+>>> +{
+>>> +	platform_device_unregister(dwc_pcie_pmu_dev);
+>>> +	platform_driver_unregister(&dwc_pcie_pmu_driver);
+>>> +	cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
+>>> +
+>>> +	if (dwc_pcie_pmu_notify)
+>>
+>> If you have something unusual like this a driver module_exit() it definitely
+>> deserves a comment on why.  I'm surprised by this as I'd expect the notifier
+>> to be unregistered in the driver remove so not sure why this is here.
+>> I've lost track of earlier discussions so if this was addressed then all
+>> we need is a comment here for the next person to run into it!
+> 
+> All replied above, I will unregistered the notifier by devm_add_action_or_reset().
+> 
+> I am curious about that what the difference between unregistered in module_exit()
+> and remove()?
+> 
 
-> It may be a
-> decision that needs to be deferred until the guest makes its intentions
-> clear, and the host will need to have policy around how to resolve
-> conflicts between guestA wants "native" and guestB wants "platform-TSM".
-> If the VFs those guests are using map to the same PF then only one
-> policy can be in effect.
+From my understanding, if you register it in probe() then should undo it in remove().
+Otherwise you should register it in module_init(). Just make them coupled to make
+sure cleanup the resources correctly.
 
-To own IDE, the guest will have to have exclusive access to the portion 
-of RC responsible for the IDE keys. Which is doable but requires passing 
-through both RC and the device and probably everything between these 
-two.  It is going to be quite different "host-native" and 
-"guest-native". How IDE keys are going to be programmed into the RC on 
-Intel?
+This driver is a bit different since device and driver are created in module_init()
+so will works fine in most cases, because the device/driver removal will happens the
+same time when unloading the module. However if manually unbind the driver and device
+without unloading the module, we'll miss to unregister the notifier in the currently
+implementation.
 
-
--- 
-Alexey
-
-
+>>
+>>> +		bus_unregister_notifier(&pci_bus_type, &dwc_pcie_pmu_nb);
+>>> +}
+> 
+> .
+> 
