@@ -2,31 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16F187D1516
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Oct 2023 19:44:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 620467D1530
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Oct 2023 19:53:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377908AbjJTRol (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Oct 2023 13:44:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39592 "EHLO
+        id S229437AbjJTRxR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Oct 2023 13:53:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377895AbjJTRok (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Oct 2023 13:44:40 -0400
+        with ESMTP id S230008AbjJTRxQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Oct 2023 13:53:16 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B4B5A3;
-        Fri, 20 Oct 2023 10:44:38 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 204F6C433C9;
-        Fri, 20 Oct 2023 17:44:31 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E880FD51;
+        Fri, 20 Oct 2023 10:53:14 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B226C433C7;
+        Fri, 20 Oct 2023 17:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697823878;
-        bh=tM18i9s5DyCKNvNL4uxB77beHUHrncqWw9WuGgi11Sc=;
+        s=k20201202; t=1697824394;
+        bh=zlzQselxabvwga7pwZwHtszfK36j7B5oGEvcCuWmbvY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qN6wGAxbfAChNjoLr5JDLEMA1Yj+VXAm1mIrvIai0T7d3G6o655pNSQo+SYWECDNJ
-         tkFS3gMulxYKpiNf3SesEVfzKyQjA/5DtMXpEuUMZ0dxODQ8d6kmjsSjqU1iGnX45t
-         U+OBJowH14NvBAGCP93/5kVnK3CAzSZAQiJto8Fwnuewnn4E7yoXVAqHfIsJHL6ODQ
-         SyDGio5RxL70E0jPTDGXylaFoJJ1Rmlb47upWX/MakTC510CcYcdjGU65YQmfWndaq
-         11TYcwA+E728enME8ni+F/2VRXXMIZQlLNiisg1bXJ79Yg5/pHzqZprTUWY3fifPJk
-         B54UYuQvwVrbw==
-Date:   Fri, 20 Oct 2023 23:14:28 +0530
+        b=RHKQ7jq0nGa0C6zbqjUOHa0dgGM93U7No/q0uLVyxXdsToA92e0+5J7zl5YFNPndl
+         3FHz6T/d0VP+IDUuyQNdbMAepCYvj3SQ3DHB0zoaDOUAqctOaNjBmt7v5BeDAGRJna
+         2HxeQvLLVxgMcEIYWQxPFPDVB/Wx3nMb0wr2PaYwqlRV8LmUbsL5m3MDSLTTSggQ4L
+         dqDrBakqHLCuQKMjR7aFjrJpw5WDLd6dq5aTQ8jIokqjRG77XG9480mT7XUwjq4CWu
+         hsxNg4gusLSE8+2hen7cK1BW2YpynmKq7fgH0inNu1r5oL+VVc4a/eKNAdBLDF5lko
+         UtF7Hp+TpZbPQ==
+Date:   Fri, 20 Oct 2023 23:23:04 +0530
 From:   Manivannan Sadhasivam <mani@kernel.org>
 To:     Frank Li <Frank.Li@nxp.com>
 Cc:     manivannan.sadhasivam@linaro.org, aisheng.dong@nxp.com,
@@ -37,15 +37,15 @@ Cc:     manivannan.sadhasivam@linaro.org, aisheng.dong@nxp.com,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         lorenzo.pieralisi@arm.com, lpieralisi@kernel.org, maz@kernel.org,
         s.hauer@pengutronix.de, shawnguo@kernel.org, tglx@linutronix.de
-Subject: Re: [PATCH v2 3/5] PCI: endpoint: pci-epf-test: add doorbell test
-Message-ID: <20231020174428.GB46191@thinkpad>
+Subject: Re: [PATCH v2 4/5] misc: pci_endpoint_test: Add doorbell test case
+Message-ID: <20231020175304.GC46191@thinkpad>
 References: <20230911220920.1817033-1-Frank.Li@nxp.com>
- <20230911220920.1817033-4-Frank.Li@nxp.com>
+ <20230911220920.1817033-5-Frank.Li@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230911220920.1817033-4-Frank.Li@nxp.com>
+In-Reply-To: <20230911220920.1817033-5-Frank.Li@nxp.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -56,202 +56,161 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 06:09:18PM -0400, Frank Li wrote:
-
-Subject could be,
-
-PCI: endpoint: pci-epf-test: Add doorbell support
-
-> Add three register: doorbell_bar, doorbell_addr, doorbell_data,
-> doorbell_done. Call pci_epf_alloc_doorbell() all a doorbell address space.
-> 
-> Root complex(RC) side driver can trigger pci-epc-test's doorbell callback
-> handler by write doorbell_data to mapped doorbell_bar's address space.
-> 
-> pci-epc-test will set doorbell_done in doorbell callback.
+On Mon, Sep 11, 2023 at 06:09:19PM -0400, Frank Li wrote:
+> Using bit 0..7 of magic as version number in pci_endpoint_test struct to
+> support older driver versions. Save to 'version' field of struct
+> pci_endpoint_test to prevent reading non-existent address.
 > 
 
-How about,
+Since both drivers are in the kernel, I don't see a necessity to maintain
+compatibility. Does it make sense to load drivers of previous kernel revision
+with a new kernel?
 
-Add doorbell support to the EPF test driver by introducing 3 new registers:
-
-doorbell_bar
-doorbell_addr
-doorbell_data
-
-The PCI RC driver can trigger the doorbell on the EP side by writing the
-content of "doorbell_data" to the address specified by the "doorbell_addr"
-register in the "doorbell_bar" BAR region.
-
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-
-You should also update Documentation/PCI/endpoint/pci-test-* files in a separate
-commit with doorbell support.
-
-> ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 59 ++++++++++++++++++-
->  1 file changed, 58 insertions(+), 1 deletion(-)
+> Add three registers: PCIE_ENDPOINT_TEST_DB_BAR, PCIE_ENDPOINT_TEST_DB_ADDR,
+> PCIE_ENDPOINT_TEST_DB_DATA.
 > 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 1f0d2b84296a3..566549919b87b 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -11,6 +11,7 @@
->  #include <linux/dmaengine.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
-> +#include <linux/msi.h>
->  #include <linux/slab.h>
->  #include <linux/pci_ids.h>
->  #include <linux/random.h>
-> @@ -39,17 +40,21 @@
->  #define STATUS_IRQ_RAISED		BIT(6)
->  #define STATUS_SRC_ADDR_INVALID		BIT(7)
->  #define STATUS_DST_ADDR_INVALID		BIT(8)
-> +#define STATUS_DOORBELL_SUCCESS		BIT(9)
->  
->  #define FLAG_USE_DMA			BIT(0)
->  
->  #define TIMER_RESOLUTION		1
->  
-> +#define MAGIC_VERSION_MASK		GENMASK(7, 0)
-> +
->  static struct workqueue_struct *kpcitest_workqueue;
->  
->  struct pci_epf_test {
->  	void			*reg[PCI_STD_NUM_BARS];
->  	struct pci_epf		*epf;
->  	enum pci_barno		test_reg_bar;
-> +	enum pci_barno		doorbell_bar;
->  	size_t			msix_table_offset;
->  	struct delayed_work	cmd_handler;
->  	struct dma_chan		*dma_chan_tx;
-> @@ -74,6 +79,9 @@ struct pci_epf_test_reg {
->  	u32	irq_type;
->  	u32	irq_number;
->  	u32	flags;
-> +	u32	doorbell_bar;
-> +	u32	doorbell_addr;
-> +	u32	doorbell_data;
->  } __packed;
->  
->  static struct pci_epf_header test_header = {
-> @@ -693,6 +701,8 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
->  	struct pci_epf_bar *epf_bar;
->  	int bar;
->  
-> +	pci_epf_free_doorbell(epf);
-> +
->  	cancel_delayed_work(&epf_test->cmd_handler);
->  	pci_epf_test_clean_dma_chan(epf_test);
->  	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
-> @@ -808,9 +818,22 @@ static int pci_epf_test_link_up(struct pci_epf *epf)
->  	return 0;
->  }
->  
-> +static int pci_epf_test_doorbell(struct pci_epf *epf, int index)
-> +{
-> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> +	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
-> +	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
-> +
-> +	reg->status |= STATUS_DOORBELL_SUCCESS;
-> +	pci_epf_test_raise_irq(epf_test, reg);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct pci_epc_event_ops pci_epf_test_event_ops = {
->  	.core_init = pci_epf_test_core_init,
->  	.link_up = pci_epf_test_link_up,
-> +	.doorbell = pci_epf_test_doorbell,
 
-I would like to pass this callback directly to the pci_epf_alloc_doorbell() API.
- Would that be feasible?
+This patch is not adding these registers and not this driver also. So this
+statement is wrong.
 
->  };
->  
->  static int pci_epf_test_alloc_space(struct pci_epf *epf)
-> @@ -859,7 +882,7 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
->  		epf_bar = &epf->bar[bar];
->  		add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
->  
-> -		if (bar == test_reg_bar)
-> +		if (bar == test_reg_bar || bar == epf_test->doorbell_bar)
->  			continue;
->  
->  		if (!!(epc_features->reserved_bar & (1 << bar)))
-> @@ -900,9 +923,14 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->  	const struct pci_epc_features *epc_features;
->  	enum pci_barno test_reg_bar = BAR_0;
-> +	enum pci_barno doorbell_bar = NO_BAR;
->  	struct pci_epc *epc = epf->epc;
->  	bool linkup_notifier = false;
->  	bool core_init_notifier = false;
-> +	struct pci_epf_test_reg *reg;
-> +	struct msi_msg *msg;
-> +	u64 doorbell_addr;
-> +	u32 align;
->  
->  	if (WARN_ON_ONCE(!epc))
->  		return -EINVAL;
-> @@ -923,10 +951,39 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->  	epf_test->test_reg_bar = test_reg_bar;
->  	epf_test->epc_features = epc_features;
->  
-> +	align = epc_features->align;
-> +	align = align ? align : 128;
-> +
-> +	ret = pci_epf_alloc_doorbell(epf, 1);
+> Write data from PCI_ENDPOINT_TEST_DB_DATA to address from
+> PCI_ENDPOINT_TEST_DB_ADDR to trigger doorbell and wait for endpoint
+> feedback.
+> 
 
-This should be renamed as pci_epc_alloc_doorbell() as per comment on patch 1/3.
-Also, the "msi_msg" pointer should be part of the EPC struct.
+You can reuse a part of the commit description I suggested for previous patch.
 
-> +	if (!ret) {
-> +		msg = epf->msg;
-> +		doorbell_bar = pci_epc_get_next_free_bar(epc_features, test_reg_bar + 1);
-> +
-> +		if (doorbell_bar > 0) {
-> +			epf_test->doorbell_bar = doorbell_bar;
-> +			doorbell_addr = msg->address_hi;
-> +			doorbell_addr <<= 32;
-> +			doorbell_addr |= msg->address_lo;
-> +			epf->bar[doorbell_bar].phys_addr = round_down(doorbell_addr, align);
-> +			epf->bar[doorbell_bar].barno = doorbell_bar;
-> +			epf->bar[doorbell_bar].size = align;
-> +		} else {
-> +			pci_epf_free_doorbell(epf);
-
-This one too should be renamed. 
-
-> +		}
-> +	}
-> +
->  	ret = pci_epf_test_alloc_space(epf);
-
-This one too.
-
->  	if (ret)
->  		return ret;
->  
-> +	reg = epf_test->reg[test_reg_bar];
-> +	reg->magic |= FIELD_PREP(MAGIC_VERSION_MASK, 0x1);
-
-Why are you writing this register? This register serves for the purpose of
-testing BAR0.
+Rest looks good to me.
 
 - Mani
 
-> +	if (doorbell_bar > 0) {
-> +		reg->doorbell_addr = doorbell_addr & (align - 1);
-> +		reg->doorbell_data = msg->data;
-> +		reg->doorbell_bar = doorbell_bar;
-> +	}
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/misc/pci_endpoint_test.c | 48 ++++++++++++++++++++++++++++++++
+>  include/uapi/linux/pcitest.h     |  1 +
+>  2 files changed, 49 insertions(+)
+> 
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index ed4d0ef5e5c31..ed0b025132d17 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -33,6 +33,8 @@
+>  #define IRQ_TYPE_MSIX				2
+>  
+>  #define PCI_ENDPOINT_TEST_MAGIC			0x0
+> +#define PCI_MAGIC_VERSION_MASK			GENMASK(7, 0)
+> +#define PCI_ENDPOINT_TEST_V1			0x1
+>  
+>  #define PCI_ENDPOINT_TEST_COMMAND		0x4
+>  #define COMMAND_RAISE_LEGACY_IRQ		BIT(0)
+> @@ -52,6 +54,7 @@
+>  #define STATUS_IRQ_RAISED			BIT(6)
+>  #define STATUS_SRC_ADDR_INVALID			BIT(7)
+>  #define STATUS_DST_ADDR_INVALID			BIT(8)
+> +#define STATUS_DOORBELL_SUCCESS			BIT(9)
+>  
+>  #define PCI_ENDPOINT_TEST_LOWER_SRC_ADDR	0x0c
+>  #define PCI_ENDPOINT_TEST_UPPER_SRC_ADDR	0x10
+> @@ -66,7 +69,12 @@
+>  #define PCI_ENDPOINT_TEST_IRQ_NUMBER		0x28
+>  
+>  #define PCI_ENDPOINT_TEST_FLAGS			0x2c
+> +#define PCI_ENDPOINT_TEST_DB_BAR		0x30
+> +#define PCI_ENDPOINT_TEST_DB_ADDR		0x34
+> +#define PCI_ENDPOINT_TEST_DB_DATA		0x38
 > +
->  	if (!core_init_notifier) {
->  		ret = pci_epf_test_core_init(epf);
->  		if (ret)
+>  #define FLAG_USE_DMA				BIT(0)
+> +#define FLAG_SUPPORT_DOORBELL			BIT(1)
+>  
+>  #define PCI_DEVICE_ID_TI_AM654			0xb00c
+>  #define PCI_DEVICE_ID_TI_J7200			0xb00f
+> @@ -102,6 +110,7 @@ enum pci_barno {
+>  	BAR_3,
+>  	BAR_4,
+>  	BAR_5,
+> +	NO_BAR = -1,
+>  };
+>  
+>  struct pci_endpoint_test {
+> @@ -118,6 +127,7 @@ struct pci_endpoint_test {
+>  	enum pci_barno test_reg_bar;
+>  	size_t alignment;
+>  	const char *name;
+> +	u8 version;
+>  };
+>  
+>  struct pci_endpoint_test_data {
+> @@ -713,6 +723,38 @@ static bool pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
+>  	return false;
+>  }
+>  
+> +static bool pci_endpoint_test_doorbell(struct pci_endpoint_test *test)
+> +{
+> +	enum pci_barno bar;
+> +	u32 data, status;
+> +	u32 addr;
+> +
+> +	if (test->version < PCI_ENDPOINT_TEST_V1)
+> +		return false;
+> +
+> +	bar = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_BAR);
+> +	if (bar == NO_BAR)
+> +		return false;
+> +
+> +	data = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_DATA);
+> +	addr = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_ADDR);
+> +	bar = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_BAR);
+> +
+> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
+> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
+> +
+> +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_STATUS, 0);
+> +	pci_endpoint_test_bar_writel(test, bar, addr, data);
+> +
+> +	wait_for_completion_timeout(&test->irq_raised, msecs_to_jiffies(1000));
+> +
+> +	status = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_STATUS);
+> +	if (status & STATUS_DOORBELL_SUCCESS)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>  static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
+>  				    unsigned long arg)
+>  {
+> @@ -760,6 +802,9 @@ static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
+>  	case PCITEST_CLEAR_IRQ:
+>  		ret = pci_endpoint_test_clear_irq(test);
+>  		break;
+> +	case PCITEST_DOORBELL:
+> +		ret = pci_endpoint_test_doorbell(test);
+> +		break;
+>  	}
+>  
+>  ret:
+> @@ -887,6 +932,9 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+>  	misc_device->parent = &pdev->dev;
+>  	misc_device->fops = &pci_endpoint_test_fops;
+>  
+> +	test->version = FIELD_GET(PCI_MAGIC_VERSION_MASK,
+> +				  pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_MAGIC));
+> +
+>  	err = misc_register(misc_device);
+>  	if (err) {
+>  		dev_err(dev, "Failed to register device\n");
+> diff --git a/include/uapi/linux/pcitest.h b/include/uapi/linux/pcitest.h
+> index f9c1af8d141b4..479ca1aa3ae0b 100644
+> --- a/include/uapi/linux/pcitest.h
+> +++ b/include/uapi/linux/pcitest.h
+> @@ -20,6 +20,7 @@
+>  #define PCITEST_SET_IRQTYPE	_IOW('P', 0x8, int)
+>  #define PCITEST_GET_IRQTYPE	_IO('P', 0x9)
+>  #define PCITEST_CLEAR_IRQ	_IO('P', 0x10)
+> +#define PCITEST_DOORBELL	_IO('P', 0x11)
+>  
+>  #define PCITEST_FLAGS_USE_DMA	0x00000001
+>  
 > -- 
 > 2.34.1
 > 
