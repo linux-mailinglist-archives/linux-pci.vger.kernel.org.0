@@ -2,74 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECBD07D0998
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Oct 2023 09:36:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E40107D0B7E
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Oct 2023 11:22:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376406AbjJTHgh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Oct 2023 03:36:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35250 "EHLO
+        id S1376812AbjJTJWY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Oct 2023 05:22:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376317AbjJTHgh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Oct 2023 03:36:37 -0400
-Received: from mail.venturelinkbiz.com (mail.venturelinkbiz.com [51.195.119.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC2C091
-        for <linux-pci@vger.kernel.org>; Fri, 20 Oct 2023 00:36:33 -0700 (PDT)
-Received: by mail.venturelinkbiz.com (Postfix, from userid 1002)
-        id ECE8947021; Fri, 20 Oct 2023 07:36:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=venturelinkbiz.com;
-        s=mail; t=1697787391;
-        bh=JBV4b8UUo1MSngn/QBoedt1Dv52bT8rWeq4R22MtJMs=;
-        h=Date:From:To:Subject:From;
-        b=wLAzd5L7XQ/12T5OWdsS9aRVOMksq8pPkaIz0jlR30WPY/Qa1qNzndnvFPKlpakux
-         rHSm3gaxYGhBk0Z+Q11cbEPAbywoypW6hTowzod6RVAfLHrlF8Mr1ZrsATsPdPzwe5
-         p6zCPw5fOEP+bLleREuMDKZsJvXAw0LTdaxnPRiLcF3H6m7IOY0KYTacYcJs0XwMpB
-         kRNRecI/3oHSzMiUWkNYwLBpxfA+3UMkFrGe4GpN/oJSEpWrZzHM6sB1+4gTjunek+
-         FHr6eY/qGlQncWy5tmJXqJ/fvL5S/iLyCcdZNAXoHVnzNP0wbg2OTabsHgT5KitaL9
-         C5VZTWreQM2PQ==
-Received: by mail.venturelinkbiz.com for <linux-pci@vger.kernel.org>; Fri, 20 Oct 2023 07:36:11 GMT
-Message-ID: <20231020064500-0.1.35.8m7d.0.rmkqke6h4x@venturelinkbiz.com>
-Date:   Fri, 20 Oct 2023 07:36:11 GMT
-From:   "Michal Rmoutil" <michal.rmoutil@venturelinkbiz.com>
-To:     <linux-pci@vger.kernel.org>
-Subject: =?UTF-8?Q?Efektivn=C3=AD_sledov=C3=A1n=C3=AD_a_optimalizace_v=C3=BDroby_pro_va=C5=A1i_spole=C4=8Dnost?=
-X-Mailer: mail.venturelinkbiz.com
+        with ESMTP id S1376586AbjJTJWE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Oct 2023 05:22:04 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDB6D1732
+        for <linux-pci@vger.kernel.org>; Fri, 20 Oct 2023 02:21:21 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qtlgv-0000Zd-Kk; Fri, 20 Oct 2023 11:21:13 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qtlgv-002zak-1L; Fri, 20 Oct 2023 11:21:13 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qtlgu-002QqD-O0; Fri, 20 Oct 2023 11:21:12 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Will Deacon <will@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: [PATCH] PCI: host-generic: Convert to platform remove callback returning void
+Date:   Fri, 20 Oct 2023 11:21:07 +0200
+Message-ID: <20231020092107.2148311-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.40.0.353.g56adddaa06d3
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,URIBL_CSS_A,
-        URIBL_DBL_SPAM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ***
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2867; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=qj6z6vB2KX6cuvhKy1RcC/hSLUWPjnuM56r5qbHHE38=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlMkaCACAKoAsqjssG4om0jR94C/pJ9B3UCmPcB kc7kri05MqJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZTJGggAKCRCPgPtYfRL+ Tl0HCACN+0kOuf6RiyN24L/OKHLCNQs2v/9LlBN2qWFTVxde8LdH/686c5xLUlWSP4DD/emllKU v4O+wwHZ8CPSwE8VaIpMIpoiQJx1cQgm1+g50twEr0oy3HMFAkEU/FzbIwRI9fu8b4NDdwPnHia CMg3h8cdZ3FDs+kmz45fIyJ1D7OGEWep0awzrBi9AVZxf+1L+D9FWyYKlefnl027QdcbQh87XMb 4z24CYykXd4yyHUCLUJ42AW5ftnhQesADMLIthZ5IFl4oum2luLxv7kODFbPuKm6zOWaDJyPm+D 7KwTYpJO+BEdx8yu24X+yhyIfxGWbecELapwybyFphCfsLta
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dobr=C3=A9 r=C3=A1no,
+The .remove() callback for a platform driver returns an int which makes
+many driver authors wrongly assume it's possible to do error handling by
+returning an error code.  However the value returned is (mostly) ignored
+and this typically results in resource leaks. To improve here there is a
+quest to make the remove callback return void. In the first step of this
+quest all drivers are converted to .remove_new() which already returns
+void.
 
-m=C3=A1te mo=C5=BEnost sledovat stav ka=C5=BEd=C3=A9ho stroje a v=C3=BDro=
-bn=C3=ADho procesu z kancel=C3=A1=C5=99e, konferen=C4=8Dn=C3=AD m=C3=ADst=
-nosti nebo dokonce z domova =C4=8Di na cest=C3=A1ch =E2=80=93 na va=C5=A1=
-em telefonu?
+pci_host_common_remove() returned zero unconditionally. With that
+converted to return void instead, the generic pci host driver can be
+switched to .remove_new trivially.
 
-Poskytujeme rychle implementovateln=C3=BD a snadno pou=C5=BEiteln=C3=BD n=
-=C3=A1stroj, kter=C3=BD zachyt=C3=AD i n=C4=9Bkolikasekundov=C3=BD mikrop=
-rostoj a okam=C5=BEit=C4=9B p=C5=99epo=C4=8D=C3=ADt=C3=A1 vyu=C5=BEit=C3=AD=
- stroje v kontextu dan=C3=A9 v=C3=BDrobn=C3=AD zak=C3=A1zky.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pci/controller/pci-host-common.c  | 4 +---
+ drivers/pci/controller/pci-host-generic.c | 2 +-
+ include/linux/pci-ecam.h                  | 2 +-
+ 3 files changed, 3 insertions(+), 5 deletions(-)
 
-Kdykoli vid=C3=ADte stav objedn=C3=A1vky a jste informov=C3=A1ni o p=C5=99=
-=C3=ADpadn=C3=A9m sn=C3=AD=C5=BEen=C3=AD efektivity. Syst=C3=A9m s=C3=A1m=
- analyzuje data a p=C5=99ipravuje cenn=C3=A9 reporty, co=C5=BE oper=C3=A1=
-tor=C5=AFm umo=C5=BE=C5=88uje soust=C5=99edit se na v=C3=BDrobn=C3=AD c=C3=
-=ADl.
+diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+index 6be3266cd7b5..45b71806182d 100644
+--- a/drivers/pci/controller/pci-host-common.c
++++ b/drivers/pci/controller/pci-host-common.c
+@@ -85,7 +85,7 @@ int pci_host_common_probe(struct platform_device *pdev)
+ }
+ EXPORT_SYMBOL_GPL(pci_host_common_probe);
+ 
+-int pci_host_common_remove(struct platform_device *pdev)
++void pci_host_common_remove(struct platform_device *pdev)
+ {
+ 	struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
+ 
+@@ -93,8 +93,6 @@ int pci_host_common_remove(struct platform_device *pdev)
+ 	pci_stop_root_bus(bridge->bus);
+ 	pci_remove_root_bus(bridge->bus);
+ 	pci_unlock_rescan_remove();
+-
+-	return 0;
+ }
+ EXPORT_SYMBOL_GPL(pci_host_common_remove);
+ 
+diff --git a/drivers/pci/controller/pci-host-generic.c b/drivers/pci/controller/pci-host-generic.c
+index 63865aeb636b..41cb6a057f6e 100644
+--- a/drivers/pci/controller/pci-host-generic.c
++++ b/drivers/pci/controller/pci-host-generic.c
+@@ -82,7 +82,7 @@ static struct platform_driver gen_pci_driver = {
+ 		.of_match_table = gen_pci_of_match,
+ 	},
+ 	.probe = pci_host_common_probe,
+-	.remove = pci_host_common_remove,
++	.remove_new = pci_host_common_remove,
+ };
+ module_platform_driver(gen_pci_driver);
+ 
+diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+index 6b1301e2498e..3a4860bd2758 100644
+--- a/include/linux/pci-ecam.h
++++ b/include/linux/pci-ecam.h
+@@ -93,6 +93,6 @@ extern const struct pci_ecam_ops loongson_pci_ecam_ops; /* Loongson PCIe */
+ #if IS_ENABLED(CONFIG_PCI_HOST_COMMON)
+ /* for DT-based PCI controllers that support ECAM */
+ int pci_host_common_probe(struct platform_device *pdev);
+-int pci_host_common_remove(struct platform_device *pdev);
++void pci_host_common_remove(struct platform_device *pdev);
+ #endif
+ #endif
 
-C=C3=ADl je jednoduch=C3=BD: jeden pohled =E2=80=93 cel=C3=A1 tov=C3=A1rn=
-a. =C4=8Cek=C3=A1m na odpov=C4=9B=C4=8F, jestli vid=C3=ADte mo=C5=BEnost =
-vyu=C5=BEit=C3=AD takov=C3=A9ho n=C3=A1stroje ve va=C5=A1=C3=AD firm=C4=9B=
-=2E
+base-commit: 2030579113a1b1b5bfd7ff24c0852847836d8fd1
+-- 
+2.40.0.353.g56adddaa06d3
 
-
-Pozdravy
-Michal Rmoutil
