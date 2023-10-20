@@ -2,43 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A67577D0D41
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Oct 2023 12:35:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04CAF7D0D4F
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Oct 2023 12:36:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376860AbjJTKfR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Oct 2023 06:35:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51640 "EHLO
+        id S1376928AbjJTKgF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Oct 2023 06:36:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376884AbjJTKfN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Oct 2023 06:35:13 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2068.outbound.protection.outlook.com [40.107.244.68])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03066D5D;
-        Fri, 20 Oct 2023 03:35:08 -0700 (PDT)
+        with ESMTP id S1376927AbjJTKf7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Oct 2023 06:35:59 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2066.outbound.protection.outlook.com [40.107.244.66])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 842E1170A;
+        Fri, 20 Oct 2023 03:35:49 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RkWoM3EIEz5KSkzMdrDmaZmLb6gX9QQx3nvZdm2FRXtih7pJWd8axl5cXcT9INOLdIkKyrp/UkwWAw7HBlmmjVZO+g00Z0fqsKB0qzpInxpmhJ7C48fQNIoT2IMGTGOHoIyr6DuOiD4X15AluYVAAPRSSc7c6V8BJ81uKCVSrLSVE65YoDR/Jw6dSxUCU/h89JsiL3iCIBhbhZIzqnUuHICH/uaEDBhR2voCqJRVAZzV+vj1ODNjPLqTR1WnuAL43ZyM/63Ug3n9Drkrbc7P7z1m7DZDis0NTz6p2TTe0Do0mAfXQu9jGUOzF6AwOkZT3lnjsmhaDQplRyxx0H6WWQ==
+ b=Eie8hEckEEs14ha4gJtlx4iKiWSxWboTJ0GzLIrBT47YmYIH2HYhBG+esVViKlu2ssHOIxQwTftgXxUah7bWEs/VUIOJqdIN/aEcHAoOme0v/VIHxToVlwYsL/s8bdBEiuItjS/hNtmJDOSEGphuzEoOBkrQZq3Z0mX8/Y6JJ3cYuc+42+8KAh6YzJEJ5UD8+OHI2VZxTio7v8TMbRw/dfhdE/9V594Zm4Gg4W20oneWHcR/YWGhCz716DESM811JgL+P3g6e+5QzhiC78aJfRUlg7fIF7pF6siqDnMcb/R+pFtVNcgTmA2xnGygd20R3JczZthcZRLVjWvwx3KW9g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q2q+rTOak9nB9PuPXJvKKiRBehxKarf5/Pig/vcwIB8=;
- b=P129OMsqNuiVvYs/hIymIIkUVByPzrAn6kEHCDKSDWDXIYQB0nDgXD4BCEQM/bwkUPC0s/fgeHF+wR4BfzmH2HnhWv2dkbskORRR9DKSxXCYo4UZA9e/RN8O6q7K4FXTiaRFjNEiSoxQVGd3w3ZxL1Ns+sbatAW9cpBTCtkGNP6msvjpx2jeEjuGBxGKm5rGDQ90Mwlwoak3ac7KidNqFPlYkkx70oyW8GtSfHbO35V5z3WI3zbLaLo7mvtFyKy6svhrhTylgkTHdyMzpAMUEK/tlMWB3CSuXdc3489BLV187RRXfXFNqH9mAO52VZt0lYgDV/y3X8zX1Wtwmy2oAA==
+ bh=2le8x+RMQjzghYYr9XRaIW8ILaPqXqW4/Ubwyoda9BM=;
+ b=BzRvaWMlSvRKghsrmxHJvQnM1a5JS6gp0PFg9DTXxitEtD5tUOfwndWMEEw//i1uvcmNTw89oE4g31YNiPNjh+LYQ0EL0Zf8B3REIruJ9z6SJauKQaxN1IN+8i/VJuJO9D1VpIgxGViiPRqaFoYC11jX/eWztHuMkCQEem+8qkz4vqYMGZmcgiJXoxcxxM2oWakvzqmd+v+vtaD8Hw1EgykMoa78gaRb04AuPN8utTlOu6oVfJBpyg2cojUnxMwkI4B8G3KPAlml2bUS0ou/8Nrf2z8v+8P6EybysygH5J7hTkzmHh6jofW5VOeUvpl9XFk654tIA4SGpmoBycIFmg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q2q+rTOak9nB9PuPXJvKKiRBehxKarf5/Pig/vcwIB8=;
- b=hKf+xzmxCst6JQ0JItHtrf8S+ji3WPTLcsHvWAGgXFnQCrnDdiabl41Ri5HxhqY69RGsdeIunIuPWPbcxcb14J2DqtuKIVAuHct9rMPXpuWOJvFnWb2hrrK3pTLQhf9I3SM7GPo7S/UequgiF1i6dTs7ra7A1ntYwO/xScQc1jY=
+ bh=2le8x+RMQjzghYYr9XRaIW8ILaPqXqW4/Ubwyoda9BM=;
+ b=sKeH60d6HPI97D8BmuMtC3z0Pvofgqd0Fg/agGW12lY/QVlxKujFUBooQAr4UI3DDC3eeIL8YslOARKKRYi0GbZPPnPsHV9DecU07z/HTFk6BwfZU0dUDmzeZJpl8m5K3pqlh5Lc5jPhfGm5HIPAkDpxSlOBVzpdUmXRm/8EINo=
 Received: from SN7PR12MB7201.namprd12.prod.outlook.com (2603:10b6:806:2a8::22)
  by PH7PR12MB5711.namprd12.prod.outlook.com (2603:10b6:510:1e2::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.26; Fri, 20 Oct
- 2023 10:35:02 +0000
+ 2023 10:35:46 +0000
 Received: from SN7PR12MB7201.namprd12.prod.outlook.com
  ([fe80::167:7f5a:82a1:e2b9]) by SN7PR12MB7201.namprd12.prod.outlook.com
  ([fe80::167:7f5a:82a1:e2b9%4]) with mapi id 15.20.6907.022; Fri, 20 Oct 2023
- 10:35:01 +0000
+ 10:35:46 +0000
 From:   "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
-To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+To:     "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
@@ -48,19 +49,18 @@ CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
         "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
         "krzysztof.kozlowski+dt@linaro.org" 
         <krzysztof.kozlowski+dt@linaro.org>,
-        "conor+dt@kernel.org" <conor+dt@kernel.org>,
+        "colnor+dt@kernel.org" <colnor+dt@kernel.org>,
         "Simek, Michal" <michal.simek@amd.com>,
         "Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>
-Subject: RE: [PATCH v7 RESEND 0/3] Add support for Xilinx XDMA Soft IP as Root
- Port.
-Thread-Topic: [PATCH v7 RESEND 0/3] Add support for Xilinx XDMA Soft IP as
- Root Port.
-Thread-Index: AQHZ9iAav8GpnnhtikuLDTUsy/E9P7BL+v3AgAaaqrA=
-Date:   Fri, 20 Oct 2023 10:35:01 +0000
-Message-ID: <SN7PR12MB720130851B21EAF714B7A41B8BDBA@SN7PR12MB7201.namprd12.prod.outlook.com>
-References: <20231003173453.938190-1-thippeswamy.havalige@amd.com>
- <SN7PR12MB7201035D9E8F21AB4E2B52038BD7A@SN7PR12MB7201.namprd12.prod.outlook.com>
-In-Reply-To: <SN7PR12MB7201035D9E8F21AB4E2B52038BD7A@SN7PR12MB7201.namprd12.prod.outlook.com>
+Subject: RE: [PATCH v5 RESEND 0/4] increase ecam size value to discover 256
+ buses during
+Thread-Topic: [PATCH v5 RESEND 0/4] increase ecam size value to discover 256
+ buses during
+Thread-Index: AQHZ/+89QXgcS12G7EKSCK4TL1ydHbBSgl0g
+Date:   Fri, 20 Oct 2023 10:35:46 +0000
+Message-ID: <SN7PR12MB7201A57631FB1E0FB60A9BC08BDBA@SN7PR12MB7201.namprd12.prod.outlook.com>
+References: <20231016051102.1180432-1-thippeswamy.havalige@amd.com>
+In-Reply-To: <20231016051102.1180432-1-thippeswamy.havalige@amd.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -69,53 +69,53 @@ authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: SN7PR12MB7201:EE_|PH7PR12MB5711:EE_
-x-ms-office365-filtering-correlation-id: e7848678-1398-431c-959d-08dbd1583725
+x-ms-office365-filtering-correlation-id: 2137cafc-0d2c-4b7e-9e46-08dbd158520d
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fWNNYopC15u65ryg2f3x9GhLh8Z6z/XnOFlI2mNmd5YqlUf5cWXdaCP4+/2ZQGRxUutgRV2tdPvI/cQyTs6yu7MxExloRK5/ROMVI2XXopeozWOVqQK1Zkqdrk6zCrp4LCTkvXYRymk3JFTy2s0LNOg2DpaufyppvwT75JMj/cZsx/bDYSYObGDKFZERMd4v9rG3kmgUGM9G6E4pH+qx2obKTbM2xAkogqL9wknVHuVVRNvMJFPwKF/0U3iUb21PGTNATfIX/nLP/HSh7vtJ6hl/B/5Cy84z2wj2dgTlPJyDLHwHRLyMEL09bhtKFpj8/f4EBi+GU/wmjDZLnOV8QmESGRLRSa/Tf6oe+6BXPG/QdPPpk9ccOvMJMO5Q782rWao4v6ZphjVvZknOQjewgomqjjklST66HEulWQa7XYKwRm0kJpeAxLYM3kfkG/3mETh9Chnou7NJXFmhiuffABHGnqYXIuwyTNb5U2bgByDYK0mWfG3uI3ezhQfVHsbT8zUYEt8kfs2z7iLflKwjiZCHFI2jaSJJPMHijkij9jCxIFPukh21n5RCYkZbeSPuN2yLY2hq8V50ZBTPmM55Oega7DML9qdQZ9ofHDEMiz1rwrU38MFtxSUvgfdvysXV
+x-microsoft-antispam-message-info: gs4iATO2idUPuf24ts6nMSFBWjwIYSx9nqkGvDx9wR/geNv5oYt+HuWX1/VuHv1DzUH5BHCaNGjdW6AkbdS+9FPhzPZSU6BGXVJGSBxv/zXEC5vUmC/GtVv3wzhfocjN/2EJt0Vt3o4qF7uRurXPRZE7d/8ATQuNTFNrf0lKIXfXN92rDTYPQpGNKl9DLMXdjb0giMQHuq+/jz48AeJWJqqk20w4G7elGAwAnA6D2ryGiYcF8QntVp4eRMXoBgTev9QjZC6fz00aSLNdPkIT1eHFoV5rL8KxmEz7KDqxAwgvehb7GM0Lk+RlSpR4UE4sK17r4hACnm5Wc1DkXU1em1hhY0x0JCslMefiXLoI4IP+5OJAc3xuydTC6/B6PtCoGqsDSu+/JO/u+f2Ffogm8Q3vkUt3SwCUbLgiT3Z1CNP58Q5q+kJ/Dxb37JVp3FJCnufvlSP3YnXsX8igfobbKb4nyKfHzpN1lsxjKxwS4ftgqxBmkoHJ0HyQrhABtyWQFU5QuFsWbrWq3YLsHXz+E9KQQgl95+QE/jOAQuMr6WIcQOA4KM8HfMcbrm3VHpyNOMu4cROnGrv9gBw6Ru7PLcdhkHYNg8n+LVvmu7tJjrh1/IXNSqU5hNLq80D623XK
 x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7201.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(346002)(39860400002)(376002)(136003)(230922051799003)(451199024)(186009)(1800799009)(64100799003)(33656002)(41300700001)(7416002)(55016003)(5660300002)(4326008)(8676002)(8936002)(52536014)(2906002)(86362001)(38070700009)(478600001)(9686003)(122000001)(26005)(76116006)(53546011)(83380400001)(6506007)(7696005)(71200400001)(66556008)(66476007)(66946007)(64756008)(66446008)(38100700002)(316002)(54906003)(110136005);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?sqba3u/pSBPGX1cNUDgSpAtft90U0orqHEVhvwQ6Sn0sbhEPhBOyArO2BZfV?=
- =?us-ascii?Q?P0UkmSUd9DKV4A6NEcU+XuvuH5idFzP4UlSDjedtuj4rPGvM43ezSrL3Jlw/?=
- =?us-ascii?Q?NvNlW3o3D5F0CRqIDcYLC0XKPektiPftAplSDdaXcN6rvm9EuVWEbbfCemuM?=
- =?us-ascii?Q?bQY1XOru9RzYmsyDlDdFmy8P2+ggTUkfqN2eyHZU0gx6a05RpwhPFDnbJAxR?=
- =?us-ascii?Q?nGEWBMnnhu4uw4eHSoq3Mh4qfmgY7GiPf2J7ZYcBXzOFwFVBEACG1HoQZg+T?=
- =?us-ascii?Q?F8YIB7uPJGBaCjSzK+ien0AjW7X4Po8+4dKzSTB89H7MBslVwYKNlfzxDGEV?=
- =?us-ascii?Q?OLzsWRQsj8WLzBHQhIiOZbB3tpOvmca7HYsAAf6OMG1SHmhBODt2DEgJrf/n?=
- =?us-ascii?Q?Cvl1u7Bh068oV7NIURVPN+bWtN/K65JzifCd/nHgrUSE2+Ph9wMxDpExvvIq?=
- =?us-ascii?Q?1aHkQMkhw3aR85wdwGMy9Bt2u74WyJwProffbnW4fYXWdKW3M4T1rJcoeykZ?=
- =?us-ascii?Q?U5AkdbpoE/sKE47BW/NamS01J8QwLI78d+zsO6LMCtgV/g4aVnpKj4cAz4MD?=
- =?us-ascii?Q?lNO+ndse+HaeArONrzJ+Kr/8GW9o0aJACTASYdwOe0xzzwMkDmfqdkJCrL8J?=
- =?us-ascii?Q?ovqn82VwKBFu3qtS3nneHESy+Fjj6phnW54S+W9HtvsZev4kaVRX6YdmRvWX?=
- =?us-ascii?Q?bHC0cqc/n5X+3mhLmXgcIwHvRrbpx4pKeL6ey0LU6Ld5SEMW6BHHOlQr/93f?=
- =?us-ascii?Q?nL/gYlqBy4AgT5LFfF47H+A6UwDj7Pbmtp8EfzGy67AiDXzdkTJEJYperFH4?=
- =?us-ascii?Q?kxaTU62n0+vunTwgX4f1JHZYz2N/+BwU7kVvCvw4AeBgbsoNsVfQ4LH4EH67?=
- =?us-ascii?Q?LFFqI3UOp/yM6YqYnsFrIbvvjcRjnakIAV/WkfWzFb2730Xqc0xq3M0OBXfH?=
- =?us-ascii?Q?C0FgBoI1DvYHu1HG11di4ZfwEN6+pRVPJTgkoR5NIJcEFoaefsdYE6phMfbF?=
- =?us-ascii?Q?EWrDTck+ERI9PwtJfsxo6p9hthtZYjXP1K71W7jPnupEhdXkFss3eo3yOHxr?=
- =?us-ascii?Q?aNaJbwd5X7dmgKj+061BZhDvAl6c4GS5NWvFfVL6+4oiNAM6cGhEXAghQqX7?=
- =?us-ascii?Q?zk1SJOVpdVsK5+ioHXJPbQ3ZNVdUN5nZ+qzGrCgJv8R05tdgJ6DQHKHp9ldn?=
- =?us-ascii?Q?foXyfC/eA3cacXjuBWYGofytDHd3WHUzYFIo/J0jIZ9ohKn7jEEzsHh3qW8e?=
- =?us-ascii?Q?SB0BPb3ODIMKm5wXWGEJkMRYs77bDkq3g4F5v5DljN/HeBIt3eOvQ4lnaJKD?=
- =?us-ascii?Q?FJ3OtFex0tkna5WsopGcobf6f1lXUhRc66pzml6DasYAujii+ICwozsPhCJq?=
- =?us-ascii?Q?Jyb1gDN2UI5rGpT33jhYZrgFbs7u4SLV72O8S6z9wySS73qCetMhQXkoZ26/?=
- =?us-ascii?Q?UyqLDo4f2CZMUARSNcJHLpGpquSbv7mkOpUyXs4rRtaC0cBYGLw1INHTI5IN?=
- =?us-ascii?Q?e2onSri9IGKEcGgPOYKj0l0mIikD9sXhR01xD+kyATMU6SLKF5bhSue/LhlN?=
- =?us-ascii?Q?LJ8rc6iyF4LwnjB7HCY=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?TgurxyjkJH1v4YlMrmX13F63Ga9rwdl9owytLjBXbZqXDB5UedhQTXBsqipQ?=
+ =?us-ascii?Q?x7MQScePOWi1FJoLRLUxtQbcMqWlDRv28Uk5lr2U98LOiiNgNH70nq/EY7s0?=
+ =?us-ascii?Q?y/Kw/nDFZRzoPtOs78KlcqnuqJdyGLEsB1laJuNe+OoTB2Qm8R35KMOFMKjM?=
+ =?us-ascii?Q?MBPik+XFhIeYyVBtIKIzK8pSZujCCbjbqwlgIKRpiIog+3QPQeUtiIOVV8Pk?=
+ =?us-ascii?Q?1DqRzEumesuuqBTSLGZ5yfD74APNWFXo4Pg0Fth3rO1BLfFAxeHv2hs9YOlL?=
+ =?us-ascii?Q?5zxKGHPENRFab78BMF01OsfqND3Ln7m3PcOsWOWasqAbGXWgqxred3eavt8g?=
+ =?us-ascii?Q?+ljl60peabg0pMn7pgZFXszb0XZYfShH/CPV7DyB8+nxHiWqBFNBNRhXjB1/?=
+ =?us-ascii?Q?faN6CgdRWKIutbJ/3zri1KXbSCSMiuBIYbEMYA90ok4G/4+0t7RYNMTyB6OA?=
+ =?us-ascii?Q?6Bg/2pxX7Sr58E0THE/S71WCJppI8VMopUFWJC/FMIthjabF45dKunFD754Q?=
+ =?us-ascii?Q?TW21NKjDdADW/B8GhkmSkcWi+XVfW8c9GG5TLV3lyhIuyZDPuk4tKMu5MT7i?=
+ =?us-ascii?Q?ieJR3Ih9ile5JXcWiaKMsbQFow3YBKTd3paC1+9/tX2V21+qXjaq3GoNlVCW?=
+ =?us-ascii?Q?gTlbOfMclhwzJpsD+HsixjgZyYohEuuMUVYyEve9NY3h19rTDgDtDNjNJhBw?=
+ =?us-ascii?Q?+Pj3zFi5maMgNmU8bYIr5PLYnImnXV8IJ4X9kSeeopoW1mpvl/drJQ112flU?=
+ =?us-ascii?Q?8GLf/PA8z87oXfEKbe6YDupf4IO3ho9oekYNBbnvVxxBt7EdVxnJDw+LNxjT?=
+ =?us-ascii?Q?krmUySFbX8I+eqkPzEpRWEbnZnLqrtRmBOCvMVgPaHhW5oiqzSBU9fShYujY?=
+ =?us-ascii?Q?GYG7THU4wgXgnnwZMtHYJREeSeak4uV91hSGb1VIHGEAwQH2yrrqJ77LhPX0?=
+ =?us-ascii?Q?zH4rJEGGYZeRGAAH7i5quT2WatUxdbQZ45HPNxHHUyNKeEAhhBdCk3MLmbIJ?=
+ =?us-ascii?Q?OnFJmrYS0h/ELls4kWtWLOW/OFX/E6Tyc7YF2vOTNfr+Glnq4YzfG/aCvXb5?=
+ =?us-ascii?Q?WiBG9NplEgb1B/nm0htAffIlVV4/lRa6ZSz7Wu3IPXHW+/5PStZR2tfxEfqR?=
+ =?us-ascii?Q?97QTVZDnt+C8gT1DN0LCiEYjKHLN2H4pT8Ms6MYbnecgtsAuU+PS0GANLog8?=
+ =?us-ascii?Q?EFEkolRUdHVbWAi96rz2mCRB+H7TS+Raz8I+TLiJ2qHJLvgQttLxWuUrki24?=
+ =?us-ascii?Q?82ZjlJJ2CWsXJdKs+9h0Cg6qmzV+YdvBpCxW7gUQL7qi6TfpyvVlFS4iq3f6?=
+ =?us-ascii?Q?k8q+QyYvimfw4y2eoUBUz9zPopeyccTVdL4aiMJQSM5V55Kmgh0HmaEBXqr9?=
+ =?us-ascii?Q?e/GAGrR0q7jf3pZ6Pfvkg6fCYrmK0uH1ZR+Add5g+hssCXMhJqe6ssgYMX4n?=
+ =?us-ascii?Q?0g6ohgYaYAoIZcgQGJivu6l0Fl1mPH1sSdjpgfxHod1fUf2HvaxlUzu90d2M?=
+ =?us-ascii?Q?C6bkUs/5CIU+3d09buHa8mkThCa/9Fc5W8T89AxdviAyHc0IpYyCNhl8r6VM?=
+ =?us-ascii?Q?q8DD9xCPgyDgmBSKNJo=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: amd.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7201.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e7848678-1398-431c-959d-08dbd1583725
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Oct 2023 10:35:01.5178
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2137cafc-0d2c-4b7e-9e46-08dbd158520d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Oct 2023 10:35:46.7009
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1CptQol6RbEiUqPNOC02x7jwUbo/usTchu9DE5el99xN7O34u2+a5joKlhoWE6fZV05n2heXIeTA5lgPgbjwGw==
+X-MS-Exchange-CrossTenant-userprincipalname: NEKIA6ZZHm25pB5RWiuidJQZxYg9fEvAEmIYZ4xq7XoFJYsi29aPlkAPwjcb1lhNH8diISyKTMkucKeG/TCn9A==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5711
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
@@ -129,73 +129,46 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Bjorn,
 
-Please can you provide an update on this patch series.
+Can you please provide an update on this patch series.
 
 Regards,
 Thippeswamy H
 
 > -----Original Message-----
-> From: Havalige, Thippeswamy <thippeswamy.havalige@amd.com>
-> Sent: Monday, October 16, 2023 11:14 AM
-> To: Havalige, Thippeswamy <thippeswamy.havalige@amd.com>; linux-
-> pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> From: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> Sent: Monday, October 16, 2023 10:41 AM
+> To: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
 > kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org
 > Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
-> robh@kernel.org; krzysztof.kozlowski+dt@linaro.org; conor+dt@kernel.org;
-> Simek, Michal <michal.simek@amd.com>; Gogada, Bharat Kumar
+> robh@kernel.org; krzysztof.kozlowski+dt@linaro.org; colnor+dt@kernel.org;
+> Havalige, Thippeswamy <thippeswamy.havalige@amd.com>; Simek, Michal
+> <michal.simek@amd.com>; Gogada, Bharat Kumar
 > <bharat.kumar.gogada@amd.com>
-> Subject: RE: [PATCH v7 RESEND 0/3] Add support for Xilinx XDMA Soft IP as
-> Root Port.
+> Subject: [PATCH v5 RESEND 0/4] increase ecam size value to discover 256
+> buses during
 >=20
-> Hi Bjorn/Lorenzo/ Krzysztof
+> Current driver is supports up to 16 buses. The following code fixes to su=
+pport
+> up to 256 buses.
 >=20
-> Can you please provide update on this series.
+> update "NWL_ECAM_VALUE_DEFAULT " to 16  can access up to 256MB ECAM
+> region to detect 256 buses.
 >=20
-> Regards,
-> Thippeswamy H
+> Update ecam size to 256MB in device tree binding example.
 >=20
-> > -----Original Message-----
-> > From: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-> > Sent: Tuesday, October 3, 2023 11:05 PM
-> > To: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org
-> > Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
-> > robh@kernel.org; krzysztof.kozlowski+dt@linaro.org;
-> > conor+dt@kernel.org; Havalige, Thippeswamy
-> > <thippeswamy.havalige@amd.com>; Simek, Michal
-> <michal.simek@amd.com>;
-> > Gogada, Bharat Kumar <bharat.kumar.gogada@amd.com>
-> > Subject: [PATCH v7 RESEND 0/3] Add support for Xilinx XDMA Soft IP as
-> > Root Port.
-> >
-> > This series of patch add support for Xilinx XDMA Soft IP as Root Port.
-> >
-> > The Xilinx XDMA Soft IP support's 32 bit and 64bit BAR's.
-> > As Root Port it supports MSI and legacy interrupts.
-> >
-> > For code reusability existing CPM4 error interrupt bits are moved to
-> > common header.
-> >
-> > Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-> > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>
-> > ---
-> > Thippeswamy Havalige (3):
-> >   PCI: xilinx-cpm: Move interrupt bit definitions to common header
-> >   dt-bindings: PCI: xilinx-xdma: Add YAML schemas for Xilinx XDMA PCIe
-> >     Root Port Bridge
-> >   PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver
-> >
-> >  .../bindings/pci/xlnx,xdma-host.yaml          | 114 +++
-> >  drivers/pci/controller/Kconfig                |  11 +
-> >  drivers/pci/controller/Makefile               |   1 +
-> >  drivers/pci/controller/pcie-xilinx-common.h   |  31 +
-> >  drivers/pci/controller/pcie-xilinx-cpm.c      |  38 +-
-> >  drivers/pci/controller/pcie-xilinx-dma-pl.c   | 803 ++++++++++++++++++
-> >  6 files changed, 967 insertions(+), 31 deletions(-)  create mode
-> > 100644 Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
-> >  create mode 100644 drivers/pci/controller/pcie-xilinx-common.h
-> >  create mode 100644 drivers/pci/controller/pcie-xilinx-dma-pl.c
-> >
-> > --
-> > 2.25.1
+> Remove unwanted code.
+>=20
+> Thippeswamy Havalige (4):
+>   PCI: xilinx-nwl: Remove unnecessary code which updates primary,
+>     secondary and sub-ordinate bus numbers
+>   dt-bindings: PCI: xilinx-nwl: Modify ECAM size in example
+>   PCI: xilinx-nwl: Rename ECAM size default macro
+>   PCI: xilinx-nwl: Increase ECAM size to accommodate 256 buses
+>=20
+>  .../devicetree/bindings/pci/xlnx,nwl-pcie.yaml |  2 +-
+>  drivers/pci/controller/pcie-xilinx-nwl.c       | 18 +++---------------
+>  2 files changed, 4 insertions(+), 16 deletions(-)
+>=20
+> --
+> 2.25.1
 
