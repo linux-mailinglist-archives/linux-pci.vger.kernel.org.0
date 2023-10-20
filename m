@@ -2,154 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 799EC7D0E15
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Oct 2023 13:04:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A70F7D0E10
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Oct 2023 13:04:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377099AbjJTLEM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Oct 2023 07:04:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40930 "EHLO
+        id S1376932AbjJTLEK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Oct 2023 07:04:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376745AbjJTLEL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Oct 2023 07:04:11 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16A3C112
-        for <linux-pci@vger.kernel.org>; Fri, 20 Oct 2023 04:04:10 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-32dc918d454so476289f8f.2
-        for <linux-pci@vger.kernel.org>; Fri, 20 Oct 2023 04:04:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697799848; x=1698404648; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sN3sjFfzHqesOB5SHANZC6LXIF9auqa0w7LdJW2M1Xw=;
-        b=WjTBYK0++5k9UedKR/Oef3ToYBCoCD1v2cxuCpidyPQQM5z0xtJeIJq1wVyJUnDT0i
-         Kt1MZ3EXx8HYQYY1ifMyXS5T39DsD+zHr8SZJtN3Bc+H8ccAd8T0scaB1mKjH1f9jT+/
-         XfjNQCDELDjTg1rW5RUkdvjnbKJNtI2pmEV+UZ2vG2wvqF1slPUbs6lMJwpOwdSRcGfu
-         8PM94m9beieHRQjflBjDHGTf63/LqaiNQeCEiLWf6ge5x5YKtW5nkntVP4WCQ53ePH8R
-         9UX0C9ZszLGqSelCdm7RqNA8GRihgjGfvisVnWMLEMCUjNHeWE1g4+AhntFkgPlsGone
-         aw5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697799848; x=1698404648;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sN3sjFfzHqesOB5SHANZC6LXIF9auqa0w7LdJW2M1Xw=;
-        b=A12aKdlYmBpzsplA6G91pKLdUaHsJ7c1zFeRQMws7qGFMFd94s/GsNDGqtXTSjqbd7
-         r0JhefsDJfdAQHFH96u4ionC12JHJ8r37QKzi1ZsNOqyteXJEP0VRsd8ebWIB/tXhqwy
-         B0wo5L79zKY08SctuSLKaXmibCHvDjS129RzI/WT+0P+ghWZPyfpjanOgVduivXOdV8s
-         g9g8GPEH9NIP5cL6/N3gHr5UA0zqjU5X61WlNU+nR60gfsAysk+sGdHMoLoFPpGV519F
-         zSknxm9IuZBqBQ/p6Vd3TF602xwVIQWJWP2z0oRTfzUO1yoL8Vl54AIIv4C6QOp0ujrV
-         iwrw==
-X-Gm-Message-State: AOJu0Ywp5DG6LO6023jE46nMee8bNIZdBmAXj5A/u21r9b/zYD6CKKuV
-        5Vr1PmI53H4OPH5BRu2gDfgXng==
-X-Google-Smtp-Source: AGHT+IH+Zr8JmAeDS/JPN/46ytmfgsM9SpIQFdeujrQKUGDMULQkgsxQxOl7BH43B+rnMmsxvxOGJQ==
-X-Received: by 2002:a5d:4692:0:b0:32d:9395:dec6 with SMTP id u18-20020a5d4692000000b0032d9395dec6mr1111771wrq.67.1697799848393;
-        Fri, 20 Oct 2023 04:04:08 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.218.126])
-        by smtp.gmail.com with ESMTPSA id v3-20020adff683000000b0032d9523de65sm1437072wrp.48.2023.10.20.04.04.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        with ESMTP id S1376745AbjJTLEJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Oct 2023 07:04:09 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7A1ECA;
         Fri, 20 Oct 2023 04:04:07 -0700 (PDT)
-Message-ID: <8ced1915-7b94-4abc-bd8b-cb4bf027fa01@linaro.org>
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1qtnIU-0003KO-3g; Fri, 20 Oct 2023 13:04:06 +0200
+Message-ID: <c9a99e29-1a16-4b46-8e3a-afd0aae5b76e@leemhuis.info>
 Date:   Fri, 20 Oct 2023 13:04:05 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 01/20] dt-bindings: PCI: Add PLDA XpressRICH PCIe host
- common properties
-Content-Language: en-US
-To:     Minda Chen <minda.chen@starfivetech.com>,
-        Conor Dooley <conor@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        Kevin Xie <kevin.xie@starfivetech.com>
-References: <20231020104341.63157-1-minda.chen@starfivetech.com>
- <20231020104341.63157-2-minda.chen@starfivetech.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231020104341.63157-2-minda.chen@starfivetech.com>
+Subject: Re: [PATCH v2] pci: loongson: Workaround MIPS firmware MRRS settings
+Content-Language: en-US, de-DE
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     Huacai Chen <chenhuacai@kernel.org>, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org, kw@linux.com,
+        lpieralisi@kernel.org, stable@vger.kernel.org,
+        Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20230725061008.1504292-1-jiaxun.yang@flygoat.com>
+ <e9c103dc-98ac-9a51-7291-f5da1467b2ff@flygoat.com>
+ <CAAhV-H7_OjTaU_wn6mUW0-JSrXS+=A2rXCiBc8cyce5ob49BLg@mail.gmail.com>
+ <861a809d-3df1-327e-e033-87506f6d89e5@flygoat.com>
+ <20230907011828.GA2865@thinkpad>
+ <6e1bdebf-f335-23a5-c79f-d603c5d0150c@flygoat.com>
+ <20230907050805.GA3218@thinkpad>
+ <91336c97-0831-3ce3-5ff0-54344f18e065@leemhuis.info>
+In-Reply-To: <91336c97-0831-3ce3-5ff0-54344f18e065@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1697799847;c25b5c96;
+X-HE-SMSGID: 1qtnIU-0003KO-3g
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 20/10/2023 12:43, Minda Chen wrote:
-> Add PLDA XpressRICH PCIe host common properties dt-binding doc.
-> Microchip PolarFire PCIe host using PLDA IP.
-> Move common properties from Microchip PolarFire PCIe host
-> to PLDA files.
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
+
+Just wondering what's up here. The patch this thread is about afaics was
+supposed to fix a regression reported in July
+(https://bugzilla.kernel.org/show_bug.cgi?id=217680 ), but has made not
+steps closer to get mainlined during the past few weeks. Is there a
+reason, or did it maybe fell through the cracks?
+
+Jiaxun Yang, from it quick look it seems like you wanted to post a v3,
+but never did so; but I might be mistaken there.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+On 20.09.23 14:33, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [CCing the regression list, as it should be in the loop for regressions:
+> https://docs.kernel.org/admin-guide/reporting-regressions.html]
 > 
-> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-> Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../bindings/pci/microchip,pcie-host.yaml     | 55 +-------------
->  .../pci/plda,xpressrich3-axi-common.yaml      | 75 +++++++++++++++++++
-
-Where was this patch reviewed?
-
-Best regards,
-Krzysztof
-
+> On 07.09.23 07:08, Manivannan Sadhasivam wrote:
+>> On Thu, Sep 07, 2023 at 11:13:00AM +0800, Jiaxun Yang wrote:
+>>> 在 2023/9/7 9:18, Manivannan Sadhasivam 写道:
+>>> [...]
+>>>> Why do you need to walk through every single device instead of just bridges?
+>>>> I'm not the maintainer, but my suggestion is to go for Huacai Chen's solution.
+>>>
+>>> Thanks for your reply, unfortunately Huacai's solution is impractical in
+>>> this case.
+>>>
+>>> The problem we have, is firmware (or BIOS) setting improper MRRS for devices
+>>> attached under those bridges. So we have to fix up MRRS for every single
+>>> device.
+>>> We can't iterate child device in bridge quirk because there is no guarantee
+>>> that
+>>> bridge will be probed before  it's child device, partly due to hotplug.
+>>
+>> Okay, this clarifies and also warrants improvement in commit message.
+>>
+>> You could also use pci_walk_bus() after pci_host_probe() to iterate over the
+>> child devices under root bridge and set MRRS. IMO that would look neat.
+> 
+> Hi, Thorsten here, the Linux kernel's regression tracker. What's the
+> status here? The regression that was supposed to be fixed by the patched
+> that started this thread was reported 9 weeks ago[1] and the culprit
+> made it to many stable kernels as well. Would be really good to finally
+> fix this, as a regression like this should ideally be fixed within 2 to
+> 3 weeks (in both mainline and stable). With a revert if necessary -- is
+> this maybe still a option, or would that cause more trouble then it
+> solved (I guess that's the case).
+> 
+> [1] https://bugzilla.kernel.org/show_bug.cgi?id=217680
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+>>> This quirk has been in tree for a while, until Huacai refactored it and
+>>> broke some
+>>> systems in 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases").
+>>>
+>>> Also to note that ks_pcie_quirk in drivers/pci/controller/dwc/pci-keystone.c
+>>> uses similar approach.
+>>>> This avoids iterating over bridges/devices two times.
+>>>>
+>>>> Also, please rename firmware to BIOS, as firmware commonly represents the
+>>>> software running on PCIe endpoint devices.
+>>> Ack, will fix in next reversion.
+>>>
+>>> Thanks
+>>> - Jiaxun
+>>>>
+>>>> - Mani
+>>> [...]
+>>
