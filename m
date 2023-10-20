@@ -2,248 +2,442 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 709E17D145E
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Oct 2023 18:49:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7FF17D1499
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Oct 2023 19:12:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229522AbjJTQtr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Oct 2023 12:49:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39870 "EHLO
+        id S1377702AbjJTRMa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Oct 2023 13:12:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229843AbjJTQtr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Oct 2023 12:49:47 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AABEB197;
-        Fri, 20 Oct 2023 09:49:44 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SBr7n3bsHz6J9dR;
-        Sat, 21 Oct 2023 00:46:13 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 20 Oct
- 2023 17:49:41 +0100
-Date:   Fri, 20 Oct 2023 17:49:40 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-CC:     <chengyou@linux.alibaba.com>, <kaishen@linux.alibaba.com>,
-        <helgaas@kernel.org>, <yangyicong@huawei.com>, <will@kernel.org>,
-        <baolin.wang@linux.alibaba.com>, <robin.murphy@arm.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <rdunlap@infradead.org>,
-        <mark.rutland@arm.com>, <zhuo.song@linux.alibaba.com>,
-        <renyu.zj@linux.alibaba.com>
-Subject: Re: [PATCH v9 3/4] drivers/perf: add DesignWare PCIe PMU driver
-Message-ID: <20231020174940.0000429e@Huawei.com>
-In-Reply-To: <20231020134230.53342-4-xueshuai@linux.alibaba.com>
-References: <20231020134230.53342-1-xueshuai@linux.alibaba.com>
-        <20231020134230.53342-4-xueshuai@linux.alibaba.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S1377718AbjJTRMa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Oct 2023 13:12:30 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F1C0A3;
+        Fri, 20 Oct 2023 10:12:27 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D000EC433C8;
+        Fri, 20 Oct 2023 17:12:20 +0000 (UTC)
+Date:   Fri, 20 Oct 2023 22:42:15 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Frank Li <Frank.li@nxp.com>
+Cc:     Manivannan Sadhasivam <mani@kernel.org>, aisheng.dong@nxp.com,
+        bhelgaas@google.com, devicetree@vger.kernel.org,
+        festevam@gmail.com, imx@lists.linux.dev, jdmason@kudzu.us,
+        kernel@pengutronix.de, kishon@kernel.org, kw@linux.com,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, lpieralisi@kernel.org, maz@kernel.org,
+        s.hauer@pengutronix.de, shawnguo@kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH v2 1/5] PCI: endpoint: Add RC-to-EP doorbell support
+ using platform MSI controllery
+Message-ID: <20231020171215.GA46191@thinkpad>
+References: <20230911220920.1817033-1-Frank.Li@nxp.com>
+ <20230911220920.1817033-2-Frank.Li@nxp.com>
+ <20231017183722.GB137137@thinkpad>
+ <ZS7YvWSlkQluPtg3@lizhi-Precision-Tower-5810>
+ <20231019150441.GA7254@thinkpad>
+ <ZTFSlpnF41BDzyiX@lizhi-Precision-Tower-5810>
+ <20231019172347.GC7254@thinkpad>
+ <ZTFxSnpqfHtVR1JJ@lizhi-Precision-Tower-5810>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZTFxSnpqfHtVR1JJ@lizhi-Precision-Tower-5810>
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 20 Oct 2023 21:42:29 +0800
-Shuai Xue <xueshuai@linux.alibaba.com> wrote:
-
-> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
-> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
-> Core controller IP which provides statistics feature. The PMU is a PCIe
-> configuration space register block provided by each PCIe Root Port in a
-> Vendor-Specific Extended Capability named RAS D.E.S (Debug, Error
-> injection, and Statistics).
+On Thu, Oct 19, 2023 at 02:11:22PM -0400, Frank Li wrote:
+> On Thu, Oct 19, 2023 at 10:53:47PM +0530, Manivannan Sadhasivam wrote:
+> > On Thu, Oct 19, 2023 at 12:00:22PM -0400, Frank Li wrote:
+> > > On Thu, Oct 19, 2023 at 08:34:41PM +0530, Manivannan Sadhasivam wrote:
+> > > > On Tue, Oct 17, 2023 at 02:55:57PM -0400, Frank Li wrote:
+> > > > > On Wed, Oct 18, 2023 at 12:07:22AM +0530, Manivannan Sadhasivam wrote:
+> > > > > > On Mon, Sep 11, 2023 at 06:09:16PM -0400, Frank Li wrote:
+> > > > > > > This commit introduces a common method for sending messages from the Root
+> > > > > > > Complex (RC) to the Endpoint (EP) by utilizing the platform MSI interrupt
+> > > > > > > controller, such as ARM GIC, as an EP doorbell. Maps the memory assigned
+> > > > > > > for the BAR region by the PCI host to the message address of the platform
+> > > > > > > MSI interrupt controller in the PCI EP. As a result, when the PCI RC writes
+> > > > > > 
+> > > > > > "Doorbell feature is implemented by mapping the EP's MSI interrupt controller
+> > > > > > message address to a dedicated BAR in the EPC core. It is the responsibility
+> > > > > > of the EPF driver to pass the actual message data to be written by the host to
+> > > > > > the doorbell BAR region through its own logic."
+> > > > > > 
+> > > > > > > to the BAR region, it triggers an IRQ at the EP. This implementation serves
+> > > > > > > as a common method for all endpoint function drivers.
+> > > > > > > 
+> > > > > > > However, it currently supports only one EP physical function due to
+> > > > > > > limitations in ARM MSI/IMS readiness.
+> > > > > > > 
+> > > > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > > > > > ---
+> > > > > > >  drivers/pci/endpoint/pci-epc-core.c | 192 ++++++++++++++++++++++++++++
+> > > > > > >  drivers/pci/endpoint/pci-epf-core.c |  44 +++++++
+> > > > > > >  include/linux/pci-epc.h             |   6 +
+> > > > > > >  include/linux/pci-epf.h             |   7 +
+> > > > > > >  4 files changed, 249 insertions(+)
+> > > > > > > 
+> > > > > > > diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> > > > > > > index 5a4a8b0be6262..d336a99c6a94f 100644
+> > > > > > > --- a/drivers/pci/endpoint/pci-epc-core.c
+> > > > > > > +++ b/drivers/pci/endpoint/pci-epc-core.c
+> > > > > > > @@ -10,6 +10,7 @@
+> > > > > > >  #include <linux/slab.h>
+> > > > > > >  #include <linux/module.h>
+> > > > > > >  
+> > > > > > > +#include <linux/msi.h>
+> > > > > > >  #include <linux/pci-epc.h>
+> > > > > > >  #include <linux/pci-epf.h>
+> > > > > > >  #include <linux/pci-ep-cfs.h>
+> > > > > > > @@ -783,6 +784,197 @@ void pci_epc_bme_notify(struct pci_epc *epc)
+> > > > > > >  }
+> > > > > > >  EXPORT_SYMBOL_GPL(pci_epc_bme_notify);
+> > > > > > >  
+> > > > > > > +/**
+> > > > > > > + * pci_epc_alloc_doorbell() - alloc an address space to let RC trigger EP side IRQ by write data to
+> > > > > > > + *			      the space.
+> > > > > > 
+> > > > > > "Allocate platform specific doorbell IRQs to be used by the host to trigger
+> > > > > > doorbells on EP."
+> > > > > > 
+> > > > > > > + *
+> > > > > > > + * @epc: the EPC device that need doorbell address and data from RC.
+> > > > > > 
+> > > > > > EPC device for which the doorbell needs to be allocated
+> > > > > > 
+> > > > > > > + * @func_no: the physical endpoint function number in the EPC device.
+> > > > > > > + * @vfunc_no: the virtual endpoint function number in the physical function.
+> > > > > > > + * @num_msgs: the total number of doorbell messages
+> > > > > > 
+> > > > > > s/num_msgs/num_db
+> > > > > > 
+> > > > > > > + *
+> > > > > > > + * Return: 0 success, other is failure
+> > > > > > > + */
+> > > > > > > +int pci_epc_alloc_doorbell(struct pci_epc *epc, u8 func_no, u8 vfunc_no, int num_msgs)
+> > > > > > > +{
+> > > > > > > +	int ret;
+> > > > > > > +
+> > > > > > > +	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
+> > > > > > > +		return -EINVAL;
+> > > > > > > +
+> > > > > > > +	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
+> > > > > > > +		return -EINVAL;
+> > > > > > > +
+> > > > > > > +	if (!epc->ops->alloc_doorbell)
+> > > > > > > +		return 0;
+> > > > > > 
+> > > > > > You mentioned 0 is a success. So if there is no callback, you want to return
+> > > > > > success?
+> > > > > > 
+> > > > > > > +
+> > > > > > > +	mutex_lock(&epc->lock);
+> > > > > > > +	ret = epc->ops->alloc_doorbell(epc, func_no, vfunc_no, num_msgs);
+> > > > > > 
+> > > > > > Why can't you just call the generic function here and in other places instead of
+> > > > > > implementing callbacks? I do not see a necessity for EPC specific callbacks. If
+> > > > > > there is one, please specify.
+> > > > > 
+> > > > > 1. Refer v1 your comments.
+> > > > > https://lore.kernel.org/imx/20230906145227.GC5930@thinkpad/
+> > > > 
+> > > > I do not find where I suggested the callback approach.
+> > > 
+> > > 	> > > If that, Each EPF driver need do duplicate work. 
+> > > 	> > > 
+> > > 	> > 
+> > > 	> > Yes, and that's how it should be. EPF core has no job in supplying the of_node.
+> > > 	> > It is the responsibility of the EPF drivers as they depend on OF for platform
+> > > 	> > support.
+> > > 	> 
+> > > 	> EPF driver still not depend on OF. such pci-epf-test, which was probed by
+> > > 	> configfs.
+> > > 	> 
+> > > 
+> > > 	Hmm, yeah. Then it should be part of the EPC driver.
+> > > 
+> > > 	Sorry for the confusion.
+> > > 
+> > > Here, all "EPF" should be "EPC". The key problem is of_node. EPC core have
+> > > not of_node, EPC core's parent driver (like dwc-ep driver) have of_node. 
+> > > 
+> > > pci_epc_generic_alloc_doorbell(dev), dev is probed by platform driver, such
+> > > as dwc-ep, which have of_node,  EPC core will create child device.
+> > > 
+> > > dwc-ep device
+> > >  |- epc core device
+> > > 
+> > > we can direct call pci_epc_generic_alloc_doorbell(epc->parent) here.
+> > > 
+> > > I may miss understand what your means. I think you want to dwc-ep
+> > > (with of_node) handle these alloc functions. 
+> > > 
+> > 
+> > My comment was to have just one function definition. But looking at it again, I
+> > think it is better to move all the (alloc, free, write_msg) definitions to
+> > dwc-ep, since the contents of those functions are not EPC core specific.
 > 
-> To facilitate collection of statistics the controller provides the
-> following two features for each Root Port:
+> There are still problem. (alloc, free, write_msg) is quite common for all
+> controller and the system with MSI.
 > 
-> - one 64-bit counter for Time Based Analysis (RX/TX data throughput and
->   time spent in each low-power LTSSM state) and
-> - one 32-bit counter for Event Counting (error and non-error events for
->   a specified lane)
+> If move these into dwc-ep,  cdns or other controller have to duplicate 
+> these codes.
 > 
-> Note: There is no interrupt for counter overflow.
+> If you think it is not EPC core specific, how about create new help files?
 > 
-> This driver adds PMU devices for each PCIe Root Port. And the PMU device is
-> named based the BDF of Root Port. For example,
+
+Hmm, that sounds good to me. I think the best place would be:
+drivers/pci/endpoint/pci-ep-msi.c
+
+Reason is, we cannot have this generic code under drivers/pci/controller/ as it
+is not a standalone PCI controller but a platform MSI controller. So having it
+under pci/endpoint/ makes much sense to me.
+
+And this is not specific to EPF drivers as well, so we cannot have it under
+pci/endpoint/functions/.
+
+- Mani
+
+> Frank
 > 
->     30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
-> 
-> the PMU device name for this Root Port is dwc_rootport_3018.
-> 
-> Example usage of counting PCIe RX TLP data payload (Units of bytes)::
-> 
->     $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
-> 
-> average RX bandwidth can be calculated like this:
-> 
->     PCIe TX Bandwidth = Rx_PCIe_TLP_Data_Payload / Measure_Time_Window
-> 
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-LGTM other than some really trivial stuff inline if you are doing a v10
+> > 
+> > In the EPC core, you can still have the callbacks specific to each EPC. This
+> > also solves your of_node problem.
+> > 
+> > - Mani
+> > 
+> > > > 
+> > > > > 2. Maybe some ep controller have built-in doorbell support. Write to some
+> > > > > address to trigger doorbell irq.
+> > > > > 
+> > > > 
+> > > > We will handle it whenever such EP controllers arrive. Until then, let's keep it
+> > > > simple.
+> > > > 
+> > > > - Mani
+> > > > 
+> > > > > Frank
+> > > > > 
+> > > > > > 
+> > > > > > > +	mutex_unlock(&epc->lock);
+> > > > > > > +
+> > > > > > > +	return ret;
+> > > > > > > +}
+> > > > > > > +EXPORT_SYMBOL_GPL(pci_epc_alloc_doorbell);
+> > > > > > > +
+> > > > > > > +/**
+> > > > > > > + * pci_epc_free_doorbell() - free resource allocated by pci_epc_alloc_doorbell()
+> > > > > > > + *
+> > > > > > > + * @epc: the EPC device that need doorbell address and data from RC.
+> > > > > > 
+> > > > > > Same as above.
+> > > > > > 
+> > > > > > > + * @func_no: the physical endpoint function number in the EPC device.
+> > > > > > > + * @vfunc_no: the virtual endpoint function number in the physical function.
+> > > > > > > + *
+> > > > > > > + * Return: 0 success, other is failure
+> > > > > > > + */
+> > > > > > > +void pci_epc_free_doorbell(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
+> > > > > > > +{
+> > > > > > > +	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
+> > > > > > > +		return;
+> > > > > > > +
+> > > > > > > +	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
+> > > > > > > +		return;
+> > > > > > > +
+> > > > > > > +	if (!epc->ops->free_doorbell)
+> > > > > > > +		return;
+> > > > > > > +
+> > > > > > > +	mutex_lock(&epc->lock);
+> > > > > > > +	epc->ops->free_doorbell(epc, func_no, vfunc_no);
+> > > > > > 
+> > > > > > Same as suggested above.
+> > > > > > 
+> > > > > > > +	mutex_unlock(&epc->lock);
+> > > > > > > +}
+> > > > > > > +EXPORT_SYMBOL_GPL(pci_epc_free_doorbell);
+> > > > > > > +
+> > > > > > > +static irqreturn_t pci_epf_generic_doorbell_handler(int irq, void *data)
+> > > > > > > +{
+> > > > > > > +	struct pci_epf *epf = data;
+> > > > > > > +
+> > > > > > > +	if (epf->event_ops && epf->event_ops->doorbell)
+> > > > > > > +		epf->event_ops->doorbell(epf, irq - epf->virq_base);
+> > > > > > 
+> > > > > > Same as suggested above.
+> > > > > > 
+> > > > > > > +
+> > > > > > > +	return IRQ_HANDLED;
+> > > > > > > +}
+> > > > > > > +
+> > > > > > > +static void pci_epc_generic_write_msi_msg(struct msi_desc *desc, struct msi_msg *msg)
+> > > > > > > +{
+> > > > > > > +	struct pci_epc *epc = NULL;
+> > > > > > > +	struct class_dev_iter iter;
+> > > > > > > +	struct pci_epf *epf;
+> > > > > > > +	struct device *dev;
+> > > > > > > +
+> > > > > > > +	class_dev_iter_init(&iter, pci_epc_class, NULL, NULL);
+> > > > > > > +	while ((dev = class_dev_iter_next(&iter))) {
+> > > > > > > +		if (dev->parent != desc->dev)
+> > > > > > > +			continue;
+> > > > > > > +
+> > > > > > > +		epc = to_pci_epc(dev);
+> > > > > > > +
+> > > > > > > +		class_dev_iter_exit(&iter);
+> > > > > > > +		break;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	if (!epc)
+> > > > > > > +		return;
+> > > > > > > +
+> > > > > > > +	/* Only support one EPF for doorbell */
+> > > > > > > +	epf = list_first_entry_or_null(&epc->pci_epf, struct pci_epf, list);
+> > > > > > > +
+> > > > > > 
+> > > > > > No need of this newline
+> > > > > > 
+> > > > > > > +	if (!epf)
+> > > > > > > +		return;
+> > > > > > > +
+> > > > > > > +	if (epf->msg && desc->msi_index < epf->num_msgs)
+> > > > > > > +		epf->msg[desc->msi_index] = *msg;
+> > > > > > > +}
+> > > > > > > +
+> > > > > > > +
+> > > > > > 
+> > > > > > Remove extra newline
+> > > > > > 
+> > > > > > > +/**
+> > > > > > > + * pci_epc_generic_alloc_doorbell() - Common help function. Allocate address space from MSI
+> > > > > > > + *                                    controller
+> > > > > > > + *
+> > > > > > > + * @epc: the EPC device that need doorbell address and data from RC.
+> > > > > > > + * @func_no: the physical endpoint function number in the EPC device.
+> > > > > > > + * @vfunc_no: the virtual endpoint function number in the physical function.
+> > > > > > > + * @num_msgs: the total number of doorbell messages
+> > > > > > > + *
+> > > > > > 
+> > > > > > Same comment as for pci_epc_alloc_doorbell()
+> > > > > > 
+> > > > > > > + * Remark: use this function only if EPC driver just register one EPC device.
+> > > > > > > + *
+> > > > > > > + * Return: 0 success, other is failure
+> > > > > > > + */
+> > > > > > > +int pci_epc_generic_alloc_doorbell(struct pci_epc *epc, u8 func_no, u8 vfunc_no, int num_msgs)
+> > > > > > > +{
+> > > > > > > +	struct pci_epf *epf;
+> > > > > > > +	struct device *dev;
+> > > > > > > +	int virq, last;
+> > > > > > > +	int ret;
+> > > > > > > +	int i;
+> > > > > > > +
+> > > > > > > +	if (IS_ERR_OR_NULL(epc))
+> > > > > > > +		return -EINVAL;
+> > > > > > > +
+> > > > > > > +	/* Currently only support one func and one vfunc for doorbell */
+> > > > > > > +	if (func_no || vfunc_no)
+> > > > > > > +		return -EINVAL;
+> > > > > > > +
+> > > > > > > +	epf = list_first_entry_or_null(&epc->pci_epf, struct pci_epf, list);
+> > > > > > > +	if (!epf)
+> > > > > > > +		return -EINVAL;
+> > > > > > > +
+> > > > > > > +	dev = epc->dev.parent;
+> > > > > > > +	ret = platform_msi_domain_alloc_irqs(dev, num_msgs, pci_epc_generic_write_msi_msg);
+> > > > > > > +	if (ret) {
+> > > > > > > +		dev_err(dev, "Failed to allocate MSI\n");
+> > > > > > > +		return -ENOMEM;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	last = -1;
+> > > > > > > +	for (i = 0; i < num_msgs; i++) {
+> > > > > > 
+> > > > > > You should iterate over msi_desc as below:
+> > > > > > 
+> > > > > >         msi_lock_descs(dev);
+> > > > > >         msi_for_each_desc(desc, dev, MSI_DESC_ALL) {
+> > > > > > 		...
+> > > > > > 	}
+> > > > > > 	msi_unlock_descs(dev);
+> > > > > > 
+> > > > > > > +		virq = msi_get_virq(dev, i);
+> > > > > > > +		if (i == 0)
+> > > > > > > +			epf->virq_base = virq;
+> > > > > > > +
+> > > > > > > +		ret = request_irq(virq, pci_epf_generic_doorbell_handler, 0,
+> > > > > > 
+> > > > > > 	request_irq(desc->irq, ...)
+> > > > > > 
+> > > > > > > +				  kasprintf(GFP_KERNEL, "pci-epc-doorbell%d", i), epf);
+> > > > > > > +
+> > > > > > > +		if (ret) {
+> > > > > > > +			dev_err(dev, "Failed to request doorbell\n");
+> > > > > > > +			goto err_free_irq;
+> > > > > > > +		}
+> > > > > > > +		last = i;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	return 0;
+> > > > > > > +
+> > > > > > > +err_free_irq:
+> > > > > > > +	for (i = 0; i < last; i++)
+> > > > > > > +		kfree(free_irq(epf->virq_base + i, epf));
+> > > > > > > +	platform_msi_domain_free_irqs(dev);
+> > > > > > > +
+> > > > > > > +	return -EINVAL;
+> > > > > > 
+> > > > > > 	return ret;
+> > > > > > 
+> > > > > > > +}
+> > > > > > > +EXPORT_SYMBOL_GPL(pci_epc_generic_alloc_doorbell);
+> > > > > > > +
+> > > > > > 
+> > > > > > [...]
+> > > > > > 
+> > > > > > > diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+> > > > > > > index 3f44b6aec4770..485c146a5efe2 100644
+> > > > > > > --- a/include/linux/pci-epf.h
+> > > > > > > +++ b/include/linux/pci-epf.h
+> > > > > > > @@ -79,6 +79,7 @@ struct pci_epc_event_ops {
+> > > > > > >  	int (*link_up)(struct pci_epf *epf);
+> > > > > > >  	int (*link_down)(struct pci_epf *epf);
+> > > > > > >  	int (*bme)(struct pci_epf *epf);
+> > > > > > > +	int (*doorbell)(struct pci_epf *epf, int index);
+> > > > > > 
+> > > > > > kdoc missing.
+> > > > > > 
+> > > > > > >  };
+> > > > > > >  
+> > > > > > >  /**
+> > > > > > > @@ -180,6 +181,9 @@ struct pci_epf {
+> > > > > > >  	unsigned long		vfunction_num_map;
+> > > > > > >  	struct list_head	pci_vepf;
+> > > > > > >  	const struct pci_epc_event_ops *event_ops;
+> > > > > > > +	struct msi_msg *msg;
+> > > > > > > +	u16 num_msgs;
+> > > > > > 
+> > > > > > num_db
+> > > > > > 
+> > > > > > You also need to add kdoc for each new member.
+> > > > > > 
+> > > > > > - Mani
+> > > > > > 
+> > > > > > -- 
+> > > > > > மணிவண்ணன் சதாசிவம்
+> > > > 
+> > > > -- 
+> > > > மணிவண்ணன் சதாசிவம்
+> > 
+> > -- 
+> > மணிவண்ணன் சதாசிவம்
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-
-> +static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
-> +{
-> +	struct pci_dev *pdev = NULL;
-> +	struct dwc_pcie_pmu *pcie_pmu;
-> +	bool notify = false;
-> +	char *name;
-> +	u32 bdf;
-> +	int ret;
-> +
-> +	/* Match the rootport with VSEC_RAS_DES_ID, and register a PMU for it */
-> +	for_each_pci_dev(pdev) {
-> +		u16 vsec;
-> +		u32 val;
-> +
-> +		if (!(pci_is_pcie(pdev) &&
-> +		      pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT))
-> +			continue;
-> +
-> +		vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_ALIBABA,
-> +						DWC_PCIE_VSEC_RAS_DES_ID);
-> +		if (!vsec)
-> +			continue;
-> +
-> +		pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
-> +		if (PCI_VNDR_HEADER_REV(val) != 0x04)
-> +			continue;
-> +		pci_dbg(pdev,
-> +			"Detected PCIe Vendor-Specific Extended Capability RAS DES\n");
-> +
-> +		bdf = PCI_DEVID(pdev->bus->number, pdev->devfn);
-> +		name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%x",
-> +				      bdf);
-> +		if (!name) {
-> +			ret = -ENOMEM;
-> +			goto out;
-> +		}
-> +
-> +		/* All checks passed, go go go */
-> +		pcie_pmu = devm_kzalloc(&plat_dev->dev, sizeof(*pcie_pmu), GFP_KERNEL);
-> +		if (!pcie_pmu) {
-> +			ret = -ENOMEM;
-> +			goto out;
-> +		}
-> +
-> +		pcie_pmu->pdev = pdev;
-> +		pcie_pmu->ras_des_offset = vsec;
-> +		pcie_pmu->nr_lanes = pcie_get_width_cap(pdev);
-> +		pcie_pmu->on_cpu = -1;
-> +		pcie_pmu->pmu = (struct pmu){
-> +			.module		= THIS_MODULE,
-> +			.attr_groups	= dwc_pcie_attr_groups,
-> +			.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
-> +			.task_ctx_nr	= perf_invalid_context,
-> +			.event_init	= dwc_pcie_pmu_event_init,
-> +			.add		= dwc_pcie_pmu_event_add,
-> +			.del		= dwc_pcie_pmu_event_del,
-> +			.start		= dwc_pcie_pmu_event_start,
-> +			.stop		= dwc_pcie_pmu_event_stop,
-> +			.read		= dwc_pcie_pmu_event_update,
-> +		};
-> +
-> +		/* Add this instance to the list used by the offline callback */
-> +		ret = cpuhp_state_add_instance(dwc_pcie_pmu_hp_state,
-> +					       &pcie_pmu->cpuhp_node);
-> +		if (ret) {
-> +			pci_err(pdev,
-> +				"Error %d registering hotplug @%x\n", ret, bdf);
-> +			goto out;
-> +		}
-> +
-> +		/* Unwind when platform driver removes */
-> +		ret = devm_add_action_or_reset(
-> +			&plat_dev->dev, dwc_pcie_pmu_remove_cpuhp_instance,
-> +			&pcie_pmu->cpuhp_node);
-> +		if (ret)
-> +			goto out;
-> +
-> +		ret = perf_pmu_register(&pcie_pmu->pmu, name, -1);
-> +		if (ret) {
-> +			pci_err(pdev,
-> +				"Error %d registering PMU @%x\n", ret, bdf);
-> +			goto out;
-> +		}
-> +
-> +		/* Cache PMU to handle pci device hotplug */
-> +		list_add(&pcie_pmu->pmu_node, &dwc_pcie_pmu_head);
-> +		pcie_pmu->registered = true;
-> +		notify = true;
-> +
-> +		ret = devm_add_action_or_reset(
-> +			&plat_dev->dev, dwc_pcie_pmu_unregister_pmu, pcie_pmu);
-
-line wrapping is a bit ugly - I would move the &plat_dev->dev to previous line.
-and I think you can get away with aligning the rest just after the (
-
-
-> +		if (ret)
-> +			goto out;
-> +	}
-> +
-> +	if (notify && !bus_register_notifier(&pci_bus_type, &dwc_pcie_pmu_nb))
-> +		return devm_add_action_or_reset(
-> +			&plat_dev->dev, dwc_pcie_pmu_unregister_nb, NULL);
-> +
-> +	return 0;
-> +
-> +out:
-> +	pci_dev_put(pdev);
-> +
-> +	return ret;
-> +}
-
-
-
-> +static int __init dwc_pcie_pmu_init(void)
-> +{
-> +	int ret;
-> +
-> +	ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
-> +				      "perf/dwc_pcie_pmu:online",
-> +				      dwc_pcie_pmu_online_cpu,
-> +				      dwc_pcie_pmu_offline_cpu);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	dwc_pcie_pmu_hp_state = ret;
-> +
-> +	ret = platform_driver_register(&dwc_pcie_pmu_driver);
-> +	if (ret)
-> +		goto platform_driver_register_err;
-> +
-> +	dwc_pcie_pmu_dev = platform_device_register_simple(
-> +				"dwc_pcie_pmu", PLATFORM_DEVID_NONE, NULL, 0);
-> +	if (IS_ERR(dwc_pcie_pmu_dev)) {
-> +		ret = PTR_ERR(dwc_pcie_pmu_dev);
-> +		goto platform_device_register_error;
-> +	}
-> +
-> +	return 0;
-> +
-> +platform_device_register_error:
-
-Trivial but I'd standardize on err or error, not mix them.
-
-> +	platform_driver_unregister(&dwc_pcie_pmu_driver);
-> +platform_driver_register_err:
-> +	cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
-> +
-> +	return ret;
-> +}
-
+-- 
+மணிவண்ணன் சதாசிவம்
