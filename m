@@ -2,56 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A891F7D15C8
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Oct 2023 20:27:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C481C7D1AB5
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Oct 2023 06:13:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbjJTS1A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Oct 2023 14:27:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58538 "EHLO
+        id S229472AbjJUEN4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 Oct 2023 00:13:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbjJTS07 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Oct 2023 14:26:59 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E69C0BF;
-        Fri, 20 Oct 2023 11:26:56 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8387AC433C8;
-        Fri, 20 Oct 2023 18:26:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697826413;
-        bh=jPvm+vw3CLG6JwUV21PGNZW9z38rg332T7A3ndx2J9k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pv904BHaMqG07yVrPbP1iExG17hESU1JBkiAbnEPugoSwW7XnO8OJKWePVdmmJZhE
-         z+TtIvCCUALzMgBZm3xJbeLTcA6N6Mk91wl9x5CT4HfRR5/1lHjG3byLQ4VVRSfT8H
-         pS9vhpeUnu9EIA3eRcJHXun0Eo4643I8dJf+LhJPh43Cj//b0CZZiZl7svfTf31Gmv
-         6RELDz/l2aBZFtE+jVZOKRfCiwIs4HNF/0gn8ftCVUbVBheyMAJkxxra+KZfso/BsJ
-         t+Q0LKuEzYuylItnPIKJze5o/fAt9qgFHkIGsgEPu3fa6eqwGimU6WEzwSpQ3rNwUC
-         kVwp8+GOAyGBw==
-Date:   Fri, 20 Oct 2023 23:56:43 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Frank Li <Frank.li@nxp.com>
-Cc:     manivannan.sadhasivam@linaro.org, aisheng.dong@nxp.com,
-        bhelgaas@google.com, devicetree@vger.kernel.org,
-        festevam@gmail.com, imx@lists.linux.dev, jdmason@kudzu.us,
-        kernel@pengutronix.de, kishon@kernel.org, kw@linux.com,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, lpieralisi@kernel.org, maz@kernel.org,
-        s.hauer@pengutronix.de, shawnguo@kernel.org, tglx@linutronix.de
-Subject: Re: [PATCH v2 4/5] misc: pci_endpoint_test: Add doorbell test case
-Message-ID: <20231020182643.GG46191@thinkpad>
-References: <20230911220920.1817033-1-Frank.Li@nxp.com>
- <20230911220920.1817033-5-Frank.Li@nxp.com>
- <20231020175304.GC46191@thinkpad>
- <20231020180139.GE46191@thinkpad>
- <ZTLBxvM/qNGw/FLd@lizhi-Precision-Tower-5810>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZTLBxvM/qNGw/FLd@lizhi-Precision-Tower-5810>
+        with ESMTP id S229500AbjJUENy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Oct 2023 00:13:54 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5C1FDA
+        for <linux-pci@vger.kernel.org>; Fri, 20 Oct 2023 21:13:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697861628; x=1729397628;
+  h=date:from:to:cc:subject:message-id;
+  bh=bIfamow3629Y/Xcw+ArGBU7tP8mx9m9QDaaydo8LdI0=;
+  b=JXPpGPkUruHNUnEBdQuD+M+082rCkAeD1zD9eUwqeZOV7Gh4EfINty9q
+   5YI1MKxSEVJFg4R37gLIaX00ExfHV5Xu2EGCT9ng267MGWc7cNNPIjejo
+   gSXQgg4AftwNnxnrTFVd/e1vhkPHoxXdIlDX5Z+hxlIhBdiLwsYmAAlXT
+   26vYpr7kLxdvOfBenefzQCSf8cAAC0JDdllIIk6OrZ3iMwEhvX+KY+S32
+   dS503wVyPpLXTEjNLBkYhA1ApDQxm6w+fm9glbxJMgoMbKKxXYvqGyyzA
+   v6cCpXTvr6DMA74tnLVPafI/j8DVzxvcKvNbUp1Qq+TAvLRNmCbHvgD9s
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10869"; a="472832637"
+X-IronPort-AV: E=Sophos;i="6.03,239,1694761200"; 
+   d="scan'208";a="472832637"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2023 21:13:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10869"; a="1088928068"
+X-IronPort-AV: E=Sophos;i="6.03,239,1694761200"; 
+   d="scan'208";a="1088928068"
+Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 20 Oct 2023 21:13:47 -0700
+Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qu3Mv-0004Oe-1g;
+        Sat, 21 Oct 2023 04:13:45 +0000
+Date:   Sat, 21 Oct 2023 12:12:47 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:ats] BUILD SUCCESS
+ a18615b1cfc04f00548c60eb9a77e0ce56e848fd
+Message-ID: <202310211244.GMCIpMzH-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,200 +59,181 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 20, 2023 at 02:07:02PM -0400, Frank Li wrote:
-> On Fri, Oct 20, 2023 at 11:31:39PM +0530, Manivannan Sadhasivam wrote:
-> > On Fri, Oct 20, 2023 at 11:23:04PM +0530, Manivannan Sadhasivam wrote:
-> > > On Mon, Sep 11, 2023 at 06:09:19PM -0400, Frank Li wrote:
-> > > > Using bit 0..7 of magic as version number in pci_endpoint_test struct to
-> > > > support older driver versions. Save to 'version' field of struct
-> > > > pci_endpoint_test to prevent reading non-existent address.
-> > > > 
-> > > 
-> > > Since both drivers are in the kernel, I don't see a necessity to maintain
-> > > compatibility. Does it make sense to load drivers of previous kernel revision
-> > > with a new kernel?
-> > > 
-> > 
-> > Shoot... Sorry, I completely forgot that one is EP and another is host. Yes, we
-> > do need to maintain compatibility.
-> > 
-> > But can't we use the doorbell register contents to determine that?
-> 
-> Doorbell register is not exist at old EP driver. If old EP driver register
-> size is 64Byte,  doorbell register is 64 - 68.
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git ats
+branch HEAD: a18615b1cfc04f00548c60eb9a77e0ce56e848fd  PCI: Disable ATS for specific Intel IPU E2000 devices
 
-Yes, I know!
- 
-> Read unexisted, or unmapped space will cause kernel dump or other side
-> effects.
-> 
+elapsed time: 3254m
 
-For sure it won't be unmapped as the BAR0 size is 512B. I thought we could infer
-something from the uninitialized registers. I need to think about other options.
-But changing the semantics of MAGIC register is a no-go.
+configs tested: 162
+configs skipped: 2
 
-- Mani
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> Frank
-> 
-> > 
-> > - Mani
-> > 
-> > > > Add three registers: PCIE_ENDPOINT_TEST_DB_BAR, PCIE_ENDPOINT_TEST_DB_ADDR,
-> > > > PCIE_ENDPOINT_TEST_DB_DATA.
-> > > > 
-> > > 
-> > > This patch is not adding these registers and not this driver also. So this
-> > > statement is wrong.
-> > > 
-> > > > Write data from PCI_ENDPOINT_TEST_DB_DATA to address from
-> > > > PCI_ENDPOINT_TEST_DB_ADDR to trigger doorbell and wait for endpoint
-> > > > feedback.
-> > > > 
-> > > 
-> > > You can reuse a part of the commit description I suggested for previous patch.
-> > > 
-> > > Rest looks good to me.
-> > > 
-> > > - Mani
-> > > 
-> > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > ---
-> > > >  drivers/misc/pci_endpoint_test.c | 48 ++++++++++++++++++++++++++++++++
-> > > >  include/uapi/linux/pcitest.h     |  1 +
-> > > >  2 files changed, 49 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> > > > index ed4d0ef5e5c31..ed0b025132d17 100644
-> > > > --- a/drivers/misc/pci_endpoint_test.c
-> > > > +++ b/drivers/misc/pci_endpoint_test.c
-> > > > @@ -33,6 +33,8 @@
-> > > >  #define IRQ_TYPE_MSIX				2
-> > > >  
-> > > >  #define PCI_ENDPOINT_TEST_MAGIC			0x0
-> > > > +#define PCI_MAGIC_VERSION_MASK			GENMASK(7, 0)
-> > > > +#define PCI_ENDPOINT_TEST_V1			0x1
-> > > >  
-> > > >  #define PCI_ENDPOINT_TEST_COMMAND		0x4
-> > > >  #define COMMAND_RAISE_LEGACY_IRQ		BIT(0)
-> > > > @@ -52,6 +54,7 @@
-> > > >  #define STATUS_IRQ_RAISED			BIT(6)
-> > > >  #define STATUS_SRC_ADDR_INVALID			BIT(7)
-> > > >  #define STATUS_DST_ADDR_INVALID			BIT(8)
-> > > > +#define STATUS_DOORBELL_SUCCESS			BIT(9)
-> > > >  
-> > > >  #define PCI_ENDPOINT_TEST_LOWER_SRC_ADDR	0x0c
-> > > >  #define PCI_ENDPOINT_TEST_UPPER_SRC_ADDR	0x10
-> > > > @@ -66,7 +69,12 @@
-> > > >  #define PCI_ENDPOINT_TEST_IRQ_NUMBER		0x28
-> > > >  
-> > > >  #define PCI_ENDPOINT_TEST_FLAGS			0x2c
-> > > > +#define PCI_ENDPOINT_TEST_DB_BAR		0x30
-> > > > +#define PCI_ENDPOINT_TEST_DB_ADDR		0x34
-> > > > +#define PCI_ENDPOINT_TEST_DB_DATA		0x38
-> > > > +
-> > > >  #define FLAG_USE_DMA				BIT(0)
-> > > > +#define FLAG_SUPPORT_DOORBELL			BIT(1)
-> > > >  
-> > > >  #define PCI_DEVICE_ID_TI_AM654			0xb00c
-> > > >  #define PCI_DEVICE_ID_TI_J7200			0xb00f
-> > > > @@ -102,6 +110,7 @@ enum pci_barno {
-> > > >  	BAR_3,
-> > > >  	BAR_4,
-> > > >  	BAR_5,
-> > > > +	NO_BAR = -1,
-> > > >  };
-> > > >  
-> > > >  struct pci_endpoint_test {
-> > > > @@ -118,6 +127,7 @@ struct pci_endpoint_test {
-> > > >  	enum pci_barno test_reg_bar;
-> > > >  	size_t alignment;
-> > > >  	const char *name;
-> > > > +	u8 version;
-> > > >  };
-> > > >  
-> > > >  struct pci_endpoint_test_data {
-> > > > @@ -713,6 +723,38 @@ static bool pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
-> > > >  	return false;
-> > > >  }
-> > > >  
-> > > > +static bool pci_endpoint_test_doorbell(struct pci_endpoint_test *test)
-> > > > +{
-> > > > +	enum pci_barno bar;
-> > > > +	u32 data, status;
-> > > > +	u32 addr;
-> > > > +
-> > > > +	if (test->version < PCI_ENDPOINT_TEST_V1)
-> > > > +		return false;
-> > > > +
-> > > > +	bar = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_BAR);
-> > > > +	if (bar == NO_BAR)
-> > > > +		return false;
-> > > > +
-> > > > +	data = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_DATA);
-> > > > +	addr = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_ADDR);
-> > > > +	bar = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_BAR);
-> > > > +
-> > > > +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
-> > > > +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
-> > > > +
-> > > > +	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_STATUS, 0);
-> > > > +	pci_endpoint_test_bar_writel(test, bar, addr, data);
-> > > > +
-> > > > +	wait_for_completion_timeout(&test->irq_raised, msecs_to_jiffies(1000));
-> > > > +
-> > > > +	status = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_STATUS);
-> > > > +	if (status & STATUS_DOORBELL_SUCCESS)
-> > > > +		return true;
-> > > > +
-> > > > +	return false;
-> > > > +}
-> > > > +
-> > > >  static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
-> > > >  				    unsigned long arg)
-> > > >  {
-> > > > @@ -760,6 +802,9 @@ static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
-> > > >  	case PCITEST_CLEAR_IRQ:
-> > > >  		ret = pci_endpoint_test_clear_irq(test);
-> > > >  		break;
-> > > > +	case PCITEST_DOORBELL:
-> > > > +		ret = pci_endpoint_test_doorbell(test);
-> > > > +		break;
-> > > >  	}
-> > > >  
-> > > >  ret:
-> > > > @@ -887,6 +932,9 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
-> > > >  	misc_device->parent = &pdev->dev;
-> > > >  	misc_device->fops = &pci_endpoint_test_fops;
-> > > >  
-> > > > +	test->version = FIELD_GET(PCI_MAGIC_VERSION_MASK,
-> > > > +				  pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_MAGIC));
-> > > > +
-> > > >  	err = misc_register(misc_device);
-> > > >  	if (err) {
-> > > >  		dev_err(dev, "Failed to register device\n");
-> > > > diff --git a/include/uapi/linux/pcitest.h b/include/uapi/linux/pcitest.h
-> > > > index f9c1af8d141b4..479ca1aa3ae0b 100644
-> > > > --- a/include/uapi/linux/pcitest.h
-> > > > +++ b/include/uapi/linux/pcitest.h
-> > > > @@ -20,6 +20,7 @@
-> > > >  #define PCITEST_SET_IRQTYPE	_IOW('P', 0x8, int)
-> > > >  #define PCITEST_GET_IRQTYPE	_IO('P', 0x9)
-> > > >  #define PCITEST_CLEAR_IRQ	_IO('P', 0x10)
-> > > > +#define PCITEST_DOORBELL	_IO('P', 0x11)
-> > > >  
-> > > >  #define PCITEST_FLAGS_USE_DMA	0x00000001
-> > > >  
-> > > > -- 
-> > > > 2.34.1
-> > > > 
-> > > 
-> > > -- 
-> > > மணிவண்ணன் சதாசிவம்
-> > 
-> > -- 
-> > மணிவண்ணன் சதாசிவம்
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20231019   gcc  
+arc                   randconfig-001-20231021   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                       omap2plus_defconfig   gcc  
+arm                   randconfig-001-20231019   gcc  
+arm64                            allmodconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+i386                              allnoconfig   gcc  
+i386         buildonly-randconfig-001-20231020   gcc  
+i386         buildonly-randconfig-002-20231020   gcc  
+i386         buildonly-randconfig-003-20231020   gcc  
+i386         buildonly-randconfig-004-20231020   gcc  
+i386         buildonly-randconfig-005-20231020   gcc  
+i386         buildonly-randconfig-006-20231020   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20231019   gcc  
+i386                  randconfig-001-20231021   gcc  
+i386                  randconfig-002-20231019   gcc  
+i386                  randconfig-002-20231021   gcc  
+i386                  randconfig-003-20231019   gcc  
+i386                  randconfig-003-20231021   gcc  
+i386                  randconfig-004-20231019   gcc  
+i386                  randconfig-004-20231021   gcc  
+i386                  randconfig-005-20231019   gcc  
+i386                  randconfig-005-20231021   gcc  
+i386                  randconfig-006-20231019   gcc  
+i386                  randconfig-006-20231021   gcc  
+i386                  randconfig-011-20231019   gcc  
+i386                  randconfig-011-20231021   gcc  
+i386                  randconfig-012-20231019   gcc  
+i386                  randconfig-012-20231021   gcc  
+i386                  randconfig-013-20231019   gcc  
+i386                  randconfig-013-20231021   gcc  
+i386                  randconfig-014-20231019   gcc  
+i386                  randconfig-014-20231021   gcc  
+i386                  randconfig-015-20231019   gcc  
+i386                  randconfig-015-20231021   gcc  
+i386                  randconfig-016-20231019   gcc  
+i386                  randconfig-016-20231021   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20231019   gcc  
+loongarch             randconfig-001-20231021   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   gcc  
+powerpc                      ep88xc_defconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                 randconfig-001-20231019   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20231019   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                            hp6xx_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                 randconfig-001-20231019   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-001-20231019   gcc  
+x86_64       buildonly-randconfig-001-20231021   gcc  
+x86_64       buildonly-randconfig-002-20231019   gcc  
+x86_64       buildonly-randconfig-002-20231021   gcc  
+x86_64       buildonly-randconfig-003-20231019   gcc  
+x86_64       buildonly-randconfig-003-20231021   gcc  
+x86_64       buildonly-randconfig-004-20231019   gcc  
+x86_64       buildonly-randconfig-004-20231021   gcc  
+x86_64       buildonly-randconfig-005-20231019   gcc  
+x86_64       buildonly-randconfig-005-20231021   gcc  
+x86_64       buildonly-randconfig-006-20231019   gcc  
+x86_64       buildonly-randconfig-006-20231021   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20231019   gcc  
+x86_64                randconfig-001-20231021   gcc  
+x86_64                randconfig-002-20231019   gcc  
+x86_64                randconfig-002-20231021   gcc  
+x86_64                randconfig-003-20231019   gcc  
+x86_64                randconfig-003-20231021   gcc  
+x86_64                randconfig-004-20231019   gcc  
+x86_64                randconfig-004-20231021   gcc  
+x86_64                randconfig-005-20231019   gcc  
+x86_64                randconfig-005-20231021   gcc  
+x86_64                randconfig-006-20231019   gcc  
+x86_64                randconfig-006-20231021   gcc  
+x86_64                randconfig-011-20231020   gcc  
+x86_64                randconfig-012-20231020   gcc  
+x86_64                randconfig-013-20231020   gcc  
+x86_64                randconfig-014-20231020   gcc  
+x86_64                randconfig-015-20231020   gcc  
+x86_64                randconfig-016-20231020   gcc  
+x86_64                randconfig-071-20231020   gcc  
+x86_64                randconfig-072-20231020   gcc  
+x86_64                randconfig-073-20231020   gcc  
+x86_64                randconfig-074-20231020   gcc  
+x86_64                randconfig-075-20231020   gcc  
+x86_64                randconfig-076-20231020   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
 
 -- 
-மணிவண்ணன் சதாசிவம்
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
