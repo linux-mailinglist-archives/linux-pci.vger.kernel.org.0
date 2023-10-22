@@ -2,71 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2D3D7D2337
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Oct 2023 15:36:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EE827D233A
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Oct 2023 15:39:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231297AbjJVNgj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 22 Oct 2023 09:36:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42768 "EHLO
+        id S231669AbjJVNjA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 22 Oct 2023 09:39:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbjJVNgi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 22 Oct 2023 09:36:38 -0400
+        with ESMTP id S229500AbjJVNi7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 22 Oct 2023 09:38:59 -0400
 Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEFD4DC;
-        Sun, 22 Oct 2023 06:36:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BED9DF;
+        Sun, 22 Oct 2023 06:38:58 -0700 (PDT)
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id BF08C320046F;
-        Sun, 22 Oct 2023 09:36:33 -0400 (EDT)
+        by mailout.west.internal (Postfix) with ESMTP id EFAC0320029B;
+        Sun, 22 Oct 2023 09:38:56 -0400 (EDT)
 Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Sun, 22 Oct 2023 09:36:34 -0400
+  by compute3.internal (MEProxy); Sun, 22 Oct 2023 09:38:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
         cc:cc:content-transfer-encoding:content-type:content-type:date
         :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
         :references:reply-to:sender:subject:subject:to:to; s=fm1; t=
-        1697981793; x=1698068193; bh=3+zHI5XxJ0GdEW2zOOWUQBzlNnmU90B1H+l
-        bgNRgITc=; b=mdb3o1qiwZJ7GziAMlEdciFjbuylXPyQzJ281BNLoD/GOCCb8oA
-        sMvcaI7+VmGgsqxp4HC1e11OvGBFvr49S234RVIfFcFhWlM/FUA2BVzrCgRKqGOm
-        51xN5BM4jO/0G/qU77ca3pSGs8P5QNfmfLUbr036rDmLx7EYzrMSZ4QhuQCyEL04
-        +o9040SJQAavBbcmzb3OIZlY7qrLvMFdasKZMvKDvceMBM3HdtLVea25/Ttl0PKS
-        VBgVM+ZvDJhsSihHxg5qq+mebdwn3N1mVFVgs8wjnGJrzgCAxMRnS6DXehTj/u46
-        c+riAcCoHRHlqpuX2RLHWfAAUn9YkvovHFA==
+        1697981936; x=1698068336; bh=wH3Vt951/DMMbekXvIko30IMJg8aJNBVPTI
+        gR0Q6vgM=; b=e1F56EfPAF9aj0uN+eX9z1JJtGmyz6F+SDmDjE+Z9SRnLFHrPNW
+        x+strqlDwZoNOTPr47jhndbnGwBrPnYzieP965AznZWHB6lovZwV1vMjh3lWglzm
+        E/sPwUMF+B+QHu71/DwhuIwv53DCs5b2o1lL/pjt4my7cfpH0SVAua+TKZJlhcoA
+        idZZ4tDt6C+BAJbZt6unzCD5/DUPqI4aM+BXIVg5aa9Hj267hRV2CBxZElH9MNQa
+        5KostnayvikAG671aK1LRcwa8le6rCn5BS5kC3VdAHJmnCJObnGKujrQ/1+P+SQT
+        vlldwOUrSaZ+BL/vyYqoPKaNPKSSUogDN0w==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding
         :content-type:content-type:date:date:feedback-id:feedback-id
         :from:from:in-reply-to:in-reply-to:message-id:mime-version
         :references:reply-to:sender:subject:subject:to:to:x-me-proxy
         :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-        1697981793; x=1698068193; bh=3+zHI5XxJ0GdEW2zOOWUQBzlNnmU90B1H+l
-        bgNRgITc=; b=NPOGMiwB0Xz18tHXSfDKOzkvPdCOzD5F2v1MpDWpZ2SKr+/paOz
-        NkegnWTgcdFqlTevmFoFroBVjh7v2XAImNk8Gst9vpS8HbfoJQ8HA63wutgLrJ+D
-        nqppOUEOWIO0YGtwqv0QegXTdYO1fVN8RHSyFvgekJOa3V2TADNInH/VMxW804Go
-        a3OPyzSW7Y5NcxQnohNyOUw+UT6x6jagH0EFKJhB1zbZ6BOwhSNu7BZAMUIKZ1hW
-        hurATdBsyHKrBZDp9D9MHhkoBbpKGDarPGeAePv6ZRcZABnetjiNgfTKa7huxdzd
-        a3Q5FwbLWmooJzehGhf+8bQWclJ+O6YzOCA==
-X-ME-Sender: <xms:YSU1Zdko4eyVyDV1GyUNkEmDsi5tOA5PNTr3eymu5JXeKQxKOgvkiQ>
-    <xme:YSU1ZY12k0TtNJl7LZyPnedeBLbSXkvFt1X3S-pLRBuKfes-TQVPqor-9CXWiWOwV
-    kL4F15oLzrUFRGkKlA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrkeefgdeiiecutefuodetggdotefrodftvf
+        1697981936; x=1698068336; bh=wH3Vt951/DMMbekXvIko30IMJg8aJNBVPTI
+        gR0Q6vgM=; b=BOlC0cN5VJljng7KXQB4UYUq83/vkjxiXLaQHNKT9gAOIfU9lxy
+        TeN59hnUEUDu1q6ULPEOFNx23Kh5L/6GKUEjwXTO4LvKqKE3EEoKcXPsktwemNfD
+        0eAaQet3EiMwFRaGERxCkYERL+sJqrpdQLBHuWqTxEpzglhi3w8BWHXDOEAJtVzP
+        asJV0DM9k+vQjza/pUjOBPjXAGYl9bYro9qLvDS/ZXrTfX3o2MrEYb+d5QyESSeb
+        Ef2+yq1k+D5uo6xMJtryJtRklfqh2rq1RbvFKV5RTaslFJJ75HanbLLp0+k8htwG
+        6/ePsyzRlRpr7fB9pTg1ELtCkQ+FrqmAgFA==
+X-ME-Sender: <xms:8CU1ZTP-V0X3yNIBwYuMV6gSSRVYMODrVOLlqFKKd9wXNIjBvw3Izg>
+    <xme:8CU1Zd8p023PAYW0e3s7KD0DKKCSQQl4CQV6tmYVvVUVpuD9sXw8tUd5ZeaN0pCtf
+    p4S6M2KI_sS_RJqOfg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrkeefgdeijecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
     rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-    eqnecuggftrfgrthhtvghrnhepteduledttdelgeejfeejffeihfelhffgteetudfgkedt
-    tdfhkeehtdekjeefgeelnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdplhgvvghmhh
-    huihhsrdhinhhfohenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:YSU1ZTqAqDZhnbnmHdCoArEOY-IgQOeNKZb77Tcw9btK6WS4ZA5vsg>
-    <xmx:YSU1ZdkgTm8H5JIungjwQiwFX1hphYAPnr9mQN0NM0RGOvRTXIo2Ag>
-    <xmx:YSU1Zb22FkhT2LU8UZqN2ZqCV94BjbwR90D3wxhC0EmxOsFus_Tm4A>
-    <xmx:YSU1ZVp2PnUiOHlxYUUsAsi4i33ekrz6E9QRLrPtgj4W4EGyM53rVA>
+    eqnecuggftrfgrthhtvghrnhepudefgeeftedugeehffdtheefgfevffelfefghefhjeeu
+    geevtefhudduvdeihefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:8CU1ZSSGe20bDi3pcriFX-gssx75PxxCIMSjtOscTL_mzP4XvDRpiQ>
+    <xmx:8CU1ZXvhL75wv-KqimA1g3dg3jVCsW76kSosRZfnIAAjiEpJlJM79A>
+    <xmx:8CU1ZbdHn8LCN5vSTwoDWyXFelJUdd53X_0BHl4JNlmqpKJ-wsxDOw>
+    <xmx:8CU1ZcGJ3YLDf_nYu4ecdN49vub0HXy9_O5qCv_TMm1u9-VcUKkLtQ>
 Feedback-ID: ifd894703:Fastmail
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id D9A5136A0077; Sun, 22 Oct 2023 09:36:32 -0400 (EDT)
+        id 34AC236A0077; Sun, 22 Oct 2023 09:38:56 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.9.0-alpha0-1048-g9229b632c5-fm-20231019.001-g9229b632
 MIME-Version: 1.0
-Message-Id: <52ec45eb-6633-4d51-96ff-d29d1743e1aa@app.fastmail.com>
-In-Reply-To: <c9a99e29-1a16-4b46-8e3a-afd0aae5b76e@leemhuis.info>
+Message-Id: <30afffac-b470-43ce-95cd-7bc72bf1752f@app.fastmail.com>
+In-Reply-To: <20230907050805.GA3218@thinkpad>
 References: <20230725061008.1504292-1-jiaxun.yang@flygoat.com>
  <e9c103dc-98ac-9a51-7291-f5da1467b2ff@flygoat.com>
  <CAAhV-H7_OjTaU_wn6mUW0-JSrXS+=A2rXCiBc8cyce5ob49BLg@mail.gmail.com>
@@ -74,12 +73,9 @@ References: <20230725061008.1504292-1-jiaxun.yang@flygoat.com>
  <20230907011828.GA2865@thinkpad>
  <6e1bdebf-f335-23a5-c79f-d603c5d0150c@flygoat.com>
  <20230907050805.GA3218@thinkpad>
- <91336c97-0831-3ce3-5ff0-54344f18e065@leemhuis.info>
- <c9a99e29-1a16-4b46-8e3a-afd0aae5b76e@leemhuis.info>
-Date:   Sun, 22 Oct 2023 14:36:13 +0100
+Date:   Sun, 22 Oct 2023 14:38:30 +0100
 From:   "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To:     "Linux regressions mailing list" <regressions@lists.linux.dev>,
-        "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>
+To:     "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>
 Cc:     "Huacai Chen" <chenhuacai@kernel.org>,
         linux-pci <linux-pci@vger.kernel.org>,
         "Bjorn Helgaas" <bhelgaas@google.com>,
@@ -101,118 +97,78 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-=E5=9C=A82023=E5=B9=B410=E6=9C=8820=E6=97=A5=E5=8D=81=E6=9C=88 =E4=B8=8B=
-=E5=8D=8812:04=EF=BC=8CThorsten Leemhuis=E5=86=99=E9=81=93=EF=BC=9A
-> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> for once, to make this easily accessible to everyone.
+=E5=9C=A82023=E5=B9=B49=E6=9C=887=E6=97=A5=E4=B9=9D=E6=9C=88 =E4=B8=8A=E5=
+=8D=886:08=EF=BC=8CManivannan Sadhasivam=E5=86=99=E9=81=93=EF=BC=9A
+> On Thu, Sep 07, 2023 at 11:13:00AM +0800, Jiaxun Yang wrote:
+>>=20
+>>=20
+>> =E5=9C=A8 2023/9/7 9:18, Manivannan Sadhasivam =E5=86=99=E9=81=93:
+>> [...]
+>> > Why do you need to walk through every single device instead of just=
+ bridges?
+>> > I'm not the maintainer, but my suggestion is to go for Huacai Chen'=
+s solution.
+>> Hi Mani,
+>>=20
+>> Thanks for your reply, unfortunately Huacai's solution is impractical=
+ in
+>> this case.
+>>=20
+>> The problem we have, is firmware (or BIOS) setting improper MRRS for =
+devices
+>> attached under those bridges. So we have to fix up MRRS for every sin=
+gle
+>> device.
+>> We can't iterate child device in bridge quirk because there is no gua=
+rantee
+>> that
+>> bridge will be probed before=C2=A0 it's child device, partly due to h=
+otplug.
+>>=20
 >
-> Just wondering what's up here. The patch this thread is about afaics w=
-as
-> supposed to fix a regression reported in July
-> (https://bugzilla.kernel.org/show_bug.cgi?id=3D217680 ), but has made =
-not
-> steps closer to get mainlined during the past few weeks. Is there a
-> reason, or did it maybe fell through the cracks?
+> Okay, this clarifies and also warrants improvement in commit message.
 >
-> Jiaxun Yang, from it quick look it seems like you wanted to post a v3,
-> but never did so; but I might be mistaken there.
+> You could also use pci_walk_bus() after pci_host_probe() to iterate ov=
+er the
+> child devices under root bridge and set MRRS. IMO that would look neat.
 
-I just figure out the problem of this implementation.
-Will resend and explain.
+This won't work as disabling device will reset MRRS and you have to set
+it again, while pci_host_probe will only run at init.
+
+So quirk at device enablement is still the best solution.
 
 Thanks
 - Jiaxun
 
 >
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' ha=
-t)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
+> - Mani
 >
-> #regzbot poke
+>> This quirk has been in tree for a while, until Huacai refactored it a=
+nd
+>> broke some
+>> systems in 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases"=
+).
+>>=20
+>> Also to note that ks_pcie_quirk in drivers/pci/controller/dwc/pci-key=
+stone.c
+>> uses similar approach.
+>> > This avoids iterating over bridges/devices two times.
+>> >=20
+>> > Also, please rename firmware to BIOS, as firmware commonly represen=
+ts the
+>> > software running on PCIe endpoint devices.
+>> Ack, will fix in next reversion.
+>>=20
+>> Thanks
+>> - Jiaxun
+>> >=20
+>> > - Mani
+>> [...]
 >
-> On 20.09.23 14:33, Linux regression tracking (Thorsten Leemhuis) wrote:
->> [CCing the regression list, as it should be in the loop for regressio=
-ns:
->> https://docs.kernel.org/admin-guide/reporting-regressions.html]
->>=20
->> On 07.09.23 07:08, Manivannan Sadhasivam wrote:
->>> On Thu, Sep 07, 2023 at 11:13:00AM +0800, Jiaxun Yang wrote:
->>>> =E5=9C=A8 2023/9/7 9:18, Manivannan Sadhasivam =E5=86=99=E9=81=93:
->>>> [...]
->>>>> Why do you need to walk through every single device instead of jus=
-t bridges?
->>>>> I'm not the maintainer, but my suggestion is to go for Huacai Chen=
-'s solution.
->>>>
->>>> Thanks for your reply, unfortunately Huacai's solution is impractic=
-al in
->>>> this case.
->>>>
->>>> The problem we have, is firmware (or BIOS) setting improper MRRS fo=
-r devices
->>>> attached under those bridges. So we have to fix up MRRS for every s=
-ingle
->>>> device.
->>>> We can't iterate child device in bridge quirk because there is no g=
-uarantee
->>>> that
->>>> bridge will be probed before=C2=A0 it's child device, partly due to=
- hotplug.
->>>
->>> Okay, this clarifies and also warrants improvement in commit message.
->>>
->>> You could also use pci_walk_bus() after pci_host_probe() to iterate =
-over the
->>> child devices under root bridge and set MRRS. IMO that would look ne=
-at.
->>=20
->> Hi, Thorsten here, the Linux kernel's regression tracker. What's the
->> status here? The regression that was supposed to be fixed by the patc=
-hed
->> that started this thread was reported 9 weeks ago[1] and the culprit
->> made it to many stable kernels as well. Would be really good to final=
-ly
->> fix this, as a regression like this should ideally be fixed within 2 =
-to
->> 3 weeks (in both mainline and stable). With a revert if necessary -- =
-is
->> this maybe still a option, or would that cause more trouble then it
->> solved (I guess that's the case).
->>=20
->> [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D217680
->>=20
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' h=
-at)
->> --
->> Everything you wanna know about Linux kernel regression tracking:
->> https://linux-regtracking.leemhuis.info/about/#tldr
->> If I did something stupid, please tell me, as explained on that page.
->>=20
->>>> This quirk has been in tree for a while, until Huacai refactored it=
- and
->>>> broke some
->>>> systems in 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increase=
-s").
->>>>
->>>> Also to note that ks_pcie_quirk in drivers/pci/controller/dwc/pci-k=
-eystone.c
->>>> uses similar approach.
->>>>> This avoids iterating over bridges/devices two times.
->>>>>
->>>>> Also, please rename firmware to BIOS, as firmware commonly represe=
-nts the
->>>>> software running on PCIe endpoint devices.
->>>> Ack, will fix in next reversion.
->>>>
->>>> Thanks
->>>> - Jiaxun
->>>>>
->>>>> - Mani
->>>> [...]
->>>
+> --=20
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
 
 --=20
 - Jiaxun
