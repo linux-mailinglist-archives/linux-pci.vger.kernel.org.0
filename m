@@ -2,149 +2,217 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 462897D21EC
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Oct 2023 10:23:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2D3D7D2337
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Oct 2023 15:36:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229588AbjJVIXV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 22 Oct 2023 04:23:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58382 "EHLO
+        id S231297AbjJVNgj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 22 Oct 2023 09:36:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbjJVIXU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 22 Oct 2023 04:23:20 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2087.outbound.protection.outlook.com [40.107.237.87])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FF33BF;
-        Sun, 22 Oct 2023 01:23:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QAFjXp1ulliXfEkcHRRqb5GHTsukhQQ/BKhDz7UaLs7ejJa6Oi+3nC3NU8tvkSwqSfRxs4tBQr7b0l04d794PaFeujbK+UYXgSuTb4kk2ujUNhZP4lsUXmpD/RCoK4VdpY2SEXadeMHhqbzAuLudRcTQIjiixmBGpHt7Vf00MTdvDEtw5+LV0Itao/aD8XLSmR655nE8eT23XNPOw1SeNMRPJ6/9SK5VSeh69tPV+h5AYm9vcDg89L5gZq88v3PzEuAwNvGpYk+uYsuR4mZSZGb/Z7Nmjl4D1H5zLAcHjlflxDA7lvWuhU6HXxYaih9ENXxGW3d7MQ5LfosJclt0wQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7pWvyPJVsdN76GpHoeM83MmFjZjUZbRfUj7xrGKq18Q=;
- b=X78KtLAHXPlgf5a+2ReJA271dlrzDRLex5+Ks329ykEiBMV5CYBbAZiummuxhEN7a6Qxo7udBeXWFYlQlUxOM/GtqySURvkAVV/051RWGiS/nGxtPdUphQZ7wOPuflAtICDrITGnv19+7QPq9kTLcwsaXQQZGWE/PSy6OXDbeSbWmQb4OMSCnpDNA7AqNSOJrTpvQhP2fd8uTU2uo8PC2ddT9+eCdQrK6asTkVvJUiXIfXDPMBidgeXkfxu/ZTcu4OV2BpMZEaEvt3uIQID5B6SVqY2+fupOFjrdvlcXQ06w+nqSQUhFvX49Qo9XCLJUMidD8awBCTKz+qNFEvPWSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7pWvyPJVsdN76GpHoeM83MmFjZjUZbRfUj7xrGKq18Q=;
- b=AA+z8pZ/tAfVgkj0XuMiWBfVvDEfvGB/zIeiqaQ48DP1p0lDBrY66zduqRRSy30L+b5aQJxe+PcUnHBzXCAUKrAhWG/b+eN57aFFpP9a30j1javLc+uV3128SjT3PAx61NOusLYbwY0mlphi3e+GtFMp6qU6kF915WnQ7ITd8865u4woHgaemljt31zOnQsWvGDatSj0A1zUPMo6psnqmIll9m+AlNzJWmJlCHB1D6X/K5plonVzcqLEthL/MRkApmZqEA0oX2hJNjru52+4J6Z4o6FWzX6lu8bMwuWK5Q866oMrhiwKnD5p0ZMm/EcbqxinunYnuR7tB/zcXxRVwg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6179.namprd12.prod.outlook.com (2603:10b6:930:24::22)
- by CH0PR12MB8508.namprd12.prod.outlook.com (2603:10b6:610:18c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.26; Sun, 22 Oct
- 2023 08:23:15 +0000
-Received: from CY5PR12MB6179.namprd12.prod.outlook.com
- ([fe80::6f24:e252:5c2f:d3c9]) by CY5PR12MB6179.namprd12.prod.outlook.com
- ([fe80::6f24:e252:5c2f:d3c9%7]) with mapi id 15.20.6907.030; Sun, 22 Oct 2023
- 08:23:15 +0000
-Date:   Sun, 22 Oct 2023 11:23:08 +0300
-From:   Ido Schimmel <idosch@nvidia.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
-        edumazet@google.com, bhelgaas@google.com,
-        alex.williamson@redhat.com, lukas@wunner.de, petrm@nvidia.com,
-        jiri@nvidia.com, mlxsw@nvidia.com
-Subject: Re: [RFC PATCH net-next 04/12] PCI: Add no PM reset quirk for NVIDIA
- Spectrum devices
-Message-ID: <ZTTb7KSgdQcvxdDq@shredder>
-References: <20231017074257.3389177-5-idosch@nvidia.com>
- <20231018194041.GA1370549@bhelgaas>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231018194041.GA1370549@bhelgaas>
-X-ClientProxiedBy: TL2P290CA0012.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:2::16) To CY5PR12MB6179.namprd12.prod.outlook.com
- (2603:10b6:930:24::22)
+        with ESMTP id S229500AbjJVNgi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 22 Oct 2023 09:36:38 -0400
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEFD4DC;
+        Sun, 22 Oct 2023 06:36:36 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id BF08C320046F;
+        Sun, 22 Oct 2023 09:36:33 -0400 (EDT)
+Received: from imap44 ([10.202.2.94])
+  by compute3.internal (MEProxy); Sun, 22 Oct 2023 09:36:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+        cc:cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm1; t=
+        1697981793; x=1698068193; bh=3+zHI5XxJ0GdEW2zOOWUQBzlNnmU90B1H+l
+        bgNRgITc=; b=mdb3o1qiwZJ7GziAMlEdciFjbuylXPyQzJ281BNLoD/GOCCb8oA
+        sMvcaI7+VmGgsqxp4HC1e11OvGBFvr49S234RVIfFcFhWlM/FUA2BVzrCgRKqGOm
+        51xN5BM4jO/0G/qU77ca3pSGs8P5QNfmfLUbr036rDmLx7EYzrMSZ4QhuQCyEL04
+        +o9040SJQAavBbcmzb3OIZlY7qrLvMFdasKZMvKDvceMBM3HdtLVea25/Ttl0PKS
+        VBgVM+ZvDJhsSihHxg5qq+mebdwn3N1mVFVgs8wjnGJrzgCAxMRnS6DXehTj/u46
+        c+riAcCoHRHlqpuX2RLHWfAAUn9YkvovHFA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+        1697981793; x=1698068193; bh=3+zHI5XxJ0GdEW2zOOWUQBzlNnmU90B1H+l
+        bgNRgITc=; b=NPOGMiwB0Xz18tHXSfDKOzkvPdCOzD5F2v1MpDWpZ2SKr+/paOz
+        NkegnWTgcdFqlTevmFoFroBVjh7v2XAImNk8Gst9vpS8HbfoJQ8HA63wutgLrJ+D
+        nqppOUEOWIO0YGtwqv0QegXTdYO1fVN8RHSyFvgekJOa3V2TADNInH/VMxW804Go
+        a3OPyzSW7Y5NcxQnohNyOUw+UT6x6jagH0EFKJhB1zbZ6BOwhSNu7BZAMUIKZ1hW
+        hurATdBsyHKrBZDp9D9MHhkoBbpKGDarPGeAePv6ZRcZABnetjiNgfTKa7huxdzd
+        a3Q5FwbLWmooJzehGhf+8bQWclJ+O6YzOCA==
+X-ME-Sender: <xms:YSU1Zdko4eyVyDV1GyUNkEmDsi5tOA5PNTr3eymu5JXeKQxKOgvkiQ>
+    <xme:YSU1ZY12k0TtNJl7LZyPnedeBLbSXkvFt1X3S-pLRBuKfes-TQVPqor-9CXWiWOwV
+    kL4F15oLzrUFRGkKlA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrkeefgdeiiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
+    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+    eqnecuggftrfgrthhtvghrnhepteduledttdelgeejfeejffeihfelhffgteetudfgkedt
+    tdfhkeehtdekjeefgeelnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdplhgvvghmhh
+    huihhsrdhinhhfohenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:YSU1ZTqAqDZhnbnmHdCoArEOY-IgQOeNKZb77Tcw9btK6WS4ZA5vsg>
+    <xmx:YSU1ZdkgTm8H5JIungjwQiwFX1hphYAPnr9mQN0NM0RGOvRTXIo2Ag>
+    <xmx:YSU1Zb22FkhT2LU8UZqN2ZqCV94BjbwR90D3wxhC0EmxOsFus_Tm4A>
+    <xmx:YSU1ZVp2PnUiOHlxYUUsAsi4i33ekrz6E9QRLrPtgj4W4EGyM53rVA>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id D9A5136A0077; Sun, 22 Oct 2023 09:36:32 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1048-g9229b632c5-fm-20231019.001-g9229b632
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6179:EE_|CH0PR12MB8508:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5ddb5ed5-9817-4db3-be30-08dbd2d8231b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: q3FP3eNdRwaNs2aluv3c62e9iY25nY9FOrR4dO9BVq0ZAkIzqpRrRCgKqPmkN2apQFA/Gh0CewGIgsyMo9NOiQZ4k1B0Q34A1Gnn9b0XjNEXxO5IgfBBfb7oygqgZTAWJtsz30pSXPOVk14+JeZre9JbotqKDJ+1XeAWdWlY1wjs8O0aPx/8jap70lXqqGbrJvAxkhowUZ4cWzmrRxD3JT1ZW0IR5nncYnpIlnsgZOvUXEbaFs5BpcLdEC6TyEHWyPbemdK0sNFJ1Bs4wyYis74WaMyeQjQqNeHGFZ02g1h4W35NOcWlSGyo4NzCKvkNRrEajef6d8Snh8JuX+BqFmuCUCTJDjYIMCcJQx2sKhKiVuWuRRObSr+yHG0Sz6JVjm2OT4hTPUd2TlVJThrluNZKwlD+TUmIhXOUIQ1n5eGsKUjnmB4FcFvew2rEEvsIituVQhlPXUoWg5WnUjVC90hmY37cUKB4xI9jhO83Z2hZjRtdKc1Yc1tsqS90oMH5CvUa7XcIBK2mCWG4DunPfLND1RagQUHx9abws9W94FdFJzHr1F48QN3qD+S9qk+a
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6179.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(39860400002)(396003)(346002)(366004)(136003)(376002)(230922051799003)(451199024)(64100799003)(186009)(1800799009)(478600001)(316002)(6486002)(7416002)(66946007)(66556008)(6916009)(66476007)(4326008)(8676002)(8936002)(86362001)(5660300002)(6506007)(38100700002)(33716001)(9686003)(6512007)(2906002)(107886003)(26005)(41300700001)(6666004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DGAk+aNgVaYQ3ZcRd7iQpMAbkHvIupqSQKf+lQTx6rjhjQzVk/pllbbSXqes?=
- =?us-ascii?Q?b/reBk2A/y3oN+Xu3y6c9L3f77YehRffFyhqLhA2UVYo0Mt6MWkAoG4JgTSA?=
- =?us-ascii?Q?HRUB2e84lBtOBcZf807OWCk8V//TBlZGihsTprGq7Jt+RgA+jZRWaYA5XvT6?=
- =?us-ascii?Q?ogKm12O9+2oAn8hablI7UXyITUoJTwCdWvagrTdwauUgDhjkLLkFUHhL4Xu4?=
- =?us-ascii?Q?uVPnmLtc885cWWlpTrKsvpkB7BYeXM6c+WOz3mu3zwwiMFvKPNcfJqzGmSJa?=
- =?us-ascii?Q?Nv000mjGuLzw17QYbAlWrWn8TP1PGWuXt1qKMQ/WXXvBCxlVcLDfruBUkd1b?=
- =?us-ascii?Q?FptMQzuBmh4NIr7Chv6TstcFJLo4nLXxxvrFN/+/8iotthb9U63m0Rx5VC1B?=
- =?us-ascii?Q?VshHmLSfyyki5O8s+9hJeQMHDtJQi/ujy0DHMqtkgmotvaAaeOfyVqjS8kto?=
- =?us-ascii?Q?FnZSBtOv4DB6JcNn+dmFn2h63viJFW5ARWchECJkZPF8vrFTQG/c0e1FzPWV?=
- =?us-ascii?Q?jm8XaTTgLPF5x3z7pTqOjBh8osZDkbzjKM7gP6TyrYmCHrAfJHMLoDZ24DnD?=
- =?us-ascii?Q?wvwvdo+LwKojK8UIWJDKJjZyhYc5oyxOCavqL6bFQfrQet3ZfqQveorkBBhQ?=
- =?us-ascii?Q?RdW2ZFfeHdcl1FXR764XgA7ucqxcDxCI/Un1S0XRWk3DRxGz/3mgJboIaV9o?=
- =?us-ascii?Q?rVM2dCbQnO3oJ4B3/guUxwW58l9W/nPPMn3VX/0tatA+FMPG+ne9dRfx1k2C?=
- =?us-ascii?Q?6l2ZU75Gn4z4IsP68ATXUKcUDlw0m92owctCYQzhPT16LDN5vKs3+psgOCF0?=
- =?us-ascii?Q?f3keFjJnhWOsqCIOybQgTyUlBrhVfecZN+5kyr5D5u6UKFReHeZlgCBpK9FB?=
- =?us-ascii?Q?qInd4a+SqqMBy8FTjlnGCuAlYkjHAzN+NrwXarJxaWxvQVCY4NFfqbz0AQdk?=
- =?us-ascii?Q?v2qlIUlIIMuEycoN0gS8ybEpNPcBZmbHx+/8gdVdQmy/CYiw0Kj3FKDZgiYD?=
- =?us-ascii?Q?OhzcENhFopYLgeu6LnpxW7OJXyn5CRwuzns6j/iszQyInoeGq5MY6LnQM0us?=
- =?us-ascii?Q?VcPAF4H+WepqrzeQVk/C5hEl8/+OGc5EcwC2ewol1UyN0V8dG8vxIT5dTHP8?=
- =?us-ascii?Q?G+wEsWF+SKduguYofnZjPIRWL4soSSKpnOXd+NroFUyOCdNMh1gIuJe8w8lT?=
- =?us-ascii?Q?PxXABxt0UcPLZSJz6PpIsLt0u3tgR3ymSwu1+GOAq5QxEcdgQOjIGlHcx7YE?=
- =?us-ascii?Q?XTPhl+5ZrthRSp8e7GXgPbrNTtj/Bam7m8lqSZdhRjr3XKaIJXFIQ+ISI/p+?=
- =?us-ascii?Q?ceUAG7SJg51+otbPpYy1d5dP9pew/plO2CVZr+vMzhkm4J8uhPPnN2yqvDpm?=
- =?us-ascii?Q?t/EbpfH/GvWyLHC1HavjTDcylbfdE23eEyjrdxo+KM+ui+pZgQfnbJTY/yPo?=
- =?us-ascii?Q?ZyieORD0VAzeWbOg4DrNNrEsAjVprS/XpCFoyj8SQcFdNilFSbL9aS3rrYOV?=
- =?us-ascii?Q?HOaALXWUyNnYRQ4dkF0DLmQR65NZdPJd1KA3BQiJap2adDH6VPlll6yvBUV7?=
- =?us-ascii?Q?VemIEfNRfKzg7wyvEllTjSpYT2PZuzhlJdk7iCqy?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ddb5ed5-9817-4db3-be30-08dbd2d8231b
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6179.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2023 08:23:14.9716
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jrtCS/mLVWv/7vj13q1ONrQ9OrNmA+RI+B+IkU6oVEmKDu2ZOc3+Qe9PqxBvHC5ZuN26zh+2oOZO1MchnMkmQQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8508
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+Message-Id: <52ec45eb-6633-4d51-96ff-d29d1743e1aa@app.fastmail.com>
+In-Reply-To: <c9a99e29-1a16-4b46-8e3a-afd0aae5b76e@leemhuis.info>
+References: <20230725061008.1504292-1-jiaxun.yang@flygoat.com>
+ <e9c103dc-98ac-9a51-7291-f5da1467b2ff@flygoat.com>
+ <CAAhV-H7_OjTaU_wn6mUW0-JSrXS+=A2rXCiBc8cyce5ob49BLg@mail.gmail.com>
+ <861a809d-3df1-327e-e033-87506f6d89e5@flygoat.com>
+ <20230907011828.GA2865@thinkpad>
+ <6e1bdebf-f335-23a5-c79f-d603c5d0150c@flygoat.com>
+ <20230907050805.GA3218@thinkpad>
+ <91336c97-0831-3ce3-5ff0-54344f18e065@leemhuis.info>
+ <c9a99e29-1a16-4b46-8e3a-afd0aae5b76e@leemhuis.info>
+Date:   Sun, 22 Oct 2023 14:36:13 +0100
+From:   "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To:     "Linux regressions mailing list" <regressions@lists.linux.dev>,
+        "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>
+Cc:     "Huacai Chen" <chenhuacai@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] pci: loongson: Workaround MIPS firmware MRRS settings
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 18, 2023 at 02:40:41PM -0500, Bjorn Helgaas wrote:
-> On Tue, Oct 17, 2023 at 10:42:49AM +0300, Ido Schimmel wrote:
-> > Spectrum-{1,2,3,4} devices report that a D3hot->D0 transition causes a
-> > reset (i.e., they advertise NoSoftRst-). However, this transition seems
-> > to have no effect on the device: It continues to be operational and
-> > network ports remain up. Advertising this support makes it seem as if a
-> > PM reset is viable for these devices. Mark it as unavailable to skip it
-> > when testing reset methods.
-> > 
-> > Before:
-> > 
-> >  # cat /sys/bus/pci/devices/0000\:03\:00.0/reset_method
-> >  pm bus
-> > 
-> > After:
-> > 
-> >  # cat /sys/bus/pci/devices/0000\:03\:00.0/reset_method
-> >  bus
-> > 
-> > Signed-off-by: Ido Schimmel <idosch@nvidia.com>
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Hopefully since these are NVIDIA parts and you work at NVIDIA, this is
-> stronger than "this transition *seems* to have no effect" :)
 
-Yes. Reworded to "this transition does not have any effect on the
-device" and kept your tag.
 
-FYI, new devices will not advertise support for PM reset so I don't
-expect this list to grow.
+=E5=9C=A82023=E5=B9=B410=E6=9C=8820=E6=97=A5=E5=8D=81=E6=9C=88 =E4=B8=8B=
+=E5=8D=8812:04=EF=BC=8CThorsten Leemhuis=E5=86=99=E9=81=93=EF=BC=9A
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
+>
+> Just wondering what's up here. The patch this thread is about afaics w=
+as
+> supposed to fix a regression reported in July
+> (https://bugzilla.kernel.org/show_bug.cgi?id=3D217680 ), but has made =
+not
+> steps closer to get mainlined during the past few weeks. Is there a
+> reason, or did it maybe fell through the cracks?
+>
+> Jiaxun Yang, from it quick look it seems like you wanted to post a v3,
+> but never did so; but I might be mistaken there.
+
+I just figure out the problem of this implementation.
+Will resend and explain.
+
+Thanks
+- Jiaxun
+
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' ha=
+t)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>
+> #regzbot poke
+>
+> On 20.09.23 14:33, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> [CCing the regression list, as it should be in the loop for regressio=
+ns:
+>> https://docs.kernel.org/admin-guide/reporting-regressions.html]
+>>=20
+>> On 07.09.23 07:08, Manivannan Sadhasivam wrote:
+>>> On Thu, Sep 07, 2023 at 11:13:00AM +0800, Jiaxun Yang wrote:
+>>>> =E5=9C=A8 2023/9/7 9:18, Manivannan Sadhasivam =E5=86=99=E9=81=93:
+>>>> [...]
+>>>>> Why do you need to walk through every single device instead of jus=
+t bridges?
+>>>>> I'm not the maintainer, but my suggestion is to go for Huacai Chen=
+'s solution.
+>>>>
+>>>> Thanks for your reply, unfortunately Huacai's solution is impractic=
+al in
+>>>> this case.
+>>>>
+>>>> The problem we have, is firmware (or BIOS) setting improper MRRS fo=
+r devices
+>>>> attached under those bridges. So we have to fix up MRRS for every s=
+ingle
+>>>> device.
+>>>> We can't iterate child device in bridge quirk because there is no g=
+uarantee
+>>>> that
+>>>> bridge will be probed before=C2=A0 it's child device, partly due to=
+ hotplug.
+>>>
+>>> Okay, this clarifies and also warrants improvement in commit message.
+>>>
+>>> You could also use pci_walk_bus() after pci_host_probe() to iterate =
+over the
+>>> child devices under root bridge and set MRRS. IMO that would look ne=
+at.
+>>=20
+>> Hi, Thorsten here, the Linux kernel's regression tracker. What's the
+>> status here? The regression that was supposed to be fixed by the patc=
+hed
+>> that started this thread was reported 9 weeks ago[1] and the culprit
+>> made it to many stable kernels as well. Would be really good to final=
+ly
+>> fix this, as a regression like this should ideally be fixed within 2 =
+to
+>> 3 weeks (in both mainline and stable). With a revert if necessary -- =
+is
+>> this maybe still a option, or would that cause more trouble then it
+>> solved (I guess that's the case).
+>>=20
+>> [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D217680
+>>=20
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' h=
+at)
+>> --
+>> Everything you wanna know about Linux kernel regression tracking:
+>> https://linux-regtracking.leemhuis.info/about/#tldr
+>> If I did something stupid, please tell me, as explained on that page.
+>>=20
+>>>> This quirk has been in tree for a while, until Huacai refactored it=
+ and
+>>>> broke some
+>>>> systems in 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increase=
+s").
+>>>>
+>>>> Also to note that ks_pcie_quirk in drivers/pci/controller/dwc/pci-k=
+eystone.c
+>>>> uses similar approach.
+>>>>> This avoids iterating over bridges/devices two times.
+>>>>>
+>>>>> Also, please rename firmware to BIOS, as firmware commonly represe=
+nts the
+>>>>> software running on PCIe endpoint devices.
+>>>> Ack, will fix in next reversion.
+>>>>
+>>>> Thanks
+>>>> - Jiaxun
+>>>>>
+>>>>> - Mani
+>>>> [...]
+>>>
+
+--=20
+- Jiaxun
