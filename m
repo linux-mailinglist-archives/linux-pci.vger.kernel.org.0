@@ -2,270 +2,187 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6209F7D1B48
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Oct 2023 08:04:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 385437D21A1
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Oct 2023 09:27:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229500AbjJUGD7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 Oct 2023 02:03:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35986 "EHLO
+        id S229588AbjJVH1b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 22 Oct 2023 03:27:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbjJUGD6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Oct 2023 02:03:58 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1FA0D65
-        for <linux-pci@vger.kernel.org>; Fri, 20 Oct 2023 23:03:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697868233; x=1729404233;
-  h=date:from:to:cc:subject:message-id;
-  bh=SyB6Bb+dIxXYJiOUAqQWLKXxwT/mP82huoh0l+bxijc=;
-  b=j3s0KE+Kl+H+43VindhzCJ29YCKkFaJTisZ0XDLPIRfxBJ08uHyfQbHo
-   MZydefkSR/BDApBQ4hKs5McdbQPDJnbwFU+w9M2fw3gM2etRPMI0yqaXE
-   RrTSPGnHPxBpw66hz9slHaqG8yrHjBpsNRkp52+hVaqA9H2NQkh62sgKl
-   sJVdJ1udcqcIqAOgk3Uxo7wCEce3NcAzlXFoM53+QFS/18YiTWVGp3epn
-   MBlJDHcSXTfe3yDu7ZB40U28ToaAREVldW5cEGvcid09Wr1DUUXJXt3i7
-   y4Lcajz1Wz8Bjj2hlOg3n6/QrfczmDnvxWmwebaVUS0Yq7864Ao+8G6FC
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10869"; a="385504832"
-X-IronPort-AV: E=Sophos;i="6.03,240,1694761200"; 
-   d="scan'208";a="385504832"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2023 23:03:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10869"; a="751135238"
-X-IronPort-AV: E=Sophos;i="6.03,240,1694761200"; 
-   d="scan'208";a="751135238"
-Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 20 Oct 2023 23:03:51 -0700
-Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qu55R-0004Ua-1Z;
-        Sat, 21 Oct 2023 06:03:49 +0000
-Date:   Sat, 21 Oct 2023 14:03:04 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:field-get] BUILD SUCCESS
- a1a3a781d0ba0b751ea5f56f08dec0c3dec0e90d
-Message-ID: <202310211401.98fTccDu-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229452AbjJVH1a (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 22 Oct 2023 03:27:30 -0400
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79635C2;
+        Sun, 22 Oct 2023 00:27:27 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R961e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0VubL23W_1697959640;
+Received: from 30.240.48.65(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VubL23W_1697959640)
+          by smtp.aliyun-inc.com;
+          Sun, 22 Oct 2023 15:27:22 +0800
+Message-ID: <673a0032-db43-4708-ac71-c8bef3fd8e56@linux.alibaba.com>
+Date:   Sun, 22 Oct 2023 15:27:19 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 3/4] drivers/perf: add DesignWare PCIe PMU driver
+Content-Language: en-US
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Yicong Yang <yangyicong@huawei.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
+        will@kernel.org, baolin.wang@linux.alibaba.com,
+        robin.murphy@arm.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        rdunlap@infradead.org, mark.rutland@arm.com,
+        zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
+References: <20231020134230.53342-1-xueshuai@linux.alibaba.com>
+ <20231020134230.53342-4-xueshuai@linux.alibaba.com>
+ <20231020174940.0000429e@Huawei.com>
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20231020174940.0000429e@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git field-get
-branch HEAD: a1a3a781d0ba0b751ea5f56f08dec0c3dec0e90d  PCI/portdrv: Use FIELD_GET()
 
-elapsed time: 3364m
 
-configs tested: 195
-configs skipped: 2
+On 2023/10/21 00:49, Jonathan Cameron wrote:
+> On Fri, 20 Oct 2023 21:42:29 +0800
+> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+> 
+>> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
+>> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
+>> Core controller IP which provides statistics feature. The PMU is a PCIe
+>> configuration space register block provided by each PCIe Root Port in a
+>> Vendor-Specific Extended Capability named RAS D.E.S (Debug, Error
+>> injection, and Statistics).
+>>
+>> To facilitate collection of statistics the controller provides the
+>> following two features for each Root Port:
+>>
+>> - one 64-bit counter for Time Based Analysis (RX/TX data throughput and
+>>   time spent in each low-power LTSSM state) and
+>> - one 32-bit counter for Event Counting (error and non-error events for
+>>   a specified lane)
+>>
+>> Note: There is no interrupt for counter overflow.
+>>
+>> This driver adds PMU devices for each PCIe Root Port. And the PMU device is
+>> named based the BDF of Root Port. For example,
+>>
+>>     30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
+>>
+>> the PMU device name for this Root Port is dwc_rootport_3018.
+>>
+>> Example usage of counting PCIe RX TLP data payload (Units of bytes)::
+>>
+>>     $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
+>>
+>> average RX bandwidth can be calculated like this:
+>>
+>>     PCIe TX Bandwidth = Rx_PCIe_TLP_Data_Payload / Measure_Time_Window
+>>
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> LGTM other than some really trivial stuff inline if you are doing a v10
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Hi, Jonathan,
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                          axs101_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20231019   gcc  
-arc                   randconfig-001-20231021   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                       omap2plus_defconfig   gcc  
-arm                   randconfig-001-20231019   gcc  
-arm                   randconfig-001-20231021   gcc  
-arm64                            alldefconfig   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20231020   gcc  
-i386         buildonly-randconfig-001-20231021   gcc  
-i386         buildonly-randconfig-002-20231020   gcc  
-i386         buildonly-randconfig-002-20231021   gcc  
-i386         buildonly-randconfig-003-20231020   gcc  
-i386         buildonly-randconfig-003-20231021   gcc  
-i386         buildonly-randconfig-004-20231020   gcc  
-i386         buildonly-randconfig-004-20231021   gcc  
-i386         buildonly-randconfig-005-20231020   gcc  
-i386         buildonly-randconfig-005-20231021   gcc  
-i386         buildonly-randconfig-006-20231020   gcc  
-i386         buildonly-randconfig-006-20231021   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231019   gcc  
-i386                  randconfig-001-20231021   gcc  
-i386                  randconfig-002-20231019   gcc  
-i386                  randconfig-002-20231021   gcc  
-i386                  randconfig-003-20231019   gcc  
-i386                  randconfig-003-20231021   gcc  
-i386                  randconfig-004-20231019   gcc  
-i386                  randconfig-004-20231021   gcc  
-i386                  randconfig-005-20231019   gcc  
-i386                  randconfig-005-20231021   gcc  
-i386                  randconfig-006-20231019   gcc  
-i386                  randconfig-006-20231021   gcc  
-i386                  randconfig-011-20231019   gcc  
-i386                  randconfig-011-20231021   gcc  
-i386                  randconfig-012-20231019   gcc  
-i386                  randconfig-012-20231021   gcc  
-i386                  randconfig-013-20231019   gcc  
-i386                  randconfig-013-20231021   gcc  
-i386                  randconfig-014-20231019   gcc  
-i386                  randconfig-014-20231021   gcc  
-i386                  randconfig-015-20231019   gcc  
-i386                  randconfig-015-20231021   gcc  
-i386                  randconfig-016-20231019   gcc  
-i386                  randconfig-016-20231021   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20231019   gcc  
-loongarch             randconfig-001-20231021   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-microblaze                      mmu_defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                  maltasmvp_eva_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                    adder875_defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc                      ep88xc_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20231019   gcc  
-riscv                 randconfig-001-20231021   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20231019   gcc  
-s390                  randconfig-001-20231021   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                            hp6xx_defconfig   gcc  
-sh                          kfr2r09_defconfig   gcc  
-sh                          rsk7269_defconfig   gcc  
-sh                           se7780_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                 randconfig-001-20231019   gcc  
-sparc                 randconfig-001-20231021   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20231019   gcc  
-x86_64       buildonly-randconfig-001-20231021   gcc  
-x86_64       buildonly-randconfig-002-20231019   gcc  
-x86_64       buildonly-randconfig-002-20231021   gcc  
-x86_64       buildonly-randconfig-003-20231019   gcc  
-x86_64       buildonly-randconfig-003-20231021   gcc  
-x86_64       buildonly-randconfig-004-20231019   gcc  
-x86_64       buildonly-randconfig-004-20231021   gcc  
-x86_64       buildonly-randconfig-005-20231019   gcc  
-x86_64       buildonly-randconfig-005-20231021   gcc  
-x86_64       buildonly-randconfig-006-20231019   gcc  
-x86_64       buildonly-randconfig-006-20231021   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20231019   gcc  
-x86_64                randconfig-001-20231021   gcc  
-x86_64                randconfig-002-20231019   gcc  
-x86_64                randconfig-002-20231021   gcc  
-x86_64                randconfig-003-20231019   gcc  
-x86_64                randconfig-003-20231021   gcc  
-x86_64                randconfig-004-20231019   gcc  
-x86_64                randconfig-004-20231021   gcc  
-x86_64                randconfig-005-20231019   gcc  
-x86_64                randconfig-005-20231021   gcc  
-x86_64                randconfig-006-20231019   gcc  
-x86_64                randconfig-006-20231021   gcc  
-x86_64                randconfig-011-20231020   gcc  
-x86_64                randconfig-011-20231021   gcc  
-x86_64                randconfig-012-20231020   gcc  
-x86_64                randconfig-012-20231021   gcc  
-x86_64                randconfig-013-20231020   gcc  
-x86_64                randconfig-013-20231021   gcc  
-x86_64                randconfig-014-20231020   gcc  
-x86_64                randconfig-014-20231021   gcc  
-x86_64                randconfig-015-20231020   gcc  
-x86_64                randconfig-015-20231021   gcc  
-x86_64                randconfig-016-20231020   gcc  
-x86_64                randconfig-016-20231021   gcc  
-x86_64                randconfig-071-20231020   gcc  
-x86_64                randconfig-071-20231021   gcc  
-x86_64                randconfig-072-20231020   gcc  
-x86_64                randconfig-072-20231021   gcc  
-x86_64                randconfig-073-20231020   gcc  
-x86_64                randconfig-073-20231021   gcc  
-x86_64                randconfig-074-20231020   gcc  
-x86_64                randconfig-074-20231021   gcc  
-x86_64                randconfig-075-20231020   gcc  
-x86_64                randconfig-075-20231021   gcc  
-x86_64                randconfig-076-20231020   gcc  
-x86_64                randconfig-076-20231021   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
+Thank you for your prompt response.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+The fact that this [3/4] patch has received a Reviewed-by tag from the
+community is a momentous milestone for both the patchset itself and for me
+personally. I am deeply grateful for the time and effort you have dedicated
+to providing valuable comments, as it has significantly improved the code's
+quality.
+
+I will address the inline comments in the upcoming version v10. However, I
+kindly request some time to wait for feedback from esteemed reviewers such
+as Yicong, Bjorn, Will, or anyone else who may find this patchset
+intriguing.
+
+Best Regards and Cheers.
+Shuai
+
+
+>> +		}
+>> +
+>> +		/* Unwind when platform driver removes */
+>> +		ret = devm_add_action_or_reset(
+>> +			&plat_dev->dev, dwc_pcie_pmu_remove_cpuhp_instance,
+>> +			&pcie_pmu->cpuhp_node);
+>> +		if (ret)
+>> +			goto out;
+>> +
+>> +		ret = perf_pmu_register(&pcie_pmu->pmu, name, -1);
+>> +		if (ret) {
+>> +			pci_err(pdev,
+>> +				"Error %d registering PMU @%x\n", ret, bdf);
+>> +			goto out;
+>> +		}
+>> +
+>> +		/* Cache PMU to handle pci device hotplug */
+>> +		list_add(&pcie_pmu->pmu_node, &dwc_pcie_pmu_head);
+>> +		pcie_pmu->registered = true;
+>> +		notify = true;
+>> +
+>> +		ret = devm_add_action_or_reset(
+>> +			&plat_dev->dev, dwc_pcie_pmu_unregister_pmu, pcie_pmu);
+> 
+> line wrapping is a bit ugly - I would move the &plat_dev->dev to previous line.
+> and I think you can get away with aligning the rest just after the (
+> 
+
+Actually, I warp this with VSCode automaticlly :(
+Will move the &plat_dev->dev to previous line.
+
+
+> 
+> 
+> 
+>> +static int __init dwc_pcie_pmu_init(void)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
+>> +				      "perf/dwc_pcie_pmu:online",
+>> +				      dwc_pcie_pmu_online_cpu,
+>> +				      dwc_pcie_pmu_offline_cpu);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	dwc_pcie_pmu_hp_state = ret;
+>> +
+>> +	ret = platform_driver_register(&dwc_pcie_pmu_driver);
+>> +	if (ret)
+>> +		goto platform_driver_register_err;
+>> +
+>> +	dwc_pcie_pmu_dev = platform_device_register_simple(
+>> +				"dwc_pcie_pmu", PLATFORM_DEVID_NONE, NULL, 0);
+>> +	if (IS_ERR(dwc_pcie_pmu_dev)) {
+>> +		ret = PTR_ERR(dwc_pcie_pmu_dev);
+>> +		goto platform_device_register_error;
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +platform_device_register_error:
+> 
+> Trivial but I'd standardize on err or error, not mix them.
+
+Sorry, will fix it.
+
+> 
+>> +	platform_driver_unregister(&dwc_pcie_pmu_driver);
+>> +platform_driver_register_err:
+>> +	cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
+>> +
+>> +	return ret;
+>> +}
