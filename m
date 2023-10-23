@@ -2,125 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E99387D3AEA
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Oct 2023 17:36:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C34657D3B7E
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Oct 2023 17:52:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230250AbjJWPgZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Oct 2023 11:36:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59414 "EHLO
+        id S229498AbjJWPwA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Oct 2023 11:52:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229569AbjJWPgZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Oct 2023 11:36:25 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B28ADB;
-        Mon, 23 Oct 2023 08:36:23 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 440D7C433C8;
-        Mon, 23 Oct 2023 15:36:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698075382;
-        bh=GjXvcSO/i6FF/OlNaJfRF+sQGbecxltiNDipUhA7AB4=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=sgfRDy2e5QPF/UqBmV4/zbV2K5RPcCyGcHK4oaRv5OtJ1hyrcX/STTBuIIrs4wLPG
-         2pFD7871CcQJXtWvBh/hyGF0Ut9Fys9tqaiO1X9MYnC5IDDW/ynbGIqc/7mOxm68ns
-         McCpTf+5t0S1464Mj14zcecHl7VAn5No+ABYNI5nRiui94ClbGAe+UQ2bjnzXBFzgX
-         1QI0D8VMV6FExZjhbe1Qhp87xnX90bN2v2Q5ROuhaTMTWNswVARfPwm40QcjXOkHwd
-         mNxyJQlO4jtENF79RzQAJFgJzy2852R5ARDwBCAv4AL66ax+/9PqFfwSdYDmU1Ftc1
-         thPMt39SBYdGA==
-Date:   Mon, 23 Oct 2023 17:36:19 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v5 13/44] i2c: add HAS_IOPORT dependencies
-Message-ID: <ZTaS8/Z4p8bLoHF1@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-pci@vger.kernel.org,
-        Arnd Bergmann <arnd@kernel.org>, linux-i2c@vger.kernel.org
-References: <20230522105049.1467313-1-schnelle@linux.ibm.com>
- <20230522105049.1467313-14-schnelle@linux.ibm.com>
- <ZRCju+Ctuu2Mf+1c@shikoro>
+        with ESMTP id S233353AbjJWPvy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Oct 2023 11:51:54 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A1EFF
+        for <linux-pci@vger.kernel.org>; Mon, 23 Oct 2023 08:51:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=QO0jPqp/qs2yWDaXi5BBn48i75pk74+sIYVNu39eIWI=; b=rxpc1sWGcK/0KVnixkVIxoUh4D
+        zt1jbRdmvX05NlzHlf+4yw6cnDEoYeu91/I6xWIIOqTJ3hoM4kbxltimT+Wsi1+3CjsKRakfpqJtL
+        usTSi0pKUmeqjiQzLLeirXu0K+Dh/5sptZhM1M4Gj315Fb+v2zwS88uIup4MK2CRreEnQGvmG4g++
+        Vw+nPyeHDjf3dbAqpeUhCx5AI0Afh7IXk6cwVkbwLEgAyQ+2dwJRfmb+oDckqcxTpkf9s/UBy689F
+        Ggxlu/SXS9sAqGw/50Rk2E5P9dF7nm2YDTRPp5paWdnfl1pqJYPaD5WaIJMR7ddTxn9GNiLKhQyRv
+        jg4b4KIA==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1quxDY-004FQC-Fo; Mon, 23 Oct 2023 09:51:49 -0600
+Message-ID: <271d092e-36bd-4420-9432-ffa837e3134f@deltatee.com>
+Date:   Mon, 23 Oct 2023 09:51:47 -0600
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="IKJd4WrwHJvKoZ2A"
-Content-Disposition: inline
-In-Reply-To: <ZRCju+Ctuu2Mf+1c@shikoro>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+To:     Tadeusz Struk <tstruk@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, Tadeusz Struk <tstruk@gigaio.com>
+References: <20231023084050.55230-1-tstruk@gmail.com>
+Content-Language: en-CA
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20231023084050.55230-1-tstruk@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: tstruk@gmail.com, bhelgaas@google.com, linux-pci@vger.kernel.org, tstruk@gigaio.com
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH] p2pdma: remove redundant goto
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---IKJd4WrwHJvKoZ2A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Sep 24, 2023 at 11:01:47PM +0200, Wolfram Sang wrote:
-> On Mon, May 22, 2023 at 12:50:18PM +0200, Niklas Schnelle wrote:
-> > In a future patch HAS_IOPORT=3Dn will result in inb()/outb() and friends
-> > not being declared. We thus need to add HAS_IOPORT as dependency for
-> > those drivers using them.
-> >=20
-> > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> > Signed-off-by: Arnd Bergmann <arnd@kernel.org>
-> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
->=20
-> In RFC v1, you agreed to drop PARPORT [1]. Is there a reason you haven't
-> done this so far?
->=20
-> [1] https://patchwork.ozlabs.org/project/linux-i2c/patch/20211227164317.4=
-146918-11-schnelle@linux.ibm.com/
+On 2023-10-23 02:40, Tadeusz Struk wrote:
+> Remove redundant goto in pci_alloc_p2pmem()
+> 
+> Signed-off-by: Tadeusz Struk <tstruk@gmail.com>
 
-Shall I apply this with or without PARPORT?
+Makes sense to me.
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+Logan
 
 
---IKJd4WrwHJvKoZ2A
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmU2kvMACgkQFA3kzBSg
-Kbatiw//U8VXBAC3aPMTbD6m0NSoMa1PF0OiVlizyXToMW0qVjXRKbhDGpWMV9rq
-ML2nNXfCNCwnsI/NdYX5KD8NtBaKIu7ecIGZ1xaF8eqWaSPbVxCuK/zKwrBgFcjb
-eakTvDuWnNWVzgXDd1J2/oaIfTvYUfXI4rbm7SBlPFysGNjzgixUf3XtJ+9Ou97z
-ydKK886E0sKpzpwKl2c3CIqUMZYTDAFu+EVWimk8/u6fSRp+0peEBRDv6hgTbO4Y
-5KHwdh6WddCZ8KODGx9f0ZW1vxO530SRGoqiK6p/8b4YIMQ7gfhD4rb2r/seSpGJ
-0BhLY//IE2+Pj2QLXrELinaJGFyk5PXLsdlDCkstcLjyvB2l2xkvgJZTbDfM+gM5
-OiXThEmz4RUxaL3npTBrC6U7z8hWqS+XfkKQ8OYXXY8IPiuwXwuJIUPDUCFqhKec
-srmuu0bd4F9JYPOzJCERwbDVYI7mFq9lReuAJSE+GfSLeV16kpL3woGRZLKdzbav
-lhGSOliYGqEINY2xATuYc85IGrAkN7PeRcK5643A8obdnH8mNKlzezm92dzCdqfb
-WB2Rx2khFBqZiA1+fx9PLhS9EMF7yneQ83pqDUgvzeRm6zKiWzDViX1vy/tDj0vv
-ob4loEiEXp70Wb8uif1uYYLdmc3IBdWBLNfYeBJEFAf97PyaopQ=
-=U36p
------END PGP SIGNATURE-----
-
---IKJd4WrwHJvKoZ2A--
+> ---
+>  drivers/pci/p2pdma.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index fa7370f9561a..a7776315996c 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -837,7 +837,6 @@ void *pci_alloc_p2pmem(struct pci_dev *pdev, size_t size)
+>  	if (unlikely(!percpu_ref_tryget_live_rcu(ref))) {
+>  		gen_pool_free(p2pdma->pool, (unsigned long) ret, size);
+>  		ret = NULL;
+> -		goto out;
+>  	}
+>  out:
+>  	rcu_read_unlock();
