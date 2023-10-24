@@ -2,173 +2,199 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C46A47D54F5
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Oct 2023 17:12:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 398E07D5704
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Oct 2023 17:56:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234528AbjJXPM5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Oct 2023 11:12:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49282 "EHLO
+        id S1343956AbjJXP4y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Oct 2023 11:56:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234698AbjJXPM4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Oct 2023 11:12:56 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45455122;
-        Tue, 24 Oct 2023 08:12:43 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-507bd19eac8so6733232e87.0;
-        Tue, 24 Oct 2023 08:12:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698160361; x=1698765161;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:dkim-signature:dkim-signature
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9N9/+NUa+wHK0HF99kAFQH1PWNyZJRmq/sRYP/HtkeM=;
-        b=Qy7xbmmpprk7o68qbU5++IAXmaAxHn6rWI5+jLpZbFpTcDOE0HWEhpWuLilYMS/bnI
-         +ygfVqNBG433lt9Qc8OBJA1u8VboGet55Q74e1HxuCj7nGd19uGBCAtHjd+hH5C+r4yn
-         XvxXCG+oNHBJW7Zfc4YxDWyKcuO+b8R+OgLwC0cdBnTdI7pVeJgN4k6569BctaxNqiPG
-         cafirZCT5CzwoBbR0Dd4CyteFQpp+ZvZGSpUQ/aS/hiCebGip2Eavjga1QmOiZnrI9od
-         PhkSUtTJwkuhNen1E109v3rETtpwe3Cn8WLc7SN2qptdB2na86eaYw/B81KDA5zhptqO
-         IPwA==
-X-Gm-Message-State: AOJu0YwbuzxUmKGgD/CIV+W+GFIT/OVWNEX2fvDzbknpNjkBTrfFddeh
-        tdTTUeJiQdQok0kvklldFIEA9+qKRuoypw==
-X-Google-Smtp-Source: AGHT+IFQRbGqxwwWDNyZFLNmwC4u32DEGCwINoeL3rqL0ZmPtayQiSa4V+fMB7LtB04E5CROiWsV+g==
-X-Received: by 2002:a19:5e1c:0:b0:507:a58f:79ac with SMTP id s28-20020a195e1c000000b00507a58f79acmr9328157lfb.33.1698160361182;
-        Tue, 24 Oct 2023 08:12:41 -0700 (PDT)
-Received: from flawful.org (c-f5f0e255.011-101-6d6c6d3.bbcust.telenor.se. [85.226.240.245])
-        by smtp.gmail.com with ESMTPSA id l8-20020ac25548000000b005032ebff21asm2141126lfk.279.2023.10.24.08.12.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 08:12:40 -0700 (PDT)
-Received: by flawful.org (Postfix, from userid 112)
-        id 109F414D4; Tue, 24 Oct 2023 17:12:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
-        t=1698160360; bh=nOWykBjoXapYzbbqt/B6vaxHD5OyGUKgl7kHm6hJUts=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PkGmnmIKbZXn3i3S+B4zJWjLs6YwRCYrx3zQ/0kyZg5Y/w8mpBDNGeqPTu8BDV5rq
-         jje4lJWt71pDKMowQs/obwiXUj6H4WVqJM5KedZ6kxYcwgGYPQsDzHerbBd+qeK+no
-         MTRI45wloCJpt/7K6zdx9SGVxsBfUempa1m/ENMw=
+        with ESMTP id S1343963AbjJXP4x (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Oct 2023 11:56:53 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65CBED7A;
+        Tue, 24 Oct 2023 08:56:51 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB363C433CB;
+        Tue, 24 Oct 2023 15:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698163010;
+        bh=r5Sa3tUW2/ACs5PkqUuCw3ezccmcgEsbeiCxzhS4PFA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=WvRBAcpH1TFHbhuDbryiydv0Hkm3NYAO14s3oLc5nlfxpatDGN9CPW9ygpmLARYG0
+         0nfPpk8obxuzT9GVMn9b7ETsaFBXhL2rG2L5b8qqCSxLp/t/m5GyDEkRRoX9Cdd0ga
+         Fnn2CDbno+LXjaWsQXkF+eql6AfrYKb5k5TrtDU1f24h2arM+RqDo/CYGN1n3OA7L7
+         1mPmsCgXTCSORYYUI/ADd76TfqdfNuwMxuKR5Pi8FpEwESJF10HsLypnnEFzc1tuma
+         2JO6r00oVHdAZ0Xccd9ss/n/vUosMr7OUqSci6cVvMIMrPuDdc4GyBOWz0RU3xkiaz
+         tpgO96ewDO/Cw==
+Date:   Tue, 24 Oct 2023 10:56:49 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] PCI: dwc: Use FIELD_GET/PREP()
+Message-ID: <20231024155649.GA1655811@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231024110336.26264-1-ilpo.jarvinen@linux.intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
-Received: from x1-carbon.lan (OpenWrt.lan [192.168.1.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by flawful.org (Postfix) with ESMTPSA id 57FF514E7;
-        Tue, 24 Oct 2023 17:10:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
-        t=1698160246; bh=nOWykBjoXapYzbbqt/B6vaxHD5OyGUKgl7kHm6hJUts=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WAnZ5gtPK8mM3eEH4aTkJGHHxRvBNJtNK4kGrk0CYhTG4AEKnQKNIPRPCcuti4T1E
-         7oJX1wj0eJ132vMInhvaOTYDmRkFXrouTOzfMVtn3QlFbek8AjJWbl+NL8vVFrDoIt
-         IHHPQpg9jT9kIiC17HA5YFoWQQzPPZ0VnyYB0UAk=
-From:   Niklas Cassel <nks@flawful.org>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>
-Cc:     Damien Le Moal <dlemoal@kernel.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Niklas Cassel <niklas.cassel@wdc.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH v2 3/4] dt-bindings: PCI: dwc: rockchip: Add dma properties
-Date:   Tue, 24 Oct 2023 17:10:10 +0200
-Message-ID: <20231024151014.240695-4-nks@flawful.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231024151014.240695-1-nks@flawful.org>
-References: <20231024151014.240695-1-nks@flawful.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel@wdc.com>
+On Tue, Oct 24, 2023 at 02:03:36PM +0300, Ilpo Järvinen wrote:
+> Convert open-coded variants of PCI field access into FIELD_GET/PREP()
+> to make the code easier to understand.
+> 
+> Add two missing defines into pci_regs.h. Logically, the Max No-Snoop
+> Latency Register is a separate word sized register in the PCIe spec,
+> but the pre-existing LTR defines in pci_regs.h with dword long values
+> seem to consider the registers together (the same goes for the only
+> user). Thus, follow the custom and make the new values also take both
+> word long LTR registers as a joint dword register.
+> 
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-Even though rockchip-dw-pcie.yaml inherits snps,dw-pcie.yaml
-using:
+Replaced the previous "PCI: dwc: Use FIELD_GET/PREP()" patch on
+pci/field-get, thanks!
 
-allOf:
-  - $ref: /schemas/pci/snps,dw-pcie.yaml#
+Here's the diff from a1a3a781d0ba (the previous head of pci/field-get)
+to the current head:
 
-and snps,dw-pcie.yaml does have the dma properties defined, in order to be
-able to use these properties, while still making sure 'make CHECK_DTBS=y'
-pass, we need to add these properties to rockchip-dw-pcie.yaml.
-
-Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
----
- .../bindings/pci/rockchip-dw-pcie.yaml        | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-index 229f8608c535..633f8e0e884f 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-@@ -35,6 +35,7 @@ properties:
-       - description: Rockchip designed configuration registers
-       - description: Config registers
-       - description: iATU registers
-+      - description: eDMA registers
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 12d5ab2f5219..f2a515b639ab 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -126,6 +126,7 @@
  
-   reg-names:
-     minItems: 3
-@@ -43,6 +44,7 @@ properties:
-       - const: apb
-       - const: config
-       - const: atu
-+      - const: dma
+ #define APPL_LTR_MSG_1				0xC4
+ #define LTR_MSG_REQ				BIT(15)
++#define LTR_NOSNOOP_MSG_REQ			BIT(31)
  
-   clocks:
-     minItems: 5
-@@ -65,6 +67,7 @@ properties:
-       - const: pipe
+ #define APPL_LTR_MSG_2				0xC8
+ #define APPL_LTR_MSG_2_LTR_MSG_REQ_STATE	BIT(3)
+@@ -495,8 +496,12 @@ static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
+ 		ktime_t timeout;
  
-   interrupts:
-+    minItems: 5
-     items:
-       - description:
-           Combined system interrupt, which is used to signal the following
-@@ -88,14 +91,31 @@ properties:
-           interrupts - aer_rc_err, aer_rc_err_msi, rx_cpl_timeout,
-           tx_cpl_timeout, cor_err_sent, nf_err_sent, f_err_sent, cor_err_rx,
-           nf_err_rx, f_err_rx, radm_qoverflow
-+      - description:
-+          Indicates that the eDMA Tx/Rx transfer is complete or that an
-+          error has occurred on the corresponding channel.
-+      - description:
-+          Indicates that the eDMA Tx/Rx transfer is complete or that an
-+          error has occurred on the corresponding channel.
-+      - description:
-+          Indicates that the eDMA Tx/Rx transfer is complete or that an
-+          error has occurred on the corresponding channel.
-+      - description:
-+          Indicates that the eDMA Tx/Rx transfer is complete or that an
-+          error has occurred on the corresponding channel.
+ 		/* 110us for both snoop and no-snoop */
+-		val = 110 | FIELD_PREP(PCI_LTR_SCALE_SHIFT, 2) | LTR_MSG_REQ;
+-		val |= FIELD_PREP(PCI_LTR_NOSNOOP_VALUE, val);
++		val = FIELD_PREP(PCI_LTR_VALUE_MASK, 110) |
++		      FIELD_PREP(PCI_LTR_SCALE_MASK, 2) |
++		      LTR_MSG_REQ |
++		      FIELD_PREP(PCI_LTR_NOSNOOP_VALUE, 110) |
++		      FIELD_PREP(PCI_LTR_NOSNOOP_SCALE, 2) |
++		      LTR_NOSNOOP_MSG_REQ;
+ 		appl_writel(pcie, val, APPL_LTR_MSG_1);
  
-   interrupt-names:
-+    minItems: 5
-     items:
-       - const: sys
-       - const: pmc
-       - const: msg
-       - const: legacy
-       - const: err
-+      - const: dma0
-+      - const: dma1
-+      - const: dma2
-+      - const: dma3
- 
-   legacy-interrupt-controller:
-     description: Interrupt controller node for handling legacy PCI interrupts.
--- 
-2.41.0
+ 		/* Send LTR upstream */
 
+> ---
+> 
+> This patch REPLACES the previous patch which caused the build fail on
+> arm and also failed to copy the entire value into nosnoop register
+> like the original code did.
+> 
+> v2:
+> - Correct define name used in FIELD_PREP()
+> - Correctly copy the contents of the full register, not just the
+>   Max Latency Value field.
+> - Wrap also the 110 literal into FIELD_PREP()
+> 
+>  drivers/pci/controller/dwc/pcie-designware-ep.c |  7 ++++---
+>  drivers/pci/controller/dwc/pcie-tegra194.c      | 10 +++++++---
+>  include/uapi/linux/pci_regs.h                   |  2 ++
+>  3 files changed, 13 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index f9182f8d552f..20bef1436bfb 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -6,6 +6,7 @@
+>   * Author: Kishon Vijay Abraham I <kishon@ti.com>
+>   */
+>  
+> +#include <linux/bitfield.h>
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  
+> @@ -334,7 +335,7 @@ static int dw_pcie_ep_get_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
+>  	if (!(val & PCI_MSI_FLAGS_ENABLE))
+>  		return -EINVAL;
+>  
+> -	val = (val & PCI_MSI_FLAGS_QSIZE) >> 4;
+> +	val = FIELD_GET(PCI_MSI_FLAGS_QSIZE, val);
+>  
+>  	return val;
+>  }
+> @@ -357,7 +358,7 @@ static int dw_pcie_ep_set_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  	reg = ep_func->msi_cap + func_offset + PCI_MSI_FLAGS;
+>  	val = dw_pcie_readw_dbi(pci, reg);
+>  	val &= ~PCI_MSI_FLAGS_QMASK;
+> -	val |= (interrupts << 1) & PCI_MSI_FLAGS_QMASK;
+> +	val |= FIELD_PREP(PCI_MSI_FLAGS_QMASK, interrupts);
+>  	dw_pcie_dbi_ro_wr_en(pci);
+>  	dw_pcie_writew_dbi(pci, reg, val);
+>  	dw_pcie_dbi_ro_wr_dis(pci);
+> @@ -584,7 +585,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  
+>  	reg = ep_func->msix_cap + func_offset + PCI_MSIX_TABLE;
+>  	tbl_offset = dw_pcie_readl_dbi(pci, reg);
+> -	bir = (tbl_offset & PCI_MSIX_TABLE_BIR);
+> +	bir = FIELD_GET(PCI_MSIX_TABLE_BIR, tbl_offset);
+>  	tbl_offset &= PCI_MSIX_TABLE_OFFSET;
+>  
+>  	msix_tbl = ep->epf_bar[bir]->addr + tbl_offset;
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 248cd9347e8f..f2a515b639ab 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -126,7 +126,7 @@
+>  
+>  #define APPL_LTR_MSG_1				0xC4
+>  #define LTR_MSG_REQ				BIT(15)
+> -#define LTR_MST_NO_SNOOP_SHIFT			16
+> +#define LTR_NOSNOOP_MSG_REQ			BIT(31)
+>  
+>  #define APPL_LTR_MSG_2				0xC8
+>  #define APPL_LTR_MSG_2_LTR_MSG_REQ_STATE	BIT(3)
+> @@ -496,8 +496,12 @@ static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
+>  		ktime_t timeout;
+>  
+>  		/* 110us for both snoop and no-snoop */
+> -		val = 110 | (2 << PCI_LTR_SCALE_SHIFT) | LTR_MSG_REQ;
+> -		val |= (val << LTR_MST_NO_SNOOP_SHIFT);
+> +		val = FIELD_PREP(PCI_LTR_VALUE_MASK, 110) |
+> +		      FIELD_PREP(PCI_LTR_SCALE_MASK, 2) |
+> +		      LTR_MSG_REQ |
+> +		      FIELD_PREP(PCI_LTR_NOSNOOP_VALUE, 110) |
+> +		      FIELD_PREP(PCI_LTR_NOSNOOP_SCALE, 2) |
+> +		      LTR_NOSNOOP_MSG_REQ;
+>  		appl_writel(pcie, val, APPL_LTR_MSG_1);
+>  
+>  		/* Send LTR upstream */
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index e5f558d96493..495f0ae4ecd5 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -975,6 +975,8 @@
+>  #define  PCI_LTR_VALUE_MASK	0x000003ff
+>  #define  PCI_LTR_SCALE_MASK	0x00001c00
+>  #define  PCI_LTR_SCALE_SHIFT	10
+> +#define  PCI_LTR_NOSNOOP_VALUE	0x03ff0000 /* Max No-Snoop Latency Value */
+> +#define  PCI_LTR_NOSNOOP_SCALE	0x1c000000 /* Scale for Max Value */
+>  #define PCI_EXT_CAP_LTR_SIZEOF	8
+>  
+>  /* Access Control Service */
+> -- 
+> 2.30.2
+> 
