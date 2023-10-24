@@ -2,259 +2,222 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 844187D596F
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Oct 2023 19:08:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBBBA7D59F8
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Oct 2023 19:52:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344020AbjJXRIb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Oct 2023 13:08:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54960 "EHLO
+        id S1343610AbjJXRw7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Oct 2023 13:52:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344034AbjJXRIa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Oct 2023 13:08:30 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8DE4118;
-        Tue, 24 Oct 2023 10:08:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698167305; x=1729703305;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=hUGirVag7S8n+zT+Bt5TDAK/SLrrk9OVdLzyMdWj1BM=;
-  b=MK0rHJbLLv/T5s/Xh7JJJg0HxouXOgh6hV+Tv8dzO0kjvhQ3DvGVXTCw
-   2V0Jel9mU1SFM2FcBkrblU+HU/VjodqXH3/KzqDqzejMGjb9zBQa54O+3
-   cOrSot/OYcEbMDHZFOTeZD0aQ5Bd/t+I9UYLrxsIlZNQG9Bcbhfym8hQ2
-   4QIN0Id3JeSLbaNKMdLB/rSUSF1e25uMGk8sEsLy/Z7Z5tcnYk67nxLQI
-   s+3QzNxHqs6ZeYuGr1vJOhdbruYg8B6UXePPdGyJHGRp2S0ExyuDTftSt
-   ta9cFGaKdzFpqX/AkvBFThLi3yZIL/OEJMv/3HKVRkbv2R7YwTisKtc4/
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10873"; a="5740573"
-X-IronPort-AV: E=Sophos;i="6.03,248,1694761200"; 
-   d="scan'208";a="5740573"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2023 10:08:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10873"; a="758546619"
-X-IronPort-AV: E=Sophos;i="6.03,248,1694761200"; 
-   d="scan'208";a="758546619"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
-  by orsmga002.jf.intel.com with SMTP; 24 Oct 2023 10:08:16 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Tue, 24 Oct 2023 20:08:16 +0300
-Date:   Tue, 24 Oct 2023 20:08:16 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
-        lorenzo.pieralisi@arm.com, hch@infradead.org, kw@linux.com,
-        robh@kernel.org, bhelgaas@google.com, michael.a.bottini@intel.com,
-        rafael@kernel.org, me@adhityamohan.in, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH V2] PCI: Move VMD ASPM/LTR fix to PCI quirk
-Message-ID: <ZTf6ALl3xNvhLN6M@intel.com>
-References: <20230411213323.1362300-1-david.e.box@linux.intel.com>
+        with ESMTP id S234315AbjJXRw6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Oct 2023 13:52:58 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8192810D3;
+        Tue, 24 Oct 2023 10:52:56 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEBD1C433C7;
+        Tue, 24 Oct 2023 17:52:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698169976;
+        bh=KUF7e+OQ3Cmah38SMoodhEwyDPQhM9qKHEvTf9JRMLA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=szEiV2H2y6V69DSMmIjRsYCrp7HLNV/OYuRJb36ATW03CYFhw7JwfTZ7CE3WiiunT
+         IoMGGD+iW3gjfdM5coQnjSmuYY57kaitDfZG+vVWYuEmpF/W/TrEudTZP5J3hDKRpz
+         nTzMTiUHC3esNZ+ZqhB+LxOwRpxcbNgCohlcUegpEXuT3LncyOCpGY3CCJUvOThe/h
+         hyN+7Dv1qPOApEdX2Xif3Rbb72hl53NwpT/I2Bf0OHRQZaNG0VYw8ZDsqi4wy2zq2P
+         ixonxQTg+4Y7pKbQo8XdnBSzp/FiAHOgGLpH/jRqE2WRPdazUQFCecbe7oiv5iB+zU
+         xqeGovmWrEOTg==
+Date:   Tue, 24 Oct 2023 12:52:53 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Minda Chen <minda.chen@starfivetech.com>
+Cc:     Conor Dooley <conor@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Kevin Xie <kevin.xie@starfivetech.com>
+Subject: Re: [PATCH v9 19/20] PCI: starfive: Add JH7110 PCIe controller
+Message-ID: <20231024175253.GA1662387@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230411213323.1362300-1-david.e.box@linux.intel.com>
-X-Patchwork-Hint: comment
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20231020104341.63157-20-minda.chen@starfivetech.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 02:33:23PM -0700, David E. Box wrote:
-> In commit f492edb40b54 ("PCI: vmd: Add quirk to configure PCIe ASPM and
-> LTR") the VMD driver calls pci_enabled_link_state as a callback from
-> pci_bus_walk. Both will acquire the pci_bus_sem lock leading to a lockdep
-> warning. Instead of doing the pci_bus_walk, move the fix to quirks.c using
-> DECLARE_PCI_FIXUP_FINAL.
+On Fri, Oct 20, 2023 at 06:43:40PM +0800, Minda Chen wrote:
+> Add StarFive JH7110 SoC PCIe controller platform
+> driver codes, JH7110 with PLDA host PCIe core.
 
-What happened to this patch? We're still carrying a local fix
-for this in drm-tip...
+Wrap all your commit logs to fill about 75 columns (as suggested
+before).  "git log" adds a few spaces, so if you fill to 75 columns,
+the result will still fit in a default 80 column window.
 
-> 
-> Fixes: f492edb40b54 ("PCI: vmd: Add quirk to configure PCIe ASPM and LTR")
-> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
-> 
-> V2 - Instead of adding a lock flag argument to pci_enabled_link_state, move
->      the fix to quirks.c
-> 
->  drivers/pci/controller/vmd.c | 55 +--------------------------
->  drivers/pci/quirks.c         | 72 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 73 insertions(+), 54 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 990630ec57c6..47fa3e5f2dc5 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -66,22 +66,11 @@ enum vmd_features {
->  	 * interrupt handling.
->  	 */
->  	VMD_FEAT_CAN_BYPASS_MSI_REMAP		= (1 << 4),
-> -
-> -	/*
-> -	 * Enable ASPM on the PCIE root ports and set the default LTR of the
-> -	 * storage devices on platforms where these values are not configured by
-> -	 * BIOS. This is needed for laptops, which require these settings for
-> -	 * proper power management of the SoC.
-> -	 */
-> -	VMD_FEAT_BIOS_PM_QUIRK		= (1 << 5),
->  };
+> +config PCIE_STARFIVE_HOST
+> +	tristate "StarFive PCIe host controller"
+> +	depends on OF && PCI_MSI
+> +	select PCIE_PLDA_HOST
+> +	help
+> +	  Say Y here if you want to support the StarFive PCIe controller
+> +	  in host mode. StarFive PCIe controller uses PLDA PCIe
+> +	  core.
+
+Add blank line between paragraphs.  Wrap to fill 75-78 columns.
+
+> +	  If you choose to build this driver as module it will
+> +	  be dynamically linked and module will be called
+> +	  pcie-starfive.ko
+
+> +++ b/drivers/pci/controller/plda/pcie-plda.h
+> @@ -6,14 +6,26 @@
+>  #ifndef _PCIE_PLDA_H
+>  #define _PCIE_PLDA_H
 >  
-> -#define VMD_BIOS_PM_QUIRK_LTR	0x1003	/* 3145728 ns */
-> -
->  #define VMD_FEATS_CLIENT	(VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |	\
->  				 VMD_FEAT_HAS_BUS_RESTRICTIONS |	\
-> -				 VMD_FEAT_OFFSET_FIRST_VECTOR |		\
-> -				 VMD_FEAT_BIOS_PM_QUIRK)
-> +				 VMD_FEAT_OFFSET_FIRST_VECTOR)
->  
->  static DEFINE_IDA(vmd_instance_ida);
->  
-> @@ -724,46 +713,6 @@ static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
->  	vmd_bridge->native_dpc = root_bridge->native_dpc;
->  }
->  
-> -/*
-> - * Enable ASPM and LTR settings on devices that aren't configured by BIOS.
-> - */
-> -static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
-> -{
-> -	unsigned long features = *(unsigned long *)userdata;
-> -	u16 ltr = VMD_BIOS_PM_QUIRK_LTR;
-> -	u32 ltr_reg;
-> -	int pos;
-> -
-> -	if (!(features & VMD_FEAT_BIOS_PM_QUIRK))
-> -		return 0;
-> -
-> -	pci_enable_link_state(pdev, PCIE_LINK_STATE_ALL);
-> -
-> -	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
-> -	if (!pos)
-> -		return 0;
-> -
-> -	/*
-> -	 * Skip if the max snoop LTR is non-zero, indicating BIOS has set it
-> -	 * so the LTR quirk is not needed.
-> -	 */
-> -	pci_read_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, &ltr_reg);
-> -	if (!!(ltr_reg & (PCI_LTR_VALUE_MASK | PCI_LTR_SCALE_MASK)))
-> -		return 0;
-> -
-> -	/*
-> -	 * Set the default values to the maximum required by the platform to
-> -	 * allow the deepest power management savings. Write as a DWORD where
-> -	 * the lower word is the max snoop latency and the upper word is the
-> -	 * max non-snoop latency.
-> -	 */
-> -	ltr_reg = (ltr << 16) | ltr;
-> -	pci_write_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, ltr_reg);
-> -	pci_info(pdev, "VMD: Default LTR value set by driver\n");
-> -
-> -	return 0;
-> -}
-> -
->  static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  {
->  	struct pci_sysdata *sd = &vmd->sysdata;
-> @@ -936,8 +885,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  
->  	pci_assign_unassigned_bus_resources(vmd->bus);
->  
-> -	pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features);
-> -
->  	/*
->  	 * VMD root buses are virtual and don't return true on pci_is_pcie()
->  	 * and will fail pcie_bus_configure_settings() early. It can instead be
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 44cab813bf95..2d86623f96e3 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -6023,3 +6023,75 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2d, dpc_log_size);
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2f, dpc_log_size);
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
->  #endif
-> +
-> +#ifdef CONFIG_VMD
-> +/*
-> + * Enable ASPM on the PCIE root ports under VMD and set the default LTR of the
-> + * storage devices on platforms where these values are not configured by BIOS.
-> + * This is needed for laptops, which require these settings for proper power
-> + * management of the SoC.
-> + */
-> +#define VMD_DEVICE_LTR	0x1003	/* 3145728 ns */
-> +static void quirk_intel_vmd(struct pci_dev *pdev)
+> +#include <linux/phy/phy.h>
+
+I don't think you need to #include this.  In this file you only use a
+pointer to struct phy, so declaring the struct should be enough, e.g.,
+
+  struct phy;
+
+You will have to #include it in pcie-starfive.c where you actually
+*use* phy, of course.
+
+> +#define CONFIG_SPACE_ADDR			0x1000u
+
+This looks like an *offset* that you add to ->bridge_addr.  Adding two
+addresses together doesn't really make sense.
+
+> +static int starfive_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
+> +				      int where, int size, u32 value)
 > +{
-> +	struct pci_dev *parent;
-> +	u16 ltr = VMD_DEVICE_LTR;
-> +	u32 ltr_reg;
-> +	int pos;
+> +	if (starfive_pcie_hide_rc_bar(bus, devfn, where))
+> +		return PCIBIOS_BAD_REGISTER_NUMBER;
+
+I think this should probably return PCIBIOS_SUCCESSFUL.  There's
+nothing wrong with the register number; you just want to pretend that
+it's hardwired to zero.  That means ignore writes and always return 0
+for reads.
+
+> +	return pci_generic_config_write(bus, devfn, where, size, value);
+> +}
 > +
-> +	/* Check in VMD domain */
-> +	if (pci_domain_nr(pdev->bus) < 0x10000)
-> +		return;
+> +static int starfive_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
+> +				     int where, int size, u32 *value)
+> +{
+> +	if (starfive_pcie_hide_rc_bar(bus, devfn, where))
+> +		return PCIBIOS_BAD_REGISTER_NUMBER;
+
+Set *value to zero and return PCIBIOS_SUCCESSFUL.
+
+> +	return pci_generic_config_read(bus, devfn, where, size, value);
+> +}
 > +
-> +	/* Get Root Port */
-> +	parent = pci_upstream_bridge(pdev);
-> +	if (!parent || parent->vendor != PCI_VENDOR_ID_INTEL)
-> +		return;
+> +static int starfive_pcie_parse_dt(struct starfive_jh7110_pcie *pcie, struct device *dev)
+
+95% of this driver (and the rest of drivers/pci) is wrapped to fit in
+80 columns, e.g.,
+
+  static int starfive_pcie_parse_dt(struct starfive_jh7110_pcie *pcie,
+                                    struct device *dev)
+
+> +	domain_nr = of_get_pci_domain_nr(dev->of_node);
 > +
-> +	/* Get VMD Host Bridge */
-> +	parent = to_pci_dev(parent->dev.parent);
-> +	if (!parent)
-> +		return;
+> +	if (domain_nr < 0 || domain_nr > 1)
+> +		return dev_err_probe(dev, -ENODEV,
+> +				     "failed to get valid pcie id\n");
+
+"id" is too generic and doesn't hint about where the problem is.
+Update the message ("pcie id") to mention "domain" so it corresponds
+with the source ("linux,pci-domain" from DT).
+
+> +	ret = reset_control_deassert(pcie->resets);
+> +	if (ret) {
+> +		clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
+> +		dev_err_probe(dev, ret, "failed to resets\n");
+
+"failed to ... resets" is missing a word.  "Failed to deassert
+resets", I guess?
+
+> +	/* Ensure that PERST has been asserted for at least 100 ms,
+> +	 * the sleep value is T_PVPERL from PCIe CEM spec r2.0 (Table 2-4)
+> +	 */
+
+Use multiline comment formatting (also below):
+
+  /*
+   * Ensure ...
+   */
+
+> +	msleep(100);
+> +	if (pcie->reset_gpio)
+> +		gpiod_set_value_cansleep(pcie->reset_gpio, 0);
 > +
-> +	/* Get RAID controller */
-> +	parent = to_pci_dev(parent->dev.parent);
-> +	if (!parent)
-> +		return;
+> +	/* As the requirement in PCIe base spec r6.0, system (<=5GT/s) must
+> +	 * wait a minimum of 100 ms following exit from a conventional reset
+> +	 * before sending a configuration request to the device.
+
+Mention sec 6.6.1, where (I think) this value comes from.  Eventually
+we should make a #define for this because it's not specific to any one
+PCIe controller.
+
+> +	msleep(100);
 > +
-> +	switch (parent->device) {
-> +	case 0x467f:
-> +	case 0x4c3d:
-> +	case 0xa77f:
-> +	case 0x7d0b:
-> +	case 0xad0b:
-> +	case 0x9a0b:
-> +		break;
-> +	default:
-> +		return;
+> +	if (starfive_pcie_host_wait_for_link(pcie))
+> +		dev_info(dev, "port link down\n");
+> +
+> +	return ret;
+
+We know the value here, so return it explicitly:
+
+  return 0;
+
+> +static int starfive_pcie_suspend_noirq(struct device *dev)
+> +{
+> +	struct starfive_jh7110_pcie *pcie = dev_get_drvdata(dev);
+> +
+> +	if (!pcie)
+> +		return 0;
+
+How could it happen that "pcie" is zero?  I think it could only happen
+if there were a driver bug or a memory corruption.  Either way, we
+should remove the check so we take a NULL pointer fault and find out
+about the problem.
+
+> +static int starfive_pcie_resume_noirq(struct device *dev)
+> +{
+> +	struct starfive_jh7110_pcie *pcie = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = starfive_pcie_enable_phy(dev, &pcie->plda);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_bulk_prepare_enable(pcie->num_clks, pcie->clks);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable clocks\n");
+> +		starfive_pcie_disable_phy(&pcie->plda);
+> +		return ret;
 > +	}
 > +
-> +	pci_enable_link_state(pdev, PCIE_LINK_STATE_ALL);
-> +
-> +	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
-> +	if (!pos)
-> +		return;
-> +
-> +	/* Skip if the max snoop LTR is non-zero, indicating BIOS has set it */
-> +	pci_read_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, &ltr_reg);
-> +	if (!!(ltr_reg & (PCI_LTR_VALUE_MASK | PCI_LTR_SCALE_MASK)))
-> +		return;
-> +
-> +	/*
-> +	 * Set the LTR values to the maximum required by the platform to
-> +	 * allow the deepest power management savings. Write as a DWORD where
-> +	 * the lower word is the max snoop latency and the upper word is the
-> +	 * max non-snoop latency.
-> +	 */
-> +	ltr_reg = (ltr << 16) | ltr;
-> +	pci_write_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, ltr_reg);
-> +	pci_info(pdev, "LTR set by VMD PCI quick\n");
-> +
-> +}
-> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_ANY_ID, PCI_ANY_ID,
-> +			      PCI_CLASS_STORAGE_EXPRESS, 0, quirk_intel_vmd);
-> +#endif
-> -- 
-> 2.34.1
+> +	return ret;
 
--- 
-Ville Syrjälä
-Intel
+  return 0;
+
+Bjorn
