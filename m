@@ -2,277 +2,231 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F22227D65BE
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 10:49:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E03E7D6872
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 12:28:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233904AbjJYItw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Oct 2023 04:49:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55264 "EHLO
+        id S234590AbjJYK2P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Oct 2023 06:28:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234227AbjJYIi7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 04:38:59 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFBDC18A;
-        Wed, 25 Oct 2023 01:38:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698223136; x=1729759136;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=I38QlpUe3v1pEBGiWrdhG1N+IsOTdBzI0QWTg8Einzg=;
-  b=hsU31vsdN88OnBef8+dmnMimGXvgqnPreD5T7NGXvid1SK/CO+Y6dw9n
-   kcS0n+sj71PZ+U2yBjzH+bNMcLeJjdizSj5KtYm/UrT9GBj1rSiu27xqJ
-   ZNxAjwM0B3QHwUTTgFc7w+OPb9srYMEZXqvHZ9RdZLSMkJ4oaaJIfdIcN
-   /d68SNThZkLQANLPtSJ4OdiDfFL7TUicl5Fe6f5lJr7EWPaFxHQh71dLN
-   PXRdosgCk84GQ7MQQADaXg0olAMCkhgrN+rUTKZWi16GYGFEQb6lSvKVU
-   d99MZksodkSkpuo54GqHUHAhZAd+NSUFY4KJVnl1f5qG3gFUiOYJ5rmQa
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10873"; a="391132691"
-X-IronPort-AV: E=Sophos;i="6.03,250,1694761200"; 
-   d="scan'208";a="391132691"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 01:38:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10873"; a="758800777"
-X-IronPort-AV: E=Sophos;i="6.03,250,1694761200"; 
-   d="scan'208";a="758800777"
-Received: from cristina-mobl3.ger.corp.intel.com ([10.251.212.45])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 01:38:51 -0700
-Date:   Wed, 25 Oct 2023 11:38:46 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     =?ISO-8859-15?Q?Ville_Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-cc:     "David E. Box" <david.e.box@linux.intel.com>,
-        nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
-        lorenzo.pieralisi@arm.com, hch@infradead.org, kw@linux.com,
-        robh@kernel.org, bhelgaas@google.com, michael.a.bottini@intel.com,
-        "Rafael J. Wysocki" <rafael@kernel.org>, me@adhityamohan.in,
-        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH V2] PCI: Move VMD ASPM/LTR fix to PCI quirk
-In-Reply-To: <ZTf6ALl3xNvhLN6M@intel.com>
-Message-ID: <ab823587-1e2b-474e-f0e7-14e4782ce49f@linux.intel.com>
-References: <20230411213323.1362300-1-david.e.box@linux.intel.com> <ZTf6ALl3xNvhLN6M@intel.com>
+        with ESMTP id S234404AbjJYK2O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 06:28:14 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4262EB0;
+        Wed, 25 Oct 2023 03:28:12 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-507b18cf2e1so7480494e87.3;
+        Wed, 25 Oct 2023 03:28:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698229690; x=1698834490; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yNP27PAMmqvkFQ64RZOWcZ2pYsOHLuDyPEFDZaios5Q=;
+        b=OW/w/lzjeWnZk1b2xGLtOIyUCGEByZbTWxH/ywIxQsLvlJss60vwD9oH0Hd9O78Chz
+         e/+Rzv9nj8oL8m2abz3y2JvMQRH8ccC8XVQDjuGHWLGQtHNcFF4/cjtDxhIfhZQ3iunb
+         kz3TBLGQaamKS6Mcy06cWWGSm2GLx59GrXMo2jMS+ivRCZNLSQ7x8O9zKxTrGffQbl3u
+         JBjw2XUhLXFie6j1zj2Ep81MLVwquz1ub9Vv1qbRyHpT9ubeLxvWlE2sw2iiM7M2l75i
+         uZ96H1RL7IkHxKBZOPUqbXjd8H53trPa50T1Gqce3IZacu4YlOqxROoO1aeVBAzGfwNs
+         gKsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698229690; x=1698834490;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yNP27PAMmqvkFQ64RZOWcZ2pYsOHLuDyPEFDZaios5Q=;
+        b=Fw3tewzKRqxQFs+WjYSRK/0HcDvQuzAJVPgzJ/OiSlyK7xSNBs9hHmepSWHP0DJQMQ
+         FL3MROaIpjlgm1hf+EG/jn6xO4drmsmg5rW3CJUUkzP/9sdwZywmIWl1sBnY3ZStRq1N
+         /JiUJXWjzwRzav/KEmlvanBMzeehslAm3LcVQ2AD3Ji3fQCIxVFzklnkBb5bTdXUIspn
+         q/K8iOGQgjW3DeeejEuWBE5QFAncVXIpbAyvwlPh520j2/rihTYIs4T5iVyBYqE8v1Vw
+         dplfrFVannSAHgPGogbaGu65G7hKYijPAdV/2Eb1ROPba0baLYN9pxUYjXFhNi6/zuVO
+         jPow==
+X-Gm-Message-State: AOJu0YyChlMqZmoSHUiNvW5Kf95vqIgiTvbs/1J3DXZpWpjft5YejkZE
+        uONEsLBs5y9S4y7oFOFgdFc=
+X-Google-Smtp-Source: AGHT+IGa0sx4vMhOBXKsVh6AK+7GQbCC9qKBI94rsACPSthJpOiG2QMloF5w8HyaD2Wee9O22Gp0iA==
+X-Received: by 2002:ac2:599a:0:b0:503:7dd:7ebd with SMTP id w26-20020ac2599a000000b0050307dd7ebdmr10284199lfn.24.1698229690140;
+        Wed, 25 Oct 2023 03:28:10 -0700 (PDT)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id g14-20020a19ee0e000000b00507cd390141sm2495159lfb.140.2023.10.25.03.28.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Oct 2023 03:28:09 -0700 (PDT)
+Date:   Wed, 25 Oct 2023 13:28:07 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Siddharth Vadapalli <s-vadapalli@ti.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        bhelgaas@google.com, lpieralisi@kernel.org, robh@kernel.org,
+        kw@linux.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        r-gunasekaran@ti.com, srk@ti.com
+Subject: Re: [PATCH v3] PCI: keystone: Fix pci_ops for AM654x SoC
+Message-ID: <3szgydgz7ege5h75mwdket5lniwy4oe52dq2uqehf74il5hc5j@oaqcbmfuf6de>
+References: <20231023212628.GA1627567@bhelgaas>
+ <c7851172-f474-42f3-9730-1f323f9e6c73@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-1564197198-1698222874=:1881"
-Content-ID: <f4607477-96fb-95c1-42e4-b229f896a124@linux.intel.com>
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c7851172-f474-42f3-9730-1f323f9e6c73@ti.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Siddharth, Bjorn
 
---8323329-1564197198-1698222874=:1881
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <7a409998-66d4-3482-222-b4908db15982@linux.intel.com>
-
-On Tue, 24 Oct 2023, Ville Syrjälä wrote:
-
-> On Tue, Apr 11, 2023 at 02:33:23PM -0700, David E. Box wrote:
-> > In commit f492edb40b54 ("PCI: vmd: Add quirk to configure PCIe ASPM and
-> > LTR") the VMD driver calls pci_enabled_link_state as a callback from
-> > pci_bus_walk. Both will acquire the pci_bus_sem lock leading to a lockdep
-> > warning. Instead of doing the pci_bus_walk, move the fix to quirks.c using
-> > DECLARE_PCI_FIXUP_FINAL.
+On Wed, Oct 25, 2023 at 10:32:50AM +0530, Siddharth Vadapalli wrote:
+> Hello Bjorn,
 > 
-> What happened to this patch? We're still carrying a local fix
-> for this in drm-tip...
+> On 24/10/23 02:56, Bjorn Helgaas wrote:
+> > On Mon, Oct 23, 2023 at 05:05:30PM +0530, Siddharth Vadapalli wrote:
+> >> On 23/10/23 16:12, Serge Semin wrote:
+> >>
+> >> ...
+> >>
+> >>> Siddharth, if it won't be that much bother and you have an access to
+> >>> the v3.65-based Keystone PCIe device, could you please have a look
+> >>> whether it's possible to implement what Bjorn suggested?
+> >>
+> >> Unfortunately I don't have any SoC/Device with me that has the v3.65 PCIe
+> >> controller, so I will not be able to test Bjorn's suggestion.
+> > 
+> > Huh.  57e1d8206e48 ("MAINTAINERS: move Murali Karicheri to credits")
+> > removed the maintainer for pci-keystone.c, so the driver hasn't had a
+> > maintainer for over two years.
+> > 
+> > Given the fact that there's no maintainer, I'm more than happy to take
+> > a patch to move this code to somewhere in the host_init() callback,
+> > even if you don't have the hardware to test it.
 > 
-> > 
-> > Fixes: f492edb40b54 ("PCI: vmd: Add quirk to configure PCIe ASPM and LTR")
-> > Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > ---
-> > 
-> > V2 - Instead of adding a lock flag argument to pci_enabled_link_state, move
-> >      the fix to quirks.c
-> > 
-> >  drivers/pci/controller/vmd.c | 55 +--------------------------
-> >  drivers/pci/quirks.c         | 72 ++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 73 insertions(+), 54 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> > index 990630ec57c6..47fa3e5f2dc5 100644
-> > --- a/drivers/pci/controller/vmd.c
-> > +++ b/drivers/pci/controller/vmd.c
-> > @@ -66,22 +66,11 @@ enum vmd_features {
-> >  	 * interrupt handling.
-> >  	 */
-> >  	VMD_FEAT_CAN_BYPASS_MSI_REMAP		= (1 << 4),
-> > -
-> > -	/*
-> > -	 * Enable ASPM on the PCIE root ports and set the default LTR of the
-> > -	 * storage devices on platforms where these values are not configured by
-> > -	 * BIOS. This is needed for laptops, which require these settings for
-> > -	 * proper power management of the SoC.
-> > -	 */
-> > -	VMD_FEAT_BIOS_PM_QUIRK		= (1 << 5),
-> >  };
-> >  
-> > -#define VMD_BIOS_PM_QUIRK_LTR	0x1003	/* 3145728 ns */
-> > -
-> >  #define VMD_FEATS_CLIENT	(VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |	\
-> >  				 VMD_FEAT_HAS_BUS_RESTRICTIONS |	\
-> > -				 VMD_FEAT_OFFSET_FIRST_VECTOR |		\
-> > -				 VMD_FEAT_BIOS_PM_QUIRK)
-> > +				 VMD_FEAT_OFFSET_FIRST_VECTOR)
-> >  
-> >  static DEFINE_IDA(vmd_instance_ida);
-> >  
-> > @@ -724,46 +713,6 @@ static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
-> >  	vmd_bridge->native_dpc = root_bridge->native_dpc;
-> >  }
-> >  
-> > -/*
-> > - * Enable ASPM and LTR settings on devices that aren't configured by BIOS.
-> > - */
-> > -static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
-> > -{
-> > -	unsigned long features = *(unsigned long *)userdata;
-> > -	u16 ltr = VMD_BIOS_PM_QUIRK_LTR;
-> > -	u32 ltr_reg;
-> > -	int pos;
-> > -
-> > -	if (!(features & VMD_FEAT_BIOS_PM_QUIRK))
-> > -		return 0;
-> > -
-> > -	pci_enable_link_state(pdev, PCIE_LINK_STATE_ALL);
-> > -
-> > -	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
-> > -	if (!pos)
-> > -		return 0;
-> > -
-> > -	/*
-> > -	 * Skip if the max snoop LTR is non-zero, indicating BIOS has set it
-> > -	 * so the LTR quirk is not needed.
-> > -	 */
-> > -	pci_read_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, &ltr_reg);
-> > -	if (!!(ltr_reg & (PCI_LTR_VALUE_MASK | PCI_LTR_SCALE_MASK)))
-> > -		return 0;
-> > -
-> > -	/*
-> > -	 * Set the default values to the maximum required by the platform to
-> > -	 * allow the deepest power management savings. Write as a DWORD where
-> > -	 * the lower word is the max snoop latency and the upper word is the
-> > -	 * max non-snoop latency.
-> > -	 */
-> > -	ltr_reg = (ltr << 16) | ltr;
-> > -	pci_write_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, ltr_reg);
-> > -	pci_info(pdev, "VMD: Default LTR value set by driver\n");
-> > -
-> > -	return 0;
-> > -}
-> > -
-> >  static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
-> >  {
-> >  	struct pci_sysdata *sd = &vmd->sysdata;
-> > @@ -936,8 +885,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
-> >  
-> >  	pci_assign_unassigned_bus_resources(vmd->bus);
-> >  
-> > -	pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features);
-> > -
-> >  	/*
-> >  	 * VMD root buses are virtual and don't return true on pci_is_pcie()
-> >  	 * and will fail pcie_bus_configure_settings() early. It can instead be
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index 44cab813bf95..2d86623f96e3 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -6023,3 +6023,75 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2d, dpc_log_size);
-> >  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2f, dpc_log_size);
-> >  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
-> >  #endif
-> > +
-> > +#ifdef CONFIG_VMD
-> > +/*
-> > + * Enable ASPM on the PCIE root ports under VMD and set the default LTR of the
-> > + * storage devices on platforms where these values are not configured by BIOS.
-> > + * This is needed for laptops, which require these settings for proper power
-> > + * management of the SoC.
-> > + */
-> > +#define VMD_DEVICE_LTR	0x1003	/* 3145728 ns */
-
-This should be defined using FIELD_PREP()s. It is better to construct both 
-snoop and nosnoop registers here and not do the shift below at all.
-
-There are new defines for the nosnoop reg in pci/field-get branch for the 
-nosnoop reg fields.
-
--- 
- i.
-
-> > +static void quirk_intel_vmd(struct pci_dev *pdev)
-> > +{
-> > +	struct pci_dev *parent;
-> > +	u16 ltr = VMD_DEVICE_LTR;
-> > +	u32 ltr_reg;
-> > +	int pos;
-> > +
-> > +	/* Check in VMD domain */
-> > +	if (pci_domain_nr(pdev->bus) < 0x10000)
-> > +		return;
-> > +
-> > +	/* Get Root Port */
-> > +	parent = pci_upstream_bridge(pdev);
-> > +	if (!parent || parent->vendor != PCI_VENDOR_ID_INTEL)
-> > +		return;
-> > +
-> > +	/* Get VMD Host Bridge */
-> > +	parent = to_pci_dev(parent->dev.parent);
-> > +	if (!parent)
-> > +		return;
-> > +
-> > +	/* Get RAID controller */
-> > +	parent = to_pci_dev(parent->dev.parent);
-> > +	if (!parent)
-> > +		return;
-> > +
-> > +	switch (parent->device) {
-> > +	case 0x467f:
-> > +	case 0x4c3d:
-> > +	case 0xa77f:
-> > +	case 0x7d0b:
-> > +	case 0xad0b:
-> > +	case 0x9a0b:
-> > +		break;
-> > +	default:
-> > +		return;
-> > +	}
-> > +
-> > +	pci_enable_link_state(pdev, PCIE_LINK_STATE_ALL);
-> > +
-> > +	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
-> > +	if (!pos)
-> > +		return;
-> > +
-> > +	/* Skip if the max snoop LTR is non-zero, indicating BIOS has set it */
-> > +	pci_read_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, &ltr_reg);
-> > +	if (!!(ltr_reg & (PCI_LTR_VALUE_MASK | PCI_LTR_SCALE_MASK)))
-> > +		return;
-> > +
-> > +	/*
-> > +	 * Set the LTR values to the maximum required by the platform to
-> > +	 * allow the deepest power management savings. Write as a DWORD where
-> > +	 * the lower word is the max snoop latency and the upper word is the
-> > +	 * max non-snoop latency.
-> > +	 */
-> > +	ltr_reg = (ltr << 16) | ltr;
-> > +	pci_write_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, ltr_reg);
-> > +	pci_info(pdev, "LTR set by VMD PCI quick\n");
-> > +
-> > +}
-> > +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_ANY_ID, PCI_ANY_ID,
-> > +			      PCI_CLASS_STORAGE_EXPRESS, 0, quirk_intel_vmd);
-> > +#endif
-> > -- 
-> > 2.34.1
+> Sure, I can work on a patch for it. The execution flow with the existing code is
+> as follows:
 > 
+> ks_pcie_probe()
+>     dw_pcie_host_init()
+>         pci_host_probe()
+>             ks_pcie_v3_65_add_bus()
 > 
---8323329-1564197198-1698222874=:1881--
+> So I assume that as long as ks_pcie_v3_65_add_bus() is invoked after
+> pci_host_probe(), it should be acceptable. With this understanding, I plan to
+> move it immediately after the invocation to dw_pcie_host_init() within
+> ks_pcie_probe() conditionally (based on the is_am6 flag). The new call trace
+> with this change will look like:
+> 
+
+> ks_pcie_probe()
+>     dw_pcie_host_init()
+>         pci_host_probe()
+>     ks_pcie_v3_65_add_bus()
+
+I guess what Bjorn implied was to add the ks_pcie_v3_65_add_bus()
+invocation to the host_init() callback, i.e. in ks_pcie_host_init().
+Moreover initializing the BARs/MSI after all the PCIe hierarchy has
+been probed will eventually cause problems since MSI's won't work
+until the ks_pcie_v3_65_add_bus() is called.
+
+> 
+> Since the .add_bus() method will be removed following this change, I suppose
+> that the patch I post for it can be applied instead of this v3 patch which fixes
+> pci_ops.
+> 
+
+> The patch I plan to post as a replacement for the current patch which shall also
+> remove the ks_pcie_v3_65_add_bus() and the .add_bus() method is:
+
+Just a note. Seeing the Bjorn's suggestion may cause a regression on
+the Keystone PCIe Host v3.65 I would suggest to merge in the original
+fix as is and post an additional cleanup patch, like below with proper
+modifications, on top of it. Thus we'll minimize a risk to break
+things at least on the stable kernels.
+
+-Serge(y)
+
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> index 0def919f89fa..3933e857ecaa 100644
+> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> @@ -447,44 +447,10 @@ static struct pci_ops ks_child_pcie_ops = {
+>  	.write = pci_generic_config_write,
+>  };
+> 
+> -/**
+> - * ks_pcie_v3_65_add_bus() - keystone add_bus post initialization
+> - * @bus: A pointer to the PCI bus structure.
+> - *
+> - * This sets BAR0 to enable inbound access for MSI_IRQ register
+> - */
+> -static int ks_pcie_v3_65_add_bus(struct pci_bus *bus)
+> -{
+> -	struct dw_pcie_rp *pp = bus->sysdata;
+> -	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> -	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
+> -
+> -	if (!pci_is_root_bus(bus))
+> -		return 0;
+> -
+> -	/* Configure and set up BAR0 */
+> -	ks_pcie_set_dbi_mode(ks_pcie);
+> -
+> -	/* Enable BAR0 */
+> -	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 1);
+> -	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, SZ_4K - 1);
+> -
+> -	ks_pcie_clear_dbi_mode(ks_pcie);
+> -
+> -	 /*
+> -	  * For BAR0, just setting bus address for inbound writes (MSI) should
+> -	  * be sufficient.  Use physical address to avoid any conflicts.
+> -	  */
+> -	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, ks_pcie->app.start);
+> -
+> -	return 0;
+> -}
+> -
+>  static struct pci_ops ks_pcie_ops = {
+>  	.map_bus = dw_pcie_own_conf_map_bus,
+>  	.read = pci_generic_config_read,
+>  	.write = pci_generic_config_write,
+> -	.add_bus = ks_pcie_v3_65_add_bus,
+>  };
+> 
+>  /**
+> @@ -1270,6 +1236,29 @@ static int ks_pcie_probe(struct platform_device *pdev)
+>  		ret = dw_pcie_host_init(&pci->pp);
+>  		if (ret < 0)
+>  			goto err_get_sync;
+> +
+> +		if (!ks_pcie->is_am6) {
+> +			/*
+> +			 * For v3.65 DWC PCIe Controllers, setup BAR0 to enable
+> +			 * inbound access for MSI_IRQ register.
+> +			 */
+> +
+> +			/* Configure and set up BAR0 */
+> +			ks_pcie_set_dbi_mode(ks_pcie);
+> +
+> +			/* Enable BAR0 */
+> +			dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 1);
+> +			dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, SZ_4K - 1);
+> +
+> +			ks_pcie_clear_dbi_mode(ks_pcie);
+> +
+> +			 /*
+> +			  * For BAR0, just setting bus address for inbound writes (MSI) should
+> +			  * be sufficient.  Use physical address to avoid any conflicts.
+> +			  */
+> +			dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, ks_pcie->app.start);
+> +		}
+> +
+>  		break;
+>  	case DW_PCIE_EP_TYPE:
+>  		if (!IS_ENABLED(CONFIG_PCI_KEYSTONE_EP)) {
+> 
+> Please review and let me know if this looks fine. If so, I will post the patch for it.
+> 
+> -- 
+> Regards,
+> Siddharth.
