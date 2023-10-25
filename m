@@ -2,95 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9B7D7D6285
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 09:27:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A0797D640F
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 09:52:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232602AbjJYH1U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Oct 2023 03:27:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38890 "EHLO
+        id S231542AbjJYHwj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Oct 2023 03:52:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232698AbjJYH1T (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 03:27:19 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C692512A
-        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 00:27:17 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-4083ac51d8aso41930445e9.2
-        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 00:27:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698218836; x=1698823636; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ndvlHffn+v+7jRpIhr2PQ0zOxK49/EI25GTkz7n0JYg=;
-        b=FB0HW+ohyDlyGtumlPgCG38fGZYf9V0fYxb2Xk9bS9GOoS4bpuL5NermwQJudUUPoq
-         bkm9Tf6egAEPXNy61aQh1bHFJK0vSMQ9JvaWozo6P3Il2SA/2qbg0RxY5NXUXSXFAJCz
-         guF99CPq2abLhuIe5w7/HemMLJ3rURGDD55IrIcEPZOrSxesbxgdxEdaoSsbU3ZKnXcE
-         qACo9QP2XzAfqaZN90LPUhd23Pov3Z7sADTz2oGx2L7z2+uT3pViWPKMDVOfYC6fTuMG
-         VflzPukagiuFlOGPN+SEQJqAaGAEawPxI53+ILp34Z/RxnNRvsqXiKKikoDxlekaGbJj
-         rb+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698218836; x=1698823636;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ndvlHffn+v+7jRpIhr2PQ0zOxK49/EI25GTkz7n0JYg=;
-        b=b+tUbx6bHbC0tq54gCUXmsNl4aFsZX8xV6IlPQ4CFzroPLvy1FaS8acG8MXHK+Y5oO
-         sK9QznG/bIVdjQolYWXzM7A6ZIojgWma6J5FPkiRM4j+gytV+b81DST88ae/Ruyd/4Iu
-         3lrExnWXmWTJZHZy9gb5r87pwb2XKPgiinJ1vEmWNVvEI9Q8WSXZbnlYlIMGTW7go8W4
-         s6yoNxUG+hpewRX0mgjz+IKKn0dRvvpdqkNtXhcohUReFzJ+Rr3zj44CY+lD80KAx/ZC
-         8blHdhCrrXdxjPYOitzSOZmteUybMxfY9Cx3yzjYzvWNjtbp4deCEAtwDQT6py21P+G4
-         fD1Q==
-X-Gm-Message-State: AOJu0YxTc8YmqS6wGG4vbdzy1RG/N/ElCufD9qOKa8c931WABiZGWmGn
-        j6xyESu/xfRdHLJ/2pJ0wLSQUA==
-X-Google-Smtp-Source: AGHT+IGGuTVPCQcnTnNzNxlcAHMi13LFGMnlST+B6XUzSFqU2ksPBCTq0J5I8vLDy4C4uHzHH8iUxA==
-X-Received: by 2002:a05:600c:15c1:b0:3fc:dd9:91fd with SMTP id v1-20020a05600c15c100b003fc0dd991fdmr10370800wmf.40.1698218836271;
-        Wed, 25 Oct 2023 00:27:16 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 6-20020a05600c230600b004083bc9ac90sm13673640wmo.24.2023.10.25.00.27.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Oct 2023 00:27:15 -0700 (PDT)
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Date:   Wed, 25 Oct 2023 09:27:14 +0200
-Subject: [PATCH] dt-bindings: PCI: qcom: document the SM8650 PCIe
- Controller
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231025-topic-sm8650-upstream-bindings-pcie-v1-1-0e3d6f0c5827@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAFHDOGUC/x3NQQqDMBBG4avIrB1IIgm2VykubJzaf2EMGRVBv
- HtDl9/mvYtUCkTp2VxU5IBiTRW2bSh+xzQLY6omZ1xnjQ28rRmRdemDN7xn3YqMC7+RJqRZOUc
- I+yAP47sQne+plnKRD87/5TXc9w/qQVHodQAAAA==
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        with ESMTP id S231467AbjJYHwj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 03:52:39 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C04FDE;
+        Wed, 25 Oct 2023 00:52:36 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93E63C433C7;
+        Wed, 25 Oct 2023 07:52:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698220355;
+        bh=AjvHbivfFAj4feaP3aHyTgho0kLeTTMjqn0xHKJqObY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Au1eplrqt71V0W8QiBWNe2G4Yt1Oo5Nwe1X9M5FenWXHtTYUyb207aW2LFGcyCWhS
+         zV7j5ngxfjrhePd3EDD3Jm+6rbJM4NaiyRax0zGFz4DBTz+PHXLLknRC2YjWVpJ3Oy
+         jXEp0aJZYsV8DWK0QjVwU1724Ebqkh7EtBUXSTt7FTqH4r8c7cl33Osn2PGke1fPtn
+         LXj9gnwfXVYYHR9uRm8ne146V2qe1GEJ+lrc+a5S49DyJncP47JS5D87NUURR60Mzn
+         hbNMX2JBySi4GYlW9fExrNPnywHtX69EINNWbSk+YzS7o4Tnyl81i4FMjg4bcz4fKS
+         b0ZDKaaj0dTTw==
+Date:   Wed, 25 Oct 2023 13:22:24 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        konrad.dybcio@linaro.org, quic_shazhuss@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
+        quic_nayiluri@quicinc.com, dmitry.baryshkov@linaro.org,
+        robh@kernel.org, quic_krichai@quicinc.com,
+        quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <neil.armstrong@linaro.org>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1300;
- i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=9202tyaMMRdGcdJf/JRZ0vhX+oG3wOQczHTXpC7CSu8=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBlOMNSl4BZKLCPeISlXs1vISGMx8P2mdsBwv3I0Ued
- 6XhRlW6JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZTjDUgAKCRB33NvayMhJ0fdrEA
- C4zeGdd7qlPGgQ4TVO4O6a6XDood7tXDbpcoFFZA7Kb+tH5XCT/dHioPiKTWNg3trYjBJ2lfU6LB6M
- IHGR9NFhkOxnkAwO2/P1y6aMptlf+xIu48osJJzD56wn21n01uBozVGRGBcaESjf+BdGwh3tmW2diT
- SM5I3ChTsd65VuZUs18Wk8wvC8mIdKAhPU3taTUENsnEbeIXmXbPvpF3mp5yJecOXKGQwWkHq6ERhf
- jtnnPGXSWFl6CcYuo4EM9bi1VqRLBe6mKynaQHfWTliAGkeshcgeNxMIDWASqioWCGxWNIANXW0yKH
- y39cmAGJHxzgalHqzdR4HBEa7YupLE2FviR9yGYANOX7rY0EC9MDvG3czgXRSYxtnbGBWHcgOvAXRs
- Vt7EOoi7vhlkHP5MRb27zuXO+NJv6jLZ5QJ/LD0s80moybhabixqx7RYUdbRBxYeh5t0oYEhJVzkkZ
- f1+tAKadZ9SKyGI8HGc4/Nn2VFqjO0z0Kzhi/BmJkrFHwxOm8Y+U/sX3hTOwjYjoiYLZfFbA979NOP
- Z8Gzoz45LDOr1xpQhSiqbGqnFVrlX+VixWcQs2NQkEU9t9mI9ABnmT0Fjom6ZfMD0PKf+DrLmkcA7u
- WVGciGnF2iDEHDxvjexdrLF2CCZKlQNKTuH84jNvJOhUWkd2eQvIY9JDIdKw==
-X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
- fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+        linux-phy@lists.infradead.org
+Subject: Re: [PATCH v3 5/5] arm64: dts: qcom: sa8775p: Add ep pcie0
+ controller node
+Message-ID: <20231025075224.GB3648@thinkpad>
+References: <1697715430-30820-1-git-send-email-quic_msarkar@quicinc.com>
+ <1697715430-30820-6-git-send-email-quic_msarkar@quicinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1697715430-30820-6-git-send-email-quic_msarkar@quicinc.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -98,39 +63,98 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Document the PCIe Controller on the SM8650 platform by using the
-SM8550 bindings as a fallback.
+On Thu, Oct 19, 2023 at 05:07:10PM +0530, Mrinmay Sarkar wrote:
+> Add ep pcie dtsi node for pcie0 controller found on sa8775p platform.
+> It supports gen4 and x2 link width. Due to some stability issue in
+> gen4 enabling gen3 as of now.
+> 
+> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sa8775p.dtsi | 48 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+> index 13dd44d..2aa7383 100644
+> --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+> @@ -3714,4 +3714,52 @@
+>  
+>  		status = "disabled";
+>  	};
+> +
+> +	pcie0_ep: pcie-ep@1c00000 {
+> +		compatible = "qcom,sa8775p-pcie-ep";
+> +		reg = <0x0 0x01c00000 0x0 0x3000>,
+> +		      <0x0 0x40000000 0x0 0xf20>,
+> +		      <0x0 0x40000f20 0x0 0xa8>,
+> +		      <0x0 0x40001000 0x0 0x4000>,
+> +		      <0x0 0x40200000 0x0 0x100000>,
+> +		      <0x0 0x01c03000 0x0 0x1000>,
+> +		      <0x0 0x40005000 0x0 0x2000>;
 
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
----
-For convenience, a regularly refreshed linux-next based git tree containing
-all the SM8650 related work is available at:
-https://git.codelinaro.org/neil.armstrong/linux/-/tree/topic/sm85650/upstream/integ
----
- Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+Can we sort the reg entries?
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index eadba38171e1..af537732ded6 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -41,6 +41,10 @@ properties:
-           - qcom,pcie-sm8450-pcie0
-           - qcom,pcie-sm8450-pcie1
-           - qcom,pcie-sm8550
-+      - items:
-+          - enum:
-+              - qcom,pcie-sm8650
-+          - const: qcom,pcie-sm8550
-       - items:
-           - const: qcom,pcie-msm8998
-           - const: qcom,pcie-msm8996
+> +		reg-names = "parf", "dbi", "elbi", "atu", "addr_space",
+> +			    "mmio", "dma";
+> +
+> +		clocks = <&gcc GCC_PCIE_0_AUX_CLK>,
+> +			<&gcc GCC_PCIE_0_CFG_AHB_CLK>,
+> +			<&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
+> +			<&gcc GCC_PCIE_0_SLV_AXI_CLK>,
+> +			<&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>;
+> +
+> +		clock-names = "aux",
+> +			      "cfg",
+> +			      "bus_master",
+> +			      "bus_slave",
+> +			      "slave_q2a";
+> +
+> +		interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 630 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +		interrupt-names = "global", "doorbell", "dma";
+> +
+> +		interconnects = <&pcie_anoc MASTER_PCIE_0 0 &mc_virt SLAVE_EBI1 0>,
+> +				<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_PCIE_0 0>;
+> +		interconnect-names = "pcie-mem", "cpu-pcie";
+> +
+> +		iommu-map = <0x0 &pcie_smmu 0x0000 0x1>,
+> +			    <0x100 &pcie_smmu 0x0001 0x1>;
 
----
-base-commit: fe1998aa935b44ef873193c0772c43bce74f17dc
-change-id: 20231016-topic-sm8650-upstream-bindings-pcie-56e90536c258
+I think I recommended using "iommu-map" instead of "iommus" property. But
+looking at it again, I think it is fine to use just "iommus" property as the SID
+will be associated with the EP directly.
 
-Best regards,
+Unless you want to have different SID for each function.
+
+> +
+> +		resets = <&gcc GCC_PCIE_0_BCR>;
+> +		reset-names = "core";
+> +		power-domains = <&gcc PCIE_0_GDSC>;
+> +		phys = <&pcie0_phy>;
+> +		phy-names = "pciephy";
+> +		max-link-speed = <3>;
+
+Please add a comment here that you are limiting the Gen speed due to stability
+issues. Like,
+
+		max-link-speed = <3>; /* FIXME: Limiting the Gen speed due to stability issues */
+
+> +		num-lanes = <2>;
+
+Can you check if the controller is cache coherent? If so, we should add
+"dma-coherent" property.
+
+- Mani
+
+> +
+> +		status = "disabled";
+> +	};
+>  };
+> -- 
+> 2.7.4
+> 
+
 -- 
-Neil Armstrong <neil.armstrong@linaro.org>
-
+மணிவண்ணன் சதாசிவம்
