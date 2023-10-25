@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F1697D756C
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 22:24:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94C307D756F
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 22:24:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234796AbjJYUYa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Oct 2023 16:24:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42100 "EHLO
+        id S1343564AbjJYUYi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Oct 2023 16:24:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234315AbjJYUYX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 16:24:23 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E04B712A
-        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 13:24:20 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-6bd96cfb99cso126592b3a.2
-        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 13:24:20 -0700 (PDT)
+        with ESMTP id S234825AbjJYUYb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 16:24:31 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8535119B
+        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 13:24:26 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-6b20577ef7bso124560b3a.3
+        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 13:24:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1698265460; x=1698870260; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1698265466; x=1698870266; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=il/rbbBih8ETNOL/0gi7mQnwMr9PQruIC4HVqlbsTs0=;
-        b=cpHqw6Ko3XBXaXjWZ2O0xRulHJ+115MQRPzNMFsfrt14xH96seITodu0Y+SWsiWCST
-         6pWhR+UxbgdBdR/SOzQK8vOATWnQNus0CEKcmfVGjM7OxS6eUc0z89y9fk6cvTTkd1Tn
-         K7V1x8mXwsramj8XqH18q1J7VNYAtiXbZyuUmYXDQaQqGCay9MNIosNf7VHAQvKxNa0H
-         4JN0iJKu/M1CM4BSURbHiCnxs4wbvNeNy2gikGl8PNMtUTh5tdCtEqYGKp/O8Nimm/7A
-         T2SGIeS8++loU1mgwGUdu+A8eGtwf+zITm7nOeYPxn5Oyhhyzaf09opZ+ry0h+t3rumK
-         uVag==
+        bh=W8oe0TQ1+zZd/3zKJQAEE+us/MvQWSBihayeSKyJW3A=;
+        b=B2QZEsvNG1mckIay9FM37B8+RnbVBxmNlf/31hZqak2JAmMmKKpO3kQ3+QwfNmjTqx
+         WCHcf/DzVJlqsxO6h6FGcQQIB3fQvcGK0Xhm7PP5EI8GSSnFruJdb5VNBMmgZSukgjll
+         hKkTgNdRX9DqS/9NVqSpYuTi8qQkluwSgds8Na3VFhxvltoRNN7JUqh0xw6EkGo37+km
+         keMHZ8eewlPoof4/eNfdheg0AU/D6rS75EXHTf4AOzcv8yobdEXv0yymXFKR3BiSpp61
+         txpZSki5CdlRBVvI4nTwBUCbz1S+qpkkDSvq78M6AgKDV+yzA4w+RdbxsqXehsdzMq2V
+         XcUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698265460; x=1698870260;
+        d=1e100.net; s=20230601; t=1698265466; x=1698870266;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=il/rbbBih8ETNOL/0gi7mQnwMr9PQruIC4HVqlbsTs0=;
-        b=KZWpZklxCh1yOh0/K9VZPRu3MAO0B+VsesVghm4mpVxrk+2MHNtVLq301qmD6U/brt
-         6ZQmyWPo0lPesqvjhoFxyLwZ8tV0qEtsj47szN9mlJvWt3kH6/waHyARCwgpmpGwK05w
-         w1Qh79jndOt9l99wTvyRwjJ1u6JzG8aQ99vvKGFKn6sacAJsjObYyhArJkoRapWfi+49
-         wo1P7nJsR7YOgNkXkcXnjZAoqtVRh0OhgbjpIzPt2/Nm87T9ygybB6uEGb7JqBrXDaXA
-         49agrcp5v+M8ABtqnUDCxN6LzqY7LO6LeXoVPu5zXFU1iZXT4WbTvsY0WxDY2K9O24Zm
-         3Rig==
-X-Gm-Message-State: AOJu0YxB2nIZjZ+P+1xNPuWF6SH3DF/EQYrs/FH7IiFcnqZ1kOZ5iz2A
-        IGhuW4g95znMT4Py/Y0Efw2Ecg==
-X-Google-Smtp-Source: AGHT+IHAnCPM/Z122/pk/4UjZRlnQX59HcM6kQVsLk17lGf/hhEOulm69KFX9/lCmDwSpdfrn7JfVw==
-X-Received: by 2002:a05:6a00:9392:b0:693:4143:5145 with SMTP id ka18-20020a056a00939200b0069341435145mr15121152pfb.31.1698265460080;
-        Wed, 25 Oct 2023 13:24:20 -0700 (PDT)
+        bh=W8oe0TQ1+zZd/3zKJQAEE+us/MvQWSBihayeSKyJW3A=;
+        b=UDhvnCve3K54w4YQu1TVPrAQhqGffh3zLatyU9ynuvKI7KjazQ81Jjl7WWHxyOlWAl
+         1du+RnihP3qaQWn/cAqf5g27ahPYI/vNc4szHUwJCHM4/ey6eoxRL+hDL84RoT8IR4AE
+         kBZ2HvEXxDAV3vqmg3PSw8tft8T+VaN2ivqHxGWbCxlMFAaJUOAxIQWU0kw5LPUCoN80
+         92Vjf8L7C3NlnMyFUcKwRGxIBr/3TglNNwFOLHKSBjkuqzZA3KUl/eqWrI0d0iLJLq7+
+         aQcBU4sSb2KCWkHCTk6gkK0H+bDzUY037z/2cEonFMZUlCxsihcXG+h01E4ZzrVbrW85
+         O8sw==
+X-Gm-Message-State: AOJu0YyX+C3mrpKtqNjcSd9d2YtqanFc35Bt3fpM2REdsPVa8KIQcW6y
+        P/Xq6k1F9jy9Aqvrk11/A3CPGQ==
+X-Google-Smtp-Source: AGHT+IGK6pQK6oEdjKlIa1mcimdR1pYjb6u2hPifw5U79lxb+nCirP606/eGPYNlPkAaYdn6n6fpUw==
+X-Received: by 2002:a05:6a00:12:b0:6c0:52b9:d448 with SMTP id h18-20020a056a00001200b006c052b9d448mr905573pfk.9.1698265465988;
+        Wed, 25 Oct 2023 13:24:25 -0700 (PDT)
 Received: from sunil-pc.Dlink ([106.51.188.78])
-        by smtp.gmail.com with ESMTPSA id y3-20020aa79423000000b006b84ed9371esm10079590pfo.177.2023.10.25.13.24.14
+        by smtp.gmail.com with ESMTPSA id y3-20020aa79423000000b006b84ed9371esm10079590pfo.177.2023.10.25.13.24.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Oct 2023 13:24:19 -0700 (PDT)
+        Wed, 25 Oct 2023 13:24:25 -0700 (PDT)
 From:   Sunil V L <sunilvl@ventanamicro.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
@@ -70,9 +70,9 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Atish Kumar Patra <atishp@rivosinc.com>,
         Haibo Xu <haibo1.xu@intel.com>,
         Sunil V L <sunilvl@ventanamicro.com>
-Subject: [RFC PATCH v2 02/21] RISC-V: ACPI: Implement PCI related functionality
-Date:   Thu, 26 Oct 2023 01:53:25 +0530
-Message-Id: <20231025202344.581132-3-sunilvl@ventanamicro.com>
+Subject: [RFC PATCH v2 03/21] ACPI: Kconfig: Introduce new option to support deferred GSI probe
+Date:   Thu, 26 Oct 2023 01:53:26 +0530
+Message-Id: <20231025202344.581132-4-sunilvl@ventanamicro.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231025202344.581132-1-sunilvl@ventanamicro.com>
 References: <20231025202344.581132-1-sunilvl@ventanamicro.com>
@@ -89,98 +89,32 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Replace the dummy implementation for PCI related functions with actual
-implementation. This needs ECAM and MCFG CONFIG options to be enabled
-for RISC-V.
+On some architectures like RISC-V, the interrupt controllers for Global
+System Interrupts (GSI) are not probed early during boot. So, the
+device drivers which need to register their GSI, need to be deferred
+until the actual interrupt controller driver is probed. To reduce the
+impact of such change, add a new CONFIG option which can be set only by
+the architecture which needs deferred GSI probing.
 
 Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 ---
- arch/riscv/Kconfig       |  2 ++
- arch/riscv/kernel/acpi.c | 31 ++++++++++++++-----------------
- drivers/pci/pci-acpi.c   |  2 +-
- 3 files changed, 17 insertions(+), 18 deletions(-)
+ drivers/acpi/Kconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index c3c3f3562082..8c105a151e12 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -13,6 +13,7 @@ config 32BIT
- config RISCV
- 	def_bool y
- 	select ACPI_GENERIC_GSI if ACPI
-+	select ACPI_MCFG if (ACPI && PCI)
- 	select ACPI_REDUCED_HARDWARE_ONLY if ACPI
- 	select ARCH_DMA_DEFAULT_COHERENT
- 	select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
-@@ -152,6 +153,7 @@ config RISCV
- 	select OF_EARLY_FLATTREE
- 	select OF_IRQ
- 	select PCI_DOMAINS_GENERIC if PCI
-+	select PCI_ECAM if (ACPI && PCI)
- 	select PCI_MSI if PCI
- 	select RISCV_ALTERNATIVE if !XIP_KERNEL
- 	select RISCV_APLIC
-diff --git a/arch/riscv/kernel/acpi.c b/arch/riscv/kernel/acpi.c
-index e619edc8b0cc..41aa77c8484b 100644
---- a/arch/riscv/kernel/acpi.c
-+++ b/arch/riscv/kernel/acpi.c
-@@ -306,29 +306,26 @@ void __iomem *acpi_os_ioremap(acpi_physical_address phys, acpi_size size)
- #ifdef CONFIG_PCI
+diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+index cee82b473dc5..4399e793f1d2 100644
+--- a/drivers/acpi/Kconfig
++++ b/drivers/acpi/Kconfig
+@@ -51,6 +51,9 @@ config ARCH_MIGHT_HAVE_ACPI_PDC
+ config ACPI_GENERIC_GSI
+ 	bool
  
- /*
-- * These interfaces are defined just to enable building ACPI core.
-- * TODO: Update it with actual implementation when external interrupt
-- * controller support is added in RISC-V ACPI.
-+ * raw_pci_read/write - Platform-specific PCI config space access.
-  */
--int raw_pci_read(unsigned int domain, unsigned int bus, unsigned int devfn,
--		 int reg, int len, u32 *val)
-+int raw_pci_read(unsigned int domain, unsigned int bus,
-+		 unsigned int devfn, int reg, int len, u32 *val)
- {
--	return PCIBIOS_DEVICE_NOT_FOUND;
--}
-+	struct pci_bus *b = pci_find_bus(domain, bus);
- 
--int raw_pci_write(unsigned int domain, unsigned int bus, unsigned int devfn,
--		  int reg, int len, u32 val)
--{
--	return PCIBIOS_DEVICE_NOT_FOUND;
-+	if (!b)
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+	return b->ops->read(b, devfn, reg, len, val);
- }
- 
--int acpi_pci_bus_find_domain_nr(struct pci_bus *bus)
-+int raw_pci_write(unsigned int domain, unsigned int bus,
-+		  unsigned int devfn, int reg, int len, u32 val)
- {
--	return -1;
--}
-+	struct pci_bus *b = pci_find_bus(domain, bus);
- 
--struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
--{
--	return NULL;
-+	if (!b)
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+	return b->ops->write(b, devfn, reg, len, val);
- }
++config ARCH_ACPI_DEFERRED_GSI
++	bool
 +
- #endif	/* CONFIG_PCI */
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 58497b25d2ab..c8c3369fd69f 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -1520,7 +1520,7 @@ static int __init acpi_pci_init(void)
- }
- arch_initcall(acpi_pci_init);
+ config ACPI_SYSTEM_POWER_STATES_SUPPORT
+ 	bool
  
--#if defined(CONFIG_ARM64)
-+#if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
- 
- /*
-  * Try to assign the IRQ number when probing a new device
 -- 
 2.39.2
 
