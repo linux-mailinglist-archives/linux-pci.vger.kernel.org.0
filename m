@@ -2,95 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DDE9C7D7218
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 19:08:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 297BF7D7222
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 19:11:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbjJYRIb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Oct 2023 13:08:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37182 "EHLO
+        id S229743AbjJYRLc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Oct 2023 13:11:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229629AbjJYRIa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 13:08:30 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A87412F;
-        Wed, 25 Oct 2023 10:08:29 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27B2FC433C7;
-        Wed, 25 Oct 2023 17:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698253708;
-        bh=HB+n4zKxAkIg+YmsEHyf2pMF18rKQZxGqCKpe+6cdB0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YRj1O1OvYuMJ2at1RMAgFOQmdCCvXJAGqgIhsHm6VEGuljfeV8u/LP+gIX80UNv25
-         Ikly2nRHQy0x2uMm4FGshCrVoe7tf0GVw3xIAgxQRWvK5SnOV3HwmljlHIwaBhkZfc
-         7wCvOzfKVGW3mggCN4epBBOZx9h2IAdaaFC6KYQoBIxWEUT9Xy0azgFqxdavI2ErGu
-         Dy3mVD/mEN90zcN1CUC9fE/t/RncO1wKeAVt41Dy0GE3V7hyQQA6z3S/OC7+4gKHsC
-         Sls38dDIrHAs0dsXguli4sImkoSl1f2/OPpqlsby8hrOXxCnAuL100WHuMs0Ttw4PC
-         GR6Ne8MAnVupw==
-Date:   Wed, 25 Oct 2023 22:38:20 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc:     lpieralisi@kernel.org, kw@linux.com, mani@kernel.org,
-        kishon@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, r-gunasekaran@ti.com,
-        srk@ti.com
-Subject: Re: [PATCH] misc: pci_endpoint_test: Add deviceID for J721S2 PCIe EP
- device support
-Message-ID: <20231025170820.GA103335@thinkpad>
-References: <20231020120248.3168406-1-s-vadapalli@ti.com>
+        with ESMTP id S229746AbjJYRLb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 13:11:31 -0400
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35C9A132
+        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 10:11:28 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id C9FF210096662;
+        Wed, 25 Oct 2023 19:11:26 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 8E1E4110AC; Wed, 25 Oct 2023 19:11:26 +0200 (CEST)
+Date:   Wed, 25 Oct 2023 19:11:26 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Simon Richter <sjr@debian.org>, 1015871@bugs.debian.org,
+        linux-pci@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Krzysztof Wilczy??ski <kw@linux.com>,
+        Emanuele Rocca <ema@debian.org>
+Subject: Re: Enabling PCI_P2PDMA for distro kernels?
+Message-ID: <20231025171126.GA9661@wunner.de>
+References: <20231025061927.smn5xnwpkasctpn7@pengutronix.de>
+ <b909a5e6-841a-44e4-a21f-e3cddbf71816@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231020120248.3168406-1-s-vadapalli@ti.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <b909a5e6-841a-44e4-a21f-e3cddbf71816@deltatee.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 20, 2023 at 05:32:48PM +0530, Siddharth Vadapalli wrote:
-> Add DEVICE_ID for J721S2 and enable support for endpoints configured
-> with this DEVICE_ID in the pci_endpoint_test driver.
-> 
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+On Wed, Oct 25, 2023 at 10:30:07AM -0600, Logan Gunthorpe wrote:
+> In addition to the above, P2PDMA transfers are only allowed by the
+> kernel for traffic that flows through certain host bridges that are
+> known to work. For AMD, all modern CPUs are on this list, but for Intel,
+> the list is very patchy.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+This has recently been brought up internally at Intel and nobody could
+understand why there's a whitelist in the first place.  A long-time PCI
+architect told me that Intel silicon validation has been testing P2PDMA
+at least since the Lindenhurst days, i.e. since 2005.
 
-- Mani
+What's the reason for the whitelist?  Was there Intel hardware which
+didn't support it or turned out to be broken?
 
-> ---
->  drivers/misc/pci_endpoint_test.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index ed4d0ef5e5c3..7e1acc68d435 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -71,6 +71,7 @@
->  #define PCI_DEVICE_ID_TI_AM654			0xb00c
->  #define PCI_DEVICE_ID_TI_J7200			0xb00f
->  #define PCI_DEVICE_ID_TI_AM64			0xb010
-> +#define PCI_DEVICE_ID_TI_J721S2		0xb013
->  #define PCI_DEVICE_ID_LS1088A			0x80c0
->  #define PCI_DEVICE_ID_IMX8			0x0808
->  
-> @@ -999,6 +1000,9 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM64),
->  	  .driver_data = (kernel_ulong_t)&j721e_data,
->  	},
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721S2),
-> +	  .driver_data = (kernel_ulong_t)&j721e_data,
-> +	},
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(pci, pci_endpoint_test_tbl);
-> -- 
-> 2.34.1
-> 
+I imagine (but am not certain) that the feature might only be enabled
+for server SKUs, is that the reason?
 
--- 
-மணிவண்ணன் சதாசிவம்
+Thanks,
+
+Lukas
