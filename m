@@ -2,45 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9E267D7234
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 19:22:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC42A7D7269
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 19:36:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229561AbjJYRWm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Oct 2023 13:22:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41136 "EHLO
+        id S234496AbjJYRgC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Oct 2023 13:36:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbjJYRWl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 13:22:41 -0400
+        with ESMTP id S234840AbjJYRft (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 13:35:49 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4915C12F;
-        Wed, 25 Oct 2023 10:22:40 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE601C433C7;
-        Wed, 25 Oct 2023 17:22:39 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F455187
+        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 10:35:36 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E95FC433C7;
+        Wed, 25 Oct 2023 17:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698254559;
-        bh=TpVWJFapHo0VMT3nduTVoXX71bNPxxczuV+vN2OQlj4=;
+        s=k20201202; t=1698255336;
+        bh=cr+xsjzlJjNwwmmyK3BYe5LelBs/qSR+1qnO6d+5Sas=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Jqyc/pzOjnUqQi1ENoMFIHd7NAJDIILKbOQvRshNeIA3ZnJKYJGIT5ZdBwEKw6eZr
-         PvaG2CsPwhJ6ndvZ6rX/02SEki/3nG+d0/O4kjEL/BlQ6bVlkGoSl826D76E0kq59K
-         /BxYttdXvaH/+fNXL7Elqx25hV8Hr7uMHo6BleqPNvpQthRCZENDhE7p2vpgfVBSo+
-         VeFXA9HJ1CsHXY5l8hClMG4s1bcShaSrmYRWHIBqYDSILDENJmbXn9URBdku28K1AR
-         The3ZP1ObSvDReM0tXcECgSlgcH0PeX0AFm7BONVLizklk0qQwaRQKsF/vr2F9voHy
-         Wd1lv6GQYGqjQ==
-Date:   Wed, 25 Oct 2023 12:22:37 -0500
+        b=pyCkSoX3dMfy+GBuCi0EFvqnZUhOpw7rQ/cFiaxBapk9o3sAFEPl7pAfXCmBuYq+d
+         HRQ0p/a7x61XE7wBO48AY9Mmr2baZEP9GpxPy9kG1LPXnMOxPRi/AqTbwcMO/QbGcV
+         DJYLVcI1rizT7u5+W2akUwncytVmXwniMOtApautY7rdYkgOycQrDSN1Os71l5wFmg
+         zcoJULQG08k1bPud1zU3ACayafVbl7EXCn6pGNX6nelZkwzT5zsdgAwDk0EFNBAC0n
+         S0LwNR41DsfPuYOWcdJq+QiHdxQmNoBBTvX/mbKn5o/kpI/SlmcxD6PfQm+I59MKsl
+         8m5qsTdYMuqzw==
+Date:   Wed, 25 Oct 2023 12:35:34 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     D Scott Phillips <scott@os.amperecomputing.com>
-Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        Darren Hart <darren@os.amperecomputing.com>,
-        patches@amperecomputing.com
-Subject: Re: [PATCH v2 2/2] PCI: hotplug: Add extension driver for Ampere
- Altra hotplug LED control
-Message-ID: <20231025172237.GA1754650@bhelgaas>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Simon Richter <sjr@debian.org>, 1015871@bugs.debian.org,
+        linux-pci@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Krzysztof Wilczy??ski <kw@linux.com>,
+        Emanuele Rocca <ema@debian.org>
+Subject: Re: Enabling PCI_P2PDMA for distro kernels?
+Message-ID: <20231025173534.GA1755254@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230930002036.6491-2-scott@os.amperecomputing.com>
+In-Reply-To: <20231025171126.GA9661@wunner.de>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -50,20 +53,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Sep 29, 2023 at 05:20:36PM -0700, D Scott Phillips wrote:
-> On Ampere Altra, PCIe hotplug is handled through ACPI. A side interface is
-> also present to request system firmware control of attention LEDs. Add an
-> ACPI PCI Hotplug companion driver to support attention LED control.
-> ...
+On Wed, Oct 25, 2023 at 07:11:26PM +0200, Lukas Wunner wrote:
+> On Wed, Oct 25, 2023 at 10:30:07AM -0600, Logan Gunthorpe wrote:
+> > In addition to the above, P2PDMA transfers are only allowed by the
+> > kernel for traffic that flows through certain host bridges that are
+> > known to work. For AMD, all modern CPUs are on this list, but for Intel,
+> > the list is very patchy.
+> 
+> This has recently been brought up internally at Intel and nobody could
+> understand why there's a whitelist in the first place.  A long-time PCI
+> architect told me that Intel silicon validation has been testing P2PDMA
+> at least since the Lindenhurst days, i.e. since 2005.
+> 
+> What's the reason for the whitelist?  Was there Intel hardware which
+> didn't support it or turned out to be broken?
+> 
+> I imagine (but am not certain) that the feature might only be enabled
+> for server SKUs, is that the reason?
 
-> +	arm_smccc_smc(REQUEST, LED_CMD, led_status(status), LED_ATTENTION,
-> +		      pci_domain_nr(bus) | (PCI_SLOT(root_port->devfn) << 4), 0, 0,
+No, the reason is that the PCIe spec doesn't require routing of
+peer-to-peer transactions between Root Ports:
+https://git.kernel.org/linus/0f97da831026
 
-pci_domain_nr() returns "int" (normally 32 bits), but since this is an
-ACPI system, the domain comes from _SEG, which is defined to be 16
-bits (ACPI r6.5, sec 6.5.6).
+I think there was a little discussion about adding a firmware
+interface to advertise this capability, but I guess nobody cared
+enough to advance it.
 
-So it looks like ORing in the "slot << 4" clobbers the upper 12 bits
-of _SEG.
-
-Is this code doing the right thing?
+Bjorn
