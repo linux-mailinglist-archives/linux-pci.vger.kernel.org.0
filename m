@@ -2,254 +2,215 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 04F517D7523
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 22:07:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B7F67D7567
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 22:24:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbjJYUHL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Oct 2023 16:07:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45502 "EHLO
+        id S229498AbjJYUYP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Oct 2023 16:24:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjJYUHK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 16:07:10 -0400
-Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6BBE12A;
-        Wed, 25 Oct 2023 13:07:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1698264427; x=1729800427;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=3kcO/NhTgLAUDKCVbrsZsrWdOzZ7cKfHNnIFKi2c/Dc=;
-  b=amdCJvwzV8EhlO29LKmqsrYEl1yHtvZ/Dgv3Gr8joQkMnsaAkqSeYgNV
-   zilS53rfu9pL9c5FXAxssz+I+gkXZ5bhL4esXxsJLvh+yb59Y/Lud3J8t
-   flX7m+3gDD1MPvPwyaMYYBB1o77rfIUbCSn9w1KZhaN83PJOOfKNsScvY
-   /YeLSa1cFnVFzJVsRiiRLINdzOIJrlmNxA1GhNa3LM59DwrtxwKB2sWxp
-   GPLVZD9LtB+UfDp4xWW0HAqYQWFqrVo8PHX7Mxl0ldsQ50Sn81I55MXvF
-   RCZxfCRLQqOtZ2dj1/mL/Hvvn7ax9+sZlkO3+CtdlskUp2e+yM2MEYNsf
-   w==;
-X-CSE-ConnectionGUID: t0+Z+b1XQ7aoA0B62bvP/Q==
-X-CSE-MsgGUID: Yy5g0OYhSTS2V84PVUH9JA==
-X-IronPort-AV: E=Sophos;i="6.03,250,1694707200"; 
-   d="scan'208";a="623592"
-Received: from mail-bn8nam11lp2168.outbound.protection.outlook.com (HELO NAM11-BN8-obe.outbound.protection.outlook.com) ([104.47.58.168])
-  by ob1.hgst.iphmx.com with ESMTP; 26 Oct 2023 04:07:04 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MxifzgHQEVA1A1ZfxgmSAnPtqjLt187eZhPEc4ilgwoMWHWLy6nDJ2mn6qUCuLSfEYD17bmtBc7613wGafS1kHvveIlEHt8UJ5klMEo3ZOyC/uqGsadFb1B2JoVzj8C0ZszxEJkgoecyHl3H66D5QetDBWGoexN8uN2gBHMbIMk8cNE5wEgNe5DN53ZOq0Yuv9X+TrG3BClkF/Q0s2Fp/ktAbTgWY0U/jxz268PX1I77RqREnwEHvoXBIq3lrXGHt8qjgYg216LQukL33awYDKz9lhvaDdfLkUJ70wtLYaUbF2f96iyVjcV9KHMJJscVVd9anGUomSDtzz8C/ZjVEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qYT0SRoEWVmaJ7xzjQs7GGtWI2KXo2Fsr3HPU247HwI=;
- b=D14Fs6mcqqDiYEtv4MtrNryrefY7e5nxCjflwpRaDFb4vuW6ti9pfKd6658zTbZch5EWyzQXxK6bNdYrH6kEfVjlrBV+LC0Ap28ZrclRrcp5smYskuxxjjIASW0gsELmvzXxEaxhX33ODL9Zu96JiQ6zlsa40ipsFXUUQle/fCKzDyjXH/mqwN5vvNVWcjgX7Miw7VUac8yQfhxzbCbk6mdo0A4aMwNkJ6r+7N9YM5BA4Hn5rSeDXmcYa1X2f7/ZCElDV9Z+/nuT10hheAseV5uxP9uvQyC77M6Sfs++6F0xj/ik2d+N/Qz9JaNAcceHC/+Miwdyr241q8lorddmSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        with ESMTP id S229776AbjJYUYO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 16:24:14 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FB8612A
+        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 13:24:09 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-577fff1cae6so96455a12.1
+        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 13:24:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qYT0SRoEWVmaJ7xzjQs7GGtWI2KXo2Fsr3HPU247HwI=;
- b=GFMD6P9zMNZW9s7Nc1JaSJow0i5Am+jSYEvByre5rAcs5aFrpXvVmZd+o9V0m/eWm9oKua+GwlIRul7Om2DlI6OI2tU75sJyPogKtCBrBDPUiL8ykRww3rxUj9PSY9EGunS7kGoOLtTzdmkkamGTECJbLwrjYVI5RlL/+iTfZcY=
-Received: from MN2PR04MB6272.namprd04.prod.outlook.com (2603:10b6:208:e0::27)
- by DM8PR04MB8056.namprd04.prod.outlook.com (2603:10b6:8::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6933.19; Wed, 25 Oct 2023 20:07:03 +0000
-Received: from MN2PR04MB6272.namprd04.prod.outlook.com
- ([fe80::47df:9a7c:5674:2ca6]) by MN2PR04MB6272.namprd04.prod.outlook.com
- ([fe80::47df:9a7c:5674:2ca6%4]) with mapi id 15.20.6933.019; Wed, 25 Oct 2023
- 20:07:03 +0000
-From:   Niklas Cassel <Niklas.Cassel@wdc.com>
-To:     Conor Dooley <conor@kernel.org>
-CC:     Niklas Cassel <nks@flawful.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
+        d=ventanamicro.com; s=google; t=1698265449; x=1698870249; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=F9/pedB262IMNHEh1PUtoWlFeNdn65+nq0ZZR6F2re8=;
+        b=KDBnVad/L98ks9dD6PFiobWlP+Y3q+9Zm0vjzN3/+4omI65ozoSxrD30/6HzY+mbQM
+         H6IwEnthNvfRwxUvup1anEfy2bOrqPYRKxmyXL8n7RErVvzVMLkMSVCO7hpfrjYtH967
+         DjN2SsObKv5oVudbtz50lcuB4ySHSDcD6Wh6SOMfo2yD3D+YqW0nTUr0e5GspcQSN1RR
+         0SQngTgKrPvDXXIV4axCjPlx5lK03PX8xn98jaouG9PAq2gCBMUUmhBYWJdAC6qDUJ0p
+         LWmZI7tMzbAE30w6Pfmzr9D5j2bPqBiUqkDxoC4PhCl3ovTi17+Z+lXxmFwU3u+0FhpL
+         rZMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698265449; x=1698870249;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F9/pedB262IMNHEh1PUtoWlFeNdn65+nq0ZZR6F2re8=;
+        b=ExRBOp0sFvs8jBfrkB4kOl3XzVMA0l0h5TWKpOxz1Hf4wlfEbgt6Dib3gyiKy9j3HS
+         iz5usV0ET6VHOJKVZg2+7F1qLQ6KYKmxXg5KTqeOEVO5eON1xI1p31F0kcsCJn7HhQMT
+         B3c3FWgBS2wxlEPCK0xt1nT+yXV6jQgtNPeoYcF2JkemUogpJhykwny+/A42mBhIY6EB
+         z0oOW/NvA/ECIk2Ehd20zbfFf+/bASfpr8I+RAhx8R+/ylSE68yqJGSHnYccAFonJlPJ
+         8DZocgPmLJECOCJXPapTDVGqBW5HdkhoY8wgI1jjerUx0jHS/SpT+EETfH+x52SyRAOx
+         spQg==
+X-Gm-Message-State: AOJu0YzQnf3Ren0fgzzlJc/fmn0MDDdnABlQRriKkw/AIyPxtPEUnqaU
+        05TOysCp0A7XP0jjaNp6kZ/3og==
+X-Google-Smtp-Source: AGHT+IEV4o/13i3hZesUJvr2asiwuxud0jha6gl4OJB79xQ7DR2BCPeSNSC6qZTwPjauiylzsIcCjw==
+X-Received: by 2002:a05:6a20:8e12:b0:14e:2208:d62f with SMTP id y18-20020a056a208e1200b0014e2208d62fmr801359pzj.22.1698265448502;
+        Wed, 25 Oct 2023 13:24:08 -0700 (PDT)
+Received: from sunil-pc.Dlink ([106.51.188.78])
+        by smtp.gmail.com with ESMTPSA id y3-20020aa79423000000b006b84ed9371esm10079590pfo.177.2023.10.25.13.24.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Oct 2023 13:24:08 -0700 (PDT)
+From:   Sunil V L <sunilvl@ventanamicro.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-serial@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: PCI: dwc: rockchip: Add dma
- properties
-Thread-Topic: [PATCH v2 3/4] dt-bindings: PCI: dwc: rockchip: Add dma
- properties
-Thread-Index: AQHaBoyNd+UCFjyqgU2gBHlMOd/MHbBZIasAgAHO3gA=
-Date:   Wed, 25 Oct 2023 20:07:03 +0000
-Message-ID: <ZTl1ZsHvk3DDHWsm@x1-carbon>
-References: <20231024151014.240695-1-nks@flawful.org>
- <20231024151014.240695-4-nks@flawful.org>
- <20231024-glacial-subpar-6eeff54fbb85@spud>
-In-Reply-To: <20231024-glacial-subpar-6eeff54fbb85@spud>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wdc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN2PR04MB6272:EE_|DM8PR04MB8056:EE_
-x-ms-office365-filtering-correlation-id: 0f44cf07-7640-4635-ea3a-08dbd595f46e
-wdcipoutbound: EOP-TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: r4zm6XPigxdq8yIQdMr/2T5SQ81Eovmpl26hQe7ux4EGdc8PpX2axZD4qMNkq9ruMoTW9wQKypqalZxm5bTMmZ0+85hevE1SrxjUjcq6NsJssdaSNVembK0/EoDe04U6XQ+uj2x/tEk0nnhaDXz39B5Q5Y/HT2XckSlwPS97DrPpPthzMohOW+d1R3z3cVCEqZ6lbPHSAcXWYoY7QNIMipzEkxtZ6WGF/ECMzXwCNjgIaYVdWfEG53u15d8tylgDNv+PDesTWwJD3bUyM9RoZZb3s3UzcgoqZev5qbEghTnfl52t1V7QWKfKCLJqBc9V6yFwOftT+/xs5O62QsXTbH9OEjxCl6/dNY+iHNGQQKn/vr1Eamn3araiHdnsxk5h6IEFC7tfCY+4zDNYUgbrQh1OccVJg4vUJrXPDPwxZ7hil84ICKjRCT4vVEkp2Red546mXnoCbbLmkLoPFGnc72ZQ/GImt8SGg1ogLCDXGsmqRF1xU6GAssc3IYkM6AJmlk9Krg5nTKBhHwMRfIJAD94RLUKnVvzn/9pXffQ5ff+/Jn3uPNLtlmz4TvKYPwn4hnw+LBrIrlzP+lyUfLn6AH1XK/G/mDhn3m/DRDS5gS/oYBC7rWtWLUKytm8tVGvi
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR04MB6272.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(366004)(39860400002)(376002)(136003)(346002)(396003)(230922051799003)(1800799009)(64100799003)(186009)(451199024)(83380400001)(71200400001)(4326008)(8936002)(122000001)(2906002)(8676002)(7416002)(6486002)(82960400001)(9686003)(5660300002)(41300700001)(6512007)(6506007)(6916009)(316002)(91956017)(478600001)(26005)(38070700009)(86362001)(76116006)(54906003)(66946007)(64756008)(38100700002)(66446008)(66556008)(66476007)(33716001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?q8A49jL5VQLL77p0MM+TIXb/Voa/t8mi74Mjm3lNxu6oUQANtXhZTCFK76?=
- =?iso-8859-2?Q?baSYWOBB827icmoXqcoq6sVViIeyrUJbT63+xz5gb7qEwUOftmzuJ0OvCt?=
- =?iso-8859-2?Q?ElGNXgPunEqpt9SJlvPgpAApDe4EN2/zvO3E+h0//OOSpy+vuluWqioeeE?=
- =?iso-8859-2?Q?Zu2XmB9ZA9mNDDGIjjdmRUJ6PXgIwNg01LMDtsv6yke9lfGOyOHBNb2eU+?=
- =?iso-8859-2?Q?suIsDNDIlV9E+JvY05RO+VAG9g+BULG+SePBP+SIXgzjOafFZsIn6Dv2ph?=
- =?iso-8859-2?Q?fmvKXq8cgDDYgp2E0baB2MbS3pDq4O2yJ4jq1M9c5zCleiYwTu6TPzW9tT?=
- =?iso-8859-2?Q?g6oitDdJCoYNE7aLNiejtHu/R9gWT2c5/5bcwpqPdqIWpxwCRjWmzdfs47?=
- =?iso-8859-2?Q?QmcQobM4aY48mhP7Hn1qyLTI2TZ4kllwtjtODQtrdpDfwHwdSUM4CFSksv?=
- =?iso-8859-2?Q?1qNx1B2NwdawL+7A6djf0TbwPO4+EsyBD0P4iqPO4Qk9D2TB3Y3hJgBY8q?=
- =?iso-8859-2?Q?xsIllJr2QMh/Gn6RscGRPy7et8wOjA0VTBAbcnvwnQTRFTaUiwNiXdnYrO?=
- =?iso-8859-2?Q?WqTLf/ECAerGMdwNXoTQcS3dM0QGQrluQ6+9JFrozYz8c/rY0ZHudTGttq?=
- =?iso-8859-2?Q?XAkbACQcK0O06jC/dup95I7rC61+8bsrB8vbIfmfuqoQO6+wAVQPZH4z0+?=
- =?iso-8859-2?Q?C170KcF1tNf6su6J2fv45o2igyvgDFgSlJLOJtSFiB8873tuEDwDRFCHhX?=
- =?iso-8859-2?Q?l2u/MjsPE811OjPXSQuYQx/bLMZ0JFCGWcXqTd88+Ol40X8F2MLJ8LGRb2?=
- =?iso-8859-2?Q?L/HLFGnSFE8KAJxLiacE259n5j8wObgVj4dAOMRaycyjDpixau/pVGMj7c?=
- =?iso-8859-2?Q?Cxw2KFzQvO6LFar2tiSYFN66RlQWNzLhmNfK5zBGelLfG34EV4mqdTBx6P?=
- =?iso-8859-2?Q?T6Kwck3ZqJ6VFfDNGhXEErM0y7Z9wTJktqpkbdEtb2iWHmhCWj2Hka1XcG?=
- =?iso-8859-2?Q?VfVf3x8qXco+wLA2kcsAK1lMm1gZsaQbLFtu87YBpy+Q0sMMdxo3otQDTU?=
- =?iso-8859-2?Q?e/8LY7qExo0RholNbAytkuyRLYehVExUCXDpy4CItwgF0xzcGWW0CDkele?=
- =?iso-8859-2?Q?U3ts9tP087N9GOnQPAZpgvbGyNaVEV06cTJIi/zsi+DF+BF+DZN9A3G76b?=
- =?iso-8859-2?Q?feOIr3kWcP6WgF9QXXgQgO1JNFHouYbAtGe5pdFd3Tnh4eYNu4Vm4puJ9o?=
- =?iso-8859-2?Q?zjzwXmuBP643iZS7WtqjF3cISlsLw+f6asyeToj1dTtyo/a40lkEQTeYsc?=
- =?iso-8859-2?Q?iLG1rLZ+RRbpvSgSO8wgHR3p9n8DItSTcP4y82hIcomiOD9xkBjmtTAXZs?=
- =?iso-8859-2?Q?0zugEz+BCt3b5OM8n1q7z8FUQCAC6kI1LbuKSe/9ypBOT1Xc3W4m6goWMs?=
- =?iso-8859-2?Q?+jAWDf22uxvkQ0eoUhGTNhCKk7IHdzLLq/kZ4QXzkBo0GtGiNBYDIv6Hup?=
- =?iso-8859-2?Q?Jan6PsFZdfJKsQbd1NjU2rEUWRYZTgO+0LWbltno4ryPJSurDbyZdvZuyy?=
- =?iso-8859-2?Q?Me0rkjHXB5XhWLw5P3hB0tRamCt0YYYmWdZinuRCnciLFg9TqJnGUnmivu?=
- =?iso-8859-2?Q?6wOqaVM85uzmjsY3h4eiKalTjqfRvhQFJJHSOWkWdtE5rovsDzblprPQ?=
- =?iso-8859-2?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-ID: <9E0D7D041433044FB2615C1FBD1BE483@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Anup Patel <anup@brainfault.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        Atish Kumar Patra <atishp@rivosinc.com>,
+        Haibo Xu <haibo1.xu@intel.com>,
+        Sunil V L <sunilvl@ventanamicro.com>
+Subject: [RFC PATCH v2 00/21] RISC-V: ACPI: Add external interrupt controller support 
+Date:   Thu, 26 Oct 2023 01:53:23 +0530
+Message-Id: <20231025202344.581132-1-sunilvl@ventanamicro.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?iso-8859-2?Q?3neZKicrfllqMneJyuOkNtLNCAhzVeAAU3aCnOQG+HjrJOoktbZ6FaxOqU?=
- =?iso-8859-2?Q?7yz+a79F6GHJHW9xoLLDoxbR3k7HZ06ODzCE6ZooOJlDmrKmtegiEeRB30?=
- =?iso-8859-2?Q?THCYarhwnDyHiK4U5tkbekkSRnJonXjObmJY6fkk0xeGGuvZeLwjf6evs8?=
- =?iso-8859-2?Q?MT1rpOERxe21of7ArYkCHpD3Ekne/fhYeHTw04wm8bBv0rQswbQUYanqKJ?=
- =?iso-8859-2?Q?JSI+9DQlruRIa0HmklGqMjMjQMTJefhX+TXmRDIYlkl1tSIjj9DUEEcawC?=
- =?iso-8859-2?Q?+uM3AVzh+S8IUAyiIzSMABFRe2YVZi+XhXSTJUbvmYGv/+Izhrkj7MhEkg?=
- =?iso-8859-2?Q?lIkfP54pJTvmqQTvf2QthxcMlUaDlP0LdbMeNVzXhChXpTQSZELyQJZjzh?=
- =?iso-8859-2?Q?XQu+sbuoM1lzFeJK2j+MiX7sEvotD2GmKrX46oCLTx0SjPBtRAEC255H5q?=
- =?iso-8859-2?Q?jI1s4ld8FHKTxrfKhYyEEziWDeHM6GAb4W+hWirYevSbbEo5lQ64RUPa9O?=
- =?iso-8859-2?Q?1UvIsONJLq6HoO3BjaqoXXOjhqyAIvuZ0zhN2BqB94LRuV8a5Ar2/S7uuj?=
- =?iso-8859-2?Q?ExqJm08KpHN7igkA3GDdPagJWGWzByFc3wTtMCWMoObD04O0TNoouDePaf?=
- =?iso-8859-2?Q?4pnNCn7MU8ej0X++2+v8ZcbnugHAWn1/10musF5hE9R5rHagZOtupstQ3O?=
- =?iso-8859-2?Q?CfExMKhaP2JRV1FqC10QgAJ+wkaArhSI2h1zUve3Q0hxHJjgnHFSEDc8sS?=
- =?iso-8859-2?Q?9I9hRnhquUm+/4VroadWm3gZGTaMThzxQDgS7EEnEyG4VWcUTmqAYcTe1J?=
- =?iso-8859-2?Q?Bijm/jr/y14ggy6p7a0/NNRo1+PI+ohOIrJS2cNkH3Ianul/qwk9IQfuDB?=
- =?iso-8859-2?Q?eT//t4CxuianO4IPEJmZsnBrQh72CS1z9+c/VkIrAOOD3OKELwaeLNfGG0?=
- =?iso-8859-2?Q?i4+exRzakAf7CrSo94KcfGArTQ3cWGD869wiI+5HBaSIGU9RP1LGGdA3rA?=
- =?iso-8859-2?Q?/ByQEG61YeBtV5kuwXKuCAclgKLyBxUGpdIhU7639ecXHByxWhRS/7nwZT?=
- =?iso-8859-2?Q?CFFyq6XBJ6lZGv81piOUTEZuesAY8C5kFE7t0dYm9Hc1j3QYhfUcxMjny2?=
- =?iso-8859-2?Q?P76dJdlg=3D=3D?=
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR04MB6272.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f44cf07-7640-4635-ea3a-08dbd595f46e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2023 20:07:03.0743
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /taf93JJYDg8JwfIyjToWNBeR/y+r/t7ngz0hUXLcD+JWkUrICmKBwsRUk9j157iLSxjCkCSGepH+pQlQjNX+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR04MB8056
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Conor,
+This series adds support for the below ECR approved by ASWG.
+1) MADT - https://drive.google.com/file/d/1oMGPyOD58JaPgMl1pKasT-VKsIKia7zR/view?usp=sharing
 
-On Tue, Oct 24, 2023 at 05:30:22PM +0100, Conor Dooley wrote:
-> On Tue, Oct 24, 2023 at 05:10:10PM +0200, Niklas Cassel wrote:
-> > From: Niklas Cassel <niklas.cassel@wdc.com>
-> >=20
-> > Even though rockchip-dw-pcie.yaml inherits snps,dw-pcie.yaml
-> > using:
-> >=20
-> > allOf:
-> >   - $ref: /schemas/pci/snps,dw-pcie.yaml#
-> >=20
-> > and snps,dw-pcie.yaml does have the dma properties defined, in order to=
- be
-> > able to use these properties, while still making sure 'make CHECK_DTBS=
-=3Dy'
-> > pass, we need to add these properties to rockchip-dw-pcie.yaml.
-> >=20
-> > Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
-> > ---
-> >  .../bindings/pci/rockchip-dw-pcie.yaml        | 20 +++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yam=
-l b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> > index 229f8608c535..633f8e0e884f 100644
-> > --- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> > @@ -35,6 +35,7 @@ properties:
-> >        - description: Rockchip designed configuration registers
-> >        - description: Config registers
-> >        - description: iATU registers
-> > +      - description: eDMA registers
->=20
-> Same here, is this just for one of the two supported models, or for
-> both?
+The series primarily enables irqchip drivers for RISC-V ACPI based
+platforms.
 
-For the 3 controllers found in rk3568, this range exists for all
-(all of the controllers were synthesized with the eDMA controller).
+In addition, PCI ACPI related functions are migrated from arm64 to
+common file so that we don't need to duplicate them for RISC-V.
 
-For the 5 controllers found in rk3588, this range exists for only one of th=
-em
-(only one of the controllers was synthesized with the eDMA controller).
+On RISC-V platforms, apart from root irqchips which provide local
+interrupts and IPI, all other interrupt controllers are probed late
+during boot. Hence, the drivers for the devices connected to these
+interrupt controllers which are probed late, should also support
+deferred probe. While ACPI platform devices/drivers seem to support
+deferred probe since they use acpi_irq_get(), the PNP devices and the
+PCI INTx expect GSIs are registered early. So, patches are required
+to enable few essential drivers to support deferred probe. To minimize
+the impact, a new CONFIG option is introduced which can be enabled only
+by the architecture like RISC-V which supports deferred irqchip probe.
 
+This series is based on Anup's AIA v11 series. Since Anup's AIA v11 is
+not merged yet and first time introducing deferred probe, this series is
+still kept as RFC. Looking forward for the feedback!
 
-> >    interrupt-names:
-> > +    minItems: 5
-> >      items:
-> >        - const: sys
-> >        - const: pmc
-> >        - const: msg
-> >        - const: legacy
-> >        - const: err
-> > +      - const: dma0
-> > +      - const: dma1
-> > +      - const: dma2
-> > +      - const: dma3
+Changes since RFC v1:
+	1) Abandoned swnode approach as per Marc's feedback.
+	2) To cope up with AIA series changes which changed irqchip driver
+	   probe from core_initcall() to platform_driver, added patches
+	   to support deferred probing.
+	3) Rebased on top of Anup's AIA v11 and added tags.
 
-While all the PCIe controllers on the rk3568 have the embedded DMA controll=
-er
-as part of the PCIe controller, they don't have separate IRQs for the eDMA.
-(They will need to use the combined "sys" irq, so the driver will need to r=
-ead
-an additional register to see that it was an eDMA irq.)
+To test the series,
 
-For the rk3588, only one of the 5 PCIe controllers have the eDMA, and that
-controller also has dedicated IRQs for the eDMA.
-(It should also be able to use the combined "sys" irq, but that would be le=
-ss
-efficient, and AFAICT, the driver currently only works with dedicated IRQs.=
-)
+1) Qemu should be built using the riscv_acpi_b2_v4 branch at
+https://github.com/vlsunil/qemu.git
 
+2) EDK2 should be built using the instructions at:
+https://github.com/tianocore/edk2/blob/master/OvmfPkg/RiscVVirt/README.md
 
-Kind regards,
-Niklas=
+3) Build Linux using this series on top of Anup's AIA v11 series.
+
+Run Qemu:
+qemu-system-riscv64 \
+ -M virt,pflash0=pflash0,pflash1=pflash1,aia=aplic-imsic \
+ -m 2G -smp 8 \
+ -serial mon:stdio \
+ -device virtio-gpu-pci -full-screen \
+ -device qemu-xhci \
+ -device usb-kbd \
+ -blockdev node-name=pflash0,driver=file,read-only=on,filename=RISCV_VIRT_CODE.fd \
+ -blockdev node-name=pflash1,driver=file,filename=RISCV_VIRT_VARS.fd \
+ -netdev user,id=net0 -device virtio-net-pci,netdev=net0 \
+ -kernel arch/riscv/boot/Image \
+ -initrd rootfs.cpio \
+ -append "root=/dev/ram ro console=ttyS0 rootwait earlycon=uart8250,mmio,0x10000000"
+
+To boot with APLIC only, use aia=aplic.
+To boot with PLIC, remove aia= option.
+
+This series is also available in acpi_b2_v2_riscv_aia_v11 branch at
+https://github.com/vlsunil/linux.git
+
+Based-on: 20231023172800.315343-1-apatel@ventanamicro.com
+(https://lore.kernel.org/lkml/20231023172800.315343-1-apatel@ventanamicro.com/)
+
+Sunil V L (21):
+  arm64: PCI: Migrate ACPI related functions to pci-acpi.c
+  RISC-V: ACPI: Implement PCI related functionality
+  ACPI: Kconfig: Introduce new option to support deferred GSI probe
+  ACPI: irq: Add support for deferred probe in acpi_register_gsi()
+  pnp.h: Return -EPROBE_DEFER for disabled IRQ resource in pnp_irq()
+  RISC-V: Kconfig: Select deferred GSI probe for ACPI systems
+  serial: 8250_pnp: Add support for deferred probe
+  ACPI: pci_irq: Avoid warning for deferred probe in
+    acpi_pci_irq_enable()
+  ACPI: scan.c: Add weak arch specific function to reorder the IRQCHIP
+    probe
+  ACPI: RISC-V: Implement arch function to reorder irqchip probe entries
+  PCI: MSI: Add helper function to set system wide MSI support
+  PCI: pci-acpi.c: Return correct value from pcibios_alloc_irq()
+  irqchip: riscv-intc: Add ACPI support for AIA
+  irqchip: riscv-imsic: Add ACPI support
+  irqchip: riscv-aplic: Add ACPI support
+  irqchip: irq-sifive-plic: Add ACPI support
+  ACPI: bus: Add RINTC IRQ model for RISC-V
+  irqchip: riscv-intc: Set ACPI irqmodel
+  ACPI: bus: Add acpi_riscv_init function
+  ACPI: RISC-V: Create APLIC platform device
+  ACPI: RISC-V: Create PLIC platform device
+
+ arch/arm64/kernel/pci.c                    | 191 ---------------------
+ arch/riscv/Kconfig                         |   3 +
+ arch/riscv/include/asm/irq.h               |  31 ++++
+ arch/riscv/kernel/acpi.c                   |  31 ++--
+ drivers/acpi/Kconfig                       |   3 +
+ drivers/acpi/bus.c                         |   4 +
+ drivers/acpi/irq.c                         |  12 +-
+ drivers/acpi/pci_irq.c                     |   7 +-
+ drivers/acpi/riscv/Makefile                |   2 +-
+ drivers/acpi/riscv/init.c                  |  15 ++
+ drivers/acpi/riscv/init.h                  |   6 +
+ drivers/acpi/riscv/irq.c                   | 120 +++++++++++++
+ drivers/acpi/scan.c                        |   3 +
+ drivers/irqchip/irq-riscv-aplic-direct.c   |  22 ++-
+ drivers/irqchip/irq-riscv-aplic-main.c     | 105 ++++++++---
+ drivers/irqchip/irq-riscv-aplic-main.h     |   1 +
+ drivers/irqchip/irq-riscv-aplic-msi.c      |  10 +-
+ drivers/irqchip/irq-riscv-imsic-early.c    |  52 +++++-
+ drivers/irqchip/irq-riscv-imsic-platform.c |  51 ++++--
+ drivers/irqchip/irq-riscv-imsic-state.c    | 128 +++++++-------
+ drivers/irqchip/irq-riscv-imsic-state.h    |   2 +-
+ drivers/irqchip/irq-riscv-intc.c           | 114 +++++++++++-
+ drivers/irqchip/irq-sifive-plic.c          | 113 ++++++++++--
+ drivers/pci/msi/msi.c                      |   5 +
+ drivers/pci/pci-acpi.c                     | 182 ++++++++++++++++++++
+ drivers/pci/pci.h                          |   2 +
+ drivers/tty/serial/8250/8250_pnp.c         |  18 +-
+ include/linux/acpi.h                       |   9 +
+ include/linux/irqchip/riscv-imsic.h        |  10 ++
+ include/linux/pnp.h                        |  10 +-
+ 30 files changed, 906 insertions(+), 356 deletions(-)
+ create mode 100644 drivers/acpi/riscv/init.c
+ create mode 100644 drivers/acpi/riscv/init.h
+ create mode 100644 drivers/acpi/riscv/irq.c
+
+-- 
+2.39.2
+
