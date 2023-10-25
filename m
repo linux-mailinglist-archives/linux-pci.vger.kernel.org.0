@@ -2,52 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98B357D618B
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 08:19:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE8C97D619A
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 08:24:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229688AbjJYGTn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Oct 2023 02:19:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32894 "EHLO
+        id S231648AbjJYGYf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Oct 2023 02:24:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231542AbjJYGTm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 02:19:42 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89A44123
-        for <linux-pci@vger.kernel.org>; Tue, 24 Oct 2023 23:19:40 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qvXEo-0003gE-OM; Wed, 25 Oct 2023 08:19:30 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qvXEm-0047Gp-EH; Wed, 25 Oct 2023 08:19:28 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qvXEm-005nSU-4z; Wed, 25 Oct 2023 08:19:28 +0200
-Date:   Wed, 25 Oct 2023 08:19:27 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Cc:     Simon Richter <sjr@debian.org>, 1015871@bugs.debian.org,
-        linux-pci@vger.kernel.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Emanuele Rocca <ema@debian.org>
-Subject: Enabling PCI_P2PDMA for distro kernels?
-Message-ID: <20231025061927.smn5xnwpkasctpn7@pengutronix.de>
+        with ESMTP id S231637AbjJYGYf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 02:24:35 -0400
+Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F9EFE5;
+        Tue, 24 Oct 2023 23:24:31 -0700 (PDT)
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+        by fd01.gateway.ufhost.com (Postfix) with ESMTP id 3186D80CF;
+        Wed, 25 Oct 2023 14:24:23 +0800 (CST)
+Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 25 Oct
+ 2023 14:24:23 +0800
+Received: from [192.168.125.136] (183.27.99.126) by EXMBX172.cuchost.com
+ (172.16.6.92) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 25 Oct
+ 2023 14:24:21 +0800
+Message-ID: <2857e5b8-0a87-26b7-1057-8ef8ecf94f2c@starfivetech.com>
+Date:   Wed, 25 Oct 2023 14:24:22 +0800
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="s6rnyabjnc2dlg6y"
-Content-Disposition: inline
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v9 19/20] PCI: starfive: Add JH7110 PCIe controller
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Minda Chen <minda.chen@starfivetech.com>
+CC:     Conor Dooley <conor@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        "Daire McNamara" <daire.mcnamara@microchip.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>
+References: <20231024175253.GA1662387@bhelgaas>
+From:   Kevin Xie <kevin.xie@starfivetech.com>
+In-Reply-To: <20231024175253.GA1662387@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [183.27.99.126]
+X-ClientProxiedBy: EXCAS064.cuchost.com (172.16.6.24) To EXMBX172.cuchost.com
+ (172.16.6.92)
+X-YovoleRuleAgent: yovoleflag
+X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,54 +69,229 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---s6rnyabjnc2dlg6y
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On 2023/10/25 1:52, Bjorn Helgaas wrote:
+> On Fri, Oct 20, 2023 at 06:43:40PM +0800, Minda Chen wrote:
+>> Add StarFive JH7110 SoC PCIe controller platform
+>> driver codes, JH7110 with PLDA host PCIe core.
+> 
+> Wrap all your commit logs to fill about 75 columns (as suggested
+> before).  "git log" adds a few spaces, so if you fill to 75 columns,
+> the result will still fit in a default 80 column window.
+> 
 
-in https://bugs.debian.org/1015871 the Debian kernel team got a request
-to enable PCI_P2PDMA. Given the description of the feature and also the
-"If unsure, say N." I wonder if you consider it safe to enable this
-option.
+OK.
 
-Assuming this option isn't completely free of security concerns, a
-kernel option to explicitly enable would be nice for a distro kernel.
-This way the option could be enabled (but dormant and so safe) and users
-who want to benefit from it despite the concerns can still do so.
+>> +config PCIE_STARFIVE_HOST
+>> +	tristate "StarFive PCIe host controller"
+>> +	depends on OF && PCI_MSI
+>> +	select PCIE_PLDA_HOST
+>> +	help
+>> +	  Say Y here if you want to support the StarFive PCIe controller
+>> +	  in host mode. StarFive PCIe controller uses PLDA PCIe
+>> +	  core.
+> 
+> Add blank line between paragraphs.  Wrap to fill 75-78 columns.
+> 
 
-Some side information:
+OK.
 
- - According to Emanuele Rocca this option is enabled in Fedora Server
-   38 and openSUSE Tumbleweed
+>> +	  If you choose to build this driver as module it will
+>> +	  be dynamically linked and module will be called
+>> +	  pcie-starfive.ko
+> 
+>> +++ b/drivers/pci/controller/plda/pcie-plda.h
+>> @@ -6,14 +6,26 @@
+>>  #ifndef _PCIE_PLDA_H
+>>  #define _PCIE_PLDA_H
+>>  
+>> +#include <linux/phy/phy.h>
+> 
+> I don't think you need to #include this.  In this file you only use a
+> pointer to struct phy, so declaring the struct should be enough, e.g.,
+> 
+>   struct phy;
+> 
+> You will have to #include it in pcie-starfive.c where you actually
+> *use* phy, of course.
+> 
 
- - I already asked in #linux-pci for feedback, Krzysztof Wilczy=C5=84ski
-   recommended there to bring this topic forward via mail and pointed
-   out a (paywalled) ACM paper about this topic
-   (https://dl.acm.org/doi/10.1145/3409963.3410491).
+OK.
 
-Best regards
-Uwe
+>> +#define CONFIG_SPACE_ADDR			0x1000u
+> 
+> This looks like an *offset* that you add to ->bridge_addr.  Adding two
+> addresses together doesn't really make sense.
+> 
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+OK, I will rename it.
 
---s6rnyabjnc2dlg6y
-Content-Type: application/pgp-signature; name="signature.asc"
+>> +static int starfive_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
+>> +				      int where, int size, u32 value)
+>> +{
+>> +	if (starfive_pcie_hide_rc_bar(bus, devfn, where))
+>> +		return PCIBIOS_BAD_REGISTER_NUMBER;
+> 
+> I think this should probably return PCIBIOS_SUCCESSFUL.  There's
+> nothing wrong with the register number; you just want to pretend that
+> it's hardwired to zero.  That means ignore writes and always return 0
+> for reads.
+> 
+>> +	return pci_generic_config_write(bus, devfn, where, size, value);
+>> +}
+>> +
+>> +static int starfive_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
+>> +				     int where, int size, u32 *value)
+>> +{
+>> +	if (starfive_pcie_hide_rc_bar(bus, devfn, where))
+>> +		return PCIBIOS_BAD_REGISTER_NUMBER;
+> 
+> Set *value to zero and return PCIBIOS_SUCCESSFUL.
+> 
 
------BEGIN PGP SIGNATURE-----
+Agree, PCIBIOS_BAD_REGISTER_NUMBER is imprecise.
+I will return PCIBIOS_SUCCESSFUL here, ignore writes and always return 0 for reads.
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmU4s28ACgkQj4D7WH0S
-/k6JQwf9Gjjtgh2jbZsJdUB8pMaQqfBhri1KkGEz4F/WAXbIk6wjIuRmIw/iToCb
-z+4iB0zsQdDMrPC4kYzYU01HVlc+ZfsFdfUWIl1pL/TaGJmufh6dccrgaWsLJ+OC
-lNiyGDKSrnZeagC967U3UZaxNReHXESlADetzF6bzKB8FWiN6VLkFN6Fs1bp+z9R
-qVwnzoij/LsIIRuRpr17VtAKJpZ9GteGXdu1tJmNpUVGTaMBSYCUslHvZ/1ou6CM
-+1j+4J2razslVfT6lyvrock3CWGrF8leDYpRdEkv7RhZw8g19uN1qJ/RlC2UdjmT
-oifDP3SYlZ1H1XjfZy4WGvKq1wjuCw==
-=x5rE
------END PGP SIGNATURE-----
+>> +	return pci_generic_config_read(bus, devfn, where, size, value);
+>> +}
+>> +
+>> +static int starfive_pcie_parse_dt(struct starfive_jh7110_pcie *pcie, struct device *dev)
+> 
+> 95% of this driver (and the rest of drivers/pci) is wrapped to fit in
+> 80 columns, e.g.,
+> 
+>   static int starfive_pcie_parse_dt(struct starfive_jh7110_pcie *pcie,
+>                                     struct device *dev)
+> 
 
---s6rnyabjnc2dlg6y--
+Sorry, I will check and make them are wrapped to fit in 80 columns.
+
+>> +	domain_nr = of_get_pci_domain_nr(dev->of_node);
+>> +
+>> +	if (domain_nr < 0 || domain_nr > 1)
+>> +		return dev_err_probe(dev, -ENODEV,
+>> +				     "failed to get valid pcie id\n");
+> 
+> "id" is too generic and doesn't hint about where the problem is.
+> Update the message ("pcie id") to mention "domain" so it corresponds
+> with the source ("linux,pci-domain" from DT).
+>
+Yes, domain is better.
+
+>> +	ret = reset_control_deassert(pcie->resets);
+>> +	if (ret) {
+>> +		clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
+>> +		dev_err_probe(dev, ret, "failed to resets\n");
+> 
+> "failed to ... resets" is missing a word.  "Failed to deassert
+> resets", I guess?
+> 
+
+Yes, I will make a supplement.
+
+>> +	/* Ensure that PERST has been asserted for at least 100 ms,
+>> +	 * the sleep value is T_PVPERL from PCIe CEM spec r2.0 (Table 2-4)
+>> +	 */
+> 
+> Use multiline comment formatting (also below):
+> 
+>   /*
+>    * Ensure ...
+>    */
+> 
+
+OK.
+
+>> +	msleep(100);
+>> +	if (pcie->reset_gpio)
+>> +		gpiod_set_value_cansleep(pcie->reset_gpio, 0);
+>> +
+>> +	/* As the requirement in PCIe base spec r6.0, system (<=5GT/s) must
+>> +	 * wait a minimum of 100 ms following exit from a conventional reset
+>> +	 * before sending a configuration request to the device.
+> 
+> Mention sec 6.6.1, where (I think) this value comes from.  Eventually
+> we should make a #define for this because it's not specific to any one
+> PCIe controller.
+> 
+
+I would like to add a new define in drivers/pci/pci.h:
+/*
+ * PCIe r6.0, sec 6.6.1, <Conventional Reset>
+ * Requires a minimum waiting of 100ms before sending a configuration
+ * request to the device.
+ */
+#define PCIE_BEFORE_CONFIG_REQUEST_WAIT_MS     100
+
+When drivers use it, they can put them into the right place depends on the link speed:
+1) With a Downstream Port(<=5.0 GT/s), system waits after conventional reset done.
+2) With a Downstream Port(> 5.0 GT/s), system waits after link training completes. 
+
+Thus, our code will be:
++	if (pcie->reset_gpio)
++		gpiod_set_value_cansleep(pcie->reset_gpio, 0);
++       /*
++        * With a Downstream Port (<=5GT/s), software must wait a minimum
++        * of 100ms following exit from a conventional reset before
++        * sending a configuration request to the device.
+         */
+-       msleep(100);
++       msleep(PCIE_BEFORE_CONFIG_REQUEST_WAIT_MS);
+
+Is that what you expected?
+
+>> +	msleep(100);
+>> +
+>> +	if (starfive_pcie_host_wait_for_link(pcie))
+>> +		dev_info(dev, "port link down\n");
+>> +
+>> +	return ret;
+> 
+> We know the value here, so return it explicitly:
+> 
+>   return 0;
+> 
+
+OK
+
+>> +static int starfive_pcie_suspend_noirq(struct device *dev)
+>> +{
+>> +	struct starfive_jh7110_pcie *pcie = dev_get_drvdata(dev);
+>> +
+>> +	if (!pcie)
+>> +		return 0;
+> 
+> How could it happen that "pcie" is zero?  I think it could only happen
+> if there were a driver bug or a memory corruption.  Either way, we
+> should remove the check so we take a NULL pointer fault and find out
+> about the problem.
+> 
+
+I will remove it.
+
+>> +static int starfive_pcie_resume_noirq(struct device *dev)
+>> +{
+>> +	struct starfive_jh7110_pcie *pcie = dev_get_drvdata(dev);
+>> +	int ret;
+>> +
+>> +	ret = starfive_pcie_enable_phy(dev, &pcie->plda);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = clk_bulk_prepare_enable(pcie->num_clks, pcie->clks);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to enable clocks\n");
+>> +		starfive_pcie_disable_phy(&pcie->plda);
+>> +		return ret;
+>> +	}
+>> +
+>> +	return ret;
+> 
+>   return 0;
+> 
+
+OK.
+
+Thanks!
+
+> Bjorn
