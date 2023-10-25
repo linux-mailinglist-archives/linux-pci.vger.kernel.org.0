@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 170027D75A7
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 22:27:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A99F7D75AE
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 22:27:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235112AbjJYU1S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Oct 2023 16:27:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37388 "EHLO
+        id S234938AbjJYU10 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Oct 2023 16:27:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343879AbjJYU0i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 16:26:38 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 293F21BEB
-        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 13:25:54 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-6b9af7d41d2so155563b3a.0
-        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 13:25:54 -0700 (PDT)
+        with ESMTP id S234852AbjJYU05 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 16:26:57 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2707810F9
+        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 13:26:00 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-6b5cac99cfdso121836b3a.2
+        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 13:26:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1698265553; x=1698870353; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1698265559; x=1698870359; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VwZ9IOYC0gRC/owt7RZ2EBdGuffYJiDuVuQ5+XRLwVw=;
-        b=gni9otB/RxqkdQcBtDhkGtxYXI1WhO6/nBa5LuP10/nNencAljOkoEGMmIzHInY/ky
-         oDlR4aIa6BOWPeVwvMeutGJ5V6ffVJCjq9yAVxUgQJ2NWKDBS7IHFKiQ+l6fFBvSh15A
-         mZC/WjARqRxm2wTMlRiEvP5OHITXIqMDoeYIdAubOwiSoJbWpW6qqgDG3R3ijHPWgG3l
-         RZ7TnvwKTmJTwhe02+58gFnl2LR1WgjHj440rGe69OikbaJsYYesrFvKharIMMus1Hog
-         QqV5S9f6vTbimWXy/i5vLDf/0GQKcbKhCidzew7Kz1qBK6XcaGk99AbAHyc/PlHte0Xp
-         EzEg==
+        bh=6iZbx/IhbkeIBI8+FFzeu8yqPtMDZXtB3E1NSIPmMj8=;
+        b=QEHaA3wcgswZPYvKtFvfe/69k4FY46ERnR8WMgXV1IMqoelcM4rz2XqdzfkYCJXcHA
+         AZeXQv7QoKGxqZ8ztRXRHR9/meSUBV06R56NGZ0Bg4afony776+cS/GP0IMhMqcGOPeR
+         BXmQXbwU0ap+UQ2w4s/WYEtaHQZTbJ+E9qp0/JBGXAVRiliE31C9a2pEb9jGPqDb//5F
+         i7Gi+IZmFLPOhb5//zueDpHn2Gg8GUHChn2TdeHDV+4lyzpfvEf+quAO5gN25dyGVvVN
+         XDNQQ+hvzvrwbpVPDQpk/iwr8m3MuhroNohrJ9lv6idIL4D5Op4XIlq/P3lu0wHBCkvV
+         CU2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698265553; x=1698870353;
+        d=1e100.net; s=20230601; t=1698265559; x=1698870359;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VwZ9IOYC0gRC/owt7RZ2EBdGuffYJiDuVuQ5+XRLwVw=;
-        b=k8NCgNwC5Fhy+yeCbJ5dnwYGS4Fl2yiBWN6bE36Vmctr4F+fqfCv4EiKcNysR2WDts
-         jtoMnUpY6oFrixOByCtxIAqm257QERIoijo4+HMhN/rODxprSSoW0mFA+oOaHbbfMlNS
-         dn7sxRVR72efL4PXK55d7BJ7Gv/763iK4P7ZYTGNmTTVgF10Gj58dibLkHxZGNkJOjVH
-         E+M/g88qanTRVwIU/dKUgu5mccjOH49+h6l78gaqJdHO6dvhj+Ha8dC/5WjMHBeSODQm
-         d2yD/netOBdkPFQcGSJCJ17XSK9SiWM33tT5MJ0/WA2Ex3Wpj4RrAIcvFk4HHum4Pchc
-         vANA==
-X-Gm-Message-State: AOJu0Yys/xD/bxtVJUeHV6bw/HlQM8KDwlfl8t9bLhTpmnHLZVRxFylE
-        DmtbvU3Wko0c5m07BGYJGdTWrA==
-X-Google-Smtp-Source: AGHT+IHkn2z1G+Hl0DvKFF4S04ijeypy9mwQD0HYMK+syY66BONzs/0zW1LpSVQhK3aml5xBfnLnBg==
-X-Received: by 2002:a05:6a00:17a1:b0:6be:265:1bf6 with SMTP id s33-20020a056a0017a100b006be02651bf6mr14834736pfg.32.1698265553494;
-        Wed, 25 Oct 2023 13:25:53 -0700 (PDT)
+        bh=6iZbx/IhbkeIBI8+FFzeu8yqPtMDZXtB3E1NSIPmMj8=;
+        b=kRPs5QbWD0NtZOUupH8RFKar+euSLXLKMIomOtibYJz6s5t7q/LP5CsbhTDXVwURm8
+         5vV4gHVSus5YmDI/6WfvEl6oGGqwk6Hclwf1SwYqMepyqWxURXQr/jbd7q00nWsePz1m
+         +6QNe1JLTRJP9oy5osiN0lvnNZBWwicf5REh22Qvo4Wntt+vtMrecgK0XLB5/+PZGARp
+         CUoffqS6vmZdQcSBb1p5IPMqcsLKfGG7L2Kh+Gy6B30PYexQqZ5YPZ3nL5CD5xuftcWG
+         TaLY1+ANKAtjfsjgtRuSIy5wq/S+cK9nkel/A05E+6En5fbraEhDa1iQjm2LaXW5OgAM
+         TW3A==
+X-Gm-Message-State: AOJu0YyOnV3uGCIlmxz1R5Em6ZF0hmQupZtG7rhxii6iywCUROAlOFRi
+        bFm27YsSsztW1ZK6Y92YrQXR5A==
+X-Google-Smtp-Source: AGHT+IFsNPal98bQ9F5MiljlxhKf86YWd9QVm8kQWxT7ZeiK3cahwXFdqVcGHEG00PzdPooHKx2sEg==
+X-Received: by 2002:a05:6a00:1798:b0:6ad:535e:6ed9 with SMTP id s24-20020a056a00179800b006ad535e6ed9mr16898802pfg.16.1698265559236;
+        Wed, 25 Oct 2023 13:25:59 -0700 (PDT)
 Received: from sunil-pc.Dlink ([106.51.188.78])
-        by smtp.gmail.com with ESMTPSA id y3-20020aa79423000000b006b84ed9371esm10079590pfo.177.2023.10.25.13.25.48
+        by smtp.gmail.com with ESMTPSA id y3-20020aa79423000000b006b84ed9371esm10079590pfo.177.2023.10.25.13.25.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Oct 2023 13:25:53 -0700 (PDT)
+        Wed, 25 Oct 2023 13:25:58 -0700 (PDT)
 From:   Sunil V L <sunilvl@ventanamicro.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
@@ -70,16 +70,16 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Atish Kumar Patra <atishp@rivosinc.com>,
         Haibo Xu <haibo1.xu@intel.com>,
         Sunil V L <sunilvl@ventanamicro.com>
-Subject: [RFC PATCH v2 18/21] irqchip: riscv-intc: Set ACPI irqmodel
-Date:   Thu, 26 Oct 2023 01:53:41 +0530
-Message-Id: <20231025202344.581132-19-sunilvl@ventanamicro.com>
+Subject: [RFC PATCH v2 19/21] ACPI: bus: Add acpi_riscv_init function
+Date:   Thu, 26 Oct 2023 01:53:42 +0530
+Message-Id: <20231025202344.581132-20-sunilvl@ventanamicro.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231025202344.581132-1-sunilvl@ventanamicro.com>
 References: <20231025202344.581132-1-sunilvl@ventanamicro.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Level: *
@@ -89,44 +89,74 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-INTC being the root interrupt controller, set the ACPI irqmodel with
-callback function to get the GSI domain id.
+Add a new function for RISC-V to do any architecture specific
+initialization. This function will be used to create platform devices
+like APLIC, PLIC, RISC-V IOMMU etc. This is similar to acpi_arm_init().
 
 Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 ---
- drivers/irqchip/irq-riscv-intc.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/acpi/bus.c          |  1 +
+ drivers/acpi/riscv/Makefile |  2 +-
+ drivers/acpi/riscv/init.c   | 12 ++++++++++++
+ include/linux/acpi.h        |  6 ++++++
+ 4 files changed, 20 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/acpi/riscv/init.c
 
-diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
-index f3aaecde12dd..627723d72b01 100644
---- a/drivers/irqchip/irq-riscv-intc.c
-+++ b/drivers/irqchip/irq-riscv-intc.c
-@@ -273,6 +273,17 @@ int acpi_get_imsic_mmio_info(u32 index, struct resource *res)
- 	return 0;
- }
- 
-+static struct fwnode_handle *riscv_get_gsi_domain_id(u32 gsi)
+diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
+index 9eace6c7042e..f7ac0caf04cf 100644
+--- a/drivers/acpi/bus.c
++++ b/drivers/acpi/bus.c
+@@ -1417,6 +1417,7 @@ static int __init acpi_init(void)
+ 	acpi_hest_init();
+ 	acpi_ghes_init();
+ 	acpi_arm_init();
++	acpi_riscv_init();
+ 	acpi_scan_init();
+ 	acpi_ec_init();
+ 	acpi_debugfs_init();
+diff --git a/drivers/acpi/riscv/Makefile b/drivers/acpi/riscv/Makefile
+index f80b3da230e9..c4d679b1359e 100644
+--- a/drivers/acpi/riscv/Makefile
++++ b/drivers/acpi/riscv/Makefile
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-obj-y 	+= rhct.o irq.o
++obj-y 	+= rhct.o irq.o init.o
+diff --git a/drivers/acpi/riscv/init.c b/drivers/acpi/riscv/init.c
+new file mode 100644
+index 000000000000..b5807bbdb171
+--- /dev/null
++++ b/drivers/acpi/riscv/init.c
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2023, Ventana Micro Systems Inc
++ *	Author: Sunil V L <sunilvl@ventanamicro.com>
++ *
++ */
++
++#include <linux/acpi.h>
++
++void __init acpi_riscv_init(void)
 +{
-+	struct fwnode_handle *gsi_fwnode = NULL;
-+
-+	gsi_fwnode = aplic_get_gsi_domain_id(gsi);
-+	if (!gsi_fwnode)
-+		gsi_fwnode = plic_get_gsi_domain_id(gsi);
-+
-+	return gsi_fwnode;
 +}
-+
- static int __init riscv_intc_acpi_init(union acpi_subtable_headers *header,
- 				       const unsigned long end)
- {
-@@ -318,6 +329,7 @@ static int __init riscv_intc_acpi_init(union acpi_subtable_headers *header,
- 	 * unsupported. Once IMSIC is probed, MSI support will be set.
- 	 */
- 	pci_no_msi();
-+	acpi_set_irq_model(ACPI_IRQ_MODEL_RINTC, riscv_get_gsi_domain_id);
- 	return 0;
- }
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 19c3dda9c2ed..c408070ac52e 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -1527,6 +1527,12 @@ void acpi_arm_init(void);
+ static inline void acpi_arm_init(void) { }
+ #endif
  
++#ifdef CONFIG_RISCV
++void acpi_riscv_init(void);
++#else
++static inline void acpi_riscv_init(void) { }
++#endif
++
+ #ifdef CONFIG_ACPI_PCC
+ void acpi_init_pcc(void);
+ #else
 -- 
 2.39.2
 
