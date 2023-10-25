@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CE1A7D7588
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 22:25:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5AED7D7586
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 22:25:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235016AbjJYUY5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Oct 2023 16:24:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37970 "EHLO
+        id S234957AbjJYUZA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Oct 2023 16:25:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234337AbjJYUYl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 16:24:41 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E30812A
-        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 13:24:38 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-6bd73395bceso116564b3a.0
-        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 13:24:38 -0700 (PDT)
+        with ESMTP id S234958AbjJYUYs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 16:24:48 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAD40D4B
+        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 13:24:43 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id 41be03b00d2f7-5b837dc2855so109734a12.0
+        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 13:24:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1698265477; x=1698870277; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1698265483; x=1698870283; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=J8S/JDCmwBJX/s4tcuif01AJjqTYAtUjVSzvHHCYv3Q=;
-        b=nNqvGjA6QPmPkU0pIK+PisNTyVgj2VgA4U5e51WIi1UAtB68oOcDrAFNkopUNesM5k
-         x5L/8RGmTh7GA0rwpMIDrGTAfFijRQogXgvaxhxfntL7XlcCcztZsFKcL45pLMhuRGcP
-         HDaG3Z2kIzvvvvrPWQh+rvSak5AwjfkNG5+O6B6BLQxWc+MTHPvMxYWttNwgWppF25vJ
-         glcd/sy1FvIwxr7bfe//85NgZBsIJ+qhTJAByTugflLc9l77og8LLV94aKgAb/i72lJx
-         V4qVcEQj5eXnFn3BigSXcUMY7LN3Zr7E5hveMCoS84pk0QvbHq4XbsyfXz85Gezfp/m6
-         Tuvg==
+        bh=GmA5kOKekb5h3Uw1k+e0LhCWijGnTH8utnJ5szxpch8=;
+        b=auVS/K/Jk7vgky4MjvSPyw3256thHNswIFM0+CHRJfw8cZMbSsKDL7aCq9OiRUFHIn
+         vhqWb1Ba0aPYiVgfisYHsfrxFFdjBfLbOs15MAzbLhPHxuRqT5s81JCMSPHp7u4BnRry
+         2ZPfCe8yqF4CGCh/KyUFfF2HFzYkNOEEm7i8nBl2N857thL2U0IW97wJcK88BIZUrGVV
+         OYTNiUslB8+H3xiH1zs8mwP083VVwgO4yBf3eLBh2Fzc2+Waue+65NOTaD2v8RT8lmcd
+         FXE3K1JffCz/cOrAvDcRniAps0d0N0MF3sseo29l7YXpoM1uetpW//TUo52Ge7kHw90C
+         KoUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698265477; x=1698870277;
+        d=1e100.net; s=20230601; t=1698265483; x=1698870283;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=J8S/JDCmwBJX/s4tcuif01AJjqTYAtUjVSzvHHCYv3Q=;
-        b=ePgdCPqmZuX2nDU8SoBLSz20h/80zSMZnMBCrqTwZu8qnbL36zYqz187HNGneRV6Oc
-         QUq7ijrd7CbRmhVXrVJZ45fjx4Jpcs7juuxz53Q8fatJNTegY69vsaSWN6XZ9uTlNniI
-         bypZhBy1jXEpmdIixHUe4661VD0ynwMii/pbRdlLoIUf20xWX68U2VsfDlU6yn1n+7b/
-         T1FDsallt47HVmpbUK/zjFQbxSvfWnHVcbqFnV28EeefXUtp+fknOdtqoRh53swOWLlB
-         FzhXkx0tMEIoVwuLuVBreOKscrGhWsGQaXimmb9I1x0E5XEBnZU4Y56XDa9hePNile8h
-         EpTQ==
-X-Gm-Message-State: AOJu0YwfkbvwDxrrIoRyRO5Fq4tO/38oreJe85KVRcnf34fMr3RLbKFY
-        fkLDm84K/k0nTLPYRWirLSf88g==
-X-Google-Smtp-Source: AGHT+IGn0Ntg16V2ATutjBKN8vUehxORe09c59/GsjNsvnPR9Qebb6VfuMhALgVB74e2gHGUr8GJNA==
-X-Received: by 2002:a05:6a00:1396:b0:68f:b015:ea99 with SMTP id t22-20020a056a00139600b0068fb015ea99mr913751pfg.10.1698265477463;
-        Wed, 25 Oct 2023 13:24:37 -0700 (PDT)
+        bh=GmA5kOKekb5h3Uw1k+e0LhCWijGnTH8utnJ5szxpch8=;
+        b=ww2kInsjujOfXjxhiamJdTijeM9sqmvWIdUMD0/svYYAhExOU1FuTDoEs0ah/xPuHz
+         sG1WKglUGR/XrUpGUiL/V47H5zWj6CqylOYG95Uw/S1DtY6lVMJXUXUNylJ0g481JPeg
+         bZ3/M+UGwgAEjVPm3AtMxBkL4u6bHObXr6NV4zGKIW8BZlp7AO8OH/ourJ2JR8EceaPI
+         /3As0wrs3d9TR3VJseK5v5wjGRXZEjgNbaJO8ouJcjMJI2GMTqF62szJHPw+BWpqm54K
+         5W5GxRV9ZzV2gKu8DPCQqwoKDR9ZnvcjnFYMp+HFHJt4U6XoGtrROx2waBTtKe9z+8Xg
+         2oEg==
+X-Gm-Message-State: AOJu0Yxqrm1EQnMpqjQIrqZVpzZ1RtTKxeRZXTTlnKHEOKkvTUrmHQEm
+        f/j0QlhztlhFkDh16+s2E41how==
+X-Google-Smtp-Source: AGHT+IEWaGrpkEpDFbneFUdLQrgY3wxCJPmh6tSJaEBSJOipB/ao+CEA+asAJLO3X3etojz+m4Eg/g==
+X-Received: by 2002:a05:6a21:999c:b0:17a:f4b6:bf89 with SMTP id ve28-20020a056a21999c00b0017af4b6bf89mr713082pzb.31.1698265483317;
+        Wed, 25 Oct 2023 13:24:43 -0700 (PDT)
 Received: from sunil-pc.Dlink ([106.51.188.78])
-        by smtp.gmail.com with ESMTPSA id y3-20020aa79423000000b006b84ed9371esm10079590pfo.177.2023.10.25.13.24.32
+        by smtp.gmail.com with ESMTPSA id y3-20020aa79423000000b006b84ed9371esm10079590pfo.177.2023.10.25.13.24.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Oct 2023 13:24:37 -0700 (PDT)
+        Wed, 25 Oct 2023 13:24:42 -0700 (PDT)
 From:   Sunil V L <sunilvl@ventanamicro.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
@@ -70,9 +70,9 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Atish Kumar Patra <atishp@rivosinc.com>,
         Haibo Xu <haibo1.xu@intel.com>,
         Sunil V L <sunilvl@ventanamicro.com>
-Subject: [RFC PATCH v2 05/21] pnp.h: Return -EPROBE_DEFER for disabled IRQ resource in pnp_irq()
-Date:   Thu, 26 Oct 2023 01:53:28 +0530
-Message-Id: <20231025202344.581132-6-sunilvl@ventanamicro.com>
+Subject: [RFC PATCH v2 06/21] RISC-V: Kconfig: Select deferred GSI probe for ACPI systems
+Date:   Thu, 26 Oct 2023 01:53:29 +0530
+Message-Id: <20231025202344.581132-7-sunilvl@ventanamicro.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231025202344.581132-1-sunilvl@ventanamicro.com>
 References: <20231025202344.581132-1-sunilvl@ventanamicro.com>
@@ -89,40 +89,29 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-To support deferred PNP driver probe, pnp_irq() must return -EPROBE_DEFER
-so that the device driver can do deferred probe if the interrupt controller
-is not probed early.
+On RISC-V platforms, apart from root interrupt controllers (which
+provide local interrupts and IPI), other interrupt controllers in the
+hierarchy are probed late. Enable this select this CONFIG option for
+RISC-V platforms so that device drivers which connect to deferred
+interrupt controllers can take appropriate action.
 
 Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 ---
- include/linux/pnp.h | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/riscv/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/pnp.h b/include/linux/pnp.h
-index c2a7cfbca713..21cf833789fb 100644
---- a/include/linux/pnp.h
-+++ b/include/linux/pnp.h
-@@ -147,12 +147,18 @@ static inline resource_size_t pnp_mem_len(struct pnp_dev *dev,
- }
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 8c105a151e12..b62441aefa6a 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -12,6 +12,7 @@ config 32BIT
  
- 
--static inline resource_size_t pnp_irq(struct pnp_dev *dev, unsigned int bar)
-+static inline int pnp_irq(struct pnp_dev *dev, unsigned int bar)
- {
- 	struct resource *res = pnp_get_resource(dev, IORESOURCE_IRQ, bar);
- 
--	if (pnp_resource_valid(res))
-+	if (pnp_resource_valid(res)) {
-+#if IS_ENABLED(CONFIG_ARCH_ACPI_DEFERRED_GSI)
-+		if (!pnp_resource_enabled(res))
-+			return -EPROBE_DEFER;
-+#endif
-+
- 		return res->start;
-+	}
- 	return -1;
- }
- 
+ config RISCV
+ 	def_bool y
++	select ARCH_ACPI_DEFERRED_GSI if ACPI
+ 	select ACPI_GENERIC_GSI if ACPI
+ 	select ACPI_MCFG if (ACPI && PCI)
+ 	select ACPI_REDUCED_HARDWARE_ONLY if ACPI
 -- 
 2.39.2
 
