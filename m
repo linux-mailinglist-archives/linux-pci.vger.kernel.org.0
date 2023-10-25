@@ -2,42 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B1C17D7713
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 23:51:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E97DC7D778F
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Oct 2023 00:05:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbjJYVvV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Oct 2023 17:51:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55470 "EHLO
+        id S230046AbjJYWFY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Oct 2023 18:05:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229573AbjJYVvV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 17:51:21 -0400
+        with ESMTP id S229978AbjJYWFX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 18:05:23 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37456A3;
-        Wed, 25 Oct 2023 14:51:19 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 721F3C433C7;
-        Wed, 25 Oct 2023 21:51:18 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DF18184;
+        Wed, 25 Oct 2023 15:05:21 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC1AEC433C8;
+        Wed, 25 Oct 2023 22:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698270678;
-        bh=PjnBP9jEL2AWQ7PbVvmJXlUUowLNSpEaOjN6Erdxx7o=;
+        s=k20201202; t=1698271521;
+        bh=K37AazOyFgGLh7Rwz9bbbBRRa9M4I7JnYV82L3ucPGE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FH+c+m7NzeG/KQdNL0oyOj3P67+XqkQYe2XINJfANb1L6Wes0YQDDBHBr5QRIYFDH
-         SUFy3znctK02yBQVQmZjbAyhh/kkcO86o3Ff7qa3CXvSjrt3O050Y9Z87fAGnCn8oQ
-         BoJEgM/lYyWvAFMCz7vcuZHZoUQD53EIKW76vf3PUrXaZkAKcYnlUqraudTMPoQUyp
-         40fcVkjYc5eUZoHUUVs+djiljw0atPNJa9QMHinzvUD2tvRbLW6Wf8gyoJqbWPD5+y
-         5AYZOZQC6IQixB+sjP59SFTJyTJa7VWuZ3XdBVAToHZj20q/LtRfUFcWpHmWYAzpi2
-         bHll+1Euz7XNw==
-Date:   Wed, 25 Oct 2023 16:51:16 -0500
+        b=hmqwH2VPlpn+EsaFTF7qlt93Mww7TUJXDiF7WPLfP03DQqPcRLeu3QzI7D+rzU7CY
+         Zs6YeyrHGnRMhOJ2GboEBbJE6sFOuBAi5dfJnb61nN04TnGAfUISyiGU4nOapPA4GH
+         4AkC+ZpO3C1+oMegqEJEGWmlfTaPjLk+nEy5GEfyKhaADHrWBaCQWINN7O+GGOzbJU
+         xkYlUjuJ4CQU2u5YJbwH/5FUvYcY/uBzLB8mznSKJbi0N0VA0uOMlS2QmZefPVdxwv
+         mviyhqM+ZG6OEGI8z+pGeUiEqoQeTjxCBNj0zbLmmvDhDsBGS9IWV1KOLYiiBWZzWN
+         0wtxAnl7hYdkg==
+Date:   Wed, 25 Oct 2023 17:05:18 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sharath.kumar.d.m@intel.com, Joyce Ooi <joyce.ooi@intel.com>
+To:     sharath.kumar.d.m@intel.com
 Cc:     bhelgaas@google.com, dinguyen@kernel.org, kw@linux.com,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lpieralisi@kernel.org, robh@kernel.org
-Subject: Re: [PATCH v4 0/2] PCI: altera: add support to agilex family
-Message-ID: <20231025215116.GA1768116@bhelgaas>
+        lpieralisi@kernel.org, robh@kernel.org,
+        Joyce Ooi <joyce.ooi@intel.com>
+Subject: Re: [PATCH v4 2/2] PCI: altera: add support for agilex family fpga
+Message-ID: <20231025220518.GA1768317@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230917170546.2097352-1-sharath.kumar.d.m@intel.com>
+In-Reply-To: <20230917170546.2097352-3-sharath.kumar.d.m@intel.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -47,60 +48,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+to Joyce, Altera PCIe maintainer]
+[+cc Joyce]
 
-On Sun, Sep 17, 2023 at 10:35:44PM +0530, sharath.kumar.d.m@intel.com wrote:
+On Sun, Sep 17, 2023 at 10:35:46PM +0530, sharath.kumar.d.m@intel.com wrote:
 > From: D M Sharath Kumar <sharath.kumar.d.m@intel.com>
 > 
-> added new callback for
-> 1) read,write to root port configuration registers
-> 2) read,write to endpoint configuration registers
-> 3) root port interrupt handler
-> 
-> agilex and newer platforms need to implemant the callback and generic root
-> port driver should work ( without much changes ) , legacy platforms (arria
->  and startix) implement configuration read,write directly in wrapper
-> api _altera_pcie_cfg_read/_altera_pcie_cfg_write
+> create new instance of struct altera_pcie_data for
+> "altr,pcie-root-port-3.0"
+> provide corresponding callback
+> "port_conf_off" points to avmm port config register base
 
-Do these patches make the driver work on some new platform?  Has it
-been tested?  Please include the name of the new platform.
+Please mention the hardware platform that this corresponds to.
 
-Saying this "... driver should work (without much changes)" does not
-sound like anything has actually been tested on hardware.
+> +	/* interrupt pin not programmed in hardware, set to INTA*/
 
-> changelog v2:
-> saperated into two patches
-> 1.refactored the driver for easily portability to future Altera FPGA
-> platforms
-> 2.added support for "Agilex" FPGA
-> 
-> this driver supports PCI RP IP on Agilex FPGA, as these are FPGA its up
-> to the user to add PCI RP or not ( as per his needs). we are not adding
-> the device tree as part of this commit. we are expecting the add device
-> tree changes only if he is adding PCI RP IP in his design
+Add space before closing "*/".
 
-Please cc: Joyce on any future postings, since she's listed as the
-maintainer for pcie-altera.c.
+> +	if (status & AGLX_CFG_AER) {
+> +		ret = generic_handle_domain_irq(pcie->irq_domain, 0);
+> +		if (ret)
+> +			dev_err_ratelimited(dev, "unexpected IRQ\n");
 
-Joyce, please comment on these.  We don't like to merge things
-affecting your file unless you approve.
+Maybe include a hint about what the unexpected IRQ was?  An IRQ number
+or "status" value?
 
-> changelog v3:
-> incorporate review comments from Bjorn Helgaas
-> 
-> changelog v4:
-> added below callback for root bus
-> alt_read/write_own_cfg
-> added below callback for non-root buses
-> alt_read/write_other_cfg
-> 
-> D M Sharath Kumar (2):
->   PCI: altera: refactor driver for supporting new platform
->   PCI: altera: add support for agilex family fpga
-> 
->  drivers/pci/controller/pcie-altera.c | 313 ++++++++++++++++++++++++---
->  1 file changed, 280 insertions(+), 33 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
+> +static const struct altera_pcie_ops altera_pcie_ops_3_0 = {
+> +	.alt_read_own_cfg = aglx_read_own_cfg,
+> +	.alt_write_own_cfg = aglx_write_own_cfg,
+> +	.get_link_status = aglx_altera_pcie_link_up,
+> +	.alt_read_other_cfg = aglx_read_other_cfg,
+> +	.alt_write_other_cfg = aglx_write_other_cfg,
+> +	.rp_isr = aglx_isr,
+
+Use the same order of function pointers in all of these structs and
+make it match the struct altera_pcie_ops definition.  (Don't put
+.get_link_status in the middle of the config accessors.)
+
+>  static const struct of_device_id altera_pcie_of_match[] = {
+>  	{.compatible = "altr,pcie-root-port-1.0",
+>  	 .data = &altera_pcie_1_0_data },
+>  	{.compatible = "altr,pcie-root-port-2.0",
+>  	 .data = &altera_pcie_2_0_data },
+> +	{.compatible = "altr,pcie-root-port-3.0",
+> +	.data = &altera_pcie_3_0_data },
+
+Make the .data indentation match the rest.
