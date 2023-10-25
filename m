@@ -2,109 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98DBC7D72BB
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 19:58:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E091B7D72EF
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 20:07:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234581AbjJYR61 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Oct 2023 13:58:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39474 "EHLO
+        id S230035AbjJYSHi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Oct 2023 14:07:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234631AbjJYR6X (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 13:58:23 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93D54187
-        for <linux-pci@vger.kernel.org>; Wed, 25 Oct 2023 10:58:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=aJshDtmbgpE+bl/GO9TyrL/miqSyo1kEz4gCYNkIUXk=; b=c1lE6Xpm9VsRhIUdtbNjut0tsw
-        9/E/q2n+wfsfEgfo+/4jElV7K3h6EKDxHolW/AAaYd55A4YD10LHcwqwjL8JlFldQZ3esKzxcK4yM
-        NB+hJTqgxbNhxqcslD49ycz7kOFyhhiFo4UaInPx8CX5WAOsxDVeQEfVWKO418hV6bEUaIMSV+LM/
-        /zmoVZe+eeufc4/TywH7gu1ggMQxUo9CURuHBNRdzeI4gFe0X1ud9cLoucFtCm0enCXkFy578f5pf
-        1Pd7fjwadRP3XqqlBFUBT6Nn5/Z3orFHfb0QgW7LX+FNzaPBhhRZVUrVoKEetH9JNcTJggk8G6CJI
-        LNSy8mkQ==;
-Received: from s010670a741a4a87d.cg.shawcable.net ([70.73.161.44] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1qvi8p-0061YR-If; Wed, 25 Oct 2023 11:58:04 -0600
-Message-ID: <e2c56983-0111-4132-ae17-0095aa33fd2d@deltatee.com>
-Date:   Wed, 25 Oct 2023 11:58:00 -0600
+        with ESMTP id S234958AbjJYSH0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 14:07:26 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BAE71FED;
+        Wed, 25 Oct 2023 11:06:30 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76765C433C9;
+        Wed, 25 Oct 2023 18:06:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698257189;
+        bh=TjPM4IUHZFeN5SC8qO/PKZAR4LKbys4t4FhjaQKNlpo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=FA1auGb6vfdKd2ep3peuFgkHN25Eck/KxDbmTJ5LHvEf9WcUm9E8+xlbzj15MML4m
+         sbrbseIezz0rt/qX458xFvQSmew0cCpKAKlFy0sAAQIoOTvalyjz0DXAuPGwPOS3sU
+         nZIA/8s5NwrwsNrN1p1KKW2FfwEvvyIzhM9q5JLpioTpNlE4EP8ATBRphOMcR6WQRD
+         Ux2Mf+CctvmMGYMbEiZIuO+UZRhwMO+qerXVHVDh+J4NqCUNXPAvHocZBzNpC0lTWY
+         vCOVAXItEj32o8Cbl7CNEju4R3MwlGTPhBmRu1pYTqH+u/YlR7750KMzZOgVw4gyrL
+         XSvKpTWsDUqAg==
+Date:   Wed, 25 Oct 2023 13:06:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     D Scott Phillips <scott@os.amperecomputing.com>
+Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        Darren Hart <darren@os.amperecomputing.com>,
+        patches@amperecomputing.com
+Subject: Re: [PATCH v2 2/2] PCI: hotplug: Add extension driver for Ampere
+ Altra hotplug LED control
+Message-ID: <20231025180627.GA1756475@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>
-Cc:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Simon Richter <sjr@debian.org>, 1015871@bugs.debian.org,
-        linux-pci@vger.kernel.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Krzysztof Wilczy??ski <kw@linux.com>,
-        Emanuele Rocca <ema@debian.org>
-References: <20231025173534.GA1755254@bhelgaas>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <20231025173534.GA1755254@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.161.44
-X-SA-Exim-Rcpt-To: helgaas@kernel.org, lukas@wunner.de, u.kleine-koenig@pengutronix.de, bhelgaas@google.com, sjr@debian.org, 1015871@bugs.debian.org, linux-pci@vger.kernel.org, alexander.deucher@amd.com, kw@linux.com, ema@debian.org
-X-SA-Exim-Mail-From: logang@deltatee.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86ttqe4n1h.fsf@scott-ph-mail.amperecomputing.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
-Subject: Re: Enabling PCI_P2PDMA for distro kernels?
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2023-10-25 11:35, Bjorn Helgaas wrote:
-> On Wed, Oct 25, 2023 at 07:11:26PM +0200, Lukas Wunner wrote:
->> On Wed, Oct 25, 2023 at 10:30:07AM -0600, Logan Gunthorpe wrote:
->>> In addition to the above, P2PDMA transfers are only allowed by the
->>> kernel for traffic that flows through certain host bridges that are
->>> known to work. For AMD, all modern CPUs are on this list, but for Intel,
->>> the list is very patchy.
->>
->> This has recently been brought up internally at Intel and nobody could
->> understand why there's a whitelist in the first place.  A long-time PCI
->> architect told me that Intel silicon validation has been testing P2PDMA
->> at least since the Lindenhurst days, i.e. since 2005.
->>
->> What's the reason for the whitelist?  Was there Intel hardware which
->> didn't support it or turned out to be broken?
->>
->> I imagine (but am not certain) that the feature might only be enabled
->> for server SKUs, is that the reason?
+On Wed, Oct 25, 2023 at 10:41:46AM -0700, D Scott Phillips wrote:
+> Bjorn Helgaas <helgaas@kernel.org> writes:
 > 
-> No, the reason is that the PCIe spec doesn't require routing of
-> peer-to-peer transactions between Root Ports:
-> https://git.kernel.org/linus/0f97da831026
+> > On Fri, Sep 29, 2023 at 05:20:36PM -0700, D Scott Phillips wrote:
+> >> On Ampere Altra, PCIe hotplug is handled through ACPI. A side interface is
+> >> also present to request system firmware control of attention LEDs. Add an
+> >> ACPI PCI Hotplug companion driver to support attention LED control.
+> >> ...
+> >
+> >> +	arm_smccc_smc(REQUEST, LED_CMD, led_status(status), LED_ATTENTION,
+> >> +		      pci_domain_nr(bus) | (PCI_SLOT(root_port->devfn) << 4), 0, 0,
+> >
+> > pci_domain_nr() returns "int" (normally 32 bits), but since this is an
+> > ACPI system, the domain comes from _SEG, which is defined to be 16
+> > bits (ACPI r6.5, sec 6.5.6).
+> >
+> > So it looks like ORing in the "slot << 4" clobbers the upper 12 bits
+> > of _SEG.
+> >
+> > Is this code doing the right thing?
 > 
-> I think there was a little discussion about adding a firmware
-> interface to advertise this capability, but I guess nobody cared
-> enough to advance it.
+> Hi Bjorn,
+> 
+> on these Altra platforms _SEG is limited within 0-11. I can add an `&
+> 0xf` to pci_domain_nr() to make it clear that the segment number is
+> encoded down into 4 bits in the smc request.
 
-Yes, I remember someone advancing that in the PCI spec, but I don't know
-that it got anywhere.
+If the following looks OK, we're all set.  I put these on pci/hotplug
+for v6.7, thanks!
 
-I definitely remember also testing Intel hardware several years ago
-where P2PDMA "worked" but the performance was so awful there was no point.
-
-I vaguely remember this not working on non-server machines in the past
-(circa 2015). That's why we had to buy a Xeon. Though this was a long
-time ago and my memory is fuzzy.
-
-I'd love it if someone from Intel can give us a reasonable check on the
-CPU that guarantees P2PDMA will work for everything that passes the
-check (like AMD has done.) But in the absence of Intel telling us this
-we can't easily make these assumptions.
-
-Logan
-
++static int set_attention_status(struct hotplug_slot *slot, u8 status)
++{
++	struct arm_smccc_res res;
++	struct pci_bus *bus;
++	struct pci_dev *root_port;
++	unsigned long flags;
++	u32 handle;
++	int ret = 0;
++
++	bus = slot->pci_slot->bus;
++	root_port = pcie_find_root_port(bus->self);
++	if (!root_port)
++		return -ENODEV;
++
++	local_irq_save(flags);
++	arm_smccc_smc(HANDLE_OPEN, led_service_id[0], led_service_id[1],
++		      led_service_id[2], led_service_id[3], 0, 0, 0, &res);
++	if (res.a0) {
++		ret = -ENODEV;
++		goto out;
++	}
++	handle = res.a1 & 0xffff0000;
++
++	arm_smccc_smc(REQUEST, LED_CMD, led_status(status), LED_ATTENTION,
++		     PCI_SLOT(root_port->devfn) << 4 | pci_domain_nr(bus) & 0xf,
++		     0, 0, handle, &res);
++	if (res.a0)
++		ret = -ENODEV;
++
++	arm_smccc_smc(HANDLE_CLOSE, handle, 0, 0, 0, 0, 0, 0, &res);
++
++ out:
++	local_irq_restore(flags);
++	return ret;
++}
