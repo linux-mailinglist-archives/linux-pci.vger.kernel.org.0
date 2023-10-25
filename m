@@ -2,104 +2,277 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 830FA7D6529
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 10:31:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F22227D65BE
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 10:49:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233766AbjJYIbl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Oct 2023 04:31:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60604 "EHLO
+        id S233904AbjJYItw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Oct 2023 04:49:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233509AbjJYIbk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 04:31:40 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DAE412D;
-        Wed, 25 Oct 2023 01:31:38 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA6C7C433C7;
-        Wed, 25 Oct 2023 08:31:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698222697;
-        bh=YnqE7G0jNqwWoVJ1R/3UU77XIIf6urohHotWyxgl7FI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Gl/9nXAJzi6hbbygDvAcV4nojlKBDSyOZnDFrD6E5719Y+A+clTsA6wAFZbIsByur
-         zgRPRSy+1rFnLrvmFLHerl7neCFzdJIoJQvP3ON/yGkSpMRALBel8K5pM9Hl6O9av9
-         xxe1Hli2J3FH3qCJ7K7L5bx9ELpqo5NfQhdrbGO0MMALC7reHhYqOiJ3pc2Xoq9Wgn
-         LgRHDVpPxlCVpScGWv9n+JZ+lf06iMEABYoF6sMyeRsA+nf9II45wbOOV8SSbzcC17
-         ZND/VIiRdAXE4VDdxH5Qaf592CCu9cRm/YIyfQwD+B0QG3BWJq/8Ech2KMGeTgQWJ8
-         yjjY1fgzJx0sw==
-Date:   Wed, 25 Oct 2023 14:01:30 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Neil Armstrong <neil.armstrong@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: qcom: document the SM8650 PCIe
- Controller
-Message-ID: <20231025083130.GG3648@thinkpad>
-References: <20231025-topic-sm8650-upstream-bindings-pcie-v1-1-0e3d6f0c5827@linaro.org>
+        with ESMTP id S234227AbjJYIi7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 04:38:59 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFBDC18A;
+        Wed, 25 Oct 2023 01:38:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698223136; x=1729759136;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=I38QlpUe3v1pEBGiWrdhG1N+IsOTdBzI0QWTg8Einzg=;
+  b=hsU31vsdN88OnBef8+dmnMimGXvgqnPreD5T7NGXvid1SK/CO+Y6dw9n
+   kcS0n+sj71PZ+U2yBjzH+bNMcLeJjdizSj5KtYm/UrT9GBj1rSiu27xqJ
+   ZNxAjwM0B3QHwUTTgFc7w+OPb9srYMEZXqvHZ9RdZLSMkJ4oaaJIfdIcN
+   /d68SNThZkLQANLPtSJ4OdiDfFL7TUicl5Fe6f5lJr7EWPaFxHQh71dLN
+   PXRdosgCk84GQ7MQQADaXg0olAMCkhgrN+rUTKZWi16GYGFEQb6lSvKVU
+   d99MZksodkSkpuo54GqHUHAhZAd+NSUFY4KJVnl1f5qG3gFUiOYJ5rmQa
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10873"; a="391132691"
+X-IronPort-AV: E=Sophos;i="6.03,250,1694761200"; 
+   d="scan'208";a="391132691"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 01:38:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10873"; a="758800777"
+X-IronPort-AV: E=Sophos;i="6.03,250,1694761200"; 
+   d="scan'208";a="758800777"
+Received: from cristina-mobl3.ger.corp.intel.com ([10.251.212.45])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 01:38:51 -0700
+Date:   Wed, 25 Oct 2023 11:38:46 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     =?ISO-8859-15?Q?Ville_Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+        lorenzo.pieralisi@arm.com, hch@infradead.org, kw@linux.com,
+        robh@kernel.org, bhelgaas@google.com, michael.a.bottini@intel.com,
+        "Rafael J. Wysocki" <rafael@kernel.org>, me@adhityamohan.in,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH V2] PCI: Move VMD ASPM/LTR fix to PCI quirk
+In-Reply-To: <ZTf6ALl3xNvhLN6M@intel.com>
+Message-ID: <ab823587-1e2b-474e-f0e7-14e4782ce49f@linux.intel.com>
+References: <20230411213323.1362300-1-david.e.box@linux.intel.com> <ZTf6ALl3xNvhLN6M@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231025-topic-sm8650-upstream-bindings-pcie-v1-1-0e3d6f0c5827@linaro.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/mixed; BOUNDARY="8323329-1564197198-1698222874=:1881"
+Content-ID: <f4607477-96fb-95c1-42e4-b229f896a124@linux.intel.com>
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 25, 2023 at 09:27:14AM +0200, Neil Armstrong wrote:
-> Document the PCIe Controller on the SM8650 platform by using the
-> SM8550 bindings as a fallback.
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+--8323329-1564197198-1698222874=:1881
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+Content-ID: <7a409998-66d4-3482-222-b4908db15982@linux.intel.com>
 
-- Mani
+On Tue, 24 Oct 2023, Ville Syrj�l� wrote:
 
-> ---
-> For convenience, a regularly refreshed linux-next based git tree containing
-> all the SM8650 related work is available at:
-> https://git.codelinaro.org/neil.armstrong/linux/-/tree/topic/sm85650/upstream/integ
-> ---
->  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
+> On Tue, Apr 11, 2023 at 02:33:23PM -0700, David E. Box wrote:
+> > In commit f492edb40b54 ("PCI: vmd: Add quirk to configure PCIe ASPM and
+> > LTR") the VMD driver calls pci_enabled_link_state as a callback from
+> > pci_bus_walk. Both will acquire the pci_bus_sem lock leading to a lockdep
+> > warning. Instead of doing the pci_bus_walk, move the fix to quirks.c using
+> > DECLARE_PCI_FIXUP_FINAL.
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> index eadba38171e1..af537732ded6 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> @@ -41,6 +41,10 @@ properties:
->            - qcom,pcie-sm8450-pcie0
->            - qcom,pcie-sm8450-pcie1
->            - qcom,pcie-sm8550
-> +      - items:
-> +          - enum:
-> +              - qcom,pcie-sm8650
-> +          - const: qcom,pcie-sm8550
->        - items:
->            - const: qcom,pcie-msm8998
->            - const: qcom,pcie-msm8996
+> What happened to this patch? We're still carrying a local fix
+> for this in drm-tip...
 > 
-> ---
-> base-commit: fe1998aa935b44ef873193c0772c43bce74f17dc
-> change-id: 20231016-topic-sm8650-upstream-bindings-pcie-56e90536c258
-> 
-> Best regards,
-> -- 
-> Neil Armstrong <neil.armstrong@linaro.org>
-> 
+> > 
+> > Fixes: f492edb40b54 ("PCI: vmd: Add quirk to configure PCIe ASPM and LTR")
+> > Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > ---
+> > 
+> > V2 - Instead of adding a lock flag argument to pci_enabled_link_state, move
+> >      the fix to quirks.c
+> > 
+> >  drivers/pci/controller/vmd.c | 55 +--------------------------
+> >  drivers/pci/quirks.c         | 72 ++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 73 insertions(+), 54 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> > index 990630ec57c6..47fa3e5f2dc5 100644
+> > --- a/drivers/pci/controller/vmd.c
+> > +++ b/drivers/pci/controller/vmd.c
+> > @@ -66,22 +66,11 @@ enum vmd_features {
+> >  	 * interrupt handling.
+> >  	 */
+> >  	VMD_FEAT_CAN_BYPASS_MSI_REMAP		= (1 << 4),
+> > -
+> > -	/*
+> > -	 * Enable ASPM on the PCIE root ports and set the default LTR of the
+> > -	 * storage devices on platforms where these values are not configured by
+> > -	 * BIOS. This is needed for laptops, which require these settings for
+> > -	 * proper power management of the SoC.
+> > -	 */
+> > -	VMD_FEAT_BIOS_PM_QUIRK		= (1 << 5),
+> >  };
+> >  
+> > -#define VMD_BIOS_PM_QUIRK_LTR	0x1003	/* 3145728 ns */
+> > -
+> >  #define VMD_FEATS_CLIENT	(VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |	\
+> >  				 VMD_FEAT_HAS_BUS_RESTRICTIONS |	\
+> > -				 VMD_FEAT_OFFSET_FIRST_VECTOR |		\
+> > -				 VMD_FEAT_BIOS_PM_QUIRK)
+> > +				 VMD_FEAT_OFFSET_FIRST_VECTOR)
+> >  
+> >  static DEFINE_IDA(vmd_instance_ida);
+> >  
+> > @@ -724,46 +713,6 @@ static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
+> >  	vmd_bridge->native_dpc = root_bridge->native_dpc;
+> >  }
+> >  
+> > -/*
+> > - * Enable ASPM and LTR settings on devices that aren't configured by BIOS.
+> > - */
+> > -static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
+> > -{
+> > -	unsigned long features = *(unsigned long *)userdata;
+> > -	u16 ltr = VMD_BIOS_PM_QUIRK_LTR;
+> > -	u32 ltr_reg;
+> > -	int pos;
+> > -
+> > -	if (!(features & VMD_FEAT_BIOS_PM_QUIRK))
+> > -		return 0;
+> > -
+> > -	pci_enable_link_state(pdev, PCIE_LINK_STATE_ALL);
+> > -
+> > -	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
+> > -	if (!pos)
+> > -		return 0;
+> > -
+> > -	/*
+> > -	 * Skip if the max snoop LTR is non-zero, indicating BIOS has set it
+> > -	 * so the LTR quirk is not needed.
+> > -	 */
+> > -	pci_read_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, &ltr_reg);
+> > -	if (!!(ltr_reg & (PCI_LTR_VALUE_MASK | PCI_LTR_SCALE_MASK)))
+> > -		return 0;
+> > -
+> > -	/*
+> > -	 * Set the default values to the maximum required by the platform to
+> > -	 * allow the deepest power management savings. Write as a DWORD where
+> > -	 * the lower word is the max snoop latency and the upper word is the
+> > -	 * max non-snoop latency.
+> > -	 */
+> > -	ltr_reg = (ltr << 16) | ltr;
+> > -	pci_write_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, ltr_reg);
+> > -	pci_info(pdev, "VMD: Default LTR value set by driver\n");
+> > -
+> > -	return 0;
+> > -}
+> > -
+> >  static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+> >  {
+> >  	struct pci_sysdata *sd = &vmd->sysdata;
+> > @@ -936,8 +885,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+> >  
+> >  	pci_assign_unassigned_bus_resources(vmd->bus);
+> >  
+> > -	pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features);
+> > -
+> >  	/*
+> >  	 * VMD root buses are virtual and don't return true on pci_is_pcie()
+> >  	 * and will fail pcie_bus_configure_settings() early. It can instead be
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index 44cab813bf95..2d86623f96e3 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -6023,3 +6023,75 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2d, dpc_log_size);
+> >  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2f, dpc_log_size);
+> >  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
+> >  #endif
+> > +
+> > +#ifdef CONFIG_VMD
+> > +/*
+> > + * Enable ASPM on the PCIE root ports under VMD and set the default LTR of the
+> > + * storage devices on platforms where these values are not configured by BIOS.
+> > + * This is needed for laptops, which require these settings for proper power
+> > + * management of the SoC.
+> > + */
+> > +#define VMD_DEVICE_LTR	0x1003	/* 3145728 ns */
+
+This should be defined using FIELD_PREP()s. It is better to construct both 
+snoop and nosnoop registers here and not do the shift below at all.
+
+There are new defines for the nosnoop reg in pci/field-get branch for the 
+nosnoop reg fields.
 
 -- 
-மணிவண்ணன் சதாசிவம்
+ i.
+
+> > +static void quirk_intel_vmd(struct pci_dev *pdev)
+> > +{
+> > +	struct pci_dev *parent;
+> > +	u16 ltr = VMD_DEVICE_LTR;
+> > +	u32 ltr_reg;
+> > +	int pos;
+> > +
+> > +	/* Check in VMD domain */
+> > +	if (pci_domain_nr(pdev->bus) < 0x10000)
+> > +		return;
+> > +
+> > +	/* Get Root Port */
+> > +	parent = pci_upstream_bridge(pdev);
+> > +	if (!parent || parent->vendor != PCI_VENDOR_ID_INTEL)
+> > +		return;
+> > +
+> > +	/* Get VMD Host Bridge */
+> > +	parent = to_pci_dev(parent->dev.parent);
+> > +	if (!parent)
+> > +		return;
+> > +
+> > +	/* Get RAID controller */
+> > +	parent = to_pci_dev(parent->dev.parent);
+> > +	if (!parent)
+> > +		return;
+> > +
+> > +	switch (parent->device) {
+> > +	case 0x467f:
+> > +	case 0x4c3d:
+> > +	case 0xa77f:
+> > +	case 0x7d0b:
+> > +	case 0xad0b:
+> > +	case 0x9a0b:
+> > +		break;
+> > +	default:
+> > +		return;
+> > +	}
+> > +
+> > +	pci_enable_link_state(pdev, PCIE_LINK_STATE_ALL);
+> > +
+> > +	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
+> > +	if (!pos)
+> > +		return;
+> > +
+> > +	/* Skip if the max snoop LTR is non-zero, indicating BIOS has set it */
+> > +	pci_read_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, &ltr_reg);
+> > +	if (!!(ltr_reg & (PCI_LTR_VALUE_MASK | PCI_LTR_SCALE_MASK)))
+> > +		return;
+> > +
+> > +	/*
+> > +	 * Set the LTR values to the maximum required by the platform to
+> > +	 * allow the deepest power management savings. Write as a DWORD where
+> > +	 * the lower word is the max snoop latency and the upper word is the
+> > +	 * max non-snoop latency.
+> > +	 */
+> > +	ltr_reg = (ltr << 16) | ltr;
+> > +	pci_write_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, ltr_reg);
+> > +	pci_info(pdev, "LTR set by VMD PCI quick\n");
+> > +
+> > +}
+> > +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_ANY_ID, PCI_ANY_ID,
+> > +			      PCI_CLASS_STORAGE_EXPRESS, 0, quirk_intel_vmd);
+> > +#endif
+> > -- 
+> > 2.34.1
+> 
+> 
+--8323329-1564197198-1698222874=:1881--
