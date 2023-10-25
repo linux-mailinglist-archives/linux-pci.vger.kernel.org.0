@@ -2,215 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A9307D5FBC
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 04:06:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E38D7D60FB
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Oct 2023 07:03:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231283AbjJYCGW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Oct 2023 22:06:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45554 "EHLO
+        id S229568AbjJYFDS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Oct 2023 01:03:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229548AbjJYCGU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Oct 2023 22:06:20 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2064.outbound.protection.outlook.com [40.107.92.64])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3932110E3;
-        Tue, 24 Oct 2023 19:06:17 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AETvowjEV1G3G+W0+S+7bdlX2BK3EhbRwer9hDRYPC1At+ujcRzMW0llAeWWfvel0Xx5d+PI/P5gdRV3Ph2Q35unvGTQsSeXnzieC7b74AhsK6g+jaq2uSb8kYwAygMNDLg0XHWwU0BClEmc/J9+0HIZLYREi4nLbph2Q1GUe1Nhvsnlx5/OPJU1wHu9vH00BLt+Ak9AH6paeaXpvUJ20BJhJINgysHL9mmE9UZBhjPCn9iznLzsPQipo28D8xEd9tAMPXXsAZdcVC0LHxlgwO3RcTi9tca9vy5KlIXRwXPbv661tTyq5LD2lwWLC5Uxl9aF5j4Hc1gTnNftiOYxpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+F3uO+5IWBcf7q6yTe2ZhI9rXKBglfqAeJ41mJytnzo=;
- b=DeSj4FrdRvoRlhcWG+GqX0xedrooCWALk+sN7GxcZkC3xir26j9iX4GbXznx8htzfXLP5fJJV9JJ8aZc7dB5Sj4olhuQJMsLQ4Kuw/kqIfoemuflmOO3uN9iCXVCBfmL7bqHsyOhbHbqQWj9WxyoR/rNihwQPzp0ZmGUaj5I2s6XH3yqKxUoX9TWEOsmllwtG8vMnaP8R+rQaHYjNoS6zPF088WGeDPqQb1SkGnBt7MUYmIB8dV1TwdMcon54Jx7AyWP45MY3J1cnTeH7bvDoFLF19jA9JOzxV8gMhMNr7ufsfSEDMJwQKACKnC2yIY05Rvohi/vHZ7owRDlchw7Eg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+F3uO+5IWBcf7q6yTe2ZhI9rXKBglfqAeJ41mJytnzo=;
- b=Re41GFkRETwo0vzHdyHGBzWRaOafIBR6pIxj9vCP2pX9TePkW9hrtFrRivCSY5s36VaeFsuAd1OIlR/1j1UpWJexyIiHKFH47CZzvIGcwqntVHJojoG1fsrovDccUVOBR0NH1rRflTetkABbxzXi2vbye+JyBpECQMbEd8CZrJI=
-Received: from MW4P220CA0022.NAMP220.PROD.OUTLOOK.COM (2603:10b6:303:115::27)
- by SJ2PR12MB9115.namprd12.prod.outlook.com (2603:10b6:a03:55c::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.26; Wed, 25 Oct
- 2023 02:06:12 +0000
-Received: from CO1PEPF000044F0.namprd05.prod.outlook.com
- (2603:10b6:303:115:cafe::63) by MW4P220CA0022.outlook.office365.com
- (2603:10b6:303:115::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.32 via Frontend
- Transport; Wed, 25 Oct 2023 02:06:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000044F0.mail.protection.outlook.com (10.167.241.70) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6933.15 via Frontend Transport; Wed, 25 Oct 2023 02:06:12 +0000
-Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 24 Oct
- 2023 21:06:10 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH 4/4] platform/x86/amd: pmc: Add support for using constraints to decide D3 policy
-Date:   Tue, 24 Oct 2023 21:05:46 -0500
-Message-ID: <20231025020546.504-5-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231025020546.504-1-mario.limonciello@amd.com>
-References: <20231025020546.504-1-mario.limonciello@amd.com>
+        with ESMTP id S229456AbjJYFDR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Oct 2023 01:03:17 -0400
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A103E5;
+        Tue, 24 Oct 2023 22:03:15 -0700 (PDT)
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 39P52tl9125931;
+        Wed, 25 Oct 2023 00:02:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1698210175;
+        bh=3zOX6TUjyNNgjljAkOrTg04EXn1HnypXqTsDWnDgMkM=;
+        h=Date:From:Subject:To:CC:References:In-Reply-To;
+        b=KiuO+Qi8x7F7wJgye1QmAuld7eE4GbP5+7VouFlMMzrYe/1EsnKgi7xGS9EhHZwch
+         7TcJL8kqBzGG8GKcPsetvmC8eGPDa29k5xKybyjnzP/PRR3j/jCehURfVV3hbitmU9
+         UUliMs4da9kAehXo99waO0OMJj4VjlF9x1HvMJIQ=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 39P52tet103204
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 25 Oct 2023 00:02:55 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 25
+ Oct 2023 00:02:55 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 25 Oct 2023 00:02:55 -0500
+Received: from [172.24.227.9] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 39P52o6I019290;
+        Wed, 25 Oct 2023 00:02:51 -0500
+Message-ID: <c7851172-f474-42f3-9730-1f323f9e6c73@ti.com>
+Date:   Wed, 25 Oct 2023 10:32:50 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F0:EE_|SJ2PR12MB9115:EE_
-X-MS-Office365-Filtering-Correlation-Id: b6264cc3-ca17-4cc5-df3c-08dbd4fef699
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rXlWUXDIr+ZsYF1yu3p975niA66x/MacU4CpMv1+UulsuZHIz5hvw6McKuEywU9b7gxq6kFxEP0ocSRBV2s8aIlYwmHpbXfD6bqpjSa1ix1OJdAaSpqyxZCs4n4q5HOppJyr2NrvJEvBqPe9ex3J/u2nlAUl2BmtIjipJwIm1wgQcPr4K8jw/05vTCWfOUO/KGdwftCDVG4h3YeMGHsFutLXl8lJOy2UyvUn4/3sHevjQURMvxXbFzMz6E1AoD42s7eDp2Q6jliVJkAxkqWXU1mxFby5tv/vr22G7+BlY/Jva1Q8qAw3wPg7DlOkacB43JZoCeIillF7Wq2Uia1bVOOM9e4ryumm6jXFCS1BFXfEk0ff74oqbq6YwiqkS8x7BAYE8mM65olB4KbOoG75YOXPUpnN0hSIh3W+bJRmEYQ92zOeR3HLqoR/mzxELFFQNBuqLxl6XkrUXD4g2ISFhlQeLvq9BjJX5D+u9F6XQ+co5pTAFmXJWSWoGLHW0LQlvhV/7HwDQsJt/BKx7ZfCjGQ991p3aCucWSFrm337kP3a59/ebxtZXljzBAW/v3joWmQMTVObF0b14n26xaywS9cqhmKw1rD+VcuVTSbwzDL4Pmmovxj+mSAWVbr0EupioaqtrxKbayHdossEvznvt2mS7g5EsUuc2Jz4rjOOwxi5nyWP69ItoG2LTJqds1gN9ytZ6VbRnFPJ+deXOD5dcjJJ+W8yFrOLuk1GyuUmz2/tSffALwuYk5hOvls39ADJ
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(376002)(346002)(136003)(230922051799003)(451199024)(186009)(82310400011)(1800799009)(64100799003)(40470700004)(46966006)(36840700001)(2906002)(40460700003)(5660300002)(316002)(8936002)(8676002)(36756003)(4326008)(40480700001)(44832011)(478600001)(110136005)(70586007)(54906003)(82740400003)(6666004)(86362001)(70206006)(356005)(7696005)(426003)(41300700001)(2616005)(26005)(1076003)(83380400001)(81166007)(336012)(966005)(36860700001)(47076005)(16526019)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2023 02:06:12.5711
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6264cc3-ca17-4cc5-df3c-08dbd4fef699
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000044F0.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9115
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+From:   Siddharth Vadapalli <s-vadapalli@ti.com>
+Subject: Re: [PATCH v3] PCI: keystone: Fix pci_ops for AM654x SoC
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>
+CC:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        <bhelgaas@google.com>, <lpieralisi@kernel.org>, <robh@kernel.org>,
+        <kw@linux.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <r-gunasekaran@ti.com>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+References: <20231023212628.GA1627567@bhelgaas>
+Content-Language: en-US
+In-Reply-To: <20231023212628.GA1627567@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The default kernel policy will allow modern machines to effectively put
-all PCIe bridges into PCI D3. This policy doesn't match what Windows uses.
+Hello Bjorn,
 
-In Windows the driver stack includes a "Power Engine Plugin" (uPEP driver)
-to decide the policy for integrated devices using PEP device constraints.
+On 24/10/23 02:56, Bjorn Helgaas wrote:
+> On Mon, Oct 23, 2023 at 05:05:30PM +0530, Siddharth Vadapalli wrote:
+>> On 23/10/23 16:12, Serge Semin wrote:
+>>
+>> ...
+>>
+>>> Siddharth, if it won't be that much bother and you have an access to
+>>> the v3.65-based Keystone PCIe device, could you please have a look
+>>> whether it's possible to implement what Bjorn suggested?
+>>
+>> Unfortunately I don't have any SoC/Device with me that has the v3.65 PCIe
+>> controller, so I will not be able to test Bjorn's suggestion.
+> 
+> Huh.  57e1d8206e48 ("MAINTAINERS: move Murali Karicheri to credits")
+> removed the maintainer for pci-keystone.c, so the driver hasn't had a
+> maintainer for over two years.
+> 
+> Given the fact that there's no maintainer, I'm more than happy to take
+> a patch to move this code to somewhere in the host_init() callback,
+> even if you don't have the hardware to test it.
 
-Device constraints are expressed as a number in the _DSM of the PNP0D80
-device and exported by the kernel in acpi_get_lps0_constraint().
+Sure, I can work on a patch for it. The execution flow with the existing code is
+as follows:
 
-Add support for SoCs to use constraints on Linux as well for deciding
-target state for integrated PCI bridges.
+ks_pcie_probe()
+    dw_pcie_host_init()
+        pci_host_probe()
+            ks_pcie_v3_65_add_bus()
 
-Disable existing production SoCs by default with this change.
+So I assume that as long as ks_pcie_v3_65_add_bus() is invoked after
+pci_host_probe(), it should be acceptable. With this understanding, I plan to
+move it immediately after the invocation to dw_pcie_host_init() within
+ks_pcie_probe() conditionally (based on the is_am6 flag). The new call trace
+with this change will look like:
 
-Link: https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/platform-design-for-modern-standby#low-power-core-silicon-cpu-soc-dram
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-Changes from RFC v1:
- * Use pci_d3cold_*able() instead
----
- drivers/platform/x86/amd/pmc/pmc.c | 57 ++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+ks_pcie_probe()
+    dw_pcie_host_init()
+        pci_host_probe()
+    ks_pcie_v3_65_add_bus()
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index c1e788b67a74..346564517667 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -741,6 +741,61 @@ static int amd_pmc_czn_wa_irq1(struct amd_pmc_dev *pdev)
- 	return 0;
- }
- 
-+static inline void amd_pmc_apply_constraint(struct pci_dev *pci_dev, bool apply)
-+{
-+	if (apply)
-+		pci_d3cold_disable(pci_dev);
-+	else
-+		pci_d3cold_enable(pci_dev);
-+}
+Since the .add_bus() method will be removed following this change, I suppose
+that the patch I post for it can be applied instead of this v3 patch which fixes
+pci_ops.
+
+The patch I plan to post as a replacement for the current patch which shall also
+remove the ks_pcie_v3_65_add_bus() and the .add_bus() method is:
+
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index 0def919f89fa..3933e857ecaa 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -447,44 +447,10 @@ static struct pci_ops ks_child_pcie_ops = {
+ 	.write = pci_generic_config_write,
+ };
+
+-/**
+- * ks_pcie_v3_65_add_bus() - keystone add_bus post initialization
+- * @bus: A pointer to the PCI bus structure.
+- *
+- * This sets BAR0 to enable inbound access for MSI_IRQ register
+- */
+-static int ks_pcie_v3_65_add_bus(struct pci_bus *bus)
+-{
+-	struct dw_pcie_rp *pp = bus->sysdata;
+-	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
+-
+-	if (!pci_is_root_bus(bus))
+-		return 0;
+-
+-	/* Configure and set up BAR0 */
+-	ks_pcie_set_dbi_mode(ks_pcie);
+-
+-	/* Enable BAR0 */
+-	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 1);
+-	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, SZ_4K - 1);
+-
+-	ks_pcie_clear_dbi_mode(ks_pcie);
+-
+-	 /*
+-	  * For BAR0, just setting bus address for inbound writes (MSI) should
+-	  * be sufficient.  Use physical address to avoid any conflicts.
+-	  */
+-	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, ks_pcie->app.start);
+-
+-	return 0;
+-}
+-
+ static struct pci_ops ks_pcie_ops = {
+ 	.map_bus = dw_pcie_own_conf_map_bus,
+ 	.read = pci_generic_config_read,
+ 	.write = pci_generic_config_write,
+-	.add_bus = ks_pcie_v3_65_add_bus,
+ };
+
+ /**
+@@ -1270,6 +1236,29 @@ static int ks_pcie_probe(struct platform_device *pdev)
+ 		ret = dw_pcie_host_init(&pci->pp);
+ 		if (ret < 0)
+ 			goto err_get_sync;
 +
-+/*
-+ * Constraints are specified in the ACPI LPS0 device and specify what the
-+ * platform intended for devices that are internal to the SoC.
-+ *
-+ * If a constraint is present and >= to ACPI_STATE_D3, then enable D3.
-+ * If a constraint is not present or < ACPI_STATE_D3, then disable D3.
-+ */
-+static void amd_pmc_check_constraints(struct amd_pmc_dev *pdev, bool apply)
-+{
-+	struct pci_dev *pci_dev = NULL;
-+	struct acpi_device *adev;
-+	int constraint;
++		if (!ks_pcie->is_am6) {
++			/*
++			 * For v3.65 DWC PCIe Controllers, setup BAR0 to enable
++			 * inbound access for MSI_IRQ register.
++			 */
 +
-+	switch (pdev->cpu_id) {
-+	case AMD_CPU_ID_RV:
-+	case AMD_CPU_ID_RN:
-+	case AMD_CPU_ID_YC:
-+	case AMD_CPU_ID_CB:
-+	case AMD_CPU_ID_PS:
-+	case AMD_CPU_ID_SP:
-+		return;
-+	default:
-+		break;
-+	}
++			/* Configure and set up BAR0 */
++			ks_pcie_set_dbi_mode(ks_pcie);
 +
-+	while ((pci_dev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, pci_dev))) {
-+		adev = ACPI_COMPANION(&pci_dev->dev);
-+		if (!adev)
-+			continue;
-+		constraint = acpi_get_lps0_constraint(adev);
-+		dev_dbg(&pci_dev->dev, "constraint is %d\n", constraint);
++			/* Enable BAR0 */
++			dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 1);
++			dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, SZ_4K - 1);
 +
-+		switch (constraint) {
-+		case ACPI_STATE_UNKNOWN:
-+		case ACPI_STATE_D0:
-+		case ACPI_STATE_D1:
-+		case ACPI_STATE_D2:
-+			amd_pmc_apply_constraint(pci_dev, apply);
-+			continue;
-+		/* use the logic pci_bridge_d3_possible() to decide */
-+		case ACPI_STATE_D3:
-+		default:
-+			continue;
++			ks_pcie_clear_dbi_mode(ks_pcie);
++
++			 /*
++			  * For BAR0, just setting bus address for inbound writes (MSI) should
++			  * be sufficient.  Use physical address to avoid any conflicts.
++			  */
++			dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, ks_pcie->app.start);
 +		}
-+	}
-+}
 +
- static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
- {
- 	struct rtc_device *rtc_device;
-@@ -1074,6 +1129,7 @@ static int amd_pmc_probe(struct platform_device *pdev)
- 			amd_pmc_quirks_init(dev);
- 	}
- 
-+	amd_pmc_check_constraints(dev, TRUE);
- 	amd_pmc_dbgfs_register(dev);
- 	pm_report_max_hw_sleep(U64_MAX);
- 	return 0;
-@@ -1089,6 +1145,7 @@ static void amd_pmc_remove(struct platform_device *pdev)
- 
- 	if (IS_ENABLED(CONFIG_SUSPEND))
- 		acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
-+	amd_pmc_check_constraints(dev, FALSE);
- 	amd_pmc_dbgfs_unregister(dev);
- 	pci_dev_put(dev->rdev);
- 	mutex_destroy(&dev->lock);
--- 
-2.34.1
+ 		break;
+ 	case DW_PCIE_EP_TYPE:
+ 		if (!IS_ENABLED(CONFIG_PCI_KEYSTONE_EP)) {
 
+Please review and let me know if this looks fine. If so, I will post the patch for it.
+
+-- 
+Regards,
+Siddharth.
