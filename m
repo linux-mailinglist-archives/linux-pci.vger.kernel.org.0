@@ -2,56 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0EE67D81D4
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Oct 2023 13:34:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5F4D7D81D9
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Oct 2023 13:34:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230143AbjJZLeX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Oct 2023 07:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44046 "EHLO
+        id S230455AbjJZLe5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Oct 2023 07:34:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229649AbjJZLeW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Oct 2023 07:34:22 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC761A6
-        for <linux-pci@vger.kernel.org>; Thu, 26 Oct 2023 04:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698320060; x=1729856060;
-  h=date:from:to:cc:subject:message-id;
-  bh=J6xfS90zW1aSe8+2dV6IaisuxhiEyZ1G85nTo6BjU9c=;
-  b=Et2KsB2ohhuMXaNIaOxhslicQxEe7vhCejRFKOozOLGd1BVaNZ/XCQkC
-   KZKy6qOsocV2xQuwhtASDrhwi26X6I2D4dl+c+6cgdtbHYbTYIydiQ3pw
-   JlJLyZSQq8N/ddiJAwXwClB5ITt8YJefHOZ6dG94MBZk6sTXnnOxGLSdk
-   guFrCZWZndLCnJ9Ribe4+oJQDqv5bzjWfzNcCX3LobpBtPoqRIXkaXlUW
-   SWmLTQf5OyV7SJ9BcTE8Mp1/TBW1KxSgAJgvOuMq+3DQ/lClzOsnvmY3+
-   M+sYpXm5tZp3J1IBlkIAuvnCI2xDsEPdq766bk27IdLvYSzfHXdwOE0tR
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="332258"
-X-IronPort-AV: E=Sophos;i="6.03,253,1694761200"; 
-   d="scan'208";a="332258"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2023 04:34:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="709045910"
-X-IronPort-AV: E=Sophos;i="6.03,253,1694761200"; 
-   d="scan'208";a="709045910"
-Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 26 Oct 2023 04:34:18 -0700
-Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qvycy-0009kP-1H;
-        Thu, 26 Oct 2023 11:34:16 +0000
-Date:   Thu, 26 Oct 2023 19:34:14 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:field-get] BUILD SUCCESS
- 8a0395578a9bb8937d1cc88c3f2e17e437467c2d
-Message-ID: <202310261911.J3b3rCVd-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+        with ESMTP id S230321AbjJZLe4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Oct 2023 07:34:56 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48A781AA;
+        Thu, 26 Oct 2023 04:34:53 -0700 (PDT)
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39QAmBFV024823;
+        Thu, 26 Oct 2023 11:34:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=0RykzLAc2GcpRBB2lxRtT9xw9T54D6XSLPdU1P03Ecg=;
+ b=TUbPLcJRU3NeutpppwPr/hqOUndGtWyqtZHchUg2fabbywTsyxW8B99C7mgCpMzrNbIZ
+ dKhnFNYGtMhT60D5ZYxeqNgXEuvmpX9A23EOvRFASJbQ1ewVYmhos3ywrD9lNaz0h7xK
+ 1xtRZKMT5Cg0DsJtKNQEfvo3ylCuHQ3UASiRh13i7d/bvygPfZ9d7UojdHKByEq3FITY
+ ebT3JCUvSuHRnCXYweEBbcTxe9W6oBrUPT44ZARfj/Iy27KWYRTDeWagWbMJwh6gXG0o
+ ly4OEBtHmlLj+3IAyOf/Ndg+0tVl0XKIZ6J1tsKaorxlTLC+8uLoFjDgPrBtuPdoCjVI /Q== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tykw28gme-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Oct 2023 11:34:37 +0000
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39QBYaIs014795
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Oct 2023 11:34:36 GMT
+Received: from [10.216.45.182] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Thu, 26 Oct
+ 2023 04:34:27 -0700
+Message-ID: <b9fb5970-633b-07f0-4359-09fe8204bbf8@quicinc.com>
+Date:   Thu, 26 Oct 2023 17:04:24 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v3 4/5] PCI: epf-mhi: Add support for SA8775P
+Content-Language: en-US
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>
+CC:     <agross@kernel.org>, <andersson@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <quic_shazhuss@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_ramkri@quicinc.com>, <quic_nayiluri@quicinc.com>,
+        <dmitry.baryshkov@linaro.org>, <robh@kernel.org>,
+        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>,
+        <quic_parass@quicinc.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mhi@lists.linux.dev>,
+        <linux-phy@lists.infradead.org>
+References: <1697715430-30820-1-git-send-email-quic_msarkar@quicinc.com>
+ <1697715430-30820-5-git-send-email-quic_msarkar@quicinc.com>
+ <20231025075603.GD3648@thinkpad>
+ <610b0621-b140-ee9b-c450-0fec6862c4fc@quicinc.com>
+ <fb0647b5-67c4-4558-ac41-ee2b21446ee2@linaro.org>
+From:   Mrinmay Sarkar <quic_msarkar@quicinc.com>
+In-Reply-To: <fb0647b5-67c4-4558-ac41-ee2b21446ee2@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: I9bXBXL35wkZTwKQbllTp6Iof-QEowRZ
+X-Proofpoint-GUID: I9bXBXL35wkZTwKQbllTp6Iof-QEowRZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-26_09,2023-10-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=679 spamscore=0 suspectscore=0 bulkscore=0
+ phishscore=0 mlxscore=0 clxscore=1015 adultscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2310170001 definitions=main-2310260098
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,217 +95,29 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git field-get
-branch HEAD: 8a0395578a9bb8937d1cc88c3f2e17e437467c2d  PCI/portdrv: Use FIELD_GET()
 
-elapsed time: 2216m
+On 10/26/2023 4:40 PM, Konrad Dybcio wrote:
+>
+>
+> On 10/26/23 07:30, Mrinmay Sarkar wrote:
+>>
+>> On 10/25/2023 1:26 PM, Manivannan Sadhasivam wrote:
+>>> On Thu, Oct 19, 2023 at 05:07:09PM +0530, Mrinmay Sarkar wrote:
+>>>> Add support for Qualcomm Snapdragon SA8775P SoC to the EPF driver.
+>>>> SA8775P has the PID (0x0306) and supports HDMA. Currently, it has
+>>> Is the PID fixed? I thought you just want to reuse the SDXxx PID in the
+>>> meantime.
+>>>
+>>> - Mani
+>>
+>> The PID for SA8775p EP is not decided yet. So using 0x0306 PID meantime.
+> If it's not decided, why should it go upstream then? Would that
+> not break the hosts' expectations when the EP device is updated?
+>
+> Konrad
 
-configs tested: 198
-configs skipped: 2
+I don't think it will break the host's functionality. In host side as 
+well we are reusing same 0x0306 for SA8775p
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+--Mrinmay
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20231025   gcc  
-arc                   randconfig-001-20231026   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                         assabet_defconfig   gcc  
-arm                                 defconfig   gcc  
-arm                            mps2_defconfig   gcc  
-arm                         s3c6400_defconfig   gcc  
-arm                        spear6xx_defconfig   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20231025   gcc  
-i386         buildonly-randconfig-001-20231026   gcc  
-i386         buildonly-randconfig-002-20231025   gcc  
-i386         buildonly-randconfig-002-20231026   gcc  
-i386         buildonly-randconfig-003-20231025   gcc  
-i386         buildonly-randconfig-003-20231026   gcc  
-i386         buildonly-randconfig-004-20231025   gcc  
-i386         buildonly-randconfig-004-20231026   gcc  
-i386         buildonly-randconfig-005-20231025   gcc  
-i386         buildonly-randconfig-005-20231026   gcc  
-i386         buildonly-randconfig-006-20231025   gcc  
-i386         buildonly-randconfig-006-20231026   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231025   gcc  
-i386                  randconfig-001-20231026   gcc  
-i386                  randconfig-002-20231025   gcc  
-i386                  randconfig-002-20231026   gcc  
-i386                  randconfig-003-20231025   gcc  
-i386                  randconfig-003-20231026   gcc  
-i386                  randconfig-004-20231025   gcc  
-i386                  randconfig-004-20231026   gcc  
-i386                  randconfig-005-20231025   gcc  
-i386                  randconfig-005-20231026   gcc  
-i386                  randconfig-006-20231025   gcc  
-i386                  randconfig-006-20231026   gcc  
-i386                  randconfig-011-20231025   gcc  
-i386                  randconfig-011-20231026   gcc  
-i386                  randconfig-012-20231025   gcc  
-i386                  randconfig-012-20231026   gcc  
-i386                  randconfig-013-20231025   gcc  
-i386                  randconfig-013-20231026   gcc  
-i386                  randconfig-014-20231025   gcc  
-i386                  randconfig-014-20231026   gcc  
-i386                  randconfig-015-20231025   gcc  
-i386                  randconfig-015-20231026   gcc  
-i386                  randconfig-016-20231025   gcc  
-i386                  randconfig-016-20231026   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20231025   gcc  
-loongarch             randconfig-001-20231026   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                          atari_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                       m5275evb_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                     decstation_defconfig   gcc  
-mips                           jazz_defconfig   gcc  
-mips                        maltaup_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                generic-64bit_defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc                   lite5200b_defconfig   clang
-powerpc                      pasemi_defconfig   gcc  
-powerpc                      ppc44x_defconfig   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20231025   gcc  
-riscv                 randconfig-001-20231026   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20231025   gcc  
-s390                  randconfig-001-20231026   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                     magicpanelr2_defconfig   gcc  
-sh                           se7724_defconfig   gcc  
-sh                            titan_defconfig   gcc  
-sh                              ul2_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                 randconfig-001-20231025   gcc  
-sparc                 randconfig-001-20231026   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20231025   gcc  
-x86_64       buildonly-randconfig-001-20231026   gcc  
-x86_64       buildonly-randconfig-002-20231025   gcc  
-x86_64       buildonly-randconfig-002-20231026   gcc  
-x86_64       buildonly-randconfig-003-20231025   gcc  
-x86_64       buildonly-randconfig-003-20231026   gcc  
-x86_64       buildonly-randconfig-004-20231025   gcc  
-x86_64       buildonly-randconfig-004-20231026   gcc  
-x86_64       buildonly-randconfig-005-20231025   gcc  
-x86_64       buildonly-randconfig-005-20231026   gcc  
-x86_64       buildonly-randconfig-006-20231025   gcc  
-x86_64       buildonly-randconfig-006-20231026   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                randconfig-001-20231025   gcc  
-x86_64                randconfig-001-20231026   gcc  
-x86_64                randconfig-002-20231025   gcc  
-x86_64                randconfig-002-20231026   gcc  
-x86_64                randconfig-003-20231025   gcc  
-x86_64                randconfig-003-20231026   gcc  
-x86_64                randconfig-004-20231025   gcc  
-x86_64                randconfig-004-20231026   gcc  
-x86_64                randconfig-005-20231025   gcc  
-x86_64                randconfig-005-20231026   gcc  
-x86_64                randconfig-006-20231025   gcc  
-x86_64                randconfig-006-20231026   gcc  
-x86_64                randconfig-011-20231025   gcc  
-x86_64                randconfig-011-20231026   gcc  
-x86_64                randconfig-012-20231025   gcc  
-x86_64                randconfig-012-20231026   gcc  
-x86_64                randconfig-013-20231025   gcc  
-x86_64                randconfig-013-20231026   gcc  
-x86_64                randconfig-014-20231025   gcc  
-x86_64                randconfig-014-20231026   gcc  
-x86_64                randconfig-015-20231025   gcc  
-x86_64                randconfig-015-20231026   gcc  
-x86_64                randconfig-016-20231025   gcc  
-x86_64                randconfig-016-20231026   gcc  
-x86_64                randconfig-071-20231025   gcc  
-x86_64                randconfig-072-20231025   gcc  
-x86_64                randconfig-073-20231025   gcc  
-x86_64                randconfig-074-20231025   gcc  
-x86_64                randconfig-075-20231025   gcc  
-x86_64                randconfig-076-20231025   gcc  
-x86_64                           rhel-8.3-bpf   gcc  
-x86_64                          rhel-8.3-func   gcc  
-x86_64                    rhel-8.3-kselftests   gcc  
-x86_64                         rhel-8.3-kunit   gcc  
-x86_64                           rhel-8.3-ltp   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                  nommu_kc705_defconfig   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
