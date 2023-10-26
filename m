@@ -2,164 +2,188 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 422A37D8331
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Oct 2023 14:55:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A448C7D83C5
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Oct 2023 15:44:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231126AbjJZMzI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Oct 2023 08:55:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32868 "EHLO
+        id S231195AbjJZNoj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Oct 2023 09:44:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230330AbjJZMzH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Oct 2023 08:55:07 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A2ACAC;
-        Thu, 26 Oct 2023 05:55:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698324905; x=1729860905;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Hl8FaZTzUfLxFUNddJbFTntXpEPXqgat3oylaxVt9p8=;
-  b=Xps6oZCLu7ph7/3onDHo+dwF5amXGj5CYYC4qMJVfUFr20GuphDrySxF
-   wYRlJpMFq00T6Ku4qeAsQOv+5DZMLYlEOQ2wP7mqwQSgg2+okCDnKE/a4
-   I3XUkWQDry53x804NsiUDY6/MNYkjEQ903vQXh9tXA+rm2/0kMCCDxZF5
-   N7SPMhCrATtxr0l11o08yo8MUJAAjQ2rfLAdy5yFhorcjxrwMn7dAVkWK
-   lo4H9YA4I2y1uVz8e7xNN9kbSEKV2vLKxyg/P3H+pLeFl4e1gFzNtsRr7
-   6iZ+a9bYx24BXo0c/RVQEpu9LTq8ul5devrVbMcTDtlTWqWyPnLXEehTk
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="366879697"
-X-IronPort-AV: E=Sophos;i="6.03,253,1694761200"; 
-   d="scan'208";a="366879697"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2023 05:55:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="709062075"
-X-IronPort-AV: E=Sophos;i="6.03,253,1694761200"; 
-   d="scan'208";a="709062075"
-Received: from ialvarez-mobl.ger.corp.intel.com (HELO localhost) ([10.252.33.120])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2023 05:55:00 -0700
-From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 1/1] x86/PCI: Name PCI BIOS error code & use FIELD_GET()
-Date:   Thu, 26 Oct 2023 15:54:52 +0300
-Message-Id: <20231026125453.25767-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
+        with ESMTP id S230413AbjJZNoi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Oct 2023 09:44:38 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D281BD;
+        Thu, 26 Oct 2023 06:44:33 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SGRm62t56z6K5sb;
+        Thu, 26 Oct 2023 21:41:42 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Thu, 26 Oct
+ 2023 14:44:30 +0100
+Date:   Thu, 26 Oct 2023 14:44:28 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Shuai Xue <xueshuai@linux.alibaba.com>
+CC:     Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Yicong Yang <yangyicong@huawei.com>,
+        <chengyou@linux.alibaba.com>, <kaishen@linux.alibaba.com>,
+        <baolin.wang@linux.alibaba.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <rdunlap@infradead.org>,
+        <mark.rutland@arm.com>, <zhuo.song@linux.alibaba.com>,
+        <renyu.zj@linux.alibaba.com>
+Subject: Re: [PATCH v9 3/4] drivers/perf: add DesignWare PCIe PMU driver
+Message-ID: <20231026144428.00005db8@Huawei.com>
+In-Reply-To: <5b695595-d243-4ea5-97bb-f4c74398fc27@linux.alibaba.com>
+References: <20231020134230.53342-1-xueshuai@linux.alibaba.com>
+        <20231020134230.53342-4-xueshuai@linux.alibaba.com>
+        <20231023123202.GA3515@willie-the-truck>
+        <cf72afb6-44c7-45f0-bfaa-6881f6782ebf@arm.com>
+        <5b695595-d243-4ea5-97bb-f4c74398fc27@linux.alibaba.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI BIOS returns error code in AH register when carry flag is set. The
-extraction of the error code is currently set of masking and shifting
-which makes the code harder to understand than it needs to be.
+On Tue, 24 Oct 2023 17:29:34 +0800
+Shuai Xue <xueshuai@linux.alibaba.com> wrote:
 
-Name the PCI BIOS error code with a define and use FIELD_GET() to
-access it to improve code readability.
+> + Will, Jonathan, Bjorn and Yicong for probe and hotplug handing.
+> 
+> On 2023/10/24 02:51, Robin Murphy wrote:
+> > On 2023-10-23 13:32, Will Deacon wrote:
+> > [...]  
+> >>> +
+> >>> +    /*
+> >>> +     * The Group#1 event measures the amount of data processed in 16-byte
+> >>> +     * units. Simplify the end-user interface by multiplying the counter
+> >>> +     * at the point of read.
+> >>> +     */
+> >>> +    if (event_id >= 0x20 && event_id <= 0x23)
+> >>> +        return (((u64)hi << 32) | lo) << 4;
+> >>> +    else
+> >>> +        return (((u64)hi << 32) | lo);  
+> >>
+> >> nit, but I think it would be clearer to do:
+> >>
+> >>     ret = ((u64)hi << 32) | lo;
+> >>
+> >>     /* ... */
+> >>     if (event_id >= 0x20 && event_id <= 0x23)
+> >>         ret <<= 4;  
+> > 
+> > Nit: "ret *= 16;" since the comment says it's multiplying a value, not moving a bitfield. The compiler already knows the most efficient way to implement constant multiplication.  
+> 
+> Cool, will use multiplication directly.
+> 
+> >   
+> >>
+> >>     return ret;
+> >>  
+> > [...]  
+> >>> +static int __init dwc_pcie_pmu_init(void)
+> >>> +{
+> >>> +    int ret;
+> >>> +
+> >>> +    ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
+> >>> +                      "perf/dwc_pcie_pmu:online",
+> >>> +                      dwc_pcie_pmu_online_cpu,
+> >>> +                      dwc_pcie_pmu_offline_cpu);
+> >>> +    if (ret < 0)
+> >>> +        return ret;
+> >>> +
+> >>> +    dwc_pcie_pmu_hp_state = ret;
+> >>> +
+> >>> +    ret = platform_driver_register(&dwc_pcie_pmu_driver);
+> >>> +    if (ret)
+> >>> +        goto platform_driver_register_err;
+> >>> +
+> >>> +    dwc_pcie_pmu_dev = platform_device_register_simple(
+> >>> +                "dwc_pcie_pmu", PLATFORM_DEVID_NONE, NULL, 0);
+> >>> +    if (IS_ERR(dwc_pcie_pmu_dev)) {
+> >>> +        ret = PTR_ERR(dwc_pcie_pmu_dev);
+> >>> +        goto platform_device_register_error;
+> >>> +    }  
+> >>
+> >> I'm a bit confused as to why you're having to create a platform device
+> >> for a PCI device -- is this because the main designware driver has already
+> >> bound to it? A comment here explaining why you need to do this would be
+> >> very helpful. In particular, is there any dependency on another driver
+> >> to make sure that e.g. config space accesses work properly? If so, we
+> >> probably need to enforce module load ordering or something like that.  
+> > 
+> > AFAICS the platform device/driver serve no purpose other than being a hilariously roundabout way to run the for_each_pci_dev() loop in dwc_pcie_pmu_probe() upon module init, and to save explicitly freeing the PMU name/data. Furthermore the devres action for dwc_pcie_pmu_remove_cpuhp_instance() is apparently going for even more style points at module exit by not even relying on the corresponding .remove callback of the tenuous platform driver to undo what its .probe did, but (ab)using the device's devres list to avoid having to keep track of an explicit list of PMU instances at all.  
+> 
+> You are right.
 
-In addition, rely on implicit cast to int and replace zero test
-with PCIBIOS_SUCCESSFUL.
+Also provides a (potential) parent for the PMU devices which is something
+we were trying to clean up for existing PMUs (which end up in the
+wrong directly in sysfs because they typically don't have parents).
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- arch/x86/pci/pcbios.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/pci/pcbios.c b/arch/x86/pci/pcbios.c
-index 4f15280732ed..0515e0c05e10 100644
---- a/arch/x86/pci/pcbios.c
-+++ b/arch/x86/pci/pcbios.c
-@@ -3,6 +3,8 @@
-  * BIOS32 and PCI BIOS handling.
-  */
- 
-+#include <linux/bits.h>
-+#include <linux/bitfield.h>
- #include <linux/pci.h>
- #include <linux/init.h>
- #include <linux/slab.h>
-@@ -29,6 +31,12 @@
- #define PCIBIOS_HW_TYPE1_SPEC		0x10
- #define PCIBIOS_HW_TYPE2_SPEC		0x20
- 
-+/*
-+ * Returned in EAX:
-+ * - AH: return code
-+ */
-+#define PCIBIOS_RETURN_CODE			GENMASK(15, 8)
-+
- int pcibios_enabled;
- 
- /* According to the BIOS specification at:
-@@ -154,7 +162,7 @@ static int __init check_pcibios(void)
- 			: "memory");
- 		local_irq_restore(flags);
- 
--		status = (eax >> 8) & 0xff;
-+		status = FIELD_GET(PCIBIOS_RETURN_CODE, eax);
- 		hw_mech = eax & 0xff;
- 		major_ver = (ebx >> 8) & 0xff;
- 		minor_ver = ebx & 0xff;
-@@ -227,7 +235,7 @@ static int pci_bios_read(unsigned int seg, unsigned int bus,
- 
- 	raw_spin_unlock_irqrestore(&pci_config_lock, flags);
- 
--	return (int)((result & 0xff00) >> 8);
-+	return FIELD_GET(PCIBIOS_RETURN_CODE, result);
- }
- 
- static int pci_bios_write(unsigned int seg, unsigned int bus,
-@@ -269,7 +277,7 @@ static int pci_bios_write(unsigned int seg, unsigned int bus,
- 
- 	raw_spin_unlock_irqrestore(&pci_config_lock, flags);
- 
--	return (int)((result & 0xff00) >> 8);
-+	return FIELD_GET(PCIBIOS_RETURN_CODE, result);
- }
- 
- 
-@@ -354,6 +362,7 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
- {
- 	struct irq_routing_options opt;
- 	struct irq_routing_table *rt = NULL;
-+	unsigned int error_code;
- 	int ret, map;
- 	unsigned long page;
- 
-@@ -385,8 +394,9 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
- 		  "m" (opt)
- 		: "memory");
- 	DBG("OK  ret=%d, size=%d, map=%x\n", ret, opt.size, map);
--	if (ret & 0xff00)
--		printk(KERN_ERR "PCI: Error %02x when fetching IRQ routing table.\n", (ret >> 8) & 0xff);
-+	error_code = FIELD_GET(PCIBIOS_RETURN_CODE, ret);
-+	if (error_code)
-+		printk(KERN_ERR "PCI: Error %02x when fetching IRQ routing table.\n", error_code);
- 	else if (opt.size) {
- 		rt = kmalloc(sizeof(struct irq_routing_table) + opt.size, GFP_KERNEL);
- 		if (rt) {
-@@ -415,7 +425,7 @@ int pcibios_set_irq_routing(struct pci_dev *dev, int pin, int irq)
- 		  "b" ((dev->bus->number << 8) | dev->devfn),
- 		  "c" ((irq << 8) | (pin + 10)),
- 		  "S" (&pci_indirect));
--	return !(ret & 0xff00);
-+	return FIELD_GET(PCIBIOS_RETURN_CODE, ret) == PCIBIOS_SUCCESSFUL;
- }
- EXPORT_SYMBOL(pcibios_set_irq_routing);
- 
--- 
-2.30.2
+> 
+> > 
+> > Frankly I think it would be a lot more straightforward to just maintain that explicit list of PMU instances, do the PMU creation directly in dwc_pcie_pmu_init(), then unregister and free them in dwc_pcie_pmu_exit(). Not every driver has to contain a literal struct device_driver.  
+> 
+> Agreed, it might be more straightforward. But personally speaking, I prefer
+> current implementation.
+> 
+>     - standard driver creation / probe flow is more normal
+>     - it avoid maintaining list of PMU instances
+>     - IMHO, both of them are temporary solution, if PCI core addes a
+>       standard mechanism to discover and enbale PCIe VSEC/DVSEC capability,
+>       the driver will use the standard way.
+> 
+> 
+> > 
+> > It also smells a bit odd that it handles PCI hot-remove but not hot-add - if the underlying device really is hotpluggable, wouldn't we also want to handle new ones turning up after module load? Conversely if it isn't, why pretend to handle it being removed? Even if it's not to do with physical hotplug of the PMU but with the user unloading the PCI controller driver itself (since there's no module/driver-level dependency enforced) and thus tearing down the whole PCI bus, then the same point still applies - if that *can* happen, then what if the user then re-loads it again, or indeed if this module loads first to begin with; wouldn't we want to be able to (re-)discover the PMUs rather than leave the whole PMU driver degraded to a useless state?
+> >   
+> 
+> I see you point, there are three casees:
+> 1. hot-remove PCI root port firstly and then load the PMU module, the PMU
+> of the removed PCI device will not be registered.
+> 
+> I think it is the expected behavior.
+> 
+> 2. load the PMU module firstly and then hot-remove PCI root port, the PMU
+> of the removed PCI device will be unregistered.
+> 
+> it is what the dwc_pcie_pmu_unregister_nb() does upon BUS_NOTIFY_DEL_DEVICE
+> 
+> 3. load the PMU module firstly, hot-remove PCI root port, and then hot-plug
+> the PCI root port the PMU of the hot-pluged device will not load again by
+> current design upon BUS_NOTIFY_DEL_DEVICE.
+> 
+> I guess it is the really problem. It can be workaround be reload the PMU
+> module. It has been a bit complex around how the following interact:
+> 
+>     - Driver loading/unloading
+>     - CPU hotplug events
+>     - PCI device add/del events
+> 
+> We can also add action for BUS_NOTIFY_ADD_DEVICE to address the problem,
+> 
+>     - scan all PCI device
+>      - check RAS_DES cap
+>      - check cached PMU node
+>      - registers its PMU
+> 
+> But I prefer leave as it is, just as x86 does in uncore_bus_notify().
+> Certainly, if the community deems it necessary to implement
+> BUS_NOTIFY_ADD_DEVICE action, I also would like to extend it.
+> 
 
