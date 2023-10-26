@@ -2,154 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD8D47D870B
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Oct 2023 18:52:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2442F7D8720
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Oct 2023 19:03:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229815AbjJZQwr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Oct 2023 12:52:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51030 "EHLO
+        id S230116AbjJZRDh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Oct 2023 13:03:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230340AbjJZQwq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Oct 2023 12:52:46 -0400
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2047.outbound.protection.outlook.com [40.107.6.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA85D187;
-        Thu, 26 Oct 2023 09:52:43 -0700 (PDT)
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=pass;
- b=EMURaodG8TIP5xt3zgtcq2y+xtz61hpJIVhfsSzXUbnZ5RWjC0w20P5c2YSDOGG/qurGXAks3x0U9QPt3B4bH09djE/biXkkEPetopAyYTLnfWq0vbkfgy6y6TrEH60eYcUW4mf0moiR4ZJUUR0+NvwP+8UDb/RDjDxbMypfjvcXfwxlqJjne8NvNdS/tahCtoa1ZPuM1InS05zv2ZvVKLpdQ6aAbMSuBAkRzQ61ATwBSe92SH8CA4j6LE7i7wD0QYnUF8n1Ar9gKjq6SyePZY348i2umBPZox/g/uRD0l/KIyddBAtQOeT8EixALAy8Ds5uJuPT49PXXVLpUPaYkw==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jOwv4sv50j5Hgjt8vw9pbb+/URwkgpeNnV4GthI7stA=;
- b=imfGFbl9zKBACmlD0Oatj4gzlyusFmgXjSpNB+Vu2a6P17EdwCQnsUKNG63QwaUz+KVEXvflw4YOMIhCMNxJ9xmsEXPqQs4rarw2k2ch/i6VdFKlzo6uFBkoiBtNGxqxYeuVqzaOMcHTYxnd0ooXJuzxyvH/MIpgTTOdAg6xie6hdvV2kcekofRL/MKGmHAl2JTwZTuo2YC2Oe7VcYWNzHNRVwznEnvzuAiZZG/uzP67rHogeFV9pncjF0tSRJ1gq1KKD3/VaxxkkTaPwLhsYJlsq/h7D4t6/SzAgilUtrIBrAzv1KDxlvGv3zbPN/pt05bLx2hvj+31hV9VDX6imA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 63.35.35.123) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=armh.onmicrosoft.com; arc=pass (0
- oda=1 ltdi=1 spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jOwv4sv50j5Hgjt8vw9pbb+/URwkgpeNnV4GthI7stA=;
- b=oyI1TOC78PcWkAKddyuwXHS/hwPOcB9LZycON0M1CQmVCCeAU5E8zUShTWjC5kmLaE5GwJnUrDbYsYV2I3+WSzTS4MDQxRYtvtPIfFaeygVncCTPj/mGMKywBJELCk88Sk4aCFCodcz0t/qxhx8Vzc6FWEaNmyAZmWI8kcUKjC0=
-Received: from AS9PR06CA0461.eurprd06.prod.outlook.com (2603:10a6:20b:49a::12)
- by PAXPR08MB7492.eurprd08.prod.outlook.com (2603:10a6:102:2b5::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.33; Thu, 26 Oct
- 2023 16:52:40 +0000
-Received: from AMS0EPF0000019E.eurprd05.prod.outlook.com
- (2603:10a6:20b:49a:cafe::23) by AS9PR06CA0461.outlook.office365.com
- (2603:10a6:20b:49a::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.34 via Frontend
- Transport; Thu, 26 Oct 2023 16:52:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
- pr=C
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AMS0EPF0000019E.mail.protection.outlook.com (10.167.16.250) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6933.15 via Frontend Transport; Thu, 26 Oct 2023 16:52:39 +0000
-Received: ("Tessian outbound 7671e7ddc218:v228"); Thu, 26 Oct 2023 16:52:38 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 96b21924e1c907d4
-X-CR-MTA-TID: 64aa7808
-Received: from cff91a715612.1
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 9C90C98F-D5B3-40D2-A4AE-906ACE17A83E.1;
-        Thu, 26 Oct 2023 16:52:32 +0000
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id cff91a715612.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 26 Oct 2023 16:52:32 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mIfx4Teix/eamyDY6Fiz1kr1pTVoKi9A0vt3mLLjy1l3qxDY+0/RxckqhGRPLaKUUXjBq0wSuZu+W09XQdKcFU0qGpncDrr5B5PobvT1I1qXvQgS1QNFrTxB89OrirZqUCWszinD0lG91BOUchM2w77En+aZWx6r4aVDsRfSZvolxjreS/LQsgCuJQQzYEKtrYNAj0CqBSLK9ybG8Rh3jnQClkdeoAl00tJjdkz0OIVJdIqdaeHcAyB+W2ijOZZfTFSsn9tIxntJ0gYmPS6lREGiaXLRCt5MkIWi0gXN3dpnebzm9zgbYe/fREiMHB7WZNsgFA87eRhXB1hOBr47tA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jOwv4sv50j5Hgjt8vw9pbb+/URwkgpeNnV4GthI7stA=;
- b=nmjQMmCEA+V6pLVRDn88WFOuQjPV7qUWmtWkNTASwC5aqkmttO9B4jzz/LqUDUyOxToGIPvX5v1KfCEZYrpd1ZLBGd2+pRh9PaPLEJo4soFhEA+Iv0uqnMbkKTVATcCRMpRhvXdBkIRsiS7JNixLfy22U8stSArgWZFn6eRPVXqupjoMuEnorYXDvkOJf5v7cW7BdN/ZYbRc1SYmnV8SO6YieFsuLCeA4ozDurBIz7+893M6cH7LV8BG9QX9dxF2nFEn9D0asABHdfW60Gi0RnQQneJZQLNVPd6j9vKXEanunC4zn3m00ODuofJMqn8mNaG3jhCP7e7CG4EmlqGDFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jOwv4sv50j5Hgjt8vw9pbb+/URwkgpeNnV4GthI7stA=;
- b=oyI1TOC78PcWkAKddyuwXHS/hwPOcB9LZycON0M1CQmVCCeAU5E8zUShTWjC5kmLaE5GwJnUrDbYsYV2I3+WSzTS4MDQxRYtvtPIfFaeygVncCTPj/mGMKywBJELCk88Sk4aCFCodcz0t/qxhx8Vzc6FWEaNmyAZmWI8kcUKjC0=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from DB9PR08MB6650.eurprd08.prod.outlook.com (2603:10a6:10:26d::23)
- by DB4PR08MB8104.eurprd08.prod.outlook.com (2603:10a6:10:384::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.31; Thu, 26 Oct
- 2023 16:52:28 +0000
-Received: from DB9PR08MB6650.eurprd08.prod.outlook.com
- ([fe80::4b11:196a:114e:55ff]) by DB9PR08MB6650.eurprd08.prod.outlook.com
- ([fe80::4b11:196a:114e:55ff%4]) with mapi id 15.20.6933.022; Thu, 26 Oct 2023
- 16:52:27 +0000
-Message-ID: <8f8a2e42-f6ed-4328-9457-5f986d761224@arm.com>
-Date:   Thu, 26 Oct 2023 17:52:20 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 3/4] drivers/perf: add DesignWare PCIe PMU driver
-Content-Language: en-GB
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     Will Deacon <will@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-        Yicong Yang <yangyicong@huawei.com>,
-        chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
-        baolin.wang@linux.alibaba.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        rdunlap@infradead.org, mark.rutland@arm.com,
-        zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
-References: <20231020134230.53342-1-xueshuai@linux.alibaba.com>
- <20231020134230.53342-4-xueshuai@linux.alibaba.com>
- <20231023123202.GA3515@willie-the-truck>
- <cf72afb6-44c7-45f0-bfaa-6881f6782ebf@arm.com>
- <5b695595-d243-4ea5-97bb-f4c74398fc27@linux.alibaba.com>
- <20231026144428.00005db8@Huawei.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20231026144428.00005db8@Huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P123CA0024.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:a6::36) To DB9PR08MB6650.eurprd08.prod.outlook.com
- (2603:10a6:10:26d::23)
+        with ESMTP id S229668AbjJZRDh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Oct 2023 13:03:37 -0400
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEA09194;
+        Thu, 26 Oct 2023 10:03:34 -0700 (PDT)
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.2.0)
+ id 60db24a9da3562ba; Thu, 26 Oct 2023 19:03:31 +0200
+Received: from kreacher.localnet (unknown [195.136.19.94])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by cloudserver094114.home.pl (Postfix) with ESMTPSA id 5F8546673F2;
+        Thu, 26 Oct 2023 19:03:31 +0200 (CEST)
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH 1/4] PCI: Make d3cold_allowed sysfs attribute read only
+Date:   Thu, 26 Oct 2023 19:03:31 +0200
+Message-ID: <2717722.mvXUDI8C0e@kreacher>
+In-Reply-To: <20231025020546.504-2-mario.limonciello@amd.com>
+References: <20231025020546.504-1-mario.limonciello@amd.com> <20231025020546.504-2-mario.limonciello@amd.com>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic: DB9PR08MB6650:EE_|DB4PR08MB8104:EE_|AMS0EPF0000019E:EE_|PAXPR08MB7492:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5d835977-77fd-4ee9-3a38-08dbd643f695
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: aUMWRlZ5sQmQqTrvZQJmUBfRZ+3apZJSvP8RRwqBlJRIlo19Vrr3ppy0Hwp8aj6K14Wib91cVDgdgpIQcEIpFKk5ZJ0YKNU3pYslz0maodx+ezF88B9WibFT8O5R6JtbWOIUGWpzjPgG6oEnm7K5A1KfntgYAONGKVRkULTb1url5zSCPRLrZUpikzc7YZuZTIBJ98yJuLLW5D3VuVroCqBAks9JxgI73u11WNggfeDLWq9c5/uVUpaQtQxMC/lkguhpqJ56zyBorYKP+McyCOlpKOFBWghThIha0XO5ylMPSI3k5UmVBaRZCjBYyLqiudA4hnvGSlmiFVJB5OfSWK9xadB+F9VUrYLgCYu+tlWEDWnYNkcjkLr572M42QGAf5OAUy5gf2HW/TKCZUa0wdjd2+tSB/QHyTbv44eGEFljw/xQQmLUQFljWk+eQ4IGgwnSTBzLACFnwM1sGz+OJjf/Hl7hVa/dQ9IiuXF76CRJgArA409DRJdlEdFoPf0DgPFS++7//OJiZciAWcxKIf2V0HSbMCmeiYwyYDGiA3k9D9qphTwphgTdacehC6U8RB5hVvE7vp2Vsocy71wD9i4JC/Ot4Hd+bYOehe4H2WlLTcf9HiUEwJ3gf1midSf+MmoXr5+ikR0L6rimT3uq6Q==
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR08MB6650.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(396003)(366004)(376002)(136003)(230922051799003)(451199024)(186009)(1800799009)(64100799003)(2616005)(38100700002)(6512007)(6506007)(53546011)(8936002)(41300700001)(83380400001)(26005)(478600001)(4326008)(6486002)(44832011)(4001150100001)(7416002)(66946007)(66476007)(110136005)(54906003)(316002)(66556008)(8676002)(5660300002)(36756003)(31696002)(86362001)(31686004)(6666004)(2906002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB4PR08MB8104
-Original-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: AMS0EPF0000019E.eurprd05.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 04d58bb7-c8bc-4be3-d65c-08dbd643ef31
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QvoVajAucjru+FBp9WnXzWGLyJEwun2LstMbJIooouP6rfSW6HO5wIyK61JNXKQzLblSqtB2iTQb2D0YUxKvjQbc67NuQT9ZLzvqbahvrlebY0ZEKK2RIauykHZc8xTHXm1wtOpWDO3RFDoLxdSyFELH1DRdAaTn7j4FquxeOS6ZPa/NdDm+tJReYKArYuGfPSoYk+FaFkCueQFOrOU1EIBEZPJoF7t/89l8L7nxT/zDCi3+MabVdalWyNYaTH6RzX8wPhdFSuJwnB+7Ci1gOuIR53hSe3IoyMcNDc9+2/lR+3z02j3aUu5dVQFoNmwuN3Fx9HCSLGiOYFX7won5LM4gKuDB82gBa88zlmVytEROvNaj62IWkV/Df1gE/k44CdZufQ52o4CjcM7YRMsbiPmNJSm/6xrawTXGSmqXzy9c1kHEXa18+vX3TEwNoFJUKx0cqmvcH0/Havx1GwQm1NM00M6WOs2KPeBf6/2inQF/52qmb9huWENGrcX2bZgDQMsOMweZbLmtKv2TlTL22b5e8T7H+rMTPh2q2kBMRHxzq/Cvwx5YBtlyTtQU8/UxamPkOtwsr3Yv+ZhrZ4/T9Vfmp1GoptX2ojzwDEfBFTRFX5pouvT4eNcBSz39+pyGTlYF2usdA6wz1yAK1Ku9KmPRvTnZnSSyUIBrkNndKlAIBgV2ZTDE+dNp/Q1dClpQKcfS/L96tvr/P5imcCUOBhJrrT0HleThlOe//myVKE/7PrJZIgD6/vDB8M1YzJqILj7fFkF6mYtnXDu5XXwtAA==
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(13230031)(4636009)(136003)(396003)(346002)(376002)(39860400002)(230922051799003)(1800799009)(451199024)(186009)(64100799003)(82310400011)(36840700001)(46966006)(40470700004)(31686004)(40460700003)(26005)(47076005)(2906002)(8676002)(36860700001)(4326008)(44832011)(83380400001)(53546011)(6506007)(36756003)(6512007)(5660300002)(2616005)(6666004)(8936002)(107886003)(6486002)(41300700001)(40480700001)(86362001)(336012)(4001150100001)(110136005)(356005)(31696002)(54906003)(82740400003)(70206006)(478600001)(70586007)(316002)(81166007)(450100002)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2023 16:52:39.0247
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d835977-77fd-4ee9-3a38-08dbd643f695
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource: AMS0EPF0000019E.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR08MB7492
-X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,FORGED_SPF_HELO,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_NONE,UNPARSEABLE_RELAY autolearn=no
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvkedrledvgddutdekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepfeduudeutdeugfelffduieegiedtueefledvjeegffdttefhhffhtefhleejgfetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopedutddprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghm
+ ugdrtghomhdprhgtphhtthhopefuhhihrghmqdhsuhhnuggrrhdrufdqkhesrghmugdrtghomhdprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-DCC--Metrics: v370.home.net.pl 1024; Body=10 Fuz1=10 Fuz2=10
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -157,84 +58,137 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 26/10/2023 2:44 pm, Jonathan Cameron wrote:
-> On Tue, 24 Oct 2023 17:29:34 +0800
-> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+On Wednesday, October 25, 2023 4:05:43 AM CEST Mario Limonciello wrote:
+> Before kernel 3.6 D3cold was considered "opt-in" for PCIe devices.
+> Userspace was able to opt PCIe devices into d3cold support by using
+> the `d3cold_allowed` sysfs attribute. The policy changed to default
+> to enabled with commit 4f9c1397e2e8 ("PCI/PM: Enable D3/D3cold by
+> default for most devices").  The sysfs file remains however and
+> can potentially allow userspace to prevent the SoC from getting into
+> the deepest sleep state on modern systems.
 > 
->> + Will, Jonathan, Bjorn and Yicong for probe and hotplug handing.
->>
->> On 2023/10/24 02:51, Robin Murphy wrote:
->>> On 2023-10-23 13:32, Will Deacon wrote:
->>> [...]
->>>>> +
->>>>> +    /*
->>>>> +     * The Group#1 event measures the amount of data processed in 16-byte
->>>>> +     * units. Simplify the end-user interface by multiplying the counter
->>>>> +     * at the point of read.
->>>>> +     */
->>>>> +    if (event_id >= 0x20 && event_id <= 0x23)
->>>>> +        return (((u64)hi << 32) | lo) << 4;
->>>>> +    else
->>>>> +        return (((u64)hi << 32) | lo);
->>>>
->>>> nit, but I think it would be clearer to do:
->>>>
->>>>      ret = ((u64)hi << 32) | lo;
->>>>
->>>>      /* ... */
->>>>      if (event_id >= 0x20 && event_id <= 0x23)
->>>>          ret <<= 4;
->>>
->>> Nit: "ret *= 16;" since the comment says it's multiplying a value, not moving a bitfield. The compiler already knows the most efficient way to implement constant multiplication.
->>
->> Cool, will use multiplication directly.
->>
->>>    
->>>>
->>>>      return ret;
->>>>   
->>> [...]
->>>>> +static int __init dwc_pcie_pmu_init(void)
->>>>> +{
->>>>> +    int ret;
->>>>> +
->>>>> +    ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
->>>>> +                      "perf/dwc_pcie_pmu:online",
->>>>> +                      dwc_pcie_pmu_online_cpu,
->>>>> +                      dwc_pcie_pmu_offline_cpu);
->>>>> +    if (ret < 0)
->>>>> +        return ret;
->>>>> +
->>>>> +    dwc_pcie_pmu_hp_state = ret;
->>>>> +
->>>>> +    ret = platform_driver_register(&dwc_pcie_pmu_driver);
->>>>> +    if (ret)
->>>>> +        goto platform_driver_register_err;
->>>>> +
->>>>> +    dwc_pcie_pmu_dev = platform_device_register_simple(
->>>>> +                "dwc_pcie_pmu", PLATFORM_DEVID_NONE, NULL, 0);
->>>>> +    if (IS_ERR(dwc_pcie_pmu_dev)) {
->>>>> +        ret = PTR_ERR(dwc_pcie_pmu_dev);
->>>>> +        goto platform_device_register_error;
->>>>> +    }
->>>>
->>>> I'm a bit confused as to why you're having to create a platform device
->>>> for a PCI device -- is this because the main designware driver has already
->>>> bound to it? A comment here explaining why you need to do this would be
->>>> very helpful. In particular, is there any dependency on another driver
->>>> to make sure that e.g. config space accesses work properly? If so, we
->>>> probably need to enforce module load ordering or something like that.
->>>
->>> AFAICS the platform device/driver serve no purpose other than being a hilariously roundabout way to run the for_each_pci_dev() loop in dwc_pcie_pmu_probe() upon module init, and to save explicitly freeing the PMU name/data. Furthermore the devres action for dwc_pcie_pmu_remove_cpuhp_instance() is apparently going for even more style points at module exit by not even relying on the corresponding .remove callback of the tenuous platform driver to undo what its .probe did, but (ab)using the device's devres list to avoid having to keep track of an explicit list of PMU instances at all.
->>
->> You are right.
+> For debugging purposes `pcie_port_pm=` can be used to control whether
+> a PCI port will go into D3cold and runtime PM can be turned off by
+> `/sys/bus/pci/devices/*/power/control` on PCI end points.
 > 
-> Also provides a (potential) parent for the PMU devices which is something
-> we were trying to clean up for existing PMUs (which end up in the
-> wrong directly in sysfs because they typically don't have parents).
+> Change the sysfs attribute to a noop that ignores the input when written
+> and shows a warning. Simplify the internal kernel logic to drop
+> `d3cold_allowed`.
+> 
+> Link: https://lore.kernel.org/linux-pci/20230918132424.GA11357@wunner.de/
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Surely the relevant PCI device would be an even more appropriate parent, 
-though, since that's the true topology?
+I'm not aware of anyone using this sysfs i/f in practice, so
 
-Thanks,
-Robin.
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+
+> ---
+> Changes from previous submission:
+>  * Update commit message
+>  * Roll into series for D3 related handling
+> ---
+>  Documentation/ABI/testing/sysfs-bus-pci |  4 ++--
+>  drivers/pci/pci-acpi.c                  |  2 +-
+>  drivers/pci/pci-sysfs.c                 | 14 ++------------
+>  drivers/pci/pci.c                       |  3 +--
+>  include/linux/pci.h                     |  1 -
+>  5 files changed, 6 insertions(+), 18 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> index ecf47559f495..b5db141dfee6 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> @@ -283,8 +283,8 @@ Description:
+>  		device will never be put into D3Cold state.  If it is set, the
+>  		device may be put into D3Cold state if other requirements are
+>  		satisfied too.  Reading this attribute will show the current
+> -		value of d3cold_allowed bit.  Writing this attribute will set
+> -		the value of d3cold_allowed bit.
+> +		value of no_d3cold bit.
+> +		Writing to this attribute is deprecated and will do nothing.
+>  
+>  What:		/sys/bus/pci/devices/.../sriov_totalvfs
+>  Date:		November 2012
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index 05b7357bd258..a05350a4e49c 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -911,7 +911,7 @@ pci_power_t acpi_pci_choose_state(struct pci_dev *pdev)
+>  {
+>  	int acpi_state, d_max;
+>  
+> -	if (pdev->no_d3cold || !pdev->d3cold_allowed)
+> +	if (pdev->no_d3cold)
+>  		d_max = ACPI_STATE_D3_HOT;
+>  	else
+>  		d_max = ACPI_STATE_D3_COLD;
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 5e741a05cf2c..52ed5a55a371 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -523,17 +523,7 @@ static ssize_t d3cold_allowed_store(struct device *dev,
+>  				    struct device_attribute *attr,
+>  				    const char *buf, size_t count)
+>  {
+> -	struct pci_dev *pdev = to_pci_dev(dev);
+> -	unsigned long val;
+> -
+> -	if (kstrtoul(buf, 0, &val) < 0)
+> -		return -EINVAL;
+> -
+> -	pdev->d3cold_allowed = !!val;
+> -	pci_bridge_d3_update(pdev);
+> -
+> -	pm_runtime_resume(dev);
+> -
+> +	dev_warn_once(dev, "pci: writing to d3cold_allowed is deprecated\n");
+>  	return count;
+>  }
+>  
+> @@ -541,7 +531,7 @@ static ssize_t d3cold_allowed_show(struct device *dev,
+>  				   struct device_attribute *attr, char *buf)
+>  {
+>  	struct pci_dev *pdev = to_pci_dev(dev);
+> -	return sysfs_emit(buf, "%u\n", pdev->d3cold_allowed);
+> +	return sysfs_emit(buf, "%u\n", !pdev->no_d3cold);
+>  }
+>  static DEVICE_ATTR_RW(d3cold_allowed);
+>  #endif
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 59c01d68c6d5..8c5a6f68f63d 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3067,7 +3067,7 @@ static int pci_dev_check_d3cold(struct pci_dev *dev, void *data)
+>  	bool *d3cold_ok = data;
+>  
+>  	if (/* The device needs to be allowed to go D3cold ... */
+> -	    dev->no_d3cold || !dev->d3cold_allowed ||
+> +	    dev->no_d3cold ||
+>  
+>  	    /* ... and if it is wakeup capable to do so from D3cold. */
+>  	    (device_may_wakeup(&dev->dev) &&
+> @@ -3204,7 +3204,6 @@ void pci_pm_init(struct pci_dev *dev)
+>  	dev->d3hot_delay = PCI_PM_D3HOT_WAIT;
+>  	dev->d3cold_delay = PCI_PM_D3COLD_WAIT;
+>  	dev->bridge_d3 = pci_bridge_d3_possible(dev);
+> -	dev->d3cold_allowed = true;
+>  
+>  	dev->d1_support = false;
+>  	dev->d2_support = false;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 8c7c2c3c6c65..5f4ed71d31f5 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -376,7 +376,6 @@ struct pci_dev {
+>  	unsigned int	no_d1d2:1;	/* D1 and D2 are forbidden */
+>  	unsigned int	no_d3cold:1;	/* D3cold is forbidden */
+>  	unsigned int	bridge_d3:1;	/* Allow D3 for bridge */
+> -	unsigned int	d3cold_allowed:1;	/* D3cold is allowed by user */
+>  	unsigned int	mmio_always_on:1;	/* Disallow turning off io/mem
+>  						   decoding during BAR sizing */
+>  	unsigned int	wakeup_prepared:1;
+> 
+
+
+
+
