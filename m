@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 575E17D9C3F
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 16:55:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDEF97D9C46
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 16:55:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345974AbjJ0Oz1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Oct 2023 10:55:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39864 "EHLO
+        id S1346124AbjJ0Ozt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Oct 2023 10:55:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345833AbjJ0Oz0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 10:55:26 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B76FF18F;
-        Fri, 27 Oct 2023 07:55:23 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-507d1cc0538so3006190e87.2;
-        Fri, 27 Oct 2023 07:55:23 -0700 (PDT)
+        with ESMTP id S1345833AbjJ0Ozs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 10:55:48 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE1FD116;
+        Fri, 27 Oct 2023 07:55:45 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-507cd62472dso3759189e87.0;
+        Fri, 27 Oct 2023 07:55:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698418522; x=1699023322;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:dkim-signature:dkim-signature:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=96q2m+4Ifyz64+2ug+CpD5T9xkfpfc0ZrC+g4yfpz0Q=;
-        b=a9Xd3cXC4A8un+PwMwB9/632NvYpf5RPS7qi4A7TbRWXkykSvMMmMk4f3IQgPDiHdI
-         9eWOtEkxKJo8PX73rrzWC+WoxNCyG1cNeXlc4g2h1SlAWl2A6/0slPpl0f0UNL3iSfSn
-         Jg9jD+QQXvO4f/03VhNoNqZwO1YdX46dHj3cB+DGQJkbOMVvEQMED1puG8KwksuddeAv
-         VMt1T5eqco1RJcgas9JM8V5GJrEJaMAbr1m54HNUkFcoTKEHtxNZEkzmXV0qyKhprXRm
-         lcFLQZtR/8KGmVXo3Up54EDxg3iQQ0p6kPsKzjeUmC/bNM0mj1MavIN0GSIzWhE3+hif
-         dyKg==
-X-Gm-Message-State: AOJu0YwfrW8CW4EIMMfKJWmUDytFcy+vTvzsyH9caSjn+vNddU2pFAsb
-        jZXmVWnyw6uP7wWtOSXBxHhnLz1DQ/8xdw==
-X-Google-Smtp-Source: AGHT+IGTboKD9jMb7/hBmso6C/UneNnywnRJgshy+qZSsrD9DLKmDD8KZOGjyTNRaEtp6KbviSZsHw==
-X-Received: by 2002:a05:6512:1cf:b0:505:7113:1d0f with SMTP id f15-20020a05651201cf00b0050571131d0fmr1832796lfp.13.1698418521865;
-        Fri, 27 Oct 2023 07:55:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1698418544; x=1699023344;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:dkim-signature:dkim-signature
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7fk2PnC+TBXg3FG5uJDTBRvnx6bVdktN6rmeNod/FIs=;
+        b=QzCYuv2TwkxM7clcglCr4DRUFkEwAxK+CZFBpquoYlAXzCiI+kPgfHZXN7mJ9S2mUb
+         eBZBWOF/zBQzsCHNakk16/htkAkJg+UbJK3tAX0dxeX0568aB7KJ5amDZSXzCPXxtw5a
+         UVvc2NIm58T9ahdRQIA9s8gpDAZJWWJqJtrCmRbAxxXkJS84zyup6beQc+s7wKd61FvS
+         hUyx352CAHsfB+ljrzWnC0+W/+J8N4+WnexdhvnxQyffFqNuRxSsR/lzYXjNqsPnEF+W
+         WiT4h5AtfNysCZMFRaYuQ/LvCLcc6PjURD8cALqzCVLbCEUDhaGICvaODc86KEtBXqnj
+         GzOA==
+X-Gm-Message-State: AOJu0Yw0ZU7bgPe1AB442eeGyKRu+W9f+8zHsn+R/XD6LNUzF7AfpK2k
+        x367HQ0znf43WIVsRXc/Zou0bTxuM8kDsw==
+X-Google-Smtp-Source: AGHT+IEzYYjoPF/6u4zI82c8ko/ojtz2kNpjhMJso4ftmQSSFtWDbmIVYrjwdVIHeaM3qjUdCwaFuQ==
+X-Received: by 2002:ac2:55a3:0:b0:4fe:8ba8:1a8b with SMTP id y3-20020ac255a3000000b004fe8ba81a8bmr1052313lfg.7.1698418543885;
+        Fri, 27 Oct 2023 07:55:43 -0700 (PDT)
 Received: from flawful.org (c-f5f0e255.011-101-6d6c6d3.bbcust.telenor.se. [85.226.240.245])
-        by smtp.gmail.com with ESMTPSA id f27-20020ac251bb000000b004fce9e8c390sm300568lfk.63.2023.10.27.07.55.21
+        by smtp.gmail.com with ESMTPSA id o6-20020ac24bc6000000b004fe333128c0sm300212lfq.242.2023.10.27.07.55.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Oct 2023 07:55:21 -0700 (PDT)
+        Fri, 27 Oct 2023 07:55:43 -0700 (PDT)
 Received: by flawful.org (Postfix, from userid 112)
-        id 9D4A91C9C; Fri, 27 Oct 2023 16:55:20 +0200 (CEST)
+        id B5F3C1C26; Fri, 27 Oct 2023 16:55:42 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
-        t=1698418520; bh=XYooW2tHRjOShIGkDb+fj10MVq3/bsytYnpauhlZIqY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=J1xjYv40kbD+W+ttDfblGQyAdquc0NwFIqEDly6iGANmKuRC0PbRUytvJ+yIFr06J
-         aR9uzf3PTvKC2PpY86MTywOHb1qdPmlBQ0LkO/ZQlGkCBNU9QI4AFmMGeOmj6uXZpo
-         bQxnsAsXp71lwT83/SOVGy/7NwaApU+klyX/WEaI=
+        t=1698418542; bh=g4psYLhd5gjSDxalQeXnhs04zLy+rcfPqBl/V56L60w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DEx2iwkNn8j4yjDgWg5PEk9I4OQ62OlL3McQ3iPK8ucrtcyVaCZA++BBuxS241afk
+         +tvmgLjXUWJ6OXYbF3gyIB/rIj84bQQSzOj4CVgtZ7aBBzPkBjc4ETDYQ+6EPVzKGQ
+         bPalcZx0e6voSp0n05nQrxDHN2jkjA1h+WlXXTRg=
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 X-Spam-Level: 
@@ -56,37 +56,37 @@ Received: from x1-carbon.lan (OpenWrt.lan [192.168.1.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by flawful.org (Postfix) with ESMTPSA id 845F119B2;
-        Fri, 27 Oct 2023 16:54:38 +0200 (CEST)
+        by flawful.org (Postfix) with ESMTPSA id B8F4819B4;
+        Fri, 27 Oct 2023 16:54:42 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
-        t=1698418482; bh=XYooW2tHRjOShIGkDb+fj10MVq3/bsytYnpauhlZIqY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=udVsIis1vxBWe+//VugcXqyHpywZBrG1PIQ4pKYAWuOb/PK7v+gXTvqIrhYA5jeg/
-         0v+ik5Wg7d3nJj/Ot1HPEcFTokk2wqCUX4pgVGbVdYzWFWh3kCX1AraDPF/o3qadm1
-         R+k0MAx6nYXCVIgvY4rL0+U8C32vQspG/qgcPFH4=
+        t=1698418483; bh=g4psYLhd5gjSDxalQeXnhs04zLy+rcfPqBl/V56L60w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dJK2mPL3V6sdIvNI/8DzoQ280DicAiz1ybel49xaOYVGgm6vBjEdDOWnRjbKka3nz
+         EkDfVMmAR3cmtD7f5jPiP57R+PNU1yz622gZcqfvf+va0GyrCfeXMUAAGC1GVh8gqx
+         1aG4v1d+RsD45OVZG8fOitBzKkLetiJaLXncEfm0=
 From:   Niklas Cassel <nks@flawful.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
         Heiko Stuebner <heiko@sntech.de>,
         Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Jagan Teki <jagan@edgeble.ai>,
-        Kever Yang <kever.yang@rock-chips.com>
+        Simon Xue <xxm@rock-chips.com>
 Cc:     Damien Le Moal <dlemoal@kernel.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Serge Semin <fancer.lancer@gmail.com>,
         Niklas Cassel <niklas.cassel@wdc.com>,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org
-Subject: [PATCH v3 0/6] rockchip DWC PCIe improvements
-Date:   Fri, 27 Oct 2023 16:54:12 +0200
-Message-ID: <20231027145422.40265-1-nks@flawful.org>
+Subject: [PATCH v3 1/6] dt-bindings: PCI: dwc: rockchip: Add mandatory atu reg
+Date:   Fri, 27 Oct 2023 16:54:13 +0200
+Message-ID: <20231027145422.40265-2-nks@flawful.org>
 X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20231027145422.40265-1-nks@flawful.org>
+References: <20231027145422.40265-1-nks@flawful.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -95,48 +95,61 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Niklas Cassel <niklas.cassel@wdc.com>
 
-Hello,
+Even though rockchip-dw-pcie.yaml inherits snps,dw-pcie.yaml
+using:
 
-This series adds the iATU region to all rockchip DWC PCIe compatibles,
-such that the driver can properly runtime detect all inbound iATU and
-outbound iATUs. (The actual number of inbound/outbound iATUs differ,
-but can be up to 16 inbound iATUs and 16 outbound iATUs.)
+allOf:
+  - $ref: /schemas/pci/snps,dw-pcie.yaml#
 
-It also adds the interrupts for the eDMA on rk3588, such that the embedded
-DMA controller is properly detected, and can be used to offload data
-transfers.
+and snps,dw-pcie.yaml does have the atu reg defined, in order to be
+able to use this reg, while still making sure 'make CHECK_DTBS=y'
+pass, we need to add this reg to rockchip-dw-pcie.yaml.
 
-We also remove unused device tree properties num-ib-windows/num-ob-windows
-that are unsed by the code. (Instead the driver depends on the iATU region
-being specified in the device tree.)
+All compatible strings (rockchip,rk3568-pcie and rockchip,rk3588-pcie)
+should have this reg.
 
+The regs in the example are updated to actually match pcie3x2 on rk3568.
 
-Changes since v2:
--Added patch to drop unused properties num-{ib,ob}-windows.
--Added patch that adds atu reg also for rk3568.
--Make atu reg mandatory (since both rk3568 and rk3588 defines it).
--Include eDMA region in iATU region, as suggested by snps,dw-pcie.yaml.
+Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
+---
+ .../devicetree/bindings/pci/rockchip-dw-pcie.yaml     | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-
-Kind regards,
-Niklas
-
-Niklas Cassel (6):
-  dt-bindings: PCI: dwc: rockchip: Add mandatory atu reg
-  dt-bindings: PCI: dwc: rockchip: Add optional dma interrupts
-  arm64: dts: rockchip: drop unused properties num-{ib,ob}-windows
-  arm64: dts: rockchip: add missing mandatory rk3568 PCIe atu reg
-  arm64: dts: rockchip: add missing mandatory rk3588 PCIe atu reg
-  arm64: dts: rockchip: add missing rk3588 PCIe eDMA interrupts
-
- .../bindings/pci/rockchip-dw-pcie.yaml        | 29 +++++++++++++++---
- .../boot/dts/rockchip/rk3568-nanopi-r5s.dts   |  2 --
- arch/arm64/boot/dts/rockchip/rk3568.dtsi      | 18 +++++------
- arch/arm64/boot/dts/rockchip/rk356x.dtsi      |  9 +++---
- arch/arm64/boot/dts/rockchip/rk3588.dtsi      | 30 ++++++++++++-------
- arch/arm64/boot/dts/rockchip/rk3588s.dtsi     | 14 +++++----
- 6 files changed, 64 insertions(+), 38 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+index 1ae8dcfa072c..6ca87ff4ae20 100644
+--- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+@@ -33,12 +33,14 @@ properties:
+       - description: Data Bus Interface (DBI) registers
+       - description: Rockchip designed configuration registers
+       - description: Config registers
++      - description: iATU/eDMA registers
+ 
+   reg-names:
+     items:
+       - const: dbi
+       - const: apb
+       - const: config
++      - const: atu
+ 
+   clocks:
+     minItems: 5
+@@ -171,10 +173,11 @@ examples:
+ 
+         pcie3x2: pcie@fe280000 {
+             compatible = "rockchip,rk3568-pcie";
+-            reg = <0x3 0xc0800000 0x0 0x390000>,
+-                  <0x0 0xfe280000 0x0 0x10000>,
+-                  <0x3 0x80000000 0x0 0x100000>;
+-            reg-names = "dbi", "apb", "config";
++            reg = <0x3 0xc0800000 0x0 0x00300000>,
++                  <0x0 0xfe280000 0x0 0x00010000>,
++                  <0x0 0xf0000000 0x0 0x00100000>,
++                  <0x3 0xc0b00000 0x0 0x00100000>;
++            reg-names = "dbi", "apb", "config", "atu";
+             bus-range = <0x20 0x2f>;
+             clocks = <&cru 143>, <&cru 144>,
+                      <&cru 145>, <&cru 146>,
 -- 
 2.41.0
 
