@@ -2,124 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1342C7D91CD
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 10:38:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CFA47D9260
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 10:43:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235117AbjJ0Iia (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Oct 2023 04:38:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37566 "EHLO
+        id S1345645AbjJ0Ino (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Oct 2023 04:43:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235107AbjJ0IiX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 04:38:23 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC3F3106;
-        Fri, 27 Oct 2023 01:38:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698395901; x=1729931901;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=SBl7gvq5bTKZ2qBWsxuRcqwqbwBEKeoZL83t6kWoQH4=;
-  b=SFzFPe7mCYj6XvD3S4cNgadIpsou6aR/MziGFT3HHEF8QeUNr1L+xast
-   GJgKzbrNQKZICUtEzJZNu1vFskr8/sN92HOgFDA8qX9UZQVoNIn1EPGsM
-   RqX1cEHT2e+lou2pLm7XazRsg5aMT5EkckdC7mSWbN/dV2oWKzCzhbVvH
-   SGktee8bnaijwEBeb1H9nc/94zl42YJGUTp0Uxlz7lmbsO4K8DDwnm0uN
-   8ylsuBlZbhLk0LNFWc7TQ9cWIDa/Zn6gTCCkyZ+hP4mgu7PTLk/FxUDnl
-   YRj6Yp/z6aUo02Cjv0EXaj5XCYKqm/vAk31WPbcP3cV/WXkNXkjzvxBZ9
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10875"; a="391609777"
-X-IronPort-AV: E=Sophos;i="6.03,255,1694761200"; 
-   d="scan'208";a="391609777"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2023 01:38:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10875"; a="753056267"
-X-IronPort-AV: E=Sophos;i="6.03,255,1694761200"; 
-   d="scan'208";a="753056267"
-Received: from amyachev-mobl3.ccr.corp.intel.com (HELO localhost) ([10.252.49.46])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2023 01:38:18 -0700
-From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 1/1] PCI: Use FIELD_PREP() and remove *_SHIFT defines
-Date:   Fri, 27 Oct 2023 11:38:11 +0300
-Message-Id: <20231027083811.9200-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
+        with ESMTP id S235105AbjJ0Inb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 04:43:31 -0400
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DBD61BCC;
+        Fri, 27 Oct 2023 01:42:26 -0700 (PDT)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 39R8g4WH124179;
+        Fri, 27 Oct 2023 03:42:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1698396124;
+        bh=WGO6hjkMHMtX7U62PjVv9kWlUZJFjcfJsN4vTr8Xu5o=;
+        h=From:To:CC:Subject:Date;
+        b=gvdGeey7NVse+nim+ro0tvPZy5DGZBMZlL4eFZPT8yUdStQJjEHd7myi6UlzhVX/P
+         2nZBkiP1PbvIrTsiEAvcYA9sNlMPB66jcLUQxJLVGCDPGnbDsggJ+ARoc9r//3V3eg
+         UTmWgRDlC5q3AupyNUJ2dfgSVYGk/m8oJMPFzhS0=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 39R8g4i9004917
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 27 Oct 2023 03:42:04 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 27
+ Oct 2023 03:42:04 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 27 Oct 2023 03:42:04 -0500
+Received: from uda0492258.dhcp.ti.com (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 39R8fxTB012713;
+        Fri, 27 Oct 2023 03:42:00 -0500
+From:   Siddharth Vadapalli <s-vadapalli@ti.com>
+To:     <lpieralisi@kernel.org>, <robh@kernel.org>, <kw@linux.com>,
+        <bhelgaas@google.com>, <u.kleine-koenig@pengutronix.de>
+CC:     <fancer.lancer@gmail.com>, <helgaas@kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <r-gunasekaran@ti.com>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [RFC PATCH] PCI: keystone: Refactor ks_pcie_v3_65_add_bus() functionality
+Date:   Fri, 27 Oct 2023 14:11:59 +0530
+Message-ID: <20231027084159.4166188-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Instead of open-coded masking and shifting with PCI_CONF1_* bitfields,
-use GENMASK() and FIELD_PREP(), and then remove the *_SHIFT defines
-that are no longer needed.
+The .add_bus() callback "ks_pcie_v3_65_add_bus()" exists to setup BAR0 for
+MSI configuration. This method is expected to be invoked after the
+enumeration of endpoints for the v3.65a DWC PCIe IP Controller.
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Based on the discussion at [0], the contents of "ks_pcie_v3_65_add_bus()"
+can be moved to the .host_init callback "ks_pcie_host_init()" and the
+.add_bus callback within "struct pci_ops ks_pcie_ops" is no longer
+required.
+
+Hence, for the v3.65a DWC PCIe IP Controllers (!ks_pcie->is_am6), perform
+the MSI specific configuration of BAR0 within "ks_pcie_host_init()"
+itself.
+
+[0] https://lore.kernel.org/r/20231019220847.GA1413474@bhelgaas/
+
+Suggested-by: Serge Semin <fancer.lancer@gmail.com>
+Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 ---
+Hello,
 
- drivers/pci/pci.h | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+This patch is based on linux-next tagged next-20231027.
+This patch depends on the patch at:
+https://lore.kernel.org/r/20231019081330.2975470-1-s-vadapalli@ti.com/
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 39a8932dc340..31da9fde8aca 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -2,6 +2,8 @@
- #ifndef DRIVERS_PCI_H
- #define DRIVERS_PCI_H
+Regards,
+Siddharth.
+
+ drivers/pci/controller/dwc/pci-keystone.c | 51 ++++++++---------------
+ 1 file changed, 17 insertions(+), 34 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index e9245b7632c5..369f5e556df3 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -447,44 +447,10 @@ static struct pci_ops ks_child_pcie_ops = {
+ 	.write = pci_generic_config_write,
+ };
  
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
- #include <linux/pci.h>
- 
- /* Number of possible devfns: 0.0 to 1f.7 inclusive */
-@@ -797,19 +799,15 @@ static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
-  * Section 3.2.2.3.2, Figure 3-2, p. 50.
-  */
- 
--#define PCI_CONF1_BUS_SHIFT	16 /* Bus number */
--#define PCI_CONF1_DEV_SHIFT	11 /* Device number */
--#define PCI_CONF1_FUNC_SHIFT	8  /* Function number */
+-/**
+- * ks_pcie_v3_65_add_bus() - keystone add_bus post initialization
+- * @bus: A pointer to the PCI bus structure.
+- *
+- * This sets BAR0 to enable inbound access for MSI_IRQ register
+- */
+-static int ks_pcie_v3_65_add_bus(struct pci_bus *bus)
+-{
+-	struct dw_pcie_rp *pp = bus->sysdata;
+-	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
 -
--#define PCI_CONF1_BUS_MASK	0xff
--#define PCI_CONF1_DEV_MASK	0x1f
--#define PCI_CONF1_FUNC_MASK	0x7
-+#define PCI_CONF1_BUS_MASK	GENMASK(23, 16)
-+#define PCI_CONF1_DEV_MASK	GENMASK(15, 11)
-+#define PCI_CONF1_FUNC_MASK	GENMASK(10, 8)
- #define PCI_CONF1_REG_MASK	0xfc /* Limit aligned offset to a maximum of 256B */
+-	if (!pci_is_root_bus(bus))
+-		return 0;
+-
+-	/* Configure and set up BAR0 */
+-	ks_pcie_set_dbi_mode(ks_pcie);
+-
+-	/* Enable BAR0 */
+-	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 1);
+-	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, SZ_4K - 1);
+-
+-	ks_pcie_clear_dbi_mode(ks_pcie);
+-
+-	 /*
+-	  * For BAR0, just setting bus address for inbound writes (MSI) should
+-	  * be sufficient.  Use physical address to avoid any conflicts.
+-	  */
+-	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, ks_pcie->app.start);
+-
+-	return 0;
+-}
+-
+ static struct pci_ops ks_pcie_ops = {
+ 	.map_bus = dw_pcie_own_conf_map_bus,
+ 	.read = pci_generic_config_read,
+ 	.write = pci_generic_config_write,
+-	.add_bus = ks_pcie_v3_65_add_bus,
+ };
  
- #define PCI_CONF1_ENABLE	BIT(31)
--#define PCI_CONF1_BUS(x)	(((x) & PCI_CONF1_BUS_MASK) << PCI_CONF1_BUS_SHIFT)
--#define PCI_CONF1_DEV(x)	(((x) & PCI_CONF1_DEV_MASK) << PCI_CONF1_DEV_SHIFT)
--#define PCI_CONF1_FUNC(x)	(((x) & PCI_CONF1_FUNC_MASK) << PCI_CONF1_FUNC_SHIFT)
-+#define PCI_CONF1_BUS(x)	FIELD_PREP(PCI_CONF1_BUS_MASK, (x))
-+#define PCI_CONF1_DEV(x)	FIELD_PREP(PCI_CONF1_DEV_MASK, (x))
-+#define PCI_CONF1_FUNC(x)	FIELD_PREP(PCI_CONF1_FUNC_MASK, (x))
- #define PCI_CONF1_REG(x)	((x) & PCI_CONF1_REG_MASK)
+ static struct pci_ops ks_pcie_am6_ops = {
+@@ -834,6 +800,23 @@ static int __init ks_pcie_host_init(struct dw_pcie_rp *pp)
+ 	if (ret < 0)
+ 		return ret;
  
- #define PCI_CONF1_ADDRESS(bus, dev, func, reg) \
-@@ -827,9 +825,8 @@ static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
-  * are used for specifying additional 4 high bits of PCI Express register.
-  */
- 
--#define PCI_CONF1_EXT_REG_SHIFT	16
--#define PCI_CONF1_EXT_REG_MASK	0xf00
--#define PCI_CONF1_EXT_REG(x)	(((x) & PCI_CONF1_EXT_REG_MASK) << PCI_CONF1_EXT_REG_SHIFT)
-+#define PCI_CONF1_EXT_REG_MASK	GENMASK(27, 24)
-+#define PCI_CONF1_EXT_REG(x)	FIELD_PREP(PCI_CONF1_EXT_REG_MASK, (x) >> 8)
- 
- #define PCI_CONF1_EXT_ADDRESS(bus, dev, func, reg) \
- 	(PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
++	if (!ks_pcie->is_am6) {
++		/* Configure and set up BAR0 */
++		ks_pcie_set_dbi_mode(ks_pcie);
++
++		/* Enable BAR0 */
++		dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 1);
++		dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, SZ_4K - 1);
++
++		ks_pcie_clear_dbi_mode(ks_pcie);
++
++		/*
++		 * For BAR0, just setting bus address for inbound writes (MSI) should
++		 * be sufficient.  Use physical address to avoid any conflicts.
++		 */
++		dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, ks_pcie->app.start);
++	}
++
+ #ifdef CONFIG_ARM
+ 	/*
+ 	 * PCIe access errors that result into OCP errors are caught by ARM as
 -- 
-2.30.2
+2.34.1
 
