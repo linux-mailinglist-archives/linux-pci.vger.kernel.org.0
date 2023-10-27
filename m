@@ -2,102 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C57C7D97ED
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 14:25:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 422AF7D9801
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 14:27:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231345AbjJ0MZa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Oct 2023 08:25:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50790 "EHLO
+        id S230101AbjJ0M12 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Oct 2023 08:27:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230101AbjJ0MZ3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 08:25:29 -0400
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8081B10A;
-        Fri, 27 Oct 2023 05:25:26 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0Vv-ygIX_1698409518;
-Received: from 30.240.112.233(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vv-ygIX_1698409518)
-          by smtp.aliyun-inc.com;
-          Fri, 27 Oct 2023 20:25:21 +0800
-Message-ID: <3b2f8b0f-ca94-400f-ae13-ac1de84591b1@linux.alibaba.com>
-Date:   Fri, 27 Oct 2023 20:25:16 +0800
+        with ESMTP id S229503AbjJ0M12 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 08:27:28 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3603DFA;
+        Fri, 27 Oct 2023 05:27:26 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C11E8C433CA;
+        Fri, 27 Oct 2023 12:27:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698409645;
+        bh=erg1rYgP74To6KDDM1KXYV8FQqFk+IL93d/OT4RF8Iw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ta10opSzgCPzK+RJbeKtJ7EMbjSh54GhTiZuuIcrhdyLroX493IECvCcpfvb7tmQG
+         qk2JfMz57us1lj28G4ln6dH9FnssPpgunuDN12rQl541JYJdJL2J87Wkvyc9DyBvrm
+         7fVfO7+iYSNcJSfOkcWnpglQISSkfjmlfD/P3VRyobo2OqU3tcsz0Zjh/Uhv3Fb/Uq
+         IK1Q0KN3Y3cvlCHKKU70/zP6YqhdndEkKNAS4WkdynltFe0fVootg5Bg+pIi5xVlCK
+         2xvXBkcDqJkOCkpPrjaENfuPjqgnmZpe2ebi1jrMhwU3z0p/S8rhl9UPtgh1VTj2/4
+         prrA0FqagnZMw==
+Date:   Fri, 27 Oct 2023 17:57:11 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc:     Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+        Manivannan Sadhasivam <mani@kernel.org>, agross@kernel.org,
+        andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, quic_shazhuss@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
+        quic_nayiluri@quicinc.com, dmitry.baryshkov@linaro.org,
+        robh@kernel.org, quic_krichai@quicinc.com,
+        quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+        linux-phy@lists.infradead.org
+Subject: Re: [PATCH v3 4/5] PCI: epf-mhi: Add support for SA8775P
+Message-ID: <20231027122711.GB17527@thinkpad>
+References: <1697715430-30820-1-git-send-email-quic_msarkar@quicinc.com>
+ <1697715430-30820-5-git-send-email-quic_msarkar@quicinc.com>
+ <20231025075603.GD3648@thinkpad>
+ <610b0621-b140-ee9b-c450-0fec6862c4fc@quicinc.com>
+ <fb0647b5-67c4-4558-ac41-ee2b21446ee2@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 3/4] drivers/perf: add DesignWare PCIe PMU driver
-Content-Language: en-US
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Will Deacon <will@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-        Yicong Yang <yangyicong@huawei.com>,
-        chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
-        baolin.wang@linux.alibaba.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        rdunlap@infradead.org, mark.rutland@arm.com,
-        zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
-References: <20231020134230.53342-1-xueshuai@linux.alibaba.com>
- <20231020134230.53342-4-xueshuai@linux.alibaba.com>
- <20231023123202.GA3515@willie-the-truck>
- <cf72afb6-44c7-45f0-bfaa-6881f6782ebf@arm.com>
- <5b695595-d243-4ea5-97bb-f4c74398fc27@linux.alibaba.com>
- <20231026144428.00005db8@Huawei.com>
- <8f8a2e42-f6ed-4328-9457-5f986d761224@arm.com>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <8f8a2e42-f6ed-4328-9457-5f986d761224@arm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <fb0647b5-67c4-4558-ac41-ee2b21446ee2@linaro.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2023/10/27 00:52, Robin Murphy wrote:
-> On 26/10/2023 2:44 pm, Jonathan Cameron wrote:
->> On Tue, 24 Oct 2023 17:29:34 +0800
->> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
->>
->>> + Will, Jonathan, Bjorn and Yicong for probe and hotplug handing.
->>>
-...
->>>>>> +
->>>>>> +    dwc_pcie_pmu_hp_state = ret;
->>>>>> +
->>>>>> +    ret = platform_driver_register(&dwc_pcie_pmu_driver);
->>>>>> +    if (ret)
->>>>>> +        goto platform_driver_register_err;
->>>>>> +
->>>>>> +    dwc_pcie_pmu_dev = platform_device_register_simple(
->>>>>> +                "dwc_pcie_pmu", PLATFORM_DEVID_NONE, NULL, 0);
->>>>>> +    if (IS_ERR(dwc_pcie_pmu_dev)) {
->>>>>> +        ret = PTR_ERR(dwc_pcie_pmu_dev);
->>>>>> +        goto platform_device_register_error;
->>>>>> +    }
->>>>>
->>>>> I'm a bit confused as to why you're having to create a platform device
->>>>> for a PCI device -- is this because the main designware driver has already
->>>>> bound to it? A comment here explaining why you need to do this would be
->>>>> very helpful. In particular, is there any dependency on another driver
->>>>> to make sure that e.g. config space accesses work properly? If so, we
->>>>> probably need to enforce module load ordering or something like that.
->>>>
->>>> AFAICS the platform device/driver serve no purpose other than being a hilariously roundabout way to run the for_each_pci_dev() loop in dwc_pcie_pmu_probe() upon module init, and to save explicitly freeing the PMU name/data. Furthermore the devres action for dwc_pcie_pmu_remove_cpuhp_instance() is apparently going for even more style points at module exit by not even relying on the corresponding .remove callback of the tenuous platform driver to undo what its .probe did, but (ab)using the device's devres list to avoid having to keep track of an explicit list of PMU instances at all.
->>>
->>> You are right.
->>
->> Also provides a (potential) parent for the PMU devices which is something
->> we were trying to clean up for existing PMUs (which end up in the
->> wrong directly in sysfs because they typically don't have parents).
+On Thu, Oct 26, 2023 at 01:10:00PM +0200, Konrad Dybcio wrote:
 > 
-> Surely the relevant PCI device would be an even more appropriate parent, though, since that's the true topology?
+> 
+> On 10/26/23 07:30, Mrinmay Sarkar wrote:
+> > 
+> > On 10/25/2023 1:26 PM, Manivannan Sadhasivam wrote:
+> > > On Thu, Oct 19, 2023 at 05:07:09PM +0530, Mrinmay Sarkar wrote:
+> > > > Add support for Qualcomm Snapdragon SA8775P SoC to the EPF driver.
+> > > > SA8775P has the PID (0x0306) and supports HDMA. Currently, it has
+> > > Is the PID fixed? I thought you just want to reuse the SDXxx PID in the
+> > > meantime.
+> > > 
+> > > - Mani
+> > 
+> > The PID for SA8775p EP is not decided yet. So using 0x0306 PID meantime.
+> If it's not decided, why should it go upstream then? Would that
+> not break the hosts' expectations when the EP device is updated?
 > 
 
-I see, I will add its parent.
+No, it won't. If the device uses existing PID, then the existing host drivers
+matching the PID will be used for this device. When the PID gets changed, then
+the host drivers need to be updated too.
 
-Thank you.
-Best Regards,
-Shuai
+- Mani
+
+> Konrad
+
+-- 
+மணிவண்ணன் சதாசிவம்
