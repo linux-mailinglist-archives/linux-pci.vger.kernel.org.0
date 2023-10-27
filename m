@@ -2,112 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F02327D9EB1
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 19:16:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D7EC7D9F00
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 19:45:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235048AbjJ0RQn convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Fri, 27 Oct 2023 13:16:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35564 "EHLO
+        id S232101AbjJ0Rpr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Oct 2023 13:45:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235211AbjJ0RQc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 13:16:32 -0400
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9336F7A9C;
-        Fri, 27 Oct 2023 10:07:34 -0700 (PDT)
-Received: from i53875a19.versanet.de ([83.135.90.25] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <heiko@sntech.de>)
-        id 1qwQIX-0001eX-MH; Fri, 27 Oct 2023 19:07:01 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Rob Herring <robh@kernel.org>,
-        Niklas Cassel <Niklas.Cassel@wdc.com>
-Cc:     Niklas Cassel <nks@flawful.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        with ESMTP id S231464AbjJ0Rpq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 13:45:46 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 988ABF3;
+        Fri, 27 Oct 2023 10:45:40 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1698428739;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vCF2sTMjoJARe87DP7lAD8rcZvlM4BFzZKH7cV3QuU8=;
+        b=xXX2ovs1OHhXbwDuZac6CP8IsOrVj54bZeD5nyxWlPUBOXUniX1BJWPV+PcVr7obtLN3eF
+        I6uPBnLwqsSeXJfTpISEjW/ksbeWDMkDlGhuSLkQd0gwCvAm+Ogc1qakMhd99FaKFmFOz6
+        1GIjy1E+N/YDe03TxrnRIU53J4jidS28NuERCZkDyMkX8X5wFJu/OtV20oF773goJYLcMm
+        /ktLuCbvSshkq1Zxca8OxoWF8VJ4zqw5Ohr8CYTRGpLm9x96JuE60jmezp5gm6X3Yn94AK
+        7ns6idG1lqprpc0Y27+8vH0y0yrCC8o1DwW3zTycAy/bFh5YoXh4wv0+CbwiwA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1698428739;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vCF2sTMjoJARe87DP7lAD8rcZvlM4BFzZKH7cV3QuU8=;
+        b=WWHizKPPbjghvXPvf1/QyrM9sNTsNYrmVq6GoM+JMN89I9M6CgHAYJRHoOSGLIiqmVpfsl
+        B+qpDGnW7YiT4hDg==
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Sunil V L <sunilvl@ventanamicro.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>
-Subject: Re: [PATCH v3 1/6] dt-bindings: PCI: dwc: rockchip: Add mandatory atu reg
-Date:   Fri, 27 Oct 2023 19:07:00 +0200
-Message-ID: <3040634.xgJ6IN8ObU@diego>
-In-Reply-To: <ZTvh51PGCBhSjURY@x1-carbon>
-References: <20231027145422.40265-1-nks@flawful.org>
- <CAL_JsqJh6aJb7_qsVnVNEABBg2utf0FPN+qYyOfsF2dAfZpd0w@mail.gmail.com>
- <ZTvh51PGCBhSjURY@x1-carbon>
+        Anup Patel <anup@brainfault.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        Atish Kumar Patra <atishp@rivosinc.com>,
+        Haibo Xu <haibo1.xu@intel.com>, Marc Zyngier <maz@kernel.org>
+Subject: Re: [RFC PATCH v2 13/21] irqchip: riscv-intc: Add ACPI support for AIA
+In-Reply-To: <20231026165150.GA1825130@bhelgaas>
+References: <20231026165150.GA1825130@bhelgaas>
+Date:   Fri, 27 Oct 2023 19:45:38 +0200
+Message-ID: <87jzr82c3h.ffs@tglx>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_PASS,
-        T_SPF_HELO_TEMPERROR autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Niklas,
+On Thu, Oct 26 2023 at 11:51, Bjorn Helgaas wrote:
+> On Thu, Oct 26, 2023 at 01:53:36AM +0530, Sunil V L wrote:
+>> The RINTC subtype structure in MADT also has information about other
+>> interrupt controllers like MMIO. So, save those information and provide
+>> interfaces to retrieve them when required by corresponding drivers.
+>
+>> @@ -218,7 +306,19 @@ static int __init riscv_intc_acpi_init(union acpi_subtable_headers *header,
+>
+>> +	 * MSI controller (IMSIC) in RISC-V is optional. So, unless
+>> +	 * IMSIC is discovered, set system wide MSI support as
+>> +	 * unsupported. Once IMSIC is probed, MSI support will be set.
+>> +	 */
+>> +	pci_no_msi();
+>
+> It doesn't seem like we should have to tell the PCI core about
+> functionality we *don't* have.
+>
+> I would think IMSIC would be detected before enumerating PCI devices
+> that might use it, and if we *haven't* found an IMSIC by the time we
+> get to pci_register_host_bridge(), would/should we set
+> PCI_BUS_FLAGS_NO_MSI there?
+>
+> I see Thomas is cc'd; he'd have better insight.
 
-Am Freitag, 27. Oktober 2023, 18:14:32 CEST schrieb Niklas Cassel:
-> On Fri, Oct 27, 2023 at 10:58:28AM -0500, Rob Herring wrote:
-> > On Fri, Oct 27, 2023 at 9:56 AM Niklas Cassel <nks@flawful.org> wrote:
-> > >
-> > > From: Niklas Cassel <niklas.cassel@wdc.com>
-> > >
-> > > Even though rockchip-dw-pcie.yaml inherits snps,dw-pcie.yaml
-> > > using:
-> > >
-> > > allOf:
-> > >   - $ref: /schemas/pci/snps,dw-pcie.yaml#
-> > >
-> > > and snps,dw-pcie.yaml does have the atu reg defined, in order to be
-> > > able to use this reg, while still making sure 'make CHECK_DTBS=y'
-> > > pass, we need to add this reg to rockchip-dw-pcie.yaml.
-> > >
-> > > All compatible strings (rockchip,rk3568-pcie and rockchip,rk3588-pcie)
-> > > should have this reg.
-> > >
-> > > The regs in the example are updated to actually match pcie3x2 on rk3568.
-> > 
-> > Breaking compatibility on these platforms is okay because ...?
-> 
-> I don't follow, could you please elaborate?
+I was not really involved with this bus and MSI domain logic. Marc
+should know. CC'ed.
 
-you're adding the atu reg unconditionally as required element.
+Thanks,
 
-Newer kernel versions (strongly) _should_ work with older devicetrees.
-So a kernel with that change should also work with a dtb build from the
-old style.
-
-DTBs are essentially part of the device firmware, so while some devices
-can update theirs easily, you can't really require a dtb update.
-
-I guess you could something like:
-
-   reg-names:
-     oneOf:
-       - deprecated: true
-         items:
-         - const: dbi
-         - const: apb
-         - const: config
-       - items:
-         - const: dbi
-         - const: apb
-         - const: config
-         - const: atu
- 
-(may not be accurate and to spec yet)
+        tglx
 
 
