@@ -2,258 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77B117D8F4D
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 09:12:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EC367D90AD
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 10:06:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230369AbjJ0HMH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Oct 2023 03:12:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52094 "EHLO
+        id S230101AbjJ0IGn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Oct 2023 04:06:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234999AbjJ0HMF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 03:12:05 -0400
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36DDD1B1
-        for <linux-pci@vger.kernel.org>; Fri, 27 Oct 2023 00:12:00 -0700 (PDT)
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20231027071158epoutp02eef561c6e4f3551e9a73caee5a7edeeb~R5VwPzn170218902189epoutp02V
-        for <linux-pci@vger.kernel.org>; Fri, 27 Oct 2023 07:11:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20231027071158epoutp02eef561c6e4f3551e9a73caee5a7edeeb~R5VwPzn170218902189epoutp02V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1698390718;
-        bh=XinEXqbMGYYXEdTEUQ6Gxi75JRlQ0apA3Uu3KoNEONQ=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=Fixw7w7j0kbV7fHtj+7nAyHSot2zlj5lrO/Y8BNgyixVlJz6WUlp9PutDY57NRtM5
-         9Kuw6NUzgJjBgwyWSoVAdQIA2EQ63TbOSRVWm/DcUZ+RBeGZ/Gqwh44p/GBBnwVz3u
-         9vCtoM/CLkL+lY9XOta1/BEhFaAg+we7ycSgtDes=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20231027071157epcas5p412d8c4007d98798f39809bc775f623b0~R5Vvwtdsi2566125661epcas5p4d;
-        Fri, 27 Oct 2023 07:11:57 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.176]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4SGv3v5rlSz4x9QB; Fri, 27 Oct
-        2023 07:11:55 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7D.6A.09672.8B26B356; Fri, 27 Oct 2023 16:11:52 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20231027063746epcas5p1256399d02b1255f65b6e766a13da92cd~R435iH_-D2895828958epcas5p1P;
-        Fri, 27 Oct 2023 06:37:46 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20231027063746epsmtrp1a947182f52274b9b4fdafaf6d4cb332d~R435hXZ_40137601376epsmtrp1n;
-        Fri, 27 Oct 2023 06:37:46 +0000 (GMT)
-X-AuditID: b6c32a4b-39fff700000025c8-2c-653b62b8ecfd
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        46.52.08755.ABA5B356; Fri, 27 Oct 2023 15:37:46 +0900 (KST)
-Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20231027063744epsmtip1ad1884e37ef89dbc96485af6ccb07398~R433nhDDm2102021020epsmtip1R;
-        Fri, 27 Oct 2023 06:37:44 +0000 (GMT)
-From:   "Shradha Todi" <shradha.t@samsung.com>
-To:     <jingoohan1@gmail.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <bhelgaas@google.com>,
-        <krzysztof.kozlowski@linaro.org>, <alim.akhtar@samsung.com>
-Cc:     <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <pankaj.dubey@samsung.com>
-In-Reply-To: <20231009062216.6729-1-shradha.t@samsung.com>
-Subject: RE: [PATCH] PCI: exynos: Adapt to clk_bulk_* APIs
-Date:   Fri, 27 Oct 2023 12:07:43 +0530
-Message-ID: <0b4801da08a0$18877110$49965330$@samsung.com>
+        with ESMTP id S229604AbjJ0IGm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 04:06:42 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22F661A5
+        for <linux-pci@vger.kernel.org>; Fri, 27 Oct 2023 01:06:40 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id 2adb3069b0e04-508126afb9bso2492419e87.0
+        for <linux-pci@vger.kernel.org>; Fri, 27 Oct 2023 01:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698393998; x=1698998798; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fgULfd/BQf3rXOb2Liur3bE6zxBSiYu9TNmtJmWbpCs=;
+        b=Nr2WRBxuxdZCEyStn5AKTqJwjukjUD+Rw6WZ3yJPnrTbJ2F1L/8f3XUL57CTC/DB32
+         4dRzDd4aatK4ErHKupCBaLkT3gbLSNILfQ3sbzwvcqnWgdUdNgZwEMUWNggmvkxdqr1l
+         plC1t17dATm+8cCnuWl609h8NMJk4Wwu1jSj7i0Z1PdFxoYZYQyXo2DjYAJAuetRJKea
+         e99nsyezk1c+uKELhkRHKLm74pybmpe+0XQmt30KMuRZRntann+Mgbj75zUwuPuc7Du4
+         r+bncny7KsKAVcPK6smojdA8g4vYDvKmGCJEvHpG9UWuQ6MClwqF7VYEvScQk84pdfDb
+         aOdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698393998; x=1698998798;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fgULfd/BQf3rXOb2Liur3bE6zxBSiYu9TNmtJmWbpCs=;
+        b=ZykTnHhlwhjtH1Of92HpIVPbu9GQoCVWY50+kAQ26vmk/0wHFh0+mJjBrt+tk2K6nb
+         LEoO8oEXtU3Ug6wMBfv3mtFoqWEYxtuyAuOrnXZ7cNlR52mMcOC6gqzCNJoZXWXUErcP
+         d14K9KIHrLAJ115tYgZ3u0opkY5J2jtAdNP9zuT758CGJhJY29MZ9rPkmX8OxGxA9rYM
+         j79iqZMa0IR/cMuSDC08ZHflkET8NpMNi4yEcCgQAhzCPMGt11EDPZWKLGQYxB3KGL8Z
+         okzl+CwTgHuYHcny5xVGvt3/kbVxbKAMhn7FL4vuRCeyM8X9e9TEQQiZRRnp6Eu4Qq1Y
+         OzfQ==
+X-Gm-Message-State: AOJu0YxjzwmIyOsTXrca7fibQxzHy7+SRKc2232G2ZGxQkbdS5luk7Vm
+        /iKTpQ7B3bqVt+GBR1XoL96uRg==
+X-Google-Smtp-Source: AGHT+IEJFfYsTI78D03/L8NvageWyWtEeZq1rR3P3kFq9t3sgonnO4xsQxqYrk7ZOTDAfXzejtcLEA==
+X-Received: by 2002:ac2:5935:0:b0:503:1be5:24eb with SMTP id v21-20020ac25935000000b005031be524ebmr1190179lfi.50.1698393998333;
+        Fri, 27 Oct 2023 01:06:38 -0700 (PDT)
+Received: from [192.168.0.22] ([78.10.206.168])
+        by smtp.gmail.com with ESMTPSA id be11-20020a056512250b00b005081a25b095sm180122lfb.246.2023.10.27.01.06.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Oct 2023 01:06:37 -0700 (PDT)
+Message-ID: <f7b90711-015b-4261-b044-a63396e78c9f@linaro.org>
+Date:   Fri, 27 Oct 2023 10:06:36 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFlrvPEaqAl+ZjspMpXVx4MiN0lSgK7wbyrsTAEGMA=
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIJsWRmVeSWpSXmKPExsWy7bCmpu6OJOtUg/PzDC0ezNvGZrGkKcNi
-        xZeZ7BZ7X29lt2jo+c1qsenxNVaLy7vmsFmcnXeczWLG+X1MFi1/WlgsFm39wm7xf88Odgce
-        j52z7rJ7LNhU6rFpVSebx51re9g8nlyZzuSxeUm9R9+WVYwenzfJBXBEZdtkpCampBYppOYl
-        56dk5qXbKnkHxzvHm5oZGOoaWlqYKynkJeam2iq5+AToumXmAN2qpFCWmFMKFApILC5W0rez
-        KcovLUlVyMgvLrFVSi1IySkwKdArTswtLs1L18tLLbEyNDAwMgUqTMjOeLdkEVPBQsWKU2/P
-        sjYwrpHuYuTkkBAwkbiwsJW1i5GLQ0hgN6PE5c+/mSCcT4wS55achHK+MUpM7mhihWl5sHYT
-        G0RiL6PEhDen2CGcF4wS31btZAepYhPQkXhy5Q8zSEJEYB2jxLE/nWAJZoE1QLO6o0BsTgEr
-        iX/HT7OB2MJA9velE8BWsAioSsx4vxOomYODV8BSYstssGN5BQQlTs58wgIxRlti2cLXzBAX
-        KUj8fLoMrFUEaMzh1nlQq8Qljv7sAbtBQuAEh8ShtS+hXnCReHmmnRHCFpZ4dXwLO4QtJfGy
-        vw3KTpdYuXkG1IIciW+blzBB2PYSB67MYQG5jVlAU2L9Ln2IsKzE1FPrmCD28kn0/n4CVc4r
-        sWMejK0s8eXvHhYIW1Ji3rHLrBMYlWYheW0WktdmIXlhFsK2BYwsqxglUwuKc9NTi00LjPNS
-        y+Exnpyfu4kRnJa1vHcwPnrwQe8QIxMH4yFGCQ5mJRHeSB+LVCHelMTKqtSi/Pii0pzU4kOM
-        psDgnsgsJZqcD8wMeSXxhiaWBiZmZmYmlsZmhkrivK9b56YICaQnlqRmp6YWpBbB9DFxcEo1
-        MAkcmbTgUIP0jpYDk0QPTn3hUrDkjndjqdjMmiwe1so7wewlwRv+mU5qsgqYtKZ8esLtjEk1
-        9vZLeVitFHxXnjmiWb3sUnHUwU1ZXEJ/t2xiE3RS/SFRMHlL8g8ziYiyg2cvyxQs5z5q6Twv
-        7/6JiC1T3p9otmJl9/5ruqm/9X2T6Y7eLREmrR8VNPZ4q274sKxcJHrHWi8+X0GeS1s63aZG
-        PWt1VbXvMGC7svx1cq3W6tV/37QpHn5suqFq7pvMJ5fMn73PUaplE1h/6amwqKZBsVqc1xv9
-        eaVvQ7yfxAdGPhd78enxJ8WO8IdtH+ZUeb0u3dZYMz+F23LO3ZbGoD2nJt7u/35eaupz21NL
-        y5VYijMSDbWYi4oTAefG60pUBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJIsWRmVeSWpSXmKPExsWy7bCSnO6uKOtUgys3hCwezNvGZrGkKcNi
-        xZeZ7BZ7X29lt2jo+c1qsenxNVaLy7vmsFmcnXeczWLG+X1MFi1/WlgsFm39wm7xf88Odgce
-        j52z7rJ7LNhU6rFpVSebx51re9g8nlyZzuSxeUm9R9+WVYwenzfJBXBEcdmkpOZklqUW6dsl
-        cGW83j+NsaBNoeL9x49sDYz9Ul2MnBwSAiYSD9ZuYuti5OIQEtjNKPHt1FQ2iISkxOeL65gg
-        bGGJlf+es0MUPWOUeHmjG6yITUBH4smVP8wgCRGBbYwSs1t6WUASzAIbGCW2HciD6OhmlFhy
-        6QBYB6eAlcS/46fBbGEg+/vSCawgNouAqsSM9zuBJnFw8ApYSmyZLQ0S5hUQlDg58wnUTG2J
-        3oetjDD2soWvmSGuU5D4+XQZ2BgRoJGHW+exQ9SISxz92cM8gVF4FpJRs5CMmoVk1CwkLQsY
-        WVYxSqYWFOem5xYbFhjmpZbrFSfmFpfmpesl5+duYgTHppbmDsbtqz7oHWJk4mA8xCjBwawk
-        whvpY5EqxJuSWFmVWpQfX1Sak1p8iFGag0VJnFf8RW+KkEB6YklqdmpqQWoRTJaJg1OqgWnW
-        zATOlq0GDzNCTVWjvO4VbWl5cPZ019SJ1sUcaiqdMdNNmquePb2+ZuaUnimRMTszlixIanjX
-        kHzR0YCXxWCDeVDt8n3+0nL77gdMzWEOcG9s2sG5zzLi/ofaO9NKov6Lb7webMFkGtF//s8i
-        xvC9sSV8L0x7OKZ0mKg6bv7k/UPRQzxE7JyXYSOrYJiZd+7t291eKScm7nHncVE8dyt7390P
-        ntfP9J7rWM7A/nTepi0GAl/nmCbEzLqv36m+qy/n77mXXHFy0wQVu7Ua+/xVbstOmvGljOf5
-        i9cGF6+q31qcHbK/7Mz5dQyq7z4IThS27fpZJ58p8NaF4f+CHS4xhh/ON6i7/PO+86hRW4ml
-        OCPRUIu5qDgRAIDWXTo8AwAA
-X-CMS-MailID: 20231027063746epcas5p1256399d02b1255f65b6e766a13da92cd
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231009062222epcas5p36768b75c13c7c79965b5863521361a64
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: exynos: Adapt to clk_bulk_* APIs
+Content-Language: en-US
+To:     Shradha Todi <shradha.t@samsung.com>, jingoohan1@gmail.com,
+        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, alim.akhtar@samsung.com
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pankaj.dubey@samsung.com
 References: <CGME20231009062222epcas5p36768b75c13c7c79965b5863521361a64@epcas5p3.samsung.com>
-        <20231009062216.6729-1-shradha.t@samsung.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+ <20231009062216.6729-1-shradha.t@samsung.com>
+ <0b4801da08a0$18877110$49965330$@samsung.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <0b4801da08a0$18877110$49965330$@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Gentle reminder to review this patch. Thanks in advance=21
+On 27/10/2023 08:37, Shradha Todi wrote:
+> Gentle reminder to review this patch. Thanks in advance!
+> 
 
-> -----Original Message-----
-> From: Shradha Todi =5Bmailto:shradha.t=40samsung.com=5D
-> Sent: 09 October 2023 11:52
-> To: jingoohan1=40gmail.com; lpieralisi=40kernel.org; kw=40linux.com;
-> robh=40kernel.org; bhelgaas=40google.com; krzysztof.kozlowski=40linaro.or=
-g;
-> alim.akhtar=40samsung.com
-> Cc: linux-pci=40vger.kernel.org; linux-arm-kernel=40lists.infradead.org; =
-linux-
-> samsung-soc=40vger.kernel.org; linux-kernel=40vger.kernel.org;
-> pankaj.dubey=40samsung.com; Shradha Todi <shradha.t=40samsung.com>
-> Subject: =5BPATCH=5D PCI: exynos: Adapt to clk_bulk_* APIs
->=20
-> There is no need to hardcode the clock info in the driver as driver can r=
-ely on
-> the devicetree to supply the clocks required for the functioning of the
-> peripheral. Get rid of the static clock info and obtain the platform supp=
-lied
-> clocks. The total number of clocks supplied is obtained using the
-> devm_clk_bulk_get_all() API and used for the rest of the clk_bulk_* APIs.
->=20
-> Signed-off-by: Shradha Todi <shradha.t=40samsung.com>
-> ---
->  drivers/pci/controller/dwc/pci-exynos.c =7C 46 ++++++-------------------
->  1 file changed, 11 insertions(+), 35 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/dwc/pci-exynos.c
-> b/drivers/pci/controller/dwc/pci-exynos.c
-> index 9e42cfcd99cc..023cf41fccd7 100644
-> --- a/drivers/pci/controller/dwc/pci-exynos.c
-> +++ b/drivers/pci/controller/dwc/pci-exynos.c
-> =40=40 -54,8 +54,8 =40=40
->  struct exynos_pcie =7B
->  	struct dw_pcie			pci;
->  	void __iomem			*elbi_base;
-> -	struct clk			*clk;
-> -	struct clk			*bus_clk;
-> +	struct clk_bulk_data		*clks;
-> +	int				clk_cnt;
->  	struct phy			*phy;
->  	struct regulator_bulk_data	supplies=5B2=5D;
->  =7D;
-> =40=40 -65,30 +65,18 =40=40 static int exynos_pcie_init_clk_resources(str=
-uct
-> exynos_pcie *ep)
->  	struct device *dev =3D ep->pci.dev;
->  	int ret;
->=20
-> -	ret =3D clk_prepare_enable(ep->clk);
-> -	if (ret) =7B
-> -		dev_err(dev, =22cannot enable pcie rc clock=22);
-> +	ret =3D devm_clk_bulk_get_all(dev, &ep->clks);
-> +	if (ret < 0)
->  		return ret;
-> -	=7D
->=20
-> -	ret =3D clk_prepare_enable(ep->bus_clk);
-> -	if (ret) =7B
-> -		dev_err(dev, =22cannot enable pcie bus clock=22);
-> -		goto err_bus_clk;
-> -	=7D
-> +	ep->clk_cnt =3D ret;
->=20
-> -	return 0;
-> -
-> -err_bus_clk:
-> -	clk_disable_unprepare(ep->clk);
-> -
-> -	return ret;
-> +	return clk_bulk_prepare_enable(ep->clk_cnt, ep->clks);
->  =7D
->=20
->  static void exynos_pcie_deinit_clk_resources(struct exynos_pcie *ep)  =
-=7B
-> -	clk_disable_unprepare(ep->bus_clk);
-> -	clk_disable_unprepare(ep->clk);
-> +	clk_bulk_disable_unprepare(ep->clk_cnt, ep->clks);
->  =7D
->=20
->  static void exynos_pcie_writel(void __iomem *base, u32 val, u32 reg) =40=
-=40 -
-> 332,17 +320,9 =40=40 static int exynos_pcie_probe(struct platform_device
-> *pdev)
->  	if (IS_ERR(ep->elbi_base))
->  		return PTR_ERR(ep->elbi_base);
->=20
-> -	ep->clk =3D devm_clk_get(dev, =22pcie=22);
-> -	if (IS_ERR(ep->clk)) =7B
-> -		dev_err(dev, =22Failed to get pcie rc clock=5Cn=22);
-> -		return PTR_ERR(ep->clk);
-> -	=7D
-> -
-> -	ep->bus_clk =3D devm_clk_get(dev, =22pcie_bus=22);
-> -	if (IS_ERR(ep->bus_clk)) =7B
-> -		dev_err(dev, =22Failed to get pcie bus clock=5Cn=22);
-> -		return PTR_ERR(ep->bus_clk);
-> -	=7D
-> +	ret =3D exynos_pcie_init_clk_resources(ep);
-> +	if (ret < 0)
-> +		return ret;
->=20
->  	ep->supplies=5B0=5D.supply =3D =22vdd18=22;
->  	ep->supplies=5B1=5D.supply =3D =22vdd10=22;
-> =40=40 -351,10 +331,6 =40=40 static int exynos_pcie_probe(struct platform=
-_device
-> *pdev)
->  	if (ret)
->  		return ret;
->=20
-> -	ret =3D exynos_pcie_init_clk_resources(ep);
-> -	if (ret)
-> -		return ret;
-> -
->  	ret =3D regulator_bulk_enable(ARRAY_SIZE(ep->supplies), ep-
-> >supplies);
->  	if (ret)
->  		return ret;
-> =40=40 -369,8 +345,8 =40=40 static int exynos_pcie_probe(struct platform_=
-device
-> *pdev)
->=20
->  fail_probe:
->  	phy_exit(ep->phy);
-> -	exynos_pcie_deinit_clk_resources(ep);
->  	regulator_bulk_disable(ARRAY_SIZE(ep->supplies), ep->supplies);
-> +	exynos_pcie_deinit_clk_resources(ep);
->=20
->  	return ret;
->  =7D
-> --
-> 2.17.1
+Please relax, and help out by reviewing other patches on the mailing
+lists in order to relieve the burden of maintainers and move your
+patches higher up the list.
 
+
+Best regards,
+Krzysztof
 
