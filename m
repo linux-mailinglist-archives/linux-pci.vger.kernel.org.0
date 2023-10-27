@@ -2,159 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 362D77D99EE
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 15:34:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76C627D9A71
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 15:51:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232514AbjJ0Nen (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Oct 2023 09:34:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56342 "EHLO
+        id S1345688AbjJ0NvX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Oct 2023 09:51:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232003AbjJ0Neh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 09:34:37 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59C391BE;
-        Fri, 27 Oct 2023 06:34:35 -0700 (PDT)
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39RBPgN0024483;
-        Fri, 27 Oct 2023 13:33:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=qcppdkim1;
- bh=RsQx3p3Jdt45deKD8q2naBRmwFH/7pLMEOjfr52W8xs=;
- b=VExHeDzOOk0g+Z+Dzcb7knMZzV8n5MYG5Z624K7UiPYSJidCJg2CWXKTk4jUn/RfqqOc
- +hVsxbye4LegMvGo4LmdLMTkboLKcB2ZEFahwVzk6pX2bu3Yy1koeOk3FDwb3aozYkff
- xt/hW/CUZFiroeK4yEJfsXKzKQcBH/p3jpmmmWklkgfLUvG7jsIwjDNKA30VrvL0uvIc
- WlVcHuPM7HTKs6gknxk6QDcMocoB6o2ZSzP3m4Px3FU61Y67GG8crRVpAV7SRlZnpQyg
- lJmGh3gpJ/xit2KX2+GLC3stx74t8ssExTi6jTazrmL40VBa4EZgn2fZR0147hHq/KuN FQ== 
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tyxfga4ex-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Oct 2023 13:33:24 +0000
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-        by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 39RDWw6E025502;
-        Fri, 27 Oct 2023 13:33:21 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3tv7qmaaq9-1;
-        Fri, 27 Oct 2023 13:33:21 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39RDXLoF026080;
-        Fri, 27 Oct 2023 13:33:21 GMT
-Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
-        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 39RDXLMq026079;
-        Fri, 27 Oct 2023 13:33:21 +0000
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
-        id 3AC4D481E; Fri, 27 Oct 2023 19:03:20 +0530 (+0530)
-From:   Mrinmay Sarkar <quic_msarkar@quicinc.com>
-To:     agross@kernel.org, andersson@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        konrad.dybcio@linaro.org, mani@kernel.org
-Cc:     quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
-        dmitry.baryshkov@linaro.org, robh@kernel.org,
-        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
-        quic_parass@quicinc.com, quic_schintav@quicinc.com,
-        Mrinmay Sarkar <quic_msarkar@quicinc.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mhi@lists.linux.dev
-Subject: [PATCH v4 4/4] arm64: dts: qcom: sa8775p: Add ep pcie0 controller node
-Date:   Fri, 27 Oct 2023 19:03:12 +0530
-Message-Id: <1698413592-26523-5-git-send-email-quic_msarkar@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1698413592-26523-1-git-send-email-quic_msarkar@quicinc.com>
-References: <1698413592-26523-1-git-send-email-quic_msarkar@quicinc.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: D2AllKrWHeaLji7CmmlNujmoAwfwwVod
-X-Proofpoint-ORIG-GUID: D2AllKrWHeaLji7CmmlNujmoAwfwwVod
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-27_11,2023-10-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- impostorscore=0 phishscore=0 suspectscore=0 priorityscore=1501
- malwarescore=0 lowpriorityscore=0 adultscore=0 spamscore=0 mlxscore=0
- clxscore=1015 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2310240000 definitions=main-2310270117
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S1345458AbjJ0NvW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 09:51:22 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB43C9D
+        for <linux-pci@vger.kernel.org>; Fri, 27 Oct 2023 06:51:20 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id 98e67ed59e1d1-27cfb8442f9so1750501a91.2
+        for <linux-pci@vger.kernel.org>; Fri, 27 Oct 2023 06:51:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698414680; x=1699019480; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yClEmQrqjxPOdEt4O4nDzfNvYznOcwD4oHzNoki+cXk=;
+        b=IniAMNg7WfTlg9CqfyIO+8h4AyKyxVi9dAj1cf2AbG8nT6mzRdFkAOg4V07OOqE+98
+         az6NW5eZPIyTKY7ppZ/Q834JuxYSPJuoN9OeT4pU5Ir9qUqzg0fOykG2Xu5bnj+haC5I
+         yQxXOMCO8EtFRi993j1s/Cp/vqobJugxJLOq1gzxdV5FkgdLH1XghUTeRH/HbOAh0+KE
+         ex5tKDnh77BIs0djqRCIWsmDAYdmFJinscCXCrrJFoJ9I5jD7zaoLKCf9+ygyt8J5p44
+         r0/UYgqjOR8BIgu5xJNl5p+v8uWXWBbjrD1l8vthJ2iLzQq81G7Yfmcd0FdfOehY46nB
+         x8eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698414680; x=1699019480;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yClEmQrqjxPOdEt4O4nDzfNvYznOcwD4oHzNoki+cXk=;
+        b=QIgrAMyO00xJtDLPJqHWVCyylUAuABC/nimMREPpeawvpJZkHBZVvxFjWyDnLBrKdG
+         +wI/1kM5d40M/I365dmjwz8vVNqBiDLy9aJ4dm6XLwSqPMABZBFp9shLJFtGMs3PI6AA
+         itEYr23gA5X3OewrpxlYIDO6EvXq01zhhlMAfJJzCHBTKrBJBRcBWscmElh9L/C91NmA
+         LdnoyB03BlJ8FRIalKKB1lGokdsk8e//vu0JCsr3CP6tA4++JpeRhsQbjnpDpO4I0g3v
+         L7O35fcwKBApNEMVHkrOwRNWGZK/yD/MmUimOAA53DNB8xrKsAe07hus7/BWFc4XgQ83
+         U2lg==
+X-Gm-Message-State: AOJu0Yy2JggZzLBckUjQxTZ069x4UHZ0p4yD2xXL+r6YKiXZAQeVExB+
+        ODZZj/Tcm5yR5Kg5QGqUJeW0
+X-Google-Smtp-Source: AGHT+IGqCJVvpEyUioQmJvsxwgcQ0gbRLZzrZ42d1hKqRxPaA7cyNZ0+7ziM+B9RL5dMOlHxK5eGYw==
+X-Received: by 2002:a17:90b:2495:b0:274:99e7:217e with SMTP id nt21-20020a17090b249500b0027499e7217emr2593791pjb.16.1698414680273;
+        Fri, 27 Oct 2023 06:51:20 -0700 (PDT)
+Received: from thinkpad ([120.138.12.43])
+        by smtp.gmail.com with ESMTPSA id n14-20020a17090ac68e00b00274262bcf8dsm3229377pjt.41.2023.10.27.06.49.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Oct 2023 06:49:49 -0700 (PDT)
+Date:   Fri, 27 Oct 2023 19:18:49 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Shradha Todi <shradha.t@samsung.com>
+Cc:     jingoohan1@gmail.com, lpieralisi@kernel.org, kw@linux.com,
+        robh@kernel.org, bhelgaas@google.com,
+        krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pankaj.dubey@samsung.com
+Subject: Re: [PATCH] PCI: exynos: Adapt to clk_bulk_* APIs
+Message-ID: <20231027134849.GA23716@thinkpad>
+References: <CGME20231009062222epcas5p36768b75c13c7c79965b5863521361a64@epcas5p3.samsung.com>
+ <20231009062216.6729-1-shradha.t@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231009062216.6729-1-shradha.t@samsung.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add ep pcie dtsi node for pcie0 controller found on sa8775p platform.
-It supports gen4 and x2 link width. Limiting the speed to Gen3 due to
-stability issues.
+On Mon, Oct 09, 2023 at 11:52:16AM +0530, Shradha Todi wrote:
+> There is no need to hardcode the clock info in the driver as driver can
+> rely on the devicetree to supply the clocks required for the functioning
+> of the peripheral. Get rid of the static clock info and obtain the
+> platform supplied clocks. The total number of clocks supplied is
+> obtained using the devm_clk_bulk_get_all() API and used for the rest of
+> the clk_bulk_* APIs.
+> 
+> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+> ---
+>  drivers/pci/controller/dwc/pci-exynos.c | 46 ++++++-------------------
+>  1 file changed, 11 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
+> index 9e42cfcd99cc..023cf41fccd7 100644
+> --- a/drivers/pci/controller/dwc/pci-exynos.c
+> +++ b/drivers/pci/controller/dwc/pci-exynos.c
+> @@ -54,8 +54,8 @@
+>  struct exynos_pcie {
+>  	struct dw_pcie			pci;
+>  	void __iomem			*elbi_base;
+> -	struct clk			*clk;
+> -	struct clk			*bus_clk;
+> +	struct clk_bulk_data		*clks;
+> +	int				clk_cnt;
+>  	struct phy			*phy;
+>  	struct regulator_bulk_data	supplies[2];
+>  };
+> @@ -65,30 +65,18 @@ static int exynos_pcie_init_clk_resources(struct exynos_pcie *ep)
+>  	struct device *dev = ep->pci.dev;
+>  	int ret;
+>  
+> -	ret = clk_prepare_enable(ep->clk);
+> -	if (ret) {
+> -		dev_err(dev, "cannot enable pcie rc clock");
+> +	ret = devm_clk_bulk_get_all(dev, &ep->clks);
+> +	if (ret < 0)
 
-Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sa8775p.dtsi | 46 +++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+Please use !(ret) here and below to be consistent with the driver.
 
-diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-index 13dd44d..7eab458 100644
---- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-@@ -3586,6 +3586,52 @@
- 		status = "disabled";
- 	};
- 
-+	pcie0_ep: pcie-ep@1c00000 {
-+		compatible = "qcom,sa8775p-pcie-ep";
-+		reg = <0x0 0x01c00000 0x0 0x3000>,
-+		      <0x0 0x40000000 0x0 0xf20>,
-+		      <0x0 0x40000f20 0x0 0xa8>,
-+		      <0x0 0x40001000 0x0 0x4000>,
-+		      <0x0 0x40200000 0x0 0x100000>,
-+		      <0x0 0x01c03000 0x0 0x1000>,
-+		      <0x0 0x40005000 0x0 0x2000>;
-+		reg-names = "parf", "dbi", "elbi", "atu", "addr_space",
-+			    "mmio", "dma";
-+
-+		clocks = <&gcc GCC_PCIE_0_AUX_CLK>,
-+			<&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-+			<&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-+			<&gcc GCC_PCIE_0_SLV_AXI_CLK>,
-+			<&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>;
-+
-+		clock-names = "aux",
-+			      "cfg",
-+			      "bus_master",
-+			      "bus_slave",
-+			      "slave_q2a";
-+
-+		interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 630 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		interrupt-names = "global", "doorbell", "dma";
-+
-+		interconnects = <&pcie_anoc MASTER_PCIE_0 0 &mc_virt SLAVE_EBI1 0>,
-+				<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_PCIE_0 0>;
-+		interconnect-names = "pcie-mem", "cpu-pcie";
-+
-+		iommus = <&pcie_smmu 0x0000 0x7f>;
-+		resets = <&gcc GCC_PCIE_0_BCR>;
-+		reset-names = "core";
-+		power-domains = <&gcc PCIE_0_GDSC>;
-+		phys = <&pcie0_phy>;
-+		phy-names = "pciephy";
-+		max-link-speed = <3>; /* FIXME: Limiting the Gen speed due to stability issues */
-+		num-lanes = <2>;
-+
-+		status = "disabled";
-+	};
-+
- 	pcie0_phy: phy@1c04000 {
- 		compatible = "qcom,sa8775p-qmp-gen4x2-pcie-phy";
- 		reg = <0x0 0x1c04000 0x0 0x2000>;
+>  		return ret;
+> -	}
+>  
+> -	ret = clk_prepare_enable(ep->bus_clk);
+> -	if (ret) {
+> -		dev_err(dev, "cannot enable pcie bus clock");
+> -		goto err_bus_clk;
+> -	}
+> +	ep->clk_cnt = ret;
+
+Since clk_cnt is "int", you can just use it directly instead of "ret".
+
+>  
+> -	return 0;
+> -
+> -err_bus_clk:
+> -	clk_disable_unprepare(ep->clk);
+> -
+> -	return ret;
+> +	return clk_bulk_prepare_enable(ep->clk_cnt, ep->clks);
+>  }
+>  
+>  static void exynos_pcie_deinit_clk_resources(struct exynos_pcie *ep)
+>  {
+> -	clk_disable_unprepare(ep->bus_clk);
+> -	clk_disable_unprepare(ep->clk);
+> +	clk_bulk_disable_unprepare(ep->clk_cnt, ep->clks);
+>  }
+>  
+>  static void exynos_pcie_writel(void __iomem *base, u32 val, u32 reg)
+> @@ -332,17 +320,9 @@ static int exynos_pcie_probe(struct platform_device *pdev)
+>  	if (IS_ERR(ep->elbi_base))
+>  		return PTR_ERR(ep->elbi_base);
+>  
+> -	ep->clk = devm_clk_get(dev, "pcie");
+> -	if (IS_ERR(ep->clk)) {
+> -		dev_err(dev, "Failed to get pcie rc clock\n");
+> -		return PTR_ERR(ep->clk);
+> -	}
+> -
+> -	ep->bus_clk = devm_clk_get(dev, "pcie_bus");
+> -	if (IS_ERR(ep->bus_clk)) {
+> -		dev_err(dev, "Failed to get pcie bus clock\n");
+> -		return PTR_ERR(ep->bus_clk);
+> -	}
+> +	ret = exynos_pcie_init_clk_resources(ep);
+> +	if (ret < 0)
+> +		return ret;
+>  
+>  	ep->supplies[0].supply = "vdd18";
+>  	ep->supplies[1].supply = "vdd10";
+> @@ -351,10 +331,6 @@ static int exynos_pcie_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = exynos_pcie_init_clk_resources(ep);
+> -	if (ret)
+> -		return ret;
+> -
+>  	ret = regulator_bulk_enable(ARRAY_SIZE(ep->supplies), ep->supplies);
+>  	if (ret)
+
+You need to disable_unprepare() clocks in error path here and above.
+
+- Mani
+
 -- 
-2.7.4
-
+மணிவண்ணன் சதாசிவம்
