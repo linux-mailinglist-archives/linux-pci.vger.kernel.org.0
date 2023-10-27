@@ -2,104 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D7EC7D9F00
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 19:45:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA1937DA134
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 21:17:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232101AbjJ0Rpr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Oct 2023 13:45:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57854 "EHLO
+        id S229586AbjJ0TRe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Oct 2023 15:17:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231464AbjJ0Rpq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 13:45:46 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 988ABF3;
-        Fri, 27 Oct 2023 10:45:40 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1698428739;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vCF2sTMjoJARe87DP7lAD8rcZvlM4BFzZKH7cV3QuU8=;
-        b=xXX2ovs1OHhXbwDuZac6CP8IsOrVj54bZeD5nyxWlPUBOXUniX1BJWPV+PcVr7obtLN3eF
-        I6uPBnLwqsSeXJfTpISEjW/ksbeWDMkDlGhuSLkQd0gwCvAm+Ogc1qakMhd99FaKFmFOz6
-        1GIjy1E+N/YDe03TxrnRIU53J4jidS28NuERCZkDyMkX8X5wFJu/OtV20oF773goJYLcMm
-        /ktLuCbvSshkq1Zxca8OxoWF8VJ4zqw5Ohr8CYTRGpLm9x96JuE60jmezp5gm6X3Yn94AK
-        7ns6idG1lqprpc0Y27+8vH0y0yrCC8o1DwW3zTycAy/bFh5YoXh4wv0+CbwiwA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1698428739;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vCF2sTMjoJARe87DP7lAD8rcZvlM4BFzZKH7cV3QuU8=;
-        b=WWHizKPPbjghvXPvf1/QyrM9sNTsNYrmVq6GoM+JMN89I9M6CgHAYJRHoOSGLIiqmVpfsl
-        B+qpDGnW7YiT4hDg==
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Sunil V L <sunilvl@ventanamicro.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Anup Patel <anup@brainfault.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Andrew Jones <ajones@ventanamicro.com>,
-        Atish Kumar Patra <atishp@rivosinc.com>,
-        Haibo Xu <haibo1.xu@intel.com>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [RFC PATCH v2 13/21] irqchip: riscv-intc: Add ACPI support for AIA
-In-Reply-To: <20231026165150.GA1825130@bhelgaas>
-References: <20231026165150.GA1825130@bhelgaas>
-Date:   Fri, 27 Oct 2023 19:45:38 +0200
-Message-ID: <87jzr82c3h.ffs@tglx>
+        with ESMTP id S232039AbjJ0TRd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 15:17:33 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1745186
+        for <linux-pci@vger.kernel.org>; Fri, 27 Oct 2023 12:17:30 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-9a6190af24aso391024066b.0
+        for <linux-pci@vger.kernel.org>; Fri, 27 Oct 2023 12:17:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gigaio-com.20230601.gappssmtp.com; s=20230601; t=1698434249; x=1699039049; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=YfXNY5+Qb2CuwFyDDH5zc72IL9f1vcKMEUozaq/s6YQ=;
+        b=ScdTTsA75frR0XVHDukyQmo9IOo51/Rz7myI8iXb21GmXU0YPlCYTPaSX4+GeAXSCI
+         Ww0pUAIR/BWkyupa4Jv7O4NnveE/lrQC5J1ydpqIqOTLovqNQIqsjA6Rw8Jqk+M0oiwq
+         3BP8DaFSeDhiZ2yW6qSZbqKiiR6Qllt81/P8SRABX4BeeN17sbZVzpMbHlWS8Tytd8km
+         nWznW6WOF4TE6TLFeiOxQH5l15IOQ1gKa80ts54NV/+DxnsgGS2K1oSBPX9zrWWWpkgD
+         4yXo0vcTw0zC9bUn2+y1AzMhe9y+Gn3T+9YqGoeJPhCUo2RmZfsefntu23X0lrEKHIDN
+         W4Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698434249; x=1699039049;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YfXNY5+Qb2CuwFyDDH5zc72IL9f1vcKMEUozaq/s6YQ=;
+        b=Qxowjg9hs739RUxpv90gLUMgkEoxvCRcTEiLODKLqqQ1PRhFXkT2JwW+whM1zQ1EV7
+         dEHKjoP//h+Q8K6zieeQLlEB3yGyIsrRupmXZRnQbLRckEp3+NP9UsIb1YNRyEhrUNjT
+         aeouF8MylYx6WkUTUdy5KIZ0fvFT5vuyJcxoUSr/3Jfz3EALqtIMxM+pjtoDnuDUEeO2
+         HqaPqW89fp8N0Tji+k39xcV52CPiDkOZMvQ9iAI1dafqAAG3t/k9ekVnZwYo55Lx2D6K
+         5Rq/0noOwMfi+gh1VJB+xKpIQ5CF/kX5qhyqPdkTxb/VY6Vb1p499KBA4E0DQDv6g9D6
+         Asag==
+X-Gm-Message-State: AOJu0Yxl/Hr1IGnkpDQAJQxIwN0Ieayumv4FB6afoAGwTWz5YMg/f3+P
+        2w7zrMJKpX2DmqODnb6SmOeP78YXpi2ILWgEGgcTJwslWiwgITWi
+X-Google-Smtp-Source: AGHT+IGb5ReXfsXF6LQQQyxWyvO9P+rw7gib+XZu1vUBzKfU6/sRg8Imq3HvjjdJf6I86ZONO/7nKbBXDyftEarLK2g=
+X-Received: by 2002:a17:907:1b13:b0:9bd:ea65:7626 with SMTP id
+ mp19-20020a1709071b1300b009bdea657626mr3077707ejc.20.1698434248924; Fri, 27
+ Oct 2023 12:17:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+From:   Eric Pilmore <epilmore@gigaio.com>
+Date:   Fri, 27 Oct 2023 12:17:17 -0700
+Message-ID: <CAOQPn8uAWqR+0Qpk+Ua8gria06xx99ge5MnCGi4MwPOZNaXBvw@mail.gmail.com>
+Subject: IOVA address range
+To:     linux-pci@vger.kernel.org, dmaengine@vger.kernel.org
+Cc:     Eric Pilmore <epilmore@gigaio.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 26 2023 at 11:51, Bjorn Helgaas wrote:
-> On Thu, Oct 26, 2023 at 01:53:36AM +0530, Sunil V L wrote:
->> The RINTC subtype structure in MADT also has information about other
->> interrupt controllers like MMIO. So, save those information and provide
->> interfaces to retrieve them when required by corresponding drivers.
->
->> @@ -218,7 +306,19 @@ static int __init riscv_intc_acpi_init(union acpi_subtable_headers *header,
->
->> +	 * MSI controller (IMSIC) in RISC-V is optional. So, unless
->> +	 * IMSIC is discovered, set system wide MSI support as
->> +	 * unsupported. Once IMSIC is probed, MSI support will be set.
->> +	 */
->> +	pci_no_msi();
->
-> It doesn't seem like we should have to tell the PCI core about
-> functionality we *don't* have.
->
-> I would think IMSIC would be detected before enumerating PCI devices
-> that might use it, and if we *haven't* found an IMSIC by the time we
-> get to pci_register_host_bridge(), would/should we set
-> PCI_BUS_FLAGS_NO_MSI there?
->
-> I see Thomas is cc'd; he'd have better insight.
+Need a little IOVA/IOMMU help.
 
-I was not really involved with this bus and MSI domain logic. Marc
-should know. CC'ed.
+Is it correct that the IOVA address range for a device goes from
+address 0x0 up to the dma-mask of the respective device?
+
+Is it correct to assume that the base of the IOVA address space for a
+device will always be zero (0x0)? Is there any reason to think that
+this has changed in some newer iteration of the kernel, perhaps 5.10,
+and that the base could be non-zero?
+
+I realize an IOVA itself can be non-zero. I'm trying to verify what
+the base address is of the IOVA space as a whole on a per device
+basis.
 
 Thanks,
-
-        tglx
-
-
+Eric Pilmore
