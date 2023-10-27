@@ -2,142 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5BD67D9903
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 14:55:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 229D67D99E5
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 15:34:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345505AbjJ0MzS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Oct 2023 08:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53456 "EHLO
+        id S1345892AbjJ0Ne1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Oct 2023 09:34:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbjJ0MzR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 08:55:17 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D836128
-        for <linux-pci@vger.kernel.org>; Fri, 27 Oct 2023 05:55:14 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-6b20a48522fso2007686b3a.1
-        for <linux-pci@vger.kernel.org>; Fri, 27 Oct 2023 05:55:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1698411314; x=1699016114; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NtR5YHlVvuHvzI/nsFjHhzkEP3xQ5iNgT/02AgGSWcY=;
-        b=eaaagx6NDkfQFgJo9sUQQmAQNfajIGMpoXKob72Poy79+Ux5Ksmp1ACsWi5q04olmg
-         4H6DQtFNdYdYKNljv++MNGOgGL7lntA58GKdrN3WI+AIz5EIn8VQ+WGhNWmlUG2Y+OlJ
-         qK8lfyKbpgYWvNVXCceHQ311fa9K/4So1K0Olvdxx8hzecyqNjh6YO7HJ62LXKubO9xb
-         GyTLR8h5sArH7U81tKasS0PdncPEiOkMnWyUsrT36i60PN1EDQO6tySOVTw3va7JvRn/
-         GtgXG2YtFEhYLmbS56xu4hdctI3FLs9PO8DZdp8nEzmqkHQB36NAxYG7xNgj4hWK8AKF
-         7U7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698411314; x=1699016114;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NtR5YHlVvuHvzI/nsFjHhzkEP3xQ5iNgT/02AgGSWcY=;
-        b=X2INBAVo4txPfCaRRG5idHF7MLcjAso4j+2I5znRbpzqpMwH3NR1oK7cWtIqlGmFKb
-         1uVXgQs/qp9aa1+93InkJDHIC5F4wrrOWZX7FUbtgSee5sCoiUToVExX5YACAdu+nzCi
-         w/GJkuvTiaF0rhzDTXwCBK7EgQot1azpWwy/f4JbmtWlZEpB3ketXn68/UFEC/QERiS3
-         RqmXNkvx5ikI6UEFqEPrfZgZaMOqXk99CuXRe2WXi2/RQJrC09p1ZzDu+ZGTRvezopW5
-         MlWfbjnEbL3mBhsCLy82A869FHJ04CVTaxd53Y/2Ic7Iz1LW1QeBs2N16smU5D4xj9R7
-         5DCA==
-X-Gm-Message-State: AOJu0YxLWGD3S+JF20FaTKNlptNNemB3vmHeR15GK5PKHUgDR6BxmHV8
-        kMykAn/hs39M/ADi+axFN9POiQ==
-X-Google-Smtp-Source: AGHT+IFhOP7YUnwDjtkHfZaRuwApUBuBpo87R1Ao7f/FkzvpRDYjh5UpMDOWwDtBZTINnRMBGE38uw==
-X-Received: by 2002:a05:6a21:a5a8:b0:174:129d:3978 with SMTP id gd40-20020a056a21a5a800b00174129d3978mr3501864pzc.32.1698411313970;
-        Fri, 27 Oct 2023 05:55:13 -0700 (PDT)
-Received: from sunil-laptop ([106.51.188.78])
-        by smtp.gmail.com with ESMTPSA id bu22-20020a632956000000b00528db73ed70sm1053268pgb.3.2023.10.27.05.55.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Oct 2023 05:55:13 -0700 (PDT)
-Date:   Fri, 27 Oct 2023 18:25:03 +0530
-From:   Sunil V L <sunilvl@ventanamicro.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
+        with ESMTP id S231555AbjJ0Ne0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 09:34:26 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1E8BD6;
+        Fri, 27 Oct 2023 06:34:23 -0700 (PDT)
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39RCqAA3001415;
+        Fri, 27 Oct 2023 13:33:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=RZRsq6NSc8v50RtGhhXOa3FDVL7OuBZ8+GKl30Gtyzs=;
+ b=RWvLfLJ0NXzGH4T0xui4L0WE54PDTrv0sTrKvQJrdrmA3rKcJ7S8pJ9k1zp8V3P+dQ7B
+ ADH/w3Jue6FHzQeP14WXKrS40653cCZXTExbUdM2ho0OdZ44QVnpInTaFMio2u6ujb+Q
+ UCZ4m2hRhxZGuU9hlm0RHVPsQ5KcjyHPv0Z4UbgFrICw6P/KPIFz58xS/vUg6rGgsPet
+ oOZHcfWQ3lz27MExDOBOCBDLwumuM22DEjczR77hBHbzlVj+utOXH3Edh6FY6q+NcF0j
+ ju/yeTQqCjQviVp3HtOqChgsK3CY+Sd/elwD+Yo+RI4amoZLfFC6HtDyglyPyLeh49qK NA== 
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tyws9a8tj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Oct 2023 13:33:20 +0000
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 39RDXHN1026021;
+        Fri, 27 Oct 2023 13:33:17 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3tv7qmaape-1;
+        Fri, 27 Oct 2023 13:33:17 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39RDXGhL026015;
+        Fri, 27 Oct 2023 13:33:16 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
+        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 39RDXFSJ026014;
+        Fri, 27 Oct 2023 13:33:16 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
+        id 31BE4481E; Fri, 27 Oct 2023 19:03:15 +0530 (+0530)
+From:   Mrinmay Sarkar <quic_msarkar@quicinc.com>
+To:     agross@kernel.org, andersson@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        konrad.dybcio@linaro.org, mani@kernel.org
+Cc:     quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+        dmitry.baryshkov@linaro.org, robh@kernel.org,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        quic_parass@quicinc.com, quic_schintav@quicinc.com,
+        Mrinmay Sarkar <quic_msarkar@quicinc.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Anup Patel <anup@brainfault.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Andrew Jones <ajones@ventanamicro.com>,
-        Atish Kumar Patra <atishp@rivosinc.com>,
-        Haibo Xu <haibo1.xu@intel.com>
-Subject: Re: [RFC PATCH v2 06/21] RISC-V: Kconfig: Select deferred GSI probe
- for ACPI systems
-Message-ID: <ZTuzJ1nsicZYp+uh@sunil-laptop>
-References: <20231025202344.581132-7-sunilvl@ventanamicro.com>
- <20231026170408.GA1825378@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231026170408.GA1825378@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mhi@lists.linux.dev
+Subject: [PATCH v4 0/4] arm64: qcom: sa8775p: add support for EP PCIe
+Date:   Fri, 27 Oct 2023 19:03:08 +0530
+Message-Id: <1698413592-26523-1-git-send-email-quic_msarkar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: gGNF1ox1zsnyPE4Hp4jLZNIU78BBbxQh
+X-Proofpoint-GUID: gGNF1ox1zsnyPE4Hp4jLZNIU78BBbxQh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-27_11,2023-10-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxlogscore=347 spamscore=0 impostorscore=0 mlxscore=0 bulkscore=0
+ clxscore=1015 lowpriorityscore=0 phishscore=0 priorityscore=1501
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2310240000 definitions=main-2310270117
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
+        SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 26, 2023 at 12:04:08PM -0500, Bjorn Helgaas wrote:
-> On Thu, Oct 26, 2023 at 01:53:29AM +0530, Sunil V L wrote:
-> > On RISC-V platforms, apart from root interrupt controllers (which
-> > provide local interrupts and IPI), other interrupt controllers in the
-> > hierarchy are probed late. Enable this select this CONFIG option for
-> > RISC-V platforms so that device drivers which connect to deferred
-> > interrupt controllers can take appropriate action.
-> 
-> Quite a bit of this series seems related to the question of interrupt
-> controllers being probed "late".
-> 
-> I don't see anything specific about *how* late this might be, but from
-> the use of -EPROBE_DEFER in individual drivers (8250_pnp explicitly,
-> and acpi_register_gsi() and pnp_irq() and acpi_pci_irq_enable(), which
-> are called from driver .probe() paths) it seems like interrupt
-> controllers might be detected even after devices that use them.
-> 
-> That seems like a fairly invasive change to the driver probe flow.
-> If we really need to do that, I think it might merit a little more
-> background as justification since we haven't had to do it for any
-> other arch yet.
-> 
+This series adds the relavent DT bindings, new compatible string,
+add support to EPF driver and add EP PCIe node in dtsi file for
+ep pcie0 controller.
 
-Hi Bjorn,
+v3 -> v4:
+- add maxItems field in dt bindings
+- update comment in patch2
+- dropped PHY driver patch as it is already applied [1]
+- update comment in EPF driver patch
+- update commect in dtsi and add iommus instead of iommu-map
 
-In RISC-V, the APLIC can be a converter from wired (GSI) to MSI interrupts.
-Hence, especially in this mode, it has to be a platform device to use
-device MSI domain. Also, according to Marc Zyngier there is no reason to
-probe interrupt controllers early apart from root controller. So, the
-device drivers which use wired interrupts need to be probed after APLIC.
+[1] https://lore.kernel.org/all/169804254205.383714.18423881810869732517.b4-ty@kernel.org/
 
-The PNP devices and PCI INTx GSI links use either
-acpi_dev_resource_interrupt() (PNP) or acpi_register_gsi() directly
-(PCI). The approach taken here is to follow the example of
-acpi_irq_get() which is enhanced to return EPROBE_DEFER and several
-platform device drivers which use platform_get_irq() seem to be handling
-this already.
+v2 -> v3:
+- removed if/then schemas, added minItems for reg,
+  reg-bnames, interrupt and interrupt-names instead.
+- adding qcom,sa8775p-pcie-ep compitable for sa8775p
+  as we have some specific change to add.
+- reusing sm8450's pcs_misc num table as it is same as sa8775p.
+  used appropriate namespace for pcs.
+- remove const from sa8775p_header as kernel test robot
+  throwing some warnings due to this.
+- remove fallback compatiable as we are adding compatiable for sa8775p.
 
-Using ResourceSource dependency (mbigen uses) in the namespace as part of
-Extended Interrupt Descriptor will not ensure the order since PNP/INTx
-GSI devices don't work with that.
+v1 -> v2:
+- update description for dma
+- Reusing qcom,sdx55-pcie-ep compatibe so remove compaitable
+  for sa8775p
+- sort the defines in phy header file and remove extra defines
+- add const in return type pci_epf_header and remove MHI_EPF_USE_DMA
+  flag as hdma patch is not ready
+- add fallback compatiable as qcom,sdx55-pcie-ep, add iommu property
 
-Is there any other better way to create dependency between IO devices
-and the interrupt controllers when interrupt controller itself is a
-platform device? While using core_initcall() for interrupt controllers
-seem to work which forces the interrupt controller to be probed first,
-Marc is not in favor of that approach since it is fragile.
 
-Thanks a lot for your help with review and feedback!
+Mrinmay Sarkar (4):
+  dt-bindings: PCI: qcom-ep: Add support for SA8775P SoC
+  PCI: qcom-ep: Add support for SA8775P SOC
+  PCI: epf-mhi: Add support for SA8775P
+  arm64: dts: qcom: sa8775p: Add ep pcie0 controller node
 
-Sunil
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 48 +++++++++++++++++++++-
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 46 +++++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-qcom-ep.c          |  1 +
+ drivers/pci/endpoint/functions/pci-epf-mhi.c       | 17 ++++++++
+ 4 files changed, 110 insertions(+), 2 deletions(-)
+
+-- 
+2.7.4
 
