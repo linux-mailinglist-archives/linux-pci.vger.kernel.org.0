@@ -2,150 +2,274 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 050FA7D8B4F
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 00:02:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 652E87D8DDA
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Oct 2023 06:44:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231977AbjJZWCW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Oct 2023 18:02:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36588 "EHLO
+        id S229633AbjJ0EoL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Oct 2023 00:44:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229668AbjJZWCV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Oct 2023 18:02:21 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF647AB;
-        Thu, 26 Oct 2023 15:02:19 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA825C433C8;
-        Thu, 26 Oct 2023 22:02:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698357739;
-        bh=v+OwCPCkufkei1OkZ0IK7OBnZIyQ/k2CAv18GMp5ECU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=n78Q8MakmY6S/n69Ux03t5U9WUOopOaUt6nDKsoVSQ7EwfcRn4luVSqYv4gLpBVda
-         DrKIa1h7StitkkRiy4EE1uZV9ATfMIOdG1LH7fry+wsdgg7K0o8FZyDL0K8lk1O1cV
-         t8tCIDdZoIwRLbl3rrSWnJxwraxqaVw/Gir1EFKFtZzjPUiogtA2KbpA/GPnWVFE75
-         vFVT+iMPgWVgs1VDlgs/RGVAxhV9lLfl6E7IGtKj2DkZ2fYHoCBfSJQ4yR5Uj+vsRQ
-         d1R5iC/0IUud8PHKgG7cpchJEmznQsL2QPpfVhJQJ4HgyUhDYk2WkITTtzPLdgWmQ9
-         XkdZf2GExUM1w==
-Date:   Thu, 26 Oct 2023 17:02:16 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        ath10k@lists.infradead.org, ath11k@lists.infradead.org,
-        ath12k@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-bluetooth@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-rdma@vger.kernel.org,
-        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2 03/13] PCI/ASPM: Disable ASPM when driver requests it
-Message-ID: <20231026220216.GA1752508@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a434d9f-48ec-cfe5-900-8923361798a9@linux.intel.com>
+        with ESMTP id S229604AbjJ0EoK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Oct 2023 00:44:10 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A15E791
+        for <linux-pci@vger.kernel.org>; Thu, 26 Oct 2023 21:44:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698381847; x=1729917847;
+  h=date:from:to:cc:subject:message-id;
+  bh=SA133/BP6Bo2Z6dj8kdlwSH5KztVXkYglL+emk9FMro=;
+  b=hJPdV0Jg32qokpGMFB1Q42/D3BPA6nMFhE+ioB8Wz/xGyIk0XtvrJoxN
+   LxF+pc+sAbq+AERdBANP3aDdYqcrnI2rr9Quz3RYt//EczCteWhGJYFys
+   Egtw6rgSi7S4OgzR+Ih35aK0mOGT3AKB3Ahg3MJq6BKYT6GtrNA7SqCwd
+   gD0spEwcGfLddtqGe/+L2p8jf8e667fL4mRz/V2acc57ThHK+BhPr7Dxb
+   hDAZVwN1I+WojVzytCiCfKsPawG8ng9onNukZOdZIWnojiUZGvdc5SyN9
+   ZS5FOf6GVPH5fbqD4TvlvDX59SFohjPpVeftmF3Qoqt3vytqHaVWU3Ow+
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10875"; a="367916793"
+X-IronPort-AV: E=Sophos;i="6.03,255,1694761200"; 
+   d="scan'208";a="367916793"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2023 21:44:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.03,255,1694761200"; 
+   d="scan'208";a="7106678"
+Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 26 Oct 2023 21:42:44 -0700
+Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qwEhX-000ASd-2V;
+        Fri, 27 Oct 2023 04:44:03 +0000
+Date:   Fri, 27 Oct 2023 12:43:27 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:aer] BUILD SUCCESS
+ 13cf36c648df0c7de6b74ca7163713d8fcae53e2
+Message-ID: <202310271223.XGwkyfjb-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 16, 2023 at 05:27:37PM +0300, Ilpo Järvinen wrote:
-> On Fri, 13 Oct 2023, Bjorn Helgaas wrote:
-> > On Thu, Oct 12, 2023 at 01:56:16PM +0300, Ilpo Järvinen wrote:
-> > > On Wed, 11 Oct 2023, Bjorn Helgaas wrote:
-> > > > On Mon, Sep 18, 2023 at 04:10:53PM +0300, Ilpo Järvinen wrote:
-> > > > > PCI core/ASPM service driver allows controlling ASPM state
-> > > > > through pci_disable_link_state() and pci_enable_link_state()
-> > > > > API. It was decided earlier (see the Link below), to not
-> > > > > allow ASPM changes when OS does not have control over it but
-> > > > > only log a warning about the problem (commit 2add0ec14c25
-> > > > > ("PCI/ASPM: Warn when driver asks to disable ASPM, but we
-> > > > > can't do it")). Similarly, if ASPM is not enabled through
-> > > > > config, ASPM cannot be disabled.
-> > > ...
-> > 
-> > > > This disables *all* ASPM states, unlike the version when
-> > > > CONFIG_PCIEASPM is enabled.  I suppose there's a reason, and
-> > > > maybe a comment could elaborate on it?
-> > > >
-> > > > When CONFIG_PCIEASPM is not enabled, I don't think we actively
-> > > > *disable* ASPM in the hardware; we just leave it as-is, so
-> > > > firmware might have left it enabled.
-> > > 
-> > > This whole trickery is intended for drivers that do not want to
-> > > have ASPM because the devices are broken with it. So leaving it
-> > > as-is is not really an option (as demonstrated by the custom
-> > > workarounds).
-> > 
-> > Right.
-> > 
-> > > > Conceptually it seems like the LNKCTL updates here should be
-> > > > the same whether CONFIG_PCIEASPM is enabled or not (subject to
-> > > > the question above).
-> > > > 
-> > > > When CONFIG_PCIEASPM is enabled, we might need to do more
-> > > > stuff, but it seems like the core should be the same.
-> > > 
-> > > So you think it's safer to partially disable ASPM (as per
-> > > driver's request) rather than disable it completely? I got the
-> > > impression that the latter might be safer from what Rafael said
-> > > earlier but I suppose I might have misinterpreted him since he
-> > > didn't exactly say that it might be safer to _completely_
-> > > disable it.
-> > 
-> > My question is whether the state of the device should depend on
-> > CONFIG_PCIEASPM.  If the driver does this:
-> > 
-> >   pci_disable_link_state(PCIE_LINK_STATE_L0S)
-> > 
-> > do we want to leave L1 enabled when CONFIG_PCIEASPM=y but disable L1
-> > when CONFIG_PCIEASPM is unset?
-> > 
-> > I can see arguments both ways.  My thought was that it would be nice
-> > to end up with a single implementation of pci_disable_link_state()
-> > with an #ifdef around the CONFIG_PCIEASPM-enabled stuff because it
-> > makes the code easier to read.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git aer
+branch HEAD: 13cf36c648df0c7de6b74ca7163713d8fcae53e2  PCI/AER: Factor out interrupt toggling into helpers
 
-Responding to myself here, I think we should do the partial disables
-because it matches what the drivers did previously by hand, we can
-reduce the number of code paths, and the resulting device state will
-be the same regardless of CONFIG_PCIEASPM.
+elapsed time: 1799m
 
-> I think there's still one important thing to discuss and none of the
-> comments have covered that area so far.
-> 
-> The drivers that have workaround are not going to turn more
-> dangerous than they're already without this change, so we're mostly
-> within charted waters there even with what you propose. However, I
-> think the bigger catch and potential source of problems, with both
-> this v2 and your alternative, are the drivers that do not have the
-> workarounds around CONFIG_PCIEASPM=n and/or _OSC permissions. Those
-> code paths just call pci_disable_link_state() and do nothing else.
-> 
-> Do you think it's okay to alter the behavior for those drivers too
-> (disable ASPM where it previously was a no-op)?
+configs tested: 199
+configs skipped: 2
 
-Yes.  I assume the reason those drivers call pci_disable_link_state()
-is because some hardware defect means ASPM doesn't work correctly.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-This change means pci_disable_link_state() will disable ASPM even when
-the OS doesn't own ASPM or CONFIG_PCIEASPM is unset.  I think those
-cases are unusual and probably not well tested, and I suspect that if
-we *did* test them, we'd find that ASPM doesn't work with the current
-kernel.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20231026   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                   randconfig-001-20231026   gcc  
+arm                   randconfig-001-20231027   gcc  
+arm                       spear13xx_defconfig   clang
+arm64                            allmodconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20231026   gcc  
+i386         buildonly-randconfig-001-20231027   gcc  
+i386         buildonly-randconfig-002-20231026   gcc  
+i386         buildonly-randconfig-002-20231027   gcc  
+i386         buildonly-randconfig-003-20231026   gcc  
+i386         buildonly-randconfig-003-20231027   gcc  
+i386         buildonly-randconfig-004-20231026   gcc  
+i386         buildonly-randconfig-004-20231027   gcc  
+i386         buildonly-randconfig-005-20231026   gcc  
+i386         buildonly-randconfig-005-20231027   gcc  
+i386         buildonly-randconfig-006-20231026   gcc  
+i386         buildonly-randconfig-006-20231027   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20231026   gcc  
+i386                  randconfig-001-20231027   gcc  
+i386                  randconfig-002-20231026   gcc  
+i386                  randconfig-002-20231027   gcc  
+i386                  randconfig-003-20231026   gcc  
+i386                  randconfig-003-20231027   gcc  
+i386                  randconfig-004-20231026   gcc  
+i386                  randconfig-004-20231027   gcc  
+i386                  randconfig-005-20231026   gcc  
+i386                  randconfig-005-20231027   gcc  
+i386                  randconfig-006-20231026   gcc  
+i386                  randconfig-006-20231027   gcc  
+i386                  randconfig-011-20231026   gcc  
+i386                  randconfig-011-20231027   gcc  
+i386                  randconfig-012-20231026   gcc  
+i386                  randconfig-012-20231027   gcc  
+i386                  randconfig-013-20231026   gcc  
+i386                  randconfig-013-20231027   gcc  
+i386                  randconfig-014-20231026   gcc  
+i386                  randconfig-014-20231027   gcc  
+i386                  randconfig-015-20231026   gcc  
+i386                  randconfig-015-20231027   gcc  
+i386                  randconfig-016-20231026   gcc  
+i386                  randconfig-016-20231027   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20231026   gcc  
+loongarch             randconfig-001-20231027   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                         apollo_defconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                          hp300_defconfig   gcc  
+m68k                        mvme147_defconfig   gcc  
+m68k                          sun3x_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                     loongson1b_defconfig   gcc  
+mips                      loongson3_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                 randconfig-001-20231026   gcc  
+riscv                 randconfig-001-20231027   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20231026   gcc  
+s390                  randconfig-001-20231027   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                            hp6xx_defconfig   gcc  
+sh                           se7750_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                 randconfig-001-20231026   gcc  
+sparc                 randconfig-001-20231027   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           alldefconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-001-20231026   gcc  
+x86_64       buildonly-randconfig-001-20231027   gcc  
+x86_64       buildonly-randconfig-002-20231026   gcc  
+x86_64       buildonly-randconfig-002-20231027   gcc  
+x86_64       buildonly-randconfig-003-20231026   gcc  
+x86_64       buildonly-randconfig-003-20231027   gcc  
+x86_64       buildonly-randconfig-004-20231026   gcc  
+x86_64       buildonly-randconfig-004-20231027   gcc  
+x86_64       buildonly-randconfig-005-20231026   gcc  
+x86_64       buildonly-randconfig-005-20231027   gcc  
+x86_64       buildonly-randconfig-006-20231026   gcc  
+x86_64       buildonly-randconfig-006-20231027   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                randconfig-001-20231026   gcc  
+x86_64                randconfig-001-20231027   gcc  
+x86_64                randconfig-002-20231026   gcc  
+x86_64                randconfig-002-20231027   gcc  
+x86_64                randconfig-003-20231026   gcc  
+x86_64                randconfig-003-20231027   gcc  
+x86_64                randconfig-004-20231026   gcc  
+x86_64                randconfig-004-20231027   gcc  
+x86_64                randconfig-005-20231026   gcc  
+x86_64                randconfig-005-20231027   gcc  
+x86_64                randconfig-006-20231026   gcc  
+x86_64                randconfig-006-20231027   gcc  
+x86_64                randconfig-011-20231026   gcc  
+x86_64                randconfig-011-20231027   gcc  
+x86_64                randconfig-012-20231026   gcc  
+x86_64                randconfig-012-20231027   gcc  
+x86_64                randconfig-013-20231026   gcc  
+x86_64                randconfig-013-20231027   gcc  
+x86_64                randconfig-014-20231026   gcc  
+x86_64                randconfig-014-20231027   gcc  
+x86_64                randconfig-015-20231026   gcc  
+x86_64                randconfig-015-20231027   gcc  
+x86_64                randconfig-016-20231026   gcc  
+x86_64                randconfig-016-20231027   gcc  
+x86_64                randconfig-071-20231026   gcc  
+x86_64                randconfig-071-20231027   gcc  
+x86_64                randconfig-072-20231026   gcc  
+x86_64                randconfig-072-20231027   gcc  
+x86_64                randconfig-073-20231026   gcc  
+x86_64                randconfig-073-20231027   gcc  
+x86_64                randconfig-074-20231026   gcc  
+x86_64                randconfig-074-20231027   gcc  
+x86_64                randconfig-075-20231026   gcc  
+x86_64                randconfig-075-20231027   gcc  
+x86_64                randconfig-076-20231026   gcc  
+x86_64                randconfig-076-20231027   gcc  
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                          rhel-8.3-func   gcc  
+x86_64                    rhel-8.3-kselftests   gcc  
+x86_64                         rhel-8.3-kunit   gcc  
+x86_64                           rhel-8.3-ltp   gcc  
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                          iss_defconfig   gcc  
 
-So I think this is more likely to *fix* something than to break it.
-
-Bjorn
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
