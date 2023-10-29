@@ -2,68 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA06D7DA76E
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Oct 2023 15:59:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32D727DAA4C
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Oct 2023 02:49:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229492AbjJ1N72 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 28 Oct 2023 09:59:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58156 "EHLO
+        id S229768AbjJ2Att (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 28 Oct 2023 20:49:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229488AbjJ1N72 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 28 Oct 2023 09:59:28 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1601ED
-        for <linux-pci@vger.kernel.org>; Sat, 28 Oct 2023 06:59:25 -0700 (PDT)
+        with ESMTP id S229446AbjJ2Att (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 28 Oct 2023 20:49:49 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50941AD
+        for <linux-pci@vger.kernel.org>; Sat, 28 Oct 2023 17:49:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698501565; x=1730037565;
-  h=date:from:to:cc:subject:message-id;
-  bh=Ur/dZ1zfsIitkmPNcD1GAuKohbgyVy+A0RsNxaroypQ=;
-  b=Yi8n9cowlynOJ7CY4mP5Bho8aYlynpaOrgvXw5SM9563SHp5ScLpIuHN
-   QxgI9a9FhXSGSmQT6GIdmjRgxaC+Bmr4gGgveUbgnbEG1zTx6ZhyUdG1c
-   k0bcHzcMKkWpxCddujejJ2s0wDyZ6h/y3Ub9FyZAj3Wylh9gcQJn5JD1x
-   kDeU0CjvNS8EcLyGQCSVsI+EIWzwAJ6ho24o72fU+Mi9u8Pf2+6IrwkDm
-   rGPCvbpa6Ze37r+jUA0UaT9+JUzxr1jcCrsIrXI5BPXh/PnZ4sRAw5Y7Y
-   Ea2hhE9HCauyQjyJ9B+dH6p92xXoyGmhm1b0ecnuBuUa77H7DQNBiYMlv
+  t=1698540586; x=1730076586;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=iiUHfjc9nX9KaHGGOQCim9KlWuKjTlMF67reCKa9PRw=;
+  b=mCAXgbtXPCOnjILM9CWdgROjc/AvImfO3JLzt3nNzke4WXM6+EfOJ+b5
+   XdS1sJIZzJZOqOUB47ZpVGzH++7w2muh5mrPnrazKtyHqClwHJNId4tV8
+   JmkM7BLlc5T8FtwX8pS8QDmKcEe0C3KHnV9a6N+o4p0+6cVISCrU1iEq4
+   87GXGLCtcee1s+lmipS3vwfvLZNYZWSZhrYRIjvTRATaakGe7eFD5uLmN
+   FJ+GGv+TTfNIn64+1e7L7+XUelsV2t/x3ojhEk/gfpwGvZUr+jX3RSsIv
+   DF2/WWXQmMKb0wfuYX77ZYd6DsCuJwnTMrrrCYpnQxNisvlZb5DFeHiS1
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10876"; a="387711396"
-X-IronPort-AV: E=Sophos;i="6.03,259,1694761200"; 
-   d="scan'208";a="387711396"
+X-IronPort-AV: E=McAfee;i="6600,9927,10877"; a="368140949"
+X-IronPort-AV: E=Sophos;i="6.03,260,1694761200"; 
+   d="scan'208";a="368140949"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2023 06:59:25 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2023 17:49:46 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10876"; a="825638390"
-X-IronPort-AV: E=Sophos;i="6.03,259,1694761200"; 
-   d="scan'208";a="825638390"
+X-IronPort-AV: E=McAfee;i="6600,9927,10877"; a="825711871"
+X-IronPort-AV: E=Sophos;i="6.03,260,1694761200"; 
+   d="scan'208";a="825711871"
 Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 28 Oct 2023 06:59:24 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 28 Oct 2023 17:49:44 -0700
 Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1qwjqU-000BnP-0P;
-        Sat, 28 Oct 2023 13:59:22 +0000
-Date:   Sat, 28 Oct 2023 21:58:23 +0800
+        id 1qwtzq-000CDL-21;
+        Sun, 29 Oct 2023 00:49:42 +0000
+Date:   Sun, 29 Oct 2023 08:49:39 +0800
 From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
+To:     "Krzysztof =?utf-8?Q?Wilczy=C5=84ski" ?= <kwilczynski@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:misc] BUILD SUCCESS
- 0fce6e5c87faec2c8bf28d2abc8cb595f4e244b6
-Message-ID: <202310282120.h544QPfJ-lkp@intel.com>
+Subject: [pci:controller/qcom-ep] BUILD SUCCESS
+ a07d2497ed657eb2efeb967af47e22f573dcd1d6
+Message-ID: <202310290836.tOTwUbHi-lkp@intel.com>
 User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
-branch HEAD: 0fce6e5c87faec2c8bf28d2abc8cb595f4e244b6  PCI: Simplify pcie_capability_clear_and_set_word() to ..._clear_word()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/qcom-ep
+branch HEAD: a07d2497ed657eb2efeb967af47e22f573dcd1d6  PCI: qcom-ep: Add dedicated callback for writing to DBI2 registers
 
-elapsed time: 2683m
+elapsed time: 2231m
 
-configs tested: 149
+configs tested: 145
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -77,12 +80,15 @@ arc                              allmodconfig   gcc
 arc                               allnoconfig   gcc  
 arc                              allyesconfig   gcc  
 arc                                 defconfig   gcc  
+arc                        nsim_700_defconfig   gcc  
 arc                   randconfig-001-20231027   gcc  
 arm                              allmodconfig   gcc  
 arm                               allnoconfig   gcc  
 arm                              allyesconfig   gcc  
+arm                         assabet_defconfig   gcc  
+arm                          collie_defconfig   clang
 arm                                 defconfig   gcc  
-arm                        multi_v5_defconfig   clang
+arm                        keystone_defconfig   gcc  
 arm                   randconfig-001-20231027   gcc  
 arm                         vf610m4_defconfig   gcc  
 arm64                            allmodconfig   gcc  
@@ -93,14 +99,13 @@ csky                             allmodconfig   gcc
 csky                              allnoconfig   gcc  
 csky                             allyesconfig   gcc  
 csky                                defconfig   gcc  
-i386                              allnoconfig   gcc  
+i386                              allnoconfig   clang
 i386         buildonly-randconfig-001-20231027   gcc  
 i386         buildonly-randconfig-002-20231027   gcc  
 i386         buildonly-randconfig-003-20231027   gcc  
 i386         buildonly-randconfig-004-20231027   gcc  
 i386         buildonly-randconfig-005-20231027   gcc  
 i386         buildonly-randconfig-006-20231027   gcc  
-i386                              debian-10.3   gcc  
 i386                                defconfig   gcc  
 i386                  randconfig-001-20231027   gcc  
 i386                  randconfig-002-20231027   gcc  
@@ -123,7 +128,9 @@ m68k                             allmodconfig   gcc
 m68k                              allnoconfig   gcc  
 m68k                             allyesconfig   gcc  
 m68k                                defconfig   gcc  
+m68k                        mvme16x_defconfig   gcc  
 m68k                        stmark2_defconfig   gcc  
+m68k                           sun3_defconfig   gcc  
 microblaze                       allmodconfig   gcc  
 microblaze                        allnoconfig   gcc  
 microblaze                       allyesconfig   gcc  
@@ -131,10 +138,9 @@ microblaze                          defconfig   gcc
 mips                             allmodconfig   gcc  
 mips                              allnoconfig   gcc  
 mips                             allyesconfig   gcc  
-mips                        bcm63xx_defconfig   clang
-mips                  cavium_octeon_defconfig   clang
-mips                          rm200_defconfig   clang
-mips                           rs90_defconfig   clang
+mips                       bmips_be_defconfig   gcc  
+mips                  maltasmvp_eva_defconfig   gcc  
+mips                           xway_defconfig   gcc  
 nios2                            allmodconfig   gcc  
 nios2                             allnoconfig   gcc  
 nios2                            allyesconfig   gcc  
@@ -143,8 +149,6 @@ openrisc                         allmodconfig   gcc
 openrisc                          allnoconfig   gcc  
 openrisc                         allyesconfig   gcc  
 openrisc                            defconfig   gcc  
-openrisc                       virt_defconfig   gcc  
-parisc                           allmodconfig   gcc  
 parisc                            allnoconfig   gcc  
 parisc                           allyesconfig   gcc  
 parisc                              defconfig   gcc  
@@ -152,11 +156,10 @@ parisc64                            defconfig   gcc
 powerpc                          allmodconfig   gcc  
 powerpc                           allnoconfig   gcc  
 powerpc                          allyesconfig   gcc  
-powerpc                    ge_imp3a_defconfig   clang
-powerpc                      ppc40x_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
+powerpc                      chrp32_defconfig   gcc  
+powerpc                     redwood_defconfig   gcc  
+powerpc                     tqm8555_defconfig   gcc  
+powerpc                      tqm8xx_defconfig   gcc  
 riscv                               defconfig   gcc  
 riscv                 randconfig-001-20231027   gcc  
 riscv                          rv32_defconfig   gcc  
@@ -168,11 +171,10 @@ s390                  randconfig-001-20231027   gcc
 sh                               allmodconfig   gcc  
 sh                                allnoconfig   gcc  
 sh                               allyesconfig   gcc  
-sh                         ap325rxa_defconfig   gcc  
 sh                                  defconfig   gcc  
-sh                             espt_defconfig   gcc  
-sh                          r7780mp_defconfig   gcc  
-sh                          rsk7201_defconfig   gcc  
+sh                          rsk7269_defconfig   gcc  
+sh                           se7780_defconfig   gcc  
+sh                              ul2_defconfig   gcc  
 sparc                            allmodconfig   gcc  
 sparc                             allnoconfig   gcc  
 sparc                            allyesconfig   gcc  
@@ -187,7 +189,6 @@ um                               allyesconfig   clang
 um                                  defconfig   gcc  
 um                             i386_defconfig   gcc  
 um                           x86_64_defconfig   gcc  
-x86_64                           alldefconfig   gcc  
 x86_64                            allnoconfig   gcc  
 x86_64                           allyesconfig   gcc  
 x86_64       buildonly-randconfig-001-20231027   gcc  
@@ -217,8 +218,6 @@ x86_64                randconfig-075-20231027   gcc
 x86_64                randconfig-076-20231027   gcc  
 x86_64                          rhel-8.3-rust   clang
 x86_64                               rhel-8.3   gcc  
-xtensa                  cadence_csp_defconfig   gcc  
-xtensa                       common_defconfig   gcc  
 
 -- 
 0-DAY CI Kernel Test Service
