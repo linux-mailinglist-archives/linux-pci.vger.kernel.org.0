@@ -2,55 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56A2B7DB0E5
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Oct 2023 00:22:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A33B7DB257
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Oct 2023 04:55:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231544AbjJ2XWV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Oct 2023 19:22:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60490 "EHLO
+        id S229544AbjJ3DxM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Oct 2023 23:53:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231807AbjJ2XWE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Oct 2023 19:22:04 -0400
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A9BC4EBF7
-        for <linux-pci@vger.kernel.org>; Sun, 29 Oct 2023 16:15:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        sang-engineering.com; h=date:from:to:cc:subject:message-id
-        :references:mime-version:content-type:in-reply-to; s=k1; bh=4LqK
-        zsyzMPK0zG6jKlZssYlLz/JHO+MhlunhgtJzoZo=; b=ZaHoVgojOIkrRRSx+KOd
-        dVlhRZ6Ob907FHX3inRvUAEQiHcpGd+45mPtvGQyIk1lhpKiyemRLyBypmxVZgOP
-        SWmlKxXq1Ki4BKlCRZXUrTYt6FBtHseSamajnqNbiR97wXmcb/Cc/xv0yD3TxAkl
-        zd07/zAUl4r5szjNNfGSbpZVQaska9llvX4vbcBvObSdyRZTZisLk3l35Fb0FEE/
-        IzFbNMotuxys1TSVKZpg9xwg4xl0pIr3BxbyY3arfjWUFKgwra48lYCY6EUiMH2j
-        /Ff69Bhoy9SJn/So0CC79ffsi8mSv90CAZdZvrXrg/4G9P/hp8CSOXczjAc73kbh
-        VA==
-Received: (qmail 3928351 invoked from network); 30 Oct 2023 00:15:55 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 30 Oct 2023 00:15:55 +0100
-X-UD-Smtp-Session: l3s3148p1@YKl3GuMICKVehhre
-Date:   Mon, 30 Oct 2023 00:15:54 +0100
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-renesas-soc@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH v5 0/2] PCI: rcar: support regulators for PCIe
-Message-ID: <ZT7nqrxadWzhrhU9@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-References: <20230921132624.5664-1-wsa+renesas@sang-engineering.com>
+        with ESMTP id S229514AbjJ3DxM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Oct 2023 23:53:12 -0400
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D51209B;
+        Sun, 29 Oct 2023 20:53:07 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0Vv5D-ur_1698637982;
+Received: from 30.240.112.195(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vv5D-ur_1698637982)
+          by smtp.aliyun-inc.com;
+          Mon, 30 Oct 2023 11:53:03 +0800
+Message-ID: <889576c1-4761-4329-9f3b-63a2930c391d@linux.alibaba.com>
+Date:   Mon, 30 Oct 2023 11:53:01 +0800
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="VK2a64zn4LDxDZm+"
-Content-Disposition: inline
-In-Reply-To: <20230921132624.5664-1-wsa+renesas@sang-engineering.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 3/4] drivers/perf: add DesignWare PCIe PMU driver
+Content-Language: en-US
+To:     Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Yicong Yang <yangyicong@huawei.com>
+Cc:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
+        baolin.wang@linux.alibaba.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        rdunlap@infradead.org, mark.rutland@arm.com,
+        zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
+References: <20231020134230.53342-1-xueshuai@linux.alibaba.com>
+ <20231020134230.53342-4-xueshuai@linux.alibaba.com>
+ <20231023123202.GA3515@willie-the-truck>
+ <cf72afb6-44c7-45f0-bfaa-6881f6782ebf@arm.com>
+ <5b695595-d243-4ea5-97bb-f4c74398fc27@linux.alibaba.com>
+ <6790b6ea-4874-4a8c-a8fd-d9ab6caaf1d4@arm.com>
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <6790b6ea-4874-4a8c-a8fd-d9ab6caaf1d4@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -58,52 +54,63 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---VK2a64zn4LDxDZm+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 21, 2023 at 03:26:22PM +0200, Wolfram Sang wrote:
-> Here are the patches to make PCIe cards work in slot CN15 on a Renesas
-> KingFisher board. Please apply.
->=20
-> Changes since v4:
-> * rebased to 6.6-rc2
-> * added ack from Mani (Thanks!)
+On 2023/10/27 02:06, Robin Murphy wrote:
+...
+>>>>      return ret;
+>>>>
+>>> [...]
+>>>>> +static int __init dwc_pcie_pmu_init(void)
+>>>>> +{
+>>>>> +    int ret;
+>>>>> +
+>>>>> +    ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
+>>>>> +                      "perf/dwc_pcie_pmu:online",
+>>>>> +                      dwc_pcie_pmu_online_cpu,
+>>>>> +                      dwc_pcie_pmu_offline_cpu);
+>>>>> +    if (ret < 0)
+>>>>> +        return ret;
+>>>>> +
+>>>>> +    dwc_pcie_pmu_hp_state = ret;
+>>>>> +
+>>>>> +    ret = platform_driver_register(&dwc_pcie_pmu_driver);
+>>>>> +    if (ret)
+>>>>> +        goto platform_driver_register_err;
+>>>>> +
+>>>>> +    dwc_pcie_pmu_dev = platform_device_register_simple(
+>>>>> +                "dwc_pcie_pmu", PLATFORM_DEVID_NONE, NULL, 0);
+>>>>> +    if (IS_ERR(dwc_pcie_pmu_dev)) {
+>>>>> +        ret = PTR_ERR(dwc_pcie_pmu_dev);
+>>>>> +        goto platform_device_register_error;
+>>>>> +    }
+>>>>
+>>>> I'm a bit confused as to why you're having to create a platform device
+>>>> for a PCI device -- is this because the main designware driver has already
+>>>> bound to it? A comment here explaining why you need to do this would be
+>>>> very helpful. In particular, is there any dependency on another driver
+>>>> to make sure that e.g. config space accesses work properly? If so, we
+>>>> probably need to enforce module load ordering or something like that.
+>>>
+>>> AFAICS the platform device/driver serve no purpose other than being a hilariously roundabout way to run the for_each_pci_dev() loop in dwc_pcie_pmu_probe() upon module init, and to save explicitly freeing the PMU name/data. Furthermore the devres action for dwc_pcie_pmu_remove_cpuhp_instance() is apparently going for even more style points at module exit by not even relying on the corresponding .remove callback of the tenuous platform driver to undo what its .probe did, but (ab)using the device's devres list to avoid having to keep track of an explicit list of PMU instances at all.
+>>
+>> You are right.
+>>
+>>>
+>>> Frankly I think it would be a lot more straightforward to just maintain that explicit list of PMU instances, do the PMU creation directly in dwc_pcie_pmu_init(), then unregister and free them in dwc_pcie_pmu_exit(). Not every driver has to contain a literal struct device_driver.
+>>
+>> Agreed, it might be more straightforward. But personally speaking, I prefer
+>> current implementation.
+>>
+>>      - standard driver creation / probe flow is more normal
+> 
+> It's really not, though. We have a weird singleton platform device appearing out of nowhere which effectively represents the module being loaded, rather than anything about the actual underlying hardware. If you want this to look like "normal" driver model usage, then create a separate platform device for each physical PCI PMU instance you discover (potentially via both a one-time scan at module_init and an ADD_DEVICE hotplug notifier later), then have the platform driver just register the corresponding PMU device in .probe and unregister it in .remove, without confusing devres action tricks.
+> 
 
-Did this slip through the cracks maybe?
+Got it. If IIUC, I should register a platform device for each matched pci
+device in module_init() or when BUS_NOTIFY_ADD_DEVICE event triggered, and
+unwind it in module exit() and when BUS_NOTIFY_DEL_DEVICE event triggered.
 
->=20
-> Wolfram Sang (2):
->   dt-bindings: PCI: rcar-pci-host: add optional regulators
->   PCI: rcar-host: add support for optional regulators
->=20
->  .../devicetree/bindings/pci/rcar-pci-host.yaml   | 11 +++++++++++
->  drivers/pci/controller/pcie-rcar-host.c          | 16 +++++++++++++++-
->  2 files changed, 26 insertions(+), 1 deletion(-)
->=20
-> --=20
-> 2.35.1
->=20
+Thank you for valuable comments.
 
---VK2a64zn4LDxDZm+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmU+56oACgkQFA3kzBSg
-KbZksQ//ZTQLV9AZwNEEizqnTqfYg+QukBAMZ/kogfa/L/jSlsS7Gbh0ki0wQBG9
-nwLAdJWr17bzAqAtkaOezJ5+4QsE5PtfhDZ2kSdJd2sxKJ5FUc0g2Wrqe1EmOlez
-zTEzOvJeXhi3IV8kp4kAA2856rVcxfFIAD3+42vfZLHP5xsTL4L/rDMshRL4Pwf/
-69Q0LjTkQyhNHocQGduT/j6K7XCq9uLVfEcNu7ViCbzLbxzjoIy74b33nCK7KCCi
-/Ci2R6Tr7U5Mui4Z4AyHvUgqKiVe+BTzCjWmDUznQRC5KmE5302dI7Oq/PRt3ret
-F+SnXI+TrO/AwSlg1eC7V03gVGOqibVQfAATLhxPc+E3bKvrFd1jrzDSZHiT8dic
-ZsR+jpf86vW/1G58PB7ZRIpePPhoskJ9o8u7JP29HuVd1xUG3TH8TokrSStn3Pdb
-I5x87wcYaIWNXoludxC/CLMZoQ8k2KqGfg9SXav2YO4eeWuYZf6ozhpsHP84qQzE
-CUIewC5etAevv1Y2cQ/ETuql08sOsfQVsDenJ0Uz67dXhs+xBC0fCjLI0Jctra8Y
-tHq5JJs35qM2sZSrsKFS+4gaw6zFECNpf5CGeonMu2Qj6F+0MsL4eUpwyOofUAk5
-/Nf6JQdEs2drjfJQGe+REja9S5AelI5F4jrRHaRosy4DtJ3o2nE=
-=6C7y
------END PGP SIGNATURE-----
-
---VK2a64zn4LDxDZm+--
+Best Regards,
+Shuai
