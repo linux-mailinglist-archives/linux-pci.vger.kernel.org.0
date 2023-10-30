@@ -2,92 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9E0D7DB9D2
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Oct 2023 13:23:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC8727DB9F1
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Oct 2023 13:32:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229456AbjJ3MXO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Oct 2023 08:23:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48464 "EHLO
+        id S233094AbjJ3Mch (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Oct 2023 08:32:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232531AbjJ3MXN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Oct 2023 08:23:13 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 303AAA2;
-        Mon, 30 Oct 2023 05:23:09 -0700 (PDT)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39UC9HLj019344;
-        Mon, 30 Oct 2023 12:23:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=4YHkGWLw2OrwpyiXVjdHQGX9PojhBUm/xhT+uiXYKv4=;
- b=QIX6WJrfeCvVkY16KN53YjBpGw24uUBr6daw16f9Yn9h7OzZ+x0AJ+9Oo2pewJ9UynVO
- TuqkcOixz1IuRWcGoZxIjOjk8rqAoacUOeBuLZqB4hwTI4lYNBNwWlGqrlCaSUXb/46e
- A6ymWCL0KLbcTYiFdW/n4sK0iMcQwZW6Vu/iArbuEYTMtWsrzdKINZBuQ+7MjmQS3ZKn
- AFRIib/AU7mStpY3fLlDMEvwx2fUmew57ufNQLF4FgWbZN1iVII2VGmDD27RJjGjd46S
- 0k0GxSbBciwQzZEiDS166CcVA3H5ioPI8bZE+X9wQ+eJGAstq8qctiGzQse/9pt2rsI1 Ng== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3u0u2qkm94-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Oct 2023 12:23:00 +0000
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39UCMxZi030283
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Oct 2023 12:22:59 GMT
-Received: from [10.216.34.48] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Mon, 30 Oct
- 2023 05:22:51 -0700
-Message-ID: <05ce4dc9-4c73-823d-d2ea-d01848516916@quicinc.com>
-Date:   Mon, 30 Oct 2023 17:52:48 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v4 1/4] dt-bindings: PCI: qcom-ep: Add support for SA8775P
- SoC
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <konrad.dybcio@linaro.org>, <mani@kernel.org>
-CC:     <quic_shazhuss@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <quic_nayiluri@quicinc.com>,
-        <dmitry.baryshkov@linaro.org>, <robh@kernel.org>,
-        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>,
-        <quic_parass@quicinc.com>, <quic_schintav@quicinc.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mhi@lists.linux.dev>
-References: <1698413592-26523-1-git-send-email-quic_msarkar@quicinc.com>
- <1698413592-26523-2-git-send-email-quic_msarkar@quicinc.com>
- <45b8f4e1-b915-42f2-aa03-03cc9d1be9f7@linaro.org>
- <4ea52adf-9f64-7aa3-1d88-e90ce1d9ff4d@quicinc.com>
- <fc0e791d-96a5-4557-9963-ec02318b60fb@linaro.org>
-From:   Mrinmay Sarkar <quic_msarkar@quicinc.com>
-In-Reply-To: <fc0e791d-96a5-4557-9963-ec02318b60fb@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: G9zukxRlQvEr1NHvT7z2uclVohXF9kTi
-X-Proofpoint-GUID: G9zukxRlQvEr1NHvT7z2uclVohXF9kTi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-30_10,2023-10-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- clxscore=1015 malwarescore=0 suspectscore=0 mlxlogscore=999
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2310240000 definitions=main-2310300094
-X-Spam-Status: No, score=-6.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        with ESMTP id S232654AbjJ3Mch (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Oct 2023 08:32:37 -0400
+Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [IPv6:2a01:37:3000::53df:4ee9:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6580993
+        for <linux-pci@vger.kernel.org>; Mon, 30 Oct 2023 05:32:33 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by mailout2.hostsharing.net (Postfix) with ESMTPS id 525EB10189E06;
+        Mon, 30 Oct 2023 13:32:31 +0100 (CET)
+Received: from localhost (unknown [89.246.108.87])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by h08.hostsharing.net (Postfix) with ESMTPSA id 25C6C60E0F2B;
+        Mon, 30 Oct 2023 13:32:31 +0100 (CET)
+X-Mailbox-Line: From 85ca95ae8e4d57ccf082c5c069b8b21eb141846e Mon Sep 17 00:00:00 2001
+Message-Id: <85ca95ae8e4d57ccf082c5c069b8b21eb141846e.1698668982.git.lukas@wunner.de>
+From:   Lukas Wunner <lukas@wunner.de>
+Date:   Mon, 30 Oct 2023 13:32:12 +0100
+Subject: [PATCH 1/2] PCI: Compile pci-sysfs.c only if CONFIG_SYSFS=y
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Krzysztof Wilczynski <kwilczynski@kernel.org>,
+        Alistair Francis <alistair23@gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -96,46 +45,220 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+It is possible to enable CONFIG_PCI but disable CONFIG_SYSFS and for
+space-constrained devices such as routers, such a configuration may
+actually make sense.
 
-On 10/30/2023 4:20 PM, Krzysztof Kozlowski wrote:
-> On 30/10/2023 11:19, Mrinmay Sarkar wrote:
->> On 10/27/2023 7:20 PM, Krzysztof Kozlowski wrote:
->>> On 27/10/2023 15:33, Mrinmay Sarkar wrote:
->>>> Add devicetree bindings support for SA8775P SoC. It has DMA register
->>>> space and dma interrupt to support HDMA.
->>>>
->>>> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
->>> Unfortunately I do not see any of my comment addressed. :(
->>>
->>> This is a friendly reminder during the review process.
->>>
->>> It seems my or other reviewer's previous comments were not fully
->>> addressed. Maybe the feedback got lost between the quotes, maybe you
->>> just forgot to apply it. Please go back to the previous discussion and
->>> either implement all requested changes or keep discussing them.
->>>
->>> Thank you.
->>>
->>> Best regards,
->>> Krzysztof
->> Thanks Krzysztof for your review and patience.
->> Sorry I missed your previous comment.
-> Multiple comments. Also from Mani and maybe from others?
-I have discussed and addressed all the comments from others.
-As per the discussions. Updated commit messages and made
-necessary changes in dtsi node.
+However pci-sysfs.c is compiled even if CONFIG_SYSFS is disabled,
+unnecessarily increasing the kernel's size.
 
-please correct me otherwise.
+To rectify that:
 
->> If I understand correctly by constraining IO space/interrupt,
->> you mean to add maxItems for reg and interrupt for other variants.
->> If so, I verified adding maxItems for these properties and dtb check
->> seems to be good. I will post the same in the next patch series.
->>
->> Thanks,
->> Mrinmay
-> Best regards,
-> Krzysztof
-Thanks,
-Mrinmay
->
+* Move pci_mmap_fits() to mmap.c.  It is not only needed by
+  pci-sysfs.c, but also proc.c.
+
+* Move pci_dev_type to probe.c and make it private.  It references
+  pci_dev_attr_groups in pci-sysfs.c.  Make that public instead for
+  consistency with pci_dev_groups, pcibus_groups and pci_bus_groups,
+  which are likewise public and referenced by struct definitions in
+  pci-driver.c and probe.c.
+
+* Define pci_dev_groups, pci_dev_attr_groups, pcibus_groups and
+  pci_bus_groups to NULL if CONFIG_SYSFS is disabled.  Provide empty
+  static inlines for pci_{create,remove}_legacy_files() and
+  pci_{create,remove}_sysfs_dev_files().
+
+Result:
+
+vmlinux size is reduced by 122996 bytes in my arm 32-bit test build.
+
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+---
+ drivers/pci/Makefile    |  4 ++--
+ drivers/pci/mmap.c      | 29 +++++++++++++++++++++++++++++
+ drivers/pci/pci-sysfs.c | 29 +----------------------------
+ drivers/pci/pci.h       | 18 ++++++++++++++----
+ drivers/pci/probe.c     |  4 ++++
+ 5 files changed, 50 insertions(+), 34 deletions(-)
+
+diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+index cc8b4e01e29d..96f4759f2bd3 100644
+--- a/drivers/pci/Makefile
++++ b/drivers/pci/Makefile
+@@ -4,7 +4,7 @@
+ 
+ obj-$(CONFIG_PCI)		+= access.o bus.o probe.o host-bridge.o \
+ 				   remove.o pci.o pci-driver.o search.o \
+-				   pci-sysfs.o rom.o setup-res.o irq.o vpd.o \
++				   rom.o setup-res.o irq.o vpd.o \
+ 				   setup-bus.o vc.o mmap.o setup-irq.o
+ 
+ obj-$(CONFIG_PCI)		+= msi/
+@@ -12,7 +12,7 @@ obj-$(CONFIG_PCI)		+= pcie/
+ 
+ ifdef CONFIG_PCI
+ obj-$(CONFIG_PROC_FS)		+= proc.o
+-obj-$(CONFIG_SYSFS)		+= slot.o
++obj-$(CONFIG_SYSFS)		+= pci-sysfs.o slot.o
+ obj-$(CONFIG_ACPI)		+= pci-acpi.o
+ endif
+ 
+diff --git a/drivers/pci/mmap.c b/drivers/pci/mmap.c
+index 4504039056d1..8da3347a95c4 100644
+--- a/drivers/pci/mmap.c
++++ b/drivers/pci/mmap.c
+@@ -11,6 +11,8 @@
+ #include <linux/mm.h>
+ #include <linux/pci.h>
+ 
++#include "pci.h"
++
+ #ifdef ARCH_GENERIC_PCI_MMAP_RESOURCE
+ 
+ static const struct vm_operations_struct pci_phys_vm_ops = {
+@@ -50,3 +52,30 @@ int pci_mmap_resource_range(struct pci_dev *pdev, int bar,
+ }
+ 
+ #endif
++
++#if (defined(CONFIG_SYSFS) || defined(CONFIG_PROC_FS)) && \
++    (defined(HAVE_PCI_MMAP) || defined(ARCH_GENERIC_PCI_MMAP_RESOURCE))
++
++int pci_mmap_fits(struct pci_dev *pdev, int resno, struct vm_area_struct *vma,
++		  enum pci_mmap_api mmap_api)
++{
++	resource_size_t pci_start = 0, pci_end;
++	unsigned long nr, start, size;
++
++	if (pci_resource_len(pdev, resno) == 0)
++		return 0;
++	nr = vma_pages(vma);
++	start = vma->vm_pgoff;
++	size = ((pci_resource_len(pdev, resno) - 1) >> PAGE_SHIFT) + 1;
++	if (mmap_api == PCI_MMAP_PROCFS) {
++		pci_resource_to_user(pdev, resno, &pdev->resource[resno],
++				     &pci_start, &pci_end);
++		pci_start >>= PAGE_SHIFT;
++	}
++	if (start >= pci_start && start < pci_start + size &&
++	    start + nr <= pci_start + size)
++		return 1;
++	return 0;
++}
++
++#endif
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 2321fdfefd7d..44ed30df08c3 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -1022,29 +1022,6 @@ void pci_remove_legacy_files(struct pci_bus *b)
+ #endif /* HAVE_PCI_LEGACY */
+ 
+ #if defined(HAVE_PCI_MMAP) || defined(ARCH_GENERIC_PCI_MMAP_RESOURCE)
+-
+-int pci_mmap_fits(struct pci_dev *pdev, int resno, struct vm_area_struct *vma,
+-		  enum pci_mmap_api mmap_api)
+-{
+-	unsigned long nr, start, size;
+-	resource_size_t pci_start = 0, pci_end;
+-
+-	if (pci_resource_len(pdev, resno) == 0)
+-		return 0;
+-	nr = vma_pages(vma);
+-	start = vma->vm_pgoff;
+-	size = ((pci_resource_len(pdev, resno) - 1) >> PAGE_SHIFT) + 1;
+-	if (mmap_api == PCI_MMAP_PROCFS) {
+-		pci_resource_to_user(pdev, resno, &pdev->resource[resno],
+-				     &pci_start, &pci_end);
+-		pci_start >>= PAGE_SHIFT;
+-	}
+-	if (start >= pci_start && start < pci_start + size &&
+-			start + nr <= pci_start + size)
+-		return 1;
+-	return 0;
+-}
+-
+ /**
+  * pci_mmap_resource - map a PCI resource into user memory space
+  * @kobj: kobject for mapping
+@@ -1660,7 +1637,7 @@ static const struct attribute_group pcie_dev_attr_group = {
+ 	.is_visible = pcie_dev_attrs_are_visible,
+ };
+ 
+-static const struct attribute_group *pci_dev_attr_groups[] = {
++const struct attribute_group *pci_dev_attr_groups[] = {
+ 	&pci_dev_attr_group,
+ 	&pci_dev_hp_attr_group,
+ #ifdef CONFIG_PCI_IOV
+@@ -1677,7 +1654,3 @@ static const struct attribute_group *pci_dev_attr_groups[] = {
+ #endif
+ 	NULL,
+ };
+-
+-const struct device_type pci_dev_type = {
+-	.groups = pci_dev_attr_groups,
+-};
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 5ecbcf041179..aedaf4e51146 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -31,8 +31,6 @@ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+ 
+ /* Functions internal to the PCI core code */
+ 
+-int pci_create_sysfs_dev_files(struct pci_dev *pdev);
+-void pci_remove_sysfs_dev_files(struct pci_dev *pdev);
+ void pci_cleanup_rom(struct pci_dev *dev);
+ #ifdef CONFIG_DMI
+ extern const struct attribute_group pci_dev_smbios_attr_group;
+@@ -152,7 +150,7 @@ static inline int pci_proc_detach_bus(struct pci_bus *bus) { return 0; }
+ /* Functions for PCI Hotplug drivers to use */
+ int pci_hp_add_bridge(struct pci_dev *dev);
+ 
+-#ifdef HAVE_PCI_LEGACY
++#if defined(CONFIG_SYSFS) && defined(HAVE_PCI_LEGACY)
+ void pci_create_legacy_files(struct pci_bus *bus);
+ void pci_remove_legacy_files(struct pci_bus *bus);
+ #else
+@@ -185,10 +183,22 @@ static inline int pci_no_d1d2(struct pci_dev *dev)
+ 	return (dev->no_d1d2 || parent_dstates);
+ 
+ }
++
++#ifdef CONFIG_SYSFS
++int pci_create_sysfs_dev_files(struct pci_dev *pdev);
++void pci_remove_sysfs_dev_files(struct pci_dev *pdev);
+ extern const struct attribute_group *pci_dev_groups[];
++extern const struct attribute_group *pci_dev_attr_groups[];
+ extern const struct attribute_group *pcibus_groups[];
+-extern const struct device_type pci_dev_type;
+ extern const struct attribute_group *pci_bus_groups[];
++#else
++static inline int pci_create_sysfs_dev_files(struct pci_dev *pdev) { return 0; }
++static inline void pci_remove_sysfs_dev_files(struct pci_dev *pdev) { }
++#define pci_dev_groups NULL
++#define pci_dev_attr_groups NULL
++#define pcibus_groups NULL
++#define pci_bus_groups NULL
++#endif
+ 
+ extern unsigned long pci_hotplug_io_size;
+ extern unsigned long pci_hotplug_mmio_size;
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index ed6b7f48736a..500ac154fdfb 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2307,6 +2307,10 @@ static void pci_release_dev(struct device *dev)
+ 	kfree(pci_dev);
+ }
+ 
++static const struct device_type pci_dev_type = {
++	.groups = pci_dev_attr_groups,
++};
++
+ struct pci_dev *pci_alloc_dev(struct pci_bus *bus)
+ {
+ 	struct pci_dev *dev;
+-- 
+2.40.1
+
