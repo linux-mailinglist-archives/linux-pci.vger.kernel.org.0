@@ -2,58 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD1717DD372
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Oct 2023 17:56:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E23997DD5E6
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Oct 2023 19:16:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346766AbjJaQyx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Oct 2023 12:54:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44340 "EHLO
+        id S235928AbjJaSPz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Oct 2023 14:15:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347024AbjJaQw5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Oct 2023 12:52:57 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 013EE1719
-        for <linux-pci@vger.kernel.org>; Tue, 31 Oct 2023 09:50:25 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-507975d34e8so8531894e87.1
-        for <linux-pci@vger.kernel.org>; Tue, 31 Oct 2023 09:50:25 -0700 (PDT)
+        with ESMTP id S1346830AbjJaQxP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Oct 2023 12:53:15 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FB2A1733
+        for <linux-pci@vger.kernel.org>; Tue, 31 Oct 2023 09:50:39 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-507bd64814fso8091694e87.1
+        for <linux-pci@vger.kernel.org>; Tue, 31 Oct 2023 09:50:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698771024; x=1699375824; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1698771037; x=1699375837; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=d73v9cfketw/ArDcT80Q+U6ac8cwJQ83f2L/6k+AOxU=;
-        b=fSrkm81u9KvGs3w4t9T7AScPGLJkfv92JdfaQKLl1FxqHuE3SnfpnMYYPvHp49bIZX
-         GjNBCYYfC5OcCQbl/dJOfaFT3BZ+UNiIr9BRFmLLyn67ZIUrmgEjWXemwjBY1qDhYVsJ
-         ov55OSVPVDV748Gv4PFf9jdF9pq1nh6js5Q+TbAI/Dzz4DIuNow3q525egHJYUKvsL9c
-         tuFTrxwlMxI7wBAGV2EolPOTFvirld6jJWQpE0x2l/A4StI1QhOAYCQ0Shhwfzh8Ouf4
-         tbEqFU1XAXmtmlE3W7oU2yCx6em8vBqXr6ycco7oZ/n4mKwepHmmy69TE+FMvFApfqL7
-         cPNQ==
+        bh=uQLeE6sXfW573CKI5NyYi9nd4DE1+VWbV1i+703zc4A=;
+        b=Qo/edyi/+nRbk3ntCpwkS/aiLFkIjT2zyGphDJH0UtRRjMzGN3LKMBellXBVPuT+k2
+         LBGCRLrkXtlSIwGyXNkpcHJL9E4R4LxKajiz43AF9SgxuaNc/9nvxKv6QS2LYu4Ttogx
+         WlOO2Xc6fTDowFSxxB6xwR+J49TiTjzpE6gBmRXeguRt6JSJ2hcawWyJFLt59NDHi2VW
+         ExZaNPoyQC+43d28r86lxKbGzur1Wbi0Bw6HXYcjOyYb3zYvlEIjLmko+ekWkr6XFFi4
+         YtTo39hAD759z5rKn3psQGkXlQSMoV/dzI1BsQZZGfMKmGt9kHJHQjkn96QvuCiuqTmc
+         YASg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698771024; x=1699375824;
+        d=1e100.net; s=20230601; t=1698771037; x=1699375837;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d73v9cfketw/ArDcT80Q+U6ac8cwJQ83f2L/6k+AOxU=;
-        b=Z/5jvr2BfJB3t5J7snwt3dvocYsF633/ID8F5ievFcbuf44nZd5Vta+5Lgr4KlZDSz
-         rcm5a3dy0Mx9fCdRxLdJJnSL4xIW8/4Fxe/6bZSz8fnQHdpiXfd4T6jzcxWe87l8PP++
-         NX+u4rHCQcQpskD8O/9iHsR7OMlrPskqZZ/2rx7M2UbNoYhLcPP2Nl4n5hnPS1J6yNvh
-         MDbstRVdDhSEl9qwWEt2nEaADiFt6k7No/t50GapybHIH+7Q+yF0Rk4U+uRAY+xQRhfx
-         BngoUygAJQydJ+hcmpWaRV+uYZpVxPoCdHEtxy1MXhH34JqTZRO/iSB7KTuYdhhFmgtn
-         SFhw==
-X-Gm-Message-State: AOJu0YxoNcHmGotL8wjcJsU810K6hxg3uaDz482gVbXJ0Vx0kZk/aLOd
-        hORNbOBnwab4FzBDIvuZgqT73g==
-X-Google-Smtp-Source: AGHT+IGj8Fy0pJ05EoAIRZ55sWvm/g7whZcYv7i8aYj7QQHleGaGK92mxaglJWinHZajCCS/iMiSBQ==
-X-Received: by 2002:a05:6512:1282:b0:505:6ede:20a9 with SMTP id u2-20020a056512128200b005056ede20a9mr12384328lfs.65.1698771024156;
-        Tue, 31 Oct 2023 09:50:24 -0700 (PDT)
+        bh=uQLeE6sXfW573CKI5NyYi9nd4DE1+VWbV1i+703zc4A=;
+        b=rYPXbGAbPnscPDYg+kgbw0011WnZJ8mwjdetQKpllCkWFPk+LhOOdSGxtJDBXwRele
+         ucXqrHkWrHvrs8TePZObW1tupfWRcQGnUXXCT294Wtk0BVtkXEfdOg0zCmFqs35FfMvJ
+         OFsFY3HD2C7LvDk0yNWhiEWkO+/GZZzH0yzduLNI1WBonvCFYAP05/q8BCum/fsja84s
+         xkxO2rXwH44cegx4QQ+07oDjI9A2MHKMjgPftvd329Gw6+D/DD4XkxwCXxOOmORTzl4p
+         8Y2Eg7UtzxR8LjUfYON88Y26TzO6y//b4gDnM7WUuwRncqppnC63gF3OAFwwe4hMzAdd
+         4d7Q==
+X-Gm-Message-State: AOJu0YwDNyy7JS6IWqmqGf89vMuX3tAQTz9KPU6uuvKVrglOBnp16Mc3
+        0IxHTA7BW7OhFzKznJV/OrHX8Q==
+X-Google-Smtp-Source: AGHT+IEzJGKJWCPnVYzpuEZxGqaRs6XzhDEr3F3ZVSxCn3yurfoTUNLhoPnQTcyd9os1W9HfmMHqAA==
+X-Received: by 2002:a05:6512:2356:b0:505:73e7:b478 with SMTP id p22-20020a056512235600b0050573e7b478mr12675226lfu.16.1698771037643;
+        Tue, 31 Oct 2023 09:50:37 -0700 (PDT)
 Received: from [192.168.143.96] (178235177091.dynamic-4-waw-k-1-1-0.vectranet.pl. [178.235.177.91])
-        by smtp.gmail.com with ESMTPSA id j19-20020a056512345300b005079a61a182sm256853lfr.143.2023.10.31.09.50.21
+        by smtp.gmail.com with ESMTPSA id j19-20020a056512345300b005079a61a182sm256853lfr.143.2023.10.31.09.50.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Oct 2023 09:50:23 -0700 (PDT)
-Message-ID: <e5ee7051-d867-453f-98a7-3a8aea402607@linaro.org>
-Date:   Tue, 31 Oct 2023 17:50:20 +0100
+        Tue, 31 Oct 2023 09:50:37 -0700 (PDT)
+Message-ID: <a2759c78-359f-4f40-81f4-98f7549e509b@linaro.org>
+Date:   Tue, 31 Oct 2023 17:50:34 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] PCI: qcom: Enable cache coherency for SA8775P RC
+Subject: Re: [PATCH v1 2/3] PCI: qcom-ep: Enable cache coherency for SA8775P
+ EP
 Content-Language: en-US
 To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>, agross@kernel.org,
         andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
@@ -70,7 +71,7 @@ Cc:     quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 References: <1698767186-5046-1-git-send-email-quic_msarkar@quicinc.com>
- <1698767186-5046-2-git-send-email-quic_msarkar@quicinc.com>
+ <1698767186-5046-3-git-send-email-quic_msarkar@quicinc.com>
 From:   Konrad Dybcio <konrad.dybcio@linaro.org>
 Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
@@ -107,12 +108,12 @@ Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
  nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
  izWDgYvmBE8=
-In-Reply-To: <1698767186-5046-2-git-send-email-quic_msarkar@quicinc.com>
+In-Reply-To: <1698767186-5046-3-git-send-email-quic_msarkar@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -122,50 +123,10 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 On 31.10.2023 16:46, Mrinmay Sarkar wrote:
 > This change will enable cache snooping logic to support
-> cache coherency for SA8755P RC platform.
-8775
-
+> cache coherency for SA8755P EP platform.
 > 
 > Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 6902e97..6f240fc 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -51,6 +51,7 @@
->  #define PARF_SID_OFFSET				0x234
->  #define PARF_BDF_TRANSLATE_CFG			0x24c
->  #define PARF_SLV_ADDR_SPACE_SIZE		0x358
-> +#define PCIE_PARF_NO_SNOOP_OVERIDE		0x3d4
->  #define PARF_DEVICE_TYPE			0x1000
->  #define PARF_BDF_TO_SID_TABLE_N			0x2000
->  
-> @@ -117,6 +118,9 @@
->  /* PARF_LTSSM register fields */
->  #define LTSSM_EN				BIT(8)
->  
-> +/* PARF_NO_SNOOP_OVERIDE register value */
-override
-> +#define NO_SNOOP_OVERIDE_EN			0xa
-is this actually some magic value and not BIT(1) | BIT(3)?
-
->  /* PARF_DEVICE_TYPE register fields */
->  #define DEVICE_TYPE_RC				0x4
->  
-> @@ -961,6 +965,13 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
->  
->  static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
->  {
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
-> +
-> +	/* Enable cache snooping for SA8775P */
-> +	if (of_device_is_compatible(dev->of_node, "qcom,pcie-sa8775p"))
-> +		writel(NO_SNOOP_OVERIDE_EN, pcie->parf + PCIE_PARF_NO_SNOOP_OVERIDE);
-Why only for 8775 and not for other v2.7, or perhaps all other
-revisions?
+same comments as patch 1
 
 Konrad
