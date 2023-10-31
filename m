@@ -2,71 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CCCD7DC329
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Oct 2023 00:33:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72F477DC3CC
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Oct 2023 02:10:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229677AbjJ3XdF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Oct 2023 19:33:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52730 "EHLO
+        id S230319AbjJaBK2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Oct 2023 21:10:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229646AbjJ3XdE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Oct 2023 19:33:04 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC8F0C2;
-        Mon, 30 Oct 2023 16:33:01 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-507adc3381cso7244501e87.3;
-        Mon, 30 Oct 2023 16:33:01 -0700 (PDT)
+        with ESMTP id S234920AbjJaBK1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Oct 2023 21:10:27 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DA5CA2;
+        Mon, 30 Oct 2023 18:10:24 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-5079f9675c6so7773045e87.2;
+        Mon, 30 Oct 2023 18:10:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698708780; x=1699313580; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1698714622; x=1699319422; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TYzQy61n4OpQizbkMFZEMwiE1E2OOTWr3NUjWoPbxLQ=;
-        b=fGSKkIFueXKjkdnPyQZJAs2Owq5zZVoAdhRMv34VYAoVP7OelJRl9VhO0pSoqIkJ2h
-         jnXQJ0PLQCSXm3NlyoTCNpVvfyPuy4Ecs0CZt5QtI1lPkFshdiIMcumi3ajILhsQRS8P
-         hm9APZ3F9AF+xyjtJyJdhv9nSrDov5yfTiZEcYClfIOAVD1bwqS0b9lzuOKdQdvqK+ei
-         M4kACEr5Loro46rrD3wPoVuw9DodIZx4Tly7JBcsAVnBaXtR8BVPOz0FaInYDbIr+p7N
-         1RLwsY2VD9x41kY4x9MQxuyk8qRGobFZQnrPq0D0dyAVZ6sSyRZvLvjYO1Fa4ohPHzyd
-         ojmg==
+        bh=bqPoT4F9RmVDc8pr+IDxp35lpchtUg1Qh6Xpf92yaO8=;
+        b=ikRR3M7egHBwfmH46soRsjFkn5ofAN6lfjHPTCqRFfzrzWJqp0genw01VEUoLzthSP
+         cjyA+O1QhgTUZeFx1KAp/J48ZNRis6627VO9Q9e3TsevaxVcMuPCZTSh6W4uziUEJJY3
+         iLA1Ex/zR6O+YW2UtahArAarhkDfbDgSv7v0jOQs+tbvwcfp5oZFXGzNs+172uJaFPLb
+         fXEKSaHgZdkhamFtjG8rFC6mXjBhbAzG+GR8pT4ZtNFe2kDKBBXQcgi0Pqm6JPAtHngp
+         MI+4K+qmk3aA3P1dpZB5MUrJlDGrYBmBY8XVoUGSfMYnCMLk+jWJHDO3di8Kq1QaJHrv
+         gJlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698708780; x=1699313580;
+        d=1e100.net; s=20230601; t=1698714622; x=1699319422;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TYzQy61n4OpQizbkMFZEMwiE1E2OOTWr3NUjWoPbxLQ=;
-        b=CuP3HEgrDoof/mmjU1YV/PopV2mFvHbJ7cqocb4Tw+qUXyCF4xbgmTYOpWcO1tEmkw
-         kfawf8lzjwyHFiWIzOQA+hJ/SDNMyHTQB3EKNtdQd0cvvO29lA+w0whJiHORTz6yvF+l
-         nbJ5n0VdDsX3NvbmH3tgfl58VcBPPn2qHBNAWeJIcosrGSvZl4NSWk28TCtEFzxXwW1X
-         +vKN8g9LN4gJpYTZPPu7tTIlzn43RKYG3Br5/id7TJnwtExujSqRj3hiZGmrvpqTJeQz
-         Sxoxx8+K5O8RrUE91b6OIurHII5aFCMokf+wCs5UuD7QGDXxNtQ3Nvt6qdZrBLLCIsYi
-         /BZw==
-X-Gm-Message-State: AOJu0YwGRjh2SL23eRahQw0LBqXWtoDrm6TUHO9ApWcSdUBHGGJWvGjp
-        XrHAye8uaBWDEOQKx4ZVi7Y=
-X-Google-Smtp-Source: AGHT+IHX/xKq0tp9DABrucx3glLbnJxxbHBzclrIoU4uhOMhN+Lkw3rXuc7gQXaxtsHWmolNqt5atg==
-X-Received: by 2002:a05:6512:3b97:b0:507:9777:a34a with SMTP id g23-20020a0565123b9700b005079777a34amr11418761lfv.39.1698708779583;
-        Mon, 30 Oct 2023 16:32:59 -0700 (PDT)
+        bh=bqPoT4F9RmVDc8pr+IDxp35lpchtUg1Qh6Xpf92yaO8=;
+        b=biHJX7r6IZzAlb8GQjb1gDLcT0q+Ln3ISB87JoMbE7VGC+u8GpNsJ6XpFxLak5aoTU
+         yYyBKM/wv2Ti4yfduGNVllK0pbKRZHtdLMksLtoV2E8pmTadSBeRp/eOmsq9jNyd8IcV
+         cKWE0dW+0+XxFI0BNQTD0ROqiJ7E5S2fieGhZZe3TDOhuScoyjvfAsmumgEx0g3qdwy8
+         7iHf2fHCV+nzXD16zM1TgQe6p7RBspB84gqB4a7KwzA7zAz8gqovKtHSfQj3JoptZzPo
+         Y8JzITAHvyCDCrifRCkaKpxh+Y444LwPrlUTZ3RqMYrHPfmlOVwWvFQpPHom3Tz4B3RL
+         oxIA==
+X-Gm-Message-State: AOJu0Yxyjdzp0lKapE8c32emMkQq7G1+F0x6bRQhgo6ASI1USHCHJrAg
+        GB/2E7mdTmcRK26jDO31mOgLOHujwo5aAQ==
+X-Google-Smtp-Source: AGHT+IEMqTcP5JE/a5KNIjbcNlQMvWCSkDmRmU6WhDaXBEEHn1kqWQDZgSMKsd/pZYZYOz5BJ3/Rqg==
+X-Received: by 2002:a05:6512:124f:b0:500:7fc1:414b with SMTP id fb15-20020a056512124f00b005007fc1414bmr10429837lfb.25.1698714622023;
+        Mon, 30 Oct 2023 18:10:22 -0700 (PDT)
 Received: from mobilestation ([89.113.151.243])
-        by smtp.gmail.com with ESMTPSA id t7-20020ac243a7000000b0050420b0a642sm2548lfl.91.2023.10.30.16.32.58
+        by smtp.gmail.com with ESMTPSA id dw24-20020a0565122c9800b004fdde1db756sm26123lfb.26.2023.10.30.18.10.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Oct 2023 16:32:59 -0700 (PDT)
-Date:   Tue, 31 Oct 2023 02:32:56 +0300
+        Mon, 30 Oct 2023 18:10:21 -0700 (PDT)
+Date:   Tue, 31 Oct 2023 04:10:17 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Xiaowei Song <songxiaowei@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
+To:     Niklas Cassel <nks@flawful.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: kirin: Fix an error path in kirin_pcie_probe()
-Message-ID: <gpmjckwgbbccsnjcexg7wtvw2oshj6wuwqomlbbo2ebok5oe3g@ky6mfxdutnt4>
-References: <e2b83334ab204ee905fe36ac01cfc297a5a2a7be.1698654061.git.christophe.jaillet@wanadoo.fr>
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Simon Xue <xxm@rock-chips.com>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Niklas Cassel <niklas.cassel@wdc.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3 2/6] dt-bindings: PCI: dwc: rockchip: Add optional dma
+ interrupts
+Message-ID: <jxsrtqplojsab4a64erm7ojjdm3kq5ohb5l7vf3lf7gzvx3q3d@ilyu4vg2xeze>
+References: <20231027145422.40265-1-nks@flawful.org>
+ <20231027145422.40265-3-nks@flawful.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e2b83334ab204ee905fe36ac01cfc297a5a2a7be.1698654061.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20231027145422.40265-3-nks@flawful.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -77,62 +85,98 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 30, 2023 at 09:21:16AM +0100, Christophe JAILLET wrote:
-> If an error occurs after a successful kirin_pcie_power_on(),
-> kirin_pcie_power_off() should be called, as already done in the remove
-> function.
+On Fri, Oct 27, 2023 at 04:54:14PM +0200, Niklas Cassel wrote:
+> From: Niklas Cassel <niklas.cassel@wdc.com>
 > 
-> Fixes: fc5165db245a ("PCI: kirin: Add HiSilicon Kirin SoC PCIe controller driver")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> Not sure of the Fixes tag.
-> ---
->  drivers/pci/controller/dwc/pcie-kirin.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
+> Even though rockchip-dw-pcie.yaml inherits snps,dw-pcie.yaml
+> using:
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> index 2ee146767971..0b93de9d2d06 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -813,7 +813,15 @@ static int kirin_pcie_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
+> allOf:
+>   - $ref: /schemas/pci/snps,dw-pcie.yaml#
+> 
+> and snps,dw-pcie.yaml does have the dma interrupts defined, in order to be
+> able to use these interrupts, while still making sure 'make CHECK_DTBS=y'
+> pass, we need to add these interrupts to rockchip-dw-pcie.yaml.
+> 
+> These dedicated interrupts for the eDMA are not always wired to all the
+> PCIe controllers on the same SoC. In other words, even for a specific
+> compatible, e.g. rockchip,rk3588-pcie, these dedicated eDMA interrupts
+> may or may not be wired.
+> 
+> Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
+> ---
+>  .../bindings/pci/rockchip-dw-pcie.yaml         | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+> index 6ca87ff4ae20..7ad6e1283784 100644
+> --- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+> @@ -63,6 +63,7 @@ properties:
+>        - const: pipe
 >  
-> -	return dw_pcie_host_init(&pci->pp);
-> +	ret = dw_pcie_host_init(&pci->pp);
-> +	if (ret)
-> +		goto err_power_off;
-> +
-> +	return 0;
-> +
-> +err_power_off:
-> +	kirin_pcie_power_off(kirin_pcie);
-> +	return ret;
+>    interrupts:
+> +    minItems: 5
+>      items:
+>        - description:
+>            Combined system interrupt, which is used to signal the following
+> @@ -86,14 +87,31 @@ properties:
+>            interrupts - aer_rc_err, aer_rc_err_msi, rx_cpl_timeout,
+>            tx_cpl_timeout, cor_err_sent, nf_err_sent, f_err_sent, cor_err_rx,
+>            nf_err_rx, f_err_rx, radm_qoverflow
+> +      - description:
+> +          Indicates that the eDMA Tx/Rx transfer is complete or that an
+> +          error has occurred on the corresponding channel.
+> +      - description:
+> +          Indicates that the eDMA Tx/Rx transfer is complete or that an
+> +          error has occurred on the corresponding channel.
+> +      - description:
+> +          Indicates that the eDMA Tx/Rx transfer is complete or that an
+> +          error has occurred on the corresponding channel.
+> +      - description:
+> +          Indicates that the eDMA Tx/Rx transfer is complete or that an
+> +          error has occurred on the corresponding channel.
+>  
+>    interrupt-names:
+> +    minItems: 5
+>      items:
+>        - const: sys
+>        - const: pmc
+>        - const: msg
+>        - const: legacy
+>        - const: err
 
-From the current driver implementation point of view this looks
-correct. So
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+> +      - const: dma0
+> +      - const: dma1
+> +      - const: dma2
+> +      - const: dma3
 
-But the design of the power on/off procedures seems very unfortunate:
-1. Calling antagonist from the respective protagonist is a bad
-solution for maintainability, because shall you need to add something
-to the protagonist you'll need to somehow take into account that it is
-reverted in the antagonist only if it was executed, which in its
-turn will get to be impossible if there are several conditional
-steps need to be implemented.
-2. There is a logical split up between the hi3660 and other
-controllers. Wherein the hi3660-specific code is implemented as a set
-of various coherent functions, meanwhile the code for the other
-controllers is placed directly to the kirin_pcie_power_on() and
-kirin_pcie_power_off() functions. It looks clumsy and hard-readable.
-3. kirin_pcie->gpio_id_dwc_perst is requested and switched to output,
-but is never freed and got back to input or level zero.
+No. As you said yourself here
+https://lore.kernel.org/linux-pci/ZTl1ZsHvk3DDHWsm@x1-carbon/
+and in the response to my last message in v2, which for some reason
+hasn't got to the lore archive:
+
+On Fri, Oct 27, 2023 at 05:51:14PM +0200, Niklas Cassel wrote:
+> However, e.g. rk3568 only has one channel for reads and one for writes.
+> (Now this SoC doesn't have dedicated IRQs for the eDMA, but let's pretend
+> that it did.)
+> 
+> So for rk3568, it would then instead be:
+> dma0: wr0
+> dma1: rd0
+> dma2: <unused>
+> dma3: <unused>
+
+rk3568 doesn't have IRQs supplied in a normal way, as separate
+signals.  Instead they are combined in the 'sys' IRQ. So you should
+define the IRQs constraint being device-specific by using for example
+the "allOf: if-else" pattern.
 
 -Serge(y)
 
->  }
 >  
->  static struct platform_driver kirin_pcie_driver = {
+>    legacy-interrupt-controller:
+>      description: Interrupt controller node for handling legacy PCI interrupts.
 > -- 
-> 2.34.1
+> 2.41.0
 > 
