@@ -2,161 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FC047DC5C4
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Oct 2023 06:12:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D17F7DC706
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Oct 2023 08:15:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230522AbjJaFMT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Oct 2023 01:12:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43206 "EHLO
+        id S1343585AbjJaHPB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Oct 2023 03:15:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230319AbjJaFMR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Oct 2023 01:12:17 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 598F2F5;
-        Mon, 30 Oct 2023 22:12:15 -0700 (PDT)
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39V4PHQw025204;
-        Tue, 31 Oct 2023 05:12:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=qcppdkim1;
- bh=RsQx3p3Jdt45deKD8q2naBRmwFH/7pLMEOjfr52W8xs=;
- b=eMtccMgJrp9IZ0kTdJSRgf4TEIWhka46NAaZN80JDV9hkwrsgkUEhBPVxYtPUsXY0NeO
- /3uEdYybTZdTpMyHDehAwsofTq865mBIzyznhKigwhwZjngOw6eUnFedXN1cc1GBkE1B
- Wi8kQ6oCrbw1AXdd6TRDzwiU5xgjpV4m/9vI1PiKp14SBvg4mMta42fMrx3CX0V+4QSe
- +UQ8o9AfCTiM4E8STQEM2WQKdSAXMQZo/YV7jFHYW4k32eVsUclADXnYwsGTXNV1L91R
- qAS9m9BIWTaiR0HW4aVEl9zQ13IwdFvFgPBWWTp773uoxgS9Od5qkFOSpfFNNMN84ZOm Ng== 
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3u2egssn98-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 31 Oct 2023 05:12:07 +0000
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 39V5C3p3010087;
-        Tue, 31 Oct 2023 05:12:04 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3u0ucktxaj-1;
-        Tue, 31 Oct 2023 05:12:03 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39V5C3Ne010081;
-        Tue, 31 Oct 2023 05:12:03 GMT
-Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
-        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 39V5C3mJ010079;
-        Tue, 31 Oct 2023 05:12:03 +0000
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
-        id F237C450D; Tue, 31 Oct 2023 10:42:01 +0530 (+0530)
-From:   Mrinmay Sarkar <quic_msarkar@quicinc.com>
-To:     agross@kernel.org, andersson@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        konrad.dybcio@linaro.org, mani@kernel.org
-Cc:     quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
-        dmitry.baryshkov@linaro.org, robh@kernel.org,
-        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
-        quic_parass@quicinc.com, quic_schintav@quicinc.com,
-        quic_shijose@quicinc.com,
-        Mrinmay Sarkar <quic_msarkar@quicinc.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mhi@lists.linux.dev
-Subject: [PATCH v6 4/4] arm64: dts: qcom: sa8775p: Add ep pcie0 controller node
-Date:   Tue, 31 Oct 2023 10:41:48 +0530
-Message-Id: <1698729108-27356-5-git-send-email-quic_msarkar@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1698729108-27356-1-git-send-email-quic_msarkar@quicinc.com>
-References: <1698729108-27356-1-git-send-email-quic_msarkar@quicinc.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: nJT0Zd_xpoxTGLx4nMS-Vzwk7I6Pjsrc
-X-Proofpoint-GUID: nJT0Zd_xpoxTGLx4nMS-Vzwk7I6Pjsrc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-30_13,2023-10-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
- mlxlogscore=999 adultscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0
- impostorscore=0 priorityscore=1501 spamscore=0 suspectscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2310240000
- definitions=main-2310310039
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S1343556AbjJaHPA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Oct 2023 03:15:00 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 146DAC2
+        for <linux-pci@vger.kernel.org>; Tue, 31 Oct 2023 00:14:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698736498; x=1730272498;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=lzC1r5/MhuR3N9ZPloNAnD3/lZwpYF4xcO5Hf2mHMl0=;
+  b=gBMD3JJ+APCzR3y2QhbFRSi8NAwko+BFYtwcTn8TE5S3VvYizLCLeKH5
+   gniJBZnYOF2+870uoXgdTAV6okc2yMboSA0VFtBXDYldKCel5PSeVYKvV
+   50ksWQEV2vIpEChesxAAYh8sPRSNvVDzNe626cpeYSPRyAXn6Dd5YvoHe
+   WU+M3kKaFPsGLHVRtVd0NQUy2fJVjJIdypMBNM0E8dK/6iCVWvzV0CChO
+   +tsXztJnPXRmWliAH8QdN2Ouup3LAWQX7e0Ra01+UhaV6SXsqrLSXm/VV
+   F/SnKMnY8r3GIV1FVsdtcPhDrG9IaA/hmjgWJY/BK6t4lNFhoL9wVntEG
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="452503228"
+X-IronPort-AV: E=Sophos;i="6.03,265,1694761200"; 
+   d="scan'208";a="452503228"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2023 00:14:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="789697385"
+X-IronPort-AV: E=Sophos;i="6.03,265,1694761200"; 
+   d="scan'208";a="789697385"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 31 Oct 2023 00:14:22 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 1045B16E; Tue, 31 Oct 2023 09:14:20 +0200 (EET)
+Date:   Tue, 31 Oct 2023 09:14:20 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: pcie_bandwidth_available and USB4/TBT3
+Message-ID: <20231031071420.GN3208943@black.fi.intel.com>
+References: <7ad4b2ce-4ee4-429d-b5db-3dfc360f4c3e@amd.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7ad4b2ce-4ee4-429d-b5db-3dfc360f4c3e@amd.com>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add ep pcie dtsi node for pcie0 controller found on sa8775p platform.
-It supports gen4 and x2 link width. Limiting the speed to Gen3 due to
-stability issues.
+Hi Mario,
 
-Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sa8775p.dtsi | 46 +++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+On Mon, Oct 30, 2023 at 11:46:20AM -0500, Mario Limonciello wrote:
+> Hi,
+> 
+> Recently we’ve been looking at some issues with AMD dGPUs being put into a
+> TBT3 eGPU enclosure and various issues that come up.  Several of them are
+> root caused to bugs in the amdgpu driver that we’ll fix there.
+> 
+> However one thing stands out is a performance problem where the cards are
+> artificially limited to a lower speed than necessary.
+> 
+> The amdgpu driver uses pcie_bandwidth_available() to decide what values to
+> use for the platform speed cap and bandwidth cap.
+> The value returned for the platform speed cap is always hardcoded to 2.5
+> GT/s.
+> 
+> This happens because the USB4 spec explicitly states[1]
+> 
+> ---
+> 11.2.1 PCIe Physical Layer Logical Sub-block
+> The Logical sub-block shall update the PCIe configuration registers with the
+> following
+> characteristics:
+> • PCIe Gen 1 protocol behavior.
+> • Max Link Speed field in the Link Capabilities Register set to 0001b (data
+> rate of 2.5 GT/s
+> only).
+> Note: These settings do not represent actual throughput. Throughput is
+> implementation specific
+> and based on the USB4 Fabric performance.
+> ---
+> 
+> So I wanted to ask – is it better to:
+> 1. Catch this case in pcie_bandwidth_available() to skip PCIe root ports
+> associated with a USB4 controller.
+> 
+> 2. Special case the usage of pcie_bandwidth_available() to ignore any
+> limiting devices when dev_is_removable() for the dGPU.
+> 
+> I'm personally tending to think it's better to fix in
+> pcie_bandwidth_available() because papering over it in amdgpu means that the
+> discovering the upper bound isn't possible if you must ignore the return
+> value for pcie_bandwidth_available().
 
-diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-index 13dd44d..7eab458 100644
---- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-@@ -3586,6 +3586,52 @@
- 		status = "disabled";
- 	};
- 
-+	pcie0_ep: pcie-ep@1c00000 {
-+		compatible = "qcom,sa8775p-pcie-ep";
-+		reg = <0x0 0x01c00000 0x0 0x3000>,
-+		      <0x0 0x40000000 0x0 0xf20>,
-+		      <0x0 0x40000f20 0x0 0xa8>,
-+		      <0x0 0x40001000 0x0 0x4000>,
-+		      <0x0 0x40200000 0x0 0x100000>,
-+		      <0x0 0x01c03000 0x0 0x1000>,
-+		      <0x0 0x40005000 0x0 0x2000>;
-+		reg-names = "parf", "dbi", "elbi", "atu", "addr_space",
-+			    "mmio", "dma";
-+
-+		clocks = <&gcc GCC_PCIE_0_AUX_CLK>,
-+			<&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-+			<&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-+			<&gcc GCC_PCIE_0_SLV_AXI_CLK>,
-+			<&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>;
-+
-+		clock-names = "aux",
-+			      "cfg",
-+			      "bus_master",
-+			      "bus_slave",
-+			      "slave_q2a";
-+
-+		interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 630 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		interrupt-names = "global", "doorbell", "dma";
-+
-+		interconnects = <&pcie_anoc MASTER_PCIE_0 0 &mc_virt SLAVE_EBI1 0>,
-+				<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_PCIE_0 0>;
-+		interconnect-names = "pcie-mem", "cpu-pcie";
-+
-+		iommus = <&pcie_smmu 0x0000 0x7f>;
-+		resets = <&gcc GCC_PCIE_0_BCR>;
-+		reset-names = "core";
-+		power-domains = <&gcc PCIE_0_GDSC>;
-+		phys = <&pcie0_phy>;
-+		phy-names = "pciephy";
-+		max-link-speed = <3>; /* FIXME: Limiting the Gen speed due to stability issues */
-+		num-lanes = <2>;
-+
-+		status = "disabled";
-+	};
-+
- 	pcie0_phy: phy@1c04000 {
- 		compatible = "qcom,sa8775p-qmp-gen4x2-pcie-phy";
- 		reg = <0x0 0x1c04000 0x0 0x2000>;
--- 
-2.7.4
-
+I agree, handling this in pcie_bandwidth_available() makes sense but I
+suggest also to document this the kernel-doc so that the GPU driver
+writers (probably the only ones using this function) can find the
+information easily. Maybe the simplest is to skip any "tunneled" links
+and stick to the real PCIe links when calculating the bandwidth.
