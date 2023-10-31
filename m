@@ -2,129 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B03F37DC411
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Oct 2023 03:00:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8C097DC56C
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Oct 2023 05:41:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229692AbjJaCAv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Oct 2023 22:00:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56010 "EHLO
+        id S231391AbjJaElt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Oct 2023 00:41:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229510AbjJaCAu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Oct 2023 22:00:50 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C66DEE4
-        for <linux-pci@vger.kernel.org>; Mon, 30 Oct 2023 19:00:47 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-565334377d0so4115764a12.2
-        for <linux-pci@vger.kernel.org>; Mon, 30 Oct 2023 19:00:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1698717647; x=1699322447; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ysFHtwfLEtis2HEwrxQHDKnfNsPImE2g/7GGtzNp+Cs=;
-        b=RA0zuQurBpzYYfjoncjl1kshFj3iAGNIw3NKTxySaBBPtVj/wd5SKoIIAEqT071n2g
-         u8J8MlnD8DYzzR4sOIQPxbwdVqRqjyN1CPa2FTv+5p0A6cWkQqe9e5/wx7ZoTZre/dws
-         n6YeCGYiyXr0yQYwjly+z4aEl4jxOH/7s1dtkQ7y7hoyy7/7jUM0j5ddNVd+B/zJadk+
-         sb1a++EwzSH11of0XYBZmkazOmcCqjL4Exyyk7ZJHvpsCehjyowvTW8DWITyYOvg6fUw
-         sr5RJmpYKdB0yuSm6ixVX0ixxlNR3G2v9EyVqHnquwekNJ0sboVSZB30lCkWvcA1EI//
-         Nziw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698717647; x=1699322447;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ysFHtwfLEtis2HEwrxQHDKnfNsPImE2g/7GGtzNp+Cs=;
-        b=QMHa0knY3/p4LbFIiPpprcpzrBIaHmkvRvGcPn0iJ5+f+/TyxwdMRhTRVwpR36K9rm
-         Oj50rwlOAg/po0kMYwNAqrl1TuCHwoSVZJK9cKOn5XXLPTGdt31d1OiMzbl3HRDKXEC9
-         iS2KNHZAsd/XOktE/HpQiIYAhx/SHNtLTqfpstrafLesBWk3h9TDqRkeV26CF1K0i1Yj
-         ak9ekDB5MQz2A297DkaIlojRmaxyrVD0qdYogkywfPiLMWHUJAgFyvboG3ggtJcYueX7
-         ochjbmmDbxNKmL0kKcJQdiTb6BLaqK5T0isgNPnB4TaBVrIwVYw+sS79bYNO61JWqsIN
-         PpXg==
-X-Gm-Message-State: AOJu0YxmITeTrvE5pt08X4hqHx5N1r5a5sOWjz3K2xf9jtq4w7Iqj/Dp
-        oo7Bp+pyKrdRyCd+2rUB3YUG/w==
-X-Google-Smtp-Source: AGHT+IEf0KaLXQATJy7Y+aQfRDpTBjnOxd6k1XM+fNDmCwu9+0PAZyGarOs4HgtrLS/PIbK2VfXdgQ==
-X-Received: by 2002:a05:6a20:a220:b0:17b:e0a3:f6f4 with SMTP id u32-20020a056a20a22000b0017be0a3f6f4mr9170362pzk.25.1698717647083;
-        Mon, 30 Oct 2023 19:00:47 -0700 (PDT)
-Received: from sunil-laptop ([106.51.188.78])
-        by smtp.gmail.com with ESMTPSA id b17-20020a056a000a9100b006934e7ceb79sm159585pfl.32.2023.10.30.19.00.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Oct 2023 19:00:46 -0700 (PDT)
-Date:   Tue, 31 Oct 2023 07:30:35 +0530
-From:   Sunil V L <sunilvl@ventanamicro.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
+        with ESMTP id S229504AbjJaElt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Oct 2023 00:41:49 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87D6E98;
+        Mon, 30 Oct 2023 21:41:46 -0700 (PDT)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39V4IeYQ008323;
+        Tue, 31 Oct 2023 04:41:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=tNUOQlsdhJItx2egS2k34uo+5/T/8mE36Mww34hX4dY=;
+ b=NcDbubAMuFuDPEmcn0kQLrblxOmElo2m/fCWnZbpxZ0Ksetrz0dUy7jVPHGgvxqhvOkW
+ jcL3E18v6QMrzXeeyozL9G+0eoHzE14QkPfZJYifX5Qq9/prIo8u22D0LmlXJisfnMw+
+ 6t/2BoJNVEX+6zAZ8ZqbbRKj/nqksNDeX+K0FU5AfPACTsReF1rvjjHxGa26jEcliCeJ
+ BxEOtuLFG0Sctol39PEr1dbepx7UWvz7KPpB9TwXekCP3Wz8nSPa5kKLBjRe1Gqx566H
+ OQvxQ0bEFn1/DytabtUsCoIO5rQez0N35EpVFO9smTAtnxb8jPfp/Wvu+IeOH4mvg4ss EQ== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3u2fuvhad5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 Oct 2023 04:41:15 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 39V4fBqY012148;
+        Tue, 31 Oct 2023 04:41:11 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3u0ucktta7-1;
+        Tue, 31 Oct 2023 04:41:11 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39V4fBiC012143;
+        Tue, 31 Oct 2023 04:41:11 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 39V4fBnB012139;
+        Tue, 31 Oct 2023 04:41:11 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
+        id 1B048449C; Tue, 31 Oct 2023 10:11:10 +0530 (+0530)
+From:   Mrinmay Sarkar <quic_msarkar@quicinc.com>
+To:     agross@kernel.org, andersson@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        konrad.dybcio@linaro.org, mani@kernel.org
+Cc:     quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+        dmitry.baryshkov@linaro.org, robh@kernel.org,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        quic_parass@quicinc.com, quic_schintav@quicinc.com,
+        quic_shijose@quicinc.com,
+        Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Anup Patel <anup@brainfault.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Andrew Jones <ajones@ventanamicro.com>,
-        Atish Kumar Patra <atishp@rivosinc.com>,
-        Haibo Xu <haibo1.xu@intel.com>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [RFC PATCH v2 11/21] PCI: MSI: Add helper function to set system
- wide MSI support
-Message-ID: <ZUBfw2vrzc+GyAny@sunil-laptop>
-References: <20231025202344.581132-1-sunilvl@ventanamicro.com>
- <20231025202344.581132-12-sunilvl@ventanamicro.com>
- <87a5s0yyje.ffs@tglx>
- <ZT/t0UY5rbudhjfH@sunil-laptop>
- <874ji7zz7a.ffs@tglx>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874ji7zz7a.ffs@tglx>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mhi@lists.linux.dev
+Subject: [PATCH v5 0/4] arm64: qcom: sa8775p: add cache coherency support for SA8775P
+Date:   Tue, 31 Oct 2023 10:11:02 +0530
+Message-Id: <1698727267-22131-1-git-send-email-quic_msarkar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: tIhiVGtan5dR5IH_9eAPNmz2Dz4brPnF
+X-Proofpoint-GUID: tIhiVGtan5dR5IH_9eAPNmz2Dz4brPnF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-30_13,2023-10-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ spamscore=0 suspectscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0
+ priorityscore=1501 phishscore=0 mlxlogscore=372 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2310240000 definitions=main-2310310034
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 30, 2023 at 08:29:13PM +0100, Thomas Gleixner wrote:
-> On Mon, Oct 30 2023 at 23:24, Sunil V. L. wrote:
-> > On Mon, Oct 30, 2023 at 03:28:53PM +0100, Thomas Gleixner wrote:
-> > Just noting related discussion :
-> > https://www.spinics.net/lists/linux-serial/msg57616.html
-> >
-> > The MSI controller on RISC-V (IMSIC) is optional for the platform. So,
-> > when by default pci_msi_enable = 1 and the MSI controller is not
-> > discovered, we get stack trace like below.
-> 
-> <SNIP>
-> 
-> > So, what I did was, by default call pci_no_msi() to disable MSI and then
-> > call pci_set_msi() to enable when MSI controller is probed.
-> 
-> Your taste sensors should have gone out of range ...
-> 
-> > But I think Bjorn's suggestion to depend on PCI_BUS_FLAGS_NO_MSI may be
-> > better idea. In that case, we need to set bridge->msi_domain to true in
-> > pci_create_root_bus(). Let me know what do you prefer or if I am
-> > completely missing something here.
-> 
-> That's definitely more sensible, but as I said in the other thread, Marc
-> is the one who did the PCI core/bridge setup magic and he is definitely
-> in a better position to answer that bridge->msi_domain question.
-> 
-Thanks!. It looks like Marc introduced bridge->msi_domain in [1] for
-exactly the same problem we have with RISC-V + ACPI. Let me remove this
-hack and do similar to pci_host_common_probe() in next revision unless I
-get objections to that approach.
+This series is to enable cache snooping logic in both RC and EP
+driver and add the "dma-coherent" property in dtsi to support
+cache coherency in SA8775P.
 
-Sorry, somehow my script didn't copy Marc in the series. Will make sure
-I copy him explicitly in next revision.
 
-[1] - https://lore.kernel.org/all/20210330151145.997953-12-maz@kernel.org/
+This series adds the relavent DT bindings, new compatible string,
+add support to EPF driver and add EP PCIe node in dtsi file for
+ep pcie0 controller.
 
-Thanks!
-Sunil
+v4 -> v5:
+- add maxItems to the respective field to constrain io space and
+  interrupt in all variants.
+
+v3 -> v4:
+- add maxItems field in dt bindings
+- update comment in patch2
+- dropped PHY driver patch as it is already applied [1]
+- update comment in EPF driver patch
+- update commect in dtsi and add iommus instead of iommu-map
+
+[1] https://lore.kernel.org/all/169804254205.383714.18423881810869732517.b4-ty@kernel.org/
+
+v2 -> v3:
+- removed if/then schemas, added minItems for reg,
+  reg-bnames, interrupt and interrupt-names instead.
+- adding qcom,sa8775p-pcie-ep compitable for sa8775p
+  as we have some specific change to add.
+- reusing sm8450's pcs_misc num table as it is same as sa8775p.
+  used appropriate namespace for pcs.
+- remove const from sa8775p_header as kernel test robot
+  throwing some warnings due to this.
+- remove fallback compatiable as we are adding compatiable for sa8775p.
+
+v1 -> v2:
+- update description for dma
+- Reusing qcom,sdx55-pcie-ep compatibe so remove compaitable
+  for sa8775p
+- sort the defines in phy header file and remove extra defines
+- add const in return type pci_epf_header and remove MHI_EPF_USE_DMA
+  flag as hdma patch is not ready
+- add fallback compatiable as qcom,sdx55-pcie-ep, add iommu property
+
+
+Mrinmay Sarkar (4):
+  dt-bindings: PCI: qcom-ep: Add support for SA8775P SoC
+  PCI: qcom-ep: Add support for SA8775P SOC
+  PCI: epf-mhi: Add support for SA8775P
+  arm64: dts: qcom: sa8775p: Add ep pcie0 controller node
+
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 64 +++++++++++++++++++++-
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 46 ++++++++++++++++
+ drivers/pci/controller/dwc/pcie-qcom-ep.c          |  1 +
+ drivers/pci/endpoint/functions/pci-epf-mhi.c       | 17 ++++++
+ 4 files changed, 126 insertions(+), 2 deletions(-)
+
+-- 
+2.7.4
+
