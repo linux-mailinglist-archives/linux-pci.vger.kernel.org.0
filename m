@@ -2,120 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F6B67DD08A
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Oct 2023 16:31:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 879967DD0D9
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Oct 2023 16:46:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344997AbjJaPbt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Oct 2023 11:31:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34224 "EHLO
+        id S232197AbjJaPqo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Oct 2023 11:46:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344229AbjJaPbs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Oct 2023 11:31:48 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C000C1
-        for <linux-pci@vger.kernel.org>; Tue, 31 Oct 2023 08:31:46 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8443C433C8;
-        Tue, 31 Oct 2023 15:31:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698766306;
-        bh=0ht/xyjjKxAjGu7LLLsV1dUU6l8i2g6icSzBSWpyKKQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nucSoiPwjlrsu6P3IHSoQCn1zLdaiuoU1KYDRMt4NGjA5m71kxl5pOJo9sAujzqJF
-         GWjs44dENfwT1zl2SFBJS3klvOj/kIHYzx/qJiDBjyQ9723prBL7bKgw4UEQNlyze3
-         JJxbnzpEtZTF03YgBeTn9HLN4Z6PA/1Caury/GbaQF74w0rBMhMZjvGCKCo9XX3/g9
-         suM1RZqg5ltt3f1w5YAswxGHN6sSbrS8/3HK2E9yjvVMaYXa7+05Kiy0MfdqFDahec
-         e0vgylDwzRzvux66Zhepic98D2dznJVNZdY2Oss8EFsEhqUsAImFcP0Ig98CbFXLWt
-         +twfkAV6891qQ==
-Date:   Tue, 31 Oct 2023 10:31:44 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: vmd: Enable Hotplug based on BIOS setting on VMD
- rootports
-Message-ID: <20231031153144.GA10760@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231030201654.27505-1-nirmal.patel@linux.intel.com>
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231131AbjJaPqn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Oct 2023 11:46:43 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43B58F;
+        Tue, 31 Oct 2023 08:46:41 -0700 (PDT)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39VA9YXV024332;
+        Tue, 31 Oct 2023 15:46:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=QFeJZo4lVoS28Eu6lyZ7a2Uw6ke/eG74rXjZ9gHcpRQ=;
+ b=JtkCtwyeY8WLZEFWjmLpMSj7IyIqk3mzYbp37GGwrqTzHQt0xaEsA1GU3mphph3U3gXj
+ yzVxvWJv+U1CkwaikafHzLVAodF4hyR3uI2z0yRn84SGhrlKY/VLVH7d58HnxLsPt2x3
+ ZagmDqHgXArhffz0Cx0YjNmKjDG/ruo33oIJFNG8t/JFltyZTFTQFHCU6KKkhOzYGMH4
+ mXSmMJGhPsEK1aG6YUH3NfRjk03UO8Em3tzVYlV48/dirvfvEhK9T9QkRUJFSvwDz8X2
+ CNvO3rf0Q33lgf1Q3iynKSw1PVLQiK9lPQ+cml/aqewr6cJvuAVzdw5PE//4lDReS2cY eQ== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3u2c4ruryg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 Oct 2023 15:46:35 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 39VFkWMT006360;
+        Tue, 31 Oct 2023 15:46:32 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3u0uckx0ua-1;
+        Tue, 31 Oct 2023 15:46:32 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39VFkVwc006354;
+        Tue, 31 Oct 2023 15:46:31 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 39VFkV03006352;
+        Tue, 31 Oct 2023 15:46:31 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
+        id C65C74BFB; Tue, 31 Oct 2023 21:16:30 +0530 (+0530)
+From:   Mrinmay Sarkar <quic_msarkar@quicinc.com>
+To:     agross@kernel.org, andersson@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        konrad.dybcio@linaro.org, mani@kernel.org, robh+dt@kernel.org
+Cc:     quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+        dmitry.baryshkov@linaro.org, robh@kernel.org,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        quic_parass@quicinc.com, quic_schintav@quicinc.com,
+        quic_shijjose@quicinc.com,
+        Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH v1 0/3] arm64: qcom: sa8775p: add cache coherency support for SA8775P
+Date:   Tue, 31 Oct 2023 21:16:23 +0530
+Message-Id: <1698767186-5046-1-git-send-email-quic_msarkar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 6_V4tVSHgqYjuYmH5tnZf0oiTWJJedcR
+X-Proofpoint-GUID: 6_V4tVSHgqYjuYmH5tnZf0oiTWJJedcR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-31_02,2023-10-31_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
+ phishscore=0 adultscore=0 spamscore=0 priorityscore=1501 mlxlogscore=282
+ malwarescore=0 mlxscore=0 suspectscore=0 impostorscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2310240000 definitions=main-2310310125
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 30, 2023 at 04:16:54PM -0400, Nirmal Patel wrote:
-> VMD Hotplug should be enabled or disabled based on VMD rootports'
-> Hotplug configuration in BIOS. is_hotplug_bridge is set on each
-> VMD rootport based on Hotplug capable bit in SltCap in probe.c.
-> Check is_hotplug_bridge and enable or disable native_pcie_hotplug
-> based on that value.
-> 
-> Currently VMD driver copies ACPI settings or platform configurations
-> for Hotplug, AER, DPC, PM, etc and enables or disables these features
-> on VMD bridge which is not correct in case of Hotplug.
+This series is to enable cache snooping logic in both RC and EP
+driver and add the "dma-coherent" property in dtsi to support
+cache coherency in SA8775P.
 
-This needs some background about why it's correct to copy the ACPI
-settings in the case of AER, DPC, PM, etc, but incorrect for hotplug.
+To verify this series we required [1]
 
-> Also during the Guest boot up, ACPI settings along with VMD UEFI
-> driver are not present in Guest BIOS which results in assigning
-> default values to Hotplug, AER, DPC, etc. As a result Hotplug is
-> disabled on VMD in the Guest OS.
-> 
-> This patch will make sure that Hotplug is enabled properly in Host
-> as well as in VM.
+[1] https://lore.kernel.org/all/1698729108-27356-1-git-send-email-quic_msarkar@quicinc.com/
 
-Did we come to some consensus about how or whether _OSC for the host
-bridge above the VMD device should apply to devices in the separate
-domain below the VMD?
+Mrinmay Sarkar (3):
+  PCI: qcom: Enable cache coherency for SA8775P RC
+  PCI: qcom-ep: Enable cache coherency for SA8775P EP
+  arm64: dts: qcom: sa8775p: Mark PCIe controller as cache coherent
 
-I think this warrants some clarification and possibly discussion in
-the PCI firmware SIG.
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi     |  2 ++
+ drivers/pci/controller/dwc/pcie-qcom-ep.c |  8 ++++++++
+ drivers/pci/controller/dwc/pcie-qcom.c    | 11 +++++++++++
+ 3 files changed, 21 insertions(+)
 
-At the very least, the commit log should mention _OSC and say
-something about the fact that this is assuming PCIe hotplug ownership
-for devices below VMD, regardless of what the upstream _OSC said.
+-- 
+2.7.4
 
-> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
-> ---
-> ---
->  drivers/pci/controller/vmd.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 769eedeb8802..e39eaef5549a 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -720,6 +720,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  	resource_size_t membar2_offset = 0x2000;
->  	struct pci_bus *child;
->  	struct pci_dev *dev;
-> +	struct pci_host_bridge *vmd_bridge;
->  	int ret;
->  
->  	/*
-> @@ -886,8 +887,16 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  	 * and will fail pcie_bus_configure_settings() early. It can instead be
->  	 * run on each of the real root ports.
->  	 */
-> -	list_for_each_entry(child, &vmd->bus->children, node)
-> +	vmd_bridge = to_pci_host_bridge(vmd->bus->bridge);
-> +	list_for_each_entry(child, &vmd->bus->children, node) {
->  		pcie_bus_configure_settings(child);
-> +		/*
-> +		 * When Hotplug is enabled on vmd root-port, enable it on vmd
-> +		 * bridge.
-> +		 */
-> +		if (child->self->is_hotplug_bridge)
-> +			vmd_bridge->native_pcie_hotplug = 1;
-> +	}
->  
->  	pci_bus_add_devices(vmd->bus);
->  
-> -- 
-> 2.31.1
-> 
