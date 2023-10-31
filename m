@@ -2,146 +2,205 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF4F77DD913
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Nov 2023 00:04:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3E307DD936
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Nov 2023 00:20:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234563AbjJaXE3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Oct 2023 19:04:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38494 "EHLO
+        id S236243AbjJaXUK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Oct 2023 19:20:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234609AbjJaXE2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Oct 2023 19:04:28 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 209BC103;
-        Tue, 31 Oct 2023 16:04:26 -0700 (PDT)
+        with ESMTP id S236226AbjJaXUJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Oct 2023 19:20:09 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 111ACC9
+        for <linux-pci@vger.kernel.org>; Tue, 31 Oct 2023 16:20:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698793466; x=1730329466;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rrdo+pxc08eDuJsbTiYZVvEMJaUTmPZQSBv0NuXRWOU=;
-  b=bmVR+nPfEcqzuAksavwnrj9DzkYsLpL3Yolpz8S0jwz6uJMtMq+HVNhp
-   HNkabBant4QD2sHZO3UcPm1j+jUB7ASas4l+j66QZncsmMfyj32zlLSA0
-   wTIHh0xbeYRtJPGdTlZzSv1iV2w6zFwPc11kfbGReziRO1so8YOxShGTU
-   kxSpdYxuAh1ZnHmcKz6ZHXTVAfLfuCcAECOYDCJ8UmQvBjgUoh+KjWfRr
-   04c6iRRLhv/J01b48saEYsa9l93mFBfbodwVpaj5zNV9zhB+Tqcx801+Y
-   E5q+ellffiet65WPJHOrBwsC90xJaZG61aXRss771/cXpd5qAj+VS9VXh
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10880"; a="387276548"
+  t=1698794407; x=1730330407;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=4i5Q6qILxVTBd5if9FFMyEDGLFLIbzqmYduCd7MYAjg=;
+  b=nhQdc7eaCmZ0vpTycUmfAvfJIQdfyYCqQHMBKkAAnqj37pNJ0lxtMmV3
+   6k/Ws6YJvZKSCj59HXPulzxtTMLzpUMqGemDZZH+gzwOsUQMzogdvuZAq
+   PDuw02h3M99D+AidRvg9ot2nsuHca3OHW9+UGIDbRJKlLjkmrXVJSACBF
+   IACLclSGdnsA+jb4M5fiQZXuwsC+mChqRr5JfY9em/pwCA1WP2G0f4ooz
+   TMGfvdUjxFbPadHRh7dCEPeNZUbWwmJEfK9PAsyk1ROyGRC69frJTzkZw
+   KW1+C9GMhfqaVL3pcwXf6VKC1FQrhXDLMPaQdoM2mokaDFneLro+gQ4IS
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10880"; a="388215518"
 X-IronPort-AV: E=Sophos;i="6.03,266,1694761200"; 
-   d="scan'208";a="387276548"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2023 16:03:59 -0700
+   d="scan'208";a="388215518"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2023 16:20:06 -0700
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10880"; a="884363646"
 X-IronPort-AV: E=Sophos;i="6.03,266,1694761200"; 
-   d="scan'208";a="8855384"
-Received: from lkp-server01.sh.intel.com (HELO 17d9e85e5079) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 31 Oct 2023 16:03:56 -0700
-Received: from kbuild by 17d9e85e5079 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qxxm6-0000Ro-2b;
-        Tue, 31 Oct 2023 23:03:54 +0000
-Date:   Wed, 1 Nov 2023 07:02:58 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Mario Limonciello <mario.limonciello@amd.com>, bhelgaas@google.com,
-        mika.westerberg@linux.intel.com
-Cc:     oe-kbuild-all@lists.linux.dev, andreas.noever@gmail.com,
-        michael.jamet@intel.com, YehezkelShB@gmail.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, Alexander.Deucher@amd.com,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH 2/2] PCI: Ignore PCIe ports used for tunneling in
- pcie_bandwidth_available()
-Message-ID: <202311010646.KCczSLIW-lkp@intel.com>
-References: <20231031133438.5299-2-mario.limonciello@amd.com>
+   d="scan'208";a="884363646"
+Received: from patelni-ubuntu-dev.ch.intel.com ([10.2.132.59])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2023 16:20:06 -0700
+Message-ID: <8542edf9a001d74895a75574d91df421e535bbcd.camel@linux.intel.com>
+Subject: Re: [PATCH] PCI: vmd: Enable Hotplug based on BIOS setting on VMD
+ rootports
+From:   Nirmal Patel <nirmal.patel@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, orden.e.smith@intel.com
+Date:   Tue, 31 Oct 2023 16:26:46 -0700
+In-Reply-To: <f0b9e19c7a976f7a81b55f432a4ed29324b319fc.camel@linux.intel.com>
+References: <20231031153144.GA10760@bhelgaas>
+         <f0b9e19c7a976f7a81b55f432a4ed29324b319fc.camel@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231031133438.5299-2-mario.limonciello@amd.com>
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Mario,
+On Tue, 2023-10-31 at 12:59 -0700, Nirmal Patel wrote:
+> On Tue, 2023-10-31 at 10:31 -0500, Bjorn Helgaas wrote:
+> > On Mon, Oct 30, 2023 at 04:16:54PM -0400, Nirmal Patel wrote:
+> > > VMD Hotplug should be enabled or disabled based on VMD rootports'
+> > > Hotplug configuration in BIOS. is_hotplug_bridge is set on each
+> > > VMD rootport based on Hotplug capable bit in SltCap in probe.c.
+> > > Check is_hotplug_bridge and enable or disable native_pcie_hotplug
+> > > based on that value.
+> > > 
+> > > Currently VMD driver copies ACPI settings or platform
+> > > configurations
+> > > for Hotplug, AER, DPC, PM, etc and enables or disables these
+> > > features
+> > > on VMD bridge which is not correct in case of Hotplug.
+> > 
+> > This needs some background about why it's correct to copy the ACPI
+> > settings in the case of AER, DPC, PM, etc, but incorrect for
+> > hotplug.
+> > 
+> > > Also during the Guest boot up, ACPI settings along with VMD UEFI
+> > > driver are not present in Guest BIOS which results in assigning
+> > > default values to Hotplug, AER, DPC, etc. As a result Hotplug is
+> > > disabled on VMD in the Guest OS.
+> > > 
+> > > This patch will make sure that Hotplug is enabled properly in
+> > > Host
+> > > as well as in VM.
+> > 
+> > Did we come to some consensus about how or whether _OSC for the
+> > host
+> > bridge above the VMD device should apply to devices in the separate
+> > domain below the VMD?
+> We are not able to come to any consensus. Someone suggested to copy
+> either all _OSC flags or none. But logic behind that assumption is
+> that the VMD is a bridge device which is not completely true. VMD is
+> an
+> endpoint device and it owns its domain.
+> 
+> Also please keep this in your consideration, since Guest BIOS
+> doesn't have _OSC implementation, all of the flags Hotplug, AER, DPC
+> are set to power state default value and VMD's very important hotplug
+> functionality is broken.
 
-kernel test robot noticed the following build warnings:
+In case of Host OS, when VMD copies all the _OSC flags, Hotplug, AER,
+DPC, etc, it reflects Host BIOS settings.
 
-[auto build test WARNING on pci/for-linus]
-[also build test WARNING on westeri-thunderbolt/next linus/master v6.6 next-20231031]
-[cannot apply to pci/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+But in case of Guest OS or VM, the _OSC flags do not reflect Host BIOS
+settings. Instead what we have is power ON default values in VM, thus
+does not reflect any Host BIOS settings. For example, disabling Hotplug
+in VM eventhough it is enabled in Host BIOS.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/PCI-Ignore-PCIe-ports-used-for-tunneling-in-pcie_bandwidth_available/20231031-224221
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-patch link:    https://lore.kernel.org/r/20231031133438.5299-2-mario.limonciello%40amd.com
-patch subject: [PATCH 2/2] PCI: Ignore PCIe ports used for tunneling in pcie_bandwidth_available()
-config: arc-randconfig-002-20231101 (https://download.01.org/0day-ci/archive/20231101/202311010646.KCczSLIW-lkp@intel.com/config)
-compiler: arc-elf-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231101/202311010646.KCczSLIW-lkp@intel.com/reproduce)
+The patch 04b12ef163d1 broke the settings in Guest kernel by applying
+non-host default _OSC values. This long discussion is about restoring
+some of these settings to correct Host BIOS settings. i.e. Hotplug.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311010646.KCczSLIW-lkp@intel.com/
+> 
+> The patch 04b12ef163d1 assumes VMD is a bridge device and borrows/
+> *imposes system settings* for AER, DPC, Hotplug, PM, etc on VMD.
+> VMD is*type 0 PCI endpoint* device and all the PCI devices under VMD
+> are *privately *owned by VMD not by the OS.
+> 
+> Also VMD has its own Hotplug setting for its rootports in BIOS under
+> VMD settings that are different from global BIOS system settings. It
+> is
+> these settings that give VMD its own unique functionality.
+> 
+> That is why I suggested three solutions but never got any
+> confirmation.
+> 
+> #1: Revert the patch 04b12ef163d1 which was added under wrong
+> assumption. This patch didn't need to be added to VMD code if AER
+> was disabled from BIOS platform settings.
+> 
+> #2: VMD driver disables AER by copying AER BIOS system settings
+> which the patch 04b12ef163d1 does but do not change Hotplug.
+> I proposed this patch and didn't get approval.
+> 
+> #3: If hotplug is enabled on VMD root ports, make sure hotplug is
+> enabled on the bridge rootports are connected to. The proposed patch
+> does that.
+> 
+> Can we please come to some decision? VM Hotplug is an important part
+> of
+> VMD and customers are reporting VM Hotplug issues. I would like to
+> get
+> some progress on this one.
+> 
+> Thanks
+> nirmal
+> > I think this warrants some clarification and possibly discussion in
+> > the PCI firmware SIG.
+> > 
+> > At the very least, the commit log should mention _OSC and say
+> > something about the fact that this is assuming PCIe hotplug
+> > ownership
+> > for devices below VMD, regardless of what the upstream _OSC said.
+> > 
+> > > Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> > > ---
+> > > ---
+> > >  drivers/pci/controller/vmd.c | 11 ++++++++++-
+> > >  1 file changed, 10 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/vmd.c
+> > > b/drivers/pci/controller/vmd.c
+> > > index 769eedeb8802..e39eaef5549a 100644
+> > > --- a/drivers/pci/controller/vmd.c
+> > > +++ b/drivers/pci/controller/vmd.c
+> > > @@ -720,6 +720,7 @@ static int vmd_enable_domain(struct vmd_dev
+> > > *vmd, unsigned long features)
+> > >  	resource_size_t membar2_offset = 0x2000;
+> > >  	struct pci_bus *child;
+> > >  	struct pci_dev *dev;
+> > > +	struct pci_host_bridge *vmd_bridge;
+> > >  	int ret;
+> > >  
+> > >  	/*
+> > > @@ -886,8 +887,16 @@ static int vmd_enable_domain(struct vmd_dev
+> > > *vmd, unsigned long features)
+> > >  	 * and will fail pcie_bus_configure_settings() early. It can
+> > > instead be
+> > >  	 * run on each of the real root ports.
+> > >  	 */
+> > > -	list_for_each_entry(child, &vmd->bus->children, node)
+> > > +	vmd_bridge = to_pci_host_bridge(vmd->bus->bridge);
+> > > +	list_for_each_entry(child, &vmd->bus->children, node) {
+> > >  		pcie_bus_configure_settings(child);
+> > > +		/*
+> > > +		 * When Hotplug is enabled on vmd root-port, enable it
+> > > on vmd
+> > > +		 * bridge.
+> > > +		 */
+> > > +		if (child->self->is_hotplug_bridge)
+> > > +			vmd_bridge->native_pcie_hotplug = 1;
+> > > +	}
+> > >  
+> > >  	pci_bus_add_devices(vmd->bus);
+> > >  
+> > > -- 
+> > > 2.31.1
+> > > 
 
-All warnings (new ones prefixed by >>):
-
->> drivers/pci/pci.c:6234: warning: Function parameter or member 'pdev' not described in 'pcie_is_tunneling_port'
->> drivers/pci/pci.c:6234: warning: Excess function parameter 'dev' description in 'pcie_is_tunneling_port'
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for VIDEO_OV7670
-   Depends on [n]: MEDIA_SUPPORT [=y] && VIDEO_DEV [=y] && VIDEO_CAMERA_SENSOR [=n]
-   Selected by [y]:
-   - VIDEO_CAFE_CCIC [=y] && MEDIA_SUPPORT [=y] && MEDIA_PLATFORM_SUPPORT [=y] && MEDIA_PLATFORM_DRIVERS [=y] && V4L_PLATFORM_DRIVERS [=y] && PCI [=y] && I2C [=y] && VIDEO_DEV [=y] && COMMON_CLK [=y]
-
-
-vim +6234 drivers/pci/pci.c
-
-  6225	
-  6226	/**
-  6227	 * pcie_is_tunneling_port - Check if a PCI device is used for TBT3/USB4 tunneling
-  6228	 * @dev: PCI device to check
-  6229	 *
-  6230	 * Returns true if the device is used for PCIe tunneling, false otherwise.
-  6231	 */
-  6232	static bool
-  6233	pcie_is_tunneling_port(struct pci_dev *pdev)
-> 6234	{
-  6235		struct device_link *link;
-  6236		struct pci_dev *supplier;
-  6237	
-  6238		/* Intel TBT3 bridge */
-  6239		if (pdev->is_thunderbolt)
-  6240			return true;
-  6241	
-  6242		if (!pci_is_pcie(pdev))
-  6243			return false;
-  6244	
-  6245		if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT)
-  6246			return false;
-  6247	
-  6248		/* PCIe root port used for tunneling linked to USB4 router */
-  6249		list_for_each_entry(link, &pdev->dev.links.suppliers, c_node) {
-  6250			supplier = to_pci_dev(link->supplier);
-  6251			if (!supplier)
-  6252				continue;
-  6253			if (supplier->class == PCI_CLASS_SERIAL_USB_USB4)
-  6254				return true;
-  6255		}
-  6256	
-  6257		return false;
-  6258	}
-  6259	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
