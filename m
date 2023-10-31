@@ -2,114 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D17F7DC706
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Oct 2023 08:15:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D56727DC87B
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Oct 2023 09:37:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343585AbjJaHPB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Oct 2023 03:15:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44882 "EHLO
+        id S235467AbjJaIh0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Oct 2023 04:37:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343556AbjJaHPA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Oct 2023 03:15:00 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 146DAC2
-        for <linux-pci@vger.kernel.org>; Tue, 31 Oct 2023 00:14:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698736498; x=1730272498;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=lzC1r5/MhuR3N9ZPloNAnD3/lZwpYF4xcO5Hf2mHMl0=;
-  b=gBMD3JJ+APCzR3y2QhbFRSi8NAwko+BFYtwcTn8TE5S3VvYizLCLeKH5
-   gniJBZnYOF2+870uoXgdTAV6okc2yMboSA0VFtBXDYldKCel5PSeVYKvV
-   50ksWQEV2vIpEChesxAAYh8sPRSNvVDzNe626cpeYSPRyAXn6Dd5YvoHe
-   WU+M3kKaFPsGLHVRtVd0NQUy2fJVjJIdypMBNM0E8dK/6iCVWvzV0CChO
-   +tsXztJnPXRmWliAH8QdN2Ouup3LAWQX7e0Ra01+UhaV6SXsqrLSXm/VV
-   F/SnKMnY8r3GIV1FVsdtcPhDrG9IaA/hmjgWJY/BK6t4lNFhoL9wVntEG
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="452503228"
-X-IronPort-AV: E=Sophos;i="6.03,265,1694761200"; 
-   d="scan'208";a="452503228"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2023 00:14:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="789697385"
-X-IronPort-AV: E=Sophos;i="6.03,265,1694761200"; 
-   d="scan'208";a="789697385"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP; 31 Oct 2023 00:14:22 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 1045B16E; Tue, 31 Oct 2023 09:14:20 +0200 (EET)
-Date:   Tue, 31 Oct 2023 09:14:20 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: Re: pcie_bandwidth_available and USB4/TBT3
-Message-ID: <20231031071420.GN3208943@black.fi.intel.com>
-References: <7ad4b2ce-4ee4-429d-b5db-3dfc360f4c3e@amd.com>
+        with ESMTP id S235301AbjJaIhD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Oct 2023 04:37:03 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F6741BB
+        for <linux-pci@vger.kernel.org>; Tue, 31 Oct 2023 01:36:02 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1cc3bb4c307so15119935ad.0
+        for <linux-pci@vger.kernel.org>; Tue, 31 Oct 2023 01:36:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698741361; x=1699346161; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=CmRWz5iS/me/RMqdnaDD894cfakp+jsL2NZ95UmiyHg=;
+        b=prEu3q2poVTSVjwpaPZo6mX/hhi+J/9eh6896iU+t69PYT7sgiFwRiKMtn/sGQz5Yp
+         3A78cOa7ptNqhqjgW8wM/coB35JyveqVCWsLg4ZCZwpfLvQPqpTBE4mqqQj2GELAeEeN
+         I17rzqljT2wjoWR6O5EQDtN5a4TleqGr7iBmuEPlUMQd15E08j9KpIVi7Xirk3DsU7x7
+         hTqCs/VU/WNvPyEPOFx9WQnS9iV6yTWg1FrcyLprVVLnlw1xX1DmwXSHAzbMne6c3L3h
+         OJCnPq5I7ZPnuc2cO3HtMFOXlQn38PgTxnQBUf7AJvwL+O2euasULlD1Q8Ilgp+plwkh
+         cRDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698741361; x=1699346161;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CmRWz5iS/me/RMqdnaDD894cfakp+jsL2NZ95UmiyHg=;
+        b=jS9gXQoLn4iJYRSPPclWXh43wRxInDBcs6+/MiKadLaOwDeseDqPRVaVqWjWnMENkJ
+         JemZwBG4cCt0ZHJVuwUkAKuHof3i4hqhPNyWMkvyOookFC+gw4ZH70GdjaU9dzJC6yl9
+         wglWCZ8xvUJFa99fHZPuJ77/NaHAp+UtJMp/uMafoSZDH4kktkExuZ4RKm2RuitS5EkG
+         D0Rfol8N0ZkZtFh6OCfUKNDNaTD2nVFFkZYKtDbuinV36kOrshMEJC0+TdJq+4x304lx
+         PNfKMO+PfSed3Egj1YAjvoKmg5DcQhiaxIqPQqOGvuS9lO72Mzkyv6W5aJLl+m6Ph7k5
+         W4+Q==
+X-Gm-Message-State: AOJu0Ywljebq4hAbqnK6BFOSlP3Q7mdVkhcz76RpqwizHJX83diyab6R
+        N2VJfLG/qU1+KMGNExI6V6r7nxh7jsGeUT+hSg==
+X-Google-Smtp-Source: AGHT+IHjmRCODXpSYkvrHsgbscR3NzOeJbWUsnSzsupPb3nySmVdBXTLkyuKisEduQzGXlUKwY73Rg==
+X-Received: by 2002:a17:902:d50f:b0:1cc:4e9f:d27 with SMTP id b15-20020a170902d50f00b001cc4e9f0d27mr4647477plg.1.1698741361293;
+        Tue, 31 Oct 2023 01:36:01 -0700 (PDT)
+Received: from thinkpad ([117.193.215.92])
+        by smtp.gmail.com with ESMTPSA id u3-20020a17090282c300b001c74df14e6fsm781176plz.284.2023.10.31.01.35.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Oct 2023 01:36:00 -0700 (PDT)
+Date:   Tue, 31 Oct 2023 14:05:53 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: kirin: Fix an error path in kirin_pcie_probe()
+Message-ID: <20231031083553.GD11778@thinkpad>
+References: <e2b83334ab204ee905fe36ac01cfc297a5a2a7be.1698654061.git.christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7ad4b2ce-4ee4-429d-b5db-3dfc360f4c3e@amd.com>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <e2b83334ab204ee905fe36ac01cfc297a5a2a7be.1698654061.git.christophe.jaillet@wanadoo.fr>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Mario,
+On Mon, Oct 30, 2023 at 09:21:16AM +0100, Christophe JAILLET wrote:
+> If an error occurs after a successful kirin_pcie_power_on(),
+> kirin_pcie_power_off() should be called, as already done in the remove
+> function.
+> 
 
-On Mon, Oct 30, 2023 at 11:46:20AM -0500, Mario Limonciello wrote:
-> Hi,
-> 
-> Recently we’ve been looking at some issues with AMD dGPUs being put into a
-> TBT3 eGPU enclosure and various issues that come up.  Several of them are
-> root caused to bugs in the amdgpu driver that we’ll fix there.
-> 
-> However one thing stands out is a performance problem where the cards are
-> artificially limited to a lower speed than necessary.
-> 
-> The amdgpu driver uses pcie_bandwidth_available() to decide what values to
-> use for the platform speed cap and bandwidth cap.
-> The value returned for the platform speed cap is always hardcoded to 2.5
-> GT/s.
-> 
-> This happens because the USB4 spec explicitly states[1]
-> 
-> ---
-> 11.2.1 PCIe Physical Layer Logical Sub-block
-> The Logical sub-block shall update the PCIe configuration registers with the
-> following
-> characteristics:
-> • PCIe Gen 1 protocol behavior.
-> • Max Link Speed field in the Link Capabilities Register set to 0001b (data
-> rate of 2.5 GT/s
-> only).
-> Note: These settings do not represent actual throughput. Throughput is
-> implementation specific
-> and based on the USB4 Fabric performance.
-> ---
-> 
-> So I wanted to ask – is it better to:
-> 1. Catch this case in pcie_bandwidth_available() to skip PCIe root ports
-> associated with a USB4 controller.
-> 
-> 2. Special case the usage of pcie_bandwidth_available() to ignore any
-> limiting devices when dev_is_removable() for the dGPU.
-> 
-> I'm personally tending to think it's better to fix in
-> pcie_bandwidth_available() because papering over it in amdgpu means that the
-> discovering the upper bound isn't possible if you must ignore the return
-> value for pcie_bandwidth_available().
+PERST# assert (gpio_id_dwc_perst) is missing from kirin_pcie_power_off(). So
+first you need to add that in a separate patch and then this patch can come
+next.
 
-I agree, handling this in pcie_bandwidth_available() makes sense but I
-suggest also to document this the kernel-doc so that the GPU driver
-writers (probably the only ones using this function) can find the
-information easily. Maybe the simplest is to skip any "tunneled" links
-and stick to the real PCIe links when calculating the bandwidth.
+Also, this driver is using legacy GPIO APIs and needs cleanup too (Kudos if you
+are willing to do that).
+
+- Mani
+
+> Fixes: fc5165db245a ("PCI: kirin: Add HiSilicon Kirin SoC PCIe controller driver")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> Not sure of the Fixes tag.
+> ---
+>  drivers/pci/controller/dwc/pcie-kirin.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+> index 2ee146767971..0b93de9d2d06 100644
+> --- a/drivers/pci/controller/dwc/pcie-kirin.c
+> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
+> @@ -813,7 +813,15 @@ static int kirin_pcie_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> -	return dw_pcie_host_init(&pci->pp);
+> +	ret = dw_pcie_host_init(&pci->pp);
+> +	if (ret)
+> +		goto err_power_off;
+> +
+> +	return 0;
+> +
+> +err_power_off:
+> +	kirin_pcie_power_off(kirin_pcie);
+> +	return ret;
+>  }
+>  
+>  static struct platform_driver kirin_pcie_driver = {
+> -- 
+> 2.34.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
