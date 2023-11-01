@@ -2,215 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F14A7DDCAF
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Nov 2023 07:33:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5C687DDCF1
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Nov 2023 08:05:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231495AbjKAGdo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Nov 2023 02:33:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56858 "EHLO
+        id S229573AbjKAHFm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Nov 2023 03:05:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231295AbjKAGdo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Nov 2023 02:33:44 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7685A98;
-        Tue, 31 Oct 2023 23:33:41 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 320C1C433C8;
-        Wed,  1 Nov 2023 06:33:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698820420;
-        bh=3O26v4tTyNO7eM9tG/OxIgXtPpBxiNbtzfURLi8HCZk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CcnVKKv8EfTeuBLyyOLKSRwG+qCSvPSCwkfxkbo3TzyH3Hq0Y52w+78vCkJQRXpVA
-         svekU5rFtLritpMRc9Gn+pvR4ZkWPHYHKQQAhOYSFZAzd2u2yiIbtfP5BB3bU0YMWA
-         chrek2JJ+UXrd0CEtV3/RM9vbdorPAlFHyQ2N7yx4WNoWhCC9hktyArQWzTI5YNYYz
-         SCyRKTCVzT+JYFE/QWO7u0A1l+X4NW3sZHo/3GFZkbqvyQQHhC6cEwAI4MbSerUoWk
-         iEeqbJBlkrMAKNazjKGPbg0ke5dJVE4hd2w07id/zHg6CinmLBl1fohgw3Xsl8UMk9
-         QDi6xA2BsfbWQ==
-Date:   Wed, 1 Nov 2023 12:03:23 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, rafael@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, quic_vbadigan@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, quic_parass@quicinc.com
-Subject: Re: [PATCH v5 5/5] PCI: qcom: Add OPP support to scale performance
- state of power domain
-Message-ID: <20231101063323.GH2897@thinkpad>
-References: <1694066433-8677-1-git-send-email-quic_krichai@quicinc.com>
- <1694066433-8677-6-git-send-email-quic_krichai@quicinc.com>
+        with ESMTP id S229816AbjKAHFl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Nov 2023 03:05:41 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C21E109
+        for <linux-pci@vger.kernel.org>; Wed,  1 Nov 2023 00:05:35 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-540fb78363bso11146022a12.0
+        for <linux-pci@vger.kernel.org>; Wed, 01 Nov 2023 00:05:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698822334; x=1699427134; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=q7ANMdQBeVTGqhSHO1rP9w6x+E4E+JDk1Oiiy7igDF8=;
+        b=dPTU29hLWQKt5p8oUZVdhSVYIiTLHnBBKe6AqXLi2h1V3ncoUD5q4lryK1YvbuMo70
+         FNsHmi6o58VZGvagoQW07eb58GiXi/Gq4mrxt2ctQhhgprDYK4E859R4dFnjtNqpYE69
+         zM/iC5/bUXasvuo9nllfDb+nwDla1+VOLsiZrv4PQqqOqVhdW9DDvP9/McOOtBkWeUA8
+         a0X7/dx8B37BOO2bDl9X6BVf7C2vaGEhgFMJEZWniw48m87+DpQMaBGwANWJAuZ7YKew
+         ZeQDNznEsJ1oOwTizfZOTdcz7OcIsfCo4Eocrcw/2qB9MS0PlLlDklQ0Kue2AYSYkzBV
+         TNyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698822334; x=1699427134;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q7ANMdQBeVTGqhSHO1rP9w6x+E4E+JDk1Oiiy7igDF8=;
+        b=kuzTWp5aGGjdJoDgPdSjoWWk0ZNoBxy1+zQqtxhm1pbNJWhz9zYrxIT/LeiF2Vk545
+         bszJW6CUxCrmcZmzBB3IYmrpdd0KICqrvHGTiz4vlErasKvTAOVQJBYCmQUT4R5U8toO
+         sgPBYfKS1qPzzWh+WKcwj/e4/Pfcd7Bd33fgamiQPHCTf2RtvN85QvmwpIpZAQpce8/V
+         AzqAos8yYekuZeWibvgBfB96vVCuauEa7d6JYwEVONnaHKayero/sbB4+MF5M75Z+jmG
+         Mgx3RutomFLO1uDismxdRnavlYi55jPuB2rtIF3FbRh31/+NeEOuhmE02CK+h9xil1Bc
+         vYrw==
+X-Gm-Message-State: AOJu0Yy1Nks/VacIGF3h2bmi8cxp67n1lUIYQpldIUh2udlTPHDcRRh7
+        BYU2yWgS+AwSQPUOYA3OT+VaBg==
+X-Google-Smtp-Source: AGHT+IEszHjUPy0gRFDTmaLrChOO46qbIl+d2bdwWbEN5RyXCrvvNxySKcypRz44blnYS+LojSwRPg==
+X-Received: by 2002:a17:907:86a6:b0:9c1:bee1:b7eb with SMTP id qa38-20020a17090786a600b009c1bee1b7ebmr1303855ejc.37.1698822333811;
+        Wed, 01 Nov 2023 00:05:33 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.218.126])
+        by smtp.gmail.com with ESMTPSA id l9-20020a170906078900b009adc81bb544sm2052523ejc.106.2023.11.01.00.05.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Nov 2023 00:05:33 -0700 (PDT)
+Message-ID: <df166846-b226-4c4c-afb0-5e1cbdaf2abb@linaro.org>
+Date:   Wed, 1 Nov 2023 08:05:30 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1694066433-8677-6-git-send-email-quic_krichai@quicinc.com>
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/4] dt-bindings: PCI: qcom-ep: Add support for SA8775P
+ SoC
+To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, konrad.dybcio@linaro.org, mani@kernel.org
+Cc:     quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+        dmitry.baryshkov@linaro.org, robh@kernel.org,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        quic_parass@quicinc.com, quic_schintav@quicinc.com,
+        quic_shijose@quicinc.com, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mhi@lists.linux.dev
+References: <1698729108-27356-1-git-send-email-quic_msarkar@quicinc.com>
+ <1698729108-27356-2-git-send-email-quic_msarkar@quicinc.com>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <1698729108-27356-2-git-send-email-quic_msarkar@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 07, 2023 at 11:30:33AM +0530, Krishna chaitanya chundru wrote:
-> While scaling the interconnect clocks based on PCIe link speed, it is also
-> mandatory to scale the power domain performance state so that the SoC can
-> run under optimum power conditions.
+On 31/10/2023 06:11, Mrinmay Sarkar wrote:
+> Add devicetree bindings support for SA8775P SoC. It has DMA register
+> space and dma interrupt to support HDMA.
 > 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 58 ++++++++++++++++++++++++++++------
->  1 file changed, 49 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index ca6350b..1817e96 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -22,6 +22,7 @@
->  #include <linux/of.h>
->  #include <linux/of_gpio.h>
->  #include <linux/pci.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/platform_device.h>
->  #include <linux/phy/pcie.h>
-> @@ -240,6 +241,7 @@ struct qcom_pcie {
->  	const struct qcom_pcie_cfg *cfg;
->  	struct dentry *debugfs;
->  	bool suspended;
-> +	bool opp_supported;
->  };
->  
->  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> @@ -1357,14 +1359,13 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
->  	return 0;
->  }
->  
-> -static int qcom_pcie_icc_update(struct qcom_pcie *pcie)
-> +static int qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
->  {
->  	struct dw_pcie *pci = pcie->pci;
-> +	struct dev_pm_opp *opp;
->  	u32 offset, status, bw;
->  	int speed, width;
-> -
-> -	if (!pcie->icc_mem)
-> -		return 0;
-> +	int ret;
->  
->  	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->  	status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
-> @@ -1391,7 +1392,21 @@ static int qcom_pcie_icc_update(struct qcom_pcie *pcie)
->  		break;
->  	}
->  
-> -	return icc_set_bw(pcie->icc_mem, 0, width * bw);
-> +	if (pcie->opp_supported) {
-> +		opp = dev_pm_opp_find_level_exact(pci->dev, speed);
-> +		if (!IS_ERR(opp)) {
-> +			ret = dev_pm_opp_set_opp(pci->dev, opp);
-> +			if (ret)
-> +				dev_err(pci->dev, "Failed to set opp: level %d ret %d\n",
-> +					dev_pm_opp_get_level(opp), ret);
-> +			dev_pm_opp_put(opp);
-> +		}
-> +	}
-> +
-> +	if (pcie->icc_mem)
-> +		ret = icc_set_bw(pcie->icc_mem, 0, width * bw);
 
-I think you should tie interconnect scaling with OPP as suggested by Viresh,
-since you are updating both OPP and BW at the same time.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-- Mani
+Best regards,
+Krzysztof
 
-> +
-> +	return ret;
->  }
->  
->  static int qcom_pcie_link_transition_count(struct seq_file *s, void *data)
-> @@ -1434,8 +1449,10 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
->  static int qcom_pcie_probe(struct platform_device *pdev)
->  {
->  	const struct qcom_pcie_cfg *pcie_cfg;
-> +	unsigned long max_level = INT_MAX;
->  	struct device *dev = &pdev->dev;
->  	struct qcom_pcie *pcie;
-> +	struct dev_pm_opp *opp;
->  	struct dw_pcie_rp *pp;
->  	struct resource *res;
->  	struct dw_pcie *pci;
-> @@ -1506,6 +1523,27 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto err_pm_runtime_put;
->  
-> +	/* OPP table is optional */
-> +	ret = devm_pm_opp_of_add_table(dev);
-> +	if (ret && ret != -ENODEV) {
-> +		dev_err_probe(dev, ret, "Failed to add OPP table\n");
-> +		goto err_pm_runtime_put;
-> +	}
-> +
-> +	/* vote for max level in the opp table if opp table is present */
-> +	if (ret != -ENODEV) {
-> +		opp = dev_pm_opp_find_level_floor(dev, &max_level);
-> +		if (!IS_ERR(opp)) {
-> +			ret = dev_pm_opp_set_opp(dev, opp);
-> +			if (ret)
-> +				dev_err_probe(pci->dev, ret,
-> +					      "Failed to set opp: level %d\n",
-> +					      dev_pm_opp_get_level(opp));
-> +			dev_pm_opp_put(opp);
-> +		}
-> +		pcie->opp_supported = true;
-> +	}
-> +
->  	ret = pcie->cfg->ops->get_resources(pcie);
->  	if (ret)
->  		goto err_pm_runtime_put;
-> @@ -1524,9 +1562,9 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  		goto err_phy_exit;
->  	}
->  
-> -	ret = qcom_pcie_icc_update(pcie);
-> +	ret = qcom_pcie_icc_opp_update(pcie);
->  	if (ret)
-> -		dev_err(dev, "failed to update interconnect bandwidth: %d\n",
-> +		dev_err(dev, "failed to update interconnect bandwidth/opp: %d\n",
->  			ret);
->  
->  	if (pcie->mhi)
-> @@ -1575,6 +1613,8 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
->  	 */
->  	if (!dw_pcie_link_up(pcie->pci)) {
->  		qcom_pcie_host_deinit(&pcie->pci->pp);
-> +		if (pcie->opp_supported)
-> +			dev_pm_opp_set_opp(dev, NULL);
->  		pcie->suspended = true;
->  	}
->  
-> @@ -1594,9 +1634,9 @@ static int qcom_pcie_resume_noirq(struct device *dev)
->  		pcie->suspended = false;
->  	}
->  
-> -	ret = qcom_pcie_icc_update(pcie);
-> +	ret = qcom_pcie_icc_opp_update(pcie);
->  	if (ret)
-> -		dev_err(dev, "failed to update interconnect bandwidth: %d\n",
-> +		dev_err(dev, "failed to update interconnect bandwidth/opp: %d\n",
->  			ret);
->  
->  	return 0;
-> -- 
-> 2.7.4
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
