@@ -2,71 +2,233 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A50CB7DDFFD
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Nov 2023 11:59:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92B3E7DE016
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Nov 2023 12:06:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230502AbjKAK7y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Nov 2023 06:59:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39808 "EHLO
+        id S235056AbjKALG2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Nov 2023 07:06:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229731AbjKAK7y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Nov 2023 06:59:54 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A909EF7
-        for <linux-pci@vger.kernel.org>; Wed,  1 Nov 2023 03:59:48 -0700 (PDT)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1qy8wt-0006AC-4r; Wed, 01 Nov 2023 11:59:47 +0100
-Message-ID: <0f256363-430c-49c9-b395-94c3c7ceab06@leemhuis.info>
-Date:   Wed, 1 Nov 2023 11:59:46 +0100
+        with ESMTP id S235015AbjKALGZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Nov 2023 07:06:25 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAA8511A;
+        Wed,  1 Nov 2023 04:06:20 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SL3xy3gfhz6K6Lm;
+        Wed,  1 Nov 2023 19:02:46 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Wed, 1 Nov
+ 2023 11:05:52 +0000
+Date:   Wed, 1 Nov 2023 11:05:51 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Lukas Wunner <lukas@wunner.de>
+CC:     Alexey Kardashevskiy <aik@amd.com>, <linux-coco@lists.linux.dev>,
+        <kvm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <jic23@kernel.org>, <suzuki.poulose@arm.com>
+Subject: Re: TDISP enablement
+Message-ID: <20231101110551.00003896@Huawei.com>
+In-Reply-To: <20231101072717.GB25863@wunner.de>
+References: <e05eafd8-04b3-4953-8bca-dc321c1a60b9@amd.com>
+        <20231101072717.GB25863@wunner.de>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Content-Language: en-US, de-DE
-To:     Kamil Paral <kparal@redhat.com>, linux-pci@vger.kernel.org
-Cc:     regressions@lists.linux.dev
-References: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
-From:   "Linux regression tracking (Thorsten Leemhuis)" 
-        <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1698836388;8e952d61;
-X-HE-SMSGID: 1qy8wt-0006AC-4r
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking.]
+On Wed, 1 Nov 2023 08:27:17 +0100
+Lukas Wunner <lukas@wunner.de> wrote:
 
-On 21.08.23 12:39, Kamil Paral wrote:
-> = Summary =
-> A Thinkpad T480s laptop with a Thinkpad Thunderbolt 3 Dock connected
-> can no longer resume from suspend. The problem was introduced in
-> e8b908146d44 "PCI/PM: Increase wait time after resume".
-> [...]
-> #regzbot introduced: e8b908146d44
+Thanks Alexy, this is a great discussion to kick off.
 
-Kamil, It looks like you found a workaround and lack time to further
-look into this. Nobody else seems to have run into this and it seems
-this is a odd corner case. Hence I guess there is not much value in
-tracking this regression further for now. Please speak up if you disagree.
+> On Wed, Nov 01, 2023 at 09:56:11AM +1100, Alexey Kardashevskiy wrote:
+> > - device_connect - starts CMA/SPDM session, returns measurements/certs,
+> > runs IDE_KM to program the keys;  
+> 
+> Does the PSP have a set of trusted root certificates?
+> If so, where does it get them from?
+> 
+> If not, does the PSP just blindly trust the validity of the cert chain?
+> Who validates the cert chain, and when?
+> Which slot do you use?
+> Do you return only the cert chain of that single slot or of all slots?
+> Does the PSP read out all measurements available?  This may take a while
+> if the measurements are large and there are a lot of them.
 
-#regzbot inconclusive: workaround found, debugging stuck
-#regzbot ignore-activity
+I'd definitely like their to be a path for certs and measurement to be
+checked by the Host OS (for the non TDISP path). Whether the
+policy setup cares about result is different question ;)
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+> 
+> 
+> > - tdi_info - read measurements/certs/interface report;  
+> 
+> Does this return cached cert chains and measurements from the device
+> or does it retrieve them anew?  (Measurements might have changed if
+> MEAS_FRESH_CAP is supported.)
+> 
+> 
+> > If the user wants only CMA/SPDM, the Lukas'es patched will do that without
+> > the PSP. This may co-exist with the AMD PSP (if the endpoint allows multiple
+> > sessions).  
+> 
+> It can co-exist if the pci_cma_claim_ownership() library call
+> provided by patch 12/12 is invoked upon device_connect.
+> 
+> It would seem advantageous if you could delay device_connect
+> until a device is actually passed through.  Then the OS can
+> initially authenticate and measure devices and the PSP takes
+> over when needed.
 
+Would that delay mean IDE isn't up - I think that wants to be
+available whether or not pass through is going on.
+
+Given potential restrictions on IDE resources, I'd expect to see an explicit
+opt in from userspace on the host to start that process for a given
+device.  (udev rule or similar might kick it off for simple setups).
+
+Would that work for the flows described?  
+
+Next bit probably has holes...  Key is that a lot of the checks
+may fail, and it's up to host userspace policy to decide whether
+to proceed (other policy in the secure VM side of things obviously)
+
+So my rough thinking is - for the two options (IDE / TDISP)
+
+Comparing with Alexey's flow I think only real difference is that
+I call out explicit host userspace policy controls. I'd also like
+to use similar interfaces to convey state to host userspace as
+per Lukas' existing approaches.  Sure there will also be in
+kernel interfaces for driver to get data if it knows what to do
+with it.  I'd also like to enable the non tdisp flow to handle
+IDE setup 'natively' if that's possible on particular hardware.
+
+1. Host has a go at CMA/SPDM. Policy might say that a failure here is
+   a failure in general so reject device - or it might decide it's up to
+   the PSP etc.   (userspace can see if it succeeded)
+   I'd argue host software can launch this at any time.  It will
+   be a denial of service attack but so are many other things the host
+   can do.
+2. TDISP policy decision from host (userspace policy control)
+   Need to know end goal.
+3. IDE opt in from userspace.  Policy decision.
+  - If not TDISP 
+    - device_connect(IDE ONLY) - bunch of proxying in host OS.
+    - Cert chain and measurements presented to host, host can then check if
+      it is happy and expose for next policy decision.
+    - Hooks exposed for host to request more measurements, key refresh etc.
+      Idea being that the flow is host driven with PSP providing required
+      services.  If host can just do setup directly that's fine too.
+  - If TDISP (technically you can run tdisp from host, but lets assume
+    for now no one wants to do that? (yet)).
+    - device_connect(TDISP) - bunch of proxying in host OS.
+    - Cert chain and measurements presented to host, host can then check if
+      it is happy and expose for next policy decision.
+
+4. Flow after this depends on early or late binding (lockdown)
+   but could load driver at this point.  Userspace policy.
+   tdi-bind etc.
+
+
+> 
+> 
+> > If the user wants only IDE, the AMD PSP's device_connect needs to be called
+> > and the host OS does not get to know the IDE keys. Other vendors allow
+> > programming IDE keys to the RC on the baremetal, and this also may co-exist
+> > with a TSM running outside of Linux - the host still manages trafic classes
+> > and streams.  
+> 
+> I'm wondering if your implementation is spec compliant:
+> 
+> PCIe r6.1 sec 6.33.3 says that "It is permitted for a Root Complex
+> to [...] use implementation specific key management."  But "For
+> Endpoint Functions, [...] Function 0 must implement [...]
+> the IDE key management (IDE_KM) protocol as a Responder."
+> 
+> So the keys need to be programmed into the endpoint using IDE_KM
+> but for the Root Port it's permitted to use implementation-specific
+> means.
+> 
+> The keys for the endpoint and Root Port are the same because this
+> is symmetric encryption.
+> 
+> If the keys are internal to the PSP, the kernel can't program the
+> keys into the endpoint using IDE_KM.  So your implementation precludes
+> IDE setup by the host OS kernel.
+
+Proxy the CMA messages through the host OS. Doesn't mean host has
+visibility of the keys or certs.  So indeed, the actual setup isn't being done
+by the host kernel, but rather by it requesting the 'blob' to send
+to the CMA DOE from PSP.
+
+By my reading that's a bit inelegant but I don't see it being a break
+with the specification.
+
+> 
+> device_connect is meant to be used for TDISP, i.e. with devices which
+> have the TEE-IO Supported bit set in the Device Capabilities Register.
+> 
+> What are you going to do with IDE-capable devices which have that bit
+> cleared?  Are they unsupported by your implementation?
+> 
+> It seems to me an architecture cannot claim IDE compliance if it's
+> limited to TEE-IO capable devices, which might only be a subset of
+> the available products.
+
+Agreed.  If can request the PSP does a non TDISP IDE setup then
+I think we are fine.  If not then indeed usecases are limited and
+meh, it might be a spec compliance issue but I suspect not as
+TDISP has a note at the top that says:
+
+"Although it is permitted (and generally expected) that TDIs will
+be implemented such that they can be assigned to Legacy VMs, such
+use is not the focus of TDISP."
+
+Which rather implies that devices that don't support other usecases
+are allowed.
+
+> 
+> 
+> > The next steps:
+> > - expose blobs via configfs (like Dan did configfs-tsm);
+> > - s/tdisp.ko/coco.ko/;
+> > - ask the audience - what is missing to make it reusable for other vendors
+> > and uses?  
+> 
+> I intend to expose measurements in sysfs in a measurements/ directory
+> below each CMA-capable device's directory.  There are products coming
+> to the market which support only CMA and are not interested in IDE or
+> TISP.  When bringing up TDISP, measurements received as part of an
+> interface report must be exposed in the same way so that user space
+> tooling which evaluates the measurememt works both with TEE-IO capable
+> and incapable products.  This could be achieved by fetching measurements
+> from the interface report instead of via SPDM when TDISP is in use.
+
+Absolutely agree on this and superficially it feels like this should not
+be hard to hook up.
+
+There will also be paths where a driver wants to see the measurement report
+but that should also be easy enough to enable.
+
+Jonathan
+> 
+> Thanks,
+> 
+> Lukas
+> 
 
