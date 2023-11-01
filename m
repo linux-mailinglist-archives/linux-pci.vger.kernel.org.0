@@ -2,73 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A13247DE3C8
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Nov 2023 16:37:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E25D27DE366
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Nov 2023 16:36:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234017AbjKAP1I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Nov 2023 11:27:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49998 "EHLO
+        id S234088AbjKAP1L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Nov 2023 11:27:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233988AbjKAP1I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Nov 2023 11:27:08 -0400
+        with ESMTP id S234084AbjKAP1J (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Nov 2023 11:27:09 -0400
 Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B47310D;
-        Wed,  1 Nov 2023 08:27:00 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id DF8435C0040;
-        Wed,  1 Nov 2023 11:26:59 -0400 (EDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6806119;
+        Wed,  1 Nov 2023 08:27:02 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id B25295C0415;
+        Wed,  1 Nov 2023 11:27:01 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Wed, 01 Nov 2023 11:26:59 -0400
+  by compute2.internal (MEProxy); Wed, 01 Nov 2023 11:27:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
         cc:cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to; s=fm1; t=1698852419; x=1698938819; bh=xCnRAnA710
-        25ehVLm6DUJDLfmLjVFEx/xgBZes9V/dA=; b=kBENrH7S2umwB4PdiCaqfVEjkL
-        nKBfOC5EqCyFigYEptqPEReGYTl6QVrhbwN7N4nQ0FS68gLl0IGSLqkoNDRTeDGm
-        OlR8XKMLtVaWrAjM+kk6cPLZ1IodS/5g3HmrSykvvjxquyNDT603gs38c39vbv8c
-        yACp+PJYnj5SL4OunYZ5E1j2PUQ8RPOhVKamQ789cRSls4Q84ba4frpClW8e70p/
-        Ho+tEfb+OkuCNcpcrPPSxcuJ4tC+9HCmgljukPErtwLtK5lWyxp/qZdP6aQVWCd+
-        my2XJFO95SrOVIb07jZKTNY34Tioe7IjYkzXgHhzb46bos/1CWG3FtMmJB6Q==
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm1; t=1698852421; x=
+        1698938821; bh=xCnRAnA71025ehVLm6DUJDLfmLjVFEx/xgBZes9V/dA=; b=n
+        Vmew0Pl0rKX5yfy7egRF0hT44hcafrFsk0zg2FnH7xU/MYGzcdOqEj69v29jhVZ4
+        ZU9D+d2iNynRdwOLi68s5eHK/HagLsxL7xgkXLIb5hZ9acJeVzBcI1LkOz9CJXBf
+        Q7f9Yv0y3Dgdyqx2kj1qYoaZgu5YEothGmcpmiPo4TrKtadOINbUW1n7AvHE8CJT
+        wPekbFMPHn38xz8e15nGjsAN02YhCcxtuFP6IYFqT9dB7/1x0dMrGMlfqxYbGMpf
+        x1xh8e0iMvrsomqTNNG63XI9G1ZrGwRsczm/6zdWnDKw0F0NDKDSnfKLiy03HO3S
+        npNgf6QFxIRgpMOKGcJXA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding
         :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1698852419; x=1698938819; bh=xCnRAnA71025e
-        hVLm6DUJDLfmLjVFEx/xgBZes9V/dA=; b=qjaQR+W3EXidVbIK1IqFsd28zCbLA
-        WfE1ybQfLajdBbdRTWXML5E6SWNJRWFja6UKc8fMV7wbrZnJC/0JtAY0fitf1OfM
-        AzbGcGDvxzpEjtQymolYdRq+w5iD7kEgjHFm1iEqp55j0aUUpIT1Us1FIyXQ1COw
-        fNltEfnwdh2BHJQXo4x3mko65nzlCurLM3FqG41v2cNVdQwE2X6k5rtVZlZyhlLE
-        Dnu8v2y6RhbXqVsq7ZMd1lCi8SYr/LTNZFUS/o1XUN0JV4mBOvnJ/ruJydfzT20S
-        tyd5M8S/RAzFltWY7a8pX508NGomgC7tnojNRonTxWoZC8hl6/d/Qijow==
-X-ME-Sender: <xms:Q25CZTcB8cq7Ca3JwoQUOnRCSVH5ElZ0579_QXhlVlUrhlHP6uWvlw>
-    <xme:Q25CZZMKXwjkVQBGfvBPY06XCN692VyocaSdhU27Cp0Idar4O_ypIOcaAxYpqjQzW
-    I14h_fW7PQ3mRDoZQs>
-X-ME-Received: <xmr:Q25CZcjq2yThEZRgNkCYcaQD48B3uw4AwuYYR-olxgOADBtXVM_NGLKZpAVDN_8djG66ptRoLLE>
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1698852421; x=
+        1698938821; bh=xCnRAnA71025ehVLm6DUJDLfmLjVFEx/xgBZes9V/dA=; b=e
+        qMDTiss8SbmK/ooT81K7oc4vE2p3T/MC4YIgy6yoPQplO2w9/iqUA2AVP5Ka/TNV
+        jN6jv/Sj9OtYictwjvImnedGD3eYa6hcWjUMZzhdomoSLne06ljXHWfiNUYgDui4
+        SakSxT5k4Zw54dKcjau4uHMZNNJFBgfjbP+Yexs2Fm0B5km/FbBG62vyuJmTE1ss
+        anC+aeZNqZH7jhxThBjGf4f8EB8L0fmgzVH3bKwU+l6JaoyALflg+h1ct7tOZ71i
+        8P8zpjh/9EVvz9dZq1Ag9sXBC7+zyUcd77KiIPwFwy2QHqQgAQsMZ7Z2mJXiOjDY
+        NouzkjbV4Eqi5T70srFoQ==
+X-ME-Sender: <xms:RW5CZUJZ17ePgnSNKrzCGaIGRpAUZO_N5mvzhiUjwDMBEz9rlEoEOQ>
+    <xme:RW5CZUJpsI2sOZ_gHfM56s6f-MI9AmicPmE7fi4-NlgOX4HPg5GmLUoy5P0KSz4rT
+    V-mNl4-Nhqj8UnmCdg>
+X-ME-Received: <xmr:RW5CZUt15g7XRXMGNySlzmVMgp8l-jW4ArDZeE5Vzlb3ewESRHEwRblEzOWo2p8hPhT-7AptnmI>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedruddtgedgjeeiucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
-    ertddtnecuhfhrohhmpeflihgrgihunhcujggrnhhguceojhhirgiguhhnrdihrghnghes
-    fhhlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepvdeuteekleeuudfgueethe
-    dtuddthfdtleffgefhieehfeeigedvtdeuveetiedunecuffhomhgrihhnpehkvghrnhgv
-    lhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:Q25CZU8T1mtLcXLfWLaB5TSydqIBkD_InmISZ4tvbIgnfNGvQ4EXPA>
-    <xmx:Q25CZfv2lspI0jHApafI2BC8fYnknvf8b6ZiwP8XDzFdnZrfk-X1lw>
-    <xmx:Q25CZTFHd767d3dxo8orDSA51nhTu6RlqGaAiR3xzZSalIgYMcD5gA>
-    <xmx:Q25CZTgijUFXCu_0tKGEYzOdBDkjlAIMcsZR096XwjvM4Trf8MV_Vw>
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
+    ertdertddtnecuhfhrohhmpeflihgrgihunhcujggrnhhguceojhhirgiguhhnrdihrghn
+    ghesfhhlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepkeetuefhiefgleegie
+    duveefffefteeltddtffeikedtgfevgfduueehfffhgeffnecuffhomhgrihhnpehkvghr
+    nhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:RW5CZRa_iNVSQfQPtZIzHGe8WIoDgDrUaHKddZ6Ieij5gWarsJjD7w>
+    <xmx:RW5CZbbkcj-u4nU4Ub3ujXkna-rCEC-JMRElOtrVmvRmwIgxPQNunw>
+    <xmx:RW5CZdCBFWpos3PEYPRanOy1_vvW7hC7dL82s8yhPYDk_HKxpPTNjQ>
+    <xmx:RW5CZQOTtTntZX6foFxN1rxu1g4Hk1ODoOjO5vYsC2FuwJf_Our7rQ>
 Feedback-ID: ifd894703:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 1 Nov 2023 11:26:58 -0400 (EDT)
+ 1 Nov 2023 11:27:00 -0400 (EDT)
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     linux-pci@vger.kernel.org
 Cc:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
         linux-kernel@vger.kernel.org, chenhuacai@kernel.org,
         Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org
 Subject: [PATCH fixes v4] pci: loongson: Workaround MIPS firmware MRRS settings
-Date:   Wed,  1 Nov 2023 11:49:56 +0000
-Message-Id: <20231101114957.309902-1-jiaxun.yang@flygoat.com>
+Date:   Wed,  1 Nov 2023 11:49:57 +0000
+Message-Id: <20231101114957.309902-2-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231101114957.309902-1-jiaxun.yang@flygoat.com>
+References: <20231101114957.309902-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
