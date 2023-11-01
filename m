@@ -2,195 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 744A37DD951
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Nov 2023 00:42:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 71E157DDC41
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Nov 2023 06:24:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236776AbjJaXlP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Oct 2023 19:41:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52290 "EHLO
+        id S233234AbjKAFUK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Nov 2023 01:20:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230375AbjJaXlO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Oct 2023 19:41:14 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A426E10F
-        for <linux-pci@vger.kernel.org>; Tue, 31 Oct 2023 16:41:11 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-53eeb28e8e5so2602a12.1
-        for <linux-pci@vger.kernel.org>; Tue, 31 Oct 2023 16:41:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698795670; x=1699400470; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zggeX0Jrb9ZkmTPvrH2f7IhIYusHsgDJwAs8nPg2uwQ=;
-        b=2zdQm0tuvu2+mfRzZxsAnqPH7L0CD9zh/cAJBaC2a1A5YXdqMi6yxsL+gkHDLyYHQJ
-         B3u4ns5jgZ28tm/J0UoFY9PvNGe0kjy5JFl+pPvmgL5B/8kGr5bjri2TidxncnJYVP0f
-         1wukGw0yp4NFYWr0c5OuAUlSSdmcTwCtqYEDo8weVGS3gWMm2dNkGuhHkfuehX2ZNIHb
-         WAT9G4de2vX4M+jFqS2wwg8erYDSPO3TmrDd+K/DNmeMpV2gOg/13J87zfX6+2dIE+IH
-         KH4GtoC/mz7pw4occ7sm0NnFN24XSMtQ6rfhwLUYRR52DbMdCos9LHJR6g+JwCm+c1sJ
-         2+gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698795670; x=1699400470;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zggeX0Jrb9ZkmTPvrH2f7IhIYusHsgDJwAs8nPg2uwQ=;
-        b=aFEAKXz08xRD9k9qi0ppp7YfGuN9AogbYwCGbnAJUZhn4CEsRZavYfaUpf2PQqZbBG
-         FSYRui3tr12oeqlfuY5jQSocvpyQ2UACWi4Pkbl5hAu+Hjsqf5F87sq25y2Bk+NtX11A
-         5n804PuQuC3TDNRKvD/uwPl2G02vfST5zIAc/uXzyCsQcCVDt9GQXgH/oIeJps2h9gpF
-         3Uq7yrA5Ey9xfeD7JFfMoaEiZMyd8RP/X4lbvzk+QySnKlhPtf+QXr1u43AL1vUAtwuO
-         deGXgWNXqukW7zOT3bR1rkDh1OTVIy7wXTQxNYNlzPHNnXizkWD0NYHJf2ngJ8eyuehF
-         uDwA==
-X-Gm-Message-State: AOJu0YzrAPDcC9+c+DQsI2NW1/pAChaPXZnNIOv0LMprLDRkWFiykWpn
-        NDJ1OsJJlV0oLaBUs1AIfe64rkjnsG+MWToxzJQP0Q==
-X-Google-Smtp-Source: AGHT+IH8smVyAPSV4skfSfLcHBheaSGA0wMn4dpV16jIlV7oMI0/LSUcNdrWjjR8D/Y7TxygXaM1FPDn2qMh12c09io=
-X-Received: by 2002:a05:6402:17da:b0:543:72e1:7f7 with SMTP id
- s26-20020a05640217da00b0054372e107f7mr160542edy.1.1698795669923; Tue, 31 Oct
- 2023 16:41:09 -0700 (PDT)
+        with ESMTP id S231162AbjKAFUK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Nov 2023 01:20:10 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBD6AB9;
+        Tue, 31 Oct 2023 22:20:07 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03BF7C433C7;
+        Wed,  1 Nov 2023 05:19:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698816007;
+        bh=IR8T015GjC2W1ZHwd6MH/vDDHExF6SvoDshzi+eVuYY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PT76iVfuRLaaMW2JFu5mmEn8P9JpLjoFNwzbqBWHecWDq/N9KB09bvG4z6+eNaD5V
+         u9S9MPTkqwPu+X1+eHPj7Pgo35yk/zfhHh+a+69Q204JQq1YTnbdu6q3qPLyQqUFOq
+         woECxfMac5Nfyv3IK+Fk7/PH4mWGvB8NCMIKvzOekY8Gna48GZE0tklOcYsIg2YzAc
+         xDyZSnD4EC0UG109TFUiylJdlBr4ks+uu9hh/d+9S/TRm1NOmkiVSDIbf5oHjkEohZ
+         LJv1vM1mncf3CXzJpgTPCuPdYyvDXrskWjgBZ46q0ChHluEyr/phclg45QekXB+QP/
+         U2JbRW5XnJWyw==
+Date:   Wed, 1 Nov 2023 10:49:47 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        konrad.dybcio@linaro.org, quic_shazhuss@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
+        quic_nayiluri@quicinc.com, dmitry.baryshkov@linaro.org,
+        robh@kernel.org, quic_krichai@quicinc.com,
+        quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
+        quic_schintav@quicinc.com, quic_shijose@quicinc.com,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mhi@lists.linux.dev
+Subject: Re: [PATCH v6 2/4] PCI: qcom-ep: Add support for SA8775P SOC
+Message-ID: <20231101051947.GE2897@thinkpad>
+References: <1698729108-27356-1-git-send-email-quic_msarkar@quicinc.com>
+ <1698729108-27356-3-git-send-email-quic_msarkar@quicinc.com>
 MIME-Version: 1.0
-References: <e05eafd8-04b3-4953-8bca-dc321c1a60b9@amd.com>
-In-Reply-To: <e05eafd8-04b3-4953-8bca-dc321c1a60b9@amd.com>
-From:   Dionna Amalie Glaze <dionnaglaze@google.com>
-Date:   Tue, 31 Oct 2023 16:40:56 -0700
-Message-ID: <CAAH4kHYgMKv2xYT8=4Vx7i8hhpCOMZNdzf8G4fbNdx=9gQ8Y1w@mail.gmail.com>
-Subject: Re: TDISP enablement
-To:     Alexey Kardashevskiy <aik@amd.com>
-Cc:     linux-coco@lists.linux.dev, kvm@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1698729108-27356-3-git-send-email-quic_msarkar@quicinc.com>
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 31, 2023 at 3:56=E2=80=AFPM Alexey Kardashevskiy <aik@amd.com> =
-wrote:
->
-> Hi everyone,
->
-Hi Alexey.
+On Tue, Oct 31, 2023 at 10:41:46AM +0530, Mrinmay Sarkar wrote:
 
-> Here is followup after the Dan's community call we had weeks ago.
->
-> Our (AMD) goal at the moment is TDISP to pass through SRIOV VFs to
-> confidential VMs without trusting the HV and with enabled IDE
-> (encryption) and IOMMU (performance, compared to current SWIOTLB). I am
-> aware of other uses and vendors and I spend hours unsuccessfully trying
-> to generalize all this in a meaningful way.
->
-> The AMD SEV TIO verbs can be simplified as:
->
-> - device_connect - starts CMA/SPDM session, returns measurements/certs,
-> runs IDE_KM to program the keys;
-> - device_reclaim - undo the connect;
-> - tdi_bind - transition the TDI to TDISP's LOCKED and RUN states,
-> generates interface report;
-> - tdi_unbind - undo the bind;
-> - tdi_info - read measurements/certs/interface report;
+"s/SOC/SoC" in subject.
 
-Only read? Can user space not provide a nonce for replay protection
-here, or is that just inherent to the SPDM channel setup, and the
-user's replay-protected acceptance of the booted code, including this
-SPDM communication logic?
-I'm not fully up to speed here.
+> Add support for SA8775P SoC to the Qualcomm PCIe Endpoint Controller
+> driver. Adding new compatible string as it has different set of clocks
+> compare to other SOCs.
 
-> - tdi_validate - unlock TDI's MMIO and IOMMU (or invalidate, depends on
-> the parameters).
->
-> The first 4 called by the host OS, the last two by the TVM ("Trusted
-> VM"). These are implemented in the AMD PSP (platform processor).
-> There are CMA/SPDM, IDE_KV, TDISP in use.
->
-> Now, my strawman code does this on the host (I simplified a bit):
-> - after PCI discovery but before probing: walk through all TDISP-capable
-> (TEE-IO in PCIe caps) endpoint devices and call device_connect;
-> - when drivers probe - it is all set up and the device measurements are
-> visible to the driver;
-> - when constructing a TVM, tdi_bind is called;
->
-> and then in the TVM:
-> - after PCI discovery but before probing: walk through all TDIs (which
-> will have TEE IO bit set) and call tdi_info, verify the report, if ok -
-> call tdi_validate;
-> - when drivers probe - it is all set up and the driver decides if/which
-> DMA mode to use (SWIOTLB or direct), or panic().
->
->
-> Uff. Too long already. Sorry. Now, go to the problems:
->
-> If the user wants only CMA/SPDM, the Lukas'es patched will do that
-> without the PSP. This may co-exist with the AMD PSP (if the endpoint
-> allows multiple sessions).
->
-> If the user wants only IDE, the AMD PSP's device_connect needs to be
-> called and the host OS does not get to know the IDE keys. Other vendors
-> allow programming IDE keys to the RC on the baremetal, and this also may
-> co-exist with a TSM running outside of Linux - the host still manages
-> trafic classes and streams.
->
-> If the user wants TDISP for VMs, this assumes the user does not trust
-> the host OS and therefore the TSM (which is trusted) has to do CMA/SPDM
-> and IDE.
->
-> The TSM code is not Linux and not shared among vendors. CMA/SPDM and IDE
-> seem capable of co-existing, TDISP does not.
->
-> However there are common bits.
-> - certificates/measurements/reports blobs: storing, presenting to the
-> userspace (results of device_connect and tdi_bind);
-> - place where we want to authenticate the device and enable IDE
-> (device_connect);
-> - place where we want to bind TDI to a TVM (tdi_bind).
->
-> I've tried to address this with my (poorly named)
-> drivers/pci/pcie/tdisp.ko and a hack for VFIO PCI device to call tdi_bind=
-.
->
-> The next steps:
-> - expose blobs via configfs (like Dan did configfs-tsm);
+"compared to ther SoCs."
 
-I think that the blob interface should be reworked, as Sean and I have
-commented on for the SEV-SNP host patch series.
-For example, the amount of memory needed for the blob should be
-configurable by the host through a proposed size.
-These vendored certificates will only grow in size, and they're
-device-specific, so it makes sense for machines to have a local cache
-of all the provisioned certificates that get forwarded to the guest
-through the VMM. I'd like to see this kind of blob reporting as a more
-general mechanism, however, so we can get TDX-specific blobs in too
-without much fuss.
+> 
+> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
 
-I'm not _fully_ opposed to ditching this blob idea and just requiring
-the guest to contact a RIM service for all these certs, but generally
-I think that's a bit of an objectionable barrier to entry. And more
-work I'll need to do, lol. Probably still will have to eventually for
-short-lived claims.
-We then have another API to try to standardize that IETF RATS doesn't
-try to touch.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-All that aside, it doesn't seem like tsm/report is going to be the
-right place to get attestations from various devices. It's only
-designed for attesting the CPU. Would the idea be to have a new WO
-attribute that is some kind of TDI id, and that multiplexes out to the
-different TDI?
+- Mani
 
-> - s/tdisp.ko/coco.ko/;
-> - ask the audience - what is missing to make it reusable for other
-> vendors and uses?
->
-> Thanks,
-> --
-> Alexey
->
->
->
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> index 9e58f05..3a53d97 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> @@ -875,6 +875,7 @@ static void qcom_pcie_ep_remove(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id qcom_pcie_ep_match[] = {
+> +	{ .compatible = "qcom,sa8775p-pcie-ep", },
+>  	{ .compatible = "qcom,sdx55-pcie-ep", },
+>  	{ .compatible = "qcom,sm8450-pcie-ep", },
+>  	{ }
+> -- 
+> 2.7.4
+> 
 
-
---
--Dionna Glaze, PhD (she/her)
+-- 
+மணிவண்ணன் சதாசிவம்
