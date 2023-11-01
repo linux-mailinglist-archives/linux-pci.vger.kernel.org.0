@@ -2,145 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5C687DDCF1
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Nov 2023 08:05:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 481CA7DDD2A
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Nov 2023 08:27:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229573AbjKAHFm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Nov 2023 03:05:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53736 "EHLO
+        id S230361AbjKAH1Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Nov 2023 03:27:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229816AbjKAHFl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Nov 2023 03:05:41 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C21E109
-        for <linux-pci@vger.kernel.org>; Wed,  1 Nov 2023 00:05:35 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-540fb78363bso11146022a12.0
-        for <linux-pci@vger.kernel.org>; Wed, 01 Nov 2023 00:05:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698822334; x=1699427134; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=q7ANMdQBeVTGqhSHO1rP9w6x+E4E+JDk1Oiiy7igDF8=;
-        b=dPTU29hLWQKt5p8oUZVdhSVYIiTLHnBBKe6AqXLi2h1V3ncoUD5q4lryK1YvbuMo70
-         FNsHmi6o58VZGvagoQW07eb58GiXi/Gq4mrxt2ctQhhgprDYK4E859R4dFnjtNqpYE69
-         zM/iC5/bUXasvuo9nllfDb+nwDla1+VOLsiZrv4PQqqOqVhdW9DDvP9/McOOtBkWeUA8
-         a0X7/dx8B37BOO2bDl9X6BVf7C2vaGEhgFMJEZWniw48m87+DpQMaBGwANWJAuZ7YKew
-         ZeQDNznEsJ1oOwTizfZOTdcz7OcIsfCo4Eocrcw/2qB9MS0PlLlDklQ0Kue2AYSYkzBV
-         TNyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698822334; x=1699427134;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q7ANMdQBeVTGqhSHO1rP9w6x+E4E+JDk1Oiiy7igDF8=;
-        b=kuzTWp5aGGjdJoDgPdSjoWWk0ZNoBxy1+zQqtxhm1pbNJWhz9zYrxIT/LeiF2Vk545
-         bszJW6CUxCrmcZmzBB3IYmrpdd0KICqrvHGTiz4vlErasKvTAOVQJBYCmQUT4R5U8toO
-         sgPBYfKS1qPzzWh+WKcwj/e4/Pfcd7Bd33fgamiQPHCTf2RtvN85QvmwpIpZAQpce8/V
-         AzqAos8yYekuZeWibvgBfB96vVCuauEa7d6JYwEVONnaHKayero/sbB4+MF5M75Z+jmG
-         Mgx3RutomFLO1uDismxdRnavlYi55jPuB2rtIF3FbRh31/+NeEOuhmE02CK+h9xil1Bc
-         vYrw==
-X-Gm-Message-State: AOJu0Yy1Nks/VacIGF3h2bmi8cxp67n1lUIYQpldIUh2udlTPHDcRRh7
-        BYU2yWgS+AwSQPUOYA3OT+VaBg==
-X-Google-Smtp-Source: AGHT+IEszHjUPy0gRFDTmaLrChOO46qbIl+d2bdwWbEN5RyXCrvvNxySKcypRz44blnYS+LojSwRPg==
-X-Received: by 2002:a17:907:86a6:b0:9c1:bee1:b7eb with SMTP id qa38-20020a17090786a600b009c1bee1b7ebmr1303855ejc.37.1698822333811;
-        Wed, 01 Nov 2023 00:05:33 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.218.126])
-        by smtp.gmail.com with ESMTPSA id l9-20020a170906078900b009adc81bb544sm2052523ejc.106.2023.11.01.00.05.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Nov 2023 00:05:33 -0700 (PDT)
-Message-ID: <df166846-b226-4c4c-afb0-5e1cbdaf2abb@linaro.org>
-Date:   Wed, 1 Nov 2023 08:05:30 +0100
+        with ESMTP id S230206AbjKAH1X (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Nov 2023 03:27:23 -0400
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDB38E4;
+        Wed,  1 Nov 2023 00:27:19 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id B8605100D9404;
+        Wed,  1 Nov 2023 08:27:17 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 6577B1BAC8D; Wed,  1 Nov 2023 08:27:17 +0100 (CET)
+Date:   Wed, 1 Nov 2023 08:27:17 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Alexey Kardashevskiy <aik@amd.com>
+Cc:     linux-coco@lists.linux.dev, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: TDISP enablement
+Message-ID: <20231101072717.GB25863@wunner.de>
+References: <e05eafd8-04b3-4953-8bca-dc321c1a60b9@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/4] dt-bindings: PCI: qcom-ep: Add support for SA8775P
- SoC
-To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, konrad.dybcio@linaro.org, mani@kernel.org
-Cc:     quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
-        dmitry.baryshkov@linaro.org, robh@kernel.org,
-        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
-        quic_parass@quicinc.com, quic_schintav@quicinc.com,
-        quic_shijose@quicinc.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mhi@lists.linux.dev
-References: <1698729108-27356-1-git-send-email-quic_msarkar@quicinc.com>
- <1698729108-27356-2-git-send-email-quic_msarkar@quicinc.com>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <1698729108-27356-2-git-send-email-quic_msarkar@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e05eafd8-04b3-4953-8bca-dc321c1a60b9@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 31/10/2023 06:11, Mrinmay Sarkar wrote:
-> Add devicetree bindings support for SA8775P SoC. It has DMA register
-> space and dma interrupt to support HDMA.
-> 
-> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> ---
+On Wed, Nov 01, 2023 at 09:56:11AM +1100, Alexey Kardashevskiy wrote:
+> - device_connect - starts CMA/SPDM session, returns measurements/certs,
+> runs IDE_KM to program the keys;
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Does the PSP have a set of trusted root certificates?
+If so, where does it get them from?
 
-Best regards,
-Krzysztof
+If not, does the PSP just blindly trust the validity of the cert chain?
+Who validates the cert chain, and when?
+Which slot do you use?
+Do you return only the cert chain of that single slot or of all slots?
+Does the PSP read out all measurements available?  This may take a while
+if the measurements are large and there are a lot of them.
 
+
+> - tdi_info - read measurements/certs/interface report;
+
+Does this return cached cert chains and measurements from the device
+or does it retrieve them anew?  (Measurements might have changed if
+MEAS_FRESH_CAP is supported.)
+
+
+> If the user wants only CMA/SPDM, the Lukas'es patched will do that without
+> the PSP. This may co-exist with the AMD PSP (if the endpoint allows multiple
+> sessions).
+
+It can co-exist if the pci_cma_claim_ownership() library call
+provided by patch 12/12 is invoked upon device_connect.
+
+It would seem advantageous if you could delay device_connect
+until a device is actually passed through.  Then the OS can
+initially authenticate and measure devices and the PSP takes
+over when needed.
+
+
+> If the user wants only IDE, the AMD PSP's device_connect needs to be called
+> and the host OS does not get to know the IDE keys. Other vendors allow
+> programming IDE keys to the RC on the baremetal, and this also may co-exist
+> with a TSM running outside of Linux - the host still manages trafic classes
+> and streams.
+
+I'm wondering if your implementation is spec compliant:
+
+PCIe r6.1 sec 6.33.3 says that "It is permitted for a Root Complex
+to [...] use implementation specific key management."  But "For
+Endpoint Functions, [...] Function 0 must implement [...]
+the IDE key management (IDE_KM) protocol as a Responder."
+
+So the keys need to be programmed into the endpoint using IDE_KM
+but for the Root Port it's permitted to use implementation-specific
+means.
+
+The keys for the endpoint and Root Port are the same because this
+is symmetric encryption.
+
+If the keys are internal to the PSP, the kernel can't program the
+keys into the endpoint using IDE_KM.  So your implementation precludes
+IDE setup by the host OS kernel.
+
+device_connect is meant to be used for TDISP, i.e. with devices which
+have the TEE-IO Supported bit set in the Device Capabilities Register.
+
+What are you going to do with IDE-capable devices which have that bit
+cleared?  Are they unsupported by your implementation?
+
+It seems to me an architecture cannot claim IDE compliance if it's
+limited to TEE-IO capable devices, which might only be a subset of
+the available products.
+
+
+> The next steps:
+> - expose blobs via configfs (like Dan did configfs-tsm);
+> - s/tdisp.ko/coco.ko/;
+> - ask the audience - what is missing to make it reusable for other vendors
+> and uses?
+
+I intend to expose measurements in sysfs in a measurements/ directory
+below each CMA-capable device's directory.  There are products coming
+to the market which support only CMA and are not interested in IDE or
+TISP.  When bringing up TDISP, measurements received as part of an
+interface report must be exposed in the same way so that user space
+tooling which evaluates the measurememt works both with TEE-IO capable
+and incapable products.  This could be achieved by fetching measurements
+from the interface report instead of via SPDM when TDISP is in use.
+
+Thanks,
+
+Lukas
