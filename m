@@ -2,174 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 340747DF7E6
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Nov 2023 17:46:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CEA37DF825
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Nov 2023 17:58:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229566AbjKBQqH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Nov 2023 12:46:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60844 "EHLO
+        id S1377114AbjKBQ61 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Nov 2023 12:58:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbjKBQqG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Nov 2023 12:46:06 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8705136
-        for <linux-pci@vger.kernel.org>; Thu,  2 Nov 2023 09:45:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1698943514;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=4pGcLJaNBwC1v+KjQOvj58B3m9mcip1YfSO+mB8Da10=;
-        b=Hnbrk5G1ld1M6LvIEnirWb/01BWb3ORJQ3aAbuA/Mxu/aAWouC+Fpmgze1oxGcFc4Gec87
-        ybcpuYK5OH5QSVL2NoFdMJY1bZ4d940HRARyk7YoTzxCqqdb9zrLTJMMrebUwQe/kYZj4N
-        g6p/Pg0HZ3a3T6Cmroa96FZWyAGzovw=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-462-fbtGQcVdODC0TzW8HEVWgg-1; Thu, 02 Nov 2023 12:45:13 -0400
-X-MC-Unique: fbtGQcVdODC0TzW8HEVWgg-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-9c7f0a33afbso91378766b.3
-        for <linux-pci@vger.kernel.org>; Thu, 02 Nov 2023 09:45:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698943512; x=1699548312;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+        with ESMTP id S1377101AbjKBQ61 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Nov 2023 12:58:27 -0400
+Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF83F18E
+        for <linux-pci@vger.kernel.org>; Thu,  2 Nov 2023 09:58:20 -0700 (PDT)
+Received: by mail-oi1-x231.google.com with SMTP id 5614622812f47-3b2b1af09c5so665658b6e.0
+        for <linux-pci@vger.kernel.org>; Thu, 02 Nov 2023 09:58:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698944299; x=1699549099; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=4pGcLJaNBwC1v+KjQOvj58B3m9mcip1YfSO+mB8Da10=;
-        b=GmeoSBshWT1ASyZRIPf9nhjXHM1QcLBmwbo4h+QjIOzS+RUqe1I9w0W3MelX/4GFdm
-         7XDFhHBGhndJrCIDpVza15dI1bqfPFmOSCqlkbh74hP0piFBaOGWgl03sFDv4/NxQIt4
-         flHuv8arpmZl+zNMoIbxIvrE61AURQRpLJ6SlRhkQf6hRJCN7uJNqEQGIOlPUOWw7yPU
-         UuKPXDNYoCP0cFb6aMfn880Po1KTd4wIU2TehLvnUCyZwaz6aOODMGlw8A5op8lsFR2z
-         vAGDX3qjfuuLRNKRa9VHbFwqpwfyJApt9mLwxHKpMbbbcvivQSfiGZc8Ij2SmmHHKZh8
-         iL3w==
-X-Gm-Message-State: AOJu0Yx9fO+Kp+06sV08hNyWol1mQfXa4jlprMZIw7hfVO0HihPLwZZx
-        clg063TNFxcVyEJvCKAeHwBIdQlVDbQ7SSIdojHqr/Lgjhsy62rELkGRg3ChlirgnFubH+wsZON
-        ZwA2EBYoxS7XR1z0m3suSOQ0Qo/DZ
-X-Received: by 2002:a17:906:da8a:b0:9d1:6780:fb31 with SMTP id xh10-20020a170906da8a00b009d16780fb31mr5110578ejb.38.1698943511918;
-        Thu, 02 Nov 2023 09:45:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEMZgTElgawO9Ng46nlhG6CbCbtQYOk2fZuKGOAMAjvWFks9kNl8nR74y+xW6X+ay3B70nbFw==
-X-Received: by 2002:a17:906:da8a:b0:9d1:6780:fb31 with SMTP id xh10-20020a170906da8a00b009d16780fb31mr5110567ejb.38.1698943511604;
-        Thu, 02 Nov 2023 09:45:11 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id kb21-20020a1709070f9500b009aa292a2df2sm1335394ejc.217.2023.11.02.09.45.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Nov 2023 09:45:11 -0700 (PDT)
-Message-ID: <324caf3c-1f3a-68f1-95ee-ba682cf71c01@redhat.com>
-Date:   Thu, 2 Nov 2023 17:45:10 +0100
+        bh=DfyS21pSAaN9Ul5DPXfGOsxbkU+EJCrhzTnYRsGJibU=;
+        b=vYWJ6IGz5IiUWVcVOfopIIgzUrafHCoeoKUcwGX4ujQGvv/ctstHPGnqvsYG1BzbXy
+         uTJ1L76cG8eawcblL/ksFM64CzBabkXyqE1tiAODx0lfzUa7/RKKARl97lzUFLI/YqsW
+         qEPaSgwIXt3+PYRYLaco91rSMRk4q58GGRIu0Y+pHYRZ6856j5tCKgl6DBqm6udYbSTn
+         /e0KZFAW/hcqUsNtOoLpU9O+1G6fa8cHKLBRhsAWEdm3uJBeoZDDDch8IGKyInQS7AAQ
+         FUzIY2sJgmKAxSoo7MAM8EPP5+MYVK1UV+OVbUbafwq2iSzhCda5h7SxzH3pNb23jKXx
+         P36A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698944299; x=1699549099;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DfyS21pSAaN9Ul5DPXfGOsxbkU+EJCrhzTnYRsGJibU=;
+        b=KJiHNrjFoFzXe3AgCRDdg2QOXeVxqmKQ3ehXIOnE2je3AGIfugdTCrpczAhYlxS0gz
+         jQ9NdRJk85LuJuEOuGiGu22pcSvM0GFy7o4NYh8h/ayCZuUVofF3Dt2GwqPoZqdrw/PF
+         GxwUteCm5pllmNYCiPCgjPmNgoO0m5+knw1BtvnfJvbSXeLHh3tE8IvUvzwf/x1lKl0x
+         yEFWXRhfJu/ymRt12srT1CTNfhIBdX3UQV5wFX2+qtcLjwizqIekAdSaekL1TBtL77An
+         C1JZ5ALaZ9d79E6MDStjwYk6qsYxP5am64DTkj1bbaTX0IwarII3aT//CIgDy5nHB9tT
+         +lEQ==
+X-Gm-Message-State: AOJu0Yy7DXNq2YMgpeiMTXtjGLhvu/zyKKXGIuaQ1iQ+Klo5+/xgpPhu
+        6ieXUiQAzi3NpEUP7Oppg3zM0ryq/zRYWosSWw==
+X-Google-Smtp-Source: AGHT+IGcPZMPmb6P3crHIYT6MoFFJH19w/pybMCanZfpyJq0eFqq7TsGozYLDzAec+P33O2PTiZXzg==
+X-Received: by 2002:a05:6808:209f:b0:3ad:fe8d:dfae with SMTP id s31-20020a056808209f00b003adfe8ddfaemr20056494oiw.57.1698944298897;
+        Thu, 02 Nov 2023 09:58:18 -0700 (PDT)
+Received: from thinkpad ([117.217.189.228])
+        by smtp.gmail.com with ESMTPSA id z26-20020a05620a08da00b0077263636a95sm89742qkz.93.2023.11.02.09.58.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Nov 2023 09:58:18 -0700 (PDT)
+Date:   Thu, 2 Nov 2023 22:28:08 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     bhelgaas@google.com, imx@lists.linux.dev, kw@linux.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        lpieralisi@kernel.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
+        robh@kernel.org, roy.zang@nxp.com
+Subject: Re: [PATCH v3 1/4] PCI: layerscape: Add function pointer for
+ exit_from_l2()
+Message-ID: <20231102165808.GC20943@thinkpad>
+References: <20231017193145.3198380-1-Frank.Li@nxp.com>
+ <20231017193145.3198380-2-Frank.Li@nxp.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Content-Language: en-US, nl
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: v6.6 lockdep splat about locking pci_bus_sem twice
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231017193145.3198380-2-Frank.Li@nxp.com>
+X-Spam-Status: No, score=0.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi All,
+On Tue, Oct 17, 2023 at 03:31:42PM -0400, Frank Li wrote:
+> Since difference SoCs require different sequence for exiting L2, let's add
+> a separate "exit_from_l2()" callback. This callback can be used to execute
+> SoC specific sequence.
+> 
 
-When testing the 6.6 kernel release with lockdep
-enabled on a Dell Latitude 9420 laptop, I got
-the below lockdep warning.
+I missed the fact that this patch honors the return value of the callback (which
+was ignored previously). So this should be added to the description as well.
 
-I'm happy to test any patches to address this.
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-[    2.973360] pci 10000:e0:06.0: BAR 14: assigned [mem 0xbc000000-0xbc0fffff]
-[    2.973365] pci 10000:e0:06.0: BAR 13: no space for [io  size 0x1000]
-[    2.973367] pci 10000:e0:06.0: BAR 13: failed to assign [io  size 0x1000]
-[    2.973370] pci 10000:e1:00.0: BAR 0: assigned [mem 0xbc000000-0xbc003fff 64bit]
-[    2.973381] pci 10000:e0:06.0: PCI bridge to [bus e1]
-[    2.973385] pci 10000:e0:06.0:   bridge window [mem 0xbc000000-0xbc0fffff]
-[    2.973407] ============================================
-[    2.973409] WARNING: possible recursive locking detected
-[    2.973411] 6.6.0+ #118 Not tainted
-[    2.973413] --------------------------------------------
-[    2.973415] (udev-worker)/425 is trying to acquire lock:
-[    2.973417] ffffffffb5ec8830 (pci_bus_sem){++++}-{3:3}, at: pci_enable_link_state+0x77/0x1b0
-[    2.973426] 
-               but task is already holding lock:
-[    2.973428] ffffffffb5ec8830 (pci_bus_sem){++++}-{3:3}, at: pci_walk_bus+0x25/0x90
-[    2.973433] 
-               other info that might help us debug this:
-[    2.973436]  Possible unsafe locking scenario:
+With that,
 
-[    2.973438]        CPU0
-[    2.973439]        ----
-[    2.973440]   lock(pci_bus_sem);
-[    2.973442]   lock(pci_bus_sem);
-[    2.973443] 
-                *** DEADLOCK ***
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-[    2.973445]  May be due to missing lock nesting notation
+- Mani
 
-[    2.973448] 2 locks held by (udev-worker)/425:
-[    2.973450]  #0: ffff88810279d1a8 (&dev->mutex){....}-{3:3}, at: __driver_attach+0xc7/0x1c0
-[    2.973456]  #1: ffffffffb5ec8830 (pci_bus_sem){++++}-{3:3}, at: pci_walk_bus+0x25/0x90
-[    2.973461] 
-               stack backtrace:
-[    2.973463] CPU: 6 PID: 425 Comm: (udev-worker) Not tainted 6.6.0+ #118
-[    2.973466] Hardware name: Dell Inc. Latitude 9420/, BIOS 1.23.0 07/10/2023
-[    2.973469] Call Trace:
-[    2.973471]  <TASK>
-[    2.973472]  dump_stack_lvl+0x57/0x90
-[    2.973477]  __lock_acquire+0x1272/0x2190
-[    2.973482]  lock_acquire+0xc4/0x290
-[    2.973485]  ? pci_enable_link_state+0x77/0x1b0
-[    2.973489]  down_read+0x3e/0x190
-[    2.973493]  ? pci_enable_link_state+0x77/0x1b0
-[    2.973496]  pci_enable_link_state+0x77/0x1b0
-[    2.973500]  ? __pfx_vmd_pm_enable_quirk+0x10/0x10 [vmd]
-[    2.973505]  vmd_pm_enable_quirk+0x24/0xa0 [vmd]
-[    2.973510]  ? down_read+0x48/0x190
-[    2.973512]  pci_walk_bus+0x6f/0x90
-[    2.973515]  vmd_probe+0x7e9/0xa40 [vmd]
-[    2.973520]  local_pci_probe+0x3e/0x90
-[    2.973523]  pci_device_probe+0xb3/0x210
-[    2.973527]  really_probe+0x19b/0x3e0
-[    2.973529]  ? __pfx___driver_attach+0x10/0x10
-[    2.973532]  __driver_probe_device+0x78/0x160
-[    2.973535]  driver_probe_device+0x1f/0x90
-[    2.973537]  __driver_attach+0xd2/0x1c0
-[    2.973540]  bus_for_each_dev+0x63/0xa0
-[    2.973543]  bus_add_driver+0x115/0x210
-[    2.973546]  driver_register+0x55/0x100
-[    2.973548]  ? __pfx_vmd_drv_init+0x10/0x10 [vmd]
-[    2.973553]  do_one_initcall+0x5a/0x360
-[    2.973557]  ? rcu_is_watching+0xd/0x40
-[    2.973561]  ? kmalloc_trace+0xa5/0xb0
-[    2.973565]  do_init_module+0x60/0x230
-[    2.973569]  __do_sys_init_module+0x16a/0x1a0
-[    2.973571]  ? __seccomp_filter+0x320/0x510
-[    2.973577]  do_syscall_64+0x59/0x90
-[    2.973580]  ? do_user_addr_fault+0x366/0x830
-[    2.973584]  ? exc_page_fault+0xf1/0x200
-[    2.973588]  ? asm_exc_page_fault+0x22/0x30
-[    2.973592]  ? lockdep_hardirqs_on+0x7d/0x100
-[    2.973594]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-[    2.973597] RIP: 0033:0x7f84bedcf7fe
-[    2.973600] Code: 48 8b 0d 35 16 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 49 89 ca b8 af 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 02 16 0c 00 f7 d8 64 89 01 48
-[    2.973606] RSP: 002b:00007fff04d64ea8 EFLAGS: 00000246 ORIG_RAX: 00000000000000af
-[    2.973609] RAX: ffffffffffffffda RBX: 000055589fb73360 RCX: 00007f84bedcf7fe
-[    2.973612] RDX: 00007f84beed507d RSI: 000000000000a3b9 RDI: 00005558a037de70
-[    2.973614] RBP: 00007fff04d64f60 R08: 000055589fb44010 R09: 0000000000000007
-[    2.973617] R10: 0000000000000002 R11: 0000000000000246 R12: 00007f84beed507d
-[    2.973619] R13: 0000000000020000 R14: 000055589fb6c760 R15: 000055589fb74c70
-[    2.973623]  </TASK>
-[    2.974292] pci 10000:e1:00.0: VMD: Default LTR value set by driver
+> ---
+> 
+> Notes:
+>     Change from v2 to v3
+>     - fixed according to mani's feedback
+>       1. update commit message
+>       2. move dw_pcie_host_ops to next patch
+>       3. check return value from exit_from_l2()
+>     Change from v1 to v2
+>     - change subject 'a' to 'A'
+>     
+>     Change from v1 to v2
+>     - change subject 'a' to 'A'
+> 
+>  drivers/pci/controller/dwc/pci-layerscape.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+> index 37956e09c65bd..aea89926bcc4f 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> @@ -39,6 +39,7 @@
+>  
+>  struct ls_pcie_drvdata {
+>  	const u32 pf_off;
+> +	int (*exit_from_l2)(struct dw_pcie_rp *pp);
+>  	bool pm_support;
+>  };
+>  
+> @@ -125,7 +126,7 @@ static void ls_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
+>  		dev_err(pcie->pci->dev, "PME_Turn_off timeout\n");
+>  }
+>  
+> -static void ls_pcie_exit_from_l2(struct dw_pcie_rp *pp)
+> +static int ls_pcie_exit_from_l2(struct dw_pcie_rp *pp)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>  	struct ls_pcie *pcie = to_ls_pcie(pci);
+> @@ -150,6 +151,8 @@ static void ls_pcie_exit_from_l2(struct dw_pcie_rp *pp)
+>  				 10000);
+>  	if (ret)
+>  		dev_err(pcie->pci->dev, "L2 exit timeout\n");
+> +
+> +	return ret;
+>  }
+>  
+>  static int ls_pcie_host_init(struct dw_pcie_rp *pp)
+> @@ -180,6 +183,7 @@ static const struct ls_pcie_drvdata ls1021a_drvdata = {
+>  static const struct ls_pcie_drvdata layerscape_drvdata = {
+>  	.pf_off = 0xc0000,
+>  	.pm_support = true,
+> +	.exit_from_l2 = ls_pcie_exit_from_l2,
+>  };
+>  
+>  static const struct of_device_id ls_pcie_of_match[] = {
+> @@ -247,11 +251,14 @@ static int ls_pcie_suspend_noirq(struct device *dev)
+>  static int ls_pcie_resume_noirq(struct device *dev)
+>  {
+>  	struct ls_pcie *pcie = dev_get_drvdata(dev);
+> +	int ret;
+>  
+>  	if (!pcie->drvdata->pm_support)
+>  		return 0;
+>  
+> -	ls_pcie_exit_from_l2(&pcie->pci->pp);
+> +	ret = pcie->drvdata->exit_from_l2(&pcie->pci->pp);
+> +	if (ret)
+> +		return ret;
+>  
+>  	return dw_pcie_resume_noirq(pcie->pci);
+>  }
+> -- 
+> 2.34.1
+> 
 
-Regards,
-
-Hans
-
-
-
+-- 
+மணிவண்ணன் சதாசிவம்
