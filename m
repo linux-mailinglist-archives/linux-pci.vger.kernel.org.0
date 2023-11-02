@@ -2,100 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 367E87DF223
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Nov 2023 13:17:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 151CD7DF255
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Nov 2023 13:27:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346866AbjKBMRd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Nov 2023 08:17:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49766 "EHLO
+        id S229645AbjKBM1p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Nov 2023 08:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346863AbjKBMR3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Nov 2023 08:17:29 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E35B112;
-        Thu,  2 Nov 2023 05:17:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698927442; x=1730463442;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WKRnkNW/XER8dXSWKZi5aAoaOJTp9xTuNC9BpNIc3/4=;
-  b=Upu8vQa8eesss8OOUad5/gQfiZ4N+0O7ZfGtUJ+mdrM2dq6rPJ8UThPF
-   uIuybF27d1mjoVmY1OZYvhg9xVp6u2AFHCyMIL4qLgofQJGAEyf8zX3dd
-   8+JrIL2sbTu3jgABC4wz9QrtpWr1vHP78Dwo9AY4ATX0aaDju12mhdisW
-   z4zMyn5FnKW30JFsxLl7RRGbPIOh7T1dZPMxLLM72xIiFBH9qVfDdmJ7c
-   gyEnCJSrBUoz9FsqYqS7OzKCGDN51C8oqewrKuuY5wvjlwd0wkkCZYjq1
-   EbrN1XJYDu2KvEpa9YzCoi9DrWy809RtlmFMaMX2MYySXD1S5ronzvzAX
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="453000884"
-X-IronPort-AV: E=Sophos;i="6.03,271,1694761200"; 
-   d="scan'208";a="453000884"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 05:17:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="1092689422"
-X-IronPort-AV: E=Sophos;i="6.03,271,1694761200"; 
-   d="scan'208";a="1092689422"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 02 Nov 2023 05:17:18 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 8ACDD54A; Thu,  2 Nov 2023 14:17:17 +0200 (EET)
-Date:   Thu, 2 Nov 2023 14:17:17 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Mario Limonciello <mario.limonciello@amd.com>, bhelgaas@google.com,
-        andreas.noever@gmail.com, michael.jamet@intel.com,
-        YehezkelShB@gmail.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Alexander.Deucher@amd.com
-Subject: Re: [PATCH 2/2] PCI: Ignore PCIe ports used for tunneling in
- pcie_bandwidth_available()
-Message-ID: <20231102121717.GL17433@black.fi.intel.com>
-References: <20231102103108.GK17433@black.fi.intel.com>
- <20231102120739.GA114661@bhelgaas>
+        with ESMTP id S234302AbjKBM1o (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Nov 2023 08:27:44 -0400
+X-Greylist: delayed 62 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 02 Nov 2023 05:27:34 PDT
+Received: from esa6.hc3370-68.iphmx.com (esa6.hc3370-68.iphmx.com [216.71.155.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC9D112;
+        Thu,  2 Nov 2023 05:27:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1698928055;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=SOa8sX/Ie2qKItHbC8xOcneJFIOfk23Ogyua++a0w4w=;
+  b=OFoPDU7xzZyj/MvOWi3+d+lpirnYnG0h31b7D+cOG8C7jt4iels+ETEL
+   IV1oJKWK0Hr1Un12GyMHqwXv3y+7Gh8ZNbsMp9mkltbLVos5bpQi0NVji
+   W8TbdRY6ncdH86YPtr0sSiRnzuRqsme9w3Upn9xo/Gmi824yDchRkSGKz
+   k=;
+X-CSE-ConnectionGUID: pNIzOpSTTbaXx/hvRfdv1w==
+X-CSE-MsgGUID: BpbD5vabTnSNIjuRbaZWVQ==
+Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+X-SBRS: 4.0
+X-MesageID: 126596381
+X-Ironport-Server: esa6.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.159.70
+X-Policy: $RELAYED
+X-ThreatScanner-Verdict: Negative
+IronPort-Data: A9a23:gJjK3qp7QmFwiY0gQfooSElf0/teBmJ/YxIvgKrLsJaIsI4StFCzt
+ garIBnXMq2CNjPyet1zPoqx8EoPvsTQyNdmSQVlpSk2Qn8RpZuZCYyVIHmrMnLJJKUvbq7FA
+ +Y2MYCccZ9uHhcwgj/3b9ANeFEljfngqoLUUbOCYmYpA1Y8FE/NsDo788YhmIlknNOlNA2Ev
+ NL2sqX3NUSsnjV5KQr40YrawP9UlKq04GhwUmAWP6gR5waHzyNNUPrzGInqR5fGatgMdgKFb
+ 76rIIGRpgvx4xorA9W5pbf3GmVirmn6ZFXmZtJ+AsBOszAazsAA+v9T2Mk0MC+7vw6hjdFpo
+ OihgLTrIesf0g8gr8xGO/VQO3kW0aSrY9YrK1Dn2SCY5xWun3cBX5yCpaz5VGEV0r8fPI1Ay
+ RAXACgrTwKkn9mK/LiyevkrhtoZIsX1ZZxK7xmMzRmBZRonaZXKQqGM7t5ExjYgwMtJGJ4yZ
+ eJAN2ApNk6ZJUQSaxFIUPrSn8/x7pX7WxRepEiYuuwc5G/LwRYq+LPsLMDUapqBQsA9ckOw/
+ ziYojWnWUFDXDCZ4RCd+F7xmObFoSXAfqMQCYey/8xVvmTGkwT/DzVJDADm8JFVkHWWWM13L
+ 00S5zpopq83nGSxSdP9dx61uniJulgbQdU4O+ki6QyXw67V+AexBWUeSDNFLts8u6ceRTUrx
+ 1aPkMHBAD1kqrqOTnyBsLyTqFuaOjkOBWoDbjUDVgwL/5/op4Rbph7CRctiOKu0hcfyAjb+3
+ 3aBqy1Wr64PgNAGkbqy/VTvgyqh4JPOS2Yd5RTTUySg4xJ0fqalf4Hu4l/ehd5MLYOYUkOA+
+ mMFhcGY7esOJZGVmWqGR+BlNKu0/O3DOTvQjER0GJ8J9yygvXWkeOh44ixlOEZvdMsefyT1S
+ E/LtEVa45o7FGv6M4d0bpi3BsBsyrLvffz9UvnIYN1UZ919bg6Z8TsrdR7O937inVJqkqwlP
+ 5qfN8G2Ah4yDaVh0SrzX+wc+aEkyzp4xm7JQ53/iRO93tK2YH+TVKdAMEqWY/onxL2LrR+T8
+ NtFMcaOjRJFX4XWaDH/+IoSIFZaa3Q2bbj6otJaMO6KJBFrHkklCvnM0fUgfZBom+JekeKg1
+ nGlU2dK2Ub4nzvMLgDiQnVibrzodYxyoXIyIWonOlPA83IjbIKg5a4EX5QwerYj+apoyvscZ
+ +UKf9WoBvVJVyjd/DIcfd/xoeRKeAqrjBiSFyujbiI2c5NpS0rO4NCMVgLp+DgmDyy5r8Iyr
+ rSskATBTvIrQwVkEdaTa/+1yV61lWYSlfg0XEbSJNRXPkL2/+BCNCHwyPs2PukPJA/Fyz/c0
+ ByZaSr0vsGU/dVzqoOQw/nZ/sH2S4OSA3a2AUHDy5ekEjHhwlapyL9QF+aWRz7RSjrrrfDKi
+ fpu8x3sDBEWtA8U4tosQug3kP5WC8jH/eEAklo+dJnfRxH7Uuk+fyPuMdxn7/UVntdkVR2Kt
+ lVjEzWwEZ6OIsrhWGUJPgsjYf/rORo8wWKKsq1dzKkX/kZKEFu7vaZ6ZULkZNR1ducdDW/c6
+ b5JVDQqwwK+kAE2Fd2NkzpZ8W+BRlRZDfR35s9BXtG12lN7or2nXXA7InaoiKxjlv0VbxJ0S
+ tNqrPGqa0tgKrrqLCNoSCmlMRt1jpUSohFapGI/y6CysoOd3JcfhUQBmQnbuywJln2rJcovY
+ Dk0X6C0TI3SlwpVaD9rBjD1QVkYWk3DpCQcCTIhzQXkcqVhbUSVREVVBApH1BlxH750FtSDw
+ Iyl9Q==
+IronPort-HdrOrdr: A9a23:t96daaPaoXi8YsBcTmyjsMiBIKoaSvp037Dk7SFMoHtuA6qlfq
+ GV7ZMmPHrP4gr5N0tMpTntAsW9qDbnhP1ICWd4B8bfYOCkghrUEGlahbGSvAEIYheOiNK1t5
+ 0BT0EOMqyVMbEgt7eC3ODQKb9Jq+VvsprY59s2qU0DcegAUdAE0+4WMGim+2RNNXh7LKt8Op
+ qAx9ZN4wGtcW4Qaa2AdwM4dtmGid3XtY7sJSULDR4/6AWIkFqTmcXHOind8BcCci9FhYwv+2
+ jdkwD/++GKvvyhxgXHvlWjnKh+qZ/OysZjGMfJsMQTJzn24zzYHLhJVrGZoTAzqPyu7lEx+e
+ O80ysdAw==
+X-Talos-CUID: 9a23:PQz+v20pJbdTWQTsAXS8ZLxfAuYEYFrF90vsKUaIGSFpVoebRUHJ5/Yx
+X-Talos-MUID: 9a23:tEDSUQsAOipBZjk9982nriloGJp26q6SDnsrsJcbgcONBxNOAmLI
+X-IronPort-AV: E=Sophos;i="6.03,271,1694750400"; 
+   d="scan'208";a="126596381"
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: [PATCH 0/3] x86/apic: Misc pruning
+Date:   Thu, 2 Nov 2023 12:26:18 +0000
+Message-ID: <20231102-x86-apic-v1-0-bf049a2a0ed6@citrix.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231102120739.GA114661@bhelgaas>
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGqVQ2UC/x3MQQqAIBBA0avIrBvQEUK6SrQQnWo2JgohiHdPW
+ j74/A6Vi3CFTXUo/EqVJ02YRUG4fboYJU4DabLGaMLmVvRZAjoXg2XPVluCmefCp7R/tR9jfBw
+ p+fhaAAAA
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Steve Wahl <steve.wahl@hpe.com>,
+        Justin Ernst <justin.ernst@hpe.com>,
+        Kyle Meyer <kyle.meyer@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        "Russ Anderson" <russ.anderson@hpe.com>,
+        Darren Hart <dvhart@infradead.org>,
+        "Andy Shevchenko" <andy@infradead.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "Dexuan Cui" <decui@microsoft.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-hyperv@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>
+X-Mailer: b4 0.12.4
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 02, 2023 at 07:07:39AM -0500, Bjorn Helgaas wrote:
-> On Thu, Nov 02, 2023 at 12:31:08PM +0200, Mika Westerberg wrote:
-> > On Wed, Nov 01, 2023 at 08:14:31PM -0500, Mario Limonciello wrote:
-> > > On 11/1/2023 17:52, Bjorn Helgaas wrote:
-> 
-> > > > Lukas' brief intro in
-> > > > https://lore.kernel.org/all/20230925141930.GA21033@wunner.de/ really
-> > > > helped me connect a few dots, because things like
-> > > > Documentation/admin-guide/thunderbolt.rst assume we already know those
-> > > > details.
-> > > 
-> > > Thanks for sharing that.  If I move the detection mechanism as I suggested
-> > > above I'll reference some of that as well in the commit message to explain
-> > > what exactly a tunneled port is.
-> > 
-> > I'm not sure it makes sense to explain from the zero all this stuff that
-> > people can easily look up from the corresponding spec, such as PCIe or
-> > USB.
-> 
-> I don't know if it needs to be in the commit log.
-> 
-> I mentioned thunderbolt.rst because the text at
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/thunderbolt.rst?id=v6.6#n6
-> assumes that we know the terms "host router", "host controller",
-> "router", "tunnel", "connection manager", and I don't think that's a
-> good assumption in that documentation.
-> 
-> A little bit of introduction based on Lukas' text could improve that.
+Seriously, this work started out trying to fix a buggy comment.  It
+escalated somewhat...  Perform some simple tidying.
 
-All these are explained in the USB4 spec, I wonder if we should just
-link that in the document rather than expaining all of them there.
-Anyway, point taken, thanks for the feedback!
+P.S. I'm trialing `b4 prep` to send this series.  I've got some notes
+already; others welcome too.
+
+Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
+---
+Andrew Cooper (3):
+      x86/apic: Drop apic::delivery_mode
+      x86/apic: Drop enum apic_delivery_modes
+      x86/apic: Drop struct local_apic
+
+ arch/x86/include/asm/apic.h           |   2 -
+ arch/x86/include/asm/apicdef.h        | 276 +---------------------------------
+ arch/x86/kernel/apic/apic_flat_64.c   |   2 -
+ arch/x86/kernel/apic/apic_noop.c      |   1 -
+ arch/x86/kernel/apic/apic_numachip.c  |   2 -
+ arch/x86/kernel/apic/bigsmp_32.c      |   1 -
+ arch/x86/kernel/apic/probe_32.c       |   1 -
+ arch/x86/kernel/apic/x2apic_cluster.c |   1 -
+ arch/x86/kernel/apic/x2apic_phys.c    |   1 -
+ arch/x86/kernel/apic/x2apic_uv_x.c    |   1 -
+ arch/x86/platform/uv/uv_irq.c         |   2 +-
+ drivers/pci/controller/pci-hyperv.c   |   7 -
+ 12 files changed, 8 insertions(+), 289 deletions(-)
+---
+base-commit: b56ebe7c896dc78b5865ec2c4b1dae3c93537517
+change-id: 20231102-x86-apic-88dc3eae3032
+
+Best regards,
+-- 
+Andrew Cooper <andrew.cooper3@citrix.com>
+
