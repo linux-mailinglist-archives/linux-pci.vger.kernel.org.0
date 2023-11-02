@@ -2,120 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A2707DE9E5
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Nov 2023 02:14:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E93477DEAAE
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Nov 2023 03:28:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345679AbjKBBOs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Nov 2023 21:14:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33554 "EHLO
+        id S235183AbjKBC2Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Nov 2023 22:28:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348147AbjKBBOr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Nov 2023 21:14:47 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2084.outbound.protection.outlook.com [40.107.92.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAC46FC;
-        Wed,  1 Nov 2023 18:14:40 -0700 (PDT)
+        with ESMTP id S232963AbjKBC2Y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Nov 2023 22:28:24 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2085.outbound.protection.outlook.com [40.107.93.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9390BD;
+        Wed,  1 Nov 2023 19:28:18 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Sgej03euOlMjk2ftDQa5kL68HWc2Je9VoDRlJJ+IaSBAXd7V4ivZ4ydXRhG1d/c49NftFeKP3aP0vge57dAeuoNbfbTr+d+ADYxRDg3mKr/qwT0uxRL028ScS1GQt2WE7KcncyzSxltYdmF7/edk0DEoZAfTADVMkOuYefzYx9jGRF1s9PTaGd9POmnLpzFs8a94fa6Aa8a1m+MXxwGyRSp0c42PAqfU07Y+dbZsMQ4RHc1pWU72nbtefCE6JTopEPEYkckI2DB0zRr+ERZYd85ZJkOmPokNrgdOmMKlisUtv8KpJmDvaHQb4pkJrEmdt0GywXxWJ5kAa4Cy2Rd7Tw==
+ b=iz0YFUD4sSrJjGC3vrcexxhLy5fiFaB0ngp+W9XzpItZegynRc4e/RDGD5yUhB3ROdMleuZQ+/sPxDcYi/RWdB643d3jMjUfhCGajSU5DIAAXY/bU7xlahztCDfoMWPkC01j5LAGOUBEoQERQfgh3c7yV4QIiXwPKBRru861peshistwY5lThVp66hoG+QRghcx1vI7md2bUo1TolQO1VrlqhJ9QXvEKscs3a3iGbvn3i22aWu867EZ9hCuKd4ZkG6He7hLV6m37V8bC/fd0ylWcWyi2ejTwhkiHfuEXChyKpQekenbfR7GQSTrM7hEM8UfgaaZiIygkKtUICWGZOw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1q/Z71deQ7J/xEcvR0+lxoqnzw2ubuoKlGHkRO3hgBc=;
- b=II4dJGpF6hrtfYV4qIVYaJ3uhQME0FFGSD+DW0Vu0jFlHHQNoilKBEKUE5dWt5mkn9/Sc3J1al3GvSPzIyuID6mH55GtrZnLL+VzSD/s/HHn2Lmzxq37YGc0CcHclQ2m7bFwxfXf5whEGQrOytpp69UXjyWDnMD51mhdSZ+Df4cIdNsvBXkpNV8sEQLQDAYmC8taqGIyJ8Ykt2pthgQhtC4zCEErbMHFTs/TT7GeXU+bTg5OcM4MCIwZ0Ojcdxx1BbhPdWsHxzCZQZ3yhu2DxVAUMSug8X4NITRyHBC/fUGLPUdJEWpi4l2HcLzH2O9Dm7PnKRwHkZLTLHnqgTGIrw==
+ bh=7tp/L6qWgd9KJfY47or6YYO9f24Ne4Alzxk4PeU4U+w=;
+ b=BlWEobC8BWraePAI1tIEVja/52dPhAWBmwq430GLkSN9bL98iCBdFF6ptxm7Bt0+Sfhb8pS6zaqh90JHZNuJI2dP1eQ/1dKjIVqdAtJZLIAabf5lUnucjAznSpn0CAE1yJT5roo4zR2g46rzzUVgwB82qi5ilXXkJEhsBa+bTg8NaT4lYdijZY01NSBNDGls42Jt7TWBwzl9Mpi417g7gDnFYukkpfIqu6EMwiI5I2SNnVK02Y6lCAyoOH96Mlb7SPYdq/vDLSLvte8vl0EBiyb4Evf2gkaG5+TcQMzN3kwieJbu9xM+hQ87yFIZQA2WIAtuNZXmhZ3L5pD2QncyaQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1q/Z71deQ7J/xEcvR0+lxoqnzw2ubuoKlGHkRO3hgBc=;
- b=0Yj9y3I6pkmc4Mts4CR4YkRCSlnYFhSKInT9VbVsUatcZ8p0+swu09ThalgEkXkSDbfUgWVlAVOH4Ut2xqOAL2C8eYgureVdPuDoNueUhish1G4NNJEiyR3hItwiJlANr8v2V76vZSjaOs9vnZLeyFTlrO662a2LHBK51puNPM0=
+ bh=7tp/L6qWgd9KJfY47or6YYO9f24Ne4Alzxk4PeU4U+w=;
+ b=xRLJZ1R1pCxUkp8yVuEpVO2TZJDq0DOfpN5fGLvqf4VHiQK1ykA94qHnoiKXRlr3z6ydyfJl4yg+eA/+BOa0mRBjZFBDT3Eq0llLlV0p/bTkEL6ATA0m1uH6N1gnBi5SDQkW6Xr6cLFGXtVwk9cn45G7e3J4aOYTKP0tanYDIPc=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by MW3PR12MB4364.namprd12.prod.outlook.com (2603:10b6:303:5c::14) with
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+ by DS0PR12MB9397.namprd12.prod.outlook.com (2603:10b6:8:1bd::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.19; Thu, 2 Nov
- 2023 01:14:37 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::83d7:9c4f:4d9b:1f2a]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::83d7:9c4f:4d9b:1f2a%5]) with mapi id 15.20.6933.024; Thu, 2 Nov 2023
- 01:14:37 +0000
-Message-ID: <928df647-5b20-406b-8da5-3199f5cfbb48@amd.com>
-Date:   Wed, 1 Nov 2023 20:14:31 -0500
+ 2023 02:28:16 +0000
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::7e54:2e35:593c:80a2]) by CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::7e54:2e35:593c:80a2%7]) with mapi id 15.20.6954.019; Thu, 2 Nov 2023
+ 02:28:16 +0000
+Message-ID: <4cfe829f-8373-4ff4-a963-3ee74fa39efe@amd.com>
+Date:   Thu, 2 Nov 2023 13:28:03 +1100
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] PCI: Ignore PCIe ports used for tunneling in
- pcie_bandwidth_available()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, mika.westerberg@linux.intel.com,
-        andreas.noever@gmail.com, michael.jamet@intel.com,
-        YehezkelShB@gmail.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Alexander.Deucher@amd.com
-References: <20231101225259.GA101390@bhelgaas>
+Subject: Re: TDISP enablement
 Content-Language: en-US
-From:   Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20231101225259.GA101390@bhelgaas>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Lukas Wunner <lukas@wunner.de>
+Cc:     linux-coco@lists.linux.dev, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <jic23@kernel.org>, suzuki.poulose@arm.com
+References: <e05eafd8-04b3-4953-8bca-dc321c1a60b9@amd.com>
+ <20231101072717.GB25863@wunner.de> <20231101110551.00003896@Huawei.com>
+From:   Alexey Kardashevskiy <aik@amd.com>
+In-Reply-To: <20231101110551.00003896@Huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR13CA0169.namprd13.prod.outlook.com
- (2603:10b6:a03:2c7::24) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+X-ClientProxiedBy: SYBPR01CA0113.ausprd01.prod.outlook.com
+ (2603:10c6:10:1::29) To CH3PR12MB9194.namprd12.prod.outlook.com
+ (2603:10b6:610:19f::7)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MW3PR12MB4364:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2aea99fc-62a8-4f42-9579-08dbdb411446
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|DS0PR12MB9397:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3070b885-fd94-4af4-d4b9-08dbdb4b5ea1
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: g6HnpA9f1vE3eLxljYjEw1Ui61EfakvJEN00g78H2Tk5sKSMaRsjoX4VRp1fsYeBij9ytqoWNlijR4SQH2Dt6iapxAyIBPJl82Z4MoWJCD+eMkZsazYxRU7IcefShFqHkPcRS5WBIj+x0IvoGla+lx2TUr0wG5H41ceGXPKQch5nJlNVbdZ+Oqw+AuWUQaeLRySp7BRhL2EDGIkuKH6Pst+u/UaRL36dghyKeI7OxYondsH/bB/ktfbB2mI/f5v2AyC4uCz9P9Mxyye8tq7Gh0e5itce9xqX1bRdC7LepYoVZ+LciN3f0vh2e2afrazRb9a4fmotn99+xC7dXZyQMfEQRN54TCwogOS1tfbV3+MCP2+pc92u81iyCsLRAulsn6xxuwArCXwYhHcBUktNIYCWvyeL6Tp+etM/uNC65oahNxYjDJCdMrBxPYPlt77FcEeB8OgPhtknQJ9akVliPDKlAeK7FCRrnaBOxOP+LFLlo3N2CZBqhMko8Qlbi59d1TYkBPECv4xpu9K5qyLd0b+QaZScmo8HIH87f0tJNFecK3Zg3UvHRdCOicRH+aoJepw8s6xUUwcTrdUCwtvicREdKvBlDIWmPhkmHUtPbXMsqP32AevflqP0bNBHTJwk2dPV8zGPR0tPJherxD4/TO5kxcpvrK61epsdPyibZ8JizcxJDt5Ek+q+kc1BM6iNqBR2EnOFN+Wvtn5o2raVXQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(366004)(136003)(376002)(39860400002)(230273577357003)(230173577357003)(230922051799003)(64100799003)(1800799009)(451199024)(186009)(2616005)(5660300002)(66574015)(86362001)(31696002)(26005)(6506007)(6486002)(966005)(478600001)(6666004)(66556008)(53546011)(36756003)(66476007)(66946007)(6916009)(316002)(38100700002)(41300700001)(31686004)(6512007)(44832011)(2906002)(83380400001)(8936002)(8676002)(4326008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: q/sswNVlgVR9HfqMpZnA7ZgdTY7j8T/HUMpQGgnaXF2q18uvO3wRdbmQnxdszhaBrU0aFJ4ED3rd33UlmEtazY9VR0LhrbqeRH+GX52/2GYv2PZlfz+pWioxEfBun2q+2T7K/Y94VDJZVgvqVQnYyt3B1UJPoUN1ERbObYuDVDiXioltpRk014kTBsQW/tj5OBYJljFi14m+KilzhFO+Ih0PzUu5CiKIXb4/cu0IAM+T3ljq0b9z2gogTCicIWtXONvebZS3QBpu8jXMYSJOF1kupBcbUXbFyw/LZcMC2TVoeysVtPUqrYqtV9O3rOEIhpY/6XcrVasCgS5KK007ov6ptIOuPrk2Bt/C1ww2dYHaduehwMdG3zMBv7woqcak2kUFwSiNvQtZrtt1MRXEFT/gGkhCawoi0fSBtSc85Lnl3f5IUzzuLmTuV0eP5lo2USzL3a1AXclRSKQUEHOTqeHvHBXRypYSpAtShtnaHVQsBhng40NcwejQZAdpBFok93nWUZdEJTqDgMecW1NFqcdiUwVjlPGOmfNoUYjm1eTlXYxTWbPWQurOibi+eY7YlXaSUlbh8SZVnPhgCaQ35ign9wua3q9W+FeDbs8k2BR1DteSuxQinenRn4ZtQOMonAgtxVnpZlYhS8F9d1Mkag==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(39860400002)(346002)(136003)(376002)(230922051799003)(451199024)(186009)(1800799009)(64100799003)(66476007)(66946007)(54906003)(110136005)(66556008)(316002)(6506007)(478600001)(6666004)(2616005)(4326008)(31686004)(26005)(8936002)(83380400001)(8676002)(6486002)(53546011)(7116003)(6512007)(5660300002)(36756003)(3480700007)(2906002)(38100700002)(66899024)(31696002)(41300700001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bUoyczE3OGlCU1g5eDRFd2d4YnhOUGo5UEw5L0hyb1FhQW1ibDN0T2hCQTJw?=
- =?utf-8?B?bnBWbWIvN0prMDRZbUlaRUVhT0JwSUwyekJJeGdOdllVV2x0SmU1WGc1bUI4?=
- =?utf-8?B?RE9NV0R5eFo1K1lUc3ZkTEQrNnpSdlU1cXlXTVRNUlBuaTd0S0RVWnlpWDdW?=
- =?utf-8?B?cFVwbEhqWmQrSE9sUXZ3OE5oN2paWUFzbkF4ZHJVMktjYTB2NG9nTUxSTHhp?=
- =?utf-8?B?Z1czOUxkcUhuZ3hrQ29YV0lvby9nR1haK1Z1YXd6VTZjY3J0SUYvZ1haeVhq?=
- =?utf-8?B?TUhSREYxc1d2Q1RBWStxZFNWSW9qV2ZuV2tTaXNvUjFJejYwa1lHTkZzRUYz?=
- =?utf-8?B?T1dtYnVOWTJJRnhZSjBRbmdRQzJ1ZGtDSTQyMXFoaEhpZTNnQW5lSzR1aWJY?=
- =?utf-8?B?K0pQNXZWR0xJbUFubzNaS2M5VWZqeGVwMGlSRzlCMmRmajcvdW1xZmQ3Q25I?=
- =?utf-8?B?cWR5OVd1ZGlGZjhjbU9veWx3dlBDQzEvWUQ1OTNJd2poWWhacUZHTnQyME15?=
- =?utf-8?B?N1RnWUNsbllwUTRsd0ZLdlNmL3puNW1FMVlSdTRaSHREU1VYMEtZaTFXSERi?=
- =?utf-8?B?ekJWTWJmd0kxQ2tyVWFCKzR0bnFOK1orN0crNjRyYkVLZDdybGtVcGlVcmc0?=
- =?utf-8?B?NHJ2YzVQUnExanFwRnhpaWpENkZwS0hjc211dk14aXBZUEhhNG1YQzkxVVRv?=
- =?utf-8?B?UldvSURvU2E0TlJHWEM2UE1XQlFzN3RsT2huaFFxZVZxa0liNTdJaThXYU4r?=
- =?utf-8?B?YW5WTXZHU1J5V2dqYjFOR2xWT1QzNE9tN2ZncXIzK3daUWJYamVIR05xUzFj?=
- =?utf-8?B?TjJudVF2QklpenByS1BKNEJLeWF1enZlM3Y1SG85ckFNWG5LVjFnS1dmbTNU?=
- =?utf-8?B?VnEwUmJ6NUw1R3RMWFBoK0gyYk5PME1MT2lOU1E5azdRKzhjN2UzR2FTQXZR?=
- =?utf-8?B?T3RFa2FnUzB1OTBacHJsSDluc1dVMVg1ZTcyZ1pnUGJscnpUNVUzbGhwTTRh?=
- =?utf-8?B?RG9Fci9FQXpwTUdLRHZLREZxdEJlWnkrU3JxMWUzQVIrNWYzUlg0MUdMOXBB?=
- =?utf-8?B?MnoraGVZb0lEM3dIR3ZvaThteWxaUldaaTlXWDF1T01yNFY2QTVxdFdGUGYw?=
- =?utf-8?B?SWVHTGZ3RVllK2tpK0xxQ0ROUHFQZjRHY04veEE0NWFQbzJMSG1McGRLNTVp?=
- =?utf-8?B?eXo2UWpHQTlndTR6V3RoYWY4LzFFSjhxZ3lBZHVVOUZ1M0wrOEhnR1F2eSs2?=
- =?utf-8?B?eXk0UERQMVB4TmxYQWg5Tk80Z0hNdGRJMXpkQzVIZzJEM2UrVzk3ajBVQ1RM?=
- =?utf-8?B?Y3dwZHZnenlpaHlVUHY1aWgzUnVRaGpycDE3NzFlT1Z3OWVoajN4a1BMT3NH?=
- =?utf-8?B?Q0N3eUQ2ZkJPUHVnYU5DRmZkTWZKMnJhandXVVg1YzVxb3BzMWhpNUdlZWxM?=
- =?utf-8?B?K0JpVmsxaitBck9uV0k1UEJSNW9XM3lVRHNrZHhTZUdsQS8zSmVmT0U1QndY?=
- =?utf-8?B?bHJ6YVdHSjdqcmloeWRlS0VUcWp5TzdWVEZId0NYMmhMbjFJa1lmaTVIVTdx?=
- =?utf-8?B?MFpUU1NZTVMvK3hOT2QyOFFYdnArZTFiK096S0ttMENpT2hhR2NTS040TEVs?=
- =?utf-8?B?R0lrTnpFYXRXaW9DNXhUSHR5NHhEUXYrTXhOZ0VzNzNYa0FlQlpjaWVpdE5u?=
- =?utf-8?B?elQ2UkhWMFV3SkY0aWVtSHRjaXRobHExYjZvdkY3OFlmTXhMQmp0QnZkL1Fw?=
- =?utf-8?B?TTl1Yk90NG5MZWpYenBoc2FCSmpLNTVRYUpyWHczMXhEa3FwSTlNMVM4ek1i?=
- =?utf-8?B?Y0FwR3N1VkIxa00ycFdSQTJQZ1E4a1E1TTVGZ1diNVg4MDZXMzhqczhmbDZk?=
- =?utf-8?B?bWRNNTl1NHdnSEx0NUxYUG1MaEc1VVhwOVczVHhkdkFHN2EvS3JXUjg0N2Q4?=
- =?utf-8?B?dXpwc0lXNy9mbFFtcjN2b1lUZU53Uko1WHVBR3FEVHZHTzBnRXplUkdGK0U3?=
- =?utf-8?B?TUsrK2FEUDVtTkxsWkZIWjhwcWpXOWFYbVMvYlNJUGlSV0YyUDNpUnZVVW53?=
- =?utf-8?B?TDB5aWxRZEZWRlVGYlpxRlVPNFg3ZjFzcWJNbEJ1ZFd1cllGeGN5VmJuMjli?=
- =?utf-8?Q?1cofZaFOkyouW5JCBxNtVQrCD?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UnQvQ2RzUzlrdTIvUnh1TjBwZi9EK2tzUndtbmdWQ3dFdlVtVDcrQUhmcDhH?=
+ =?utf-8?B?V3hMejNzQTd4RG9JOGVIVW4vTHQyblRPTGI1QzI0a2tWV0NYWW9Yb05BellI?=
+ =?utf-8?B?engzMEpxaU1QMWN0ZEdGY1VpOGMxcUpzOUZ4TEk5VXNSazlxTTZYaTNvcTdL?=
+ =?utf-8?B?bUNkQXdaTi9XUHBwNTZDUWtmeWFNL29DM2E0dVUwQTZUemNnVGJpNkZKTFVP?=
+ =?utf-8?B?ZlRvN3ZOWWM3WWROdm1nY3gwSnlHdVFxV0dJTHBQVkJ5TTNPbHNHTWsxSTd1?=
+ =?utf-8?B?NUErSlhJUlR3MUxRdGVueW1EMDR0M2laNGpNcDNDTUFjdmd0bXFjbDhKczRC?=
+ =?utf-8?B?M0pvUjcyMnNhSmFqc1BRZWcxRDZRd1J0U0M4TmhmOHh4NGxpaE1yU01FUnpX?=
+ =?utf-8?B?T3lkb2JmR05tTFNoWm54a0VMdTRtUXF2aE5EQkM0bENqdG0yWFVjbzRvK2sw?=
+ =?utf-8?B?eTFTYnZ5bzhXdHR0allNYkl0ZUdBZGtFU3QzUGtTSnVFRDlMUGZxTURzTlhX?=
+ =?utf-8?B?VUM0N1NaeWxoeGcxTEs2M0lyMDJXNDJmT0hsQy9oY1RBNExFM1BJcUtLVDZQ?=
+ =?utf-8?B?K2M3NllmUnN0Q2QwSUoyaE5RaDZ5QXRpWkRDWjRiOWh1NzBzV2drcytQVEp4?=
+ =?utf-8?B?OTJGWHZCL2pzU3ZiL0F0SXM1N0o3MkNGaURLYUNxZEthbGl2ekRwbmRWazVu?=
+ =?utf-8?B?Q1JTTVRTN3hRcnFxbG5pK1JKVm53cjlVTUNBR2hRR0xTWEc3U1lRcWZUcU1v?=
+ =?utf-8?B?ZzhiYStDRnAvNXFYcTlEYmh0M3E0eitDTno0cDBNbzF6SGE0ZGVYN2dKQU9U?=
+ =?utf-8?B?bjUzM1lEWEM0SWdSbmRpOXdjbmdDeW15SEpobUFmNXA1T25YME5OaE9MdVpa?=
+ =?utf-8?B?bnhZZzRkdks1UUxRU1ZsaHFIZWZqMllRdjNwK2RsMEY1SDBtVTF5N2NlZVly?=
+ =?utf-8?B?eW5kQ3pOQUQ5c0QyUlBwSXZmajZqRThVOTZpMmdzYXphYk95NnZaUFdHU09y?=
+ =?utf-8?B?akcrVjBQSlltZTBuQTlqR2JPQXg5VkNFRk8xQk9CdmxtL1R5OXZNSUxxY3hz?=
+ =?utf-8?B?N0JrYVI4TjBnM25XaFptVGV0bnVtdlprNnlFa2l5eW9sSkZSQWFlMHVhY3pr?=
+ =?utf-8?B?a2pBWWw5blNlb09tWEttZDd0Y1ppWjVRcS9NMjd1cWtGM3FLdVJUdlBZTDFv?=
+ =?utf-8?B?Y1pKUEUzNERUVzR6ejhoQm1wRkxBb3hEWU5oQzV4N0RGT25ONDFsMEpPOTBI?=
+ =?utf-8?B?aGFmM0s0bEJwdXRXd1NVa2tJZTNKT2drdkl3TE40MU9JL3NGK0xyblhLOGdR?=
+ =?utf-8?B?cE1jaFh3RHd6ZW4xUjFpUmxjZklQZlVtdEFQRWlzajIwN1ZWYk9QU0RTeiti?=
+ =?utf-8?B?MU05QzBFNDJGMEFCeVdiQ29obk9uSzM0SnB5WWtzWnZxY2xDQW5rWFdORmFK?=
+ =?utf-8?B?SHNwTG92YzlsUER5WXJvMTFXQkdCcm9PdFIrUFdnR0VEQjJDQzJnTXpZb2x0?=
+ =?utf-8?B?UHJrZDVLSncxc0x6bmt5Q2hzcHhMUW0zc09TSDVFWGYrRTMzbXhEdllNdlpm?=
+ =?utf-8?B?U1pua3YveU5xVXJ0OUxLcHZ5cXM1UkFpOHdGZldSYWlJbDNyb2lrdFkrc3N6?=
+ =?utf-8?B?WW9PeFhrZVdDYTZhNDJZS1pJVnpqS3VVdWlwcjBZWmdoV3NIMkpyZlNPbnM0?=
+ =?utf-8?B?bGM3TXUrOGpDWFY4UE5BYkVHOTlmVFBxZE9pb2pPcjFmT1cvNzdLNnFiOUQv?=
+ =?utf-8?B?RHdSWmx2VVJOZE5MNDhyT1N6TEN2N0J0ODQ5QkVoOWZXSGZobFc5VTJlVFBF?=
+ =?utf-8?B?MGlBRk1HU0VjZmViKysyZDJhRENxd3pZcEdxRzB3RTl6dzc2b0xMU2JscE1r?=
+ =?utf-8?B?ZDMxbjJVVk9HUlhsczEzM3BUaVdTVDZCSU1xS1NOSDFtY05xUFhyWmR6YWUy?=
+ =?utf-8?B?NXBtQ0tGeVJYVGxGRE5oTUJuanNEYUF1dFNQQmNyR3RsYjFxUGJBVEp1Nml4?=
+ =?utf-8?B?eXFBN3hqbkdkcUxxSXBHSm1QRC9LOU9mZ0RkZlNZQ2Q5SmJmQXZlNmZKWGt0?=
+ =?utf-8?B?MVpVWUFjcFBBWXpjUnE1Y21qZmc0WCtYc2U4TmJZR2NXeXl0Wnd5WVo3QnFL?=
+ =?utf-8?Q?LXHtfgQYTdgZrBEpT+QItEpXn?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2aea99fc-62a8-4f42-9579-08dbdb411446
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3070b885-fd94-4af4-d4b9-08dbdb4b5ea1
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2023 01:14:36.5973
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2023 02:28:16.1082
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O2WdCTUIQ4GowMRuLtwNdVA0fMDofchArzKGZqAQg0jBWJK+P94BmRpBiEOJCNdZdTdCWC9qXdxS1/TwjNP71g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4364
+X-MS-Exchange-CrossTenant-UserPrincipalName: 02AbkjNqll62aFurMfa+PigGdVh4D0KfhCyL5rxPNve/xyUtdn+SJvsU545a4sfADBRuAIbBiLLC6TunbrVsbA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9397
 X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
@@ -127,201 +126,231 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/1/2023 17:52, Bjorn Helgaas wrote:
-> On Tue, Oct 31, 2023 at 08:34:38AM -0500, Mario Limonciello wrote:
->> The USB4 spec specifies that PCIe ports that are used for tunneling
->> PCIe traffic over USB4 fabric will be hardcoded to advertise 2.5GT/s.
+
+On 1/11/23 22:05, Jonathan Cameron wrote:
+> On Wed, 1 Nov 2023 08:27:17 +0100
+> Lukas Wunner <lukas@wunner.de> wrote:
+> 
+> Thanks Alexy, this is a great discussion to kick off.
+> 
+>> On Wed, Nov 01, 2023 at 09:56:11AM +1100, Alexey Kardashevskiy wrote:
+>>> - device_connect - starts CMA/SPDM session, returns measurements/certs,
+>>> runs IDE_KM to program the keys;
 >>
->> In reality these ports speed is controlled by the fabric implementation.
-> 
-> So I guess you're saying the speed advertised by PCI_EXP_LNKSTA is not
-> the actual speed?  And we don't have a generic way to find the actual
-> speed?
-
-Correct.
-
-> 
->> Downstream drivers such as amdgpu which utilize pcie_bandwidth_available()
->> to program the device will always find the PCIe ports used for
->> tunneling as a limiting factor and may make incorrect decisions.
+>> Does the PSP have a set of trusted root certificates?
+>> If so, where does it get them from?
 >>
->> To prevent problems in downstream drivers check explicitly for ports
->> being used for PCIe tunneling and skip them when looking for bandwidth
->> limitations.
+>> If not, does the PSP just blindly trust the validity of the cert chain?
+>> Who validates the cert chain, and when?
+>> Which slot do you use?
+>> Do you return only the cert chain of that single slot or of all slots?
+>> Does the PSP read out all measurements available?  This may take a while
+>> if the measurements are large and there are a lot of them.
+> 
+> I'd definitely like their to be a path for certs and measurement to be
+> checked by the Host OS (for the non TDISP path). Whether the
+> policy setup cares about result is different question ;)
+
+Yup, the PSP returns these to the host OS anyway. And one of reasons why 
+I wanted the same module in both host and guest for exposing these 
+certs/meas to the userspace.
+
 >>
->> 2 types of devices are detected:
->> 1) PCIe root port used for PCIe tunneling
->> 2) Intel Thunderbolt 3 bridge
+>>> - tdi_info - read measurements/certs/interface report;
 >>
->> Downstream drivers could make this change on their own but then they
->> wouldn't be able to detect other potential speed bottlenecks.
-> 
-> Is the implication that a tunneling port can *never* be a speed
-> bottleneck?  That seems to be how this patch would work in practice.
-
-I think that's a stretch we should avoid concluding.
-
-IIUC the fabric can be hosting other traffic and it's entirely possible 
-the traffic over the tunneling port runs more slowly at times.
-
-Perhaps that's why the the USB4 spec decided to advertise it this way? 
-I don't know.
-
-> 
->> Link: https://lore.kernel.org/linux-pci/7ad4b2ce-4ee4-429d-b5db-3dfc360f4c3e@amd.com/
->> Link: https://www.usb.org/document-library/usb4r-specification-v20
->>        USB4 V2 with Errata and ECN through June 2023 - CLEAN p710
-> 
-> I guess this is sec 11.2.1 ("PCIe Physical Layer Logical Sub-block")
-> on PDF p710 (labeled "666" on the printed page).  How annoying that
-> the PDF page numbers don't match the printed ones; do the section
-> numbers at least stay stable in new spec revisions?
-
-I'd hope so.  I'll change it to section numbers in the next revision.
-
-> 
->> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2925
-> 
-> This issue says the external GPU doesn't work at all.  Does this patch
-> fix that?  This patch looks like it might improve GPU performance, but
-> wouldn't fix something that didn't work at all.
-
-The issue actually identified 4 distinct different problems.  The 3 
-problems will be fixed in amdgpu which are functional.
-
-This performance one was from later in the ticket after some back and 
-forth identifying proper solutions for the first 3.
-
-> 
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->>   drivers/pci/pci.c | 41 +++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 41 insertions(+)
+>> Does this return cached cert chains and measurements from the device
+>> or does it retrieve them anew?  (Measurements might have changed if
+>> MEAS_FRESH_CAP is supported.)
 >>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index 59c01d68c6d5..4a7dc9c2b8f4 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -6223,6 +6223,40 @@ int pcie_set_mps(struct pci_dev *dev, int mps)
->>   }
->>   EXPORT_SYMBOL(pcie_set_mps);
->>   
->> +/**
->> + * pcie_is_tunneling_port - Check if a PCI device is used for TBT3/USB4 tunneling
->> + * @dev: PCI device to check
->> + *
->> + * Returns true if the device is used for PCIe tunneling, false otherwise.
->> + */
->> +static bool
->> +pcie_is_tunneling_port(struct pci_dev *pdev)
-> 
-> Use usual function signature styling (all on one line).
-
-OK.
-
-> 
->> +{
->> +	struct device_link *link;
->> +	struct pci_dev *supplier;
->> +
->> +	/* Intel TBT3 bridge */
->> +	if (pdev->is_thunderbolt)
->> +		return true;
->> +
->> +	if (!pci_is_pcie(pdev))
->> +		return false;
->> +
->> +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT)
->> +		return false;
->> +
->> +	/* PCIe root port used for tunneling linked to USB4 router */
->> +	list_for_each_entry(link, &pdev->dev.links.suppliers, c_node) {
->> +		supplier = to_pci_dev(link->supplier);
->> +		if (!supplier)
->> +			continue;
->> +		if (supplier->class == PCI_CLASS_SERIAL_USB_USB4)
->> +			return true;
-> 
-> Since this is in drivers/pci, and this USB4/Thunderbolt routing is not
-> covered by the PCIe specs, this is basically black magic.  Is there a
-> reference to the USB4 spec we could include to help make it less
-> magical?
-
-The "magic" part is that there is an ACPI construct to indicate a PCIe 
-port is linked to a USB4 router.
-
-Here is a link to the page that is explained:
-https://learn.microsoft.com/en-us/windows-hardware/design/component-guidelines/usb4-acpi-requirements#port-mapping-_dsd-for-usb-3x-and-pcie
-
-In the Linux side this link is created in the 'thunderbolt' driver.
-
-Thinking about this again, this does actually mean we could have a 
-different result based on whether pcie_bandwidth_available() is called 
-before or after the 'thunderbolt' driver has loaded.
-
-For example if a GPU driver that called pcie_bandwidth_available() was 
-in the initramfs but 'thunderbolt' was in the rootfs we might end up 
-with the wrong result again.
-
-Considering this I think it's a good idea to move that creation of the 
-device link into drivers/pci/pci-acpi.c and store a bit in struct 
-pci_device to indicate it's a tunneled port.
-
-Then 'thunderbolt' can look for this directly instead of walking all the 
-FW nodes.
-
-pcie_bandwidth_available() can just look at the tunneled port bit 
-instead of the existence of the device link.
-
-> 
-> Lukas' brief intro in
-> https://lore.kernel.org/all/20230925141930.GA21033@wunner.de/ really
-> helped me connect a few dots, because things like
-> Documentation/admin-guide/thunderbolt.rst assume we already know those
-> details.
-
-Thanks for sharing that.  If I move the detection mechanism as I 
-suggested above I'll reference some of that as well in the commit 
-message to explain what exactly a tunneled port is.
-
-> 
->> +	}
->> +
->> +	return false;
->> +}
->> +
->>   /**
->>    * pcie_bandwidth_available - determine minimum link settings of a PCIe
->>    *			      device and its bandwidth limitation
->> @@ -6236,6 +6270,8 @@ EXPORT_SYMBOL(pcie_set_mps);
->>    * limiting_dev, speed, and width pointers are supplied) information about
->>    * that point.  The bandwidth returned is in Mb/s, i.e., megabits/second of
->>    * raw bandwidth.
->> + *
->> + * This function excludes root ports and bridges used for USB4 and TBT3 tunneling.
->>    */
->>   u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
->>   			     enum pci_bus_speed *speed,
->> @@ -6254,6 +6290,10 @@ u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
->>   	bw = 0;
->>   
->>   	while (dev) {
->> +		/* skip root ports and bridges used for tunneling */
->> +		if (pcie_is_tunneling_port(dev))
->> +			goto skip;
->> +
->>   		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
->>   
->>   		next_speed = pcie_link_speed[lnksta & PCI_EXP_LNKSTA_CLS];
->> @@ -6274,6 +6314,7 @@ u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
->>   				*width = next_width;
->>   		}
->>   
->> +skip:
->>   		dev = pci_upstream_bridge(dev);
->>   	}
->>   
->> -- 
->> 2.34.1
 >>
+>>> If the user wants only CMA/SPDM, the Lukas'es patched will do that without
+>>> the PSP. This may co-exist with the AMD PSP (if the endpoint allows multiple
+>>> sessions).
+>>
+>> It can co-exist if the pci_cma_claim_ownership() library call
+>> provided by patch 12/12 is invoked upon device_connect.
+>>
+>> It would seem advantageous if you could delay device_connect
+>> until a device is actually passed through.  Then the OS can
+>> initially authenticate and measure devices and the PSP takes
+>> over when needed.
+> 
+> Would that delay mean IDE isn't up - I think that wants to be
+> available whether or not pass through is going on.
+> 
+> Given potential restrictions on IDE resources, I'd expect to see an explicit
+> opt in from userspace on the host to start that process for a given
+> device.  (udev rule or similar might kick it off for simple setups).
+> 
+> Would that work for the flows described?
+
+This would work but my (likely wrong) intention was also to run 
+necessary setup in both host and guest at the same time before drivers 
+probe devices. And while delaying it in the host is fine (well, for us 
+in AMD, as we are aiming for CoCo/TDISP), in the guest this means less 
+flexibility in enlightening the PCI subsystem and the guest driver: 
+ideally (or at least initially) the driver is supposed to probe already 
+enabled and verified device, as otherwise it has to do SWIOTLB until the 
+userspace does the verification and kicks the driver to go proper direct 
+DMA (or reload the driver?).
+
+> Next bit probably has holes...  Key is that a lot of the checks
+> may fail, and it's up to host userspace policy to decide whether
+> to proceed (other policy in the secure VM side of things obviously)
+> 
+> So my rough thinking is - for the two options (IDE / TDISP)
+> 
+> Comparing with Alexey's flow I think only real difference is that
+> I call out explicit host userspace policy controls. I'd also like
+
+My imagination fails me :) What is the host supposed to do if the device 
+verification fails/succeeds later, and how much later, and the device is 
+a boot disk? Or is this userspace going to be limited to initramdisk? 
+What is that thing which we are protecting against? Or it is for CUDA 
+and such (which yeah, it can wait)?
+
+> to use similar interfaces to convey state to host userspace as
+> per Lukas' existing approaches.  Sure there will also be in
+> kernel interfaces for driver to get data if it knows what to do
+> with it.  I'd also like to enable the non tdisp flow to handle
+> IDE setup 'natively' if that's possible on particular hardware.
+> 
+> 1. Host has a go at CMA/SPDM. Policy might say that a failure here is
+>     a failure in general so reject device - or it might decide it's up to
+>     the PSP etc.   (userspace can see if it succeeded)
+>     I'd argue host software can launch this at any time.  It will
+>     be a denial of service attack but so are many other things the host
+>     can do.
+
+Trying to visualize it in my head - policy is a kernel cmdline or module 
+parameter?
+
+> 2. TDISP policy decision from host (userspace policy control)
+>     Need to know end goal.
+
+/sys/bus/pci/devices/0000:11:22.3/tdisp ?
+
+> 3. IDE opt in from userspace.  Policy decision.
+>    - If not TDISP
+>      - device_connect(IDE ONLY) - bunch of proxying in host OS.
+>      - Cert chain and measurements presented to host, host can then check if
+>        it is happy and expose for next policy decision.
+>      - Hooks exposed for host to request more measurements, key refresh etc.
+>        Idea being that the flow is host driven with PSP providing required
+>        services.  If host can just do setup directly that's fine too.
+
+I'd expect the user to want IDE on from the very beginning, why wait to 
+turn it on later? The question is rather if the user wants to panic() or 
+warn() or block the device if IDE setup failed.
+
+>    - If TDISP (technically you can run tdisp from host, but lets assume
+>      for now no one wants to do that? (yet)).
+>      - device_connect(TDISP) - bunch of proxying in host OS.
+>      - Cert chain and measurements presented to host, host can then check if
+>        it is happy and expose for next policy decision.
+
+On AMD SEV TIO the TDISP setup happens in "tdi_bind" when the device is 
+about to be passed through which is when QEMU (==userspace) starts.
+
+> 
+> 4. Flow after this depends on early or late binding (lockdown)
+>     but could load driver at this point.  Userspace policy.
+>     tdi-bind etc.
+
+Not sure I follow this. A host or guest driver?
+
+
+>>
+>>> If the user wants only IDE, the AMD PSP's device_connect needs to be called
+>>> and the host OS does not get to know the IDE keys. Other vendors allow
+>>> programming IDE keys to the RC on the baremetal, and this also may co-exist
+>>> with a TSM running outside of Linux - the host still manages trafic classes
+>>> and streams.
+>>
+>> I'm wondering if your implementation is spec compliant:
+>>
+>> PCIe r6.1 sec 6.33.3 says that "It is permitted for a Root Complex
+>> to [...] use implementation specific key management."  But "For
+>> Endpoint Functions, [...] Function 0 must implement [...]
+>> the IDE key management (IDE_KM) protocol as a Responder."
+>>
+>> So the keys need to be programmed into the endpoint using IDE_KM
+>> but for the Root Port it's permitted to use implementation-specific
+>> means.
+>>
+>> The keys for the endpoint and Root Port are the same because this
+>> is symmetric encryption.
+>>
+>> If the keys are internal to the PSP, the kernel can't program the
+>> keys into the endpoint using IDE_KM.  So your implementation precludes
+>> IDE setup by the host OS kernel.
+> 
+> Proxy the CMA messages through the host OS. Doesn't mean host has
+> visibility of the keys or certs.  So indeed, the actual setup isn't being done
+> by the host kernel, but rather by it requesting the 'blob' to send
+> to the CMA DOE from PSP.
+> 
+> By my reading that's a bit inelegant but I don't see it being a break
+> with the specification.
+> 
+>>
+>> device_connect is meant to be used for TDISP, i.e. with devices which
+>> have the TEE-IO Supported bit set in the Device Capabilities Register.
+>>
+>> What are you going to do with IDE-capable devices which have that bit
+>> cleared?  Are they unsupported by your implementation?
+>>
+>> It seems to me an architecture cannot claim IDE compliance if it's
+>> limited to TEE-IO capable devices, which might only be a subset of
+>> the available products.
+> 
+> Agreed.  If can request the PSP does a non TDISP IDE setup then
+> I think we are fine.  If not then indeed usecases are limited and
+> meh, it might be a spec compliance issue but I suspect not as
+> TDISP has a note at the top that says:
+> 
+> "Although it is permitted (and generally expected) that TDIs will
+> be implemented such that they can be assigned to Legacy VMs, such
+> use is not the focus of TDISP."
+> 
+> Which rather implies that devices that don't support other usecases
+> are allowed.
+> 
+>>
+>>
+>>> The next steps:
+>>> - expose blobs via configfs (like Dan did configfs-tsm);
+>>> - s/tdisp.ko/coco.ko/;
+>>> - ask the audience - what is missing to make it reusable for other vendors
+>>> and uses?
+>>
+>> I intend to expose measurements in sysfs in a measurements/ directory
+>> below each CMA-capable device's directory.  There are products coming
+>> to the market which support only CMA and are not interested in IDE or
+>> TISP.  When bringing up TDISP, measurements received as part of an
+>> interface report must be exposed in the same way so that user space
+>> tooling which evaluates the measurememt works both with TEE-IO capable
+>> and incapable products.  This could be achieved by fetching measurements
+>> from the interface report instead of via SPDM when TDISP is in use.
+> 
+> Absolutely agree on this and superficially it feels like this should not
+> be hard to hook up.
+
+True. sysfs it is then. Thanks,
+
+> 
+> There will also be paths where a driver wants to see the measurement report
+> but that should also be easy enough to enable.
+> 
+> Jonathan
+>>
+>> Thanks,
+>>
+>> Lukas
+>>
+> 
+
+-- 
+Alexey
+
 
