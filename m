@@ -2,146 +2,243 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BEB177DEFB9
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Nov 2023 11:21:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23E317DF0E7
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Nov 2023 12:08:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346340AbjKBKRR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Nov 2023 06:17:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39004 "EHLO
+        id S1347260AbjKBLIZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Nov 2023 07:08:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346333AbjKBKRQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Nov 2023 06:17:16 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F062128;
-        Thu,  2 Nov 2023 03:17:11 -0700 (PDT)
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3A29L7Qn006445;
-        Thu, 2 Nov 2023 10:16:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=62j8hy0jkDrjp09B7AE85jy2kVheEsLAkN5WotB2Ud4=;
- b=MFpRvSnZUTr5i7GPn+KLj42Lj1aq1nqK3dHppIXLPfcz0ne2nVIuG87BpdM4Xk797qD1
- FrB5Bt/9Ert920k7VFwbs67Cq/aHBbOFEugSCC1EFXLqZgFySerpjJBnLrb8Ux1miudl
- WrAK27Y8aMg7Lo3ZrgljdN0AjpC90ELv4Hi2p+ooPeNXZAQvxenbfD/e0A1mk7yc6xxw
- yN6Mkc08QOhopePpjrgOQeH/fQVHqQ8o0kYHT8yDrXtOijQ20wTVHX3SX59GPV4TZ5uX
- sgOSom0pv2LySt8X64JDC3umPNeRaLXjWBjCrw8xoY2K4foXNxpn2VsMVmSrx6f48xR1 5g== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3u430kgtb5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Nov 2023 10:16:57 +0000
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3A2AGuar027151
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 2 Nov 2023 10:16:56 GMT
-Received: from [10.216.33.58] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Thu, 2 Nov
- 2023 03:16:48 -0700
-Message-ID: <73a332db-14d3-a5b6-331a-d52ffb27ee63@quicinc.com>
-Date:   Thu, 2 Nov 2023 15:46:45 +0530
+        with ESMTP id S1347302AbjKBLIX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Nov 2023 07:08:23 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91D25181;
+        Thu,  2 Nov 2023 04:08:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698923296; x=1730459296;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=odjc9dr4DIBNf+sdcc67k5/3mIvmgLlogDDgZmqqTho=;
+  b=JkShQwMfAfj7ECauXBsqZi//XwqUaouL4sj9JzoITCGQHVkBkoYk7w1v
+   4IEdi/SbmBQE2IrbQwnFKWGyq3ZvwCd2+RWCIafzl4Jw4nC5I+J7RZt5z
+   gYBxuidlDp2NDKnYrYijHZrCHHZM4tiSnsUsK7djQM9xzjpIj1OU+x/Kq
+   hoRvUNERjLKF4Dx+9wUlmyTecivlb9w7YUbu+sthV8nxIplDpdBcVmmnT
+   W6mU2coGBU4qMZ56jVv80DsbAcEuvkrj///URylesn7yaKCu1Mcbr4eBE
+   9vPMEdHXHSECP/hOAeY1gV2g8T4P/062PGYu7MZRbzzC6vFQbERPLTBBH
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="7328808"
+X-IronPort-AV: E=Sophos;i="6.03,271,1694761200"; 
+   d="scan'208";a="7328808"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 04:08:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="764877653"
+X-IronPort-AV: E=Sophos;i="6.03,271,1694761200"; 
+   d="scan'208";a="764877653"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 02 Nov 2023 04:08:11 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 8AEB14F0; Thu,  2 Nov 2023 12:31:08 +0200 (EET)
+Date:   Thu, 2 Nov 2023 12:31:08 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
+        andreas.noever@gmail.com, michael.jamet@intel.com,
+        YehezkelShB@gmail.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Alexander.Deucher@amd.com
+Subject: Re: [PATCH 2/2] PCI: Ignore PCIe ports used for tunneling in
+ pcie_bandwidth_available()
+Message-ID: <20231102103108.GK17433@black.fi.intel.com>
+References: <20231101225259.GA101390@bhelgaas>
+ <928df647-5b20-406b-8da5-3199f5cfbb48@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v1 1/3] PCI: qcom: Enable cache coherency for SA8775P RC
-Content-Language: en-US
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>, <agross@kernel.org>,
-        <andersson@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <mani@kernel.org>, <robh+dt@kernel.org>
-CC:     <quic_shazhuss@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <quic_nayiluri@quicinc.com>,
-        <dmitry.baryshkov@linaro.org>, <robh@kernel.org>,
-        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>,
-        <quic_parass@quicinc.com>, <quic_schintav@quicinc.com>,
-        <quic_shijjose@quicinc.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-References: <1698767186-5046-1-git-send-email-quic_msarkar@quicinc.com>
- <1698767186-5046-2-git-send-email-quic_msarkar@quicinc.com>
- <e5ee7051-d867-453f-98a7-3a8aea402607@linaro.org>
-From:   Mrinmay Sarkar <quic_msarkar@quicinc.com>
-In-Reply-To: <e5ee7051-d867-453f-98a7-3a8aea402607@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: GEcN-YQ0fpJJI2SDLdbjjwoFmr85ekY8
-X-Proofpoint-ORIG-GUID: GEcN-YQ0fpJJI2SDLdbjjwoFmr85ekY8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-01_23,2023-11-02_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- mlxscore=0 bulkscore=0 adultscore=0 spamscore=0 mlxlogscore=999
- priorityscore=1501 lowpriorityscore=0 impostorscore=0 phishscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2310240000 definitions=main-2311020081
-X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <928df647-5b20-406b-8da5-3199f5cfbb48@amd.com>
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Nov 01, 2023 at 08:14:31PM -0500, Mario Limonciello wrote:
+> On 11/1/2023 17:52, Bjorn Helgaas wrote:
+> > On Tue, Oct 31, 2023 at 08:34:38AM -0500, Mario Limonciello wrote:
+> > > The USB4 spec specifies that PCIe ports that are used for tunneling
+> > > PCIe traffic over USB4 fabric will be hardcoded to advertise 2.5GT/s.
+> > > 
+> > > In reality these ports speed is controlled by the fabric implementation.
+> > 
+> > So I guess you're saying the speed advertised by PCI_EXP_LNKSTA is not
+> > the actual speed?  And we don't have a generic way to find the actual
+> > speed?
+> 
+> Correct.
+> 
+> > 
+> > > Downstream drivers such as amdgpu which utilize pcie_bandwidth_available()
+> > > to program the device will always find the PCIe ports used for
+> > > tunneling as a limiting factor and may make incorrect decisions.
+> > > 
+> > > To prevent problems in downstream drivers check explicitly for ports
+> > > being used for PCIe tunneling and skip them when looking for bandwidth
+> > > limitations.
+> > > 
+> > > 2 types of devices are detected:
+> > > 1) PCIe root port used for PCIe tunneling
+> > > 2) Intel Thunderbolt 3 bridge
+> > > 
+> > > Downstream drivers could make this change on their own but then they
+> > > wouldn't be able to detect other potential speed bottlenecks.
+> > 
+> > Is the implication that a tunneling port can *never* be a speed
+> > bottleneck?  That seems to be how this patch would work in practice.
+> 
+> I think that's a stretch we should avoid concluding.
+> 
+> IIUC the fabric can be hosting other traffic and it's entirely possible the
+> traffic over the tunneling port runs more slowly at times.
+> 
+> Perhaps that's why the the USB4 spec decided to advertise it this way? I
+> don't know.
+> 
+> > 
+> > > Link: https://lore.kernel.org/linux-pci/7ad4b2ce-4ee4-429d-b5db-3dfc360f4c3e@amd.com/
+> > > Link: https://www.usb.org/document-library/usb4r-specification-v20
+> > >        USB4 V2 with Errata and ECN through June 2023 - CLEAN p710
+> > 
+> > I guess this is sec 11.2.1 ("PCIe Physical Layer Logical Sub-block")
+> > on PDF p710 (labeled "666" on the printed page).  How annoying that
+> > the PDF page numbers don't match the printed ones; do the section
+> > numbers at least stay stable in new spec revisions?
+> 
+> I'd hope so.  I'll change it to section numbers in the next revision.
+> 
+> > 
+> > > Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2925
+> > 
+> > This issue says the external GPU doesn't work at all.  Does this patch
+> > fix that?  This patch looks like it might improve GPU performance, but
+> > wouldn't fix something that didn't work at all.
+> 
+> The issue actually identified 4 distinct different problems.  The 3 problems
+> will be fixed in amdgpu which are functional.
+> 
+> This performance one was from later in the ticket after some back and forth
+> identifying proper solutions for the first 3.
+> 
+> > 
+> > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> > > ---
+> > >   drivers/pci/pci.c | 41 +++++++++++++++++++++++++++++++++++++++++
+> > >   1 file changed, 41 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > index 59c01d68c6d5..4a7dc9c2b8f4 100644
+> > > --- a/drivers/pci/pci.c
+> > > +++ b/drivers/pci/pci.c
+> > > @@ -6223,6 +6223,40 @@ int pcie_set_mps(struct pci_dev *dev, int mps)
+> > >   }
+> > >   EXPORT_SYMBOL(pcie_set_mps);
+> > > +/**
+> > > + * pcie_is_tunneling_port - Check if a PCI device is used for TBT3/USB4 tunneling
+> > > + * @dev: PCI device to check
+> > > + *
+> > > + * Returns true if the device is used for PCIe tunneling, false otherwise.
+> > > + */
+> > > +static bool
+> > > +pcie_is_tunneling_port(struct pci_dev *pdev)
+> > 
+> > Use usual function signature styling (all on one line).
+> 
+> OK.
+> 
+> > 
+> > > +{
+> > > +	struct device_link *link;
+> > > +	struct pci_dev *supplier;
+> > > +
+> > > +	/* Intel TBT3 bridge */
+> > > +	if (pdev->is_thunderbolt)
+> > > +		return true;
+> > > +
+> > > +	if (!pci_is_pcie(pdev))
+> > > +		return false;
+> > > +
+> > > +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT)
+> > > +		return false;
+> > > +
+> > > +	/* PCIe root port used for tunneling linked to USB4 router */
+> > > +	list_for_each_entry(link, &pdev->dev.links.suppliers, c_node) {
+> > > +		supplier = to_pci_dev(link->supplier);
+> > > +		if (!supplier)
+> > > +			continue;
+> > > +		if (supplier->class == PCI_CLASS_SERIAL_USB_USB4)
+> > > +			return true;
+> > 
+> > Since this is in drivers/pci, and this USB4/Thunderbolt routing is not
+> > covered by the PCIe specs, this is basically black magic.  Is there a
+> > reference to the USB4 spec we could include to help make it less
+> > magical?
+> 
+> The "magic" part is that there is an ACPI construct to indicate a PCIe port
+> is linked to a USB4 router.
+> 
+> Here is a link to the page that is explained:
+> https://learn.microsoft.com/en-us/windows-hardware/design/component-guidelines/usb4-acpi-requirements#port-mapping-_dsd-for-usb-3x-and-pcie
+> 
+> In the Linux side this link is created in the 'thunderbolt' driver.
+> 
+> Thinking about this again, this does actually mean we could have a different
+> result based on whether pcie_bandwidth_available() is called before or after
+> the 'thunderbolt' driver has loaded.
+> 
+> For example if a GPU driver that called pcie_bandwidth_available() was in
+> the initramfs but 'thunderbolt' was in the rootfs we might end up with the
+> wrong result again.
 
-On 10/31/2023 10:20 PM, Konrad Dybcio wrote:
-> On 31.10.2023 16:46, Mrinmay Sarkar wrote:
->> This change will enable cache snooping logic to support
->> cache coherency for SA8755P RC platform.
-> 8775
->
->> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-qcom.c | 11 +++++++++++
->>   1 file changed, 11 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
->> index 6902e97..6f240fc 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->> @@ -51,6 +51,7 @@
->>   #define PARF_SID_OFFSET				0x234
->>   #define PARF_BDF_TRANSLATE_CFG			0x24c
->>   #define PARF_SLV_ADDR_SPACE_SIZE		0x358
->> +#define PCIE_PARF_NO_SNOOP_OVERIDE		0x3d4
->>   #define PARF_DEVICE_TYPE			0x1000
->>   #define PARF_BDF_TO_SID_TABLE_N			0x2000
->>   
->> @@ -117,6 +118,9 @@
->>   /* PARF_LTSSM register fields */
->>   #define LTSSM_EN				BIT(8)
->>   
->> +/* PARF_NO_SNOOP_OVERIDE register value */
-> override
->> +#define NO_SNOOP_OVERIDE_EN			0xa
-> is this actually some magic value and not BIT(1) | BIT(3)?
-we need to set 1st and 3rd bit. yes, we can use BIT(1) | BIT(3).
->
->>   /* PARF_DEVICE_TYPE register fields */
->>   #define DEVICE_TYPE_RC				0x4
->>   
->> @@ -961,6 +965,13 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
->>   
->>   static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
->>   {
->> +	struct dw_pcie *pci = pcie->pci;
->> +	struct device *dev = pci->dev;
->> +
->> +	/* Enable cache snooping for SA8775P */
->> +	if (of_device_is_compatible(dev->of_node, "qcom,pcie-sa8775p"))
->> +		writel(NO_SNOOP_OVERIDE_EN, pcie->parf + PCIE_PARF_NO_SNOOP_OVERIDE);
-> Why only for 8775 and not for other v2.7, or perhaps all other
-> revisions?
-yes this is only required for 8775 due to hw requirement we need to enable
-cache snooping from the register level for 8775.
-> Konrad
-Thanks,
-Mrinmay
+Right, that's possible if the boot firmware has support for a connection
+manager. Although we do reset the whole topology with the USB4 v2 host
+routers this is kept as is for v1.
+
+> Considering this I think it's a good idea to move that creation of the
+> device link into drivers/pci/pci-acpi.c and store a bit in struct pci_device
+> to indicate it's a tunneled port.
+
+Note it currently is setting the link between xHCI and the
+USB4/Thunderbolt host controller but we may want to change it later to
+link between USB 3.x port and the USB4/Thunderbolt host to allow more
+fine grained power management, this is especially true with the new USB
+Gen T tunneling. So for now it is only PCI but we may need to touch the
+USB stack too (perhaps put it in drivers/acpi/ instead).
+
+> Then 'thunderbolt' can look for this directly instead of walking all the FW
+> nodes.
+> 
+> pcie_bandwidth_available() can just look at the tunneled port bit instead of
+> the existence of the device link.
+> 
+> > 
+> > Lukas' brief intro in
+> > https://lore.kernel.org/all/20230925141930.GA21033@wunner.de/ really
+> > helped me connect a few dots, because things like
+> > Documentation/admin-guide/thunderbolt.rst assume we already know those
+> > details.
+> 
+> Thanks for sharing that.  If I move the detection mechanism as I suggested
+> above I'll reference some of that as well in the commit message to explain
+> what exactly a tunneled port is.
+
+I'm not sure it makes sense to explain from the zero all this stuff that
+people can easily look up from the corresponding spec, such as PCIe or
+USB.
+
+There is a good picture in USB4 v2 ch 2.2.3 about paths crossing USB4
+fabric, perhaps reference that one? Or ch 2.2.10.3 that shows how this
+works with PCIe tunneling instead (although they are similar).
