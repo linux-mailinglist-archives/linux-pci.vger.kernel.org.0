@@ -2,243 +2,216 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23E317DF0E7
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Nov 2023 12:08:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 749E07DF11E
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Nov 2023 12:27:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347260AbjKBLIZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Nov 2023 07:08:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37590 "EHLO
+        id S1347345AbjKBL13 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Nov 2023 07:27:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347302AbjKBLIX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Nov 2023 07:08:23 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91D25181;
-        Thu,  2 Nov 2023 04:08:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698923296; x=1730459296;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=odjc9dr4DIBNf+sdcc67k5/3mIvmgLlogDDgZmqqTho=;
-  b=JkShQwMfAfj7ECauXBsqZi//XwqUaouL4sj9JzoITCGQHVkBkoYk7w1v
-   4IEdi/SbmBQE2IrbQwnFKWGyq3ZvwCd2+RWCIafzl4Jw4nC5I+J7RZt5z
-   gYBxuidlDp2NDKnYrYijHZrCHHZM4tiSnsUsK7djQM9xzjpIj1OU+x/Kq
-   hoRvUNERjLKF4Dx+9wUlmyTecivlb9w7YUbu+sthV8nxIplDpdBcVmmnT
-   W6mU2coGBU4qMZ56jVv80DsbAcEuvkrj///URylesn7yaKCu1Mcbr4eBE
-   9vPMEdHXHSECP/hOAeY1gV2g8T4P/062PGYu7MZRbzzC6vFQbERPLTBBH
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="7328808"
-X-IronPort-AV: E=Sophos;i="6.03,271,1694761200"; 
-   d="scan'208";a="7328808"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 04:08:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="764877653"
-X-IronPort-AV: E=Sophos;i="6.03,271,1694761200"; 
-   d="scan'208";a="764877653"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 02 Nov 2023 04:08:11 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 8AEB14F0; Thu,  2 Nov 2023 12:31:08 +0200 (EET)
-Date:   Thu, 2 Nov 2023 12:31:08 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
-        andreas.noever@gmail.com, michael.jamet@intel.com,
-        YehezkelShB@gmail.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Alexander.Deucher@amd.com
-Subject: Re: [PATCH 2/2] PCI: Ignore PCIe ports used for tunneling in
- pcie_bandwidth_available()
-Message-ID: <20231102103108.GK17433@black.fi.intel.com>
-References: <20231101225259.GA101390@bhelgaas>
- <928df647-5b20-406b-8da5-3199f5cfbb48@amd.com>
+        with ESMTP id S1347243AbjKBL12 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Nov 2023 07:27:28 -0400
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54820111;
+        Thu,  2 Nov 2023 04:27:22 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 80C2C3200999;
+        Thu,  2 Nov 2023 07:27:18 -0400 (EDT)
+Received: from imap44 ([10.202.2.94])
+  by compute3.internal (MEProxy); Thu, 02 Nov 2023 07:27:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+        cc:cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm1; t=
+        1698924438; x=1699010838; bh=qnoBr0axhGTzmrMpnTUgIJi6AVoVM2Yv3UZ
+        5FiYaoBU=; b=sc764kvD/TTRiG6jBZxCEn7xXI0z5dHbpj5UYBPJCQxCtNqYkCf
+        n7mXa1dYgEgwz1/CF//ljQAjamdDozYwFZjirioah2KLBumPM86oTH4jEKGaIKxf
+        /tC85yQuiKxK8llZ0U5tyLcmi2B6BKqZ4sCfgkO8KkBZE905BhThVAFpyb/IiGQr
+        mvHI3Yzxop2oj4yvK5xb7XptDfohzZlNAG/43OmH6//b2fKeU4Nr+17rJpT2bW5u
+        R5PLrTVJQPh7PpoczKN8hA/kyYW1FVyNyOcEBXQRsxx+kmqK4Xz9mQpjKF/85qRl
+        dxgzC+ujHhx7p57yfZC6LkvILu/qY0BMxCg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+        1698924438; x=1699010838; bh=qnoBr0axhGTzmrMpnTUgIJi6AVoVM2Yv3UZ
+        5FiYaoBU=; b=IUOkmwwg/DLe+ETpwWVKLlG/c/BFwE33eVNFfKLLISIh+BaDva5
+        2vELNrYCayd/v5zecQQ2ve3edSO2gE+ExkfJXm8zRu4wY21e0E62Em8zQXq3X1WB
+        /FFKV8F7xEddXdVLVSiMJMNGeYe3uQjcNuJkVIzj5qOgRc1dYkyiaHxfSeKjVzn6
+        nB1ygA7UGUfp+lYDpYq8wJoUEgusLPhFPN8v4IYDfPOcfN/zFS2HqgMOgHjTXyXy
+        MnoVeu30CA7TmvNVbqVISaqvxsaHgBKmcROS5zERrvY9o9JgyaJTvqNPsMeDzJMT
+        5/qqelOahhmbuLt2xxGTjetOAQnEeg4SnFQ==
+X-ME-Sender: <xms:lYdDZSnUEW4E2HjhRnB2rPm7grhFd0YBKrsrBfqhIUESBoG0QAQAZg>
+    <xme:lYdDZZ1H9k0ge8fYCY_ZDaZ5_rZjNTQ3-gqIERLWnHQ8MQ8JZr0zGsALur46RmROZ
+    utLKQiLnw5nkjQ1XGs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedruddtiedgvdekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
+    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
+    hmqeenucggtffrrghtthgvrhhnpeekleevffehtdeigfekfefhffdtudffvdeuvedtffet
+    heeuiefhgfetleekleekjeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdih
+    rghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:lYdDZQrkT5juP-tsw7PaxVbI8WnpY-H0LoPL50OIau3J53pTaq5gGw>
+    <xmx:lYdDZWmAAMuQqLI33hlKVtFD1k8EBTmzeFZwiBpAYx4Wfgm8rDkvyA>
+    <xmx:lYdDZQ3HpI219ZwqLMeOKlw5eSUXXsvy3ruc5HnR165jsl9oeVI_dw>
+    <xmx:lodDZU9V_UtuuB6Vw94hyVjtlGinTiIQUroLNUfLgp-lW5UYxJ5i6Q>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 6B4AE36A0075; Thu,  2 Nov 2023 07:27:17 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1108-g3a29173c6d-fm-20231031.005-g3a29173c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <928df647-5b20-406b-8da5-3199f5cfbb48@amd.com>
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Message-Id: <a49a86b1-c938-4f00-8fb8-311f7a9ee31c@app.fastmail.com>
+In-Reply-To: <20231101220222.GA99154@bhelgaas>
+References: <20231101220222.GA99154@bhelgaas>
+Date:   Thu, 02 Nov 2023 11:26:46 +0000
+From:   "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To:     "Bjorn Helgaas" <helgaas@kernel.org>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        "Rob Herring" <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        "Huacai Chen" <chenhuacai@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH fixes v4] pci: loongson: Workaround MIPS firmware MRRS settings
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 01, 2023 at 08:14:31PM -0500, Mario Limonciello wrote:
-> On 11/1/2023 17:52, Bjorn Helgaas wrote:
-> > On Tue, Oct 31, 2023 at 08:34:38AM -0500, Mario Limonciello wrote:
-> > > The USB4 spec specifies that PCIe ports that are used for tunneling
-> > > PCIe traffic over USB4 fabric will be hardcoded to advertise 2.5GT/s.
-> > > 
-> > > In reality these ports speed is controlled by the fabric implementation.
-> > 
-> > So I guess you're saying the speed advertised by PCI_EXP_LNKSTA is not
-> > the actual speed?  And we don't have a generic way to find the actual
-> > speed?
-> 
-> Correct.
-> 
-> > 
-> > > Downstream drivers such as amdgpu which utilize pcie_bandwidth_available()
-> > > to program the device will always find the PCIe ports used for
-> > > tunneling as a limiting factor and may make incorrect decisions.
-> > > 
-> > > To prevent problems in downstream drivers check explicitly for ports
-> > > being used for PCIe tunneling and skip them when looking for bandwidth
-> > > limitations.
-> > > 
-> > > 2 types of devices are detected:
-> > > 1) PCIe root port used for PCIe tunneling
-> > > 2) Intel Thunderbolt 3 bridge
-> > > 
-> > > Downstream drivers could make this change on their own but then they
-> > > wouldn't be able to detect other potential speed bottlenecks.
-> > 
-> > Is the implication that a tunneling port can *never* be a speed
-> > bottleneck?  That seems to be how this patch would work in practice.
-> 
-> I think that's a stretch we should avoid concluding.
-> 
-> IIUC the fabric can be hosting other traffic and it's entirely possible the
-> traffic over the tunneling port runs more slowly at times.
-> 
-> Perhaps that's why the the USB4 spec decided to advertise it this way? I
-> don't know.
-> 
-> > 
-> > > Link: https://lore.kernel.org/linux-pci/7ad4b2ce-4ee4-429d-b5db-3dfc360f4c3e@amd.com/
-> > > Link: https://www.usb.org/document-library/usb4r-specification-v20
-> > >        USB4 V2 with Errata and ECN through June 2023 - CLEAN p710
-> > 
-> > I guess this is sec 11.2.1 ("PCIe Physical Layer Logical Sub-block")
-> > on PDF p710 (labeled "666" on the printed page).  How annoying that
-> > the PDF page numbers don't match the printed ones; do the section
-> > numbers at least stay stable in new spec revisions?
-> 
-> I'd hope so.  I'll change it to section numbers in the next revision.
-> 
-> > 
-> > > Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2925
-> > 
-> > This issue says the external GPU doesn't work at all.  Does this patch
-> > fix that?  This patch looks like it might improve GPU performance, but
-> > wouldn't fix something that didn't work at all.
-> 
-> The issue actually identified 4 distinct different problems.  The 3 problems
-> will be fixed in amdgpu which are functional.
-> 
-> This performance one was from later in the ticket after some back and forth
-> identifying proper solutions for the first 3.
-> 
-> > 
-> > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> > > ---
-> > >   drivers/pci/pci.c | 41 +++++++++++++++++++++++++++++++++++++++++
-> > >   1 file changed, 41 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > index 59c01d68c6d5..4a7dc9c2b8f4 100644
-> > > --- a/drivers/pci/pci.c
-> > > +++ b/drivers/pci/pci.c
-> > > @@ -6223,6 +6223,40 @@ int pcie_set_mps(struct pci_dev *dev, int mps)
-> > >   }
-> > >   EXPORT_SYMBOL(pcie_set_mps);
-> > > +/**
-> > > + * pcie_is_tunneling_port - Check if a PCI device is used for TBT3/USB4 tunneling
-> > > + * @dev: PCI device to check
-> > > + *
-> > > + * Returns true if the device is used for PCIe tunneling, false otherwise.
-> > > + */
-> > > +static bool
-> > > +pcie_is_tunneling_port(struct pci_dev *pdev)
-> > 
-> > Use usual function signature styling (all on one line).
-> 
-> OK.
-> 
-> > 
-> > > +{
-> > > +	struct device_link *link;
-> > > +	struct pci_dev *supplier;
-> > > +
-> > > +	/* Intel TBT3 bridge */
-> > > +	if (pdev->is_thunderbolt)
-> > > +		return true;
-> > > +
-> > > +	if (!pci_is_pcie(pdev))
-> > > +		return false;
-> > > +
-> > > +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT)
-> > > +		return false;
-> > > +
-> > > +	/* PCIe root port used for tunneling linked to USB4 router */
-> > > +	list_for_each_entry(link, &pdev->dev.links.suppliers, c_node) {
-> > > +		supplier = to_pci_dev(link->supplier);
-> > > +		if (!supplier)
-> > > +			continue;
-> > > +		if (supplier->class == PCI_CLASS_SERIAL_USB_USB4)
-> > > +			return true;
-> > 
-> > Since this is in drivers/pci, and this USB4/Thunderbolt routing is not
-> > covered by the PCIe specs, this is basically black magic.  Is there a
-> > reference to the USB4 spec we could include to help make it less
-> > magical?
-> 
-> The "magic" part is that there is an ACPI construct to indicate a PCIe port
-> is linked to a USB4 router.
-> 
-> Here is a link to the page that is explained:
-> https://learn.microsoft.com/en-us/windows-hardware/design/component-guidelines/usb4-acpi-requirements#port-mapping-_dsd-for-usb-3x-and-pcie
-> 
-> In the Linux side this link is created in the 'thunderbolt' driver.
-> 
-> Thinking about this again, this does actually mean we could have a different
-> result based on whether pcie_bandwidth_available() is called before or after
-> the 'thunderbolt' driver has loaded.
-> 
-> For example if a GPU driver that called pcie_bandwidth_available() was in
-> the initramfs but 'thunderbolt' was in the rootfs we might end up with the
-> wrong result again.
 
-Right, that's possible if the boot firmware has support for a connection
-manager. Although we do reset the whole topology with the USB4 v2 host
-routers this is kept as is for v1.
 
-> Considering this I think it's a good idea to move that creation of the
-> device link into drivers/pci/pci-acpi.c and store a bit in struct pci_device
-> to indicate it's a tunneled port.
+=E5=9C=A82023=E5=B9=B411=E6=9C=881=E6=97=A5=E5=8D=81=E4=B8=80=E6=9C=88 =E4=
+=B8=8B=E5=8D=8810:02=EF=BC=8CBjorn Helgaas=E5=86=99=E9=81=93=EF=BC=9A
+> On Wed, Nov 01, 2023 at 11:49:56AM +0000, Jiaxun Yang wrote:
+>> This is a partial revert of commit 8b3517f88ff2 ("PCI:
+>> loongson: Prevent LS7A MRRS increases") for MIPS based Loongson.
+>
+> Thanks for this patch.  We're in the v6.7 merge window, so we won't
+> start merging v6.8 content until v6.7-rc1 (probably Nov 12).
+>
+>> There are many MIPS based Loongson systems in wild that
+>> shipped with firmware which does not set maximum MRRS properly.
+>
+> As far as I know, there's no requirement for firmware to set MRRS at
+> all *except* for the "no_inc_mrrs" hack added by 8b3517f88ff2.  That
+> hack treats the current MRRS value as a limit to work around the
+> Loongson bug that read requests larger than the limit cause a
+> Completer Abort instead of multiple completions.
 
-Note it currently is setting the link between xHCI and the
-USB4/Thunderbolt host controller but we may want to change it later to
-link between USB 3.x port and the USB4/Thunderbolt host to allow more
-fine grained power management, this is especially true with the new USB
-Gen T tunneling. So for now it is only PCI but we may need to touch the
-USB stack too (perhaps put it in drivers/acpi/ instead).
+Yep, it happens that we can't trust MRRS left by firmware on MIPS
+Loongson.
+>
+>> Limiting MRRS to 256 for all as MIPS Loongson comes with higher
+>> MRRS support is considered rare.
+>>=20
+>> It must be done at device enablement stage because hardware will
+>> reset MRRS to inavlid value if a device got disabled.
+>
+> s/inavlid/invalid/
+>
+> This part isn't clear to me, though.  What exactly does "device got
+> disabled" mean?  The device got reset?  Power cycled?
+> PCI_COMMAND_MASTER was cleared?
+>
+> PCI_FIXUP_ENABLE quirks are run during pci_enable_device(), which
+> basically just turns on PCI_COMMAND_MEMORY and/or PCI_COMMAND_IO.
+>
+> If MRRS gets reset when PCI_COMMAND_MASTER is set or cleared, we don't
+> have a quirk phase that runs during pci_set_master(), which is where
+> PCI_COMMAND_MASTER gets set, so it's not clear that
+> pci_enable_device() is the right place.
 
-> Then 'thunderbolt' can look for this directly instead of walking all the FW
-> nodes.
-> 
-> pcie_bandwidth_available() can just look at the tunneled port bit instead of
-> the existence of the device link.
-> 
-> > 
-> > Lukas' brief intro in
-> > https://lore.kernel.org/all/20230925141930.GA21033@wunner.de/ really
-> > helped me connect a few dots, because things like
-> > Documentation/admin-guide/thunderbolt.rst assume we already know those
-> > details.
-> 
-> Thanks for sharing that.  If I move the detection mechanism as I suggested
-> above I'll reference some of that as well in the commit message to explain
-> what exactly a tunneled port is.
+I should make myself clear that MRRS reset actually happens when the
+PCIe port (i.e. the PCI to PCI bridge) lose it's PCI_COMMAND_MASTER.
 
-I'm not sure it makes sense to explain from the zero all this stuff that
-people can easily look up from the corresponding spec, such as PCIe or
-USB.
+Since pci_enable_bridge is called by pci_enable_device it is still the
+best place for such quirk.
 
-There is a good picture in USB4 v2 ch 2.2.3 about paths crossing USB4
-fabric, perhaps reference that one? Or ch 2.2.10.3 that shows how this
-works with PCIe tunneling instead (although they are similar).
+I'll amend the commit message to make it clear.
+
+>
+>> Cc: stable@vger.kernel.org
+>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D217680
+>> Fixes: 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases")
+>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>
+> We'll look for an ack from the maintainer.  Maybe that's you, since
+> you added the driver in the first place?  Or maybe it's Huacai?
+
+I'm dumb to ACPI enabled Loongson so I think Huacai must be the maintain=
+er
+but I'd like to take care of this driver as well, perhaps having two M e=
+ntry
+or give me an R entry?
+
+Huacai, what's your opinion?
+
+>
+> MAINTAINERS currently doesn't list anybody for
+> drivers/pci/controller/pci-loongson.c, and it should.  That should be
+> a separate patch.
+>
+>> ---
+>> v4: Improve commit message
+>>=20
+>> This is a partial revert of the origin quirk so there shouldn't
+>> be any drama.
+>> ---
+>>  drivers/pci/controller/pci-loongson.c | 38 +++++++++++++++++++++++++=
+++
+>>  1 file changed, 38 insertions(+)
+>>=20
+>> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/cont=
+roller/pci-loongson.c
+>> index d45e7b8dc530..d184d7b97e54 100644
+>> --- a/drivers/pci/controller/pci-loongson.c
+>> +++ b/drivers/pci/controller/pci-loongson.c
+>> @@ -108,6 +108,44 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>  			DEV_LS7A_PCIE_PORT6, loongson_mrrs_quirk);
+>> =20
+>> +#ifdef CONFIG_MIPS
+>> +static void loongson_old_mrrs_quirk(struct pci_dev *pdev)
+>> +{
+>> +	struct pci_bus *bus =3D pdev->bus;
+>> +	struct pci_dev *bridge;
+>> +	static const struct pci_device_id bridge_devids[] =3D {
+>> +		{ PCI_VDEVICE(LOONGSON, DEV_LS2K_PCIE_PORT0) },
+>> +		{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT0) },
+>> +		{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT1) },
+>> +		{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT2) },
+>> +		{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT3) },
+>> +		{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT4) },
+>> +		{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT5) },
+>> +		{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT6) },
+>
+> This looks like the same list of devices as for loongson_mrrs_quirk().
+> So I guess the idea is that we need loongson_mrrs_quirk() for
+> Loongarch-based systems, and this loongson_old_mrrs_quirk() for
+> MIPS-based systems?
+>
+> If so, maybe they could be #ifdef'd to show that, e.g., so that only
+> one or the other is compiled?
+
+I think no_inc_mrrs still needs to be set for those devices so I left
+the "new" quirk enabled for MIPS as well here.
+
+But we can also do it in "old" quirk with an extra match, will do in next
+version.
+
+[...]
+
+--=20
+- Jiaxun
