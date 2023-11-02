@@ -2,69 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5759C7DF20A
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Nov 2023 13:09:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 367E87DF223
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Nov 2023 13:17:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231713AbjKBMJz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Nov 2023 08:09:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36416 "EHLO
+        id S1346866AbjKBMRd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Nov 2023 08:17:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229806AbjKBMJy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Nov 2023 08:09:54 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41760128;
-        Thu,  2 Nov 2023 05:09:52 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A021FC433C7;
-        Thu,  2 Nov 2023 12:09:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698926991;
-        bh=IwE9+OvFRLx91Mib23swemUFGjVhO8KF9WcxPps/jzs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=SRW8Tc5FZ8RxUVh+wdGHrbvjyKFIYpnUUNw2ZsH8qdEMiE0mEzoRZRaybRTTlYzDA
-         NlxH7vHPtKL0xnIFxITJPqC6pr4xMU7oFmTKcYVPm5Ze2CJf+qsbXtCyhhBgEvh00w
-         TUIsqio11IPhFjZK4IKJ6HTN2oFsZXKCxhHeRePwL2yuhU04m7c4LRsJL80RW1ETam
-         nT5l44sn4SnYmLPAT1/n9uVMPjd9ysMXaCtTS1NefKIW6AM40widFo4v2IC61Ui63R
-         PRm503pvXhyS2XsGk485oiiaq6n1PIo3xjnFWSZ4DiJFQb15aChjHPFh1Ie+6HXYzC
-         AQvxUrpbeF2Rw==
-Date:   Thu, 2 Nov 2023 07:09:50 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, mani@kernel.org,
-        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, rafael@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, quic_vbadigan@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, quic_parass@quicinc.com
-Subject: Re: [PATCH v5 5/5] PCI: qcom: Add OPP support to scale performance
- state of power domain
-Message-ID: <20231102120950.GA115288@bhelgaas>
+        with ESMTP id S1346863AbjKBMR3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Nov 2023 08:17:29 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E35B112;
+        Thu,  2 Nov 2023 05:17:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698927442; x=1730463442;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WKRnkNW/XER8dXSWKZi5aAoaOJTp9xTuNC9BpNIc3/4=;
+  b=Upu8vQa8eesss8OOUad5/gQfiZ4N+0O7ZfGtUJ+mdrM2dq6rPJ8UThPF
+   uIuybF27d1mjoVmY1OZYvhg9xVp6u2AFHCyMIL4qLgofQJGAEyf8zX3dd
+   8+JrIL2sbTu3jgABC4wz9QrtpWr1vHP78Dwo9AY4ATX0aaDju12mhdisW
+   z4zMyn5FnKW30JFsxLl7RRGbPIOh7T1dZPMxLLM72xIiFBH9qVfDdmJ7c
+   gyEnCJSrBUoz9FsqYqS7OzKCGDN51C8oqewrKuuY5wvjlwd0wkkCZYjq1
+   EbrN1XJYDu2KvEpa9YzCoi9DrWy809RtlmFMaMX2MYySXD1S5ronzvzAX
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="453000884"
+X-IronPort-AV: E=Sophos;i="6.03,271,1694761200"; 
+   d="scan'208";a="453000884"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 05:17:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="1092689422"
+X-IronPort-AV: E=Sophos;i="6.03,271,1694761200"; 
+   d="scan'208";a="1092689422"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 02 Nov 2023 05:17:18 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 8ACDD54A; Thu,  2 Nov 2023 14:17:17 +0200 (EET)
+Date:   Thu, 2 Nov 2023 14:17:17 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Mario Limonciello <mario.limonciello@amd.com>, bhelgaas@google.com,
+        andreas.noever@gmail.com, michael.jamet@intel.com,
+        YehezkelShB@gmail.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Alexander.Deucher@amd.com
+Subject: Re: [PATCH 2/2] PCI: Ignore PCIe ports used for tunneling in
+ pcie_bandwidth_available()
+Message-ID: <20231102121717.GL17433@black.fi.intel.com>
+References: <20231102103108.GK17433@black.fi.intel.com>
+ <20231102120739.GA114661@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231102053013.7yt7pxin5awlu7w7@vireshk-i7>
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20231102120739.GA114661@bhelgaas>
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 02, 2023 at 11:00:13AM +0530, Viresh Kumar wrote:
-> On 01-11-23, 17:17, Bjorn Helgaas wrote:
-> > Can you expand "OPP" somewhere so we know what it stands for?  I'm
-> > sure everybody knows except me :)
+On Thu, Nov 02, 2023 at 07:07:39AM -0500, Bjorn Helgaas wrote:
+> On Thu, Nov 02, 2023 at 12:31:08PM +0200, Mika Westerberg wrote:
+> > On Wed, Nov 01, 2023 at 08:14:31PM -0500, Mario Limonciello wrote:
+> > > On 11/1/2023 17:52, Bjorn Helgaas wrote:
 > 
-> It is "Operating Performance Points", defined here:
+> > > > Lukas' brief intro in
+> > > > https://lore.kernel.org/all/20230925141930.GA21033@wunner.de/ really
+> > > > helped me connect a few dots, because things like
+> > > > Documentation/admin-guide/thunderbolt.rst assume we already know those
+> > > > details.
+> > > 
+> > > Thanks for sharing that.  If I move the detection mechanism as I suggested
+> > > above I'll reference some of that as well in the commit message to explain
+> > > what exactly a tunneled port is.
+> > 
+> > I'm not sure it makes sense to explain from the zero all this stuff that
+> > people can easily look up from the corresponding spec, such as PCIe or
+> > USB.
 > 
-> Documentation/power/opp.rst
+> I don't know if it needs to be in the commit log.
+> 
+> I mentioned thunderbolt.rst because the text at
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/thunderbolt.rst?id=v6.6#n6
+> assumes that we know the terms "host router", "host controller",
+> "router", "tunnel", "connection manager", and I don't think that's a
+> good assumption in that documentation.
+> 
+> A little bit of introduction based on Lukas' text could improve that.
 
-Thanks; I meant in the subject or commit log of the next revision, of
-course.
+All these are explained in the USB4 spec, I wonder if we should just
+link that in the document rather than expaining all of them there.
+Anyway, point taken, thanks for the feedback!
