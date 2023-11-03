@@ -2,172 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84DFA7E0944
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Nov 2023 20:09:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF26E7E095F
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Nov 2023 20:19:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377769AbjKCTI6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Nov 2023 15:08:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60726 "EHLO
+        id S1345902AbjKCTTF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Nov 2023 15:19:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376368AbjKCTIy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Nov 2023 15:08:54 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2056.outbound.protection.outlook.com [40.107.220.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A9DAD59;
-        Fri,  3 Nov 2023 12:08:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RHsZrfp7WQNjz+J9I/444tKaWInicMD/ZPpZbkzMAP1irWS9Q47MdAWEv4nng9FhVbH+JYx8qb3O9EGGxF+7+hb4KLizqQ/izjpWiHzu/gOCVfPoS2LbjyjneFKQX9L66QASTQ0X/u+2RUuIWdFaPPML5CVNbnaRXOtc/LTdKIVJ/V5WvwA7OWzqI+6rTtTaCiOwY1R6hyhhBgKz/27PQJFtApo0pUaNUgmcftOiEQHx9aAUiXKPbExoXqF5WHXBHJ6WQ5+GAkHZpxgNnxEPW8xW/S32nsWzKASkSFsOewsm7YsiNedmyYo2aQPQK7U26upkms8ZzgD+XH3EL++kSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9bm6CvuPszQdPXt5Zsc6/nH1F3rQtl/A2wuDDypGcGk=;
- b=MOr/Iq/sk0lYyeJfRLo4LUHtO95iqkW7uUpmoV0WOarEnqgNhVxCwIX8G3oaYA3YvSMmT6EN/sF9fuP6Fw+UM+wXikR7bzgeJIG2DddEM4/P9Ir049NCUFbxHOGRAgHOizR3AjodfxLsqtXH5b7epa+FfFSgurCIRXNDX8T0fUC7PpBLeUHz8vfG7srFdVxQqxJGKoryQa4xHgvqQtkEG7bl8WRSPUkkplUxsFUBbNXSD7JFsuBqBKPAB9zxA2JcTo+uEOaHQcAFaftbl5/e5H2xRW8kYGjkq4vaEKPssPeU8CuRxmFKcXaiqERuti0zo4rSbTLLMenTzEt1ZYO9bg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9bm6CvuPszQdPXt5Zsc6/nH1F3rQtl/A2wuDDypGcGk=;
- b=Jc0A8ugIcvY3nY1ksEuQVqNtqx3jY1/eckxO8CLf8hp0X/l8Vpi71s7YCRuyq19iuhVljfR4iNbuBiizkUoED7FuHkxNnANcRc1+NBU+YGeG7pv5a+KHfv2qFWymRnkZgjgpJSFnhGs8hjpHGdSehoKHOSQBTbzBQpw0Ss2KeEg=
-Received: from MW4P221CA0008.NAMP221.PROD.OUTLOOK.COM (2603:10b6:303:8b::13)
- by SN7PR12MB8146.namprd12.prod.outlook.com (2603:10b6:806:323::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.24; Fri, 3 Nov
- 2023 19:08:45 +0000
-Received: from CO1PEPF000044F0.namprd05.prod.outlook.com
- (2603:10b6:303:8b:cafe::26) by MW4P221CA0008.outlook.office365.com
- (2603:10b6:303:8b::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.22 via Frontend
- Transport; Fri, 3 Nov 2023 19:08:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000044F0.mail.protection.outlook.com (10.167.241.70) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6954.19 via Frontend Transport; Fri, 3 Nov 2023 19:08:44 +0000
-Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.32; Fri, 3 Nov
- 2023 14:08:41 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-        "Alex Deucher" <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Hans de Goede" <hdegoede@redhat.com>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        with ESMTP id S1376824AbjKCTTE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Nov 2023 15:19:04 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F655D5C;
+        Fri,  3 Nov 2023 12:19:01 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B56E8C433CA;
+        Fri,  3 Nov 2023 19:19:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1699039141;
+        bh=BdoS7jE6bPtz6cHJb4OOOnvh/m9c3Hkg7gCaP1DpcH0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Smb5QE/gZgORY8VVtStZ9oylS8sVrfWGpKaE+oFHhDDkWihjqzMQM0uZDjmrdDOll
+         Mb4y9rmN9pNgMx6+xBXHUmPdtReEzFkcvBS6g1f4TVwKs3rN7s2WjFaPdiYNM3Ee2p
+         Jnm8yZsG3U1sEJBylpnEWd2rUeGUp0rhUWQOTM7kywMmXW+mYj+FBc1wNioY/+H/9t
+         qoI7Zuh0/v5pKueXhpwZrm5KzlGy93ikBKsE7HNtMwPgMEo49gdc5nfsJjuXFZzG7V
+         M7OO1SbGc/0XhHQF4CL3y/+uNQ9igOrx+FpQJqsJVtkj6u8plCwdmbc428SPvnCdRG
+         upTo2jHYImc1A==
+Date:   Fri, 3 Nov 2023 14:18:58 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Tomasz Pala <gotar@polanet.pl>
+Cc:     linux-pci@vger.kernel.org,
+        Dan J Williams <dan.j.williams@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        David E Box <david.e.box@intel.com>,
+        Yunying Sun <yunying.sun@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>
-CC:     Danilo Krummrich <dakr@redhat.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Xinhui Pan <Xinhui.Pan@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        "Andreas Noever" <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-        "Maciej W . Rozycki" <macro@orcam.me.uk>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        "open list" <linux-kernel@vger.kernel.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>
-Subject: [PATCH v2 9/9] PCI: Add a quirk to mark 0x8086 : 0x9a23 as supporting PCIe tunneling
-Date:   Fri, 3 Nov 2023 14:07:58 -0500
-Message-ID: <20231103190758.82911-10-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231103190758.82911-1-mario.limonciello@amd.com>
-References: <20231103190758.82911-1-mario.limonciello@amd.com>
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Florent DELAHAYE <linuxkernelml@undead.fr>,
+        Konrad J Hambrick <kjhambrick@gmail.com>,
+        Matt Hansen <2lprbe78@duck.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Benoit =?utf-8?B?R3LDqWdvaXJl?= <benoitg@coeus.ca>,
+        Werner Sembach <wse@tuxedocomputers.com>,
+        mumblingdrunkard@protonmail.com, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 2/2] x86/pci: Treat EfiMemoryMappedIO as reservation of
+ ECAM space
+Message-ID: <20231103191858.GA163196@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F0:EE_|SN7PR12MB8146:EE_
-X-MS-Office365-Filtering-Correlation-Id: af307a45-915a-42fa-0ab9-08dbdca04ce3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RFPYuBVsqfBHmJXlBnNiy1k/QcZUag5y1aEzneMp8T7RXa09nxgtEHw12USPTpKsC1J8RF/7tszj4l8FExfwYeUHXgm8w8eRHBKdBDJbWf9GVRnIqwluq/5ItSvgQCwdCANqGJUW9mgsYwXUiQ9y4pCM9VFKqR5nLZrFQdORomem6R6Jwz0kIikyiCimcm2wriyQWrn/8N3x8TkjaH1F+Ecv9sOUzioaUkShCOczD9IndWHwvksjEEZMt+dXp3BpMFc6oJw4SOMTzrg7PAqBRJ7DKlvHZSZZSiE3+6E7dXMoFKHroe0d+MRnhAnW0dFUTg/wiiVQnNhXhpLkWY7hB8CAx4+rMTUeSDW+bX/Ynk4D1xhZIhGnM0wRCFWOVXQqhTLpOhOTLJahzqlWSVYvcQqTtUFJ1mjhJb+tgOEp+wy9/O2NOmBksD8ceeFN2sQTSUwTZAsmrkb4oTLtLACNwnJr6OZhGqK9NL31WqWJLTzDkCH2W8aHcHEvmoBOGZMu1TDQS/O7NrmYb+L8+t+sQdPl8CkbB60CP6eeRe+doRIzCmkmSRiM2f0SdSvb7ype2TD1etQU5Fx9nkslpRiCPm9pHiDWGbvTYn6Hn0xg22DavCTinLgdp6XWaKkNOynNkuU5/g8Id7Q//wMgNlZXhvWZ9PSm0egFZwdtnWv1Pc389yifDKt2cMyls9CMI/a2Cyb/QZ6ZTb5wpEEOh1Y2i9M1HbB+EdG6jdJOf2UqtfBXOhF7cxhuDNGV1EMkN8LG
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(346002)(136003)(376002)(39860400002)(230922051799003)(451199024)(1800799009)(186009)(82310400011)(64100799003)(46966006)(40470700004)(36840700001)(47076005)(70206006)(70586007)(86362001)(110136005)(26005)(336012)(82740400003)(81166007)(426003)(2616005)(16526019)(1076003)(316002)(54906003)(478600001)(966005)(7696005)(6666004)(8936002)(8676002)(356005)(40480700001)(40460700003)(4326008)(44832011)(36756003)(2906002)(83380400001)(7416002)(36860700001)(5660300002)(41300700001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2023 19:08:44.4476
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: af307a45-915a-42fa-0ab9-08dbdca04ce3
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000044F0.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8146
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231026205319.GA1832508@bhelgaas>
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PCI root port used for tunneling USB4 traffic on Tiger Lake is
-is not marked as tunneling but has the same limitations as other
-PCIe root ports used for tunneling.
+On Thu, Oct 26, 2023 at 03:53:19PM -0500, Bjorn Helgaas wrote:
+> On Thu, Oct 12, 2023 at 05:33:47PM +0200, Tomasz Pala wrote:
+> > On Tue, Jan 10, 2023 at 12:02:43 -0600, Bjorn Helgaas wrote:
+> > > Normally we reject ECAM space unless it is reported as reserved in the E820
+> > > table or via a PNP0C02 _CRS method (PCI Firmware, r3.3, sec 4.1.2).  This
+> > > means PCI extended config space (offsets 0x100-0xfff) may not be accessible.
+> > > 
+> > > Some firmware doesn't report ECAM space via PNP0C02 _CRS methods, but does
+> > > mention it as an EfiMemoryMappedIO region via EFI GetMemoryMap(), which is
+> > > normally converted to an E820 entry by a bootloader or EFI stub.
+> > > 
+> > > 07eab0901ede ("efi/x86: Remove EfiMemoryMappedIO from E820 map"), removes
+> > > E820 entries that correspond to EfiMemoryMappedIO regions because some
+> > > other firmware uses EfiMemoryMappedIO for PCI host bridge windows, and the
+> > > E820 entries prevent Linux from allocating BAR space for hot-added devices.
+> > > 
+> > > Allow use of ECAM for extended config space when the region is covered by
+> > > an EfiMemoryMappedIO region, even if it's not included in E820 or PNP0C02
+> > > _CRS.
+> > 
+> > I'm still having a problem initializing ixgbe NICs with pristine 6.5.7 kernel.
+> 
+> Thanks very much for the report, and sorry for the inconvenience and
+> my delay in looking at it.
+> 
+> > efi: Remove mem63: MMIO range=[0x80000000-0x8fffffff] (256MB) from e820 map
+> > [mem 0x7f800000-0xfed1bfff] available for PCI devices
+> > PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
+> > [Firmware Info]: PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] not reserved in ACPI motherboard resources
+> > PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] reserved as EfiMemoryMappedIO
+> > ixgbe 0000:02:00.0: enabling device (0140 -> 0142)
+> > ixgbe 0000:02:00.0: BAR 0: can't reserve [mem 0x80000000-0x8007ffff 64bit]
+> > ixgbe 0000:02:00.0: pci_request_selected_regions failed 0xfffffff0
+> > ixgbe: probe of 0000:02:00.0 failed with error -16
+> 
+> Something is wrong with our allocation scheme.  Both the MMCONFIG
+> region and the ixgbe BAR 0 are at 0x80000000, which obviously cannot
+> work.  Maybe the full dmesg log will have a clue about why we didn't
+> move ixgbe out of the way.
+> 
+> > After disabling the code causing this (using always-false condition:
+> > 		if (size >= 256*1024 && 0) {
+> > ) in the chunk:
+> > 
+> > https://lore.kernel.org/lkml/20221208190341.1560157-2-helgaas@kernel.org/
+> > 
+> > the BAR starts at 0x90000000 (not 0x80000000):
+> > 
+> > efi: Not removing mem63: MMIO range=[0x80000000-0x8fffffff] (262144KB) from e820 map
+> > [...]
+> > [mem 0x90000000-0xfed1bfff] available for PCI devices
+> > [...]
+> > PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
+> > PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] reserved as E820 entry
+> > 
+> > and everything seems to work again.
+> > 
+> > 
+> > I've got full system bootup logs from the upstream and worked around,
+> > but I'm not sure if this is OK to attach them (the CC list is long).
+> 
+> Would you mind opening a new report at https://bugzilla.kernel.org,
+> attaching those logs, and responding here with the URL?
 
-This causes pcie_bandwidth_available() to treat it as the limiting
-device in the PCI hierarchy and downstream driver to program devices
-incorrectly as a result.
+Thanks for the report and the logs, which are attached at
+https://bugzilla.kernel.org/show_bug.cgi?id=218050
 
-Add a quirk to mark the device as tunneling so that it will be skipped
-in pcie_bandwidth_available() like other TBT3/USB4 root ports and bridges.
+I think the problem is that the MMCONFIG region is at
+[mem 0x80000000-0x8fffffff], and that is *also* included in one of the
+host bridge windows reported via _CRS:
 
-Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2885
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/pci/quirks.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+  PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
+  pci_bus 0000:00: root bus resource [mem 0x80000000-0xfbffffff window]
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 4bbf6e33ca11..0f124e075834 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3827,6 +3827,17 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_2C
- 			quirk_thunderbolt_command_complete);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_PORT_RIDGE,
- 			quirk_thunderbolt_command_complete);
-+
-+/*
-+ * PCIe root port associated with the integrated controller is used for PCIe
-+ * tunneling but can't be detected using ACPI.
-+ */
-+static void quirk_thunderbolt_tunneling(struct pci_dev *pdev)
-+{
-+	pdev->is_tunneled = 1;
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x9a23,
-+			quirk_thunderbolt_tunneling);
- #ifdef CONFIG_ACPI
- /*
-  * Apple: Shutdown Cactus Ridge Thunderbolt controller.
--- 
-2.34.1
+I'll try to figure out how to deal with that.  In the meantime, would
+you mind attaching the contents of /proc/iomem to the bugzilla?  I
+think you have to cat it as root to get the actual values included.
 
+Bjorn
