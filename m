@@ -2,173 +2,218 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C4307E0634
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Nov 2023 17:15:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AC357E06AB
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Nov 2023 17:44:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234376AbjKCQP1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Nov 2023 12:15:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59448 "EHLO
+        id S1345483AbjKCQoO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Nov 2023 12:44:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234339AbjKCQP0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Nov 2023 12:15:26 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BAC31BC;
-        Fri,  3 Nov 2023 09:15:20 -0700 (PDT)
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3A3GB9JQ022682;
-        Fri, 3 Nov 2023 16:14:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=UEmzL8XnnUaSYukwC2RWAV78gJR5Gq/WShP3uUMaefY=;
- b=IZB4gCH1AFkBYkejgH4U/VpHccDCdOf8SQJK2zwLODwI+3jf40e12QZ1H+UN22ES/VnJ
- DtX9ZGdGvuDcW5AUiknnQQK8dVM+zfSNwkzMZPz+Qeh71SxQ/RbSgm7cygSxo7jOROJp
- WdYJrwZ1mmgFo5z1pfLH42gz+pCU1aZplGJuJM6RlEnrfY+2FvFyXPATwiLVu4ODZmzO
- QCEx1a/baWFPb2UOrfjG2T+1dMOLOZzsNuOQ0th9/gz3NRYH8t+MoSs6eIDUc+zKC+rH
- 1gEgw/rm6W09rsiitjoL9Fwi037P/UnA0Dp3jJlxL/RQqO9HtVBXwMVJ1/Jh6FqGoY2x ZQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u537tapjt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Nov 2023 16:14:57 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3A3GBDet022992;
-        Fri, 3 Nov 2023 16:14:54 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u537taphk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Nov 2023 16:14:54 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3A3FxRvg031377;
-        Fri, 3 Nov 2023 16:14:53 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3u1fb2pjks-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Nov 2023 16:14:53 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3A3GEoC035455286
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Nov 2023 16:14:50 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 46B5A20043;
-        Fri,  3 Nov 2023 16:14:50 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6033D20040;
-        Fri,  3 Nov 2023 16:14:49 +0000 (GMT)
-Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.179.14.202])
-        by smtpav01.fra02v.mail.ibm.com (Postfix) with SMTP;
-        Fri,  3 Nov 2023 16:14:49 +0000 (GMT)
-Date:   Fri, 3 Nov 2023 17:14:47 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Petr Tesarik <petr.tesarik1@huawei-partners.com>,
-        Ross Lagerwall <ross.lagerwall@citrix.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: Memory corruption with CONFIG_SWIOTLB_DYNAMIC=y
-Message-ID: <20231103171447.02759771.pasic@linux.ibm.com>
-In-Reply-To: <104a8c8fedffd1ff8a2890983e2ec1c26bff6810.camel@linux.ibm.com>
-References: <104a8c8fedffd1ff8a2890983e2ec1c26bff6810.camel@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        with ESMTP id S1344250AbjKCQoN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Nov 2023 12:44:13 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DABDE111;
+        Fri,  3 Nov 2023 09:44:08 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SMRM85W5Lz67gDh;
+        Sat,  4 Nov 2023 00:40:52 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 3 Nov
+ 2023 16:44:06 +0000
+Date:   Fri, 3 Nov 2023 16:44:04 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Alexey Kardashevskiy <aik@amd.com>
+CC:     Lukas Wunner <lukas@wunner.de>, <linux-coco@lists.linux.dev>,
+        <kvm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <jic23@kernel.org>, <suzuki.poulose@arm.com>
+Subject: Re: TDISP enablement
+Message-ID: <20231103164404.00006e0b@Huawei.com>
+In-Reply-To: <4cfe829f-8373-4ff4-a963-3ee74fa39efe@amd.com>
+References: <e05eafd8-04b3-4953-8bca-dc321c1a60b9@amd.com>
+        <20231101072717.GB25863@wunner.de>
+        <20231101110551.00003896@Huawei.com>
+        <4cfe829f-8373-4ff4-a963-3ee74fa39efe@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: zVtfq5E679MMAd25-Nm87Mk6HV4xfH4X
-X-Proofpoint-ORIG-GUID: hf0ETBIVG9xLaDgnyh543ISyW9uQVwEG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-03_15,2023-11-02_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- mlxlogscore=999 clxscore=1011 lowpriorityscore=0 spamscore=0
- suspectscore=0 priorityscore=1501 impostorscore=0 adultscore=0 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2310240000 definitions=main-2311030137
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 03 Nov 2023 16:13:03 +0100
-Niklas Schnelle <schnelle@linux.ibm.com> wrote:
-
-> The reason for 1) is a bit more convoluted and not entirely understood
-> by us. We are certain though that the function swiotlb_find_slots()
-> allocates a pool with nr_slots(alloc_size), where this alloc_size is
-> the alloc_size from swiotlb_tbl_map_single() + swiotlb_align_offset(),
-> but for alignment reasons some slots may get "skipped over" in
-> swiotlb_area_find_slots() causing the picked slots to overrun the
-> allocation.
+ 
+> >>> - tdi_info - read measurements/certs/interface report;  
+> >>
+> >> Does this return cached cert chains and measurements from the device
+> >> or does it retrieve them anew?  (Measurements might have changed if
+> >> MEAS_FRESH_CAP is supported.)
+> >>
+> >>  
+> >>> If the user wants only CMA/SPDM, the Lukas'es patched will do that without
+> >>> the PSP. This may co-exist with the AMD PSP (if the endpoint allows multiple
+> >>> sessions).  
+> >>
+> >> It can co-exist if the pci_cma_claim_ownership() library call
+> >> provided by patch 12/12 is invoked upon device_connect.
+> >>
+> >> It would seem advantageous if you could delay device_connect
+> >> until a device is actually passed through.  Then the OS can
+> >> initially authenticate and measure devices and the PSP takes
+> >> over when needed.  
+> > 
+> > Would that delay mean IDE isn't up - I think that wants to be
+> > available whether or not pass through is going on.
+> > 
+> > Given potential restrictions on IDE resources, I'd expect to see an explicit
+> > opt in from userspace on the host to start that process for a given
+> > device.  (udev rule or similar might kick it off for simple setups).
+> > 
+> > Would that work for the flows described?  
 > 
-> Not sure how to properly fix this as the different alignment
-> requirements get pretty complex quickly. So would appreciate your
-> input.
+> This would work but my (likely wrong) intention was also to run 
+> necessary setup in both host and guest at the same time before drivers 
+> probe devices. And while delaying it in the host is fine (well, for us 
+> in AMD, as we are aiming for CoCo/TDISP), in the guest this means less 
+> flexibility in enlightening the PCI subsystem and the guest driver: 
+> ideally (or at least initially) the driver is supposed to probe already 
+> enabled and verified device, as otherwise it has to do SWIOTLB until the 
+> userspace does the verification and kicks the driver to go proper direct 
+> DMA (or reload the driver?).
 
-Let me post a more detailed analysis of why do we observe
-swiotlb_area_find_slots() considering the slot with the
-index 0 invalid in our particular case, and how does that
-relate to the whole "alignment" complex.
+In the case of a guest getting a VF, there probably won't be any way for
+the kernel to run any native attestation anyway, so policy would have to
+rely on the CoCo paths. Kernel stuff Lukas has would just not try to attest
+or claim anything about it. If a VF has a CMA capable DOE instance
+then that's not there for IDE stuff at all, but for the guest to get
+direct measurements etc without PSP or anything else getting involved
+in which case the guest using that directly is a reasonable thing to do.
 
-Currently there are three distinct mechanisms that dictate the "alignment":
-a) min_align_mask (introduced by 36950f2da1ea ("driver core: add a
-   min_align_mask))
-field to struct device_dma_parameters"))
-b) alloc_size >= PAGE_SIZE which requires "page alignment"
-c) alloc_aligned_mask.
+> 
+> > Next bit probably has holes...  Key is that a lot of the checks
+> > may fail, and it's up to host userspace policy to decide whether
+> > to proceed (other policy in the secure VM side of things obviously)
+> > 
+> > So my rough thinking is - for the two options (IDE / TDISP)
+> > 
+> > Comparing with Alexey's flow I think only real difference is that
+> > I call out explicit host userspace policy controls. I'd also like  
+> 
+> My imagination fails me :) What is the host supposed to do if the device 
+> verification fails/succeeds later, and how much later, and the device is 
+> a boot disk? Or is this userspace going to be limited to initramdisk? 
+> What is that thing which we are protecting against? Or it is for CUDA 
+> and such (which yeah, it can wait)?
 
-In our case min_align_mask == 0 and a) is thus not applicable, because b) and
-c) we end up with iotlb_align_mask = 0x800. And because orig_add & 0x800 ==
-0x800 but pool->start & 0x800 == 0 and the slot at index i is skipped over. The
-slot 0 is skipped over because it is page aligned, when !!((1UL << PAGE_SHIFT)
-& orig_addr) 
+There are a bunch of non obvious cases indeed.  Hence make it all policy.
+Though if you have a flow where verification is needed for boot disk and
+it fails (and policy says that's not acceptable) then bad luck you
+probably need to squirt a cert into your ramdisk or UEFI or similar.
 
-Let us note that with the current implementation the min_align_size mask, that
-is mechanism a) also controls the tlb_addr within the first slot so that:
-tlb_addr & min_align_mask == orig_addr & min_align_mask. In that sense a) is
-very unlike b) and c).
+> 
+> > to use similar interfaces to convey state to host userspace as
+> > per Lukas' existing approaches.  Sure there will also be in
+> > kernel interfaces for driver to get data if it knows what to do
+> > with it.  I'd also like to enable the non tdisp flow to handle
+> > IDE setup 'natively' if that's possible on particular hardware.
+> > 
+> > 1. Host has a go at CMA/SPDM. Policy might say that a failure here is
+> >     a failure in general so reject device - or it might decide it's up to
+> >     the PSP etc.   (userspace can see if it succeeded)
+> >     I'd argue host software can launch this at any time.  It will
+> >     be a denial of service attack but so are many other things the host
+> >     can do.  
+> 
+> Trying to visualize it in my head - policy is a kernel cmdline or module 
+> parameter?
 
-For example, if !min_align_mask, then tlb_addr & (IO_TLB_SIZE - 1) is always 0,
-even if the alloc_size is >= PAGE_SIZE or if alloc_aligned_size is non 0.
+Neither - it's bind not happening until userspace decides to kick it off.
+The module could provide it's own policy on top of this - so userspace
+could defer to that if it makes sense (so bind but rely on probe failing
+if policy not met).
 
-If with b) and c) the goal is that the swiotlb buffer shall not stretch over
-more pages or address space blocks of a size dictated by alloc_aligned_mask
-then, that goal is accomplished. If however the goal is to preserve the offsets
-modulo some exponent of 2 dictated either by PAGE_SHIFT or by alloc_aligned
-mask, then that goal is not reached. 
+> 
+> > 2. TDISP policy decision from host (userspace policy control)
+> >     Need to know end goal.  
+> 
+> /sys/bus/pci/devices/0000:11:22.3/tdisp ?
 
-But there is more to it! In the beginning there was b), or more precisely in the
-olden days for mapping_size >= PAGE_SIZE we used to allocate properly page
-aligned bounce buffers. That is tlb_addr & (~PAGE_MASK) == 0 regardless of what
-orig_addr & (~PAGE_MASK) & (IO_TLB_SIZE - 1) is. That first got borked by
-commit 1f221a0d0dbf ("swiotlb: respect min_align_mask") and then it did not get
-fixed by commit 0eee5ae10256 ("swiotlb: fix slot alignment checks").
+Maybe - I'm sure we'll bikeshed anything like that :)
 
-Let us also note that if more than one of the above mechanisms are applicable,
-then for the slot selection the idea is apparently to go with the strictest
-"alignment requirement", while for the offset within the slot only a) matters
-(if applicable, i.e. min_align_mask != 0), which may appear strange if
-not thoroughly documented.
+> 
+> > 3. IDE opt in from userspace.  Policy decision.
+> >    - If not TDISP
+> >      - device_connect(IDE ONLY) - bunch of proxying in host OS.
+> >      - Cert chain and measurements presented to host, host can then check if
+> >        it is happy and expose for next policy decision.
+> >      - Hooks exposed for host to request more measurements, key refresh etc.
+> >        Idea being that the flow is host driven with PSP providing required
+> >        services.  If host can just do setup directly that's fine too.  
+> 
+> I'd expect the user to want IDE on from the very beginning, why wait to 
+> turn it on later? The question is rather if the user wants to panic() or 
+> warn() or block the device if IDE setup failed.
 
-In our opinion the first step towards getting this right is to figure out what
-the different kinds of alignments are really supposed to mean. For each of the
-mechanisms we need to understand and document, whether making sure that the
-bounce buffer does not stretch over more of certain units of memory (like,
-pages, iova granule size, whatever), or is it about preserving offset within a
-certain unit of memory, and if yes to what extent (the least significant n-bits
-of the orig_addr dictated by the respective mask, or something different).
+There are some concerns about being able to support enough selective IDE streams.
+Might turn out to be a false concern (I've not yet got visibility of enough
+implementations to be able to tell).
+Also (as I understand it as a software guy) IDE has a significant performance
+and power cost (and for CXL at least there are various trade offs and options
+you can enable depending on security model and device features).
 
-Thank you for your help in advance!
+There is "talk" of people turning IDE off if they can cope without it and only
+enabling for CoCo (and possibly selectively doing that as well)
 
-Regards,
-Halil and Niklas
+> 
+> >    - If TDISP (technically you can run tdisp from host, but lets assume
+> >      for now no one wants to do that? (yet)).
+> >      - device_connect(TDISP) - bunch of proxying in host OS.
+> >      - Cert chain and measurements presented to host, host can then check if
+> >        it is happy and expose for next policy decision.  
+> 
+> On AMD SEV TIO the TDISP setup happens in "tdi_bind" when the device is 
+> about to be passed through which is when QEMU (==userspace) starts.
+Ah. Ok.
+
+> 
+> > 
+> > 4. Flow after this depends on early or late binding (lockdown)
+> >     but could load driver at this point.  Userspace policy.
+> >     tdi-bind etc.  
+> 
+> Not sure I follow this. A host or guest driver?
+
+Hmm - I confess I'm confusing myself now.
+
+At this stage we just have enough info to load a driver for the PF because
+to get to state we want locked prior to VF assignment the PF driver may
+have some configuration to do.
+
+If all that goes well and the TDI can be moved to locked state, and assigned
+to a TVM which then has to decide to issue tdi_validate before binding
+the guest driver (which I assume is the TDISP START_INTERFACE_REQUEST
+bit of the state machine). Or is the guest driver ever needed before this
+transition? (I see you called it out as not, but is it always a one time
+thing on driver load or can that decision change without unbind/bind
+of driver?)
+
+I know this gets more complex for the PF pass through cases where the
+driver needs to load and do some setup before you can lock down the device
+but do people have that requirement for VFs? If they do it feels like
+device was designed wrong to me...
+
+Too many specs (some of which provide too many ways you 'could' do it)
+so I may well have a bunch of this wrong :(
+
+Jonathan
