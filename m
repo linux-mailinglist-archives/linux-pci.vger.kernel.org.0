@@ -2,78 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7F747DFEA8
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Nov 2023 06:12:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DAB097DFEEB
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Nov 2023 06:48:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbjKCFM5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Nov 2023 01:12:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51582 "EHLO
+        id S229879AbjKCFsT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Nov 2023 01:48:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229570AbjKCFM5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Nov 2023 01:12:57 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5FE41A4
-        for <linux-pci@vger.kernel.org>; Thu,  2 Nov 2023 22:12:50 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-2806cbd43b8so1592574a91.3
-        for <linux-pci@vger.kernel.org>; Thu, 02 Nov 2023 22:12:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698988370; x=1699593170; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OixtEquTnHR2YZhEd0MDEhswdqqqsbVAp+5RHrt7SyY=;
-        b=olZcH8W9AllPK4gFcgNwx+AWhkczLaehkgn321GTYcJk/ckcLrAFRmjOD0YQFQYNF7
-         woOMIi00GXEyUCA/8BDlxiz6JI3anxj/zzYeXw16pmkL09/TT+GnVmynHnCX0UdEZFQf
-         n23QaP0dyooFNYC0ShlkzZoUxSxEeii/4J4JkENreIVAtigByG4cLC8UuEcWw88BD64B
-         hDZu2DFVjQltO7l/EWYrfpzpdzEs6Kt7Ym1RnVV5yh01C92KZqMUP73foEU7Ey5we70X
-         bRgVI0GnG5wnHZZJrzpJyPaQ0rqlg1uR5/a6SPpLxC7JWcchODi2oR7nphd3K5cX8vAB
-         jMPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698988370; x=1699593170;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OixtEquTnHR2YZhEd0MDEhswdqqqsbVAp+5RHrt7SyY=;
-        b=Zd75oErino+ojo1n7yq0Oa7tO+og3JRAa6Wuennskg5+pGAVH9KlZcKt5uHKEpqK6k
-         VgjpJ3ApOQf7gxrssaDU/MVZQn8CGJnOezdVKaX8cYZbGfinKopLezEZzlIAVIH/NfRf
-         qDPL6Lvcuv+9OW0MVsNMgicvlqLSllZQZxdQQ7HDv9zP2tTrsbD2EcZYzUd+O41VQmb4
-         LQ/Jp4Mn4dEaVdFHAb/ZSpdGdoJlqnTOL1shPrddFbMt4RabcAyClinF6fekYEJFyBb/
-         2ryeQPVcO+SXxYGBLgJ1ruD9oXbJWRiOOvUOGj644pqFaxcJ2fkdZNlrqWoOMlKcToXZ
-         CFHA==
-X-Gm-Message-State: AOJu0YwKOMUnsk6cKIloTOTqyF2UWt+Dyrn7B69MX7s2bjgFa+qZaHfw
-        /1prZdRWOnQ7+rid5X0IUQLG3g==
-X-Google-Smtp-Source: AGHT+IFExr8ybCriMSgOLlaz6WAWaai4oOiYuReMXnpbJnZEcRwsDQDCfUwG4Y7Q7LrrQj7TnqqbKA==
-X-Received: by 2002:a17:90a:7e88:b0:280:c97:5968 with SMTP id j8-20020a17090a7e8800b002800c975968mr18934034pjl.5.1698988370217;
-        Thu, 02 Nov 2023 22:12:50 -0700 (PDT)
-Received: from localhost ([122.172.80.14])
-        by smtp.gmail.com with ESMTPSA id js4-20020a17090b148400b0027d15bd9fa2sm626409pjb.35.2023.11.02.22.12.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Nov 2023 22:12:49 -0700 (PDT)
-Date:   Fri, 3 Nov 2023 10:42:47 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, mani@kernel.org,
-        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, rafael@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, quic_vbadigan@quicinc.com,
-        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-        quic_ramkri@quicinc.com, quic_parass@quicinc.com
-Subject: Re: [PATCH v5 5/5] PCI: qcom: Add OPP support to scale performance
- state of power domain
-Message-ID: <20231103051247.u4cnckzstcvs4lf5@vireshk-i7>
-References: <20231102053013.7yt7pxin5awlu7w7@vireshk-i7>
- <20231102120950.GA115288@bhelgaas>
+        with ESMTP id S229463AbjKCFsS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Nov 2023 01:48:18 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FCD61B3;
+        Thu,  2 Nov 2023 22:48:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698990492; x=1730526492;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=VhVOyEkw81ZXmzUGM0tPtiT0KqT8vYg0EKll81rp9JI=;
+  b=P6WdqjphDwszzs2shDkGzU488JejphywLb7Nci9gEdHuBgdIdzUy3bDR
+   N0SLNmLX+Q8S3ObRzEdL7XZlUUp5YPsxZjBkT5P0TKRxTAkM9sh8VuNaH
+   ePJFHupWT6TOZGddrZ1fKUqw9IR7aaYV3JComBZbkZLmBqaaGfC6VALNH
+   JiQX0IV3dl2pCPswL4o3FuO2zaL4NVjHn/ZoAHqLHWe3MZzcrXpATwHMQ
+   HouPb8d/guin8LYUrQ//vch71A0/wyPybmQmSQ0JuH8MXGeb7+ZZ/PL2h
+   RftI+K7KPmH2Pkc4iTnxo8yoyww5oGR67aCh2SeFrIlHH9Ml+p+OdX5oB
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10882"; a="455373393"
+X-IronPort-AV: E=Sophos;i="6.03,273,1694761200"; 
+   d="scan'208";a="455373393"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 22:48:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10882"; a="878526916"
+X-IronPort-AV: E=Sophos;i="6.03,273,1694761200"; 
+   d="scan'208";a="878526916"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 02 Nov 2023 22:48:08 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 9E8172A6; Fri,  3 Nov 2023 07:48:07 +0200 (EET)
+Date:   Fri, 3 Nov 2023 07:48:07 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+        bhelgaas@google.com, andreas.noever@gmail.com,
+        michael.jamet@intel.com, YehezkelShB@gmail.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, Alexander.Deucher@amd.com
+Subject: Re: [PATCH 2/2] PCI: Ignore PCIe ports used for tunneling in
+ pcie_bandwidth_available()
+Message-ID: <20231103054807.GN17433@black.fi.intel.com>
+References: <20231101225259.GA101390@bhelgaas>
+ <928df647-5b20-406b-8da5-3199f5cfbb48@amd.com>
+ <20231102152154.GA22270@wunner.de>
+ <bb4d8fad-dced-4fed-9582-2db50643e868@amd.com>
+ <20231102153345.GA30347@wunner.de>
+ <67e7d200-52aa-44b9-8e87-e416e3d53a6c@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231102120950.GA115288@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <67e7d200-52aa-44b9-8e87-e416e3d53a6c@amd.com>
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,20 +72,66 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 02-11-23, 07:09, Bjorn Helgaas wrote:
-> On Thu, Nov 02, 2023 at 11:00:13AM +0530, Viresh Kumar wrote:
-> > On 01-11-23, 17:17, Bjorn Helgaas wrote:
-> > > Can you expand "OPP" somewhere so we know what it stands for?  I'm
-> > > sure everybody knows except me :)
+On Thu, Nov 02, 2023 at 11:22:05AM -0500, Mario Limonciello wrote:
+> On 11/2/2023 10:33, Lukas Wunner wrote:
+> > On Thu, Nov 02, 2023 at 10:26:31AM -0500, Mario Limonciello wrote:
+> > > On 11/2/2023 10:21, Lukas Wunner wrote:
+> > > > On Wed, Nov 01, 2023 at 08:14:31PM -0500, Mario Limonciello wrote:
+> > > > > Considering this I think it's a good idea to move that creation of the
+> > > > > device link into drivers/pci/pci-acpi.c and store a bit in struct
+> > > > > pci_device to indicate it's a tunneled port.
+> > > > > 
+> > > > > Then 'thunderbolt' can look for this directly instead of walking all
+> > > > > the FW nodes.
+> > > > > 
+> > > > > pcie_bandwidth_available() can just look at the tunneled port bit
+> > > > > instead of the existence of the device link.
+> > > > 
+> > > > pci_is_thunderbolt_attached() should already be doing exactly what
+> > > > you want to achieve with the new bit.  It tells you whether a PCI
+> > > > device is behind a Thunderbolt tunnel.  So I don't think a new bit
+> > > > is actually needed.
+> > > 
+> > > It's only for a device connected to an Intel TBT3 controller though; it
+> > > won't apply to USB4.
 > > 
-> > It is "Operating Performance Points", defined here:
+> > Time to resurrect this patch here...? :)
 > > 
-> > Documentation/power/opp.rst
+> > https://lore.kernel.org/all/20220204182820.130339-3-mario.limonciello@amd.com/
 > 
-> Thanks; I meant in the subject or commit log of the next revision, of
-> course.
+> That thought crossed my mind, but I don't think it's actually correct.
+> That's the major reason I didn't resurrect that series.
+> 
+> The PCIe topology looks like this:
+> 
+> ├─PCIe tunneled root port
+> |  └─PCIe bridge/switch (TBT3 or USB4 hub)
+> |    └─PCIe device
+> └─PCIe root port
+>   └─USB 4 Router
+> 
+> In this topology the USB4 PCIe class device is going to be the USB4 router.
+> This *isn't* a tunneled device.
+> 
+> The two problematic devices are going to be that PCIe bridge (TBT or USB4
+> hub) and PCIe tunneled root port.
+> Looking for the class is going to mark the wrong device for the "USB 4
+> Router".
+> 
+> I looked through the USB4 spec again and I don't see any way that such a
+> port can be distinguished.
+> 
+> I feel the correct way to identify it is via the relationship specified in
+> ACPI.
 
-Yeah, I understood that. Krishna shall do it in next version I believe.
+Just to add here, for discrete (eg. add in USB4 host controllers) the
+USB4 spec defines DVSEC capability that can be used to figure out the
+same information as the ACPI above so at least we should make the code
+work so that adding the DVSEC support later on is still possible with
+minimal effort :)
 
--- 
-viresh
+> FWIW I also think that that all the kernel users of
+> pci_is_thunderbolt_attached() *should* be using dev_is_removable().
+
+I tend to agree with this. There can be other "mediums" than
+USB4/Thunderbolt that can carry PCIe packets.
