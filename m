@@ -2,90 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6D407E0A07
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Nov 2023 21:17:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 085D47E0A83
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Nov 2023 21:51:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234569AbjKCURS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Nov 2023 16:17:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53690 "EHLO
+        id S229954AbjKCUvC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Nov 2023 16:51:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbjKCURR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Nov 2023 16:17:17 -0400
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53B38D53;
-        Fri,  3 Nov 2023 13:17:14 -0700 (PDT)
-Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3A3InJ4f001508;
-        Fri, 3 Nov 2023 20:16:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pps0720; bh=D51GjDb7/ozAJNlUYKNTwI4ApLuMChHWlUEbM3CJ6no=;
- b=mEea6OpQ4GyhnF36+uGnR03Vx1ICKSCu6OxzE4yX+cbJ6lZDumNQVs6DbbTD0A9eauyy
- g6s7jyvesL+yGSqFNIBsyeUJbdgqwdLPEY8MwMl8hF7MOl9/csH654p4dyiL76pXjgB8
- vC+8zIVu1RbFbKK/ZBcfPojc9qgCiE/GS9pPEMGxRezsZQy60BECCIGxJ1gJu0bgdYK9
- PbqRsZNXlnd+ZBL8vX6IhuGbHX8Lx5+2U9T+v9uxqxyBZrvHl9Cjr6P297DOTnBfeqxS
- mJWs0TSX/DU4HShDVVjcAhARK9Uz3ucTScaxKKlyDeCErEBC8hqCaKVSoDmw2eNLmLIi Sw== 
-Received: from p1lg14878.it.hpe.com ([16.230.97.204])
-        by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 3u4twf02jx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Nov 2023 20:16:51 +0000
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+        with ESMTP id S229484AbjKCUvB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Nov 2023 16:51:01 -0400
+Received: from bee.tesarici.cz (bee.tesarici.cz [IPv6:2a03:3b40:fe:2d4::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BB001BF;
+        Fri,  3 Nov 2023 13:50:57 -0700 (PDT)
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by p1lg14878.it.hpe.com (Postfix) with ESMTPS id 7C11E13197;
-        Fri,  3 Nov 2023 20:16:43 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id CD82A80045D;
-        Fri,  3 Nov 2023 20:16:39 +0000 (UTC)
-Date:   Fri, 3 Nov 2023 15:16:38 -0500
-From:   Steve Wahl <steve.wahl@hpe.com>
-To:     Andrew Cooper <andrew.cooper3@citrix.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Steve Wahl <steve.wahl@hpe.com>,
-        Justin Ernst <justin.ernst@hpe.com>,
-        Kyle Meyer <kyle.meyer@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
+        by bee.tesarici.cz (Postfix) with ESMTPSA id 89C841953CF;
+        Fri,  3 Nov 2023 21:50:54 +0100 (CET)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=none dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tesarici.cz; s=mail;
+        t=1699044654; bh=ovF2UxeFKGVoKgOj3oQMqaLMJ/vL6MISuASAGJ+7cOo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OKDh8aDXW5UlBWkhlrSF+eWWUCy4nesCqv1sSWA8SKz3LtzRyonOKo29z948jxFn8
+         IP0OAsvNwuKaro8+qHqn3sTG3glqpExjeHguIxFqapE/hWSGLaPHOThV5ofhLMM0N4
+         ZD4zVycNv0+4kwjtBNZmagUDOJJHW23CCP+axUGAz5o8UxXHXTcCyuukm0Fz51SMtI
+         pvyIjLrJn+VAqScqSvK6YCeZIkP0+YStxsNx/lanF4fG2gGB7t+0IAFt3pXSJU86+v
+         db4SKPxpo1B9rsrQpHgQMeMk08n9RVtjGPdgHGlERFIC+X5JS4KT1fq0w0xs1so5K3
+         mFANpzOhAXKtw==
+Date:   Fri, 3 Nov 2023 21:50:53 +0100
+From:   Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 3/3] x86/apic: Drop struct local_apic
-Message-ID: <ZUVVJkpGg4hoF/Hs@swahl-home.5wahls.com>
-References: <20231102-x86-apic-v1-0-bf049a2a0ed6@citrix.com>
- <20231102-x86-apic-v1-3-bf049a2a0ed6@citrix.com>
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Petr Tesarik <petr.tesarik1@huawei-partners.com>,
+        Ross Lagerwall <ross.lagerwall@citrix.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+        Matthew Rosato <mjrosato@linux.ibm.com>
+Subject: Re: Memory corruption with CONFIG_SWIOTLB_DYNAMIC=y
+Message-ID: <20231103214831.26d29f4d@meshulam.tesarici.cz>
+In-Reply-To: <20231103171447.02759771.pasic@linux.ibm.com>
+References: <104a8c8fedffd1ff8a2890983e2ec1c26bff6810.camel@linux.ibm.com>
+        <20231103171447.02759771.pasic@linux.ibm.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231102-x86-apic-v1-3-bf049a2a0ed6@citrix.com>
-X-Proofpoint-ORIG-GUID: kxI0VjgnmO0WDNPr5wrLa66Msn4A28Gw
-X-Proofpoint-GUID: kxI0VjgnmO0WDNPr5wrLa66Msn4A28Gw
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-03_19,2023-11-02_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- mlxlogscore=999 lowpriorityscore=0 clxscore=1015 adultscore=0 spamscore=0
- impostorscore=0 priorityscore=1501 suspectscore=0 mlxscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2310240000
- definitions=main-2311030170
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -93,308 +62,60 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 02, 2023 at 12:26:21PM +0000, Andrew Cooper wrote:
-> This type predates recorded history in tglx/history.git, making it older
-> than Feb 5th 2002.
-> 
-> This structure is literally old enough to drink in most juristictions in
-> the world, and has not been used once in that time.
-> 
-> Lay it to rest in /dev/null.
-> 
-> Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
-> ---
-> There is perhaps something to be said for the longevity of the comment.
-> "Not terribly well tested" certainly hasn't bitrotted in all this time.
+On Fri, 3 Nov 2023 17:14:47 +0100
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-   :-)  !!!
+>[...]
+> In our case min_align_mask == 0 and a) is thus not applicable, because b) and
+> c) we end up with iotlb_align_mask = 0x800. And because orig_add & 0x800 ==
+> 0x800 but pool->start & 0x800 == 0 and the slot at index i is skipped over. The
+> slot 0 is skipped over because it is page aligned, when !!((1UL << PAGE_SHIFT)
+> & orig_addr) 
 
-Reveiewed-by: Steve Wahl <steve.wahl@hpe.com>
+Wait. These mask values can quickly become confusing. Do you mean
+iotlb_align_mask == 0xfff?
+
+> Let us note that with the current implementation the min_align_size mask, that
+> is mechanism a) also controls the tlb_addr within the first slot so that:
+> tlb_addr & min_align_mask == orig_addr & min_align_mask. In that sense a) is
+> very unlike b) and c).
+
+It is silently assumed that PAGE_SIZE >= IO_TLB_SIZE, so if the buffer
+is page-aligned, the lower bits of the alignment inside the io tlb slot
+must be zero.
+
+If the same assumption is made about alloc_align_mask, it should be
+documented, but it is not.
+
+>[...]
+> In our opinion the first step towards getting this right is to figure out what
+> the different kinds of alignments are really supposed to mean. For each of the
+> mechanisms we need to understand and document, whether making sure that the
+> bounce buffer does not stretch over more of certain units of memory (like,
+> pages, iova granule size, whatever), or is it about preserving offset within a
+> certain unit of memory, and if yes to what extent (the least significant n-bits
+> of the orig_addr dictated by the respective mask, or something different).
 
 
-> ---
->  arch/x86/include/asm/apicdef.h | 260 -----------------------------------------
->  1 file changed, 260 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/apicdef.h b/arch/x86/include/asm/apicdef.h
-> index ddcbf00db19d..094106b6a538 100644
-> --- a/arch/x86/include/asm/apicdef.h
-> +++ b/arch/x86/include/asm/apicdef.h
-> @@ -172,270 +172,10 @@
->  #define APIC_CPUID(apicid)	((apicid) & XAPIC_DEST_CPUS_MASK)
->  #define NUM_APIC_CLUSTERS	((BAD_APICID + 1) >> XAPIC_DEST_CPUS_SHIFT)
->  
-> -#ifndef __ASSEMBLY__
-> -/*
-> - * the local APIC register structure, memory mapped. Not terribly well
-> - * tested, but we might eventually use this one in the future - the
-> - * problem why we cannot use it right now is the P5 APIC, it has an
-> - * errata which cannot take 8-bit reads and writes, only 32-bit ones ...
-> - */
-> -#define u32 unsigned int
-> -
-> -struct local_apic {
-> -
-> -/*000*/	struct { u32 __reserved[4]; } __reserved_01;
-> -
-> -/*010*/	struct { u32 __reserved[4]; } __reserved_02;
-> -
-> -/*020*/	struct { /* APIC ID Register */
-> -		u32   __reserved_1	: 24,
-> -			phys_apic_id	:  4,
-> -			__reserved_2	:  4;
-> -		u32 __reserved[3];
-> -	} id;
-> -
-> -/*030*/	const
-> -	struct { /* APIC Version Register */
-> -		u32   version		:  8,
-> -			__reserved_1	:  8,
-> -			max_lvt		:  8,
-> -			__reserved_2	:  8;
-> -		u32 __reserved[3];
-> -	} version;
-> -
-> -/*040*/	struct { u32 __reserved[4]; } __reserved_03;
-> -
-> -/*050*/	struct { u32 __reserved[4]; } __reserved_04;
-> -
-> -/*060*/	struct { u32 __reserved[4]; } __reserved_05;
-> -
-> -/*070*/	struct { u32 __reserved[4]; } __reserved_06;
-> -
-> -/*080*/	struct { /* Task Priority Register */
-> -		u32   priority	:  8,
-> -			__reserved_1	: 24;
-> -		u32 __reserved_2[3];
-> -	} tpr;
-> -
-> -/*090*/	const
-> -	struct { /* Arbitration Priority Register */
-> -		u32   priority	:  8,
-> -			__reserved_1	: 24;
-> -		u32 __reserved_2[3];
-> -	} apr;
-> -
-> -/*0A0*/	const
-> -	struct { /* Processor Priority Register */
-> -		u32   priority	:  8,
-> -			__reserved_1	: 24;
-> -		u32 __reserved_2[3];
-> -	} ppr;
-> -
-> -/*0B0*/	struct { /* End Of Interrupt Register */
-> -		u32   eoi;
-> -		u32 __reserved[3];
-> -	} eoi;
-> -
-> -/*0C0*/	struct { u32 __reserved[4]; } __reserved_07;
-> -
-> -/*0D0*/	struct { /* Logical Destination Register */
-> -		u32   __reserved_1	: 24,
-> -			logical_dest	:  8;
-> -		u32 __reserved_2[3];
-> -	} ldr;
-> -
-> -/*0E0*/	struct { /* Destination Format Register */
-> -		u32   __reserved_1	: 28,
-> -			model		:  4;
-> -		u32 __reserved_2[3];
-> -	} dfr;
-> -
-> -/*0F0*/	struct { /* Spurious Interrupt Vector Register */
-> -		u32	spurious_vector	:  8,
-> -			apic_enabled	:  1,
-> -			focus_cpu	:  1,
-> -			__reserved_2	: 22;
-> -		u32 __reserved_3[3];
-> -	} svr;
-> -
-> -/*100*/	struct { /* In Service Register */
-> -/*170*/		u32 bitfield;
-> -		u32 __reserved[3];
-> -	} isr [8];
-> -
-> -/*180*/	struct { /* Trigger Mode Register */
-> -/*1F0*/		u32 bitfield;
-> -		u32 __reserved[3];
-> -	} tmr [8];
-> -
-> -/*200*/	struct { /* Interrupt Request Register */
-> -/*270*/		u32 bitfield;
-> -		u32 __reserved[3];
-> -	} irr [8];
-> -
-> -/*280*/	union { /* Error Status Register */
-> -		struct {
-> -			u32   send_cs_error			:  1,
-> -				receive_cs_error		:  1,
-> -				send_accept_error		:  1,
-> -				receive_accept_error		:  1,
-> -				__reserved_1			:  1,
-> -				send_illegal_vector		:  1,
-> -				receive_illegal_vector		:  1,
-> -				illegal_register_address	:  1,
-> -				__reserved_2			: 24;
-> -			u32 __reserved_3[3];
-> -		} error_bits;
-> -		struct {
-> -			u32 errors;
-> -			u32 __reserved_3[3];
-> -		} all_errors;
-> -	} esr;
-> -
-> -/*290*/	struct { u32 __reserved[4]; } __reserved_08;
-> -
-> -/*2A0*/	struct { u32 __reserved[4]; } __reserved_09;
-> -
-> -/*2B0*/	struct { u32 __reserved[4]; } __reserved_10;
-> -
-> -/*2C0*/	struct { u32 __reserved[4]; } __reserved_11;
-> -
-> -/*2D0*/	struct { u32 __reserved[4]; } __reserved_12;
-> -
-> -/*2E0*/	struct { u32 __reserved[4]; } __reserved_13;
-> -
-> -/*2F0*/	struct { u32 __reserved[4]; } __reserved_14;
-> -
-> -/*300*/	struct { /* Interrupt Command Register 1 */
-> -		u32   vector			:  8,
-> -			delivery_mode		:  3,
-> -			destination_mode	:  1,
-> -			delivery_status		:  1,
-> -			__reserved_1		:  1,
-> -			level			:  1,
-> -			trigger			:  1,
-> -			__reserved_2		:  2,
-> -			shorthand		:  2,
-> -			__reserved_3		:  12;
-> -		u32 __reserved_4[3];
-> -	} icr1;
-> -
-> -/*310*/	struct { /* Interrupt Command Register 2 */
-> -		union {
-> -			u32   __reserved_1	: 24,
-> -				phys_dest	:  4,
-> -				__reserved_2	:  4;
-> -			u32   __reserved_3	: 24,
-> -				logical_dest	:  8;
-> -		} dest;
-> -		u32 __reserved_4[3];
-> -	} icr2;
-> -
-> -/*320*/	struct { /* LVT - Timer */
-> -		u32   vector		:  8,
-> -			__reserved_1	:  4,
-> -			delivery_status	:  1,
-> -			__reserved_2	:  3,
-> -			mask		:  1,
-> -			timer_mode	:  1,
-> -			__reserved_3	: 14;
-> -		u32 __reserved_4[3];
-> -	} lvt_timer;
-> -
-> -/*330*/	struct { /* LVT - Thermal Sensor */
-> -		u32  vector		:  8,
-> -			delivery_mode	:  3,
-> -			__reserved_1	:  1,
-> -			delivery_status	:  1,
-> -			__reserved_2	:  3,
-> -			mask		:  1,
-> -			__reserved_3	: 15;
-> -		u32 __reserved_4[3];
-> -	} lvt_thermal;
-> -
-> -/*340*/	struct { /* LVT - Performance Counter */
-> -		u32   vector		:  8,
-> -			delivery_mode	:  3,
-> -			__reserved_1	:  1,
-> -			delivery_status	:  1,
-> -			__reserved_2	:  3,
-> -			mask		:  1,
-> -			__reserved_3	: 15;
-> -		u32 __reserved_4[3];
-> -	} lvt_pc;
-> -
-> -/*350*/	struct { /* LVT - LINT0 */
-> -		u32   vector		:  8,
-> -			delivery_mode	:  3,
-> -			__reserved_1	:  1,
-> -			delivery_status	:  1,
-> -			polarity	:  1,
-> -			remote_irr	:  1,
-> -			trigger		:  1,
-> -			mask		:  1,
-> -			__reserved_2	: 15;
-> -		u32 __reserved_3[3];
-> -	} lvt_lint0;
-> -
-> -/*360*/	struct { /* LVT - LINT1 */
-> -		u32   vector		:  8,
-> -			delivery_mode	:  3,
-> -			__reserved_1	:  1,
-> -			delivery_status	:  1,
-> -			polarity	:  1,
-> -			remote_irr	:  1,
-> -			trigger		:  1,
-> -			mask		:  1,
-> -			__reserved_2	: 15;
-> -		u32 __reserved_3[3];
-> -	} lvt_lint1;
-> -
-> -/*370*/	struct { /* LVT - Error */
-> -		u32   vector		:  8,
-> -			__reserved_1	:  4,
-> -			delivery_status	:  1,
-> -			__reserved_2	:  3,
-> -			mask		:  1,
-> -			__reserved_3	: 15;
-> -		u32 __reserved_4[3];
-> -	} lvt_error;
-> -
-> -/*380*/	struct { /* Timer Initial Count Register */
-> -		u32   initial_count;
-> -		u32 __reserved_2[3];
-> -	} timer_icr;
-> -
-> -/*390*/	const
-> -	struct { /* Timer Current Count Register */
-> -		u32   curr_count;
-> -		u32 __reserved_2[3];
-> -	} timer_ccr;
-> -
-> -/*3A0*/	struct { u32 __reserved[4]; } __reserved_16;
-> -
-> -/*3B0*/	struct { u32 __reserved[4]; } __reserved_17;
-> -
-> -/*3C0*/	struct { u32 __reserved[4]; } __reserved_18;
-> -
-> -/*3D0*/	struct { u32 __reserved[4]; } __reserved_19;
-> -
-> -/*3E0*/	struct { /* Timer Divide Configuration Register */
-> -		u32   divisor		:  4,
-> -			__reserved_1	: 28;
-> -		u32 __reserved_2[3];
-> -	} timer_dcr;
-> -
-> -/*3F0*/	struct { u32 __reserved[4]; } __reserved_20;
-> -
-> -} __attribute__ ((packed));
-> -
-> -#undef u32
-> -
->  #ifdef CONFIG_X86_32
->   #define BAD_APICID 0xFFu
->  #else
->   #define BAD_APICID 0xFFFFu
->  #endif
->  
-> -#endif /* !__ASSEMBLY__ */
->  #endif /* _ASM_X86_APICDEF_H */
-> 
-> -- 
-> 2.30.2
-> 
+Seconded. I have also been struggling with the various alignment
+constraints. I have even written (but not yet submitted) a patch to
+calculate the combined alignment mask in swiotlb_tbl_map_single() and
+pass it down to all other functions, just to make it clear what
+alignment mask is used.
 
--- 
-Steve Wahl, Hewlett Packard Enterprise
+My understanding is that buffer alignment may be required by:
+
+1. hardware which cannot handle an unaligned base address (presumably
+   because the chip performs a simple OR operation to get the addresses
+   of individual fields);
+
+2. isolation of untrusted devices, where no two bounce buffers should
+   end up in the same iova granule;
+
+3. allocation size; I could not find an explanation, so this might be
+   merely an attempt at reducing SWIOTLB internal fragmentation.
+
+I hope other people on the Cc list can shed more light on the intended
+behaviour.
+
+Petr T
