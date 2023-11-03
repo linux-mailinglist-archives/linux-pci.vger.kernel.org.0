@@ -2,59 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF26E7E095F
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Nov 2023 20:19:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1104B7E0968
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Nov 2023 20:21:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345902AbjKCTTF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Nov 2023 15:19:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46676 "EHLO
+        id S1345150AbjKCTVK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Nov 2023 15:21:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376824AbjKCTTE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Nov 2023 15:19:04 -0400
+        with ESMTP id S232839AbjKCTVJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Nov 2023 15:21:09 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F655D5C;
-        Fri,  3 Nov 2023 12:19:01 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B56E8C433CA;
-        Fri,  3 Nov 2023 19:19:00 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 990A4D73;
+        Fri,  3 Nov 2023 12:21:00 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E611AC433C8;
+        Fri,  3 Nov 2023 19:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699039141;
-        bh=BdoS7jE6bPtz6cHJb4OOOnvh/m9c3Hkg7gCaP1DpcH0=;
+        s=k20201202; t=1699039260;
+        bh=7MN/U949LXBUJuxhHGoevzr7GxH9ANzavjzuKeHmEFI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Smb5QE/gZgORY8VVtStZ9oylS8sVrfWGpKaE+oFHhDDkWihjqzMQM0uZDjmrdDOll
-         Mb4y9rmN9pNgMx6+xBXHUmPdtReEzFkcvBS6g1f4TVwKs3rN7s2WjFaPdiYNM3Ee2p
-         Jnm8yZsG3U1sEJBylpnEWd2rUeGUp0rhUWQOTM7kywMmXW+mYj+FBc1wNioY/+H/9t
-         qoI7Zuh0/v5pKueXhpwZrm5KzlGy93ikBKsE7HNtMwPgMEo49gdc5nfsJjuXFZzG7V
-         M7OO1SbGc/0XhHQF4CL3y/+uNQ9igOrx+FpQJqsJVtkj6u8plCwdmbc428SPvnCdRG
-         upTo2jHYImc1A==
-Date:   Fri, 3 Nov 2023 14:18:58 -0500
+        b=ATOS90CQjIPKFdQUNME1YOl/ZNO2l4vdA/tAPEX5FuZ7YB0AZw3Rg48H9VhtnnOA7
+         VtX7UDME19I2utp0+HF+lTQWr1D2hH09nX463+1I6RWUaNBEbWhgPk6cHDBxOANA2/
+         GbhdCLcNRwLIWfdX1Sj8XI23fCuZmPAunNQ+ynphpjxhJc317uikh3sxlMhff1fqtK
+         FCtukqW5Kj1gGpk6aAglpD5Efco/VWlsxThbznSAwnIfQu5rtd4/zabCMIAZ5h2wrN
+         d43JcoHYz09h5jLLSCD3wjOJ1MfFJa73nnUnofNlVsP2Q8bxmAm1uiL68bvht0+bEj
+         icfdgBagHldvQ==
+Date:   Fri, 3 Nov 2023 14:20:58 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Tomasz Pala <gotar@polanet.pl>
-Cc:     linux-pci@vger.kernel.org,
-        Dan J Williams <dan.j.williams@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        David E Box <david.e.box@intel.com>,
-        Yunying Sun <yunying.sun@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Florent DELAHAYE <linuxkernelml@undead.fr>,
-        Konrad J Hambrick <kjhambrick@gmail.com>,
-        Matt Hansen <2lprbe78@duck.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Benoit =?utf-8?B?R3LDqWdvaXJl?= <benoitg@coeus.ca>,
-        Werner Sembach <wse@tuxedocomputers.com>,
-        mumblingdrunkard@protonmail.com, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 2/2] x86/pci: Treat EfiMemoryMappedIO as reservation of
- ECAM space
-Message-ID: <20231103191858.GA163196@bhelgaas>
+        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <dri-devel@lists.freedesktop.org>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        David Airlie <airlied@gmail.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        Danilo Krummrich <dakr@redhat.com>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mark Gross <markgross@kernel.org>,
+        Xinhui Pan <Xinhui.Pan@amd.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        "Maciej W . Rozycki" <macro@orcam.me.uk>
+Subject: Re: [PATCH v2 0/9] Improvements to pcie_bandwidth_available() for
+ eGPUs
+Message-ID: <20231103192058.GA164718@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231026205319.GA1832508@bhelgaas>
+In-Reply-To: <20231103190758.82911-1-mario.limonciello@amd.com>
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -65,82 +79,57 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 26, 2023 at 03:53:19PM -0500, Bjorn Helgaas wrote:
-> On Thu, Oct 12, 2023 at 05:33:47PM +0200, Tomasz Pala wrote:
-> > On Tue, Jan 10, 2023 at 12:02:43 -0600, Bjorn Helgaas wrote:
-> > > Normally we reject ECAM space unless it is reported as reserved in the E820
-> > > table or via a PNP0C02 _CRS method (PCI Firmware, r3.3, sec 4.1.2).  This
-> > > means PCI extended config space (offsets 0x100-0xfff) may not be accessible.
-> > > 
-> > > Some firmware doesn't report ECAM space via PNP0C02 _CRS methods, but does
-> > > mention it as an EfiMemoryMappedIO region via EFI GetMemoryMap(), which is
-> > > normally converted to an E820 entry by a bootloader or EFI stub.
-> > > 
-> > > 07eab0901ede ("efi/x86: Remove EfiMemoryMappedIO from E820 map"), removes
-> > > E820 entries that correspond to EfiMemoryMappedIO regions because some
-> > > other firmware uses EfiMemoryMappedIO for PCI host bridge windows, and the
-> > > E820 entries prevent Linux from allocating BAR space for hot-added devices.
-> > > 
-> > > Allow use of ECAM for extended config space when the region is covered by
-> > > an EfiMemoryMappedIO region, even if it's not included in E820 or PNP0C02
-> > > _CRS.
-> > 
-> > I'm still having a problem initializing ixgbe NICs with pristine 6.5.7 kernel.
+On Fri, Nov 03, 2023 at 02:07:49PM -0500, Mario Limonciello wrote:
+> Downstream drivers are getting the wrong values from
+> pcie_bandwidth_available() which is causing problems for performance
+> of eGPUs.
 > 
-> Thanks very much for the report, and sorry for the inconvenience and
-> my delay in looking at it.
+> This series overhauls Thunderbolt related device detection and uses
+> the changes to change the behavior of pcie_bandwidth_available().
 > 
-> > efi: Remove mem63: MMIO range=[0x80000000-0x8fffffff] (256MB) from e820 map
-> > [mem 0x7f800000-0xfed1bfff] available for PCI devices
-> > PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
-> > [Firmware Info]: PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] not reserved in ACPI motherboard resources
-> > PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] reserved as EfiMemoryMappedIO
-> > ixgbe 0000:02:00.0: enabling device (0140 -> 0142)
-> > ixgbe 0000:02:00.0: BAR 0: can't reserve [mem 0x80000000-0x8007ffff 64bit]
-> > ixgbe 0000:02:00.0: pci_request_selected_regions failed 0xfffffff0
-> > ixgbe: probe of 0000:02:00.0 failed with error -16
+> NOTE: This series is currently based on top of v6.6 + this change that
+>       will be merged for 6.7:
+> Link: https://patchwork.freedesktop.org/patch/564738/
+
+Thanks, Mario, I'll look at this soon after v6.7-rc1 (probably Nov
+12), so the amdgpu patch should be in mainline by then.
+
+> v1->v2:
+>  * Rename is_thunderbolt
+>  * Look for _DSD instead of link
+>  * Drop pci_is_thunderbolt_attached() from all drivers
+>  * Adjust links
+>  * Adjust commit messages
+>  * Add quirk for Tiger Lake
 > 
-> Something is wrong with our allocation scheme.  Both the MMCONFIG
-> region and the ixgbe BAR 0 are at 0x80000000, which obviously cannot
-> work.  Maybe the full dmesg log will have a clue about why we didn't
-> move ixgbe out of the way.
+> Mario Limonciello (9):
+>   drm/nouveau: Switch from pci_is_thunderbolt_attached() to
+>     dev_is_removable()
+>   drm/radeon: Switch from pci_is_thunderbolt_attached() to
+>     dev_is_removable()
+>   PCI: Drop pci_is_thunderbolt_attached()
+>   PCI: Move the `PCI_CLASS_SERIAL_USB_USB4` definition to common header
+>   PCI: pciehp: Move check for is_thunderbolt into a quirk
+>   PCI: Rename is_thunderbolt to is_tunneled
+>   PCI: ACPI: Detect PCIe root ports that are used for tunneling
+>   PCI: Exclude PCIe ports used for tunneling in
+>     pcie_bandwidth_available()
+>   PCI: Add a quirk to mark 0x8086 : 0x9a23 as supporting PCIe tunneling
 > 
-> > After disabling the code causing this (using always-false condition:
-> > 		if (size >= 256*1024 && 0) {
-> > ) in the chunk:
-> > 
-> > https://lore.kernel.org/lkml/20221208190341.1560157-2-helgaas@kernel.org/
-> > 
-> > the BAR starts at 0x90000000 (not 0x80000000):
-> > 
-> > efi: Not removing mem63: MMIO range=[0x80000000-0x8fffffff] (262144KB) from e820 map
-> > [...]
-> > [mem 0x90000000-0xfed1bfff] available for PCI devices
-> > [...]
-> > PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
-> > PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] reserved as E820 entry
-> > 
-> > and everything seems to work again.
-> > 
-> > 
-> > I've got full system bootup logs from the upstream and worked around,
-> > but I'm not sure if this is OK to attach them (the CC list is long).
+>  drivers/gpu/drm/nouveau/nouveau_vga.c  |  6 +-
+>  drivers/gpu/drm/radeon/radeon_device.c |  4 +-
+>  drivers/gpu/drm/radeon/radeon_kms.c    |  2 +-
+>  drivers/pci/hotplug/pciehp_hpc.c       |  6 +-
+>  drivers/pci/pci-acpi.c                 | 16 ++++++
+>  drivers/pci/pci.c                      | 76 +++++++++++++++++---------
+>  drivers/pci/probe.c                    |  2 +-
+>  drivers/pci/quirks.c                   | 31 +++++++++++
+>  drivers/platform/x86/apple-gmux.c      |  2 +-
+>  drivers/thunderbolt/nhi.h              |  2 -
+>  include/linux/pci.h                    | 25 +--------
+>  include/linux/pci_ids.h                |  1 +
+>  12 files changed, 109 insertions(+), 64 deletions(-)
 > 
-> Would you mind opening a new report at https://bugzilla.kernel.org,
-> attaching those logs, and responding here with the URL?
-
-Thanks for the report and the logs, which are attached at
-https://bugzilla.kernel.org/show_bug.cgi?id=218050
-
-I think the problem is that the MMCONFIG region is at
-[mem 0x80000000-0x8fffffff], and that is *also* included in one of the
-host bridge windows reported via _CRS:
-
-  PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
-  pci_bus 0000:00: root bus resource [mem 0x80000000-0xfbffffff window]
-
-I'll try to figure out how to deal with that.  In the meantime, would
-you mind attaching the contents of /proc/iomem to the bugzilla?  I
-think you have to cat it as root to get the actual values included.
-
-Bjorn
+> -- 
+> 2.34.1
+> 
