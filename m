@@ -2,218 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AC357E06AB
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Nov 2023 17:44:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F6077E07FA
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Nov 2023 19:21:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345483AbjKCQoO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Nov 2023 12:44:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58442 "EHLO
+        id S232839AbjKCSU7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Nov 2023 14:20:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344250AbjKCQoN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Nov 2023 12:44:13 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DABDE111;
-        Fri,  3 Nov 2023 09:44:08 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SMRM85W5Lz67gDh;
-        Sat,  4 Nov 2023 00:40:52 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 3 Nov
- 2023 16:44:06 +0000
-Date:   Fri, 3 Nov 2023 16:44:04 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Alexey Kardashevskiy <aik@amd.com>
-CC:     Lukas Wunner <lukas@wunner.de>, <linux-coco@lists.linux.dev>,
-        <kvm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <jic23@kernel.org>, <suzuki.poulose@arm.com>
-Subject: Re: TDISP enablement
-Message-ID: <20231103164404.00006e0b@Huawei.com>
-In-Reply-To: <4cfe829f-8373-4ff4-a963-3ee74fa39efe@amd.com>
-References: <e05eafd8-04b3-4953-8bca-dc321c1a60b9@amd.com>
-        <20231101072717.GB25863@wunner.de>
-        <20231101110551.00003896@Huawei.com>
-        <4cfe829f-8373-4ff4-a963-3ee74fa39efe@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S230197AbjKCSU6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Nov 2023 14:20:58 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5CC1D4D;
+        Fri,  3 Nov 2023 11:20:55 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D9CCC433C8;
+        Fri,  3 Nov 2023 18:20:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1699035655;
+        bh=7tsGjmrJ/IXbOi51N3JxFSTY9p457HkH2KZbbUbO1iE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=IqXu1JfP1CdmSvVNo4GhiVPq19YApTjCfV10gbi+4ezSJBuhOQLrV7Lld2xJM2LUx
+         puek0io2gVD/ianpjw+DsgRCFgXKFqvgMh2EJ219wgEkW/tE8N7OiaSdFhk2kqu2w5
+         kKxQmgUkpWFKi6oiKTUG09k7i4ZA6/r78auAsFNwwVP31aP4ENBsfSzoCSxTMO/WYg
+         MeOqfdN0yFZ9GgzpMZ5z7Tq1oPXGtTP7pVkkWorYHbWofeKhVFz7VsGNk5fSnIpYcR
+         e5ZuduAjfrGeozEFDZXcOJ5gXMOZ9YZ/c/aH1dXMq79ehpg4meXTG0jK8gBKcqjl8t
+         uLu7wzcWes8gA==
+Date:   Fri, 3 Nov 2023 13:20:53 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Vikram Sethi <vsethi@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Krishna Thota <kthota@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Question: Clearing error bits in the root port post enumeration
+Message-ID: <20231103182053.GA160440@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN8PR12MB29005068F39DE028F19084EDB8A0A@BN8PR12MB2900.namprd12.prod.outlook.com>
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
- 
-> >>> - tdi_info - read measurements/certs/interface report;  
-> >>
-> >> Does this return cached cert chains and measurements from the device
-> >> or does it retrieve them anew?  (Measurements might have changed if
-> >> MEAS_FRESH_CAP is supported.)
-> >>
-> >>  
-> >>> If the user wants only CMA/SPDM, the Lukas'es patched will do that without
-> >>> the PSP. This may co-exist with the AMD PSP (if the endpoint allows multiple
-> >>> sessions).  
-> >>
-> >> It can co-exist if the pci_cma_claim_ownership() library call
-> >> provided by patch 12/12 is invoked upon device_connect.
-> >>
-> >> It would seem advantageous if you could delay device_connect
-> >> until a device is actually passed through.  Then the OS can
-> >> initially authenticate and measure devices and the PSP takes
-> >> over when needed.  
-> > 
-> > Would that delay mean IDE isn't up - I think that wants to be
-> > available whether or not pass through is going on.
-> > 
-> > Given potential restrictions on IDE resources, I'd expect to see an explicit
-> > opt in from userspace on the host to start that process for a given
-> > device.  (udev rule or similar might kick it off for simple setups).
-> > 
-> > Would that work for the flows described?  
+On Tue, Oct 31, 2023 at 12:26:31PM +0000, Vidya Sagar wrote:
+> Hi folks,
 > 
-> This would work but my (likely wrong) intention was also to run 
-> necessary setup in both host and guest at the same time before drivers 
-> probe devices. And while delaying it in the host is fine (well, for us 
-> in AMD, as we are aiming for CoCo/TDISP), in the guest this means less 
-> flexibility in enlightening the PCI subsystem and the guest driver: 
-> ideally (or at least initially) the driver is supposed to probe already 
-> enabled and verified device, as otherwise it has to do SWIOTLB until the 
-> userspace does the verification and kicks the driver to go proper direct 
-> DMA (or reload the driver?).
-
-In the case of a guest getting a VF, there probably won't be any way for
-the kernel to run any native attestation anyway, so policy would have to
-rely on the CoCo paths. Kernel stuff Lukas has would just not try to attest
-or claim anything about it. If a VF has a CMA capable DOE instance
-then that's not there for IDE stuff at all, but for the guest to get
-direct measurements etc without PSP or anything else getting involved
-in which case the guest using that directly is a reasonable thing to do.
-
+> I would like to know your comments on the following scenario where
+> we are observing the root port logging errors because of the
+> enumeration flow being followed.
 > 
-> > Next bit probably has holes...  Key is that a lot of the checks
-> > may fail, and it's up to host userspace policy to decide whether
-> > to proceed (other policy in the secure VM side of things obviously)
-> > 
-> > So my rough thinking is - for the two options (IDE / TDISP)
-> > 
-> > Comparing with Alexey's flow I think only real difference is that
-> > I call out explicit host userspace policy controls. I'd also like  
+> DUT information:
+> - Has a root port and an endpoint connected to it
+> - Uses ECAM mechanism to access the configuration space
+> - Booted through ACPI flow
+> - Has a Firmware-First approach for handling the errors
+> - System is configured to treat Unsupported Requests as
+>   AdvisoryNon-Fatal errors
 > 
-> My imagination fails me :) What is the host supposed to do if the device 
-> verification fails/succeeds later, and how much later, and the device is 
-> a boot disk? Or is this userspace going to be limited to initramdisk? 
-> What is that thing which we are protecting against? Or it is for CUDA 
-> and such (which yeah, it can wait)?
-
-There are a bunch of non obvious cases indeed.  Hence make it all policy.
-Though if you have a flow where verification is needed for boot disk and
-it fails (and policy says that's not acceptable) then bad luck you
-probably need to squirt a cert into your ramdisk or UEFI or similar.
-
+> As we all know, when a configuration read request comes in for a
+> device number that is not implemented, a UR would be returned as per
+> the PCIe spec.
 > 
-> > to use similar interfaces to convey state to host userspace as
-> > per Lukas' existing approaches.  Sure there will also be in
-> > kernel interfaces for driver to get data if it knows what to do
-> > with it.  I'd also like to enable the non tdisp flow to handle
-> > IDE setup 'natively' if that's possible on particular hardware.
-> > 
-> > 1. Host has a go at CMA/SPDM. Policy might say that a failure here is
-> >     a failure in general so reject device - or it might decide it's up to
-> >     the PSP etc.   (userspace can see if it succeeded)
-> >     I'd argue host software can launch this at any time.  It will
-> >     be a denial of service attack but so are many other things the host
-> >     can do.  
+> As part of the enumeration flow on DUT, when the kernel reads offset
+> 0x0 of B:D:F=0:0:0, the root port responds with its valid Vendor-ID
+> and Device-ID values.  But, when B:D:F=0:1:0 is probed, since there
+> is no device present there, the root port responds with an
+> Unsupported Request and simultaneously logs the same in the Device
+> Status register (i.e. bit-3).  Because of it, there is a UR logged
+> in the Device Status register of the RP by the time enumeration is
+> complete.
 > 
-> Trying to visualize it in my head - policy is a kernel cmdline or module 
-> parameter?
-
-Neither - it's bind not happening until userspace decides to kick it off.
-The module could provide it's own policy on top of this - so userspace
-could defer to that if it makes sense (so bind but rely on probe failing
-if policy not met).
-
+> In the case of AER capability natively owned by the kernel, the AER
+> driver's init call would clear all such pending bits.
 > 
-> > 2. TDISP policy decision from host (userspace policy control)
-> >     Need to know end goal.  
+> Since we are going with the Firmware-First approach, and the system
+> is configured to treat Unsupported Requests as AdvisoryNon-Fatal
+> errors, only a correctable error interrupt can be raised to the
+> Firmware which takes care of clearing the corresponding status
+> registers.  The firmware can't know about the UnsupReq bit being set
+> as the interrupt it received is for a correctable error hence it
+> clears only bits related to correctable error.
 > 
-> /sys/bus/pci/devices/0000:11:22.3/tdisp ?
-
-Maybe - I'm sure we'll bikeshed anything like that :)
-
+> All these events leave a freshly booted system with the following
+> bits set.
 > 
-> > 3. IDE opt in from userspace.  Policy decision.
-> >    - If not TDISP
-> >      - device_connect(IDE ONLY) - bunch of proxying in host OS.
-> >      - Cert chain and measurements presented to host, host can then check if
-> >        it is happy and expose for next policy decision.
-> >      - Hooks exposed for host to request more measurements, key refresh etc.
-> >        Idea being that the flow is host driven with PSP providing required
-> >        services.  If host can just do setup directly that's fine too.  
+> Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort+ <SERR- <PERR-          (MAbort)
+> DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq+ AuxPwr- TransPend-                                                              (UnsupReq)
+> UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq+ ACSViol-   (UnsupReq)
 > 
-> I'd expect the user to want IDE on from the very beginning, why wait to 
-> turn it on later? The question is rather if the user wants to panic() or 
-> warn() or block the device if IDE setup failed.
+> Since the reason for UR is well understood at this point, I would
+> like to weigh in on the idea of clearing the aforementioned bits in
+> the root port once the enumeration is done particularly to cater to
+> the configurations where Firmware-First approach is in place.
+> Please let me know your comments on this approach.
 
-There are some concerns about being able to support enough selective IDE streams.
-Might turn out to be a false concern (I've not yet got visibility of enough
-implementations to be able to tell).
-Also (as I understand it as a software guy) IDE has a significant performance
-and power cost (and for CXL at least there are various trade offs and options
-you can enable depending on security model and device features).
+I think Secondary status (PCI_SEC_STATUS) is always owned by the OS
+and is not affected by _OSC negotiation, right?  Linux does basically
+nothing with that today, but I think it *could* clear the "Received
+Master Abort" bit.
 
-There is "talk" of people turning IDE off if they can cope without it and only
-enabling for CoCo (and possibly selectively doing that as well)
+I'm not very familiar with Advisory Non-Fatal errors.  I'm curious
+about the UESta situation: why can't firmware know about UnsupReq
+being set?  I assume PCI_ERR_COR_ADV_NFAT is the Correctable Error
+Status bit the firmware *does* see and clear.
 
-> 
-> >    - If TDISP (technically you can run tdisp from host, but lets assume
-> >      for now no one wants to do that? (yet)).
-> >      - device_connect(TDISP) - bunch of proxying in host OS.
-> >      - Cert chain and measurements presented to host, host can then check if
-> >        it is happy and expose for next policy decision.  
-> 
-> On AMD SEV TIO the TDISP setup happens in "tdi_bind" when the device is 
-> about to be passed through which is when QEMU (==userspace) starts.
-Ah. Ok.
+But isn't the whole point of Advisory Non-Fatal errors that an error
+that is logged as an Uncorrectable Error and that normally would be
+signaled with ERR_NONFATAL is signaled with ERR_COR instead?  So
+doesn't PCI_ERR_COR_ADV_NFAT being set imply that some
+PCI_ERR_UNCOR_STATUS must be set as well?  If so, I would think
+firmware *could* figure that out and clear the PCI_ERR_UNCOR_STATUS
+bit.
 
-> 
-> > 
-> > 4. Flow after this depends on early or late binding (lockdown)
-> >     but could load driver at this point.  Userspace policy.
-> >     tdi-bind etc.  
-> 
-> Not sure I follow this. A host or guest driver?
-
-Hmm - I confess I'm confusing myself now.
-
-At this stage we just have enough info to load a driver for the PF because
-to get to state we want locked prior to VF assignment the PF driver may
-have some configuration to do.
-
-If all that goes well and the TDI can be moved to locked state, and assigned
-to a TVM which then has to decide to issue tdi_validate before binding
-the guest driver (which I assume is the TDISP START_INTERFACE_REQUEST
-bit of the state machine). Or is the guest driver ever needed before this
-transition? (I see you called it out as not, but is it always a one time
-thing on driver load or can that decision change without unbind/bind
-of driver?)
-
-I know this gets more complex for the PF pass through cases where the
-driver needs to load and do some setup before you can lock down the device
-but do people have that requirement for VFs? If they do it feels like
-device was designed wrong to me...
-
-Too many specs (some of which provide too many ways you 'could' do it)
-so I may well have a bunch of this wrong :(
-
-Jonathan
+Bjorn
