@@ -2,307 +2,219 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF3737E0E25
-	for <lists+linux-pci@lfdr.de>; Sat,  4 Nov 2023 07:57:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7C2B7E0FA8
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Nov 2023 14:54:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229572AbjKDG5s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 4 Nov 2023 02:57:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45546 "EHLO
+        id S232243AbjKDNcj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 4 Nov 2023 09:32:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbjKDG5r (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 4 Nov 2023 02:57:47 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2077.outbound.protection.outlook.com [40.107.223.77])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C3F21B9;
-        Fri,  3 Nov 2023 23:57:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Awr5OqHnvV1hmC29geWUbSlec4qzr4u9TGgQvdheDfnWvRMW030gWPLnBkIT2mJb/oF0EOfbKz9KRee7ITZfrm1o2VwI/tbZW6x/OJ6YmjzJOrvhrYOHUoi2iOTUW1AUeUVV30NGJRtVOLjHX6MyVYekTb1oZQVHip6ubONq1pQEgJLgsD82DcSC85uOAeONj1pgZD9cPYRreS/+1dVt8TmPAtorrP7/WoaOfp9FWfCQ/2MIk68QZwNPXNrai7x9iCNw1rsLjD/dl5+kL1MNhDu9LQRRRXLzSE/5a7iy/f30SBw531FtegRCtSju47VLHGXndHnT29LABL4ERzzgSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dxiayzGVQs0Dlew/58DoZQz3IwGgGxDbtVfrFx/w480=;
- b=Ucl+ltdX0TB//dxxVrmu2snnUD8/rwHoiOpLqoeoZzFbHBM1ZA+hnkChSOIswOuXVPNfnUZFN0DhIeh8vTjT808/1c4m3mdHyQgicGA/Lux/WcYrxtbOJWf7WtDTeBFPjX6Nh/EmOp5fR+p1j92psi67qd1JfDDzzz42lcKl2dx84IJXJdTFyznxvoKakfpg2QvOjEPYpcnprV2QRH2RHrzt52yggxwMMoacwXvca7Psj3Th2YMgB4wIhubbY3TaPqDB6W1YbodNk57cjGNgAAYut47l0nAxey8DpaUHkA/mnz6CQs4LArwJaxJ/9cy4kdmJ8v1q01je/0DAdNOI6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dxiayzGVQs0Dlew/58DoZQz3IwGgGxDbtVfrFx/w480=;
- b=r+RoXsvLAvHMrU7CbpY91pgOCUTdR8Fd5GMIPiYhtbfLxoalBRcRPPRQg87Hx67KHHaUtu6yvSwsKwdW6iWyIC3we9jN88wCbgOUW7MsDVRgPaHjRD4Ud7kOFSZaPo3zWhdf7q7JxXQwJswMc4dSV8sIw84RP7ysnDuwXTtoyos=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BYAPR12MB4614.namprd12.prod.outlook.com (2603:10b6:a03:a6::22)
- by MW6PR12MB8899.namprd12.prod.outlook.com (2603:10b6:303:248::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.21; Sat, 4 Nov
- 2023 06:57:38 +0000
-Received: from BYAPR12MB4614.namprd12.prod.outlook.com
- ([fe80::ce36:81fc:9c50:c892]) by BYAPR12MB4614.namprd12.prod.outlook.com
- ([fe80::ce36:81fc:9c50:c892%6]) with mapi id 15.20.6954.024; Sat, 4 Nov 2023
- 06:57:38 +0000
-Message-ID: <b8097564-dcba-e4bc-2d65-5c6936373772@amd.com>
-Date:   Sat, 4 Nov 2023 12:27:22 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v2 8/9] PCI: Exclude PCIe ports used for tunneling in
- pcie_bandwidth_available()
-Content-Language: en-US
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>
-Cc:     "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <dri-devel@lists.freedesktop.org>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        David Airlie <airlied@gmail.com>,
-        =?UTF-8?Q?Marek_Beh=c3=ban?= <kabel@kernel.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        Danilo Krummrich <dakr@redhat.com>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Xinhui Pan <Xinhui.Pan@amd.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        "Maciej W . Rozycki" <macro@orcam.me.uk>
-References: <20231103190758.82911-1-mario.limonciello@amd.com>
- <20231103190758.82911-9-mario.limonciello@amd.com>
-From:   "Lazar, Lijo" <lijo.lazar@amd.com>
-In-Reply-To: <20231103190758.82911-9-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BMXP287CA0009.INDP287.PROD.OUTLOOK.COM
- (2603:1096:b00:2c::15) To BYAPR12MB4614.namprd12.prod.outlook.com
- (2603:10b6:a03:a6::22)
+        with ESMTP id S229456AbjKDNcg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 4 Nov 2023 09:32:36 -0400
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F385ED45;
+        Sat,  4 Nov 2023 06:32:30 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R391e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0VvcM-NJ_1699104741;
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VvcM-NJ_1699104741)
+          by smtp.aliyun-inc.com;
+          Sat, 04 Nov 2023 21:32:24 +0800
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+To:     kaishen@linux.alibaba.com, helgaas@kernel.org,
+        yangyicong@huawei.com, will@kernel.org,
+        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
+        robin.murphy@arm.com
+Cc:     chengyou@linux.alibaba.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        rdunlap@infradead.org, mark.rutland@arm.com,
+        zhuo.song@linux.alibaba.com, xueshuai@linux.alibaba.com,
+        renyu.zj@linux.alibaba.com
+Subject: [PATCH v10 0/5] drivers/perf: add Synopsys DesignWare PCIe PMU driver support
+Date:   Sat,  4 Nov 2023 21:32:11 +0800
+Message-Id: <20231104133216.42056-1-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB4614:EE_|MW6PR12MB8899:EE_
-X-MS-Office365-Filtering-Correlation-Id: 770d3860-f64f-433a-68ba-08dbdd03548d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3W83KYT0vAGW0hDnzK57G8/eSxaTQ7d2aBtMbTbaoA/Bcqy+ljZL714yiuOBt2bMuJ3Zr86WN7mUNj3iBr/fpM2feKONYDg0jyMsNUjK6aS+7cEoe43C+Xx2wrzPJwqB+l0KCtAwRpmpNSbTjFi6+psufw9ePOix2sz8+3PApLvJI7qiyzEkfKZMRRBKq0knEsZP5kkIwhCgf5xFgCw2EBISIKhr7y5EykUG9Wv3our/9+bNhXDN4ikgpPWvkDzOAZfPl32MCR6f8ziMCmPENq725hP9qyuN5TFmnRhkyhMKziwFCirVKJb6WqnHzF47aWCNzUQRsyHQS2x4UsujmNpUPvWCytYuop68RXf+Zqz3r6ImIPhkLmY6v5Riey1/SjY5z9WURunZlpH7f/HF52FlWng/4t2/JTd8NIM+lwbTCt2FAFopMzd/DX1UmLHPQQNkXCYP00+u2OoWuI9SNSMuiHhJprFRJj5GpV5CJdx7RQce6dQ75P4/Cg/xm4mptkZjLeEfNQ6WK7z63WOm+mhUvWF9ub68lLzxPAGTb2xLPDFvKul2cdQm4Yq+AmQgGT7m+ggAmX7zAsqP7D2ZJVaxkGdToVRCwkd++pZ8Wtlv6gBj+FEK1ulUo1wGSwBnigQX7STs6XAtGgVAXu5a5w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB4614.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(376002)(346002)(366004)(396003)(230922051799003)(1800799009)(186009)(451199024)(64100799003)(31686004)(26005)(53546011)(2616005)(6512007)(38100700002)(86362001)(36756003)(921008)(31696002)(2906002)(8676002)(7416002)(478600001)(6506007)(6666004)(4326008)(66476007)(6486002)(66556008)(316002)(54906003)(8936002)(41300700001)(5660300002)(110136005)(66946007)(83380400001)(966005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VGhpZ1ZJLzJ2QWZlVjZHdkl5ZWduVmlMU2cvM1R5VkVTUURack84ZEZMc3dl?=
- =?utf-8?B?Sk5wcGdWM0hBL2FJaTRMejVIQ3ZIaHFURUNkMWtkRVZ1cEdLMXdPams5d29m?=
- =?utf-8?B?a2Y2TWxPUjZDU1ZBUCtIV21IUkZjcVdXRUwxYTdTV1RKY1Z1eDZjMTdXQVFi?=
- =?utf-8?B?RmZ1OVJVMC81V1hwZUd4QXVIbVJjV2xkY3ozNklCV0p1TGFCQzNlNzVZQmN2?=
- =?utf-8?B?MFY3L3VxbDdZK3pVRDU3ZEErSXJOcnZock5PM05YTFdZUGlWU202L1RIQ0xW?=
- =?utf-8?B?WVpjLzdWSzNKTk5lM1ROaVRGclo5RzhoSmVIcVJLM1JNV3Nxa3JTN2xhWXpw?=
- =?utf-8?B?SjNUNzg2SE9RUnExTk5VaDZ3bE5XczhOYzFRdWQxMUJsSERtWlJxTmhVeXcx?=
- =?utf-8?B?TnlzVWZSNzNwVGIxa0JtMkpmUThIR0dnd21SZW5XSjUyNmdSVmdJcU1TRk14?=
- =?utf-8?B?NWRGcVRpcHg3VlROZGlWOHc2aENEdCtvc3RuWm0ySXhQVXdTYkMrS0VpZEN5?=
- =?utf-8?B?d2VsaFplRENrUVpZUXhNODVwRUN6Q3oyVGVTSnI5TUtoeWFxc3EzWlIxbnNl?=
- =?utf-8?B?MHBqVjh3akRtL0QwN0N2TndqbW9KNnJXMGdpOWhRVG9aS2JhZld3NVIwMzE3?=
- =?utf-8?B?MmlmR3d4VE9HS01NQVVqQSs3Z1J6dEtUVGJlU1B5M1NxMkFmQzN4ckREZURW?=
- =?utf-8?B?RCs0R2JnZHlDbk5vU3JxUVpVZ05IZGpuUjFvRzJmNGNSS3lZQUozd0FOVVJk?=
- =?utf-8?B?eXBKMnduYXVDbmplRnNLY3BpZEhwZm1LWlc0NXRiTkdzbWdSdk5EODFETEM2?=
- =?utf-8?B?VHVOOXNZNER0ZlVyaUtwTVBqZTZENTdDZTVlUnBqMDBZSk93dkk4QjB5MlRn?=
- =?utf-8?B?Y2dyZXg2MUx3cUlkejBuT05HTEVSQ1hXdlN0MStJQXJBTWVNWXhOTWNBenI2?=
- =?utf-8?B?R1RCSEdSNlFRWmdKSHZBejVTVlAxTkhlRCtoa29qZ05ob0xkbnJuRG5ncXVo?=
- =?utf-8?B?WUJ5UjRYcDBaNVczRkFncG16a0dIVUJtbWxZSWs2NmZFc0lzeTZNbHhyQVN6?=
- =?utf-8?B?Mk9nSktxaFNjQkxMUWswaUZVNWhVVkUyRStpRHBaK0Z5VS80aDZuWmZSRXVV?=
- =?utf-8?B?Z0h5YzRsdmw3aTI2UHpQd0h1M0t5N2JmZTA0dzhqY2N4elJIdWUrQm5pNDd6?=
- =?utf-8?B?QWJCa1lIU1ZkV0JSdlRzT3I0OTFIaTdKUUsvaDF2Q0JXb3AvTTRGTFpuNk1y?=
- =?utf-8?B?ekZENWFodFVQVUMvMDNYYnBLOHFvdEo3R2s3WEF3YjBtRFdxVDV0bDhOdU0r?=
- =?utf-8?B?WkJac0NhVWtIV3J0cXFQRDh6ZU03QkJDREJEbm9NTHBLY21kZmdpUDhSM0dw?=
- =?utf-8?B?Slpsd3pOSmphTlVOM3p3QzRTMkp1Q1Nyb3ZBSGtLakhodzNLcVhhQjhubXEv?=
- =?utf-8?B?cjk5L09xS05jdGxsazlRdGFuVTB0aTJZdUNwKy9mSFZMaElpMjZ3RUpYc1Ur?=
- =?utf-8?B?ZVRORnlxVk5lM1FuUHZ0RWc0S0RxL0MxWkFDZE5wODdhTFNwVmNhOEp2RWdB?=
- =?utf-8?B?L1VmMHVjZ3UwaDR0U1dlL0QvK3MzaUFOY1owdmtmaloyT21qY094N2Jpcisv?=
- =?utf-8?B?RzdUSUdhMGlzSHFjd0ZnVzNycmJic3pObU9UeWZKQldhUnJaaUs2dTZzWFNa?=
- =?utf-8?B?UzF1ZS9pVHpKS1BWM0pFREU0K3N6OWpNMlg5MkR6dlRjSkRMTXBEMmtKVXlF?=
- =?utf-8?B?WkZiMnBvLy9Fdk1Ock9hL1U5dzl5UU9pMk96WlA2YkFCTmViQkJQQ2QzQ1ZO?=
- =?utf-8?B?cnFPeEN1dUt2OHUxZE8wdkpqSCtYQWZFdkJrU2VsWTAzSHJVSlJ1MUxxR3RK?=
- =?utf-8?B?WXQzc1JXQ2tZWk83dlIzVHJUU05IbzRGQ0tkbklZYzJCK21BRmRWcGxuUFp2?=
- =?utf-8?B?N0N3N2Jqa0h6Tm1KaCtUZ1BZQjVHYW9RUGQ5TXNHMXQzYit5VE1JNk1FT1dC?=
- =?utf-8?B?SUZXd0txUUxBdjN0L0hySE9QL0IvRnJXM2dXd1ZTQVJDbjZWZU5OU1pwNnJh?=
- =?utf-8?B?cE0rb3p1MkFGNW10dUdHdmlQckJ0eHdIemNjdE83UXZ1eE1CVW9LeXc4emdR?=
- =?utf-8?Q?+K88K9LCO9Jyk3+gOE7Fbzh26?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 770d3860-f64f-433a-68ba-08dbdd03548d
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB4614.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2023 06:57:38.0334
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PyJ0pRlwA/k8XKAkIoRBW6B0gkDQ2SwjiDarsWw3DTo71MWvnNMP05Br+ABeokQB
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8899
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Change Log
+==========
+
+- move the &plat_dev->dev to previous line to warp more beautiful (Per Jonathan)
+- rename error label with the same suffix 'err'  (Per Jonathan)
+- drop unnecessary else branch and return directly (Per Baolin)
+- warp out set prev_count from dwc_pcie_pmu_set_period (Per Baolin)
+- use PMU_FORMAT_ATTR to simplify format sysfs stuff (Per Will)
+- export pci_clear_and_set_dword() to simplify _enable() functions  (Per Will)
+- simplify _read() function by unconditionally calculate with unit in bytes plused if branch for group#1 event (Per Will and Robin)
+- simplify _update() function by unconditionally mask with 64-bit width plused if branch for lane event (Per Will)
+- add type sanity check in _init() (Per Will)
+- test with fuzzing tool before this new version (Per Will)
+- register a platform device for each PCI device to probe RAS_DES PMU cap (Per Robin)
+- add dwc_pcie_vendor_ids to extend vendor id for future added device (Per Krishna)
+- pickup review-by tag from Baolin, Yicong and Jonathan 
 
 
-On 11/4/2023 12:37 AM, Mario Limonciello wrote:
-> The USB4 spec specifies that PCIe ports that are used for tunneling
-> PCIe traffic over USB4 fabric will be hardcoded to advertise 2.5GT/s and
-> behave as a PCIe Gen1 device. The actual performance of these ports is
-> controlled by the fabric implementation.
+changes since v8:
+- tidy up doc and pick up Reviewed-by tag in pathc 1/4 (Per Yicong and Jonathan)
+- rename ras_des as ras_des_offset and remove coment about it (Per Jonathan)
+- keep exact reverse order of what happened in probe when unregister pmu (Per Jonathan)
+- remove the hender length check to make the driver more compatible (Per Jonathan)
+- move unwind of register pmu forward to fix list_del() on something that was never added (Per Jonathan)
+- use devm_add_action_or_reset() to unwind bus_register_notifier() (Per Jonathan)
+- use local pdev directly in dwc_pcie_pmu_offline_cpu() and dwc_pcie_pmu_probe() (Per Jonathan)
+- use the approach of a gotos to handle errors in dwc_pcie_pmu_init() (Per Jonathan)
+- multiply the counter value at point of read by 16 for group#1 events (Per Jonathan)
 
-The code below ties a generic term 'tunneling' to USB4 spec. I think it 
-should be something like if (is_USB4 && is_tunneled), exclude from 
-bandwidth calculations - it should specifically identify usb4 based 
-tunneling rather than applying to all 'tunneled' cases.
+changes since v7:
+- add config help with alibaba name (per Bjorn)
+- remove the ARM64 dependency (per Bjorn and Jonathan)
+- fix typo and column warp (per Bjorn) 
+- move list_del() after perf_pmu_unregister() (per Bjorn) 
+- reorder the funtions by interests (per Bjorn)
+- rewrite commit log about PMU counters, also update doc (per Bjorn)
+- extend to support stat time-based analysis and lane event at the same time (per Bjorn and Jonathan)
+Link: https://lore.kernel.org/linux-arm-kernel/20231012032856.2640-2-xueshuai@linux.alibaba.com/T/
 
-Thanks,
-Lijo
+changes since v6:
+- improve editorial things in doc (Per Jonathan)
+- change config help to generic text (Per Jonathan)
+- remove macro to_dwc_pcie_pmu by moving pmu as the first member to struct dwc_pcie_pmu (Per Yicong)
+- add event type check in dwc_pcie_event_show() to keep consistent with other function (Per Jonathan)
+- remove intended blank line (Per Yicong)
+- protect against lower 32 bits of counter overflow by try again trick (Per Jonathan)
+- call pci_dev_put on all the return branch to keep the refcnt balance (Per Jonathan and Yicong)
+- use devm_add_action_or_reset() to automatic unwind (Per Jonathan)
+- fix picking numa-aware context cpu up when offline and offline cpu (Per Jonathan)
+- simplify online cpu by init pcie_pmu->on_cpu as -1 (Per Jonathan)
+- add bus_register_notifier() to handle rootport hotplug (Per Yicong)
+- pick up Acked-by from Bjorn for patch 2/4 (Per Bjorn)
+Link: https://lore.kernel.org/lkml/20230606074938.97724-1-xueshuai@linux.alibaba.com/T/
 
-> 
-> Downstream drivers such as amdgpu which utilize pcie_bandwidth_available()
-> to program the device will always find the PCIe ports used for
-> tunneling as a limiting factor potentially leading to incorrect
-> performance decisions.
-> 
-> To prevent problems in downstream drivers check explicitly for ports
-> being used for PCIe tunneling and skip them when looking for bandwidth
-> limitations of the hierarchy. If the only device connected is a root port
-> used for tunneling then report that device.
-> 
-> Downstream drivers could make this change on their own but then they
-> wouldn't be able to detect other potential speed bottlenecks from the
-> hierarchy without duplicating pcie_bandwidth_available() logic.
-> 
-> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2925#note_2145860
-> Link: https://www.usb.org/document-library/usb4r-specification-v20
->        USB4 V2 with Errata and ECN through June 2023
->        Section 11.2.1
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->   drivers/pci/pci.c | 74 +++++++++++++++++++++++++++++++----------------
->   1 file changed, 49 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index d9aa5a39f585..15e37164ce56 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -6223,6 +6223,35 @@ int pcie_set_mps(struct pci_dev *dev, int mps)
->   }
->   EXPORT_SYMBOL(pcie_set_mps);
->   
-> +static u32 pcie_calc_bw_limits(struct pci_dev *dev, u32 bw,
-> +			       struct pci_dev **limiting_dev,
-> +			       enum pci_bus_speed *speed,
-> +			       enum pcie_link_width *width)
-> +{
-> +	enum pcie_link_width next_width;
-> +	enum pci_bus_speed next_speed;
-> +	u32 next_bw;
-> +	u16 lnksta;
-> +
-> +	pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
-> +	next_speed = pcie_link_speed[lnksta & PCI_EXP_LNKSTA_CLS];
-> +	next_width = (lnksta & PCI_EXP_LNKSTA_NLW) >> PCI_EXP_LNKSTA_NLW_SHIFT;
-> +	next_bw = next_width * PCIE_SPEED2MBS_ENC(next_speed);
-> +
-> +	/* Check if current device limits the total bandwidth */
-> +	if (!bw || next_bw <= bw) {
-> +		bw = next_bw;
-> +		if (limiting_dev)
-> +			*limiting_dev = dev;
-> +		if (speed)
-> +			*speed = next_speed;
-> +		if (width)
-> +			*width = next_width;
-> +	}
-> +
-> +	return bw;
-> +}
-> +
->   /**
->    * pcie_bandwidth_available - determine minimum link settings of a PCIe
->    *			      device and its bandwidth limitation
-> @@ -6236,47 +6265,42 @@ EXPORT_SYMBOL(pcie_set_mps);
->    * limiting_dev, speed, and width pointers are supplied) information about
->    * that point.  The bandwidth returned is in Mb/s, i.e., megabits/second of
->    * raw bandwidth.
-> + *
-> + * This excludes the bandwidth calculation that has been returned from a
-> + * PCIe device used for transmitting tunneled PCIe traffic over a Thunderbolt
-> + * or USB4 link that is part of larger hierarchy. The calculation is excluded
-> + * because the USB4 specification specifies that the max speed returned from
-> + * PCIe configuration registers for the tunneling link is always PCI 1x 2.5 GT/s.
-> + * When only tunneled devices are present, the bandwidth returned is the
-> + * bandwidth available from the first tunneled device.
->    */
->   u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
->   			     enum pci_bus_speed *speed,
->   			     enum pcie_link_width *width)
->   {
-> -	u16 lnksta;
-> -	enum pci_bus_speed next_speed;
-> -	enum pcie_link_width next_width;
-> -	u32 bw, next_bw;
-> +	struct pci_dev *tdev = NULL;
-> +	u32 bw = 0;
->   
->   	if (speed)
->   		*speed = PCI_SPEED_UNKNOWN;
->   	if (width)
->   		*width = PCIE_LNK_WIDTH_UNKNOWN;
->   
-> -	bw = 0;
-> -
->   	while (dev) {
-> -		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
-> -
-> -		next_speed = pcie_link_speed[lnksta & PCI_EXP_LNKSTA_CLS];
-> -		next_width = (lnksta & PCI_EXP_LNKSTA_NLW) >>
-> -			PCI_EXP_LNKSTA_NLW_SHIFT;
-> -
-> -		next_bw = next_width * PCIE_SPEED2MBS_ENC(next_speed);
-> -
-> -		/* Check if current device limits the total bandwidth */
-> -		if (!bw || next_bw <= bw) {
-> -			bw = next_bw;
-> -
-> -			if (limiting_dev)
-> -				*limiting_dev = dev;
-> -			if (speed)
-> -				*speed = next_speed;
-> -			if (width)
-> -				*width = next_width;
-> +		if (dev->is_tunneled) {
-> +			if (!tdev)
-> +				tdev = dev;
-> +			goto skip;
->   		}
-> -
-> +		bw = pcie_calc_bw_limits(dev, bw, limiting_dev, speed, width);
-> +skip:
->   		dev = pci_upstream_bridge(dev);
->   	}
->   
-> +	/* If nothing "faster" found on link, limit to first tunneled device */
-> +	if (tdev && !bw)
-> +		bw = pcie_calc_bw_limits(tdev, bw, limiting_dev, speed, width);
-> +
->   	return bw;
->   }
->   EXPORT_SYMBOL(pcie_bandwidth_available);
+changes since v5:
+- Rewrite the commit log to follow policy in pci_ids.h (Bjorn Helgaas)
+- return error code when __dwc_pcie_pmu_probe failed (Baolin Wang)
+- call 'cpuhp_remove_multi_state()' when exiting the driver. (Baolin Wang)
+- pick up Review-by tag from Baolin for Patch 1 and 3
+Link: https://lore.kernel.org/lkml/ZGuSimj1cuQl3W5L@bhelgaas/T/#mba3fa2572dde0deddb40b5b24a31f4df41004bdf
+
+changes since v4:
+
+1. addressing commens from Bjorn Helgaas:
+- reorder the includes by alpha
+- change all macros with upper-case hex
+- change ras_des type into u16
+- remove unnecessary outer "()"
+- minor format changes
+
+2. Address commensts from Jonathan Cameron:
+- rewrite doc and add a example to show how to use lane event
+
+3. fix compile error reported by: kernel test robot
+- remove COMPILE_TEST and add depend on PCI in kconfig
+- add Reported-by: kernel test robot <lkp@intel.com>
+
+Changes since v3:
+
+1. addressing comments from Robin Murphy:
+- add a prepare patch to define pci id in linux/pci_ids.h
+- remove unnecessary 64BIT dependency
+- fix DWC_PCIE_PER_EVENT_OFF/ON macro
+- remove dwc_pcie_pmu struct and move all its fileds into dwc_pcie_rp_info
+- remove unnecessary format field show
+- use sysfs_emit() instead of all the assorted sprintf() and snprintf() calls.
+- remove unnecessary spaces and remove unnecessary cast to follow event show convention
+- remove pcie_pmu_event_attr_is_visible
+- fix a refcout leak on error branch when walk pci device in for_each_pci_dev
+- remove bdf field from dwc_pcie_rp_info and calculate it at runtime
+- finish all the checks before allocating rp_info to avoid hanging wasted memory
+- remove some unused fields
+- warp out control register configuration from sub function to .add()
+- make function return type with a proper signature
+- fix lane event count enable by clear DWC_PCIE_CNT_ENABLE field first
+- pass rp_info directly to the read_*_counter helpers and in start, stop and add callbacks
+- move event type validtion into .event_init()
+- use is_sampling_event() to be consistent with everything else of pmu drivers
+- remove unnecessary dev_err message in .event_init()
+- return EINVAL instead EOPNOTSUPP for not a valid event 
+- finish all the checks before start modifying the event
+- fix sibling event check by comparing event->pmu with sibling->pmu
+- probe PMU for each rootport independently
+- use .update() as .read() directly
+- remove dynamically generating symbolic name of lane event
+- redefine static symbolic name of lane event and leave lane filed to user
+- add CPU hotplug support
+
+2. addressing comments from Baolin:
+- add a mask to avoid possible overflow
+
+Changes since v2 addressing comments from Baolin:
+- remove redundant macro definitions
+- use dev_err to print error message
+- change pmu_is_register to boolean
+- use PLATFORM_DEVID_NONE macro
+- fix module author format
+
+Changes since v1:
+
+1. address comments from Jonathan:
+- drop marco for PMU name and VSEC version
+- simplify code with PCI standard marco
+- simplify code with FIELD_PREP()/FIELD_GET() to replace shift marco
+- name register filed with single _ instead double
+- wrap dwc_pcie_pmu_{write}_dword out and drop meaningless snaity check 
+- check vendor id while matching vesc with pci_find_vsec_capability()
+- remove RP_NUM_MAX and use a list to organize PMU devices for rootports
+- replace DWC_PCIE_CREATE_BDF with standard PCI_DEVID
+- comments on riping register together
+
+2. address comments from Bjorn:
+- rename DWC_PCIE_VSEC_ID to DWC_PCIE_VSEC_RAS_DES_ID
+- rename cap_pos to ras_des
+- simplify declare of device_attribute with DEVICE_ATTR_RO
+- simplify code with PCI standard macro and API like pcie_get_width_cap()
+- fix some code style problem and typo
+- drop meaningless snaity check of container_of
+
+3. address comments from Yicong:
+- use sysfs_emit() to replace sprintf()
+- simplify iteration of pci device with for_each_pci_dev
+- pick preferred CPUs on a near die and add comments
+- unregister PMU drivers only for failed ones
+- log on behalf PMU device and give more hint
+- fix some code style problem
+
+(Thanks for all comments and they are very valuable to me)
+
+Shuai Xue (5):
+  docs: perf: Add description for Synopsys DesignWare PCIe PMU driver
+  PCI: Add Alibaba Vendor ID to linux/pci_ids.h
+  PCI: move pci_clear_and_set_dword helper to pci header
+  drivers/perf: add DesignWare PCIe PMU driver
+  MAINTAINERS: add maintainers for DesignWare PCIe PMU driver
+
+ .../admin-guide/perf/dwc_pcie_pmu.rst         |  94 +++
+ Documentation/admin-guide/perf/index.rst      |   1 +
+ MAINTAINERS                                   |   7 +
+ drivers/infiniband/hw/erdma/erdma_hw.h        |   2 -
+ drivers/pci/access.c                          |  12 +
+ drivers/pci/pcie/aspm.c                       |  11 -
+ drivers/perf/Kconfig                          |   7 +
+ drivers/perf/Makefile                         |   1 +
+ drivers/perf/dwc_pcie_pmu.c                   | 798 ++++++++++++++++++
+ include/linux/pci.h                           |   2 +
+ include/linux/pci_ids.h                       |   2 +
+ 11 files changed, 924 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/admin-guide/perf/dwc_pcie_pmu.rst
+ create mode 100644 drivers/perf/dwc_pcie_pmu.c
+
+-- 
+2.39.3
+
