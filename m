@@ -2,120 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 085D47E0A83
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Nov 2023 21:51:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34B607E0CBD
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Nov 2023 01:38:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229954AbjKCUvC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Nov 2023 16:51:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54354 "EHLO
+        id S231226AbjKDAi3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Nov 2023 20:38:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbjKCUvB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Nov 2023 16:51:01 -0400
-Received: from bee.tesarici.cz (bee.tesarici.cz [IPv6:2a03:3b40:fe:2d4::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BB001BF;
-        Fri,  3 Nov 2023 13:50:57 -0700 (PDT)
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by bee.tesarici.cz (Postfix) with ESMTPSA id 89C841953CF;
-        Fri,  3 Nov 2023 21:50:54 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=none dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tesarici.cz; s=mail;
-        t=1699044654; bh=ovF2UxeFKGVoKgOj3oQMqaLMJ/vL6MISuASAGJ+7cOo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OKDh8aDXW5UlBWkhlrSF+eWWUCy4nesCqv1sSWA8SKz3LtzRyonOKo29z948jxFn8
-         IP0OAsvNwuKaro8+qHqn3sTG3glqpExjeHguIxFqapE/hWSGLaPHOThV5ofhLMM0N4
-         ZD4zVycNv0+4kwjtBNZmagUDOJJHW23CCP+axUGAz5o8UxXHXTcCyuukm0Fz51SMtI
-         pvyIjLrJn+VAqScqSvK6YCeZIkP0+YStxsNx/lanF4fG2gGB7t+0IAFt3pXSJU86+v
-         db4SKPxpo1B9rsrQpHgQMeMk08n9RVtjGPdgHGlERFIC+X5JS4KT1fq0w0xs1so5K3
-         mFANpzOhAXKtw==
-Date:   Fri, 3 Nov 2023 21:50:53 +0100
-From:   Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Petr Tesarik <petr.tesarik1@huawei-partners.com>,
-        Ross Lagerwall <ross.lagerwall@citrix.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-        Matthew Rosato <mjrosato@linux.ibm.com>
-Subject: Re: Memory corruption with CONFIG_SWIOTLB_DYNAMIC=y
-Message-ID: <20231103214831.26d29f4d@meshulam.tesarici.cz>
-In-Reply-To: <20231103171447.02759771.pasic@linux.ibm.com>
-References: <104a8c8fedffd1ff8a2890983e2ec1c26bff6810.camel@linux.ibm.com>
-        <20231103171447.02759771.pasic@linux.ibm.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-suse-linux-gnu)
+        with ESMTP id S231231AbjKDAi2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Nov 2023 20:38:28 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90A39D45;
+        Fri,  3 Nov 2023 17:38:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1699058299; x=1730594299;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lgdwiAyPRysKtnT+0nfDxaf8k2i2tuiMEm+OGHK/8NQ=;
+  b=dyKNqf0KjUWdxcLnEF6dEat40PVvphPZaY+pHG7iXbkNMzELgriU42o5
+   VJxc+wz6xKHCcYfwgRVVYKCeafktags6VSsQL7eRm96A2tdy3YQo4LytY
+   4iAA+9LaOnsSR6/t52umMuW9e0aHBv25GXolYMED3Ju23yGQvZ6VhxB1r
+   PvyRvjg9X5mhJlURTv7wP9/dW74NdpBdsMyrM/4ZPyrYbRPgS8xfMDsb5
+   te2qMkLOuMskSFPs/eEZBtF0SZfV4rNPjrSJd1i/cHnRNS3eIploRqxNu
+   BbY+aRBeThJ+QKJf5UD4RC+nDDPXSS+FAk7zDHwB+s801AcafBGTLV7Tz
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10883"; a="369252348"
+X-IronPort-AV: E=Sophos;i="6.03,275,1694761200"; 
+   d="scan'208";a="369252348"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2023 17:38:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10883"; a="755313891"
+X-IronPort-AV: E=Sophos;i="6.03,275,1694761200"; 
+   d="scan'208";a="755313891"
+Received: from lkp-server01.sh.intel.com (HELO 17d9e85e5079) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 03 Nov 2023 17:38:11 -0700
+Received: from kbuild by 17d9e85e5079 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qz4fx-00038N-1g;
+        Sat, 04 Nov 2023 00:38:09 +0000
+Date:   Sat, 4 Nov 2023 08:37:16 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>
+Cc:     oe-kbuild-all@lists.linux.dev, Danilo Krummrich <dakr@redhat.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Xinhui Pan <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        "Maciej W . Rozycki" <macro@orcam.me.uk>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH v2 3/9] PCI: Drop pci_is_thunderbolt_attached()
+Message-ID: <202311040800.zpVIwNrB-lkp@intel.com>
+References: <20231103190758.82911-4-mario.limonciello@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231103190758.82911-4-mario.limonciello@amd.com>
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 3 Nov 2023 17:14:47 +0100
-Halil Pasic <pasic@linux.ibm.com> wrote:
+Hi Mario,
 
->[...]
-> In our case min_align_mask == 0 and a) is thus not applicable, because b) and
-> c) we end up with iotlb_align_mask = 0x800. And because orig_add & 0x800 ==
-> 0x800 but pool->start & 0x800 == 0 and the slot at index i is skipped over. The
-> slot 0 is skipped over because it is page aligned, when !!((1UL << PAGE_SHIFT)
-> & orig_addr) 
+kernel test robot noticed the following build errors:
 
-Wait. These mask values can quickly become confusing. Do you mean
-iotlb_align_mask == 0xfff?
+[auto build test ERROR on pci/for-linus]
+[also build test ERROR on drm-misc/drm-misc-next westeri-thunderbolt/next rafael-pm/linux-next rafael-pm/acpi-bus linus/master rafael-pm/devprop v6.6 next-20231103]
+[cannot apply to pci/next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> Let us note that with the current implementation the min_align_size mask, that
-> is mechanism a) also controls the tlb_addr within the first slot so that:
-> tlb_addr & min_align_mask == orig_addr & min_align_mask. In that sense a) is
-> very unlike b) and c).
+url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/drm-nouveau-Switch-from-pci_is_thunderbolt_attached-to-dev_is_removable/20231104-030945
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+patch link:    https://lore.kernel.org/r/20231103190758.82911-4-mario.limonciello%40amd.com
+patch subject: [PATCH v2 3/9] PCI: Drop pci_is_thunderbolt_attached()
+config: loongarch-randconfig-002-20231104 (https://download.01.org/0day-ci/archive/20231104/202311040800.zpVIwNrB-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231104/202311040800.zpVIwNrB-lkp@intel.com/reproduce)
 
-It is silently assumed that PAGE_SIZE >= IO_TLB_SIZE, so if the buffer
-is page-aligned, the lower bits of the alignment inside the io tlb slot
-must be zero.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311040800.zpVIwNrB-lkp@intel.com/
 
-If the same assumption is made about alloc_align_mask, it should be
-documented, but it is not.
+All errors (new ones prefixed by >>):
 
->[...]
-> In our opinion the first step towards getting this right is to figure out what
-> the different kinds of alignments are really supposed to mean. For each of the
-> mechanisms we need to understand and document, whether making sure that the
-> bounce buffer does not stretch over more of certain units of memory (like,
-> pages, iova granule size, whatever), or is it about preserving offset within a
-> certain unit of memory, and if yes to what extent (the least significant n-bits
-> of the orig_addr dictated by the respective mask, or something different).
+   drivers/gpu/drm/amd/amdgpu/nbio_v2_3.c: In function 'nbio_v2_3_enable_aspm':
+>> drivers/gpu/drm/amd/amdgpu/nbio_v2_3.c:364:21: error: implicit declaration of function 'pci_is_thunderbolt_attached' [-Werror=implicit-function-declaration]
+     364 |                 if (pci_is_thunderbolt_attached(adev->pdev))
+         |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+--
+   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c: In function 'amdgpu_device_ip_early_init':
+>> drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:2118:14: error: implicit declaration of function 'pci_is_thunderbolt_attached' [-Werror=implicit-function-declaration]
+    2118 |             !pci_is_thunderbolt_attached(to_pci_dev(dev->dev)))
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
 
-Seconded. I have also been struggling with the various alignment
-constraints. I have even written (but not yet submitted) a patch to
-calculate the combined alignment mask in swiotlb_tbl_map_single() and
-pass it down to all other functions, just to make it clear what
-alignment mask is used.
+vim +/pci_is_thunderbolt_attached +364 drivers/gpu/drm/amd/amdgpu/nbio_v2_3.c
 
-My understanding is that buffer alignment may be required by:
+f1213b15976881d Evan Quan 2020-08-18  350  
+f1213b15976881d Evan Quan 2020-08-18  351  static void nbio_v2_3_enable_aspm(struct amdgpu_device *adev,
+f1213b15976881d Evan Quan 2020-08-18  352  				  bool enable)
+f1213b15976881d Evan Quan 2020-08-18  353  {
+f1213b15976881d Evan Quan 2020-08-18  354  	uint32_t def, data;
+f1213b15976881d Evan Quan 2020-08-18  355  
+f1213b15976881d Evan Quan 2020-08-18  356  	def = data = RREG32_PCIE(smnPCIE_LC_CNTL);
+f1213b15976881d Evan Quan 2020-08-18  357  
+f1213b15976881d Evan Quan 2020-08-18  358  	if (enable) {
+f1213b15976881d Evan Quan 2020-08-18  359  		/* Disable ASPM L0s/L1 first */
+f1213b15976881d Evan Quan 2020-08-18  360  		data &= ~(PCIE_LC_CNTL__LC_L0S_INACTIVITY_MASK | PCIE_LC_CNTL__LC_L1_INACTIVITY_MASK);
+f1213b15976881d Evan Quan 2020-08-18  361  
+f1213b15976881d Evan Quan 2020-08-18  362  		data |= NAVI10_PCIE__LC_L0S_INACTIVITY_DEFAULT << PCIE_LC_CNTL__LC_L0S_INACTIVITY__SHIFT;
+f1213b15976881d Evan Quan 2020-08-18  363  
+f1213b15976881d Evan Quan 2020-08-18 @364  		if (pci_is_thunderbolt_attached(adev->pdev))
+f1213b15976881d Evan Quan 2020-08-18  365  			data |= NAVI10_PCIE__LC_L1_INACTIVITY_TBT_DEFAULT  << PCIE_LC_CNTL__LC_L1_INACTIVITY__SHIFT;
+f1213b15976881d Evan Quan 2020-08-18  366  		else
+f1213b15976881d Evan Quan 2020-08-18  367  			data |= NAVI10_PCIE__LC_L1_INACTIVITY_DEFAULT << PCIE_LC_CNTL__LC_L1_INACTIVITY__SHIFT;
+f1213b15976881d Evan Quan 2020-08-18  368  
+f1213b15976881d Evan Quan 2020-08-18  369  		data &= ~PCIE_LC_CNTL__LC_PMI_TO_L1_DIS_MASK;
+f1213b15976881d Evan Quan 2020-08-18  370  	} else {
+f1213b15976881d Evan Quan 2020-08-18  371  		/* Disbale ASPM L1 */
+f1213b15976881d Evan Quan 2020-08-18  372  		data &= ~PCIE_LC_CNTL__LC_L1_INACTIVITY_MASK;
+f1213b15976881d Evan Quan 2020-08-18  373  		/* Disable ASPM TxL0s */
+f1213b15976881d Evan Quan 2020-08-18  374  		data &= ~PCIE_LC_CNTL__LC_L0S_INACTIVITY_MASK;
+f1213b15976881d Evan Quan 2020-08-18  375  		/* Disable ACPI L1 */
+f1213b15976881d Evan Quan 2020-08-18  376  		data |= PCIE_LC_CNTL__LC_PMI_TO_L1_DIS_MASK;
+f1213b15976881d Evan Quan 2020-08-18  377  	}
+f1213b15976881d Evan Quan 2020-08-18  378  
+f1213b15976881d Evan Quan 2020-08-18  379  	if (def != data)
+f1213b15976881d Evan Quan 2020-08-18  380  		WREG32_PCIE(smnPCIE_LC_CNTL, data);
+f1213b15976881d Evan Quan 2020-08-18  381  }
+f1213b15976881d Evan Quan 2020-08-18  382  
 
-1. hardware which cannot handle an unaligned base address (presumably
-   because the chip performs a simple OR operation to get the addresses
-   of individual fields);
-
-2. isolation of untrusted devices, where no two bounce buffers should
-   end up in the same iova granule;
-
-3. allocation size; I could not find an explanation, so this might be
-   merely an attempt at reducing SWIOTLB internal fragmentation.
-
-I hope other people on the Cc list can shed more light on the intended
-behaviour.
-
-Petr T
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
