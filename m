@@ -2,93 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE6997E131D
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Nov 2023 12:20:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F7177E1587
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Nov 2023 18:40:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229561AbjKELUM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 5 Nov 2023 06:20:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40332 "EHLO
+        id S229468AbjKERkE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 5 Nov 2023 12:40:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbjKELUM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Nov 2023 06:20:12 -0500
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC729DE
-        for <linux-pci@vger.kernel.org>; Sun,  5 Nov 2023 03:20:07 -0800 (PST)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-208-_gyjXBTTOsWWsWRWtT5SRQ-1; Sun, 05 Nov 2023 11:20:04 +0000
-X-MC-Unique: _gyjXBTTOsWWsWRWtT5SRQ-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 5 Nov
- 2023 11:20:03 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sun, 5 Nov 2023 11:20:03 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'David Epping' <david.epping@missinglinkelectronics.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        with ESMTP id S229445AbjKERj6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Nov 2023 12:39:58 -0500
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FEE3CA;
+        Sun,  5 Nov 2023 09:39:49 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id D5BCE300002D8;
+        Sun,  5 Nov 2023 18:39:46 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id BDB26473E23; Sun,  5 Nov 2023 18:39:46 +0100 (CET)
+Date:   Sun, 5 Nov 2023 18:39:46 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?utf-8?B?S3J6eXN6dG9mIFdpbGN6ecWEc2tp?= <kw@linux.com>
-Subject: RE: mach-socfpga: PCIe Root IO TLP support for Cyclone V
-Thread-Topic: mach-socfpga: PCIe Root IO TLP support for Cyclone V
-Thread-Index: AQHaC+rcwX/RJWhaCEGpb3NmFV615LBrmEmQ
-Date:   Sun, 5 Nov 2023 11:20:03 +0000
-Message-ID: <fd407621b4a64cebaf8a847b3ff1ad2e@AcuMS.aculab.com>
-References: <ZUDd04c7FXUeusxK@nucnuc.mle>
-In-Reply-To: <ZUDd04c7FXUeusxK@nucnuc.mle>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Hans de Goede <hdegoede@redhat.com>,
+        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Danilo Krummrich <dakr@redhat.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Xinhui Pan <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        "Maciej W . Rozycki" <macro@orcam.me.uk>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <dri-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH v2 6/9] PCI: Rename is_thunderbolt to is_tunneled
+Message-ID: <20231105173946.GA31955@wunner.de>
+References: <20231103190758.82911-1-mario.limonciello@amd.com>
+ <20231103190758.82911-7-mario.limonciello@amd.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231103190758.82911-7-mario.limonciello@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-RnJvbTogRGF2aWQgRXBwaW5nDQo+IFNlbnQ6IDMxIE9jdG9iZXIgMjAyMyAxMDo1OA0KPiANCj4g
-SGVsbG8gQVJNIFBDSWUgYW5kIGVzcGVjaWFsbHkgSW50ZWwgQWx0ZXJhIFNPQ0ZQR0EgbWFpbnRh
-aW5lcnMsDQo+IA0KPiB0aGUgSW50ZWwgQWx0ZXJhIEN5Y2xvbmUgViBQQ0llIFJvb3QgQ29tcGxl
-eCBkcml2ZXJzIGFmYWlrIGN1cnJlbnRseQ0KPiBkb27igJl0IHN1cHBvcnQgc2VuZGluZyBJTyBU
-TFBzLg0KPiBUaGUgUm9vdCBDb21wbGV4IElQIENvcmUsIHNlZW1pbmdseSB1bmxpa2UgbWFueSBv
-dGhlciBBUk0gUm9vdCBDb21wbGV4ZXMsDQoNCkl0IGlzbid0IGFuIEFSTSByb290IGNvbXBsZXgg
-Li4uDQpJIGRpZG4ndCB0aGluayBhbnkgb2YgdGhlIEN5Y2xvbmUgViBoYWQgZW1iZWRkZWQgYXJt
-IGNwdS4NCkkga25vdyBzb21lIG9mIHRoZSBtb3JlIHJlY2VudCBBbHRlcmEgRlBHQSBkbywgYnkg
-dGhlIEN5Y2xvbmUgVg0KaXMgcHJldHR5IG9sZCBub3cgLSBhbHRob3VnaCB3ZSBhcmUgc3RpbGwg
-dXNpbmcgdGhlbSBpbiBuZXcgY2FyZHMuDQooT25seSBhcyBQQ0llIGVuZHBvaW50cyB0aG91Z2gu
-KQ0KDQo+IGRvZXMgbm90IG9mZmVyIGEgbWVtb3J5IG1hcHBpbmcgZm9yIHRoZSBJTyBhZGRyZXNz
-IHNwYWNlLCBidXQgaW5zdGVhZCByZWxpZXMNCj4gb24gaW5kaXJlY3QgYWRkcmVzc2luZyB2aWEg
-YWRkcmVzcyBhbmQgZGF0YSByZWdpc3RlcnMuDQoNCklmIHlvdSBhcmUgYnVpbGRpbmcgdGhlIEZQ
-R0EgaW1hZ2UgdGhlbiBhbGwgdGhlIGxvZ2ljIHRvIGNvbnZlcnQgdGhlDQptZW1vcnkgbWFwcGVk
-IHNsYXZlIGN5Y2xlcyAoaW50byB0aGUgZnBnYSBsb2dpYykgaXMgc3VwcGxpZWQgYXMNCnZlcmls
-b2cgc291cmNlLg0KU28geW91IHNob3VsZCBiZSBhYmxlIHRvICdmaXgnIGl0IGRvIGdlbmVyYXRl
-IElPIFRMUCBpbnN0ZWFkIG9mIGRhdGENClRMUCBmb3IgY2VydGFpbiBhZGRyZXNzZXMuDQooQSBm
-ZXcgeWVhcnMgYmFjayB3ZSBoYWQgdG8gZml4IGl0IHRvIGNvcnJlY3RseSBwcm9jZXNzIG11bHRp
-cGxlDQpkYXRhIFRMUCBpbiByZXNwb25zZSB0byBhIHNpbmdsZSByZWFkIFRMUCAtIG5vdCBhIHBy
-b2JsZW0gbm93LikNCg0KLi4uDQo+IFRvIHN1cHBvcnQgYW4gQVg5OTEwMCBlbmRwb2ludCAod2hp
-Y2ggcmVxdWlyZXMgSU8gQkFScyBmb3Igc29tZSBvZiBpdHMgZmVhdHVyZXMpDQoNCkkgdGhvdWdo
-dCB0aGF0IGFsbCByZWNlbnQgZW5kcG9pbnRzIHdlcmUgcmVxdWlyZWQgWzFdIHRvIHdvcmsgd2l0
-aA0KanVzdCBtZW1vcnkgQkFScyAtIGV2ZW4gZ29pbmcgYmFjayB0byB0aGUgbGF0ZXIgUENJIHZl
-cnNpb25zLg0KU28gSSdtIHN1cnByaXNlZCBhIFBDSWUgZW5kcG9pbnQgbmVlZCBhbiBJTyBCQVIu
-DQoNCglEYXZpZA0KDQpbMV0gd2VsbCBzdHJvbmdseSBpbXBsaWVkIHRoYXQgaXQgd2FzIGEgcmVh
-bGx5IGdvb2QgaWRlYSA6LSkNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFt
-bGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3Ry
-YXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+On Fri, Nov 03, 2023 at 02:07:55PM -0500, Mario Limonciello wrote:
+> The `is_thunderbolt` bit has been used to indicate that a PCIe device
+> contained the Intel VSEC which is used by various parts of the kernel
+> to change behavior. To later allow usage with USB4 controllers as well,
+> rename this to `is_tunneled`.
 
+This doesn't seem to make sense.  is_thunderbolt indicates that a device
+is part of a Thunderbolt controller.  See the code comment:
+
+> -	unsigned int	is_thunderbolt:1;	/* Thunderbolt controller */
+
+A Thunderbolt controller is not necessarily tunneled.  The PCIe switch,
+NHI and XHCI of the Thunderbolt host controller are not tunneled at all.
+
+Thanks,
+
+Lukas
