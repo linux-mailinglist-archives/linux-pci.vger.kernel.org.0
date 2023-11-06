@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C2537E3094
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 00:06:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 816E37E30A1
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 00:07:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233217AbjKFXGd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Nov 2023 18:06:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42176 "EHLO
+        id S233418AbjKFXHK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Nov 2023 18:07:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233151AbjKFXGc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Nov 2023 18:06:32 -0500
+        with ESMTP id S233435AbjKFXHE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Nov 2023 18:07:04 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C28BBD77;
-        Mon,  6 Nov 2023 15:06:29 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8147C433C8;
-        Mon,  6 Nov 2023 23:06:27 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE7F010D1;
+        Mon,  6 Nov 2023 15:06:58 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE117C433BA;
+        Mon,  6 Nov 2023 23:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699311989;
-        bh=tS2zKrKvHvG0lRZaa++gBljibvEozY3c59EsLxFV1yI=;
+        s=k20201202; t=1699312018;
+        bh=8QBsEisIjwcVpDLqknlYT5o5ni7l1hnkoLPRVKBzn54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KZTUT2iXjPcv9HuucESa7d4Em7/eYl8zJ12faGVQKTTs9OYDLRmXxk0LTtu6NxeP0
-         Jx3A3LAUAQLasVs9PiI7C/o1HosFtS9Hk95MRZx+ueBJ72dLjlv+/1LK4s5m3Bq/yz
-         hhUYppl9ePSZNYH3Jp7G5bCkd9w+7FDI4FtBwtAh5hXdPD9ReN5/n5eon78fFgMaUU
-         RmT19qLWeWWDX/QuM8P1fGga/ZG3tLXSfikTd771xPkl1LZyDk0NSO31LMRLMLiAsl
-         5SwnckTsadRLCcYVWP8yH6M8mumHEWj1Bso0bdssbuTsby/xd6Hurq7vshzAApeZg1
-         6AbOu5CBBjfhw==
+        b=YbdHztD+ZvvrgsiZM+LAh0e7aEfy95PX0QOfC7hltcncZE9SpyBQUtsMdSJLApFjA
+         AptNGIx3htiOg8XlfMm3jM4pMiTbAIEthzjdO/al+UTLkEVKd1BESw0GCtU91dbOjf
+         kcD6+ZYMB7LuFwU/wkp/s04qE/jk8NBHa1+U35P5iOgLCkEBgGu270+EmS0Ioej/E2
+         46up6DtRjhbVLop9NkHZC17tQ/bkozL5/VXy/4G62Tt2tMfAFo16fBJS4rU0Fdl74i
+         jptYu+DfMpM9Ba9v+jZZ3kgIlvEVUX/SKU6ygPLz2aL+buGlfIwwI+6mbBkLwjJnTO
+         moio5Ma7E4uwQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Muralidhara M K <muralidhara.mk@amd.com>,
@@ -34,18 +34,18 @@ Cc:     Muralidhara M K <muralidhara.mk@amd.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, yazen.ghannam@amd.com, Avadhut.Naik@amd.com,
-        mario.limonciello@amd.com, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 2/5] x86/amd_nb: Add AMD Family MI300 PCI IDs
-Date:   Mon,  6 Nov 2023 18:06:08 -0500
-Message-ID: <20231106230622.3734225-2-sashal@kernel.org>
+        x86@kernel.org, mario.limonciello@amd.com, yazen.ghannam@amd.com,
+        Avadhut.Naik@amd.com, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.5 2/5] x86/amd_nb: Add AMD Family MI300 PCI IDs
+Date:   Mon,  6 Nov 2023 18:06:39 -0500
+Message-ID: <20231106230651.3734359-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231106230622.3734225-1-sashal@kernel.org>
-References: <20231106230622.3734225-1-sashal@kernel.org>
+In-Reply-To: <20231106230651.3734359-1-sashal@kernel.org>
+References: <20231106230651.3734359-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6
+X-stable-base: Linux 6.5.10
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
@@ -120,7 +120,7 @@ index 356de955e78dd..10c2a3c9114ea 100644
  };
  
 diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 5fb3d4c393a9e..91b457de262ed 100644
+index 8f9a459e16718..b2b3c4993a9a0 100644
 --- a/include/linux/pci_ids.h
 +++ b/include/linux/pci_ids.h
 @@ -579,6 +579,7 @@
