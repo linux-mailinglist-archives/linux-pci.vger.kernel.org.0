@@ -2,116 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C115A7E1F1F
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Nov 2023 12:02:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA9787E2019
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Nov 2023 12:35:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231314AbjKFLCU convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 6 Nov 2023 06:02:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55882 "EHLO
+        id S231458AbjKFLff (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Nov 2023 06:35:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbjKFLCT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Nov 2023 06:02:19 -0500
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F97ED8
-        for <linux-pci@vger.kernel.org>; Mon,  6 Nov 2023 03:02:15 -0800 (PST)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-44-NNK0qxekP9KmzfnMHlHj9Q-1; Mon, 06 Nov 2023 11:02:13 +0000
-X-MC-Unique: NNK0qxekP9KmzfnMHlHj9Q-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 6 Nov
- 2023 11:02:12 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 6 Nov 2023 11:02:12 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'David Epping' <david.epping@missinglinkelectronics.com>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        with ESMTP id S230018AbjKFLfe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Nov 2023 06:35:34 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFCDABE;
+        Mon,  6 Nov 2023 03:35:31 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 832BAC433C7;
+        Mon,  6 Nov 2023 11:35:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1699270531;
+        bh=fI4NKuZ1uY8mqL9yZ9YNJndkjv1j7nVGFqh2pflGyYI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cRiY+eu6yXREipoxzeem9UkMf7DbKLyTEsBhihxAIIk9nQ7OhutANlrX0EN63aFg8
+         ZSOLFibjhi2PMsmJgXzpwOvA3yqj+aXKhPs5qY42O3Uubyo3b9ra3w1ryHOdHG+HiZ
+         lHOvlA1VxBzJlQ/bT8UqOpfVLA184ZKyXm6dfKOVjFk5US/uhLcvJeH9TagyH2mwcu
+         9b39ZbgDKTEhKmjrt0MJvhXN1mZbmQCjYEQL13faJBplEzfT8BihvSFWhGl8cQUWBC
+         bWSHz+fQSNq7mqI8jiAcEbQjHnTmI/qTbh4GYesnI1QXEQSU6GqcBjGWWa/rNB3tBe
+         ESW6CSQ0mYtcg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1qzxtA-00AkGy-HO;
+        Mon, 06 Nov 2023 11:35:28 +0000
+Date:   Mon, 06 Nov 2023 11:35:27 +0000
+Message-ID: <86fs1j15ds.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Sunil V L <sunilvl@ventanamicro.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>
-Subject: RE: mach-socfpga: PCIe Root IO TLP support for Cyclone V
-Thread-Topic: mach-socfpga: PCIe Root IO TLP support for Cyclone V
-Thread-Index: AQHaC+rcwX/RJWhaCEGpb3NmFV615LBrmEmQgAGENICAAApRcA==
-Date:   Mon, 6 Nov 2023 11:02:12 +0000
-Message-ID: <531d4fadcc694f9582af54f3998720b4@AcuMS.aculab.com>
-References: <ZUDd04c7FXUeusxK@nucnuc.mle>
- <fd407621b4a64cebaf8a847b3ff1ad2e@AcuMS.aculab.com>
- <ZUi8v0GL/urin/Yj@nucnuc.mle>
-In-Reply-To: <ZUi8v0GL/urin/Yj@nucnuc.mle>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        Anup Patel <anup@brainfault.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        Atish Kumar Patra <atishp@rivosinc.com>,
+        Haibo Xu <haibo1.xu@intel.com>
+Subject: Re: [RFC PATCH v2 13/21] irqchip: riscv-intc: Add ACPI support for AIA
+In-Reply-To: <87jzr82c3h.ffs@tglx>
+References: <20231026165150.GA1825130@bhelgaas>
+        <87jzr82c3h.ffs@tglx>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, helgaas@kernel.org, sunilvl@ventanamicro.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, rafael@kernel.org, lenb@kernel.org, bhelgaas@google.com, anup@brainfault.org, gregkh@linuxfoundation.org, jirislaby@kernel.org, conor.dooley@microchip.com, ajones@ventanamicro.com, atishp@rivosinc.com, haibo1.xu@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: David Epping
-> Sent: 06 November 2023 10:15
+On Fri, 27 Oct 2023 18:45:38 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> On Sun, Nov 05, 2023 at 11:20:03AM +0000, David Laight wrote:
-...
-> > If you are building the FPGA image then all the logic to convert the
-> > memory mapped slave cycles (into the fpga logic) is supplied as
-> > verilog source.
+> On Thu, Oct 26 2023 at 11:51, Bjorn Helgaas wrote:
+> > On Thu, Oct 26, 2023 at 01:53:36AM +0530, Sunil V L wrote:
+> >> The RINTC subtype structure in MADT also has information about other
+> >> interrupt controllers like MMIO. So, save those information and provide
+> >> interfaces to retrieve them when required by corresponding drivers.
+> >
+> >> @@ -218,7 +306,19 @@ static int __init riscv_intc_acpi_init(union acpi_subtable_headers *header,
+> >
+> >> +	 * MSI controller (IMSIC) in RISC-V is optional. So, unless
+> >> +	 * IMSIC is discovered, set system wide MSI support as
+> >> +	 * unsupported. Once IMSIC is probed, MSI support will be set.
+> >> +	 */
+> >> +	pci_no_msi();
+> >
+> > It doesn't seem like we should have to tell the PCI core about
+> > functionality we *don't* have.
+> >
+> > I would think IMSIC would be detected before enumerating PCI devices
+> > that might use it, and if we *haven't* found an IMSIC by the time we
+> > get to pci_register_host_bridge(), would/should we set
+> > PCI_BUS_FLAGS_NO_MSI there?
+> >
+> > I see Thomas is cc'd; he'd have better insight.
 > 
-> The CPU subsystem and the PCIe IP are hard IP in silicon and can not be altered.
+> I was not really involved with this bus and MSI domain logic. Marc
+> should know. CC'ed.
 
-If you look carefully you'll find that the 'hard IP' block stops
-with a streaming interface that carries the data TLP.
-All the logic to convert the TLP into Avalon memory cycles is verilog source.
-So, at least in principle, it is modifiable.
+The canonical way of doing this is by the platform expressing that
+there is no linkage between the PCIe RC and the MSI controller.  If
+there is no MSI domain associated with the RC, then by extension the
+endpoints don't get one either.
 
-With a bit of effort it is possible to trace the TLP into fpga memory.
-(We had to modify the verilog to expose the TX TLP.)
-Even allowing for development time it was probably cheaper than
-buying a PCIe monitor!
+There are additional quirks linked to the msi_domain host bridge
+property, allowing the host bridge driver to indicate that it isn't in
+charge of MSIs, but that a third party may provide it (in which case a
+MSI irq domain will be associated with it).
 
-> They are connected via the FPGA logic, though, and I agree one approach could be to intercept their
-> communication with custom HDL.
-> However, Linux uses the exact same PCIe hard IP registers required for IO TLPs to send Config TLPs.
-> Every TLP requires multiple accesses to multiple registers, so locking between FPGA logic and Linux
-> transactions would be required.
-> I'm not saying that this is impossible, but I don't think it can be robust without a Linux software
-> change.
-> A software only solution has the benefit of being available to all users of such an FPGA, without
-> access to that special logic.
+In any case, slapping a pci_no_msi() call in an irqchip driver is
+gross and most probably a sign that this is going in the wrong
+direction, specially as this is platform-wide.
 
-I saw/checked you'd added a lock, didn't see it was the same one used
-for config space accesses.
+The only cases I'd expect this function to be called are:
 
-> > I thought that all recent endpoints were required [1] to work with
-> > just memory BARs - even going back to the later PCI versions.
-> > So I'm surprised a PCIe endpoint need an IO BAR.
-> 
-> The AX99100 implements a so called "Legacy Endpoint" and is thus allowed to
-> rely on support for IO space.
-> I guess this choice was made to stay driver-compatible to the PCI version,
-> although I don't know the ancestry if this product.
+- Platform or firmware explicitly disallowing MSIs
+- pci=nomsi on the command line
 
-A lot of PCI devices solved this by adding a memory BAR that
-mapped exactly the same registers.
+none of which are the business of an irqchip driver.
 
-	David
+HTH,
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+	M.
 
+-- 
+Without deviation from the norm, progress is not possible.
