@@ -2,137 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BD107E352E
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 07:24:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C84A7E3AD7
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 12:15:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230074AbjKGGYS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Nov 2023 01:24:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45450 "EHLO
+        id S233935AbjKGLPk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Nov 2023 06:15:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229559AbjKGGYS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 01:24:18 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AD9C101;
-        Mon,  6 Nov 2023 22:24:15 -0800 (PST)
+        with ESMTP id S229541AbjKGLPk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 06:15:40 -0500
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AE5791;
+        Tue,  7 Nov 2023 03:15:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699338255; x=1730874255;
+  t=1699355737; x=1730891737;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=xMd2rVgz/0nCDHGO5G5Cgmns963Fjfa40nHUcD2LIxI=;
-  b=IGCMk8ZZpOLcTsOgycxyY4TH3dQ/eEP5ApYP7g3QYG2nqGBUAliuOluS
-   5q0Nz+BKL2CeVuwhRrIK8vN1mQEN37rWnUNnI1BxvrXCo+05EWGnNTi1a
-   v0CS1yb/0h97f5ax1fmFs62RLrv9b8S/jp6ZWJnJBMIpQNvLbykJfLf2g
-   rNGe2YlKqBXrWEN561Ln0J9ZPIlalDjgXgkN7YnreOfgI5XG4VSa6AX7F
-   vArXh463zL2b9g2BwG+UkgLqjUbL1QWzwUxvGEE1WFQ3ROxRSdHNFEo9H
-   S5O6TpHxQWi8cqEM+Y1t2t7jqE0j+jbZLdSqqwa251uJAq1k49tAaNClj
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10886"; a="475682216"
-X-IronPort-AV: E=Sophos;i="6.03,282,1694761200"; 
-   d="scan'208";a="475682216"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2023 22:24:15 -0800
+  bh=w2/2LCzSyzbuwvyD3qf3LKnmsbE00Zq8CXWqqzD2B60=;
+  b=fa0NAkBuJN41kW02oz4ZRbbOjIKOLyaE844KNOTfrshaUendIRXObI8Q
+   H9fHwsw+vhWjM6TC6hS+KGY9AKwPnSwo26Ol7SrJK+4yo1NMpZnl3xDPt
+   zabgxrX19EfweXMZ2VoogA1tuSariPOKt3TqyRjB5yn8CF7tYsVOOt3UX
+   Sm6PSH9e2PN8ifZAQBgmroEHHxigPOCBWbm5xnx/QfJ7pIybzEkicZj4b
+   ECrEECljKuj2NksgHks7ym6bPiE9TZ5kDjNnOPCd6Q55Cs/T7uvLWQQVv
+   E4UAgtZN/1SpCyizZLt9fVhAT/J0zVkioc3Ccoj/oeacmX1wsd/AEaiLK
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10886"; a="379875889"
+X-IronPort-AV: E=Sophos;i="6.03,283,1694761200"; 
+   d="scan'208";a="379875889"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2023 03:15:35 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10886"; a="1094047505"
-X-IronPort-AV: E=Sophos;i="6.03,282,1694761200"; 
-   d="scan'208";a="1094047505"
+X-IronPort-AV: E=McAfee;i="6600,9927,10886"; a="936124134"
+X-IronPort-AV: E=Sophos;i="6.03,283,1694761200"; 
+   d="scan'208";a="936124134"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Nov 2023 22:24:07 -0800
+  by orsmga005.jf.intel.com with ESMTP; 07 Nov 2023 03:15:31 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 15A0E3CC; Tue,  7 Nov 2023 08:24:05 +0200 (EET)
-Date:   Tue, 7 Nov 2023 08:24:05 +0200
+        id 64056706; Tue,  7 Nov 2023 13:15:30 +0200 (EET)
+Date:   Tue, 7 Nov 2023 13:15:30 +0200
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Mario Limonciello <mario.limonciello@amd.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Kenneth R. Crudup" <kenny@panix.com>, vidyas@nvidia.com,
+        bhelgaas@google.com, kai.heng.feng@canonical.com,
+        andrea.righi@canonical.com, vicamo.yang@canonical.com,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
         Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-        Danilo Krummrich <dakr@redhat.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Xinhui Pan <Xinhui.Pan@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        "Maciej W . Rozycki" <macro@orcam.me.uk>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH v2 8/9] PCI: Exclude PCIe ports used for tunneling in
- pcie_bandwidth_available()
-Message-ID: <20231107062405.GU17433@black.fi.intel.com>
-References: <20231103190758.82911-1-mario.limonciello@amd.com>
- <20231103190758.82911-9-mario.limonciello@amd.com>
- <20231106181022.GA18564@wunner.de>
- <712ebb25-3fc0-49b5-96a1-a13c3c4c4921@amd.com>
- <20231106185652.GA3360@wunner.de>
- <20231107054526.GT17433@black.fi.intel.com>
+        Ricky WU <ricky_wu@realtek.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: My AlderLake Dell (XPS-9320) needs these patches to get full
+ standby/low-power modes
+Message-ID: <20231107111530.GW17433@black.fi.intel.com>
+References: <218aa81f-9c6-5929-578d-8dc15f83dd48@panix.com>
+ <20231106181107.GA255535@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231107054526.GT17433@black.fi.intel.com>
+In-Reply-To: <20231106181107.GA255535@bhelgaas>
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 07, 2023 at 07:45:26AM +0200, Mika Westerberg wrote:
-> Hi,
-> 
-> On Mon, Nov 06, 2023 at 07:56:52PM +0100, Lukas Wunner wrote:
-> > On Mon, Nov 06, 2023 at 12:44:25PM -0600, Mario Limonciello wrote:
-> > > Tangentially related; the link speed is currently symmetric but there are
-> > > two sysfs files.  Mika left a comment in drivers/thunderbolt/switch.c it may
-> > > be asymmetric in the future. So we may need to keep that in mind on any
-> > > design that builds on top of them.
-> > 
-> > Aren't asymmetric Thunderbolt speeds just a DisplayPort thing?
-> 
-> No, they affect the whole fabric. We have the initial code for
-> asymmetric switching in v6.7-rc1.
-> 
-> > > As 'thunderbolt' can be a module or built in, we need to bring code into PCI
-> > > core so that it works in early boot before it loads.
-> > 
-> > tb_switch_get_generation() is small enough that it could be moved to the
-> > PCI core.  I doubt that we need to make thunderbolt built-in only
-> > or move a large amount of code to the PCI core.
-> 
-> If at all possible I would like to avoid this and littering PCI side
-> with non-PCI stuff. There could be other similar "mediums" in the future
-> where you can transfer packets of "native" protocols such as PCIe so
-> instead of making it Thunderbolt/USB4 specific it should be generic
-> enough to support future extensions.
-> 
-> In case of Thunderbolt/USB4 there is no real way to figure out how much
-> bandwidth each PCIe tunnel gets (it is kind of bulk traffic that gets
-> what is left from isochronous protocols) so I would not even try that
-> and instead use the real PCIe links in pcie_bandwidth_available() and
-> skip all the "virtual" ones.
+Hi,
 
-Actually can we call the new function something like pci_link_is_virtual()
-instead and make pcie_bandwidth_available() call it? That would be more
-future proof IMHO.
+On Mon, Nov 06, 2023 at 12:11:07PM -0600, Bjorn Helgaas wrote:
+> [+cc Mika, Sathy, Rafael, David, Ilpo, Ricky, Mario, linux-pci]
+> 
+> On Sat, Nov 04, 2023 at 10:13:24AM -0700, Kenneth R. Crudup wrote:
+> > 
+> > I have a Dell XPS-9320 with an Alderlake chipset, and the NVMe behind a
+> > VMD device:
+> > 
+> > ----
+> > [    0.127342] smpboot: CPU0: 12th Gen Intel(R) Core(TM) i7-1280P (family: 0x6, model: 0x9a, stepping: 0x3)
+> > ----
+> > 0000:00:0e.0 0104: 8086:467f
+> >         Subsystem: 1028:0af3
+> >         Flags: bus master, fast devsel, latency 0, IOMMU group 9
+> >         Memory at 603c000000 (64-bit, non-prefetchable) [size=32M]
+> >         Memory at 72000000 (32-bit, non-prefetchable) [size=32M]
+> > a7152be79b6        Memory at 6040100000 (64-bit, non-prefetchable) [size=1M]
+> >         Capabilities: <access denied>
+> >         Kernel driver in use: vmd
+> > ----
+> > 
+> > The only release kernel that was able to get this laptop to fully get into
+> > low-power (unfortunately only s0ix) was the Ubuntu-6.2.0- ... series from
+> > Ubuntu
+> > (remote git://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/lunar).
+> > 
+> > I'd bisected it to the following commits (in this order):
+> > 
+> > 4ff116d0d5fd PCI/ASPM: Save L1 PM Substates Capability for suspend/resume
+> > 5e85eba6f50d PCI/ASPM: Refactor L1 PM Substates Control Register programming
+> > 1a0102a08f20 UBUNTU: SAUCE: PCI/ASPM: Enable ASPM for links under VMD domain
+> > 47c7bfd31514 UBUNTU: SAUCE: PCI/ASPM: Enable LTR for endpoints behind VMD
+> > 154d48da2c57 UBUNTU: SAUCE: vmd: fixup bridge ASPM by driver name instead
+> 
+> Thanks for these.  You don't happen to have URLs for those Ubuntu
+> commits, do you?  E.g., https://git.kernel.org/linus/4ff116d0d5fd
+> (which was reverted by a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM
+> Substates Capability for suspend/resume"")).
+> 
+> > Without the patches I never see Pkg%PC8 or higher(? lower?), nor i915 states
+> > DC5/6, all necssary for SYS%LPI/CPU%LPI. I've attached a little script I use
+> > alongside turbostat for verifying low-power operation (and also for seeing
+> > what chipset subsystem may be preventing it).
+> > 
+> > The first two are in Linus' trees, but were reverted (4ff116d0d5fd in
+> > a7152be79b6, 5e85eba6f50d in ff209ecc376a). The last three come from Ubuntu's
+> > Linux trees (see remote spec above). The first two remain reverted in the
+> > Ubuntu trees, but if I put them back, I get increased power savings during
+> > suspend/resume cycles.
+> > 
+> > Considering the power draw is really significant without these patches (10s
+> > of %s per hour) and I'd think Dell would have sold some decent number of
+> > these laptops, I'd been patiently waiting for these patches, or some variant
+> > to show up in the stable trees, but so far I'm up to the 6.6 stable kernel
+> > and still having to manually cherry-pick these, so I thought maybe I could
+> > bring this to the PM maintainers' attention so at least start a discussion
+> > about this issue.
+> 
+> Thank you very much for raising this again.  We really need to make
+> some progress, and Mika recently posted a patch to add the
+> 4ff116d0d5fd functionality again:
+> https://lore.kernel.org/r/20231002070044.2299644-1-mika.westerberg@linux.intel.com
+> 
+> The big problem is that it works on *most* systems, but it still seems
+> to break a few.  So Mika's current patch relies on a denylist of
+> systems where we *don't* restore the substates.
+
+According to latest reports it is just that one system where this is
+still an issue. The latest patch works in Asus UX305FA even if it is not
+in the denylist. That would leave that one system only to the denylist,
+at least the ones we are aware about.
