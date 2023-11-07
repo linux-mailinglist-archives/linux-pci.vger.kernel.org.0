@@ -2,45 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99E337E3C13
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 13:12:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 713327E3C1C
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 13:12:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234179AbjKGMMT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Nov 2023 07:12:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42114 "EHLO
+        id S234485AbjKGMMd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Nov 2023 07:12:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234429AbjKGMLs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 07:11:48 -0500
+        with ESMTP id S234503AbjKGML6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 07:11:58 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 346DE19BD;
-        Tue,  7 Nov 2023 04:09:48 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5D43C433C9;
-        Tue,  7 Nov 2023 12:09:46 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C99830D5;
+        Tue,  7 Nov 2023 04:09:55 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 065BFC433CD;
+        Tue,  7 Nov 2023 12:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699358988;
-        bh=oxL5q+LXqa/6GFIBeO17c/ibc8JlajUX3kY8hpeFTeY=;
+        s=k20201202; t=1699358994;
+        bh=dmtJAUGRYxZHciadibakhst4NtRR0Kw1nvLI2n5q/VU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fyUucl5GudI/RK99/s4VSeHFGoNQPD744fDd8rJFScAVW/8YtKU9LoZ5SWtXLP6zd
-         A/d4DaN65wJilgzw4JTcYGooQ/X6kj+chN3GuEfK3WiozO7ZMzPQN4nIowefRQPPTg
-         hoEWzDCF9fHh5mMbtYmN6OsEx8s8OrsjcqaNzSdOyAojqGmHQC4YUJwllzl9WwfqqO
-         DTgojUQGc++qcaXXygseUo9qcq0SuEXaWQLG5/TyobWExir/+vdp0MPDeMlHD6C+KY
-         PIOy7x6tavB5phbboaxznU1OnDxXlcrE0Y9S5naPEz7rKsMPcNSf29Q7Y4077JMXmq
-         grnOLQFaVV87g==
+        b=I9dnJHVM+MkrNaGu+yoEs67LDbRgiUq3aCaNvJ3QbcXss4BJEED8PpPqZxjQq5Ywu
+         rkhOVhWHfMnxy8uZXwRwZ943URMgLyB/GZ77e6gYOxMo9aXtwb8O5l/zCTUZTlUqbV
+         umcqmzPbVc5t8RA+oDYxRFruKi9AC113NYT85yPxJQJigCI6F6yrshwFFJGLaLMVCo
+         YVwASxngjM6zaDNkY0Dcq1ixOivPpGKE8jodgmp1li99LpL6bSd+l9fcVndwlGgzNO
+         IYOEiHTXLHItqd5hI0qMpvuZOv/lCV2WKeKTl88usORihNWeAdtP0oM5qDhHaERFg1
+         3bf/6ot30OvbA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shiju Jose <shiju.jose@huawei.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, rafael@kernel.org,
-        mahesh@linux.ibm.com, robert.moore@intel.com, pabeni@redhat.com,
-        leoyang.li@nxp.com, tony.luck@intel.com, rostedt@goodmis.org,
-        linmiaohe@huawei.com, linux-acpi@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        acpica-devel@lists.linuxfoundation.org
-Subject: [PATCH AUTOSEL 6.5 11/30] ACPI: APEI: Fix AER info corruption when error status data has multiple sections
-Date:   Tue,  7 Nov 2023 07:08:26 -0500
-Message-ID: <20231107120922.3757126-11-sashal@kernel.org>
+Cc:     Ingo Rohloff <lundril@gmx.de>, Felix Fietkau <nbd@nbd.name>,
+        Sasha Levin <sashal@kernel.org>, lorenzo@kernel.org,
+        ryder.lee@mediatek.com, kvalo@kernel.org, matthias.bgg@gmail.com,
+        angelogioacchino.delregno@collabora.com, bhelgaas@google.com,
+        deren.wu@mediatek.com, sean.wang@mediatek.com,
+        quan.zhou@mediatek.com, Leon.Yen@mediatek.com,
+        linux-wireless@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.5 13/30] wifi: mt76: mt7921e: Support MT7992 IP in Xiaomi Redmibook 15 Pro (2023)
+Date:   Tue,  7 Nov 2023 07:08:28 -0500
+Message-ID: <20231107120922.3757126-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20231107120922.3757126-1-sashal@kernel.org>
 References: <20231107120922.3757126-1-sashal@kernel.org>
@@ -59,134 +58,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Shiju Jose <shiju.jose@huawei.com>
+From: Ingo Rohloff <lundril@gmx.de>
 
-[ Upstream commit e2abc47a5a1a9f641e7cacdca643fdd40729bf6e ]
+[ Upstream commit fce9c967820a72f600abbf061d7077861685a14d ]
 
-ghes_handle_aer() passes AER data to the PCI core for logging and
-recovery by calling aer_recover_queue() with a pointer to struct
-aer_capability_regs.
+In the Xiaomi Redmibook 15 Pro (2023) laptop I have got, a wifi chip is
+used, which according to its PCI Vendor ID is from "ITTIM Technology".
 
-The problem was that aer_recover_queue() queues the pointer directly
-without copying the aer_capability_regs data.  The pointer was to
-the ghes->estatus buffer, which could be reused before
-aer_recover_work_func() reads the data.
+This chip works flawlessly with the mt7921e module.  The driver doesn't
+bind to this PCI device, because the Vendor ID from "ITTIM Technology" is
+not recognized.
 
-To avoid this problem, allocate a new aer_capability_regs structure
-from the ghes_estatus_pool, copy the AER data from the ghes->estatus
-buffer into it, pass a pointer to the new struct to
-aer_recover_queue(), and free it after aer_recover_work_func() has
-processed it.
+This patch adds the PCI Vendor ID from "ITTIM Technology" to the list of
+PCI Vendor IDs and lets the mt7921e driver bind to the mentioned wifi
+chip.
 
-Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-[ rjw: Subject edits ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Ingo Rohloff <lundril@gmx.de>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/apei/ghes.c | 23 ++++++++++++++++++++++-
- drivers/pci/pcie/aer.c   | 10 ++++++++++
- include/acpi/ghes.h      |  4 ++++
- 3 files changed, 36 insertions(+), 1 deletion(-)
+ drivers/net/wireless/mediatek/mt76/mt7921/pci.c | 2 ++
+ include/linux/pci_ids.h                         | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index ef59d6ea16da0..63ad0541db381 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -209,6 +209,20 @@ int ghes_estatus_pool_init(unsigned int num_ghes)
- 	return -ENOMEM;
- }
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/pci.c b/drivers/net/wireless/mediatek/mt76/mt7921/pci.c
+index 95610a117d2f0..ed5a220763ce6 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7921/pci.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7921/pci.c
+@@ -17,6 +17,8 @@ static const struct pci_device_id mt7921_pci_device_table[] = {
+ 		.driver_data = (kernel_ulong_t)MT7921_FIRMWARE_WM },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x7922),
+ 		.driver_data = (kernel_ulong_t)MT7922_FIRMWARE_WM },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ITTIM, 0x7922),
++		.driver_data = (kernel_ulong_t)MT7922_FIRMWARE_WM },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x0608),
+ 		.driver_data = (kernel_ulong_t)MT7921_FIRMWARE_WM },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_MEDIATEK, 0x0616),
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 8f9a459e16718..e0a11d34ec998 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -180,6 +180,8 @@
+ #define PCI_DEVICE_ID_BERKOM_A4T		0xffa4
+ #define PCI_DEVICE_ID_BERKOM_SCITEL_QUADRO	0xffa8
  
-+/**
-+ * ghes_estatus_pool_region_free - free previously allocated memory
-+ *				   from the ghes_estatus_pool.
-+ * @addr: address of memory to free.
-+ * @size: size of memory to free.
-+ *
-+ * Returns none.
-+ */
-+void ghes_estatus_pool_region_free(unsigned long addr, u32 size)
-+{
-+	gen_pool_free(ghes_estatus_pool, addr, size);
-+}
-+EXPORT_SYMBOL_GPL(ghes_estatus_pool_region_free);
++#define PCI_VENDOR_ID_ITTIM		0x0b48
 +
- static int map_gen_v2(struct ghes *ghes)
- {
- 	return apei_map_generic_address(&ghes->generic_v2->read_ack_register);
-@@ -564,6 +578,7 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
- 	    pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO) {
- 		unsigned int devfn;
- 		int aer_severity;
-+		u8 *aer_info;
- 
- 		devfn = PCI_DEVFN(pcie_err->device_id.device,
- 				  pcie_err->device_id.function);
-@@ -577,11 +592,17 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
- 		if (gdata->flags & CPER_SEC_RESET)
- 			aer_severity = AER_FATAL;
- 
-+		aer_info = (void *)gen_pool_alloc(ghes_estatus_pool,
-+						  sizeof(struct aer_capability_regs));
-+		if (!aer_info)
-+			return;
-+		memcpy(aer_info, pcie_err->aer_info, sizeof(struct aer_capability_regs));
-+
- 		aer_recover_queue(pcie_err->device_id.segment,
- 				  pcie_err->device_id.bus,
- 				  devfn, aer_severity,
- 				  (struct aer_capability_regs *)
--				  pcie_err->aer_info);
-+				  aer_info);
- 	}
- #endif
- }
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index f6c24ded134cd..67025ee2b7454 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -29,6 +29,7 @@
- #include <linux/kfifo.h>
- #include <linux/slab.h>
- #include <acpi/apei.h>
-+#include <acpi/ghes.h>
- #include <ras/ras_event.h>
- 
- #include "../pci.h"
-@@ -1010,6 +1011,15 @@ static void aer_recover_work_func(struct work_struct *work)
- 			continue;
- 		}
- 		cper_print_aer(pdev, entry.severity, entry.regs);
-+		/*
-+		 * Memory for aer_capability_regs(entry.regs) is being allocated from the
-+		 * ghes_estatus_pool to protect it from overwriting when multiple sections
-+		 * are present in the error status. Thus free the same after processing
-+		 * the data.
-+		 */
-+		ghes_estatus_pool_region_free((unsigned long)entry.regs,
-+					      sizeof(struct aer_capability_regs));
-+
- 		if (entry.severity == AER_NONFATAL)
- 			pcie_do_recovery(pdev, pci_channel_io_normal,
- 					 aer_root_reset);
-diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
-index 3c8bba9f1114a..be1dd4c1a9174 100644
---- a/include/acpi/ghes.h
-+++ b/include/acpi/ghes.h
-@@ -73,8 +73,12 @@ int ghes_register_vendor_record_notifier(struct notifier_block *nb);
- void ghes_unregister_vendor_record_notifier(struct notifier_block *nb);
- 
- struct list_head *ghes_get_devices(void);
-+
-+void ghes_estatus_pool_region_free(unsigned long addr, u32 size);
- #else
- static inline struct list_head *ghes_get_devices(void) { return NULL; }
-+
-+static inline void ghes_estatus_pool_region_free(unsigned long addr, u32 size) { return; }
- #endif
- 
- int ghes_estatus_pool_init(unsigned int num_ghes);
+ #define PCI_VENDOR_ID_COMPAQ		0x0e11
+ #define PCI_DEVICE_ID_COMPAQ_TOKENRING	0x0508
+ #define PCI_DEVICE_ID_COMPAQ_TACHYON	0xa0fc
 -- 
 2.42.0
 
