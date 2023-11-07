@@ -2,124 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EBD167E46D9
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 18:25:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F8B67E4950
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 20:39:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235014AbjKGRZX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Nov 2023 12:25:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53514 "EHLO
+        id S230523AbjKGTjP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Nov 2023 14:39:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234913AbjKGRZV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 12:25:21 -0500
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D932101;
-        Tue,  7 Nov 2023 09:25:19 -0800 (PST)
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3A7GZhEa020682;
-        Tue, 7 Nov 2023 17:24:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=3etUmHlLQoqkujeMpctTSui817APH+WOGe3bUcUWroU=;
- b=ObmbUZhiaRKd/RiPTFKyzWd3y/wu1zATeU6YMLSaoh36onMNYSAvzwabFU++4KXt69K1
- BNmH5Idi/zQDgIUPp+ge5AboPc7TNeA3wB33SVVlxZgTefIDsNkc3jbBsbAqOKEa6uRI
- 54sObPMnq3Rfd97qLIfiv/nT0vdKc4HDBkWYcIihtO6o6rZvaokyqx0GAs5XlR3oGW4m
- JuwTgWXF/FZuBaLgCbOnGdRcaVMIcmHO4UzJ3jbc4aQuJH4UNB7WVbmZjCQ9XJZmfzub
- qsrJCxehLHtrWWL3y/vljlHjvqxiOXwL1TA+zLoONjna2hfzciof50G7r08N/dmtWH0B Fw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u7rw2a9a0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Nov 2023 17:24:56 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3A7HKR3P007621;
-        Tue, 7 Nov 2023 17:24:55 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u7rw2a94k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Nov 2023 17:24:55 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3A7H8vpN012797;
-        Tue, 7 Nov 2023 17:24:42 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3u609stjb0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Nov 2023 17:24:42 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3A7HOdL540501948
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Nov 2023 17:24:39 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 273EE20043;
-        Tue,  7 Nov 2023 17:24:39 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ED0E520040;
-        Tue,  7 Nov 2023 17:24:38 +0000 (GMT)
-Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.152.224.212])
-        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Nov 2023 17:24:38 +0000 (GMT)
-Date:   Tue, 7 Nov 2023 18:24:37 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
+        with ESMTP id S235203AbjKGTjN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 14:39:13 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1331D10C6
+        for <linux-pci@vger.kernel.org>; Tue,  7 Nov 2023 11:38:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1699385904;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=JFtzha1JbWEIPRDSewC1qHZEFrnoECJinIv2TMAU/Lc=;
+        b=IjVjGaB2G9NgdE2ugDsKTFvj/06mkeuISC+UfbBAW5bvMlgHr9s4j4hnaaMFWCZ2U99buq
+        XIYxMFrZmc12BnsrEa0P499zJZG3PgOiYNW3lvStLDmDTSUWkmSd6R5sUlOTwIUP4ybVZm
+        mHWyl58qYKCTcZ0YzEY+5BxC/1q09hw=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-48-rGno_ZgQNRmLmxDUVOmlKg-1; Tue, 07 Nov 2023 14:38:23 -0500
+X-MC-Unique: rGno_ZgQNRmLmxDUVOmlKg-1
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-66d3f71f49cso16646366d6.1
+        for <linux-pci@vger.kernel.org>; Tue, 07 Nov 2023 11:38:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699385902; x=1699990702;
+        h=mime-version:user-agent:content-transfer-encoding:date:cc:to:from
+         :subject:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JFtzha1JbWEIPRDSewC1qHZEFrnoECJinIv2TMAU/Lc=;
+        b=GzsJzh6txOJ7t2pXqGywQclf6YE/VPLYP9dsZbbuP8LzTonYRiqMnBTxzCmgbn+szC
+         Fuj7Ig2stWRiJ5rDt530+vGA9e0+7xH5PsioQEtXGuKCiilLeA+F7Xj1Jcx/lF0fSO0X
+         2eOKJCdBt/2osEbbK/azIRCtHUM9kdoOB55gN+kTTIfbDJLOdm1M1lhquXZUE+8YYTug
+         /u3KBdwVAJZ1BfY9AIElog6gZhjUxP8QLh5UxQC1QQTw3Is8wDdXTUnlbHPX9kZ2DUB/
+         jlerj01XJE/yr97pt3iyPMoptJy9PHR4ufJKzjWr1xwFUjDjiBFJCovtxdpTe2BGAAt/
+         JXSA==
+X-Gm-Message-State: AOJu0Yz7NBGPeqnUR6SyY2LArOXKUnkLPpsg6Qh1FaY42OejY4hzLipn
+        pRhYfj+YwB9rjyaoQBIcs9Gy2FSkqWhiZz9xFjhxX8GZ8f1bd4kAJTxW2GGaJKuc1rM5Gsig3FH
+        G8r+QV/9hiGwUague9tmwZAxUpV0ed475KaS6jiIl42jOp5x+GmLs1VEdfkd4pTuHMmaTd8L9hM
+        1twcUC
+X-Received: by 2002:a05:6214:4993:b0:66d:1b4e:77d6 with SMTP id pf19-20020a056214499300b0066d1b4e77d6mr34189543qvb.5.1699385901961;
+        Tue, 07 Nov 2023 11:38:21 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEGdUFhqB95DEEaNf+A7ev9h/xHKbl8QUfCv3AgVm7mvm9jWaDnd40Jrnc7eXX4aZ+9aEIGSw==
+X-Received: by 2002:a05:6214:4993:b0:66d:1b4e:77d6 with SMTP id pf19-20020a056214499300b0066d1b4e77d6mr34189517qvb.5.1699385901601;
+        Tue, 07 Nov 2023 11:38:21 -0800 (PST)
+Received: from pstanner-thinkpadt14sgen1.remote.csb ([2001:9e8:32c0:300:227b:d2ff:fe26:2a7a])
+        by smtp.gmail.com with ESMTPSA id j19-20020ac86653000000b0041811e71890sm219156qtp.33.2023.11.07.11.38.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Nov 2023 11:38:21 -0800 (PST)
+Message-ID: <84be1049e41283cf8a110267646320af9ffe59fe.camel@redhat.com>
+Subject: Implementation details of PCI Managed (devres) Functions
+From:   Philipp Stanner <pstanner@redhat.com>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Tejun Heo <htejun@gmail.com>, dakr@redhat.com,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Petr Tesarik <petr.tesarik1@huawei-partners.com>,
-        Ross Lagerwall <ross.lagerwall@citrix.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Jianxiong Gao <jxgao@google.com>
-Subject: Re: Memory corruption with CONFIG_SWIOTLB_DYNAMIC=y
-Message-ID: <20231107182437.06632f6e.pasic@linux.ibm.com>
-In-Reply-To: <20231106074243.GA17777@lst.de>
-References: <104a8c8fedffd1ff8a2890983e2ec1c26bff6810.camel@linux.ibm.com>
-        <20231103171447.02759771.pasic@linux.ibm.com>
-        <20231103214831.26d29f4d@meshulam.tesarici.cz>
-        <20231106074243.GA17777@lst.de>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Philipp Stanner <pstanner@redhat.com>, jeff@garzik.org,
+        Al Viro <viro@zeniv.linux.org.uk>
+Date:   Tue, 07 Nov 2023 20:38:18 +0100
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: rlOMfE6v9Jv1K1zh90qVbbSrtVVgtlIr
-X-Proofpoint-GUID: p1cNH5AcjioJZXwoiozkBShsYX00e0kl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-07_08,2023-11-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 malwarescore=0 priorityscore=1501 impostorscore=0 bulkscore=0
- suspectscore=0 spamscore=0 clxscore=1015 adultscore=0 mlxscore=0
- mlxlogscore=596 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2310240000 definitions=main-2311070142
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 6 Nov 2023 08:42:43 +0100
-Christoph Hellwig <hch@lst.de> wrote:
+Hi all,
 
-> > 1. hardware which cannot handle an unaligned base address (presumably
-> >    because the chip performs a simple OR operation to get the addresses
-> >    of individual fields);  
-> 
-> There's all kinds of weird encodings that discard the low bits.
-> For NVMe it's the PRPs (that is actually documented in the NVMe
-> spec, so it might be easiest to grasp), but except for a Mellox
-> vendor extension this is also how all RDMA memory registrations
-> work.
+I'm currently working on porting more drivers in DRM to managed pci-
+functions. During this process I discovered something that might be
+called an inconsistency in the implementation.
 
-Thanks Christoph! So for NVMe in certain contexts the low
-bits of addresses get discarded, but in other contexts the high bits
-of addresses get discarded and the low bits need to remain the same
-after the bounce (and that's why we need commits 36950f2da1ea ("driver
-core: add a min_align_mask) and 1f221a0d0dbf ("swiotlb: respect
-min_align_mask").
+First, there would be the pcim_ functions being scattered across
+several files. Some are implemented in drivers/pci/pci.c, others in
+lib/devres.c, where they are guarded by #ifdef CONFIG_PCI
+=E2=80=93 this originates from an old cleanup, done in
+5ea8176994003483a18c8fed580901e2125f8a83
 
-Does that sound about right?
+Additionally, there is lib/pci_iomap.c, which contains the non-managed
+pci_iomap() functions.
+
+At first and second glance it's not obvious to me why these pci-
+functions are scattered. Hints?
+
+
+Second, it seems there are two competing philosophies behind managed
+resource reservations. Some pci_ functions have pcim_ counterparts,
+such as pci_iomap() <-> pcim_iomap(). So the API-user might expect that
+relevant pci_ functions that do not have a managed counterpart do so
+because no one bothered implementing them so far.
+
+However, it turns out that for pci_request_region(), there is no
+counterpart because a different mechanism / semantic was used to make
+the function _sometimes_ managed:
+
+=C2=A0=C2=A0 1. If you use pcim_enable_device(), the member is_managed in s=
+truct
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci_dev is set to 1.
+=C2=A0=C2=A0 2. This value is then evaluated in pci_request_region()'s call=
+ to
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 find_pci_dr()
+
+Effectively, this makes pci_request_region() sometimes managed.
+Why has it been implemented that way and not as a separate function =E2=80=
+=93
+like, e.g., pcim_iomap()?
+
+That's where an inconsistency lies. For things like iomappings there
+are separate managed functions, for the region-request there's a
+universal function doing managed or unmanaged, respectively.
+
+Furthermore, look at pcim_iomap_regions() =E2=80=93 that function uses a mi=
+x
+between the obviously managed function pcim_iomap() and
+pci_request_region(), which appears unmanaged judging by the name, but,
+nevertheless, is (sometimes) managed below the surface.
+Consequently, pcim_iomap_regions() could even be a little buggy: When
+someone uses pci_enable_device() + pcim_iomap_regions(), wouldn't that
+leak the resource regions?
+
+The change to pci_request_region() hasn't grown historically but was
+implemented that way in one run with the first set of managed functions
+in commit 9ac7849e35f70. So this implies it has been implemented that
+way on purpose.
+
+What was that purpose?
+
+Would be great if someone can give some hints :)
 
 Regards,
-Halil
+P.
+
