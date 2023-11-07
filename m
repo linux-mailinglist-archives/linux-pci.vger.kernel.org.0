@@ -2,101 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 132FF7E4470
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 16:53:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D0AB7E44CC
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 16:57:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343964AbjKGPxU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Nov 2023 10:53:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56276 "EHLO
+        id S235536AbjKGP5y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Nov 2023 10:57:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343744AbjKGPw5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 10:52:57 -0500
+        with ESMTP id S1343917AbjKGP50 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 10:57:26 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894F410C8;
-        Tue,  7 Nov 2023 07:49:53 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 455D5C43391;
-        Tue,  7 Nov 2023 15:49:52 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3079A1FE8;
+        Tue,  7 Nov 2023 07:51:08 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AA76C433C7;
+        Tue,  7 Nov 2023 15:51:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699372193;
-        bh=G7hVeSMGXEqLHFBQsGfChauu0GD7cXnGdrZRoJaA6QM=;
+        s=k20201202; t=1699372267;
+        bh=nfb5nN17v0+f0ezzG8nk6Y33+M5O9n95jP9ZIUTL3KQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XRLgg9zUhoOqapDgc2LvhijicxY0DwgGPp42DzWYHl0yWuZOmckvlR7ek5oFbMGD4
-         1UJ7VxEsyiC6Wa92AuBzBDEzvhHAg6Dos42lRS+ieriB5rFV08t/pX0JL0Scu1LJ56
-         APBS5dMzI6pbbd+5LDTxtaEx7yZ8OCIhdxXI+eWOZR7V8Ujxr7/PAIZ4DDVoiqhTl0
-         WUBbMxV+dOc6fdBUk/sUsYZoY6ZXTO6XqA7H6KmPIwZd4oE88mSzXdCWumhY0Bezwq
-         DFoFMLgjyKtKh+/Ea3zG3rYYz0nAa0Z0tzlIfH3qq4KIUoksOamazwd5Q6Z9BLY3IF
-         r/bOrZPs/sGfg==
+        b=OJuBxySvxYjFcDljS3JDPEqy1ZY3w8vpEsF0ss1QQWKIJG3u521RZuVLSDNyOhdR8
+         8GRYmyFcv/bc7UG/qzLUmkqRRosuF46HAjEDvoTh0yy9sQdOUtgrsKPBtk9Bi2PanP
+         glOXF81OV8qCVbHUh7KbW7xDdlI4LGTiZx4dmxDoCb2uGgxNwuOH6vdH9RLoQuc0CN
+         sOaKz2FkXwQ730wL7h1gJ+WI13lPtjwOJtcBzgG3ip+goEOcbiRf+M15F2yfbFnnIq
+         P4YGnlM2dyHSmVex0/lOWI1e4v97u4DWl8GgwHC1pM3LmSc4CrbKYRTONzVC+fw5B1
+         fpsOqcxrevveA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Nirmoy Das <nirmoy.das@amd.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.5 29/34] PCI: Use FIELD_GET() in Sapphire RX 5600 XT Pulse quirk
-Date:   Tue,  7 Nov 2023 10:48:09 -0500
-Message-ID: <20231107154846.3766119-29-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, lpieralisi@kernel.org,
+        kw@linux.com, thierry.reding@gmail.com, jonathanh@nvidia.com,
+        mani@kernel.org, fancer.lancer@gmail.com, sumitg@nvidia.com,
+        yoshihiro.shimoda.uh@renesas.com, vidyas@nvidia.com,
+        u.kleine-koenig@pengutronix.de, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 16/30] PCI: tegra194: Use FIELD_GET()/FIELD_PREP() with Link Width fields
+Date:   Tue,  7 Nov 2023 10:49:50 -0500
+Message-ID: <20231107155024.3766950-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231107154846.3766119-1-sashal@kernel.org>
-References: <20231107154846.3766119-1-sashal@kernel.org>
+In-Reply-To: <20231107155024.3766950-1-sashal@kernel.org>
+References: <20231107155024.3766950-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.5.10
+X-stable-base: Linux 6.1.61
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-[ Upstream commit 04e82fa5951ca66495d7b05665eff673aa3852b4 ]
+[ Upstream commit 759574abd78e3b47ec45bbd31a64e8832cf73f97 ]
 
-Use FIELD_GET() to remove dependences on the field position, i.e., the
-shift value.  No functional change intended.
+Use FIELD_GET() to extract PCIe Negotiated Link Width field instead of
+custom masking and shifting.
 
-Separate because this isn't as trivial as the other FIELD_GET() changes.
+Similarly, change custom code that misleadingly used
+PCI_EXP_LNKSTA_NLW_SHIFT to prepare value for PCI_EXP_LNKCAP write
+to use FIELD_PREP() with correct field define (PCI_EXP_LNKCAP_MLW).
 
-See 907830b0fc9e ("PCI: Add a REBAR size quirk for Sapphire RX 5600 XT
-Pulse")
-
-Link: https://lore.kernel.org/r/20231010204436.1000644-3-helgaas@kernel.org
+Link: https://lore.kernel.org/r/20230919125648.1920-5-ilpo.jarvinen@linux.intel.com
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Nirmoy Das <nirmoy.das@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/pci/controller/dwc/pcie-tegra194.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 2c5662d43df1b..a7793abdd74ee 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3746,14 +3746,14 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
- 		return 0;
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 2241029537a03..5d1ae2706f6ea 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -9,6 +9,7 @@
+  * Author: Vidya Sagar <vidyas@nvidia.com>
+  */
  
- 	pci_read_config_dword(pdev, pos + PCI_REBAR_CAP, &cap);
--	cap &= PCI_REBAR_CAP_SIZES;
-+	cap = FIELD_GET(PCI_REBAR_CAP_SIZES, cap);
++#include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/debugfs.h>
+ #include <linux/delay.h>
+@@ -324,8 +325,7 @@ static void apply_bad_link_workaround(struct dw_pcie_rp *pp)
+ 	 */
+ 	val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA);
+ 	if (val & PCI_EXP_LNKSTA_LBMS) {
+-		current_link_width = (val & PCI_EXP_LNKSTA_NLW) >>
+-				     PCI_EXP_LNKSTA_NLW_SHIFT;
++		current_link_width = FIELD_GET(PCI_EXP_LNKSTA_NLW, val);
+ 		if (pcie->init_link_width > current_link_width) {
+ 			dev_warn(pci->dev, "PCIe link is bad, width reduced\n");
+ 			val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base +
+@@ -740,8 +740,7 @@ static void tegra_pcie_enable_system_interrupts(struct dw_pcie_rp *pp)
  
- 	/* Sapphire RX 5600 XT Pulse has an invalid cap dword for BAR 0 */
- 	if (pdev->vendor == PCI_VENDOR_ID_ATI && pdev->device == 0x731f &&
--	    bar == 0 && cap == 0x7000)
--		cap = 0x3f000;
-+	    bar == 0 && cap == 0x700)
-+		return 0x3f00;
+ 	val_w = dw_pcie_readw_dbi(&pcie->pci, pcie->pcie_cap_base +
+ 				  PCI_EXP_LNKSTA);
+-	pcie->init_link_width = (val_w & PCI_EXP_LNKSTA_NLW) >>
+-				PCI_EXP_LNKSTA_NLW_SHIFT;
++	pcie->init_link_width = FIELD_GET(PCI_EXP_LNKSTA_NLW, val_w);
  
--	return cap >> 4;
-+	return cap;
- }
- EXPORT_SYMBOL(pci_rebar_get_possible_sizes);
+ 	val_w = dw_pcie_readw_dbi(&pcie->pci, pcie->pcie_cap_base +
+ 				  PCI_EXP_LNKCTL);
+@@ -900,7 +899,7 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
+ 	/* Configure Max lane width from DT */
+ 	val = dw_pcie_readl_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKCAP);
+ 	val &= ~PCI_EXP_LNKCAP_MLW;
+-	val |= (pcie->num_lanes << PCI_EXP_LNKSTA_NLW_SHIFT);
++	val |= FIELD_PREP(PCI_EXP_LNKCAP_MLW, pcie->num_lanes);
+ 	dw_pcie_writel_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKCAP, val);
  
+ 	/* Clear Slot Clock Configuration bit if SRNS configuration */
 -- 
 2.42.0
 
