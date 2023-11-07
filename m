@@ -2,138 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B8677E4200
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 15:45:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85C5E7E42EE
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 16:11:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233872AbjKGOpN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Nov 2023 09:45:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59296 "EHLO
+        id S235180AbjKGPLN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Nov 2023 10:11:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230178AbjKGOpM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 09:45:12 -0500
+        with ESMTP id S234857AbjKGPLG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 10:11:06 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C83F511B;
-        Tue,  7 Nov 2023 06:45:09 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D68C4C433C7;
-        Tue,  7 Nov 2023 14:45:00 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E0228271;
+        Tue,  7 Nov 2023 07:03:45 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EFEBC433C7;
+        Tue,  7 Nov 2023 15:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699368309;
-        bh=DCyfmXibenthavLR5OiO0v+ClmxD1f/SWmuBNmS/nbQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=igKU9F11MB0Xcq4Nu0c1zh1QEB+4EOVvhCFXhykinYrteyoEIZAmk+OCdpz2BIrQD
-         REEqlz5XNUcIntoHKJiiT4Lx9GXJ2dr/INGX7xQ9WkESsMdsAmgVmn4UrXxVNNKIzx
-         04wxNoRpL6NneIX5ip6sDXZ3CPuQcySARG4dKSdmVUsZGiAQaBSjTT7WpntRKTChTx
-         r8upz/bfdHhVFgxb+EDNsDPEUEDd7StSdXkwW2NXLK3qCEIUN28TnS6dS8DHQL9lBh
-         XMoiLPgXPHqE3UphKCKtmZUbr4l4xKKDuE/9QVhTRkLrk3hB9IdS2U7zMtGif3kj2l
-         vwpEpHoVapRYg==
-Date:   Tue, 7 Nov 2023 20:14:45 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        konrad.dybcio@linaro.org, mani@kernel.org, robh+dt@kernel.org,
-        quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
-        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
-        dmitry.baryshkov@linaro.org, robh@kernel.org,
-        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
-        quic_parass@quicinc.com, quic_schintav@quicinc.com,
-        quic_shijjose@quicinc.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mhi@lists.linux.dev
-Subject: Re: [PATCH v7 3/4] PCI: epf-mhi: Add support for SA8775P
-Message-ID: <20231107144445.GA147804@thinkpad>
-References: <1699361428-12802-1-git-send-email-quic_msarkar@quicinc.com>
- <1699361428-12802-4-git-send-email-quic_msarkar@quicinc.com>
+        s=k20201202; t=1699369424;
+        bh=J1vNjNieRJr3E7Lwg+K5Qxx5RI7TJ2qHL+YZr26NfxU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=pig9iQ0Vys09BIZmgBew6LN8vDcKe3GcGGIYTJJamHEEyxFXbP8Z7/2+gny8+h69u
+         JCOgtmzAJ9J3SmfckMcRshTFehtjlWsZYVAQ4FUGXXgPAj3EVkCqCnlV+ZzFwppRUK
+         iGRB1Olbq8qnf74R3xu1kkHrEPRLJ/57LKdoRVZ6SlhZmu1O0sblJexmJZFuesvNFm
+         maqY4J5PBrozHw5JtfG62ZJp/7Cc93h8FPxVAmvZbN7Qo3DBVM70TcaEl7LjoHd1ok
+         JfHWgCtuWizD+GGiaQuTJ1SAieXGrLlYA2k9FT+wjnIaJbQPPwYiwfapI0BBhOTSme
+         js6E1Ac/iWm8Q==
+Date:   Tue, 7 Nov 2023 09:03:42 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shuai Xue <xueshuai@linux.alibaba.com>
+Cc:     kaishen@linux.alibaba.com, yangyicong@huawei.com, will@kernel.org,
+        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
+        robin.murphy@arm.com, chengyou@linux.alibaba.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, rdunlap@infradead.org,
+        mark.rutland@arm.com, zhuo.song@linux.alibaba.com,
+        renyu.zj@linux.alibaba.com
+Subject: Re: [PATCH v10 3/5] PCI: move pci_clear_and_set_dword helper to pci
+ header
+Message-ID: <20231107150342.GA288219@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1699361428-12802-4-git-send-email-quic_msarkar@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+In-Reply-To: <20231104133216.42056-4-xueshuai@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 07, 2023 at 06:20:27PM +0530, Mrinmay Sarkar wrote:
-> Add support for Qualcomm Snapdragon SA8775P SoC to the EPF driver.
-> Reusing PID (0x0306) as dedicated PID for SA8775P EP is yet to decide
-> and it supports HDMA.
+On Sat, Nov 04, 2023 at 09:32:14PM +0800, Shuai Xue wrote:
+> The clear and set pattern is commonly used for accessing pci config,
+> move the helper pci_clear_and_set_dword from aspm.c into pci header.
 
-"SA8775P is currently reusing the PID 0x0306 (the default one hardcoded in the
-config space header) as the unique PID is not yet allocated. But the host side
-stack works fine with the default PID. It will get updated once the PID is
-finalized."
+s/move/Move/ (in subject, capitalize first word)
+s/pci/PCI/ (capitalize in English text)
+s/pci_clear_and_set_dword/pci_clear_and_set_dword()/ (add parens to
+function names, also in subject)
 
-> Currently, it has no fixed PCI class, so it is
-> being advertised as "PCI_CLASS_OTHERS".
-> 
-> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+With the fixes here and below:
+
+  Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 > ---
->  drivers/pci/endpoint/functions/pci-epf-mhi.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+>  drivers/pci/access.c    | 12 ++++++++++++
+>  drivers/pci/pcie/aspm.c | 11 -----------
+>  include/linux/pci.h     |  2 ++
+>  3 files changed, 14 insertions(+), 11 deletions(-)
 > 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> index b7b9d3e..23ea94e 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> @@ -114,6 +114,22 @@ static const struct pci_epf_mhi_ep_info sm8450_info = {
->  	.flags = MHI_EPF_USE_DMA,
->  };
->  
-> +static struct pci_epf_header sa8775p_header = {
-> +	.vendorid = PCI_VENDOR_ID_QCOM,
-> +	.deviceid = 0x0306,               /* FIXME: Update deviceid for sa8775p EP */
-> +	.baseclass_code = PCI_CLASS_OTHERS,
-> +	.interrupt_pin = PCI_INTERRUPT_INTA,
-> +};
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 6554a2e89d36..526360481d99 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -598,3 +598,15 @@ int pci_write_config_dword(const struct pci_dev *dev, int where,
+>  	return pci_bus_write_config_dword(dev->bus, dev->devfn, where, val);
+>  }
+>  EXPORT_SYMBOL(pci_write_config_dword);
 > +
-> +static const struct pci_epf_mhi_ep_info sa8775p_info = {
-> +	.config = &mhi_v1_config,
-> +	.epf_header = &sa8775p_header,
-> +	.bar_num = BAR_0,
-> +	.epf_flags = PCI_BASE_ADDRESS_MEM_TYPE_32,
-> +	.msi_count = 32,
-> +	.mru = 0x8000,
-> +};
+> +void pci_clear_and_set_dword(const struct pci_dev *dev, int pos,
+> +				    u32 clear, u32 set)
+
+Rename to pci_clear_and_set_config_dword() to retain the "config"
+information and match the other accessors.
+
+Align "u32 clear" under "const struct ...".  pci_write_config_dword()
+above is an anomaly.
+
+> +{
+> +	u32 val;
 > +
->  struct pci_epf_mhi {
->  	const struct pci_epc_features *epc_features;
->  	const struct pci_epf_mhi_ep_info *info;
-> @@ -677,6 +693,7 @@ static int pci_epf_mhi_probe(struct pci_epf *epf,
+> +	pci_read_config_dword(dev, pos, &val);
+> +	val &= ~clear;
+> +	val |= set;
+> +	pci_write_config_dword(dev, pos, val);
+> +}
+> +EXPORT_SYMBOL(pci_clear_and_set_dword);
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 1bf630059264..f4e64fedc048 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -423,17 +423,6 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+>  	}
 >  }
 >  
->  static const struct pci_epf_device_id pci_epf_mhi_ids[] = {
-> +	{ .name = "sa8775p", .driver_data = (kernel_ulong_t)&sa8775p_info },
+> -static void pci_clear_and_set_dword(struct pci_dev *pdev, int pos,
+> -				    u32 clear, u32 set)
+> -{
+> -	u32 val;
+> -
+> -	pci_read_config_dword(pdev, pos, &val);
+> -	val &= ~clear;
+> -	val |= set;
+> -	pci_write_config_dword(pdev, pos, val);
+> -}
+> -
+>  /* Calculate L1.2 PM substate timing parameters */
+>  static void aspm_calc_l12_info(struct pcie_link_state *link,
+>  				u32 parent_l1ss_cap, u32 child_l1ss_cap)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 8c7c2c3c6c65..271f30fd7ca4 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1213,6 +1213,8 @@ int pci_read_config_dword(const struct pci_dev *dev, int where, u32 *val);
+>  int pci_write_config_byte(const struct pci_dev *dev, int where, u8 val);
+>  int pci_write_config_word(const struct pci_dev *dev, int where, u16 val);
+>  int pci_write_config_dword(const struct pci_dev *dev, int where, u32 val);
+> +void pci_clear_and_set_dword(const struct pci_dev *dev, int pos,
+> +				    u32 clear, u32 set);
 
-The ID should be changed to "pci_epf_mhi_sa8775p". I know that you followed the
-existing pattern, but it was my fault to ignore the prefix "pci_epf_mhi" and now
-the function name would appear as "functions/sa8775p/" and it would create issue
-if we happen to support multiple functions for this EP.
+Align "u32 clear" again.
 
-I will share the patch with you for changing the names for other functions as
-well. Please apply it on top this series and send it together. Even though it is
-an ABI breakage if we change the function name, luckily there isn't anyone (to
-my knowledge) using this driver outside Qcom and myself yet.
-
-- Mani
-
->  	{ .name = "sdx55", .driver_data = (kernel_ulong_t)&sdx55_info },
->  	{ .name = "sm8450", .driver_data = (kernel_ulong_t)&sm8450_info },
->  	{},
+>  int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val);
+>  int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val);
 > -- 
-> 2.7.4
+> 2.39.3
 > 
 > 
-
--- 
-மணிவண்ணன் சதாசிவம்
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
