@@ -2,42 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3B437E441E
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 16:49:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A53987E43F7
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 16:49:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234084AbjKGPtz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Nov 2023 10:49:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32842 "EHLO
+        id S235564AbjKGPtI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Nov 2023 10:49:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344293AbjKGPsd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 10:48:33 -0500
+        with ESMTP id S1344299AbjKGPsm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 10:48:42 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0397D170D;
-        Tue,  7 Nov 2023 07:48:01 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35E4EC433C9;
-        Tue,  7 Nov 2023 15:47:59 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 809CA1712;
+        Tue,  7 Nov 2023 07:48:02 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21883C433C7;
+        Tue,  7 Nov 2023 15:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699372080;
-        bh=jlORUrhwRe1qCQ3jPdGLBjmsIvLRy3hgBAMYBSgKlto=;
+        s=k20201202; t=1699372082;
+        bh=+umiqZVn5MEAP1q4+b5WFA8yb5jxICIs8crcWbbcSI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NqDrAGU7BgJ603x0RAeNE56qqSwjfIlbkd28T8sSGolPoQqhCTgHpBMF3hlAc2Qp9
-         67PEaDq7GqmZbHEgxhO+wStCigq1zjwc6TQE/Qbzfba9dRqUWsyhbJyhwsjAeQa6ii
-         YcYOjoC8ysnFiCQLSO5j31hlSoXnX9l9mcBvdt+EybsSU5uJXQevCPKqFLOs6nmg1v
-         z7ZcfIOsZy3FX1VLOxOy76YwxOwHFVsOmW6AmvyQOnBMtEv4/HPYO/n2YUWULW0L/4
-         VCBNrbGSQZrMV/yfKtWFfwvrUrAQzzGbYy22Wnaa4xIEFOPxkzqwDv5Mokb9degCRz
-         Ra7PU/X7bpIEQ==
+        b=vADD7KprKCegoaFvreeIVmfyVtuwcNikKuqZnROkebjdQqrDqzM5LgaRBfcqJQ9Uq
+         bWaDoC5lMdc2i4IqmhyH0rW9ts1l7RcM/zx0lFuCOH4+ZJCK8yLcCCK1FcS88VFqG5
+         1dLPUMYSsF/nVamtiG9vZNuT6ucHJZKNxBDmSa9BwHzZCpqRuPbAWEGHfqfaE92tu6
+         1a626hIm2ZS2kOo2HG4LAj7PIn1/vHLyvLApxSUePWG7UPKTmswVWHJ6ONzpKBYkR3
+         OUiB0UkmN6VG7zah8Z5NxkinV0OHW/rTgWsiHyLss8MjPlYqoNpdkdtG/4RzkV3pFA
+         wUzqL5o8n3a4g==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, lpieralisi@kernel.org, kw@linux.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 29/36] PCI: dwc: Add missing PCI_EXP_LNKCAP_MLW handling
-Date:   Tue,  7 Nov 2023 10:46:11 -0500
-Message-ID: <20231107154654.3765336-29-sashal@kernel.org>
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, lpieralisi@kernel.org,
+        kw@linux.com, gregkh@linuxfoundation.org, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 30/36] misc: pci_endpoint_test: Add Device ID for R-Car S4-8 PCIe controller
+Date:   Tue,  7 Nov 2023 10:46:12 -0500
+Message-ID: <20231107154654.3765336-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20231107154654.3765336-1-sashal@kernel.org>
 References: <20231107154654.3765336-1-sashal@kernel.org>
@@ -53,68 +51,42 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit 89db0793c9f2da265ecb6c1681f899d9af157f37 ]
+[ Upstream commit 6c4b39937f4e65688ea294725ae432b2565821ff ]
 
-Update dw_pcie_link_set_max_link_width() to set PCI_EXP_LNKCAP_MLW.
+Add Renesas R8A779F0 in pci_device_id table so that pci-epf-test
+can be used for testing PCIe EP on R-Car S4-8.
 
-In accordance with the DW PCIe RC/EP HW manuals [1,2,3,...] aside with
-the PORT_LINK_CTRL_OFF.LINK_CAPABLE and GEN2_CTRL_OFF.NUM_OF_LANES[8:0]
-field there is another one which needs to be updated.
-
-It's LINK_CAPABILITIES_REG.PCIE_CAP_MAX_LINK_WIDTH. If it isn't done at
-the very least the maximum link-width capability CSR won't expose the
-actual maximum capability.
-
-[1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-    Version 4.60a, March 2015, p.1032
-[2] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-    Version 4.70a, March 2016, p.1065
-[3] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-    Version 4.90a, March 2016, p.1057
-...
-[X] DesignWare Cores PCI Express Controller Databook - DWC PCIe Endpoint,
-      Version 5.40a, March 2019, p.1396
-[X+1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-      Version 5.40a, March 2019, p.1266
-
-Suggested-by: Serge Semin <fancer.lancer@gmail.com>
-Link: https://lore.kernel.org/linux-pci/20231018085631.1121289-4-yoshihiro.shimoda.uh@renesas.com
+Link: https://lore.kernel.org/linux-pci/20231018085631.1121289-16-yoshihiro.shimoda.uh@renesas.com
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-designware.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/misc/pci_endpoint_test.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index da4aba4aee623..2b60d20dfdf59 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -734,7 +734,8 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index ed4d0ef5e5c31..150083dab71a3 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -81,6 +81,7 @@
+ #define PCI_DEVICE_ID_RENESAS_R8A774B1		0x002b
+ #define PCI_DEVICE_ID_RENESAS_R8A774C0		0x002d
+ #define PCI_DEVICE_ID_RENESAS_R8A774E1		0x0025
++#define PCI_DEVICE_ID_RENESAS_R8A779F0		0x0031
  
- static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
- {
--	u32 lwsc, plc;
-+	u32 lnkcap, lwsc, plc;
-+	u8 cap;
+ static DEFINE_IDA(pci_endpoint_test_ida);
  
- 	if (!num_lanes)
- 		return;
-@@ -770,6 +771,12 @@ static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
- 	}
- 	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, plc);
- 	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, lwsc);
-+
-+	cap = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-+	lnkcap = dw_pcie_readl_dbi(pci, cap + PCI_EXP_LNKCAP);
-+	lnkcap &= ~PCI_EXP_LNKCAP_MLW;
-+	lnkcap |= FIELD_PREP(PCI_EXP_LNKCAP_MLW, num_lanes);
-+	dw_pcie_writel_dbi(pci, cap + PCI_EXP_LNKCAP, lnkcap);
- }
- 
- void dw_pcie_iatu_detect(struct dw_pcie *pci)
+@@ -990,6 +991,9 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A774B1),},
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A774C0),},
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A774E1),},
++	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A779F0),
++	  .driver_data = (kernel_ulong_t)&default_data,
++	},
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721E),
+ 	  .driver_data = (kernel_ulong_t)&j721e_data,
+ 	},
 -- 
 2.42.0
 
