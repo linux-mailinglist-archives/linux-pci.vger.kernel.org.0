@@ -2,162 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C3A87E3F80
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 14:04:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B8677E4200
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 15:45:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234912AbjKGNEz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Nov 2023 08:04:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36270 "EHLO
+        id S233872AbjKGOpN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Nov 2023 09:45:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234917AbjKGNEo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 08:04:44 -0500
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81651A5CE;
-        Tue,  7 Nov 2023 04:50:49 -0800 (PST)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3A7CjG2b012206;
-        Tue, 7 Nov 2023 12:50:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=qcppdkim1;
- bh=3+YMA23o75yDOPLIrv3GEbuYP46t8YxPCwUb1AJ4tA8=;
- b=bSVtyHV5MpCbMgLztXPRqDgrVw6Y1KIZYjh8yaOvcd9KP9Mdt06gi7bkBJCbZVre1jRq
- kk/oJqXASWa72m5rpPNdmddPQuQuc4vesdbpRFoc1pTz5/+Sg46Wy/glGRsrlyATHo3d
- PRZ9QNrkvJdG6mlhKU9kK20zP+yRCNU9jKACvHXkpLWIhw/bT+tAajExxdE5eF0mQfLp
- xFpYn+G4mZ+deYL0IyPuvRYt/Xhn4e85dLo5QC2GLhUouKBek4dPG3gBcLrXlyx4e2/C
- h97Hxt1zc9SWPW5h7Mh5+7d57nU/+QTJTmLJ2qhEqBdoaiapuTyPHrdhNekJnpiYOuuk 5A== 
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3u73a72bk0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Nov 2023 12:50:40 +0000
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 3A7CoYaK000737;
-        Tue, 7 Nov 2023 12:50:37 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3u5f1m401f-1;
-        Tue, 07 Nov 2023 12:50:37 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3A7CobPI000764;
-        Tue, 7 Nov 2023 12:50:37 GMT
-Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
-        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3A7CoaGL000761;
-        Tue, 07 Nov 2023 12:50:37 +0000
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
-        id 03F0D4C77; Tue,  7 Nov 2023 18:20:36 +0530 (+0530)
-From:   Mrinmay Sarkar <quic_msarkar@quicinc.com>
-To:     agross@kernel.org, andersson@kernel.org,
+        with ESMTP id S230178AbjKGOpM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 09:45:12 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C83F511B;
+        Tue,  7 Nov 2023 06:45:09 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D68C4C433C7;
+        Tue,  7 Nov 2023 14:45:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1699368309;
+        bh=DCyfmXibenthavLR5OiO0v+ClmxD1f/SWmuBNmS/nbQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=igKU9F11MB0Xcq4Nu0c1zh1QEB+4EOVvhCFXhykinYrteyoEIZAmk+OCdpz2BIrQD
+         REEqlz5XNUcIntoHKJiiT4Lx9GXJ2dr/INGX7xQ9WkESsMdsAmgVmn4UrXxVNNKIzx
+         04wxNoRpL6NneIX5ip6sDXZ3CPuQcySARG4dKSdmVUsZGiAQaBSjTT7WpntRKTChTx
+         r8upz/bfdHhVFgxb+EDNsDPEUEDd7StSdXkwW2NXLK3qCEIUN28TnS6dS8DHQL9lBh
+         XMoiLPgXPHqE3UphKCKtmZUbr4l4xKKDuE/9QVhTRkLrk3hB9IdS2U7zMtGif3kj2l
+         vwpEpHoVapRYg==
+Date:   Tue, 7 Nov 2023 20:14:45 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        konrad.dybcio@linaro.org, mani@kernel.org, robh+dt@kernel.org
-Cc:     quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+        konrad.dybcio@linaro.org, mani@kernel.org, robh+dt@kernel.org,
+        quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
         quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
         dmitry.baryshkov@linaro.org, robh@kernel.org,
         quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
         quic_parass@quicinc.com, quic_schintav@quicinc.com,
-        quic_shijjose@quicinc.com,
-        Mrinmay Sarkar <quic_msarkar@quicinc.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        quic_shijjose@quicinc.com, Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         mhi@lists.linux.dev
-Subject: [PATCH v7 4/4] arm64: dts: qcom: sa8775p: Add ep pcie0 controller node
-Date:   Tue,  7 Nov 2023 18:20:28 +0530
-Message-Id: <1699361428-12802-5-git-send-email-quic_msarkar@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1699361428-12802-1-git-send-email-quic_msarkar@quicinc.com>
+Subject: Re: [PATCH v7 3/4] PCI: epf-mhi: Add support for SA8775P
+Message-ID: <20231107144445.GA147804@thinkpad>
 References: <1699361428-12802-1-git-send-email-quic_msarkar@quicinc.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: SVOSm48Ir8PZWbMASV8Flh4_qPuSc-ud
-X-Proofpoint-GUID: SVOSm48Ir8PZWbMASV8Flh4_qPuSc-ud
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-07_02,2023-11-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 clxscore=1015 bulkscore=0 spamscore=0 suspectscore=0
- priorityscore=1501 mlxscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2310240000 definitions=main-2311070105
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+ <1699361428-12802-4-git-send-email-quic_msarkar@quicinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1699361428-12802-4-git-send-email-quic_msarkar@quicinc.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add ep pcie dtsi node for pcie0 controller found on sa8775p platform.
-It supports gen4 and x2 link width. Limiting the speed to Gen3 due to
-stability issues.
+On Tue, Nov 07, 2023 at 06:20:27PM +0530, Mrinmay Sarkar wrote:
+> Add support for Qualcomm Snapdragon SA8775P SoC to the EPF driver.
+> Reusing PID (0x0306) as dedicated PID for SA8775P EP is yet to decide
+> and it supports HDMA.
 
-Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm64/boot/dts/qcom/sa8775p.dtsi | 46 +++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+"SA8775P is currently reusing the PID 0x0306 (the default one hardcoded in the
+config space header) as the unique PID is not yet allocated. But the host side
+stack works fine with the default PID. It will get updated once the PID is
+finalized."
 
-diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-index 13dd44d..7eab458 100644
---- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-@@ -3586,6 +3586,52 @@
- 		status = "disabled";
- 	};
- 
-+	pcie0_ep: pcie-ep@1c00000 {
-+		compatible = "qcom,sa8775p-pcie-ep";
-+		reg = <0x0 0x01c00000 0x0 0x3000>,
-+		      <0x0 0x40000000 0x0 0xf20>,
-+		      <0x0 0x40000f20 0x0 0xa8>,
-+		      <0x0 0x40001000 0x0 0x4000>,
-+		      <0x0 0x40200000 0x0 0x100000>,
-+		      <0x0 0x01c03000 0x0 0x1000>,
-+		      <0x0 0x40005000 0x0 0x2000>;
-+		reg-names = "parf", "dbi", "elbi", "atu", "addr_space",
-+			    "mmio", "dma";
-+
-+		clocks = <&gcc GCC_PCIE_0_AUX_CLK>,
-+			<&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-+			<&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-+			<&gcc GCC_PCIE_0_SLV_AXI_CLK>,
-+			<&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>;
-+
-+		clock-names = "aux",
-+			      "cfg",
-+			      "bus_master",
-+			      "bus_slave",
-+			      "slave_q2a";
-+
-+		interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 630 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		interrupt-names = "global", "doorbell", "dma";
-+
-+		interconnects = <&pcie_anoc MASTER_PCIE_0 0 &mc_virt SLAVE_EBI1 0>,
-+				<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_PCIE_0 0>;
-+		interconnect-names = "pcie-mem", "cpu-pcie";
-+
-+		iommus = <&pcie_smmu 0x0000 0x7f>;
-+		resets = <&gcc GCC_PCIE_0_BCR>;
-+		reset-names = "core";
-+		power-domains = <&gcc PCIE_0_GDSC>;
-+		phys = <&pcie0_phy>;
-+		phy-names = "pciephy";
-+		max-link-speed = <3>; /* FIXME: Limiting the Gen speed due to stability issues */
-+		num-lanes = <2>;
-+
-+		status = "disabled";
-+	};
-+
- 	pcie0_phy: phy@1c04000 {
- 		compatible = "qcom,sa8775p-qmp-gen4x2-pcie-phy";
- 		reg = <0x0 0x1c04000 0x0 0x2000>;
+> Currently, it has no fixed PCI class, so it is
+> being advertised as "PCI_CLASS_OTHERS".
+> 
+> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-mhi.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> index b7b9d3e..23ea94e 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> @@ -114,6 +114,22 @@ static const struct pci_epf_mhi_ep_info sm8450_info = {
+>  	.flags = MHI_EPF_USE_DMA,
+>  };
+>  
+> +static struct pci_epf_header sa8775p_header = {
+> +	.vendorid = PCI_VENDOR_ID_QCOM,
+> +	.deviceid = 0x0306,               /* FIXME: Update deviceid for sa8775p EP */
+> +	.baseclass_code = PCI_CLASS_OTHERS,
+> +	.interrupt_pin = PCI_INTERRUPT_INTA,
+> +};
+> +
+> +static const struct pci_epf_mhi_ep_info sa8775p_info = {
+> +	.config = &mhi_v1_config,
+> +	.epf_header = &sa8775p_header,
+> +	.bar_num = BAR_0,
+> +	.epf_flags = PCI_BASE_ADDRESS_MEM_TYPE_32,
+> +	.msi_count = 32,
+> +	.mru = 0x8000,
+> +};
+> +
+>  struct pci_epf_mhi {
+>  	const struct pci_epc_features *epc_features;
+>  	const struct pci_epf_mhi_ep_info *info;
+> @@ -677,6 +693,7 @@ static int pci_epf_mhi_probe(struct pci_epf *epf,
+>  }
+>  
+>  static const struct pci_epf_device_id pci_epf_mhi_ids[] = {
+> +	{ .name = "sa8775p", .driver_data = (kernel_ulong_t)&sa8775p_info },
+
+The ID should be changed to "pci_epf_mhi_sa8775p". I know that you followed the
+existing pattern, but it was my fault to ignore the prefix "pci_epf_mhi" and now
+the function name would appear as "functions/sa8775p/" and it would create issue
+if we happen to support multiple functions for this EP.
+
+I will share the patch with you for changing the names for other functions as
+well. Please apply it on top this series and send it together. Even though it is
+an ABI breakage if we change the function name, luckily there isn't anyone (to
+my knowledge) using this driver outside Qcom and myself yet.
+
+- Mani
+
+>  	{ .name = "sdx55", .driver_data = (kernel_ulong_t)&sdx55_info },
+>  	{ .name = "sm8450", .driver_data = (kernel_ulong_t)&sm8450_info },
+>  	{},
+> -- 
+> 2.7.4
+> 
+> 
+
 -- 
-2.7.4
-
+மணிவண்ணன் சதாசிவம்
