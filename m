@@ -2,140 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85C5E7E42EE
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 16:11:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B29F7E436D
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 16:29:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235180AbjKGPLN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Nov 2023 10:11:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45062 "EHLO
+        id S234099AbjKGP3j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Nov 2023 10:29:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234857AbjKGPLG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 10:11:06 -0500
+        with ESMTP id S233946AbjKGP3j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 10:29:39 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E0228271;
-        Tue,  7 Nov 2023 07:03:45 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EFEBC433C7;
-        Tue,  7 Nov 2023 15:03:44 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EC9C95;
+        Tue,  7 Nov 2023 07:29:37 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2C83C433C7;
+        Tue,  7 Nov 2023 15:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699369424;
-        bh=J1vNjNieRJr3E7Lwg+K5Qxx5RI7TJ2qHL+YZr26NfxU=;
+        s=k20201202; t=1699370977;
+        bh=ZlerLC4HZoG58tR/d9/VGC2fvwvlupCnuLnLcuhHslc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=pig9iQ0Vys09BIZmgBew6LN8vDcKe3GcGGIYTJJamHEEyxFXbP8Z7/2+gny8+h69u
-         JCOgtmzAJ9J3SmfckMcRshTFehtjlWsZYVAQ4FUGXXgPAj3EVkCqCnlV+ZzFwppRUK
-         iGRB1Olbq8qnf74R3xu1kkHrEPRLJ/57LKdoRVZ6SlhZmu1O0sblJexmJZFuesvNFm
-         maqY4J5PBrozHw5JtfG62ZJp/7Cc93h8FPxVAmvZbN7Qo3DBVM70TcaEl7LjoHd1ok
-         JfHWgCtuWizD+GGiaQuTJ1SAieXGrLlYA2k9FT+wjnIaJbQPPwYiwfapI0BBhOTSme
-         js6E1Ac/iWm8Q==
-Date:   Tue, 7 Nov 2023 09:03:42 -0600
+        b=GKrnWUqGyjFFJUOOFqpAD/GW+5ajiQ3w8D/RgPNiDEheo3qDW16M6FaIdlL2XH3Gy
+         yMMA/dVFaIbIx56GONlTzSN20Iq+jpZ78pxpH3w7rQBdb1hi7VnbsM2IywUHwd8xNz
+         0JFFA+uHh1zD9fG96P8NsFBFBXMiSyko3aj24i6fpJAfemhgG/dC3At5doCuYuYZ/q
+         p72xQ6Y/RlJlG/1lsUrN2MFbSUzGhcyXnjDd7lJDwpup1cMD5NMZV5JM8JIVE6OCsk
+         PE91P/E1WiBBnRVlGPAL+MzhR1yIvWtFhukFj1O1qU0+P1cjJybRDtBX9hZFjr28Z2
+         F5xZ/onpsH6tg==
+Date:   Tue, 7 Nov 2023 09:29:29 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     kaishen@linux.alibaba.com, yangyicong@huawei.com, will@kernel.org,
-        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
-        robin.murphy@arm.com, chengyou@linux.alibaba.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, rdunlap@infradead.org,
-        mark.rutland@arm.com, zhuo.song@linux.alibaba.com,
-        renyu.zj@linux.alibaba.com
-Subject: Re: [PATCH v10 3/5] PCI: move pci_clear_and_set_dword helper to pci
- header
-Message-ID: <20231107150342.GA288219@bhelgaas>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Vikram Sethi <vsethi@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Krishna Thota <kthota@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Question: Clearing error bits in the root port post enumeration
+Message-ID: <20231107152929.GA289532@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231104133216.42056-4-xueshuai@linux.alibaba.com>
+In-Reply-To: <0d217128-b08c-4c56-ba7c-ed7b7ddfb75a@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Nov 04, 2023 at 09:32:14PM +0800, Shuai Xue wrote:
-> The clear and set pattern is commonly used for accessing pci config,
-> move the helper pci_clear_and_set_dword from aspm.c into pci header.
-
-s/move/Move/ (in subject, capitalize first word)
-s/pci/PCI/ (capitalize in English text)
-s/pci_clear_and_set_dword/pci_clear_and_set_dword()/ (add parens to
-function names, also in subject)
-
-With the fixes here and below:
-
-  Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> ---
->  drivers/pci/access.c    | 12 ++++++++++++
->  drivers/pci/pcie/aspm.c | 11 -----------
->  include/linux/pci.h     |  2 ++
->  3 files changed, 14 insertions(+), 11 deletions(-)
+On Tue, Nov 07, 2023 at 08:44:53AM +0530, Vidya Sagar wrote:
+> On 11/3/2023 11:50 PM, Bjorn Helgaas wrote:
+> > On Tue, Oct 31, 2023 at 12:26:31PM +0000, Vidya Sagar wrote:
+> > > Hi folks,
+> > > 
+> > > I would like to know your comments on the following scenario where
+> > > we are observing the root port logging errors because of the
+> > > enumeration flow being followed.
+> > > 
+> > > DUT information:
+> > > - Has a root port and an endpoint connected to it
+> > > - Uses ECAM mechanism to access the configuration space
+> > > - Booted through ACPI flow
+> > > - Has a Firmware-First approach for handling the errors
+> > > - System is configured to treat Unsupported Requests as
+> > >    AdvisoryNon-Fatal errors
+> > > 
+> > > As we all know, when a configuration read request comes in for a
+> > > device number that is not implemented, a UR would be returned as per
+> > > the PCIe spec.
+> > > 
+> > > As part of the enumeration flow on DUT, when the kernel reads offset
+> > > 0x0 of B:D:F=0:0:0, the root port responds with its valid Vendor-ID
+> > > and Device-ID values.  But, when B:D:F=0:1:0 is probed, since there
+> > > is no device present there, the root port responds with an
+> > > Unsupported Request and simultaneously logs the same in the Device
+> > > Status register (i.e. bit-3).  Because of it, there is a UR logged
+> > > in the Device Status register of the RP by the time enumeration is
+> > > complete.
+> > > 
+> > > In the case of AER capability natively owned by the kernel, the AER
+> > > driver's init call would clear all such pending bits.
+> > > 
+> > > Since we are going with the Firmware-First approach, and the system
+> > > is configured to treat Unsupported Requests as AdvisoryNon-Fatal
+> > > errors, only a correctable error interrupt can be raised to the
+> > > Firmware which takes care of clearing the corresponding status
+> > > registers.  The firmware can't know about the UnsupReq bit being set
+> > > as the interrupt it received is for a correctable error hence it
+> > > clears only bits related to correctable error.
+> > > 
+> > > All these events leave a freshly booted system with the following
+> > > bits set.
+> > > 
+> > > Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort+ <SERR- <PERR-          (MAbort)
+> > > DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq+ AuxPwr- TransPend-                                                              (UnsupReq)
+> > > UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq+ ACSViol-   (UnsupReq)
+> > > 
+> > > Since the reason for UR is well understood at this point, I would
+> > > like to weigh in on the idea of clearing the aforementioned bits in
+> > > the root port once the enumeration is done particularly to cater to
+> > > the configurations where Firmware-First approach is in place.
+> > > Please let me know your comments on this approach.
+> > 
+> > I think Secondary status (PCI_SEC_STATUS) is always owned by the OS
+> > and is not affected by _OSC negotiation, right?  Linux does basically
+> > nothing with that today, but I think it *could* clear the "Received
+> > Master Abort" bit.
+>
+> Yes. PCI_SEC_STATUS is always owned by the OS and _OSC negotiation doesn't
+> really affect that.
 > 
-> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> index 6554a2e89d36..526360481d99 100644
-> --- a/drivers/pci/access.c
-> +++ b/drivers/pci/access.c
-> @@ -598,3 +598,15 @@ int pci_write_config_dword(const struct pci_dev *dev, int where,
->  	return pci_bus_write_config_dword(dev->bus, dev->devfn, where, val);
->  }
->  EXPORT_SYMBOL(pci_write_config_dword);
-> +
-> +void pci_clear_and_set_dword(const struct pci_dev *dev, int pos,
-> +				    u32 clear, u32 set)
+> > I'm not very familiar with Advisory Non-Fatal errors.  I'm curious
+> > about the UESta situation: why can't firmware know about UnsupReq
+> > being set?  I assume PCI_ERR_COR_ADV_NFAT is the Correctable Error
+> > Status bit the firmware *does* see and clear.
+>
+> Yes, PCI_ERR_COR_ADV_NFAT is indeed cleared by the firmware.
+> > 
+> > But isn't the whole point of Advisory Non-Fatal errors that an error
+> > that is logged as an Uncorrectable Error and that normally would be
+> > signaled with ERR_NONFATAL is signaled with ERR_COR instead?  So
+> > doesn't PCI_ERR_COR_ADV_NFAT being set imply that some
+> > PCI_ERR_UNCOR_STATUS must be set as well?  If so, I would think
+> > firmware *could* figure that out and clear the PCI_ERR_UNCOR_STATUS
+> > bit.
+>
+> So, are you suggesting that let the firmware only clear the
+> PCI_ERR_UNCOR_STATUS also?
 
-Rename to pci_clear_and_set_config_dword() to retain the "config"
-information and match the other accessors.
+In this firmware-first scenario, I'm assuming the platform retained
+ownership of the AER capability, so I would think firmware certainly
+should be allowed to clear PCI_ERR_UNCOR_STATUS.
 
-Align "u32 clear" under "const struct ...".  pci_write_config_dword()
-above is an anomaly.
+> if so, then, I can even make the firmware clear the PCI_SEC_STATUS
+> also thereby leaving the firmware responsible for clearing all the
+> error bits. Does that sound ok?
 
-> +{
-> +	u32 val;
-> +
-> +	pci_read_config_dword(dev, pos, &val);
-> +	val &= ~clear;
-> +	val |= set;
-> +	pci_write_config_dword(dev, pos, val);
-> +}
-> +EXPORT_SYMBOL(pci_clear_and_set_dword);
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 1bf630059264..f4e64fedc048 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -423,17 +423,6 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
->  	}
->  }
->  
-> -static void pci_clear_and_set_dword(struct pci_dev *pdev, int pos,
-> -				    u32 clear, u32 set)
-> -{
-> -	u32 val;
-> -
-> -	pci_read_config_dword(pdev, pos, &val);
-> -	val &= ~clear;
-> -	val |= set;
-> -	pci_write_config_dword(pdev, pos, val);
-> -}
-> -
->  /* Calculate L1.2 PM substate timing parameters */
->  static void aspm_calc_l12_info(struct pcie_link_state *link,
->  				u32 parent_l1ss_cap, u32 child_l1ss_cap)
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 8c7c2c3c6c65..271f30fd7ca4 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1213,6 +1213,8 @@ int pci_read_config_dword(const struct pci_dev *dev, int where, u32 *val);
->  int pci_write_config_byte(const struct pci_dev *dev, int where, u8 val);
->  int pci_write_config_word(const struct pci_dev *dev, int where, u16 val);
->  int pci_write_config_dword(const struct pci_dev *dev, int where, u32 val);
-> +void pci_clear_and_set_dword(const struct pci_dev *dev, int pos,
-> +				    u32 clear, u32 set);
+It doesn't sound quite right to me for firmware to clear
+PCI_SEC_STATUS because it doesn't own that register.  I suspect we
+would probably see the "Received Master Abort" bit set after
+enumeration even on Conventional PCI systems, so I doubt this is
+anything specific to PCIe or AER, and maybe Linux should clear it
+after enumerating devices below the bridge.
 
-Align "u32 clear" again.
-
->  int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val);
->  int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val);
-> -- 
-> 2.39.3
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Bjorn
