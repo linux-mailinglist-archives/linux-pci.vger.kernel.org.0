@@ -2,206 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4184A7E5276
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Nov 2023 10:13:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 205C27E52E6
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Nov 2023 10:53:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235336AbjKHJN5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Nov 2023 04:13:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45154 "EHLO
+        id S235450AbjKHJxa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Nov 2023 04:53:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232723AbjKHJN5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Nov 2023 04:13:57 -0500
-Received: from bee.tesarici.cz (bee.tesarici.cz [77.93.223.253])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DE2410A;
-        Wed,  8 Nov 2023 01:13:54 -0800 (PST)
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by bee.tesarici.cz (Postfix) with ESMTPSA id 5FDED184639;
-        Wed,  8 Nov 2023 10:13:51 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=none dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tesarici.cz; s=mail;
-        t=1699434831; bh=8YvlJP4iehF5VC4lYo9yr3Gk1KOKmHeLrYZG+pdLVxc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zQpYhRcZSsQhsdYt6OAMWjWj/1XvjsMN6ErRHy5DsAcVuH/fDLaBQHivbO9laMGOg
-         2l85K13CiAFz0ifJan0FYClLvJ4MdyM3QMgKJvnIckZr7af1Y4dShgg3YbLsluuUBj
-         VFggBmKgfCCmzHdzASRGg4uBDynoa3fATMSvLSKGZ5lj4DJMSanfaZBXvasKhuVOHr
-         ak/inXItCQaK7proFvieb6/oI8qOZC9siRHqWp7czMu4J1L48W5mPM370dM84klnWh
-         +r3Z65N2Uxq2ZPhi/7myR/u6xsbh0kA1YRgPRnelz9XmiTlnsgGQou1xggb6UFfPuZ
-         gUiOfBkWe8ogg==
-Date:   Wed, 8 Nov 2023 10:13:47 +0100
-From:   Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
+        with ESMTP id S229924AbjKHJx3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Nov 2023 04:53:29 -0500
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2920C1B3
+        for <linux-pci@vger.kernel.org>; Wed,  8 Nov 2023 01:53:27 -0800 (PST)
+Received: by mail-pg1-x533.google.com with SMTP id 41be03b00d2f7-5b7f3f470a9so4554974a12.0
+        for <linux-pci@vger.kernel.org>; Wed, 08 Nov 2023 01:53:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1699437206; x=1700042006; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=juZI1n0aMz+KCog5r3XPutHhgq5o1lm8dusNtuYCGmE=;
+        b=l4+BwGgY2FKriVF/7CpzeLjOonahsX0UZ+iRlPfKa5SCMWP3uOmqqSvDaHQXXn97Nl
+         CaRsML0xSTtH4bN1IDXI1yeVyQRl8O0vFVZx0oVVL7f4wTYykEtD75oLJem13+2Pj46r
+         dE+B+f7R8+YlrjLV6Np5COFcnaVwXxSAZEEjDm/pwCulNSkBh4VogF8RucBzCftg1CqK
+         sd1E8gnivGkhxH9jYMz+VZbhnnThdzq9ssdHSLDhH94pXHWioa32JWxiWlJhRx0ls7/t
+         Lnxg3mput54c1cqplbmUFgOXLaaXlRyzH7+neGhNDUxqYiALdscsQQIHKXhvSIdktCn0
+         094A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699437206; x=1700042006;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=juZI1n0aMz+KCog5r3XPutHhgq5o1lm8dusNtuYCGmE=;
+        b=GyaNRLh1yvtpCyGeJsbeqOOgqbYmizLG5r1hFJ6PgGaM8A3xcU54nbWiMpDgFVr3gw
+         6fqiqZMnBkNQqGKnNCw/E57rO+FsDEIb/LQ3kJtqgmv18lpKo+ScbGopjC1J9HvlOA10
+         mIif7MdZZY9JRT2qz/gAP3dP/FxXPOWQ8hhZloaEW2I+gk+y/aFZFACRphpuxwghAcf2
+         7mPU7FoTQK/vnR8chKBMopoauniR2om+08POuLqVntme01lBBXxpkVAEGRZOrGqcUIXT
+         cDcbIAMi6j3dqpA/BDO8Bl71M7HKz8SiPjYMyJhzRz0WH9aASqVUaP9ClGgmWA1I8B1+
+         aaiw==
+X-Gm-Message-State: AOJu0YzMEkierPU/WxOpPLyVnc5DkeryG0GN+ydN7QVsIw3BwXHTnp+V
+        haRfhGM26ynyUusVoJ2AVoIRpg==
+X-Google-Smtp-Source: AGHT+IEEgxtG4vAOOXAzU0cQ43q+y/GuzULUrpgSTtLmSEOIhXbF+HzsEiLo0Th7PmwROQ6HsMZIlg==
+X-Received: by 2002:a05:6a20:7495:b0:14e:43b0:5f99 with SMTP id p21-20020a056a20749500b0014e43b05f99mr1462760pzd.52.1699437206593;
+        Wed, 08 Nov 2023 01:53:26 -0800 (PST)
+Received: from sunil-laptop ([106.51.188.78])
+        by smtp.gmail.com with ESMTPSA id c24-20020a170902d91800b001c728609574sm1346631plz.6.2023.11.08.01.53.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Nov 2023 01:53:25 -0800 (PST)
+Date:   Wed, 8 Nov 2023 15:23:14 +0530
+From:   Sunil V L <sunilvl@ventanamicro.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Petr Tesarik <petr.tesarik1@huawei-partners.com>,
-        Ross Lagerwall <ross.lagerwall@citrix.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Jianxiong Gao <jxgao@google.com>
-Subject: Re: Memory corruption with CONFIG_SWIOTLB_DYNAMIC=y
-Message-ID: <20231108101347.77cab795@meshulam.tesarici.cz>
-In-Reply-To: <20231107182420.0bd8c211.pasic@linux.ibm.com>
-References: <104a8c8fedffd1ff8a2890983e2ec1c26bff6810.camel@linux.ibm.com>
-        <20231103171447.02759771.pasic@linux.ibm.com>
-        <20231103214831.26d29f4d@meshulam.tesarici.cz>
-        <20231107182420.0bd8c211.pasic@linux.ibm.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-suse-linux-gnu)
+        Anup Patel <anup@brainfault.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        Atish Kumar Patra <atishp@rivosinc.com>,
+        Haibo Xu <haibo1.xu@intel.com>, Marc Zyngier <maz@kernel.org>
+Subject: Re: [RFC PATCH v2 06/21] RISC-V: Kconfig: Select deferred GSI probe
+ for ACPI systems
+Message-ID: <ZUtailOcozI9xIou@sunil-laptop>
+References: <ZTuzJ1nsicZYp+uh@sunil-laptop>
+ <20231106221606.GA264641@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231106221606.GA264641@bhelgaas>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 7 Nov 2023 18:24:20 +0100
-Halil Pasic <pasic@linux.ibm.com> wrote:
+Hi Bjorn,
 
-> On Fri, 3 Nov 2023 21:50:53 +0100
-> Petr Tesa=C5=99=C3=ADk <petr@tesarici.cz> wrote:
->=20
-> > > In our opinion the first step towards getting this right is to figure=
- out what
-> > > the different kinds of alignments are really supposed to mean. For ea=
-ch of the
-> > > mechanisms we need to understand and document, whether making sure th=
-at the
-> > > bounce buffer does not stretch over more of certain units of memory (=
-like,
-> > > pages, iova granule size, whatever), or is it about preserving offset=
- within a
-> > > certain unit of memory, and if yes to what extent (the least signific=
-ant n-bits
-> > > of the orig_addr dictated by the respective mask, or something differ=
-ent).   =20
-> >=20
-> >=20
-> > Seconded. I have also been struggling with the various alignment
-> > constraints. I have even written (but not yet submitted) a patch to
-> > calculate the combined alignment mask in swiotlb_tbl_map_single() and
-> > pass it down to all other functions, just to make it clear what
-> > alignment mask is used. =20
->=20
-> Can you cc me when posting that rework?
-
-Absolutely. I mean, if it still makes sense after we clarify the
-intended goals of the various alignment parameters. Because I believe
-you have indeed found something!
-
-> > My understanding is that buffer alignment may be required by:
-> >=20
-> > 1. hardware which cannot handle an unaligned base address (presumably
-> >    because the chip performs a simple OR operation to get the addresses
-> >    of individual fields); =20
->=20
-> I'm not sure I understood this properly. What is "base address" in this
-> context? Is for swiotlb "base address" basically the return value
-> of swiotlb_tbl_map_single() -- I referred to this as tlb_addr previously?
+On Mon, Nov 06, 2023 at 04:16:06PM -0600, Bjorn Helgaas wrote:
+> On Fri, Oct 27, 2023 at 06:25:03PM +0530, Sunil V L wrote:
+> > On Thu, Oct 26, 2023 at 12:04:08PM -0500, Bjorn Helgaas wrote:
+> > > On Thu, Oct 26, 2023 at 01:53:29AM +0530, Sunil V L wrote:
+> > > > On RISC-V platforms, apart from root interrupt controllers (which
+> > > > provide local interrupts and IPI), other interrupt controllers in the
+> > > > hierarchy are probed late. Enable this select this CONFIG option for
+> > > > RISC-V platforms so that device drivers which connect to deferred
+> > > > interrupt controllers can take appropriate action.
+> > > 
+> > > Quite a bit of this series seems related to the question of interrupt
+> > > controllers being probed "late".
+> > > 
+> > > I don't see anything specific about *how* late this might be, but from
+> > > the use of -EPROBE_DEFER in individual drivers (8250_pnp explicitly,
+> > > and acpi_register_gsi() and pnp_irq() and acpi_pci_irq_enable(), which
+> > > are called from driver .probe() paths) it seems like interrupt
+> > > controllers might be detected even after devices that use them.
+> > > 
+> > > That seems like a fairly invasive change to the driver probe flow.
+> > > If we really need to do that, I think it might merit a little more
+> > > background as justification since we haven't had to do it for any
+> > > other arch yet.
+> > 
+> > In RISC-V, the APLIC can be a converter from wired (GSI) to MSI interrupts.
+> > Hence, especially in this mode, it has to be a platform device to use
+> > device MSI domain. Also, according to Marc Zyngier there is no reason to
+> > probe interrupt controllers early apart from root controller. So, the
+> > device drivers which use wired interrupts need to be probed after APLIC.
+> > 
+> > The PNP devices and PCI INTx GSI links use either
+> > acpi_dev_resource_interrupt() (PNP) or acpi_register_gsi() directly
+> > (PCI). The approach taken here is to follow the example of
+> > acpi_irq_get() which is enhanced to return EPROBE_DEFER and several
+> > platform device drivers which use platform_get_irq() seem to be handling
+> > this already.
+> 
+> This series (patch 04/21 "ACPI: irq: Add support for deferred probe in
+> acpi_register_gsi()" [1]) makes acpi_register_gsi() return
+> -EPROBE_DEFER, which percolates up through pci_enable_device().
+> 
+> Maybe that's ok, but this affects *all* PCI drivers, and it's a new
+> case that did not occur before.  Many drivers emit warning or error
+> messages for any pci_enable_device() failure, which you probably don't
+> want in this case, since -EPROBE_DEFER is not really a "failure";
+> IIUC, it just means "probe again later."
 >
-> If yes, I understand that  satisfying 1 means satisfying=20
-> tlb_addr & combined_mask =3D=3D 0, where combined_mask describes the
-> combined alignment requirement (i.e. combined_mask =3D=3D min_align_mask |
-> alloc_align_mask | (alloc_size < PAGE_SIZE ? 0 : (PAGE_SIZE-1)). Does
-> that sound about right?
->=20
-> Can we assume that if 1. then the start address of the mapping
-> that is orig_addr needs to be already aligned?
+Yeah, I think all the drivers which need to be supported on RISC-V
+ACPI based systems will have to support deferred probe with this scheme.
 
+> > Using ResourceSource dependency (mbigen uses) in the namespace as part of
+> > Extended Interrupt Descriptor will not ensure the order since PNP/INTx
+> > GSI devices don't work with that.
+> 
+> Are these PNP/INTx GSI devices described in ACPI?  In the namespace?
+> Or in a static table?
+> 
+Yes, these are standard devices in the namespace. For ex: PNP0501(16550)
+or PNP0C0F (PCI interrupt link devices) are in the namespace.
 
-No, not really. A very nice diagram can be found in commit 5f89468e2f06
-("swiotlb: manipulate orig_addr when tlb_addr has offset"):
+> > Is there any other better way to create dependency between IO devices
+> > and the interrupt controllers when interrupt controller itself is a
+> > platform device? While using core_initcall() for interrupt controllers
+> > seem to work which forces the interrupt controller to be probed first,
+> > Marc is not in favor of that approach since it is fragile.
+> 
+> I guess PCI interrupts from the PCI host bridges (PNP0A03 devices)
+> feed into the APLIC?  And APLIC is described via MADT?  Based on this
+> series, it looks like this:
+> 
+>     acpi_init
+>   +   acpi_riscv_init
+>   +     riscv_acpi_aplic_platform_init
+>   +       acpi_table_parse_madt(ACPI_MADT_TYPE_APLIC, aplic_parse_madt, 0)
+>       acpi_scan_init
+>         acpi_pci_root_init
+>         acpi_pci_link_init
+> 	acpi_bus_scan             # add PCI host bridges, etc
+> 
+> If that's the sequence, it looks like aplic_parse_madt() should be
+> called before the PCI host bridges are added.
+> 
+> Or maybe this isn't how the APLICs are enumerated?
+> 
+That's partly correct. APLIC platform devices are created prior to PCI
+host bridges added. But the actual APLIC driver which creates the
+irqdomain will be probed as a regular platform driver for the APLIC
+device. The platform driver probe will happen using DD framework and
+devices don't have any dependency on APLIC which can cause device probe
+prior to APLIC driver probe.
 
-"""
-  1. Get dma_addr_t from dma_map_single()
+DT supports fw_devlink framework which makes it easier for IRQ devices
+to use regular platform drivers and produces-consumers are probed in the
+order without requiring drivers to do deferred probe. But I don't see
+that supported for ACPI framework.  Also, the way PNP devices get added
+there is an assumption that interrupt controller is already setup fully.
 
-  dma_addr_t tlb_addr =3D dma_map_single(dev, vaddr, vsize, DMA_TO_DEVICE);
+With this new use case in RISC-V, here are the alternatives I am aware of.
 
-      |<---------------vsize------------->|
-      +-----------------------------------+
-      |                                   | original buffer
-      +-----------------------------------+
-    vaddr
+1) Use core_initcall() in the APLIC drivers which makes APLIC driver to
+be probed prior to PNP or PCI INTx devices. But this was ruled out in
+the context of DT from Marc.
 
-   swiotlb_align_offset
-       |<----->|<---------------vsize------------->|
-       +-------+-----------------------------------+
-       |       |                                   | swiotlb buffer
-       +-------+-----------------------------------+
-	    tlb_addr
-"""
+2) Like the approach tried in this series, add support for deferred
+probe in drivers. This will be invasive change requiring many drivers to
+change like you pointed.
 
-Here, the aligned address is outside the original buffer at
-[vadddr; vaddr+vsize). This is what I referred to as "base
-address". The N lowest bits of this address are zero. It may not
-even be mapped in the SWIOTLB if N is greater than IO_TLB_SHIFT.
-However, the exact values of the N lowest bits of the original
-buffer's physical start address are preserved in tlb_addr.
+I don't know which is less evil or if there is any other alternative
+which I am not aware of.
 
-> > 2. isolation of untrusted devices, where no two bounce buffers should
-> >    end up in the same iova granule;
-> >=20
-> > 3. allocation size; I could not find an explanation, so this might be
-> >    merely an attempt at reducing SWIOTLB internal fragmentation. =20
->=20
->=20
-> Assumed I understood 1 correctly, I think we are missing something.
->=20
-> 4. preserve the n (0 <=3D n <=3D 31) lowest bits of all addresses within =
-the
-> mapping.
->=20
-> Was it just 1, 2 and 3 then we wouldn't need the whole offsetting
-> business introduced by commit 1f221a0d0dbf ("swiotlb: respect
-> min_align_mask"). Let me cite from its commit message:
->=20
-> """
->     Respect the min_align_mask in struct device_dma_parameters in swiotlb.
->    =20
->     There are two parts to it:
->      1) for the lower bits of the alignment inside the io tlb slot, just
->         extent the size of the allocation and leave the start of the slot
->          empty
->      2) for the high bits ensure we find a slot that matches the high bits
->         of the alignment to avoid wasting too much memory
->    =20
->     Based on an earlier patch from Jianxiong Gao <jxgao@google.com>.
-> """
->=20
-> Do we agree, that 4. needs to be added to the list? Or was it supposed
-> to be covered by 1.?
+Thomas/Marc, could you allow APLIC (and PLIC) irqchip drivers to use
+core_initcall() for ACPI?
 
-That's it. It's what case 1 is supposed to be. However, IIUC cases
-2 and 3 don't need to preserve any lowest bits.
-
-At least for case 3, I'm now quite confident that the intention
-was to start big buffers on a page-aligned slot, leaving the gaps
-for buffers smaller than a page.
-
-Case 2 is not clear to me. Some comments suggest that it should
-prevent exposing a single iova granule to multiple untrusted
-devices. What the code really does now is prevent crossing an iova
-granule boundary if the original buffer did not cross one. I'm not
-sure whether it achieves the goal, because commit e81e99bacc9f
-("swiotlb: Support aligned swiotlb buffers") also references
-PAGE_SIZE, but AFAICS it should use the same logic as case 3
-(page-aligned allocations).
-
-To sum it up, there are two types of alignment:
-
-1. specified by a device's min_align_mask; this says how many low
-   bits of a buffer's physical address must be preserved,
-
-2. specified by allocation size and/or the alignment parameter;
-   this says how many low bits in the first IO TLB slot's physical
-   address must be zero.
-
-I hope somebody can confirm or correct this summary before I go
-and break something. You know, it's not like cleanups in SWIOTLB
-have never broken anything.  ;-)
-
-Petr T
+Thanks,
+Sunil
