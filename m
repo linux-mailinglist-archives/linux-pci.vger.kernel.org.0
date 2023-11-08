@@ -2,82 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F1217E5AC5
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Nov 2023 17:03:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0888B7E5C79
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Nov 2023 18:35:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229521AbjKHQD3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Nov 2023 11:03:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50864 "EHLO
+        id S229689AbjKHRf2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Nov 2023 12:35:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229635AbjKHQD2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Nov 2023 11:03:28 -0500
-X-Greylist: delayed 1130 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 08 Nov 2023 08:03:26 PST
-Received: from l2mail1.panix.com (l2mail1.panix.com [166.84.1.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE3281BFD
-        for <linux-pci@vger.kernel.org>; Wed,  8 Nov 2023 08:03:26 -0800 (PST)
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
-        by l2mail1.panix.com (Postfix) with ESMTPS id 4SQTsw6Xb3zDSq
-        for <linux-pci@vger.kernel.org>; Wed,  8 Nov 2023 10:44:36 -0500 (EST)
-Received: from xps-9320.lan (kenny-tx.gotdns.com [162.196.229.233])
-        by mailbackend.panix.com (Postfix) with ESMTPSA id 4SQTsr2Pg4zsvB;
-        Wed,  8 Nov 2023 10:44:32 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-        t=1699458275; bh=49JlpVbEi9PYM8BXorNeSMKDtk16l7yJ96LgyF0RG0Y=;
-        h=Date:From:Reply-To:To:cc:Subject:In-Reply-To:References;
-        b=GEiZ9lkM1/QxeEraUfwnPSep+IVjywJOsYlefDQ5+hc5DjKRr3L8oOlY5qFMg6z9n
-         9o41OX1NfNwz9VvWdjAlIHuiIP6yiMRT36qPXk86zzHZRsW1NaRYo+GCnEgBFLvG/g
-         9kmiq05eILq9l9ixM2X4EFdr4vEVKtiB1eOiuWQQ=
-Date:   Wed, 8 Nov 2023 07:44:31 -0800 (PST)
-From:   "Kenneth R. Crudup" <kenny@panix.com>
-Reply-To: "Kenneth R. Crudup" <kenny@panix.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-cc:     vidyas@nvidia.com, bhelgaas@google.com,
-        kai.heng.feng@canonical.com, andrea.righi@canonical.com,
-        vicamo.yang@canonical.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Ricky WU <ricky_wu@realtek.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: My AlderLake Dell (XPS-9320) needs these patches to get full
- standby/low-power modes
-In-Reply-To: <20231106181107.GA255535@bhelgaas>
-Message-ID: <f3dd694b-8d9-ef-9d21-ad4394f6e33@panix.com>
-References: <20231106181107.GA255535@bhelgaas>
+        with ESMTP id S230118AbjKHRf2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Nov 2023 12:35:28 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F06751FDF;
+        Wed,  8 Nov 2023 09:35:25 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D9F9C433C7;
+        Wed,  8 Nov 2023 17:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1699464925;
+        bh=2cawYqnuvzkIcsh1Svh8QomJyD9U+RkekHpokK63Beg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=IXhfxJMeJfPQE6LGUyqa8b5iSmYcj86HjQ62wQtViKlkCnaJEX4VCg/hQWr8suJi/
+         yFpjUjn09ABuRxq7U8aPB4433u5egy1QezRCoK2srbgTBpWGBx81+PbiJ0owW/QnPK
+         SDc3t+ICV6B692LdXF8lcumgtPqL8cQEnMSW2Htm0LpgMoWqIqHO6pXVoeyAK2+ja7
+         MYoWoUppgkdrgnCSbJAHFvbuJrDGTlgZqzgunpeGDGRVQe/DWLyXTl3/lnVfK9pNoP
+         N47eG14GWhopKkdvfGblB24Pq52/1g0feKd082n0ewPG3CTcnnQToMSGxbM7qwAQmd
+         tz3oRZ3pmUY1g==
+Date:   Wed, 8 Nov 2023 11:35:22 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Philipp Stanner <pstanner@redhat.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tejun Heo <htejun@gmail.com>, dakr@redhat.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>, jeff@garzik.org,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: Implementation details of PCI Managed (devres) Functions
+Message-ID: <20231108173522.GA421244@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <84be1049e41283cf8a110267646320af9ffe59fe.camel@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Nov 07, 2023 at 08:38:18PM +0100, Philipp Stanner wrote:
+> Hi all,
+> 
+> I'm currently working on porting more drivers in DRM to managed pci-
+> functions. During this process I discovered something that might be
+> called an inconsistency in the implementation.
+> 
+> First, there would be the pcim_ functions being scattered across
+> several files. Some are implemented in drivers/pci/pci.c, others in
+> lib/devres.c, where they are guarded by #ifdef CONFIG_PCI
+> – this originates from an old cleanup, done in
+> 5ea8176994003483a18c8fed580901e2125f8a83
+> 
+> Additionally, there is lib/pci_iomap.c, which contains the non-managed
+> pci_iomap() functions.
+> 
+> At first and second glance it's not obvious to me why these pci-
+> functions are scattered. Hints?
+> 
+> 
+> Second, it seems there are two competing philosophies behind managed
+> resource reservations. Some pci_ functions have pcim_ counterparts,
+> such as pci_iomap() <-> pcim_iomap(). So the API-user might expect that
+> relevant pci_ functions that do not have a managed counterpart do so
+> because no one bothered implementing them so far.
+> 
+> However, it turns out that for pci_request_region(), there is no
+> counterpart because a different mechanism / semantic was used to make
+> the function _sometimes_ managed:
+> 
+>    1. If you use pcim_enable_device(), the member is_managed in struct
+>       pci_dev is set to 1.
+>    2. This value is then evaluated in pci_request_region()'s call to
+>       find_pci_dr()
+> 
+> Effectively, this makes pci_request_region() sometimes managed.
+> Why has it been implemented that way and not as a separate function –
+> like, e.g., pcim_iomap()?
+> 
+> That's where an inconsistency lies. For things like iomappings there
+> are separate managed functions, for the region-request there's a
+> universal function doing managed or unmanaged, respectively.
+> 
+> Furthermore, look at pcim_iomap_regions() – that function uses a mix
+> between the obviously managed function pcim_iomap() and
+> pci_request_region(), which appears unmanaged judging by the name, but,
+> nevertheless, is (sometimes) managed below the surface.
+> Consequently, pcim_iomap_regions() could even be a little buggy: When
+> someone uses pci_enable_device() + pcim_iomap_regions(), wouldn't that
+> leak the resource regions?
+> 
+> The change to pci_request_region() hasn't grown historically but was
+> implemented that way in one run with the first set of managed functions
+> in commit 9ac7849e35f70. So this implies it has been implemented that
+> way on purpose.
+> 
+> What was that purpose?
+> 
+> Would be great if someone can give some hints :)
 
-On Mon, 6 Nov 2023, Bjorn Helgaas wrote:
+Sorry, I don't know or remember all the history behind this, so can't
+give any useful hints.  If the devm functions are mostly wrappers
+without interesting content, it might make sense to collect them
+together.  If they *do* have interesting content, it probably makes
+sense to put them next to their non-devm counterparts.
 
-> > I'd bisected it to the following commits (in this order):
-> > 4ff116d0d5fd PCI/ASPM: Save L1 PM Substates Capability for suspend/resume
-> > 5e85eba6f50d PCI/ASPM: Refactor L1 PM Substates Control Register programming
-> > 1a0102a08f20 UBUNTU: SAUCE: PCI/ASPM: Enable ASPM for links under VMD domain
-> > 47c7bfd31514 UBUNTU: SAUCE: PCI/ASPM: Enable LTR for endpoints behind VMD
-> > 154d48da2c57 UBUNTU: SAUCE: vmd: fixup bridge ASPM by driver name instead
+The pci_request_region() managed/unmanaged thing does seem like it
+could be unexpected and lead to issues as you point out.
 
-> Thanks for these.  You don't happen to have URLs for those Ubuntu
-> commits, do you?
-
-https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/lunar/commit/?id=1a0102a08f206149d9abd56c2b28877c878b5526
-https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/lunar/commit/?id=47c7bfd31514e7b54a1f830f7707297aebbb8679
-https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/lunar/commit/?id=154d48da2c57514e4b5dadc7b8c70a4edb550981
-
-> Thank you very much for raising this again.
-
-They've been really great for battery life on my laptop, so I'd like to help
-these in some form get upstreamed (provided there's no bad side-effects, of
-course).
-
-	-Kenny
-
--- 
-Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange County CA
+Bjorn
