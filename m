@@ -2,155 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5CD97E4E44
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Nov 2023 01:51:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA63B7E4EF2
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Nov 2023 03:34:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234119AbjKHAvQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Nov 2023 19:51:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42608 "EHLO
+        id S231760AbjKHCcp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Nov 2023 21:32:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234348AbjKHAvP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 19:51:15 -0500
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B91A1702;
-        Tue,  7 Nov 2023 16:51:12 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0VvvcIdY_1699404667;
-Received: from 30.240.112.123(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VvvcIdY_1699404667)
-          by smtp.aliyun-inc.com;
-          Wed, 08 Nov 2023 08:51:09 +0800
-Message-ID: <98b1dbba-3b82-4fe3-bb72-7447c8118bf2@linux.alibaba.com>
-Date:   Wed, 8 Nov 2023 08:51:06 +0800
+        with ESMTP id S229988AbjKHCco (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 21:32:44 -0500
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E2A10F8;
+        Tue,  7 Nov 2023 18:32:42 -0800 (PST)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3A828BBl008611;
+        Wed, 8 Nov 2023 02:32:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=g4Cv5ypflLdXhHFj4Pj/RaVxQ6QZsT6ZxFVJnc4pP1c=;
+ b=XFBb1Ga/BlR9EWzRmIeehfQNpy6scDDk2zhmDMAzsclD9tPZPtLMJL4TH389oiX/qZ1Y
+ nDAWOtPnJabiKUCFb8g2elk4EZBMFY+NPtws2AtRZR54tpdqC//m6AXbSZj9E79mODur
+ Q1SyXfgkXK6sNnXWNyKXgnFz7FDojcJXWEHX7he+0QGeSPm1PwSShkoXA6ketOypluVz
+ Ls8GZ4HG4O682Wjl0dcuB0WHCCYtkBMKxiNcJR5dMaVWB6ePrDcPG+NusRy8dYWZ7R0B
+ ht4Nu7mB/zPoMkB0EryduOLj6ZwnKRhd3wemjpmgw0Hppii8E+17tmxsqHcnEjDguMLM Vw== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3u7w2cgfqq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Nov 2023 02:32:34 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3A82WYHd028868
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 8 Nov 2023 02:32:34 GMT
+Received: from [10.216.1.136] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Tue, 7 Nov
+ 2023 18:32:23 -0800
+Message-ID: <15a98ec0-214b-218b-1e3c-c09f770fce2e@quicinc.com>
+Date:   Wed, 8 Nov 2023 08:02:18 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 3/5] PCI: move pci_clear_and_set_dword helper to pci
- header
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     kaishen@linux.alibaba.com, yangyicong@huawei.com, will@kernel.org,
-        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
-        robin.murphy@arm.com, chengyou@linux.alibaba.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, rdunlap@infradead.org,
-        mark.rutland@arm.com, zhuo.song@linux.alibaba.com,
-        renyu.zj@linux.alibaba.com
-References: <20231107150342.GA288219@bhelgaas>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v5 5/5] PCI: qcom: Add OPP support to scale performance
+ state of power domain
 Content-Language: en-US
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20231107150342.GA288219@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+CC:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <vireshk@kernel.org>, <nm@ti.com>,
+        <sboyd@kernel.org>, <mani@kernel.org>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <rafael@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <quic_vbadigan@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_ramkri@quicinc.com>,
+        <quic_parass@quicinc.com>
+References: <20231102053013.7yt7pxin5awlu7w7@vireshk-i7>
+ <20231102120950.GA115288@bhelgaas>
+ <20231103051247.u4cnckzstcvs4lf5@vireshk-i7>
+From:   Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20231103051247.u4cnckzstcvs4lf5@vireshk-i7>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 2-gJotlcQ3gh9-6L_23Y87F28GMFBywc
+X-Proofpoint-ORIG-GUID: 2-gJotlcQ3gh9-6L_23Y87F28GMFBywc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-08_01,2023-11-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 clxscore=1011 malwarescore=0 phishscore=0
+ bulkscore=0 mlxlogscore=850 suspectscore=0 adultscore=0 priorityscore=1501
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311080019
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
+On 11/3/2023 10:42 AM, Viresh Kumar wrote:
+> On 02-11-23, 07:09, Bjorn Helgaas wrote:
+>> On Thu, Nov 02, 2023 at 11:00:13AM +0530, Viresh Kumar wrote:
+>>> On 01-11-23, 17:17, Bjorn Helgaas wrote:
+>>>> Can you expand "OPP" somewhere so we know what it stands for?  I'm
+>>>> sure everybody knows except me :)
+>>> It is "Operating Performance Points", defined here:
+>>>
+>>> Documentation/power/opp.rst
+>> Thanks; I meant in the subject or commit log of the next revision, of
+>> course.
+> Yeah, I understood that. Krishna shall do it in next version I believe.
+>
+Hi All,
 
-On 2023/11/7 23:03, Bjorn Helgaas wrote:
-> On Sat, Nov 04, 2023 at 09:32:14PM +0800, Shuai Xue wrote:
->> The clear and set pattern is commonly used for accessing pci config,
->> move the helper pci_clear_and_set_dword from aspm.c into pci header.
-> 
-> s/move/Move/ (in subject, capitalize first word)
-> s/pci/PCI/ (capitalize in English text)
-> s/pci_clear_and_set_dword/pci_clear_and_set_dword()/ (add parens to
-> function names, also in subject)
-> 
-> With the fixes here and below:
-> 
->   Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+I will do this in my next patch both commit message and ICC voting 
+through OPP
 
-Hi, Bjorn,
+got stuck in some other work, will try to send new series as soon as 
+possible.
 
-Thank you for comments, will fix them in next version.
+- Krishna Chaitanya.
 
-Best Regards,
-Shuai
-
-> 
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->> ---
->>  drivers/pci/access.c    | 12 ++++++++++++
->>  drivers/pci/pcie/aspm.c | 11 -----------
->>  include/linux/pci.h     |  2 ++
->>  3 files changed, 14 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
->> index 6554a2e89d36..526360481d99 100644
->> --- a/drivers/pci/access.c
->> +++ b/drivers/pci/access.c
->> @@ -598,3 +598,15 @@ int pci_write_config_dword(const struct pci_dev *dev, int where,
->>  	return pci_bus_write_config_dword(dev->bus, dev->devfn, where, val);
->>  }
->>  EXPORT_SYMBOL(pci_write_config_dword);
->> +
->> +void pci_clear_and_set_dword(const struct pci_dev *dev, int pos,
->> +				    u32 clear, u32 set)
-> 
-> Rename to pci_clear_and_set_config_dword() to retain the "config"
-> information and match the other accessors.
-
-Got it. Will rename it.
-
-> 
-> Align "u32 clear" under "const struct ...".  pci_write_config_dword()
-> above is an anomaly.
-> 
-
-Got it. Will align it.
-
->> +{
->> +	u32 val;
->> +
->> +	pci_read_config_dword(dev, pos, &val);
->> +	val &= ~clear;
->> +	val |= set;
->> +	pci_write_config_dword(dev, pos, val);
->> +}
->> +EXPORT_SYMBOL(pci_clear_and_set_dword);
->> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
->> index 1bf630059264..f4e64fedc048 100644
->> --- a/drivers/pci/pcie/aspm.c
->> +++ b/drivers/pci/pcie/aspm.c
->> @@ -423,17 +423,6 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
->>  	}
->>  }
->>  
->> -static void pci_clear_and_set_dword(struct pci_dev *pdev, int pos,
->> -				    u32 clear, u32 set)
->> -{
->> -	u32 val;
->> -
->> -	pci_read_config_dword(pdev, pos, &val);
->> -	val &= ~clear;
->> -	val |= set;
->> -	pci_write_config_dword(pdev, pos, val);
->> -}
->> -
->>  /* Calculate L1.2 PM substate timing parameters */
->>  static void aspm_calc_l12_info(struct pcie_link_state *link,
->>  				u32 parent_l1ss_cap, u32 child_l1ss_cap)
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 8c7c2c3c6c65..271f30fd7ca4 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -1213,6 +1213,8 @@ int pci_read_config_dword(const struct pci_dev *dev, int where, u32 *val);
->>  int pci_write_config_byte(const struct pci_dev *dev, int where, u8 val);
->>  int pci_write_config_word(const struct pci_dev *dev, int where, u16 val);
->>  int pci_write_config_dword(const struct pci_dev *dev, int where, u32 val);
->> +void pci_clear_and_set_dword(const struct pci_dev *dev, int pos,
->> +				    u32 clear, u32 set);
-> 
-> Align "u32 clear" again.
-
-Thank you. Will align it.
-
-> 
->>  int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val);
->>  int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val);
->> -- 
->> 2.39.3
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
