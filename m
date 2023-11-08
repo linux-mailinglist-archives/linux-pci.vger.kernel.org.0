@@ -2,181 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EED6A7E535A
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Nov 2023 11:29:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1815C7E548B
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Nov 2023 11:53:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232602AbjKHK3y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Nov 2023 05:29:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44518 "EHLO
+        id S1344410AbjKHKxR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Nov 2023 05:53:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231616AbjKHK3x (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Nov 2023 05:29:53 -0500
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A271A1BD9
-        for <linux-pci@vger.kernel.org>; Wed,  8 Nov 2023 02:29:51 -0800 (PST)
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 32EC5409D8
-        for <linux-pci@vger.kernel.org>; Wed,  8 Nov 2023 10:29:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1699439388;
-        bh=JPnUP2dhK6rq2OT2zp59qDXCzcw2C/MeNwbO6irKsM8=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=QxjeHl3HuUYSKwAg8nm/gLIGxyOT/SuAWmmnzT2SXQh3+eSE56aRVttDXBF5jmP0b
-         OZnFnOabjENcix6k6Nl/lpcxoU193Vk9RoE5LkOhDoQR58KOBGpYgrWjx88p6VOioZ
-         gg426JUdKOSnxWqXB1Buuq0JWQoOmP+0ep87Hiklt1IzPlwlfPmGgy2HZrw0RGiINh
-         XQ4zuoOzp5PxWIGaBcDYswLPc/IWO6Fr01SayMmEMvV2iDNcwNjdh5yUqlkcMuEOar
-         lE2gXRLZQNx+dQBr2bKygIcecePq8lyHoaJ4FgLjMweLcfFawyTiSSWuN5v4RHgzE6
-         ZkB95gQZo4sQA==
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-6bcefd3b248so6703764b3a.3
-        for <linux-pci@vger.kernel.org>; Wed, 08 Nov 2023 02:29:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699439387; x=1700044187;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JPnUP2dhK6rq2OT2zp59qDXCzcw2C/MeNwbO6irKsM8=;
-        b=qrLzSrrfRpoubZEdFlMVBARrTIDmg9WXE51BiHiXZOjt4e5OHyHWvuBLAduynlXHlR
-         MFvJAgzH2BKSa6Uqz2TvZgrDZ4fFb45dxtJEOXAvznmg5SmsWvpHEGTrNL0PLzBHH26l
-         2Ht9+1QFXuSgLrUv/Gz6U2nn2pCgowz1ShZuCI8ELm9QsAKRKxfUhIAf3HiJMxAavdRY
-         c/8Mj/hAlX+MF/nDAqG7ZvnnURNnjyDfzn2eCSoITKdtHKLGkMbE/6O5DUbCBA3ZnNx2
-         6dzZLQNjPngPqzfpEIAFJGBkdGXobNX137HVzpEP2NA465xZTmxjiwIvWM/Ojh0JMHOV
-         03KA==
-X-Gm-Message-State: AOJu0Yy236t0aGsmEVS4swXY9Pmi8QhDD916FmtvfTe0f3NjfcRUIpJT
-        p8IsOglzJhMXP1zCyB6Kh9o512Q0g+Q5AUWl45t7A8XLVCw/+MH7YnEjhGZBPevt6/mnxX6F67u
-        WKKFZiVNcuijbqsvn4EjRZUE+6yKvDRuhqHCh3n6bv+bHFFTaDwsTYg==
-X-Received: by 2002:a05:6a20:441d:b0:14c:c393:692 with SMTP id ce29-20020a056a20441d00b0014cc3930692mr2027849pzb.7.1699439386904;
-        Wed, 08 Nov 2023 02:29:46 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFboe2yTK4xo9PqvpxUzC3jlXy/epT3vmB6XsIMqWHzujx8gpq9+ZMU6Xblm9e+XufQk7xJ3brIYpcN30jCvUY=
-X-Received: by 2002:a05:6a20:441d:b0:14c:c393:692 with SMTP id
- ce29-20020a056a20441d00b0014cc3930692mr2027833pzb.7.1699439386603; Wed, 08
- Nov 2023 02:29:46 -0800 (PST)
+        with ESMTP id S235702AbjKHKxA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Nov 2023 05:53:00 -0500
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23547C6;
+        Wed,  8 Nov 2023 02:52:46 -0800 (PST)
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3A8AjBmp006482;
+        Wed, 8 Nov 2023 10:52:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=Y6n9Wq/1lf6ns5MR5hkNe3aObEjXjSgg3FSfX8KTZQs=;
+ b=j9YzRz0uUiZGyCnQWMsCL8++tgBaXnTK6G5twhpJ8v4h4EcIAI3KGQ6aOd73/6KJ9LUf
+ Vs0MSWfIUztqahWCSZOtYN/+VLzO8ImiOHbaLXA7IUimQvIn3FWD5ni05QDvY6E7AEhf
+ HewSIQRWIkWkx0UklD6gmf8l24ZUrCh/fKaaMCskdWcUrpKZ6/SB0PYgdSULgChTWhFQ
+ oxZCRkuzcYGDuph7aYI2Suh46WYA512dzTN9KlgVMSlEZbTJC2mBcWY+TlB6tG6UM84u
+ pFznS6nqlPSn2CtSqSexw3MgEQ/cGGDnAbv35lZG2fZ1NQzlH8Uk9AmB7Ss2q5jgFkqQ Ig== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u88uqrf9a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Nov 2023 10:52:16 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3A8AjQxd009025;
+        Wed, 8 Nov 2023 10:52:15 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u88uqrf7s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Nov 2023 10:52:15 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3A88V7pS019256;
+        Wed, 8 Nov 2023 10:52:12 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3u7w23v4ms-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Nov 2023 10:52:12 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3A8Aq9eM41484886
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Nov 2023 10:52:09 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 40B2420043;
+        Wed,  8 Nov 2023 10:52:09 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E87A520040;
+        Wed,  8 Nov 2023 10:52:08 +0000 (GMT)
+Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.152.224.212])
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed,  8 Nov 2023 10:52:08 +0000 (GMT)
+Date:   Wed, 8 Nov 2023 11:52:07 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Petr Tesarik <petr.tesarik1@huawei-partners.com>,
+        Ross Lagerwall <ross.lagerwall@citrix.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Subject: Re: Memory corruption with CONFIG_SWIOTLB_DYNAMIC=y
+Message-ID: <20231108115207.791a30d8.pasic@linux.ibm.com>
+In-Reply-To: <20231103195949.0af884d0@meshulam.tesarici.cz>
+References: <104a8c8fedffd1ff8a2890983e2ec1c26bff6810.camel@linux.ibm.com>
+ <20231103195949.0af884d0@meshulam.tesarici.cz>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20231016040132.23824-1-kai.heng.feng@canonical.com>
- <20231016093210.GA22952@wunner.de> <263982e90fc046cf977ecb8727003690@realtek.com>
- <20231018094435.GA21090@wunner.de> <02ee7e47166a463d8d4e491b61cdd33f@realtek.com>
- <20231019143504.GA25140@wunner.de>
-In-Reply-To: <20231019143504.GA25140@wunner.de>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Wed, 8 Nov 2023 12:29:34 +0200
-Message-ID: <CAAd53p7jx=_Yh8sPwdsu-6Bc-hNgiExscMNGhgcbH=rzOBMOXQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: pciehp: Prevent child devices from doing RPM on PCIe
- Link Down
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Ricky WU <ricky_wu@realtek.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: qK8Ky8dtByMWS9pE01Wz3idCdL0ui5So
+X-Proofpoint-ORIG-GUID: LT_y2TRDzFp56vukj3DHi7MXpkTZAqPi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-08_01,2023-11-08_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 mlxscore=0
+ spamscore=0 suspectscore=0 bulkscore=0 phishscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311080090
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lukas and Ricky,
+On Fri, 3 Nov 2023 19:59:49 +0100
+Petr Tesařík <petr@tesarici.cz> wrote:
 
-On Thu, Oct 19, 2023 at 5:35=E2=80=AFPM Lukas Wunner <lukas@wunner.de> wrot=
-e:
->
-> On Thu, Oct 19, 2023 at 01:49:50AM +0000, Ricky WU wrote:
-> > [    0.267813] pci 0000:00:1c.0: [8086:a33c] type 01 class 0x060400
->
-> Cannon Lake PCH Root Port
->
-> > [    0.275241] pci 0000:01:00.0: [10ec:5261] type 00 class 0xff0000
-> > [    0.275315] pci 0000:01:00.0: reg 0x10: [mem 0xa3b00000-0xa3b00fff]
-> > [    0.275782] pci 0000:01:00.0: supports D1 D2
-> > [    0.275784] pci 0000:01:00.0: PME# supported from D1 D2 D3hot D3cold
-> > [    0.276490] pci 0000:00:1c.0: PCI bridge to [bus 01]
->
-> Device below Root Port is initially a Realtek RTS5261 card reader.
->
-> > [    0.395968] pcieport 0000:00:1c.0: PME: Signaling with IRQ 122
-> > [    0.396009] pcieport 0000:00:1c.0: pciehp: Slot #8 AttnBtn- PwrCtrl-=
- MRL- AttnInd- PwrInd- HotPlug+ Surprise+ Interlock- NoCompl+ IbPresDis- LL=
-ActRep+
->
-> Root Port is hotplug-capable.
->
-> > [   43.180701] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> > [   43.180709] pcieport 0000:00:1c.0: pciehp: Slot(8): Card not present
-> > [   44.403768] pcieport 0000:00:1c.0: pciehp: Slot(8): Card present
-> > [   44.403772] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Up
-> > [   44.540631] pci 0000:01:00.0: [15b7:5007] type 00 class 0x010802
->
-> Card reader is unplugged and replaced by SanDisk SN530 NVMe SSD.
->
-> > [   51.682628] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> > [   51.716800] nvme0n1: detected capacity change from 495050752 to 0
-> > [   51.793382] pcieport 0000:00:1c.0: pciehp: Slot(8): Card present
-> > [   51.793392] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Up
-> > [   51.928633] pci 0000:01:00.0: [10ec:5261] type 00 class 0xff0000
->
-> NVMe SSD replaced by the card reader again.
->
-> > [   54.872928] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> > [   56.146581] pcieport 0000:00:1c.0: pciehp: Slot(8): Card present
-> > [   56.146584] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Up
-> > [   56.284632] pci 0000:01:00.0: [15b7:5007] type 00 class 0x010802
->
-> Card reader replaced by NVMe SSD, second time.
->
-> > [   60.635845] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> > [   60.676842] nvme0n1: detected capacity change from 495050752 to 0
-> > [   60.748953] pcieport 0000:00:1c.0: pciehp: Slot(8): Card present
-> > [   60.748958] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Up
-> > [   60.884619] pci 0000:01:00.0: [10ec:5261] type 00 class 0xff0000
->
-> NVMe SSD replaced by the card reader, second time.
->
-> > [   63.898861] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> > [   63.912118] BUG: unable to handle page fault for address: ffffb24d40=
-3e5010
->
-> Card reader replaced with NVMe SSD, third time.
->
-> So it took three tries to reproduce the page fault.
->
-> Thanks for the log, the issue is a little less murky now.
-> But it's still unclear what the root cause is and thus
-> what the proper solution is.  I think this needs more
-> in-depth debugging, see my previous e-mail.
->
-> Hope that helps!  Thanks,
+> > Not sure how to properly fix this as the different alignment
+> > requirements get pretty complex quickly. So would appreciate your
+> > input.  
+> 
+> I don't think it's possible to improve the allocation logic without
+> modifying the page allocator and/or the DMA atomic pool allocator to
+> take additional constraints into account.
 
-I think the following approach should cover all the cases?
-Ricky, can you please give it a try?
+I don't understand. What speaks against calculating the amount of space
+needed, so that with the waste we can still fit the bounce-buffer in the
+pool?
 
-diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-index d749ea8250d6..907d60587227 100644
---- a/drivers/pci/remove.c
-+++ b/drivers/pci/remove.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/pci.h>
- #include <linux/module.h>
-+#include <linux/pm_runtime.h>
- #include "pci.h"
+I believe alloc_size + combined_mask is a trivial upper bound, but we can
+do slightly better since we know that we allocate pages.
 
- static void pci_free_resources(struct pci_dev *dev)
-@@ -89,6 +90,8 @@ static void pci_remove_bus_device(struct pci_dev *dev)
-        struct pci_bus *bus =3D dev->subordinate;
-        struct pci_dev *child, *tmp;
+For the sake of simplicity let us assume we only have the min_align_mask
+requirement. Then I believe the worst case is that we need 
+(orig_addr & min_align_mask & PAGE_MASK)  + (min_align_mask & ~PAGE_MASK)
+extra space to fit.
 
-+       pm_runtime_barrier(&dev->dev);
-+
-        if (bus) {
-                list_for_each_entry_safe(child, tmp,
-                                         &bus->devices, bus_list)
+Depending on how the semantics pan out one may be able to replace
+min_align_mask with combined_mask.
+
+Is your point that for large combined_mask values 
+_get_free_pages(GFP_NOWAIT | __GFP_NOWARN, required_order) is not
+likely to complete successfully?
+
+Regards,
+Halil
 
 
->
-> Lukas
+
+
