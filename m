@@ -2,150 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A70527E4BB9
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Nov 2023 23:30:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5CD97E4E44
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Nov 2023 01:51:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235142AbjKGWap (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Nov 2023 17:30:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46478 "EHLO
+        id S234119AbjKHAvQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Nov 2023 19:51:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235267AbjKGWan (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 17:30:43 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D12610CF
-        for <linux-pci@vger.kernel.org>; Tue,  7 Nov 2023 14:30:41 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9238C433C8;
-        Tue,  7 Nov 2023 22:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699396240;
-        bh=zO04+G345zN9/cizf6fLcH3TgOzXuILq9uepaUlB1aM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nIeWLxA0DlonXeBJ9chFJK1IYhQ86uipzSCtVmKC3zjeKl2vVyjPO8Ki11SMe2IWe
-         rm8mEVlrXuordPU4goVTHtCpfzCv3W0rrke7PByI2wUuQw/CQgORPrtAgXuPtDIY0w
-         bEWcLQgwqebkG5ns32AQuf2EPMOc1ORIz5jeVb+KPdzvh+TL52NxD9fsauygt+0/xa
-         udowoHMObM5rGkg0LefpzGfyRqtAbS+y71rzJ2MPD38YgyXVC2hotSvGDpXlUZouLa
-         8SIAgjNqOnO5SzqUWNP1YA8krBxml0zYl218iNC7nikLohWTzobReinPTKN9BAjRj1
-         SgN50IpdB9H7g==
-Date:   Tue, 7 Nov 2023 16:30:37 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        orden.e.smith@intel.com, samruddh.dhope@intel.com,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] PCI: vmd: Enable Hotplug based on BIOS setting on VMD
- rootports
-Message-ID: <20231107223037.GA303668@bhelgaas>
+        with ESMTP id S234348AbjKHAvP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Nov 2023 19:51:15 -0500
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B91A1702;
+        Tue,  7 Nov 2023 16:51:12 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0VvvcIdY_1699404667;
+Received: from 30.240.112.123(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VvvcIdY_1699404667)
+          by smtp.aliyun-inc.com;
+          Wed, 08 Nov 2023 08:51:09 +0800
+Message-ID: <98b1dbba-3b82-4fe3-bb72-7447c8118bf2@linux.alibaba.com>
+Date:   Wed, 8 Nov 2023 08:51:06 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a623e811037972c7cdf1fe05fcb7ace2b445a323.camel@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 3/5] PCI: move pci_clear_and_set_dword helper to pci
+ header
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     kaishen@linux.alibaba.com, yangyicong@huawei.com, will@kernel.org,
+        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
+        robin.murphy@arm.com, chengyou@linux.alibaba.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, rdunlap@infradead.org,
+        mark.rutland@arm.com, zhuo.song@linux.alibaba.com,
+        renyu.zj@linux.alibaba.com
+References: <20231107150342.GA288219@bhelgaas>
+Content-Language: en-US
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20231107150342.GA288219@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Rafael, just FYI re 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on PCIe features")]
 
-On Tue, Nov 07, 2023 at 02:50:57PM -0700, Nirmal Patel wrote:
-> On Thu, 2023-11-02 at 16:49 -0700, Nirmal Patel wrote:
-> > On Thu, 2023-11-02 at 15:41 -0500, Bjorn Helgaas wrote:
-> > > On Thu, Nov 02, 2023 at 01:07:03PM -0700, Nirmal Patel wrote:
-> > > > On Wed, 2023-11-01 at 17:20 -0500, Bjorn Helgaas wrote:
-> > > > > On Tue, Oct 31, 2023 at 12:59:34PM -0700, Nirmal Patel wrote:
-> > > > > > On Tue, 2023-10-31 at 10:31 -0500, Bjorn Helgaas wrote:
-> > > > > > > On Mon, Oct 30, 2023 at 04:16:54PM -0400, Nirmal Patel
-> > > > > > > wrote:
-> > > > > > > > VMD Hotplug should be enabled or disabled based on VMD
-> > > > > > > > rootports' Hotplug configuration in BIOS.
-> > > > > > > > is_hotplug_bridge
-> > > > > > > > is set on each VMD rootport based on Hotplug capable bit
-> > > > > > > > in
-> > > > > > > > SltCap in probe.c.  Check is_hotplug_bridge and enable or
-> > > > > > > > disable native_pcie_hotplug based on that value.
-> > > > > > > > 
-> > > > > > > > Currently VMD driver copies ACPI settings or platform
-> > > > > > > > configurations for Hotplug, AER, DPC, PM, etc and enables
-> > > > > > > > or
-> > > > > > > > disables these features on VMD bridge which is not
-> > > > > > > > correct
-> > > > > > > > in case of Hotplug.
-> > > > > > > 
-> > > > > > > This needs some background about why it's correct to copy
-> > > > > > > the
-> > > > > > > ACPI settings in the case of AER, DPC, PM, etc, but
-> > > > > > > incorrect
-> > > > > > > for hotplug.
-> > > > > > > 
-> > > > > > > > Also during the Guest boot up, ACPI settings along with
-> > > > > > > > VMD
-> > > > > > > > UEFI driver are not present in Guest BIOS which results
-> > > > > > > > in
-> > > > > > > > assigning default values to Hotplug, AER, DPC, etc. As a
-> > > > > > > > result Hotplug is disabled on VMD in the Guest OS.
-> > > > > > > > 
-> > > > > > > > This patch will make sure that Hotplug is enabled
-> > > > > > > > properly
-> > > > > > > > in Host as well as in VM.
-> > > > > > > 
-> > > > > > > Did we come to some consensus about how or whether _OSC for
-> > > > > > > the host bridge above the VMD device should apply to
-> > > > > > > devices
-> > > > > > > in the separate domain below the VMD?
-> > > > > > 
-> > > > > > We are not able to come to any consensus. Someone suggested
-> > > > > > to
-> > > > > > copy either all _OSC flags or none. But logic behind that
-> > > > > > assumption is that the VMD is a bridge device which is not
-> > > > > > completely true. VMD is an endpoint device and it owns its
-> > > > > > domain.
-> > > > > 
-> > > > > Do you want to facilitate a discussion in the PCI firmware SIG
-> > > > > about this?  It seems like we may want a little text in the
-> > > > > spec
-> > > > > about how to handle this situation so platforms and OSes have
-> > > > > the
-> > > > > same expectations.
-> > > > 
-> > > > The patch 04b12ef163d1 broke intel VMD's hotplug capabilities and
-> > > > author did not test in VM environment impact.
-> > > > We can resolve the issue easily by 
-> > > > 
-> > > > #1 Revert the patch which means restoring VMD's original
-> > > > functionality
-> > > > and author provide better fix.
-> > > > 
-> > > > or
-> > > > 
-> > > > #2 Allow the current change to re-enable VMD hotplug inside VMD
-> > > > driver.
-> > > > 
-> > > > There is a significant impact for our customers hotplug use cases
-> > > > which
-> > > > forces us to apply the fix in out-of-box drivers for different
-> > > > OSs.
-> > > 
-> > > I agree 100% that there's a serious problem here and we need to fix
-> > > it, there's no argument there.
-> > > 
-> > > I guess you're saying it's obvious that an _OSC above VMD does not
-> > > apply to devices below VMD, and therefore, no PCI Firmware SIG
-> > > discussion or spec clarification is needed?
-> >
-> > Yes. By design VMD is an endpoint device to OS and its domain is
-> > privately owned by VMD only. I believe we should revert back to
-> > original design and not impose _OSC settings on VMD domain which is
-> > also a maintainable solution.
->
-> I will send out revert patch. The _OSC settings shouldn't apply
-> to private VMD domain. 
 
-I assume you mean to revert 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC
-on PCIe features").  That appeared in v5.17, and it fixed (or at least
-prevented) an AER message flood.  We can't simply revert 04b12ef163d1
-unless we first prevent that AER message flood in another way.
+On 2023/11/7 23:03, Bjorn Helgaas wrote:
+> On Sat, Nov 04, 2023 at 09:32:14PM +0800, Shuai Xue wrote:
+>> The clear and set pattern is commonly used for accessing pci config,
+>> move the helper pci_clear_and_set_dword from aspm.c into pci header.
+> 
+> s/move/Move/ (in subject, capitalize first word)
+> s/pci/PCI/ (capitalize in English text)
+> s/pci_clear_and_set_dword/pci_clear_and_set_dword()/ (add parens to
+> function names, also in subject)
+> 
+> With the fixes here and below:
+> 
+>   Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Bjorn
+Hi, Bjorn,
 
-> Even the patch 04b12ef163d1 needs more changes to make sure _OSC
-> settings are passed on from Host BIOS to Guest BIOS which means
-> involvement of ESXi, Windows HyperV, KVM.
+Thank you for comments, will fix them in next version.
+
+Best Regards,
+Shuai
+
+> 
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> ---
+>>  drivers/pci/access.c    | 12 ++++++++++++
+>>  drivers/pci/pcie/aspm.c | 11 -----------
+>>  include/linux/pci.h     |  2 ++
+>>  3 files changed, 14 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+>> index 6554a2e89d36..526360481d99 100644
+>> --- a/drivers/pci/access.c
+>> +++ b/drivers/pci/access.c
+>> @@ -598,3 +598,15 @@ int pci_write_config_dword(const struct pci_dev *dev, int where,
+>>  	return pci_bus_write_config_dword(dev->bus, dev->devfn, where, val);
+>>  }
+>>  EXPORT_SYMBOL(pci_write_config_dword);
+>> +
+>> +void pci_clear_and_set_dword(const struct pci_dev *dev, int pos,
+>> +				    u32 clear, u32 set)
+> 
+> Rename to pci_clear_and_set_config_dword() to retain the "config"
+> information and match the other accessors.
+
+Got it. Will rename it.
+
+> 
+> Align "u32 clear" under "const struct ...".  pci_write_config_dword()
+> above is an anomaly.
+> 
+
+Got it. Will align it.
+
+>> +{
+>> +	u32 val;
+>> +
+>> +	pci_read_config_dword(dev, pos, &val);
+>> +	val &= ~clear;
+>> +	val |= set;
+>> +	pci_write_config_dword(dev, pos, val);
+>> +}
+>> +EXPORT_SYMBOL(pci_clear_and_set_dword);
+>> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+>> index 1bf630059264..f4e64fedc048 100644
+>> --- a/drivers/pci/pcie/aspm.c
+>> +++ b/drivers/pci/pcie/aspm.c
+>> @@ -423,17 +423,6 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+>>  	}
+>>  }
+>>  
+>> -static void pci_clear_and_set_dword(struct pci_dev *pdev, int pos,
+>> -				    u32 clear, u32 set)
+>> -{
+>> -	u32 val;
+>> -
+>> -	pci_read_config_dword(pdev, pos, &val);
+>> -	val &= ~clear;
+>> -	val |= set;
+>> -	pci_write_config_dword(pdev, pos, val);
+>> -}
+>> -
+>>  /* Calculate L1.2 PM substate timing parameters */
+>>  static void aspm_calc_l12_info(struct pcie_link_state *link,
+>>  				u32 parent_l1ss_cap, u32 child_l1ss_cap)
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index 8c7c2c3c6c65..271f30fd7ca4 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -1213,6 +1213,8 @@ int pci_read_config_dword(const struct pci_dev *dev, int where, u32 *val);
+>>  int pci_write_config_byte(const struct pci_dev *dev, int where, u8 val);
+>>  int pci_write_config_word(const struct pci_dev *dev, int where, u16 val);
+>>  int pci_write_config_dword(const struct pci_dev *dev, int where, u32 val);
+>> +void pci_clear_and_set_dword(const struct pci_dev *dev, int pos,
+>> +				    u32 clear, u32 set);
+> 
+> Align "u32 clear" again.
+
+Thank you. Will align it.
+
+> 
+>>  int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val);
+>>  int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val);
+>> -- 
+>> 2.39.3
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
