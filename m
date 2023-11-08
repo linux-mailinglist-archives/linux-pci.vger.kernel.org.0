@@ -2,201 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 205C27E52E6
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Nov 2023 10:53:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EED6A7E535A
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Nov 2023 11:29:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235450AbjKHJxa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Nov 2023 04:53:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36124 "EHLO
+        id S232602AbjKHK3y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Nov 2023 05:29:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbjKHJx3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Nov 2023 04:53:29 -0500
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2920C1B3
-        for <linux-pci@vger.kernel.org>; Wed,  8 Nov 2023 01:53:27 -0800 (PST)
-Received: by mail-pg1-x533.google.com with SMTP id 41be03b00d2f7-5b7f3f470a9so4554974a12.0
-        for <linux-pci@vger.kernel.org>; Wed, 08 Nov 2023 01:53:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1699437206; x=1700042006; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=juZI1n0aMz+KCog5r3XPutHhgq5o1lm8dusNtuYCGmE=;
-        b=l4+BwGgY2FKriVF/7CpzeLjOonahsX0UZ+iRlPfKa5SCMWP3uOmqqSvDaHQXXn97Nl
-         CaRsML0xSTtH4bN1IDXI1yeVyQRl8O0vFVZx0oVVL7f4wTYykEtD75oLJem13+2Pj46r
-         dE+B+f7R8+YlrjLV6Np5COFcnaVwXxSAZEEjDm/pwCulNSkBh4VogF8RucBzCftg1CqK
-         sd1E8gnivGkhxH9jYMz+VZbhnnThdzq9ssdHSLDhH94pXHWioa32JWxiWlJhRx0ls7/t
-         Lnxg3mput54c1cqplbmUFgOXLaaXlRyzH7+neGhNDUxqYiALdscsQQIHKXhvSIdktCn0
-         094A==
+        with ESMTP id S231616AbjKHK3x (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Nov 2023 05:29:53 -0500
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A271A1BD9
+        for <linux-pci@vger.kernel.org>; Wed,  8 Nov 2023 02:29:51 -0800 (PST)
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 32EC5409D8
+        for <linux-pci@vger.kernel.org>; Wed,  8 Nov 2023 10:29:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1699439388;
+        bh=JPnUP2dhK6rq2OT2zp59qDXCzcw2C/MeNwbO6irKsM8=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=QxjeHl3HuUYSKwAg8nm/gLIGxyOT/SuAWmmnzT2SXQh3+eSE56aRVttDXBF5jmP0b
+         OZnFnOabjENcix6k6Nl/lpcxoU193Vk9RoE5LkOhDoQR58KOBGpYgrWjx88p6VOioZ
+         gg426JUdKOSnxWqXB1Buuq0JWQoOmP+0ep87Hiklt1IzPlwlfPmGgy2HZrw0RGiINh
+         XQ4zuoOzp5PxWIGaBcDYswLPc/IWO6Fr01SayMmEMvV2iDNcwNjdh5yUqlkcMuEOar
+         lE2gXRLZQNx+dQBr2bKygIcecePq8lyHoaJ4FgLjMweLcfFawyTiSSWuN5v4RHgzE6
+         ZkB95gQZo4sQA==
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-6bcefd3b248so6703764b3a.3
+        for <linux-pci@vger.kernel.org>; Wed, 08 Nov 2023 02:29:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699437206; x=1700042006;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=juZI1n0aMz+KCog5r3XPutHhgq5o1lm8dusNtuYCGmE=;
-        b=GyaNRLh1yvtpCyGeJsbeqOOgqbYmizLG5r1hFJ6PgGaM8A3xcU54nbWiMpDgFVr3gw
-         6fqiqZMnBkNQqGKnNCw/E57rO+FsDEIb/LQ3kJtqgmv18lpKo+ScbGopjC1J9HvlOA10
-         mIif7MdZZY9JRT2qz/gAP3dP/FxXPOWQ8hhZloaEW2I+gk+y/aFZFACRphpuxwghAcf2
-         7mPU7FoTQK/vnR8chKBMopoauniR2om+08POuLqVntme01lBBXxpkVAEGRZOrGqcUIXT
-         cDcbIAMi6j3dqpA/BDO8Bl71M7HKz8SiPjYMyJhzRz0WH9aASqVUaP9ClGgmWA1I8B1+
-         aaiw==
-X-Gm-Message-State: AOJu0YzMEkierPU/WxOpPLyVnc5DkeryG0GN+ydN7QVsIw3BwXHTnp+V
-        haRfhGM26ynyUusVoJ2AVoIRpg==
-X-Google-Smtp-Source: AGHT+IEEgxtG4vAOOXAzU0cQ43q+y/GuzULUrpgSTtLmSEOIhXbF+HzsEiLo0Th7PmwROQ6HsMZIlg==
-X-Received: by 2002:a05:6a20:7495:b0:14e:43b0:5f99 with SMTP id p21-20020a056a20749500b0014e43b05f99mr1462760pzd.52.1699437206593;
-        Wed, 08 Nov 2023 01:53:26 -0800 (PST)
-Received: from sunil-laptop ([106.51.188.78])
-        by smtp.gmail.com with ESMTPSA id c24-20020a170902d91800b001c728609574sm1346631plz.6.2023.11.08.01.53.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Nov 2023 01:53:25 -0800 (PST)
-Date:   Wed, 8 Nov 2023 15:23:14 +0530
-From:   Sunil V L <sunilvl@ventanamicro.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Anup Patel <anup@brainfault.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Andrew Jones <ajones@ventanamicro.com>,
-        Atish Kumar Patra <atishp@rivosinc.com>,
-        Haibo Xu <haibo1.xu@intel.com>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [RFC PATCH v2 06/21] RISC-V: Kconfig: Select deferred GSI probe
- for ACPI systems
-Message-ID: <ZUtailOcozI9xIou@sunil-laptop>
-References: <ZTuzJ1nsicZYp+uh@sunil-laptop>
- <20231106221606.GA264641@bhelgaas>
+        d=1e100.net; s=20230601; t=1699439387; x=1700044187;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JPnUP2dhK6rq2OT2zp59qDXCzcw2C/MeNwbO6irKsM8=;
+        b=qrLzSrrfRpoubZEdFlMVBARrTIDmg9WXE51BiHiXZOjt4e5OHyHWvuBLAduynlXHlR
+         MFvJAgzH2BKSa6Uqz2TvZgrDZ4fFb45dxtJEOXAvznmg5SmsWvpHEGTrNL0PLzBHH26l
+         2Ht9+1QFXuSgLrUv/Gz6U2nn2pCgowz1ShZuCI8ELm9QsAKRKxfUhIAf3HiJMxAavdRY
+         c/8Mj/hAlX+MF/nDAqG7ZvnnURNnjyDfzn2eCSoITKdtHKLGkMbE/6O5DUbCBA3ZnNx2
+         6dzZLQNjPngPqzfpEIAFJGBkdGXobNX137HVzpEP2NA465xZTmxjiwIvWM/Ojh0JMHOV
+         03KA==
+X-Gm-Message-State: AOJu0Yy236t0aGsmEVS4swXY9Pmi8QhDD916FmtvfTe0f3NjfcRUIpJT
+        p8IsOglzJhMXP1zCyB6Kh9o512Q0g+Q5AUWl45t7A8XLVCw/+MH7YnEjhGZBPevt6/mnxX6F67u
+        WKKFZiVNcuijbqsvn4EjRZUE+6yKvDRuhqHCh3n6bv+bHFFTaDwsTYg==
+X-Received: by 2002:a05:6a20:441d:b0:14c:c393:692 with SMTP id ce29-20020a056a20441d00b0014cc3930692mr2027849pzb.7.1699439386904;
+        Wed, 08 Nov 2023 02:29:46 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFboe2yTK4xo9PqvpxUzC3jlXy/epT3vmB6XsIMqWHzujx8gpq9+ZMU6Xblm9e+XufQk7xJ3brIYpcN30jCvUY=
+X-Received: by 2002:a05:6a20:441d:b0:14c:c393:692 with SMTP id
+ ce29-20020a056a20441d00b0014cc3930692mr2027833pzb.7.1699439386603; Wed, 08
+ Nov 2023 02:29:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231106221606.GA264641@bhelgaas>
+References: <20231016040132.23824-1-kai.heng.feng@canonical.com>
+ <20231016093210.GA22952@wunner.de> <263982e90fc046cf977ecb8727003690@realtek.com>
+ <20231018094435.GA21090@wunner.de> <02ee7e47166a463d8d4e491b61cdd33f@realtek.com>
+ <20231019143504.GA25140@wunner.de>
+In-Reply-To: <20231019143504.GA25140@wunner.de>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Wed, 8 Nov 2023 12:29:34 +0200
+Message-ID: <CAAd53p7jx=_Yh8sPwdsu-6Bc-hNgiExscMNGhgcbH=rzOBMOXQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: pciehp: Prevent child devices from doing RPM on PCIe
+ Link Down
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Ricky WU <ricky_wu@realtek.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+Hi Lukas and Ricky,
 
-On Mon, Nov 06, 2023 at 04:16:06PM -0600, Bjorn Helgaas wrote:
-> On Fri, Oct 27, 2023 at 06:25:03PM +0530, Sunil V L wrote:
-> > On Thu, Oct 26, 2023 at 12:04:08PM -0500, Bjorn Helgaas wrote:
-> > > On Thu, Oct 26, 2023 at 01:53:29AM +0530, Sunil V L wrote:
-> > > > On RISC-V platforms, apart from root interrupt controllers (which
-> > > > provide local interrupts and IPI), other interrupt controllers in the
-> > > > hierarchy are probed late. Enable this select this CONFIG option for
-> > > > RISC-V platforms so that device drivers which connect to deferred
-> > > > interrupt controllers can take appropriate action.
-> > > 
-> > > Quite a bit of this series seems related to the question of interrupt
-> > > controllers being probed "late".
-> > > 
-> > > I don't see anything specific about *how* late this might be, but from
-> > > the use of -EPROBE_DEFER in individual drivers (8250_pnp explicitly,
-> > > and acpi_register_gsi() and pnp_irq() and acpi_pci_irq_enable(), which
-> > > are called from driver .probe() paths) it seems like interrupt
-> > > controllers might be detected even after devices that use them.
-> > > 
-> > > That seems like a fairly invasive change to the driver probe flow.
-> > > If we really need to do that, I think it might merit a little more
-> > > background as justification since we haven't had to do it for any
-> > > other arch yet.
-> > 
-> > In RISC-V, the APLIC can be a converter from wired (GSI) to MSI interrupts.
-> > Hence, especially in this mode, it has to be a platform device to use
-> > device MSI domain. Also, according to Marc Zyngier there is no reason to
-> > probe interrupt controllers early apart from root controller. So, the
-> > device drivers which use wired interrupts need to be probed after APLIC.
-> > 
-> > The PNP devices and PCI INTx GSI links use either
-> > acpi_dev_resource_interrupt() (PNP) or acpi_register_gsi() directly
-> > (PCI). The approach taken here is to follow the example of
-> > acpi_irq_get() which is enhanced to return EPROBE_DEFER and several
-> > platform device drivers which use platform_get_irq() seem to be handling
-> > this already.
-> 
-> This series (patch 04/21 "ACPI: irq: Add support for deferred probe in
-> acpi_register_gsi()" [1]) makes acpi_register_gsi() return
-> -EPROBE_DEFER, which percolates up through pci_enable_device().
-> 
-> Maybe that's ok, but this affects *all* PCI drivers, and it's a new
-> case that did not occur before.  Many drivers emit warning or error
-> messages for any pci_enable_device() failure, which you probably don't
-> want in this case, since -EPROBE_DEFER is not really a "failure";
-> IIUC, it just means "probe again later."
+On Thu, Oct 19, 2023 at 5:35=E2=80=AFPM Lukas Wunner <lukas@wunner.de> wrot=
+e:
 >
-Yeah, I think all the drivers which need to be supported on RISC-V
-ACPI based systems will have to support deferred probe with this scheme.
+> On Thu, Oct 19, 2023 at 01:49:50AM +0000, Ricky WU wrote:
+> > [    0.267813] pci 0000:00:1c.0: [8086:a33c] type 01 class 0x060400
+>
+> Cannon Lake PCH Root Port
+>
+> > [    0.275241] pci 0000:01:00.0: [10ec:5261] type 00 class 0xff0000
+> > [    0.275315] pci 0000:01:00.0: reg 0x10: [mem 0xa3b00000-0xa3b00fff]
+> > [    0.275782] pci 0000:01:00.0: supports D1 D2
+> > [    0.275784] pci 0000:01:00.0: PME# supported from D1 D2 D3hot D3cold
+> > [    0.276490] pci 0000:00:1c.0: PCI bridge to [bus 01]
+>
+> Device below Root Port is initially a Realtek RTS5261 card reader.
+>
+> > [    0.395968] pcieport 0000:00:1c.0: PME: Signaling with IRQ 122
+> > [    0.396009] pcieport 0000:00:1c.0: pciehp: Slot #8 AttnBtn- PwrCtrl-=
+ MRL- AttnInd- PwrInd- HotPlug+ Surprise+ Interlock- NoCompl+ IbPresDis- LL=
+ActRep+
+>
+> Root Port is hotplug-capable.
+>
+> > [   43.180701] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
+> > [   43.180709] pcieport 0000:00:1c.0: pciehp: Slot(8): Card not present
+> > [   44.403768] pcieport 0000:00:1c.0: pciehp: Slot(8): Card present
+> > [   44.403772] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Up
+> > [   44.540631] pci 0000:01:00.0: [15b7:5007] type 00 class 0x010802
+>
+> Card reader is unplugged and replaced by SanDisk SN530 NVMe SSD.
+>
+> > [   51.682628] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
+> > [   51.716800] nvme0n1: detected capacity change from 495050752 to 0
+> > [   51.793382] pcieport 0000:00:1c.0: pciehp: Slot(8): Card present
+> > [   51.793392] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Up
+> > [   51.928633] pci 0000:01:00.0: [10ec:5261] type 00 class 0xff0000
+>
+> NVMe SSD replaced by the card reader again.
+>
+> > [   54.872928] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
+> > [   56.146581] pcieport 0000:00:1c.0: pciehp: Slot(8): Card present
+> > [   56.146584] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Up
+> > [   56.284632] pci 0000:01:00.0: [15b7:5007] type 00 class 0x010802
+>
+> Card reader replaced by NVMe SSD, second time.
+>
+> > [   60.635845] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
+> > [   60.676842] nvme0n1: detected capacity change from 495050752 to 0
+> > [   60.748953] pcieport 0000:00:1c.0: pciehp: Slot(8): Card present
+> > [   60.748958] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Up
+> > [   60.884619] pci 0000:01:00.0: [10ec:5261] type 00 class 0xff0000
+>
+> NVMe SSD replaced by the card reader, second time.
+>
+> > [   63.898861] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
+> > [   63.912118] BUG: unable to handle page fault for address: ffffb24d40=
+3e5010
+>
+> Card reader replaced with NVMe SSD, third time.
+>
+> So it took three tries to reproduce the page fault.
+>
+> Thanks for the log, the issue is a little less murky now.
+> But it's still unclear what the root cause is and thus
+> what the proper solution is.  I think this needs more
+> in-depth debugging, see my previous e-mail.
+>
+> Hope that helps!  Thanks,
 
-> > Using ResourceSource dependency (mbigen uses) in the namespace as part of
-> > Extended Interrupt Descriptor will not ensure the order since PNP/INTx
-> > GSI devices don't work with that.
-> 
-> Are these PNP/INTx GSI devices described in ACPI?  In the namespace?
-> Or in a static table?
-> 
-Yes, these are standard devices in the namespace. For ex: PNP0501(16550)
-or PNP0C0F (PCI interrupt link devices) are in the namespace.
+I think the following approach should cover all the cases?
+Ricky, can you please give it a try?
 
-> > Is there any other better way to create dependency between IO devices
-> > and the interrupt controllers when interrupt controller itself is a
-> > platform device? While using core_initcall() for interrupt controllers
-> > seem to work which forces the interrupt controller to be probed first,
-> > Marc is not in favor of that approach since it is fragile.
-> 
-> I guess PCI interrupts from the PCI host bridges (PNP0A03 devices)
-> feed into the APLIC?  And APLIC is described via MADT?  Based on this
-> series, it looks like this:
-> 
->     acpi_init
->   +   acpi_riscv_init
->   +     riscv_acpi_aplic_platform_init
->   +       acpi_table_parse_madt(ACPI_MADT_TYPE_APLIC, aplic_parse_madt, 0)
->       acpi_scan_init
->         acpi_pci_root_init
->         acpi_pci_link_init
-> 	acpi_bus_scan             # add PCI host bridges, etc
-> 
-> If that's the sequence, it looks like aplic_parse_madt() should be
-> called before the PCI host bridges are added.
-> 
-> Or maybe this isn't how the APLICs are enumerated?
-> 
-That's partly correct. APLIC platform devices are created prior to PCI
-host bridges added. But the actual APLIC driver which creates the
-irqdomain will be probed as a regular platform driver for the APLIC
-device. The platform driver probe will happen using DD framework and
-devices don't have any dependency on APLIC which can cause device probe
-prior to APLIC driver probe.
+diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+index d749ea8250d6..907d60587227 100644
+--- a/drivers/pci/remove.c
++++ b/drivers/pci/remove.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/pci.h>
+ #include <linux/module.h>
++#include <linux/pm_runtime.h>
+ #include "pci.h"
 
-DT supports fw_devlink framework which makes it easier for IRQ devices
-to use regular platform drivers and produces-consumers are probed in the
-order without requiring drivers to do deferred probe. But I don't see
-that supported for ACPI framework.  Also, the way PNP devices get added
-there is an assumption that interrupt controller is already setup fully.
+ static void pci_free_resources(struct pci_dev *dev)
+@@ -89,6 +90,8 @@ static void pci_remove_bus_device(struct pci_dev *dev)
+        struct pci_bus *bus =3D dev->subordinate;
+        struct pci_dev *child, *tmp;
 
-With this new use case in RISC-V, here are the alternatives I am aware of.
++       pm_runtime_barrier(&dev->dev);
++
+        if (bus) {
+                list_for_each_entry_safe(child, tmp,
+                                         &bus->devices, bus_list)
 
-1) Use core_initcall() in the APLIC drivers which makes APLIC driver to
-be probed prior to PNP or PCI INTx devices. But this was ruled out in
-the context of DT from Marc.
 
-2) Like the approach tried in this series, add support for deferred
-probe in drivers. This will be invasive change requiring many drivers to
-change like you pointed.
-
-I don't know which is less evil or if there is any other alternative
-which I am not aware of.
-
-Thomas/Marc, could you allow APLIC (and PLIC) irqchip drivers to use
-core_initcall() for ACPI?
-
-Thanks,
-Sunil
+>
+> Lukas
