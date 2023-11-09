@@ -2,31 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCBE47E7397
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Nov 2023 22:27:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C1837E73A2
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Nov 2023 22:33:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231226AbjKIV12 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Nov 2023 16:27:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40442 "EHLO
+        id S229733AbjKIVdV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Nov 2023 16:33:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229630AbjKIV11 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Nov 2023 16:27:27 -0500
+        with ESMTP id S229630AbjKIVdU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Nov 2023 16:33:20 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA453C07;
-        Thu,  9 Nov 2023 13:27:25 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59D4DC433C7;
-        Thu,  9 Nov 2023 21:27:24 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D2D43C30;
+        Thu,  9 Nov 2023 13:33:18 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9F83C433C8;
+        Thu,  9 Nov 2023 21:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699565244;
-        bh=ZDkD8nE6Mqdk9hjfAmYOU/xCoxyV7u/A9MBQaroE3Fk=;
+        s=k20201202; t=1699565598;
+        bh=ksMXL7JuxLefyNW85J+EYnJjuVKz/X0dBos8onrG1LY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gYFjrn5/JVD/tBrEMnhScZbfsTW5K25i/CgTI61//ELC3FX8Dk+jMl58EIdSWmtYp
-         YPiqym0Yb7bhyZjAeqGvUcJsukEqmZSKF0T43MSBfi7pPk/e0bV7Ka0l2nBvTazXJL
-         v/RcRqaB5ePBhLNpfTSl+J8kJjUPq7O/wK64LdDYbPtHCSH939za/UwncG83UxOS1L
-         rDWb8AConIxVgacZgWq7fpqBccCw5bOKW6KbSGaYpi2R0f7WhnFE2DKWZ9QeeFRY6a
-         BbschAKBblGVzx4v0uGqpX9s2KI6cgKQ6yPWiaKb3+iozfS2RZewClNW31cWoL6WmG
-         H34qHBnxwtHiw==
-Date:   Thu, 9 Nov 2023 15:27:22 -0600
+        b=MKNxzbGaY6mBpEZtn1QzDfV4ts54b26DJKnhlTleYCCLiUj+7IesrVrsftXrpWn95
+         n1JLCypQlzJOqt6XbvxnEPnUopUxKlGGn8julyNr59DiAYSn+cCLfzta3O7w5Kkr2D
+         w+2VaLMrcKC9OcKIvTH8LIYrulkxJBBMkWrDiHgcRkaaz28hcO5CBWGYf1uZ56NAgd
+         i8FMFyfVlwlGk9fDcMB/Cp8xjF3vPV88ejhKsVKWe5Tgm9I5tDEpHlXYDo0mTlX43S
+         J/WctStnl47pFWDjcx7Jd+8eMldIhSyUTm8COzi6nkGttcr44SECEJrqeovVyw7vRs
+         /e4ld6Grc5XQA==
+Date:   Thu, 9 Nov 2023 15:33:15 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Jim Quinlan <james.quinlan@broadcom.com>
 Cc:     linux-pci@vger.kernel.org,
@@ -36,74 +36,82 @@ Cc:     linux-pci@vger.kernel.org,
         Cyril Brulebois <kibi@debian.org>,
         Phil Elwell <phil@raspberrypi.com>,
         bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
         Jim Quinlan <jim2101024@gmail.com>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
         <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 3/3] PCI: brcmstb: Set higher value for internal bus
- timeout
-Message-ID: <20231109212722.GA492431@bhelgaas>
+Subject: Re: [PATCH v7 1/3] dt-bindings: PCI: brcmstb: Add property
+ "brcm,clkreq-mode"
+Message-ID: <20231109213315.GA492812@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231109191355.27738-4-james.quinlan@broadcom.com>
+In-Reply-To: <20231109191355.27738-2-james.quinlan@broadcom.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 09, 2023 at 02:13:54PM -0500, Jim Quinlan wrote:
-> During long periods of the PCIe RC HW being in an L1SS sleep state, there
-> may be a timeout on an internal bus access, even though there may not be
-> any PCIe access involved.  Such a timeout will cause a subsequent CPU
-> abort.
+On Thu, Nov 09, 2023 at 02:13:52PM -0500, Jim Quinlan wrote:
+> The Broadcom STB/CM PCIe HW -- a core that is also used by RPi SOCs --
+> requires the driver to deliberately place the RC HW one of three CLKREQ#
+> modes.  The "brcm,clkreq-mode" property allows the user to override the
+> default setting.  If this property is omitted, the default mode shall be
+> "default".
 > 
 > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 > ---
->  drivers/pci/controller/pcie-brcmstb.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 21 +++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index f45c5d0168d3..f82a3e1a843a 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -1031,6 +1031,21 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  	return 0;
->  }
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index 7e15aae7d69e..992b35e915a5 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -64,6 +64,27 @@ properties:
 >  
-> +/*
-> + * This extends the timeout period for an access to an internal bus.  This
-> + * access timeout may occur during L1SS sleep periods, even without the
-> + * presence of a PCIe access.
-> + */
-> +static void brcm_extend_rbus_timeout(struct brcm_pcie *pcie)
-> +{
-> +	/* TIMEOUT register is two registers before RGR1_SW_INIT_1 */
-> +	const unsigned int REG_OFFSET = PCIE_RGR1_SW_INIT_1(pcie) - 8;
-> +	u32 timeout_us = 4000000; /* 4 seconds, our setting for L1SS */
-> +
-> +	/* Each unit in timeout register is 1/216,000,000 seconds */
-> +	writel(216 * timeout_us, pcie->base + REG_OFFSET);
-> +}
-> +
->  static void brcm_config_clkreq(struct brcm_pcie *pcie)
->  {
->  	static const char err_msg[] = "invalid 'brcm,clkreq-mode' DT string\n";
-> @@ -1067,6 +1082,7 @@ static void brcm_config_clkreq(struct brcm_pcie *pcie)
->  		 * atypical and should happen only with older devices.
->  		 */
->  		clkreq_cntl |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK;
-> +		brcm_extend_rbus_timeout(pcie);
+>    aspm-no-l0s: true
+>  
+> +  brcm,clkreq-mode:
+> +    description: A string that determines the operating
+> +      clkreq mode of the PCIe RC HW WRT controlling the refclk signal.
 
-It looks like this should be squashed into the previous patch, which
-added brcm_config_clkreq().  Otherwise there's a bisection hole where
-somebody testing at the previous patch could see the CPU abort.
+I assume "WRT" is shorthand for "with respect to", but it's slightly
+confusing following all the other acronyms.
 
->  	} else {
->  		/*
->  		 * "safe" -- No power savings; refclk is driven by RC
+> +      There are three different modes --
+> +      "safe", which drives the
+> +      refclk signal unconditionally and will work for all devices but does
+> +      not provide any power savings;
+> +      "no-l1ss" -- which provides Clock Power Management, L0s, and
+> +      L1, but cannot provide L1 substate (L1SS) power
+> +      savings. If the downstream device connected to the RC is
+> +      L1SS capable AND the OS enables L1SS, all PCIe traffic
+> +      may abruptly halt, potentially hanging the system;
+> +      "default" -- which provides L0s, L1, and L1SS, but not
+> +      compliant to provide Clock Power Management;
+> +      specifically, may not be able to meet the Tclron max
+> +      timing of 400ns as specified in "Dynamic Clock Control",
+> +      section 3.2.5.2.2 of the PCIe spec.  This situation is
+> +      atypical and should happen only with older devices.
+
+These are all weirdly wrapped.  Really no reason to use lines shorter
+than 80.
+
+Same spec citation question as in patch 2/3.
+
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    enum: [ safe, no-l1ss, default ]
+> +
+>    brcm,scb-sizes:
+>      description: u64 giving the 64bit PCIe memory
+>        viewport size of a memory controller.  There may be up to
