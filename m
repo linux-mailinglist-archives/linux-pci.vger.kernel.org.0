@@ -2,193 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E31EC7E825D
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Nov 2023 20:18:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72FEB7E82A4
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Nov 2023 20:32:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346119AbjKJTRC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Nov 2023 14:17:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43564 "EHLO
+        id S236068AbjKJTWe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Nov 2023 14:22:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345759AbjKJTQs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Nov 2023 14:16:48 -0500
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2047.outbound.protection.outlook.com [40.107.244.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE8CD6C90;
-        Fri, 10 Nov 2023 10:55:32 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PhRmmCM6XXHI2ZTrvZDvHIJrwrmlloS6ysksNSpKFZ/jGHSsjdNwbQqwsw5Sn399qv1U84r29x7zBh8TkETngEUelXYu6hd75Yw4HCn/+OAF7z4p1V3+vOburW4CpnVDEdGx47ChOCidOXmiSXVuRwvLEMX3UQ9LR68N77h17eahPccHO5+1OiZvdj/7eD0r+G4h7JgsW9a5Nb1sqV37DuzVPana8wTJZAJWsl51Fa9LNkH7HBgfz1Z4FQXofHBbsy7/CSm2wI2NdidOB93tnlGaJzQsRX4+vmFJCVxgRula+iISlQEHoD6A4unl2Dv7gv2M19d4HcKAH5XXrz7Qqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=COYn6LvPddBHTWly4J+FD6qXdpwcv2oBpv77/QbspEw=;
- b=QNrohEiRb5pCSD/OKdA3nulPL9+feHLXkjEbZiO54Pngf/z31Mm0sOMCwwWmfIsN9dfiwxxxZAXfL8b4STjAY1VAejj/D3F/7dWN9QROOkL5pqSs6IKMXQMkvappgLKLfbJsQpL7XF04g0+osnmEe75f+kpBM8HQuvBTBFcta41CC4lWhPU3YXNBmPxp/k7+6V+mWYhiobzSol3v56QUbV6ZZjmOharReajj5CQ/bw77egBBSGHXP/PQEixL9wzZaKeALvE15+NyRGlk3zUq8CWNSedQhVDB8QShGV4REnBYEQZIdKsezlolGUB9SRtm0JxHOWPlb3ujuci1fKEiRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=COYn6LvPddBHTWly4J+FD6qXdpwcv2oBpv77/QbspEw=;
- b=0nTyx2VhyRhoraw6MTQ1nUiyoJ5naO697W6A+4m8XZJ7bnG+k9Jprud8thu5VUe7eervs4rVSk0hvRA9kO8NL5oaJct1FnGLy34MCsm0jGGhcS33XsqqkMEHPDiUr6EINfh+Gs++Sw9oNq80bvZuaDYsKCNUeGVXKZSq1Bn0Foc=
-Received: from MN2PR01CA0005.prod.exchangelabs.com (2603:10b6:208:10c::18) by
- SN7PR12MB6930.namprd12.prod.outlook.com (2603:10b6:806:262::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6977.19; Fri, 10 Nov 2023 18:55:30 +0000
-Received: from BL6PEPF0001AB4F.namprd04.prod.outlook.com
- (2603:10b6:208:10c:cafe::76) by MN2PR01CA0005.outlook.office365.com
- (2603:10b6:208:10c::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.19 via Frontend
- Transport; Fri, 10 Nov 2023 18:55:30 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB4F.mail.protection.outlook.com (10.167.242.73) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6977.16 via Frontend Transport; Fri, 10 Nov 2023 18:55:29 +0000
-Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.32; Fri, 10 Nov
- 2023 12:55:28 -0600
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-CC:     "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Mario Limonciello" <mario.limonciello@amd.com>
-Subject: [PATCH 3/3] PCI/ACPI: Add API for specifying a PERST# assertion delay
-Date:   Fri, 10 Nov 2023 12:55:03 -0600
-Message-ID: <20231110185503.46117-4-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231110185503.46117-1-mario.limonciello@amd.com>
-References: <20231110185503.46117-1-mario.limonciello@amd.com>
-MIME-Version: 1.0
+        with ESMTP id S236001AbjKJTWG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Nov 2023 14:22:06 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED396B9D4
+        for <linux-pci@vger.kernel.org>; Fri, 10 Nov 2023 11:16:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1699643770;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GxHfJ1htVRZCy6QGeX5s9dQZAX+xioUFSgZZ1hMauTk=;
+        b=SBFmwd3+Zn6DrlKo50on1EuhdYslwHLGXE5o8kPuQ0Hb9cEF9L7Oad1meknlnHiR9zi2ga
+        IuqhFNbi0aXNrOoFP9ANSv7PCRwrsAYZuzdYZKE+Xfkv6uuMkpQZM/wSl4c/fmJRBec7gj
+        7SY+QiF9z7564TVoT5j3LXQCnhNsvg8=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-668-coyAkwenP62Qi5v0WojZYg-1; Fri, 10 Nov 2023 14:16:09 -0500
+X-MC-Unique: coyAkwenP62Qi5v0WojZYg-1
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6754babc2c8so2425266d6.0
+        for <linux-pci@vger.kernel.org>; Fri, 10 Nov 2023 11:16:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699643768; x=1700248568;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GxHfJ1htVRZCy6QGeX5s9dQZAX+xioUFSgZZ1hMauTk=;
+        b=DEFSfSz97WhQvEB5paMuRWxAvQfiNJfHpwu5UaRpM5kdSXN5HN0o5wf5YhysitoEmi
+         wUFXAupioJzzD/fL7xgVwzFoTwjBOnQ152iibMl/I7mJ4ZcdeObC9oJ91U9ubys0WH5J
+         MR11fRP6KI1Uvm5J0Lj+y+oyuUHby25Zzgn2pudgxShAyOaJ5mKlR/4Uy2sXjI/0Gem5
+         3KrB5Q5QpMvzK+UOxeTwXkhLT0aMQHLRUzhTjP/74I8rE1nUL7gJNdEQ6WRM1TnT5Geq
+         IuV3qN3+kzkl4Ni/136b3B+VIyEgPO7mN7YUuCX21Q/ttDeyo5dKxZtnhN9n7fN0ezN/
+         Sdjg==
+X-Gm-Message-State: AOJu0YxSpzt0tdMc5OfG0nsUI1GLak1udjFle/K2ewGR8Eby9ZUhpXSD
+        yGp5p66H9orRhl+EIzVVTuJcs5ThEnJQTA9xRqF9tHIC5Lih4JzR6Rqv6TJ/pjTxP5ucHCQw7+A
+        Vk7UcUkRDE6w+JOGQt42T
+X-Received: by 2002:ad4:5911:0:b0:66a:d2d2:59b6 with SMTP id ez17-20020ad45911000000b0066ad2d259b6mr93449qvb.5.1699643768669;
+        Fri, 10 Nov 2023 11:16:08 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFi1+TSOIQnmNjS0gFPLLySwN8wyJkIMgU/AagS1/+hxuZ+LJtxfrdJv5Rn17oTFgSYMv2bag==
+X-Received: by 2002:ad4:5911:0:b0:66a:d2d2:59b6 with SMTP id ez17-20020ad45911000000b0066ad2d259b6mr93433qvb.5.1699643768416;
+        Fri, 10 Nov 2023 11:16:08 -0800 (PST)
+Received: from pstanner-thinkpadt14sgen1.remote.csb ([2001:9e8:32e5:ff00:227b:d2ff:fe26:2a7a])
+        by smtp.gmail.com with ESMTPSA id e11-20020a056214162b00b0066d0621bb67sm50370qvw.114.2023.11.10.11.16.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Nov 2023 11:16:08 -0800 (PST)
+Message-ID: <5c547e6de1e6c206a46197c8f46583e0bc5f4395.camel@redhat.com>
+Subject: Re: Implementation details of PCI Managed (devres) Functions
+From:   Philipp Stanner <pstanner@redhat.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tejun Heo <htejun@gmail.com>, dakr@redhat.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>, jeff@garzik.org,
+        Al Viro <viro@zeniv.linux.org.uk>
+Date:   Fri, 10 Nov 2023 20:16:05 +0100
+In-Reply-To: <ZU0qYBfFzsF3e8S9@slm.duckdns.org>
+References: <84be1049e41283cf8a110267646320af9ffe59fe.camel@redhat.com>
+         <1e964a74ca51e9e28202a47af22917e468050039.camel@redhat.com>
+         <ZU0qYBfFzsF3e8S9@slm.duckdns.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4F:EE_|SN7PR12MB6930:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3953cfdf-cb02-4105-0a13-08dbe21e9c43
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: a35lPOCYviJ1NbEDH5THP9qPdPr9slElG/0h/fCwxs7175OI1f6zp7yWkFkHgKp5A+X0ryt0dRzPJgT6Qa0lVMoLjx+lpxvvCVmHwyEUIQc415o1nVhAYSfBLyYsRtVcSmF5iAWu+2khf+aHP9uGjFUfaD6BHubHZtKh+U+XGdQWbW2HINz+qKf7KVs7uc+RHUnr5ScTbLhNSk9PCCi4//S8+mrpX7n9jN+E+pZj3D9SpR2BYKtMfkMPSEu3MIPPw7zo86/JXVjhKAF7rG7ComaCjSfUWuh7QX50ITW5n7Q1i49RL17YCjxNZX1om8VdWa2xoud8x1179tfJeQtyQtdnDycS6Z4B9UNlEtxBReHXZlyCAWLMDAsXoRuYGgnrgGhq1W6/lMrBduQh5HfKr01Z3ytI92AB7Nh8Swx66W7s53lFz1p2pDRVABe9IEbstW0l6/gizrTm5Hsi0bC4wQZ47lV9wvrqMTUgdsIJawUSf53l8rjxdURc+wvJh8MVd1/a6nIDaDM/oDKq7q4389GjznafB9wbSb3Hlveh04JzkUOCEwQLi8KLH/ZIxDhzt5ydlqjsHAxZXG5finnRMysbWvFE1xcj91dgl0T9FyPacAA5lC7pQ0B4vFeGnECc6zpR/h6PJUfFZLxatFndbiYABxIe8iaFw/DBynDJO1DUHYQ2z1rGyatljPt4lncLNYhl0GTV2fhp9SKLO3JVfkyvv/Edl4XjfB2mQjMj+a1SfDSz9NOnHPLFXmfRNjBTi5JsiWewgmjOuQa0QhtkGg==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(376002)(346002)(396003)(136003)(230922051799003)(82310400011)(64100799003)(1800799009)(451199024)(186009)(36840700001)(40470700004)(46966006)(7696005)(83380400001)(4326008)(8676002)(8936002)(2616005)(966005)(426003)(6666004)(26005)(70586007)(16526019)(44832011)(110136005)(478600001)(316002)(336012)(54906003)(70206006)(1076003)(47076005)(40480700001)(5660300002)(36860700001)(40460700003)(41300700001)(81166007)(356005)(82740400003)(36756003)(2906002)(86362001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Nov 2023 18:55:29.9717
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3953cfdf-cb02-4105-0a13-08dbe21e9c43
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BL6PEPF0001AB4F.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6930
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+MIME-Version: 1.0
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PCI firmware specification includes support for a _DSM function
-to specify a PERST# assertion delay.
+Hi Tejun,
 
-"The Add PERST# Assertion Delay function is used to convey the requirement
-for a fixed delay in timing between the time the PME_TO_Ack message is
-received at the PCI Express Downstream Port that originated the
-PME_Turn_Off message, and the time the platform asserts PERST# to the slot
-during the corresponding Endpoint’s or PCI Express Upstream Port’s
-transition to D3cold while the system is in an ACPI operational state."
+On Thu, 2023-11-09 at 08:52 -1000, Tejun Heo wrote:
+> Hello, Philipp.
+>=20
+> On Wed, Nov 08, 2023 at 10:02:29PM +0100, Philipp Stanner wrote:
+> ...
+> > That struct keeps track of the requested BARs. That's why there can
+> > only be one mapping per BAR, because that table is statically
+> > allocated
+> > and is indexed with the bar-number.
+> > pcim_iomap_table() now only ever returns the table with the
+> > pointers to
+> > the BARs. Adding tables to that struct that keep track of which
+> > mappings exist in which bars would be a bit tricky and require
+> > probably
+> > an API change for everyone who currently uses pcim_iomap_table(),
+> > and
+> > that's more than 100 C-files.
+> >=20
+> > So, it seems that a concern back in 2007 was to keep things simple
+> > and
+> > skip the more complex data structures necessary for keeping track
+> > of
+> > the various mappings within a bar.
+>=20
+> It was so long ago that I don't remember much but I do remember
+> taking a
+> shortcut there for convenience / simplicity. I'm sure it's already
+> clear but
+> there's no deeper reason, so if you wanna put in the work to make it
+> consistent, that'd be great.
+>=20
 
-Add API for callers to utilize this _DSM.
+Alright, it's good to know that there seems to be no functional or
+semantic reason or something behind it.
 
-Link: https://members.pcisig.com/wg/PCI-SIG/document/15350
-      PCI Firmware specification 3.3, section 4.6.11
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/pci/pci-acpi.c   | 40 ++++++++++++++++++++++++++++++++++++++++
- include/linux/pci-acpi.h |  2 ++
- 2 files changed, 42 insertions(+)
+I'll think it through. Maybe we can design something clever
 
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 257858a6719e..82e04808040d 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -1402,6 +1402,46 @@ int pci_acpi_request_aux_power_for_d3cold(struct pci_dev *pdev, int arg)
- }
- EXPORT_SYMBOL_GPL(pci_acpi_request_aux_power_for_d3cold);
- 
-+/**
-+ * pci_acpi_set_perst_delay - Set the assertion delay for the PERST# signal
-+ * @pdev: PCI device to set the delay for
-+ * @arg: Delay value in microseconds
-+ *
-+ * This function sets the delay for the PERST# signal of the given PCI device.
-+ * The delay value is specified in microseconds through the @arg parameter.
-+ * The maximum delay value is 10000 microseconds.
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+int pci_acpi_set_perst_delay(struct pci_dev *pdev, int arg)
-+{
-+	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-+	union acpi_object *obj;
-+	union acpi_object argv4 = {
-+		.integer.type = ACPI_TYPE_INTEGER,
-+		.integer.value = arg,
-+	};
-+	int val;
-+
-+	if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid,
-+			    pci_acpi_dsm_rev, 1 << DSM_PCI_ADD_PERST_DELAY))
-+		return -ENODEV;
-+
-+	if (arg > 10000)
-+		return -EINVAL;
-+
-+	obj = acpi_evaluate_dsm_typed(adev->handle, &pci_acpi_dsm_guid,
-+				      pci_acpi_dsm_rev, DSM_PCI_ADD_PERST_DELAY,
-+				      &argv4, ACPI_TYPE_INTEGER);
-+	if (!obj)
-+		return -EIO;
-+
-+	val = obj->integer.value;
-+	ACPI_FREE(obj);
-+	return (val == arg) ? 0 : -EINVAL;
-+}
-+EXPORT_SYMBOL_GPL(pci_acpi_set_perst_delay);
-+
- /**
-  * pci_acpi_optimize_delay - optimize PCI D3 and D3cold delay from ACPI
-  * @pdev: the PCI device whose delay is to be updated
-diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
-index bc6372bcb7d6..bdce83c3afbf 100644
---- a/include/linux/pci-acpi.h
-+++ b/include/linux/pci-acpi.h
-@@ -123,12 +123,14 @@ extern const int pci_acpi_dsm_rev;
- #define DSM_PCI_POWER_ON_RESET_DELAY		0x08
- #define DSM_PCI_DEVICE_READINESS_DURATIONS	0x09
- #define DSM_PCI_REQUEST_D3COLD_AUX_POWER	0x0A
-+#define DSM_PCI_ADD_PERST_DELAY			0x0B
- 
- #define PCI_D3COLD_AUX_DENIED			0
- #define PCI_D3COLD_AUX_GRANTED			1
- #define PCI_D3COLD_AUX_NO_MAIN_POWER_REMOVAL	2
- 
- int pci_acpi_request_aux_power_for_d3cold(struct pci_dev *pdev, int arg);
-+int pci_acpi_set_perst_delay(struct pci_dev *pdev, int arg);
- 
- #ifdef CONFIG_PCIE_EDR
- void pci_acpi_add_edr_notifier(struct pci_dev *pdev);
--- 
-2.34.1
+P.
+
+
+> Thanks.
+>=20
 
