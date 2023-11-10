@@ -2,131 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72FEB7E82A4
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Nov 2023 20:32:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7655B7E8395
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Nov 2023 21:18:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236068AbjKJTWe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Nov 2023 14:22:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41434 "EHLO
+        id S229498AbjKJUSV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Nov 2023 15:18:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236001AbjKJTWG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Nov 2023 14:22:06 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED396B9D4
-        for <linux-pci@vger.kernel.org>; Fri, 10 Nov 2023 11:16:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1699643770;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GxHfJ1htVRZCy6QGeX5s9dQZAX+xioUFSgZZ1hMauTk=;
-        b=SBFmwd3+Zn6DrlKo50on1EuhdYslwHLGXE5o8kPuQ0Hb9cEF9L7Oad1meknlnHiR9zi2ga
-        IuqhFNbi0aXNrOoFP9ANSv7PCRwrsAYZuzdYZKE+Xfkv6uuMkpQZM/wSl4c/fmJRBec7gj
-        7SY+QiF9z7564TVoT5j3LXQCnhNsvg8=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-668-coyAkwenP62Qi5v0WojZYg-1; Fri, 10 Nov 2023 14:16:09 -0500
-X-MC-Unique: coyAkwenP62Qi5v0WojZYg-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6754babc2c8so2425266d6.0
-        for <linux-pci@vger.kernel.org>; Fri, 10 Nov 2023 11:16:09 -0800 (PST)
+        with ESMTP id S229437AbjKJUSV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Nov 2023 15:18:21 -0500
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC888A9
+        for <linux-pci@vger.kernel.org>; Fri, 10 Nov 2023 12:18:16 -0800 (PST)
+Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-5b8f68ba4e5so1850219a12.1
+        for <linux-pci@vger.kernel.org>; Fri, 10 Nov 2023 12:18:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=google; t=1699647496; x=1700252296; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=877Jy/m/x7YTL71XvyVEIgFecU2le8H27gTqlL68z1s=;
+        b=PrLK3DmdiQFPhQRKwqCEFloq+lqM0OCQPYvYZmgjfI5VRCYZdYDHvZu+bcQNkudQGZ
+         BNMOdfz+Xdt34wv4k1Q/o+5WMnZ/96d5sfZmwLQTGDQttIB38kzwduxqChdhh2uiEjaV
+         C/cskMq0g6u6Z9Dw0dJpDuwkYMa+ohokM6UosNhGZfeCzrv0EhH0NkH2XPBAh1zRiduf
+         Ihj5cQDOYJ3tRLzNU+iA3mK0944NTrA6P4Edkkcx/4zoYHeXFFfLmHYFMWxxGZ7gG6Sw
+         +7WDYZioYFGZhy57Yb5ZQLNpDdr8GodhXgGkknpfVJfv8oSPy4fLBxsQP0F+095zHItK
+         o+tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699643768; x=1700248568;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GxHfJ1htVRZCy6QGeX5s9dQZAX+xioUFSgZZ1hMauTk=;
-        b=DEFSfSz97WhQvEB5paMuRWxAvQfiNJfHpwu5UaRpM5kdSXN5HN0o5wf5YhysitoEmi
-         wUFXAupioJzzD/fL7xgVwzFoTwjBOnQ152iibMl/I7mJ4ZcdeObC9oJ91U9ubys0WH5J
-         MR11fRP6KI1Uvm5J0Lj+y+oyuUHby25Zzgn2pudgxShAyOaJ5mKlR/4Uy2sXjI/0Gem5
-         3KrB5Q5QpMvzK+UOxeTwXkhLT0aMQHLRUzhTjP/74I8rE1nUL7gJNdEQ6WRM1TnT5Geq
-         IuV3qN3+kzkl4Ni/136b3B+VIyEgPO7mN7YUuCX21Q/ttDeyo5dKxZtnhN9n7fN0ezN/
-         Sdjg==
-X-Gm-Message-State: AOJu0YxSpzt0tdMc5OfG0nsUI1GLak1udjFle/K2ewGR8Eby9ZUhpXSD
-        yGp5p66H9orRhl+EIzVVTuJcs5ThEnJQTA9xRqF9tHIC5Lih4JzR6Rqv6TJ/pjTxP5ucHCQw7+A
-        Vk7UcUkRDE6w+JOGQt42T
-X-Received: by 2002:ad4:5911:0:b0:66a:d2d2:59b6 with SMTP id ez17-20020ad45911000000b0066ad2d259b6mr93449qvb.5.1699643768669;
-        Fri, 10 Nov 2023 11:16:08 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFi1+TSOIQnmNjS0gFPLLySwN8wyJkIMgU/AagS1/+hxuZ+LJtxfrdJv5Rn17oTFgSYMv2bag==
-X-Received: by 2002:ad4:5911:0:b0:66a:d2d2:59b6 with SMTP id ez17-20020ad45911000000b0066ad2d259b6mr93433qvb.5.1699643768416;
-        Fri, 10 Nov 2023 11:16:08 -0800 (PST)
-Received: from pstanner-thinkpadt14sgen1.remote.csb ([2001:9e8:32e5:ff00:227b:d2ff:fe26:2a7a])
-        by smtp.gmail.com with ESMTPSA id e11-20020a056214162b00b0066d0621bb67sm50370qvw.114.2023.11.10.11.16.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Nov 2023 11:16:08 -0800 (PST)
-Message-ID: <5c547e6de1e6c206a46197c8f46583e0bc5f4395.camel@redhat.com>
-Subject: Re: Implementation details of PCI Managed (devres) Functions
-From:   Philipp Stanner <pstanner@redhat.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tejun Heo <htejun@gmail.com>, dakr@redhat.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>, jeff@garzik.org,
-        Al Viro <viro@zeniv.linux.org.uk>
-Date:   Fri, 10 Nov 2023 20:16:05 +0100
-In-Reply-To: <ZU0qYBfFzsF3e8S9@slm.duckdns.org>
-References: <84be1049e41283cf8a110267646320af9ffe59fe.camel@redhat.com>
-         <1e964a74ca51e9e28202a47af22917e468050039.camel@redhat.com>
-         <ZU0qYBfFzsF3e8S9@slm.duckdns.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        d=1e100.net; s=20230601; t=1699647496; x=1700252296;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=877Jy/m/x7YTL71XvyVEIgFecU2le8H27gTqlL68z1s=;
+        b=vb4MaCfbcluhubl/DornffigbkyHp9rcvLlEY1NQs3ryhyqYsDubfEEC+abD1SUxX9
+         1mPbjgGJkyJYE3vNF2maV0NIxWBCsGlaNO6+Xb4ix0egXJnwKsgR5J8zKEfCmiJFF32p
+         eQr6L+V0G7CqT14O1VMj2+lwzfWvtenc6kyaM+FVEsqP/qXpMvztAYrSw52q2ssH8UAy
+         r6zJpzAXDdRdqavCH3Ka07LRy7ZY4cTV/ec8Y2fs5iSGq4/5mxkLYxnYMKnvLTq/BPEX
+         Rssul28PkSJTkT+hTtn4Z3lN0U8REDu7oejEzdk6JxDIBWVoHbUQEkhhdJKXdvi1cX5K
+         QAFA==
+X-Gm-Message-State: AOJu0Ywj0cuiv9IlLrrhmjbuPqnX3wTNRBqxUWnHUtmt55bHpX7aoO7f
+        Vrj4z8B4gkeOgdEeUIbgm2E60NFLURv6gfevedZX2g==
+X-Google-Smtp-Source: AGHT+IEO9V/aWQa9tt+0EYZe660iwSHni17qHUC17C4mXYALyl4jslI+Qsz3hgxZj8VK15Ff1lY1bw==
+X-Received: by 2002:a17:90b:1c11:b0:280:85a:b425 with SMTP id oc17-20020a17090b1c1100b00280085ab425mr44811pjb.49.1699647496283;
+        Fri, 10 Nov 2023 12:18:16 -0800 (PST)
+Received: from dns-msemi-midplane-0.sjc.aristanetworks.com ([74.123.28.18])
+        by smtp.gmail.com with ESMTPSA id fz10-20020a17090b024a00b00268b439a0cbsm141491pjb.23.2023.11.10.12.18.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 Nov 2023 12:18:15 -0800 (PST)
+From:   Daniel Stodden <dns@arista.com>
+To:     Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH 0/1] switchtec: Fix stdev_release crash after suprise device loss.
+Date:   Fri, 10 Nov 2023 12:18:13 -0800
+Message-ID: <20231110201814.88997-1-dns@arista.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Tejun,
+Hello.
 
-On Thu, 2023-11-09 at 08:52 -1000, Tejun Heo wrote:
-> Hello, Philipp.
->=20
-> On Wed, Nov 08, 2023 at 10:02:29PM +0100, Philipp Stanner wrote:
-> ...
-> > That struct keeps track of the requested BARs. That's why there can
-> > only be one mapping per BAR, because that table is statically
-> > allocated
-> > and is indexed with the bar-number.
-> > pcim_iomap_table() now only ever returns the table with the
-> > pointers to
-> > the BARs. Adding tables to that struct that keep track of which
-> > mappings exist in which bars would be a bit tricky and require
-> > probably
-> > an API change for everyone who currently uses pcim_iomap_table(),
-> > and
-> > that's more than 100 C-files.
-> >=20
-> > So, it seems that a concern back in 2007 was to keep things simple
-> > and
-> > skip the more complex data structures necessary for keeping track
-> > of
-> > the various mappings within a bar.
->=20
-> It was so long ago that I don't remember much but I do remember
-> taking a
-> shortcut there for convenience / simplicity. I'm sure it's already
-> clear but
-> there's no deeper reason, so if you wanna put in the work to make it
-> consistent, that'd be great.
->=20
+Sorry for sending the same set twice in a row, but I found a
+typo in yesterday's recipients list.
 
-Alright, it's good to know that there seems to be no functional or
-semantic reason or something behind it.
+Here goes a small shell script to crash a kernel in switchtec.ko's
+stdev_release.
 
-I'll think it through. Maybe we can design something clever
+--snip--
+#!/bin/bash -x
+# open cdev
+exec 3<>/dev/switchtec0
+# remove pdev
+addr=$(basename $(realpath /sys/class/switchtec/switchtec0/../..))
+echo 1 > /sys/bus/pci/devices/$addr/remove
+# close cdev
+exec 3>&-
+--snip--
 
-P.
+It worked on v5.10. I believe it has been working ever since. The
+problem is that keeping the stdev pinned past the pci_driver removal
+will defer the mrpc dma shutdown until way after devres_release_all,
+which unmapped stdev->mmio_mrpc. Also, stdev->pdev would be a stale
+pointer by then.
 
+Followed-up with a humble proposal how to fix it.
 
-> Thanks.
->=20
+Thanks,
+Daniel
+
+Daniel Stodden (1):
+  switchtec: Fix stdev_release crash after suprise device loss.
+
+ drivers/pci/switch/switchtec.c | 29 +++++++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 8 deletions(-)
+
+-- 
+2.41.0
 
