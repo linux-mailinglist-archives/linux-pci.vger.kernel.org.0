@@ -2,103 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9786F7E815B
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Nov 2023 19:27:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96AE17E807B
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Nov 2023 19:12:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345471AbjKJS13 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Nov 2023 13:27:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36072 "EHLO
+        id S1344907AbjKJSMX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Nov 2023 13:12:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346523AbjKJS04 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Nov 2023 13:26:56 -0500
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8BB7D0BE;
-        Fri, 10 Nov 2023 01:23:27 -0800 (PST)
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AA9DJHD019415;
-        Fri, 10 Nov 2023 09:22:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=HznTsQNl47/GQCrKjB/UG3RtaDQ6QdkoTZ2WIS6q3HA=;
- b=sgmKbhIMOjGnIze4wT/YBq4hk8KJotdGY/Eh4G72tNuNZKNW4Wx8q1Nrmxf+rPeyU/S/
- 4x90FWCue82TNGraPd2rBczxw+rOLPUp/8wpVB6Cs1FpNfeD+H22/XzNkv68k6i7ltNK
- nJXpsjt626Xro8OXMsDR53mvx2nQgttEljiWjSnvAL9wYTX6sBKzfth2slrjmgW/QwtI
- w5j3SWmFLBug1T8b8xCQkLUfCRKdriVA8UIlNoUN59vdsn68W5Qem73gbVU83sFK3nqP
- 1EMPCEDCaaM/SxlxKIt8T6bMEFfK/oCGO9R6EXDfKpvY7PYmtNro0+1slGBWRtgIyDoe LQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u9h71s7q0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Nov 2023 09:22:52 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AA9DW8S021570;
-        Fri, 10 Nov 2023 09:22:52 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u9h71s7pv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Nov 2023 09:22:52 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AA74s4i004132;
-        Fri, 10 Nov 2023 09:22:51 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3u7w219vjb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Nov 2023 09:22:51 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AA9MmQn28639904
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Nov 2023 09:22:48 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87BF420043;
-        Fri, 10 Nov 2023 09:22:48 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6FF5A20040;
-        Fri, 10 Nov 2023 09:22:47 +0000 (GMT)
-Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.171.21.196])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with SMTP;
-        Fri, 10 Nov 2023 09:22:47 +0000 (GMT)
-Date:   Fri, 10 Nov 2023 10:22:45 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Petr Tesarik <petr.tesarik1@huawei-partners.com>
-Cc:     Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Ross Lagerwall <ross.lagerwall@citrix.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <iommu@lists.linux.dev>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: Memory corruption with CONFIG_SWIOTLB_DYNAMIC=y
-Message-ID: <20231110102245.6ac971b9.pasic@linux.ibm.com>
-In-Reply-To: <7a4f87c3-b3c6-42c5-9200-8eb56d1c8530@huawei-partners.com>
-References: <104a8c8fedffd1ff8a2890983e2ec1c26bff6810.camel@linux.ibm.com>
-        <20231103195949.0af884d0@meshulam.tesarici.cz>
-        <20231108115207.791a30d8.pasic@linux.ibm.com>
-        <41c0baf6-ba4d-4876-b692-279307265466@huawei-partners.com>
-        <20231108153230.6491acaa.pasic@linux.ibm.com>
-        <7a4f87c3-b3c6-42c5-9200-8eb56d1c8530@huawei-partners.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        with ESMTP id S1345701AbjKJSLT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Nov 2023 13:11:19 -0500
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 786E32FEF1
+        for <linux-pci@vger.kernel.org>; Fri, 10 Nov 2023 03:35:35 -0800 (PST)
+Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-6c4eb5fda3cso213528b3a.2
+        for <linux-pci@vger.kernel.org>; Fri, 10 Nov 2023 03:35:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=google; t=1699616135; x=1700220935; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=C1IYhuhVSdfYuyJAuKx2vgmdG+BrUDQ8aS8yHc+1o4A=;
+        b=cdTxP94uM2SUNXGilj/OuvA03SGQeWQql2o13biIBoUMWdb7peaUnHUyNzunGn+Zgv
+         jIhDWPK1YB5NnILbb9IrRvcUWCk6CQTeeyiFv5DvTPl4YpoRSxIie47473xLwE5eJgDX
+         crW5XmsDafGBMe9x2aa5IkNWcHWl+HYV4kBF93dJTHo9lb9QocVuaa6udcSWufaB1iFV
+         Cyo8Pll1+OisaP7UHZctODF6IMePriO+8IK2+SQkWpn1YH+UE7kK8bDpM+VgG4Rnfk+n
+         8HqYBpGMAqc291pga+vpI6dM/XeWe6E84wbZVmEgLbbXNYCPf+ZktZTkLBVC4XvJImwp
+         FU6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699616135; x=1700220935;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C1IYhuhVSdfYuyJAuKx2vgmdG+BrUDQ8aS8yHc+1o4A=;
+        b=G1T7o7Z58++Mi8P6UQDSblyBncjvM222GUIeZJ2gb0bpMVRIRQzO91xvzBS1lLmhGu
+         E+8g6qjo6FCE0CVxCEk0vNza7sl5CRtw51Ui7H8+zTefHQWW9RiWFsUlRMknMF2yXZT8
+         zodzuB3268AMaKeArLWf635iFl7B01L+U1VLn4qBrMENd4L7rcgxtdCVHETj1VeGbuqf
+         tElH2wJw0QopV2CIyQHphVdWHWSvhFVkRNV98pbI/MyO7QbBfCx7ltjXJ5UCuStBv5IT
+         +NOz5bGRNgR9xckGBJGWZ6MHx+kHwaSPqWhQgUm0R2qdLZaWYLhG5MNpBzR/dH1O+wre
+         lTFg==
+X-Gm-Message-State: AOJu0YyHMBLKzUAu6JMBGCT1o5VHf4nr+/HEqjkp2rrqEKPiggRpYjeJ
+        4dmcwV5sheSiHOnA+n+AyjzUY7NL9Dj+oR7LY8l6qg==
+X-Google-Smtp-Source: AGHT+IGQ2WpJqljcLWnVsfgBmOLpEtUYUsX5fxP4jNAbTYVQyoUgWXdMZaF8tVwHrVKLl6Xc9zfPew==
+X-Received: by 2002:a05:6a00:888:b0:6be:319:446b with SMTP id q8-20020a056a00088800b006be0319446bmr9246458pfj.21.1699616134765;
+        Fri, 10 Nov 2023 03:35:34 -0800 (PST)
+Received: from dns-msemi-midplane-0.sjc.aristanetworks.com ([74.123.28.12])
+        by smtp.gmail.com with ESMTPSA id z16-20020aa78890000000b006bdd7cbcf98sm12309574pfe.182.2023.11.10.03.35.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 Nov 2023 03:35:34 -0800 (PST)
+From:   Daniel Stodden <dns@arista.com>
+To:     Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deo2ltatee.com>,
+        linux-pci@vger.kernel.org
+Cc:     Daniel Stodden <dns@arista.com>
+Subject: [PATCH 0/1] switchtec: Fix stdev_release crash after suprise device loss.
+Date:   Fri, 10 Nov 2023 03:35:11 -0800
+Message-ID: <20231110113512.83254-1-dns@arista.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: oOuHQySkKhSqp4kaUhZWxxdqq2tOxfSE
-X-Proofpoint-ORIG-GUID: IIwt0OJc9stJoXlryv475MX4u7tTtuFY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-10_05,2023-11-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 mlxscore=0 malwarescore=0
- clxscore=1015 spamscore=0 phishscore=0 mlxlogscore=999 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311100075
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -106,59 +69,39 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 8 Nov 2023 15:45:49 +0100
-Petr Tesarik <petr.tesarik1@huawei-partners.com> wrote:
+Hello.
 
-> On 11/8/2023 3:32 PM, Halil Pasic wrote:
-> > On Wed, 8 Nov 2023 12:04:12 +0100
-> > Petr Tesarik <petr.tesarik1@huawei-partners.com> wrote:
-> > [..]  
-> >>>
-> >>> For the sake of simplicity let us assume we only have the min_align_mask
-> >>> requirement. Then I believe the worst case is that we need 
-> >>> (orig_addr & min_align_mask & PAGE_MASK)  + (min_align_mask & ~PAGE_MASK)
-> >>> extra space to fit.
-> >>>
-> >>> Depending on how the semantics pan out one may be able to replace
-> >>> min_align_mask with combined_mask.
-> >>>
-> >>> Is your point that for large combined_mask values 
-> >>> _get_free_pages(GFP_NOWAIT | __GFP_NOWARN, required_order) is not
-> >>> likely to complete successfully?    
-> >>
-> >> Yes, that's the reason. OTOH it's probably worth a try. The point is
-> >> that mapping a DMA buffer is allowed to fail, so callers should be
-> >> prepared anyway.
-> >>
-> >> And for the case you reported initially, I don't think there is any need
-> >> to preserve bit 11 (0x800) from the original buffer's physical address,
-> >> which is enough to fix it. See also my other email earlier today.  
-> > 
-> > Hm. Do you mean "[PATCH 1/1] swiotlb: fix out-of-bounds TLB allocations
-> > with CONFIG_SWIOTLB_DYNAMIC" or a different one?
-> > 
-> > I only see "[PATCH 1/1] swiotlb: fix out-of-bounds TLB allocations
-> > with CONFIG_SWIOTLB_DYNAMIC" but I don't think that one takes
-> > care of "I don't think there is any need to preserve bit 11 (0x800)
-> > from the original buffer's physical address".  
-> 
-> Yes, I mean only this patch. I want to fix memory corruption fast, while
-> waiting for more feedback on my understanding of the alignment masks.
-> What I'm trying to say is that your specific use case may not even need
-> a bigger allocation if the page alignment should be interpreted differently.
-> 
-> Again, thank you for your in-depth inspection, because it's not totally
-> clear how the various alignment parameters should be interpreted. It's
-> difficult to write correct code then...
+Here goes a small shell script to crash a kernel in switchtec.ko's
+stdev_release.
 
-I fully understand. Thanks for tackling this. We decided to go with a bug
-report and not with a fix because of the very same reasons: lack of
-clarity on how certain things are supposed to work. Let us see how
-the discussion develops. :)
+--snip--
+#!/bin/bash -x
+# open cdev
+exec 3<>/dev/switchtec0
+# remove pdev
+addr=$(basename $(realpath /sys/class/switchtec/switchtec0/../..))
+echo 1 > /sys/bus/pci/devices/$addr/remove
+# close cdev
+exec 3>&-
+--snip--
 
-Regards,
-Halil
+It worked on v5.10. I believe it has been working ever since. The
+problem is that keeping the stdev pinned past the pci_driver removal
+will defer the mrpc dma shutdown until way after devres_release_all,
+which unmapped stdev->mmio_mrpc. Also, stdev->pdev would be a stale
+pointer by then.
 
-> 
-> Petr T
+Followed-up with a humble proposal how to fix it.
+
+Thanks,
+Daniel
+
+Daniel Stodden (1):
+  switchtec: Fix stdev_release crash after suprise device loss.
+
+ drivers/pci/switch/switchtec.c | 29 +++++++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 8 deletions(-)
+
+-- 
+2.41.0
 
