@@ -2,58 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7655B7E8395
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Nov 2023 21:18:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA9FD7E839A
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Nov 2023 21:19:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbjKJUSV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Nov 2023 15:18:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53700 "EHLO
+        id S229437AbjKJUTY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Nov 2023 15:19:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjKJUSV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Nov 2023 15:18:21 -0500
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC888A9
-        for <linux-pci@vger.kernel.org>; Fri, 10 Nov 2023 12:18:16 -0800 (PST)
-Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-5b8f68ba4e5so1850219a12.1
-        for <linux-pci@vger.kernel.org>; Fri, 10 Nov 2023 12:18:16 -0800 (PST)
+        with ESMTP id S229584AbjKJUTX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Nov 2023 15:19:23 -0500
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1E3B3868
+        for <linux-pci@vger.kernel.org>; Fri, 10 Nov 2023 12:19:19 -0800 (PST)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-6c431b91b2aso2241766b3a.1
+        for <linux-pci@vger.kernel.org>; Fri, 10 Nov 2023 12:19:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=google; t=1699647496; x=1700252296; darn=vger.kernel.org;
+        d=arista.com; s=google; t=1699647559; x=1700252359; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:from:to:cc:subject:date:message-id:reply-to;
         bh=877Jy/m/x7YTL71XvyVEIgFecU2le8H27gTqlL68z1s=;
-        b=PrLK3DmdiQFPhQRKwqCEFloq+lqM0OCQPYvYZmgjfI5VRCYZdYDHvZu+bcQNkudQGZ
-         BNMOdfz+Xdt34wv4k1Q/o+5WMnZ/96d5sfZmwLQTGDQttIB38kzwduxqChdhh2uiEjaV
-         C/cskMq0g6u6Z9Dw0dJpDuwkYMa+ohokM6UosNhGZfeCzrv0EhH0NkH2XPBAh1zRiduf
-         Ihj5cQDOYJ3tRLzNU+iA3mK0944NTrA6P4Edkkcx/4zoYHeXFFfLmHYFMWxxGZ7gG6Sw
-         +7WDYZioYFGZhy57Yb5ZQLNpDdr8GodhXgGkknpfVJfv8oSPy4fLBxsQP0F+095zHItK
-         o+tw==
+        b=NkgkDU3seAfKr/V0kP6mJa5uInvjcrgZmE4Mk68HqMMXmdNiqVZk/QFeXDd3Y+L3WV
+         hjDfHBIOcz1Vo8Vdw8nE2VijTXIgf/UZlBNVpOVBECfdIp8DefHkVlUSJdkmWizhOzIq
+         yedNleppZ7dUhK9RSeS9ruVP/iQ4xgE2vvDO9qEQZPV5750xYwQytSR1PYjE1kEsI4jp
+         GHPMRixhegOaD4umBxR3ylKmZC9Nk7vbY54dvCWRUbztiCHsvjdH/8euJWqpHkr5DcP3
+         7SkE39TPY6/SnjleTegnrHxb+b1DpedGHH+xibHkmWeR+BfgvfEoOQJnf1pRcNdtmDuY
+         OcfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699647496; x=1700252296;
+        d=1e100.net; s=20230601; t=1699647559; x=1700252359;
         h=content-transfer-encoding:mime-version:message-id:date:subject:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
         bh=877Jy/m/x7YTL71XvyVEIgFecU2le8H27gTqlL68z1s=;
-        b=vb4MaCfbcluhubl/DornffigbkyHp9rcvLlEY1NQs3ryhyqYsDubfEEC+abD1SUxX9
-         1mPbjgGJkyJYE3vNF2maV0NIxWBCsGlaNO6+Xb4ix0egXJnwKsgR5J8zKEfCmiJFF32p
-         eQr6L+V0G7CqT14O1VMj2+lwzfWvtenc6kyaM+FVEsqP/qXpMvztAYrSw52q2ssH8UAy
-         r6zJpzAXDdRdqavCH3Ka07LRy7ZY4cTV/ec8Y2fs5iSGq4/5mxkLYxnYMKnvLTq/BPEX
-         Rssul28PkSJTkT+hTtn4Z3lN0U8REDu7oejEzdk6JxDIBWVoHbUQEkhhdJKXdvi1cX5K
-         QAFA==
-X-Gm-Message-State: AOJu0Ywj0cuiv9IlLrrhmjbuPqnX3wTNRBqxUWnHUtmt55bHpX7aoO7f
-        Vrj4z8B4gkeOgdEeUIbgm2E60NFLURv6gfevedZX2g==
-X-Google-Smtp-Source: AGHT+IEO9V/aWQa9tt+0EYZe660iwSHni17qHUC17C4mXYALyl4jslI+Qsz3hgxZj8VK15Ff1lY1bw==
-X-Received: by 2002:a17:90b:1c11:b0:280:85a:b425 with SMTP id oc17-20020a17090b1c1100b00280085ab425mr44811pjb.49.1699647496283;
-        Fri, 10 Nov 2023 12:18:16 -0800 (PST)
+        b=kosh5SbrPksfZI5SzBx/vXNf3Sr4A3IXMIqcFdOPrkluI7Cz6h/gs3PnbyiHKazUp0
+         iKGGUtICCghJoKwKZ3t+DGT27wGOFCzTJEtrwp7e+qW+Ho35fTrnTSxu/T7HjR3X7+0O
+         BVjJ+nx/ip6XRDPpOsWuh5gnAoTJ0784qPjUTrg25IljHdzLa47RkbnofaokGRe9bxJ5
+         PpIVAHRGXHS4tV9T7qzwg450sik9LR3pMoD2GdZIUyf4LKM3M6E7+xZRn4hzM7fvl5lT
+         fatImssuJMfhyfhcTPPQoTtIUkvNrCXzAaMzd4wYNK/4XKWMnquyA0umoiY/xsU3wgxe
+         YCUg==
+X-Gm-Message-State: AOJu0YyVsBL0eU2rihPOs/bRJs117rYQWPpl0/TYWiWScPHXHGUlrgjq
+        4xCKkgLUhXyIPvZxIk350S9p8g==
+X-Google-Smtp-Source: AGHT+IE4WzPmieDM4u/N3m65nKNDE4dqzgam6uVwSewTue5dHg2teH6g5IxWJljPuNEU6LLjeAKXBQ==
+X-Received: by 2002:a05:6a20:7487:b0:181:1fc8:c5de with SMTP id p7-20020a056a20748700b001811fc8c5demr215814pzd.43.1699647559148;
+        Fri, 10 Nov 2023 12:19:19 -0800 (PST)
 Received: from dns-msemi-midplane-0.sjc.aristanetworks.com ([74.123.28.18])
-        by smtp.gmail.com with ESMTPSA id fz10-20020a17090b024a00b00268b439a0cbsm141491pjb.23.2023.11.10.12.18.15
+        by smtp.gmail.com with ESMTPSA id s18-20020a056a00195200b006c3328c9911sm109547pfk.93.2023.11.10.12.19.18
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 Nov 2023 12:18:15 -0800 (PST)
+        Fri, 10 Nov 2023 12:19:18 -0800 (PST)
 From:   Daniel Stodden <dns@arista.com>
 To:     Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
         Logan Gunthorpe <logang@deltatee.com>,
         linux-pci@vger.kernel.org
-Subject: [PATCH 0/1] switchtec: Fix stdev_release crash after suprise device loss.
-Date:   Fri, 10 Nov 2023 12:18:13 -0800
-Message-ID: <20231110201814.88997-1-dns@arista.com>
+Subject: [PATCH v2 0/1] switchtec: Fix stdev_release crash after suprise device loss.
+Date:   Fri, 10 Nov 2023 12:19:16 -0800
+Message-ID: <20231110201917.89016-1-dns@arista.com>
 X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
