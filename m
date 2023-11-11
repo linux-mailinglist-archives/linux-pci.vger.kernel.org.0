@@ -2,75 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 145C07E86B0
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Nov 2023 00:50:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EF297E8813
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Nov 2023 03:07:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229908AbjKJXuO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Nov 2023 18:50:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34098 "EHLO
+        id S229905AbjKKCHs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Nov 2023 21:07:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229700AbjKJXuN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Nov 2023 18:50:13 -0500
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E6D23C39
-        for <linux-pci@vger.kernel.org>; Fri, 10 Nov 2023 15:50:11 -0800 (PST)
-Received: by mail-pg1-x531.google.com with SMTP id 41be03b00d2f7-5bd306f86a8so2043952a12.0
-        for <linux-pci@vger.kernel.org>; Fri, 10 Nov 2023 15:50:11 -0800 (PST)
+        with ESMTP id S229462AbjKKCHr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Nov 2023 21:07:47 -0500
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D5F83C0E;
+        Fri, 10 Nov 2023 18:07:43 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6bb4abb8100so2380803b3a.2;
+        Fri, 10 Nov 2023 18:07:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=google; t=1699660210; x=1700265010; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1699668462; x=1700273262; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hZYhPiKUGI3usn76HYsWDt0VbRfi/1VVQFT0yJkbIqI=;
-        b=OhyPp+4GBUd/OkB7LLMQx1IvC/MZS8GDRDS+uSjKjKu2s2vzps9sR0bSqVfbf9/mLi
-         yJiAnk3a/OyCAqj+PyVJ0ZauWrj70j2yVlCsC4O6pm2jn8XAhH2DH9q91+JMFguI/w2D
-         MXIuzLseQqiOZ9vYEVdtStqiU4b/Pxty8fthXDL8LfwB+z6EFwiDdzPU0o1oUboH47OM
-         qiTmwQ1su2s5+pCBXwBGKe5lAj5PSbxkXt/aOCSr1dbheScGLhPOLzlSnyUW6mb+IEQt
-         rmaVC0wEm7fSB/7AzJRWMQPbXEsrG976w3kZ/3EE2YckDIbedv2lnQ5SqKsLjM3zueP8
-         OByg==
+        bh=us4PH3hYSKV8M14QXIBOyvA+4JqUtwc0XH3JtG4nmDY=;
+        b=H2SACKIh/aE8QyI9hmjRYgDpTcn2jhbedsoYWNKoryJo5gw9y7qRdGpdtzhyqtnT7Z
+         IyaivMsC/o5jYmUFamrLMj9RntR/nwl0g8dafIeGJTDW1dg07ALue77KOXLepq+enGS/
+         46tLvitQ3NET2vdPyIV9R5noUpnuWGcuaKZFdOLL/A6ZVNgLawVy4M7OTyxSymo48bNO
+         HambX9i5EFqNPBzmShFNds6UgrMK1QOYi+0O1wvZdNrMiLyN3/KUQzJbTENNA1dIR3Pk
+         sLNfBM82Q/cDLg4xKsWzYCoMR8jLVOchb6lHHLHwP7it+gpT9+Y2FpIlCv+CcExXeIRc
+         MOmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699660210; x=1700265010;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hZYhPiKUGI3usn76HYsWDt0VbRfi/1VVQFT0yJkbIqI=;
-        b=jjfNF6WjhI7Dsudn4dkINEfAe4kIBJ75+FzMPP/st6uCfmcnDqg4rTomryvkZNcBM8
-         ySQGtnZxjhYHvtqNEcBqRRdn5DJnWGL7WimmrMExMUN5veVLUZSGRdoSULg0WbtMp7Ua
-         BSQXRvR6def3Rbr1a4mCDyWI9hHnP655rcgphm99Ub/d32qm+zKNpFGh5qCksKnnuUB9
-         QPzLB4NU8hQjhBZt+sxCJxOQN6HuTOboV3JFojMfrYfmys280zOh6Xd9aNKPoyrhgiRZ
-         wS2rzNIciXrGHpFgjyfWHZe4BiyHhwnPhFB/v9sg8lZv4nM+aE+QfoLK8FZ3dftBPKU8
-         Cpzg==
-X-Gm-Message-State: AOJu0YxL9mlHOiHqNhW935A3ooQaIZdvu6q/R5U0Zy6QamNpZn3w4Ym5
-        qk6wU2nmc+dVxRGx5pK0557FoFYkNX1WUvtOhlFtPQ==
-X-Google-Smtp-Source: AGHT+IF4i/hXkWPjIYKaZct7WSGds1eDliBiNONPp0IQJ+jqzg06E5lFp+uL9tuEMfwjJIQCBcuDlg==
-X-Received: by 2002:a05:6a20:1588:b0:13d:5b8e:db83 with SMTP id h8-20020a056a20158800b0013d5b8edb83mr695762pzj.9.1699660210541;
-        Fri, 10 Nov 2023 15:50:10 -0800 (PST)
-Received: from smtpclient.apple (76-10-188-40.dsl.teksavvy.com. [76.10.188.40])
-        by smtp.gmail.com with ESMTPSA id ng4-20020a17090b1a8400b002635db431a0sm284840pjb.45.2023.11.10.15.50.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 Nov 2023 15:50:10 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: Re: [PATCH v2 1/1] switchtec: Fix stdev_release crash after suprise
- device loss.
-From:   Daniel Stodden <dns@arista.com>
-In-Reply-To: <3916e092-201a-401c-b6f9-e3a5732308b0@deltatee.com>
-Date:   Fri, 10 Nov 2023 15:49:57 -0800
-Cc:     Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        linux-pci@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2CB550C8-71A9-4A49-8320-8C63DD89FB4E@arista.com>
-References: <20231110201917.89016-1-dns@arista.com>
- <20231110201917.89016-2-dns@arista.com>
- <dc15dc87-d199-4295-96b4-b972f4965bd5@deltatee.com>
- <531029E9-0321-4E5A-8C65-3378B8DCB5E2@arista.com>
- <3916e092-201a-401c-b6f9-e3a5732308b0@deltatee.com>
-To:     Logan Gunthorpe <logang@deltatee.com>
-X-Mailer: Apple Mail (2.3731.700.6)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        d=1e100.net; s=20230601; t=1699668462; x=1700273262;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=us4PH3hYSKV8M14QXIBOyvA+4JqUtwc0XH3JtG4nmDY=;
+        b=P3pAzLvZOpeLxQh1oPV5tCz10xk/ZcK6+p1XPqbHMSICLemiCMoao0Fn93PwvSljmH
+         tjFsMNIqa+73RiZuFPzZote0LUUHJzU/pYFtXtZS8/kmgo83fIPYQjn3/RPy3fcM03jE
+         di23VitBv5Eu+qCedPXRgS5DssTX9yqAtCntMxo+PTXY9YA961PaNu50GmizlzC1X2w3
+         18XvVDFf61EYsOCH7JI7yNpqe1tacImlH4kwsLNq4KWyWOdwTq8eoMHrJ+5AnthPbMWH
+         Gik916q8RqHs9OnMEeupN7x7U8sC/pig4zFqCZDF+RZc6NmAN7jElCXn9bpnQ85mjdht
+         1vWQ==
+X-Gm-Message-State: AOJu0Yw/tHvbPAotgeLg+64ZdE3AKl9yrM+SdGSmFxycEjAa73UqYBjY
+        /AIBS52Bc/9wmLOlW2no107JkTRlazE60A==
+X-Google-Smtp-Source: AGHT+IHNBBW3BK8jyaoUi7xXcxcZdBpSdb0qc7l3zTckarw97gd+X2tbBj1Oc1EwReuZ3Rk530zP9g==
+X-Received: by 2002:a05:6a20:ce83:b0:131:b3fa:eaaa with SMTP id if3-20020a056a20ce8300b00131b3faeaaamr588855pzb.61.1699668462452;
+        Fri, 10 Nov 2023 18:07:42 -0800 (PST)
+Received: from [192.168.0.106] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id 13-20020a170902c20d00b001a9b29b6759sm308895pll.183.2023.11.10.18.07.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Nov 2023 18:07:41 -0800 (PST)
+Message-ID: <60585667-70ca-4ace-8d8f-dbdd8d4428a6@gmail.com>
+Date:   Sat, 11 Nov 2023 09:07:35 +0700
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Wireless <linux-wireless@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PowerPC <linuxppc-dev@lists.ozlabs.org>
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jian-Hong Pan <jhp@endlessos.org>
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: The PCIe AER error flood between PCIe bridge and Realtek's
+ RTL8723BE makes system hang
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,81 +78,75 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
 
-I don=E2=80=99t mind all.
+I notice a bug report on Bugzilla [1]. Quoting from it:
 
-I=E2=80=99ll remove disable_dma_mrpc(). That will make things about the =
-size as the old stdev_release() again.
-It=E2=80=99s pretty gratuitous.
+> We have an ASUS X555UQ laptop equipped with Intel i7-6500U CPU and Realtek RTL8723BE PCIe Wireless adapter.
+> 
+> We tested it with kernel 6.6.  System keeps showing AER error message flood, even hangs up, until rtl8723be's ASPM is disabled.
+> 
+> kernel: pcieport 0000:00:1c.5: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
+> kernel: pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask=00000001/00002000
+> kernel: pcieport 0000:00:1c.5:    [ 0] RxErr                  (First)
+> kernel: pcieport 0000:00:1c.5: AER: Corrected error received: 0000:00:1c.5
+> kernel: pcieport 0000:00:1c.5: AER: can't find device of ID00e5
+> kernel: pcieport 0000:00:1c.5: AER: Corrected error received: 0000:00:1c.5
+> kernel: pcieport 0000:00:1c.5: AER: can't find device of ID00e5
+> kernel: pcieport 0000:00:1c.5: AER: Multiple Corrected error received: 0000:00:1c.5
+> kernel: pcieport 0000:00:1c.5: AER: can't find device of ID00e5
+> 
+> Here is the PCI tree:
+> $ lspci -tv
+> -[0000:00]-+-00.0  Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Host Bridge/DRAM Registers
+>            +-02.0  Intel Corporation Skylake GT2 [HD Graphics 520]
+>            +-04.0  Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem
+>            +-14.0  Intel Corporation Sunrise Point-LP USB 3.0 xHCI Controller
+>            +-14.2  Intel Corporation Sunrise Point-LP Thermal subsystem
+>            +-15.0  Intel Corporation Sunrise Point-LP Serial IO I2C Controller #0
+>            +-15.1  Intel Corporation Sunrise Point-LP Serial IO I2C Controller #1
+>            +-16.0  Intel Corporation Sunrise Point-LP CSME HECI #1
+>            +-17.0  Intel Corporation Sunrise Point-LP SATA Controller [AHCI mode]
+>            +-1c.0-[01]----00.0  NVIDIA Corporation GM108M [GeForce 940MX]
+>            +-1c.4-[02]----00.0  Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller
+>            +-1c.5-[03]----00.0  Realtek Semiconductor Co., Ltd. RTL8723BE PCIe Wireless Network Adapter
+>            +-1f.0  Intel Corporation Sunrise Point-LP LPC Controller
+>            +-1f.2  Intel Corporation Sunrise Point-LP PMC
+>            +-1f.3  Intel Corporation Sunrise Point-LP HD Audio
+>            \-1f.4  Intel Corporation Sunrise Point-LP SMBus
 
-I=E2=80=99ll keep switchtec_exit_pci(), because it helps =
-switchtec_pci_remove to remain a carefully ordered
-sequence of one-liners.
+And then the reporter found that it was ASPM bug:
 
-I looked a little more through the code, and noticed that the two =
-non-delayed work structs,
-mrpc_work and mrpc_timeout, are not cancelled in stdev_kill(). We seem =
-to stop the ISR which schedules them,=20
-but do not stop the bh before teardown.=20
+> Notice a long time ago discussion mail: Dmesg filled with "AER: Corrected error received" [1]
+> 
+> So, I force write 1 to clear Receiver Error Status bit of Correctable Error Status Register, like
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 9c8fd69ae5ad..39faedd2ec8e 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1141,8 +1160,9 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+>                         e_info.multi_error_valid = 0;
+>                 aer_print_port_info(pdev, &e_info);
+>  
+> -               if (find_source_device(pdev, &e_info))
+> -                       aer_process_err_devices(&e_info);
+> +               //if (find_source_device(pdev, &e_info))
+> +               //      aer_process_err_devices(&e_info);
+> +               pci_write_config_dword(pdev, pdev->aer_cap + PCI_ERR_COR_STATUS, 0x1);
+>         }
+>  
+>         if (e_src->status & PCI_ERR_ROOT_UNCOR_RCV) {
+> 
+> Then, system should clear the error right away.  However, system still get the AER flood ...
+> 
+> Seems that we still have to disable rtl8723be's ASPM.
 
-And these handlers do not recognize stdev->alive (ok, they should not, =
-because they do not hold a strong reference to stdev.)
+See Bugzilla for the full thread and attached full kernel logs.
 
-So there=E2=80=99s probably more coming soon-ish. Just mentioning it in =
-case I get hit by a piano until then.
+Thanks.
 
-Cheers,
-Daniel
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=218127
 
-> On Nov 10, 2023, at 2:49 PM, Logan Gunthorpe <logang@deltatee.com> =
-wrote:
->=20
->=20
->=20
-> On 2023-11-10 14:30, Daniel Stodden wrote:
->>=20
->> Hi.
->>=20
->> [Sorry, sending this twice, again, hoping this time it won't bounce, =
-because html]
->>=20
->>> Nice catch, thanks!
->>>=20
->>> The solution looks good to me, though I might quibble slightly about
->>> style: I'm not sure why we need two helper functions =
-(disable_dma_mrpc()
->>> and switchtec_exit_pci()) that are only called in one place. I'd
->>> probably just open code both of them.
->>>=20
->>> Other than that:
->>>=20
->>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
->>=20
->> I'm fine with it either way. I added those mainly because of the =
-enable_dma_mrpc/switctec_init_pci
->> counterparts were already there. And likewise single-use, as would be =
-usual.
->>=20
->> So the subroutines would maintain symmetry between probe() and =
-remove().
->>=20
->> So.. just don't add the new remove()-relevant ones? (One alternative =
-would be to send another change right after,
->> which goes after single-use pairs altogether.)
->=20
-> Ah, I see. Just because it's single use doesn't necessarily mean it's
-> wrong. I would say switchtec_init_pci() should not be inlined because
-> it's rather long and keeps switchtec_pci_probe() a little more =
-readable.
->=20
-> enable_dma_mrpc() more questionable. I'm not sure why it was done that
-> way. Perhaps something changed.
->=20
-> In any case, I'm not all that concerned. If you want to leave it the =
-way
-> it is, I wouldn't mind.
->=20
-> Thanks,
->=20
-> Logan
-
+-- 
+An old man doll... just what I always wanted! - Clara
