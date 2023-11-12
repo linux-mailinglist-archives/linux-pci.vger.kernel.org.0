@@ -2,98 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96C7B7E8F08
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Nov 2023 08:44:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0B197E9219
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Nov 2023 19:46:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230222AbjKLHoo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 12 Nov 2023 02:44:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55408 "EHLO
+        id S229754AbjKLSqL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 12 Nov 2023 13:46:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230318AbjKLHon (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 Nov 2023 02:44:43 -0500
-X-Greylist: delayed 450 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 11 Nov 2023 23:44:40 PST
-Received: from smtp.smtpout.orange.fr (smtp-28.smtpout.orange.fr [80.12.242.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BD9C830C2
-        for <linux-pci@vger.kernel.org>; Sat, 11 Nov 2023 23:44:40 -0800 (PST)
-Received: from pop-os.home ([86.243.2.178])
-        by smtp.orange.fr with ESMTPA
-        id 251irZ6wGaq2K251irxRYF; Sun, 12 Nov 2023 08:37:08 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-        s=t20230301; t=1699774628;
-        bh=+SExa3iRH7Ca8gW1D0XoaD0vtMK+3bmRILeHnVgGh+c=;
-        h=From:To:Cc:Subject:Date;
-        b=cOrQyt1SjHP/RA29twkYAzgtIAizHd/5aONl/TDF4wKEAiQLlJW8wk4YLPbY/PD0F
-         hHxsH2xuh4KI061eHKfdIJi5FCxG4jNSQYbXuf7azREDC+9FhdsiiSUpOwEMw3GvZS
-         5L9I+mhhID8YdVaS2ztTjyWJSO92FgoDkz2E1LwblGAHTpK90yJ4mioJFMN/Onc0Xw
-         aKZ2IXs8U755U7xLpmWa4MQGaXSCXmaRCt1Vbx7ZuhFz+NoP15doZ2V4Ze93i6fkib
-         cWp1rrzEsq+K5okptKbt63zHh3aG4EMDteovYnnGEyPt9ycwMFSJ/46lpv/rLRXMiL
-         hWgg4Fos297QA==
-X-ME-Helo: pop-os.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 12 Nov 2023 08:37:08 +0100
-X-ME-IP: 86.243.2.178
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     Xiaowei Song <songxiaowei@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
+        with ESMTP id S231906AbjKLSqL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 Nov 2023 13:46:11 -0500
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C26842D46
+        for <linux-pci@vger.kernel.org>; Sun, 12 Nov 2023 10:46:07 -0800 (PST)
+Received: by mail-yb1-xb2e.google.com with SMTP id 3f1490d57ef6-da37522a363so3769520276.0
+        for <linux-pci@vger.kernel.org>; Sun, 12 Nov 2023 10:46:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1699814767; x=1700419567; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=K0UezdLYD5scNL5kYSvTIK/LGcnTqVfERy2ExLqUR88=;
+        b=VCKr8s05r+s7F1MKoBjoD9X5Yju/zxitaUofUYbxEcZRUVgOW5BfpPbmegldxh6aUv
+         U0HdQ4gEfBsJ4rb7HgTCfT+Kp948hd+DZIun+JuZ4CBlFJXP0iDV19GWcH+juCKOX1z4
+         wnuXMsKM+Du/f4T7Qwti/Jk4C2EDFBYgW6ZioMx0fuskJBDIqHYcVA2ceilM7WTYRSnG
+         l/S+5GoC0Rkj+5NzXUltr1HzbsC0lVlkehEODlkdnOomVpQCF0mH0D9WMZ0+7QqsfJ8Z
+         2kOdHBp2KVc/vCQ5JflzJ48q3QkyUwVJQKP9w9uN8ddnoIilwW64BmOCVnSQgAtH/IMA
+         ISTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699814767; x=1700419567;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K0UezdLYD5scNL5kYSvTIK/LGcnTqVfERy2ExLqUR88=;
+        b=iMRZlLqvbveSW+oFojnBVihOnOfcoiXU0EDMgB2V9KYze0hFfdXhe71QJqVDGaJSuV
+         c+hSrTu8uPSp1m5nb2FEGF4swC2fv17FK1kue/UIlax3PDir5+VOF8xQt+6hTmZ7GTjx
+         x/nyZkfyi9UxUYa2VYfWYWnq4Hl5bxrA+Yv0lc25BIVKpzaHHLkfR8LiVBUBqoxcEuyY
+         SuxHf4KJiE1IJ5dLyWojar2UnFcT0JzuuWG5MfbyxMPVEMj+zM1fEubRj8+AabFJaYRy
+         LLrIytjHrDGY5+zdxqZf0xF2AY4xhIBDv07Isie5bV+w74lWf8YvdMqBWtrZCmVk3pV+
+         cekQ==
+X-Gm-Message-State: AOJu0YxjZU30ykkBwqG5BAaSrZPEVkx4THx57ooxwZPO889tVs3RmqG+
+        GX3LJ4UdW1kCC3LPRhkx5gelYg==
+X-Google-Smtp-Source: AGHT+IGzMDV42Dc+z6kVlgJlDpbc3rB95mpnZwob8pQsfQOsfIb2nXUi2vL3ixJhYc5tnfaiJtoJ4A==
+X-Received: by 2002:a25:33c6:0:b0:daf:6259:43d8 with SMTP id z189-20020a2533c6000000b00daf625943d8mr2987278ybz.36.1699814766920;
+        Sun, 12 Nov 2023 10:46:06 -0800 (PST)
+Received: from krzk-bin.. ([12.161.6.170])
+        by smtp.gmail.com with ESMTPSA id o17-20020a258d91000000b00d995a8b956csm1104185ybl.51.2023.11.12.10.46.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Nov 2023 10:46:06 -0800 (PST)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: kirin: Use devm_kasprintf()
-Date:   Sun, 12 Nov 2023 08:37:01 +0100
-Message-Id: <085fc5ac70fc8d73d5da197967e76d18f2ab5208.1699774592.git.christophe.jaillet@wanadoo.fr>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/2] dt-bindings: PCI: qcom: adjust iommu-map for different SoC
+Date:   Sun, 12 Nov 2023 19:45:56 +0100
+Message-Id: <20231112184557.3801-1-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use devm_kasprintf() instead of hand writing it.
-This saves the need of an intermediate buffer.
+The PCIe controller on SDX55 has five entries in its iommu-map, MSM8998
+has one and SDM845 has sixteen, so allow wider number of items to fix
+dtbs_check warnings like:
 
-There was also no reason to use the _const() version of devm_kstrdup().
-The string was known be not constant.
+  qcom-sdx55-mtp.dtb: pcie@1c00000: iommu-map: [[0, 21, 512, 1], [256, 21, 513, 1],
+    [512, 21, 514, 1], [768, 21, 515, 1], [1024, 21, 516, 1]] is too long
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/pci/controller/dwc/pcie-kirin.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-index 2ee146767971..d9e3514de0a0 100644
---- a/drivers/pci/controller/dwc/pcie-kirin.c
-+++ b/drivers/pci/controller/dwc/pcie-kirin.c
-@@ -366,7 +366,6 @@ static int kirin_pcie_get_gpio_enable(struct kirin_pcie *pcie,
- 				      struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	char name[32];
- 	int ret, i;
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+index 8bfae8eb79a3..14d25e8a18e4 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+@@ -62,7 +62,8 @@ properties:
+     maxItems: 8
  
- 	/* This is an optional property */
-@@ -387,9 +386,8 @@ static int kirin_pcie_get_gpio_enable(struct kirin_pcie *pcie,
- 		if (pcie->gpio_id_clkreq[i] < 0)
- 			return pcie->gpio_id_clkreq[i];
+   iommu-map:
+-    maxItems: 2
++    minItems: 1
++    maxItems: 16
  
--		sprintf(name, "pcie_clkreq_%d", i);
--		pcie->clkreq_names[i] = devm_kstrdup_const(dev, name,
--							    GFP_KERNEL);
-+		pcie->clkreq_names[i] = devm_kasprintf(dev, GFP_KERNEL,
-+						       "pcie_clkreq_%d", i);
- 		if (!pcie->clkreq_names[i])
- 			return -ENOMEM;
- 	}
+   # Common definitions for clocks, clock-names and reset.
+   # Platform constraints are described later.
 -- 
 2.34.1
 
