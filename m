@@ -2,298 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4420E7E96C2
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Nov 2023 07:46:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95E9D7E98F4
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Nov 2023 10:30:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231511AbjKMGqx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Nov 2023 01:46:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58924 "EHLO
+        id S233283AbjKMJa2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Nov 2023 04:30:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229645AbjKMGqw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Nov 2023 01:46:52 -0500
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2050.outbound.protection.outlook.com [40.107.237.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65C4B10E0;
-        Sun, 12 Nov 2023 22:46:48 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L+2rgOO11qmayggvZS6S7MiRli8/jcCBCh8Hx3uqjD4wnKp0pmqumW8goBKixEflRA42ietdZmnsmvyaniCjlWOG1xXhcSzrsLMNPs8/83AFAqt2TMAJaZ3EyphFwsjoZ+YKThFmAutlNrNH7S6KodtY+f3Ll2+ZVsbpJVgHjcXsUVTYQxM7gkxobiOy7xtyCnLCKdVFTApL5QS/Qx0gpG/HNHc/29w92R5bquXwYH31y6A0qNrQn4jAbQwp6FzG4nbyXh5gS6P5O6rn32L4cFkEbzvxGVoNz8BzzVQrhFR8yYzc7YQj73qP0mEflpcniLyf8neb175iZZAYGg4ElQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8nCovrP4yoHyhw4r/Bbz/PvMX/YL7YyoEmjnxyMVABQ=;
- b=YXkCQm99KXV5VzmrVObi1w0OfAJI1jg5AdjJEmwiIUk2uj+aQmQY5SBuNb2PB/l5Yf/iC3cP6p9NrF2LC8/fRpvs58kU0GDH7r3YNeUdm8hkun5l6k/IKf3V6mZV5VsRWE6MwlBEtHemlsEwhyFxu4J4fxjB6BziIDv4Frz0/8KZ08YWL2rS+TBjuR88aYfsIuo/hv95/PAVfH8iVVpe3ApQATNolnAVbObl7jgFc8iWryWYmJ1nk3xb/ARFaORo1dJeBfcKj5V8ORM3GdJIKGC+kIjdTTf3Gmm/5HJ4UgxO7XsLv+Vd2xwg3T0jOJP8VXSYIe+hLYcbdRvAvdrXxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8nCovrP4yoHyhw4r/Bbz/PvMX/YL7YyoEmjnxyMVABQ=;
- b=y4KkQhnqglrYgEobcZ7hu8lNjW50EYNao48R62P4M3Aa05OAmU5lF1baCvxzcLQd9z4IEqiEjoPnNTij4zWcPVlwmcc3HA0OMwYiW0itlZxhb2krXuXkqsLVFpoJQI1zu1pYrlTdTkt/Dd9TtrE5b/iIveYkSvbTlE+LOva7Izo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by DM3PR12MB9349.namprd12.prod.outlook.com (2603:10b6:0:49::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.29; Mon, 13 Nov
- 2023 06:46:44 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::3112:5f54:2e51:cf89]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::3112:5f54:2e51:cf89%5]) with mapi id 15.20.6977.029; Mon, 13 Nov 2023
- 06:46:44 +0000
-Message-ID: <58a60211-1edc-4238-b4a3-fe7faf3b6458@amd.com>
-Date:   Mon, 13 Nov 2023 17:46:35 +1100
-User-Agent: Mozilla Thunderbird
-Subject: Re: TDISP enablement
-Content-Language: en-US
-To:     Samuel Ortiz <sameo@rivosinc.com>
-Cc:     linux-coco@lists.linux.dev, kvm@vger.kernel.org,
+        with ESMTP id S233278AbjKMJa2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Nov 2023 04:30:28 -0500
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5560310D0;
+        Mon, 13 Nov 2023 01:30:24 -0800 (PST)
+Received: by mail-lj1-x229.google.com with SMTP id 38308e7fff4ca-2c72e275d96so57179801fa.2;
+        Mon, 13 Nov 2023 01:30:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699867822; x=1700472622; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BFLwO1MEkjZNVx3zv0RItJg/q41xvxnn7YY3auNWQXc=;
+        b=Yp02YClFC1vwh1xEUISqcbYUKKAHN5WGdDK0zEbZOcLQl/Gd3DD3ivfOAR5UxF/yNj
+         /Vv/2YGMUISE8a/EQwn7fR+2uRO9bs5sR5FVKMu8eolyGnhV9BAy2ykyun16PBqjpW9W
+         3l8o5c42vK73aqyQ61cYloXdoHiUL1+nO298NZm0R/Mc01C/BHC/Y0DiHHz9httXvPqm
+         gl+kN1ZBL8SHAMfhAigo1rm8npdJ30RbTBwdVN4VKcd4sans3+CTd1tFGRdSkvi/4m26
+         PFEffKfVM9GnZlJRFA8qDdqo4710fGjUw6QZKxmOEU4ettVXSHVpyIJDiJA8qJYcWBO7
+         RPDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699867822; x=1700472622;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BFLwO1MEkjZNVx3zv0RItJg/q41xvxnn7YY3auNWQXc=;
+        b=ZPc1ssmFK4gLa12iEyTSly5Q2YpKhFGrM2sdcOdH9wjc5u5E4iOkE33wn2QIEnBbqZ
+         kmSrsYjakDgoWer+ShrfkTZkDl0EJJI0DolEViji7yXu//gxHv+mdQCQYJunqkgQshw9
+         oAzZ64VGORDC6vhmKptePOzIvLs0mOCLscNrVslcw5pbWC8LXB/jXUNno01P1CLE4jPN
+         YIlTprkPfU1y7w0351B3uJZUcfnN0pKWfMmD4KbWqq7RWG47okdyyUMMBQHoVjU4BwBs
+         c3g2H9Ht/hcjC4rzBlbP/Fv+BwVmwQONoapJDWdgMB96ow5hnuF/nMfjcKjpEHld97K1
+         8bxg==
+X-Gm-Message-State: AOJu0YwgHUEJYAzt+P5KtQxvKhurFhwUM00NMtJludJDzPXc6Srwm7lC
+        Lr3xTbKFAPi6Gl6obcMlGj2glg2uZ7w=
+X-Google-Smtp-Source: AGHT+IFO1L5y4VCYchUO/+Ru5DQJLpUskWOSpOWPlKQgLGuKmBaWcFPS1HVVv7QSvPdjU/uY5cEqXg==
+X-Received: by 2002:a2e:a4db:0:b0:2bd:1f83:8d4 with SMTP id p27-20020a2ea4db000000b002bd1f8308d4mr4074045ljm.22.1699867822192;
+        Mon, 13 Nov 2023 01:30:22 -0800 (PST)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id t4-20020a2e9d04000000b002bf7fd1d336sm923551lji.14.2023.11.13.01.30.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Nov 2023 01:30:21 -0800 (PST)
+Date:   Mon, 13 Nov 2023 12:30:18 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
         linux-pci@vger.kernel.org
-References: <e05eafd8-04b3-4953-8bca-dc321c1a60b9@amd.com>
- <ZVG3fREeTQqvHLb/@vermeer>
-From:   Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <ZVG3fREeTQqvHLb/@vermeer>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0234.namprd04.prod.outlook.com
- (2603:10b6:806:127::29) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+Subject: Re: [PATCH] PCI: kirin: Use devm_kasprintf()
+Message-ID: <nx24ea6ur7mbhrmb46cwf3hrierz3qryzqhq6a6eo5ynem477g@fju4d4zmt4mz>
+References: <085fc5ac70fc8d73d5da197967e76d18f2ab5208.1699774592.git.christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|DM3PR12MB9349:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5f03b612-627d-4d57-a65f-08dbe4144c41
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: OmRwcsA0DIhZ2qXATSqgUN/8/oTDq1hmif3SZ5Oy+IqtlnDUP3cm7Xu5Fo7ZRh9T0vD6gdOLmEspypmn8Rjqld9Q7IkJyU4EZjC9JISVCJi9S7IKki3cMIXGOfJ/uIbpD719ONQeFhDJT0zLEMw4DWU/rpi4Im7JqcwQ3/1akwDBHcE3z3KFXDHndp5S6P20Hh58DRZfP6FASutYrb5QSbSyCXLLSI+Hf0a/bg6geFhgKAxxH3KNGcySHWSIz2taBPTHxyx4chfhnEtxiRRoXEjGkhq0hbFnnLLYKurJyZOKAHlBZCRaET1yZ+cJ6BWfRhXxxIj2bmJJ4lOLWz4py+4ol0uXjc180rDskW9WIILaVWnioC1dUa3QENx853N0cEU+8qnUUogo+KzNOTWwPaqHwbsQR0ponEoA+aQ3onjyZQc7QrMUGKCVL+ikftsjs/46wSDV2xdOcQAjz/jEJL8Hhqgy6oz6XTivP8NZFjLhhCoQz8QMIzLArEyVqfy+Xubr4o2lTn9EaHGgX3+MaVrtesPnhZiEphxzgCbJ2Q+MOhCjBRnC/ptyeyGoAnsJ9ozobOLzONumZVvsvgWJE35yL2ncuZdn2zD0d90Qldzh2kCkbIto8EOZKKMypmPgpNNgfrj7Cclj0k7naPFi/g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(136003)(39850400004)(366004)(396003)(230922051799003)(1800799009)(64100799003)(186009)(451199024)(26005)(2616005)(6506007)(53546011)(6666004)(6512007)(3480700007)(83380400001)(5660300002)(4326008)(8676002)(8936002)(7116003)(41300700001)(2906002)(966005)(6486002)(478600001)(316002)(6916009)(66476007)(66556008)(66946007)(36756003)(31696002)(38100700002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NVZQMzdMcjJXVEhLK1Z2RHZha0hpT1UwdDdFd09yVzJUOW5Kd21hdWZSNzFJ?=
- =?utf-8?B?T1BhMG83NnNaL1lpZlRLVTdBU2pzTEE4dk54bysxU0lOMHVnWDFKRDY1NlpY?=
- =?utf-8?B?MzlNdUtlN1RDZiswRUF2Z09odDRPT2Q2TzVaQ3BDSk9WT29kM2VrMEdVditD?=
- =?utf-8?B?NlBVd0hGSU14OTBvSXUvbG9YUmdMUjVuNWJQUm1Ob2pQSHpMYWxTTTYwVTRz?=
- =?utf-8?B?WEs3S3dBczYrZDlIdWhDeVpaS0d2MWsveTgvL3NvcSthYnJZR2g1RFVCZjJS?=
- =?utf-8?B?dzJuVk41U0llRHBTdGhqam0yaDF0cFIyc09PQlBWV1FEVWR6VHRIZk41QVQ5?=
- =?utf-8?B?WU1pM0hzZC9tNk9GMEZHaEdsNXhGbTN5MVJMaTlnOWd6ckhCUThUZkROejNT?=
- =?utf-8?B?N016b2o5N1Jqelo3Qkd3WGxjLzh1NDV0R2xBQ2VkSEZXemN1TzJHV1pIQkQz?=
- =?utf-8?B?cG84NWdHTEo2WlFBdUVRY0ZKSFJSSmhxbXd5Nlc5bEJXZys5bkxmL0Z5Y2ZX?=
- =?utf-8?B?alFwQ21uYmtxcFRSbElZRXR1NzQ4S29MamYzcG5POXJZTGl6M1NWUkFYQlht?=
- =?utf-8?B?bE5wODVrWXFEMmQ5MzAvSlpMRmpNQnZKNjU1dm13ZjBHY0dNUnlzV1krMkJo?=
- =?utf-8?B?WjZwR0NGZTNkQnVUc08ySGMrVTVPNGkyMitCS2o0TmRRc1QvNnQxV1Y5Q1FR?=
- =?utf-8?B?eFNJTHdLQjA0T0c5VjdOU0FwT0R0TjJDTXliUGc3dnRuajQyazNJSTZMRDJQ?=
- =?utf-8?B?Mm9WeDZlOFBXL2t1K0NRaXd5NjY2ajNOeXZ0OWVHdnpGaE14LytFQWFrc3ZW?=
- =?utf-8?B?WXhkS0F5Ny95MGMvZUNSNTlkUUhVNWV6OHFqVTM1Wk5hZXQwdGpvY1ZhSzRC?=
- =?utf-8?B?ckJYakpiRWxJQkhvRWU1RTJoVEk1V1c4S2VVd255N1cvVkttQWpGZ1N0V1Ny?=
- =?utf-8?B?VDl5djI0WndlSmNiSHZjclRqVTk1RjFrMzJoVU9udDVtUGE0Y1h2cjc1dU9Q?=
- =?utf-8?B?SWh2Y0dGdXphSTVnRU5FamkrVmdpMzVYUk1HdkZrNTYyQU53UEYxMWtUWWlY?=
- =?utf-8?B?LzJaR1NoWUZQQWJhWG94YnY3ZHh4SklHem41ZWRzREpEMVJYV2IzWVVmdDhx?=
- =?utf-8?B?dTZLd3k5eUIxQnM1UGsrTGhLMHFGMjlnNGw2TGRFQTlFdXBYVjhWTW5jYjVh?=
- =?utf-8?B?OWNGRHdHaHArdTFTVmFJcmlPN3FmbGljU1VMTzdjU0JMZjJqUHNBU3IyMVFU?=
- =?utf-8?B?T3hpVDRITXdlMHZ1WCtOMVJvOGZ1RHJKUHkvdzNPUFJpYVEwRGhFUU5pUEdF?=
- =?utf-8?B?ZDZFb3Z5RjVwQ0lXZDdUQ0FjSmJMQ1pYUTdaWkVXTkVETzgvMGVxUExVSTZl?=
- =?utf-8?B?T1lhMmt2Q05qSDFpV1FsUkVJUTZRVXJ3cXRRVThJS2dISURpWk40SFlyNk9D?=
- =?utf-8?B?WCt5Z2hwYXNxbDVFa0V4YmNZMmg4cGVJbGtlbTFwTkR3eGRTZ1V4cmJySDZQ?=
- =?utf-8?B?ZXFiOWF2eVh4MHdXWmpTVlhPT0ptc3dYVU5JTzZ0WEs1alN1Y3ltY0hGSEFO?=
- =?utf-8?B?UE1QK3JBbm14N0JOQUpkc0Nrck5KL1MxMGhnR052bnFuWldpTllaQ3RmVVdE?=
- =?utf-8?B?ZzJkQnJLY04raFNONGNIaVNxSGZBV1dBTHYzTG9WUlljM1lTQW9YWjdlemxG?=
- =?utf-8?B?T01ORTVEWGRuWTQzcTlEaUpjT0hyam9rcVBROERLYmtiV1JaNytlUmV3L09D?=
- =?utf-8?B?M2ZZaVZvWnUzMTVBRjNSRjUyMHhrTndLejJQdW9CdXpNR09FWnp6aitkZmp2?=
- =?utf-8?B?bzdiVk5Pdmk1dktwSjZhM3hYUlpFcStENFE4NVRQeXJBQksweE9YUWV3ZWNv?=
- =?utf-8?B?dStPTmpvMU8wQzBoa3J6ZGxYQzk2OGR3ZWFodDJNNS9EbDAzZnl0c1dyVU1w?=
- =?utf-8?B?TXFtbXYzdnBEZVNxNE4rSFpDeXphUUhXdC9rUCsyMjFMVzZNUDJjRU5WcFNH?=
- =?utf-8?B?V1FCQzJqVGRFbEZKNVp3aldCZ2svZ1daR0pleHpVUllVMEZKLzExb2RIdzVv?=
- =?utf-8?B?YXptZ1ZrSDM1VWxUZnVoT1MrQVQ5QVVxaHNvMjU2QnVYd2l0NEdjQUlOd0Vk?=
- =?utf-8?Q?6PeCxs0/IMpd/y1dUpL/zzTkv?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f03b612-627d-4d57-a65f-08dbe4144c41
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2023 06:46:43.7596
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xn2cgJQiW7OEJzGGgnrYbujKK+g8JgzKFG+E1YCNviqNvoDq/WqM4uxitxIoM+m1L1+66teEDNKL07EuyoIfCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9349
-X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <085fc5ac70fc8d73d5da197967e76d18f2ab5208.1699774592.git.christophe.jaillet@wanadoo.fr>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-On 13/11/23 16:43, Samuel Ortiz wrote:
-> Hi Alexey,
+On Sun, Nov 12, 2023 at 08:37:01AM +0100, Christophe JAILLET wrote:
+> Use devm_kasprintf() instead of hand writing it.
+> This saves the need of an intermediate buffer.
 > 
-> On Wed, Nov 01, 2023 at 09:56:11AM +1100, Alexey Kardashevskiy wrote:
->> Hi everyone,
->>
->> Here is followup after the Dan's community call we had weeks ago.
->>
->> Our (AMD) goal at the moment is TDISP to pass through SRIOV VFs to
->> confidential VMs without trusting the HV and with enabled IDE (encryption)
->> and IOMMU (performance, compared to current SWIOTLB). I am aware of other
->> uses and vendors and I spend hours unsuccessfully trying to generalize all
->> this in a meaningful way.
->>
->> The AMD SEV TIO verbs can be simplified as:
->>
->> - device_connect - starts CMA/SPDM session, returns measurements/certs, runs
->> IDE_KM to program the keys;
->> - device_reclaim - undo the connect;
->> - tdi_bind - transition the TDI to TDISP's LOCKED and RUN states, generates
->> interface report;
+> There was also no reason to use the _const() version of devm_kstrdup().
+> The string was known be not constant.
 > 
->  From a VF to TVM use case, I think tdi_bind should only transition to
-> LOCKED, but not RUN. RUN should only be reached once the TVM approves
-> the device, and afaiu this is a host call.
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-What is the point in separating these? What is that thing which requires 
-the device to be in LOCKED but not RUN state (besides the obvious 
-START_INTERFACE_REQUEST)?
+Neat cleanup. Thanks!
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 
->> - tdi_unbind - undo the bind;
->> - tdi_info - read measurements/certs/interface report;
->> - tdi_validate - unlock TDI's MMIO and IOMMU (or invalidate, depends on the
->> parameters).
+-Serge(y)
+
+> ---
+>  drivers/pci/controller/dwc/pcie-kirin.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> That's equivalent to the TVM accepting the TDI, and this should
-> transition the TDI from LOCKED to RUN.
-
-Even if the device was in RUN, it would not work until the validation is 
-done == RMP+IOMMU are updated by the TSM. This may be different for 
-other architectures though, dunno. RMP == reverse map table, an SEV SNP 
-thing used for verifying memory accesses.
-
-
->> The first 4 called by the host OS, the last two by the TVM ("Trusted VM").
->> These are implemented in the AMD PSP (platform processor).
->> There are CMA/SPDM, IDE_KV, TDISP in use.
->>
->> Now, my strawman code does this on the host (I simplified a bit):
->> - after PCI discovery but before probing: walk through all TDISP-capable
->> (TEE-IO in PCIe caps) endpoint devices and call device_connect;
+> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+> index 2ee146767971..d9e3514de0a0 100644
+> --- a/drivers/pci/controller/dwc/pcie-kirin.c
+> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
+> @@ -366,7 +366,6 @@ static int kirin_pcie_get_gpio_enable(struct kirin_pcie *pcie,
+>  				      struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> -	char name[32];
+>  	int ret, i;
+>  
+>  	/* This is an optional property */
+> @@ -387,9 +386,8 @@ static int kirin_pcie_get_gpio_enable(struct kirin_pcie *pcie,
+>  		if (pcie->gpio_id_clkreq[i] < 0)
+>  			return pcie->gpio_id_clkreq[i];
+>  
+> -		sprintf(name, "pcie_clkreq_%d", i);
+> -		pcie->clkreq_names[i] = devm_kstrdup_const(dev, name,
+> -							    GFP_KERNEL);
+> +		pcie->clkreq_names[i] = devm_kasprintf(dev, GFP_KERNEL,
+> +						       "pcie_clkreq_%d", i);
+>  		if (!pcie->clkreq_names[i])
+>  			return -ENOMEM;
+>  	}
+> -- 
+> 2.34.1
 > 
-> Would the host call device_connect unconditionally for all TEE-IO device
-> probed on the host? Wouldn't you want to do so only before the first
-> tdi_bind for a TDI that belongs to the physical device?
-
-
-Well, in the SEV TIO, device_connect enables IDE which has value for the 
-host on its own.
-
-
->> - when drivers probe - it is all set up and the device measurements are
->> visible to the driver;
->> - when constructing a TVM, tdi_bind is called;
-> 
-> Here as well, the tdi_bind could be asynchronous to e.g. support hot
-> plugging TDIs into TVMs.
-
-
-I do not really see a huge difference between starting a VM with already 
-bound TDISP device or hotplugging a device - either way the host calls 
-tdi_bind and it does not really care about what the guest is doing at 
-that moment and when the guest sees a TDISP device - it is always bound.
-
->> and then in the TVM:
->> - after PCI discovery but before probing: walk through all TDIs (which will
->> have TEE IO bit set) and call tdi_info, verify the report, if ok - call
->> tdi_validate;
-> 
-> By verify you mean verify the reported MMIO ranges? With support from
-> the TSM?
-
-The tdi_validate call to the PSP FW (==TSM) asks the PSP to validate the 
-MMIO values and enable them in the RMP.
-
-> We discussed that a few times, but the device measurements and
-> attestation report should also be attested, i.e. run against a relying
-> party. The kernel may not be the right place for that, and I'm proposing
-> for the guest kernel to rely on a user space component and offload the
-> attestation part to it. This userspace component would then
-> synchronously return to the guest kernel with an attestation result.
-
-What bothers me here is that the userspace works when PCI is probed so 
-when the userspace is called for attestation - the device is up and 
-running and hosting the rootfs. The userspace will need a knob which 
-transitions the device into the trusted state (switch SWIOTLB to direct 
-DMA, for example). I guess if the userspace is initramdisk, it could 
-still reload the driver which is not doing useful work just yet...
-
-
->> - when drivers probe - it is all set up and the driver decides if/which DMA
->> mode to use (SWIOTLB or direct), or panic().
->>
-> 
-> When would it panic?
-
-When attestation failed.
-
->> Uff. Too long already. Sorry. Now, go to the problems:
->>
->> If the user wants only CMA/SPDM,
-> 
-> By user here, you mean the user controlling the host? Or the TVM
-> user/owner? I assume the former.
-
-Yes, the physical host owner.
-
->> the Lukas'es patched will do that without
->> the PSP. This may co-exist with the AMD PSP (if the endpoint allows multiple
->> sessions).
->>
->> If the user wants only IDE, the AMD PSP's device_connect needs to be called
->> and the host OS does not get to know the IDE keys. Other vendors allow
->> programming IDE keys to the RC on the baremetal, and this also may co-exist
->> with a TSM running outside of Linux - the host still manages trafic classes
->> and streams.
->>
->> If the user wants TDISP for VMs, this assumes the user does not trust the
->> host OS and therefore the TSM (which is trusted) has to do CMA/SPDM and IDE.
->>
->> The TSM code is not Linux and not shared among vendors. CMA/SPDM and IDE
->> seem capable of co-existing, TDISP does not.
-> 
-> Which makes sense, TDISP is not designed to be used outside of the
-> TEE-IO VFs assigned to TVM use case.
-> 
->>
->> However there are common bits.
->> - certificates/measurements/reports blobs: storing, presenting to the
->> userspace (results of device_connect and tdi_bind);
->> - place where we want to authenticate the device and enable IDE
->> (device_connect);
->> - place where we want to bind TDI to a TVM (tdi_bind).
->>
->> I've tried to address this with my (poorly named) drivers/pci/pcie/tdisp.ko
->> and a hack for VFIO PCI device to call tdi_bind.
->>
->> The next steps:
->> - expose blobs via configfs (like Dan did configfs-tsm);
->> - s/tdisp.ko/coco.ko/;
->> - ask the audience - what is missing to make it reusable for other vendors
->> and uses?
-> 
-> The connect-bind-run flow is similar to the one we have defined for
-> RISC-V [1]. There we are defining the TEE-IO flows for RISC-V in
-> details, but nothing there is architectural and could somehow apply to
-> other architectures.
-
-Yeah, it is good one!
-I am still missing the need to have sbi_covg_start_interface() as a 
-separate step though. Thanks,
-
-
-> Cheers,
-> Samuel.
-> 
-> [1] https://github.com/riscv-non-isa/riscv-ap-tee-io/blob/main/specification/07-theory_operations.adoc
-
-
--- 
-Alexey
-
-
