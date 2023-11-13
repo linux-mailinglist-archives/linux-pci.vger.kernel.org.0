@@ -2,75 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5370E7E9CF3
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Nov 2023 14:18:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 361D07E9D41
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Nov 2023 14:35:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230475AbjKMNSy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Nov 2023 08:18:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57838 "EHLO
+        id S231219AbjKMNfY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Nov 2023 08:35:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230389AbjKMNSx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Nov 2023 08:18:53 -0500
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C72C8D6D;
-        Mon, 13 Nov 2023 05:18:49 -0800 (PST)
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5bd85b1939aso2521586a12.2;
-        Mon, 13 Nov 2023 05:18:49 -0800 (PST)
+        with ESMTP id S231215AbjKMNfX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Nov 2023 08:35:23 -0500
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FA151A5
+        for <linux-pci@vger.kernel.org>; Mon, 13 Nov 2023 05:35:19 -0800 (PST)
+Received: by mail-yb1-xb2b.google.com with SMTP id 3f1490d57ef6-d9b9adaf291so4168022276.1
+        for <linux-pci@vger.kernel.org>; Mon, 13 Nov 2023 05:35:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1699882518; x=1700487318; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=WxaBetmt1VHQkxFwpab5NRYOQI6Xx5tYoo4BJzlpyR0=;
+        b=MJvRt5fbADU8RJrP8b9qlxdsPqtT6uMryfJBfliBWtKzmnri5+XoL99zl+lI5KRoVd
+         nHuBsluSpH4VUf7YlouQ3CQCSWMDbGZz1TDUNPY1GWXEtBDQjXXIVj/qHeWasDWsHYoi
+         N2pQfZ1d/oZKsTWMs2lVrW2H5566xhqFCYN0ezQNuwKHvftaKXzJAa5GlofisvdCfCpA
+         wI4y0zRDWRU2tZr8OuTdvIeAKiVZp9voA0cIPpCdCSaW4/U0UrHUIko+nWFNFDt9I8ro
+         8BAxNtND0UqkJgXbM6H7mdT9HXqyTRDd4GAv1xKjUdruj+omORfcGTmnnKwpXub+2BhA
+         V34Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699881529; x=1700486329;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IOlnxYdURNzc3S19TzZzd39YvfCLB1voUOe65YcS7qY=;
-        b=qS2vXcZB4ybYy6qumT5fnRtu4P9QYHExB6fldzU4vuvnOSd0UdU7yzAsSzVuv2elhd
-         vplx/ktfzKkzh5LU9ZNsp7syp1ZcY4xxH/yFzUSmBhTkIUSgg6Q4A0+cKE7fenD7R8Mg
-         3Zd8sEOu+q+dV6WNUXWgSPgiTa0+e4tKCXBQx7M574WC9dtRlg55zurys4xw6DiJuM4U
-         v2Be2L04tzgH/DAz6RtZYTt1RbWLt8S7Nmb3yxOsK3WSElsWm3vDfwIb7D7h5SMDeTah
-         lDopMEDQBIVZ7W7oCRegn522Q2EnzySszcjm4DjQMSbaWrQYZ846ubtCwCMw16nKzxWE
-         nWuA==
-X-Gm-Message-State: AOJu0YwZC8qO4lbbjsUKlBdP6mOGkTqGxDI/EyV/PZLCRQy0Yf95JHTt
-        Z9/G/tEgOkSjyTns+V3Mx40=
-X-Google-Smtp-Source: AGHT+IHMCfixw5bNBz1Dj6MA0FhzNL3vrHsarIlhlyW3PX8qo5TRXyf05wKSf3No7EALGSIr80uDRw==
-X-Received: by 2002:a05:6a20:1612:b0:16b:7602:15b1 with SMTP id l18-20020a056a20161200b0016b760215b1mr4472277pzj.12.1699881529157;
-        Mon, 13 Nov 2023 05:18:49 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id f8-20020a170902684800b001cc46240491sm4116669pln.136.2023.11.13.05.18.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Nov 2023 05:18:48 -0800 (PST)
-Date:   Mon, 13 Nov 2023 22:18:47 +0900
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "mani@kernel.org" <mani@kernel.org>,
-        "minghuan.Lian@nxp.com" <minghuan.Lian@nxp.com>,
-        "mingkai.hu@nxp.com" <mingkai.hu@nxp.com>,
-        "roy.zang@nxp.com" <roy.zang@nxp.com>,
-        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 0/3] PCI: dwc: Improve code readability
-Message-ID: <20231113131847.GA2770646@rocinante>
-References: <20231113013300.2132152-1-yoshihiro.shimoda.uh@renesas.com>
- <20231113100914.GB1583963@rocinante>
- <CAMuHMdVLmmf12KPQch7fT2iGjfDV--M2Wd0zsxSw6wfqYxUggQ@mail.gmail.com>
- <TYBPR01MB53411530E01A90CB525DF814D8B3A@TYBPR01MB5341.jpnprd01.prod.outlook.com>
- <20231113122221.GA2418639@rocinante>
- <CAMuHMdX2D-Ui=6Xt_x_yDAYQYoooP51ZwZTmoASwcUeZTcME4g@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1699882518; x=1700487318;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WxaBetmt1VHQkxFwpab5NRYOQI6Xx5tYoo4BJzlpyR0=;
+        b=upEkVAziX6AMVb76b1W3eBwHG9XqSbcPCfhXt51/+Ebf+k9+mq6oXULkpFRs4qPGa2
+         JkxqPLyIkGxtO1m3eeONIdrsz+VJlaHl6kI1URVogwNK1FvNbyOkzIOlPSZ+ZuPOPHdY
+         Fr7MEQ7sZ7m0HZKBSLClEsppP8jBU7WqWoi14l6NIbbIOleqm0Q8xy2FUtTHHlMHvMR/
+         BX+NowZz1loTDZfcZhn2aluBMcIDR4OOgiVvISgKbHvvTBpcnJICUfBkuVZF43vNjJag
+         ZEXsvANm2OcHKO7+ytXKzjTm4lEd2hHd1MwCl/ZBFH/Xl72Pk3mdofErAHXmetW9I4CH
+         ZfsQ==
+X-Gm-Message-State: AOJu0Yxs0Muf0FXxVQ6z5qiLokIsOJ+5RX/zM25TFYryX1L/8eOJ0k7N
+        oQCYfzGyd4cIgLrQu8QOi3BWiX5MkfnIFRZZlRYCdw==
+X-Google-Smtp-Source: AGHT+IGPu7Rn5TQZs+nbjVZoYL/TJSffa3l5p9Nq+lau/Fo1c7x1h4SnyWxankMCKEl1H6csQ9NB+nxzflMOa4pF/l0=
+X-Received: by 2002:a25:c048:0:b0:da0:69e4:29d5 with SMTP id
+ c69-20020a25c048000000b00da069e429d5mr3641047ybf.43.1699882518441; Mon, 13
+ Nov 2023 05:35:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdX2D-Ui=6Xt_x_yDAYQYoooP51ZwZTmoASwcUeZTcME4g@mail.gmail.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+References: <20231112184557.3801-1-krzysztof.kozlowski@linaro.org> <20231112184557.3801-2-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20231112184557.3801-2-krzysztof.kozlowski@linaro.org>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Mon, 13 Nov 2023 15:35:07 +0200
+Message-ID: <CAA8EJpqGNF=j4Ym-mFGb9XyQkXWd2DWm3MzRKmnQckFkBh1X7w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: PCI: qcom: correct clocks for SC8180x
+ and SM8150
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,36 +77,111 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
+On Sun, 12 Nov 2023 at 20:46, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> PCI node in Qualcomm SC8180x DTS has 8 clocks, while one on SM8150 has 7
+> clocks:
+>
+>   sc8180x-primus.dtb: pci@1c00000: 'oneOf' conditional failed, one must be fixed:
+>     ['pipe', 'aux', 'cfg', 'bus_master', 'bus_slave', 'slave_q2a', 'ref', 'tbu'] is too short
+>
+>   sm8150-hdk.dtb: pci@1c00000: 'oneOf' conditional failed, one must be fixed:
+>     ['pipe', 'aux', 'cfg', 'bus_master', 'bus_slave', 'slave_q2a', 'ref', 'tbu'] is too short
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie.yaml    | 58 ++++++++++++++++++-
+>  1 file changed, 57 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> index 14d25e8a18e4..4c993ea97d7c 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> @@ -479,6 +479,35 @@ allOf:
+>            items:
+>              - const: pci # PCIe core reset
+>
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - qcom,pcie-sc8180x
+> +    then:
+> +      oneOf:
+> +        - properties:
+> +            clocks:
+> +              minItems: 8
+> +              maxItems: 8
+> +            clock-names:
+> +              items:
+> +                - const: pipe # PIPE clock
+> +                - const: aux # Auxiliary clock
+> +                - const: cfg # Configuration clock
+> +                - const: bus_master # Master AXI clock
+> +                - const: bus_slave # Slave AXI clock
+> +                - const: slave_q2a # Slave Q2A clock
+> +                - const: ref # REFERENCE clock
+> +                - const: tbu # PCIe TBU clock
+> +      properties:
+> +        resets:
+> +          maxItems: 1
+> +        reset-names:
+> +          items:
+> +            - const: pci # PCIe core reset
+> +
+>    - if:
+>        properties:
+>          compatible:
+> @@ -527,8 +556,35 @@ allOf:
+>          compatible:
+>            contains:
+>              enum:
+> -              - qcom,pcie-sc8180x
+>                - qcom,pcie-sm8150
+> +    then:
+> +      oneOf:
+> +        - properties:
+> +            clocks:
+> +              minItems: 7
+> +              maxItems: 7
+> +            clock-names:
+> +              items:
+> +                - const: pipe # PIPE clock
+> +                - const: aux # Auxiliary clock
+> +                - const: cfg # Configuration clock
+> +                - const: bus_master # Master AXI clock
+> +                - const: bus_slave # Slave AXI clock
+> +                - const: slave_q2a # Slave Q2A clock
 
-[...]
-> > > I confirmed that the uintptr_t fixed the issue.
-> >
-> > We declined a similar fix in the past[1] ...
-> >
-> > > I also think that adding a new struct with the mode is overkill.
-> >
-> > ... with the hopes that a driver could drop the switch statements in place
-> > of using the other pattern.  Also, to be consistent with other drivers that
-> > do this already.
-> 
-> Note that the issue of casting is something we cannot fix easily:
-> some *_device_id structs use "kernel_ulong_t" for the "data" member,
-> others use "void *".
-> 
-> git grep -W "_device_id" -- include/linux/mod_devicetable.h | grep data
-> 
-> In addition, several drivers use multiple types of device IDs, so you
-> cannot settle on one type to avoid casts.
-> 
-> Also, putting enum values in instances of that struct, as suggested,
-> increases kernel size, for IMHO no additional gain.
+Which actually brings up a question, there is the corresponding clkref
+gcc clock.
+Mani, do you know if we should use it on sm8150?
 
-All good points!  Thank you for taking the time to get back to me.  Appreciated. :)
+> +                - const: tbu # PCIe TBU clock
+> +      properties:
+> +        resets:
+> +          maxItems: 1
+> +        reset-names:
+> +          items:
+> +            - const: pci # PCIe core reset
+> +
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+>                - qcom,pcie-sm8250
+>      then:
+>        oneOf:
+> --
+> 2.34.1
+>
+>
 
-> If there is more data to put in the struct, I agree it makes sense to use
-> a struct.
 
-Yeah.  Perhaps if there is such a need in the future, indeed.
-
-	Krzysztof
+-- 
+With best wishes
+Dmitry
