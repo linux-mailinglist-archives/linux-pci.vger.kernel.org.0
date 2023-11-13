@@ -2,88 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B59B07EA23F
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Nov 2023 18:43:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 40DDB7EA282
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Nov 2023 19:04:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229769AbjKMRnQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Nov 2023 12:43:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34534 "EHLO
+        id S229549AbjKMSED (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Nov 2023 13:04:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231583AbjKMRnQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Nov 2023 12:43:16 -0500
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6711C171A;
-        Mon, 13 Nov 2023 09:43:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=qakUNyCfhZ+dCkJi5eky2DzuNS8lnx39d2dRA/FKlqY=; b=FCC1WEgxXyl6HYa6/ZkNsTP6o1
-        TMBnKFggBpvkjwXsQ14v/5i/zuaVuCeYdkqYUg+ELDAEBmFv05xbj9zJQFbLw28+kcD1EmnoXdZh3
-        /gs9QoWS3fMIYhsMc9SRzNpcaBYeGp71BXxx13Xldv3QLYzlpPeHH9TsQA3x2jMnV8r3Aumjf7Udo
-        0KX3TI6d0zNY9x5l9HpUB/1wENZnkMNiFk8HbR8V/N4JINtt2QqAEuoA4iOc3s964GjFz+yajteOB
-        B2EQpG8pEdVtIng/GIQ+jDyKWamSDrWO2Ro7Qh2nTYKovCbyl4gCaBfyaBkhCxvX0ruW0xSD8ye17
-        1ZJDnx3A==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1r2axn-004mSL-Ha; Mon, 13 Nov 2023 10:43:08 -0700
-Message-ID: <6eb84bc5-dd58-4745-8e99-ccc97c10fb63@deltatee.com>
-Date:   Mon, 13 Nov 2023 10:43:06 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-CA
-To:     Tadeusz Struk <tstruk@gigaio.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-pci@vger.kernel.org,
+        with ESMTP id S229454AbjKMSEC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Nov 2023 13:04:02 -0500
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20944F7;
+        Mon, 13 Nov 2023 10:03:56 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-507adc3381cso6284988e87.3;
+        Mon, 13 Nov 2023 10:03:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699898634; x=1700503434; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4O0q/lzuG/y6HTyakaCBvtK6ZK/WSABJjsotgMFppjk=;
+        b=ACbHE/IGA3UTuZilHmpQDpV3QTnfeJwgumcLo+9/v6XtofQql7PJKH4ORIhIMFRQlg
+         EuyoPr4I61FKWbPAe8Rs4ySlQawcHubk0gAlrirf+x/GG20snMxYAegcQwlaXAq8wl4W
+         8noo3xBdO3Sfrf8/QGCJSL/6BaBeMDTKWTJT6Dhu3lBS43AMZcLI/1KY+zgFCX11ubFk
+         2bcunBhxHpp5uSbFZPYAr7+/X+hj6oH9H8vJatp/WK6SFIPjP7v0CDGsp4Zx/GEVRe7P
+         NoN90tUEmsY7K4BamfTsoTxXGw7vxfxiV9ttvHEt0nw/JxHh70oKG/LPXi7JdpPNkcfD
+         4ifw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699898634; x=1700503434;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4O0q/lzuG/y6HTyakaCBvtK6ZK/WSABJjsotgMFppjk=;
+        b=IIN4m+bvceJGAL4zfiToDPlA99F0MaRzV299KRQ4LoZPKDo2IMrjGHHqQhIMwW+1am
+         NB3Fnp5dDZ/WQhiCdsUXaepBcmK7/8VQyPKPrqm7rCmPLCt22ssLO0c77EjctXupouj1
+         +tOd9lVFB/fvSz/VzdGFA0DzT1Sk3/eMwciEfLNAhGOlmSjK4sZs7MBndyn3y5TPJgJN
+         V94XqMVnoTsB1Q687m+DBhYul+LPkqGOZsJTmhn2CQraSene6BOf2Jk+jGRJxsCpKvOf
+         cTgBm6DglnuPpvRuRqkFqa2LRj/WmEWU8WSgcm3USh+YRabYEZJShVfaJt8S8waOTzfo
+         OyaA==
+X-Gm-Message-State: AOJu0Yzdp0te5EBFTiwM/l9q/ya2KagGUHs4L0MetfKqxPeycBDc7VHy
+        +hGLDBlawDnCAlH3rrFzFIRo+VN+1/RZ8Q==
+X-Google-Smtp-Source: AGHT+IFvxHvtwQFnCbx89TySZ5USbYzzV8ToIEUPQcEA4JAAEGrkRqMEgQWbXpqPN1Gnl9/L56l/mA==
+X-Received: by 2002:a05:6512:3d02:b0:509:31e6:1de5 with SMTP id d2-20020a0565123d0200b0050931e61de5mr6654349lfv.47.1699898634002;
+        Mon, 13 Nov 2023 10:03:54 -0800 (PST)
+Received: from desktop.localdomain ([109.95.114.4])
+        by smtp.gmail.com with ESMTPSA id ko14-20020a170907986e00b009dd701bb916sm4329966ejc.213.2023.11.13.10.03.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Nov 2023 10:03:53 -0800 (PST)
+From:   Tadeusz Struk <tstruk@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Tadeusz Struk <tstruk@gmail.com>, linux-pci@vger.kernel.org,
         linux-doc@vger.kernel.org, stable@kernel.org,
-        Tadeusz Struk <tstruk@gmail.com>
-References: <20231111092239.308767-1-tstruk@gmail.com>
- <8899b3e9-50bd-4356-9c94-d2d8a5256b0b@deltatee.com>
- <777d9449-0207-401b-a239-40110fab2977@gigaio.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <777d9449-0207-401b-a239-40110fab2977@gigaio.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: tstruk@gigaio.com, bhelgaas@google.com, corbet@lwn.net, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, stable@kernel.org, tstruk@gmail.com
-X-SA-Exim-Mail-From: logang@deltatee.com
+        Tadeusz Struk <tstruk@gigaio.com>
+Subject: [PATCH v2] Documentation: PCI/P2PDMA: Remove reference to pci_p2pdma_map_sg()
+Date:   Mon, 13 Nov 2023 19:03:25 +0100
+Message-ID: <20231113180325.444692-1-tstruk@gmail.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <6eb84bc5-dd58-4745-8e99-ccc97c10fb63@deltatee.com>
+References: <6eb84bc5-dd58-4745-8e99-ccc97c10fb63@deltatee.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
-Subject: Re: [PATCH] Documentation: PCI/P2PDMA: Remove reference to
- pci_p2pdma_map_sg()
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: Tadeusz Struk <tstruk@gigaio.com>
 
+Update Documentation/driver-api/pci/p2pdma.rst doc and
+remove references to obsolete p2pdma mapping functions.
 
-On 2023-11-13 10:23, Tadeusz Struk wrote:
-> On 11/13/23 17:44, Logan Gunthorpe wrote:
->> Might make sense to rework this next paragraph as well seeing it
->> references the P2P mapping functions that no longer exist.
->>
->> Thanks for cleaning up the documentation I forgot about!
-> 
-> Ok, I will need to check exactly what was removed when.
-> Currently I'm working with v6.1, and all the other functions are
-> still there in this version.
+Fixes: 0d06132fc84b ("PCI/P2PDMA: Remove pci_p2pdma_[un]map_sg()")
+Cc: stable <stable@kernel.org>
+Signed-off-by: Tadeusz Struk <tstruk@gigaio.com>
+----
 
-The function still exists, but it's talking about using it to decide
-when to use the map functions that are gone. Could probably just drop
-the paragraph.
+v2: Dropped a section that talks about using is_pci_p2pdma_page()
+    function by the client. Suggested by Logan.
+---
+ Documentation/driver-api/pci/p2pdma.rst | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
 
-> The pci_p2pdma_[un]map_sg() functions are gone since v6.0.
-> If you want to take this one, I will follow up with updates that
-> apply to more recent versions.
+diff --git a/Documentation/driver-api/pci/p2pdma.rst b/Documentation/driver-api/pci/p2pdma.rst
+index 44deb52beeb4..44efed79d908 100644
+--- a/Documentation/driver-api/pci/p2pdma.rst
++++ b/Documentation/driver-api/pci/p2pdma.rst
+@@ -83,19 +83,9 @@ this to include other types of resources like doorbells.
+ Client Drivers
+ --------------
+ 
+-A client driver typically only has to conditionally change its DMA map
+-routine to use the mapping function :c:func:`pci_p2pdma_map_sg()` instead
+-of the usual :c:func:`dma_map_sg()` function. Memory mapped in this
+-way does not need to be unmapped.
+-
+-The client may also, optionally, make use of
+-:c:func:`is_pci_p2pdma_page()` to determine when to use the P2P mapping
+-functions and when to use the regular mapping functions. In some
+-situations, it may be more appropriate to use a flag to indicate a
+-given request is P2P memory and map appropriately. It is important to
+-ensure that struct pages that back P2P memory stay out of code that
+-does not have support for them as other code may treat the pages as
+-regular memory which may not be appropriate.
++A client driver only has to use the mapping API :c:func:`dma_map_sg()`
++and :c:func:`dma_unmap_sg()` functions, as usual, and the implementaion
++will do the right thing for the P2P capable memory.
+ 
+ 
+ Orchestrator Drivers
+-- 
+2.41.0
 
-Unfortunately I don't have the time at the moment to look at it.
-
-Logan
