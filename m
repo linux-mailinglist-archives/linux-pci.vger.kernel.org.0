@@ -2,298 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A11C87E9FA0
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Nov 2023 16:10:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8A677EA16E
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Nov 2023 17:44:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231416AbjKMPKt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Nov 2023 10:10:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38292 "EHLO
+        id S229742AbjKMQo1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Nov 2023 11:44:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbjKMPKi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Nov 2023 10:10:38 -0500
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD433D51
-        for <linux-pci@vger.kernel.org>; Mon, 13 Nov 2023 07:10:32 -0800 (PST)
-Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2c509f2c46cso63985481fa.1
-        for <linux-pci@vger.kernel.org>; Mon, 13 Nov 2023 07:10:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1699888231; x=1700493031; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/uSAnzdKJzOwhDCx2lMzCGWjduY9gKbcUUDKOORvU/g=;
-        b=XkWSLSQ972C8Udfo0Zh+xk1dAo6LsgxcJUFKDq9RRKeDVbLJEx2ZKm5AunpgBs04ea
-         cmZ3sYwQlt08vKJYBhv/unC8hUZRuP20Sfyn3QTIVd/pIOukKxgl1xDCwNbc4jbeot3g
-         QT7eujqK6QTkRjduUImrHzro3Qm3X6ysiPOcP7/CL3CPlGQ/DoJMXwDvv2W6BT0RnkEW
-         oyhutXl8nkRIgjU7kGlvGFbDRSA+qe/sRhgHDtgCRZ5NFZxHtagpuq6dz+UfCuItFltE
-         M7/GaS3xLccy+YfnomiN1Ymh272XweSbYrmv5Ec7WpQVtlzSiuauzOXvfgOorFSSSsBQ
-         9VdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699888231; x=1700493031;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/uSAnzdKJzOwhDCx2lMzCGWjduY9gKbcUUDKOORvU/g=;
-        b=JXsbuzysf0fZH5a/g/VPGAAVx20bmaVUEcBsZ1uE5DHjiORhNZO3OPPsCa8JVLbzrX
-         72Ve4sDghi3R7VHGPnO9U+6F0yz4NtUeRivUW61JrVFd3vIp1z7ZdRHYDExm+NSc58l4
-         JKipuPgfmm0TiYNHHQDejCsv1JFE1aCgnrxZ3ul3k/5a+bbjaMXLWUmAd4mXd5bQ5dVw
-         E6Wfb83guc5bWSOUyd1RjTAbznjwQePcC82oVz9qatGKOm4lFaDGVa+sYEKoVt+nY7P6
-         ipea0sbEaRlzVZbU8rSI/p23szDsOyGSMfQECKIA45nbc/1Di+wPYEgJhiv/+C5KM911
-         DqsA==
-X-Gm-Message-State: AOJu0Yxl4ukrR9JqCriY1hy+2TD/KznLhacA5bqwdx5v3A3/tgOrudKG
-        uDbFoUwvZDI3GdFDWNgl33anyA==
-X-Google-Smtp-Source: AGHT+IGgBcGjXkjxchwHTcEYJB7HmtkT5mkr4WqJbwqgxxrauJ5dGMJT9299gyB7itFwPwVEYi8Twg==
-X-Received: by 2002:a2e:90ca:0:b0:2c5:a50b:2f08 with SMTP id o10-20020a2e90ca000000b002c5a50b2f08mr4847663ljg.36.1699888230671;
-        Mon, 13 Nov 2023 07:10:30 -0800 (PST)
-Received: from vermeer ([2a01:cb1d:81a9:dd00:a3fd:7e78:12c3:f74b])
-        by smtp.gmail.com with ESMTPSA id v5-20020a05600c444500b003fefb94ccc9sm8320265wmn.11.2023.11.13.07.10.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Nov 2023 07:10:30 -0800 (PST)
-Date:   Mon, 13 Nov 2023 16:10:27 +0100
-From:   Samuel Ortiz <sameo@rivosinc.com>
-To:     Alexey Kardashevskiy <aik@amd.com>
-Cc:     linux-coco@lists.linux.dev, kvm@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: TDISP enablement
-Message-ID: <ZVI8Y8VICy/SwYy5@vermeer>
-References: <e05eafd8-04b3-4953-8bca-dc321c1a60b9@amd.com>
- <ZVG3fREeTQqvHLb/@vermeer>
- <58a60211-1edc-4238-b4a3-fe7faf3b6458@amd.com>
+        with ESMTP id S229511AbjKMQo1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Nov 2023 11:44:27 -0500
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E5D6F7
+        for <linux-pci@vger.kernel.org>; Mon, 13 Nov 2023 08:44:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=t+X3h0tLlX3yo1+ZHCajOFGkEO92RwMUdz8JyR30B9s=; b=et1rTy4y1DAjVf4BnstsIdBcrt
+        YTaMuGUIREkG1xGWJ3UfzEB7w4wXKVCRmtWy6Dkg71QDQPKuKQcb+8K9km+tH162XM/9N1ZzigkMX
+        qcNoDc/qW4GU1JIAoG7FmDKmZM7sfEBxLrwqoDSKQGL0j+1ayrC4c1mqbXpjfCoGOHIoboaiD+8Hs
+        knUlPYI9C8webgyoNq760t8ttKvUMOBd210mO8H5Zdl8jXIgapUrpwi+N+oYKNVxl/50hWYzturZ5
+        8/UmVU2ewDnryoDuB7HbYwxyQQJGTx3l4s+U2jlt47pm2XvtTFdyssqoT59vuDPoDBDFPTYV6bdUW
+        pCWKJdEw==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1r2a2n-004lUD-6U; Mon, 13 Nov 2023 09:44:14 -0700
+Message-ID: <8899b3e9-50bd-4356-9c94-d2d8a5256b0b@deltatee.com>
+Date:   Mon, 13 Nov 2023 09:44:04 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <58a60211-1edc-4238-b4a3-fe7faf3b6458@amd.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Content-Language: en-CA
+To:     Tadeusz Struk <tstruk@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Tadeusz Struk <tstruk@gigaio.com>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, stable@kernel.org
+References: <20231111092239.308767-1-tstruk@gmail.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20231111092239.308767-1-tstruk@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: tstruk@gmail.com, bhelgaas@google.com, corbet@lwn.net, tstruk@gigaio.com, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, stable@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH] Documentation: PCI/P2PDMA: Remove reference to
+ pci_p2pdma_map_sg()
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 13, 2023 at 05:46:35PM +1100, Alexey Kardashevskiy wrote:
+
+On 2023-11-11 02:22, Tadeusz Struk wrote:
+> From: Tadeusz Struk <tstruk@gigaio.com>
 > 
-> On 13/11/23 16:43, Samuel Ortiz wrote:
-> > Hi Alexey,
-> > 
-> > On Wed, Nov 01, 2023 at 09:56:11AM +1100, Alexey Kardashevskiy wrote:
-> > > Hi everyone,
-> > > 
-> > > Here is followup after the Dan's community call we had weeks ago.
-> > > 
-> > > Our (AMD) goal at the moment is TDISP to pass through SRIOV VFs to
-> > > confidential VMs without trusting the HV and with enabled IDE (encryption)
-> > > and IOMMU (performance, compared to current SWIOTLB). I am aware of other
-> > > uses and vendors and I spend hours unsuccessfully trying to generalize all
-> > > this in a meaningful way.
-> > > 
-> > > The AMD SEV TIO verbs can be simplified as:
-> > > 
-> > > - device_connect - starts CMA/SPDM session, returns measurements/certs, runs
-> > > IDE_KM to program the keys;
-> > > - device_reclaim - undo the connect;
-> > > - tdi_bind - transition the TDI to TDISP's LOCKED and RUN states, generates
-> > > interface report;
-> > 
-> >  From a VF to TVM use case, I think tdi_bind should only transition to
-> > LOCKED, but not RUN. RUN should only be reached once the TVM approves
-> > the device, and afaiu this is a host call.
+> Update Documentation/driver-api/pci/p2pdma.rst doc to
+> remove references to the obsolete pci_p2pdma_map_sg() function.
 > 
-> What is the point in separating these? What is that thing which requires the
-> device to be in LOCKED but not RUN state (besides the obvious
-> START_INTERFACE_REQUEST)?
+> Fixes: 0d06132fc84b ("PCI/P2PDMA: Remove pci_p2pdma_[un]map_sg()")
+> Cc: stable <stable@kernel.org>
+> Signed-off-by: Tadeusz Struk <tstruk@gigaio.com>
+> ---
+>  Documentation/driver-api/pci/p2pdma.rst | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 
-Because they're two very different steps of the TDI assignment into a
-TVM.
-TDISP moves to RUN upon TVM accepting the TDI into its TCB.
-LOCKED is typically driven by the host, in order to lock the TDI
-configuration while the TVM verifies, attest and accept or reject it
-from its TCB.
 
-When the TSM moves the TDI to RUN, by TVM request, all IO paths (DMA and
-MMIO) are supposed to be functional. I understand most architectures
-have ways to prevent TDIs from accessing access confidential memory
-regardless of their TDISP state, but a TDI in the RUN state should not
-be forbidden from DMA'ing the TVM confidential memory. Preventing it
-from doing so should be an error case, not the nominal flow.
+> diff --git a/Documentation/driver-api/pci/p2pdma.rst b/Documentation/driver-api/pci/p2pdma.rst
+> index 44deb52beeb4..9e54ee711b5c 100644
+> --- a/Documentation/driver-api/pci/p2pdma.rst
+> +++ b/Documentation/driver-api/pci/p2pdma.rst
+> @@ -83,10 +83,9 @@ this to include other types of resources like doorbells.
+>  Client Drivers
+>  --------------
+>  
+> -A client driver typically only has to conditionally change its DMA map
+> -routine to use the mapping function :c:func:`pci_p2pdma_map_sg()` instead
+> -of the usual :c:func:`dma_map_sg()` function. Memory mapped in this
+> -way does not need to be unmapped.
+> +A client driver only has to use the mapping api :c:func:`dma_map_sg()`
+> +and :c:func:`dma_unmap_sg()` functions, as usual, and the implementation
+> +will do the right thing for the P2P capable memory.
+>  
+>  The client may also, optionally, make use of
+>  :c:func:`is_pci_p2pdma_page()` to determine when to use the P2P mapping
 
-> > > - tdi_info - read measurements/certs/interface report;
-> > > - tdi_validate - unlock TDI's MMIO and IOMMU (or invalidate, depends on the
-> > > parameters).
-> > 
-> > That's equivalent to the TVM accepting the TDI, and this should
-> > transition the TDI from LOCKED to RUN.
-> 
-> Even if the device was in RUN, it would not work until the validation is
-> done == RMP+IOMMU are updated by the TSM. 
+Might make sense to rework this next paragraph as well seeing it
+references the P2P mapping functions that no longer exist.
 
-Right, and that makes sense from a security perspective. But a device in
-the RUN state will expect IO to work, because it's a TDISP semantic for
-it being accepted into the TVM and as such the TVM allowed access to its
-confidential memory.
+Thanks for cleaning up the documentation I forgot about!
 
-> This may be different for other
-> architectures though, dunno. RMP == reverse map table, an SEV SNP thing used
-> for verifying memory accesses.
-> 
-> 
-> > > The first 4 called by the host OS, the last two by the TVM ("Trusted VM").
-> > > These are implemented in the AMD PSP (platform processor).
-> > > There are CMA/SPDM, IDE_KV, TDISP in use.
-> > > 
-> > > Now, my strawman code does this on the host (I simplified a bit):
-> > > - after PCI discovery but before probing: walk through all TDISP-capable
-> > > (TEE-IO in PCIe caps) endpoint devices and call device_connect;
-> > 
-> > Would the host call device_connect unconditionally for all TEE-IO device
-> > probed on the host? Wouldn't you want to do so only before the first
-> > tdi_bind for a TDI that belongs to the physical device?
-> 
-> 
-> Well, in the SEV TIO, device_connect enables IDE which has value for the
-> host on its own.
-
-Ok, that makes sense to me. And the TSM would be responsible for
-supporting this. Then TDISP is exercised on a particular TDI for the
-device when this TDI is passed through to a specific TVM.
-
-> 
-> > > - when drivers probe - it is all set up and the device measurements are
-> > > visible to the driver;
-> > > - when constructing a TVM, tdi_bind is called;
-> > 
-> > Here as well, the tdi_bind could be asynchronous to e.g. support hot
-> > plugging TDIs into TVMs.
-> 
-> 
-> I do not really see a huge difference between starting a VM with already
-> bound TDISP device or hotplugging a device - either way the host calls
-> tdi_bind and it does not really care about what the guest is doing at that
-> moment and when the guest sees a TDISP device - it is always bound.
-
-I agree. What I meant is that bind can be called at TVM construction
-time, or asynchronously whenever the host decides to attach a TDI to the
-previously constructed TVM.
-
-> > > and then in the TVM:
-> > > - after PCI discovery but before probing: walk through all TDIs (which will
-> > > have TEE IO bit set) and call tdi_info, verify the report, if ok - call
-> > > tdi_validate;
-> > 
-> > By verify you mean verify the reported MMIO ranges? With support from
-> > the TSM?
-> 
-> The tdi_validate call to the PSP FW (==TSM) asks the PSP to validate the
-> MMIO values and enable them in the RMP.
-
-Sounds good.
-
-> > We discussed that a few times, but the device measurements and
-> > attestation report should also be attested, i.e. run against a relying
-> > party. The kernel may not be the right place for that, and I'm proposing
-> > for the guest kernel to rely on a user space component and offload the
-> > attestation part to it. This userspace component would then
-> > synchronously return to the guest kernel with an attestation result.
-> 
-> What bothers me here is that the userspace works when PCI is probed so when
-> the userspace is called for attestation - the device is up and running and
-> hosting the rootfs.
-
-I guess you're talking about a use case where one would pass a storage
-device through, and that device would hold the guest rootfs?
-With the approach we're proposing, attestation would be optional and
-upon the kernel's decision. In that case, the kernel would not require
-userspace to run attestation (because there is no userspace...) but the
-actual guest attestation would still happen whenever the guest would
-want to fetch an attestation gated secret. And that attestation flow
-would include the storage device attestation report, because it's part
-of the guest TCB. So, eventually, the device would be attested, but not
-right when the device is attached to the guest.
-
-> The userspace will need a knob which transitions the
-> device into the trusted state (switch SWIOTLB to direct DMA, for example). I
-> guess if the userspace is initramdisk, it could still reload the driver
-> which is not doing useful work just yet...
-> 
-> 
-> > > - when drivers probe - it is all set up and the driver decides if/which DMA
-> > > mode to use (SWIOTLB or direct), or panic().
-> > > 
-> > 
-> > When would it panic?
-> 
-> When attestation failed.
-
-Attestation failure should only trigger a rejection from the TVM, i.e.
-the TDI would not be probed. That should be reported back to the host,
-who may decide to call unbind on that TDI (and thus moved it back to
-UNLOCKED).
-
-> > > Uff. Too long already. Sorry. Now, go to the problems:
-> > > 
-> > > If the user wants only CMA/SPDM,
-> > 
-> > By user here, you mean the user controlling the host? Or the TVM
-> > user/owner? I assume the former.
-> 
-> Yes, the physical host owner.
-> 
-> > > the Lukas'es patched will do that without
-> > > the PSP. This may co-exist with the AMD PSP (if the endpoint allows multiple
-> > > sessions).
-> > > 
-> > > If the user wants only IDE, the AMD PSP's device_connect needs to be called
-> > > and the host OS does not get to know the IDE keys. Other vendors allow
-> > > programming IDE keys to the RC on the baremetal, and this also may co-exist
-> > > with a TSM running outside of Linux - the host still manages trafic classes
-> > > and streams.
-> > > 
-> > > If the user wants TDISP for VMs, this assumes the user does not trust the
-> > > host OS and therefore the TSM (which is trusted) has to do CMA/SPDM and IDE.
-> > > 
-> > > The TSM code is not Linux and not shared among vendors. CMA/SPDM and IDE
-> > > seem capable of co-existing, TDISP does not.
-> > 
-> > Which makes sense, TDISP is not designed to be used outside of the
-> > TEE-IO VFs assigned to TVM use case.
-> > 
-> > > 
-> > > However there are common bits.
-> > > - certificates/measurements/reports blobs: storing, presenting to the
-> > > userspace (results of device_connect and tdi_bind);
-> > > - place where we want to authenticate the device and enable IDE
-> > > (device_connect);
-> > > - place where we want to bind TDI to a TVM (tdi_bind).
-> > > 
-> > > I've tried to address this with my (poorly named) drivers/pci/pcie/tdisp.ko
-> > > and a hack for VFIO PCI device to call tdi_bind.
-> > > 
-> > > The next steps:
-> > > - expose blobs via configfs (like Dan did configfs-tsm);
-> > > - s/tdisp.ko/coco.ko/;
-> > > - ask the audience - what is missing to make it reusable for other vendors
-> > > and uses?
-> > 
-> > The connect-bind-run flow is similar to the one we have defined for
-> > RISC-V [1]. There we are defining the TEE-IO flows for RISC-V in
-> > details, but nothing there is architectural and could somehow apply to
-> > other architectures.
-> 
-> Yeah, it is good one!
-
-Thanks. Comments and improvements proposal are welcome.
-
-> I am still missing the need to have sbi_covg_start_interface() as a separate
-> step though. Thanks,
-
-Just to reiterate: start_interface is a guest call into the TSM, to let
-it know that it accepts the TDI. That makes the TSM do two things:
-
-1. Enable the MMIO and DMA mappings.
-2. Move the TDI to RUN.
-
-After that call, the TDI is usable from a TVM perspective. Before that
-call it is not, but its configuration and state are locked.
-
-Cheers,
-Samuel.
+Logan
