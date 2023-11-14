@@ -2,54 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 168D67EADCC
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Nov 2023 11:17:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B8FE7EAE35
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Nov 2023 11:42:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229585AbjKNKRC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Nov 2023 05:17:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48750 "EHLO
+        id S229555AbjKNKms (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Nov 2023 05:42:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230451AbjKNKRB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Nov 2023 05:17:01 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 254701A3
-        for <linux-pci@vger.kernel.org>; Tue, 14 Nov 2023 02:16:58 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F23CDC433C8;
-        Tue, 14 Nov 2023 10:16:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699957017;
-        bh=dGeTRv0PWClXlso6IfyrLb94RNVVGoSgFGtSPfab5P4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ORGBZrBZlIzrT0L6WnyVZtUxYL+FuVPTuvLfs7AwzOyiNA8Cn5Sk69COszrV7E19/
-         HqU0AmWTZV83gaBPwipWA2O+WGTAtYOzXPXXmpu+yWFvl4OUrYENS9p8nbjtttQOpD
-         UJw3jpLkxaF+u2/h69T7f4QZDLY8ZUdn/zRz/t6agA6kkB1oZ2rNGroMrFxrBRoQZw
-         3Ot1oVBLuG3MVOPIsaD9O9OGrbilnixz/Or8IfcKz4fBh4Vn3ZtIvuK1Xu7a/QdLKD
-         EiI0/kET0/7XJIDGzEtc0/5e/60y0MM4j/OuMfqD7TNXpEtkNgD6Ygg5OOTdp0bjRX
-         gStCFrCc9I1nw==
-Date:   Tue, 14 Nov 2023 05:16:43 -0500
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-Subject: Re: [bug report] lockdep WARN at PCI device rescan
-Message-ID: <ZVNJCxh5vgj22SfQ@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-References: <6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j>
+        with ESMTP id S229441AbjKNKmr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Nov 2023 05:42:47 -0500
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A9C4D9;
+        Tue, 14 Nov 2023 02:42:42 -0800 (PST)
+Received: by mail-lf1-x130.google.com with SMTP id 2adb3069b0e04-509c61e0cf4so6446322e87.2;
+        Tue, 14 Nov 2023 02:42:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699958560; x=1700563360; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eCTKEQT+hdaxsRjGuE89rsnSJKi9O0784g7pD+LZpD8=;
+        b=mH5oNxMr8D5L9OPoY7iSWsILGDXI/wA4Qj6NEH9/SCD+9xY/YUfqrh5j1aCcWEq5UR
+         42F2CRdynE7cWq2acNZBOCeYw/tS368+UPkhj68VfZcLp63+n3SJgMdf9nFcmFT4HK6d
+         PBdgfJl6COi/GxAF4tyUpcxWTSkObIQ40mUaiWZSK4XlDf88Lh3D5N6vYX1pq2KyQWRw
+         J7GqcrOwzpC3uqi+cOJBjG1Vn6caSWXB2Q44IhBaNe/+A3Is7HACnZrb7n/vnYEJjYlj
+         mHTpS90xT6qCTcHCFT5jDhd0f1Mh7Vul3JmZv/Dw8kGhVAQ2RnyTtCh9BFKak8szhkuy
+         bjcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699958560; x=1700563360;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eCTKEQT+hdaxsRjGuE89rsnSJKi9O0784g7pD+LZpD8=;
+        b=EREWTePetrOGUBvVSfzZ28HbeMACB/zfYLdKuHYR4RHGPZhVHmf8FK7b4/MUdrFn+H
+         qS99yQPHQ5LF607FDT2hLZNfa6aNzXaFdPOPDNGoQaeUv4vh/zQUhmKiUUgft5yb6XZg
+         d8iNilv/dTx7v9IAiKPyOeNIiSGOu4FlbVaD1KqZnzXOWuswQ+NJy3xSdIkJPoZWWuwT
+         6kIsvZZEdidZGdkxgsRU34xJQN04piASTjEmfGgmT/B78EqUlkItuSOxAt22NtRU4zDc
+         SDKc9kKAHTW+E4/wbj0PpezR1H98JKHzXPzWvtcKouzr3jjpVqUkkDtXEn+y09Zh6Zw+
+         d76w==
+X-Gm-Message-State: AOJu0YzyGvxnc4JIlQsY4GVXqEWjSoY1octC97d67iQ5QdEucEoU6Wc+
+        tsa3r+QQqgEVYGgvQR/G9X0=
+X-Google-Smtp-Source: AGHT+IH05uNrjV63ztLvrf0P0aIMXbI22ztjxVSYR01hZs6OZ+pZLV9ROMaSmHkC2tZGv8yp9ipvrA==
+X-Received: by 2002:a05:6512:445:b0:507:a8d1:6e56 with SMTP id y5-20020a056512044500b00507a8d16e56mr5673575lfk.35.1699958560048;
+        Tue, 14 Nov 2023 02:42:40 -0800 (PST)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id y19-20020ac24473000000b005094bb01fc9sm1286935lfl.214.2023.11.14.02.42.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Nov 2023 02:42:39 -0800 (PST)
+Date:   Tue, 14 Nov 2023 13:42:36 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mani@kernel.org,
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Chuanhua Lei <lchuanhua@maxlinear.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Pratyush Anand <pratyush.anand@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: Re: [PATCH v2 1/6] PCI: dwc: Drop host prefix from struct
+ dw_pcie_host_ops
+Message-ID: <7opp7cvz3gojhmmcg4zmsnkd26rb2wkrtnx3546undm56g5vgi@ceak7mdzcm52>
+References: <20231114055456.2231990-1-yoshihiro.shimoda.uh@renesas.com>
+ <20231114055456.2231990-2-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="FIBYGVLzZDAiE7Lv"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+In-Reply-To: <20231114055456.2231990-2-yoshihiro.shimoda.uh@renesas.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -57,295 +108,479 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Nov 14, 2023 at 02:54:51PM +0900, Yoshihiro Shimoda wrote:
+> Since the name of dw_pcie_host_ops indicates that it's for host
+> obviously, drop host prefix from the struct.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
---FIBYGVLzZDAiE7Lv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Awesome. Thanks!
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 
-On Tue, Nov 14, 2023 at 06:54:29AM +0000, Shinichiro Kawasaki wrote:
-> Hello there.
->=20
-> Recently I tried a couple of commands below on the kernel v6.6 and v6.7-r=
-c1,
-> then observed a lockdep WARN at the second command [1]. The first command
-> removes a PCI device, and the second command rescans whole PCI devices to
-> regain the removed device.
->=20
->  # echo 1 > /sys/bus/pci/devices/0000:51:00.0/remove
->  # echo 1 > /sys/bus/pci/rescan
->=20
-> I tried this rescan for SAS-HBA or AHCI controller with HDDs. When those =
-devices
-> are left in weird status after some kernel tests, I want to remove the SA=
-S-HBA
-> and AHCI controller and rescan to get back the devices in good status. Th=
-is
-> rescan looks working good except the WARN.
->=20
-> The lockdep splat indicates possible deadlock between pci_rescan_remove_l=
-ock
-> and work_completion lock have deadlock possibility. Is the lockdep WARN a=
- known
-> issue? I found a similar discussion in the past [2], but it did not discu=
-ss the
-> work_completion lock, so my observation looks a new, different issue.
->=20
-> In the call stack, I found that the workqueue thread for i801_probe() cal=
-ls
-> p2sb_bar(), which locks pci_rescan_remove_lock. IMHO, the issue cause loo=
-ks that
-> pci_rescan_remove_lock is locked in both workqueue context and non-workqu=
-eue
-> context. As a fix trial, I created a quick patch [3]. It calls i801_probe=
-() in
-> non-workqueue context only by adding a new flag to struct pci_driver. Wit=
-h this,
-> I observed the lockdep WARN disappears. Is this a good solution approach?=
- If
-> not, is there any other better solution?
+-Serge(y)
 
-Thanks for the report and the proposed solution. I'll add the i801
-experts, Jean and Heiner, to CC.
-
->=20
-> [1] kernel message log at the second command
->=20
-> [  242.922091] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [  242.931663] WARNING: possible circular locking dependency detected
-> [  242.938292] mpt3sas_cm1: 63 BIT PCI BUS DMA ADDRESSING SUPPORTED, tota=
-l mem (56799464 kB)
-> [  242.939415] 6.7.0-rc1-kts #1 Not tainted
-> [  242.939419] ------------------------------------------------------
-> [  242.939421] bash/1615 is trying to acquire lock:
-> [  242.939424] ff1100017bf87910 ((work_completion)(&wfc.work)){+.+.}-{0:0=
-}, at: __flush_work+0xc5/0x980
-> [  242.989069]=20
->                but task is already holding lock:
-> [  243.000283] ffffffff870bf4a8 (pci_rescan_remove_lock){+.+.}-{3:3}, at:=
- rescan_store+0x96/0xd0
-> [  243.012269]=20
->                which lock already depends on the new lock.
->=20
-> [  243.028569]=20
->                the existing dependency chain (in reverse order) is:
-> [  243.041611]=20
->                -> #1 (pci_rescan_remove_lock){+.+.}-{3:3}:
-> [  243.053709]        __mutex_lock+0x16a/0x1880
-> [  243.060767]        p2sb_bar+0xa7/0x250
-> [  243.067213]        i801_add_tco_spt.constprop.0+0x88/0x1f0 [i2c_i801]
-> [  243.076707]        i801_add_tco+0x18a/0x210 [i2c_i801]
-> [  243.084727]        i801_probe+0x99c/0x1500 [i2c_i801]
-> [  243.092618]        local_pci_probe+0xd6/0x190
-> [  243.099708]        work_for_cpu_fn+0x4e/0xa0
-> [  243.106673]        process_one_work+0x736/0x1230
-> [  243.114012]        worker_thread+0x723/0x1300
-> [  243.121039]        kthread+0x2ee/0x3d0
-> [  243.127372]        ret_from_fork+0x2d/0x70
-> [  243.134073]        ret_from_fork_asm+0x1b/0x30
-> [  243.141140]=20
->                -> #0 ((work_completion)(&wfc.work)){+.+.}-{0:0}:
-> [  243.153341]        __lock_acquire+0x2e74/0x5ea0
-> [  243.160490]        lock_acquire+0x196/0x4b0
-> [  243.167236]        __flush_work+0xe2/0x980
-> [  243.173882]        work_on_cpu_key+0xcc/0xf0
-> [  243.180709]        pci_device_probe+0x548/0x740
-> [  243.187813]        really_probe+0x3df/0xb80
-> [  243.194525]        __driver_probe_device+0x18c/0x450
-> [  243.202128]        driver_probe_device+0x4a/0x120
-> [  243.209437]        __device_attach_driver+0x15e/0x270
-> [  243.217149]        bus_for_each_drv+0x101/0x170
-> [  243.224260]        __device_attach+0x189/0x380
-> [  243.231254]        pci_bus_add_device+0x9f/0xf0
-> [  243.238360]        pci_bus_add_devices+0x7f/0x190
-> [  243.245639]        pci_bus_add_devices+0x114/0x190
-> [  243.253017]        pci_rescan_bus+0x23/0x30
-> [  243.259711]        rescan_store+0xa2/0xd0
-> [  243.266187]        kernfs_fop_write_iter+0x356/0x530
-> [  243.273735]        vfs_write+0x513/0xd60
-> [  243.280090]        ksys_write+0xe7/0x1b0
-> [  243.286412]        do_syscall_64+0x5d/0xe0
-> [  243.292908]        entry_SYSCALL_64_after_hwframe+0x6e/0x76
-> [  243.301053]=20
->                other info that might help us debug this:
->=20
-> [  243.315550]  Possible unsafe locking scenario:
->=20
-> [  243.325803]        CPU0                    CPU1
-> [  243.332654]        ----                    ----
-> [  243.339492]   lock(pci_rescan_remove_lock);
-> [  243.345937]                                lock((work_completion)(&wfc=
-=2Ework));
-> [  243.355852]                                lock(pci_rescan_remove_lock=
-);
-> [  243.365170]   lock((work_completion)(&wfc.work));
-> [  243.372235]=20
->                 *** DEADLOCK ***
->=20
-> [  243.384100] 5 locks held by bash/1615:
-> [  243.390048]  #0: ff1100013f4b0418 (sb_writers#4){.+.+}-{0:0}, at: ksys=
-_write+0xe7/0x1b0
-> [  243.400833]  #1: ff11000128429888 (&of->mutex){+.+.}-{3:3}, at: kernfs=
-_fop_write_iter+0x21d/0x530
-> [  243.412623]  #2: ff11000103849968 (kn->active#136){.+.+}-{0:0}, at: ke=
-rnfs_fop_write_iter+0x241/0x530
-> [  243.424832]  #3: ffffffff870bf4a8 (pci_rescan_remove_lock){+.+.}-{3:3}=
-, at: rescan_store+0x96/0xd0
-> [  243.436773]  #4: ff1100019cc7e1a8 (&dev->mutex){....}-{3:3}, at: __dev=
-ice_attach+0x67/0x380
-> [  243.448048]=20
->                stack backtrace:
-> [  243.456654] CPU: 16 PID: 1615 Comm: bash Not tainted 6.7.0-rc1-kts #1
-> [  243.465797] Hardware name: Supermicro SYS-520P-WTR/X12SPW-TF, BIOS 1.2=
- 02/14/2022
-> [  243.476145] Call Trace:
-> [  243.480820]  <TASK>
-> [  243.485084]  dump_stack_lvl+0x57/0x90
-> [  243.491112]  check_noncircular+0x2e1/0x3c0
-> [  243.497630]  ? __pfx_check_noncircular+0x10/0x10
-> [  243.504747]  ? __pfx___bfs+0x10/0x10
-> [  243.510680]  ? lockdep_lock+0xbc/0x1a0
-> [  243.516811]  ? __pfx_lockdep_lock+0x10/0x10
-> [  243.523436]  __lock_acquire+0x2e74/0x5ea0
-> [  243.529866]  ? __pfx___lock_acquire+0x10/0x10
-> [  243.536682]  lock_acquire+0x196/0x4b0
-> [  243.542710]  ? __flush_work+0xc5/0x980
-> [  243.548829]  ? __pfx_lock_acquire+0x10/0x10
-> [  243.555442]  ? __pfx___lock_acquire+0x10/0x10
-> [  243.562252]  ? driver_probe_device+0x4a/0x120
-> [  243.569061]  ? __device_attach_driver+0x15e/0x270
-> [  243.576282]  ? mark_lock+0xee/0x16c0
-> [  243.582222]  ? __flush_work+0xc5/0x980
-> [  243.588364]  __flush_work+0xe2/0x980
-> [  243.594300]  ? __flush_work+0xc5/0x980
-> [  243.600425]  ? __queue_work+0x4e4/0xe30
-> [  243.606658]  ? __pfx___flush_work+0x10/0x10
-> [  243.613287]  ? lock_is_held_type+0xce/0x120
-> [  243.619917]  ? queue_work_on+0x69/0xa0
-> [  243.626032]  ? lockdep_hardirqs_on+0x7d/0x100
-> [  243.632834]  work_on_cpu_key+0xcc/0xf0
-> [  243.638950]  ? __pfx_work_on_cpu_key+0x10/0x10
-> [  243.645849]  ? __pfx_work_for_cpu_fn+0x10/0x10
-> [  243.652738]  ? __pfx_local_pci_probe+0x10/0x10
-> [  243.659638]  pci_device_probe+0x548/0x740
-> [  243.666057]  ? __pfx_pci_device_probe+0x10/0x10
-> [  243.673057]  ? kernfs_create_link+0x167/0x230
-> [  243.679855]  really_probe+0x3df/0xb80
-> [  243.685860]  __driver_probe_device+0x18c/0x450
-> [  243.692737]  driver_probe_device+0x4a/0x120
-> [  243.699314]  __device_attach_driver+0x15e/0x270
-> [  243.706297]  ? __pfx___device_attach_driver+0x10/0x10
-> [  243.713890]  bus_for_each_drv+0x101/0x170
-> [  243.720312]  ? __pfx_bus_for_each_drv+0x10/0x10
-> [  243.727294]  ? lockdep_hardirqs_on+0x7d/0x100
-> [  243.734063]  ? _raw_spin_unlock_irqrestore+0x35/0x60
-> [  243.741505]  __device_attach+0x189/0x380
-> [  243.747747]  ? __pfx___device_attach+0x10/0x10
-> [  243.754554]  pci_bus_add_device+0x9f/0xf0
-> [  243.760836]  pci_bus_add_devices+0x7f/0x190
-> [  243.767328]  pci_bus_add_devices+0x114/0x190
-> [  243.773890]  pci_rescan_bus+0x23/0x30
-> [  243.779741]  rescan_store+0xa2/0xd0
-> [  243.785362]  ? __pfx_rescan_store+0x10/0x10
-> [  243.791785]  kernfs_fop_write_iter+0x356/0x530
-> [  243.798516]  vfs_write+0x513/0xd60
-> [  243.804054]  ? __pfx_vfs_write+0x10/0x10
-> [  243.810193]  ? __fget_light+0x51/0x220
-> [  243.816125]  ? __pfx_lock_release+0x10/0x10
-> [  243.822555]  ksys_write+0xe7/0x1b0
-> [  243.828097]  ? __pfx_ksys_write+0x10/0x10
-> [  243.834327]  ? syscall_enter_from_user_mode+0x22/0x90
-> [  243.841736]  ? lockdep_hardirqs_on+0x7d/0x100
-> [  243.848366]  do_syscall_64+0x5d/0xe0
-> [  243.854114]  ? do_syscall_64+0x6c/0xe0
-> [  243.860053]  ? do_syscall_64+0x6c/0xe0
-> [  243.865989]  ? lockdep_hardirqs_on+0x7d/0x100
-> [  243.872608]  ? do_syscall_64+0x6c/0xe0
-> [  243.878537]  ? lockdep_hardirqs_on+0x7d/0x100
-> [  243.885147]  entry_SYSCALL_64_after_hwframe+0x6e/0x76
-> [  243.892555] RIP: 0033:0x7fee10d53c34
-> [  243.898305] Code: c7 00 16 00 00 00 b8 ff ff ff ff c3 66 2e 0f 1f 84 0=
-0 00 00 00 00 f3 0f 1e fa 80 3d 35 77 0d 00 00 74 13 b8 01 00 00 00 0f 05 <=
-48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 55 48 89 e5 48 83 ec 20 48 89
-> [  243.922266] RSP: 002b:00007ffd173e68e8 EFLAGS: 00000202 ORIG_RAX: 0000=
-000000000001
-> [  243.932655] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007fee1=
-0d53c34
-> [  243.942564] RDX: 0000000000000002 RSI: 000055f17c9c4bc0 RDI: 000000000=
-0000001
-> [  243.952485] RBP: 00007ffd173e6910 R08: 0000000000000073 R09: 000000000=
-0000001
-> [  243.962408] R10: 0000000000000000 R11: 0000000000000202 R12: 000000000=
-0000002
-> [  243.972328] R13: 000055f17c9c4bc0 R14: 00007fee10e245c0 R15: 00007fee1=
-0e21f20
-> [  243.982259]  </TASK>
->=20
-> [2] https://patchwork.kernel.org/project/linux-pci/patch/20180921205752.3=
-191-1-keith.busch@intel.com/
->=20
-> [3] fix trial patch
->=20
-> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-> index 070999139c6..00d57d4e006 100644
-> --- a/drivers/i2c/busses/i2c-i801.c
-> +++ b/drivers/i2c/busses/i2c-i801.c
-> @@ -1820,6 +1820,7 @@ static struct pci_driver i801_driver =3D {
->  		.pm	=3D pm_sleep_ptr(&i801_pm_ops),
->  		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
->  	},
-> +	.local_probe	=3D true,
+> ---
+> Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Cc: Alim Akhtar <alim.akhtar@samsung.com>
+> Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Minghuan Lian <minghuan.Lian@nxp.com>
+> Cc: Mingkai Hu <mingkai.hu@nxp.com>
+> Cc: Roy Zang <roy.zang@nxp.com>
+> Cc: Yue Wang <yue.wang@Amlogic.com>
+> Cc: Neil Armstrong <neil.armstrong@linaro.org>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Cc: Jonathan Chocron <jonnyc@amazon.com>
+> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> Cc: Jesper Nilsson <jesper.nilsson@axis.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Cc: Manivannan Sadhasivam <mani@kernel.org>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Greentime Hu <greentime.hu@sifive.com>
+> Cc: Chuanhua Lei <lchuanhua@maxlinear.com>
+> Cc: Xiaowei Song <songxiaowei@hisilicon.com>
+> Cc: Binghui Wang <wangbinghui@hisilicon.com>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <andersson@kernel.org>
+> Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Cc: Marek Vasut <marek.vasut+renesas@gmail.com>
+> Cc: Pratyush Anand <pratyush.anand@gmail.com>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Jonathan Hunter <jonathanh@nvidia.com>
+> Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+> ---
+>  drivers/pci/controller/dwc/pci-dra7xx.c       |  2 +-
+>  drivers/pci/controller/dwc/pci-exynos.c       |  2 +-
+>  drivers/pci/controller/dwc/pci-imx6.c         |  4 +--
+>  drivers/pci/controller/dwc/pci-keystone.c     |  6 ++--
+>  drivers/pci/controller/dwc/pci-layerscape.c   |  2 +-
+>  drivers/pci/controller/dwc/pci-meson.c        |  2 +-
+>  drivers/pci/controller/dwc/pcie-al.c          |  2 +-
+>  drivers/pci/controller/dwc/pcie-armada8k.c    |  2 +-
+>  drivers/pci/controller/dwc/pcie-artpec6.c     |  2 +-
+>  drivers/pci/controller/dwc/pcie-bt1.c         |  4 +--
+>  .../pci/controller/dwc/pcie-designware-host.c | 30 +++++++++----------
+>  drivers/pci/controller/dwc/pcie-designware.h  |  8 ++---
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c |  2 +-
+>  drivers/pci/controller/dwc/pcie-fu740.c       |  2 +-
+>  drivers/pci/controller/dwc/pcie-histb.c       |  2 +-
+>  drivers/pci/controller/dwc/pcie-intel-gw.c    |  2 +-
+>  drivers/pci/controller/dwc/pcie-kirin.c       |  2 +-
+>  drivers/pci/controller/dwc/pcie-qcom.c        |  6 ++--
+>  drivers/pci/controller/dwc/pcie-rcar-gen4.c   |  4 +--
+>  drivers/pci/controller/dwc/pcie-spear13xx.c   |  2 +-
+>  drivers/pci/controller/dwc/pcie-tegra194.c    |  2 +-
+>  drivers/pci/controller/dwc/pcie-uniphier.c    |  2 +-
+>  drivers/pci/controller/dwc/pcie-visconti.c    |  2 +-
+>  23 files changed, 47 insertions(+), 47 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> index b445ffe95e3f..6125a838f4b1 100644
+> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> @@ -371,7 +371,7 @@ static int dra7xx_pcie_init_irq_domain(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops dra7xx_pcie_host_ops = {
+> -	.host_init = dra7xx_pcie_host_init,
+> +	.init = dra7xx_pcie_host_init,
 >  };
-> =20
->  static int __init i2c_i801_init(struct pci_driver *drv)
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 51ec9e7e784..161ff37143a 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -368,7 +368,7 @@ static int pci_call_probe(struct pci_driver *drv, str=
-uct pci_dev *dev,
->  	 * device is probed from work_on_cpu() of the Physical device.
->  	 */
->  	if (node < 0 || node >=3D MAX_NUMNODES || !node_online(node) ||
-> -	    pci_physfn_is_probed(dev)) {
-> +	    pci_physfn_is_probed(dev) || drv->local_probe) {
->  		cpu =3D nr_cpu_ids;
->  	} else {
->  		cpumask_var_t wq_domain_mask;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 60ca768bc86..6fd086eb26c 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -957,6 +957,7 @@ struct pci_driver {
->  	struct device_driver	driver;
->  	struct pci_dynids	dynids;
->  	bool driver_managed_dma;
-> +	bool local_probe;
+>  
+>  static void dra7xx_pcie_ep_init(struct dw_pcie_ep *ep)
+> diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
+> index c6bede346932..673ae213203f 100644
+> --- a/drivers/pci/controller/dwc/pci-exynos.c
+> +++ b/drivers/pci/controller/dwc/pci-exynos.c
+> @@ -268,7 +268,7 @@ static int exynos_pcie_host_init(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops exynos_pcie_host_ops = {
+> -	.host_init = exynos_pcie_host_init,
+> +	.init = exynos_pcie_host_init,
 >  };
-> =20
->  static inline struct pci_driver *to_pci_driver(struct device_driver *drv)
->=20
-
---FIBYGVLzZDAiE7Lv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmVTSQcACgkQFA3kzBSg
-KbYkzg//RCZEo3fkpWPGHQRx2QrSiUh74Rgd5EKUrsICT/XJvIjN/MVZyHPXFNEH
-Vi3uHRcd4OSXRNPH34jWb5UFX5T0H8RW96aP/pA6MpTKi3R+uKBUx2VJou3dG1t9
-xw8f3/SF/XsDz74FQS2hKwTLAC+bcp1R5zeCtMSTjeBMTciw/perpGMslAM+E2vs
-pyX5ses8SBQVxhOUXKJNYap1s2WsPFMnFDouS8/52FzcUvOuLAco9n0eidTdBEtY
-3xDP/u8mmfzHet+KJyn9sxAa+cCW8+1cL6/TxLX7TkO3AM7pzT5fcAW2yzU7gLBP
-xxefEUI72UNMd6VZAm5LEunf/9eihfOUz20YRXQOTxpHjNlYjVwqchOXqYvXK7hA
-XEZLkG7A0pR/LpNGoFP3er/acUhM0nqfC1af4TS7CoLiFiDAhkmPccf4uXxuMaf9
-SsZHFZnOsH+2BxxdYeLyLJQ5tWlMbCnw9G9kEYDCW9ix8fn5jwWcEN92jspMWCsH
-JPfaWTXIGttB39qO0REwP+d0fI/ucfbh7JUyXjd/SZtIUDHUfQJcgBixwR1Yx6ap
-e8ExyEN5MYc56iNCjw54EDVgCd+mliGvFR+1wawp5Yf1CfhSwoTsYO+iywFf4d3G
-LBVgpoexvqlT3Eo25qTCyDnbjUurXYwIC55BRDOVoT3varY3e/w=
-=yHEE
------END PGP SIGNATURE-----
-
---FIBYGVLzZDAiE7Lv--
+>  
+>  static int exynos_add_pcie_port(struct exynos_pcie *ep,
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 74703362aeec..b02f6f14a411 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -1039,8 +1039,8 @@ static void imx6_pcie_host_exit(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops imx6_pcie_host_ops = {
+> -	.host_init = imx6_pcie_host_init,
+> -	.host_deinit = imx6_pcie_host_exit,
+> +	.init = imx6_pcie_host_init,
+> +	.deinit = imx6_pcie_host_exit,
+>  };
+>  
+>  static const struct dw_pcie_ops dw_pcie_ops = {
+> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> index 0def919f89fa..3711347ddc87 100644
+> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> @@ -838,12 +838,12 @@ static int __init ks_pcie_host_init(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops ks_pcie_host_ops = {
+> -	.host_init = ks_pcie_host_init,
+> -	.msi_host_init = ks_pcie_msi_host_init,
+> +	.init = ks_pcie_host_init,
+> +	.msi_init = ks_pcie_msi_host_init,
+>  };
+>  
+>  static const struct dw_pcie_host_ops ks_pcie_am654_host_ops = {
+> -	.host_init = ks_pcie_host_init,
+> +	.init = ks_pcie_host_init,
+>  };
+>  
+>  static irqreturn_t ks_pcie_err_irq_handler(int irq, void *priv)
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+> index 37956e09c65b..0c3d7ef729cb 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> @@ -169,7 +169,7 @@ static int ls_pcie_host_init(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops ls_pcie_host_ops = {
+> -	.host_init = ls_pcie_host_init,
+> +	.init = ls_pcie_host_init,
+>  	.pme_turn_off = ls_pcie_send_turnoff_msg,
+>  };
+>  
+> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+> index 407558f5d74a..6477c83262c2 100644
+> --- a/drivers/pci/controller/dwc/pci-meson.c
+> +++ b/drivers/pci/controller/dwc/pci-meson.c
+> @@ -389,7 +389,7 @@ static int meson_pcie_host_init(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops meson_pcie_host_ops = {
+> -	.host_init = meson_pcie_host_init,
+> +	.init = meson_pcie_host_init,
+>  };
+>  
+>  static const struct dw_pcie_ops dw_pcie_ops = {
+> diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
+> index b8cb77c9c4bd..6dfdda59f328 100644
+> --- a/drivers/pci/controller/dwc/pcie-al.c
+> +++ b/drivers/pci/controller/dwc/pcie-al.c
+> @@ -311,7 +311,7 @@ static int al_pcie_host_init(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops al_pcie_host_ops = {
+> -	.host_init = al_pcie_host_init,
+> +	.init = al_pcie_host_init,
+>  };
+>  
+>  static int al_pcie_probe(struct platform_device *pdev)
+> diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
+> index 5c999e15c357..b5c599ccaacf 100644
+> --- a/drivers/pci/controller/dwc/pcie-armada8k.c
+> +++ b/drivers/pci/controller/dwc/pcie-armada8k.c
+> @@ -225,7 +225,7 @@ static irqreturn_t armada8k_pcie_irq_handler(int irq, void *arg)
+>  }
+>  
+>  static const struct dw_pcie_host_ops armada8k_pcie_host_ops = {
+> -	.host_init = armada8k_pcie_host_init,
+> +	.init = armada8k_pcie_host_init,
+>  };
+>  
+>  static int armada8k_add_pcie_port(struct armada8k_pcie *pcie,
+> diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
+> index 9b572a2b2c9a..2f32fcd8933c 100644
+> --- a/drivers/pci/controller/dwc/pcie-artpec6.c
+> +++ b/drivers/pci/controller/dwc/pcie-artpec6.c
+> @@ -333,7 +333,7 @@ static int artpec6_pcie_host_init(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops artpec6_pcie_host_ops = {
+> -	.host_init = artpec6_pcie_host_init,
+> +	.init = artpec6_pcie_host_init,
+>  };
+>  
+>  static void artpec6_pcie_ep_init(struct dw_pcie_ep *ep)
+> diff --git a/drivers/pci/controller/dwc/pcie-bt1.c b/drivers/pci/controller/dwc/pcie-bt1.c
+> index 17e696797ff5..76d0ddea8007 100644
+> --- a/drivers/pci/controller/dwc/pcie-bt1.c
+> +++ b/drivers/pci/controller/dwc/pcie-bt1.c
+> @@ -559,8 +559,8 @@ static void bt1_pcie_host_deinit(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops bt1_pcie_host_ops = {
+> -	.host_init = bt1_pcie_host_init,
+> -	.host_deinit = bt1_pcie_host_deinit,
+> +	.init = bt1_pcie_host_init,
+> +	.deinit = bt1_pcie_host_deinit,
+>  };
+>  
+>  static struct bt1_pcie *bt1_pcie_create_data(struct platform_device *pdev)
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 7991f0e179b2..d5fc31f8345f 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -441,14 +441,14 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  	bridge->ops = &dw_pcie_ops;
+>  	bridge->child_ops = &dw_child_pcie_ops;
+>  
+> -	if (pp->ops->host_init) {
+> -		ret = pp->ops->host_init(pp);
+> +	if (pp->ops->init) {
+> +		ret = pp->ops->init(pp);
+>  		if (ret)
+>  			return ret;
+>  	}
+>  
+>  	if (pci_msi_enabled()) {
+> -		pp->has_msi_ctrl = !(pp->ops->msi_host_init ||
+> +		pp->has_msi_ctrl = !(pp->ops->msi_init ||
+>  				     of_property_read_bool(np, "msi-parent") ||
+>  				     of_property_read_bool(np, "msi-map"));
+>  
+> @@ -464,8 +464,8 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  			goto err_deinit_host;
+>  		}
+>  
+> -		if (pp->ops->msi_host_init) {
+> -			ret = pp->ops->msi_host_init(pp);
+> +		if (pp->ops->msi_init) {
+> +			ret = pp->ops->msi_init(pp);
+>  			if (ret < 0)
+>  				goto err_deinit_host;
+>  		} else if (pp->has_msi_ctrl) {
+> @@ -502,8 +502,8 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  	if (ret)
+>  		goto err_stop_link;
+>  
+> -	if (pp->ops->host_post_init)
+> -		pp->ops->host_post_init(pp);
+> +	if (pp->ops->post_init)
+> +		pp->ops->post_init(pp);
+>  
+>  	return 0;
+>  
+> @@ -518,8 +518,8 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  		dw_pcie_free_msi(pp);
+>  
+>  err_deinit_host:
+> -	if (pp->ops->host_deinit)
+> -		pp->ops->host_deinit(pp);
+> +	if (pp->ops->deinit)
+> +		pp->ops->deinit(pp);
+>  
+>  	return ret;
+>  }
+> @@ -539,8 +539,8 @@ void dw_pcie_host_deinit(struct dw_pcie_rp *pp)
+>  	if (pp->has_msi_ctrl)
+>  		dw_pcie_free_msi(pp);
+>  
+> -	if (pp->ops->host_deinit)
+> -		pp->ops->host_deinit(pp);
+> +	if (pp->ops->deinit)
+> +		pp->ops->deinit(pp);
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_host_deinit);
+>  
+> @@ -842,8 +842,8 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+>  		return ret;
+>  	}
+>  
+> -	if (pci->pp.ops->host_deinit)
+> -		pci->pp.ops->host_deinit(&pci->pp);
+> +	if (pci->pp.ops->deinit)
+> +		pci->pp.ops->deinit(&pci->pp);
+>  
+>  	pci->suspended = true;
+>  
+> @@ -860,8 +860,8 @@ int dw_pcie_resume_noirq(struct dw_pcie *pci)
+>  
+>  	pci->suspended = false;
+>  
+> -	if (pci->pp.ops->host_init) {
+> -		ret = pci->pp.ops->host_init(&pci->pp);
+> +	if (pci->pp.ops->init) {
+> +		ret = pci->pp.ops->init(&pci->pp);
+>  		if (ret) {
+>  			dev_err(pci->dev, "Host init failed: %d\n", ret);
+>  			return ret;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 55ff76e3d384..5c4518ad1bec 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -300,10 +300,10 @@ enum dw_pcie_ltssm {
+>  };
+>  
+>  struct dw_pcie_host_ops {
+> -	int (*host_init)(struct dw_pcie_rp *pp);
+> -	void (*host_deinit)(struct dw_pcie_rp *pp);
+> -	void (*host_post_init)(struct dw_pcie_rp *pp);
+> -	int (*msi_host_init)(struct dw_pcie_rp *pp);
+> +	int (*init)(struct dw_pcie_rp *pp);
+> +	void (*deinit)(struct dw_pcie_rp *pp);
+> +	void (*post_init)(struct dw_pcie_rp *pp);
+> +	int (*msi_init)(struct dw_pcie_rp *pp);
+>  	void (*pme_turn_off)(struct dw_pcie_rp *pp);
+>  };
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> index 2fe42c70097f..961dabcb1ec8 100644
+> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -215,7 +215,7 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops rockchip_pcie_host_ops = {
+> -	.host_init = rockchip_pcie_host_init,
+> +	.init = rockchip_pcie_host_init,
+>  };
+>  
+>  static int rockchip_pcie_clk_init(struct rockchip_pcie *rockchip)
+> diff --git a/drivers/pci/controller/dwc/pcie-fu740.c b/drivers/pci/controller/dwc/pcie-fu740.c
+> index 1e9b44b8bba4..66367252032b 100644
+> --- a/drivers/pci/controller/dwc/pcie-fu740.c
+> +++ b/drivers/pci/controller/dwc/pcie-fu740.c
+> @@ -279,7 +279,7 @@ static int fu740_pcie_host_init(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops fu740_pcie_host_ops = {
+> -	.host_init = fu740_pcie_host_init,
+> +	.init = fu740_pcie_host_init,
+>  };
+>  
+>  static const struct dw_pcie_ops dw_pcie_ops = {
+> diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
+> index fd484cc7c481..7a11c618b9d9 100644
+> --- a/drivers/pci/controller/dwc/pcie-histb.c
+> +++ b/drivers/pci/controller/dwc/pcie-histb.c
+> @@ -198,7 +198,7 @@ static int histb_pcie_host_init(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops histb_pcie_host_ops = {
+> -	.host_init = histb_pcie_host_init,
+> +	.init = histb_pcie_host_init,
+>  };
+>  
+>  static void histb_pcie_host_disable(struct histb_pcie *hipcie)
+> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> index c9c93524e01d..be52e9db44af 100644
+> --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
+> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> @@ -391,7 +391,7 @@ static const struct dw_pcie_ops intel_pcie_ops = {
+>  };
+>  
+>  static const struct dw_pcie_host_ops intel_pcie_dw_ops = {
+> -	.host_init =		intel_pcie_rc_init,
+> +	.init =		intel_pcie_rc_init,
+>  };
+>  
+>  static int intel_pcie_probe(struct platform_device *pdev)
+> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+> index 2ee146767971..c50e183f88d6 100644
+> --- a/drivers/pci/controller/dwc/pcie-kirin.c
+> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
+> @@ -672,7 +672,7 @@ static const struct dw_pcie_ops kirin_dw_pcie_ops = {
+>  };
+>  
+>  static const struct dw_pcie_host_ops kirin_pcie_host_ops = {
+> -	.host_init = kirin_pcie_host_init,
+> +	.init = kirin_pcie_host_init,
+>  };
+>  
+>  static int kirin_pcie_power_off(struct kirin_pcie *kirin_pcie)
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 6902e97719d1..cd986f50ec4a 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1244,9 +1244,9 @@ static void qcom_pcie_host_post_init(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
+> -	.host_init	= qcom_pcie_host_init,
+> -	.host_deinit	= qcom_pcie_host_deinit,
+> -	.host_post_init	= qcom_pcie_host_post_init,
+> +	.init		= qcom_pcie_host_init,
+> +	.deinit		= qcom_pcie_host_deinit,
+> +	.post_init	= qcom_pcie_host_post_init,
+>  };
+>  
+>  /* Qcom IP rev.: 2.1.0	Synopsys IP rev.: 4.01a */
+> diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> index 3bc45e513b3d..193ed88d3c2f 100644
+> --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> @@ -307,8 +307,8 @@ static void rcar_gen4_pcie_host_deinit(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops rcar_gen4_pcie_host_ops = {
+> -	.host_init = rcar_gen4_pcie_host_init,
+> -	.host_deinit = rcar_gen4_pcie_host_deinit,
+> +	.init = rcar_gen4_pcie_host_init,
+> +	.deinit = rcar_gen4_pcie_host_deinit,
+>  };
+>  
+>  static int rcar_gen4_add_dw_pcie_rp(struct rcar_gen4_pcie *rcar)
+> diff --git a/drivers/pci/controller/dwc/pcie-spear13xx.c b/drivers/pci/controller/dwc/pcie-spear13xx.c
+> index 99d47ae80331..201dced209f0 100644
+> --- a/drivers/pci/controller/dwc/pcie-spear13xx.c
+> +++ b/drivers/pci/controller/dwc/pcie-spear13xx.c
+> @@ -148,7 +148,7 @@ static int spear13xx_pcie_host_init(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops spear13xx_pcie_host_ops = {
+> -	.host_init = spear13xx_pcie_host_init,
+> +	.init = spear13xx_pcie_host_init,
+>  };
+>  
+>  static int spear13xx_add_pcie_port(struct spear13xx_pcie *spear13xx_pcie,
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 0fe113598ebb..52e26ed61380 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -1060,7 +1060,7 @@ static const struct dw_pcie_ops tegra_dw_pcie_ops = {
+>  };
+>  
+>  static const struct dw_pcie_host_ops tegra_pcie_dw_host_ops = {
+> -	.host_init = tegra_pcie_dw_host_init,
+> +	.init = tegra_pcie_dw_host_init,
+>  };
+>  
+>  static void tegra_pcie_disable_phy(struct tegra_pcie_dw *pcie)
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index 48c3eba817b4..354fb3bd0a19 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -311,7 +311,7 @@ static int uniphier_pcie_host_init(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops uniphier_pcie_host_ops = {
+> -	.host_init = uniphier_pcie_host_init,
+> +	.init = uniphier_pcie_host_init,
+>  };
+>  
+>  static int uniphier_pcie_host_enable(struct uniphier_pcie *pcie)
+> diff --git a/drivers/pci/controller/dwc/pcie-visconti.c b/drivers/pci/controller/dwc/pcie-visconti.c
+> index 71026fefa366..318c278e65c8 100644
+> --- a/drivers/pci/controller/dwc/pcie-visconti.c
+> +++ b/drivers/pci/controller/dwc/pcie-visconti.c
+> @@ -236,7 +236,7 @@ static int visconti_pcie_host_init(struct dw_pcie_rp *pp)
+>  }
+>  
+>  static const struct dw_pcie_host_ops visconti_pcie_host_ops = {
+> -	.host_init = visconti_pcie_host_init,
+> +	.init = visconti_pcie_host_init,
+>  };
+>  
+>  static int visconti_get_resources(struct platform_device *pdev,
+> -- 
+> 2.34.1
+> 
