@@ -2,376 +2,633 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E44287EA7F7
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Nov 2023 01:57:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 192377EA833
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Nov 2023 02:29:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229611AbjKNA5p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Nov 2023 19:57:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46446 "EHLO
+        id S229551AbjKNB3m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Nov 2023 20:29:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229511AbjKNA5o (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Nov 2023 19:57:44 -0500
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2055.outbound.protection.outlook.com [40.107.223.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD5E6D51;
-        Mon, 13 Nov 2023 16:57:39 -0800 (PST)
+        with ESMTP id S229508AbjKNB3l (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Nov 2023 20:29:41 -0500
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2099.outbound.protection.outlook.com [40.107.114.99])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 254291A8;
+        Mon, 13 Nov 2023 17:29:36 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kHQNsYjapjIOvAcUfJ7H9K8k69VqGh6WJb630sYp1c0rYh8GqiUlsr5KQSXbkm7RMCMDvh9GVw1Ah1+OjefUhTRRoOqqKcY936K60ZS6kwPD8FFamPiIoXsBTQF1ECarGgIZ9lMe0OYzaBOR92IGHAmbFlDwmW3WAWCwjgfKcbQhKVOe+S7no15UQ2/a83UY79Z4XH9xdbly6wJ+sQRxN2pewOnNiGXXEla6c/nH60bJvmuyyHXMeYwP9chO1CltoHU5qEiBkwNLZGI4SuuMeM5FkOqRqpza/pOy7sV+D7cLVqx4tIOaNUNuUFNjKDQ5nDfDSRfgcVp3cZ0QlHPUqA==
+ b=G505GG13BcqpgljaW3WG8qpDUjqrY7X+MFqFCYZDKEoXxfnPcMS9MgDm+uqJfAfuZvOMuar9wfGbxVP7cfd91cIHhbxaFSGsOXN40D/NVAhNfLWtXkWiV41MDb/WdxI6oA5uXWzGAbIO+nD/3u01Ulcg+0oagwIpbxj439HduCwbxJKcCkmlEMPScdhiXP4nM3PxG62mVSI57//QywXvpz31+jKyD+auUT1Wm3HQt/TDozrNz9k9ZoHcNa3EwJbv2xWpgPuf8lKGRI/49LhC0bM0mrADULBvmMANSEktmrtNMO4mc/qC+yT2nnpLOpVZwo5RvkIPrsRxLrbl1JZbNg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=J6y1jei7nFWXhWMzYGBZb3vLPn0CIxYrvBKAZklq0nE=;
- b=MGnGLkJjFpe8o5/roJaR59YJr8/dp059YLfh+trJLr/Od7hLYgikewEIxhKk8oqMy4ErhtsDRP/3bAlD0f6Rg94isTvihXQcYpOIgdtEx7ncqq7HqJIJqqHrh56ytc5oYMutvk9SYqz0tUW4TVqiyIQRkus4XPviHgi/51u7iAuWSbjMWyoZRADiD6W+quQK3dh4kImhLFwqbmsQElf/pGJKi4GalTksPAPJ5c3NpzLA+k7Z6n2v/gWhA5PKJNHmxZGDWG1yfUj3AUBOCpS2Bptq/x4kCYDe2L+soS+N43FUdu2hUVHBf1US1sbpPV8fWXloh2AtB0xEZc0lsIlZXg==
+ bh=tZn9t7wCL6vJb6yuLG/JNgJtpOOCvCvDJxCCRy2GWOY=;
+ b=FlQgFCjGzMfw3ahJzJ4psSIjbGz1iKwiwB/P3sWibTuytD19jewnycWygAtFIIbbKBeQ5mvZeIjHj9E4+Rl+/clndbXZTblkRCX3LJ9JRkIeTEwtNjzy8XoVy7sQH7yeLeB+5yvjYdJzWKJvHH0xt1uwuyVH8CTXYRZ1bw17+OpoPV235D5zCkS1fzB6d+oQr0H97oFkQReNnwg9ZyJFQD1TJvxoE6pq85LwhYcOkWNO3IqdL/lCAvDHbre9jAXrrwSirbjl9cbPzlZry+p9dDWLnN1PMqyeJHky08DAYOb/RXlbMz/VI3fYcOzxBw7ryQViYcratQBpNTdTJNeOCw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J6y1jei7nFWXhWMzYGBZb3vLPn0CIxYrvBKAZklq0nE=;
- b=VumYyGzC4kawbNZxf3/uRX4zYp1i+LeyEG2LTd/uXJ44vDkXATHjmrWHKyDqmlMlDg5xri2RhfmW3TRKg5wk5kIJWFPNewUM3TdTmH7nIvN1bplXNhfWu09vXB3VNkPX6lEFAXV1hNruCjedEnllBc9pPpI71zYjWwVxQoI54+w=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by CY5PR12MB6431.namprd12.prod.outlook.com (2603:10b6:930:39::8) with
- Microsoft SMTP Server (version=TLS1_2,
+ bh=tZn9t7wCL6vJb6yuLG/JNgJtpOOCvCvDJxCCRy2GWOY=;
+ b=EDVSVpxQlt9aNRY+qPJPRdNV11qH0YFtLQeGDT52YdaD9oCp8AMTyPhkWLOOd2TGqaqKahWML6KMlkn4I4e5VdA8ozNo3O4wwQnZflZGT2lT7dAqR9m+3U9Rayk2iUwBm8D6PPXFDrvYgS40/CDLNMFJAVpY1dvEHwV8x5w3JVc=
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ (2603:1096:404:8028::13) by TYWPR01MB9923.jpnprd01.prod.outlook.com
+ (2603:1096:400:237::10) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.29; Tue, 14 Nov
- 2023 00:57:37 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::3112:5f54:2e51:cf89]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::3112:5f54:2e51:cf89%5]) with mapi id 15.20.6977.029; Tue, 14 Nov 2023
- 00:57:37 +0000
-Message-ID: <51bf9fed-2bad-4eb1-bbc7-239200bff668@amd.com>
-Date:   Tue, 14 Nov 2023 11:57:34 +1100
-User-Agent: Mozilla Thunderbird
-Subject: Re: TDISP enablement
-Content-Language: en-US
-To:     Samuel Ortiz <sameo@rivosinc.com>
-Cc:     linux-coco@lists.linux.dev, kvm@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <e05eafd8-04b3-4953-8bca-dc321c1a60b9@amd.com>
- <ZVG3fREeTQqvHLb/@vermeer> <58a60211-1edc-4238-b4a3-fe7faf3b6458@amd.com>
- <ZVI8Y8VICy/SwYy5@vermeer>
-From:   Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <ZVI8Y8VICy/SwYy5@vermeer>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0116.namprd13.prod.outlook.com
- (2603:10b6:806:24::31) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+ 2023 01:29:30 +0000
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::50f5:eb2b:710a:b7c7]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::50f5:eb2b:710a:b7c7%6]) with mapi id 15.20.6977.029; Tue, 14 Nov 2023
+ 01:29:29 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Serge Semin <fancer.lancer@gmail.com>
+CC:     "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "mani@kernel.org" <mani@kernel.org>,
+        "minghuan.Lian@nxp.com" <minghuan.Lian@nxp.com>,
+        "mingkai.hu@nxp.com" <mingkai.hu@nxp.com>,
+        "roy.zang@nxp.com" <roy.zang@nxp.com>,
+        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH 3/3] PCI: dwc: Add dw_pcie_ep_{read,write}_dbi[2] helpers
+Thread-Topic: [PATCH 3/3] PCI: dwc: Add dw_pcie_ep_{read,write}_dbi[2] helpers
+Thread-Index: AQHaFdFZ9OiYX0KtrUmMUQSxaLoFhLB4MciAgADU1DA=
+Date:   Tue, 14 Nov 2023 01:29:29 +0000
+Message-ID: <TYBPR01MB5341AEC6A301654C95012792D8B2A@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+References: <20231113013300.2132152-1-yoshihiro.shimoda.uh@renesas.com>
+ <20231113013300.2132152-4-yoshihiro.shimoda.uh@renesas.com>
+ <tna3a5tn7ikg5vvsqadxrife6cihahsa7i2c6qqfihafxcrwx6@lx4l2j2es2yq>
+In-Reply-To: <tna3a5tn7ikg5vvsqadxrife6cihahsa7i2c6qqfihafxcrwx6@lx4l2j2es2yq>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|TYWPR01MB9923:EE_
+x-ms-office365-filtering-correlation-id: b9ffabd5-eee3-4f8c-362e-08dbe4b125d9
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dcmamSPq7LP+ZkSxd6CM39G0hddqF1Qo/xGKQGYuoQnLFseb3xPxxpxNZ15B+zbAowzFCY+cQ65A98W1Wtvpqb8Cv5pHkAzmD/7LLDDdM6fxoXq2B/sCKvxvqC7I5/hRjlNxR9tl98NvUN0cbCB99BgYszq7/rFdrDXhrLK9EvvD2bbzloRLVvxAQk9nepgexygWv7IgufUf3qxEdNeePoVfngxGPFORcOD5wdo2oouvnnBxHy1HOiRYl9WGixG6sZkRl7yfEsbmIX0cI1WFttHVw5lEAc3RNAanMdTb2mpbzObN9jICpk6UANPCpiuuHljTwy08WHE6Frg62GkB7iY3xSeWdq3z65bytm1Ego+78LgiJdIprkMlRHJkYAoEHIySYcTVxH8MJ//MGS1ep4QdTQwn0ckGh8enQkOWiZePdMm0rWZeIQxB84n/Jz9nfU1WOEagISI/jDrV8f1Wdms43jfNvqVFuyUkhF4n+DR2ljVOQowPso/7tgiOG0gdaSuQtvCYunc3uk67AH38wzhR9K1GvHqQH/N721NeHI6j4N+rhhtCIpEPKn8AgWhl2vnN4IjN467ZIiXKB5+dSviFojktTH3/iOQtghfJkYo+y4BPiPDCgh+vsOADEbZh
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(346002)(136003)(376002)(396003)(230922051799003)(451199024)(1800799009)(186009)(64100799003)(2906002)(55016003)(30864003)(83380400001)(38100700002)(38070700009)(33656002)(86362001)(122000001)(4326008)(8936002)(8676002)(71200400001)(478600001)(5660300002)(52536014)(6506007)(7696005)(41300700001)(6916009)(316002)(66476007)(66446008)(66946007)(54906003)(76116006)(66556008)(64756008)(7416002)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Ro3O0TbMNoi/Ee9fN9QGC22B08YMkgdisLS/1MN22XiD2gi8LL8oHJc4ThOP?=
+ =?us-ascii?Q?kfhjn58x4MNGKjoYqOJaEDVMFYZ2KbesZ5hOt1cKMfXjX8iy5uXSm4coXmi+?=
+ =?us-ascii?Q?VSOnaTxdhjRflxcqGsJJ2GrpMwXY9Z1XYkGjAjOQ/fOEcBBAlnzzQ3/aaK30?=
+ =?us-ascii?Q?KYuwD4tF7hBPNOXSt2zhFJmCnNluKm73THzXnFEnsWM94CyB9apbeBXp4lev?=
+ =?us-ascii?Q?aV/ej32qnAIGych4CcwYjrEohQzuMZFayZsn/Q/BbyuxjJNLLfToeS0sm9pc?=
+ =?us-ascii?Q?U2nFc4HB+SxPY7ovwPO/puJhvpDxGQt8V1XkJwXFneAaUifeRWV5+jFJYD69?=
+ =?us-ascii?Q?pJNMjMhK3olessP/QhUKHHntagf9odjbXScQ0IohNKzmcU5Gr6OcnhPwzEHc?=
+ =?us-ascii?Q?VPUOKZrQeIS7HHBPnzPxArEotXFVTxmoP6HT89szNWzAI32xAx1qoZuOUsZb?=
+ =?us-ascii?Q?07emjKHj4k5dd1LjMH2lV2yNjLb/9iegNPX3Yk9CQagq2cnn/i5+LkJpJmVJ?=
+ =?us-ascii?Q?i7z8nciJQO5W9JITiiL2ctF9BREUmE4RXCwBV0QdaLvnNFgTc9A0L8X2+KFH?=
+ =?us-ascii?Q?xHmUDeTo4vzLTlXVt8MEQxWok7Ehl3nXX31bj8+cGjO730b88b0S6CGDEdtB?=
+ =?us-ascii?Q?rMhjFjfdc5e6mqkOmjr4pSq84Bs8oCSh4uE01bYtA/SogKwxBRBFMvlmn8yV?=
+ =?us-ascii?Q?bbu292to6c5FMvv9j6IjEqn2+1b7KfdVQbGrOkPChVrtkIIEAjjySLwklccK?=
+ =?us-ascii?Q?hS/VJw+2/Vn0gfeyWK7ohCbcCah7xy/W3hngtt/KvXjIFFUVDZdHs8QuDany?=
+ =?us-ascii?Q?TmKH5Rq98/AV9BKKdbop1ZY6BKhCJC1fwt9JL803x2cahSaDsV6STaWolGNo?=
+ =?us-ascii?Q?eiDfsi7wknoDs2bQA9bfrTDxViymwRFffuTBged+k6VnrqOdsl2D2qg0IvSM?=
+ =?us-ascii?Q?0s49DA90gOyOTgaUM+P9jg10iQ7uIA2fOVhLWyb0KFg+uzWQ2cKga/n0uyF3?=
+ =?us-ascii?Q?nI5ZJDFiURCe6Rn/rNXDH+QsohyUvmNpezAj70uGq83Gj+1bVTESlEjtGZko?=
+ =?us-ascii?Q?RA7MZV4HVVNdQfUKZMLmyouw2CtOkxF2LCQIFZYabnWCKawwQvPt8QsVOL3g?=
+ =?us-ascii?Q?6wt3hXDwxNMz+todPFicC3hTzlbEAmd6ZGNN4P7dOCmqbSHQXR0xKOsA+AWA?=
+ =?us-ascii?Q?l5I0HnuKMHTW+Tfjb2meJR9iYsV5j98FJNgeo5voJERrm1YbBDyXPaLX63WS?=
+ =?us-ascii?Q?/Okbs8Kx/3QWkh//FI+SjE7jT9HpUFZQkQPyNdkAPfQiz2nf1tyc5pjVVhaV?=
+ =?us-ascii?Q?iQkoY7rXwyZFd4RfMv9CWi4/+ZrdRzEPAAGWw6boEe7bGqcZR4lA2eM2M8ZF?=
+ =?us-ascii?Q?YwxtnEOOIK1J1j+FzoFiFMOzCQ13kJHl00knk5K+MqbBIxaIineYzvRBbvg+?=
+ =?us-ascii?Q?I/I8ZOIwOAbXWdpndRZ5LS3tuhTuSkEGH0wffVrsS0DP4g8gHap99+8spBqI?=
+ =?us-ascii?Q?Q/W+yr2FXCIWqaR+6fyPeN75A5LOrC+ZLsB1uobb+spVQ5oHUbh3+2MKeEB4?=
+ =?us-ascii?Q?Cz7RWwivpGqVeNFiuqlGFHD605l+DwWAfIwJ1zy939W6L8BITSp9TQ6ab5zQ?=
+ =?us-ascii?Q?gs5bDbEwSu8AfbU1Gn6zWJWJxEdYg81j6Z22UtadT3dwFNISZLqsdvsaearm?=
+ =?us-ascii?Q?NSvQGA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|CY5PR12MB6431:EE_
-X-MS-Office365-Filtering-Correlation-Id: a845dd74-f0ec-41a1-ffed-08dbe4acb1d5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4nc2YkyRRr5dS8kgPgoJ/PDCI/J/VUtnLHl4CYIyDX9r4yXaXE1hyVgJ8+91IfJdsM6/nxtnVSeKfr82Gb4ZyF0PBbuwR0CigQO8oJyTvzT7c8OyKBYRp7crJPNDRtuAvn8oGF6V8ov6PpOyJLWGScrShY4ifonzpIjC5DxCn7REl4lXpnt5ZvbtcKdH2v/L1QTBxn1zSaViPJWuC+X6+QSukJDxueLYTP1sl7c4Qdsie/BjL9wK/4bEbPIVNqVEj5DQ4lsIaNJPqXpz9uBVW+aUgPXrsaH+7BT/pSvMObYGrp+ymcBTDEMyVx02eRLUS0B5ZTvziWq499YahKinlyrekDPzu2LrAqFJSU74crdywv4rECJNpTyxZ7C+tfiCup0ThnkjY3em3Y+4YHHoolIQ9EIvL5Qp4Y2alLeOrxxz/itcV1zLSAlqQG0Lh/AZ1nwpYE/x+YC2jczlD6ZypgEKVfWyKgSOeacc83ZjdWBl0wFH6yvJfkjwndKcsqB9dw19wA16sq2nt9XJR7OcNBDS+8lyWIPlL3xXgx3sTr0fRrfMwFjRBy/S5+n5zJaXW8uXuXlN0i76TWWl+ZYd+qKpVB6xyT+NhMEaz8luPJA84V2dkY0lto2aZABhJOqFdWIev8XJRWHqN4D6lzjaSw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(346002)(396003)(376002)(136003)(230922051799003)(186009)(64100799003)(1800799009)(451199024)(53546011)(41300700001)(26005)(6506007)(6916009)(6486002)(478600001)(6666004)(316002)(6512007)(30864003)(2616005)(5660300002)(31696002)(83380400001)(36756003)(8936002)(2906002)(8676002)(7116003)(4326008)(66946007)(66476007)(66556008)(31686004)(38100700002)(3480700007)(66899024)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dXRYdHpXUHJkeVJaeklBZmhvVmNza0d3Tm50TjRmdmVIKzBBVFZ2ekNNVG1D?=
- =?utf-8?B?MkZzbG53MGlMd3lTc3NhSFVKNlhzdGFaSDNkZHNBVE8xdzZqclRhV2JJWVp3?=
- =?utf-8?B?OEd5T2l6Z1NtNlFRcnlFREI5UEN2NytOdmVtbXA3Mm83eXordEJadGRkSFVD?=
- =?utf-8?B?aWJZSW1EWGJSTGpGaGgzdGRPeTdJMkt3enVWdnFRclRmaDNRR2RuTHZLcW9n?=
- =?utf-8?B?dHdxSXNJZFpnVnlZTkFCU0hSd3kzL2ZQTDNLdGs0OXRpT0RwcDVkMmk4Zkw4?=
- =?utf-8?B?OEJiQStyNnZTUFNZNER0YnZOaHE5WkNaa090anZYY0tlTXRMaDhCNW1xTG5m?=
- =?utf-8?B?WTZGcHdqZVFUQnhwTFUxQkJKYXIzbVpwN3dra1JYZ1FqV1ltVlJkQ1hDRnZY?=
- =?utf-8?B?VFlUSVI0OTExUnJLZXZvZHVBakVabVQ3Ty9GYUh2c0k0UDFaT2NwRHFJRlgv?=
- =?utf-8?B?MlVPZTVTTHVVRnRmV3lSMTg0TWJyRXJZbWtITXZOUTJlQUhFR0lyVndMVGxv?=
- =?utf-8?B?MDE1Q3B6ajdEakZvNlMzc3RIK2M5MTZOa3oxWkxteExDM0pVMzJCQVpESHBl?=
- =?utf-8?B?aWtMdjVvbnA3SkdEUWkwY0x4eG9oNElBV0lGdTMydTBFYUJyeTYzUFJGOUh3?=
- =?utf-8?B?N3JucHZGM3hpd0JJL3FmVGE2cUJLK0lWa21RdFBOUXl0cDV4cDZLOWthV3NU?=
- =?utf-8?B?WnJSVW9xQ2dITFdXSExpM2hzMG83RXkzakZ3UnVIbjBSelpNa1NuSVpuM0lu?=
- =?utf-8?B?OU1lWjdZSWoybkE5MUF2NXFEK0tpeGhiQmo4Mk5FWWppMnBuK3F1SGlYRVRq?=
- =?utf-8?B?bVQ5em16cENSNWdwRkR5MjZlSDVJNWRvMTlRZy8rK0hXNWkrYmhSd1E1S004?=
- =?utf-8?B?aXp0SW5kcGRFMkNTS3VQZzJBS09sNXZzN3FCNlQvTVpQcXpNbVpBbFJZL3pL?=
- =?utf-8?B?MGRxeXRWc2x6NVQvRVpMdGhWTW5pOFRBUjFDRTdWMFVPNldLRUJXL2U0VjV0?=
- =?utf-8?B?cE8wZ04wM2wvMGRXTE1tZVh4VkkveGxXdllDRGR0YWFJYW9FS1NGQy9DWUpO?=
- =?utf-8?B?RUF2clJBNlFVK1RLTFNINWcwTmhnNmhwamloS3lZMzB2akpITGpSWm1yTTNp?=
- =?utf-8?B?OGNRNVlpaTVJTXVXb1ozcUFMV1FvWkhNYnJuMEk0YUpMQUJZb0F1ck1TaDY4?=
- =?utf-8?B?b08yZ0k0VFNIdHN5VmdhZEpLNDdiZlFXTWZkYkhFV2JtcGVONnlKSkFsTEhN?=
- =?utf-8?B?cm5xUFNhalVRa09UYm9KZGhMalM5WXNuQWVjTllOaUVsT0l4SEtWR3NFMFp3?=
- =?utf-8?B?VzN6amhTbFRNcjB5TG5Ub0hoTGl1dGhhcWJ0bGppUUZQWHhqWWFqU0RMM2lh?=
- =?utf-8?B?ZjZnbno4Q1hyeTg3M2ZZRURGcWRjRnd4dkZUT3hrNGxJYmpCSVRLZnVZbXQr?=
- =?utf-8?B?UkNPMnBPOHByZHdwRlFzMzNEUHlPbDBzdlJYSDY3a1lGNThGWnprTHRENTJH?=
- =?utf-8?B?UnRyd2tOemhYUEhtWDNIenB1V3BCdHYwcksyVTlja3ZuTHBvQkd3WVR6d1F3?=
- =?utf-8?B?U2xxZWtyTUQ4ZzZhOEJseDRVN1J6dSsvNlhKVkJJUTh2cTRlVjErZW50eU0r?=
- =?utf-8?B?SHF0a1hOQmMwLzVGSHk5b3dVSE4xTHJXc21nMmVtYU5kSk1mclVLanpZMWIw?=
- =?utf-8?B?aTFmN0JHU1JNY0U3MFh0cWdicVErNjI4Uk41eUlFblkwem5tYWhKRkdPZG4r?=
- =?utf-8?B?NGxQQVA1R2JhblkrZHVhbEdSZnRaTE9rT25SdE44Z2ZBa0xlUllnaWR1MVQ3?=
- =?utf-8?B?L2U3YVNuNW03Uk9JdGdQdWkzVkhsYno3UDVnTkhtTHcxa1VUVDVnYTcvUFNP?=
- =?utf-8?B?ZVFoa1lIU01ST0U0U05wOXNLenViUGhmOG9zbjNkWVFNMXlTSEN0R3ZyNnMv?=
- =?utf-8?B?dENBTy9jSHhlaEE0TEtIRWZnOXNxbkNLOWJqSnorbE4yMkc3VXBYdmsxRkJa?=
- =?utf-8?B?MzNURkpFRG5lK3EzSUNuZ0J1dllnZkltLzhuQTQ5aXF4MndCWldCOG96eDVK?=
- =?utf-8?B?N0RmQWV4S1hIQkFZMTQzamxFVlRvcUV5NWo0RDc4b0QyQkhSL0dSM0lmTEFR?=
- =?utf-8?Q?PZnc/t2RGROdvTQwEUoEk8mxq?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a845dd74-f0ec-41a1-ffed-08dbe4acb1d5
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
+X-OriginatorOrg: renesas.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2023 00:57:37.3209
+X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9ffabd5-eee3-4f8c-362e-08dbe4b125d9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Nov 2023 01:29:29.7984
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fLGX+yQpXwRlUSMWu+qvm8UlUKKxC2LeLNhXPhzBf8t1l2Eizuqw1iBV5KBwsYdO+pHSFn/Y+icuSHrBO394JA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6431
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: a/kL0EKYeWjCNrgrxIBe6Xz3RlwIfXrIB3cnUXFTNTcXap0OWtwINpPQXfzl0+GV6oiBTxSP4S3zYyKGh4BsBhzu98smuHoG5qZFV3plQIsb74IdXAb6qkaiVyC4iN92
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB9923
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hello Serge,
 
-On 14/11/23 02:10, Samuel Ortiz wrote:
-> On Mon, Nov 13, 2023 at 05:46:35PM +1100, Alexey Kardashevskiy wrote:
->>
->> On 13/11/23 16:43, Samuel Ortiz wrote:
->>> Hi Alexey,
->>>
->>> On Wed, Nov 01, 2023 at 09:56:11AM +1100, Alexey Kardashevskiy wrote:
->>>> Hi everyone,
->>>>
->>>> Here is followup after the Dan's community call we had weeks ago.
->>>>
->>>> Our (AMD) goal at the moment is TDISP to pass through SRIOV VFs to
->>>> confidential VMs without trusting the HV and with enabled IDE (encryption)
->>>> and IOMMU (performance, compared to current SWIOTLB). I am aware of other
->>>> uses and vendors and I spend hours unsuccessfully trying to generalize all
->>>> this in a meaningful way.
->>>>
->>>> The AMD SEV TIO verbs can be simplified as:
->>>>
->>>> - device_connect - starts CMA/SPDM session, returns measurements/certs, runs
->>>> IDE_KM to program the keys;
->>>> - device_reclaim - undo the connect;
->>>> - tdi_bind - transition the TDI to TDISP's LOCKED and RUN states, generates
->>>> interface report;
->>>
->>>   From a VF to TVM use case, I think tdi_bind should only transition to
->>> LOCKED, but not RUN. RUN should only be reached once the TVM approves
->>> the device, and afaiu this is a host call.
->>
->> What is the point in separating these? What is that thing which requires the
->> device to be in LOCKED but not RUN state (besides the obvious
->> START_INTERFACE_REQUEST)?
-> 
-> Because they're two very different steps of the TDI assignment into a
-> TVM.
-> TDISP moves to RUN upon TVM accepting the TDI into its TCB.
-> LOCKED is typically driven by the host, in order to lock the TDI
-> configuration while the TVM verifies, attest and accept or reject it
-> from its TCB.
-> 
-> When the TSM moves the TDI to RUN, by TVM request, all IO paths (DMA and
-> MMIO) are supposed to be functional. I understand most architectures
-> have ways to prevent TDIs from accessing access confidential memory
-> regardless of their TDISP state, but a TDI in the RUN state should not
-> be forbidden from DMA'ing the TVM confidential memory. Preventing it
-> from doing so should be an error case, not the nominal flow.
+> From: Serge Semin, Sent: Monday, November 13, 2023 9:41 PM
+>=20
+> On Mon, Nov 13, 2023 at 10:33:00AM +0900, Yoshihiro Shimoda wrote:
+> > The current code calculated some dbi[2] registers' offset by calling
+> > dw_pcie_ep_get_dbi[2]_offset() in each function. To improve code
+> > readability, add dw_pcie_ep_{read,write}_dbi[2} and some data-width
+> > related helpers.
+>=20
+> Thanks for submitting this cleanup patch. That's exactly what I meant
+> here
+<snip URL>
+> and Mani later here
+<snip URL>
+>=20
+> Please note a few nitpicks below.
 
-There is always a driver which has to enable the device and tell it 
-where it can DMA to/from anyway so the RUN state does not really let the 
-device start doing things once it is moved to RUN (except may be P2P but 
-this is not in our focus atm).
+Thank you for your review!
 
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > ---
+> >  .../pci/controller/dwc/pcie-designware-ep.c   | 230 ++++++++++--------
+> >  1 file changed, 129 insertions(+), 101 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/=
+pci/controller/dwc/pcie-designware-ep.c
+> > index 1100671db887..dcbed49c9613 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -65,24 +65,89 @@ static unsigned int dw_pcie_ep_get_dbi2_offset(stru=
+ct dw_pcie_ep *ep, u8 func_no
+> >  	return dbi2_offset;
+> >  }
+> >
+> > +static u32 dw_pcie_ep_read_dbi(struct dw_pcie_ep *ep, u8 func_no, u32 =
+reg,
+> > +			       size_t size)
+> > +{
+> > +	unsigned int offset =3D dw_pcie_ep_get_dbi_offset(ep, func_no);
+> > +	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > +
+> > +	return dw_pcie_read_dbi(pci, offset + reg, size);
+> > +}
+> > +
+> > +static void dw_pcie_ep_write_dbi(struct dw_pcie_ep *ep, u8 func_no, u3=
+2 reg,
+> > +				 size_t size, u32 val)
+> > +{
+> > +	unsigned int offset =3D dw_pcie_ep_get_dbi_offset(ep, func_no);
+> > +	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > +
+> > +	dw_pcie_write_dbi(pci, offset + reg, size, val);
+> > +}
+> > +
+> > +static void dw_pcie_ep_write_dbi2(struct dw_pcie_ep *ep, u8 func_no, u=
+32 reg,
+> > +				  size_t size, u32 val)
+> > +{
+> > +	unsigned int offset =3D dw_pcie_ep_get_dbi2_offset(ep, func_no);
+> > +	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > +
+> > +	dw_pcie_write_dbi2(pci, offset + reg, size, val);
+> > +}
+> > +
+> > +static inline void dw_pcie_ep_writel_dbi(struct dw_pcie_ep *ep, u8 fun=
+c_no,
+> > +					 u32 reg, u32 val)
+> > +{
+> > +	dw_pcie_ep_write_dbi(ep, func_no, reg, 0x4, val);
+> > +}
+> > +
+> > +static inline u32 dw_pcie_ep_readl_dbi(struct dw_pcie_ep *ep, u8 func_=
+no,
+> > +				       u32 reg)
+> > +{
+> > +	return dw_pcie_ep_read_dbi(ep, func_no, reg, 0x4);
+> > +}
+> > +
+> > +static inline void dw_pcie_ep_writew_dbi(struct dw_pcie_ep *ep, u8 fun=
+c_no,
+> > +					 u32 reg, u16 val)
+> > +{
+> > +	dw_pcie_ep_write_dbi(ep, func_no, reg, 0x2, val);
+> > +}
+> > +
+> > +static inline u16 dw_pcie_ep_readw_dbi(struct dw_pcie_ep *ep, u8 func_=
+no,
+> > +				       u32 reg)
+> > +{
+> > +	return dw_pcie_ep_read_dbi(ep, func_no, reg, 0x2);
+> > +}
+> > +
+> > +static inline void dw_pcie_ep_writeb_dbi(struct dw_pcie_ep *ep, u8 fun=
+c_no,
+> > +					 u32 reg, u8 val)
+> > +{
+> > +	dw_pcie_ep_write_dbi(ep, func_no, reg, 0x1, val);
+> > +}
+> > +
+> > +static inline u8 dw_pcie_ep_readb_dbi(struct dw_pcie_ep *ep, u8 func_n=
+o,
+> > +				      u32 reg)
+> > +{
+> > +	return dw_pcie_ep_read_dbi(ep, func_no, reg, 0x1);
+> > +}
+> > +
+> > +static inline void dw_pcie_ep_writel_dbi2(struct dw_pcie_ep *ep, u8 fu=
+nc_no,
+> > +					  u32 reg, u32 val)
+> > +{
+> > +	dw_pcie_ep_write_dbi2(ep, func_no, reg, 0x4, val);
+> > +}
+> > +
+>=20
+> I am not sure whether the methods above are supposed to be defined
+> here instead of being moved to the "pcie-designware.h" header file
+> together with dw_pcie_ep_get_dbi2_offset() and
+> dw_pcie_ep_get_dbi_offset(). The later place seems more suitable
+> seeing the accessors are generic, look similar to the
+> dw_pcie_{write,read}_dbi{,2}() functions and might be useful in the
+> platform drivers. On the other hand no LLDDs would have used it
+> currently. So I'll leave this as a food for thoughts for the driver
+> and subsystem maintainers.
 
->>>> - tdi_info - read measurements/certs/interface report;
->>>> - tdi_validate - unlock TDI's MMIO and IOMMU (or invalidate, depends on the
->>>> parameters).
->>>
->>> That's equivalent to the TVM accepting the TDI, and this should
->>> transition the TDI from LOCKED to RUN.
->>
->> Even if the device was in RUN, it would not work until the validation is
->> done == RMP+IOMMU are updated by the TSM.
-> 
-> Right, and that makes sense from a security perspective. But a device in
-> the RUN state will expect IO to work, because it's a TDISP semantic for
-> it being accepted into the TVM and as such the TVM allowed access to its
-> confidential memory.
+Perhaps, when a device driver needs to use these functions actually,
+we can move these functions to pcie-designware.h, I think.
 
-I've read about RUN that "TDI resources are operational and permitted to 
-be accessed and managed by the TVM". They are, the TDI setup is done at 
-this point. It is the TVM's responsibility to request the RC side of 
-things to be configured.
+> >  static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, u8 func_no,
+> >  				   enum pci_barno bar, int flags)
+> >  {
+> > -	unsigned int dbi_offset, dbi2_offset;
+> >  	struct dw_pcie_ep *ep =3D &pci->ep;
+> >  	u32 reg, reg_dbi2;
+> >
+> > -	dbi_offset =3D dw_pcie_ep_get_dbi_offset(ep, func_no);
+> > -	dbi2_offset =3D dw_pcie_ep_get_dbi2_offset(ep, func_no);
+> > -
+> > -	reg =3D dbi_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
+> > -	reg_dbi2 =3D dbi2_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
+>=20
+> > +	reg =3D PCI_BASE_ADDRESS_0 + (4 * bar);
+> > +	reg_dbi2 =3D PCI_BASE_ADDRESS_0 + (4 * bar);
+>=20
+> Semantics of the both variables is identical, could you please drop
+> "reg_dbi2" and just use the "reg" variable instead here? You must have
+> just missed it because a similar change is done in the rest of the
+> places in this patch.
 
+I think so. I'll drop reg_dbi2 on v2.
 
->> This may be different for other
->> architectures though, dunno. RMP == reverse map table, an SEV SNP thing used
->> for verifying memory accesses.
->>
->>
->>>> The first 4 called by the host OS, the last two by the TVM ("Trusted VM").
->>>> These are implemented in the AMD PSP (platform processor).
->>>> There are CMA/SPDM, IDE_KV, TDISP in use.
->>>>
->>>> Now, my strawman code does this on the host (I simplified a bit):
->>>> - after PCI discovery but before probing: walk through all TDISP-capable
->>>> (TEE-IO in PCIe caps) endpoint devices and call device_connect;
->>>
->>> Would the host call device_connect unconditionally for all TEE-IO device
->>> probed on the host? Wouldn't you want to do so only before the first
->>> tdi_bind for a TDI that belongs to the physical device?
->>
->>
->> Well, in the SEV TIO, device_connect enables IDE which has value for the
->> host on its own.
-> 
-> Ok, that makes sense to me. And the TSM would be responsible for
-> supporting this. Then TDISP is exercised on a particular TDI for the
-> device when this TDI is passed through to a specific TVM.
->
->>
->>>> - when drivers probe - it is all set up and the device measurements are
->>>> visible to the driver;
->>>> - when constructing a TVM, tdi_bind is called;
->>>
->>> Here as well, the tdi_bind could be asynchronous to e.g. support hot
->>> plugging TDIs into TVMs.
->>
->>
->> I do not really see a huge difference between starting a VM with already
->> bound TDISP device or hotplugging a device - either way the host calls
->> tdi_bind and it does not really care about what the guest is doing at that
->> moment and when the guest sees a TDISP device - it is always bound.
-> 
-> I agree. What I meant is that bind can be called at TVM construction
-> time, or asynchronously whenever the host decides to attach a TDI to the
-> previously constructed TVM.
+> >  	dw_pcie_dbi_ro_wr_en(pci);
+> > -	dw_pcie_writel_dbi2(pci, reg_dbi2, 0x0);
+> > -	dw_pcie_writel_dbi(pci, reg, 0x0);
+> > +	dw_pcie_ep_writel_dbi2(ep, func_no, reg_dbi2, 0x0);
+> > +	dw_pcie_ep_writel_dbi(ep, func_no, reg, 0x0);
+> >  	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
+> > -		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, 0x0);
+> > -		dw_pcie_writel_dbi(pci, reg + 4, 0x0);
+> > +		dw_pcie_ep_writel_dbi2(ep, func_no, reg_dbi2 + 4, 0x0);
+> > +		dw_pcie_ep_writel_dbi(ep, func_no, reg + 4, 0x0);
+> >  	}
+> >  	dw_pcie_dbi_ro_wr_dis(pci);
+> >  }
+> > @@ -99,19 +164,15 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enu=
+m pci_barno bar)
+> >  EXPORT_SYMBOL_GPL(dw_pcie_ep_reset_bar);
+> >
+> >  static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie_ep *ep, u8 func_no=
+,
+> > -		u8 cap_ptr, u8 cap)
+> > +				     u8 cap_ptr, u8 cap)
+> >  {
+> > -	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > -	unsigned int dbi_offset =3D 0;
+> >  	u8 cap_id, next_cap_ptr;
+> >  	u16 reg;
+> >
+> >  	if (!cap_ptr)
+> >  		return 0;
+> >
+> > -	dbi_offset =3D dw_pcie_ep_get_dbi_offset(ep, func_no);
+> > -
+> > -	reg =3D dw_pcie_readw_dbi(pci, dbi_offset + cap_ptr);
+> > +	reg =3D dw_pcie_ep_readw_dbi(ep, func_no, cap_ptr);
+> >  	cap_id =3D (reg & 0x00ff);
+> >
+> >  	if (cap_id > PCI_CAP_ID_MAX)
+> > @@ -126,14 +187,10 @@ static u8 __dw_pcie_ep_find_next_cap(struct dw_pc=
+ie_ep *ep, u8 func_no,
+> >
+> >  static u8 dw_pcie_ep_find_capability(struct dw_pcie_ep *ep, u8 func_no=
+, u8 cap)
+> >  {
+> > -	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > -	unsigned int dbi_offset =3D 0;
+> >  	u8 next_cap_ptr;
+> >  	u16 reg;
+> >
+> > -	dbi_offset =3D dw_pcie_ep_get_dbi_offset(ep, func_no);
+> > -
+> > -	reg =3D dw_pcie_readw_dbi(pci, dbi_offset + PCI_CAPABILITY_LIST);
+> > +	reg =3D dw_pcie_ep_readw_dbi(ep, func_no, PCI_CAPABILITY_LIST);
+> >  	next_cap_ptr =3D (reg & 0x00ff);
+> >
+> >  	return __dw_pcie_ep_find_next_cap(ep, func_no, next_cap_ptr, cap);
+> > @@ -144,24 +201,21 @@ static int dw_pcie_ep_write_header(struct pci_epc=
+ *epc, u8 func_no, u8 vfunc_no,
+> >  {
+> >  	struct dw_pcie_ep *ep =3D epc_get_drvdata(epc);
+> >  	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > -	unsigned int dbi_offset =3D 0;
+> > -
+> > -	dbi_offset =3D dw_pcie_ep_get_dbi_offset(ep, func_no);
+> >
+> >  	dw_pcie_dbi_ro_wr_en(pci);
+> > -	dw_pcie_writew_dbi(pci, dbi_offset + PCI_VENDOR_ID, hdr->vendorid);
+> > -	dw_pcie_writew_dbi(pci, dbi_offset + PCI_DEVICE_ID, hdr->deviceid);
+> > -	dw_pcie_writeb_dbi(pci, dbi_offset + PCI_REVISION_ID, hdr->revid);
+> > -	dw_pcie_writeb_dbi(pci, dbi_offset + PCI_CLASS_PROG, hdr->progif_code=
+);
+> > -	dw_pcie_writew_dbi(pci, dbi_offset + PCI_CLASS_DEVICE,
+> > -			   hdr->subclass_code | hdr->baseclass_code << 8);
+> > -	dw_pcie_writeb_dbi(pci, dbi_offset + PCI_CACHE_LINE_SIZE,
+> > -			   hdr->cache_line_size);
+> > -	dw_pcie_writew_dbi(pci, dbi_offset + PCI_SUBSYSTEM_VENDOR_ID,
+> > -			   hdr->subsys_vendor_id);
+> > -	dw_pcie_writew_dbi(pci, dbi_offset + PCI_SUBSYSTEM_ID, hdr->subsys_id=
+);
+> > -	dw_pcie_writeb_dbi(pci, dbi_offset + PCI_INTERRUPT_PIN,
+> > -			   hdr->interrupt_pin);
+> > +	dw_pcie_ep_writew_dbi(ep, func_no, PCI_VENDOR_ID, hdr->vendorid);
+> > +	dw_pcie_ep_writew_dbi(ep, func_no, PCI_DEVICE_ID, hdr->deviceid);
+> > +	dw_pcie_ep_writeb_dbi(ep, func_no, PCI_REVISION_ID, hdr->revid);
+> > +	dw_pcie_ep_writeb_dbi(ep, func_no, PCI_CLASS_PROG, hdr->progif_code);
+> > +	dw_pcie_ep_writew_dbi(ep, func_no, PCI_CLASS_DEVICE,
+> > +			      hdr->subclass_code | hdr->baseclass_code << 8);
+> > +	dw_pcie_ep_writeb_dbi(ep, func_no, PCI_CACHE_LINE_SIZE,
+> > +			      hdr->cache_line_size);
+> > +	dw_pcie_ep_writew_dbi(ep, func_no, PCI_SUBSYSTEM_VENDOR_ID,
+> > +			      hdr->subsys_vendor_id);
+> > +	dw_pcie_ep_writew_dbi(ep, func_no, PCI_SUBSYSTEM_ID, hdr->subsys_id);
+> > +	dw_pcie_ep_writeb_dbi(ep, func_no, PCI_INTERRUPT_PIN,
+> > +			      hdr->interrupt_pin);
+> >  	dw_pcie_dbi_ro_wr_dis(pci);
+> >
+> >  	return 0;
+> > @@ -243,18 +297,13 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc=
+, u8 func_no, u8 vfunc_no,
+> >  {
+> >  	struct dw_pcie_ep *ep =3D epc_get_drvdata(epc);
+> >  	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > -	unsigned int dbi_offset, dbi2_offset;
+> >  	enum pci_barno bar =3D epf_bar->barno;
+> >  	size_t size =3D epf_bar->size;
+> >  	int flags =3D epf_bar->flags;
+> > -	u32 reg, reg_dbi2;
+> >  	int ret, type;
+> > +	u32 reg;
+> >
+> > -	dbi_offset =3D dw_pcie_ep_get_dbi_offset(ep, func_no);
+> > -	dbi2_offset =3D dw_pcie_ep_get_dbi2_offset(ep, func_no);
+> > -
+> > -	reg =3D PCI_BASE_ADDRESS_0 + (4 * bar) + dbi_offset;
+> > -	reg_dbi2 =3D PCI_BASE_ADDRESS_0 + (4 * bar) + dbi2_offset;
+> > +	reg =3D PCI_BASE_ADDRESS_0 + (4 * bar);
+> >
+> >  	if (!(flags & PCI_BASE_ADDRESS_SPACE))
+> >  		type =3D PCIE_ATU_TYPE_MEM;
+> > @@ -270,12 +319,12 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc=
+, u8 func_no, u8 vfunc_no,
+> >
+> >  	dw_pcie_dbi_ro_wr_en(pci);
+> >
+> > -	dw_pcie_writel_dbi2(pci, reg_dbi2, lower_32_bits(size - 1));
+> > -	dw_pcie_writel_dbi(pci, reg, flags);
+> > +	dw_pcie_ep_writel_dbi2(ep, func_no, reg, lower_32_bits(size - 1));
+> > +	dw_pcie_ep_writel_dbi(ep, func_no, reg, flags);
+> >
+> >  	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
+> > -		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, upper_32_bits(size - 1));
+> > -		dw_pcie_writel_dbi(pci, reg + 4, 0);
+> > +		dw_pcie_ep_writel_dbi2(ep, func_no, reg + 4, upper_32_bits(size - 1)=
+);
+> > +		dw_pcie_ep_writel_dbi(ep, func_no, reg + 4, 0);
+> >  	}
+> >
+> >  	ep->epf_bar[bar] =3D epf_bar;
+> > @@ -335,19 +384,15 @@ static int dw_pcie_ep_map_addr(struct pci_epc *ep=
+c, u8 func_no, u8 vfunc_no,
+> >  static int dw_pcie_ep_get_msi(struct pci_epc *epc, u8 func_no, u8 vfun=
+c_no)
+> >  {
+> >  	struct dw_pcie_ep *ep =3D epc_get_drvdata(epc);
+> > -	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > -	u32 val, reg;
+> > -	unsigned int dbi_offset =3D 0;
+> >  	struct dw_pcie_ep_func *ep_func;
+> > +	u32 val, reg;
+>=20
+> Special kudos for preserving and adding the reversed xmas tree order
+> here and below. =3D)
 
-+1.
+Yes :)
 
->>>> and then in the TVM:
->>>> - after PCI discovery but before probing: walk through all TDIs (which will
->>>> have TEE IO bit set) and call tdi_info, verify the report, if ok - call
->>>> tdi_validate;
->>>
->>> By verify you mean verify the reported MMIO ranges? With support from
->>> the TSM?
->>
->> The tdi_validate call to the PSP FW (==TSM) asks the PSP to validate the
->> MMIO values and enable them in the RMP.
-> 
-> Sounds good.
-> 
->>> We discussed that a few times, but the device measurements and
->>> attestation report should also be attested, i.e. run against a relying
->>> party. The kernel may not be the right place for that, and I'm proposing
->>> for the guest kernel to rely on a user space component and offload the
->>> attestation part to it. This userspace component would then
->>> synchronously return to the guest kernel with an attestation result.
->>
->> What bothers me here is that the userspace works when PCI is probed so when
->> the userspace is called for attestation - the device is up and running and
->> hosting the rootfs.
-> 
-> I guess you're talking about a use case where one would pass a storage
-> device through, and that device would hold the guest rootfs?
-> With the approach we're proposing, attestation would be optional and
-> upon the kernel's decision. In that case, the kernel would not require
-> userspace to run attestation (because there is no userspace...) but the
-> actual guest attestation would still happen whenever the guest would
-> want to fetch an attestation gated secret. And that attestation flow
-> would include the storage device attestation report, because it's part
-> of the guest TCB. So, eventually, the device would be attested, but not
-> right when the device is attached to the guest.
-> 
->> The userspace will need a knob which transitions the
->> device into the trusted state (switch SWIOTLB to direct DMA, for example). I
->> guess if the userspace is initramdisk, it could still reload the driver
->> which is not doing useful work just yet...
->>
->>
->>>> - when drivers probe - it is all set up and the driver decides if/which DMA
->>>> mode to use (SWIOTLB or direct), or panic().
->>>>
->>>
->>> When would it panic?
->>
->> When attestation failed.
-> 
-> Attestation failure should only trigger a rejection from the TVM, i.e.
-> the TDI would not be probed. That should be reported back to the host,
-> who may decide to call unbind on that TDI (and thus moved it back to
-> UNLOCKED).
-> 
->>>> Uff. Too long already. Sorry. Now, go to the problems:
->>>>
->>>> If the user wants only CMA/SPDM,
->>>
->>> By user here, you mean the user controlling the host? Or the TVM
->>> user/owner? I assume the former.
->>
->> Yes, the physical host owner.
->>
->>>> the Lukas'es patched will do that without
->>>> the PSP. This may co-exist with the AMD PSP (if the endpoint allows multiple
->>>> sessions).
->>>>
->>>> If the user wants only IDE, the AMD PSP's device_connect needs to be called
->>>> and the host OS does not get to know the IDE keys. Other vendors allow
->>>> programming IDE keys to the RC on the baremetal, and this also may co-exist
->>>> with a TSM running outside of Linux - the host still manages trafic classes
->>>> and streams.
->>>>
->>>> If the user wants TDISP for VMs, this assumes the user does not trust the
->>>> host OS and therefore the TSM (which is trusted) has to do CMA/SPDM and IDE.
->>>>
->>>> The TSM code is not Linux and not shared among vendors. CMA/SPDM and IDE
->>>> seem capable of co-existing, TDISP does not.
->>>
->>> Which makes sense, TDISP is not designed to be used outside of the
->>> TEE-IO VFs assigned to TVM use case.
->>>
->>>>
->>>> However there are common bits.
->>>> - certificates/measurements/reports blobs: storing, presenting to the
->>>> userspace (results of device_connect and tdi_bind);
->>>> - place where we want to authenticate the device and enable IDE
->>>> (device_connect);
->>>> - place where we want to bind TDI to a TVM (tdi_bind).
->>>>
->>>> I've tried to address this with my (poorly named) drivers/pci/pcie/tdisp.ko
->>>> and a hack for VFIO PCI device to call tdi_bind.
->>>>
->>>> The next steps:
->>>> - expose blobs via configfs (like Dan did configfs-tsm);
->>>> - s/tdisp.ko/coco.ko/;
->>>> - ask the audience - what is missing to make it reusable for other vendors
->>>> and uses?
->>>
->>> The connect-bind-run flow is similar to the one we have defined for
->>> RISC-V [1]. There we are defining the TEE-IO flows for RISC-V in
->>> details, but nothing there is architectural and could somehow apply to
->>> other architectures.
->>
->> Yeah, it is good one!
-> 
-> Thanks. Comments and improvements proposal are welcome.
-> 
->> I am still missing the need to have sbi_covg_start_interface() as a separate
->> step though. Thanks,
-> 
-> Just to reiterate: start_interface is a guest call into the TSM, to let
-> it know that it accepts the TDI. That makes the TSM do two things:
-> 
-> 1. Enable the MMIO and DMA mappings.
-> 2. Move the TDI to RUN.
-> 
-> After that call, the TDI is usable from a TVM perspective. Before that
-> call it is not, but its configuration and state are locked.
-Right. I still wonder what bad thing can happen if we move to RUN before 
-starting the TVM (I suspect there is something), or it is all about 
-semantics (for the AMD TIO usecase, at least)?
+Best regards,
+Yoshihiro Shimoda
 
-
-> Cheers,
-> Samuel.
-
--- 
-Alexey
-
-
+> -Serge(y)
+>=20
+> >
+> >  	ep_func =3D dw_pcie_ep_get_func_from_ep(ep, func_no);
+> >  	if (!ep_func || !ep_func->msi_cap)
+> >  		return -EINVAL;
+> >
+> > -	dbi_offset =3D dw_pcie_ep_get_dbi_offset(ep, func_no);
+> > -
+> > -	reg =3D ep_func->msi_cap + dbi_offset + PCI_MSI_FLAGS;
+> > -	val =3D dw_pcie_readw_dbi(pci, reg);
+> > +	reg =3D ep_func->msi_cap + PCI_MSI_FLAGS;
+> > +	val =3D dw_pcie_ep_readw_dbi(ep, func_no, reg);
+> >  	if (!(val & PCI_MSI_FLAGS_ENABLE))
+> >  		return -EINVAL;
+> >
+> > @@ -361,22 +406,19 @@ static int dw_pcie_ep_set_msi(struct pci_epc *epc=
+, u8 func_no, u8 vfunc_no,
+> >  {
+> >  	struct dw_pcie_ep *ep =3D epc_get_drvdata(epc);
+> >  	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > -	u32 val, reg;
+> > -	unsigned int dbi_offset =3D 0;
+> >  	struct dw_pcie_ep_func *ep_func;
+> > +	u32 val, reg;
+> >
+> >  	ep_func =3D dw_pcie_ep_get_func_from_ep(ep, func_no);
+> >  	if (!ep_func || !ep_func->msi_cap)
+> >  		return -EINVAL;
+> >
+> > -	dbi_offset =3D dw_pcie_ep_get_dbi_offset(ep, func_no);
+> > -
+> > -	reg =3D ep_func->msi_cap + dbi_offset + PCI_MSI_FLAGS;
+> > -	val =3D dw_pcie_readw_dbi(pci, reg);
+> > +	reg =3D ep_func->msi_cap + PCI_MSI_FLAGS;
+> > +	val =3D dw_pcie_ep_readw_dbi(ep, func_no, reg);
+> >  	val &=3D ~PCI_MSI_FLAGS_QMASK;
+> >  	val |=3D FIELD_PREP(PCI_MSI_FLAGS_QMASK, interrupts);
+> >  	dw_pcie_dbi_ro_wr_en(pci);
+> > -	dw_pcie_writew_dbi(pci, reg, val);
+> > +	dw_pcie_ep_writew_dbi(ep, func_no, reg, val);
+> >  	dw_pcie_dbi_ro_wr_dis(pci);
+> >
+> >  	return 0;
+> > @@ -385,19 +427,15 @@ static int dw_pcie_ep_set_msi(struct pci_epc *epc=
+, u8 func_no, u8 vfunc_no,
+> >  static int dw_pcie_ep_get_msix(struct pci_epc *epc, u8 func_no, u8 vfu=
+nc_no)
+> >  {
+> >  	struct dw_pcie_ep *ep =3D epc_get_drvdata(epc);
+> > -	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > -	u32 val, reg;
+> > -	unsigned int dbi_offset =3D 0;
+> >  	struct dw_pcie_ep_func *ep_func;
+> > +	u32 val, reg;
+> >
+> >  	ep_func =3D dw_pcie_ep_get_func_from_ep(ep, func_no);
+> >  	if (!ep_func || !ep_func->msix_cap)
+> >  		return -EINVAL;
+> >
+> > -	dbi_offset =3D dw_pcie_ep_get_dbi_offset(ep, func_no);
+> > -
+> > -	reg =3D ep_func->msix_cap + dbi_offset + PCI_MSIX_FLAGS;
+> > -	val =3D dw_pcie_readw_dbi(pci, reg);
+> > +	reg =3D ep_func->msix_cap + PCI_MSIX_FLAGS;
+> > +	val =3D dw_pcie_ep_readw_dbi(ep, func_no, reg);
+> >  	if (!(val & PCI_MSIX_FLAGS_ENABLE))
+> >  		return -EINVAL;
+> >
+> > @@ -411,9 +449,8 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc,=
+ u8 func_no, u8 vfunc_no,
+> >  {
+> >  	struct dw_pcie_ep *ep =3D epc_get_drvdata(epc);
+> >  	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > -	u32 val, reg;
+> > -	unsigned int dbi_offset =3D 0;
+> >  	struct dw_pcie_ep_func *ep_func;
+> > +	u32 val, reg;
+> >
+> >  	ep_func =3D dw_pcie_ep_get_func_from_ep(ep, func_no);
+> >  	if (!ep_func || !ep_func->msix_cap)
+> > @@ -421,21 +458,19 @@ static int dw_pcie_ep_set_msix(struct pci_epc *ep=
+c, u8 func_no, u8 vfunc_no,
+> >
+> >  	dw_pcie_dbi_ro_wr_en(pci);
+> >
+> > -	dbi_offset =3D dw_pcie_ep_get_dbi_offset(ep, func_no);
+> > -
+> > -	reg =3D ep_func->msix_cap + dbi_offset + PCI_MSIX_FLAGS;
+> > -	val =3D dw_pcie_readw_dbi(pci, reg);
+> > +	reg =3D ep_func->msix_cap + PCI_MSIX_FLAGS;
+> > +	val =3D dw_pcie_ep_readw_dbi(ep, func_no, reg);
+> >  	val &=3D ~PCI_MSIX_FLAGS_QSIZE;
+> >  	val |=3D interrupts;
+> >  	dw_pcie_writew_dbi(pci, reg, val);
+> >
+> > -	reg =3D ep_func->msix_cap + dbi_offset + PCI_MSIX_TABLE;
+> > +	reg =3D ep_func->msix_cap + PCI_MSIX_TABLE;
+> >  	val =3D offset | bir;
+> > -	dw_pcie_writel_dbi(pci, reg, val);
+> > +	dw_pcie_ep_writel_dbi(ep, func_no, reg, val);
+> >
+> > -	reg =3D ep_func->msix_cap + dbi_offset + PCI_MSIX_PBA;
+> > +	reg =3D ep_func->msix_cap + PCI_MSIX_PBA;
+> >  	val =3D (offset + (interrupts * PCI_MSIX_ENTRY_SIZE)) | bir;
+> > -	dw_pcie_writel_dbi(pci, reg, val);
+> > +	dw_pcie_ep_writel_dbi(ep, func_no, reg, val);
+> >
+> >  	dw_pcie_dbi_ro_wr_dis(pci);
+> >
+> > @@ -510,38 +545,34 @@ EXPORT_SYMBOL_GPL(dw_pcie_ep_raise_legacy_irq);
+> >  int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+> >  			     u8 interrupt_num)
+> >  {
+> > -	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > +	u32 msg_addr_lower, msg_addr_upper, reg;
+> >  	struct dw_pcie_ep_func *ep_func;
+> >  	struct pci_epc *epc =3D ep->epc;
+> >  	unsigned int aligned_offset;
+> > -	unsigned int dbi_offset =3D 0;
+> >  	u16 msg_ctrl, msg_data;
+> > -	u32 msg_addr_lower, msg_addr_upper, reg;
+> > -	u64 msg_addr;
+> >  	bool has_upper;
+> > +	u64 msg_addr;
+> >  	int ret;
+> >
+> >  	ep_func =3D dw_pcie_ep_get_func_from_ep(ep, func_no);
+> >  	if (!ep_func || !ep_func->msi_cap)
+> >  		return -EINVAL;
+> >
+> > -	dbi_offset =3D dw_pcie_ep_get_dbi_offset(ep, func_no);
+> > -
+> >  	/* Raise MSI per the PCI Local Bus Specification Revision 3.0, 6.8.1.=
+ */
+> > -	reg =3D ep_func->msi_cap + dbi_offset + PCI_MSI_FLAGS;
+> > -	msg_ctrl =3D dw_pcie_readw_dbi(pci, reg);
+> > +	reg =3D ep_func->msi_cap + PCI_MSI_FLAGS;
+> > +	msg_ctrl =3D dw_pcie_ep_readw_dbi(ep, func_no, reg);
+> >  	has_upper =3D !!(msg_ctrl & PCI_MSI_FLAGS_64BIT);
+> > -	reg =3D ep_func->msi_cap + dbi_offset + PCI_MSI_ADDRESS_LO;
+> > -	msg_addr_lower =3D dw_pcie_readl_dbi(pci, reg);
+> > +	reg =3D ep_func->msi_cap + PCI_MSI_ADDRESS_LO;
+> > +	msg_addr_lower =3D dw_pcie_ep_readl_dbi(ep, func_no, reg);
+> >  	if (has_upper) {
+> > -		reg =3D ep_func->msi_cap + dbi_offset + PCI_MSI_ADDRESS_HI;
+> > -		msg_addr_upper =3D dw_pcie_readl_dbi(pci, reg);
+> > -		reg =3D ep_func->msi_cap + dbi_offset + PCI_MSI_DATA_64;
+> > -		msg_data =3D dw_pcie_readw_dbi(pci, reg);
+> > +		reg =3D ep_func->msi_cap + PCI_MSI_ADDRESS_HI;
+> > +		msg_addr_upper =3D dw_pcie_ep_readl_dbi(ep, func_no, reg);
+> > +		reg =3D ep_func->msi_cap + PCI_MSI_DATA_64;
+> > +		msg_data =3D dw_pcie_ep_readw_dbi(ep, func_no, reg);
+> >  	} else {
+> >  		msg_addr_upper =3D 0;
+> > -		reg =3D ep_func->msi_cap + dbi_offset + PCI_MSI_DATA_32;
+> > -		msg_data =3D dw_pcie_readw_dbi(pci, reg);
+> > +		reg =3D ep_func->msi_cap + PCI_MSI_DATA_32;
+> > +		msg_data =3D dw_pcie_ep_readw_dbi(ep, func_no, reg);
+> >  	}
+> >  	aligned_offset =3D msg_addr_lower & (epc->mem->window.page_size - 1);
+> >  	msg_addr =3D ((u64)msg_addr_upper) << 32 |
+> > @@ -582,10 +613,9 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *e=
+p, u8 func_no,
+> >  			      u16 interrupt_num)
+> >  {
+> >  	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > -	struct dw_pcie_ep_func *ep_func;
+> >  	struct pci_epf_msix_tbl *msix_tbl;
+> > +	struct dw_pcie_ep_func *ep_func;
+> >  	struct pci_epc *epc =3D ep->epc;
+> > -	unsigned int dbi_offset =3D 0;
+> >  	u32 reg, msg_data, vec_ctrl;
+> >  	unsigned int aligned_offset;
+> >  	u32 tbl_offset;
+> > @@ -597,10 +627,8 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *e=
+p, u8 func_no,
+> >  	if (!ep_func || !ep_func->msix_cap)
+> >  		return -EINVAL;
+> >
+> > -	dbi_offset =3D dw_pcie_ep_get_dbi_offset(ep, func_no);
+> > -
+> > -	reg =3D ep_func->msix_cap + dbi_offset + PCI_MSIX_TABLE;
+> > -	tbl_offset =3D dw_pcie_readl_dbi(pci, reg);
+> > +	reg =3D ep_func->msix_cap + PCI_MSIX_TABLE;
+> > +	tbl_offset =3D dw_pcie_ep_readl_dbi(ep, func_no, reg);
+> >  	bir =3D FIELD_GET(PCI_MSIX_TABLE_BIR, tbl_offset);
+> >  	tbl_offset &=3D PCI_MSIX_TABLE_OFFSET;
+> >
+> > --
+> > 2.34.1
+> >
