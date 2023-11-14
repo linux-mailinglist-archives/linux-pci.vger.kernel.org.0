@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D90D47EB152
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Nov 2023 14:56:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A4787EB14A
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Nov 2023 14:56:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232262AbjKNN4n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Nov 2023 08:56:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49342 "EHLO
+        id S230053AbjKNN4l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Nov 2023 08:56:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232168AbjKNN4k (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Nov 2023 08:56:40 -0500
+        with ESMTP id S232027AbjKNN4j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Nov 2023 08:56:39 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C022D55;
-        Tue, 14 Nov 2023 05:56:35 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA8C7C43397;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20F5FD50;
+        Tue, 14 Nov 2023 05:56:34 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B15D0C433CD;
         Tue, 14 Nov 2023 13:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1699970193;
-        bh=FBrVwkCNQ13rjcfw1rE/Ykhh7nhHv9rEy/bYSmsBegQ=;
+        bh=eo9kfCbX6q6KqiGf0IQeZw8TC/sg5ZoML6hbCiQxCyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BBHOHfNckzRz7mnu26EM4ZGNdr34Tk+SyDvwuccRYDg3/vBsf5XfdAI532RpNgedV
-         N2JcKrllILDtvNuhJ1nbPIeWY5nSHp8yMzs02lrEnGHsngcHmdgVmFYB5nTN+iedLp
-         dvT6K9UjGj7xIwUy0BOu+U75X49pqAxeZkUf7ZxLMW3AZ48e94dDU7baWsnE/IUxOa
-         iaaixLJK/z0HBKHZwYXQuw/48ot5+xto239+Sedo42JooeUiqBl1f8et7L58/eNSHe
-         YuICzi3eeb6/fxPrdVYw8HwDXX7YFZzoBaJw4GEid+wCUMf1pJd2tiDkUHS0LBHoQ/
-         u85joJ6WXsyug==
+        b=hvzgQs4/9S5RUfSUDfl+ZBXj8xB4XpWCi1gh6wnZMfzRCKuYG5KTLn6y4h4DuADRA
+         oCa5tYe+ekj/mzp5YSjsWpZ2ILuTsBhlr/KuBHdZlMyxnxNTWg9sYZwd2yJEqavC0/
+         LsJfY+IPxeWYpZcBJvx/XVnxsriQqgUo9bFQkTqvoJq4RKZA2xsFGNjt2z+k84xlSN
+         qeOlTdksrKdZc1Az0YZoHAso558mOYRAKeudnfYMQ77IAKelqIDXCMQNqIj28cKbNm
+         E1OSs/RawbAUAJ2Nym5MugY8Gubl6pA7BUIyiiUdKscX5F3dMO5qEgjIB3NCp7TBeO
+         WgnjHWVXRD1Lg==
 Received: from johan by xi.lan with local (Exim 4.96.2)
         (envelope-from <johan+linaro@kernel.org>)
-        id 1r2tu2-0008PT-2c;
+        id 1r2tu2-0008PV-2s;
         Tue, 14 Nov 2023 14:56:30 +0100
 From:   Johan Hovold <johan+linaro@kernel.org>
 To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -43,11 +43,10 @@ Cc:     Andy Gross <agross@kernel.org>,
         Jonathan Derrick <jonathan.derrick@linux.dev>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 3/6] PCI: qcom: Fix deadlock when enabling ASPM
-Date:   Tue, 14 Nov 2023 14:55:50 +0100
-Message-ID: <20231114135553.32301-4-johan+linaro@kernel.org>
+        Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH 4/6] PCI: qcom: Clean up ASPM comment
+Date:   Tue, 14 Nov 2023 14:55:51 +0100
+Message-ID: <20231114135553.32301-5-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231114135553.32301-1-johan+linaro@kernel.org>
 References: <20231114135553.32301-1-johan+linaro@kernel.org>
@@ -63,56 +62,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The qcom_pcie_enable_aspm() helper is called from pci_walk_bus() during
-host init to enable ASPM.
+Break up the newly added ASPM comment so that it fits within the soft 80
+character limit and becomes more readable.
 
-Since pci_walk_bus() already holds a pci_bus_sem read lock, use the new
-locked helper to enable link states in order to avoid a potential
-deadlock (e.g. in case someone takes a write lock before reacquiring
-the read lock).
-
-This issue was reported by lockdep:
-
-   ============================================
-   WARNING: possible recursive locking detected
-   6.7.0-rc1 #4 Not tainted
-   --------------------------------------------
-   kworker/u16:6/147 is trying to acquire lock:
-   ffffbf3ff9d2cfa0 (pci_bus_sem){++++}-{3:3}, at: pci_enable_link_state+0x74/0x1e8
-
-   but task is already holding lock:
-   ffffbf3ff9d2cfa0 (pci_bus_sem){++++}-{3:3}, at: pci_walk_bus+0x34/0xbc
-
-   other info that might help us debug this:
-    Possible unsafe locking scenario:
-
-          CPU0
-          ----
-     lock(pci_bus_sem);
-     lock(pci_bus_sem);
-
-    *** DEADLOCK ***
-
-Fixes: 9f4f3dfad8cf ("PCI: qcom: Enable ASPM for platforms supporting 1.9.0 ops")
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-qcom.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index ce3ece28fed2..21523115f6a4 100644
+index 21523115f6a4..a6f08acff3d4 100644
 --- a/drivers/pci/controller/dwc/pcie-qcom.c
 +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -971,7 +971,7 @@ static int qcom_pcie_enable_aspm(struct pci_dev *pdev, void *userdata)
- {
- 	/* Downstream devices need to be in D0 state before enabling PCI PM substates */
- 	pci_set_power_state(pdev, PCI_D0);
--	pci_enable_link_state(pdev, PCIE_LINK_STATE_ALL);
-+	pci_enable_link_state_locked(pdev, PCIE_LINK_STATE_ALL);
+@@ -969,7 +969,10 @@ static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
  
- 	return 0;
- }
+ static int qcom_pcie_enable_aspm(struct pci_dev *pdev, void *userdata)
+ {
+-	/* Downstream devices need to be in D0 state before enabling PCI PM substates */
++	/*
++	 * Downstream devices need to be in D0 state before enabling PCI PM
++	 * substates.
++	 */
+ 	pci_set_power_state(pdev, PCI_D0);
+ 	pci_enable_link_state_locked(pdev, PCIE_LINK_STATE_ALL);
+ 
 -- 
 2.41.0
 
