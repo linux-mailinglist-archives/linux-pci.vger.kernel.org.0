@@ -2,61 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B1F757EAB5F
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Nov 2023 09:11:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D303F7EAB61
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Nov 2023 09:12:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232354AbjKNILB convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 14 Nov 2023 03:11:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56062 "EHLO
+        id S232262AbjKNIMD convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 14 Nov 2023 03:12:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232273AbjKNILA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Nov 2023 03:11:00 -0500
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C68A1B3;
-        Tue, 14 Nov 2023 00:10:56 -0800 (PST)
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-5a7d9d357faso59485697b3.0;
-        Tue, 14 Nov 2023 00:10:56 -0800 (PST)
+        with ESMTP id S232259AbjKNIMD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Nov 2023 03:12:03 -0500
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E544D182;
+        Tue, 14 Nov 2023 00:11:57 -0800 (PST)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5a84204e7aeso62327757b3.0;
+        Tue, 14 Nov 2023 00:11:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699949455; x=1700554255;
+        d=1e100.net; s=20230601; t=1699949517; x=1700554317;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=eQyWvVaaG3YYmj7OkmiIuVD+3WVrgTtuqGcCabyOScU=;
-        b=Rn0Z/U9Iy0+3PV8cARa5wLREEDxwo2jdiXdxSmCBlp47/gRCyAiSkcQ4zzwuQQIr0U
-         +AFB6FS72U+tusXr2qdeSYjjCeM07vt+GTuElymGjEsz5SpluoElbjZqVM0SAOzR4h+0
-         bcvgIAHzW0i3WAHHUEExA8kzd7t75bwk6Y5a7nyGOLwGTODsqLguyWECohojuyGYR639
-         lRGZNO3RdGdcPy1jP+y2pYZnY4QhE/0EtMva4ywRrpXr/02OCcbIWLdYNQIeAwwx33F9
-         2PReWP45viBFDwvenSK8bdp35WdyM8L4mztfjXlHSpk5588Ee9PG2mqM45QY/pVWb+wJ
-         kVlA==
-X-Gm-Message-State: AOJu0YzXbX59vNpugXlitA5RQ7/vPv8pCgKs9xMk4Tb+26M2YYddI7Kn
-        2xSiqC+JvrE5EbR5LImVX0NTWpw2JX1xeA==
-X-Google-Smtp-Source: AGHT+IHAvW/VgBqQp9T86sQdAssMESIZGxc0+n9okpt4otfQrJ8ijbNKto/OTYemuruTJAcmkMvyvg==
-X-Received: by 2002:a81:4113:0:b0:5a8:277f:b378 with SMTP id o19-20020a814113000000b005a8277fb378mr6212716ywa.1.1699949455205;
-        Tue, 14 Nov 2023 00:10:55 -0800 (PST)
+        bh=KHG3EGmxTIdYX2e8a6DHgsba/Di0EdWLhT/NZ6xsUZs=;
+        b=Myn11gem+mcdqzwev6mby7YL3+tl4xZwPqgRNmqPvaPjkhT1wDARYtunV9F1ajQBEg
+         excQKHn5ttfKf4JiGdVTqTmliU3vc5L/NOXJi70ig6LOqf3aD0bbynVqBUEynL3G21H6
+         ydjX6s7ML5HUo0Fivto5mgwU6jp8BrSsH83Pxl9bmCJWIHzGdT6IQzx56wdWk/Zr1pPv
+         KwL5Y5uQC/RLTzFuoYeW0A0Vr7L46LcXcUERdkBjcMtUYA1LkIOzeWKmXSZe+cdnskge
+         NjDpuFzegFIgzt3LTsGKhSn2Ydvam8p8pAHKtc3PycTCeCzYc1ZseU+nBkp9kRXXpJ4T
+         68Cg==
+X-Gm-Message-State: AOJu0YxgUB9BoLy0uXF1TOEnxRpYpgKZ1EzzAHgBnq+aMz3Z0DDDtbOd
+        DB2R315KxActlQ5wUnbaF/Y5IrpaSV08YA==
+X-Google-Smtp-Source: AGHT+IEC5AVmKpqc6r8I6fjzb8ldoGwOZT+9khjQ/9VMwgWbdok752EpgE72//VpFEHH2MUJn1YjTA==
+X-Received: by 2002:a81:8002:0:b0:5a7:a959:337 with SMTP id q2-20020a818002000000b005a7a9590337mr8492365ywf.27.1699949516993;
+        Tue, 14 Nov 2023 00:11:56 -0800 (PST)
 Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id v2-20020a0dd302000000b00576c727498dsm2266640ywd.92.2023.11.14.00.10.53
+        by smtp.gmail.com with ESMTPSA id c68-20020a0df347000000b005a8c392f498sm2263961ywf.82.2023.11.14.00.11.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Nov 2023 00:10:54 -0800 (PST)
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-da7238b3eb4so5838478276.1;
-        Tue, 14 Nov 2023 00:10:53 -0800 (PST)
-X-Received: by 2002:a25:4206:0:b0:da0:c80f:5775 with SMTP id
- p6-20020a254206000000b00da0c80f5775mr8699596yba.61.1699949453644; Tue, 14 Nov
- 2023 00:10:53 -0800 (PST)
+        Tue, 14 Nov 2023 00:11:56 -0800 (PST)
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-da819902678so5439574276.1;
+        Tue, 14 Nov 2023 00:11:56 -0800 (PST)
+X-Received: by 2002:a25:b381:0:b0:da0:5acf:e5f6 with SMTP id
+ m1-20020a25b381000000b00da05acfe5f6mr8305332ybj.61.1699949516109; Tue, 14 Nov
+ 2023 00:11:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20231114055456.2231990-1-yoshihiro.shimoda.uh@renesas.com> <20231114055456.2231990-6-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <20231114055456.2231990-6-yoshihiro.shimoda.uh@renesas.com>
+References: <20231114055456.2231990-1-yoshihiro.shimoda.uh@renesas.com> <20231114055456.2231990-7-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20231114055456.2231990-7-yoshihiro.shimoda.uh@renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Nov 2023 09:10:42 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWAa_9prcF3hVE+4DwtjVDzpQqA+qyMfB4P1U_yAVi9Zg@mail.gmail.com>
-Message-ID: <CAMuHMdWAa_9prcF3hVE+4DwtjVDzpQqA+qyMfB4P1U_yAVi9Zg@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] PCI: iproc: fix -Wvoid-pointer-to-enum-cast warning
+Date:   Tue, 14 Nov 2023 09:11:44 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdU_Bb4t2wA86ypegRu6i6gE9dftp3TRtpRP8MOmUD0QXQ@mail.gmail.com>
+Message-ID: <CAMuHMdU_Bb4t2wA86ypegRu6i6gE9dftp3TRtpRP8MOmUD0QXQ@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] PCI: rcar-gen4: fix -Wvoid-pointer-to-enum-cast warning
 To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
         bhelgaas@google.com, jingoohan1@gmail.com,
         gustavo.pimentel@synopsys.com, mani@kernel.org,
-        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Justin Stitt <justinstitt@google.com>,
-        Nathan Chancellor <nathan@kernel.org>
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -71,23 +69,14 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 On Tue, Nov 14, 2023 at 6:55 AM Yoshihiro Shimoda
 <yoshihiro.shimoda.uh@renesas.com> wrote:
-> From: Justin Stitt <justinstitt@google.com>
+> When building with clang 18 with adding -Wvoid-pointer-to-enum-cast,
+> the following error happens:
 >
-> When building with clang 18 I see the following warning:
-> |       drivers/pci/controller/pcie-iproc-platform.c:55:15: warning: cast to smaller
-> |                integer type 'enum iproc_pcie_type' from 'const void *' [-Wvoid-pointer-to-enum-cast]
-> |          55 |         pcie->type = (enum iproc_pcie_type) of_device_get_match_data(dev);
+> drivers/pci/controller/dwc/pcie-rcar-gen4.c:439:15: error: cast to smaller integer type 'enum dw_pcie_device_mode' from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
+>   439 |         rcar->mode = (enum dw_pcie_device_mode)of_device_get_match_data(&rcar->pdev->dev);
+>       |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> To fix this issue, use uintptr_t instead.
 >
-> This is due to the fact that `of_device_get_match_data` returns a void*
-> while `enum iproc_pcie_type` has the size of an int. This leads to
-> truncation and possible data loss.
-
-Note that in this case there is no data loss, as the original value
-stored is of type enum iproc_pcie_type.
-
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1910
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
 > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
