@@ -2,363 +2,523 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D719A7EAE4C
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Nov 2023 11:47:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3D927EAE57
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Nov 2023 11:52:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230295AbjKNKrX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Nov 2023 05:47:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50500 "EHLO
+        id S229596AbjKNKwf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Nov 2023 05:52:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230434AbjKNKrV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Nov 2023 05:47:21 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25178186;
-        Tue, 14 Nov 2023 02:47:17 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-53e2308198eso8316382a12.1;
-        Tue, 14 Nov 2023 02:47:17 -0800 (PST)
+        with ESMTP id S229441AbjKNKwe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Nov 2023 05:52:34 -0500
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8F14186;
+        Tue, 14 Nov 2023 02:52:29 -0800 (PST)
+Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2c50cf61f6dso75646031fa.2;
+        Tue, 14 Nov 2023 02:52:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699958835; x=1700563635; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=46YOEQ0FNblUgO/h8wcHgKHcfFM5epdSzmHpnsspYvQ=;
-        b=FpUiNx/oY0xzb9jSMtmehi3RKU+oP9u8GP6jjd0IlB9IMiEICNq5WoWuPrrj6WkCbw
-         Icn5qVl0BOBhix5HrKJlTDg5U/1QHZWCOueEEtFrxJJrPcxUKDEo9mmYo/P0gRhrimQ0
-         FS/wS+0z22g7CkBy1OBf+agi0HQgyfvSDjK/TKOIs/qdneWKpkXzSUqjyEaBcWsGVdlU
-         Qdz5ko/gEWCz9ubQ4C8dUmGTQUryZ8h5GEguEHIxr8ZnMdtCDfZRaAebqujyzZYNv8SW
-         RvlyaIEla+uYg8hr6IA6BnWaJDHiDkR+6pv3u+6BGPHhJ8AKVC38c++yOFVKXXLvmmve
-         tozQ==
+        d=gmail.com; s=20230601; t=1699959148; x=1700563948; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MiGXLmvRDdb+Www7N8zvaWUl2JSbQHy4Don+fAX4OAI=;
+        b=EtSUC4SxcQB0UyfMJAZnzyZIyCIHbpL6Ub+abiPfrOsWy+a2eYQvTF5OvB50mIhzJN
+         zCU5LWW79TUTlcBvy7ST3AkLXn46oaC7vwH5GyiJA8379OXG8vPeIlmjRMXr8DeXZTEz
+         wkUoTYD7MJNgJYrk8b/JS9tKpxjoisiJFLZdDGFjsi7zZH5q1wXD0iqdv25PWwAfgA3u
+         XHFSNMsa0wR5f3yIxmxJZKmU6/T3vJcAJQ0uA59wKXbeq+5CgytmxTs9CyjSYb/s+XEs
+         uAqCms5sWozU3w+KoiR3FHqSC1/0st9dDGgxcVMhRNwLWCDcM+pRVsDhY2A5b5pqsji7
+         ZveQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699958835; x=1700563635;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=46YOEQ0FNblUgO/h8wcHgKHcfFM5epdSzmHpnsspYvQ=;
-        b=gsMLbFM23vqYCMq9/TyJwD25wyR9wihWoIPXgzuBpfhRlPSy6K0DPhbIT3XPgE8bea
-         1fU6l+wqI7ZvgxpuGxC46X/DJvezPTb7ffS/MDZRk4mWCo0ENffACHeXg8cWtZmHmINq
-         A/oqqkZ4WxTKvC+KPLxFi4I7y3jTgDr4C9gp/bfDfpRfkPnDmk58ezyNffmsAhUXvzoi
-         atiXjugPbpHWCJK3K5Lem83YkwKldGTisRdHCSW3s+XL0Ph6h5Hwevrg888NjIiZ0rmK
-         eHITOWBBDzmiydfATvoqi92u+t9LImeo1oHV4QWFSDXrLhzviEiQ9mkCP1ey8AID/JN/
-         +0YA==
-X-Gm-Message-State: AOJu0YzJuOkJoK2vuAB6G7jnmV9O88ozqTvQpeBMGFX9GusX8M7P3xbC
-        2dk+y6sVKGyXIVJemfC9niE=
-X-Google-Smtp-Source: AGHT+IGZhzU7Qyk2MyoQf1Zp/5vnzrokW8QNcWOQ7Ev+4nIUCfVlBEGrqv1QErDIM+/2cBLRg98POg==
-X-Received: by 2002:aa7:c9d9:0:b0:534:8bdf:a258 with SMTP id i25-20020aa7c9d9000000b005348bdfa258mr6823355edt.31.1699958835166;
-        Tue, 14 Nov 2023 02:47:15 -0800 (PST)
-Received: from ?IPV6:2a01:c22:774d:c900:d8c1:a971:ec8:d2af? (dynamic-2a01-0c22-774d-c900-d8c1-a971-0ec8-d2af.c22.pool.telefonica.de. [2a01:c22:774d:c900:d8c1:a971:ec8:d2af])
-        by smtp.googlemail.com with ESMTPSA id d17-20020aa7c1d1000000b0052febc781bfsm4940681edp.36.2023.11.14.02.47.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Nov 2023 02:47:14 -0800 (PST)
-Message-ID: <ea31480f-2887-41fe-a560-f4bb1103479e@gmail.com>
-Date:   Tue, 14 Nov 2023 11:47:15 +0100
+        d=1e100.net; s=20230601; t=1699959148; x=1700563948;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MiGXLmvRDdb+Www7N8zvaWUl2JSbQHy4Don+fAX4OAI=;
+        b=FIiSzjabOi+dRMMJZF4PZiG7AJ8ykHp/0gI5J393gaY6nHQ2mO65yBgWBoRBlokQol
+         mv9bD/DRN+VFqUplrcX+Dzokko3p1HiYYFJKKX3YueZnUr5mDfziM/HuJXLcu75ia+/X
+         eZf5ZgzUn9VBkPbqBqirywjhwqsBeOK/eVU3cm69WAIGWNvLI53aOzzrl47wbgJiEyOa
+         jMtqiZ1VRoEyaqfqXSUX8M1W8EvSyG6vFp44nNP7vH14cQGZokde7ynTL59BrKmNpdFt
+         MIn9e80EH9KlPehIi8/dwxCYLB1JmwYrAvdB0N5da4iAbwTezI0eyyJkkE2pH6bGvKar
+         w7sA==
+X-Gm-Message-State: AOJu0YyApTRL8hMOTVyNgAdVRMudQc+Wpu0FUEZw/BKSLCSRDnjGdl3y
+        wVIKmYF1ldRCxLPNpycPYmA=
+X-Google-Smtp-Source: AGHT+IE9PdrZRmPPKjtZ7g+MzocMd9FllnEYhvcYqCcscmnCsiOqpUsEcPRNNPdx8X+72YM+SmmbcA==
+X-Received: by 2002:a2e:91cc:0:b0:2ba:6519:c50f with SMTP id u12-20020a2e91cc000000b002ba6519c50fmr1770148ljg.52.1699959147731;
+        Tue, 14 Nov 2023 02:52:27 -0800 (PST)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id j24-20020a2e8518000000b002c506c89511sm1269020lji.37.2023.11.14.02.52.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Nov 2023 02:52:27 -0800 (PST)
+Date:   Tue, 14 Nov 2023 13:52:24 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mani@kernel.org,
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] PCI: dwc: Add dw_pcie_ep_{read,write}_dbi[2]
+ helpers
+Message-ID: <qpw6zgqnxvnxqwzilelaev26xmjebimnyyvc5jzfgdyqgvjyvq@sne5unvwbea4>
+References: <20231114055456.2231990-1-yoshihiro.shimoda.uh@renesas.com>
+ <20231114055456.2231990-5-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bug report] lockdep WARN at PCI device rescan
-To:     Wolfram Sang <wsa@kernel.org>,
-        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j>
- <ZVNJCxh5vgj22SfQ@shikoro>
-Content-Language: en-US
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Autocrypt: addr=hkallweit1@gmail.com; keydata=
- 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
-In-Reply-To: <ZVNJCxh5vgj22SfQ@shikoro>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231114055456.2231990-5-yoshihiro.shimoda.uh@renesas.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 14.11.2023 11:16, Wolfram Sang wrote:
-> On Tue, Nov 14, 2023 at 06:54:29AM +0000, Shinichiro Kawasaki wrote:
->> Hello there.
->>
->> Recently I tried a couple of commands below on the kernel v6.6 and v6.7-rc1,
->> then observed a lockdep WARN at the second command [1]. The first command
->> removes a PCI device, and the second command rescans whole PCI devices to
->> regain the removed device.
->>
->>  # echo 1 > /sys/bus/pci/devices/0000:51:00.0/remove
->>  # echo 1 > /sys/bus/pci/rescan
->>
->> I tried this rescan for SAS-HBA or AHCI controller with HDDs. When those devices
->> are left in weird status after some kernel tests, I want to remove the SAS-HBA
->> and AHCI controller and rescan to get back the devices in good status. This
->> rescan looks working good except the WARN.
->>
->> The lockdep splat indicates possible deadlock between pci_rescan_remove_lock
->> and work_completion lock have deadlock possibility. Is the lockdep WARN a known
->> issue? I found a similar discussion in the past [2], but it did not discuss the
->> work_completion lock, so my observation looks a new, different issue.
->>
->> In the call stack, I found that the workqueue thread for i801_probe() calls
->> p2sb_bar(), which locks pci_rescan_remove_lock. IMHO, the issue cause looks that
->> pci_rescan_remove_lock is locked in both workqueue context and non-workqueue
->> context. As a fix trial, I created a quick patch [3]. It calls i801_probe() in
->> non-workqueue context only by adding a new flag to struct pci_driver. With this,
->> I observed the lockdep WARN disappears. Is this a good solution approach? If
->> not, is there any other better solution?
+On Tue, Nov 14, 2023 at 02:54:54PM +0900, Yoshihiro Shimoda wrote:
+> The current code calculated some dbi[2] registers' offset by calling
+> dw_pcie_ep_get_dbi[2]_offset() in each function. To improve code
+> readability, add dw_pcie_ep_{read,write}_dbi[2} and some data-width
+> related helpers.
+
+Nice update. Thanks!
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+
+I'll replicate my v1 nitpick regarding the accessors location here so
+the maintainers would decide whether it worth being taken into
+account.
+
 > 
-> Thanks for the report and the proposed solution. I'll add the i801
-> experts, Jean and Heiner, to CC.
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  .../pci/controller/dwc/pcie-designware-ep.c   | 231 ++++++++++--------
+>  1 file changed, 129 insertions(+), 102 deletions(-)
 > 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 1100671db887..2b5b5b0fa7a9 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -65,24 +65,88 @@ static unsigned int dw_pcie_ep_get_dbi2_offset(struct dw_pcie_ep *ep, u8 func_no
+>  	return dbi2_offset;
+>  }
+>  
+> +static u32 dw_pcie_ep_read_dbi(struct dw_pcie_ep *ep, u8 func_no, u32 reg,
+> +			       size_t size)
+> +{
+> +	unsigned int offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +
+> +	return dw_pcie_read_dbi(pci, offset + reg, size);
+> +}
+> +
+> +static void dw_pcie_ep_write_dbi(struct dw_pcie_ep *ep, u8 func_no, u32 reg,
+> +				 size_t size, u32 val)
+> +{
+> +	unsigned int offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +
+> +	dw_pcie_write_dbi(pci, offset + reg, size, val);
+> +}
+> +
+> +static void dw_pcie_ep_write_dbi2(struct dw_pcie_ep *ep, u8 func_no, u32 reg,
+> +				  size_t size, u32 val)
+> +{
+> +	unsigned int offset = dw_pcie_ep_get_dbi2_offset(ep, func_no);
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +
+> +	dw_pcie_write_dbi2(pci, offset + reg, size, val);
+> +}
+> +
+> +static inline void dw_pcie_ep_writel_dbi(struct dw_pcie_ep *ep, u8 func_no,
+> +					 u32 reg, u32 val)
+> +{
+> +	dw_pcie_ep_write_dbi(ep, func_no, reg, 0x4, val);
+> +}
+> +
+> +static inline u32 dw_pcie_ep_readl_dbi(struct dw_pcie_ep *ep, u8 func_no,
+> +				       u32 reg)
+> +{
+> +	return dw_pcie_ep_read_dbi(ep, func_no, reg, 0x4);
+> +}
+> +
+> +static inline void dw_pcie_ep_writew_dbi(struct dw_pcie_ep *ep, u8 func_no,
+> +					 u32 reg, u16 val)
+> +{
+> +	dw_pcie_ep_write_dbi(ep, func_no, reg, 0x2, val);
+> +}
+> +
+> +static inline u16 dw_pcie_ep_readw_dbi(struct dw_pcie_ep *ep, u8 func_no,
+> +				       u32 reg)
+> +{
+> +	return dw_pcie_ep_read_dbi(ep, func_no, reg, 0x2);
+> +}
+> +
+> +static inline void dw_pcie_ep_writeb_dbi(struct dw_pcie_ep *ep, u8 func_no,
+> +					 u32 reg, u8 val)
+> +{
+> +	dw_pcie_ep_write_dbi(ep, func_no, reg, 0x1, val);
+> +}
+> +
+> +static inline u8 dw_pcie_ep_readb_dbi(struct dw_pcie_ep *ep, u8 func_no,
+> +				      u32 reg)
+> +{
+> +	return dw_pcie_ep_read_dbi(ep, func_no, reg, 0x1);
+> +}
+> +
+> +static inline void dw_pcie_ep_writel_dbi2(struct dw_pcie_ep *ep, u8 func_no,
+> +					  u32 reg, u32 val)
+> +{
+> +	dw_pcie_ep_write_dbi2(ep, func_no, reg, 0x4, val);
+> +}
+> +
 
-+ Bjorn, Andy
+My comment was:
 
-i801 just uses p2sb_bar(), I don't see any issue in i801. Root cause seems to
-be in the PCI subsystem. Calling p2sb_bar() from a PCI driver probe callback
-seems to be problematic, nevertheless it's a valid API usage.
+> From: Serge Semin, Sent: Monday, November 13, 2023 9:41 PM
+> > I am not sure whether the methods above are supposed to be defined
+> > here instead of being moved to the "pcie-designware.h" header file
+> > together with dw_pcie_ep_get_dbi2_offset() and
+> > dw_pcie_ep_get_dbi_offset(). The later place seems more suitable
+> > seeing the accessors are generic, look similar to the
+> > dw_pcie_{write,read}_dbi{,2}() functions and might be useful in the
+> > platform drivers. On the other hand no LLDDs would have used it
+> > currently. So I'll leave this as a food for thoughts for the driver
+> > and subsystem maintainers.
 
-The proposed fix helps to get an idea of how to work around the issue.
-But IMO it more cures a symptom than fixes the root cause.
+Yoshihiro replied:
+> Perhaps, when a device driver needs to use these functions actually,
+> we can move these functions to pcie-designware.h, I think.
 
->>
->> [1] kernel message log at the second command
->>
->> [  242.922091] ======================================================
->> [  242.931663] WARNING: possible circular locking dependency detected
->> [  242.938292] mpt3sas_cm1: 63 BIT PCI BUS DMA ADDRESSING SUPPORTED, total mem (56799464 kB)
->> [  242.939415] 6.7.0-rc1-kts #1 Not tainted
->> [  242.939419] ------------------------------------------------------
->> [  242.939421] bash/1615 is trying to acquire lock:
->> [  242.939424] ff1100017bf87910 ((work_completion)(&wfc.work)){+.+.}-{0:0}, at: __flush_work+0xc5/0x980
->> [  242.989069] 
->>                but task is already holding lock:
->> [  243.000283] ffffffff870bf4a8 (pci_rescan_remove_lock){+.+.}-{3:3}, at: rescan_store+0x96/0xd0
->> [  243.012269] 
->>                which lock already depends on the new lock.
->>
->> [  243.028569] 
->>                the existing dependency chain (in reverse order) is:
->> [  243.041611] 
->>                -> #1 (pci_rescan_remove_lock){+.+.}-{3:3}:
->> [  243.053709]        __mutex_lock+0x16a/0x1880
->> [  243.060767]        p2sb_bar+0xa7/0x250
->> [  243.067213]        i801_add_tco_spt.constprop.0+0x88/0x1f0 [i2c_i801]
->> [  243.076707]        i801_add_tco+0x18a/0x210 [i2c_i801]
->> [  243.084727]        i801_probe+0x99c/0x1500 [i2c_i801]
->> [  243.092618]        local_pci_probe+0xd6/0x190
->> [  243.099708]        work_for_cpu_fn+0x4e/0xa0
->> [  243.106673]        process_one_work+0x736/0x1230
->> [  243.114012]        worker_thread+0x723/0x1300
->> [  243.121039]        kthread+0x2ee/0x3d0
->> [  243.127372]        ret_from_fork+0x2d/0x70
->> [  243.134073]        ret_from_fork_asm+0x1b/0x30
->> [  243.141140] 
->>                -> #0 ((work_completion)(&wfc.work)){+.+.}-{0:0}:
->> [  243.153341]        __lock_acquire+0x2e74/0x5ea0
->> [  243.160490]        lock_acquire+0x196/0x4b0
->> [  243.167236]        __flush_work+0xe2/0x980
->> [  243.173882]        work_on_cpu_key+0xcc/0xf0
->> [  243.180709]        pci_device_probe+0x548/0x740
->> [  243.187813]        really_probe+0x3df/0xb80
->> [  243.194525]        __driver_probe_device+0x18c/0x450
->> [  243.202128]        driver_probe_device+0x4a/0x120
->> [  243.209437]        __device_attach_driver+0x15e/0x270
->> [  243.217149]        bus_for_each_drv+0x101/0x170
->> [  243.224260]        __device_attach+0x189/0x380
->> [  243.231254]        pci_bus_add_device+0x9f/0xf0
->> [  243.238360]        pci_bus_add_devices+0x7f/0x190
->> [  243.245639]        pci_bus_add_devices+0x114/0x190
->> [  243.253017]        pci_rescan_bus+0x23/0x30
->> [  243.259711]        rescan_store+0xa2/0xd0
->> [  243.266187]        kernfs_fop_write_iter+0x356/0x530
->> [  243.273735]        vfs_write+0x513/0xd60
->> [  243.280090]        ksys_write+0xe7/0x1b0
->> [  243.286412]        do_syscall_64+0x5d/0xe0
->> [  243.292908]        entry_SYSCALL_64_after_hwframe+0x6e/0x76
->> [  243.301053] 
->>                other info that might help us debug this:
->>
->> [  243.315550]  Possible unsafe locking scenario:
->>
->> [  243.325803]        CPU0                    CPU1
->> [  243.332654]        ----                    ----
->> [  243.339492]   lock(pci_rescan_remove_lock);
->> [  243.345937]                                lock((work_completion)(&wfc.work));
->> [  243.355852]                                lock(pci_rescan_remove_lock);
->> [  243.365170]   lock((work_completion)(&wfc.work));
->> [  243.372235] 
->>                 *** DEADLOCK ***
->>
->> [  243.384100] 5 locks held by bash/1615:
->> [  243.390048]  #0: ff1100013f4b0418 (sb_writers#4){.+.+}-{0:0}, at: ksys_write+0xe7/0x1b0
->> [  243.400833]  #1: ff11000128429888 (&of->mutex){+.+.}-{3:3}, at: kernfs_fop_write_iter+0x21d/0x530
->> [  243.412623]  #2: ff11000103849968 (kn->active#136){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x241/0x530
->> [  243.424832]  #3: ffffffff870bf4a8 (pci_rescan_remove_lock){+.+.}-{3:3}, at: rescan_store+0x96/0xd0
->> [  243.436773]  #4: ff1100019cc7e1a8 (&dev->mutex){....}-{3:3}, at: __device_attach+0x67/0x380
->> [  243.448048] 
->>                stack backtrace:
->> [  243.456654] CPU: 16 PID: 1615 Comm: bash Not tainted 6.7.0-rc1-kts #1
->> [  243.465797] Hardware name: Supermicro SYS-520P-WTR/X12SPW-TF, BIOS 1.2 02/14/2022
->> [  243.476145] Call Trace:
->> [  243.480820]  <TASK>
->> [  243.485084]  dump_stack_lvl+0x57/0x90
->> [  243.491112]  check_noncircular+0x2e1/0x3c0
->> [  243.497630]  ? __pfx_check_noncircular+0x10/0x10
->> [  243.504747]  ? __pfx___bfs+0x10/0x10
->> [  243.510680]  ? lockdep_lock+0xbc/0x1a0
->> [  243.516811]  ? __pfx_lockdep_lock+0x10/0x10
->> [  243.523436]  __lock_acquire+0x2e74/0x5ea0
->> [  243.529866]  ? __pfx___lock_acquire+0x10/0x10
->> [  243.536682]  lock_acquire+0x196/0x4b0
->> [  243.542710]  ? __flush_work+0xc5/0x980
->> [  243.548829]  ? __pfx_lock_acquire+0x10/0x10
->> [  243.555442]  ? __pfx___lock_acquire+0x10/0x10
->> [  243.562252]  ? driver_probe_device+0x4a/0x120
->> [  243.569061]  ? __device_attach_driver+0x15e/0x270
->> [  243.576282]  ? mark_lock+0xee/0x16c0
->> [  243.582222]  ? __flush_work+0xc5/0x980
->> [  243.588364]  __flush_work+0xe2/0x980
->> [  243.594300]  ? __flush_work+0xc5/0x980
->> [  243.600425]  ? __queue_work+0x4e4/0xe30
->> [  243.606658]  ? __pfx___flush_work+0x10/0x10
->> [  243.613287]  ? lock_is_held_type+0xce/0x120
->> [  243.619917]  ? queue_work_on+0x69/0xa0
->> [  243.626032]  ? lockdep_hardirqs_on+0x7d/0x100
->> [  243.632834]  work_on_cpu_key+0xcc/0xf0
->> [  243.638950]  ? __pfx_work_on_cpu_key+0x10/0x10
->> [  243.645849]  ? __pfx_work_for_cpu_fn+0x10/0x10
->> [  243.652738]  ? __pfx_local_pci_probe+0x10/0x10
->> [  243.659638]  pci_device_probe+0x548/0x740
->> [  243.666057]  ? __pfx_pci_device_probe+0x10/0x10
->> [  243.673057]  ? kernfs_create_link+0x167/0x230
->> [  243.679855]  really_probe+0x3df/0xb80
->> [  243.685860]  __driver_probe_device+0x18c/0x450
->> [  243.692737]  driver_probe_device+0x4a/0x120
->> [  243.699314]  __device_attach_driver+0x15e/0x270
->> [  243.706297]  ? __pfx___device_attach_driver+0x10/0x10
->> [  243.713890]  bus_for_each_drv+0x101/0x170
->> [  243.720312]  ? __pfx_bus_for_each_drv+0x10/0x10
->> [  243.727294]  ? lockdep_hardirqs_on+0x7d/0x100
->> [  243.734063]  ? _raw_spin_unlock_irqrestore+0x35/0x60
->> [  243.741505]  __device_attach+0x189/0x380
->> [  243.747747]  ? __pfx___device_attach+0x10/0x10
->> [  243.754554]  pci_bus_add_device+0x9f/0xf0
->> [  243.760836]  pci_bus_add_devices+0x7f/0x190
->> [  243.767328]  pci_bus_add_devices+0x114/0x190
->> [  243.773890]  pci_rescan_bus+0x23/0x30
->> [  243.779741]  rescan_store+0xa2/0xd0
->> [  243.785362]  ? __pfx_rescan_store+0x10/0x10
->> [  243.791785]  kernfs_fop_write_iter+0x356/0x530
->> [  243.798516]  vfs_write+0x513/0xd60
->> [  243.804054]  ? __pfx_vfs_write+0x10/0x10
->> [  243.810193]  ? __fget_light+0x51/0x220
->> [  243.816125]  ? __pfx_lock_release+0x10/0x10
->> [  243.822555]  ksys_write+0xe7/0x1b0
->> [  243.828097]  ? __pfx_ksys_write+0x10/0x10
->> [  243.834327]  ? syscall_enter_from_user_mode+0x22/0x90
->> [  243.841736]  ? lockdep_hardirqs_on+0x7d/0x100
->> [  243.848366]  do_syscall_64+0x5d/0xe0
->> [  243.854114]  ? do_syscall_64+0x6c/0xe0
->> [  243.860053]  ? do_syscall_64+0x6c/0xe0
->> [  243.865989]  ? lockdep_hardirqs_on+0x7d/0x100
->> [  243.872608]  ? do_syscall_64+0x6c/0xe0
->> [  243.878537]  ? lockdep_hardirqs_on+0x7d/0x100
->> [  243.885147]  entry_SYSCALL_64_after_hwframe+0x6e/0x76
->> [  243.892555] RIP: 0033:0x7fee10d53c34
->> [  243.898305] Code: c7 00 16 00 00 00 b8 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 f3 0f 1e fa 80 3d 35 77 0d 00 00 74 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 55 48 89 e5 48 83 ec 20 48 89
->> [  243.922266] RSP: 002b:00007ffd173e68e8 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
->> [  243.932655] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007fee10d53c34
->> [  243.942564] RDX: 0000000000000002 RSI: 000055f17c9c4bc0 RDI: 0000000000000001
->> [  243.952485] RBP: 00007ffd173e6910 R08: 0000000000000073 R09: 0000000000000001
->> [  243.962408] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
->> [  243.972328] R13: 000055f17c9c4bc0 R14: 00007fee10e245c0 R15: 00007fee10e21f20
->> [  243.982259]  </TASK>
->>
->> [2] https://patchwork.kernel.org/project/linux-pci/patch/20180921205752.3191-1-keith.busch@intel.com/
->>
->> [3] fix trial patch
->>
->> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
->> index 070999139c6..00d57d4e006 100644
->> --- a/drivers/i2c/busses/i2c-i801.c
->> +++ b/drivers/i2c/busses/i2c-i801.c
->> @@ -1820,6 +1820,7 @@ static struct pci_driver i801_driver = {
->>  		.pm	= pm_sleep_ptr(&i801_pm_ops),
->>  		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
->>  	},
->> +	.local_probe	= true,
->>  };
->>  
->>  static int __init i2c_i801_init(struct pci_driver *drv)
->> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
->> index 51ec9e7e784..161ff37143a 100644
->> --- a/drivers/pci/pci-driver.c
->> +++ b/drivers/pci/pci-driver.c
->> @@ -368,7 +368,7 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
->>  	 * device is probed from work_on_cpu() of the Physical device.
->>  	 */
->>  	if (node < 0 || node >= MAX_NUMNODES || !node_online(node) ||
->> -	    pci_physfn_is_probed(dev)) {
->> +	    pci_physfn_is_probed(dev) || drv->local_probe) {
->>  		cpu = nr_cpu_ids;
->>  	} else {
->>  		cpumask_var_t wq_domain_mask;
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 60ca768bc86..6fd086eb26c 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -957,6 +957,7 @@ struct pci_driver {
->>  	struct device_driver	driver;
->>  	struct pci_dynids	dynids;
->>  	bool driver_managed_dma;
->> +	bool local_probe;
->>  };
->>  
->>  static inline struct pci_driver *to_pci_driver(struct device_driver *drv)
->>
+-Serge(y)
 
+>  static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, u8 func_no,
+>  				   enum pci_barno bar, int flags)
+>  {
+> -	unsigned int dbi_offset, dbi2_offset;
+>  	struct dw_pcie_ep *ep = &pci->ep;
+> -	u32 reg, reg_dbi2;
+> -
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -	dbi2_offset = dw_pcie_ep_get_dbi2_offset(ep, func_no);
+> +	u32 reg;
+>  
+> -	reg = dbi_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
+> -	reg_dbi2 = dbi2_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
+> +	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
+>  	dw_pcie_dbi_ro_wr_en(pci);
+> -	dw_pcie_writel_dbi2(pci, reg_dbi2, 0x0);
+> -	dw_pcie_writel_dbi(pci, reg, 0x0);
+> +	dw_pcie_ep_writel_dbi2(ep, func_no, reg, 0x0);
+> +	dw_pcie_ep_writel_dbi(ep, func_no, reg, 0x0);
+>  	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
+> -		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, 0x0);
+> -		dw_pcie_writel_dbi(pci, reg + 4, 0x0);
+> +		dw_pcie_ep_writel_dbi2(ep, func_no, reg + 4, 0x0);
+> +		dw_pcie_ep_writel_dbi(ep, func_no, reg + 4, 0x0);
+>  	}
+>  	dw_pcie_dbi_ro_wr_dis(pci);
+>  }
+> @@ -99,19 +163,15 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+>  EXPORT_SYMBOL_GPL(dw_pcie_ep_reset_bar);
+>  
+>  static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie_ep *ep, u8 func_no,
+> -		u8 cap_ptr, u8 cap)
+> +				     u8 cap_ptr, u8 cap)
+>  {
+> -	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	unsigned int dbi_offset = 0;
+>  	u8 cap_id, next_cap_ptr;
+>  	u16 reg;
+>  
+>  	if (!cap_ptr)
+>  		return 0;
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -
+> -	reg = dw_pcie_readw_dbi(pci, dbi_offset + cap_ptr);
+> +	reg = dw_pcie_ep_readw_dbi(ep, func_no, cap_ptr);
+>  	cap_id = (reg & 0x00ff);
+>  
+>  	if (cap_id > PCI_CAP_ID_MAX)
+> @@ -126,14 +186,10 @@ static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie_ep *ep, u8 func_no,
+>  
+>  static u8 dw_pcie_ep_find_capability(struct dw_pcie_ep *ep, u8 func_no, u8 cap)
+>  {
+> -	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	unsigned int dbi_offset = 0;
+>  	u8 next_cap_ptr;
+>  	u16 reg;
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -
+> -	reg = dw_pcie_readw_dbi(pci, dbi_offset + PCI_CAPABILITY_LIST);
+> +	reg = dw_pcie_ep_readw_dbi(ep, func_no, PCI_CAPABILITY_LIST);
+>  	next_cap_ptr = (reg & 0x00ff);
+>  
+>  	return __dw_pcie_ep_find_next_cap(ep, func_no, next_cap_ptr, cap);
+> @@ -144,24 +200,21 @@ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  {
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	unsigned int dbi_offset = 0;
+> -
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+>  
+>  	dw_pcie_dbi_ro_wr_en(pci);
+> -	dw_pcie_writew_dbi(pci, dbi_offset + PCI_VENDOR_ID, hdr->vendorid);
+> -	dw_pcie_writew_dbi(pci, dbi_offset + PCI_DEVICE_ID, hdr->deviceid);
+> -	dw_pcie_writeb_dbi(pci, dbi_offset + PCI_REVISION_ID, hdr->revid);
+> -	dw_pcie_writeb_dbi(pci, dbi_offset + PCI_CLASS_PROG, hdr->progif_code);
+> -	dw_pcie_writew_dbi(pci, dbi_offset + PCI_CLASS_DEVICE,
+> -			   hdr->subclass_code | hdr->baseclass_code << 8);
+> -	dw_pcie_writeb_dbi(pci, dbi_offset + PCI_CACHE_LINE_SIZE,
+> -			   hdr->cache_line_size);
+> -	dw_pcie_writew_dbi(pci, dbi_offset + PCI_SUBSYSTEM_VENDOR_ID,
+> -			   hdr->subsys_vendor_id);
+> -	dw_pcie_writew_dbi(pci, dbi_offset + PCI_SUBSYSTEM_ID, hdr->subsys_id);
+> -	dw_pcie_writeb_dbi(pci, dbi_offset + PCI_INTERRUPT_PIN,
+> -			   hdr->interrupt_pin);
+> +	dw_pcie_ep_writew_dbi(ep, func_no, PCI_VENDOR_ID, hdr->vendorid);
+> +	dw_pcie_ep_writew_dbi(ep, func_no, PCI_DEVICE_ID, hdr->deviceid);
+> +	dw_pcie_ep_writeb_dbi(ep, func_no, PCI_REVISION_ID, hdr->revid);
+> +	dw_pcie_ep_writeb_dbi(ep, func_no, PCI_CLASS_PROG, hdr->progif_code);
+> +	dw_pcie_ep_writew_dbi(ep, func_no, PCI_CLASS_DEVICE,
+> +			      hdr->subclass_code | hdr->baseclass_code << 8);
+> +	dw_pcie_ep_writeb_dbi(ep, func_no, PCI_CACHE_LINE_SIZE,
+> +			      hdr->cache_line_size);
+> +	dw_pcie_ep_writew_dbi(ep, func_no, PCI_SUBSYSTEM_VENDOR_ID,
+> +			      hdr->subsys_vendor_id);
+> +	dw_pcie_ep_writew_dbi(ep, func_no, PCI_SUBSYSTEM_ID, hdr->subsys_id);
+> +	dw_pcie_ep_writeb_dbi(ep, func_no, PCI_INTERRUPT_PIN,
+> +			      hdr->interrupt_pin);
+>  	dw_pcie_dbi_ro_wr_dis(pci);
+>  
+>  	return 0;
+> @@ -243,18 +296,13 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  {
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	unsigned int dbi_offset, dbi2_offset;
+>  	enum pci_barno bar = epf_bar->barno;
+>  	size_t size = epf_bar->size;
+>  	int flags = epf_bar->flags;
+> -	u32 reg, reg_dbi2;
+>  	int ret, type;
+> +	u32 reg;
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -	dbi2_offset = dw_pcie_ep_get_dbi2_offset(ep, func_no);
+> -
+> -	reg = PCI_BASE_ADDRESS_0 + (4 * bar) + dbi_offset;
+> -	reg_dbi2 = PCI_BASE_ADDRESS_0 + (4 * bar) + dbi2_offset;
+> +	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
+>  
+>  	if (!(flags & PCI_BASE_ADDRESS_SPACE))
+>  		type = PCIE_ATU_TYPE_MEM;
+> @@ -270,12 +318,12 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  
+>  	dw_pcie_dbi_ro_wr_en(pci);
+>  
+> -	dw_pcie_writel_dbi2(pci, reg_dbi2, lower_32_bits(size - 1));
+> -	dw_pcie_writel_dbi(pci, reg, flags);
+> +	dw_pcie_ep_writel_dbi2(ep, func_no, reg, lower_32_bits(size - 1));
+> +	dw_pcie_ep_writel_dbi(ep, func_no, reg, flags);
+>  
+>  	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
+> -		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, upper_32_bits(size - 1));
+> -		dw_pcie_writel_dbi(pci, reg + 4, 0);
+> +		dw_pcie_ep_writel_dbi2(ep, func_no, reg + 4, upper_32_bits(size - 1));
+> +		dw_pcie_ep_writel_dbi(ep, func_no, reg + 4, 0);
+>  	}
+>  
+>  	ep->epf_bar[bar] = epf_bar;
+> @@ -335,19 +383,15 @@ static int dw_pcie_ep_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  static int dw_pcie_ep_get_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
+>  {
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+> -	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	u32 val, reg;
+> -	unsigned int dbi_offset = 0;
+>  	struct dw_pcie_ep_func *ep_func;
+> +	u32 val, reg;
+>  
+>  	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+>  	if (!ep_func || !ep_func->msi_cap)
+>  		return -EINVAL;
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -
+> -	reg = ep_func->msi_cap + dbi_offset + PCI_MSI_FLAGS;
+> -	val = dw_pcie_readw_dbi(pci, reg);
+> +	reg = ep_func->msi_cap + PCI_MSI_FLAGS;
+> +	val = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+>  	if (!(val & PCI_MSI_FLAGS_ENABLE))
+>  		return -EINVAL;
+>  
+> @@ -361,22 +405,19 @@ static int dw_pcie_ep_set_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  {
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	u32 val, reg;
+> -	unsigned int dbi_offset = 0;
+>  	struct dw_pcie_ep_func *ep_func;
+> +	u32 val, reg;
+>  
+>  	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+>  	if (!ep_func || !ep_func->msi_cap)
+>  		return -EINVAL;
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -
+> -	reg = ep_func->msi_cap + dbi_offset + PCI_MSI_FLAGS;
+> -	val = dw_pcie_readw_dbi(pci, reg);
+> +	reg = ep_func->msi_cap + PCI_MSI_FLAGS;
+> +	val = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+>  	val &= ~PCI_MSI_FLAGS_QMASK;
+>  	val |= FIELD_PREP(PCI_MSI_FLAGS_QMASK, interrupts);
+>  	dw_pcie_dbi_ro_wr_en(pci);
+> -	dw_pcie_writew_dbi(pci, reg, val);
+> +	dw_pcie_ep_writew_dbi(ep, func_no, reg, val);
+>  	dw_pcie_dbi_ro_wr_dis(pci);
+>  
+>  	return 0;
+> @@ -385,19 +426,15 @@ static int dw_pcie_ep_set_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  static int dw_pcie_ep_get_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
+>  {
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+> -	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	u32 val, reg;
+> -	unsigned int dbi_offset = 0;
+>  	struct dw_pcie_ep_func *ep_func;
+> +	u32 val, reg;
+>  
+>  	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+>  	if (!ep_func || !ep_func->msix_cap)
+>  		return -EINVAL;
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -
+> -	reg = ep_func->msix_cap + dbi_offset + PCI_MSIX_FLAGS;
+> -	val = dw_pcie_readw_dbi(pci, reg);
+> +	reg = ep_func->msix_cap + PCI_MSIX_FLAGS;
+> +	val = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+>  	if (!(val & PCI_MSIX_FLAGS_ENABLE))
+>  		return -EINVAL;
+>  
+> @@ -411,9 +448,8 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  {
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	u32 val, reg;
+> -	unsigned int dbi_offset = 0;
+>  	struct dw_pcie_ep_func *ep_func;
+> +	u32 val, reg;
+>  
+>  	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+>  	if (!ep_func || !ep_func->msix_cap)
+> @@ -421,21 +457,19 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  
+>  	dw_pcie_dbi_ro_wr_en(pci);
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -
+> -	reg = ep_func->msix_cap + dbi_offset + PCI_MSIX_FLAGS;
+> -	val = dw_pcie_readw_dbi(pci, reg);
+> +	reg = ep_func->msix_cap + PCI_MSIX_FLAGS;
+> +	val = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+>  	val &= ~PCI_MSIX_FLAGS_QSIZE;
+>  	val |= interrupts;
+>  	dw_pcie_writew_dbi(pci, reg, val);
+>  
+> -	reg = ep_func->msix_cap + dbi_offset + PCI_MSIX_TABLE;
+> +	reg = ep_func->msix_cap + PCI_MSIX_TABLE;
+>  	val = offset | bir;
+> -	dw_pcie_writel_dbi(pci, reg, val);
+> +	dw_pcie_ep_writel_dbi(ep, func_no, reg, val);
+>  
+> -	reg = ep_func->msix_cap + dbi_offset + PCI_MSIX_PBA;
+> +	reg = ep_func->msix_cap + PCI_MSIX_PBA;
+>  	val = (offset + (interrupts * PCI_MSIX_ENTRY_SIZE)) | bir;
+> -	dw_pcie_writel_dbi(pci, reg, val);
+> +	dw_pcie_ep_writel_dbi(ep, func_no, reg, val);
+>  
+>  	dw_pcie_dbi_ro_wr_dis(pci);
+>  
+> @@ -510,38 +544,34 @@ EXPORT_SYMBOL_GPL(dw_pcie_ep_raise_legacy_irq);
+>  int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  			     u8 interrupt_num)
+>  {
+> -	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	u32 msg_addr_lower, msg_addr_upper, reg;
+>  	struct dw_pcie_ep_func *ep_func;
+>  	struct pci_epc *epc = ep->epc;
+>  	unsigned int aligned_offset;
+> -	unsigned int dbi_offset = 0;
+>  	u16 msg_ctrl, msg_data;
+> -	u32 msg_addr_lower, msg_addr_upper, reg;
+> -	u64 msg_addr;
+>  	bool has_upper;
+> +	u64 msg_addr;
+>  	int ret;
+>  
+>  	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+>  	if (!ep_func || !ep_func->msi_cap)
+>  		return -EINVAL;
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -
+>  	/* Raise MSI per the PCI Local Bus Specification Revision 3.0, 6.8.1. */
+> -	reg = ep_func->msi_cap + dbi_offset + PCI_MSI_FLAGS;
+> -	msg_ctrl = dw_pcie_readw_dbi(pci, reg);
+> +	reg = ep_func->msi_cap + PCI_MSI_FLAGS;
+> +	msg_ctrl = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+>  	has_upper = !!(msg_ctrl & PCI_MSI_FLAGS_64BIT);
+> -	reg = ep_func->msi_cap + dbi_offset + PCI_MSI_ADDRESS_LO;
+> -	msg_addr_lower = dw_pcie_readl_dbi(pci, reg);
+> +	reg = ep_func->msi_cap + PCI_MSI_ADDRESS_LO;
+> +	msg_addr_lower = dw_pcie_ep_readl_dbi(ep, func_no, reg);
+>  	if (has_upper) {
+> -		reg = ep_func->msi_cap + dbi_offset + PCI_MSI_ADDRESS_HI;
+> -		msg_addr_upper = dw_pcie_readl_dbi(pci, reg);
+> -		reg = ep_func->msi_cap + dbi_offset + PCI_MSI_DATA_64;
+> -		msg_data = dw_pcie_readw_dbi(pci, reg);
+> +		reg = ep_func->msi_cap + PCI_MSI_ADDRESS_HI;
+> +		msg_addr_upper = dw_pcie_ep_readl_dbi(ep, func_no, reg);
+> +		reg = ep_func->msi_cap + PCI_MSI_DATA_64;
+> +		msg_data = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+>  	} else {
+>  		msg_addr_upper = 0;
+> -		reg = ep_func->msi_cap + dbi_offset + PCI_MSI_DATA_32;
+> -		msg_data = dw_pcie_readw_dbi(pci, reg);
+> +		reg = ep_func->msi_cap + PCI_MSI_DATA_32;
+> +		msg_data = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+>  	}
+>  	aligned_offset = msg_addr_lower & (epc->mem->window.page_size - 1);
+>  	msg_addr = ((u64)msg_addr_upper) << 32 |
+> @@ -582,10 +612,9 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  			      u16 interrupt_num)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	struct dw_pcie_ep_func *ep_func;
+>  	struct pci_epf_msix_tbl *msix_tbl;
+> +	struct dw_pcie_ep_func *ep_func;
+>  	struct pci_epc *epc = ep->epc;
+> -	unsigned int dbi_offset = 0;
+>  	u32 reg, msg_data, vec_ctrl;
+>  	unsigned int aligned_offset;
+>  	u32 tbl_offset;
+> @@ -597,10 +626,8 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	if (!ep_func || !ep_func->msix_cap)
+>  		return -EINVAL;
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -
+> -	reg = ep_func->msix_cap + dbi_offset + PCI_MSIX_TABLE;
+> -	tbl_offset = dw_pcie_readl_dbi(pci, reg);
+> +	reg = ep_func->msix_cap + PCI_MSIX_TABLE;
+> +	tbl_offset = dw_pcie_ep_readl_dbi(ep, func_no, reg);
+>  	bir = FIELD_GET(PCI_MSIX_TABLE_BIR, tbl_offset);
+>  	tbl_offset &= PCI_MSIX_TABLE_OFFSET;
+>  
+> -- 
+> 2.34.1
+> 
