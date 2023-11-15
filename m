@@ -2,118 +2,233 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C64A57EC0D9
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Nov 2023 11:40:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 463BF7EC170
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Nov 2023 12:49:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234883AbjKOKkd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Nov 2023 05:40:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45024 "EHLO
+        id S1343614AbjKOLtb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Nov 2023 06:49:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234098AbjKOKka (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Nov 2023 05:40:30 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05C54C2;
-        Wed, 15 Nov 2023 02:40:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700044827; x=1731580827;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WhUgLMg4fPuk0HcHV6kkPoQlTphUx0dqokHvR43C3OQ=;
-  b=DqAHXMexfBurmC/XzfmKuCx86GMZeLwTWhfh6NI1Tue8xJikvQ7WDI89
-   wAG/2auxIdgZPwXiA8iVWjCLl4Um1GYfWi+mU+0XB5kSch6/j4K7o9F2Q
-   OQvQhIAH+oPHGjZ74xA9a24VC6FNFPWAQ1n50MLMJHGBOr55lq2P0x4hG
-   ABaqOeKqvss2uxIGxwUw2HLM0LSU2YkO+XOn4cyEfLEIPRAES+4/Ro/SC
-   5BeHcepThfV/0eplCInxvOE5MYVykHvkibXqcdNSjIy28MO2gkG+CuJ1k
-   Nzu5ta5iot4ir+IU67QyIHFBPRysT4V/TCNNH6tA9Br/NXawTD8JsaVCo
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="393711582"
-X-IronPort-AV: E=Sophos;i="6.03,304,1694761200"; 
-   d="scan'208";a="393711582"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2023 02:40:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="768552987"
-X-IronPort-AV: E=Sophos;i="6.03,304,1694761200"; 
-   d="scan'208";a="768552987"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 15 Nov 2023 02:40:20 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 3653C305; Wed, 15 Nov 2023 12:40:19 +0200 (EET)
-Date:   Wed, 15 Nov 2023 12:40:19 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        with ESMTP id S1343584AbjKOLt3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Nov 2023 06:49:29 -0500
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B026811F;
+        Wed, 15 Nov 2023 03:49:23 -0800 (PST)
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+        by ex01.ufhost.com (Postfix) with ESMTP id 2D9F424E2D3;
+        Wed, 15 Nov 2023 19:49:15 +0800 (CST)
+Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 15 Nov
+ 2023 19:49:15 +0800
+Received: from ubuntu.localdomain (183.27.97.246) by EXMBX171.cuchost.com
+ (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 15 Nov
+ 2023 19:49:14 +0800
+From:   Minda Chen <minda.chen@starfivetech.com>
+To:     Conor Dooley <conor@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Danilo Krummrich <dakr@redhat.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Xinhui Pan <Xinhui.Pan@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        "Maciej W . Rozycki" <macro@orcam.me.uk>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v3 5/7] PCI: ACPI: Detect PCIe root ports that are used
- for tunneling
-Message-ID: <20231115104019.GY17433@black.fi.intel.com>
-References: <20231114200755.14911-1-mario.limonciello@amd.com>
- <20231114200755.14911-6-mario.limonciello@amd.com>
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        "Daire McNamara" <daire.mcnamara@microchip.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Kevin Xie <kevin.xie@starfivetech.com>,
+        Minda Chen <minda.chen@starfivetech.com>
+Subject: [PATCH v11 0/20] Refactoring Microchip PCIe driver and add StarFive PCIe
+Date:   Wed, 15 Nov 2023 19:48:52 +0800
+Message-ID: <20231115114912.71448-1-minda.chen@starfivetech.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231114200755.14911-6-mario.limonciello@amd.com>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [183.27.97.246]
+X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX171.cuchost.com
+ (172.16.6.91)
+X-YovoleRuleAgent: yovoleflag
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Mario,
+This patchset final purpose is add PCIe driver for StarFive JH7110 SoC.
+JH7110 using PLDA XpressRICH PCIe IP. Microchip PolarFire Using the
+same IP and have commit their codes, which are mixed with PLDA
+controller codes and Microchip platform codes.
 
-On Tue, Nov 14, 2023 at 02:07:53PM -0600, Mario Limonciello wrote:
-> USB4 routers support a feature called "PCIe tunneling". This
-> allows PCIe traffic to be transmitted over USB4 fabric.
-> 
-> PCIe root ports that are used in this fashion can be discovered
-> by device specific data that specifies the USB4 router they are
-> connected to. For the PCI core, the specific connection information
-> doesn't matter, but it's interesting to know that this root port is
-> used for tunneling traffic. This will allow other decisions to be
-> made based upon it.
-> 
-> Detect the `usb4-host-interface` _DSD and if it's found save it
-> into a new `is_virtual_link` bit in `struct pci_device`.
+For re-use the PLDA controller codes, I request refactoring microchip
+codes, move PLDA common codes to PLDA files.
+Desigware and Cadence is good example for refactoring codes.
 
-While this is fine for the "first" tunneled link, this does not take
-into account possible other "virtual" links that lead to the endpoint in
-question. Typically for eGPU it only makes sense to plug it directly to
-the host but say there is a USB4 hub (with PCIe tunneling capabilities)
-in the middle. Now the link from the hub to the eGPU that is also
-"virtual" is not marked as such and the bandwidth calculations may not
-get what is expected.
+----------------------------------------------------------
+The refactoring patches total number is 16,(patch 1-16)
+which do NOT contain changing logic of codes.
 
-It should be possible to map the PCIe ports that go over USB4 links
-through router port operation "Get PCIe Downstream Entry Mapping" and
-for the Thunderbolt 3 there is the DROM entries (I believe Lukas has
-patches for this part already) but I guess it is outside of the scope of
-this series. Out of curiosity I tried to look in Windows documentation
-if there is such interface for GPUs as we have in Linux but could not
-find (which does not mean it does not exist, though).
+These patches just contain three type basic operations.
+(rename, modify codes to support starfive platform, and moving to common file)
+If these patched are all be reviewed. They can be accepted first.
+
+Refactoring patches can be devided to different groups
+1. (patch 1- 3 is the prepare work of refactoring)
+patch1 is move PLDA XpressRICH PCIe host common properties dt-binding
+       docs from microchip,pcie-host.yaml
+patch2 is move PolarFire codes to PLDA directory.
+patch3 is move PLDA IP register macros to plda-pcie.h
+
+2. (patch4 - 6 is processing and re-use PCIe host instance)
+patch4 is add bridge_addr field to PCIe host instance.
+patch5 is rename data structure in microchip codes.
+patch6 is moving two data structures to head file
+
+3. (patch 7 - 9 are for re-use two PCIe setup function)
+patch7 is rename two setup functions in microchip codes, prepare to move
+to common file.
+patch8 is change the arguments of plda_pcie_setup_iomems()
+patch9 is move the two setup functions to common file pcie-plda-host.c
+
+4.(patch 10 - 16 are for re-use interupt processing codes)
+patch10 is rename the IRQ related functions, prepare to move to
+pcie-plda-host.c
+patch 11 - 15 is modify the interrupt event codes, preparing for support starfive
+and microchip two platforms.
+patch16 is move IRQ related functions to pcie-plda-host.c
+
+------------------------------------------------------------
+The remainder patches (patch 17 -20) are not refactoring patch.
+They are for adding StarFive codes and dont modify the microchip's
+codes.
+
+patch17 is Add PLDA event interrupt codes and host init/deinit functions.
+patch18 is add StarFive JH7110 PCIe dt-binding doc.
+patch19 is add StarFive JH7110 Soc PCIe codes.
+patch20 is Starfive dts config
+
+This patchset is base on v6.7-rc1
+
+previous version:
+v6:https://patchwork.kernel.org/project/linux-pci/cover/20230915102243.59775-1-minda.chen@starfivetech.com/
+v7:https://patchwork.kernel.org/project/linux-pci/cover/20230927100802.46620-1-minda.chen@starfivetech.com/
+v8:https://patchwork.kernel.org/project/linux-pci/cover/20231011110514.107528-1-minda.chen@starfivetech.com/
+v9:https://patchwork.kernel.org/project/linux-pci/cover/20231020104341.63157-1-minda.chen@starfivetech.com/
+v10:https://patchwork.kernel.org/project/linux-pci/cover/20231031115430.113586-1-minda.chen@starfivetech.com/
+
+change:
+  v11:
+     check and modify some commit messages again.
+     All the codes are the same with v10.   
+
+  v10:
+   All the commit message set to fit in 75 columns.
+   All the codes fit in less than 80 colunms.
+   patch 14: 
+	Commit message changes suggested by Conor.
+   patch 19:
+        Add 100 ms delay macro to pci.h
+	generic phy pointer related codes moving to pcie-starfive.c
+	This patch Change pcie-starfive only, bus_ops move to patch 16.
+	Some Codes changes suggested by Bjorn.
+
+  v9:
+   v8 patch 10 squash to v9 patch 12, v8 patch 18 squash to v9 patch 16.
+   patch 4 - 16: Add new review tags and add more accurate commit messages.
+   patch 17: move the plda_pcie_host_init/deinit from patch 19. Make
+             plda driver become to whole driver.
+
+  v8:
+    The patch description in cover-letter has been changed.
+
+    v7 patch 4 split to v8 patch 4 - 6.
+        (It is patches about re-use pcie host data structure, new patches just contain one
+	function modification. It is more reguluar and easier to review).
+
+    patch 7- 9: modify the commit messages and add reason of
+		modifcation.
+    patch10- 16 :
+             Add review tag and add more commit messages to declear the
+	     reason of modifying the codes.
+    patch17: plda_handle_events() using bit mask macro. The function are
+	     easier to read.
+
+  v7:
+    patch17: fix the build warning.
+    patch19: Some format changes (Emil's comment)
+    patch20: change the pcie node sequences by alphabetical
+             delete the "interupt-parent" in pcie node.
+
+  v6:
+    v5 patch 4 split to patch 4 -9. New patches just contain one function modification. It is more reguluar.
+
+    patch 9: Just move the two setup functions only
+    patch 19 : draw a graph of PLDA local register, make it easier to
+               review the codes.
+    v5 patch 7 split to patch 10- 16. Each patch just contain one
+                function modification. It is more regular.
+    patch 10: rename IRQ related functions.
+    patch 11 - 15 : modify the events codes, total five patch.
+    patch 16: move IRQ related functions to pcie-plda-host.c
+    patch 19- 20 using "linux,pci-domain" dts setting.
+
+Minda Chen (20):
+  dt-bindings: PCI: Add PLDA XpressRICH PCIe host common properties
+  PCI: microchip: Move pcie-microchip-host.c to plda directory
+  PCI: microchip: Move PLDA IP register macros to pcie-plda.h
+  PCI: microchip: Add bridge_addr field to struct mc_pcie
+  PCI: microchip: Rename two PCIe data structures
+  PCI: microchip: Move PCIe host data structures to plda-pcie.h
+  PCI: microchip: Rename two setup functions
+  PCI: microchip: Change the argument of plda_pcie_setup_iomems()
+  PCI: microchip: Move setup functions to pcie-plda-host.c
+  PCI: microchip: Rename interrupt related functions
+  PCI: microchip: Add num_events field to struct plda_pcie_rp
+  PCI: microchip: Add request_event_irq() callback function
+  PCI: microchip: Add INTx and MSI event num to struct plda_event
+  PCI: microchip: Add get_events() callback function
+  PCI: microchip: Add event IRQ domain ops to struct plda_event
+  PCI: microchip: Move IRQ functions to pcie-plda-host.c
+  PCI: plda: Add event interrupt codes and host init/deinit functions
+  dt-bindings: PCI: Add StarFive JH7110 PCIe controller
+  PCI: starfive: Add JH7110 PCIe controller
+  riscv: dts: starfive: add PCIe dts configuration for JH7110
+
+ .../bindings/pci/microchip,pcie-host.yaml     |  55 +-
+ .../pci/plda,xpressrich3-axi-common.yaml      |  75 ++
+ .../bindings/pci/starfive,jh7110-pcie.yaml    | 120 ++++
+ MAINTAINERS                                   |  19 +-
+ .../jh7110-starfive-visionfive-2.dtsi         |  64 ++
+ arch/riscv/boot/dts/starfive/jh7110.dtsi      |  86 +++
+ drivers/pci/controller/Kconfig                |   9 +-
+ drivers/pci/controller/Makefile               |   2 +-
+ drivers/pci/controller/plda/Kconfig           |  29 +
+ drivers/pci/controller/plda/Makefile          |   4 +
+ .../{ => plda}/pcie-microchip-host.c          | 602 ++--------------
+ drivers/pci/controller/plda/pcie-plda-host.c  | 657 ++++++++++++++++++
+ drivers/pci/controller/plda/pcie-plda.h       | 266 +++++++
+ drivers/pci/controller/plda/pcie-starfive.c   | 460 ++++++++++++
+ drivers/pci/pci.h                             |   7 +
+ 15 files changed, 1851 insertions(+), 604 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/plda,xpressrich3-axi-common.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/starfive,jh7110-pcie.yaml
+ create mode 100644 drivers/pci/controller/plda/Kconfig
+ create mode 100644 drivers/pci/controller/plda/Makefile
+ rename drivers/pci/controller/{ => plda}/pcie-microchip-host.c (54%)
+ create mode 100644 drivers/pci/controller/plda/pcie-plda-host.c
+ create mode 100644 drivers/pci/controller/plda/pcie-plda.h
+ create mode 100644 drivers/pci/controller/plda/pcie-starfive.c
+
+
+base-commit: b85ea95d086471afb4ad062012a4d73cd328fa86
+-- 
+2.17.1
+
