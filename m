@@ -2,63 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 251BB7EBF6F
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Nov 2023 10:27:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C64A57EC0D9
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Nov 2023 11:40:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234679AbjKOJ1w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Nov 2023 04:27:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60462 "EHLO
+        id S234883AbjKOKkd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Nov 2023 05:40:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234709AbjKOJ1v (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Nov 2023 04:27:51 -0500
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2047.outbound.protection.outlook.com [40.107.244.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24B599F;
-        Wed, 15 Nov 2023 01:27:48 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KB4jXWaMHQocntYZYp4+TiuX4tQAFA4GUgw9ALQBvDliUvqSXrt84dGFNkg3wTHIsxmGklB4V54TOFQ3hACH/meww69hVUcLWCbz767bQtsU6xlzNKt6WBhkGybxHwp6JTLtrYQRCAfwX+YLzrbZedvP0ioGcEUqFBNOKAbEfdGRLH7OjOvzFLiPa3pZO1eVmBrzq4xNkMDeQg+CexpiEuDxlTvGTnfxYnx9wGKCy6iNHmWgTZH4QTiwJgWpRPM5GTelf0m9cwse7N7sKN0Og4fls+Uau17rr2Fn2Px2nOEMplaGUgy3hw4pvD+zKKq1ideWIc9YyLxXow9PR69Jtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BZPyNGxoeVgDtj8QVEiAyklHT19cFxs3qEW/nOdus/o=;
- b=cuWge0SW8jQS4tld9IZLoWqGAF1E/9ckLNmB8TFRdNxrr32IyhSJl0ePfi9zgRZtPT+ggPUGlwvjBn6rFBbBgH7hD/nlMvty91iEKoEf7PCyt8g/JXKgWLFuGkq9fNVtd20MvNxvlL7JVZFBuUndSqp5a8XJtdd6WdXWYvdsJTvm3iyjmhLaZ9hoMxumFpi5qsdH33uhpDdwM2VIQJCNaFXKuQz9ntwEWaj8Ja2S4JYWP3wIlpfLf3ew1UfoCYNF4CX45Q9WONPXqBRQ5ajusw2GQ9Aw88iSr1G0oubgU0D5lRtG1o/ZmjsT25dRd20PBi2TBNMukeGr0Na/+QOjyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BZPyNGxoeVgDtj8QVEiAyklHT19cFxs3qEW/nOdus/o=;
- b=t1yyerzs38ZUckQVafeEfpDapJNb3rsGau2B6i4ne91LNcd8rWgXQDcycWAhZTuzNtWOYClxXHTMizSfGjlDR/7H8XKFvYOHQtM45Mx2tF0nONoKztjWyn+myf9Sx3Yg5o2xQPGkTXl2mjBk5m0JfBJrXKl5TlF7cuB1G3THp70=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3587.namprd12.prod.outlook.com (2603:10b6:408:43::13)
- by CY5PR12MB6406.namprd12.prod.outlook.com (2603:10b6:930:3d::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.31; Wed, 15 Nov
- 2023 09:27:41 +0000
-Received: from BN8PR12MB3587.namprd12.prod.outlook.com
- ([fe80::ca80:8f1c:c11:ded3]) by BN8PR12MB3587.namprd12.prod.outlook.com
- ([fe80::ca80:8f1c:c11:ded3%7]) with mapi id 15.20.6977.033; Wed, 15 Nov 2023
- 09:27:41 +0000
-Message-ID: <5fa7aab7-3bf9-4491-a822-fd686efa5376@amd.com>
-Date:   Wed, 15 Nov 2023 10:27:31 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/7] drm/radeon: Switch from
- pci_is_thunderbolt_attached() to dev_is_removable()
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Lyude Paul <lyude@redhat.com>,
+        with ESMTP id S234098AbjKOKka (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Nov 2023 05:40:30 -0500
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05C54C2;
+        Wed, 15 Nov 2023 02:40:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700044827; x=1731580827;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WhUgLMg4fPuk0HcHV6kkPoQlTphUx0dqokHvR43C3OQ=;
+  b=DqAHXMexfBurmC/XzfmKuCx86GMZeLwTWhfh6NI1Tue8xJikvQ7WDI89
+   wAG/2auxIdgZPwXiA8iVWjCLl4Um1GYfWi+mU+0XB5kSch6/j4K7o9F2Q
+   OQvQhIAH+oPHGjZ74xA9a24VC6FNFPWAQ1n50MLMJHGBOr55lq2P0x4hG
+   ABaqOeKqvss2uxIGxwUw2HLM0LSU2YkO+XOn4cyEfLEIPRAES+4/Ro/SC
+   5BeHcepThfV/0eplCInxvOE5MYVykHvkibXqcdNSjIy28MO2gkG+CuJ1k
+   Nzu5ta5iot4ir+IU67QyIHFBPRysT4V/TCNNH6tA9Br/NXawTD8JsaVCo
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="393711582"
+X-IronPort-AV: E=Sophos;i="6.03,304,1694761200"; 
+   d="scan'208";a="393711582"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2023 02:40:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="768552987"
+X-IronPort-AV: E=Sophos;i="6.03,304,1694761200"; 
+   d="scan'208";a="768552987"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 15 Nov 2023 02:40:20 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 3653C305; Wed, 15 Nov 2023 12:40:19 +0200 (EET)
+Date:   Wed, 15 Nov 2023 12:40:19 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
         Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>
-Cc:     Danilo Krummrich <dakr@redhat.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Danilo Krummrich <dakr@redhat.com>,
         David Airlie <airlied@gmail.com>,
         Daniel Vetter <daniel@ffwll.ch>,
         Xinhui Pan <Xinhui.Pan@amd.com>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>,
+        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
         "Maciej W . Rozycki" <macro@orcam.me.uk>,
         Manivannan Sadhasivam <mani@kernel.org>,
         "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
@@ -70,142 +67,53 @@ Cc:     Danilo Krummrich <dakr@redhat.com>,
         <amd-gfx@lists.freedesktop.org>,
         "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
         "open list:ACPI" <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v3 5/7] PCI: ACPI: Detect PCIe root ports that are used
+ for tunneling
+Message-ID: <20231115104019.GY17433@black.fi.intel.com>
 References: <20231114200755.14911-1-mario.limonciello@amd.com>
- <20231114200755.14911-3-mario.limonciello@amd.com>
-Content-Language: en-US
-From:   =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20231114200755.14911-3-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR4P281CA0030.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:c9::7) To BN8PR12MB3587.namprd12.prod.outlook.com
- (2603:10b6:408:43::13)
+ <20231114200755.14911-6-mario.limonciello@amd.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3587:EE_|CY5PR12MB6406:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9838de35-dc39-486e-96b5-08dbe5bd1d7f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: LK3jqHBnRo450t+gkHEjXGxCcJQUQgLWMQ0+JMk5b6KIVgVwNSHwoZvk2a4isChY5PZyYS0kOV7JUqbddO5WbWWcac+qT9z5b1d9VoMJqrAn1DbjDRdZNedAc7kE1IUdetsm9tPke7shKLaKfYefSR0YRSBGDX40nisy3HrKyspyuaQ2CY4Gcgr5hCaMrCbaLuPWD6jXiP9GBIYuLcw+QE8N0HXwBMaZt8WE7J3p6P+N5UzeJGkJnUsbDcYON7R2lZBVsJa2MOm2AFalSxoU2+IRH6U2Tq4VjIFyam0eiix0/k5vKSMuLy8tTeodeOgvNleL2P5WhDTErLPk/Jsran4guktZ3tYHLI2BNm9gq5j1ZkQxah36XJgpBIdOMPp8Xv779OJeDkeAx8+h/lhUK7R6zdQmv75BXw5zYkvsEED4JQpvjkSSBFPCuZmPwgqaCtRqQc29zmN40zfOok4EcanGJ1Drx6c3B+bDAX+GEmPOb9hNy/g0Zj4Z+Sb9N9djwt0HyYZVcmR7twC8cdq0KOhmUG+BfvN/z0O+NNyT9bSiLFmgs+9+UtuSuRPD1dBGlWGjukkY6U5Hxa/8Xw38+/ZPvtzgeh8qdF4W2jcIxPRdPIKX4RUaG+JhapCzUoedzyzf82RiXYvNfWzJxnC8oLUxD+ko2bYU4r5D7zR5mv+f0dzJRM3ag/PrcOycih3a
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3587.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(396003)(366004)(136003)(39860400002)(230273577357003)(230173577357003)(230922051799003)(451199024)(1800799009)(186009)(64100799003)(66556008)(66476007)(6506007)(41300700001)(26005)(2616005)(6666004)(66574015)(6512007)(83380400001)(4326008)(8676002)(7416002)(5660300002)(8936002)(2906002)(6486002)(316002)(478600001)(110136005)(66946007)(54906003)(36756003)(86362001)(31696002)(38100700002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NXJYdjRlODYwQkFaN253QkNlRUVmWEtrd1dGenQ3V3JGbXhhN216dm9UTUMz?=
- =?utf-8?B?MDN6eGsrZlhockZOREQ3eUJ6OE9ueE83NnVUZ29Camp0eWlWSFpxa2hXM0tr?=
- =?utf-8?B?YUFxdjg3c3hrRmEvVTBta0licXljQzA1M21TL2IvczRSN3NYNXVucWI2UTQy?=
- =?utf-8?B?YTNiYVdzV3dOeDNqUnNwRXB0eER0ZFI3WlNYcGxtQUpwdy81bHgyeHFrUjRZ?=
- =?utf-8?B?bE1VT085dGRudlNXOVdwVVdRZDB5TGlTTlowR1JjQVEzdEZKZkc1dFFWZDB6?=
- =?utf-8?B?dEFHUHpucGZkcGc5MXFOVHR5OVdnRzhIckZSQzBlVFVFd0ZYUzNBcFltWkEx?=
- =?utf-8?B?NldlTVduVWZrWHFaUmNWT0EwTVArNTJnTkdGYmVhY3pEOG5aWFJGa0puRmdw?=
- =?utf-8?B?dHM1eTc2VlFPTitHRWNrZkEvNDRhWFNwZFgzUE42cFhKYUlXVUxIVjVnOEw0?=
- =?utf-8?B?RmxaVGNyMmk4Rk1IZlZjcldkQmhZU3RmL3RWc0VmRGpxbmc2UStSYjRaYTNx?=
- =?utf-8?B?c0N3K3ZGdFhZemxac2tSQmQ0eC9VNXh5cER3SjFMTVFMaEc2ZG10bE9IOUsv?=
- =?utf-8?B?dnJZVUhTckhjM3pUQ0EzUEZLSmZzcnhtZXRXNTdsbGMwRm8ybEYxRVkrQXhp?=
- =?utf-8?B?ZVJTWDN6SHBsRzJjQXBjR3d6MkowZnFveVdIRVgxTWt2TEFscWluWUJKb25C?=
- =?utf-8?B?cWNmZ0hnMDR4T0tFaDk3cjRBclBTN01jZ2RjalowUXZmVFlaM1dOYWJtQVpP?=
- =?utf-8?B?NnQ1YzRsd2llQ0pvc2RrNjd3ODk0VmhaMm1BeGMrQTBhVExWVzM1MXhYcUt0?=
- =?utf-8?B?TlJqeDlEbGdyNldoQTlPWFpnTkdEb2NYZVJjRTZadERTeWw2Ny9FN0pTcDFq?=
- =?utf-8?B?ejVPSHBJdGVva0I3WUQ3R0tidHU2RHUwd2V2WVJnYlYvc3Z3Yk54N1lickN2?=
- =?utf-8?B?SVBQR3pIR2w3ZlA2eVd5K1JJYlppazVNbWNvYlhaVC85VDdVRmtiUnNxNXNi?=
- =?utf-8?B?ZXZtK044RElrRi9FS0RFUTV3MEtxTExCRkszc1FoRUptZVBPYkNBVk5pdkZU?=
- =?utf-8?B?Vm1Od1F2UVhmQjBtWmkreHRZQUV5cUxmUGtSOXRMbFBZKzYyYWpvRlA5WjRC?=
- =?utf-8?B?eVVibGU5eldyYXJ2UEwrSUpnZHZnOE9FUDYyZ2ROM0k5RGRZL1lsTTRtTXFG?=
- =?utf-8?B?ZTdUVjB2Y3JvRTB1NU5QaXB6RUlENm5jbVNqbDRZQ2RxKzM2Y01hZEFaUEJa?=
- =?utf-8?B?aDQ1b3RPamdjakRicDNPeWJCQlRsamRCbGFlYWhUQ0RreUZ3dG9Cd29UZTlI?=
- =?utf-8?B?Z29meHVPZmNBMStxait2TVFXMUxwQzdRK0F0S2hPY0IzeHhmcmJPRzh2THpw?=
- =?utf-8?B?NGoybHJCMXZpNjhTT1JxdTY0c2x0Y3lJS0ZTWFpSNTVmYW5YK0kvYjR2a0xS?=
- =?utf-8?B?dm9aeERDbXp6dE9Pd25DZVlMenRCeGVBbmtOSnlURnE4MXNzRGRWcGRiUFZv?=
- =?utf-8?B?VVlFVU04anUycFhZUnA5LzY1TjZjQ0NFRGZjYTROb3FjYVNiNExqVHV0UEVE?=
- =?utf-8?B?aGx6bHpyOEF4dk0zUmdzVWtGK0tpMUwyN1VOaDhVUStwYXYxUlJ3Uk9FZ0M4?=
- =?utf-8?B?T1Z0Uk03ZzZUSTc1a1ZxQ3NEZ2Y5Mzg0OVowZk1BNTA3YjhpQzBTenRTS0hO?=
- =?utf-8?B?T0pBVllhcTRJU01OdkR3ZnAvUWNCVXhvNGlFWWlEVEVyVGNKcndaR01GVkFa?=
- =?utf-8?B?U1hBSzJ4cllaQWNpNk1YYWVLMkRhQVZrbERBaHdFSCtSTkpLT0RBakQ2MG81?=
- =?utf-8?B?TGZBTXFLTnpmNEJ3Rysra3VlQWo3YkUxL09LeVpuTkg4RkR3WE1IakZrcW9v?=
- =?utf-8?B?Z1JjRkJnWHQ1YVlETVhFS3BMNEFQVWcvSkNLcEpiRDYvMTlPcEIzVm1PNU9z?=
- =?utf-8?B?a1RocTBJMnJxN2dSWnRrcElJdmNWVkJnUmNwcHFDb2xDakRTdmdqTDZjMzNn?=
- =?utf-8?B?YllReWl2N1NlK0ZoWG8zRXNoYUNJYjRVcUtjOGF2ZFI1ZUlYTFhrN1lINEYy?=
- =?utf-8?B?SDBGa2FBYmxFcGE4dkEva0pXTFhyR1d5cElZTlArSUhteHB1K3A2dmlIQkp5?=
- =?utf-8?Q?OjVY=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9838de35-dc39-486e-96b5-08dbe5bd1d7f
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3587.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2023 09:27:41.1544
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dvgEbFTAbdDZz3cgVD6DopAkmg9xa5k20G41pCVcC3cF2DRqBDrj/tbP0cPLQhcl
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6406
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20231114200755.14911-6-mario.limonciello@amd.com>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am 14.11.23 um 21:07 schrieb Mario Limonciello:
-> pci_is_thunderbolt_attached() looks at the hierarchy of the PCIe device
-> to determine if any bridge along the way has the is_thunderbolt bit set.
-> This bit will only be set when one of the devices in the hierarchy is an
-> Intel Thunderbolt device.
->
-> However PCIe devices can be connected to USB4 hubs and routers which won't
-> necessarily set the is_thunderbolt bit. These devices will however be
-> marked as externally facing which means they are marked removable by
-> pci_set_removable().
->
-> Look whether the device is marked removable to determine it's
-> connected to a Thunderbolt controller or USB4 router.
->
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Hi Mario,
 
-Acked-by: Christian König <christian.koenig@amd.com> for this one.
+On Tue, Nov 14, 2023 at 02:07:53PM -0600, Mario Limonciello wrote:
+> USB4 routers support a feature called "PCIe tunneling". This
+> allows PCIe traffic to be transmitted over USB4 fabric.
+> 
+> PCIe root ports that are used in this fashion can be discovered
+> by device specific data that specifies the USB4 router they are
+> connected to. For the PCI core, the specific connection information
+> doesn't matter, but it's interesting to know that this root port is
+> used for tunneling traffic. This will allow other decisions to be
+> made based upon it.
+> 
+> Detect the `usb4-host-interface` _DSD and if it's found save it
+> into a new `is_virtual_link` bit in `struct pci_device`.
 
-> ---
-> v2->v3:
->   * Update commit message
-> ---
->   drivers/gpu/drm/radeon/radeon_device.c | 4 ++--
->   drivers/gpu/drm/radeon/radeon_kms.c    | 2 +-
->   2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/radeon/radeon_device.c b/drivers/gpu/drm/radeon/radeon_device.c
-> index afbb3a80c0c6..ba0ca0694d18 100644
-> --- a/drivers/gpu/drm/radeon/radeon_device.c
-> +++ b/drivers/gpu/drm/radeon/radeon_device.c
-> @@ -1429,7 +1429,7 @@ int radeon_device_init(struct radeon_device *rdev,
->   
->   	if (rdev->flags & RADEON_IS_PX)
->   		runtime = true;
-> -	if (!pci_is_thunderbolt_attached(rdev->pdev))
-> +	if (!dev_is_removable(&rdev->pdev->dev))
->   		vga_switcheroo_register_client(rdev->pdev,
->   					       &radeon_switcheroo_ops, runtime);
->   	if (runtime)
-> @@ -1519,7 +1519,7 @@ void radeon_device_fini(struct radeon_device *rdev)
->   	radeon_bo_evict_vram(rdev);
->   	radeon_audio_component_fini(rdev);
->   	radeon_fini(rdev);
-> -	if (!pci_is_thunderbolt_attached(rdev->pdev))
-> +	if (!dev_is_removable(&rdev->pdev->dev))
->   		vga_switcheroo_unregister_client(rdev->pdev);
->   	if (rdev->flags & RADEON_IS_PX)
->   		vga_switcheroo_fini_domain_pm_ops(rdev->dev);
-> diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/radeon/radeon_kms.c
-> index a16590c6247f..ead912a58ab8 100644
-> --- a/drivers/gpu/drm/radeon/radeon_kms.c
-> +++ b/drivers/gpu/drm/radeon/radeon_kms.c
-> @@ -138,7 +138,7 @@ int radeon_driver_load_kms(struct drm_device *dev, unsigned long flags)
->   	if ((radeon_runtime_pm != 0) &&
->   	    radeon_has_atpx() &&
->   	    ((flags & RADEON_IS_IGP) == 0) &&
-> -	    !pci_is_thunderbolt_attached(pdev))
-> +	    !dev_is_removable(&pdev->dev))
->   		flags |= RADEON_IS_PX;
->   
->   	/* radeon_device_init should report only fatal error
+While this is fine for the "first" tunneled link, this does not take
+into account possible other "virtual" links that lead to the endpoint in
+question. Typically for eGPU it only makes sense to plug it directly to
+the host but say there is a USB4 hub (with PCIe tunneling capabilities)
+in the middle. Now the link from the hub to the eGPU that is also
+"virtual" is not marked as such and the bandwidth calculations may not
+get what is expected.
 
+It should be possible to map the PCIe ports that go over USB4 links
+through router port operation "Get PCIe Downstream Entry Mapping" and
+for the Thunderbolt 3 there is the DROM entries (I believe Lukas has
+patches for this part already) but I guess it is outside of the scope of
+this series. Out of curiosity I tried to look in Windows documentation
+if there is such interface for GPUs as we have in Linux but could not
+find (which does not mean it does not exist, though).
