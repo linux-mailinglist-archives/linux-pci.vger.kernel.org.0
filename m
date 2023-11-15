@@ -2,55 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDB017EC377
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Nov 2023 14:19:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 196377EC37F
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Nov 2023 14:21:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343911AbjKONTE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Nov 2023 08:19:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42426 "EHLO
+        id S1343912AbjKONVn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Nov 2023 08:21:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343883AbjKONTE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Nov 2023 08:19:04 -0500
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49EB5121
-        for <linux-pci@vger.kernel.org>; Wed, 15 Nov 2023 05:19:00 -0800 (PST)
-Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-da7ea62e76cso7331173276.3
-        for <linux-pci@vger.kernel.org>; Wed, 15 Nov 2023 05:19:00 -0800 (PST)
+        with ESMTP id S1343875AbjKONVm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Nov 2023 08:21:42 -0500
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92DA611D
+        for <linux-pci@vger.kernel.org>; Wed, 15 Nov 2023 05:21:38 -0800 (PST)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-5a7fb84f6ceso70528097b3.1
+        for <linux-pci@vger.kernel.org>; Wed, 15 Nov 2023 05:21:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700054339; x=1700659139; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1700054498; x=1700659298; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+vRJLB0hwLsR22GJa22gbqqqBV/RS9yq52QAFcn89A4=;
-        b=AT7Il+4/Vc9UMl7zKbOkhp9mIgRyNWa8lM5Pd5eDBpLTyIG6c5EWykCy4Jz2nDN2Xw
-         rCugxvs0nwP9rwOXLpjShAHPOU4haXwozNKnkWAFpFEsUti1JGEx88MU1C1GB6s1+PRF
-         595kxfXGWFFY6d1BVaXveIsYXGJggay8ln4KYO6r7OPa3XToPtnAX4YAmSGuUk3o0e7C
-         b1014Z3DW40hvucUrn+pCcpLanshl0SpRsxfRqVKU43bEikI1VkmpAgqBWxmXDl52rFF
-         k+0OFYt5ubo5I2MDjAYkdKWAAeGybDbZ6vCI6sZeSy1UOjzT4Qnf0GFYW9owr2skASW1
-         VZuw==
+        bh=qmhC7cUoOMTfZNr8tTpl5VWN0/bC5ZVilmLHQGwcmA8=;
+        b=FlzbVDhs5FPuEtsQgfwfZg+P5HLgzgGLJlFhk81vB8KES59dcCdJHuk8MAYRhT7H2J
+         2HuMN/YuQ5n9TdSresmvEC64GBy+kKDFqoLDuTQEKYUvPcKWWteW2tljkSwNST85YLJY
+         0wU6v5hEXDiYO65wGwP4oTMURm1KIUx6jfgeQC3J5NqXAWUr+IJFYiJ0fuMg1Wj50Lri
+         q+qi4NAvFxHtAyMsI8CxudB4KBCNNAFbUUJqjkyCBwxDA+Urr74PjDW4jMzH1P2TwmVE
+         oculpuRsxAA8BEpaYpyGfutUTAnwTIpigBN9ncveMGZ+bE69iaj33P8UBveZuXC0vVMP
+         21Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700054339; x=1700659139;
+        d=1e100.net; s=20230601; t=1700054498; x=1700659298;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+vRJLB0hwLsR22GJa22gbqqqBV/RS9yq52QAFcn89A4=;
-        b=C2euCXUqnB4BIYAlGwpT42xlh0VD1dzpWhNlGm1YAH8+SaPutniHgSdyBUhDLoP1U4
-         D5exz05/uw5ZsSVi8U1pLI3r/kY1/XMBBIWrsHWxOq1x26VA1ixn+j9UM+4/8MN0qYkK
-         EpvEOJAX70HbzKve3WC9SCyh8pTWGiCU/BjeLbwTWbpCg2viGG476ZUpmw3w0yC57Nfw
-         esxCs2LJYmHxvM4cf5lHPYTURU4NGKg2J+i/mJwwZynMjW1sLZwwzGd9TdTgK8/9gDUK
-         pLo0zvDZBEnWbONJPdcRIilnmSnqN/uLkHssipXiRSMJyf7oh58B3enn5KZyfYy0hFY9
-         SDoA==
-X-Gm-Message-State: AOJu0YxNO0MFTpmgEpUmf9Exb9zviXkfOiLVoAd52wbGUvO2MTT1scyE
-        dQfn1gGvYTBT35EWBL6yZWm2HLxqxfgO8BL2EK0EWQ==
-X-Google-Smtp-Source: AGHT+IGOjBUPEL3sJdbPpkrzRws6EeLvSwt7JJzox80aXGm6pK08NYMtazbM3pQlXjKvCVPrQERzRicT0Vnoo5tx1rA=
-X-Received: by 2002:a25:db90:0:b0:d7f:1749:9e59 with SMTP id
- g138-20020a25db90000000b00d7f17499e59mr13214940ybf.11.1700054339341; Wed, 15
- Nov 2023 05:18:59 -0800 (PST)
+        bh=qmhC7cUoOMTfZNr8tTpl5VWN0/bC5ZVilmLHQGwcmA8=;
+        b=eX9a/PqCVL3ShcMmA9A6KjQpWtDFBKqduaQ8tzsZQg3z2HY1KisVuN75TfqFT6EiFv
+         5Cgdy5JyLz78lz+3eKsDpicsLOiqBtoYwVlSZjO93YhLys1RgWGqKMBl8d7ekdHW6WUl
+         /0CF1bgwJnZJKZGtqMTNa/IGSep4ib0m7rC7Cn8VQBAvO2MAltH9RaTKFLVG5OeaA54o
+         S+I7SsIjjWwYanayb09ClFT+1QYPUaP0gEIf31UJ/TNv3QHqoPuaPJkTpsIEjaNl2HDL
+         3niQ/oI190CDPUFa9QIoF/wmU3vkIk+O8WTD800AJNL5V354QLcAdFeWFs9oO+NXSMKT
+         gy+A==
+X-Gm-Message-State: AOJu0Yx9bnK9U31KZk9aDgtYB0avM8DYKhohP/3iwD4ZuWl8q8RQCNnf
+        fKDPvznfXvgobggvH3W7GWO5zHhVVZro1+h8Pt9TVQ==
+X-Google-Smtp-Source: AGHT+IGosDu2W9oeWYt/RNw56Tl9pnmCGdRN+gpQGKe0jrfOUiv7Tybc5XhJ8xYmVnJpsuRetbjrvZnCAoPAC6D6rWE=
+X-Received: by 2002:a25:c5c4:0:b0:d9a:fe8c:c29c with SMTP id
+ v187-20020a25c5c4000000b00d9afe8cc29cmr9934442ybe.58.1700054497731; Wed, 15
+ Nov 2023 05:21:37 -0800 (PST)
 MIME-Version: 1.0
-References: <1700051821-1087-1-git-send-email-quic_msarkar@quicinc.com> <1700051821-1087-2-git-send-email-quic_msarkar@quicinc.com>
-In-Reply-To: <1700051821-1087-2-git-send-email-quic_msarkar@quicinc.com>
+References: <1700051821-1087-1-git-send-email-quic_msarkar@quicinc.com>
+ <1700051821-1087-2-git-send-email-quic_msarkar@quicinc.com> <CAA8EJprWP3ThYyPZDF7ddG9Awdk9D7ovxes--r0VS3Ma53VqxA@mail.gmail.com>
+In-Reply-To: <CAA8EJprWP3ThYyPZDF7ddG9Awdk9D7ovxes--r0VS3Ma53VqxA@mail.gmail.com>
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Wed, 15 Nov 2023 15:18:48 +0200
-Message-ID: <CAA8EJprWP3ThYyPZDF7ddG9Awdk9D7ovxes--r0VS3Ma53VqxA@mail.gmail.com>
+Date:   Wed, 15 Nov 2023 15:21:26 +0200
+Message-ID: <CAA8EJprouEiex2YGuMjJCmwiWmhbYXaUpTBkWhEXpF08iGzk6Q@mail.gmail.com>
 Subject: Re: [PATCH v3 1/3] PCI: qcom: Enable cache coherency for SA8775P RC
 To:     Mrinmay Sarkar <quic_msarkar@quicinc.com>
 Cc:     agross@kernel.org, andersson@kernel.org,
@@ -77,64 +78,79 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 15 Nov 2023 at 14:37, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
+On Wed, 15 Nov 2023 at 15:18, Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
 >
-> This change will enable cache snooping logic to support
-> cache coherency for 8775 RC platform.
+> On Wed, 15 Nov 2023 at 14:37, Mrinmay Sarkar <quic_msarkar@quicinc.com> wrote:
+> >
+> > This change will enable cache snooping logic to support
+> > cache coherency for 8775 RC platform.
+> >
+> > Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 6902e97..b82ccd1 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -51,6 +51,7 @@
+> >  #define PARF_SID_OFFSET                                0x234
+> >  #define PARF_BDF_TRANSLATE_CFG                 0x24c
+> >  #define PARF_SLV_ADDR_SPACE_SIZE               0x358
+> > +#define PCIE_PARF_NO_SNOOP_OVERIDE             0x3d4
+> >  #define PARF_DEVICE_TYPE                       0x1000
+> >  #define PARF_BDF_TO_SID_TABLE_N                        0x2000
+> >
+> > @@ -117,6 +118,10 @@
+> >  /* PARF_LTSSM register fields */
+> >  #define LTSSM_EN                               BIT(8)
+> >
+> > +/* PARF_NO_SNOOP_OVERIDE register fields */
+> > +#define WR_NO_SNOOP_OVERIDE_EN                 BIT(1)
+> > +#define RD_NO_SNOOP_OVERIDE_EN                 BIT(3)
+> > +
+> >  /* PARF_DEVICE_TYPE register fields */
+> >  #define DEVICE_TYPE_RC                         0x4
+> >
+> > @@ -961,6 +966,14 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+> >
+> >  static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
+> >  {
+> > +       struct dw_pcie *pci = pcie->pci;
+> > +       struct device *dev = pci->dev;
+> > +
+> > +       /* Enable cache snooping for SA8775P */
+> > +       if (of_device_is_compatible(dev->of_node, "qcom,pcie-sa8775p"))
 >
-> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> Quoting my feedback from v1:
 >
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 6902e97..b82ccd1 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -51,6 +51,7 @@
->  #define PARF_SID_OFFSET                                0x234
->  #define PARF_BDF_TRANSLATE_CFG                 0x24c
->  #define PARF_SLV_ADDR_SPACE_SIZE               0x358
-> +#define PCIE_PARF_NO_SNOOP_OVERIDE             0x3d4
->  #define PARF_DEVICE_TYPE                       0x1000
->  #define PARF_BDF_TO_SID_TABLE_N                        0x2000
->
-> @@ -117,6 +118,10 @@
->  /* PARF_LTSSM register fields */
->  #define LTSSM_EN                               BIT(8)
->
-> +/* PARF_NO_SNOOP_OVERIDE register fields */
-> +#define WR_NO_SNOOP_OVERIDE_EN                 BIT(1)
-> +#define RD_NO_SNOOP_OVERIDE_EN                 BIT(3)
-> +
->  /* PARF_DEVICE_TYPE register fields */
->  #define DEVICE_TYPE_RC                         0x4
->
-> @@ -961,6 +966,14 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
->
->  static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
->  {
-> +       struct dw_pcie *pci = pcie->pci;
-> +       struct device *dev = pci->dev;
-> +
-> +       /* Enable cache snooping for SA8775P */
-> +       if (of_device_is_compatible(dev->of_node, "qcom,pcie-sa8775p"))
+> Obviously: please populate a flag in the data structures instead of
+> doing of_device_is_compatible(). Same applies to the patch 2.
 
-Quoting my feedback from v1:
+Mani, I saw your response for the v1, but I forgot to respond. In my
+opinion, it's better to have the flag now, even if it is just for a
+single platform. It allows us to follow the logic of the driver and
+saves few string ops.
 
-Obviously: please populate a flag in the data structures instead of
-doing of_device_is_compatible(). Same applies to the patch 2.
-
-
-> +               writel(WR_NO_SNOOP_OVERIDE_EN | RD_NO_SNOOP_OVERIDE_EN,
-> +                               pcie->parf + PCIE_PARF_NO_SNOOP_OVERIDE);
-> +
->         qcom_pcie_clear_hpc(pcie->pci);
 >
->         return 0;
+>
+> > +               writel(WR_NO_SNOOP_OVERIDE_EN | RD_NO_SNOOP_OVERIDE_EN,
+> > +                               pcie->parf + PCIE_PARF_NO_SNOOP_OVERIDE);
+> > +
+> >         qcom_pcie_clear_hpc(pcie->pci);
+> >
+> >         return 0;
+> > --
+> > 2.7.4
+> >
+>
+>
 > --
-> 2.7.4
->
+> With best wishes
+> Dmitry
+
 
 
 -- 
