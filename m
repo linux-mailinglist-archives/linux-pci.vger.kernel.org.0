@@ -2,291 +2,305 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 00D8D7EDAEB
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Nov 2023 05:34:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FC767EDB21
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Nov 2023 06:22:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235734AbjKPEeg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Nov 2023 23:34:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59858 "EHLO
+        id S230238AbjKPFWb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Nov 2023 00:22:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344864AbjKPEeO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Nov 2023 23:34:14 -0500
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8E7519B;
-        Wed, 15 Nov 2023 20:34:00 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S1VfOEQRTKkZMgOfXo9lqAIYOmK1HgUp4Mxf+eSZb+q9JEvVXjWF770u79VNl8f/m4EeSI5ueX8+wp7fyq4PqGibMQg+PWu4jm6b73tlhyw313gAZCT+1xjlmCy+1QW/O4g5h4IxzxkywgjZQEwnDAXuCdgvW++n5Q2xxv8eHllMvLYuhRevp/eCFAO2BZ2ZTJg80tQGf/O7qEwK0/jQgOMXvBqP3TUYVwFiAh+UriqXa3Qm0D0wrEBgS1tv70vIlj+Mwfa26DXcbwZrZtsdVqRUE8QO47AwhEbaS0D4kgncOJI2VQuCc8d3zy2w+bMJp+hQq71mY2Yb0s73yAW5HA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dPX9Y3DDSPe4Dkmf3EwQ714i3oyO+ArRVD8DwL6RTRU=;
- b=JMfwyiJi/5BLkQlEEoPUf/gVmwbCiq4XgKgeMVv4MPTmnHyVhXe7FIjZdx54vVcVTRJc4AwdCZMLc07P6fpI9QDJsQlNPcXq0K6U4MZs1vAerc08XkP0OxSNHu51mE39nhOeg7cx8UXFNniYTfRAxJ9LSPeKtSNrTpIrie1kdJkjC7E93LyzhfX7/tv9IF8gUgEPPdBuJqaYsi8PhIA4Q2v/1ZW5yNA1Plz8X+gFr9DPK8Pt8HbU+2H6n1kvt7n4OpzSSK8TyeM7BdMPAUSphALitDH045wAk6i/H/mqu2XscyjNwQH73mSV4NwXLBDk8SQYdddPg7OOAS86na8zMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dPX9Y3DDSPe4Dkmf3EwQ714i3oyO+ArRVD8DwL6RTRU=;
- b=kcfzk6zLM8EDO/LBolXZTWDZrXw2X8fxhHbxRYnpZLJfBOlJSXEd75tuoHV72C+h1Sz4RgWyOfcfpdx5LlTfK2e4CYpgPaOg0FvfsuRgKdR0UIE40Su6i6dth+0kceAEWhu1yKPZ26YZBtdxLpI3/0X3mCwYMRehIednQrBmcus=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BYAPR12MB4614.namprd12.prod.outlook.com (2603:10b6:a03:a6::22)
- by MN6PR12MB8541.namprd12.prod.outlook.com (2603:10b6:208:47a::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.31; Thu, 16 Nov
- 2023 04:33:58 +0000
-Received: from BYAPR12MB4614.namprd12.prod.outlook.com
- ([fe80::c258:1e94:a85b:1510]) by BYAPR12MB4614.namprd12.prod.outlook.com
- ([fe80::c258:1e94:a85b:1510%4]) with mapi id 15.20.6977.033; Thu, 16 Nov 2023
- 04:33:58 +0000
-Message-ID: <ed07b850-8924-29b5-895c-331e3093d8a2@amd.com>
-Date:   Thu, 16 Nov 2023 10:03:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v3 7/7] PCI: Exclude PCIe ports used for virtual links in
- pcie_bandwidth_available()
-Content-Language: en-US
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>
-Cc:     =?UTF-8?Q?Marek_Beh=c3=ban?= <kabel@kernel.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Xinhui Pan <Xinhui.Pan@amd.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <dri-devel@lists.freedesktop.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        Danilo Krummrich <dakr@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        David Airlie <airlied@gmail.com>,
-        "Maciej W . Rozycki" <macro@orcam.me.uk>
-References: <20231114200755.14911-1-mario.limonciello@amd.com>
- <20231114200755.14911-8-mario.limonciello@amd.com>
- <e0e76948-a0a8-b6c2-163b-1d00afb6650c@amd.com>
- <5356bcbd-0785-4156-993c-338fed67d39d@amd.com>
- <d7539754-1877-43ed-a1b4-f969315ec271@amd.com>
-From:   "Lazar, Lijo" <lijo.lazar@amd.com>
-In-Reply-To: <d7539754-1877-43ed-a1b4-f969315ec271@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BM1PR01CA0150.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:68::20) To BYAPR12MB4614.namprd12.prod.outlook.com
- (2603:10b6:a03:a6::22)
+        with ESMTP id S230102AbjKPFWa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Nov 2023 00:22:30 -0500
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC50E1A3
+        for <linux-pci@vger.kernel.org>; Wed, 15 Nov 2023 21:22:25 -0800 (PST)
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id EE3AD3FDEC
+        for <linux-pci@vger.kernel.org>; Thu, 16 Nov 2023 05:22:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1700112144;
+        bh=fr9ynEVsHoa7ae6x3+SEy8aQYynppv18RGOoPksmpuo=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=ZOd9sezC5ahaMtZGgLIb3wXG0t6Pi1n9aSm+Y6OBBOqajl/moKGkxZP6mbWCqn1RA
+         axNeI9336x8u2XDY3c+i0zM72qCWYhE/NmT8xJvzQ2qk206zkNislfF7I9oUWOYHsK
+         xls/PuDj8FYQTIaUkP2gAPUC2Uv/2lv4yuwGM1kaiDq6Y7wV4YOnzjHfqWMAz9yzHN
+         Sv1XujpBt/OqacS7XXDzEKsY2YejDZacPEfys7XSWsz4wZOTZB52wdElTnHC3TOJGr
+         5Y0C4V5dch2oBkXqQDk5laAfsOcOj2lB0APuohNIqScohQy8+vJnKIXko/c+90Gd+M
+         Z4ywfneMPSFYg==
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-28043db47ebso447984a91.1
+        for <linux-pci@vger.kernel.org>; Wed, 15 Nov 2023 21:22:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700112142; x=1700716942;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fr9ynEVsHoa7ae6x3+SEy8aQYynppv18RGOoPksmpuo=;
+        b=LfFCRxRFgfv2Eny4mh1LTt93pjoD3sRp1Sp5B6xDyNUHlos2R/m3LH+1Q541DJ0j7p
+         f2ylhfWthhw2tKeDWstw2rOucn7RXPyYmro4UyBkYs9er6zF1z3eUCLyZOflPLj1srrG
+         TtRsEGkhFpZCRpDpvzuOFaFDlQ1qVdvqK0lp4jd4s/+cu6+eAXLWotf0ZW8qyqmd2OJ+
+         MRzkLfNoLs5QtTlr0Lir6XWGaamFqAJz5SZB4mnf/GqICXrH3d85/tvbJdrMCCfBKBe0
+         g3mASams07msG3mTKD8qhAsRwOc/VDFEt7BMuWmzMHuP93QYHEFap3dTaRFJ/bJO6b/M
+         0P0g==
+X-Gm-Message-State: AOJu0YzQaCYjSzON7ErPo76AgVEq9FGUFC/2hFMrxVDO4GnKFqZUiWw9
+        Z1nB8l7dtNAglFwGgrWP6WVxUO7eVLYezt9IPIFjtC8mytjPU0gxZvadA1O7e21L0lu3Rna4jFn
+        R4PhjUjH8e84ETM1u/zfPSNuPZ0VLvc9IedNrth9d+OW67/Dfjd322Q==
+X-Received: by 2002:a17:90b:38c8:b0:280:15a3:89c3 with SMTP id nn8-20020a17090b38c800b0028015a389c3mr12951089pjb.27.1700112142221;
+        Wed, 15 Nov 2023 21:22:22 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHLC/4acj0McErWz60wZejZap8B3iqii7Bt//IL+u/LsPxNLf+dbpSHr4r38hr46JezIPdNZztQhciZUIS2ZCc=
+X-Received: by 2002:a17:90b:38c8:b0:280:15a3:89c3 with SMTP id
+ nn8-20020a17090b38c800b0028015a389c3mr12951075pjb.27.1700112141806; Wed, 15
+ Nov 2023 21:22:21 -0800 (PST)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB4614:EE_|MN6PR12MB8541:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4ac6499f-87fb-4c64-c4bc-08dbe65d3f25
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: LOiyDkmUOkb50OJqFQJ/i5aIGVmSNJUztWYRt5rT2BNtnJbq8SqakH7iDPDfAlurwuw/Jd0AElvuK0jET1caazjytTDjhFxyADCEjFLfbuHuvcXquY04KK18yslVuSmkW8fafV6D4stePfWGdUofvxslpj4EGrLaWD06visIIk9LUfJjyxLpxX2w9FiSNPRPL0mr8gCOlYY3fZjVRV4W2QbS4gvqQDV+554bNfJinHebGX1121y4pB4Sw341+7zhnCpepaSi9xp09GHIbcAzGKCykRv1QZsKpflYB2yKTSWWfG0pArtBcrKfOqYW7JTXgX/LhUvodWq/SYfeT8J/vHMbDbcbvtW0diNnU9ayrgckxZvi6rlknxf11hulRRZACEZC6fWzCSA3sf6FTWLN5cvn5pqzraHexwjfrJ2ISssMvjh1gp4LAA+wq4CKMgBeTWaRCNPAhhvoS9aYoipPhHv/0UOhq+FS6GebQsTHUFM0+BNIPO5Bj5+7aj7689oq1zzkVR8oHVSMmYKpkegr2nLTAOUm0Qzsz/sAnBwOnQ37NATZWICscqm9eNIgm8o966jIqIGQhAHl8x/hLTHFA+gUpMjZmN880+oq8lqPaKyZccTOTmSzs8hJM6hlnJnj
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB4614.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(396003)(136003)(346002)(366004)(230922051799003)(451199024)(186009)(1800799009)(64100799003)(54906003)(316002)(86362001)(6512007)(53546011)(6486002)(6506007)(66476007)(966005)(478600001)(31686004)(31696002)(36756003)(5660300002)(2616005)(7416002)(8936002)(110136005)(66946007)(4326008)(6666004)(66556008)(8676002)(26005)(83380400001)(41300700001)(2906002)(38100700002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Y0JaT1RoYUhwYVhiNkpYbWtTdTFodG9VU3d4czRTZ3FZeEtqMHFMaHozUDJM?=
- =?utf-8?B?OFk2OEhzVTRxVnIvckV6Vk0rMUFtcENzZENUOE1DR0xKNjhWVWZPbnBnb2Vn?=
- =?utf-8?B?eTB6OUczOVc0V2dtWGJoSTdWNkx4NnhSdXdTRXVIelo3cU5yOHlESUFEQ2Uw?=
- =?utf-8?B?SHFkZkZ0clpuSEpJNkpnRTRDMGNia2Y1RTQ1R2ltRjY2T3UxZDVlblZNYytu?=
- =?utf-8?B?MnkrQlEvL3Y1WUN0OXpDcnZ5dExJQS9iTzZwdTB3T1JGNHVvK0ltTGE5MlNs?=
- =?utf-8?B?ZVdPNEQ5WXNmQTY5dUd6bVZaUFBWQ3RnMXdYMFZMVVBxdCthanZFM3M4Ky9n?=
- =?utf-8?B?emI3NHlNZEhtMWZGdkpIOTQreWZMcmRYWHdFd1hNUTJWWnV6V0RLNHVtWHc5?=
- =?utf-8?B?V1dqY0k3clhRbDZ5NWpvd040Z05yMmVxdkpLMXBlaEdPYzBWMEZ1bG1HcmV5?=
- =?utf-8?B?TlFNdEVaSGVCamJJcTdtb3U5Tmw1WHE2YXdMZ0U1L2plWHVid0gyR3ZRRFR5?=
- =?utf-8?B?S0x6bWdORU5UdUI1N0VzTmlpZHJYa2dFald1M25QcjF1bldYQzErQmhWUHZh?=
- =?utf-8?B?U0JJcmRiT0VDWVdlQkc5Y1U0aFdzZUJYQXFoZjBVOUZyL3IySHlEWU82LzlJ?=
- =?utf-8?B?eitrSUhxcWZteFRxQklvd2V4Vm9oUDNITlE4S2MxRGowN3p1ODVhN2U4QUMv?=
- =?utf-8?B?L1llQSttdkRrZlQ3dlF1TkowSzdQb0VSZHYvWHdnVnVDUkp0MW1lQjJQZ3NQ?=
- =?utf-8?B?Z2FNVG9TMWJxSzVsazM1d3pvM2pvRXJ1MHBXYkpyMFdENWYxZWx3a0o2Rk0y?=
- =?utf-8?B?SUgvMzBtaWJXN2FkMWh4bCs2NWN6QWw4aFFCdjhrN2FhR0prOWFaOTE1V0pX?=
- =?utf-8?B?M25Yd2FBYlg3OWlIaE9zR2RSWStLUHVqZHZLeURUWjluTzlybzdDSmZhWkVu?=
- =?utf-8?B?dXdLY2JEVHhnK0Z5R2tPeXc3V3Bac3kwcnlRc1p1eEpHVFdHWXZiRUJodGRu?=
- =?utf-8?B?VlpjZlVpRnVoaWdhbnFLd0dtMUdROUZDRjMxcG54aHRWQlBLVFZsdW1aRDc0?=
- =?utf-8?B?c1QrbnBCTEQyK0lPVW00b1U2VVlyYjNad29Zb29PeGdER1BnTjhzWHdjV25O?=
- =?utf-8?B?RDFudWNSWnNBbXowRGNERUNoUkZVV3R2NkE3NXNnSXI4Uy84MUhVT25zK1Ju?=
- =?utf-8?B?a1FDSVk2U2U3dVVIWndscFVNZXltay9KdW1Jd3pkRGJBOGNXVklvSzczSlY2?=
- =?utf-8?B?VVg4VUExOCtWTVVMUU1UR0NKUW1KUUtCemVIa21Hc0N4YzRNOGR0ZzlrNzhX?=
- =?utf-8?B?NnhOdUtrb2YzcVlUUmlMRFJGVjRsb2lVVGU5cHRXOThHUVczR3BPTlIwL1Rm?=
- =?utf-8?B?ajFMNmRtQi9sbXZlRUdrYU5uZHRsaGQzUEpKVEtYODJrQlZadkNRcFZvZVR5?=
- =?utf-8?B?NHlRUmUzdUEranliMExhU3ZhZ0NlQUVxUm1kT1ovbnZ1Y2UrQ25XNjcyZWc5?=
- =?utf-8?B?a1ZQVWlSMnBFK1FBQWRQNXVLNDZJdkt3dWNuMUc1NXVlSEtFNGdiZ3E5SDFv?=
- =?utf-8?B?WXFYM0dUZ2c4Q1piOXFRcFY3WU9JVEtiRGtNT1JsbVFBMmxjaXRHa0RGOWlK?=
- =?utf-8?B?cFBic3Q3YUd0RFpsZXFxMzUrbFJjejBRcXBDWXdaaFVNK1oralhIZEdkNTB3?=
- =?utf-8?B?MnJadG1VcC85TitaZXZnQUlLTWVPb1VBcmFMZ0w4aFZTWEJ0emw5NWYxclhI?=
- =?utf-8?B?eFlMVDM0NlA4d0kzcFBjZVBSZG5sY1BzUUF6WWZGY1BuSkgvMGp5MVRTSU9S?=
- =?utf-8?B?bHllQWgxcS9lTmtJOEMyTEFnemZKcHAxWk9sM0JtSGk3ZlByOGpGb0ZEVWRx?=
- =?utf-8?B?d1NFR0dPSjc2MTJYOS9seTNrdVBqeVFLNkx6TE1oVUp5ZmNoYVRGMlNuK3hx?=
- =?utf-8?B?MHJUMkpZUXZUTk1meGRxeEZtNkl3WDBrZzQ5QnpwYThuSi9hRmdleTAxcVFq?=
- =?utf-8?B?S3ZzZUd3NE5MakNFeVBRNkZodmtxbXZtVDh5blFaNFVkMm1IOE5zVW1yeUdW?=
- =?utf-8?B?a1JpYWtUd1JNOHRoMkpWdERHclN3bnRWUGJyWU5YUnBYTGVieXdyYWhDOFJv?=
- =?utf-8?Q?rXnvbdox0de6Bmg8tJ99Y3Gia?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ac6499f-87fb-4c64-c4bc-08dbe65d3f25
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB4614.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2023 04:33:57.2946
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uUHmYuf2zfmK7EzTtP9eoDRbqO2nu3jL4qUcUC/HqARatlnO0706oTFjcBKI6X3h
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR12MB8541
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20231016040132.23824-1-kai.heng.feng@canonical.com>
+ <20231016093210.GA22952@wunner.de> <263982e90fc046cf977ecb8727003690@realtek.com>
+ <20231018094435.GA21090@wunner.de> <02ee7e47166a463d8d4e491b61cdd33f@realtek.com>
+ <20231019143504.GA25140@wunner.de> <CAAd53p7jx=_Yh8sPwdsu-6Bc-hNgiExscMNGhgcbH=rzOBMOXQ@mail.gmail.com>
+ <d7cc9e658b114da7a9c32b383f06adc9@realtek.com>
+In-Reply-To: <d7cc9e658b114da7a9c32b383f06adc9@realtek.com>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Thu, 16 Nov 2023 13:22:09 +0800
+Message-ID: <CAAd53p6bRnhGOfLHBz4WyTQVKocZPK0d5m4oRdeLhWxkx-5tLw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: pciehp: Prevent child devices from doing RPM on PCIe
+ Link Down
+To:     Ricky WU <ricky_wu@realtek.com>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Ricky,
+
+On Fri, Nov 10, 2023 at 10:41=E2=80=AFAM Ricky WU <ricky_wu@realtek.com> wr=
+ote:
+>
+> > Hi Lukas and Ricky,
+> >
+> > I think the following approach should cover all the cases?
+> > Ricky, can you please give it a try?
+> >
+>
+> This patch is invalid for this issue,
+> Problem reappears after plugging and unplugging twice
+> Dmesg as below,
+
+My bad. The pm_runtime_barrier() should be called earlier.
+Can you please give the following a try:
+
+diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+index d749ea8250d6..c69b4ce5dbfd 100644
+--- a/drivers/pci/remove.c
++++ b/drivers/pci/remove.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/pci.h>
+ #include <linux/module.h>
++#include <linux/pm_runtime.h>
+ #include "pci.h"
+
+ static void pci_free_resources(struct pci_dev *dev)
+@@ -18,6 +19,7 @@ static void pci_stop_dev(struct pci_dev *dev)
+  pci_pme_active(dev, false);
+
+  if (pci_dev_is_added(dev)) {
++ pm_runtime_barrier(&dev->dev);
+
+  device_release_driver(&dev->dev);
+  pci_proc_detach_device(dev);
 
 
-On 11/16/2023 2:39 AM, Mario Limonciello wrote:
-> On 11/15/2023 11:04, Mario Limonciello wrote:
->> On 11/14/2023 21:23, Lazar, Lijo wrote:
->>>
->>>
->>> On 11/15/2023 1:37 AM, Mario Limonciello wrote:
->>>> The USB4 spec specifies that PCIe ports that are used for tunneling
->>>> PCIe traffic over USB4 fabric will be hardcoded to advertise 2.5GT/s 
->>>> and
->>>> behave as a PCIe Gen1 device. The actual performance of these ports is
->>>> controlled by the fabric implementation.
->>>>
->>>> Callers for pcie_bandwidth_available() will always find the PCIe ports
->>>> used for tunneling as a limiting factor potentially leading to 
->>>> incorrect
->>>> performance decisions.
->>>>
->>>> To prevent such problems check explicitly for ports that are marked as
->>>> virtual links or as thunderbolt controllers and skip them when looking
->>>> for bandwidth limitations of the hierarchy. If the only device 
->>>> connected
->>>> is a port used for tunneling then report that device.
->>>>
->>>> Callers to pcie_bandwidth_available() could make this change on their
->>>> own as well but then they wouldn't be able to detect other potential
->>>> speed bottlenecks from the hierarchy without duplicating
->>>> pcie_bandwidth_available() logic.
->>>>
->>>> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2925#note_2145860
->>>> Link: https://www.usb.org/document-library/usb4r-specification-v20
->>>>        USB4 V2 with Errata and ECN through June 2023
->>>>        Section 11.2.1
->>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>>> ---
->>>> v2->v3:
->>>>   * Split from previous patch version
->>>>   * Look for thunderbolt or virtual link
->>>> ---
->>>>   drivers/pci/pci.c | 19 +++++++++++++++++++
->>>>   1 file changed, 19 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>>> index 0ff7883cc774..b1fb2258b211 100644
->>>> --- a/drivers/pci/pci.c
->>>> +++ b/drivers/pci/pci.c
->>>> @@ -6269,11 +6269,20 @@ static u32 pcie_calc_bw_limits(struct 
->>>> pci_dev *dev, u32 bw,
->>>>    * limiting_dev, speed, and width pointers are supplied) 
->>>> information about
->>>>    * that point.  The bandwidth returned is in Mb/s, i.e., 
->>>> megabits/second of
->>>>    * raw bandwidth.
->>>> + *
->>>> + * This excludes the bandwidth calculation that has been returned 
->>>> from a
->>>> + * PCIe device that is used for transmitting tunneled PCIe traffic 
->>>> over a virtual
->>>> + * link part of larger hierarchy. Examples include Thunderbolt3 and 
->>>> USB4 links.
->>>> + * The calculation is excluded because the USB4 specification 
->>>> specifies that the
->>>> + * max speed returned from PCIe configuration registers for the 
->>>> tunneling link is
->>>> + * always PCI 1x 2.5 GT/s.  When only tunneled devices are present, 
->>>> the bandwidth
->>>> + * returned is the bandwidth available from the first tunneled device.
->>>>    */
->>>>   u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev 
->>>> **limiting_dev,
->>>>                    enum pci_bus_speed *speed,
->>>>                    enum pcie_link_width *width)
->>>>   {
->>>> +    struct pci_dev *vdev = NULL;
->>>>       u32 bw = 0;
->>>>       if (speed)
->>>> @@ -6282,10 +6291,20 @@ u32 pcie_bandwidth_available(struct pci_dev 
->>>> *dev, struct pci_dev **limiting_dev,
->>>>           *width = PCIE_LNK_WIDTH_UNKNOWN;
->>>>       while (dev) {
->>>> +        if (dev->is_virtual_link || dev->is_thunderbolt) {
->>>> +            if (!vdev)
->>>> +                vdev = dev;
->>>> +            goto skip;
->>>> +        }
->>>
->>> One problem with this is it *silently* ignores the bandwidth limiting 
->>> device - the bandwidth may not be really available if there are 
->>> virtual links in between. That is a change in behavior from the 
->>> messages shown in __pcie_print_link_status.
->>
->> That's a good point.  How about a matching behavioral change to 
->> __pcie_print_link_status() where it looks at the entire hierarchy for 
->> any links marked as virtual and prints a message along the lines of:
->>
->> "This value may be further limited by virtual links".
-> 
-> I'll wait for some more feedback on the series before posting another 
-> version, but I did put this together and this is a sample from dmesg of 
-> the wording I'm planning on using for the next version:
-> 
-> 31.504 Gb/s available PCIe bandwidth, this may be further limited by 
-> conditions of virtual link 0000:00:03.1
-> 
-
-This will cover the the message, but for any real user of the API this 
-is not good enough as the speed returned doesn't really indicate the 
-bandwidth available. Or, modify the description such that users know 
-that the value cannot be trusted when there is virtual link in between 
-(probably the API should indicate that through some param/return code) 
-and act accordingly.
-
-Thanks,
-Lijo
-
->>
->>>
->>> Thanks,
->>> Lijo
->>>
->>>>           bw = pcie_calc_bw_limits(dev, bw, limiting_dev, speed, 
->>>> width);
->>>> +skip:
->>>>           dev = pci_upstream_bridge(dev);
->>>>       }
->>>> +    /* If nothing "faster" found on hierarchy, limit to first 
->>>> virtual link */
->>>> +    if (vdev && !bw)
->>>> +        bw = pcie_calc_bw_limits(vdev, bw, limiting_dev, speed, 
->>>> width);
->>>> +
->>>>       return bw;
->>>>   }
->>>>   EXPORT_SYMBOL(pcie_bandwidth_available);
->>
-> 
+> [...]
+> [  360.771161] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
+> [  360.771165] pcieport 0000:00:1c.0: pciehp: Slot(8): Card not present
+> [  361.986932] pcieport 0000:00:1c.0: pciehp: Slot(8): Card present
+> [  361.986937] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Up
+> [  362.120635] pci 0000:01:00.0: [15b7:5007] type 00 class 0x010802
+> [  362.120691] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64b=
+it]
+> [  362.120747] pci 0000:01:00.0: reg 0x20: [mem 0x00000000-0x000000ff 64b=
+it]
+> [  362.121606] pci 0000:01:00.0: BAR 0: assigned [mem 0xa3b00000-0xa3b03f=
+ff 64bit]
+> [  362.121646] pci 0000:01:00.0: BAR 4: assigned [mem 0xa3b04000-0xa3b040=
+ff 64bit]
+> [  362.121686] pcieport 0000:00:1c.0: PCI bridge to [bus 01]
+> [  362.121702] pcieport 0000:00:1c.0:   bridge window [io  0x4000-0x4fff]
+> [  362.121743] pcieport 0000:00:1c.0:   bridge window [mem 0xa3b00000-0xa=
+44fffff]
+> [  362.121761] pcieport 0000:00:1c.0:   bridge window [mem 0xa0a00000-0xa=
+13fffff 64bit pref]
+> [  362.171709] nvme nvme0: pci function 0000:01:00.0
+> [  362.171726] nvme 0000:01:00.0: enabling device (0000 -> 0002)
+> [  362.256724] nvme nvme0: 4/0/0 default/read/poll queues
+> [  362.261656]  nvme0n1: p1 p2
+> [  369.343246] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
+> [  369.457450] pcieport 0000:00:1c.0: pciehp: Slot(8): Card present
+> [  369.457462] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Up
+> [  369.592600] pci 0000:01:00.0: [10ec:5261] type 00 class 0xff0000
+> [  369.592654] pci 0000:01:00.0: reg 0x10: [mem 0xa3b00000-0xa3b00fff]
+> [  369.592776] pci 0000:01:00.0: Upstream bridge's Max Payload Size set t=
+o 128 (was 256, max 256)
+> [  369.592797] pci 0000:01:00.0: Max Payload Size set to 128 (was 128, ma=
+x 128)
+> [  369.592964] pci 0000:01:00.0: supports D1 D2
+> [  369.592970] pci 0000:01:00.0: PME# supported from D1 D2 D3hot D3cold
+> [  369.593642] pci 0000:01:00.0: BAR 0: assigned [mem 0xa3b00000-0xa3b00f=
+ff]
+> [  369.593662] pcieport 0000:00:1c.0: PCI bridge to [bus 01]
+> [  369.593679] pcieport 0000:00:1c.0:   bridge window [io  0x4000-0x4fff]
+> [  369.593692] pcieport 0000:00:1c.0:   bridge window [mem 0xa3b00000-0xa=
+44fffff]
+> [  369.593703] pcieport 0000:00:1c.0:   bridge window [mem 0xa0a00000-0xa=
+13fffff 64bit pref]
+> [  372.573757] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
+> [  372.586620] BUG: unable to handle page fault for address: ffffc9000008=
+9010
+> [  372.586624] #PF: supervisor read access in kernel mode
+> [  372.586626] #PF: error_code(0x0000) - not-present page
+> [  372.586627] PGD 100000067 P4D 100000067 PUD 10020a067 PMD 10020b067 PT=
+E 0
+> [  372.586632] Oops: 0000 [#1] PREEMPT SMP PTI
+> [  372.586634] CPU: 2 PID: 157 Comm: kworker/2:2 Not tainted 6.6.0-rc4 #1=
+2
+> [  372.586637] Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.=
+M./H370M Pro4, BIOS P3.40 10/25/2018
+> [  372.586639] Workqueue: pm pm_runtime_work
+> [  372.586644] RIP: 0010:ioread32+0x2e/0x70
+> [  372.586647] Code: ff 03 00 77 25 48 81 ff 00 00 01 00 77 14 8b 15 98 a=
+c 52 01 b8 ff ff ff ff 85 d2 75 14 c3 cc cc cc cc 89 fa ed c3 cc cc cc cc <=
+8b> 07 c3 cc cc cc cc 55 83 ea 01 48 89 fe 48 c7 c7 f8 97 57 86 48
+> [  372.586649] RSP: 0018:ffffc90000543d50 EFLAGS: 00010296
+> [  372.586652] RAX: ffffc90000089000 RBX: 000000000000032f RCX: 000000000=
+000007f
+> [  372.586653] RDX: 000000000000ff00 RSI: ffffc90000089010 RDI: ffffc9000=
+0089010
+> [  372.586655] RBP: ffffc90000543d70 R08: ffffc90000089010 R09: ffff88816=
+a132368
+> [  372.586656] R10: 0000000000000000 R11: 0000000000000003 R12: 000000000=
+000007f
+> [  372.586657] R13: ffff8881060ed000 R14: ffff8881060ed100 R15: 000000000=
+0009003
+> [  372.586659] FS:  0000000000000000(0000) GS:ffff88816a100000(0000) knlG=
+S:0000000000000000
+> [  372.586661] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  372.586662] CR2: ffffc90000089010 CR3: 0000000043032006 CR4: 000000000=
+03706e0
+> [  372.586664] Call Trace:
+> [  372.586665]  <TASK>
+> [  372.586667]  ? show_regs+0x68/0x70
+> [  372.586671]  ? __die_body+0x20/0x70
+> [  372.586674]  ? __die+0x2b/0x40
+> [  372.586677]  ? page_fault_oops+0x160/0x480
+> [  372.586680]  ? search_bpf_extables+0x63/0x90
+> [  372.586684]  ? ioread32+0x2e/0x70
+> [  372.586686]  ? search_exception_tables+0x5f/0x70
+> [  372.586689]  ? kernelmode_fixup_or_oops+0xa2/0x120
+> [  372.586692]  ? __bad_area_nosemaphore+0x179/0x230
+> [  372.586696]  ? bad_area_nosemaphore+0x16/0x20
+> [  372.586698]  ? do_kern_addr_fault+0x8b/0xa0
+> [  372.586701]  ? exc_page_fault+0xe5/0x180
+> [  372.586705]  ? asm_exc_page_fault+0x27/0x30
+> [  372.586710]  ? ioread32+0x2e/0x70
+> [  372.586714]  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
+> [  372.586723]  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
+> [  372.586731]  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
+> [  372.586740]  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
+> [  372.586748]  ? __pfx_pci_pm_runtime_idle+0x10/0x10
+> [  372.586751]  pci_pm_runtime_idle+0x34/0x70
+> [  372.586753]  rpm_idle+0xc4/0x2b0
+> [  372.586756]  pm_runtime_work+0x93/0xc0
+> [  372.586759]  process_scheduled_works+0x9a/0x390
+> [  372.586762]  ? __pfx_worker_thread+0x10/0x10
+> [  372.586764]  worker_thread+0x15b/0x2d0
+> [  372.586767]  ? __pfx_worker_thread+0x10/0x10
+> [  372.586769]  kthread+0x106/0x140
+> [  372.586771]  ? __pfx_kthread+0x10/0x10
+> [  372.586774]  ret_from_fork+0x39/0x60
+> [  372.586776]  ? __pfx_kthread+0x10/0x10
+> [  372.586778]  ret_from_fork_asm+0x1b/0x30
+> [  372.586783]  </TASK>
+> [  372.586784] Modules linked in: nvme nvme_core snd_hda_codec_hdmi snd_h=
+da_codec_realtek snd_hda_codec_generic ledtrig_audio nls_iso8859_1 snd_sof_=
+pci_intel_cnl snd_sof_intel_hda_common snd_soc_hdac_hda soundwire_intel sou=
+ndwire_generic_allocation snd_sof_intel_hda_mlink soundwire_cadence snd_sof=
+_intel_hda snd_sof_pci snd_sof_xtensa_dsp snd_sof snd_sof_utils snd_hda_ext=
+_core snd_soc_acpi_intel_match snd_soc_acpi soundwire_bus intel_rapl_msr in=
+tel_rapl_common snd_soc_core x86_pkg_temp_thermal intel_powerclamp coretemp=
+ snd_compress ac97_bus kvm_intel snd_pcm_dmaengine i915 snd_hda_intel snd_i=
+ntel_dspcfg snd_intel_sdw_acpi kvm snd_hda_codec snd_hda_core mei_hdcp crct=
+10dif_pclmul ghash_clmulni_intel snd_hwdep snd_pcm sha512_ssse3 aesni_intel=
+ snd_seq_midi crypto_simd snd_seq_midi_event cryptd rapl snd_rawmidi intel_=
+cstate drm_buddy binfmt_misc ttm snd_seq drm_display_helper joydev input_le=
+ds cec snd_seq_device wmi_bmof snd_timer ee1004 mei_me rc_core snd drm_kms_=
+helper mei intel_pch_thermal i2c_algo_bit soundcore mac_hid
+> [  372.586834]  acpi_tad acpi_pad sch_fq_codel msr parport_pc ppdev lp pa=
+rport drm ramoops reed_solomon efi_pstore ip_tables x_tables autofs4 hid_ge=
+neric usbhid hid rtsx_pci_sdmmc ahci i2c_i801 e1000e crc32_pclmul rtsx_pci =
+i2c_smbus xhci_pci libahci xhci_pci_renesas video wmi
+> [  372.586856] CR2: ffffc90000089010
+> [  372.586858] ---[ end trace 0000000000000000 ]---
+> [  372.746808] RIP: 0010:ioread32+0x2e/0x70
+> [  372.746816] Code: ff 03 00 77 25 48 81 ff 00 00 01 00 77 14 8b 15 98 a=
+c 52 01 b8 ff ff ff ff 85 d2 75 14 c3 cc cc cc cc 89 fa ed c3 cc cc cc cc <=
+8b> 07 c3 cc cc cc cc 55 83 ea 01 48 89 fe 48 c7 c7 f8 97 57 86 48
+> [  372.746818] RSP: 0018:ffffc90000543d50 EFLAGS: 00010296
+> [  372.746821] RAX: ffffc90000089000 RBX: 000000000000032f RCX: 000000000=
+000007f
+> [  372.746823] RDX: 000000000000ff00 RSI: ffffc90000089010 RDI: ffffc9000=
+0089010
+> [  372.746825] RBP: ffffc90000543d70 R08: ffffc90000089010 R09: ffff88816=
+a132368
+> [  372.746826] R10: 0000000000000000 R11: 0000000000000003 R12: 000000000=
+000007f
+> [  372.746828] R13: ffff8881060ed000 R14: ffff8881060ed100 R15: 000000000=
+0009003
+> [  372.746830] FS:  0000000000000000(0000) GS:ffff88816a100000(0000) knlG=
+S:0000000000000000
+> [  372.746832] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  372.746833] CR2: ffffc90000089010 CR3: 000000010a564004 CR4: 000000000=
+03706e0
+> [  372.746835] note: kworker/2:2[157] exited with irqs disabled
+>
+> > diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c index
+> > d749ea8250d6..907d60587227 100644
+> > --- a/drivers/pci/remove.c
+> > +++ b/drivers/pci/remove.c
+> > @@ -1,6 +1,7 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  #include <linux/pci.h>
+> >  #include <linux/module.h>
+> > +#include <linux/pm_runtime.h>
+> >  #include "pci.h"
+> >
+> >  static void pci_free_resources(struct pci_dev *dev) @@ -89,6 +90,8 @@
+> > static void pci_remove_bus_device(struct pci_dev *dev)
+> >         struct pci_bus *bus =3D dev->subordinate;
+> >         struct pci_dev *child, *tmp;
+> >
+> > +       pm_runtime_barrier(&dev->dev);
+> > +
+> >         if (bus) {
+> >                 list_for_each_entry_safe(child, tmp,
+> >                                          &bus->devices, bus_list)
+> >
+> >
+>
