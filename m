@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 791707ED8A8
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Nov 2023 01:48:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2772B7ED8BE
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Nov 2023 01:57:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229679AbjKPAs3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Nov 2023 19:48:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34544 "EHLO
+        id S229990AbjKPA5Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Nov 2023 19:57:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229692AbjKPAs2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Nov 2023 19:48:28 -0500
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2094.outbound.protection.outlook.com [40.107.95.94])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBC67125;
-        Wed, 15 Nov 2023 16:48:24 -0800 (PST)
+        with ESMTP id S229692AbjKPA5P (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Nov 2023 19:57:15 -0500
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12hn2218.outbound.protection.outlook.com [52.100.166.218])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 090F9125;
+        Wed, 15 Nov 2023 16:57:12 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T0nesYt97ydNO4wtUm24/mM+Y6nCpzZjrMMmVk+EImaiQuFKTRwXohEgnXoGMSPzjNRJQrU0XCQXAFv1z8QG231k7eFdS+V3ug/2RfItyBRwa4hESu04nFs0zFOiOshR4arGQTDfEe0cZVK0GO8sbj1Dy/vkr6TpGBKZwYtpMGsmxNIuNjeUzM6FK9peO3qa0T8lHHLWjxmMvFNzQ45Boz9rNXH3L6NhZ4mEDaD1tK3CNef4PNaEtOExsRa7atV9cJ+O4FNCnbGeEvR9iF96ifuBwOwOcQVuHCWyUytGAABCvar0FiehKPMSnHhrwCGADjcQaTnJ+DHqVBHIxN9o4w==
+ b=m4MQrAPNyJGqmKby5SLo7tiFQFS0D2nvm97h65ggBM9vCIUo+rxB5oFgiInCnaYQBFzeU+ryFEOWo0BpHpJuh/iSw5swmh+MqHEyB15xHB2QOf2X9mZCjkgbF433D6LTzfh1ebaLQCndXeo23+F4DjnyDG3d1zBZNFDZBep3bGRfK+weMWxkCT26+ZzAEvthdirPl0QU+ZoP6J30n+QcYD45fYqYIen6sTjXcAlrTTrTTPP7vyA8uIdCdlt5vUf0XKGQ0pe/mh7V3cYDEEQlWTmO8PVKMyuH/pj26/KjHDomZr4O5O1EnFhPmVYGOEhcQQ7Vt4Hli+w5LB+VMs5k7g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=w5y16fW60pijhOOQ4q5b+eZrnmq63ov3bpSQVzJMKR4=;
- b=E8L4MgDP9VumMW9gwoPKnFybTha3rpCyUyfMUtFVoabrlAOrhEX0znuQ8gJcb5MsM87g+nvmxJMPR/uhCqv8cAJLljDFX6Xssyg4Vl7uc6B3vT9p1/TK2L3c2+xO9009JJneeXrCo9mvwjwTk+IYmJLBuEesdIdLOJeBMnMGnMPSFZ+1mM1SQqvp2NABXAO4Ff9djyTMWK5ZhNQxy+5o/WcTPCmIQ2gy0JeZD6LvcyFoMVvn0Hys0BxTGxfLk5cHpgd8WHCzHjQNCov8wGORwhKuEmJSuiUffhokT0uIZc7MIfEUBArJbdLNXDc1m8jFDyerouElQW/l4jbVD03OfQ==
+ bh=inSxnn1CyKo0i3KQG8xlXEgitv9f3KLDD7C1MR6JweI=;
+ b=et6QIbss61A7AfJKEe4r7/bTpM3s2v8q6ZHB42rICCJz1C2FvQ+N24Lq4RZJlMhsyGSOiWW4kIDd/dNHL868koSnngDYy/oGUnkYSHVsr32pgLc+dIHvS/50qcrt/7MIUOHKNLis2YQ79LyByuuVVK2kibAwv52qh3Ia0WU62DNoCz1u6pyZUFAjYwbz4ZqxNnVwiZNdTt2UknlJ+shgFjFMw/1G+PWCwHgdlhU0KkKnatjIYISEpu7NEowEmznMFKAjYooSfWxIE93RwVhkCYTFzQgKGtxR2kpeUzolIgHJxri2yGxX+ctWMLr1c0h2qiXIQG8jUStM8PEioNXtWQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
  header.from=os.amperecomputing.com; dkim=pass
@@ -28,23 +28,22 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=os.amperecomputing.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w5y16fW60pijhOOQ4q5b+eZrnmq63ov3bpSQVzJMKR4=;
- b=KwMJB2lsYG6WqsTEW5UKJj6Om2DGrc6XyvMOs8Uzy9Oni5DZnfRLGy/dJOe+OAtLPzEIK+GRHPAiZrjmO1hrsaf8mUvGo5XifTqLVrkGyXUUMxfGNC4K3yWjPvEzRJdA+qQA2dxsi+YciYfk7DL93aRLiO6RBRmyeQrHQLcpeMs=
+ bh=inSxnn1CyKo0i3KQG8xlXEgitv9f3KLDD7C1MR6JweI=;
+ b=Nd6avZYWk6jN0FcqEr0hBHhSYkwFegPH12FEyRRIFRkRITG/BmPEraJJh7jfJxNs8+Nz4iQYFgc6NwqwANpuH5/JfQ+8GSK14PD8ruX3PnkLnPZCg4F51QMFM+qX9sFtLUFlRAC3Fdpvd2ZFSzsBpFBplEQUAcNmMExDrbTZ+50=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
 Received: from DM5PR0102MB3590.prod.exchangelabs.com (2603:10b6:4:a4::25) by
- MN0PR01MB7876.prod.exchangelabs.com (2603:10b6:208:383::6) with Microsoft
+ CH3PR01MB8340.prod.exchangelabs.com (2603:10b6:610:177::8) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7002.20; Thu, 16 Nov 2023 00:48:20 +0000
+ 15.20.7002.17; Thu, 16 Nov 2023 00:57:06 +0000
 Received: from DM5PR0102MB3590.prod.exchangelabs.com
  ([fe80::49fa:8dc0:6fd1:72e6]) by DM5PR0102MB3590.prod.exchangelabs.com
  ([fe80::49fa:8dc0:6fd1:72e6%4]) with mapi id 15.20.6977.018; Thu, 16 Nov 2023
- 00:48:20 +0000
-Date:   Wed, 15 Nov 2023 16:48:01 -0800 (PST)
+ 00:57:06 +0000
+Date:   Wed, 15 Nov 2023 16:57:00 -0800 (PST)
 From:   Ilkka Koskinen <ilkka@os.amperecomputing.com>
 To:     Shuai Xue <xueshuai@linux.alibaba.com>
-cc:     Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        kaishen@linux.alibaba.com, helgaas@kernel.org,
+cc:     kaishen@linux.alibaba.com, helgaas@kernel.org,
         yangyicong@huawei.com, will@kernel.org,
         Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
         robin.murphy@arm.com, chengyou@linux.alibaba.com,
@@ -52,72 +51,81 @@ cc:     Ilkka Koskinen <ilkka@os.amperecomputing.com>,
         linux-pci@vger.kernel.org, rdunlap@infradead.org,
         mark.rutland@arm.com, zhuo.song@linux.alibaba.com,
         renyu.zj@linux.alibaba.com
-Subject: Re: [PATCH v10 4/5] drivers/perf: add DesignWare PCIe PMU driver
-In-Reply-To: <011efd17-c384-4285-9de9-2e40640bec08@linux.alibaba.com>
-Message-ID: <74ae6ba7-a2e4-3b89-940-9a29f7cea34f@os.amperecomputing.com>
-References: <20231104133216.42056-1-xueshuai@linux.alibaba.com> <20231104133216.42056-5-xueshuai@linux.alibaba.com> <e053a5d-f2a8-86c7-5af-d211507140c4@os.amperecomputing.com> <011efd17-c384-4285-9de9-2e40640bec08@linux.alibaba.com>
-Content-Type: multipart/mixed; boundary="1372433909-1567097883-1700095699=:2142"
-X-ClientProxiedBy: CH2PR07CA0043.namprd07.prod.outlook.com
- (2603:10b6:610:5b::17) To DM5PR0102MB3590.prod.exchangelabs.com
+Subject: Re: [PATCH v10 0/5] drivers/perf: add Synopsys DesignWare PCIe PMU
+ driver support
+In-Reply-To: <20231104133216.42056-1-xueshuai@linux.alibaba.com>
+Message-ID: <51c926a0-b4d7-aacf-12ce-30fad7c5cb@os.amperecomputing.com>
+References: <20231104133216.42056-1-xueshuai@linux.alibaba.com>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-ClientProxiedBy: CH0PR03CA0372.namprd03.prod.outlook.com
+ (2603:10b6:610:119::10) To DM5PR0102MB3590.prod.exchangelabs.com
  (2603:10b6:4:a4::25)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM5PR0102MB3590:EE_|MN0PR01MB7876:EE_
-X-MS-Office365-Filtering-Correlation-Id: a9c3bcce-e88c-4ad7-c75d-08dbe63dba16
+X-MS-TrafficTypeDiagnostic: DM5PR0102MB3590:EE_|CH3PR01MB8340:EE_
+X-MS-Office365-Filtering-Correlation-Id: 38392b4c-c638-4526-d550-08dbe63ef405
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: O4SZG5ha6+C0aP1G25+I4RNgLLtNbl31H8UFkCLM8PFzCUMczcRrTzJjuhI7t85ixAk36HXHYVG6ZR/YukzEq3K1MVN/GAyOR7eurA8kGUfI6OcOOr8jgyzfx8IA5aESsuTpPi6ZQ0GPBu24MtSK9IQs/ipdjAIIh05e7RLsrgBjvWfmTRK9cYElyQETjLrwFKMMkcnRaLjfBOAGjns356JiEbuWxa7lhqZRTiF1duZhFsVExAfT8FMA0uj85Uw1hfuoezwh1T252HCftnTHuPJUD3+hMcrWFHvhvLascmGnKD/bRah1t7kcMPTUuJCAXgSmZSdmVF1jwSzbf2DcDUKbIgTQdU5b8O9p1E9KoO7zIAcs09ydbBgd3Ct+x3m0erRIKLwSLJnpfYzKqysCCe3F2a8QUFPw59Ss9akiCodKo0AYi7sU/4N9UASSXup83mR5/S4klgjXUV1vRZbBqw4IhRYQEYMYUMtnEDEjARTfePCwXVBuwkjS+l4ubWewjmHIy1F3d/qiu7B9RqFJRj1lmR3HTWCxP3ljMdn196s7/0viTAxBcIdScH6XTLsheqiQgRaku1DCtCPUB1IVtJXqIyVTdt8miB5d4QyLVPcPK19BXmuQkdhxWs2bIw04
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0102MB3590.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(39850400004)(396003)(366004)(136003)(346002)(376002)(230922051799003)(1800799009)(451199024)(186009)(64100799003)(7416002)(2906002)(38100700002)(5660300002)(86362001)(6512007)(83380400001)(6506007)(38350700005)(33964004)(52116002)(53546011)(26005)(2616005)(6666004)(41300700001)(6486002)(19627235002)(478600001)(8676002)(66556008)(6916009)(316002)(66946007)(66476007)(8936002)(4326008);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?wmRKbdNqtHwbYlukc0FmSSJGy7/K5IX7jc3I3xRU48ovt0RpyZxOPsLs6P/f?=
+ =?us-ascii?Q?6Ez7+cRx/mIWxYjflQcrq0t070gKPYZJ9efhy+5tWX6b+D82pB4qYwuCbkk4?=
+ =?us-ascii?Q?jBJC1/thl86LuER9tJK2z+//KOewHV812U9AYIK+xBLtuoBhuw+wXUGFk3N6?=
+ =?us-ascii?Q?druPg8F4igQ7RufWKoJI7KcQOGorK1BAh+XZ+xmL0dWsBqFDV4WIKWbHJz3N?=
+ =?us-ascii?Q?Be9cX2a45fy0BQVgwod58SCbwnjC1qQLd3AKs5j6dqcAqlUUhVun9LVVlh6H?=
+ =?us-ascii?Q?QQ371R+WderUNWTdiDazNbY7Qr1pBh8sYhoPzRMx9wVNt7M2YPiM27g2Gghk?=
+ =?us-ascii?Q?GCXQDorlFXvQgpIlPDV3MKafUBprgWYY7LnHztuSDPxXCD9ThUeed8DiMjqm?=
+ =?us-ascii?Q?So0ri5761c3wj3XwsQ/v3yCrb3S88xbD3uf4adbISHEZfQDu2e8Vcir+UYxD?=
+ =?us-ascii?Q?VTXIblLxLAn0hMHXUzJC6SYC+p6kJxKGcblgt3LNJeodWq5W7+kB3SMPsMnP?=
+ =?us-ascii?Q?D2ILVw/OROclpFOaCWOCffvTpttSQ2pbu2fdguNz0eTFaoW277jrKJV3kT0C?=
+ =?us-ascii?Q?b2jupGXyf4G8M0AN80aTS/EAt4DSP1ZZg3y+ZeJw36RhgBwbLXJNYV0QJ3VE?=
+ =?us-ascii?Q?BU3phfn1K3NHTrKKc5SCmIxNeCVspf+e2VljIS4OH73PlszCDr0DzIqNWtGZ?=
+ =?us-ascii?Q?bUtV3vsjqnk2RDOhp1o/WcIbLgTC/kpVWPqbm2aI3jOzQMJ80LQnEFydAivv?=
+ =?us-ascii?Q?D41W33yX3WWB47cps0wKNMLb7rEQvViZ8Sa0K2bR7nZjBBQMPlGl4kwd48rn?=
+ =?us-ascii?Q?10mr6V/a5OVDxIKHYGBGZJYm/dteUpyVYa4URcgfLBbAVJSTQ62d7grXrBQW?=
+ =?us-ascii?Q?7AgNwQNK5Sg9GXbQq7QWAv2Y0lL+kbyLOC9P65PmVF/vQ1EzFtWTcnB+8+jl?=
+ =?us-ascii?Q?wmpR5vK4Ov7YeZHUYfjqKiQMh6ZgNH0R00GLphgr0mylLuzOxwuWyWC79Ulo?=
+ =?us-ascii?Q?tsfB0PEYvYmLaxlQ8JnTE8NOZg=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:DM5PR0102MB3590.prod.exchangelabs.com;PTR:;CAT:OSPM;SFS:(13230031)(366004)(376002)(136003)(39850400004)(396003)(346002)(230922051799003)(1800799009)(64100799003)(451199024)(186009)(38350700005)(8676002)(26005)(8936002)(2906002)(52116002)(6512007)(4326008)(6506007)(6666004)(83380400001)(38100700002)(41300700001)(7416002)(2616005)(5660300002)(6486002)(966005)(86362001)(316002)(66556008)(66476007)(66946007)(478600001)(6916009)(58440200007);DIR:OUT;SFP:1501;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cTU5QnFpSVcybklSTXRla1hnSjh5Um02ci9hakxjOTdKL25TVld4SDZjTzl3?=
- =?utf-8?B?azcrd0lZQ3FsSzNnL3R5QlFSR0dYelJIb2FZVWRUaFgzbTFHT1pBUGNtY1lo?=
- =?utf-8?B?dG9EQzRKWURkUElHamlob0FRL3Vyems0UklyQ3FCNFJMdE4xcDZ1OVM0S09J?=
- =?utf-8?B?Q1RNbkZ5WFhFZXNhT2tpR2ZyMVJ1S3ZJUDE4M25yUkdpM1BGQVR5aGRCVFJB?=
- =?utf-8?B?UUNZblB3WU5Va1lueFV2b2ZpSk1lZnBjWnNNOFdNbjZML0h1dDF1TUxjSm84?=
- =?utf-8?B?b3ZwYzNUaGljVlJEbjJadUlVYTFNdEw3WWs1R2VkdXMvemhoa3VHOWdMWVJV?=
- =?utf-8?B?Tk9Gcm9lcTBFRnRYUU9tYUVXNkZtc1AwY0s5R2txYkw0R0RRdVdabUFJUXVn?=
- =?utf-8?B?RWVlQlpTa0pmYmlhNURYc3UxTHlyNUFPbnhiMmlXeEIraWhHZlcwL2Rhc1pB?=
- =?utf-8?B?TEwwVlpRcUdsM2tId0o1L291Ry9lbXp5WW91RklIdGcxSnR5WUdwUHl5bXk3?=
- =?utf-8?B?NlVJVExkMkxxbUFtR1l2cFBMdkJ0Yi8yNnVqYkF4Snp5T1FKSHExOThJaW1v?=
- =?utf-8?B?cEtBWWpGU05uOG5xY01Nbm5VaFRFMzFrTm1VN0xhKzA5RzdScUZyNnYzN0g5?=
- =?utf-8?B?UGNwUkZsOTY0SXByQVk1RkFIYkE5VEJDV2ovK0YzWllmM28zeTRuRlc0OTlx?=
- =?utf-8?B?UDdjTzR6WXRhcmpMeTBCNXA0SGRhblAwZmh1dkt6L0VUQW1NUnAxTHhiN0xa?=
- =?utf-8?B?Y0tIRURIWUFDRWRPeGlxWmZ3NmhDMmRwRDlmblFrdmppWndTMEI5YlRpbG41?=
- =?utf-8?B?YU9mdFZPUGEvTnU4eGpEbkQ1ZnVXd0tuQzhKcXhaL0FqYTNwMmUzZkozN1Z6?=
- =?utf-8?B?cG1tUXc0R1F4bFpSTkgrbDR4dDhFSDg4NERIM0o1NjZBWk15NzB0NVdPM2gy?=
- =?utf-8?B?MXA3RHYrWHdVTXFFejB4YkdYeVUyL2xWeHU5WUJxOW5LeVp2bTJZWndwUk5G?=
- =?utf-8?B?VUpiMFZPZE1tcytudlh2QjVtaVpJV0JiNC9xd1hYK0F6TDNNdEtvMEFOQTVk?=
- =?utf-8?B?eVUrRDlHY0ZaelFHeXdkTFVoN3M1ajNzcFFTOEJXbERwcU1zWVFQWnpydFd2?=
- =?utf-8?B?YXduWCtGMUJWZ2toQ2dSVnJiR0tpVElLZmJWczBHUjBDSVltc2lTM3ppemZp?=
- =?utf-8?B?ZGpWSzR4dVp6YUdzNFNpSjF0dTNueUpqTE1MWUliVWo4Umw2Z2MvRnRaRmw1?=
- =?utf-8?B?UE1tY0JZdlFFUjhmQzRwZTZYdGQyVzduOEJ1WmpVRkFZa1lnM2FLV1FTU0c4?=
- =?utf-8?B?SUlzeEdFejhxcVpqTFVyeDJjY0dOdlByRjYyL1VyM2dVUnBlNDJsR0xhbk1Q?=
- =?utf-8?B?Y1d1VC85WFViVVgySXV4bDNNNjJ3MG4veUF6YUtSSnh3eVBmZktTL1hXWHgz?=
- =?utf-8?B?dXF6VUVKM3dkVEJ1ZDA5WnBxdDhyMzFINmpNcnErLzBGc2VBSEQwdlpOb2gv?=
- =?utf-8?B?dXc3OFU2Ynh1emMxQUEzTXp0Q2h5c0NOUXdHZzBlcVh4engxemtVV01FZWpL?=
- =?utf-8?B?aWRCSTYyS2N5OUVKdW9JZzV1eWZvb2dLdEtCSmxUdXU1NDhrR3lReGEvMHlz?=
- =?utf-8?B?U3lrUEhLUDVLRkc2QmFoZENlYlZteGpvOVBWZE5obFJhcjJSWFRTR1FzNW50?=
- =?utf-8?B?cnBCdlRJY2I5YzhlNU5Wa3cxQ2tGM1lBU0x2YWl2ek5aZzVEWlhWeDlIdkxR?=
- =?utf-8?B?NlFBUEpzNzVUcTJ0cFpQb3pxa2E4SC9rWSt3TGllZ2sxcXVZaUJKaGZ6RVhv?=
- =?utf-8?B?RlAyS3UrUHJNR1RSd0p4anBrcndObkRJQ29qNWlwbm1xM0NZbm5QQ1B5Qm9n?=
- =?utf-8?B?SytGd0EyckZvVXB1SzRMRGYvQXllZHNaTk0yRXVJeWJaS2pua1JSc3BFN3dB?=
- =?utf-8?B?RVFaN2dUdG4zQWdoc2xaeWxEYkpVV09UMkI1R3VsZVB2SGlYbE1jZWh3THRo?=
- =?utf-8?B?ekJaUTUxeDU4bzIrazZPdG1JckJZdXloVlhaUHdsRjJjVE5lc3djUFZDWEU4?=
- =?utf-8?B?Vmg2QS9SOE5FZEhycTJ6ekpVMzM5dU1kdS9mYldVMTA1MlpYcEVXanVjS3h2?=
- =?utf-8?B?ZjYzbjZNSzdkelZzUnNLZWt6WkJZTXNxbS9FVWhVMEk4aXE1d0dSTzZTRDA4?=
- =?utf-8?Q?n3IfyRU2ktLAVRttn+OLh1g=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?YfewqVtsqgOw5mBOXX6f84SXSJ3cuT0EdQn3qhi6YroHi2JHou4Lkp8vKp3/?=
+ =?us-ascii?Q?9+GtanrB6GMQbkLPlTiQvEIj/h0lZSrwEmsIzjVYY2wR00GHF1N/qV6aXj56?=
+ =?us-ascii?Q?keWTDS7/Tap0tf/ieRVf/OuOyOCt01GAQIJvKG7U+F5OBiTltG/MoR1WMen/?=
+ =?us-ascii?Q?rV0NpRtjBm0lwYSxOqlswb+PFi6U4+N5O/3/dpaIdW2SEnwYKZqvNTJY5ohZ?=
+ =?us-ascii?Q?03TTT4/gzsmNhtTdHsMvtuEsE5y7HSofmgDxlLvDogpKwJ7mCX/yOaGa1/R7?=
+ =?us-ascii?Q?CrESfuAtV+H74XCIY2ela+lnLRfHu3RBikWPcpap8B6Xv1cXvTQrv5gKMyIj?=
+ =?us-ascii?Q?WTevsxSKjGk2VK5HCr5A6Iw3tbcY787DRvW18J+yDSoGVuOvqQYO7K0eWduR?=
+ =?us-ascii?Q?iY+BudYQskREIInr+6ud4DoqkGIU8dww/N92kvEsLYuTXXugs4YzyL3Q3trR?=
+ =?us-ascii?Q?l34iY22KtnDcMjE5fkqtCWfkTB2tSRYVq7Fs4/Gc2nG9LC0BjPBZqLBeQnql?=
+ =?us-ascii?Q?FYzJ/CAFUut73xWYorioglUOQbodHO6uREKmuklNO/9+bIX5BRj8DuMTqz+G?=
+ =?us-ascii?Q?QSumo7l4hzOLshjm/yi5XwrW9BHi3K6prM0ZFdB/ttPDUu/2TRFQVSjwjZT/?=
+ =?us-ascii?Q?S96r3ssJu1FpejgJ/DxWjW4yBK9Or+Axq6WY6mu/RItc1+XlmQlVmaEnpExX?=
+ =?us-ascii?Q?TNBOr3Mk4LUTuCi8D6YNL2sMsl6bU+yoXt6yW2mEOIiDTXEsl0d9/2UBaOu0?=
+ =?us-ascii?Q?EwyihM1iSJlnzowi5mOuh75gGjqmaLsLxKUesO0JssFuOqRTokuhE0X5+Tai?=
+ =?us-ascii?Q?a4g2W8GMLVS9sYPx+VovTmlGV7x4Y0gQrKfZwTbRg64gw68rAA46K6mDHJAo?=
+ =?us-ascii?Q?HRhBGzv55SDNxgFJcp23MLpNWwstnK/uS9aOEEz9SdIZaxVOBe561rw4cSZT?=
+ =?us-ascii?Q?Ylgn0A7ej3mQHnEpDh1xKCVN9Qm1ma9gy7BVHi9vn8WX27VHX/IWjQxa4FM/?=
+ =?us-ascii?Q?zGX0AGEfF3St9zt8sbpGuSvJyno6G20zRGWZANVcIHA83ysYgtMMuTAbe+YJ?=
+ =?us-ascii?Q?7mrVzEXYG1SAQGpeHzmYu26rg//wWrjm3NjQ4SRHrPtL7681XIUPD1vdQTsh?=
+ =?us-ascii?Q?2qaJiPR/GFQkZBRv5nJzSfLrAnAs0uolB0l2BRcGpfYa1oZuCFAIsFQoF6b/?=
+ =?us-ascii?Q?eUnFbCJGPadEnwvgBJL8/1sQn5R/VKwjfhLWI/VNmPlVrYt0adWAf2uONYNk?=
+ =?us-ascii?Q?SMAxGyHsx4RC8bQSXXSMXdi7yEq60gVnvaK2CqL/XjU3SMibuDMm0UPlMM2T?=
+ =?us-ascii?Q?RhopQEeC8j7VLmAad21w4Kxw8vXB+dl7WiOLg4O/t8r/TG/4TJI0nRt/Y5Fc?=
+ =?us-ascii?Q?TTN3XwZCY0kVhHXgrNYj/lVz95EE1T+CyIiyIqcsqAV6JfTIAA6rOuqJARpX?=
+ =?us-ascii?Q?jmkqYO7tRaq5T57gc4N9NLaxSoDnqWdS7zDsJcFlvPSlFlC6jT/Ah+Nq+uXU?=
+ =?us-ascii?Q?6ZiMFZvQJZN8VZ1JnTny8dZDuJ/5V1UZQICecnXL1da2hlTaxlpP0hDBQ+ww?=
+ =?us-ascii?Q?Rw5nUjYTBo3AXEafqwUSF1Ufea+bQk4asfovZsTGQQXcQcXJABCyLVvKHY/o?=
+ =?us-ascii?Q?K3DYuHjDVdJ7JDh6I88rk9c=3D?=
 X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9c3bcce-e88c-4ad7-c75d-08dbe63dba16
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38392b4c-c638-4526-d550-08dbe63ef405
 X-MS-Exchange-CrossTenant-AuthSource: DM5PR0102MB3590.prod.exchangelabs.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2023 00:48:19.9945
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2023 00:57:06.4312
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LFY/U+uVouQ3BiSyZFz2b45+dsfbMlkyYwDno4qkocOqoHiSnK/P4gYiEcGtzo7djqamHppX6rUFGb2Vx6eEpFGpgFGowittQz1o+gnTdyzYqCs8xKTMWkuM191WYOI6
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR01MB7876
+X-MS-Exchange-CrossTenant-UserPrincipalName: jHK4kIUdaHl8qExi6KTeItW9j2ui6MGGpTJ+tnFQHY++bQGS7DlK020V7lF205g1OSuiSytMMXArfqN/ou8Sm18OgFt0Iurhc/OlQH8MiVcm8EePUuCIhUbzu+RUCNlN
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR01MB8340
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,
         SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
@@ -128,74 +136,67 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---1372433909-1567097883-1700095699=:2142
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
 
+Hi Shuai,
 
-On Wed, 15 Nov 2023, Shuai Xue wrote:
-> On 2023/11/15 08:07, Ilkka Koskinen wrote:
->>
->> Hi Shuai,
->>
->> On Sat, 4 Nov 2023, Shuai Xue wrote:
->>> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
->>> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
->>> Core controller IP which provides statistics feature. The PMU is a PCIe
->>> configuration space register block provided by each PCIe Root Port in a
->>> Vendor-Specific Extended Capability named RAS D.E.S (Debug, Error
->>> injection, and Statistics).
->>>
->>> To facilitate collection of statistics the controller provides the
->>> following two features for each Root Port:
->>>
->>> - one 64-bit counter for Time Based Analysis (RX/TX data throughput and
->>>  time spent in each low-power LTSSM state) and
->>> - one 32-bit counter for Event Counting (error and non-error events for
->>>  a specified lane)
->>>
->>> Note: There is no interrupt for counter overflow.
->>>
->>> This driver adds PMU devices for each PCIe Root Port. And the PMU device is
->>> named based the BDF of Root Port. For example,
->>>
->>>    30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
->>>
->>> the PMU device name for this Root Port is dwc_rootport_3018.
->>>
->>> Example usage of counting PCIe RX TLP data payload (Units of bytes)::
->>>
->>>    $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
->>>
->>> average RX bandwidth can be calculated like this:
->>>
->>>    PCIe TX Bandwidth = Rx_PCIe_TLP_Data_Payload / Measure_Time_Window
->>>
->>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->>> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>> Reviewed-by: Yicong Yang <yangyicong@hisilicon.com>
->>
->> Thanks for the driver! I finally found some time to test your driver on AmpereOne and it seemed to work fine.
+On Sat, 4 Nov 2023, Shuai Xue wrote:
+> Change Log
+> ==========
 >
-> Glad to hear that. Could you please explicitly give me you tested-by tag? I could add it in next version.
+> - move the &plat_dev->dev to previous line to warp more beautiful (Per Jonathan)
+> - rename error label with the same suffix 'err'  (Per Jonathan)
+> - drop unnecessary else branch and return directly (Per Baolin)
+> - warp out set prev_count from dwc_pcie_pmu_set_period (Per Baolin)
+> - use PMU_FORMAT_ATTR to simplify format sysfs stuff (Per Will)
+> - export pci_clear_and_set_dword() to simplify _enable() functions  (Per Will)
+> - simplify _read() function by unconditionally calculate with unit in bytes plused if branch for group#1 event (Per Will and Robin)
+> - simplify _update() function by unconditionally mask with 64-bit width plused if branch for lane event (Per Will)
+> - add type sanity check in _init() (Per Will)
+> - test with fuzzing tool before this new version (Per Will)
+> - register a platform device for each PCI device to probe RAS_DES PMU cap (Per Robin)
+> - add dwc_pcie_vendor_ids to extend vendor id for future added device (Per Krishna)
+> - pickup review-by tag from Baolin, Yicong and Jonathan
 
-Sure, I'll reply to the cover letter mail.
+...
 
->> I had to do a couple of changes though such as adding Ampere vendor ID
-and support multiple PCIe domains. Given your driver is already in v10 and you have got quite a few reviewed and acked bys, I wonder if it's better to add my changes to your patches or me to create new patches on top of yours? I'm fine with either. Any thoughts?
->
-> I prefer new separate patches, so that we can review them in a new loop.
+> Shuai Xue (5):
+>  docs: perf: Add description for Synopsys DesignWare PCIe PMU driver
+>  PCI: Add Alibaba Vendor ID to linux/pci_ids.h
+>  PCI: move pci_clear_and_set_dword helper to pci header
+>  drivers/perf: add DesignWare PCIe PMU driver
+>  MAINTAINERS: add maintainers for DesignWare PCIe PMU driver
 
-Sounds good to me.
+As I mentioned earlier, I successfully tested your patchset with a few 
+patches on top of it to enable DWC PCIe PMU on AmpereOne. Thus, feel free 
+to add this tag to all the patches above:
 
-Cheers, Ilkka
+ 	Tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+
+Br, Ilkka
+
 
 >
->>
->> Cheers, Ilkka
+> .../admin-guide/perf/dwc_pcie_pmu.rst         |  94 +++
+> Documentation/admin-guide/perf/index.rst      |   1 +
+> MAINTAINERS                                   |   7 +
+> drivers/infiniband/hw/erdma/erdma_hw.h        |   2 -
+> drivers/pci/access.c                          |  12 +
+> drivers/pci/pcie/aspm.c                       |  11 -
+> drivers/perf/Kconfig                          |   7 +
+> drivers/perf/Makefile                         |   1 +
+> drivers/perf/dwc_pcie_pmu.c                   | 798 ++++++++++++++++++
+> include/linux/pci.h                           |   2 +
+> include/linux/pci_ids.h                       |   2 +
+> 11 files changed, 924 insertions(+), 13 deletions(-)
+> create mode 100644 Documentation/admin-guide/perf/dwc_pcie_pmu.rst
+> create mode 100644 drivers/perf/dwc_pcie_pmu.c
 >
-> Best Regard,
-> Shuai
+> -- 
+> 2.39.3
 >
---1372433909-1567097883-1700095699=:2142--
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
