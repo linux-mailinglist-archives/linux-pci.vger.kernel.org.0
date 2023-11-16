@@ -2,204 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3F997EE0F8
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Nov 2023 14:02:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C21C7EE553
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Nov 2023 17:41:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230220AbjKPNCY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Nov 2023 08:02:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39268 "EHLO
+        id S230435AbjKPQlx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Nov 2023 11:41:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229749AbjKPNCX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Nov 2023 08:02:23 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 799C0AD;
-        Thu, 16 Nov 2023 05:02:20 -0800 (PST)
+        with ESMTP id S230136AbjKPQlw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Nov 2023 11:41:52 -0500
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 295B0AD;
+        Thu, 16 Nov 2023 08:41:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700139740; x=1731675740;
+  t=1700152909; x=1731688909;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=qni4q+MCRq+nAUIb30fVBT62T2fPU22iNzyXzheWpdg=;
-  b=QolO64CJe2TCEWToxUrLxK29Vbq4OR1al+Dv5dFGWH1zo4lKZMfAcIfV
-   FuPwkYNSzt/or0oTtZMqjVYsIvREVP9VQ3gApCCT56in/lyVF4DDpNux7
-   l5aNIkJgRyVJb8w+YECRMTQMCa5o8HkyBLqhMhZb0kw1eopgACZWw/44q
-   icTe4i7d7AQIVLy4fwhWiGdxPcbg+x/CdJphtBnMnoEW6OqCHd3k7nXVk
-   u7gs8T1T1ZIG/GqaIb9UgYSRjQBP9FSzkoogSH/W48bHhrGYR2ljrusqe
-   B7TKniPK50hOeOEw5noyIc79JFR9VSgIhZvU7OIaMvlJBiULJFpOKnLjF
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10895"; a="388247928"
-X-IronPort-AV: E=Sophos;i="6.04,308,1695711600"; 
-   d="scan'208";a="388247928"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2023 05:02:19 -0800
+  bh=ENc58iiDD7naN+MUGYEeiCLwWArf3YSExYXPLRVX/ok=;
+  b=LISfpslLNzP9Vt/n5q7MZDUXjrvww6epsbLzcqxLPpkZ2K++WwbD3lq+
+   aL3dDRnfbRxY6IjYl7lVymt2eSFGSMuBjS7VNM9yF0qq+sIrDGD7w3bMW
+   yhTWWbnyNSOBI5qudIAMMY1JRx7YPv+lgcU2GLDwDNTDf3lhV6di9eO2h
+   FMyG28dIaoW1lwUZEqE41fjwU3lz/CmP7CvzFdg3/g+9K5/0ZKesbCzdw
+   z96AsNnj+1xBHDuGhWC2ee6X1iL6PmN/Qf8OYBE7ZIUO3IQdRLeQkuGYn
+   5zVkpfiSpDwnypnnLXy0YWEe3OqX3kN+9IypMvf8DQa1Pd75VZvsC1dY0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10896"; a="9768435"
+X-IronPort-AV: E=Sophos;i="6.04,204,1695711600"; 
+   d="scan'208";a="9768435"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2023 08:41:49 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,308,1695711600"; 
-   d="scan'208";a="13550045"
+X-IronPort-AV: E=McAfee;i="6600,9927,10896"; a="856054858"
+X-IronPort-AV: E=Sophos;i="6.04,204,1695711600"; 
+   d="scan'208";a="856054858"
 Received: from jhsteyn-mobl1.ger.corp.intel.com ([10.252.40.9])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2023 05:02:14 -0800
-Date:   Thu, 16 Nov 2023 15:02:11 +0200 (EET)
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2023 08:41:46 -0800
+Date:   Thu, 16 Nov 2023 18:41:43 +0200 (EET)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-cc:     Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Danilo Krummrich <dakr@redhat.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Xinhui Pan <Xinhui.Pan@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        =?ISO-8859-15?Q?Pali_Roh=E1r?= <pali@kernel.org>,
-        =?ISO-8859-15?Q?Marek_Beh=FAn?= <kabel@kernel.org>,
-        "Maciej W . Rozycki" <macro@orcam.me.uk>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v3 6/7] PCI: Split up some logic in pcie_bandwidth_available()
- to separate function
-In-Reply-To: <20231114200755.14911-7-mario.limonciello@amd.com>
-Message-ID: <671f5c3b-fd24-7d24-c848-1ae31cea82ff@linux.intel.com>
-References: <20231114200755.14911-1-mario.limonciello@amd.com> <20231114200755.14911-7-mario.limonciello@amd.com>
+To:     Jian-Hong Pan <jhp@endlessos.org>
+cc:     Jonathan Bither <jonbither@gmail.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux@endlessos.org
+Subject: Re: [PATCH v3] rtlwifi: rtl8723be: Disable ASPM if RTL8723BE connects
+ to Intel PCI bridge
+In-Reply-To: <20231116041834.8310-2-jhp@endlessos.org>
+Message-ID: <1c27232-c626-5ba2-eb99-f61d80afb116@linux.intel.com>
+References: <ea1d2505-7396-92c0-4687-facad575d299@gmail.com> <20231116041834.8310-2-jhp@endlessos.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-761469376-1700139739=:1886"
+Content-Type: text/plain; charset=US-ASCII
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, 16 Nov 2023, Jian-Hong Pan wrote:
 
---8323329-761469376-1700139739=:1886
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-On Tue, 14 Nov 2023, Mario Limonciello wrote:
-
-> The logic to calculate bandwidth limits may be used at multiple call sites
-> so split it up into its own static function instead.
+> Disable RTL8723BE's ASPM in a PCI quirk and rtl8723be module if the
+> Realtek RTL8723BE PCIe Wireless adapter connects to some Intel PCI
+> bridges, such as Skylake and Kabylake. Otherwise, the PCI AER flood
+> hangs system:
 > 
-> No intended functional changes.
+> pcieport 0000:00:1c.5: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
+> pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask=00000001/00002000
+> pcieport 0000:00:1c.5:    [ 0] RxErr                  (First)
+> pcieport 0000:00:1c.5: AER: Corrected error received: 0000:00:1c.5
+> pcieport 0000:00:1c.5: AER: can't find device of ID00e5
+> pcieport 0000:00:1c.5: AER: Corrected error received: 0000:00:1c.5
+> pcieport 0000:00:1c.5: AER: can't find device of ID00e5
+> pcieport 0000:00:1c.5: AER: Multiple Corrected error received: 0000:00:1c.5
+> pcieport 0000:00:1c.5: AER: can't find device of ID00e5
 > 
-> Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218127
+> Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
 > ---
-> v2->v3:
->  * Split from previous patch version
-> ---
->  drivers/pci/pci.c | 60 +++++++++++++++++++++++++++--------------------
->  1 file changed, 34 insertions(+), 26 deletions(-)
+> v2: Add the switch case's default condition with comment:
+>     "The ASPM has already been enabled by initializing
+>     rtl8723be_mod_params' aspm_support as 1."
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 55bc3576a985..0ff7883cc774 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -6224,6 +6224,38 @@ int pcie_set_mps(struct pci_dev *dev, int mps)
->  }
->  EXPORT_SYMBOL(pcie_set_mps);
+> v3: Rework with a PCI qurik which disables RTL8723BE PCIE's ASPM, if it
+>     connects to some Intel bridges, such as Skylake and Kabylake. Then,
+>     rtl8723be checks the PCIE ASPM is enabled, or not. If it is not,
+>     disables rtl8723be's aspm_support parameter.
+> 
+>  .../wireless/realtek/rtlwifi/rtl8723be/sw.c   |  6 ++++
+>  drivers/pci/quirks.c                          | 36 +++++++++++++++++++
+>  2 files changed, 42 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c
+> index 43b611d5288d..fe9acbaa879b 100644
+> --- a/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c
+> +++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723be/sw.c
+> @@ -26,6 +26,12 @@ static void rtl8723be_init_aspm_vars(struct ieee80211_hw *hw)
+>  	struct rtl_priv *rtlpriv = rtl_priv(hw);
+>  	struct rtl_pci *rtlpci = rtl_pcidev(rtl_pcipriv(hw));
 >  
-> +static u32 pcie_calc_bw_limits(struct pci_dev *dev, u32 bw,
-> +			       struct pci_dev **limiting_dev,
-> +			       enum pci_bus_speed *speed,
-> +			       enum pcie_link_width *width)
+> +	/* Disable ASPM if the link control disables it */
+> +	if (!pcie_aspm_enabled(rtlpci->pdev)) {
+> +		pci_info(rtlpci->pdev, "PCIE ASPM is disabled\n");
+> +		rtlpriv->cfg->mod_params->aspm_support = 0;
+> +	}
+> +
+>  	/*close ASPM for AMD defaultly */
+>  	rtlpci->const_amdpci_aspm = 0;
+>  
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index eeec1d6f9023..170321f4b23b 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3606,6 +3606,42 @@ DECLARE_PCI_FIXUP_FINAL(0x1b7c, 0x0004, /* Ceton InfiniTV4 */
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REALTEK, 0x8169,
+>  			quirk_broken_intx_masking);
+>  
+> +
+
+Remove extra new line.
+
+> +static void quirk_disable_int_bridge_sub_pci_aspm(struct pci_dev *dev)
 > +{
-> +	enum pcie_link_width next_width;
-> +	enum pci_bus_speed next_speed;
-> +	u32 next_bw;
-> +	u16 lnksta;
+> +	struct pci_dev *pdev;
+> +	u16 val;
 > +
-> +	pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
+> +	if (dev->bus && dev->bus->self)
+> +		pdev = dev->bus->self;
+> +	else
+> +		return;
 > +
-> +	next_speed = pcie_link_speed[FIELD_GET(PCI_EXP_LNKSTA_CLS, lnksta)];
-> +	next_width = FIELD_GET(PCI_EXP_LNKSTA_NLW, lnksta);
-> +
-> +	next_bw = next_width * PCIE_SPEED2MBS_ENC(next_speed);
-> +
-> +	/* Check if current device limits the total bandwidth */
+> +	if (pdev->vendor == PCI_VENDOR_ID_INTEL) {
+> +		switch (pdev->device) {
+> +		case 0x9d15:
+> +		/* PCI bridges on Skylake */
+> +		case 0xa110 ... 0xa11f:
+> +		case 0xa167 ... 0xa16a:
+> +		/* PCI bridges on Kabylake */
+> +		case 0xa290 ... 0xa29f:
+> +		case 0xa2e7 ... 0xa2ee:
+> +			pci_info(dev, "quirk: disable the device's ASPM\n");
+> +			pcie_capability_read_word(pdev, PCI_EXP_LNKCTL, &val);
+> +			val &= ~PCI_EXP_LNKCTL_ASPMC;
+> +			pcie_capability_write_word(dev, PCI_EXP_LNKCTL, val);
 
-I'd make this a function comment instead and say:
+Never do RMW ops on LNKCTL like that but use a RMW-safe accessor:
 
-/* Check if @dev limits the total bandwidth. */
+			pcie_capability_clear_word(dev, PCI_EXP_LNKCTL,
+						   PCI_EXP_LNKCTL_ASPMC);
 
-Other than that,
-
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+However, isn't there quirk_disable_aspm_l0s_l1() already which this 
+function could call? Why not use it?
 
 -- 
  i.
 
-> +	if (!bw || next_bw <= bw) {
-> +		bw = next_bw;
-> +
-> +		if (limiting_dev)
-> +			*limiting_dev = dev;
-> +		if (speed)
-> +			*speed = next_speed;
-> +		if (width)
-> +			*width = next_width;
-> +	}
-> +
-> +	return bw;
-> +}
-> +
->  /**
->   * pcie_bandwidth_available - determine minimum link settings of a PCIe
->   *			      device and its bandwidth limitation
-> @@ -6242,39 +6274,15 @@ u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev **limiting_dev,
->  			     enum pci_bus_speed *speed,
->  			     enum pcie_link_width *width)
->  {
-> -	u16 lnksta;
-> -	enum pci_bus_speed next_speed;
-> -	enum pcie_link_width next_width;
-> -	u32 bw, next_bw;
-> +	u32 bw = 0;
->  
->  	if (speed)
->  		*speed = PCI_SPEED_UNKNOWN;
->  	if (width)
->  		*width = PCIE_LNK_WIDTH_UNKNOWN;
->  
-> -	bw = 0;
-> -
->  	while (dev) {
-> -		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
-> -
-> -		next_speed = pcie_link_speed[FIELD_GET(PCI_EXP_LNKSTA_CLS,
-> -						       lnksta)];
-> -		next_width = FIELD_GET(PCI_EXP_LNKSTA_NLW, lnksta);
-> -
-> -		next_bw = next_width * PCIE_SPEED2MBS_ENC(next_speed);
-> -
-> -		/* Check if current device limits the total bandwidth */
-> -		if (!bw || next_bw <= bw) {
-> -			bw = next_bw;
-> -
-> -			if (limiting_dev)
-> -				*limiting_dev = dev;
-> -			if (speed)
-> -				*speed = next_speed;
-> -			if (width)
-> -				*width = next_width;
-> -		}
-> -
-> +		bw = pcie_calc_bw_limits(dev, bw, limiting_dev, speed, width);
->  		dev = pci_upstream_bridge(dev);
->  	}
->  
-> 
---8323329-761469376-1700139739=:1886--
