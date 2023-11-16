@@ -2,269 +2,196 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B6AB7ED5AA
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Nov 2023 22:09:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F3F97ED883
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Nov 2023 01:30:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343780AbjKOVJU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Nov 2023 16:09:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45250 "EHLO
+        id S229823AbjKPAa1 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 15 Nov 2023 19:30:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234894AbjKOVJS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Nov 2023 16:09:18 -0500
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2068.outbound.protection.outlook.com [40.107.244.68])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A9F3AB;
-        Wed, 15 Nov 2023 13:09:15 -0800 (PST)
+        with ESMTP id S229692AbjKPAa0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Nov 2023 19:30:26 -0500
+X-Greylist: delayed 739 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 15 Nov 2023 16:30:19 PST
+Received: from mo-csw-fb.securemx.jp (mo-csw-fb1120.securemx.jp [210.130.202.128])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A7BDA9;
+        Wed, 15 Nov 2023 16:30:18 -0800 (PST)
+Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1120) id 3AG0I0r32851137; Thu, 16 Nov 2023 09:18:00 +0900
+Received: by mo-csw.securemx.jp (mx-mo-csw1121) id 3AG0G4lg2824237; Thu, 16 Nov 2023 09:16:04 +0900
+X-Iguazu-Qid: 2rWgaNhqp1LtXmaEeP
+X-Iguazu-QSIG: v=2; s=0; t=1700093763; q=2rWgaNhqp1LtXmaEeP; m=pjKFLuXQrV/G5HSWdlGtF3PVFWl1kTR4m9gwlnBaq4M=
+Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
+        by relay.securemx.jp (mx-mr1120) id 3AG0FvJg2092951
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 16 Nov 2023 09:15:57 +0900
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m0lGvH7585XTgFQJWJo6Ne6Jf7qoBog1o47Kho6hFs2D3xBlHe9+Hq+h+wqb5quZfs7UTHuzM29vHuDCWE/LddMddEJ9fKRXqto7Ol8VJhqXxUadGVR7hxbR97m9MQQRFVozNbqnl0Gikf25uNad0K1AKM8dg77FMjUA+wO1W3dyZgqsBV/XCqEkB/PVkFwCf5puI1Gzl98CZOC/6SMneXynXbvOV9qOBEH7OA3JVOdgm8yvIe9Ae+a6Q6opLDa6ewashmfs71nJddgRXoEoT/tFFlldwthqBQFWLLrxb+SohQ0QXQOtanBK8xGBsqIczsXb8C/1XvRjTYLl5ucHVw==
+ b=G6XLrmU1Y+nN3etO11LRYLcR0ifz2mDxqYbieZFzpsn4RTOSoTknjxFkdSyzePu7xqNtRzPr/lMTVvy2Bz8mGH4sN80IMP1xSbGFu2MDcvjx3B2kLYduOUYz/rEH7rBRvqKatmnSo6qVGxgDgEtc3eTEzoK61PSgEXp0EM5624o24OPm4XaHzcsWtLzHnuo5y6oh9kQf3xQfVUPTxkWScdx0rtVa9pcTeI89DUGDknj1mYkWRpr9vaJ+V6SomE/aBwFnmn5W2T4LRU825BO89DrRDZYDZuAo1u2RqX/Z0t1U+vY4gSPu2mzCRrJa5UZl+vn/nKzpmwl8ASnPArWkWg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LEAGG7uaQ7Cx4EW/SpG+sUaW8WzVuepuE6BNGplDn0k=;
- b=byVDGCpz384wMfJCO4AMfrA45HIMkpdHscWlmXlV1yVGhjMkM1nL/x+8mnVov/MnrwX2tqkjW4eMr5xstuj3Iz1qp8YeHD8iBo3YjSQ+eJRhFug2cogffj9dl175MjJ0Q6NlgYPSr/ljEew0rGaDwLY4cHE/P7pgNOciqlMmgSNmXZNFABb1NVhrNfr7YG43G5zFCiPAJu/NJk0W7EOkIZRQo7J+hSOVXZbMl3SQBArRnMDL/SkcTv4ybW3WNmugsAt5oG2H1IaAZ3YySbJikP7k3YMQ4PQyOhUJZ65FcO25nAl4LuxNF390hMnVsMl6mIPIilFp30Oi4u3p+HpatQ==
+ bh=PFL5c/0F2ixCIuQC9SELo03LPPZfDkosUx3wtonKmMo=;
+ b=cj00x8Fz1iWktfsUB1lco9jIoY39plmOs6H8jCDLhe0GrWLZNwXPpgas0ZAe64WV9JsT3VtWbUsiT+5AA4h6oYxHqN2i6NBq/eSzDqGjCES6Q4tiuiw63aHOmr1SEv25+rEJ6CKyHJVyCCk+rpg9LM98q1S4HpgZGrzMgTGcImzVWwsRA8BeLQttGTxv415rRHEHiq9HDKQVjhrOkzcEx8af9VzH172VBJibdDsoecqSdTuhK3rWNoSwi/fykKsXPkTZOzgnA6u7hdXaephIbo93ACcSqTg2ilrXNSYpCfSdNlsqR7R1A44igTjPtYtNMzD0UfbVLPJdC4X5QYgAVQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LEAGG7uaQ7Cx4EW/SpG+sUaW8WzVuepuE6BNGplDn0k=;
- b=5KmSIE5vcdtsByWfkmdtDel79v77vWxoOFZRmLYfgqT7mfPejO7bfSuAYsiIsuAGxh8po98Y3yJLAxMRWoiXCGl/RM78aoDU7JbTp8hhRJEsvv7DiQmYL73OMmFmunbenpBZVnJDnlxiJzGbey6lCVjok9kxFIB6bflcvQ4TWUo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SA3PR12MB8021.namprd12.prod.outlook.com (2603:10b6:806:305::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.31; Wed, 15 Nov
- 2023 21:09:12 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::83d7:9c4f:4d9b:1f2a]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::83d7:9c4f:4d9b:1f2a%5]) with mapi id 15.20.7002.019; Wed, 15 Nov 2023
- 21:09:12 +0000
-Message-ID: <d7539754-1877-43ed-a1b4-f969315ec271@amd.com>
-Date:   Wed, 15 Nov 2023 15:09:09 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 7/7] PCI: Exclude PCIe ports used for virtual links in
- pcie_bandwidth_available()
-Content-Language: en-US
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     "Lazar, Lijo" <lijo.lazar@amd.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>
-Cc:     =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Xinhui Pan <Xinhui.Pan@amd.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <dri-devel@lists.freedesktop.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        Danilo Krummrich <dakr@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        David Airlie <airlied@gmail.com>,
-        "Maciej W . Rozycki" <macro@orcam.me.uk>
-References: <20231114200755.14911-1-mario.limonciello@amd.com>
- <20231114200755.14911-8-mario.limonciello@amd.com>
- <e0e76948-a0a8-b6c2-163b-1d00afb6650c@amd.com>
- <5356bcbd-0785-4156-993c-338fed67d39d@amd.com>
-In-Reply-To: <5356bcbd-0785-4156-993c-338fed67d39d@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN7PR04CA0210.namprd04.prod.outlook.com
- (2603:10b6:806:126::35) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+ smtp.mailfrom=toshiba.co.jp; dmarc=pass action=none
+ header.from=toshiba.co.jp; dkim=pass header.d=toshiba.co.jp; arc=none
+From:   <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     <yoshihiro.shimoda.uh@renesas.com>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <mani@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+        <vigneshr@ti.com>, <krzysztof.kozlowski@linaro.org>,
+        <alim.akhtar@samsung.com>, <hongxing.zhu@nxp.com>,
+        <l.stach@pengutronix.de>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>, <festevam@gmail.com>,
+        <minghuan.Lian@nxp.com>, <mingkai.hu@nxp.com>, <roy.zang@nxp.com>,
+        <yue.wang@Amlogic.com>, <neil.armstrong@linaro.org>,
+        <khilman@baylibre.com>, <jbrunet@baylibre.com>,
+        <martin.blumenstingl@googlemail.com>, <jonnyc@amazon.com>,
+        <thomas.petazzoni@bootlin.com>, <jesper.nilsson@axis.com>,
+        <heiko@sntech.de>, <paul.walmsley@sifive.com>,
+        <greentime.hu@sifive.com>, <lchuanhua@maxlinear.com>,
+        <songxiaowei@hisilicon.com>, <wangbinghui@hisilicon.com>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <marek.vasut+renesas@gmail.com>,
+        <pratyush.anand@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <hayashi.kunihiko@socionext.com>,
+        <mhiramat@kernel.org>
+Subject: RE: [PATCH v2 1/6] PCI: dwc: Drop host prefix from struct
+ dw_pcie_host_ops
+Thread-Topic: [PATCH v2 1/6] PCI: dwc: Drop host prefix from struct
+ dw_pcie_host_ops
+Thread-Index: AQHaFr8he6AG9IJOJ0yv1tK95ivwK7B8FgCg
+Date:   Thu, 16 Nov 2023 00:15:52 +0000
+X-TSB-HOP2: ON
+Message-ID: <TYVPR01MB11245A96BE6937181281849C092B0A@TYVPR01MB11245.jpnprd01.prod.outlook.com>
+References: <20231114055456.2231990-1-yoshihiro.shimoda.uh@renesas.com>
+ <20231114055456.2231990-2-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20231114055456.2231990-2-yoshihiro.shimoda.uh@renesas.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=toshiba.co.jp;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYVPR01MB11245:EE_|OS7PR01MB11964:EE_
+x-ms-office365-filtering-correlation-id: 468c4e92-8ca1-4931-08a6-08dbe63931f0
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7RFGV3KYJ0eBkc+44TAsQ7vqbpgxH3jqj9BZszB0U0jnbUOxWJfDO089RleXR3GFNbuCV7xHXhgU2Y5XFEXHU0NVKOsRv21nM1MboNGPC9Km73NMhabW7rz2UjcaswP/PW5Dt9SknpYkwfOjnzsOMvG3f56uNlac6oMjYE9c5eQcNMWDlTHh8iKdc22g/DLgHrkHKPjYre1N0tb21UjGeghyTTOwp2RbIqPtFzsXZReAVvm1FrPJB4cm1CQSDncejmZt1bORwPNWWlHi9rYyuJ9YgsvmrH6W8WYOrB6aBRqsshFsWmWut+73xi7hE7DVnMk9NyoWipNFGZZ0HN4D5hCEYG3t/oeR/cDT/deO7opZ994Wwc2MCJ8MeJp2tdzyN8w6pGlIAQiBSG/DShFzVbawUcQ5lCJEYApeUOB59EutEuCXh0qhlRy7UVLm9bxCLnOg4mJvYk/R1AK93WyTlVMjhea9IoFuSCR2cmeK+/FK7r8M9JUBUx1nOBOY45Vmbcy7NJYWUXVBSHr0mtJRNVjoXnObdcAChsAcF4/Jet1DhOXUSeqRzDzXyN/sRUgK/5iZ9zusC4/Q2/7pgJLL3XCP0BOkxgCTkLdFLsxoWn7QPkRRLsk4EPVPYtzriL/q1eY6miFjZznP6NWZJG9Mbg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYVPR01MB11245.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(366004)(39860400002)(346002)(136003)(230922051799003)(64100799003)(1800799009)(451199024)(186009)(7416002)(7406005)(5660300002)(55016003)(52536014)(2906002)(41300700001)(8936002)(4326008)(8676002)(316002)(110136005)(66476007)(54906003)(66446008)(64756008)(76116006)(66946007)(66556008)(86362001)(478600001)(38070700009)(26005)(71200400001)(53546011)(9686003)(7696005)(6506007)(122000001)(33656002)(83380400001)(38100700002)(95630200002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-2022-jp?B?T0YrVk1tdnMwTGNMLzNNbEczVUt6QTZCbGN4dWpOSXV2TmpkVlIyWCtL?=
+ =?iso-2022-jp?B?NVBWUjkzNHlENFNlTXBOTFlBVVREWElhb3VZenZLc1RVMW1rUWpSYW1u?=
+ =?iso-2022-jp?B?UVBQVjZ4SUlodzVNTFh0SzcwQTE5bFNFek5Ddzg1WnBlV3pLMVNEbkpF?=
+ =?iso-2022-jp?B?VXI5b2ZqcnZhOHB4aUQ2WEpGa2ptQjdkblI1RmdZOHZveEZMSnU1OGN3?=
+ =?iso-2022-jp?B?TDNnVHhlbzBhUDZSQ29tZ3drMkpFdTcramhNb290eVJlQ29kbk9RaG5m?=
+ =?iso-2022-jp?B?NWo5MlFlQzlqNlpvNWI4OTNDU2RuSVI5Szcxd245eG11ODJFVS8vUWVX?=
+ =?iso-2022-jp?B?MXgydVUzQlYraEdGU3IrY0tyTkJGekxwOG1iUFNjL0NKVWFFbTBTUW1Z?=
+ =?iso-2022-jp?B?dlh2NDVORTBvS1Y3U0M2TlFkV1F5MkdIdDZxYmZkR1VLS2hDSDluN3Z1?=
+ =?iso-2022-jp?B?Z3FZSFZxQU1qYVZhVnJodjFqbnRLS1dwRmFmblZJY1pVaFc2K3UzQjJt?=
+ =?iso-2022-jp?B?NzU5M295d2loQzdLM1JDYUNGcmpYWktwcG9GZ2lFcnZuZFFPRXE5TE9S?=
+ =?iso-2022-jp?B?S1dYYXdSVytXbFg0U0ZVczVOSm5PeXZWMU5VcjA4MmlJbjgyNklWdk1z?=
+ =?iso-2022-jp?B?TmRsZW1YVE1SMUxUc0VLOFFiNnNNR2xCZUhNbmJiV3FlcjFRSHhlakU0?=
+ =?iso-2022-jp?B?STlRTWRlbnhEZWZGVkpiTE13MmpXbkpKanM3b0NvVUMzYWFjQyt3OUFD?=
+ =?iso-2022-jp?B?ZkRYc01ZNEhCSWJsNmxhS1JNbEFoMGFxS3NnTjVuK0dDWlMzYmtXRURX?=
+ =?iso-2022-jp?B?WDdwU2YwRWEvU1NpMmVFelhyeG1mOVFKcWdJQTN5NWlhbEJrL1U0dGNU?=
+ =?iso-2022-jp?B?V3k5dWlBbmpSVkVLcW9uaStZLytjbUljN2l1TWoyQnVNWDVCNmFqZW1T?=
+ =?iso-2022-jp?B?ak9pTjhmTCt0QnpLYmlNYTF6dUY2TGtBeXVtcVgrZzh1QnowcFF2M1NN?=
+ =?iso-2022-jp?B?SFk5dG5pQmc3QlQvZlhUMS9SamYzTFdjYk9CS1FvbVdzemhLYm95NWth?=
+ =?iso-2022-jp?B?YTl1MXQ4Wk0zcWI2SWpKaGxJbG12cHFsaFoweFZtc1hiNkZzVUNrblFn?=
+ =?iso-2022-jp?B?b0VLSnlOZFRZWVd3blFPeVlMVFlPSU1nSVkxcEpQR3NIdHNwa0pYWFVZ?=
+ =?iso-2022-jp?B?ZTkzQnA2S1FKcjA5QUdYTjdyUEsxMzRCOXRVSzFLWStOMXhEMy9ObHhz?=
+ =?iso-2022-jp?B?OStSb1BHWVdmSGQ3VDJnOHBlZmJvbTV6U2d5VE5scDZSbWY1ckhaRTB5?=
+ =?iso-2022-jp?B?MGt2dnhMTk81M2l6bkZ2QjVIQ0s0elNHTUIwcHhEejBoWU9scGFtUEpk?=
+ =?iso-2022-jp?B?UzFEUExoVHJkOEQ0NC94R1ZKWGlwVGtJYTBHb3pEVE9QQ3VBQmQwZkhU?=
+ =?iso-2022-jp?B?aHZ6dytFZVg3V0tqVzVmamNrZGlGVVpCU1Qya0VxZ3JPN0xUZ2Z4cDFE?=
+ =?iso-2022-jp?B?bDBtaFBVVmFwVkE5RzZabk9pZ0tqRTR3NE04bHMrY0tyZ2pFSlF5NmVK?=
+ =?iso-2022-jp?B?eEdCTWZZT1cwNElXZXErUTBCcFdPbllSVDBSRHlwUGhRek9OUWw0RUdm?=
+ =?iso-2022-jp?B?WmE5STJUakZucW1KeHFTRXpOZjBxempIUVFWa3BTdXY1UXNTSncxZ1lQ?=
+ =?iso-2022-jp?B?NU9iMmM5S1hvc0doeVZuOU9CbTFYbm1ETGFUMXJXOW0yWE9mSEwzcWJD?=
+ =?iso-2022-jp?B?T1dZK25BSENwY0kzQ0RndTc1ZjEyY0dsNnl5MVVVVWFYYTZXRDNBbVhv?=
+ =?iso-2022-jp?B?bVdXd3JYcXlMUjZlcDAza1pSV1BCQU1TR01yNnZObkFxaU9wUElMKzZz?=
+ =?iso-2022-jp?B?T0RxaDEvMjc5c3kySzB6NzJ3cmpxV3dKVy83Zko3N3RicSt1emdTankz?=
+ =?iso-2022-jp?B?YzVodnBPNkZZS1BUMThlRHo2NXJldE9LM2NqMzlGb1NQQ1NId05HSS8r?=
+ =?iso-2022-jp?B?RitSNWcwYjNjNlJQNHlja1RTM0F0M24rdmM2MnFEczF6Y0I5emxBbCt0?=
+ =?iso-2022-jp?B?T1ZRUTJUUW96a3c0ajlJcmNjMFNXYnpPbE5vdEVvR1I3K1pNWWVHN2xL?=
+ =?iso-2022-jp?B?T0ZzQmMva2ZSY25Nc0VXMW5vNnlNTGVqZjJTWGt5aS9PWDNKeUdkaG9M?=
+ =?iso-2022-jp?B?cTBWQ1YvZDdKZGUxOFBOdVN4ZGRJV2xrVGpqWjQzbmtNMS9VS0ZFajl3?=
+ =?iso-2022-jp?B?R3BiNVJiOWE2VzVWNWVmQlVZNUltYjVHVWczM3laWlhSa2ExSnNnczRK?=
+ =?iso-2022-jp?B?RjExOHRuWW9HOWdvV3o4TlcvQVAxQThMOUE9PQ==?=
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SA3PR12MB8021:EE_
-X-MS-Office365-Filtering-Correlation-Id: bb0818b5-fedc-4b50-1e8e-08dbe61f1da5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XSDulacBpiZOYPqY02M1QXNhuWU+lQ44PhLYYbFBAxPLMIsKrujhBC+MqvSE2PF7GlneU2Iur64RvzjY1KzNPeBkCXj8btycM4IPXJHczXBffLhRPnbKLZKPx5UZ6OBcRSfMZHpnHWT7KfXMVtXzYf6I5xQO1YK93XNEUoP5RiZzwIW5j/ASlGdEwfwt48r3pZ0P8FvXZGOY7bkf/U0NxYhI8C3DdwyKHMP4u7FJgtcUvsfDIFdC6eCQnx0anny1eB2y0jBX/Y4jmkxj1WuZQmUTBu5ADRbNjgpcX07LTUZAPmPTlHZwUsYBsLsfe/B+YHqWjZRh8UOm5qUfHNOaMr5DSPrAB/ZLdxrUk9SmAweYKYbMZIvEJkdx7lzqmY1ZbIiSZgKvT4vPN6ou/3UKv+aCq87MCNWiao1gwCFZ5/scAGlc7+WDPeoU7uFaUhcj249XNkaF6FSKHWsE8Hbr0DK7o7dPZRGro8zZEUwd7xWSIwiBSDidmn9mxt8rnKZWBVMMHWJhGJlFoeimvQsXCCbcoxMrEUv+GQqyopxT5kXllSm47eNg+uZi8+lmTsfBrCwv42y29gSNG4vlWM7NxY317ECDp+Xx01eqfW7oPNrbaI4RYRvzp1WyZQbXO7nl
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(39860400002)(396003)(346002)(376002)(230922051799003)(64100799003)(451199024)(186009)(1800799009)(8936002)(31686004)(54906003)(2906002)(7416002)(5660300002)(4326008)(83380400001)(966005)(6486002)(44832011)(8676002)(478600001)(36756003)(66476007)(86362001)(66946007)(31696002)(316002)(41300700001)(38100700002)(66556008)(53546011)(6506007)(6666004)(2616005)(26005)(6512007)(110136005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WWJzQVdsaENSNElNUGtDcU8wcG5SN3RyN1gvN1NYdGEybnFucXdHeVNtaFh6?=
- =?utf-8?B?SUMxaWprekMrb043eWduWVpxZ1BZWERiZStLM09xYWRJWWlrRlI3TEtSQTds?=
- =?utf-8?B?US9QS3JLQ2lLWkVVN2lvZXExWm9nRTd5NUdEVHgvV2FYWW1ZUFI1K2psNGl6?=
- =?utf-8?B?aEJOQzYybXJDNE81T3JZSlU1YXdscTQ4OGZkMG5ySzM5NjFjVWFEOUV1cTV0?=
- =?utf-8?B?dElxVlRzSGN6Rkw0SThHZjduRHd5L052ZXRxSHowNU80ZldETFIrREJkOXdT?=
- =?utf-8?B?eGo0VVVpSEJPSENEL3dXUmduQU92VWgvcS9zb1hMNi9Od09YWVZTRG5EY2FW?=
- =?utf-8?B?OFU0eEVrc01LVzNkaWNmdDJ5dTJXYjladUtNdGVOcnMxRWk3ck1lMmJqZC9X?=
- =?utf-8?B?N1VlUmEzcmxwOHAyTlhteU5PczJaV3RVa0NJQy9UM0xCbVNiR2hhenlVdWtN?=
- =?utf-8?B?VWlRWWVIaGZLc0xjYnBEWWZ0M0s2Rjh1WURsdUh1WGNncFVMU0xRYnR3cDJ1?=
- =?utf-8?B?QW8rdzdjaklZalVzUE5ja1hGdU1aN0kvc0JQSHNQZVFjN0llMy95RGl6VjdY?=
- =?utf-8?B?NllCWmgzNE00aDFTVm5hTlV4cHpQc0R2NzlUOGMrUmVpVFZOWTQ4eDllOHRB?=
- =?utf-8?B?My9TVHFNYTFvYmVQVkFkVE1QVnZFendwUUZrdnU3d3p2TGtscUZNZkgrYTdN?=
- =?utf-8?B?eWRvbVhDY0k2V3R5cDlyVUUvaDAwSm9sOTdZbHprTHBTRnRyUmx2VEVmb2FU?=
- =?utf-8?B?aWJhaitBK3pab3U1RGg0MWVjNUJGRmpyaWc3bDNDU0lJWHd4YmFyNUg0MERD?=
- =?utf-8?B?alM2bHFHVnZiSXlNYlFCYXE4QkloRWNuUVJvT2VJMUQ1SDJNZVNpajNsbmM0?=
- =?utf-8?B?M3RLcThLRk9UVWNPczZtTHd0eEYzVER4cDd4NGM3VzNBL1NIaFZsbzE2eUZU?=
- =?utf-8?B?M3llZGRsNTRNNzhLSThYbmF3QnNWSjd6QjRMZWVYandjb2ZWREx2Ylo2ei9m?=
- =?utf-8?B?SUlSYkxXTUllZ1VDeVNIcHoyZndPUExFOWxXYzhLMkFySEdUWS9zcnQ3Vnpq?=
- =?utf-8?B?OVJRNTFMSHlWWHJodk9ZdkdseXY0c1ROa0gvNVdRQUVvUUpTR3hSNloyTU5I?=
- =?utf-8?B?MzB4UWpoRkJsSmlOUFQ5bXhZMVQ2VndBVXQ1VnZmZW1KQVFuU3crcElJK2xT?=
- =?utf-8?B?TnVDakNrZUh0NHhNVlgvN3pRdzI5SUZ0b2Vxc3Yvdm9DdDVOSUxSaWY2d1I3?=
- =?utf-8?B?Sk80TmZEajFCcHpvZUpkYXlzeGovT0t2Mkd6QWtuOVR0bU5YZGErYW5PMy9V?=
- =?utf-8?B?NGZxWWU0Ukx3TU9UYndPNVl4S29VNnhqMU9QRElwc3dGbmZvclpSNk9QUUFQ?=
- =?utf-8?B?YjZkN0N3ckt0Smk4TmNVcFNQZDBzNXVCbWI2M0grcjBRWUV0bFU4WWJheWFX?=
- =?utf-8?B?bjUyc25tUXdVb3VNUXZiU1pKMjJnYjlkRHozVEVCS21wRFE5cUkvQnZXdll1?=
- =?utf-8?B?ditYYlJqSEZKamRZdXhBSHRMQjVIVWhxY2llYkVRbG9UdXNkY0wxdTJ3Wk9W?=
- =?utf-8?B?dENlZ0o5bjVpUUlWTjFGaTFveTRJakVieEhOTEt5S2pkZDQ0OVBvUFpZYXVq?=
- =?utf-8?B?TzJiU0ZSd2lQUkQvUHlDNHhxN1Bld2NrNWxucWZIczBTazFEdE11Q3FqaHBl?=
- =?utf-8?B?VmZtNWJWQ01PY0RqdFBuOGQ1ZkRVcG1mRWtXSnlrUTdyODRORWZlNUZwWVNW?=
- =?utf-8?B?T1VwWW9TWFR6ODJhTzF3V1h4WFNaMUVsaHp0d3ZSRzduT2hUQjVsODhCUHkz?=
- =?utf-8?B?aG1ZSkk1VUxnUWE5N2xLdnJEOGtoLzlIbmU5Uk4ra2MxK001VndEQjN4NjJU?=
- =?utf-8?B?cmxtOHJkQm5xN3BhUEd2b2YxeHBhNjYzQlI1Vng5WjNCL0pCckhtWlJkTm4v?=
- =?utf-8?B?ZDQzTVFHcytSSEdCb1paZTVBOEQvQlhvMmdTZy9lOTdGS1FOdTl3UVRGdWNh?=
- =?utf-8?B?QXpMb0hycXhrTVBKVi8zTUZvOFNoVEV6T1JnY2xHdGZlTlF4OGUxSmRLaGxD?=
- =?utf-8?B?L2oxVi9VNFg5TXNHaXpxeExLTUhvNUZTUWp5Q1RoZjlNVkZIM21Ydld3RzZu?=
- =?utf-8?Q?umJUHMGpaKzMbmHGN5EpwnT0r?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb0818b5-fedc-4b50-1e8e-08dbe61f1da5
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-OriginatorOrg: toshiba.co.jp
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2023 21:09:12.0446
+X-MS-Exchange-CrossTenant-AuthSource: TYVPR01MB11245.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 468c4e92-8ca1-4931-08a6-08dbe63931f0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Nov 2023 00:15:52.8390
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 894K+cIUIXH53edsRey+eUXhVK+B8QMVv3KdCXXxjged4rzpwmKdkC9+sanOAEueOnKFuRhVfRrG9w8QneS0YA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8021
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f109924e-fb71-4ba0-b2cc-65dcdf6fbe4f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dBoWSZMDBiTN7g1SoXq1n33vc+wIYFkyX5wLjRIPntzMYIVxe69lKbyBMlSVyyVeII7JGK4a1RCIb0VCF/0z9CLHoXZcUCehbTtX16Ht0fcwtjveytz+wTNANL6n/H9I
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7PR01MB11964
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/15/2023 11:04, Mario Limonciello wrote:
-> On 11/14/2023 21:23, Lazar, Lijo wrote:
->>
->>
->> On 11/15/2023 1:37 AM, Mario Limonciello wrote:
->>> The USB4 spec specifies that PCIe ports that are used for tunneling
->>> PCIe traffic over USB4 fabric will be hardcoded to advertise 2.5GT/s and
->>> behave as a PCIe Gen1 device. The actual performance of these ports is
->>> controlled by the fabric implementation.
->>>
->>> Callers for pcie_bandwidth_available() will always find the PCIe ports
->>> used for tunneling as a limiting factor potentially leading to incorrect
->>> performance decisions.
->>>
->>> To prevent such problems check explicitly for ports that are marked as
->>> virtual links or as thunderbolt controllers and skip them when looking
->>> for bandwidth limitations of the hierarchy. If the only device connected
->>> is a port used for tunneling then report that device.
->>>
->>> Callers to pcie_bandwidth_available() could make this change on their
->>> own as well but then they wouldn't be able to detect other potential
->>> speed bottlenecks from the hierarchy without duplicating
->>> pcie_bandwidth_available() logic.
->>>
->>> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2925#note_2145860
->>> Link: https://www.usb.org/document-library/usb4r-specification-v20
->>>        USB4 V2 with Errata and ECN through June 2023
->>>        Section 11.2.1
->>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>> ---
->>> v2->v3:
->>>   * Split from previous patch version
->>>   * Look for thunderbolt or virtual link
->>> ---
->>>   drivers/pci/pci.c | 19 +++++++++++++++++++
->>>   1 file changed, 19 insertions(+)
->>>
->>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>> index 0ff7883cc774..b1fb2258b211 100644
->>> --- a/drivers/pci/pci.c
->>> +++ b/drivers/pci/pci.c
->>> @@ -6269,11 +6269,20 @@ static u32 pcie_calc_bw_limits(struct pci_dev 
->>> *dev, u32 bw,
->>>    * limiting_dev, speed, and width pointers are supplied) 
->>> information about
->>>    * that point.  The bandwidth returned is in Mb/s, i.e., 
->>> megabits/second of
->>>    * raw bandwidth.
->>> + *
->>> + * This excludes the bandwidth calculation that has been returned 
->>> from a
->>> + * PCIe device that is used for transmitting tunneled PCIe traffic 
->>> over a virtual
->>> + * link part of larger hierarchy. Examples include Thunderbolt3 and 
->>> USB4 links.
->>> + * The calculation is excluded because the USB4 specification 
->>> specifies that the
->>> + * max speed returned from PCIe configuration registers for the 
->>> tunneling link is
->>> + * always PCI 1x 2.5 GT/s.  When only tunneled devices are present, 
->>> the bandwidth
->>> + * returned is the bandwidth available from the first tunneled device.
->>>    */
->>>   u32 pcie_bandwidth_available(struct pci_dev *dev, struct pci_dev 
->>> **limiting_dev,
->>>                    enum pci_bus_speed *speed,
->>>                    enum pcie_link_width *width)
->>>   {
->>> +    struct pci_dev *vdev = NULL;
->>>       u32 bw = 0;
->>>       if (speed)
->>> @@ -6282,10 +6291,20 @@ u32 pcie_bandwidth_available(struct pci_dev 
->>> *dev, struct pci_dev **limiting_dev,
->>>           *width = PCIE_LNK_WIDTH_UNKNOWN;
->>>       while (dev) {
->>> +        if (dev->is_virtual_link || dev->is_thunderbolt) {
->>> +            if (!vdev)
->>> +                vdev = dev;
->>> +            goto skip;
->>> +        }
->>
->> One problem with this is it *silently* ignores the bandwidth limiting 
->> device - the bandwidth may not be really available if there are 
->> virtual links in between. That is a change in behavior from the 
->> messages shown in __pcie_print_link_status.
-> 
-> That's a good point.  How about a matching behavioral change to 
-> __pcie_print_link_status() where it looks at the entire hierarchy for 
-> any links marked as virtual and prints a message along the lines of:
-> 
-> "This value may be further limited by virtual links".
+Hi Yoshihiro,
 
-I'll wait for some more feedback on the series before posting another 
-version, but I did put this together and this is a sample from dmesg of 
-the wording I'm planning on using for the next version:
-
-31.504 Gb/s available PCIe bandwidth, this may be further limited by 
-conditions of virtual link 0000:00:03.1
-
+> -----Original Message-----
+> From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Sent: Tuesday, November 14, 2023 2:55 PM
+> To: lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
+> bhelgaas@google.com; jingoohan1@gmail.com;
+> gustavo.pimentel@synopsys.com; mani@kernel.org
+> Cc: linux-pci@vger.kernel.org; linux-renesas-soc@vger.kernel.org; Yoshihiro
+> Shimoda <yoshihiro.shimoda.uh@renesas.com>; Vignesh Raghavendra
+> <vigneshr@ti.com>; Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>;
+> Alim Akhtar <alim.akhtar@samsung.com>; Richard Zhu
+> <hongxing.zhu@nxp.com>; Lucas Stach <l.stach@pengutronix.de>; Shawn
+> Guo <shawnguo@kernel.org>; Sascha Hauer <s.hauer@pengutronix.de>;
+> Fabio Estevam <festevam@gmail.com>; Minghuan Lian
+> <minghuan.Lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy Zang
+> <roy.zang@nxp.com>; Yue Wang <yue.wang@Amlogic.com>; Neil Armstrong
+> <neil.armstrong@linaro.org>; Kevin Hilman <khilman@baylibre.com>; Jerome
+> Brunet <jbrunet@baylibre.com>; Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com>; Jonathan Chocron
+> <jonnyc@amazon.com>; Thomas Petazzoni
+> <thomas.petazzoni@bootlin.com>; Jesper Nilsson
+> <jesper.nilsson@axis.com>; Heiko Stuebner <heiko@sntech.de>; Paul
+> Walmsley <paul.walmsley@sifive.com>; Greentime Hu
+> <greentime.hu@sifive.com>; Chuanhua Lei <lchuanhua@maxlinear.com>;
+> Xiaowei Song <songxiaowei@hisilicon.com>; Binghui Wang
+> <wangbinghui@hisilicon.com>; Andy Gross <agross@kernel.org>; Bjorn
+> Andersson <andersson@kernel.org>; Konrad Dybcio
+> <konrad.dybcio@linaro.org>; Marek Vasut
+> <marek.vasut+renesas@gmail.com>; Pratyush Anand
+> <pratyush.anand@gmail.com>; Thierry Reding <thierry.reding@gmail.com>;
+> Jonathan Hunter <jonathanh@nvidia.com>; Kunihiko Hayashi
+> <hayashi.kunihiko@socionext.com>; Masami Hiramatsu
+> <mhiramat@kernel.org>; iwamatsu nobuhiro($B4d>>(B $B?.MN(B $B!{#D#I#T#C""#D#I#T(B
+> $B!{#O#S#T(B) <nobuhiro1.iwamatsu@toshiba.co.jp>
+> Subject: [PATCH v2 1/6] PCI: dwc: Drop host prefix from struct
+> dw_pcie_host_ops
 > 
->>
->> Thanks,
->> Lijo
->>
->>>           bw = pcie_calc_bw_limits(dev, bw, limiting_dev, speed, width);
->>> +skip:
->>>           dev = pci_upstream_bridge(dev);
->>>       }
->>> +    /* If nothing "faster" found on hierarchy, limit to first 
->>> virtual link */
->>> +    if (vdev && !bw)
->>> +        bw = pcie_calc_bw_limits(vdev, bw, limiting_dev, speed, width);
->>> +
->>>       return bw;
->>>   }
->>>   EXPORT_SYMBOL(pcie_bandwidth_available);
+> Since the name of dw_pcie_host_ops indicates that it's for host obviously, drop
+> host prefix from the struct.
 > 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+
+For drivers/pci/controller/dwc/pcie-visconti.c:
+
+Acked-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+
+Best regards,
+  Nobuhiro
 
