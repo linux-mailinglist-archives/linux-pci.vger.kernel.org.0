@@ -2,170 +2,234 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E3F57EDB6B
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Nov 2023 07:05:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66A487EDB8B
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Nov 2023 07:30:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230083AbjKPGGA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Nov 2023 01:06:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36906 "EHLO
+        id S229900AbjKPGaI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Nov 2023 01:30:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229843AbjKPGF7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Nov 2023 01:05:59 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 559928F;
-        Wed, 15 Nov 2023 22:05:56 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F1E8C433C8;
-        Thu, 16 Nov 2023 06:05:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1700114755;
-        bh=B36lbKAAn1whA4DTcAjeUDPo5i0BoaQAKk0kLOv7+Mc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SC9jUjOhjj6aTYcTLsK8Zp8lA6m/gFqGEdA2xaOwwzKgwc2utVzaF6Y7VgkE5NvtZ
-         dSpzXaKv0E8DM9RkszoHVYTL8u43nsWL6aRSs9DG9Tnk4OFS/BkWyyKKTtklfdkF6m
-         66VCk4J7zrsY7M+fd9Pik9nwbT4tsotakSnqTxXBfabaB+OD2hM/YWHZOLglpErS9l
-         e18FtbQZ857rzC4MJTwcP0ubzktClDl9nV+RDvVxUQQMJ6+dkP9UiZtr7YjbGWbtE5
-         XirNa9plIfpAnaABkf9OB8xpUdN9Hatg/pzLf0isf8Lk/BWyuBH2CMdoUvzcSsiobO
-         Lz9M7V8Ky3d+g==
-Date:   Thu, 16 Nov 2023 11:35:41 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: PCI: qcom: correct clocks for SC8180x
- and SM8150
-Message-ID: <20231116060541.GC3443@thinkpad>
-References: <20231112184557.3801-1-krzysztof.kozlowski@linaro.org>
- <20231112184557.3801-2-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S229749AbjKPGaH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Nov 2023 01:30:07 -0500
+Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6702D127
+        for <linux-pci@vger.kernel.org>; Wed, 15 Nov 2023 22:30:03 -0800 (PST)
+Received: by mail-qv1-xf2e.google.com with SMTP id 6a1803df08f44-66cfd874520so2412596d6.2
+        for <linux-pci@vger.kernel.org>; Wed, 15 Nov 2023 22:30:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1700116202; x=1700721002; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PB/tb7x/wwBfMXKFlAwdEXt9fJqb2hzUXhb3693FMFI=;
+        b=pM70wgon19wcKb2jRCMBD6WKF4W4YezlxwnqWKgKbq36CTXgbzotfjlsyDcYK/tC6o
+         M8JSRRdCTO6W90KL4Rnpuh1Yb0ja6wLMr+dZjeo+k4EjLiE7K/fJyhGCfqq/A1JoD1nL
+         aG8beuDtlDLyEJBwbmd1q1hUzt67ALCkAt/XBpAGRJ39ft05utlZOEailKOH5CCg+A6l
+         SPLUIwhM58jX724aRkVMsdlUf0FPzZUvfMTto1OrGtgRIIDqjBTK5e6lp6kpXVOCym5D
+         fdPWv4Ot13PymrC/a/jjfyNn/D0IM6IUWbslGE/bBooJ1ADFNGVzDfWL0BJelY/SnKbT
+         +JAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700116202; x=1700721002;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PB/tb7x/wwBfMXKFlAwdEXt9fJqb2hzUXhb3693FMFI=;
+        b=CFSc3Mh19U7lE5bm22DQmywG/q2UfTy1LvX793RGm+edDntRb5iY7jPBwy6wv6foYU
+         DOaHvOPJ8VJjJ7RL4XaWtjQvhpk6Sr8flVFDeP+fE9WyhWG7pKbOiA3NW8ARdTFlFOdd
+         HWIzm1fT51CuvhLzsOvnK3CmnTh3coyFFQ1GnSCu2NF+d+CTC5lFC7DLYKKkMfokWFJg
+         wr4u4DKddiMZHEEJKtVR0nv3XyZPe1RcfX9EcR2Srd+1bQa8/UwNGvu1+jLxy7ptoQmo
+         Zg3vL6mu3QX/w1zuWRmIiHyG3axVoRDCyMXUK2sBGj89RWzenFtzNea38K38o3H0z/4B
+         rYOw==
+X-Gm-Message-State: AOJu0YwmbNTByyKwCmGJbRAhGo2V7NatDh/5yRu9EZdP6ie1A6Swhup1
+        hOdwM0L5wPhvRH3RXqUWGcL7
+X-Google-Smtp-Source: AGHT+IEt8cECYm2VNPS0pn16zEsLLLHhSV0cG4YvuKehpByAru6JTwlYnq7ZubFBquXWqDAvW7VJjA==
+X-Received: by 2002:a0c:ec50:0:b0:66d:544d:8e68 with SMTP id n16-20020a0cec50000000b0066d544d8e68mr8276026qvq.3.1700116202454;
+        Wed, 15 Nov 2023 22:30:02 -0800 (PST)
+Received: from thinkpad ([117.207.24.140])
+        by smtp.gmail.com with ESMTPSA id u3-20020ad44983000000b00677ad5a91e1sm1149979qvx.53.2023.11.15.22.29.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Nov 2023 22:30:01 -0800 (PST)
+Date:   Thu, 16 Nov 2023 11:59:51 +0530
+From:   'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Shradha Todi <shradha.t@samsung.com>, jingoohan1@gmail.com,
+        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, krzysztof.kozlowski@linaro.org,
+        alim.akhtar@samsung.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pankaj.dubey@samsung.com
+Subject: Re: [PATCH] PCI: exynos: Adapt to clk_bulk_* APIs
+Message-ID: <20231116062951.GD3443@thinkpad>
+References: <CGME20231009062222epcas5p36768b75c13c7c79965b5863521361a64@epcas5p3.samsung.com>
+ <20231009062216.6729-1-shradha.t@samsung.com>
+ <20231027134849.GA23716@thinkpad>
+ <000b01da178e$a43088d0$ec919a70$@samsung.com>
+ <bbcee6bf-850b-43c0-a5d3-9d5a66b24dc5@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231112184557.3801-2-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <bbcee6bf-850b-43c0-a5d3-9d5a66b24dc5@samsung.com>
+X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Nov 12, 2023 at 07:45:57PM +0100, Krzysztof Kozlowski wrote:
-> PCI node in Qualcomm SC8180x DTS has 8 clocks, while one on SM8150 has 7
-> clocks:
+On Wed, Nov 15, 2023 at 10:06:19AM +0100, Marek Szyprowski wrote:
+> Hi!
 > 
->   sc8180x-primus.dtb: pci@1c00000: 'oneOf' conditional failed, one must be fixed:
->     ['pipe', 'aux', 'cfg', 'bus_master', 'bus_slave', 'slave_q2a', 'ref', 'tbu'] is too short
+> On 15.11.2023 07:40, Shradha Todi wrote:
+> >> -----Original Message-----
+> >> From: Manivannan Sadhasivam [mailto:manivannan.sadhasivam@linaro.org]
+> >> Sent: 27 October 2023 19:19
+> >> To: Shradha Todi<shradha.t@samsung.com>
+> >> Cc:jingoohan1@gmail.com;lpieralisi@kernel.org;kw@linux.com;
+> >> robh@kernel.org;bhelgaas@google.com;krzysztof.kozlowski@linaro.org;
+> >> alim.akhtar@samsung.com;linux-pci@vger.kernel.org; linux-arm-
+> >> kernel@lists.infradead.org;linux-samsung-soc@vger.kernel.org; linux-
+> >> kernel@vger.kernel.org;pankaj.dubey@samsung.com
+> >> Subject: Re: [PATCH] PCI: exynos: Adapt to clk_bulk_* APIs
+> >>
+> >> On Mon, Oct 09, 2023 at 11:52:16AM +0530, Shradha Todi wrote:
+> >>> There is no need to hardcode the clock info in the driver as driver
+> >>> can rely on the devicetree to supply the clocks required for the
+> >>> functioning of the peripheral. Get rid of the static clock info and
+> >>> obtain the platform supplied clocks. The total number of clocks
+> >>> supplied is obtained using the devm_clk_bulk_get_all() API and used
+> >>> for the rest of the clk_bulk_* APIs.
+> >>>
+> >>> Signed-off-by: Shradha Todi<shradha.t@samsung.com>
+> >>> ---
+> >>>   drivers/pci/controller/dwc/pci-exynos.c | 46
+> >>> ++++++-------------------
+> >>>   1 file changed, 11 insertions(+), 35 deletions(-)
+> >>>
+> >>> diff --git a/drivers/pci/controller/dwc/pci-exynos.c
+> >>> b/drivers/pci/controller/dwc/pci-exynos.c
+> >>> index 9e42cfcd99cc..023cf41fccd7 100644
+> >>> --- a/drivers/pci/controller/dwc/pci-exynos.c
+> >>> +++ b/drivers/pci/controller/dwc/pci-exynos.c
+> >>> @@ -54,8 +54,8 @@
+> >>>   struct exynos_pcie {
+> >>>   	struct dw_pcie			pci;
+> >>>   	void __iomem			*elbi_base;
+> >>> -	struct clk			*clk;
+> >>> -	struct clk			*bus_clk;
+> >>> +	struct clk_bulk_data		*clks;
+> >>> +	int				clk_cnt;
+> >>>   	struct phy			*phy;
+> >>>   	struct regulator_bulk_data	supplies[2];
+> >>>   };
+> >>> @@ -65,30 +65,18 @@ static int exynos_pcie_init_clk_resources(struct
+> >> exynos_pcie *ep)
+> >>>   	struct device *dev = ep->pci.dev;
+> >>>   	int ret;
+> >>>
+> >>> -	ret = clk_prepare_enable(ep->clk);
+> >>> -	if (ret) {
+> >>> -		dev_err(dev, "cannot enable pcie rc clock");
+> >>> +	ret = devm_clk_bulk_get_all(dev, &ep->clks);
+> >>> +	if (ret < 0)
+> >> Please use !(ret) here and below to be consistent with the driver.
+> >>
+> > In this case, only negative values indicate failure. Hence we cannot use (!ret) here.
+> >
+> >>>   		return ret;
+> >>> -	}
+> >>>
+> >>> -	ret = clk_prepare_enable(ep->bus_clk);
+> >>> -	if (ret) {
+> >>> -		dev_err(dev, "cannot enable pcie bus clock");
+> >>> -		goto err_bus_clk;
+> >>> -	}
+> >>> +	ep->clk_cnt = ret;
+> >> Since clk_cnt is "int", you can just use it directly instead of "ret".
+> >>
+> > Thanks for this suggestion! Will take care in v2.
+> >
+> >>> -	return 0;
+> >>> -
+> >>> -err_bus_clk:
+> >>> -	clk_disable_unprepare(ep->clk);
+> >>> -
+> >>> -	return ret;
+> >>> +	return clk_bulk_prepare_enable(ep->clk_cnt, ep->clks);
+> >>>   }
+> >>>
+> >>>   static void exynos_pcie_deinit_clk_resources(struct exynos_pcie *ep)
+> >>> {
+> >>> -	clk_disable_unprepare(ep->bus_clk);
+> >>> -	clk_disable_unprepare(ep->clk);
+> >>> +	clk_bulk_disable_unprepare(ep->clk_cnt, ep->clks);
+> >>>   }
+> >>>
+> >>>   static void exynos_pcie_writel(void __iomem *base, u32 val, u32 reg)
+> >>> @@ -332,17 +320,9 @@ static int exynos_pcie_probe(struct
+> >> platform_device *pdev)
+> >>>   	if (IS_ERR(ep->elbi_base))
+> >>>   		return PTR_ERR(ep->elbi_base);
+> >>>
+> >>> -	ep->clk = devm_clk_get(dev, "pcie");
+> >>> -	if (IS_ERR(ep->clk)) {
+> >>> -		dev_err(dev, "Failed to get pcie rc clock\n");
+> >>> -		return PTR_ERR(ep->clk);
+> >>> -	}
+> >>> -
+> >>> -	ep->bus_clk = devm_clk_get(dev, "pcie_bus");
+> >>> -	if (IS_ERR(ep->bus_clk)) {
+> >>> -		dev_err(dev, "Failed to get pcie bus clock\n");
+> >>> -		return PTR_ERR(ep->bus_clk);
+> >>> -	}
+> >>> +	ret = exynos_pcie_init_clk_resources(ep);
+> >>> +	if (ret < 0)
+> >>> +		return ret;
+> >>>
+> >>>   	ep->supplies[0].supply = "vdd18";
+> >>>   	ep->supplies[1].supply = "vdd10";
+> >>> @@ -351,10 +331,6 @@ static int exynos_pcie_probe(struct
+> >> platform_device *pdev)
+> >>>   	if (ret)
+> >>>   		return ret;
+> >>>
+> >>> -	ret = exynos_pcie_init_clk_resources(ep);
+> >>> -	if (ret)
+> >>> -		return ret;
+> >>> -
+> >>>   	ret = regulator_bulk_enable(ARRAY_SIZE(ep->supplies), ep-
+> >>> supplies);
+> >>>   	if (ret)
+> >> You need to disable_unprepare() clocks in error path here and above.
+> >>
+> > Thanks for pointing out! Will take care in v2.
 > 
->   sm8150-hdk.dtb: pci@1c00000: 'oneOf' conditional failed, one must be fixed:
->     ['pipe', 'aux', 'cfg', 'bus_master', 'bus_slave', 'slave_q2a', 'ref', 'tbu'] is too short
-
-This error says that SM8150 has 8 clocks defined in DT, but it has only 7. I'm
-confused.
-
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Maybe it would make sense to add devm_clk_bulk_get_all_enabled() to 
+> clock framework, similar to the existing devm_clk_get_enabled()?
+> 
+> It is really a common pattern to get all clocks and enable them for the 
+> time of driver operation.
+> 
 
-Anyway, the patch looks good to me.
+Right. Someone may argue that the users would need to check the number of clocks
+returned by the devm_clk_bulk_get_all() API, before enabling them. But I don't
+think the drivers should check those values as they need to rely on the
+firmware (unless accessing the clocks manually later). Even for those cases, the
+individual APIs can be used.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+So IMO it is worth to give it a shot.
 
 - Mani
 
-> ---
->  .../devicetree/bindings/pci/qcom,pcie.yaml    | 58 ++++++++++++++++++-
->  1 file changed, 57 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> index 14d25e8a18e4..4c993ea97d7c 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> @@ -479,6 +479,35 @@ allOf:
->            items:
->              - const: pci # PCIe core reset
->  
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - qcom,pcie-sc8180x
-> +    then:
-> +      oneOf:
-> +        - properties:
-> +            clocks:
-> +              minItems: 8
-> +              maxItems: 8
-> +            clock-names:
-> +              items:
-> +                - const: pipe # PIPE clock
-> +                - const: aux # Auxiliary clock
-> +                - const: cfg # Configuration clock
-> +                - const: bus_master # Master AXI clock
-> +                - const: bus_slave # Slave AXI clock
-> +                - const: slave_q2a # Slave Q2A clock
-> +                - const: ref # REFERENCE clock
-> +                - const: tbu # PCIe TBU clock
-> +      properties:
-> +        resets:
-> +          maxItems: 1
-> +        reset-names:
-> +          items:
-> +            - const: pci # PCIe core reset
-> +
->    - if:
->        properties:
->          compatible:
-> @@ -527,8 +556,35 @@ allOf:
->          compatible:
->            contains:
->              enum:
-> -              - qcom,pcie-sc8180x
->                - qcom,pcie-sm8150
-> +    then:
-> +      oneOf:
-> +        - properties:
-> +            clocks:
-> +              minItems: 7
-> +              maxItems: 7
-> +            clock-names:
-> +              items:
-> +                - const: pipe # PIPE clock
-> +                - const: aux # Auxiliary clock
-> +                - const: cfg # Configuration clock
-> +                - const: bus_master # Master AXI clock
-> +                - const: bus_slave # Slave AXI clock
-> +                - const: slave_q2a # Slave Q2A clock
-> +                - const: tbu # PCIe TBU clock
-> +      properties:
-> +        resets:
-> +          maxItems: 1
-> +        reset-names:
-> +          items:
-> +            - const: pci # PCIe core reset
-> +
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
->                - qcom,pcie-sm8250
->      then:
->        oneOf:
+> Best regards
 > -- 
-> 2.34.1
-> 
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
 
 -- 
 மணிவண்ணன் சதாசிவம்
