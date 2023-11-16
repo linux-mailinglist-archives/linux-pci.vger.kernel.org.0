@@ -2,47 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D05787EDC8C
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Nov 2023 09:02:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 618E87EDD34
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Nov 2023 10:01:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230112AbjKPICw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Nov 2023 03:02:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40652 "EHLO
+        id S230228AbjKPJBO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Nov 2023 04:01:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229997AbjKPICw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Nov 2023 03:02:52 -0500
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09BF2E1;
-        Thu, 16 Nov 2023 00:02:47 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R731e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0VwVk1Zu_1700121763;
-Received: from 30.240.112.215(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VwVk1Zu_1700121763)
-          by smtp.aliyun-inc.com;
-          Thu, 16 Nov 2023 16:02:45 +0800
-Message-ID: <7e383d7f-8df5-4d49-a45e-3dbe23b2c925@linux.alibaba.com>
-Date:   Thu, 16 Nov 2023 16:02:38 +0800
+        with ESMTP id S229806AbjKPJBO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Nov 2023 04:01:14 -0500
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D674A1A7;
+        Thu, 16 Nov 2023 01:01:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700125270; x=1731661270;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/STXsbosH6Rz9sQMt/crvGrrS9Z0X1RfO/fEtM3K5Z0=;
+  b=c4VjVSEp+FXbfcPUlMD4dOLzaf2czQG5e5BcvJAIqJ09QVP4TPJwHGVF
+   yx4C5RwvB2aeZJ+HbLJCkocyorQciAxNuwadWNZmJrCVrA7lth2cUaNWb
+   Ru4V/mu33t4t1ioMQIXCIRbdyqsw+BQR0+UK4hVB0Ao6H529p3LFEVQ7B
+   HJNcC4R47c3v7QKrEokzjLPtDbiERAV3VaYVyg6diHWEoPNvnmsQmlI2C
+   tcgoOygFG3uY+y1gteOUJrAvA1+6KErTEBXrtBOVB2CMTUdgQDaIVggIg
+   ugKd96b3KrGF1+phb24hscy2SFDRwsE1ttgD2fCvWtUUq7DS9K3j4mDmE
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10895"; a="457542981"
+X-IronPort-AV: E=Sophos;i="6.03,307,1694761200"; 
+   d="scan'208";a="457542981"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2023 01:00:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10895"; a="768851613"
+X-IronPort-AV: E=Sophos;i="6.03,307,1694761200"; 
+   d="scan'208";a="768851613"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 16 Nov 2023 01:00:43 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 9BFF0209; Thu, 16 Nov 2023 11:00:42 +0200 (EET)
+Date:   Thu, 16 Nov 2023 11:00:42 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Danilo Krummrich <dakr@redhat.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Xinhui Pan <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        "Maciej W . Rozycki" <macro@orcam.me.uk>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <dri-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v3 5/7] PCI: ACPI: Detect PCIe root ports that are used
+ for tunneling
+Message-ID: <20231116090042.GF17433@black.fi.intel.com>
+References: <20231114200755.14911-1-mario.limonciello@amd.com>
+ <20231114200755.14911-6-mario.limonciello@amd.com>
+ <20231115104019.GY17433@black.fi.intel.com>
+ <70b35a0e-5ccd-4e19-a8ac-4cf095007a69@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 4/5] drivers/perf: add DesignWare PCIe PMU driver
-Content-Language: en-US
-To:     Ilkka Koskinen <ilkka@os.amperecomputing.com>
-Cc:     kaishen@linux.alibaba.com, helgaas@kernel.org,
-        yangyicong@huawei.com, will@kernel.org,
-        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
-        robin.murphy@arm.com, chengyou@linux.alibaba.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, rdunlap@infradead.org,
-        mark.rutland@arm.com, zhuo.song@linux.alibaba.com,
-        renyu.zj@linux.alibaba.com
-References: <20231104133216.42056-1-xueshuai@linux.alibaba.com>
- <20231104133216.42056-5-xueshuai@linux.alibaba.com>
- <32626689-c8b1-9bd-b00-5285c633bfbc@os.amperecomputing.com>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <32626689-c8b1-9bd-b00-5285c633bfbc@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <70b35a0e-5ccd-4e19-a8ac-4cf095007a69@amd.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -50,141 +88,45 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Mario,
 
+On Wed, Nov 15, 2023 at 11:08:43AM -0600, Mario Limonciello wrote:
+> On 11/15/2023 04:40, Mika Westerberg wrote:
+> > Hi Mario,
+> > 
+> > On Tue, Nov 14, 2023 at 02:07:53PM -0600, Mario Limonciello wrote:
+> > > USB4 routers support a feature called "PCIe tunneling". This
+> > > allows PCIe traffic to be transmitted over USB4 fabric.
+> > > 
+> > > PCIe root ports that are used in this fashion can be discovered
+> > > by device specific data that specifies the USB4 router they are
+> > > connected to. For the PCI core, the specific connection information
+> > > doesn't matter, but it's interesting to know that this root port is
+> > > used for tunneling traffic. This will allow other decisions to be
+> > > made based upon it.
+> > > 
+> > > Detect the `usb4-host-interface` _DSD and if it's found save it
+> > > into a new `is_virtual_link` bit in `struct pci_device`.
+> > 
+> > While this is fine for the "first" tunneled link, this does not take
+> > into account possible other "virtual" links that lead to the endpoint in
+> > question. Typically for eGPU it only makes sense to plug it directly to
+> > the host but say there is a USB4 hub (with PCIe tunneling capabilities)
+> > in the middle. Now the link from the hub to the eGPU that is also
+> > "virtual" is not marked as such and the bandwidth calculations may not
+> > get what is expected.
+> 
+> Right; you mentioned the DVSEC available for hubs in this case.  As I don't
+> have one of these to validate it works properly I was thinking that should
+> be a follow up.
+> 
+> If you think it should be part of the same series I'll add it, but I'd ask
+> if you can please check I did it right on one that reports the DVSEC?
 
-On 2023/11/16 11:50, Ilkka Koskinen wrote:
-> 
-> Hi Shuai,
-> 
-> I have a few comments below
-> 
-> 
-...
-> 
->> +static void dwc_pcie_pmu_time_based_event_enable(struct dwc_pcie_pmu *pcie_pmu,
->> +                      bool enable)
->> +{
->> +    struct pci_dev *pdev = pcie_pmu->pdev;
->> +    u16 ras_des_offset = pcie_pmu->ras_des_offset;
->> +
->> +    if (enable)
->> +        pci_clear_and_set_dword(pdev,
->> +            ras_des_offset + DWC_PCIE_TIME_BASED_ANAL_CTL,
->> +            DWC_PCIE_TIME_BASED_TIMER_START, 0x1);
->> +    else
->> +        pci_clear_and_set_dword(pdev,
->> +            ras_des_offset + DWC_PCIE_TIME_BASED_ANAL_CTL,
->> +            DWC_PCIE_TIME_BASED_TIMER_START, 0x0);
-> 
-> It's a matter of taste, but you could simply do:
-> 
->     pci_clear_and_set_dword(pdev,
->                  ras_des_offset + DWC_PCIE_TIME_BASED_ANAL_CTL,
->                  DWC_PCIE_TIME_BASED_TIMER_START, enable);
-> 
-> 
-> However, I'm fine with either way.
+I don't think it should be part of this series. I just checked and DVSEC
+is only required for hosts so kind of hardware equivalent for the _DSD
+property you are using here. For hubs there is no such luxury
+unfortunately.
 
-Good suggestion, will fix it.
-
-> 
->> +static u64 dwc_pcie_pmu_read_lane_event_counter(struct perf_event *event)
->> +{
->> +    struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
->> +    struct pci_dev *pdev = pcie_pmu->pdev;
->> +    u16 ras_des_offset = pcie_pmu->ras_des_offset;
->> +    u32 val;
->> +
->> +    pci_read_config_dword(pdev, ras_des_offset + DWC_PCIE_EVENT_CNT_DATA, &val);
->> +
->> +    return val;
->> +}
-> 
-> ...
-> 
->> +static int dwc_pcie_register_dev(struct pci_dev *pdev)
->> +{
->> +    struct platform_device *plat_dev;
->> +    struct dwc_pcie_dev_info *dev_info;
->> +    int ret;
->> +    u32 bdf;
->> +
->> +    bdf = PCI_DEVID(pdev->bus->number, pdev->devfn);
->> +    plat_dev = platform_device_register_data(NULL, "dwc_pcie_pmu", bdf,
->> +                         pdev, sizeof(*pdev));
->> +    ret = PTR_ERR_OR_ZERO(plat_dev);
->> +    if (ret)
->> +             return ret;
-> 
-> platform_device_register_data() doesn't return a null pointer and you don't really need 'ret'. You could do something like instead:
-> 
->    if (IS_ERR(plat_dev))
->           return PTR_ERR(plat_dev);
-> 
->> +    dev_info = kzalloc(sizeof(*dev_info), GFP_KERNEL);
->> +    if (!dev_info)
->> +        return -ENOMEM;
->> +
->> +    /* Cache platform device to handle pci device hotplug */
->> +    dev_info->plat_dev = plat_dev;
->> +    dev_info->pdev = pdev;
->> +    list_add(&dev_info->dev_node, &dwc_pcie_dev_info_head);
->> +
->> +    return 0;
->> +}
->> +
->> +static int dwc_pcie_pmu_notifier(struct notifier_block *nb,
->> +                     unsigned long action, void *data)
->> +{
->> +    struct device *dev = data;
->> +    struct pci_dev *pdev = to_pci_dev(dev);
->> +    struct dwc_pcie_dev_info *dev_info;
->> +
->> +    switch (action) {
->> +    case BUS_NOTIFY_ADD_DEVICE:
->> +        if (!dwc_pcie_match_des_cap(pdev))
->> +            return NOTIFY_DONE;
->> +        if (dwc_pcie_register_dev(pdev))
->> +            return NOTIFY_BAD;
->> +        break;
->> +    case BUS_NOTIFY_DEL_DEVICE:
->> +        dev_info = dwc_pcie_find_dev_info(pdev);
->> +        if (!dev_info)
->> +            return NOTIFY_DONE;
->> +        dwc_pcie_unregister_dev(dev_info);
->> +        break;
->> +    }
->> +
->> +    return NOTIFY_OK;
->> +}
->> +
->> +static struct notifier_block dwc_pcie_pmu_nb = {
->> +    .notifier_call = dwc_pcie_pmu_notifier,
->> +};
->> +
->> +static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
->> +{
->> +    struct pci_dev *pdev = plat_dev->dev.platform_data;
->> +    struct dwc_pcie_pmu *pcie_pmu;
->> +    char *name;
->> +    u32 bdf, val;
->> +    u16 vsec;
->> +    int ret;
->> +
->> +    vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_ALIBABA,
->> +                    DWC_PCIE_VSEC_RAS_DES_ID);
-> 
-> You nicely changed to use vendor list in this version but here the driver still tries to find Alibaba specific capability.
-
-Sorry, I missed here.
-
-> I guess, you could search again using the vendor list. The other option would be to make dwc_pcie_match_des_cap() to return the vendor id, pass it to dwc_pcie_register_dev(), which would add it to device's platform data with
-> the pointer to the pci device.
-
-The dwc_pcie_pmu_probe() is called by device which has DWC_PCIE_VSEC_RAS_DES_ID cap.
-So I guess I can use pdev->vendor directly here, e.g?
-
-	pci_find_vsec_capability(pdev, pdev->vendor, DWC_PCIE_VSEC_RAS_DES_ID);
-
-Best Regards,
-Shuai
+I think I do have hardware here with the DVSEC in place so if you
+decide to add it, I should be able to try it.
