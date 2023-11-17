@@ -2,34 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0098B7EF0A5
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Nov 2023 11:36:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 172F37EF0EF
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Nov 2023 11:48:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344735AbjKQKgm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Nov 2023 05:36:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47088 "EHLO
+        id S1345915AbjKQKsN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Nov 2023 05:48:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230105AbjKQKgl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Nov 2023 05:36:41 -0500
+        with ESMTP id S1345869AbjKQKsN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Nov 2023 05:48:13 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1C02B9;
-        Fri, 17 Nov 2023 02:36:38 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58447C433C7;
-        Fri, 17 Nov 2023 10:36:34 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2302C2;
+        Fri, 17 Nov 2023 02:48:09 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80863C433C7;
+        Fri, 17 Nov 2023 10:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1700217398;
-        bh=US34hMxupTHZ9TsBDq1dqsqsLDXa5zqsP2aagnEpwKs=;
+        s=k20201202; t=1700218089;
+        bh=MHfAV0lQx9b1z+ZYliUxzTe7mQ+82iR06qthvGyNmPs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qR6SB/dR/hVs2o/TszmjzGLOeimKanmbfi2ETFu4k5U890FEwX+E3cbJYpPUvVchv
-         eYyPt/9i2ejlP//6KUHJ+qtNIyDxXc4H60sE91eg+CgdoPCmb8Y8MrIaCReO9U4Qfg
-         a+MI3ZVsdgEHCF8Mjd8MkfS8GUC1USIdY33mJKC9GjYuQ2z9mfWllQVwp+0wTnZmd6
-         Uu9u53mLL6URdgK+w4RePlVR0pdHm9ZAMBsGts25rlzBAvZy/awnzkqpSu1wr0HMq6
-         WiO+pAMpaQcLPZaygSdcctl1vMCk3YwKAIYYnp8aa9yAaCYpQu7mh4tbeQFITTn+IM
-         V5Uy2XjfLHWyg==
-Date:   Fri, 17 Nov 2023 16:06:30 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Johan Hovold <johan+linaro@kernel.org>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        b=uaMGEQXaIm+8fY90zRgc4THJWT/avYJ0iX4KnXk+pCrapICvgAlIFs9cjTcH0NNjm
+         PVc3dWUwXhYwR+TSqqmXsHAASgMgYM/ua8MdL4wCLUsNmjVGa0W7Ugzoslvx6URJRI
+         UebBeMVsEaVyTXqiZZCpKkX3S65WM2cLnRFRh+lYg7VTnVjW+z04MUQF5A7FgXO6wr
+         tNB3d14xNhLlc9K1Nrpb37JLRQGnWXME3XtnyipyuUcedmcMKtOiDVufr6qbmu+xzd
+         MNSZ8xFsRzdGo2olOE2rL5w+uweIJCS7dokvuRktw5IKipFqIgLhMJfKuaXqhmVjKs
+         m5Ypaz6ooXbuQ==
+Received: from johan by xi.lan with local (Exim 4.96.2)
+        (envelope-from <johan@kernel.org>)
+        id 1r3wOQ-0002Kf-27;
+        Fri, 17 Nov 2023 11:48:11 +0100
+Date:   Fri, 17 Nov 2023 11:48:10 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Andy Gross <agross@kernel.org>,
@@ -40,15 +45,15 @@ Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Jonathan Derrick <jonathan.derrick@linux.dev>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] PCI/ASPM: Add lockdep assert to link state helper
-Message-ID: <20231117103630.GO250770@thinkpad>
+Subject: Re: [PATCH 4/6] PCI: qcom: Clean up ASPM comment
+Message-ID: <ZVdE6nqanqcaL8sO@hovoldconsulting.com>
 References: <20231114135553.32301-1-johan+linaro@kernel.org>
- <20231114135553.32301-7-johan+linaro@kernel.org>
+ <20231114135553.32301-5-johan+linaro@kernel.org>
+ <20231117103227.GM250770@thinkpad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231114135553.32301-7-johan+linaro@kernel.org>
+In-Reply-To: <20231117103227.GM250770@thinkpad>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -59,36 +64,25 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 14, 2023 at 02:55:53PM +0100, Johan Hovold wrote:
-> Add a lockdep assert to the locked disable link state helper which
-> should only be called with a pci_bus_sem read lock held.
+On Fri, Nov 17, 2023 at 04:02:27PM +0530, Manivannan Sadhasivam wrote:
+> On Tue, Nov 14, 2023 at 02:55:51PM +0100, Johan Hovold wrote:
+> > Break up the newly added ASPM comment so that it fits within the soft 80
+> > character limit and becomes more readable.
+> > 
+> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 > 
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> I think we discussed (80column soft limit for comments) in the past, but I don't
+> think breaking here makes the comment more readable.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+The coding style clearly states:
 
-- Mani
+	The preferred limit on the length of a single line is 80 columns.
 
-> ---
->  drivers/pci/pcie/aspm.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 19b7256d2dc9..ef2e7a186f57 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -1090,6 +1090,8 @@ static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool locked
->  
->  int pci_disable_link_state_locked(struct pci_dev *pdev, int state)
->  {
-> +	lockdep_assert_held_read(&pci_bus_sem);
-> +
->  	return __pci_disable_link_state(pdev, state, true);
->  }
->  EXPORT_SYMBOL(pci_disable_link_state_locked);
-> -- 
-> 2.41.0
-> 
+	Statements longer than 80 columns should be broken into sensible chunks,
+	unless exceeding 80 columns significantly increases readability and does
+	not hide information.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Going beyond 80 chars may sometimes be warranted for code, but the
+exception is not intended for comments.
+
+Johan
