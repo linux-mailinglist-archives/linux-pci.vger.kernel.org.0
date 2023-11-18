@@ -2,192 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10B627EFFCE
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Nov 2023 14:21:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 482037F001C
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Nov 2023 15:21:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229481AbjKRNVj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Nov 2023 08:21:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39428 "EHLO
+        id S229515AbjKROVx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Nov 2023 09:21:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjKRNVi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Nov 2023 08:21:38 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 258CE127
-        for <linux-pci@vger.kernel.org>; Sat, 18 Nov 2023 05:21:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700313695; x=1731849695;
-  h=date:from:to:cc:subject:message-id;
-  bh=D7dcALPON0uc7XcBwwGEIGfJ20SEzViA7MX8Z8UNtxM=;
-  b=AxsQq3E/rvg6vYuDtLo1i0QQ5tXF16CdzniwfwhEvzbHuADWE0rozYwB
-   BU/TUDS/l2fcU/lDE/TGjcqpIUv28I9SGoIp4sVl83OLuqQUoGzPRzpUc
-   76Zj7y6GnRwPmXVAhHNkPtq4b0jE8A0lIQuRnTVeP7exX7ICdbab5Dnis
-   X5fLJaElCKC8zp3mE7yXD4r4drPX1zqPkVPNMPzpNCjH7P8rT8V0M++Ux
-   PrLlsFJNpht4rxPl6upnsGY2TEWpTMjsA868/8cpUkcBwuvyg4m/2WVA8
-   WYw7oqZMaGo2WlPMUHLTmXWydRjKtf/kNcvfbhT3gnMb62d/Dhv7HY4yN
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10897"; a="390290351"
-X-IronPort-AV: E=Sophos;i="6.04,209,1695711600"; 
-   d="scan'208";a="390290351"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2023 05:21:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,209,1695711600"; 
-   d="scan'208";a="7279144"
-Received: from lkp-server02.sh.intel.com (HELO b8de5498638e) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 18 Nov 2023 05:21:34 -0800
-Received: from kbuild by b8de5498638e with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1r4LGN-0003vz-0X;
-        Sat, 18 Nov 2023 13:21:31 +0000
-Date:   Sat, 18 Nov 2023 21:20:47 +0800
-From:   kernel test robot <lkp@intel.com>
+        with ESMTP id S229489AbjKROVw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Nov 2023 09:21:52 -0500
+Received: from pepin.polanet.pl (pepin.polanet.pl [193.34.52.2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB488F;
+        Sat, 18 Nov 2023 06:21:47 -0800 (PST)
+Date:   Sat, 18 Nov 2023 15:21:43 +0100
+From:   Tomasz Pala <gotar@polanet.pl>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:review/ecam] BUILD SUCCESS
- 936e987d63a9e1a7039ffcae1e48ef40f89d36b2
-Message-ID: <202311182145.zg96E2MQ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Cc:     linux-pci@vger.kernel.org,
+        Dan J Williams <dan.j.williams@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        David E Box <david.e.box@intel.com>,
+        Yunying Sun <yunying.sun@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Florent DELAHAYE <linuxkernelml@undead.fr>,
+        Konrad J Hambrick <kjhambrick@gmail.com>,
+        Matt Hansen <2lprbe78@duck.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Benoit =?iso-8859-2?Q?Gr=E9goire?= <benoitg@coeus.ca>,
+        Werner Sembach <wse@tuxedocomputers.com>,
+        mumblingdrunkard@protonmail.com, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sebastian Manciulea <manciuleas@protonmail.com>
+Subject: Re: [PATCH 2/2] x86/pci: Treat EfiMemoryMappedIO as reservation of
+ ECAM space
+Message-ID: <20231118142143.GA14101@polanet.pl>
+References: <20231103191858.GA163196@bhelgaas>
+ <20231109184405.GA488882@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+In-Reply-To: <20231109184405.GA488882@bhelgaas>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git review/ecam
-branch HEAD: 936e987d63a9e1a7039ffcae1e48ef40f89d36b2  x86/pci: Clarify ECAM 'reserved' messages
+On Thu, Nov 09, 2023 at 12:44:05 -0600, Bjorn Helgaas wrote:
 
-elapsed time: 722m
+>> https://bugzilla.kernel.org/show_bug.cgi?id=218050
+>> 
+>> I think the problem is that the MMCONFIG region is at
+>> [mem 0x80000000-0x8fffffff], and that is *also* included in one of the
+>> host bridge windows reported via _CRS:
+>> 
+>>   PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
+>>   pci_bus 0000:00: root bus resource [mem 0x80000000-0xfbffffff window]
+>> 
+>> I'll try to figure out how to deal with that.  In the meantime, would
+>> you mind attaching the contents of /proc/iomem to the bugzilla?  I
+> 
+> I attached a debug patch to both bugzilla entries.  If you could
+> attach the "acpidump" output and (if practical) boot a kernel with the
+> debug patch and attach the dmesg logs, that would be great.
 
-configs tested: 116
-configs skipped: 124
+I've posted the files. There are signs of buggy BIOS, but I don't expect
+any firmware update to be released for this hw anymore.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+DMI: Supermicro X9DRi-LN4+/X9DR3-LN4+/X9DRi-LN4+/X9DR3-LN4+, BIOS 3.4 11/20/2019
 
-tested configs:
-arc                     haps_hs_smp_defconfig   gcc  
-arc                   randconfig-001-20231118   gcc  
-arc                   randconfig-002-20231118   gcc  
-arm                      integrator_defconfig   gcc  
-arm                   randconfig-001-20231118   gcc  
-arm                   randconfig-002-20231118   gcc  
-arm                   randconfig-003-20231118   gcc  
-arm                   randconfig-004-20231118   gcc  
-arm                           u8500_defconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                 randconfig-001-20231118   gcc  
-arm64                 randconfig-002-20231118   gcc  
-arm64                 randconfig-003-20231118   gcc  
-arm64                 randconfig-004-20231118   gcc  
-csky                  randconfig-001-20231118   gcc  
-csky                  randconfig-002-20231118   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20231118   gcc  
-i386         buildonly-randconfig-002-20231118   gcc  
-i386         buildonly-randconfig-003-20231118   gcc  
-i386         buildonly-randconfig-004-20231118   gcc  
-i386         buildonly-randconfig-005-20231118   gcc  
-i386         buildonly-randconfig-006-20231118   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231118   gcc  
-i386                  randconfig-002-20231118   gcc  
-i386                  randconfig-003-20231118   gcc  
-i386                  randconfig-004-20231118   gcc  
-i386                  randconfig-005-20231118   gcc  
-i386                  randconfig-006-20231118   gcc  
-i386                  randconfig-011-20231118   gcc  
-i386                  randconfig-012-20231118   gcc  
-i386                  randconfig-013-20231118   gcc  
-i386                  randconfig-014-20231118   gcc  
-i386                  randconfig-015-20231118   gcc  
-i386                  randconfig-016-20231118   gcc  
-loongarch             randconfig-001-20231118   gcc  
-loongarch             randconfig-002-20231118   gcc  
-m68k                           sun3_defconfig   gcc  
-microblaze                        allnoconfig   gcc  
-mips                     loongson1b_defconfig   gcc  
-nios2                 randconfig-001-20231118   gcc  
-nios2                 randconfig-002-20231118   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20231118   gcc  
-parisc                randconfig-002-20231118   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc                      mgcoge_defconfig   gcc  
-powerpc                      pcm030_defconfig   gcc  
-powerpc               randconfig-001-20231118   gcc  
-powerpc               randconfig-002-20231118   gcc  
-powerpc               randconfig-003-20231118   gcc  
-powerpc64             randconfig-001-20231118   gcc  
-powerpc64             randconfig-002-20231118   gcc  
-powerpc64             randconfig-003-20231118   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20231118   gcc  
-riscv                 randconfig-002-20231118   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                  randconfig-001-20231118   gcc  
-s390                  randconfig-002-20231118   gcc  
-sh                        apsh4ad0a_defconfig   gcc  
-sh                    randconfig-001-20231118   gcc  
-sh                    randconfig-002-20231118   gcc  
-sh                            titan_defconfig   gcc  
-sparc64               randconfig-001-20231118   gcc  
-sparc64               randconfig-002-20231118   gcc  
-um                    randconfig-001-20231118   gcc  
-um                    randconfig-002-20231118   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20231118   gcc  
-x86_64       buildonly-randconfig-002-20231118   gcc  
-x86_64       buildonly-randconfig-003-20231118   gcc  
-x86_64       buildonly-randconfig-004-20231118   gcc  
-x86_64       buildonly-randconfig-005-20231118   gcc  
-x86_64       buildonly-randconfig-006-20231118   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20231118   gcc  
-x86_64                randconfig-002-20231118   gcc  
-x86_64                randconfig-003-20231118   gcc  
-x86_64                randconfig-004-20231118   gcc  
-x86_64                randconfig-005-20231118   gcc  
-x86_64                randconfig-006-20231118   gcc  
-x86_64                randconfig-011-20231118   gcc  
-x86_64                randconfig-012-20231118   gcc  
-x86_64                randconfig-013-20231118   gcc  
-x86_64                randconfig-014-20231118   gcc  
-x86_64                randconfig-015-20231118   gcc  
-x86_64                randconfig-016-20231118   gcc  
-x86_64                randconfig-071-20231118   gcc  
-x86_64                randconfig-072-20231118   gcc  
-x86_64                randconfig-073-20231118   gcc  
-x86_64                randconfig-074-20231118   gcc  
-x86_64                randconfig-075-20231118   gcc  
-x86_64                randconfig-076-20231118   gcc  
-x86_64                           rhel-8.3-bpf   clang
-x86_64                           rhel-8.3-bpf   gcc  
-x86_64                          rhel-8.3-rust   clang
-xtensa                randconfig-001-20231118   gcc  
-xtensa                randconfig-002-20231118   gcc  
+.text .data .bss are not marked as E820_TYPE_RAM!
+tboot: non-0 tboot_addr but it is not of type E820_TYPE_RESERVED
+
+DMAR: [Firmware Bug]: No firmware reserved region can cover this RMRR [0x00000000df243000-0x00000000df251fff], contact BIOS vendor for fixes
+DMAR: [Firmware Bug]: Your BIOS is broken; bad RMRR [0x00000000df243000-0x00000000df251fff]
+
+
+
+BTW is there a reason for this logging discrepancy?
+
+efi: Remove mem173: MMIO range=[0xe0000000-0xefffffff] (256MB) from e820 map
+efi: Not removing mem71: MMIO range=[0xe0000000-0xefffffff] (262144KB) from e820 map
+
+efi: Not removing mem74: MMIO range=[0xff000000-0xffffffff] (16384KB) from e820 map
+efi: Remove mem176: MMIO range=[0xff000000-0xffffffff] (16MB) from e820 map
+
+This is arch/x86/platform/efi/efi.c:
+static void __init efi_remove_e820_mmio(void)
+
+Remove mem%02u: MMIO range=[0x%08llx-0x%08llx] (%lluMB) ... size >> 20
+Not removing mem%02u: MMIO range=[0x%08llx-0x%08llx] (%lluKB) ... size >> 10
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Tomasz Pala <gotar@pld-linux.org>
