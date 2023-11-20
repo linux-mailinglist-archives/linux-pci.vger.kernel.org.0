@@ -2,98 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB25A7F1C47
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Nov 2023 19:23:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B81C17F1DCC
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Nov 2023 21:10:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229696AbjKTSXy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Nov 2023 13:23:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51586 "EHLO
+        id S229721AbjKTUJG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Nov 2023 15:09:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbjKTSXx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Nov 2023 13:23:53 -0500
+        with ESMTP id S230119AbjKTUJE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Nov 2023 15:09:04 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5BF8C8;
-        Mon, 20 Nov 2023 10:23:49 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CA3EC433C7;
-        Mon, 20 Nov 2023 18:23:49 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33E37E3;
+        Mon, 20 Nov 2023 12:09:01 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79700C433CB;
+        Mon, 20 Nov 2023 20:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1700504629;
-        bh=eglYaIQ/qtU51O7/Tl79eYRTbxeBJ9UX1J/7CgEKMp8=;
+        s=k20201202; t=1700510940;
+        bh=C/9ul9eMXOVExx3R6EqLciqztWaUgMTk2Itzl0yF/t8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=o6e+CUPFOXvGngNNWHM9X1PLe9PzMUguk0FCo6af1DPRNJ0p+OepiuLwS7AR5KlZ2
-         eakxW+7UEsZuUod6rTu0DKOh7tcfLE6bXTYE1iw3n/kMBFk0UbajUZeu6GoDKN4M3t
-         VKhbtXzLK8ghNFU2I80Ncclrv5FKPKqgNxX/uI8+GAcwxlrDTuCohrSL3cZXDsgQcM
-         wfpZhvWCvQUwMyN5tVCbMHPHMO22NWWBh9SCrOW4Rm9IAgoZ21fzobRc2A7iGXkhlt
-         Y8PjAxr6YZq527RKNFptB80cmQq4RqGgqe6c29UD1Rf03Dz1U8hq9rxNYpyS2+eb3Q
-         eYQMD4+/wUcjg==
-Date:   Mon, 20 Nov 2023 12:23:47 -0600
+        b=DNfDy1sQLzJ7rgmUjLORvRdkKs7/QzpQxoT14szxbOHF9ZloKkhvWacR3GeeruERu
+         PRcW/qohw++OoCImOiTfnQ1n2eskKG3aY2O93kO+3TuUlXQ1DJ3mI02HVVQd7nsrP2
+         nxChs4qRXpUd9WBONIE4PDRI+piAHtdr8iaJxzYOk+RZBLoGXewV5mg2txeNLfq5qT
+         YfYZzz4zo8/GWGOj5xhI21hP708BG9Efqe89UcJRWoIT9oXOQ32FNAYuk7JUcO+1ii
+         nCkQ3gnNwMrn9akFzPQ90TkdOoxcp1wLOAIBkFtXbw7LvKWUMBRevz+6Aw/igv99nU
+         wp0HCyQmavQCg==
+Date:   Mon, 20 Nov 2023 14:08:58 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Minda Chen <minda.chen@starfivetech.com>
-Cc:     Conor Dooley <conor@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        Kevin Xie <kevin.xie@starfivetech.com>
-Subject: Re: [PATCH v11 19/20] PCI: starfive: Add JH7110 PCIe controller
-Message-ID: <20231120182347.GA207554@bhelgaas>
+To:     Jiantao Zhang <water.zhangjiantao@huawei.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tjoseph@cadence.com,
+        zhangjianrong5@huawei.com
+Subject: Re: [PATCH] PCI: controller: Fix calculation error of msix pending
+ table offset
+Message-ID: <20231120200858.GA211414@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3c69c1b5-7183-4d34-9689-27cd126a4f4c@starfivetech.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230531142442.27576-1-water.zhangjiantao@huawei.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 20, 2023 at 06:07:31PM +0800, Minda Chen wrote:
-> On 2023/11/15 19:49, Minda Chen wrote:
-> > Add StarFive JH7110 SoC PCIe controller platform driver codes, JH7110
-> > with PLDA host PCIe core.
-> ...
+On Wed, May 31, 2023 at 10:24:42PM +0800, Jiantao Zhang wrote:
+> The interrupts already minus 1 in pci_epc_set_msix() according to pcie
+> specification. So we must add 1 otherwise data corruption will happen.
 
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -22,6 +22,13 @@
-> >   */
-> >  #define PCIE_PME_TO_L2_TIMEOUT_US	10000
-> >  
-> > +/*
-> > + * PCIe r6.0, sec 6.6.1, <Conventional Reset>
-> > + * Requires a minimum waiting of 100ms before sending a configuration
-> > + * request to the device.
-> > + */
-> > +#define PCIE_BEFORE_CONFIG_REQUEST_WAIT_MS	100
-> > +
-> >  extern const unsigned char pcie_link_speed[];
-> >  extern bool pci_early_dump;
-> >  
-> Hi Bjorn
->   I have not checked this carefully.
->   I think the change of pci.h should be moved to a indepent patch.
->   Could you approve this? Kevin will commit a new patch for this.
->   Next version I will remove this change. 
+I'm not sure what happened to this.
 
-Yes, I think it makes sense to add that #define in a separate patch.
+Can you include a citation to the section of the spec, which will help
+reviewers?
 
-Please trim out the unnecessary context; there's no need for readers
-to scroll through the entire driver to get to the useful part, which
-is just the last dozen lines or so.
+Have you observed a crash or similar defect that is fixed by this
+patch?  If so, a few details would be useful in the commit log to help
+people find this fix.
 
-Bjorn
+> Signed-off-by: Jiantao Zhang <water.zhangjiantao@huawei.com>
+> Signed-off-by: Jianrong Zhang <zhangjianrong5@huawei.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c | 2 +-
+>  drivers/pci/controller/dwc/pcie-designware-ep.c  | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> index b8b655d4047e..ff608c46b8ac 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> @@ -310,7 +310,7 @@ static int cdns_pcie_ep_set_msix(struct pci_epc *epc, u8 fn, u8 vfn,
+>  
+>  	/* Set PBA BAR and offset.  BAR must match MSIX BAR */
+>  	reg = cap + PCI_MSIX_PBA;
+> -	val = (offset + (interrupts * PCI_MSIX_ENTRY_SIZE)) | bir;
+> +	val = (offset + ((interrupts + 1) * PCI_MSIX_ENTRY_SIZE)) | bir;
+>  	cdns_pcie_ep_fn_writel(pcie, fn, reg, val);
+>  
+>  	return 0;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index f9182f8d552f..3d078ebe2517 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -417,7 +417,7 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  	dw_pcie_writel_dbi(pci, reg, val);
+>  
+>  	reg = ep_func->msix_cap + func_offset + PCI_MSIX_PBA;
+> -	val = (offset + (interrupts * PCI_MSIX_ENTRY_SIZE)) | bir;
+> +	val = (offset + ((interrupts + 1) * PCI_MSIX_ENTRY_SIZE)) | bir;
+>  	dw_pcie_writel_dbi(pci, reg, val);
+>  
+>  	dw_pcie_dbi_ro_wr_dis(pci);
+> -- 
+> 2.17.1
+> 
