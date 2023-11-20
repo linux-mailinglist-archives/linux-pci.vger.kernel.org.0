@@ -2,215 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F0B47F0B9B
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Nov 2023 06:41:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 819EA7F0C79
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Nov 2023 08:06:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231923AbjKTFlv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Nov 2023 00:41:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48060 "EHLO
+        id S231167AbjKTHGs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Nov 2023 02:06:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231920AbjKTFlu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Nov 2023 00:41:50 -0500
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F738E3;
-        Sun, 19 Nov 2023 21:41:46 -0800 (PST)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1r4x2U-00032f-FD; Mon, 20 Nov 2023 06:41:42 +0100
-Message-ID: <973830d2-e9db-4ffb-8862-ca08427e6ed9@leemhuis.info>
-Date:   Mon, 20 Nov 2023 06:41:41 +0100
+        with ESMTP id S229785AbjKTHGp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Nov 2023 02:06:45 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA5E694
+        for <linux-pci@vger.kernel.org>; Sun, 19 Nov 2023 23:06:40 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-548d00656d1so364464a12.3
+        for <linux-pci@vger.kernel.org>; Sun, 19 Nov 2023 23:06:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1700463999; x=1701068799; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=9grGCe4D4vRTiFpuIziYXpMc9v12qtWa9N42rfnj2Nc=;
+        b=N86npd7sk0LcYq4g2qAtwyIzaYNFM7a1kja/LEDnfsveoxfC3UuPFLvDPoKQHx71aE
+         zgQttdLacyo7QFOJkvHz83SwcUtZbB71zl4mtwV0NpkpXufY8jch0YGi0QlLzcdMtCgU
+         9dI0laKsqiPosVxH4kxSGYIaxfLxRrkFb+cbL1Irwx463+XPcArY3nwFAm9DiiunUA7y
+         iKi5GI/M0+RPDiDlIkd71aLR1tSM/5ap8CWe98bo6Yz3xsl12xq80mN5NebxRyxBQGed
+         GpiRaV+v//a04aqEL/b+BI+6WDwngceRMQeRof5FkSlpr4zLeWFB1eJBeVQLdlNjyPv4
+         t7Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700463999; x=1701068799;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9grGCe4D4vRTiFpuIziYXpMc9v12qtWa9N42rfnj2Nc=;
+        b=JIawUrLM0NNy4za4iiCR7CXwwuGohal302stPzOaHg4yCYGbp5eyxrl4qJ+6xaY1q4
+         dTKZXXiRcv6hvoRw3EjlWu2lJuVlntDbZcc8cNXgTpfvQ8TyR+2+4XICfhWUlArro076
+         xTdaMsCyw35rgfEGlJ8rTPrg05bhPgb7GRCCE8dOAI1lVFXzKiV3XkVMWYV/IYET6CKy
+         LvNaKHvvdWHgmZqOB7pqCCmE6jKQIEnAduUji4s7/qA1A0Jk07Cs0VA6kuATTx7NHdTk
+         4RnxxDvPv2mYjvF6DKuPxfjfUxEOguCZGOZFwZA5TGcp4lUgkTP85XfvIpXxvZ5x9WZ0
+         u1iw==
+X-Gm-Message-State: AOJu0YwxOzX/I0Imdepb1i4lAI6+RHyTRioAdQROld+/WnGFvy0f0AWb
+        LsD6HizGgMQ0zGfnbkeW+prL3Q==
+X-Google-Smtp-Source: AGHT+IHim8h/AXb8DpEM2+BlQenAJQS1k7VbHFT/qnAehpMIYGNJBWlm7v+e2X3DOmBgwuBZOzI8sQ==
+X-Received: by 2002:a17:907:a287:b0:9b2:89ec:d701 with SMTP id rd7-20020a170907a28700b009b289ecd701mr5245161ejc.27.1700463999378;
+        Sun, 19 Nov 2023 23:06:39 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.11])
+        by smtp.gmail.com with ESMTPSA id m23-20020a1709062ad700b0099297782aa9sm3570018eje.49.2023.11.19.23.06.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 19 Nov 2023 23:06:38 -0800 (PST)
+Message-ID: <3b43267d-f458-439b-82dd-03a2771e49be@linaro.org>
+Date:   Mon, 20 Nov 2023 08:06:33 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Regression from dcadfd7f7c74ef9ee415e072a19bdf6c085159eb
-Content-Language: en-US, de-DE
-To:     Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        Linux kernel regressions list <regressions@lists.linux.dev>,
-        a.mark.broadworth@gmail.com, matthias.schrumpf@freenet.de,
-        LKML <linux-kernel@vger.kernel.org>, aros@gmx.com,
-        bagasdotme@gmail.com,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <f878b188-3fe4-420c-9bcb-b431ac6088dd@amd.com>
- <20231107121756.GA168964@workstation.local>
- <318cc8da-f8d2-4307-866e-8c302dacf094@amd.com>
- <20231108051638.GA194133@workstation.local>
-From:   "Linux regression tracking (Thorsten Leemhuis)" 
-        <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20231108051638.GA194133@workstation.local>
+Subject: Re: [PATCH 2/2] dt-bindings: PCI: qcom: correct clocks for SC8180x
+ and SM8150
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231112184557.3801-1-krzysztof.kozlowski@linaro.org>
+ <20231112184557.3801-2-krzysztof.kozlowski@linaro.org>
+ <20231116060541.GC3443@thinkpad>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20231116060541.GC3443@thinkpad>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700458906;6182bc9b;
-X-HE-SMSGID: 1r4x2U-00032f-FD
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 08.11.23 06:16, Takashi Sakamoto wrote:
-> On Tue, Nov 07, 2023 at 03:27:08PM -0600, Mario Limonciello wrote:
->> +linux-pci / Bjorn
->> On 11/7/2023 06:17, Takashi Sakamoto wrote:
->>>
->>> Thanks for the report.
->>>
->>> I apologize for the inconvenience you and your reporter facing, however
->>> I can not avoid to say that the problem appears to be specific to the AMD
->>> Ryzen machines.
+On 16/11/2023 07:05, Manivannan Sadhasivam wrote:
+> On Sun, Nov 12, 2023 at 07:45:57PM +0100, Krzysztof Kozlowski wrote:
+>> PCI node in Qualcomm SC8180x DTS has 8 clocks, while one on SM8150 has 7
+>> clocks:
+>>
+>>   sc8180x-primus.dtb: pci@1c00000: 'oneOf' conditional failed, one must be fixed:
+>>     ['pipe', 'aux', 'cfg', 'bus_master', 'bus_slave', 'slave_q2a', 'ref', 'tbu'] is too short
+>>
+>>   sm8150-hdk.dtb: pci@1c00000: 'oneOf' conditional failed, one must be fixed:
+>>     ['pipe', 'aux', 'cfg', 'bus_master', 'bus_slave', 'slave_q2a', 'ref', 'tbu'] is too short
+> 
+> This error says that SM8150 has 8 clocks defined in DT, but it has only 7. I'm
+> confused.
 
-It nevertheless from the point of kernel development *afaics* is a
-kernel regression, as it doesn't matter much if the root of the problem
-is a hw problem; what matters primarily is that the problem apparently
-did not happen before the commit mentioned in the subject.
+I think I pasted wrong error. I'll fix in v2.
 
-Which bears the question: Can the culprit (and others commits that might
-be depending on it) still be reverted without causing regression itself?
+> 
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> Anyway, the patch looks good to me.
+> 
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Thanks.
 
->> Unfortunately I don't have this 1394 hardware myself.  I was just looking at
->> another completely unrelated issue on Bugzilla and noticed the report come
->> up in my search and wanted to ensure it's on your radar already as the
->> author as it's lingered a while.
-> 
-> It is your misfortune to face this kind of machine trouble.
-> 
-> In the report[1], Matthias Schrumpf and Mark Broadworth noted to use AMD
-> Ryzen 7 5800X on B550/X570 chipsets, and insert VT6307 in their PCIe bus.
-> I guess that the device attends PCI bridge (ASM1083) since VT6307 has PCI
-> interface only.
-> 
-> We can see MCE error in another report[2]. Unfortunately, the reporter,
-> Ian Donnelly, have less suspiction about machine architecture, and never
-> provides hardware information. But I believe that it comes from AMD Ryzen
-> machine. I transcribe the error here:
-> 
-> ```
-> [    0.860834] mce: [Hardware Error]: Machine check events logged
-> [    0.860834] microcode: CPU20: patch_level=0x0a201025
-> [    0.860835] microcode: CPU21: patch_level=0x0a201025
-> [    0.860836] microcode: CPU23: patch_level=0x0a201025
-> [    0.860836] microcode: CPU22: patch_level=0x0a201025
-> [    0.860837] mce: [Hardware Error]: CPU 17: Machine Check: 0 Bank 0: bc00080001010135
-> [    0.860845] fbcon: Taking over console
-> [    0.860847] mce: [Hardware Error]: TSC 0 ADDR fca000f0 MISC d012000000000000 IPID 1000b000000000 
-> [    0.860854] mce: [Hardware Error]: PROCESSOR 2:a20f10 TIME 1696955537 SOCKET 0 APIC b microcode a201025
-> [    0.860860] microcode: CPU0: patch_level=0x0a201025
-> [    0.861676] microcode: Microcode Update Driver: v2.2.
-> ```
-> 
-> Additionally, as I note in the PR[3], I observed cache-coherence failure
-> over memory dedicated for DMA transmission. The mapping is created by
-> `dmam_alloc_coherent()` and no need to have extra care such as streaming
-> API. However, the combination of ASM1083 and VT6307 provides me bogus
-> values from the memory in AMD Ryzen machine, and I can see no issue in
-> Intel machines.
-> 
-> Essentially, the host system reboots when firewire-ohci module in guest
-> system probes the PCI device for 1394 OHCI hardware provided by PCI
-> pass-though[4].
-> 
->>> I've already received the similar report[1], and have been
->>> investigating it in the last few weeks, then got the insight. Please take
->>> a look at my short report about it in PR to Linus for 6.7-rc1:
->>> https://lore.kernel.org/lkml/20231105144852.GA165906@workstation.local/
->>>
->>> I can confirm that I have been abe to reproduce the problem on AMD Ryzen
->>> machine. However, it's important to note that I have not observed the
->>> problem on the following systems:
->>
->> Any chance you (or anyone with the issue) has a serial output available?
->> I think it would be really good to look at the circumstances surrounding the
->> reboot.
->>
->>>
->>> * Intel machine (Sandy Bridge and Skylake generations)
->>> * AMD machines predating Ryzen (Sempron 145)
->>> * Machines using different 1394 OHCI hardware from other vendors such as
->>>    TI
->>> * VIA VT6307 connected directly to PCI slot (i.e. without the issued
->>>    PCIe/PCI bridge)
->>>
->>> Currently, I have not been able to obtain any useful debug output from
->>> the Linux system or any hardware error reports when the system reboots.
->>> It seems that the system reboots spontaneously. My assumption at this
->>> point is that AMD Ryzen machines detect a specific hardware error
->>> triggered by Ryzen machine quirk related to the combination of the Asmedia
->>> ASM1083/1085 and VIA VT6306/6307/6308, leading to power reset.
->>>
->>
->> Recent kernels have enabled PCI AER.  Could that be factoring in perhaps?
-> 
-> I ordered equipments for the workflow, and waiting for shipping, since
-> my motherboard has no interface for serial output.
-> 
-> (However, I predict that we can no helpful output via the interface.)
-> 
->>> I genuinely appreciate your assistance in debugging this elusive
->>> hardware issue. If any workaround specific to AMD Ryzen machine quirk is
->>> required in PCI driver for 1394 OHCI hardware, I'm willing to apply it.
->>> However, it is preferable to figure out the reboot mechanism at first,
->>> I think.
->>
->> Does the BIOS on these machines enable a watchdog timer?  If so, I'd suggest
->> disabling that for a starting point.
->  
-> For consumer use, the machine has no such function, I think. For
-> your information, this is the machine information I used:
-> 
-> * Ryzen 5 2400G
-> * Gigabyte Technology Co., Ltd. AX370-Gaming 5/AX370-Gaming 5
->     * BIOS F51h 02/09/2023
-> 
->> How about if you compile as a module and then modprobe.blacklist the module
->> on kernel command line and load it later.  Can you trigger the fault/reboot
->> this way?  If so, it at least rules out some conditions that happen during a
->> race at boot.
-> 
-> Nowadays FireWire software stack is optional in the most of
-> distributions. I can encounter the same issue at deferred probing enough
-> after booting up, even if the load of system is very low.
-> 
->> Looking more closely at the change, I would guess the fault is specifically
->> in get_cycle_time().  I can see that the VIA devices do set
->> QUIRK_CYCLE_TIMER which will cause additional reads.
-> 
-> I've already tested with the driver compiled without these codes, but the
-> system reboots again.
-> 
->> Another guesses worth looking at is to see if iommu=pt or amd_iommu=off
->> help.
->>
->> If either of those help it could point at being a problem with
->> get_cycle_time() and IOMMU.  The older systems you mentioned working
->> probably didn't enable IOMMU by default but most AMD Ryzen systems do.
-> 
-> I already suspect platform IOMMU and kernel implementation, however it
-> is helpless to disable AMD SVM and IOMMU in BIOS settings. Of course, it
-> is helpless as well to provide any options to iommu in kernel command line.
-> 
-> If I had any opportunity to access to AMD machines for enterprise-grade
-> usage somehow, I would have done it. However, I am a private-time
-> contributor and what I can access to is the ones for consumer use
-> without any hardware support for RAS reporting.
-> 
-> 
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=217993
-> [2] https://bugzilla.kernel.org/show_bug.cgi?id=217994
-> [3] https://lore.kernel.org/lkml/20231105144852.GA165906@workstation.local/
-> [4] https://lore.kernel.org/lkml/20231016155657.GA7904@workstation.local/
-> 
-> Thanks
-> 
-> Takashi Sakamoto
-> 
-> 
+Best regards,
+Krzysztof
+
