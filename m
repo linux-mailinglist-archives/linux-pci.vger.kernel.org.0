@@ -2,158 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 162977F18A2
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Nov 2023 17:29:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB25A7F1C47
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Nov 2023 19:23:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229861AbjKTQ3k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Nov 2023 11:29:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40726 "EHLO
+        id S229696AbjKTSXy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Nov 2023 13:23:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjKTQ3j (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Nov 2023 11:29:39 -0500
+        with ESMTP id S229507AbjKTSXx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Nov 2023 13:23:53 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C087E9E;
-        Mon, 20 Nov 2023 08:29:35 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3457CC433C8;
-        Mon, 20 Nov 2023 16:29:35 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5BF8C8;
+        Mon, 20 Nov 2023 10:23:49 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CA3EC433C7;
+        Mon, 20 Nov 2023 18:23:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1700497775;
-        bh=2KHeNbWYhMcQAXeUJJ39uvRa4Dtfeq52+R1v+4w7+po=;
+        s=k20201202; t=1700504629;
+        bh=eglYaIQ/qtU51O7/Tl79eYRTbxeBJ9UX1J/7CgEKMp8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=A3TvIHXdynvxpesKj6UjEEgOfHBSZLggPVyufnrX3DwTVpzVTioThwiSU40qX/HH5
-         j6BQHcRoIrhWobP/Vd8Hgc0cf1JhKlALq+iwT3WmQIKwR520knScYknLs80U/fp+7I
-         33wTCqqp5NFvnRx4NqYZtYMWXeMiA3Cep/WixSYltEJ6c+/eFlNLF9beNHVcETuqu9
-         svOnDiMM9tp62rzapZrBq6na+ow/FMSeq40j6tOeRTk9xLrt6smQ4MX0mpUKKMVwmZ
-         jMPGsa4ljH0zh4qhX9Lx/edMvcYdB0P9JYAGBu3Lfv/Fi77gQFz1nAnVioPS9QNGCw
-         G/GBp7i6+72Kw==
-Date:   Mon, 20 Nov 2023 10:29:33 -0600
+        b=o6e+CUPFOXvGngNNWHM9X1PLe9PzMUguk0FCo6af1DPRNJ0p+OepiuLwS7AR5KlZ2
+         eakxW+7UEsZuUod6rTu0DKOh7tcfLE6bXTYE1iw3n/kMBFk0UbajUZeu6GoDKN4M3t
+         VKhbtXzLK8ghNFU2I80Ncclrv5FKPKqgNxX/uI8+GAcwxlrDTuCohrSL3cZXDsgQcM
+         wfpZhvWCvQUwMyN5tVCbMHPHMO22NWWBh9SCrOW4Rm9IAgoZ21fzobRc2A7iGXkhlt
+         Y8PjAxr6YZq527RKNFptB80cmQq4RqGgqe6c29UD1Rf03Dz1U8hq9rxNYpyS2+eb3Q
+         eYQMD4+/wUcjg==
+Date:   Mon, 20 Nov 2023 12:23:47 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Tomasz Pala <gotar@polanet.pl>
-Cc:     linux-pci@vger.kernel.org,
-        Dan J Williams <dan.j.williams@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        David E Box <david.e.box@intel.com>,
-        Yunying Sun <yunying.sun@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Florent DELAHAYE <linuxkernelml@undead.fr>,
-        Konrad J Hambrick <kjhambrick@gmail.com>,
-        Matt Hansen <2lprbe78@duck.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Benoit =?utf-8?B?R3LDqWdvaXJl?= <benoitg@coeus.ca>,
-        Werner Sembach <wse@tuxedocomputers.com>,
-        mumblingdrunkard@protonmail.com, linux-kernel@vger.kernel.org,
+To:     Minda Chen <minda.chen@starfivetech.com>
+Cc:     Conor Dooley <conor@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Sebastian Manciulea <manciuleas@protonmail.com>
-Subject: Re: [PATCH 2/2] x86/pci: Treat EfiMemoryMappedIO as reservation of
- ECAM space
-Message-ID: <20231120162933.GA197390@bhelgaas>
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Kevin Xie <kevin.xie@starfivetech.com>
+Subject: Re: [PATCH v11 19/20] PCI: starfive: Add JH7110 PCIe controller
+Message-ID: <20231120182347.GA207554@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231118142143.GA14101@polanet.pl>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <3c69c1b5-7183-4d34-9689-27cd126a4f4c@starfivetech.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Nov 18, 2023 at 03:21:43PM +0100, Tomasz Pala wrote:
-> On Thu, Nov 09, 2023 at 12:44:05 -0600, Bjorn Helgaas wrote:
-> 
-> >> https://bugzilla.kernel.org/show_bug.cgi?id=218050
-> >> 
-> >> I think the problem is that the MMCONFIG region is at
-> >> [mem 0x80000000-0x8fffffff], and that is *also* included in one of the
-> >> host bridge windows reported via _CRS:
-> >> 
-> >>   PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
-> >>   pci_bus 0000:00: root bus resource [mem 0x80000000-0xfbffffff window]
-> >> 
-> >> I'll try to figure out how to deal with that.  In the meantime, would
-> >> you mind attaching the contents of /proc/iomem to the bugzilla?  I
-> > 
-> > I attached a debug patch to both bugzilla entries.  If you could
-> > attach the "acpidump" output and (if practical) boot a kernel with the
-> > debug patch and attach the dmesg logs, that would be great.
-> 
-> I've posted the files. There are signs of buggy BIOS, but I don't expect
-> any firmware update to be released for this hw anymore.
+On Mon, Nov 20, 2023 at 06:07:31PM +0800, Minda Chen wrote:
+> On 2023/11/15 19:49, Minda Chen wrote:
+> > Add StarFive JH7110 SoC PCIe controller platform driver codes, JH7110
+> > with PLDA host PCIe core.
+> ...
 
-Thank you!  A BIOS update is almost never the answer because even if
-an update exists, we have to assume that most users in the field will
-never install the update.
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -22,6 +22,13 @@
+> >   */
+> >  #define PCIE_PME_TO_L2_TIMEOUT_US	10000
+> >  
+> > +/*
+> > + * PCIe r6.0, sec 6.6.1, <Conventional Reset>
+> > + * Requires a minimum waiting of 100ms before sending a configuration
+> > + * request to the device.
+> > + */
+> > +#define PCIE_BEFORE_CONFIG_REQUEST_WAIT_MS	100
+> > +
+> >  extern const unsigned char pcie_link_speed[];
+> >  extern bool pci_early_dump;
+> >  
+> Hi Bjorn
+>   I have not checked this carefully.
+>   I think the change of pci.h should be moved to a indepent patch.
+>   Could you approve this? Kevin will commit a new patch for this.
+>   Next version I will remove this change. 
 
-I want to look at the BIOS info in case we can learn about something
-*Linux* is doing wrong.  This most likely works fine with Windows, so
-I assume Linux is doing something wrong or at least differently than
-Windows.
+Yes, I think it makes sense to add that #define in a separate patch.
 
-> DMI: Supermicro X9DRi-LN4+/X9DR3-LN4+/X9DRi-LN4+/X9DR3-LN4+, BIOS 3.4 11/20/2019
-> 
-> .text .data .bss are not marked as E820_TYPE_RAM!
-
-Added by 4eea6aa581ab ("x86, mm: if kernel .text .data .bss are not
-marked as E820_RAM, complain and fix").  No idea.  A shame we didn't
-include the .text/.data values in the message.
-
-> tboot: non-0 tboot_addr but it is not of type E820_TYPE_RESERVED
-
-Added by 316253406959 ("x86, intel_txt: Intel TXT boot support").  No
-idea about this either.
-
-> DMAR: [Firmware Bug]: No firmware reserved region can cover this RMRR [0x00000000df243000-0x00000000df251fff], contact BIOS vendor for fixes
-> DMAR: [Firmware Bug]: Your BIOS is broken; bad RMRR [0x00000000df243000-0x00000000df251fff]
-
-Both related to arch_rmrr_sanity_check(), added by f036c7fa0ab6
-("iommu/vt-d: Check VT-d RMRR region in BIOS is reported as reserved")
-and f5a68bb0752e ("iommu/vt-d: Mark firmware tainted if RMRR fails
-sanity check").
-
-No idea about this one either.  The VT-d spec (r1.3, sec 8.4) says
-"BIOS must report the RMRR reported memory addresses as reserved in
-the system memory map returned through methods such as INT15, EFI
-GetMemoryMap etc."
-
-arch_rmrr_sanity_check() only looks at your e820 map, which only has
-this:
-
-  BIOS-e820: [mem 0x0000000000000000-0x000000000009ffff] usable
-  BIOS-e820: [mem 0x0000000000100000-0x00000000d1f36fff] usable
-
-I think Linux basically converts the info from EFI GetMemoryMap
-to an e820 format; I think booting with "efi=debug" would show more
-details of this.
-
-Anyway, this is all a tangent.
-
-> BTW is there a reason for this logging discrepancy?
-> 
-> efi: Remove mem173: MMIO range=[0xe0000000-0xefffffff] (256MB) from e820 map
-> efi: Not removing mem71: MMIO range=[0xe0000000-0xefffffff] (262144KB) from e820 map
-> 
-> efi: Not removing mem74: MMIO range=[0xff000000-0xffffffff] (16384KB) from e820 map
-> efi: Remove mem176: MMIO range=[0xff000000-0xffffffff] (16MB) from e820 map
-> 
-> This is arch/x86/platform/efi/efi.c:
-> static void __init efi_remove_e820_mmio(void)
-> 
-> Remove mem%02u: MMIO range=[0x%08llx-0x%08llx] (%lluMB) ... size >> 20
-> Not removing mem%02u: MMIO range=[0x%08llx-0x%08llx] (%lluKB) ... size >> 10
-
-You mean the MB vs KB difference?  That's my fault.  I guess I used KB
-for the "Not removing" message because those are smaller (< 256KB) so
-the size in MB wouldn't be useful there.  We could use KB for both,
-but I guess I used MB for the "Remove" case because it's a little
-easier to read and I expected "Not removing" to be a relatively
-unusual case.
+Please trim out the unnecessary context; there's no need for readers
+to scroll through the entire driver to get to the useful part, which
+is just the last dozen lines or so.
 
 Bjorn
