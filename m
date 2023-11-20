@@ -2,171 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FA007F0DBA
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Nov 2023 09:40:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D31757F0FD6
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Nov 2023 11:07:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232257AbjKTIkx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Nov 2023 03:40:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47776 "EHLO
+        id S232229AbjKTKH1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Nov 2023 05:07:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232236AbjKTIkw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Nov 2023 03:40:52 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D767129
-        for <linux-pci@vger.kernel.org>; Mon, 20 Nov 2023 00:40:47 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-6bee11456baso3407255b3a.1
-        for <linux-pci@vger.kernel.org>; Mon, 20 Nov 2023 00:40:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700469646; x=1701074446; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cA4et5DEe58CvaUPaUoVn2JhyhKCxIJLdzNc+n4DX2I=;
-        b=FXqmwKK2EVv6oFkDad7iQc9A3S53jV1tk7MOfvqm2FUJ+pncZHWTXUPhM6875sYCwT
-         mYMiq4uLb2fqOTVfqlLPFTw3oJXCIj7yrz6Ss1eQP06zzwIS/xTWNonZGUFh508bYnIF
-         cOYxYIm5nh953R7UEfqUsXOxKqeWTKuTUgSnszeI1eYbRYwIHlzaFAO4Z5tGS1ffUrQ7
-         pOOx7dvJ7fATTAb7gawGXNZ5Koq2lns7rKHwAN5M39USxiGEyIq4CeognX1oHdSgZs/T
-         voy4OXWXw7b0PBE57Tv7kk+3TuH7Ni+OrAfv+XsSOEgcP3nR99rhY67CqVAq9CI/jq+U
-         5HYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700469646; x=1701074446;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cA4et5DEe58CvaUPaUoVn2JhyhKCxIJLdzNc+n4DX2I=;
-        b=rp2EFvWtQc61afF1C+MkJRGnzLTA3gw0heKSmXaOLXIZGd17A1LlCRgVN8zIHfbFxy
-         AXK0RmQkdEk/ZA27kZ3hM+YyGwhuqWL5MlIjOnJuYAW04kRQbBHR/BXkQPaL2LFew9ZZ
-         z8aXxSSGfKJxf6M3OL1rmI5PX1UxHIBzxexqi51Rxc9/jG6+Xju8nWOoqmsQxXIN1b/e
-         gESDK59EbPs7LxkioBV0U9SucDDvhj55t2WqaHPjLgx1aYaptNfx/lZbNVYh4r9DKc2p
-         mTPQ+6X1s0InrxVLMy2mfyn/eZVk7vS2W2JpR2hvpEaL7INiVhMdhWZOE0NbWCoCgVVU
-         XBiw==
-X-Gm-Message-State: AOJu0Yz0ENWRc5hcG0ilX9tZZL7hQD09PqHObNjPzr4dENQq7CaJ0cvK
-        Gyck/elTi8equ9dHvnmkJruh
-X-Google-Smtp-Source: AGHT+IElVewiVppHRvMO+lPS3lN61OStbKOmnNSX89BRCubPBY4/WTTj8C1eQ+g8SFtw8K29OgPTfQ==
-X-Received: by 2002:a05:6a21:9209:b0:174:7f7:d049 with SMTP id tl9-20020a056a21920900b0017407f7d049mr5987907pzb.9.1700469646494;
-        Mon, 20 Nov 2023 00:40:46 -0800 (PST)
-Received: from localhost.localdomain ([117.248.2.5])
-        by smtp.gmail.com with ESMTPSA id e24-20020a62ee18000000b00694ebe2b0d4sm5567019pfi.191.2023.11.20.00.40.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Nov 2023 00:40:43 -0800 (PST)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_bjorande@quicinc.com,
-        fancer.lancer@gmail.com, vidyas@nvidia.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v7 2/2] PCI: designware-ep: Move pci_epc_init_notify() inside dw_pcie_ep_init_complete()
-Date:   Mon, 20 Nov 2023 14:10:14 +0530
-Message-Id: <20231120084014.108274-3-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231120084014.108274-1-manivannan.sadhasivam@linaro.org>
-References: <20231120084014.108274-1-manivannan.sadhasivam@linaro.org>
+        with ESMTP id S232969AbjKTKHP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Nov 2023 05:07:15 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94BCA118;
+        Mon, 20 Nov 2023 02:07:08 -0800 (PST)
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AK9a2mg031485;
+        Mon, 20 Nov 2023 10:06:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=8XNRTI3wuGd4bf5ULCxy9o5QTqPSUb8wRanCjXpoxCg=;
+ b=UGzWZYy6jso/o0gUOyLQVkzgpQ8GTShn4455r+cJQ4SvScoPKKVjr8ufR5gvY2uUzBIH
+ Z+tsjzOHq8ZBUPwO5xL2zCjQTLheWKVSBavddKygR7Dbr495aX1IpvP3NXJD73jMPKq+
+ HSDpve5STvFPDWo7EtVQ1RnBHh5lq3yLzskkycpCS540P7+f6hIE2v5sSSH3kz4cmH28
+ bP7R+XGQiWvsDKiDyhpi7on00f69MuPJMPjptMiOv1A14lAt2dsywKUfLvJwoSr3gWOQ
+ F33JdSTYXQAJgEkrEaynXJ0eTGzqiRjBfWWGR69pHKOJ78+OOaRomVAgcjWk73q2KSbS dw== 
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ug2ax8gme-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Nov 2023 10:06:52 +0000
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3AKA6plj004941
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Nov 2023 10:06:51 GMT
+Received: from [10.218.10.86] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 20 Nov
+ 2023 02:06:43 -0800
+Message-ID: <5eae728f-f052-f2aa-7876-cb2421191fc9@quicinc.com>
+Date:   Mon, 20 Nov 2023 15:36:40 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v8 0/5] arm64: qcom: sa8775p: add support for EP PCIe
+To:     <agross@kernel.org>, <andersson@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <konrad.dybcio@linaro.org>, <mani@kernel.org>, <robh+dt@kernel.org>
+CC:     <quic_shazhuss@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_ramkri@quicinc.com>, <quic_nayiluri@quicinc.com>,
+        <dmitry.baryshkov@linaro.org>, <robh@kernel.org>,
+        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>,
+        <quic_parass@quicinc.com>, <quic_schintav@quicinc.com>,
+        <quic_shijjose@quicinc.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mhi@lists.linux.dev>
+References: <1699669982-7691-1-git-send-email-quic_msarkar@quicinc.com>
+Content-Language: en-US
+From:   Mrinmay Sarkar <quic_msarkar@quicinc.com>
+In-Reply-To: <1699669982-7691-1-git-send-email-quic_msarkar@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 2-nfT9vuu7uZY3tK0yJaMkHsOmhBRX83
+X-Proofpoint-ORIG-GUID: 2-nfT9vuu7uZY3tK0yJaMkHsOmhBRX83
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-20_08,2023-11-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 bulkscore=0 spamscore=0 suspectscore=0 phishscore=0
+ mlxlogscore=823 impostorscore=0 adultscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311060000 definitions=main-2311200068
+X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Since pci_epc_init_notify() API is getting called right after the
-dw_pcie_ep_init_complete() API in the DWC glue drivers, let's move it
-inside dw_pcie_ep_init_complete() API as there is no compelling reason to
-call it separately.
+Some of the patches are reviewed. Please apply in linux-next.
 
-Co-developed-by: Vidya Sagar <vidyas@nvidia.com>
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c | 10 ++--------
- drivers/pci/controller/dwc/pcie-designware.h    |  5 -----
- drivers/pci/controller/dwc/pcie-qcom-ep.c       |  2 --
- drivers/pci/controller/dwc/pcie-tegra194.c      |  2 --
- 4 files changed, 2 insertions(+), 17 deletions(-)
+Thanks,
+Mrinmay
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index b1c79cd8e25f..63bb99d1c48f 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -22,14 +22,6 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
- }
- EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
- 
--void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
--{
--	struct pci_epc *epc = ep->epc;
--
--	pci_epc_init_notify(epc);
--}
--EXPORT_SYMBOL_GPL(dw_pcie_ep_init_notify);
--
- struct dw_pcie_ep_func *
- dw_pcie_ep_get_func_from_ep(struct dw_pcie_ep *ep, u8 func_no)
- {
-@@ -784,6 +776,8 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
- 	if (ret)
- 		goto err_cleanup;
- 
-+	pci_epc_init_notify(epc);
-+
- 	return 0;
- 
- err_cleanup:
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 55ff76e3d384..53bf38989eea 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -578,7 +578,6 @@ static inline void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus,
- void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
- int dw_pcie_ep_init(struct dw_pcie_ep *ep);
- int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
--void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep);
- void dw_pcie_ep_exit(struct dw_pcie_ep *ep);
- int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no);
- int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
-@@ -605,10 +604,6 @@ static inline int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
- 	return 0;
- }
- 
--static inline void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
--{
--}
--
- static inline void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
- {
- }
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 9e58f055199a..4a8119779a29 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -482,8 +482,6 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
- 	val &= ~PARF_MSTR_AXI_CLK_EN;
- 	writel_relaxed(val, pcie_ep->parf + PARF_MHI_CLOCK_RESET_CTRL);
- 
--	dw_pcie_ep_init_notify(&pcie_ep->pci.ep);
--
- 	/* Enable LTSSM */
- 	val = readl_relaxed(pcie_ep->parf + PARF_LTSSM);
- 	val |= BIT(8);
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 0fe113598ebb..1126d1f5830c 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -1901,8 +1901,6 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
- 		goto fail_init_complete;
- 	}
- 
--	dw_pcie_ep_init_notify(ep);
--
- 	/* Program the private control to allow sending LTR upstream */
- 	if (pcie->of_data->has_ltr_req_fix) {
- 		val = appl_readl(pcie, APPL_LTR_MSG_2);
--- 
-2.25.1
-
+On 11/11/2023 8:02 AM, Mrinmay Sarkar wrote:
+> This series adds the relavent DT bindings, new compatible string,
+> add support to EPF driver and add EP PCIe node in dtsi file for
+> ep pcie0 controller.
+>
+> v7 -> v8:
+> - Add new patch PCI: epf-mhi: Add "pci_epf_mhi_" prefix to the function
+>    names
+> - Update PCI: epf-mhi: Add support for SA8775P patch on top of the new
+>    patch and update commit message.
+>
+> v6 -> v7:
+> - add reviewed by tag in commit message in all patches.
+> - update commit message in patch 2 as per comment.
+> - update reason for reusing PID in commit message.
+>
+> v5 -> v6:
+> - update cover letter.
+>
+> v4 -> v5:
+> - add maxItems to the respective field to constrain io space and
+>    interrupt in all variants.
+>
+> v3 -> v4:
+> - add maxItems field in dt bindings
+> - update comment in patch2
+> - dropped PHY driver patch as it is already applied [1]
+> - update comment in EPF driver patch
+> - update commect in dtsi and add iommus instead of iommu-map
+>
+> [1] https://lore.kernel.org/all/169804254205.383714.18423881810869732517.b4-ty@kernel.org/
+>
+> v2 -> v3:
+> - removed if/then schemas, added minItems for reg,
+>    reg-bnames, interrupt and interrupt-names instead.
+> - adding qcom,sa8775p-pcie-ep compitable for sa8775p
+>    as we have some specific change to add.
+> - reusing sm8450's pcs_misc num table as it is same as sa8775p.
+>    used appropriate namespace for pcs.
+> - remove const from sa8775p_header as kernel test robot
+>    throwing some warnings due to this.
+> - remove fallback compatiable as we are adding compatiable for sa8775p.
+>
+> v1 -> v2:
+> - update description for dma
+> - Reusing qcom,sdx55-pcie-ep compatibe so remove compaitable
+>    for sa8775p
+> - sort the defines in phy header file and remove extra defines
+> - add const in return type pci_epf_header and remove MHI_EPF_USE_DMA
+>    flag as hdma patch is not ready
+> - add fallback compatiable as qcom,sdx55-pcie-ep, add iommu property
+>
+>
+> Mrinmay Sarkar (5):
+>    dt-bindings: PCI: qcom-ep: Add support for SA8775P SoC
+>    PCI: qcom-ep: Add support for SA8775P SOC
+>    PCI: epf-mhi: Add "pci_epf_mhi_" prefix to the function names
+>    PCI: epf-mhi: Add support for SA8775P
+>    arm64: dts: qcom: sa8775p: Add ep pcie0 controller node
+>
+>   .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 64 +++++++++++++++++++++-
+>   arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 46 ++++++++++++++++
+>   drivers/pci/controller/dwc/pcie-qcom-ep.c          |  1 +
+>   drivers/pci/endpoint/functions/pci-epf-mhi.c       | 21 ++++++-
+>   4 files changed, 128 insertions(+), 4 deletions(-)
+>
