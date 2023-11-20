@@ -2,79 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84BA27F0C84
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Nov 2023 08:09:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B39267F0D14
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Nov 2023 08:59:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231987AbjKTHJ0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Nov 2023 02:09:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40282 "EHLO
+        id S230364AbjKTH71 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Nov 2023 02:59:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231982AbjKTHJW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Nov 2023 02:09:22 -0500
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6FE290
-        for <linux-pci@vger.kernel.org>; Sun, 19 Nov 2023 23:09:18 -0800 (PST)
-Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-9fa2714e828so230220666b.1
-        for <linux-pci@vger.kernel.org>; Sun, 19 Nov 2023 23:09:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700464157; x=1701068957; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6laP/QeQ8ZkNdY+I7g66zga8GNt1LoZIWkuM0YaBrIE=;
-        b=LaRHv4HACu2w7RpKBmj9nr5IR1qElkq6oW4JgK0ak/Ox/R0qfvBi29cyOuKI9ODN4W
-         0DIb90S4QxZdG25nuJXsOBH6INWLL/eweOGyQmdWkzf2S4svJ/q3XPXU8OV3+uERPbUF
-         ejOhTOGk5Tc92yw9mOBFSvQ2ixIG1MpmgvMISrcyosWfOQm/zHi88/YWVm0cTZAiS1fV
-         dhtO1CfztH5ffxc3JhIfZhj6VQ65ZTMs6APE0NIhHiIwQYko2HlS8AVl07b03Z6ajKM7
-         l2c0a/2jizysm5CixxeGacRYYbbEmclK/M6wN6ZL3IniQxAMfiBjmYM6Dftb5callqvG
-         MWQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700464157; x=1701068957;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6laP/QeQ8ZkNdY+I7g66zga8GNt1LoZIWkuM0YaBrIE=;
-        b=nCS9KITV1/T2wNAzdMsh3pO3400IWr2wLtkiUWcD8dEIYJuL05eMZGaKCcvLX+ZR0V
-         s4bzst7DsE8qB2RXgFgLXoBCx8zG9i4ynClEnjyDTb2qaqWgXnhrBx6rUgaBFlZQILH3
-         16HfnJnyygpgnl1A1oBibsg3GIwQhCRi8MpN0hJNNw5oJRy28PgHi49EPLZrdF6wySnD
-         hxjBL53K7s71O7wn5lK+n4TwgTw/yovhbzh4shgdVXGUo2LBb7jDLeCPhn+aWlScpBya
-         LlTLZAuvhq7Jj1T55Z6+aLasVbMsOI5G2WxOGJDWEFbDAounrP6TULD8x17WGMx09GSl
-         YZhw==
-X-Gm-Message-State: AOJu0Yyl/vAd0RzOcGErreayiIg5nJIRtaD70U9oWEY76C/0MKtfUJWO
-        UZQ7xBDvkGkMAoUpa6Le/fjNZw==
-X-Google-Smtp-Source: AGHT+IGnSpGLDhGj8nPBUxiGsT/wU1tVvYfXN3TxpwhKJ+R5n5vOwx8YbFTgOFcBuhLAy8fmL2wVLw==
-X-Received: by 2002:a17:907:29d7:b0:9df:4232:5276 with SMTP id ev23-20020a17090729d700b009df42325276mr4154859ejc.76.1700464157199;
-        Sun, 19 Nov 2023 23:09:17 -0800 (PST)
-Received: from krzk-bin.. ([178.197.222.11])
-        by smtp.gmail.com with ESMTPSA id d2-20020a170906640200b0099bd7b26639sm3570500ejm.6.2023.11.19.23.09.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Nov 2023 23:09:16 -0800 (PST)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 2/2] dt-bindings: PCI: qcom: correct clocks for SC8180x and SM8150
-Date:   Mon, 20 Nov 2023 08:09:10 +0100
-Message-Id: <20231120070910.16697-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231120070910.16697-1-krzysztof.kozlowski@linaro.org>
-References: <20231120070910.16697-1-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S229483AbjKTH71 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Nov 2023 02:59:27 -0500
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FA60C0;
+        Sun, 19 Nov 2023 23:59:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700467163; x=1732003163;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JzSFdhpu4Z2Dl0iRmYFt0FhnPqgEZQkDIIi0hsLtfRY=;
+  b=K1jdFrhvb4x0CEMUALYXqV/qwg78WVvlBF3S50M/tut32YDnFc6aYgTs
+   cSO7YaO36lFSNAWRWxPnA9pA3tBvyv79/hn2OUJLKSPCmqLjin6PXUdLF
+   WRBxKr/9ZJFMrtu/fCcEQHkp0jTXi0iTdwW/rrBXf9PrI18kCH9WJZeXU
+   RP2WGGn11j11GKmJeSfFV9m3zVDLUPljphCB31h8yY/TRvogcYM46qXy5
+   8Z8plrub4BPGSbmOo2np9Rs27rMGISm5BbH19WHQLjmy1Sdsf0AFc4HAa
+   Os3jhURtws0wTqOJcuw0pS2Wjs93jX5gmrb7ZET4iEYq26Rx7wbA2ZPNl
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10899"; a="390432918"
+X-IronPort-AV: E=Sophos;i="6.04,213,1695711600"; 
+   d="scan'208";a="390432918"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2023 23:59:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10899"; a="1097677168"
+X-IronPort-AV: E=Sophos;i="6.04,213,1695711600"; 
+   d="scan'208";a="1097677168"
+Received: from lkp-server02.sh.intel.com (HELO b8de5498638e) ([10.239.97.151])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Nov 2023 23:59:19 -0800
+Received: from kbuild by b8de5498638e with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1r4zBc-0006CC-2s;
+        Mon, 20 Nov 2023 07:59:16 +0000
+Date:   Mon, 20 Nov 2023 15:58:49 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-pci@vger.kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, lpieralisi@kernel.org, kw@linux.com,
+        robh@kernel.org, linux-kernel@vger.kernel.org,
+        chenhuacai@kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v5] pci: loongson: Workaround MIPS firmware MRRS settings
+Message-ID: <202311201537.u2ZGD7A8-lkp@intel.com>
+References: <20231119215635.52810-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231119215635.52810-1-jiaxun.yang@flygoat.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,104 +66,120 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI node in Qualcomm SC8180x DTS has 8 clocks, while one on SM8150 has 7
-clocks:
+Hi Jiaxun,
 
-  sc8180x-primus.dtb: pci@1c00000: 'oneOf' conditional failed, one must be fixed:
-    ['pipe', 'aux', 'cfg', 'bus_master', 'bus_slave', 'slave_q2a', 'ref', 'tbu'] is too short
+kernel test robot noticed the following build warnings:
 
-  sm8150-hdk.dtb: pci@1c00000: 'oneOf' conditional failed, one must be fixed:
-    ['pipe', 'aux', 'cfg', 'bus_master', 'bus_slave', 'slave_q2a', 'tbu'] is too short
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.7-rc2 next-20231120]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+url:    https://github.com/intel-lab-lkp/linux/commits/Jiaxun-Yang/pci-loongson-Workaround-MIPS-firmware-MRRS-settings/20231120-055946
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20231119215635.52810-1-jiaxun.yang%40flygoat.com
+patch subject: [PATCH v5] pci: loongson: Workaround MIPS firmware MRRS settings
+config: mips-allmodconfig (https://download.01.org/0day-ci/archive/20231120/202311201537.u2ZGD7A8-lkp@intel.com/config)
+compiler: mips-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231120/202311201537.u2ZGD7A8-lkp@intel.com/reproduce)
 
----
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311201537.u2ZGD7A8-lkp@intel.com/
 
-Changes in v2:
-1. Add Acs/Rb.
-2. Correct error message for sm8150.
----
- .../devicetree/bindings/pci/qcom,pcie.yaml    | 58 ++++++++++++++++++-
- 1 file changed, 57 insertions(+), 1 deletion(-)
+All warnings (new ones prefixed by >>):
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index 14d25e8a18e4..4c993ea97d7c 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -479,6 +479,35 @@ allOf:
-           items:
-             - const: pci # PCIe core reset
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - qcom,pcie-sc8180x
-+    then:
-+      oneOf:
-+        - properties:
-+            clocks:
-+              minItems: 8
-+              maxItems: 8
-+            clock-names:
-+              items:
-+                - const: pipe # PIPE clock
-+                - const: aux # Auxiliary clock
-+                - const: cfg # Configuration clock
-+                - const: bus_master # Master AXI clock
-+                - const: bus_slave # Slave AXI clock
-+                - const: slave_q2a # Slave Q2A clock
-+                - const: ref # REFERENCE clock
-+                - const: tbu # PCIe TBU clock
-+      properties:
-+        resets:
-+          maxItems: 1
-+        reset-names:
-+          items:
-+            - const: pci # PCIe core reset
-+
-   - if:
-       properties:
-         compatible:
-@@ -527,8 +556,35 @@ allOf:
-         compatible:
-           contains:
-             enum:
--              - qcom,pcie-sc8180x
-               - qcom,pcie-sm8150
-+    then:
-+      oneOf:
-+        - properties:
-+            clocks:
-+              minItems: 7
-+              maxItems: 7
-+            clock-names:
-+              items:
-+                - const: pipe # PIPE clock
-+                - const: aux # Auxiliary clock
-+                - const: cfg # Configuration clock
-+                - const: bus_master # Master AXI clock
-+                - const: bus_slave # Slave AXI clock
-+                - const: slave_q2a # Slave Q2A clock
-+                - const: tbu # PCIe TBU clock
-+      properties:
-+        resets:
-+          maxItems: 1
-+        reset-names:
-+          items:
-+            - const: pci # PCIe core reset
-+
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-               - qcom,pcie-sm8250
-     then:
-       oneOf:
+   In file included from drivers/pci/controller/pci-loongson.c:10:
+   drivers/pci/controller/pci-loongson.c:122:50: error: 'loongson_mrrs_quirk_old' undeclared here (not in a function)
+     122 | DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk_old);
+         |                                                  ^~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/pci.h:2241:57: note: in definition of macro 'DECLARE_PCI_FIXUP_SECTION'
+    2241 |                 = { vendor, device, class, class_shift, hook };
+         |                                                         ^~~~
+   drivers/pci/controller/pci-loongson.c:122:1: note: in expansion of macro 'DECLARE_PCI_FIXUP_ENABLE'
+     122 | DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk_old);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/pci/controller/pci-loongson.c:92:13: warning: 'loongson_set_min_mrrs_quirk' defined but not used [-Wunused-function]
+      92 | static void loongson_set_min_mrrs_quirk(struct pci_dev *pdev)
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/loongson_set_min_mrrs_quirk +92 drivers/pci/controller/pci-loongson.c
+
+    54	
+    55	/* Fixup wrong class code in PCIe bridges */
+    56	static void bridge_class_quirk(struct pci_dev *dev)
+    57	{
+    58		dev->class = PCI_CLASS_BRIDGE_PCI_NORMAL;
+    59	}
+    60	DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+    61				DEV_LS7A_PCIE_PORT0, bridge_class_quirk);
+    62	DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+    63				DEV_LS7A_PCIE_PORT1, bridge_class_quirk);
+    64	DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+    65				DEV_LS7A_PCIE_PORT2, bridge_class_quirk);
+    66	
+    67	static void system_bus_quirk(struct pci_dev *pdev)
+    68	{
+    69		/*
+    70		 * The address space consumed by these devices is outside the
+    71		 * resources of the host bridge.
+    72		 */
+    73		pdev->mmio_always_on = 1;
+    74		pdev->non_compliant_bars = 1;
+    75	}
+    76	DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+    77				DEV_LS2K_APB, system_bus_quirk);
+    78	DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+    79				DEV_LS7A_CONF, system_bus_quirk);
+    80	DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+    81				DEV_LS7A_LPC, system_bus_quirk);
+    82	
+    83	/*
+    84	 * Some Loongson PCIe ports have h/w limitations of maximum read
+    85	 * request size. They can't handle anything larger than this.
+    86	 * Sane firmware will set proper MRRS at boot, so we only need
+    87	 * no_inc_mrrs for bridges. However, some MIPS Loongson firmware
+    88	 * won't set MRRS properly, and we have to enforce maximum safe
+    89	 * MRRS, which is 256 bytes.
+    90	 */
+    91	#ifdef CONFIG_MIPS
+  > 92	static void loongson_set_min_mrrs_quirk(struct pci_dev *pdev)
+    93	{
+    94		struct pci_bus *bus = pdev->bus;
+    95		struct pci_dev *bridge;
+    96		static const struct pci_device_id bridge_devids[] = {
+    97			{ PCI_VDEVICE(LOONGSON, DEV_LS2K_PCIE_PORT0) },
+    98			{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT0) },
+    99			{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT1) },
+   100			{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT2) },
+   101			{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT3) },
+   102			{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT4) },
+   103			{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT5) },
+   104			{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT6) },
+   105			{ 0, },
+   106		};
+   107	
+   108		/* look for the matching bridge */
+   109		while (!pci_is_root_bus(bus)) {
+   110			bridge = bus->self;
+   111			bus = bus->parent;
+   112	
+   113			if (pci_match_id(bridge_devids, bridge)) {
+   114				if (pcie_get_readrq(pdev) > 256) {
+   115					pci_info(pdev, "limiting MRRS to 256\n");
+   116					pcie_set_readrq(pdev, 256);
+   117				}
+   118				break;
+   119			}
+   120		}
+   121	}
+   122	DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk_old);
+   123	#endif
+   124	
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
