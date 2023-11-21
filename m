@@ -1,105 +1,182 @@
-Return-Path: <linux-pci+bounces-51-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-52-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A66DE7F35D2
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 19:19:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DEB127F35DD
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 19:24:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D7CCB1C20D65
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 18:19:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0D8261C208FF
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 18:24:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 351A82208D;
-	Tue, 21 Nov 2023 18:19:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67F5815C1;
+	Tue, 21 Nov 2023 18:24:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UR90IS6t"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="HkX4eD+b"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188E32206D
-	for <linux-pci@vger.kernel.org>; Tue, 21 Nov 2023 18:19:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4E3AC433C7;
-	Tue, 21 Nov 2023 18:19:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700590774;
-	bh=j7HBjbV0HBXxOEcT0OG9f5FjRXuKR0dQ3RimJ19uarQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=UR90IS6tEP7ZH2Mu//OVccMIjGE9Vfl31LFB4El1nPF2ME8r7MMhbJAEfIoHe/tY0
-	 yflc2zxpNeR3lm0pOY5pTyPelPCqTaXnBpamkUhP3cPZe4uhe/N9ORKaOYvpU6yRbk
-	 wwRIEoS1TTof4N+ylTO2ur+LBoJM5h4jdbeQuXbjG8RMYJQkA1kltTm8oae4AORsJc
-	 kofl5OLse5z+UlsudmRzP52jMFc7wzD+CWsOk2JVqNYBZ1B13iknFXUXlNJNp9Cndq
-	 eJGM+6jfUQIdSPhFsfppv4UaWAe/MqQwNjD32OaNC5SDg74EZuilu0oIHaU0y7Obh6
-	 3LCOJmrFHWiqQ==
-Date: Tue, 21 Nov 2023 12:19:33 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Tomasz Pala <gotar@polanet.pl>
-Cc: linux-pci@vger.kernel.org, Dan J Williams <dan.j.williams@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Tony Luck <tony.luck@intel.com>,
-	David E Box <david.e.box@intel.com>,
-	Yunying Sun <yunying.sun@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Florent DELAHAYE <linuxkernelml@undead.fr>,
-	Konrad J Hambrick <kjhambrick@gmail.com>,
-	Matt Hansen <2lprbe78@duck.com>,
-	Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-	Benoit =?utf-8?B?R3LDqWdvaXJl?= <benoitg@coeus.ca>,
-	Werner Sembach <wse@tuxedocomputers.com>,
-	mumblingdrunkard@protonmail.com, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Sebastian Manciulea <manciuleas@protonmail.com>
-Subject: Re: [PATCH 2/2] x86/pci: Treat EfiMemoryMappedIO as reservation of
- ECAM space
-Message-ID: <20231121181933.GA240494@bhelgaas>
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9544E191
+	for <linux-pci@vger.kernel.org>; Tue, 21 Nov 2023 10:24:05 -0800 (PST)
+Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-5c18a3387f5so3558178a12.1
+        for <linux-pci@vger.kernel.org>; Tue, 21 Nov 2023 10:24:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=google; t=1700591045; x=1701195845; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qoFy+5zY8AzZfi/p4KTXL2InlOSTkvBEaJ8keEbwN3k=;
+        b=HkX4eD+b+qTwGOkKrsTGWu5/RQImWqhDpobhYWqUVjtqhY+7fjXC/axL4d9qhS2T4y
+         n2mx1ZqHZnDIMMjZ2f4fFsdZ3UT5o0IRA1fRM+srgofNvh4lHA6I4yaNzz2oTtU3IrOB
+         NZj7ApJxwnlp2SdcLg0bTwHle1tH1Hz2QId77fpyx2aYme43bSj9dEVwo8En1zvM2sBt
+         5Vv+ugQ0ZRBTrlLDceS59NCNTHUWfDjkdaPb5Oqixk19f5zpaxY8eSWaC2aUfClgaXQ3
+         xJ1Op0h3fdYQl9Ov/cUkxs/utKidlpE+zyvRkK15TN0/IVFX+2HFnBKqQbRYh5Oe32Sg
+         5KcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700591045; x=1701195845;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qoFy+5zY8AzZfi/p4KTXL2InlOSTkvBEaJ8keEbwN3k=;
+        b=UwlSVlurfLJ/OppGWmd62Bifd6H2aw8rCklc2/Q/qLriyQMCmv91rIlpw0LCC0OJ2D
+         SIncebc4ffCEWIha65EO1T2g1ntVEswdm5N9deYjYFUJzHyddXIOtk6VpQ0qve2CKG6C
+         aMoudXD34gR3qkZ9iMFK57wud/B37fdo/c0lEmy0sqR47nTWgjVkwB/OcbQA3lG6Z8FF
+         vRFfAoGYWzDswKjDbOliPH4AEag/kxURAYrnjS+9d6vPSIJw3hRv6vXap2gV+HmxGnJY
+         5bGcbjtjd+waEBZJ6IwKc9jqnnJRRq6PS0C9TyffG4Bw+jC+tB2hbyCjcCogAffkmpAc
+         IjBQ==
+X-Gm-Message-State: AOJu0YxEzhufdl6qbAEHI0lgMFUElhciE2Qplz609vMw9VOqJnXmyszm
+	I0g4NsPReZgvSQAEPBHZbFeMaQ==
+X-Google-Smtp-Source: AGHT+IG6OkIIcO0IRlOnM5fzxmAxocqkNaraTJ+KE8Wz+S3+NSqQe0j/ivRcctj26rW5HFV0iP1J7A==
+X-Received: by 2002:a05:6a20:bea5:b0:187:652d:95b5 with SMTP id gf37-20020a056a20bea500b00187652d95b5mr6257220pzb.62.1700591044871;
+        Tue, 21 Nov 2023 10:24:04 -0800 (PST)
+Received: from smtpclient.apple (76-10-188-40.dsl.teksavvy.com. [76.10.188.40])
+        by smtp.gmail.com with ESMTPSA id s23-20020a056a00179700b006cb6119f516sm6032937pfg.163.2023.11.21.10.24.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 Nov 2023 10:24:04 -0800 (PST)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231121152407.GA13288@polanet.pl>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
+Subject: Re: [PATCH v3] switchtec: Fix stdev_release crash after suprise
+ device loss.
+From: Daniel Stodden <dns@arista.com>
+In-Reply-To: <20231120212546.GA215889@bhelgaas>
+Date: Tue, 21 Nov 2023 10:23:51 -0800
+Cc: Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+ Logan Gunthorpe <logang@deltatee.com>,
+ linux-pci@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <BDEC1856-B689-433B-9227-4CCA5969C2F2@arista.com>
+References: <20231120212546.GA215889@bhelgaas>
+To: Bjorn Helgaas <helgaas@kernel.org>
+X-Mailer: Apple Mail (2.3731.700.6)
 
-On Tue, Nov 21, 2023 at 04:24:07PM +0100, Tomasz Pala wrote:
-> On Mon, Nov 20, 2023 at 10:29:33 -0600, Bjorn Helgaas wrote:
-> 
-> > Thank you!  A BIOS update is almost never the answer because even if
-> > an update exists, we have to assume that most users in the field will
-> > never install the update.
-> 
-> Not to mention enabling 64-bit BARs, which is even more cumbersome
-> ixgbe-specific magic that requires entirely dedicated tools...
-> 
-> >> .text .data .bss are not marked as E820_TYPE_RAM!
-> and
-> >> DMAR: [Firmware Bug]: No firmware reserved region can cover this RMRR [0x00000000df243000-0x00000000df251fff], contact BIOS vendor for fixes
-> >> DMAR: [Firmware Bug]: Your BIOS is broken; bad RMRR [0x00000000df243000-0x00000000df251fff]
-> [...]
-> > I think Linux basically converts the info from EFI GetMemoryMap
-> > to an e820 format; I think booting with "efi=debug" would show more
-> > details of this.
-> 
-> The dmesg I've attached today is with efi=debug, but the weird thing is
-> - both of the above warnings manifested themself only once, with the
-> first (verbose debugging: "MCFG debug") patch applied... Anyway.
+Hi.
 
-OK.  I don't know what (if anything) to do about the above.
+> On Nov 20, 2023, at 1:25 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>=20
+> On Mon, Nov 13, 2023 at 01:21:50PM -0800, Daniel Stodden wrote:
+>> A pci device hot removal may occur while stdev->cdev is held open. =
+The
+>> call to stdev_release is then delivered during close or exit, at a
+>> point way past switchtec_pci_remove. Otherwise the last ref would
+>> vanish with the trailing put_device, just before return.
+>>=20
+>> At that later point in time, the device layer has alreay removed
+>> stdev->mrpc_mmio map. Also, the stdev->pdev reference was not a
+>=20
+> I guess this should say the "stdev->mmio_mrpc" (not "mrpc_mmio")?
 
-> The "memremap attempted on mixed range 0x0000000000000000 size: 0x8000
-> WARNING: CPU: 0 PID: 1 at kernel/iomem.c:78 memremap+0x154/0x170" also
-> seems to be triggered by "efi=debug", so my guess is that it's unrelated.
+Eww. My fault. Could you still correct that?
 
-Yes, I think so.  This is from efi_debugfs_init(), which we only run
-when "efi=debug", and I think it comes from memremapping this area:
+>=20
+>> counted one. Therefore, in dma mode, the iowrite32 in stdev_release
+>> will cause a fatal page fault, and the subsequent dma_free_coherent,
+>> if reached, would pass a stale &stdev->pdev->dev pointer.
+>>=20
+>> Fixed by moving mrpc dma shutdown into switchtec_pci_remove, after
+>> stdev_kill. Counting the stdev->pdev ref is now optional, but may
+>> prevent future accidents.
+>>=20
+>> Signed-off-by: Daniel Stodden <dns@arista.com>
+>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+>=20
+> Thanks, applied to "switchtec" for v6.8
 
-  efi: mem00: [Boot Code   |   |  |  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x0000000000000000-0x0000000000007fff] (0MB)
+Thank you.
 
-Bjorn
+Daniel
+
+>> ---
+>> drivers/pci/switch/switchtec.c | 24 ++++++++++++++++--------
+>> 1 file changed, 16 insertions(+), 8 deletions(-)
+>>=20
+>> diff --git a/drivers/pci/switch/switchtec.c =
+b/drivers/pci/switch/switchtec.c
+>> index e69cac84b605..d8718acdb85f 100644
+>> --- a/drivers/pci/switch/switchtec.c
+>> +++ b/drivers/pci/switch/switchtec.c
+>> @@ -1251,13 +1251,6 @@ static void stdev_release(struct device *dev)
+>> {
+>> struct switchtec_dev *stdev =3D to_stdev(dev);
+>>=20
+>> - if (stdev->dma_mrpc) {
+>> - iowrite32(0, &stdev->mmio_mrpc->dma_en);
+>> - flush_wc_buf(stdev);
+>> - writeq(0, &stdev->mmio_mrpc->dma_addr);
+>> - dma_free_coherent(&stdev->pdev->dev, sizeof(*stdev->dma_mrpc),
+>> - stdev->dma_mrpc, stdev->dma_mrpc_dma_addr);
+>> - }
+>> kfree(stdev);
+>> }
+>>=20
+>> @@ -1301,7 +1294,7 @@ static struct switchtec_dev =
+*stdev_create(struct pci_dev *pdev)
+>> return ERR_PTR(-ENOMEM);
+>>=20
+>> stdev->alive =3D true;
+>> - stdev->pdev =3D pdev;
+>> + stdev->pdev =3D pci_dev_get(pdev);
+>> INIT_LIST_HEAD(&stdev->mrpc_queue);
+>> mutex_init(&stdev->mrpc_mutex);
+>> stdev->mrpc_busy =3D 0;
+>> @@ -1587,6 +1580,18 @@ static int switchtec_init_pci(struct =
+switchtec_dev *stdev,
+>> return 0;
+>> }
+>>=20
+>> +static void switchtec_exit_pci(struct switchtec_dev *stdev)
+>> +{
+>> + if (stdev->dma_mrpc) {
+>> + iowrite32(0, &stdev->mmio_mrpc->dma_en);
+>> + flush_wc_buf(stdev);
+>> + writeq(0, &stdev->mmio_mrpc->dma_addr);
+>> + dma_free_coherent(&stdev->pdev->dev, sizeof(*stdev->dma_mrpc),
+>> +  stdev->dma_mrpc, stdev->dma_mrpc_dma_addr);
+>> + stdev->dma_mrpc =3D NULL;
+>> + }
+>> +}
+>> +
+>> static int switchtec_pci_probe(struct pci_dev *pdev,
+>>       const struct pci_device_id *id)
+>> {
+>> @@ -1646,6 +1651,9 @@ static void switchtec_pci_remove(struct pci_dev =
+*pdev)
+>> ida_simple_remove(&switchtec_minor_ida, MINOR(stdev->dev.devt));
+>> dev_info(&stdev->dev, "unregistered.\n");
+>> stdev_kill(stdev);
+>> + switchtec_exit_pci(stdev);
+>> + pci_dev_put(stdev->pdev);
+>> + stdev->pdev =3D NULL;
+>> put_device(&stdev->dev);
+>> }
+>>=20
+>> --=20
+>> 2.41.0
+>>=20
+
 
