@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-27-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-28-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1550F7F29D9
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 11:11:21 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE8C87F2A23
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 11:18:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 37DD51C20988
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 10:11:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5AA22B210D3
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 10:18:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 176F23A278;
-	Tue, 21 Nov 2023 10:11:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2C413D397;
+	Tue, 21 Nov 2023 10:18:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZfZFYfxx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WilkxKr1"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF27638FB1
-	for <linux-pci@vger.kernel.org>; Tue, 21 Nov 2023 10:11:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7398C433C7;
-	Tue, 21 Nov 2023 10:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DEF3D394
+	for <linux-pci@vger.kernel.org>; Tue, 21 Nov 2023 10:18:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D461C433CC;
+	Tue, 21 Nov 2023 10:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700561476;
-	bh=pwVt1w2LCBRnUv5jOmI2812LEvoFjTvS4hIHofg4Jas=;
+	s=k20201202; t=1700561897;
+	bh=x6Eqbz8ebjzAvuYM7IREObhQffM7Tdw0BiU0JcMcJaM=;
 	h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
-	b=ZfZFYfxxS0kEHfQDfWXH7ireMlOgqyx0yaQJpgectuibgt0G+FYx8HopU8/OaKkz5
-	 gwTPcWEuCRVaCMTRvG2KtNLyFRnPUT1suQ177UA3k4kPlnuDBTJWdemwwyPyuZJcZe
-	 OChqB/BfYEZOCrB+0gwXyXTx9IeCctN/En00qnrUbSO/pfSK2DaEajRnqsYDORzw/T
-	 TnlaxAL7RX+th+wCKBklOyVpclKZPe4/JvYWoaX2wCh9iuTQod8xXeHJzIvDWdoWPH
-	 MfeqPSklfM2dKl47JXR25E9f9KFSIICu2K0ZCHHSP3mduSOyVkdVmVIcgmf2YgxAKd
-	 INCwXxdSIhk6Q==
+	b=WilkxKr1YsGr3NJe8afmUfGnZevm3G/59J5yCJoMTLk+GoCH517WI+iY6DuwPW4jD
+	 Htki7HWMpbxY/oRzFLgMma6JVEqY7ma07B3eMkoMW81RLYGzDoUkPhkv/yGEedM8K9
+	 Kf0KFd1XYlMAARg0GRyfu8JZ9YxYlNMwE2fmHuCv9PROA34SMhrLxlqWy+AWnc54fT
+	 nJxLTZcOYaDC2Xyy96CPKs4PBWw4ohAIg93kQAznThFEGodRL2a/z1C8kcFtCZFGeH
+	 4NQmgFIuM5hlRhHxLMvCzXZkcc1t4kDzD4ApWghtCR0x9O/3gOhNMXJ7mdRRXr2+v+
+	 9EzOClQJPwUUg==
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailauth.nyi.internal (Postfix) with ESMTP id B7F6C27C005B;
-	Tue, 21 Nov 2023 05:11:14 -0500 (EST)
+	by mailauth.nyi.internal (Postfix) with ESMTP id 3F0F727C0054;
+	Tue, 21 Nov 2023 05:18:15 -0500 (EST)
 Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 21 Nov 2023 05:11:14 -0500
-X-ME-Sender: <xms:QYJcZZOsH-mUuunCB8jsICA8SXmqvbkSxX1urvM880E4tme3cLuZlA>
-    <xme:QYJcZb-oApEEEdyISnFgBNPFhuiLciclgtIj9IVX4c1_eE_Ks-3s54Qr18zMPd1sM
-    eL6hCqjRnZwHdrQ7wI>
+  by compute5.internal (MEProxy); Tue, 21 Nov 2023 05:18:15 -0500
+X-ME-Sender: <xms:5oNcZcSO38KFYbW9qpw93qmsgssYpHs6CGyxg6FkUSPN_ADaNr6BcQ>
+    <xme:5oNcZZz9GbApy_U-yAwMI6tfkpI7zsvS7Lq95XIY06BbURzI8g3fV6_GkxXWsMrr2
+    j5f21nisDNEQsTlv3M>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudegledguddtucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -50,13 +50,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudegledguddtucetufdoteggod
     eprghrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduvdekhedujedt
     vdegqddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvghlrdhorhhgsegrrhhnuggsrd
     guvg
-X-ME-Proxy: <xmx:QYJcZYTLMUsoPYYkz62VgwTBcINyKVI2lw5kKpIfQECglAjBavdKCw>
-    <xmx:QYJcZVurnxtwUR2GwTR2ilONbym90xq-UPJ7Bb--HnT48TJc_se0cQ>
-    <xmx:QYJcZRd8F1UQEgvCOM7pkVREzFPo_LQM6LrJjsar-2maBiq35vKfIg>
-    <xmx:QoJcZX_Dw3364yokzNFcp-_h9mYEYM8RCotQIHlbuZhsgZXupblPGF68Rgz_ttDl>
+X-ME-Proxy: <xmx:5oNcZZ17G2DTgqs1fAa9v8wjRdFawzMY7kI8ouLbPqHZiKzfXcKu8w>
+    <xmx:5oNcZQAcYvzvL4rXpbUIdjtcsVpnOkO2VVaIlg0ObKXHVUlBSIcB3Q>
+    <xmx:5oNcZViwMaeUUdbHcDsRa0gY-9GgD5_R5VN7kKjSVeS0pbgP8uXERg>
+    <xmx:54NcZYiM6cVzxTPUA7CF_Mu4aHlt8_TWzVNRhXWYuoUbpM8LM9_8qp6cA4ng-bjs>
 Feedback-ID: i36794607:Fastmail
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 6C63CB60089; Tue, 21 Nov 2023 05:11:13 -0500 (EST)
+	id 48412B60089; Tue, 21 Nov 2023 05:18:14 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.9.0-alpha0-1178-geeaf0069a7-fm-20231114.001-geeaf0069
 Precedence: bulk
@@ -65,13 +65,11 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <f4cded7b-c62a-453e-b09f-6fe39b4a9c1a@app.fastmail.com>
-In-Reply-To: <d38d1149fdf5eb0cc4da12402ca03604beba1881.camel@redhat.com>
+Message-Id: <3bc69019-7867-4f51-806d-02bf85a3cbf9@app.fastmail.com>
+In-Reply-To: <20231120215945.52027-5-pstanner@redhat.com>
 References: <20231120215945.52027-2-pstanner@redhat.com>
- <20231120215945.52027-4-pstanner@redhat.com>
- <45997863-d817-48c7-ad46-8b47f5e0ce61@app.fastmail.com>
- <d38d1149fdf5eb0cc4da12402ca03604beba1881.camel@redhat.com>
-Date: Tue, 21 Nov 2023 11:10:41 +0100
+ <20231120215945.52027-5-pstanner@redhat.com>
+Date: Tue, 21 Nov 2023 11:17:52 +0100
 From: "Arnd Bergmann" <arnd@kernel.org>
 To: "Philipp Stanner" <pstanner@redhat.com>,
  "Bjorn Helgaas" <bhelgaas@google.com>,
@@ -89,48 +87,43 @@ To: "Philipp Stanner" <pstanner@redhat.com>,
  "Jason Baron" <jbaron@akamai.com>, "Ben Dooks" <ben.dooks@codethink.co.uk>,
  "Danilo Krummrich" <dakr@redhat.com>
 Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/4] lib: move pci-specific devres code to drivers/pci/
+Subject: Re: [PATCH 3/4] pci: move devres code from pci.c to devres.c
 Content-Type: text/plain
 
-On Tue, Nov 21, 2023, at 09:00, Philipp Stanner wrote:
-> On Tue, 2023-11-21 at 08:29 +0100, Arnd Bergmann wrote:
->> On Mon, Nov 20, 2023, at 22:59, Philipp Stanner wrote:
->> 
->> Since you are moving the pci_iomap() code into drivers/pci/ already,
->> I'd suggest merging this one into the same file and keep the two
->> halves of this interface together.
+On Mon, Nov 20, 2023, at 22:59, Philipp Stanner wrote:
+> The file pci.c is very large and contains a number of devres-functions.
+> These functions should now reside in devres.c
 >
+> There are a few callers left in pci.c that do devres operations. These
+> should be ported in the future. Corresponding TODOs are added by this
+> commit.
 >
-> I'd argue that they are as much together as they were before:
+> The reason they are not moved right now in this commit is that pci's
+> devres currently implements a sort of "hybrid-mode":
+> pci_request_region(), for instance, does not have a corresponding pcim_
+> equivalent, yet. Instead, the function can be made managed by previously
+> calling pcim_enable_device() (instead of pci_enable_device()). This
+> makes it unreasonable to move pci_request_region() to devres.c
+> Moving the functions would require changes to pci's API and is,
+> therefore, left for future work.
 >
-> Previously:
->  * PCI-IOMAP-code in folder lib/ in its own file (pci_iomap.c)
->  * PCI-Devres-code in folder lib/ in a distinct file (devres.c)
+> Move as much devres-specific code from pci.c to devres.c as possible.
 >
-> Now:
->  * PCI-IOMAP-code in folder drivers/pci/ in its own file (iomap.c)
->  * PCI-Devres-code in folder drivers/pci/ in its own file (devres.c)
->
-> Or am I misunderstanding something?
+> Suggested-by: Danilo Krummrich <dakr@redhat.com>
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> ---
+>  drivers/pci/devres.c | 243 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pci.c    | 249 -------------------------------------------
+>  drivers/pci/pci.h    |  24 +++++
+>  3 files changed, 267 insertions(+), 249 deletions(-)
 
-They are indeed closer together now, just not in the same file.
+I had just commented in the other mail that you'd have to move
+these functions to devres.c for the file to make sense, but that
+I think the existing state is better.
 
-Looking across subsystems at the output of
-
-git grep -l EXPORT.*devm
-
-I see that 10 out of 182 files have split the devres functions
-into a separate file, while the others just keep the devm_*
-function in the same place as the normal one. Since you never
-have one of these files without the other, and they do
-almost the exact same thing, a single file is the simpler
-option.
-
-Note that there are also three pcim_*() functions in
-drivers/pci/pci.c. I think that is the correct place for
-them, but if you wanted to split out pci devres functions
-into a separate file, they would now also have to go
-into drivers/pci/devres.c.
+Just to clarify again here: this patch does not seem to improve
+anything to me, I'd much prefer leaving it the way it is, and
+moving the pcim_iomap family to corresponding drivers/pci/iomap.c. 
 
      Arnd
 
