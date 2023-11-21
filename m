@@ -1,51 +1,52 @@
-Return-Path: <linux-pci+bounces-49-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-50-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19EAB7F3283
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 16:41:25 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E11F37F32E6
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 16:58:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B7A51C20A93
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 15:41:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 71313B21ECE
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 15:58:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7834D4A9BB;
-	Tue, 21 Nov 2023 15:41:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CA575811B;
+	Tue, 21 Nov 2023 15:57:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QliQtl2Y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WxN4AdM2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61C4A11A;
-	Tue, 21 Nov 2023 07:41:18 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3022D1A3;
+	Tue, 21 Nov 2023 07:57:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700581278; x=1732117278;
+  t=1700582273; x=1732118273;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:content-transfer-encoding:in-reply-to;
-  bh=hp2/itkYHGLatqqut+LfjX0mAXpYpgJyMjjE1s8y8h4=;
-  b=QliQtl2Y6WuVOM0q9MGMmcdl2H7TmopyZlS72zqH3prqAfgRzSt5+A5g
-   2W9G6VmGbvsvmWgG1q2K5TsjVlq86xd8wxltXC+qN/B4GbleB1ItQx2G9
-   0Ksk96TkTT5HdTyc6VdtYvB9xJSk2JzmyHC/TBkLtV3L/+yl9Vdflg3tL
-   rCRCYvb1SaKjLdm7KD/JwzPIa3BSQMH2QyMxaiBYpGHPEA7IKNGDqKTZE
-   Z0FGyYDElvG0UKHLd8Gw4dqBnFKSLgpUj6Apr+lKX0MI/51Pwaxtb6OiK
-   /ElBPdmRe/JrdUMALmohv+CtgBaNxLk+fOhc4ibfObt15nanpWgb0jFMH
+  bh=eL05pmjVJXJoEw+m49W6HrphDl1bzm2MfgyaY9VLivg=;
+  b=WxN4AdM2gPRklQtH0WHwu5vCQDbIYrshBZhB7WKxqL+MulChmczuN3oa
+   TE/6b7ExGxdlfuYmsERIBcxnLXTCgDiPAAtmwl4jzmLujJ0cBjw+pLhsn
+   XrCyR4Dfoyvi8NzhadZGA89qSmbz9Q2PhEJ7Fb4KyIMbpujeTcEUyNf3/
+   yKbhtYRnhiVm1tJMBPWcLVDLAENlxQSDW61PLNTcuBqQD5uRFhw8k0NVg
+   4+U0ufvfg6fHO8RJqjOEYSjSBVh5jv+ymB+D3wKXFmlB1o3eZlGrWJXz9
+   OhaNTb8orzw2Rmzso8EIgNG/rpMGyJgZcklmEbBaFH/8Vwa+KlAyQivRY
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="458357690"
-X-IronPort-AV: E=Sophos;i="6.04,215,1695711600"; 
-   d="scan'208";a="458357690"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 07:41:17 -0800
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="382261985"
+X-IronPort-AV: E=Sophos;i="6.04,216,1695711600"; 
+   d="scan'208";a="382261985"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 07:57:52 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,215,1695711600"; 
-   d="scan'208";a="8119408"
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="716576264"
+X-IronPort-AV: E=Sophos;i="6.04,216,1695711600"; 
+   d="scan'208";a="716576264"
 Received: from lkp-server02.sh.intel.com (HELO b8de5498638e) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 21 Nov 2023 07:41:11 -0800
+  by orsmga003.jf.intel.com with ESMTP; 21 Nov 2023 07:57:46 -0800
 Received: from kbuild by b8de5498638e with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1r5Ss8-0007y0-17;
-	Tue, 21 Nov 2023 15:41:08 +0000
-Date: Tue, 21 Nov 2023 23:40:24 +0800
+	id 1r5T8B-0007ym-2U;
+	Tue, 21 Nov 2023 15:57:43 +0000
+Date: Tue, 21 Nov 2023 23:56:55 +0800
 From: kernel test robot <lkp@intel.com>
 To: Philipp Stanner <pstanner@redhat.com>,
 	Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
@@ -71,7 +72,7 @@ Cc: Paul Gazzillo <paul@pgazz.com>,
 	Linux Memory Management List <linux-mm@kvack.org>,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 Subject: Re: [PATCH 1/4] lib: move pci_iomap.c to drivers/pci/
-Message-ID: <202311212322.TOIJ8Pcg-lkp@intel.com>
+Message-ID: <202311212316.a0awwkaE-lkp@intel.com>
 References: <20231120215945.52027-3-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -101,30 +102,30 @@ base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
 patch link:    https://lore.kernel.org/r/20231120215945.52027-3-pstanner%40=
 redhat.com
 patch subject: [PATCH 1/4] lib: move pci_iomap.c to drivers/pci/
-config: parisc-kismet-CONFIG_GENERIC_PCI_IOMAP-CONFIG_PARISC-0-0 (https://d=
-ownload.01.org/0day-ci/archive/20231121/202311212322.TOIJ8Pcg-lkp@intel.com=
+config: sparc64-kismet-CONFIG_GENERIC_PCI_IOMAP-CONFIG_SPARC-0-0 (https://d=
+ownload.01.org/0day-ci/archive/20231121/202311212316.a0awwkaE-lkp@intel.com=
 /config)
-reproduce: (https://download.01.org/0day-ci/archive/20231121/202311212322.T=
-OIJ8Pcg-lkp@intel.com/reproduce)
+reproduce: (https://download.01.org/0day-ci/archive/20231121/202311212316.a=
+0awwkaE-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new versio=
 n of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311212322.TOIJ8Pcg-lkp@i=
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311212316.a0awwkaE-lkp@i=
 ntel.com/
 
 kismet warnings: (new ones prefixed by >>)
 >> kismet: WARNING: unmet direct dependencies detected for GENERIC_PCI_IOMA=
-P when selected by PARISC
+P when selected by SPARC
    /usr/bin/grep: /db/releases/20231121182703/kernel-tests/etc/kcflags: No =
 such file or directory
-   {"timestamp":"2023-11-21 21:16:41 +0800", "level":"WARN", "event":"kbuil=
+   {"timestamp":"2023-11-21 22:16:15 +0800", "level":"WARN", "event":"kbuil=
 d.sh:3942:in `add_etc_kcflags': grep exit 2 (ShellError)", "detail":"cmd: '=
 /usr/bin/grep' '-v' '-e' '^#' '-e' '^$' '/db/releases/20231121182703/kernel=
 -tests/etc/kcflags' \nstderr: /usr/bin/grep: /db/releases/20231121182703/ke=
 rnel-tests/etc/kcflags: No such file or directory\n\n", "hostname":"communi=
-ty-kbuild-consumer-161", "host_hostname":"lkp-worker22", "call_stack":"/zda=
+ty-kbuild-consumer-123", "host_hostname":"lkp-worker50", "call_stack":"/zda=
 y/kernel-tests/lib/kbuild.sh:3942:in `add_etc_kcflags': /usr/bin/grep: /db/=
 releases/20231121182703/kernel-tests/etc/kcflags: No such file or directory=
  (ShellError 2)\n  from /zday/kernel-tests/lib/kbuild.sh:3971: setup_kcflag=
@@ -140,7 +141,7 @@ compile\n  from /zday/kernel-tests/bisect-test-build-error.sh:94: main\n"}
    WARNING: unmet direct dependencies detected for GENERIC_PCI_IOMAP
      Depends on [n]: PCI [=3Dn]
      Selected by [y]:
-     - PARISC [=3Dy]
+     - SPARC [=3Dy]
 
 --=20
 0-DAY CI Kernel Test Service
