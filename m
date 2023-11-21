@@ -1,26 +1,26 @@
-Return-Path: <linux-pci+bounces-9-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D7307F2320
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 02:34:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E9237F2321
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 02:34:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CC0C428226C
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 01:34:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9A2791C21686
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 01:34:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CD7F6FB5;
-	Tue, 21 Nov 2023 01:34:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 246F06FBF;
+	Tue, 21 Nov 2023 01:34:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16239A2;
-	Mon, 20 Nov 2023 17:34:13 -0800 (PST)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0VwqXEh._1700530450;
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VwqXEh._1700530450)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A3E3C3;
+	Mon, 20 Nov 2023 17:34:15 -0800 (PST)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R491e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0VwqXEhG_1700530452;
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VwqXEhG_1700530452)
           by smtp.aliyun-inc.com;
-          Tue, 21 Nov 2023 09:34:11 +0800
+          Tue, 21 Nov 2023 09:34:13 +0800
 From: Shuai Xue <xueshuai@linux.alibaba.com>
 To: ilkka@os.amperecomputing.com,
 	kaishen@linux.alibaba.com,
@@ -39,9 +39,9 @@ Cc: chengyou@linux.alibaba.com,
 	zhuo.song@linux.alibaba.com,
 	xueshuai@linux.alibaba.com,
 	renyu.zj@linux.alibaba.com
-Subject: [PATCH v11 2/5] PCI: Add Alibaba Vendor ID to linux/pci_ids.h
-Date: Tue, 21 Nov 2023 09:33:57 +0800
-Message-Id: <20231121013400.18367-3-xueshuai@linux.alibaba.com>
+Subject: [PATCH v11 3/5] PCI: Move pci_clear_and_set_dword() helper to PCI header
+Date: Tue, 21 Nov 2023 09:33:58 +0800
+Message-Id: <20231121013400.18367-4-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231121013400.18367-1-xueshuai@linux.alibaba.com>
 References: <20231121013400.18367-1-xueshuai@linux.alibaba.com>
@@ -53,45 +53,163 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Alibaba Vendor ID (0x1ded) is now used by Alibaba elasticRDMA ("erdma")
-and will be shared with the upcoming PCIe PMU ("dwc_pcie_pmu"). Move the
-Vendor ID to linux/pci_ids.h so that it can shared by several drivers
-later.
+The clear and set pattern is commonly used for accessing PCI config,
+move the helper pci_clear_and_set_dword() from aspm.c into PCI header.
+In addition, rename to pci_clear_and_set_config_dword() to retain the
+"config" information and match the other accessors.
+
+No functional change intended.
 
 Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci_ids.h
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 Tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
 ---
- drivers/infiniband/hw/erdma/erdma_hw.h | 2 --
- include/linux/pci_ids.h                | 2 ++
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/access.c    | 12 ++++++++
+ drivers/pci/pcie/aspm.c | 65 +++++++++++++++++++----------------------
+ include/linux/pci.h     |  2 ++
+ 3 files changed, 44 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/infiniband/hw/erdma/erdma_hw.h b/drivers/infiniband/hw/erdma/erdma_hw.h
-index 9d316fdc6f9a..a155519a862f 100644
---- a/drivers/infiniband/hw/erdma/erdma_hw.h
-+++ b/drivers/infiniband/hw/erdma/erdma_hw.h
-@@ -11,8 +11,6 @@
- #include <linux/types.h>
- 
- /* PCIe device related definition. */
--#define PCI_VENDOR_ID_ALIBABA 0x1ded
--
- #define ERDMA_PCI_WIDTH 64
- #define ERDMA_FUNC_BAR 0
- #define ERDMA_MISX_BAR 2
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 5fb3d4c393a9..d8760daf9e5a 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2601,6 +2601,8 @@
- #define PCI_VENDOR_ID_TEKRAM		0x1de1
- #define PCI_DEVICE_ID_TEKRAM_DC290	0xdc29
- 
-+#define PCI_VENDOR_ID_ALIBABA		0x1ded
+diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+index 6554a2e89d36..6449056b57dd 100644
+--- a/drivers/pci/access.c
++++ b/drivers/pci/access.c
+@@ -598,3 +598,15 @@ int pci_write_config_dword(const struct pci_dev *dev, int where,
+ 	return pci_bus_write_config_dword(dev->bus, dev->devfn, where, val);
+ }
+ EXPORT_SYMBOL(pci_write_config_dword);
 +
- #define PCI_VENDOR_ID_TEHUTI		0x1fc9
- #define PCI_DEVICE_ID_TEHUTI_3009	0x3009
- #define PCI_DEVICE_ID_TEHUTI_3010	0x3010
++void pci_clear_and_set_config_dword(const struct pci_dev *dev, int pos,
++				    u32 clear, u32 set)
++{
++	u32 val;
++
++	pci_read_config_dword(dev, pos, &val);
++	val &= ~clear;
++	val |= set;
++	pci_write_config_dword(dev, pos, val);
++}
++EXPORT_SYMBOL(pci_clear_and_set_config_dword);
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 1bf630059264..9dbc4d3c2591 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -423,17 +423,6 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+ 	}
+ }
+ 
+-static void pci_clear_and_set_dword(struct pci_dev *pdev, int pos,
+-				    u32 clear, u32 set)
+-{
+-	u32 val;
+-
+-	pci_read_config_dword(pdev, pos, &val);
+-	val &= ~clear;
+-	val |= set;
+-	pci_write_config_dword(pdev, pos, val);
+-}
+-
+ /* Calculate L1.2 PM substate timing parameters */
+ static void aspm_calc_l12_info(struct pcie_link_state *link,
+ 				u32 parent_l1ss_cap, u32 child_l1ss_cap)
+@@ -494,10 +483,12 @@ static void aspm_calc_l12_info(struct pcie_link_state *link,
+ 	cl1_2_enables = cctl1 & PCI_L1SS_CTL1_L1_2_MASK;
+ 
+ 	if (pl1_2_enables || cl1_2_enables) {
+-		pci_clear_and_set_dword(child, child->l1ss + PCI_L1SS_CTL1,
+-					PCI_L1SS_CTL1_L1_2_MASK, 0);
+-		pci_clear_and_set_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
+-					PCI_L1SS_CTL1_L1_2_MASK, 0);
++		pci_clear_and_set_config_dword(child,
++					       child->l1ss + PCI_L1SS_CTL1,
++					       PCI_L1SS_CTL1_L1_2_MASK, 0);
++		pci_clear_and_set_config_dword(parent,
++					       parent->l1ss + PCI_L1SS_CTL1,
++					       PCI_L1SS_CTL1_L1_2_MASK, 0);
+ 	}
+ 
+ 	/* Program T_POWER_ON times in both ports */
+@@ -505,22 +496,26 @@ static void aspm_calc_l12_info(struct pcie_link_state *link,
+ 	pci_write_config_dword(child, child->l1ss + PCI_L1SS_CTL2, ctl2);
+ 
+ 	/* Program Common_Mode_Restore_Time in upstream device */
+-	pci_clear_and_set_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
+-				PCI_L1SS_CTL1_CM_RESTORE_TIME, ctl1);
++	pci_clear_and_set_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
++				       PCI_L1SS_CTL1_CM_RESTORE_TIME, ctl1);
+ 
+ 	/* Program LTR_L1.2_THRESHOLD time in both ports */
+-	pci_clear_and_set_dword(parent,	parent->l1ss + PCI_L1SS_CTL1,
+-				PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
+-				PCI_L1SS_CTL1_LTR_L12_TH_SCALE, ctl1);
+-	pci_clear_and_set_dword(child, child->l1ss + PCI_L1SS_CTL1,
+-				PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
+-				PCI_L1SS_CTL1_LTR_L12_TH_SCALE, ctl1);
++	pci_clear_and_set_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
++				       PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
++				       PCI_L1SS_CTL1_LTR_L12_TH_SCALE,
++				       ctl1);
++	pci_clear_and_set_config_dword(child, child->l1ss + PCI_L1SS_CTL1,
++				       PCI_L1SS_CTL1_LTR_L12_TH_VALUE |
++				       PCI_L1SS_CTL1_LTR_L12_TH_SCALE,
++				       ctl1);
+ 
+ 	if (pl1_2_enables || cl1_2_enables) {
+-		pci_clear_and_set_dword(parent, parent->l1ss + PCI_L1SS_CTL1, 0,
+-					pl1_2_enables);
+-		pci_clear_and_set_dword(child, child->l1ss + PCI_L1SS_CTL1, 0,
+-					cl1_2_enables);
++		pci_clear_and_set_config_dword(parent,
++					       parent->l1ss + PCI_L1SS_CTL1, 0,
++					       pl1_2_enables);
++		pci_clear_and_set_config_dword(child,
++					       child->l1ss + PCI_L1SS_CTL1, 0,
++					       cl1_2_enables);
+ 	}
+ }
+ 
+@@ -680,10 +675,10 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ 	 */
+ 
+ 	/* Disable all L1 substates */
+-	pci_clear_and_set_dword(child, child->l1ss + PCI_L1SS_CTL1,
+-				PCI_L1SS_CTL1_L1SS_MASK, 0);
+-	pci_clear_and_set_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
+-				PCI_L1SS_CTL1_L1SS_MASK, 0);
++	pci_clear_and_set_config_dword(child, child->l1ss + PCI_L1SS_CTL1,
++				       PCI_L1SS_CTL1_L1SS_MASK, 0);
++	pci_clear_and_set_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
++				       PCI_L1SS_CTL1_L1SS_MASK, 0);
+ 	/*
+ 	 * If needed, disable L1, and it gets enabled later
+ 	 * in pcie_config_aspm_link().
+@@ -706,10 +701,10 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ 		val |= PCI_L1SS_CTL1_PCIPM_L1_2;
+ 
+ 	/* Enable what we need to enable */
+-	pci_clear_and_set_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
+-				PCI_L1SS_CTL1_L1SS_MASK, val);
+-	pci_clear_and_set_dword(child, child->l1ss + PCI_L1SS_CTL1,
+-				PCI_L1SS_CTL1_L1SS_MASK, val);
++	pci_clear_and_set_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1,
++				       PCI_L1SS_CTL1_L1SS_MASK, val);
++	pci_clear_and_set_config_dword(child, child->l1ss + PCI_L1SS_CTL1,
++				       PCI_L1SS_CTL1_L1SS_MASK, val);
+ }
+ 
+ static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 8c7c2c3c6c65..72b0fb82a820 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1213,6 +1213,8 @@ int pci_read_config_dword(const struct pci_dev *dev, int where, u32 *val);
+ int pci_write_config_byte(const struct pci_dev *dev, int where, u8 val);
+ int pci_write_config_word(const struct pci_dev *dev, int where, u16 val);
+ int pci_write_config_dword(const struct pci_dev *dev, int where, u32 val);
++void pci_clear_and_set_config_dword(const struct pci_dev *dev, int pos,
++				    u32 clear, u32 set);
+ 
+ int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val);
+ int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val);
 -- 
 2.39.3
 
