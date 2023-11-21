@@ -1,79 +1,62 @@
-Return-Path: <linux-pci+bounces-50-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-51-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E11F37F32E6
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 16:58:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A66DE7F35D2
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 19:19:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 71313B21ECE
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 15:58:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D7CCB1C20D65
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 18:19:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CA575811B;
-	Tue, 21 Nov 2023 15:57:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 351A82208D;
+	Tue, 21 Nov 2023 18:19:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WxN4AdM2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UR90IS6t"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3022D1A3;
-	Tue, 21 Nov 2023 07:57:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700582273; x=1732118273;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=eL05pmjVJXJoEw+m49W6HrphDl1bzm2MfgyaY9VLivg=;
-  b=WxN4AdM2gPRklQtH0WHwu5vCQDbIYrshBZhB7WKxqL+MulChmczuN3oa
-   TE/6b7ExGxdlfuYmsERIBcxnLXTCgDiPAAtmwl4jzmLujJ0cBjw+pLhsn
-   XrCyR4Dfoyvi8NzhadZGA89qSmbz9Q2PhEJ7Fb4KyIMbpujeTcEUyNf3/
-   yKbhtYRnhiVm1tJMBPWcLVDLAENlxQSDW61PLNTcuBqQD5uRFhw8k0NVg
-   4+U0ufvfg6fHO8RJqjOEYSjSBVh5jv+ymB+D3wKXFmlB1o3eZlGrWJXz9
-   OhaNTb8orzw2Rmzso8EIgNG/rpMGyJgZcklmEbBaFH/8Vwa+KlAyQivRY
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="382261985"
-X-IronPort-AV: E=Sophos;i="6.04,216,1695711600"; 
-   d="scan'208";a="382261985"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 07:57:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="716576264"
-X-IronPort-AV: E=Sophos;i="6.04,216,1695711600"; 
-   d="scan'208";a="716576264"
-Received: from lkp-server02.sh.intel.com (HELO b8de5498638e) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 21 Nov 2023 07:57:46 -0800
-Received: from kbuild by b8de5498638e with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1r5T8B-0007ym-2U;
-	Tue, 21 Nov 2023 15:57:43 +0000
-Date: Tue, 21 Nov 2023 23:56:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: Philipp Stanner <pstanner@redhat.com>,
-	Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Eric Auger <eric.auger@redhat.com>,
-	Kent Overstreet <kmo@daterainc.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>, NeilBrown <neilb@suse.de>,
-	John Sanpe <sanpeqf@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	David Gow <davidgow@google.com>,
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188E32206D
+	for <linux-pci@vger.kernel.org>; Tue, 21 Nov 2023 18:19:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4E3AC433C7;
+	Tue, 21 Nov 2023 18:19:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700590774;
+	bh=j7HBjbV0HBXxOEcT0OG9f5FjRXuKR0dQ3RimJ19uarQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=UR90IS6tEP7ZH2Mu//OVccMIjGE9Vfl31LFB4El1nPF2ME8r7MMhbJAEfIoHe/tY0
+	 yflc2zxpNeR3lm0pOY5pTyPelPCqTaXnBpamkUhP3cPZe4uhe/N9ORKaOYvpU6yRbk
+	 wwRIEoS1TTof4N+ylTO2ur+LBoJM5h4jdbeQuXbjG8RMYJQkA1kltTm8oae4AORsJc
+	 kofl5OLse5z+UlsudmRzP52jMFc7wzD+CWsOk2JVqNYBZ1B13iknFXUXlNJNp9Cndq
+	 eJGM+6jfUQIdSPhFsfppv4UaWAe/MqQwNjD32OaNC5SDg74EZuilu0oIHaU0y7Obh6
+	 3LCOJmrFHWiqQ==
+Date: Tue, 21 Nov 2023 12:19:33 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Tomasz Pala <gotar@polanet.pl>
+Cc: linux-pci@vger.kernel.org, Dan J Williams <dan.j.williams@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Tony Luck <tony.luck@intel.com>,
+	David E Box <david.e.box@intel.com>,
+	Yunying Sun <yunying.sun@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
 	Herbert Xu <herbert@gondor.apana.org.au>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
-	Jason Baron <jbaron@akamai.com>,
-	Ben Dooks <ben.dooks@codethink.co.uk>,
-	Danilo Krummrich <dakr@redhat.com>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/4] lib: move pci_iomap.c to drivers/pci/
-Message-ID: <202311212316.a0awwkaE-lkp@intel.com>
-References: <20231120215945.52027-3-pstanner@redhat.com>
+	Hans de Goede <hdegoede@redhat.com>,
+	Florent DELAHAYE <linuxkernelml@undead.fr>,
+	Konrad J Hambrick <kjhambrick@gmail.com>,
+	Matt Hansen <2lprbe78@duck.com>,
+	Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+	Benoit =?utf-8?B?R3LDqWdvaXJl?= <benoitg@coeus.ca>,
+	Werner Sembach <wse@tuxedocomputers.com>,
+	mumblingdrunkard@protonmail.com, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Sebastian Manciulea <manciuleas@protonmail.com>
+Subject: Re: [PATCH 2/2] x86/pci: Treat EfiMemoryMappedIO as reservation of
+ ECAM space
+Message-ID: <20231121181933.GA240494@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -82,68 +65,41 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20231120215945.52027-3-pstanner@redhat.com>
+In-Reply-To: <20231121152407.GA13288@polanet.pl>
 
-Hi Philipp,
+On Tue, Nov 21, 2023 at 04:24:07PM +0100, Tomasz Pala wrote:
+> On Mon, Nov 20, 2023 at 10:29:33 -0600, Bjorn Helgaas wrote:
+> 
+> > Thank you!  A BIOS update is almost never the answer because even if
+> > an update exists, we have to assume that most users in the field will
+> > never install the update.
+> 
+> Not to mention enabling 64-bit BARs, which is even more cumbersome
+> ixgbe-specific magic that requires entirely dedicated tools...
+> 
+> >> .text .data .bss are not marked as E820_TYPE_RAM!
+> and
+> >> DMAR: [Firmware Bug]: No firmware reserved region can cover this RMRR [0x00000000df243000-0x00000000df251fff], contact BIOS vendor for fixes
+> >> DMAR: [Firmware Bug]: Your BIOS is broken; bad RMRR [0x00000000df243000-0x00000000df251fff]
+> [...]
+> > I think Linux basically converts the info from EFI GetMemoryMap
+> > to an e820 format; I think booting with "efi=debug" would show more
+> > details of this.
+> 
+> The dmesg I've attached today is with efi=debug, but the weird thing is
+> - both of the above warnings manifested themself only once, with the
+> first (verbose debugging: "MCFG debug") patch applied... Anyway.
 
-kernel test robot noticed the following build warnings:
+OK.  I don't know what (if anything) to do about the above.
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.7-rc2 next-202311=
-21]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> The "memremap attempted on mixed range 0x0000000000000000 size: 0x8000
+> WARNING: CPU: 0 PID: 1 at kernel/iomem.c:78 memremap+0x154/0x170" also
+> seems to be triggered by "efi=debug", so my guess is that it's unrelated.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Philipp-Stanner/lib-=
-move-pci_iomap-c-to-drivers-pci/20231121-060258
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20231120215945.52027-3-pstanner%40=
-redhat.com
-patch subject: [PATCH 1/4] lib: move pci_iomap.c to drivers/pci/
-config: sparc64-kismet-CONFIG_GENERIC_PCI_IOMAP-CONFIG_SPARC-0-0 (https://d=
-ownload.01.org/0day-ci/archive/20231121/202311212316.a0awwkaE-lkp@intel.com=
-/config)
-reproduce: (https://download.01.org/0day-ci/archive/20231121/202311212316.a=
-0awwkaE-lkp@intel.com/reproduce)
+Yes, I think so.  This is from efi_debugfs_init(), which we only run
+when "efi=debug", and I think it comes from memremapping this area:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new versio=
-n of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311212316.a0awwkaE-lkp@i=
-ntel.com/
+  efi: mem00: [Boot Code   |   |  |  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x0000000000000000-0x0000000000007fff] (0MB)
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for GENERIC_PCI_IOMA=
-P when selected by SPARC
-   /usr/bin/grep: /db/releases/20231121182703/kernel-tests/etc/kcflags: No =
-such file or directory
-   {"timestamp":"2023-11-21 22:16:15 +0800", "level":"WARN", "event":"kbuil=
-d.sh:3942:in `add_etc_kcflags': grep exit 2 (ShellError)", "detail":"cmd: '=
-/usr/bin/grep' '-v' '-e' '^#' '-e' '^$' '/db/releases/20231121182703/kernel=
--tests/etc/kcflags' \nstderr: /usr/bin/grep: /db/releases/20231121182703/ke=
-rnel-tests/etc/kcflags: No such file or directory\n\n", "hostname":"communi=
-ty-kbuild-consumer-123", "host_hostname":"lkp-worker50", "call_stack":"/zda=
-y/kernel-tests/lib/kbuild.sh:3942:in `add_etc_kcflags': /usr/bin/grep: /db/=
-releases/20231121182703/kernel-tests/etc/kcflags: No such file or directory=
- (ShellError 2)\n  from /zday/kernel-tests/lib/kbuild.sh:3971: setup_kcflag=
-s\n  from /zday/kernel-tests/lib/kbuild.sh:4016: invoke_make\n  from /zday/=
-kernel-tests/lib/kbuild.sh:4122: make\n  from /zday/kernel-tests/lib/kbuild=
-=2Esh:5623: make_config_allyes\n  from /zday/kernel-tests/common.sh:209: re=
-direct_error_to_screen\n  from /zday/kernel-tests/common.sh:217: redirect_c=
-ommand_errors\n  from /zday/kernel-tests/lib/kbuild.sh:5630: make_config\n =
- from /zday/kernel-tests/lib/builder/kismet.sh:156: generate_make_olddefcon=
-fig_warnings\n  from /zday/kernel-tests/lib/builder/kismet.sh:297: builder_=
-compile\n  from /zday/kernel-tests/bisect-test-build-error.sh:94: main\n"}
-  =20
-   WARNING: unmet direct dependencies detected for GENERIC_PCI_IOMAP
-     Depends on [n]: PCI [=3Dn]
-     Selected by [y]:
-     - SPARC [=3Dy]
-
---=20
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Bjorn
 
