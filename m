@@ -1,62 +1,62 @@
-Return-Path: <linux-pci+bounces-19-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58B987F2642
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 08:22:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C461C7F2654
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 08:29:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 882CA1C20950
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 07:22:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 008BB1C20A10
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 07:29:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45571200DC;
-	Tue, 21 Nov 2023 07:22:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 339A021A16;
+	Tue, 21 Nov 2023 07:29:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mMNLUTLR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVDQYKuX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261051BDFB
-	for <linux-pci@vger.kernel.org>; Tue, 21 Nov 2023 07:22:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07515C433C8;
-	Tue, 21 Nov 2023 07:22:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1633921375
+	for <linux-pci@vger.kernel.org>; Tue, 21 Nov 2023 07:29:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 150D6C433C7;
+	Tue, 21 Nov 2023 07:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700551374;
-	bh=rTUDuCw0+yacO1VkcLXeIh3RHyma9O/gexWOtY1atkE=;
+	s=k20201202; t=1700551779;
+	bh=iN2vy0G2QoY8JrojPMvjhZH+VwMN+5+iL06Cyoh3i6Y=;
 	h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
-	b=mMNLUTLRp90G0p8qEBvndw7PFpfeyjlIgQ4HzPyhnjy1/62WeS+GNT4Iyn2aMsOrk
-	 JPFDHLAkbNzPeK9d41gITvmH8sUo7y62gvpS81jfH7NVZJSGe5h/mRQU6XW7xaxmCS
-	 TwhO/fvRchxY0+okPLx+/yvEJyKL5U7Wogicmj6zoMKlisrhLDHZh8gGWm8zb5LMdm
-	 X2aPuSgPYuSYlJn9pBg6AgvOmi+8fMeXAcD5XnMvkoOiXaHDQp1tnxuIof+cpWqDNB
-	 kSa/xPOwxKA5i4MBAXUQWz+ACx9BTCDdmCMgcVVTqKXfqI+2TuG6R76+OogI3OWeA5
-	 iDJDo+ZlEz+5Q==
+	b=iVDQYKuXclKQdB90V4TxdWwdIycVFR+gtxWnS4gYYDNXxikVpoF4DwwhmPpeiu512
+	 +MAHvFJmAWGCZ7kyNyDNPUV7K1KbLLU2jyKOmOiuBNz2eAmmG+Ekfy/9Cjbui2lIwB
+	 ITQlz6a+EfipNzPTbip8xTVzqjInDQd21HfDyavb0L3xXllG+kd20quz1sCEUViMPq
+	 sxlc2rEska56Jub7k9zwWcGfCY6w/xTYDUxqajZrK19ZEMFH58f7ZEWNl8GNZQs0LJ
+	 dZdROs7LHxQJO3Qf7krPM8s8kiy2v28VgAAFUxj6ioap4zK5WpC5UfGg2/WZsdwnFk
+	 faH3YgLSJnlgA==
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailauth.nyi.internal (Postfix) with ESMTP id DF16A27C0054;
-	Tue, 21 Nov 2023 02:22:52 -0500 (EST)
+	by mailauth.nyi.internal (Postfix) with ESMTP id 1AC3F27C0054;
+	Tue, 21 Nov 2023 02:29:38 -0500 (EST)
 Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 21 Nov 2023 02:22:52 -0500
-X-ME-Sender: <xms:ylpcZTWnurYmR8idzEPtriSzAnbz9nyGasSk6OlgWccnwLpyIffG_g>
-    <xme:ylpcZbnrhOLjpk0YqBDgIEllOEXndfk340hKfKLrCyshjl4k-jEgnXdfzZNGH0cMB
-    Ff6qeHVRXKRSLCXxdc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudegkedguddthecutefuodetggdotefrod
+  by compute5.internal (MEProxy); Tue, 21 Nov 2023 02:29:38 -0500
+X-ME-Sender: <xms:YFxcZRKkbcrovPaELtyYV2DX0O8yeUVsy-q4lW8z0WkvLeY2PFn7-w>
+    <xme:YFxcZdIjpdZ4bhGRdawrOv8AkBBgpyl7pLIqwQFEBB3vuNa76FsRLhW_0IKuowVeV
+    USizgnZw8Bnz0dWhT0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudegkedguddtkecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
     enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
     rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugeskhgvrhhnvghlrdhorhhgqeenucggtf
-    frrghtthgvrhhnpeelvefgudeiheefledttedthfffgfekudegkeelffdtiedvgfevieet
-    teekheffveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhguodhmvghsmhhtphgruhht
-    hhhpvghrshhonhgrlhhithihqdduvdekhedujedtvdegqddvkeejtddtvdeigedqrghrnh
-    gupeepkhgvrhhnvghlrdhorhhgsegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:ylpcZfbrTJL1Wj2Z7dzzyyRZDVZllpgQ2FtharPzmPcYaPq64dJf8w>
-    <xmx:ylpcZeXnaobuhvRmaDGaSf2W3r0E8GtXWYxnhLD8Y9DxhCQLJNNZiw>
-    <xmx:ylpcZdk-POFyxRFJ1f3uy81gSDJbHbtHGyDHyO6iuH5PYAdkKEq6ig>
-    <xmx:zFpcZR0B15GtGRA_MB4JMve6blPc_4ynSfvQlSJaOmIHmdl2FjUpEGkVBXIfEVT_>
+    frrghtthgvrhhnpedvveeigfetudegveeiledvgfevuedvgfetgeefieeijeejffeggeeh
+    udegtdevheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpegrrhhnugdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidquddvkeehudej
+    tddvgedqvdekjedttddvieegqdgrrhhnugeppehkvghrnhgvlhdrohhrghesrghrnhgusg
+    druggv
+X-ME-Proxy: <xmx:YFxcZZtEd9vAXuXRY06BBC1U3upWjOVv9gjszhJAGq-c4WDxWbC8Iw>
+    <xmx:YFxcZSbkMoe4h2Bdu_2qu4oZNrreffNRrCO_u8UFEj0gzSeB_byNbg>
+    <xmx:YFxcZYYM8cxkcQUlpKELYJyUlDoivNk--c7tPuY4QxfiwXudR_1E7g>
+    <xmx:YlxcZabImKBMu6_1zwp5jOQzd47qdkKWhORusT-kB6C-709OVS9agvOPHvwUFTka>
 Feedback-ID: i36794607:Fastmail
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 6A5E6B60089; Tue, 21 Nov 2023 02:22:50 -0500 (EST)
+	id D5AA1B60089; Tue, 21 Nov 2023 02:29:36 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.9.0-alpha0-1178-geeaf0069a7-fm-20231114.001-geeaf0069
 Precedence: bulk
@@ -65,18 +65,18 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <7f16795c-ec35-4fe5-86e7-6fb36b05cfc5@app.fastmail.com>
-In-Reply-To: <202311211441.4LgOiu32-lkp@intel.com>
-References: <20231120215945.52027-3-pstanner@redhat.com>
- <202311211441.4LgOiu32-lkp@intel.com>
-Date: Tue, 21 Nov 2023 08:22:29 +0100
+Message-Id: <45997863-d817-48c7-ad46-8b47f5e0ce61@app.fastmail.com>
+In-Reply-To: <20231120215945.52027-4-pstanner@redhat.com>
+References: <20231120215945.52027-2-pstanner@redhat.com>
+ <20231120215945.52027-4-pstanner@redhat.com>
+Date: Tue, 21 Nov 2023 08:29:15 +0100
 From: "Arnd Bergmann" <arnd@kernel.org>
-To: "kernel test robot" <lkp@intel.com>,
- "Philipp Stanner" <pstanner@redhat.com>,
- "Bjorn Helgaas" <helgaas@kernel.org>,
+To: "Philipp Stanner" <pstanner@redhat.com>,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
  "Andrew Morton" <akpm@linux-foundation.org>,
  "Randy Dunlap" <rdunlap@infradead.org>, "Jason Gunthorpe" <jgg@ziepe.ca>,
- "Eric Auger" <eric.auger@redhat.com>, "Kent Overstreet" <kmo@daterainc.com>,
+ "Eric Auger" <eric.auger@redhat.com>,
+ "Kent Overstreet" <kent.overstreet@gmail.com>,
  "Niklas Schnelle" <schnelle@linux.ibm.com>, "Neil Brown" <neilb@suse.de>,
  "John Sanpe" <sanpeqf@gmail.com>, "Dave Jiang" <dave.jiang@intel.com>,
  "Yury Norov" <yury.norov@gmail.com>, "Kees Cook" <keescook@chromium.org>,
@@ -86,49 +86,27 @@ To: "kernel test robot" <lkp@intel.com>,
  "wuqiang.matt" <wuqiang.matt@bytedance.com>,
  "Jason Baron" <jbaron@akamai.com>, "Ben Dooks" <ben.dooks@codethink.co.uk>,
  "Danilo Krummrich" <dakr@redhat.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
- "Linux Memory Management List" <linux-mm@kvack.org>,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/4] lib: move pci_iomap.c to drivers/pci/
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/4] lib: move pci-specific devres code to drivers/pci/
 Content-Type: text/plain
 
-On Tue, Nov 21, 2023, at 07:48, kernel test robot wrote:
+On Mon, Nov 20, 2023, at 22:59, Philipp Stanner wrote:
+> The pcim_*() functions in lib/devres.c are guarded by an #ifdef
+> CONFIG_PCI and, thus, don't belong to this file. They are only ever used
+> for pci and not generic infrastructure.
 >
-> If you fix the issue in a separate patch/commit (i.e. not just a new 
-> version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: 
-> https://lore.kernel.org/oe-kbuild-all/202311211441.4LgOiu32-lkp@intel.com/
+> Move all pcim_*() functions in lib/devres.c to drivers/pci/devres.c
 >
-> All errors (new ones prefixed by >>):
->
->    drivers/pci/iomap.c:27:15: error: redefinition of 'pci_iomap_range'
->    void __iomem *pci_iomap_range(struct pci_dev *dev,
->                  ^
->    include/asm-generic/pci_iomap.h:44:29: note: previous definition is here
->    static inline void __iomem *pci_iomap_range(struct pci_dev *dev, int bar,
->                                ^
->>> drivers/pci/iomap.c:43:10: error: call to undeclared function '__pci_ioport_map'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
->                    return __pci_ioport_map(dev, start, len);
+> Suggested-by: Danilo Krummrich <dakr@redhat.com>
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> ---
+>  drivers/pci/Makefile |   2 +-
+>  drivers/pci/devres.c | 207 ++++++++++++++++++++++++++++++++++++++++++
+>  lib/devres.c         | 208 +------------------------------------------
 
-From what I can tell looking at the header, I think we can
-just remove the "#elif defined(CONFIG_GENERIC_PCI_IOMAP)"
-bit entirely, as it no longer serves the purpose it originally
-had.
+Since you are moving the pci_iomap() code into drivers/pci/ already,
+I'd suggest merging this one into the same file and keep the two
+halves of this interface together.
 
-It also looks like s390 is the only architecture that actually
-uses a custom implementation of pci_iomap*(), and this already has
-
-#define pci_iomap pci_iomap
-#define pci_iomap_range pci_iomap_range
-#define pci_iounmap pci_iounmap
-#define pci_iomap_wc pci_iomap_wc
-#define pci_iomap_wc_range pci_iomap_wc_range
-
-so the entire CONFIG_GENERIC_PCI_IOMAP symbol can probably
-be replaced with individual checks here, using CONFIG_PCI
-as the conditional in the Makefile.
-
-    Arnd
+     Arnd
 
