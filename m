@@ -1,137 +1,222 @@
-Return-Path: <linux-pci+bounces-24-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B785E7F26DF
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 09:01:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DEB57F27D3
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 09:46:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E84811C20EC7
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 08:01:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E1D0428287C
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 08:46:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E98438DCC;
-	Tue, 21 Nov 2023 08:01:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 854DE1CF89;
+	Tue, 21 Nov 2023 08:46:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jM9q9+bG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ig95qHav"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 377DBC3
-	for <linux-pci@vger.kernel.org>; Tue, 21 Nov 2023 00:01:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1700553667;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T40r14k+GJH8froFyeHTEYys3h09bU1RbAgHUM0HR7M=;
-	b=jM9q9+bGHWIk7zvOCHzv4hHr7tjXTTKnSHerOsKtouK1XB4yR+gwVuuNQXCvqeE0lLV1xI
-	ScF5g1JwWZINgZlMeuUsQfoMONKdIcF4ndetnqA974iBdstUIMSg8DhUO22Cdia1uYfe09
-	8kF92Pg+gULbhXLAfy1SCUHh5FpjoCs=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-600-1BMS7GRVOlaG1fLBCf3ajA-1; Tue, 21 Nov 2023 03:01:02 -0500
-X-MC-Unique: 1BMS7GRVOlaG1fLBCf3ajA-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-778b5c628f4so71626985a.0
-        for <linux-pci@vger.kernel.org>; Tue, 21 Nov 2023 00:01:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700553662; x=1701158462;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=T40r14k+GJH8froFyeHTEYys3h09bU1RbAgHUM0HR7M=;
-        b=hSEJIJqiGIUoIBgh/aevap0FqhDSQiwv4Idsd+kBfn3v9nYQHdy8o2eJRPVXGxj6kW
-         zMUg1VeklKcmq69EY2MEntwkYBWBwHnV3ewUQCx6R+wu8vW3jGAOTzs+CmcJidmg7rc/
-         TYB0+sJsMfGmb/9lmpAUycHqVTAoZcsSZ+vrO+11zBNHDDOpL7v3VH25LE8Ra7V3+rRD
-         o1rBtg4Iv7LhPjkyvcFsmsa/1bq1lYm1sAy7v/NruTJ44dedPDXLfZgopoEeIAvoaCsW
-         nGFQxwsWpqZE2SUpmS5YAE4oH65f/TWF5iYn0toQVQvThFT/xmLo6o9POo18WgLoH7nF
-         SpQA==
-X-Gm-Message-State: AOJu0Yzcb8sbywmBhL/BamX4Cfo6g4Ubj8KIuBxlmq/c/1EQQxmNI27L
-	T3eCsizVzsyZiUS6YiasQ/1sayI+bV6xYvKVgqaqjXfpmWXW9AZw4xnAgH1/ArUxWRH9m7IBvos
-	6zQO5BsUhwaAIvGkIJ10m
-X-Received: by 2002:a05:620a:1993:b0:776:f188:eee6 with SMTP id bm19-20020a05620a199300b00776f188eee6mr12064308qkb.2.1700553662449;
-        Tue, 21 Nov 2023 00:01:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF/fxOrCTKTFdfBU3FfgYL3cQyMCOz/S4+5mT3QDjRE+h9BN8/orrFqxzG87zzge1Rl/wF8Pg==
-X-Received: by 2002:a05:620a:1993:b0:776:f188:eee6 with SMTP id bm19-20020a05620a199300b00776f188eee6mr12064272qkb.2.1700553662102;
-        Tue, 21 Nov 2023 00:01:02 -0800 (PST)
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id p25-20020a05620a113900b00767dcf6f4adsm3394581qkk.51.2023.11.21.00.00.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Nov 2023 00:01:01 -0800 (PST)
-Message-ID: <d38d1149fdf5eb0cc4da12402ca03604beba1881.camel@redhat.com>
-Subject: Re: [PATCH 2/4] lib: move pci-specific devres code to drivers/pci/
-From: Philipp Stanner <pstanner@redhat.com>
-To: Arnd Bergmann <arnd@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap
- <rdunlap@infradead.org>, Jason Gunthorpe <jgg@ziepe.ca>,  Eric Auger
- <eric.auger@redhat.com>, Kent Overstreet <kent.overstreet@gmail.com>,
- Niklas Schnelle <schnelle@linux.ibm.com>, Neil Brown <neilb@suse.de>, John
- Sanpe <sanpeqf@gmail.com>, Dave Jiang <dave.jiang@intel.com>, Yury Norov
- <yury.norov@gmail.com>, Kees Cook <keescook@chromium.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, David Gow <davidgow@google.com>, Herbert Xu
- <herbert@gondor.apana.org.au>, Thomas Gleixner <tglx@linutronix.de>, 
- "wuqiang.matt" <wuqiang.matt@bytedance.com>, Jason Baron
- <jbaron@akamai.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Danilo
- Krummrich <dakr@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	pstanner@redhat.com
-Date: Tue, 21 Nov 2023 09:00:58 +0100
-In-Reply-To: <45997863-d817-48c7-ad46-8b47f5e0ce61@app.fastmail.com>
-References: <20231120215945.52027-2-pstanner@redhat.com>
-	 <20231120215945.52027-4-pstanner@redhat.com>
-	 <45997863-d817-48c7-ad46-8b47f5e0ce61@app.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF7B1100;
+	Tue, 21 Nov 2023 00:46:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700556412; x=1732092412;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hac0kukbZz6JY7rDm54ZjRjFk4pFlz0OMpo25ey4LNg=;
+  b=ig95qHavl6NNuEf0hEXVHXLTpswqhy57x1gUcJ4ywDuZ6pl0SOnapiCQ
+   Ao+ovmuSgnQivMbjdSTXams0pvUb5bAhhvzQPt3yDE9CPvmt+64Cixp5o
+   8kmIFf/QqNqAZSsiVO2diazMbt0+ymqk4VQMlUCGGRL9I+ZV9Z4K48DWu
+   MyQS6dxecwpfn5zcthd93J7UkENLrQVz7nUDENDu1bgRzmVmpCUyUr8UG
+   EeLkM7VKlSdhXkqHNxbMLrMWHhK42DXefJZvtNpp5joQgpI29wObrythq
+   zlBdR9DfBx4aVPz+shQFzPjNAyFeXzXBGpvUiUgv6V7HSwO8jtCXN6ryt
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="4988543"
+X-IronPort-AV: E=Sophos;i="6.04,215,1695711600"; 
+   d="scan'208";a="4988543"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 00:46:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="760032494"
+X-IronPort-AV: E=Sophos;i="6.04,215,1695711600"; 
+   d="scan'208";a="760032494"
+Received: from lkp-server02.sh.intel.com (HELO b8de5498638e) ([10.239.97.151])
+  by orsmga007.jf.intel.com with ESMTP; 21 Nov 2023 00:46:43 -0800
+Received: from kbuild by b8de5498638e with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1r5MP1-0007aE-13;
+	Tue, 21 Nov 2023 08:46:39 +0000
+Date: Tue, 21 Nov 2023 16:46:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Philipp Stanner <pstanner@redhat.com>,
+	Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Eric Auger <eric.auger@redhat.com>,
+	Kent Overstreet <kmo@daterainc.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>, NeilBrown <neilb@suse.de>,
+	John Sanpe <sanpeqf@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	David Gow <davidgow@google.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
+	Jason Baron <jbaron@akamai.com>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	Danilo Krummrich <dakr@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/4] lib: move pci_iomap.c to drivers/pci/
+Message-ID: <202311211641.ThSnuFs7-lkp@intel.com>
+References: <20231120215945.52027-3-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231120215945.52027-3-pstanner@redhat.com>
 
-On Tue, 2023-11-21 at 08:29 +0100, Arnd Bergmann wrote:
-> On Mon, Nov 20, 2023, at 22:59, Philipp Stanner wrote:
-> > The pcim_*() functions in lib/devres.c are guarded by an #ifdef
-> > CONFIG_PCI and, thus, don't belong to this file. They are only ever
-> > used
-> > for pci and not generic infrastructure.
-> >=20
-> > Move all pcim_*() functions in lib/devres.c to drivers/pci/devres.c
-> >=20
-> > Suggested-by: Danilo Krummrich <dakr@redhat.com>
-> > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> > ---
-> > =C2=A0drivers/pci/Makefile |=C2=A0=C2=A0 2 +-
-> > =C2=A0drivers/pci/devres.c | 207
-> > ++++++++++++++++++++++++++++++++++++++++++
-> > =C2=A0lib/devres.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 20=
-8 +--------------------------------------
-> > ----
->=20
-> Since you are moving the pci_iomap() code into drivers/pci/ already,
-> I'd suggest merging this one into the same file and keep the two
-> halves of this interface together.
+Hi Philipp,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.7-rc2 next-20231121]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Philipp-Stanner/lib-move-pci_iomap-c-to-drivers-pci/20231121-060258
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20231120215945.52027-3-pstanner%40redhat.com
+patch subject: [PATCH 1/4] lib: move pci_iomap.c to drivers/pci/
+config: x86_64-buildonly-randconfig-004-20231121 (https://download.01.org/0day-ci/archive/20231121/202311211641.ThSnuFs7-lkp@intel.com/config)
+compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231121/202311211641.ThSnuFs7-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311211641.ThSnuFs7-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/pci/iomap.c:27:15: error: redefinition of 'pci_iomap_range'
+    void __iomem *pci_iomap_range(struct pci_dev *dev,
+                  ^~~~~~~~~~~~~~~
+   In file included from include/asm-generic/iomap.h:113:0,
+                    from include/asm-generic/io.h:16,
+                    from arch/x86/include/asm/io.h:327,
+                    from include/linux/io.h:13,
+                    from include/linux/pci.h:39,
+                    from drivers/pci/iomap.c:7:
+   include/asm-generic/pci_iomap.h:44:29: note: previous definition of 'pci_iomap_range' was here
+    static inline void __iomem *pci_iomap_range(struct pci_dev *dev, int bar,
+                                ^~~~~~~~~~~~~~~
+   drivers/pci/iomap.c: In function 'pci_iomap_range':
+   drivers/pci/iomap.c:43:10: error: implicit declaration of function '__pci_ioport_map'; did you mean 'devm_ioport_map'? [-Werror=implicit-function-declaration]
+      return __pci_ioport_map(dev, start, len);
+             ^~~~~~~~~~~~~~~~
+             devm_ioport_map
+>> drivers/pci/iomap.c:43:10: warning: return makes pointer from integer without a cast [-Wint-conversion]
+      return __pci_ioport_map(dev, start, len);
+             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/pci/iomap.c: At top level:
+   drivers/pci/iomap.c:67:15: error: redefinition of 'pci_iomap_wc_range'
+    void __iomem *pci_iomap_wc_range(struct pci_dev *dev,
+                  ^~~~~~~~~~~~~~~~~~
+   In file included from include/asm-generic/iomap.h:113:0,
+                    from include/asm-generic/io.h:16,
+                    from arch/x86/include/asm/io.h:327,
+                    from include/linux/io.h:13,
+                    from include/linux/pci.h:39,
+                    from drivers/pci/iomap.c:7:
+   include/asm-generic/pci_iomap.h:50:29: note: previous definition of 'pci_iomap_wc_range' was here
+    static inline void __iomem *pci_iomap_wc_range(struct pci_dev *dev, int bar,
+                                ^~~~~~~~~~~~~~~~~~
+   drivers/pci/iomap.c:110:15: error: redefinition of 'pci_iomap'
+    void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long maxlen)
+                  ^~~~~~~~~
+   In file included from include/asm-generic/iomap.h:113:0,
+                    from include/asm-generic/io.h:16,
+                    from arch/x86/include/asm/io.h:327,
+                    from include/linux/io.h:13,
+                    from include/linux/pci.h:39,
+                    from drivers/pci/iomap.c:7:
+   include/asm-generic/pci_iomap.h:35:29: note: previous definition of 'pci_iomap' was here
+    static inline void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long max)
+                                ^~~~~~~~~
+   drivers/pci/iomap.c:131:15: error: redefinition of 'pci_iomap_wc'
+    void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
+                  ^~~~~~~~~~~~
+   In file included from include/asm-generic/iomap.h:113:0,
+                    from include/asm-generic/io.h:16,
+                    from arch/x86/include/asm/io.h:327,
+                    from include/linux/io.h:13,
+                    from include/linux/pci.h:39,
+                    from drivers/pci/iomap.c:7:
+   include/asm-generic/pci_iomap.h:40:29: note: previous definition of 'pci_iomap_wc' was here
+    static inline void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long max)
+                                ^~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for GENERIC_PCI_IOMAP
+   Depends on [n]: PCI [=n]
+   Selected by [y]:
+   - GENERIC_IOMAP [=y]
 
 
-I'd argue that they are as much together as they were before:
+vim +43 drivers/pci/iomap.c
 
-Previously:
- * PCI-IOMAP-code in folder lib/ in its own file (pci_iomap.c)
- * PCI-Devres-code in folder lib/ in a distinct file (devres.c)
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  11  
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  12  /**
+eb29d8d2aad706 lib/pci_iomap.c Michael S. Tsirkin 2013-05-29  13   * pci_iomap_range - create a virtual mapping cookie for a PCI BAR
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  14   * @dev: PCI device that owns the BAR
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  15   * @bar: BAR number
+eb29d8d2aad706 lib/pci_iomap.c Michael S. Tsirkin 2013-05-29  16   * @offset: map memory at the given offset in BAR
+eb29d8d2aad706 lib/pci_iomap.c Michael S. Tsirkin 2013-05-29  17   * @maxlen: max length of the memory to map
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  18   *
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  19   * Using this function you will get a __iomem address to your device BAR.
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  20   * You can access it using ioread*() and iowrite*(). These functions hide
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  21   * the details if this is a MMIO or PIO address space and will just do what
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  22   * you expect from them in the correct way.
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  23   *
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  24   * @maxlen specifies the maximum length to map. If you want to get access to
+eb29d8d2aad706 lib/pci_iomap.c Michael S. Tsirkin 2013-05-29  25   * the complete BAR from offset to the end, pass %0 here.
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  26   * */
+eb29d8d2aad706 lib/pci_iomap.c Michael S. Tsirkin 2013-05-29  27  void __iomem *pci_iomap_range(struct pci_dev *dev,
+eb29d8d2aad706 lib/pci_iomap.c Michael S. Tsirkin 2013-05-29  28  			      int bar,
+eb29d8d2aad706 lib/pci_iomap.c Michael S. Tsirkin 2013-05-29  29  			      unsigned long offset,
+eb29d8d2aad706 lib/pci_iomap.c Michael S. Tsirkin 2013-05-29  30  			      unsigned long maxlen)
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  31  {
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  32  	resource_size_t start = pci_resource_start(dev, bar);
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  33  	resource_size_t len = pci_resource_len(dev, bar);
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  34  	unsigned long flags = pci_resource_flags(dev, bar);
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  35  
+eb29d8d2aad706 lib/pci_iomap.c Michael S. Tsirkin 2013-05-29  36  	if (len <= offset || !start)
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  37  		return NULL;
+eb29d8d2aad706 lib/pci_iomap.c Michael S. Tsirkin 2013-05-29  38  	len -= offset;
+eb29d8d2aad706 lib/pci_iomap.c Michael S. Tsirkin 2013-05-29  39  	start += offset;
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  40  	if (maxlen && len > maxlen)
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  41  		len = maxlen;
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  42  	if (flags & IORESOURCE_IO)
+b923650b84068b lib/pci_iomap.c Michael S. Tsirkin 2012-01-30 @43  		return __pci_ioport_map(dev, start, len);
+92b19ff50e8f24 lib/pci_iomap.c Dan Williams       2015-08-10  44  	if (flags & IORESOURCE_MEM)
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  45  		return ioremap(start, len);
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  46  	/* What? */
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  47  	return NULL;
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  48  }
+eb29d8d2aad706 lib/pci_iomap.c Michael S. Tsirkin 2013-05-29  49  EXPORT_SYMBOL(pci_iomap_range);
+66eab4df288aae lib/pci_iomap.c Michael S. Tsirkin 2011-11-24  50  
 
-Now:
- * PCI-IOMAP-code in folder drivers/pci/ in its own file (iomap.c)
- * PCI-Devres-code in folder drivers/pci/ in its own file (devres.c)
-
-Or am I misunderstanding something?
-
-
-P.
-
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0 Arnd
->=20
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
