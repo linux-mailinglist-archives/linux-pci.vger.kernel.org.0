@@ -1,52 +1,52 @@
-Return-Path: <linux-pci+bounces-31-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-32-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4B5A7F2AE8
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 11:45:14 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DA737F2AF0
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 11:46:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DA0D28195D
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 10:45:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9E187B2160B
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 10:46:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5CFD47791;
-	Tue, 21 Nov 2023 10:45:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 020E14778C;
+	Tue, 21 Nov 2023 10:46:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N0yWFk90"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jjW5KeC1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B98BDC1;
-	Tue, 21 Nov 2023 02:45:04 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CA8DA2;
+	Tue, 21 Nov 2023 02:46:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700563505; x=1732099505;
+  t=1700563576; x=1732099576;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=l+a71bvgEh/TboifQfXVauuzp5BKzhlFcNngQXU+KhQ=;
-  b=N0yWFk90pG4vwpdHgNxHDoWaX4P9yIjNgcqqmAttZFsXcsyhLPfpkDDd
-   C1dgV6ZI/X4gsC43xXXh7bMUUNdDVqA9Ab8+d9dv2WPpuF4nZozte0EZM
-   pKPW9G5jQ3CNGzUVQ8IDQw9bspWtJZiO+TqDqfhEampw1DxbS4+h4ZSfW
-   P3gGrBi7sSF4874E1tiri20iku7oziGZgEx/3HFD0V8G6NBcQAkQXUo+Y
-   23icPG9MZ7U6uYWDlYaQa/E3eTsq6pjNBKfTSXm/HFye/fidExIONuOaF
-   bNo8HVsQ2JsU8DoFnuRJVZqCyiEXOS36T4u5iyqM0BfDbgcG8dVS+K1WE
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="13356770"
+  bh=PBhDtUKwPikfG8y2V5EOoH+DV4F1XcXhwlk7+zHLYQo=;
+  b=jjW5KeC1gzgZhQhLWpWNWKEm0n2GtdTdc/PvOJNUpT1BxRyeXDfjaKrz
+   ZuWOIbPVbEEAbN9gCMC10SQnY+G+pV2M/C9LamyrYU9+myDV8koK8X5tf
+   KJk6PUy6WTPrGeMD5GrwTNzAS8qLwOgrNpUYkEv6w9o92SHfh6imuSxfi
+   OX/Ha8N/+Kvz6kTbJW0IMsY8CGuvRrHPsxOMNSAjPtuuNAt9gIh2zoFLo
+   ObYe0T4IKIAE9Kfm73J9DdkxQZ7Or+/y42GR0+vL4MrleLqAACAT5iVNv
+   ilIjEsx7qGyEspSglEUsXzesgJHPlIRe1ypAzcbleeNSD0PO98qWUkRN9
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="371988248"
 X-IronPort-AV: E=Sophos;i="6.04,215,1695711600"; 
-   d="scan'208";a="13356770"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 02:45:04 -0800
+   d="scan'208";a="371988248"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 02:46:15 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="857288861"
+X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="1098020667"
 X-IronPort-AV: E=Sophos;i="6.04,215,1695711600"; 
-   d="scan'208";a="857288861"
+   d="scan'208";a="1098020667"
 Received: from lkp-server02.sh.intel.com (HELO b8de5498638e) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 21 Nov 2023 02:44:57 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 21 Nov 2023 02:46:09 -0800
 Received: from kbuild by b8de5498638e with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1r5OFM-0007hR-2t;
-	Tue, 21 Nov 2023 10:44:51 +0000
-Date: Tue, 21 Nov 2023 18:44:12 +0800
+	id 1r5OGG-0007hh-0s;
+	Tue, 21 Nov 2023 10:45:52 +0000
+Date: Tue, 21 Nov 2023 18:44:19 +0800
 From: kernel test robot <lkp@intel.com>
 To: Philipp Stanner <pstanner@redhat.com>,
 	Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
@@ -72,7 +72,7 @@ Cc: Paul Gazzillo <paul@pgazz.com>,
 	Linux Memory Management List <linux-mm@kvack.org>,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 Subject: Re: [PATCH 1/4] lib: move pci_iomap.c to drivers/pci/
-Message-ID: <202311211816.wS7kAE5o-lkp@intel.com>
+Message-ID: <202311211833.tfTYR1cP-lkp@intel.com>
 References: <20231120215945.52027-3-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -98,21 +98,21 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Philipp-Stanner/lib-move-
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
 patch link:    https://lore.kernel.org/r/20231120215945.52027-3-pstanner%40redhat.com
 patch subject: [PATCH 1/4] lib: move pci_iomap.c to drivers/pci/
-config: arm-kismet-CONFIG_GENERIC_PCI_IOMAP-CONFIG_ARM-0-0 (https://download.01.org/0day-ci/archive/20231121/202311211816.wS7kAE5o-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20231121/202311211816.wS7kAE5o-lkp@intel.com/reproduce)
+config: arm64-kismet-CONFIG_GENERIC_PCI_IOMAP-CONFIG_ARM64-0-0 (https://download.01.org/0day-ci/archive/20231121/202311211833.tfTYR1cP-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20231121/202311211833.tfTYR1cP-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311211816.wS7kAE5o-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311211833.tfTYR1cP-lkp@intel.com/
 
 kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for GENERIC_PCI_IOMAP when selected by ARM
+>> kismet: WARNING: unmet direct dependencies detected for GENERIC_PCI_IOMAP when selected by ARM64
    
    WARNING: unmet direct dependencies detected for GENERIC_PCI_IOMAP
      Depends on [n]: PCI [=n]
      Selected by [y]:
-     - ARM [=y]
+     - ARM64 [=y]
 
 -- 
 0-DAY CI Kernel Test Service
