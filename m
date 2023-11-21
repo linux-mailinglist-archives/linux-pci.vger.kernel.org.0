@@ -1,137 +1,136 @@
-Return-Path: <linux-pci+bounces-70-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-71-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBBBD7F3938
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 23:34:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FA107F3A87
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 00:58:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 763D01F228C8
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 22:34:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 88E961C208E4
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Nov 2023 23:58:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0379584F0;
-	Tue, 21 Nov 2023 22:34:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CD162BAF4;
+	Tue, 21 Nov 2023 23:58:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WMZcCrfT"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="emOxbQV1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id D2C3FA1;
-	Tue, 21 Nov 2023 14:34:12 -0800 (PST)
-Received: from skinsburskii. (unknown [131.107.159.175])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 39B2120B74C0;
-	Tue, 21 Nov 2023 14:34:12 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 39B2120B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1700606052;
-	bh=mA21u0SDYN0cTZPy2oKF3AgLd7FQiOH8cg8pH+DcV9M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WMZcCrfT9hxbdGnpIQWOxTnUJny2Y0lCYMw1xX8KKHBD7kW2ILHyW/bgw4yZrsmbz
-	 ErvcL1CFacnNag0qo5GCEEspHP360qfL0dQFyCm6AlFehxpsOXN8g3vLDaiU7cXEv5
-	 wbDTTPIYBnW7zTnvQqNQVVMnbxNVnDrC/3oilEcA=
-Date: Tue, 21 Nov 2023 14:34:10 -0800
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: ryder.lee@mediatek.com, jianjun.wang@mediatek.com,
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com, linux-pci@vger.kernel.org,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, skinsburskii@gmail.com
-Subject: Re: [PATCH] PCI: mediatek: Fix sparse warning caused to
- virt_to_phys() prototype change
-Message-ID: <20231121223410.GA23977@skinsburskii.>
-References: <20231121220556.GA21969@skinsburskii.>
- <20231121222325.GA260057@bhelgaas>
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14626D47
+	for <linux-pci@vger.kernel.org>; Tue, 21 Nov 2023 15:58:36 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1cf50cc2f85so30758635ad.1
+        for <linux-pci@vger.kernel.org>; Tue, 21 Nov 2023 15:58:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=google; t=1700611115; x=1701215915; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JDEfmsPJVwTEPggSSNFb6ShzjQpZbR38A7DZ6XZ2q80=;
+        b=emOxbQV18fa6u5MG98QwU1aX2IsgrF70q90vQNgwhLqRDIhQUSc4TbOHeWYik61/uB
+         SRRvinv+7+pFF1DMnmy8j7z6F/I4+0ZgcuVItDY9/CCNkFlLYz0m75mB98ICZzeWyFwr
+         LKhnahgZQqDBa3RFgh61O+Be46FZInJrEvZ8/6IOR+eRlsD7UL1ZOe+ZV2W3AnwNMTxD
+         7ak5hJTnVp/8itN4TCrOjKeXcEjznAUDI44VcYd/afOULhK9wxFaY9w9eKty4vd62skC
+         s0V3elQfX/Is8iqRsIXDY0uW77mtSiZElFZ9JwbqyJvowz1aHNG3u2vSse9aGhDSzCwX
+         3KHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700611115; x=1701215915;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JDEfmsPJVwTEPggSSNFb6ShzjQpZbR38A7DZ6XZ2q80=;
+        b=wVOY6td/fq0niMWv0f9TNL3nFgC+bU4BZVs2VQU6qMnJptNidC/dDEuoKJBJl65fEb
+         QHPgI7wa5pf3HffSk2tWHrkHbMCzaQY0tR2loqHa6mzSrFUWNH5N/XF0hK3YY3yeUo3d
+         Bas7Djts38MJr+jOGdFocqgHhkDZj7CLx3KiebmWMf4v8obsHiGaBUNIomEP+ZjWG9aC
+         JBsqevRyF3jmivZe0MkhYEV3q/eCKI73GfZ7TCyw03hf2KiRXneHM4v8xe4bxt841Y5X
+         3fhK4Kx+IpA3dejvN0t6bVJtba6PNjrhfc8C9xzaDq5H/xbJC6wAw+JV/cZfQc2G5f9U
+         BExQ==
+X-Gm-Message-State: AOJu0YwbMBehNWouWZHQ5SdMvAFsIhjDAGhNmgHwWKy+IA4Y2IskTiOD
+	q6x5Btb6yx8mAJbfTuqEe3AKGg==
+X-Google-Smtp-Source: AGHT+IGp+BtUlQALUJJLsla+qeJzXa7pmzoyhcQrQA6HAbjosvcX7jOpb51SbfBYSr+OWQT8JQ1pug==
+X-Received: by 2002:a17:903:2312:b0:1cc:4559:f5 with SMTP id d18-20020a170903231200b001cc455900f5mr898790plh.14.1700611115452;
+        Tue, 21 Nov 2023 15:58:35 -0800 (PST)
+Received: from smtpclient.apple (76-10-188-40.dsl.teksavvy.com. [76.10.188.40])
+        by smtp.gmail.com with ESMTPSA id jw19-20020a170903279300b001b9da42cd7dsm8483523plb.279.2023.11.21.15.58.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 Nov 2023 15:58:34 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231121222325.GA260057@bhelgaas>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
+Subject: Re: [PATCH v3] switchtec: Fix stdev_release crash after suprise
+ device loss.
+From: Daniel Stodden <dns@arista.com>
+In-Reply-To: <20231121184008.GA249064@bhelgaas>
+Date: Tue, 21 Nov 2023 15:58:22 -0800
+Cc: Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+ Logan Gunthorpe <logang@deltatee.com>,
+ linux-pci@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D34BC819-ACC4-4709-8464-73EEDDC64328@arista.com>
+References: <20231121184008.GA249064@bhelgaas>
+To: Bjorn Helgaas <helgaas@kernel.org>,
+ Dmitry Safonov <dima@arista.com>
+X-Mailer: Apple Mail (2.3731.700.6)
 
-On Tue, Nov 21, 2023 at 04:23:25PM -0600, Bjorn Helgaas wrote:
-> On Tue, Nov 21, 2023 at 02:05:56PM -0800, Stanislav Kinsburskii wrote:
-> > On Tue, Nov 21, 2023 at 03:37:55PM -0600, Bjorn Helgaas wrote:
-> > > On Mon, Nov 20, 2023 at 03:40:33PM -0800, Stanislav Kinsburskii wrote:
-> > > > Explicitly cast __iomem pointer to const void* with __force to fix the
-> > > > following warning:
-> > > > 
-> > > >   warning: incorrect type in argument 1 (different address spaces)
-> > > >      expected void const volatile *address
-> > > >      got void [noderef] __iomem *
-> > > 
-> > > I have two questions about this:
-> > > 
-> > >   1) There's no other use of __force in drivers/pci, so I don't know
-> > >   what's special about pcie-mediatek.c.  There should be a way to fix
-> > >   the types so it's not needed.
-> > 
-> > __force suppreses the following sparse warning:
-> > 
-> >     warning: cast removes address space '__iomem' of expression
-> 
-> I'm suggesting that the cast is a band-aid that covers up a type
-> mismatch, and there shouldn't be a mismatch in the first place.
-> 
-> > >   2) virt_to_phys() is not quite right to begin with because what we
-> > >   want is a *bus* address, not the CPU physical address we get from
-> > >   virt_to_phys().  Obviously the current platforms that use this must
-> > >   not apply any offset between bus and CPU physical addresses, but
-> > >   it's not something we should rely on.
-> > > 
-> > >   There are only three drivers (pci-aardvark.c, pcie-xilinx.c, and
-> > >   this one) that use virt_to_phys(), and they're all slightly wrong
-> > >   here.
-> > > 
-> > > The *_compose_msi_msg() methods could use a little more consistency
-> > > across the board.
-> > 
-> > Could you elaborate on what do you suggest?
-> > Should virt_to_phys() be simply removed?
-> 
-> The DMA API (Documentation/core-api/dma-api.rst) is the usual way to
-> get bus addresses, since an MSI is basically a DMA on the PCI bus.
-> 
-> https://lore.kernel.org/linux-pci/20230914203146.GA77870@bhelgaas/
-> 
-> Nobody is very motivated to fix these, I guess ;)  I sort of hate to
-> just throw in a cast to shut up the warning because it doesn't really
-> solve the problem.
-> 
 
-This is fair.
-However I have neither expertize to assess, no hardware to test such intrusive
-changes.
-I guess it's a no-op then, is it?
 
-> > > > Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-> > > > ---
-> > > >  drivers/pci/controller/pcie-mediatek.c |    4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> > > > index 66a8f73296fc..27f0f79810a1 100644
-> > > > --- a/drivers/pci/controller/pcie-mediatek.c
-> > > > +++ b/drivers/pci/controller/pcie-mediatek.c
-> > > > @@ -397,7 +397,7 @@ static void mtk_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-> > > >  	phys_addr_t addr;
-> > > >  
-> > > >  	/* MT2712/MT7622 only support 32-bit MSI addresses */
-> > > > -	addr = virt_to_phys(port->base + PCIE_MSI_VECTOR);
-> > > > +	addr = virt_to_phys((__force const void *)port->base + PCIE_MSI_VECTOR);
-> > > >  	msg->address_hi = 0;
-> > > >  	msg->address_lo = lower_32_bits(addr);
-> > > >  
-> > > > @@ -520,7 +520,7 @@ static void mtk_pcie_enable_msi(struct mtk_pcie_port *port)
-> > > >  	u32 val;
-> > > >  	phys_addr_t msg_addr;
-> > > >  
-> > > > -	msg_addr = virt_to_phys(port->base + PCIE_MSI_VECTOR);
-> > > > +	msg_addr = virt_to_phys((__force const void *)port->base + PCIE_MSI_VECTOR);
-> > > >  	val = lower_32_bits(msg_addr);
-> > > >  	writel(val, port->base + PCIE_IMSI_ADDR);
+> On Nov 21, 2023, at 10:40 AM, Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>=20
+> On Tue, Nov 21, 2023 at 10:23:51AM -0800, Daniel Stodden wrote:
+>>> On Nov 20, 2023, at 1:25 PM, Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>>> On Mon, Nov 13, 2023 at 01:21:50PM -0800, Daniel Stodden wrote:
+>>>> A pci device hot removal may occur while stdev->cdev is held open. =
+The
+>>>> call to stdev_release is then delivered during close or exit, at a
+>>>> point way past switchtec_pci_remove. Otherwise the last ref would
+>>>> vanish with the trailing put_device, just before return.
+>>>>=20
+>>>> At that later point in time, the device layer has alreay removed
+>>>> stdev->mrpc_mmio map. Also, the stdev->pdev reference was not a
+>>>=20
+>>> I guess this should say the "stdev->mmio_mrpc" (not "mrpc_mmio")?
+>>=20
+>> Eww. My fault. Could you still correct that?
+>=20
+> Yep, I speculatively made that change already, so thanks for
+> confirming it :)
+>=20
+> =
+https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=3Dsw=
+itchtec&id=3Df9724598e29d
+
+Thanks. And sorry for what=E2=80=99s next.=20
+
+Look what I just found in my internal review inbox.
+
+Signed-off/Reviewed-by: dima@arista.com
+
+Want a v4, a follow-up, or can you re-edit that once more too, please?
+
+Thanks + sorry,
+Daniel
+
+
+diff --git a/drivers/pci/switch/switchtec.c =
+b/drivers/pci/switch/switchtec.c
+index a82576205..ddaf87e10 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -1331,6 +1331,7 @@ static struct switchtec_dev *stdev_create(struct =
+pci_dev *pdev)
+
+ err_put:
+        put_device(&stdev->dev);
++       put_device(&stdev->pdev);
+        return ERR_PTR(rc);
+ }
+
+
+
 
