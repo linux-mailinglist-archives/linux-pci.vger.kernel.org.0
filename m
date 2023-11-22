@@ -1,114 +1,148 @@
-Return-Path: <linux-pci+bounces-134-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-135-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA2697F4BF1
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 17:06:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4760E7F4C56
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 17:29:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 74DAD2813C0
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 16:06:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0926281395
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 16:29:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC5044A99B;
-	Wed, 22 Nov 2023 16:06:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC64F24B3E;
+	Wed, 22 Nov 2023 16:29:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bkYWOhe1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CHGuVvkM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A0741B9
-	for <linux-pci@vger.kernel.org>; Wed, 22 Nov 2023 08:06:36 -0800 (PST)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-5098e423ba2so9771292e87.2
-        for <linux-pci@vger.kernel.org>; Wed, 22 Nov 2023 08:06:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700669195; x=1701273995; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2mnjxkuXcJXDP3gMcUiN4SEisCT0v2zuVwcrjlWRarE=;
-        b=bkYWOhe1zQAxdhDha/XA7tBEed59jgBW3wP4X9ukDhRoY0aImCgkA3W9s1LslC0fij
-         DfoGyN69GDgIKeXo1ENUVrmaOlVCBNq3QAVsk9fwjrXWur9R0f+xeSOGWLK0J191MsdB
-         uo50wp2ii1/ndUVB1pPr46vShUtgrE8+JBxuvo5DCYuIEDd+3JBLjwlaE0UALpbiWAmb
-         bHlusiIQ216XekhfmNe21lZNXTXdxUAa2e79TesKG2TRbj8eoLx82cBi83v9olNoA0bA
-         gvY7z9NQ41AXNkoYZpC015c1tF7FzgEq77/GuR22IDgxZ4vR4wrn07jfMAD/BDXjV5vT
-         KqUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700669195; x=1701273995;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2mnjxkuXcJXDP3gMcUiN4SEisCT0v2zuVwcrjlWRarE=;
-        b=lnYftDVtF2oF4itZMYbU6TLZ9btdmAAIzSr3gpPEUucTD4BTpwzjGUt+Nn9jwZg3bB
-         xMsgO8+soa6CvO5hmo0a2OJ2GyGPGAWgbQoaOLxBTHXBV8ElgInXB6VkX18m4TizpNhZ
-         qvvjW7iAHU5RbkmRgN/fTHxhgU7aONM3yQi0ETRlq7XX0gl7hAzRQ/F1XPcF4g+TxJD+
-         V+jOk8hLdfie0D9AJzZ9s4jpumARSEKD1xEdpsL4/ynTL7C4cnpgKazJiTQDj0HUiM9H
-         PxZ/r0wcqwoQQbPjoGdCnUmKsPcVXm3UXdO69u7IZNjPR6hvHEdtX76XHcBySSLY/H76
-         cGjw==
-X-Gm-Message-State: AOJu0Yxq+lurT1vc9dT2wnqHa73spDI2l2st8aN1uFw3ljgGwM6kPygM
-	Lq/6w+sjL/N+ghDEBsN0cFGW4A==
-X-Google-Smtp-Source: AGHT+IGaNfHxXIOdW9aMrIlLdqSxyYzkqVLUEMRqiJsmE52M/h5sAhBTzkEagJpEnoMpbW++YBXC0Q==
-X-Received: by 2002:a05:6512:3ca9:b0:503:38f2:6e1 with SMTP id h41-20020a0565123ca900b0050338f206e1mr2232652lfv.5.1700669194676;
-        Wed, 22 Nov 2023 08:06:34 -0800 (PST)
-Received: from [172.30.204.227] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id q20-20020ac24a74000000b0050943cf9cdbsm1878694lfp.307.2023.11.22.08.06.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Nov 2023 08:06:34 -0800 (PST)
-Message-ID: <c1d14c70-6fee-48c3-81b1-cd6d422e31d7@linaro.org>
-Date: Wed, 22 Nov 2023 17:06:32 +0100
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8612CA2;
+	Wed, 22 Nov 2023 08:29:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700670540; x=1732206540;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=bagruS5CXrz6mOWB6COGHqS1jlKmltZBn+nUJ6YlRfc=;
+  b=CHGuVvkMltNsrvh0eAqgxIVDewD+WVIdJUZsJ2IkpO5lHrSn4UbwWPBX
+   bpxa/Zr5s20kbZw/hu9l381mf/cqIuKZjUNiVUCnsQmTSZejS4TnZBFTQ
+   ttIJrTDDZHKtxOQ+V/2lvL1rk2UCPDja4FhSw1qH6s7Ymxkwij4Fh8tBu
+   fftWG6kxgIQ4ms/eYgop0ppBYv6nI2xwF7vMoTFevna4yLtkqX/2K49NL
+   JonJpMCy3vy4/528RRPcPVxO3HaS5lY+cZ5feuz/TmIM0158y8gG2vKbq
+   eeg+oGvdzQkx67EEbg8Ty0K0VmE55njHwi5cGXff8aDrxGR2L/aVmxPqo
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="394921013"
+X-IronPort-AV: E=Sophos;i="6.04,219,1695711600"; 
+   d="scan'208";a="394921013"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 08:28:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,219,1695711600"; 
+   d="scan'208";a="8531683"
+Received: from lkp-server01.sh.intel.com (HELO d584ee6ebdcc) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 22 Nov 2023 08:28:53 -0800
+Received: from kbuild by d584ee6ebdcc with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1r5q5r-0000gb-0J;
+	Wed, 22 Nov 2023 16:28:51 +0000
+Date: Thu, 23 Nov 2023 00:28:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Philipp Stanner <pstanner@redhat.com>,
+	Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Eric Auger <eric.auger@redhat.com>,
+	Kent Overstreet <kmo@daterainc.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>, NeilBrown <neilb@suse.de>,
+	John Sanpe <sanpeqf@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	David Gow <davidgow@google.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
+	Jason Baron <jbaron@akamai.com>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	Danilo Krummrich <dakr@redhat.com>
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/4] lib: move pci_iomap.c to drivers/pci/
+Message-ID: <202311222251.miLTgMyd-lkp@intel.com>
+References: <20231120215945.52027-3-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/3] arm64: qcom: sa8775p: add cache coherency support
- for SA8775P
-Content-Language: en-US
-To: Mrinmay Sarkar <quic_msarkar@quicinc.com>, agross@kernel.org,
- andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, mani@kernel.org, robh+dt@kernel.org
-Cc: quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
- quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
- dmitry.baryshkov@linaro.org, robh@kernel.org, quic_krichai@quicinc.com,
- quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
- quic_schintav@quicinc.com, quic_shijjose@quicinc.com,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <1700577493-18538-1-git-send-email-quic_msarkar@quicinc.com>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <1700577493-18538-1-git-send-email-quic_msarkar@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: *
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20231120215945.52027-3-pstanner@redhat.com>
 
+Hi Philipp,
 
+kernel test robot noticed the following build warnings:
 
-On 11/21/23 15:38, Mrinmay Sarkar wrote:
-> In a multiprocessor system cache snooping maintains the consistency
-> of caches. Snooping logic is disabled from HW on this platform.
-> Cache coherency doesn’t work without enabling this logic.
-> 
-> This series is to enable cache snooping logic in both RC and EP
-> driver and add the "dma-coherent" property in dtsi to support
-> cache coherency in 8775 platform.
-> 
-> To verify this series we required [1]
-> 
-> [1] https://lore.kernel.org/all/1699669982-7691-1-git-send-email-quic_msarkar@quicinc.com/
-> 
-> v3 -> v4:
-> - added new cfg(cfg_1_34_0) for SA8775P in both RC and EP driver.
-> - populated a flag in the data structures instead of doing
->    of_device_is_compatible() in both RC and EP patch.
-> - update commit mesaage and added reveiwed-by tag in commit message
->    in dtsi patch.
-This series looks good now, thanks!
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.7-rc2 next-202311=
+22]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+url:    https://github.com/intel-lab-lkp/linux/commits/Philipp-Stanner/lib-=
+move-pci_iomap-c-to-drivers-pci/20231121-060258
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20231120215945.52027-3-pstanner%40=
+redhat.com
+patch subject: [PATCH 1/4] lib: move pci_iomap.c to drivers/pci/
+config: csky-kismet-CONFIG_GENERIC_PCI_IOMAP-CONFIG_CSKY-0-0 (https://downl=
+oad.01.org/0day-ci/archive/20231122/202311222251.miLTgMyd-lkp@intel.com/con=
+fig)
+reproduce: (https://download.01.org/0day-ci/archive/20231122/202311222251.m=
+iLTgMyd-lkp@intel.com/reproduce)
 
-Konrad
+If you fix the issue in a separate patch/commit (i.e. not just a new versio=
+n of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311222251.miLTgMyd-lkp@i=
+ntel.com/
+
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for GENERIC_PCI_IOMA=
+P when selected by CSKY
+   /usr/bin/grep: /db/releases/20231122101355/kernel-tests/etc/kcflags: No =
+such file or directory
+   {"timestamp":"2023-11-22 12:45:55 +0800", "level":"WARN", "event":"kbuil=
+d.sh:3942:in `add_etc_kcflags': grep exit 2 (ShellError)", "detail":"cmd: '=
+/usr/bin/grep' '-v' '-e' '^#' '-e' '^$' '/db/releases/20231122101355/kernel=
+-tests/etc/kcflags' \nstderr: /usr/bin/grep: /db/releases/20231122101355/ke=
+rnel-tests/etc/kcflags: No such file or directory\n\n", "hostname":"communi=
+ty-kbuild-consumer-56", "host_hostname":"lkp-worker31", "call_stack":"/zday=
+/kernel-tests/lib/kbuild.sh:3942:in `add_etc_kcflags': /usr/bin/grep: /db/r=
+eleases/20231122101355/kernel-tests/etc/kcflags: No such file or directory =
+(ShellError 2)\n  from /zday/kernel-tests/lib/kbuild.sh:3971: setup_kcflags=
+\n  from /zday/kernel-tests/lib/kbuild.sh:4016: invoke_make\n  from /zday/k=
+ernel-tests/lib/kbuild.sh:4122: make\n  from /zday/kernel-tests/lib/kbuild.=
+sh:5623: make_config_allyes\n  from /zday/kernel-tests/common.sh:209: redir=
+ect_error_to_screen\n  from /zday/kernel-tests/common.sh:217: redirect_comm=
+and_errors\n  from /zday/kernel-tests/lib/kbuild.sh:5630: make_config\n  fr=
+om /zday/kernel-tests/lib/builder/kismet.sh:156: generate_make_olddefconfig=
+_warnings\n  from /zday/kernel-tests/lib/builder/kismet.sh:297: builder_com=
+pile\n  from /zday/kernel-tests/bisect-test-build-error.sh:94: main\n"}
+  =20
+   WARNING: unmet direct dependencies detected for GENERIC_PCI_IOMAP
+     Depends on [n]: PCI [=3Dn]
+     Selected by [y]:
+     - CSKY [=3Dy]
+
+--=20
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
