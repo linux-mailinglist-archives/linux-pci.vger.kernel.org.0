@@ -1,88 +1,117 @@
-Return-Path: <linux-pci+bounces-124-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-125-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EC917F3E7B
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 07:59:54 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C28F07F3E92
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 08:04:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0847E2819C8
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 06:59:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5B262B20D2D
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 07:04:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA76D14F9D;
-	Wed, 22 Nov 2023 06:59:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1580179B0;
+	Wed, 22 Nov 2023 07:04:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rv6ROEJ3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AdMAmDls"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD469156CE
-	for <linux-pci@vger.kernel.org>; Wed, 22 Nov 2023 06:59:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6F42C433C7;
-	Wed, 22 Nov 2023 06:59:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700636390;
-	bh=JNS80U7Zp2gQTubPxCkH5v5BQ20tt82AZXDTBCaU7dY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Rv6ROEJ3ya/Uktuyt6skezrs2RfbjJk1V3sQ9hvJAhk6Kq7fecZC0at38mXrAQJuz
-	 1Em+DGmOUV4TSd8nvwRqRAmpPVC2dA816x13ay6Bq5Fg5tqKp2izTPQaII2UxPhh8Y
-	 McZHzenCyMWIaAtP8bI0atCZJ4ft2ZZHuCNMrwT/nOqEaiN7YlKVa84YMtb5d4UNgJ
-	 NKspEf3rNe79+GTnbGVOPG2p07mtoEBOr3CZK+RFp6bTyQl4hEkwyWzIs7kcxbPfY9
-	 zQq2ykALXh3QgQNkZxVne+oqkGM0d+ortQVkTXIziIyCX3oF0/CcxWD3Cqk3HevWx7
-	 vqryN3QGwsAeA==
-Message-ID: <3bb1f206-b709-4e74-a381-e01a8ad72e6e@kernel.org>
-Date: Wed, 22 Nov 2023 15:59:47 +0900
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8048490
+	for <linux-pci@vger.kernel.org>; Tue, 21 Nov 2023 23:04:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700636678; x=1732172678;
+  h=date:from:to:cc:subject:message-id;
+  bh=rjnU/GVDyPl+/lz0+hOS1gGHPnuBujhbccIfwZ+i3M4=;
+  b=AdMAmDlso6KsIDbBqaXqVdENC8843gB1lMR2vLnUjwsfq/LGXHcYEQFT
+   46Tfk/s3eK5naTu39Nm9yf/uCkSvQtEwLC3IEQXM0K/goteFg1P1e/Z19
+   1tdFWXcZ2772lrYbF+b17uGQ6zHePbqP1EHLvpnixEiU3vkCbUMxK3/D6
+   DXhRGPY395LvY0FnvQ5DOgEAZznfwniiJ5rYTcr9839Txo88swOG9hc4h
+   uEwtwn157H4LE4qF8O5el6s03JnSSPyHOLUC/P2tloPyDxp3tcE/Y5nzT
+   7sEPNJvjc8UOV+KbLd5ijm6jjYJlAOom0bZvqMIxB3dPtKO5xlN90zxwl
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="371348013"
+X-IronPort-AV: E=Sophos;i="6.04,218,1695711600"; 
+   d="scan'208";a="371348013"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2023 23:04:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="795995266"
+X-IronPort-AV: E=Sophos;i="6.04,218,1695711600"; 
+   d="scan'208";a="795995266"
+Received: from lkp-server01.sh.intel.com (HELO d584ee6ebdcc) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 21 Nov 2023 23:04:36 -0800
+Received: from kbuild by d584ee6ebdcc with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1r5hHm-0000AZ-1q;
+	Wed, 22 Nov 2023 07:04:34 +0000
+Date: Wed, 22 Nov 2023 15:03:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:ecam] BUILD SUCCESS
+ 4de5ec48a79e3b0fca893d10138da6051042d796
+Message-ID: <202311221551.GuYwNNRc-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/16] PCI: portdrv: Use PCI_IRQ_INTX
-Content-Language: en-US
-To: Christoph Hellwig <hch@infradead.org>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>,
- Serge Semin <fancer.lancer@gmail.com>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-References: <20231122060406.14695-1-dlemoal@kernel.org>
- <20231122060406.14695-7-dlemoal@kernel.org> <ZV2c3oAHtmmYgSGn@infradead.org>
- <3859e36a-f920-4df8-922d-36305c81758b@kernel.org>
- <ZV2eY8iH41eOSgIZ@infradead.org>
- <d8e64422-d332-4c99-88bc-85f6e2077c32@kernel.org>
- <ZV2hZ+0jRQUJqMH6@infradead.org>
- <d7c8ff12-279e-4201-8987-92de01e8ecea@kernel.org>
- <ZV2lq6PcYwL5uCHr@infradead.org>
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <ZV2lq6PcYwL5uCHr@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 11/22/23 15:54, Christoph Hellwig wrote:
-> On Wed, Nov 22, 2023 at 03:49:28PM +0900, Damien Le Moal wrote:
->>> As mentioned in reply 1 I think this is perfect for a scripted run
->>> after -rc1.
->>
->> You mean 6.8-rc1 next cycle ?
-> 
-> Yes.  6.7-rc1 is over :)
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git ecam
+branch HEAD: 4de5ec48a79e3b0fca893d10138da6051042d796  x86/pci: Reorder pci_mmcfg_arch_map() definition before calls
 
-OK.
+elapsed time: 728m
 
-Bjorn,
+configs tested: 39
+configs skipped: 137
 
-I can resend without this patch, or maybe you can drop it when applying. Let me
-know what you prefer.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+arm                                 defconfig   clang
+arm64                            allmodconfig   clang
+arm64                            allyesconfig   clang
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386                                defconfig   gcc  
+i386                  randconfig-011-20231122   gcc  
+i386                  randconfig-012-20231122   gcc  
+i386                  randconfig-013-20231122   gcc  
+i386                  randconfig-014-20231122   gcc  
+i386                  randconfig-015-20231122   gcc  
+i386                  randconfig-016-20231122   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20231122   clang
+x86_64       buildonly-randconfig-002-20231122   clang
+x86_64       buildonly-randconfig-003-20231122   clang
+x86_64       buildonly-randconfig-004-20231122   clang
+x86_64       buildonly-randconfig-005-20231122   clang
+x86_64       buildonly-randconfig-006-20231122   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-011-20231122   clang
+x86_64                randconfig-012-20231122   clang
+x86_64                randconfig-013-20231122   clang
+x86_64                randconfig-014-20231122   clang
+x86_64                randconfig-015-20231122   clang
+x86_64                randconfig-016-20231122   clang
+x86_64                randconfig-071-20231122   clang
+x86_64                randconfig-072-20231122   clang
+x86_64                randconfig-073-20231122   clang
+x86_64                randconfig-074-20231122   clang
+x86_64                randconfig-075-20231122   clang
+x86_64                randconfig-076-20231122   clang
+x86_64                          rhel-8.3-rust   clang
 
 -- 
-Damien Le Moal
-Western Digital Research
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
